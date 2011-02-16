@@ -1,6 +1,9 @@
 # Versions < 2.8.8 do not support Object Libraries
 cmake_minimum_required(VERSION 3.1.0)
 
+# Add in our modules
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+
 # Enforce the C++ standard
 set (CXX_STANDARD_REQUIRED true)
 
@@ -22,6 +25,7 @@ endif()
 set(CMAKE_MACOSX_RPATH 1)
 
 option(BUILD_UNIT_TESTS "Build unit tests")
+option(BUILD_EXAMPLES "Build examples")
 
 if (NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type selected, default is Release")
@@ -38,5 +42,7 @@ endif()
 
 add_subdirectory(src)
 
-
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
 
