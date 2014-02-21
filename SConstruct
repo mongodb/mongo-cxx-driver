@@ -939,6 +939,8 @@ if not use_system_version_of_library("stemmer"):
 if not use_system_version_of_library("snappy"):
     env.Prepend(CPPPATH=['$BUILD_DIR/third_party/snappy'])
 
+env.Prepend(CPPPATH=['$BUILD_DIR/third_party/gtest-1.7.0/include'])
+
 env.Append( CPPPATH=['$EXTRACPPPATH'],
             LIBPATH=['$EXTRALIBPATH'] )
 

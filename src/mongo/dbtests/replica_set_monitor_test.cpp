@@ -990,7 +990,7 @@ namespace mongo_test {
         ASSERT(host.empty());
     }
 
-    TEST(MultiTags, PriPrefPriOkNoMatch) {
+    TEST(MultiTagsXXX, PriPrefPriOkNoMatch) {
         vector<Node> nodes =
                 NodeSetFixtures::getThreeMemberWithTags();
 
@@ -1005,7 +1005,7 @@ namespace mongo_test {
         ASSERT_EQUALS("b", host.host());
     }
 
-    TEST(MultiTags, PriPrefPriNotOkNoMatch) {
+    TEST(MultiTagsXXX, PriPrefPriNotOkNoMatch) {
         vector<Node> nodes =
                 NodeSetFixtures::getThreeMemberWithTags();
         TagSet tags(TagSetFixtures::getMultiNoMatchTag());
@@ -1213,7 +1213,7 @@ namespace mongo_test {
         ASSERT_EQUALS("a", host.host());
     }
 
-    TEST(MultiTags, SecPrefMultiTagsNoMatch) {
+    TEST(MultiTagsXXX, SecPrefMultiTagsNoMatch) {
         vector<Node> nodes =
                 NodeSetFixtures::getThreeMemberWithTags();
         TagSet tags(TagSetFixtures::getMultiNoMatchTag());
@@ -1227,7 +1227,7 @@ namespace mongo_test {
         ASSERT_EQUALS("b", host.host());
     }
 
-    TEST(MultiTags, SecPrefMultiTagsNoMatchPriNotOk) {
+    TEST(MultiTagsXXX, SecPrefMultiTagsNoMatchPriNotOk) {
         vector<Node> nodes =
                 NodeSetFixtures::getThreeMemberWithTags();
         TagSet tags(TagSetFixtures::getMultiNoMatchTag());
@@ -1254,7 +1254,7 @@ namespace mongo_test {
         ASSERT_EQUALS("a", host.host());
     }
 
-    TEST(MultiTags, NearestMatchesFirstNotOk) {
+    TEST(MultiTagsXXX, NearestMatchesFirstNotOk) {
         vector<Node> nodes = NodeSetFixtures::getThreeMemberWithTags();
 
         BSONArrayBuilder arrayBuilder;
@@ -1345,7 +1345,7 @@ namespace mongo_test {
         ASSERT_EQUALS("b", host.host());
     }
 
-    TEST(MultiTags, NearestMultiTagsNoMatch) {
+    TEST(MultiTagsXXX, NearestMultiTagsNoMatch) {
         vector<Node> nodes =
                 NodeSetFixtures::getThreeMemberWithTags();
         TagSet tags(TagSetFixtures::getMultiNoMatchTag());
@@ -1420,7 +1420,7 @@ namespace mongo_test {
     // This test goes through configurations with different positions for the primary node
     // in the host list returned from the isMaster command. The test here is to make sure
     // that the ReplicaSetMonitor will not crash under these situations.
-    TEST(ReplicaSetMonitorTest, PrimaryRemovedFromSetStress) {
+    TEST(ReplicaSetMonitorTestXXX, PrimaryRemovedFromSetStress) {
         const size_t NODE_COUNT = 5;
         MockReplicaSet replSet("test", NODE_COUNT);
         ConnectionString::ConnectionHook* originalConnHook =

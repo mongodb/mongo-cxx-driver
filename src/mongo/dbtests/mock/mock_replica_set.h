@@ -16,13 +16,38 @@
 #pragma once
 
 #include "mongo/dbtests/mock/mock_remote_db_server.h"
-#include "mongo/db/repl/rs_config.h"
+//#include "mongo/db/repl/rs_config.h"
 
 #include <string>
 #include <map>
 #include <vector>
 
 namespace mongo {
+
+    class ReplSetConfig {
+    public:
+       struct MemberCfg {
+           MemberCfg()
+               : _id(-1)
+               , votes(1)
+               , priority(1.0)
+               , arbiterOnly(false)
+               , slaveDelay(0)
+               , hidden(false)
+               , buildIndexes(true) { }
+
+           int _id;
+           unsigned votes;
+           HostAndPort h;
+           double priority;
+           bool arbiterOnly;
+           int slaveDelay;
+           bool hidden;
+           bool buildIndexes;
+           map<string,string> tags;
+        };
+    };
+
     /**
      * This is a helper class for managing a replica set consisting of
      * MockRemoteDBServer instances.

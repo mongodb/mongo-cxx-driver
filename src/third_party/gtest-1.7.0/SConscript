@@ -1,0 +1,21 @@
+Import('env')
+
+gtestEnv = env.Clone()
+gtestEnv.AppendUnique(CPPPATH=['$BUILD_DIR/third_party/gtest-1.7.0'])
+
+gtestEnv.Library(
+    target='gtest',
+    source=[
+        'src/gtest-all.cc',
+    ],
+)
+
+gtestEnv.Library(
+    target='gtest_main',
+    source=[
+        'src/gtest_main.cc',
+    ],
+    LIBDEPS=[
+        '$BUILD_DIR/third_party/gtest-1.7.0/gtest'
+    ],
+)

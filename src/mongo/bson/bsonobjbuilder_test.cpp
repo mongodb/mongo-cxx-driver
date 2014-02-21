@@ -55,7 +55,7 @@ namespace {
                << ". actual: " << mongo::typeName(actual)
                << "; expected: " << mongo::typeName(expected);
             const string msg = ss.str();
-            FAIL(msg);
+            FAIL() << msg;
         }
     }
 

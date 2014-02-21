@@ -1,0 +1,63 @@
+Import('env')
+
+env.Library(
+    target='mocklib',
+    source=[
+        "dbtests/mock/mock_conn_registry.cpp",
+        "dbtests/mock/mock_dbclient_connection.cpp",
+        "dbtests/mock/mock_dbclient_cursor.cpp",
+        "dbtests/mock/mock_remote_db_server.cpp",
+        "dbtests/mock/mock_replica_set.cpp",
+    ],
+    LIBDEPS=[
+        '$BUILD_DIR/mongoclient',
+    ]
+)
+
+env.Library(
+    target='clienttest_main',
+    source=[
+        'clienttest_main.cpp'
+    ],
+    LIBDEPS=[
+        '$BUILD_DIR/third_party/gtest-1.7.0/gtest'
+    ],
+)
+
+unittests = [
+    'base/parse_number_test',
+    'bson/bson_field_test',
+    'bson/bson_obj_test',
+    'bson/bson_validate_test',
+    'bson/bsonobjbuilder_test',
+    'bson/util/bson_extract_test',
+    'client/dbclient_rs_test',
+    'client/scoped_db_conn_test',
+    'client/replica_set_monitor_test',
+    'dbtests/jsobjtests',
+    'dbtests/jsontests',
+    'dbtests/mock_dbclient_conn_test',
+    'dbtests/mock_replica_set_test',
+    'dbtests/replica_set_monitor_test',
+    'logger/console_test',
+    'logger/log_test',
+    'logger/rotatable_file_writer_test',
+    'platform/atomic_word_test',
+    'platform/process_id_test',
+    'platform/random_test',
+    'util/net/sock_test',
+    'util/stringutils_test',
+    'util/time_support_test',
+]
+
+for unittest in unittests:
+    env.CppUnitTest(
+        target=unittest,
+        source=[
+            unittest + '.cpp'
+        ],
+        LIBDEPS=[
+            'mocklib',
+            '$BUILD_DIR/mongoclient',
+        ]
+    )

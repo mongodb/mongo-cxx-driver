@@ -72,27 +72,27 @@ TEST(ExtractBSON, ExtractBooleanFieldWithDefault) {
     bool b;
     b = false;
     ASSERT_OK(bsonExtractBooleanFieldWithDefault(obj1, "a", false, &b));
-    ASSERT_EQUALS(true, b);
+    ASSERT_TRUE(b);
 
     b = false;
     ASSERT_OK(bsonExtractBooleanFieldWithDefault(obj1, "c", false, &b));
-    ASSERT_EQUALS(true, b);
+    ASSERT_TRUE(b);
 
     b = true;
     ASSERT_OK(bsonExtractBooleanFieldWithDefault(obj2, "a", true, &b));
-    ASSERT_EQUALS(false, b);
+    ASSERT_FALSE(b);
 
     b = true;
     ASSERT_OK(bsonExtractBooleanFieldWithDefault(obj2, "c", true, &b));
-    ASSERT_EQUALS(false, b);
+    ASSERT_FALSE(b);
 
     b = false;
     ASSERT_OK(bsonExtractBooleanFieldWithDefault(obj2, "d", true, &b));
-    ASSERT_EQUALS(true, b);
+    ASSERT_TRUE(b);
 
     b = true;
     ASSERT_OK(bsonExtractBooleanFieldWithDefault(obj2, "d", false, &b));
-    ASSERT_EQUALS(false, b);
+    ASSERT_FALSE(b);
 
     ASSERT_EQUALS(ErrorCodes::TypeMismatch,
                   bsonExtractBooleanFieldWithDefault(obj1, "b", true, &b));
