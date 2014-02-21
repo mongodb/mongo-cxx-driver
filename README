@@ -1,63 +1,40 @@
-MongoDB README
+MongoDB Legacy C++ Driver README
 
-Welcome to MongoDB!
+Welcome to the MongoDB Legacy C++ Driver!
+
+This driver is an extraction of the "Server C++ Driver" from the primary
+MongoDB sources. You should prefer using this to building the driver
+from the server sources if at all possible. Please note that as of
+MongoDB 2.6.0-rc1, it is no longer possible to build the driver from
+the server sources: this repo is the only approved source for driver builds.
 
 COMPONENTS
 
-  mongod - The database process.
-  mongos - Sharding controller.
-  mongo  - The database shell (uses interactive javascript).
-
-UTILITIES
-
-  mongodump         - MongoDB dump tool - for backups, snapshots, etc.
-  mongorestore      - MongoDB restore a dump
-  mongoexport       - Export a single collection to test (JSON, CSV)
-  mongoimport       - Import from JSON or CSV
-  mongofiles        - Utility for putting and getting files from MongoDB GridFS
-  mongostat         - Show performance statistics
+  libmongoclient.[so|dylib|dll] - The shared mongoclient library
+  libmongoclient.a - The static mongoclient library (but see notes)
 
 BUILDING
 
-  See docs/building.md, also www.mongodb.org search for "Building".
+  See http://docs.mongodb.org/ecosystem/tutorial/download-and-compile-cpp-driver/
 
-RUNNING
+  The above instructions (currently) assume that you are building from the server
+  repository, but the will work with this repository as described.
 
-  For command line options invoke:
+NOTES
 
-    $ ./mongod --help
-
-  To run a single server database:
-
-    $ mkdir /data/db
-    $ ./mongod
-    $
-    $ # The mongo javascript shell connects to localhost and test database by default:
-    $ ./mongo 
-    > help
-
-DRIVERS
-
-  Client drivers for most programming languages are available at mongodb.org.  Use the 
-  shell ("mongo") for administrative tasks.
+  Use of the static library is discouraged, and support may be removed soon. To properly
+  link against the static library on ELF platforms, you must link it with the
+  --whole-archive flag to ld. The static library is not useable on Windows since
+  there is no analogue to --whole-archive. The static library may work on OS X, but
+  we still strongly recommend using the dynamic library.
 
 DOCUMENTATION
 
-  http://www.mongodb.org/
- 
-BACKUP & MONITORING
-
-  http://mms.mongodb.com/
+  http://docs.mongodb.org/ecosystem/drivers/cpp/
 
 MAIL LISTS AND IRC
 
   http://dochub.mongodb.org/core/community
-
-32 BIT BUILD NOTES
-
-  MongoDB uses memory mapped files.  If built as a 32 bit executable, you will
-  not be able to work with large (multi-gigabyte) databases.  However, 32 bit
-  builds work fine with small development databases.
 
 LICENSE
 
