@@ -128,33 +128,104 @@ exampleSourceMap = [
         ('bsondemo', 'mongo/bson/bsondemo/bsondemo.cpp'),
         ]
 
-clientHeaderDirectories = [
-    "base/",
-    "bson/",
-    "bson/util/",
-    "client/",
-    "db/",
-    "db/auth/",
-    "db/stats/",
-    "db/repl/",
-    "db/ops/",
-    "logger/",
-    "platform/",
-    "s/",
-    "scripting/",
-    "shell/",
-    "util/",
-    "util/concurrency/",
-    "util/mongoutils/",
-    "util/options_parser/",
-    "util/net/",
-    ""
-    ]
-
-clientHeaders = []
-for path in clientHeaderDirectories:
-    clientHeaders.extend(Glob('mongo/%s/*.h' % path))
-    clientHeaders.extend(Glob('mongo/%s/*.hpp' % path))
+clientHeaders = [
+    'mongo/base/disallow_copying.h',
+    'mongo/base/error_codes.h',
+    'mongo/base/parse_number.h',
+    'mongo/base/status-inl.h',
+    'mongo/base/status.h',
+    'mongo/base/status_with.h',
+    'mongo/base/string_data-inl.h',
+    'mongo/base/string_data.h',
+    'mongo/bson/bson-inl.h',
+    'mongo/bson/bson.h',
+    'mongo/bson/bson_builder_base.h',
+    'mongo/bson/bson_db.h',
+    'mongo/bson/bson_field.h',
+    'mongo/bson/bsonelement.h',
+    'mongo/bson/bsonmisc.h',
+    'mongo/bson/bsonobj.h',
+    'mongo/bson/bsonobjbuilder.h',
+    'mongo/bson/bsonobjiterator.h',
+    'mongo/bson/bsontypes.h',
+    'mongo/bson/inline_decls.h',
+    'mongo/bson/oid.h',
+    'mongo/bson/optime.h',
+    'mongo/bson/ordering.h',
+    'mongo/bson/util/atomic_int.h',
+    'mongo/bson/util/builder.h',
+    'mongo/bson/util/misc.h',
+    'mongo/client/connpool.h',
+    'mongo/client/dbclient.h',
+    'mongo/client/dbclient_rs.h',
+    'mongo/client/dbclientcursor.h',
+    'mongo/client/dbclientinterface.h',
+    'mongo/client/export_macros.h',
+    'mongo/client/gridfs.h',
+    'mongo/client/init.h',
+    'mongo/client/redef_macros.h',
+    'mongo/client/sasl_client_authenticate.h',
+    'mongo/client/syncclusterconnection.h',
+    'mongo/client/undef_macros.h',
+    'mongo/db/jsobj.h',
+    'mongo/db/json.h',
+    'mongo/db/server_options.h',
+    'mongo/logger/appender.h',
+    'mongo/logger/labeled_level.h',
+    'mongo/logger/log_domain.h',
+    'mongo/logger/log_manager.h',
+    'mongo/logger/log_severity-inl.h',
+    'mongo/logger/log_severity.h',
+    'mongo/logger/logger.h',
+    'mongo/logger/logstream_builder.h',
+    'mongo/logger/message_event.h',
+    'mongo/logger/message_log_domain.h',
+    'mongo/logger/rotatable_file_manager.h',
+    'mongo/logger/rotatable_file_writer.h',
+    'mongo/logger/tee.h',
+    'mongo/pch.h',
+    'mongo/platform/atomic_intrinsics.h',
+    'mongo/platform/atomic_intrinsics_gcc_generic.h',
+    'mongo/platform/atomic_intrinsics_gcc_intel.h',
+    'mongo/platform/atomic_intrinsics_win32.h',
+    'mongo/platform/atomic_word.h',
+    'mongo/platform/basic.h',
+    'mongo/platform/compiler.h',
+    'mongo/platform/compiler_gcc.h',
+    'mongo/platform/compiler_msvc.h',
+    'mongo/platform/cstdint.h',
+    'mongo/platform/float_utils.h',
+    'mongo/platform/hash_namespace.h',
+    'mongo/platform/process_id.h',
+    'mongo/platform/unordered_map.h',
+    'mongo/platform/windows_basic.h',
+    'mongo/util/allocator.h',
+    'mongo/util/assert_util.h',
+    'mongo/util/background.h',
+    'mongo/util/bufreader.h',
+    'mongo/util/concurrency/mutex.h',
+    'mongo/util/concurrency/mutexdebugger.h',
+    'mongo/util/concurrency/thread_name.h',
+    'mongo/util/concurrency/threadlocal.h',
+    'mongo/util/concurrency/ticketholder.h',
+    'mongo/util/debug_util.h',
+    'mongo/util/exit_code.h',
+    'mongo/util/goodies.h',
+    'mongo/util/heapcheck.h',
+    'mongo/util/hex.h',
+    'mongo/util/log.h',
+    'mongo/util/mongoutils/str.h',
+    'mongo/util/net/hostandport.h',
+    'mongo/util/net/listen.h',
+    'mongo/util/net/message.h',
+    'mongo/util/net/message_port.h',
+    'mongo/util/net/sock.h',
+    'mongo/util/net/ssl_manager.h',
+    'mongo/util/net/ssl_options.h',
+    'mongo/util/signal_handlers.h',
+    'mongo/util/time_support.h',
+    'mongo/util/version.h',
+]
 
 # This relies on static and shared objects being the same, since we will link these object
 # files twice: once into a .a, and another time into a .so
@@ -256,11 +327,9 @@ if buildShared:
 libEnv.Alias('mongoclient', mongoClientInstalls)
 
 if installSetup.headers:
-    for x in clientHeaderDirectories:
-        inst = libEnv.Install("$INSTALL_DIR/include/mongo/" + x,
-                              [Glob('mongo/%s*.h' % x), Glob('mongo/%s*.hpp' % x)])
-        libEnv.AddPostAction(inst, Chmod('$TARGET', 0644))
-        mongoClientPrefixInstalls.append(inst)
+    inst = libEnv.InstallAs(['$INSTALL_DIR/include/' + x for x in clientHeaders], clientHeaders)
+    libEnv.AddPostAction(inst, Chmod('$TARGET', 0644))
+    mongoClientPrefixInstalls.append(inst);
 
 if installSetup.headers or installSetup.libraries:
     installAlias = libEnv.Alias('install-mongoclient', mongoClientPrefixInstalls)
