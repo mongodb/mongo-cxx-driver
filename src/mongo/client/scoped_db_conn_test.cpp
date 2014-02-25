@@ -18,7 +18,7 @@
 #include "mongo/platform/cstdint.h"
 // #include "mongo/util/net/message_port.h"
 // #include "mongo/util/net/message_server.h"
-#include "mongo/util/net/listen.h"
+// #include "mongo/util/net/listen.h"
 #include "mongo/util/fail_point_service.h"
 #include "mongo/util/time_support.h"
 #include "mongo/util/timer.h"
@@ -27,6 +27,12 @@
 #include <vector>
 #include <boost/scoped_ptr.hpp>
 #include <boost/thread/thread.hpp>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <unistd.h>
+
 
 /**
  * Tests for ScopedDbConnection, particularly in connection pool management.
@@ -45,49 +51,136 @@ using std::vector;
 namespace {
     const string TARGET_HOST = "localhost:27017";
     const int TARGET_PORT = 27017;
-
-    mongo::mutex shutDownMutex("shutDownMutex");
-    bool shuttingDown = false;
 }
 
 namespace mongo {
 
-    class TestListener : public Listener {
+    struct SocketAddress {
+        SocketAddress() {
+            size = sizeof(address);
+            memset(&address, 0, size);
+        }
+        SocketAddress(int port) {
+            size = sizeof(address);
+            memset(&address, 0, size);
+            address.sin_family = AF_INET;
+            address.sin_port = htons(port);
+            address.sin_addr.s_addr = INADDR_ANY;
+        }
+        sockaddr* get_address() {
+            return reinterpret_cast<sockaddr*>(&address);
+        }
+        socklen_t size;
+        sockaddr_in address;
+    };
+
+    class TCPSocket {
         public:
-            TestListener() : Listener("test", "", TARGET_PORT) {}
+            TCPSocket(SocketAddress sa, int fd) : _sa(sa), _fd(fd) { init(); }
+            TCPSocket(int port) : _sa(port) { init(); }
+            ~TCPSocket() { close(); }
+            void init() {
+                _closed = false;
+                _fd = socket(PF_INET, SOCK_STREAM, 0);
 
-            void accepted(boost::shared_ptr<Socket> psocket, long long connectionId) {}
-
-            void operator()() {
-                Listener::setupSockets();
-                Listener::initAndListen();
+                if (_fd == -1) {
+                    perror("Failed to get file descriptor");
+                }
             }
+            void set_opt(int optname, int optval=true) {
+                int optset = ::setsockopt(_fd, SOL_SOCKET, optname, &optval, sizeof(optval));
+                if (optset < 0) {
+                    perror("Failed to set socket opts");
+                    close();
+                }
+            }
+            void bind() {
+                int bound = ::bind(_fd, _sa.get_address(), _sa.size);
+                if (bound != 0) {
+                    perror("Failed to bind");
+                    close();
+                }
+            }
+            void listen() {
+                int listening = ::listen(_fd, 1);
+                if (listening != 0) {
+                    perror("Failed to listen");
+                    close();
+                }
+            }
+            void close() {
+                if (!_closed) {
+                    ::shutdown(_fd, SHUT_RDWR);
+                    ::close(_fd);
+                    _closed = true;
+                }
+            }
+            TCPSocket* accept() {
+                SocketAddress client_sa;
+                int client_fd = ::accept(_fd, client_sa.get_address(), &client_sa.size);
+                if (client_fd > 0) {
+                    return new TCPSocket(client_sa, client_fd);
+                } else {
+                    return NULL;
+                }
+            }
+        private:
+            SocketAddress _sa;
+            int _fd;
+            bool _closed;
+    };
+
+    class TCPServer {
+        public:
+            TCPServer(int port) : _server_sock(port) {
+                //std::cout << "[SERVER] New server on port " << port << std::endl;
+                _server_sock.set_opt(SO_REUSEADDR);
+                _server_sock.bind();
+                _server_sock.listen();
+            }
+            void start() {
+                while (TCPSocket* client = _server_sock.accept()) {
+                    if (client) {
+                        _client_socks.push_back(client);
+                        //std::cout << "[SERVER] " << _client_socks.size()
+                            //<< " clients" << std::endl;
+                    }
+                }
+            }
+            void stop() {
+                close_clients();
+                _server_sock.close();
+            }
+            void close_clients() {
+                vector<TCPSocket*>::iterator it;
+                for(it = _client_socks.begin(); it != _client_socks.end(); ++it)
+                    delete *it;
+            }
+            void operator()() {
+                start();
+            }
+        private:
+            vector<TCPSocket*> _client_socks;
+            TCPSocket _server_sock;
     };
 
     class DummyServerFixture : public ::testing::Test {
         public:
             DummyServerFixture() {
-                _listener = new TestListener();
-                _thread = new boost::thread(boost::ref(*_listener));
+                _server = new TCPServer(TARGET_PORT);
+                _thread = new boost::thread(boost::ref(*_server));
                 _maxPoolSizePerHost = mongo::PoolForHost::getMaxPerHost();
             }
 
             ~DummyServerFixture() {
-                mongo::ListeningSockets::get()->closeAll();
                 mongo::PoolForHost::setMaxPerHost(_maxPoolSizePerHost);
                 mongo::ScopedDbConnection::clearPool();
 
-                // exit the listen loop by shutting down
-                {
-                    scoped_lock sl(shutDownMutex);
-                    shuttingDown = true;
-                }
-
-                // ensure listener thread is finished before delete
+                _server->stop();
                 _thread->join();
 
                 delete _thread;
-                delete _listener;
+                delete _server; // refered to server must outlive thread
             }
 
         protected:
@@ -143,7 +236,7 @@ namespace mongo {
             }
 
         private:
-            TestListener* _listener;
+            TCPServer* _server;
             boost::thread* _thread;
             uint32_t _maxPoolSizePerHost;
     };
