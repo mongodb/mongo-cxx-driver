@@ -13,16 +13,6 @@
  *    limitations under the License.
  */
 
-/* 
-   C++ client program which inserts documents in a MongoDB database.
-
-   How to build and run:
-
-   Using mongo_client_lib.cpp:
-    g++ -I .. -I ../.. insert_demo.cpp ../mongo_client_lib.cpp -lboost_thread-mt -lboost_filesystem
-    ./a.out
-*/
-
 #include <iostream>
 #include "mongo/client/dbclient.h" // the mongo c++ driver
 

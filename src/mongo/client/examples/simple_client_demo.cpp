@@ -13,16 +13,7 @@
  *    limitations under the License.
  */
 
-/* simple_client_demo.cpp
-
-   See also : http://dochub.mongodb.org/core/cppdrivertutorial
-
-   How to build and run:
-
-    g++ simple_client_demo.cpp -lmongoclient -lboost_thread-mt -lboost_filesystem -lboost_program_options
-    ./a.out
-
-*/
+/* See also : http://dochub.mongodb.org/core/cppdrivertutorial */
 
 #include <iostream>
 #include "mongo/client/dbclient.h" // the mongo c++ driver
