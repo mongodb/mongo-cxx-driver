@@ -13,8 +13,9 @@ def build_cpp_unit_test(env, target, source, **kwargs):
     result = env.Program(target, source, **kwargs)
     runAlias = env.Alias('run-' + target, [result], result[0].abspath)
     env.AlwaysBuild(runAlias)
-    env.Alias('test', runAlias)
-    env.AlwaysBuild('test')
+    testAliases = ['test', 'smokeCppUnittests', 'smoke']
+    env.Alias(testAliases, runAlias)
+    env.AlwaysBuild(testAliases)
 
     return result
 

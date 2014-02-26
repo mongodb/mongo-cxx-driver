@@ -34,7 +34,7 @@ int printIfAge(DBClientConnection& c, int age) {
     return EXIT_SUCCESS;
 }
 
-int run() {
+int run(int argc, char* argv[]) {
 
     Status status = client::initialize();
     if ( !status.isOK() ) {
@@ -42,8 +42,17 @@ int run() {
         return EXIT_FAILURE;
     }
 
+    const char *port = "27017";
+    if ( argc != 1 ) {
+        if ( argc != 3 ) {
+            std::cout << "need to pass port as second param" << endl;
+            return EXIT_FAILURE;
+        }
+        port = argv[ 2 ];
+    }
+
     DBClientConnection c;
-    c.connect("localhost"); //"192.168.58.1");
+    c.connect(string("localhost:") + port); //"192.168.58.1");
     cout << "connected ok" << endl;
     BSONObj p = BSON( "name" << "Joe" << "age" << 33 );
     c.insert("tutorial.persons", p);
@@ -74,10 +83,10 @@ int run() {
     return printIfAge(c, 33);
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     int ret = EXIT_SUCCESS;
     try {
-        ret = run();
+        ret = run(argc, argv);
     }
     catch( DBException &e ) {
         cout << "caught " << e.what() << endl;
