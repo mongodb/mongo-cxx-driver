@@ -1,4 +1,10 @@
-Import('env')
+Import('env windows')
+
+# Windows can't have a static and dynamic library sharing a name, so adjust
+# the name to match what is found in SConscript.client if using windows.
+static_mongoclient_libdep = '$BUILD_DIR/mongoclient'
+if windows:
+    static_mongoclient_libdep = '$BUILD_DIR/libmongoclient'
 
 env.Library(
     target='mocklib',
@@ -10,7 +16,7 @@ env.Library(
         "dbtests/mock/mock_replica_set.cpp",
     ],
     LIBDEPS=[
-        '$BUILD_DIR/mongoclient',
+        static_mongoclient_libdep,
     ]
 )
 
@@ -58,6 +64,6 @@ for unittest in unittests:
         ],
         LIBDEPS=[
             'mocklib',
-            '$BUILD_DIR/mongoclient',
+             static_mongoclient_libdep,
         ]
     )
