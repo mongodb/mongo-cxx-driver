@@ -20,7 +20,7 @@ using namespace std;
 using namespace mongo;
 using namespace bson;
 
-int main() {
+int main(int argc, char* argv[]) {
 
     Status status = client::initialize();
     if ( !status.isOK() ) {
@@ -28,10 +28,19 @@ int main() {
         return EXIT_FAILURE;
     }
 
+    const char *port = "27017";
+    if ( argc != 1 ) {
+        if ( argc != 3 ) {
+            std::cout << "need to pass port as second param" << endl;
+            return EXIT_FAILURE;
+        }
+        port = argv[ 2 ];
+    }
+
     try {
         cout << "connecting to localhost..." << endl;
         DBClientConnection c;
-        c.connect("localhost");
+        c.connect(string("localhost:") + port);
         cout << "connected ok" << endl;
 
         bo o = BSON( "hello" << "world" );

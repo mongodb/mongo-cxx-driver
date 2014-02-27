@@ -22,11 +22,27 @@ using namespace std;
 using namespace mongo;
 using namespace bson;
 
-int main() {
+int main(int argc, char* argv[]) {
+
+    Status status = client::initialize();
+    if ( !status.isOK() ) {
+        std::cout << "failed to initialize the client driver: " << status.toString() << endl;
+        return EXIT_FAILURE;
+    }
+
+    const char *port = "27017";
+    if ( argc != 1 ) {
+        if ( argc != 3 ) {
+            std::cout << "need to pass port as second param" << endl;
+            return EXIT_FAILURE;
+        }
+        port = argv[ 2 ];
+    }
+
     try {
         cout << "connecting to localhost..." << endl;
         DBClientConnection c;
-        c.connect("localhost");
+        c.connect(string("localhost:") + port);
         cout << "connected ok" << endl;
         unsigned long long count = c.count("test.foo");
         cout << "count of exiting documents in collection test.foo : " << count << endl;
