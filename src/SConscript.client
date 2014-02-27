@@ -421,7 +421,7 @@ clientEnv.Alias('clientTests', clientTests, [])
 for clientTest in clientTests:
     # the rsExample test needs a replica set to talk to. The old smokeClient never tested it
     # The old smoke subsystem did test authTest, not sure why it isn't working now.
-    if 'rsExample' in clientTest.abspath:# or 'authTest' in clientTest.abspath:
+    if 'rsExample' in clientTest.abspath:
         continue
 
     # On windows, the installs also install PDB files, which we end up picking up.
