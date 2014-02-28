@@ -184,7 +184,7 @@ namespace mongo {
      * thin wrapped around file descriptor and system calls
      * todo: ssl
      */
-    class Socket {
+    class MONGO_CLIENT_API Socket {
         MONGO_DISALLOW_COPYING(Socket);
     public:
 
