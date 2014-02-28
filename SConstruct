@@ -824,7 +824,6 @@ elif windows:
     env.Append( EXTRACPPPATH=["#/../winpcap/Include"] )
     env.Append( EXTRALIBPATH=["#/../winpcap/Lib"] )
 
-env['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME'] = 1
 if nix:
 
     if has_option( "distcc" ):
