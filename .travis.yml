@@ -12,16 +12,12 @@ compiler:
 # Setup repos etc before installation
 before_install:
     - sudo add-apt-repository -y ppa:boost-latest/ppa
-    - if [ "$CXX" == "g++" ]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; fi
-      #- if [ "$CXX" == "clang++" ]; then sudo add-apt-repository -y ppa:h-rayflood/llvm; fi
+    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     - sudo apt-get update -qq
 
 install:
     - sudo apt-get install -qq libboost1.54-all-dev
     - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
     - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
-    - if [ "$CXX" == "clang++" ]; then sudo apt-get install libc++-dev; fi
-
-      #- if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq clang-3.4; fi
-
-
+    - if [ "$CXX" == "clang++" ]; then sudo apt-get install -qq clang-3.5; fi
+    - if [ "$CXX" == "clang++" ]; then sudo apt-get install -qq libc++-dev; fi
