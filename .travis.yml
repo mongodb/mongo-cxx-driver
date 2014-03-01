@@ -4,7 +4,7 @@ env:
     - PREFIX=$(mktemp -d /tmp/mongo-cxx-driver-install.XXXXXX || exit 1)
 script:
     - $CXX --version
-    - scons -j2 --cache --mute --prefix=$PREFIX --use-system-boost --full --sharedclient --ssl --use-sasl-client --dbg=on --cc-use-shell-environment --cxx-use-shell-environment test check-install-mongoclient
+    - scons -j2 --mute --prefix=$PREFIX --use-system-boost --full --sharedclient --ssl --use-sasl-client --dbg=on --cc-use-shell-environment --cxx-use-shell-environment test check-install-mongoclient
 compiler:
     - clang
     - gcc
