@@ -14,7 +14,7 @@ matrix:
 
 script:
     - $CXX --version
-    - scons -j2 --mute --prefix=$PREFIX --use-system-boost --full --sharedclient --ssl --use-sasl-client --dbg=on --cc-use-shell-environment --cxx-use-shell-environment $SANITIZE test check-install-mongoclient
+    - scons -j2 --mute --prefix=$PREFIX --use-system-boost --full --sharedclient --ssl --use-sasl-client --dbg=on --cc-use-shell-environment --cxx-use-shell-environment $SANITIZE test clientTests check-install-mongoclient
 compiler:
     - clang
     - gcc
