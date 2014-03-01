@@ -28,7 +28,7 @@ before_install:
     - sudo apt-get update -qq
 
 install:
-    - sudo apt-get install -qq libboost1.54-all-dev
+    - sudo apt-get install -qq libboost1.55-all-dev
     - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
     - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
     - if [ "$CXX" = "clang++" ]; then sudo apt-get install -qq clang-3.5; fi
