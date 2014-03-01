@@ -292,7 +292,7 @@ if buildShared:
     # library.
     if windows or use_system_version_of_library("boost"):
         sharedLibEnv.AppendUnique(LIBDEPS=mongoClientLibDeps)
-        if linux:
+        if linux and not has_option('sanitize'):
             sharedLibEnv.AppendUnique(SHLINKFLAGS=["-Wl,--as-needed", "-Wl,-zdefs"])
     elif darwin:
         sharedLibEnv.AppendUnique(SHLINKFLAGS=["-Wl,-undefined,dynamic_lookup"])
