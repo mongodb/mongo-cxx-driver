@@ -10,7 +10,7 @@ env:
 matrix:
   exclude:
     - compiler: gcc
-      env: SANITIZE=--sanitize==undefined
+      env: SANITIZE=--sanitize=undefined
 
 script:
     - $CXX --version
