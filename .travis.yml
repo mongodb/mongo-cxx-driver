@@ -1,6 +1,6 @@
 language: cpp
 script:
-    - CXX --version
+    - $CXX --version
     - scons -j2 --use-system-boost --full --sharedclient --ssl --use-sasl-client --dbg=on --cc-use-shell-environment --cxx-use-shell-environment test
 compiler:
     - clang
