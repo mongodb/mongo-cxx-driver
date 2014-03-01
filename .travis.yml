@@ -13,7 +13,7 @@ compiler:
 before_install:
     - sudo add-apt-repository -y ppa:boost-latest/ppa
     - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-    - sudo apt-add-repository -y http://llvm.org/apt/precise/ llvm-toolchain-precise main
+    - sudo apt-add-repository -y 'http://llvm.org/apt/precise/ llvm-toolchain-precise main'
     - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key|sudo apt-key add -
     - sudo apt-get update -qq
 
