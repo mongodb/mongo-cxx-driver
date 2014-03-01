@@ -3,8 +3,6 @@ env:
   global:
     - PREFIX=$(mktemp -d /tmp/mongo-cxx-driver-install.XXXXXX || exit 1)
   matrix:
-    - USE_LIBCXX=--libc++
-    - USE_LIBCXX=
     - SANITIZE=
     - SANITIZE=address
     - SANITIZE=undefined
@@ -12,14 +10,11 @@ env:
 matrix:
   exclude:
     - compiler: gcc
-      env: USE_LIBCXX=--libc++
-  exclude:
-    - compiler: gcc
       env: SANITIZE=undefined
 
 script:
     - $CXX --version
-    - scons -j2 --mute --prefix=$PREFIX --use-system-boost --full --sharedclient --ssl --use-sasl-client --dbg=on --cc-use-shell-environment --cxx-use-shell-environment $USE_LIBCXX $SANITIZE test check-install-mongoclient
+    - scons -j2 --mute --prefix=$PREFIX --use-system-boost --full --sharedclient --ssl --use-sasl-client --dbg=on --cc-use-shell-environment --cxx-use-shell-environment $SANITIZE test check-install-mongoclient
 compiler:
     - clang
     - gcc
@@ -37,4 +32,3 @@ install:
     - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
     - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
     - if [ "$CXX" == "clang++" ]; then sudo apt-get install -qq clang-3.5; fi
-    - if [ "$CXX" == "clang++" ]; then sudo apt-get install -qq libc++-dev; fi
