@@ -2,6 +2,7 @@ language: cpp
 env:
   global:
     - PREFIX=$(mktemp -d /tmp/mongo-cxx-driver-install.XXXXXX || exit 1)
+    - ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer-3.5
   matrix:
     - SANITIZE=
     - SANITIZE=--sanitize=address
