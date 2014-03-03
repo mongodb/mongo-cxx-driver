@@ -111,7 +111,7 @@ namespace mongo {
 
                 if (_fd == -1) {
                     perror("Failed to get file descriptor");
-                    std::exit(1);
+                    std::abort();
                 }
             }
 
@@ -121,7 +121,7 @@ namespace mongo {
                 if (optset < 0) {
                     perror("Failed to set socket opts");
                     close();
-                    std::exit(2);
+                    std::abort();
                 }
             }
 
@@ -130,7 +130,7 @@ namespace mongo {
                 if (bound != 0) {
                     perror("Failed to bind");
                     close();
-                    std::exit(4);
+                    std::abort();
                 }
             }
 
@@ -139,7 +139,7 @@ namespace mongo {
                 if (listening != 0) {
                     perror("Failed to listen");
                     close();
-                    std::exit(5);
+                    std::abort();
                 }
             }
 
@@ -166,7 +166,7 @@ namespace mongo {
                 int client_fd;
                 if ((client_fd= ::accept(_fd, client_sa.get_address(), &client_sa.size)) == -1) {
                     perror("accept");
-                    std::exit(6);
+                    std::abort();
                 } else {
                     return new TCPSocket(client_sa, client_fd);
                 }
@@ -207,7 +207,7 @@ namespace mongo {
 
                     if (selected == -1) {
                         perror("select");
-                        std::exit(7);
+                        std::abort();
                     }
                     else if (selected > 0 && FD_ISSET(server_fd, &readable_fd_set)) {
                         TCPSocket* p_new_sock = _server_sock.accept();
