@@ -136,7 +136,6 @@ namespace mongo {
 
             void close() {
                 if (!_closed) {
-                    ::shutdown(_fd, SHUT_RDWR);
                     ::close(_fd);
                     _closed = true;
                 }
