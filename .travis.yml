@@ -2,16 +2,9 @@ language: cpp
 env:
   global:
     - PREFIX=$(mktemp -d /tmp/mongo-cxx-driver-install.XXXXXX || exit 1)
-    - ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer-3.5
   matrix:
     - SANITIZE=
     - SANITIZE=--sanitize=address
-    - SANITIZE=--sanitize=undefined
-
-matrix:
-  exclude:
-    - compiler: gcc
-      env: SANITIZE=--sanitize=undefined
 
 script:
     - $CXX --version
@@ -25,27 +18,17 @@ script:
        --ssl
        --use-sasl-client
        --dbg=on
-       --cc-use-shell-environment
-       --cxx-use-shell-environment
        $SANITIZE
        test
        clientTests
        check-install-mongoclient
 compiler:
-    - clang
     - gcc
 
 # Setup repos etc before installation
 before_install:
     - sudo add-apt-repository -y ppa:boost-latest/ppa
-    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-    - sudo apt-add-repository -y 'deb http://llvm.org/apt/precise/ llvm-toolchain-precise main'
-    - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key|sudo apt-key add -
     - sudo apt-get update -qq
 
 install:
     - sudo apt-get install -qq libboost1.55-all-dev
-    - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
-    - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
-    - if [ "$CXX" = "clang++" ]; then sudo apt-get install -qq clang-3.5; fi
-    - if [ "$CXX" = "clang++" ]; then export CXX="/usr/bin/clang++" CC="/usr/bin/clang"; fi
