@@ -108,14 +108,6 @@ namespace mongo {
                 }
             }
 
-            void set_nonblocking() {
-                int nonblock_set = ::fcntl(_fd, F_SETFL, O_NONBLOCK);
-                if (nonblock_set == -1) {
-                    perror("fnctl");
-                    std::exit(3);
-                }
-            }
-
             void bind() {
                 int bound = ::bind(_fd, _sa.get_address(), _sa.size);
                 if (bound != 0) {
@@ -166,7 +158,6 @@ namespace mongo {
         public:
             TCPServer(int port) : _server_sock(port) {
                 _server_sock.set_opt(SO_REUSEADDR);
-                _server_sock.set_nonblocking();
                 _server_sock.bind();
                 _server_sock.listen();
             }
