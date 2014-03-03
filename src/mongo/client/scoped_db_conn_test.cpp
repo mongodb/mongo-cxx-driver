@@ -145,8 +145,13 @@ namespace mongo {
 
             void close() {
                 if (!_closed) {
-                    ::shutdown(_fd, 2);
+#if defined(_WIN32)
+                    ::shutdown(_fd, SD_BOTH); // this is SHUT_RDWR on linux and SD_BOTH on windows
                     ::closesocket(_fd);
+#else
+                    ::shutdown(_fd, SHUT_RDWR);
+                    ::close(_fd);
+#endif
                     _closed = true;
                     _fd = -1;
                 }
