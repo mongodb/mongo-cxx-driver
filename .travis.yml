@@ -2,9 +2,6 @@ language: cpp
 env:
   global:
     - PREFIX=$(mktemp -d /tmp/mongo-cxx-driver-install.XXXXXX || exit 1)
-  matrix:
-    - SANITIZE=
-    - SANITIZE=--sanitize=address
 
 script:
     - $CXX --version
@@ -18,7 +15,6 @@ script:
        --ssl
        --use-sasl-client
        --dbg=on
-       $SANITIZE
        test
        clientTests
        check-install-mongoclient
