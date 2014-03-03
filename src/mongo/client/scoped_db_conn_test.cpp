@@ -100,7 +100,8 @@ namespace mongo {
             }
 
             void set_opt(int optname, int optval=true) {
-                int optset = ::setsockopt(_fd, SOL_SOCKET, optname, &optval, sizeof(optval));
+                char * p_opt = reinterpret_cast<char*>(&optval);
+                int optset = ::setsockopt(_fd, SOL_SOCKET, optname, p_opt, sizeof(optval));
                 if (optset < 0) {
                     perror("Failed to set socket opts");
                     close();
