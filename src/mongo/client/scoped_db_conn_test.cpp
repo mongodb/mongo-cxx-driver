@@ -29,7 +29,23 @@
 #include <boost/thread/thread.hpp>
 
 // WIN32 headers included by platform/basic.h
-#ifndef _WIN32
+#if defined(_WIN32)
+    // Initialize Winsock
+    struct WinsockInit {
+        WinsockInit() {
+
+            WSADATA wsaData;
+            int iResult;
+
+            iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+            if (iResult != 0) {
+                printf("WSAStartup failed: %d\n", iResult);
+            }
+        }
+
+        ~WinsockInit() { WSACleanup(); }
+    } winsock_init;
+#else
     #include <arpa/inet.h>
     #include <sys/socket.h>
     #include <netdb.h>
@@ -129,8 +145,10 @@ namespace mongo {
 
             void close() {
                 if (!_closed) {
-                    ::close(_fd);
+                    ::shutdown(_fd, 2);
+                    ::closesocket(_fd);
                     _closed = true;
+                    _fd = -1;
                 }
             }
 
