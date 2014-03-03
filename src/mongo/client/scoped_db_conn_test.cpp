@@ -13,20 +13,47 @@
  *    limitations under the License.
  */
 
+#include "mongo/platform/basic.h"
 #include "mongo/base/init.h"
 #include "mongo/client/connpool.h"
 #include "mongo/platform/cstdint.h"
-// #include "mongo/util/net/message_port.h"
-// #include "mongo/util/net/message_server.h"
-#include "mongo/util/net/listen.h"
 #include "mongo/util/fail_point_service.h"
 #include "mongo/util/time_support.h"
 #include "mongo/util/timer.h"
 #include "mongo/unittest/unittest.h"
 
 #include <vector>
+#include <cstdlib>
+#include <algorithm>
 #include <boost/scoped_ptr.hpp>
 #include <boost/thread/thread.hpp>
+
+// WIN32 headers included by platform/basic.h
+#if defined(_WIN32)
+    // Initialize Winsock
+    struct WinsockInit {
+        WinsockInit() {
+
+            WSADATA wsaData;
+            int iResult;
+
+            iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+            if (iResult != 0) {
+                printf("WSAStartup failed: %d\n", iResult);
+            }
+        }
+
+        ~WinsockInit() { WSACleanup(); }
+    } winsock_init;
+#else
+    #include <arpa/inet.h>
+    #include <sys/socket.h>
+    #include <netdb.h>
+    #include <unistd.h>
+    #include <sys/types.h>
+    #include <fcntl.h>
+    #include <sys/time.h>
+#endif
 
 /**
  * Tests for ScopedDbConnection, particularly in connection pool management.
@@ -45,49 +72,190 @@ using std::vector;
 namespace {
     const string TARGET_HOST = "localhost:27017";
     const int TARGET_PORT = 27017;
-
-    mongo::mutex shutDownMutex("shutDownMutex");
-    bool shuttingDown = false;
 }
 
 namespace mongo {
 
-    class TestListener : public Listener {
-        public:
-            TestListener() : Listener("test", "", TARGET_PORT) {}
+    struct SocketAddress {
+        SocketAddress() {
+            size = sizeof(address);
+            memset(&address, 0, size);
+        }
 
-            void accepted(boost::shared_ptr<Socket> psocket, long long connectionId) {}
+        SocketAddress(int port) {
+            size = sizeof(address);
+            memset(&address, 0, size);
+            address.sin_family = AF_INET;
+            address.sin_port = htons(port);
+            address.sin_addr.s_addr = INADDR_ANY;
+        }
+
+        sockaddr* get_address() {
+            return reinterpret_cast<sockaddr*>(&address);
+        }
+
+        socklen_t size;
+        sockaddr_in address;
+    };
+
+    class TCPSocket {
+        public:
+
+            TCPSocket(SocketAddress sa, int fd) : _sa(sa), _fd(fd) { init(); }
+            TCPSocket(int port) : _sa(port) { init(); }
+            ~TCPSocket() { close(); }
+
+            void init() {
+                _closed = false;
+                _fd = socket(PF_INET, SOCK_STREAM, 0);
+
+                if (_fd == -1) {
+                    perror("Failed to get file descriptor");
+                    std::abort();
+                }
+            }
+
+            void set_opt(int optname, int optval=true) {
+                char * p_opt = reinterpret_cast<char*>(&optval);
+                int optset = ::setsockopt(_fd, SOL_SOCKET, optname, p_opt, sizeof(optval));
+                if (optset < 0) {
+                    perror("Failed to set socket opts");
+                    close();
+                    std::abort();
+                }
+            }
+
+            void bind() {
+                int bound = ::bind(_fd, _sa.get_address(), _sa.size);
+                if (bound != 0) {
+                    perror("Failed to bind");
+                    close();
+                    std::abort();
+                }
+            }
+
+            void listen() {
+                int listening = ::listen(_fd, 1);
+                if (listening != 0) {
+                    perror("Failed to listen");
+                    close();
+                    std::abort();
+                }
+            }
+
+            void close() {
+                if (!_closed) {
+#if defined(_WIN32)
+                    ::shutdown(_fd, SD_BOTH); // this is SHUT_RDWR on linux and SD_BOTH on windows
+                    ::closesocket(_fd);
+#else
+                    ::shutdown(_fd, SHUT_RDWR);
+                    ::close(_fd);
+#endif
+                    _closed = true;
+                    _fd = -1;
+                }
+            }
+
+            int raw() {
+                return _fd;
+            }
+
+            TCPSocket* accept() {
+                SocketAddress client_sa;
+                int client_fd;
+                if ((client_fd= ::accept(_fd, client_sa.get_address(), &client_sa.size)) == -1) {
+                    perror("accept");
+                    std::abort();
+                } else {
+                    return new TCPSocket(client_sa, client_fd);
+                }
+            }
+
+        private:
+            SocketAddress _sa;
+            int _fd;
+            bool _closed;
+    };
+
+    class TCPServer {
+        public:
+            TCPServer(int port) : _server_sock(port) {
+                _server_sock.set_opt(SO_REUSEADDR);
+                _server_sock.bind();
+                _server_sock.listen();
+            }
+
+            ~TCPServer() {
+                close_clients();
+                _server_sock.close();
+            }
+
+            void start() {
+                _running = true;
+                int server_fd = _server_sock.raw();
+                const timeval delay = {0, 10000};
+                fd_set server_fd_set;
+                fd_set readable_fd_set;
+                FD_ZERO(&server_fd_set);
+                FD_SET(server_fd, &server_fd_set);
+                readable_fd_set = server_fd_set;
+
+                while (_running) {
+                    timeval t = delay;
+                    int selected = ::select(server_fd + 1, &readable_fd_set, NULL, NULL, &t);
+
+                    if (selected == -1) {
+                        perror("select");
+                        std::abort();
+                    }
+                    else if (selected > 0 && FD_ISSET(server_fd, &readable_fd_set)) {
+                        TCPSocket* p_new_sock = _server_sock.accept();
+                        _client_socks.push_back(p_new_sock);
+                    }
+
+                    // reset readable_fd_set and t
+                    readable_fd_set = server_fd_set;
+                }
+            }
+
+            void stop() {
+                _running = false;
+            }
+
+            void close_clients() {
+                vector<TCPSocket*>::iterator it;
+                for (it = _client_socks.begin(); it != _client_socks.end(); ++it)
+                    delete *it;
+            }
 
             void operator()() {
-                Listener::setupSockets();
-                Listener::initAndListen();
+                start();
             }
+
+        private:
+            vector<TCPSocket*> _client_socks;
+            TCPSocket _server_sock;
+            bool _running;
     };
 
     class DummyServerFixture : public ::testing::Test {
         public:
             DummyServerFixture() {
-                _listener = new TestListener();
-                _thread = new boost::thread(boost::ref(*_listener));
+                _server = new TCPServer(TARGET_PORT);
+                _thread = new boost::thread(boost::ref(*_server));
                 _maxPoolSizePerHost = mongo::PoolForHost::getMaxPerHost();
             }
 
             ~DummyServerFixture() {
-                mongo::ListeningSockets::get()->closeAll();
                 mongo::PoolForHost::setMaxPerHost(_maxPoolSizePerHost);
                 mongo::ScopedDbConnection::clearPool();
 
-                // exit the listen loop by shutting down
-                {
-                    scoped_lock sl(shutDownMutex);
-                    shuttingDown = true;
-                }
-
-                // ensure listener thread is finished before delete
+                _server->stop();
                 _thread->join();
 
                 delete _thread;
-                delete _listener;
+                delete _server; // refered to server must outlive thread
             }
 
         protected:
@@ -143,7 +311,7 @@ namespace mongo {
             }
 
         private:
-            TestListener* _listener;
+            TCPServer* _server;
             boost::thread* _thread;
             uint32_t _maxPoolSizePerHost;
     };
