@@ -161,39 +161,8 @@ namespace mongo {
             bool _closed;
     };
 
-
-    class ShutdownPipe {
-        public:
-
-            ShutdownPipe() {
-                int pipe_fds[2];
-                ::pipe(pipe_fds);
-                _recv_fd = pipe_fds[0];
-                _send_fd = pipe_fds[1];
-                ::fcntl(_send_fd, F_SETFL, O_NONBLOCK);
-            }
-
-            virtual ~ShutdownPipe() {
-                ::close(_send_fd);
-                ::close(_recv_fd);
-            }
-
-            int select_fd() {
-                return _recv_fd;
-            }
-
-            void notify() {
-                write(_send_fd, "1", 1);
-            }
-
-        private:
-            int _recv_fd;
-            int _send_fd;
-    };
-
     class TCPServer {
         public:
-
             TCPServer(int port) : _server_sock(port) {
                 _server_sock.set_opt(SO_REUSEADDR);
                 _server_sock.set_nonblocking();
@@ -201,30 +170,41 @@ namespace mongo {
                 _server_sock.listen();
             }
 
+            ~TCPServer() {
+                close_clients();
+                _server_sock.close();
+            }
+
             void start() {
                 _running = true;
                 int server_fd = _server_sock.raw();
-                int pipe_fd = _shutdown_pipe.select_fd();
-                init_fd_sets(server_fd, pipe_fd);
-                while (_running && ::select(_fd_max + 1, &_read_fds, NULL, NULL, NULL) != -1) {
-                    // regular client connection
-                    if (FD_ISSET(server_fd, &_read_fds)) {
+                const timeval delay = {0, 10000};
+                fd_set server_fd_set;
+                fd_set readable_fd_set;
+                FD_ZERO(&server_fd_set);
+                FD_SET(server_fd, &server_fd_set);
+                readable_fd_set = server_fd_set;
+
+                while (_running) {
+                    timeval t = delay;
+                    int selected = ::select(server_fd + 1, &readable_fd_set, NULL, NULL, &t);
+
+                    if (selected == -1) {
+                        perror("select");
+                        std::exit(7);
+                    }
+                    else if (selected > 0 && FD_ISSET(server_fd, &readable_fd_set)) {
                         TCPSocket* p_new_sock = _server_sock.accept();
                         _client_socks.push_back(p_new_sock);
-                    } else {
-                        FD_CLR(server_fd, &_select_fds);
                     }
 
-                    // reset fd_set to the original list of descriptors
-                    _read_fds = _select_fds;
+                    // reset readable_fd_set and t
+                    readable_fd_set = server_fd_set;
                 }
             }
 
             void stop() {
                 _running = false;
-                _shutdown_pipe.notify();
-                close_clients();
-                _server_sock.close();
             }
 
             void close_clients() {
@@ -238,22 +218,8 @@ namespace mongo {
             }
 
         private:
-
-            void init_fd_sets(int server_fd, int pipe_fd) {
-                _fd_max = std::max(server_fd, pipe_fd);
-                FD_ZERO(&_select_fds);
-                FD_ZERO(&_read_fds);
-                FD_SET(server_fd, &_select_fds);
-                FD_SET(pipe_fd, &_select_fds);
-                _read_fds = _select_fds;
-            }
-
             vector<TCPSocket*> _client_socks;
             TCPSocket _server_sock;
-            fd_set _select_fds;
-            fd_set _read_fds;
-            int _fd_max;
-            ShutdownPipe _shutdown_pipe;
             bool _running;
     };
 
