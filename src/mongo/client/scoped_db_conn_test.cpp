@@ -28,14 +28,16 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/thread/thread.hpp>
 
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <sys/time.h>
-
+// WIN32 headers included by platform/basic.h
+#ifndef _WIN32
+    #include <arpa/inet.h>
+    #include <sys/socket.h>
+    #include <netdb.h>
+    #include <unistd.h>
+    #include <sys/types.h>
+    #include <fcntl.h>
+    #include <sys/time.h>
+#endif
 
 /**
  * Tests for ScopedDbConnection, particularly in connection pool management.
