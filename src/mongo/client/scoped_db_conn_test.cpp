@@ -13,12 +13,10 @@
  *    limitations under the License.
  */
 
+#include "mongo/platform/basic.h"
 #include "mongo/base/init.h"
 #include "mongo/client/connpool.h"
 #include "mongo/platform/cstdint.h"
-// #include "mongo/util/net/message_port.h"
-// #include "mongo/util/net/message_server.h"
-// #include "mongo/util/net/listen.h"
 #include "mongo/util/fail_point_service.h"
 #include "mongo/util/time_support.h"
 #include "mongo/util/timer.h"
@@ -30,17 +28,13 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/thread/thread.hpp>
 
-#if _WIN32
-    #include <winsock2.h>
-#else
-    #include <arpa/inet.h>
-    #include <sys/socket.h>
-    #include <netdb.h>
-    #include <unistd.h>
-#endif
-
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <sys/time.h>
 
 
 /**
@@ -69,6 +63,7 @@ namespace mongo {
             size = sizeof(address);
             memset(&address, 0, size);
         }
+
         SocketAddress(int port) {
             size = sizeof(address);
             memset(&address, 0, size);
@@ -76,18 +71,22 @@ namespace mongo {
             address.sin_port = htons(port);
             address.sin_addr.s_addr = INADDR_ANY;
         }
+
         sockaddr* get_address() {
             return reinterpret_cast<sockaddr*>(&address);
         }
+
         socklen_t size;
         sockaddr_in address;
     };
 
     class TCPSocket {
         public:
+
             TCPSocket(SocketAddress sa, int fd) : _sa(sa), _fd(fd) { init(); }
             TCPSocket(int port) : _sa(port) { init(); }
             ~TCPSocket() { close(); }
+
             void init() {
                 _closed = false;
                 _fd = socket(PF_INET, SOCK_STREAM, 0);
@@ -97,6 +96,7 @@ namespace mongo {
                     std::exit(1);
                 }
             }
+
             void set_opt(int optname, int optval=true) {
                 int optset = ::setsockopt(_fd, SOL_SOCKET, optname, &optval, sizeof(optval));
                 if (optset < 0) {
@@ -105,6 +105,7 @@ namespace mongo {
                     std::exit(2);
                 }
             }
+
             void set_nonblocking() {
                 int nonblock_set = ::fcntl(_fd, F_SETFL, O_NONBLOCK);
                 if (nonblock_set == -1) {
@@ -112,6 +113,7 @@ namespace mongo {
                     std::exit(3);
                 }
             }
+
             void bind() {
                 int bound = ::bind(_fd, _sa.get_address(), _sa.size);
                 if (bound != 0) {
@@ -120,6 +122,7 @@ namespace mongo {
                     std::exit(4);
                 }
             }
+
             void listen() {
                 int listening = ::listen(_fd, 1);
                 if (listening != 0) {
@@ -128,15 +131,19 @@ namespace mongo {
                     std::exit(5);
                 }
             }
+
             void close() {
                 if (!_closed) {
+                    ::shutdown(_fd, SHUT_RDWR);
                     ::close(_fd);
                     _closed = true;
                 }
             }
+
             int raw() {
                 return _fd;
             }
+
             TCPSocket* accept() {
                 SocketAddress client_sa;
                 int client_fd;
@@ -147,6 +154,7 @@ namespace mongo {
                     return new TCPSocket(client_sa, client_fd);
                 }
             }
+
         private:
             SocketAddress _sa;
             int _fd;
@@ -156,6 +164,7 @@ namespace mongo {
 
     class ShutdownPipe {
         public:
+
             ShutdownPipe() {
                 int pipe_fds[2];
                 ::pipe(pipe_fds);
@@ -163,6 +172,7 @@ namespace mongo {
                 _send_fd = pipe_fds[1];
                 ::fcntl(_send_fd, F_SETFL, O_NONBLOCK);
             }
+
             virtual ~ShutdownPipe() {
                 ::close(_send_fd);
                 ::close(_recv_fd);
@@ -171,9 +181,11 @@ namespace mongo {
             int select_fd() {
                 return _recv_fd;
             }
+
             void notify() {
                 write(_send_fd, "1", 1);
             }
+
         private:
             int _recv_fd;
             int _send_fd;
@@ -181,49 +193,52 @@ namespace mongo {
 
     class TCPServer {
         public:
+
             TCPServer(int port) : _server_sock(port) {
-                //std::cout << "[SERVER] New server on port " << port << std::endl;
                 _server_sock.set_opt(SO_REUSEADDR);
                 _server_sock.set_nonblocking();
                 _server_sock.bind();
                 _server_sock.listen();
             }
+
             void start() {
                 _running = true;
                 int server_fd = _server_sock.raw();
                 int pipe_fd = _shutdown_pipe.select_fd();
                 init_fd_sets(server_fd, pipe_fd);
-
-                while (_running && ::select(_fd_max + 1, &_select_fds, NULL, NULL, NULL) != -1) {
-                    // notification of shutdown in progress
-                    if (FD_ISSET(pipe_fd, &_select_fds)) {
-                        _running = false;
-                    }
-
+                while (_running && ::select(_fd_max + 1, &_read_fds, NULL, NULL, NULL) != -1) {
                     // regular client connection
-                    else if (FD_ISSET(server_fd, &_select_fds)) {
+                    if (FD_ISSET(server_fd, &_read_fds)) {
                         TCPSocket* p_new_sock = _server_sock.accept();
                         _client_socks.push_back(p_new_sock);
+                    } else {
+                        FD_CLR(server_fd, &_select_fds);
                     }
 
                     // reset fd_set to the original list of descriptors
                     _read_fds = _select_fds;
                 }
             }
+
             void stop() {
+                _running = false;
                 _shutdown_pipe.notify();
                 close_clients();
                 _server_sock.close();
             }
+
             void close_clients() {
                 vector<TCPSocket*>::iterator it;
-                for(it = _client_socks.begin(); it != _client_socks.end(); ++it)
+                for (it = _client_socks.begin(); it != _client_socks.end(); ++it)
                     delete *it;
             }
+
             void operator()() {
                 start();
             }
+
         private:
+
             void init_fd_sets(int server_fd, int pipe_fd) {
                 _fd_max = std::max(server_fd, pipe_fd);
                 FD_ZERO(&_select_fds);
@@ -232,6 +247,7 @@ namespace mongo {
                 FD_SET(pipe_fd, &_select_fds);
                 _read_fds = _select_fds;
             }
+
             vector<TCPSocket*> _client_socks;
             TCPSocket _server_sock;
             fd_set _select_fds;
