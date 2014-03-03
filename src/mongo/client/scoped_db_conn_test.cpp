@@ -29,12 +29,18 @@
 #include <algorithm>
 #include <boost/scoped_ptr.hpp>
 #include <boost/thread/thread.hpp>
-#include <arpa/inet.h>
+
+#if _WIN32
+    #include <winsock2.h>
+#else
+    #include <arpa/inet.h>
+    #include <sys/socket.h>
+    #include <netdb.h>
+    #include <unistd.h>
+#endif
+
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
 #include <fcntl.h>
-#include <unistd.h>
 
 
 /**
