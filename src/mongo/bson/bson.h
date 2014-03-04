@@ -38,7 +38,13 @@
 #error bson.h is for C++ driver consumer use only
 #endif
 
+// Consumers of the MongoDB C++ client library must define STATIC_LIBMONGOCLIENT when including
+// this header if they intend to link against the static version of the library. This is best
+// handled by adding STATIC_LIBMONGOCLIENT to the list of definitions passed on each compile
+// invocation.
+#ifndef STATIC_LIBMONGOCLIENT
 #define LIBMONGOCLIENT_CONSUMER
+#endif
 
 #include "mongo/client/redef_macros.h"
 
