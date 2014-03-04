@@ -378,15 +378,14 @@ if installSetup.headers or installSetup.libraries:
         include_bsonh_test,
     ])
 
-# Compile the example files to .o so that we can link them twice: once statically, once shared.
-exampleObjMap = [(target, clientEnv.Object(source)) for (target, source) in exampleSourceMap]
-
 staticClientEnv = clientEnv.Clone()
 staticClientEnv.PrependUnique(LIBDEPS=[mongoClientStaticLib])
 staticClientEnv.AppendUnique(CPPDEFINES=['STATIC_LIBMONGOCLIENT'])
 
 # Build each statically linked client program
-staticClientPrograms = [staticClientEnv.Program(target, obj) for (target, obj) in exampleObjMap]
+staticClientPrograms = [
+    staticClientEnv.Program(target, source) for (target, source) in exampleSourceMap
+]
 
 # Install them to the root, and append the install targets to the list of client tests
 clientTests = staticClientEnv.Install("#/", staticClientPrograms)
@@ -403,6 +402,10 @@ if buildShared:
         LIBDEPS=mongoClientLibDeps,
     )
 
+    # Pretend that these files are shared object suffixed so they don't conflict with the objects
+    # for the static library.
+    sharedClientEnv['OBJSUFFIX'] = sharedClientEnv['SHOBJSUFFIX']
+
     # Deal with the different lookup models between regular UNIX and Darwin. For regular unix,
     # we set $ORIGIN to pull the copy we run against from the current directory
     # (#/sharedclient). On Darwin, the staged copy of the mongoclient dylib in #sharedclient
@@ -413,7 +416,8 @@ if buildShared:
             RPATH=[sharedClientEnv.Literal("\\$$ORIGIN")])
 
     sharedClientPrograms = [
-        sharedClientEnv.Program("sharedclient/" + target, obj) for (target, obj) in exampleObjMap]
+        sharedClientEnv.Program(
+            "sharedclient/" + target, source) for (target, source) in exampleSourceMap]
     libEnv.Depends(sharedClientPrograms, mongoClientInstalls)
 
     sharedClientProgramInstalls = sharedClientEnv.Install("#/sharedclient", sharedClientPrograms)
