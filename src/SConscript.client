@@ -383,6 +383,7 @@ exampleObjMap = [(target, clientEnv.Object(source)) for (target, source) in exam
 
 staticClientEnv = clientEnv.Clone()
 staticClientEnv.PrependUnique(LIBDEPS=[mongoClientStaticLib])
+staticClientEnv.AppendUnique(CPPDEFINES=['STATIC_LIBMONGOCLIENT'])
 
 # Build each statically linked client program
 staticClientPrograms = [staticClientEnv.Program(target, obj) for (target, obj) in exampleObjMap]
