@@ -38,20 +38,12 @@
 #error bson.h is for C++ driver consumer use only
 #endif
 
-#ifdef _MSVC_VER
-#pragma warning(push)
-#pragma warning(disable:4251)
-#endif
-
 // Consumers of the MongoDB C++ client library must define STATIC_LIBMONGOCLIENT when including
 // this header if they intend to link against the static version of the library. This is best
 // handled by adding STATIC_LIBMONGOCLIENT to the list of definitions passed on each compile
 // invocation.
 #ifndef STATIC_LIBMONGOCLIENT
 #define LIBMONGOCLIENT_CONSUMER
-#endif
-#if defined(STATIC_LIBMONGOCLIENT) && defined(LIBMONGOCLIENT_CONSUMER)
-#error "Must not define both STATIC_LIBMONGOCLIENT and LIBMONGOCLIENT_CONSUMER"
 #endif
 
 #include "mongo/client/redef_macros.h"
@@ -68,7 +60,3 @@
 #include "mongo/bson/util/builder.h"
 
 #include "mongo/client/undef_macros.h"
-
-#ifdef BOOST_MSVC
-#pragma warning(pop)
-#endif
