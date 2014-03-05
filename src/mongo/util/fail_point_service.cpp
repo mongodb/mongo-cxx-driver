@@ -36,3 +36,5 @@ namespace mongo {
         return _fpRegistry.get();
     }
 }
+
+MONGO_INITIALIZER_FUNCTION_ASSURE_FILE(util_fail_point_service)

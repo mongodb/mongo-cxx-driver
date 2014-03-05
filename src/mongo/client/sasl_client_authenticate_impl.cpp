@@ -251,3 +251,5 @@ namespace {
 
 }  // namespace
 }  // namespace mongo
+
+MONGO_INITIALIZER_FUNCTION_ASSURE_FILE(client_sasl_client_authenticate_impl)

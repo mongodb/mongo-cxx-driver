@@ -1410,6 +1410,10 @@ def doConfigure(myenv):
         conf.FindSysLibDep( "v8", v8_lib_choices )
 
     conf.env['MONGO_BUILD_SASL_CLIENT'] = bool(has_option("use-sasl-client"))
+
+    if conf.env['MONGO_BUILD_SASL_CLIENT']:
+        env.Append( CPPDEFINES=["MONGO_SASL"] )
+
     if conf.env['MONGO_BUILD_SASL_CLIENT'] and not conf.CheckLibWithHeader(
             "sasl2", 
             ["stddef.h","sasl/sasl.h"], 

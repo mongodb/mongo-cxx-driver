@@ -930,3 +930,5 @@ namespace mongo {
     }
 #endif // #ifdef MONGO_SSL
 }
+
+MONGO_INITIALIZER_FUNCTION_ASSURE_FILE(util_net_ssl_manager)
