@@ -404,7 +404,7 @@ if buildShared:
 
     # Pretend that these files are shared object suffixed so they don't conflict with the objects
     # for the static library.
-    sharedClientEnv['OBJSUFFIX'] = sharedClientEnv['SHOBJSUFFIX']
+    sharedClientEnv['OBJSUFFIX'] = sharedClientEnv['OBJSUFFIX'] + 's'
 
     # Deal with the different lookup models between regular UNIX and Darwin. For regular unix,
     # we set $ORIGIN to pull the copy we run against from the current directory
@@ -423,7 +423,7 @@ if buildShared:
     sharedClientProgramInstalls = sharedClientEnv.Install("#/sharedclient", sharedClientPrograms)
     clientTests.extend(sharedClientProgramInstalls)
 
-clientEnv.Alias('clientTests', clientTests, [])
+clientEnv.Alias('clientTests', clientTests)
 
 # NOTE: There must be a mongod listening on 127.0.0.1:27999 (the traditional mongodb smoke test
 # port) for the smokeClient target to run. In the server repo that is no problem, the smoke.py
