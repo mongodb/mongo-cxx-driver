@@ -60,3 +60,4 @@ namespace mongo {
 
 
 
+MONGO_INITIALIZER_FUNCTION_ASSURE_FILE(util_net_socket_poll)

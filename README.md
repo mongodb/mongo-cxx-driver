@@ -9,8 +9,8 @@ the server sources: this repo is the only approved source for driver builds.
 
 ## Components
 
-  libmongoclient.[so|dylib|dll] - The shared mongoclient library
-  libmongoclient.a - The static mongoclient library (but see notes)
+  libmongoclient.[so|dylib|dll] - The shared mongoclient library (but see notes)
+  libmongoclient.a - The static mongoclient library
 
 ## Building
 
@@ -21,11 +21,11 @@ the server sources: this repo is the only approved source for driver builds.
 
 ## Notes
 
-  Use of the static library is discouraged, and support may be removed soon. To properly
-  link against the static library on ELF platforms, you must link it with the
-  --whole-archive flag to ld. The static library is not useable on Windows since
-  there is no analogue to --whole-archive. The static library may work on OS X, but
-  we still strongly recommend using the dynamic library.
+  Use of the shared library is experimental on windows and is currently
+  discouraged.  This is primarily due to the complexity of ensuring a matching
+  implementation of STL types between library and consumer code.  This problem
+  is unique to windows, as the consistent use of system libraries largely
+  mitigates this danger.
 
 ## Documentation
 

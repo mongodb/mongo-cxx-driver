@@ -130,3 +130,6 @@
  * named "NAME".
  */
 #define _MONGO_INITIALIZER_FUNCTION_NAME(NAME) _mongoInitializerFunction_##NAME
+
+#define MONGO_INITIALIZER_FUNCTION_ASSURE_FILE(NAME) \
+    namespace mongo { void _mongoInitializerFunctionAssure_##NAME() {} }

@@ -132,3 +132,5 @@ namespace logger {
 
 }  // namespace logger
 }  // namespace mongo
+
+MONGO_INITIALIZER_FUNCTION_ASSURE_FILE(logger_logstream_builder)

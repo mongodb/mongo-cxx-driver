@@ -24,6 +24,29 @@ namespace mongo {
     Initializer::Initializer() {}
     Initializer::~Initializer() {}
 
+/* This array of function pointers is necessary to force inclusion of
+ * translation units with global initializers when linking against a static
+ * archive version of the client.  In their absence, the related code may
+ * resolve no symbols in a potential output binary, failing to pull in the
+ * initializers and leaving the client in a broken state.
+ *
+ * Working around this with --whole-archive or an equivalent is painful where
+ * possible and renders the static archive useless where not possible (on
+ * windows).
+ *
+ * Sorry for the hack...
+ */
+#define INSTALL_FUNCTION(NAME) void _mongoInitializerFunctionAssure_##NAME();
+#include "mongo/base/initializer_functions.h"
+#undef INSTALL_FUNCTION
+
+    void (* _mongoGlobalInitializers [])() = {
+#define INSTALL_FUNCTION(NAME) &(_mongoInitializerFunctionAssure_##NAME),
+#include "mongo/base/initializer_functions.h"
+#undef INSTALL_FUNCTION
+    NULL
+    };
+
     Status Initializer::execute(const InitializerContext::ArgumentVector& args,
                                 const InitializerContext::EnvironmentMap& env) const {
 
