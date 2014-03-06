@@ -1,3 +1,5 @@
+// @file init.h
+
 /* Copyright 2013 10gen Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +24,16 @@
 // library. The below functions are not defined in servers like mongos or mongod, which have
 // their own initialization strategy.
 
+/**
+ * @namespace mongo
+ * @brief the main MongoDB namespace
+ */
 namespace mongo {
+
+/**
+ * @namespace mongo::client
+ * @brief the MongoDB C++ driver namespace
+ */
 namespace client {
 
     const int kDefaultShutdownGracePeriodMillis = 250;
