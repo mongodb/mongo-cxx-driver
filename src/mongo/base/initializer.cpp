@@ -24,6 +24,17 @@ namespace mongo {
     Initializer::Initializer() {}
     Initializer::~Initializer() {}
 
+#define INSTALL_FUNCTION(NAME, _ig) void _mongoInitializerFunctionAssure_##NAME();
+#include "mongo/base/initializer_functions.h"
+#undef INSTALL_FUNCTION
+
+    void (* _mongoGlobalInitializers [])() = {
+#define INSTALL_FUNCTION(NAME, _ig) &(_mongoInitializerFunctionAssure_##NAME),
+#include "mongo/base/initializer_functions.h"
+#undef INSTALL_FUNCTION
+    NULL
+    };
+
     Status Initializer::execute(const InitializerContext::ArgumentVector& args,
                                 const InitializerContext::EnvironmentMap& env) const {
 

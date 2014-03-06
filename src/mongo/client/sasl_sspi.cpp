@@ -14,6 +14,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/base/init.h"
+
 #ifdef _WIN32
 
 #define SECURITY_WIN32 1 // Required for SSPI support.
@@ -25,7 +27,6 @@
 #include <sasl/saslplug.h>
 #include <sspi.h>
 
-#include "mongo/base/init.h"
 #include "mongo/util/mongoutils/str.h"
 #include "mongo/base/status.h"
 #include "mongo/util/scopeguard.h"
@@ -527,3 +528,5 @@ namespace {
 } // namespace mongo
 
 #endif // ifdef _WIN32
+
+MONGO_INITIALIZER_FUNCTION_ASSURE_FILE(client_sasl_sspi)

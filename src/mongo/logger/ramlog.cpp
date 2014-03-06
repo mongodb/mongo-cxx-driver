@@ -245,3 +245,5 @@ namespace {
         return Status::OK();
     }
 }
+
+MONGO_INITIALIZER_FUNCTION_ASSURE_FILE(logger_ramlog)

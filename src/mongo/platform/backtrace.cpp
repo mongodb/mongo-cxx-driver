@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/base/init.h"
+
 #if !defined(_WIN32)
 #if defined(__sunos__) || !defined(MONGO_HAVE_EXECINFO_BACKTRACE)
 
@@ -25,7 +27,6 @@
 #include <ucontext.h>
 #include <vector>
 
-#include "mongo/base/init.h"
 #include "mongo/base/status.h"
 
 using std::string;
@@ -213,3 +214,5 @@ namespace {
 
 #endif // #if defined(__sunos__)
 #endif // #if !defined(_WIN32)
+
+MONGO_INITIALIZER_FUNCTION_ASSURE_FILE(platform_backtrace)
