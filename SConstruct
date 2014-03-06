@@ -681,13 +681,13 @@ elif linux:
     if os.uname()[4] == "x86_64" and not force32:
         linux64 = True
         nixLibPrefix = "lib64"
-        env.Append( EXTRALIBPATH=["/usr/lib64" , "/lib64" ] )
+        env.Append( EXTRALIBPATH=["/usr/lib64" , "/lib64", "/usr/lib/x86_64-linux-gnu"] )
         env.Append( LIBS=["pthread"] )
 
         force64 = False
 
     if force32:
-        env.Append( EXTRALIBPATH=["/usr/lib32"] )
+        env.Append( EXTRALIBPATH=["/usr/lib32", "/usr/lib/i386-linux-gnu"] )
         env.Append( CCFLAGS=["-mmmx"] )
 
     if static:
