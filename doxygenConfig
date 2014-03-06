@@ -2,7 +2,7 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
-PROJECT_NAME           = MongoDB C++ Driver
+PROJECT_NAME           = "MongoDB C++ Driver"
 PROJECT_NUMBER         = 0.0
 OUTPUT_DIRECTORY       = docs/doxygen
 CREATE_SUBDIRS         = NO
