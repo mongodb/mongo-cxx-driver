@@ -20,6 +20,7 @@
 #include <string>
 
 #include "mongo/bson/util/misc.h"
+#include "mongo/client/export_macros.h"
 #include "mongo/util/hex.h"
 
 namespace mongo {
@@ -39,7 +40,7 @@ namespace mongo {
         be stored big endian unlike the rest of BSON. This is because they are compared byte-by-byte and we want to ensure
         a mostly increasing order.
     */
-    class OID {
+    class MONGO_CLIENT_API OID {
     public:
         OID() : a(0), b(0) { }
 
@@ -142,7 +143,7 @@ namespace mongo {
     };
 #pragma pack()
 
-    std::ostream& operator<<( std::ostream &s, const OID &o );
+    MONGO_CLIENT_API std::ostream& operator<<( std::ostream &s, const OID &o );
     inline StringBuilder& operator<< (StringBuilder& s, const OID& o) { return (s << o.str()); }
 
     /** Formatting mode for generating JSON from BSON.
@@ -158,7 +159,5 @@ namespace mongo {
         /** Javascript JSON compatible */
         JS
     };
-
-     std::ostream& operator<<( std::ostream &s, const OID &o );
 
 }
