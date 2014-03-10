@@ -53,13 +53,14 @@ int main() {
     bo empty;
     cout << "empty: " << empty << endl;
 
-    /* make a simple { _id : <generated>, name : 'joe', age : 33.7 } object */
+    /* make a simple { _id : <generated>, when : <now>, name : 'joe', age : 33.7 } object */
     {
         const mongo::OID generated = mongo::OID::gen();
         cout << "Generated an OID: " << generated << endl;
 
         bob b;
         b.append("_id", generated);
+        b.append("when", mongo::jsTime());
         b.append("name", "joe");
         b.append("age", 33.7);
         bo result = b.obj();
