@@ -61,7 +61,6 @@ namespace mongo {
 
 using namespace mongo;
 using namespace mongoutils;
-using boost::shared_ptr;
 
 #define DBTEST_SHIM_TEST_NAMED(klass, name, ...)     \
     TEST(klass, name) {                              \

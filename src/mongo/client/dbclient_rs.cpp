@@ -139,6 +139,8 @@ namespace {
     }
 } // namespace
 
+    using boost::shared_ptr;
+
     // --------------------------------
     // ----- DBClientReplicaSet ---------
     // --------------------------------

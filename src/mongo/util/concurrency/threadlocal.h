@@ -23,8 +23,6 @@
 
 namespace mongo { 
 
-    using boost::thread_specific_ptr;
-
     /* thread local "value" rather than a pointer
        good for things which have copy constructors (and the copy constructor is fast enough)
        e.g.
@@ -162,7 +160,7 @@ namespace mongo {
 
     template< class T >
     struct TSP {
-        thread_specific_ptr<T> tsp;
+        boost::thread_specific_ptr<T> tsp;
     public:
         T* get() const { return tsp.get(); }
         void reset(T* v) { tsp.reset(v); }
