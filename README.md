@@ -1,4 +1,4 @@
-# MongoDB Legacy C++ Driver [![Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.png?branch=legacy)](https://travis-ci.org/mongodb/mongo-cxx-driver)
+# MongoDB Legacy C++ Driver [![Build Status](http://img.shields.io/travis/mongodb/mongo-cxx-driver/legacy.svg)](https://travis-ci.org/mongodb/mongo-cxx-driver)
 Welcome to the MongoDB Legacy C++ Driver!
 
 This driver is an extraction of the "Server C++ Driver" from the primary
