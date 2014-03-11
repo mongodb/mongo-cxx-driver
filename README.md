@@ -9,8 +9,8 @@ the server sources: this repo is the only approved source for driver builds.
 
 ## Components
 
-  libmongoclient.[so|dylib|dll] - The shared mongoclient library (but see notes)
-  libmongoclient.a - The static mongoclient library
+  - `libmongoclient.[so|dylib|dll]` - The shared mongoclient library (but see notes)
+  - `libmongoclient.a` - The static mongoclient library
 
 ## Building
 
