@@ -136,7 +136,7 @@ namespace mongo {
     long long getJSTimeVirtualThreadSkew();
 
     /** Date_t is milliseconds since epoch */
-     Date_t jsTime();
+    MONGO_CLIENT_API Date_t jsTime();
 
     /** warning this will wrap */
     unsigned curTimeMicros();
