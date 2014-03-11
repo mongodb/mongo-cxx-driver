@@ -27,8 +27,8 @@
 
 #include "mongo/platform/basic.h"
 
+// TODO: Remove after removing 'using namespace std', or this header doesn't compile
 #include <ctime>
-#include <cstring>
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
