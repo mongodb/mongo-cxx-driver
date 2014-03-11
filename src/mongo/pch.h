@@ -25,8 +25,6 @@
 // system headers and boost headers
 #include "mongo/client/undef_macros.h"
 
-#include "mongo/platform/basic.h"
-
 // TODO: Remove after removing 'using namespace std', or this header doesn't compile
 #include <ctime>
 
