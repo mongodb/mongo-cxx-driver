@@ -46,8 +46,6 @@
 
 
 #define BOOST_FILESYSTEM_VERSION 3
-#include <boost/shared_ptr.hpp>
-
 #include "mongo/client/redef_macros.h"
 
 #include "mongo/client/export_macros.h"
@@ -56,7 +54,6 @@
 namespace mongo {
 
     using namespace std;
-    using boost::shared_ptr;
 
     void dbexit( ExitCode returnCode, const char *whyMsg = "" );
 
