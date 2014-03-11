@@ -21,6 +21,7 @@
 
 #include "mongo/base/parse_number.h"
 #include "mongo/db/jsobj.h"
+#include "mongo/util/goodies.h"
 
 namespace mongo {
 

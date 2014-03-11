@@ -16,14 +16,26 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/util/base64.h"
+
+#include <sstream>
+
+#include "mongo/util/assert_util.h"
 
 namespace mongo {
     namespace base64 {
 
+        using std::string;
+        using std::stringstream;
+
         Alphabet alphabet;
+
+        void Alphabet::test() {
+            verify( strlen( (char*)encode ) == 64 );
+            for ( int i=0; i<26; i++ )
+                verify( encode[i] == toupper( encode[i+26] ) );
+        }
+
 
         void encode( stringstream& ss , const char * data , int size ) {
             for ( int i=0; i<size; i+=3 ) {

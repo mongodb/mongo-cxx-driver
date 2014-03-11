@@ -15,10 +15,12 @@
 
 #include "mongo/util/fail_point_service.h"
 
+#include <boost/scoped_ptr.hpp>
+
 namespace mongo {
     MONGO_FP_DECLARE(dummy); // used by jstests/libs/fail_point.js
 
-    scoped_ptr<FailPointRegistry> _fpRegistry(NULL);
+    boost::scoped_ptr<FailPointRegistry> _fpRegistry(NULL);
 
     MONGO_INITIALIZER(FailPointRegistry)(InitializerContext* context) {
         _fpRegistry.reset(new FailPointRegistry());

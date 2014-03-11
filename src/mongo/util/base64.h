@@ -17,6 +17,12 @@
 
 #pragma once
 
+#include <cstring>
+#include <iosfwd>
+#include <string>
+
+#include <boost/scoped_array.hpp>
+
 namespace mongo {
     namespace base64 {
 
@@ -36,11 +42,8 @@ namespace mongo {
 
                 test();
             }
-            void test() {
-                verify( strlen( (char*)encode ) == 64 );
-                for ( int i=0; i<26; i++ )
-                    verify( encode[i] == toupper( encode[i+26] ) );
-            }
+
+            void test();
 
             char e( int x ) {
                 return encode[x&0x3f];
@@ -55,12 +58,12 @@ namespace mongo {
         extern Alphabet alphabet;
 
 
-        void encode( stringstream& ss , const char * data , int size );
-        string encode( const char * data , int size );
-        string encode( const string& s );
+        void encode( std::stringstream& ss , const char * data , int size );
+        std::string encode( const char * data , int size );
+        std::string encode( const std::string& s );
 
-        void decode( stringstream& ss , const string& s );
-        string decode( const string& s );
+        void decode( std::stringstream& ss , const std::string& s );
+        std::string decode( const std::string& s );
 
         extern const char* chars;
 
