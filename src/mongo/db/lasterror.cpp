@@ -20,6 +20,7 @@
 #include "mongo/db/lasterror.h"
 
 #include "mongo/db/jsobj.h"
+#include "mongo/util/debug_util.h"
 #include "mongo/util/net/message.h"
 
 namespace mongo {

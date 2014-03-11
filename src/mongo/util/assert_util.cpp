@@ -28,6 +28,7 @@ using namespace std;
 
 #include "mongo/bson/bsonobjbuilder.h"
 #include "mongo/db/lasterror.h"
+#include "mongo/util/debug_util.h"
 #include "mongo/util/stacktrace.h"
 
 namespace mongo {
