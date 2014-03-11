@@ -17,6 +17,9 @@
 
 #pragma once
 
+#include <map>
+#include <string>
+
 #include <boost/noncopyable.hpp>
 
 #include "mongo/client/export_macros.h"
