@@ -180,7 +180,7 @@ namespace mongo {
 
     class TCPServer {
         public:
-            TCPServer(int port) : _server_sock(port) {
+            TCPServer(int port) : _server_sock(port), _running(true) {
                 _server_sock.set_opt(SO_REUSEADDR);
                 _server_sock.bind();
                 _server_sock.listen();
@@ -197,7 +197,6 @@ namespace mongo {
             }
 
             void start() {
-                _running = true;
                 int server_fd = _server_sock.raw();
                 const timeval delay = {0, 10000};
                 fd_set server_fd_set;
