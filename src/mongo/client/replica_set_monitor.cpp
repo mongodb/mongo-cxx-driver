@@ -16,8 +16,10 @@
 #include "mongo/client/replica_set_monitor.h"
 
 #include <algorithm>
-#include <boost/thread.hpp>
 #include <limits>
+
+#include <boost/make_shared.hpp>
+#include <boost/thread.hpp>
 
 #include "mongo/client/connpool.h"
 #include "mongo/client/replica_set_monitor_internal.h"
