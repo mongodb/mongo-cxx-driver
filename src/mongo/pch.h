@@ -29,13 +29,6 @@
 
 // TODO: Remove after removing 'using namespace std', or this header doesn't compile
 #include <ctime>
-#include <stdio.h>
-#include <stdlib.h>
-#include <signal.h>
-
-#include <time.h>
-#include <string.h>
-#include <limits.h>
 
 #include "mongo/client/redef_macros.h"
 
