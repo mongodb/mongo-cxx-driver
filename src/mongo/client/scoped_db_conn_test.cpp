@@ -191,6 +191,11 @@ namespace mongo {
                 _server_sock.close();
             }
 
+            bool is_running() {
+                boost::mutex::scoped_lock lock(_mutex);
+                return _running;
+            }
+
             void start() {
                 _running = true;
                 int server_fd = _server_sock.raw();
@@ -201,7 +206,7 @@ namespace mongo {
                 FD_SET(server_fd, &server_fd_set);
                 readable_fd_set = server_fd_set;
 
-                while (_running) {
+                while (is_running()) {
                     timeval t = delay;
                     int selected = ::select(server_fd + 1, &readable_fd_set, NULL, NULL, &t);
 
@@ -220,6 +225,7 @@ namespace mongo {
             }
 
             void stop() {
+                boost::mutex::scoped_lock lock(_mutex);
                 _running = false;
             }
 
@@ -236,6 +242,7 @@ namespace mongo {
         private:
             vector<TCPSocket*> _client_socks;
             TCPSocket _server_sock;
+            boost::mutex _mutex;
             bool _running;
     };
 
