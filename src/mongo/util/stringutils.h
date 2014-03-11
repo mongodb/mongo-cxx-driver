@@ -24,6 +24,8 @@
 
 #include <boost/scoped_array.hpp>
 
+#include "mongo/base/string_data.h"
+
 namespace mongo {
 
     // see also mongoutils/str.h - perhaps move these there?

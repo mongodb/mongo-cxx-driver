@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <boost/noncopyable.hpp>
+
 #include "mongo/client/export_macros.h"
 #include "mongo/pch.h"
 
