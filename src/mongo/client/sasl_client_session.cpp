@@ -16,7 +16,6 @@
 #include "mongo/client/sasl_client_session.h"
 
 #include "mongo/base/init.h"
-#include "mongo/util/allocator.h"
 #include "mongo/util/assert_util.h"
 #include "mongo/util/concurrency/mutex.h"
 #include "mongo/util/mongoutils/str.h"
@@ -24,33 +23,7 @@
 namespace mongo {
 namespace {
 
-    /*
-     * Allocator functions to be used by the SASL library, if the client
-     * doesn't initialize the library for us.
-     */
-
-// Version 2.1.26 is the first version to use size_t in the allocator signatures
-#if (SASL_VERSION_FULL >= ((2 << 16) | (1 << 8) | 26))
-    typedef size_t SaslAllocSize;
-#else
-    typedef unsigned long SaslAllocSize;
-#endif
-
     typedef int(*SaslCallbackFn)();
-
-    void* saslOurMalloc(SaslAllocSize sz) {
-        return ourmalloc(sz);
-    }
-
-    void* saslOurCalloc(SaslAllocSize count, SaslAllocSize size) {
-        void* ptr = calloc(count, size);
-        if (!ptr) printStackAndExit(0);
-        return ptr;
-    }
-
-    void* saslOurRealloc(void* ptr, SaslAllocSize sz) {
-        return ourrealloc(ptr, sz);
-    }
 
     /*
      * Mutex functions to be used by the SASL library, if the client doesn't initialize the library
@@ -80,11 +53,6 @@ namespace {
      * unless the client application has previously initialized the SASL library.
      */
     MONGO_INITIALIZER(CyrusSaslAllocatorsAndMutexes)(InitializerContext*) {
-        sasl_set_alloc(saslOurMalloc,
-                       saslOurCalloc,
-                       saslOurRealloc,
-                       free);
-
         sasl_set_mutex(saslMutexAlloc,
                        saslMutexLock,
                        saslMutexUnlock,
