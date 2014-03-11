@@ -17,6 +17,7 @@
 
 #include "mongo/pch.h"
 
+#include <boost/scoped_ptr.hpp>
 #include <boost/functional/hash.hpp>
 
 #include "mongo/platform/atomic_word.h"
@@ -32,6 +33,8 @@ BOOST_STATIC_ASSERT( sizeof(mongo::OID) == mongo::OID::kOIDSize );
 BOOST_STATIC_ASSERT( sizeof(mongo::OID) == 12 );
 
 namespace mongo {
+
+    using boost::scoped_ptr;
 
     void OID::hash_combine(size_t &seed) const {
         boost::hash_combine(seed, x);

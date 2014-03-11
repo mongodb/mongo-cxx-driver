@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#include <boost/scoped_array.hpp>
+
 #include "mongo/db/jsobj.h"
 #include "mongo/unittest/unittest.h"
 #include "mongo/platform/random.h"
@@ -146,7 +148,7 @@ namespace {
             int32_t fuzzFrequency = fuzzFrequencies[ i ];
 
             // Copy the 'original' BSONObj to 'buffer'.
-            scoped_array<char> buffer( new char[ original.objsize() ] );
+            boost::scoped_array<char> buffer( new char[ original.objsize() ] );
             memcpy( buffer.get(), original.objdata(), original.objsize() );
 
             // Randomly flip bits in 'buffer', with probability determined by 'fuzzFrequency'. The
