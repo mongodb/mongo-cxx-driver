@@ -28,7 +28,7 @@ namespace mongo {
     class ReplicaSetMonitor;
     class TagSet;
     struct ReadPreferenceSetting;
-    typedef shared_ptr<ReplicaSetMonitor> ReplicaSetMonitorPtr;
+    typedef boost::shared_ptr<ReplicaSetMonitor> ReplicaSetMonitorPtr;
 
     /**
      * Holds state about a replica set and provides a means to refresh the local view.
