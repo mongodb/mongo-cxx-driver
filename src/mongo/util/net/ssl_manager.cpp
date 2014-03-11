@@ -25,6 +25,7 @@
 #include "mongo/base/init.h"
 #include "mongo/bson/util/atomic_int.h"
 #include "mongo/util/concurrency/mutex.h"
+#include "mongo/util/log.h"
 #include "mongo/util/mongoutils/str.h"
 #include "mongo/util/net/sock.h"
 #include "mongo/util/net/ssl_options.h"
