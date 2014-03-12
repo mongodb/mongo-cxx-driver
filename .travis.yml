@@ -27,8 +27,6 @@ script:
        --mute
        --quiet
        --prefix=$PREFIX
-       --use-system-boost
-       --full
        --sharedclient
        --ssl
        --use-sasl-client

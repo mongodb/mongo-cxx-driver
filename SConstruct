@@ -27,7 +27,6 @@ import types
 import urllib
 import urllib2
 from buildscripts import utils
-from buildscripts import moduleconfig
 
 import libdeps
 
@@ -39,12 +38,6 @@ else:
 SConsignFile( scons_data_dir + "/sconsign" )
 
 DEFAULT_INSTALL_DIR = "/usr/local"
-
-
-def findSettingsSetup():
-    sys.path.append( "." )
-    sys.path.append( ".." )
-    sys.path.append( "../../" )
 
 def versiontuple(v):
     return tuple(map(int, (v.split("."))))
@@ -128,9 +121,6 @@ def has_option( name ):
 
     return True
 
-def use_system_version_of_library(name):
-    return has_option('use-system-all') or has_option('use-system-' + name)
-
 def get_variant_dir():
     if has_option('variant-dir'):
         return "#build/" + get_option('variant-dir') 
@@ -181,20 +171,14 @@ add_option( "mute" , "do not display commandlines for compiling and linking, to 
 
 # installation/packaging
 add_option( "prefix" , "installation prefix" , 1 , False, default=DEFAULT_INSTALL_DIR )
-add_option( "distname" , "dist name (0.8.0)" , 1 , False )
-add_option( "distmod", "additional piece for full dist name" , 1 , False )
-add_option( "nostrip", "do not strip installed binaries" , 0 , False )
 add_option( "extra-variant-dirs", "extra variant dir components, separated by commas", 1, False)
 add_option( "add-branch-to-variant-dir", "add current git branch to the variant dir", 0, False )
 add_option( "variant-dir", "override variant subdirectory", 1, False )
 
 add_option( "sharedclient", "build a libmongoclient.so/.dll" , 0 , False )
-add_option( "full", "include client and headers when doing scons install", 0 , False )
 
 # linking options
 add_option( "release" , "release build" , 0 , True )
-add_option( "static" , "fully static build" , 0 , False )
-add_option( "static-libstdc++" , "statically link libstdc++" , 0 , False )
 add_option( "lto", "enable link time optimizations (experimental, except with MSVC)" , 0 , True )
 add_option( "dynamic-windows", "dynamically link on Windows", 0, True)
 add_option( "disable-declspec-thread", "don't use __declspec(thread) on Windows", 0, True)
@@ -207,37 +191,18 @@ add_option( "cxx", "compiler to use" , 1 , True )
 add_option( "cc", "compiler to use for c" , 1 , True )
 add_option( "cc-use-shell-environment", "use $CC from shell for C compiler" , 0 , False )
 add_option( "cxx-use-shell-environment", "use $CXX from shell for C++ compiler" , 0 , False )
-add_option( "ld", "linker to use" , 1 , True )
 add_option( "c++11", "enable c++11 support (experimental)", 0, True )
 
 add_option( "cpppath", "Include path if you have headers in a nonstandard directory" , 1 , False )
 add_option( "libpath", "Library path if you have libraries in a nonstandard directory" , 1 , False )
 
 add_option( "extrapath", "comma separated list of add'l paths  (--extrapath /opt/foo/,/foo) static linking" , 1 , False )
-add_option( "extrapathdyn", "comma separated list of add'l paths  (--extrapath /opt/foo/,/foo) dynamic linking" , 1 , False )
 add_option( "extralib", "comma separated list of libraries  (--extralib js_static,readline" , 1 , False )
 
-add_option( "no-glibc-check" , "don't check for new versions of glibc" , 0 , False )
-
-# experimental features
-add_option( "mm", "use main memory instead of memory mapped files" , 0 , True )
-add_option( "asio" , "Use Asynchronous IO (NOT READY YET)" , 0 , True )
 add_option( "ssl" , "Enable SSL" , 0 , True )
 
 # library choices
-add_option( "usev8" , "use v8 for javascript" , 0 , True )
 add_option( "libc++", "use libc++ (experimental, requires clang)", 0, True )
-
-# mongo feature options
-add_option( "noshell", "don't build shell" , 0 , True )
-add_option( "safeshell", "don't let shell scripts run programs (still, don't run untrusted scripts)" , 0 , True )
-add_option( "win2008plus",
-            "use newer operating system API features (deprecated, use win-version-min instead)" ,
-            0 , False )
-
-# dev options
-add_option( "d", "debug build no optimization, etc..." , 0 , True , "debugBuild" )
-add_option( "dd", "debug build no optimization, additional debug logging, etc..." , 0 , True , "debugBuildAndLogging" )
 
 # new style debug and optimize flags
 add_option( "dbg", "Enable runtime debugging checks", 1, True, "dbg",
@@ -250,52 +215,9 @@ sanitizer_choices = ["address", "memory", "thread", "undefined"]
 add_option( "sanitize", "enable selected sanitizer", 1, True,
             type="choice", choices=sanitizer_choices, default=None )
 
-add_option( "durableDefaultOn" , "have durable default to on" , 0 , True )
-add_option( "durableDefaultOff" , "have durable default to off" , 0 , True )
-
-add_option( "pch" , "use precompiled headers to speed up the build (experimental)" , 0 , True , "usePCH" )
-add_option( "distcc" , "use distcc for distributing builds" , 0 , False )
-
-# debugging/profiling help
-if os.sys.platform.startswith("linux") and (os.uname()[-1] == 'x86_64'):
-    defaultAllocator = 'tcmalloc'
-elif (os.sys.platform == "darwin") and (os.uname()[-1] == 'x86_64'):
-    defaultAllocator = 'tcmalloc'
-else:
-    defaultAllocator = 'system'
-add_option( "allocator" , "allocator to use (tcmalloc or system)" , 1 , True,
-            default=defaultAllocator )
-add_option( "gdbserver" , "build in gdb server support" , 0 , True )
-add_option( "heapcheck", "link to heap-checking malloc-lib and look for memory leaks during tests" , 0 , False )
 add_option( "gcov" , "compile with flags for gcov" , 0 , True )
 
-add_option("smokedbprefix", "prefix to dbpath et al. for smoke tests", 1 , False )
-add_option("smokeauth", "run smoke tests with --auth", 0 , False )
-
 add_option("use-sasl-client", "Support SASL authentication in the client library", 0, False)
-
-add_option( "use-system-tcmalloc", "use system version of tcmalloc library", 0, True )
-
-add_option( "use-system-pcre", "use system version of pcre library", 0, True )
-
-add_option( "use-system-boost", "use system version of boost libraries", 0, True )
-
-add_option( "use-system-snappy", "use system version of snappy library", 0, True )
-
-add_option( "use-system-v8", "use system version of v8 library", 0, True )
-
-add_option( "use-system-stemmer", "use system version of stemmer", 0, True )
-
-add_option( "use-system-yaml", "use system version of yaml", 0, True )
-
-add_option( "use-system-all" , "use all system libraries", 0 , True )
-
-add_option( "use-cpu-profiler",
-            "Link against the google-perftools profiler library",
-            0, False )
-
-add_option("mongod-concurrency-level", "Concurrency level, \"global\" or \"db\"", 1, True,
-           type="choice", choices=["global", "db"])
 
 add_option('build-fast-and-loose', "NEVER for production builds", 0, False)
 
@@ -347,8 +269,6 @@ printLocalInfo()
 
 boostLibs = [ "thread" , "filesystem" , "program_options", "system" ]
 
-onlyServer = len( COMMAND_LINE_TARGETS ) == 0 or ( len( COMMAND_LINE_TARGETS ) == 1 and str( COMMAND_LINE_TARGETS[0] ) in [ "mongod" , "mongos" , "test" ] )
-
 linux64  = False
 force32 = has_option( "force32" ) 
 force64 = has_option( "force64" )
@@ -364,112 +284,33 @@ elif force64:
 releaseBuild = has_option("release")
 
 # validate debug and optimization options
-usingOldOptDbgOptions = has_option("debugBuild") or has_option("debugBuildAndLogging")
-usingNewOptDbgOptions = has_option('dbg') or has_option('opt')
+dbg_opt_mapping = {
+    # --dbg, --opt   :   dbg    opt
+    ( None,  None  ) : ( False, True ),
+    ( None,  "on"  ) : ( False, True ),
+    ( None,  "off" ) : ( False, False ),
+    ( "on",  None  ) : ( True,  False ),  # special case interaction
+    ( "on",  "on"  ) : ( True,  True ),
+    ( "on",  "off" ) : ( True,  False ),
+    ( "off", None  ) : ( False, True ),
+    ( "off", "on"  ) : ( False, True ),
+    ( "off", "off" ) : ( False, False ),
+}
+debugBuild, optBuild = dbg_opt_mapping[(get_option('dbg'), get_option('opt'))]
 
-if usingOldOptDbgOptions and usingNewOptDbgOptions:
-    print("Error: Cannot mix old style --d or --dd options with new --dbg and --opt options")
+if releaseBuild and (debugBuild or not optBuild):
+    print("Error: A --release build may not have debugging, and must have optimization")
     Exit(1)
 
-# By default, if no options are specified, we assume the new style options and defaults.
-if not usingOldOptDbgOptions:
-
-    dbg_opt_mapping = {
-        # --dbg, --opt   :   dbg    opt
-        ( None,  None  ) : ( False, True ),
-        ( None,  "on"  ) : ( False, True ),
-        ( None,  "off" ) : ( False, False ),
-        ( "on",  None  ) : ( True,  False ),  # special case interaction
-        ( "on",  "on"  ) : ( True,  True ),
-        ( "on",  "off" ) : ( True,  False ),
-        ( "off", None  ) : ( False, True ),
-        ( "off", "on"  ) : ( False, True ),
-        ( "off", "off" ) : ( False, False ),
-    }
-    debugBuild, optBuild = dbg_opt_mapping[(get_option('dbg'), get_option('opt'))]
-
-    if releaseBuild and (debugBuild or not optBuild):
-        print("Error: A --release build may not have debugging, and must have optimization")
-        Exit(1)
-
-else:
-    # TODO: Once all buildbots and variants have switched to the new flags,
-    # remove support for --d and --dd
-
-    d_provided = has_option( "debugBuild" )
-    dd_provided = has_option( "debugBuildAndLogging" )
-
-    dbg_opt_mapping = {
-        # win    --d    --dd   --release :   dbg    opt   release
-        ( False, False, False, False )   : ( False, True, False ),
-        ( False, False, False, True  )   : ( False, True, True ),
-
-        ( False, False, True,  False )   : ( True, False, False ),
-        ( False, False, True,  True  )   : None,
-
-
-        ( False, True, False, False )    : ( False, False, False ),
-        ( False, True, False, True  )    : None,
-
-        ( False, True, True,  False )    : ( True, False, False ),
-        ( False, True, True,  True  )    : None,
-
-
-
-
-        ( True, False, False, False )    : ( False, False, False ),
-        ( True, False, False, True  )    : ( False, True, True ),
-
-        ( True, False, True,  False )    : ( True, False, False ),
-        ( True, False, True,  True  )    : ( False, True, True ),  # --release dominates on windows
-
-
-        ( True, True, False, False )     : ( True, False, False ),
-        ( True, True, False, True  )     : ( False, True, True ),  # --release dominates on windows
-
-        ( True, True, True,  False )     : ( True, False, False ),
-        ( True, True, True,  True  )     : ( False, True, True ),  # --release dominates on windows
-    }
-
-    values = dbg_opt_mapping.get((windows, d_provided, dd_provided, releaseBuild))
-    if not values:
-        print("Error: An invalid combination of --d, --dd, and --release was specified")
-        Exit(1)
-
-    debugBuild, optBuild, releaseBuild = values
-
-static = has_option( "static" )
-
-noshell = has_option( "noshell" ) 
-
-usev8 = has_option( "usev8" ) 
-
-asio = has_option( "asio" )
-
-usePCH = has_option( "usePCH" )
-
-justClientLib = (COMMAND_LINE_TARGETS == ['mongoclient'])
-
 env = Environment( BUILD_DIR=variantDir,
-                   DIST_ARCHIVE_SUFFIX='.tgz',
                    EXTRAPATH=get_option("extrapath"),
-                   MODULE_BANNERS=[],
-                   ARCHIVE_ADDITION_DIR_MAP={},
-                   ARCHIVE_ADDITIONS=[],
-                   MODULETEST_ALIAS='moduletests',
-                   MODULETEST_LIST='#build/moduletests.txt',
                    MSVS_ARCH=msarch ,
                    PYTHON=utils.find_python(),
-                   SERVER_ARCHIVE='${SERVER_DIST_BASENAME}${DIST_ARCHIVE_SUFFIX}',
                    TARGET_ARCH=msarch ,
-                   tools=["default", "gch", "jsheader", "mergelib", "unittest"],
-                   UNITTEST_ALIAS='unittests',
-                   UNITTEST_LIST='#build/unittests.txt',
+                   tools=["default", "unittest"],
                    PYSYSPLATFORM=os.sys.platform,
-
-                   PCRE_VERSION='8.30',
                    CONFIGUREDIR = '#' + scons_data_dir + '/sconf_temp',
-                   CONFIGURELOG = '#' + scons_data_dir + '/config.log'
+                   CONFIGURELOG = '#' + scons_data_dir + '/config.log',
                    )
 
 if has_option("cache"):
@@ -519,9 +360,6 @@ if has_option('mute'):
     env.Append( SHLINKCOMSTR = env["LINKCOMSTR"] )
     env.Append( ARCOMSTR = "Generating library $TARGET" )
 
-if has_option('mongod-concurrency-level'):
-    env.Append(CPPDEFINES=['MONGOD_CONCURRENCY_LEVEL=MONGOD_CONCURRENCY_LEVEL_%s' % get_option('mongod-concurrency-level').upper()])
-
 libdeps.setup_environment( env )
 
 if env['PYSYSPLATFORM'] == 'linux3':
@@ -553,9 +391,6 @@ if has_option( "cxx" ):
 if has_option( "cc" ):
     env["CC"] = get_option( "cc" )
 
-if has_option( "ld" ):
-    env["LINK"] = get_option( "ld" )
-
 if env['PYSYSPLATFORM'] in ('linux2', 'freebsd'):
     env['LINK_LIBGROUP_START'] = '-Wl,--start-group'
     env['LINK_LIBGROUP_END'] = '-Wl,--end-group'
@@ -586,24 +421,16 @@ if has_option( "libpath" ):
 if has_option( "cpppath" ):
     env["CPPPATH"] = [get_option( "cpppath" )]
 
-env.Prepend( CPPDEFINES=[ "_SCONS" , 
-                          "MONGO_EXPOSE_MACROS" ,
-                          "SUPPORT_UTF8" ],  # for pcre
-
-
-             CPPPATH=[ '$BUILD_DIR', "$BUILD_DIR/mongo" ] )
-
-if has_option( "safeshell" ):
-    env.Append( CPPDEFINES=[ "MONGO_SAFE_SHELL" ] )
-
-if has_option( "durableDefaultOn" ):
-    env.Append( CPPDEFINES=[ "_DURABLEDEFAULTON" ] )
-
-if has_option( "durableDefaultOff" ):
-    env.Append( CPPDEFINES=[ "_DURABLEDEFAULTOFF" ] )
-
-if ( not ( usev8 or justClientLib) ):
-    usev8 = True
+env.Prepend(
+    CPPDEFINES=[
+        "_SCONS" ,
+        "MONGO_EXPOSE_MACROS" ,
+    ],
+    CPPPATH=[
+        '$BUILD_DIR',
+        '$BUILD_DIR/mongo'
+    ]
+)
 
 extraLibPlaces = []
 
@@ -614,37 +441,14 @@ def addExtraLibs( s ):
     for x in s.split(","):
         env.Append( EXTRACPPPATH=[ x + "/include" ] )
         env.Append( EXTRALIBPATH=[ x + "/lib" ] )
-        env.Append( EXTRALIBPATH=[ x + "/lib64" ] )
         extraLibPlaces.append( x + "/lib" )
 
 if has_option( "extrapath" ):
     addExtraLibs( GetOption( "extrapath" ) )
 
-if has_option( "extrapathdyn" ):
-    addExtraLibs( GetOption( "extrapathdyn" ) )
-
 if has_option( "extralib" ):
     for x in GetOption( "extralib" ).split( "," ):
         env.Append( LIBS=[ x ] )
-
-class InstallSetup:
-    binaries = False
-    libraries = False
-    headers = False
-
-    def __init__(self):
-        self.default()
-
-    def default(self):
-        self.binaries = True
-        self.libraries = False
-        self.headers = False
-
-installSetup = InstallSetup()
-
-if has_option( "full" ):
-    installSetup.headers = True
-    installSetup.libraries = True
 
 # ---- other build setup -----
 
@@ -662,9 +466,6 @@ env['PROCESSOR_ARCHITECTURE'] = processor
 
 installDir = DEFAULT_INSTALL_DIR
 nixLibPrefix = "lib"
-
-dontReplacePackage = False
-isBuildingLatest = False
 
 if has_option( "prefix" ):
     installDir = GetOption( "prefix" )
@@ -689,11 +490,6 @@ elif linux:
     if force32:
         env.Append( EXTRALIBPATH=["/usr/lib32"] )
         env.Append( CCFLAGS=["-mmmx"] )
-
-    if static:
-        env.Append( LINKFLAGS=" -static " )
-    if has_option( "static-libstdc++" ):
-        env.Append( LINKFLAGS=["-static-libstdc++", "-static-libgcc"] )
 
 elif solaris:
      env.Append( CPPDEFINES=[ "__sunos__" ] )
@@ -813,6 +609,8 @@ elif windows:
         env.Append( CCFLAGS=["/RTC1"] )
 
     # This gives 32-bit programs 4 GB of user address space in WOW64, ignored in 64-bit builds
+    #
+    # TODO: Remove? What is the effect on libraries?
     env.Append( LINKFLAGS=["/LARGEADDRESSAWARE"] )
 
     env.Append(LIBS=['ws2_32.lib', 'kernel32.lib', 'advapi32.lib', 'Psapi.lib', 'DbgHelp.lib', 'shell32.lib'])
@@ -821,13 +619,7 @@ elif windows:
     if usev8:
         env.Append(LIBS=['winmm.lib'])
 
-    env.Append( EXTRACPPPATH=["#/../winpcap/Include"] )
-    env.Append( EXTRALIBPATH=["#/../winpcap/Lib"] )
-
 if nix:
-
-    if has_option( "distcc" ):
-        env["CXX"] = "distcc " + env["CXX"]
 
     # -Winvalid-pch Warn if a precompiled header (see Precompiled Headers) is found in the search path but can't be used.
     env.Append( CCFLAGS=["-fPIC",
@@ -863,12 +655,8 @@ if nix:
 
     env.Append( LIBS=[] )
 
-    #make scons colorgcc friendly
-    for key in ('HOME', 'TERM'):
-        try:
-            env['ENV'][key] = os.environ[key]
-        except KeyError:
-            pass
+    # Allow colorized output
+    env['ENV']['TERM'] = os.environ.get('TERM', None)
 
     if linux and has_option( "gcov" ):
         env.Append( CXXFLAGS=" -fprofile-arcs -ftest-coverage " )
@@ -896,9 +684,6 @@ if nix:
         env.Append( CCFLAGS="-m32" )
         env.Append( LINKFLAGS="-m32" )
 
-    if has_option( "gdbserver" ):
-        env.Append( CPPDEFINES=["USE_GDBSERVER"] )
-
 if "uname" in dir(os):
     hacks = buildscripts.findHacks( os.uname() )
     if hacks is not None:
@@ -918,34 +703,10 @@ try:
 except OSError:
     pass
 
-if not windows:
-    for keysuffix in [ "1" , "2" ]:
-        keyfile = "jstests/libs/key%s" % keysuffix
-        os.chmod( keyfile , stat.S_IWUSR|stat.S_IRUSR )
-
-if not use_system_version_of_library("pcre"):
-    env.Prepend(CPPPATH=[ '$BUILD_DIR/third_party/pcre-${PCRE_VERSION}' ])
-
-if not use_system_version_of_library("boost"):
-    env.Prepend(CPPPATH=['$BUILD_DIR/third_party/boost'],
-                CPPDEFINES=['BOOST_ALL_NO_LIB'])
-
-env.Prepend(CPPPATH=['$BUILD_DIR/third_party/s2'])
-
-if not use_system_version_of_library("stemmer"):
-    env.Prepend(CPPPATH=['$BUILD_DIR/third_party/libstemmer_c/include'])
-
-if not use_system_version_of_library("snappy"):
-    env.Prepend(CPPPATH=['$BUILD_DIR/third_party/snappy'])
-
 env.Prepend(CPPPATH=['$BUILD_DIR/third_party/gtest-1.7.0/include'])
 
 env.Append( CPPPATH=['$EXTRACPPPATH'],
             LIBPATH=['$EXTRALIBPATH'] )
-
-# discover modules, and load the (python) module for each module's build.py
-mongo_modules = moduleconfig.discover_modules('src/mongo/db/modules')
-env['MONGO_MODULES'] = [m.name for m in mongo_modules]
 
 # --- check system ---
 
@@ -1090,22 +851,6 @@ def doConfigure(myenv):
         env.Append( CPPDEFINES=[("_WIN32_WINNT", "0x" + win_version_min[0])] )
         env.Append( CPPDEFINES=[("NTDDI_VERSION", "0x" + win_version_min[0] + win_version_min[1])] )
 
-    # Enable PCH if we are on using gcc or clang and the 'Gch' tool is enabled. Otherwise,
-    # remove any pre-compiled header since the compiler may try to use it if it exists.
-    if usePCH and (using_gcc() or using_clang()):
-        if 'Gch' in dir( myenv ):
-            if using_clang():
-                # clang++ uses pch.h.pch rather than pch.h.gch
-                myenv['GCHSUFFIX'] = '.pch'
-                # clang++ only uses pch from command line
-                myenv.Prepend( CXXFLAGS=['-include pch.h'] )
-            myenv['Gch'] = myenv.Gch( "$BUILD_DIR/mongo/pch.h$GCHSUFFIX",
-                                        "src/mongo/pch.h" )[0]
-            myenv['GchSh'] = myenv[ 'Gch' ]
-    elif os.path.exists( myenv.File("$BUILD_DIR/mongo/pch.h$GCHSUFFIX").abspath ):
-        print( "removing precompiled headers" )
-        os.unlink( myenv.File("$BUILD_DIR/mongo/pch.h.$GCHSUFFIX").abspath )
-
     def AddFlagIfSupported(env, tool, extension, flag, **mutation):
         def CheckFlagTest(context, tool, extension, flag):
             test_body = ""
@@ -1198,13 +943,6 @@ def doConfigure(myenv):
             if not AddToCXXFLAGSIfSupported(myenv, '-std=c++11'):
                 if not AddToCXXFLAGSIfSupported(myenv, '-std=c++0x'):
                     print( 'C++11 mode requested, but cannot find a flag to enable it' )
-                    Exit(1)
-            # Our current builtin tcmalloc is not compilable in C++11 mode. Remove this
-            # check when our builtin release of tcmalloc contains the resolution to
-            # http://code.google.com/p/gperftools/issues/detail?id=477.
-            if get_option('allocator') == 'tcmalloc':
-                if not use_system_version_of_library('tcmalloc'):
-                    print( 'TCMalloc is not currently compatible with C++11' )
                     Exit(1)
 
             if not AddToCFLAGSIfSupported(myenv, '-std=c99'):
@@ -1306,10 +1044,6 @@ def doConfigure(myenv):
             printf("Don't know how to enable --lto on current toolchain")
             Exit(1)
 
-    # glibc's memcmp is faster than gcc's
-    if linux:
-        AddToCCFLAGSIfSupported(myenv, "-fno-builtin-memcmp")
-
     # When using msvc, check for support for __declspec(thread), unless we have been asked
     # explicitly not to use it. For other compilers, see if __thread works.
     if using_msvc():
@@ -1365,31 +1099,17 @@ def doConfigure(myenv):
     conf = Configure(myenv)
     libdeps.setup_conftests(conf)
 
-    if use_system_version_of_library("pcre"):
-        conf.FindSysLibDep("pcre", ["pcre"])
-        conf.FindSysLibDep("pcrecpp", ["pcrecpp"])
+    if not conf.CheckCXXHeader( "boost/filesystem/operations.hpp" ):
+        print( "can't find boost headers" )
+        Exit(1)
 
-    if use_system_version_of_library("snappy"):
-        conf.FindSysLibDep("snappy", ["snappy"])
+    conf.env.Append(CPPDEFINES=[("BOOST_THREAD_VERSION", "2")])
 
-    if use_system_version_of_library("stemmer"):
-        conf.FindSysLibDep("stemmer", ["stemmer"])
-
-    if use_system_version_of_library("yaml"):
-        conf.FindSysLibDep("yaml", ["yaml"])
-
-    if use_system_version_of_library("boost"):
-        if not conf.CheckCXXHeader( "boost/filesystem/operations.hpp" ):
-            print( "can't find boost headers" )
-            Exit(1)
-
-        conf.env.Append(CPPDEFINES=[("BOOST_THREAD_VERSION", "2")])
-
-        # Note that on Windows with using-system-boost builds, the following 
-        # FindSysLibDep calls do nothing useful (but nothing problematic either)
-        for b in boostLibs:
-            boostlib = "boost_" + b
-            conf.FindSysLibDep( boostlib, [ boostlib + "-mt", boostlib ], language='C++' )
+    # Note that on Windows with using-system-boost builds, the following 
+    # FindSysLibDep calls do nothing useful (but nothing problematic either)
+    for b in boostLibs:
+        boostlib = "boost_" + b
+        conf.FindSysLibDep( boostlib, [ boostlib + "-mt", boostlib ], language='C++' )
 
     if conf.CheckHeader('unistd.h'):
         conf.env.Append(CPPDEFINES=['MONGO_HAVE_HEADER_UNISTD_H'])
@@ -1404,17 +1124,8 @@ def doConfigure(myenv):
 
         conf.env.Append( CPPDEFINES=[ "MONGO_HAVE_EXECINFO_BACKTRACE" ] )
 
-    conf.env["_HAVEPCAP"] = conf.CheckLib( ["pcap", "wpcap"], autoadd=False )
-
     if solaris:
         conf.CheckLib( "nsl" )
-
-    if usev8 and use_system_version_of_library("v8"):
-        if debugBuild:
-            v8_lib_choices = ["v8_g", "v8"]
-        else:
-            v8_lib_choices = ["v8"]
-        conf.FindSysLibDep( "v8", v8_lib_choices )
 
     conf.env['MONGO_BUILD_SASL_CLIENT'] = bool(has_option("use-sasl-client"))
 
@@ -1434,55 +1145,11 @@ def doConfigure(myenv):
         if not conf.CheckLib("execinfo"):
             Exit(1)
 
-    # 'tcmalloc' needs to be the last library linked. Please, add new libraries before this 
-    # point.
-    if get_option('allocator') == 'tcmalloc':
-        if use_system_version_of_library('tcmalloc'):
-            conf.FindSysLibDep("tcmalloc", ["tcmalloc"])
-        elif has_option("heapcheck"):
-            print ("--heapcheck does not work with the tcmalloc embedded in the mongodb source "
-                   "tree.  Use --use-system-tcmalloc.")
-            Exit(1)
-    elif get_option('allocator') == 'system':
-        pass
-    else:
-        print "Invalid --allocator parameter: \"%s\"" % get_option('allocator')
-        Exit(1)
-
-    if has_option("heapcheck"):
-        if not debugBuild:
-            print( "--heapcheck needs --d or --dd" )
-            Exit( 1 )
-
-        if not conf.CheckCXXHeader( "google/heap-checker.h" ):
-            print( "--heapcheck neads header 'google/heap-checker.h'" )
-            Exit( 1 )
-
-        conf.env.Append( CPPDEFINES=[ "HEAP_CHECKING" ] )
-        conf.env.Append( CCFLAGS=["-fno-omit-frame-pointer"] )
-
-    # ask each module to configure itself and the build environment.
-    moduleconfig.configure_modules(mongo_modules, conf)
-
     return conf.Finish()
 
 env = doConfigure( env )
 
 env['PDB'] = '${TARGET.base}.pdb'
-
-testEnv = env.Clone()
-testEnv.Append( CPPPATH=["../"] )
-
-shellEnv = None
-if noshell:
-    print( "not building shell" )
-elif not onlyServer:
-    shellEnv = env.Clone();
-
-    if windows:
-        shellEnv.Append( LIBS=["winmm.lib"] )
-
-enforce_glibc = linux and releaseBuild and not has_option("no-glibc-check")
 
 def checkErrorCodes():
     import buildscripts.errorcodes as x
@@ -1500,31 +1167,8 @@ def build_docs(env, target, source):
 env.Alias("docs", [], [build_docs])
 env.AlwaysBuild("docs")
 
-#  ---- astyle ----
-
-def doStyling( env , target , source ):
-
-    res = utils.execsys( "astyle --version" )
-    res = " ".join(res)
-    if res.count( "2." ) == 0:
-        print( "astyle 2.x needed, found:" + res )
-        Exit(-1)
-
-    files = utils.getAllSourceFiles() 
-    files = filter( lambda x: not x.endswith( ".c" ) , files )
-
-    cmd = "astyle --options=mongo_astyle " + " ".join( files )
-    res = utils.execsys( cmd )
-    print( res[0] )
-    print( res[1] )
-
-
-env.Alias( "style" , [] , [ doStyling ] )
-env.AlwaysBuild( "style" )
 
 # --- lint ----
-
-
 
 def doLint( env , target , source ):
     import buildscripts.lint
@@ -1534,140 +1178,7 @@ def doLint( env , target , source ):
 env.Alias( "lint" , [] , [ doLint ] )
 env.AlwaysBuild( "lint" )
 
-
-#  ----  INSTALL -------
-
-def getSystemInstallName():
-    n = platform + "-" + processor
-    if static:
-        n += "-static"
-    if has_option("nostrip"):
-        n += "-debugsymbols"
-    if nix and os.uname()[2].startswith("8."):
-        n += "-tiger"
-
-    if len(mongo_modules):
-            n += "-" + "-".join(m.name for m in mongo_modules)
-
-    try:
-        findSettingsSetup()
-        import settings
-        if "distmod" in dir(settings):
-            n = n + "-" + str(settings.distmod)
-    except:
-        pass
-
-    dn = GetOption("distmod")
-    if dn and len(dn) > 0:
-        n = n + "-" + dn
-
-    return n
-
-def getCodeVersion():
-    fullSource = open( "src/mongo/util/version.cpp" , "r" ).read()
-    allMatches = re.findall( r"versionString.. = \"(.*?)\"" , fullSource );
-    if len(allMatches) != 1:
-        print( "can't find version # in code" )
-        return None
-    return allMatches[0]
-
-mongoCodeVersion = getCodeVersion()
-if mongoCodeVersion == None:
-    Exit(-1)
-
-if has_option('distname'):
-    distName = GetOption( "distname" )
-elif mongoCodeVersion[-1] not in ("+", "-"):
-    dontReplacePackage = True
-    distName = mongoCodeVersion
-else:
-    isBuildingLatest = True
-    distName = utils.getGitBranchString("" , "-") + datetime.date.today().strftime("%Y-%m-%d")
-
-
-env['SERVER_DIST_BASENAME'] = 'mongodb-%s-%s' % (getSystemInstallName(), distName)
-
-distFile = "${SERVER_ARCHIVE}"
-
-env['NIX_LIB_DIR'] = nixLibPrefix
 env['INSTALL_DIR'] = installDir
-if testEnv is not None:
-    testEnv['INSTALL_DIR'] = installDir
-if shellEnv is not None:
-    shellEnv['INSTALL_DIR'] = installDir
-
-
-#  ---- CONVENIENCE ----
-
-def tabs( env, target, source ):
-    from subprocess import Popen, PIPE
-    from re import search, match
-    diff = Popen( [ "git", "diff", "-U0", "origin", "master" ], stdout=PIPE ).communicate()[ 0 ]
-    sourceFile = False
-    for line in diff.split( "\n" ):
-        if match( "diff --git", line ):
-            sourceFile = not not search( "\.(h|hpp|c|cpp)\s*$", line )
-        if sourceFile and match( "\+ *\t", line ):
-            return True
-    return False
-env.Alias( "checkSource", [], [ tabs ] )
-env.AlwaysBuild( "checkSource" )
-
-def gitPush( env, target, source ):
-    import subprocess
-    return subprocess.call( [ "git", "push" ] )
-env.Alias( "push", [ ".", "smoke", "checkSource" ], gitPush )
-env.AlwaysBuild( "push" )
-
-
-# ---- deploying ---
-
-def s3push(localName, remoteName=None, platformDir=True):
-    localName = str( localName )
-
-    if isBuildingLatest:
-        remotePrefix = utils.getGitBranchString("-") + "-latest"
-    else:
-        remotePrefix = "-" + distName
-
-    findSettingsSetup()
-
-    import simples3
-    import settings
-
-    s = simples3.S3Bucket( settings.bucket , settings.id , settings.key )
-
-    if remoteName is None:
-        remoteName = localName
-
-    name = '%s-%s%s' % (remoteName , getSystemInstallName(), remotePrefix)
-    lastDotIndex = localName.rfind('.')
-    if lastDotIndex != -1:
-        name += localName[lastDotIndex:]
-    name = name.lower()
-
-    if platformDir:
-        name = platform + "/" + name
-
-    print( "uploading " + localName + " to http://s3.amazonaws.com/" + s.name + "/" + name )
-    if dontReplacePackage:
-        for ( key , modify , etag , size ) in s.listdir( prefix=name ):
-            print( "error: already a file with that name, not uploading" )
-            Exit(2)
-    s.put( name  , open( localName , "rb" ).read() , acl="public-read" );
-    print( "  done uploading!" )
-
-def s3shellpush( env , target , source ):
-    s3push( "mongo" , "mongo-shell" )
-
-env.Alias( "s3shell" , [ "mongo" ] , [ s3shellpush ] )
-env.AlwaysBuild( "s3shell" )
-
-def s3dist( env , target , source ):
-    s3push( str(source[0]) , "mongodb" )
-
-env.Alias( "dist" , '$SERVER_ARCHIVE' )
-env.AlwaysBuild(env.Alias( "s3dist" , [ '$SERVER_ARCHIVE' ] , [ s3dist ] ))
 
 # --- an uninstall target ---
 if len(COMMAND_LINE_TARGETS) > 0 and 'uninstall' in COMMAND_LINE_TARGETS:
@@ -1676,8 +1187,6 @@ if len(COMMAND_LINE_TARGETS) > 0 and 'uninstall' in COMMAND_LINE_TARGETS:
     # what we want, but changing BUILD_TARGETS does.
     BUILD_TARGETS.remove("uninstall")
     BUILD_TARGETS.append("install")
-
-module_sconscripts = moduleconfig.get_module_sconscripts(mongo_modules)
 
 # The following symbols are exported for use in subordinate SConscript files.
 # Ideally, the SConscript files would be purely declarative.  They would only
@@ -1688,36 +1197,14 @@ module_sconscripts = moduleconfig.get_module_sconscripts(mongo_modules)
 # conditional decision making that hasn't been moved up to this SConstruct file,
 # and they are exported here, as well.
 Export("env")
-Export("shellEnv")
-Export("testEnv")
 Export("get_option")
-Export("has_option use_system_version_of_library")
-Export("installSetup mongoCodeVersion")
-Export("usev8")
+Export("has_option")
 Export("darwin windows solaris linux freebsd nix")
-Export('module_sconscripts')
 Export("debugBuild optBuild")
-Export("enforce_glibc")
-Export("s3push")
 Export("use_clang")
 
 env.SConscript('src/SConscript', variant_dir='$BUILD_DIR', duplicate=False)
 env.SConscript('src/SConscript.client', variant_dir='$BUILD_DIR', duplicate=False)
-env.SConscript(['SConscript.buildinfo', 'SConscript.smoke'])
+env.SConscript(['SConscript.buildinfo'])
 
-def clean_old_dist_builds(env, target, source):
-    prefix = "mongodb-%s-%s" % (platform, processor)
-    filenames = sorted(os.listdir("."))
-    filenames = [x for x in filenames if x.startswith(prefix)]
-    to_keep = [x for x in filenames if x.endswith(".tgz") or x.endswith(".zip")][-2:]
-    for filename in [x for x in filenames if x not in to_keep]:
-        print "removing %s" % filename
-        try:
-            shutil.rmtree(filename)
-        except:
-            os.remove(filename)
-
-env.Alias("dist_clean", [], [clean_old_dist_builds])
-env.AlwaysBuild("dist_clean")
-
-env.Alias('all', ['core', 'tools', 'clientTests', 'test', 'unittests', 'moduletests'])
+env.Alias('all', ['unittests', 'clientTests'])
