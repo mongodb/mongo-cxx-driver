@@ -115,7 +115,8 @@ namespace mongo {
             unsigned short _pid;
             bool operator!=(const OID::MachineAndPid& rhs) const;
         };
-        static MachineAndPid ourMachine, ourMachineAndPid;
+        static MachineAndPid ourMachine;
+        static MachineAndPid ourMachineAndPid;
         union {
             struct {
                 // 12 bytes total
