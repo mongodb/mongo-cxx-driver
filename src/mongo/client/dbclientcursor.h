@@ -17,8 +17,6 @@
 
 #pragma once
 
-#include "mongo/pch.h"
-
 #include <stack>
 
 #include "mongo/client/dbclientinterface.h"
@@ -78,7 +76,7 @@ namespace mongo {
         BSONObj nextSafe() {
             BSONObj o = next();
             if( strcmp(o.firstElementFieldName(), "$err") == 0 ) {
-                string s = "nextSafe(): " + o.toString();
+                std::string s = "nextSafe(): " + o.toString();
                 LOG(5) << s;
                 uasserted(13106, s);
             }
@@ -90,7 +88,7 @@ namespace mongo {
             with what is already buffered.
             WARNING: no support for _putBack yet!
         */
-        void peek(vector<BSONObj>&, int atMost);
+        void peek(std::vector<BSONObj>&, int atMost);
 
         // Peeks at first element, if exists
         BSONObj peekFirst();
@@ -133,7 +131,7 @@ namespace mongo {
         /// Change batchSize after construction. Can change after requesting first batch.
         void setBatchSize(int newBatchSize) { batchSize = newBatchSize; }
 
-        DBClientCursor( DBClientBase* client, const string &_ns, BSONObj _query, int _nToReturn,
+        DBClientCursor( DBClientBase* client, const std::string &_ns, BSONObj _query, int _nToReturn,
                         int _nToSkip, const BSONObj *_fieldsToReturn, int queryOptions , int bs ) :
             _client(client),
             ns(_ns),
@@ -151,7 +149,7 @@ namespace mongo {
             _finishConsInit();
         }
 
-        DBClientCursor( DBClientBase* client, const string &_ns, long long _cursorId, int _nToReturn, int options ) :
+        DBClientCursor( DBClientBase* client, const std::string &_ns, long long _cursorId, int _nToReturn, int options ) :
             _client(client),
             ns(_ns),
             nToReturn( _nToReturn ),
@@ -178,9 +176,9 @@ namespace mongo {
 
         void attach( AScopedConnection * conn );
 
-        string originalHost() const { return _originalHost; }
+        std::string originalHost() const { return _originalHost; }
 
-        string getns() const { return ns; }
+        std::string getns() const { return ns; }
 
         Message* getMessage(){ return batch.m.get(); }
 
@@ -204,7 +202,7 @@ namespace mongo {
 
         class Batch : boost::noncopyable {
             friend class DBClientCursor;
-            auto_ptr<Message> m;
+            std::auto_ptr<Message> m;
             int nReturned;
             int pos;
             const char *data;
@@ -221,8 +219,8 @@ namespace mongo {
 
         Batch batch;
         DBClientBase* _client;
-        string _originalHost;
-        string ns;
+        std::string _originalHost;
+        std::string ns;
         BSONObj query;
         int nToReturn;
         bool haveLimit;
@@ -230,16 +228,16 @@ namespace mongo {
         const BSONObj *fieldsToReturn;
         int opts;
         int batchSize;
-        stack< BSONObj > _putBack;
+        std::stack< BSONObj > _putBack;
         int resultFlags;
         long long cursorId;
         bool _ownCursor; // see decouple()
-        string _scopedHost;
-        string _lazyHost;
+        std::string _scopedHost;
+        std::string _lazyHost;
         bool wasError;
 
-        void dataReceived() { bool retry; string lazyHost; dataReceived( retry, lazyHost ); }
-        void dataReceived( bool& retry, string& lazyHost );
+        void dataReceived() { bool retry; std::string lazyHost; dataReceived( retry, lazyHost ); }
+        void dataReceived( bool& retry, std::string& lazyHost );
         void requestMore();
         void exhaustReceiveMore(); // for exhaust
 

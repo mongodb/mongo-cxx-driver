@@ -13,8 +13,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/client/dbclient_rs.h"
 
 #include <memory>
@@ -28,6 +26,14 @@
 #include "mongo/db/jsobj.h"
 
 namespace mongo {
+
+    using std::auto_ptr;
+    using std::endl;
+    using std::map;
+    using std::set;
+    using std::string;
+    using std::vector;
+
 namespace {
 
     /*

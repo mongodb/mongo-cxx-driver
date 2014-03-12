@@ -15,8 +15,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/client/clientOnly-private.h"
 #include "mongo/db/client_basic.h"
 #include "mongo/db/server_options.h"
@@ -25,6 +23,10 @@
 #include "mongo/util/timer.h"
 
 namespace mongo {
+
+    using std::endl;
+    using std::string;
+    using std::vector;
 
     const char * curNs = "in client mode";
 

@@ -44,7 +44,7 @@ namespace mongo {
            int slaveDelay;
            bool hidden;
            bool buildIndexes;
-           map<string,string> tags;
+           std::map<std::string,std::string> tags;
         };
     };
 

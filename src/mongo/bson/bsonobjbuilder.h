@@ -851,7 +851,7 @@ namespace mongo {
             long int n;
             Status status = parseNumberFromStringWithBase( name, 10, &n );
             uassert( 13048,
-                     (string)"can't append to array using string field name: " + name.toString(),
+                     (std::string)"can't append to array using string field name: " + name.toString(),
                      status.isOK() );
             fill(n);
         }

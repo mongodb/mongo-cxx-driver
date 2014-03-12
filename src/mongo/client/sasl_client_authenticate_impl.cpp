@@ -37,6 +37,9 @@
 #include "mongo/util/password_digest.h"
 
 namespace mongo {
+
+    using std::endl;
+
 namespace {
 
     // Default log level on the client for SASL log messages.

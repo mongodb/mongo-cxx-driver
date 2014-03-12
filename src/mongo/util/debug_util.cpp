@@ -15,7 +15,7 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
+#include "mongo/platform/basic.h"
 
 #include "mongo/util/debug_util.h"
 

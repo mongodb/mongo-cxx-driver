@@ -37,7 +37,7 @@ namespace mongo {
     };
 
     struct StringMapDefaultConvertorOther {
-        string operator()( const StringData& s ) const {
+        std::string operator()( const StringData& s ) const {
             return s.toString();
         }
     };

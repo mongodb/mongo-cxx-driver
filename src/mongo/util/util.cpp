@@ -15,8 +15,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include <iomanip>
 
 #include "mongo/platform/atomic_word.h"
@@ -29,6 +27,12 @@
 #include "mongo/util/timer.h"
 
 namespace mongo {
+
+    using std::ostream;
+    using std::setfill;
+    using std::setw;
+    using std::string;
+    using std::stringstream;
 
     string hexdump(const char *data, unsigned len) {
         verify( len < 1000000 );

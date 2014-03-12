@@ -16,8 +16,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include <limits>
 
 #include "mongo/db/jsobj.h"
@@ -26,6 +24,9 @@
 
 
 namespace JsonTests {
+
+    using namespace std;
+
     namespace JsonStringTests {
 
         class Empty {

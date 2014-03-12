@@ -15,11 +15,12 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/db/dbmessage.h"
 
 namespace mongo {
+
+    using std::string;
+    using std::stringstream;
 
     string Message::toString() const {
         stringstream ss;

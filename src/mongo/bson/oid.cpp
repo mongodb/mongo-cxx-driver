@@ -15,8 +15,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include <boost/scoped_ptr.hpp>
 #include <boost/functional/hash.hpp>
 
@@ -33,6 +31,9 @@ BOOST_STATIC_ASSERT( sizeof(mongo::OID) == mongo::OID::kOIDSize );
 BOOST_STATIC_ASSERT( sizeof(mongo::OID) == 12 );
 
 namespace mongo {
+
+    using std::ostream;
+    using std::string;
 
     using boost::scoped_ptr;
 

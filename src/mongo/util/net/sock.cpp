@@ -15,8 +15,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/util/net/sock.h"
 
 #if !defined(_WIN32)
@@ -43,6 +41,13 @@
 #include "mongo/util/net/socket_poll.h"
 
 namespace mongo {
+
+    using std::endl;
+    using std::pair;
+    using std::string;
+    using std::stringstream;
+    using std::vector;
+
     MONGO_FP_DECLARE(throwSockExcep);
 
     static bool ipv6 = false;

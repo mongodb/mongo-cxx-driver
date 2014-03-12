@@ -28,6 +28,9 @@
 
 namespace mongo {
 
+    using std::ostringstream;
+    using std::string;
+
     using boost::scoped_ptr;
 
 #if 0

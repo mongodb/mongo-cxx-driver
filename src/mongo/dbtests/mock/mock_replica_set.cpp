@@ -24,6 +24,10 @@
 
 namespace mongo {
 
+    using std::string;
+    using std::map;
+    using std::vector;
+
     struct MemberState {
         enum MS {
             RS_STARTUP = 0,

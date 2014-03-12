@@ -23,20 +23,19 @@
 #include <boost/noncopyable.hpp>
 
 #include "mongo/client/export_macros.h"
-#include "mongo/pch.h"
 
 namespace mongo {
 
     class MONGO_CLIENT_API HttpClient : boost::noncopyable {
     public:
 
-        typedef map<string,string> Headers;
+        typedef std::map<std::string,std::string> Headers;
 
         class MONGO_CLIENT_API Result {
         public:
             Result() {}
 
-            const string& getEntireResponse() const {
+            const std::string& getEntireResponse() const {
                 return _entireResponse;
             }
 
@@ -44,19 +43,19 @@ namespace mongo {
                 return _headers;
             }
 
-            const string& getBody() const {
+            const std::string& getBody() const {
                 return _body;
             }
 
         private:
 
-            void _init( int code , string entire );
+            void _init( int code , std::string entire );
 
             int _code;
-            string _entireResponse;
+            std::string _entireResponse;
 
             Headers _headers;
-            string _body;
+            std::string _body;
 
             friend class HttpClient;
         };
@@ -72,6 +71,6 @@ namespace mongo {
         int post( const std::string& url , const std::string& body , Result * result = 0 );
 
     private:
-        int _go( const char * command , string url , const char * body , Result * result );
+        int _go( const char * command , std::string url , const char * body , Result * result );
     };
 }

@@ -15,8 +15,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/util/background.h"
 
 #include <boost/bind.hpp>

@@ -19,6 +19,9 @@
 #include "mongo/dbtests/mock/mock_dbclient_connection.h"
 
 namespace mongo {
+
+    using std::string;
+
     boost::scoped_ptr<MockConnRegistry> MockConnRegistry::_instance;
 
     MONGO_INITIALIZER(MockConnRegistry)(InitializerContext* context) {

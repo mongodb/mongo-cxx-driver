@@ -13,8 +13,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include <limits>
 
 #include "mongo/base/parse_number.h"

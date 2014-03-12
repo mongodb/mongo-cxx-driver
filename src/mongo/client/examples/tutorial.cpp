@@ -18,6 +18,7 @@
 #include <iostream>
 #include "mongo/client/dbclient.h"
 
+using namespace std;
 using namespace mongo;
 
 int printIfAge(DBClientConnection& c, int age) {

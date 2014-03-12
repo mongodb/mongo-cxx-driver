@@ -15,8 +15,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/util/net/message_port.h"
 
 #include <fcntl.h>
@@ -41,6 +39,12 @@
 
 namespace mongo {
 
+    using std::dec;
+    using std::endl;
+    using std::hex;
+    using std::set;
+    using std::string;
+    using std::stringstream;
 
 // if you want trace output:
 #define mmm(x)

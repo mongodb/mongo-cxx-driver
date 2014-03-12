@@ -13,8 +13,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/util/net/ssl_manager.h"
 
 #include <boost/thread/recursive_mutex.hpp>
@@ -37,6 +35,9 @@
 #endif
 
 namespace mongo {
+
+    using std::endl;
+
     SSLGlobalParams sslGlobalParams;
 
 #ifndef MONGO_SSL   

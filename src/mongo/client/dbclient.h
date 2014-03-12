@@ -35,8 +35,6 @@
 
 #include "mongo/client/redef_macros.h"
 
-#include "mongo/pch.h"
-
 #include "mongo/client/connpool.h"
 #include "mongo/client/dbclient_rs.h"
 #include "mongo/client/dbclientcursor.h"

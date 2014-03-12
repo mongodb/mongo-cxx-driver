@@ -25,10 +25,14 @@ using namespace mongo;
 
 int main( int argc, const char **argv ) {
 
+    using std::cout;
+    using std::endl;
+    using std::string;
+
     const char *port = "27017";
     if ( argc != 1 ) {
         if ( argc != 3 ) {
-            std::cout << "need to pass port as second param" << endl;
+            cout << "need to pass port as second param" << endl;
             return EXIT_FAILURE;
         }
         port = argv[ 2 ];
@@ -36,11 +40,11 @@ int main( int argc, const char **argv ) {
 
     Status status = client::initialize();
     if (!status.isOK()) {
-        std::cout << "failed to initialize the client driver: " << status.toString() << endl;
+        cout << "failed to initialize the client driver: " << status.toString() << endl;
         return EXIT_FAILURE;
     }
 
-    std::string errmsg;
+    string errmsg;
     ConnectionString cs = ConnectionString::parse(string("127.0.0.1:") + port, errmsg);
     if (!cs.isValid()) {
         cout << "error parsing url: " << errmsg << endl;

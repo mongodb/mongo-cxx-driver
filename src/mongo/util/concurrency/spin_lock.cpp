@@ -15,8 +15,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h" // todo eliminate this include
-
 #include "mongo/util/concurrency/spin_lock.h"
 
 #include <time.h>

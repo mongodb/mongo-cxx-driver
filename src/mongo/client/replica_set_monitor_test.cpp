@@ -25,6 +25,7 @@
 #include "mongo/dbtests/mock/mock_replica_set.h"
 #include "mongo/unittest/unittest.h"
 
+using namespace std;
 using namespace mongo;
 
 // Pull nested types to top-level scope

@@ -15,8 +15,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/bson/util/bson_extract.h"
 #include "mongo/bson/util/builder.h"
 #include "mongo/client/constants.h"
@@ -34,6 +32,14 @@
 #include "mongo/util/password_digest.h"
 
 namespace mongo {
+
+    using std::auto_ptr;
+    using std::endl;
+    using std::list;
+    using std::map;
+    using std::string;
+    using std::stringstream;
+    using std::vector;
 
     AtomicInt64 DBClientBase::ConnectionIdSequence;
 
