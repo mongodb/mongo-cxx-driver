@@ -15,11 +15,12 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/util/stringutils.h"
 
 namespace mongo {
+
+    using std::string;
+    using std::vector;
 
     void splitStringDelim( const string& str , vector<string>* res , char delim ) {
         if ( str.empty() )

@@ -15,8 +15,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>

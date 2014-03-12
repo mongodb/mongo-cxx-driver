@@ -272,7 +272,7 @@ namespace mongo {
     struct DbResponse {
         Message *response;
         MSGID responseTo;
-        string exhaustNS; /* points to ns if exhaust mode. 0=normal mode*/
+        std::string exhaustNS; /* points to ns if exhaust mode. 0=normal mode*/
         DbResponse(Message *r, MSGID rt) : response(r), responseTo(rt){ }
         DbResponse() {
             response = 0;

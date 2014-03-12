@@ -32,10 +32,10 @@
 namespace mongo {
 
     /* @return a dump of the buffer as hex byte ascii output */
-    string hexdump(const char *data, unsigned len);
+    std::string hexdump(const char *data, unsigned len);
 
     template<class T>
-    inline string ToString(const T& t) {
+    inline std::string ToString(const T& t) {
         std::stringstream s;
         s << t;
         return s.str();
@@ -141,8 +141,8 @@ namespace mongo {
             delete[] _buf;
         }
 
-        string toString() const {
-            string s = _buf;
+        std::string toString() const {
+            std::string s = _buf;
             return s;
         }
 

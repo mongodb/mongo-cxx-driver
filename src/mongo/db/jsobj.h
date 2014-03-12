@@ -28,8 +28,6 @@
 
 #pragma once
 
-#include "mongo/pch.h"
-
 #include "mongo/bson/util/builder.h"
 #include "mongo/bson/optime.h"
 #include "mongo/bson/bsontypes.h"

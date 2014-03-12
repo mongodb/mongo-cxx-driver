@@ -15,8 +15,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/client/gridfs.h"
 
 #include <boost/filesystem/operations.hpp>
@@ -37,6 +35,13 @@
 
 
 namespace mongo {
+
+    using std::auto_ptr;
+    using std::cout;
+    using std::ios;
+    using std::ofstream;
+    using std::ostream;
+    using std::string;
 
     const unsigned DEFAULT_CHUNK_SIZE = 256 * 1024;
 

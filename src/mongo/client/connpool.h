@@ -66,7 +66,7 @@ namespace mongo {
 
         void flush();
 
-        void getStaleConnections( vector<DBClientBase*>& stale );
+        void getStaleConnections( std::vector<DBClientBase*>& stale );
 
         /**
          * Sets the lower bound for creation times that can be considered as
@@ -139,7 +139,7 @@ namespace mongo {
         ~DBConnectionPool();
 
         /** right now just controls some asserts.  defaults to "dbconnectionpool" */
-        void setName( const string& name ) { _name = name; }
+        void setName( const std::string& name ) { _name = name; }
 
         void onCreate( DBClientBase * conn );
         void onHandedOut( DBClientBase * conn );
@@ -147,10 +147,10 @@ namespace mongo {
 
         void flush();
 
-        DBClientBase *get(const string& host, double socketTimeout = 0);
+        DBClientBase *get(const std::string& host, double socketTimeout = 0);
         DBClientBase *get(const ConnectionString& host, double socketTimeout = 0);
 
-        void release(const string& host, DBClientBase *c);
+        void release(const std::string& host, DBClientBase *c);
 
         void addHook( DBConnectionHook * hook ); // we take ownership
         void appendInfo( BSONObjBuilder& b );
@@ -169,29 +169,29 @@ namespace mongo {
          * @return true if the connection is not bad, meaning, it is good to keep it for
          *     future use.
          */
-        bool isConnectionGood(const string& host, DBClientBase* conn);
+        bool isConnectionGood(const std::string& host, DBClientBase* conn);
 
         // Removes and deletes all connections from the pool for the host (regardless of timeout)
-        void removeHost( const string& host );
+        void removeHost( const std::string& host );
 
         /** compares server namees, but is smart about replica set names */
         struct serverNameCompare {
-            bool operator()( const string& a , const string& b ) const;
+            bool operator()( const std::string& a , const std::string& b ) const;
         };
 
-        virtual string taskName() const { return "DBConnectionPool-cleaner"; }
+        virtual std::string taskName() const { return "DBConnectionPool-cleaner"; }
         virtual void taskDoWork();
 
     private:
         DBConnectionPool( DBConnectionPool& p );
 
-        DBClientBase* _get( const string& ident , double socketTimeout );
+        DBClientBase* _get( const std::string& ident , double socketTimeout );
 
-        DBClientBase* _finishCreate( const string& ident , double socketTimeout, DBClientBase* conn );
+        DBClientBase* _finishCreate( const std::string& ident , double socketTimeout, DBClientBase* conn );
 
         struct PoolKey {
             PoolKey( const std::string& i , double t ) : ident( i ) , timeout( t ) {}
-            string ident;
+            std::string ident;
             double timeout;
         };
 
@@ -199,16 +199,16 @@ namespace mongo {
             bool operator()( const PoolKey& a , const PoolKey& b ) const;
         };
 
-        typedef map<PoolKey,PoolForHost,poolKeyCompare> PoolMap; // servername -> pool
+        typedef std::map<PoolKey,PoolForHost,poolKeyCompare> PoolMap; // servername -> pool
 
         mongo::mutex _mutex;
-        string _name;
+        std::string _name;
 
         PoolMap _pools;
 
         // pointers owned by me, right now they leak on shutdown
         // _hooks itself also leaks because it creates a shutdown race condition
-        list<DBConnectionHook*> * _hooks;
+        std::list<DBConnectionHook*> * _hooks;
 
     };
 
@@ -221,7 +221,7 @@ namespace mongo {
 
         virtual DBClientBase* get() = 0;
         virtual void done() = 0;
-        virtual string getHost() const = 0;
+        virtual std::string getHost() const = 0;
 
         /**
          * @return true iff this has a connection to the db
@@ -246,7 +246,7 @@ namespace mongo {
         /** the main constructor you want to use
             throws UserException if can't connect
             */
-        explicit ScopedDbConnection(const string& host, double socketTimeout = 0) : _host(host), _conn( pool.get(host, socketTimeout) ), _socketTimeout( socketTimeout ) {
+        explicit ScopedDbConnection(const std::string& host, double socketTimeout = 0) : _host(host), _conn( pool.get(host, socketTimeout) ), _socketTimeout( socketTimeout ) {
             _setSocketTimeout();
         }
 
@@ -257,7 +257,7 @@ namespace mongo {
         ScopedDbConnection() : _host( "" ) , _conn(0), _socketTimeout( 0 ) {}
 
         /* @param conn - bind to an existing connection */
-        ScopedDbConnection(const string& host, DBClientBase* conn, double socketTimeout = 0 ) : _host( host ) , _conn( conn ), _socketTimeout( socketTimeout ) {
+        ScopedDbConnection(const std::string& host, DBClientBase* conn, double socketTimeout = 0 ) : _host( host ) , _conn( conn ), _socketTimeout( socketTimeout ) {
             _setSocketTimeout();
         }
 
@@ -285,7 +285,7 @@ namespace mongo {
 
         bool ok() const { return _conn > 0; }
 
-        string getHost() const { return _host; }
+        std::string getHost() const { return _host; }
 
         /** Force closure of the connection.  You should call this if you leave it in
             a bad state.  Destructor will do this too, but it is verbose.
@@ -318,7 +318,7 @@ namespace mongo {
 
         void _setSocketTimeout();
 
-        const string _host;
+        const std::string _host;
         DBClientBase *_conn;
         const double _socketTimeout;
 

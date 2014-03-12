@@ -16,8 +16,6 @@
  */
 
 
-#include "mongo/pch.h"
-
 #include "mongo/client/syncclusterconnection.h"
 
 #include "mongo/client/dbclientcursor.h"
@@ -28,6 +26,14 @@
 // error codes 8000-8009
 
 namespace mongo {
+
+    using std::auto_ptr;
+    using std::endl;
+    using std::list;
+    using std::map;
+    using std::string;
+    using std::stringstream;
+    using std::vector;
 
     SyncClusterConnection::SyncClusterConnection( const list<HostAndPort> & L, double socketTimeout) : _mutex("SyncClusterConnection"), _socketTimeout( socketTimeout ) {
         {

@@ -15,8 +15,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/util/net/httpclient.h"
 
 #include "mongo/bson/util/builder.h"
@@ -27,6 +25,9 @@
 #include "mongo/util/net/ssl_manager.h"
 
 namespace mongo {
+
+    using std::string;
+    using std::stringstream;
 
     //#define HD(x) cout << x << endl;
 #define HD(x)

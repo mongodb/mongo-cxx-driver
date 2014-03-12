@@ -293,7 +293,7 @@ namespace mongo {
 
         void send( MessagingPort &p, const char *context );
         
-        string toString() const;
+        std::string toString() const;
 
     private:
         void _setData( MsgData *d, bool freeIt ) {

@@ -48,8 +48,6 @@
 
 #include "mongo/client/redef_macros.h"
 
-#include "mongo/pch.h"
-
 #include "mongo/bson/bsonelement.h"
 #include "mongo/bson/bsonobj.h"
 #include "mongo/bson/bsonobjbuilder.h"

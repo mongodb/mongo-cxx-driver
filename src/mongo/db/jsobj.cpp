@@ -17,8 +17,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/db/jsobj.h"
 
 #include <limits>
@@ -51,6 +49,14 @@ BOOST_STATIC_ASSERT( sizeof(mongo::Date_t) == 8 );
 BOOST_STATIC_ASSERT( sizeof(mongo::OID) == 12 );
 
 namespace mongo {
+
+    using std::dec;
+    using std::endl;
+    using std::hex;
+    using std::numeric_limits;
+    using std::set;
+    using std::string;
+    using std::stringstream;
 
     namespace str = mongoutils::str;
 

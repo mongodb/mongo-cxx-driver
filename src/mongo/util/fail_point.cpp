@@ -21,6 +21,9 @@
 using mongoutils::str::stream;
 
 namespace mongo {
+
+    using std::endl;
+
     FailPoint::FailPoint():
             _fpInfo(0),
             _mode(off),

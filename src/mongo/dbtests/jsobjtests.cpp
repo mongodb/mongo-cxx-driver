@@ -16,8 +16,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/bson/util/builder.h"
 #include "mongo/db/jsobj.h"
 #include "mongo/db/json.h"
@@ -29,6 +27,8 @@
 #include "mongo/util/stringutils.h"
 
 namespace JsobjTests {
+
+    using namespace std;
 
     //void keyTest(const BSONObj& o, bool mustBeCompact = false) {
         //static KeyV1Owned *kLast;

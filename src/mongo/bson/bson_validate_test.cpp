@@ -22,6 +22,8 @@
 
 namespace {
 
+    using std::endl;
+
     using namespace mongo;
 
     void appendInvalidStringElement(const char* fieldName, BufBuilder* bb) {

@@ -15,13 +15,16 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/logger/logger.h"
 #include "mongo/util/concurrency/mutex.h"
 
 
 namespace mongo {
+
+    using std::cout;
+    using std::endl;
+    using std::map;
+    using std::set;
 
 #if defined(_DEBUG)
 

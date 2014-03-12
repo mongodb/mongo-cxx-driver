@@ -15,8 +15,6 @@
  *    limitations under the License.
  */
 
-#include "mongo/pch.h"
-
 #include "mongo/db/lasterror.h"
 
 #include "mongo/db/jsobj.h"
@@ -35,11 +33,11 @@ namespace mongo {
             /* might be intentional (non-user thread) */
             DEV {
                 static unsigned n;
-                if( ++n < 4 && !isShell ) log() << "dev: lastError==0 won't report:" << msg << endl;
+                if( ++n < 4 && !isShell ) log() << "dev: lastError==0 won't report:" << msg << std::endl;
             }
         }
         else if ( le->disabled ) {
-            log() << "lastError disabled, can't report: " << code << ":" << msg << endl;
+            log() << "lastError disabled, can't report: " << code << ":" << msg << std::endl;
         }
         else {
             le->raiseError(code, msg);
