@@ -107,6 +107,7 @@ scratch
 *.class
 
 # examples
+/arrayExample
 /firstExample
 /secondExample
 /whereExample
