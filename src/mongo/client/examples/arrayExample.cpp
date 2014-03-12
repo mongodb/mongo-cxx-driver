@@ -3,10 +3,10 @@
 #include <vector>
 #include "mongo/bson/bson.h"
 
-using mongo::BSONObj;
-using mongo::BSONObjBuilder;
 using mongo::BSONArray;
 using mongo::BSONArrayBuilder;
+using mongo::BSONObj;
+using mongo::BSONObjBuilder;
 using mongo::BSONElement;
 using std::cout;
 using std::endl;
@@ -15,7 +15,7 @@ using std::vector;
 
 int main() {
     // Build an object
-    BSONObjBuilder bob(64);
+    BSONObjBuilder bob;
 
     // Build an array
     BSONArrayBuilder bab;
@@ -47,7 +47,7 @@ int main() {
     vector<BSONElement> elements = an_obj["x"].Array();
 
     // Print the array out
-    cout << "Our array:" << endl;
+    cout << "Our Array:" << endl;
     for (vector<BSONElement>::iterator it = elements.begin(); it != elements.end(); ++it){
         cout << *it << endl;
     }
