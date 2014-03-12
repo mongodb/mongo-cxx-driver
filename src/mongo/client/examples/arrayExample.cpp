@@ -54,7 +54,7 @@ int main() {
     cout << endl;
 
     // Extract the array as a BSONObj
-    BSONObj myarray = an_obj["x"].Obj();
+    BSONObj myarray = an_obj["y"].Obj();
 
     // Convert it to a vector
     vector<BSONElement> v;
