@@ -123,6 +123,7 @@ if usingSasl:
     clientSource += clientSourceSasl
 
 exampleSourceMap = [
+        ('arrayExample', 'mongo/client/examples/arrayExample.cpp'),
         ('authTest', 'mongo/client/examples/authTest.cpp'),
         ('clientTest', 'mongo/client/examples/clientTest.cpp'),
         ('firstExample', 'mongo/client/examples/first.cpp'),
