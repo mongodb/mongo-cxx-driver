@@ -7,6 +7,10 @@ compiler:
 env:
   global:
     - PREFIX=$(mktemp -d /tmp/mongo-cxx-driver-install.XXXXXX || exit 1)
+    - BUILD_FLAGS="--mute -j3 --use-system-boost --dbg=on --prefix=${PREFIX}"
+    - SECURITY_FLAGS="--ssl --use-sasl-client"
+    - CLIENT_FLAGS="--full --sharedclient"
+    - COMMON_FLAGS="${BUILD_FLAGS} ${SECURITY_FLAGS} ${CLIENT_FLAGS}"
 
 # Setup required repositories before installation
 before_install:
@@ -16,23 +20,20 @@ before_install:
 # Install Boost 1.49 dependencies via PPA
 install:
     - sudo apt-get install -qq
-      libboost1.49-dev
-      libboost-program-options1.49-dev
-      libboost-filesystem1.49-dev
-      libboost-thread1.49-dev
+        libboost1.49-dev
+        libboost-program-options1.49-dev
+        libboost-filesystem1.49-dev
+        libboost-thread1.49-dev
 
 script:
-    - scons
-       -j2
-       --mute
-       --quiet
-       --prefix=$PREFIX
-       --use-system-boost
-       --full
-       --sharedclient
-       --ssl
-       --use-sasl-client
-       --dbg=on
-       test
-       clientTests
-       check-install-mongoclient
+    # Build all targets under current directory and install
+    # TODO: use all target here when fixed
+    - scons ${COMMON_FLAGS}
+        .
+        install-mongoclient
+
+    # Run unit tests and verify header installation
+    # TODO: run smokeClient -- with mongod on 27999
+    - scons ${COMMON_FLAGS}
+        test
+        check-install-mongoclient
