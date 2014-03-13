@@ -1355,6 +1355,13 @@ def doConfigure(myenv):
         if haveUUThread:
             myenv.Append(CPPDEFINES=['MONGO_HAVE___THREAD'])
 
+    if using_msvc():
+        # TODO: This is really only needed for MSVC 12, but we have no current way to know
+        # which MSVC version we have. Presuming that this is harmless on other MSVC
+        # implementations. Without this, gtest doesn't build. We need to apply universally, not
+        # just while builing gtest.
+        myenv.Append(CPPDEFINES=[('_VARIADIC_MAX', 10)])
+
     conf = Configure(myenv)
     libdeps.setup_conftests(conf)
 
