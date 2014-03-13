@@ -1,11 +1,32 @@
-# MongoDB Legacy C++ Driver [![Build Status](http://img.shields.io/travis/mongodb/mongo-cxx-driver/legacy.svg)](https://travis-ci.org/mongodb/mongo-cxx-driver)
-Welcome to the MongoDB Legacy C++ Driver!
+# MongoDB C++ Driver [![Build Status](http://img.shields.io/travis/mongodb/mongo-cxx-driver/legacy.svg)](https://travis-ci.org/mongodb/mongo-cxx-driver)
+Welcome to the MongoDB C++ Driver!
 
-This driver is an extraction of the "Server C++ Driver" from the primary
-MongoDB sources. You should prefer using this to building the driver
-from the server sources if at all possible. Please note that as of
-MongoDB 2.6.0-rc1, it is no longer possible to build the driver from
-the server sources: this repo is the only approved source for driver builds.
+Use this branch if:
+
+ - You are using MongoDB's C++ driver for the first time.
+ - You had been using 26compat (or the driver inside of the server source) and
+ want to benefit from incremental improvements but have the same overall API.
+
+Switch to the 26compat branch if:
+
+ - You have existing code that used the driver from the server source
+ and want it to continue working without modification.
+
+**Please Note:** As of MongoDB 2.6.0-rc1, it is no longer possible to build the
+driver from the server sources: this repository is the only approved source for
+driver builds.
+
+The master branch will contain future development work on a new driver with a
+completely new API and implementation. It is a work in progress and currently
+should not be used.
+
+## Repository Overview
+
+| Branch   | Development        | Purpose                                               |
+| -------- | ------------------ | ----------------------------------------------------- |
+| master   | Planning           | New C++ driver (work in progress)                     |
+| legacy   | Active             | Existing C++ driver with non-compatible improvements  |
+| 26compat | Maintenance Only   | Drop in replacement for users of existing C++ driver  |
 
 ## Components
 
@@ -16,14 +37,15 @@ the server sources: this repo is the only approved source for driver builds.
 
   See http://docs.mongodb.org/ecosystem/tutorial/download-and-compile-cpp-driver/
 
-  The above instructions (currently) assume that you are building from the server
-  repository, but the will work with this repository as described.
+## Bugs and Issues
+
+  See http://jira.mongodb.org/browse/CXX
 
 ## Notes
 
   Use of the shared library is experimental on windows and is currently
-  discouraged.  This is primarily due to the complexity of ensuring a matching
-  implementation of STL types between library and consumer code.  This problem
+  discouraged. This is primarily due to the complexity of ensuring a matching
+  implementation of STL types between library and consumer code. This problem
   is unique to windows, as the consistent use of system libraries largely
   mitigates this danger.
 
