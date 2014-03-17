@@ -146,7 +146,6 @@ clientHeaders = [
     'mongo/base/string_data.h',
     'mongo/bson/bson-inl.h',
     'mongo/bson/bson.h',
-    'mongo/bson/bson_builder_base.h',
     'mongo/bson/bson_db.h',
     'mongo/bson/bson_field.h',
     'mongo/bson/bsonelement.h',
