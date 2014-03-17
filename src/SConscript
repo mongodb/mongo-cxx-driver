@@ -3,8 +3,9 @@
 # This is the principle SConscript file, invoked by the SConstruct.  Its job is
 # to delegate to any and all per-module SConscript files.
 
-Import('module_sconscripts')
+Import('env')
 
-SConscript(['mongo/SConscript',
-            'third_party/SConscript'] +
-           module_sconscripts)
+env.SConscript([
+    'mongo/SConscript',
+    'third_party/SConscript',
+])

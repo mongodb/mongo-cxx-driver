@@ -8,7 +8,7 @@ import sys
 
 import buildscripts.utils
 
-Import('env windows usev8')
+Import('env windows')
 
 def getSysInfo():
     if windows:
@@ -37,18 +37,11 @@ namespace mongo {
 
 def generate_buildinfo(env, target, source, **kw):
     git_version = buildscripts.utils.getGitVersion()
-    if len(env["MONGO_MODULES"]):
-        git_version += " modules: " + ", ".join(env["MONGO_MODULES"])
-
-    if usev8:
-        js_engine = "V8"
-    else:
-        js_engine = "Unknown"
 
     contents = str(source[0]) % dict(git_version=git_version,
-                                     js_engine=js_engine,
+                                     js_engine='None',
                                      sys_info=getSysInfo(),
-                                     allocator=GetOption('allocator'),
+                                     allocator='System',
                                      loader_flags=env.subst('$LINKFLAGS $LDFLAGS',
                                                             source=source, target=target),
                                      compiler_flags=env.subst('$CXXFLAGS $CCFLAGS $CFLAGS',
@@ -64,4 +57,3 @@ env.Command(buildinfo_filename,
             Action(generate_buildinfo, "Generating $TARGET"))
 env.AlwaysBuild(buildinfo_filename)
 env.Install('$BUILD_DIR/mongo', buildinfo_filename)
-env.Install('$BUILD_DIR/client_build/mongo', buildinfo_filename)

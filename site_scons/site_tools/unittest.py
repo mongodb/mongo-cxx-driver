@@ -11,6 +11,8 @@ def build_cpp_unit_test(env, target, source, **kwargs):
     kwargs['LIBDEPS'] = libdeps
 
     result = env.Program(target, source, **kwargs)
+    buildAlias = env.Alias('build-' + target, result)
+    env.Alias('unittests', buildAlias)
     runAlias = env.Alias('run-' + target, [result], result[0].abspath)
     env.AlwaysBuild(runAlias)
     testAliases = ['test', 'smokeCppUnittests', 'smoke']

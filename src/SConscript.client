@@ -4,8 +4,7 @@
 # programs.
 import os
 
-Import('env has_option installSetup use_system_version_of_library')
-
+Import('env has_option')
 Import('nix linux darwin windows')
 
 buildShared = False
@@ -263,8 +262,7 @@ mongoClientStaticLib = staticLibEnv.StaticLibrary(
     staticLibName, clientSource),
 mongoClientInstalls.append(staticLibEnv.Install('#/', mongoClientStaticLib))
 
-if installSetup.libraries:
-    mongoClientPrefixInstalls.append(libEnv.Install("$INSTALL_DIR/lib", mongoClientStaticLib))
+mongoClientPrefixInstalls.append(libEnv.Install("$INSTALL_DIR/lib", mongoClientStaticLib))
 
 mongoClientSharedLib = None
 
@@ -282,18 +280,9 @@ if buildShared:
 
     sharedLibEnv.AppendUnique(LIBS=mongoClientSysLibDeps)
 
-    # On windows, we always want to attach the shim, since independently of whether we are
-    # using the system or the vendored boost, the DLL must have complete symbols. For unix like
-    # systems, attach the shim only if we are using the external libraries so that we pick up
-    # what configure found for us. Otherwise, produce a dynamic object in which the boost
-    # symbols are undefined, ensuring that we pass any necessary OS flags to produce such a
-    # library.
-    if windows or use_system_version_of_library("boost"):
-        sharedLibEnv.AppendUnique(LIBDEPS=mongoClientLibDeps)
-        if linux and not has_option('sanitize'):
-            sharedLibEnv.AppendUnique(SHLINKFLAGS=["-Wl,--as-needed", "-Wl,-zdefs"])
-    elif darwin:
-        sharedLibEnv.AppendUnique(SHLINKFLAGS=["-Wl,-undefined,dynamic_lookup"])
+    sharedLibEnv.AppendUnique(LIBDEPS=mongoClientLibDeps)
+    if linux and not has_option('sanitize'):
+        sharedLibEnv.AppendUnique(SHLINKFLAGS=["-Wl,--as-needed", "-Wl,-zdefs"])
 
     # On non-windows systems, we want to match the behavior of DLLs
     # and not export all symbols from the dynamic shared library unless 
@@ -318,63 +307,62 @@ if buildShared:
             ))
     mongoClientInstalls.append(mongoClientSharedLibInstall)
 
-    if installSetup.libraries:
-        mongoClientSharedLibPrefixInstall = sharedLibEnv.Install(
-            '$INSTALL_DIR/lib', mongoClientSharedLib)
-        if darwin:
-            sharedLibEnv.AddPostAction(
-                mongoClientSharedLibPrefixInstall,
-                "install_name_tool -id %s %s" % (
-                    mongoClientSharedLibPrefixInstall[0],
-                    mongoClientSharedLibPrefixInstall[0]
-                ))
-        mongoClientPrefixInstalls.append(mongoClientSharedLibPrefixInstall)
+
+    mongoClientSharedLibPrefixInstall = sharedLibEnv.Install(
+        '$INSTALL_DIR/lib', mongoClientSharedLib)
+    if darwin:
+        sharedLibEnv.AddPostAction(
+            mongoClientSharedLibPrefixInstall,
+            "install_name_tool -id %s %s" % (
+                mongoClientSharedLibPrefixInstall[0],
+                mongoClientSharedLibPrefixInstall[0]
+            ))
+    mongoClientPrefixInstalls.append(mongoClientSharedLibPrefixInstall)
 
 libEnv.Alias('mongoclient', mongoClientInstalls)
 
-if installSetup.headers:
-    inst = libEnv.InstallAs(['$INSTALL_DIR/include/' + x for x in clientHeaders], clientHeaders)
-    libEnv.AddPostAction(inst, Chmod('$TARGET', 0644))
-    mongoClientPrefixInstalls.append(inst);
+inst = libEnv.InstallAs(['$INSTALL_DIR/include/' + x for x in clientHeaders], clientHeaders)
+libEnv.AddPostAction(inst, Chmod('$TARGET', 0644))
+mongoClientPrefixInstalls.append(inst);
 
-if installSetup.headers or installSetup.libraries:
-    installAlias = libEnv.Alias('install-mongoclient', mongoClientPrefixInstalls)
 
-    # Build some simple mainlines that include the dbclient.h and bson.h headers
-    # with things set up to include from the installation directory.
+installAlias = libEnv.Alias('install-mongoclient', mongoClientPrefixInstalls)
 
-    # Remove anything that says $BUILD_DIR from the CPPPATH, except for things in third party,
-    # so we have a source for boost, etc if we aren't getting them from the system.
-    limit_cpppath=[p for p in libEnv['CPPPATH']
-                   if not ('$BUILD_DIR' in p and not 'third_party' in p)]
+# Build some simple mainlines that include the dbclient.h and bson.h headers
+# with things set up to include from the installation directory.
 
-    # Create an environment where include files and libraries come from the installation directory.
-    installationTestEnv = libEnv.Clone(
-        CPPPATH=["$INSTALL_DIR/include"] + limit_cpppath,
-        LIBPATH=["$INSTALL_DIR/lib"],
-        CPPDEFINES=[],
-    )
+# Remove anything that says $BUILD_DIR from the CPPPATH, except for things in third party,
+# so we have a source for boost, etc if we aren't getting them from the system.
+limit_cpppath=[p for p in libEnv['CPPPATH']
+               if not ('$BUILD_DIR' in p and not 'third_party' in p)]
 
-    include_dbclienth_test_file = 'mongo/client/include_dbclienth_test.cpp'
-    libEnv.Depends(include_dbclienth_test_file, installAlias)
-    include_dbclienth_test = installationTestEnv.Object(
-        target='include_dbclienth_test',
-        source=[include_dbclienth_test_file])
-    libEnv.AlwaysBuild(include_dbclienth_test)
-    libEnv.NoCache(include_dbclienth_test)
+# Create an environment where include files and libraries come from the installation directory.
+installationTestEnv = libEnv.Clone(
+    CPPPATH=["$INSTALL_DIR/include"] + limit_cpppath,
+    LIBPATH=["$INSTALL_DIR/lib"],
+    CPPDEFINES=[],
+)
 
-    include_bsonh_test_file = 'mongo/client/include_bsonh_test.cpp'
-    libEnv.Depends(include_bsonh_test_file, installAlias)
-    include_bsonh_test = installationTestEnv.Object(
-        target='include_bsonh_test',
-        source=[include_bsonh_test_file])
-    libEnv.AlwaysBuild(include_bsonh_test)
-    libEnv.NoCache(include_bsonh_test)
+include_dbclienth_test_file = 'mongo/client/include_dbclienth_test.cpp'
+libEnv.Depends(include_dbclienth_test_file, installAlias)
+include_dbclienth_test = installationTestEnv.Object(
+    target='include_dbclienth_test',
+    source=[include_dbclienth_test_file])
+libEnv.AlwaysBuild(include_dbclienth_test)
+libEnv.NoCache(include_dbclienth_test)
 
-    libEnv.Alias('check-install-mongoclient', [
-        include_dbclienth_test,
-        include_bsonh_test,
-    ])
+include_bsonh_test_file = 'mongo/client/include_bsonh_test.cpp'
+libEnv.Depends(include_bsonh_test_file, installAlias)
+include_bsonh_test = installationTestEnv.Object(
+    target='include_bsonh_test',
+    source=[include_bsonh_test_file])
+libEnv.AlwaysBuild(include_bsonh_test)
+libEnv.NoCache(include_bsonh_test)
+
+libEnv.Alias('check-install-mongoclient', [
+    include_dbclienth_test,
+    include_bsonh_test,
+])
 
 staticClientEnv = clientEnv.Clone()
 staticClientEnv.PrependUnique(LIBDEPS=[mongoClientStaticLib])
