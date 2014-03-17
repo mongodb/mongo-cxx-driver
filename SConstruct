@@ -512,10 +512,6 @@ elif windows:
 
     env['DIST_ARCHIVE_SUFFIX'] = '.zip'
 
-    if has_option('win-version-min') and has_option('win2008plus'):
-        print("Can't specify both 'win-version-min' and 'win2008plus'")
-        Exit(1)
-
     # If tools configuration fails to set up 'cl' in the path, fall back to importing the whole
     # shell environment and hope for the best. This will work, for instance, if you have loaded
     # an SDK shell.
@@ -608,16 +604,7 @@ elif windows:
         # without having been initialized (implies /Od: no optimizations)
         env.Append( CCFLAGS=["/RTC1"] )
 
-    # This gives 32-bit programs 4 GB of user address space in WOW64, ignored in 64-bit builds
-    #
-    # TODO: Remove? What is the effect on libraries?
-    env.Append( LINKFLAGS=["/LARGEADDRESSAWARE"] )
-
-    env.Append(LIBS=['ws2_32.lib', 'kernel32.lib', 'advapi32.lib', 'Psapi.lib', 'DbgHelp.lib', 'shell32.lib'])
-
-    # v8 calls timeGetTime()
-    if usev8:
-        env.Append(LIBS=['winmm.lib'])
+    env.Append(LIBS=[ 'ws2_32.lib', 'DbgHelp.lib' ])
 
 if nix:
 
@@ -816,8 +803,6 @@ def doConfigure(myenv):
         default_64_bit_min = 'ws03sp2'
         if has_option('win-version-min'):
             win_version_min = get_option('win-version-min')
-        elif has_option('win2008plus'):
-            win_version_min = 'win7'
         else:
             if force32:
                 win_version_min = default_32_bit_min
