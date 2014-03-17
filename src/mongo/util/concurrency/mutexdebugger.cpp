@@ -15,6 +15,8 @@
  *    limitations under the License.
  */
 
+#include <set>
+
 #include "mongo/logger/logger.h"
 #include "mongo/util/concurrency/mutex.h"
 
