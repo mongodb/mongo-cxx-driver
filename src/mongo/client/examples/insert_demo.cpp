@@ -45,6 +45,9 @@ int main(int argc, char* argv[]) {
 
         bo o = BSON( "hello" << "world" );
 
+    cout << "dropping collection..." << endl;
+    c.dropCollection("test.foo");
+
 	cout << "inserting..." << endl;
 
 	time_t start = time(0);
