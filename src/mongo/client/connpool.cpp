@@ -21,7 +21,6 @@
 #include "mongo/client/connpool.h"
 #include "mongo/client/replica_set_monitor.h"
 #include "mongo/client/syncclusterconnection.h"
-#include "mongo/s/shard.h"
 
 namespace mongo {
 

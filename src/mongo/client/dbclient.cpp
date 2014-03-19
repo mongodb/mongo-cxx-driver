@@ -25,7 +25,6 @@
 #include "mongo/db/jsobj.h"
 #include "mongo/db/json.h"
 #include "mongo/db/namespace_string.h"
-#include "mongo/s/stale_exception.h"  // for RecvStaleConfigException
 #include "mongo/util/assert_util.h"
 #include "mongo/util/net/ssl_manager.h"
 #include "mongo/util/net/ssl_options.h"
@@ -881,12 +880,6 @@ namespace mongo {
             this->query(ns, query, nToReturn, nToSkip, fieldsToReturn, queryOptions);
 
         uassert( 10276 ,  str::stream() << "DBClientBase::findN: transport error: " << getServerAddress() << " ns: " << ns << " query: " << query.toString(), c.get() );
-
-        if ( c->hasResultFlag( ResultFlag_ShardConfigStale ) ){
-            BSONObj error;
-            c->peekError( &error );
-            throw RecvStaleConfigException( "findN stale config", error );
-        }
 
         for( int i = 0; i < nToReturn; i++ ) {
             if ( !c->more() )
