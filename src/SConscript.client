@@ -90,7 +90,6 @@ clientSourceBasic = [
     'mongo/util/md5.cpp',
     'mongo/util/password_digest.cpp',
     'mongo/util/net/httpclient.cpp',
-    'mongo/util/net/listen.cpp',
     'mongo/util/net/message.cpp',
     'mongo/util/net/message_port.cpp',
     'mongo/util/net/sock.cpp',
