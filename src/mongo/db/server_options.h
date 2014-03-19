@@ -17,9 +17,10 @@
 
 #include "mongo/db/jsobj.h"
 #include "mongo/platform/process_id.h"
-#include "mongo/util/net/listen.h" // For DEFAULT_MAX_CONN
 
 namespace mongo {
+
+    const int DEFAULT_MAX_CONN = 1000000;
 
     struct ServerGlobalParams {
 

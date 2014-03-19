@@ -219,7 +219,6 @@ clientHeaders = [
     'mongo/util/log.h',
     'mongo/util/mongoutils/str.h',
     'mongo/util/net/hostandport.h',
-    'mongo/util/net/listen.h',
     'mongo/util/net/message.h',
     'mongo/util/net/message_port.h',
     'mongo/util/net/sock.h',
