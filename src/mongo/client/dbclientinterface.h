@@ -1358,8 +1358,6 @@ namespace mongo {
      */
     MONGO_CLIENT_API bool serverAlive( const std::string &uri );
 
-    MONGO_CLIENT_API DBClientBase * createDirectClient();
-
     MONGO_CLIENT_API BSONElement getErrField( const BSONObj& result );
     MONGO_CLIENT_API bool hasErrField( const BSONObj& result );
 

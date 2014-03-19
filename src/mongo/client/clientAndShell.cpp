@@ -18,7 +18,6 @@
 #include "mongo/client/clientOnly-private.h"
 #include "mongo/db/client_basic.h"
 #include "mongo/db/server_options.h"
-#include "mongo/s/shard.h"
 #include "mongo/util/assert_util.h"
 #include "mongo/util/timer.h"
 
@@ -56,24 +55,6 @@ namespace mongo {
 
     string getDbContext() {
         return "in client only mode";
-    }
-
-    bool haveLocalShardingInfo( const string& ns ) {
-        return false;
-    }
-
-    DBClientBase * createDirectClient() {
-        uassert( 10256 ,  "no createDirectClient in clientOnly" , 0 );
-        return 0;
-    }
-
-    void Shard::getAllShards( vector<Shard>& all ) {
-        verify(0);
-    }
-
-    bool Shard::isAShardNode( const string& ident ) {
-        verify(0);
-        return false;
     }
 
     ClientBasic* ClientBasic::getCurrent() {

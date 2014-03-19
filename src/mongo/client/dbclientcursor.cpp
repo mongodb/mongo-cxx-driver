@@ -20,8 +20,6 @@
 #include "mongo/client/connpool.h"
 #include "mongo/db/dbmessage.h"
 #include "mongo/db/namespace_string.h"
-#include "mongo/s/shard.h"
-#include "mongo/s/stale_exception.h"  // for RecvStaleConfigException
 #include "mongo/util/debug_util.h"
 
 namespace mongo {
@@ -211,12 +209,6 @@ namespace mongo {
         batch.data = qr->data();
 
         _client->checkResponse( batch.data, batch.nReturned, &retry, &host ); // watches for "not master"
-
-        if( qr->resultFlags() & ResultFlag_ShardConfigStale ) {
-            BSONObj error;
-            verify( peekError( &error ) );
-            throw RecvStaleConfigException( (string)"stale config on lazy receive" + causedBy( getErrField( error ) ), error );
-        }
 
         /* this assert would fire the way we currently work:
             verify( nReturned || cursorId == 0 );
