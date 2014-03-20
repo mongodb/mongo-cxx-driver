@@ -7,19 +7,32 @@ compiler:
 env:
   global:
     - PREFIX=$(mktemp -d /tmp/mongo-cxx-driver-install.XXXXXX || exit 1)
+    - MONGO_REPO="http://repo.mongodb.com/apt/ubuntu"
+    - REPO_TYPE="precise/mongodb-enterprise/2.6 multiverse"
+    - SOURCES_LOC="/etc/apt/sources.list.d/mongodb-enterprise.list"
+    - KEY_SERVER="hkp://keyserver.ubuntu.com:80"
+    - MONGOD_OPTS="--port 27999 --httpinterface --dbpath ./data --fork --logpath mongod.log"
 
 # Setup required repositories before installation
 before_install:
     - sudo add-apt-repository -y ppa:jkeiren/ppa
+    - sudo apt-key adv --keyserver ${KEY_SERVER} --recv 7F0CEB10
+    - echo "deb ${MONGO_REPO} ${REPO_TYPE}" | sudo tee ${SOURCES_LOC}
     - sudo apt-get update -qq
 
-# Install Boost 1.49 dependencies via PPA
 install:
+    # Install Boost 1.49 dependencies via PPA
     - sudo apt-get install -qq
       libboost1.49-dev
       libboost-program-options1.49-dev
       libboost-filesystem1.49-dev
       libboost-thread1.49-dev
+
+    # Install MongoDB Enterprise and let smoke drive
+    - sudo apt-get install mongodb-enterprise
+    - sudo stop mongod
+    - mkdir data
+    - mongod ${MONGOD_OPTS}
 
 script:
     - scons
@@ -31,6 +44,6 @@ script:
        --ssl
        --use-sasl-client
        --dbg=on
-       test
-       clientTests
        check-install-mongoclient
+       test
+       smokeClient
