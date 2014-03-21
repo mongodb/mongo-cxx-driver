@@ -57,15 +57,27 @@ int main( int argc, const char **argv ) {
         return EXIT_FAILURE;
     }
 
+    bool worked;
     BSONObj ret;
-    // clean up old data from any previous tests
-    conn->runCommand( "test", BSON("removeUsersFromDatabase" << 1), ret );
 
-    conn->runCommand( "test",
-                      BSON( "createUser" << "eliot" <<
-                            "pwd" << "bar" <<
-                            "roles" << BSON_ARRAY("readWrite")),
-                      ret);
+    // clean up old data from any previous tests
+    worked = conn->runCommand( "test", BSON("dropAllUsersFromDatabase" << 1), ret );
+    if (!worked) {
+        cout << "Running MongoDB < 2.5.3 so falling back to old remove" << endl;
+        conn->remove( "test.system.users" , BSONObj() );
+    }
+
+    // create a new user
+    worked = conn->runCommand( "test",
+        BSON( "createUser" << "eliot" <<
+                "pwd" << "bar" <<
+                "roles" << BSON_ARRAY("readWrite")),
+        ret);
+    if (!worked) {
+        cout << "Running MongoDB < 2.5.3 so falling back to old user creation" << endl;
+        conn->insert( "test.system.users" , BSON( "user" <<
+            "eliot" << "pwd" << conn->createPasswordDigest( "eliot" , "bar" ) ) );
+    }
 
     errmsg.clear();
     conn->auth(BSON("user" << "eliot" <<
