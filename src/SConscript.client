@@ -208,7 +208,6 @@ clientHeaders = [
     'mongo/util/concurrency/mutexdebugger.h',
     'mongo/util/concurrency/thread_name.h',
     'mongo/util/concurrency/threadlocal.h',
-    'mongo/util/concurrency/ticketholder.h',
     'mongo/util/debug_util.h',
     'mongo/util/exit_code.h',
     'mongo/util/goodies.h',
