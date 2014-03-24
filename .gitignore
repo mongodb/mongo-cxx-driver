@@ -1,4 +1,5 @@
 /build
+/coverage
 /src/mongo/db/modules
 /.jsdbshell
 /.dbshell
@@ -54,6 +55,7 @@
 /src/third_party/*/*.tlog
 /src/third_party/*/*.lastbuildstate
 config.log
+coverage.info
 settings.py
 log_config.py
 /tags

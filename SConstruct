@@ -1192,4 +1192,47 @@ env.SConscript('src/SConscript', variant_dir='$BUILD_DIR', duplicate=False)
 env.SConscript('src/SConscript.client', variant_dir='$BUILD_DIR', duplicate=False)
 env.SConscript(['SConscript.buildinfo'])
 
+# --- Coverage ---
+if has_option("gcov"):
+    env['GCOV_BASE_DIR'] = env.subst(Dir(".").abspath)
+    env['GCOV_BUILD_DIR'] = env.subst(Dir("$BUILD_DIR").abspath).replace("#", "")
+
+    # Zero out all the counters -- depends on tests being built
+    env.Alias(
+        'zero_counters',
+        ['unittests','clientTests'],
+        ['lcov -z -b $GCOV_BASE_DIR -d $GCOV_BUILD_DIR']
+    )
+    env.AlwaysBuild('zero_counters')
+
+    # Generates test coverage information -- depends on tests being run
+    env.Command(
+        'coverage.info',
+        ['zero_counters', 'test', 'smokeClient'],
+        'lcov --no-external -c -b $GCOV_BASE_DIR -d $GCOV_BUILD_DIR -o $TARGET'
+    )
+    env.AlwaysBuild('coverage.info')
+
+    # Strip third_party and build related coverage info
+    env.Alias(
+        'strip_coverage',
+        ['coverage.info'],
+        [
+            'lcov -r coverage.info src/third_party/\* -o coverage.info',
+            'lcov -r coverage.info build/\* -o coverage.info',
+        ]
+    )
+    env.AlwaysBuild('strip_coverage')
+
+    # Generates the HTML output in "coverage" directory
+    env.Command(
+        Dir('coverage'),
+        'strip_coverage',
+        [
+            'rm -rf coverage',
+            'genhtml --legend -t "MongoDB C++ Driver Coverage" -o $TARGET coverage.info'
+        ]
+    )
+    env.AlwaysBuild('coverage')
+
 env.Alias('all', ['unittests', 'clientTests'])
