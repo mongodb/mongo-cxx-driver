@@ -176,10 +176,6 @@ namespace mongo {
      *    server
      *    server:port
      *    foo/server:port,server:port   SET
-     *    server,server,server          SYNC
-     *                                    Warning - you usually don't want "SYNC", it's used
-     *                                    for some special things such as sharding config servers.
-     *                                    See syncclusterconnection.h for more info.
      *
      * tyipcal use
      * string errmsg,
@@ -189,7 +185,7 @@ namespace mongo {
      */
     class MONGO_CLIENT_API ConnectionString {
     public:
-        enum ConnectionType { INVALID , MASTER , PAIR , SET , SYNC, CUSTOM };
+        enum ConnectionType { INVALID , MASTER , PAIR , SET , CUSTOM };
 
         ConnectionString() {
             _type = INVALID;
@@ -238,7 +234,7 @@ namespace mongo {
             }
             else {
                 _type = favoredMultipleType;
-                verify( _type == SET || _type == SYNC );
+                verify( _type == SET );
             }
             _finishInit();
         }

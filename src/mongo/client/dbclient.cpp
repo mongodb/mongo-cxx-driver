@@ -21,7 +21,6 @@
 #include "mongo/client/dbclient_rs.h"
 #include "mongo/client/dbclientcursor.h"
 #include "mongo/client/sasl_client_authenticate.h"
-#include "mongo/client/syncclusterconnection.h"
 #include "mongo/db/jsobj.h"
 #include "mongo/db/json.h"
 #include "mongo/db/namespace_string.h"
@@ -123,15 +122,6 @@ namespace mongo {
             return set;
         }
 
-        case SYNC: {
-            // TODO , don't copy
-            list<HostAndPort> l;
-            for ( unsigned i=0; i<_servers.size(); i++ )
-                l.push_back( _servers[i] );
-            SyncClusterConnection* c = new SyncClusterConnection( l, socketTimeout );
-            return c;
-        }
-
         case CUSTOM: {
 
             // Lock in case other things are modifying this at the same time
@@ -177,22 +167,6 @@ namespace mongo {
                 ( _servers[1] == other._servers[0] );
         case SET:
             return _setName == other._setName;
-        case SYNC:
-            // The servers all have to be the same in each, but not in the same order.
-            if ( _servers.size() != other._servers.size() )
-                return false;
-            for ( unsigned i = 0; i < _servers.size(); i++ ) {
-                bool found = false;
-                for ( unsigned j = 0; j < other._servers.size(); j++ ) {
-                    if ( _servers[i] == other._servers[j] ) {
-                        found = true;
-                        break;
-                    }
-                }
-                if ( ! found )
-                    return false;
-            }
-            return true;
         case CUSTOM:
             return _string == other._string;
         }
@@ -215,9 +189,6 @@ namespace mongo {
         if ( numCommas == 1 )
             return ConnectionString( PAIR , host );
 
-        if ( numCommas == 2 )
-            return ConnectionString( SYNC , host );
-
         errmsg = (string)"invalid hostname [" + host + "]";
         return ConnectionString(); // INVALID
     }
@@ -232,8 +203,6 @@ namespace mongo {
             return "pair";
         case SET:
             return "set";
-        case SYNC:
-            return "sync";
         case CUSTOM:
             return "custom";
         }
