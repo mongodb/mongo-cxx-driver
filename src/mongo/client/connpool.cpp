@@ -20,7 +20,6 @@
 
 #include "mongo/client/connpool.h"
 #include "mongo/client/replica_set_monitor.h"
-#include "mongo/client/syncclusterconnection.h"
 
 namespace mongo {
 
@@ -469,8 +468,6 @@ namespace mongo {
         if( ! _conn ) return;
         if( _conn->type() == ConnectionString::MASTER )
             (( DBClientConnection* ) _conn)->setSoTimeout( _socketTimeout );
-        else if( _conn->type() == ConnectionString::SYNC )
-            (( SyncClusterConnection* ) _conn)->setAllSoTimeouts( _socketTimeout );
     }
 
     ScopedDbConnection::~ScopedDbConnection() {

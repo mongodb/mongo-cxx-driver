@@ -302,8 +302,7 @@ namespace mongo {
         verify( conn );
         verify( conn->get() );
 
-        if ( conn->get()->type() == ConnectionString::SET ||
-             conn->get()->type() == ConnectionString::SYNC ) {
+        if ( conn->get()->type() == ConnectionString::SET ) {
             if( _lazyHost.size() > 0 )
                 _scopedHost = _lazyHost;
             else if( _client )
