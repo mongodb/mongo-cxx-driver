@@ -39,6 +39,7 @@ unittests = [
     'bson/util/bson_extract_test',
     'client/dbclient_rs_test',
     'client/scoped_db_conn_test',
+    'client/gridfs_test',
     'client/replica_set_monitor_test',
     'dbtests/jsobjtests',
     'dbtests/jsontests',

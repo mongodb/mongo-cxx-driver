@@ -126,6 +126,7 @@ exampleSourceMap = [
         ('httpClientTest', 'mongo/client/examples/httpClientTest.cpp'),
         ('insertDemo', 'mongo/client/examples/insert_demo.cpp'),
         ('rsExample', 'mongo/client/examples/rs.cpp'),
+        ('saslExample', 'mongo/client/examples/sasl_client_auth_example.cpp'),
         ('secondExample', 'mongo/client/examples/second.cpp'),
         ('simpleClientDemo', 'mongo/client/examples/simple_client_demo.cpp'),
         ('tutorial', 'mongo/client/examples/tutorial.cpp'),
