@@ -92,7 +92,6 @@ clientSourceBasic = [
     'mongo/util/net/sock.cpp',
     "mongo/util/net/socket_poll.cpp",
     'mongo/util/net/ssl_manager.cpp',
-    'mongo/util/signal_handlers.cpp',
     'mongo/util/stringutils.cpp',
     'mongo/util/text.cpp',
     'mongo/util/time_support.cpp',
@@ -219,7 +218,6 @@ clientHeaders = [
     'mongo/util/net/sock.h',
     'mongo/util/net/ssl_manager.h',
     'mongo/util/net/ssl_options.h',
-    'mongo/util/signal_handlers.h',
     'mongo/util/time_support.h',
     'mongo/util/version.h',
 ]
