@@ -24,7 +24,6 @@
 #include <boost/thread/thread.hpp>
 
 #include "mongo/util/concurrency/mutex.h"
-#include "mongo/util/concurrency/spin_lock.h"
 #include "mongo/util/concurrency/thread_name.h"
 #include "mongo/util/debug_util.h"
 #include "mongo/util/log.h"

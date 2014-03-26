@@ -32,7 +32,6 @@
 #endif
 
 #include "mongo/util/background.h"
-#include "mongo/util/concurrency/value.h"
 #include "mongo/util/debug_util.h"
 #include "mongo/util/fail_point_service.h"
 #include "mongo/util/mongoutils/str.h"
@@ -338,8 +337,6 @@ namespace mongo {
    
     //  --- my --
 
-    DiagStr& _hostNameCached = *(new DiagStr); // this is also written to from commands/cloud.cpp
-
     string getHostName() {
         char buf[256];
         int ec = gethostname(buf, 127);
@@ -348,24 +345,6 @@ namespace mongo {
             return "";
         }
         return buf;
-    }
-
-    /** we store our host name once */
-    string getHostNameCached() {
-        string temp = _hostNameCached.get();
-        if (_hostNameCached.empty()) {
-            temp = getHostName();
-            _hostNameCached = temp;
-        }
-        return temp;
-    }
-
-    string prettyHostName() {
-        StringBuilder s;
-        s << getHostNameCached();
-        if (serverGlobalParams.port != ServerGlobalParams::DefaultDBPort)
-            s << ':' << mongo::serverGlobalParams.port;
-        return s.str();
     }
 
     // --------- SocketException ----------
