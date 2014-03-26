@@ -267,7 +267,7 @@ def printLocalInfo():
 
 printLocalInfo()
 
-boostLibs = [ "thread" , "filesystem" , "program_options", "system" ]
+boostLibs = [ "thread" , "filesystem" , "system" ]
 
 linux64  = False
 force32 = has_option( "force32" ) 
