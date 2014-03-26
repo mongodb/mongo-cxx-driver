@@ -22,7 +22,6 @@
 #include "mongo/util/goodies.h"
 #include "mongo/util/mongoutils/str.h"
 #include "mongo/util/stacktrace.h"
-#include "mongo/util/startup_test.h"
 #include "mongo/util/time_support.h"
 #include "mongo/util/timer.h"
 
@@ -64,25 +63,6 @@ namespace mongo {
             n += 2;
         return n;
     }
-
-    struct UtilTest : public StartupTest {
-        void run() {
-            verify( isPrime(3) );
-            verify( isPrime(2) );
-            verify( isPrime(13) );
-            verify( isPrime(17) );
-            verify( !isPrime(9) );
-            verify( !isPrime(6) );
-            verify( nextPrime(4) == 5 );
-            verify( nextPrime(8) == 11 );
-
-            verify( endsWith("abcde", "de") );
-            verify( !endsWith("abcde", "dasdfasdfashkfde") );
-
-            verify( swapEndian(0x01020304) == 0x04030201 );
-
-        }
-    } utilTest;
 
     ostream& operator<<( ostream &s, const ThreadSafeString &o ) {
         s << o.toString();
