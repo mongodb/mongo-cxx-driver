@@ -133,12 +133,6 @@ namespace mongo {
 
     /** this is not cache and does a syscall */
     std::string getHostName();
-    
-    /** this is cached, so if changes during the process lifetime
-     * will be stale */
-    std::string getHostNameCached();
-
-    std::string prettyHostName();
 
     /**
      * thrown by Socket and SockAddr

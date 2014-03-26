@@ -23,7 +23,7 @@
 #include "mongo/bson/bsonobjbuilder.h"
 #include "mongo/client/dbclientinterface.h"
 #include "mongo/platform/unordered_map.h"
-#include "mongo/util/concurrency/spin_lock.h"
+#include "mongo/util/concurrency/mutex.h"
 
 namespace mongo {
 
@@ -224,6 +224,6 @@ namespace mongo {
         InstanceID _instanceID;
 
         // protects this entire instance
-        mutable mongo::SpinLock _lock;
+        mutable mongo::SimpleMutex _lock;
     };
 }
