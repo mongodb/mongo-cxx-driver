@@ -112,7 +112,6 @@ namespace mongo {
         stringstream temp;
         temp << "assertion " << file << ":" << line;
         AssertionException e(temp.str(),0);
-        breakpoint();
 #if defined(_DEBUG) || defined(_DURABLEDEFAULTON) || defined(_DURABLEDEFAULTOFF)
         // this is so we notice in buildbot
         log() << "\n\n***aborting after verify() failure as this is a debug/test build\n\n" << endl;
@@ -124,7 +123,6 @@ namespace mongo {
     NOINLINE_DECL void invariantFailed(const char *msg, const char *file, unsigned line) {
         problem() << "Invariant failure " << msg << ' ' << file << ' ' << dec << line << endl;
         logContext();
-        breakpoint();
         log() << "\n\n***aborting after invariant() failure\n\n" << endl;
         abort();
     }
@@ -132,22 +130,13 @@ namespace mongo {
     NOINLINE_DECL void fassertFailed( int msgid ) {
         problem() << "Fatal Assertion " << msgid << endl;
         logContext();
-        breakpoint();
         log() << "\n\n***aborting after fassert() failure\n\n" << endl;
         abort();
-    }
-
-    NOINLINE_DECL void fassertFailedNoTrace( int msgid ) {
-        problem() << "Fatal Assertion " << msgid << endl;
-        breakpoint();
-        log() << "\n\n***aborting after fassert() failure\n\n" << endl;
-        ::_exit(EXIT_ABRUPT); // bypass our handler for SIGABRT, which prints a stack trace.
     }
 
     MONGO_COMPILER_NORETURN void fassertFailedWithStatus(int msgid, const Status& status) {
         problem() << "Fatal assertion " <<  msgid << " " << status;
         logContext();
-        breakpoint();
         log() << "\n\n***aborting after fassert() failure\n\n" << endl;
         abort();
     }
@@ -172,7 +161,6 @@ namespace mongo {
     NOINLINE_DECL void msgasserted(int msgid, const char *msg) {
         assertionCount.condrollover( ++assertionCount.warning );
         log() << "Assertion: " << msgid << ":" << msg << endl;
-        //breakpoint();
         logContext();
         throw MsgAssertionException(msgid, msg);
     }

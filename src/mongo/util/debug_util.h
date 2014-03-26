@@ -52,15 +52,4 @@ namespace mongo {
     inline int strcasecmp(const char* s1, const char* s2) {return _stricmp(s1, s2);}
 #endif
 
-    // Sets SIGTRAP handler to launch GDB
-    // Noop unless on *NIX and compiled with _DEBUG
-    void setupSIGTRAPforGDB();
-
-    extern int tlogLevel;
-    void mongo_breakpoint();
-    inline void breakpoint() {
-        if ( tlogLevel < 0 )
-            return;
-        mongo_breakpoint();
-    }
 } // namespace mongo
