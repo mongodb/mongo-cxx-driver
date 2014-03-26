@@ -325,7 +325,7 @@ namespace mongo {
 
         DESTRUCTOR_GUARD (
 
-        if ( cursorId && _ownCursor && ! inShutdown() ) {
+        if ( cursorId && _ownCursor ) {
             BufBuilder b;
             b.appendNum( (int)0 ); // reserved
             b.appendNum( (int)1 ); // number

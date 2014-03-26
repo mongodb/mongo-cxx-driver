@@ -42,7 +42,7 @@ namespace client {
      *  Initializes the client driver. If the 'callShutdownAtExit' parameter is true, then
      *  'initialize' schedules a call to 'client::shutdown', with a grace period of
      *  'kDefaultShutdownGracePeriodMillis', via std::atexit. Failure to shutdown within the
-     *  grace period in the 'atexit' callback leads to a call to _exit. If the
+     *  grace period in the 'atexit' callback leads to a call to abort. If the
      *  'callShutDownAtExit' parameter is false, then it is the responsibility of the user of
      *  the client driver to appropriately sequence a call to 'mongo::client::shutdown' and
      *  respond to any failure to terminate within the grace period. Note that 'initialize'

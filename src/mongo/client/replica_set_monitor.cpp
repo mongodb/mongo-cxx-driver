@@ -135,13 +135,12 @@ namespace {
             // are fixed - see 392b933598668768bf12b1e41ad444aa3548d970.
             // Should not be needed after SERVER-7533 gets implemented and tests start
             // using it.
-            if (!inShutdown() && !StaticObserver::_destroyingStatics) {
+            if (!StaticObserver::_destroyingStatics) {
                 scoped_lock sl( _monitorMutex );
                 _stopRequestedCV.timed_wait(sl.boost(), boost::posix_time::seconds(10));
             }
 
-            while ( !inShutdown() &&
-                    !StaticObserver::_destroyingStatics ) {
+            while ( !StaticObserver::_destroyingStatics ) {
                 {
                     scoped_lock sl( _monitorMutex );
                     if (_stopRequested) {

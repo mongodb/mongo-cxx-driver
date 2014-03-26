@@ -909,7 +909,7 @@ namespace mongo {
             if ( WSAStartup(MAKEWORD(2,2), &d) != 0 ) {
                 out() << "ERROR: wsastartup failed " << errnoWithDescription() << endl;
                 problem() << "ERROR: wsastartup failed " << errnoWithDescription() << endl;
-                _exit(EXIT_NTSERVICE_ERROR);
+                abort();
             }
         }
     } winsock_init;

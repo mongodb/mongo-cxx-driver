@@ -24,7 +24,6 @@
 #include "mongo/logger/labeled_level.h"
 #include "mongo/logger/log_severity.h"
 #include "mongo/logger/message_log_domain.h"
-#include "mongo/util/exit_code.h"
 
 namespace mongo {
 namespace logger {
@@ -89,7 +88,6 @@ namespace logger {
         LogstreamBuilder& operator<<(char *x) { stream() << x; return *this; }
         LogstreamBuilder& operator<<(char x) { stream() << x; return *this; }
         LogstreamBuilder& operator<<(int x) { stream() << x; return *this; }
-        LogstreamBuilder& operator<<(ExitCode x) { stream() << x; return *this; }
         LogstreamBuilder& operator<<(long x) { stream() << x; return *this; }
         LogstreamBuilder& operator<<(unsigned long x) { stream() << x; return *this; }
         LogstreamBuilder& operator<<(unsigned x) { stream() << x; return *this; }
