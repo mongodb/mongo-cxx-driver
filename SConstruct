@@ -1220,6 +1220,12 @@ if has_option("gcov"):
         [
             'lcov -r coverage.info src/third_party/\* -o coverage.info',
             'lcov -r coverage.info build/\* -o coverage.info',
+            'lcov -r coverage.info \*_test.cpp -o coverage.info',
+            'lcov -r coverage.info src/mongo/client/examples/\* -o coverage.info',
+            'lcov -r coverage.info src/mongo/dbtests/\* -o coverage.info',
+            'lcov -r coverage.info src/mongo/unittest/\* -o coverage.info',
+            'lcov -r coverage.info src/mongo/bson/bsondemo/\* -o coverage.info',
+            'lcov -r coverage.info src/mongo/clienttest_main.cpp -o coverage.info'
         ]
     )
     env.AlwaysBuild('strip_coverage')
