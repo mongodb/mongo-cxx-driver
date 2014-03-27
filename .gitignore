@@ -55,6 +55,7 @@
 /src/third_party/*/*.tlog
 /src/third_party/*/*.lastbuildstate
 config.log
+coverage.info
 settings.py
 coverage.info
 log_config.py
