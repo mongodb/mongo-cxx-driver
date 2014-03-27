@@ -267,7 +267,7 @@ def printLocalInfo():
 
 printLocalInfo()
 
-boostLibs = [ "thread" , "filesystem" , "system" ]
+boostLibs = [ "thread" , "system" ]
 
 linux64  = False
 force32 = has_option( "force32" ) 
@@ -1081,7 +1081,7 @@ def doConfigure(myenv):
     conf = Configure(myenv)
     libdeps.setup_conftests(conf)
 
-    if not conf.CheckCXXHeader( "boost/filesystem/operations.hpp" ):
+    if not conf.CheckCXXHeader( "boost/version.hpp" ):
         print( "can't find boost headers" )
         Exit(1)
 

@@ -17,7 +17,6 @@
 
 #include "mongo/client/gridfs.h"
 
-#include <boost/filesystem/operations.hpp>
 #include <boost/smart_ptr.hpp>
 #include <fcntl.h>
 #include <fstream>
@@ -102,8 +101,6 @@ namespace mongo {
 
 
     BSONObj GridFS::storeFile( const string& fileName , const string& remoteName , const string& contentType) {
-        uassert( 10012 ,  "file doesn't exist" , fileName == "-" || boost::filesystem::exists( fileName ) );
-
         FILE* fd;
         if (fileName == "-")
             fd = stdin;
