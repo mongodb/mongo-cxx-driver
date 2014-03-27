@@ -1,5 +1,4 @@
 INSTALL_FUNCTION(base_init) // "default"
-INSTALL_FUNCTION(platform_backtrace) // "SolarisBacktrace"
 INSTALL_FUNCTION(logger_logstream_builder) // "LogstreamBuilder"
 INSTALL_FUNCTION(logger_ramlog) // "RamLogCatalog"
 INSTALL_FUNCTION(logger_logger) // "GlobalLogManager"

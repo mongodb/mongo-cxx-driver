@@ -66,7 +66,6 @@ clientSourceBasic = [
     'mongo/logger/ramlog.cpp',
     'mongo/logger/rotatable_file_manager.cpp',
     'mongo/logger/rotatable_file_writer.cpp',
-    'mongo/platform/backtrace.cpp',
     'mongo/platform/process_id.cpp',
     'mongo/platform/random.cpp',
     'mongo/util/assert_util.cpp',

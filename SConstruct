@@ -1102,13 +1102,6 @@ def doConfigure(myenv):
     if solaris or conf.CheckDeclaration('clock_gettime', includes='#include <time.h>'):
         conf.CheckLib('rt')
 
-    if (conf.CheckCXXHeader( "execinfo.h" ) and
-        conf.CheckDeclaration('backtrace', includes='#include <execinfo.h>') and
-        conf.CheckDeclaration('backtrace_symbols', includes='#include <execinfo.h>') and
-        conf.CheckDeclaration('backtrace_symbols_fd', includes='#include <execinfo.h>')):
-
-        conf.env.Append( CPPDEFINES=[ "MONGO_HAVE_EXECINFO_BACKTRACE" ] )
-
     if solaris:
         conf.CheckLib( "nsl" )
 
