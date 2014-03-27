@@ -78,12 +78,6 @@ namespace logger {
      */
     inline LogstreamBuilder out() { return log(); }
 
-    /**
-     * For logging which we may not want during unit tests (dbtests) runs.  Set tlogLevel to -1 to
-     * suppress MONGO_TLOG() output in a test program.
-     */
-    extern int tlogLevel;
-
 #define MONGO_LOG(DLEVEL) \
     if (!(::mongo::logger::globalLogDomain())->shouldLog(::mongo::LogstreamBuilder::severityCast(DLEVEL))) {} \
     else LogstreamBuilder(::mongo::logger::globalLogDomain(), getThreadName(), ::mongo::LogstreamBuilder::severityCast(DLEVEL))
@@ -94,12 +88,8 @@ namespace logger {
     if (!(DEBUG_BUILD) && !::mongo::logger::globalLogDomain()->shouldLog(::mongo::LogstreamBuilder::severityCast(DLEVEL))) {} \
     else LogstreamBuilder(::mongo::logger::globalLogDomain(), getThreadName(), ::mongo::LogstreamBuilder::severityCast(DLEVEL))
 
-    /* default impl returns "" -- mongod overrides */
-    extern const char * (*getcurns)();
-
     inline LogstreamBuilder problem() {
-        std::string curns = getcurns();
-        return log().setBaseMessage(curns);
+        return log().setBaseMessage("");
     }
 
     /**
@@ -138,7 +128,7 @@ namespace logger {
     void setRawOutToStderr();
 
     /**
-     * Write the current context (backtrace), along with the optional "msg".
+     * Write the optional "msg".
      */
     void logContext(const char *msg = NULL);
 

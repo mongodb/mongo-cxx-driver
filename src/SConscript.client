@@ -74,7 +74,6 @@ clientSourceBasic = [
     'mongo/util/base64.cpp',
     'mongo/util/concurrency/synchronization.cpp',
     'mongo/util/concurrency/thread_name.cpp',
-    'mongo/util/stacktrace.cpp',
     'mongo/util/fail_point.cpp',
     'mongo/util/fail_point_registry.cpp',
     'mongo/util/fail_point_service.cpp',

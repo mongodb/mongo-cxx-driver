@@ -40,21 +40,6 @@ namespace mongo {
         IndexOptionsDiffer = 17427        // uassert( 17427 )
     };
 
-    class MONGO_CLIENT_API AssertionCount {
-    public:
-        AssertionCount();
-        void rollover();
-        void condrollover( int newValue );
-
-        int regular;
-        int warning;
-        int msg;
-        int user;
-        int rollovers;
-    };
-
-    extern AssertionCount assertionCount;
-
     class BSONObjBuilder;
 
     struct MONGO_CLIENT_API ExceptionInfo {
@@ -95,9 +80,9 @@ namespace mongo {
     /** Most mongo exceptions inherit from this; this is commonly caught in most threads */
     class MONGO_CLIENT_API DBException : public std::exception {
     public:
-        DBException( const ExceptionInfo& ei ) : _ei(ei) { traceIfNeeded(*this); }
-        DBException( const char * msg , int code ) : _ei(msg,code) { traceIfNeeded(*this); }
-        DBException( const std::string& msg , int code ) : _ei(msg,code) { traceIfNeeded(*this); }
+        DBException( const ExceptionInfo& ei ) : _ei(ei) {}
+        DBException( const char * msg , int code ) : _ei(msg,code) {}
+        DBException( const std::string& msg , int code ) : _ei(msg,code) {}
         virtual ~DBException() throw() { }
 
         virtual const char* what() const throw() { return _ei.msg.c_str(); }
@@ -123,10 +108,6 @@ namespace mongo {
         virtual std::string toString() const;
 
         const ExceptionInfo& getInfo() const { return _ei; }
-    private:
-        static void traceIfNeeded( const DBException& e );
-    public:
-        static bool traceExceptions;
 
     protected:
         ExceptionInfo _ei;
