@@ -149,7 +149,7 @@ namespace mongo {
     struct tm *gmtime(const time_t *timep);
     struct tm *localtime(const time_t *timep);
 
-#if defined(MONGO_BOOST_TIME_UTC_HACK) || (BOOST_VERSION >= 105000)
+#if (BOOST_VERSION >= 105000)
 #define MONGO_BOOST_TIME_UTC boost::TIME_UTC_
 #else
 #define MONGO_BOOST_TIME_UTC boost::TIME_UTC
