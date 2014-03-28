@@ -267,7 +267,7 @@ def printLocalInfo():
 
 printLocalInfo()
 
-boostLibs = [ "thread" , "filesystem" , "system" ]
+boostLibs = [ "thread" , "system" ]
 
 linux64  = False
 force32 = has_option( "force32" ) 
@@ -336,9 +336,6 @@ if "sunos5" == os.sys.platform:
     # changes made by 'sunlink'. See the following thread for more detail:
     #  http://four.pairlist.net/pipermail/scons-users/2013-June/001486.html
     env.Tool('gnulink')
-
-if optBuild:
-    env.Append( CPPDEFINES=["MONGO_OPTIMIZED_BUILD"] )
 
 if has_option("propagate-shell-environment"):
     env['ENV'] = dict(os.environ);
@@ -1084,7 +1081,7 @@ def doConfigure(myenv):
     conf = Configure(myenv)
     libdeps.setup_conftests(conf)
 
-    if not conf.CheckCXXHeader( "boost/filesystem/operations.hpp" ):
+    if not conf.CheckCXXHeader( "boost/version.hpp" ):
         print( "can't find boost headers" )
         Exit(1)
 
@@ -1101,13 +1098,6 @@ def doConfigure(myenv):
 
     if solaris or conf.CheckDeclaration('clock_gettime', includes='#include <time.h>'):
         conf.CheckLib('rt')
-
-    if (conf.CheckCXXHeader( "execinfo.h" ) and
-        conf.CheckDeclaration('backtrace', includes='#include <execinfo.h>') and
-        conf.CheckDeclaration('backtrace_symbols', includes='#include <execinfo.h>') and
-        conf.CheckDeclaration('backtrace_symbols_fd', includes='#include <execinfo.h>')):
-
-        conf.env.Append( CPPDEFINES=[ "MONGO_HAVE_EXECINFO_BACKTRACE" ] )
 
     if solaris:
         conf.CheckLib( "nsl" )

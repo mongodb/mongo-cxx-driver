@@ -9,7 +9,6 @@ if windows:
 else:
     env.Library("shim_boost", ['shim_boost.cpp'],
                 SYSLIBDEPS=[
-                    env['LIBDEPS_BOOST_FILESYSTEM_SYSLIBDEP'],
                     env['LIBDEPS_BOOST_THREAD_SYSLIBDEP'],
                     env['LIBDEPS_BOOST_SYSTEM_SYSLIBDEP']
                 ] )

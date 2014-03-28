@@ -104,7 +104,7 @@ namespace mongo {
         Status status = runGlobalInitializers(argc, argv, envp);
         if (!status.isOK()) {
             std::cerr << "Failed global initialization: " << status << std::endl;
-            ::_exit(1);
+            abort();
         }
     }
 

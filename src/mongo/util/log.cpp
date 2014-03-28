@@ -28,7 +28,6 @@
 #include "mongo/util/assert_util.h"
 #include "mongo/util/concurrency/threadlocal.h"
 #include "mongo/util/concurrency/thread_name.h"
-#include "mongo/util/stacktrace.h"
 #include "mongo/util/text.h"
 #include "mongo/util/time_support.h"
 
@@ -54,11 +53,6 @@ namespace mongo {
         _appendExtraLogContext = contextFn;
         return Status::OK();
     }
-
-    int tlogLevel = 0; // test log level. so we avoid overchattiness (somewhat) in the c++ unit tests
-
-    const char *default_getcurns() { return ""; }
-    const char * (*getcurns)() = default_getcurns;
 
     bool rotateLogs() {
         using logger::RotatableFileManager;
@@ -155,7 +149,6 @@ namespace mongo {
         if ( errmsg ) {
             problem() << errmsg << endl;
         }
-        printStackTrace(problem().stream());
     }
 
     LogIndentLevel::LogIndentLevel() {

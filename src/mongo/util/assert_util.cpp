@@ -26,43 +26,13 @@ using namespace std;
 
 #include "mongo/bson/bsonobjbuilder.h"
 #include "mongo/util/debug_util.h"
-#include "mongo/util/stacktrace.h"
 
 namespace mongo {
-
-    AssertionCount assertionCount;
-
-    AssertionCount::AssertionCount()
-        : regular(0),warning(0),msg(0),user(0),rollovers(0) {
-    }
-
-    void AssertionCount::rollover() {
-        rollovers++;
-        regular = 0;
-        warning = 0;
-        msg = 0;
-        user = 0;
-    }
-
-    void AssertionCount::condrollover( int newvalue ) {
-        static const int rolloverPoint = ( 1 << 30 );
-        if ( newvalue >= rolloverPoint )
-            rollover();
-    }
-
-    bool DBException::traceExceptions = false;
 
     string DBException::toString() const {
         stringstream ss;
         ss << getCode() << " " << what();
         return ss.str();
-    }
-
-    void DBException::traceIfNeeded( const DBException& e ) {
-        if( traceExceptions && ! inShutdown() ){
-            warning() << "DBException thrown" << causedBy( e ) << endl;
-            printStackTrace();
-        }
     }
 
     ErrorCodes::Error DBException::convertExceptionCode(int exCode) {
@@ -97,7 +67,6 @@ namespace mongo {
 
         problem() << "warning assertion failure " << msg << ' ' << file << ' ' << dec << line << endl;
         logContext();
-        assertionCount.condrollover( ++assertionCount.warning );
 #if defined(_DEBUG) || defined(_DURABLEDEFAULTON) || defined(_DURABLEDEFAULTOFF)
         // this is so we notice in buildbot
         log() << "\n\n***aborting after wassert() failure in a debug/test build\n\n" << endl;
@@ -106,14 +75,12 @@ namespace mongo {
     }
 
     NOINLINE_DECL void verifyFailed(const char *msg, const char *file, unsigned line) {
-        assertionCount.condrollover( ++assertionCount.regular );
         problem() << "Assertion failure " << msg << ' ' << file << ' ' << dec << line << endl;
         logContext();
         stringstream temp;
         temp << "assertion " << file << ":" << line;
         AssertionException e(temp.str(),0);
-        breakpoint();
-#if defined(_DEBUG) || defined(_DURABLEDEFAULTON) || defined(_DURABLEDEFAULTOFF)
+#if defined(_DEBUG)
         // this is so we notice in buildbot
         log() << "\n\n***aborting after verify() failure as this is a debug/test build\n\n" << endl;
         abort();
@@ -124,7 +91,6 @@ namespace mongo {
     NOINLINE_DECL void invariantFailed(const char *msg, const char *file, unsigned line) {
         problem() << "Invariant failure " << msg << ' ' << file << ' ' << dec << line << endl;
         logContext();
-        breakpoint();
         log() << "\n\n***aborting after invariant() failure\n\n" << endl;
         abort();
     }
@@ -132,22 +98,13 @@ namespace mongo {
     NOINLINE_DECL void fassertFailed( int msgid ) {
         problem() << "Fatal Assertion " << msgid << endl;
         logContext();
-        breakpoint();
         log() << "\n\n***aborting after fassert() failure\n\n" << endl;
         abort();
-    }
-
-    NOINLINE_DECL void fassertFailedNoTrace( int msgid ) {
-        problem() << "Fatal Assertion " << msgid << endl;
-        breakpoint();
-        log() << "\n\n***aborting after fassert() failure\n\n" << endl;
-        ::_exit(EXIT_ABRUPT); // bypass our handler for SIGABRT, which prints a stack trace.
     }
 
     MONGO_COMPILER_NORETURN void fassertFailedWithStatus(int msgid, const Status& status) {
         problem() << "Fatal assertion " <<  msgid << " " << status;
         logContext();
-        breakpoint();
         log() << "\n\n***aborting after fassert() failure\n\n" << endl;
         abort();
     }
@@ -160,7 +117,6 @@ namespace mongo {
     void MsgAssertionException::appendPrefix( stringstream& ss ) const { ss << "massert:"; }
 
     NOINLINE_DECL void uasserted(int msgid, const char *msg) {
-        assertionCount.condrollover( ++assertionCount.user );
         LOG(1) << "User Assertion: " << msgid << ":" << msg << endl;
         throw UserException(msgid, msg);
     }
@@ -170,15 +126,12 @@ namespace mongo {
     }
 
     NOINLINE_DECL void msgasserted(int msgid, const char *msg) {
-        assertionCount.condrollover( ++assertionCount.warning );
         log() << "Assertion: " << msgid << ":" << msg << endl;
-        //breakpoint();
         logContext();
         throw MsgAssertionException(msgid, msg);
     }
 
     NOINLINE_DECL void msgassertedNoTrace(int msgid, const char *msg) {
-        assertionCount.condrollover( ++assertionCount.warning );
         log() << "Assertion: " << msgid << ":" << msg << endl;
         throw MsgAssertionException(msgid, msg);
     }
