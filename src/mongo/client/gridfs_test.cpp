@@ -130,7 +130,7 @@ namespace mongo {
 
         // Get it back and write it to a file
         GridFile gf = _gfs->findFile(DATA_NAME);
-        char tmp_name[12];
+        char tmp_name[L_tmpnam];
         tmpnam(tmp_name);
         gf.write(tmp_name);
 
@@ -156,7 +156,7 @@ namespace mongo {
     }
 
     TEST_F(GridFSTest, RemoveFile) {
-        // Store two files
+        // Store two different files
         _gfs->storeFile(DATA, DATA_LEN, DATA_NAME);
         _gfs->storeFile(OTHER, DATA_LEN, OTHER_NAME);
 
@@ -169,15 +169,17 @@ namespace mongo {
         // Remove the file
         _gfs->removeFile(DATA_NAME);
 
-        // Try to get the file
+        // File that we removed should not exist
         gfd = _gfs->findFile(DATA_NAME);
         ASSERT_FALSE(gfd.exists());
+
+        // File that we did not touch should still exist
         gfo = _gfs->findFile(OTHER_NAME);
         ASSERT_TRUE(gfo.exists());
     }
 
     TEST_F(GridFSTest, ListFiles) {
-        // Store the data
+        // Store two files
         _gfs->storeFile(DATA, DATA_LEN, DATA_NAME);
         _gfs->storeFile(DATA, DATA_LEN, OTHER_NAME);
 
