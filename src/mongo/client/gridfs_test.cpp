@@ -1,12 +1,14 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+
 #include "mongo/client/dbclientinterface.h"
 #include "mongo/client/gridfs.h"
 #include "mongo/unittest/unittest.h"
 
-using std::ios;
+using boost::scoped_ptr;
 using std::auto_ptr;
+using std::ios;
 using std::ifstream;
 using std::string;
 using std::stringstream;
@@ -15,10 +17,10 @@ namespace {
     const unsigned int UDEFAULT_CHUNK_SIZE = 256 * 1024;
     const int DEFAULT_CHUNK_SIZE = UDEFAULT_CHUNK_SIZE;
     const string TEST_DB = "gridfs-test";
-    const char * DATA_NAME = "data.txt";
-    const char * OTHER_NAME = "other.txt";
-    const char * DATA = "this is the data";
-    const char * OTHER = "this is other data";
+    const char DATA_NAME[] = "data.txt";
+    const char OTHER_NAME[] = "other.txt";
+    const char DATA[] = "this is the data";
+    const char OTHER[] = "this is other data";
     const unsigned int UDATA_LEN = 16;
     const unsigned int UOTHER_LEN = 18;
     const int DATA_LEN = UDATA_LEN;
@@ -29,21 +31,15 @@ namespace mongo {
 
     class GridFSTest : public unittest::Test {
     public:
-        GridFSTest() {
-            _conn = new DBClientConnection();
+        GridFSTest() : _conn(new DBClientConnection()) {
             _conn->connect("localhost:27999");
             _conn->dropDatabase(TEST_DB);
-            _gfs = new GridFS(*_conn, TEST_DB);
-        }
-
-        virtual ~GridFSTest() {
-            delete _gfs;
-            delete _conn;
+            _gfs.reset(new GridFS(*_conn, TEST_DB));
         }
 
     protected:
-        DBClientConnection* _conn;
-        GridFS* _gfs;
+        scoped_ptr<DBClientConnection> _conn;
+        scoped_ptr<GridFS> _gfs;
     };
 
     TEST_F(GridFSTest, DefaultChunkSize) {
@@ -95,7 +91,7 @@ namespace mongo {
 
     TEST_F(GridFSTest, FindFile) {
         // Store the data -- this time with a content type as well
-        const char * content_type = "text";
+        const char content_type[] = "text";
         BSONObj result;
         result = _gfs->storeFile(DATA, DATA_LEN, DATA_NAME, content_type);
 
@@ -125,7 +121,7 @@ namespace mongo {
         // Compare chunk data
         GridFSChunk chunk = gf.getChunk(0);
         int data_length = chunk.len();
-        ASSERT_EQUALS(string(chunk.data(data_length)), OTHER);
+        ASSERT_EQUALS(string(chunk.data(data_length), data_length), OTHER);
     }
 
     TEST_F(GridFSTest, WriteToFile) {
@@ -134,11 +130,13 @@ namespace mongo {
 
         // Get it back and write it to a file
         GridFile gf = _gfs->findFile(DATA_NAME);
-        gf.write("/tmp/whatever");
+        char tmp_name[12];
+        tmpnam(tmp_name);
+        gf.write(tmp_name);
 
         // check the written data is correct
         ifstream written_file;
-        written_file.open("/tmp/whatever", ios::binary);
+        written_file.open(tmp_name, ios::binary);
         stringstream written_data;
         written_data << written_file.rdbuf();
         ASSERT_EQUALS(written_data.str(), DATA);
@@ -158,15 +156,24 @@ namespace mongo {
     }
 
     TEST_F(GridFSTest, RemoveFile) {
-        // Store the data
+        // Store two files
         _gfs->storeFile(DATA, DATA_LEN, DATA_NAME);
+        _gfs->storeFile(OTHER, DATA_LEN, OTHER_NAME);
+
+        // Ensure both can be found
+        GridFile gfd = _gfs->findFile(DATA_NAME);
+        ASSERT_TRUE(gfd.exists());
+        GridFile gfo = _gfs->findFile(OTHER_NAME);
+        ASSERT_TRUE(gfo.exists());
 
         // Remove the file
         _gfs->removeFile(DATA_NAME);
 
         // Try to get the file
-        GridFile gf = _gfs->findFile(DATA_NAME);
-        ASSERT_FALSE(gf.exists());
+        gfd = _gfs->findFile(DATA_NAME);
+        ASSERT_FALSE(gfd.exists());
+        gfo = _gfs->findFile(OTHER_NAME);
+        ASSERT_TRUE(gfo.exists());
     }
 
     TEST_F(GridFSTest, ListFiles) {
