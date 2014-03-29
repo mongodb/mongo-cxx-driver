@@ -31,7 +31,7 @@ namespace mongo {
     std::string time_t_to_String(time_t t);
     std::string time_t_to_String_short(time_t t);
 
-    struct Date_t {
+    struct MONGO_CLIENT_API Date_t {
         // TODO: make signed (and look for related TODO's)
         unsigned long long millis;
         Date_t(): millis(0) {}
@@ -49,7 +49,7 @@ namespace mongo {
 
     // uses ISO 8601 dates without trailing Z
     // colonsOk should be false when creating filenames
-    std::string terseCurrentTime(bool colonsOk=true);
+    MONGO_CLIENT_API std::string terseCurrentTime(bool colonsOk=true);
 
     /**
      * Formats "time" according to the ISO 8601 extended form standard, including date,
@@ -57,7 +57,7 @@ namespace mongo {
      *
      * Sample format: "2013-07-23T18:42:14Z"
      */
-    std::string timeToISOString(time_t time);
+    MONGO_CLIENT_API std::string timeToISOString(time_t time);
 
     /**
      * Formats "date" according to the ISO 8601 extended form standard, including date,
@@ -65,7 +65,7 @@ namespace mongo {
      *
      * Sample format: "2013-07-23T18:42:14.072Z"
      */
-    std::string dateToISOStringUTC(Date_t date);
+    MONGO_CLIENT_API std::string dateToISOStringUTC(Date_t date);
 
     /**
      * Formats "date" according to the ISO 8601 extended form standard, including date,
@@ -73,14 +73,14 @@ namespace mongo {
      *
      * Sample format: "2013-07-23T18:42:14.072-05:00"
      */
-    std::string dateToISOStringLocal(Date_t date);
+    MONGO_CLIENT_API std::string dateToISOStringLocal(Date_t date);
 
     /**
      * Formats "date" in fixed width in the local time zone.
      *
      * Sample format: "Wed Oct 31 13:34:47.996"
      */
-    std::string dateToCtimeString(Date_t date);
+    MONGO_CLIENT_API std::string dateToCtimeString(Date_t date);
 
     /**
      * Parses a Date_t from an ISO 8601 string representation.
@@ -90,7 +90,7 @@ namespace mongo {
      *
      * Local times are currently not supported.
      */
-    StatusWith<Date_t> dateFromISOString(const StringData& dateString);
+    MONGO_CLIENT_API StatusWith<Date_t> dateFromISOString(const StringData& dateString);
 
     boost::gregorian::date currentDate();
 
