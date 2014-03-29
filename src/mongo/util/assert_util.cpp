@@ -26,6 +26,7 @@ using namespace std;
 
 #include "mongo/bson/bsonobjbuilder.h"
 #include "mongo/util/debug_util.h"
+#include "mongo/util/log.h"
 
 namespace mongo {
 
