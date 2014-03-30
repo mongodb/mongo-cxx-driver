@@ -105,10 +105,13 @@ namespace mongo {
          bytes of overhead.
          */
         unsigned long long asDate() const {
-            return reinterpret_cast<const unsigned long long*>(&i)[0];
+            unsigned long long date = secs;
+            date <<= 32;
+            date |= i;
+            return date;
         }
         long long asLL() const {
-            return reinterpret_cast<const long long*>(&i)[0];
+            return asDate();
         }
 
         bool isNull() const { return secs == 0; }

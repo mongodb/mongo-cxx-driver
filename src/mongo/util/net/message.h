@@ -123,8 +123,18 @@ namespace mongo {
         }
         char _data[4];
 
-        int& dataAsInt() {
-            return *((int *) _data);
+        int dataAsInt() {
+            return this->_data[0] |
+            		(this->_data[1] << 8) |
+            		(this->_data[2] << 16) |
+            		(this->_data[3] << 24);
+        }
+
+        void setData(int data) {
+        	this->_data[3] = (data >> 24) & 0xff;
+        	this->_data[2] = (data >> 16) & 0xff;
+        	this->_data[1] = (data >> 8) & 0xff;
+        	this->_data[0] = data & 0xff;
         }
 
         bool valid() {

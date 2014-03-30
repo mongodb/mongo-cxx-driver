@@ -610,7 +610,6 @@ if nix:
 
     # -Winvalid-pch Warn if a precompiled header (see Precompiled Headers) is found in the search path but can't be used.
     env.Append( CCFLAGS=["-fPIC",
-                         "-fno-strict-aliasing",
                          "-ggdb",
                          "-pthread",
                          "-Wall",
