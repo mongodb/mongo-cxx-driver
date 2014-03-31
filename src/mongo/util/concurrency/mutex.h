@@ -26,18 +26,7 @@
 #include <boost/thread/xtime.hpp>
 
 #include "mongo/util/assert_util.h"
-#include "mongo/util/heapcheck.h"
-#include "mongo/util/concurrency/threadlocal.h"
 #include "mongo/util/time_support.h"
-
-// Macro to get line as a string constant
-#define MONGO_STRINGIFY(X) #X
-// Double-expansion trick to get preproc to actually substitute __LINE__
-#define _MONGO_LINE_STRING(LINE) MONGO_STRINGIFY( LINE )
-#define MONGO_LINE_STRING _MONGO_LINE_STRING( __LINE__ )
-
-// Mutex names should be as <file>::<line> string
-#define MONGO_FILE_LINE __FILE__ "::" MONGO_LINE_STRING
 
 namespace mongo {
 
@@ -73,11 +62,9 @@ namespace mongo {
         mutex(const char *name) : _name(name)
         {
             _m = new boost::timed_mutex();
-            IGNORE_OBJECT( _m  );   // Turn-off heap checking on _m
         }
         ~mutex() {
             if( !StaticObserver::_destroyingStatics ) {
-                UNIGNORE_OBJECT( _m );
                 delete _m;
             }
         }
@@ -161,32 +148,5 @@ namespace mongo {
         pthread_mutex_t _lock;
     };
 #endif
-
-    /** This can be used instead of boost recursive mutex. The advantage is the _DEBUG checks
-     *  and ability to assertLocked(). This has not yet been tested for speed vs. the boost one.
-     */
-    class RecursiveMutex : boost::noncopyable {
-    public:
-        RecursiveMutex(const StringData& name) : m(name) { }
-        bool isLocked() const { return n.get() > 0; }
-        class scoped_lock : boost::noncopyable {
-            RecursiveMutex& rm;
-            int& nLocksByMe;
-        public:
-            scoped_lock( RecursiveMutex &m ) : rm(m), nLocksByMe(rm.n.getRef()) { 
-                if( nLocksByMe++ == 0 ) 
-                    rm.m.lock(); 
-            }
-            ~scoped_lock() { 
-                verify( nLocksByMe > 0 );
-                if( --nLocksByMe == 0 ) {
-                    rm.m.unlock(); 
-                }
-            }
-        };
-    private:
-        SimpleMutex m;
-        ThreadLocalValue<int> n;
-    };
 
 }
