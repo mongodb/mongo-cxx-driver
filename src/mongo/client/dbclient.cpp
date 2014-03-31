@@ -92,7 +92,7 @@ namespace mongo {
         _string = ss.str();
     }
 
-    mutex ConnectionString::_connectHookMutex( "ConnectionString::_connectHook" );
+    boost::mutex ConnectionString::_connectHookMutex;
     ConnectionString::ConnectionHook* ConnectionString::_connectHook = NULL;
 
     DBClientBase* ConnectionString::connect( string& errmsg, double socketTimeout ) const {
@@ -125,7 +125,7 @@ namespace mongo {
         case CUSTOM: {
 
             // Lock in case other things are modifying this at the same time
-            scoped_lock lk( _connectHookMutex );
+            boost::mutex::scoped_lock lk( _connectHookMutex );
 
             // Allow the replacement of connections with other connections - useful for testing.
 
@@ -1439,11 +1439,11 @@ namespace mongo {
     }
 
 #ifdef MONGO_SSL
-    static SimpleMutex s_mtx("SSLManager");
+    static boost::mutex s_mtx;
     static SSLManagerInterface* s_sslMgr(NULL);
 
     SSLManagerInterface* DBClientConnection::sslManager() {
-        SimpleMutex::scoped_lock lk(s_mtx);
+        boost::mutex::scoped_lock lk(s_mtx);
         if (s_sslMgr) 
             return s_sslMgr;
         s_sslMgr = getSSLManager();

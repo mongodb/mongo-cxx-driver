@@ -17,15 +17,9 @@
 
 #pragma once
 
-#ifdef _WIN32
-#include "mongo/platform/windows_basic.h"
-#endif
-
-#include <boost/noncopyable.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/xtime.hpp>
 
-#include "mongo/util/assert_util.h"
 #include "mongo/util/time_support.h"
 
 namespace mongo {
@@ -50,103 +44,5 @@ namespace mongo {
         static bool _destroyingStatics;
         ~StaticObserver() { _destroyingStatics = true; }
     };
-
-    /** On pthread systems, it is an error to destroy a mutex while held (boost mutex 
-     *    may use pthread).  Static global mutexes may be held upon shutdown in our 
-     *    implementation, and this way we avoid destroying them.
-     *  NOT recursive.
-     */
-    class mutex : boost::noncopyable {
-    public:
-        const char * const _name;
-        mutex(const char *name) : _name(name)
-        {
-            _m = new boost::timed_mutex();
-        }
-        ~mutex() {
-            if( !StaticObserver::_destroyingStatics ) {
-                delete _m;
-            }
-        }
-
-        class try_lock : boost::noncopyable {
-        public:
-            try_lock( mongo::mutex &m , int millis = 0 )
-                : _l( m.boost() , incxtimemillis( millis ) ) ,
-                  ok( _l.owns_lock() )
-            { }
-        private:
-            boost::timed_mutex::scoped_timed_lock _l;
-        public:
-            const bool ok;
-        };
-
-        class scoped_lock : boost::noncopyable {
-        public:
-            scoped_lock( mongo::mutex &m ) : 
-            _l( m.boost() ) {
-            }
-            ~scoped_lock() {
-            }
-            boost::timed_mutex::scoped_lock &boost() { return _l; }
-        private:
-            boost::timed_mutex::scoped_lock _l;
-        };
-    private:
-        boost::timed_mutex &boost() { return *_m; }
-        boost::timed_mutex *_m;
-    };
-
-    typedef mongo::mutex::scoped_lock scoped_lock;
-
-    /** The concept with SimpleMutex is that it is a basic lock/unlock with no 
-          special functionality (such as try and try timeout).  Thus it can be 
-          implemented using OS-specific facilities in all environments (if desired).
-        On Windows, the implementation below is faster than boost mutex.
-    */
-#if defined(_WIN32)
-    class SimpleMutex : boost::noncopyable {
-    public:
-        SimpleMutex( const StringData& ) { InitializeCriticalSection( &_cs ); }
-        void dassertLocked() const { }
-        void lock() { EnterCriticalSection( &_cs ); }
-        void unlock() { LeaveCriticalSection( &_cs ); }
-        class scoped_lock {
-            SimpleMutex& _m;
-        public:
-            scoped_lock( SimpleMutex &m ) : _m(m) { _m.lock(); }
-            ~scoped_lock() { _m.unlock(); }
-            const SimpleMutex& m() const { return _m; }
-        };
-
-    private:
-        CRITICAL_SECTION _cs;
-    };
-#else
-    class SimpleMutex : boost::noncopyable {
-    public:
-        void dassertLocked() const { }
-        SimpleMutex(const StringData& name) { verify( pthread_mutex_init(&_lock,0) == 0 ); }
-        ~SimpleMutex(){ 
-            if ( ! StaticObserver::_destroyingStatics ) { 
-                verify( pthread_mutex_destroy(&_lock) == 0 ); 
-            }
-        }
-
-        void lock() { verify( pthread_mutex_lock(&_lock) == 0 ); }
-        void unlock() { verify( pthread_mutex_unlock(&_lock) == 0 ); }
-    public:
-        class scoped_lock : boost::noncopyable {
-            SimpleMutex& _m;
-        public:
-            scoped_lock( SimpleMutex &m ) : _m(m) { _m.lock(); }
-            ~scoped_lock() { _m.unlock(); }
-            const SimpleMutex& m() const { return _m; }
-        };
-
-    private:
-        pthread_mutex_t _lock;
-    };
-#endif
 
 }

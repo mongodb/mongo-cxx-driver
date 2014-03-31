@@ -55,7 +55,7 @@ namespace mongo {
             _cmdCount(0),
             _queryCount(0),
             _instanceID(0),
-            _lock("MockRemoteDBServer") {
+            _lock() {
         insert(IdentityNS, BSON(HostField(hostAndPort)), 0);
     }
 
@@ -63,28 +63,28 @@ namespace mongo {
     }
 
     void MockRemoteDBServer::setDelay(long long milliSec) {
-        SimpleMutex::scoped_lock sLock(_lock);
+        boost::mutex::scoped_lock sLock(_lock);
         _delayMilliSec = milliSec;
     }
 
     void MockRemoteDBServer::shutdown() {
-        SimpleMutex::scoped_lock sLock(_lock);
+        boost::mutex::scoped_lock sLock(_lock);
         _isRunning = false;
     }
 
     void MockRemoteDBServer::reboot() {
-        SimpleMutex::scoped_lock sLock(_lock);
+        boost::mutex::scoped_lock sLock(_lock);
         _isRunning = true;
         _instanceID++;
     }
 
     MockRemoteDBServer::InstanceID MockRemoteDBServer::getInstanceID() const {
-        SimpleMutex::scoped_lock sLock(_lock);
+        boost::mutex::scoped_lock sLock(_lock);
         return _instanceID;
     }
 
     bool MockRemoteDBServer::isRunning() const {
-        SimpleMutex::scoped_lock sLock(_lock);
+        boost::mutex::scoped_lock sLock(_lock);
         return _isRunning;
     }
 
@@ -97,19 +97,19 @@ namespace mongo {
 
     void MockRemoteDBServer::setCommandReply(const string& cmdName,
             const vector<BSONObj>& replySequence) {
-        SimpleMutex::scoped_lock sLock(_lock);
+        boost::mutex::scoped_lock sLock(_lock);
         _cmdMap[cmdName].reset(new CircularBSONIterator(replySequence));
     }
 
     void MockRemoteDBServer::insert(const string &ns, BSONObj obj, int flags) {
-        SimpleMutex::scoped_lock sLock(_lock);
+        boost::mutex::scoped_lock sLock(_lock);
 
         vector<BSONObj>& mockCollection = _dataMgr[ns];
         mockCollection.push_back(obj.copy());
     }
 
     void MockRemoteDBServer::remove(const string& ns, Query query, int flags) {
-        SimpleMutex::scoped_lock sLock(_lock);
+        boost::mutex::scoped_lock sLock(_lock);
         if (_dataMgr.count(ns) == 0) {
             return;
         }
@@ -143,7 +143,7 @@ namespace mongo {
                 _cmdMap.count(cmdName) == 1);
 
         {
-            SimpleMutex::scoped_lock sLock(_lock);
+            boost::mutex::scoped_lock sLock(_lock);
             info = _cmdMap[cmdName]->next();
         }
 
@@ -153,7 +153,7 @@ namespace mongo {
 
         checkIfUp(id);
 
-        SimpleMutex::scoped_lock sLock(_lock);
+        boost::mutex::scoped_lock sLock(_lock);
         _cmdCount++;
         return info["ok"].trueValue();
     }
@@ -175,7 +175,7 @@ namespace mongo {
 
         checkIfUp(id);
 
-        SimpleMutex::scoped_lock sLock(_lock);
+        boost::mutex::scoped_lock sLock(_lock);
         _queryCount++;
 
         const vector<BSONObj>& coll = _dataMgr[ns];
@@ -192,17 +192,17 @@ namespace mongo {
     }
 
     size_t MockRemoteDBServer::getCmdCount() const {
-        SimpleMutex::scoped_lock sLock(_lock);
+        boost::mutex::scoped_lock sLock(_lock);
         return _cmdCount;
     }
 
     size_t MockRemoteDBServer::getQueryCount() const {
-        SimpleMutex::scoped_lock sLock(_lock);
+        boost::mutex::scoped_lock sLock(_lock);
         return _queryCount;
     }
 
     void MockRemoteDBServer::clearCounters() {
-        SimpleMutex::scoped_lock sLock(_lock);
+        boost::mutex::scoped_lock sLock(_lock);
         _cmdCount = 0;
         _queryCount = 0;
     }
@@ -216,7 +216,7 @@ namespace mongo {
     }
 
     void MockRemoteDBServer::checkIfUp(InstanceID id) const {
-        SimpleMutex::scoped_lock sLock(_lock);
+        boost::mutex::scoped_lock sLock(_lock);
 
         if (!_isRunning || id < _instanceID) {
             throw mongo::SocketException(mongo::SocketException::CLOSED, _hostAndPort);

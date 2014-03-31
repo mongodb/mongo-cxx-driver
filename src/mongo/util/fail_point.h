@@ -136,7 +136,7 @@ namespace mongo {
         BSONObj _data;
 
         // protects _mode, _timesOrPeriod, _data
-        mutable mutex _modMutex;
+        mutable boost::mutex _modMutex;
 
         /**
          * Enables this fail point.

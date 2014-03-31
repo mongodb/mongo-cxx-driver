@@ -224,6 +224,6 @@ namespace mongo {
         InstanceID _instanceID;
 
         // protects this entire instance
-        mutable mongo::SimpleMutex _lock;
+        mutable boost::mutex _lock;
     };
 }

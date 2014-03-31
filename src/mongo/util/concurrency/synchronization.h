@@ -43,7 +43,7 @@ namespace mongo {
         void notifyOne();
 
     private:
-        mongo::mutex _mutex;          // protects state below
+        boost::mutex _mutex;          // protects state below
         unsigned long long lookFor;
         unsigned long long cur;
         boost::condition _condition;  // cond over _notified being true
@@ -75,7 +75,7 @@ namespace mongo {
         unsigned nWaiting() const { return _nWaiting; }
 
     private:
-        mongo::mutex _mutex;
+        boost::mutex _mutex;
         boost::condition _condition;
         When _lastDone;
         When _lastReturned;

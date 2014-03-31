@@ -101,7 +101,7 @@ namespace mongo {
         MockConnHook _mockConnStrHook;
 
         // protects _registry
-        mongo::mutex _registryMutex;
+        boost::mutex _registryMutex;
         unordered_map<std::string, MockRemoteDBServer*> _registry;
     };
 }

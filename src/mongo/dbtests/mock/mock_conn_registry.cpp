@@ -35,7 +35,7 @@ namespace mongo {
 
     MockConnRegistry::MockConnRegistry():
             _mockConnStrHook(this),
-            _registryMutex("mockConnRegistryMutex") {
+            _registryMutex() {
     }
 
     MockConnRegistry* MockConnRegistry::get() {
@@ -47,7 +47,7 @@ namespace mongo {
     }
 
     void MockConnRegistry::addServer(MockRemoteDBServer* server) {
-        scoped_lock sl(_registryMutex);
+        boost::mutex::scoped_lock sl(_registryMutex);
 
         const std::string hostName(server->getServerAddress());
         fassert(16533, _registry.count(hostName) == 0);
@@ -56,17 +56,17 @@ namespace mongo {
     }
 
     bool MockConnRegistry::removeServer(const std::string& hostName) {
-        scoped_lock sl(_registryMutex);
+        boost::mutex::scoped_lock sl(_registryMutex);
         return _registry.erase(hostName) == 1;
     }
 
     void MockConnRegistry::clear() {
-        scoped_lock sl(_registryMutex);
+        boost::mutex::scoped_lock sl(_registryMutex);
         _registry.clear();
     }
 
     MockDBClientConnection* MockConnRegistry::connect(const std::string& connStr) {
-        scoped_lock sl(_registryMutex);
+        boost::mutex::scoped_lock sl(_registryMutex);
         fassert(16534, _registry.count(connStr) == 1);
         return new MockDBClientConnection(_registry[connStr], true);
     }

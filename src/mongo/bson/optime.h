@@ -45,12 +45,12 @@ namespace mongo {
         static OpTime skewed();
     public:
         static void setLast(const Date_t &date) {
-            mutex::scoped_lock lk(m);
+            boost::mutex::scoped_lock lk(m);
             last = OpTime(date);
             notifier.notify_all();
         }
         static void setLast(const OpTime &new_last) {
-            mutex::scoped_lock lk(m);
+            boost::mutex::scoped_lock lk(m);
             last = new_last;
             notifier.notify_all();
         }
@@ -86,11 +86,11 @@ namespace mongo {
         // it isn't generally safe to not be locked for this. so use now(). some tests use this.
         static OpTime _now();
 
-        static mongo::mutex m;
+        static boost::mutex m;
 
-        static OpTime now(const mongo::mutex::scoped_lock&);
+        static OpTime now(const boost::mutex::scoped_lock&);
 
-        static OpTime getLast(const mongo::mutex::scoped_lock&);
+        static OpTime getLast(const boost::mutex::scoped_lock&);
 
         // Maximum OpTime value.
         static OpTime max();
