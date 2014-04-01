@@ -1,17 +1,4 @@
 # -*- mode: python; -*-
-# build file for MongoDB
-# this requires scons
-# you can get from http://www.scons.org
-# then just type scons
-
-# some common tasks
-#   build 64-bit mac and pushing to s3
-#      scons --64 s3dist
-#      scons --distname=0.8 s3dist
-#      all s3 pushes require settings.py and simples3
-
-# This file, SConstruct, configures the build environment, and then delegates to
-# several, subordinate SConscript files, which describe specific build rules.
 
 import buildscripts
 import copy
@@ -302,15 +289,32 @@ if releaseBuild and (debugBuild or not optBuild):
     print("Error: A --release build may not have debugging, and must have optimization")
     Exit(1)
 
+mongoclientVersion = "0.8.0-pre"
+# We don't keep the -pre in the user testable version identifiers, because
+# nobody should be conditioning on the pre-release status.
+mongoclientVersionComponents = mongoclientVersion.split('-')
+if len(mongoclientVersionComponents) not in (1,2):
+    print("Error: client version most be of the form w.x.y or w.x.y-string")
+    Exit(1)
+mongoclientVersionComponents = mongoclientVersionComponents[0].split('.')
+if len(mongoclientVersionComponents) != 3:
+    print("Error: client version most be of the form w.x.y or w.x.y-string")
+    Exit(1)
+print(mongoclientVersionComponents)
+
 env = Environment( BUILD_DIR=variantDir,
                    EXTRAPATH=get_option("extrapath"),
                    MSVS_ARCH=msarch ,
                    PYTHON=utils.find_python(),
                    TARGET_ARCH=msarch ,
-                   tools=["default", "unittest"],
+                   tools=["default", "unittest", "textfile"],
                    PYSYSPLATFORM=os.sys.platform,
                    CONFIGUREDIR = '#' + scons_data_dir + '/sconf_temp',
                    CONFIGURELOG = '#' + scons_data_dir + '/config.log',
+                   MONGOCLIENT_VERSION=mongoclientVersion,
+                   MONGOCLIENT_VERSION_MAJOR=mongoclientVersionComponents[0],
+                   MONGOCLIENT_VERSION_MINOR=mongoclientVersionComponents[1],
+                   MONGOCLIENT_VERSION_PATCH=mongoclientVersionComponents[2],
                    )
 
 if has_option("cache"):
@@ -420,7 +424,6 @@ if has_option( "cpppath" ):
 
 env.Prepend(
     CPPDEFINES=[
-        "_SCONS" ,
         "MONGO_EXPOSE_MACROS" ,
     ],
     CPPPATH=[
@@ -644,7 +647,6 @@ if nix:
 
     if linux and has_option( "gcov" ):
         env.Append( CXXFLAGS=" -fprofile-arcs -ftest-coverage " )
-        env.Append( CPPDEFINES=["MONGO_GCOV"] )
         env.Append( LINKFLAGS=" -fprofile-arcs -ftest-coverage " )
 
     if optBuild:
@@ -674,7 +676,7 @@ if "uname" in dir(os):
         hacks.insert( env , { "linux64" : linux64 } )
 
 if has_option( "ssl" ):
-    env.Append( CPPDEFINES=["MONGO_SSL"] )
+    env["MONGO_SSL"] = True
     if windows:
         env.Append( LIBS=["libeay32"] )
         env.Append( LIBS=["ssleay32"] )
@@ -1094,7 +1096,7 @@ def doConfigure(myenv):
         conf.FindSysLibDep( boostlib, [ boostlib + "-mt", boostlib ], language='C++' )
 
     if conf.CheckHeader('unistd.h'):
-        conf.env.Append(CPPDEFINES=['MONGO_HAVE_HEADER_UNISTD_H'])
+        conf.env['MONGO_HAVE_HEADER_UNISTD_H'] = True
 
     if solaris or conf.CheckDeclaration('clock_gettime', includes='#include <time.h>'):
         conf.CheckLib('rt')
@@ -1102,12 +1104,9 @@ def doConfigure(myenv):
     if solaris:
         conf.CheckLib( "nsl" )
 
-    conf.env['MONGO_BUILD_SASL_CLIENT'] = bool(has_option("use-sasl-client"))
+    conf.env['MONGO_SASL'] = bool(has_option("use-sasl-client"))
 
-    if conf.env['MONGO_BUILD_SASL_CLIENT']:
-        env.Append( CPPDEFINES=["MONGO_SASL"] )
-
-    if conf.env['MONGO_BUILD_SASL_CLIENT'] and not conf.CheckLibWithHeader(
+    if conf.env['MONGO_SASL'] and not conf.CheckLibWithHeader(
             "sasl2", 
             ["stddef.h","sasl/sasl.h"], 
             "C", 
@@ -1180,7 +1179,6 @@ Export("use_clang")
 
 env.SConscript('src/SConscript', variant_dir='$BUILD_DIR', duplicate=False)
 env.SConscript('src/SConscript.client', variant_dir='$BUILD_DIR', duplicate=False)
-env.SConscript(['SConscript.buildinfo'])
 
 # --- Coverage ---
 if has_option("gcov"):

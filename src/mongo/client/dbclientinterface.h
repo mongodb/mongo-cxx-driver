@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include "mongo/config.h"
+
 #include <boost/function.hpp>
 
 #include "mongo/base/string_data.h"

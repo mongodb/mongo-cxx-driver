@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include "mongo/config.h"
+
 #include <vector>
 
 #include "mongo/util/net/message.h"

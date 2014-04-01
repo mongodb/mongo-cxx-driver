@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/platform/basic.h"
+
 #include "mongo/util/net/ssl_manager.h"
 
 #include <boost/thread/recursive_mutex.hpp>

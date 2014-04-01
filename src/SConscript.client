@@ -3,6 +3,7 @@
 # This SConscript describes build and install rules for the Mongo C++ driver and associated exmaple
 # programs.
 import os
+from buildscripts import utils
 
 Import('env has_option')
 Import('nix linux darwin windows')
@@ -27,6 +28,31 @@ libEnv.Command(['mongo/base/error_codes.h', 'mongo/base/error_codes.cpp',],
                ['mongo/base/generate_error_codes.py', 'mongo/base/error_codes.err'],
                '$PYTHON $SOURCES $TARGETS')
 
+def makeConfigHDefine(env, subst_key, env_var):
+    replacement = "// #undef %s"
+    value = env.get(env_var, None)
+    if value:
+        replacement = "#define %s 1"
+    return (subst_key, replacement % env_var)
+libEnv.AddMethod(makeConfigHDefine)
+
+configSubstitutions = [
+    libEnv.makeConfigHDefine('@mongoclient_ssl@', 'MONGO_SSL'),
+    libEnv.makeConfigHDefine('@mongoclient_sasl@', 'MONGO_SASL'),
+    libEnv.makeConfigHDefine('@mongoclient_have_header_unistd_h@', 'MONGO_HAVE_HEADER_UNISTD_H')
+,
+]
+libEnv.Substfile('mongo/config.h.in', SUBST_DICT=configSubstitutions)
+
+versionSubstitutions = [
+    ('@mongoclient_version@', libEnv['MONGOCLIENT_VERSION']),
+    ('@mongoclient_version_major@', libEnv['MONGOCLIENT_VERSION_MAJOR']),
+    ('@mongoclient_version_minor@', libEnv['MONGOCLIENT_VERSION_MINOR']),
+    ('@mongoclient_version_patch@', libEnv['MONGOCLIENT_VERSION_PATCH']),
+    ('@mongoclient_git_revision@', utils.getGitVersion)
+]
+libEnv.Substfile('mongo/version.h.in', SUBST_DICT=versionSubstitutions)
+
 clientSourceBasic = [
     'mongo/base/error_codes.cpp',
     'mongo/base/global_initializer.cpp',
@@ -43,7 +69,6 @@ clientSourceBasic = [
     'mongo/bson/oid.cpp',
     'mongo/bson/optime.cpp',
     'mongo/bson/util/bson_extract.cpp',
-    'mongo/buildinfo.cpp',
     'mongo/client/connpool.cpp',
     'mongo/client/dbclient.cpp',
     'mongo/client/dbclient_rs.cpp',
@@ -91,7 +116,6 @@ clientSourceBasic = [
     'mongo/util/time_support.cpp',
     'mongo/util/timer.cpp',
     'mongo/util/util.cpp',
-    'mongo/util/version.cpp',
     'third_party/murmurhash3/MurmurHash3.cpp',
     ]
 
@@ -103,7 +127,7 @@ clientSourceSasl = [
 
 clientSourceAll = clientSourceBasic + clientSourceSasl
 
-usingSasl = libEnv['MONGO_BUILD_SASL_CLIENT']
+usingSasl = libEnv['MONGO_SASL']
 
 clientSource = list(clientSourceBasic)
 if usingSasl:
@@ -161,6 +185,7 @@ clientHeaders = [
     'mongo/client/redef_macros.h',
     'mongo/client/sasl_client_authenticate.h',
     'mongo/client/undef_macros.h',
+    'mongo/config.h',
     'mongo/db/jsobj.h',
     'mongo/db/json.h',
     'mongo/db/server_options.h',
@@ -209,7 +234,7 @@ clientHeaders = [
     'mongo/util/net/ssl_manager.h',
     'mongo/util/net/ssl_options.h',
     'mongo/util/time_support.h',
-    'mongo/util/version.h',
+    'mongo/version.h',
 ]
 
 mongoClientLibs = []
