@@ -109,12 +109,17 @@ namespace mongo {
         static unsigned getMachineId(); // features command uses
         static void regenMachineId(); // used by unit tests
 
-    private:
         struct MachineAndPid {
             unsigned char _machineNumber[3];
             unsigned short _pid;
+            bool operator==(const OID::MachineAndPid& rhs) const;
             bool operator!=(const OID::MachineAndPid& rhs) const;
+            
+            void foldInPid(unsigned pid);
+            unsigned getMachineNumber();
         };
+
+    private:
         static MachineAndPid ourMachine;
         static MachineAndPid ourMachineAndPid;
         union {

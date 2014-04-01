@@ -50,13 +50,18 @@ namespace mongo {
         s << o.str();
         return s;
     }
+    
+    void OID::MachineAndPid::foldInPid(unsigned p) {
+        this->_pid ^= static_cast<unsigned short>(p);
+        // when the pid is greater than 16 bits, let the high bits modulate the machine id field.
+        this->_machineNumber[1] ^= p >> 16;
+        this->_machineNumber[2] ^= p >> 24;
+    }
+
 
     void OID::foldInPid(OID::MachineAndPid& x) {
         unsigned p = ProcessId::getCurrent().asUInt32();
-        x._pid ^= static_cast<unsigned short>(p);
-        // when the pid is greater than 16 bits, let the high bits modulate the machine id field.
-        unsigned short& rest = (unsigned short &) x._machineNumber[1];
-        rest ^= p >> 16;
+        x.foldInPid(p);
     }
 
     OID::MachineAndPid OID::genMachineAndPid() {
@@ -77,17 +82,23 @@ namespace mongo {
         ourMachineAndPid = genMachineAndPid();
     }
 
-    inline bool OID::MachineAndPid::operator!=(const OID::MachineAndPid& rhs) const {
-        return _pid != rhs._pid || _machineNumber != rhs._machineNumber;
+    bool OID::MachineAndPid::operator==(const OID::MachineAndPid& rhs) const {
+        return (_pid == rhs._pid) && (memcmp(_machineNumber, rhs._machineNumber, sizeof(_machineNumber)) == 0);
+    }
+
+    bool OID::MachineAndPid::operator!=(const OID::MachineAndPid& rhs) const {
+        return ! (*this == rhs);
+    }
+    
+    unsigned OID::MachineAndPid::getMachineNumber()
+    {
+        return _machineNumber[0] |
+              (_machineNumber[1] << 8) |
+              (_machineNumber[2] << 16);
     }
 
     unsigned OID::getMachineId() {
-        unsigned char x[4];
-        x[0] = ourMachineAndPid._machineNumber[0];
-        x[1] = ourMachineAndPid._machineNumber[1];
-        x[2] = ourMachineAndPid._machineNumber[2];
-        x[3] = 0;
-        return (unsigned&) x[0];
+        return ourMachineAndPid.getMachineNumber();
     }
 
     void OID::justForked() {
@@ -156,16 +167,15 @@ namespace mongo {
 
     void OID::init(Date_t date, bool max) {
         int time = (int) (date / 1000);
+
+        // use big-endian
         char* T = (char *) &time;
         data[0] = T[3];
         data[1] = T[2];
         data[2] = T[1];
         data[3] = T[0];
 
-        if (max)
-            *(long long*)(data + 4) = 0xFFFFFFFFFFFFFFFFll;
-        else
-            *(long long*)(data + 4) = 0x0000000000000000ll;
+        std::fill(&data[4], &data[kOIDSize], max ? 0xff : 0x00);
     }
 
     time_t OID::asTimeT() {

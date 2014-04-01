@@ -221,7 +221,7 @@ again:
             memcpy(md, &header, headerLen);
             int left = len - headerLen;
 
-            psock->recv( (char *)&md->_data, left );
+            psock->recv( md->_data, left );
 
             guard.Dismiss();
             m.setData(md, true);

@@ -36,6 +36,8 @@ unittests = [
     'bson/bson_obj_test',
     'bson/bson_validate_test',
     'bson/bsonobjbuilder_test',
+    'bson/oid_test',
+    'bson/optime_test',
     'bson/util/bson_extract_test',
     'client/dbclient_rs_test',
     'client/scoped_db_conn_test',
@@ -52,6 +54,7 @@ unittests = [
     'platform/process_id_test',
     'platform/random_test',
     'util/net/sock_test',
+    'util/net/message_test',
     'util/stringutils_test',
     'util/time_support_test',
 ]
