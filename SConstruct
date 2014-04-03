@@ -307,7 +307,7 @@ env = Environment( BUILD_DIR=variantDir,
                    MSVS_ARCH=msarch ,
                    PYTHON=utils.find_python(),
                    TARGET_ARCH=msarch ,
-                   tools=["default", "unittest"],
+                   tools=["default", "unittest", "integration"],
                    PYSYSPLATFORM=os.sys.platform,
                    CONFIGUREDIR = '#' + scons_data_dir + '/sconf_temp',
                    CONFIGURELOG = '#' + scons_data_dir + '/config.log',
@@ -1198,7 +1198,7 @@ if has_option("gcov"):
     # Generates test coverage information -- depends on tests being run
     env.Command(
         'coverage.info',
-        ['zero_counters', 'test', 'smokeClient'],
+        ['zero_counters', 'test', 'smokeClient', 'integration'],
         'lcov --no-external -c -b $GCOV_BASE_DIR -d $GCOV_BUILD_DIR -o $TARGET'
     )
     env.AlwaysBuild('coverage.info')
@@ -1215,7 +1215,8 @@ if has_option("gcov"):
             'lcov -r coverage.info src/mongo/dbtests/\* -o coverage.info',
             'lcov -r coverage.info src/mongo/unittest/\* -o coverage.info',
             'lcov -r coverage.info src/mongo/bson/bsondemo/\* -o coverage.info',
-            'lcov -r coverage.info src/mongo/clienttest_main.cpp -o coverage.info'
+            'lcov -r coverage.info src/mongo/\*_main.cpp -o coverage.info'
+            'lcov -r coverage.info src/mongo/integration/\* -o coverage.info'
         ]
     )
     env.AlwaysBuild('strip_coverage')
