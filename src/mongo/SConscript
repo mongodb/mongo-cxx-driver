@@ -80,6 +80,7 @@ for unittest in unittests:
 
 integration_tests = [
     'integration/gridfs_test',
+    'integration/sasl_test'
 ]
 
 for integration_test in integration_tests:
