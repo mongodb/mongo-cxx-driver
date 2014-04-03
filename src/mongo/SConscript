@@ -78,6 +78,10 @@ for unittest in unittests:
         ]
     )
 
+integration_tests = [
+    'integration/gridfs_test',
+]
+
 for integration_test in integration_tests:
     env.IntegrationTest(
         target=integration_test,
