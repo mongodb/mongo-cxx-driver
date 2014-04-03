@@ -4,7 +4,7 @@
 
 #include "mongo/client/dbclientinterface.h"
 #include "mongo/client/gridfs.h"
-#include "mongo/unittest/unittest.h"
+#include "mongo/integration/integration.h"
 
 using boost::scoped_ptr;
 using std::auto_ptr;

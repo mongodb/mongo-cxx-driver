@@ -143,7 +143,7 @@ int main( int argc, const char **argv ) {
         verify( conn.ensureIndex( ns , BSON( "name" << 1 ) ) );
         verify( ! conn.ensureIndex( ns , BSON( "name" << 1 ) ) );
     }
-/*
+
     {
         // 5 second TTL index
         const char * ttlns = "test.ttltest1";
@@ -161,7 +161,7 @@ int main( int argc, const char **argv ) {
         sleepsecs(66);
         verify(conn.findOne(ttlns, BSONObjBuilder().append("name", "foo").obj()).isEmpty());
     }
-*/
+
     {
         // hint related tests
         verify( conn.findOne(ns, "{}")["name"].str() == "sara" );
@@ -172,6 +172,7 @@ int main( int argc, const char **argv ) {
         // nonexistent index test
         bool asserted = false;
         try {
+            cout << "here" << endl;
             conn.findOne(ns, Query("{name:\"eliot\"}").hint("{foo:1}"));
         }
         catch ( ... ) {

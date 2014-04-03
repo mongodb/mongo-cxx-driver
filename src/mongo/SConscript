@@ -79,8 +79,11 @@ for unittest in unittests:
     )
 
 integration_tests = [
+    'integration/auth_test',
     'integration/gridfs_test',
-    'integration/sasl_test'
+    'integration/http_client_test',
+    'integration/sasl_test',
+    'integration/dbclient_test'
 ]
 
 for integration_test in integration_tests:
