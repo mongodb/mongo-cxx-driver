@@ -273,3 +273,26 @@ TEST_F(DBClientTest, Timeout) {
     , DBException);
     ASSERT_TRUE(c.eval("test", eval_str, res));
 }
+
+/*
+ * From whereExample.cpp
+ */
+
+TEST_F(DBClientTest, Where) {
+    c.insert(TEST_NS, BSON("name" << "Tyler" << "num" << 17));
+    c.insert(TEST_NS, BSON("name" << "Jason" << "num" << 24));
+
+    Query q = Query("{}").where("this.name == name", BSON("name" << "Jason"));
+
+    std::auto_ptr<DBClientCursor> cursor;
+    cursor = c.query(TEST_NS, q);
+    ASSERT_TRUE(cursor.get());
+
+    int num = 0;
+    while(cursor->more()) {
+        BSONObj obj = cursor->next();
+        num++;
+    }
+    ASSERT_EQUALS(num, 1);
+}
+
