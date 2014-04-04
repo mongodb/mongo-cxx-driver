@@ -1190,7 +1190,7 @@ if has_option("gcov"):
     # Zero out all the counters -- depends on tests being built
     env.Alias(
         'zero_counters',
-        ['unittests','clientTests'],
+        ['unittests'],
         ['lcov -z -b $GCOV_BASE_DIR -d $GCOV_BUILD_DIR']
     )
     env.AlwaysBuild('zero_counters')
@@ -1198,7 +1198,7 @@ if has_option("gcov"):
     # Generates test coverage information -- depends on tests being run
     env.Command(
         'coverage.info',
-        ['zero_counters', 'test', 'smokeClient', 'integration'],
+        ['zero_counters', 'test', 'integration'],
         'lcov --no-external -c -b $GCOV_BASE_DIR -d $GCOV_BUILD_DIR -o $TARGET'
     )
     env.AlwaysBuild('coverage.info')
