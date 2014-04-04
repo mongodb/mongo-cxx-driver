@@ -55,7 +55,7 @@ should not be used.
 
   http://dochub.mongodb.org/core/community
 
-## Licencse
+## License
 
   The source files in this repository are made available under the terms of the
   Apache License, version 2.0.
