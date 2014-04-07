@@ -21,9 +21,9 @@ env.Library(
 )
 
 env.Library(
-    target='clienttest_main',
+    target='client_test_main',
     source=[
-        'clienttest_main.cpp'
+        'unittest/client_test_main.cpp'
     ],
     LIBDEPS=[
         '$BUILD_DIR/third_party/gtest-1.7.0/gtest'
@@ -31,9 +31,9 @@ env.Library(
 )
 
 env.Library(
-    target='integration_main',
+    target='integration_test_main',
     source=[
-        'integration_main.cpp'
+        'unittest/integration_test_main.cpp'
     ],
     LIBDEPS=[
         '$BUILD_DIR/third_party/gtest-1.7.0/gtest'
@@ -79,15 +79,15 @@ for unittest in unittests:
     )
 
 integration_tests = [
-    'integration/gridfs_test',
-    'integration/sasl_test'
+    'gridfs_test',
+    'sasl_test'
 ]
 
 for integration_test in integration_tests:
     env.IntegrationTest(
         target=integration_test,
         source=[
-            integration_test + '.cpp'
+            'unittest/' + integration_test + '.cpp'
         ],
         LIBDEPS=[
             'mocklib',

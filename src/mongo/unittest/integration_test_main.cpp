@@ -1,7 +1,7 @@
 #include <iostream>
 
+#include "mongo/unittest/integration.h"
 #include "mongo/client/init.h"
-#include "mongo/integration/integration.h"
 
 ParameterStruct TestParams;
 
@@ -13,7 +13,12 @@ int main(int argc, char **argv) {
         }
         TestParams.port = argv[ 2 ];
     }
-    ::testing::InitGoogleTest(&argc, argv);
+
     mongo::Status status = mongo::client::initialize();
+    if (!status.isOK())
+        ::abort();
+
+    ::testing::InitGoogleTest(&argc, argv);
+
     return RUN_ALL_TESTS();
 }

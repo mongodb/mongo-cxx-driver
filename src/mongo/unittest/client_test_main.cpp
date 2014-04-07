@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
-#include <mongo/client/init.h>
+#include "gtest/gtest.h"
+#include "mongo/client/init.h"
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
