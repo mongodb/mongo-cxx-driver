@@ -46,6 +46,8 @@
 #define LIBMONGOCLIENT_CONSUMER
 #endif
 
+#include "mongo/config.h"
+
 #include "mongo/client/redef_macros.h"
 
 #include "mongo/bson/bsonelement.h"

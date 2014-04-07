@@ -25,6 +25,8 @@
 
 #pragma once
 
+#include "mongo/config.h"
+
 #if defined(MONGO_HAVE_HEADER_UNISTD_H)
 #include <unistd.h>
 #endif

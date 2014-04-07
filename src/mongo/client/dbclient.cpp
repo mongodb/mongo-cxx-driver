@@ -15,6 +15,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/platform/basic.h"
+
 #include "mongo/bson/util/bson_extract.h"
 #include "mongo/bson/util/builder.h"
 #include "mongo/client/constants.h"

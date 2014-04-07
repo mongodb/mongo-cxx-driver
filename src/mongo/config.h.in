@@ -1,7 +1,4 @@
-// basic.h
-
-/*
- *    Copyright 2010 10gen Inc.
+/*    Copyright 2014 MongoDB Inc.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,9 +15,11 @@
 
 #pragma once
 
-#include "mongo/config.h"
+// Define to 1 if SSL support is enabled
+@mongoclient_ssl@
 
-#ifdef _WIN32
-#include "windows_basic.h"
-#endif
+// Define to 1 if SASL support is enabled
+@mongoclient_sasl@
 
+// Define to 1 if unistd.h is available
+@mongoclient_have_header_unistd_h@

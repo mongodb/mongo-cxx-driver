@@ -33,6 +33,8 @@
 #define LIBMONGOCLIENT_CONSUMER
 #endif
 
+#include "mongo/config.h"
+
 #include "mongo/client/redef_macros.h"
 
 #include "mongo/client/connpool.h"
@@ -43,5 +45,6 @@
 #include "mongo/client/init.h"
 #include "mongo/client/sasl_client_authenticate.h"
 #include "mongo/util/net/ssl_options.h"
+#include "mongo/version.h"
 
 #include "mongo/client/undef_macros.h"

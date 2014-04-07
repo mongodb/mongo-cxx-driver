@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include "mongo/config.h"
+
 #include <stdio.h>
 
 #ifndef _WIN32

@@ -15,6 +15,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/platform/basic.h"
+
 #include "mongo/util/net/sock.h"
 
 #if !defined(_WIN32)
