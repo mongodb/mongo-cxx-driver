@@ -25,7 +25,9 @@
 #endif
 
 namespace mongo {
-    struct ParameterStruct {
-        std::string port;
-    };
+    namespace unittest {
+        struct IntegrationTestParameters {
+            std::string port;
+        };
+    }
 }
