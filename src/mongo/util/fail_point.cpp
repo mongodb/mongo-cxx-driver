@@ -28,7 +28,7 @@ namespace mongo {
             _fpInfo(0),
             _mode(off),
             _timesOrPeriod(0),
-            _modMutex("failPointMutex") {
+            _modMutex() {
     }
 
     void FailPoint::shouldFailCloseBlock() {
@@ -44,7 +44,7 @@ namespace mongo {
          * 3. Sets the new mode.
          */
 
-        scoped_lock scoped(_modMutex);
+        boost::mutex::scoped_lock scoped(_modMutex);
 
         // Step 1
         disableFailPoint();
@@ -134,7 +134,7 @@ namespace mongo {
     BSONObj FailPoint::toBSON() const {
         BSONObjBuilder builder;
 
-        scoped_lock scoped(_modMutex);
+        boost::mutex::scoped_lock scoped(_modMutex);
         builder.append("mode", _mode);
         builder.append("data", _data);
 

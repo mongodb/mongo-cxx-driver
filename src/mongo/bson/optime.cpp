@@ -27,7 +27,7 @@ namespace mongo {
 
     OpTime OpTime::last(0, 0);
     boost::condition OpTime::notifier;
-    mongo::mutex OpTime::m("optime");
+    boost::mutex OpTime::m;
 
     NOINLINE_DECL OpTime OpTime::skewed() {
         bool toLog = false;
@@ -65,11 +65,11 @@ namespace mongo {
         return last;
     }
 
-    OpTime OpTime::now(const mongo::mutex::scoped_lock&) {
+    OpTime OpTime::now(const boost::mutex::scoped_lock&) {
         return _now();
     }
 
-    OpTime OpTime::getLast(const mongo::mutex::scoped_lock&) {
+    OpTime OpTime::getLast(const boost::mutex::scoped_lock&) {
         return last;
     }
 
@@ -80,9 +80,9 @@ namespace mongo {
     }
 
     void OpTime::waitForDifferent(unsigned millis){
-        mutex::scoped_lock lk(m);
+        boost::mutex::scoped_lock lk(m);
         while (*this == last) {
-            if (!notifier.timed_wait(lk.boost(), boost::posix_time::milliseconds(millis)))
+            if (!notifier.timed_wait(lk, boost::posix_time::milliseconds(millis)))
                 return; // timed out
         }
     }

@@ -280,12 +280,12 @@ namespace mongo {
         };
 
         static void setConnectionHook( ConnectionHook* hook ){
-            scoped_lock lk( _connectHookMutex );
+            boost::mutex::scoped_lock lk( _connectHookMutex );
             _connectHook = hook;
         }
 
         static ConnectionHook* getConnectionHook() {
-            scoped_lock lk( _connectHookMutex );
+            boost::mutex::scoped_lock lk( _connectHookMutex );
             return _connectHook;
         }
 
@@ -311,7 +311,7 @@ namespace mongo {
         std::string _string;
         std::string _setName;
 
-        static mutex _connectHookMutex;
+        static boost::mutex _connectHookMutex;
         static ConnectionHook* _connectHook;
     };
 

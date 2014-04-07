@@ -125,7 +125,7 @@ namespace mongo {
 
         ////////////////////////////////////////////////////////////////
 
-        SimpleMutex sslManagerMtx("SSL Manager");
+        boost::mutex sslManagerMtx;
         SSLManagerInterface* theSSLManager = NULL;
         static const int BUFFER_SIZE = 8*1024;
 
@@ -282,7 +282,7 @@ namespace mongo {
     bool isSSLServer = false;
     
     MONGO_INITIALIZER(SSLManager)(InitializerContext* context) {
-        SimpleMutex::scoped_lock lck(sslManagerMtx);
+        boost::mutex::scoped_lock lck(sslManagerMtx);
         if (sslGlobalParams.sslMode.load() != SSLGlobalParams::SSLMode_disabled) {
             const Params params(
                 sslGlobalParams.sslPEMKeyFile,
@@ -300,7 +300,7 @@ namespace mongo {
     }
 
     SSLManagerInterface* getSSLManager() {
-        SimpleMutex::scoped_lock lck(sslManagerMtx);
+        boost::mutex::scoped_lock lck(sslManagerMtx);
         if (theSSLManager)
             return theSSLManager;
         return NULL;

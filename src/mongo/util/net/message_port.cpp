@@ -98,11 +98,11 @@ namespace mongo {
 
     class Ports {
         set<MessagingPort*> ports;
-        mongo::mutex m;
+        boost::mutex m;
     public:
-        Ports() : ports(), m("Ports") {}
+        Ports() : ports(), m() {}
         void closeAll(unsigned skip_mask) {
-            scoped_lock bl(m);
+            boost::mutex::scoped_lock bl(m);
             for ( set<MessagingPort*>::iterator i = ports.begin(); i != ports.end(); i++ ) {
                 if( (*i)->tag & skip_mask )
                     continue;
@@ -110,11 +110,11 @@ namespace mongo {
             }
         }
         void insert(MessagingPort* p) {
-            scoped_lock bl(m);
+            boost::mutex::scoped_lock bl(m);
             ports.insert(p);
         }
         void erase(MessagingPort* p) {
-            scoped_lock bl(m);
+            boost::mutex::scoped_lock bl(m);
             ports.erase(p);
         }
     };
