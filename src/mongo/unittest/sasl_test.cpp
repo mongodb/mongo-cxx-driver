@@ -1,5 +1,5 @@
-#include "mongo/client/dbclientinterface.h"
-#include "mongo/integration/integration.h"
+#include "mongo/unittest/integration.h"
+#include "mongo/client/dbclient.h"
 
 using namespace mongo;
 
@@ -7,13 +7,9 @@ namespace {
     bool supports_sasl(DBClientConnection& conn) {
         BSONObj result;
         conn.runCommand("admin", BSON( "buildinfo" << true ), result);
-        if (result["version"].toString() >= "2.5.3") {
-            return true;
-        } else {
-            return false;
-        }
+        return result["version"].toString() >= "2.5.3";
     }
-}
+} // namespace
 
 TEST(SASLAuthentication, LDAP) {
     DBClientConnection conn;

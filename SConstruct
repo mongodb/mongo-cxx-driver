@@ -307,7 +307,7 @@ env = Environment( BUILD_DIR=variantDir,
                    MSVS_ARCH=msarch ,
                    PYTHON=utils.find_python(),
                    TARGET_ARCH=msarch ,
-                   tools=["default", "unittest", "integration", "textfile"],
+                   tools=["default", "unittest", "integration_test", "textfile"],
                    PYSYSPLATFORM=os.sys.platform,
                    CONFIGUREDIR = '#' + scons_data_dir + '/sconf_temp',
                    CONFIGURELOG = '#' + scons_data_dir + '/config.log',
@@ -1213,8 +1213,6 @@ if has_option("gcov"):
             'lcov -r coverage.info src/mongo/dbtests/\* -o coverage.info',
             'lcov -r coverage.info src/mongo/unittest/\* -o coverage.info',
             'lcov -r coverage.info src/mongo/bson/bsondemo/\* -o coverage.info',
-            'lcov -r coverage.info src/mongo/\*_main.cpp -o coverage.info'
-            'lcov -r coverage.info src/mongo/integration/\* -o coverage.info'
         ]
     )
     env.AlwaysBuild('strip_coverage')

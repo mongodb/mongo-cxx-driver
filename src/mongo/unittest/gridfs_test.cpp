@@ -2,9 +2,8 @@
 #include <sstream>
 #include <string>
 
-#include "mongo/client/dbclientinterface.h"
-#include "mongo/client/gridfs.h"
-#include "mongo/unittest/unittest.h"
+#include "mongo/unittest/integration.h"
+#include "mongo/client/dbclient.h"
 
 using boost::scoped_ptr;
 using std::auto_ptr;
@@ -65,7 +64,7 @@ TEST_F(GridFSTest, StoreFile) {
 
 TEST_F(GridFSTest, StoreFileFromFile) {
     BSONObj result;
-    result = _gfs->storeFile("./src/mongo/integration/data.txt", DATA_NAME);
+    result = _gfs->storeFile("./src/mongo/unittest/data.txt", DATA_NAME);
 
     ASSERT_EQUALS(result["filename"].str(), DATA_NAME);
     ASSERT_EQUALS(result["length"].numberInt(), 20);

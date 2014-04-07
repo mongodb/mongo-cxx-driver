@@ -6,7 +6,7 @@ def exists(env):
 
 def build_cpp_unit_test(env, target, source, **kwargs):
     libdeps = kwargs.get('LIBDEPS', [])
-    libdeps.append( 'clienttest_main' )
+    libdeps.append( 'client_test_main' )
 
     kwargs['LIBDEPS'] = libdeps
 

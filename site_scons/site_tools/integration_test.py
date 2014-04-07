@@ -6,7 +6,7 @@ def exists(env):
 
 def build_integration_test(env, target, source, **kwargs):
     libdeps = kwargs.get('LIBDEPS', [])
-    libdeps.append( 'integration_main' )
+    libdeps.append( 'integration_test_main' )
 
     kwargs['LIBDEPS'] = libdeps
 
