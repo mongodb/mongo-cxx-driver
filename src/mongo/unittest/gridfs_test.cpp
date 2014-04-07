@@ -2,7 +2,7 @@
 #include <sstream>
 #include <string>
 
-#include "mongo/unittest/integration.h"
+#include "mongo/unittest/integration_test.h"
 #include "mongo/client/dbclient.h"
 
 using boost::scoped_ptr;
@@ -13,6 +13,8 @@ using std::string;
 using std::stringstream;
 
 using namespace mongo;
+using mongo::unittest::IntegrationTestParameters;
+extern IntegrationTestParameters params;
 
 namespace {
     const unsigned int UDEFAULT_CHUNK_SIZE = 256 * 1024;
@@ -30,7 +32,7 @@ namespace {
     class GridFSTest : public unittest::Test {
     public:
         GridFSTest() : _conn(new DBClientConnection()) {
-            _conn->connect("localhost:27999");
+            _conn->connect("localhost:" + params.port);
             _conn->dropDatabase(TEST_DB);
             _gfs.reset(new GridFS(*_conn, TEST_DB));
         }

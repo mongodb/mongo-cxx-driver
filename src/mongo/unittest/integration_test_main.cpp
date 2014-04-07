@@ -1,9 +1,11 @@
 #include <iostream>
 
-#include "mongo/unittest/integration.h"
+#include "mongo/unittest/integration_test.h"
 #include "mongo/client/init.h"
 
-ParameterStruct TestParams;
+using mongo::unittest::IntegrationTestParameters;
+
+IntegrationTestParameters params;
 
 int main(int argc, char **argv) {
     if ( argc != 1 ) {
@@ -11,7 +13,9 @@ int main(int argc, char **argv) {
             std::cout << "need to pass port as second param" << std::endl;
             return EXIT_FAILURE;
         }
-        TestParams.port = argv[ 2 ];
+        params.port = argv[2];
+    } else {
+        params.port = "27107";
     }
 
     mongo::Status status = mongo::client::initialize();

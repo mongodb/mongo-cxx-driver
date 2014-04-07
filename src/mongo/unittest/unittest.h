@@ -43,7 +43,6 @@
 #define ASSERT_THROWS(STATEMENT, EXCEPTION) ASSERT_THROW(STATEMENT, EXCEPTION)
 
 namespace mongo {
-
     namespace unittest {
         class Test : public ::testing::Test {
             virtual void setUp() {}
