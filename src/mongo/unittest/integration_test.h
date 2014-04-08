@@ -26,8 +26,9 @@
 
 namespace mongo {
     namespace unittest {
-        struct IntegrationTestParameters {
+        struct IntegrationTestParams {
             std::string port;
         };
-    }
-}
+        extern IntegrationTestParams integrationTestParams;
+    } // namespace unittest
+} // namespace mongo

@@ -28,8 +28,11 @@ using std::string;
 using std::stringstream;
 
 using namespace mongo;
-using mongo::unittest::IntegrationTestParameters;
-extern IntegrationTestParameters params;
+namespace mongo {
+    namespace unittest {
+        extern IntegrationTestParams integrationTestParams;
+    } // namespace unittest
+} // namespace mongo
 
 namespace {
     const unsigned int UDEFAULT_CHUNK_SIZE = 256 * 1024;
@@ -47,7 +50,7 @@ namespace {
     class GridFSTest : public unittest::Test {
     public:
         GridFSTest() : _conn(new DBClientConnection()) {
-            _conn->connect("localhost:" + params.port);
+            _conn->connect("localhost:" + mongo::unittest::integrationTestParams.port);
             _conn->dropDatabase(TEST_DB);
             _gfs.reset(new GridFS(*_conn, TEST_DB));
         }
@@ -56,7 +59,7 @@ namespace {
         scoped_ptr<DBClientConnection> _conn;
         scoped_ptr<GridFS> _gfs;
     };
-}
+} // namespace
 
 TEST_F(GridFSTest, DefaultChunkSize) {
     ASSERT_EQUALS(_gfs->getChunkSize(), UDEFAULT_CHUNK_SIZE);
