@@ -28,11 +28,7 @@ using std::string;
 using std::stringstream;
 
 using namespace mongo;
-namespace mongo {
-    namespace unittest {
-        extern IntegrationTestParams integrationTestParams;
-    } // namespace unittest
-} // namespace mongo
+using namespace mongo::unittest;
 
 namespace {
     const unsigned int UDEFAULT_CHUNK_SIZE = 255 * 1024;
@@ -50,7 +46,7 @@ namespace {
     class GridFSTest : public unittest::Test {
     public:
         GridFSTest() : _conn(new DBClientConnection()) {
-            _conn->connect("localhost:" + mongo::unittest::integrationTestParams.port);
+            _conn->connect("localhost:" + integrationTestParams.port);
             _conn->dropDatabase(TEST_DB);
             _gfs.reset(new GridFS(*_conn, TEST_DB));
         }
