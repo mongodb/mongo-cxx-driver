@@ -35,7 +35,7 @@ namespace mongo {
 } // namespace mongo
 
 namespace {
-    const unsigned int UDEFAULT_CHUNK_SIZE = 256 * 1024;
+    const unsigned int UDEFAULT_CHUNK_SIZE = 255 * 1024;
     const int DEFAULT_CHUNK_SIZE = UDEFAULT_CHUNK_SIZE;
     const string TEST_DB = "gridfs-test";
     const char DATA_NAME[] = "data.txt";
