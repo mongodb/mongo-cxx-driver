@@ -843,7 +843,7 @@ namespace {
     static unsigned long long resyncInterval = 0;
     static boost::mutex _curTimeMicros64ReadMutex;
     static boost::mutex _curTimeMicros64ResyncMutex;
-`
+
     static unsigned long long resyncTime() {
         boost::mutex::scoped_lock lkResync(_curTimeMicros64ResyncMutex);
         unsigned long long ftOld;
