@@ -21,6 +21,12 @@
 
 #ifdef MONGO_MACROS_PUSHED
 
+#if defined(_WIN32)
+#pragma pop_macro("min")
+#pragma pop_macro("max")
+#pragma pop_macro("NOMINMAX")
+#endif
+
 // util/assert_util.h
 #undef dassert
 #pragma pop_macro("dassert")

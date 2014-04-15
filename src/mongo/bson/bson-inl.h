@@ -23,12 +23,6 @@
 #include <map>
 #include <limits>
 
-
-#if defined(_WIN32)
-#undef max
-#undef min
-#endif
-
 namespace mongo {
 
     /* must be same type when called, unless both sides are #s 

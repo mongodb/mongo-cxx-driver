@@ -53,9 +53,6 @@
 
 // for rand_s() usage:
 # define _CRT_RAND_S
-# ifndef NOMINMAX
-#  define NOMINMAX
-# endif
 
 // Do not complain that about standard library functions that Windows believes should have
 // underscores in front of them, such as unlink().
