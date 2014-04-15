@@ -15,8 +15,6 @@ Switch to the 26compat branch if:
 
 > **Note:** As of MongoDB 2.6.0-rc1, it is no longer possible to build the driver from the server sources: this repository is the only approved source for driver builds.
 
-The master branch will contain future development work on a new driver with a completely new API and implementation. It is a work in progress and currently should not be used.
-
 ## Repository Overview
 
 | Branch   | Stability | Development       | Purpose                                               |
@@ -24,6 +22,8 @@ The master branch will contain future development work on a new driver with a co
 | master   | Unstable  | Planning          | New C++ driver (work in progress)                     |
 | legacy   | Unstable  | Active            | Existing C++ driver with non-compatible improvements  |
 | 26compat | Stable    | Maintenance Only  | Drop in replacement for users of existing C++ driver  |
+
+> **WARNING:** The master branch will contain future development work on a new driver with a completely new API and implementation. It is a work in progress and currently should not be used.
 
 ## Components
 
