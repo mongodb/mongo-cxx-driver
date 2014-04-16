@@ -22,6 +22,17 @@
 
 #define MONGO_MACROS_PUSHED 1
 
+#if defined(_WIN32)
+#pragma push_macro("min")
+#undef min
+#pragma push_macro("max")
+#undef max
+#pragma push_macro("NOMINMAX")
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#endif
+
 // util/assert_util.h
 #pragma push_macro("verify")
 #undef verify

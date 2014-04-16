@@ -524,6 +524,7 @@ elif windows:
 
     env.Append( CPPDEFINES=[ "_UNICODE" ] )
     env.Append( CPPDEFINES=[ "UNICODE" ] )
+    env.Append( CPPDEFINES=[ "NOMINMAX" ] )
 
     # /EHsc exception handling style for visual studio
     # /W3 warning level
