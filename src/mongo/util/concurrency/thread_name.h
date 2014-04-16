@@ -31,6 +31,6 @@ namespace mongo {
      * Retrieves the name of the current thread, as previously set, or "" if no name was previously
      * set.
      */
-    MONGO_CLIENT_API const std::string& getThreadName();
+    MONGO_CLIENT_API const std::string& MONGO_CLIENT_FUNC getThreadName();
 
 }  // namespace mongo

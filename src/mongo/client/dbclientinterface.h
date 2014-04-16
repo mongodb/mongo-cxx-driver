@@ -261,9 +261,9 @@ namespace mongo {
          */
         bool sameLogicalEndpoint( const ConnectionString& other ) const;
 
-        static ConnectionString parse( const std::string& url , std::string& errmsg );
+        static ConnectionString MONGO_CLIENT_FUNC parse( const std::string& url , std::string& errmsg );
 
-        static std::string typeToString( ConnectionType type );
+        static std::string MONGO_CLIENT_FUNC typeToString( ConnectionType type );
 
         //
         // Allow overriding the default connection behavior
@@ -429,7 +429,7 @@ namespace mongo {
          * @return true if this query has an orderby, hint, or some other field
          */
         bool isComplex( bool * hasDollar = 0 ) const;
-        static bool isComplex(const BSONObj& obj, bool* hasDollar = 0);
+        static bool MONGO_CLIENT_FUNC isComplex(const BSONObj& obj, bool* hasDollar = 0);
 
         BSONObj getFilter() const;
         BSONObj getSort() const;
@@ -439,7 +439,7 @@ namespace mongo {
         /**
          * @return true if the query object contains a read preference specification object.
          */
-        static bool hasReadPreference(const BSONObj& queryObj);
+        static bool MONGO_CLIENT_FUNC hasReadPreference(const BSONObj& queryObj);
 
         std::string toString() const;
         operator std::string() const { return toString(); }
@@ -517,10 +517,10 @@ namespace mongo {
 
     // Useful utilities for namespaces
     /** @return the database name portion of an ns string */
-    MONGO_CLIENT_API std::string nsGetDB( const std::string &ns );
+    MONGO_CLIENT_API std::string MONGO_CLIENT_FUNC nsGetDB( const std::string &ns );
 
     /** @return the collection name portion of an ns string */
-    MONGO_CLIENT_API std::string nsGetCollection( const std::string &ns );
+    MONGO_CLIENT_API std::string MONGO_CLIENT_FUNC nsGetCollection( const std::string &ns );
 
     /**
        interface that handles communication with the db
@@ -671,7 +671,7 @@ namespace mongo {
         */
         virtual unsigned long long count(const std::string &ns, const BSONObj& query = BSONObj(), int options=0, int limit=0, int skip=0 );
 
-        static std::string createPasswordDigest(const std::string &username, const std::string &clearTextPassword);
+        static std::string MONGO_CLIENT_FUNC createPasswordDigest(const std::string &username, const std::string &clearTextPassword);
 
         /** returns true in isMaster parm if this db is the current master
            of a replica pair.
@@ -735,7 +735,7 @@ namespace mongo {
         /** Can be called with the returned value from getLastErrorDetailed to extract an error string.
             If all you need is the string, just call getLastError() instead.
         */
-        static std::string getLastErrorString( const BSONObj& res );
+        static std::string MONGO_CLIENT_FUNC getLastErrorString( const BSONObj& res );
 
         /** Return the last error which has occurred, even if not the very last operation.
 
@@ -1300,7 +1300,7 @@ namespace mongo {
 
         virtual bool lazySupported() const { return true; }
 
-        static int getNumConnections() {
+        static int MONGO_CLIENT_FUNC getNumConnections() {
             return _numConnections;
         }
 
@@ -1316,8 +1316,8 @@ namespace mongo {
          */
         void setReplSetClientCallback(DBClientReplicaSet* rsClient);
 
-        static void setLazyKillCursor( bool lazy ) { _lazyKillCursor = lazy; }
-        static bool getLazyKillCursor() { return _lazyKillCursor; }
+        static void MONGO_CLIENT_FUNC setLazyKillCursor( bool lazy ) { _lazyKillCursor = lazy; }
+        static bool MONGO_CLIENT_FUNC getLazyKillCursor() { return _lazyKillCursor; }
 
         uint64_t getSockCreationMicroSec() const;
 
@@ -1353,12 +1353,12 @@ namespace mongo {
 
     /** pings server to check if it's up
      */
-    MONGO_CLIENT_API bool serverAlive( const std::string &uri );
+    MONGO_CLIENT_API bool MONGO_CLIENT_FUNC serverAlive( const std::string &uri );
 
-    MONGO_CLIENT_API BSONElement getErrField( const BSONObj& result );
-    MONGO_CLIENT_API bool hasErrField( const BSONObj& result );
+    MONGO_CLIENT_API BSONElement MONGO_CLIENT_FUNC getErrField( const BSONObj& result );
+    MONGO_CLIENT_API bool MONGO_CLIENT_FUNC hasErrField( const BSONObj& result );
 
-    MONGO_CLIENT_API inline std::ostream& operator<<( std::ostream &s, const Query &q ) {
+    MONGO_CLIENT_API inline std::ostream& MONGO_CLIENT_FUNC operator<<( std::ostream &s, const Query &q ) {
         return s << q.toString();
     }
 

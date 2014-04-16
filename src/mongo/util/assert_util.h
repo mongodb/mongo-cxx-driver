@@ -74,8 +74,8 @@ namespace mongo {
     };
 
     class DBException;
-    MONGO_CLIENT_API std::string causedBy( const DBException& e );
-    MONGO_CLIENT_API std::string causedBy( const std::string& e );
+    MONGO_CLIENT_API std::string MONGO_CLIENT_FUNC causedBy( const DBException& e );
+    MONGO_CLIENT_API std::string MONGO_CLIENT_FUNC causedBy( const std::string& e );
 
     /** Most mongo exceptions inherit from this; this is commonly caught in most threads */
     class MONGO_CLIENT_API DBException : public std::exception {
@@ -93,7 +93,7 @@ namespace mongo {
         }
 
         // Utilities for the migration to Status objects
-        static ErrorCodes::Error convertExceptionCode(int exCode);
+        static ErrorCodes::Error MONGO_CLIENT_FUNC convertExceptionCode(int exCode);
 
         Status toStatus(const std::string& context) const {
             return Status(convertExceptionCode(getCode()), context + causedBy(*this));
@@ -143,40 +143,40 @@ namespace mongo {
         virtual void appendPrefix( std::stringstream& ss ) const;
     };
 
-    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void verifyFailed(const char *msg, const char *file, unsigned line);
-    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void invariantFailed(const char *msg, const char *file, unsigned line);
-    MONGO_CLIENT_API void wasserted(const char *msg, const char *file, unsigned line);
-    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void fassertFailed( int msgid );
-    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void fassertFailedWithStatus(
+    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC verifyFailed(const char *msg, const char *file, unsigned line);
+    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC invariantFailed(const char *msg, const char *file, unsigned line);
+    MONGO_CLIENT_API void MONGO_CLIENT_FUNC wasserted(const char *msg, const char *file, unsigned line);
+    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC fassertFailed( int msgid );
+    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC fassertFailedWithStatus(
             int msgid, const Status& status);
 
     /** a "user assertion".  throws UserAssertion.  logs.  typically used for errors that a user
         could cause, such as duplicate key, disk full, etc.
     */
-    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void uasserted(int msgid, const char *msg);
-    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void uasserted(int msgid , const std::string &msg);
+    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC uasserted(int msgid, const char *msg);
+    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC uasserted(int msgid , const std::string &msg);
 
     /** msgassert and massert are for errors that are internal but have a well defined error text
         std::string.  a stack trace is logged.
     */
-    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void msgassertedNoTrace(int msgid, const char *msg);
-    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void msgasserted(int msgid, const char *msg);
-    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void msgasserted(int msgid, const std::string &msg);
+    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC msgassertedNoTrace(int msgid, const char *msg);
+    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC msgasserted(int msgid, const char *msg);
+    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC msgasserted(int msgid, const std::string &msg);
 
     /* convert various types of exceptions to strings */
-    MONGO_CLIENT_API std::string causedBy( const char* e );
-    MONGO_CLIENT_API std::string causedBy( const DBException& e );
-    MONGO_CLIENT_API std::string causedBy( const std::exception& e );
-    MONGO_CLIENT_API std::string causedBy( const std::string& e );
-    MONGO_CLIENT_API std::string causedBy( const std::string* e );
-    MONGO_CLIENT_API std::string causedBy( const Status& e );
+    MONGO_CLIENT_API std::string MONGO_CLIENT_FUNC causedBy( const char* e );
+    MONGO_CLIENT_API std::string MONGO_CLIENT_FUNC causedBy( const DBException& e );
+    MONGO_CLIENT_API std::string MONGO_CLIENT_FUNC causedBy( const std::exception& e );
+    MONGO_CLIENT_API std::string MONGO_CLIENT_FUNC causedBy( const std::string& e );
+    MONGO_CLIENT_API std::string MONGO_CLIENT_FUNC causedBy( const std::string* e );
+    MONGO_CLIENT_API std::string MONGO_CLIENT_FUNC causedBy( const Status& e );
 
     /** aborts on condition failure */
-    MONGO_CLIENT_API inline void fassert(int msgid, bool testOK) {
+    MONGO_CLIENT_API inline void MONGO_CLIENT_FUNC fassert(int msgid, bool testOK) {
         if (MONGO_unlikely(!testOK)) fassertFailed(msgid);
     }
 
-    MONGO_CLIENT_API inline void fassert(int msgid, const Status& status) {
+    MONGO_CLIENT_API inline void MONGO_CLIENT_FUNC fassert(int msgid, const Status& status) {
         if (MONGO_unlikely(!status.isOK())) {
             fassertFailedWithStatus(msgid, status);
         }
@@ -186,7 +186,7 @@ namespace mongo {
     /* "user assert".  if asserts, user did something wrong, not our code */
 #define MONGO_uassert(msgid, msg, expr) (void)( MONGO_likely(!!(expr)) || (::mongo::uasserted(msgid, msg), 0) )
 
-    MONGO_CLIENT_API inline void uassertStatusOK(const Status& status) {
+    MONGO_CLIENT_API inline void MONGO_CLIENT_FUNC uassertStatusOK(const Status& status) {
         if (MONGO_unlikely(!status.isOK())) {
             uasserted((status.location() != 0 ? status.location() : status.code()),
                       status.reason());

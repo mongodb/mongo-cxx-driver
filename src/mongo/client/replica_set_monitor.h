@@ -125,26 +125,26 @@ namespace mongo {
         /**
          * Creates a new ReplicaSetMonitor, if it doesn't already exist.
          */
-        static void createIfNeeded(const std::string& name , const std::set<HostAndPort>& servers);
+        static void MONGO_CLIENT_FUNC createIfNeeded(const std::string& name , const std::set<HostAndPort>& servers);
 
         /**
          * gets a cached Monitor per name. If the monitor is not found and createFromSeed is false,
          * it will return none. If createFromSeed is true, it will try to look up the last known
          * servers list for this set and will create a new monitor using that as the seed list.
          */
-        static ReplicaSetMonitorPtr get(const std::string& name, bool createFromSeed = false);
+        static ReplicaSetMonitorPtr MONGO_CLIENT_FUNC get(const std::string& name, bool createFromSeed = false);
 
         /**
          * Returns all the currently tracked replica set names.
          */
-        static std::set<std::string> getAllTrackedSets();
+        static std::set<std::string> MONGO_CLIENT_FUNC getAllTrackedSets();
 
         /**
          * Removes the ReplicaSetMonitor for the given set name from _sets, which will delete it.
          * If clearSeedCache is true, then the cached seed string for this Replica Set will be
          * removed from _seedServers.
          */
-        static void remove(const std::string& name, bool clearSeedCache = false);
+        static void MONGO_CLIENT_FUNC remove(const std::string& name, bool clearSeedCache = false);
 
         /**
          * Sets the hook to be called whenever the config of any replica set changes.
@@ -155,14 +155,14 @@ namespace mongo {
          *
          * The hook must not be changed while the program has multiple threads.
          */
-        static void setConfigChangeHook(ConfigChangeHook hook);
+        static void MONGO_CLIENT_FUNC setConfigChangeHook(ConfigChangeHook hook);
 
         /**
          * Permanently stops all monitoring on replica sets and clears all cached information
          * as well. As a consequence, NEVER call this if you have other threads that have a
          * DBClientReplicaSet instance.
          */
-        static void cleanup();
+        static void MONGO_CLIENT_FUNC cleanup();
 
         /**
          * If a ReplicaSetMonitor has been refreshed more than this many times in a row without
@@ -289,7 +289,7 @@ namespace mongo {
         /**
          * Starts a new scan over the hosts in set.
          */
-        static ScanStatePtr startNewScan(const SetState* set);
+        static ScanStatePtr MONGO_CLIENT_FUNC startNewScan(const SetState* set);
 
     private:
         /**

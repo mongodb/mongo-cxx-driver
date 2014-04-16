@@ -31,7 +31,7 @@ namespace logger {
     /**
      * Gets a global singleton instance of LogManager.
      */
-    MONGO_CLIENT_API LogManager* globalLogManager();
+    MONGO_CLIENT_API LogManager* MONGO_CLIENT_FUNC globalLogManager();
 
     /**
      * Gets the global MessageLogDomain associated for the global log manager.

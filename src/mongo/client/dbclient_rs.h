@@ -150,9 +150,9 @@ namespace mongo {
          *
          * @return true if the query/cmd could potentially be sent to a secondary, false otherwise
          */
-        static bool isSecondaryQuery( const std::string& ns,
-                                      const BSONObj& queryObj,
-                                      int queryOptions );
+        static bool MONGO_CLIENT_FUNC isSecondaryQuery( const std::string& ns,
+                                                        const BSONObj& queryObj,
+                                                        int queryOptions );
 
         virtual void setRunCommandHook(DBClientWithCommands::RunCommandHookFunc func);
         virtual void setPostRunCommandHook(DBClientWithCommands::PostRunCommandHookFunc func);

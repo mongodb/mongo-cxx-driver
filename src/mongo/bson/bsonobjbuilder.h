@@ -620,7 +620,7 @@ namespace mongo {
 
         void appendKeys( const BSONObj& keyPattern , const BSONObj& values );
 
-        static std::string numStr( int i ) {
+        static std::string MONGO_CLIENT_FUNC numStr( int i ) {
             if (i>=0 && i<100 && numStrsReady)
                 return numStrs[i];
             StringBuilder o;

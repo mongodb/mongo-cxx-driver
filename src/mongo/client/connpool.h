@@ -271,7 +271,7 @@ namespace mongo {
         /**
          * @return total number of current instances of AScopedConnection
          */
-        static int getNumConnections() { return _numConnections; }
+        static int MONGO_CLIENT_FUNC getNumConnections() { return _numConnections; }
 
     private:
         static AtomicUInt _numConnections;
@@ -301,7 +301,7 @@ namespace mongo {
             _setSocketTimeout();
         }
 
-        static void clearPool();
+        static void MONGO_CLIENT_FUNC clearPool();
 
         ~ScopedDbConnection();
 

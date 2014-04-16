@@ -68,17 +68,18 @@ namespace mongo {
      * This means that the few initializers that might want to terminate the program by failing
      * should probably arrange to terminate the process themselves.
      */
-    MONGO_CLIENT_API Status runGlobalInitializers(const InitializerContext::ArgumentVector& args,
-                                                  const InitializerContext::EnvironmentMap& env);
+    MONGO_CLIENT_API Status MONGO_CLIENT_FUNC runGlobalInitializers(
+        const InitializerContext::ArgumentVector& args,
+        const InitializerContext::EnvironmentMap& env);
 
-    MONGO_CLIENT_API Status runGlobalInitializers(
+    MONGO_CLIENT_API Status MONGO_CLIENT_FUNC runGlobalInitializers(
             int argc, const char* const* argv, const char* const* envp);
 
     /**
      * Same as runGlobalInitializers(), except prints a brief message to std::cerr
      * and terminates the process on failure.
      */
-    MONGO_CLIENT_API void runGlobalInitializersOrDie(
+    MONGO_CLIENT_API void MONGO_CLIENT_FUNC runGlobalInitializersOrDie(
             int argc, const char* const* argv, const char* const* envp);
 
 }  // namespace mongo

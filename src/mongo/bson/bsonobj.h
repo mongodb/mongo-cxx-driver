@@ -96,7 +96,7 @@ namespace mongo {
         /** Construct an empty BSONObj -- that is, {}. */
         BSONObj();
 
-        static BSONObj make( const Record* r );
+        static BSONObj MONGO_CLIENT_FUNC make( const Record* r );
 
         ~BSONObj() {
             _objdata = 0; // defensive
@@ -542,7 +542,7 @@ namespace mongo {
     /// members for Sorter
     struct SorterDeserializeSettings {}; // unused
     void serializeForSorter(BufBuilder& buf) const { buf.appendBuf(objdata(), objsize()); }
-    static BSONObj deserializeForSorter(BufReader& buf, const SorterDeserializeSettings&) {
+    static BSONObj MONGO_CLIENT_FUNC deserializeForSorter(BufReader& buf, const SorterDeserializeSettings&) {
         const int size = buf.peek<int>();
         const void* ptr = buf.skip(size);
         return BSONObj(static_cast<const char*>(ptr));

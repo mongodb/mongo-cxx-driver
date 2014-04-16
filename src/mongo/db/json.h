@@ -36,10 +36,10 @@ namespace mongo {
      * @throws MsgAssertionException if parsing fails.  The message included with
      * this assertion includes the character offset where parsing failed.
      */
-    MONGO_CLIENT_API BSONObj fromjson(const std::string& str);
+    MONGO_CLIENT_API BSONObj MONGO_CLIENT_FUNC fromjson(const std::string& str);
 
     /** @param len will be size of JSON object in text chars. */
-    MONGO_CLIENT_API BSONObj fromjson(const char* str, int* len=NULL);
+    MONGO_CLIENT_API BSONObj MONGO_CLIENT_FUNC fromjson(const char* str, int* len=NULL);
 
     /**
      * Parser class.  A BSONObj is constructed incrementally by passing a

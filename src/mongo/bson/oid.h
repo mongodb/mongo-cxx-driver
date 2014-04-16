@@ -74,7 +74,7 @@ namespace mongo {
         /** @return the random/sequential part of the object ID as 6 hex digits */
         std::string toIncString() const { return toHexLower(_inc, kIncSize); }
 
-        static OID gen() { OID o; o.init(); return o; }
+        static OID MONGO_CLIENT_FUNC gen() { OID o; o.init(); return o; }
 
         /** sets the contents to a new oid / randomized value */
         void init();
@@ -104,10 +104,10 @@ namespace mongo {
         void hash_combine(size_t &seed) const;
 
         /** call this after a fork to update the process id */
-        static void justForked();
+        static void MONGO_CLIENT_FUNC justForked();
 
-        static unsigned getMachineId(); // features command uses
-        static void regenMachineId(); // used by unit tests
+        static unsigned MONGO_CLIENT_FUNC getMachineId(); // features command uses
+        static void MONGO_CLIENT_FUNC regenMachineId(); // used by unit tests
 
     private:
         struct MachineAndPid {
@@ -139,13 +139,13 @@ namespace mongo {
             unsigned char data[kOIDSize];
         };
 
-        static void foldInPid(MachineAndPid& x);
-        static MachineAndPid genMachineAndPid();
+        static void MONGO_CLIENT_FUNC foldInPid(MachineAndPid& x);
+        static MachineAndPid MONGO_CLIENT_FUNC genMachineAndPid();
     };
 #pragma pack()
 
-    MONGO_CLIENT_API std::ostream& operator<<( std::ostream &s, const OID &o );
-    inline StringBuilder& operator<< (StringBuilder& s, const OID& o) { return (s << o.str()); }
+    MONGO_CLIENT_API std::ostream& MONGO_CLIENT_FUNC operator<<( std::ostream &s, const OID &o );
+    inline StringBuilder& MONGO_CLIENT_FUNC operator<< (StringBuilder& s, const OID& o) { return (s << o.str()); }
 
     /** Formatting mode for generating JSON from BSON.
         See <http://dochub.mongodb.org/core/mongodbextendedjson>
