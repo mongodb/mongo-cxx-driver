@@ -300,7 +300,6 @@ mongoclientVersionComponents = mongoclientVersionComponents[0].split('.')
 if len(mongoclientVersionComponents) != 3:
     print("Error: client version most be of the form w.x.y or w.x.y-string")
     Exit(1)
-print(mongoclientVersionComponents)
 
 env = Environment( BUILD_DIR=variantDir,
                    EXTRAPATH=get_option("extrapath"),
