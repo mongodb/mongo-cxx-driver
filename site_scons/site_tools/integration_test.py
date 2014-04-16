@@ -12,7 +12,7 @@ def build_integration_test(env, target, source, **kwargs):
 
     result = env.Program(target, source, **kwargs)
     buildAlias = env.Alias('build-' + target, result)
-    env.Alias('integrationtests', buildAlias)
+    env.Alias('integration_tests', buildAlias)
     runAlias = env.Alias('run-' + target, [result],
         "%s --port 27999" % result[0].abspath)
     env.AlwaysBuild(runAlias)

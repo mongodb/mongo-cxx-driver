@@ -1188,7 +1188,7 @@ if has_option("gcov"):
     # Zero out all the counters -- depends on tests being built
     env.Alias(
         'zero_counters',
-        ['unittests','clientTests'],
+        ['unittests', 'clientTests', 'integration_tests'],
         ['lcov -z -b $GCOV_BASE_DIR -d $GCOV_BUILD_DIR']
     )
     env.AlwaysBuild('zero_counters')
