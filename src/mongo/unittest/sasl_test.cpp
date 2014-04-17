@@ -24,25 +24,45 @@ namespace {
         conn.runCommand("admin", BSON( "buildinfo" << true ), result);
         return result["version"].toString() >= "2.5.3";
     }
-} // namespace
 
-TEST(SASLAuthentication, LDAP) {
-    DBClientConnection conn;
-    conn.connect("ldaptest.10gen.cc"); // only available internally or on jenkins
+    TEST(SASLAuthentication, LDAP) {
+        DBClientConnection conn;
+        conn.connect("ldaptest.10gen.cc"); // only available internally or on jenkins
 
-    if (supports_sasl(conn)) {
-        conn.auth(BSON(
-            "mechanism" << "PLAIN" <<
-            "user" << "drivers-team" <<
-            "pwd" << "mongor0x$xgen" <<
-            "digestPassword" << false
-        ));
-    } else {
-        // MongoDB version too old to support SASL
-        SUCCEED();
+        if (supports_sasl(conn)) {
+            conn.auth(BSON(
+                "mechanism" << "PLAIN" <<
+                "user" << "drivers-team" <<
+                "pwd" << "mongor0x$xgen" <<
+                "digestPassword" << false
+            ));
+        } else {
+            // MongoDB version too old to support SASL
+            SUCCEED();
+        }
+
+        BSONObj result = conn.findOne("ldap.test", Query("{}"));
+        ASSERT_TRUE(result["ldap"].trueValue());
+        ASSERT_EQUALS(result["authenticated"].str(), "yeah");
     }
 
-    BSONObj result = conn.findOne("ldap.test", Query("{}"));
-    ASSERT_TRUE(result["ldap"].trueValue());
-    ASSERT_EQUALS(result["authenticated"].str(), "yeah");
-}
+    TEST(SASLAuthentication, DISABLED_Kerberos) {
+        // You must run kinit -p drivers@LDAPTEST.10GEN.CC before this test
+        DBClientConnection conn;
+        conn.connect("ldaptest.10gen.cc"); // only available internally or on jenkins
+
+        if (supports_sasl(conn)) {
+            conn.auth(BSON(
+                "mechanism" << "GSSAPI" <<
+                "user" << "drivers@LDAPTEST.10GEN.CC"
+            ));
+        } else {
+            // MongoDB version too old to support SASL
+            SUCCEED();
+        }
+
+        BSONObj result = conn.findOne("kerberos.test", Query("{}"));
+        ASSERT_TRUE(result["kerberos"].trueValue());
+        ASSERT_EQUALS(result["authenticated"].str(), "yeah");
+    }
+} // namespace
