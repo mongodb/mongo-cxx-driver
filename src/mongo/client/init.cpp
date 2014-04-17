@@ -59,7 +59,9 @@ namespace client {
 
     Status shutdown(int gracePeriodMillis) {
         ReplicaSetMonitor::cleanup();
-        return PeriodicTask::stopRunningPeriodicTasks(gracePeriodMillis);
+        Status s = PeriodicTask::stopRunningPeriodicTasks(gracePeriodMillis);
+        shutdownNetworking();
+        return s;
     }
 
 } // namespace client
