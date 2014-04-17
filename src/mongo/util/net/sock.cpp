@@ -50,6 +50,7 @@ namespace mongo {
     using std::vector;
 
     MONGO_FP_DECLARE(throwSockExcep);
+    MONGO_FP_DECLARE(notStillConnected);
 
     static bool ipv6 = false;
     void enableIPv6(bool state) { ipv6 = state; }
@@ -786,6 +787,7 @@ namespace mongo {
     // isStillConnected() polls the socket at max every Socket::errorPollIntervalSecs to determine
     // if any disconnection-type events have happened on the socket.
     bool Socket::isStillConnected() {
+        if (MONGO_FAIL_POINT(notStillConnected)) { return false; }
 
         if ( errorPollIntervalSecs < 0 ) return true;
         if ( ! isPollSupported() ) return true; // nothing we can do

@@ -19,6 +19,7 @@
 #include <vector>
 
 #include "mongo/unittest/integration_test.h"
+#include "mongo/util/fail_point_service.h"
 
 #include "mongo/bson/bson.h"
 #include "mongo/client/dbclient.h"
@@ -38,6 +39,20 @@ namespace {
     const string TEST_NS = "test.dbclient";
     const string TEST_DB = "test";
     const string TEST_COLL = "dbclient";
+
+    class ConnHook : public DBConnectionHook {
+    public:
+        ConnHook() : _count(0) { };
+        void onCreate(DBClientBase* _client) {
+            (void)_client;
+            _count++;
+        }
+        void onDestroy(DBClientBase* _client) { (void)_client; }
+        void onHandedOut(DBClientBase* _client) { (void)_client; }
+        int getCount() { return _count; }
+    private:
+        int _count;
+    };
 
     class DBClientTest : public ::testing::Test {
     public:
@@ -483,5 +498,102 @@ namespace {
             "query.$comment" << "wow"
         ));
         ASSERT_FALSE(result.isEmpty());
+    }
+
+    TEST_F(DBClientTest, FlushBadConnections) {
+        string host_str = string("localhost:") + integrationTestParams.port;
+
+        pool.removeHost(host_str);
+
+        ConnHook* dh = new ConnHook();
+        pool.addHook(dh);
+
+        {
+            ScopedDbConnection conn1(host_str);
+            ScopedDbConnection conn2(host_str);
+            conn1.done();
+            conn2.done();
+        }
+
+        // Cause one of the connections to fail
+        getGlobalFailPointRegistry()->getFailPoint("throwSockExcep")->
+            setMode(FailPoint::nTimes, 1);
+
+        // call isMaster on all the connections, remove the bad ones
+        pool.flush();
+
+        {
+            ScopedDbConnection conn1(host_str);
+            ScopedDbConnection conn2(host_str);
+            conn1.done();
+            conn2.done();
+        }
+
+        ASSERT_EQUALS(dh->getCount(), 3);
+    }
+
+    TEST_F(DBClientTest, IsConnectionGood) {
+        string host_str = string("localhost:") + integrationTestParams.port;
+        ScopedDbConnection conn(host_str);
+        ASSERT_TRUE(conn.ok());
+        ASSERT_EQUALS(conn.getHost(), host_str);
+        DBClientBase* pconn = conn.get();
+        ASSERT_TRUE(pool.isConnectionGood(host_str, pconn));
+        conn.done();
+    }
+
+    TEST_F(DBClientTest, AppendInfo) {
+        pool.clear();
+
+        BSONObjBuilder b;
+        pool.appendInfo(b);
+        BSONObj info = b.done();
+        BSONObj hosts = info["hosts"].Obj();
+        ASSERT_EQUALS(hosts["localhost:27999::0"]["available"].Int(), 0);
+
+        {
+            string host_str = string("localhost:") + integrationTestParams.port;
+            ScopedDbConnection conn(host_str);
+            conn.done();
+        }
+
+        BSONObjBuilder b2;
+        pool.appendInfo(b2);
+        BSONObj info2 = b2.done();
+        hosts = info2["hosts"].Obj();
+        ASSERT_EQUALS(hosts["localhost:27999::0"]["available"].Int(), 1);
+    }
+
+    TEST_F(DBClientTest, ClearStaleConnections) {
+        string host_str = string("localhost:") + integrationTestParams.port;
+
+        ConnHook* dh = new ConnHook();
+        pool.clear();
+        pool.addHook(dh);
+
+        {
+            ScopedDbConnection conn1(host_str);
+            ScopedDbConnection conn2(host_str);
+            conn1.done();
+            conn2.done();
+        }
+
+        // Cause a conn to be stale
+        getGlobalFailPointRegistry()->getFailPoint("notStillConnected")->
+            setMode(FailPoint::nTimes, 1);
+
+        // runs getStaleConnections and deletes them
+        pool.taskDoWork();
+
+        ASSERT_EQUALS(pool.taskName(), "DBConnectionPool-cleaner");
+
+        {
+            ScopedDbConnection conn1(host_str);
+            ScopedDbConnection conn2(host_str);
+            conn1.done();
+            conn2.done();
+        }
+
+        ASSERT_EQUALS(dh->getCount(), 3);
     }
 } // namespace
