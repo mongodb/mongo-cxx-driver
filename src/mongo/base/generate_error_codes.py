@@ -179,21 +179,21 @@ namespace mongo {
             MaxError
         };
 
-        static std::string errorString(Error err);
+        static std::string MONGO_CLIENT_FUNC errorString(Error err);
 
         /**
          * Parses an Error from its "name".  Returns UnknownError if "name" is unrecognized.
          *
          * NOTE: Also returns UnknownError for the string "UnknownError".
          */
-        static Error fromString(const StringData& name);
+        static Error MONGO_CLIENT_FUNC fromString(const StringData& name);
 
         /**
          * Casts an integer "code" to an Error.  Unrecognized codes are preserved, meaning
          * that the result of a call to fromInt() may not be one of the values in the
          * Error enumeration.
          */
-        static Error fromInt(int code);
+        static Error MONGO_CLIENT_FUNC fromInt(int code);
 
         %(error_code_class_predicate_declarations)s;
     };

@@ -75,11 +75,11 @@ namespace mongo {
             delete error;
     }
 
-    inline bool operator==(const ErrorCodes::Error lhs, const Status& rhs) {
+    inline bool MONGO_CLIENT_FUNC operator==(const ErrorCodes::Error lhs, const Status& rhs) {
         return rhs == lhs;
     }
 
-    inline bool operator!=(const ErrorCodes::Error lhs, const Status& rhs) {
+    inline bool MONGO_CLIENT_FUNC operator!=(const ErrorCodes::Error lhs, const Status& rhs) {
         return rhs != lhs;
     }
 

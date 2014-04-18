@@ -50,7 +50,7 @@ namespace mongo {
     class MONGO_CLIENT_API Status {
     public:
         // Short-hand for returning an OK status.
-        static inline Status OK();
+        static inline Status MONGO_CLIENT_FUNC OK();
 
         /**
          * Builds an error status given the error code, a textual description of what
@@ -125,20 +125,20 @@ namespace mongo {
          *
          * @param error  ErrorInfo to be incremented
          */
-        static inline void ref(ErrorInfo* error);
-        static inline void unref(ErrorInfo* error);
+        static inline void MONGO_CLIENT_FUNC ref(ErrorInfo* error);
+        static inline void MONGO_CLIENT_FUNC unref(ErrorInfo* error);
     };
 
-    MONGO_CLIENT_API inline bool operator==(const ErrorCodes::Error lhs, const Status& rhs);
+    MONGO_CLIENT_API inline bool MONGO_CLIENT_FUNC operator==(const ErrorCodes::Error lhs, const Status& rhs);
 
-    MONGO_CLIENT_API inline bool operator!=(const ErrorCodes::Error lhs, const Status& rhs);
+    MONGO_CLIENT_API inline bool MONGO_CLIENT_FUNC operator!=(const ErrorCodes::Error lhs, const Status& rhs);
 
     //
     // Convenience method for unittest code. Please use accessors otherwise.
     //
 
-    MONGO_CLIENT_API std::ostream& operator<<(std::ostream& os, const Status& status);
-    MONGO_CLIENT_API std::ostream& operator<<(std::ostream& os, ErrorCodes::Error);
+    MONGO_CLIENT_API std::ostream& MONGO_CLIENT_FUNC operator<<(std::ostream& os, const Status& status);
+    MONGO_CLIENT_API std::ostream& MONGO_CLIENT_FUNC operator<<(std::ostream& os, ErrorCodes::Error);
 
 }  // namespace mongo
 

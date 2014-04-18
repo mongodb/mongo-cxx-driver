@@ -50,7 +50,7 @@ namespace client {
      *  'runGlobalInitializers' if calling 'initialize'. If a non-OK status is returned by this
      *  function, the error should be reported and the client driver API must not be used.
      */
-    MONGO_CLIENT_API Status initialize(bool callShutdownAtExit = true);
+    MONGO_CLIENT_API Status MONGO_CLIENT_FUNC initialize(bool callShutdownAtExit = true);
 
     /**
      *  Terminates the client driver. If the driver does not terminate within the provided
@@ -60,7 +60,7 @@ namespace client {
      *  failure to terminate the driver should be reported, and it may be unsafe to exit the
      *  process by any mechanism which causes normal destruction of static objects.
      */
-    MONGO_CLIENT_API Status shutdown(int gracePeriodMillis = kDefaultShutdownGracePeriodMillis);
+    MONGO_CLIENT_API Status MONGO_CLIENT_FUNC shutdown(int gracePeriodMillis = kDefaultShutdownGracePeriodMillis);
 
 } // namespace client
 } // namespace mongo

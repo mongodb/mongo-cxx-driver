@@ -35,9 +35,9 @@ namespace logger {
      */
     class MONGO_CLIENT_API LogstreamBuilder {
     public:
-        static LogSeverity severityCast(int ll) { return LogSeverity::cast(ll); }
-        static LogSeverity severityCast(LogSeverity ls) { return ls; }
-        static LabeledLevel severityCast(const LabeledLevel &labeled) { return labeled; }
+        static LogSeverity MONGO_CLIENT_FUNC severityCast(int ll) { return LogSeverity::cast(ll); }
+        static LogSeverity MONGO_CLIENT_FUNC severityCast(LogSeverity ls) { return ls; }
+        static LabeledLevel MONGO_CLIENT_FUNC severityCast(const LabeledLevel &labeled) { return labeled; }
 
         /**
          * Construct a LogstreamBuilder that writes to "domain" on destruction.
@@ -105,11 +105,11 @@ namespace logger {
             return *this;
         }
 
-        LogstreamBuilder& operator<< (std::ostream& ( *manip )(std::ostream&)) {
+        LogstreamBuilder& operator<< (std::ostream& ( MONGO_CLIENT_FUNC *manip )(std::ostream&)) {
             stream() << manip;
             return *this;
         }
-        LogstreamBuilder& operator<< (std::ios_base& (*manip)(std::ios_base&)) {
+        LogstreamBuilder& operator<< (std::ios_base& ( MONGO_CLIENT_FUNC *manip)(std::ios_base&)) {
             stream() << manip;
             return *this;
         }

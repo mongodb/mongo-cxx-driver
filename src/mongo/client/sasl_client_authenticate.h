@@ -55,8 +55,9 @@ namespace mongo {
      * rejected.  Other failures, all of which are tantamount to authentication failure, may also be
      * returned.
      */
-    extern MONGO_CLIENT_API Status (*saslClientAuthenticate)(DBClientWithCommands* client,
-                                            const BSONObj& saslParameters);
+    extern MONGO_CLIENT_API Status (MONGO_CLIENT_FUNC *saslClientAuthenticate)(
+        DBClientWithCommands* client,
+        const BSONObj& saslParameters);
 
     /**
      * Extracts the payload field from "cmdObj", and store it into "*payload".
@@ -67,7 +68,7 @@ namespace mongo {
      * stores into "*payload".  If the type is BinData, the contents are stored directly
      * into "*payload".  In all other cases, returns
      */
-    Status MONGO_CLIENT_API saslExtractPayload(const BSONObj& cmdObj, std::string* payload, BSONType* type);
+    MONGO_CLIENT_API Status MONGO_CLIENT_FUNC saslExtractPayload(const BSONObj& cmdObj, std::string* payload, BSONType* type);
 
     // Constants
 
