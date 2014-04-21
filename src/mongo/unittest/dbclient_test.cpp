@@ -43,12 +43,9 @@ namespace {
     class ConnHook : public DBConnectionHook {
     public:
         ConnHook() : _count(0) { };
-        void onCreate(DBClientBase* _client) {
-            (void)_client;
-            _count++;
-        }
-        void onDestroy(DBClientBase* _client) { (void)_client; }
-        void onHandedOut(DBClientBase* _client) { (void)_client; }
+        void onCreate(DBClientBase*) { _count++; }
+        void onDestroy(DBClientBase*) { }
+        void onHandedOut(DBClientBase*) { }
         int getCount() { return _count; }
     private:
         int _count;
@@ -595,5 +592,83 @@ namespace {
         }
 
         ASSERT_EQUALS(dh->getCount(), 3);
+    }
+
+    TEST_F(DBClientTest, CursorAttachNewConnection) {
+        c.insert(TEST_NS, BSON("num" << 1));
+        c.insert(TEST_NS, BSON("num" << 2));
+
+        DBClientCursor cursor(&c, TEST_NS, Query("{}").obj, 0, 0, 0, 0, 0);
+        ASSERT_TRUE(cursor.init());
+        ASSERT_TRUE(cursor.more());
+        cursor.next();
+
+        string host_str = string("localhost:") + integrationTestParams.port;
+        log() << "here";
+        cursor.attach(new ScopedDbConnection(host_str));
+        ASSERT_TRUE(cursor.more());
+        cursor.next();
+    }
+
+    TEST_F(DBClientTest, LazyCursor) {
+        c.insert(TEST_NS, BSON("test" << true));
+
+        DBClientCursor cursor(&c, TEST_NS, Query("{}").obj, 0, 0, 0, 0, 0);
+        bool is_retry = false;
+        cursor.initLazy(is_retry);
+        ASSERT_TRUE(cursor.initLazyFinish(is_retry));
+
+        vector<BSONObj> docs;
+        while(cursor.more())
+            docs.push_back(cursor.next());
+
+        ASSERT_EQUALS(docs.size(), 1U);
+        ASSERT_TRUE(docs.front()["test"].value());
+    }
+
+    void nop_hook(BSONObjBuilder* bob) { (void)bob; }
+    void nop_hook_post(BSONObj, string) { }
+
+    TEST_F(DBClientTest, LazyCursorCommand) {
+        c.setRunCommandHook(nop_hook);
+        c.setPostRunCommandHook(nop_hook_post);
+        DBClientCursor cursor(&c, TEST_DB + ".$cmd", Query("{dbStats: 1}").obj, -1, 0, 0, 0, 0);
+        bool is_retry = false;
+        cursor.initLazy(is_retry);
+        ASSERT_TRUE(cursor.initLazyFinish(is_retry));
+
+        ASSERT_TRUE(cursor.more());
+        ASSERT_TRUE(cursor.next().hasField("db"));
+        ASSERT_FALSE(cursor.more());
+    }
+
+    TEST_F(DBClientTest, InitCommand) {
+        DBClientCursor cursor(&c, TEST_DB + ".$cmd", Query("{dbStats: 1}").obj, -1, 0, 0, 0, 0);
+        ASSERT_TRUE(cursor.initCommand());
+
+        ASSERT_TRUE(cursor.more());
+        ASSERT_TRUE(cursor.next().hasField("db"));
+        ASSERT_FALSE(cursor.more());
+    }
+
+    TEST_F(DBClientTest, GetMoreLimit) {
+        // TODO: really implement limit
+        c.insert(TEST_NS, BSON("num" << 1));
+        c.insert(TEST_NS, BSON("num" << 2));
+        c.insert(TEST_NS, BSON("num" << 3));
+        c.insert(TEST_NS, BSON("num" << 4));
+
+        // set nToReturn to 3 but batch size to 2
+        auto_ptr<DBClientCursor> cursor = c.query(TEST_NS, Query("{}"), 3, 0, 0, 0, 2);
+        vector<BSONObj> docs;
+        while(cursor->more())
+            docs.push_back(cursor->next());
+
+        ASSERT_EQUALS(docs.size(), 3U);
+    }
+
+    TEST_F(DBClientTest, PeekError) {
+        auto_ptr<DBClientCursor> cursor = c.query(TEST_DB + ".$cmd", Query("{dbStatz: 1}"));
+        ASSERT_TRUE(cursor->peekError());
     }
 } // namespace
