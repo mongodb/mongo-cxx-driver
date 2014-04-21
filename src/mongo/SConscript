@@ -1,10 +1,8 @@
-Import('env windows')
+Import('env windows staticLibName')
 
 # Windows can't have a static and dynamic library sharing a name, so adjust
 # the name to match what is found in SConscript.client if using windows.
-static_mongoclient_libdep = '$BUILD_DIR/mongoclient'
-if windows:
-    static_mongoclient_libdep = '$BUILD_DIR/libmongoclient'
+static_mongoclient_libdep = '$BUILD_DIR/' + staticLibName
 
 env.Library(
     target='mocklib',

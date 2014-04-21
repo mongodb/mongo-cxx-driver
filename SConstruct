@@ -509,7 +509,9 @@ elif openbsd:
 elif windows:
     dynamicCRT = has_option("dynamic-windows")
 
-    env['DIST_ARCHIVE_SUFFIX'] = '.zip'
+    if has_option("sharedclient") and not dynamicCRT:
+        print("The shared client must be built with the dynamic runtime library")
+        Exit(1)
 
     # If tools configuration fails to set up 'cl' in the path, fall back to importing the whole
     # shell environment and hope for the best. This will work, for instance, if you have loaded
@@ -1177,8 +1179,8 @@ Export("darwin windows solaris linux freebsd nix")
 Export("debugBuild optBuild")
 Export("use_clang")
 
-env.SConscript('src/SConscript', variant_dir='$BUILD_DIR', duplicate=False)
 env.SConscript('src/SConscript.client', variant_dir='$BUILD_DIR', duplicate=False)
+env.SConscript('src/SConscript', variant_dir='$BUILD_DIR', duplicate=False)
 
 # --- Coverage ---
 if has_option("gcov"):

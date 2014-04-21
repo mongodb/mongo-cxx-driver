@@ -5,7 +5,7 @@
 import os
 from buildscripts import utils
 
-Import('env has_option')
+Import('env has_option get_option')
 Import('nix linux darwin windows')
 
 buildShared = False
@@ -254,14 +254,30 @@ staticLibEnv.AppendUnique(
     LIBDEPS=mongoClientLibDeps,
     SYSLIBDEPS=mongoClientSysLibDeps)
 
+sharedLibName = 'mongoclient'
+staticLibName = 'mongoclient'
+
 if windows:
     # On Windows, we need to have the static library target and the
     # import library target have different names, so that they aren't
     # ambiguous to scons.  Boost names the static library libxxxx.lib and
     # the import library xxxx.lib, so we shall follow their lead.
     staticLibName = 'libmongoclient'
-else:
-    staticLibName = 'mongoclient'
+
+    abi_adornment=str()
+    if not has_option('dynamic-windows'):
+        abi_adornment += 's'
+
+    if get_option('dbg') == 'on':
+        abi_adornment += 'gd'
+
+    if abi_adornment:
+        abi_adornment = '-' + abi_adornment
+        sharedLibName = sharedLibName + abi_adornment
+        staticLibName = staticLibName + abi_adornment
+
+# Make this value available in src/SConscript which needs it.
+Export('staticLibName')
 
 mongoClientStaticLib = staticLibEnv.StaticLibrary(
     staticLibName, clientSource),
@@ -296,7 +312,7 @@ if buildShared:
         sharedLibEnv.AppendUnique(CCFLAGS="-fvisibility=hidden")
         sharedLibEnv.AppendUnique(SHLINKFLAGS="-fvisibility=hidden")
 
-    mongoClientSharedLib = sharedLibEnv.SharedLibrary('mongoclient', clientSource)
+    mongoClientSharedLib = sharedLibEnv.SharedLibrary(sharedLibName, clientSource)
 
     mongoClientSharedLibInstall = sharedLibEnv.Install(
         '#/sharedclient', mongoClientSharedLib)
@@ -388,7 +404,7 @@ if buildShared:
     # Arrange for the tests to link against the mongoclient in the #/sharedclient directory,
     # and against boost explicitly rather than picking up the symbols through mongoclient.
     sharedClientEnv.PrependUnique(
-        LIBS=['mongoclient'],
+        LIBS=[sharedLibName],
         LIBPATH=["#/sharedclient"],
         LIBDEPS=mongoClientLibDeps,
     )
