@@ -67,5 +67,10 @@
 #undef LOG
 #pragma pop_macro("LOG")
 
+#if defined(_WIN32)
+#undef _CRT_SECURE_NO_WARNINGS
+#pragma pop_macro("_CRT_SECURE_NO_WARNINGS")
+#endif
+
 #undef MONGO_MACROS_PUSHED
 #endif
