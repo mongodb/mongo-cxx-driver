@@ -30,7 +30,17 @@
 // handled by adding STATIC_LIBMONGOCLIENT to the list of definitions passed on each compile
 // invocation.
 #ifndef STATIC_LIBMONGOCLIENT
+#if defined(_WIN32) && !defined(_DLL)
+#error "The DLL build of libmongoclient requires consuming code to be built with /MD or /MDd"
+#endif
 #define LIBMONGOCLIENT_CONSUMER
+#endif
+
+// Don't spam DLL consumers with warnings about STL symbol exports
+#if defined(_MSC_VER) && defined(_DLL)
+#pragma warning(push)
+#pragma warning(disable:4251)
+#pragma warning(disable:4275)
 #endif
 
 #include "mongo/config.h"
@@ -48,3 +58,7 @@
 #include "mongo/version.h"
 
 #include "mongo/client/undef_macros.h"
+
+#if defined(_MSC_VER) && defined(_DLL)
+#pragma warning(pop)
+#endif

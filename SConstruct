@@ -542,23 +542,41 @@ elif windows:
     env.Append(CCFLAGS=["/EHsc","/W3"])
 
     # some warnings we don't like:
-    # c4355
-    # 'this' : used in base member initializer list
-    #    The this pointer is valid only within nonstatic member functions. It cannot be used in the initializer list for a base class.
-    # c4800
-    # 'type' : forcing value to bool 'true' or 'false' (performance warning)
-    #    This warning is generated when a value that is not bool is assigned or coerced into type bool. 
-    # c4267
-    # 'var' : conversion from 'size_t' to 'type', possible loss of data
-    # When compiling with /Wp64, or when compiling on a 64-bit operating system, type is 32 bits but size_t is 64 bits when compiling for 64-bit targets. To fix this warning, use size_t instead of a type.
-    # c4244
-    # 'conversion' conversion from 'type1' to 'type2', possible loss of data
-    #  An integer type is converted to a smaller integer type.
-    # c4290
-    #  C++ exception specification ignored except to indicate a function is not __declspec(nothrow
-    #  A function is declared using exception specification, which Visual C++ accepts but does not
-    #  implement
-    env.Append( CCFLAGS=["/wd4355", "/wd4800", "/wd4267", "/wd4244", "/wd4290"] )
+    env.Append(CCFLAGS=[
+
+        # 'conversion' conversion from 'type1' to 'type2', possible loss of data
+        #     An integer type is converted to a smaller integer type.
+        "/wd4244",
+
+        # 'identifier' : class 'type' needs to have dll-interface to be used by clients of class 'type2'
+        #     Typically some STL type isn't dllexport adorned, and we can't do anything about that
+        "/wd4251",
+
+        # 'var' : conversion from 'size_t' to 'type', possible loss of data When compiling with
+        # /Wp64, or when compiling on a 64-bit operating system, type is 32 bits but size_t is
+        # 64 bits when compiling for 64-bit targets. To fix this warning, use size_t instead of
+        # a type
+        "/wd4267",
+
+        # non – DLL-interface classkey 'identifier' used as base for DLL-interface classkey 'identifier'
+        #    Typically some base like noncopyable isn't dllexport adorned; nothing we can do
+        "/wd4275",
+
+        # C++ exception specification ignored except to indicate a function is not
+        # __declspec(nothrow A function is declared using exception specification, which Visual
+        # C++ accepts but does not implement
+        "/wd4290",
+
+        # 'this' : used in base member initializer list
+        #    The this pointer is valid only within nonstatic member functions. It cannot be
+        #    used in the initializer list for a base class.
+        "/wd4355",
+
+        # 'type' : forcing value to bool 'true' or 'false' (performance warning)
+        #    This warning is generated when a value that is not bool is assigned or coerced
+        #    into type bool.
+        "/wd4800",
+    ])
 
     # some warnings we should treat as errors:
     # c4099

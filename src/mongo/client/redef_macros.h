@@ -84,6 +84,13 @@
 #undef ONCE
 #define ONCE MONGO_ONCE
 
+#if defined(_WIN32)
+#pragma push_macro("_CRT_SECURE_NO_WARNINGS")
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+#endif
+
 // util/log.h
 #pragma push_macro("LOG")
 #undef LOG
