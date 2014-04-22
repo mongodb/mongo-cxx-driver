@@ -17,18 +17,7 @@
 
 #include "mongo/platform/compiler.h"
 
-#if defined(_WIN32) && (defined(__i386) || defined(_M_IX86))
-// For 32-bit windows, we need to define API calls as __cdecl. For 64 bit windows
-// the calling convention is always __fastcall. For non-windows, we don't care.
-#if defined _MSC_VER
-#define MONGO_CLIENT_FUNC __cdecl
-#else
-#error "Don't know how to declare cdecl on this system"
-#endif
-#else
-// On anything other than windows 32-bit , we don't need to bother specifying.
-#define MONGO_CLIENT_FUNC
-#endif
+#define MONGO_CLIENT_FUNC MONGO_COMPILER_API_CALLING_CONVENTION
 
 /**
  * Definition of macros used to label the mongo client api.
