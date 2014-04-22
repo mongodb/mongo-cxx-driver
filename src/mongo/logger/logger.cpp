@@ -26,17 +26,11 @@ namespace logger {
     static LogManager* theGlobalLogManager;  // NULL at program start, before even static
                                              // initialization.
 
-    static RotatableFileManager theGlobalRotatableFileManager;
-
     LogManager* globalLogManager() {
         if (MONGO_unlikely(!theGlobalLogManager)) {
             theGlobalLogManager = new LogManager;
         }
         return theGlobalLogManager;
-    }
-
-    RotatableFileManager* globalRotatableFileManager() {
-        return &theGlobalRotatableFileManager;
     }
 
     /**

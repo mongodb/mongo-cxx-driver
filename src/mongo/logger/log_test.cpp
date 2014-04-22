@@ -1,3 +1,4 @@
+
 /*    Copyright 2013 10gen Inc.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,8 +24,6 @@
 #include "mongo/logger/encoder.h"
 #include "mongo/logger/message_event_utf8_encoder.h"
 #include "mongo/logger/message_log_domain.h"
-#include "mongo/logger/rotatable_file_appender.h"
-#include "mongo/logger/rotatable_file_writer.h"
 #include "mongo/platform/compiler.h"
 #include "mongo/unittest/unittest.h"
 #include "mongo/util/concurrency/thread_name.h"

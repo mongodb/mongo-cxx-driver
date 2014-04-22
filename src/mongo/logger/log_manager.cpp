@@ -17,16 +17,10 @@
 
 #include "mongo/logger/log_manager.h"
 
-#include "mongo/logger/console_appender.h"
-#include "mongo/logger/message_event_utf8_encoder.h"
-
 namespace mongo {
 namespace logger {
 
     LogManager::LogManager() {
-        // Should really fassert that the following status .isOK(), but it never fails.
-        _globalDomain.attachAppender(MessageLogDomain::AppenderAutoPtr(
-                new ConsoleAppender<MessageEventEphemeral>(new MessageEventDetailsEncoder)));
     }
 
     LogManager::~LogManager() {

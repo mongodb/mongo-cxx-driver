@@ -19,6 +19,7 @@
 #include <string>
 
 #include "mongo/base/string_data.h"
+#include "mongo/client/export_macros.h"
 
 namespace mongo {
 namespace logger {
@@ -29,7 +30,7 @@ namespace logger {
      * Severities are totally ordered, from most severe to least severe as follows:
      * Severe, Error, Warning, Info, Log, Debug(1), Debug(2), ...
      */
-    class LogSeverity {
+    class MONGO_CLIENT_API LogSeverity {
     public:
         //
         // Static factory methods for getting LogSeverity objects of the various severity levels.
@@ -115,7 +116,7 @@ namespace logger {
         int _severity;
     };
 
-    std::ostream& operator<<(std::ostream& os, LogSeverity severity);
+    MONGO_CLIENT_API std::ostream& MONGO_CLIENT_FUNC operator<<(std::ostream& os, LogSeverity severity);
 
 }  // namespace logger
 }  // namespace mongo

@@ -23,6 +23,8 @@
 #include <limits>
 #include <string>
 
+#include "mongo/client/export_macros.h"
+
 namespace mongo {
 
     /**
@@ -38,7 +40,7 @@ namespace mongo {
      *  + Because string data can be used to pass a substring around, one should never assume a
      *    rawData() terminates with a null.
      */
-    class StringData {
+    class MONGO_CLIENT_API StringData {
     public:
 
         /** Constructs an empty string data */
@@ -177,7 +179,7 @@ namespace mongo {
         return lhs.compare(rhs) >= 0;
     }
 
-    std::ostream& operator<<(std::ostream& stream, const StringData& value);
+    MONGO_CLIENT_API std::ostream& MONGO_CLIENT_FUNC operator<<(std::ostream& stream, const StringData& value);
 
 } // namespace mongo
 

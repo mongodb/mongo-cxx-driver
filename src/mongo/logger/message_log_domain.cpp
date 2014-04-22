@@ -22,7 +22,7 @@
 namespace mongo {
 namespace logger {
 
-    template class LogDomain<MessageEventEphemeral>;
+    template class MONGO_CLIENT_API LogDomain<MessageEventEphemeral>;
 
 }  // namespace logger
 }  // namespace mongo
