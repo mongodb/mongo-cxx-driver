@@ -19,7 +19,6 @@
 
 #include "mongo/base/disallow_copying.h"
 #include "mongo/logger/message_log_domain.h"
-#include "mongo/logger/rotatable_file_writer.h"
 #include "mongo/platform/unordered_map.h"
 
 namespace mongo {

@@ -47,7 +47,7 @@ namespace logger {
      * messages.
      */
     template <typename E>
-    class LogDomain {
+    class MONGO_CLIENT_API LogDomain {
         MONGO_DISALLOW_COPYING(LogDomain);
     public:
         typedef E Event;

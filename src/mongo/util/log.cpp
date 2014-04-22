@@ -21,10 +21,9 @@
 #include <io.h>
 #else
 #include <unistd.h>
+#include <cerrno>
 #endif
 
-#include "mongo/logger/ramlog.h"
-#include "mongo/logger/rotatable_file_manager.h"
 #include "mongo/util/assert_util.h"
 #include "mongo/util/concurrency/threadlocal.h"
 #include "mongo/util/concurrency/thread_name.h"
@@ -40,6 +39,13 @@ using namespace std;
 
 namespace mongo {
 
+    // Guard that alters the indentation level used by log messages on the current thread.
+    // Used only by mongodump (mongo/tools/dump.cpp).  Do not introduce new uses.
+    struct LogIndentLevel {
+        LogIndentLevel();
+        ~LogIndentLevel();
+    };
+
     static logger::ExtraLogContextFn _appendExtraLogContext;
 
     Status logger::registerExtraLogContextFn(logger::ExtraLogContextFn contextFn) {
@@ -51,14 +57,6 @@ namespace mongo {
         }
         _appendExtraLogContext = contextFn;
         return Status::OK();
-    }
-
-    bool rotateLogs() {
-        using logger::RotatableFileManager;
-        RotatableFileManager* manager = logger::globalRotatableFileManager();
-        RotatableFileManager::FileNameStatusPairVector result(
-                manager->rotateAll("." + terseCurrentTime(false)));
-        return result.empty();
     }
 
     string errnoWithDescription(int x) {
@@ -120,8 +118,5 @@ namespace mongo {
 
     LogIndentLevel::~LogIndentLevel() {
     }
-
-    Tee* const warnings = RamLog::get("warnings"); // Things put here go in serverStatus
-    Tee* const startupWarningsLog = RamLog::get("startupWarnings");  // intentionally leaked
 
 }  // namespace mongo
