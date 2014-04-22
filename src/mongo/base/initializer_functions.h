@@ -29,3 +29,4 @@ INSTALL_FUNCTION(client_sasl_sspi) // "SaslSspiClientPlugin,SaslCramClientPlugin
 INSTALL_FUNCTION(util_fail_point_service) // "FailPointRegistry,AllFailPointsRegistered"
 INSTALL_FUNCTION(util_net_socket_poll) // "DynamicLinkWin32Poll"
 INSTALL_FUNCTION(util_net_ssl_manager) // "SSLManager"
+INSTALL_FUNCTION(util_net_sock) // "SockWSAStartup"

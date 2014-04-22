@@ -60,6 +60,8 @@ namespace mongo {
 
     void disableNagle(int sock);
 
+    void shutdownNetworking();
+
 #if defined(_WIN32)
 
     typedef short sa_family_t;

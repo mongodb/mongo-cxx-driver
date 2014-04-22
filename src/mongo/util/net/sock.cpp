@@ -907,16 +907,23 @@ namespace mongo {
     }
 
 #if defined(_WIN32)
-    struct WinsockInit {
-        WinsockInit() {
-            WSADATA d;
-            if ( WSAStartup(MAKEWORD(2,2), &d) != 0 ) {
-                out() << "ERROR: wsastartup failed " << errnoWithDescription() << endl;
-                problem() << "ERROR: wsastartup failed " << errnoWithDescription() << endl;
-                abort();
-            }
+    MONGO_INITIALIZER(SockWSAStartup)(InitializerContext * context) {
+        WSADATA d;
+        if ( WSAStartup(MAKEWORD(2,2), &d) != 0 ) {
+            out() << "ERROR: wsastartup failed " << errnoWithDescription() << endl;
+            problem() << "ERROR: wsastartup failed " << errnoWithDescription() << endl;
+            abort();
         }
-    } winsock_init;
+
+        return Status::OK();
+    }
 #endif
 
+    void shutdownNetworking() {
+#ifdef _WIN32
+        WSACleanup();
+#endif
+    }
 } // namespace mongo
+
+MONGO_INITIALIZER_FUNCTION_ASSURE_FILE(util_net_sock)
