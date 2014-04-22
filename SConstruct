@@ -558,7 +558,7 @@ elif windows:
         # a type
         "/wd4267",
 
-        # non – DLL-interface classkey 'identifier' used as base for DLL-interface classkey 'identifier'
+        # non - DLL-interface classkey 'identifier' used as base for DLL-interface classkey 'identifier'
         #    Typically some base like noncopyable isn't dllexport adorned; nothing we can do
         "/wd4275",
 
