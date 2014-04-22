@@ -23,6 +23,7 @@
 #include "mongo/client/dbclient.h"
 
 #include <iostream>
+#include <boost/thread/mutex.hpp>
 
 #ifndef verify
 #  define verify(x) MONGO_verify(x)
@@ -30,6 +31,35 @@
 
 using namespace std;
 using namespace mongo;
+
+namespace {
+
+    // A demonstration of how to inject a custom logger into the client driver.
+    // This class logs events from the driver to the given ostream. Note that
+    // the appender is responsible for its own synchronization.
+    class OstreamAppender : public logger::MessageLogDomain::EventAppender {
+    public:
+        using logger::MessageLogDomain::EventAppender::Event;
+
+        OstreamAppender(std::ostream& stream)
+            : _stream(stream) {}
+
+        virtual Status append(const Event& event) {
+            boost::unique_lock<boost::mutex> lock(_mutex);
+            _stream << dateToISOStringUTC(Date_t(event.getDate())) << ' ';
+            _stream << '[' << event.getSeverity() << "] ";
+            _stream << event.getMessage();
+            return Status::OK();
+        }
+
+    private:
+        // Synchronizes appender access to _stream. Note that if there are other writers to the
+        // stream that they will not be synchronized with us.
+        boost::mutex _mutex;
+        std::ostream& _stream;
+    };
+
+} // namespace
 
 int main( int argc, const char **argv ) {
 
@@ -41,6 +71,21 @@ int main( int argc, const char **argv ) {
         }
         port = argv[ 2 ];
     }
+
+    // Logging setup example:
+
+    // Acquire the global log domain from the global log manager.
+    logger::MessageLogDomain* globalLogDomain = logger::globalLogManager()->getGlobalDomain();
+
+    // Create a new OstreamAppender that logs to std::clog, and inject it into the global log
+    // manager. Since the manager, by default, does not have any appenders we don't normally
+    // log. Adding an appender like this will enable logging.
+    std::auto_ptr<logger::MessageLogDomain::EventAppender> appender(
+        new OstreamAppender(std::clog));
+    globalLogDomain->attachAppender(appender);
+
+    // Set the logging verbosity to a high level of debugging.
+    globalLogDomain->setMinimumLoggedSeverity(logger::LogSeverity::Debug(3));
 
     Status status = client::initialize();
     if ( !status.isOK() ) {
