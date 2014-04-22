@@ -68,7 +68,7 @@ use_clang = False
 options = {}
 
 def add_option( name, help, nargs, contributesToVariantDir,
-                dest=None, default = None, type="string", choices=None, metavar=None ):
+                dest=None, default = None, type="string", choices=None, metavar=None, const=None ):
 
     if dest is None:
         dest = name
@@ -84,6 +84,7 @@ def add_option( name, help, nargs, contributesToVariantDir,
                choices=choices,
                default=default,
                metavar=metavar,
+               const=const,
                help=help )
 
     options[name] = { "help" : help ,
@@ -168,6 +169,8 @@ add_option( "sharedclient", "build a libmongoclient.so/.dll" , 0 , False )
 add_option( "release" , "release build" , 0 , True )
 add_option( "lto", "enable link time optimizations (experimental, except with MSVC)" , 0 , True )
 add_option( "dynamic-windows", "dynamically link on Windows", 0, True)
+add_option( "dynamic-boost", "dynamically link boost libraries on Windows", "?", True,
+            type="choice", choices=["on", "off", "auto"], default="auto", const="on" )
 add_option( "disable-declspec-thread", "don't use __declspec(thread) on Windows", 0, True)
 
 # base compile flags
@@ -509,7 +512,16 @@ elif openbsd:
 elif windows:
     dynamicCRT = has_option("dynamic-windows")
 
-    env['DIST_ARCHIVE_SUFFIX'] = '.zip'
+    # Unless otherwise specified, link boost in the same manner as the CRT.
+    dynamicBoost = get_option("dynamic-boost")
+    if dynamicBoost == "auto":
+        dynamicBoost = "on" if dynamicCRT else "off"
+    if dynamicBoost == "on":
+        env.Append( CPPDEFINES=[ "BOOST_ALL_DYN_LINK" ] )
+
+    if has_option("sharedclient") and not dynamicCRT:
+        print("The shared client must be built with the dynamic runtime library")
+        Exit(1)
 
     # If tools configuration fails to set up 'cl' in the path, fall back to importing the whole
     # shell environment and hope for the best. This will work, for instance, if you have loaded
@@ -1177,8 +1189,8 @@ Export("darwin windows solaris linux freebsd nix")
 Export("debugBuild optBuild")
 Export("use_clang")
 
-env.SConscript('src/SConscript', variant_dir='$BUILD_DIR', duplicate=False)
 env.SConscript('src/SConscript.client', variant_dir='$BUILD_DIR', duplicate=False)
+env.SConscript('src/SConscript', variant_dir='$BUILD_DIR', duplicate=False)
 
 # --- Coverage ---
 if has_option("gcov"):
