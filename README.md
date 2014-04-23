@@ -30,9 +30,10 @@ Switch to the 26compat branch if:
   - `libmongoclient.[so|dylib|dll]` - The shared mongoclient library (but see notes)
   - `libmongoclient.a` - The static mongoclient library
 
-## Building
+## Building and Usage
 
-  See http://docs.mongodb.org/ecosystem/tutorial/download-and-compile-cpp-driver/
+ - [Download and Compile](https://github.com/mongodb/mongo-cxx-driver/wiki/Download%20and%20Compile)
+ - [Tutorial](https://github.com/mongodb/mongo-cxx-driver/wiki/Tutorial)
 
 ## Bugs and Issues
 
