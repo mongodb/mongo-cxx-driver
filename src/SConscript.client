@@ -170,6 +170,7 @@ clientHeaders = [
     'mongo/bson/util/atomic_int.h',
     'mongo/bson/util/builder.h',
     'mongo/bson/util/misc.h',
+    'mongo/client/autolib.h',
     'mongo/client/connpool.h',
     'mongo/client/dbclient.h',
     'mongo/client/dbclient_rs.h',
