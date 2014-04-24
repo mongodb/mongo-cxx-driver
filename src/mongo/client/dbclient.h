@@ -47,6 +47,8 @@
 
 #include "mongo/client/redef_macros.h"
 
+#include "mongo/client/autolib.h"
+
 #include "mongo/client/connpool.h"
 #include "mongo/client/dbclient_rs.h"
 #include "mongo/client/dbclientcursor.h"
