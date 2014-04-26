@@ -13,13 +13,10 @@
  *    limitations under the License.
  */
 
-#pragma once
-
 #include "mongo/config.h"
 
 INSTALL_FUNCTION(base_init) // "default"
 INSTALL_FUNCTION(logger_logstream_builder) // "LogstreamBuilder"
-INSTALL_FUNCTION(logger_ramlog) // "RamLogCatalog"
 INSTALL_FUNCTION(logger_logger) // "GlobalLogManager"
 #ifdef MONGO_SASL
 INSTALL_FUNCTION(client_sasl_client_authenticate_impl) // "SaslClientAuthenticateFunction"
