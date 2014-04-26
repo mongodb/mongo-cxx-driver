@@ -38,19 +38,18 @@
  * Example:
  *   extern MONGO_CLIENT_API int myGlobalVariable;
  *
- * dbclient.h sets the LIBMONGOCLIENT_CONSUMER macro, so all clients will convert the
- * MONGO_CLIENT_API macro to the the import form, while the library code will convert it to the
- * export form.
  */
 
-#if defined(LIBMONGOCLIENT_CONSUMER) && !defined(LIBMONGOCLIENT_BUILDING)
-#define MONGO_CLIENT_API MONGO_COMPILER_API_IMPORT
-#elif !defined(LIBMONGOCLIENT_CONSUMER) && defined(LIBMONGOCLIENT_BUILDING)
-#define MONGO_CLIENT_API MONGO_COMPILER_API_EXPORT
-#elif !defined(LIBMONGOCLIENT_CONSUMER) && !defined(LIBMONGOCLIENT_BUILDING)
+#if defined(STATIC_LIBMONGOCLIENT)
+
 #define MONGO_CLIENT_API
+
 #else
-#error "Must not define both LIBMONGOCLIENT_BUILDING and LIBMONGOCLIENT_CONSUMER"
+
+#if defined(LIBMONGOCLIENT_BUILDING)
+#define MONGO_CLIENT_API MONGO_COMPILER_API_EXPORT
+#else
+#define MONGO_CLIENT_API MONGO_COMPILER_API_IMPORT
 #endif
 
-
+#endif

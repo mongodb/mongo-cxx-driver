@@ -1,16 +1,4 @@
 # -*- mode: python -*-
 
-Import("env windows")
-
-if windows:
-    # On Windows, we use the autolib feature of boost to link in the
-    # libraries we need, so we can't use SCons to detect them at configure time.
-    env.Library("shim_boost", ['shim_boost.cpp'])
-else:
-    env.Library("shim_boost", ['shim_boost.cpp'],
-                SYSLIBDEPS=[
-                    env['LIBDEPS_BOOST_THREAD_SYSLIBDEP'],
-                    env['LIBDEPS_BOOST_SYSTEM_SYSLIBDEP']
-                ] )
-
+Import("env")
 env.SConscript('gtest-1.7.0/SConscript')

@@ -1,10 +1,15 @@
-Import('env windows staticLibName')
+Import('env windows libMongoclientStatic libGTestStatic')
 
-# Windows can't have a static and dynamic library sharing a name, so adjust
-# the name to match what is found in SConscript.client if using windows.
-static_mongoclient_libdep = '$BUILD_DIR/' + staticLibName
+staticClientEnv = env.Clone()
+staticClientEnv.PrependUnique(
+    CPPDEFINES=[
+        'STATIC_LIBMONGOCLIENT'
+    ],
+    LIBS=[
+        libMongoclientStatic
+    ])
 
-env.Library(
+libMock = staticClientEnv.StaticLibrary(
     target='mocklib',
     source=[
         "dbtests/mock/mock_conn_registry.cpp",
@@ -13,28 +18,19 @@ env.Library(
         "dbtests/mock/mock_remote_db_server.cpp",
         "dbtests/mock/mock_replica_set.cpp",
     ],
-    LIBDEPS=[
-        static_mongoclient_libdep,
-    ]
 )
 
-env.Library(
+libClientTestMain = staticClientEnv.StaticLibrary(
     target='client_test_main',
     source=[
         'unittest/client_test_main.cpp'
     ],
-    LIBDEPS=[
-        '$BUILD_DIR/third_party/gtest-1.7.0/gtest'
-    ],
 )
 
-env.Library(
+libIntegrationTestMain = staticClientEnv.StaticLibrary(
     target='integration_test_main',
     source=[
         'unittest/integration_test_main.cpp'
-    ],
-    LIBDEPS=[
-        '$BUILD_DIR/third_party/gtest-1.7.0/gtest'
     ],
 )
 
@@ -62,32 +58,45 @@ unittests = [
     'util/time_support_test',
 ]
 
+gtestEnv = staticClientEnv.Clone()
+gtestEnv.PrependUnique(
+    # On windows, we need this odd flag to make the linker
+    # search for main in our _test_main libs.
+    LINKFLAGS=(['/SUBSYSTEM:CONSOLE'] if windows else []),
+    LIBS=[
+        libGTestStatic,
+    ])
+
+unitTestEnv = gtestEnv.Clone()
+unitTestEnv.PrependUnique(
+    LIBS=[
+        libClientTestMain,
+        libMock,
+    ])
+
 for unittest in unittests:
-    env.CppUnitTest(
+    unitTestEnv.CppUnitTest(
         target=unittest,
         source=[
             unittest + '.cpp'
-        ],
-        LIBDEPS=[
-            'mocklib',
-             static_mongoclient_libdep,
-        ]
-    )
+        ])
 
 integration_tests = [
     'dbclient_test',
     'gridfs_test',
     'sasl_test'
 ]
+integrationTestEnv = gtestEnv.Clone()
+integrationTestEnv.PrependUnique(
+    LIBS=[
+        libIntegrationTestMain,
+        libMock,
+    ])
 
 for integration_test in integration_tests:
-    env.IntegrationTest(
+    integrationTestEnv.IntegrationTest(
         target=integration_test,
         source=[
             'unittest/' + integration_test + '.cpp'
-        ],
-        LIBDEPS=[
-            'mocklib',
-            static_mongoclient_libdep
         ]
     )
