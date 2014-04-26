@@ -6,6 +6,6 @@
 Import('env')
 
 env.SConscript([
-    'mongo/SConscript',
     'third_party/SConscript',
+    'mongo/SConscript',
 ])

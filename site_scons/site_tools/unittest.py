@@ -5,11 +5,6 @@ def exists(env):
     return True
 
 def build_cpp_unit_test(env, target, source, **kwargs):
-    libdeps = kwargs.get('LIBDEPS', [])
-    libdeps.append( 'client_test_main' )
-
-    kwargs['LIBDEPS'] = libdeps
-
     result = env.Program(target, source, **kwargs)
     buildAlias = env.Alias('build-' + target, result)
     env.Alias('unittests', buildAlias)

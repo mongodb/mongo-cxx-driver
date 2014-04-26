@@ -15,8 +15,6 @@ import urllib
 import urllib2
 from buildscripts import utils
 
-import libdeps
-
 EnsureSConsVersion( 1, 1, 0 )
 if "uname" in dir(os):
     scons_data_dir = ".scons/%s/%s" % ( os.uname()[0] , os.getenv( "HOST" , "nohost" ) )
@@ -346,8 +344,6 @@ if "sunos5" == os.sys.platform:
 if has_option("propagate-shell-environment"):
     env['ENV'] = dict(os.environ);
 
-env['_LIBDEPS'] = '$_LIBDEPS_OBJS'
-
 if has_option('build-fast-and-loose'):
     # See http://www.scons.org/wiki/GoFastButton for details
     env.Decider('MD5-timestamp')
@@ -362,8 +358,6 @@ if has_option('mute'):
     env.Append( LINKCOMSTR = "Linking $TARGET" )
     env.Append( SHLINKCOMSTR = env["LINKCOMSTR"] )
     env.Append( ARCOMSTR = "Generating library $TARGET" )
-
-libdeps.setup_environment( env )
 
 if env['PYSYSPLATFORM'] == 'linux3':
     env['PYSYSPLATFORM'] = 'linux2'
@@ -393,28 +387,6 @@ if has_option( "cxx" ):
     env["CXX"] = get_option( "cxx" )
 if has_option( "cc" ):
     env["CC"] = get_option( "cc" )
-
-if env['PYSYSPLATFORM'] in ('linux2', 'freebsd'):
-    env['LINK_LIBGROUP_START'] = '-Wl,--start-group'
-    env['LINK_LIBGROUP_END'] = '-Wl,--end-group'
-    env['RELOBJ_LIBDEPS_START'] = '--whole-archive'
-    env['RELOBJ_LIBDEPS_END'] = '--no-whole-archive'
-    env['RELOBJ_LIBDEPS_ITEM'] = ''
-elif env['PYSYSPLATFORM'] == 'darwin':
-    env['RELOBJFLAGS'] = [ '-arch', '$PROCESSOR_ARCHITECTURE' ]
-    env['LINK_LIBGROUP_START'] = ''
-    env['LINK_LIBGROUP_END'] = ''
-    env['RELOBJ_LIBDEPS_START'] = '-all_load'
-    env['RELOBJ_LIBDEPS_END'] = ''
-    env['RELOBJ_LIBDEPS_ITEM'] = ''
-elif env['PYSYSPLATFORM'].startswith('sunos'):
-    if force64:
-        env['RELOBJFLAGS'] = ['-64']
-    env['LINK_LIBGROUP_START'] = '-z rescan'
-    env['LINK_LIBGROUP_END'] = ''
-    env['RELOBJ_LIBDEPS_START'] = '-z allextract'
-    env['RELOBJ_LIBDEPS_END'] = '-z defaultextract'
-    env['RELOBJ_LIBDEPS_ITEM'] = ''
 
 env["LIBPATH"] = []
 
@@ -1111,19 +1083,19 @@ def doConfigure(myenv):
         myenv.Append(CPPDEFINES=[('_VARIADIC_MAX', 10)])
 
     conf = Configure(myenv)
-    libdeps.setup_conftests(conf)
 
     if not conf.CheckCXXHeader( "boost/version.hpp" ):
         print( "can't find boost headers" )
-        Exit(1)
+
+    if not windows:
+        # We don't do this for windows because we rely on autolib.
+        for b in boostLibs:
+            boostCandidates = ["boost_" + b + "-mt", "boost_" + b]
+            if not conf.CheckLib(boostCandidates, language="C++"):
+                print( "can't find boost")
+                Exit(1)
 
     conf.env.Append(CPPDEFINES=[("BOOST_THREAD_VERSION", "2")])
-
-    # Note that on Windows with using-system-boost builds, the following 
-    # FindSysLibDep calls do nothing useful (but nothing problematic either)
-    for b in boostLibs:
-        boostlib = "boost_" + b
-        conf.FindSysLibDep( boostlib, [ boostlib + "-mt", boostlib ], language='C++' )
 
     if conf.CheckHeader('unistd.h'):
         conf.env['MONGO_HAVE_HEADER_UNISTD_H'] = True
@@ -1141,7 +1113,7 @@ def doConfigure(myenv):
             ["stddef.h","sasl/sasl.h"], 
             "C", 
             "sasl_version_info(0, 0, 0, 0, 0, 0);", 
-            autoadd=False ):
+            autoadd=True ):
         Exit(1)
 
     # requires ports devel/libexecinfo to be installed
@@ -1258,4 +1230,4 @@ if has_option("gcov"):
     )
     env.AlwaysBuild('coverage')
 
-env.Alias('all', ['unittests', 'clientTests'])
+env.Alias('all', ['unittests', 'integration_tests', 'clientTests'])

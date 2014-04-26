@@ -3,19 +3,24 @@ Import('env')
 gtestEnv = env.Clone()
 gtestEnv.AppendUnique(CPPPATH=['$BUILD_DIR/third_party/gtest-1.7.0'])
 
-gtestEnv.Library(
+libGTestStatic = gtestEnv.StaticLibrary(
     target='gtest',
     source=[
         'src/gtest-all.cc',
     ],
 )
 
-gtestEnv.Library(
+libGTestMainStatic = gtestEnv.StaticLibrary(
     target='gtest_main',
     source=[
         'src/gtest_main.cc',
     ],
-    LIBDEPS=[
-        '$BUILD_DIR/third_party/gtest-1.7.0/gtest'
+    LIBS=[
+        libGTestStatic,
     ],
 )
+
+Export({
+    'libGTestStatic' : libGTestStatic,
+    'libGTestMainStatic' : libGTestMainStatic,
+})

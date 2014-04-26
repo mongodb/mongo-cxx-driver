@@ -12,17 +12,20 @@ buildShared = False
 if has_option("sharedclient"):
     buildShared = True
 
-clientEnv = env.Clone()
 libEnv = env.Clone()
+libEnv.Append(CPPDEFINES=['LIBMONGOCLIENT_BUILDING'])
 
-# We want to build the same objects in two different ways, once for a static (LIBDEPSy library)
-# and once for a DLL, with different defines in play. That works fine on platforms where by
-# default SHOBJSUFFIX and OBJSUFFIX differ, but by default on windows they don't. Repair that.
+# We want to build the same objects in two different ways, once for a static, and once for a
+# DLL, with different defines in play. That works fine on platforms where by default
+# SHOBJSUFFIX and OBJSUFFIX differ, but by default on windows they don't. Repair that.
 if windows:
     libEnv['SHOBJSUFFIX'] = libEnv['OBJSUFFIX'] + 's'
 
-del env
+clientEnv = env.Clone()
 clientEnv['CPPDEFINES'].remove('MONGO_EXPOSE_MACROS')
+
+# Prevent accidental usage of the unconfigured environment.
+del env
 
 libEnv.Command(['mongo/base/error_codes.h', 'mongo/base/error_codes.cpp',],
                ['mongo/base/generate_error_codes.py', 'mongo/base/error_codes.err'],
@@ -233,21 +236,20 @@ clientHeaders = [
 ]
 
 mongoClientLibs = []
-mongoClientLibDeps = ['$BUILD_DIR/third_party/shim_boost']
-mongoClientSysLibDeps = []
 
 if usingSasl:
-    mongoClientSysLibDeps += ["sasl2"]
+    mongoClientLibs += ["sasl2"]
     if windows:
-        mongoClientSysLibDeps += ["secur32"]
+        mongoClientLibs += ["secur32"]
 
 mongoClientInstalls = []
 mongoClientPrefixInstalls = []
 
 staticLibEnv = libEnv.Clone()
 staticLibEnv.AppendUnique(
-    LIBDEPS=mongoClientLibDeps,
-    SYSLIBDEPS=mongoClientSysLibDeps)
+    CPPDEFINES=['STATIC_LIBMONGOCLIENT'],
+    LIBS=mongoClientLibs,
+)
 
 sharedLibName = 'mongoclient'
 staticLibName = 'mongoclient'
@@ -271,14 +273,15 @@ if windows:
         sharedLibName = sharedLibName + abi_adornment
         staticLibName = staticLibName + abi_adornment
 
-# Make this value available in src/SConscript which needs it.
-Export('staticLibName')
-
 mongoClientStaticLib = staticLibEnv.StaticLibrary(
     staticLibName, clientSource),
 mongoClientInstalls.append(staticLibEnv.Install('#/', mongoClientStaticLib))
 
 mongoClientPrefixInstalls.append(libEnv.Install("$INSTALL_DIR/lib", mongoClientStaticLib))
+
+# Other things like tests need to link against this library,
+# so export it so it can be named.
+Export({'libMongoclientStatic' : mongoClientStaticLib})
 
 mongoClientSharedLib = None
 
@@ -291,12 +294,8 @@ if buildShared:
     # here, be sure to add an EnsuredSconsVersion here as well.
     sharedLibEnv = libEnv.Clone()
 
-    # This causes export macros to be applied, which we want only for shared librray or DLL builds.
-    sharedLibEnv.Append(CPPDEFINES='LIBMONGOCLIENT_BUILDING')
+    sharedLibEnv.AppendUnique(LIBS=mongoClientLibs)
 
-    sharedLibEnv.AppendUnique(LIBS=mongoClientSysLibDeps)
-
-    sharedLibEnv.AppendUnique(LIBDEPS=mongoClientLibDeps)
     if linux and not has_option('sanitize'):
         sharedLibEnv.AppendUnique(SHLINKFLAGS=["-Wl,--as-needed", "-Wl,-zdefs"])
 
@@ -381,13 +380,24 @@ libEnv.Alias('check-install-mongoclient', [
 ])
 
 staticClientEnv = clientEnv.Clone()
-staticClientEnv.PrependUnique(LIBDEPS=[mongoClientStaticLib])
+
+# On windows, we rely on autolib linking, so need to set a search path to the root of the build
+# dir where the .lib will go. On others, we just add the library to libs.
+if windows:
+    staticClientEnv.PrependUnique(LIBPATH=['$BUILD_DIR'])
+else:
+    staticClientEnv.PrependUnique(LIBS=[mongoClientStaticLib])
+
 staticClientEnv.AppendUnique(CPPDEFINES=['STATIC_LIBMONGOCLIENT'])
 
 # Build each statically linked client program
 staticClientPrograms = [
     staticClientEnv.Program(target, source) for (target, source) in exampleSourceMap
 ]
+
+# For autolib'ing, we need this to create the dependency edge
+if windows:
+    staticClientEnv.Depends(staticClientPrograms, mongoClientStaticLib)
 
 # Install them to the root, and append the install targets to the list of client tests
 clientTests = staticClientEnv.Install("#/", staticClientPrograms)
@@ -397,12 +407,17 @@ if buildShared:
     sharedClientEnv = clientEnv.Clone()
 
     # Arrange for the tests to link against the mongoclient in the #/sharedclient directory,
-    # and against boost explicitly rather than picking up the symbols through mongoclient.
+    # and against boost explicitly rather than picking up the symbols through mongoclient. Note
+    # that in the autlib case, this does the right thing for our search path.
     sharedClientEnv.PrependUnique(
-        LIBS=[sharedLibName],
         LIBPATH=["#/sharedclient"],
-        LIBDEPS=mongoClientLibDeps,
     )
+
+    # On windows, we rely on autolib linking
+    if not windows:
+        sharedClientEnv.PrependUnique(
+            LIBS=[mongoClientSharedLib],
+        )
 
     # Pretend that these files are shared object suffixed so they don't conflict with the objects
     # for the static library.
@@ -420,6 +435,8 @@ if buildShared:
     sharedClientPrograms = [
         sharedClientEnv.Program(
             "sharedclient/" + target, source) for (target, source) in exampleSourceMap]
+
+    # Note that this dependency also ensures the correct dependency edge in autolib cases.
     libEnv.Depends(sharedClientPrograms, mongoClientInstalls)
 
     sharedClientProgramInstalls = sharedClientEnv.Install("#/sharedclient", sharedClientPrograms)

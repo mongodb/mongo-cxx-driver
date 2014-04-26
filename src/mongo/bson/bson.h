@@ -46,7 +46,6 @@
 #if defined(_WIN32) && !defined(_DLL)
 #error "The DLL build of libmongoclient requires consuming code to be built with /MD or /MDd"
 #endif
-#define LIBMONGOCLIENT_CONSUMER
 #endif
 
 // Don't spam DLL consumers with warnings about STL symbol exports
