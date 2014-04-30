@@ -135,7 +135,7 @@ namespace {
         _gfs->storeFile(DATA, DATA_LEN, DATA_NAME);
 
         GridFile gf = _gfs->findFile(DATA_NAME);
-        char tmp_name[12];
+        char tmp_name[L_tmpnam];
         tmpnam(tmp_name);
         gf.write(tmp_name);
 
@@ -144,6 +144,7 @@ namespace {
         stringstream written_data;
         written_data << written_file.rdbuf();
         ASSERT_EQUALS(written_data.str(), DATA);
+        written_file.close();
     }
 
     TEST_F(GridFSTest, WriteToStream) {
