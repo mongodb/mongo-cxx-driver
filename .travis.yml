@@ -7,32 +7,68 @@ compiler:
 env:
   global:
     - PREFIX=$(mktemp -d /tmp/mongo-cxx-driver-install.XXXXXX || exit 1)
+    - MONGO_REPO="http://repo.mongodb.com/apt/ubuntu"
+    - REPO_TYPE="precise/mongodb-enterprise/2.6 multiverse"
+    - SOURCES_LOC="/etc/apt/sources.list.d/mongodb-enterprise.list"
+    - KEY_SERVER="hkp://keyserver.ubuntu.com:80"
+    - MONGOD_PARAMS="--setParameter=enableTestCommands=1"
+    - MONGOD_OPTS="--port 27999 --httpinterface --dbpath ./data --fork --logpath mongod.log ${MONGOD_PARAMS}"
+    - COMPAT_FLAGS="--use-system-boost --full"
 
 # Setup required repositories before installation
 before_install:
+    # GCC 4.8.1
+    - if [ "$CXX" == "g++" ]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; fi
+
+    # Clang 3.4
+    - if [ "$CXX" == "clang++" ]; then sudo add-apt-repository -y ppa:h-rayflood/llvm; fi
+
+    # Boost 1.49
     - sudo add-apt-repository -y ppa:jkeiren/ppa
+
+    # MongoDB Enterprise Edition 2.6
+    - sudo apt-key adv --keyserver ${KEY_SERVER} --recv 7F0CEB10
+    - echo "deb ${MONGO_REPO} ${REPO_TYPE}" | sudo tee ${SOURCES_LOC}
+
+    # Update all the repositories
     - sudo apt-get update -qq
 
-# Install Boost 1.49 dependencies via PPA
 install:
+    # GCC 4.8.1
+    - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
+    - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; export CC="gcc-4.8"; fi
+
+    # Clang 3.4
+    - if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq clang-3.4; fi
+    - if [ "$CXX" == "clang++" ]; then export CXX="clang++-3.4"; export CC="clang-3.4"; fi
+
+    # Install Boost 1.49 dependencies via PPA
     - sudo apt-get install -qq
       libboost1.49-dev
       libboost-program-options1.49-dev
       libboost-filesystem1.49-dev
       libboost-thread1.49-dev
 
+    # Install MongoDB Enterprise and let smoke drive
+    - sudo apt-get install mongodb-enterprise
+    - sudo stop mongod
+    - mkdir data
+    - mongod ${MONGOD_OPTS}
+
+before_script:
+    # Set SCONS_FLAGS based on new $CXX and $CC
+    - $CXX --version
+    - export SCONS_FLAGS="-j3 --mute --prefix=$PREFIX --ssl --use-sasl-client --dbg=on --cxx=$CXX --cc=$CC $COMPAT_FLAGS"
+
+    # Build the driver
+    - scons $SCONS_FLAGS mongoclient
+
+    # Install the driver
+    - scons $SCONS_FLAGS install-mongoclient
+
+    # Check the installation
+    - scons $SCONS_FLAGS check-install-mongoclient
+
 script:
-    - scons
-       -j2
-       --mute
-       --quiet
-       --prefix=$PREFIX
-       --use-system-boost
-       --full
-       --sharedclient
-       --ssl
-       --use-sasl-client
-       --dbg=on
-       test
-       clientTests
-       check-install-mongoclient
+    # Test the driver
+    - scons $SCONS_FLAGS test clientTests
