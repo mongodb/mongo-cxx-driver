@@ -3,7 +3,7 @@
 # This SConscript describes build and install rules for the Mongo C++ driver and associated exmaple
 # programs.
 import os
-from buildscripts import utils
+import buildscripts.git
 
 Import('env has_option get_option')
 Import('nix linux darwin windows')
@@ -52,7 +52,7 @@ versionSubstitutions = [
     ('@mongoclient_version_major@', libEnv['MONGOCLIENT_VERSION_MAJOR']),
     ('@mongoclient_version_minor@', libEnv['MONGOCLIENT_VERSION_MINOR']),
     ('@mongoclient_version_patch@', libEnv['MONGOCLIENT_VERSION_PATCH']),
-    ('@mongoclient_git_revision@', utils.getGitVersion)
+    ('@mongoclient_git_revision@', buildscripts.git.getGitVersion)
 ]
 libEnv.Substfile('mongo/version.h.in', SUBST_DICT=versionSubstitutions)
 

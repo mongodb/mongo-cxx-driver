@@ -1,6 +1,5 @@
 # -*- mode: python; -*-
 
-import buildscripts
 import copy
 import datetime
 import imp
@@ -13,7 +12,10 @@ import textwrap
 import types
 import urllib
 import urllib2
-from buildscripts import utils
+
+import buildscripts.utils
+import buildscripts.docs
+import buildscripts.lint
 
 EnsureSConsVersion( 1, 1, 0 )
 if "uname" in dir(os):
@@ -135,7 +137,7 @@ def get_variant_dir():
         extras = [substitute(x) for x in get_option( 'extra-variant-dirs' ).split( ',' )]
 
     if has_option("add-branch-to-variant-dir"):
-        extras += ["branch_" + substitute( utils.getGitBranch() )]
+        extras += ["branch_" + substitute( buildscripts.utils.getGitBranch() )]
 
     if has_option('cache'):
         s = "#build/cached/"
@@ -305,7 +307,7 @@ if len(mongoclientVersionComponents) != 3:
 env = Environment( BUILD_DIR=variantDir,
                    EXTRAPATH=get_option("extrapath"),
                    MSVS_ARCH=msarch ,
-                   PYTHON=utils.find_python(),
+                   PYTHON=buildscripts.utils.find_python(),
                    TARGET_ARCH=msarch ,
                    tools=["default", "unittest", "integration_test", "textfile"],
                    PYSYSPLATFORM=os.sys.platform,
@@ -443,9 +445,6 @@ nixLibPrefix = "lib"
 
 if has_option( "prefix" ):
     installDir = GetOption( "prefix" )
-
-def filterExists(paths):
-    return filter(os.path.exists, paths)
 
 if darwin:
     pass
@@ -671,11 +670,6 @@ if nix:
     if force32:
         env.Append( CCFLAGS="-m32" )
         env.Append( LINKFLAGS="-m32" )
-
-if "uname" in dir(os):
-    hacks = buildscripts.findHacks( os.uname() )
-    if hacks is not None:
-        hacks.insert( env , { "linux64" : linux64 } )
 
 if has_option( "ssl" ):
     env["MONGO_SSL"] = True
@@ -1129,17 +1123,14 @@ env['PDB'] = '${TARGET.base}.pdb'
 
 #  ---- Docs ----
 def build_docs(env, target, source):
-    from buildscripts import docs
-    docs.main()
+    buildscripts.docs.main()
 
 env.Alias("docs", [], [build_docs])
 env.AlwaysBuild("docs")
 
-
 # --- lint ----
 
 def doLint( env , target , source ):
-    import buildscripts.lint
     if not buildscripts.lint.run_lint( [ "src/mongo/" ] ):
         raise Exception( "lint errors" )
 
