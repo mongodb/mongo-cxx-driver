@@ -59,6 +59,9 @@ before_script:
     - $CXX --version
     - export SCONS_FLAGS="-j3 --mute --prefix=$PREFIX --ssl --use-sasl-client --dbg=on --cxx=$CXX --cc=$CC"
 
+    # run lint
+    - scons $SCONS_FLAGS lint
+
     # Build the driver
     - scons $SCONS_FLAGS mongoclient
 
