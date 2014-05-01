@@ -285,7 +285,10 @@ namespace {
         v.push_back(BSON("_id" << 1));
         v.push_back(BSON("_id" << 1));
         v.push_back(BSON("_id" << 2));
-        c.insert(TEST_NS, v, InsertOption_ContinueOnError);
+        ASSERT_THROWS(
+            c.insert(TEST_NS, v, InsertOption_ContinueOnError),
+            OperationException
+        );
         ASSERT_EQUALS(c.count(TEST_NS), 2U);
     }
 
@@ -399,7 +402,10 @@ namespace {
 
     TEST_F(DBClientTest, GetPrevError) {
         c.insert(TEST_NS, BSON("_id" << 1));
-        c.insert(TEST_NS, BSON("_id" << 1));
+        ASSERT_THROWS(
+            c.insert(TEST_NS, BSON("_id" << 1)),
+            OperationException
+        );
         c.insert(TEST_NS, BSON("_id" << 2));
         ASSERT_TRUE(c.getLastError().empty());
         ASSERT_FALSE(c.getPrevError().isEmpty());
