@@ -73,4 +73,6 @@ before_script:
 
 script:
     # Test the driver
-    - scons $SCONS_FLAGS test integration smokeClient
+    - scons $SCONS_FLAGS test
+    - scons $SCONS_FLAGS integration
+    - scons $SCONS_FLAGS smokeClient
