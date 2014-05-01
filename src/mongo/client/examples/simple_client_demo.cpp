@@ -13,7 +13,7 @@
  *    limitations under the License.
  */
 
-/* See also : http://dochub.mongodb.org/core/cppdrivertutorial */
+// See also : http://dochub.mongodb.org/core/cppdrivertutorial
 
 #include <iostream>
 #include "mongo/client/dbclient.h" // the mongo c++ driver
