@@ -21,6 +21,14 @@
   ghost@aladdin.com
 
  */
+
+/*
+  NOTE: Per restriction 2 above, this file has been altered by MongoDB as follows:
+
+  1. All contents of this file have been moved within the 'mongo' namespace and the
+     extern "C" block has been removed.
+*/
+
 /* $Id: md5.c,v 1.6 2002/04/13 19:20:28 lpd Exp $ */
 /*
   Independent implementation of MD5 (RFC 1321).
@@ -54,7 +62,7 @@
 #include "md5.h"
 #include <string.h>
 
-extern "C" { 
+namespace mongo {
 
 #undef BYTE_ORDER	/* 1 = big-endian, -1 = little-endian, 0 = unknown */
 #ifdef ARCH_IS_BIG_ENDIAN
@@ -382,4 +390,4 @@ md5_finish(md5_state_t *pms, md5_byte_t digest[16])
 	digest[i] = (md5_byte_t)(pms->abcd[i >> 2] >> ((i & 3) << 3));
 }
 
-} // extern "C"
+} // namespace mongo
