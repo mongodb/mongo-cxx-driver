@@ -16,6 +16,7 @@
 #include "mongo/platform/basic.h"
 
 #include "mongo/client/write_concern.h"
+#include "mongo/util/assert_util.h"
 
 namespace mongo {
 
@@ -25,22 +26,46 @@ namespace mongo {
     const WriteConcern WriteConcern::acknowledged = WriteConcern();
     const WriteConcern WriteConcern::journaled = WriteConcern().journal(true);
     const WriteConcern WriteConcern::replicated = WriteConcern().nodes(2);
-    const WriteConcern WriteConcern::majority = WriteConcern().nodes(kMajority);
+    const WriteConcern WriteConcern::majority = WriteConcern().mode(kMajority);
 
+    /**
+     * The default constructor sets _w to 1 but has it's _enabled bit set to zero.
+     *
+     * The enabled bit must be unset because we should not send the w field to the
+     * server unless it has been explicity set.
+     *
+     * If {w: 1} was considered set by default it would be serialized as part
+     * of the get last error message and overwrite the server side default write
+     * concern.
+     *
+     * The private member _w is set to 1 because the default (simply sending GLE)
+     * is logically equvalent to requiring confirmation from a single node. Upon
+     * being set by the user (to a string or integer) it overrides the value and
+     * is sent to the server.
+     *
+     * See DRIVERS-131 for more information:
+     * https://jira.mongodb.org/browse/drivers-131
+     */
     WriteConcern::WriteConcern()
-    : _enabled()
-    , _w(1)
-    , _w_str()
-    , _j(false)
-    , _fsync(false)
-    , _timeout(0) {}
+        : _enabled()
+        , _w(1)
+        , _w_str()
+        , _j(false)
+        , _fsync(false)
+        , _timeout(0) {}
 
-    int WriteConcern::nodes() const {
-        return _w;
+    int32_t WriteConcern::nodes() const {
+        if (_enabled.test(kW) || (!_enabled.test(kWStr)))
+            return _w;
+        else
+            invariant(false);
     }
 
-    const std::string& WriteConcern::nodes_str() const {
-        return _w_str;
+    const std::string& WriteConcern::mode() const {
+        if (_enabled.test(kWStr))
+            return _w_str;
+        else
+            invariant(false);
     }
 
     bool WriteConcern::journal() const {
@@ -51,7 +76,7 @@ namespace mongo {
         return _fsync;
     }
 
-    int WriteConcern::timeout() const {
+    int32_t WriteConcern::timeout() const {
         return _timeout;
     }
 
@@ -62,7 +87,7 @@ namespace mongo {
         return *this;
     }
 
-    WriteConcern& WriteConcern::nodes(const StringData& w) {
+    WriteConcern& WriteConcern::mode(const StringData& w) {
         _w_str = w.toString();
         _enabled.set(kWStr);
         _enabled.reset(kW);
@@ -95,7 +120,7 @@ namespace mongo {
         return !(_enabled.test(kW) && _w == 0);
     }
 
-    bool WriteConcern::hasNodeStr() const {
+    bool WriteConcern::hasMode() const {
         return _enabled.test(kWStr);
     }
 
@@ -120,10 +145,6 @@ namespace mongo {
             write_concern.append("wtimeout", _timeout);
 
         return write_concern.obj();
-    }
-
-    std::string WriteConcern::toString() const {
-        return toBson().toString();
     }
 
 } // namespace mongo

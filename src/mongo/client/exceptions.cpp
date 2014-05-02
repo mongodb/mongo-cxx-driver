@@ -13,32 +13,24 @@
  *    limitations under the License.
  */
 
-#include "mongo/client/exception.h"
+#include "mongo/client/exceptions.h"
+
+namespace {
+    const char kName[] = "OperationException";
+}
 
 namespace mongo {
 
-    const char OperationException::kName[] = "OperationException";
-
-    OperationException::OperationException(BSONObj gle) throw() : _gle(gle) {
-    }
+    OperationException::OperationException(const BSONObj& gle_result) throw()
+        : std::runtime_error(std::string(kName) + ": " + gle_result.toString())
+        , _last_error(gle_result)
+        {}
 
     OperationException::~OperationException() throw () {
     }
 
-    const char* OperationException::what() const throw() {
-        return kName;
-    }
-
-    BSONObj OperationException::obj() const throw() {
-        return _gle;
-    }
-
-    int OperationException::code() const throw() {
-        if (_gle.hasField("code")) {
-            return _gle.getIntField("code");
-        } else {
-            return -1;
-        }
+    const BSONObj& OperationException::obj() const {
+        return _last_error;
     }
 
 } // namespace mongo

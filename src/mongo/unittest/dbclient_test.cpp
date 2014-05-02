@@ -677,4 +677,65 @@ namespace {
         auto_ptr<DBClientCursor> cursor = c.query(TEST_DB + ".$cmd", Query("{dbStatz: 1}"));
         ASSERT_TRUE(cursor->peekError());
     }
+
+    TEST_F(DBClientTest, DefaultWriteConcernInsert) {
+        c.insert(TEST_NS, BSON("_id" << 1));
+        ASSERT_THROWS(
+            c.insert(TEST_NS, BSON("_id" << 1)),
+            OperationException
+        );
+    }
+
+    TEST_F(DBClientTest, DefaultWriteConcernUpdate) {
+        c.insert(TEST_NS, BSON("a" << true));
+        ASSERT_THROWS(
+            c.update(TEST_NS, BSON("a" << true), BSON("$badOp" << "blah")),
+            OperationException
+        );
+    }
+
+    TEST_F(DBClientTest, DefaultWriteConcernRemove) {
+        ASSERT_THROWS(
+            c.remove("BAD_NS", BSON("a" << true)),
+            OperationException
+        );
+    }
+
+    TEST_F(DBClientTest, UnacknowledgedInsert) {
+        c.insert(TEST_NS, BSON("_id" << 1));
+        ASSERT_NO_THROW(
+            c.insert(
+                TEST_NS,
+                BSON("_id" << 1),
+                0,
+                &WriteConcern::unacknowledged
+            )
+        );
+    }
+
+    TEST_F(DBClientTest, UnacknowledgedUpdate) {
+        c.insert(TEST_NS, BSON("a" << true));
+        ASSERT_NO_THROW(
+            c.update(
+                TEST_NS,
+                BSON("a" << true),
+                BSON("$badOp" << "blah"),
+                false,
+                false,
+                &WriteConcern::unacknowledged
+            )
+        );
+    }
+
+    TEST_F(DBClientTest, UnacknowledgedRemove) {
+        ASSERT_NO_THROW(
+            c.remove(
+                "BAD_NS",
+                BSON("a" << true),
+                false,
+                &WriteConcern::unacknowledged
+            )
+        );
+    }
+
 } // namespace

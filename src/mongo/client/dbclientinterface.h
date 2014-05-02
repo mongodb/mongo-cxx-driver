@@ -25,7 +25,7 @@
 #include <boost/function.hpp>
 
 #include "mongo/base/string_data.h"
-#include "mongo/client/exception.h"
+#include "mongo/client/exceptions.h"
 #include "mongo/client/export_macros.h"
 #include "mongo/client/write_concern.h"
 #include "mongo/db/jsobj.h"

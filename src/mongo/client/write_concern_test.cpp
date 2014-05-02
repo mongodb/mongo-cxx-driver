@@ -20,9 +20,8 @@ namespace mongo {
 
     TEST(WriteConcern, Defaults) {
         WriteConcern wc;
-        ASSERT_FALSE(wc.hasNodeStr());
+        ASSERT_FALSE(wc.hasMode());
         ASSERT_EQUALS(wc.nodes(), 1);
-        ASSERT_TRUE(wc.nodes_str().empty());
         ASSERT_FALSE(wc.journal());
         ASSERT_FALSE(wc.fsync());
         ASSERT_EQUALS(wc.timeout(), 0);
@@ -31,27 +30,12 @@ namespace mongo {
     TEST(WriteConcern, Chain) {
         WriteConcern wc = WriteConcern().nodes(2).journal(true);
         ASSERT_EQUALS(wc.nodes(), 2);
-        ASSERT_TRUE(wc.nodes_str().empty());
+        ASSERT_FALSE(wc.hasMode());
         ASSERT_TRUE(wc.journal());
 
         // should be defaults
         ASSERT_FALSE(wc.fsync());
         ASSERT_EQUALS(wc.timeout(), 0);
-    }
-
-    TEST(WriteConcern, Copy) {
-        WriteConcern w1;
-        WriteConcern w2;
-
-        w1.timeout(123);
-        w2.timeout(456);
-
-        w1 = w2;
-        ASSERT_EQUALS(w1.timeout(), 456);
-
-        w2.timeout(999);
-        ASSERT_EQUALS(w1.timeout(), 456);
-        ASSERT_EQUALS(w2.timeout(), 999);
     }
 
     TEST(WriteConcern, DefaultToBSON) {
@@ -73,21 +57,21 @@ namespace mongo {
         WriteConcern wc;
 
         wc.nodes(3);
-        ASSERT_FALSE(wc.hasNodeStr());
+        ASSERT_FALSE(wc.hasMode());
         ASSERT_EQUALS(wc.nodes(), 3);
         result = wc.toBson();
         ASSERT_TRUE(result.hasField("w"));
         ASSERT_EQUALS(result["w"].Int(), 3);
 
-        wc.nodes(WriteConcern::kMajority);
-        ASSERT_TRUE(wc.hasNodeStr());
-        ASSERT_EQUALS(wc.nodes_str(), WriteConcern::kMajority);
+        wc.mode(WriteConcern::kMajority);
+        ASSERT_TRUE(wc.hasMode());
+        ASSERT_EQUALS(wc.mode(), WriteConcern::kMajority);
         result = wc.toBson();
         ASSERT_TRUE(result.hasField("w"));
         ASSERT_EQUALS(result["w"].String(), WriteConcern::kMajority);
 
         wc.nodes(5);
-        ASSERT_FALSE(wc.hasNodeStr());
+        ASSERT_FALSE(wc.hasMode());
         ASSERT_EQUALS(wc.nodes(), 5);
         result = wc.toBson();
         ASSERT_TRUE(result.hasField("w"));
@@ -127,8 +111,8 @@ namespace mongo {
 
     TEST(WriteConcern, Majority) {
         ASSERT_TRUE(WriteConcern::majority.requiresConfirmation());
-        ASSERT_EQUALS(WriteConcern::majority.nodes_str(), WriteConcern::kMajority);
-        ASSERT_TRUE(WriteConcern::majority.hasNodeStr());
+        ASSERT_EQUALS(WriteConcern::majority.mode(), WriteConcern::kMajority);
+        ASSERT_TRUE(WriteConcern::majority.hasMode());
     }
 
 } // namespace

@@ -15,8 +15,8 @@
 
 #pragma once
 
-#include <string>
 #include <bitset>
+#include <string>
 
 #include "mongo/client/export_macros.h"
 #include "mongo/db/jsobj.h"
@@ -34,10 +34,14 @@ namespace mongo {
      */
     class MONGO_CLIENT_API WriteConcern {
     public:
-        /** Default write concern */
+        /** Default write concern: equivalent to acknowledged */
         WriteConcern();
 
-        /** the character string "majority" */
+        /**
+         * Using nodes(kMajority) confirms that write operations have propagated
+         * to the majority of a replica set. This allows you to avoid hard coding
+         * assumptions about the size of your replica set into your application.
+         */
         static const char kMajority[];
 
         //
@@ -47,34 +51,37 @@ namespace mongo {
 
         /** Fire and forget */
         static const WriteConcern unacknowledged;
+
         /** A single node acknowledges the write, equivalent to default constructor */
         static const WriteConcern acknowledged;
+
         /** A single node acknowledges the write operation was committed to journal */
         static const WriteConcern journaled;
+
         /** Two nodes have acknowledged receipt of the write operation */
         static const WriteConcern replicated;
+
         /** A majority of nodes acknowledges (replica set) */
         static const WriteConcern majority;
 
         /**
          * Returns an integer representing the number of nodes required for write
-         * to be successful. Only makes sense if hasNodeStr() is false.
+         * to be considered successful.
          *
          * If set this becomes the "w" parameter when sent to the server.
          *
          * @return number of nodes required
          */
-        int nodes() const;
+        int32_t nodes() const;
 
         /**
-         * Returns a string representing the number of nodes required for write
-         * to be successful. Only makes sense if hasNodeStr() is true.
+         * Returns a string representing the write concern mode.
          *
          * If set this becomes the "w" parameter when sent to the server.
          *
          * @return nodes required as std::string
          */
-        const std::string& nodes_str() const;
+        const std::string& mode() const;
 
         /**
          * If write will only be considered successfull when committed to journal.
@@ -84,7 +91,7 @@ namespace mongo {
         bool journal() const;
 
         /**
-         * If write will only be considered successfull when committed to data files.
+         * If write will only be considered successful when committed to data files.
          *
          * @return true if write will block on MongoDB fsync
          */
@@ -95,13 +102,13 @@ namespace mongo {
          *
          * @return int representing milliseconds to wait for write
          */
-        int timeout() const;
+        int32_t timeout() const;
 
         /** Sets the number of nodes required for write to be successful. */
         WriteConcern& nodes(int w);
 
         /** Sets the type of nodes required for write to be successful. */
-        WriteConcern& nodes(const StringData& w);
+        WriteConcern& mode(const StringData& w);
 
         /** Sets whether journal is required for write to be successful. */
         WriteConcern& journal(bool j);
@@ -115,14 +122,11 @@ namespace mongo {
         /** Whether we need to send getLastError for this WriteConcern */
         bool requiresConfirmation() const;
 
-        /** Whether nodes parameter is currently represented as a string */
-        bool hasNodeStr() const;
+        /** Whether the write concern currently reflects a mode */
+        bool hasMode() const;
 
         /** Turn write concern into getLastError BSONObj suitable for command */
         BSONObj toBson() const;
-
-        /** Returns the string representation of BSONObj from toBson() */
-        std::string toString() const;
 
     private:
         // Enabled option book keeping
@@ -131,7 +135,7 @@ namespace mongo {
         std::bitset<kNumOptions> _enabled;
 
         // Actual option values
-        int _w;
+        int32_t _w;
         std::string _w_str;
         bool _j;
         bool _fsync;
