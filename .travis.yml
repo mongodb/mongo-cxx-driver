@@ -62,8 +62,8 @@ before_script:
     # run lint
     - scons $SCONS_FLAGS lint
 
-    # Build the driver
-    - scons $SCONS_FLAGS mongoclient
+    # Build all targets
+    - scons $SCONS_FLAGS all
 
     # Install the driver
     - scons $SCONS_FLAGS install-mongoclient
