@@ -13,6 +13,7 @@
  *    limitations under the License.
  */
 
+#include <algorithm>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -24,6 +25,7 @@ using boost::scoped_ptr;
 using std::auto_ptr;
 using std::ios;
 using std::ifstream;
+using std::min;
 using std::string;
 using std::stringstream;
 
@@ -223,4 +225,24 @@ namespace {
         );
         ASSERT_EQUALS(files_bad->itcount(), 0);
     }
+
+    TEST_F(GridFSTest, GridFileBuilder) {
+        GridFileBuilder gfb(_gfs.get());
+        for (int i=0; i<DATA_LEN; i+=2)
+            gfb.appendChunk(DATA + i, min(2, DATA_LEN - i));
+        gfb.buildFile(DATA_NAME);
+        GridFile gf = _gfs->findFile(DATA_NAME);
+        ASSERT_EQUALS(gf.getNumChunks(), 1);
+    }
+
+    TEST_F(GridFSTest, GridFileBuilderMultipleChunks) {
+        _gfs->setChunkSize(1);
+        GridFileBuilder gfb(_gfs.get());
+        for (int i=0; i<DATA_LEN; i+=2)
+            gfb.appendChunk(DATA + i, min(2, DATA_LEN - i));
+        gfb.buildFile(DATA_NAME);
+        GridFile gf = _gfs->findFile(DATA_NAME);
+        ASSERT_EQUALS(gf.getNumChunks(), DATA_LEN);
+    }
+
 } // namespace

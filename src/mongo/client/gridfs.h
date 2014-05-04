@@ -28,6 +28,7 @@ namespace mongo {
 
     class GridFS;
     class GridFile;
+    class GridFileBuilder;
 
     class MONGO_CLIENT_API GridFSChunk {
     public:
@@ -131,7 +132,12 @@ namespace mongo {
         // insert fileobject. All chunks must be in DB.
         BSONObj insertFile(const std::string& name, const OID& id, gridfs_offset length, const std::string& contentType);
 
+        // Insert a chunk into DB, this method is intended to be used by
+        // GridFileBuilder to incrementally insert chunks
+        void _insertChunk(const GridFSChunk& chunk);
+
         friend class GridFile;
+        friend class GridFileBuilder;
     };
 
     /**
@@ -203,4 +209,54 @@ namespace mongo {
 
         friend class GridFS;
     };
+    
+    /**
+     * class which allow to build GridFiles in a stream fashion way
+     */
+    class GridFileBuilder {
+    public:
+        /**
+         * @param grid - gridfs instance
+         */
+        GridFileBuilder( GridFS* const grid );
+        
+        /**
+         * Appends a chunk of data. Data will be split as many times as
+         * necessary in chunkSize blocks. Sizes not multiple of chunkSize will
+         * copy the reamining bytes to a pendingData pointer. In this way,
+         * it is possible to add data in a stream fashion way.
+         * @param data - C string with data
+         * @param length - size of the string
+         */
+        void appendChunk( const char* data, size_t length );
+
+        /**
+         * Inserts the description of the file in GridFS collection. Note that
+         * the stream will be reinitialized after the build call, so it will be
+         * possible to continue appending data to build another file.
+         * @param remoteName filename to use for file stored in GridFS
+         * @param contentType optional MIME type for this object.
+         *                    (default is to omit)
+         * @return the file object
+         */
+        mongo::BSONObj buildFile( const std::string& remoteName,
+                                  const std::string& contentType="" );
+        
+    private:
+        GridFS* const _grid;
+        const size_t _chunkSize; // taken from GridFS in the constructor
+        unsigned int _currentChunk;
+        OID _fileId;
+        BSONObj _fileIdObj;
+        boost::scoped_array<char> _pendingData; // pointer with _chunkSize space
+        size_t _pendingDataSize;
+        gridfs_offset _fileLength;
+
+        const char* _appendChunk( const char* data, size_t length,
+                                  bool forcePendingInsert );
+
+        void _appendPendingData();
+    };
+
+
 }
