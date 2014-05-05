@@ -29,18 +29,17 @@ namespace mongo {
     const WriteConcern WriteConcern::majority = WriteConcern().mode(kMajority);
 
     /**
-     * The default constructor sets _w to 1 but has the _enabled bit set to zero.
+     * The default constructor sets _w to 1 and the _enabled bit for _w to zero.
      *
-     * The enabled bit must be unset because we should not send the w field to the
-     * server unless it has been explicity set.
+     * The enabled bit must be unset by default because we should not send the w
+     * parameter to the server unless it has been explicity set.
      *
-     * If {w: 1} was considered set by default it would be serialized as part
-     * of the get last error message and overwrite the server side default write
-     * concern.
+     * If the _w bit were enabled by default it would be serialized with the gle
+     * message and overwrite the server side default write concern.
      *
      * The private member _w is set to 1 because the default (simply sending GLE)
-     * is logically equvalent to requiring confirmation from a single node. Upon
-     * being set by the user via nodes() or mode() it overrides the default value 
+     * is logically equivalent to requiring confirmation from a single node. Upon
+     * being set by the user via nodes() or mode() it overrides the default value
      * and is sent to the server.
      *
      * See DRIVERS-131 for more information:

@@ -1110,12 +1110,7 @@ namespace mongo {
         toSend.setData( op, b.buf(), b.len() );
         say( toSend );
 
-        const WriteConcern* operation_wc;
-
-        if (wc == NULL)
-            operation_wc = &getWriteConcern();
-        else
-            operation_wc = wc;
+        const WriteConcern* operation_wc = wc == NULL ? &getWriteConcern() : wc;
 
         if ( operation_wc->requiresConfirmation() ) {
             BSONObj info;
