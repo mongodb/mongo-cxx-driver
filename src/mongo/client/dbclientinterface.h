@@ -1045,7 +1045,7 @@ namespace mongo {
         int _minWireVersion;
         int _maxWireVersion;
         void _prepareInsert( BufBuilder& b, const std::string& ns, int flags );
-        void _write( Operations o, const std::string& ns, BufBuilder& b, const WriteConcern* wc );
+        void _write( Operations o, const std::string& ns, const BufBuilder& b, const WriteConcern* wc );
     public:
         static const uint64_t INVALID_SOCK_CREATION_TIME;
 
@@ -1057,8 +1057,8 @@ namespace mongo {
 
         long long getConnectionId() const { return _connectionId; }
 
-        const WriteConcern getWriteConcern() const { return _writeConcern; }
-        void setWriteConcern( const WriteConcern w ) { _writeConcern = w; }
+        const WriteConcern& getWriteConcern() const { return _writeConcern; }
+        void setWriteConcern( const WriteConcern& w ) { _writeConcern = w; }
 
         void setWireVersions( int minWireVersion, int maxWireVersion ){
             _minWireVersion = minWireVersion;

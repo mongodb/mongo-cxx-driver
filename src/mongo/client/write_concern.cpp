@@ -29,7 +29,7 @@ namespace mongo {
     const WriteConcern WriteConcern::majority = WriteConcern().mode(kMajority);
 
     /**
-     * The default constructor sets _w to 1 but has it's _enabled bit set to zero.
+     * The default constructor sets _w to 1 but has the _enabled bit set to zero.
      *
      * The enabled bit must be unset because we should not send the w field to the
      * server unless it has been explicity set.
@@ -40,8 +40,8 @@ namespace mongo {
      *
      * The private member _w is set to 1 because the default (simply sending GLE)
      * is logically equvalent to requiring confirmation from a single node. Upon
-     * being set by the user (to a string or integer) it overrides the value and
-     * is sent to the server.
+     * being set by the user via nodes() or mode() it overrides the default value 
+     * and is sent to the server.
      *
      * See DRIVERS-131 for more information:
      * https://jira.mongodb.org/browse/drivers-131
@@ -55,17 +55,13 @@ namespace mongo {
         , _timeout(0) {}
 
     int32_t WriteConcern::nodes() const {
-        if (_enabled.test(kW) || (!_enabled.test(kWStr)))
-            return _w;
-        else
-            invariant(false);
+        invariant(_enabled.test(kW) || (!_enabled.test(kWStr)));
+        return _w;
     }
 
     const std::string& WriteConcern::mode() const {
-        if (_enabled.test(kWStr))
-            return _w_str;
-        else
-            invariant(false);
+        invariant(_enabled.test(kWStr));
+        return _w_str;
     }
 
     bool WriteConcern::journal() const {
@@ -113,11 +109,11 @@ namespace mongo {
     }
 
     /**
-     * The only time we don't require confirmation is when nodes is explicitly set to 0.
+     * The only time we don't require confirmation is when w is explicitly set to 0.
      * See DRIVERS-131 for more information: https://jira.mongodb.org/browse/DRIVERS-131
      */
     bool WriteConcern::requiresConfirmation() const {
-        return !(_enabled.test(kW) && _w == 0);
+        return !_enabled.test(kW) || _w != 0;
     }
 
     bool WriteConcern::hasMode() const {

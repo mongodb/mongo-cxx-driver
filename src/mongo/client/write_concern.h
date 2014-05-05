@@ -84,7 +84,7 @@ namespace mongo {
         const std::string& mode() const;
 
         /**
-         * If write will only be considered successfull when committed to journal.
+         * If write will only be considered successful when committed to journal.
          *
          * @return true if write will block on MongoDB journal
          */

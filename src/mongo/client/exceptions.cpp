@@ -15,22 +15,22 @@
 
 #include "mongo/client/exceptions.h"
 
-namespace {
-    const char kName[] = "OperationException";
-}
-
 namespace mongo {
 
-    OperationException::OperationException(const BSONObj& gle_result) throw()
-        : std::runtime_error(std::string(kName) + ": " + gle_result.toString())
-        , _last_error(gle_result)
-        {}
-
-    OperationException::~OperationException() throw () {
+    namespace {
+        const char kName[] = "OperationException";
     }
 
-    const BSONObj& OperationException::obj() const {
-        return _last_error;
+    OperationException::OperationException(const BSONObj& gleResult)
+        : _lastError(gleResult)
+        , _errorString(std::string(kName) + ": " + gleResult.toString())
+        {}
+
+    OperationException::~OperationException() throw() {
+    }
+
+    const char* OperationException::what() const throw() {
+        return _errorString.c_str();
     }
 
 } // namespace mongo

@@ -1104,18 +1104,23 @@ namespace mongo {
         b.appendStr( ns );
     }
 
-    void DBClientBase::_write( Operations op, const std::string& ns, BufBuilder& b, const WriteConcern* wc ) {
+    void DBClientBase::_write( Operations op, const std::string& ns, const BufBuilder& b, const WriteConcern* wc ) {
         Message toSend;
 
         toSend.setData( op, b.buf(), b.len() );
         say( toSend );
 
-        const WriteConcern opwc(wc == NULL ? getWriteConcern() : *wc);
+        const WriteConcern* operation_wc;
 
-        if ( opwc.requiresConfirmation() ) {
+        if (wc == NULL)
+            operation_wc = &getWriteConcern();
+        else
+            operation_wc = wc;
+
+        if ( operation_wc->requiresConfirmation() ) {
             BSONObj info;
 
-            runCommand(nsGetDB(ns), opwc.toBson(), info);
+            runCommand(nsGetDB(ns), operation_wc->toBson(), info);
 
             if (!info["err"].isNull()) {
                 throw OperationException(info);
