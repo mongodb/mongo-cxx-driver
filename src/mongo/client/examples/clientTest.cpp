@@ -178,7 +178,12 @@ int main( int argc, const char **argv ) {
         verify( conn.findOne( ns , BSONObjBuilder().append( "name" , "eliot2" ).obj() ).isEmpty() );
 
         // upsert
-        conn.update( ns , BSONObjBuilder().append( "name" , "eliot2" ).obj() , after , 1 );
+        try {
+            conn.update( ns , BSONObjBuilder().append( "name" , "eliot2" ).obj() , after , UpdateOption_Upsert );
+        } catch (OperationException& oe) {
+            // This upsert throws an OperationException because of a duplicate key error:
+            // The upserted document has the same _id as one already in the collection
+        }
         verify( ! conn.findOne( ns , BSONObjBuilder().append( "name" , "eliot" ).obj() ).isEmpty() );
 
     }

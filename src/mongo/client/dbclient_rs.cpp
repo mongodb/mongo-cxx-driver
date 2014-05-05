@@ -472,20 +472,20 @@ namespace {
 
     // ------------- simple functions -----------------
 
-    void DBClientReplicaSet::insert( const string &ns , BSONObj obj , int flags) {
-        checkMaster()->insert(ns, obj, flags);
+    void DBClientReplicaSet::insert( const string &ns , BSONObj obj , int flags, const WriteConcern* wc) {
+        checkMaster()->insert(ns, obj, flags, wc);
     }
 
-    void DBClientReplicaSet::insert( const string &ns, const vector< BSONObj >& v , int flags) {
-        checkMaster()->insert(ns, v, flags);
+    void DBClientReplicaSet::insert( const string &ns, const vector< BSONObj >& v , int flags, const WriteConcern* wc) {
+        checkMaster()->insert(ns, v, flags, wc);
     }
 
-    void DBClientReplicaSet::remove( const string &ns , Query obj , int flags ) {
-        checkMaster()->remove(ns, obj, flags);
+    void DBClientReplicaSet::remove( const string &ns , Query obj , int flags, const WriteConcern* wc ) {
+        checkMaster()->remove(ns, obj, flags, wc);
     }
 
-    void DBClientReplicaSet::update( const string &ns , Query query , BSONObj obj , int flags ) {
-        return checkMaster()->update( ns, query, obj, flags );
+    void DBClientReplicaSet::update( const string &ns , Query query , BSONObj obj , int flags, const WriteConcern* wc ) {
+        return checkMaster()->update( ns, query, obj, flags, wc );
     }
 
     auto_ptr<DBClientCursor> DBClientReplicaSet::query(const string &ns,

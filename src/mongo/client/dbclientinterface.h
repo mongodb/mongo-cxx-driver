@@ -25,7 +25,9 @@
 #include <boost/function.hpp>
 
 #include "mongo/base/string_data.h"
+#include "mongo/client/exceptions.h"
 #include "mongo/client/export_macros.h"
+#include "mongo/client/write_concern.h"
 #include "mongo/db/jsobj.h"
 #include "mongo/logger/log_severity.h"
 #include "mongo/platform/atomic_word.h"
@@ -317,16 +319,6 @@ namespace mongo {
         static ConnectionHook* _connectHook;
     };
 
-    /**
-     * controls how much a clients cares about writes
-     * default is NORMAL
-     */
-    enum MONGO_CLIENT_API WriteConcern {
-        W_NONE = 0 , // TODO: not every connection type fully supports this
-        W_NORMAL = 1
-        // TODO SAFE = 2
-    };
-
     class BSONObj;
     class ScopedDbConnection;
     class DBClientCursor;
@@ -549,20 +541,20 @@ namespace mongo {
         virtual std::auto_ptr<DBClientCursor> query(const std::string &ns, Query query, int nToReturn = 0, int nToSkip = 0,
                                                     const BSONObj *fieldsToReturn = 0, int queryOptions = 0 , int batchSize = 0 ) = 0;
 
-        virtual void insert( const std::string &ns, BSONObj obj , int flags=0) = 0;
+        virtual void insert( const std::string &ns, BSONObj obj , int flags=0, const WriteConcern* wc=NULL ) = 0;
 
-        virtual void insert( const std::string &ns, const std::vector< BSONObj >& v , int flags=0) = 0;
+        virtual void insert( const std::string &ns, const std::vector< BSONObj >& v , int flags=0, const WriteConcern* wc=NULL ) = 0;
 
-        virtual void remove( const std::string &ns , Query query, bool justOne = 0 ) = 0;
+        virtual void remove( const std::string &ns , Query query, bool justOne = 0, const WriteConcern* wc=NULL ) = 0;
 
-        virtual void remove( const std::string &ns , Query query, int flags ) = 0;
+        virtual void remove( const std::string &ns , Query query, int flags, const WriteConcern* wc=NULL ) = 0;
 
         virtual void update( const std::string &ns,
                              Query query,
                              BSONObj obj,
-                             bool upsert = false, bool multi = false ) = 0;
+                             bool upsert = false, bool multi = false, const WriteConcern* wc=NULL ) = 0;
 
-        virtual void update( const std::string &ns, Query query, BSONObj obj, int flags ) = 0;
+        virtual void update( const std::string &ns, Query query, BSONObj obj, int flags, const WriteConcern* wc=NULL ) = 0;
 
         virtual ~DBClientInterface() { }
 
@@ -1052,19 +1044,21 @@ namespace mongo {
         WriteConcern _writeConcern;
         int _minWireVersion;
         int _maxWireVersion;
+        void _prepareInsert( BufBuilder& b, const std::string& ns, int flags );
+        void _write( Operations o, const std::string& ns, const BufBuilder& b, const WriteConcern* wc );
     public:
         static const uint64_t INVALID_SOCK_CREATION_TIME;
 
         DBClientBase() {
-            _writeConcern = W_NORMAL;
+            _writeConcern = WriteConcern::acknowledged;
             _connectionId = ConnectionIdSequence.fetchAndAdd(1);
             _minWireVersion = _maxWireVersion = 0;
         }
 
         long long getConnectionId() const { return _connectionId; }
 
-        WriteConcern getWriteConcern() const { return _writeConcern; }
-        void setWriteConcern( WriteConcern w ) { _writeConcern = w; }
+        const WriteConcern& getWriteConcern() const { return _writeConcern; }
+        void setWriteConcern( const WriteConcern& w ) { _writeConcern = w; }
 
         void setWireVersions( int minWireVersion, int maxWireVersion ){
             _minWireVersion = minWireVersion;
@@ -1123,30 +1117,50 @@ namespace mongo {
         /**
            insert an object into the database
          */
-        virtual void insert( const std::string &ns , BSONObj obj , int flags=0);
+        virtual void insert(
+            const std::string &ns,
+            BSONObj obj,
+            int flags=0,
+            const WriteConcern* wc=NULL
+        );
 
         /**
            insert a vector of objects into the database
          */
-        virtual void insert( const std::string &ns, const std::vector< BSONObj >& v , int flags=0);
+        virtual void insert(
+            const std::string &ns,
+            const std::vector< BSONObj >& v,
+            int flags=0,
+            const WriteConcern* wc=NULL
+        );
 
         /**
            updates objects matching query
          */
-        virtual void update( const std::string &ns,
-                             Query query,
-                             BSONObj obj,
-                             bool upsert = false, bool multi = false );
+        virtual void update(
+            const std::string &ns,
+            Query query,
+            BSONObj obj,
+            bool upsert=false,
+            bool multi=false,
+            const WriteConcern* wc=NULL
+        );
 
-        virtual void update( const std::string &ns, Query query, BSONObj obj, int flags );
+        virtual void update(
+            const std::string &ns,
+            Query query,
+            BSONObj obj,
+            int flags,
+            const WriteConcern* wc=NULL
+        );
 
         /**
            remove matching objects from the database
            @param justOne if this true, then once a single match is found will stop
          */
-        virtual void remove( const std::string &ns , Query q , bool justOne = 0 );
+        virtual void remove( const std::string &ns , Query q , bool justOne = 0, const WriteConcern* wc=NULL );
 
-        virtual void remove( const std::string &ns , Query query, int flags );
+        virtual void remove( const std::string &ns , Query query, int flags, const WriteConcern* wc=NULL );
 
         virtual bool isFailed() const = 0;
 
