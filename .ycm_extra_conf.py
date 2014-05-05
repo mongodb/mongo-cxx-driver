@@ -49,6 +49,7 @@ flags = [
     '-Ibuild/linux2/normal/',
     '-Ibuild/cached/',
     '-Ibuild/cached/mongo',
+    '-DMONGO_EXPOSE_MACROS',
     '-Wall',
     '-Wno-unknown-pragmas',
     '-Wsign-compare',
