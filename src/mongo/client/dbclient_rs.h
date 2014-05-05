@@ -76,8 +76,6 @@ namespace mongo {
 
         virtual void insert( const std::string &ns , BSONObj obj , int flags=0, const WriteConcern* wc=NULL );
 
-        /** insert multiple objects.  Note that single object insert is asynchronous, so this version
-            is only nominally faster and not worth a special effort to try to use.  */
         virtual void insert( const std::string &ns, const std::vector< BSONObj >& v , int flags=0, const WriteConcern* wc=NULL );
 
         virtual void remove( const std::string &ns , Query obj , int flags, const WriteConcern* wc=NULL );
