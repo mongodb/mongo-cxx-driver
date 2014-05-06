@@ -448,6 +448,16 @@ namespace {
         }
     }
 
+    int DBClientReplicaSet::getMinWireVersion()
+    {
+        return _getMonitor()->getMinWireVersion();
+    }
+
+    int DBClientReplicaSet::getMaxWireVersion()
+    {
+        return _getMonitor()->getMaxWireVersion();
+    }
+
     void DBClientReplicaSet::logout(const string &dbname, BSONObj& info) {
         DBClientConnection* priConn = checkMaster();
 

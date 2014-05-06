@@ -911,6 +911,21 @@ namespace mongo {
             return p->secure( sslManager(), _server.host() );
         }
 #endif
+        BSONObj info;
+        bool ismaster;
+
+        if (isMaster(ismaster, &info)) {
+            BSONElement maxWireVersion;
+            BSONElement minWireVersion;
+
+            maxWireVersion  = info["maxWireVersion"];
+            minWireVersion  = info["minWireVersion"];
+
+            if (! maxWireVersion.eoo() && ! minWireVersion.eoo()) {
+                setWireVersions(minWireVersion.Int(), maxWireVersion.Int());
+            }
+        }
+
 
         return true;
     }

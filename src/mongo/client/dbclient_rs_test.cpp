@@ -88,6 +88,39 @@ namespace {
         boost::scoped_ptr<MockReplicaSet> _replSet;
     };
 
+    TEST_F(BasicRS, GetWireVersionMixed) {
+        MockReplicaSet* replSet = getReplSet();
+        MockReplicaSet::ReplConfigMap replConfig = replSet->getReplConfig();
+
+        replConfig["$test0:27017"].minWireVersion = 0;
+        replConfig["$test0:27017"].maxWireVersion = 0;
+        replConfig["$test1:27017"].minWireVersion = 0;
+        replConfig["$test1:27017"].maxWireVersion = 2;
+
+        DBClientReplicaSet replConn(replSet->getSetName(), replSet->getHosts());
+
+        ASSERT_EQUALS(0, replConn.getMinWireVersion());
+        ASSERT_EQUALS(0, replConn.getMaxWireVersion());
+    }
+
+    TEST_F(BasicRS, GetWireVersionLatest) {
+        MockReplicaSet* replSet = getReplSet();
+        MockReplicaSet::ReplConfigMap replConfig = replSet->getReplConfig();
+
+        replConfig["$test0:27017"].minWireVersion = 0;
+        replConfig["$test0:27017"].maxWireVersion = 2;
+        replConfig["$test1:27017"].minWireVersion = 0;
+        replConfig["$test1:27017"].maxWireVersion = 2;
+
+        DBClientReplicaSet replConn(replSet->getSetName(), replSet->getHosts());
+
+        replConn.masterConn();
+        replConn.slaveConn();
+
+        ASSERT_EQUALS(0, replConn.getMinWireVersion());
+        ASSERT_EQUALS(2, replConn.getMaxWireVersion());
+    }
+
     TEST_F(BasicRS, ReadFromPrimary) {
         MockReplicaSet* replSet = getReplSet();
         DBClientReplicaSet replConn(replSet->getSetName(), replSet->getHosts());

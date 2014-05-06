@@ -782,6 +782,9 @@ namespace {
             hidden = raw["hidden"].trueValue();
             secondary = raw["secondary"].trueValue();
 
+            minWireVersion = raw.hasField("minWireVersion") ? raw["minWireVersion"].Int() : 0;
+            maxWireVersion = raw.hasField("maxWireVersion") ? raw["maxWireVersion"].Int() : 0;
+
             // hidden nodes can't be master, even if they claim to be.
             isMaster = !hidden && raw["ismaster"].trueValue();
 
@@ -841,6 +844,9 @@ namespace {
         // send any operations to them.
         isUp = !reply.hidden && (reply.isMaster || reply.secondary);
         isMaster = reply.isMaster;
+
+        minWireVersion = reply.minWireVersion;
+        maxWireVersion = reply.maxWireVersion;
 
         // save a copy if unchanged
         if (!tags.binaryEqual(reply.tags))
@@ -973,6 +979,26 @@ namespace {
             return NULL;
 
         return &(*it);
+    }
+
+    int ReplicaSetMonitor::getMinWireVersion() {
+        int min = 0;
+
+        for (Nodes::iterator it = _state->nodes.begin(); it != _state->nodes.end(); ++it) {
+            min = std::max(it->minWireVersion, min);
+        }
+
+        return min;
+    }
+
+    int ReplicaSetMonitor::getMaxWireVersion() {
+        int max = 2;
+
+        for (Nodes::iterator it = _state->nodes.begin(); it != _state->nodes.end(); ++it) {
+            max = std::min(it->maxWireVersion, max);
+        }
+
+        return max;
     }
 
     Node* SetState::findOrCreateNode(const HostAndPort& host) {

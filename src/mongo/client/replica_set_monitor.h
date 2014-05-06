@@ -106,6 +106,9 @@ namespace mongo {
          */
         std::string getName() const;
 
+        int getMinWireVersion();
+        int getMaxWireVersion();
+
         /**
          * Returns a string with the format name/server1,server2.
          * If name is empty, returns just comma-separated list of servers.
