@@ -15,7 +15,7 @@
 
 #include "mongo/dbtests/mock/mock_replica_set.h"
 
-//#include "mongo/db/repl/rs_member.h"
+#include "mongo/db/repl/member_state.h"
 #include "mongo/dbtests/mock/mock_conn_registry.h"
 #include "mongo/dbtests/mock/mock_dbclient_connection.h"
 #include "mongo/util/map_util.h"
@@ -27,22 +27,6 @@ namespace mongo {
     using std::string;
     using std::map;
     using std::vector;
-
-    struct MemberState {
-        enum MS {
-            RS_STARTUP = 0,
-            RS_PRIMARY = 1,
-            RS_SECONDARY = 2,
-            RS_RECOVERING = 3,
-            RS_FATAL = 4,
-            RS_STARTUP2 = 5,
-            RS_UNKNOWN = 6, /* remote node not yet reached */
-            RS_ARBITER = 7,
-            RS_DOWN = 8, /* node not reachable for a report */
-            RS_ROLLBACK = 9,
-            RS_SHUNNED = 10, /* node shunned from replica set */
-        };
-    };
 
     MockReplicaSet::MockReplicaSet(const string& setName, size_t nodes):
             _setName(setName) {

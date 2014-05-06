@@ -89,7 +89,7 @@ namespace logger {
     else LogstreamBuilder(::mongo::logger::globalLogDomain(), getThreadName(), ::mongo::LogstreamBuilder::severityCast(DLEVEL))
 
     inline LogstreamBuilder problem() {
-        return log().setBaseMessage("");
+        return log();
     }
 
     /** output the error # and error message with prefix.

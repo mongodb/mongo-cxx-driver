@@ -20,71 +20,13 @@
 #include <ctime>
 
 #include "mongo/bson/inline_decls.h"
-#include "mongo/util/debug_util.h"
-#include "mongo/util/log.h"
 
 namespace mongo {
-
-    OpTime OpTime::last(0, 0);
-    boost::condition OpTime::notifier;
-    boost::mutex OpTime::m;
-
-    NOINLINE_DECL OpTime OpTime::skewed() {
-        bool toLog = false;
-        ONCE toLog = true;
-        RARELY toLog = true;
-        last.i++;
-        if ( last.i & 0x80000000 )
-            toLog = true;
-        if ( toLog ) {
-            log() << "clock skew detected  prev: " << last.secs << " now: " << (unsigned) time(0) 
-                  << std::endl;
-        }
-        if ( last.i & 0x80000000 ) {
-            log() << "error large clock skew detected, shutting down" << std::endl;
-            throw ClockSkewException();
-        }
-        return last;
-    }
-
-    /*static*/ OpTime OpTime::_now() {
-        OpTime result;
-        unsigned t = (unsigned) time(0);
-        if ( last.secs == t ) {
-            last.i++;
-            result = last;
-        }
-        else if ( t < last.secs ) {
-            result = skewed(); // separate function to keep out of the hot code path
-        }
-        else { 
-            last = OpTime(t, 1);
-            result = last;
-        }
-        notifier.notify_all();
-        return last;
-    }
-
-    OpTime OpTime::now(const boost::mutex::scoped_lock&) {
-        return _now();
-    }
-
-    OpTime OpTime::getLast(const boost::mutex::scoped_lock&) {
-        return last;
-    }
 
     OpTime OpTime::max() {
         unsigned int t = static_cast<unsigned int>(std::numeric_limits<int32_t>::max());
         unsigned int i = std::numeric_limits<uint32_t>::max();
         return OpTime(t, i);
-    }
-
-    void OpTime::waitForDifferent(unsigned millis){
-        boost::mutex::scoped_lock lk(m);
-        while (*this == last) {
-            if (!notifier.timed_wait(lk, boost::posix_time::milliseconds(millis)))
-                return; // timed out
-        }
     }
 
 }

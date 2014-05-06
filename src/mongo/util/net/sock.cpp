@@ -507,9 +507,10 @@ namespace mongo {
             setTimeout( _timeout );
         }
 
+        static const unsigned int connectTimeoutMillis = 5000;
         ConnectBG bg(_fd, remote);
         bg.go();
-        if ( bg.wait(5000) ) {
+        if ( bg.wait(connectTimeoutMillis) ) {
             if ( bg.inError() ) {
                 warning() << "Failed to connect to "
                           << _remote.getAddr() << ":" << _remote.getPort()
@@ -522,6 +523,9 @@ namespace mongo {
             // time out the connect
             close();
             bg.wait(); // so bg stays in scope until bg thread terminates
+            warning() << "Failed to connect to "
+                      << _remote.getAddr() << ":" << _remote.getPort()
+                      << " after " << connectTimeoutMillis << " milliseconds, giving up." << endl;
             return false;
         }
 

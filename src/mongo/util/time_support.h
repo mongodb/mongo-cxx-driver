@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <iosfwd>
 #include <ctime>
 #include <string>
 #include <boost/thread/xtime.hpp>
@@ -90,6 +91,21 @@ namespace mongo {
      * Local times are currently not supported.
      */
     MONGO_CLIENT_API StatusWith<Date_t> MONGO_CLIENT_FUNC dateFromISOString(const StringData& dateString);
+
+    /**
+     * Like dateToISOStringUTC, except outputs to a std::ostream.
+     */
+    MONGO_CLIENT_API void MONGO_CLIENT_FUNC outputDateAsISOStringUTC(std::ostream& os, Date_t date);
+
+    /**
+     * Like dateToISOStringLocal, except outputs to a std::ostream.
+     */
+    MONGO_CLIENT_API void MONGO_CLIENT_FUNC outputDateAsISOStringLocal(std::ostream& os, Date_t date);
+
+    /**
+     * Like dateToCtimeString, except outputs to a std::ostream.
+     */
+    MONGO_CLIENT_API void MONGO_CLIENT_FUNC outputDateAsCtime(std::ostream& os, Date_t date);
 
     boost::gregorian::date currentDate();
 

@@ -43,7 +43,7 @@ namespace mongo {
         /**
          * Constructs a NamespaceString from the fully qualified namespace named in "ns".
          */
-        NamespaceString( const StringData& ns );
+        explicit NamespaceString( const StringData& ns );
 
         /**
          * Constructs a NamespaceString for the given database and collection names.
@@ -56,8 +56,8 @@ namespace mongo {
 
         const std::string& ns() const { return _ns; }
 
-        operator std::string() const { return _ns; }
-        std::string toString() const { return _ns; }
+        operator const std::string&() const { return ns(); }
+        const std::string& toString() const { return ns(); }
 
         size_t size() const { return _ns.size(); }
 

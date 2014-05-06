@@ -181,7 +181,8 @@ add_option( "cxx", "compiler to use" , 1 , True )
 add_option( "cc", "compiler to use for c" , 1 , True )
 add_option( "cc-use-shell-environment", "use $CC from shell for C compiler" , 0 , False )
 add_option( "cxx-use-shell-environment", "use $CXX from shell for C++ compiler" , 0 , False )
-add_option( "c++11", "enable c++11 support (experimental)", 0, True )
+add_option( "c++11", "enable c++11 support (experimental)", "?", True,
+            type="choice", choices=["on", "off", "auto"], const="on", default="off" )
 
 add_option( "cpppath", "Include path if you have headers in a nonstandard directory" , 1 , False )
 add_option( "libpath", "Library path if you have libraries in a nonstandard directory" , 1 , False )
@@ -195,11 +196,11 @@ add_option( "ssl" , "Enable SSL" , 0 , True )
 add_option( "libc++", "use libc++ (experimental, requires clang)", 0, True )
 
 # new style debug and optimize flags
-add_option( "dbg", "Enable runtime debugging checks", 1, True, "dbg",
-            type="choice", choices=["on", "off"] )
+add_option( "dbg", "Enable runtime debugging checks", "?", True, "dbg",
+            type="choice", choices=["on", "off"], const="on" )
 
-add_option( "opt", "Enable compile-time optimization", 1, True, "opt",
-            type="choice", choices=["on", "off"] )
+add_option( "opt", "Enable compile-time optimization", "?", True, "opt",
+            type="choice", choices=["on", "off"], const="on" )
 
 sanitizer_choices = ["address", "memory", "thread", "undefined"]
 add_option( "sanitize", "enable selected sanitizer", 1, True,
@@ -210,6 +211,8 @@ add_option( "gcov" , "compile with flags for gcov" , 0 , True )
 add_option("use-sasl-client", "Support SASL authentication in the client library", 0, False)
 
 add_option('build-fast-and-loose', "NEVER for production builds", 0, False)
+
+add_option('disable-warnings-as-errors', "Don't add -Werror to compiler command line", 0, False)
 
 add_option('propagate-shell-environment',
            "Pass shell environment to sub-processes (NEVER for production builds)",
@@ -462,7 +465,6 @@ elif linux:
 
     if force32:
         env.Append( EXTRALIBPATH=["/usr/lib32"] )
-        env.Append( CCFLAGS=["-mmmx"] )
 
 elif solaris:
      env.Append( CPPDEFINES=[ "__sunos__" ] )
@@ -620,7 +622,9 @@ if nix:
                          "-Winvalid-pch"] )
     # env.Append( " -Wconversion" ) TODO: this doesn't really work yet
     if linux or darwin:
-        env.Append( CCFLAGS=["-Werror", "-pipe"] )
+        env.Append( CCFLAGS=["-pipe"] )
+        if not has_option("disable-warnings-as-errors"):
+            env.Append( CCFLAGS=["-Werror"] )
 
     env.Append( CPPDEFINES=["_FILE_OFFSET_BITS=64"] )
     env.Append( CXXFLAGS=["-Wnon-virtual-dtor", "-Woverloaded-virtual"] )
@@ -913,21 +917,6 @@ def doConfigure(myenv):
         # primary mongo sources as well.
         AddToCCFLAGSIfSupported(myenv, "-Wno-unused-const-variable")
 
-    if has_option('c++11'):
-        # The Microsoft compiler does not need a switch to enable C++11. Again we should be
-        # checking for MSVC, not windows. In theory, we might be using clang or icc on windows.
-        if not using_msvc():
-            # For our other compilers (gcc and clang) we need to pass -std=c++0x or -std=c++11,
-            # but we prefer the latter. Try that first, and fall back to c++0x if we don't
-            # detect that --std=c++11 works.
-            if not AddToCXXFLAGSIfSupported(myenv, '-std=c++11'):
-                if not AddToCXXFLAGSIfSupported(myenv, '-std=c++0x'):
-                    print( 'C++11 mode requested, but cannot find a flag to enable it' )
-                    Exit(1)
-
-            if not AddToCFLAGSIfSupported(myenv, '-std=c99'):
-                print( 'C++11 mode selected for C++ files, but failed to enable C99 for C files' )
-
     # This needs to happen before we check for libc++, since it affects whether libc++ is available.
     if darwin and has_option('osx-version-min'):
         min_version = get_option('osx-version-min')
@@ -937,6 +926,7 @@ def doConfigure(myenv):
             Exit(1)
         myenv.AppendUnique(LINKFLAGS=[min_version_flag])
 
+    usingLibStdCxx = False
     if has_option('libc++'):
         if not using_clang():
             print( 'libc++ is currently only supported for clang')
@@ -948,29 +938,46 @@ def doConfigure(myenv):
         else:
             print( 'libc++ requested, but compiler does not support -stdlib=libc++' )
             Exit(1)
+    else:
+        def CheckLibStdCxx(context):
+            test_body = """
+            #include <vector>
+            #if !defined(__GLIBCXX__)
+            #error
+            #endif
+            """
 
-    # Check to see if we are trying to use an outdated libstdc++ in C++11 mode. This is
-    # primarly to help people using clang in C++11 mode on OS X but forgetting to use
-    # --libc++. We would, ideally, check the __GLIBCXX__ version, but for various reasons this
-    # is not workable. Instead, we switch on the fact that std::is_nothrow_constructible wasn't
-    # introduced until libstdc++ 4.6.0. Earlier versions of libstdc++ than 4.6 are unlikely to
-    # work well anyway.
-    if has_option('c++11') and not has_option('libc++'):
+            context.Message('Checking if we are using libstdc++... ')
+            ret = context.TryCompile(textwrap.dedent(test_body), ".cpp")
+            context.Result(ret)
+            return ret
+
+        conf = Configure(myenv, help=False, custom_tests = {
+            'CheckLibStdCxx' : CheckLibStdCxx,
+        })
+        usingLibStdCxx = conf.CheckLibStdCxx()
+        conf.Finish()
+
+    # Check to see if we are trying to use an elderly libstdc++, which we arbitrarily define as
+    # 4.6.0. This is primarly to help people using clang in C++11 mode on OS X but forgetting
+    # to use --libc++. We also use it to decide if we trust the libstdc++ debug mode. We would,
+    # ideally, check the __GLIBCXX__ version, but for various reasons this is not
+    # workable. Instead, we switch on the fact that _GLIBCXX_BEGIN_NAMESPACE_VERSION wasn't
+    # introduced until libstdc++ 4.6.0.
+
+    haveGoodLibStdCxx = False
+    if usingLibStdCxx:
 
         def CheckModernLibStdCxx(context):
 
             test_body = """
             #include <vector>
-            #include <cstdlib>
-            #if defined(__GLIBCXX__)
-            #include <type_traits>
-            int main() {
-                return std::is_nothrow_constructible<int>::value ? EXIT_SUCCESS : EXIT_FAILURE;
-            }
+            #if !defined(_GLIBCXX_BEGIN_NAMESPACE_VERSION)
+            #error libstdcxx older than 4.6.0
             #endif
             """
 
-            context.Message('Checking for libstdc++ 4.6.0 or better (for C++11 support)... ')
+            context.Message('Checking for libstdc++ 4.6.0 or better... ')
             ret = context.TryCompile(textwrap.dedent(test_body), ".cpp")
             context.Result(ret)
             return ret
@@ -981,11 +988,112 @@ def doConfigure(myenv):
         haveGoodLibStdCxx = conf.CheckModernLibStdCxx()
         conf.Finish()
 
-        if not haveGoodLibStdCxx:
-            print( 'Detected libstdc++ is too old to support C++11 mode' )
-            if darwin:
-                print( 'Try building with --libc++ and --osx-version-min=10.7 or higher' )
-            Exit(1)
+    # Sort out whether we can and should use C++11:
+    cxx11_mode = get_option("c++11")
+
+    if using_msvc():
+        if cxx11_mode == "off":
+            print( 'WARNING: Cannot disable C++11 features when using MSVC' )
+    else:
+
+        # If we are using libstdc++, only allow C++11 mode with our line-in-the-sand good
+        # libstdc++. As always, if in auto mode fall back to disabling if we don't have a good
+        # libstdc++, otherwise fail the build because we can't honor the explicit request.
+        if cxx11_mode != "off" and usingLibStdCxx:
+            if not haveGoodLibStdCxx:
+                if cxx11_mode == "auto":
+                    cxx11_mode = "off"
+                else:
+                    print( 'Detected libstdc++ is too old to support C++11 mode' )
+                    if darwin:
+                        print( 'Try building with --libc++ and --osx-version-min=10.7 or higher' )
+                    Exit(1)
+
+        # We are going to be adding flags to the environment, but we don't want to persist
+        # those changes unless we pass all the below checks. Make a copy of the environment
+        # that we will modify, we will only "commit" the changes to the env if we pass all the
+        # checks.
+        cxx11Env = myenv.Clone()
+
+        # For our other compilers (gcc and clang) we need to pass -std=c++0x or -std=c++11,
+        # but we prefer the latter. Try that first, and fall back to c++0x if we don't
+        # detect that --std=c++11 works. If we can't find a flag and C++11 was explicitly
+        # requested, error out, otherwise turn off C++11 support in auto mode.
+        if cxx11_mode != "off":
+            if not AddToCXXFLAGSIfSupported(cxx11Env, '-std=c++11'):
+                if not AddToCXXFLAGSIfSupported(cxx11Env, '-std=c++0x'):
+                    if cxx11_mode == "auto":
+                        cxx11_mode = "off"
+                    else:
+                        print( 'C++11 mode requested, but cannot find a flag to enable it' )
+                        Exit(1)
+
+        # We appear to have C++11, or at least a flag to enable it, which is now set in the
+        # environment. If we are in auto mode, check if the compiler claims that it strictly
+        # supports C++11, and disable C++11 if not. If the user has explicitly requested C++11,
+        # we don't care about what the compiler claims to support, trust the user.
+        if cxx11_mode == "auto":
+            def CheckCxx11Official(context):
+                test_body = """
+                #if __cplusplus < 201103L
+                #error
+                #endif
+                const int not_an_empty_file = 0;
+                """
+
+                context.Message('Checking if __cplusplus >= 201103L to auto-enable C++11... ')
+                ret = context.TryCompile(textwrap.dedent(test_body), ".cpp")
+                context.Result(ret)
+                return ret
+
+            conf = Configure(cxx11Env, help=False, custom_tests = {
+                'CheckCxx11Official' : CheckCxx11Official,
+            })
+
+            if cxx11_mode == "auto" and not conf.CheckCxx11Official():
+                cxx11_mode = "off"
+
+            conf.Finish()
+
+        # We require c99 mode for C files when C++11 is enabled, so perform the same dance
+        # as above: if C++11 mode is not off, try the flag, if we are in auto mode and we fail
+        # then turn off C++11, otherwise C++11 was explicitly requested and we should error out.
+        if cxx11_mode != "off":
+            if not AddToCFLAGSIfSupported(cxx11Env, '-std=c99'):
+                if cxx11_mode == "auto":
+                    cxx11_mode = "off"
+                else:
+                    print( "C++11 mode selected for C++ files, but can't enable C99 for C files" )
+                    Exit(1)
+
+        # If we got here and cxx11_mode hasn't become false, then its true, so swap in the
+        # modified environment.
+        if cxx11_mode != "off":
+            cxx11_mode = "on"
+            myenv = cxx11Env
+
+    # Check if we are on a POSIX system by testing if _POSIX_VERSION is defined.
+    def CheckPosixSystem(context):
+
+        test_body = """
+        // POSIX requires the existence of unistd.h, so if we can't include unistd.h, we
+        // are definitely not a POSIX system.
+        #include <unistd.h>
+        #if !defined(_POSIX_VERSION)
+        #error not a POSIX system
+        #endif
+        """
+
+        context.Message('Checking if we are on a POSIX system... ')
+        ret = context.TryCompile(textwrap.dedent(test_body), ".c")
+        context.Result(ret)
+        return ret
+
+    conf = Configure(myenv, help=False, custom_tests = {
+        'CheckPosixSystem' : CheckPosixSystem,
+    })
+    posix_system = conf.CheckPosixSystem()
+    conf.Finish()
 
     if has_option('sanitize'):
         if not (using_clang() or using_gcc()):
