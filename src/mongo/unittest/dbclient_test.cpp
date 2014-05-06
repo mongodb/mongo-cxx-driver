@@ -349,6 +349,28 @@ namespace {
         ASSERT_EQUALS(index_count, 3U);
     }
 
+    TEST_F(DBClientTest, Aggregate) {
+        BSONObj doc = BSON("hello" << "world");
+
+        BSONObj pipeline = BSON("0" << BSON("$match" << doc));
+
+        c.insert(TEST_NS, doc);
+        c.insert(TEST_NS, doc);
+
+        std::auto_ptr<DBClientCursor> cursor = c.aggregate(TEST_NS, pipeline);
+        ASSERT_TRUE(cursor.get());
+
+        for (int i = 0; i < 2; i++) {
+            ASSERT_TRUE(cursor->more());
+
+            BSONObj result = cursor->next();
+            ASSERT_TRUE(result.valid());
+            ASSERT_EQUALS(result["hello"].String(), "world");
+        }
+
+        ASSERT_FALSE(cursor->more());
+    }
+
     TEST_F(DBClientTest, CreateCollection) {
         ASSERT_FALSE(c.exists(TEST_NS));
         ASSERT_TRUE(c.createCollection(TEST_NS));

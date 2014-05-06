@@ -28,6 +28,9 @@
 namespace mongo {
 
     class AScopedConnection;
+    class DBClientCursorShim;
+    class DBClientCursorShimCursorID;
+    class DBClientCursorShimArray;
 
     /** for mock purposes only -- do not create variants of DBClientCursor, nor hang code here
         @see DBClientMockCursor
@@ -213,9 +216,16 @@ namespace mongo {
     private:
         friend class DBClientBase;
         friend class DBClientConnection;
+        friend class DBClientCursorShimCursorID;
+        friend class DBClientCursorShimArray;
 
         int nextBatchSize();
         void _finishConsInit();
+
+        BSONObj rawNext();
+        bool rawMore();
+
+        std::auto_ptr<DBClientCursorShim> shim;
 
         Batch batch;
         DBClientBase* _client;

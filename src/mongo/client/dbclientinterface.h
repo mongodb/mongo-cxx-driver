@@ -1091,6 +1091,11 @@ namespace mongo {
         virtual std::auto_ptr<DBClientCursor> query(const std::string &ns, Query query, int nToReturn = 0, int nToSkip = 0,
                                                     const BSONObj *fieldsToReturn = 0, int queryOptions = 0 , int batchSize = 0 );
 
+        virtual std::auto_ptr<DBClientCursor> aggregate(const std::string& ns,
+                                                        const BSONObj& pipeline,
+                                                        const BSONObj* aggregateOptions = NULL,
+                                                        int queryOptions = 0);
+
 
         /** Uses QueryOption_Exhaust, when available.
 

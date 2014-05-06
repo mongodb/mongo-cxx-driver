@@ -21,6 +21,7 @@
 #include "mongo/db/dbmessage.h"
 #include "mongo/db/namespace_string.h"
 #include "mongo/util/debug_util.h"
+#include "mongo/client/dbclientcursorshim.h"
 
 namespace mongo {
 
@@ -216,11 +217,8 @@ namespace mongo {
     }
 
     /** If true, safe to call next().  Requests more from server if necessary. */
-    bool DBClientCursor::more() {
-        _assertIfNull();
-
-        if ( !_putBack.empty() )
-            return true;
+    bool DBClientCursor::rawMore() {
+        DEV _assertIfNull();
 
         if (haveLimit && batch.pos >= nToReturn)
             return false;
@@ -235,13 +233,20 @@ namespace mongo {
         return batch.pos < batch.nReturned;
     }
 
-    BSONObj DBClientCursor::next() {
+    bool DBClientCursor::more() {
         DEV _assertIfNull();
-        if ( !_putBack.empty() ) {
-            BSONObj ret = _putBack.top();
-            _putBack.pop();
-            return ret;
-        }
+
+        if ( !_putBack.empty() )
+            return true;
+
+        if (shim.get())
+            return shim->more();
+
+        return rawMore();
+    }
+
+    BSONObj DBClientCursor::rawNext() {
+        DEV _assertIfNull();
 
         uassert(13422, "DBClientCursor next() called but more() is false", batch.pos < batch.nReturned);
 
@@ -250,6 +255,21 @@ namespace mongo {
         batch.data += o.objsize();
         /* todo would be good to make data null at end of batch for safety */
         return o;
+    }
+
+    BSONObj DBClientCursor::next() {
+        DEV _assertIfNull();
+
+        if ( !_putBack.empty() ) {
+            BSONObj ret = _putBack.top();
+            _putBack.pop();
+            return ret;
+        }
+
+        if (shim.get())
+            return shim->next();
+
+        return rawNext();
     }
 
     void DBClientCursor::peek(vector<BSONObj>& v, int atMost) {
