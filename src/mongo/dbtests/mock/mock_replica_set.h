@@ -34,6 +34,8 @@ namespace mongo {
                , arbiterOnly(false)
                , slaveDelay(0)
                , hidden(false)
+               , minWireVersion(0)
+               , maxWireVersion(2)
                , buildIndexes(true) { }
 
            int _id;
@@ -43,6 +45,8 @@ namespace mongo {
            bool arbiterOnly;
            int slaveDelay;
            bool hidden;
+           int minWireVersion;
+           int maxWireVersion;
            bool buildIndexes;
            std::map<std::string,std::string> tags;
         };

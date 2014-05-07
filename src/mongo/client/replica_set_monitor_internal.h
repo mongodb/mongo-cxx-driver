@@ -55,6 +55,8 @@ namespace mongo {
         bool isMaster;
         bool secondary;
         bool hidden;
+        int minWireVersion;
+        int maxWireVersion;
         HostAndPort primary; // empty if not present
         std::set<HostAndPort> normalHosts; // both "hosts" and "passives"
         BSONObj tags;
@@ -72,6 +74,8 @@ namespace mongo {
         struct Node {
             explicit Node(const HostAndPort& host)
                     : host(host)
+                    , minWireVersion(0)
+                    , maxWireVersion(0)
                     , latencyMicros(unknownLatency) {
                 markFailed();
             }
@@ -109,6 +113,8 @@ namespace mongo {
             HostAndPort host;
             bool isUp;
             bool isMaster; // implies isUp
+            int minWireVersion;
+            int maxWireVersion;
             int64_t latencyMicros; // unknownLatency if unknown
             BSONObj tags; // owned
         };

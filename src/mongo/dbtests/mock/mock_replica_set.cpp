@@ -211,6 +211,14 @@ namespace mongo {
                     builder.append("hidden", true);
                 }
 
+                if (replConfig.minWireVersion) {
+                    builder.append("minWireVersion", replConfig.minWireVersion);
+                }
+
+                if (replConfig.maxWireVersion) {
+                    builder.append("maxWireVersion", replConfig.maxWireVersion);
+                }
+
                 if (!replConfig.buildIndexes) {
                     builder.append("buildIndexes", false);
                 }

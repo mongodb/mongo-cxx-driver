@@ -56,6 +56,9 @@ namespace mongo {
          */
         bool connect();
 
+        virtual int getMinWireVersion();
+        virtual int getMaxWireVersion();
+
         /**
          * Logs out the connection for the given database.
          *
