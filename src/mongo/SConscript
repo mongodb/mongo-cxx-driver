@@ -84,6 +84,7 @@ for unittest in unittests:
 
 integration_tests = [
     'dbclient_test',
+    'dbclient_writer_test',
     'gridfs_test',
     'sasl_test'
 ]

@@ -20,12 +20,18 @@
 #include "mongo/bson/util/bson_extract.h"
 #include "mongo/bson/util/builder.h"
 #include "mongo/client/constants.h"
+#include "mongo/client/command_writer.h"
 #include "mongo/client/dbclient_rs.h"
 #include "mongo/client/dbclientcursor.h"
 #include "mongo/client/dbclientcursorshim.h"
 #include "mongo/client/dbclientcursorshimarray.h"
 #include "mongo/client/dbclientcursorshimcursorid.h"
+#include "mongo/client/dbclient_writer.h"
+#include "mongo/client/insert_write_operation.h"
+#include "mongo/client/update_write_operation.h"
+#include "mongo/client/delete_write_operation.h"
 #include "mongo/client/sasl_client_authenticate.h"
+#include "mongo/client/wire_protocol_writer.h"
 #include "mongo/db/jsobj.h"
 #include "mongo/db/json.h"
 #include "mongo/db/namespace_string.h"
@@ -47,6 +53,10 @@ namespace mongo {
     AtomicInt64 DBClientBase::ConnectionIdSequence;
 
     const char* const saslCommandUserSourceFieldName = "userSource";
+
+    const int defaultMaxBsonObjectSize = 16 * 1024 * 1024;
+    const int defaultMaxMessageSizeBytes = defaultMaxBsonObjectSize * 2;
+    const int defaultMaxWriteBatchSize = 1000;
 
     void ConnectionString::_fillServers( string s ) {
         
@@ -914,8 +924,22 @@ namespace mongo {
             return p->secure( sslManager(), _server.host() );
         }
 #endif
+        BSONObj info;
+        bool worked = simpleCommand("admin", &info, "ismaster");
+        if (worked) {
+            if (info.hasField("maxBsonObjectSize"))
+                _maxBsonObjectSize = info.getIntField("maxBsonObjectSize");
+            if (info.hasField("maxMessageSizeBytes"))
+                _maxMessageSizeBytes = info.getIntField("maxMessageSizeBytes");
+            if (info.hasField("maxWriteBatchSize"))
+                _maxWriteBatchSize = info.getIntField("maxWriteBatchSize");
+            if (info.hasField("minWireVersion"))
+                _minWireVersion = info.getIntField("minWireVersion");
+            if (info.hasField("maxWireVersion"))
+                _maxWireVersion = info.getIntField("maxWireVersion");
+        }
 
-        return true;
+        return worked;
     }
 
     void DBClientConnection::logout(const string& dbname, BSONObj& info){
@@ -990,6 +1014,21 @@ namespace mongo {
 
     const uint64_t DBClientBase::INVALID_SOCK_CREATION_TIME =
             static_cast<uint64_t>(0xFFFFFFFFFFFFFFFFULL);
+
+    DBClientBase::DBClientBase()
+        : _wireProtocolWriter(new WireProtocolWriter(this))
+        , _commandWriter(new CommandWriter(this))
+    {
+        _writeConcern = WriteConcern::acknowledged;
+        _connectionId = ConnectionIdSequence.fetchAndAdd(1);
+        _minWireVersion = _maxWireVersion = 0;
+        _maxBsonObjectSize = defaultMaxBsonObjectSize;
+        _maxMessageSizeBytes = defaultMaxMessageSizeBytes;
+        _maxWriteBatchSize = defaultMaxWriteBatchSize;
+    }
+
+    DBClientBase::~DBClientBase() {
+    }
 
     auto_ptr<DBClientCursor> DBClientBase::query(const string &ns, Query query, int nToReturn,
             int nToSkip, const BSONObj *fieldsToReturn, int queryOptions , int batchSize ) {
@@ -1171,76 +1210,65 @@ namespace mongo {
         return n;
     }
 
-    void DBClientBase::_prepareInsert( BufBuilder& b, const std::string& ns, int flags ) {
-        int reservedFlags = 0;
+    void DBClientBase::_write( const string& ns, const vector<WriteOperation*>& writes, bool ordered, const WriteConcern* wc) {
+        const WriteConcern* operation_wc = wc ? wc : &getWriteConcern();
 
-        if( flags & InsertOption_ContinueOnError )
-            reservedFlags |= Reserved_InsertOption_ContinueOnError;
+        vector<BSONObj> results;
 
-        b.appendNum( reservedFlags );
-        b.appendStr( ns );
+        if (getMaxWireVersion() >= 2 && operation_wc->requiresConfirmation())
+            _commandWriter->write( ns, writes, ordered, operation_wc, &results );
+        else
+            _wireProtocolWriter->write( ns, writes, ordered, operation_wc, &results );
+
     }
 
-    void DBClientBase::_write( Operations op, const std::string& ns, const BufBuilder& b, const WriteConcern* wc ) {
-        Message toSend;
-
-        toSend.setData( op, b.buf(), b.len() );
-        say( toSend );
-
-        const WriteConcern* operation_wc = wc == NULL ? &getWriteConcern() : wc;
-
-        if ( operation_wc->requiresConfirmation() ) {
-            BSONObj info;
-
-            runCommand(nsGetDB(ns), operation_wc->toBson(), info);
-
-            if (!info["err"].isNull()) {
-                throw OperationException(info);
+    namespace {
+        struct ScopedWriteOperations {
+            ScopedWriteOperations() { }
+            ~ScopedWriteOperations() {
+                vector<WriteOperation*>::const_iterator it;
+                for ( it = ops.begin(); it != ops.end(); ++it )
+                    delete *it;
             }
-        }
+            void enqueue(WriteOperation* op) { ops.push_back(op); }
+            std::vector<WriteOperation*> ops;
+        };
     }
 
     void DBClientBase::insert( const string & ns , BSONObj obj , int flags, const WriteConcern* wc ) {
-        BufBuilder b;
-        _prepareInsert( b, ns, flags );
-
-        obj.appendSelfToBufBuilder( b );
-
-        _write( dbInsert, ns, b, wc );
+        vector<BSONObj> toInsert;
+        toInsert.push_back( obj );
+        insert( ns, toInsert, flags, wc );
     }
 
-    void DBClientBase::insert( const string & ns , const vector< BSONObj > &v , int flags, const WriteConcern* wc ) {
-        BufBuilder b;
-        _prepareInsert( b, ns, flags );
+    void DBClientBase::insert( const string & ns, const vector< BSONObj >& v, int flags , const WriteConcern* wc ) {
+        ScopedWriteOperations inserts;
 
-        for( vector< BSONObj >::const_iterator i = v.begin(); i != v.end(); ++i )
-            i->appendSelfToBufBuilder( b );
+        vector<BSONObj>::const_iterator bsonObjIter;
+        for (bsonObjIter = v.begin(); bsonObjIter != v.end(); ++bsonObjIter) {
+            uassert(0, "document to be inserted exceeds maxBsonObjectSize",
+                    (*bsonObjIter).objsize() <= getMaxBsonObjectSize());
+            inserts.enqueue( new InsertWriteOperation(*bsonObjIter) );
+        }
 
-        _write( dbInsert, ns, b, wc );
+        bool ordered = !(flags & InsertOption_ContinueOnError);
+
+        // _write will free the inserts
+        _write( ns, inserts.ops, ordered, wc );
     }
 
     void DBClientBase::remove( const string & ns , Query obj , bool justOne, const WriteConcern* wc ) {
-        int flags = 0;
-        if( justOne ) flags |= RemoveOption_JustOne;
-        remove( ns, obj, flags, wc );
+        remove( ns, obj, justOne & RemoveOption_JustOne, wc);
     }
 
     void DBClientBase::remove( const string & ns , Query obj , int flags, const WriteConcern* wc ) {
-        BufBuilder b;
+        ScopedWriteOperations deletes;
+        uassert(0, "remove selector exceeds maxBsonObjectSize",
+                obj.obj.objsize() <= getMaxBsonObjectSize());
+        deletes.enqueue( new DeleteWriteOperation(obj.obj, flags) );
 
-        int reservedFlags = 0;
-        if( flags & WriteOption_FromWriteback ){
-            reservedFlags |= WriteOption_FromWriteback;
-            flags ^= WriteOption_FromWriteback;
-        }
-
-        b.appendNum( reservedFlags );
-        b.appendStr( ns );
-        b.appendNum( flags );
-
-        obj.obj.appendSelfToBufBuilder( b );
-
-        _write( dbDelete, ns, b, wc );
+        // _write will free the deletes
+        _write( ns, deletes.ops, true, wc );
     }
 
     void DBClientBase::update( const string & ns , Query query , BSONObj obj , bool upsert, bool multi, const WriteConcern* wc ) {
@@ -1250,23 +1278,16 @@ namespace mongo {
         update( ns, query, obj, flags, wc );
     }
 
-    void DBClientBase::update( const string & ns , Query query , BSONObj obj , int flags, const WriteConcern* wc ) {
-        BufBuilder b;
+    void DBClientBase::update( const string & ns , Query query , BSONObj obj, int flags, const WriteConcern* wc ) {
+        ScopedWriteOperations updates;
+        uassert(0, "update selector exceeds maxBsonObjectSize",
+                query.obj.objsize() <= getMaxBsonObjectSize());
+        uassert(0, "update document exceeds maxBsonObjectSize",
+                obj.objsize() <= getMaxBsonObjectSize());
+        updates.enqueue( new UpdateWriteOperation(query.obj, obj, flags) );
 
-        int reservedFlags = 0;
-        if( flags & WriteOption_FromWriteback ){
-            reservedFlags |= Reserved_FromWriteback;
-            flags ^= WriteOption_FromWriteback;
-        }
-
-        b.appendNum( reservedFlags ); // reserved
-        b.appendStr( ns );
-        b.appendNum( flags );
-
-        query.obj.appendSelfToBufBuilder( b );
-        obj.appendSelfToBufBuilder( b );
-
-        _write( dbUpdate, ns, b, wc );
+        // _write will free the updates
+        _write( ns, updates.ops, true, wc );
     }
 
     auto_ptr<DBClientCursor> DBClientWithCommands::getIndexes( const string &ns ) {

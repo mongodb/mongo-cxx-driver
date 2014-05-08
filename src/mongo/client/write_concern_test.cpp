@@ -43,9 +43,7 @@ namespace mongo {
 
         WriteConcern wc;
         ASSERT_EQUALS(wc.nodes(), 1);
-        result = wc.toBson();
-        ASSERT_TRUE(result.hasField("getlasterror"));
-        ASSERT_TRUE(result["getlasterror"].trueValue());
+        result = wc.obj();
         ASSERT_FALSE(result.hasField("w"));
         ASSERT_FALSE(result.hasField("j"));
         ASSERT_FALSE(result.hasField("fsync"));
@@ -59,21 +57,21 @@ namespace mongo {
         wc.nodes(3);
         ASSERT_FALSE(wc.hasMode());
         ASSERT_EQUALS(wc.nodes(), 3);
-        result = wc.toBson();
+        result = wc.obj();
         ASSERT_TRUE(result.hasField("w"));
         ASSERT_EQUALS(result["w"].Int(), 3);
 
         wc.mode(WriteConcern::kMajority);
         ASSERT_TRUE(wc.hasMode());
         ASSERT_EQUALS(wc.mode(), WriteConcern::kMajority);
-        result = wc.toBson();
+        result = wc.obj();
         ASSERT_TRUE(result.hasField("w"));
         ASSERT_EQUALS(result["w"].String(), WriteConcern::kMajority);
 
         wc.nodes(5);
         ASSERT_FALSE(wc.hasMode());
         ASSERT_EQUALS(wc.nodes(), 5);
-        result = wc.toBson();
+        result = wc.obj();
         ASSERT_TRUE(result.hasField("w"));
         ASSERT_EQUALS(result["w"].Int(), 5);
     }

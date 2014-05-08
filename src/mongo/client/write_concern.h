@@ -125,8 +125,8 @@ namespace mongo {
         /** Whether the write concern currently reflects a mode */
         bool hasMode() const;
 
-        /** Turn write concern into getLastError BSONObj suitable for command */
-        BSONObj toBson() const;
+        /** Turn write concern into an object for inclusion in GetLastError or write command */
+        BSONObj obj() const;
 
     private:
         // Enabled option book keeping

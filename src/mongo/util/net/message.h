@@ -22,13 +22,11 @@
 #include "mongo/bson/util/atomic_int.h"
 #include "mongo/util/goodies.h"
 #include "mongo/util/net/hostandport.h"
+#include "mongo/util/net/operation.h"
 #include "mongo/util/net/sock.h"
 
 namespace mongo {
 
-    /**
-     * Maximum accepted message size on the wire protocol.
-     */
     const size_t MaxMessageSizeBytes = 48 * 1000 * 1000;
 
     class Message;
@@ -36,18 +34,6 @@ namespace mongo {
     class PiggyBackData;
 
     typedef AtomicUInt MSGID;
-
-    enum Operations {
-        opReply = 1,     /* reply. responseTo is set. */
-        dbMsg = 1000,    /* generic msg command followed by a string */
-        dbUpdate = 2001, /* update object */
-        dbInsert = 2002,
-        //dbGetByOID = 2003,
-        dbQuery = 2004,
-        dbGetMore = 2005,
-        dbDelete = 2006,
-        dbKillCursors = 2007
-    };
 
     bool doesOpGetAResponse( int op );
 
