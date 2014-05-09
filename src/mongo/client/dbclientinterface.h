@@ -546,7 +546,7 @@ namespace mongo {
         /** query N objects from the database into an array.  makes sense mostly when you want a small number of results.  if a huge number, use
             query() and iterate the cursor.
         */
-        void findN(std::vector<BSONObj>& out, const std::string&ns, Query query, int nToReturn, int nToSkip = 0, const BSONObj *fieldsToReturn = 0, int queryOptions = 0);
+        void findN(std::vector<BSONObj>& out, const std::string&ns, Query query, int nToReturn, int nToSkip = 0, const BSONObj *fieldsToReturn = 0, int queryOptions = 0, int batchSize = 0);
 
         virtual std::string getServerAddress() const = 0;
 

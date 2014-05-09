@@ -161,12 +161,14 @@ namespace mongo {
     mongo::BSONArray MockRemoteDBServer::query(
             MockRemoteDBServer::InstanceID id,
             const string& ns,
-            mongo::Query query,
+            mongo::Query, /* don't support */
             int nToReturn,
             int nToSkip,
-            const BSONObj* fieldsToReturn,
-            int queryOptions,
-            int batchSize) {
+            const BSONObj*, /* don't support */
+            int, /* don't support */
+            int) /* don't support */ {
+        int seen = 0;
+
         checkIfUp(id);
 
         if (_delayMilliSec > 0) {
@@ -180,8 +182,15 @@ namespace mongo {
 
         const vector<BSONObj>& coll = _dataMgr[ns];
         BSONArrayBuilder result;
-        for (vector<BSONObj>::const_iterator iter = coll.begin(); iter != coll.end(); ++ iter) {
-            result.append(iter->copy());
+        for (vector<BSONObj>::const_iterator iter = coll.begin(); iter != coll.end(); ++iter) {
+            if (nToSkip) {
+                nToSkip--;
+            }
+            else {
+                if (nToReturn && (seen == nToReturn)) break;
+                result.append(iter->copy());
+                seen++;
+            }
         }
 
         return BSONArray(result.obj());

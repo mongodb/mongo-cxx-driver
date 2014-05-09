@@ -35,9 +35,9 @@ namespace mongo {
         _client(client),
         ns(_ns),
         query(_query),
-        nToReturn(_nToReturn),
-        haveLimit( _nToReturn > 0 && !(queryOptions & QueryOption_CursorTailable)),
+        nToReturn( (queryOptions & QueryOption_CursorTailable) ? 0 : _nToReturn ),
         nToSkip(_nToSkip),
+        nReturned(0),
         fieldsToReturn(_fieldsToReturn),
         opts(queryOptions),
         batchSize(bs==1?2:bs),
@@ -48,15 +48,15 @@ namespace mongo {
         _finishConsInit();
     }
 
-    DBClientCursor::DBClientCursor( DBClientBase* client, const std::string &_ns, long long _cursorId, int _nToReturn, int options ) :
+    DBClientCursor::DBClientCursor( DBClientBase* client, const std::string &_ns, long long _cursorId, int _nToReturn, int options, int bs ) :
         _client(client),
         ns(_ns),
-        nToReturn( _nToReturn ),
-        haveLimit( _nToReturn > 0 && !(options & QueryOption_CursorTailable)),
+        nToReturn( (options & QueryOption_CursorTailable) ? 0 : _nToReturn ),
         nToSkip(0),
+        nReturned(0),
         fieldsToReturn(0),
         opts( options ),
-        batchSize(0),
+        batchSize(bs==1?2:bs),
         resultFlags(0),
         cursorId(_cursorId),
         _ownCursor(true),
@@ -71,14 +71,16 @@ namespace mongo {
     }
 
     int DBClientCursor::nextBatchSize() {
+        if (nToReturn) {
+            int remaining = nToReturn - nReturned;
 
-        if ( nToReturn == 0 )
-            return batchSize;
+            if (batchSize && batchSize < remaining)
+                return batchSize;
 
-        if ( batchSize == 0 )
-            return nToReturn;
+            return -remaining;
+        }
 
-        return batchSize < nToReturn ? batchSize : nToReturn;
+        return batchSize;
     }
 
     void DBClientCursor::_assembleInit( Message& toSend ) {
@@ -89,7 +91,7 @@ namespace mongo {
             BufBuilder b;
             b.appendNum( opts );
             b.appendStr( ns );
-            b.appendNum( nToReturn );
+            b.appendNum( nextBatchSize() );
             b.appendNum( cursorId );
             toSend.setData( dbGetMore, b.buf(), b.len() );
         }
@@ -172,10 +174,6 @@ namespace mongo {
     void DBClientCursor::requestMore() {
         verify( cursorId && batch.pos == batch.nReturned );
 
-        if (haveLimit) {
-            nToReturn -= batch.nReturned;
-            verify(nToReturn > 0);
-        }
         BufBuilder b;
         b.appendNum(opts);
         b.appendStr(ns);
@@ -206,7 +204,7 @@ namespace mongo {
     /** with QueryOption_Exhaust, the server just blasts data at us (marked at end with cursorid==0). */
     void DBClientCursor::exhaustReceiveMore() {
         verify( cursorId && batch.pos == batch.nReturned );
-        verify( !haveLimit );
+        verify( !nToReturn );
         auto_ptr<Message> response(new Message());
         verify( _client );
         if (!_client->recv(*response)) {
@@ -254,7 +252,7 @@ namespace mongo {
     bool DBClientCursor::rawMore() {
         DEV _assertIfNull();
 
-        if (haveLimit && batch.pos >= nToReturn)
+        if (nToReturn && nReturned >= nToReturn)
             return false;
 
         if ( batch.pos < batch.nReturned )
@@ -293,6 +291,8 @@ namespace mongo {
 
     BSONObj DBClientCursor::next() {
         DEV _assertIfNull();
+
+        nReturned++;
 
         if ( !_putBack.empty() ) {
             BSONObj ret = _putBack.top();

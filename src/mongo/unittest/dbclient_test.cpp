@@ -252,7 +252,8 @@ namespace {
         for(int i = 0; i < 3; ++i) {
             c.insert(TEST_NS, BSON("num" << i));
         }
-        auto_ptr<DBClientCursor> cursor = c.query(TEST_NS, Query("{}"), 2);
+        auto_ptr<DBClientCursor> cursor = c.query(TEST_NS, Query("{}"), 0, 0, 0, 0, 2);
+
         uint64_t cursor_id = cursor->getCursorId();
         cursor->decouple();
         cursor.reset();
@@ -662,7 +663,7 @@ namespace {
     TEST_F(DBClientTest, LazyCursorCommand) {
         c.setRunCommandHook(nop_hook);
         c.setPostRunCommandHook(nop_hook_post);
-        DBClientCursor cursor(&c, TEST_DB + ".$cmd", Query("{dbStats: 1}").obj, -1, 0, 0, 0, 0);
+        DBClientCursor cursor(&c, TEST_DB + ".$cmd", Query("{dbStats: 1}").obj, 1, 0, 0, 0, 0);
         bool is_retry = false;
         cursor.initLazy(is_retry);
         ASSERT_TRUE(cursor.initLazyFinish(is_retry));
@@ -673,7 +674,7 @@ namespace {
     }
 
     TEST_F(DBClientTest, InitCommand) {
-        DBClientCursor cursor(&c, TEST_DB + ".$cmd", Query("{dbStats: 1}").obj, -1, 0, 0, 0, 0);
+        DBClientCursor cursor(&c, TEST_DB + ".$cmd", Query("{dbStats: 1}").obj, 1, 0, 0, 0, 0);
         ASSERT_TRUE(cursor.initCommand());
 
         ASSERT_TRUE(cursor.more());
@@ -682,19 +683,38 @@ namespace {
     }
 
     TEST_F(DBClientTest, GetMoreLimit) {
-        // TODO: really implement limit
         c.insert(TEST_NS, BSON("num" << 1));
         c.insert(TEST_NS, BSON("num" << 2));
         c.insert(TEST_NS, BSON("num" << 3));
         c.insert(TEST_NS, BSON("num" << 4));
 
-        // set nToReturn to 3 but batch size to 2
-        auto_ptr<DBClientCursor> cursor = c.query(TEST_NS, Query("{}"), 3, 0, 0, 0, 2);
+        // set nToReturn to 3 but batch size to 1
+        // This verifies:
+        //   * we can manage with multiple batches
+        //   * we can correctly upgrade batchSize 1 to 2 to avoid automatic
+        //     cursor closing when nReturn = 1 (wire protocol edge case)
+        auto_ptr<DBClientCursor> cursor = c.query(TEST_NS, Query("{}"), 3, 0, 0, 0, 1);
         vector<BSONObj> docs;
         while(cursor->more())
             docs.push_back(cursor->next());
 
         ASSERT_EQUALS(docs.size(), 3U);
+    }
+
+    TEST_F(DBClientTest, NoGetMoreLimit) {
+        c.insert(TEST_NS, BSON("num" << 1));
+        c.insert(TEST_NS, BSON("num" << 2));
+        c.insert(TEST_NS, BSON("num" << 3));
+        c.insert(TEST_NS, BSON("num" << 4));
+
+        // set nToReturn to 2 but batch size to 4
+        // check to see if a limit of 2 takes despite the larger batch
+        auto_ptr<DBClientCursor> cursor = c.query(TEST_NS, Query("{}"), 2, 0, 0, 0, 4);
+        vector<BSONObj> docs;
+        while(cursor->more())
+            docs.push_back(cursor->next());
+
+        ASSERT_EQUALS(docs.size(), 2U);
     }
 
     TEST_F(DBClientTest, PeekError) {

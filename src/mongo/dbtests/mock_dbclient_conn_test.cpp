@@ -109,6 +109,17 @@ namespace mongo_test {
 
             ASSERT(!cursor->more());
         }
+
+        {
+            MockDBClientConnection conn(&server);
+            std::auto_ptr<mongo::DBClientCursor> cursor = conn.query(ns, mongo::Query(), 1);
+
+            ASSERT(cursor->more());
+            BSONObj firstDoc = cursor->next();
+            ASSERT_EQUALS(1, firstDoc["x"].numberInt());
+
+            ASSERT(!cursor->more());
+        }
     }
 
     TEST(MockDBClientConnTest, InsertAndQueryTwice) {

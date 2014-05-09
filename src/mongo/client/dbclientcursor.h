@@ -136,8 +136,7 @@ namespace mongo {
 
         DBClientCursor( DBClientBase* client, const std::string &_ns, BSONObj _query, int _nToReturn,
                         int _nToSkip, const BSONObj *_fieldsToReturn, int queryOptions , int bs );
-
-        DBClientCursor( DBClientBase* client, const std::string &_ns, long long _cursorId, int _nToReturn, int options );
+        DBClientCursor( DBClientBase* client, const std::string &_ns, long long _cursorId, int _nToReturn, int options, int _batchSize );
 
         virtual ~DBClientCursor();
 
@@ -204,8 +203,8 @@ namespace mongo {
         std::string ns;
         BSONObj query;
         int nToReturn;
-        bool haveLimit;
         int nToSkip;
+        long long nReturned;
         const BSONObj *fieldsToReturn;
         int opts;
         int batchSize;

@@ -40,6 +40,9 @@
 #include "mongo/util/net/ssl_manager.h"
 #include "mongo/util/password_digest.h"
 
+#include <algorithm>
+#include <cstdlib>
+
 namespace mongo {
 
     using std::auto_ptr;
@@ -857,11 +860,11 @@ namespace mongo {
     /** query N objects from the database into an array.  makes sense mostly when you want a small number of results.  if a huge number, use 
         query() and iterate the cursor. 
      */
-    void DBClientInterface::findN(vector<BSONObj>& out, const string& ns, Query query, int nToReturn, int nToSkip, const BSONObj *fieldsToReturn, int queryOptions) { 
-        out.reserve(nToReturn);
+    void DBClientInterface::findN(vector<BSONObj>& out, const string& ns, Query query, int nToReturn, int nToSkip, const BSONObj *fieldsToReturn, int queryOptions, int batchSize) {
+        out.reserve(std::min(batchSize, nToReturn));
 
         auto_ptr<DBClientCursor> c =
-            this->query(ns, query, nToReturn, nToSkip, fieldsToReturn, queryOptions);
+            this->query(ns, query, nToReturn, nToSkip, fieldsToReturn, queryOptions, batchSize);
 
         uassert( 10276 ,  str::stream() << "DBClientBase::findN: transport error: " << getServerAddress() << " ns: " << ns << " query: " << query.toString(), c.get() );
 
@@ -1077,7 +1080,7 @@ namespace mongo {
 
             c->shim.reset((cursor_shim = new DBClientCursorShimCursorID(*c)));
 
-            c->haveLimit = false;
+            c->nToReturn = 0;
 
             if (c->rawMore()) {
                 BSONObj res = cursor_shim->get_cursor();
@@ -1101,7 +1104,7 @@ namespace mongo {
                                         "cursor"), 1, 0, NULL, queryOptions, 0);
 
                     simple->shim.reset(new DBClientCursorShimArray(*simple));
-                    simple->haveLimit = false;
+                    simple->nToReturn = 0;
 
                     return simple;
                 }
@@ -1112,7 +1115,7 @@ namespace mongo {
     }
 
     auto_ptr<DBClientCursor> DBClientBase::getMore( const string &ns, long long cursorId, int nToReturn, int options ) {
-        auto_ptr<DBClientCursor> c( new DBClientCursor( this, ns, cursorId, nToReturn, options ) );
+        auto_ptr<DBClientCursor> c( new DBClientCursor( this, ns, cursorId, nToReturn < 0 ? abs(nToReturn) : 0, options, abs(nToReturn)) );
         if ( c->init() )
             return c;
         return auto_ptr< DBClientCursor >( 0 );
