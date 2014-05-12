@@ -246,7 +246,6 @@ if usingSasl:
     if windows:
         mongoClientLibs += ["secur32"]
 
-mongoClientInstalls = []
 mongoClientPrefixInstalls = []
 
 staticLibEnv = libEnv.Clone()
@@ -279,7 +278,6 @@ if windows:
 
 mongoClientStaticLib = staticLibEnv.StaticLibrary(
     staticLibName, clientSource),
-mongoClientInstalls.append(staticLibEnv.Install('#/', mongoClientStaticLib))
 
 mongoClientPrefixInstalls.append(libEnv.Install("$INSTALL_DIR/lib", mongoClientStaticLib))
 
@@ -303,29 +301,23 @@ if buildShared:
     if linux and not has_option('sanitize'):
         sharedLibEnv.AppendUnique(SHLINKFLAGS=["-Wl,--as-needed", "-Wl,-zdefs"])
 
-    # On non-windows systems, we want to match the behavior of DLLs
-    # and not export all symbols from the dynamic shared library unless 
-    # they have been explicitly been marked.
+    # On non-windows systems, we want to match the behavior of DLLs and not export all symbols
+    # from the dynamic shared library unless they have been explicitly been marked.
     if not windows:
         sharedLibEnv.AppendUnique(CCFLAGS="-fvisibility=hidden")
         sharedLibEnv.AppendUnique(SHLINKFLAGS="-fvisibility=hidden")
 
     mongoClientSharedLib = sharedLibEnv.SharedLibrary(sharedLibName, clientSource)
 
-    mongoClientSharedLibInstall = sharedLibEnv.Install(
-        '#/sharedclient', mongoClientSharedLib)
-
     if darwin:
-        # Set up the copy of the client library in #/sharedclient so that things that link
-        # against it record the local directory as the install_name.
+        # Set up the copy of the client library we will link targets against so that those
+        # targets record the relative target directory as the install_name.
         sharedLibEnv.AddPostAction(
-            mongoClientSharedLibInstall,
-            "install_name_tool -id @executable_path/%s %s" % (
-                mongoClientSharedLibInstall[0].name,
-                mongoClientSharedLibInstall[0]
+            mongoClientSharedLib,
+            "install_name_tool -id @rpath/lib/%s %s" % (
+                mongoClientSharedLib[0],
+                mongoClientSharedLib[0].abspath
             ))
-    mongoClientInstalls.append(mongoClientSharedLibInstall)
-
 
     mongoClientSharedLibPrefixInstall = sharedLibEnv.Install(
         '$INSTALL_DIR/lib', mongoClientSharedLib)
@@ -338,8 +330,6 @@ if buildShared:
             ))
     mongoClientPrefixInstalls.append(mongoClientSharedLibPrefixInstall)
 
-libEnv.Alias('mongoclient', mongoClientInstalls)
-
 inst = libEnv.InstallAs(['$INSTALL_DIR/include/' + x for x in clientHeaders], clientHeaders)
 libEnv.AddPostAction(inst, Chmod('$TARGET', 0644))
 mongoClientPrefixInstalls.append(inst);
@@ -350,10 +340,10 @@ installAlias = libEnv.Alias('install-mongoclient', mongoClientPrefixInstalls)
 # Build some simple mainlines that include the dbclient.h and bson.h headers
 # with things set up to include from the installation directory.
 
-# Remove anything that says $BUILD_DIR from the CPPPATH, except for things in third party,
+# Remove anything that says $VARIANT_DIR from the CPPPATH, except for things in third party,
 # so we have a source for boost, etc if we aren't getting them from the system.
 limit_cpppath=[p for p in libEnv['CPPPATH']
-               if not ('$BUILD_DIR' in p and not 'third_party' in p)]
+               if not ('$VARIANT_DIR' in p and not 'third_party' in p)]
 
 # Create an environment where include files and libraries come from the installation directory.
 installationTestEnv = libEnv.Clone(
@@ -388,7 +378,7 @@ staticClientEnv = clientEnv.Clone()
 # On windows, we rely on autolib linking, so need to set a search path to the root of the build
 # dir where the .lib will go. On others, we just add the library to libs.
 if windows:
-    staticClientEnv.PrependUnique(LIBPATH=['$BUILD_DIR'])
+    staticClientEnv.PrependUnique(LIBPATH=['$VARIANT_DIR'])
 else:
     staticClientEnv.PrependUnique(LIBS=[mongoClientStaticLib])
 
@@ -403,22 +393,29 @@ staticClientPrograms = [
 if windows:
     staticClientEnv.Depends(staticClientPrograms, mongoClientStaticLib)
 
-# Install them to the root, and append the install targets to the list of client tests
-clientTests = staticClientEnv.Install("#/", staticClientPrograms)
+# Install path for the examples. On non-windows, do something reasonable to not pollute
+# $INSTALL_DIR/bin. On windows anything goes, drop the static libs in bin.
+staticClientProgramInstallDir = "$INSTALL_DIR/share/mongo-cxx-driver/examples/static"
+if windows:
+    staticClientProgramInstallDir = "$INSTALL_DIR/bin/examples/static"
+
+staticClientProgramInstalls = staticClientEnv.Install(
+    staticClientProgramInstallDir,
+    staticClientPrograms)
 
 # Do the same for the shared library case, if we are doing that.
+sharedClientPrograms = []
+sharedClientProgramInstalls = []
 if buildShared:
     sharedClientEnv = clientEnv.Clone()
 
-    # Arrange for the tests to link against the mongoclient in the #/sharedclient directory,
-    # and against boost explicitly rather than picking up the symbols through mongoclient. Note
-    # that in the autlib case, this does the right thing for our search path.
-    sharedClientEnv.PrependUnique(
-        LIBPATH=["#/sharedclient"],
-    )
-
-    # On windows, we rely on autolib linking
-    if not windows:
+    # On windows, we rely on autolib linking, so add the variant directory (where the .lib will
+    # land) to the search path. Otherwise, just link directly to the binary.
+    if windows:
+        sharedClientEnv.PrependUnique(
+            LIBPATH=['$VARIANT_DIR']
+        )
+    else:
         sharedClientEnv.PrependUnique(
             LIBS=[mongoClientSharedLib],
         )
@@ -427,36 +424,45 @@ if buildShared:
     # for the static library.
     sharedClientEnv['OBJSUFFIX'] = sharedClientEnv['OBJSUFFIX'] + 's'
 
-    # Deal with the different lookup models between regular UNIX and Darwin. For regular unix,
-    # we set $ORIGIN to pull the copy we run against from the current directory
-    # (#/sharedclient). On Darwin, the staged copy of the mongoclient dylib in #sharedclient
-    # has @executable path set as its install_name, so we pick up the same behavior that way.
-    if nix and not darwin:
-        sharedClientEnv.PrependUnique(
-            LINKFLAGS="-Wl,-z,origin",
-            RPATH=[sharedClientEnv.Literal("\\$$ORIGIN")])
+    # For non-darwin 'nix, just set the RPATH that this program will use
+    # when installed. Note that this must match up with the install directory
+    # set below.
+    if nix:
+        if darwin:
+            sharedClientEnv.PrependUnique(
+                LINKFLAGS="-Wl,-rpath,@loader_path/../../..")
+        else:
+            sharedClientEnv.PrependUnique(
+                LINKFLAGS="-Wl,-z,origin",
+                RPATH=[sharedClientEnv.Literal("\\$$ORIGIN/../../../lib")])
 
     sharedClientPrograms = [
         sharedClientEnv.Program(
             "sharedclient/" + target, source) for (target, source) in exampleSourceMap]
 
     # Note that this dependency also ensures the correct dependency edge in autolib cases.
-    libEnv.Depends(sharedClientPrograms, mongoClientInstalls)
+    libEnv.Depends(sharedClientPrograms, mongoClientSharedLib)
 
-    sharedClientProgramInstalls = sharedClientEnv.Install("#/sharedclient", sharedClientPrograms)
-    clientTests.extend(sharedClientProgramInstalls)
+    # For normal systems with runpaths, install the examples somewhere sane. Otherwise on
+    # windows, drop them in the lib directory because there really isn't anywher else they can
+    # live where they can find the DLL.
+    sharedClientProgramInstallDir = "$INSTALL_DIR/share/mongo-cxx-driver/examples"
+    if windows:
+        sharedClientProgramInstallDir = "$INSTALL_DIR/lib"
 
-clientEnv.Alias('clientTests', clientTests)
+    sharedClientProgramInstalls = sharedClientEnv.Install(
+        sharedClientProgramInstallDir,
+        sharedClientPrograms)
+
+clientTestPrograms = staticClientPrograms + sharedClientPrograms
+clientEnv.Alias('clientTests', clientTestPrograms)
 
 # NOTE: There must be a mongod listening on 127.0.0.1:27999 (the traditional mongodb smoke test
 # port) for the smokeClient target to run. In the server repo that is no problem, the smoke.py
 # subsystem can start a mongod as needed. We don't have the same ability in this repo, since we
 # have no way of reaching a mongod executable or knowing if it is safe to start one.
-for clientTest in clientTests:
-    # the rsExample test needs a replica set to talk to. The old smokeClient never tested it
-    # The old smoke subsystem did test authTest, not sure why it isn't working now.
-    if 'rsExample' in clientTest.abspath:
-        continue
+clientTestProgramInstalls = staticClientProgramInstalls + sharedClientProgramInstalls
+for clientTest in clientTestProgramInstalls:
 
     # On windows, the installs also install PDB files, which we end up picking up.
     # Obviously, we can't run those, so filter them out. Lets hope nobody creates
@@ -464,7 +470,14 @@ for clientTest in clientTests:
     if clientTest.abspath.endswith('.pdb'):
         continue
 
+    # the rsExample test needs a replica set to talk to. The old smokeClient never tested it
+    # The old smoke subsystem did test authTest, not sure why it isn't working now.
+    if 'rsExample' in clientTest.abspath:
+        continue
+
     clientEnv.AlwaysBuild(clientEnv.Alias(
         'smokeClient',
         [clientTest],
         "%s --port 27999" % clientTest.abspath))
+
+clientEnv.Alias('install-examples', clientTestProgramInstalls)

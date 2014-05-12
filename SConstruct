@@ -18,13 +18,6 @@ import buildscripts.docs
 import buildscripts.lint
 
 EnsureSConsVersion( 1, 1, 0 )
-if "uname" in dir(os):
-    scons_data_dir = ".scons/%s/%s" % ( os.uname()[0] , os.getenv( "HOST" , "nohost" ) )
-else:
-    scons_data_dir = ".scons/%s/" % os.getenv( "HOST" , "nohost" )
-SConsignFile( scons_data_dir + "/sconsign" )
-
-DEFAULT_INSTALL_DIR = "/usr/local"
 
 def versiontuple(v):
     return tuple(map(int, (v.split("."))))
@@ -110,8 +103,11 @@ def has_option( name ):
     return True
 
 def get_variant_dir():
+
+    build_dir = get_option('build-dir').rstrip('/')
+
     if has_option('variant-dir'):
-        return "#build/" + get_option('variant-dir') 
+        return (build_dir + '/' + get_option('variant-dir')).rstrip('/')
 
     substitute = lambda x: re.sub( "[:,\\\\/]" , "_" , x )
 
@@ -140,10 +136,10 @@ def get_variant_dir():
         extras += ["branch_" + substitute( buildscripts.utils.getGitBranch() )]
 
     if has_option('cache'):
-        s = "#build/cached/"
+        s = "cached"
         s += "/".join(extras) + "/"
     else:
-        s = "#build/${PYSYSPLATFORM}/"
+        s = "${PYSYSPLATFORM}/"
         a += extras
 
         if len(a) > 0:
@@ -152,15 +148,16 @@ def get_variant_dir():
         else:
             s += "normal/"
 
-    return s
+    return (build_dir + '/' + s).rstrip('/')
 
 # build output
 add_option( "mute" , "do not display commandlines for compiling and linking, to reduce screen noise", 0, False )
 
 # installation/packaging
-add_option( "prefix" , "installation prefix" , 1 , False, default=DEFAULT_INSTALL_DIR )
+add_option( "prefix" , "installation prefix" , 1 , False, default='$BUILD_DIR/install' )
 add_option( "extra-variant-dirs", "extra variant dir components, separated by commas", 1, False)
 add_option( "add-branch-to-variant-dir", "add current git branch to the variant dir", 0, False )
+add_option( "build-dir", "build output directory", 1, False, default='#build')
 add_option( "variant-dir", "override variant subdirectory", 1, False )
 
 add_option( "sharedclient", "build a libmongoclient.so/.dll" , 0 , False )
@@ -243,14 +240,16 @@ add_option('cache',
 
 add_option('cache-dir',
            "Specify the directory to use for caching objects if --cache is in use",
-           1, False, default="#build/cached/.cache")
+           1, False, default="$BUILD_DIR/scons/cache")
 
 # don't run configure if user calls --help
 if GetOption('help'):
     Return()
 
 # --- environment setup ---
-
+buildDir = get_option('build-dir').rstrip('/')
+sconsDataDir = Dir(buildDir).Dir('scons')
+SConsignFile(str(sconsDataDir.File('sconsign')))
 variantDir = get_variant_dir()
 
 def printLocalInfo():
@@ -307,19 +306,21 @@ if len(mongoclientVersionComponents) != 3:
     print("Error: client version most be of the form w.x.y or w.x.y-string")
     Exit(1)
 
-env = Environment( BUILD_DIR=variantDir,
+env = Environment( BUILD_DIR=buildDir,
+                   VARIANT_DIR=variantDir,
                    EXTRAPATH=get_option("extrapath"),
                    MSVS_ARCH=msarch ,
                    PYTHON=buildscripts.utils.find_python(),
                    TARGET_ARCH=msarch ,
                    tools=["default", "unittest", "integration_test", "textfile"],
                    PYSYSPLATFORM=os.sys.platform,
-                   CONFIGUREDIR = '#' + scons_data_dir + '/sconf_temp',
-                   CONFIGURELOG = '#' + scons_data_dir + '/config.log',
+                   CONFIGUREDIR=sconsDataDir.Dir('sconf_temp'),
+                   CONFIGURELOG=sconsDataDir.File('config.log'),
                    MONGOCLIENT_VERSION=mongoclientVersion,
                    MONGOCLIENT_VERSION_MAJOR=mongoclientVersionComponents[0],
                    MONGOCLIENT_VERSION_MINOR=mongoclientVersionComponents[1],
                    MONGOCLIENT_VERSION_PATCH=mongoclientVersionComponents[2],
+                   INSTALL_DIR=get_option("prefix"),
                    )
 
 if has_option("cache"):
@@ -406,8 +407,8 @@ env.Prepend(
         "MONGO_EXPOSE_MACROS" ,
     ],
     CPPPATH=[
-        '$BUILD_DIR',
-        '$BUILD_DIR/mongo'
+        '$VARIANT_DIR',
+        '$VARIANT_DIR/mongo'
     ]
 )
 
@@ -443,11 +444,7 @@ if force64:
 
 env['PROCESSOR_ARCHITECTURE'] = processor
 
-installDir = DEFAULT_INSTALL_DIR
 nixLibPrefix = "lib"
-
-if has_option( "prefix" ):
-    installDir = GetOption( "prefix" )
 
 if darwin:
     pass
@@ -689,7 +686,7 @@ try:
 except OSError:
     pass
 
-env.Prepend(CPPPATH=['$BUILD_DIR/third_party/gtest-1.7.0/include'])
+env.Prepend(CPPPATH=['$VARIANT_DIR/third_party/gtest-1.7.0/include'])
 
 env.Append( CPPPATH=['$EXTRACPPPATH'],
             LIBPATH=['$EXTRALIBPATH'] )
@@ -1245,8 +1242,6 @@ def doLint( env , target , source ):
 env.Alias( "lint" , [] , [ doLint ] )
 env.AlwaysBuild( "lint" )
 
-env['INSTALL_DIR'] = installDir
-
 # --- an uninstall target ---
 if len(COMMAND_LINE_TARGETS) > 0 and 'uninstall' in COMMAND_LINE_TARGETS:
     SetOption("clean", 1)
@@ -1270,13 +1265,13 @@ Export("darwin windows solaris linux freebsd nix")
 Export("debugBuild optBuild")
 Export("use_clang")
 
-env.SConscript('src/SConscript.client', variant_dir='$BUILD_DIR', duplicate=False)
-env.SConscript('src/SConscript', variant_dir='$BUILD_DIR', duplicate=False)
+env.SConscript('src/SConscript.client', variant_dir='$VARIANT_DIR', duplicate=False)
+env.SConscript('src/SConscript', variant_dir='$VARIANT_DIR', duplicate=False)
 
 # --- Coverage ---
 if has_option("gcov"):
-    env['GCOV_BASE_DIR'] = env.subst(Dir(".").abspath)
-    env['GCOV_BUILD_DIR'] = env.subst(Dir("$BUILD_DIR").abspath).replace("#", "")
+    env['GCOV_BASE_DIR'] = env.Dir(".").abspath
+    env['GCOV_BUILD_DIR'] = env.Dir("$VARIANT_DIR").abspath
 
     # Zero out all the counters -- depends on tests being built
     env.Alias(
@@ -1288,37 +1283,39 @@ if has_option("gcov"):
 
     # Generates test coverage information -- depends on tests being run
     env.Command(
-        'coverage.info',
-        ['zero_counters', 'test', 'smokeClient', 'integration'],
-        'lcov --no-external -c -b $GCOV_BASE_DIR -d $GCOV_BUILD_DIR -o $TARGET'
+        target='$VARIANT_DIR/coverage.info',
+        source=['zero_counters', 'test', 'smokeClient', 'integration'],
+        action='lcov --no-external -c -b $GCOV_BASE_DIR -d $GCOV_BUILD_DIR -o $TARGET'
     )
     env.AlwaysBuild('coverage.info')
 
     # Strip third_party and build related coverage info
-    env.Alias(
-        'strip_coverage',
-        ['coverage.info'],
-        [
-            'lcov -r coverage.info src/third_party/\* -o coverage.info',
-            'lcov -r coverage.info build/\* -o coverage.info',
-            'lcov -r coverage.info \*_test.cpp -o coverage.info',
-            'lcov -r coverage.info src/mongo/client/examples/\* -o coverage.info',
-            'lcov -r coverage.info src/mongo/dbtests/\* -o coverage.info',
-            'lcov -r coverage.info src/mongo/unittest/\* -o coverage.info',
-            'lcov -r coverage.info src/mongo/bson/bsondemo/\* -o coverage.info',
-        ]
+    stripCmd = env.Command(
+        target=None,
+        source='$VARIANT_DIR/coverage.info',
+        action=[
+            'lcov -r $SOURCE src/third_party/\* -o $SOURCE',
+            'lcov -r $SOURCE build/\* -o $SOURCE',
+            'lcov -r $SOURCE \*_test.cpp -o $SOURCE',
+            'lcov -r $SOURCE src/mongo/client/examples/\* -o $SOURCE',
+            'lcov -r $SOURCE src/mongo/dbtests/\* -o $SOURCE',
+            'lcov -r $SOURCE src/mongo/unittest/\* -o $SOURCE',
+            'lcov -r $SOURCE src/mongo/bson/bsondemo/\* -o $SOURCE',
+        ],
     )
-    env.AlwaysBuild('strip_coverage')
+    env.AlwaysBuild(stripCmd)
+    env.Alias('strip_coverage', stripCmd)
 
     # Generates the HTML output in "coverage" directory
-    env.Command(
-        Dir('coverage'),
+    coverageCmd = env.Command(
+        env.Dir('$BUILD_DIR/coverage'),
         'strip_coverage',
         [
-            'rm -rf coverage',
-            'genhtml --legend -t "MongoDB C++ Driver Coverage" -o $TARGET coverage.info'
+            'rm -rf $BUILD_DIR/coverage',
+            'genhtml --frames --legend -t "MongoDB C++ Driver Coverage" -o $TARGET $VARIANT_DIR/coverage.info'
         ]
     )
-    env.AlwaysBuild('coverage')
+    env.AlwaysBuild(coverageCmd)
+    env.Alias('coverage', coverageCmd)
 
 env.Alias('all', ['unittests', 'integration_tests', 'clientTests'])
