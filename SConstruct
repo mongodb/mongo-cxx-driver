@@ -1184,7 +1184,8 @@ def doConfigure(myenv):
     conf = Configure(myenv)
 
     if not conf.CheckCXXHeader( "boost/version.hpp" ):
-        print( "can't find boost headers" )
+        print( "Could not find boost headers in include search path" )
+        Exit(1)
 
     if not windows:
         # We don't do this for windows because we rely on autolib.
