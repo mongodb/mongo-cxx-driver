@@ -310,8 +310,8 @@ if buildShared:
     mongoClientSharedLib = sharedLibEnv.SharedLibrary(sharedLibName, clientSource)
 
     if darwin:
-        # Set up the copy of the client library we will link targets against record the
-        # relative target directory as the install_name.
+        # Set up the copy of the client library we will link targets against so that those
+        # targets record the relative target directory as the install_name.
         sharedLibEnv.AddPostAction(
             mongoClientSharedLib,
             "install_name_tool -id @rpath/lib/%s %s" % (
