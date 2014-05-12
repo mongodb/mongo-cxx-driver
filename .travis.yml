@@ -6,7 +6,6 @@ compiler:
 
 env:
   global:
-    - PREFIX=$(mktemp -d /tmp/mongo-cxx-driver-install.XXXXXX || exit 1)
     - MONGO_REPO="http://repo.mongodb.com/apt/ubuntu"
     - REPO_TYPE="precise/mongodb-enterprise/2.6 multiverse"
     - SOURCES_LOC="/etc/apt/sources.list.d/mongodb-enterprise.list"
@@ -57,7 +56,7 @@ install:
 before_script:
     # Set SCONS_FLAGS based on new $CXX and $CC
     - $CXX --version
-    - export SCONS_FLAGS="-j3 --mute --prefix=$PREFIX --ssl --use-sasl-client --dbg=on --cxx=$CXX --cc=$CC"
+    - export SCONS_FLAGS="-j3 --mute --ssl --use-sasl-client --dbg=on --cxx=$CXX --cc=$CC"
 
     # run lint
     - scons $SCONS_FLAGS lint
