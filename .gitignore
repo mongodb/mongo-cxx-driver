@@ -11,29 +11,6 @@
 *#
 .#*
 
-/tags
-TAGS
-
-# libs
-/libmongoclient.*
-/sharedclient
-
-# examples
-/arrayExample
-/firstExample
-/secondExample
-/whereExample
-/bsondemo
-/rsExample
-/tutorial
-/insertDemo
-/simpleClientDemo
-
-# tests
-/authTest
-/clientTest
-/httpClientTest
-
 #osx
 .DS_Store
 ._.DS_Store
