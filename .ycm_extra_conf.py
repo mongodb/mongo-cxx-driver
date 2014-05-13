@@ -49,6 +49,7 @@ flags = [
     '-Ibuild/linux2/normal/',
     '-Ibuild/cached/',
     '-Ibuild/cached/mongo',
+    '-isystem/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1',
     '-DMONGO_EXPOSE_MACROS',
     '-Wall',
     '-Wno-unknown-pragmas',
