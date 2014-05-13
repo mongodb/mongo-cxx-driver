@@ -22,6 +22,9 @@
 #include "mongo/client/constants.h"
 #include "mongo/client/dbclient_rs.h"
 #include "mongo/client/dbclientcursor.h"
+#include "mongo/client/dbclientcursorshim.h"
+#include "mongo/client/dbclientcursorshimarray.h"
+#include "mongo/client/dbclientcursorshimcursorid.h"
 #include "mongo/client/sasl_client_authenticate.h"
 #include "mongo/db/jsobj.h"
 #include "mongo/db/json.h"
@@ -996,6 +999,80 @@ namespace mongo {
         if ( c->init() )
             return c;
         return auto_ptr< DBClientCursor >( 0 );
+    }
+
+    std::auto_ptr<DBClientCursor>
+    DBClientBase::aggregate(const std::string& ns,
+                            const BSONObj& pipeline,
+                            const BSONObj* aggregateOptions,
+                            int queryOptions) {
+        BSONObjBuilder builder;
+        bool has_cursor = false;
+
+        builder.append("aggregate", nsToCollectionSubstring(ns));
+        builder.appendArray("pipeline", pipeline);
+
+        if (aggregateOptions) {
+            builder.appendElements(*aggregateOptions);
+
+            if (aggregateOptions->hasField("cursor")) {
+                has_cursor = true;
+            }
+        }
+
+        if (!has_cursor) {
+            /* If the user hasn't passed a cursor field, try to add one.  This
+             * will allow v2.6 servers to return a cursor, rather than an
+             * array, which should be higher performance and would avoid bson
+             * limits on returned sets */
+            BSONObjBuilder cursor(builder.subobjStart("cursor"));
+            cursor.done();
+        }
+
+        BSONObj request = builder.obj();
+
+        auto_ptr<DBClientCursor> c = this->query(nsToDatabase(ns) + ".$cmd",
+                                                 request, 1, 0, NULL, queryOptions, 0);
+
+        if (c.get()) {
+            /* we need this derived class pointer for access to the cursorid
+             * specific get_cursor() method */
+            DBClientCursorShimCursorID* cursor_shim;
+
+            c->shim.reset((cursor_shim = new DBClientCursorShimCursorID(*c)));
+
+            c->haveLimit = false;
+
+            if (c->rawMore()) {
+                BSONObj res = cursor_shim->get_cursor();
+
+                if (res["ok"].numberInt())
+                    return c;
+
+                if (((res["code"].numberInt() == 17020) ||
+                          (res["errmsg"].String() == "unrecognized field \"cursor")) &&
+                         !has_cursor) {
+                    /* the typo is intentional.  The server actually returns "\"cursor"
+                     *
+                     * This fall back is used when we optimistically added a
+                     * cursor field hoping to talk to a 2.6 server, but ended
+                     * up talking to 2.4.  We return the null cursor indicating
+                     * error if the user did request a cursor since we cannot
+                     * provide one via 2.4 aggregation */
+
+                    auto_ptr<DBClientCursor> simple =
+                        this->query(nsToDatabase(ns) + ".$cmd", request.removeField(
+                                        "cursor"), 1, 0, NULL, queryOptions, 0);
+
+                    simple->shim.reset(new DBClientCursorShimArray(*simple));
+                    simple->haveLimit = false;
+
+                    return simple;
+                }
+            }
+        }
+
+        return auto_ptr<DBClientCursor>(NULL);
     }
 
     auto_ptr<DBClientCursor> DBClientBase::getMore( const string &ns, long long cursorId, int nToReturn, int options ) {
