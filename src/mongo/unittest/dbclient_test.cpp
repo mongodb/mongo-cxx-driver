@@ -20,6 +20,7 @@
 
 #include "mongo/unittest/integration_test.h"
 #include "mongo/util/fail_point_service.h"
+#include "mongo/util/stringutils.h"
 
 #include "mongo/bson/bson.h"
 #include "mongo/client/dbclient.h"
@@ -482,7 +483,8 @@ namespace {
         BSONObj result;
 
         c.runCommand("admin", BSON("buildinfo" << true), result);
-        if (result["version"].toString() >= "2.5.3"){
+        std::cout << result["version"].toString() << std::endl;
+        if (versionCmp(result["version"].toString(), "2.5.3") >= 0) {
             c.runCommand("admin", BSON(
                 "configureFailPoint" << "maxTimeAlwaysTimeOut" <<
                 "mode" << BSON("times" << 2)
@@ -696,8 +698,16 @@ namespace {
     }
 
     TEST_F(DBClientTest, PeekError) {
-        auto_ptr<DBClientCursor> cursor = c.query(TEST_DB + ".$cmd", Query("{dbStatz: 1}"));
-        ASSERT_TRUE(cursor->peekError());
+        BSONObj result;
+        c.runCommand("admin", BSON("buildinfo" << true), result);
+
+        // TODO: figure out if we can come up with query that produces $err on 2.4.x
+        if (versionCmp(result["version"].toString(), "2.5.3") >= 0) {
+            auto_ptr<DBClientCursor> cursor = c.query(TEST_NS, Query("{'$fake': true}"));
+            ASSERT_TRUE(cursor->peekError());
+        } else {
+            SUCCEED();
+        }
     }
 
     TEST_F(DBClientTest, DefaultWriteConcernInsert) {
