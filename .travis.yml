@@ -12,6 +12,9 @@ env:
     - KEY_SERVER="hkp://keyserver.ubuntu.com:80"
     - MONGOD_PARAMS="--setParameter=enableTestCommands=1"
     - MONGOD_OPTS="--port 27999 --httpinterface --dbpath ./data --fork --logpath mongod.log ${MONGOD_PARAMS}"
+  matrix:
+    - SANITIZE=
+    - SANITIZE=--sanitize=address
 
 # Setup required repositories before installation
 before_install:
@@ -56,7 +59,7 @@ install:
 before_script:
     # Set SCONS_FLAGS based on new $CXX and $CC
     - $CXX --version
-    - export SCONS_FLAGS="-j3 --mute --ssl --use-sasl-client --dbg=on --cxx=$CXX --cc=$CC"
+    - export SCONS_FLAGS="-j3 --mute --ssl --use-sasl-client --dbg=on --cxx=$CXX --cc=$CC $SANITIZE"
 
     # run lint
     - scons $SCONS_FLAGS lint
