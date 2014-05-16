@@ -124,9 +124,8 @@ namespace mongo {
      * side defaults.
      * See DRIVERS-131 for more information: https://jira.mongodb.org/browse/DRIVERS-131
      */
-    BSONObj WriteConcern::toBson() const {
+    BSONObj WriteConcern::obj() const {
         BSONObjBuilder write_concern;
-        write_concern.append("getlasterror", true);
 
         if (_enabled.test(kW))
             write_concern.append("w", _w);

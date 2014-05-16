@@ -16,6 +16,7 @@
 #include "mongo/platform/basic.h"
 #include "mongo/base/init.h"
 #include "mongo/client/connpool.h"
+#include "mongo/db/dbmessage.h"
 #include "mongo/platform/cstdint.h"
 #include "mongo/util/fail_point_service.h"
 #include "mongo/util/time_support.h"
@@ -100,13 +101,11 @@ namespace mongo {
 
     class TCPSocket {
         public:
-
-            TCPSocket(SocketAddress sa, int fd) : _sa(sa), _fd(fd) { init(); }
-            TCPSocket(int port) : _sa(port) { init(); }
+            TCPSocket(SocketAddress sa, int fd) : _sa(sa), _fd(fd), _closed(false) { }
+            TCPSocket(int port) : _sa(port), _closed(false) { init(); }
             ~TCPSocket() { close(); }
 
             void init() {
-                _closed = false;
                 _fd = socket(PF_INET, SOCK_STREAM, 0);
 
                 if (_fd == -1) {
@@ -143,10 +142,30 @@ namespace mongo {
                 }
             }
 
+            int send(MsgData* toSend, int len) {
+                int sent = ::send(_fd, (char*)toSend, len, 0);
+                if (sent == -1) {
+                    perror("send");
+                    close();
+                    std::abort();
+                }
+                return sent;
+            }
+
+            int recv(char* buffer, int len) {
+                int received = ::recv(_fd, buffer, len, 0);
+                if (received == -1) {
+                    perror("recv");
+                    close();
+                    std::abort();
+                }
+                return received;
+            }
+
             void close() {
                 if (!_closed) {
 #if defined(_WIN32)
-                    ::shutdown(_fd, SD_BOTH); // this is SHUT_RDWR on linux and SD_BOTH on windows
+                    ::shutdown(_fd, SD_BOTH);
                     ::closesocket(_fd);
 #else
                     ::shutdown(_fd, SHUT_RDWR);
@@ -164,7 +183,7 @@ namespace mongo {
             TCPSocket* accept() {
                 SocketAddress client_sa;
                 int client_fd;
-                if ((client_fd= ::accept(_fd, client_sa.get_address(), &client_sa.size)) == -1) {
+                if ((client_fd = ::accept(_fd, client_sa.get_address(), &client_sa.size)) == -1) {
                     perror("accept");
                     std::abort();
                 } else {
@@ -178,6 +197,61 @@ namespace mongo {
             bool _closed;
     };
 
+    class RequestHandler {
+    public:
+        RequestHandler(TCPSocket* socket) : _socket(socket) {}
+        ~RequestHandler() {}
+        void operator()() { _handle_request(); }
+
+    private:
+        void _handle_request() {
+            char msglen_bytes[sizeof(int32_t)];
+            _socket->recv(msglen_bytes, sizeof(int32_t));
+            int msglen;
+            memcpy(&msglen, msglen_bytes, sizeof(int32_t));
+
+            boost::scoped_array<char> buffer(new char[msglen]);
+            memcpy(buffer.get(), &msglen, sizeof(int32_t));
+
+            int32_t position = sizeof(int32_t);
+            while (position < msglen) {
+                int got = _socket->recv(buffer.get() + position, (msglen - position));
+                position += got;
+            }
+
+            int32_t request_id = _extract_request_id(buffer.get());
+
+            Message reply;
+            replyToQuery(0, reply, _build_is_master());
+            MsgData* toSend = reply.singleData();
+            toSend->responseTo = request_id;
+            _send(toSend);
+        }
+
+        void _send(MsgData* toSend) {
+            int left = toSend->len;
+            while (left > 0) {
+                int sent = _socket->send(toSend + (toSend->len - left), left);
+                left -= sent;
+            }
+        }
+
+        int _extract_request_id(char* buffer) {
+            int32_t request_id;
+            memcpy(&request_id, buffer + sizeof(int32_t), sizeof(int32_t));
+            return request_id;
+        }
+
+        BSONObj _build_is_master() {
+            BSONObjBuilder isMaster;
+            isMaster.append("ismaster", true);
+            isMaster.append("ok", true);
+            return isMaster.obj();
+        }
+
+        TCPSocket* _socket;
+    };
+
     class TCPServer {
         public:
             TCPServer(int port) : _server_sock(port), _running(true) {
@@ -188,6 +262,7 @@ namespace mongo {
 
             ~TCPServer() {
                 close_clients();
+                join_threads();
                 _server_sock.close();
             }
 
@@ -216,6 +291,7 @@ namespace mongo {
                     else if (selected > 0 && FD_ISSET(server_fd, &readable_fd_set)) {
                         TCPSocket* p_new_sock = _server_sock.accept();
                         _client_socks.push_back(p_new_sock);
+                        _threads.push_back(new boost::thread(RequestHandler(p_new_sock)));
                     }
 
                     // reset readable_fd_set and t
@@ -226,6 +302,14 @@ namespace mongo {
             void stop() {
                 boost::mutex::scoped_lock lock(_mutex);
                 _running = false;
+            }
+
+            void join_threads() {
+                vector<boost::thread*>::iterator it;
+                for (it = _threads.begin(); it != _threads.end(); ++it) {
+                    (*it)->join();
+                    delete *it;
+                }
             }
 
             void close_clients() {
@@ -240,6 +324,7 @@ namespace mongo {
 
         private:
             vector<TCPSocket*> _client_socks;
+            vector<boost::thread*> _threads;
             TCPSocket _server_sock;
             boost::mutex _mutex;
             bool _running;
