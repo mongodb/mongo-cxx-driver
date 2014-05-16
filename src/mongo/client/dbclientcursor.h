@@ -135,38 +135,9 @@ namespace mongo {
         void setBatchSize(int newBatchSize) { batchSize = newBatchSize; }
 
         DBClientCursor( DBClientBase* client, const std::string &_ns, BSONObj _query, int _nToReturn,
-                        int _nToSkip, const BSONObj *_fieldsToReturn, int queryOptions , int bs ) :
-            _client(client),
-            ns(_ns),
-            query(_query),
-            nToReturn(_nToReturn),
-            haveLimit( _nToReturn > 0 && !(queryOptions & QueryOption_CursorTailable)),
-            nToSkip(_nToSkip),
-            fieldsToReturn(_fieldsToReturn),
-            opts(queryOptions),
-            batchSize(bs==1?2:bs),
-            resultFlags(0),
-            cursorId(),
-            _ownCursor( true ),
-            wasError( false ) {
-            _finishConsInit();
-        }
+                        int _nToSkip, const BSONObj *_fieldsToReturn, int queryOptions , int bs );
 
-        DBClientCursor( DBClientBase* client, const std::string &_ns, long long _cursorId, int _nToReturn, int options ) :
-            _client(client),
-            ns(_ns),
-            nToReturn( _nToReturn ),
-            haveLimit( _nToReturn > 0 && !(options & QueryOption_CursorTailable)),
-            nToSkip(0),
-            fieldsToReturn(0),
-            opts( options ),
-            batchSize(0),
-            resultFlags(0),
-            cursorId(_cursorId),
-            _ownCursor(true),
-            wasError(false) {
-            _finishConsInit();
-        }
+        DBClientCursor( DBClientBase* client, const std::string &_ns, long long _cursorId, int _nToReturn, int options );
 
         virtual ~DBClientCursor();
 
