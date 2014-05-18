@@ -18,6 +18,8 @@
 
 namespace mongo {
 
+    using std::string;
+
     TEST(WriteConcern, Defaults) {
         WriteConcern wc;
         ASSERT_FALSE(wc.hasMode());
@@ -63,10 +65,10 @@ namespace mongo {
 
         wc.mode(WriteConcern::kMajority);
         ASSERT_TRUE(wc.hasMode());
-        ASSERT_EQUALS(wc.mode(), WriteConcern::kMajority);
+        ASSERT_EQUALS(wc.mode(), string(WriteConcern::kMajority));
         result = wc.obj();
         ASSERT_TRUE(result.hasField("w"));
-        ASSERT_EQUALS(result["w"].String(), WriteConcern::kMajority);
+        ASSERT_EQUALS(result["w"].String(), string(WriteConcern::kMajority));
 
         wc.nodes(5);
         ASSERT_FALSE(wc.hasMode());
@@ -109,7 +111,7 @@ namespace mongo {
 
     TEST(WriteConcern, Majority) {
         ASSERT_TRUE(WriteConcern::majority.requiresConfirmation());
-        ASSERT_EQUALS(WriteConcern::majority.mode(), WriteConcern::kMajority);
+        ASSERT_EQUALS(WriteConcern::majority.mode(), string(WriteConcern::kMajority));
         ASSERT_TRUE(WriteConcern::majority.hasMode());
     }
 
