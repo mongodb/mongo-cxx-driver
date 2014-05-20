@@ -72,11 +72,12 @@ namespace mongo {
         }
 
         // Last batch
-        if (opsInRequest != 0)
+        if (opsInRequest != 0) {
             // All of the flags are the same so just use the ones from the final op in batch
             --iter;
             _endCommand(&batch, *iter, ordered, &command);
             results->push_back(_send(&command, wc, ns));
+        }
     }
 
     bool CommandWriter::_fits(BSONArrayBuilder* builder, WriteOperation* op) {
