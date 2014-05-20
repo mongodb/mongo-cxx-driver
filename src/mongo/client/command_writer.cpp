@@ -110,6 +110,7 @@ namespace mongo {
         BSONObj result;
         bool commandWorked = _client->runCommand(nsToDatabase(ns), command->obj(), result);
 
+        // TODO: writeConcernError should be a soft error
         if (!commandWorked || result.hasField("writeErrors") || result.hasField("writeConcernError")) {
             throw OperationException(result);
         }
