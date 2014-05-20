@@ -37,15 +37,16 @@ namespace mongo {
         int opsInRequest = 0;
         Operations requestType;
 
-        BSONObjBuilder command;
-        BSONArrayBuilder batch;
+        // In the future we could optimize by re-using bufbuilders and/or resetting these builders
+        boost::scoped_ptr<BSONObjBuilder> command(new BSONObjBuilder);
+        boost::scoped_ptr<BSONArrayBuilder> batch(new BSONArrayBuilder);
 
         std::vector<WriteOperation*>::const_iterator iter = write_operations.begin();
 
         while (iter != write_operations.end()) {
             // We don't have a pending command yet
             if (!inRequest) {
-                (*iter)->startCommand(ns.toString(), &command);
+                (*iter)->startCommand(ns.toString(), command.get());
                 inRequest = true;
                 requestType = (*iter)->operationType();
             }
@@ -55,28 +56,32 @@ namespace mongo {
                 opsInRequest < _client->getMaxWriteBatchSize()) {
 
                 // We can add to the command, lets see if it will fit and we can batch
-                if(_fits(&batch, *iter)) {
-                    (*iter)->appendSelfToCommand(&batch);
+                if(_fits(batch.get(), *iter)) {
+                    (*iter)->appendSelfToCommand(batch.get());
                     ++opsInRequest;
                     ++iter;
                     continue;
                 }
-
             }
 
             // Send the current request to the server, record the response, start a new request
-            _endCommand(&batch, *iter, ordered, &command);
-            results->push_back(_send(&command, wc, ns));
+            --iter;
+            _endCommand(batch.get(), *iter, ordered, command.get());
+            results->push_back(_send(command.get(), wc, ns));
+            command.reset(new BSONObjBuilder);
+            batch.reset(new BSONArrayBuilder);
             inRequest = false;
             opsInRequest = 0;
+            ++iter;
         }
 
         // Last batch
-        if (opsInRequest != 0)
+        if (opsInRequest != 0) {
             // All of the flags are the same so just use the ones from the final op in batch
             --iter;
-            _endCommand(&batch, *iter, ordered, &command);
-            results->push_back(_send(&command, wc, ns));
+            _endCommand(batch.get(), *iter, ordered, command.get());
+            results->push_back(_send(command.get(), wc, ns));
+        }
     }
 
     bool CommandWriter::_fits(BSONArrayBuilder* builder, WriteOperation* op) {
@@ -99,11 +104,11 @@ namespace mongo {
         command->append(kOrderedKey, ordered);
     }
 
-    BSONObj CommandWriter::_send(BSONObjBuilder* builder, const WriteConcern* wc, const StringData& ns) {
-        builder->append("writeConcern", wc->obj());
+    BSONObj CommandWriter::_send(BSONObjBuilder* command, const WriteConcern* wc, const StringData& ns) {
+        command->append("writeConcern", wc->obj());
 
         BSONObj result;
-        bool commandWorked = _client->runCommand(nsToDatabase(ns), builder->obj(), result);
+        bool commandWorked = _client->runCommand(nsToDatabase(ns), command->obj(), result);
 
         if (!commandWorked || result.hasField("writeErrors") || result.hasField("writeConcernError")) {
             throw OperationException(result);
