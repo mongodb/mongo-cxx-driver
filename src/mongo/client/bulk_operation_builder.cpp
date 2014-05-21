@@ -54,7 +54,9 @@ namespace mongo {
     }
 
     void BulkOperationBuilder::execute(const WriteConcern* wc, std::vector<BSONObj>* results) {
-        uassert(0, "Bulk operations cannot be executed twice", !_executed);
+        uassert(0, "Bulk operations cannot be re-executed", !_executed);
+        uassert(0, "Bulk operations cannot be executed without any operations",
+            !_write_operations.empty());
 
         if (!_ordered)
             std::sort(_write_operations.begin(), _write_operations.end(), compare);
