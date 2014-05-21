@@ -102,12 +102,15 @@ namespace mongo {
      */
     struct ScopedWriteOperations {
         ScopedWriteOperations() { }
+
         ~ScopedWriteOperations() {
             std::vector<WriteOperation*>::const_iterator it;
-            for ( it = ops.begin(); it != ops.end(); ++it )
+            for (it = ops.begin(); it != ops.end(); ++it)
                 delete *it;
         }
+
         void enqueue(WriteOperation* op) { ops.push_back(op); }
+
         std::vector<WriteOperation*> ops;
     };
 
