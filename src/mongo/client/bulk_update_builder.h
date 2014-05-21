@@ -16,7 +16,7 @@
 #pragma once
 
 #include "mongo/bson/bsonobj.h"
-#include "mongo/client/bulk_upsert_operation.h"
+#include "mongo/client/bulk_upsert_builder.h"
 
 namespace mongo {
 
@@ -28,7 +28,7 @@ namespace mongo {
      * Not to be instantiated directly. Comes into being via the find() method on
      * BulkOperationBuilder.
      */
-    class MONGO_CLIENT_API BulkWriteOperation {
+    class MONGO_CLIENT_API BulkUpdateBuilder {
 
         friend class BulkOperationBuilder;
 
@@ -68,16 +68,16 @@ namespace mongo {
         /**
          * Specifies that this write operation will be an upsert.
          *
-         * @return BulkUpsertOperation A BulkWriteOperation that is an upsert.
+         * @return BulkUpsertOperation A BulkUpdateBuilder that is an upsert.
          */
-        BulkUpsertOperation upsert();
+        BulkUpsertBuilder upsert();
 
     private:
         BulkOperationBuilder* const _builder;
         const BSONObj& _selector;
 
         /* Only created by freind class BulkOperationBuilder */
-        BulkWriteOperation(BulkOperationBuilder* const builder, const BSONObj& selector);
+        BulkUpdateBuilder(BulkOperationBuilder* const builder, const BSONObj& selector);
     };
 
 } // namespace mongo

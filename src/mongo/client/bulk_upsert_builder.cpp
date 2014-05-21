@@ -15,49 +15,35 @@
 
 #include "mongo/platform/basic.h"
 
-#include "mongo/client/bulk_write_operation.h"
+#include "mongo/client/bulk_upsert_builder.h"
 
 #include "mongo/client/bulk_operation_builder.h"
-#include "mongo/client/delete_write_operation.h"
 #include "mongo/client/update_write_operation.h"
 #include "mongo/client/write_options.h"
 
 namespace mongo {
 
-    BulkWriteOperation::BulkWriteOperation(BulkOperationBuilder* const builder, const BSONObj& selector)
+    BulkUpsertBuilder::BulkUpsertBuilder(BulkOperationBuilder* const builder, const BSONObj& selector)
         : _builder(builder)
         , _selector(selector)
-        { }
+        {}
 
-    void BulkWriteOperation::updateOne(const BSONObj& update) {
-        UpdateWriteOperation* update_op = new UpdateWriteOperation(_selector, update, 0);
-        _builder->enqueue(update_op);
-    }
-
-    void BulkWriteOperation::update(const BSONObj& update) {
+    void BulkUpsertBuilder::updateOne(const BSONObj& update) {
         UpdateWriteOperation* update_op = new UpdateWriteOperation(
-            _selector, update, UpdateOption_Multi);
+            _selector, update, UpdateOption_Upsert);
         _builder->enqueue(update_op);
     }
 
-    void BulkWriteOperation::replaceOne(const BSONObj& replacement) {
+    void BulkUpsertBuilder::update(const BSONObj& update) {
         UpdateWriteOperation* update_op = new UpdateWriteOperation(
-            _selector, replacement, 0);
+            _selector, update, UpdateOption_Upsert + UpdateOption_Multi);
         _builder->enqueue(update_op);
     }
 
-    void BulkWriteOperation::remove() {
-        DeleteWriteOperation* delete_op = new DeleteWriteOperation(_selector, 0);
-        _builder->enqueue(delete_op);
-    }
-
-    void BulkWriteOperation::removeOne() {
-        DeleteWriteOperation* delete_op = new DeleteWriteOperation(_selector, RemoveOption_JustOne);
-        _builder->enqueue(delete_op);
-    }
-
-    BulkUpsertOperation BulkWriteOperation::upsert() {
-        return BulkUpsertOperation(_builder, _selector);
+    void BulkUpsertBuilder::replaceOne(const BSONObj& replacement) {
+        UpdateWriteOperation* update_op = new UpdateWriteOperation(
+            _selector, replacement, UpdateOption_Upsert);
+        _builder->enqueue(update_op);
     }
 
 }

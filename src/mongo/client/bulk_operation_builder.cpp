@@ -43,8 +43,8 @@ namespace mongo {
             delete *it;
     }
 
-    BulkWriteOperation BulkOperationBuilder::find(const BSONObj& selector) {
-        return BulkWriteOperation(this, selector);
+    BulkUpdateBuilder BulkOperationBuilder::find(const BSONObj& selector) {
+        return BulkUpdateBuilder(this, selector);
     }
 
     void BulkOperationBuilder::insert(const BSONObj& doc) {

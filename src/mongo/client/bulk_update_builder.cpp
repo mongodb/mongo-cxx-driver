@@ -15,35 +15,49 @@
 
 #include "mongo/platform/basic.h"
 
-#include "mongo/client/bulk_upsert_operation.h"
+#include "mongo/client/bulk_update_builder.h"
 
 #include "mongo/client/bulk_operation_builder.h"
+#include "mongo/client/delete_write_operation.h"
 #include "mongo/client/update_write_operation.h"
 #include "mongo/client/write_options.h"
 
 namespace mongo {
 
-    BulkUpsertOperation::BulkUpsertOperation(BulkOperationBuilder* const builder, const BSONObj& selector)
+    BulkUpdateBuilder::BulkUpdateBuilder(BulkOperationBuilder* const builder, const BSONObj& selector)
         : _builder(builder)
         , _selector(selector)
-        {}
+        { }
 
-    void BulkUpsertOperation::updateOne(const BSONObj& update) {
-        UpdateWriteOperation* update_op = new UpdateWriteOperation(
-            _selector, update, UpdateOption_Upsert);
+    void BulkUpdateBuilder::updateOne(const BSONObj& update) {
+        UpdateWriteOperation* update_op = new UpdateWriteOperation(_selector, update, 0);
         _builder->enqueue(update_op);
     }
 
-    void BulkUpsertOperation::update(const BSONObj& update) {
+    void BulkUpdateBuilder::update(const BSONObj& update) {
         UpdateWriteOperation* update_op = new UpdateWriteOperation(
-            _selector, update, UpdateOption_Upsert + UpdateOption_Multi);
+            _selector, update, UpdateOption_Multi);
         _builder->enqueue(update_op);
     }
 
-    void BulkUpsertOperation::replaceOne(const BSONObj& replacement) {
+    void BulkUpdateBuilder::replaceOne(const BSONObj& replacement) {
         UpdateWriteOperation* update_op = new UpdateWriteOperation(
-            _selector, replacement, UpdateOption_Upsert);
+            _selector, replacement, 0);
         _builder->enqueue(update_op);
+    }
+
+    void BulkUpdateBuilder::remove() {
+        DeleteWriteOperation* delete_op = new DeleteWriteOperation(_selector, 0);
+        _builder->enqueue(delete_op);
+    }
+
+    void BulkUpdateBuilder::removeOne() {
+        DeleteWriteOperation* delete_op = new DeleteWriteOperation(_selector, RemoveOption_JustOne);
+        _builder->enqueue(delete_op);
+    }
+
+    BulkUpsertBuilder BulkUpdateBuilder::upsert() {
+        return BulkUpsertBuilder(_builder, _selector);
     }
 
 }

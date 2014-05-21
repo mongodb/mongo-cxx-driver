@@ -28,9 +28,9 @@ namespace mongo {
      * Not to be instantiated directly. Comes into being via the upsert() method on
      * BulkWriteOperation.
      */
-    class MONGO_CLIENT_API BulkUpsertOperation {
+    class MONGO_CLIENT_API BulkUpsertBuilder {
 
-        friend class BulkWriteOperation;
+        friend class BulkUpdateBuilder;
 
     public:
         /**
@@ -63,7 +63,7 @@ namespace mongo {
         const BSONObj _selector;
 
         /* Only created by freind class BulkWriteBuilder */
-        BulkUpsertOperation(BulkOperationBuilder* const builder, const BSONObj& selector);
+        BulkUpsertBuilder(BulkOperationBuilder* const builder, const BSONObj& selector);
     };
 
 } // namespace mongo

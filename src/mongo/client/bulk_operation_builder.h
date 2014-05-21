@@ -18,7 +18,7 @@
 #include <vector>
 
 #include "mongo/bson/bsonobj.h"
-#include "mongo/client/bulk_write_operation.h"
+#include "mongo/client/bulk_update_builder.h"
 
 namespace mongo {
 
@@ -52,11 +52,11 @@ namespace mongo {
      */
     class MONGO_CLIENT_API BulkOperationBuilder {
 
-        /* Enable operations of this type to append themselves to _write_operations */
-        friend class BulkWriteOperation;
+        /* Enable operations of this type to append themselves to enqueue themselves */
+        friend class BulkUpdateBuilder;
 
-        /* Enable operations of this type to append themselves to _write_operations */
-        friend class BulkUpsertOperation;
+        /* Enable operations of this type to append themselves to enqueue themselves */
+        friend class BulkUpsertBuilder;
 
     public:
         /**
@@ -82,7 +82,7 @@ namespace mongo {
          * @param selector A BSONObj that describes the objects to modify.
          * @return BulkWriteOperation A BulkWriteOperation with the selector specified.
          */
-        BulkWriteOperation find(const BSONObj& selector);
+        BulkUpdateBuilder find(const BSONObj& selector);
 
         /**
          * Enqueues an insert write operation to be executed as part of the bulk operation.
