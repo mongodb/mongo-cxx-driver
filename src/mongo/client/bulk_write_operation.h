@@ -29,17 +29,12 @@ namespace mongo {
      * BulkOperationBuilder.
      */
     class BulkWriteOperation {
+
+        friend class BulkOperationBuilder;
+
     public:
         /**
-         * BulkWriteOperation constructor
-         *
-         * @param builder BulkOperationBuilder where terminal operations will be enqueued.
-         * @param selector Filter describing subset of documents to which this op will apply.
-         */
-        BulkWriteOperation(BulkOperationBuilder* const builder, const BSONObj& selector);
-
-        /**
-         * Enqueues an operation which updates a single document matching _selector by
+         * Enqueues an operation which updates a single document matching the selector by
          * applying the supplied update document.
          *
          * @param update The update to apply to matching documents.
@@ -47,7 +42,7 @@ namespace mongo {
         void updateOne(const BSONObj& update);
 
         /**
-         * Enqueues an operation which updates any document matching _selector by applying
+         * Enqueues an operation which updates any document matching the selector by applying
          * the supplied update document.
          *
          * @param update The update to apply to matching documents.
@@ -55,19 +50,18 @@ namespace mongo {
         void update(const BSONObj& update);
 
         /**
-         * Enqueues an operation which replaces a single document matching _selector
+         * Enqueues an operation which replaces a single document matching the selector
          * with the supplied replacement.
          */
         void replaceOne(const BSONObj& replacement);
 
-
         /**
-         * Enqueues an operation which removes any document matching _selector.
+         * Enqueues an operation which removes any document matching the selector.
          */
         void remove();
 
         /**
-         * Enqueues an operation which removes a single document matching _selector.
+         * Enqueues an operation which removes a single document matching the selector.
          */
         void removeOne();
 
@@ -81,6 +75,9 @@ namespace mongo {
     private:
         BulkOperationBuilder* const _builder;
         const BSONObj& _selector;
+
+        /* Only created by freind class BulkOperationBuilder */
+        BulkWriteOperation(BulkOperationBuilder* const builder, const BSONObj& selector);
     };
 
-}
+} // namespace mongo

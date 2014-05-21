@@ -31,19 +31,19 @@ namespace mongo {
     void BulkUpsertOperation::updateOne(const BSONObj& update) {
         UpdateWriteOperation* update_op = new UpdateWriteOperation(
             _selector, update, UpdateOption_Upsert);
-        _builder->_write_operations.push_back(update_op);
+        _builder->enqueue(update_op);
     }
 
     void BulkUpsertOperation::update(const BSONObj& update) {
         UpdateWriteOperation* update_op = new UpdateWriteOperation(
             _selector, update, UpdateOption_Upsert + UpdateOption_Multi);
-        _builder->_write_operations.push_back(update_op);
+        _builder->enqueue(update_op);
     }
 
     void BulkUpsertOperation::replaceOne(const BSONObj& replacement) {
         UpdateWriteOperation* update_op = new UpdateWriteOperation(
             _selector, replacement, UpdateOption_Upsert);
-        _builder->_write_operations.push_back(update_op);
+        _builder->enqueue(update_op);
     }
 
 }

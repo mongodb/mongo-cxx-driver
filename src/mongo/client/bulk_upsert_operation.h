@@ -29,18 +29,12 @@ namespace mongo {
      * BulkWriteOperation.
      */
     class BulkUpsertOperation {
+
+        friend class BulkWriteOperation;
+
     public:
-
         /**
-         * BulkUpsertOperation constructor
-         *
-         * @param builder BulkOperationBuilder where terminal operations will be enqueued.
-         * @param selector Filter describing subset of documents to which this op will apply.
-         */
-        BulkUpsertOperation(BulkOperationBuilder* const builder, const BSONObj& selector);
-
-        /**
-         * Enqueues an operation which updates a single document matching _selector by
+         * Enqueues an operation which updates a single document matching the selector by
          * applying the supplied update document. If no matching document exists, the
          * operation becomes an insert.
          *
@@ -49,7 +43,7 @@ namespace mongo {
         void updateOne(const BSONObj& update);
 
         /**
-         * Enqueues an operation which updates any document matching _selector by applying
+         * Enqueues an operation which updates any document matching the selector by applying
          * the supplied update document. If no matching document exists, the operation
          * becomes an insert.
          *
@@ -58,7 +52,7 @@ namespace mongo {
         void update(const BSONObj& update);
 
         /**
-         * Enqueues an operation which replaces a single document matching _selector
+         * Enqueues an operation which replaces a single document matching the selector
          * with the supplied replacement. If no matching document exists, the operation
          * becomes an insert.
          */
@@ -67,6 +61,9 @@ namespace mongo {
     private:
         BulkOperationBuilder* const _builder;
         const BSONObj _selector;
+
+        /* Only created by freind class BulkWriteBuilder */
+        BulkUpsertOperation(BulkOperationBuilder* const builder, const BSONObj& selector);
     };
 
-}
+} // namespace mongo

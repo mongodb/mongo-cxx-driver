@@ -19,11 +19,11 @@
 
 #include "mongo/bson/bsonobj.h"
 #include "mongo/client/bulk_write_operation.h"
+#include "mongo/client/write_operation.h"
 
 namespace mongo {
 
     class DBClientBase;
-    class WriteOperation;
     class WriteConcern;
 
     /**
@@ -52,11 +52,11 @@ namespace mongo {
      */
     class BulkOperationBuilder {
 
-    /* Enable operations of this type to append themselves to _write_operations */
-    friend class BulkWriteOperation;
+        /* Enable operations of this type to append themselves to _write_operations */
+        friend class BulkWriteOperation;
 
-    /* Enable operations of this type to append themselves to _write_operations */
-    friend class BulkUpsertOperation;
+        /* Enable operations of this type to append themselves to _write_operations */
+        friend class BulkUpsertOperation;
 
     public:
         /**
@@ -70,9 +70,6 @@ namespace mongo {
          * @param ordered Whether or not ordering matters for these operations.
          */
         BulkOperationBuilder(DBClientBase* const client, const std::string& ns, bool ordered);
-
-        /* Deletes all of the WriteOperations that were created during the Builder's lifetime */
-        ~BulkOperationBuilder();
 
         /**
          * Supplies a filter to select a subset of documents on which to apply an operation.
@@ -103,7 +100,9 @@ namespace mongo {
         DBClientBase* const _client;
         const std::string _ns;
         const bool _ordered;
-        std::vector<WriteOperation*> _write_operations;
+        ScopedWriteOperations _write_operations;
+
+        void enqueue(WriteOperation* const operation);
     };
 
 } // namespace mongo

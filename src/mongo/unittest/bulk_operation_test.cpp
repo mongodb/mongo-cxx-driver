@@ -33,7 +33,6 @@ namespace {
             c.connect(string("localhost:") + integrationTestParams.port);
             c.dropCollection(TEST_NS);
         }
-        ~BulkOperationTest() {}
 
         DBClientConnection c;
     };

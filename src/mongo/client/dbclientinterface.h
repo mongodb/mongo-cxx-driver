@@ -1032,7 +1032,6 @@ namespace mongo {
         int _maxWireVersion;
         int _maxMessageSizeBytes;
         int _maxWriteBatchSize;
-        void _checkSize(const BSONObj& bo);
         void _write(
             const std::string& ns,
             const std::vector<WriteOperation*>& writes,
