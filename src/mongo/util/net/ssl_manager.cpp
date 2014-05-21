@@ -24,11 +24,11 @@
 
 #include "mongo/base/init.h"
 #include "mongo/bson/util/atomic_int.h"
+#include "mongo/client/options.h"
 #include "mongo/util/concurrency/mutex.h"
 #include "mongo/util/log.h"
 #include "mongo/util/mongoutils/str.h"
 #include "mongo/util/net/sock.h"
-#include "mongo/util/net/ssl_options.h"
 #include "mongo/util/scopeguard.h"
 
 #ifdef MONGO_SSL
@@ -39,8 +39,6 @@
 namespace mongo {
 
     using std::endl;
-
-    SSLGlobalParams sslGlobalParams;
 
 #ifndef MONGO_SSL   
     const std::string getSSLVersion(const std::string &prefix, const std::string &suffix) {
@@ -281,21 +279,24 @@ namespace mongo {
     } // namespace
 
     // Global variable indicating if this is a server or a client instance
-    bool isSSLServer = false;
-    
+    const bool isSSLServer = false;
+
     MONGO_INITIALIZER(SSLManager)(InitializerContext* context) {
+
+        const client::Options& options = client::Options::current();
+
         boost::mutex::scoped_lock lck(sslManagerMtx);
-        if (sslGlobalParams.sslMode.load() != SSLGlobalParams::SSLMode_disabled) {
+        if (options.SSLEnabled()) {
             const Params params(
-                sslGlobalParams.sslPEMKeyFile,
-                sslGlobalParams.sslPEMKeyPassword,
-                sslGlobalParams.sslClusterFile,
-                sslGlobalParams.sslClusterPassword,
-                sslGlobalParams.sslCAFile,
-                sslGlobalParams.sslCRLFile,
-                sslGlobalParams.sslWeakCertificateValidation,
-                sslGlobalParams.sslAllowInvalidCertificates,
-                sslGlobalParams.sslFIPSMode);
+                options.SSLPEMKeyFile(),
+                options.SSLPEMKeyPassword(),
+                std::string(), // server only parameter
+                std::string(), // server only parameter
+                options.SSLCAFile(),
+                options.SSLCRLFile(),
+                false, // server only parameter
+                options.SSLAllowInvalidCertificates(),
+                options.FIPSMode());
             theSSLManager = new SSLManager(params, isSSLServer);
         }
         return Status::OK();

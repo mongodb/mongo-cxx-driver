@@ -18,7 +18,8 @@
 #pragma once
 
 #include "mongo/bson/util/builder.h"
-#include "mongo/db/server_options.h"
+#include "mongo/client/options.h"
+#include "mongo/util/log.h"
 #include "mongo/util/mongoutils/str.h"
 #include "mongo/util/net/sock.h"
 
@@ -42,8 +43,6 @@ namespace mongo {
         }
 
         HostAndPort(const SockAddr& sock ) : _host( sock.getAddr() ) , _port( sock.getPort() ) { }
-
-        static HostAndPort me();
 
         bool operator<(const HostAndPort& r) const {
             const int cmp = host().compare(r.host());
@@ -81,7 +80,7 @@ namespace mongo {
         int port() const {
             if (hasPort())
                 return _port;
-            return ServerGlobalParams::DefaultDBPort;
+            return client::Options::kDbServer;
         }
         bool hasPort() const {
             return _port >= 0;
@@ -95,31 +94,6 @@ namespace mongo {
         std::string _host;
         int _port; // -1 indicates unspecified
     };
-
-    inline HostAndPort HostAndPort::me() {
-        const char* ips = serverGlobalParams.bind_ip.c_str();
-        while(*ips) {
-            std::string ip;
-            const char * comma = strchr(ips, ',');
-            if (comma) {
-                ip = std::string(ips, comma - ips);
-                ips = comma + 1;
-            }
-            else {
-                ip = std::string(ips);
-                ips = "";
-            }
-            HostAndPort h = HostAndPort(ip, serverGlobalParams.port);
-            if (!h.isLocalHost()) {
-                return h;
-            }
-        }
-
-        std::string h = getHostName();
-        verify( !h.empty() );
-        verify( h != "localhost" );
-        return HostAndPort(h, serverGlobalParams.port);
-    }
 
     inline std::string HostAndPort::toString( bool includePort ) const {
         if ( ! includePort )

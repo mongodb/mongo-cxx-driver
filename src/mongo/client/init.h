@@ -19,6 +19,7 @@
 
 #include "mongo/base/status.h"
 #include "mongo/client/export_macros.h"
+#include "mongo/client/options.h"
 
 // NOTE: These functions are only intended to be used when linking against the libmongoclient
 // library. The below functions are not defined in servers like mongos or mongod, which have
@@ -36,31 +37,26 @@ namespace mongo {
  */
 namespace client {
 
-    const int kDefaultShutdownGracePeriodMillis = 250;
+    /**
+     *  Initializes the client driver, possibly with custom options. See the Options class for
+     *  details on the various fields.
+     *
+     *  NOTE: Do not call 'initialize' before entering 'main' (i.e. from a static initializer),
+     *  as it relies on all static initialization having been completed.
+     *
+     *  NOTE: Do not call 'initialize' more than once.
+     */
+    MONGO_CLIENT_API Status MONGO_CLIENT_FUNC initialize(const Options& options = Options());
 
     /**
-     *  Initializes the client driver. If the 'callShutdownAtExit' parameter is true, then
-     *  'initialize' schedules a call to 'client::shutdown', with a grace period of
-     *  'kDefaultShutdownGracePeriodMillis', via std::atexit. Failure to shutdown within the
-     *  grace period in the 'atexit' callback leads to a call to abort. If the
-     *  'callShutDownAtExit' parameter is false, then it is the responsibility of the user of
-     *  the client driver to appropriately sequence a call to 'mongo::client::shutdown' and
-     *  respond to any failure to terminate within the grace period. Note that 'initialize'
-     *  invokes 'runGlobalInitializers', so it is not permitted to explicitly call
-     *  'runGlobalInitializers' if calling 'initialize'. If a non-OK status is returned by this
-     *  function, the error should be reported and the client driver API must not be used.
+     *  Terminates the client driver. If the driver does not terminate within the currently
+     *  configured grace period in the driver options, an 'ExceededTimeLimit' Status will be
+     *  returned, in which case it is legal to retry 'shutdown'. Other non-OK status values do
+     *  not admit retrying the operation. A permanent failure to terminate the driver should be
+     *  logged, and it may be unsafe to exit the process by any mechanism which causes normal
+     *  destruction of static objects.
      */
-    MONGO_CLIENT_API Status MONGO_CLIENT_FUNC initialize(bool callShutdownAtExit = true);
-
-    /**
-     *  Terminates the client driver. If the driver does not terminate within the provided
-     *  grace period (which defaults to kDefaultShutdownGracePeriodMillis), an
-     *  'ExceededTimeLimit' Status will be returned, in which case it is legal to retry
-     *  'shutdown'. Other non-OK status values do not admit retrying the operation, and the
-     *  failure to terminate the driver should be reported, and it may be unsafe to exit the
-     *  process by any mechanism which causes normal destruction of static objects.
-     */
-    MONGO_CLIENT_API Status MONGO_CLIENT_FUNC shutdown(int gracePeriodMillis = kDefaultShutdownGracePeriodMillis);
+    MONGO_CLIENT_API Status MONGO_CLIENT_FUNC shutdown();
 
 } // namespace client
 } // namespace mongo

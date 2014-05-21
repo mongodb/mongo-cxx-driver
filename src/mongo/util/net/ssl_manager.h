@@ -121,7 +121,5 @@ namespace mongo {
 
     // Access SSL functions through this instance.
     SSLManagerInterface* getSSLManager();
-
-    extern bool isSSLServer;
 }
 #endif // #ifdef MONGO_SSL

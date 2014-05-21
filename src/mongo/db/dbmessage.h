@@ -187,31 +187,7 @@ namespace mongo {
         bool moreJSObjs() const {
             return nextjsobj != 0;
         }
-        BSONObj nextJsObj() {
-            if ( nextjsobj == data ) {
-                nextjsobj += strlen(data) + 1; // skip namespace
-                massert( 13066 ,  "Message contains no documents", theEnd > nextjsobj );
-            }
-            massert( 10304,
-                     "Client Error: Remaining data too small for BSON object",
-                     theEnd - nextjsobj >= 5 );
-
-            if (serverGlobalParams.objcheck) {
-                Status status = validateBSON( nextjsobj, theEnd - nextjsobj );
-                massert( 10307,
-                         str::stream() << "Client Error: bad object in message: " << status.reason(),
-                         status.isOK() );
-            }
-
-            BSONObj js(nextjsobj);
-            verify( js.objsize() >= 5 );
-            verify( js.objsize() < ( theEnd - data ) );
-
-            nextjsobj += js.objsize();
-            if ( nextjsobj >= theEnd )
-                nextjsobj = 0;
-            return js;
-        }
+        BSONObj nextJsObj();
 
         const Message& msg() const { return m; }
 

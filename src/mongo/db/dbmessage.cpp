@@ -17,10 +17,39 @@
 
 #include "mongo/db/dbmessage.h"
 
+#include "mongo/client/private/options.h"
+
 namespace mongo {
 
     using std::string;
     using std::stringstream;
+
+    BSONObj DbMessage::nextJsObj() {
+        if ( nextjsobj == data ) {
+            nextjsobj += strlen(data) + 1; // skip namespace
+            massert( 13066 ,  "Message contains no documents", theEnd > nextjsobj );
+        }
+        massert( 10304,
+                 "Client Error: Remaining data too small for BSON object",
+                 theEnd - nextjsobj >= 5 );
+
+        if (client::Options::current().validateObjects()) {
+            Status status = validateBSON( nextjsobj, theEnd - nextjsobj );
+            massert( 10307,
+                     str::stream() << "Client Error: bad object in message: " << status.reason(),
+                     status.isOK() );
+        }
+
+        BSONObj js(nextjsobj);
+        verify( js.objsize() >= 5 );
+        verify( js.objsize() < ( theEnd - data ) );
+
+        nextjsobj += js.objsize();
+        if ( nextjsobj >= theEnd )
+            nextjsobj = 0;
+        return js;
+    }
+
 
     string Message::toString() const {
         stringstream ss;

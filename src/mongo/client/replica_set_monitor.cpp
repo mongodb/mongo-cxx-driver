@@ -22,6 +22,7 @@
 #include <boost/thread.hpp>
 
 #include "mongo/client/connpool.h"
+#include "mongo/client/private/options.h"
 #include "mongo/client/replica_set_monitor_internal.h"
 #include "mongo/util/concurrency/mutex.h" // for StaticObserver
 #include "mongo/util/background.h"
@@ -863,7 +864,7 @@ namespace {
         : name(name.toString())
         , consecutiveFailedScans(0)
         , seedNodes(seedNodes)
-        , latencyThresholdMicros(serverGlobalParams.defaultLocalThresholdMillis * 1000)
+        , latencyThresholdMicros(client::Options::current().defaultLocalThresholdMillis() * 1000)
         , rand(int64_t(time(0)))
         , roundRobin(0)
     {

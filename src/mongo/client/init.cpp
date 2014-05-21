@@ -21,6 +21,7 @@
 
 #include "mongo/base/initializer.h"
 #include "mongo/client/connpool.h"
+#include "mongo/client/private/options.h"
 #include "mongo/client/replica_set_monitor.h"
 #include "mongo/util/background.h"
 
@@ -30,13 +31,16 @@ namespace client {
     namespace {
         void callShutdownAtExit() {
             // We can't really do anything of value if this returns a non-OK status.
-            mongo::client::shutdown(kDefaultShutdownGracePeriodMillis);
+            mongo::client::shutdown();
         }
     } // namespace
 
-    Status initialize(bool atexit) {
+    Status initialize(const Options& options) {
 
-        if (atexit) {
+        // Copy in the provided options.
+        setOptions(options);
+
+        if (options.callShutdownAtExit()) {
             if (std::atexit(&callShutdownAtExit) != 0) {
                 return Status(
                     ErrorCodes::InternalError,
@@ -57,9 +61,12 @@ namespace client {
         return Status::OK();
     }
 
-    Status shutdown(int gracePeriodMillis) {
+    Status shutdown() {
         ReplicaSetMonitor::cleanup();
-        Status s = PeriodicTask::stopRunningPeriodicTasks(gracePeriodMillis);
+
+        const int gracePeriod = Options::current().autoShutdownGracePeriodMillis();
+        Status s = PeriodicTask::stopRunningPeriodicTasks(gracePeriod);
+
         shutdownNetworking();
         return s;
     }
