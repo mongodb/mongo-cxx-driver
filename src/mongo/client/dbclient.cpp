@@ -1220,6 +1220,19 @@ namespace mongo {
 
     }
 
+    namespace {
+        struct ScopedWriteOperations {
+            ScopedWriteOperations() { }
+            ~ScopedWriteOperations() {
+                vector<WriteOperation*>::const_iterator it;
+                for ( it = ops.begin(); it != ops.end(); ++it )
+                    delete *it;
+            }
+            void enqueue(WriteOperation* op) { ops.push_back(op); }
+            std::vector<WriteOperation*> ops;
+        };
+    }
+
     void DBClientBase::insert( const string & ns , BSONObj obj , int flags, const WriteConcern* wc ) {
         vector<BSONObj> toInsert;
         toInsert.push_back( obj );

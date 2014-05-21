@@ -19,12 +19,12 @@
 
 #include "mongo/bson/bsonobj.h"
 #include "mongo/client/bulk_write_operation.h"
-#include "mongo/client/write_operation.h"
 
 namespace mongo {
 
     class DBClientBase;
     class WriteConcern;
+    class WriteOperation;
 
     /**
      * Class for constructing and executing bulk operations against MongoDB via a
@@ -50,7 +50,7 @@ namespace mongo {
      * into batches instead of sending them individually to the server. This means
      * that unordered writes are non-deterministic. This is by design.
      */
-    class BulkOperationBuilder {
+    class MONGO_CLIENT_API BulkOperationBuilder {
 
         /* Enable operations of this type to append themselves to _write_operations */
         friend class BulkWriteOperation;
@@ -70,6 +70,9 @@ namespace mongo {
          * @param ordered Whether or not ordering matters for these operations.
          */
         BulkOperationBuilder(DBClientBase* const client, const std::string& ns, bool ordered);
+
+        /* Deletes all of the WriteOperations that were created during the Builder's lifetime */
+        ~BulkOperationBuilder();
 
         /**
          * Supplies a filter to select a subset of documents on which to apply an operation.
@@ -100,7 +103,7 @@ namespace mongo {
         DBClientBase* const _client;
         const std::string _ns;
         const bool _ordered;
-        ScopedWriteOperations _write_operations;
+        std::vector<WriteOperation*> _write_operations;
 
         void enqueue(WriteOperation* const operation);
     };

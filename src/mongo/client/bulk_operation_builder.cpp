@@ -37,23 +37,29 @@ namespace mongo {
         , _ordered(ordered)
         {}
 
+    BulkOperationBuilder::~BulkOperationBuilder() {
+        std::vector<WriteOperation*>::iterator it;
+        for (it = _write_operations.begin(); it != _write_operations.end(); ++it)
+            delete *it;
+    }
+
     BulkWriteOperation BulkOperationBuilder::find(const BSONObj& selector) {
         return BulkWriteOperation(this, selector);
     }
 
     void BulkOperationBuilder::insert(const BSONObj& doc) {
         InsertWriteOperation* insert_op = new InsertWriteOperation(doc);
-        _write_operations.enqueue(insert_op);
+        enqueue(insert_op);
     }
 
     void BulkOperationBuilder::execute(const WriteConcern* wc, std::vector<BSONObj>* results) {
         if (!_ordered)
-            std::sort(_write_operations.ops.begin(), _write_operations.ops.end(), compare);
-        _client->_write(_ns, _write_operations.ops, _ordered, wc, results);
+            std::sort(_write_operations.begin(), _write_operations.end(), compare);
+        _client->_write(_ns, _write_operations, _ordered, wc, results);
     }
 
-    void BulkOperationBuilder::enqueue(WriteOperation* const operation) {
-        _write_operations.enqueue(operation);
+    void BulkOperationBuilder::enqueue(WriteOperation* operation) {
+        _write_operations.push_back(operation);
     }
 
 } // namespace mongo

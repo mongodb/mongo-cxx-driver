@@ -28,7 +28,7 @@ namespace mongo {
      * Not to be instantiated directly. Comes into being via the upsert() method on
      * BulkWriteOperation.
      */
-    class BulkUpsertOperation {
+    class MONGO_CLIENT_API BulkUpsertOperation {
 
         friend class BulkWriteOperation;
 

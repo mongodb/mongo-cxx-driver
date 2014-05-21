@@ -28,7 +28,7 @@ namespace mongo {
      * Not to be instantiated directly. Comes into being via the find() method on
      * BulkOperationBuilder.
      */
-    class BulkWriteOperation {
+    class MONGO_CLIENT_API BulkWriteOperation {
 
         friend class BulkOperationBuilder;
 
