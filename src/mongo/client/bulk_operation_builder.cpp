@@ -35,6 +35,7 @@ namespace mongo {
         : _client(client)
         , _ns(ns)
         , _ordered(ordered)
+        , _executed(false)
         {}
 
     BulkOperationBuilder::~BulkOperationBuilder() {
@@ -53,9 +54,13 @@ namespace mongo {
     }
 
     void BulkOperationBuilder::execute(const WriteConcern* wc, std::vector<BSONObj>* results) {
+        uassert(0, "Bulk operations cannot be executed twice", !_executed);
+
         if (!_ordered)
             std::sort(_write_operations.begin(), _write_operations.end(), compare);
+
         _client->_write(_ns, _write_operations, _ordered, wc, results);
+        _executed = true;
     }
 
     void BulkOperationBuilder::enqueue(WriteOperation* operation) {

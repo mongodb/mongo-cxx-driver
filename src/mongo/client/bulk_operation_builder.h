@@ -103,6 +103,7 @@ namespace mongo {
         DBClientBase* const _client;
         const std::string _ns;
         const bool _ordered;
+        bool _executed;
         std::vector<WriteOperation*> _write_operations;
 
         void enqueue(WriteOperation* const operation);
