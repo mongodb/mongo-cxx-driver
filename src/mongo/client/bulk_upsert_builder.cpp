@@ -46,4 +46,4 @@ namespace mongo {
         _builder->enqueue(update_op);
     }
 
-}
+} // namespace mongo

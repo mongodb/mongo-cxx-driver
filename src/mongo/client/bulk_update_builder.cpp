@@ -60,4 +60,4 @@ namespace mongo {
         return BulkUpsertBuilder(_builder, _selector);
     }
 
-}
+} // namespace mongo

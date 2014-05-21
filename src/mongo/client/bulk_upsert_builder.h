@@ -62,7 +62,7 @@ namespace mongo {
         BulkOperationBuilder* const _builder;
         const BSONObj _selector;
 
-        /* Only created by freind class BulkWriteBuilder */
+        /* Only created by friend class BulkWriteBuilder */
         BulkUpsertBuilder(BulkOperationBuilder* const builder, const BSONObj& selector);
     };
 
