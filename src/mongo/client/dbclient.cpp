@@ -1210,15 +1210,13 @@ namespace mongo {
         return n;
     }
 
-    void DBClientBase::_write( const string& ns, const vector<WriteOperation*>& writes, bool ordered, const WriteConcern* wc) {
+    void DBClientBase::_write( const string& ns, const vector<WriteOperation*>& writes, bool ordered, const WriteConcern* wc, std::vector<BSONObj>* results ) {
         const WriteConcern* operation_wc = wc ? wc : &getWriteConcern();
 
-        vector<BSONObj> results;
-
         if (getMaxWireVersion() >= 2 && operation_wc->requiresConfirmation())
-            _commandWriter->write( ns, writes, ordered, operation_wc, &results );
+            _commandWriter->write( ns, writes, ordered, operation_wc, results );
         else
-            _wireProtocolWriter->write( ns, writes, ordered, operation_wc, &results );
+            _wireProtocolWriter->write( ns, writes, ordered, operation_wc, results );
 
     }
 
@@ -1253,8 +1251,8 @@ namespace mongo {
 
         bool ordered = !(flags & InsertOption_ContinueOnError);
 
-        // _write will free the inserts
-        _write( ns, inserts.ops, ordered, wc );
+        vector<BSONObj> results;
+        _write( ns, inserts.ops, ordered, wc, &results );
     }
 
     void DBClientBase::remove( const string & ns , Query obj , bool justOne, const WriteConcern* wc ) {
@@ -1267,8 +1265,8 @@ namespace mongo {
                 obj.obj.objsize() <= getMaxBsonObjectSize());
         deletes.enqueue( new DeleteWriteOperation(obj.obj, flags) );
 
-        // _write will free the deletes
-        _write( ns, deletes.ops, true, wc );
+        vector<BSONObj> results;
+        _write( ns, deletes.ops, true, wc, &results );
     }
 
     void DBClientBase::update( const string & ns , Query query , BSONObj obj , bool upsert, bool multi, const WriteConcern* wc ) {
@@ -1286,8 +1284,16 @@ namespace mongo {
                 obj.objsize() <= getMaxBsonObjectSize());
         updates.enqueue( new UpdateWriteOperation(query.obj, obj, flags) );
 
-        // _write will free the updates
-        _write( ns, updates.ops, true, wc );
+        vector<BSONObj> results;
+        _write( ns, updates.ops, true, wc, &results );
+    }
+
+    BulkOperationBuilder DBClientBase::initializeOrderedBulkOp(const std::string& ns) {
+        return BulkOperationBuilder(this, ns, true);
+    }
+
+    BulkOperationBuilder DBClientBase::initializeUnorderedBulkOp(const std::string& ns) {
+        return BulkOperationBuilder(this, ns, false);
     }
 
     auto_ptr<DBClientCursor> DBClientWithCommands::getIndexes( const string &ns ) {

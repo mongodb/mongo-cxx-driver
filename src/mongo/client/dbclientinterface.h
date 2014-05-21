@@ -25,9 +25,11 @@
 #include <boost/function.hpp>
 
 #include "mongo/base/string_data.h"
+#include "mongo/client/bulk_operation_builder.h"
 #include "mongo/client/exceptions.h"
 #include "mongo/client/export_macros.h"
 #include "mongo/client/write_concern.h"
+#include "mongo/client/write_options.h"
 #include "mongo/db/jsobj.h"
 #include "mongo/logger/log_severity.h"
 #include "mongo/platform/atomic_word.h"
@@ -89,35 +91,6 @@ namespace mongo {
 
         QueryOption_AllSupported = QueryOption_CursorTailable | QueryOption_SlaveOk | QueryOption_OplogReplay | QueryOption_NoCursorTimeout | QueryOption_AwaitData | QueryOption_Exhaust | QueryOption_PartialResults
 
-    };
-
-    enum MONGO_CLIENT_API UpdateOptions {
-        /** Upsert - that is, insert the item if no matching item is found. */
-        UpdateOption_Upsert = 1 << 0,
-
-        /** Update multiple documents (if multiple documents match query expression).
-           (Default is update a single document and stop.) */
-        UpdateOption_Multi = 1 << 1,
-
-        /** flag from mongo saying this update went everywhere */
-        UpdateOption_Broadcast = 1 << 2
-    };
-
-    enum MONGO_CLIENT_API RemoveOptions {
-        /** only delete one option */
-        RemoveOption_JustOne = 1 << 0,
-
-        /** flag from mongo saying this update went everywhere */
-        RemoveOption_Broadcast = 1 << 1
-    };
-
-
-    /**
-     * need to put in DbMesssage::ReservedOptions as well
-     */
-    enum MONGO_CLIENT_API InsertOptions {
-        /** With muli-insert keep processing inserts if one fails */
-        InsertOption_ContinueOnError = 1 << 0
     };
 
     /**
@@ -1047,6 +1020,7 @@ namespace mongo {
      abstract class that implements the core db operations
      */
     class MONGO_CLIENT_API DBClientBase : public DBClientWithCommands, public DBConnector {
+    friend class BulkOperationBuilder;
     protected:
         static AtomicInt64 ConnectionIdSequence;
         long long _connectionId; // unique connection id for this connection
@@ -1058,8 +1032,13 @@ namespace mongo {
         int _maxWireVersion;
         int _maxMessageSizeBytes;
         int _maxWriteBatchSize;
-        void _checkSize(const BSONObj& bo);
-        void _write( const std::string& ns, const std::vector<WriteOperation*>& writes, bool ordered, const WriteConcern* wc );
+        void _write(
+            const std::string& ns,
+            const std::vector<WriteOperation*>& writes,
+            bool ordered,
+            const WriteConcern* wc,
+            std::vector<BSONObj>* results
+        );
     public:
         static const uint64_t INVALID_SOCK_CREATION_TIME;
 
@@ -1175,6 +1154,24 @@ namespace mongo {
             int flags,
             const WriteConcern* wc=NULL
         );
+
+        /**
+         * Initializes an ordered bulk operation by returning an object that can be
+         * used to enqueue multiple operations for batch execution.
+         *
+         * @param ns Namespace on which to apply the operations.
+         * @see BulkOperationBuilder
+         */
+        virtual BulkOperationBuilder initializeUnorderedBulkOp(const std::string& ns);
+
+        /**
+         * Initializes an unordered bulk operation by returning an object that can be
+         * used to enqueue multiple operations for batch execution.
+         *
+         * @param ns Namespace on which to apply the operations.
+         * @see BulkOperationBuilder
+         */
+        virtual BulkOperationBuilder initializeOrderedBulkOp(const std::string& ns);
 
         /**
            remove matching objects from the database

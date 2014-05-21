@@ -110,7 +110,7 @@ namespace mongo {
         BSONObj result;
         bool commandWorked = _client->runCommand(nsToDatabase(ns), command->obj(), result);
 
-        if (!commandWorked || result.hasField("writeErrors") || result.hasField("writeConcernError")) {
+        if (!commandWorked || result.hasField("writeErrors")) {
             throw OperationException(result);
         }
 

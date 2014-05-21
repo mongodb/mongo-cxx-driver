@@ -83,6 +83,7 @@ for unittest in unittests:
         ])
 
 integration_tests = [
+    'bulk_operation_test',
     'dbclient_test',
     'dbclient_writer_test',
     'gridfs_test',

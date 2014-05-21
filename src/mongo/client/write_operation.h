@@ -16,6 +16,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "mongo/bson/bsonobjbuilder.h"
 #include "mongo/util/net/operation.h"

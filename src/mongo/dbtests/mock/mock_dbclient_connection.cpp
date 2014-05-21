@@ -15,6 +15,7 @@
 
 #include "mongo/dbtests/mock/mock_dbclient_connection.h"
 
+#include "mongo/client/write_options.h"
 #include "mongo/dbtests/mock/mock_dbclient_cursor.h"
 #include "mongo/util/net/sock.h"
 #include "mongo/util/time_support.h"
