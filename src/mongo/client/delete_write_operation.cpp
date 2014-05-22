@@ -31,7 +31,7 @@ namespace mongo {
     DeleteWriteOperation::DeleteWriteOperation(const BSONObj& selector, int flags)
         : _selector(selector)
         , _flags(flags)
-        {}
+    {}
 
     Operations DeleteWriteOperation::operationType() const {
         return dbDelete;

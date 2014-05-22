@@ -36,7 +36,7 @@ namespace mongo {
         , _ns(ns)
         , _ordered(ordered)
         , _executed(false)
-        {}
+    {}
 
     BulkOperationBuilder::~BulkOperationBuilder() {
         std::vector<WriteOperation*>::iterator it;

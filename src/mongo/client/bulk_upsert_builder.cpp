@@ -26,7 +26,7 @@ namespace mongo {
     BulkUpsertBuilder::BulkUpsertBuilder(BulkOperationBuilder* const builder, const BSONObj& selector)
         : _builder(builder)
         , _selector(selector)
-        {}
+    {}
 
     void BulkUpsertBuilder::updateOne(const BSONObj& update) {
         UpdateWriteOperation* update_op = new UpdateWriteOperation(

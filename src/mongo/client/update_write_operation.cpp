@@ -34,7 +34,7 @@ namespace mongo {
         : _selector(selector)
         , _update(update)
         , _flags(flags)
-        {}
+    {}
 
     Operations UpdateWriteOperation::operationType() const {
         return dbUpdate;

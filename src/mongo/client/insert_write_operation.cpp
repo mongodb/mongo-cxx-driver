@@ -28,7 +28,7 @@ namespace mongo {
 
     InsertWriteOperation::InsertWriteOperation(const BSONObj& doc)
         : _doc(doc)
-        {}
+    {}
 
     Operations InsertWriteOperation::operationType() const {
         return dbInsert;

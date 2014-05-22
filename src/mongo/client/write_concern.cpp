@@ -51,7 +51,8 @@ namespace mongo {
         , _w_str()
         , _j(false)
         , _fsync(false)
-        , _timeout(0) {}
+        , _timeout(0)
+    {}
 
     int32_t WriteConcern::nodes() const {
         invariant(_enabled.test(kW) || (!_enabled.test(kWStr)));
