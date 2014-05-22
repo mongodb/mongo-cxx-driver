@@ -45,11 +45,13 @@ void play( std::string url ) {
 
 int main( int argc, const char **argv, char **envp) {
 
+    mongo::client::Options options;
+
 #ifdef MONGO_SSL
-    mongo::sslGlobalParams.sslMode.store(mongo::SSLGlobalParams::SSLMode_requireSSL);
+    options.setSSLMode(mongo::client::Options::kSSLRequired);
 #endif
 
-    mongo::Status status = mongo::client::initialize();
+    mongo::Status status = mongo::client::initialize(options);
     if (!status.isOK()) {
         std::cout << "Failed to initialize mongodb client. " << status << std::endl;
         return EXIT_FAILURE;

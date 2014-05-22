@@ -33,6 +33,7 @@
 # endif
 #endif
 
+#include "mongo/client/private/options.h"
 #include "mongo/util/background.h"
 #include "mongo/util/debug_util.h"
 #include "mongo/util/fail_point_service.h"
@@ -321,12 +322,6 @@ namespace mongo {
     }
 
     SockAddr unknownAddress( "0.0.0.0", 0 );
-
-    string makeUnixSockPath(int port) {
-        return mongoutils::str::stream() << serverGlobalParams.socket << "/mongodb-" << port
-                                         << ".sock";
-    }
-
 
     // If an ip address is passed in, just return that.  If a hostname is passed
     // in, look up its ip and return that.  Returns "" on failure.

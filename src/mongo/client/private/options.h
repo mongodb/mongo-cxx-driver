@@ -1,4 +1,4 @@
-/*    Copyright 2013 10gen Inc.
+/*    Copyright 2014 10gen Inc.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,16 +13,16 @@
  *    limitations under the License.
  */
 
-#include "mongo/db/server_options.h"
+#pragma once
 
 namespace mongo {
+namespace client {
 
-    /**
-     * This struct represents global configuration data for the server.  These options get set from
-     * the command line and are used inline in the code.  Note that much shared code uses this
-     * struct, which is why it is here in its own file rather than in the same file as the code that
-     * sets it via the command line, which would pull in more dependencies.
-     */
-    ServerGlobalParams serverGlobalParams;
+    class Options;
 
+    // Sets the current global options. It is expected that this will be called from
+    // 'initialize' and nowhere else.
+    void setOptions(const Options& newOptions);
+
+} // namespace client
 } // namespace mongo

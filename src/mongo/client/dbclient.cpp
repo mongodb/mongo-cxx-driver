@@ -28,6 +28,7 @@
 #include "mongo/client/dbclientcursorshimcursorid.h"
 #include "mongo/client/dbclient_writer.h"
 #include "mongo/client/insert_write_operation.h"
+#include "mongo/client/options.h"
 #include "mongo/client/update_write_operation.h"
 #include "mongo/client/delete_write_operation.h"
 #include "mongo/client/sasl_client_authenticate.h"
@@ -37,7 +38,6 @@
 #include "mongo/db/namespace_string.h"
 #include "mongo/util/assert_util.h"
 #include "mongo/util/net/ssl_manager.h"
-#include "mongo/util/net/ssl_options.h"
 #include "mongo/util/password_digest.h"
 
 namespace mongo {
@@ -918,11 +918,8 @@ namespace mongo {
         }
 
 #ifdef MONGO_SSL
-        int sslModeVal = sslGlobalParams.sslMode.load();
-        if (sslModeVal == SSLGlobalParams::SSLMode_preferSSL ||
-            sslModeVal == SSLGlobalParams::SSLMode_requireSSL) {
+        if (client::Options::current().SSLEnabled())
             return p->secure( sslManager(), _server.host() );
-        }
 #endif
         BSONObj info;
         bool worked = simpleCommand("admin", &info, "ismaster");

@@ -19,14 +19,16 @@
 
 #include "mongo/util/net/message_port.h"
 
+#include <boost/thread/mutex.hpp>
 #include <fcntl.h>
+#include <set>
 #include <time.h>
 
+#include "mongo/client/options.h"
 #include "mongo/util/background.h"
 #include "mongo/util/goodies.h"
 #include "mongo/util/net/message.h"
 #include "mongo/util/net/ssl_manager.h"
-#include "mongo/util/net/ssl_options.h"
 #include "mongo/util/scopeguard.h"
 #include "mongo/util/time_support.h"
 
@@ -196,15 +198,15 @@ again:
 #else                    
                 if (header.responseTo != 0 && header.responseTo != -1) {
                     uassert(17132,
-                            "SSL handshake received but server is started without SSL support",
-                            sslGlobalParams.sslMode.load() != SSLGlobalParams::SSLMode_disabled);
+                            "SSL handshake received but initialized without SSL support",
+                            client::Options::current().SSLEnabled());
                     setX509SubjectName(psock->doSSLHandshake(
                                        reinterpret_cast<const char*>(&header), sizeof(header)));
                     psock->setHandshakeReceived();
                     goto again;
                 }
-                uassert(17189, "The server is configured to only allow SSL connections",
-                        sslGlobalParams.sslMode.load() != SSLGlobalParams::SSLMode_requireSSL);
+                uassert(17189, "The client is configured to only allow SSL connections",
+                        client::Options::current().SSLMode() != client::Options::kSSLRequired);
 #endif // MONGO_SSL
             }
             if ( static_cast<size_t>(len) < sizeof(MSGHEADER) || 
