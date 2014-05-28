@@ -23,7 +23,6 @@
 #include "mongo/platform/random.h"
 #include "mongo/bson/bsonobjbuilder.h"
 #include "mongo/bson/oid.h"
-#include "mongo/bson/util/atomic_int.h"
 
 #define verify MONGO_verify
 
@@ -101,8 +100,9 @@ namespace mongo {
     }
 
     void OID::init() {
-        static AtomicUInt inc = static_cast<unsigned>(
-            scoped_ptr<SecureRandom>(SecureRandom::create())->nextInt64());
+        static AtomicUInt32 inc(
+            static_cast<unsigned>(
+                scoped_ptr<SecureRandom>(SecureRandom::create())->nextInt64()));
 
         {
             unsigned t = (unsigned) time(0);
@@ -116,7 +116,7 @@ namespace mongo {
         _machineAndPid = ourMachineAndPid;
 
         {
-            int new_inc = inc++;
+            int new_inc = inc.fetchAndAdd(1);
             unsigned char *T = (unsigned char *) &new_inc;
             _inc[0] = T[2];
             _inc[1] = T[1];

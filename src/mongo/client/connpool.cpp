@@ -502,6 +502,6 @@ namespace mongo {
         pool.clear();
     }
 
-    AtomicUInt AScopedConnection::_numConnections;
+    AtomicInt32 AScopedConnection::_numConnections;
 
 } // namespace mongo

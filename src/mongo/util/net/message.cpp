@@ -38,7 +38,7 @@ namespace mongo {
         }
     }
 
-    MSGID NextMsgId;
+    AtomicWord<MSGID> NextMsgId;
 
     /*struct MsgStart {
         MsgStart() {
@@ -48,8 +48,7 @@ namespace mongo {
     } msgstart;*/
 
     MSGID nextMessageId() {
-        MSGID msgid = NextMsgId++;
-        return msgid;
+        return NextMsgId.fetchAndAdd(1);
     }
 
     bool doesOpGetAResponse( int op ) {

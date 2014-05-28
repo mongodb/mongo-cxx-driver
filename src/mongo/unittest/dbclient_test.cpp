@@ -18,6 +18,7 @@
 #include <string>
 #include <vector>
 
+#include "mongo/stdx/functional.h"
 #include "mongo/unittest/integration_test.h"
 #include "mongo/util/fail_point_service.h"
 #include "mongo/util/stringutils.h"
@@ -29,8 +30,6 @@ using std::auto_ptr;
 using std::list;
 using std::string;
 using std::vector;
-
-using boost::function;
 
 using namespace bson;
 using namespace mongo::unittest;
@@ -420,7 +419,7 @@ namespace {
         for(int i=0; i<1000; ++i)
             c.insert(TEST_NS, BSON("num" << i));
 
-        boost::function<void(const BSONObj &)> f = nop;
+        stdx::function<void(const BSONObj &)> f = nop;
         c.query(f, TEST_NS, Query("{}"));
     }
 

@@ -24,6 +24,7 @@
 
 namespace mongo {
 
+namespace replset {
     class ReplSetConfig {
     public:
        struct MemberCfg {
@@ -47,6 +48,7 @@ namespace mongo {
            std::map<std::string,std::string> tags;
         };
     };
+} // namespace replset
 
     /**
      * This is a helper class for managing a replica set consisting of
@@ -62,7 +64,7 @@ namespace mongo {
      */
     class MockReplicaSet {
     public:
-        typedef std::map<std::string, ReplSetConfig::MemberCfg> ReplConfigMap;
+        typedef std::map<std::string, replset::ReplSetConfig::MemberCfg> ReplConfigMap;
 
         /**
          * Creates a mock replica set and automatically mocks the isMaster

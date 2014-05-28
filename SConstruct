@@ -589,6 +589,13 @@ elif windows:
 
     env.Append(CCFLAGS=[winRuntimeLibMap[(dynamicCRT, debugBuild)]])
 
+    # With VS 2012 and later we need to specify 5.01 as the target console
+    # so that our 32-bit builds run on Windows XP
+    # See https://software.intel.com/en-us/articles/linking-applications-using-visual-studio-2012-to-run-on-windows-xp
+    #
+    if msarch == "x86":
+        env.Append( LINKFLAGS=["/SUBSYSTEM:CONSOLE,5.01"])
+
     if optBuild:
         # /O2:  optimize for speed (as opposed to size)
         # /Oy-: disable frame pointer optimization (overrides /O2, only affects 32-bit)
@@ -1104,6 +1111,38 @@ def doConfigure(myenv):
             print( 'Failed to enable sanitizer with flag: ' + sanitizer_option )
             Exit(1)
 
+    # When using msvc, check for VS 2013 Update 2+ so we can use new compiler flags
+    if using_msvc():
+        haveVS2013Update2OrLater = False
+        def CheckVS2013Update2(context):
+            test_body = """
+            #if _MSC_VER < 1800 || (_MSC_VER == 1800 && _MSC_FULL_VER < 180030501)
+            #error Old Version
+            #endif
+            int main(int argc, char* argv[]) {
+            return 0;
+            }
+            """
+            context.Message('Checking for VS 2013 Update 2 or Later... ')
+            ret = context.TryCompile(textwrap.dedent(test_body), ".cpp")
+            context.Result(ret)
+            return ret
+        conf = Configure(myenv, help=False, custom_tests = {
+            'CheckVS2013Update2' : CheckVS2013Update2,
+        })
+        haveVS2013Update2OrLater = conf.CheckVS2013Update2()
+        conf.Finish()
+
+        if haveVS2013Update2OrLater and optBuild:
+            # http://blogs.msdn.com/b/vcblog/archive/2013/09/11/introducing-gw-compiler-switch.aspx
+            #
+            myenv.Append( CCFLAGS=["/Gw", "/Gy"] )
+            myenv.Append( LINKFLAGS=["/OPT:REF"])
+
+            # http://blogs.msdn.com/b/vcblog/archive/2014/03/25/linker-enhancements-in-visual-studio-2013-update-2-ctp2.aspx
+            #
+            myenv.Append( CCFLAGS=["/Zc:inline"])
+
     # Apply any link time optimization settings as selected by the 'lto' option.
     if has_option('lto'):
         if using_msvc():
@@ -1173,6 +1212,96 @@ def doConfigure(myenv):
         conf.Finish()
         if haveUUThread:
             myenv.Append(CPPDEFINES=['MONGO_HAVE___THREAD'])
+
+    def CheckCXX11Atomics(context):
+        test_body = """
+        #include <atomic>
+        int main(int argc, char **argv) {
+            std::atomic<int> a(0);
+            return a.fetch_add(1);
+        }
+        """
+        context.Message('Checking for C++11 <atomic> support... ')
+        ret = context.TryLink(textwrap.dedent(test_body), '.cpp')
+        context.Result(ret)
+        return ret;
+
+    def CheckGCCAtomicBuiltins(context):
+        test_body = """
+        int main(int argc, char **argv) {
+            int a = 0;
+            int b = 0;
+            int c = 0;
+
+            __atomic_compare_exchange(&a, &b, &c, false, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
+            return 0;
+        }
+        """
+        context.Message('Checking for gcc __atomic builtins... ')
+        ret = context.TryLink(textwrap.dedent(test_body), '.cpp')
+        context.Result(ret)
+        return ret
+
+    def CheckGCCSyncBuiltins(context):
+        test_body = """
+        int main(int argc, char **argv) {
+            int a = 0;
+            return __sync_fetch_and_add(&a, 1);
+        }
+
+        //
+        // Figure out if we are using gcc older than 4.2 to target 32-bit x86. If so, error out
+        // even if we were able to compile the __sync statement, due to
+        // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=40693
+        //
+        #if defined(__i386__)
+        #if !defined(__clang__)
+        #if defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ < 2)
+        #error "Refusing to use __sync in 32-bit mode with gcc older than 4.2"
+        #endif
+        #endif
+        #endif
+        """
+
+        context.Message('Checking for useable __sync builtins... ')
+        ret = context.TryLink(textwrap.dedent(test_body), '.cpp')
+        context.Result(ret)
+        return ret
+
+    conf = Configure(myenv, help=False, custom_tests = {
+        'CheckCXX11Atomics': CheckCXX11Atomics,
+        'CheckGCCAtomicBuiltins': CheckGCCAtomicBuiltins,
+        'CheckGCCSyncBuiltins': CheckGCCSyncBuiltins,
+    })
+
+    # Figure out what atomics mode to use by way of the tests defined above.
+    #
+    # Non_windows: <atomic> > __atomic > __sync
+    # Windows: <atomic> > Interlocked functions / intrinsics.
+    #
+    # If we are in C++11 mode, try to use <atomic>. This is unusual for us, as typically we
+    # only use __cplusplus >= 201103L to decide if we want to enable a feature. We make a
+    # special case for the atomics and use them on platforms that offer them even if they don't
+    # advertise full conformance. For MSVC systems, if we don't have <atomic> then no more
+    # checks are required. Otherwise, we are on a GCC/clang system, where we may have __atomic
+    # or __sync, so try those in that order next.
+    #
+    # If we don't end up defining a MONGO_HAVE for the atomics, we will end up falling back to
+    # the Microsoft Interlocked functions/intrinsics when using MSVC, or the gcc_intel
+    # implementation of hand-rolled assembly if using gcc/clang.
+
+    if (using_msvc() or (cxx11_mode == "on")) and conf.CheckCXX11Atomics():
+        conf.env.Append(CPPDEFINES=['MONGO_HAVE_CXX11_ATOMICS'])
+    elif using_gcc() or using_clang():
+        # Prefer the __atomic builtins. If we don't have those, try for __sync. Otherwise
+        # atomic_intrinsics.h will try to fall back to the hand-rolled assembly implementations
+        # in atomic_intrinsics_gcc_intel for x86 platforms.
+        if conf.CheckGCCAtomicBuiltins():
+            conf.env.Append(CPPDEFINES=["MONGO_HAVE_GCC_ATOMIC_BUILTINS"])
+        else:
+            if conf.CheckGCCSyncBuiltins():
+                conf.env.Append(CPPDEFINES=["MONGO_HAVE_GCC_SYNC_BUILTINS"])
+    myenv = conf.Finish()
 
     if using_msvc():
         # TODO: This is really only needed for MSVC 12, but we have no current way to know

@@ -201,6 +201,15 @@ namespace mongo {
        display happening.
     */
 #define MONGO_massert(msgid, msg, expr) (void)( MONGO_likely(!!(expr)) || (::mongo::msgasserted(msgid, msg), 0) )
+
+    MONGO_CLIENT_API inline void massertStatusOK(const Status& status) {
+        if (MONGO_unlikely(!status.isOK())) {
+            msgasserted((status.location() != 0 ? status.location() : status.code()),
+                        status.reason());
+        }
+    }
+
+
     /* same as massert except no msgid */
 #define MONGO_verify(_Expression) (void)( MONGO_likely(!!(_Expression)) || (::mongo::verifyFailed(#_Expression, __FILE__, __LINE__), 0) )
 
@@ -246,7 +255,7 @@ namespace mongo {
     try { \
         expression; \
     } catch ( const std::exception &e ) { \
-        stringstream ss; \
+        std::stringstream ss; \
         ss << "caught exception: " << e.what() << ' ' << __FILE__ << ' ' << __LINE__; \
         msgasserted( 13294 , ss.str() ); \
     } catch ( ... ) { \
@@ -257,7 +266,7 @@ namespace mongo {
     try { \
         expression; \
     } catch ( const std::exception &e ) { \
-        stringstream ss; \
+        std::stringstream ss; \
         ss << msg << " caught exception exception: " << e.what();   \
         msgasserted( 14043 , ss.str() );        \
     } catch ( ... ) { \

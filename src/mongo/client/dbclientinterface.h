@@ -22,8 +22,6 @@
 
 #include "mongo/config.h"
 
-#include <boost/function.hpp>
-
 #include "mongo/base/string_data.h"
 #include "mongo/client/bulk_operation_builder.h"
 #include "mongo/client/exceptions.h"
@@ -33,6 +31,7 @@
 #include "mongo/db/jsobj.h"
 #include "mongo/logger/log_severity.h"
 #include "mongo/platform/atomic_word.h"
+#include "mongo/stdx/functional.h"
 #include "mongo/util/net/message.h"
 #include "mongo/util/net/message_port.h"
 
@@ -78,7 +77,7 @@ namespace mongo {
             will fully read all data queried.  Faster when you are pulling a lot of data and know you want to
             pull it all down.  Note: it is not allowed to not read all the data unless you close the connection.
 
-            Use the query( boost::function<void(const BSONObj&)> f, ... ) version of the connection's query()
+            Use the query( stdx::function<void(const BSONObj&)> f, ... ) version of the connection's query()
             method, and it will take care of all the details for you.
         */
         QueryOption_Exhaust = 1 << 6,
@@ -945,7 +944,7 @@ namespace mongo {
          * Once such a function is set as the runCommand hook, every time the DBClient
          * processes a runCommand, the hook will be called just prior to sending it to the server. 
          */
-        typedef boost::function<void(BSONObjBuilder*)> RunCommandHookFunc;
+        typedef stdx::function<void(BSONObjBuilder*)> RunCommandHookFunc;
         virtual void setRunCommandHook(RunCommandHookFunc func);
         RunCommandHookFunc getRunCommandHook() const {
             return _runCommandHook;
@@ -955,7 +954,7 @@ namespace mongo {
          * Similar to above, but for running a function on a command response after a command
          * has been run.
          */
-        typedef boost::function<void(const BSONObj&, const std::string&)> PostRunCommandHookFunc;
+        typedef stdx::function<void(const BSONObj&, const std::string&)> PostRunCommandHookFunc;
         virtual void setPostRunCommandHook(PostRunCommandHookFunc func);
         PostRunCommandHookFunc getPostRunCommandHook() const {
             return _postRunCommandHook;
@@ -997,7 +996,7 @@ namespace mongo {
          * has already been communicated automatically as part of the connect call.
          * Returns false on failure and set "errmsg".
          */
-        bool _authX509(const std::string&dbname,
+        bool _authX509(const std::string &dbname,
                        const std::string &username,
                        BSONObj *info);
 
@@ -1095,13 +1094,13 @@ namespace mongo {
             Use the DBClientCursorBatchIterator version, below, if you want to do items in large
             blocks, perhaps to avoid granular locking and such.
          */
-        virtual unsigned long long query( boost::function<void(const BSONObj&)> f,
+        virtual unsigned long long query( stdx::function<void(const BSONObj&)> f,
                                           const std::string& ns,
                                           Query query,
                                           const BSONObj *fieldsToReturn = 0,
                                           int queryOptions = 0 );
 
-        virtual unsigned long long query( boost::function<void(DBClientCursorBatchIterator&)> f,
+        virtual unsigned long long query( stdx::function<void(DBClientCursorBatchIterator&)> f,
                                           const std::string& ns,
                                           Query query,
                                           const BSONObj *fieldsToReturn = 0,
@@ -1226,11 +1225,11 @@ namespace mongo {
          */
         DBClientConnection(bool _autoReconnect=false, DBClientReplicaSet* cp=0, double so_timeout=0) :
             clientSet(cp), _failed(false), autoReconnect(_autoReconnect), autoReconnectBackoff(1000, 2000), _so_timeout(so_timeout) {
-            _numConnections++;
+            _numConnections.fetchAndAdd(1);
         }
 
         virtual ~DBClientConnection() {
-            _numConnections--;
+            _numConnections.fetchAndAdd(-1);
         }
 
         /** Connect to a Mongo database server.
@@ -1290,7 +1289,7 @@ namespace mongo {
             return DBClientBase::query( ns, query, nToReturn, nToSkip, fieldsToReturn, queryOptions , batchSize );
         }
 
-        virtual unsigned long long query( boost::function<void(DBClientCursorBatchIterator &)> f,
+        virtual unsigned long long query( stdx::function<void(DBClientCursorBatchIterator &)> f,
                                           const std::string& ns,
                                           Query query,
                                           const BSONObj *fieldsToReturn,
@@ -1334,7 +1333,7 @@ namespace mongo {
         virtual bool lazySupported() const { return true; }
 
         static int MONGO_CLIENT_FUNC getNumConnections() {
-            return _numConnections;
+            return _numConnections.load();
         }
 
         /**
@@ -1376,7 +1375,7 @@ namespace mongo {
         double _so_timeout;
         bool _connect( std::string& errmsg );
 
-        static AtomicUInt _numConnections;
+        static AtomicInt32 _numConnections;
         static bool _lazyKillCursor; // lazy means we piggy back kill cursors on next op
 
 #ifdef MONGO_SSL

@@ -19,6 +19,7 @@
 
 #include "mongo/config.h"
 
+#include <boost/utility.hpp>
 #include <vector>
 
 #include "mongo/util/net/message.h"
@@ -28,8 +29,6 @@ namespace mongo {
 
     class MessagingPort;
     class PiggyBackData;
-
-    typedef AtomicUInt MSGID;
 
     class AbstractMessagingPort : boost::noncopyable {
     public:

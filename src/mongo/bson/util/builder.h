@@ -252,7 +252,7 @@ namespace mongo {
 #define snprintf _snprintf
 #endif
 
-    /** stringstream deals with locale so this is a lot faster than std::stringstream for UTF8 */
+    /** std::stringstream deals with locale so this is a lot faster than std::stringstream for UTF8 */
     template <typename Allocator>
     class StringBuilderImpl {
     public:

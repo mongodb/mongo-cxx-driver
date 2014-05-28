@@ -1127,18 +1127,18 @@ namespace mongo {
                 _f( i.nextSafe() );
             }
         }
-        boost::function<void(const BSONObj &)> _f;
+        stdx::function<void(const BSONObj &)> _f;
     };
 
-    unsigned long long DBClientBase::query( boost::function<void(const BSONObj&)> f, const string& ns, Query query, const BSONObj *fieldsToReturn, int queryOptions ) {
+    unsigned long long DBClientBase::query( stdx::function<void(const BSONObj&)> f, const string& ns, Query query, const BSONObj *fieldsToReturn, int queryOptions ) {
         DBClientFunConvertor fun;
         fun._f = f;
-        boost::function<void(DBClientCursorBatchIterator &)> ptr( fun );
+        stdx::function<void(DBClientCursorBatchIterator &)> ptr( fun );
         return this->query( ptr, ns, query, fieldsToReturn, queryOptions );
     }
 
     unsigned long long DBClientBase::query(
-            boost::function<void(DBClientCursorBatchIterator &)> f,
+            stdx::function<void(DBClientCursorBatchIterator &)> f,
             const string& ns,
             Query query,
             const BSONObj *fieldsToReturn,
@@ -1165,7 +1165,7 @@ namespace mongo {
     }
 
     unsigned long long DBClientConnection::query(
-            boost::function<void(DBClientCursorBatchIterator &)> f,
+            stdx::function<void(DBClientCursorBatchIterator &)> f,
             const string& ns,
             Query query,
             const BSONObj *fieldsToReturn,
@@ -1553,7 +1553,7 @@ namespace mongo {
     }
 #endif
 
-    AtomicUInt DBClientConnection::_numConnections;
+    AtomicInt32 DBClientConnection::_numConnections;
     bool DBClientConnection::_lazyKillCursor = true;
 
 

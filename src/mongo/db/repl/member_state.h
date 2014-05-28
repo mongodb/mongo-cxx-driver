@@ -33,6 +33,7 @@
 #include <string>
 
 namespace mongo {
+namespace replset {
 
 
     /*
@@ -94,4 +95,5 @@ namespace mongo {
         return "";
     }
 
-}
+} // namespace replset
+} // namespace mongo
