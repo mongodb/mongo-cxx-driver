@@ -40,6 +40,8 @@
 
 #pragma once
 
+#include "mongo/config.h"
+
 #if defined(MONGO_HAVE_CXX11_ATOMICS)
 #error "Use of atomic_intrinsics.h is not supported when C++11 <atomic> is available"
 #endif

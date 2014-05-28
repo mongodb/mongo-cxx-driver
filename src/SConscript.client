@@ -42,8 +42,10 @@ libEnv.AddMethod(makeConfigHDefine)
 configSubstitutions = [
     libEnv.makeConfigHDefine('@mongoclient_ssl@', 'MONGO_SSL'),
     libEnv.makeConfigHDefine('@mongoclient_sasl@', 'MONGO_SASL'),
-    libEnv.makeConfigHDefine('@mongoclient_have_header_unistd_h@', 'MONGO_HAVE_HEADER_UNISTD_H')
-,
+    libEnv.makeConfigHDefine('@mongoclient_have_header_unistd_h@', 'MONGO_HAVE_HEADER_UNISTD_H'),
+    libEnv.makeConfigHDefine('@mongoclient_have_cxx11_atomics@', 'MONGO_HAVE_CXX11_ATOMICS'),
+    libEnv.makeConfigHDefine('@mongoclient_have_gcc_atomic_builtins@', 'MONGO_HAVE_GCC_ATOMIC_BUILTINS'),
+    libEnv.makeConfigHDefine('@mongoclient_have_gcc_sync_builtins@', 'MONGO_HAVE_GCC_SYNC_BUILTINS'),
 ]
 libEnv.Substfile('mongo/config.h.in', SUBST_DICT=configSubstitutions)
 
