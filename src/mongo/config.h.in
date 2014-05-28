@@ -23,3 +23,12 @@
 
 // Define to 1 if unistd.h is available
 @mongoclient_have_header_unistd_h@
+
+// Define to 1 if C++11 <atomic> is available
+@mongoclient_have_cxx11_atomics@
+
+// Define to 1 if GCC style __atomic functions are available
+@mongoclient_have_gcc_atomic_builtins@
+
+// Define to 1 if GCC style __sync functions are available
+@mongoclient_have_gcc_sync_builtins@
