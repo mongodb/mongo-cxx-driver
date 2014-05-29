@@ -130,13 +130,15 @@ clientSourceBasic = [
     'third_party/murmurhash3/MurmurHash3.cpp',
     ]
 
+clientSourceTz = [] if clientEnv['MONGO_HAVE_TIMEGM'] else ['third_party/tz/timegm.c']
+
 clientSourceSasl = [
     'mongo/client/sasl_client_authenticate_impl.cpp',
     'mongo/client/sasl_client_session.cpp',
     'mongo/client/sasl_sspi.cpp',
 ]
 
-clientSourceAll = clientSourceBasic + clientSourceSasl
+clientSourceAll = clientSourceBasic + clientSourceTz + clientSourceSasl
 
 usingSasl = libEnv['MONGO_SASL']
 
