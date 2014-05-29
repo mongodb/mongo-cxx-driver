@@ -33,55 +33,63 @@ namespace mongo {
         const WriteConcern* wc,
         std::vector<BSONObj>* results
     ) {
-        bool inRequest = false;
-        int opsInRequest = 0;
-        Operations requestType;
 
-        // In the future we could optimize by re-using bufbuilders and/or resetting these builders
-        boost::scoped_ptr<BSONObjBuilder> command(new BSONObjBuilder);
-        boost::scoped_ptr<BSONArrayBuilder> batch(new BSONArrayBuilder);
+        std::vector<WriteOperation*>::const_iterator batch_begin = write_operations.begin();
+        const std::vector<WriteOperation*>::const_iterator end = write_operations.end();
 
-        std::vector<WriteOperation*>::const_iterator iter = write_operations.begin();
+        while (batch_begin != end) {
 
-        while (iter != write_operations.end()) {
-            // We don't have a pending command yet
-            if (!inRequest) {
-                (*iter)->startCommand(ns.toString(), command.get());
-                inRequest = true;
-                requestType = (*iter)->operationType();
+            boost::scoped_ptr<BSONObjBuilder> command(new BSONObjBuilder);
+            boost::scoped_ptr<BSONArrayBuilder> batch(new BSONArrayBuilder);
+            std::vector<WriteOperation*>::const_iterator batch_iter = batch_begin;
+
+            // We must be able to fit the first item of the batch. Otherwise, the calling code
+            // passed an over size write operation in violation of our contract.
+            invariant(_fits(batch.get(), *batch_iter));
+
+            // Begin the command for this batch.
+            (*batch_iter)->startCommand(ns.toString(), command.get());
+
+            while (true) {
+
+                // Always safe to append here: either we just entered the loop, or all the
+                // checks below passed.
+                (*batch_iter)->appendSelfToCommand(batch.get());
+
+                // Peek at the next operation.
+                const std::vector<WriteOperation*>::const_iterator next = boost::next(batch_iter);
+
+                // If we are out of operations, issue what we have.
+                if (next == end)
+                    break;
+
+                // If the next operation is of a different type, issue what we have.
+                if ((*next)->operationType() != (*batch_iter)->operationType())
+                    break;
+
+                // If adding the next op would put us over the limit of ops in a batch, issue
+                // what we have.
+                if (std::distance(batch_begin, next) >= _client->getMaxWriteBatchSize())
+                    break;
+
+                // If we can't put the next item into the current batch, issue what we have.
+                if (!_fits(batch.get(), *next))
+                    break;
+
+                // OK to proceed to next op.
+                batch_iter = next;
             }
 
-            // Now we have a pending request, can we add to it?
-            if (requestType == (*iter)->operationType() &&
-                opsInRequest < _client->getMaxWriteBatchSize()) {
+            // End the command for this batch.
+            _endCommand(batch.get(), *batch_iter, ordered, command.get());
 
-                // We can add to the command, lets see if it will fit and we can batch
-                if(_fits(batch.get(), *iter)) {
-                    (*iter)->appendSelfToCommand(batch.get());
-                    ++opsInRequest;
-                    ++iter;
-                    continue;
-                }
-            }
-
-            // Send the current request to the server, record the response, start a new request
-            --iter;
-            _endCommand(batch.get(), *iter, ordered, command.get());
+            // Issue the complete command.
             results->push_back(_send(command.get(), wc, ns));
-            command.reset(new BSONObjBuilder);
-            batch.reset(new BSONArrayBuilder);
-            inRequest = false;
-            opsInRequest = 0;
-            ++iter;
+
+            // The next batch begins with the op after the last one in the just issued batch.
+            batch_begin = ++batch_iter;
         }
 
-        // Last batch
-        if (opsInRequest != 0) {
-            // All of the flags are the same so just use the ones from the final op in batch
-            --iter;
-            _endCommand(batch.get(), *iter, ordered, command.get());
-            results->push_back(_send(command.get(), wc, ns));
-        }
     }
 
     bool CommandWriter::_fits(BSONArrayBuilder* builder, WriteOperation* op) {

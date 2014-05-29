@@ -30,47 +30,67 @@ namespace mongo {
         const WriteConcern* wc,
         std::vector<BSONObj>* results
     ) {
-        bool inRequest = false;
-        int opsInRequest = 0;
-        Operations requestType;
 
         BufBuilder builder;
 
-        std::vector<WriteOperation*>::const_iterator iter = write_operations.begin();
+        std::vector<WriteOperation*>::const_iterator batch_begin = write_operations.begin();
+        const std::vector<WriteOperation*>::const_iterator end = write_operations.end();
 
-        while (iter != write_operations.end()) {
-            // We don't have a pending request yet
-            if (!inRequest) {
-                (*iter)->startRequest(ns.toString(), ordered, &builder);
-                inRequest = true;
-                requestType = (*iter)->operationType();
+        while (batch_begin != end) {
+
+            std::vector<WriteOperation*>::const_iterator batch_iter = batch_begin;
+
+            // We must be able to fit the first item of the batch. Otherwise, the calling code
+            // passed an over size write operation in violation of our contract.
+            invariant(_fits(&builder, *batch_iter));
+
+            // Begin the command for this batch.
+            (*batch_iter)->startRequest(ns.toString(), ordered, &builder);
+
+            while (true) {
+
+                // Always safe to append here: either we just entered the loop, or all the
+                // below checks passed.
+                (*batch_iter)->appendSelfToRequest(&builder);
+
+                // If the operation we just queued isn't batchable, issue what we have.
+                if (!_batchableRequest((*batch_iter)->operationType()))
+                    break;
+
+                // Peek at the next operation.
+                const std::vector<WriteOperation*>::const_iterator next = boost::next(batch_iter);
+
+                // If we are out of operations, issue what we have.
+                if (next == end)
+                    break;
+
+                // If the next operation is of a different type, issue what we have.
+                if ((*next)->operationType() != (*batch_iter)->operationType())
+                    break;
+
+                // If adding the next op would put us over the limit of ops in a batch, issue
+                // what we have.
+                if (std::distance(batch_begin, next) >= _client->getMaxWriteBatchSize())
+                    break;
+
+                // If we can't put the next item into the current batch, issue what we have.
+                if (!_fits(&builder, *next))
+                    break;
+
+                // OK to proceed to next op
+                batch_iter = next;
             }
 
-            // now we have a pending request, can we add to it?
-            if (requestType == (*iter)->operationType() &&
-                opsInRequest < _client->getMaxWriteBatchSize()) {
+            // Issue the complete command.
+            results->push_back(_send((*batch_iter)->operationType(), builder, wc, ns));
 
-                // We can add to the request, lets see if it will fit and we can batch
-                if(_fits(&builder, *iter)) {
-                    (*iter)->appendSelfToRequest(&builder);
-                    ++opsInRequest;
-                    ++iter;
-
-                    if (_batchableRequest(requestType))
-                        continue;
-                }
-            }
-
-            // Send the current request to the server, record the response, start a new request
-            results->push_back(_send(requestType, builder, wc, ns));
-            inRequest = false;
-            opsInRequest = 0;
+            // Reset the builder so we can build the next request.
             builder.reset();
+
+            // The next batch begins with the op after the last one in the just issued batch.
+            batch_begin = ++batch_iter;
         }
 
-        // Last batch
-        if (opsInRequest != 0)
-            results->push_back(_send(requestType, builder, wc, ns));
     }
 
     bool WireProtocolWriter::_fits(BufBuilder* builder, WriteOperation* op) {
