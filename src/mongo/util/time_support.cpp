@@ -40,6 +40,13 @@
 #define snprintf _snprintf
 #endif
 
+#if !defined(MONGO_HAVE_TIMEGM)
+// Not all systems have timegm defined (it isn't part of POSIX), so fall back to our vendored
+// implementation if our configure checks did not detect it as available on the current
+// system. See SERVER-13446, SERVER-14019, and CXX-204.
+extern "C" time_t timegm(struct tm *const tmp);
+#endif
+
 namespace mongo {
 
     // jsTime_virtual_skew is just for testing. a test command manipulates it.
