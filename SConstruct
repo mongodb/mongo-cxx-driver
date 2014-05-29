@@ -1291,16 +1291,16 @@ def doConfigure(myenv):
     # implementation of hand-rolled assembly if using gcc/clang.
 
     if (using_msvc() or (cxx11_mode == "on")) and conf.CheckCXX11Atomics():
-        conf.env.Append(CPPDEFINES=['MONGO_HAVE_CXX11_ATOMICS'])
+        conf.env['MONGO_HAVE_CXX11_ATOMICS'] = True
     elif using_gcc() or using_clang():
         # Prefer the __atomic builtins. If we don't have those, try for __sync. Otherwise
         # atomic_intrinsics.h will try to fall back to the hand-rolled assembly implementations
         # in atomic_intrinsics_gcc_intel for x86 platforms.
         if conf.CheckGCCAtomicBuiltins():
-            conf.env.Append(CPPDEFINES=["MONGO_HAVE_GCC_ATOMIC_BUILTINS"])
+            conf.env["MONGO_HAVE_GCC_ATOMIC_BUILTINS"] = True
         else:
             if conf.CheckGCCSyncBuiltins():
-                conf.env.Append(CPPDEFINES=["MONGO_HAVE_GCC_SYNC_BUILTINS"])
+                conf.env["MONGO_HAVE_GCC_SYNC_BUILTINS"] = True
     myenv = conf.Finish()
 
     if using_msvc():

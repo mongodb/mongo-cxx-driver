@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include "mongo/config.h"
+
 #if defined(MONGO_HAVE_CXX11_ATOMICS)
 #include "mongo/platform/atomic_word_cxx11.h"
 #else
