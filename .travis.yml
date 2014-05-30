@@ -60,16 +60,17 @@ install:
 before_script:
     # Set SCONS_FLAGS based on new $CXX and $CC
     - $CXX --version
-    - export SCONS_FLAGS="-j3 --mute --ssl --use-sasl-client --cxx=$CXX --cc=$CC $DEBUG $SANITIZE"
+    - export SCONS_CONCURRENCY_FLAG="-j3"
+    - export SCONS_FLAGS="--mute --ssl --use-sasl-client --cxx=$CXX --cc=$CC $DEBUG $SANITIZE"
 
     # run lint
     - scons $SCONS_FLAGS lint
 
     # Build all targets
-    - scons $SCONS_FLAGS all
+    - scons $SCONS_FLAGS $SCONS_CONCURRENCY_FLAG all
 
     # Install the driver
-    - scons $SCONS_FLAGS install-mongoclient
+    - scons $SCONS_FLAGS $SCONS_CONCURRENCY_FLAG install-mongoclient
 
     # Check the installation
     - scons $SCONS_FLAGS check-install-mongoclient
