@@ -632,7 +632,7 @@ if nix:
 
     env.Append( CPPDEFINES=["_FILE_OFFSET_BITS=64"] )
     env.Append( CXXFLAGS=["-Wnon-virtual-dtor", "-Woverloaded-virtual"] )
-    env.Append( LINKFLAGS=["-fPIC", "-pthread"] )
+    env.Append( LINKFLAGS=["-fPIC"] )
 
     # SERVER-9761: Ensure early detection of missing symbols in dependent libraries at program
     # startup.
@@ -794,6 +794,9 @@ def doConfigure(myenv):
 
     global use_clang
     use_clang = using_clang()
+
+    if using_gcc():
+        myenv.Append(LINKFLAGS=["-pthread"])
 
     # Figure out what our minimum windows version is. If the user has specified, then use
     # that. Otherwise, if they have explicitly selected between 32 bit or 64 bit, choose XP or
