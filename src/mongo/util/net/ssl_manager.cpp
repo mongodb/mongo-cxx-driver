@@ -26,6 +26,7 @@
 #include "mongo/platform/atomic_word.h"
 #include "mongo/client/options.h"
 #include "mongo/util/concurrency/mutex.h"
+#include "mongo/util/debug_util.h"
 #include "mongo/util/log.h"
 #include "mongo/util/mongoutils/str.h"
 #include "mongo/util/net/sock.h"

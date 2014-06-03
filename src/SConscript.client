@@ -302,9 +302,9 @@ mongoClientStaticLib = staticLibEnv.StaticLibrary(
 
 mongoClientPrefixInstalls.append(libEnv.Install("$INSTALL_DIR/lib", mongoClientStaticLib))
 
-# Other things like tests need to link against this library,
-# so export it so it can be named.
-Export({'libMongoclientStatic' : mongoClientStaticLib})
+# Other things like tests need to link against the static library (and the deps of that static
+# lib) so export it so it can be easily referenced.
+Export({'mongoClientStaticLibs' : [mongoClientStaticLib] + mongoClientLibs})
 
 mongoClientSharedLib = None
 
@@ -370,7 +370,7 @@ limit_cpppath=[p for p in libEnv['CPPPATH']
 installationTestEnv = libEnv.Clone(
     CPPPATH=["$INSTALL_DIR/include"] + limit_cpppath,
     LIBPATH=["$INSTALL_DIR/lib"],
-    CPPDEFINES=[],
+    CPPDEFINES=['STATIC_LIBMONGOCLIENT'],
 )
 
 include_dbclienth_test_file = 'mongo/client/include_dbclienth_test.cpp'
@@ -402,6 +402,9 @@ if windows:
     staticClientEnv.PrependUnique(LIBPATH=['$VARIANT_DIR'])
 else:
     staticClientEnv.PrependUnique(LIBS=[mongoClientStaticLib])
+
+# Pull in the libs that the static client depends on.
+staticClientEnv.AppendUnique(LIBS=mongoClientLibs)
 
 staticClientEnv.AppendUnique(CPPDEFINES=['STATIC_LIBMONGOCLIENT'])
 

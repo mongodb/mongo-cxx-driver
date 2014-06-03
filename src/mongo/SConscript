@@ -1,13 +1,12 @@
-Import('env windows libMongoclientStatic libGTestStatic')
+Import('env windows mongoClientStaticLibs libGTestStatic')
 
 staticClientEnv = env.Clone()
 staticClientEnv.PrependUnique(
     CPPDEFINES=[
         'STATIC_LIBMONGOCLIENT'
     ],
-    LIBS=[
-        libMongoclientStatic
-    ])
+    LIBS=mongoClientStaticLibs,
+)
 
 libMock = staticClientEnv.StaticLibrary(
     target='mocklib',
