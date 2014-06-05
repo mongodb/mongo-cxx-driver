@@ -52,7 +52,7 @@ install:
       libboost-thread1.49-dev
 
     # Install MongoDB Enterprise and let smoke drive
-    - sudo apt-get install mongodb-enterprise
+    - sudo apt-get install mongodb-enterprise-server
     - sudo stop mongod
     - mkdir data
     - mongod ${MONGOD_OPTS}
