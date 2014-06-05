@@ -30,8 +30,8 @@ namespace mongo {
         : _doc(doc)
     {}
 
-    Operations InsertWriteOperation::operationType() const {
-        return dbInsert;
+    WriteOpType InsertWriteOperation::operationType() const {
+        return dbWriteInsert;
     }
 
     const char* InsertWriteOperation::batchName() const {
@@ -57,6 +57,10 @@ namespace mongo {
 
     void InsertWriteOperation::appendSelfToCommand(BSONArrayBuilder* batch) const {
         batch->append(_doc);
+    }
+
+    void InsertWriteOperation::appendSelfToBSONObj(BSONObjBuilder* obj) const {
+        obj->appendElements(_doc);
     }
 
 } // namespace mongo

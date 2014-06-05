@@ -33,6 +33,7 @@
 #include "mongo/client/delete_write_operation.h"
 #include "mongo/client/sasl_client_authenticate.h"
 #include "mongo/client/wire_protocol_writer.h"
+#include "mongo/client/write_result.h"
 #include "mongo/db/jsobj.h"
 #include "mongo/db/json.h"
 #include "mongo/db/namespace_string.h"
@@ -1210,13 +1211,19 @@ namespace mongo {
         return n;
     }
 
-    void DBClientBase::_write( const string& ns, const vector<WriteOperation*>& writes, bool ordered, const WriteConcern* wc, std::vector<BSONObj>* results ) {
-        const WriteConcern* operation_wc = wc ? wc : &getWriteConcern();
+    void DBClientBase::_write(
+        const string& ns,
+        const vector<WriteOperation*>& writes,
+        bool ordered,
+        const WriteConcern* writeConcern,
+        WriteResult* writeResult
+    ) {
+        const WriteConcern* operationWriteConcern = writeConcern ? writeConcern : &getWriteConcern();
 
-        if (getMaxWireVersion() >= 2 && operation_wc->requiresConfirmation())
-            _commandWriter->write( ns, writes, ordered, operation_wc, results );
+        if (getMaxWireVersion() >= 2 && operationWriteConcern->requiresConfirmation())
+            _commandWriter->write( ns, writes, ordered, operationWriteConcern, writeResult );
         else
-            _wireProtocolWriter->write( ns, writes, ordered, operation_wc, results );
+            _wireProtocolWriter->write( ns, writes, ordered, operationWriteConcern, writeResult );
 
     }
 
@@ -1239,6 +1246,7 @@ namespace mongo {
         insert( ns, toInsert, flags, wc );
     }
 
+    // prefer using the bulk API for this
     void DBClientBase::insert( const string & ns, const vector< BSONObj >& v, int flags , const WriteConcern* wc ) {
         ScopedWriteOperations inserts;
 
@@ -1251,8 +1259,8 @@ namespace mongo {
 
         bool ordered = !(flags & InsertOption_ContinueOnError);
 
-        vector<BSONObj> results;
-        _write( ns, inserts.ops, ordered, wc, &results );
+        WriteResult writeResult;
+        _write( ns, inserts.ops, ordered, wc, &writeResult );
     }
 
     void DBClientBase::remove( const string & ns , Query obj , bool justOne, const WriteConcern* wc ) {
@@ -1265,8 +1273,8 @@ namespace mongo {
                 obj.obj.objsize() <= getMaxBsonObjectSize());
         deletes.enqueue( new DeleteWriteOperation(obj.obj, flags) );
 
-        vector<BSONObj> results;
-        _write( ns, deletes.ops, true, wc, &results );
+        WriteResult writeResult;
+        _write( ns, deletes.ops, true, wc, &writeResult );
     }
 
     void DBClientBase::update( const string & ns , Query query , BSONObj obj , bool upsert, bool multi, const WriteConcern* wc ) {
@@ -1284,8 +1292,8 @@ namespace mongo {
                 obj.objsize() <= getMaxBsonObjectSize());
         updates.enqueue( new UpdateWriteOperation(query.obj, obj, flags) );
 
-        vector<BSONObj> results;
-        _write( ns, updates.ops, true, wc, &results );
+        WriteResult writeResult;
+        _write( ns, updates.ops, true, wc, &writeResult );
     }
 
     BulkOperationBuilder DBClientBase::initializeOrderedBulkOp(const std::string& ns) {

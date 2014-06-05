@@ -22,6 +22,7 @@
 #include "mongo/client/dbclientinterface.h"
 #include "mongo/client/insert_write_operation.h"
 #include "mongo/client/write_options.h"
+#include "mongo/client/write_result.h"
 
 namespace mongo {
 
@@ -36,6 +37,7 @@ namespace mongo {
         , _ns(ns)
         , _ordered(ordered)
         , _executed(false)
+        , _currentIndex(0)
     {}
 
     BulkOperationBuilder::~BulkOperationBuilder() {
@@ -53,7 +55,7 @@ namespace mongo {
         enqueue(insert_op);
     }
 
-    void BulkOperationBuilder::execute(const WriteConcern* wc, std::vector<BSONObj>* results) {
+    void BulkOperationBuilder::execute(const WriteConcern* writeConcern, WriteResult* writeResult) {
         uassert(0, "Bulk operations cannot be re-executed", !_executed);
         uassert(0, "Bulk operations cannot be executed without any operations",
             !_write_operations.empty());
@@ -61,11 +63,18 @@ namespace mongo {
         if (!_ordered)
             std::sort(_write_operations.begin(), _write_operations.end(), compare);
 
-        _client->_write(_ns, _write_operations, _ordered, wc, results);
+        // This signals to the DBClientWriter that we cannot batch inserts together
+        // over the wire protocol and must send them individually to the server in
+        // order to understand what happened to them.
+        writeResult->_requiresDetailedInsertResults = true;
+
+        _client->_write(_ns, _write_operations, _ordered, writeConcern, writeResult);
+
         _executed = true;
     }
 
     void BulkOperationBuilder::enqueue(WriteOperation* operation) {
+        operation->setBulkIndex(_currentIndex++);
         _write_operations.push_back(operation);
     }
 

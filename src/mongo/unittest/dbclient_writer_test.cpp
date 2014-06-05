@@ -21,6 +21,7 @@
 #include "mongo/client/insert_write_operation.h"
 #include "mongo/client/update_write_operation.h"
 #include "mongo/client/wire_protocol_writer.h"
+#include "mongo/client/write_result.h"
 
 using std::string;
 using std::vector;
@@ -36,12 +37,12 @@ namespace {
     struct RequiredWireVersion;
 
     template <>
-    struct RequiredWireVersion<WireProtocolWriter>{
+    struct RequiredWireVersion<WireProtocolWriter> {
         static const int value = 0;
     };
 
     template <>
-    struct RequiredWireVersion<CommandWriter>{
+    struct RequiredWireVersion<CommandWriter> {
         static const int value = 2;
     };
 
@@ -72,8 +73,8 @@ namespace {
         vector<WriteOperation*> inserts;
         InsertWriteOperation insert(BSON("a" << 1));
         inserts.push_back(&insert);
-        vector<BSONObj> results;
-        this->writer->write(TEST_NS, inserts, true, &WriteConcern::acknowledged, &results);
+        WriteResult result;
+        this->writer->write(TEST_NS, inserts, true, &WriteConcern::acknowledged, &result);
         ASSERT_EQUALS(this->c.findOne(TEST_NS, Query())["a"].numberInt(), 1);
     }
 
@@ -84,11 +85,11 @@ namespace {
         InsertWriteOperation insert2(BSON("a" << 2));
         inserts.push_back(&insert1);
         inserts.push_back(&insert2);
-        vector<BSONObj> results;
-        this->writer->write(TEST_NS, inserts, true, &WriteConcern::acknowledged, &results);
+        WriteResult result;
+        this->writer->write(TEST_NS, inserts, true, &WriteConcern::acknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 1U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
-        ASSERT_TRUE(results.front()["ok"].trueValue());
+        ASSERT_FALSE(result.hasErrors());
     }
 
     TYPED_TEST(DBClientWriterTest, MultipleUnorderedInserts) {
@@ -98,11 +99,11 @@ namespace {
         InsertWriteOperation insert2(BSON("a" << 2));
         inserts.push_back(&insert1);
         inserts.push_back(&insert2);
-        vector<BSONObj> results;
-        this->writer->write(TEST_NS, inserts, false, &WriteConcern::acknowledged, &results);
+        WriteResult result;
+        this->writer->write(TEST_NS, inserts, false, &WriteConcern::acknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 1U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
-        ASSERT_TRUE(results.front()["ok"].trueValue());
+        ASSERT_FALSE(result.hasErrors());
     }
 
     TYPED_TEST(DBClientWriterTest, MultipleOrderedInsertsWithError) {
@@ -113,9 +114,9 @@ namespace {
         inserts.push_back(&insert1);
         inserts.push_back(&insert1);
         inserts.push_back(&insert2);
-        vector<BSONObj> results;
+        WriteResult result;
         ASSERT_THROWS(
-            this->writer->write(TEST_NS, inserts, true, &WriteConcern::acknowledged, &results),
+            this->writer->write(TEST_NS, inserts, true, &WriteConcern::acknowledged, &result),
             OperationException
         );
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}").obj), 1U);
@@ -130,9 +131,9 @@ namespace {
         inserts.push_back(&insert1);
         inserts.push_back(&insert1);
         inserts.push_back(&insert2);
-        vector<BSONObj> results;
+        WriteResult result;
         ASSERT_THROWS(
-            this->writer->write(TEST_NS, inserts, false, &WriteConcern::acknowledged, &results),
+            this->writer->write(TEST_NS, inserts, false, &WriteConcern::acknowledged, &result),
             OperationException
         );
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}").obj), 1U);
@@ -147,8 +148,8 @@ namespace {
         inserts.push_back(&insert1);
         inserts.push_back(&insert1);
         inserts.push_back(&insert2);
-        vector<BSONObj> results;
-        this->writer->write(TEST_NS, inserts, true, &WriteConcern::unacknowledged, &results);
+        WriteResult result;
+        this->writer->write(TEST_NS, inserts, true, &WriteConcern::unacknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}").obj), 1U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 2}").obj), 0U);
     }
@@ -161,8 +162,8 @@ namespace {
         inserts.push_back(&insert1);
         inserts.push_back(&insert1);
         inserts.push_back(&insert2);
-        vector<BSONObj> results;
-        this->writer->write(TEST_NS, inserts, false, &WriteConcern::unacknowledged, &results);
+        WriteResult result;
+        this->writer->write(TEST_NS, inserts, false, &WriteConcern::unacknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}").obj), 1U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 2}").obj), 1U);
     }
@@ -175,8 +176,8 @@ namespace {
         vector<WriteOperation*> updates;
         UpdateWriteOperation update(BSON("a" << 1), BSON("$set" << BSON("a" << 2)), 0);
         updates.push_back(&update);
-        vector<BSONObj> results;
-        this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &results);
+        WriteResult result;
+        this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 1U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
     }
@@ -189,8 +190,8 @@ namespace {
         vector<WriteOperation*> updates;
         UpdateWriteOperation update(BSON("a" << 1), BSON("$set" << BSON("a" << 2)), UpdateOption_Multi);
         updates.push_back(&update);
-        vector<BSONObj> results;
-        this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &results);
+        WriteResult result;
+        this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 0U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 2U);
     }
@@ -203,8 +204,8 @@ namespace {
         vector<WriteOperation*> updates;
         UpdateWriteOperation update(BSON("a" << 1), BSON("$set" << BSON("a" << 2)), UpdateOption_Upsert);
         updates.push_back(&update);
-        vector<BSONObj> results;
-        this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &results);
+        WriteResult result;
+        this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 0U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 2U);
     }
@@ -217,8 +218,8 @@ namespace {
         vector<WriteOperation*> updates;
         UpdateWriteOperation update(BSON("a" << 3), BSON("$set" << BSON("a" << 2)), UpdateOption_Upsert);
         updates.push_back(&update);
-        vector<BSONObj> results;
-        this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &results);
+        WriteResult result;
+        this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 1U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 2U);
     }
@@ -233,8 +234,8 @@ namespace {
         UpdateWriteOperation updateB(BSON("b" << 1), BSON("$set" << BSON("b" << 2)), 0);
         updates.push_back(&updateA);
         updates.push_back(&updateB);
-        vector<BSONObj> results;
-        this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &results);
+        WriteResult result;
+        this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 2}").obj), 1U);
     }
@@ -249,8 +250,8 @@ namespace {
         UpdateWriteOperation updateB(BSON("b" << 1), BSON("$set" << BSON("b" << 2)), 0);
         updates.push_back(&updateA);
         updates.push_back(&updateB);
-        vector<BSONObj> results;
-        this->writer->write(TEST_NS, updates, false, &WriteConcern::acknowledged, &results);
+        WriteResult result;
+        this->writer->write(TEST_NS, updates, false, &WriteConcern::acknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 2}").obj), 1U);
     }
@@ -266,9 +267,9 @@ namespace {
         UpdateWriteOperation updateB(BSON("b" << 1), BSON("$set" << BSON("a" << 2)), 0);
         updates.push_back(&updateA);
         updates.push_back(&updateB);
-        vector<BSONObj> results;
+        WriteResult result;
         ASSERT_THROWS(
-            this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &results),
+            this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result),
             OperationException
         );
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
@@ -286,9 +287,9 @@ namespace {
         UpdateWriteOperation updateB(BSON("b" << 1), BSON("$set" << BSON("a" << 2)), 0);
         updates.push_back(&updateA);
         updates.push_back(&updateB);
-        vector<BSONObj> results;
+        WriteResult result;
         ASSERT_THROWS(
-            this->writer->write(TEST_NS, updates, false, &WriteConcern::acknowledged, &results),
+            this->writer->write(TEST_NS, updates, false, &WriteConcern::acknowledged, &result),
             OperationException
         );
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
@@ -306,8 +307,8 @@ namespace {
         UpdateWriteOperation updateB(BSON("b" << 1), BSON("$set" << BSON("a" << 2)), 0);
         updates.push_back(&updateA);
         updates.push_back(&updateB);
-        vector<BSONObj> results;
-        this->writer->write(TEST_NS, updates, true, &WriteConcern::unacknowledged, &results);
+        WriteResult result;
+        this->writer->write(TEST_NS, updates, true, &WriteConcern::unacknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}").obj), 1U);
     }
@@ -323,8 +324,8 @@ namespace {
         UpdateWriteOperation updateB(BSON("b" << 1), BSON("$set" << BSON("a" << 2)), 0);
         updates.push_back(&updateA);
         updates.push_back(&updateB);
-        vector<BSONObj> results;
-        this->writer->write(TEST_NS, updates, false, &WriteConcern::unacknowledged, &results);
+        WriteResult result;
+        this->writer->write(TEST_NS, updates, false, &WriteConcern::unacknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}").obj), 1U);
     }
@@ -338,8 +339,8 @@ namespace {
         vector<WriteOperation*> deletes;
         DeleteWriteOperation delete_op(BSON("a" << BSON("$gt" << 0)), 0);
         deletes.push_back(&delete_op);
-        vector<BSONObj> results;
-        this->writer->write(TEST_NS, deletes, true, &WriteConcern::acknowledged, &results);
+        WriteResult result;
+        this->writer->write(TEST_NS, deletes, true, &WriteConcern::acknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 0}").obj), 1U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 0U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 0U);
@@ -354,8 +355,8 @@ namespace {
         vector<WriteOperation*> deletes;
         DeleteWriteOperation delete_op(BSON("a" << BSON("$gt" << 0)), RemoveOption_JustOne);
         deletes.push_back(&delete_op);
-        vector<BSONObj> results;
-        this->writer->write(TEST_NS, deletes, true, &WriteConcern::acknowledged, &results);
+        WriteResult result;
+        this->writer->write(TEST_NS, deletes, true, &WriteConcern::acknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 0}").obj), 1U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 0U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
@@ -371,10 +372,10 @@ namespace {
         DeleteWriteOperation deleteB(BSON("b" << 1), 0);
         deletes.push_back(&deleteA);
         deletes.push_back(&deleteB);
-        vector<BSONObj> results;
+        WriteResult result;
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 1U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}").obj), 1U);
-        this->writer->write(TEST_NS, deletes, true, &WriteConcern::acknowledged, &results);
+        this->writer->write(TEST_NS, deletes, true, &WriteConcern::acknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 0U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}").obj), 0U);
     }
@@ -389,10 +390,10 @@ namespace {
         DeleteWriteOperation deleteB(BSON("b" << 1), 0);
         deletes.push_back(&deleteA);
         deletes.push_back(&deleteB);
-        vector<BSONObj> results;
+        WriteResult result;
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 1U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}").obj), 1U);
-        this->writer->write(TEST_NS, deletes, false, &WriteConcern::acknowledged, &results);
+        this->writer->write(TEST_NS, deletes, false, &WriteConcern::acknowledged, &result);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 0U);
         ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}").obj), 0U);
     }

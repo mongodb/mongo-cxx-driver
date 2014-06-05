@@ -21,10 +21,10 @@ namespace mongo {
         const char kName[] = "OperationException";
     }
 
-    OperationException::OperationException(const BSONObj& gleResult)
-        : _lastError(gleResult)
-        , _errorString(std::string(kName) + ": " + gleResult.toString())
-        {}
+    OperationException::OperationException(const BSONObj& errorObj)
+        : _lastError(errorObj)
+        , _errorString(std::string(kName) + ": " + errorObj.toString())
+    {}
 
     OperationException::~OperationException() throw() {
     }

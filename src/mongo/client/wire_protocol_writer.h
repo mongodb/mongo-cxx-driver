@@ -29,13 +29,19 @@ namespace mongo {
             const StringData& ns,
             const std::vector<WriteOperation*>& write_operations,
             bool ordered,
-            const WriteConcern* wc,
-            std::vector<BSONObj>* results
+            const WriteConcern* writeConcern,
+            WriteResult* writeResult
         );
 
     private:
-        BSONObj _send(Operations opCode, const BufBuilder& builder, const WriteConcern* wc, const StringData& ns);
-        bool _batchableRequest(Operations opCode);
+        BSONObj _send(
+            WriteOpType opCode,
+            const BufBuilder& builder,
+            const WriteConcern* wc,
+            const StringData& ns
+        );
+
+        bool _batchableRequest(WriteOpType opCode, const WriteResult* const writeResult);
         bool _fits(BufBuilder* builder, WriteOperation* operation);
 
         DBClientBase* const _client;

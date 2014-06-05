@@ -15,28 +15,20 @@
 
 #pragma once
 
-#include <vector>
-
 #include "mongo/client/write_operation.h"
+
+#include "mongo/platform/cstdint.h"
 
 namespace mongo {
 
-    class WriteConcern;
-    class WriteResult;
-
-    class DBClientWriter {
+    class WriteOperationBase : public WriteOperation {
     public:
-        virtual ~DBClientWriter() {};
+        WriteOperationBase();
+        virtual void setBulkIndex(size_t index);
+        virtual size_t getBulkIndex() const;
 
-        // This function assumes that WriteOperations have been checked to ensure
-        // involved objects are less than the client's maximum BSON object size.
-        virtual void write(
-            const StringData& ns,
-            const std::vector<WriteOperation*>& write_operations,
-            bool ordered,
-            const WriteConcern* writeConcern,
-            WriteResult* writeResult
-        ) = 0;
+    private:
+        size_t _bulkIndex;
     };
 
 } // namespace mongo

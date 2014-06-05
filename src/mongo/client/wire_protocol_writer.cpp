@@ -16,6 +16,7 @@
 #include "mongo/client/wire_protocol_writer.h"
 
 #include "mongo/client/dbclientinterface.h"
+#include "mongo/client/write_result.h"
 #include "mongo/db/namespace_string.h"
 
 namespace mongo {
@@ -27,9 +28,11 @@ namespace mongo {
         const StringData& ns,
         const std::vector<WriteOperation*>& write_operations,
         bool ordered,
-        const WriteConcern* wc,
-        std::vector<BSONObj>* results
+        const WriteConcern* writeConcern,
+        WriteResult* writeResult
     ) {
+        // Effectively a map of batch relative indexes to WriteOperations
+        std::vector<WriteOperation*> batchOps;
 
         BufBuilder builder;
 
@@ -44,6 +47,9 @@ namespace mongo {
             // passed an over size write operation in violation of our contract.
             invariant(_fits(&builder, *batch_iter));
 
+            // Set the current operation type for this batch
+            const WriteOpType batchOpType = (*batch_iter)->operationType();
+
             // Begin the command for this batch.
             (*batch_iter)->startRequest(ns.toString(), ordered, &builder);
 
@@ -53,8 +59,11 @@ namespace mongo {
                 // below checks passed.
                 (*batch_iter)->appendSelfToRequest(&builder);
 
+                // Associate batch index with WriteOperation
+                batchOps.push_back(*batch_iter);
+
                 // If the operation we just queued isn't batchable, issue what we have.
-                if (!_batchableRequest((*batch_iter)->operationType()))
+                if (!_batchableRequest(batchOpType, writeResult))
                     break;
 
                 // Peek at the next operation.
@@ -65,7 +74,7 @@ namespace mongo {
                     break;
 
                 // If the next operation is of a different type, issue what we have.
-                if ((*next)->operationType() != (*batch_iter)->operationType())
+                if ((*next)->operationType() != batchOpType)
                     break;
 
                 // If adding the next op would put us over the limit of ops in a batch, issue
@@ -82,7 +91,16 @@ namespace mongo {
             }
 
             // Issue the complete command.
-            results->push_back(_send((*batch_iter)->operationType(), builder, wc, ns));
+            BSONObj batchResult = _send(batchOpType, builder, writeConcern, ns);
+
+            // Merge this batch's result into the result for all batches written.
+            writeResult->_mergeGleResult(batchOps, batchResult);
+            batchOps.clear();
+
+            // Check write result for errors if we are doing ordered processing or last op
+            bool lastOp = *batch_iter == write_operations.back();
+            if (ordered || lastOp)
+                writeResult->_check(lastOp);
 
             // Reset the builder so we can build the next request.
             builder.reset();
@@ -97,29 +115,44 @@ namespace mongo {
         return (builder->len() + op->incrementalSize()) <= _client->getMaxMessageSizeBytes();
     }
 
-    BSONObj WireProtocolWriter::_send(Operations opCode, const BufBuilder& builder, const WriteConcern* wc, const StringData& ns) {
+    BSONObj WireProtocolWriter::_send(
+        WriteOpType opCode,
+        const BufBuilder& builder,
+        const WriteConcern* writeConcern,
+        const StringData& ns
+    ) {
         Message request;
         request.setData(opCode, builder.buf(), builder.len());
         _client->say(request);
 
         BSONObj result;
 
-        if (wc->requiresConfirmation()) {
+        if (writeConcern->requiresConfirmation()) {
             BSONObjBuilder bob;
             bob.append("getlasterror", true);
-            bob.appendElements(wc->obj());
-            _client->runCommand(nsToDatabase(ns), bob.obj(), result);
+            bob.appendElements(writeConcern->obj());
 
-            if (!result["err"].isNull()) {
-                throw OperationException(result);
-            }
+            bool commandWorked = _client->runCommand(nsToDatabase(ns), bob.obj(), result);
+
+            if (!commandWorked) throw OperationException(result);
         }
 
         return result;
     }
 
-    bool WireProtocolWriter::_batchableRequest(Operations opCode) {
-        return opCode == dbInsert;
+    bool WireProtocolWriter::_batchableRequest(WriteOpType opCode, const WriteResult* const writeResult) {
+        /*
+         * In order to get detailed write information using the legacy MongoDB wire protocol
+         * you must send individual messages for each write. Inserts are the only type of write
+         * that is batchable using the wire protocol so we must take care to only batch them
+         * if and only if we do not require detailed insert results.
+         *
+         * As an example: Legacy inserts of a vector of BSONObj do not require detailed insert
+         * results and should be performed in a batch to increase performance. However, bulk
+         * operations require detailed results and thus must be executed serially when using
+         * the wire protocol.
+         */
+        return (opCode == dbWriteInsert && !(writeResult->_requiresDetailedInsertResults));
     }
 
 } // namespace mongo

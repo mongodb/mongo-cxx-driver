@@ -15,15 +15,15 @@
 
 #pragma once
 
-#include "mongo/client/write_operation.h"
+#include "mongo/client/write_operation_base.h"
 
 namespace mongo {
 
-    class UpdateWriteOperation : public WriteOperation {
+    class UpdateWriteOperation : public WriteOperationBase {
     public:
         UpdateWriteOperation(const BSONObj& selector, const BSONObj& update, int flags);
 
-        virtual Operations operationType() const;
+        virtual WriteOpType operationType() const;
         virtual const char* batchName() const;
         virtual int incrementalSize() const;
 
@@ -32,6 +32,8 @@ namespace mongo {
 
         virtual void startCommand(const std::string& ns, BSONObjBuilder* command) const;
         virtual void appendSelfToCommand(BSONArrayBuilder* batch) const;
+
+        virtual void appendSelfToBSONObj(BSONObjBuilder* obj) const;
 
     private:
         const BSONObj _selector;

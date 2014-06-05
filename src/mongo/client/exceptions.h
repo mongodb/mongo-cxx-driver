@@ -28,7 +28,7 @@ namespace mongo {
     class MONGO_CLIENT_API OperationException : public std::exception {
     public:
         /** Takes a BSONObj that is the result of the "getlasterror" command */
-        OperationException(const BSONObj& gleResult);
+        OperationException(const BSONObj& errorObj);
 
         /** Required due to BSONObj member desctructor not specifying throw() */
         virtual ~OperationException() throw();

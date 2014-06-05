@@ -19,6 +19,7 @@
 
 #include "mongo/bson/bsonobj.h"
 #include "mongo/client/bulk_update_builder.h"
+#include "mongo/client/write_result.h"
 
 namespace mongo {
 
@@ -97,7 +98,7 @@ namespace mongo {
          * @param wc The Write concern for the entire bulk operation. 0 = default (acknowledged);
          * @param results Vector where the results of operations will go.
          */
-        void execute(const WriteConcern* wc, std::vector<BSONObj>* results);
+        void execute(const WriteConcern* writeConcern, WriteResult* writeResult);
 
     private:
         void enqueue(WriteOperation* const operation);
@@ -106,6 +107,7 @@ namespace mongo {
         const std::string _ns;
         const bool _ordered;
         bool _executed;
+        size_t _currentIndex;
         std::vector<WriteOperation*> _write_operations;
     };
 

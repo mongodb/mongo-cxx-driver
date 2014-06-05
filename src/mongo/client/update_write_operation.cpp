@@ -36,8 +36,8 @@ namespace mongo {
         , _flags(flags)
     {}
 
-    Operations UpdateWriteOperation::operationType() const {
-        return dbUpdate;
+    WriteOpType UpdateWriteOperation::operationType() const {
+        return dbWriteUpdate;
     }
 
     const char* UpdateWriteOperation::batchName() const {
@@ -65,11 +65,15 @@ namespace mongo {
 
     void UpdateWriteOperation::appendSelfToCommand(BSONArrayBuilder* batch) const {
         BSONObjBuilder updateBuilder;
-        updateBuilder.append(kSelectorKey, _selector);
-        updateBuilder.append(kUpdateKey, _update);
-        updateBuilder.append(kMultiKey, bool(_flags & UpdateOption_Multi));
-        updateBuilder.append(kUpsertKey, bool(_flags & UpdateOption_Upsert));
+        appendSelfToBSONObj(&updateBuilder);
         batch->append(updateBuilder.obj());
+    }
+
+    void UpdateWriteOperation::appendSelfToBSONObj(BSONObjBuilder* obj) const {
+        obj->append(kSelectorKey, _selector);
+        obj->append(kUpdateKey, _update);
+        obj->append(kMultiKey, bool(_flags & UpdateOption_Multi));
+        obj->append(kUpsertKey, bool(_flags & UpdateOption_Upsert));
     }
 
 } // namespace mongo

@@ -13,30 +13,19 @@
  *    limitations under the License.
  */
 
-#pragma once
-
-#include <vector>
-
-#include "mongo/client/write_operation.h"
+#include "mongo/client/write_operation_base.h"
 
 namespace mongo {
 
-    class WriteConcern;
-    class WriteResult;
+    WriteOperationBase::WriteOperationBase() : _bulkIndex(0) {
+    }
 
-    class DBClientWriter {
-    public:
-        virtual ~DBClientWriter() {};
+    void WriteOperationBase::setBulkIndex(size_t index) {
+        _bulkIndex = index;
+    }
 
-        // This function assumes that WriteOperations have been checked to ensure
-        // involved objects are less than the client's maximum BSON object size.
-        virtual void write(
-            const StringData& ns,
-            const std::vector<WriteOperation*>& write_operations,
-            bool ordered,
-            const WriteConcern* writeConcern,
-            WriteResult* writeResult
-        ) = 0;
-    };
+    size_t WriteOperationBase::getBulkIndex() const {
+        return _bulkIndex;
+    }
 
 } // namespace mongo
