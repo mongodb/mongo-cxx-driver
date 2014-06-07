@@ -17,8 +17,7 @@
 
 #pragma once
 
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/xtime.hpp>
+#include <boost/noncopyable.hpp>
 
 #include "mongo/util/time_support.h"
 

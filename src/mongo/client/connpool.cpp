@@ -19,6 +19,9 @@
 // _ todo: reconnect?
 
 #include "mongo/client/connpool.h"
+
+#include <boost/thread/locks.hpp>
+
 #include "mongo/client/replica_set_monitor.h"
 
 namespace mongo {
@@ -188,7 +191,7 @@ namespace mongo {
     }
 
     DBClientBase* DBConnectionPool::_get(const string& ident , double socketTimeout ) {
-        boost::mutex::scoped_lock L(_mutex);
+        boost::lock_guard<boost::mutex> L(_mutex);
         PoolForHost& p = _pools[PoolKey(ident,socketTimeout)];
         p.setMaxPoolSize(_maxPoolSize);
         p.initializeHostName(ident);
@@ -197,7 +200,7 @@ namespace mongo {
 
     DBClientBase* DBConnectionPool::_finishCreate( const string& host , double socketTimeout , DBClientBase* conn ) {
         {
-            boost::mutex::scoped_lock L(_mutex);
+            boost::lock_guard<boost::mutex> L(_mutex);
             PoolForHost& p = _pools[PoolKey(host,socketTimeout)];
             p.setMaxPoolSize(_maxPoolSize);
             p.initializeHostName(host);
@@ -260,7 +263,7 @@ namespace mongo {
     }
 
     void DBConnectionPool::release(const string& host, DBClientBase *c) {
-        boost::mutex::scoped_lock L(_mutex);
+        boost::lock_guard<boost::mutex> L(_mutex);
         _pools[PoolKey(host,c->getSoTimeout())].done(this,c);
     }
 
@@ -270,7 +273,7 @@ namespace mongo {
     }
 
     void DBConnectionPool::flush() {
-        boost::mutex::scoped_lock L(_mutex);
+        boost::lock_guard<boost::mutex> L(_mutex);
         for ( PoolMap::iterator i = _pools.begin(); i != _pools.end(); i++ ) {
             PoolForHost& p = i->second;
             p.flush();
@@ -278,7 +281,7 @@ namespace mongo {
     }
 
     void DBConnectionPool::clear() {
-        boost::mutex::scoped_lock L(_mutex);
+        boost::lock_guard<boost::mutex> L(_mutex);
         LOG(2) << "Removing connections on all pools owned by " << _name  << endl;
         for (PoolMap::iterator iter = _pools.begin(); iter != _pools.end(); ++iter) {
             iter->second.clear();
@@ -286,7 +289,7 @@ namespace mongo {
     }
 
     void DBConnectionPool::removeHost( const string& host ) {
-        boost::mutex::scoped_lock L(_mutex);
+        boost::lock_guard<boost::mutex> L(_mutex);
         LOG(2) << "Removing connections from all pools for host: " << host << endl;
         for ( PoolMap::iterator i = _pools.begin(); i != _pools.end(); ++i ) {
             const string& poolHost = i->first.ident;
@@ -338,7 +341,7 @@ namespace mongo {
         
         BSONObjBuilder bb( b.subobjStart( "hosts" ) );
         {
-            boost::mutex::scoped_lock lk( _mutex );
+            boost::lock_guard<boost::mutex> lk( _mutex );
             for ( PoolMap::iterator i=_pools.begin(); i!=_pools.end(); ++i ) {
                 if ( i->second.numCreated() == 0 )
                     continue;
@@ -435,7 +438,7 @@ namespace mongo {
         }
 
         {
-            boost::mutex::scoped_lock sl(_mutex);
+            boost::lock_guard<boost::mutex> sl(_mutex);
             PoolForHost& pool = _pools[PoolKey(hostName, conn->getSoTimeout())];
             if (pool.isBadSocketCreationTime(conn->getSockCreationMicroSec())) {
                 return false;
@@ -451,7 +454,7 @@ namespace mongo {
         {
             // we need to get the connections inside the lock
             // but we can actually delete them outside
-            boost::mutex::scoped_lock lk( _mutex );
+            boost::lock_guard<boost::mutex> lk( _mutex );
             for ( PoolMap::iterator i=_pools.begin(); i!=_pools.end(); ++i ) {
                 i->second.getStaleConnections( toDelete );
             }

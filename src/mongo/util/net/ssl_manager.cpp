@@ -17,6 +17,8 @@
 
 #include "mongo/util/net/ssl_manager.h"
 
+#include <boost/thread/locks.hpp>
+#include <boost/thread/mutex.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 #include <boost/thread/tss.hpp>
 #include <string>
@@ -25,7 +27,6 @@
 #include "mongo/base/init.h"
 #include "mongo/platform/atomic_word.h"
 #include "mongo/client/options.h"
-#include "mongo/util/concurrency/mutex.h"
 #include "mongo/util/debug_util.h"
 #include "mongo/util/log.h"
 #include "mongo/util/mongoutils/str.h"
@@ -286,7 +287,7 @@ namespace mongo {
 
         const client::Options& options = client::Options::current();
 
-        boost::mutex::scoped_lock lck(sslManagerMtx);
+        boost::lock_guard<boost::mutex> lck(sslManagerMtx);
         if (options.SSLEnabled()) {
             const Params params(
                 options.SSLPEMKeyFile(),
@@ -304,7 +305,7 @@ namespace mongo {
     }
 
     SSLManagerInterface* getSSLManager() {
-        boost::mutex::scoped_lock lck(sslManagerMtx);
+        boost::lock_guard<boost::mutex> lck(sslManagerMtx);
         if (theSSLManager)
             return theSSLManager;
         return NULL;

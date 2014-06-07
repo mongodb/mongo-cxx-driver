@@ -21,10 +21,11 @@
 
 #pragma once
 
+#include <boost/thread/condition_variable.hpp>
 #include <deque>
+#include <set>
 #include <string>
 #include <vector>
-#include <set>
 
 #include "mongo/base/disallow_copying.h"
 #include "mongo/client/dbclient_rs.h" // for TagSet and ReadPreferenceSettings

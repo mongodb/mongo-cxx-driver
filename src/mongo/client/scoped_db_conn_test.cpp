@@ -267,7 +267,7 @@ namespace mongo {
             }
 
             bool is_running() {
-                boost::mutex::scoped_lock lock(_mutex);
+                boost::lock_guard<boost::mutex> lock(_mutex);
                 return _running;
             }
 
@@ -300,7 +300,7 @@ namespace mongo {
             }
 
             void stop() {
-                boost::mutex::scoped_lock lock(_mutex);
+                boost::lock_guard<boost::mutex> lock(_mutex);
                 _running = false;
             }
 

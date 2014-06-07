@@ -15,12 +15,13 @@
 
 #pragma once
 
+#include <boost/thread/mutex.hpp>
+
 #include "mongo/base/status.h"
 #include "mongo/client/dbclientinterface.h"
 #include "mongo/dbtests/mock/mock_dbclient_connection.h"
 #include "mongo/dbtests/mock/mock_remote_db_server.h"
 #include "mongo/platform/unordered_map.h"
-#include "mongo/util/concurrency/mutex.h"
 
 namespace mongo {
     /**

@@ -19,6 +19,7 @@
 
 #include "mongo/util/net/message_port.h"
 
+#include <boost/thread/locks.hpp>
 #include <boost/thread/mutex.hpp>
 #include <fcntl.h>
 #include <set>
@@ -106,7 +107,7 @@ namespace mongo {
     public:
         Ports() : ports(), m() {}
         void closeAll(unsigned skip_mask) {
-            boost::mutex::scoped_lock bl(m);
+            boost::lock_guard<boost::mutex> bl(m);
             for ( set<MessagingPort*>::iterator i = ports.begin(); i != ports.end(); i++ ) {
                 if( (*i)->tag & skip_mask )
                     continue;
@@ -114,11 +115,11 @@ namespace mongo {
             }
         }
         void insert(MessagingPort* p) {
-            boost::mutex::scoped_lock bl(m);
+            boost::lock_guard<boost::mutex> bl(m);
             ports.insert(p);
         }
         void erase(MessagingPort* p) {
-            boost::mutex::scoped_lock bl(m);
+            boost::lock_guard<boost::mutex> bl(m);
             ports.erase(p);
         }
     };

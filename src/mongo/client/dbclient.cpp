@@ -144,7 +144,7 @@ namespace mongo {
         case CUSTOM: {
 
             // Lock in case other things are modifying this at the same time
-            boost::mutex::scoped_lock lk( _connectHookMutex );
+            boost::lock_guard<boost::mutex> lk( _connectHookMutex );
 
             // Allow the replacement of connections with other connections - useful for testing.
 
@@ -1552,7 +1552,7 @@ namespace mongo {
     static SSLManagerInterface* s_sslMgr(NULL);
 
     SSLManagerInterface* DBClientConnection::sslManager() {
-        boost::mutex::scoped_lock lk(s_mtx);
+        boost::lock_guard<boost::mutex> lk(s_mtx);
         if (s_sslMgr) 
             return s_sslMgr;
         s_sslMgr = getSSLManager();

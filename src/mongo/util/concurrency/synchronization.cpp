@@ -15,9 +15,10 @@
  *    limitations under the License.
  */
 
-#include "synchronization.h"
+#include "mongo/util/concurrency/synchronization.h"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/thread/locks.hpp>
 
 #include "mongo/util/assert_util.h"
 
@@ -29,14 +30,14 @@ namespace mongo {
     }
 
     void Notification::waitToBeNotified() {
-        boost::mutex::scoped_lock lock( _mutex );
+        boost::unique_lock<boost::mutex> lock( _mutex );
         while ( lookFor != cur )
             _condition.wait( lock );
         lookFor++;
     }
 
     void Notification::notifyOne() {
-        boost::mutex::scoped_lock lock( _mutex );
+        boost::lock_guard<boost::mutex> lock( _mutex );
         verify( cur != lookFor );
         cur++;
         _condition.notify_one();
@@ -51,12 +52,12 @@ namespace mongo {
     }
 
     NotifyAll::When NotifyAll::now() { 
-        boost::mutex::scoped_lock lock( _mutex );
+        boost::lock_guard<boost::mutex> lock( _mutex );
         return ++_lastReturned;
     }
 
     void NotifyAll::waitFor(When e) {
-        boost::mutex::scoped_lock lock( _mutex );
+        boost::unique_lock<boost::mutex> lock( _mutex );
         ++_nWaiting;
         while( _lastDone < e ) {
             _condition.wait( lock );
@@ -64,7 +65,7 @@ namespace mongo {
     }
 
     void NotifyAll::awaitBeyondNow() { 
-        boost::mutex::scoped_lock lock( _mutex );
+        boost::unique_lock<boost::mutex> lock( _mutex );
         ++_nWaiting;
         When e = ++_lastReturned;
         while( _lastDone <= e ) {
@@ -73,7 +74,7 @@ namespace mongo {
     }
 
     void NotifyAll::notifyAll(When e) {
-        boost::mutex::scoped_lock lock( _mutex );
+        boost::lock_guard<boost::mutex> lock( _mutex );
         _lastDone = e;
         _nWaiting = 0;
         _condition.notify_all();

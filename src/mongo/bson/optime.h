@@ -16,11 +16,12 @@
 #pragma once
 
 #include <boost/thread/condition.hpp>
+#include <boost/thread/mutex.hpp>
+
 #include <iostream>
 #include <sstream>
 
 #include "mongo/util/assert_util.h"
-#include "mongo/util/concurrency/mutex.h"
 #include "mongo/util/time_support.h"
 
 namespace mongo {

@@ -20,6 +20,7 @@
 #include "mongo/util/background.h"
 
 #include <boost/thread/condition.hpp>
+#include <boost/thread/mutex.hpp>
 #include <boost/thread/once.hpp>
 #include <boost/thread/thread.hpp>
 
@@ -74,7 +75,7 @@ namespace mongo {
 
             // The condition variable is used to sleep for the interval between task
             // executions, and is notified when the _shutdownRequested flag is toggled.
-            boost::condition _cond;
+            boost::condition_variable _cond;
 
             // Used to break the loop. You should notify _cond after changing this to true
             // so that shutdown proceeds promptly.
@@ -124,7 +125,7 @@ namespace mongo {
         }
 
         boost::mutex mutex;
-        boost::condition done;
+        boost::condition_variable done;
         State state;
     };
 
@@ -159,7 +160,7 @@ namespace mongo {
         {
             // It is illegal to access any state owned by this BackgroundJob after leaving this
             // scope, with the exception of the call to 'delete this' below.
-            boost::mutex::scoped_lock l( _status->mutex );
+            boost::lock_guard<boost::mutex> l( _status->mutex );
             _status->state = Done;
             _status->done.notify_all();
         }
@@ -178,7 +179,7 @@ namespace mongo {
     }
 
     void BackgroundJob::go() {
-        boost::mutex::scoped_lock l( _status->mutex );
+        boost::lock_guard<boost::mutex> l( _status->mutex );
         massert( 17234, mongoutils::str::stream()
                  << "backgroundJob already running: " << name(),
                  _status->state != Running );
@@ -188,11 +189,12 @@ namespace mongo {
         if (_status->state == NotStarted) {
             boost::thread t( stdx::bind( &BackgroundJob::jobBody , this ) );
             _status->state = Running;
+            t.detach();
         }
     }
 
     Status BackgroundJob::cancel() {
-        boost::mutex::scoped_lock l( _status->mutex );
+        boost::lock_guard<boost::mutex> l( _status->mutex );
 
         if ( _status->state == Running )
             return Status( ErrorCodes::IllegalOperation,
@@ -208,7 +210,7 @@ namespace mongo {
 
     bool BackgroundJob::wait( unsigned msTimeOut ) {
         verify( !_selfDelete ); // you cannot call wait on a self-deleting job
-        boost::mutex::scoped_lock l( _status->mutex );
+        boost::unique_lock<boost::mutex> l( _status->mutex );
         while ( _status->state != Done ) {
             if ( msTimeOut ) {
                 boost::xtime deadline = incxtimemillis( msTimeOut );
@@ -223,12 +225,12 @@ namespace mongo {
     }
 
     BackgroundJob::State BackgroundJob::getState() const {
-        boost::mutex::scoped_lock l( _status->mutex );
+        boost::lock_guard<boost::mutex> l( _status->mutex );
         return _status->state;
     }
 
     bool BackgroundJob::running() const {
-        boost::mutex::scoped_lock l( _status->mutex );
+        boost::lock_guard<boost::mutex> l( _status->mutex );
         return _status->state == Running;
     }
 
@@ -283,12 +285,12 @@ namespace mongo {
     }
 
     void PeriodicTaskRunner::add( PeriodicTask* task ) {
-        boost::mutex::scoped_lock lock( _mutex );
+        boost::lock_guard<boost::mutex> lock( _mutex );
         _tasks.push_back( task );
     }
 
     void PeriodicTaskRunner::remove( PeriodicTask* task ) {
-        boost::mutex::scoped_lock lock( _mutex );
+        boost::lock_guard<boost::mutex> lock( _mutex );
         for ( size_t i = 0; i != _tasks.size(); i++ ) {
             if ( _tasks[i] == task ) {
                 _tasks[i] = NULL;
@@ -299,7 +301,7 @@ namespace mongo {
 
     Status PeriodicTaskRunner::stop( int gracePeriodMillis ) {
         {
-            boost::mutex::scoped_lock lock( _mutex );
+            boost::lock_guard<boost::mutex> lock( _mutex );
             _shutdownRequested = true;
             _cond.notify_one();
         }
@@ -318,7 +320,7 @@ namespace mongo {
         const stdx::function<bool()> predicate =
             stdx::bind( &PeriodicTaskRunner::_isShutdownRequested, this );
 
-        boost::mutex::scoped_lock lock( _mutex );
+        boost::unique_lock<boost::mutex> lock( _mutex );
         while ( !predicate() ) {
             const boost::xtime deadline = incxtimemillis( waitMillis );
             if ( !_cond.timed_wait( lock, deadline, predicate ) )

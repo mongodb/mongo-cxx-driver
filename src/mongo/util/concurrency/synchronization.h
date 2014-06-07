@@ -17,8 +17,9 @@
 
 #pragma once
 
-#include <boost/thread/condition.hpp>
-#include "mutex.h"
+#include <boost/noncopyable.hpp>
+#include <boost/thread/condition_variable.hpp>
+#include <boost/thread/mutex.hpp>
 
 namespace mongo {
 
@@ -46,7 +47,7 @@ namespace mongo {
         boost::mutex _mutex;          // protects state below
         unsigned long long lookFor;
         unsigned long long cur;
-        boost::condition _condition;  // cond over _notified being true
+        boost::condition_variable _condition;  // cond over _notified being true
     };
 
     /** establishes a synchronization point between threads. N threads are waits and one is notifier.
@@ -76,7 +77,7 @@ namespace mongo {
 
     private:
         boost::mutex _mutex;
-        boost::condition _condition;
+        boost::condition_variable _condition;
         When _lastDone;
         When _lastReturned;
         unsigned _nWaiting;

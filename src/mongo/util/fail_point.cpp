@@ -15,6 +15,8 @@
 
 #include "mongo/util/fail_point.h"
 
+#include <boost/thread/locks.hpp>
+
 #include "mongo/util/mongoutils/str.h"
 #include "mongo/util/time_support.h"
 
@@ -44,7 +46,7 @@ namespace mongo {
          * 3. Sets the new mode.
          */
 
-        boost::mutex::scoped_lock scoped(_modMutex);
+        boost::lock_guard<boost::mutex> scoped(_modMutex);
 
         // Step 1
         disableFailPoint();
@@ -134,7 +136,7 @@ namespace mongo {
     BSONObj FailPoint::toBSON() const {
         BSONObjBuilder builder;
 
-        boost::mutex::scoped_lock scoped(_modMutex);
+        boost::lock_guard<boost::mutex> scoped(_modMutex);
         builder.append("mode", _mode);
         builder.append("data", _data);
 

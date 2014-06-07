@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include <boost/thread/locks.hpp>
+
 #include "mongo/config.h"
 
 #include "mongo/base/string_data.h"
@@ -257,12 +259,12 @@ namespace mongo {
         };
 
         static void setConnectionHook( ConnectionHook* hook ){
-            boost::mutex::scoped_lock lk( _connectHookMutex );
+            boost::lock_guard<boost::mutex> lk( _connectHookMutex );
             _connectHook = hook;
         }
 
         static ConnectionHook* getConnectionHook() {
-            boost::mutex::scoped_lock lk( _connectHookMutex );
+            boost::lock_guard<boost::mutex> lk( _connectHookMutex );
             return _connectHook;
         }
 

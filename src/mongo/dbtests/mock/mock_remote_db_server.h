@@ -16,6 +16,7 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
+#include <boost/thread/mutex.hpp>
 #include <string>
 #include <vector>
 
@@ -23,7 +24,6 @@
 #include "mongo/bson/bsonobjbuilder.h"
 #include "mongo/client/dbclientinterface.h"
 #include "mongo/platform/unordered_map.h"
-#include "mongo/util/concurrency/mutex.h"
 
 namespace mongo {
 

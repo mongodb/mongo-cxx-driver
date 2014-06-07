@@ -1336,7 +1336,11 @@ def doConfigure(myenv):
                 print( "can't find boost")
                 Exit(1)
 
-    conf.env.Append(CPPDEFINES=[("BOOST_THREAD_VERSION", "2")])
+    # We need xtime internally no matter what the local boost thread version may be since we
+    # cannot require the existence of chrono. It is important that no uses of xtime become part
+    # of the public interface of the library so that we do not impose this burden on our
+    # consumers.
+    conf.env.Append(CPPDEFINES=[("BOOST_THREAD_USES_DATETIME")])
 
     if conf.CheckHeader('unistd.h'):
         conf.env['MONGO_HAVE_HEADER_UNISTD_H'] = True

@@ -31,7 +31,7 @@
 
 #ifdef _WIN32
 #include <boost/date_time/filetime_functions.hpp>
-#include "mongo/util/concurrency/mutex.h"
+#include <boost/thread/mutex.hpp>
 #include "mongo/util/timer.h"
 
 // NOTE(schwerin): MSVC's _snprintf is not a drop-in replacement for C99's snprintf().  In
@@ -892,7 +892,7 @@ namespace {
     static boost::mutex _curTimeMicros64ResyncMutex;
 
     static unsigned long long resyncTime() {
-        boost::mutex::scoped_lock lkResync(_curTimeMicros64ResyncMutex);
+        boost::lock_guard<boost::mutex> lkResync(_curTimeMicros64ResyncMutex);
         unsigned long long ftOld;
         unsigned long long ftNew;
         ftOld = ftNew = getFiletime();
@@ -904,7 +904,7 @@ namespace {
 
         // Make sure that we use consistent values for baseFiletime and basePerfCounter.
         //
-        boost::mutex::scoped_lock lkRead(_curTimeMicros64ReadMutex);
+        boost::lock_guard<boost::mutex> lkRead(_curTimeMicros64ReadMutex);
         baseFiletime = ftNew;
         basePerfCounter = newPerfCounter;
         resyncInterval = 60 * Timer::_countsPerSecond;
@@ -928,7 +928,7 @@ namespace {
 
         // Make sure that we use consistent values for baseFiletime and basePerfCounter.
         //
-        boost::mutex::scoped_lock lkRead(_curTimeMicros64ReadMutex);
+        boost::lock_guard<boost::mutex> lkRead(_curTimeMicros64ReadMutex);
 
         // Compute the current time in FILETIME format by adding our base FILETIME and an offset
         // from that time based on QueryPerformanceCounter.  The math is (logically) to compute the

@@ -15,9 +15,10 @@
 
 #include "mongo/client/sasl_client_session.h"
 
+#include <boost/thread/mutex.hpp>
+
 #include "mongo/base/init.h"
 #include "mongo/util/assert_util.h"
-#include "mongo/util/concurrency/mutex.h"
 #include "mongo/util/mongoutils/str.h"
 
 namespace mongo {
