@@ -30,17 +30,31 @@ namespace mongo {
     {}
 
     void BulkUpdateBuilder::updateOne(const BSONObj& update) {
+        uassert(0, "update object must not be empty",
+            !update.isEmpty());
+        uassert(0, "update object must consist of $-prefixed modifiers",
+            update.firstElementFieldName()[0] == '$');
+
         UpdateWriteOperation* update_op = new UpdateWriteOperation(_selector, update, 0);
         _builder->enqueue(update_op);
     }
 
     void BulkUpdateBuilder::update(const BSONObj& update) {
+        uassert(0, "update object must not be empty",
+            !update.isEmpty());
+        uassert(0, "update object must consist of $-prefixed modifiers",
+            update.firstElementFieldName()[0] == '$');
+
         UpdateWriteOperation* update_op = new UpdateWriteOperation(
             _selector, update, UpdateOption_Multi);
         _builder->enqueue(update_op);
     }
 
     void BulkUpdateBuilder::replaceOne(const BSONObj& replacement) {
+        if (!replacement.isEmpty())
+            uassert(0, "replacement object must not include $ operators",
+                replacement.firstElementFieldName()[0] != '$');
+
         UpdateWriteOperation* update_op = new UpdateWriteOperation(
             _selector, replacement, 0);
         _builder->enqueue(update_op);

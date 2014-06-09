@@ -580,6 +580,138 @@ namespace {
         ASSERT_FALSE(result.hasErrors());
     }
 
+    TYPED_TEST(BulkOperationTest, UpdateEmpty) {
+        if (!this->testSupported()) return;
+        BulkOperationBuilder bulk(this->c, TEST_NS, true);
+
+        ASSERT_THROWS(
+            bulk.find(BSON("b" << 1)).update(BSONObj()),
+            std::exception
+        );
+    }
+
+    TYPED_TEST(BulkOperationTest, UpdateMissingDollarSign) {
+        if (!this->testSupported()) return;
+        BulkOperationBuilder bulk(this->c, TEST_NS, true);
+
+        ASSERT_THROWS(
+            bulk.find(BSON("b" << 1)).update(BSON("a" << 2)),
+            std::exception
+        );
+    }
+
+    TYPED_TEST(BulkOperationTest, UpdateOneMissingDollarSign) {
+        if (!this->testSupported()) return;
+        BulkOperationBuilder bulk(this->c, TEST_NS, true);
+
+        ASSERT_THROWS(
+            bulk.find(BSON("b" << 1)).updateOne(BSON("a" << 2)),
+            std::exception
+        );
+    }
+
+    TYPED_TEST(BulkOperationTest, UpdateMixedDollarSign) {
+        if (!this->testSupported()) return;
+        BulkOperationBuilder bulk(this->c, TEST_NS, true);
+
+        bulk.find(BSON("b" << 1)).update(
+            BSON("$set" << BSON("a" << "2") << "a" << 2)
+        );
+
+        WriteResult result;
+        ASSERT_THROWS(
+            bulk.execute(&WriteConcern::acknowledged, &result),
+            OperationException
+        );
+    }
+
+    TYPED_TEST(BulkOperationTest, ReplaceOneEmpty) {
+        if (!this->testSupported()) return;
+        BulkOperationBuilder bulk(this->c, TEST_NS, true);
+
+        bulk.insert(BSON("b" << 1));
+        bulk.find(BSON("b" << 1)).replaceOne(BSONObj());
+        ASSERT_EQUALS(this->c->count(TEST_NS, BSON("b" << 1)), 0U);
+    }
+
+    TYPED_TEST(BulkOperationTest, ReplaceOneHavingDollarSign) {
+        if (!this->testSupported()) return;
+        BulkOperationBuilder bulk(this->c, TEST_NS, true);
+
+        ASSERT_THROWS(
+            bulk.find(BSON("b" << 1)).replaceOne(
+                BSON("$set" << BSON("a" << 2))
+            ),
+            std::exception
+        );
+    }
+
+    TYPED_TEST(BulkOperationTest, UpdateUpsertEmpty) {
+        if (!this->testSupported()) return;
+        BulkOperationBuilder bulk(this->c, TEST_NS, true);
+
+        ASSERT_THROWS(
+            bulk.find(BSON("b" << 1)).upsert().update(BSONObj()),
+            std::exception
+        );
+    }
+
+    TYPED_TEST(BulkOperationTest, UpdateUpsertMissingDollarSign) {
+        if (!this->testSupported()) return;
+        BulkOperationBuilder bulk(this->c, TEST_NS, true);
+
+        ASSERT_THROWS(
+            bulk.find(BSON("b" << 1)).upsert().update(BSON("a" << 2)),
+            std::exception
+        );
+    }
+
+    TYPED_TEST(BulkOperationTest, UpdateOneUpsertMissingDollarSign) {
+        if (!this->testSupported()) return;
+        BulkOperationBuilder bulk(this->c, TEST_NS, true);
+
+        ASSERT_THROWS(
+            bulk.find(BSON("b" << 1)).upsert().updateOne(BSON("a" << 2)),
+            std::exception
+        );
+    }
+
+    TYPED_TEST(BulkOperationTest, UpdateUpsertMixedDollarSign) {
+        if (!this->testSupported()) return;
+        BulkOperationBuilder bulk(this->c, TEST_NS, true);
+
+        bulk.find(BSON("b" << 1)).upsert().update(
+            BSON("$set" << BSON("a" << "2") << "a" << 2)
+        );
+
+        WriteResult result;
+        ASSERT_THROWS(
+            bulk.execute(&WriteConcern::acknowledged, &result),
+            OperationException
+        );
+    }
+
+    TYPED_TEST(BulkOperationTest, ReplaceOneUpsertHavingDollarSign) {
+        if (!this->testSupported()) return;
+        BulkOperationBuilder bulk(this->c, TEST_NS, true);
+
+        ASSERT_THROWS(
+            bulk.find(BSON("b" << 1)).upsert().replaceOne(
+                BSON("$set" << BSON("a" << 2))
+            ),
+            std::exception
+        );
+    }
+
+    TYPED_TEST(BulkOperationTest, ReplaceOneUpsertEmpty) {
+        if (!this->testSupported()) return;
+        BulkOperationBuilder bulk(this->c, TEST_NS, true);
+
+        bulk.insert(BSON("b" << 1));
+        bulk.find(BSON("b" << 1)).upsert().replaceOne(BSONObj());
+        ASSERT_EQUALS(this->c->count(TEST_NS, BSON("b" << 1)), 0U);
+    }
+
     TYPED_TEST(BulkOperationTest, UnorderedBatchWithErrors) {
         if (!this->testSupported()) return;
 
