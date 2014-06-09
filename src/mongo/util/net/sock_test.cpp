@@ -142,19 +142,19 @@ namespace {
             stdx::bind(&detail::awaitConnect, &connectSock, *connectRes, boost::ref(connected)));
 
         connected.waitToBeNotified();
-        connected.join();
+        connector.join();
         if (connectSock == INVALID_SOCKET) {
             closesocket(listenSock);
             ::freeaddrinfo(res);
             ::freeaddrinfo(connectRes);
             closesocket(acceptSock);
             closesocket(connectSock);
-            accepted.join();
+            acceptor.join();
             return SocketPair();
         }
 
         accepted.waitToBeNotified();
-        accepted.join();
+        acceptor.join();
         if (acceptSock == INVALID_SOCKET) {
             closesocket(listenSock);
             ::freeaddrinfo(res);
