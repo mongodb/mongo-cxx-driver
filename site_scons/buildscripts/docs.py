@@ -32,10 +32,20 @@ def version():
             if line.startswith("PROJECT_NUMBER"):
                 return line.split("=")[1].strip()
 
+def link_current(version):
+    """Create current link to the most recently generated documentation
+    """
+    print("Updating current symlink")
+
+    link_path = 'docs/html/cplusplus/current'
+    os.remove(link_path)
+    os.symlink(version, link_path)
+
 def main():
     v = version()
     print("Generating C++ docs in docs/html/cplusplus/%s" % v)
     gen_cplusplus("docs/html/cplusplus/%s" % v)
+    link_current(v)
 
 if __name__ == "__main__":
     main()
