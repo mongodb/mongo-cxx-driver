@@ -60,6 +60,8 @@ namespace mongo {
         uassert(0, "Bulk operations cannot be executed without any operations",
             !_write_operations.empty());
 
+        _executed = true;
+
         if (!_ordered)
             std::sort(_write_operations.begin(), _write_operations.end(), compare);
 
@@ -69,8 +71,6 @@ namespace mongo {
         writeResult->_requiresDetailedInsertResults = true;
 
         _client->_write(_ns, _write_operations, _ordered, writeConcern, writeResult);
-
-        _executed = true;
     }
 
     void BulkOperationBuilder::enqueue(WriteOperation* operation) {
