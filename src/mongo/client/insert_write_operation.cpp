@@ -27,7 +27,7 @@ namespace mongo {
     } // namespace
 
     InsertWriteOperation::InsertWriteOperation(const BSONObj& doc)
-        : _doc(doc)
+        : _doc(_ensureId(doc))
     {}
 
     WriteOpType InsertWriteOperation::operationType() const {
@@ -61,6 +61,16 @@ namespace mongo {
 
     void InsertWriteOperation::appendSelfToBSONObj(BSONObjBuilder* obj) const {
         obj->appendElements(_doc);
+    }
+
+    BSONObj InsertWriteOperation::_ensureId(const BSONObj& doc) {
+        if (doc.hasField("_id"))
+            return doc;
+
+        BSONObjBuilder bob;
+        bob.append("_id", OID::gen());
+        bob.appendElements(doc);
+        return bob.obj();
     }
 
 } // namespace mongo

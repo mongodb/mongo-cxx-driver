@@ -36,6 +36,8 @@ namespace mongo {
         virtual void appendSelfToBSONObj(BSONObjBuilder* obj) const;
 
     private:
+        static BSONObj _ensureId(const BSONObj& doc);
+
         const BSONObj _doc;
     };
 
