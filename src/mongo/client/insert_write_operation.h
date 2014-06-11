@@ -21,7 +21,7 @@ namespace mongo {
 
     class InsertWriteOperation : public WriteOperationBase {
     public:
-        InsertWriteOperation(const BSONObj& doc);
+        explicit InsertWriteOperation(const BSONObj& doc);
 
         virtual WriteOpType operationType() const;
         virtual const char* batchName() const;
