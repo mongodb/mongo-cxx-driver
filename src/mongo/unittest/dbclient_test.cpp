@@ -281,6 +281,85 @@ namespace {
         ASSERT_EQUALS(c.count(TEST_NS), 2U);
     }
 
+    TEST_F(DBClientTest, SimpleGroup) {
+        c.insert(TEST_NS, BSON("a" << 1 << "color" << "green"));
+        c.insert(TEST_NS, BSON("a" << 2 << "color" << "green"));
+        c.insert(TEST_NS, BSON("a" << 3 << "color" << "green"));
+        c.insert(TEST_NS, BSON("a" << 1 << "color" << "blue"));
+
+        std::string reduce = "function(current, aggregate) {"
+            "if (current.color === 'green') { aggregate.green++; }"
+            "if (current.a) { aggregate.a += current.a; }"
+        "}";
+
+        BSONObj initial = BSON("a" << 0 << "green" << 0);
+        BSONObj cond = BSON("a" << LT << 3);
+        BSONObj key = BSON("color" << 1);
+
+        std::string finalize = "function(result) {"
+            "result.combined = result.green + result.a;"
+        "}";
+
+        vector<BSONObj> results;
+        c.group(TEST_NS, reduce, &results, initial, cond, key, finalize);
+
+        vector<BSONObj>::const_iterator it = results.begin();
+        while (it != results.end()) {
+            BSONObj current = *it;
+            if (current.getStringField("color") == std::string("green")) {
+                ASSERT_EQUALS(current.getField("a").Double(), 3.0);
+                ASSERT_EQUALS(current.getField("green").Double(), 2.0);
+                ASSERT_EQUALS(current.getField("combined").Double(), 5.0);
+            } else {
+                ASSERT_EQUALS(current.getField("a").Double(), 1.0);
+                ASSERT_EQUALS(current.getField("green").Double(), 0.0);
+                ASSERT_EQUALS(current.getField("combined").Double(), 1.0);
+            }
+            ++it;
+        }
+    }
+
+    TEST_F(DBClientTest, GroupWithKeyFunction) {
+        c.insert(TEST_NS, BSON("a" << 1 << "color" << "green"));
+        c.insert(TEST_NS, BSON("a" << 2 << "color" << "green"));
+        c.insert(TEST_NS, BSON("a" << 3 << "color" << "green"));
+        c.insert(TEST_NS, BSON("a" << 1 << "color" << "blue"));
+
+        std::string reduce = "function(current, aggregate) {"
+            "if (current.color === 'green') { aggregate.green++; }"
+            "if (current.a) { aggregate.a += current.a; }"
+        "}";
+
+        BSONObj initial = BSON("a" << 0 << "green" << 0);
+        BSONObj cond = BSON("a" << LT << 3);
+
+        std::string key = "function(doc) {"
+            "return { 'color': doc.color }"
+        "}";
+
+        std::string finalize = "function(result) {"
+            "result.combined = result.green + result.a;"
+        "}";
+
+        vector<BSONObj> results;
+        c.groupWithKeyFunction(TEST_NS, reduce, &results, initial, cond, key, finalize);
+
+        vector<BSONObj>::const_iterator it = results.begin();
+        while (it != results.end()) {
+            BSONObj current = *it;
+            if (current.getStringField("color") == std::string("green")) {
+                ASSERT_EQUALS(current.getField("a").Double(), 3.0);
+                ASSERT_EQUALS(current.getField("green").Double(), 2.0);
+                ASSERT_EQUALS(current.getField("combined").Double(), 5.0);
+            } else {
+                ASSERT_EQUALS(current.getField("a").Double(), 1.0);
+                ASSERT_EQUALS(current.getField("green").Double(), 0.0);
+                ASSERT_EQUALS(current.getField("combined").Double(), 1.0);
+            }
+            ++it;
+        }
+    }
+
     TEST_F(DBClientTest, InsertVectorContinueOnError) {
         vector<BSONObj> v;
         v.push_back(BSON("_id" << 1));

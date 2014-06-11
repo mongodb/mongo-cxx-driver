@@ -791,6 +791,78 @@ namespace mongo {
         return info;
     }
 
+    void DBClientWithCommands::group(
+        const std::string& ns,
+        const std::string& jsreduce,
+        std::vector<BSONObj>* output,
+        const BSONObj& initial,
+        const BSONObj& cond,
+        const BSONObj& key,
+        const std::string& finalize
+    ) {
+        BSONObjBuilder groupObjBuilder;
+        _buildGroupObj(ns, jsreduce, initial, cond, finalize, &groupObjBuilder);
+
+        if (!key.isEmpty())
+            groupObjBuilder.append("key", key);
+
+        _runGroup(ns, groupObjBuilder.obj(), output);
+    }
+
+    void DBClientWithCommands::groupWithKeyFunction(
+        const std::string& ns,
+        const std::string& jsreduce,
+        std::vector<BSONObj>* output,
+        const BSONObj& initial,
+        const BSONObj& cond,
+        const std::string& jskey,
+        const std::string& finalize
+    ) {
+        BSONObjBuilder groupBuilder;
+        _buildGroupObj(ns, jsreduce, initial, cond, finalize, &groupBuilder);
+
+        if (!jskey.empty())
+            groupBuilder.append("$keyf", jskey);
+
+        _runGroup(ns, groupBuilder.obj(), output);
+    }
+
+    void DBClientWithCommands::_buildGroupObj(
+        const std::string& ns,
+        const std::string& jsreduce,
+        const BSONObj& initial,
+        const BSONObj& cond,
+        const std::string& finalize,
+        BSONObjBuilder* groupObj
+    ) {
+        groupObj->append("ns", nsGetCollection(ns));
+        groupObj->appendCode("$reduce", jsreduce);
+        groupObj->append("initial", initial);
+
+        if (!cond.isEmpty())
+            groupObj->append("cond", cond);
+        if (!finalize.empty())
+            groupObj->append("finalize", finalize);
+    }
+
+    void DBClientWithCommands::_runGroup(const std::string ns, const BSONObj& group, std::vector<BSONObj>* output) {
+        BSONObjBuilder commandBuilder;
+        commandBuilder.append("group", group);
+
+        BSONObj result;
+        bool ok = runCommand(nsGetDB(ns), commandBuilder.obj(), result);
+
+        if (!ok)
+            throw OperationException(result);
+
+        BSONElement resultArray = result.getField("retval");
+        BSONObjIterator resultIterator(resultArray.Obj());
+
+        while (resultIterator.more()) {
+            output->push_back(resultIterator.next().Obj().getOwned());
+        }
+    }
+
     bool DBClientWithCommands::eval(const string &dbname, const string &jscode, BSONObj& info, BSONElement& retValue, BSONObj *args) {
         BSONObjBuilder b;
         b.appendCode("$eval", jscode);

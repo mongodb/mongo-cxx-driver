@@ -821,6 +821,50 @@ namespace mongo {
         */
         BSONObj mapreduce(const std::string &ns, const std::string &jsmapf, const std::string &jsreducef, BSONObj query = BSONObj(), MROutput output = MRInline);
 
+        /**
+         * Groups documents in a collection by the specified keys and performs simple aggregation
+         * functions such as computing counts and sums.
+         *
+         * See: http://docs.mongodb.org/manual/reference/method/db.collection.group
+         *
+         * @param ns The namespace to group
+         * @param key The field or fields to group specified as a projection document: { field: 1 }
+         * @param jsreduce An aggregation function that operates on the documents during the group
+         * ing operation. The function should take two arguments: the current document and an
+         * aggregation result for that group.
+         * @param output The output vector.
+         * @param initial Initial aggregation result document.
+         * @param cond Optional selection criteria to determine which documents to process.
+         * @param finalize Optional function that runs for each item in the result set before
+         * returning the final values in the output vector.
+         */
+        void group(
+            const std::string& ns,
+            const std::string& jsreduce,
+            std::vector<BSONObj>* output,
+            const BSONObj& initial = BSONObj(),
+            const BSONObj& cond = BSONObj(),
+            const BSONObj& key = BSONObj(),
+            const std::string& finalize = ""
+        );
+
+        /**
+         * Does the same thing as group but accepts a key function that can be used to create the
+         * object representing the key. This allows for grouping on calculated fields rather than
+         * existing fields alone.
+         *
+         * @see DBClientWithCommands::group
+         */
+        void groupWithKeyFunction(
+            const std::string& ns,
+            const std::string& jsreduce,
+            std::vector<BSONObj>* output,
+            const BSONObj& initial = BSONObj(),
+            const BSONObj& cond = BSONObj(),
+            const std::string& jskey = "",
+            const std::string& finalize = ""
+        );
+
         /** Run javascript code on the database server.
            dbname    database SavedContext in which the code runs. The javascript variable 'db' will be assigned
                      to this database when the function is invoked.
@@ -1012,6 +1056,17 @@ namespace mongo {
     private:
         enum QueryOptions _cachedAvailableOptions;
         bool _haveCachedAvailableOptions;
+
+        void _buildGroupObj(
+            const std::string& ns,
+            const std::string& jsreduce,
+            const BSONObj& initial,
+            const BSONObj& cond,
+            const std::string& finalize,
+            BSONObjBuilder* groupObj
+        );
+
+        void _runGroup(const std::string ns, const BSONObj& group, std::vector<BSONObj>* output);
     };
 
     class DBClientWriter;
