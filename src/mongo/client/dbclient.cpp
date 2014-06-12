@@ -792,13 +792,13 @@ namespace mongo {
     }
 
     void DBClientWithCommands::group(
-        const std::string& ns,
-        const std::string& jsreduce,
+        const StringData& ns,
+        const StringData& jsreduce,
         std::vector<BSONObj>* output,
         const BSONObj& initial,
         const BSONObj& cond,
         const BSONObj& key,
-        const std::string& finalize
+        const StringData& finalize
     ) {
         BSONObjBuilder groupObjBuilder;
         _buildGroupObj(ns, jsreduce, initial, cond, finalize, &groupObjBuilder);
@@ -810,13 +810,13 @@ namespace mongo {
     }
 
     void DBClientWithCommands::groupWithKeyFunction(
-        const std::string& ns,
-        const std::string& jsreduce,
+        const StringData& ns,
+        const StringData& jsreduce,
         std::vector<BSONObj>* output,
         const BSONObj& initial,
         const BSONObj& cond,
-        const std::string& jskey,
-        const std::string& finalize
+        const StringData& jskey,
+        const StringData& finalize
     ) {
         BSONObjBuilder groupBuilder;
         _buildGroupObj(ns, jsreduce, initial, cond, finalize, &groupBuilder);
@@ -828,14 +828,14 @@ namespace mongo {
     }
 
     void DBClientWithCommands::_buildGroupObj(
-        const std::string& ns,
-        const std::string& jsreduce,
+        const StringData& ns,
+        const StringData& jsreduce,
         const BSONObj& initial,
         const BSONObj& cond,
-        const std::string& finalize,
+        const StringData& finalize,
         BSONObjBuilder* groupObj
     ) {
-        groupObj->append("ns", nsGetCollection(ns));
+        groupObj->append("ns", nsGetCollection(ns.toString()));
         groupObj->appendCode("$reduce", jsreduce);
         groupObj->append("initial", initial);
 
@@ -845,12 +845,12 @@ namespace mongo {
             groupObj->append("finalize", finalize);
     }
 
-    void DBClientWithCommands::_runGroup(const std::string ns, const BSONObj& group, std::vector<BSONObj>* output) {
+    void DBClientWithCommands::_runGroup(const StringData& ns, const BSONObj& group, std::vector<BSONObj>* output) {
         BSONObjBuilder commandBuilder;
         commandBuilder.append("group", group);
 
         BSONObj result;
-        bool ok = runCommand(nsGetDB(ns), commandBuilder.obj(), result);
+        bool ok = runCommand(nsGetDB(ns.toString()), commandBuilder.obj(), result);
 
         if (!ok)
             throw OperationException(result);

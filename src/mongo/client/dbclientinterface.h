@@ -822,10 +822,13 @@ namespace mongo {
         BSONObj mapreduce(const std::string &ns, const std::string &jsmapf, const std::string &jsreducef, BSONObj query = BSONObj(), MROutput output = MRInline);
 
         /**
-         * Groups documents in a collection by the specified keys and performs simple aggregation
+         * Groups documents in a collection by the specified key and performs simple aggregation
          * functions such as computing counts and sums.
          *
-         * See: http://docs.mongodb.org/manual/reference/method/db.collection.group
+         * @note WARNING: Use of the group command is strongly discouraged, it is much better to use
+         * the aggregation framework to acheive similar functionality.
+         *
+         * @see http://docs.mongodb.org/manual/reference/method/db.collection.group
          *
          * @param ns The namespace to group
          * @param key The field or fields to group specified as a projection document: { field: 1 }
@@ -839,30 +842,30 @@ namespace mongo {
          * returning the final values in the output vector.
          */
         void group(
-            const std::string& ns,
-            const std::string& jsreduce,
+            const StringData& ns,
+            const StringData& jsreduce,
             std::vector<BSONObj>* output,
             const BSONObj& initial = BSONObj(),
             const BSONObj& cond = BSONObj(),
             const BSONObj& key = BSONObj(),
-            const std::string& finalize = ""
+            const StringData& finalize = ""
         );
 
         /**
-         * Does the same thing as group but accepts a key function that can be used to create the
-         * object representing the key. This allows for grouping on calculated fields rather than
-         * existing fields alone.
+         * Does the same thing as 'group' but accepts a key function, 'jskey', that is used to
+         * create an object representing the key. This allows for grouping on calculated fields
+         * rather on existing fields alone.
          *
          * @see DBClientWithCommands::group
          */
         void groupWithKeyFunction(
-            const std::string& ns,
-            const std::string& jsreduce,
+            const StringData& ns,
+            const StringData& jsreduce,
             std::vector<BSONObj>* output,
             const BSONObj& initial = BSONObj(),
             const BSONObj& cond = BSONObj(),
-            const std::string& jskey = "",
-            const std::string& finalize = ""
+            const StringData& jskey = "",
+            const StringData& finalize = ""
         );
 
         /** Run javascript code on the database server.
@@ -1058,15 +1061,15 @@ namespace mongo {
         bool _haveCachedAvailableOptions;
 
         void _buildGroupObj(
-            const std::string& ns,
-            const std::string& jsreduce,
+            const StringData& ns,
+            const StringData& jsreduce,
             const BSONObj& initial,
             const BSONObj& cond,
-            const std::string& finalize,
+            const StringData& finalize,
             BSONObjBuilder* groupObj
         );
 
-        void _runGroup(const std::string ns, const BSONObj& group, std::vector<BSONObj>* output);
+        void _runGroup(const StringData& ns, const BSONObj& group, std::vector<BSONObj>* output);
     };
 
     class DBClientWriter;
