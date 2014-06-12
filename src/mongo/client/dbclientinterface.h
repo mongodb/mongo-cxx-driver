@@ -1220,6 +1220,32 @@ namespace mongo {
         virtual std::auto_ptr<DBClientCursor> query(const std::string &ns, Query query, int nToReturn = 0, int nToSkip = 0,
                                                     const BSONObj *fieldsToReturn = 0, int queryOptions = 0 , int batchSize = 0 );
 
+        /**
+         * Returns a list of up to 'numCursors' cursors that can be iterated concurrently.
+         *
+         * As long as the collection is not modified during scanning, each document appears once
+         * in one of the cursors' result sets.
+         *
+         * @note Warning: One must delete the cursors after use.
+         * @note Warning: One must delete any new connections created by the connection factory
+         *  after use.
+         *
+         * @see example usage in dbclient_test.cpp -> DBClientTest/ParallelCollectionScan
+         *
+         * @param ns The namespace to scan
+         * @param numCursors Number of cursors to return. You may get back less than you asked for.
+         * @param cursors Output vector to hold cursors created for this scan.
+         * @param connectionFactory Function that returns a pointer to a DBClientBase for use by
+         *  newly created cursors. The function takes zero parameters but additional parameters
+         *  may be bound (if required) using std::bind. See the example listed above for more info.
+         */
+        virtual void parallelScan(
+            const StringData& ns,
+            int numCursors,
+            std::vector<DBClientCursor*>* cursors,
+            stdx::function<DBClientBase* ()> connectionFactory
+        );
+
         virtual std::auto_ptr<DBClientCursor> aggregate(const std::string& ns,
                                                         const BSONObj& pipeline,
                                                         const BSONObj* aggregateOptions = NULL,

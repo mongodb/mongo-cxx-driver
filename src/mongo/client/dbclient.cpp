@@ -1204,6 +1204,55 @@ namespace mongo {
         return auto_ptr< DBClientCursor >( 0 );
     }
 
+    void DBClientBase::parallelScan(
+        const StringData& ns,
+        int numCursors,
+        std::vector<DBClientCursor*>* cursors,
+        stdx::function<DBClientBase* ()> connectionFactory
+    ) {
+        BSONObjBuilder bob;
+        bob.append("parallelCollectionScan", nsGetCollection(ns.toString()));
+        bob.append("numCursors", numCursors);
+
+        BSONObj result;
+        bool ok = runCommand(nsGetDB(ns.toString()), bob.obj(), result);
+
+        if (!ok)
+            throw OperationException(result);
+
+        BSONObj resultArray = result.getObjectField("cursors");
+        BSONObjIterator arrayIterator(resultArray);
+
+        while (arrayIterator.more()) {
+            long long cursorId = arrayIterator.next().Obj().getFieldDotted("cursor.id").numberLong();
+
+            DBClientBase* conn = NULL;
+
+            // Attempt to get a connection for this cursor from the user provided connectionFactory
+            try {
+                conn = connectionFactory();
+            } catch (...) {
+                while (arrayIterator.more()) {
+                    try {
+                        DBClientCursor killOnServer(this, ns.toString(), cursorId, 0, 0, 0);
+                        cursorId = arrayIterator.next().Obj().getFieldDotted("cursor.id").numberLong();
+                    } catch (...) {
+                       // ignore any failure to create or destroy the above temporary cursors, they
+                       // exist just to attempt to kill the cursors on the server for which we will
+                       // not be able to return a cursor to the user
+                    }
+                }
+
+                // Re-throw the users original exception...
+                throw;
+            }
+
+            // Caller is responsible for cleaning up DBClientCursors
+            DBClientCursor* cursor = new DBClientCursor(conn, ns.toString(), cursorId, 0, 0, 0);
+            cursors->push_back(cursor);
+        }
+    }
+
     std::auto_ptr<DBClientCursor>
     DBClientBase::aggregate(const std::string& ns,
                             const BSONObj& pipeline,

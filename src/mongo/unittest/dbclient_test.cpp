@@ -15,6 +15,7 @@
 
 #include <boost/scoped_ptr.hpp>
 #include <algorithm>
+#include <functional>
 #include <list>
 #include <string>
 #include <vector>
@@ -26,6 +27,8 @@
 
 #include "mongo/bson/bson.h"
 #include "mongo/client/dbclient.h"
+
+#include "boost/thread.hpp"
 
 using std::auto_ptr;
 using std::list;
@@ -60,6 +63,17 @@ namespace {
         }
         DBClientConnection c;
     };
+
+    bool serverGTE(DBClientBase* c, int major, int minor) {
+        BSONObj result;
+        c->runCommand("admin", BSON("buildinfo" << true), result);
+
+        std::vector<BSONElement> version = result.getField("versionArray").Array();
+        int serverMajor = version[0].Int();
+        int serverMinor = version[1].Int();
+
+        return (serverMajor >= major && serverMinor >= minor);
+    }
 
     /* Query Class */
     TEST(QueryTest, Explain) {
@@ -624,6 +638,167 @@ namespace {
                 ASSERT_EQUALS(current.getField("combined").Double(), 1.0);
             }
             ++it;
+        }
+    }
+
+    void getResults(DBClientCursor* cursor, std::vector<int>* results, boost::mutex* mut) {
+        while (cursor->more()) {
+            boost::lock_guard<boost::mutex> lock(*mut);
+            results->push_back(cursor->next().getIntField("_id"));
+        }
+    }
+
+    DBClientBase* cloneFromPool(DBClientBase* originalConnection,
+                                std::vector<DBClientBase*>* connectionAccumulator) {
+        DBClientBase* conn = pool.get(originalConnection->getServerAddress(),
+            originalConnection->getSoTimeout());
+        connectionAccumulator->push_back(conn);
+        return conn;
+    }
+
+    TEST_F(DBClientTest, ParallelCollectionScanUsingConnectionPool) {
+        bool supported = serverGTE(&c, 2, 6);
+
+        if (supported) {
+            const size_t numItems = 8000;
+            const size_t seriesSum = (numItems * (numItems - 1)) / 2;
+
+            for (size_t i = 0; i < numItems; ++i)
+                c.insert(TEST_NS, BSON("_id" << static_cast<int>(i)));
+
+            std::vector<DBClientBase*> connections;
+            std::vector<DBClientCursor*> cursors;
+
+            stdx::function<DBClientBase* ()> factory = stdx::bind(&cloneFromPool, &c, &connections);
+            c.parallelScan(TEST_NS, 3, &cursors, factory);
+
+            std::vector<int> results;
+            boost::mutex resultsMutex;
+            std::vector<boost::thread*> threads;
+
+            // We can get up to 3 cursors back here but the server might give us back less
+            for (size_t i = 0; i < cursors.size(); ++i)
+                threads.push_back(new boost::thread(getResults, cursors[i], &results, &resultsMutex));
+
+            // Ensure all the threads have completed their scans
+            for (size_t i = 0; i < threads.size(); ++i) {
+                threads[i]->join();
+                delete threads[i];
+            }
+
+            // Cleanup the cursors that parallel scan created
+            for (size_t i = 0; i < cursors.size(); ++i)
+                delete cursors[i];
+
+            size_t sum = 0;
+            for (size_t i = 0; i < results.size(); ++i)
+                sum += results[i];
+
+            ASSERT_EQUALS(sum, seriesSum);
+        }
+    }
+
+    DBClientBase* makeNewConnection(DBClientBase* originalConnection,
+                                    std::vector<DBClientBase*>* connectionAccumulator) {
+        DBClientConnection* newConn = new DBClientConnection();
+        newConn->connect(originalConnection->getServerAddress());
+        connectionAccumulator->push_back(newConn);
+        return newConn;
+    }
+
+    TEST_F(DBClientTest, ParallelCollectionScanUsingNewConnections) {
+        bool supported = serverGTE(&c, 2, 6);
+
+        if (supported) {
+            const size_t numItems = 8000;
+            const size_t seriesSum = (numItems * (numItems - 1)) / 2;
+
+            for (size_t i = 0; i < numItems; ++i)
+                c.insert(TEST_NS, BSON("_id" << static_cast<int>(i)));
+
+            std::vector<DBClientBase*> connections;
+            std::vector<DBClientCursor*> cursors;
+
+            stdx::function<DBClientBase* ()> factory = stdx::bind(&makeNewConnection, &c, &connections);
+            c.parallelScan(TEST_NS, 3, &cursors, factory);
+
+            std::vector<int> results;
+            boost::mutex resultsMutex;
+            std::vector<boost::thread*> threads;
+
+            // We can get up to 3 cursors back here but the server might give us back less
+            for (size_t i = 0; i < cursors.size(); ++i)
+                threads.push_back(new boost::thread(getResults, cursors[i], &results, &resultsMutex));
+
+            // Ensure all the threads have completed their scans
+            for (size_t i = 0; i < threads.size(); ++i) {
+                threads[i]->join();
+                delete threads[i];
+            }
+
+            // Cleanup the cursors that parallel scan created
+            for (size_t i = 0; i < cursors.size(); ++i)
+                delete cursors[i];
+
+            // Cleanup the connections our connection factory created
+            for (size_t i = 0; i < connections.size(); ++i)
+                delete connections[i];
+
+            size_t sum = 0;
+            for (size_t i = 0; i < results.size(); ++i)
+                sum += results[i];
+
+            ASSERT_EQUALS(sum, seriesSum);
+        }
+    }
+
+    DBClientBase* makeSketchyConnection(DBClientBase* originalConnection,
+                                        std::vector<DBClientBase*>* connectionAccumulator) {
+        static int connectionCount = 0;
+
+        // Fail creating the second connection
+        DBClientConnection* newConn;
+        if (connectionCount != 1)
+            newConn = new DBClientConnection();
+        else
+            throw OperationException(BSONObj());
+
+        newConn->connect(originalConnection->getServerAddress());
+        connectionAccumulator->push_back(newConn);
+
+        connectionCount++;
+
+        return newConn;
+    }
+
+    TEST_F(DBClientTest, ParallelCollectionScanBadConnections) {
+        bool supported = serverGTE(&c, 2, 6);
+
+        if (supported) {
+            const size_t numItems = 8000;
+
+            for (size_t i = 0; i < numItems; ++i)
+                c.insert(TEST_NS, BSON("_id" << static_cast<int>(i)));
+
+            std::vector<DBClientBase*> connections;
+            std::vector<DBClientCursor*> cursors;
+
+            stdx::function<DBClientBase* ()> factory = stdx::bind(&makeSketchyConnection, &c, &connections);
+            ASSERT_THROWS(
+                c.parallelScan(TEST_NS, 3, &cursors, factory),
+                OperationException
+            );
+
+            ASSERT_EQUALS(cursors.size(), 1U);
+            ASSERT_EQUALS(connections.size(), 1U);
+
+            // Cleanup the cursors that parallel scan created
+            for (size_t i = 0; i < cursors.size(); ++i)
+                delete cursors[i];
+
+            // Cleanup the connections our connection factory created
+            for (size_t i = 0; i < connections.size(); ++i)
+                delete connections[i];
         }
     }
 
