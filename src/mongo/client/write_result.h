@@ -39,7 +39,7 @@ namespace mongo {
     public:
 
         /**
-         * Creates and empty write result.
+         * Creates an empty write result.
          */
         WriteResult();
 
@@ -58,7 +58,7 @@ namespace mongo {
          * Returns true if there have been write errors.
          *
          * These include duplicate key errors, etc... that are possibly encountered in the process
-         * of write exuction on the server.
+         * of write execution on the server.
          */
         bool hasWriteErrors() const;
 
@@ -66,7 +66,7 @@ namespace mongo {
          * Returns true if there have been write concern errors.
          *
          * This class of error can occur after the execution of writes on the server if they
-         * cannot be fully persisted or replicated to fufill given supplied level of write concern.
+         * cannot be fully persisted or replicated to fulfill given supplied level of write concern.
          */
         bool hasWriteConcernErrors() const;
 
@@ -132,12 +132,12 @@ namespace mongo {
         //
 
         /**
-         * Vector with the write errors that occured.
+         * Vector with the write errors that occurred.
          */
         const std::vector<BSONObj>& writeErrors() const;
 
         /**
-         * Vector with the write concern errors that occured.
+         * Vector with the write concern errors that occurred.
          */
         const std::vector<BSONObj>& writeConcernErrors() const;
 
