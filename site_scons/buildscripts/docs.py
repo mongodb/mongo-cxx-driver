@@ -35,10 +35,15 @@ def version():
 def link_current(version):
     """Create current link to the most recently generated documentation
     """
-    print("Updating current symlink")
+    print("Updating 'current' docs symlink")
 
     link_path = 'docs/html/cplusplus/current'
-    os.remove(link_path)
+
+    try:
+        os.unlink(link_path)
+    except OSError:
+        pass
+
     os.symlink(version, link_path)
 
 def main():
