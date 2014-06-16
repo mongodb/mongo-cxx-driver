@@ -14,6 +14,7 @@
  */
 
 #include <boost/scoped_ptr.hpp>
+#include <algorithm>
 #include <list>
 #include <string>
 #include <vector>
@@ -284,6 +285,67 @@ namespace {
         cursor = c.getMore(TEST_NS, cursor_id);
         ASSERT_TRUE(cursor->more());
         ASSERT_EQUALS(cursor->next().getIntField("num"), 2);
+    }
+
+    TEST_F(DBClientTest, Distinct) {
+        c.insert(TEST_NS, BSON("a" << 1));
+        c.insert(TEST_NS, BSON("a" << 2));
+        c.insert(TEST_NS, BSON("a" << 2));
+        c.insert(TEST_NS, BSON("a" << 2));
+        c.insert(TEST_NS, BSON("a" << 3));
+
+        BSONObj result = c.distinct(TEST_NS, "a");
+
+        std::vector<BSONElement> results;
+        BSONObjIterator iter(result);
+        while (iter.more())
+            results.push_back(iter.next());
+
+        std::sort(results.begin(), results.end());
+
+        ASSERT_EQUALS(results[0].Int(), 1);
+        ASSERT_EQUALS(results[1].Int(), 2);
+        ASSERT_EQUALS(results[2].Int(), 3);
+    }
+
+    TEST_F(DBClientTest, DistinctWithQuery) {
+        c.insert(TEST_NS, BSON("a" << 1));
+        c.insert(TEST_NS, BSON("a" << 2));
+        c.insert(TEST_NS, BSON("a" << 2));
+        c.insert(TEST_NS, BSON("a" << 2));
+        c.insert(TEST_NS, BSON("a" << 3));
+
+        BSONObj result = c.distinct(TEST_NS, "a", BSON("a" << GT << 1));
+
+        std::vector<BSONElement> results;
+        BSONObjIterator iter(result);
+        while (iter.more())
+            results.push_back(iter.next());
+
+        std::sort(results.begin(), results.end());
+
+        ASSERT_EQUALS(results[0].Int(), 2);
+        ASSERT_EQUALS(results[1].Int(), 3);
+    }
+
+    TEST_F(DBClientTest, DistinctDotted) {
+        c.insert(TEST_NS, BSON("a" << BSON("b" << "a") << "c" << 12));
+        c.insert(TEST_NS, BSON("a" << BSON("b" << "b") << "c" << 12));
+        c.insert(TEST_NS, BSON("a" << BSON("b" << "c") << "c" << 12));
+        c.insert(TEST_NS, BSON("a" << BSON("b" << "c") << "c" << 12));
+
+        BSONObj result = c.distinct(TEST_NS, "a.b");
+
+        std::vector<BSONElement> results;
+        BSONObjIterator iter(result);
+        while (iter.more())
+            results.push_back(iter.next());
+
+        std::sort(results.begin(), results.end());
+
+        ASSERT_EQUALS(results[0].String(), std::string("a"));
+        ASSERT_EQUALS(results[1].String(), std::string("b"));
+        ASSERT_EQUALS(results[2].String(), std::string("c"));
     }
 
     /* DBClient free functions */

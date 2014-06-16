@@ -863,6 +863,25 @@ namespace mongo {
         }
     }
 
+    BSONObj DBClientWithCommands::distinct(
+        const StringData& ns,
+        const StringData& field,
+        const BSONObj& query
+    ) {
+        BSONObjBuilder commandBuilder;
+        commandBuilder.append("distinct", nsGetCollection(ns.toString()));
+        commandBuilder.append("key", field);
+        commandBuilder.append("query", query);
+
+        BSONObj result;
+        bool ok = runCommand(nsGetDB(ns.toString()), commandBuilder.obj(), result);
+
+        if (!ok)
+            throw OperationException(result);
+
+        return result.getField("values").Obj().getOwned();
+    }
+
     bool DBClientWithCommands::eval(const string &dbname, const string &jscode, BSONObj& info, BSONElement& retValue, BSONObj *args) {
         BSONObjBuilder b;
         b.appendCode("$eval", jscode);

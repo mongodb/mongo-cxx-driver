@@ -881,6 +881,22 @@ namespace mongo {
             const StringData& finalize = ""
         );
 
+        /**
+         * Finds the distinct values for a specified field across a single collection and returns
+         * the results in an array.
+         *
+         * @param ns The namespace to query for distinct values.
+         * @param field The field for which to return distinct values.
+         *  Examples: "name", "address.street"
+         * @param query Optional query that specifies a filter for documents from which to retrieve
+         * distinct values.
+         */
+        BSONObj distinct(
+            const StringData& ns,
+            const StringData& field,
+            const BSONObj& query=BSONObj()
+        );
+
         /** Run javascript code on the database server.
            dbname    database SavedContext in which the code runs. The javascript variable 'db' will be assigned
                      to this database when the function is invoked.
