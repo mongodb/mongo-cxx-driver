@@ -272,6 +272,186 @@ namespace {
         );
     }
 
+    TEST_F(DBClientTest, FindAndModify) {
+        c.insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
+
+        BSONObj result = c.findAndModify(
+            TEST_NS,
+            BSON("i" << 1),
+            BSON("$inc" << BSON("i" << 1)),
+            false
+        );
+
+        ASSERT_EQUALS(result.getIntField("_id"), 1);
+        ASSERT_EQUALS(result.getIntField("i"), 1);
+        ASSERT_EQUALS(c.count(TEST_NS), 1U);
+    }
+
+    TEST_F(DBClientTest, FindAndModifyNoMatch) {
+        c.insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
+
+        BSONObj result = c.findAndModify(
+            TEST_NS,
+            BSON("i" << 2),
+            BSON("$inc" << BSON("i" << 1)),
+            false
+        );
+
+        ASSERT_TRUE(result.isEmpty());
+        ASSERT_EQUALS(c.count(TEST_NS), 1U);
+    }
+
+    TEST_F(DBClientTest, FindAndModifyNoMatchUpsert) {
+        c.insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
+
+        BSONObj result = c.findAndModify(
+            TEST_NS,
+            BSON("i" << 2),
+            BSON("$inc" << BSON("i" << 1)),
+            true
+        );
+
+        ASSERT_TRUE(result.isEmpty());
+        ASSERT_EQUALS(c.count(TEST_NS), 2U);
+    }
+
+    TEST_F(DBClientTest, FindAndModifyReturnNew) {
+        c.insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
+
+        BSONObj result = c.findAndModify(
+            TEST_NS,
+            BSON("i" << 1),
+            BSON("$inc" << BSON("i" << 1)),
+            false,
+            true
+        );
+
+        ASSERT_EQUALS(result.getIntField("_id"), 1);
+        ASSERT_EQUALS(result.getIntField("i"), 2);
+        ASSERT_EQUALS(c.count(TEST_NS), 1U);
+    }
+
+    TEST_F(DBClientTest, FindAndModifyNoMatchUpsertReturnNew) {
+        c.insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
+
+        BSONObj result = c.findAndModify(
+            TEST_NS,
+            BSON("i" << 2),
+            BSON("$inc" << BSON("i" << 1)),
+            true,
+            true
+        );
+
+        ASSERT_TRUE(result.hasField("_id"));
+        ASSERT_EQUALS(result.getIntField("i"), 3);
+        ASSERT_EQUALS(c.count(TEST_NS), 2U);
+    }
+
+    TEST_F(DBClientTest, FindAndModifySort) {
+        c.insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
+        c.insert(TEST_NS, BSON("_id" << 2 << "i" << 2));
+
+        BSONObj result = c.findAndModify(
+            TEST_NS,
+            BSONObj(),
+            BSON("$inc" << BSON("i" << 1)),
+            false,
+            false,
+            BSON("i" << -1)
+        );
+
+        ASSERT_EQUALS(result.getIntField("_id"), 2);
+        ASSERT_EQUALS(result.getIntField("i"), 2);
+        ASSERT_EQUALS(c.count(TEST_NS, BSON("_id" << 2 << "i" << 3)), 1U);
+    }
+
+    TEST_F(DBClientTest, FindAndModifyProjection) {
+        c.insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
+
+        BSONObj result = c.findAndModify(
+            TEST_NS,
+            BSON("i" << 1),
+            BSON("$inc" << BSON("i" << 1)),
+            false,
+            false,
+            BSONObj(),
+            BSON("_id" << 0)
+        );
+
+        ASSERT_FALSE(result.hasField("_id"));
+        ASSERT_TRUE(result.hasField("i"));
+    }
+
+    TEST_F(DBClientTest, FindAndModifyDuplicateKeyError) {
+        c.insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
+        c.ensureIndex(TEST_NS, BSON("i" << 1), true);
+        ASSERT_THROWS(
+            c.findAndModify(
+                TEST_NS,
+                BSON("i" << 1 << "j" << 1),
+                BSON("$set" << BSON("k" << 1)),
+                true
+            ),
+            OperationException
+        );
+    }
+
+    TEST_F(DBClientTest, FindAndRemove) {
+        c.insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
+
+        BSONObj result = c.findAndRemove(
+            TEST_NS,
+            BSON("i" << 1)
+        );
+
+        ASSERT_EQUALS(result.getIntField("_id"), 1);
+        ASSERT_EQUALS(result.getIntField("i"), 1);
+        ASSERT_EQUALS(c.count(TEST_NS), 0U);
+    }
+
+    TEST_F(DBClientTest, FindAndRemoveNoMatch) {
+        c.insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
+
+        BSONObj result = c.findAndRemove(
+            TEST_NS,
+            BSON("i" << 2)
+        );
+
+        ASSERT_TRUE(result.isEmpty());
+        ASSERT_EQUALS(c.count(TEST_NS), 1U);
+    }
+
+    TEST_F(DBClientTest, FindAndRemoveSort) {
+        c.insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
+        c.insert(TEST_NS, BSON("_id" << 2 << "i" << 2));
+
+        BSONObj result = c.findAndRemove(
+            TEST_NS,
+            BSONObj(),
+            BSON("i" << -1)
+        );
+
+        ASSERT_EQUALS(result.getIntField("_id"), 2);
+        ASSERT_EQUALS(result.getIntField("i"), 2);
+        ASSERT_EQUALS(c.count(TEST_NS), 1U);
+        ASSERT_EQUALS(c.count(TEST_NS, BSON("_id" << 1)), 1U);
+    }
+
+    TEST_F(DBClientTest, FindAndRemoveProjection) {
+        c.insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
+
+        BSONObj result = c.findAndRemove(
+            TEST_NS,
+            BSON("i" << 1),
+            BSONObj(),
+            BSON("_id" << 0)
+        );
+
+        ASSERT_FALSE(result.hasField("_id"));
+        ASSERT_TRUE(result.hasField("i"));
+        ASSERT_EQUALS(c.count(TEST_NS), 0U);
+    }
+
     TEST_F(DBClientTest, ManualGetMore) {
         // Ported from dbtests/querytests.cpp
         for(int i = 0; i < 3; ++i) {

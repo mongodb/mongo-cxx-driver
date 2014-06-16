@@ -897,6 +897,46 @@ namespace mongo {
             const BSONObj& query=BSONObj()
         );
 
+        /**
+         * Modifies and returns a single document.
+         *
+         * @note By default, the returned document does not include modifications made on update.
+         *
+         * @param ns Namespace on which to perform this findAndModify.
+         * @param update Update document to be applied.
+         * @param query Filter for the update.
+         * @param upsert Insert if object does not exist.
+         * @param sort Sort for the filter.
+         * @param new Return the updated rather than original object.
+         * @param fields Fields to return. Specifies inclusion with 1, "{<field1>: 1, ...}"
+         */
+        BSONObj findAndModify(
+            const StringData& ns,
+            const BSONObj& query,
+            const BSONObj& update,
+            bool upsert = false,
+            bool returnNew = false,
+            const BSONObj& sort = BSONObj(),
+            const BSONObj& fields = BSONObj()
+        );
+
+        /**
+         * Removes and returns a single document.
+         *
+         * @note By default, the returned document does not include modifications made on update.
+         *
+         * @param ns Namespace on which to perform this findAndModify.
+         * @param query Filter for the update.
+         * @param sort Sort for the filter.
+         * @param fields Fields to return. Specifies inclusion with 1, "{<field1>: 1, ...}"
+         */
+        BSONObj findAndRemove(
+            const StringData& ns,
+            const BSONObj& query,
+            const BSONObj& sort = BSONObj(),
+            const BSONObj& fields = BSONObj()
+        );
+
         /** Run javascript code on the database server.
            dbname    database SavedContext in which the code runs. The javascript variable 'db' will be assigned
                      to this database when the function is invoked.
@@ -1099,6 +1139,17 @@ namespace mongo {
         );
 
         void _runGroup(const StringData& ns, const BSONObj& group, std::vector<BSONObj>* output);
+
+        void _findAndModify(
+            const StringData& ns,
+            const BSONObj& query,
+            const BSONObj& update,
+            const BSONObj& sort,
+            bool returnNew,
+            bool upsert,
+            const BSONObj& fields,
+            BSONObjBuilder* out
+        );
     };
 
     class DBClientWriter;

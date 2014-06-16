@@ -882,6 +882,71 @@ namespace mongo {
         return result.getField("values").Obj().getOwned();
     }
 
+    void DBClientWithCommands::_findAndModify(
+        const StringData& ns,
+        const BSONObj& query,
+        const BSONObj& update,
+        const BSONObj& sort,
+        bool returnNew,
+        bool upsert,
+        const BSONObj& fields,
+        BSONObjBuilder* out
+    ) {
+        BSONObjBuilder commandBuilder;
+
+        commandBuilder.append("findAndModify", nsGetCollection(ns.toString()));
+
+        if (update.isEmpty())
+            commandBuilder.append("remove", true);
+        else
+            commandBuilder.append("update", update);
+
+        if (!query.isEmpty())
+            commandBuilder.append("query", query);
+
+        if (!sort.isEmpty())
+            commandBuilder.append("sort", sort);
+
+        if (!fields.isEmpty())
+            commandBuilder.append("fields", fields);
+
+        commandBuilder.append("new", returnNew);
+        commandBuilder.append("upsert", upsert);
+
+        BSONObj result;
+        bool ok = runCommand(nsGetDB(ns.toString()), commandBuilder.obj(), result);
+
+        if (!ok)
+            throw OperationException(result);
+
+        out->appendElements(result.getObjectField("value"));
+    }
+
+    BSONObj DBClientWithCommands::findAndModify(
+        const StringData& ns,
+        const BSONObj& query,
+        const BSONObj& update,
+        bool upsert,
+        bool returnNew,
+        const BSONObj& sort,
+        const BSONObj& fields
+    ) {
+        BSONObjBuilder result;
+        _findAndModify(ns, query, update, sort, returnNew, upsert, fields, &result);
+        return result.obj();
+    }
+
+    BSONObj DBClientWithCommands::findAndRemove(
+        const StringData& ns,
+        const BSONObj& query,
+        const BSONObj& sort,
+        const BSONObj& fields
+    ) {
+        BSONObjBuilder result;
+        _findAndModify(ns, query, BSONObj(), sort, false, false, fields, &result);
+        return result.obj();
+    }
+
     bool DBClientWithCommands::eval(const string &dbname, const string &jscode, BSONObj& info, BSONElement& retValue, BSONObj *args) {
         BSONObjBuilder b;
         b.appendCode("$eval", jscode);
