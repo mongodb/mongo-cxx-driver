@@ -549,6 +549,19 @@ namespace mongo {
         */
         void findN(std::vector<BSONObj>& out, const std::string&ns, Query query, int nToReturn, int nToSkip = 0, const BSONObj *fieldsToReturn = 0, int queryOptions = 0, int batchSize = 0);
 
+        /**
+         * Saves a document to a collection.
+         *
+         * If 'toSave' already has an '_id' then an update(upsert) operation is performed and
+         * any existing document with that '_id' is overwritten. Otherwise, an insert operation
+         * is performed.
+         *
+         * @param ns The namespace to save the document into.
+         * @param toSave The document to save.
+         * @param wc The write concern for this operation.
+         */
+        void save(const StringData& ns, const BSONObj& toSave, const WriteConcern* wc = NULL);
+
         virtual std::string getServerAddress() const = 0;
 
         /** don't use this - called automatically by DBClientCursor for you */

@@ -954,6 +954,13 @@ namespace mongo {
         return v.empty() ? BSONObj() : v[0];
     }
 
+    void DBClientInterface::save( const StringData& ns, const BSONObj& toSave, const WriteConcern* wc ) {
+        if (!toSave.hasField("_id"))
+            insert(ns.rawData(), toSave, 0, wc);
+        else
+            update(ns.rawData(), QUERY("_id" << toSave.getField("_id")), toSave, true, false, wc);
+    }
+
     bool DBClientConnection::connect(const HostAndPort& server, string& errmsg) {
         _server = server;
         _serverString = _server.toString();
