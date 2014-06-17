@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#include <boost/make_shared.hpp>
+
 #include "mongo/client/connpool.h"
 #include "mongo/client/dbclientinterface.h"
 #include "mongo/client/dbclient_rs.h"
