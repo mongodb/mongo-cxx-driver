@@ -910,8 +910,7 @@ namespace mongo {
     MONGO_INITIALIZER(SockWSAStartup)(InitializerContext * context) {
         WSADATA d;
         if ( WSAStartup(MAKEWORD(2,2), &d) != 0 ) {
-            out() << "ERROR: wsastartup failed " << errnoWithDescription() << endl;
-            problem() << "ERROR: wsastartup failed " << errnoWithDescription() << endl;
+            log() << "ERROR: wsastartup failed " << errnoWithDescription() << endl;
             abort();
         }
 

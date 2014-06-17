@@ -109,7 +109,7 @@ namespace mongo {
 
     void logContext(const char *errmsg) {
         if ( errmsg ) {
-            problem() << errmsg << endl;
+            log() << errmsg << endl;
         }
     }
 

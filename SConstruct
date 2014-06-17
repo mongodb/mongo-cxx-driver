@@ -203,9 +203,8 @@ add_option( "dbg", "Enable runtime debugging checks", "?", True, "dbg",
 add_option( "opt", "Enable compile-time optimization", "?", True, "opt",
             type="choice", choices=["on", "off"], const="on" )
 
-sanitizer_choices = ["address", "memory", "thread", "undefined"]
-add_option( "sanitize", "enable selected sanitizer", 1, True,
-            type="choice", choices=sanitizer_choices, default=None )
+add_option( "sanitize", "enable selected sanitizers", 1, True, metavar="san1,san2,...sanN" )
+add_option( "llvm-symbolizer", "name of (or path to) the LLVM symbolizer", 1, False, default="llvm-symbolizer" )
 
 add_option( "gcov" , "compile with flags for gcov" , 0 , True )
 
@@ -933,6 +932,31 @@ def doConfigure(myenv):
         # primary mongo sources as well.
         AddToCCFLAGSIfSupported(myenv, "-Wno-unused-const-variable")
 
+    # Check if we need to disable null-conversion warnings
+    if using_clang():
+        def CheckNullConversion(context):
+
+            test_body = """
+            #include <boost/shared_ptr.hpp>
+            struct TestType { int value; bool boolValue; };
+            bool foo() {
+                boost::shared_ptr<TestType> sp(new TestType);
+                return NULL != sp;
+            }
+            """
+
+            context.Message('Checking if implicit boost::shared_ptr null conversion is supported... ')
+            ret = context.TryCompile(textwrap.dedent(test_body), ".cpp")
+            context.Result(ret)
+            return ret
+
+        conf = Configure(myenv, help=False, custom_tests = {
+            'CheckNullConversion' : CheckNullConversion,
+        })
+        if conf.CheckNullConversion() == False:
+            env.Append( CCFLAGS="-Wno-null-conversion" )
+        conf.Finish()
+
     # This needs to happen before we check for libc++, since it affects whether libc++ is available.
     if darwin and has_option('osx-version-min'):
         min_version = get_option('osx-version-min')
@@ -1111,17 +1135,70 @@ def doConfigure(myenv):
     posix_system = conf.CheckPosixSystem()
     conf.Finish()
 
+    # Check if we are on a system that support the POSIX clock_gettime function
+    #  and the "monotonic" clock.
+    posix_monotonic_clock = False
+    if posix_system:
+        def CheckPosixMonotonicClock(context):
+
+            test_body = """
+            #include <unistd.h>
+            #if !(defined(_POSIX_TIMERS) && _POSIX_TIMERS > 0)
+            #error POSIX clock_gettime not supported
+            #elif !(defined(_POSIX_MONOTONIC_CLOCK) && _POSIX_MONOTONIC_CLOCK >= 0)
+            #error POSIX monotonic clock not supported
+            #endif
+            """
+
+            context.Message('Checking if the POSIX monotonic clock is supported... ')
+            ret = context.TryCompile(textwrap.dedent(test_body), ".c")
+            context.Result(ret)
+            return ret
+
+        conf = Configure(myenv, help=False, custom_tests = {
+            'CheckPosixMonotonicClock' : CheckPosixMonotonicClock,
+        })
+        posix_monotonic_clock = conf.CheckPosixMonotonicClock()
+        conf.Finish()
+
     if has_option('sanitize'):
+
         if not (using_clang() or using_gcc()):
             print( 'sanitize is only supported with clang or gcc')
             Exit(1)
-        sanitizer_option = '-fsanitize=' + GetOption('sanitize')
+
+        sanitizer_list = get_option('sanitize').split(',')
+
+        using_asan = 'address' in sanitizer_list or 'leak' in sanitizer_list
+
+        # If the user asked for leak sanitizer turn on the detect_leaks
+        # ASAN_OPTION. If they asked for address sanitizer as well, drop
+        # 'leak', because -fsanitize=leak means no address.
+        #
+        # --sanitize=leak:           -fsanitize=leak, detect_leaks=1
+        # --sanitize=address,leak:   -fsanitize=address, detect_leaks=1
+        # --sanitize=address:        -fsanitize=address
+        #
+        if 'leak' in sanitizer_list:
+            myenv['ENV']['ASAN_OPTIONS'] = "detect_leaks=1"
+            if 'address' in sanitizer_list:
+                sanitizer_list.remove('leak')
+
+        sanitizer_option = '-fsanitize=' + ','.join(sanitizer_list)
+
         if AddToCCFLAGSIfSupported(myenv, sanitizer_option):
             myenv.Append(LINKFLAGS=[sanitizer_option])
             myenv.Append(CCFLAGS=['-fno-omit-frame-pointer'])
         else:
-            print( 'Failed to enable sanitizer with flag: ' + sanitizer_option )
+            print( 'Failed to enable sanitizers with flag: ' + sanitizer_option )
             Exit(1)
+
+        llvm_symbolizer = get_option('llvm-symbolizer')
+        if not os.path.isabs(llvm_symbolizer):
+            llvm_symbolizer = myenv.WhereIs(llvm_symbolizer)
+        if llvm_symbolizer:
+            if using_asan:
+                myenv['ENV']['ASAN_SYMBOLIZER_PATH'] = llvm_symbolizer
 
     # When using msvc, check for VS 2013 Update 2+ so we can use new compiler flags
     if using_msvc():
@@ -1345,8 +1422,12 @@ def doConfigure(myenv):
     if conf.CheckHeader('unistd.h'):
         conf.env['MONGO_HAVE_HEADER_UNISTD_H'] = True
 
-    if solaris or conf.CheckDeclaration('clock_gettime', includes='#include <time.h>'):
+    if posix_system:
+        conf.env.Append(CPPDEFINES=['MONGO_HAVE_HEADER_UNISTD_H'])
         conf.CheckLib('rt')
+
+    if posix_monotonic_clock:
+        conf.env.Append(CPPDEFINES=['MONGO_HAVE_POSIX_MONOTONIC_CLOCK'])
 
     if solaris:
         conf.CheckLib( "nsl" )

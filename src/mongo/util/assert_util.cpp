@@ -66,7 +66,7 @@ namespace mongo {
         lastWhen = time(0);
         lastLine = line;
 
-        problem() << "warning assertion failure " << msg << ' ' << file << ' ' << dec << line << endl;
+        log() << "warning assertion failure " << msg << ' ' << file << ' ' << dec << line << endl;
         logContext();
 #if defined(_DEBUG) || defined(_DURABLEDEFAULTON) || defined(_DURABLEDEFAULTOFF)
         // this is so we notice in buildbot
@@ -76,7 +76,7 @@ namespace mongo {
     }
 
     NOINLINE_DECL void verifyFailed(const char *msg, const char *file, unsigned line) {
-        problem() << "Assertion failure " << msg << ' ' << file << ' ' << dec << line << endl;
+        log() << "Assertion failure " << msg << ' ' << file << ' ' << dec << line << endl;
         logContext();
         stringstream temp;
         temp << "assertion " << file << ":" << line;
@@ -90,21 +90,21 @@ namespace mongo {
     }
 
     NOINLINE_DECL void invariantFailed(const char *msg, const char *file, unsigned line) {
-        problem() << "Invariant failure " << msg << ' ' << file << ' ' << dec << line << endl;
+        log() << "Invariant failure " << msg << ' ' << file << ' ' << dec << line << endl;
         logContext();
         log() << "\n\n***aborting after invariant() failure\n\n" << endl;
         abort();
     }
 
     NOINLINE_DECL void fassertFailed( int msgid ) {
-        problem() << "Fatal Assertion " << msgid << endl;
+        log() << "Fatal Assertion " << msgid << endl;
         logContext();
         log() << "\n\n***aborting after fassert() failure\n\n" << endl;
         abort();
     }
 
     MONGO_COMPILER_NORETURN void fassertFailedWithStatus(int msgid, const Status& status) {
-        problem() << "Fatal assertion " <<  msgid << " " << status;
+        log() << "Fatal assertion " <<  msgid << " " << status;
         logContext();
         log() << "\n\n***aborting after fassert() failure\n\n" << endl;
         abort();

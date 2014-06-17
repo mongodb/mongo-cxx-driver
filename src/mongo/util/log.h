@@ -73,24 +73,12 @@ namespace logger {
     }
 
 
-    /**
-     * Synonym for log().
-     */
-    inline LogstreamBuilder out() { return log(); }
-
 #define MONGO_LOG(DLEVEL) \
     if (!(::mongo::logger::globalLogDomain())->shouldLog(::mongo::LogstreamBuilder::severityCast(DLEVEL))) {} \
     else LogstreamBuilder(::mongo::logger::globalLogDomain(), getThreadName(), ::mongo::LogstreamBuilder::severityCast(DLEVEL))
 
 #define LOG MONGO_LOG
 
-#define MONGO_DLOG(DLEVEL) \
-    if (!(DEBUG_BUILD) && !::mongo::logger::globalLogDomain()->shouldLog(::mongo::LogstreamBuilder::severityCast(DLEVEL))) {} \
-    else LogstreamBuilder(::mongo::logger::globalLogDomain(), getThreadName(), ::mongo::LogstreamBuilder::severityCast(DLEVEL))
-
-    inline LogstreamBuilder problem() {
-        return log();
-    }
 
     /** output the error # and error message with prefix.
         handy for use as parm in uassert/massert.

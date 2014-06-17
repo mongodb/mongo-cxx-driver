@@ -22,6 +22,8 @@
 
 #include <sstream>
 
+using namespace mongo::repl;
+
 namespace mongo {
 
     using std::string;
@@ -46,7 +48,7 @@ namespace mongo {
 
             MockConnRegistry::get()->addServer(mockServer);
 
-            replset::ReplSetConfig::MemberCfg config;
+            ReplSetConfig::MemberCfg config;
             config.h = HostAndPort(hostName);
             replConfig.insert(std::make_pair(hostName, config));
         }
@@ -103,7 +105,7 @@ namespace mongo {
         ReplConfigMap::const_iterator iter = _replConfig.find(hostAndPort);
         fassert(16578, iter != _replConfig.end());
 
-        const replset::ReplSetConfig::MemberCfg& config = iter->second;
+        const ReplSetConfig::MemberCfg& config = iter->second;
         fassert(16579, !config.hidden && config.priority > 0 && !config.arbiterOnly);
 
         _primaryHost = hostAndPort;
@@ -194,7 +196,7 @@ namespace mongo {
 
                 builder.append("primary", getPrimary());
 
-                const replset::ReplSetConfig::MemberCfg& replConfig = configIter->second;
+                const ReplSetConfig::MemberCfg& replConfig = configIter->second;
                 if (replConfig.arbiterOnly) {
                     builder.append("arbiterOnly", true);
                 }
@@ -235,13 +237,13 @@ namespace mongo {
 
     int MockReplicaSet::getState(const std::string& hostAndPort) const {
         if (_replConfig.count(hostAndPort) < 1) {
-            return static_cast<int>(replset::MemberState::RS_SHUNNED);
+            return static_cast<int>(MemberState::RS_SHUNNED);
         }
         else if (hostAndPort == getPrimary()) {
-            return static_cast<int>(replset::MemberState::RS_PRIMARY);
+            return static_cast<int>(MemberState::RS_PRIMARY);
         }
         else {
-            return static_cast<int>(replset::MemberState::RS_SECONDARY);
+            return static_cast<int>(MemberState::RS_SECONDARY);
         }
     }
 

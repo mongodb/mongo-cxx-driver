@@ -406,6 +406,14 @@ namespace JsonTests {
                                built.jsonString( Strict ) );
                 ASSERT_EQUALS( "{ \"a\" : Date( 0 ) }", built.jsonString( TenGen ) );
                 ASSERT_EQUALS( "{ \"a\" : Date( 0 ) }", built.jsonString( JS ) );
+
+                // Test dates above our maximum formattable date.  See SERVER-13760.
+                BSONObjBuilder b2;
+                b2.appendDate("a", 32535262800000ULL);
+                BSONObj built2 = b2.done();
+                ASSERT_EQUALS(
+                            "{ \"a\" : { \"$date\" : { \"$numberLong\" : \"32535262800000\" } } }",
+                            built2.jsonString( Strict ) );
             }
 
         private:
@@ -572,12 +580,14 @@ namespace JsonTests {
                                const char* msg) {
                 const bool bad = expected.woCompare( actual );
                 if ( bad ) {
-                    out() << "want:" << expected.jsonString() << " size: " << expected.objsize() << endl;
-                    out() << "got :" << actual.jsonString() << " size: " << actual.objsize() << endl;
-                    out() << expected.hexDump() << endl;
-                    out() << actual.hexDump() << endl;
-                    out() << msg << endl;
-                    out() << "orig json:" << this->json();
+                    ::mongo::log() << "want:" << expected.jsonString()
+                                   << " size: " << expected.objsize() << endl;
+                    ::mongo::log() << "got :" << actual.jsonString()
+                                   << " size: " << actual.objsize() << endl;
+                    ::mongo::log() << expected.hexDump() << endl;
+                    ::mongo::log() << actual.hexDump() << endl;
+                    ::mongo::log() << msg << endl;
+                    ::mongo::log() << "orig json:" << this->json();
                 }
                 ASSERT( !bad );
             }
