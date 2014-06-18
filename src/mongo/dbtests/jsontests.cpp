@@ -257,6 +257,24 @@ namespace JsonTests {
             }
         }; DBTEST_SHIM_TEST(EmptyArray);
 
+        class EmptyTopLevelArray {
+            public:
+                void run() {
+                    BSONArrayBuilder bab;
+                    ASSERT_EQUALS( "[]", bab.arr().jsonString());
+                }
+        }; DBTEST_SHIM_TEST(EmptyTopLevelArray);
+
+        class TopLevelArray {
+            public:
+                void run() {
+                    BSONArrayBuilder bab;
+                    bab.append(123);
+                    bab.append("abc");
+                    ASSERT_EQUALS( "[ 123, \"abc\" ]", bab.arr().jsonString());
+                }
+        }; DBTEST_SHIM_TEST(TopLevelArray);
+
         class Array {
         public:
             void run() {
