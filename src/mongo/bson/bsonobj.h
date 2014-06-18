@@ -150,6 +150,7 @@ namespace mongo {
             @param pretty if true we try to add some lf's and indentation
         */
         std::string jsonString( JsonStringFormat format = Strict, int pretty = 0 ) const;
+        std::string _jsonString( JsonStringFormat format, int pretty, bool isArray ) const;
 
         /** note: addFields always adds _id even if not specified */
         int addFields(BSONObj& from, std::set<std::string>& fields); /* returns n added */
@@ -581,6 +582,12 @@ namespace mongo {
         // Don't add anything other than forwarding constructors!!!
         BSONArray(): BSONObj() {}
         explicit BSONArray(const BSONObj& obj): BSONObj(obj) {}
+
+        /** Properly formatted JSON string.
+            @param format the format to use for the output (Strict, TenGen)
+            @param pretty if true we try to add some lf's and indentation
+        */
+        std::string jsonString( JsonStringFormat format = Strict, int pretty = 0 ) const;
     };
 
 }

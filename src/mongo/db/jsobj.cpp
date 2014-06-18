@@ -482,17 +482,16 @@ namespace mongo {
         return digestToString( d );
     }
 
-    string BSONObj::jsonString( JsonStringFormat format, int pretty ) const {
+    string BSONObj::_jsonString( JsonStringFormat format, int pretty, bool isArray ) const {
 
-        if ( isEmpty() ) return "{}";
-
+        if ( isEmpty() ) return isArray ? "[]" : "{}";
         StringBuilder s;
-        s << "{ ";
+        s << (isArray ? "[ " : "{ ");
         BSONObjIterator i(*this);
         BSONElement e = i.next();
         if ( !e.eoo() )
             while ( 1 ) {
-                s << e.jsonString( format, true, pretty?pretty+1:0 );
+                s << e.jsonString( format, !isArray, pretty?pretty+1:0 );
                 e = i.next();
                 if ( e.eoo() )
                     break;
@@ -506,8 +505,16 @@ namespace mongo {
                     s << " ";
                 }
             }
-        s << " }";
+        s << (isArray ? " ]" : " }");
         return s.str();
+    }
+
+    string BSONObj::jsonString( JsonStringFormat format, int pretty ) const {
+        return _jsonString(format, pretty, false);
+    }
+
+    string BSONArray::jsonString( JsonStringFormat format, int pretty ) const {
+        return _jsonString(format, pretty, true);
     }
 
     bool BSONObj::valid() const {
