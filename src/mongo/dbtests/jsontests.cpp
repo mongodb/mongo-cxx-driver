@@ -566,10 +566,10 @@ namespace JsonTests {
             virtual ~Base() {}
             void run() {
                 ASSERT( fromjson( json() ).valid() );
-                assertEquals( bson(), fromjson( json() ), "mode: <default>" );
-                assertEquals( bson(), fromjson( bson().jsonString( Strict ) ), "mode: strict" );
-                assertEquals( bson(), fromjson( bson().jsonString( TenGen ) ), "mode: tengen" );
-                assertEquals( bson(), fromjson( bson().jsonString( JS ) ), "mode: js" );
+                assertEquals( bson(), fromjson( tojson( bson() ) ), "mode: <default>" );
+                assertEquals( bson(), fromjson( tojson( bson(), Strict ) ), "mode: strict" );
+                assertEquals( bson(), fromjson( tojson( bson(), TenGen ) ), "mode: tengen" );
+                assertEquals( bson(), fromjson( tojson( bson(), JS ) ), "mode: js" );
             }
         protected:
             virtual BSONObj bson() const = 0;
@@ -801,6 +801,27 @@ namespace JsonTests {
                 return "{ \"a\" : [] }";
             }
         }; DBTEST_SHIM_TEST(ArrayEmpty);
+
+        class TopLevelArrayEmpty : public Base {
+            virtual BSONObj bson() const {
+                return BSONArray();
+            }
+            virtual string json() const {
+                return "[]";
+            }
+        }; DBTEST_SHIM_TEST(TopLevelArrayEmpty);
+
+        class TopLevelArray : public Base {
+            virtual BSONObj bson() const {
+                BSONArrayBuilder builder;
+                builder.append(123);
+                builder.append("abc");
+                return builder.arr();
+            }
+            virtual string json() const {
+                return "[ 123, \"abc\" ]";
+            }
+        }; DBTEST_SHIM_TEST(TopLevelArray);
 
         class Array : public Base {
             virtual BSONObj bson() const {
