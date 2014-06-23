@@ -723,7 +723,24 @@ namespace mongo {
         return ok;
     }
 
-    bool DBClientWithCommands::createCollection(const string &ns, long long size, bool capped, int max, BSONObj *info) {
+    bool DBClientWithCommands::createCollection(
+        const string &ns,
+        long long size,
+        bool capped,
+        int max,
+        BSONObj *info
+    ) {
+        return createCollectionWithOptions(ns, size, capped, max, BSONObj(), info);
+    }
+
+    bool DBClientWithCommands::createCollectionWithOptions(
+        const string &ns,
+        long long size,
+        bool capped,
+        int max,
+        const BSONObj& extra,
+        BSONObj *info
+    ) {
         verify(!capped||size);
         BSONObj o;
         if ( info == 0 )    info = &o;
@@ -733,6 +750,7 @@ namespace mongo {
         if ( size ) b.append("size", size);
         if ( capped ) b.append("capped", true);
         if ( max ) b.append("max", max);
+        if ( !extra.isEmpty() ) b.appendElements(extra);
         return runCommand(db.c_str(), b.done(), *info);
     }
 

@@ -682,9 +682,40 @@ namespace mongo {
            @param capped if true, this is a fixed size collection (where old data rolls out).
            @param max    maximum number of objects if capped (optional).
 
-           returns true if successful.
+           @return true if successful.
         */
-        bool createCollection(const std::string &ns, long long size = 0, bool capped = false, int max = 0, BSONObj *info = 0);
+        bool createCollection(
+            const std::string &ns,
+            long long size = 0,
+            bool capped = false,
+            int max = 0,
+            BSONObj *info = 0
+        );
+
+        /**
+         * Creates a new collection in the database. Allows for a user to provide a BSONObj that
+         * contains extra options.
+         *
+         * @param extraOptions Add extra parameters to the create collection command for features
+         *  that are version specific or for which default values have flipped between server
+         *  releases. Some examples are "usePowerOf2Sizes" and "autoIndexId".
+         *
+         * @warning Options set in extraOptions which shadow those passed in as parameters will
+         *  have indeterminate behavior.
+         *
+         * @see the form of createCollection with less parameters above.
+         *
+         * @see http://docs.mongodb.org/manual/reference/command/create/#dbcmd.create for available
+         * options.
+         */
+        bool createCollectionWithOptions(
+            const std::string &ns,
+            long long size = 0,
+            bool capped = false,
+            int max = 0,
+            const BSONObj& extraOptions = BSONObj(),
+            BSONObj *info = 0
+        );
 
         /** Get error result from the last write operation (insert/update/delete) on this connection.
             db doesn't change the command's behavior - it is just for auth checks.

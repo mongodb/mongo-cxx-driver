@@ -898,6 +898,27 @@ namespace {
         ASSERT_TRUE(c.createCollection(TEST_NS));
         ASSERT_FALSE(c.createCollection(TEST_NS));
         ASSERT_TRUE(c.exists(TEST_NS));
+
+        BSONObj info;
+        ASSERT_TRUE(c.runCommand(TEST_DB, BSON("collstats" << TEST_COLL), info));
+
+        bool server26plus = serverGTE(&c, 2, 6);
+
+        ASSERT_EQUALS(info.getIntField("userFlags"), server26plus ? 1 : 0);
+        ASSERT_EQUALS(info.getIntField("nindexes"), 1);
+    }
+
+    TEST_F(DBClientTest, CreateCollectionAdvanced) {
+        BSONObjBuilder opts;
+        opts.append("usePowerOf2Sizes", 0);
+        opts.append("autoIndexId", false);
+        c.createCollectionWithOptions(TEST_NS, 1, true, 1, opts.obj());
+
+        BSONObj info;
+        ASSERT_TRUE(c.runCommand(TEST_DB, BSON("collstats" << TEST_COLL), info));
+
+        ASSERT_EQUALS(info.getIntField("userFlags"), 0);
+        ASSERT_EQUALS(info.getIntField("nindexes"), 0);
     }
 
     TEST_F(DBClientTest, CopyDatabase) {
