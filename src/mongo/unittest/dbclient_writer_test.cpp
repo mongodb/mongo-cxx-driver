@@ -258,7 +258,7 @@ namespace {
 
     TYPED_TEST(DBClientWriterTest, MultipleOrderedUpdatesWithError) {
         if (!this->testSupported()) return;
-        this->c.ensureIndex(TEST_NS, BSON("a" << 1), true);
+        this->c.createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
         this->c.insert(TEST_NS, BSON("a" << 1));
         this->c.insert(TEST_NS, BSON("b" << 1));
 
@@ -278,7 +278,7 @@ namespace {
 
     TYPED_TEST(DBClientWriterTest, MultipleUnorderedUpdatesWithError) {
         if (!this->testSupported()) return;
-        this->c.ensureIndex(TEST_NS, BSON("a" << 1), true);
+        this->c.createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
         this->c.insert(TEST_NS, BSON("a" << 1));
         this->c.insert(TEST_NS, BSON("b" << 1));
 
@@ -298,7 +298,7 @@ namespace {
 
     TYPED_TEST(DBClientWriterTest, MultipleOrderedUpdatesWithErrorNoConcern) {
         if (!this->testSupported()) return;
-        this->c.ensureIndex(TEST_NS, BSON("a" << 1), true);
+        this->c.createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
         this->c.insert(TEST_NS, BSON("a" << 1));
         this->c.insert(TEST_NS, BSON("b" << 1));
 
@@ -315,7 +315,7 @@ namespace {
 
     TYPED_TEST(DBClientWriterTest, MultipleUnorderedUpdatesWithErrorNoConcern) {
         if (!this->testSupported()) return;
-        this->c.ensureIndex(TEST_NS, BSON("a" << 1), true);
+        this->c.createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
         this->c.insert(TEST_NS, BSON("a" << 1));
         this->c.insert(TEST_NS, BSON("b" << 1));
 

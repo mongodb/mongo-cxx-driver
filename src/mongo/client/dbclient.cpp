@@ -1551,7 +1551,6 @@ namespace mongo {
             LOG(_logLevel) << "dropIndex failed: " << info << endl;
             uassert( 10007 ,  "dropIndex failed" , 0 );
         }
-        resetIndexCache();
     }
 
     void DBClientWithCommands::dropIndexes( const string& ns ) {
@@ -1562,7 +1561,6 @@ namespace mongo {
                              BSON( "deleteIndexes" << nsToCollectionSubstring(ns) << "index" << "*"),
                              info )
                  );
-        resetIndexCache();
     }
 
     void DBClientWithCommands::reIndex( const string& ns ) {
@@ -1603,55 +1601,39 @@ namespace mongo {
         return ss.str();
     }
 
-    bool DBClientWithCommands::ensureIndex( const string &ns,
-                                            BSONObj keys,
-                                            bool unique,
-                                            const string & name,
-                                            bool cache,
-                                            bool background,
-                                            int version,
-                                            int ttl ) {
-        BSONObjBuilder toSave;
-        toSave.append( "ns" , ns );
-        toSave.append( "key" , keys );
+    void DBClientWithCommands::createIndex(const StringData& ns, const IndexSpec& descriptor) {
 
-        string cacheKey(ns);
-        cacheKey += "--";
+        const BSONObj descriptorObj = descriptor.toBSON();
 
-        if ( name != "" ) {
-            toSave.append( "name" , name );
-            cacheKey += name;
+        BSONObjBuilder command;
+        command.append("createIndexes", nsToCollectionSubstring(ns));
+        {
+            BSONArrayBuilder indexes(command.subarrayStart("indexes"));
+            indexes.append(descriptorObj);
         }
-        else {
-            string nn = genIndexName( keys );
-            toSave.append( "name" , nn );
-            cacheKey += nn;
+        const BSONObj commandObj = command.done();
+
+        BSONObj infoObj;
+        if (!runCommand(nsToDatabase(ns), commandObj, infoObj)) {
+
+            // If runCommand failed either by returning no code or saying that the command is
+            // not supported, then fall back to inserting into the system.indexes collection.
+
+            if (!infoObj.hasField("code") ||
+                (infoObj["code"].numberInt() == ErrorCodes::CommandNotFound)) {
+
+                BSONObjBuilder insertCommand;
+                insertCommand.append("ns", ns.toString());
+                insertCommand.appendElements(descriptorObj);
+
+                return insert(
+                    nsToDatabase(ns) + ".system.indexes",
+                    insertCommand.obj());
+            }
+
+            // Some other sort of error occurred; raise.
+            throw OperationException(infoObj);
         }
-
-        if( version >= 0 ) 
-            toSave.append("v", version);
-
-        if ( unique )
-            toSave.appendBool( "unique", unique );
-
-        if( background ) 
-            toSave.appendBool( "background", true );
-
-        if ( _seenIndexes.count( cacheKey ) )
-            return 0;
-
-        if ( cache )
-            _seenIndexes.insert( cacheKey );
-
-        if ( ttl > 0 )
-            toSave.append( "expireAfterSeconds", ttl );
-
-        insert( NamespaceString( ns ).getSystemIndexesCollection() , toSave.obj() );
-        return 1;
-    }
-
-    void DBClientWithCommands::resetIndexCache() {
-        _seenIndexes.clear();
     }
 
     /* -- DBClientCursor ---------------------------------------------- */

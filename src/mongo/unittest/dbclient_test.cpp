@@ -398,7 +398,7 @@ namespace {
 
     TEST_F(DBClientTest, FindAndModifyDuplicateKeyError) {
         c.insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
-        c.ensureIndex(TEST_NS, BSON("i" << 1), true);
+        c.createIndex(TEST_NS, IndexSpec().addKey("i").unique());
         ASSERT_THROWS(
             c.findAndModify(
                 TEST_NS,
@@ -822,7 +822,7 @@ namespace {
         cursor = c.getIndexes(TEST_NS);
         ASSERT_EQUALS(cursor->itcount(), 1);
 
-        c.ensureIndex(TEST_NS, BSON("test" << 1));
+        c.createIndex(TEST_NS, BSON("test" << 1));
         cursor = c.getIndexes(TEST_NS);
         vector<BSONObj> v;
         while(cursor->more())
@@ -833,7 +833,7 @@ namespace {
     }
 
     TEST_F(DBClientTest, DropIndexes) {
-        c.ensureIndex(TEST_NS, BSON("test" << 1));
+        c.createIndex(TEST_NS, BSON("test" << 1));
         unsigned index_count = c.getIndexes(TEST_NS)->itcount();
         ASSERT_EQUALS(index_count, 2U);
         c.dropIndexes(TEST_NS);
@@ -842,8 +842,8 @@ namespace {
     }
 
     TEST_F(DBClientTest, DropIndex) {
-        c.ensureIndex(TEST_NS, BSON("test" << 1));
-        c.ensureIndex(TEST_NS, BSON("test2" << -1));
+        c.createIndex(TEST_NS, BSON("test" << 1));
+        c.createIndex(TEST_NS, BSON("test2" << -1));
         unsigned index_count = c.getIndexes(TEST_NS)->itcount();
         ASSERT_EQUALS(index_count, 3U);
 
@@ -862,8 +862,8 @@ namespace {
     }
 
     TEST_F(DBClientTest, ReIndex) {
-        c.ensureIndex(TEST_NS, BSON("test" << 1));
-        c.ensureIndex(TEST_NS, BSON("test2" << -1));
+        c.createIndex(TEST_NS, BSON("test" << 1));
+        c.createIndex(TEST_NS, BSON("test2" << -1));
         unsigned index_count = c.getIndexes(TEST_NS)->itcount();
         ASSERT_EQUALS(index_count, 3U);
         c.reIndex(TEST_NS);
@@ -1001,7 +1001,7 @@ namespace {
         ASSERT_FALSE(result.hasField("a"));
         ASSERT_FALSE(result.hasField("b"));
 
-        c.ensureIndex(TEST_NS, BSON("a" << 1));
+        c.createIndex(TEST_NS, BSON("a" << 1));
         result = c.findOne(TEST_NS, Query("{$query: {a: true}, $returnKey: true}"));
         ASSERT_TRUE(result.hasField("a"));
         ASSERT_FALSE(result.hasField("b"));
@@ -1341,6 +1341,99 @@ namespace {
             c.insert(TEST_NS, BSON("_id" << 1), 0, &wc),
             OperationException
         );
+    }
+
+    TEST_F(DBClientTest, CreateSimpleV0Index) {
+        c.createIndex(TEST_NS, IndexSpec()
+                      .addKey("aField")
+                      .version(0));
+    }
+
+    TEST_F(DBClientTest, CreateSimpleNamedV0Index) {
+        c.createIndex(TEST_NS, IndexSpec()
+                      .addKey("aField")
+                      .version(0)
+                      .name("aFieldV0Index"));
+    }
+
+    TEST_F(DBClientTest, CreateCompoundNamedV0Index) {
+        c.createIndex(TEST_NS, IndexSpec()
+                      .addKey("aField")
+                      .addKey("bField", IndexSpec::kIndexTypeDescending)
+                      .version(0)
+                      .name("aFieldbFieldV0Index"));
+    }
+
+    TEST_F(DBClientTest, CreateSimpleV1Index) {
+        c.createIndex(TEST_NS, IndexSpec()
+                      .addKey("aField")
+                      .version(1));
+    }
+
+    TEST_F(DBClientTest, CreateSimpleNamedV1Index) {
+        c.createIndex(TEST_NS, IndexSpec()
+                      .addKey("aField")
+                      .version(1)
+                      .name("aFieldV1Index"));
+    }
+
+    TEST_F(DBClientTest, CreateCompoundNamedV1Index) {
+        c.createIndex(TEST_NS, IndexSpec()
+                      .addKey("aField")
+                      .addKey("bField", IndexSpec::kIndexTypeDescending)
+                      .version(1)
+                      .name("aFieldbFieldV1Index"));
+    }
+
+    TEST_F(DBClientTest, CreateUniqueSparseDropDupsIndexInBackground) {
+        c.createIndex(TEST_NS,
+                      IndexSpec()
+                      .addKey("aField")
+                      .background()
+                      .unique()
+                      .sparse()
+                      .dropDuplicates());
+    }
+
+    TEST_F(DBClientTest, CreateComplexTextIndex) {
+        c.createIndex(TEST_NS,
+                      IndexSpec()
+                      .addKey("aField", IndexSpec::kIndexTypeText)
+                      .addKey("bField", IndexSpec::kIndexTypeText)
+                      .textWeights(BSON("aField" << 100))
+                      .textDefaultLanguage("spanish")
+                      .textLanguageOverride("lang")
+                      .textIndexVersion(serverGTE(&c, 2, 6) ? 2 : 1));
+    }
+
+    TEST_F(DBClientTest, Create2DIndex) {
+        c.createIndex(TEST_NS,
+                      IndexSpec()
+                      .addKey("aField", IndexSpec::kIndexTypeGeo2D)
+                      .geo2DBits(20)
+                      .geo2DMin(-120.0)
+                      .geo2DMax(120.0));
+    }
+
+    TEST_F(DBClientTest, CreateHaystackIndex) {
+        c.createIndex(TEST_NS,
+                      IndexSpec()
+                      .addKey("aField", IndexSpec::kIndexTypeGeoHaystack)
+                      .addKey("otherField", IndexSpec::kIndexTypeDescending)
+                      .geoHaystackBucketSize(1.0));
+    }
+
+    TEST_F(DBClientTest, Create2DSphereIndex) {
+        c.createIndex(TEST_NS,
+                      IndexSpec()
+                      .addKey("aField", IndexSpec::kIndexTypeGeo2DSphere)
+                      .geo2DSphereIndexVersion(serverGTE(&c, 2, 6) ? 2 : 1));
+    }
+
+    TEST_F(DBClientTest, CreateHashedIndex) {
+        c.createIndex(TEST_NS,
+                      IndexSpec()
+                      .addKey("aField", IndexSpec::kIndexTypeHashed));
     }
 
 } // namespace

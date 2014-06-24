@@ -28,6 +28,7 @@
 #include "mongo/client/bulk_operation_builder.h"
 #include "mongo/client/exceptions.h"
 #include "mongo/client/export_macros.h"
+#include "mongo/client/index_spec.h"
 #include "mongo/client/write_concern.h"
 #include "mongo/client/write_options.h"
 #include "mongo/db/jsobj.h"
@@ -573,7 +574,6 @@ namespace mongo {
        Basically just invocations of connection.$cmd.findOne({...});
     */
     class MONGO_CLIENT_API DBClientWithCommands : public DBClientInterface {
-        std::set<std::string> _seenIndexes;
     public:
         /** controls how chatty the client is about network errors & such.  See log.h */
         logger::LogSeverity _logLevel;
@@ -782,7 +782,6 @@ namespace mongo {
             }
 
             bool res = runCommand( db.c_str() , BSON( "drop" << coll ) , *info );
-            resetIndexCache();
             return res;
         }
 
@@ -1036,32 +1035,28 @@ namespace mongo {
 
         bool exists( const std::string& ns );
 
-        /** Create an index if it does not already exist.
-            ensureIndex calls are remembered so it is safe/fast to call this function many
-            times in your code.
-           @param ns collection to be indexed
-           @param keys the "key pattern" for the index.  e.g., { name : 1 }
-           @param unique if true, indicates that key uniqueness should be enforced for this index
-           @param name if not specified, it will be created from the keys automatically (which is recommended)
-           @param cache if set to false, the index cache for the connection won't remember this call
-           @param background build index in the background (see mongodb docs for details)
-           @param v index version. leave at default value. (unit tests set this parameter.)
-           @param ttl. The value of how many seconds before data should be removed from a collection.
-           @return whether or not sent message to db.
-             should be true on first call, false on subsequent unless resetIndexCache was called
+        /** Create an index on the collection 'ns' as described by the given keys. If you wish
+         *  to specify options, see the more flexible overload of 'createIndex' which takes an
+         *  IndexSpec object. Failure to construct the index is reported by throwing an
+         *  OperationException.
+         *
+         *  @param ns Namespace on which to create the index
+         *  @param keys Document describing keys and index types. You must provide at least one
+         * field and its direction.
          */
-        virtual bool ensureIndex( const std::string &ns,
-                                  BSONObj keys,
-                                  bool unique = false,
-                                  const std::string &name = "",
-                                  bool cache = true,
-                                  bool background = false,
-                                  int v = -1,
-                                  int ttl = 0 );
-        /**
-           clears the index cache, so the subsequent call to ensureIndex for any index will go to the server
+        void createIndex( const StringData& ns, const BSONObj& keys ) {
+            return createIndex( ns, IndexSpec().addKeys(keys) );
+        }
+
+        /** Create an index on the collection 'ns' as described by the given
+         *  descriptor. Failure to construct the index is reported by throwing an
+         *  OperationException.
+         *
+         *  @param ns Namespace on which to create the index
+         *  @param descriptor Configuration object describing the index to create. The
+         *  descriptor must describe at least one key and index type.
          */
-        virtual void resetIndexCache();
+        virtual void createIndex( const StringData& ns, const IndexSpec& descriptor );
 
         virtual std::auto_ptr<DBClientCursor> getIndexes( const std::string &ns );
 
@@ -1075,12 +1070,11 @@ namespace mongo {
 
         virtual void reIndex( const std::string& ns );
 
-        std::string genIndexName( const BSONObj& keys );
+        static std::string genIndexName( const BSONObj& keys );
 
         /** Erase / drop an entire database */
         virtual bool dropDatabase(const std::string &dbname, BSONObj *info = 0) {
             bool ret = simpleCommand(dbname, info, "dropDatabase");
-            resetIndexCache();
             return ret;
         }
 

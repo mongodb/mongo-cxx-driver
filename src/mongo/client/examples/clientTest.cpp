@@ -188,11 +188,9 @@ int main( int argc, const char **argv ) {
 
     }
 
-    {
-        // ensure index
-        verify( conn.ensureIndex( ns , BSON( "name" << 1 ) ) );
-        verify( ! conn.ensureIndex( ns , BSON( "name" << 1 ) ) );
-    }
+    // Create an index on 'name'
+    conn.createIndex( ns , BSON( "name" << 1 ) );
+
 /*
     {
         // 5 second TTL index

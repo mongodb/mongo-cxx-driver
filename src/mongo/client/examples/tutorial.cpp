@@ -66,7 +66,7 @@ int run(int argc, char* argv[]) {
     p = BSON( "name" << "Samantha" << "age" << 21 << "city" << "Los Angeles" << "state" << "CA" );
     c.insert("tutorial.persons", p);
 
-    c.ensureIndex("tutorial.persons", fromjson("{age:1}"));
+    c.createIndex("tutorial.persons", fromjson("{age:1}"));
 
     cout << "count:" << c.count("tutorial.persons") << endl;
 

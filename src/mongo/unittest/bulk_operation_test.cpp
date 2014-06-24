@@ -715,7 +715,7 @@ namespace {
     TYPED_TEST(BulkOperationTest, UnorderedBatchWithErrors) {
         if (!this->testSupported()) return;
 
-        this->c->ensureIndex(TEST_NS, BSON("a" << 1), true);
+        this->c->createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
 
         BulkOperationBuilder bulk(this->c, TEST_NS, false);
 
@@ -758,7 +758,7 @@ namespace {
     TYPED_TEST(BulkOperationTest, OrderedBatchWithErrors) {
         if (!this->testSupported()) return;
 
-        this->c->ensureIndex(TEST_NS, BSON("a" << 1), true);
+        this->c->createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
 
         BulkOperationBuilder bulk(this->c, TEST_NS, true);
 

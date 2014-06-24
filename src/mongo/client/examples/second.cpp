@@ -61,7 +61,7 @@ int main( int argc, const char **argv ) {
         cout << "\t" << obj.jsonString() << endl;
     }
 
-    conn->ensureIndex( ns , BSON( "name" << 1 << "num" << -1 ) );
+    conn->createIndex( ns , BSON( "name" << 1 << "num" << -1 ) );
 
     conn.done();
 

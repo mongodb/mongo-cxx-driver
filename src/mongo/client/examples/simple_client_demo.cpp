@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
         }
 
         // make an index with a unique key constraint
-        c.ensureIndex("test.foo", BSON("hello"<<1), /*unique*/true);
+        c.createIndex("test.foo", IndexSpec().addKeys(BSON("hello"<<1)).unique());
 
         try {
             c.insert("test.foo", o); // will cause a dup key error on "hello" field
