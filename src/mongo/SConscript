@@ -1,4 +1,4 @@
-Import('env windows mongoClientStaticLibs libGTestStatic')
+Import('env windows mongoClientStaticLibs libGTestStatic mingw')
 
 staticClientEnv = env.Clone()
 staticClientEnv.PrependUnique(
@@ -63,7 +63,7 @@ gtestEnv = staticClientEnv.Clone()
 gtestEnv.PrependUnique(
     # On windows, we need this odd flag to make the linker
     # search for main in our _test_main libs.
-    LINKFLAGS=(['/SUBSYSTEM:CONSOLE'] if windows else []),
+    LINKFLAGS=(['/SUBSYSTEM:CONSOLE'] if windows and not mingw else []),
     LIBS=[
         libGTestStatic,
     ])

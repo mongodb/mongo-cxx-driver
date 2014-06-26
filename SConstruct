@@ -35,6 +35,7 @@ windows = False
 freebsd = False
 openbsd = False
 solaris = False
+mingw = False
 
 if "darwin" == platform:
     darwin = True
@@ -173,6 +174,10 @@ add_option( "disable-declspec-thread", "don't use __declspec(thread) on Windows"
 # base compile flags
 add_option( "64" , "whether to force 64 bit" , 0 , True , "force64" )
 add_option( "32" , "whether to force 32 bit" , 0 , True , "force32" )
+
+# mingw flag
+add_option( "mingw", "use the mingw compiler" , 0 , False )
+add_option( "boost-postfix", "postfix to the boost library ex. -mgw48-mt-1_55", 1, False)
 
 add_option( "cxx", "compiler to use" , 1 , True )
 add_option( "cc", "compiler to use for c" , 1 , True )
@@ -315,7 +320,7 @@ env = Environment( BUILD_DIR=buildDir,
                    MSVS_ARCH=msarch ,
                    PYTHON=buildscripts.utils.find_python(),
                    TARGET_ARCH=msarch ,
-                   tools=["default", "unittest", "integration_test", "textfile"],
+                   tools=[],
                    PYSYSPLATFORM=os.sys.platform,
                    CONFIGUREDIR=sconsDataDir.Dir('sconf_temp'),
                    CONFIGURELOG=sconsDataDir.File('config.log'),
@@ -324,7 +329,25 @@ env = Environment( BUILD_DIR=buildDir,
                    MONGOCLIENT_VERSION_MINOR=mongoclientVersionComponents[1],
                    MONGOCLIENT_VERSION_PATCH=mongoclientVersionComponents[2],
                    INSTALL_DIR=get_option("prefix"),
-                   )
+                   )        
+  
+# Include mingw tools for scons
+if has_option('mingw'): 
+    mingw = True
+    Tool("unittest")(env)
+    Tool("integration_test")(env)
+    Tool("textfile")(env)
+    Tool('mingw')(env)
+    # Scons workaround for mingw
+    env.Replace(CCFLAGS = [])
+    env.Replace(CXXFLAGS = [])
+    env.Replace(LINKFLAGS = [])
+    env.Replace(CCPDBFLAGS = [])
+else:
+    Tool('default')(env)
+    Tool("unittest")(env)
+    Tool("integration_test")(env)
+    Tool("textfile")(env)
 
 if has_option("cache"):
     EnsureSConsVersion( 2, 3, 0 )
@@ -488,138 +511,185 @@ elif openbsd:
     env.Append( CPPDEFINES=[ "__openbsd__" ] )
 
 elif windows:
-    dynamicCRT = has_option("dynamic-windows")
+    if has_option('mingw'):
+        env.Append( LIBS=['m'] )
+        env.Append( CPPDEFINES=[ "BOOST_ALL_DYN_LINK=1", "BOOST_SYSTEM_NO_DEPRECATED=1" ] )
+        env.Append( EXTRACPPPATH=[ "/msys/include", "/msys/local/include", "/msys/x86_64-w64-mingw32/include"] )
+        env.Append( EXTRALIBPATH=[ "/msys/lib", "/msys/local/lib",  "/msys/x86_64-w64-mingw32/lib" ] )
+        # -Winvalid-pch Warn if a precompiled header (see Precompiled Headers) is found in the search path but can't be used.
+        env.Append( CCFLAGS=["-fno-strict-aliasing",
+                             "-ggdb",
+                             "-Wall",
+                             "-Wsign-compare",
+                             "-Wno-unknown-pragmas",
+                             "-Winvalid-pch"] )
+        
+        env.Append( CPPDEFINES=["_FILE_OFFSET_BITS=64"] )
+        env.Append( CXXFLAGS=["-Wnon-virtual-dtor", "-Woverloaded-virtual"] )
+        env.Append( LINKFLAGS=["-fPIC"] )
+        env.Append( CPPDEFINES=[ "_UNICODE" ] )
+        env.Append( CPPDEFINES=[ "UNICODE" ] )
+        env.Append( LIBS=[] )
 
-    # Unless otherwise specified, link boost in the same manner as the CRT.
-    dynamicBoost = get_option("dynamic-boost")
-    if dynamicBoost == "auto":
-        dynamicBoost = "on" if dynamicCRT else "off"
-    if dynamicBoost == "on":
-        env.Append( CPPDEFINES=[ "BOOST_ALL_DYN_LINK" ] )
+        if has_option( "gcov" ):
+            env.Append( CXXFLAGS=" -fprofile-arcs -ftest-coverage " )
+            env.Append( LINKFLAGS=" -fprofile-arcs -ftest-coverage " )
 
-    if has_option("sharedclient") and not dynamicCRT:
-        print("The shared client must be built with the dynamic runtime library")
-        Exit(1)
+        if optBuild:
+            env.Append( CCFLAGS=["-O3"] )
+        else:
+            env.Append( CCFLAGS=["-O0"] )
 
-    # If tools configuration fails to set up 'cl' in the path, fall back to importing the whole
-    # shell environment and hope for the best. This will work, for instance, if you have loaded
-    # an SDK shell.
-    for pathdir in env['ENV']['PATH'].split(os.pathsep):
-        if os.path.exists(os.path.join(pathdir, 'cl.exe')):
-            break
+        if debugBuild:
+            if not optBuild:
+                env.Append( CCFLAGS=["-fstack-protector"] )
+                env.Append( LINKFLAGS=["-fstack-protector"] )
+                env.Append( SHLINKFLAGS=["-fstack-protector"] )
+            env['ENV']['GLIBCXX_FORCE_NEW'] = 1; # play nice with valgrind
+            env.Append( CPPDEFINES=["_DEBUG"] );
+
+        if force64:
+            env.Append( CCFLAGS="-m64" )
+            env.Append( LINKFLAGS="-m64" )
+
+        if force32:
+            env.Append( CCFLAGS="-m32" )
+            env.Append( LINKFLAGS="-m32" )
+            
+        env.Append(LIBS=[ 'ws2_32', 'DbgHelp' ])
     else:
-        print("NOTE: Tool configuration did not find 'cl' compiler, falling back to os environment")
-        env['ENV'] = dict(os.environ)
+        dynamicCRT = has_option("dynamic-windows")
 
-    env.Append( CPPDEFINES=[ "_UNICODE" ] )
-    env.Append( CPPDEFINES=[ "UNICODE" ] )
-    env.Append( CPPDEFINES=[ "NOMINMAX" ] )
+        # Unless otherwise specified, link boost in the same manner as the CRT.
+        dynamicBoost = get_option("dynamic-boost")
+        if dynamicBoost == "auto":
+            dynamicBoost = "on" if dynamicCRT else "off"
+        if dynamicBoost == "on":
+            env.Append( CPPDEFINES=[ "BOOST_ALL_DYN_LINK" ] )
 
-    # /EHsc exception handling style for visual studio
-    # /W3 warning level
-    env.Append(CCFLAGS=["/EHsc","/W3"])
+        if has_option("sharedclient") and not dynamicCRT:
+            print("The shared client must be built with the dynamic runtime library")
+            Exit(1)
 
-    # some warnings we don't like:
-    env.Append(CCFLAGS=[
+        # If tools configuration fails to set up 'cl' in the path, fall back to importing the whole
+        # shell environment and hope for the best. This will work, for instance, if you have loaded
+        # an SDK shell.
+        for pathdir in env['ENV']['PATH'].split(os.pathsep):
+            if os.path.exists(os.path.join(pathdir, 'cl.exe')):
+                break
+        else:
+            print("NOTE: Tool configuration did not find 'cl' compiler, falling back to os environment")
+            env['ENV'] = dict(os.environ)
 
-        # 'conversion' conversion from 'type1' to 'type2', possible loss of data
-        #     An integer type is converted to a smaller integer type.
-        "/wd4244",
+        env.Append( CPPDEFINES=[ "_UNICODE" ] )
+        env.Append( CPPDEFINES=[ "UNICODE" ] )
+        env.Append( CPPDEFINES=[ "NOMINMAX" ] )
 
-        # 'identifier' : class 'type' needs to have dll-interface to be used by clients of class 'type2'
-        #     Typically some STL type isn't dllexport adorned, and we can't do anything about that
-        "/wd4251",
+        # /EHsc exception handling style for visual studio
+        # /W3 warning level
+        env.Append(CCFLAGS=["/EHsc","/W3"])
 
-        # 'var' : conversion from 'size_t' to 'type', possible loss of data When compiling with
-        # /Wp64, or when compiling on a 64-bit operating system, type is 32 bits but size_t is
-        # 64 bits when compiling for 64-bit targets. To fix this warning, use size_t instead of
-        # a type
-        "/wd4267",
+        # some warnings we don't like:
+        env.Append(CCFLAGS=[
 
-        # non - DLL-interface classkey 'identifier' used as base for DLL-interface classkey 'identifier'
-        #    Typically some base like noncopyable isn't dllexport adorned; nothing we can do
-        "/wd4275",
+            # 'conversion' conversion from 'type1' to 'type2', possible loss of data
+            #     An integer type is converted to a smaller integer type.
+            "/wd4244",
 
-        # C++ exception specification ignored except to indicate a function is not
-        # __declspec(nothrow A function is declared using exception specification, which Visual
-        # C++ accepts but does not implement
-        "/wd4290",
+            # 'identifier' : class 'type' needs to have dll-interface to be used by clients of class 'type2'
+            #     Typically some STL type isn't dllexport adorned, and we can't do anything about that
+            "/wd4251",
 
-        # 'this' : used in base member initializer list
-        #    The this pointer is valid only within nonstatic member functions. It cannot be
-        #    used in the initializer list for a base class.
-        "/wd4355",
+            # 'var' : conversion from 'size_t' to 'type', possible loss of data When compiling with
+            # /Wp64, or when compiling on a 64-bit operating system, type is 32 bits but size_t is
+            # 64 bits when compiling for 64-bit targets. To fix this warning, use size_t instead of
+            # a type
+            "/wd4267",
 
-        # 'type' : forcing value to bool 'true' or 'false' (performance warning)
-        #    This warning is generated when a value that is not bool is assigned or coerced
-        #    into type bool.
-        "/wd4800",
-    ])
+            # non - DLL-interface classkey 'identifier' used as base for DLL-interface classkey 'identifier'
+            #    Typically some base like noncopyable isn't dllexport adorned; nothing we can do
+            "/wd4275",
 
-    # some warnings we should treat as errors:
-    # c4099
-    #  identifier' : type name first seen using 'objecttype1' now seen using 'objecttype2'
-    #    This warning occurs when classes and structs are declared with a mix of struct and class
-    #    which can cause linker failures
-    env.Append( CCFLAGS=["/we4099"] )
+            # C++ exception specification ignored except to indicate a function is not
+            # __declspec(nothrow A function is declared using exception specification, which Visual
+            # C++ accepts but does not implement
+            "/wd4290",
 
-    env.Append( CPPDEFINES=["_CONSOLE","_CRT_SECURE_NO_WARNINGS"] )
+            # 'this' : used in base member initializer list
+            #    The this pointer is valid only within nonstatic member functions. It cannot be
+            #    used in the initializer list for a base class.
+            "/wd4355",
 
-    # this would be for pre-compiled headers, could play with it later  
-    #env.Append( CCFLAGS=['/Yu"pch.h"'] )
+            # 'type' : forcing value to bool 'true' or 'false' (performance warning)
+            #    This warning is generated when a value that is not bool is assigned or coerced
+            #    into type bool.
+            "/wd4800",
+        ])
 
-    # docs say don't use /FD from command line (minimal rebuild)
-    # /Gy function level linking (implicit when using /Z7)
-    # /Z7 debug info goes into each individual .obj file -- no .pdb created 
-    env.Append( CCFLAGS= ["/Z7", "/errorReport:none"] )
+        # some warnings we should treat as errors:
+        # c4099
+        #  identifier' : type name first seen using 'objecttype1' now seen using 'objecttype2'
+        #    This warning occurs when classes and structs are declared with a mix of struct and class
+        #    which can cause linker failures
+        env.Append( CCFLAGS=["/we4099"] )
 
-    # /DEBUG will tell the linker to create a .pdb file
-    # which WinDbg and Visual Studio will use to resolve
-    # symbols if you want to debug a release-mode image.
-    # Note that this means we can't do parallel links in the build.
-    #
-    # Please also note that this has nothing to do with _DEBUG or optimization.
-    env.Append( LINKFLAGS=["/DEBUG"] )
+        env.Append( CPPDEFINES=["_CONSOLE","_CRT_SECURE_NO_WARNINGS"] )
 
-    # /MD:  use the multithreaded, DLL version of the run-time library (MSVCRT.lib/MSVCR###.DLL)
-    # /MT:  use the multithreaded, static version of the run-time library (LIBCMT.lib)
-    # /MDd: Defines _DEBUG, _MT, _DLL, and uses MSVCRTD.lib/MSVCRD###.DLL
-    # /MTd: Defines _DEBUG, _MT, and causes your application to use the
-    #       debug multithread version of the run-time library (LIBCMTD.lib)
+        # this would be for pre-compiled headers, could play with it later  
+        #env.Append( CCFLAGS=['/Yu"pch.h"'] )
 
-    winRuntimeLibMap = {
-          #dyn   #dbg
-        ( False, False ) : "/MT",
-        ( False, True  ) : "/MTd",
-        ( True,  False ) : "/MD",
-        ( True,  True  ) : "/MDd",
-    }
+        # docs say don't use /FD from command line (minimal rebuild)
+        # /Gy function level linking (implicit when using /Z7)
+        # /Z7 debug info goes into each individual .obj file -- no .pdb created 
+        env.Append( CCFLAGS= ["/Z7", "/errorReport:none"] )
 
-    env.Append(CCFLAGS=[winRuntimeLibMap[(dynamicCRT, debugBuild)]])
+        # /DEBUG will tell the linker to create a .pdb file
+        # which WinDbg and Visual Studio will use to resolve
+        # symbols if you want to debug a release-mode image.
+        # Note that this means we can't do parallel links in the build.
+        #
+        # Please also note that this has nothing to do with _DEBUG or optimization.
+        env.Append( LINKFLAGS=["/DEBUG"] )
 
-    # With VS 2012 and later we need to specify 5.01 as the target console
-    # so that our 32-bit builds run on Windows XP
-    # See https://software.intel.com/en-us/articles/linking-applications-using-visual-studio-2012-to-run-on-windows-xp
-    #
-    if msarch == "x86":
-        env.Append( LINKFLAGS=["/SUBSYSTEM:CONSOLE,5.01"])
+        # /MD:  use the multithreaded, DLL version of the run-time library (MSVCRT.lib/MSVCR###.DLL)
+        # /MT:  use the multithreaded, static version of the run-time library (LIBCMT.lib)
+        # /MDd: Defines _DEBUG, _MT, _DLL, and uses MSVCRTD.lib/MSVCRD###.DLL
+        # /MTd: Defines _DEBUG, _MT, and causes your application to use the
+        #       debug multithread version of the run-time library (LIBCMTD.lib)
 
-    if optBuild:
-        # /O2:  optimize for speed (as opposed to size)
-        # /Oy-: disable frame pointer optimization (overrides /O2, only affects 32-bit)
-        # /INCREMENTAL: NO - disable incremental link - avoid the level of indirection for function
-        # calls
-        env.Append( CCFLAGS=["/O2", "/Oy-"] )
-        env.Append( LINKFLAGS=["/INCREMENTAL:NO"])
-    else:
-        env.Append( CCFLAGS=["/Od"] )
+        winRuntimeLibMap = {
+              #dyn   #dbg
+            ( False, False ) : "/MT",
+            ( False, True  ) : "/MTd",
+            ( True,  False ) : "/MD",
+            ( True,  True  ) : "/MDd",
+        }
 
-    if debugBuild and not optBuild:
-        # /RTC1: - Enable Stack Frame Run-Time Error Checking; Reports when a variable is used
-        # without having been initialized (implies /Od: no optimizations)
-        env.Append( CCFLAGS=["/RTC1"] )
+        env.Append(CCFLAGS=[winRuntimeLibMap[(dynamicCRT, debugBuild)]])
 
-    env.Append(LIBS=[ 'ws2_32.lib', 'DbgHelp.lib' ])
+        # With VS 2012 and later we need to specify 5.01 as the target console
+        # so that our 32-bit builds run on Windows XP
+        # See https://software.intel.com/en-us/articles/linking-applications-using-visual-studio-2012-to-run-on-windows-xp
+        #
+        if msarch == "x86":
+            env.Append( LINKFLAGS=["/SUBSYSTEM:CONSOLE,5.01"])
+
+        if optBuild:
+            # /O2:  optimize for speed (as opposed to size)
+            # /Oy-: disable frame pointer optimization (overrides /O2, only affects 32-bit)
+            # /INCREMENTAL: NO - disable incremental link - avoid the level of indirection for function
+            # calls
+            env.Append( CCFLAGS=["/O2", "/Oy-"] )
+            env.Append( LINKFLAGS=["/INCREMENTAL:NO"])
+        else:
+            env.Append( CCFLAGS=["/Od"] )
+
+        if debugBuild and not optBuild:
+            # /RTC1: - Enable Stack Frame Run-Time Error Checking; Reports when a variable is used
+            # without having been initialized (implies /Od: no optimizations)
+            env.Append( CCFLAGS=["/RTC1"] )
+
+        env.Append(LIBS=[ 'ws2_32.lib', 'DbgHelp.lib' ])
 
 if nix:
 
@@ -689,12 +759,15 @@ if nix:
 
 if has_option( "ssl" ):
     env["MONGO_SSL"] = True
-    if windows:
+    if windows and not mingw:
         env.Append( LIBS=["libeay32"] )
         env.Append( LIBS=["ssleay32"] )
     else:
         env.Append( LIBS=["ssl"] )
         env.Append( LIBS=["crypto"] )
+        if mingw:
+            env.Append( LIBS=['z'] )
+            env.Append( LIBS=['gdi32'] )
 
 try:
     umask = os.umask(022)
@@ -781,7 +854,7 @@ def doConfigure(myenv):
     using_clang = lambda: toolchain == toolchain_clang
 
     if windows:
-        toolchain_search_sequence = [toolchain_msvc]
+        toolchain_search_sequence = [toolchain_msvc, toolchain_gcc]
     else:
         toolchain_search_sequence = [toolchain_gcc, toolchain_clang]
 
@@ -803,7 +876,7 @@ def doConfigure(myenv):
     global use_clang
     use_clang = using_clang()
 
-    if using_gcc():
+    if using_gcc() and not mingw:
         myenv.Append(LINKFLAGS=["-pthread"])
 
     # Figure out what our minimum windows version is. If the user has specified, then use
@@ -1405,10 +1478,13 @@ def doConfigure(myenv):
         print( "Could not find boost headers in include search path" )
         Exit(1)
 
-    if not windows:
+    if not windows or has_option('mingw'):
         # We don't do this for windows because we rely on autolib.
         for b in boostLibs:
-            boostCandidates = ["boost_" + b + "-mt", "boost_" + b]
+            if has_option('mingw') and has_option('boost-postfix'):
+                boostCandidates = ["boost_" + b + get_option('boost-postfix'),"boost_" + b + "-mt", "boost_" + b]
+            else:
+                boostCandidates = ["boost_" + b + "-mt", "boost_" + b]
             if not conf.CheckLib(boostCandidates, language="C++"):
                 print( "can't find boost")
                 Exit(1)
@@ -1456,7 +1532,8 @@ def doConfigure(myenv):
 
 env = doConfigure( env )
 
-env['PDB'] = '${TARGET.base}.pdb'
+if not mingw:
+    env['PDB'] = '${TARGET.base}.pdb'
 
 #  ---- Docs ----
 def build_docs(env, target, source):
@@ -1493,7 +1570,7 @@ if len(COMMAND_LINE_TARGETS) > 0 and 'uninstall' in COMMAND_LINE_TARGETS:
 Export("env")
 Export("get_option")
 Export("has_option")
-Export("darwin windows solaris linux freebsd nix")
+Export("darwin windows solaris linux freebsd nix mingw")
 Export("debugBuild optBuild")
 Export("use_clang")
 

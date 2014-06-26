@@ -17,7 +17,7 @@
 
 #include <cstdlib>
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__GNUC__)
 static inline long long strtoll(const char* nptr, char** endptr, int base) {
     return _strtoi64(nptr, endptr, base);
 }
