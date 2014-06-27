@@ -180,6 +180,7 @@ add_option( "mingw", "use the mingw compiler" , 0 , False )
 add_option( "boost-postfix", "postfix to the boost library ex. -mgw48-mt-1_55", 1, False)
 
 add_option( "cxx", "compiler to use" , 1 , True )
+add_option( "ar", "archiver to use" , 1 , True )
 add_option( "cc", "compiler to use for c" , 1 , True )
 add_option( "cc-use-shell-environment", "use $CC from shell for C compiler" , 0 , False )
 add_option( "cxx-use-shell-environment", "use $CXX from shell for C++ compiler" , 0 , False )
@@ -419,6 +420,8 @@ if has_option( "cxx-use-shell-environment" ):
 if has_option( "cc-use-shell-environment" ):
     env["CC"] = os.getenv("CC");
 
+if has_option( "ar" ):
+    env["AR"] = get_option( "ar" )
 if has_option( "cxx" ):
     env["CC"] = get_option( "cxx" )
     env["CXX"] = get_option( "cxx" )
