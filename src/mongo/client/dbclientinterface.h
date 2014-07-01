@@ -1586,5 +1586,3 @@ namespace mongo {
     }
 
 } // namespace mongo
-
-#include "mongo/client/dbclientcursor.h"
