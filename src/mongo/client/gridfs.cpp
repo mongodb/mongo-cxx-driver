@@ -194,13 +194,13 @@ namespace mongo {
         _obj = obj;
     }
 
-    GridFile GridFS::findFile( const string& fileName ) const {
+    GridFile GridFS::findFileByName( const string& fileName ) const {
         return findFile( BSON( "filename" << fileName ) );
     };
 
-    GridFile GridFS::findFile( BSONObj query ) const {
-        query = BSON("query" << query << "orderby" << BSON("uploadDate" << -1));
-        return GridFile( this , _client.findOne( _filesNS.c_str() , query ) );
+    GridFile GridFS::findFile( Query query ) const {
+        query.sort(BSON("uploadDate" << -1));
+        return GridFile( this , _client.findOne( _filesNS.c_str() , query.obj ) );
     }
 
     auto_ptr<DBClientCursor> GridFS::list() const {

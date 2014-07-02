@@ -105,7 +105,7 @@ namespace {
         _gfs->setChunkSize(1);
         _gfs->storeFile(DATA, DATA_LEN, DATA_NAME);
 
-        GridFile gf = _gfs->findFile(DATA_NAME);
+        GridFile gf = _gfs->findFileByName(DATA_NAME);
         ASSERT_EQUALS(gf.getNumChunks(), DATA_LEN);
     }
 
@@ -114,7 +114,7 @@ namespace {
         BSONObj result;
         result = _gfs->storeFile(DATA, DATA_LEN, DATA_NAME, content_type);
 
-        GridFile gf = _gfs->findFile(DATA_NAME);
+        GridFile gf = _gfs->findFileByName(DATA_NAME);
         ASSERT_TRUE(gf.exists());
         ASSERT_TRUE(gf.getMetadata().isEmpty());
         ASSERT_EQUALS(gf.getContentType(), content_type);
@@ -131,7 +131,7 @@ namespace {
         sleepmillis(100);   // must sleep here to avoid identical uploadDate
         _gfs->storeFile(OTHER, OTHER_LEN, DATA_NAME);
 
-        GridFile gf = _gfs->findFile(DATA_NAME);
+        GridFile gf = _gfs->findFileByName(DATA_NAME);
         ASSERT_EQUALS(gf.getContentLength(), UOTHER_LEN);
 
         GridFSChunk chunk = gf.getChunk(0);
@@ -142,7 +142,7 @@ namespace {
     TEST_F(GridFSTest, WriteToFile) {
         _gfs->storeFile(DATA, DATA_LEN, DATA_NAME);
 
-        GridFile gf = _gfs->findFile(DATA_NAME);
+        GridFile gf = _gfs->findFileByName(DATA_NAME);
 
 #if defined(_WIN32)
         char tmp_path[MAX_PATH - 14];
@@ -176,7 +176,7 @@ namespace {
     TEST_F(GridFSTest, WriteToStream) {
         _gfs->storeFile(DATA, DATA_LEN, DATA_NAME);
 
-        GridFile gf = _gfs->findFile(DATA_NAME);
+        GridFile gf = _gfs->findFileByName(DATA_NAME);
         stringstream ss;
         gf.write(ss);
 
@@ -187,16 +187,16 @@ namespace {
         _gfs->storeFile(DATA, DATA_LEN, DATA_NAME);
         _gfs->storeFile(OTHER, DATA_LEN, OTHER_NAME);
 
-        GridFile gfd = _gfs->findFile(DATA_NAME);
+        GridFile gfd = _gfs->findFileByName(DATA_NAME);
         ASSERT_TRUE(gfd.exists());
-        GridFile gfo = _gfs->findFile(OTHER_NAME);
+        GridFile gfo = _gfs->findFileByName(OTHER_NAME);
         ASSERT_TRUE(gfo.exists());
 
         _gfs->removeFile(DATA_NAME);
 
-        gfd = _gfs->findFile(DATA_NAME);
+        gfd = _gfs->findFileByName(DATA_NAME);
         ASSERT_FALSE(gfd.exists());
-        gfo = _gfs->findFile(OTHER_NAME);
+        gfo = _gfs->findFileByName(OTHER_NAME);
         ASSERT_TRUE(gfo.exists());
     }
 
@@ -231,7 +231,7 @@ namespace {
         for (int i=0; i<DATA_LEN; i+=2)
             gfb.appendChunk(DATA + i, min(2, DATA_LEN - i));
         gfb.buildFile(DATA_NAME);
-        GridFile gf = _gfs->findFile(DATA_NAME);
+        GridFile gf = _gfs->findFileByName(DATA_NAME);
         ASSERT_EQUALS(gf.getNumChunks(), 1);
     }
 
@@ -241,7 +241,7 @@ namespace {
         for (int i=0; i<DATA_LEN; i+=2)
             gfb.appendChunk(DATA + i, min(2, DATA_LEN - i));
         gfb.buildFile(DATA_NAME);
-        GridFile gf = _gfs->findFile(DATA_NAME);
+        GridFile gf = _gfs->findFileByName(DATA_NAME);
         ASSERT_EQUALS(gf.getNumChunks(), DATA_LEN);
     }
 

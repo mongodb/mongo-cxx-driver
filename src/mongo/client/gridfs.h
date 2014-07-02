@@ -104,12 +104,12 @@ namespace mongo {
         /**
          * returns a file object matching the query
          */
-        GridFile findFile( BSONObj query ) const;
+        GridFile findFile( Query query ) const;
 
         /**
          * equiv to findFile( { filename : filename } )
          */
-        GridFile findFile( const std::string& fileName ) const;
+        GridFile findFileByName( const std::string& fileName ) const;
 
         /**
          * convenience method to get all the files
