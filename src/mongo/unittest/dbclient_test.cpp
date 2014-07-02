@@ -1024,32 +1024,21 @@ namespace {
         c.insert(TEST_NS, BSON("a" << true));
         BSONObj result;
 
-        c.runCommand("admin", BSON("buildinfo" << true), result);
-
-        if (versionCmp(result["version"].toString(), "2.5.3") >= 0) {
+        if (serverGTE(&c, 2, 6)) {
             c.runCommand("admin", BSON(
                 "configureFailPoint" << "maxTimeAlwaysTimeOut" <<
                 "mode" << BSON("times" << 2)
             ), result);
 
             // First test with a query
-            ASSERT_NO_THROW(
-                c.findOne(TEST_NS, Query("{$query: {}}"));
-            );
-            ASSERT_THROWS(
-                c.findOne(TEST_NS, Query("{$query: {}, $maxTimeMS: 1}"));
-            , DBException);
+            ASSERT_NO_THROW(c.findOne(TEST_NS, Query("{}")););
+            ASSERT_THROWS(c.findOne(TEST_NS, Query("{}").maxTimeMs(1)), DBException);
 
             // Then test with a command
-            ASSERT_TRUE(
-                c.runCommand(TEST_DB, BSON("count" << TEST_COLL), result)
-            );
-            ASSERT_FALSE(
-                c.runCommand(TEST_DB,
-                    BSON("count" << TEST_COLL << "maxTimeMS" << 1), result)
-            );
+            ASSERT_NO_THROW(c.count(TEST_NS, Query("{}")));
+            ASSERT_THROWS(c.count(TEST_NS, Query("{}").maxTimeMs(1)), DBException);
         } else {
-            // we are not connected to MongoDB >= 2.5.3, skip
+            // we are not connected to MongoDB >= 2.6, skip
             SUCCEED();
         }
     }

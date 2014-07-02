@@ -267,6 +267,11 @@ namespace mongo {
         return *this;
     }
 
+    Query& Query::maxTimeMs(int millis) {
+        appendComplex( "$maxTimeMS", millis );
+        return *this;
+    }
+
     Query& Query::explain() {
         appendComplex( "$explain", true );
         return *this;
@@ -299,6 +304,21 @@ namespace mongo {
         }
 
         return false;
+    }
+
+    BSONObj Query::getModifiers() const {
+        std::set<string> names;
+        obj.getFieldNames(names);
+
+        BSONObjBuilder complexFields;
+
+        std::set<string>::const_iterator nameIterator;
+        for(nameIterator = names.begin(); nameIterator != names.end(); ++nameIterator) {
+            if (nameIterator->find('$') == '0')
+                complexFields.append(obj.getField(*nameIterator));
+        }
+
+        return complexFields.obj();
     }
 
     Query& Query::readPref(ReadPreference pref, const BSONArray& tags) {
@@ -353,6 +373,10 @@ namespace mongo {
         return hasReadPreference(obj);
     }
 
+    bool Query::hasMaxTimeMs() const {
+        return obj.hasField( "$maxTimeMS" );
+    }
+
     BSONObj Query::getFilter() const {
         bool hasDollar;
         if ( ! isComplex( &hasDollar ) )
@@ -376,6 +400,10 @@ namespace mongo {
 
     BSONObj Query::getReadPref() const {
         return obj.getObjectField(ReadPrefField.name());
+    }
+
+    int Query::getMaxTimeMs() const {
+        return obj.getIntField("maxTimeMs");
     }
 
     bool Query::isExplain() const {
@@ -472,8 +500,8 @@ namespace mongo {
         if ( skip )
             b.append( "skip" , skip );
 
-        if (query.hasReadPreference())
-            b.append(query.ReadPrefField.name(), query.getReadPref());
+        if (query.isComplex())
+            b.appendElements(query.getModifiers());
 
         return b.obj();
     }
@@ -817,8 +845,9 @@ namespace mongo {
 
         if( !query.obj.isEmpty() )
             b.append("query", query.getFilter());
-        if (query.hasReadPreference())
-            b.append(query.ReadPrefField.name(), query.getReadPref());
+
+        if (query.isComplex())
+            b.appendElements(query.getModifiers());
 
         b.append("out", output.out);
         BSONObj info;
@@ -889,8 +918,8 @@ namespace mongo {
         BSONObjBuilder commandBuilder;
         commandBuilder.append("group", group);
 
-        if (query.hasReadPreference())
-            commandBuilder.append(query.ReadPrefField.name(), query.getReadPref());
+        if (query.isComplex())
+            commandBuilder.appendElements(query.getModifiers());
 
         BSONObj result;
         bool ok = runCommand(nsGetDB(ns.toString()), commandBuilder.obj(), result);
@@ -915,8 +944,9 @@ namespace mongo {
         commandBuilder.append("distinct", nsGetCollection(ns.toString()));
         commandBuilder.append("key", field);
         commandBuilder.append("query", query.getFilter());
-        if (query.hasReadPreference())
-            commandBuilder.append(query.ReadPrefField.name(), query.getReadPref());
+
+        if (query.isComplex())
+            commandBuilder.appendElements(query.getModifiers());
 
         BSONObj result;
         bool ok = runCommand(nsGetDB(ns.toString()), commandBuilder.obj(), result);

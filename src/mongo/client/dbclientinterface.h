@@ -347,6 +347,12 @@ namespace mongo {
         Query& hint(BSONObj keyPattern);
         Query& hint(const std::string &jsonKeyPatt);
 
+        /**
+         * Specifies a cumulative time limit in milliseconds for processing an operation.
+         * MongoDB will interrupt the operation at the earliest following interrupt point.
+         */
+        Query& maxTimeMs(int millis);
+
         /** Provide min and/or max index limits for the query.
             min <= x < max
          */
@@ -402,12 +408,14 @@ namespace mongo {
          * @return true if this query has an orderby, hint, or some other field
          */
         bool isComplex( bool * hasDollar = 0 ) const;
+        BSONObj getModifiers() const;
         static bool MONGO_CLIENT_FUNC isComplex(const BSONObj& obj, bool* hasDollar = 0);
 
         BSONObj getFilter() const;
         BSONObj getSort() const;
         BSONObj getHint() const;
         BSONObj getReadPref() const;
+        int getMaxTimeMs() const;
         bool isExplain() const;
 
         /**
@@ -415,6 +423,7 @@ namespace mongo {
          */
         static bool MONGO_CLIENT_FUNC hasReadPreference(const BSONObj& queryObj);
         bool hasReadPreference() const;
+        bool hasMaxTimeMs() const;
 
         std::string toString() const;
         operator std::string() const { return toString(); }
