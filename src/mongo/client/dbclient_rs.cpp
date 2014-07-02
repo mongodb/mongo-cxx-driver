@@ -53,6 +53,8 @@ namespace {
             _secOkCmdList.insert("geoSearch");
             _secOkCmdList.insert("geoWalk");
             _secOkCmdList.insert("group");
+            _secOkCmdList.insert("text");
+            _secOkCmdList.insert("parallelCollectionScan");
         }
     } _populateReadPrefSecOkCmdList;
 
