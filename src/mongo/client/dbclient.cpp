@@ -41,6 +41,11 @@
 #include "mongo/util/net/ssl_manager.h"
 #include "mongo/util/password_digest.h"
 
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/regex.hpp>
+
 #include <algorithm>
 #include <cstdlib>
 
@@ -61,6 +66,26 @@ namespace mongo {
     const int defaultMaxBsonObjectSize = 16 * 1024 * 1024;
     const int defaultMaxMessageSizeBytes = defaultMaxBsonObjectSize * 2;
     const int defaultMaxWriteBatchSize = 1000;
+
+    namespace {
+        const char kMongoDBURL[] =
+            // scheme: non-capturing
+            "mongodb://"
+
+            // credentials: two inner captures for user and password
+            "(?:([^:]+)(?::([^@]+))?@)?"
+
+            // servers: grabs all host:port or UNIX socket names
+            "((?:(?:[^\\/]+|/.+.sock?),?)+)"
+
+            // database: matches anything but the chars that cannot
+            // be part of a MongoDB database name.
+            "(?:/([^/\\.\\ \"*<>:\\|\\?]*))?"
+
+            // options
+            "(?:\\?(?:(.+=.+)&?)+)*";
+
+    } // namespace
 
     void ConnectionString::_fillServers( string s ) {
         
@@ -111,6 +136,30 @@ namespace mongo {
         _string = ss.str();
     }
 
+    BSONObj ConnectionString::_makeAuthObjFromOptions() const {
+        BSONObjBuilder bob;
+
+        // Add the username and optional password
+        invariant(!_user.empty());
+        bob.append("user", _user);
+        if (!_password.empty())
+            bob.append("pwd", _password);
+
+        BSONElement elt = _options.getField("authSource");
+        if (!elt.eoo())
+            bob.appendAs(elt, "db");
+
+        elt = _options.getField("authMechanism");
+        if (!elt.eoo())
+            bob.appendAs(elt, "mechanism");
+
+        elt = _options.getField("gssapiServiceName");
+        if (!elt.eoo())
+            bob.appendAs(elt, "serviceName");
+
+        return bob.obj();
+    }
+
     boost::mutex ConnectionString::_connectHookMutex;
     ConnectionString::ConnectionHook* ConnectionString::_connectHook = NULL;
 
@@ -125,6 +174,17 @@ namespace mongo {
                 delete c;
                 return 0;
             }
+
+            if (!_user.empty()) {
+                try {
+                    c->auth(_makeAuthObjFromOptions());
+                }
+                catch(...) {
+                    delete c;
+                    throw;
+                }
+            }
+
             LOG(1) << "connected connection!" << endl;
             return c;
         }
@@ -138,6 +198,17 @@ namespace mongo {
                 errmsg += toString();
                 return 0;
             }
+
+            if (!_user.empty()) {
+                try {
+                    set->auth(_makeAuthObjFromOptions());
+                }
+                catch(...) {
+                    delete set;
+                    throw;
+                }
+            }
+
             return set;
         }
 
@@ -192,24 +263,105 @@ namespace mongo {
         verify( false );
     }
 
-    ConnectionString ConnectionString::parse( const string& host , string& errmsg ) {
+    ConnectionString ConnectionString::parse( const string& url , string& errmsg ) {
 
-        string::size_type i = host.find( '/' );
+        if ( boost::algorithm::starts_with( url, "mongodb://" ) )
+            return _parseURL( url, errmsg );
+
+        string::size_type i = url.find( '/' );
         if ( i != string::npos && i != 0) {
             // replica set
-            return ConnectionString( SET , host.substr( i + 1 ) , host.substr( 0 , i ) );
+            return ConnectionString( SET , url.substr( i + 1 ) , url.substr( 0 , i ) );
         }
 
-        int numCommas = str::count( host , ',' );
+        int numCommas = str::count( url , ',' );
 
         if( numCommas == 0 )
-            return ConnectionString( HostAndPort( host ) );
+            return ConnectionString( HostAndPort( url ) );
 
         if ( numCommas == 1 )
-            return ConnectionString( PAIR , host );
+            return ConnectionString( PAIR , url );
 
-        errmsg = (string)"invalid hostname [" + host + "]";
+        errmsg = (string)"invalid hostname [" + url + "]";
         return ConnectionString(); // INVALID
+    }
+
+    ConnectionString ConnectionString::_parseURL( const string& url, string& errmsg ) {
+
+        const boost::regex mongoUrlRe(kMongoDBURL);
+
+        boost::smatch matches;
+        if (!boost::regex_match(url, matches, mongoUrlRe)) {
+            errmsg = "Failed to parse mongodb:// URL: " + url;
+            return ConnectionString();
+        }
+
+        // We have 5 top level captures, plus the whole input.
+        invariant(matches.size() == 6);
+
+        if (!matches[3].matched) {
+            errmsg = "No server(s) specified";
+            return ConnectionString();
+        }
+
+        std::map<std::string, std::string> options;
+
+        if (matches[5].matched) {
+            const std::string optionsMatch = matches[5].str();
+
+            std::vector< boost::iterator_range<std::string::const_iterator> > optionsTokens;
+            boost::algorithm::split(
+                optionsTokens, optionsMatch, boost::algorithm::is_any_of("=&"));
+
+            invariant(optionsTokens.size() % 2 == 0);
+
+            for (size_t i = 0; i != optionsTokens.size(); i = i + 2)
+                options[std::string(optionsTokens[i].begin(), optionsTokens[i].end())] =
+                    std::string(optionsTokens[i + 1].begin(), optionsTokens[i + 1].end());
+        }
+
+        // Validate options against global driver state, and transform
+        // or append relevant options to the auth struct.
+
+        std::map<std::string, std::string>::const_iterator optIter;
+
+        // If a replica set option was specified, store it in the 'setName' field.
+        bool haveSetName;
+        std::string setName;
+        if ((haveSetName = ((optIter = options.find("replicaSet")) != options.end())))
+            setName = optIter->second;
+
+        // If an SSL option was specified that conflicts with the global setting, error out.
+        // The driver doesn't offer per connection settings.
+        if ((optIter = options.find("ssl")) != options.end()) {
+            if (optIter->second != (client::Options::current().SSLEnabled() ? "true" : "false")) {
+                errmsg = "Cannot override global driver SSL state in connection URL";
+                return ConnectionString();
+            }
+        }
+
+        // Add all remaining options into the bson object
+        BSONObjBuilder optionsBob;
+        for (optIter = options.begin(); optIter != options.end(); ++optIter)
+            optionsBob.append(optIter->first, optIter->second);
+
+        std::string servers = matches[3].str();
+        const bool direct = !haveSetName && (servers.find(',') == std::string::npos);
+
+        if (!direct && setName.empty()) {
+            errmsg = "Cannot list multiple servers in URL without 'replicaSet' option";
+            return ConnectionString();
+        }
+
+        return ConnectionString(
+            direct ? MASTER : SET,
+            matches[1].str(),
+            matches[2].str(),
+            servers,
+            matches[4].str(),
+            setName,
+            optionsBob.obj());
+
     }
 
     string ConnectionString::typeToString( ConnectionType type ) {

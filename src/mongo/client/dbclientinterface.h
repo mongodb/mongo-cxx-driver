@@ -231,6 +231,14 @@ namespace mongo {
 
         ConnectionType type() const { return _type; }
 
+        const std::string& getUser() const { return _user; }
+
+        const std::string& getPassword() const { return _password; }
+
+        const BSONObj& getOptions() const { return _options; }
+
+        const std::string& getDatabase() const { return _database; }
+
         /**
          * This returns true if this and other point to the same logical entity.
          * For single nodes, thats the same address.
@@ -287,14 +295,57 @@ namespace mongo {
         }
 
     private:
+        ConnectionString( ConnectionType type,
+                          const std::string& user,
+                          const std::string& password,
+                          const std::string& servers,
+                          const std::string& database,
+                          const std::string& setName,
+                          const BSONObj& options )
+            : _type( type )
+            , _servers( )
+            , _setName( setName )
+            , _user( user )
+            , _password( password )
+            , _database( database )
+            , _options( options ) {
+
+            _fillServers( servers );
+            switch ( _type ) {
+            case MASTER:
+                verify( _servers.size() == 1 );
+                break;
+            case SET:
+                verify( _setName.size() );
+                verify( _servers.size() >= 1 ); // 1 is ok since we can derive
+                break;
+            case PAIR:
+                verify( _servers.size() == 2 );
+                break;
+            default:
+                verify( _servers.size() > 0 );
+            }
+
+            _finishInit();
+        }
+
+        static ConnectionString _parseURL( const std::string& url, std::string& errmsg );
 
         void _fillServers( std::string s );
         void _finishInit();
+
+        BSONObj _makeAuthObjFromOptions() const;
 
         ConnectionType _type;
         std::vector<HostAndPort> _servers;
         std::string _string;
         std::string _setName;
+
+        std::string _user;
+        std::string _password;
+
+        std::string _database;
+        BSONObj _options;
 
         static boost::mutex _connectHookMutex;
         static ConnectionHook* _connectHook;

@@ -86,7 +86,8 @@ int main( int argc , const char ** argv ) {
     }
 
     string errmsg;
-    ConnectionString cs = ConnectionString::parse( "foo/127.0.0.1" , errmsg );
+    ConnectionString cs = ConnectionString::parse( "mongodb://127.0.0.1/?replicaSet=foo" , errmsg );
+
     if ( ! cs.isValid() ) {
         cout << "error parsing url: " << errmsg << endl;
         return EXIT_FAILURE;
