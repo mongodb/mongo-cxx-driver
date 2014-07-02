@@ -407,12 +407,14 @@ namespace mongo {
         BSONObj getFilter() const;
         BSONObj getSort() const;
         BSONObj getHint() const;
+        BSONObj getReadPref() const;
         bool isExplain() const;
 
         /**
          * @return true if the query object contains a read preference specification object.
          */
         static bool MONGO_CLIENT_FUNC hasReadPreference(const BSONObj& queryObj);
+        bool hasReadPreference() const;
 
         std::string toString() const;
         operator std::string() const { return toString(); }
@@ -654,7 +656,7 @@ namespace mongo {
         /** count number of objects in collection ns that match the query criteria specified
             throws UserAssertion if database returns an error
         */
-        virtual unsigned long long count(const std::string &ns, const BSONObj& query = BSONObj(), int options=0, int limit=0, int skip=0 );
+        virtual unsigned long long count(const std::string &ns, const Query& query = Query(), int options=0, int limit=0, int skip=0 );
 
         static std::string MONGO_CLIENT_FUNC createPasswordDigest(const std::string &username, const std::string &clearTextPassword);
 
@@ -862,7 +864,13 @@ namespace mongo {
                result.getField("ok").trueValue()
              on the result to check if ok.
         */
-        BSONObj mapreduce(const std::string &ns, const std::string &jsmapf, const std::string &jsreducef, BSONObj query = BSONObj(), MROutput output = MRInline);
+        BSONObj mapreduce(
+            const std::string &ns,
+            const std::string &jsmapf,
+            const std::string &jsreducef,
+            Query query = Query(),
+            MROutput output = MRInline
+        );
 
         /**
          * Groups documents in a collection by the specified key and performs simple aggregation
@@ -880,7 +888,7 @@ namespace mongo {
          * aggregation result for that group.
          * @param output The output vector.
          * @param initial Initial aggregation result document.
-         * @param cond Optional selection criteria to determine which documents to process.
+         * @param query Optional selection criteria to determine which documents to process.
          * @param finalize Optional function that runs for each item in the result set before
          * returning the final values in the output vector.
          */
@@ -889,7 +897,7 @@ namespace mongo {
             const StringData& jsreduce,
             std::vector<BSONObj>* output,
             const BSONObj& initial = BSONObj(),
-            const BSONObj& cond = BSONObj(),
+            const Query& query = Query(),
             const BSONObj& key = BSONObj(),
             const StringData& finalize = ""
         );
@@ -906,7 +914,7 @@ namespace mongo {
             const StringData& jsreduce,
             std::vector<BSONObj>* output,
             const BSONObj& initial = BSONObj(),
-            const BSONObj& cond = BSONObj(),
+            const Query& query = Query(),
             const StringData& jskey = "",
             const StringData& finalize = ""
         );
@@ -924,7 +932,7 @@ namespace mongo {
         BSONObj distinct(
             const StringData& ns,
             const StringData& field,
-            const BSONObj& query=BSONObj()
+            const Query& query = Query()
         );
 
         /**
@@ -1111,7 +1119,7 @@ namespace mongo {
         /** if the element contains a not master error */
         bool isNotMasterErrorString( const BSONElement& e );
 
-        BSONObj _countCmd(const std::string &ns, const BSONObj& query, int options, int limit, int skip );
+        BSONObj _countCmd(const std::string &ns, const Query& query, int options, int limit, int skip );
 
         /**
          * Look up the options available on this client.  Caches the answer from
@@ -1158,12 +1166,17 @@ namespace mongo {
             const StringData& ns,
             const StringData& jsreduce,
             const BSONObj& initial,
-            const BSONObj& cond,
+            const Query& query,
             const StringData& finalize,
             BSONObjBuilder* groupObj
         );
 
-        void _runGroup(const StringData& ns, const BSONObj& group, std::vector<BSONObj>* output);
+        void _runGroup(
+            const StringData& ns,
+            const BSONObj& group,
+            const Query& query,
+            std::vector<BSONObj>* output
+        );
 
         void _findAndModify(
             const StringData& ns,

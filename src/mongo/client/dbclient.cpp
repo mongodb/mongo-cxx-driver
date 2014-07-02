@@ -349,6 +349,10 @@ namespace mongo {
                 hasReadPrefOption;
     }
 
+    bool Query::hasReadPreference() const {
+        return hasReadPreference(obj);
+    }
+
     BSONObj Query::getFilter() const {
         bool hasDollar;
         if ( ! isComplex( &hasDollar ) )
@@ -369,6 +373,11 @@ namespace mongo {
             return BSONObj();
         return obj.getObjectField( "$hint" );
     }
+
+    BSONObj Query::getReadPref() const {
+        return obj.getObjectField(ReadPrefField.name());
+    }
+
     bool Query::isExplain() const {
         return isComplex() && obj.getBoolField( "$explain" );
     }
@@ -445,7 +454,7 @@ namespace mongo {
         return runCommand(dbname, b.done(), *info);
     }
 
-    unsigned long long DBClientWithCommands::count(const string &myns, const BSONObj& query, int options, int limit, int skip ) {
+    unsigned long long DBClientWithCommands::count(const string &myns, const Query& query, int options, int limit, int skip ) {
         BSONObj cmd = _countCmd( myns , query , options , limit , skip );
         BSONObj res;
         if( !runCommand(nsToDatabase(myns), cmd, res, options) )
@@ -453,15 +462,19 @@ namespace mongo {
         return res["n"].numberLong();
     }
 
-    BSONObj DBClientWithCommands::_countCmd(const string &myns, const BSONObj& query, int options, int limit, int skip ) {
+    BSONObj DBClientWithCommands::_countCmd(const string &myns, const Query& query, int options, int limit, int skip ) {
         NamespaceString ns(myns);
         BSONObjBuilder b;
         b.append( "count" , ns.coll() );
-        b.append( "query" , query );
+        b.append( "query" , query.getFilter() );
         if ( limit )
             b.append( "limit" , limit );
         if ( skip )
             b.append( "skip" , skip );
+
+        if (query.hasReadPreference())
+            b.append(query.ReadPrefField.name(), query.getReadPref());
+
         return b.obj();
     }
 
@@ -796,13 +809,17 @@ namespace mongo {
 
     DBClientWithCommands::MROutput DBClientWithCommands::MRInline (BSON("inline" << 1));
 
-    BSONObj DBClientWithCommands::mapreduce(const string &ns, const string &jsmapf, const string &jsreducef, BSONObj query, MROutput output) {
+    BSONObj DBClientWithCommands::mapreduce(const string &ns, const string &jsmapf, const string &jsreducef, Query query, MROutput output) {
         BSONObjBuilder b;
         b.append("mapreduce", nsGetCollection(ns));
         b.appendCode("map", jsmapf);
         b.appendCode("reduce", jsreducef);
-        if( !query.isEmpty() )
-            b.append("query", query);
+
+        if( !query.obj.isEmpty() )
+            b.append("query", query.getFilter());
+        if (query.hasReadPreference())
+            b.append(query.ReadPrefField.name(), query.getReadPref());
+
         b.append("out", output.out);
         BSONObj info;
         runCommand(nsGetDB(ns), b.done(), info);
@@ -814,17 +831,17 @@ namespace mongo {
         const StringData& jsreduce,
         std::vector<BSONObj>* output,
         const BSONObj& initial,
-        const BSONObj& cond,
+        const Query& query,
         const BSONObj& key,
         const StringData& finalize
     ) {
         BSONObjBuilder groupObjBuilder;
-        _buildGroupObj(ns, jsreduce, initial, cond, finalize, &groupObjBuilder);
+        _buildGroupObj(ns, jsreduce, initial, query, finalize, &groupObjBuilder);
 
         if (!key.isEmpty())
             groupObjBuilder.append("key", key);
 
-        _runGroup(ns, groupObjBuilder.obj(), output);
+        _runGroup(ns, groupObjBuilder.obj(), query, output);
     }
 
     void DBClientWithCommands::groupWithKeyFunction(
@@ -832,24 +849,24 @@ namespace mongo {
         const StringData& jsreduce,
         std::vector<BSONObj>* output,
         const BSONObj& initial,
-        const BSONObj& cond,
+        const Query& query,
         const StringData& jskey,
         const StringData& finalize
     ) {
         BSONObjBuilder groupBuilder;
-        _buildGroupObj(ns, jsreduce, initial, cond, finalize, &groupBuilder);
+        _buildGroupObj(ns, jsreduce, initial, query, finalize, &groupBuilder);
 
         if (!jskey.empty())
             groupBuilder.append("$keyf", jskey);
 
-        _runGroup(ns, groupBuilder.obj(), output);
+        _runGroup(ns, groupBuilder.obj(), query, output);
     }
 
     void DBClientWithCommands::_buildGroupObj(
         const StringData& ns,
         const StringData& jsreduce,
         const BSONObj& initial,
-        const BSONObj& cond,
+        const Query& query,
         const StringData& finalize,
         BSONObjBuilder* groupObj
     ) {
@@ -857,15 +874,23 @@ namespace mongo {
         groupObj->appendCode("$reduce", jsreduce);
         groupObj->append("initial", initial);
 
-        if (!cond.isEmpty())
-            groupObj->append("cond", cond);
+        if (!query.obj.isEmpty())
+            groupObj->append("cond", query.getFilter());
         if (!finalize.empty())
             groupObj->append("finalize", finalize);
     }
 
-    void DBClientWithCommands::_runGroup(const StringData& ns, const BSONObj& group, std::vector<BSONObj>* output) {
+    void DBClientWithCommands::_runGroup(
+        const StringData& ns,
+        const BSONObj& group,
+        const Query& query,
+        std::vector<BSONObj>* output
+    ) {
         BSONObjBuilder commandBuilder;
         commandBuilder.append("group", group);
+
+        if (query.hasReadPreference())
+            commandBuilder.append(query.ReadPrefField.name(), query.getReadPref());
 
         BSONObj result;
         bool ok = runCommand(nsGetDB(ns.toString()), commandBuilder.obj(), result);
@@ -884,12 +909,14 @@ namespace mongo {
     BSONObj DBClientWithCommands::distinct(
         const StringData& ns,
         const StringData& field,
-        const BSONObj& query
+        const Query& query
     ) {
         BSONObjBuilder commandBuilder;
         commandBuilder.append("distinct", nsGetCollection(ns.toString()));
         commandBuilder.append("key", field);
-        commandBuilder.append("query", query);
+        commandBuilder.append("query", query.getFilter());
+        if (query.hasReadPreference())
+            commandBuilder.append(query.ReadPrefField.name(), query.getReadPref());
 
         BSONObj result;
         bool ok = runCommand(nsGetDB(ns.toString()), commandBuilder.obj(), result);

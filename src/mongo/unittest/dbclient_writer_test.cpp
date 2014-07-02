@@ -87,8 +87,8 @@ namespace {
         inserts.push_back(&insert2);
         WriteResult result;
         this->writer->write(TEST_NS, inserts, true, &WriteConcern::acknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
         ASSERT_FALSE(result.hasErrors());
     }
 
@@ -101,8 +101,8 @@ namespace {
         inserts.push_back(&insert2);
         WriteResult result;
         this->writer->write(TEST_NS, inserts, false, &WriteConcern::acknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
         ASSERT_FALSE(result.hasErrors());
     }
 
@@ -119,8 +119,8 @@ namespace {
             this->writer->write(TEST_NS, inserts, true, &WriteConcern::acknowledged, &result),
             OperationException
         );
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 2}").obj), 0U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 2}")), 0U);
     }
 
     TYPED_TEST(DBClientWriterTest, MultipleUnorderedInsertsWithError) {
@@ -136,8 +136,8 @@ namespace {
             this->writer->write(TEST_NS, inserts, false, &WriteConcern::acknowledged, &result),
             OperationException
         );
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 2}").obj), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 2}")), 1U);
     }
 
     TYPED_TEST(DBClientWriterTest, MultipleOrderedInsertsWithErrorNoConcern) {
@@ -150,8 +150,8 @@ namespace {
         inserts.push_back(&insert2);
         WriteResult result;
         this->writer->write(TEST_NS, inserts, true, &WriteConcern::unacknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 2}").obj), 0U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 2}")), 0U);
     }
 
     TYPED_TEST(DBClientWriterTest, MultipleUnorderedInsertsWithErrorNoConcern) {
@@ -164,8 +164,8 @@ namespace {
         inserts.push_back(&insert2);
         WriteResult result;
         this->writer->write(TEST_NS, inserts, false, &WriteConcern::unacknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 2}").obj), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 2}")), 1U);
     }
 
     TYPED_TEST(DBClientWriterTest, SingleUpdate) {
@@ -178,8 +178,8 @@ namespace {
         updates.push_back(&update);
         WriteResult result;
         this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
     }
 
     TYPED_TEST(DBClientWriterTest, SingleMultiUpdate) {
@@ -192,8 +192,8 @@ namespace {
         updates.push_back(&update);
         WriteResult result;
         this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 0U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 2U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 0U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 2U);
     }
 
     TYPED_TEST(DBClientWriterTest, SingleUpsertDoesUpdate) {
@@ -206,8 +206,8 @@ namespace {
         updates.push_back(&update);
         WriteResult result;
         this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 0U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 2U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 0U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 2U);
     }
 
     TYPED_TEST(DBClientWriterTest, SingleUpsertDoesUpsert) {
@@ -220,8 +220,8 @@ namespace {
         updates.push_back(&update);
         WriteResult result;
         this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 2U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 2U);
     }
 
     TYPED_TEST(DBClientWriterTest, MultipleOrderedUpdates) {
@@ -236,8 +236,8 @@ namespace {
         updates.push_back(&updateB);
         WriteResult result;
         this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 2}").obj), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 2}")), 1U);
     }
 
     TYPED_TEST(DBClientWriterTest, MultipleUnorderedUpdates) {
@@ -252,8 +252,8 @@ namespace {
         updates.push_back(&updateB);
         WriteResult result;
         this->writer->write(TEST_NS, updates, false, &WriteConcern::acknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 2}").obj), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 2}")), 1U);
     }
 
     TYPED_TEST(DBClientWriterTest, MultipleOrderedUpdatesWithError) {
@@ -272,8 +272,8 @@ namespace {
             this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result),
             OperationException
         );
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}").obj), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 1U);
     }
 
     TYPED_TEST(DBClientWriterTest, MultipleUnorderedUpdatesWithError) {
@@ -292,8 +292,8 @@ namespace {
             this->writer->write(TEST_NS, updates, false, &WriteConcern::acknowledged, &result),
             OperationException
         );
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}").obj), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 1U);
     }
 
     TYPED_TEST(DBClientWriterTest, MultipleOrderedUpdatesWithErrorNoConcern) {
@@ -309,8 +309,8 @@ namespace {
         updates.push_back(&updateB);
         WriteResult result;
         this->writer->write(TEST_NS, updates, true, &WriteConcern::unacknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}").obj), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 1U);
     }
 
     TYPED_TEST(DBClientWriterTest, MultipleUnorderedUpdatesWithErrorNoConcern) {
@@ -326,8 +326,8 @@ namespace {
         updates.push_back(&updateB);
         WriteResult result;
         this->writer->write(TEST_NS, updates, false, &WriteConcern::unacknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}").obj), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 1U);
     }
 
     TYPED_TEST(DBClientWriterTest, SingleDelete) {
@@ -341,9 +341,9 @@ namespace {
         deletes.push_back(&delete_op);
         WriteResult result;
         this->writer->write(TEST_NS, deletes, true, &WriteConcern::acknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 0}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 0U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 0U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 0}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 0U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 0U);
     }
 
     TYPED_TEST(DBClientWriterTest, SingleDeleteJustOne) {
@@ -357,9 +357,9 @@ namespace {
         deletes.push_back(&delete_op);
         WriteResult result;
         this->writer->write(TEST_NS, deletes, true, &WriteConcern::acknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 0}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 0U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}").obj), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 0}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 0U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
     }
 
     TYPED_TEST(DBClientWriterTest, MultipleOrderedDeletes) {
@@ -373,11 +373,11 @@ namespace {
         deletes.push_back(&deleteA);
         deletes.push_back(&deleteB);
         WriteResult result;
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}").obj), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 1U);
         this->writer->write(TEST_NS, deletes, true, &WriteConcern::acknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 0U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}").obj), 0U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 0U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 0U);
     }
 
     TYPED_TEST(DBClientWriterTest, MultipleUnorderedDeletes) {
@@ -391,11 +391,11 @@ namespace {
         deletes.push_back(&deleteA);
         deletes.push_back(&deleteB);
         WriteResult result;
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 1U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}").obj), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 1U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 1U);
         this->writer->write(TEST_NS, deletes, false, &WriteConcern::acknowledged, &result);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}").obj), 0U);
-        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}").obj), 0U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 0U);
+        ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 0U);
     }
 
 }

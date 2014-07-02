@@ -90,7 +90,7 @@ namespace {
         ASSERT_TRUE(result.upserted().empty());
         ASSERT_FALSE(result.hasErrors());
 
-        BSONObj doc = this->c->findOne(TEST_NS, Query("{}").obj);
+        BSONObj doc = this->c->findOne(TEST_NS, Query("{}"));
         ASSERT_EQUALS(doc["a"].numberInt(), 1);
     }
 
@@ -113,7 +113,7 @@ namespace {
         ASSERT_TRUE(result.upserted().empty());
         ASSERT_FALSE(result.hasErrors());
 
-        BSONObj doc = this->c->findOne(TEST_NS, Query("{}").obj);
+        BSONObj doc = this->c->findOne(TEST_NS, Query("{}"));
         ASSERT_EQUALS(doc["a"].numberInt(), 1);
     }
 
@@ -128,7 +128,7 @@ namespace {
             bulk.execute(&WriteConcern::acknowledged, &result),
             OperationException
         );
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}").obj), 0U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}")), 0U);
     }
 
     TYPED_TEST(BulkOperationTest, InsertBadKeyUnordered) {
@@ -142,7 +142,7 @@ namespace {
             bulk.execute(&WriteConcern::acknowledged, &result),
             OperationException
         );
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}").obj), 0U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}")), 0U);
     }
 
     TYPED_TEST(BulkOperationTest, UpdateOneMatchingSelector) {
@@ -166,7 +166,7 @@ namespace {
         ASSERT_TRUE(result.upserted().empty());
         ASSERT_FALSE(result.hasErrors());
 
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}").obj), 1U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}")), 1U);
     }
 
     TYPED_TEST(BulkOperationTest, UpdateMultiMatchingSelector) {
@@ -191,7 +191,7 @@ namespace {
         ASSERT_TRUE(result.upserted().empty());
         ASSERT_FALSE(result.hasErrors());
 
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1, x: 1}").obj), 2U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1, x: 1}")), 2U);
     }
 
     TYPED_TEST(BulkOperationTest, UpdateAllDocuments) {
@@ -217,7 +217,7 @@ namespace {
         ASSERT_FALSE(result.hasErrors());
 
 
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}").obj), 3U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}")), 3U);
     }
 
     TYPED_TEST(BulkOperationTest, ReplaceEntireDocument) {
@@ -242,8 +242,8 @@ namespace {
         ASSERT_FALSE(result.hasErrors());
 
 
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}").obj), 1U);
-        ASSERT_FALSE(this->c->findOne(TEST_NS, Query("{x: 1}").obj).hasField("a"));
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}")), 1U);
+        ASSERT_FALSE(this->c->findOne(TEST_NS, Query("{x: 1}")).hasField("a"));
     }
 
     TYPED_TEST(BulkOperationTest, UpsertOneMatchingSelector) {
@@ -268,8 +268,8 @@ namespace {
         ASSERT_TRUE(result.upserted().empty());
         ASSERT_FALSE(result.hasErrors());
 
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}").obj), 1U);
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}").obj), 3U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}")), 1U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}")), 3U);
     }
 
     TYPED_TEST(BulkOperationTest, UpsertOneNotMatchingSelector) {
@@ -293,9 +293,9 @@ namespace {
         ASSERT_EQUALS(result.upserted().size(), 1U);
         ASSERT_FALSE(result.hasErrors());
 
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}").obj), 1U);
-        ASSERT_TRUE(this->c->findOne(TEST_NS, Query("{x: 1}").obj).hasField("a"));
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}").obj), 3U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}")), 1U);
+        ASSERT_TRUE(this->c->findOne(TEST_NS, Query("{x: 1}")).hasField("a"));
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}")), 3U);
     }
 
     TYPED_TEST(BulkOperationTest, UpsertMultiMatchingSelector) {
@@ -320,8 +320,8 @@ namespace {
         ASSERT_TRUE(result.upserted().empty());
         ASSERT_FALSE(result.hasErrors());
 
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}").obj), 2U);
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}").obj), 3U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}")), 2U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}")), 3U);
     }
 
     TYPED_TEST(BulkOperationTest, UpsertMultiNotMatchingSelector) {
@@ -345,9 +345,9 @@ namespace {
         ASSERT_EQUALS(result.upserted().size(), 1U);
         ASSERT_FALSE(result.hasErrors());
 
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}").obj), 1U);
-        ASSERT_TRUE(this->c->findOne(TEST_NS, Query("{x: 1}").obj).hasField("a"));
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}").obj), 3U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}")), 1U);
+        ASSERT_TRUE(this->c->findOne(TEST_NS, Query("{x: 1}")).hasField("a"));
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}")), 3U);
     }
 
     TYPED_TEST(BulkOperationTest, MultipleUpsertsMixedBatchHaveCorrectSequence) {
@@ -391,9 +391,9 @@ namespace {
         ASSERT_TRUE(result.upserted().empty());
         ASSERT_FALSE(result.hasErrors());
 
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}").obj), 1U);
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}").obj), 1U);
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}").obj), 3U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}")), 1U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}")), 1U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}")), 3U);
     }
 
     TYPED_TEST(BulkOperationTest, UpsertReplaceNotMatchingSelector) {
@@ -418,9 +418,9 @@ namespace {
         ASSERT_FALSE(result.hasErrors());
 
         ASSERT_EQUALS(result.nUpserted(), 1);
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}").obj), 1U);
-        ASSERT_FALSE(this->c->findOne(TEST_NS, Query("{x: 1}").obj).hasField("a"));
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}").obj), 3U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{x: 1}")), 1U);
+        ASSERT_FALSE(this->c->findOne(TEST_NS, Query("{x: 1}")).hasField("a"));
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}")), 3U);
     }
 
     TYPED_TEST(BulkOperationTest, RemoveOneMatchingSelector) {
@@ -445,8 +445,8 @@ namespace {
         ASSERT_TRUE(result.upserted().empty());
         ASSERT_FALSE(result.hasErrors());
 
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}").obj), 2U);
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}").obj), 1U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}")), 2U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}")), 1U);
     }
 
     TYPED_TEST(BulkOperationTest, RemoveAllMatchingSelector) {
@@ -471,8 +471,8 @@ namespace {
         ASSERT_TRUE(result.upserted().empty());
         ASSERT_FALSE(result.hasErrors());
 
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}").obj), 1U);
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}").obj), 0U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}")), 1U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}")), 0U);
     }
 
     TYPED_TEST(BulkOperationTest, RemoveAll) {
@@ -498,7 +498,7 @@ namespace {
         ASSERT_TRUE(result.upserted().empty());
         ASSERT_FALSE(result.hasErrors());
 
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}").obj), 0U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}")), 0U);
     }
 
     TYPED_TEST(BulkOperationTest, MultipleOrderedOperations) {
@@ -838,7 +838,7 @@ namespace {
         ASSERT_EQUALS(writeError.getIntField("index"), 6);
         ASSERT_TRUE(writeError.hasField("errmsg"));
 
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query().obj), 6U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query()), 6U);
     }
 
     TYPED_TEST(BulkOperationTest, UnorderedBatchSplitting) {
@@ -879,7 +879,7 @@ namespace {
         ASSERT_EQUALS(writeError.getIntField("index"), 6);
         ASSERT_TRUE(writeError.hasField("errmsg"));
 
-        ASSERT_EQUALS(this->c->count(TEST_NS, Query().obj), 7U);
+        ASSERT_EQUALS(this->c->count(TEST_NS, Query()), 7U);
     }
 
     TYPED_TEST(BulkOperationTest, EmptyBatch) {
