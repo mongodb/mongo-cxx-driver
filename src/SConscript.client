@@ -482,6 +482,8 @@ if buildShared:
         sharedClientProgramInstallDir,
         sharedClientPrograms)
 
+    sharedClientEnv.Depends(sharedClientProgramInstalls, mongoClientSharedLibPrefixInstall)
+
 clientTestPrograms = staticClientPrograms + sharedClientPrograms
 clientEnv.Alias('clientTests', clientTestPrograms)
 
