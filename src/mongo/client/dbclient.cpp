@@ -314,7 +314,7 @@ namespace mongo {
 
         std::set<string>::const_iterator nameIterator;
         for(nameIterator = names.begin(); nameIterator != names.end(); ++nameIterator) {
-            if (nameIterator->find('$') == '0')
+            if (nameIterator->find('$') == 0)
                 complexFields.append(obj.getField(*nameIterator));
         }
 
