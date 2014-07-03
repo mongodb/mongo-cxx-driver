@@ -51,6 +51,7 @@ unittests = [
     'dbtests/mock_dbclient_conn_test',
     'dbtests/mock_replica_set_test',
     'dbtests/replica_set_monitor_test',
+    'geo/geo_test',
     'logger/log_test',
     'platform/atomic_word_test',
     'platform/process_id_test',
