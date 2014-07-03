@@ -64,6 +64,7 @@
 #include "mongo/client/init.h"
 #include "mongo/client/options.h"
 #include "mongo/client/sasl_client_authenticate.h"
+#include "mongo/geo/interface.h"
 #include "mongo/version.h"
 
 #include "mongo/client/undef_macros.h"
