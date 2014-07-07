@@ -556,12 +556,11 @@ elif windows:
         "/wd4800",
     ])
 
-    # some warnings we should treat as errors:
-    # c4099
-    #  identifier' : type name first seen using 'objecttype1' now seen using 'objecttype2'
-    #    This warning occurs when classes and structs are declared with a mix of struct and class
-    #    which can cause linker failures
-    env.Append( CCFLAGS=["/we4099"] )
+    if not has_option("disable-warnings-as-errors"):
+        env.Append(
+            CCFLAGS=["/WX"],
+            LINKFLAGS=["/WX"],
+        )
 
     env.Append( CPPDEFINES=[
         "_CONSOLE",
