@@ -17,6 +17,8 @@
  * This file includes integration testing between the MockDBClientBase and MockRemoteDB.
  */
 
+#include "mongo/platform/basic.h"
+
 #include "mongo/client/dbclientcursor.h"
 #include "mongo/client/dbclientinterface.h"
 #include "mongo/db/jsobj.h"

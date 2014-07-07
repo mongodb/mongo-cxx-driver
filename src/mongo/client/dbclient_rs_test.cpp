@@ -18,6 +18,8 @@
  * the DBClientReplicaSet talks to, so the tests only covers the client side logic.
  */
 
+#include "mongo/platform/basic.h"
+
 #include "mongo/bson/bson_field.h"
 #include "mongo/client/connpool.h"
 #include "mongo/client/dbclientcursor.h"
