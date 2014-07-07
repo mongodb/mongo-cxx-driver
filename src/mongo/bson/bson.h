@@ -55,6 +55,10 @@
 #pragma warning(disable:4275)
 #endif
 
+#if defined(_WIN32) && !defined(_WINSOCK2API_)
+#error "You must include the windows and windows sockets headers before bson.h"
+#endif
+
 #include "mongo/config.h"
 
 #include "mongo/client/redef_macros.h"
