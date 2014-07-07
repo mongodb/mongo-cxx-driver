@@ -108,7 +108,8 @@ namespace {
         for ( int i=4; i<theObject.objsize()-1; i++ ) {
             BSONObj mine = theObject.copy();
 
-            char* data = const_cast<char*>(mine.objdata());
+            unsigned char* data = reinterpret_cast<unsigned char*>(
+                const_cast<char*>(mine.objdata()));
 
             data[ i ] = 200;
 
