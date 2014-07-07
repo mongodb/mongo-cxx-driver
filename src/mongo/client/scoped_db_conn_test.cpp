@@ -14,8 +14,10 @@
  */
 
 #include "mongo/platform/basic.h"
+
 #include "mongo/base/init.h"
 #include "mongo/client/connpool.h"
+#include "mongo/client/dbclientcursor.h"
 #include "mongo/db/dbmessage.h"
 #include "mongo/platform/cstdint.h"
 #include "mongo/util/fail_point_service.h"

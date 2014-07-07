@@ -1604,6 +1604,12 @@ namespace mongo {
         clientSet = rsClient;
     }
 
+    std::auto_ptr<DBClientCursor> DBClientConnection::query(const std::string &ns, Query query, int nToReturn, int nToSkip,
+                                                            const BSONObj *fieldsToReturn, int queryOptions, int batchSize ) {
+        checkConnection();
+        return DBClientBase::query( ns, query, nToReturn, nToSkip, fieldsToReturn, queryOptions , batchSize );
+    }
+
     unsigned long long DBClientConnection::query(
             stdx::function<void(DBClientCursorBatchIterator &)> f,
             const string& ns,

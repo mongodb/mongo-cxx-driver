@@ -1548,10 +1548,7 @@ namespace mongo {
         virtual void logout(const std::string& dbname, BSONObj& info);
 
         virtual std::auto_ptr<DBClientCursor> query(const std::string &ns, Query query=Query(), int nToReturn = 0, int nToSkip = 0,
-                                                    const BSONObj *fieldsToReturn = 0, int queryOptions = 0 , int batchSize = 0 ) {
-            checkConnection();
-            return DBClientBase::query( ns, query, nToReturn, nToSkip, fieldsToReturn, queryOptions , batchSize );
-        }
+                                                    const BSONObj *fieldsToReturn = 0, int queryOptions = 0 , int batchSize = 0 );
 
         virtual unsigned long long query( stdx::function<void(DBClientCursorBatchIterator &)> f,
                                           const std::string& ns,
