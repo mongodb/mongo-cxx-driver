@@ -563,7 +563,14 @@ elif windows:
     #    which can cause linker failures
     env.Append( CCFLAGS=["/we4099"] )
 
-    env.Append( CPPDEFINES=["_CONSOLE","_CRT_SECURE_NO_WARNINGS"] )
+    env.Append( CPPDEFINES=[
+        "_CONSOLE",
+        "_CRT_NONSTDC_NO_WARNINGS",
+        "_CRT_SECURE_NO_WARNINGS",
+        "_CRT_SECURE_NO_DEPRECATE",
+        "_SCL_SECURE_NO_WARNINGS",
+        "_SCL_SECURE_NO_DEPRECATE",
+    ] )
 
     # this would be for pre-compiled headers, could play with it later  
     #env.Append( CCFLAGS=['/Yu"pch.h"'] )
