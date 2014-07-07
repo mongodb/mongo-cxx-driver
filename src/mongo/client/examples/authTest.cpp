@@ -93,7 +93,7 @@ int main( int argc, const char **argv ) {
         // Shouldn't get here.
         cout << "Authentication with invalid password should have failed but didn't" << endl;
         return EXIT_FAILURE;
-    } catch (const DBException& e) {
+    } catch (const DBException&) {
         // expected
     }
     return EXIT_SUCCESS;

@@ -180,7 +180,7 @@ int main( int argc, const char **argv ) {
         // upsert
         try {
             conn.update( ns , BSONObjBuilder().append( "name" , "eliot2" ).obj() , after , UpdateOption_Upsert );
-        } catch (OperationException& oe) {
+        } catch (OperationException&) {
             // This upsert throws an OperationException because of a duplicate key error:
             // The upserted document has the same _id as one already in the collection
         }

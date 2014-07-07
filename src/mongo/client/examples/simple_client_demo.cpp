@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
 
         try {
             c.insert("test.foo", o); // will cause a dup key error on "hello" field
-        } catch (const OperationException &oe) {
+        } catch (const OperationException &) {
             // duplicate key error
         }
         cout << "we expect a dup key error here:" << endl;
