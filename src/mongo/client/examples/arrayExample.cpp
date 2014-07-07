@@ -13,11 +13,19 @@
  *    limitations under the License.
  */
 
+// It is the responsibility of the mongo client consumer to ensure that any necessary windows
+// headers have already been included before including the driver facade headers.
+#if defined(_WIN32)
+#include <winsock2.h>
+#include <windows.h>
+#endif
+
+#include "mongo/bson/bson.h"
 
 #include <iostream>
 #include <list>
 #include <vector>
-#include "mongo/bson/bson.h"
+
 
 using mongo::BSONArray;
 using mongo::BSONArrayBuilder;

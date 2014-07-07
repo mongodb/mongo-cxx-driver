@@ -19,11 +19,18 @@
  * example of using replica sets from c++
  */
 
+// It is the responsibility of the mongo client consumer to ensure that any necessary windows
+// headers have already been included before including the driver facade headers.
+#if defined(_WIN32)
+#include <winsock2.h>
+#include <windows.h>
+#endif
+
+#include "mongo/client/dbclient.h"
+
 #include <iostream>
 #include <vector>
 #include <boost/thread/thread.hpp>
-
-#include "mongo/client/dbclient.h"
 
 using namespace mongo;
 using namespace std;

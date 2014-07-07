@@ -30,6 +30,13 @@
     Windows: project files are available in this directory for bsondemo.cpp for use with Visual Studio.
 */
 
+// It is the responsibility of the mongo client consumer to ensure that any necessary windows
+// headers have already been included before including the driver facade headers.
+#if defined(_WIN32)
+#include <winsock2.h>
+#include <windows.h>
+#endif
+
 #include "mongo/client/dbclient.h"
 
 #include <iostream>

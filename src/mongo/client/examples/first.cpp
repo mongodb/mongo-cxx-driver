@@ -19,10 +19,17 @@
  * this is a good first example of how to use mongo from c++
  */
 
-#include <iostream>
-#include <cstdlib>
+// It is the responsibility of the mongo client consumer to ensure that any necessary windows
+// headers have already been included before including the driver facade headers.
+#if defined(_WIN32)
+#include <winsock2.h>
+#include <windows.h>
+#endif
 
 #include "mongo/client/dbclient.h"
+
+#include <iostream>
+#include <cstdlib>
 
 using namespace std;
 
