@@ -20,6 +20,8 @@
  * The primary entry point at runtime is saslClientAuthenticateImpl().
  */
 
+#include "mongo/platform/basic.h"
+
 #include <boost/scoped_ptr.hpp>
 #include <string>
 

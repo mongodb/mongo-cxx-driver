@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/platform/basic.h"
+
 #include "mongo/client/sasl_client_authenticate.h"
 
 #include <string>

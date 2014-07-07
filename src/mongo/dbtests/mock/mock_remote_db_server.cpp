@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/platform/basic.h"
+
 #include "mongo/dbtests/mock/mock_remote_db_server.h"
 
 #include "mongo/dbtests/mock/mock_dbclient_connection.h"

@@ -15,6 +15,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/platform/basic.h"
+
 #include "mongo/db/dbmessage.h"
 
 #include "mongo/client/private/options.h"

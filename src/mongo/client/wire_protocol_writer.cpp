@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/platform/basic.h"
+
 #include "mongo/client/wire_protocol_writer.h"
 
 #include "mongo/client/dbclientinterface.h"

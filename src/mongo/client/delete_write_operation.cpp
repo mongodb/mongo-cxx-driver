@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/platform/basic.h"
+
 #include "mongo/client/delete_write_operation.h"
 
 #include "mongo/client/dbclientinterface.h"

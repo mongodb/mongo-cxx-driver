@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/platform/basic.h"
+
 #include "mongo/client/dbclientcursorshimarray.h"
 #include "mongo/client/dbclientcursor.h"
 

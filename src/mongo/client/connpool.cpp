@@ -18,6 +18,8 @@
 
 // _ todo: reconnect?
 
+#include "mongo/platform/basic.h"
+
 #include "mongo/client/connpool.h"
 
 #include <boost/thread/locks.hpp>

@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/platform/basic.h"
+
 #include <algorithm>
 #include <fstream>
 #include <sstream>

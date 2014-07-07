@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/platform/basic.h"
+
 #include "mongo/unittest/integration_test.h"
 #include "mongo/client/dbclient.h"
 
