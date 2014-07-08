@@ -300,14 +300,12 @@ if releaseBuild and (debugBuild or not optBuild):
 mongoclientVersion = "1.0.0-rc0-pre"
 # We don't keep the -pre in the user testable version identifiers, because
 # nobody should be conditioning on the pre-release status.
-mongoclientVersionComponents = mongoclientVersion.split('-')
-if len(mongoclientVersionComponents) not in (1,2):
-    print("Error: client version most be of the form w.x.y or w.x.y-string")
+mongoclientVersionComponents = re.split(r'\.|-rc', mongoclientVersion.partition('-pre')[0])
+if len(mongoclientVersionComponents) not in (3,4):
+    print("Error: client version most be of the form w.x.y[-rcz][-string]")
     Exit(1)
-mongoclientVersionComponents = mongoclientVersionComponents[0].split('.')
-if len(mongoclientVersionComponents) != 3:
-    print("Error: client version most be of the form w.x.y or w.x.y-string")
-    Exit(1)
+
+mongoclientVersionRC = mongoclientVersionComponents[3:][0]
 
 env = Environment( BUILD_DIR=buildDir,
                    VARIANT_DIR=variantDir,
@@ -323,6 +321,7 @@ env = Environment( BUILD_DIR=buildDir,
                    MONGOCLIENT_VERSION_MAJOR=mongoclientVersionComponents[0],
                    MONGOCLIENT_VERSION_MINOR=mongoclientVersionComponents[1],
                    MONGOCLIENT_VERSION_PATCH=mongoclientVersionComponents[2],
+                   MONGOCLIENT_VERSION_RC=mongoclientVersionRC,
                    INSTALL_DIR=get_option("prefix"),
                    )
 
