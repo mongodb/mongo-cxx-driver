@@ -305,8 +305,6 @@ if len(mongoclientVersionComponents) not in (3,4):
     print("Error: client version most be of the form w.x.y[-rcz][-string]")
     Exit(1)
 
-mongoclientVersionRC = mongoclientVersionComponents[3:][0]
-
 env = Environment( BUILD_DIR=buildDir,
                    VARIANT_DIR=variantDir,
                    EXTRAPATH=get_option("extrapath"),
@@ -321,7 +319,6 @@ env = Environment( BUILD_DIR=buildDir,
                    MONGOCLIENT_VERSION_MAJOR=mongoclientVersionComponents[0],
                    MONGOCLIENT_VERSION_MINOR=mongoclientVersionComponents[1],
                    MONGOCLIENT_VERSION_PATCH=mongoclientVersionComponents[2],
-                   MONGOCLIENT_VERSION_RC=mongoclientVersionRC,
                    INSTALL_DIR=get_option("prefix"),
                    )
 

@@ -188,9 +188,8 @@ namespace mongo {
                 if ((client_fd = ::accept(_fd, client_sa.get_address(), &client_sa.size)) == -1) {
                     perror("accept");
                     std::abort();
-                } else {
-                    return new TCPSocket(client_sa, client_fd);
                 }
+                return new TCPSocket(client_sa, client_fd);
             }
 
         private:
