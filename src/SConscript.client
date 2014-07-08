@@ -6,7 +6,7 @@ import os
 import buildscripts.git
 
 Import('env has_option get_option')
-Import('nix linux darwin windows')
+Import('nix linux darwin windows mingw')
 
 buildShared = False
 if has_option("sharedclient"):
@@ -282,7 +282,7 @@ staticLibEnv.AppendUnique(
 sharedLibName = 'mongoclient'
 staticLibName = 'mongoclient'
 
-if windows:
+if windows and not mingw:
     # On Windows, we need to have the static library target and the
     # import library target have different names, so that they aren't
     # ambiguous to scons.  Boost names the static library libxxxx.lib and
@@ -300,6 +300,8 @@ if windows:
         abi_adornment = '-' + abi_adornment
         sharedLibName = sharedLibName + abi_adornment
         staticLibName = staticLibName + abi_adornment
+if mingw:
+    staticLibName = 'libmongoclient'
 
 mongoClientStaticLib = staticLibEnv.StaticLibrary(
     staticLibName, clientSource),
@@ -328,12 +330,14 @@ if buildShared:
 
     # On non-windows systems, we want to match the behavior of DLLs and not export all symbols
     # from the dynamic shared library unless they have been explicitly been marked.
-    if not windows:
+    if not windows or mingw:
         sharedLibEnv.AppendUnique(CCFLAGS="-fvisibility=hidden")
         sharedLibEnv.AppendUnique(SHLINKFLAGS="-fvisibility=hidden")
 
-    mongoClientSharedLib = sharedLibEnv.SharedLibrary(sharedLibName, clientSource)
-
+    if mingw:
+        mongoClientSharedLib = sharedLibEnv.SharedLibrary(sharedLibName, clientSource, SHLIBPREFIX='lib',LIBSUFFIX='.dll.a')
+    else:
+        mongoClientSharedLib = sharedLibEnv.SharedLibrary(sharedLibName, clientSource)
     if darwin:
         # Set up the copy of the client library we will link targets against so that those
         # targets record the relative target directory as the install_name.
@@ -402,8 +406,8 @@ staticClientEnv = clientEnv.Clone()
 
 # On windows, we rely on autolib linking, so need to set a search path to the root of the build
 # dir where the .lib will go. On others, we just add the library to libs.
-if windows:
-    staticClientEnv.PrependUnique(LIBPATH=['$VARIANT_DIR'])
+if windows and not mingw:
+    staticClientEnv.PrependUnique(LIBPATH=['$VARIANT_DIR'])        
 else:
     staticClientEnv.PrependUnique(LIBS=[mongoClientStaticLib])
 
@@ -439,7 +443,7 @@ if buildShared:
 
     # On windows, we rely on autolib linking, so add the variant directory (where the .lib will
     # land) to the search path. Otherwise, just link directly to the binary.
-    if windows:
+    if windows and not mingw:
         sharedClientEnv.PrependUnique(
             LIBPATH=['$VARIANT_DIR']
         )
@@ -463,7 +467,8 @@ if buildShared:
             sharedClientEnv.PrependUnique(
                 LINKFLAGS="-Wl,-z,origin",
                 RPATH=[sharedClientEnv.Literal("\\$$ORIGIN/../../../lib")])
-
+    if mingw:    
+        sharedClientEnv.PrependUnique(RPATH=[sharedClientEnv.Literal("\\$$ORIGIN/../../../lib")])
     sharedClientPrograms = [
         sharedClientEnv.Program(
             "sharedclient/" + target, source) for (target, source) in exampleSourceMap]
@@ -474,7 +479,7 @@ if buildShared:
     # For normal systems with runpaths, install the examples somewhere sane. Otherwise on
     # windows, drop them in the lib directory because there really isn't anywher else they can
     # live where they can find the DLL.
-    sharedClientProgramInstallDir = "$INSTALL_DIR/share/mongo-cxx-driver/examples"
+    sharedClientProgramInstallDir = "$INSTALL_DIR/share/mongo-cxx-driver/examples/shared"
     if windows:
         sharedClientProgramInstallDir = "$INSTALL_DIR/lib"
 

@@ -27,7 +27,7 @@ namespace mongo {
 namespace {
     boost::thread_specific_ptr<std::string> _threadName;
 
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(__GNUC__)
 
 #define MS_VC_EXCEPTION 0x406D1388
 #pragma pack(push,8)
