@@ -1,13 +1,17 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
+# Directories that are generated
+/build
+/docs
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
+/callgrind.out.*
+/massif.out.*
+
+*~
+*.pyc
+*#
+.#*
+
+#osx
+.DS_Store
+._.DS_Store
+*.fuse_*
