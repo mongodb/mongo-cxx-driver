@@ -21,6 +21,7 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 #include <boost/thread/tss.hpp>
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -38,9 +39,11 @@
 #include <openssl/x509v3.h>
 #endif
 
+using std::endl;
+
 namespace mongo {
 
-    using std::endl;
+    MONGO_LOG_DEFAULT_COMPONENT_FILE(::mongo::logger::LogComponent::kNetworking);
 
 #ifndef MONGO_SSL   
     const std::string getSSLVersion(const std::string &prefix, const std::string &suffix) {

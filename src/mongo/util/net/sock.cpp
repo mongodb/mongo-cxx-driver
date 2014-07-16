@@ -38,6 +38,7 @@
 #include "mongo/util/debug_util.h"
 #include "mongo/util/fail_point_service.h"
 #include "mongo/util/mongoutils/str.h"
+#include "mongo/util/log.h"
 #include "mongo/util/net/message.h"
 #include "mongo/util/net/ssl_manager.h"
 #include "mongo/util/net/socket_poll.h"
@@ -49,6 +50,8 @@ namespace mongo {
     using std::string;
     using std::stringstream;
     using std::vector;
+
+    MONGO_LOG_DEFAULT_COMPONENT_FILE(::mongo::logger::LogComponent::kNetworking);
 
     MONGO_FP_DECLARE(throwSockExcep);
     MONGO_FP_DECLARE(notStillConnected);

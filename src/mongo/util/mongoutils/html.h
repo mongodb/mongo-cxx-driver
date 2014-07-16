@@ -17,16 +17,9 @@
 
 #pragma once
 
-/* Things in the mongoutils namespace
-   (1) are not database specific, rather, true utilities
-   (2) are cross platform
-   (3) may require boost headers, but not libs
-   (4) are clean and easy to use in any c++ project without pulling in lots of other stuff
-*/
-
 #include <sstream>
 
-namespace mongoutils {
+namespace mongo {
 
     namespace html {
 

@@ -42,6 +42,8 @@ namespace mongo {
 
     using std::endl;
 
+    MONGO_LOG_DEFAULT_COMPONENT_FILE(::mongo::logger::LogComponent::kNetworking);
+
 namespace {
 
     // Default log level on the client for SASL log messages.

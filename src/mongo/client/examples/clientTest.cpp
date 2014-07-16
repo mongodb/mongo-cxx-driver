@@ -82,7 +82,8 @@ int main( int argc, const char **argv ) {
     // Logging setup example:
 
     // Acquire the global log domain from the global log manager.
-    logger::MessageLogDomain* globalLogDomain = logger::globalLogManager()->getGlobalDomain();
+    logger::ComponentMessageLogDomain* globalLogDomain =
+        logger::globalLogManager()->getGlobalDomain();
 
     // Create a new OstreamAppender that logs to std::clog, and inject it into the global log
     // manager. Since the manager, by default, does not have any appenders we don't normally

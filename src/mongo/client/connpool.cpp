@@ -25,8 +25,11 @@
 #include <boost/thread/locks.hpp>
 
 #include "mongo/client/replica_set_monitor.h"
+#include "mongo/util/log.h"
 
 namespace mongo {
+
+    MONGO_LOG_DEFAULT_COMPONENT_FILE(::mongo::logger::LogComponent::kNetworking);
 
     using std::endl;
     using std::list;
@@ -264,7 +267,19 @@ namespace mongo {
         return _finishCreate( host , socketTimeout , c );
     }
 
+    void DBConnectionPool::onRelease(DBClientBase* conn) {
+        if (_hooks->empty()) {
+            return;
+        }
+
+        for (list<DBConnectionHook*>::iterator i = _hooks->begin(); i != _hooks->end(); i++) {
+            (*i)->onRelease( conn );
+        }
+    }
+
     void DBConnectionPool::release(const string& host, DBClientBase *c) {
+        onRelease(c);
+
         boost::lock_guard<boost::mutex> L(_mutex);
         _pools[PoolKey(host,c->getSoTimeout())].done(this,c);
     }

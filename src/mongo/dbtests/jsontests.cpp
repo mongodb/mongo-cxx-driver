@@ -2616,6 +2616,41 @@ namespace JsonTests {
             }
         }; DBTEST_SHIM_TEST(NullFieldUnquoted);
 
+        class MinKeyAlone : public Bad {
+            virtual string json() const {
+                return "{ \"$minKey\" : 1 }";
+            }
+        }; DBTEST_SHIM_TEST(MinKeyAlone);
+
+        class MaxKeyAlone : public Bad {
+            virtual string json() const {
+                return "{ \"$maxKey\" : 1 }";
+            }
+        }; DBTEST_SHIM_TEST(MaxKeyAlone);
+
+        class MinKey : public Base {
+            virtual BSONObj bson() const {
+                BSONObjBuilder b;
+                b.appendMinKey("a");
+                return b.obj();
+            }
+            virtual string json() const {
+                return "{ \"a\" : { \"$minKey\" : 1 } }";
+            }
+        }; DBTEST_SHIM_TEST(MinKey);
+
+        class MaxKey : public Base {
+            virtual BSONObj bson() const {
+                BSONObjBuilder b;
+                b.appendMaxKey("a");
+                return b.obj();
+            }
+            virtual string json() const {
+                return "{ \"a\" : { \"$maxKey\" : 1 } }";
+            }
+        }; DBTEST_SHIM_TEST(MaxKey);
+
+
     } // namespace FromJsonTests
 
     // class All : public Suite {
@@ -2684,6 +2719,8 @@ namespace JsonTests {
     //         add< FromJsonTests::Subobject >();
     //         add< FromJsonTests::DeeplyNestedObject >();
     //         add< FromJsonTests::ArrayEmpty >();
+    //         add< FromJsonTests::TopLevelArrayEmpty >();
+    //         add< FromJsonTests::TopLevelArray >();
     //         add< FromJsonTests::Array >();
     //         add< FromJsonTests::True >();
     //         add< FromJsonTests::False >();
@@ -2875,6 +2912,8 @@ namespace JsonTests {
     //         add< FromJsonTests::EmbeddedDatesFormat3 >();
     //         add< FromJsonTests::NullString >();
     //         add< FromJsonTests::NullFieldUnquoted >();
+    //         add< FromJsonTests::MinKey >();
+    //         add< FromJsonTests::MaxKey >();
     //     }
     // } myall;
 

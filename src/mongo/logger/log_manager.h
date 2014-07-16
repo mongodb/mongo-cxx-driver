@@ -18,7 +18,7 @@
 #include <string>
 
 #include "mongo/base/disallow_copying.h"
-#include "mongo/logger/message_log_domain.h"
+#include "mongo/logger/component_message_log_domain.h"
 #include "mongo/platform/unordered_map.h"
 
 namespace mongo {
@@ -38,7 +38,7 @@ namespace logger {
         /**
          * Gets the global domain for this manager.  It has no name.
          */
-        MessageLogDomain* getGlobalDomain() { return &_globalDomain; }
+        ComponentMessageLogDomain* getGlobalDomain() { return &_globalDomain; }
 
         /**
          * Get the log domain with the given name, creating if needed.
@@ -49,7 +49,7 @@ namespace logger {
         typedef unordered_map<std::string, MessageLogDomain*> DomainsByNameMap;
 
         DomainsByNameMap _domains;
-        MessageLogDomain _globalDomain;
+        ComponentMessageLogDomain _globalDomain;
     };
 
 }  // namespace logger

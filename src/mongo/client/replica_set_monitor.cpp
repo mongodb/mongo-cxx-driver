@@ -26,11 +26,13 @@
 #include <boost/thread/mutex.hpp>
 
 #include "mongo/client/connpool.h"
+#include "mongo/client/options.h"
 #include "mongo/client/private/options.h"
 #include "mongo/client/replica_set_monitor_internal.h"
 #include "mongo/util/concurrency/mutex.h" // for StaticObserver
 #include "mongo/util/background.h"
 #include "mongo/util/debug_util.h"
+#include "mongo/util/log.h"
 #include "mongo/util/string_map.h"
 #include "mongo/util/timer.h"
 
@@ -47,6 +49,8 @@ namespace mongo {
     using std::numeric_limits;
     using std::string;
     using std::set;
+
+    MONGO_LOG_DEFAULT_COMPONENT_FILE(::mongo::logger::LogComponent::kNetworking);
 
 namespace {
     // Pull nested types to top-level scope
@@ -356,7 +360,8 @@ namespace {
         replicaSetMonitorWatcher.safeGo();
     }
 
-    ReplicaSetMonitorPtr ReplicaSetMonitor::get(const string& name, const bool createFromSeed) {
+    ReplicaSetMonitorPtr ReplicaSetMonitor::get(const string& name,
+                                                const bool createFromSeed) {
         LOG(3) << "ReplicaSetMonitor::get " << name;
         boost::lock_guard<boost::mutex> lk( setsLock );
         StringMap<ReplicaSetMonitorPtr>::const_iterator i = sets.find( name );

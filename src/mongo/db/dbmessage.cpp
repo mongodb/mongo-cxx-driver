@@ -19,6 +19,7 @@
 
 #include "mongo/db/dbmessage.h"
 
+#include "mongo/client/options.h"
 #include "mongo/client/private/options.h"
 
 namespace mongo {

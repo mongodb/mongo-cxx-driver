@@ -22,7 +22,6 @@
 //#include "mongo/db/structure/btree/key.h"
 //#include "mongo/dbtests/dbtests.h"
 #include "mongo/platform/float_utils.h"
-//#include "mongo/util/mongoutils/checksum.h"
 #include "mongo/unittest/unittest.h"
 #include "mongo/util/stringutils.h"
 
@@ -2098,15 +2097,6 @@ namespace JsobjTests {
                 //int millis = t.millis();
                 //cout << "toString : " << millis << endl;
             }
-
-            {
-	            //Timer t;
-                //for ( int i=0; i<N; i++ )
-                //    checksum( x.objdata() , x.objsize() );
-                //int millis = t.millis();
-                //cout << "checksum : " << millis << endl;
-            }
-
         }
     }; DBTEST_SHIM_TEST(HashingTest);
 

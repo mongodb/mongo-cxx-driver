@@ -1,5 +1,3 @@
-// hostandport.h
-
 /*    Copyright 2009 10gen Inc.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,143 +15,91 @@
 
 #pragma once
 
+#include <iosfwd>
+#include <string>
+
 #include "mongo/bson/util/builder.h"
-#include "mongo/client/options.h"
-#include "mongo/util/log.h"
-#include "mongo/util/mongoutils/str.h"
-#include "mongo/util/net/sock.h"
+#include "mongo/base/status.h"
+#include "mongo/base/status_with.h"
 
 namespace mongo {
+    class StringData;
 
-    using namespace mongoutils;
+    /**
+     * Name of a process on the network.
+     *
+     * Composed of some name component, followed optionally by a colon and a numeric port.  The name
+     * might be an IPv4 or IPv6 address or a relative or fully qualified host name, or an absolute
+     * path to a unix socket.
+     */
+    struct MONGO_CLIENT_API HostAndPort {
 
-    /** helper for manipulating host:port connection endpoints.
-      */
-    struct HostAndPort {
-        HostAndPort() : _port(-1) { }
+        /**
+         * Parses "text" to produce a HostAndPort.  Returns either that or an error
+         * status describing the parse failure.
+         */
+        static StatusWith<HostAndPort> MONGO_CLIENT_FUNC parse(const StringData& text);
 
-        /** From a string hostname[:portnumber]
-            Throws user assertion if bad config string or bad port #.
-        */
-        HostAndPort(const std::string& s);
+        /**
+         * Construct an empty/invalid HostAndPort.
+         */
+        HostAndPort();
 
-        /** @param p port number. -1 is ok to use default. */
-        HostAndPort(const std::string& h, int p /*= -1*/) : _host(h), _port(p) { 
-            verify(!mongoutils::str::startsWith(h, '#'));
-        }
+        /**
+         * Constructs a HostAndPort by parsing "text" of the form hostname[:portnumber]
+         * Throws an AssertionException if bad config std::string or bad port #.
+         */
+        explicit HostAndPort(const StringData& text);
 
-        HostAndPort(const SockAddr& sock ) : _host( sock.getAddr() ) , _port( sock.getPort() ) { }
+        /**
+         * Constructs a HostAndPort with the hostname "h" and port "p".
+         *
+         * If "p" is -1, port() returns ServerGlobalParams::DefaultDBPort.
+         */
+        HostAndPort(const std::string& h, int p);
 
-        bool operator<(const HostAndPort& r) const {
-            const int cmp = host().compare(r.host());
-            if (cmp)
-                return cmp < 0;
-            return port() < r.port();
-        }
-
-        bool operator==(const HostAndPort& r) const { 
-            return host() == r.host() && port() == r.port();
-        }
-
+        bool operator<(const HostAndPort& r) const;
+        bool operator==(const HostAndPort& r) const;
         bool operator!=(const HostAndPort& r) const { return !(*this == r); }
 
-        /* returns true if the host/port combo identifies this process instance. */
-        bool isSelf() const; // defined in isself.cpp
-
+        /**
+         * Returns true if the hostname looks localhost-y.
+         *
+         * TODO: Make a more rigorous implementation, perhaps elsewhere in
+         * the networking library.
+         */
         bool isLocalHost() const;
 
         /**
-         * @param includePort host:port if true, host otherwise
+         * Returns a string representation of "host:port".
          */
-        std::string toString( bool includePort=true ) const;
+        std::string toString() const;
 
-        operator std::string() const { return toString(); }
-
+        /**
+         * Like toString(), above, but writes to "ss", instead.
+         */
         void append( StringBuilder& ss ) const;
 
-        bool empty() const {
-            return _host.empty() && _port < 0;
-        }
+        /**
+         * Returns true if this object represents no valid HostAndPort.
+         */
+        bool empty() const;
+
         const std::string& host() const {
             return _host;
         }
-        int port() const {
-            if (hasPort())
-                return _port;
-            return client::Options::kDbServer;
-        }
+        int port() const;
+
         bool hasPort() const {
             return _port >= 0;
         }
-        void setPort( int port ) {
-            _port = port;
-        }
 
     private:
-        void init(const char *);
+        Status initialize(const StringData& s);
         std::string _host;
         int _port; // -1 indicates unspecified
     };
 
-    inline std::string HostAndPort::toString( bool includePort ) const {
-        if ( ! includePort )
-            return host();
+    MONGO_CLIENT_API std::ostream& MONGO_CLIENT_FUNC operator<<(std::ostream& os, const HostAndPort& hp);
 
-        StringBuilder ss;
-        append( ss );
-        return ss.str();
-    }
-
-    inline void HostAndPort::append( StringBuilder& ss ) const {
-        ss << host();
-
-        int p = port();
-
-        if ( p != -1 ) {
-            ss << ':';
-#if defined(_DEBUG)
-            if( p >= 44000 && p < 44100 ) {
-                log() << "warning: special debug port 44xxx used" << std::endl;
-                ss << p+1;
-            }
-            else
-                ss << p;
-#else
-            ss << p;
-#endif
-        }
-
-    }
-
-
-    inline bool HostAndPort::isLocalHost() const {
-        std::string _host = host();
-        return (  _host == "localhost"
-               || mongoutils::str::startsWith(_host.c_str(), "127.")
-               || _host == "::1"
-               || _host == "anonymous unix socket"
-               || _host.c_str()[0] == '/' // unix socket
-               );
-    }
-
-    inline void HostAndPort::init(const char *p) {
-        massert(13110, "HostAndPort: host is empty", *p);
-        const char *colon = strrchr(p, ':');
-        if( colon ) {
-            int port = atoi(colon+1);
-            massert(13095, "HostAndPort: bad port #", port > 0);
-            _host = std::string(p,colon-p);
-            _port = port;
-        }
-        else {
-            // no port specified.
-            _host = p;
-            _port = -1;
-        }
-    }
-
-    inline HostAndPort::HostAndPort(const std::string& s) {
-        init(s.c_str());
-    }
-
-}
+}  // namespace mongo

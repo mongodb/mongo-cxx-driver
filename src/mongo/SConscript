@@ -55,6 +55,7 @@ unittests = [
     'platform/atomic_word_test',
     'platform/process_id_test',
     'platform/random_test',
+    'util/net/hostandport_test',
     'util/net/sock_test',
     'util/stringutils_test',
     'util/time_support_test',

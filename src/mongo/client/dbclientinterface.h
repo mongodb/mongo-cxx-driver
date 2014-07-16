@@ -35,6 +35,7 @@
 #include "mongo/logger/log_severity.h"
 #include "mongo/platform/atomic_word.h"
 #include "mongo/stdx/functional.h"
+#include "mongo/util/mongoutils/str.h"
 #include "mongo/util/net/message.h"
 #include "mongo/util/net/message_port.h"
 
@@ -290,7 +291,7 @@ namespace mongo {
         static ConnectionString mock( const HostAndPort& server ) {
             ConnectionString connStr;
             connStr._servers.push_back( server );
-            connStr._string = server.toString( true );
+            connStr._string = server.toString();
             return connStr;
         }
 
@@ -1464,6 +1465,8 @@ namespace mongo {
             return INVALID_SOCK_CREATION_TIME;
         }
 
+        virtual void reset() {}
+
     }; // DBClientBase
 
     class DBClientReplicaSet;
@@ -1523,6 +1526,11 @@ namespace mongo {
            @return false if fails to connect.
         */
         virtual bool connect(const HostAndPort& server, std::string& errmsg);
+
+        /** Compatibility connect now that HostAndPort has an explicit constructor */
+        bool connect(const std::string& server, std::string& errmsg) {
+            return connect(HostAndPort(server), errmsg);
+        }
 
         /** Connect to a Mongo database server.  Exception throwing version.
             Throws a UserException if cannot connect.

@@ -37,6 +37,8 @@
 using namespace std;
 namespace mongo {
 
+    MONGO_LOG_DEFAULT_COMPONENT_FILE(::mongo::logger::LogComponent::kCommands);
+
     namespace {
 
         class PeriodicTaskRunner : public BackgroundJob {

@@ -27,6 +27,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <mongo/base/status_with.h>
 #include <mongo/util/mongoutils/str.h>
 
 #define ASSERT ASSERT_TRUE
@@ -55,6 +56,18 @@ namespace mongo {
                 tearDown();
             }
         };
+
+        /**
+         * Get the value out of a StatusWith<T>, or throw an exception if it is not OK.
+         */
+        template <typename T>
+        const T& assertGet(const StatusWith<T>& swt) {
+            if (!swt.getStatus().isOK())
+                ::abort();
+            return swt.getValue();
+        }
+
+
     } // unittest
 } // mongo
 

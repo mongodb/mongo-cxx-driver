@@ -19,6 +19,7 @@
 
 #include "mongo/base/status.h"
 #include "mongo/bson/util/builder.h"
+#include "mongo/logger/log_component.h"
 #include "mongo/logger/logger.h"
 #include "mongo/logger/logstream_builder.h"
 #include "mongo/logger/tee.h"
@@ -73,11 +74,24 @@ namespace logger {
     }
 
 
+// MONGO_LOG uses log component from MongoLogDefaultComponent from current or global namespace.
 #define MONGO_LOG(DLEVEL) \
-    if (!(::mongo::logger::globalLogDomain())->shouldLog(::mongo::LogstreamBuilder::severityCast(DLEVEL))) {} \
+    if (!(::mongo::logger::globalLogDomain())->shouldLog(MongoLogDefaultComponent_component, ::mongo::LogstreamBuilder::severityCast(DLEVEL))) {} \
     else LogstreamBuilder(::mongo::logger::globalLogDomain(), getThreadName(), ::mongo::LogstreamBuilder::severityCast(DLEVEL))
 
 #define LOG MONGO_LOG
+
+#define MONGO_LOG_COMPONENT(DLEVEL, COMPONENT1) \
+    if (!(::mongo::logger::globalLogDomain())->shouldLog((COMPONENT1), ::mongo::LogstreamBuilder::severityCast(DLEVEL))) {} \
+    else LogstreamBuilder(::mongo::logger::globalLogDomain(), getThreadName(), ::mongo::LogstreamBuilder::severityCast(DLEVEL))
+
+#define MONGO_LOG_COMPONENT2(DLEVEL, COMPONENT1, COMPONENT2) \
+    if (!(::mongo::logger::globalLogDomain())->shouldLog((COMPONENT1), (COMPONENT2), ::mongo::LogstreamBuilder::severityCast(DLEVEL))) {} \
+    else LogstreamBuilder(::mongo::logger::globalLogDomain(), getThreadName(), ::mongo::LogstreamBuilder::severityCast(DLEVEL))
+
+#define MONGO_LOG_COMPONENT3(DLEVEL, COMPONENT1, COMPONENT2, COMPONENT3) \
+    if (!(::mongo::logger::globalLogDomain())->shouldLog((COMPONENT1), (COMPONENT2), (COMPONENT3), ::mongo::LogstreamBuilder::severityCast(DLEVEL))) {} \
+    else LogstreamBuilder(::mongo::logger::globalLogDomain(), getThreadName(), ::mongo::LogstreamBuilder::severityCast(DLEVEL))
 
 
     /** output the error # and error message with prefix.
@@ -93,3 +107,24 @@ namespace logger {
     void logContext(const char *msg = NULL);
 
 } // namespace mongo
+
+/**
+ * Defines default log component for MONGO_LOG.
+ * Use this macro inside an implementation namespace or code block where debug messages
+ * are logged using MONGO_LOG().
+ *
+ * Note: Do not use more than once inside any namespace/code block.
+ *       Using static function instead of enum to support use inside function code block.
+ */
+#define MONGO_LOG_DEFAULT_COMPONENT_FILE(COMPONENT) \
+    static const ::mongo::logger::LogComponent MongoLogDefaultComponent_component = (COMPONENT);
+
+/**
+ * MONGO_LOG_DEFAULT_COMPONENT for local code block.
+ */
+#define MONGO_LOG_DEFAULT_COMPONENT_LOCAL(COMPONENT) \
+    const ::mongo::logger::LogComponent MongoLogDefaultComponent_component = (COMPONENT);
+
+// Provide log component in global scope so that MONGO_LOG will always have a valid component.
+const ::mongo::logger::LogComponent MongoLogDefaultComponent_component =
+    ::mongo::logger::LogComponent::kDefault;

@@ -20,8 +20,10 @@ int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
     const mongo::Status status = mongo::client::initialize();
-    if (!status.isOK())
+    if (!status.isOK()) {
+        std::cerr << "unit test failed to initialize the client: " << status << '\n';
         ::abort();
+    }
 
     return RUN_ALL_TESTS();
 }

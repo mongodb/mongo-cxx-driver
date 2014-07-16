@@ -27,7 +27,7 @@
 #include <openssl/err.h>
 #include <openssl/ssl.h>
 
-#endif
+#endif // #ifdef MONGO_SSL
 
 namespace mongo {
     /*
