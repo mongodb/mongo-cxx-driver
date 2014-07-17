@@ -372,7 +372,7 @@ namespace {
             try {
                 conn->logout(i->first, response);
             }
-            catch (const UserException& ex) {
+            catch (const UserException&) {
                 warning() << "Failed to logout: " << conn->getServerAddress() <<
                     " on db: " << i->first << endl;
             }
