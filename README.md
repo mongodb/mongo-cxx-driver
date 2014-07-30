@@ -1,10 +1,16 @@
 # MongoDB C++ Driver [![Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=legacy)](https://travis-ci.org/mongodb/mongo-cxx-driver)
 Welcome to the MongoDB C++ Driver!
 
-> **WARNING:** This branch is under active development, if you are looking for a production ready release of the C++ driver you should use the 26compat branch for the time being.
+  Version [1.0.0-rc0](https://github.com/mongodb/mongo-cxx-driver/releases/tag/legacy-1.0.0-rc0)
+  of the C++ legacy driver has been released. Help us test it out!
+  Please report any bugs or issues in the C++
+  [JIRA project](http://jira.mongodb.org/browse/CXX).
 
-Use this branch if:
+> **NOTE:** The legacy branch is currently in testing. If you are looking for a production-ready release of the C++ driver you should use the 26compat branch until our RC testing is complete.
 
+Use the legacy branch if:
+
+ - You want to help test the upcoming 1.0 release of the legacy C++ driver.
  - You are using MongoDB's C++ driver for the first time and do not mind the driver being actively worked on.
  - You had been using 26compat (or the driver inside of the server source) and want to benefit from incremental improvements while having the same overall API.
 
@@ -17,11 +23,11 @@ Switch to the 26compat branch if:
 
 ## Repository Overview
 
-| Branch   | Stability | Development       | Purpose                                               |
-| -------- | ----------| ----------------- | ----------------------------------------------------- |
-| master   | Unstable  | Planning          | New C++ driver (work in progress)                     |
-| legacy   | Unstable  | Active            | Existing C++ driver with non-compatible improvements  |
-| 26compat | Stable    | Maintenance Only  | Drop in replacement for users of existing C++ driver  |
+| Branch   | Stability   | Development       | Purpose                                               |
+| -------- | ------------| ----------------- | ----------------------------------------------------- |
+| master   | Unstable    | Planning          | New C++ driver (work in progress)                     |
+| legacy   | Pre-release | RC Testing        | Existing C++ driver with non-compatible improvements  |
+| 26compat | Stable      | Maintenance Only  | Drop in replacement for users of existing C++ driver  |
 
 > **WARNING:** The master branch will contain future development work on a new driver with a completely new API and implementation. It is a work in progress and currently should not be used.
 
