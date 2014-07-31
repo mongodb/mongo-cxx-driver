@@ -48,11 +48,15 @@
 #endif
 #endif
 
-// Don't spam DLL consumers with warnings about STL symbol exports
-#if defined(_MSC_VER) && defined(_DLL)
+#if defined(_MSC_VER)
 #pragma warning(push)
+// Don't emit deprecation warnings
+#pragma warning(disable:4996)
+#if defined(_DLL)
+// Don't spam DLL consumers with warnings about STL symbol exports
 #pragma warning(disable:4251)
 #pragma warning(disable:4275)
+#endif
 #endif
 
 #if defined(_WIN32) && !defined(_WINSOCK2API_)

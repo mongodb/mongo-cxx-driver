@@ -16,7 +16,6 @@
 // It is the responsibility of the mongo client consumer to ensure that any necessary windows
 // headers have already been included before including the driver facade headers.
 #if defined(_WIN32)
-#define _CRT_SECURE_NO_WARNINGS
 #include <winsock2.h>
 #include <windows.h>
 #endif
