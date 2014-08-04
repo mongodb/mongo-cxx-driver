@@ -1387,6 +1387,12 @@ namespace {
     }
 
     TEST_F(DBClientTest, CreateComplexTextIndex) {
+        if (!serverGTE(&c, 2, 6)) {
+            BSONObj result;
+            c.runCommand("admin",
+                         BSON("setParameter" << 1 << "textSearchEnabled" << true),
+                         result);
+                         }
         c.createIndex(TEST_NS,
                       IndexSpec()
                       .addKey("aField", IndexSpec::kIndexTypeText)
