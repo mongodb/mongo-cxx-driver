@@ -28,7 +28,6 @@
 
 using namespace std;
 using namespace mongo;
-using namespace bson;
 
 int main(int argc, char* argv[]) {
 

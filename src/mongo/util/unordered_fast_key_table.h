@@ -137,6 +137,8 @@ namespace mongo {
 
             const value_type* operator->() const { return &_area->_entries[_position].data; }
 
+            const value_type& operator*() const { return _area->_entries[_position].data; }
+
             const_iterator operator++() {
                 if ( _position < 0 )
                     return *this;

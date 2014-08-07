@@ -237,6 +237,19 @@ elif windows:
                type = 'choice', default = None,
                choices = win_version_min_choices.keys())
 
+    # Someday get rid of --32 and --64 for windows and use these with a --msvc-target-arch flag
+    # that mirrors msvc-host-arch.
+    msvc_arch_choices = ['x86', 'i386', 'amd64', 'emt64', 'x86_64', 'ia64']
+
+    add_option("msvc-host-arch", "host architecture for ms toolchain", 1, True,
+               type="choice", choices=msvc_arch_choices)
+
+    add_option("msvc-script",
+               "msvc toolchain setup script, pass no argument to suppress script execution",
+               1, True)
+
+    add_option("msvc-version", "select msvc version", 1, True)
+
 add_option('cache',
            "Use an object cache rather than a per-build variant directory (experimental)",
            0, False)
@@ -250,10 +263,31 @@ if GetOption('help'):
     Return()
 
 # --- environment setup ---
+
+# If the user isn't using the # to indicate top-of-tree or $ to expand a variable, forbid
+# relative paths. Relative paths don't really work as expected, because they end up relative to
+# the top level SConstruct, not the invokers CWD. We could in theory fix this with
+# GetLaunchDir, but that seems a step too far.
 buildDir = get_option('build-dir').rstrip('/')
+if buildDir[0] not in ['$', '#']:
+    if not os.path.isabs(buildDir):
+        print("Do not use relative paths with --build-dir")
+        Exit(1)
+
+cacheDir = get_option('cache-dir').rstrip('/')
+if cacheDir[0] not in ['$', '#']:
+    if not os.path.isabs(cachdDIr):
+        print("Do not use relative paths with --cache-dir")
+        Exit(1)
+
+installDir = get_option('prefix').rstrip('/')
+if installDir[0] not in ['$', '#']:
+    if not os.path.isabs(installDir):
+        print("Do not use relative paths with --prefix")
+        Exit(1)
+
 sconsDataDir = Dir(buildDir).Dir('scons')
 SConsignFile(str(sconsDataDir.File('sconsign')))
-variantDir = get_variant_dir()
 
 def printLocalInfo():
     import sys, SCons
@@ -305,22 +339,58 @@ if len(mongoclientVersionComponents) not in (3,4):
     print("Error: client version most be of the form w.x.y[-rcz][-string]")
     Exit(1)
 
-env = Environment( BUILD_DIR=buildDir,
-                   VARIANT_DIR=variantDir,
-                   EXTRAPATH=get_option("extrapath"),
-                   MSVS_ARCH=msarch ,
-                   PYTHON=buildscripts.utils.find_python(),
-                   TARGET_ARCH=msarch ,
-                   tools=["default", "unittest", "integration_test", "textfile"],
-                   PYSYSPLATFORM=os.sys.platform,
-                   CONFIGUREDIR=sconsDataDir.Dir('sconf_temp'),
-                   CONFIGURELOG=sconsDataDir.File('config.log'),
-                   MONGOCLIENT_VERSION=mongoclientVersion,
-                   MONGOCLIENT_VERSION_MAJOR=mongoclientVersionComponents[0],
-                   MONGOCLIENT_VERSION_MINOR=mongoclientVersionComponents[1],
-                   MONGOCLIENT_VERSION_PATCH=mongoclientVersionComponents[2],
-                   INSTALL_DIR=get_option("prefix"),
-                   )
+# We defer building the env until we have determined whether we want certain values. Some values
+# in the env actually have semantics for 'None' that differ from being absent, so it is better
+# to build it up via a dict, and then construct the Environment in one shot with kwargs.
+envDict = dict(BUILD_DIR=buildDir,
+               VARIANT_DIR=get_variant_dir(),
+               EXTRAPATH=get_option("extrapath"),
+               PYTHON=buildscripts.utils.find_python(),
+               tools=["default", "unittest", "integration_test", "textfile"],
+               PYSYSPLATFORM=os.sys.platform,
+               CONFIGUREDIR=sconsDataDir.Dir('sconf_temp'),
+               CONFIGURELOG=sconsDataDir.File('config.log'),
+               MONGOCLIENT_VERSION=mongoclientVersion,
+               MONGOCLIENT_VERSION_MAJOR=mongoclientVersionComponents[0],
+               MONGOCLIENT_VERSION_MINOR=mongoclientVersionComponents[1],
+               MONGOCLIENT_VERSION_PATCH=mongoclientVersionComponents[2],
+               INSTALL_DIR=installDir,
+               )
+
+if windows:
+    if msarch:
+        envDict['TARGET_ARCH'] = msarch
+
+    # We can't set this to None without disturbing the autodetection,
+    # so only set it conditionally.
+    if has_option('msvc-host-arch'):
+        envDict['HOST_ARCH'] = get_option('msvc-host-arch')
+
+    msvc_version = get_option('msvc-version')
+    msvc_script = get_option('msvc-script')
+
+    if msvc_version:
+        if msvc_script:
+            print("Passing --msvc-version with --msvc-script is not meaningful")
+            Exit(1)
+        envDict['MSVC_VERSION'] = msvc_version
+
+    # The python None value is meaningful to MSVC_USE_SCRIPT; we want to interpret
+    # --msvc-script= with no argument as meaning 'None', so check explicitly against None so
+    # that '' is not interpreted as false.
+    if msvc_script is not None:
+        if has_option('msvc-host-arch'):
+            print("Passing --msvc-host-arch with --msvc-script is not meaningful")
+            Exit(1)
+        if msarch:
+            print("Passing --32 or --64 with --msvc-script is not meaningful")
+            Exit(1)
+        if msvc_script == "":
+            msvc_script = None
+        envDict['MSVC_USE_SCRIPT'] = msvc_script
+
+env = Environment(**envDict)
+del envDict
 
 if has_option("cache"):
     EnsureSConsVersion( 2, 3, 0 )
@@ -330,7 +400,7 @@ if has_option("cache"):
     if has_option("gcov"):
         print("Mixing --cache and --gcov doesn't work correctly yet. See SERVER-11084")
         Exit(1)
-    env.CacheDir(str(env.Dir(get_option('cache-dir'))))
+    env.CacheDir(str(env.Dir(cacheDir)))
 
 # This could be 'if solaris', but unfortuantely that variable hasn't been set yet.
 if "sunos5" == os.sys.platform:

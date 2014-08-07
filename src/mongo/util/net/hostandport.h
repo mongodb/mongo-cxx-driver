@@ -58,6 +58,14 @@ namespace mongo {
          */
         HostAndPort(const std::string& h, int p);
 
+        /**
+         * (Re-)initializes this HostAndPort by parsing "s".  Returns
+         * Status::OK on success.  The state of this HostAndPort is unspecified
+         * after initialize() returns a non-OK status, though it is safe to
+         * assign to it or re-initialize it.
+         */
+        Status initialize(const StringData& s);
+
         bool operator<(const HostAndPort& r) const;
         bool operator==(const HostAndPort& r) const;
         bool operator!=(const HostAndPort& r) const { return !(*this == r); }
@@ -95,7 +103,6 @@ namespace mongo {
         }
 
     private:
-        Status initialize(const StringData& s);
         std::string _host;
         int _port; // -1 indicates unspecified
     };

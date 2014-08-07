@@ -37,7 +37,6 @@ using std::list;
 using std::string;
 using std::vector;
 
-using namespace bson;
 using namespace mongo::unittest;
 using namespace mongo;
 

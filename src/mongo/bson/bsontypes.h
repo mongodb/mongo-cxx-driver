@@ -19,8 +19,6 @@
 
 #include "mongo/util/assert_util.h"
 
-namespace bson { }
-
 namespace mongo {
 
     class BSONArrayBuilder;
@@ -89,7 +87,6 @@ namespace mongo {
 
     /**
      * returns the name of the argument's type
-     * defined in jsobj.cpp
      */
     const char* typeName (BSONType type);
 

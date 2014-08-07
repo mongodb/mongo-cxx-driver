@@ -171,6 +171,12 @@ namespace client {
         Options& setSSLAllowInvalidCertificates(bool value = true);
         const bool SSLAllowInvalidCertificates() const;
 
+        /** When set true, SSL hostname validation is disabled.
+         *
+         *  Default: false
+         */
+        Options& setSSLAllowInvalidHostnames(bool value = true);
+        const bool SSLAllowInvalidHostnames() const;
 
         //
         // Misc
@@ -193,6 +199,7 @@ namespace client {
         std::string _sslPEMKeyPassword;
         std::string _sslCRLFile;
         bool _sslAllowInvalidCertificates;
+        bool _sslAllowInvalidHostnames;
         int _defaultLocalThresholdMillis;
         bool _validateObjects;
     };

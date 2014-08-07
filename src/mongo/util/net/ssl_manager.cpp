@@ -143,6 +143,7 @@ namespace mongo {
                    const std::string& crlfile = "",
                    bool weakCertificateValidation = false,
                    bool allowInvalidCertificates = false,
+                   bool allowInvalidHostnames = false,
                    bool fipsMode = false) :
                 pemfile(pemfile),
                 pempwd(pempwd),
@@ -152,6 +153,7 @@ namespace mongo {
                 crlfile(crlfile),
                 weakCertificateValidation(weakCertificateValidation),
                 allowInvalidCertificates(allowInvalidCertificates),
+                allowInvalidHostnames(allowInvalidHostnames),
                 fipsMode(fipsMode) {};
 
             std::string pemfile;
@@ -162,6 +164,7 @@ namespace mongo {
             std::string crlfile;
             bool weakCertificateValidation;
             bool allowInvalidCertificates;
+            bool allowInvalidHostnames;
             bool fipsMode;
         };
 
@@ -211,6 +214,7 @@ namespace mongo {
             bool _validateCertificates;
             bool _weakValidation;
             bool _allowInvalidCertificates;
+            bool _allowInvalidHostnames;
             std::string _serverSubjectName;
             std::string _clientSubjectName;
 
@@ -301,6 +305,7 @@ namespace mongo {
                 options.SSLCRLFile(),
                 false, // server only parameter
                 options.SSLAllowInvalidCertificates(),
+                options.SSLAllowInvalidHostnames(),
                 options.FIPSMode());
             theSSLManager = new SSLManager(params, isSSLServer);
         }
@@ -377,7 +382,8 @@ namespace mongo {
     SSLManager::SSLManager(const Params& params, bool isServer) :
         _validateCertificates(false),
         _weakValidation(params.weakCertificateValidation),
-        _allowInvalidCertificates(params.allowInvalidCertificates) {
+        _allowInvalidCertificates(params.allowInvalidCertificates),
+        _allowInvalidHostnames(params.allowInvalidHostnames) {
 
         SSL_library_init();
         SSL_load_error_strings();
@@ -878,7 +884,7 @@ namespace mongo {
         sk_GENERAL_NAME_pop_free(sanNames, GENERAL_NAME_free);
 
         if (!sanMatch) {
-            if (_allowInvalidCertificates) {
+            if (_allowInvalidCertificates || _allowInvalidHostnames) {
                 warning() << "The server certificate does not match the host name " << 
                     remoteHost;
             }

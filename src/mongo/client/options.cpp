@@ -45,6 +45,7 @@ namespace client {
         , _sslMode(kSSLDisabled)
         , _useFIPSMode(false)
         , _sslAllowInvalidCertificates(false)
+        , _sslAllowInvalidHostnames(false)
         , _defaultLocalThresholdMillis(kDefaultDefaultLocalThresholdMillis)
         , _validateObjects(false)
     {}
@@ -137,6 +138,15 @@ namespace client {
 
     const bool Options::SSLAllowInvalidCertificates() const {
         return _sslAllowInvalidCertificates;
+    }
+
+    Options& Options::setSSLAllowInvalidHostnames(bool value) {
+        _sslAllowInvalidHostnames = value;
+        return *this;
+    }
+
+    const bool Options::SSLAllowInvalidHostnames() const {
+        return _sslAllowInvalidHostnames;
     }
 
     Options& Options::setValidateObjects(bool value) {

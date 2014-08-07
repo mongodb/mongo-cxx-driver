@@ -28,10 +28,10 @@
 #include <limits>
 
 #include "mongo/base/parse_number.h"
-#include "mongo/bson/bsonelement.h"
-#include "mongo/bson/bsonobj.h"
-#include "mongo/bson/bsonmisc.h"
 #include "mongo/bson/bson_field.h"
+#include "mongo/bson/bsonelement.h"
+#include "mongo/bson/bsonmisc.h"
+#include "mongo/bson/bsonobj.h"
 #include "mongo/client/export_macros.h"
 
 #if defined(_DEBUG) && defined(MONGO_EXPOSE_MACROS)
@@ -698,7 +698,7 @@ namespace mongo {
         bool _doneCalled;
 
         static const std::string numStrs[100]; // cache of 0 to 99 inclusive
-        static bool numStrsReady; // for static init safety. see comments in db/jsobj.cpp
+        static bool numStrsReady; // for static init safety.
     };
 
     class BSONArrayBuilder : boost::noncopyable {
@@ -875,6 +875,12 @@ namespace mongo {
         return _appendArrayIt< std::set< T > >( *this, vals );
     }
 
+    template<typename T>
+    inline BSONFieldValue<BSONObj> BSONField<T>::query( const char * q , const T& t ) const {
+        BSONObjBuilder b;
+        b.append( q , t );
+        return BSONFieldValue<BSONObj>( _name , b.obj() );
+    }
 
     // $or helper: OR(BSON("x" << GT << 7), BSON("y" << LT 6));
     inline BSONObj OR(const BSONObj& a, const BSONObj& b)
