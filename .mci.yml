@@ -1,0 +1,230 @@
+functions:
+  "fetch source" :
+    command: git.get_project
+    params:
+      directory: mongo-cxx-driver
+  "fetch mongodb" :
+    command: shell.exec
+    params:
+      working_dir: "mongo-cxx-driver"
+      script: |
+        set -o verbose
+        set -o errexit
+        curl -s ${mongo_url} --output mongo_enterprise.${ext|tgz}
+        ${decompress} mongo_enterprise.${ext|tgz}
+        cp mongodb*enterprise*/bin/mongod${extension} ./mongod${extension}
+        chmod +x ./mongod${extension}
+  "fetch artifacts" :
+    command: s3.get
+    params:
+      aws_key: ${aws_key}
+      aws_secret: ${aws_secret}
+      remote_file: mongo-cxx-driver/${build_variant}/${revision}/artifacts/mongo-${build_id}.tar.gz
+      bucket: mciuploads
+      extract_to: mongo-cxx-driver
+
+pre:
+  - command: expansions.fetch
+    params:
+      keys:
+        - local_key: "aws_key"
+          remote_key: "project_aws_key"
+        - local_key: "aws_secret"
+          remote_key: "project_aws_secret"
+  - command: shell.exec
+    params:
+      script: |
+        rm -rf "mongo-cxx-driver"
+        rm -rf /data/db
+        mkdir -p /data/db
+
+post:
+  - command: shell.exec
+    params:
+      script: |
+        ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py}
+
+## tasks
+tasks:
+    - name: lint
+      commands:
+        - func: "fetch source"
+        - command: shell.exec
+          params:
+            working_dir: "mongo-cxx-driver"
+            script: |
+                set -o errexit
+                set -o verbose
+                ${scons|scons} ${scons_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} lint
+
+    - name: compile
+      commands:
+        - func: "fetch source"
+        - command: shell.exec
+          params:
+            working_dir: "mongo-cxx-driver"
+            script: |
+                set -o errexit
+                set -o verbose
+                ${scons|scons} ${scons_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} all
+        - command: shell.exec
+          params:
+              working_dir: "mongo-cxx-driver"
+              script: |
+                set -o errexit
+                set -o verbose
+                tar -czf ../mongo-cxx-driver.tar.gz .
+        - command: s3.put
+          params:
+            aws_key: ${aws_key}
+            aws_secret: ${aws_secret}
+            local_file: mongo-cxx-driver.tar.gz
+            remote_file: mongo-cxx-driver/${build_variant}/${revision}/artifacts/mongo-${build_id}.tar.gz
+            bucket: mciuploads
+            permissions: public-read
+            content_type: ${content_type|application/x-gzip}
+
+    - name: "unit test"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - command: shell.exec
+          params:
+            working_dir: "mongo-cxx-driver"
+            script: |
+              set -o verbose
+              echo "Starting mongod..."
+              ./mongod${extension} ${mongodb_args}
+              ${scons|scons} ${scons_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} test
+              exit_code=$?
+              ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py} || true
+              exit $exit_code
+
+    - name: "integration test"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - command: shell.exec
+          params:
+            working_dir: "mongo-cxx-driver"
+            script: |
+              set -o verbose
+              echo "Starting mongod..."
+              ./mongod${extension} ${mongodb_args}
+              ${scons|scons} ${scons_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} integration
+              exit_code=$?
+              ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py} || true
+              exit $exit_code
+
+    - name: "client test"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - command: shell.exec
+          params:
+            working_dir: "mongo-cxx-driver"
+            script: |
+              set -o verbose
+              echo "Starting mongod..."
+              ./mongod${extension} ${mongodb_args}
+              ${scons|scons} ${scons_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} install-mongoclient # static lib install step
+              install_exit=$?
+              ${scons|scons} ${scons_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} check-install-mongoclient # static build installation header check
+              check_exit=$?
+              ${scons|scons} ${scons_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} smokeClient
+              smoke_exit=$?
+              ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py}
+              exit $install_exit || $check_exit || $smoke_exit
+
+#######################################
+#           Buildvariants             #
+#######################################
+
+buildvariants:
+
+#######################################
+#         Linux Buildvariants         #
+#######################################
+
+- name: linux-64-shared
+  display_name: "Linux-64 (Shared)"
+  expansions:
+    compile_flags: "--mute --dbg=on"
+    scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
+    mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --setParameter=enableTestCommands=1 &"
+    mongo_url: "http://downloads.10gen.com/linux/mongodb-linux-x86_64-enterprise-ubuntu1404-2.6.2.tgz"
+  run_on:
+    - ubuntu1404-test
+  tasks:
+  - name: compile
+  - name: "unit test"
+  - name: "integration test"
+  - name: "client test"
+
+- name: linux-64
+  display_name: "Linux-64 (Static)"
+  expansions:
+    compile_flags: "--mute --dbg=on"
+    scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client"
+    mongo_url: "http://downloads.10gen.com/linux/mongodb-linux-x86_64-enterprise-ubuntu1404-2.6.2.tgz"
+    mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --setParameter=enableTestCommands=1 &"
+  run_on:
+    - ubuntu1404-test
+  tasks:
+  - name: lint
+  - name: compile
+  - name: "unit test"
+  - name: "integration test"
+  - name: "client test"
+
+#######################################
+#        Windows Buildvariants        #
+#######################################
+
+- name: windows-64-shared
+  display_name: "Win-64 (Shared)"
+  expansions:
+    compile_flags: "--mute --dbg=on"
+    scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows --sharedclient"
+    dllpath: --dllpath="c:\local\boost_1_55_0\lib64-msvc-10.0;c:\openssl\bin;c:\sasl\bin"
+    extrapath: --extrapath="c:\openssl,c:\sasl"
+    cpppath: --cpppath="c:\local\boost_1_55_0"
+    libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-10.0"
+    mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --setParameter=enableTestCommands=1 &"
+    mongo_url: "http://downloads.10gen.com/win32/mongodb-win32-x86_64-enterprise-windows-64-2.6.2.zip"
+    extension: ".exe"
+    scons: scons.bat
+  run_on:
+    - windows-64-test
+  tasks:
+  - name: compile
+  - name: "unit test"
+  - name: "integration test"
+  - name: "client test"
+
+- name: windows-64
+  display_name: "Win-64 (Static)"
+  expansions:
+    compile_flags: "--mute --dbg=on"
+    scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client"
+    dllpath: --dllpath="c:\local\boost_1_55_0\lib64-msvc-10.0;c:\openssl\bin;c:\sasl\bin"
+    extrapath: --extrapath="c:\openssl,c:\sasl"
+    cpppath: --cpppath="c:\local\boost_1_55_0"
+    libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-10.0"
+    mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --setParameter=enableTestCommands=1 &"
+    mongo_url: "http://downloads.10gen.com/win32/mongodb-win32-x86_64-enterprise-windows-64-2.6.2.zip"
+    extension: ".exe"
+    scons: scons.bat
+  run_on:
+    - windows-64-test
+  tasks:
+  - name: compile
+  - name: "unit test"
+  - name: "integration test"
+  - name: "client test"
