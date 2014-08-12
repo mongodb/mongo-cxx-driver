@@ -19,6 +19,7 @@
 
 #include "mongo/config.h"
 
+#include <boost/shared_ptr.hpp>
 #include <boost/utility.hpp>
 #include <vector>
 

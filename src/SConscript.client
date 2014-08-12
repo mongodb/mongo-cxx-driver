@@ -257,7 +257,6 @@ clientHeaders = [
     'mongo/util/bufreader.h',
     'mongo/util/concurrency/thread_name.h',
     'mongo/util/debug_util.h',
-    'mongo/util/goodies.h',
     'mongo/util/hex.h',
     'mongo/util/log.h',
     'mongo/util/mongoutils/str.h',

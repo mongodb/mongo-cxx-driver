@@ -864,10 +864,6 @@ namespace mongo {
                         << " bytes of data during connectivity check"
                         << " (idle " << idleTimeSecs << " secs,"
                         << " remote host " << remoteString() << ")" << endl;
-                DEV {
-                    std::string hex = hexdump(testBuf, recvd);
-                    error() << "Hex dump of stale log data: " << hex << endl;
-                }
                 dassert( false );
             }
             else {

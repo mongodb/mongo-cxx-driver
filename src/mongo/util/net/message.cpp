@@ -23,7 +23,6 @@
 #include <errno.h>
 #include <time.h>
 
-#include "mongo/util/goodies.h"
 #include "mongo/util/net/message_port.h"
 
 namespace mongo {

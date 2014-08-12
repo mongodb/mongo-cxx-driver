@@ -28,6 +28,7 @@
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
+#include <boost/scoped_array.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/thread/thread.hpp>
 

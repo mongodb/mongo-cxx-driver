@@ -21,7 +21,6 @@
 
 #include "mongo/platform/atomic_word.h"
 #include "mongo/platform/cstdint.h"
-#include "mongo/util/goodies.h"
 #include "mongo/util/mongoutils/str.h"
 #include "mongo/util/net/hostandport.h"
 #include "mongo/util/net/operation.h"
@@ -76,7 +75,6 @@ namespace mongo {
             return true;
 
         default:
-            PRINT(op);
             verify(0);
             return "";
         }
@@ -273,7 +271,7 @@ namespace mongo {
             size_t dataLen = len + sizeof(MsgData) - 4;
             MsgData *d = (MsgData *) malloc(dataLen);
             memcpy(d->_data, msgdata, len);
-            d->len = fixEndian(dataLen);
+            d->len = dataLen;
             d->setOperation(operation);
             _setData( d, true );
         }

@@ -15,58 +15,9 @@
  *    limitations under the License.
  */
 
-#include <iomanip>
-
-#include "mongo/platform/atomic_word.h"
 #include "mongo/util/concurrency/mutex.h"
-#include "mongo/util/goodies.h"
-#include "mongo/util/mongoutils/str.h"
-#include "mongo/util/time_support.h"
-#include "mongo/util/timer.h"
 
 namespace mongo {
-
-    using std::ostream;
-    using std::setfill;
-    using std::setw;
-    using std::string;
-    using std::stringstream;
-
-    string hexdump(const char *data, unsigned len) {
-        verify( len < 1000000 );
-        const unsigned char *p = (const unsigned char *) data;
-        stringstream ss;
-        ss << std::hex << setw(2) << setfill('0');
-        for( unsigned i = 0; i < len; i++ ) {
-            ss << static_cast<unsigned>(p[i]) << ' ';
-        }
-        string s = ss.str();
-        return s;
-    }
-
-    bool isPrime(int n) {
-        int z = 2;
-        while ( 1 ) {
-            if ( z*z > n )
-                break;
-            if ( n % z == 0 )
-                return false;
-            z++;
-        }
-        return true;
-    }
-
-    int nextPrime(int n) {
-        n |= 1; // 2 goes to 3...don't care...
-        while ( !isPrime(n) )
-            n += 2;
-        return n;
-    }
-
-    ostream& operator<<( ostream &s, const ThreadSafeString &o ) {
-        s << o.toString();
-        return s;
-    }
 
     bool StaticObserver::_destroyingStatics = false;
 
