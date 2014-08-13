@@ -256,15 +256,8 @@ add_option( "durableDefaultOff" , "have durable default to off" , 0 , True )
 add_option( "pch" , "use precompiled headers to speed up the build (experimental)" , 0 , True , "usePCH" )
 add_option( "distcc" , "use distcc for distributing builds" , 0 , False )
 
-# debugging/profiling help
-if os.sys.platform.startswith("linux") and (os.uname()[-1] == 'x86_64'):
-    defaultAllocator = 'tcmalloc'
-elif (os.sys.platform == "darwin") and (os.uname()[-1] == 'x86_64'):
-    defaultAllocator = 'tcmalloc'
-else:
-    defaultAllocator = 'system'
-add_option( "allocator" , "allocator to use (tcmalloc or system)" , 1 , True,
-            default=defaultAllocator )
+add_option( "allocator" , "allocator to use (tcmalloc or system)" , 1 , False )
+
 add_option( "gdbserver" , "build in gdb server support" , 0 , True )
 add_option( "heapcheck", "link to heap-checking malloc-lib and look for memory leaks during tests" , 0 , False )
 add_option( "gcov" , "compile with flags for gcov" , 0 , True )
@@ -1203,13 +1196,6 @@ def doConfigure(myenv):
                 if not AddToCXXFLAGSIfSupported(myenv, '-std=c++0x'):
                     print( 'C++11 mode requested, but cannot find a flag to enable it' )
                     Exit(1)
-            # Our current builtin tcmalloc is not compilable in C++11 mode. Remove this
-            # check when our builtin release of tcmalloc contains the resolution to
-            # http://code.google.com/p/gperftools/issues/detail?id=477.
-            if get_option('allocator') == 'tcmalloc':
-                if not use_system_version_of_library('tcmalloc'):
-                    print( 'TCMalloc is not currently compatible with C++11' )
-                    Exit(1)
 
             if not AddToCFLAGSIfSupported(myenv, '-std=c99'):
                 print( 'C++11 mode selected for C++ files, but failed to enable C99 for C files' )
@@ -1443,32 +1429,14 @@ def doConfigure(myenv):
     if conf.env['MONGO_HAVE_TIMEGM']:
         conf.env.Append(CPPDEFINES=['MONGO_HAVE_TIMEGM'])
 
-    # 'tcmalloc' needs to be the last library linked. Please, add new libraries before this 
-    # point.
-    if get_option('allocator') == 'tcmalloc':
-        if use_system_version_of_library('tcmalloc'):
-            conf.FindSysLibDep("tcmalloc", ["tcmalloc"])
-        elif has_option("heapcheck"):
-            print ("--heapcheck does not work with the tcmalloc embedded in the mongodb source "
-                   "tree.  Use --use-system-tcmalloc.")
-            Exit(1)
-    elif get_option('allocator') == 'system':
-        pass
-    else:
-        print "Invalid --allocator parameter: \"%s\"" % get_option('allocator')
-        Exit(1)
+    if has_option('allocator'):
+        print("WARNING: --allocator option ignored, not meaningful for driver build")
+
+    if has_option('use-system-tcmalloc'):
+        print("WARNING: --use-system-tcmalloc option ignored, not meaningful for driver build")
 
     if has_option("heapcheck"):
-        if not debugBuild:
-            print( "--heapcheck needs --d or --dd" )
-            Exit( 1 )
-
-        if not conf.CheckCXXHeader( "google/heap-checker.h" ):
-            print( "--heapcheck neads header 'google/heap-checker.h'" )
-            Exit( 1 )
-
-        conf.env.Append( CPPDEFINES=[ "HEAP_CHECKING" ] )
-        conf.env.Append( CCFLAGS=["-fno-omit-frame-pointer"] )
+        print("WARNING: --heapcheck ignored, not meaningful for driver build")
 
     # ask each module to configure itself and the build environment.
     moduleconfig.configure_modules(mongo_modules, conf)
