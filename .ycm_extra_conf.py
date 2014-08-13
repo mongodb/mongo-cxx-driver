@@ -37,7 +37,8 @@ import ycm_core
 
 flags = [
     '-std=c++',
-    '-x', 'c++',
+    '-x',
+    'c++',
     '-DBOOST_ALL_NO_LIB',
     '-D_SCONS',
     '-D_DEBUG',
@@ -50,6 +51,7 @@ flags = [
     '-DXP_UNIX',
     '-I.',
     '-I./src/',
+    '-I./src/third_party',
     '-I./src/third_party/gtest-1.7.0/include',
     '-I./build/linux2/normal/',
     '-I./build/cached/',

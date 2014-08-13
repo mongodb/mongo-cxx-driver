@@ -16,11 +16,9 @@ cxx_driver_variables:
   full_test_list: &full_tests
     - name: "compile"
     - name: "unit test"
-    - name: "integration test 2.2"
     - name: "integration test 2.4"
     - name: "integration test 2.6"
     - name: "integration test latest"
-    - name: "client test 2.2"
     - name: "client test 2.4"
     - name: "client test 2.6"
     - name: "client test latest"
@@ -41,26 +39,21 @@ cxx_driver_variables:
       mongo_url_prefix: "http://downloads.mongodb.org/linux/mongodb-linux-i686"
       mongo_url_platform: ""
 
-## Common mongodb arguments
-  mongodb_arguments:
-    standard: &mongodb_args "--dbpath /data/db --port 27999 --nopreallocj --setParameter=enableTestCommands=1 &"
-    old: &mongodb_22_args "--dbpath /data/db --port 27999 --nopreallocj &"
-
 ## Common sets of scons flags
   scons_flags:
     standard: &scons_flags_64
-      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
+      scons_flags: "--64 --ssl --use-sasl-client --sharedclient"
     standard_32: &scons_flags_32
-      scons_flags: "--32 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
+      scons_flags: "--32 --ssl --use-sasl-client --sharedclient"
     ubuntu_c++11: &scons_flags_cpp11
-      scons_flags: "--64 --c++11 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
+      scons_flags: "--64 --c++11 --ssl --use-sasl-client --sharedclient"
     ## test all plausible combinations of static/dynamic mongo client and windows runtime:
     static_windows: &scons_flags_64_windows_static
-      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client"
+      scons_flags: "--64 --ssl --use-sasl-client"
     dynamic_RT_windows: &scons_flags_64_windows_dynamic_rt
-      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows"
+      scons_flags: "--64 --ssl --use-sasl-client --dynamic-windows"
     dynamic_windows: &scons_flags_64_windows_dynamic
-      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows --sharedclient"
+      scons_flags: "--64 --ssl --use-sasl-client --dynamic-windows --sharedclient"
 
 ## Common compile flags
   compile_flags:
@@ -137,7 +130,8 @@ functions:
         set -o errexit
         curl -s ${mongo_url} --output mongo_enterprise.${ext|tgz}
         ${decompress} mongo_enterprise.${ext|tgz}
-        cd mongodb*/bin
+        mv mongodb* mongodb
+        cd mongodb/bin
         chmod +x ./mongod${extension}
         if [ ${windows|false} = true ]
           then
@@ -160,32 +154,20 @@ functions:
       updates:
         - key: "mongo_url"
           value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform}-latest.${mongo_url_extension|tgz}
-        - key: "mongodb_args"
-          value: *mongodb_args
+
   "set version 2.6" :
     command: expansions.update
     params:
       updates:
         - key: "mongo_url"
           value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform}-2.6.5.${mongo_url_extension|tgz}
-        - key: "mongodb_args"
-          value: *mongodb_args
+
   "set version 2.4" :
     command: expansions.update
     params:
       updates:
         - key: "mongo_url"
           value: ${mongo_url_prefix}${mongo_url_subscription_keyword|"subscription-"}${mongo_url_platform}-2.4.12.${mongo_url_extension|tgz}
-        - key: "mongodb_args"
-          value: *mongodb_args
-  "set version 2.2" :
-    command: expansions.update
-    params:
-      updates:
-        - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|"subscription-"}${mongo_url_platform}-2.2.7.${mongo_url_extension|tgz}
-        - key: "mongodb_args"
-          value: *mongodb_22_args
 
   "run integration tests" :
     command: shell.exec
@@ -193,10 +175,9 @@ functions:
       working_dir: "mongo-cxx-driver"
       script: |
         set -o verbose
-        echo "Starting mongod..."
-        cd mongodb*/bin
-        ./mongod${extension} ${mongodb_args}
-        cd ../..
+        echo "Starting Mongo Orchestration..."
+        echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
+        mongo-orchestration -f orchestration.config -e default start
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} integration
         exit_code=$?
         ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py} || true
@@ -208,10 +189,9 @@ functions:
       working_dir: "mongo-cxx-driver"
       script: |
         set -o verbose
-        echo "Starting mongod..."
-        cd mongodb*/bin
-        ./mongod${extension} ${mongodb_args}
-        cd ../..
+        echo "Starting Mongo Orchestration..."
+        echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
+        mongo-orchestration -f orchestration.config -e default start
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} install # static lib install step
         install_exit=$?
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} check-install # static build installation header check
@@ -307,15 +287,6 @@ tasks:
                 ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py} || true
                 exit $exit_code
 
-    - name: "integration test 2.2"
-      depends_on:
-        - name: "compile"
-      commands:
-        - func: "set version 2.2"
-        - func: "fetch artifacts"
-        - func: "fetch mongodb"
-        - func: "run integration tests"
-
     - name: "integration test 2.4"
       depends_on:
         - name: "compile"
@@ -342,15 +313,6 @@ tasks:
         - func: "fetch artifacts"
         - func: "fetch mongodb"
         - func: "run integration tests"
-
-    - name: "client test 2.2"
-      depends_on:
-        - name: "compile"
-      commands:
-        - func: "set version 2.2"
-        - func: "fetch artifacts"
-        - func: "fetch mongodb"
-        - func: "run client tests"
 
     - name: "client test 2.4"
       depends_on:

@@ -3,6 +3,9 @@
 # This SConscript describes build and install rules for the Mongo C++ driver and associated exmaple
 # programs.
 import os
+import httplib
+import urllib
+import json
 import buildscripts.git
 
 Import('env has_option get_option')
@@ -538,10 +541,6 @@ if buildShared:
 clientTestPrograms = staticClientPrograms + sharedClientPrograms
 clientEnv.Alias('build-examples', clientTestPrograms)
 
-# NOTE: There must be a mongod listening on 127.0.0.1:27999 (the traditional mongodb smoke test
-# port) for the smokeClient target to run. In the server repo that is no problem, the smoke.py
-# subsystem can start a mongod as needed. We don't have the same ability in this repo, since we
-# have no way of reaching a mongod executable or knowing if it is safe to start one.
 clientTestProgramInstalls = staticClientProgramInstalls + sharedClientProgramInstalls
 for clientTest in clientTestProgramInstalls:
 
@@ -556,9 +555,40 @@ for clientTest in clientTestProgramInstalls:
     if 'rsExample' in clientTest.abspath:
         continue
 
+    # TODO: Make this more Scons-like with an action target that causes
+    # a server to come into being and then have each test depend on it.
+    orchestration_uri = "localhost:8889"
+    conn = httplib.HTTPConnection(orchestration_uri)
+    headers = { "Content-Type": "application/json" }
+    params = json.dumps({ "id": "standalone", "name": "mongod" })
+
+    # Check if a standalone mongod is already up
+    orchestration_up = False
+    try:
+        conn.request("GET", "/servers/standalone", "", headers)
+        orchestration_up = True
+    except:
+        print("Cannot connect to Mongo Orchestration at %s!" % orchestration_uri)
+
+    if not orchestration_up:
+        break
+
+    response = conn.getresponse()
+
+    if response.status / 100 != 2:
+        # Standalone was not up
+        response.read()
+        conn.request("POST", "/servers", params, headers)
+        response = conn.getresponse()
+
+    # Grab the port from the response -- use it in the tests
+    decoded_response = json.loads(response.read())
+    port = decoded_response['uri'].split(':')[1]
+
     clientEnv.AlwaysBuild(clientEnv.Alias(
         'examples',
         [clientTest],
-        "%s --port 27999" % clientTest.abspath))
+        "%s --port %s" % (clientTest.abspath, port)
+    ))
 
 clientEnv.Alias('install-examples', clientTestProgramInstalls)

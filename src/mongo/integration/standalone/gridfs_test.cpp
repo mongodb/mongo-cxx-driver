@@ -20,7 +20,7 @@
 #include <sstream>
 #include <string>
 
-#include "mongo/unittest/integration_test.h"
+#include "mongo/integration/integration_test.h"
 #include "mongo/client/dbclient.h"
 
 using boost::scoped_ptr;
@@ -32,11 +32,7 @@ using std::string;
 using std::stringstream;
 
 using namespace mongo;
-namespace mongo {
-    namespace unittest {
-        extern IntegrationTestParams integrationTestParams;
-    } // namespace unittest
-} // namespace mongo
+using namespace mongo::integration;
 
 namespace {
     const unsigned int UDEFAULT_CHUNK_SIZE = 255 * 1024;
@@ -50,12 +46,12 @@ namespace {
     const unsigned int UOTHER_LEN = 18;
     const int DATA_LEN = UDATA_LEN;
     const int OTHER_LEN = UOTHER_LEN;
-    const char DATA_LOC[] = "./src/mongo/unittest/data";
+    const char DATA_LOC[] = "./src/mongo/integration/data";
 
-    class GridFSTest : public unittest::Test {
+    class GridFSTest : public StandaloneTest {
     public:
         GridFSTest() : _conn(new DBClientConnection()) {
-            _conn->connect("localhost:" + mongo::unittest::integrationTestParams.port);
+            _conn->connect(server().uri());
             _conn->dropDatabase(TEST_DB);
             _gfs.reset(new GridFS(*_conn, TEST_DB));
         }
@@ -93,7 +89,7 @@ namespace {
         dataFile.seekg(0, std::ios_base::end);
         int fileSize = dataFile.tellg();
 
-        result = _gfs->storeFile("./src/mongo/unittest/data", DATA_NAME);
+        result = _gfs->storeFile(DATA_LOC, DATA_NAME);
 
         ASSERT_EQUALS(result["filename"].str(), DATA_NAME);
         ASSERT_EQUALS(result["length"].numberInt(), fileSize);

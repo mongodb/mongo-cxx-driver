@@ -15,7 +15,7 @@
 
 #include "mongo/platform/basic.h"
 
-#include "mongo/unittest/integration_test.h"
+#include "mongo/integration/integration_test.h"
 
 #include "mongo/client/command_writer.h"
 #include "mongo/client/dbclient.h"
@@ -30,7 +30,7 @@ namespace {
     using std::vector;
 
     using namespace mongo;
-    using namespace mongo::unittest;
+    using namespace mongo::integration;
 
     const string TEST_DB = "test";
     const string TEST_COLL = "bulk_operation";
@@ -50,11 +50,11 @@ namespace {
     };
 
     template <typename T>
-    class BulkOperationTest : public ::testing::Test {
+    class BulkOperationTest : public StandaloneTest {
     public:
         BulkOperationTest() {
             c = new DBClientConnection;
-            c->connect(string("localhost:") + integrationTestParams.port);
+            c->connect(server().uri());
             c->dropCollection(TEST_NS);
             _originalWireVersion = c->getMaxWireVersion();
             c->setWireVersions(RequiredWireVersion<T>::value, RequiredWireVersion<T>::value);
