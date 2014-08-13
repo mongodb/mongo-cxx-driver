@@ -1461,14 +1461,6 @@ elif not onlyServer:
 
 enforce_glibc = linux and releaseBuild and not has_option("no-glibc-check")
 
-def checkErrorCodes():
-    import buildscripts.errorcodes as x
-    if x.checkErrorCodes() == False:
-        print( "next id to use:" + str( x.getNextCode() ) )
-        Exit(-1)
-
-checkErrorCodes()
-
 #  ---- Docs ----
 def build_docs(env, target, source):
     from buildscripts import docs
