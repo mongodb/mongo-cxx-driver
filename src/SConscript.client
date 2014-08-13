@@ -207,6 +207,7 @@ clientHeaders = [
     'mongo/platform/float_utils.h',
     'mongo/platform/hash_namespace.h',
     'mongo/platform/process_id.h',
+    'mongo/platform/random.h',
     'mongo/platform/unordered_map.h',
     'mongo/platform/windows_basic.h',
     'mongo/util/allocator.h',
