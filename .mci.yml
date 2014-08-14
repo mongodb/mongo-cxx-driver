@@ -152,8 +152,8 @@ buildvariants:
 #         Linux Buildvariants         #
 #######################################
 
-- name: linux-64-shared
-  display_name: "Linux-64 (Shared)"
+- name: linux-64
+  display_name: "Linux-64"
   expansions:
     compile_flags: "--mute --dbg=on"
     scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
@@ -167,52 +167,15 @@ buildvariants:
   - name: "integration test"
   - name: "client test"
 
-- name: linux-64
-  display_name: "Linux-64 (Static)"
-  expansions:
-    compile_flags: "--mute --dbg=on"
-    scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client"
-    mongo_url: "http://downloads.10gen.com/linux/mongodb-linux-x86_64-enterprise-ubuntu1404-2.6.2.tgz"
-    mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --setParameter=enableTestCommands=1 &"
-  run_on:
-    - ubuntu1404-test
-  tasks:
-  - name: lint
-  - name: compile
-  - name: "unit test"
-  - name: "integration test"
-  - name: "client test"
-
 #######################################
 #        Windows Buildvariants        #
 #######################################
 
-- name: windows-64-shared
-  display_name: "Win-64 (Shared)"
+- name: windows-64
+  display_name: "Win-64"
   expansions:
     compile_flags: "--mute --dbg=on"
     scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows --sharedclient"
-    dllpath: --dllpath="c:\local\boost_1_55_0\lib64-msvc-10.0;c:\openssl\bin;c:\sasl\bin"
-    extrapath: --extrapath="c:\openssl,c:\sasl"
-    cpppath: --cpppath="c:\local\boost_1_55_0"
-    libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-10.0"
-    mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --setParameter=enableTestCommands=1 &"
-    mongo_url: "http://downloads.10gen.com/win32/mongodb-win32-x86_64-enterprise-windows-64-2.6.2.zip"
-    extension: ".exe"
-    scons: scons.bat
-  run_on:
-    - windows-64-test
-  tasks:
-  - name: compile
-  - name: "unit test"
-  - name: "integration test"
-  - name: "client test"
-
-- name: windows-64
-  display_name: "Win-64 (Static)"
-  expansions:
-    compile_flags: "--mute --dbg=on"
-    scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client"
     dllpath: --dllpath="c:\local\boost_1_55_0\lib64-msvc-10.0;c:\openssl\bin;c:\sasl\bin"
     extrapath: --extrapath="c:\openssl,c:\sasl"
     cpppath: --cpppath="c:\local\boost_1_55_0"
