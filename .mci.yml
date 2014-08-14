@@ -1,3 +1,73 @@
+#######################################
+#      CXX Driver Config for MCI      #
+#######################################
+
+## Some variables for convenience:
+
+cxx_driver_variables:
+
+## The basic set of tests to run on most buildvariants
+  basic_test_list: &basic_tests
+    - name: "compile"
+    - name: "unit test"
+    - name: "integration test"
+    - name: "client test"
+
+## Common download urls (merge in as hashes)
+  mongo_download_urls:
+    ubuntu1404: &mongo_url_ubuntu1404
+      mongo_url: "http://downloads.10gen.com/linux/mongodb-linux-x86_64-enterprise-ubuntu1404-2.6.2.tgz"
+    windows64-bit: &mongo_url_windows64
+      mongo_url: "http://downloads.10gen.com/win32/mongodb-win32-x86_64-enterprise-windows-64-2.6.2.zip"
+    rhel55: &mongo_url_rhel55
+      mongo_url: "downloads.mongodb.org/linux/mongodb-linux-x86_64-rhel55-latest.tgz"
+
+## Common mongodb arguments
+  mongodb_arguments:
+    standard: &mongodb_args
+      mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --setParameter=enableTestCommands=1 &"
+
+## Common sets of scons flags
+  scons_flags:
+    standard: &scons_flags_64
+      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
+    dynamic_windows: &scons_flags_64_windows_dynamic
+      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows --sharedclient"
+
+## Common compile flags
+  compile_flags:
+    basic: &compile_flags
+      compile_flags: "--mute"
+    debug: &compile_flags_debug
+      compile_flags: "--mute --dbg=on"
+
+## Paths for Windows builds
+  windows_paths:
+    ## DLL paths
+    dll:
+      dll_msvc2010: &dllpath_msvc2010
+        dllpath: --dllpath="c:\local\boost_1_55_0\lib64-msvc-10.0;c:\openssl\bin;c:\sasl\bin"
+      dll_msvc2013: &dllpath_msvc2013
+        dllpath: --dllpath="c:\local\boost_1_55_0\lib64-msvc-12.0;c:\openssl\bin;c:\sasl\bin"
+    ## C++ paths
+    cpp:
+      cpp_boost_1_55_0: &cpppath
+        cpppath: --cpppath="c:\local\boost_1_55_0"
+    ## Extras
+    extra:
+      basic_extras: &extrapath
+        extrapath: --extrapath="c:\openssl,c:\sasl"
+    ## Library paths
+    lib:
+      lib_msvc2010: &libpath_msvc2010
+        libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-10.0"
+      lib_msvc2013: &libpath_msvc2013
+        libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-12.0"
+
+#######################################
+#            Functions                #
+#######################################
+
 functions:
   "fetch source" :
     command: git.get_project
@@ -44,7 +114,10 @@ post:
       script: |
         ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py}
 
-## tasks
+#######################################
+#               Tasks                 #
+#######################################
+
 tasks:
     - name: lint
       commands:
@@ -152,79 +225,104 @@ buildvariants:
 #         Linux Buildvariants         #
 #######################################
 
-- name: linux-64-shared
-  display_name: "Linux-64 (Shared)"
-  expansions:
-    compile_flags: "--mute --dbg=on"
-    scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
-    mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --setParameter=enableTestCommands=1 &"
-    mongo_url: "http://downloads.10gen.com/linux/mongodb-linux-x86_64-enterprise-ubuntu1404-2.6.2.tgz"
-  run_on:
-    - ubuntu1404-test
-  tasks:
-  - name: compile
-  - name: "unit test"
-  - name: "integration test"
-  - name: "client test"
+## RHEL 5.5
 
-- name: linux-64
-  display_name: "Linux-64 (Static)"
+- name: rhel55
+  display_name: "RHEL 5.5"
   expansions:
-    compile_flags: "--mute --dbg=on"
-    scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client"
-    mongo_url: "http://downloads.10gen.com/linux/mongodb-linux-x86_64-enterprise-ubuntu1404-2.6.2.tgz"
-    mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --setParameter=enableTestCommands=1 &"
+    <<: *compile_flags
+    <<: *scons_flags_64
+    <<: *mongodb_args
+    <<: *mongo_url_rhel55
   run_on:
-    - ubuntu1404-test
-  tasks:
-  - name: lint
-  - name: compile
-  - name: "unit test"
-  - name: "integration test"
-  - name: "client test"
+  - rhel55-test
+  tasks: *basic_tests
+
+## Ubuntu 1404
+
+- name: ubuntu1404
+  display_name: "Ubuntu 1404"
+  expansions:
+    <<: *compile_flags
+    <<: *scons_flags_64
+    <<: *mongodb_args
+    <<: *mongo_url_ubuntu1404
+  run_on:
+  - ubuntu1404-test
+  tasks: *basic_tests
+
+## Ubuntu 1404 DEBUG
+
+- name: ubuntu1404-debug
+  display_name: "Ubuntu 1404 DEBUG"
+  expansions:
+    <<: *compile_flags_debug
+    <<: *scons_flags_64
+    <<: *mongodb_args
+    <<: *mongo_url_ubuntu1404
+  run_on:
+  - ubuntu1404-test
+  tasks: *basic_tests
 
 #######################################
 #        Windows Buildvariants        #
 #######################################
 
-- name: windows-64-shared
-  display_name: "Win-64 (Shared)"
-  expansions:
-    compile_flags: "--mute --dbg=on"
-    scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows --sharedclient"
-    dllpath: --dllpath="c:\local\boost_1_55_0\lib64-msvc-10.0;c:\openssl\bin;c:\sasl\bin"
-    extrapath: --extrapath="c:\openssl,c:\sasl"
-    cpppath: --cpppath="c:\local\boost_1_55_0"
-    libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-10.0"
-    mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --setParameter=enableTestCommands=1 &"
-    mongo_url: "http://downloads.10gen.com/win32/mongodb-win32-x86_64-enterprise-windows-64-2.6.2.zip"
-    extension: ".exe"
-    scons: scons.bat
-  run_on:
-    - windows-64-test
-  tasks:
-  - name: compile
-  - name: "unit test"
-  - name: "integration test"
-  - name: "client test"
+## Windows 64-bit (msvc2010)
 
 - name: windows-64
-  display_name: "Win-64 (Static)"
+  display_name: "Windows 64-bit (msvc2010)"
   expansions:
-    compile_flags: "--mute --dbg=on"
-    scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client"
-    dllpath: --dllpath="c:\local\boost_1_55_0\lib64-msvc-10.0;c:\openssl\bin;c:\sasl\bin"
-    extrapath: --extrapath="c:\openssl,c:\sasl"
-    cpppath: --cpppath="c:\local\boost_1_55_0"
-    libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-10.0"
-    mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --setParameter=enableTestCommands=1 &"
-    mongo_url: "http://downloads.10gen.com/win32/mongodb-win32-x86_64-enterprise-windows-64-2.6.2.zip"
+    ## basic compilation and installation
+    <<: *compile_flags
+    <<: *scons_flags_64
+    <<: *mongodb_args
+    <<: *mongo_url_windows64
+    ## additional paths for windows builds
+    <<: *dllpath_msvc2010
+    <<: *libpath_msvc2010
+    <<: *extrapath
+    <<: *cpppath
     extension: ".exe"
     scons: scons.bat
   run_on:
-    - windows-64-test
-  tasks:
-  - name: compile
-  - name: "unit test"
-  - name: "integration test"
-  - name: "client test"
+  - windows-64-test
+  tasks: *basic_tests
+
+## Windows 64-bit DEBUG DYNAMIC (msvc2010)
+
+- name: windows-64
+  display_name: "Windows 64-bit Debug Dynamic (msvc2010)"
+  expansions:
+    <<: *compile_flags_debug
+    <<: *scons_flags_64_windows_dynamic
+    <<: *mongodb_args
+    <<: *mongo_url_windows64
+    <<: *dllpath_msvc2010
+    <<: *libpath_msvc2010
+    <<: *extrapath
+    <<: *cpppath
+    extension: ".exe"
+    scons: scons.bat
+  run_on:
+  - windows-64-test
+  tasks: *basic_tests
+
+## Windows 64-bit (msvc2013)
+
+- name: windows-64
+  display_name: "Windows 64-bit (msvc2013)"
+  expansions:
+    <<: *compile_flags
+    <<: *scons_flags_64_windows_dynamic
+    <<: *mongodb_args
+    <<: *mongo_url_windows64
+    <<: *dllpath_msvc2013
+    <<: *libpath_msvc2013
+    <<: *extrapath
+    <<: *cpppath
+    extension: ".exe"
+    scons: scons.bat
+  run_on:
+  - windows-64-test
+  tasks: *basic_tests
