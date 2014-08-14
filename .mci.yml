@@ -1,3 +1,48 @@
+#######################################
+#      CXX Driver Config for MCI      #
+#######################################
+
+## Some variables for convenience:
+
+variables:
+
+## The basic set of tests to run on most buildvariants
+  basic_test_list: &basic_tests
+    - name: "compile"
+    - name: "unit test"
+    - name: "integration test"
+    - name: "client test"
+
+## Common download urls (merge in as hashes)
+  mongo_download_urls:
+    ubuntu1404: &ubuntu1404_mongo_url
+      mongo_url: "http://downloads.10gen.com/linux/mongodb-linux-x86_64-enterprise-ubuntu1404-2.6.2.tgz"
+    windows64-bit: &windows64_mongo_url
+      mongo_url: "http://downloads.10gen.com/win32/mongodb-win32-x86_64-enterprise-windows-64-2.6.2.zip"
+
+## Common mongodb arguments
+  mongodb_arguments:
+    standard: &standard_mongodb_args
+      mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --setParameter=enableTestCommands=1 &"
+
+## Common sets of scons flags
+  scons_flags:
+    standard: &standard_scons_flags_64
+      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
+    dynamic_windows: &dynamic_windows_scons_flags
+      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows --sharedclient"
+
+## Common compile flags
+  compile_flags:
+    basic: &basic_compile_flags
+      compile_flags: "--mute"
+    debug: &debug_compile_flags
+      compile_flags: "--mute --dbg=on"
+
+#######################################
+#            Functions                #
+#######################################
+
 functions:
   "fetch source" :
     command: git.get_project
@@ -44,7 +89,10 @@ post:
       script: |
         ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py}
 
-## tasks
+#######################################
+#               Tasks                 #
+#######################################
+
 tasks:
     - name: lint
       commands:
@@ -152,42 +200,49 @@ buildvariants:
 #         Linux Buildvariants         #
 #######################################
 
-- name: linux-64
-  display_name: "Linux-64"
+## Ubuntu 1404
+
+- name: ubuntu1404
+  display_name: "Ubuntu 1404"
   expansions:
-    compile_flags: "--mute --dbg=on"
-    scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
-    mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --setParameter=enableTestCommands=1 &"
-    mongo_url: "http://downloads.10gen.com/linux/mongodb-linux-x86_64-enterprise-ubuntu1404-2.6.2.tgz"
+    <<: *basic_compile_flags
+    <<: *standard_scons_flags_64
+    <<: *standard_mongodb_args
+    <<: *ubuntu1404_mongo_url
   run_on:
-    - ubuntu1404-test
-  tasks:
-  - name: compile
-  - name: "unit test"
-  - name: "integration test"
-  - name: "client test"
+  - ubuntu1404-test
+  tasks: *basic_tests
+
+## Ubuntu 1404 DEBUG
+
+- name: ubuntu1404-debug
+  display_name: "Ubuntu 1404 DEBUG"
+  expansions:
+    <<: *debug_compile_flags
+    <<: *standard_scons_flags_64
+    <<: *standard_mongodb_args
+    <<: *ubuntu1404_mongo_url
+  run_on:
+  - ubuntu1404-test
+  tasks: *basic_tests
 
 #######################################
 #        Windows Buildvariants        #
 #######################################
 
 - name: windows-64
-  display_name: "Win-64"
+  display_name: "Windows 64-bit Debug Dynamic"
   expansions:
-    compile_flags: "--mute --dbg=on"
-    scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows --sharedclient"
     dllpath: --dllpath="c:\local\boost_1_55_0\lib64-msvc-10.0;c:\openssl\bin;c:\sasl\bin"
     extrapath: --extrapath="c:\openssl,c:\sasl"
     cpppath: --cpppath="c:\local\boost_1_55_0"
     libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-10.0"
-    mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --setParameter=enableTestCommands=1 &"
-    mongo_url: "http://downloads.10gen.com/win32/mongodb-win32-x86_64-enterprise-windows-64-2.6.2.zip"
+    <<: *debug_compile_flags
+    <<: *dynamic_windows_scons_flags
+    <<: *standard_mongodb_args
+    <<: *windows64_mongo_url
     extension: ".exe"
     scons: scons.bat
   run_on:
-    - windows-64-test
-  tasks:
-  - name: compile
-  - name: "unit test"
-  - name: "integration test"
-  - name: "client test"
+  - windows-64-test
+  tasks: *basic_tests
