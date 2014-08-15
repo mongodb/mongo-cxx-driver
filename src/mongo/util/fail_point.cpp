@@ -18,6 +18,7 @@
 #include <boost/thread/locks.hpp>
 
 #include "mongo/util/mongoutils/str.h"
+#include "mongo/util/log.h"
 #include "mongo/util/time_support.h"
 
 using mongoutils::str::stream;

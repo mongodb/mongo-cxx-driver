@@ -1098,9 +1098,17 @@ namespace mongo {
         std::list<std::string> getDatabaseNames();
 
         /**
-           get a list of all the current collections in db
+         * Get a list of all the current collections in db.
+         * Returns fully qualified names.
          */
         std::list<std::string> getCollectionNames( const std::string& db );
+
+        /**
+         * { name : "<short collection name>",
+         *   options : { }
+         * }
+         */
+        std::list<BSONObj> getCollectionInfos( const std::string& db );
 
         bool exists( const std::string& ns );
 
@@ -1127,7 +1135,12 @@ namespace mongo {
          */
         virtual void createIndex( const StringData& ns, const IndexSpec& descriptor );
 
+        /**
+         * @deprecated use getIndexSpecs
+         */
         virtual std::auto_ptr<DBClientCursor> getIndexes( const std::string &ns );
+
+        virtual std::list<BSONObj> getIndexSpecs( const std::string &ns, int options = 0 );
 
         virtual void dropIndex( const std::string& ns , BSONObj keys );
         virtual void dropIndex( const std::string& ns , const std::string& indexName );

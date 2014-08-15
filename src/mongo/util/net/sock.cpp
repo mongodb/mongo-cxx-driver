@@ -15,6 +15,8 @@
  *    limitations under the License.
  */
 
+#define MONGO_LOG_DEFAULT_COMPONENT ::mongo::logger::LogComponent::kNetworking
+
 #include "mongo/platform/basic.h"
 
 #include "mongo/util/net/sock.h"
@@ -50,8 +52,6 @@ namespace mongo {
     using std::string;
     using std::stringstream;
     using std::vector;
-
-    MONGO_LOG_DEFAULT_COMPONENT_FILE(::mongo::logger::LogComponent::kNetworking);
 
     MONGO_FP_DECLARE(throwSockExcep);
     MONGO_FP_DECLARE(notStillConnected);

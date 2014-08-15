@@ -15,6 +15,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/platform/basic.h"
+
 #include "mongo/util/assert_util.h"
 
 using namespace std;

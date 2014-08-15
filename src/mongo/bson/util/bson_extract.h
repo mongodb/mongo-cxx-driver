@@ -16,6 +16,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "mongo/base/status.h"
 #include "mongo/base/string_data.h"
@@ -25,6 +26,8 @@ namespace mongo {
 
     class BSONObj;
     class BSONElement;
+    class OID;
+    class OpTime;
 
     /**
      * Finds an element named "fieldName" in "object".
@@ -86,6 +89,30 @@ namespace mongo {
     Status bsonExtractStringField(const BSONObj& object,
                                   const StringData& fieldName,
                                   std::string* out);
+
+    /**
+     * Finds an OpTime-typed element named "fieldName" in "object" and stores its value in "out".
+     *
+     * Returns Status::OK() and sets *out to the found element's OpTime value on success.  Returns
+     * ErrorCodes::NoSuchKey if there are no matches for "fieldName", and ErrorCodes::TypeMismatch
+     * if the type of the matching element is not OpTime.  For return values other than
+     * Status::OK(), the resulting value of "*out" is undefined.
+     */
+    Status bsonExtractOpTimeField(const BSONObj& object,
+                                  const StringData& fieldName,
+                                  OpTime* out);
+
+    /**
+     * Finds an OID-typed element named "fieldName" in "object" and stores its value in "out".
+     *
+     * Returns Status::OK() and sets *out to the found element's OID value on success.  Returns
+     * ErrorCodes::NoSuchKey if there are no matches for "fieldName", and ErrorCodes::TypeMismatch
+     * if the type of the matching element is not OID.  For return values other than Status::OK(),
+     * the resulting value of "*out" is undefined.
+     */
+    Status bsonExtractOIDField(const BSONObj& object,
+                               const StringData& fieldName,
+                               OID* out);
 
     /**
      * Finds a bool-like element named "fieldName" in "object".

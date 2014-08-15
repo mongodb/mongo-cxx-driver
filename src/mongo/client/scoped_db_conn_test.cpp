@@ -21,6 +21,7 @@
 #include "mongo/db/dbmessage.h"
 #include "mongo/platform/cstdint.h"
 #include "mongo/util/fail_point_service.h"
+#include "mongo/util/log.h"
 #include "mongo/util/time_support.h"
 #include "mongo/util/timer.h"
 #include "mongo/unittest/unittest.h"
@@ -145,8 +146,8 @@ namespace mongo {
                 }
             }
 
-            int send(MsgData* toSend, int len) {
-                int sent = ::send(_fd, (char*)toSend, len, 0);
+            int send(MsgData::ConstView toSend, int len) {
+                int sent = ::send(_fd, toSend.view2ptr(), toSend.getLen(), 0);
                 if (sent == -1) {
                     perror("send");
                     close();
@@ -225,15 +226,15 @@ namespace mongo {
 
             Message reply;
             replyToQuery(0, reply, _build_is_master());
-            MsgData* toSend = reply.singleData();
-            toSend->responseTo = request_id;
+            MsgData::View toSend(reply.singleData());
+            toSend.setResponseTo(request_id);
             _send(toSend);
         }
 
-        void _send(MsgData* toSend) {
-            int left = toSend->len;
+        void _send(MsgData::ConstView toSend) {
+            int left = toSend.getLen();
             while (left > 0) {
-                int sent = _socket->send(toSend + (toSend->len - left), left);
+                int sent = _socket->send(toSend.view2ptr() + (toSend.getLen() - left), left);
                 left -= sent;
             }
         }

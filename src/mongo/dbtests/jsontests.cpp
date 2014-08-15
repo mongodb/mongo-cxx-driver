@@ -21,7 +21,7 @@
 #include "mongo/db/jsobj.h"
 #include "mongo/db/json.h"
 #include "mongo/unittest/unittest.h"
-
+#include "mongo/util/log.h"
 
 namespace JsonTests {
 

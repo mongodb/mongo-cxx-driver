@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#define MONGO_LOG_DEFAULT_COMPONENT ::mongo::logger::LogComponent::kNetworking
+
 #include "mongo/platform/basic.h"
 
 #include "mongo/client/dbclient_rs.h"
@@ -36,8 +38,6 @@ namespace mongo {
     using std::set;
     using std::string;
     using std::vector;
-
-    MONGO_LOG_DEFAULT_COMPONENT_FILE(::mongo::logger::LogComponent::kNetworking);
 
 namespace {
 
@@ -986,9 +986,9 @@ namespace {
             return false;
 
         if ( ns ) {
-            QueryResult * res = (QueryResult*)response.singleData();
-            if ( res->nReturned == 1 ) {
-                BSONObj x(res->data() );
+            QueryResult::View res = response.singleData().view2ptr();
+            if ( res.getNReturned() == 1 ) {
+                BSONObj x(res.data() );
                 if ( str::contains( ns , "$cmd" ) ) {
                     if ( isNotMasterErrorString( x["errmsg"] ) )
                         isntMaster();

@@ -174,6 +174,9 @@ add_option( "disable-declspec-thread", "don't use __declspec(thread) on Windows"
 add_option( "64" , "whether to force 64 bit" , 0 , True , "force64" )
 add_option( "32" , "whether to force 32 bit" , 0 , True , "force32" )
 
+add_option( "endian" , "endianness of target platform" , 1 , False , "endian",
+            type="choice", choices=["big", "little", "auto"], default="auto" )
+
 add_option( "cxx", "compiler to use" , 1 , True )
 add_option( "cc", "compiler to use for c" , 1 , True )
 add_option( "cc-use-shell-environment", "use $CC from shell for C compiler" , 0 , False )
@@ -192,6 +195,7 @@ if windows:
                 1, False)
 
 add_option( "ssl" , "Enable SSL" , 0 , True )
+add_option( "ssl-fips-capability", "Enable the ability to activate FIPS 140-2 mode", 0, True );
 
 # library choices
 add_option( "libc++", "use libc++ (experimental, requires clang)", 0, True )
@@ -440,6 +444,16 @@ if has_option('mute'):
     env.Append( LINKCOMSTR = "Linking $TARGET" )
     env.Append( SHLINKCOMSTR = env["LINKCOMSTR"] )
     env.Append( ARCOMSTR = "Generating library $TARGET" )
+
+endian = get_option( "endian" )
+
+if endian == "auto":
+    endian = sys.byteorder
+
+if endian == "little":
+    env["MONGO_BYTE_ORDER"] = "1234"
+elif endian == "big":
+    env["MONGO_BYTE_ORDER"] = "4321"
 
 if env['PYSYSPLATFORM'] == 'linux3':
     env['PYSYSPLATFORM'] = 'linux2'
@@ -773,6 +787,8 @@ if has_option( "ssl" ):
     else:
         env.Append( LIBS=["ssl"] )
         env.Append( LIBS=["crypto"] )
+    if has_option("ssl-fips-capability"):
+        env.Append( CPPDEFINES=["MONGO_SSL_FIPS"] )
 
 try:
     umask = os.umask(022)

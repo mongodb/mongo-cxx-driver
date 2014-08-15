@@ -39,6 +39,12 @@ def makeConfigHDefine(env, subst_key, env_var):
     return (subst_key, replacement % env_var)
 libEnv.AddMethod(makeConfigHDefine)
 
+def makeConfigHDefineWithValue(env, subst_key, env_var):
+    value = env.get(env_var)
+    replacement = "#define %s %s"
+    return (subst_key, replacement % (env_var, value))
+libEnv.AddMethod(makeConfigHDefineWithValue)
+
 configSubstitutions = [
     libEnv.makeConfigHDefine('@mongoclient_ssl@', 'MONGO_SSL'),
     libEnv.makeConfigHDefine('@mongoclient_sasl@', 'MONGO_SASL'),
@@ -46,6 +52,7 @@ configSubstitutions = [
     libEnv.makeConfigHDefine('@mongoclient_have_cxx11_atomics@', 'MONGO_HAVE_CXX11_ATOMICS'),
     libEnv.makeConfigHDefine('@mongoclient_have_gcc_atomic_builtins@', 'MONGO_HAVE_GCC_ATOMIC_BUILTINS'),
     libEnv.makeConfigHDefine('@mongoclient_have_gcc_sync_builtins@', 'MONGO_HAVE_GCC_SYNC_BUILTINS'),
+    libEnv.makeConfigHDefineWithValue('@mongoclient_byte_order@', 'MONGO_BYTE_ORDER'),
 ]
 libEnv.Substfile('mongo/config.h.in', SUBST_DICT=configSubstitutions)
 
@@ -179,7 +186,10 @@ exampleSourceMap = [
 ]
 
 clientHeaders = [
+    'mongo/base/data_view.h',
+    'mongo/base/data_cursor.h',
     'mongo/base/disallow_copying.h',
+    'mongo/base/encoded_value_storage.h',
     'mongo/base/error_codes.h',
     'mongo/base/parse_number.h',
     'mongo/base/status-inl.h',
@@ -273,6 +283,7 @@ clientHeaders = [
     'mongo/platform/compiler_gcc.h',
     'mongo/platform/compiler_msvc.h',
     'mongo/platform/cstdint.h',
+    'mongo/platform/endian.h',
     'mongo/platform/float_utils.h',
     'mongo/platform/hash_namespace.h',
     'mongo/platform/process_id.h',

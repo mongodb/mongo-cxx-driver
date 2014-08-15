@@ -32,6 +32,8 @@
 #include <iostream>
 #include <boost/thread/mutex.hpp>
 
+#include "mongo/util/log.h"
+
 #ifndef verify
 #  define verify(x) MONGO_verify(x)
 #endif

@@ -15,6 +15,8 @@
  *    limitations under the License.
  */
 
+#define MONGO_LOG_DEFAULT_COMPONENT ::mongo::logger::LogComponent::kNetworking
+
 #include "mongo/platform/basic.h"
 
 #include "mongo/bson/util/bson_extract.h"
@@ -59,8 +61,6 @@ namespace mongo {
     using std::string;
     using std::stringstream;
     using std::vector;
-
-    MONGO_LOG_DEFAULT_COMPONENT_FILE(::mongo::logger::LogComponent::kNetworking);
 
     AtomicInt64 DBClientBase::ConnectionIdSequence;
 
@@ -1210,17 +1210,61 @@ namespace mongo {
     }
 
     list<string> DBClientWithCommands::getCollectionNames( const string& db ) {
+        list<BSONObj> infos = getCollectionInfos( db );
         list<string> names;
+        for ( list<BSONObj>::iterator it = infos.begin(); it != infos.end(); ++it ) {
+            names.push_back( db + "." + (*it)["name"].valuestr() );
+        }
+        return names;
+    }
+
+    list<BSONObj> DBClientWithCommands::getCollectionInfos( const string& db ) {
+        list<BSONObj> infos;
+
+        // first we're going to try the command
+        // it was only added in 2.8, so if we're talking to an older server
+        // we'll fail back to querying system.namespaces
+
+        {
+            BSONObj res;
+            if ( runCommand( db, BSON( "listCollections" << 1), res ) ) {
+                BSONObj collections = res["collections"].Obj();
+                BSONObjIterator it( collections );
+                while ( it.more() ) {
+                    BSONElement e = it.next();
+                    infos.push_back( e.Obj().getOwned() );
+                }
+                return infos;
+            }
+
+            // command failed
+
+            int code = res["code"].numberInt();
+            string errmsg = res["errmsg"].valuestrsafe();
+            if ( code == ErrorCodes::CommandNotFound ||
+                 errmsg.find( "no such cmd" ) != string::npos ) {
+                // old version of server, ok, fall through to old code
+            }
+            else {
+                uasserted( 18630, str::stream() << "listCollections failed: " << res );
+            }
+
+        }
 
         string ns = db + ".system.namespaces";
         auto_ptr<DBClientCursor> c = query( ns.c_str() , BSONObj() );
         while ( c->more() ) {
-            string name = c->nextSafe()["name"].valuestr();
-            if ( name.find( "$" ) != string::npos )
+            BSONObj obj = c->nextSafe();
+            string ns = obj["name"].valuestr();
+            if ( ns.find( "$" ) != string::npos )
                 continue;
-            names.push_back( name );
+            BSONObjBuilder b;
+            b.append( "name", ns.substr( db.size() + 1 ) );
+            b.appendElementsUnique( obj );
+            infos.push_back( b.obj() );
         }
-        return names;
+
+        return infos;
     }
 
     bool DBClientWithCommands::exists( const string& ns ) {
@@ -1755,6 +1799,42 @@ namespace mongo {
     auto_ptr<DBClientCursor> DBClientWithCommands::getIndexes( const string &ns ) {
         return query( NamespaceString( ns ).getSystemIndexesCollection() , BSON( "ns" << ns ) );
     }
+
+    list<BSONObj> DBClientWithCommands::getIndexSpecs( const string &ns, int options ) {
+        list<BSONObj> specs;
+
+        {
+            BSONObj cmd = BSON( "listIndexes" << nsToCollectionSubstring( ns ) );
+            BSONObj res;
+            if ( runCommand( nsToDatabase( ns ), cmd, res, options ) ) {
+                BSONObjIterator i( res["indexes"].Obj() );
+                while ( i.more() ) {
+                    specs.push_back( i.next().Obj().getOwned() );
+                }
+                return specs;
+            }
+            int code = res["code"].numberInt();
+            string errmsg = res["errmsg"].valuestrsafe();
+            if ( code == ErrorCodes::CommandNotFound ||
+                 errmsg.find( "no such cmd" ) != string::npos ) {
+                // old version of server, ok, fall through to old code
+            }
+            else if ( code == ErrorCodes::NamespaceNotFound ) {
+                return specs;
+            }
+            else {
+                uasserted( 18631, str::stream() << "listIndexes failed: " << res );
+            }
+        }
+
+        auto_ptr<DBClientCursor> cursor = getIndexes( ns );
+        while ( cursor->more() ) {
+            BSONObj spec = cursor->nextSafe();
+            specs.push_back( spec.getOwned() );
+        }
+        return specs;
+    }
+
 
     void DBClientWithCommands::dropIndex( const string& ns , BSONObj keys ) {
         dropIndex( ns , genIndexName( keys ) );

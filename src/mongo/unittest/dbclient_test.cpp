@@ -25,6 +25,7 @@
 #include "mongo/stdx/functional.h"
 #include "mongo/unittest/integration_test.h"
 #include "mongo/util/fail_point_service.h"
+#include "mongo/util/log.h"
 #include "mongo/util/stringutils.h"
 
 #include "mongo/bson/bson.h"

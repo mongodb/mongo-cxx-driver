@@ -19,6 +19,7 @@
 #include "mongo/unittest/unittest.h"
 #include "mongo/platform/random.h"
 #include "mongo/bson/bson_validate.h"
+#include "mongo/util/log.h"
 
 namespace {
 

@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#define MONGO_LOG_DEFAULT_COMPONENT ::mongo::logger::LogComponent::kNetworking
+
 #include "mongo/platform/basic.h"
 
 #include "mongo/client/replica_set_monitor.h"
@@ -49,8 +51,6 @@ namespace mongo {
     using std::numeric_limits;
     using std::string;
     using std::set;
-
-    MONGO_LOG_DEFAULT_COMPONENT_FILE(::mongo::logger::LogComponent::kNetworking);
 
 namespace {
     // Pull nested types to top-level scope
