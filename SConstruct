@@ -218,6 +218,8 @@ add_option('propagate-shell-environment',
            "Pass shell environment to sub-processes (NEVER for production builds)",
            0, False)
 
+add_option('gtest-filter', "Pass argument as filter to gtest", 1, False)
+
 if darwin:
     osx_version_choices = ['10.6', '10.7', '10.8', '10.9']
     add_option("osx-version-min", "minimum OS X version to support", 1, True,
@@ -455,6 +457,10 @@ if has_option( "cc-use-shell-environment" ) and has_option( "cc" ):
 elif has_option( "cxx-use-shell-environment" ) and has_option( "cxx" ):
     print("Cannot specify both --cxx-use-shell-environment and --cxx")
     Exit(1)
+
+
+if has_option( "gtest-filter" ):
+    env["gtest_filter"] = get_option('gtest-filter')
 
 if has_option( "cxx-use-shell-environment" ):
     env["CXX"] = os.getenv("CXX");
