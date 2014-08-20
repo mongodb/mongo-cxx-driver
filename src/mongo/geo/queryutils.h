@@ -45,23 +45,23 @@ namespace geo {
     }
 
     template<typename TCoordinates>
-    inline BSONObj NEAR(const GeoObj<TCoordinates>& geoObj) {
+    inline BSONObj GEONEAR(const GeoObj<TCoordinates>& geoObj) {
         return GEOQUERY("$near", geoObj);
     }
 
     template<typename TCoordinates>
-    inline BSONObj NEAR(const GeoObj<TCoordinates>& geoObj, double distance) {
+    inline BSONObj GEONEAR(const GeoObj<TCoordinates>& geoObj, double distance) {
         return BSON("$near" << BSON("$geometry" << geoObj.toBSON()) <<
                     "$maxDistance" << distance);
     }
 
     template<typename TCoordinates>
-    inline BSONObj NEARSPHERE(const GeoObj<TCoordinates>& geoObj) {
+    inline BSONObj GEONEARSPHERE(const GeoObj<TCoordinates>& geoObj) {
         return GEOQUERY("$nearSphere", geoObj);
     }
 
     template<typename TCoordinates>
-    inline BSONObj NEARSPHERE(const GeoObj<TCoordinates>& geoObj,
+    inline BSONObj GEONEARSPHERE(const GeoObj<TCoordinates>& geoObj,
         double distance) {
         return BSON("$nearSphere" << BSON("$geometry" << geoObj.toBSON()) <<
                     "$maxDistance" << distance);
