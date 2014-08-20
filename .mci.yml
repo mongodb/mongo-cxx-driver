@@ -131,15 +131,6 @@ post:
 #######################################
 
 tasks:
-    - name: rhel55_boost
-      commands:
-        - command: shell.exec
-          params:
-            script: |
-                set -o errexit
-                set -o verbose
-                yum -y install boost141-devel.i386 boost141-devel.x86_64
-
     - name: lint
       commands:
         - func: "fetch source"
@@ -260,9 +251,7 @@ buildvariants:
     <<: *mongo_url_rhel55
   run_on:
   - rhel55-test
-  tasks:
-    rhel55_boost
-    *basic_tests
+  tasks: *basic_tests
 
 ## Ubuntu 1404
 
