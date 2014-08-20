@@ -60,6 +60,15 @@ cxx_driver_variables:
       lib_msvc2010: &libpath_msvc2010
         libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-10.0"
 
+## Toolchain options for windows
+  windows_toolchains:
+    msvc2010: &toolchain_msvc2010
+      toolchain_flags: --msvc-version=10.0
+    msvc2012: &toolchain_msvc2012
+      toolchain_flags: --msvc-version=11.0
+    msvc2013: &toolchain_msvc2013
+      toolchain_flags: --msvc-version=12.0
+
 ## Paths and flags for RHEL 5.5 builds
   rhel55_fixups:
     scons:
@@ -291,6 +300,7 @@ buildvariants:
     ## basic compilation and installation
     <<: *compile_flags
     <<: *scons_flags_64
+    <<: *toolchain_msvc2010
     <<: *mongodb_args
     <<: *mongo_url_windows64
     ## additional paths for windows builds
@@ -311,6 +321,7 @@ buildvariants:
   expansions:
     <<: *compile_flags_debug
     <<: *scons_flags_64_windows_dynamic
+    <<: *toolchain_msvc2010
     <<: *mongodb_args
     <<: *mongo_url_windows64
     <<: *dllpath_msvc2010
@@ -330,6 +341,7 @@ buildvariants:
   expansions:
     <<: *compile_flags
     <<: *scons_flags_64_windows_dynamic
+    <<: *toolchain_msvc2013
     <<: *mongodb_args
     <<: *mongo_url_windows64
     <<: *dllpath_msvc2010 # For now, we use the VC 10 boost because that is what is installed.
