@@ -108,8 +108,7 @@ namespace geo {
          *
          * @return a vector of const pointers to each geometry in defined in the collection.
          */
-        static std::vector<const GeoObj<TCoordinates>*> MONGO_CLIENT_FUNC
-            parseGeometries(const BSONObj& bson);
+        static std::vector<const GeoObj<TCoordinates>*> parseGeometries(const BSONObj& bson);
 
         BSONObj _bson;
         std::vector<const GeoObj<TCoordinates>*> _geometries;

@@ -57,8 +57,7 @@ namespace geo {
         virtual GeoObjType getType() const = 0;
 
     protected:
-        static BSONObj MONGO_CLIENT_FUNC validateType(const BSONObj& bson,
-            const StringData& typeStr);
+        static BSONObj validateType(const BSONObj& bson, const StringData& typeStr);
     };
 
     template<typename TCoordinates>

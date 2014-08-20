@@ -85,10 +85,8 @@ namespace geo {
         std::vector<LineString<TCoordinates> > getLineStrings() const;
 
     private:
-        static BSONObj MONGO_CLIENT_FUNC createBSON(
-            const std::vector<LineString<TCoordinates> >& lineStrings);
-        static std::vector<LineString<TCoordinates> > MONGO_CLIENT_FUNC parseLineStrings(
-            const BSONObj& bson);
+        static BSONObj createBSON(const std::vector<LineString<TCoordinates> >& lineStrings);
+        static std::vector<LineString<TCoordinates> > parseLineStrings(const BSONObj& bson);
 
         BSONObj _bson;
         std::vector<LineString<TCoordinates> > _lineStrings;

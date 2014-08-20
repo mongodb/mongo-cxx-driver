@@ -44,10 +44,10 @@ namespace geo {
          * LineString. So the returned GeoObj* can be statically cast to a LineString*
          * in such case.
          */
-        static GeoObj<TCoordinates>* MONGO_CLIENT_FUNC parse(const BSONObj& bson);
+        static GeoObj<TCoordinates>* parse(const BSONObj& bson);
 
     private:
-        static GeoObjType MONGO_CLIENT_FUNC stringToType(const StringData& typeStr);
+        static GeoObjType stringToType(const StringData& typeStr);
     };
 
 } // namespace geo

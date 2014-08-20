@@ -79,9 +79,8 @@ namespace geo {
         std::vector<Polygon<TCoordinates> > getPolygons() const { return _polygons; }
 
     private:
-        static Polygon<TCoordinates> MONGO_CLIENT_FUNC parsePolygon(const BSONElement& polygon);
-        static std::vector<Polygon<TCoordinates> > MONGO_CLIENT_FUNC parseAllPolygons(
-            const BSONObj& bson);
+        static Polygon<TCoordinates> parsePolygon(const BSONElement& polygon);
+        static std::vector<Polygon<TCoordinates> > parseAllPolygons(const BSONObj& bson);
 
         BSONObj _bson;
         std::vector<Polygon<TCoordinates> > _polygons;

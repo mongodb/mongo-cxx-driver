@@ -80,8 +80,7 @@ namespace geo {
         std::vector<Point<TCoordinates> > getPoints() const { return _points; }
 
     private:
-        static BSONObj MONGO_CLIENT_FUNC createBSON(
-            const std::vector<Point<TCoordinates> >& points);
+        static BSONObj createBSON(const std::vector<Point<TCoordinates> >& points);
 
         BSONObj _bson;
         std::vector<Point<TCoordinates> > _points;

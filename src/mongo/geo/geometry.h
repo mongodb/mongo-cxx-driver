@@ -38,13 +38,13 @@ namespace geo {
     template<typename TCoordinates>
     class Geometry : public GeoObj<TCoordinates> {
     protected:
-        static BSONElement MONGO_CLIENT_FUNC getCoordsField(const BSONObj& bson);
-        static std::vector<double> MONGO_CLIENT_FUNC parseCoords(const BSONElement& coordArr);
-        static std::vector<double> MONGO_CLIENT_FUNC parseCoords(const BSONObj& bson);
-        static Point<TCoordinates> MONGO_CLIENT_FUNC parsePoint(const BSONElement& coordArr);
-        static std::vector<Point<TCoordinates> > MONGO_CLIENT_FUNC parsePointArray(
+        static BSONElement getCoordsField(const BSONObj& bson);
+        static std::vector<double> parseCoords(const BSONElement& coordArr);
+        static std::vector<double> parseCoords(const BSONObj& bson);
+        static Point<TCoordinates> parsePoint(const BSONElement& coordArr);
+        static std::vector<Point<TCoordinates> > parsePointArray(
             const std::vector<BSONElement>& pointArr);
-        static std::vector<Point<TCoordinates> > MONGO_CLIENT_FUNC parseAllPoints(
+        static std::vector<Point<TCoordinates> > parseAllPoints(
             const BSONObj& bson);
 
         /**
@@ -55,7 +55,7 @@ namespace geo {
          *
          * @return A pointer to a bounding box around the given points.
          */
-        static BoundingBox<TCoordinates>* MONGO_CLIENT_FUNC computeBoundingBox(
+        static BoundingBox<TCoordinates>* computeBoundingBox(
             const std::vector<Point<TCoordinates> >& points);
 
         /**
@@ -68,7 +68,7 @@ namespace geo {
          *
          * @return A pointer to a bounding box around the given bounding boxes.
          */
-        static BoundingBox<TCoordinates>* MONGO_CLIENT_FUNC computeBoundingBox(
+        static BoundingBox<TCoordinates>* computeBoundingBox(
             const std::vector<BoundingBox<TCoordinates> >& bboxes);
 
         /**
@@ -81,10 +81,10 @@ namespace geo {
          * returns a pointer to an instantiated bounding box around the shape.
          * Otherwise returns NULL.
          */
-        static BoundingBox<TCoordinates>* MONGO_CLIENT_FUNC parseBoundingBox(const BSONObj& bson);
+        static BoundingBox<TCoordinates>* parseBoundingBox(const BSONObj& bson);
 
     private:
-        static void MONGO_CLIENT_FUNC findMinAndMaxCoordinatesOfDimension(
+        static void findMinAndMaxCoordinatesOfDimension(
             const std::vector<Point<TCoordinates> >& points,
             size_t dimension,
             double* min,

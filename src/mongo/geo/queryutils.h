@@ -25,43 +25,43 @@ namespace mongo {
 namespace geo {
 
     template<typename TCoordinates>
-    inline BSONObj MONGO_CLIENT_FUNC GEOQUERY(const char* op, const GeoObj<TCoordinates>& geoObj) {
+    inline BSONObj GEOQUERY(const char* op, const GeoObj<TCoordinates>& geoObj) {
         return BSON(op << BSON("$geometry" << geoObj.toBSON()));
     }
 
     template<typename TCoordinates>
-    inline BSONObj MONGO_CLIENT_API GEOWITHIN(const GeoObj<TCoordinates>& geoObj) {
+    inline BSONObj GEOWITHIN(const GeoObj<TCoordinates>& geoObj) {
         return GEOQUERY("$geoWithin", geoObj);
     }
 
     template<typename TCoordinates>
-    inline BSONObj MONGO_CLIENT_API GEOWITHIN(const BoundingBox<TCoordinates>& geoBB) {
+    inline BSONObj GEOWITHIN(const BoundingBox<TCoordinates>& geoBB) {
         return BSON("$geoWithin" << BSON("$box" << geoBB.toNestedBSONArray()));
     }
 
     template<typename TCoordinates>
-    inline BSONObj MONGO_CLIENT_API GEOINTERSECTS(const GeoObj<TCoordinates>& geoObj) {
+    inline BSONObj GEOINTERSECTS(const GeoObj<TCoordinates>& geoObj) {
         return GEOQUERY("$geoIntersects", geoObj);
     }
 
     template<typename TCoordinates>
-    inline BSONObj MONGO_CLIENT_API NEAR(const GeoObj<TCoordinates>& geoObj) {
+    inline BSONObj NEAR(const GeoObj<TCoordinates>& geoObj) {
         return GEOQUERY("$near", geoObj);
     }
 
     template<typename TCoordinates>
-    inline BSONObj MONGO_CLIENT_API NEAR(const GeoObj<TCoordinates>& geoObj, double distance) {
+    inline BSONObj NEAR(const GeoObj<TCoordinates>& geoObj, double distance) {
         return BSON("$near" << BSON("$geometry" << geoObj.toBSON()) <<
                     "$maxDistance" << distance);
     }
 
     template<typename TCoordinates>
-    inline BSONObj MONGO_CLIENT_API NEARSPHERE(const GeoObj<TCoordinates>& geoObj) {
+    inline BSONObj NEARSPHERE(const GeoObj<TCoordinates>& geoObj) {
         return GEOQUERY("$nearSphere", geoObj);
     }
 
     template<typename TCoordinates>
-    inline BSONObj MONGO_CLIENT_API NEARSPHERE(const GeoObj<TCoordinates>& geoObj,
+    inline BSONObj NEARSPHERE(const GeoObj<TCoordinates>& geoObj,
         double distance) {
         return BSON("$nearSphere" << BSON("$geometry" << geoObj.toBSON()) <<
                     "$maxDistance" << distance);

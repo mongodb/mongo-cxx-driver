@@ -165,7 +165,7 @@ namespace geo {
         double operator[](size_t dimension) const { return _coords[dimension]; }
 
     private:
-        static BSONObj MONGO_CLIENT_FUNC createBSON(const TCoordinates& coords);
+        static BSONObj createBSON(const TCoordinates& coords);
 
         BSONObj _bson;
         TCoordinates _coords;
