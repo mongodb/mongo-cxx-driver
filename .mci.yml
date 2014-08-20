@@ -47,8 +47,6 @@ cxx_driver_variables:
     dll:
       dll_msvc2010: &dllpath_msvc2010
         dllpath: --dllpath="c:\local\boost_1_55_0\lib64-msvc-10.0;c:\openssl\bin;c:\sasl\bin"
-      dll_msvc2013: &dllpath_msvc2013
-        dllpath: --dllpath="c:\local\boost_1_55_0\lib64-msvc-12.0;c:\openssl\bin;c:\sasl\bin"
     ## C++ paths
     cpp:
       cpp_boost_1_55_0: &cpppath
@@ -61,8 +59,6 @@ cxx_driver_variables:
     lib:
       lib_msvc2010: &libpath_msvc2010
         libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-10.0"
-      lib_msvc2013: &libpath_msvc2013
-        libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-12.0"
 
 ## Paths and flags for RHEL 5.5 builds
   rhel55_fixups:
@@ -347,8 +343,8 @@ buildvariants:
     <<: *scons_flags_64_windows_dynamic
     <<: *mongodb_args
     <<: *mongo_url_windows64
-    <<: *dllpath_msvc2013
-    <<: *libpath_msvc2013
+    <<: *dllpath_msvc2010 # For now, we use the VC 10 boost because that is what is installed.
+    <<: *libpath_msvc2010 # Ditto
     <<: *extrapath
     <<: *cpppath
     extension: ".exe"
