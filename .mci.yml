@@ -140,7 +140,7 @@ tasks:
             script: |
                 set -o errexit
                 set -o verbose
-                ${scons|scons} ${scons_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} lint
+                ${scons|scons} ${scons_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} lint
 
     - name: compile
       commands:
@@ -151,7 +151,7 @@ tasks:
             script: |
                 set -o errexit
                 set -o verbose
-                ${scons|scons} ${scons_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} all
+                ${scons|scons} ${scons_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} all
         - command: shell.exec
           params:
               working_dir: "mongo-cxx-driver"
@@ -182,7 +182,7 @@ tasks:
               set -o verbose
               echo "Starting mongod..."
               ./mongod${extension} ${mongodb_args}
-              ${scons|scons} ${scons_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} test
+              ${scons|scons} ${scons_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} test
               exit_code=$?
               ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py} || true
               exit $exit_code
@@ -200,7 +200,7 @@ tasks:
               set -o verbose
               echo "Starting mongod..."
               ./mongod${extension} ${mongodb_args}
-              ${scons|scons} ${scons_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} integration
+              ${scons|scons} ${scons_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} integration
               exit_code=$?
               ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py} || true
               exit $exit_code
@@ -218,11 +218,11 @@ tasks:
               set -o verbose
               echo "Starting mongod..."
               ./mongod${extension} ${mongodb_args}
-              ${scons|scons} ${scons_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} install-mongoclient # static lib install step
+              ${scons|scons} ${scons_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} install-mongoclient # static lib install step
               install_exit=$?
-              ${scons|scons} ${scons_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} check-install-mongoclient # static build installation header check
+              ${scons|scons} ${scons_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} check-install-mongoclient # static build installation header check
               check_exit=$?
-              ${scons|scons} ${scons_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} smokeClient
+              ${scons|scons} ${scons_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} smokeClient
               smoke_exit=$?
               ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py}
               exit $install_exit || $check_exit || $smoke_exit

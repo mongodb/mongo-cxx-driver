@@ -49,7 +49,7 @@ void insertGeoData(DBClientConnection& conn) {
     lineStrings.push_back(line);
     lineStrings.push_back(line);
     MultiLineString mls(lineStrings);
-    Polygon poly(lineStrings);
+    geo::coords2dgeographic::Polygon poly(lineStrings);
 
     BSONObj mpBson = BSON("type" << "MultiPolygon" << "coordinates" << BSON_ARRAY(
         BSON_ARRAY(
@@ -117,7 +117,7 @@ void queryGeoData(DBClientConnection& conn) {
             )
         )
     );
-    Polygon poly(polygonBson);
+    geo::coords2dgeographic::Polygon poly(polygonBson);
 
     // Make sure printing is ok:
     cout << "LineString json:" << endl;
