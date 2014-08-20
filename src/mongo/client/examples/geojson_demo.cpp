@@ -15,12 +15,12 @@
 
 /** @file */
 
-/*
- * An overview of some geo features of MongoDB and the C++ driver.
- *
- * NOTE: I will make this actually readable when I have a chance to come back to
- * this after my intern presentation.
- */
+// It is the responsibility of the mongo client consumer to ensure that any necessary windows
+// headers have already been included before including the driver facade headers.
+#if defined(_WIN32)
+#include <winsock2.h>
+#include <windows.h>
+#endif
 
 #include <iostream>
 #include <cstdlib>
