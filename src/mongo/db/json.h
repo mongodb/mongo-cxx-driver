@@ -48,7 +48,8 @@ namespace mongo {
      *  BSONObj
      *  BSONArray
      *
-     * @example Using the method to select the proper type.
+     * Example: Using the method to select the proper type.
+     *
      *  If this method returns true, the user could store the result of fromjson
      *  inside a BSONArray, rather than a BSONObj, in order to have it print as an
      *  array when passed to tojson.
