@@ -64,6 +64,22 @@ cxx_driver_variables:
       lib_msvc2013: &libpath_msvc2013
         libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-12.0"
 
+## Paths and flags for RHEL 5.5 builds
+  rhel55_fixups:
+    scons:
+      scons_flags: &scons_flags_rhel55
+        # For some reason GCC on RHEL 5.5 gives lots of warnings from its own headers when using
+        # visibility attributes.
+        sconsflags: --disable-warnings-as-errors
+    cpp:
+      cpp_boost: &cpppath_rhel55
+        cpppath: --cpppath="/usr/include/boost141"
+    lib:
+      lib32_boost: &libpath_rhel55_32
+        libpath: --libpath="/usr/lib/boost141"
+      lib64_boost: &libpath_rhel55_64
+        libpath: --libpath="/usr/lib64/boost141"
+
 #######################################
 #            Functions                #
 #######################################
@@ -119,6 +135,15 @@ post:
 #######################################
 
 tasks:
+    - name: rhel55_boost
+      commands:
+        - command: shell.exec
+          params:
+            script: |
+                set -o errexit
+                set -o verbose
+                yum -y install boost141-devel.i386 boost141-devel.x86_64
+
     - name: lint
       commands:
         - func: "fetch source"
@@ -232,11 +257,16 @@ buildvariants:
   expansions:
     <<: *compile_flags
     <<: *scons_flags_64
+    <<: *scons_flags_rhel55
+    <<: *cpppath_rhel55
+    <<: *libpath_rhel55_64
     <<: *mongodb_args
     <<: *mongo_url_rhel55
   run_on:
   - rhel55-test
-  tasks: *basic_tests
+  tasks:
+    rhel55_boost
+    *basic_tests
 
 ## Ubuntu 1404
 
