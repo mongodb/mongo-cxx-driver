@@ -185,7 +185,7 @@ namespace {
             return vec;
         }
 
-        mongo::Polygon<Coordinates2D> poly;
+        mongo::geo::Polygon<Coordinates2D> poly;
         Coordinates2D lowerBound;
         Coordinates2D upperBound;
     };
