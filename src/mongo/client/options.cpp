@@ -28,7 +28,7 @@ namespace client {
 
 #if !defined(_MSC_EXTENSIONS)
     const int Options::kDefaultDefaultLocalThresholdMillis;
-    const int Options::kDefaultAutoShutdownGracePeriodMillis;
+    const unsigned int Options::kDefaultAutoShutdownGracePeriodMillis;
 #endif
 
     void setOptions(const Options& newOptions) {
@@ -59,12 +59,12 @@ namespace client {
         return _callShutdownAtExit;
     }
 
-    Options& Options::setAutoShutdownGracePeriodMillis(int millis) {
+    Options& Options::setAutoShutdownGracePeriodMillis(unsigned int millis) {
         _autoShutdownGracePeriodMillis = millis;
         return *this;
     }
 
-    int Options::autoShutdownGracePeriodMillis() const {
+    unsigned int Options::autoShutdownGracePeriodMillis() const {
         return _autoShutdownGracePeriodMillis;
     }
 

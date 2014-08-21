@@ -64,7 +64,7 @@ namespace client {
     Status shutdown() {
         ReplicaSetMonitor::cleanup();
 
-        const int gracePeriod = Options::current().autoShutdownGracePeriodMillis();
+        const unsigned int gracePeriod = Options::current().autoShutdownGracePeriodMillis();
         Status s = PeriodicTask::stopRunningPeriodicTasks(gracePeriod);
 
         shutdownNetworking();

@@ -153,9 +153,9 @@ namespace mongo {
          *  terminate within the grace period, returns an invalid status. It is safe to call
          *  this method repeatedly from one thread if the grace period is overshot. It is not
          *  safe to call this method from multiple threads, or in a way that races with
-         *  'startRunningPeriodicTasks'.
+         *  'startRunningPeriodicTasks'. A grace period of 0 means to wait forever.
          */
-        static Status stopRunningPeriodicTasks( int gracePeriodMillis );
+        static Status stopRunningPeriodicTasks( unsigned int gracePeriodMillis );
     };
 
 

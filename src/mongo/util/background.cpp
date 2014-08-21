@@ -51,7 +51,7 @@ namespace mongo {
             void add( PeriodicTask* task );
             void remove( PeriodicTask* task );
 
-            Status stop( int gracePeriodMillis );
+            Status stop( unsigned int gracePeriodMillis );
 
         private:
 
@@ -268,7 +268,7 @@ namespace mongo {
         runner->go();
     }
 
-    Status PeriodicTask::stopRunningPeriodicTasks( int gracePeriodMillis ) {
+    Status PeriodicTask::stopRunningPeriodicTasks( unsigned gracePeriodMillis ) {
         ConditionalScopedLock lock( runnerMutex );
 
         Status status = Status::OK();
@@ -301,7 +301,7 @@ namespace mongo {
         }
     }
 
-    Status PeriodicTaskRunner::stop( int gracePeriodMillis ) {
+    Status PeriodicTaskRunner::stop( unsigned int gracePeriodMillis ) {
         {
             boost::lock_guard<boost::mutex> lock( _mutex );
             _shutdownRequested = true;

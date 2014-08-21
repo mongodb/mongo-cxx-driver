@@ -32,7 +32,7 @@ namespace client {
         // Defaults for non-boolean or std::string parameters that are not defaulted to the
         // empty string. These are useful in case you which to set a parameter to a scale
         // factor or mutation of the default.
-        static const int kDefaultAutoShutdownGracePeriodMillis = 250;
+        static const unsigned int kDefaultAutoShutdownGracePeriodMillis = 0;
         static const int kDefaultDefaultLocalThresholdMillis = 15;
 
         /** Obtains the currently configured options for the driver. This method
@@ -86,10 +86,10 @@ namespace client {
         /** The grace period used when calling client::shutdown from atexit. If
          * 'callShutdownAtExit' is false, this parameter has no effect.
          *
-         *  Default: 250 ms
+         *  Default: 0 ms (wait forever).
          */
-        Options& setAutoShutdownGracePeriodMillis(int millis);
-        int autoShutdownGracePeriodMillis() const;
+        Options& setAutoShutdownGracePeriodMillis(unsigned int millis);
+        unsigned int autoShutdownGracePeriodMillis() const;
 
 
         //
@@ -191,7 +191,7 @@ namespace client {
 
     private:
         bool _callShutdownAtExit;
-        int _autoShutdownGracePeriodMillis;
+        unsigned int _autoShutdownGracePeriodMillis;
         SSLModes _sslMode;
         bool _useFIPSMode;
         std::string _sslCAFile;
