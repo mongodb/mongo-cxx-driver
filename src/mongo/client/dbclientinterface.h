@@ -1108,7 +1108,8 @@ namespace mongo {
          *   options : { }
          * }
          */
-        std::list<BSONObj> getCollectionInfos( const std::string& db );
+        std::list<BSONObj> getCollectionInfos( const std::string& db,
+                                               const BSONObj& filter = BSONObj() );
 
         bool exists( const std::string& ns );
 

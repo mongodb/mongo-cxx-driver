@@ -1218,7 +1218,8 @@ namespace mongo {
         return names;
     }
 
-    list<BSONObj> DBClientWithCommands::getCollectionInfos( const string& db ) {
+    list<BSONObj> DBClientWithCommands::getCollectionInfos( const string& db,
+                                                            const BSONObj& filter ) {
         list<BSONObj> infos;
 
         // first we're going to try the command
@@ -1227,7 +1228,7 @@ namespace mongo {
 
         {
             BSONObj res;
-            if ( runCommand( db, BSON( "listCollections" << 1), res ) ) {
+            if ( runCommand( db, BSON( "listCollections" << 1 << "filter" << filter ), res ) ) {
                 BSONObj collections = res["collections"].Obj();
                 BSONObjIterator it( collections );
                 while ( it.more() ) {
@@ -1252,7 +1253,7 @@ namespace mongo {
         }
 
         string ns = db + ".system.namespaces";
-        auto_ptr<DBClientCursor> c = query( ns.c_str() , BSONObj() );
+        auto_ptr<DBClientCursor> c = query( ns.c_str(), filter );
         while ( c->more() ) {
             BSONObj obj = c->nextSafe();
             string ns = obj["name"].valuestr();
@@ -1268,10 +1269,9 @@ namespace mongo {
     }
 
     bool DBClientWithCommands::exists( const string& ns ) {
-
-        string db = nsGetDB( ns ) + ".system.namespaces";
-        BSONObj q = BSON( "name" << ns );
-        return count( db.c_str() , q, QueryOption_SlaveOk ) != 0;
+        BSONObj filter = BSON( "name" << nsToCollectionSubstring( ns ) );
+        list<BSONObj> results = getCollectionInfos( nsToDatabase( ns ), filter );
+        return !results.empty();
     }
 
     /* --- dbclientconnection --- */
