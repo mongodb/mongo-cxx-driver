@@ -351,5 +351,5 @@ buildvariants:
     extension: ".exe"
     scons: scons.bat
   run_on:
-  - windows-64-test
+  - windows-64-vs2013-test
   tasks: *basic_tests
