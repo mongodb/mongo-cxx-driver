@@ -149,7 +149,7 @@ tasks:
             script: |
                 set -o errexit
                 set -o verbose
-                ${scons|scons} ${scons_flags} ${warning_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} lint
+                ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} lint
 
     - name: compile
       commands:
@@ -160,7 +160,7 @@ tasks:
             script: |
                 set -o errexit
                 set -o verbose
-                ${scons|scons} ${scons_flags} ${warning_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} all
+                ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} all
         - command: shell.exec
           params:
               working_dir: "mongo-cxx-driver"
