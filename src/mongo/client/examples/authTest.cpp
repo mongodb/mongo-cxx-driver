@@ -56,7 +56,7 @@ int main( int argc, const char **argv ) {
     }
 
     string errmsg;
-    ConnectionString cs = ConnectionString::parse(string("127.0.0.1:") + port, errmsg);
+    ConnectionString cs = ConnectionString::parse(string("mongodb://127.0.0.1:") + port, errmsg);
     if (!cs.isValid()) {
         cout << "error parsing url: " << errmsg << endl;
         return EXIT_FAILURE;

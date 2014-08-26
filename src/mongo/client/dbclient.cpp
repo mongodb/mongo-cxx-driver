@@ -91,7 +91,7 @@ namespace mongo {
     } // namespace
 
     void ConnectionString::_fillServers( string s ) {
-        
+
         //
         // Custom-handled servers/replica sets start with '$'
         // According to RFC-1123/952, this will not overlap with valid hostnames
@@ -117,7 +117,7 @@ namespace mongo {
         _servers.push_back(HostAndPort(s));
 
     }
-    
+
     void ConnectionString::_finishInit() {
 
         // Needed here as well b/c the parsing logic isn't used in all constructors
@@ -266,26 +266,29 @@ namespace mongo {
         verify( false );
     }
 
-    ConnectionString ConnectionString::parse( const string& url , string& errmsg ) {
+    ConnectionString ConnectionString::parse( const string& address , string& errmsg ) {
+        if ( boost::algorithm::starts_with( address, "mongodb://" ) )
+            return _parseURL( address, errmsg );
+        errmsg = string("invalid connection string [") + address + "]";
+        return ConnectionString(); // INVALID
+    }
 
-        if ( boost::algorithm::starts_with( url, "mongodb://" ) )
-            return _parseURL( url, errmsg );
-
-        string::size_type i = url.find( '/' );
+    ConnectionString ConnectionString::parseDeprecated( const string& address, string& errmsg ) {
+        string::size_type i = address.find( '/' );
         if ( i != string::npos && i != 0) {
             // replica set
-            return ConnectionString( SET , url.substr( i + 1 ) , url.substr( 0 , i ) );
+            return ConnectionString( SET , address.substr( i + 1 ) , address.substr( 0 , i ) );
         }
 
-        int numCommas = str::count( url , ',' );
+        int numCommas = str::count( address , ',' );
 
         if( numCommas == 0 )
-            return ConnectionString( HostAndPort( url ) );
+            return ConnectionString( HostAndPort( address ) );
 
         if ( numCommas == 1 )
-            return ConnectionString( PAIR , url );
+            return ConnectionString( PAIR , address );
 
-        errmsg = (string)"invalid hostname [" + url + "]";
+        errmsg = string("invalid connection string [") + address + "]";
         return ConnectionString(); // INVALID
     }
 

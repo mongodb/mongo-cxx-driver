@@ -202,29 +202,29 @@ namespace {
 
         // INVALID -- default non parsed state
         ASSERT_TRUE(cs1.sameLogicalEndpoint(cs2));
-        cs2 = ConnectionString::parse("host1,host2,host3", err1);
+        cs2 = ConnectionString::parse("mongodb://host1,host2,host3", err1);
         ASSERT_TRUE(cs1.sameLogicalEndpoint(cs2));
 
         // MASTER
-        cs1 = ConnectionString::parse("localhost:1234", err1);
-        cs2 = ConnectionString::parse("localhost:1234", err2);
+        cs1 = ConnectionString::parse("mongodb://localhost:1234", err1);
+        cs2 = ConnectionString::parse("mongodb://localhost:1234", err2);
         ASSERT_TRUE(cs1.sameLogicalEndpoint(cs2));
 
         // PAIR -- compares the host + port even in swapped order
-        cs1 = cs1.parse("localhost:1234,localhost:5678", err1);
-        cs2 = cs2.parse("localhost:1234,localhost:5678", err2);
+        cs1 = cs1.parse("mongodb://localhost:1234,localhost:5678", err1);
+        cs2 = cs2.parse("mongodb://localhost:1234,localhost:5678", err2);
         ASSERT_TRUE(cs1.sameLogicalEndpoint(cs2));
-        cs2 = cs2.parse("localhost:5678,localhost:1234", err2);
+        cs2 = cs2.parse("mongodb://localhost:5678,localhost:1234", err2);
         ASSERT_TRUE(cs1.sameLogicalEndpoint(cs2));
 
         // SET -- compares the set name only
-        cs1 = cs1.parse("testset/localhost:1234,localhost:5678", err1);
-        cs2 = cs2.parse("testset/localhost:5678,localhost:1234", err2);
+        cs1 = cs1.parse("mongodb://localhost:1234,localhost:5678/?replicaSet=testset", err1);
+        cs2 = cs2.parse("mongodb://localhost:5678,localhost:1234/?replicaSet=testset", err2);
         ASSERT_TRUE(cs1.sameLogicalEndpoint(cs2));
 
-        // Different types
-        cs1 = cs1.parse("testset/localhost:1234,localhost:5678", err1);
-        cs2 = cs2.parse("localhost:5678,localhost:1234", err2);
+        // Different parsing methods
+        cs1 = cs1.parseDeprecated("testset/localhost:1234,localhost:5678", err1);
+        cs2 = cs2.parse("mongodb://localhost:5678,localhost:1234", err2);
         ASSERT_FALSE(cs1.sameLogicalEndpoint(cs2));
     }
 

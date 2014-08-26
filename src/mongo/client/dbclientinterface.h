@@ -152,17 +152,32 @@ namespace mongo {
     class MONGO_CLIENT_API DBClientConnection;
 
     /**
-     * ConnectionString handles parsing different ways to connect to mongo and determining method
-     * samples:
-     *    server
-     *    server:port
-     *    foo/server:port,server:port   SET
+     * ConnectionString can parse MongoDB URIs with the following format:
      *
-     * tyipcal use
-     * string errmsg,
-     * ConnectionString cs = ConnectionString::parse( url , errmsg );
-     * if ( ! cs.isValid() ) throw "bad: " + errmsg;
-     * DBClientBase * conn = cs.connect( errmsg );
+     *    mongodb://[usr:pwd@]host1[:port1]...[,hostN[:portN]]][/[db][?options]]
+     *
+     * For a complete list of URI string options, see
+     * https://wiki.mongodb.com/display/DH/Connection+String+Format
+     *
+     * Examples:
+     *
+     *    A replica set with three members (one running on default port 27017):
+     *      string uri = mongodb://localhost,localhost:27018,localhost:27019
+     *
+     *    Authenticated connection to db 'bedrock' with user 'barney' and pwd 'rubble':
+     *      string url = mongodb://barney:rubble@localhost/bedrock
+     *
+     *    Use parse() to parse the url, then validate and connect:
+     *      string errmsg;
+     *      ConnectionString cs = ConnectionString::parse( url, errmsg );
+     *      if ( ! cs.isValid() ) throw "bad connection string: " + errmsg;
+     *      DBClientBase * conn = cs.connect( errmsg );
+     *
+     * NOTE:
+     *
+     *    The 'rs_name/host1:port,host2:port' format has been deprecated, and parse()
+     *    will no longer recognize this as a valid URI. To use the deprecated format,
+     *    use parseDeprecated() instead.
      */
     class MONGO_CLIENT_API ConnectionString {
     public:
@@ -249,7 +264,9 @@ namespace mongo {
          */
         bool sameLogicalEndpoint( const ConnectionString& other ) const;
 
-        static ConnectionString MONGO_CLIENT_FUNC parse( const std::string& url , std::string& errmsg );
+        static ConnectionString MONGO_CLIENT_FUNC parse( const std::string& address , std::string& errmsg );
+
+        static ConnectionString MONGO_CLIENT_FUNC parseDeprecated( const std::string& address , std::string& errmsg );
 
         static std::string MONGO_CLIENT_FUNC typeToString( ConnectionType type );
 
