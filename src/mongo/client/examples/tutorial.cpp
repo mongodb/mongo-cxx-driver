@@ -61,7 +61,7 @@ int run(int argc, char* argv[]) {
     }
 
     DBClientConnection c;
-    c.connect(string("localhost:") + port); //"192.168.58.1");
+    c.connect(string("localhost:") + port);
     cout << "connected ok" << endl;
     BSONObj p = BSON( "name" << "Joe" << "age" << 33 );
     c.insert("tutorial.persons", p);
