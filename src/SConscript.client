@@ -169,6 +169,7 @@ if usingSasl:
 exampleSourceMap = [
     ('arrayExample', 'mongo/client/examples/arrayExample.cpp'),
     ('authTest', 'mongo/client/examples/authTest.cpp'),
+    ('initializeTest', 'mongo/client/examples/initializeTest.cpp'),
     ('clientTest', 'mongo/client/examples/clientTest.cpp'),
     ('firstExample', 'mongo/client/examples/first.cpp'),
     ('geojsonExample', 'mongo/client/examples/geojson_demo.cpp'),

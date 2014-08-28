@@ -41,10 +41,10 @@ namespace client {
      *  Initializes the client driver, possibly with custom options. See the Options class for
      *  details on the various fields.
      *
-     *  NOTE: Do not call 'initialize' before entering 'main' (i.e. from a static initializer),
-     *  as it relies on all static initialization having been completed.
-     *
-     *  NOTE: Do not call 'initialize' more than once.
+     *  initialize() MUST be called EXACTLY once after entering 'main' and before using
+     *  the driver. Do not call initialize() before entering 'main'
+     *  (i.e. from a static initializer), as it relies on all static initialization
+     *  having been completed.
      */
     MONGO_CLIENT_API Status MONGO_CLIENT_FUNC initialize(const Options& options = Options());
 
@@ -55,6 +55,8 @@ namespace client {
      *  not admit retrying the operation. A permanent failure to terminate the driver should be
      *  logged, and it may be unsafe to exit the process by any mechanism which causes normal
      *  destruction of static objects.
+     *
+     *  Once the driver has been terminated, it cannot be initialized again.
      */
     MONGO_CLIENT_API Status MONGO_CLIENT_FUNC shutdown();
 
