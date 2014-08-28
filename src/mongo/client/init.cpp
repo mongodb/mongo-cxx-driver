@@ -23,52 +23,72 @@
 #include "mongo/client/connpool.h"
 #include "mongo/client/private/options.h"
 #include "mongo/client/replica_set_monitor.h"
+#include "mongo/platform/atomic_word.h"
 #include "mongo/util/background.h"
 
 namespace mongo {
 namespace client {
 
+    AtomicWord<int> isInitialized;
+
     namespace {
         void callShutdownAtExit() {
-            // We can't really do anything of value if this returns a non-OK status.
+            // We can't really do anything if this returns a non-OK status.
             mongo::client::shutdown();
         }
     } // namespace
 
     Status initialize(const Options& options) {
 
-        // Copy in the provided options.
-        setOptions(options);
+        if (isInitialized.compareAndSwap(0, 1) == 0) {
 
-        if (options.callShutdownAtExit()) {
-            if (std::atexit(&callShutdownAtExit) != 0) {
-                return Status(
-                    ErrorCodes::InternalError,
-                    "Failed setting client driver atexit shutdown handler");
+            // Copy in the provided options.
+            setOptions(options);
+
+            if (options.callShutdownAtExit()) {
+                if (std::atexit(&callShutdownAtExit) != 0) {
+                    return Status(
+                        ErrorCodes::InternalError,
+                        "Failed setting client driver atexit shutdown handler");
+                }
             }
+
+            Status result = runGlobalInitializers(0, NULL, NULL);
+            if (!result.isOK())
+                return result;
+
+            // Setup default pool parameters
+            mongo::pool.setName("connection pool");
+            mongo::pool.setMaxPoolSize(50);
+
+            PeriodicTask::startRunningPeriodicTasks();
+
+            return Status::OK();
         }
-
-        Status result = runGlobalInitializers(0, NULL, NULL);
-        if (!result.isOK())
-            return result;
-
-        // Setup default pool parameters
-        mongo::pool.setName("connection pool");
-        mongo::pool.setMaxPoolSize(50);
-
-        PeriodicTask::startRunningPeriodicTasks();
-
-        return Status::OK();
+        else {
+            return Status(
+                ErrorCodes::IllegalOperation,
+                "Initialize() may only be called once");
+        }
     }
 
     Status shutdown() {
-        ReplicaSetMonitor::cleanup();
 
-        const unsigned int gracePeriod = Options::current().autoShutdownGracePeriodMillis();
-        Status s = PeriodicTask::stopRunningPeriodicTasks(gracePeriod);
+        if (isInitialized.compareAndSwap(1, 0) == 1) {
 
-        shutdownNetworking();
-        return s;
+            ReplicaSetMonitor::cleanup();
+
+            const unsigned int gracePeriod = Options::current().autoShutdownGracePeriodMillis();
+            Status s = PeriodicTask::stopRunningPeriodicTasks(gracePeriod);
+
+            shutdownNetworking();
+            return s;
+        }
+        else {
+            return Status(
+                ErrorCodes::IllegalOperation,
+                "Shutdown() cannot be called before initialize()");
+        }
     }
 
 } // namespace client
