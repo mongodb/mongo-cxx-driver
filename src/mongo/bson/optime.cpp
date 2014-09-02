@@ -1,4 +1,4 @@
-/*    Copyright 2009 10gen Inc.
+/*    Copyright 2014 MongoDB Inc.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,19 +15,13 @@
 
 #include "mongo/bson/optime.h"
 
-#include <iostream>
 #include <limits>
-#include <ctime>
-
-#include "mongo/bson/inline_decls.h"
-#include "mongo/platform/cstdint.h"
 
 namespace mongo {
 
     OpTime OpTime::max() {
-        unsigned int t = static_cast<unsigned int>(std::numeric_limits<int32_t>::max());
-        unsigned int i = std::numeric_limits<uint32_t>::max();
-        return OpTime(t, i);
+        int32_t m = std::numeric_limits<int32_t>::max();
+        return OpTime(m, m);
     }
 
 }

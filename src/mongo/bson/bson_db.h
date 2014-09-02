@@ -26,6 +26,7 @@
 
 #pragma once
 
+#include "mongo/base/data_view.h"
 #include "mongo/bson/optime.h"
 #include "mongo/util/time_support.h"
 
@@ -37,19 +38,23 @@ namespace mongo {
     @param time - in millis (but stored in seconds)
     */
     inline BSONObjBuilder& BSONObjBuilder::appendTimestamp( const StringData& fieldName , unsigned long long time , unsigned int inc ) {
-        OpTime t( (unsigned) (time / 1000) , inc );
-        appendTimestamp( fieldName , t.asDate() );
+        OpTime t( uint32_t(time / 1000), uint32_t(inc) );
+        append( fieldName , t );
         return *this;
     }
 
     inline BSONObjBuilder& BSONObjBuilder::append(const StringData& fieldName, OpTime optime) {
-        appendTimestamp(fieldName, optime.asDate());
+        _b.appendNum((char) Timestamp);
+        _b.appendStr(fieldName);
+        _b.appendNum(optime.getIncrement());
+        _b.appendNum(optime.getTimestamp());
         return *this;
     }
 
     inline OpTime BSONElement::_opTime() const {
-        if( type() == mongo::Date || type() == Timestamp )
-            return OpTime( *reinterpret_cast< const unsigned long long* >( value() ) );
+        if ( type() == mongo::Date || type() == Timestamp ) {
+            return OpTime(value());
+        }
         return OpTime();
     }
 
