@@ -4,6 +4,7 @@ import copy
 import datetime
 import imp
 import os
+import platform as py_platform
 import re
 import shutil
 import stat
@@ -226,8 +227,13 @@ add_option('gtest-filter', "Pass argument as filter to gtest", 1, False)
 
 if darwin:
     osx_version_choices = ['10.6', '10.7', '10.8', '10.9']
-    add_option("osx-version-min", "minimum OS X version to support", 1, True,
-               type = 'choice', default = osx_version_choices[0], choices = osx_version_choices)
+
+    my_version, _, _ = py_platform.mac_ver()
+    my_version = '.'.join(my_version.split('.')[:2])
+
+    add_option("osx-version-min",
+               "minimum OS X version to support, defaults to current version", 1, True,
+               type = 'choice', default = my_version, choices = osx_version_choices)
 
 elif windows:
     win_version_min_choices = {
