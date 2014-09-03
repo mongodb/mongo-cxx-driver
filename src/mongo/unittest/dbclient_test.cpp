@@ -1289,12 +1289,13 @@ namespace {
 
     TEST_F(DBClientTest, UnacknowledgedInsert) {
         c.insert(TEST_NS, BSON("_id" << 1));
+        WriteConcern wc = WriteConcern::unacknowledged();
         ASSERT_NO_THROW(
             c.insert(
                 TEST_NS,
                 BSON("_id" << 1),
                 0,
-                &WriteConcern::unacknowledged
+                &wc
             )
         );
         ASSERT_EQUALS(c.count(TEST_NS, BSON("_id" << 1)), 1U);
@@ -1302,6 +1303,7 @@ namespace {
 
     TEST_F(DBClientTest, UnacknowledgedUpdate) {
         c.insert(TEST_NS, BSON("a" << true));
+        WriteConcern wc = WriteConcern::unacknowledged();
         ASSERT_NO_THROW(
             c.update(
                 TEST_NS,
@@ -1309,19 +1311,20 @@ namespace {
                 BSON("$badOp" << "blah"),
                 false,
                 false,
-                &WriteConcern::unacknowledged
+                &wc
             )
         );
         ASSERT_EQUALS(c.count(TEST_NS, BSON("a" << true)), 1U);
     }
 
     TEST_F(DBClientTest, UnacknowledgedRemove) {
+        WriteConcern wc = WriteConcern::unacknowledged();
         ASSERT_NO_THROW(
             c.remove(
                 "BAD.$NS",
                 BSON("a" << true),
                 false,
-                &WriteConcern::unacknowledged
+                &wc
             )
         );
     }
