@@ -41,3 +41,5 @@
 #else
 #define MONGO_COMPILER_API_CALLING_CONVENTION
 #endif
+
+#define MONGO_COMPILER_API_DEPRECATED(MSG) __declspec( deprecated( MSG ) )

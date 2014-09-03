@@ -26,7 +26,7 @@ namespace mongo {
     TEST(Options, RepeatedOptionsFail) {
         ASSERT_UASSERTS(IndexSpec().background().background());
         ASSERT_UASSERTS(IndexSpec().unique().unique());
-        ASSERT_UASSERTS(IndexSpec().dropDuplicates().dropDuplicates());
+        ASSERT_UASSERTS(IndexSpec().dropDuplicatesDeprecated().dropDuplicatesDeprecated());
         ASSERT_UASSERTS(IndexSpec().sparse().sparse());
         ASSERT_UASSERTS(IndexSpec().expireAfterSeconds(1).expireAfterSeconds(1));
         ASSERT_UASSERTS(IndexSpec().version(0).version(0));

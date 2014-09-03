@@ -105,6 +105,15 @@
  *    shared libraries.
  *
  *    Same correct/incorrect usage as for MONGO_COMPILER_API_EXPORT.
+ *
+ * MONGO_COMPILER_API_DEPRECATED(MSG)
+ *    
+ *    Designates a function declaration as deprecated, causing the compiler to emit a warning
+ *    if it is invoked.
+ *
+ *    Example:
+ *        MONGO_COMPILER_API_DEPRECATED("Deprecated in MongoDB 2.8") Ret& deprecatedMethod();
+ *
  */
 
 #if defined(_MSC_VER)
@@ -114,3 +123,5 @@
 #else
 #error "Unsupported compiler family"
 #endif
+
+#define MONGO_CLIENT_DEPRECATED(MSG) MONGO_COMPILER_API_DEPRECATED(MSG)

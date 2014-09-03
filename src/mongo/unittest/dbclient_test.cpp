@@ -1383,7 +1383,7 @@ namespace {
                       .background()
                       .unique()
                       .sparse()
-                      .dropDuplicates());
+                      .dropDuplicatesDeprecated());
     }
 
     TEST_F(DBClientTest, CreateComplexTextIndex) {

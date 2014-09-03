@@ -103,6 +103,10 @@ namespace mongo {
     }
 
     IndexSpec& IndexSpec::dropDuplicates(bool value) {
+        return dropDuplicatesDeprecated(value);
+    }
+
+    IndexSpec& IndexSpec::dropDuplicatesDeprecated(bool value) {
         uassert(0, kDuplicateOption, !_options.asTempObj().hasField("dropDups"));
         _options.append("dropDups", value);
         return *this;

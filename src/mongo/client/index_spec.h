@@ -102,7 +102,12 @@ namespace mongo {
         /** Sets whether duplicates detected while indexing should be dropped. By default,
          *  duplicates are not dropped.
          */
+        MONGO_CLIENT_DEPRECATED("deprecated in MongoDB 2.8")
         IndexSpec& dropDuplicates(bool value = true);
+
+        /**  Same as above, but doesn't emit a compiler warning on use.
+         */
+        IndexSpec& dropDuplicatesDeprecated(bool value = true);
 
         /** Sets whether or not this index should be sparse. By default, indexes are not
          *  sparse.
