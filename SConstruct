@@ -1650,4 +1650,7 @@ if has_option("gcov"):
     env.AlwaysBuild(coverageCmd)
     env.Alias('coverage', coverageCmd)
 
-env.Alias('all', ['unittests', 'integration_tests', 'clientTests'])
+env.Alias('all', ['mongoclient', 'build-unit', 'build-integration', 'build-examples'])
+env.Alias('test', ['unit', 'integration'])
+
+Default('mongoclient')

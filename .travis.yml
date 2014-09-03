@@ -72,13 +72,13 @@ before_script:
     - scons $SCONS_FLAGS $SCONS_CONCURRENCY_FLAG all
 
     # Install the driver
-    - scons $SCONS_FLAGS $SCONS_CONCURRENCY_FLAG install-mongoclient
+    - scons $SCONS_FLAGS $SCONS_CONCURRENCY_FLAG install
 
     # Check the installation
-    - scons $SCONS_FLAGS check-install-mongoclient
+    - scons $SCONS_FLAGS check-install
 
 script:
     # Test the driver
-    - scons $SCONS_FLAGS test
+    - scons $SCONS_FLAGS unit
     - scons $SCONS_FLAGS integration
-    - scons $SCONS_FLAGS smokeClient
+    - scons $SCONS_FLAGS examples

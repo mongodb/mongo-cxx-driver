@@ -348,6 +348,8 @@ if windows:
 mongoClientStaticLib = staticLibEnv.StaticLibrary(
     staticLibName, clientSource),
 
+buildMongoClientAlias = libEnv.Alias('mongoclient', mongoClientStaticLib)
+
 mongoClientPrefixInstalls.append(libEnv.Install("$INSTALL_DIR/lib", mongoClientStaticLib))
 
 # Other things like tests need to link against the static library (and the deps of that static
@@ -404,7 +406,7 @@ libEnv.AddPostAction(inst, Chmod('$TARGET', 0644))
 mongoClientPrefixInstalls.append(inst);
 
 
-installAlias = libEnv.Alias('install-mongoclient', mongoClientPrefixInstalls)
+installAlias = libEnv.Alias('install', mongoClientPrefixInstalls)
 
 # Build some simple mainlines that include the dbclient.h and bson.h headers
 # with things set up to include from the installation directory.
@@ -437,7 +439,7 @@ include_bsonh_test = installationTestEnv.Object(
 libEnv.AlwaysBuild(include_bsonh_test)
 libEnv.NoCache(include_bsonh_test)
 
-libEnv.Alias('check-install-mongoclient', [
+libEnv.Alias('check-install', [
     include_dbclienth_test,
     include_bsonh_test,
 ])
@@ -529,7 +531,7 @@ if buildShared:
     sharedClientEnv.Depends(sharedClientProgramInstalls, mongoClientSharedLibPrefixInstall)
 
 clientTestPrograms = staticClientPrograms + sharedClientPrograms
-clientEnv.Alias('clientTests', clientTestPrograms)
+clientEnv.Alias('build-examples', clientTestPrograms)
 
 # NOTE: There must be a mongod listening on 127.0.0.1:27999 (the traditional mongodb smoke test
 # port) for the smokeClient target to run. In the server repo that is no problem, the smoke.py
@@ -550,7 +552,7 @@ for clientTest in clientTestProgramInstalls:
         continue
 
     clientEnv.AlwaysBuild(clientEnv.Alias(
-        'smokeClient',
+        'examples',
         [clientTest],
         "%s --port 27999" % clientTest.abspath))
 
