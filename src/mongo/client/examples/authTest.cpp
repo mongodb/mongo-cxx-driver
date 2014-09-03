@@ -46,7 +46,10 @@ int main( int argc, const char **argv ) {
         port = argv[ 2 ];
     }
 
-    Status status = client::initialize();
+    client::Options autoTimeoutOpts = client::Options();
+    autoTimeoutOpts.setAutoShutdownGracePeriodMillis(250);
+
+    Status status = client::initialize(autoTimeoutOpts);
     if (!status.isOK()) {
         cout << "failed to initialize the client driver: " << status.toString() << endl;
         return EXIT_FAILURE;
