@@ -22,11 +22,26 @@ namespace mongo {
 
     const char WriteConcern::kMajority[] = "majority";
 
-    const WriteConcern WriteConcern::unacknowledged = WriteConcern().nodes(0);
-    const WriteConcern WriteConcern::acknowledged = WriteConcern();
-    const WriteConcern WriteConcern::journaled = WriteConcern().journal(true);
-    const WriteConcern WriteConcern::replicated = WriteConcern().nodes(2);
-    const WriteConcern WriteConcern::majority = WriteConcern().mode(kMajority);
+
+    WriteConcern WriteConcern::unacknowledged() {
+        return WriteConcern().nodes(0);
+    }
+
+    WriteConcern WriteConcern::acknowledged() {
+        return WriteConcern();
+    }
+
+    WriteConcern WriteConcern::journaled() {
+        return WriteConcern().journal(true);
+    }
+
+    WriteConcern WriteConcern::replicated() {
+        return WriteConcern().nodes(2);
+    }
+
+    WriteConcern WriteConcern::majority() {
+       return WriteConcern().mode(kMajority);
+    }
 
     /**
      * The default constructor sets _w to 1 and the _enabled bit for _w to zero.

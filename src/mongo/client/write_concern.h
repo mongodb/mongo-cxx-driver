@@ -50,19 +50,19 @@ namespace mongo {
         //
 
         /** Fire and forget */
-        static const WriteConcern unacknowledged;
+        static WriteConcern unacknowledged();
 
         /** A single node acknowledges the write, equivalent to default constructor */
-        static const WriteConcern acknowledged;
+        static WriteConcern acknowledged();
 
         /** A single node acknowledges the write operation was committed to journal */
-        static const WriteConcern journaled;
+        static WriteConcern journaled();
 
         /** Two nodes have acknowledged receipt of the write operation */
-        static const WriteConcern replicated;
+        static WriteConcern replicated();
 
         /** A majority of nodes acknowledges (replica set) */
-        static const WriteConcern majority;
+        static WriteConcern majority();
 
         /**
          * Returns an integer representing the number of nodes required for write

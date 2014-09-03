@@ -81,7 +81,8 @@ namespace {
         bulk.insert(BSON("a" << 1));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), 1);
         ASSERT_EQUALS(result.nUpserted(), 0);
@@ -104,7 +105,8 @@ namespace {
         bulk.insert(BSON("a" << 1));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), 1);
         ASSERT_EQUALS(result.nUpserted(), 0);
@@ -126,8 +128,9 @@ namespace {
         bulk.insert(BSON("$a" << 1));
 
         WriteResult result;
+        WriteConcern wc = WriteConcern::acknowledged();
         ASSERT_THROW(
-            bulk.execute(&WriteConcern::acknowledged, &result),
+            bulk.execute(&wc, &result),
             OperationException
         );
         ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}")), 0U);
@@ -140,8 +143,9 @@ namespace {
         bulk.insert(BSON("$a" << 1));
 
         WriteResult result;
+        WriteConcern wc = WriteConcern::acknowledged();
         ASSERT_THROW(
-            bulk.execute(&WriteConcern::acknowledged, &result),
+            bulk.execute(&wc, &result),
             OperationException
         );
         ASSERT_EQUALS(this->c->count(TEST_NS, Query("{}")), 0U);
@@ -157,7 +161,8 @@ namespace {
         bulk.find(BSON("a" << 1)).updateOne(BSON("$inc" << BSON("x" << 1)));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), 0);
         ASSERT_EQUALS(result.nUpserted(), 0);
@@ -182,7 +187,8 @@ namespace {
         bulk.find(BSON("a" << 1)).update(BSON("$inc" << BSON("x" << 1)));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), 0);
         ASSERT_EQUALS(result.nUpserted(), 0);
@@ -207,7 +213,8 @@ namespace {
         bulk.find(fromjson("{}")).update(BSON("$inc" << BSON("x" << 1)));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), 0);
         ASSERT_EQUALS(result.nUpserted(), 0);
@@ -232,7 +239,8 @@ namespace {
         bulk.find(BSON("a" << 1)).replaceOne(BSON("x" << 1));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), 0);
         ASSERT_EQUALS(result.nUpserted(), 0);
@@ -259,7 +267,8 @@ namespace {
         bulk.find(BSON("a" << 1)).upsert().updateOne(BSON("$inc" << BSON("x" << 1)));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), 0);
         ASSERT_EQUALS(result.nUpserted(), 0);
@@ -284,7 +293,8 @@ namespace {
         bulk.find(BSON("a" << 2)).upsert().updateOne(BSON("$inc" << BSON("x" << 1)));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), 0);
         ASSERT_EQUALS(result.nUpserted(), 1);
@@ -311,7 +321,8 @@ namespace {
         bulk.find(BSON("a" << 1)).upsert().update(BSON("$inc" << BSON("x" << 1)));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), 0);
         ASSERT_EQUALS(result.nUpserted(), 0);
@@ -336,7 +347,8 @@ namespace {
         bulk.find(BSON("a" << 2)).upsert().update(BSON("$inc" << BSON("x" << 1)));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), 0);
         ASSERT_EQUALS(result.nUpserted(), 1);
@@ -365,7 +377,8 @@ namespace {
         bulk.find(BSON("a" << 5)).upsert().update(BSON("$inc" << BSON("x" << 1)));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
         ASSERT_EQUALS(result.upserted()[0].getIntField("index"), 0);
         ASSERT_EQUALS(result.upserted()[1].getIntField("index"), 1);
         ASSERT_EQUALS(result.upserted()[2].getIntField("index"), 3);
@@ -382,7 +395,8 @@ namespace {
         bulk.find(BSON("a" << 1)).upsert().replaceOne(BSON("x" << 1));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), 0);
         ASSERT_EQUALS(result.nUpserted(), 0);
@@ -408,7 +422,8 @@ namespace {
         bulk.find(BSON("a" << 2)).upsert().replaceOne(BSON("x" << 1));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), 0);
         ASSERT_EQUALS(result.nUpserted(), 1);
@@ -436,7 +451,8 @@ namespace {
         bulk.find(BSON("a" << 1)).removeOne();
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), 0);
         ASSERT_EQUALS(result.nUpserted(), 0);
@@ -462,7 +478,8 @@ namespace {
         bulk.find(BSON("a" << 1)).remove();
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), 0);
         ASSERT_EQUALS(result.nUpserted(), 0);
@@ -488,7 +505,8 @@ namespace {
         bulk.find(fromjson("{}")).remove();
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
         ASSERT_TRUE(result.upserted().empty());
 
         ASSERT_EQUALS(result.nInserted(), 0);
@@ -518,7 +536,8 @@ namespace {
         bulk.insert(BSON("b" << 1));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), 4);
         ASSERT_EQUALS(result.nUpserted(), 1);
@@ -547,7 +566,8 @@ namespace {
         bulk.insert(BSON("b" << 1));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         // this test passing depends on the current unordered optimization implementation
         ASSERT_EQUALS(result.nInserted(), 4);
@@ -570,7 +590,8 @@ namespace {
             bulk.insert(BSON("a" << 1));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nInserted(), this->c->getMaxWriteBatchSize() + 1);
         ASSERT_EQUALS(result.nUpserted(), 0);
@@ -621,8 +642,9 @@ namespace {
         );
 
         WriteResult result;
+        WriteConcern wc = WriteConcern::acknowledged();
         ASSERT_THROWS(
-            bulk.execute(&WriteConcern::acknowledged, &result),
+            bulk.execute(&wc, &result),
             OperationException
         );
     }
@@ -687,8 +709,9 @@ namespace {
         );
 
         WriteResult result;
+        WriteConcern wc = WriteConcern::acknowledged();
         ASSERT_THROWS(
-            bulk.execute(&WriteConcern::acknowledged, &result),
+            bulk.execute(&wc, &result),
             OperationException
         );
     }
@@ -733,8 +756,9 @@ namespace {
         bulk.insert(BSON("b" << 5 << "a" << 1));
 
         WriteResult result;
+        WriteConcern wc = WriteConcern::acknowledged();
         ASSERT_THROWS(
-            bulk.execute(&WriteConcern::acknowledged, &result),
+            bulk.execute(&wc, &result),
             OperationException
         );
 
@@ -776,8 +800,9 @@ namespace {
         bulk.insert(BSON("b" << 5 << "a" << 1));
 
         WriteResult result;
+        WriteConcern wc = WriteConcern::acknowledged();
         ASSERT_THROWS(
-            bulk.execute(&WriteConcern::acknowledged, &result),
+            bulk.execute(&wc, &result),
             OperationException
         );
 
@@ -821,8 +846,9 @@ namespace {
         bulk.insert(BSON("_id" << 100));
 
         WriteResult result;
+        WriteConcern wc = WriteConcern::acknowledged();
         ASSERT_THROWS(
-            bulk.execute(&WriteConcern::acknowledged, &result),
+            bulk.execute(&wc, &result),
             OperationException
         );
 
@@ -862,8 +888,9 @@ namespace {
         bulk.insert(BSON("_id" << 100));
 
         WriteResult result;
+        WriteConcern wc = WriteConcern::acknowledged();
         ASSERT_THROWS(
-            bulk.execute(&WriteConcern::acknowledged, &result),
+            bulk.execute(&wc, &result),
             OperationException
         );
 
@@ -890,9 +917,10 @@ namespace {
         BulkOperationBuilder bulk(this->c, TEST_NS, true);
 
         WriteResult result;
+        WriteConcern wc = WriteConcern::acknowledged();
 
         ASSERT_THROWS(
-            bulk.execute(&WriteConcern::acknowledged, &result),
+            bulk.execute(&wc, &result),
             std::exception
         );
     }
@@ -904,15 +932,16 @@ namespace {
 
         bulk.insert(BSONObj());
         WriteResult result;
+        WriteConcern wc = WriteConcern::acknowledged();
 
         // First time is ok
         ASSERT_NO_THROW(
-            bulk.execute(&WriteConcern::acknowledged, &result)
+            bulk.execute(&wc, &result)
         );
 
         // Second time throws
         ASSERT_THROWS(
-            bulk.execute(&WriteConcern::acknowledged, &result),
+            bulk.execute(&wc, &result),
             std::exception
         );
     }
@@ -924,9 +953,10 @@ namespace {
 
         bulk.insert(BSONObj());
         WriteResult result;
+        WriteConcern wc = WriteConcern::replicated();
 
         ASSERT_THROWS(
-            bulk.execute(&WriteConcern::replicated, &result),
+            bulk.execute(&wc, &result),
             std::exception
         );
     }
@@ -940,9 +970,10 @@ namespace {
         bulk.insert(BSON("_id" << 1));
 
         WriteResult result;
+        WriteConcern wc = WriteConcern::unacknowledged();
 
         ASSERT_NO_THROW(
-            bulk.execute(&WriteConcern::unacknowledged, &result)
+            bulk.execute(&wc, &result)
         );
 
         // Make sure we have done the inserts before moving on to the next test
@@ -966,7 +997,8 @@ namespace {
             bulk.find(BSON("_id" << 2)).upsert().replaceOne(BSON("_id" << 2));
 
         WriteResult result;
-        bulk.execute(&WriteConcern::acknowledged, &result);
+        WriteConcern wc = WriteConcern::acknowledged();
+        bulk.execute(&wc, &result);
 
         ASSERT_EQUALS(result.nUpserted(), 3);
         ASSERT_EQUALS(result.upserted().size(), 3U);
