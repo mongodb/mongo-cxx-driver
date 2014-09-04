@@ -161,11 +161,9 @@ clientSourceSasl = [
     'mongo/client/sasl_sspi.cpp',
 ]
 
-clientSourceAll = clientSourceBasic + clientSourceTz + clientSourceSasl
-
 usingSasl = libEnv['MONGO_SASL']
 
-clientSource = list(clientSourceBasic)
+clientSource = clientSourceBasic + clientSourceTz
 if usingSasl:
     clientSource += clientSourceSasl
 
