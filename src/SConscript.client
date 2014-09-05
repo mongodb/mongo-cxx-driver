@@ -153,7 +153,7 @@ clientSourceBasic = [
     'third_party/murmurhash3/MurmurHash3.cpp',
     ]
 
-clientSourceTz = [] if clientEnv['MONGO_HAVE_TIMEGM'] else ['third_party/tz/timegm.c']
+clientSourceTz = [] if (clientEnv['MONGO_HAVE_TIMEGM'] or windows) else ['third_party/tz/timegm.c']
 
 clientSourceSasl = [
     'mongo/client/sasl_client_authenticate_impl.cpp',
