@@ -1,4 +1,4 @@
-/*    Copyright 2009 10gen Inc.
+/*    Copyright 2014 MongoDB Inc.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,122 +15,38 @@
 
 #pragma once
 
-#include <boost/thread/condition.hpp>
-#include <boost/thread/mutex.hpp>
-
-#include <iostream>
-#include <sstream>
-
-#include "mongo/util/assert_util.h"
-#include "mongo/util/time_support.h"
+#include "mongo/base/data_view.h"
+#include "mongo/platform/cstdint.h"
 
 namespace mongo {
 
-    struct ClockSkewException : public DBException {
-        ClockSkewException() : DBException( "clock skew exception" , 20001 ) {}
-    };
-
-    /* replsets used to use RSOpTime.
-       M/S uses OpTime.
-       But this is useable from both.
-       */
-    typedef unsigned long long ReplTime;
-
-    /* Operation sequence #.  A combination of current second plus an ordinal value.
-     */
-#pragma pack(4)
     class OpTime {
-        unsigned i; // ordinal comes first so we can do a single 64 bit compare on little endian
-        unsigned secs;
+        static const std::size_t kIncrementOffset = 0;
+        static const std::size_t kTimeOffset = 4;
     public:
-        unsigned getSecs() const {
-            return secs;
-        }
-        unsigned getInc() const {
-            return i;
+        OpTime(uint32_t timestamp, uint32_t increment) {
+            setTimestamp(timestamp);
+            setIncrement(increment);
         }
 
-        OpTime(Date_t date) {
-            reinterpret_cast<unsigned long long&>(*this) = date.millis;
-            dassert( (int)secs >= 0 );
-        }
-        OpTime(ReplTime x) {
-            reinterpret_cast<unsigned long long&>(*this) = x;
-            dassert( (int)secs >= 0 );
-        }
-        OpTime(unsigned a, unsigned b) {
-            secs = a;
-            i = b;
-            dassert( (int)secs >= 0 );
-        }
-        OpTime( const OpTime& other ) { 
-            secs = other.secs;
-            i = other.i;
-            dassert( (int)secs >= 0 );
-        }
-        OpTime() {
-            secs = 0;
-            i = 0;
+        // Caller must ensure that the buffer is valid for at least 8 bytes past the start
+        explicit OpTime(const char *src) {
+            std::memcpy(_buf, src, sizeof(_buf));
         }
 
-        // Maximum OpTime value.
+        OpTime() : _buf() {}
+
+        void setTimestamp(uint32_t v) { DataView(_buf).writeLE(v, kTimeOffset); }
+        void setIncrement(uint32_t v) { DataView(_buf).writeLE(v, kIncrementOffset); }
+
+        uint32_t getTimestamp() const { return ConstDataView(_buf).readLE<uint32_t>(kTimeOffset); }
+        uint32_t getIncrement() const { return ConstDataView(_buf).readLE<uint32_t>(kIncrementOffset); }
+
+        bool isNull() const { return getTimestamp() == 0u; }
+
         static OpTime max();
-
-        /* We store OpTime's in the database as BSON Date datatype -- we needed some sort of
-         64 bit "container" for these values.  While these are not really "Dates", that seems a
-         better choice for now than say, Number, which is floating point.  Note the BinData type
-         is perhaps the cleanest choice, lacking a true unsigned64 datatype, but BinData has 5
-         bytes of overhead.
-         */
-        unsigned long long asDate() const {
-            return reinterpret_cast<const unsigned long long*>(&i)[0];
-        }
-        long long asLL() const {
-            return reinterpret_cast<const long long*>(&i)[0];
-        }
-
-        bool isNull() const { return secs == 0; }
-
-        std::string toStringLong() const {
-            std::stringstream ss;
-            ss << time_t_to_String_short(secs) << ' ';
-            ss << std::hex << secs << ':' << i;
-            return ss.str();
-        }
-
-        std::string toStringPretty() const {
-            std::stringstream ss;
-            ss << time_t_to_String_short(secs) << ':' << std::hex << i;
-            return ss.str();
-        }
-
-        std::string toString() const {
-            std::stringstream ss;
-            ss << std::hex << secs << ':' << i;
-            return ss.str();
-        }
-
-        bool operator==(const OpTime& r) const {
-            return i == r.i && secs == r.secs;
-        }
-        bool operator!=(const OpTime& r) const {
-            return !(*this == r);
-        }
-        bool operator<(const OpTime& r) const {
-            if ( secs != r.secs )
-                return secs < r.secs;
-            return i < r.i;
-        }
-        bool operator<=(const OpTime& r) const {
-            return *this < r || *this == r;
-        }
-        bool operator>(const OpTime& r) const {
-            return !(*this <= r);
-        }
-        bool operator>=(const OpTime& r) const {
-            return !(*this < r);
-        }
+    private:
+        char _buf[8];
     };
-#pragma pack()
 
-} // namespace mongo
+}  // namespace mongo

@@ -15,6 +15,7 @@
 
 #include "mongo/db/json.h"
 
+#include <errno.h>
 #include <boost/scoped_ptr.hpp>
 
 #include "mongo/base/parse_number.h"
