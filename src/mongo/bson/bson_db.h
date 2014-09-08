@@ -26,32 +26,9 @@
 
 #pragma once
 
-#include "mongo/bson/optime.h"
 #include "mongo/util/time_support.h"
 
 namespace mongo {
-
-    /**
-    Timestamps are a special BSON datatype that is used internally for replication.
-    Append a timestamp element to the object being ebuilt.
-    @param time - in millis (but stored in seconds)
-    */
-    inline BSONObjBuilder& BSONObjBuilder::appendTimestamp( const StringData& fieldName , unsigned long long time , unsigned int inc ) {
-        OpTime t( (unsigned) (time / 1000) , inc );
-        appendTimestamp( fieldName , t.asDate() );
-        return *this;
-    }
-
-    inline BSONObjBuilder& BSONObjBuilder::append(const StringData& fieldName, OpTime optime) {
-        appendTimestamp(fieldName, optime.asDate());
-        return *this;
-    }
-
-    inline OpTime BSONElement::_opTime() const {
-        if( type() == mongo::Date || type() == Timestamp )
-            return OpTime( *reinterpret_cast< const unsigned long long* >( value() ) );
-        return OpTime();
-    }
 
     inline BSONObjBuilder& BSONObjBuilderValueStream::operator<<(const DateNowLabeler& id) {
         _builder->appendDate(_fieldName, jsTime());

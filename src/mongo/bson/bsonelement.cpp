@@ -249,15 +249,16 @@ namespace mongo {
             s << "\"" << escape(_asCode()) << "\"";
             break;
 
-        case Timestamp:
+        case mongo::Timestamp: {
+            Timestamp_t ts = timestamp();
             if ( format == TenGen ) {
-                s << "Timestamp( " << ( timestampTime() / 1000 ) << ", " << timestampInc() << " )";
+                s << "Timestamp( " << ts.seconds() << ", " << ts.increment() << " )";
             }
             else {
-                s << "{ \"$timestamp\" : { \"t\" : " << ( timestampTime() / 1000 ) << ", \"i\" : " << timestampInc() << " } }";
+                s << "{ \"$timestamp\" : { \"t\" : " << ts.seconds() << ", \"i\" : " << ts.increment() << " } }";
             }
             break;
-
+        }
         case MinKey:
             s << "{ \"$minKey\" : 1 }";
             break;
@@ -445,7 +446,7 @@ namespace mongo {
         case NumberInt:
             x = 4;
             break;
-        case Timestamp:
+        case mongo::Timestamp:
         case mongo::Date:
         case NumberDouble:
         case NumberLong:
@@ -525,7 +526,7 @@ namespace mongo {
         case NumberInt:
             x = 4;
             break;
-        case Timestamp:
+        case mongo::Timestamp:
         case mongo::Date:
         case NumberDouble:
         case NumberLong:
@@ -687,9 +688,11 @@ namespace mongo {
                 }
             }
             break;
-        case Timestamp:
-            s << "Timestamp " << timestampTime() << "|" << timestampInc();
+        case mongo::Timestamp: {
+            Timestamp_t ts = timestamp();
+            s << "Timestamp " << ts.seconds() << "|" << ts.increment();
             break;
+        }
         default:
             s << "?type=" << type();
             break;

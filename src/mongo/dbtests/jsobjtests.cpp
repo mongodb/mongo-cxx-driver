@@ -1503,8 +1503,8 @@ namespace JsobjTests {
                 ASSERT_EQUALS(objTypeOf(1), NumberInt);
                 ASSERT_EQUALS(arrTypeOf(1), NumberInt);
 
-                ASSERT_EQUALS(objTypeOf(OpTime()), Timestamp);
-                ASSERT_EQUALS(arrTypeOf(OpTime()), Timestamp);
+                ASSERT_EQUALS(objTypeOf(Timestamp_t()), Timestamp);
+                ASSERT_EQUALS(arrTypeOf(Timestamp_t()), Timestamp);
 
                 ASSERT_EQUALS(objTypeOf(1LL), NumberLong);
                 ASSERT_EQUALS(arrTypeOf(1LL), NumberLong);

@@ -16,6 +16,7 @@
 #include "mongo/db/json.h"
 
 #include <boost/scoped_ptr.hpp>
+#include <cerrno>
 
 #include "mongo/base/parse_number.h"
 #include "mongo/db/jsobj.h"
@@ -542,7 +543,7 @@ namespace mongo {
         if (!readToken(RBRACE)) {
             return parseError("Expecting '}'");
         }
-        builder.appendTimestamp(fieldName, (static_cast<uint64_t>(seconds))*1000, count);
+        builder.appendTimestamp(fieldName, Timestamp_t(seconds, count));
         return Status::OK();
     }
 
@@ -802,7 +803,7 @@ namespace mongo {
         if (!readToken(RPAREN)) {
             return parseError("Expecting ')'");
         }
-        builder.appendTimestamp(fieldName, (static_cast<uint64_t>(seconds))*1000, count);
+        builder.appendTimestamp(fieldName, Timestamp_t(seconds, count));
         return Status::OK();
     }
 

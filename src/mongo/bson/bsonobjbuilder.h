@@ -27,11 +27,13 @@
 #include <cmath>
 #include <limits>
 
+#include "mongo/base/data_cursor.h"
 #include "mongo/base/parse_number.h"
 #include "mongo/bson/bson_field.h"
 #include "mongo/bson/bsonelement.h"
 #include "mongo/bson/bsonmisc.h"
 #include "mongo/bson/bsonobj.h"
+#include "mongo/bson/timestamp.h"
 #include "mongo/client/export_macros.h"
 
 namespace mongo {
@@ -408,40 +410,23 @@ namespace mongo {
             return *this;
         }
 
-        // Append a Timestamp field -- will be updated to next OpTime on db insert.
-        BSONObjBuilder& appendTimestamp( const StringData& fieldName ) {
+        /** Append a Timestamp element to the object */
+        BSONObjBuilder& appendTimestamp( const StringData& fieldName , const Timestamp_t& ts = Timestamp_t() ) {
             _b.appendNum( (char) Timestamp );
             _b.appendStr( fieldName );
-            _b.appendNum( (unsigned long long) 0 );
+
+            char buf[2 * sizeof(uint32_t)];
+            DataCursor cur(buf);
+            cur.writeLEAndAdvance<>(ts.increment());
+            cur.writeLEAndAdvance<>(ts.seconds());
+
+            _b.appendBuf(buf, sizeof(buf));
             return *this;
         }
 
-        /**
-         * To store an OpTime in BSON, use this function.
-         * This captures both the secs and inc fields.
-         */
-        BSONObjBuilder& append(const StringData& fieldName, OpTime optime);
-
-        /**
-         * Alternative way to store an OpTime in BSON. Pass the OpTime as a Date, as follows:
-         *
-         *     builder.appendTimestamp("field", optime.asDate());
-         *
-         * This captures both the secs and inc fields.
-         */
-        BSONObjBuilder& appendTimestamp( const StringData& fieldName , unsigned long long val ) {
-            _b.appendNum( (char) Timestamp );
-            _b.appendStr( fieldName );
-            _b.appendNum( val );
-            return *this;
+        BSONObjBuilder& append( const StringData& fieldName, const Timestamp_t& ts ) {
+            return appendTimestamp(fieldName, ts);
         }
-
-        /**
-        Timestamps are a special BSON datatype that is used internally for replication.
-        Append a timestamp element to the object being ebuilt.
-        @param time - in millis (but stored in seconds)
-        */
-        BSONObjBuilder& appendTimestamp( const StringData& fieldName , unsigned long long time , unsigned int inc );
 
         /*
         Append an element of the deprecated DBRef type.
@@ -740,11 +725,6 @@ namespace mongo {
         BufBuilder &subobjStart() { return _b.subobjStart( num() ); }
         BufBuilder &subarrayStart() { return _b.subarrayStart( num() ); }
 
-        BSONArrayBuilder& appendTimestamp(unsigned int sec, unsigned int inc) {
-            _b.appendTimestamp(num(), sec, inc);
-            return *this;
-        }
-
         BSONArrayBuilder& appendRegex(const StringData& regex, const StringData& options = "") {
             _b.appendRegex(num(), regex, options);
             return *this;
@@ -777,11 +757,6 @@ namespace mongo {
 
         BSONArrayBuilder& appendBool(bool val) {
             _b.appendBool(num(), val);
-            return *this;
-        }
-
-        BSONArrayBuilder& appendTimestamp(unsigned long long ts) {
-            _b.appendTimestamp(num(), ts);
             return *this;
         }
 

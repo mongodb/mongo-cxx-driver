@@ -1,4 +1,5 @@
-/*    Copyright 2009 10gen Inc.
+/*
+ *    Copyright 2014 MongoDB Inc.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,21 +14,30 @@
  *    limitations under the License.
  */
 
-#include "mongo/bson/optime.h"
+#pragma once
 
-#include <iostream>
-#include <limits>
-#include <ctime>
-
-#include "mongo/bson/inline_decls.h"
 #include "mongo/platform/cstdint.h"
 
 namespace mongo {
 
-    OpTime OpTime::max() {
-        unsigned int t = static_cast<unsigned int>(std::numeric_limits<int32_t>::max());
-        unsigned int i = std::numeric_limits<uint32_t>::max();
-        return OpTime(t, i);
-    }
+    class Timestamp_t {
+     public:
+        Timestamp_t()
+            : _seconds()
+            , _increment()
+        {}
 
-}
+        Timestamp_t(const uint32_t seconds, const uint32_t increment)
+            : _seconds(seconds)
+            , _increment(increment)
+        {}
+
+        uint32_t seconds() const { return _seconds; }
+        uint32_t increment() const { return _increment; }
+
+     private:
+        const uint32_t _seconds;
+        const uint32_t _increment;
+    };
+
+}  // namespace mongo

@@ -503,7 +503,7 @@ namespace JsonTests {
         public:
             void run() {
                 BSONObjBuilder b;
-                b.appendTimestamp( "x" , 4000 , 10 );
+                b.appendTimestamp( "x" , Timestamp_t( 4, 10 ) );
                 BSONObj o = b.obj();
                 ASSERT_EQUALS( "{ \"x\" : { \"$timestamp\" : { \"t\" : 4, \"i\" : 10 } } }",
                         o.jsonString( Strict ) );
@@ -547,7 +547,7 @@ namespace JsonTests {
                 b.appendSymbol( "p" , "foo" );
                 b.appendCodeWScope( "q" , "function(){}" , BSON("x" << 1 ) );
                 b.append( "r" , (int)5 );
-                b.appendTimestamp( "s" , 123123123123123LL );
+                b.appendTimestamp( "s" , Timestamp_t( 123123, 123123 ) );
                 b.append( "t" , 12321312312LL );
                 b.appendMaxKey( "u" );
 
@@ -1750,7 +1750,7 @@ namespace JsonTests {
         class Timestamp : public Base {
             virtual BSONObj bson() const {
                 BSONObjBuilder b;
-                b.appendTimestamp( "a", (unsigned long long) 20000, 5 );
+                b.appendTimestamp( "a", Timestamp_t( 20, 5 ) );
                 return b.obj();
             }
             virtual string json() const {
@@ -1767,7 +1767,7 @@ namespace JsonTests {
         class TimestampZero : public Base {
             virtual BSONObj bson() const {
                 BSONObjBuilder b;
-                b.appendTimestamp( "a", 0ULL, 0 );
+                b.appendTimestamp( "a", Timestamp_t() );
                 return b.obj();
             }
             virtual string json() const {
@@ -1814,7 +1814,7 @@ namespace JsonTests {
         class TimestampObject : public Base {
             virtual BSONObj bson() const {
                 BSONObjBuilder b;
-                b.appendTimestamp( "a", (unsigned long long) 20000, 5 );
+                b.appendTimestamp( "a", Timestamp_t( 20, 5 ) );
                 return b.obj();
             }
             virtual string json() const {
@@ -1855,7 +1855,7 @@ namespace JsonTests {
         class TimestampObjectZero : public Base {
             virtual BSONObj bson() const {
                 BSONObjBuilder b;
-                b.appendTimestamp( "a", 0ULL, 0 );
+                b.appendTimestamp( "a", Timestamp_t() );
                 return b.obj();
             }
             virtual string json() const {

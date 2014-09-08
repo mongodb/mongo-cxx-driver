@@ -252,13 +252,13 @@ int main( int argc, const char **argv ) {
 
         {
             mongo::BSONObjBuilder b;
-            b.appendTimestamp( "ts" );
+            b.appendTimestamp( "ts" , Timestamp_t());
             conn.insert( tsns , b.obj() );
         }
 
         mongo::BSONObj out = conn.findOne( tsns , mongo::BSONObj() );
-        Date_t oldTime = out["ts"].timestampTime();
-        unsigned int oldInc = out["ts"].timestampInc();
+        uint32_t oldTime = out["ts"].timestamp().seconds();
+        uint32_t oldInc = out["ts"].timestamp().increment();
 
         {
             mongo::BSONObjBuilder b1;
@@ -266,15 +266,15 @@ int main( int argc, const char **argv ) {
 
             mongo::BSONObjBuilder b2;
             b2.append( out["_id"] );
-            b2.appendTimestamp( "ts" );
+            b2.appendTimestamp( "ts" , Timestamp_t());
 
             conn.update( tsns , b1.obj() , b2.obj() );
         }
 
         BSONObj found = conn.findOne( tsns , mongo::BSONObj() );
         cout << "old: " << out << "\nnew: " << found << endl;
-        verify( ( oldTime < found["ts"].timestampTime() ) ||
-                ( oldTime == found["ts"].timestampTime() && oldInc < found["ts"].timestampInc() ) );
+        verify( ( oldTime < found["ts"].timestamp().seconds() ) ||
+                ( oldTime == found["ts"].timestamp().seconds() && oldInc < found["ts"].timestamp().increment() ) );
 
     }
 

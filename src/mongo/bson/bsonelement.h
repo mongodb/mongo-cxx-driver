@@ -21,14 +21,15 @@
 #include <string>
 #include <vector>
 
+#include "mongo/base/data_cursor.h"
 #include "mongo/bson/bsontypes.h"
 #include "mongo/bson/oid.h"
+#include "mongo/bson/timestamp.h"
 #include "mongo/client/export_macros.h"
 #include "mongo/platform/cstdint.h"
 #include "mongo/platform/float_utils.h"
 
 namespace mongo {
-    class OpTime;
     class BSONObj;
     class BSONElement;
     class BSONObjBuilder;
@@ -76,6 +77,7 @@ namespace mongo {
         mongo::OID OID()            const { return chk(jstOID).__oid(); }
         void Null()                 const { chk(isNull()); } // throw MsgAssertionException if not null
         void OK()                   const { chk(ok()); }     // throw MsgAssertionException if element DNE
+        Timestamp_t Timestamp()     const { return chk(mongo::Timestamp).timestamp(); }
 
         /** @return the embedded object associated with this field.
             Note the returned object is a reference to within the parent bson object. If that
@@ -406,16 +408,11 @@ namespace mongo {
             }
         }
 
-        Date_t timestampTime() const {
-            unsigned long long t = ((unsigned int*)(value() + 4 ))[0];
-            return t * 1000;
-        }
-        unsigned int timestampInc() const {
-            return ((unsigned int*)(value() ))[0];
-        }
-
-        unsigned long long timestampValue() const {
-            return reinterpret_cast<const unsigned long long*>( value() )[0];
+        Timestamp_t timestamp() const {
+            ConstDataCursor cursor(value());
+            const uint32_t increment = cursor.readLEAndAdvance<uint32_t>();
+            const uint32_t seconds = cursor.readLE<uint32_t>();
+            return Timestamp_t(seconds, increment);
         }
 
         const char * dbrefNS() const {
@@ -478,7 +475,6 @@ namespace mongo {
         }
 
         std::string _asCode() const;
-        OpTime _opTime() const;
 
         template<typename T> bool coerce( T* out ) const;
 

@@ -31,7 +31,6 @@ namespace {
     using mongo::BSONObj;
     using mongo::BSONObjBuilder;
     using mongo::BSONType;
-    using mongo::OpTime;
 
     const long long maxEncodableInt = (1 << 30) - 1;
     const long long minEncodableInt = -maxEncodableInt;
@@ -243,9 +242,6 @@ namespace {
 
         BSONElement e = o1.getField("a");
         ASSERT_FALSE(e.eoo());
-
-        OpTime opTime = e._opTime();
-        ASSERT_FALSE(opTime.isNull());
     }
 
 } // unnamed namespace

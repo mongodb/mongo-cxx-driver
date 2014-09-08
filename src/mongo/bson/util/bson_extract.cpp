@@ -94,17 +94,6 @@ namespace mongo {
         return Status::OK();
     }
 
-    Status bsonExtractOpTimeField(const BSONObj& object,
-                                  const StringData& fieldName,
-                                  OpTime* out) {
-        BSONElement element;
-        Status status = bsonExtractTypedField(object, fieldName, Timestamp, &element);
-        if (!status.isOK())
-            return status;
-        *out = element._opTime();
-        return Status::OK();
-    }
-
     Status bsonExtractOIDField(const BSONObj& object,
                                const StringData& fieldName,
                                OID* out) {

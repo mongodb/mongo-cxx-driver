@@ -17,7 +17,6 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include "mongo/bson/optime.h"
 #include "mongo/util/log.h"
 
 namespace mongo {
@@ -43,7 +42,8 @@ namespace mongo {
             //appendDate( fieldName , numeric_limits<long long>::min() ); 
             return;
         case Timestamp: // TODO integrate with Date SERVER-3304
-            appendTimestamp( fieldName , 0 ); return;
+            appendTimestamp( fieldName, Timestamp_t() );
+            return;
         case Undefined: // shared with EOO
             appendUndefined( fieldName ); return;
                 
@@ -98,8 +98,11 @@ namespace mongo {
             appendMinForType( fieldName, Object ); return;
         case Date:
             appendDate( fieldName , numeric_limits<long long>::max() ); return;
-        case Timestamp: // TODO integrate with Date SERVER-3304
-            append( fieldName , OpTime::max() ); return;
+        case Timestamp: { // TODO integrate with Date SERVER-3304
+            const int32_t max = numeric_limits<int32_t>::max();
+            appendTimestamp( fieldName, Timestamp_t( max, max ) );
+            return;
+        }
         case Undefined: // shared with EOO
             appendUndefined( fieldName ); return;
 
