@@ -230,7 +230,7 @@ int main( int argc, const char **argv ) {
         // nonexistent index test
         bool asserted = false;
         try {
-            conn.findOne(ns, Query("{name:\"eliot\"}").hint("{foo:1}"));
+            conn.findOne(ns, Query("{name:\"eliot\"}").hint("foo_1}"));
         }
         catch ( ... ) {
             asserted = true;
@@ -238,7 +238,7 @@ int main( int argc, const char **argv ) {
         verify( asserted );
 
         //existing index
-        verify( conn.findOne(ns, Query("{name:'eliot'}").hint("{name:1}")).hasElement("name") );
+        verify( conn.findOne(ns, Query("{name:'eliot'}").hint("name_1")).hasElement("name") );
 
         // run validate
         verify( conn.validate( ns ) );

@@ -105,7 +105,7 @@ namespace {
     TEST(QueryTest, Hint) {
         Query q;
         q.hint(BSON("a" << 1));
-        BSONObj hint = q.getHint();
+        BSONObj hint = q.getHint().Obj();
         ASSERT_TRUE(hint.hasField("a"));
         ASSERT_EQUALS(hint.getIntField("a"), 1);
     }
@@ -921,6 +921,35 @@ namespace {
 
         ASSERT_EQUALS(info.getIntField("userFlags"), 0);
         ASSERT_EQUALS(info.getIntField("nindexes"), 0);
+    }
+
+    TEST_F(DBClientTest, CountWithHint) {
+        c.insert(TEST_NS, BSON("a" << 1));
+        c.insert(TEST_NS, BSON("a" << 2));
+
+        IndexSpec normal_spec;
+        normal_spec.addKey("a");
+        c.createIndex(TEST_NS, normal_spec);
+
+        ASSERT_EQUALS(c.count(TEST_NS, Query("{'a': 1}").hint("_id_")), 1U);
+        ASSERT_EQUALS(c.count(TEST_NS, Query().hint("_id_")), 2U);
+
+        IndexSpec sparse_spec;
+        sparse_spec.addKey("b").sparse(true);
+        c.createIndex(TEST_NS, sparse_spec);
+
+        Query good = Query("{'a': 1}").hint("b_1");
+        Query bad = Query("{'a': 1}").hint("badhint");
+
+        if (serverGTE(&c, 2, 6)) {
+            ASSERT_EQUALS(c.count(TEST_NS, good), 0U);
+            ASSERT_THROWS(c.count(TEST_NS, bad), DBException);
+        } else {
+            ASSERT_EQUALS(c.count(TEST_NS, good), 1U);
+            ASSERT_NO_THROW(c.count(TEST_NS, bad));
+        }
+
+        ASSERT_EQUALS(c.count(TEST_NS, Query().hint("b_1")), 2U);
     }
 
     TEST_F(DBClientTest, CopyDatabase) {

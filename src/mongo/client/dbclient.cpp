@@ -392,7 +392,10 @@ namespace mongo {
 
     Query::Query( const char *json ) : obj( fromjson( json ) ) {}
 
-    Query& Query::hint(const string &jsonKeyPatt) { return hint( fromjson( jsonKeyPatt ) ); }
+    Query& Query::hint(const string &indexName) {
+        appendComplex( "$hint", indexName );
+        return *this;
+    }
 
     Query& Query::where(const string &jscode, BSONObj scope) {
         /* use where() before sort() and hint() and explain(), else this will assert. */
@@ -528,6 +531,10 @@ namespace mongo {
         return hasReadPreference(obj);
     }
 
+    bool Query::hasHint() const {
+        return obj.hasField( "$hint" );
+    }
+
     bool Query::hasMaxTimeMs() const {
         return obj.hasField( "$maxTimeMS" );
     }
@@ -547,10 +554,10 @@ namespace mongo {
             ret = obj.getObjectField( "$orderby" );
         return ret;
     }
-    BSONObj Query::getHint() const {
+    BSONElement Query::getHint() const {
         if ( ! isComplex() )
-            return BSONObj();
-        return obj.getObjectField( "$hint" );
+            return BSONElement();
+        return obj.getField( "$hint" );
     }
 
     BSONObj Query::getReadPref() const {
@@ -655,8 +662,17 @@ namespace mongo {
         if ( skip )
             b.append( "skip" , skip );
 
-        if (query.isComplex())
-            b.appendElements(query.getModifiers());
+        if ( query.isComplex() ) {
+            if ( query.hasHint() ) {
+                BSONElement hint(query.getHint());
+                if ( hint.isABSONObj() )
+                    b.append( "hint", hint.Obj() );
+                else
+                    b.append( "hint", hint.String() );
+            }
+            if ( query.hasReadPreference() )
+                b.append( "$readPreference", query.getReadPref() );
+        }
 
         return b.obj();
     }

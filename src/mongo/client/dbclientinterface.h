@@ -398,7 +398,7 @@ namespace mongo {
               hint("{ts:1}")
         */
         Query& hint(BSONObj keyPattern);
-        Query& hint(const std::string &jsonKeyPatt);
+        Query& hint(const std::string& indexName);
 
         /**
          * Specifies a cumulative time limit in milliseconds for processing an operation.
@@ -466,7 +466,7 @@ namespace mongo {
 
         BSONObj getFilter() const;
         BSONObj getSort() const;
-        BSONObj getHint() const;
+        BSONElement getHint() const;
         BSONObj getReadPref() const;
         int getMaxTimeMs() const;
         bool isExplain() const;
@@ -476,6 +476,7 @@ namespace mongo {
          */
         static bool MONGO_CLIENT_FUNC hasReadPreference(const BSONObj& queryObj);
         bool hasReadPreference() const;
+        bool hasHint() const;
         bool hasMaxTimeMs() const;
 
         std::string toString() const;
@@ -522,7 +523,7 @@ namespace mongo {
         bool isExplain() const { return _queryObj.isExplain(); }
         BSONObj filter() const { return _queryObj.getFilter(); }
 
-        BSONObj hint() const { return _queryObj.getHint(); }
+        BSONElement hint() const { return _queryObj.getHint(); }
         BSONObj sort() const { return _queryObj.getSort(); }
         BSONObj query() const { return _query; }
         BSONObj fields() const { return _fields; }
