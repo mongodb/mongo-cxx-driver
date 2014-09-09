@@ -1457,7 +1457,7 @@ namespace mongo {
         : _wireProtocolWriter(new WireProtocolWriter(this))
         , _commandWriter(new CommandWriter(this))
     {
-        _writeConcern = WriteConcern::acknowledged();
+        _writeConcern = WriteConcern::acknowledged;
         _connectionId = ConnectionIdSequence.fetchAndAdd(1);
         _minWireVersion = _maxWireVersion = 0;
         _maxBsonObjectSize = defaultMaxBsonObjectSize;
