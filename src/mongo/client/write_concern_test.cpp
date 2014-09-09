@@ -90,29 +90,29 @@ namespace mongo {
     }
 
     TEST(WriteConcern, Unacknowledged) {
-        ASSERT_FALSE(WriteConcern::unacknowledged().requiresConfirmation());
-        ASSERT_EQUALS(WriteConcern::unacknowledged().nodes(), 0);
+        ASSERT_FALSE(WriteConcern::unacknowledged.requiresConfirmation());
+        ASSERT_EQUALS(WriteConcern::unacknowledged.nodes(), 0);
     }
 
     TEST(WriteConcern, Acknowledged) {
-        ASSERT_TRUE(WriteConcern::acknowledged().requiresConfirmation());
-        ASSERT_EQUALS(WriteConcern::acknowledged().nodes(), 1);
+        ASSERT_TRUE(WriteConcern::acknowledged.requiresConfirmation());
+        ASSERT_EQUALS(WriteConcern::acknowledged.nodes(), 1);
     }
 
     TEST(WriteConcern, Journaled) {
-        ASSERT_TRUE(WriteConcern::journaled().requiresConfirmation());
-        ASSERT_TRUE(WriteConcern::journaled().journal());
+        ASSERT_TRUE(WriteConcern::journaled.requiresConfirmation());
+        ASSERT_TRUE(WriteConcern::journaled.journal());
     }
 
     TEST(WriteConcern, Replicated) {
-        ASSERT_TRUE(WriteConcern::replicated().requiresConfirmation());
-        ASSERT_EQUALS(WriteConcern::replicated().nodes(), 2);
+        ASSERT_TRUE(WriteConcern::replicated.requiresConfirmation());
+        ASSERT_EQUALS(WriteConcern::replicated.nodes(), 2);
     }
 
     TEST(WriteConcern, Majority) {
-        ASSERT_TRUE(WriteConcern::majority().requiresConfirmation());
-        ASSERT_EQUALS(WriteConcern::majority().mode(), string(WriteConcern::kMajority));
-        ASSERT_TRUE(WriteConcern::majority().hasMode());
+        ASSERT_TRUE(WriteConcern::majority.requiresConfirmation());
+        ASSERT_EQUALS(WriteConcern::majority.mode(), string(WriteConcern::kMajority));
+        ASSERT_TRUE(WriteConcern::majority.hasMode());
     }
 
 } // namespace
