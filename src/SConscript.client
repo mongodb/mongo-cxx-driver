@@ -346,7 +346,7 @@ if windows:
 mongoClientStaticLib = staticLibEnv.StaticLibrary(
     staticLibName, clientSource),
 
-buildDriverAlias = libEnv.Alias('driver', mongoClientStaticLib)
+libEnv.Alias('driver', mongoClientStaticLib)
 
 mongoClientPrefixInstalls.append(libEnv.Install("$INSTALL_DIR/lib", mongoClientStaticLib))
 
@@ -377,7 +377,7 @@ if buildShared:
         sharedLibEnv.AppendUnique(SHLINKFLAGS="-fvisibility=hidden")
 
     mongoClientSharedLib = sharedLibEnv.SharedLibrary(sharedLibName, clientSource)
-    libEnv.Alias(buildDriverAlias, mongoClientSharedLib)
+    libEnv.Alias('driver', mongoClientSharedLib)
 
     if darwin:
         # Set up the copy of the client library we will link targets against so that those
