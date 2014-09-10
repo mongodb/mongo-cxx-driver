@@ -197,6 +197,12 @@ int main( int argc, const char **argv ) {
         cout << "connecting to localhost..." << endl;
         conn.connect(string("localhost:") + port);
         cout << "connected ok" << endl;
+
+        BSONObj cmdResult;
+        conn.runCommand("admin", BSON("buildinfo" << true), cmdResult);
+        if (cmdResult["versionArray"].Array()[1].Int() < 6)
+            return EXIT_SUCCESS;
+
         insertGeoData(conn);
         queryGeoData(conn);
         conn.dropCollection(kDbCollectionName);
