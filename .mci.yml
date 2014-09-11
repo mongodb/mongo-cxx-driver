@@ -224,9 +224,6 @@ tasks:
           params:
             working_dir: "mongo-cxx-driver"
             script: |
-              set -o verbose
-              echo "Task is currently skipped until CXX-318 is fixed."
-              exit 1
               echo "Starting mongod..."
               ./mongod${extension} ${mongodb_args}
               ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} install # static lib install step
