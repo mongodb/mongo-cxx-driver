@@ -159,9 +159,16 @@ namespace mongo {
         static void MONGO_CLIENT_FUNC setConfigChangeHook(ConfigChangeHook hook);
 
         /**
+         * Starts the ReplicaSetMonitorWatcher. You shouldn't have to call this in production code
+         * as it is called in init.cpp. However, it may be useful to pair calls to initalize and cleanup
+         * in tests.
+         */
+        static void MONGO_CLIENT_FUNC initialize();
+
+        /**
          * Permanently stops all monitoring on replica sets and clears all cached information
          * as well. As a consequence, NEVER call this if you have other threads that have a
-         * DBClientReplicaSet instance.
+         * DBClientReplicaSet instance. 
          */
         static void MONGO_CLIENT_FUNC cleanup();
 

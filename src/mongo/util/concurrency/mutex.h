@@ -35,13 +35,4 @@ namespace mongo {
         return xt;
     }
 
-    // If you create a local static instance of this class, that instance will be destroyed
-    // before all global static objects are destroyed, so _destroyingStatics will be set
-    // to true before the global static variables are destroyed.
-    class StaticObserver : boost::noncopyable {
-    public:
-        static bool _destroyingStatics;
-        ~StaticObserver() { _destroyingStatics = true; }
-    };
-
 }

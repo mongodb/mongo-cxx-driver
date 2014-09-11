@@ -31,7 +31,6 @@
 #include "mongo/client/options.h"
 #include "mongo/client/private/options.h"
 #include "mongo/client/replica_set_monitor_internal.h"
-#include "mongo/util/concurrency/mutex.h" // for StaticObserver
 #include "mongo/util/background.h"
 #include "mongo/util/debug_util.h"
 #include "mongo/util/log.h"
@@ -67,6 +66,8 @@ namespace {
 
     const double socketTimeoutSecs = 5;
 
+    // TODO(amidvidy): fix comment
+
     /*  Replica Set Monitor shared state:
      *      If a program (such as one built with the C++ driver) exits (by either calling exit()
      *      or by returning from main()), static objects will be destroyed in the reverse order
@@ -89,10 +90,17 @@ namespace {
      *          Don't lock setsLock while holding any SetState::mutex. It is however safe to grab a
      *          SetState::mutex without holder setsLock, but then you can't grab setsLock until you
      *          release the SetState::mutex.
+
      */
-    boost::mutex setsLock;
-    StringMap<set<HostAndPort> > seedServers;
-    StringMap<ReplicaSetMonitorPtr> sets;
+
+
+    namespace global {
+        // Protects global state
+        boost::mutex lock;
+        bool isRunning;
+        StringMap<set<HostAndPort> > seedServers;
+        StringMap<ReplicaSetMonitorPtr> sets;
+    }
 
     // global background job responsible for checking every X amount of time
     class ReplicaSetMonitorWatcher : public BackgroundJob {
@@ -106,9 +114,6 @@ namespace {
         ~ReplicaSetMonitorWatcher() {
             stop();
 
-            // We relying on the fact that if the monitor was rerun again, wait will not hang
-            // because _destroyingStatics will make the run method exit immediately.
-            dassert(StaticObserver::_destroyingStatics);
             if (running()) {
                 wait();
             }
@@ -144,12 +149,15 @@ namespace {
             // are fixed - see 392b933598668768bf12b1e41ad444aa3548d970.
             // Should not be needed after SERVER-7533 gets implemented and tests start
             // using it.
-            if (!StaticObserver::_destroyingStatics) {
+
+            // TODO(amidvidy): investigate if this is still needed
+            {
+                // prevent recursive locking
                 boost::unique_lock<boost::mutex> sl( _monitorMutex );
                 _stopRequestedCV.timed_wait(sl, boost::posix_time::seconds(10));
             }
 
-            while ( !StaticObserver::_destroyingStatics ) {
+            while ( true ) {
                 {
                     boost::lock_guard<boost::mutex> sl( _monitorMutex );
                     if (_stopRequested) {
@@ -180,8 +188,8 @@ namespace {
             // make a copy so we can quickly unlock setsLock
             StringMap<ReplicaSetMonitorPtr> setsCopy;
             {
-                boost::lock_guard<boost::mutex> lk( setsLock );
-                setsCopy = sets;
+                boost::lock_guard<boost::mutex> lk( global::lock );
+                setsCopy = global::sets;
             }
 
             for (StringMap<ReplicaSetMonitorPtr>::const_iterator it = setsCopy.begin();
@@ -208,9 +216,14 @@ namespace {
 
         boost::condition_variable _stopRequestedCV;
         bool _stopRequested;
-    } replicaSetMonitorWatcher;
+    };
 
-    StaticObserver staticObserver;
+    // State shared across all ReplicaSetMonitors. All variables here need an ugly namespace because they
+    // are ugly.
+    namespace global {
+        //class ReplicaSetMonitorWatcher;
+        boost::shared_ptr<ReplicaSetMonitorWatcher> replicaSetMonitorWatcher;
+    }
 
     //
     // Helpers for stl algorithms
@@ -352,30 +365,30 @@ namespace {
 
     void ReplicaSetMonitor::createIfNeeded(const string& name, const set<HostAndPort>& servers) {
         LOG(3) << "ReplicaSetMonitor::createIfNeeded " << name;
-        boost::lock_guard<boost::mutex> lk(setsLock);
-        ReplicaSetMonitorPtr& m = sets[name];
+        boost::lock_guard<boost::mutex> lk(global::lock);
+        ReplicaSetMonitorPtr& m = global::sets[name];
         if ( ! m )
             m = boost::make_shared<ReplicaSetMonitor>( name , servers );
 
-        replicaSetMonitorWatcher.safeGo();
+        global::replicaSetMonitorWatcher->safeGo();
     }
 
     ReplicaSetMonitorPtr ReplicaSetMonitor::get(const string& name,
                                                 const bool createFromSeed) {
         LOG(3) << "ReplicaSetMonitor::get " << name;
-        boost::lock_guard<boost::mutex> lk( setsLock );
-        StringMap<ReplicaSetMonitorPtr>::const_iterator i = sets.find( name );
-        if ( i != sets.end() ) {
+        boost::lock_guard<boost::mutex> lk( global::lock );
+        StringMap<ReplicaSetMonitorPtr>::const_iterator i = global::sets.find( name );
+        if ( i != global::sets.end() ) {
             return i->second;
         }
         if ( createFromSeed ) {
-            StringMap<set<HostAndPort> >::const_iterator j = seedServers.find( name );
-            if ( j != seedServers.end() ) {
+            StringMap<set<HostAndPort> >::const_iterator j = global::seedServers.find( name );
+            if ( j != global::seedServers.end() ) {
                 LOG(4) << "Creating ReplicaSetMonitor from cached address";
-                ReplicaSetMonitorPtr& m = sets[name];
+                ReplicaSetMonitorPtr& m = global::sets[name];
                 invariant( !m );
                 m.reset( new ReplicaSetMonitor( name, j->second ) );
-                replicaSetMonitorWatcher.safeGo();
+                global::replicaSetMonitorWatcher->safeGo();
                 return m;
             }
         }
@@ -384,9 +397,9 @@ namespace {
 
     set<string> ReplicaSetMonitor::getAllTrackedSets() {
         set<string> activeSets;
-        boost::lock_guard<boost::mutex> lk( setsLock );
-        for (StringMap<ReplicaSetMonitorPtr>::const_iterator it = sets.begin();
-             it != sets.end(); ++it)
+        boost::lock_guard<boost::mutex> lk( global::lock );
+        for (StringMap<ReplicaSetMonitorPtr>::const_iterator it = global::sets.begin();
+             it != global::sets.end(); ++it)
         {
             activeSets.insert(it->first);
         }
@@ -397,20 +410,20 @@ namespace {
         LOG(2) << "Removing ReplicaSetMonitor for " << name << " from replica set table"
                << (clearSeedCache ? " and the seed cache" : "");
 
-        boost::lock_guard<boost::mutex> lk( setsLock );
-        const StringMap<ReplicaSetMonitorPtr>::const_iterator setIt = sets.find(name);
-        if (setIt != sets.end()) {
+        boost::lock_guard<boost::mutex> lk( global::lock );
+        const StringMap<ReplicaSetMonitorPtr>::const_iterator setIt = global::sets.find(name);
+        if (setIt != global::sets.end()) {
             if (!clearSeedCache) {
                 // Save list of current set members so that the monitor can be rebuilt if needed.
                 const ReplicaSetMonitorPtr& rsm = setIt->second;
                 boost::lock_guard<boost::mutex> lk(rsm->_state->mutex);
-                seedServers[name] = rsm->_state->seedNodes;
+                global::seedServers[name] = rsm->_state->seedNodes;
             }
-            sets.erase(setIt);
+            global::sets.erase(setIt);
         }
 
         if ( clearSeedCache ) {
-            seedServers.erase( name );
+            global::seedServers.erase( name );
         }
 
         // Kill all pooled ReplicaSetConnections for this set. They will not function correctly
@@ -450,14 +463,29 @@ namespace {
         hosts.done();
     }
 
+    // Users shouldn't need to call this more than once... but our tests do...
+    void ReplicaSetMonitor::initialize() {
+        boost::lock_guard<boost::mutex> lock(global::lock);
+        if (!global::isRunning) {
+            global::seedServers = StringMap<set<HostAndPort> >();
+            global::sets = StringMap<ReplicaSetMonitorPtr>();
+            global::replicaSetMonitorWatcher.reset(new ReplicaSetMonitorWatcher());
+            global::isRunning = true;
+        }
+    }
+
     void ReplicaSetMonitor::cleanup() {
-        // Call cancel first, in case the RSMW was never started.
-        replicaSetMonitorWatcher.cancel();
-        replicaSetMonitorWatcher.stop();
-        replicaSetMonitorWatcher.wait();
-        boost::lock_guard<boost::mutex> lock(setsLock);
-        sets = StringMap<ReplicaSetMonitorPtr>();
-        seedServers = StringMap<set<HostAndPort> >();
+        boost::lock_guard<boost::mutex> lock(global::lock);
+        if (global::isRunning) {
+            // Call cancel first, in case the RSMW was never started.
+            global::replicaSetMonitorWatcher->cancel();
+            global::replicaSetMonitorWatcher->stop();
+            global::replicaSetMonitorWatcher->wait();
+            global::replicaSetMonitorWatcher.reset();
+            global::sets = StringMap<ReplicaSetMonitorPtr>();
+            global::seedServers = StringMap<set<HostAndPort> >();
+            global::isRunning = false;
+        }
     }
 
     Refresher::Refresher(const SetStatePtr& setState)
