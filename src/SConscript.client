@@ -155,6 +155,8 @@ clientSourceBasic = [
 clientSourceTz = [] if (clientEnv['MONGO_HAVE_TIMEGM'] or windows) else ['third_party/tz/timegm.c']
 
 clientSourceSasl = [
+    'mongo/client/cyrus_sasl_client_session.cpp',
+    'mongo/client/native_sasl_client_session.cpp',
     'mongo/client/sasl_client_authenticate_impl.cpp',
     'mongo/client/sasl_client_session.cpp',
     'mongo/client/sasl_sspi.cpp',

@@ -39,6 +39,7 @@ unittests = [
     'bson/bson_obj_test',
     'bson/bson_validate_test',
     'bson/bsonobjbuilder_test',
+    'bson/util/builder_test',
     'bson/util/bson_extract_test',
     'client/connection_string_test',
     'client/dbclient_rs_test',
