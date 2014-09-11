@@ -138,10 +138,10 @@ namespace mongo {
         virtual std::string taskName() const = 0;
 
         /**
-         *  Starts the BackgroundJob that runs PeriodicTasks. You may call this multiple times,
-         *  from multiple threads, and the BackgroundJob will be started only once. Please note
-         *  that since this method starts threads, it is not appropriate to call it from within
-         *  a mongo initializer. Calling this method after calling 'stopRunningPeriodicTasks'
+         *  Starts the BackgroundJob that runs PeriodicTasks. This method is intended to
+         *  be called internally from initialize() only. You may not call this method twice.
+         *  As this method starts threads, it is not appropriate to call it from within a
+         *  mongo initializer. Calling this method after calling 'stopRunningPeriodicTasks'
          *  does not re-start the background job.
          */
         static void startRunningPeriodicTasks();
