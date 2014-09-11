@@ -55,6 +55,8 @@ namespace client {
      *  not admit retrying the operation. A permanent failure to terminate the driver should be
      *  logged, and it may be unsafe to exit the process by any mechanism which causes normal
      *  destruction of static objects.
+     *
+     *  Once the driver has been terminated, it cannot be initialized again.
      */
     MONGO_CLIENT_API Status MONGO_CLIENT_FUNC shutdown();
 

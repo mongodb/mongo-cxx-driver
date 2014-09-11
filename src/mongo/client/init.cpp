@@ -29,9 +29,13 @@
 namespace mongo {
 namespace client {
 
-    AtomicWord<int> isInitialized;
-
     namespace {
+
+        // 0 = not yet initialized
+        // 1 = initialized, not yet shut down
+        // -1 = terminated
+        AtomicWord<int> isInitialized;
+
         void callShutdownAtExit() {
             // We can't really do anything if this returns a non-OK status.
             mongo::client::shutdown();
@@ -40,7 +44,9 @@ namespace client {
 
     Status initialize(const Options& options) {
 
-        if (isInitialized.compareAndSwap(0, 1) == 0) {
+        int initStatus = isInitialized.compareAndSwap(0, 1);
+
+        if (initStatus == 0) {
 
             // Copy in the provided options.
             setOptions(options);
@@ -65,16 +71,23 @@ namespace client {
 
             return Status::OK();
         }
-        else {
+        else if (initStatus == 1) {
             return Status(
                 ErrorCodes::IllegalOperation,
                 "Initialize() may only be called once");
+        }
+        else {
+            return Status(
+                ErrorCodes::IllegalOperation,
+                "The driver has been terminated.");
         }
     }
 
     Status shutdown() {
 
-        if (isInitialized.compareAndSwap(1, 0) == 1) {
+        int initStatus = isInitialized.compareAndSwap(1, -1);
+
+        if (initStatus == 1) {
 
             ReplicaSetMonitor::cleanup();
 
@@ -84,10 +97,15 @@ namespace client {
             shutdownNetworking();
             return s;
         }
-        else {
+        else if (initStatus == 0) {
             return Status(
                 ErrorCodes::IllegalOperation,
                 "Shutdown() cannot be called before initialize()");
+        }
+        else {
+            return Status(
+                ErrorCodes::IllegalOperation,
+                "The driver has been terminated.");
         }
     }
 

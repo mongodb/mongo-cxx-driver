@@ -24,6 +24,7 @@
 
 #include "mongo/client/dbclient.h"
 
+#include <stdexcept>
 #include <iostream>
 
 using namespace std;
@@ -32,32 +33,28 @@ using namespace mongo;
 void successfulInit(client::Options opts) {
     Status status = client::initialize(opts);
     if ( !status.isOK() ) {
-        cout << "failed to initialize the client driver: " << status.toString() << endl;
-        throw 1;
+        throw std::runtime_error("Failed to initialize the driver");
     }
 }
 
 void failedInit(string errMsg) {
     Status status = client::initialize();
     if ( status.isOK() ) {
-        cout << errMsg << endl;
-        throw 1;
+        throw std::runtime_error(errMsg);
     }
 }
 
 void successfulShutdown() {
     Status status = client::shutdown();
     if ( !status.isOK() ) {
-        cout << "failed to shutdown properly: " << status.toString() << endl;
-        throw 1;
+        throw std::runtime_error("Failed to shutdown properly");
     }
 }
 
 void failedShutdown(string errMsg) {
     Status status = client::shutdown();
     if ( status.isOK() ) {
-        cout << errMsg << endl;
-        throw 1;
+        throw std::runtime_error(errMsg);
     }
 }
 
@@ -77,18 +74,16 @@ int main() {
         successfulShutdown();
 
         // shutdown again, should fail
-        failedShutdown("shouldn't shutdown before initializing");
+        failedShutdown("Can't shutdown, driver has already been terminated");
 
-        // first initialize, should succeed
-        successfulInit(manualShutdownOpts);
+        // another initialization, should fail
+        failedInit("Can't initialize, driver has already been terminated");
 
-        // second initialize, should fail
-        failedInit("shouldn't initialize twice");
-
-        // a final shutdown, should succeed
-        successfulShutdown();
+        // a final shutdown, should also fail
+        failedShutdown("Can't shutdown, driver has already been terminated");
     }
-    catch (int e) {
+    catch (const std::runtime_error& e) {
+        cout << e.what() << endl;
         return EXIT_FAILURE;
     }
 
