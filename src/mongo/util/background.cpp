@@ -27,7 +27,6 @@
 #include <boost/thread/thread.hpp>
 
 #include "mongo/stdx/functional.h"
-#include "mongo/util/concurrency/mutex.h"
 #include "mongo/util/concurrency/thread_name.h"
 #include "mongo/util/debug_util.h"
 #include "mongo/util/log.h"
@@ -128,6 +127,20 @@ namespace mongo {
         }
 
         return Status::OK();
+    }
+
+    namespace {
+        inline boost::xtime incxtimemillis( long long s ) {
+            boost::xtime xt;
+            boost::xtime_get(&xt, MONGO_BOOST_TIME_UTC);
+            xt.sec += (int)( s / 1000 );
+            xt.nsec += (int)(( s % 1000 ) * 1000000);
+            if ( xt.nsec >= 1000000000 ) {
+                xt.nsec -= 1000000000;
+                xt.sec++;
+            }
+            return xt;
+        }
     }
 
     bool BackgroundJob::wait( unsigned msTimeOut ) {

@@ -154,7 +154,6 @@ clientSourceBasic = [
     'mongo/util/text.cpp',
     'mongo/util/time_support.cpp',
     'mongo/util/timer.cpp',
-    'mongo/util/util.cpp',
     'third_party/murmurhash3/MurmurHash3.cpp',
     ]
 

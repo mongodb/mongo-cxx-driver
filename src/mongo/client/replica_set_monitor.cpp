@@ -23,6 +23,7 @@
 #include <limits>
 
 #include <boost/make_shared.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/thread/mutex.hpp>
@@ -30,7 +31,6 @@
 #include "mongo/client/options.h"
 #include "mongo/client/private/options.h"
 #include "mongo/client/replica_set_monitor_internal.h"
-#include "mongo/util/concurrency/mutex.h" // for StaticObserver
 #include "mongo/util/background.h"
 #include "mongo/util/debug_util.h"
 #include "mongo/util/log.h"
@@ -66,29 +66,27 @@ namespace {
 
     const double socketTimeoutSecs = 5;
 
-    /*  Replica Set Monitor shared state:
-     *      If a program (such as one built with the C++ driver) exits (by either calling exit()
-     *      or by returning from main()), static objects will be destroyed in the reverse order
-     *      of their creation (within each translation unit (source code file)).  This makes it
-     *      vital that the order be explicitly controlled within the source file so that destroyed
-     *      objects never reference objects that have been destroyed earlier.
+    /*  Replica Set Monitor global state
      *
-     *      The order chosen below is intended to allow safe destruction in reverse order from
-     *      construction order:
-     *          setsLock                 -- mutex protecting _seedServers and _sets, destroyed last
+     *          watcheLifetimeLock       -- mutex held during creation/destruction of
+     *                                      replicaSetMonitorWatcher
+     *          replicaSetMonitorWatcher -- background job to check Replica Set members
+     *          setsLock                 -- mutex protecting seedServers and sets
      *          seedServers              -- list (map) of servers
      *          sets                     -- list (map) of ReplicaSetMonitors
-     *          replicaSetMonitorWatcher -- background job to check Replica Set members
-     *          staticObserver           -- sentinel to detect process termination
-     *
-     *      Related to:
-     *          SERVER-8891 -- Simple client fail with segmentation fault in mongoclient library
      *
      *      Mutex locking order:
-     *          Don't lock setsLock while holding any SetState::mutex. It is however safe to grab a
-     *          SetState::mutex without holder setsLock, but then you can't grab setsLock until you
-     *          release the SetState::mutex.
+     *          watcherLock should be acquired first when acquiring it and any other lock.
+     *          Don't lock setsLock while holding any SetState::mutex.
+     *          It is however safe to grab a SetState::mutex without holding setsLock, but
+     *          then you can't grab setsLock until you release the SetState::mutex.
      */
+
+    class ReplicaSetMonitorWatcher;
+
+    boost::mutex watcherLifetimeLock;
+    boost::scoped_ptr<ReplicaSetMonitorWatcher> replicaSetMonitorWatcher;
+        
     boost::mutex setsLock;
     StringMap<set<HostAndPort> > seedServers;
     StringMap<ReplicaSetMonitorPtr> sets;
@@ -105,9 +103,6 @@ namespace {
         ~ReplicaSetMonitorWatcher() {
             stop();
 
-            // We relying on the fact that if the monitor was rerun again, wait will not hang
-            // because _destroyingStatics will make the run method exit immediately.
-            dassert(StaticObserver::_destroyingStatics);
             if (running()) {
                 wait();
             }
@@ -139,16 +134,7 @@ namespace {
         void run() {
             log() << "starting"; // includes thread name in output
 
-            // Added only for patching timing problems in test. Remove after tests
-            // are fixed - see 392b933598668768bf12b1e41ad444aa3548d970.
-            // Should not be needed after SERVER-7533 gets implemented and tests start
-            // using it.
-            if (!StaticObserver::_destroyingStatics) {
-                boost::unique_lock<boost::mutex> sl( _monitorMutex );
-                _stopRequestedCV.timed_wait(sl, boost::posix_time::seconds(10));
-            }
-
-            while ( !StaticObserver::_destroyingStatics ) {
+            while ( true ) {
                 {
                     boost::lock_guard<boost::mutex> sl( _monitorMutex );
                     if (_stopRequested) {
@@ -207,9 +193,7 @@ namespace {
 
         boost::condition_variable _stopRequestedCV;
         bool _stopRequested;
-    } replicaSetMonitorWatcher;
-
-    StaticObserver staticObserver;
+    };
 
     //
     // Helpers for stl algorithms
@@ -356,7 +340,12 @@ namespace {
         if ( ! m )
             m = boost::make_shared<ReplicaSetMonitor>( name , servers );
 
-        replicaSetMonitorWatcher.safeGo();
+        /* Don't need to hold the lifetime lock for safeGo as
+         * 1) we assume the monitor is created as the contract of this class is such that initialize()
+         *    must have been called.
+         * 2) replicaSetMonitorWatcher synchronizes safeGo internally using the _monitorMutex
+         */
+        replicaSetMonitorWatcher->safeGo();
     }
 
     ReplicaSetMonitorPtr ReplicaSetMonitor::get(const string& name,
@@ -374,7 +363,9 @@ namespace {
                 ReplicaSetMonitorPtr& m = sets[name];
                 invariant( !m );
                 m.reset( new ReplicaSetMonitor( name, j->second ) );
-                replicaSetMonitorWatcher.safeGo();
+                // see above comment in createIfNeeded for why we don't need the
+                // watcherLifetimeLock
+                replicaSetMonitorWatcher->safeGo();
                 return m;
             }
         }
@@ -444,14 +435,37 @@ namespace {
         hosts.done();
     }
 
+    // Users shouldn't need to call this more than once, but our tests do.
+    // Note that this doesn't actually start the watcher, it just creates it.
+    // The watcher is lazily started when we start monitoring our first replica
+    // set, so we don't have to pay the cost of the extra thread unless needed.
+    void ReplicaSetMonitor::initialize() {
+        boost::lock_guard<boost::mutex> lock(watcherLifetimeLock);
+        if (!replicaSetMonitorWatcher) {
+            {
+                boost::lock_guard<boost::mutex> lockSets(setsLock);
+                seedServers = StringMap<set<HostAndPort> >();
+                sets = StringMap<ReplicaSetMonitorPtr>();
+            }
+            replicaSetMonitorWatcher.reset(new ReplicaSetMonitorWatcher());
+        }
+    }
+
     void ReplicaSetMonitor::cleanup() {
-        // Call cancel first, in case the RSMW was never started.
-        replicaSetMonitorWatcher.cancel();
-        replicaSetMonitorWatcher.stop();
-        replicaSetMonitorWatcher.wait();
-        boost::lock_guard<boost::mutex> lock(setsLock);
-        sets = StringMap<ReplicaSetMonitorPtr>();
-        seedServers = StringMap<set<HostAndPort> >();
+        boost::lock_guard<boost::mutex> lock(watcherLifetimeLock);
+        if (replicaSetMonitorWatcher) {
+            // Call cancel first, in case the RSMW was never started.
+            replicaSetMonitorWatcher->cancel();
+            replicaSetMonitorWatcher->stop();
+            replicaSetMonitorWatcher->wait();
+
+            replicaSetMonitorWatcher.reset();
+            {
+                boost::lock_guard<boost::mutex> lock(setsLock);
+                sets = StringMap<ReplicaSetMonitorPtr>();
+                seedServers = StringMap<set<HostAndPort> >();
+            }
+        }
     }
 
     Refresher::Refresher(const SetStatePtr& setState)

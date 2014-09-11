@@ -88,6 +88,8 @@ namespace client {
             if (!result.isOK())
                 return result;
 
+            ReplicaSetMonitor::initialize();
+
             return Status::OK();
         }
         else if (initStatus == 1) {
