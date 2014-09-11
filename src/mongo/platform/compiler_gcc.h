@@ -59,8 +59,8 @@
 #define __has_extension __has_feature
 #endif
 
-// Technically __attribute__(deprecated) is supposed to come at the start of the declaration, but
-// GCC and clang accept it at the end, which eases compatibility with MSVC
+// Technically __attribute__(deprecated) is supposed to come at the end of the declaration, but
+// GCC and clang accept it at the start, which eases compatibility with MSVC
 
 #if __has_extension(attribute_deprecated_with_message)
 #define MONGO_COMPILER_API_DEPRECATED(MSG) __attribute__(( deprecated( MSG ) ))
