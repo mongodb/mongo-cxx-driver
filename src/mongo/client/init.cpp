@@ -88,6 +88,11 @@ namespace client {
             if (!result.isOK())
                 return result;
 
+            result = ReplicaSetMonitor::initialize();
+            if (!result.isOK()) {
+                return result;
+            }
+
             return Status::OK();
         }
         else if (initStatus == 1) {
@@ -108,7 +113,10 @@ namespace client {
 
         if (initStatus == 1) {
 
-            ReplicaSetMonitor::cleanup();
+            Status result = ReplicaSetMonitor::shutdown(Options::current().autoShutdownGracePeriodMillis());
+            if (!result.isOK()) {
+                return result;
+            }
             shutdownNetworking();
             return Status::OK();
         }

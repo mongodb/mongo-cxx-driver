@@ -67,14 +67,14 @@ namespace {
     class BasicRS: public mongo::unittest::Test {
     protected:
         void setUp() {
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::initialize();
             _replSet.reset(new MockReplicaSet("test", 2));
             ConnectionString::setConnectionHook(
                     mongo::MockConnRegistry::get()->getConnStrHook());
         }
 
         void tearDown() {
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::shutdown();
             _replSet.reset();
         }
 
@@ -150,7 +150,7 @@ namespace {
     class AllNodesDown: public mongo::unittest::Test {
     protected:
         void setUp() {
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::initialize();
             _replSet.reset(new MockReplicaSet("test", 2));
             ConnectionString::setConnectionHook(
                     mongo::MockConnRegistry::get()->getConnStrHook());
@@ -163,7 +163,7 @@ namespace {
         }
 
         void tearDown() {
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::shutdown();
             _replSet.reset();
         }
 
@@ -226,7 +226,7 @@ namespace {
     class PrimaryDown: public mongo::unittest::Test {
     protected:
         void setUp() {
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::initialize();
             _replSet.reset(new MockReplicaSet("test", 2));
             ConnectionString::setConnectionHook(
                     mongo::MockConnRegistry::get()->getConnStrHook());
@@ -234,7 +234,7 @@ namespace {
         }
 
         void tearDown() {
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::shutdown();
             _replSet.reset();
         }
 
@@ -311,7 +311,7 @@ namespace {
     class SecondaryDown: public mongo::unittest::Test {
     protected:
         void setUp() {
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::initialize();
             _replSet.reset(new MockReplicaSet("test", 2));
             ConnectionString::setConnectionHook(
                     mongo::MockConnRegistry::get()->getConnStrHook());
@@ -320,7 +320,7 @@ namespace {
         }
 
         void tearDown() {
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::shutdown();
             _replSet.reset();
 
         }
@@ -406,7 +406,7 @@ namespace {
 
             // This shuts down the background RSMWatcher thread and prevents it from running. These
             // tests depend on controlling when the RSMs are updated.
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::initialize();
 
             _replSet.reset(new MockReplicaSet("test", 5));
             _originalConnectionHook = ConnectionString::getConnectionHook();
@@ -477,7 +477,7 @@ namespace {
             ReplicaSetMonitor::useDeterministicHostSelection = false;
 
             ConnectionString::setConnectionHook(_originalConnectionHook);
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::shutdown();
             _replSet.reset();
 
         }

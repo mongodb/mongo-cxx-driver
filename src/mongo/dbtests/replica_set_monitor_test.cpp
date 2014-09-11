@@ -1377,11 +1377,12 @@ namespace mongo_test {
             _originalConnectionHook = ConnectionString::getConnectionHook();
             ConnectionString::setConnectionHook(
                     mongo::MockConnRegistry::get()->getConnStrHook());
+            ReplicaSetMonitor::initialize();
         }
 
         void tearDown() {
             ConnectionString::setConnectionHook(_originalConnectionHook);
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::shutdown();
             _replSet.reset();
         }
 
@@ -1429,6 +1430,7 @@ namespace mongo_test {
         const string replSetName(replSet.getSetName());
         set<HostAndPort> seedList;
         seedList.insert(HostAndPort(replSet.getPrimary()));
+        ReplicaSetMonitor::initialize();
         ReplicaSetMonitor::createIfNeeded(replSetName, seedList);
 
         const MockReplicaSet::ReplConfigMap origConfig = replSet.getReplConfig();
@@ -1463,7 +1465,7 @@ namespace mongo_test {
             replMonitor->startOrContinueRefresh().refreshAll();
         }
 
-        ReplicaSetMonitor::cleanup();
+        ReplicaSetMonitor::shutdown();
         ConnectionString::setConnectionHook(originalConnHook);
     }
 
@@ -1498,12 +1500,13 @@ namespace mongo_test {
             }
 
             _replSet->setConfig(config);
+            ReplicaSetMonitor::initialize();
 
         }
 
         void tearDown() {
             ConnectionString::setConnectionHook(_originalConnectionHook);
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::shutdown();
             _replSet.reset();
         }
 
