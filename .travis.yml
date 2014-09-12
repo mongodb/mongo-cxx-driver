@@ -61,7 +61,7 @@ install:
 before_script:
     # Set SCONS_FLAGS based on new $CXX and $CC
     - $CXX --version
-    - export GTEST_PARAMS="--gtest-filter=\"-SASL*\""
+    - export GTEST_PARAMS="--gtest-filter=-SASL*"
     - export SCONS_CONCURRENCY_FLAG="-j3"
     - export SCONS_FLAGS="--mute --ssl --use-sasl-client $GTEST_PARAMS --cxx=$CXX --cc=$CC $DEBUG $SANITIZE"
 
