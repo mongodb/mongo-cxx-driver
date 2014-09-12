@@ -670,8 +670,9 @@ namespace mongo {
                 else
                     b.append( "hint", hint.String() );
             }
-            if ( query.hasReadPreference() )
-                b.append( "$readPreference", query.getReadPref() );
+
+            // We don't want $hint anymore as we've already used it inside the command
+            b.appendElements(query.getModifiers().removeField("$hint"));
         }
 
         return b.obj();
