@@ -66,8 +66,6 @@ namespace {
 
     const double socketTimeoutSecs = 5;
 
-    // TODO(amidvidy): fix comment
-
     /*  Replica Set Monitor global state (in "global" namespace):
      *
      *          lock                     -- mutex protecting seedServers and sets
@@ -141,8 +139,6 @@ namespace {
             // are fixed - see 392b933598668768bf12b1e41ad444aa3548d970.
             // Should not be needed after SERVER-7533 gets implemented and tests start
             // using it.
-
-            // TODO(amidvidy): investigate if this is still needed
             {
                 // separate scope exists to prevent recursive locking
                 boost::unique_lock<boost::mutex> sl( _monitorMutex );
