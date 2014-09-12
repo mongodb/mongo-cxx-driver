@@ -16,6 +16,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/util/debug_util.h"
+
 namespace mongo {
 
     inline StringData NamespaceString::db() const {

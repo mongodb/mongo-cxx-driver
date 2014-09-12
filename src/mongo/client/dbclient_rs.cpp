@@ -28,6 +28,7 @@
 #include "mongo/client/sasl_client_authenticate.h"
 #include "mongo/db/dbmessage.h"
 #include "mongo/db/jsobj.h"
+#include "mongo/util/debug_util.h"
 #include "mongo/util/log.h"
 
 namespace mongo {

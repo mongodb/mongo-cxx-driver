@@ -20,36 +20,30 @@
 
 namespace mongo {
 
-#if defined(_DEBUG)
-    enum {DEBUG_BUILD = 1};
+#if defined(MONGO_DEBUG_BUILD)
     const bool debug=true;
 #else
-    enum {DEBUG_BUILD = 0};
     const bool debug=false;
 #endif
 
-#define MONGO_DEV if( DEBUG_BUILD )
+#define MONGO_DEV if( debug )
 #define DEV MONGO_DEV
-
-#define MONGO_DEBUGGING if( 0 )
-#define DEBUGGING MONGO_DEBUGGING
-
-// The following declare one unique counter per enclosing function.
-// NOTE The implementation double-increments on a match, but we don't really care.
-#define MONGO_SOMETIMES( occasion, howOften ) for( static unsigned occasion = 0; ++occasion % howOften == 0; )
-#define SOMETIMES MONGO_SOMETIMES
-
-#define MONGO_OCCASIONALLY SOMETIMES( occasionally, 16 )
-#define OCCASIONALLY MONGO_OCCASIONALLY
-
-#define MONGO_RARELY SOMETIMES( rarely, 128 )
-#define RARELY MONGO_RARELY
-
-#define MONGO_ONCE for( static bool undone = true; undone; undone = false )
-#define ONCE MONGO_ONCE
 
 #if defined(_WIN32)
     inline int strcasecmp(const char* s1, const char* s2) {return _stricmp(s1, s2);}
+#endif
+
+    /* dassert is 'debug assert' -- might want to turn off for production as these
+       could be slow.
+    */
+#if defined(MONGO_DEBUG_BUILD)
+# define MONGO_dassert(x) fassert(16199, (x))
+#else
+# define MONGO_dassert(x)
+#endif
+
+#ifdef MONGO_EXPOSE_MACROS
+# define dassert MONGO_dassert
 #endif
 
 } // namespace mongo

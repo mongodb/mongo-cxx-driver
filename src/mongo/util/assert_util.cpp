@@ -70,7 +70,7 @@ namespace mongo {
 
         log() << "warning assertion failure " << msg << ' ' << file << ' ' << dec << line << endl;
         logContext();
-#if defined(_DEBUG) || defined(_DURABLEDEFAULTON) || defined(_DURABLEDEFAULTOFF)
+#if defined(MONGO_DEBUG_BUILD)
         // this is so we notice in buildbot
         log() << "\n\n***aborting after wassert() failure in a debug/test build\n\n" << endl;
         abort();

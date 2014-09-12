@@ -774,8 +774,6 @@ if nix:
             env.Append( CCFLAGS=["-fstack-protector"] )
             env.Append( LINKFLAGS=["-fstack-protector"] )
             env.Append( SHLINKFLAGS=["-fstack-protector"] )
-        env['ENV']['GLIBCXX_FORCE_NEW'] = 1; # play nice with valgrind
-        env.Append( CPPDEFINES=["_DEBUG"] );
 
     if force64:
         env.Append( CCFLAGS="-m64" )
@@ -784,6 +782,9 @@ if nix:
     if force32:
         env.Append( CCFLAGS="-m32" )
         env.Append( LINKFLAGS="-m32" )
+
+if debugBuild:
+    env.Append( CPPDEFINES=["MONGO_DEBUG_BUILD"] );
 
 if has_option( "ssl" ):
     env["MONGO_SSL"] = True

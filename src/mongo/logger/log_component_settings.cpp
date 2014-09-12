@@ -18,6 +18,7 @@
 #include "mongo/logger/log_component_settings.h"
 
 #include "mongo/util/assert_util.h"
+#include "mongo/util/debug_util.h"
 
 namespace mongo {
 namespace logger {

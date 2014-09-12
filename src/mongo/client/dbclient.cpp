@@ -1943,7 +1943,7 @@ namespace mongo {
 
     /* -- DBClientCursor ---------------------------------------------- */
 
-#ifdef _DEBUG
+#ifdef MONGO_DEBUG_BUILD
 #define CHECK_OBJECT( o , msg ) massert( 10337 ,  (string)"object not valid" + (msg) , (o).isValid() )
 #else
 #define CHECK_OBJECT( o , msg )

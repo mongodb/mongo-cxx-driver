@@ -99,7 +99,6 @@ namespace mongo {
             : _objdata(std::move(other._objdata))
             , _holder(std::move(other._holder)) {
             other._objdata = BSONObj()._objdata; // To return to an empty state.
-            dassert(!other._holder);
         }
 
         // The explicit move constructor above will inhibit generation of the copy ctor, so

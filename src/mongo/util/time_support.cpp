@@ -27,6 +27,7 @@
 #include "mongo/base/parse_number.h"
 #include "mongo/bson/util/builder.h"
 #include "mongo/platform/cstdint.h"
+#include "mongo/util/debug_util.h"
 #include "mongo/util/assert_util.h"
 
 #ifdef _WIN32

@@ -28,8 +28,6 @@
 #endif
 
 // util/assert_util.h
-#undef dassert
-#pragma pop_macro("dassert")
 #undef wassert
 #pragma pop_macro("wassert")
 #undef massert
@@ -42,30 +40,6 @@
 #pragma pop_macro("invariant")
 #undef DESTRUCTOR_GUARD
 #pragma pop_macro("DESTRUCTOR_GUARD")
-
-// util/goodies.h
-#undef PRINT
-#pragma pop_macro("PRINT")
-#undef PRINTFL
-#pragma pop_macro("PRINTFL")
-
-// util/debug_util.h
-#undef DEV
-#pragma pop_macro("DEV")
-#undef DEBUGGING
-#pragma pop_macro("DEBUGGING")
-#undef SOMETIMES
-#pragma pop_macro("SOMETIMES")
-#undef OCCASIONALLY
-#pragma pop_macro("OCCASIONALLY")
-#undef RARELY
-#pragma pop_macro("RARELY")
-#undef ONCE
-#pragma pop_macro("ONCE")
-
-// util/log.h
-#undef LOG
-#pragma pop_macro("LOG")
 
 #undef MONGO_MACROS_PUSHED
 #endif

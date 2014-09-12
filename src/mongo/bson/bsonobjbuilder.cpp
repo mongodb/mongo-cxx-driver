@@ -188,7 +188,7 @@ namespace mongo {
 
     BSONObjBuilder& BSONObjBuilder::appendDate(const StringData& fieldName, Date_t dt) {
         /* easy to pass a time_t to this and get a bad result.  thus this warning. */
-#if defined(_DEBUG) && defined(MONGO_EXPOSE_MACROS)
+#if defined(MONGO_DEBUG_BUILD) && defined(MONGO_EXPOSE_MACROS)
         if( dt > 0 && dt <= 0xffffffff ) {
             static int n;
             if( n++ == 0 )

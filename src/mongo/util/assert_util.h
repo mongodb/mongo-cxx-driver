@@ -219,17 +219,7 @@ namespace mongo {
 
 #define MONGO_invariant(_Expression) (void)( MONGO_likely(!!(_Expression)) || (::mongo::invariantFailed(#_Expression, __FILE__, __LINE__), 0) )
 
-    /* dassert is 'debug assert' -- might want to turn off for production as these
-       could be slow.
-    */
-#if defined(_DEBUG)
-# define MONGO_dassert(x) fassert(16199, (x))
-#else
-# define MONGO_dassert(x)
-#endif
-
 #ifdef MONGO_EXPOSE_MACROS
-# define dassert MONGO_dassert
 # define verify MONGO_verify
 # define invariant MONGO_invariant
 # define uassert MONGO_uassert
