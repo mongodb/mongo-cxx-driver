@@ -292,7 +292,6 @@ clientHeaders = [
     'mongo/stdx/functional.h',
     'mongo/util/assert_util.h',
     'mongo/util/background.h',
-    'mongo/util/bufreader.h',
     'mongo/util/concurrency/thread_name.h',
     'mongo/util/debug_util.h',
     'mongo/util/hex.h',

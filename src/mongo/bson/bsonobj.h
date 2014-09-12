@@ -30,7 +30,6 @@
 #include "mongo/bson/util/builder.h"
 #include "mongo/client/export_macros.h"
 #include "mongo/platform/atomic_word.h"
-#include "mongo/util/bufreader.h"
 
 namespace mongo {
 
@@ -551,19 +550,6 @@ namespace mongo {
             // TODO: Should dassert alignment of holderPrefixedData
             // here if possible.
             return BSONObj(new(holderPrefixedData) BSONObj::Holder(1U));
-        }
-
-        /// members for Sorter
-        struct SorterDeserializeSettings {}; // unused
-        void serializeForSorter(BufBuilder& buf) const { buf.appendBuf(objdata(), objsize()); }
-        static BSONObj deserializeForSorter(BufReader& buf, const SorterDeserializeSettings&) {
-            const int size = buf.peek<int>();
-            const void* ptr = buf.skip(size);
-            return BSONObj(static_cast<const char*>(ptr));
-        }
-        int memUsageForSorter() const {
-            // TODO consider ownedness?
-            return sizeof(BSONObj) + objsize();
         }
 
     private:
