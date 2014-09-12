@@ -168,7 +168,7 @@ namespace mongo {
         /**
          * Permanently stops all monitoring on replica sets and clears all cached information
          * as well. As a consequence, NEVER call this if you have other threads that have a
-         * DBClientReplicaSet instance. 
+         * DBClientReplicaSet instance.
          */
         static void MONGO_CLIENT_FUNC cleanup();
 
