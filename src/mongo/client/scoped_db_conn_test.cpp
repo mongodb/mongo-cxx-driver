@@ -92,7 +92,7 @@ namespace mongo {
             memset(&address, 0, size);
             address.sin_family = AF_INET;
             address.sin_port = htons(port);
-            address.sin_addr.s_addr = INADDR_ANY;
+            address.sin_addr.s_addr = INADDR_LOOPBACK;
         }
 
         sockaddr* get_address() {
