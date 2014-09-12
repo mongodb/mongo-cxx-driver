@@ -68,34 +68,26 @@ namespace {
 
     // TODO(amidvidy): fix comment
 
-    /*  Replica Set Monitor shared state:
-     *      If a program (such as one built with the C++ driver) exits (by either calling exit()
-     *      or by returning from main()), static objects will be destroyed in the reverse order
-     *      of their creation (within each translation unit (source code file)).  This makes it
-     *      vital that the order be explicitly controlled within the source file so that destroyed
-     *      objects never reference objects that have been destroyed earlier.
+    /*  Replica Set Monitor global state (in "global" namespace):
      *
-     *      The order chosen below is intended to allow safe destruction in reverse order from
-     *      construction order:
-     *          setsLock                 -- mutex protecting _seedServers and _sets, destroyed last
+     *          lock                     -- mutex protecting seedServers and sets
+     *          isRunning                -- true if the ReplicaSetMonitorWatcher is running
+     *                                      even though the RSMW maintains a _started boolean,
+     *                                      we need this to know when the RSMW is NOT running
      *          seedServers              -- list (map) of servers
      *          sets                     -- list (map) of ReplicaSetMonitors
      *          replicaSetMonitorWatcher -- background job to check Replica Set members
-     *          staticObserver           -- sentinel to detect process termination
-     *
-     *      Related to:
-     *          SERVER-8891 -- Simple client fail with segmentation fault in mongoclient library
      *
      *      Mutex locking order:
-     *          Don't lock setsLock while holding any SetState::mutex. It is however safe to grab a
+     *          Don't lock global::lock while holding any SetState::mutex. It is however safe to grab a
      *          SetState::mutex without holder setsLock, but then you can't grab setsLock until you
      *          release the SetState::mutex.
-
+     *
      */
 
-
+    // This namespace exists to make it easy to identify when global state is being accessed.
+    // While this is a bit ugly, explicitly ugly beats implicitly ugly
     namespace global {
-        // Protects global state
         boost::mutex lock;
         bool isRunning;
         StringMap<set<HostAndPort> > seedServers;
@@ -152,7 +144,7 @@ namespace {
 
             // TODO(amidvidy): investigate if this is still needed
             {
-                // prevent recursive locking
+                // separate scope exists to prevent recursive locking
                 boost::unique_lock<boost::mutex> sl( _monitorMutex );
                 _stopRequestedCV.timed_wait(sl, boost::posix_time::seconds(10));
             }
@@ -218,10 +210,8 @@ namespace {
         bool _stopRequested;
     };
 
-    // State shared across all ReplicaSetMonitors. All variables here need an ugly namespace because they
-    // are ugly.
     namespace global {
-        //class ReplicaSetMonitorWatcher;
+        // The global replicaSetMonitorWatcher instance.
         boost::shared_ptr<ReplicaSetMonitorWatcher> replicaSetMonitorWatcher;
     }
 
@@ -482,6 +472,7 @@ namespace {
             global::replicaSetMonitorWatcher->stop();
             global::replicaSetMonitorWatcher->wait();
             global::replicaSetMonitorWatcher.reset();
+
             global::sets = StringMap<ReplicaSetMonitorPtr>();
             global::seedServers = StringMap<set<HostAndPort> >();
             global::isRunning = false;
