@@ -17,6 +17,7 @@
 
 #include "mongo/client/private/options.h"
 #include "mongo/client/options.h"
+#include "mongo/util/log.h"
 
 namespace mongo {
 namespace client {
@@ -47,6 +48,7 @@ namespace client {
         , _sslAllowInvalidCertificates(false)
         , _sslAllowInvalidHostnames(false)
         , _defaultLocalThresholdMillis(kDefaultDefaultLocalThresholdMillis)
+        , _minLoggedSeverity(logger::LogSeverity::Log())
         , _validateObjects(false)
     {}
 
@@ -147,6 +149,24 @@ namespace client {
 
     const bool Options::SSLAllowInvalidHostnames() const {
         return _sslAllowInvalidHostnames;
+    }
+
+    Options& Options::setLogAppenderFactory(const Options::LogAppenderFactory& factory) {
+        _appenderFactory = factory;
+        return *this;
+    }
+
+    const Options::LogAppenderFactory& Options::logAppenderFactory() const {
+        return _appenderFactory;
+    }
+
+    Options& Options::setMinLoggedSeverity(logger::LogSeverity level) {
+        _minLoggedSeverity = level;
+        return *this;
+    }
+
+    logger::LogSeverity Options::minLoggedSeverity() const {
+        return _minLoggedSeverity;
     }
 
     Options& Options::setValidateObjects(bool value) {

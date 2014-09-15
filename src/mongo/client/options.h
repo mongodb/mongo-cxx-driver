@@ -18,6 +18,9 @@
 #include <string>
 
 #include "mongo/client/export_macros.h"
+#include "mongo/logger/log_domain.h"
+#include "mongo/logger/message_log_domain.h"
+#include "mongo/stdx/functional.h"
 
 namespace mongo {
 namespace client {
@@ -34,6 +37,10 @@ namespace client {
         // factor or mutation of the default.
         static const unsigned int kDefaultAutoShutdownGracePeriodMillis = 0;
         static const int kDefaultDefaultLocalThresholdMillis = 15;
+
+        // Helpful typedefs for logging-related options
+        typedef std::auto_ptr<logger::MessageLogDomain::EventAppender> LogAppenderPtr;
+        typedef stdx::function<LogAppenderPtr()> LogAppenderFactory;
 
         /** Obtains the currently configured options for the driver. This method
          *  must not be called before mongo::client::initialize has completed.
@@ -179,6 +186,25 @@ namespace client {
         const bool SSLAllowInvalidHostnames() const;
 
         //
+        // Logging
+        //
+
+        /** Provide a factory for a log appender to configure logging.
+         *
+         *  Default: no log appender, and logging is not enabled.
+         */
+        Options& setLogAppenderFactory(const LogAppenderFactory& factory);
+        const LogAppenderFactory& logAppenderFactory() const;
+
+        /** Specify the minimum severity of messages that will be logged, if logging
+         *  is enabled.
+         *
+         *  Default: LogSeverity::Log()
+         */
+        Options& setMinLoggedSeverity(logger::LogSeverity level);
+        logger::LogSeverity minLoggedSeverity() const;
+
+        //
         // Misc
         //
 
@@ -201,6 +227,8 @@ namespace client {
         bool _sslAllowInvalidCertificates;
         bool _sslAllowInvalidHostnames;
         int _defaultLocalThresholdMillis;
+        LogAppenderFactory _appenderFactory;
+        logger::LogSeverity _minLoggedSeverity;
         bool _validateObjects;
     };
 

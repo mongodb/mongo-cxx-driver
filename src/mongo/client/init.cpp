@@ -24,6 +24,7 @@
 #include "mongo/client/private/options.h"
 #include "mongo/client/replica_set_monitor.h"
 #include "mongo/platform/atomic_word.h"
+#include "mongo/stdx/functional.h"
 #include "mongo/util/background.h"
 
 namespace mongo {
@@ -40,6 +41,20 @@ namespace client {
             // We can't really do anything if this returns a non-OK status.
             mongo::client::shutdown();
         }
+
+        void configureLogging(const Options& opts) {
+
+            const mongo::client::Options::LogAppenderFactory& appenderFactory =
+                opts.logAppenderFactory();
+
+            if (appenderFactory) {
+                logger::ComponentMessageLogDomain* globalLogDomain =
+                    logger::globalLogManager()->getGlobalDomain();
+
+                globalLogDomain->attachAppender(appenderFactory());
+                globalLogDomain->setMinimumLoggedSeverity(opts.minLoggedSeverity());
+            }
+        }
     } // namespace
 
     Status initialize(const Options& options) {
@@ -50,6 +65,7 @@ namespace client {
 
             // Copy in the provided options.
             setOptions(options);
+            configureLogging(options);
 
             if (options.callShutdownAtExit()) {
                 if (std::atexit(&callShutdownAtExit) != 0) {
