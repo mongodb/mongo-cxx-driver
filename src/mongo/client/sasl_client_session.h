@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#pragma once
+
 #include <boost/scoped_array.hpp>
 #include <string>
 
@@ -40,9 +42,9 @@ namespace mongo {
     class MONGO_CLIENT_API SaslClientSession {
         MONGO_DISALLOW_COPYING(SaslClientSession);
     public:
-        typedef stdx::function<SaslClientSession* ()> SaslClientSessionFactoryFn;
+        typedef stdx::function<SaslClientSession* (const std::string&)> SaslClientSessionFactoryFn;
         static SaslClientSessionFactoryFn create;
-        
+
         /**
          * Identifiers of parameters used to configure a SaslClientSession.
          */

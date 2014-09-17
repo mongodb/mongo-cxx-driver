@@ -19,7 +19,7 @@
 
 namespace mongo {
     SaslClientSession::SaslClientSessionFactoryFn SaslClientSession::create = NULL;
-    
+
     SaslClientSession::SaslClientSession() {}
 
     SaslClientSession::~SaslClientSession() {}
@@ -29,7 +29,7 @@ namespace mongo {
         DataBuffer& buffer = _parameters[id];
         buffer.size = value.size();
         buffer.data.reset(new char[buffer.size + 1]);
-        
+
         // Note that we append a terminal NUL to buffer.data, so it may be treated as a C-style
         // string.  This is required for parameterServiceName, parameterServiceHostname,
         // parameterMechanism and parameterUser.

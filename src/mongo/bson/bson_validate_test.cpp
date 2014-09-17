@@ -15,6 +15,7 @@
 
 #include <boost/scoped_array.hpp>
 
+#include "mongo/base/data_view.h"
 #include "mongo/db/jsobj.h"
 #include "mongo/unittest/unittest.h"
 #include "mongo/platform/random.h"
@@ -54,8 +55,7 @@ namespace {
             int size = 1234;
 
             char* x = new char[size];
-            int* xx = reinterpret_cast<int*>(x);
-            xx[0] = size;
+            DataView(x).writeLE(size);
 
             for ( int i=4; i<size; i++ ) {
                 x[i] = r.nextInt32( 255 );

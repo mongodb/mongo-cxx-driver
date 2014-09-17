@@ -133,7 +133,7 @@ namespace mongo {
         BSONObjBuilder& appendObject(const StringData& fieldName, const char * objdata , int size = 0 ) {
             verify( objdata );
             if ( size == 0 ) {
-                size = *((int*)objdata);
+                size = ConstDataView(objdata).readLE<int>();
             }
 
             verify( size > 4 && size < 100000000 );
@@ -295,14 +295,14 @@ namespace mongo {
             _b.appendNum((char) jstOID);
             _b.appendStr(fieldName);
             if ( oid )
-                _b.appendBuf( (void *) oid, 12 );
+                _b.appendBuf( oid->view().view(), OID::kOIDSize );
             else {
                 OID tmp;
                 if ( generateIfBlank )
                     tmp.init();
                 else
                     tmp.clear();
-                _b.appendBuf( (void *) &tmp, 12 );
+                _b.appendBuf( tmp.view().view(), OID::kOIDSize );
             }
             return *this;
         }
@@ -315,7 +315,7 @@ namespace mongo {
         BSONObjBuilder& append( const StringData& fieldName, OID oid ) {
             _b.appendNum((char) jstOID);
             _b.appendStr(fieldName);
-            _b.appendBuf( (void *) &oid, 12 );
+            _b.appendBuf( oid.view().view(), OID::kOIDSize );
             return *this;
         }
 
@@ -464,7 +464,7 @@ namespace mongo {
             _b.appendStr( fieldName );
             _b.appendNum( (int) ns.size() + 1 );
             _b.appendStr( ns );
-            _b.appendBuf( (void *) &oid, 12 );
+            _b.appendBuf( oid.view().view(), OID::kOIDSize );
             return *this;
         }
 
@@ -678,7 +678,7 @@ namespace mongo {
             _b.appendNum((char) EOO);
             char *data = _b.buf() + _offset;
             int size = _b.len() - _offset;
-            *((int*)data) = size;
+            DataView(data).writeLE(size);
             if ( _tracker )
                 _tracker->got( size );
             return data;

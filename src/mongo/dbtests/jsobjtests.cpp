@@ -1244,7 +1244,7 @@ namespace JsobjTests {
                 OID b;
 
                 a.init();
-                b.init( a.str() );
+                b.init( a.toString() );
 
                 ASSERT( a == b );
             }
@@ -1260,9 +1260,9 @@ namespace JsobjTests {
                 BSONObj o = b.obj();
                 //keyTest(o);
 
-                ASSERT( o["a"].__oid().str() == "000000000000000000000000" );
-                ASSERT( o["b"].__oid().str() == "000000000000000000000000" );
-                ASSERT( o["c"].__oid().str() != "000000000000000000000000" );
+                ASSERT( o["a"].__oid().toString() == "000000000000000000000000" );
+                ASSERT( o["b"].__oid().toString() == "000000000000000000000000" );
+                ASSERT( o["c"].__oid().toString() != "000000000000000000000000" );
 
             }
         }; DBTEST_SHIM_TEST(append);
@@ -1318,20 +1318,6 @@ namespace JsobjTests {
             }
         }; DBTEST_SHIM_TEST(FromDate);
 
-        class Seq {
-        public:
-            void run() {
-                for ( int i=0; i<10000; i++ ) {
-                    OID a;
-                    OID b;
-                    
-                    a.initSequential();
-                    b.initSequential();
-
-                    ASSERT( a < b );
-                }
-            }
-        }; DBTEST_SHIM_TEST(Seq);
     } // namespace OIDTests
 
 
@@ -2288,7 +2274,6 @@ namespace JsobjTests {
     //         add< OIDTests::increasing >();
     //         add< OIDTests::ToDate >();
     //         add< OIDTests::FromDate >();
-    //         add< OIDTests::Seq >();
     //         add< ValueStreamTests::LabelBasic >();
     //         add< ValueStreamTests::LabelShares >();
     //         add< ValueStreamTests::LabelDouble >();

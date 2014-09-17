@@ -16,6 +16,12 @@ env:
     - SANITIZE= DEBUG=
     - SANITIZE= DEBUG=--dbg=on
     - SANITIZE=--sanitize=address --llvm-symbolizer=llvm-symbolizer-3.4 DEBUG=--dbg=on
+    - SANITIZE=--sanitize=undefined DEBUG=--dbg=on
+
+matrix:
+  exclude:
+    - compiler: gcc
+      env: SANITIZE=--sanitize=undefined DEBUG=--dbg=on
 
 # Setup required repositories before installation
 before_install:

@@ -35,3 +35,6 @@
 
 // Define to target byte order (1234 vs 4321)
 @mongoclient_byte_order@
+
+// Define to 1 if std::is_trivially_copyable is supported
+@mongoclient_have_std_is_trivially_copyable@

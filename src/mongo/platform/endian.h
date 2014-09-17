@@ -17,9 +17,11 @@
 
 #include "mongo/config.h"
 
+#include <climits>
 #include <cstring>
 #include <boost/static_assert.hpp>
-
+#include <boost/mpl/if.hpp>
+#include <boost/type_traits/is_signed.hpp>
 #include "mongo/platform/cstdint.h"
 
 #pragma push_macro("MONGO_UINT16_SWAB")
@@ -160,8 +162,6 @@ namespace endian {
                ((v & 0x00FF000000000000ULL) >> 40) |
                ((v & 0xFF00000000000000ULL) >> 56);
     }
-
-} // namespace endian
 
     template<typename T>
     struct ByteOrderConverter;
@@ -422,26 +422,68 @@ namespace endian {
         }
     };
 
+    // Use a typemape to normalize non-fixed-width integral types to the associated fixed width
+    // types.
+
+    template<typename T>
+    struct IntegralTypeMap {
+        typedef T type;
+    };
+
+    template<>
+    struct IntegralTypeMap<signed char> {
+        BOOST_STATIC_ASSERT(CHAR_BIT == 8);
+        typedef int8_t type;
+    };
+
+    template<>
+    struct IntegralTypeMap<unsigned char> {
+        BOOST_STATIC_ASSERT(CHAR_BIT == 8);
+        typedef uint8_t type;
+    };
+
+    template<>
+    struct IntegralTypeMap<char> {
+        BOOST_STATIC_ASSERT(CHAR_BIT == 8);
+        typedef boost::mpl::if_c<
+            boost::is_signed<char>::value,
+            int8_t,
+            uint8_t>::type type;
+    };
+
+    template<>
+    struct IntegralTypeMap<long long> {
+        BOOST_STATIC_ASSERT(sizeof(long long) == sizeof(int64_t));
+        typedef int64_t type;
+    };
+
+    template<>
+    struct IntegralTypeMap<unsigned long long> {
+        BOOST_STATIC_ASSERT(sizeof(unsigned long long) == sizeof(uint64_t));
+        typedef uint64_t type;
+    };
+
     template<typename T>
     inline T nativeToBig(T t) {
-        return ByteOrderConverter<T>::nativeToBig(t);
+        return ByteOrderConverter<typename IntegralTypeMap<T>::type>::nativeToBig(t);
     }
 
     template<typename T>
     inline T bigToNative(T t) {
-        return ByteOrderConverter<T>::bigToNative(t);
+        return ByteOrderConverter<typename IntegralTypeMap<T>::type>::bigToNative(t);
     }
 
     template<typename T>
     inline T nativeToLittle(T t) {
-        return ByteOrderConverter<T>::nativeToLittle(t);
+        return ByteOrderConverter<typename IntegralTypeMap<T>::type>::nativeToLittle(t);
     }
 
     template<typename T>
     inline T littleToNative(T t) {
-        return ByteOrderConverter<T>::littleToNative(t);
+        return ByteOrderConverter<typename IntegralTypeMap<T>::type>::littleToNative(t);
     }
 
+} // namespace endian
 } // namespace mongo
 
 #undef MONGO_UINT16_SWAB

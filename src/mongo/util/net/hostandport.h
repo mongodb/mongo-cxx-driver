@@ -19,11 +19,12 @@
 #include <string>
 
 #include "mongo/bson/util/builder.h"
-#include "mongo/base/status.h"
-#include "mongo/base/status_with.h"
+#include "mongo/platform/hash_namespace.h"
 
 namespace mongo {
+    class Status;
     class StringData;
+    template <typename T> class StatusWith;
 
     /**
      * Name of a process on the network.
@@ -110,3 +111,12 @@ namespace mongo {
     MONGO_CLIENT_API std::ostream& MONGO_CLIENT_FUNC operator<<(std::ostream& os, const HostAndPort& hp);
 
 }  // namespace mongo
+
+MONGO_HASH_NAMESPACE_START
+
+template <>
+struct hash<mongo::HostAndPort> {
+    size_t operator()(const mongo::HostAndPort& host) const;
+};
+
+MONGO_HASH_NAMESPACE_END

@@ -15,9 +15,15 @@
 
 #pragma once
 
+#include "mongo/config.h"
+
 #include <cstring>
 
 #include "mongo/platform/endian.h"
+
+#if __cplusplus >= 201103L
+#include <type_traits>
+#endif
 
 namespace mongo {
 
@@ -35,20 +41,30 @@ namespace mongo {
         }
 
         template<typename T>
+        const ConstDataView& readNative(T* t, size_t offset = 0) const {
+#if MONGO_HAVE_STD_IS_TRIVIALLY_COPYABLE
+            static_assert(std::is_trivially_copyable<T>::value,
+                          "Type for DataView::readNative must be trivially copyable");
+#endif
+            std::memcpy(t, view(offset), sizeof(*t));
+            return *this;
+        }
+
+        template<typename T>
         T readNative(std::size_t offset = 0) const {
             T t;
-            std::memcpy(&t, view(offset), sizeof(t));
+            readNative(&t, offset);
             return t;
         }
 
         template<typename T>
         T readLE(std::size_t offset = 0) const {
-            return littleToNative(readNative<T>(offset));
+            return endian::littleToNative(readNative<T>(offset));
         }
 
         template<typename T>
         T readBE(std::size_t offset = 0) const {
-            return bigToNative(readNative<T>(offset));
+            return endian::bigToNative(readNative<T>(offset));
         }
 
     private:
@@ -71,18 +87,23 @@ namespace mongo {
         }
 
         template<typename T>
-        void writeNative(const T& value, std::size_t offset = 0) {
+        DataView& writeNative(const T& value, std::size_t offset = 0) {
+#if MONGO_HAVE_STD_IS_TRIVIALLY_COPYABLE
+            static_assert(std::is_trivially_copyable<T>::value,
+                          "Type for DataView::writeNative must be trivially copyable");
+#endif
             std::memcpy(view(offset), &value, sizeof(value));
+            return *this;
         }
 
         template<typename T>
-        void writeLE(const T& value, std::size_t offset = 0) {
-            return writeNative(nativeToLittle(value), offset);
+        DataView& writeLE(const T& value, std::size_t offset = 0) {
+            return writeNative(endian::nativeToLittle(value), offset);
         }
 
         template<typename T>
-        void writeBE(const T& value, std::size_t offset = 0) {
-            return writeNative(nativeToBig(value), offset);
+        DataView& writeBE(const T& value, std::size_t offset = 0) {
+            return writeNative(endian::nativeToBig(value), offset);
         }
     };
 

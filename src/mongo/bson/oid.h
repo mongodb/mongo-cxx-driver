@@ -19,27 +19,44 @@
 
 #include <string>
 
-#include "mongo/bson/util/misc.h"
+#include "mongo/base/data_view.h"
+#include "mongo/bson/util/builder.h"
 #include "mongo/client/export_macros.h"
-#include "mongo/util/hex.h"
+#include "mongo/util/time_support.h"
 
 namespace mongo {
+    class SecureRandom;
 
-#pragma pack(1)
-    /** Object ID type.
-        BSON objects typically have an _id field for the object id.  This field should be the first
-        member of the object when present.  class OID is a special type that is a 12 byte id which
-        is likely to be unique to the system.  You may also use other types for _id's.
-        When _id field is missing from a BSON object, on an insert the database may insert one
-        automatically in certain circumstances.
-
-        Warning: You must call OID::newState() after a fork().
-
-        Typical contents of the BSON ObjectID is a 12-byte value consisting of a 4-byte timestamp (seconds since epoch),
-        a 3-byte machine id, a 2-byte process id, and a 3-byte counter. Note that the timestamp and counter fields must
-        be stored big endian unlike the rest of BSON. This is because they are compared byte-by-byte and we want to ensure
-        a mostly increasing order.
-    */
+    /**
+     * Object ID type.
+     * BSON objects typically have an _id field for the object id. This field should be the first
+     * member of the object when present. The OID class is a special type that is a 12 byte id which
+     * is likely to be unique to the system.  You may also use other types for _id's.
+     * When _id field is missing from a BSON object, on an insert the database may insert one
+     * automatically in certain circumstances.
+     *
+     * The BSON ObjectID is a 12-byte value consisting of a 4-byte timestamp (seconds since epoch),
+     * in the highest order 4 bytes followed by a 5 byte value unique to this machine AND process,
+     * followed by a 3 byte counter.
+     *
+     *               4 byte timestamp    5 byte process unique   3 byte counter
+     *             |<----------------->|<---------------------->|<------------->
+     * OID layout: [----|----|----|----|----|----|----|----|----|----|----|----]
+     *             0                   4                   8                   12
+     *
+     * The timestamp is a big endian 4 byte signed-integer.
+     *
+     * The process unique is an arbitrary sequence of 5 bytes. There are no endianness concerns
+     * since it is never interpreted as a multi-byte value.
+     *
+     * The counter is a big endian 3 byte unsigned integer.
+     *
+     * Note: The timestamp and counter are big endian (in contrast to the rest of BSON) because
+     * we use memcmp to order OIDs, and we want to ensure an increasing order.
+     *
+     * Warning: You MUST call OID::justForked() after a fork(). This ensures that each process will
+     * generate unique OIDs.
+     */
     class MONGO_CLIENT_API OID {
     public:
 
@@ -52,49 +69,58 @@ namespace mongo {
             size_t operator() (const OID& oid) const;
         };
 
-        OID() : a(0), b(0) { }
+        OID() : _data() {}
 
         enum {
             kOIDSize = 12,
-            kIncSize = 3
+            kTimestampSize = 4,
+            kInstanceUniqueSize = 5,
+            kIncrementSize = 3
         };
 
         /** init from a 24 char hex string */
-        explicit OID(const std::string &s) { init(s); }
+        explicit OID(const std::string &s) {
+            init(s);
+        }
 
         /** init from a reference to a 12-byte array */
         explicit OID(const unsigned char (&arr)[kOIDSize]) {
-            memcpy(data, arr, sizeof(arr));
+            std::memcpy(_data, arr, sizeof(arr));
         }
 
         /** initialize to 'null' */
-        void clear() { a = 0; b = 0; }
+        void clear() { std::memset(_data, 0, kOIDSize); }
 
-        const unsigned char *getData() const { return data; }
-
-        bool operator==(const OID& r) const { return a==r.a && b==r.b; }
-        bool operator!=(const OID& r) const { return a!=r.a || b!=r.b; }
-        int compare( const OID& other ) const { return memcmp( data , other.data , kOIDSize ); }
-        bool operator<( const OID& other ) const { return compare( other ) < 0; }
-        bool operator<=( const OID& other ) const { return compare( other ) <= 0; }
+        int compare( const OID& other ) const { return memcmp( _data , other._data , kOIDSize ); }
 
         /** @return the object ID output as 24 hex digits */
-        std::string str() const { return toHexLower(data, kOIDSize); }
-        std::string toString() const { return str(); }
+        std::string toString() const;
         /** @return the random/sequential part of the object ID as 6 hex digits */
-        std::string toIncString() const { return toHexLower(_inc, kIncSize); }
+        std::string toIncString() const;
 
-        static OID MONGO_CLIENT_FUNC gen() { OID o; o.init(); return o; }
+        static OID MONGO_CLIENT_FUNC gen() {
+            OID o((no_initialize_tag()));
+            o.init();
+            return o;
+        }
+
+        // Caller must ensure that the buffer is valid for kOIDSize bytes.
+        // this is templated because some places use unsigned char vs signed char
+        template<typename T>
+        static OID MONGO_CLIENT_FUNC from(T* buf) {
+            OID o((no_initialize_tag()));
+            std::memcpy(o._data, buf, OID::kOIDSize);
+            return o;
+        }
+
+        static OID MONGO_CLIENT_FUNC max() {
+            OID o((no_initialize_tag()));
+            std::memset(o._data, 0xFF, kOIDSize);
+            return o;
+        }
 
         /** sets the contents to a new oid / randomized value */
         void init();
-
-        /** sets the contents to a new oid
-         * guaranteed to be sequential
-         * NOT guaranteed to be globally unique
-         *     only unique for this process
-         * */
-        void initSequential();
 
         /** init from a 24 char hex string */
         void init( const std::string& s );
@@ -103,9 +129,12 @@ namespace mongo {
         void init( Date_t date, bool max=false );
 
         time_t asTimeT();
-        Date_t asDateT() { return asTimeT() * (long long)1000; }
+        Date_t asDateT() { return asTimeT() * 1000LL; }
 
-        bool isSet() const { return a || b; }
+        // True iff the OID is not empty
+        bool isSet() const {
+            return compare(OID()) != 0;
+        }
 
         /**
          * this is not consistent
@@ -116,46 +145,57 @@ namespace mongo {
         /** call this after a fork to update the process id */
         static void MONGO_CLIENT_FUNC justForked();
 
-        static unsigned MONGO_CLIENT_FUNC getMachineId(); // features command uses
-        static void MONGO_CLIENT_FUNC regenMachineId(); // used by unit tests
+        static unsigned MONGO_CLIENT_FUNC getMachineId();  // used by the 'features' command
+        static void MONGO_CLIENT_FUNC regenMachineId();
+
+        // Timestamp is 4 bytes so we just use int32_t
+        typedef int32_t Timestamp;
+
+        // Wrappers so we can return stuff by value.
+        struct InstanceUnique {
+            static InstanceUnique MONGO_CLIENT_FUNC generate(SecureRandom& entropy);
+            uint8_t bytes[kInstanceUniqueSize];
+        };
+
+        struct Increment {
+        public:
+            static Increment MONGO_CLIENT_FUNC next();
+            uint8_t bytes[kIncrementSize];
+        };
+
+        void setTimestamp(Timestamp timestamp);
+        void setInstanceUnique(InstanceUnique unique);
+        void setIncrement(Increment inc);
+
+        Timestamp getTimestamp() const;
+        InstanceUnique getInstanceUnique() const;
+        Increment getIncrement() const;
+
+        ConstDataView view() const {
+            return ConstDataView(_data);
+        }
 
     private:
-        struct MachineAndPid {
-            unsigned char _machineNumber[3];
-            unsigned short _pid;
-            bool operator!=(const OID::MachineAndPid& rhs) const;
-        };
-        static MachineAndPid ourMachine;
-        static MachineAndPid ourMachineAndPid;
-        union {
-            struct {
-                // 12 bytes total
-                unsigned char _time[4];
-                MachineAndPid _machineAndPid;
-                unsigned char _inc[3];
-            };
-            struct {
-                long long a;
-                unsigned b;
-            };
-            struct {
-                // TODO: get rid of this eventually
-                //       this is a hack because of hash_combine with older versions of boost
-                //       on 32-bit platforms
-                int x;
-                int y;
-                int z;
-            };
-            unsigned char data[kOIDSize];
-        };
+        // Internal mutable view
+        DataView _view() {
+            return DataView(_data);
+        }
 
-        static void MONGO_CLIENT_FUNC foldInPid(MachineAndPid& x);
-        static MachineAndPid MONGO_CLIENT_FUNC genMachineAndPid();
+        // When we are going to immediately overwrite the bytes, there is no point in zero
+        // initializing the data first.
+        struct no_initialize_tag {};
+        explicit OID(no_initialize_tag) {}
+
+        char _data[kOIDSize];
     };
-#pragma pack()
 
-    MONGO_CLIENT_API std::ostream& MONGO_CLIENT_FUNC operator<<( std::ostream &s, const OID &o );
-    inline StringBuilder& MONGO_CLIENT_FUNC operator<< (StringBuilder& s, const OID& o) { return (s << o.str()); }
+    MONGO_CLIENT_API inline std::ostream& MONGO_CLIENT_FUNC operator<<(std::ostream &s, const OID &o) {
+        return (s << o.toString());
+    }
+
+    MONGO_CLIENT_API inline StringBuilder& MONGO_CLIENT_FUNC operator<<(StringBuilder& s, const OID& o) {
+        return (s << o.toString());
+    }
 
     /** Formatting mode for generating JSON from BSON.
         See <http://dochub.mongodb.org/core/mongodbextendedjson>
@@ -171,4 +211,9 @@ namespace mongo {
         JS
     };
 
-}
+    MONGO_CLIENT_API inline bool MONGO_CLIENT_FUNC operator==(const OID& lhs, const OID& rhs) { return lhs.compare(rhs) == 0; }
+    MONGO_CLIENT_API inline bool MONGO_CLIENT_FUNC operator!=(const OID& lhs, const OID& rhs) { return lhs.compare(rhs) != 0; }
+    MONGO_CLIENT_API inline bool MONGO_CLIENT_FUNC operator<(const OID& lhs, const OID& rhs) { return lhs.compare(rhs) < 0; }
+    MONGO_CLIENT_API inline bool MONGO_CLIENT_FUNC operator<=(const OID& lhs, const OID& rhs) { return lhs.compare(rhs) <= 0; }
+
+}  // namespace mongo

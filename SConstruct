@@ -653,6 +653,14 @@ elif windows:
         #    This warning is generated when a value that is not bool is assigned or coerced
         #    into type bool.
         "/wd4800",
+
+        # unknown pragma -- added so that we can specify unknown pragmas for other compilers
+        "/wd4068",
+
+        # On extremely old versions of MSVC (pre 2k5), default constructing an array member in a
+        # constructor's initialization list would not zero the array members "in some cases".
+        # since we don't target MSVC versions that old, this warning is safe to ignore.
+        "/wd4351",
     ])
 
     if not has_option("disable-warnings-as-errors"):
@@ -730,7 +738,6 @@ if nix:
 
     # -Winvalid-pch Warn if a precompiled header (see Precompiled Headers) is found in the search path but can't be used.
     env.Append( CCFLAGS=["-fPIC",
-                         "-fno-strict-aliasing",
                          "-ggdb",
                          "-pthread",
                          "-Wall",
@@ -1465,10 +1472,42 @@ def doConfigure(myenv):
         context.Result(ret)
         return ret
 
+    # not all C++11-enabled gcc versions have type properties
+    def CheckCXX11IsTriviallyCopyable(context):
+        test_body = """
+        #include <type_traits>
+        int main(int argc, char **argv) {
+            class Trivial {
+                int trivial1;
+                double trivial2;
+                struct {
+                    float trivial3;
+                    short trivial4;
+                } trivial_member;
+            };
+
+            class NotTrivial {
+                int x, y;
+                NotTrivial(const NotTrivial& o) : x(o.y), y(o.x) {}
+            };
+
+            static_assert(std::is_trivially_copyable<Trivial>::value,
+                          "I should be trivially copyable");
+            static_assert(!std::is_trivially_copyable<NotTrivial>::value,
+                          "I should not be trivially copyable");
+            return 0;
+        }
+        """
+        context.Message('Checking for C++11 is_trivially_copyable support... ')
+        ret = context.TryCompile(textwrap.dedent(test_body), '.cpp')
+        context.Result(ret)
+        return ret
+
     conf = Configure(myenv, help=False, custom_tests = {
         'CheckCXX11Atomics': CheckCXX11Atomics,
         'CheckGCCAtomicBuiltins': CheckGCCAtomicBuiltins,
         'CheckGCCSyncBuiltins': CheckGCCSyncBuiltins,
+        'CheckCXX11IsTriviallyCopyable': CheckCXX11IsTriviallyCopyable,
     })
 
     # Figure out what atomics mode to use by way of the tests defined above.
@@ -1498,6 +1537,10 @@ def doConfigure(myenv):
         else:
             if conf.CheckGCCSyncBuiltins():
                 conf.env["MONGO_HAVE_GCC_SYNC_BUILTINS"] = True
+
+    if (cxx11_mode == "on") and conf.CheckCXX11IsTriviallyCopyable():
+        conf.env['MONGO_HAVE_STD_IS_TRIVIALLY_COPYABLE'] = True
+
     myenv = conf.Finish()
 
     if using_msvc():

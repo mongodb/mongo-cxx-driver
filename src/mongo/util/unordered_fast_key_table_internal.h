@@ -17,6 +17,7 @@
  */
 
 #include "mongo/util/assert_util.h"
+#include "mongo/util/debug_util.h"
 
 namespace mongo {
     template< typename K_L, typename K_S, typename V, typename H, typename E, typename C, typename C_LS >
@@ -165,6 +166,7 @@ namespace mongo {
         if ( pos < 0 )
             return 0;
 
+        --_size;
         _area._entries[pos].used = false;
         _area._entries[pos].data.second = V();
         return 1;
@@ -175,6 +177,7 @@ namespace mongo {
         dassert(it._position >= 0);
         dassert(it._area == &_area);
 
+        --_size;
         _area._entries[it._position].used = false;
         _area._entries[it._position].data.second = V();
     }

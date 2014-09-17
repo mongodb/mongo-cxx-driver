@@ -57,6 +57,8 @@ void iter(bo o) {
 
 int main() {
 
+    // As of legacy-1.0-rc1-pre, you must initialize the driver in order to use
+    // the BSON library OID class.
     mongo::client::GlobalInstance instance;
     if (!instance.initialized()) {
         std::cout << "failed to initialize the client driver: " << instance.status() << endl;
