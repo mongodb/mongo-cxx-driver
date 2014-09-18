@@ -119,7 +119,7 @@ functions:
         set -o errexit
         curl -s ${mongo_url} --output mongo_enterprise.${ext|tgz}
         ${decompress} mongo_enterprise.${ext|tgz}
-        cp mongodb*{os_name}*/bin/mongod${extension} ./mongod${extension}
+        cp mongodb*${os_name}*/bin/mongod${extension} ./mongod${extension}
         chmod +x ./mongod${extension}
   "fetch artifacts" :
     command: s3.get
