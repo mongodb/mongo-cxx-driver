@@ -58,7 +58,7 @@ namespace geo {
      *
      * // Find all geometry objects inside the bounding box of mls
      * BoundingBox<Coordinates2D> bbox = mls.getBoundingBox();
-     * Query geowithinQuery = QUERY("<field_name>" << GEOWITHIN(bbox));
+     * Query geowithinQuery = MONGO_QUERY("<field_name>" << GEOWITHIN(bbox));
      * conn.query("<db_name>.<collection_name>", geowithinQuery);
      *
      * @see http://geojson.org/geojson-spec.html#bounding-boxes

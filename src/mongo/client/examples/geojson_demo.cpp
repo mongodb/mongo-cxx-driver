@@ -96,16 +96,16 @@ void queryGeoData(DBClientConnection& conn) {
         BSON_ARRAY(BSON_ARRAY(0.0 << 0.0) <<
                    BSON_ARRAY(50.0 << 50.0)));
     LineString line(lineBson);
-    Query q = QUERY(kLocField << WITHINQUERY(line.getBoundingBox()));
-    Query q2 = QUERY(kLocField << INTERSECTSQUERY(line));
+    Query q = MONGO_QUERY(kLocField << WITHINQUERY(line.getBoundingBox()));
+    Query q2 = MONGO_QUERY(kLocField << INTERSECTSQUERY(line));
 
     BSONObj multipointBson = BSON("type" << "MultiPoint" << "coordinates" <<
         BSON_ARRAY(BSON_ARRAY(0.0 << 0.0) <<
                    BSON_ARRAY(50.0 << 50.0)));
 
     MultiPoint mPoint(multipointBson);
-    Query q3 = QUERY(kLocField << WITHINQUERY(mPoint.getBoundingBox()));
-    Query q4 = QUERY(kLocField << INTERSECTSQUERY(mPoint));
+    Query q3 = MONGO_QUERY(kLocField << WITHINQUERY(mPoint.getBoundingBox()));
+    Query q4 = MONGO_QUERY(kLocField << INTERSECTSQUERY(mPoint));
 
     BSONObj polygonBson = BSON("type" << "Polygon" << "coordinates" <<
         BSON_ARRAY( // list of linear rings
@@ -128,8 +128,8 @@ void queryGeoData(DBClientConnection& conn) {
     cout << poly.toBSON().jsonString() << endl;
     cout << endl << endl;
 
-    Query q5 = QUERY(kLocField << WITHINQUERY(poly.getBoundingBox()));
-    Query q6 = QUERY(kLocField << INTERSECTSQUERY(poly));
+    Query q5 = MONGO_QUERY(kLocField << WITHINQUERY(poly.getBoundingBox()));
+    Query q6 = MONGO_QUERY(kLocField << INTERSECTSQUERY(poly));
 
     cout << "*** Testing LineString ***" << endl;
 

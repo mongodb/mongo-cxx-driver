@@ -358,10 +358,10 @@ namespace mongo {
     class DBClientCursor;
     class DBClientCursorBatchIterator;
 
-    /** Represents a Mongo query expression.  Typically one uses the QUERY(...) macro to construct a Query object.
+    /** Represents a Mongo query expression.  Typically one uses the MONGO_QUERY(...) macro to construct a Query object.
         Examples:
-           QUERY( "age" << 33 << "school" << "UCLA" ).sort("name")
-           QUERY( "age" << GT << 30 << LT << 50 )
+           MONGO_QUERY( "age" << 33 << "school" << "UCLA" ).sort("name")
+           MONGO_QUERY( "age" << GT << 30 << LT << 50 )
     */
     class MONGO_CLIENT_API Query {
     public:
@@ -548,10 +548,10 @@ namespace mongo {
     };
 
 
-    /** Typically one uses the QUERY(...) macro to construct a Query object.
-        Example: QUERY( "age" << 33 << "school" << "UCLA" )
+    /** Typically one uses the MONGO_QUERY(...) macro to construct a Query object.
+        Example: MONGO_QUERY( "age" << 33 << "school" << "UCLA" )
     */
-#define QUERY(x) ::mongo::Query( BSON(x) )
+#define MONGO_QUERY(x) ::mongo::Query( BSON(x) )
 
     // Useful utilities for namespaces
     /** @return the database name portion of an ns string */

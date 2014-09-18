@@ -30,7 +30,7 @@ using namespace std;
 using namespace mongo;
 
 int printIfAge(DBClientConnection& c, int age) {
-    std::auto_ptr<DBClientCursor> cursor = c.query("tutorial.persons", QUERY( "age" << age ).sort("name") );
+    std::auto_ptr<DBClientCursor> cursor = c.query("tutorial.persons", MONGO_QUERY( "age" << age ).sort("name") );
     if (!cursor.get()) {
         cout << "query failure" << endl;
         return EXIT_FAILURE;

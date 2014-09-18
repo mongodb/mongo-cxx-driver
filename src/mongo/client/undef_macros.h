@@ -27,6 +27,12 @@
 #pragma pop_macro("NOMINMAX")
 #endif
 
+// bson/inline_decls.h
+#undef NOINLINE_DECL
+#pragma pop_macro("NOINLINE_DECL")
+#undef PACKED_DECL
+#pragma pop_macro("PACKED_DECL")
+
 // util/assert_util.h
 #undef wassert
 #pragma pop_macro("wassert")

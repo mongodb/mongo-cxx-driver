@@ -272,7 +272,7 @@ namespace {
 
         // Save a doc with explicit id
         c.save(TEST_NS, BSON("_id" << "explicit_id" << "hello" << "bar"));
-        BSONObj doc = c.findOne(TEST_NS, QUERY("_id" << "explicit_id"));
+        BSONObj doc = c.findOne(TEST_NS, MONGO_QUERY("_id" << "explicit_id"));
         ASSERT_EQUALS(doc.getStringField("_id"), std::string("explicit_id"));
         ASSERT_EQUALS(doc.getStringField("hello"), std::string("bar"));
 
@@ -283,7 +283,7 @@ namespace {
         c.save(TEST_NS, BSON("_id" << "explicit_id" << "hello" << "baz"));
         ASSERT_EQUALS(c.count(TEST_NS), 2U);
         ASSERT_EQUALS(
-            c.findOne(TEST_NS, QUERY("_id" << "explicit_id")).getStringField("hello"),
+            c.findOne(TEST_NS, MONGO_QUERY("_id" << "explicit_id")).getStringField("hello"),
             std::string("baz")
         );
     }

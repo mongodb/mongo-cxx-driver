@@ -33,6 +33,12 @@
 #endif
 #endif
 
+// bson/inline_decls.h
+#pragma push_macro("NOINLINE_DECL")
+#undef NOINLINE_DECL
+#pragma push_macro("PACKED_DECL")
+#undef PACKED_DECL
+
 // util/assert_util.h
 #pragma push_macro("verify")
 #undef verify

@@ -1340,7 +1340,7 @@ namespace mongo {
         if (!toSave.hasField("_id"))
             insert(ns.rawData(), toSave, 0, wc);
         else
-            update(ns.rawData(), QUERY("_id" << toSave.getField("_id")), toSave, true, false, wc);
+            update(ns.rawData(), MONGO_QUERY("_id" << toSave.getField("_id")), toSave, true, false, wc);
     }
 
     bool DBClientConnection::connect(const HostAndPort& server, string& errmsg) {

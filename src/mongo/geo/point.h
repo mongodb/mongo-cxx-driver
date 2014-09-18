@@ -45,7 +45,7 @@ namespace geo {
      *
      * Coordinates2D coords(1, 2);
      * Point<Coordinates2D> point(coords);
-     * Query nearPointQuery = QUERY("loc" << NEAR(point));
+     * Query nearPointQuery = MONGO_QUERY("loc" << NEAR(point));
      * conn.query("foo.bar", nearPointQuery);
      */
     template<typename TCoordinates>
