@@ -96,16 +96,16 @@ void queryGeoData(DBClientConnection& conn) {
         BSON_ARRAY(BSON_ARRAY(0.0 << 0.0) <<
                    BSON_ARRAY(50.0 << 50.0)));
     LineString line(lineBson);
-    Query q = QUERY(kLocField << GEOWITHIN(line.getBoundingBox()));
-    Query q2 = QUERY(kLocField << GEOINTERSECTS(line));
+    Query q = QUERY(kLocField << WITHINQUERY(line.getBoundingBox()));
+    Query q2 = QUERY(kLocField << INTERSECTSQUERY(line));
 
     BSONObj multipointBson = BSON("type" << "MultiPoint" << "coordinates" <<
         BSON_ARRAY(BSON_ARRAY(0.0 << 0.0) <<
                    BSON_ARRAY(50.0 << 50.0)));
 
     MultiPoint mPoint(multipointBson);
-    Query q3 = QUERY(kLocField << GEOWITHIN(mPoint.getBoundingBox()));
-    Query q4 = QUERY(kLocField << GEOINTERSECTS(mPoint));
+    Query q3 = QUERY(kLocField << WITHINQUERY(mPoint.getBoundingBox()));
+    Query q4 = QUERY(kLocField << INTERSECTSQUERY(mPoint));
 
     BSONObj polygonBson = BSON("type" << "Polygon" << "coordinates" <<
         BSON_ARRAY( // list of linear rings
@@ -128,19 +128,19 @@ void queryGeoData(DBClientConnection& conn) {
     cout << poly.toBSON().jsonString() << endl;
     cout << endl << endl;
 
-    Query q5 = QUERY(kLocField << GEOWITHIN(poly.getBoundingBox()));
-    Query q6 = QUERY(kLocField << GEOINTERSECTS(poly));
+    Query q5 = QUERY(kLocField << WITHINQUERY(poly.getBoundingBox()));
+    Query q6 = QUERY(kLocField << INTERSECTSQUERY(poly));
 
     cout << "*** Testing LineString ***" << endl;
 
     auto_ptr<DBClientCursor> cursor = conn.query(kDbCollectionName, q);
-    cout << "Results from GEOWITHIN" << endl;
+    cout << "Results from WITHINQUERY" << endl;
     while (cursor->more())
         cout << cursor->next().toString() << endl;
     cout << "---------------" << endl;
 
     auto_ptr<DBClientCursor> cursor2 = conn.query(kDbCollectionName, q2);
-    cout << "Results from GEOINTERSECTS" << endl;
+    cout << "Results from INTERSECTSQUERY" << endl;
     while (cursor2->more())
         cout << cursor2->next().toString() << endl;
     cout << "---------------" << endl;
@@ -148,13 +148,13 @@ void queryGeoData(DBClientConnection& conn) {
     cout << "*** Testing MultiPoint ***" << endl;
 
     auto_ptr<DBClientCursor> cursor3 = conn.query(kDbCollectionName, q3);
-    cout << "Results from GEOWITHIN" << endl;
+    cout << "Results from WITHINQUERY" << endl;
     while (cursor3->more())
         cout << cursor3->next().toString() << endl;
     cout << "---------------" << endl;
 
     auto_ptr<DBClientCursor> cursor4 = conn.query(kDbCollectionName, q4);
-    cout << "Results from GEOINTERSECTS" << endl;
+    cout << "Results from INTERSECTSQUERY" << endl;
     while (cursor4->more())
         cout << cursor4->next().toString() << endl;
     cout << "---------------" << endl;
@@ -168,7 +168,7 @@ void queryGeoData(DBClientConnection& conn) {
     cout << "---------------" << endl;
 
     auto_ptr<DBClientCursor> cursor6 = conn.query(kDbCollectionName, q6);
-    cout << "Results from GEOINTERSECTS" << endl;
+    cout << "Results from INTERSECTSQUERY" << endl;
     while (cursor6->more())
         cout << cursor6->next().toString() << endl;
     cout << "---------------" << endl;

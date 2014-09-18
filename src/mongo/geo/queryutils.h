@@ -30,38 +30,38 @@ namespace geo {
     }
 
     template<typename TCoordinates>
-    inline BSONObj GEOWITHIN(const GeoObj<TCoordinates>& geoObj) {
+    inline BSONObj WITHINQUERY(const GeoObj<TCoordinates>& geoObj) {
         return GEOQUERY("$geoWithin", geoObj);
     }
 
     template<typename TCoordinates>
-    inline BSONObj GEOWITHIN(const BoundingBox<TCoordinates>& geoBB) {
+    inline BSONObj WITHINQUERY(const BoundingBox<TCoordinates>& geoBB) {
         return BSON("$geoWithin" << BSON("$box" << geoBB.toNestedBSONArray()));
     }
 
     template<typename TCoordinates>
-    inline BSONObj GEOINTERSECTS(const GeoObj<TCoordinates>& geoObj) {
+    inline BSONObj INTERSECTSQUERY(const GeoObj<TCoordinates>& geoObj) {
         return GEOQUERY("$geoIntersects", geoObj);
     }
 
     template<typename TCoordinates>
-    inline BSONObj GEONEAR(const GeoObj<TCoordinates>& geoObj) {
+    inline BSONObj NEARQUERY(const GeoObj<TCoordinates>& geoObj) {
         return GEOQUERY("$near", geoObj);
     }
 
     template<typename TCoordinates>
-    inline BSONObj GEONEAR(const GeoObj<TCoordinates>& geoObj, double distance) {
+    inline BSONObj NEARQUERY(const GeoObj<TCoordinates>& geoObj, double distance) {
         return BSON("$near" << BSON("$geometry" << geoObj.toBSON()) <<
                     "$maxDistance" << distance);
     }
 
     template<typename TCoordinates>
-    inline BSONObj GEONEARSPHERE(const GeoObj<TCoordinates>& geoObj) {
+    inline BSONObj NEARSPHEREQUERY(const GeoObj<TCoordinates>& geoObj) {
         return GEOQUERY("$nearSphere", geoObj);
     }
 
     template<typename TCoordinates>
-    inline BSONObj GEONEARSPHERE(const GeoObj<TCoordinates>& geoObj,
+    inline BSONObj NEARSPHEREQUERY(const GeoObj<TCoordinates>& geoObj,
         double distance) {
         return BSON("$nearSphere" << BSON("$geometry" << geoObj.toBSON()) <<
                     "$maxDistance" << distance);
