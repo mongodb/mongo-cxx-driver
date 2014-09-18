@@ -67,7 +67,16 @@ cxx_driver_variables:
       lib_msvc2010: &libpath_msvc2010
         libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-10.0"
 
-## Toolchain options for windows
+  ## OS name
+  os_names:
+    windows_64: &os_name_windows64
+      os_name: "windows-64"
+    rhel55: &os_name_rhel55
+      os_name: "rhel55"
+    ubuntu1404: &os_name_ubuntu1404
+      os_name: "ubuntu1404"
+
+  ## Toolchain options for windows
   windows_toolchains:
     msvc2010: &toolchain_msvc2010
       toolchain_flags: --msvc-version=10.0
@@ -110,7 +119,7 @@ functions:
         set -o errexit
         curl -s ${mongo_url} --output mongo_enterprise.${ext|tgz}
         ${decompress} mongo_enterprise.${ext|tgz}
-        cp mongodb*enterprise*/bin/mongod${extension} ./mongod${extension}
+        cp mongodb*{os_name}*/bin/mongod${extension} ./mongod${extension}
         chmod +x ./mongod${extension}
   "fetch artifacts" :
     command: s3.get
@@ -258,6 +267,7 @@ buildvariants:
 - name: rhel55
   display_name: "RHEL 5.5"
   expansions:
+    <<: *os_name_rhel55
     <<: *compile_flags
     <<: *scons_flags_64
     <<: *warning_flags_rhel55
@@ -274,6 +284,7 @@ buildvariants:
 - name: ubuntu1404
   display_name: "Ubuntu 1404"
   expansions:
+    <<: *os_name_ubuntu1404
     <<: *compile_flags
     <<: *scons_flags_64
     <<: *mongodb_args
@@ -287,6 +298,7 @@ buildvariants:
 - name: ubuntu1404-debug
   display_name: "Ubuntu 1404 DEBUG"
   expansions:
+    <<: *os_name_ubuntu1404
     <<: *compile_flags_debug
     <<: *scons_flags_64
     <<: *mongodb_args
@@ -305,6 +317,7 @@ buildvariants:
   display_name: "Windows 64-bit (msvc2010)"
   expansions:
     ## basic compilation and installation
+    <<: *os_name_windows64
     <<: *compile_flags
     <<: *scons_flags_64
     <<: *toolchain_msvc2010
@@ -326,6 +339,7 @@ buildvariants:
 - name: windows-64-msvc2010-debug
   display_name: "Windows 64-bit Debug Dynamic (msvc2010)"
   expansions:
+    <<: *os_name_windows64
     <<: *compile_flags_debug
     <<: *scons_flags_64_windows_dynamic
     <<: *toolchain_msvc2010
@@ -346,6 +360,7 @@ buildvariants:
 - name: windows-64-msvc2013
   display_name: "Windows 64-bit (msvc2013)"
   expansions:
+    <<: *os_name_windows64
     <<: *compile_flags
     <<: *scons_flags_64_windows_dynamic
     <<: *toolchain_msvc2013
