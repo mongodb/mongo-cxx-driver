@@ -54,10 +54,14 @@ cxx_driver_variables:
     dll:
       dll_msvc2010: &dllpath_msvc2010
         dllpath: --dllpath="c:\local\boost_1_55_0\lib64-msvc-10.0;c:\openssl\bin;c:\sasl\bin"
+      dll_mscv2013: &dllpath_msvc2013
+        dllpath: --dllpath="c:\local\boost_1_56_0\lib64-msvc-12.0;c:\openssl\bin;c:\sasl\bin"
     ## C++ paths
     cpp:
-      cpp_boost_1_55_0: &cpppath
+      cpp_boost_1_55_0: &cpppath_boost_1_55_0
         cpppath: --cpppath="c:\local\boost_1_55_0"
+      cpp_boost_1_56_0: &cpppath_boost_1_56_0
+        cpppath: --cpppath="c:\local\boost_1_56_0"
     ## Extras
     extra:
       basic_extras: &extrapath
@@ -66,6 +70,8 @@ cxx_driver_variables:
     lib:
       lib_msvc2010: &libpath_msvc2010
         libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-10.0"
+      lib_msvc2013: &libpath_msvc2013
+        libpath: --libpath="c:\local\boost_1_56_0\lib64-msvc-12.0"
 
   ## OS name
   os_names:
@@ -327,7 +333,7 @@ buildvariants:
     <<: *dllpath_msvc2010
     <<: *libpath_msvc2010
     <<: *extrapath
-    <<: *cpppath
+    <<: *cpppath_boost_1_55_0
     extension: ".exe"
     scons: scons.bat
   run_on:
@@ -348,7 +354,7 @@ buildvariants:
     <<: *dllpath_msvc2010
     <<: *libpath_msvc2010
     <<: *extrapath
-    <<: *cpppath
+    <<: *cpppath_boost_1_55_0
     extension: ".exe"
     scons: scons.bat
   run_on:
@@ -366,10 +372,10 @@ buildvariants:
     <<: *toolchain_msvc2013
     <<: *mongodb_args
     <<: *mongo_url_windows64
-    <<: *dllpath_msvc2010 # For now, we use the VC 10 boost because that is what is installed.
-    <<: *libpath_msvc2010 # Ditto
+    <<: *dllpath_msvc2013
+    <<: *libpath_msvc2013
     <<: *extrapath
-    <<: *cpppath
+    <<: *cpppath_boost_1_56_0
     extension: ".exe"
     scons: scons.bat
   run_on:
