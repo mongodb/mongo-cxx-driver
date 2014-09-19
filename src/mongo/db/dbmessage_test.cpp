@@ -14,6 +14,8 @@
  *    limitations under the License.
  */
 
+#include "mongo/platform/basic.h"
+
 #include <string>
 
 #include "mongo/bson/util/builder.h"
