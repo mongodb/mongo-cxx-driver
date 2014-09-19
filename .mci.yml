@@ -38,6 +38,11 @@ cxx_driver_variables:
   scons_flags:
     standard: &scons_flags_64
       scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
+    ## test all plausible combinations of static/dynamic mongo client and windows runtime:
+    static_windows: &scons_flags_64_windows_static
+      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client"
+    dynamic_RT_windows: &scons_flags_64_windows_dynamic_rt
+      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows"
     dynamic_windows: &scons_flags_64_windows_dynamic
       scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows --sharedclient"
 
@@ -288,7 +293,7 @@ buildvariants:
 ## Ubuntu 1404
 
 - name: ubuntu1404
-  display_name: "Ubuntu 1404"
+  display_name: "Ubuntu1404"
   expansions:
     <<: *os_name_ubuntu1404
     <<: *compile_flags
@@ -302,7 +307,7 @@ buildvariants:
 ## Ubuntu 1404 DEBUG
 
 - name: ubuntu1404-debug
-  display_name: "Ubuntu 1404 DEBUG"
+  display_name: "Ubuntu1404 dbg"
   expansions:
     <<: *os_name_ubuntu1404
     <<: *compile_flags_debug
@@ -318,14 +323,15 @@ buildvariants:
 #######################################
 
 ## Windows 64-bit (msvc2010)
+## static client and RT
 
-- name: windows-64-msvc2010
-  display_name: "Windows 64-bit (msvc2010)"
+- name: windows-64-msvc2010-static-static
+  display_name: "Win64(2010) static-static"
   expansions:
     ## basic compilation and installation
     <<: *os_name_windows64
     <<: *compile_flags
-    <<: *scons_flags_64
+    <<: *scons_flags_64_windows_static
     <<: *toolchain_msvc2010
     <<: *mongodb_args
     <<: *mongo_url_windows64
@@ -338,12 +344,13 @@ buildvariants:
     scons: scons.bat
   run_on:
   - windows-64-test
-  tasks: *basic_tests
+  tasks: *windows_CXX318_tests # temporary
 
 ## Windows 64-bit DEBUG DYNAMIC (msvc2010)
+## dynamic client and RT
 
-- name: windows-64-msvc2010-debug
-  display_name: "Windows 64-bit Debug Dynamic (msvc2010)"
+- name: windows-64-msvc2010-dbg-dyn-dyn
+  display_name: "Win64(2010) dbg dyn-dyn"
   expansions:
     <<: *os_name_windows64
     <<: *compile_flags_debug
@@ -361,10 +368,11 @@ buildvariants:
   - windows-64-test
   tasks: *windows_CXX318_tests
 
-## Windows 64-bit (msvc2013)
+## Windows 64-bit DYNAMIC (msvc2013)
+## dynamic client and RT
 
-- name: windows-64-msvc2013
-  display_name: "Windows 64-bit (msvc2013)"
+- name: windows-64-msvc2013-dyn-dyn
+  display_name: "Win64(2013) dyn-dyn"
   expansions:
     <<: *os_name_windows64
     <<: *compile_flags
@@ -380,4 +388,26 @@ buildvariants:
     scons: scons.bat
   run_on:
   - windows-64-vs2013-test
-  tasks: *basic_tests
+  tasks: *windows_CXX318_tests
+
+## Windows 64-bit (msvc2013) DYNAMIC-RT
+## static client, dynamic RT
+
+- name: windows-64-msvc-2013-static-dyn
+  display_name: "Win64(2013) static-dyn"
+  expansions:
+    <<: *os_name_windows64
+    <<: *compile_flags
+    <<: *scons_flags_64_windows_dynamic_rt
+    <<: *toolchain_msvc2013
+    <<: *mongodb_args
+    <<: *mongo_url_windows64
+    <<: *dllpath_msvc2013
+    <<: *libpath_msvc2013
+    <<: *extrapath
+    <<: *cpppath_boost_1_56_0
+    extension: ".exe"
+    scons: scons.bat
+  run_on:
+  - windows-64-vs2013-test
+  tasks: *windows_CXX318_tests
