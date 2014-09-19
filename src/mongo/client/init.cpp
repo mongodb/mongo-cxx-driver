@@ -85,6 +85,8 @@ namespace client {
 
             PeriodicTask::startRunningPeriodicTasks();
 
+            ReplicaSetMonitor::initialize();
+
             return Status::OK();
         }
         else if (initStatus == 1) {
