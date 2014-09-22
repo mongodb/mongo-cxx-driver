@@ -32,7 +32,7 @@ cxx_driver_variables:
 ## Common mongodb arguments
   mongodb_arguments:
     standard: &mongodb_args
-      mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --setParameter=enableTestCommands=1 &"
+      mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --nopreallocj --setParameter=enableTestCommands=1 &"
 
 ## Common sets of scons flags
   scons_flags:
