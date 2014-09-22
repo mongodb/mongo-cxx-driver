@@ -168,6 +168,7 @@ if usingSasl:
     clientSource += clientSourceSasl
 
 exampleSourceMap = [
+    ('aggregation', 'mongo/client/examples/aggregation.cpp'),
     ('arrayExample', 'mongo/client/examples/arrayExample.cpp'),
     ('authTest', 'mongo/client/examples/authTest.cpp'),
     ('initializeTest', 'mongo/client/examples/initializeTest.cpp'),
