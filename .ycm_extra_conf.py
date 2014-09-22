@@ -54,7 +54,7 @@ flags = [
     '-I./build/linux2/normal/',
     '-I./build/cached/',
     '-I./build/cached/mongo',
-    '-isystem/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1',
+    '-isystem/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1',
     '-Wall',
     '-Wextra',
     '-Wc++11-compat',
