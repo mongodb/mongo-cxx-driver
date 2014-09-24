@@ -335,7 +335,7 @@ namespace {
                             const std::string& expectedSubstring) {
         MessageEventDetailsEncoder encoder;
         std::ostringstream os;
-        ASSERT_TRUE(encoder.encode(event, os));
+        ASSERT_TRUE(static_cast<bool>(encoder.encode(event, os)));
         std::string s = os.str();
         if (s.find(expectedSubstring) == std::string::npos) {
             FAIL() << "encoded log line does not contain substring \""
