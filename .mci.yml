@@ -13,6 +13,13 @@ cxx_driver_variables:
     - name: "integration test"
     - name: "client test"
 
+## A client-test-less set of tasks to run on Windows
+## TODO: use basic_test_list once CXX-318 is resolved
+  windows_CXX318_test_list: &windows_CXX318_tests
+    - name: "compile"
+    - name: "unit test"
+    - name: "integration test"
+
 ## Common download urls (merge in as hashes)
   mongo_download_urls:
     ubuntu1404: &mongo_url_ubuntu1404
@@ -359,7 +366,7 @@ buildvariants:
     scons: scons.bat
   run_on:
   - windows-64-test
-  tasks: *basic_tests
+  tasks: *windows_CXX318_tests
 
 ## Windows 64-bit DYNAMIC (msvc2013)
 ## dynamic client and RT
@@ -381,7 +388,7 @@ buildvariants:
     scons: scons.bat
   run_on:
   - windows-64-vs2013-test
-  tasks: *basic_tests
+  tasks: *windows_CXX318_tests
 
 ## Windows 64-bit (msvc2013) DYNAMIC-RT
 ## static client, dynamic RT
