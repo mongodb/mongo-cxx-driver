@@ -32,6 +32,8 @@ cxx_driver_variables:
     standard: &scons_flags_64
       scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
     ## test all plausible combinations of static/dynamic mongo client and windows runtime:
+    ubuntu_c++11: &scons_flags_cpp11
+      scons_flags: "--64 --c++11 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
     static_windows: &scons_flags_64_windows_static
       scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client"
     dynamic_RT_windows: &scons_flags_64_windows_dynamic_rt
@@ -305,6 +307,20 @@ buildvariants:
     <<: *os_name_ubuntu1404
     <<: *compile_flags_debug
     <<: *scons_flags_64
+    <<: *mongodb_args
+    <<: *mongo_url_ubuntu1404
+  run_on:
+  - ubuntu1404-test
+  tasks: *basic_tests
+
+## Ubuntu 1404 C++11
+
+- name: ubuntu1404-c++11
+  display_name: "Ubuntu1404 C++11"
+  expansions:
+    <<: *os_name_ubuntu1404
+    <<: *compile_flags
+    <<: *scons_flags_cpp11
     <<: *mongodb_args
     <<: *mongo_url_ubuntu1404
   run_on:
