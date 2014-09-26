@@ -315,7 +315,7 @@ buildvariants:
 
 ## Ubuntu 1404 C++11
 
-- name: ubuntu1404-c++11
+- name: ubuntu1404-cpp11
   display_name: "Ubuntu1404 C++11"
   expansions:
     <<: *os_name_ubuntu1404
