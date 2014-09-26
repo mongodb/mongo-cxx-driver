@@ -85,10 +85,9 @@ int main() {
     loggingOpts.setMinLoggedSeverity(level2);
     verify(loggingOpts.minLoggedSeverity() == level2);
 
-    // initialize with our options
-    Status status = client::initialize(loggingOpts);
-    if (!status.isOK()) {
-        cout << "Failed to initialize the driver" << endl;
+    mongo::client::GlobalInstance instance(loggingOpts);
+    if (!instance.initialized()) {
+        std::cout << "failed to initialize the client driver: " << instance.status() << endl;
         return EXIT_FAILURE;
     }
 

@@ -83,9 +83,13 @@ namespace client {
 
         /** If true, the driver will automatically schedule a client::shutdown via
          *  'std::atexit'. If false, the user of the library is responsible for calling
-         *  'client::shutdown'.
+         *  'client::shutdown'. Not all platforms support this option (notably, the Windows DLL
+         *  build of the driver does not), so the default value of this parameter is
+         *  'false'. If this parameter is set to 'true' and the platform cannot honor the
+         *  request to enable 'atexit' termination, 'mongo::client::initialize' will return a
+         *  non-OK status.
          *
-         *  Default: true
+         *  Default: false
          */
         Options& setCallShutdownAtExit(bool value = true);
         bool callShutdownAtExit() const;

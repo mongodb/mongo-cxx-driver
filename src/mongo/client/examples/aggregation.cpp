@@ -39,9 +39,9 @@ int main(int argc, char* argv[]) {
         port = argv[ 2 ];
     }
 
-    Status status = client::initialize();
-
-    if (!status.isOK()) {
+    mongo::client::GlobalInstance instance;
+    if (!instance.initialized()) {
+        std::cout << "failed to initialize the client driver: " << instance.status() << std::endl;
         return EXIT_FAILURE;
     }
 

@@ -55,6 +55,7 @@ namespace client {
                 globalLogDomain->setMinimumLoggedSeverity(opts.minLoggedSeverity());
             }
         }
+
     } // namespace
 
     Status initialize(const Options& options) {
@@ -66,6 +67,14 @@ namespace client {
             // Copy in the provided options.
             setOptions(options);
             configureLogging(options);
+
+#if defined(_WIN32) && defined(_DLL)
+            if (options.callShutdownAtExit()) {
+                return Status(
+                    ErrorCodes::IllegalOperation,
+                    "The DLL build of the MongoDB C++ driver does not support shutdown at exit");
+            }
+#endif
 
             if (options.callShutdownAtExit()) {
                 if (std::atexit(&callShutdownAtExit) != 0) {
@@ -89,7 +98,7 @@ namespace client {
         }
         else if (initStatus == 1) {
             return Status(
-                ErrorCodes::IllegalOperation,
+                ErrorCodes::AlreadyInitialized,
                 "Initialize() may only be called once");
         }
         else {
@@ -116,13 +125,36 @@ namespace client {
         else if (initStatus == 0) {
             return Status(
                 ErrorCodes::IllegalOperation,
-                "Shutdown() cannot be called before initialize()");
+                "mongo::client::shutdown() cannot be called before mongo::client::initialize()");
         }
         else {
             return Status(
                 ErrorCodes::IllegalOperation,
                 "The driver has been terminated.");
         }
+    }
+
+    GlobalInstance::GlobalInstance(const Options& options)
+        : _terminateNeeded(false)
+        , _status(initialize(options)) {
+        if (initialized())
+            _terminateNeeded = !Options::current().callShutdownAtExit();
+    }
+
+    GlobalInstance::~GlobalInstance() {
+        if (_terminateNeeded && !client::shutdown().isOK())
+            std::abort();
+    }
+
+    void GlobalInstance::assertInitialized() const {
+        uassertStatusOK(status());
+    }
+
+    Status GlobalInstance::shutdown() {
+        const Status result = client::shutdown();
+        if (result.isOK())
+            _terminateNeeded = false;
+        return result;
     }
 
 } // namespace client

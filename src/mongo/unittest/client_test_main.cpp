@@ -19,9 +19,9 @@
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
-    const mongo::Status status = mongo::client::initialize();
-    if (!status.isOK()) {
-        std::cerr << "unit test failed to initialize the client: " << status << '\n';
+    mongo::client::GlobalInstance instance;
+    if (!instance.initialized()) {
+        std::cerr << "failed to initialize the client driver: " << instance.status() << std::endl;
         ::abort();
     }
 

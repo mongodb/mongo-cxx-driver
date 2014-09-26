@@ -56,6 +56,13 @@ void iter(bo o) {
 }
 
 int main() {
+
+    mongo::client::GlobalInstance instance;
+    if (!instance.initialized()) {
+        std::cout << "failed to initialize the client driver: " << instance.status() << endl;
+        return EXIT_FAILURE;
+    }
+
     cout << "build bits: " << 8 * sizeof(char *) << '\n' <<  endl;
 
     /* a bson object defaults on construction to { } */

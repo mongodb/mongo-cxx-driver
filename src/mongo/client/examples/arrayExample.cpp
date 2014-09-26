@@ -20,7 +20,7 @@
 #include <windows.h>
 #endif
 
-#include "mongo/bson/bson.h"
+#include "mongo/client/dbclient.h"
 
 #include <iostream>
 #include <list>
@@ -38,6 +38,13 @@ using std::list;
 using std::vector;
 
 int main() {
+
+    mongo::client::GlobalInstance instance;
+    if (!instance.initialized()) {
+        std::cout << "failed to initialize the client driver: " << instance.status() << endl;
+        return EXIT_FAILURE;
+    }
+
     // Build an object
     BSONObjBuilder bob;
 

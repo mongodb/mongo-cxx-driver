@@ -41,7 +41,7 @@ namespace client {
     }
 
     Options::Options()
-        : _callShutdownAtExit(true)
+        : _callShutdownAtExit(false)
         , _autoShutdownGracePeriodMillis(kDefaultAutoShutdownGracePeriodMillis)
         , _sslMode(kSSLDisabled)
         , _useFIPSMode(false)

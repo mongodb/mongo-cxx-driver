@@ -35,9 +35,11 @@ int main(int argc, char **argv) {
         mongo::unittest::integrationTestParams.port = "27107";
     }
 
-    mongo::Status status = mongo::client::initialize();
-    if (!status.isOK())
+    mongo::client::GlobalInstance instance;
+    if (!instance.initialized()) {
+        std::cerr << "failed to initialize the client driver: " << instance.status() << std::endl;
         ::abort();
+    }
 
     ::testing::InitGoogleTest(&argc, argv);
 

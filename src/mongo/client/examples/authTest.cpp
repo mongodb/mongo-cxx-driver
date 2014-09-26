@@ -49,9 +49,9 @@ int main( int argc, const char **argv ) {
     client::Options autoTimeoutOpts = client::Options();
     autoTimeoutOpts.setAutoShutdownGracePeriodMillis(250);
 
-    Status status = client::initialize(autoTimeoutOpts);
-    if (!status.isOK()) {
-        cout << "failed to initialize the client driver: " << status.toString() << endl;
+    mongo::client::GlobalInstance instance(autoTimeoutOpts);
+    if (!instance.initialized()) {
+        std::cout << "failed to initialize the client driver: " << instance.status() << endl;
         return EXIT_FAILURE;
     }
 

@@ -45,12 +45,6 @@ int printIfAge(DBClientConnection& c, int age) {
 
 int run(int argc, char* argv[]) {
 
-    Status status = client::initialize();
-    if ( !status.isOK() ) {
-        std::cout << "failed to initialize the client driver: " << status.toString() << endl;
-        return EXIT_FAILURE;
-    }
-
     const char *port = "27017";
     if ( argc != 1 ) {
         if ( argc != 3 ) {
@@ -93,6 +87,13 @@ int run(int argc, char* argv[]) {
 }
 
 int main(int argc, char* argv[]) {
+
+    mongo::client::GlobalInstance instance;
+    if (!instance.initialized()) {
+        std::cout << "failed to initialize the client driver: " << instance.status() << endl;
+        return EXIT_FAILURE;
+    }
+
     int ret = EXIT_SUCCESS;
     try {
         ret = run(argc, argv);
