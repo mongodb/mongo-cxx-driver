@@ -15,7 +15,7 @@ env:
   matrix:
     - SANITIZE= DEBUG=
     - SANITIZE= DEBUG=--dbg=on
-    - SANITIZE=--sanitize=address DEBUG=--dbg=on
+    - SANITIZE=--sanitize=address,leak DEBUG=--dbg=on
 
 # Setup required repositories before installation
 before_install:
