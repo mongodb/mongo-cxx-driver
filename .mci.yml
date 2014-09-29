@@ -20,7 +20,9 @@ cxx_driver_variables:
     windows64-bit: &mongo_url_windows64
       mongo_url: "http://downloads.10gen.com/win32/mongodb-win32-x86_64-enterprise-windows-64-2.6.4.zip"
     rhel55: &mongo_url_rhel55
-      mongo_url: "downloads.mongodb.org/linux/mongodb-linux-x86_64-rhel55-latest.tgz"
+      mongo_url: "http://downloads.mongodb.org/linux/mongodb-linux-x86_64-rhel55-latest.tgz"
+    rhel55: &mongo_url_rhel55_32
+      mongo_url: "http://downloads.mongodb.org/linux/mongodb-linux-i686-latest.tgz"
 
 ## Common mongodb arguments
   mongodb_arguments:
@@ -31,9 +33,11 @@ cxx_driver_variables:
   scons_flags:
     standard: &scons_flags_64
       scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
-    ## test all plausible combinations of static/dynamic mongo client and windows runtime:
+    standard_32: &scons_flags_32
+      scons_flags: "--32 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
     ubuntu_c++11: &scons_flags_cpp11
       scons_flags: "--64 --c++11 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
+    ## test all plausible combinations of static/dynamic mongo client and windows runtime:
     static_windows: &scons_flags_64_windows_static
       scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client"
     dynamic_RT_windows: &scons_flags_64_windows_dynamic_rt
@@ -281,6 +285,23 @@ buildvariants:
     <<: *libpath_rhel55_64
     <<: *mongodb_args
     <<: *mongo_url_rhel55
+  run_on:
+  - rhel55-test
+  tasks: *basic_tests
+
+## RHEL 5.5 32-bit
+
+- name: rhel55-32-bit
+  display_name: "RHEL 5.5 32-bit"
+  expansions:
+    <<: *os_name_rhel55
+    <<: *compile_flags
+    <<: *scons_flags_32
+    <<: *warning_flags_rhel55
+    <<: *cpppath_rhel55
+    <<: *libpath_rhel55_32
+    <<: *mongodb_args
+    <<: *mongo_url_rhel55_32
   run_on:
   - rhel55-test
   tasks: *basic_tests
