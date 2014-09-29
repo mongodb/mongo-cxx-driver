@@ -53,9 +53,9 @@ cxx_driver_variables:
     ## DLL paths
     dll:
       dll_msvc2010: &dllpath_msvc2010
-        dllpath: --dllpath="c:\local\boost_1_55_0\lib64-msvc-10.0;c:\openssl\bin;c:\sasl\bin"
+        dllpath: --runtime-library-search-path="c:\local\boost_1_55_0\lib64-msvc-10.0,c:\openssl\bin,c:\sasl\bin"
       dll_mscv2013: &dllpath_msvc2013
-        dllpath: --dllpath="c:\local\boost_1_56_0\lib64-msvc-12.0;c:\openssl\bin;c:\sasl\bin"
+        dllpath: --runtime-library-search-path="c:\local\boost_1_56_0\lib64-msvc-12.0,c:\openssl\bin,c:\sasl\bin"
     ## C++ paths
     cpp:
       cpp_boost_1_55_0: &cpppath_boost_1_55_0

@@ -191,9 +191,9 @@ add_option( "libpath", "Library path if you have libraries in a nonstandard dire
 add_option( "extrapath", "comma separated list of add'l paths  (--extrapath /opt/foo/,/foo) static linking" , 1 , False )
 add_option( "extralib", "comma separated list of libraries  (--extralib js_static,readline" , 1 , False )
 
-if windows:
-    add_option( "dllpath", "semicolon separated list of dirs to append to PATH to find DLLs at runtime",
-                1, False)
+add_option("runtime-library-search-path",
+           "comma separated list of dirs to append to PATH to find dynamic libs at runtime",
+           1, False)
 
 add_option( "ssl" , "Enable SSL" , 0 , True )
 add_option( "ssl-fips-capability", "Enable the ability to activate FIPS 140-2 mode", 0, True );
@@ -431,10 +431,17 @@ if "sunos5" == os.sys.platform:
 if has_option("propagate-shell-environment"):
     env['ENV'] = dict(os.environ);
 
-if windows and has_option("dllpath"):
-    new_components = env.Dir(get_option("dllpath").split(";"))
-    for nc in new_components:
-        env.AppendENVPath('PATH', nc, delete_existing=0)
+if has_option('runtime-library-search-path'):
+    libs = get_option('runtime-library-search-path').split(',')
+    envVar = None
+    if windows:
+        envVar = 'PATH'
+    elif darwin:
+        envVar = 'DYLD_LIBRARY_PATH'
+    else:
+        envVar = 'LD_LIBRARY_PATH'
+    for lib in libs:
+        env.AppendENVPath(envVar, env.Dir(lib), delete_existing=0)
 
 if has_option('build-fast-and-loose'):
     # See http://www.scons.org/wiki/GoFastButton for details
