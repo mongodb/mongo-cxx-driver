@@ -30,6 +30,7 @@
 #include "mongo/client/dbclient.h"
 
 #include <iostream>
+#include <set>
 
 #ifndef verify
 #  define verify(x) MONGO_verify(x)
@@ -258,6 +259,22 @@ int main( int argc, const char **argv ) {
         for ( list<string>::iterator i = l.begin(); i != l.end(); i++ ) {
             cout << "coll name : " << *i << endl;
         }
+    }
+
+    {
+        const string ns = "test.listMyIndexes";
+        conn.dropCollection(ns);
+        conn.insert(ns, BSON( "a" << 1 ));
+        conn.createIndex(ns, BSON ( "a" << 1 ));
+        conn.createIndex(ns, BSON ( "b" << 1 ));
+        conn.createIndex(ns, BSON ( "c" << 1 ));
+        list<string> indexNames(conn.getIndexNames(ns));
+        std::multiset<string> names(indexNames.begin(), indexNames.end());
+        verify(indexNames.size() == 4);
+        verify(names.count(string("_id_")) == 1);
+        verify(names.count(string("a_1")) == 1);
+        verify(names.count(string("b_1")) == 1);
+        verify(names.count(string("c_1")) == 1);
     }
 
     {

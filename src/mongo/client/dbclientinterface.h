@@ -1145,6 +1145,11 @@ namespace mongo {
 
         virtual std::list<BSONObj> getIndexSpecs( const std::string &ns, int options = 0 );
 
+        /**
+         * Enumerates all indexes on ns (a db-qualified collection name). Returns a list of the index names.
+         */
+        virtual std::list<std::string> getIndexNames( const std::string& ns );
+
         virtual void dropIndex( const std::string& ns , BSONObj keys );
         virtual void dropIndex( const std::string& ns , const std::string& indexName );
 

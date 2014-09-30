@@ -1867,6 +1867,15 @@ namespace mongo {
         return specs;
     }
 
+    list<std::string> DBClientWithCommands::getIndexNames( const std::string &ns ) {
+        list<std::string> indexNames;
+        list<BSONObj> specs( getIndexSpecs(ns) );
+
+        for (list<BSONObj>::const_iterator it = specs.begin(); it != specs.end(); ++it) {
+            indexNames.push_back((*it)["name"].valuestr());
+        }
+        return indexNames;
+    }
 
     void DBClientWithCommands::dropIndex( const string& ns , BSONObj keys ) {
         dropIndex( ns , genIndexName( keys ) );
