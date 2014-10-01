@@ -580,7 +580,7 @@ namespace mongo {
         return s.str();
     }
 
-    inline void BSONElement::toString( StringBuilder& s, bool includeFieldName, bool full, int depth ) const {
+    void BSONElement::toString( StringBuilder& s, bool includeFieldName, bool full, int depth ) const {
 
         if ( depth > BSONObj::maxToStringRecursionDepth ) {
             // check if we want the full/complete string
