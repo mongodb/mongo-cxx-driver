@@ -1867,7 +1867,7 @@ namespace mongo {
         return specs;
     }
 
-    list<std::string> DBClientWithCommands::getIndexNames( const std::string &ns ) {
+    list<std::string> DBClientWithCommands::getIndexNames( const std::string& ns ) {
         list<std::string> indexNames;
         list<BSONObj> specs( getIndexSpecs(ns) );
 
