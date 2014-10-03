@@ -88,8 +88,6 @@ namespace client {
             if (!result.isOK())
                 return result;
 
-            PeriodicTask::startRunningPeriodicTasks();
-
             return Status::OK();
         }
         else if (initStatus == 1) {
@@ -111,12 +109,8 @@ namespace client {
         if (initStatus == 1) {
 
             ReplicaSetMonitor::cleanup();
-
-            const unsigned int gracePeriod = Options::current().autoShutdownGracePeriodMillis();
-            Status s = PeriodicTask::stopRunningPeriodicTasks(gracePeriod);
-
             shutdownNetworking();
-            return s;
+            return Status::OK();
         }
         else if (initStatus == 0) {
             return Status(

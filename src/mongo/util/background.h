@@ -120,45 +120,4 @@ namespace mongo {
         void jobBody();
     };
 
-    /**
-     * these run "roughly" every minute
-     * instantiate statically
-     * class MyTask : public PeriodicTask {
-     * public:
-     *   virtual std::string name() const { return "MyTask; " }
-     *   virtual void doWork() { log() << "hi" << endl; }
-     * } myTask;
-     */
-    class PeriodicTask {
-    public:
-        PeriodicTask();
-        virtual ~PeriodicTask();
-
-        virtual void taskDoWork() = 0;
-        virtual std::string taskName() const = 0;
-
-        /**
-         *  Starts the BackgroundJob that runs PeriodicTasks. This method is intended to
-         *  be called internally from initialize() only. You may not call this method twice.
-         *  As this method starts threads, it is not appropriate to call it from within a
-         *  mongo initializer. Calling this method after calling 'stopRunningPeriodicTasks'
-         *  does not re-start the background job.
-         */
-        static void startRunningPeriodicTasks();
-
-        /**
-         *  Waits 'gracePeriodMillis' for the BackgroundJob responsible for PeriodicTask
-         *  execution to finish any running tasks, then destroys it. If the BackgroundJob was
-         *  never started, returns Status::OK right away. If the BackgroundJob does not
-         *  terminate within the grace period, returns an invalid status. It is safe to call
-         *  this method repeatedly from one thread if the grace period is overshot. It is not
-         *  safe to call this method from multiple threads, or in a way that races with
-         *  'startRunningPeriodicTasks'. A grace period of 0 means to wait forever.
-         */
-        static Status stopRunningPeriodicTasks( unsigned int gracePeriodMillis );
-    };
-
-
-
-
 } // namespace mongo
