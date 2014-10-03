@@ -46,17 +46,6 @@ namespace {
     const string TEST_DB = "test";
     const string TEST_COLL = "dbclient";
 
-    class ConnHook : public DBConnectionHook {
-    public:
-        ConnHook() : _count(0) { };
-        void onCreate(DBClientBase*) { _count++; }
-        void onDestroy(DBClientBase*) { }
-        void onHandedOut(DBClientBase*) { }
-        int getCount() { return _count; }
-    private:
-        int _count;
-    };
-
     class DBClientTest : public ::testing::Test {
     public:
         DBClientTest() {
@@ -646,57 +635,8 @@ namespace {
     void getResults(DBClientCursor* cursor, std::vector<int>* results, boost::mutex* mut) {
         while (cursor->more()) {
             boost::lock_guard<boost::mutex> lock(*mut);
+
             results->push_back(cursor->next().getIntField("_id"));
-        }
-    }
-
-    DBClientBase* cloneFromPool(DBClientBase* originalConnection,
-                                std::vector<DBClientBase*>* connectionAccumulator) {
-        DBClientBase* conn = pool.get(originalConnection->getServerAddress(),
-            originalConnection->getSoTimeout());
-        connectionAccumulator->push_back(conn);
-        return conn;
-    }
-
-    TEST_F(DBClientTest, ParallelCollectionScanUsingConnectionPool) {
-        bool supported = serverGTE(&c, 2, 6);
-
-        if (supported) {
-            const size_t numItems = 8000;
-            const size_t seriesSum = (numItems * (numItems - 1)) / 2;
-
-            for (size_t i = 0; i < numItems; ++i)
-                c.insert(TEST_NS, BSON("_id" << static_cast<int>(i)));
-
-            std::vector<DBClientBase*> connections;
-            std::vector<DBClientCursor*> cursors;
-
-            stdx::function<DBClientBase* ()> factory = stdx::bind(&cloneFromPool, &c, &connections);
-            c.parallelScan(TEST_NS, 3, &cursors, factory);
-
-            std::vector<int> results;
-            boost::mutex resultsMutex;
-            std::vector<boost::thread*> threads;
-
-            // We can get up to 3 cursors back here but the server might give us back less
-            for (size_t i = 0; i < cursors.size(); ++i)
-                threads.push_back(new boost::thread(getResults, cursors[i], &results, &resultsMutex));
-
-            // Ensure all the threads have completed their scans
-            for (size_t i = 0; i < threads.size(); ++i) {
-                threads[i]->join();
-                delete threads[i];
-            }
-
-            // Cleanup the cursors that parallel scan created
-            for (size_t i = 0; i < cursors.size(); ++i)
-                delete cursors[i];
-
-            size_t sum = 0;
-            for (size_t i = 0; i < results.size(); ++i)
-                sum += results[i];
-
-            ASSERT_EQUALS(sum, seriesSum);
         }
     }
 
@@ -1087,119 +1027,6 @@ namespace {
             "query.$comment" << "wow"
         ));
         ASSERT_FALSE(result.isEmpty());
-    }
-
-    TEST_F(DBClientTest, FlushBadConnections) {
-        string host_str = string("localhost:") + integrationTestParams.port;
-
-        pool.removeHost(host_str);
-
-        ConnHook* dh = new ConnHook();
-        pool.addHook(dh);
-
-        {
-            ScopedDbConnection conn1(host_str);
-            ScopedDbConnection conn2(host_str);
-            conn1.done();
-            conn2.done();
-        }
-
-        // Cause one of the connections to fail
-        getGlobalFailPointRegistry()->getFailPoint("throwSockExcep")->
-            setMode(FailPoint::nTimes, 1);
-
-        // call isMaster on all the connections, remove the bad ones
-        pool.flush();
-
-        {
-            ScopedDbConnection conn1(host_str);
-            ScopedDbConnection conn2(host_str);
-            conn1.done();
-            conn2.done();
-        }
-
-        ASSERT_EQUALS(dh->getCount(), 3);
-    }
-
-    TEST_F(DBClientTest, IsConnectionGood) {
-        string host_str = string("localhost:") + integrationTestParams.port;
-        ScopedDbConnection conn(host_str);
-        ASSERT_TRUE(conn.ok());
-        ASSERT_EQUALS(conn.getHost(), host_str);
-        DBClientBase* pconn = conn.get();
-        ASSERT_TRUE(pool.isConnectionGood(host_str, pconn));
-        conn.done();
-    }
-
-    TEST_F(DBClientTest, AppendInfo) {
-        pool.clear();
-
-        BSONObjBuilder b;
-        pool.appendInfo(b);
-        BSONObj info = b.done();
-        BSONObj hosts = info["hosts"].Obj();
-        ASSERT_EQUALS(hosts["localhost:27999::0"]["available"].Int(), 0);
-
-        {
-            string host_str = string("localhost:") + integrationTestParams.port;
-            ScopedDbConnection conn(host_str);
-            conn.done();
-        }
-
-        BSONObjBuilder b2;
-        pool.appendInfo(b2);
-        BSONObj info2 = b2.done();
-        hosts = info2["hosts"].Obj();
-        ASSERT_EQUALS(hosts["localhost:27999::0"]["available"].Int(), 1);
-    }
-
-    TEST_F(DBClientTest, ClearStaleConnections) {
-        string host_str = string("localhost:") + integrationTestParams.port;
-
-        ConnHook* dh = new ConnHook();
-        pool.clear();
-        pool.addHook(dh);
-
-        {
-            ScopedDbConnection conn1(host_str);
-            ScopedDbConnection conn2(host_str);
-            conn1.done();
-            conn2.done();
-        }
-
-        // Cause a conn to be stale
-        getGlobalFailPointRegistry()->getFailPoint("notStillConnected")->
-            setMode(FailPoint::nTimes, 1);
-
-        // runs getStaleConnections and deletes them
-        pool.taskDoWork();
-
-        ASSERT_EQUALS(pool.taskName(), "DBConnectionPool-cleaner");
-
-        {
-            ScopedDbConnection conn1(host_str);
-            ScopedDbConnection conn2(host_str);
-            conn1.done();
-            conn2.done();
-        }
-
-        ASSERT_EQUALS(dh->getCount(), 3);
-    }
-
-    TEST_F(DBClientTest, CursorAttachNewConnection) {
-        c.insert(TEST_NS, BSON("num" << 1));
-        c.insert(TEST_NS, BSON("num" << 2));
-
-        DBClientCursor cursor(&c, TEST_NS, Query("{}").obj, 0, 0, 0, 0, 0);
-        ASSERT_TRUE(cursor.init());
-        ASSERT_TRUE(cursor.more());
-        cursor.next();
-
-        string host_str = string("localhost:") + integrationTestParams.port;
-        log() << "here";
-        cursor.attach(new ScopedDbConnection(host_str));
-        ASSERT_TRUE(cursor.more());
-        cursor.next();
     }
 
     TEST_F(DBClientTest, LazyCursor) {

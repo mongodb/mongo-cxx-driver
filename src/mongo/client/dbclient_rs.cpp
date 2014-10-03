@@ -22,7 +22,6 @@
 #include <memory>
 
 #include "mongo/bson/util/builder.h"
-#include "mongo/client/connpool.h"
 #include "mongo/client/dbclientcursor.h"
 #include "mongo/client/replica_set_monitor.h"
 #include "mongo/client/sasl_client_authenticate.h"
@@ -697,8 +696,7 @@ namespace {
             return NULL;
         }
 
-        // We are now about to get a new connection from the pool, so cleanup
-        // the current one and release it back to the pool.
+        // cleanup the last connection we used.
         resetSlaveOkConn();
 
         _lastReadPref = readPref;
@@ -721,15 +719,23 @@ namespace {
         // Needs to perform a dynamic_cast because we need to set the replSet
         // callback. We should eventually not need this after we remove the
         // callback.
-        DBClientConnection* newConn = dynamic_cast<DBClientConnection*>(
-                pool.get(_lastSlaveOkHost.toString(), _so_timeout));
+        std::string errmsg;
+        // Need to use ConnectionString so that the MockDBClientConnection can be
+        // hooked in in the tests....
+        _lastSlaveOkConn.reset(dynamic_cast<DBClientConnection*>
+            (ConnectionString(_lastSlaveOkHost).connect(errmsg, _so_timeout)));
 
         // Assert here instead of returning NULL since the contract of this method is such
-        // that returning NULL means none of the nodes were good, which is not the case here.
-        uassert(16532, str::stream() << "Failed to connect to " << _lastSlaveOkHost.toString(),
-                newConn != NULL);
+        // returning NULL means none of the nodes were good, which is not the case here.
+        uassert(0, "Unable to construct DBClientConnection", _lastSlaveOkConn.get());
 
-        _lastSlaveOkConn.reset(newConn);
+        bool connected = _lastSlaveOkConn->connect(_lastSlaveOkHost, errmsg);
+
+        uassert(0,
+                str::stream() << "Failed to connect to " << _lastSlaveOkHost.toString()
+                              << ": " << errmsg,
+                connected);
+
         _lastSlaveOkConn->setReplSetClientCallback(this);
         _lastSlaveOkConn->setRunCommandHook(_runCommandHook);
         _lastSlaveOkConn->setPostRunCommandHook(_postRunCommandHook);
@@ -1046,8 +1052,7 @@ namespace {
                 // so no need to logout.
             }
 
-            // If the connection was bad, the pool will clean it up.
-            pool.release(_lastSlaveOkHost.toString(), _lastSlaveOkConn.release());
+            _lastSlaveOkConn.reset();
         }
 
         _lastSlaveOkHost = HostAndPort();

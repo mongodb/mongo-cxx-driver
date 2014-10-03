@@ -21,7 +21,6 @@
 
 #include "mongo/client/dbclientcursor.h"
 
-#include "mongo/client/connpool.h"
 #include "mongo/db/dbmessage.h"
 #include "mongo/db/namespace_string.h"
 #include "mongo/util/debug_util.h"
@@ -105,7 +104,7 @@ namespace mongo {
     bool DBClientCursor::init() {
         Message toSend;
         _assembleInit( toSend );
-        verify( _client );
+
         if ( !_client->call( toSend, *batch.m, false, &_originalHost ) ) {
             // log msg temp?
             log() << "DBClientCursor::init call() failed" << endl;
@@ -189,21 +188,9 @@ namespace mongo {
         toSend.setData(dbGetMore, b.buf(), b.len());
         auto_ptr<Message> response(new Message());
 
-        if ( _client ) {
-            _client->call( toSend, *response );
-            this->batch.m = response;
-            dataReceived();
-        }
-        else {
-            verify( _scopedHost.size() );
-            ScopedDbConnection conn(_scopedHost);
-            conn->call( toSend , *response );
-            _client = conn.get();
-            this->batch.m = response;
-            dataReceived();
-            _client = 0;
-            conn.done();
-        }
+        _client->call( toSend, *response );
+        this->batch.m = response;
+        dataReceived();
     }
 
     /** with QueryOption_Exhaust, the server just blasts data at us (marked at end with cursorid==0). */
@@ -211,7 +198,6 @@ namespace mongo {
         verify( cursorId && batch.pos == batch.nReturned );
         verify( !nToReturn );
         auto_ptr<Message> response(new Message());
-        verify( _client );
         if (!_client->recv(*response)) {
             uasserted(16465, "recv failed while exhausting cursor");
         }
@@ -366,28 +352,6 @@ namespace mongo {
         return true;
     }
 
-    void DBClientCursor::attach( AScopedConnection * conn ) {
-        verify( _scopedHost.size() == 0 );
-        verify( conn );
-        verify( conn->get() );
-
-        if ( conn->get()->type() == ConnectionString::SET ) {
-            if( _lazyHost.size() > 0 )
-                _scopedHost = _lazyHost;
-            else if( _client )
-                _scopedHost = _client->getServerAddress();
-            else
-                massert(14821, "No client or lazy client specified, cannot store multi-host connection.", false);
-        }
-        else {
-            _scopedHost = conn->getHost();
-        }
-
-        conn->done();
-        _client = 0;
-        _lazyHost = "";
-    }
-
     DBClientCursor::~DBClientCursor() {
         DESTRUCTOR_GUARD (
 
@@ -400,26 +364,11 @@ namespace mongo {
             Message m;
             m.setData( dbKillCursors , b.buf() , b.len() );
 
-            if ( _client ) {
-
-                // Kill the cursor the same way the connection itself would.  Usually, non-lazily
-                if( DBClientConnection::getLazyKillCursor() )
-                    _client->sayPiggyBack( m );
-                else
-                    _client->say( m );
-
-            }
-            else {
-                verify( _scopedHost.size() );
-                ScopedDbConnection conn(_scopedHost);
-
-                if( DBClientConnection::getLazyKillCursor() )
-                    conn->sayPiggyBack( m );
-                else
-                    conn->say( m );
-
-                conn.done();
-            }
+            // Kill the cursor the same way the connection itself would.  Usually, non-lazily
+            if( DBClientConnection::getLazyKillCursor() )
+                _client->sayPiggyBack( m );
+            else
+                _client->say( m );
         }
 
         );

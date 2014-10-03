@@ -33,9 +33,63 @@
 #include "mongo/db/jsobj.h"
 #include "mongo/platform/cstdint.h"
 #include "mongo/platform/random.h"
+#include "mongo/platform/unordered_map.h"
 #include "mongo/util/net/hostandport.h"
 
 namespace mongo {
+    // Internal connection cache for isMaster. Used to amortize the cost of establishing connections
+    // to a remote host. Not really a pool because we only keep one connection per host.
+    class ConnectionCache {
+    public:
+        // Uses a cached connection (may need to reconnect) to execute a remote isMaster call
+        // on the given host. Returns microseconds taken for remote call to complete. Throws.
+        uint64_t timedIsMaster(const HostAndPort& host, BSONObj* out);
+
+    private:
+        typedef unordered_map<HostAndPort, boost::shared_ptr<DBClientConnection> >
+            ConnectionMap;
+
+        // Guard that creates a connection if needed, or removes it from
+        // the cache. This is so multiple isMaster calls can be in flight in the same
+        // set simultaneously.
+        class ConnectionGuard {
+        public:
+            // Lifetime of guard must be subset of lifetime of host
+            ConnectionGuard(ConnectionCache& cache,
+                            const HostAndPort& host)
+                : _cache(cache)
+                , _host(host)
+            {
+                // this could throw.
+                _conn = _cache.getConnectionTo(_host);
+            }
+
+            ~ConnectionGuard() {
+                _cache.returnConnection(_host, _conn);
+            }
+
+            boost::shared_ptr<DBClientConnection> _conn;
+            // Reference to owner.
+            ConnectionCache& _cache;
+            const HostAndPort& _host;
+        };
+
+        // If we don't have a connection to this host cached,
+        // or we have one that is dead, we reconnect and return
+        // If we have one, we remove it from the cache and return it
+        boost::shared_ptr<DBClientConnection> getConnectionTo(const HostAndPort& host);
+
+        void returnConnection(const HostAndPort& host, boost::shared_ptr<DBClientConnection> conn);
+
+        inline bool connectionOk(const boost::shared_ptr<DBClientConnection>& conn) {
+            // checks are ordered from cheap to expensive
+            return conn && !conn->isFailed() && conn->isStillConnected();
+        }
+
+        ConnectionMap _cacheStorage;
+        boost::mutex _cacheLock;
+    };
+
     struct ReplicaSetMonitor::IsMasterReply {
         IsMasterReply() : ok(false) {}
         IsMasterReply(const HostAndPort& host, int64_t latencyMicros, const BSONObj& reply)
@@ -169,6 +223,7 @@ namespace mongo {
         int64_t latencyThresholdMicros;
         mutable PseudoRandom rand; // only used for host selection to balance load
         mutable int roundRobin; // used when useDeterministicHostSelection is true
+        mutable ConnectionCache connectionCache;
     };
 
     struct ReplicaSetMonitor::ScanState {

@@ -20,12 +20,12 @@
 #include <cstdlib>
 
 #include "mongo/base/initializer.h"
-#include "mongo/client/connpool.h"
 #include "mongo/client/private/options.h"
 #include "mongo/client/replica_set_monitor.h"
 #include "mongo/platform/atomic_word.h"
 #include "mongo/stdx/functional.h"
 #include "mongo/util/background.h"
+#include "mongo/util/net/sock.h"
 
 namespace mongo {
 namespace client {
@@ -87,10 +87,6 @@ namespace client {
             Status result = runGlobalInitializers(0, NULL, NULL);
             if (!result.isOK())
                 return result;
-
-            // Setup default pool parameters
-            mongo::pool.setName("connection pool");
-            mongo::pool.setMaxPoolSize(50);
 
             PeriodicTask::startRunningPeriodicTasks();
 

@@ -46,16 +46,21 @@ int main( int argc, const char **argv ) {
         return EXIT_FAILURE;
     }
 
-    ScopedDbConnection conn(string( "127.0.0.1:" ) + port);
+    DBClientConnection conn;
+    std::string errmsg;
+    if ( !conn.connect( string( "127.0.0.1:" ) + port, errmsg) ) {
+        cout << "couldn't connect : " << errmsg << endl;
+        return EXIT_FAILURE;
+    }
 
     const char * ns = "test.second";
 
-    conn->remove( ns , BSONObj() );
+    conn.remove( ns , BSONObj() );
 
-    conn->insert( ns , BSON( "name" << "eliot" << "num" << 17 ) );
-    conn->insert( ns , BSON( "name" << "sara" << "num" << 24 ) );
+    conn.insert( ns , BSON( "name" << "eliot" << "num" << 17 ) );
+    conn.insert( ns , BSON( "name" << "sara" << "num" << 24 ) );
 
-    std::auto_ptr<DBClientCursor> cursor = conn->query( ns , BSONObj() );
+    std::auto_ptr<DBClientCursor> cursor = conn.query( ns , BSONObj() );
 
     if (!cursor.get()) {
         cout << "query failure" << endl;
@@ -68,9 +73,7 @@ int main( int argc, const char **argv ) {
         cout << "\t" << obj.jsonString() << endl;
     }
 
-    conn->createIndex( ns , BSON( "name" << 1 << "num" << -1 ) );
-
-    conn.done();
+    conn.createIndex( ns , BSON( "name" << 1 << "num" << -1 ) );
 
     return EXIT_SUCCESS;
 }

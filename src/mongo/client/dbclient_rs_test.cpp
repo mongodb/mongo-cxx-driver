@@ -21,7 +21,6 @@
 #include "mongo/platform/basic.h"
 
 #include "mongo/bson/bson_field.h"
-#include "mongo/client/connpool.h"
 #include "mongo/client/dbclientcursor.h"
 #include "mongo/client/dbclientinterface.h"
 #include "mongo/client/dbclient_rs.h"
@@ -60,7 +59,6 @@ namespace {
     using mongo::Query;
     using mongo::ReadPreference;
     using mongo::ReplicaSetMonitor;
-    using mongo::ScopedDbConnection;
     using mongo::TagSet;
 
     /**
@@ -78,8 +76,6 @@ namespace {
         void tearDown() {
             ReplicaSetMonitor::cleanup();
             _replSet.reset();
-
-            mongo::ScopedDbConnection::clearPool();
         }
 
         MockReplicaSet* getReplSet() {
@@ -169,8 +165,6 @@ namespace {
         void tearDown() {
             ReplicaSetMonitor::cleanup();
             _replSet.reset();
-
-            mongo::ScopedDbConnection::clearPool();
         }
 
         MockReplicaSet* getReplSet() {
@@ -242,8 +236,6 @@ namespace {
         void tearDown() {
             ReplicaSetMonitor::cleanup();
             _replSet.reset();
-
-            mongo::ScopedDbConnection::clearPool();
         }
 
         MockReplicaSet* getReplSet() {
@@ -331,7 +323,6 @@ namespace {
             ReplicaSetMonitor::cleanup();
             _replSet.reset();
 
-            mongo::ScopedDbConnection::clearPool();
         }
 
         MockReplicaSet* getReplSet() {
@@ -489,7 +480,6 @@ namespace {
             ReplicaSetMonitor::cleanup();
             _replSet.reset();
 
-            mongo::ScopedDbConnection::clearPool();
         }
 
         MockReplicaSet* getReplSet() {

@@ -46,7 +46,6 @@ unittests = [
     'client/dbclient_rs_test',
     'client/index_spec_test',
     'client/replica_set_monitor_test',
-    'client/scoped_db_conn_test',
     'client/write_concern_test',
     'db/dbmessage_test',
     'dbtests/jsobjtests',

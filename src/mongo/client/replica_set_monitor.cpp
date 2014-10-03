@@ -27,7 +27,6 @@
 #include <boost/thread/condition.hpp>
 #include <boost/thread/mutex.hpp>
 
-#include "mongo/client/connpool.h"
 #include "mongo/client/options.h"
 #include "mongo/client/private/options.h"
 #include "mongo/client/replica_set_monitor_internal.h"
@@ -412,11 +411,6 @@ namespace {
         if ( clearSeedCache ) {
             seedServers.erase( name );
         }
-
-        // Kill all pooled ReplicaSetConnections for this set. They will not function correctly
-        // after we kill the ReplicaSetMonitor.
-        // TODO we may only need to do this if clearSeedCache is true.
-        pool.removeHost(name);
     }
 
     void ReplicaSetMonitor::setConfigChangeHook(ConfigChangeHook hook) {
@@ -753,17 +747,14 @@ namespace {
 
                 DEV _set->checkInvariants();
                 lk.unlock(); // relocked after attempting to call isMaster
+
                 try {
-                    ScopedDbConnection conn(ConnectionString(ns.host), socketTimeoutSecs);
-                    bool ignoredOutParam = false;
-                    Timer timer;
-                    conn->isMaster(ignoredOutParam, &reply);
-                    pingMicros = timer.micros();
-                    conn.done(); // return to pool on success.
+                    pingMicros = _set->connectionCache.timedIsMaster(ns.host, &reply);
+                } catch (...) {
+                    LOG(2) << "failed to execute isMaster on host: " << ns.host;
+                    reply = BSONObj();
                 }
-                catch (...) {
-                    reply = BSONObj(); // should be a no-op but want to be sure
-                }
+
                 lk.lock();
 
                 // Ignore the reply and return if we are no longer the current scan. This might
@@ -868,6 +859,45 @@ namespace {
     }
 
     ReplicaSetMonitor::ConfigChangeHook SetState::configChangeHook;
+
+    uint64_t ConnectionCache::timedIsMaster(const HostAndPort& host, BSONObj* out) {
+        bool ignoredOutParam;
+        ConnectionGuard guard(*this, host);
+        Timer timer;
+        guard._conn->isMaster(ignoredOutParam, out);
+        return timer.micros();
+    }
+
+    boost::shared_ptr<DBClientConnection>
+    ConnectionCache::getConnectionTo(const HostAndPort& host) {
+        {
+            boost::lock_guard<boost::mutex> lk(_cacheLock);
+            ConnectionMap::iterator connEntry = _cacheStorage.find(host);
+            if (connEntry != _cacheStorage.end() && connectionOk(connEntry->second)) {
+                boost::shared_ptr<DBClientConnection> conn(connEntry->second);
+                _cacheStorage.erase(connEntry);
+                return conn;
+            }
+        }
+
+        std::string errmsg;
+        boost::shared_ptr<DBClientConnection> conn(dynamic_cast<DBClientConnection*>
+            (ConnectionString(host).connect(errmsg, socketTimeoutSecs)));
+        if (!conn) {
+            throw DBException(str::stream() << "failed to connect to " << host.toString() << ": "
+                                            << errmsg, 0);
+        }
+        return conn;
+    }
+
+    void ConnectionCache::returnConnection(const HostAndPort& host,
+                                           boost::shared_ptr<DBClientConnection> conn) {
+        boost::lock_guard<boost::mutex> lk(_cacheLock);
+        // save our connection to the cache. We may stomp on
+        // a connection to the same host that was created while
+        // we were executing isMaster, but that is OK.
+        _cacheStorage[host] = conn;
+    }
 
     SetState::SetState(StringData name, const std::set<HostAndPort>& seedNodes)
         : name(name.toString())

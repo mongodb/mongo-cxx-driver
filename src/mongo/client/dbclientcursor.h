@@ -27,7 +27,6 @@
 
 namespace mongo {
 
-    class AScopedConnection;
     class DBClientCursorShim;
     class DBClientCursorShimCursorID;
     class DBClientCursorShimArray;
@@ -138,8 +137,6 @@ namespace mongo {
             message when ~DBClientCursor() is called. This function overrides that.
         */
         void decouple() { _ownCursor = false; }
-
-        void attach( AScopedConnection * conn );
 
         std::string originalHost() const { return _originalHost; }
 

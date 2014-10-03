@@ -354,7 +354,6 @@ namespace mongo {
     };
 
     class BSONObj;
-    class ScopedDbConnection;
     class DBClientCursor;
     class DBClientCursorBatchIterator;
 

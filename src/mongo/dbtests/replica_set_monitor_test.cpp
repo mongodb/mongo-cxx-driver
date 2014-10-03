@@ -15,7 +15,6 @@
 
 #include "mongo/platform/basic.h"
 
-#include "mongo/client/connpool.h"
 #include "mongo/client/dbclientinterface.h"
 #include "mongo/client/dbclient_rs.h"
 #include "mongo/client/replica_set_monitor.h"
@@ -45,7 +44,6 @@ using mongo::ReadPreference;
 using mongo::ReadPreferenceSetting;
 using mongo::ReplicaSetMonitor;
 using mongo::ReplicaSetMonitorPtr;
-using mongo::ScopedDbConnection;
 using mongo::TagSet;
 
 // Pull nested types to top-level scope
@@ -1385,7 +1383,6 @@ namespace mongo_test {
             ConnectionString::setConnectionHook(_originalConnectionHook);
             ReplicaSetMonitor::cleanup();
             _replSet.reset();
-            mongo::ScopedDbConnection::clearPool();
         }
 
         MockReplicaSet* getReplSet() {
@@ -1468,7 +1465,6 @@ namespace mongo_test {
 
         ReplicaSetMonitor::cleanup();
         ConnectionString::setConnectionHook(originalConnHook);
-        mongo::ScopedDbConnection::clearPool();
     }
 
     /**
