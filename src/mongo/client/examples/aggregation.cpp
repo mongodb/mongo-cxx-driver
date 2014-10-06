@@ -49,6 +49,13 @@ int main(int argc, char* argv[]) {
     conn.connect(std::string("localhost:").append(port));
     conn.dropCollection("test.test");
 
+    // Don't run on MongoDB < 2.2
+    BSONObj cmdResult;
+    conn.runCommand("admin", BSON("buildinfo" << true), cmdResult);
+    std::vector<BSONElement> versionArray = cmdResult["versionArray"].Array();
+    if (versionArray[0].Int() < 2 || versionArray[1].Int() < 2)
+        return EXIT_SUCCESS;
+
     conn.insert("test.test", BSON("x" << 0));
     conn.insert("test.test", BSON("x" << 1));
     conn.insert("test.test", BSON("x" << 1));

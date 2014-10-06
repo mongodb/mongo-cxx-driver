@@ -814,25 +814,27 @@ namespace {
     }
 
     TEST_F(DBClientTest, Aggregate) {
-        BSONObj doc = BSON("hello" << "world");
+        if (serverGTE(&c, 2, 2)) {
+            BSONObj doc = BSON("hello" << "world");
 
-        BSONObj pipeline = BSON("0" << BSON("$match" << doc));
+            BSONObj pipeline = BSON("0" << BSON("$match" << doc));
 
-        c.insert(TEST_NS, doc);
-        c.insert(TEST_NS, doc);
+            c.insert(TEST_NS, doc);
+            c.insert(TEST_NS, doc);
 
-        std::auto_ptr<DBClientCursor> cursor = c.aggregate(TEST_NS, pipeline);
-        ASSERT_TRUE(cursor.get());
+            std::auto_ptr<DBClientCursor> cursor = c.aggregate(TEST_NS, pipeline);
+            ASSERT_TRUE(cursor.get());
 
-        for (int i = 0; i < 2; i++) {
-            ASSERT_TRUE(cursor->more());
+            for (int i = 0; i < 2; i++) {
+                ASSERT_TRUE(cursor->more());
 
-            BSONObj result = cursor->next();
-            ASSERT_TRUE(result.valid());
-            ASSERT_EQUALS(result["hello"].String(), "world");
+                BSONObj result = cursor->next();
+                ASSERT_TRUE(result.valid());
+                ASSERT_EQUALS(result["hello"].String(), "world");
+            }
+
+            ASSERT_FALSE(cursor->more());
         }
-
-        ASSERT_FALSE(cursor->more());
     }
 
     TEST_F(DBClientTest, CreateCollection) {
@@ -846,7 +848,9 @@ namespace {
 
         bool server26plus = serverGTE(&c, 2, 6);
 
-        ASSERT_EQUALS(info.getIntField("userFlags"), server26plus ? 1 : 0);
+        if (serverGTE(&c, 2, 2)) {
+            ASSERT_EQUALS(info.getIntField("userFlags"), server26plus ? 1 : 0);
+        }
         ASSERT_EQUALS(info.getIntField("nindexes"), 1);
     }
 
@@ -859,7 +863,9 @@ namespace {
         BSONObj info;
         ASSERT_TRUE(c.runCommand(TEST_DB, BSON("collstats" << TEST_COLL), info));
 
-        ASSERT_EQUALS(info.getIntField("userFlags"), 0);
+        if (serverGTE(&c, 2, 2)) {
+            ASSERT_EQUALS(info.getIntField("userFlags"), 0);
+        }
         ASSERT_EQUALS(info.getIntField("nindexes"), 0);
     }
 
