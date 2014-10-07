@@ -1395,8 +1395,8 @@ namespace mongo {
 
 #ifdef MONGO_SSL
         if (client::Options::current().SSLEnabled() &&
-            !p->secure(sslManager(), _server.host()) {
-                return false;
+            !p->secure(sslManager(), _server.host())) {
+            return false;
         }
 #endif
         BSONObj info;
