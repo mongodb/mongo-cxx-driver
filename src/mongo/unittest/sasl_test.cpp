@@ -15,7 +15,10 @@
 
 #include "mongo/platform/basic.h"
 
+#include <boost/scoped_ptr.hpp>
+
 #include "mongo/unittest/integration_test.h"
+#include "mongo/util/mongoutils/str.h"
 #include "mongo/client/dbclient.h"
 
 using namespace mongo;
@@ -67,4 +70,62 @@ namespace {
         ASSERT_TRUE(result["kerberos"].trueValue());
         ASSERT_EQUALS(result["authenticated"].str(), "yeah");
     }
+
+    TEST(SASLAuthentication, DISABLED_KerberosProperties) {
+        // You must run kinit -p drivers@LDAPTEST.10GEN.CC before this test
+        std::string connStr = str::stream()
+            << "mongodb://drivers@ldaptest.10gen.cc/?"
+            << "authMechanism=GSSAPI" << "&"
+            << "authMechanismProperties="
+                << "SERVICE_NAME:mongodb" << ","
+                << "SERVICE_REALM:LDAPTEST.10GEN.CC";
+
+        std::string errmsg;
+        ConnectionString parsed(ConnectionString::parse(connStr, errmsg));
+        std::cout << errmsg << std::endl;
+        boost::scoped_ptr<DBClientConnection> conn;
+
+        ASSERT_NO_THROW(conn.reset(dynamic_cast<DBClientConnection*>(parsed.connect(errmsg, 0))));
+
+        BSONObj result = conn->findOne("kerberos.test", Query("{}"));
+        ASSERT_TRUE(result["kerberos"].trueValue());
+        ASSERT_EQUALS(result["authenticated"].str(), "yeah");
+    }
+
+    TEST(SASLAuthentication, DISABLED_KerberosPropertiesInvalid) {
+        // You must run kinit -p drivers@LDAPTEST.10GEN.CC before this test
+        std::string connStr = str::stream()
+            << "mongodb://drivers@ldaptest.10gen.cc/?"
+            << "authMechanism=GSSAPI" << "&"
+            << "authMechanismProperties="
+                << "SERVICE_NAME:mongodb" << ","
+                << "SERVICE_REALM:LDAPTEST.10GEN.CC" << ","
+                << "I_AM_NOT_VALID:meow";
+
+        std::string errmsg;
+        ConnectionString parsed(ConnectionString::parse(connStr, errmsg));
+        std::cout << errmsg << std::endl;
+        boost::scoped_ptr<DBClientConnection> conn;
+        ASSERT_THROW(conn.reset(dynamic_cast<DBClientConnection*>(parsed.connect(errmsg, 0))),
+                     UserException);
+    }
+
+    TEST(SASLAuthentication, DISABLED_KerberosPropertiesRedundant) {
+        // You must run kinit -p drivers@LDAPTEST.10GEN.CC before this test
+        std::string connStr = str::stream()
+            << "mongodb://drivers@ldaptest.10gen.cc/?"
+            << "gssapiServiceName=thisshouldnotwork" << "&"  // can't set this and SERVICE_NAME
+            << "authMechanism=GSSAPI" << "&"
+            << "authMechanismProperties="
+                << "SERVICE_NAME:mongodb" << ","
+                << "SERVICE_REALM:LDAPTEST.10GEN.CC";
+
+        std::string errmsg;
+        ConnectionString parsed(ConnectionString::parse(connStr, errmsg));
+        std::cout << errmsg << std::endl;
+        boost::scoped_ptr<DBClientConnection> conn;
+        ASSERT_THROW(conn.reset(dynamic_cast<DBClientConnection*>(parsed.connect(errmsg, 0))),
+                     UserException);
+    }
+
 } // namespace

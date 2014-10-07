@@ -19,6 +19,7 @@
 
 #include "mongo/platform/basic.h"
 
+#include "mongo/base/init.h"
 #include "mongo/bson/util/bson_extract.h"
 #include "mongo/bson/util/builder.h"
 #include "mongo/client/constants.h"
@@ -44,6 +45,7 @@
 #include "mongo/util/net/ssl_manager.h"
 #include "mongo/util/password_digest.h"
 
+#include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/split.hpp>
@@ -139,12 +141,53 @@ namespace mongo {
         _string = ss.str();
     }
 
+    namespace {
+        const char kAuthMechanismPropertiesKey[] = "mechanism_properties";
+
+        // CANONICALIZE_HOST_NAME is currently unsupported
+        const char kAuthServiceName[] = "SERVICE_NAME";
+        const char kAuthServiceRealm[] = "SERVICE_REALM";
+
+        const char* const kSupportedAuthMechanismProperties[] = {
+            kAuthServiceName,
+            kAuthServiceRealm
+        };
+
+        // bootleg std::end for c-style arrays.
+        template<class T, std::size_t N>
+        T* endOf(T (&arr)[N]) { return arr + N; }
+
+        BSONObj parseAuthMechanismProperties(const std::string& propStr) {
+            BSONObjBuilder bob;
+            std::vector<std::string> props;
+            boost::algorithm::split(props, propStr, boost::algorithm::is_any_of(",:"));
+            for (std::vector<std::string>::const_iterator it = props.begin();
+                 it != props.end(); ++it) {
+                std::string prop((boost::algorithm::to_upper_copy(*it))); // normalize case
+                uassert(ErrorCodes::FailedToParse,
+                         str::stream() << "authMechanismProperty: " << *it
+                                       << " is not supported",
+                         std::count(kSupportedAuthMechanismProperties,
+                                    endOf(kSupportedAuthMechanismProperties),
+                                    prop));
+                ++it;
+                uassert(ErrorCodes::FailedToParse,
+                         str::stream() << "authMechanismProperty: "
+                                       << prop << " must have a value",
+                         it != props.end());
+                bob.append(prop, *it);
+            }
+            return bob.obj();
+        }
+    }  // namespace
+
     BSONObj ConnectionString::_makeAuthObjFromOptions() const {
         BSONObjBuilder bob;
 
         // Add the username and optional password
         invariant(!_user.empty());
-        bob.append("user", _user);
+        std::string username(_user);  // may have to tack on service realm before we append
+
         if (!_password.empty())
             bob.append("pwd", _password);
 
@@ -156,9 +199,34 @@ namespace mongo {
         if (!elt.eoo())
             bob.appendAs(elt, "mechanism");
 
+        elt = _options.getField("authMechanismProperties");
+        if (!elt.eoo()) {
+            BSONObj parsed(parseAuthMechanismProperties(elt.String()));
+
+            bool hasNameProp = parsed.hasField(kAuthServiceName);
+            bool hasRealmProp = parsed.hasField(kAuthServiceRealm);
+
+            uassert(ErrorCodes::FailedToParse,
+                    "Cannot specify both gssapiServiceName and SERVICE_NAME",
+                    !(hasNameProp && _options.hasField("gssapiServiceName")));
+            // we append the parsed object so that mechanisms that don't accept it can assert.
+            bob.append(kAuthMechanismPropertiesKey, parsed);
+            // we still append using the old way the SASL code expects it
+            if (hasNameProp) {
+                bob.append("serviceName", parsed[kAuthServiceName].String());
+            }
+            // if we specified a realm, we just append it to the username as the SASL code
+            // expects it that way.
+            if (hasRealmProp) {
+                username.append("@").append(parsed[kAuthServiceRealm].String());
+            }
+        }
+
         elt = _options.getField("gssapiServiceName");
         if (!elt.eoo())
             bob.appendAs(elt, "serviceName");
+
+        bob.append("user", username);
 
         return bob.obj();
     }
@@ -794,6 +862,10 @@ namespace mongo {
                                                                saslCommandDigestPasswordFieldName,
                                                                true,
                                                                &digestPassword));
+            uassert(ErrorCodes::AuthenticationFailed,
+                    "Cannot set mechanism_properties when using MONGODB_CR",
+                    !params.hasField(kAuthMechanismPropertiesKey));
+
             BSONObj result;
             uassert(result["code"].Int(),
                     result.toString(),
@@ -827,6 +899,10 @@ namespace mongo {
                     "\" does not match the provided client certificate user \"" +
                     getSSLManager()->getClientSubjectName() + "\"",
                     user ==  getSSLManager()->getClientSubjectName());
+
+            uassert(ErrorCodes::AuthenticationFailed,
+                    "Cannot set mechanism_properties when using MONGODB_X509",
+                    !params.hasField(kAuthMechanismPropertiesKey));
 
             BSONObj result;
             uassert(result["code"].Int(),

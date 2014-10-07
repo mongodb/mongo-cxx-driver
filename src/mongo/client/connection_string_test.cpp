@@ -114,6 +114,10 @@ namespace {
         { "mongodb://user@[::1]:1234,127.0.0.2:1234/?replicaSet=replName", "user", "", kSet, "replName", 2, 1, "" },
 
         { "mongodb://[::1]:1234,[::1]:1234/dbName?foo=a&c=b&replicaSet=replName", "", "", kSet, "replName", 2, 3, "dbName"},
+
+        { "mongodb://user:pwd@[::1]/?authMechanism=GSSAPI&authMechanismProperties=SERVICE_NAME:foobar", "user", "pwd", kMaster, "", 1, 2, "" },
+
+        { "mongodb://user:pwd@[::1]/?authMechanism=GSSAPI&gssapiServiceName=foobar", "user", "pwd", kMaster, "", 1, 2, "" }
     };
 
     const InvalidURITestCase invalidCases[] = {
