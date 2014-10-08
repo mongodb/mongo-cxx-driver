@@ -19,11 +19,6 @@
 #include "mongo/client/sasl_scramsha1_client_conversation.h"
 
 #include <boost/algorithm/string/replace.hpp>
-#ifdef MONGO_SSL
-#include <openssl/sha.h>
-#include <openssl/evp.h>
-#include <openssl/hmac.h>
-#endif
 
 #include "mongo/base/parse_number.h"
 #include "mongo/client/sasl_client_session.h"
@@ -83,10 +78,7 @@ namespace mongo {
      * n,a=authzid,n=encoded-username,r=client-nonce
      */
     StatusWith<bool> SaslSCRAMSHA1ClientConversation::_firstStep(std::string* outputData) {
-#ifndef MONGO_SSL
-        return StatusWith<bool>(ErrorCodes::InternalError,
-            "The server is not compiled with SSL support");
-#else
+        
         // Create text-based nonce as base64 encoding of a binary blob of length multiple of 3
         const int nonceLenQWords = 3;
         uint64_t binaryNonce[nonceLenQWords];
@@ -113,7 +105,6 @@ namespace mongo {
 
         return StatusWith<bool>(false);
 
-#endif // MONGO_SSL
     }
 
     /**
@@ -126,10 +117,6 @@ namespace mongo {
      **/
     StatusWith<bool> SaslSCRAMSHA1ClientConversation::_secondStep(const std::vector<std::string>& input,
                                                                   std::string* outputData) {
-#ifndef MONGO_SSL
-        return StatusWith<bool>(ErrorCodes::InternalError,
-            "The server is not compiled with SSL support");
-#else
         if (input.size() != 3) {
             return StatusWith<bool>(ErrorCodes::BadValue, mongoutils::str::stream() <<
                 "Incorrect number of arguments for first SCRAM-SHA-1 server message, got " <<
@@ -188,7 +175,6 @@ namespace mongo {
         *outputData = sb.str();
 
         return StatusWith<bool>(false);
-#endif // MONGO_SSL
     }
 
     /**
@@ -200,10 +186,6 @@ namespace mongo {
      **/
     StatusWith<bool> SaslSCRAMSHA1ClientConversation::_thirdStep(const std::vector<std::string>& input,
                                                                   std::string* outputData) {
-#ifndef MONGO_SSL
-        return StatusWith<bool>(ErrorCodes::InternalError,
-            "The server is not compiled with SSL support");
-#else
 
         if (input.size() != 1) {
             return StatusWith<bool>(ErrorCodes::BadValue, mongoutils::str::stream() <<
@@ -236,6 +218,5 @@ namespace mongo {
         *outputData = "";
 
         return StatusWith<bool>(true);
-#endif // MONGO_SSL
     }
 }  // namespace mongo

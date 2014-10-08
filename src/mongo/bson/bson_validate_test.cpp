@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#define MONGO_LOG_DEFAULT_COMPONENT ::mongo::logger::LogComponent::kDefault
+
 #include <boost/scoped_array.hpp>
 
 #include "mongo/base/data_view.h"

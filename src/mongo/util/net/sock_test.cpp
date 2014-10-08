@@ -28,7 +28,6 @@
 #include "mongo/unittest/unittest.h"
 #include "mongo/util/concurrency/synchronization.h"
 #include "mongo/util/fail_point_service.h"
-#include "mongo/util/log.h"
 
 namespace {
 

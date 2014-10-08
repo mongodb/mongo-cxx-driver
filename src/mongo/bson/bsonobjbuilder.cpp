@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#define MONGO_LOG_DEFAULT_COMPONENT ::mongo::logger::LogComponent::kDefault
+
 #include "mongo/db/jsobj.h"
 
 #include <boost/lexical_cast.hpp>

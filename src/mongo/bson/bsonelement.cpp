@@ -13,6 +13,8 @@
  *    limitations under the License.
  */
 
+#define MONGO_LOG_DEFAULT_COMPONENT ::mongo::logger::LogComponent::kDefault
+
 #include "mongo/bson/bsonelement.h"
 
 #include "mongo/base/data_cursor.h"

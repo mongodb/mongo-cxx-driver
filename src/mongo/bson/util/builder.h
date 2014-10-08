@@ -28,6 +28,7 @@
 
 #include "mongo/base/data_view.h"
 #include "mongo/base/string_data.h"
+#include "mongo/bson/inline_decls.h"
 #include "mongo/util/assert_util.h"
 
 namespace mongo {

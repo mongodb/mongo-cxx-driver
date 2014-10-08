@@ -810,6 +810,8 @@ if has_option( "ssl" ):
         env.Append( LIBS=["crypto"] )
     if has_option("ssl-fips-capability"):
         env.Append( CPPDEFINES=["MONGO_SSL_FIPS"] )
+else:
+    env["MONGO_SSL"] = False
 
 try:
     umask = os.umask(022)
@@ -1584,6 +1586,10 @@ def doConfigure(myenv):
         conf.CheckLib( "nsl" )
 
     conf.env['MONGO_SASL'] = bool(has_option("use-sasl-client"))
+
+    if conf.env['MONGO_SASL'] and not conf.env['MONGO_SSL']:
+        print("SASL support requires --ssl")
+        Exit(1)
 
     if conf.env['MONGO_SASL'] and not conf.CheckLibWithHeader(
             "sasl2", 

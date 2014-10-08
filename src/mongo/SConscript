@@ -58,12 +58,16 @@ unittests = [
     'platform/atomic_word_test',
     'platform/process_id_test',
     'platform/random_test',
+    'util/mongoutils/str_test',
     'util/net/hostandport_test',
     'util/net/sock_test',
     'util/string_map_test',
     'util/stringutils_test',
     'util/time_support_test',
 ]
+
+if env['MONGO_SSL']:
+   unittests += ['crypto/crypto_test']
 
 gtestEnv = staticClientEnv.Clone()
 gtestEnv.PrependUnique(
@@ -93,8 +97,11 @@ integration_tests = [
     'dbclient_test',
     'dbclient_writer_test',
     'gridfs_test',
-    'sasl_test'
 ]
+
+if env['MONGO_SASL']:
+   integration_tests += ['sasl_test']
+
 integrationTestEnv = gtestEnv.Clone()
 integrationTestEnv.PrependUnique(
     LIBS=[

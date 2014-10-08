@@ -16,11 +16,11 @@
  *    limitations under the License.
  */
 
+#define MONGO_LOG_DEFAULT_COMPONENT ::mongo::logger::LogComponent::kDefault
+
 #include "mongo/bson/util/builder.h"
 #include "mongo/db/jsobj.h"
 #include "mongo/db/json.h"
-//#include "mongo/db/storage/mmap_v1/btree/key.h"
-//#include "mongo/dbtests/dbtests.h"
 #include "mongo/platform/float_utils.h"
 #include "mongo/unittest/unittest.h"
 #include "mongo/util/embedded_builder.h"

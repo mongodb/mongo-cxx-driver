@@ -26,6 +26,7 @@
 // log.h is a private header and is not meant to be included in user
 // applications.  We include it here only as a test, to simulate the
 // driver's internal logging functionality.
+#define MONGO_LOG_DEFAULT_COMPONENT ::mongo::logger::LogComponent::kDefault;
 #include "mongo/util/log.h"
 
 #ifndef verify

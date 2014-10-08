@@ -16,6 +16,8 @@
  *    limitations under the License.
  */
 
+#define MONGO_LOG_DEFAULT_COMPONENT ::mongo::logger::LogComponent::kDefault
+
 #include <limits>
 
 #include "mongo/db/jsobj.h"
