@@ -141,7 +141,7 @@ namespace mongo {
             }
             return xt;
         }
-    }
+    }  // namespace
 
     bool BackgroundJob::wait( unsigned msTimeOut ) {
         verify( !_selfDelete ); // you cannot call wait on a self-deleting job

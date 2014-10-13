@@ -171,8 +171,12 @@ namespace mongo {
          * as well. As a consequence, NEVER call this if you have other threads that have a
          * DBClientReplicaSet instance. After this is called, the behavior of other methods in this
          * class is undefined until a subsequent call to initialize.
+         *
+         * The gracePeriodMillis parameter determines the maximum amount of time to wait. A value
+         * of 0 (the default) indicates no timeout. If a nonzero timeout is specified, a return value
+         * of Status::OK() indicates that shutdown completed successfully in the allotted time.
          */
-        static void MONGO_CLIENT_FUNC cleanup();
+        static Status MONGO_CLIENT_FUNC shutdown(int gracePeriodMillis = 0);
 
         /**
          * If a ReplicaSetMonitor has been refreshed more than this many times in a row without

@@ -1382,7 +1382,7 @@ namespace mongo_test {
 
         void tearDown() {
             ConnectionString::setConnectionHook(_originalConnectionHook);
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::shutdown();
             _replSet.reset();
         }
 
@@ -1465,7 +1465,7 @@ namespace mongo_test {
             replMonitor->startOrContinueRefresh().refreshAll();
         }
 
-        ReplicaSetMonitor::cleanup();
+        ReplicaSetMonitor::shutdown();
         ConnectionString::setConnectionHook(originalConnHook);
     }
 
@@ -1506,7 +1506,7 @@ namespace mongo_test {
 
         void tearDown() {
             ConnectionString::setConnectionHook(_originalConnectionHook);
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::shutdown();
             _replSet.reset();
         }
 

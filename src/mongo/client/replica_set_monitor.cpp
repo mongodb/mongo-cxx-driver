@@ -68,7 +68,7 @@ namespace {
 
     /*  Replica Set Monitor global state
      *
-     *          watcheLifetimeLock       -- mutex held during creation/destruction of
+     *          watcherLifetimeLock       -- mutex held during creation/destruction of
      *                                      replicaSetMonitorWatcher
      *          replicaSetMonitorWatcher -- background job to check Replica Set members
      *          setsLock                 -- mutex protecting seedServers and sets
@@ -340,11 +340,10 @@ namespace {
         if ( ! m )
             m = boost::make_shared<ReplicaSetMonitor>( name , servers );
 
-        /* Don't need to hold the lifetime lock for safeGo as
-         * 1) we assume the monitor is created as the contract of this class is such that initialize()
-         *    must have been called.
-         * 2) replicaSetMonitorWatcher synchronizes safeGo internally using the _monitorMutex
-         */
+        // Don't need to hold the lifetime lock for safeGo as
+        // 1) we assume the monitor is created as the contract of this class is such that initialize()
+        //    must have been called.
+        // 2) replicaSetMonitorWatcher synchronizes safeGo internally using the _monitorMutex
         replicaSetMonitorWatcher->safeGo();
     }
 
@@ -441,31 +440,32 @@ namespace {
     // set, so we don't have to pay the cost of the extra thread unless needed.
     void ReplicaSetMonitor::initialize() {
         boost::lock_guard<boost::mutex> lock(watcherLifetimeLock);
-        if (!replicaSetMonitorWatcher) {
-            {
-                boost::lock_guard<boost::mutex> lockSets(setsLock);
-                seedServers = StringMap<set<HostAndPort> >();
-                sets = StringMap<ReplicaSetMonitorPtr>();
-            }
-            replicaSetMonitorWatcher.reset(new ReplicaSetMonitorWatcher());
+        if (replicaSetMonitorWatcher) {
+            return;
         }
+        replicaSetMonitorWatcher.reset(new ReplicaSetMonitorWatcher());
     }
 
-    void ReplicaSetMonitor::cleanup() {
+    Status ReplicaSetMonitor::shutdown(int gracePeriodMillis) {
         boost::lock_guard<boost::mutex> lock(watcherLifetimeLock);
-        if (replicaSetMonitorWatcher) {
-            // Call cancel first, in case the RSMW was never started.
-            replicaSetMonitorWatcher->cancel();
-            replicaSetMonitorWatcher->stop();
-            replicaSetMonitorWatcher->wait();
-
-            replicaSetMonitorWatcher.reset();
-            {
-                boost::lock_guard<boost::mutex> lock(setsLock);
-                sets = StringMap<ReplicaSetMonitorPtr>();
-                seedServers = StringMap<set<HostAndPort> >();
-            }
+        if (!replicaSetMonitorWatcher) {
+            return Status(ErrorCodes::IllegalOperation,
+                          "ReplicaSetMonitorWatcher is not currently running");
         }
+        // Call cancel first, in case the RSMW was never started.
+        replicaSetMonitorWatcher->cancel();
+        replicaSetMonitorWatcher->stop();
+        bool success = replicaSetMonitorWatcher->wait(gracePeriodMillis);
+        replicaSetMonitorWatcher.reset();
+
+        boost::lock_guard<boost::mutex> lockSets(setsLock);
+        sets = StringMap<ReplicaSetMonitorPtr>();
+        seedServers = StringMap<set<HostAndPort> >();
+
+        return success ?
+            Status::OK() :
+            Status(ErrorCodes::InternalError,
+                   "Timed out waiting for ReplicaSetMonitorWatcher to shutdown");
     }
 
     Refresher::Refresher(const SetStatePtr& setState)

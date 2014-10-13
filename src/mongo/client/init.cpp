@@ -110,7 +110,7 @@ namespace client {
 
         if (initStatus == 1) {
 
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::shutdown(Options::current().autoShutdownGracePeriodMillis());
             shutdownNetworking();
             return Status::OK();
         }

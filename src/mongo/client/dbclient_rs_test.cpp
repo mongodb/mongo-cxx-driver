@@ -74,7 +74,7 @@ namespace {
         }
 
         void tearDown() {
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::shutdown();
             _replSet.reset();
         }
 
@@ -163,7 +163,7 @@ namespace {
         }
 
         void tearDown() {
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::shutdown();
             _replSet.reset();
         }
 
@@ -234,7 +234,7 @@ namespace {
         }
 
         void tearDown() {
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::shutdown();
             _replSet.reset();
         }
 
@@ -320,7 +320,7 @@ namespace {
         }
 
         void tearDown() {
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::shutdown();
             _replSet.reset();
 
         }
@@ -477,7 +477,7 @@ namespace {
             ReplicaSetMonitor::useDeterministicHostSelection = false;
 
             ConnectionString::setConnectionHook(_originalConnectionHook);
-            ReplicaSetMonitor::cleanup();
+            ReplicaSetMonitor::shutdown();
             _replSet.reset();
 
         }
