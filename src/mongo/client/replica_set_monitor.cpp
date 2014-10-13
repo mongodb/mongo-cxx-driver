@@ -438,34 +438,36 @@ namespace {
     // Note that this doesn't actually start the watcher, it just creates it.
     // The watcher is lazily started when we start monitoring our first replica
     // set, so we don't have to pay the cost of the extra thread unless needed.
-    void ReplicaSetMonitor::initialize() {
+    Status ReplicaSetMonitor::initialize() {
         boost::lock_guard<boost::mutex> lock(watcherLifetimeLock);
         if (replicaSetMonitorWatcher) {
-            return;
+            return Status(ErrorCodes::IllegalOperation,
+                          "ReplicaSetMonitorWatcher has already been initialized");
         }
         replicaSetMonitorWatcher.reset(new ReplicaSetMonitorWatcher());
+        return Status::OK();
     }
 
     Status ReplicaSetMonitor::shutdown(int gracePeriodMillis) {
         boost::lock_guard<boost::mutex> lock(watcherLifetimeLock);
         if (!replicaSetMonitorWatcher) {
             return Status(ErrorCodes::IllegalOperation,
-                          "ReplicaSetMonitorWatcher is not currently running");
+                          "ReplicaSetMonitorWatcher has not been initialized");
         }
         // Call cancel first, in case the RSMW was never started.
         replicaSetMonitorWatcher->cancel();
         replicaSetMonitorWatcher->stop();
         bool success = replicaSetMonitorWatcher->wait(gracePeriodMillis);
+        if (!success) {
+            return Status(ErrorCodes::InternalError,
+                          "Timed out waiting for ReplicaSetMonitorWatcher to shutdown");
+        }
         replicaSetMonitorWatcher.reset();
-
         boost::lock_guard<boost::mutex> lockSets(setsLock);
         sets = StringMap<ReplicaSetMonitorPtr>();
         seedServers = StringMap<set<HostAndPort> >();
 
-        return success ?
-            Status::OK() :
-            Status(ErrorCodes::InternalError,
-                   "Timed out waiting for ReplicaSetMonitorWatcher to shutdown");
+        return Status::OK();
     }
 
     Refresher::Refresher(const SetStatePtr& setState)

@@ -164,7 +164,7 @@ namespace mongo {
          * and cleanup in tests. The behavior of other methods in this class is undefined if initialize()
          * has not been called.
          */
-        static void MONGO_CLIENT_FUNC initialize();
+        static Status MONGO_CLIENT_FUNC initialize();
 
         /**
          * Permanently stops all monitoring on replica sets and clears all cached information
