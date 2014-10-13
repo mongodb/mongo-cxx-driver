@@ -441,7 +441,7 @@ namespace {
     Status ReplicaSetMonitor::initialize() {
         boost::lock_guard<boost::mutex> lock(watcherLifetimeLock);
         if (replicaSetMonitorWatcher) {
-            return Status(ErrorCodes::IllegalOperation,
+            return Status(ErrorCodes::AlreadyInitialized,
                           "ReplicaSetMonitorWatcher has already been initialized");
         }
         replicaSetMonitorWatcher.reset(new ReplicaSetMonitorWatcher());
@@ -451,7 +451,7 @@ namespace {
     Status ReplicaSetMonitor::shutdown(int gracePeriodMillis) {
         boost::lock_guard<boost::mutex> lock(watcherLifetimeLock);
         if (!replicaSetMonitorWatcher) {
-            return Status(ErrorCodes::IllegalOperation,
+            return Status(ErrorCodes::InternalError,
                           "ReplicaSetMonitorWatcher has not been initialized");
         }
         // Call cancel first, in case the RSMW was never started.
@@ -459,7 +459,7 @@ namespace {
         replicaSetMonitorWatcher->stop();
         bool success = replicaSetMonitorWatcher->wait(gracePeriodMillis);
         if (!success) {
-            return Status(ErrorCodes::InternalError,
+            return Status(ErrorCodes::ExceededTimeLimit,
                           "Timed out waiting for ReplicaSetMonitorWatcher to shutdown");
         }
         replicaSetMonitorWatcher.reset();

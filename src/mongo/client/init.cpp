@@ -25,6 +25,7 @@
 #include "mongo/platform/atomic_word.h"
 #include "mongo/stdx/functional.h"
 #include "mongo/util/background.h"
+#include "mongo/util/log.h"
 #include "mongo/util/net/sock.h"
 
 namespace mongo {
@@ -115,7 +116,12 @@ namespace client {
 
             Status result = ReplicaSetMonitor::shutdown(Options::current().autoShutdownGracePeriodMillis());
             if (!result.isOK()) {
-                return result;
+                if (result == ErrorCodes::ExceededTimeLimit) {
+                    return result;
+                }
+                warning() << "The ReplicaSetMonitor was shutdown prior to driver termination. "
+                          << "This is a non-fatal error that can occur if you are calling "
+                          << "ReplicaSetMonitor::shutdown() manually." << std::endl;
             }
             shutdownNetworking();
             return Status::OK();
