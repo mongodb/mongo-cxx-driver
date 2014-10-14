@@ -607,9 +607,9 @@ namespace mongo {
 
         virtual void insert( const std::string &ns, const std::vector< BSONObj >& v , int flags=0, const WriteConcern* wc=NULL ) = 0;
 
-        virtual void remove( const std::string &ns , Query query, bool justOne = 0, const WriteConcern* wc=NULL ) = 0;
+        virtual void remove( const std::string &ns, Query query, bool justOne = false, const WriteConcern* wc=NULL ) = 0;
 
-        virtual void remove( const std::string &ns , Query query, int flags, const WriteConcern* wc=NULL ) = 0;
+        virtual void remove( const std::string &ns, Query query, int flags, const WriteConcern* wc=NULL ) = 0;
 
         virtual void update( const std::string &ns,
                              Query query,
