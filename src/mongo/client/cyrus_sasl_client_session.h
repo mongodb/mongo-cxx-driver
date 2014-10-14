@@ -23,7 +23,7 @@ namespace mongo {
      * Implementation of the client side of a SASL authentication conversation.
      * using the Cyrus SASL library.
      */
-    class MONGO_CLIENT_API CyrusSaslClientSession : public SaslClientSession {
+    class CyrusSaslClientSession : public SaslClientSession {
         MONGO_DISALLOW_COPYING(CyrusSaslClientSession);
     public:
 

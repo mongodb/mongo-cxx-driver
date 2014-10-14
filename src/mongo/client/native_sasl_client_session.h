@@ -25,7 +25,7 @@ namespace mongo {
      * Implementation of the client side of a SASL authentication conversation using the
      * native SASL implementation.
      */
-    class MONGO_CLIENT_API NativeSaslClientSession : public SaslClientSession {
+    class NativeSaslClientSession : public SaslClientSession {
         MONGO_DISALLOW_COPYING(NativeSaslClientSession);
     public:
 

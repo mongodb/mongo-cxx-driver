@@ -32,7 +32,7 @@ namespace mongo {
      * 2.5 years will be supported.  Since a typical tick duration will be under 10 per nanosecond,
      * if not below 1 per nanosecond, this should not be an issue.
      */
-    class MONGO_CLIENT_API Timer /*copyable*/ {
+    class Timer /*copyable*/ {
     public:
         static const long long millisPerSecond = 1000;
         static const long long microsPerSecond = 1000 * millisPerSecond;

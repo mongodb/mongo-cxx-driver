@@ -35,7 +35,7 @@ namespace mongo {
      * Holds state about a replica set and provides a means to refresh the local view.
      * All methods perform the required synchronization to allow callers from multiple threads.
      */
-    class MONGO_CLIENT_API ReplicaSetMonitor {
+    class ReplicaSetMonitor {
         MONGO_DISALLOW_COPYING(ReplicaSetMonitor);
     public:
         class Refresher;
@@ -126,26 +126,26 @@ namespace mongo {
         /**
          * Creates a new ReplicaSetMonitor, if it doesn't already exist.
          */
-        static void MONGO_CLIENT_FUNC createIfNeeded(const std::string& name , const std::set<HostAndPort>& servers);
+        static void createIfNeeded(const std::string& name , const std::set<HostAndPort>& servers);
 
         /**
          * gets a cached Monitor per name. If the monitor is not found and createFromSeed is false,
          * it will return none. If createFromSeed is true, it will try to look up the last known
          * servers list for this set and will create a new monitor using that as the seed list.
          */
-        static ReplicaSetMonitorPtr MONGO_CLIENT_FUNC get(const std::string& name, bool createFromSeed = false);
+        static ReplicaSetMonitorPtr get(const std::string& name, bool createFromSeed = false);
 
         /**
          * Returns all the currently tracked replica set names.
          */
-        static std::set<std::string> MONGO_CLIENT_FUNC getAllTrackedSets();
+        static std::set<std::string> getAllTrackedSets();
 
         /**
          * Removes the ReplicaSetMonitor for the given set name from _sets, which will delete it.
          * If clearSeedCache is true, then the cached seed string for this Replica Set will be
          * removed from _seedServers.
          */
-        static void MONGO_CLIENT_FUNC remove(const std::string& name, bool clearSeedCache = false);
+        static void remove(const std::string& name, bool clearSeedCache = false);
 
         /**
          * Sets the hook to be called whenever the config of any replica set changes.
@@ -156,7 +156,7 @@ namespace mongo {
          *
          * The hook must not be changed while the program has multiple threads.
          */
-        static void MONGO_CLIENT_FUNC setConfigChangeHook(ConfigChangeHook hook);
+        static void setConfigChangeHook(ConfigChangeHook hook);
 
         /**
          * Starts the ReplicaSetMonitorWatcher. You shouldn't have to call this in production code
@@ -164,7 +164,7 @@ namespace mongo {
          * and cleanup in tests. The behavior of other methods in this class is undefined if initialize()
          * has not been called.
          */
-        static Status MONGO_CLIENT_FUNC initialize();
+        static Status initialize();
 
         /**
          * Permanently stops all monitoring on replica sets and clears all cached information
@@ -176,7 +176,7 @@ namespace mongo {
          * of 0 (the default) indicates no timeout. If a nonzero timeout is specified, a return value
          * of Status::OK() indicates that shutdown completed successfully in the allotted time.
          */
-        static Status MONGO_CLIENT_FUNC shutdown(int gracePeriodMillis = 0);
+        static Status shutdown(int gracePeriodMillis = 0);
 
         /**
          * If a ReplicaSetMonitor has been refreshed more than this many times in a row without
@@ -228,7 +228,7 @@ namespace mongo {
      * All logic related to choosing the hosts to contact and updating the SetState based on replies
      * lives in this class.
      */
-    class MONGO_CLIENT_API ReplicaSetMonitor::Refresher {
+    class ReplicaSetMonitor::Refresher {
     public:
         /**
          * Contact hosts in the set to refresh our view, but stop once a host matches criteria.
@@ -303,7 +303,7 @@ namespace mongo {
         /**
          * Starts a new scan over the hosts in set.
          */
-        static ScanStatePtr MONGO_CLIENT_FUNC startNewScan(const SetState* set);
+        static ScanStatePtr startNewScan(const SetState* set);
 
     private:
         /**

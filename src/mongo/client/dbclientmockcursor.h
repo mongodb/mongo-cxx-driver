@@ -22,7 +22,7 @@
 
 namespace mongo {
 
-    class MONGO_CLIENT_API DBClientMockCursor : public DBClientCursorInterface {
+    class DBClientMockCursor : public DBClientCursorInterface {
     public:
         DBClientMockCursor( const BSONArray& mockCollection ) : _iter( mockCollection ) {}
         virtual ~DBClientMockCursor() {}

@@ -39,7 +39,7 @@ namespace mongo {
      * parameters must be UTF-8 encoded strings with no embedded NUL characters.  The
      * parameterPassword parameter is not constrained.
      */
-    class MONGO_CLIENT_API SaslClientSession {
+    class SaslClientSession {
         MONGO_DISALLOW_COPYING(SaslClientSession);
     public:
         typedef stdx::function<SaslClientSession* (const std::string&)> SaslClientSessionFactoryFn;
