@@ -319,7 +319,10 @@ namespace mongo {
             boost::algorithm::split(
                 optionsTokens, optionsMatch, boost::algorithm::is_any_of("=&"));
 
-            invariant(optionsTokens.size() % 2 == 0);
+            if (optionsTokens.size() % 2 != 0) {
+                errmsg = "Missing a key or value in the options for mongodb:// URL: " + url;
+                return ConnectionString();
+            }
 
             for (size_t i = 0; i != optionsTokens.size(); i = i + 2)
                 options[std::string(optionsTokens[i].begin(), optionsTokens[i].end())] =
