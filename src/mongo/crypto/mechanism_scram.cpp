@@ -89,7 +89,7 @@ namespace scram {
                                 const int iterationCount,
                                 unsigned char saltedPassword[hashSize]) {
         // saltedPassword = Hi(password, salt)
-        HMACIteration(reinterpret_cast<const unsigned char*>(password.rawData()),
+        HMACIteration(password.rawData(),
                       password.size(),
                       salt,
                       saltLen,
@@ -120,7 +120,7 @@ namespace scram {
         fassert(17498, HMAC(EVP_sha1(),
                             saltedPassword,
                             hashSize,
-                            reinterpret_cast<const unsigned char*>(clientKeyConst.data()),
+                            clientKeyConst.data(),
                             clientKeyConst.size(),
                             clientKey,
                             &hashLen));
@@ -132,7 +132,7 @@ namespace scram {
         fassert(17500, HMAC(EVP_sha1(),
                             saltedPassword,
                             hashSize,
-                            reinterpret_cast<const unsigned char*>(serverKeyConst.data()),
+                            serverKeyConst.data(),
                             serverKeyConst.size(),
                             serverKey,
                             &hashLen));
@@ -156,23 +156,23 @@ namespace scram {
         userSalt[0] = sr->nextInt64();
         userSalt[1] = sr->nextInt64();
         std::string encodedUserSalt =
-            base64::encode(reinterpret_cast<char*>(userSalt), sizeof(userSalt));
+            base64::encode(&userSalt, sizeof(userSalt));
 
         // Compute SCRAM secrets serverKey and storedKey
         unsigned char storedKey[hashSize];
         unsigned char serverKey[hashSize];
 
         computeProperties(hashedPassword,
-                          reinterpret_cast<unsigned char*>(userSalt),
+                          &userSalt,
                           saltLenQWords*sizeof(uint64_t),
                           iterationCount,
                           storedKey,
                           serverKey);
 
         std::string encodedStoredKey =
-            base64::encode(reinterpret_cast<char*>(storedKey), hashSize);
+            base64::encode(&storedKey, hashSize);
         std::string encodedServerKey =
-            base64::encode(reinterpret_cast<char*>(serverKey), hashSize);
+            base64::encode(&serverKey, hashSize);
 
         return BSON("iterationCount" << iterationCount <<
                     "salt" << encodedUserSalt <<
@@ -193,7 +193,7 @@ namespace scram {
         fassert(18689, HMAC(EVP_sha1(),
                             saltedPassword,
                             hashSize,
-                            reinterpret_cast<const unsigned char*>(clientKeyConst.data()),
+                            clientKeyConst.data(),
                             clientKeyConst.size(),
                             clientKey,
                             &hashLen));
@@ -207,7 +207,7 @@ namespace scram {
         fassert(18702, HMAC(EVP_sha1(),
                             storedKey,
                             hashSize,
-                            reinterpret_cast<const unsigned char*>(authMessage.c_str()),
+                            authMessage.c_str(),
                             authMessage.size(),
                             clientSignature,
                             &hashLen));
@@ -218,7 +218,7 @@ namespace scram {
             clientProof[i] = clientKey[i] ^ clientSignature[i];
         }
 
-        return base64::encode(reinterpret_cast<char*>(clientProof), hashSize);
+        return base64::encode(&clientProof, hashSize);
 
 #endif // MONGO_SSL
     }
@@ -235,7 +235,7 @@ namespace scram {
         fassert(18703, HMAC(EVP_sha1(),
                             saltedPassword,
                             hashSize,
-                            reinterpret_cast<const unsigned char*>(serverKeyConst.data()),
+                            serverKeyConst.data(),
                             serverKeyConst.size(),
                             serverKey,
                             &hashLen));
@@ -245,13 +245,13 @@ namespace scram {
         fassert(18704, HMAC(EVP_sha1(),
                             serverKey,
                             hashSize,
-                            reinterpret_cast<const unsigned char*>(authMessage.c_str()),
+                            authMessage.c_str(),
                             authMessage.size(),
                             serverSignature,
                             &hashLen));
 
         std::string encodedServerSignature =
-            base64::encode(reinterpret_cast<char*>(serverSignature), sizeof(serverSignature));
+            base64::encode(&serverSignature, sizeof(serverSignature));
         return (receivedServerSignature == encodedServerSignature);
 #endif
     }

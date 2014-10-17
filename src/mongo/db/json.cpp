@@ -1025,7 +1025,7 @@ namespace mongo {
             // and therefore 'corrupted' unless we force them to be unsigned ... 0x80 becomes
             // 0xffffff80 as seen by isspace when sign-extended ... we want it to be 0x00000080
             while (_input < _input_end &&
-                   isspace(*reinterpret_cast<const unsigned char*>(_input))) {
+                   isspace(static_cast<unsigned char>(*_input))) {
                 ++_input;
             }
             if (_input >= _input_end) {
@@ -1180,7 +1180,7 @@ namespace mongo {
         // 'isspace()' takes an 'int' (signed), so (default signed) 'char's get sign-extended
         // and therefore 'corrupted' unless we force them to be unsigned ... 0x80 becomes
         // 0xffffff80 as seen by isspace when sign-extended ... we want it to be 0x00000080
-        while (check < _input_end && isspace(*reinterpret_cast<const unsigned char*>(check))) {
+        while (check < _input_end && isspace(static_cast<const unsigned char>(*check))) {
             ++check;
         }
         while (*token != '\0') {

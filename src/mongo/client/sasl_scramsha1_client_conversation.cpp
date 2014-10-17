@@ -100,7 +100,7 @@ namespace mongo {
         std::string user =
             _saslClientSession->getParameter(SaslClientSession::parameterUser).toString();
         encodeSCRAMUsername(user);
-        std::string clientNonce = base64::encode(reinterpret_cast<char*>(binaryNonce),
+        std::string clientNonce = base64::encode(&binaryNonce,
                                                  sizeof(binaryNonce));
 
         // Append client-first-message-bare to authMessage
@@ -176,7 +176,7 @@ namespace mongo {
 
         scram::generateSaltedPassword(
                             _saslClientSession->getParameter(SaslClientSession::parameterPassword),
-                            reinterpret_cast<const unsigned char*>(decodedSalt.c_str()),
+                            decodedSalt.c_str(),
                             decodedSalt.size(),
                             iterationCount,
                             _saltedPassword);

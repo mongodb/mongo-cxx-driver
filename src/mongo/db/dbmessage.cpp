@@ -200,8 +200,7 @@ namespace mongo {
     void replyToQuery( int queryResultFlags, Message& response, const BSONObj& resultObj ) {
         BufBuilder bufBuilder;
         bufBuilder.skip( sizeof( QueryResult::Value ));
-        bufBuilder.appendBuf( reinterpret_cast< void *>(
-                const_cast< char* >( resultObj.objdata() )), resultObj.objsize() );
+        bufBuilder.appendBuf( const_cast< char* >( resultObj.objdata() ), resultObj.objsize() );
 
         QueryResult::View queryResult = bufBuilder.buf();
         bufBuilder.decouple();
