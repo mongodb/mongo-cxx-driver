@@ -41,11 +41,10 @@ namespace mongo {
         return (char)(( fromHex( c[ 0 ] ) << 4 ) | fromHex( c[ 1 ] ));
     }
 
-    inline std::string toHex(const void* inRaw, int len) {
+    inline std::string toHex(const char* in, int len) {
         static const char hexchars[] = "0123456789ABCDEF";
 
         StringBuilder out;
-        const char* in = reinterpret_cast<const char*>(inRaw);
         for (int i=0; i<len; ++i) {
             char c = in[i];
             char hi = hexchars[(c & 0xF0) >> 4];
