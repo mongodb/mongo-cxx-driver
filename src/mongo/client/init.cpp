@@ -71,7 +71,7 @@ namespace client {
             setOptions(options);
             configureLogging(options);
 
-#if defined(_WIN32) && defined(_DLL)
+#if defined(_WIN32) && !defined(STATIC_LIBMONGOCLIENT)
             if (options.callShutdownAtExit()) {
                 return Status(
                     ErrorCodes::IllegalOperation,
