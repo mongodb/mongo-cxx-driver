@@ -226,7 +226,7 @@ add_option('propagate-shell-environment',
 add_option('gtest-filter', "Pass argument as filter to gtest", 1, False)
 
 if darwin:
-    osx_version_choices = ['10.6', '10.7', '10.8', '10.9']
+    osx_version_choices = ['10.6', '10.7', '10.8', '10.9', '10.10']
 
     my_version, _, _ = py_platform.mac_ver()
     my_version = '.'.join(my_version.split('.')[:2])
