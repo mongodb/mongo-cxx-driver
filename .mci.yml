@@ -7,27 +7,44 @@
 cxx_driver_variables:
 
 ## The basic set of tests to run on most buildvariants
-  basic_test_list: &basic_tests
+  latest_test_list: &latest_tests
     - name: "compile"
     - name: "unit test"
-    - name: "integration test"
-    - name: "client test"
+    - name: "integration test latest"
+    - name: "client test latest"
+
+  full_test_list: &full_tests
+    - name: "compile"
+    - name: "unit test"
+    - name: "integration test 2.2"
+    - name: "integration test 2.4"
+    - name: "integration test 2.6"
+    - name: "integration test latest"
+    - name: "client test 2.2"
+    - name: "client test 2.4"
+    - name: "client test 2.6"
+    - name: "client test latest"
 
 ## Common download urls (merge in as hashes)
-  mongo_download_urls:
+  mongo_download_url_prefixes:
     ubuntu1404: &mongo_url_ubuntu1404
-      mongo_url: "http://downloads.10gen.com/linux/mongodb-linux-x86_64-enterprise-ubuntu1404-2.6.4.tgz"
-    windows64-bit: &mongo_url_windows64
-      mongo_url: "http://downloads.10gen.com/win32/mongodb-win32-x86_64-enterprise-windows-64-2.6.4.zip"
+      mongo_url_prefix: "http://downloads.mongodb.com/linux/mongodb-linux-x86_64-"
+      mongo_url_platform: "ubuntu1404"
+    windows64-bitcomm: &mongo_url_windows64
+      mongo_url_extension: "zip"
+      mongo_url_prefix: "http://downloads.mongodb.com/win32/mongodb-win32-x86_64-"
+      mongo_url_platform: "windows-64"
     rhel55: &mongo_url_rhel55
-      mongo_url: "http://downloads.mongodb.org/linux/mongodb-linux-x86_64-rhel55-latest.tgz"
-    rhel55: &mongo_url_rhel55_32
-      mongo_url: "http://downloads.mongodb.org/linux/mongodb-linux-i686-latest.tgz"
+      mongo_url_prefix: "http://downloads.10gen.com/linux/mongodb-linux-x86_64-"
+      mongo_url_platform: "rhel57"
+    rhel55_32: &mongo_url_rhel55_32
+      mongo_url_prefix: "http://downloads.mongodb.org/linux/mongodb-linux-i686"
+      mongo_url_platform: ""
 
 ## Common mongodb arguments
   mongodb_arguments:
-    standard: &mongodb_args
-      mongodb_args: "--dbpath /data/db --port 27999 --httpinterface --nopreallocj --setParameter=enableTestCommands=1 &"
+    standard: &mongodb_args "--dbpath /data/db --port 27999 --nopreallocj --setParameter=enableTestCommands=1 &"
+    old: &mongodb_22_args "--dbpath /data/db --port 27999 --nopreallocj &"
 
 ## Common sets of scons flags
   scons_flags:
@@ -120,8 +137,14 @@ functions:
         set -o errexit
         curl -s ${mongo_url} --output mongo_enterprise.${ext|tgz}
         ${decompress} mongo_enterprise.${ext|tgz}
-        cp mongodb*/bin/mongod${extension} ./mongod${extension}
+        cd mongodb*/bin
         chmod +x ./mongod${extension}
+        if [ ${windows|false} = true ]
+          then
+            #This won't run on a 32bit OS.
+            ./vcredist_x64${extension} /Q
+        fi
+
   "fetch artifacts" :
     command: s3.get
     params:
@@ -130,6 +153,74 @@ functions:
       remote_file: mongo-cxx-driver/${build_variant}/${revision}/artifacts/mongo-${build_id}.tar.gz
       bucket: mciuploads
       extract_to: mongo-cxx-driver
+
+  "set version latest" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "mongo_url"
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform}-latest.${mongo_url_extension|tgz}
+        - key: "mongodb_args"
+          value: *mongodb_args
+  "set version 2.6" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "mongo_url"
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform}-2.6.5.${mongo_url_extension|tgz}
+        - key: "mongodb_args"
+          value: *mongodb_args
+  "set version 2.4" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "mongo_url"
+          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|"subscription-"}${mongo_url_platform}-2.4.12.${mongo_url_extension|tgz}
+        - key: "mongodb_args"
+          value: *mongodb_args
+  "set version 2.2" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "mongo_url"
+          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|"subscription-"}${mongo_url_platform}-2.2.7.${mongo_url_extension|tgz}
+        - key: "mongodb_args"
+          value: *mongodb_22_args
+
+  "run integration tests" :
+    command: shell.exec
+    params:
+      working_dir: "mongo-cxx-driver"
+      script: |
+        set -o verbose
+        echo "Starting mongod..."
+        cd mongodb*/bin
+        ./mongod${extension} ${mongodb_args}
+        cd ../..
+        ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} integration
+        exit_code=$?
+        ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py} || true
+        exit $exit_code
+
+  "run client tests" :
+    command: shell.exec
+    params:
+      working_dir: "mongo-cxx-driver"
+      script: |
+        set -o verbose
+        echo "Starting mongod..."
+        cd mongodb*/bin
+        ./mongod${extension} ${mongodb_args}
+        cd ../..
+        ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} install # static lib install step
+        install_exit=$?
+        ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} check-install # static build installation header check
+        check_exit=$?
+        ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} examples
+        smoke_exit=$?
+        ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py}
+        exit $install_exit || $check_exit || $smoke_exit
+
 
 pre:
   - command: expansions.fetch
@@ -206,56 +297,87 @@ tasks:
         - name: "compile"
       commands:
         - func: "fetch artifacts"
-        - func: "fetch mongodb"
         - command: shell.exec
           params:
             working_dir: "mongo-cxx-driver"
             script: |
-              set -o verbose
-              ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} unit
-              exit_code=$?
-              ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py} || true
-              exit $exit_code
+                set -o verbose
+                ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} unit
+                exit_code=$?
+                ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py} || true
+                exit $exit_code
 
-    - name: "integration test"
+    - name: "integration test 2.2"
       depends_on:
         - name: "compile"
       commands:
+        - func: "set version 2.2"
         - func: "fetch artifacts"
         - func: "fetch mongodb"
-        - command: shell.exec
-          params:
-            working_dir: "mongo-cxx-driver"
-            script: |
-              set -o verbose
-              echo "Starting mongod..."
-              ./mongod${extension} ${mongodb_args}
-              ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} integration
-              exit_code=$?
-              ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py} || true
-              exit $exit_code
+        - func: "run integration tests"
 
-    - name: "client test"
+    - name: "integration test 2.4"
       depends_on:
         - name: "compile"
       commands:
+        - func: "set version 2.4"
         - func: "fetch artifacts"
         - func: "fetch mongodb"
-        - command: shell.exec
-          params:
-            working_dir: "mongo-cxx-driver"
-            script: |
-              set -o verbose
-              echo "Starting mongod..."
-              ./mongod${extension} ${mongodb_args}
-              ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} install # static lib install step
-              install_exit=$?
-              ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} check-install # static build installation header check
-              check_exit=$?
-              ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} examples
-              smoke_exit=$?
-              ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py}
-              exit $install_exit || $check_exit || $smoke_exit
+        - func: "run integration tests"
+
+    - name: "integration test 2.6"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 2.6"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
+    - name: "integration test latest"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version latest"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
+    - name: "client test 2.2"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 2.2"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
+    - name: "client test 2.4"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 2.4"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
+    - name: "client test 2.6"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 2.6"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
+    - name: "client test latest"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version latest"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
 
 #######################################
 #           Buildvariants             #
@@ -277,27 +399,27 @@ buildvariants:
     <<: *warning_flags_rhel55
     <<: *cpppath_rhel55
     <<: *libpath_rhel55_64
-    <<: *mongodb_args
     <<: *mongo_url_rhel55
   run_on:
   - rhel55-test
-  tasks: *basic_tests
+  tasks: *full_tests
 
 ## RHEL 5.5 32-bit
 
 - name: rhel55-32-bit
   display_name: "RHEL 5.5 32-bit"
   expansions:
+    mongo_url_enterprise_keyword: ""
+    mongo_url_subscription_keyword: ""
     <<: *compile_flags
     <<: *scons_flags_32
     <<: *warning_flags_rhel55
     <<: *cpppath_rhel55
     <<: *libpath_rhel55_32
-    <<: *mongodb_args
     <<: *mongo_url_rhel55_32
   run_on:
   - rhel55-test
-  tasks: *basic_tests
+  tasks: *latest_tests
 
 ## Ubuntu 1404
 
@@ -306,11 +428,10 @@ buildvariants:
   expansions:
     <<: *compile_flags
     <<: *scons_flags_64
-    <<: *mongodb_args
     <<: *mongo_url_ubuntu1404
   run_on:
   - ubuntu1404-test
-  tasks: *basic_tests
+  tasks: *latest_tests
 
 ## Ubuntu 1404 DEBUG
 
@@ -319,11 +440,11 @@ buildvariants:
   expansions:
     <<: *compile_flags_debug
     <<: *scons_flags_64
-    <<: *mongodb_args
     <<: *mongo_url_ubuntu1404
   run_on:
   - ubuntu1404-test
-  tasks: *basic_tests
+  tasks: *latest_tests
+
 
 ## Ubuntu 1404 C++11
 
@@ -332,11 +453,10 @@ buildvariants:
   expansions:
     <<: *compile_flags
     <<: *scons_flags_cpp11
-    <<: *mongodb_args
     <<: *mongo_url_ubuntu1404
   run_on:
   - ubuntu1404-test
-  tasks: *basic_tests
+  tasks: *latest_tests
 
 #######################################
 #        Windows Buildvariants        #
@@ -348,11 +468,12 @@ buildvariants:
 - name: windows-64-msvc2010-static-static
   display_name: "Win64(2010) static-static"
   expansions:
+    windows: true
+    mongo_url_extension: "zip"
     ## basic compilation and installation
     <<: *compile_flags
     <<: *scons_flags_64_windows_static
     <<: *toolchain_msvc2010
-    <<: *mongodb_args
     <<: *mongo_url_windows64
     ## additional paths for windows builds
     <<: *dllpath_msvc2010
@@ -363,7 +484,7 @@ buildvariants:
     scons: scons.bat
   run_on:
   - windows-64-test
-  tasks: *basic_tests
+  tasks: *latest_tests
 
 ## Windows 64-bit DEBUG DYNAMIC (msvc2010)
 ## dynamic client and RT
@@ -371,10 +492,10 @@ buildvariants:
 - name: windows-64-msvc2010-dbg-dyn-dyn
   display_name: "Win64(2010) dbg dyn-dyn"
   expansions:
+    windows: true
     <<: *compile_flags_debug
     <<: *scons_flags_64_windows_dynamic
     <<: *toolchain_msvc2010
-    <<: *mongodb_args
     <<: *mongo_url_windows64
     <<: *dllpath_msvc2010
     <<: *libpath_msvc2010
@@ -384,7 +505,7 @@ buildvariants:
     scons: scons.bat
   run_on:
   - windows-64-test
-  tasks: *basic_tests
+  tasks: *latest_tests
 
 ## Windows 64-bit DYNAMIC (msvc2013)
 ## dynamic client and RT
@@ -392,10 +513,10 @@ buildvariants:
 - name: windows-64-msvc2013-dyn-dyn
   display_name: "Win64(2013) dyn-dyn"
   expansions:
+    windows: true
     <<: *compile_flags
     <<: *scons_flags_64_windows_dynamic
     <<: *toolchain_msvc2013
-    <<: *mongodb_args
     <<: *mongo_url_windows64
     <<: *dllpath_msvc2013
     <<: *libpath_msvc2013
@@ -405,7 +526,7 @@ buildvariants:
     scons: scons.bat
   run_on:
   - windows-64-vs2013-test
-  tasks: *basic_tests
+  tasks: *latest_tests
 
 ## Windows 64-bit (msvc2013) DYNAMIC-RT
 ## static client, dynamic RT
@@ -413,10 +534,10 @@ buildvariants:
 - name: windows-64-msvc-2013-static-dyn
   display_name: "Win64(2013) static-dyn"
   expansions:
+    windows: true
     <<: *compile_flags
     <<: *scons_flags_64_windows_dynamic_rt
     <<: *toolchain_msvc2013
-    <<: *mongodb_args
     <<: *mongo_url_windows64
     <<: *dllpath_msvc2013
     <<: *libpath_msvc2013
@@ -426,4 +547,4 @@ buildvariants:
     scons: scons.bat
   run_on:
   - windows-64-vs2013-test
-  tasks: *basic_tests
+  tasks: *latest_tests
