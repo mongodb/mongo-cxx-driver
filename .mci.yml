@@ -212,8 +212,6 @@ tasks:
             working_dir: "mongo-cxx-driver"
             script: |
               set -o verbose
-              echo "Starting mongod..."
-              ./mongod${extension} ${mongodb_args}
               ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} unit
               exit_code=$?
               ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py} || true
