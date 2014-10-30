@@ -1330,6 +1330,7 @@ namespace mongo {
         // first we're going to try the command
         // it was only added in 2.8, so if we're talking to an older server
         // we'll fail back to querying system.namespaces
+        // TODO(spencer): remove fallback behavior after 2.8
 
         {
             BSONObj res;
@@ -1365,7 +1366,8 @@ namespace mongo {
         fallbackFilter.appendElementsUnique( filter );
 
         string ns = db + ".system.namespaces";
-        auto_ptr<DBClientCursor> c = query( ns.c_str(), fallbackFilter.obj() );
+        auto_ptr<DBClientCursor> c = query(
+                ns.c_str(), fallbackFilter.obj(), 0, 0, 0, QueryOption_SlaveOk);
         while ( c->more() ) {
             BSONObj obj = c->nextSafe();
             string ns = obj["name"].valuestr();
@@ -1917,10 +1919,6 @@ namespace mongo {
         return BulkOperationBuilder(this, ns, false);
     }
 
-    auto_ptr<DBClientCursor> DBClientWithCommands::getIndexes( const string &ns ) {
-        return query( NamespaceString( ns ).getSystemIndexesCollection() , BSON( "ns" << ns ) );
-    }
-
     list<BSONObj> DBClientWithCommands::getIndexSpecs( const string &ns, int options ) {
         list<BSONObj> specs;
 
@@ -1948,7 +1946,10 @@ namespace mongo {
             }
         }
 
-        auto_ptr<DBClientCursor> cursor = getIndexes( ns );
+        // fallback to querying system.indexes
+        // TODO(spencer): Remove fallback behavior after 2.8
+        auto_ptr<DBClientCursor> cursor = query(NamespaceString(ns).getSystemIndexesCollection(),
+                                                BSON("ns" << ns), 0, 0, 0, options);
         while ( cursor->more() ) {
             BSONObj spec = cursor->nextSafe();
             specs.push_back( spec.getOwned() );

@@ -244,7 +244,7 @@ namespace mongo {
 
         std::string getSetName() const { return _setName; }
 
-        std::vector<HostAndPort> getServers() const { return _servers; }
+        const std::vector<HostAndPort>& getServers() const { return _servers; }
 
         ConnectionType type() const { return _type; }
 
@@ -1155,11 +1155,6 @@ namespace mongo {
          *  descriptor must describe at least one key and index type.
          */
         virtual void createIndex( const StringData& ns, const IndexSpec& descriptor );
-
-        /**
-         * @deprecated use getIndexSpecs
-         */
-        virtual std::auto_ptr<DBClientCursor> getIndexes( const std::string &ns );
 
         virtual std::list<BSONObj> getIndexSpecs( const std::string &ns, int options = 0 );
 

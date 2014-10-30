@@ -312,6 +312,7 @@ clientHeaders = [
     'mongo/util/net/message_port.h',
     'mongo/util/net/operation.h',
     'mongo/util/net/sock.h',
+    'mongo/util/shared_buffer.h',
     'mongo/util/time_support.h',
     'mongo/version.h',
 ]

@@ -14,17 +14,14 @@
  *    limitations under the License.
  */
 
-#define MONGO_LOG_DEFAULT_COMPONENT ::mongo::logger::LogComponent::kDefault
-
 #include "mongo/platform/basic.h"
 
 #include "mongo/client/sasl_plain_client_conversation.h"
 
 #include "mongo/base/status_with.h"
+#include "mongo/bson/util/builder.h"
 #include "mongo/client/sasl_client_session.h"
-#include "mongo/util/log.h"
 #include "mongo/util/password_digest.h"
-#include "mongo/util/text.h"
 
 namespace mongo {
 
