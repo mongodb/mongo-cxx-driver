@@ -660,6 +660,8 @@ namespace mongo {
         logger::LogSeverity _logLevel;
 
         DBClientWithCommands() : _logLevel(logger::LogSeverity::Log()),
+                _minWireVersion(0),
+                _maxWireVersion(0),
                 _cachedAvailableOptions( (enum QueryOptions)0 ),
                 _haveCachedAvailableOptions(false) { }
 
@@ -1254,6 +1256,8 @@ namespace mongo {
          */
         RunCommandHookFunc _runCommandHook;
         PostRunCommandHookFunc _postRunCommandHook;
+        int _minWireVersion;
+        int _maxWireVersion;
 
 
     private:
@@ -1302,9 +1306,7 @@ namespace mongo {
         const boost::scoped_ptr<DBClientWriter> _wireProtocolWriter;
         const boost::scoped_ptr<DBClientWriter> _commandWriter;
         WriteConcern _writeConcern;
-        int _minWireVersion;
         int _maxBsonObjectSize;
-        int _maxWireVersion;
         int _maxMessageSizeBytes;
         int _maxWriteBatchSize;
         void _write(

@@ -929,7 +929,11 @@ namespace mongo {
                                     string& errmsg,
                                     bool digestPassword) {
         try {
-            _auth(BSON(saslCommandMechanismFieldName << "MONGODB-CR" <<
+            const char* mech = "MONGODB-CR";
+            if( _maxWireVersion > 3 ) {
+                mech = "SCRAM-SHA-1";
+            }
+            _auth(BSON(saslCommandMechanismFieldName << mech <<
                        saslCommandUserDBFieldName << dbname <<
                        saslCommandUserFieldName << username <<
                        saslCommandPasswordFieldName << password_text <<
@@ -1575,7 +1579,6 @@ namespace mongo {
     {
         _writeConcern = WriteConcern::acknowledged;
         _connectionId = ConnectionIdSequence.fetchAndAdd(1);
-        _minWireVersion = _maxWireVersion = 0;
         _maxBsonObjectSize = defaultMaxBsonObjectSize;
         _maxMessageSizeBytes = defaultMaxMessageSizeBytes;
         _maxWriteBatchSize = defaultMaxWriteBatchSize;
