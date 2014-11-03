@@ -54,6 +54,9 @@ namespace orchestration {
     std::string Service::createMongod(Document params) {
         params["name"] = "mongod";
         params["procParams"]["setParameter"]["enableTestCommands"] = 1;
+        params["procParams"]["noprealloc"] = true;
+        params["procParams"]["nopreallocj"] = true;
+        params["procParams"]["smallfiles"] = true;
 
         return _createResource(kServers, params);
     }
