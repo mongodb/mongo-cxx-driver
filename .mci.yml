@@ -195,13 +195,13 @@ functions:
       working_dir: "mongo-cxx-driver"
       script: |
         set -o verbose
+        set -o errexit
+        trap '${killall_mci|mongo-orchestration stop || pkill -9 mongod || pkill -9 mongos || true}' EXIT
         echo "Starting Mongo Orchestration..."
         echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
-        mongo-orchestration -f orchestration.config -e default start
+        mkdir tmp
+        TMPDIR=`pwd`/tmp mongo-orchestration -f orchestration.config -e default start
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} integration
-        exit_code=$?
-        ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py} || true
-        exit $exit_code
 
   "run client tests" :
     command: shell.exec
@@ -209,18 +209,15 @@ functions:
       working_dir: "mongo-cxx-driver"
       script: |
         set -o verbose
+        set -o errexit
+        trap '${killall_mci|mongo-orchestration stop || pkill -9 mongod || pkill -9 mongos || true}' EXIT
         echo "Starting Mongo Orchestration..."
         echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
-        mongo-orchestration -f orchestration.config -e default start
+        mkdir tmp
+        TMPDIR=`pwd`/tmp mongo-orchestration -f orchestration.config -e default start
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} install # static lib install step
-        install_exit=$?
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} check-install # static build installation header check
-        check_exit=$?
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} examples
-        smoke_exit=$?
-        ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py}
-        exit $install_exit || $check_exit || $smoke_exit
-
 
 pre:
   - command: expansions.fetch
@@ -236,12 +233,14 @@ pre:
         rm -rf "mongo-cxx-driver"
         rm -rf /data/db
         mkdir -p /data/db
+        ${killall_mci|pkill mongo-orchestration; pkill -9 mongod; pkill -9 mongos}
 
 post:
   - command: shell.exec
     params:
       script: |
-        ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py}
+        cd mongo-cxx-driver && mongo-orchestration stop
+        ${killall_mci|pkill -9 mongod; pkill -9 mongos;}
 
 #######################################
 #               Tasks                 #
