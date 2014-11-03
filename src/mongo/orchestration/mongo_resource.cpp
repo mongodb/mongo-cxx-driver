@@ -41,7 +41,7 @@ namespace orchestration {
     }
 
     std::string MongoResource::uri() const {
-        //mongodb_uri has the format: mongodb://<hostport>[/stuff not in standalones]
+        // mongodb_uri has the format: mongodb://<hostport>[/stuff not in standalones]
         std::string uri = handleResponse(status())["mongodb_uri"].asString();
         const std::string prefix("mongodb://");
         if (uri.substr(0, prefix.size()) != prefix) {

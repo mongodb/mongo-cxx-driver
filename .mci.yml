@@ -13,7 +13,15 @@ cxx_driver_variables:
     - name: "integration test latest"
     - name: "client test latest"
 
-  full_test_list: &full_tests
+  storage_engine_test_list: &storage_engine_tests
+    - name: "compile"
+    - name: "unit test"
+    - name: "integration test latest"
+    - name: "integration test latest with heap1"
+    - name: "client test latest"
+    - name: "client test latest with heap1"
+
+  version_test_list: &version_tests
     - name: "compile"
     - name: "unit test"
     - name: "integration test 2.4"
@@ -38,6 +46,10 @@ cxx_driver_variables:
     rhel55_32: &mongo_url_rhel55_32
       mongo_url_prefix: "http://downloads.mongodb.org/linux/mongodb-linux-i686"
       mongo_url_platform: ""
+
+  ## mongo-orchestration presets
+  mongo-orchestration_preset:
+    heap1: &heap1_orchestration_preset "--mongo-orchestration-preset=heap.json"
 
 ## Common sets of scons flags
   scons_flags:
@@ -154,6 +166,14 @@ functions:
       updates:
         - key: "mongo_url"
           value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform}-latest.${mongo_url_extension|tgz}
+  "set version latest with heap1 storage" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "mongo_url"
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform}-latest.${mongo_url_extension|tgz}
+        - key: "orchestration_preset"
+          value: *heap1_orchestration_preset
 
   "set version 2.6" :
     command: expansions.update
@@ -178,7 +198,7 @@ functions:
         echo "Starting Mongo Orchestration..."
         echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
         mongo-orchestration -f orchestration.config -e default start
-        ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} integration
+        ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} integration
         exit_code=$?
         ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py} || true
         exit $exit_code
@@ -196,7 +216,7 @@ functions:
         install_exit=$?
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} check-install # static build installation header check
         check_exit=$?
-        ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} examples
+        ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} examples
         smoke_exit=$?
         ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py}
         exit $install_exit || $check_exit || $smoke_exit
@@ -314,6 +334,15 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
+    - name: "integration test latest with heap1"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version latest with heap1 storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
     - name: "client test 2.4"
       depends_on:
         - name: "compile"
@@ -341,6 +370,16 @@ tasks:
         - func: "fetch mongodb"
         - func: "run client tests"
 
+    - name: "client test latest with heap1"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version latest with heap1 storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
+
 #######################################
 #           Buildvariants             #
 #######################################
@@ -364,7 +403,7 @@ buildvariants:
     <<: *mongo_url_rhel55
   run_on:
   - rhel55-test
-  tasks: *full_tests
+  tasks: *version_tests
 
 ## RHEL 5.5 32-bit
 
@@ -393,7 +432,7 @@ buildvariants:
     <<: *mongo_url_ubuntu1404
   run_on:
   - ubuntu1404-test
-  tasks: *latest_tests
+  tasks: *storage_engine_tests
 
 ## Ubuntu 1404 DEBUG
 

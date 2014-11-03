@@ -51,13 +51,7 @@ namespace orchestration {
         return ReplicaSet(relativeUrl(std::string(kReplicaSets).append("/").append(id)));
     }
 
-    std::string Service::createMongod(Document params) {
-        params["name"] = "mongod";
-        params["procParams"]["setParameter"]["enableTestCommands"] = 1;
-        params["procParams"]["noprealloc"] = true;
-        params["procParams"]["nopreallocj"] = true;
-        params["procParams"]["smallfiles"] = true;
-
+    std::string Service::createMongod(const Document& params) {
         return _createResource(kServers, params);
     }
 

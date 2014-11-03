@@ -45,15 +45,22 @@ namespace integration {
     //
     class Environment : public ::testing::Environment {
     public:
-        explicit Environment(const std::string& uri) {
+        Environment(const std::string& uri, const std::string& preset)
+        {
             _orchestration.reset(new mongo::orchestration::Service(uri));
+            _preset = preset;
         }
 
         static const std::auto_ptr<mongo::orchestration::Service>& orchestration() {
             return _orchestration;
         }
 
+        static const std::string& getPreset() {
+            return _preset;
+        }
+
     private:
+        static std::string _preset;
         static std::auto_ptr<mongo::orchestration::Service> _orchestration;
     };
 
@@ -70,7 +77,9 @@ namespace integration {
         }
 
         static void SetUpTestCase() {
-            _id = Environment::orchestration()->createMongod();
+            mongo::orchestration::Document params;
+            params["preset"] = Environment::getPreset();
+            _id = Environment::orchestration()->createMongod(params);
         }
 
         static void TearDownTestCase() {
@@ -95,9 +104,9 @@ namespace integration {
         }
 
         static void SetUpTestCase() {
-            Json::Value parameters;
-            parameters["preset"] = "arbiter.json";
-            _id = Environment::orchestration()->createReplicaSet(parameters);
+            mongo::orchestration::Document params;
+            params["preset"] = Environment::getPreset();
+            _id = Environment::orchestration()->createReplicaSet(params);
         }
 
         static void TearDownTestCase() {

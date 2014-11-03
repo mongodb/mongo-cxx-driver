@@ -33,8 +33,8 @@ namespace orchestration {
         std::vector<ReplicaSet> replica_sets() const;
         std::vector<ShardedCluster> clusters() const;
 
-        std::string createMongod(Document params = Document());
-        std::string createMongos(Document params = Document());
+        std::string createMongod(const Document& params = Document());
+        std::string createMongos(const Document& params = Document());
         std::string createReplicaSet(const Document& params = Document());
         std::string createShardedCluster(const Document& params = Document());
 

@@ -543,53 +543,51 @@ clientTestPrograms = staticClientPrograms + sharedClientPrograms
 clientEnv.Alias('build-examples', clientTestPrograms)
 
 clientTestProgramInstalls = staticClientProgramInstalls + sharedClientProgramInstalls
-for clientTest in clientTestProgramInstalls:
 
-    # On windows, the installs also install PDB files, which we end up picking up.
-    # Obviously, we can't run those, so filter them out. Lets hope nobody creates
-    # a new client test with pdb in the name.
-    if clientTest.abspath.endswith('.pdb'):
-        continue
+# TODO: Make this more Scons-like with an action target that causes
+# a server to come into being and then have each test depend on it.
+orchestration_uri = "%s:%s" % (clientEnv.GetOption("mongo-orchestration-host"),
+                               clientEnv.GetOption("mongo-orchestration-port"))
+conn = httplib.HTTPConnection(orchestration_uri)
+headers = { "Content-Type": "application/json" }
+params = json.dumps({ "id": "standalone", "name": "mongod",
+                      "preset": clientEnv.GetOption("mongo-orchestration-preset") })
 
-    # the rsExample test needs a replica set to talk to. The old smokeClient never tested it
-    # The old smoke subsystem did test authTest, not sure why it isn't working now.
-    if 'rsExample' in clientTest.abspath:
-        continue
-
-    # TODO: Make this more Scons-like with an action target that causes
-    # a server to come into being and then have each test depend on it.
-    orchestration_uri = "localhost:8889"
-    conn = httplib.HTTPConnection(orchestration_uri)
-    headers = { "Content-Type": "application/json" }
-    params = json.dumps({ "id": "standalone", "name": "mongod" })
-
-    # Check if a standalone mongod is already up
-    orchestration_up = False
-    try:
-        conn.request("GET", "/servers/standalone", "", headers)
-        orchestration_up = True
-    except:
-        print("Cannot connect to Mongo Orchestration at %s!" % orchestration_uri)
-
-    if not orchestration_up:
-        break
-
+# Check if a standalone mongod is already up, resetting if it is
+try:
+    conn.request("GET", "/servers/standalone", "", headers)
     response = conn.getresponse()
-
-    if response.status / 100 != 2:
-        # Standalone was not up
-        response.read()
-        conn.request("POST", "/servers", params, headers)
-        response = conn.getresponse()
-
+    response.read()
+    if response.status == 200:
+        conn.request("DELETE", "/servers/standalone")
+        conn.getresponse().read()
+    conn.request("POST", "/servers", params, headers)
+    response = conn.getresponse()
     # Grab the port from the response -- use it in the tests
     decoded_response = json.loads(response.read())
     host_port_match = re.search("mongodb://(\w+)\:(\d+)", decoded_response['mongodb_uri'])
 
-    clientEnv.AlwaysBuild(clientEnv.Alias(
-        'examples',
-        [clientTest],
-        "%s --port %s" % (clientTest.abspath, host_port_match.group(2))
-    ))
+    for clientTest in clientTestProgramInstalls:
+
+        # On windows, the installs also install PDB files, which we end up picking up.
+        # Obviously, we can't run those, so filter them out. Lets hope nobody creates
+        # a new client test with pdb in the name.
+        if clientTest.abspath.endswith('.pdb'):
+            continue
+
+        # the rsExample test needs a replica set to talk to. The old smokeClient never tested it
+        # The old smoke subsystem did test authTest, not sure why it isn't working now.
+        if 'rsExample' in clientTest.abspath:
+            continue
+
+        clientEnv.AlwaysBuild(
+            clientEnv.Alias(
+             'examples',
+             [clientTest],
+             "%s --port %s" % (clientTest.abspath, host_port_match.group(2))
+            )
+        )
+except:
+    print("Cannot connect to Mongo Orchestration at %s!" % orchestration_uri)
 
 clientEnv.Alias('install-examples', clientTestProgramInstalls)
