@@ -19,6 +19,7 @@
 #include <functional>
 #include <list>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -65,6 +66,22 @@ namespace {
         int serverMinor = version[1].Int();
 
         return (serverMajor >= major && serverMinor >= minor);
+    }
+
+    bool serverStorageEngine(DBClientBase& c, const StringData& engineName) {
+        BSONObj result;
+        c.runCommand("admin", BSON("serverStatus" << true), result);
+
+        BSONElement storageEngineField = result.getField("storageEngine");
+        if (storageEngineField.eoo() || storageEngineField.type() != Object) {
+            return engineName == "mmapv1";
+        }
+
+        BSONElement storageEngineNameField = storageEngineField.Obj().getField("name");
+        if (storageEngineNameField.eoo()) {
+            throw std::runtime_error("storageEngine object does not have field `name`");
+        }
+        return engineName == storageEngineNameField.String();
     }
 
     /* DBClient Tests */
@@ -532,7 +549,7 @@ namespace {
     TEST_F(DBClientTest, ParallelCollectionScanBadConnections) {
         bool supported = serverGTE(&c, 2, 6);
 
-        if (supported) {
+        if (supported && serverStorageEngine(c, "mmapv1")) {
             const size_t numItems = 8000;
 
             for (size_t i = 0; i < numItems; ++i)
