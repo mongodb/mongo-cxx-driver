@@ -16,6 +16,8 @@
 
 #include "mongo/orchestration/mongo_resource.h"
 
+#include <stdexcept>
+
 namespace mongo {
 namespace orchestration {
 
@@ -39,7 +41,15 @@ namespace orchestration {
     }
 
     std::string MongoResource::uri() const {
-        return handleResponse(status())["uri"].asString();
+        //mongodb_uri has the format: mongodb://<hostport>[/stuff not in standalones]
+        std::string uri = handleResponse(status())["mongodb_uri"].asString();
+        const std::string prefix("mongodb://");
+        if (uri.substr(0, prefix.size()) != prefix) {
+            throw std::runtime_error("mongodb_uri does not begin with prefix 'mongodb://'");
+        }
+        uri = uri.substr(prefix.size());
+        const size_t suffix = uri.find('/');
+        return uri.substr(0, suffix);
     }
 
     std::string MongoResource::mongodbUri() const {

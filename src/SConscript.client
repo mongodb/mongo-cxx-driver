@@ -6,6 +6,7 @@ import os
 import httplib
 import urllib
 import json
+import re
 import buildscripts.git
 
 Import('env has_option get_option')
@@ -583,12 +584,12 @@ for clientTest in clientTestProgramInstalls:
 
     # Grab the port from the response -- use it in the tests
     decoded_response = json.loads(response.read())
-    port = decoded_response['uri'].split(':')[1]
+    host_port_match = re.search("mongodb://(\w+)\:(\d+)", decoded_response['mongodb_uri'])
 
     clientEnv.AlwaysBuild(clientEnv.Alias(
         'examples',
         [clientTest],
-        "%s --port %s" % (clientTest.abspath, port)
+        "%s --port %s" % (clientTest.abspath, host_port_match.group(2))
     ))
 
 clientEnv.Alias('install-examples', clientTestProgramInstalls)
