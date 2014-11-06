@@ -681,7 +681,7 @@ namespace {
 
         bool server26plus = serverGTE(&c, 2, 6);
 
-        if (serverGTE(&c, 2, 2)) {
+        if (serverGTE(&c, 2, 2) && serverStorageEngine(c, "mmapv1")) {
             ASSERT_EQUALS(info.getIntField("userFlags"), server26plus ? 1 : 0);
         }
         ASSERT_EQUALS(info.getIntField("nindexes"), 1);
@@ -696,7 +696,7 @@ namespace {
         BSONObj info;
         ASSERT_TRUE(c.runCommand(TEST_DB, BSON("collstats" << TEST_COLL), info));
 
-        if (serverGTE(&c, 2, 2)) {
+        if (serverGTE(&c, 2, 2) && serverStorageEngine(c, "mmapv1")) {
             ASSERT_EQUALS(info.getIntField("userFlags"), 0);
         }
         ASSERT_EQUALS(info.getIntField("nindexes"), 0);
