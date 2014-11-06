@@ -196,7 +196,7 @@ functions:
       script: |
         set -o verbose
         set -o errexit
-        trap '${killall_mci|mongo-orchestration stop || pkill -9 mongod || pkill -9 mongos || true}' EXIT
+        trap 'set +o errexit; mongo-orchestration stop; pkill -9 mongod; pkill -9 mongos; pkill -9 mongo-orchestration}' EXIT
         echo "Starting Mongo Orchestration..."
         echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
         mkdir tmp
@@ -210,7 +210,7 @@ functions:
       script: |
         set -o verbose
         set -o errexit
-        trap '${killall_mci|mongo-orchestration stop || pkill -9 mongod || pkill -9 mongos || true}' EXIT
+        trap 'set +o errexit; mongo-orchestration stop; pkill -9 mongod; pkill -9 mongos; pkill -9 mongo-orchestration}' EXIT
         echo "Starting Mongo Orchestration..."
         echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
         mkdir tmp
@@ -231,16 +231,13 @@ pre:
     params:
       script: |
         rm -rf "mongo-cxx-driver"
-        rm -rf /data/db
-        mkdir -p /data/db
-        ${killall_mci|pkill mongo-orchestration; pkill -9 mongod; pkill -9 mongos}
 
 post:
   - command: shell.exec
     params:
       script: |
         cd mongo-cxx-driver && mongo-orchestration stop
-        ${killall_mci|pkill -9 mongod; pkill -9 mongos;}
+        ${killall_mci|pkill -9 mongo-orchestration; pkill -9 mongod; pkill -9 mongos;}
 
 #######################################
 #               Tasks                 #
@@ -302,9 +299,6 @@ tasks:
             script: |
                 set -o verbose
                 ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} unit
-                exit_code=$?
-                ${killall_mci|pkill mongo; pkill -9 mongod; pkill -9 mongos; pkill -f buildlogger.py; pkill -f smoke.py} || true
-                exit $exit_code
 
     - name: "integration test 2.4"
       depends_on:
