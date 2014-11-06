@@ -181,7 +181,7 @@ namespace {
                 WriteConcern wcAll = WriteConcern().nodes(2);
                 replset_conn->insert(TEST_NS, BSON("x" << 2), 0, &wcAll);
                 break;
-            } catch (DBException& ex) {
+            } catch (const DBException&) {
                 mongo::sleepsecs(1);
             }
         }

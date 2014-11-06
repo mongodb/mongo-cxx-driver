@@ -91,7 +91,7 @@ cxx_driver_variables:
     ## Extras
     extra:
       basic_extras: &extrapath
-        extrapath: --extrapath="c:\openssl,c:\sasl"
+        extrapath: --extrapath="c:\openssl,c:\sasl,c:\curl"
     ## Library paths
     lib:
       lib_msvc2010: &libpath_msvc2010
