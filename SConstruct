@@ -225,6 +225,17 @@ add_option('propagate-shell-environment',
 
 add_option('gtest-filter', "Pass argument as filter to gtest", 1, False)
 
+add_option('mongo-orchestration-preset',
+           "Pass argument to mongo-orchestration as the configuration preset",
+           1, False, default='basic.json' )
+
+add_option('mongo-orchestration-host',
+           "Host mongo-orchestration is running on",
+           1, False, default='localhost' )
+
+add_option('mongo-orchestration-port',
+           "Host mongo-orchestration is running on",
+           1, False, default='8889' )
 if darwin:
     osx_version_choices = ['10.6', '10.7', '10.8', '10.9', '10.10']
 

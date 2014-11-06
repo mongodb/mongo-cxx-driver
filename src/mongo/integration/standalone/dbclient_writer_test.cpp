@@ -15,7 +15,7 @@
 
 #include "mongo/platform/basic.h"
 
-#include "mongo/unittest/integration_test.h"
+#include "mongo/integration/integration_test.h"
 
 #include "mongo/client/command_writer.h"
 #include "mongo/client/dbclient.h"
@@ -29,7 +29,7 @@ using std::string;
 using std::vector;
 
 using namespace mongo;
-using namespace mongo::unittest;
+using namespace mongo::integration;
 
 namespace {
 
@@ -49,10 +49,10 @@ namespace {
     };
 
     template <typename T>
-    class DBClientWriterTest : public ::testing::Test {
+    class DBClientWriterTest : public StandaloneTest {
     public:
         DBClientWriterTest() {
-            c.connect(string("localhost:") + integrationTestParams.port);
+            c.connect(server().uri());
             c.dropCollection(TEST_NS);
             writer = new T(&c);
         }

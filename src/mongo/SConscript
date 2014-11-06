@@ -1,6 +1,11 @@
 Import('env windows mongoClientStaticLibs libGTestStatic')
 
-staticClientEnv = env.Clone()
+testEnv = env.Clone()
+conf = Configure(testEnv)
+conf.CheckLibWithHeader('curl', 'curl/curl.h', 'c')
+testEnv = conf.Finish()
+
+staticClientEnv = testEnv.Clone()
 staticClientEnv.PrependUnique(
     CPPDEFINES=[
         'STATIC_LIBMONGOCLIENT'
@@ -19,17 +24,25 @@ libMock = staticClientEnv.StaticLibrary(
     ],
 )
 
-libClientTestMain = staticClientEnv.StaticLibrary(
-    target='client_test_main',
+libUnitTestMain = staticClientEnv.StaticLibrary(
+    target='unit_test_main',
     source=[
-        'unittest/client_test_main.cpp'
+        'unittest/unit_test_main.cpp'
     ],
 )
 
 libIntegrationTestMain = staticClientEnv.StaticLibrary(
     target='integration_test_main',
     source=[
-        'unittest/integration_test_main.cpp'
+        '../third_party/restclient/restclient.cpp',
+        '../third_party/jsoncpp/jsoncpp.cpp',
+        'orchestration/resource.cpp',
+        'orchestration/mongo_resource.cpp',
+        'orchestration/server.cpp',
+        'orchestration/service.cpp',
+        'orchestration/replica_set.cpp',
+        'orchestration/sharded_cluster.cpp',
+        'integration/integration_test_main.cpp'
     ],
 )
 
@@ -58,6 +71,8 @@ unittests = [
     'platform/atomic_word_test',
     'platform/process_id_test',
     'platform/random_test',
+    'unittest/connection_string_test',
+    'unittest/query_test',
     'util/mongoutils/str_test',
     'util/net/hostandport_test',
     'util/net/sock_test',
@@ -81,7 +96,7 @@ gtestEnv.PrependUnique(
 unitTestEnv = gtestEnv.Clone()
 unitTestEnv.PrependUnique(
     LIBS=[
-        libClientTestMain,
+        libUnitTestMain,
         libMock,
     ])
 
@@ -93,26 +108,27 @@ for unittest in unittests:
         ])
 
 integration_tests = [
-    'bulk_operation_test',
-    'dbclient_test',
-    'dbclient_writer_test',
-    'gridfs_test',
+    'standalone/bulk_operation_test',
+    'standalone/dbclient_test',
+    'standalone/dbclient_writer_test',
+    'standalone/gridfs_test',
+    'replica_set/basic',
+    'replica_set/read_preference'
 ]
 
 if env['MONGO_SASL']:
-   integration_tests += ['sasl_test']
+   integration_tests += ['standalone/sasl_test']
 
 integrationTestEnv = gtestEnv.Clone()
 integrationTestEnv.PrependUnique(
     LIBS=[
-        libIntegrationTestMain,
-        libMock,
+        libIntegrationTestMain
     ])
 
 for integration_test in integration_tests:
     integrationTestEnv.IntegrationTest(
         target=integration_test,
         source=[
-            'unittest/' + integration_test + '.cpp'
+            'integration/' + integration_test + '.cpp'
         ]
     )

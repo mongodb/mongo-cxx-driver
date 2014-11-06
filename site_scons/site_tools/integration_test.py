@@ -10,7 +10,10 @@ def build_integration_test(env, target, source, **kwargs):
     env.Alias('build-integration', buildAlias)
     env['ENV']['GTEST_FILTER'] = env.get("gtest_filter", "*")
     runAlias = env.Alias('run-' + target, [result],
-        "%s --port 27999" % result[0].abspath)
+        "%s %s:%s %s" % (
+            result[0].abspath, env.GetOption("mongo-orchestration-host"),
+            env.GetOption("mongo-orchestration-port"),
+            env.GetOption("mongo-orchestration-preset")))
     env.AlwaysBuild(runAlias)
     testAliases = ['integration']
     env.Alias(testAliases, runAlias)

@@ -15,24 +15,24 @@
 
 #include <iostream>
 
-#include "mongo/unittest/integration_test.h"
+#include "mongo/integration/integration_test.h"
 #include "mongo/client/init.h"
 
 namespace mongo {
-    namespace unittest {
-        IntegrationTestParams integrationTestParams;
-    } // namespace unittest
+    namespace integration {
+        std::auto_ptr<mongo::orchestration::Service> Environment::_orchestration;
+        std::string Environment::_preset;
+        std::string mongo::integration::StandaloneTest::_id;
+        std::string mongo::integration::ReplicaSetTest::_id;
+    } // namespace integration
 } // namespace mongo
 
 int main(int argc, char **argv) {
-    if ( argc != 1 ) {
-        if ( argc != 3 ) {
-            std::cout << "need to pass port as second param" << std::endl;
-            return EXIT_FAILURE;
-        }
-        mongo::unittest::integrationTestParams.port = argv[2];
-    } else {
-        mongo::unittest::integrationTestParams.port = "27107";
+
+    if (!(argc == 2 || argc == 3)) {
+        std::cout << "usage: " << argv[0] <<
+            " MONGO_ORCHESTRATION_HOST:MONGO_ORCHESTRATION_PORT" <<
+            " [MONGO_ORCHESTRATION_PRESET]" << std::endl;
     }
 
     mongo::client::GlobalInstance instance;
@@ -41,6 +41,13 @@ int main(int argc, char **argv) {
         ::abort();
     }
 
+    std::string preset("basic.json");
+    if (argc == 3) {
+        preset = argv[2];
+    }
+
+    // Google test takes ownership of Environment and destroys it when finished.
+    ::testing::AddGlobalTestEnvironment(new mongo::integration::Environment(argv[1], preset));
     ::testing::InitGoogleTest(&argc, argv);
 
     return RUN_ALL_TESTS();

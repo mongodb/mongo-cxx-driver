@@ -17,10 +17,9 @@
 
 #include <vector>
 
-#include "mongo/unittest/integration_test.h"
+#include "mongo/unittest/unittest.h"
 
-#include "mongo/bson/bson.h"
-#include "mongo/client/dbclient.h"
+#include "mongo/geo/interface.h"
 
 using std::vector;
 

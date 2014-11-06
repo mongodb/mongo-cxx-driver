@@ -17,7 +17,7 @@
 
 #include <boost/scoped_ptr.hpp>
 
-#include "mongo/unittest/integration_test.h"
+#include "mongo/integration/integration_test.h"
 #include "mongo/util/mongoutils/str.h"
 #include "mongo/client/dbclient.h"
 
