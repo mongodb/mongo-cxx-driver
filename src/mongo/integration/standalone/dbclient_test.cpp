@@ -589,48 +589,40 @@ namespace {
         ASSERT_EQUALS(c.count(TEST_NS), 2U);
     }
 
-    TEST_F(DBClientTest, GetIndexes) {
-        auto_ptr<DBClientCursor> cursor = c.getIndexes(TEST_NS);
-        ASSERT_FALSE(cursor->more());
+    TEST_F(DBClientTest, GetIndexNames) {
+        ASSERT_TRUE(c.getIndexNames(TEST_NS).empty());
 
-        c.insert(TEST_NS, BSON("test" << true));
-        cursor = c.getIndexes(TEST_NS);
-        ASSERT_EQUALS(cursor->itcount(), 1);
+        c.insert(TEST_NS, BSON("test" << "random data"));
+        ASSERT_EQUALS(1U, c.getIndexNames(TEST_NS).size());
 
         c.createIndex(TEST_NS, BSON("test" << 1));
-        cursor = c.getIndexes(TEST_NS);
-        vector<BSONObj> v;
-        while(cursor->more())
-            v.push_back(cursor->next());
-        ASSERT_EQUALS(v.size(), 2U);
-        ASSERT_EQUALS(v[0]["name"].String(), "_id_");
-        ASSERT_EQUALS(v[1]["name"].String(), "test_1");
+
+        list<string> names = c.getIndexNames(TEST_NS);
+        ASSERT_EQUALS(2U, names.size());
+        ASSERT_EQUALS("_id_", names.front());
+        names.pop_front();
+        ASSERT_EQUALS("test_1", names.front());
     }
 
     TEST_F(DBClientTest, DropIndexes) {
         c.createIndex(TEST_NS, BSON("test" << 1));
-        unsigned index_count = c.getIndexes(TEST_NS)->itcount();
-        ASSERT_EQUALS(index_count, 2U);
+        ASSERT_EQUALS(2U, c.getIndexNames(TEST_NS).size());
         c.dropIndexes(TEST_NS);
-        index_count = c.getIndexes(TEST_NS)->itcount();
-        ASSERT_EQUALS(index_count, 1U);
+        ASSERT_EQUALS(1U, c.getIndexNames(TEST_NS).size());
     }
 
     TEST_F(DBClientTest, DropIndex) {
         c.createIndex(TEST_NS, BSON("test" << 1));
         c.createIndex(TEST_NS, BSON("test2" << -1));
-        unsigned index_count = c.getIndexes(TEST_NS)->itcount();
-        ASSERT_EQUALS(index_count, 3U);
+        ASSERT_EQUALS(3U, c.getIndexNames(TEST_NS).size());
 
         // Interface that takes an index key obj
         c.dropIndex(TEST_NS, BSON("test" << 1));
-        index_count = c.getIndexes(TEST_NS)->itcount();
-        ASSERT_EQUALS(index_count, 2U);
+        ASSERT_EQUALS(2U, c.getIndexNames(TEST_NS).size());
 
         // Interface that takes an index name
         c.dropIndex(TEST_NS, "test2_-1");
-        index_count = c.getIndexes(TEST_NS)->itcount();
-        ASSERT_EQUALS(index_count, 1U);
+        ASSERT_EQUALS(1U, c.getIndexNames(TEST_NS).size());
 
         // Drop of unknown index should throw an error
         ASSERT_THROWS(c.dropIndex(TEST_NS, "test3_1"), DBException);
@@ -639,11 +631,9 @@ namespace {
     TEST_F(DBClientTest, ReIndex) {
         c.createIndex(TEST_NS, BSON("test" << 1));
         c.createIndex(TEST_NS, BSON("test2" << -1));
-        unsigned index_count = c.getIndexes(TEST_NS)->itcount();
-        ASSERT_EQUALS(index_count, 3U);
+        ASSERT_EQUALS(3U, c.getIndexNames(TEST_NS).size());
         c.reIndex(TEST_NS);
-        index_count = c.getIndexes(TEST_NS)->itcount();
-        ASSERT_EQUALS(index_count, 3U);
+        ASSERT_EQUALS(3U, c.getIndexNames(TEST_NS).size());
     }
 
     TEST_F(DBClientTest, Aggregate) {
