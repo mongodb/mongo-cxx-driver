@@ -164,11 +164,11 @@ clientSourceSSL = [
     'mongo/client/sasl_scramsha1_client_conversation.cpp',
     'mongo/crypto/crypto_openssl.cpp',
     'mongo/crypto/mechanism_scram.cpp',
+    'mongo/client/native_sasl_client_session.cpp',
 ]
 
 clientSourceSasl = [
     'mongo/client/cyrus_sasl_client_session.cpp',
-    'mongo/client/native_sasl_client_session.cpp',
     'mongo/client/sasl_sspi.cpp',
 ]
 
