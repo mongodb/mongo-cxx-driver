@@ -91,21 +91,14 @@ int main( int argc, const char **argv ) {
     }
 
     errmsg.clear();
-    conn->auth(BSON("user" << "eliot" <<
-                    "db" << "test" <<
-                    "pwd" << "bar" <<
-                    "mechanism" << "MONGODB-CR"));
+    if (!conn->auth("test", "eliot", "bar", errmsg)) {
+        cout << "Authentication failed, when it should have succeeded. Got error: " << errmsg << endl;
+        return EXIT_FAILURE;
+    }
 
-    try {
-        conn->auth(BSON("user" << "eliot" <<
-                        "db" << "test" <<
-                        "pwd" << "bars" << // incorrect password
-                        "mechanism" << "MONGODB-CR"));
-        // Shouldn't get here.
+    if (conn->auth("test", "eliot", "bars", errmsg)) { // incorrect password
         cout << "Authentication with invalid password should have failed but didn't" << endl;
         return EXIT_FAILURE;
-    } catch (const DBException&) {
-        // expected
     }
     return EXIT_SUCCESS;
 }
