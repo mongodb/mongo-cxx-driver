@@ -1990,19 +1990,13 @@ namespace mongo {
     }
 
     void DBClientWithCommands::reIndex( const string& ns ) {
-        list<BSONObj> all;
-        auto_ptr<DBClientCursor> i = getIndexes( ns );
-        while ( i->more() ) {
-            all.push_back( i->next().getOwned() );
-        }
-
-        dropIndexes( ns );
-
-        for ( list<BSONObj>::iterator i=all.begin(); i!=all.end(); i++ ) {
-            BSONObj o = *i;
-            insert( NamespaceString( ns ).getSystemIndexesCollection() , o );
-        }
-
+        BSONObj info;
+        uassert( 0,
+                 "reIndex failed",
+                 runCommand( nsToDatabase( ns ),
+                             BSON( "reIndex" << nsToCollectionSubstring(ns)),
+                             info )
+               );
     }
 
 
