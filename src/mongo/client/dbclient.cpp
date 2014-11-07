@@ -930,7 +930,7 @@ namespace mongo {
                                     bool digestPassword) {
         try {
             const char* mech = "MONGODB-CR";
-            if( _maxWireVersion > 3 ) {
+            if( _maxWireVersion >= 3 ) {
                 mech = "SCRAM-SHA-1";
             }
             _auth(BSON(saslCommandMechanismFieldName << mech <<
