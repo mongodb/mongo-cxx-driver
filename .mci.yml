@@ -18,8 +18,10 @@ cxx_driver_variables:
     - name: "unit test"
     - name: "integration test latest"
     - name: "integration test latest with heap1"
+    - name: "integration test latest with WiredTiger"
     - name: "client test latest"
     - name: "client test latest with heap1"
+    - name: "client test latest with WiredTiger"
 
   version_test_list: &version_tests
     - name: "compile"
@@ -46,10 +48,6 @@ cxx_driver_variables:
     rhel55_32: &mongo_url_rhel55_32
       mongo_url_prefix: "http://downloads.mongodb.org/linux/mongodb-linux-i686"
       mongo_url_platform: ""
-
-  ## mongo-orchestration presets
-  mongo-orchestration_preset:
-    heap1: &heap1_orchestration_preset "--mongo-orchestration-preset=heap.json"
 
 ## Common sets of scons flags
   scons_flags:
@@ -166,14 +164,20 @@ functions:
       updates:
         - key: "mongo_url"
           value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform}-latest.${mongo_url_extension|tgz}
-  "set version latest with heap1 storage" :
+
+  "use heap1 storage" :
     command: expansions.update
     params:
       updates:
-        - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform}-latest.${mongo_url_extension|tgz}
         - key: "orchestration_preset"
-          value: *heap1_orchestration_preset
+          value: "--mongo-orchestration-preset=heap.json"
+
+  "use WiredTiger storage" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "orchestration_preset"
+          value: "--mongo-orchestration-preset=wiredtiger.json"
 
   "set version 2.6" :
     command: expansions.update
@@ -331,7 +335,18 @@ tasks:
       depends_on:
         - name: "compile"
       commands:
-        - func: "set version latest with heap1 storage"
+        - func: "set version latest"
+        - func: "use heap1 storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
+    - name: "integration test latest with WiredTiger"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version latest"
+        - func: "use WiredTiger storage"
         - func: "fetch artifacts"
         - func: "fetch mongodb"
         - func: "run integration tests"
@@ -367,10 +382,22 @@ tasks:
       depends_on:
         - name: "compile"
       commands:
-        - func: "set version latest with heap1 storage"
+        - func: "set version latest"
+        - func: "use heap1 storage"
         - func: "fetch artifacts"
         - func: "fetch mongodb"
         - func: "run client tests"
+
+    - name: "client test latest with WiredTiger"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version latest"
+        - func: "use WiredTiger storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
 
 
 #######################################
