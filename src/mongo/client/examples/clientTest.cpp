@@ -175,8 +175,6 @@ int main( int argc, const char **argv ) {
 */
     {
         // hint related tests
-        verify( conn.findOne(ns, "{}")["name"].str() == "sara" );
-
         verify( conn.findOne(ns, "{ name : 'eliot' }")["name"].str() == "eliot" );
         verify( conn.getLastError() == "" );
 
