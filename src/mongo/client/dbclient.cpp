@@ -914,8 +914,10 @@ namespace mongo {
             uassertStatusOK(saslClientAuthenticate(this, params));
         }
         else {
-            uasserted(ErrorCodes::BadValue,
-                      mechanism + " mechanism support not compiled into client library.");
+            std::string error = mechanism + " mechanism support not compiled into client library."
+                                            " (Some mechanisms require the driver be compiled"
+                                            " with the flags --ssl or --use-sasl-client)";
+            uasserted(ErrorCodes::BadValue, error);
         }
     };
 
