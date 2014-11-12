@@ -1118,4 +1118,56 @@ namespace {
                       .addKey("aField", IndexSpec::kIndexTypeHashed));
     }
 
+#ifdef MONGO_SSL
+    const bool kCompiledWithSSL = true;
+#else
+    const bool kCompiledWithSSL = false;
+#endif
+
+    void createUser(DBClientConnection& c, const string& name, const string& password) {
+        if (serverGTE(&c, 2, 6)) {
+            BSONObj ret;
+            ASSERT_TRUE(
+                c.runCommand("test",
+                             BSON( "createUser" << name
+                                << "pwd" << password
+                                << "roles" << BSON_ARRAY("readWrite")),
+                             ret)
+            );
+        } else if (serverGTE(&c, 2, 4)) {
+            ASSERT_NO_THROW(
+                c.insert("test.system.users" ,
+                         BSON( "user" << name
+                            << "pwd" << c.createPasswordDigest(name , password)))
+            );
+        }
+    }
+
+    TEST_F(DBClientTest, CreateUser) {
+        createUser(c, "user1", "password1");
+    }
+
+    // This test would fail against a fresh 2.8 if we did not use the SCRAM-SHA-1 auth mechanism
+    TEST_F(DBClientTest, AuthenticateUserSuccess) {
+        /*  Run this test if version indicates that the server supports auth, and we can
+         *  communicate with it. The server must be at least as new as 2.4, when auth was
+         *  introduced. If the server is as new as 2.8, then the driver must have SSL support,
+         *  to use the SCRAM-SHA-1 auth mechanism which it will likely require.
+         */
+        if (serverGTE(&c, 2, 4) && (!serverGTE(&c, 2, 7) || kCompiledWithSSL)) {
+            createUser(c, "user2", "password2");
+            std::string errmsg;
+            ASSERT_TRUE(c.auth("test", "user2", "password2", errmsg));
+        }
+    }
+
+    TEST_F(DBClientTest, AuthenticateUserFailure) {
+        // Run test if the server can be authed into, as per AuthenticateUserSuccess
+        if (serverGTE(&c, 2, 4) && (!serverGTE(&c, 2, 7) || kCompiledWithSSL)) {
+            createUser(c, "user3", "password3");
+            std::string errmsg;
+            ASSERT_FALSE(c.auth("test", "user3", "notPassword3", errmsg));
+        }
+    }
+
 } // namespace
