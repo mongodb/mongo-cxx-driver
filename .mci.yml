@@ -141,12 +141,11 @@ functions:
         curl -s ${mongo_url} --output mongo_enterprise.${ext|tgz}
         ${decompress} mongo_enterprise.${ext|tgz}
         mv mongodb* mongodb
-        cd mongodb/bin
-        chmod +x ./mongod${extension}
-        if [ ${windows|false} = true ]
-          then
+        chmod +x ./mongodb/bin/mongod${extension}
+        if [ ${windows|false} = true ]; then
+            cp -r mongodb /cygdrive/c/mongodb
             #This won't run on a 32bit OS.
-            ./vcredist_x64${extension} /Q
+            ./mongodb/bin/vcredist_x64${extension} /Q
         fi
 
   "fetch artifacts" :
@@ -198,13 +197,26 @@ functions:
     params:
       working_dir: "mongo-cxx-driver"
       script: |
-        set -o verbose
-        set -o errexit
-        trap 'set +o errexit; mongo-orchestration stop; pkill -9 mongod; pkill -9 mongos; pkill -9 mongo-orchestration}' EXIT
         echo "Starting Mongo Orchestration..."
-        echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
-        mkdir tmp
-        TMPDIR=`pwd`/tmp mongo-orchestration -f orchestration.config -e default start
+        if [ ${windows|false} = true ]; then
+          trap 'set +o errexit; cd mongo-orchestration; mongo-orchestration stop;' EXIT
+          taskkill.exe /fi python /f
+          cp /cygdrive/c/curl/dlls/* .
+          rm -rf python_env
+          git clone https://github.com/TylerBrock/mongo-orchestration.git
+          cd mongo-orchestration
+          python setup.py install
+          echo "{ \"releases\": { \"default\": \"c:\\\\mongodb\\\\bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
+          mongo-orchestration -f orchestration.config -e default start
+          pip install --upgrade git@github.com:10gen/mongo-orchestration.git
+          cd ..
+        else
+          trap 'set +o errexit; mongo-orchestration stop;' EXIT
+          echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
+          pip uninstall -y mongo-orchestration
+          pip install --upgrade git@github.com:10gen/mongo-orchestration.git
+          TMPDIR=/data/db mongo-orchestration -f orchestration.config -e default start
+        fi
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} integration
 
   "run client tests" :
@@ -212,13 +224,25 @@ functions:
     params:
       working_dir: "mongo-cxx-driver"
       script: |
-        set -o verbose
-        set -o errexit
-        trap 'set +o errexit; mongo-orchestration stop; pkill -9 mongod; pkill -9 mongos; pkill -9 mongo-orchestration}' EXIT
         echo "Starting Mongo Orchestration..."
-        echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
-        mkdir tmp
-        TMPDIR=`pwd`/tmp mongo-orchestration -f orchestration.config -e default start
+        if [ ${windows|false} = true ]; then
+          trap 'set +o errexit; cd mongo-orchestration; mongo-orchestration stop;' EXIT
+          taskkill.exe /fi python /f
+          cp /cygdrive/c/curl/dlls/* .
+          rm -rf python_env
+          git clone https://github.com/TylerBrock/mongo-orchestration.git
+          cd mongo-orchestration
+          python setup.py install
+          echo "{ \"releases\": { \"default\": \"c:\\\\mongodb\\\\bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
+          mongo-orchestration -f orchestration.config -e default start
+          cd ..
+        else
+          trap 'set +o errexit; mongo-orchestration stop;' EXIT
+          echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
+          pip uninstall -y mongo-orchestration
+          pip install --upgrade git@github.com:10gen/mongo-orchestration.git
+          TMPDIR=/data/db mongo-orchestration -f orchestration.config -e default start
+        fi
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} install # static lib install step
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} check-install # static build installation header check
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} examples
@@ -274,7 +298,7 @@ tasks:
             script: |
                 set -o errexit
                 set -o verbose
-                ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} all
+                ${scons|scons} -j$(grep -c ^processor /proc/cpuinfo) ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} all
         - command: shell.exec
           params:
               working_dir: "mongo-cxx-driver"
@@ -504,7 +528,7 @@ buildvariants:
     extension: ".exe"
     scons: scons.bat
   run_on:
-  - windows-64-test
+  - windows-64-compile
   tasks: *latest_tests
 
 ## Windows 64-bit DEBUG DYNAMIC (msvc2010)
@@ -525,7 +549,7 @@ buildvariants:
     extension: ".exe"
     scons: scons.bat
   run_on:
-  - windows-64-test
+  - windows-64-compile
   tasks: *latest_tests
 
 ## Windows 64-bit DYNAMIC (msvc2013)
@@ -546,7 +570,7 @@ buildvariants:
     extension: ".exe"
     scons: scons.bat
   run_on:
-  - windows-64-vs2013-test
+  - windows-64-vs2013-compile
   tasks: *latest_tests
 
 ## Windows 64-bit (msvc2013) DYNAMIC-RT
@@ -567,5 +591,5 @@ buildvariants:
     extension: ".exe"
     scons: scons.bat
   run_on:
-  - windows-64-vs2013-test
+  - windows-64-vs2013-compile
   tasks: *latest_tests
