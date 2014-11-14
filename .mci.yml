@@ -204,7 +204,8 @@ functions:
         echo "Starting Mongo Orchestration..."
         echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
         mkdir tmp
-        TMPDIR=`pwd`/tmp mongo-orchestration -f orchestration.config -e default start
+        export TMPDIR=`pwd`/tmp
+        mongo-orchestration -f orchestration.config -e default start
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} integration
 
   "run client tests" :
@@ -218,7 +219,8 @@ functions:
         echo "Starting Mongo Orchestration..."
         echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
         mkdir tmp
-        TMPDIR=`pwd`/tmp mongo-orchestration -f orchestration.config -e default start
+        export TMPDIR=`pwd`/tmp
+        mongo-orchestration -f orchestration.config -e default start
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} install # static lib install step
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} check-install # static build installation header check
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} examples
