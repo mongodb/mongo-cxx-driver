@@ -213,8 +213,6 @@ functions:
         else
           trap 'set +o errexit; mongo-orchestration stop;' EXIT
           echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
-          pip uninstall -y mongo-orchestration
-          pip install --upgrade git@github.com:10gen/mongo-orchestration.git
           TMPDIR=/data/db mongo-orchestration -f orchestration.config -e default start
         fi
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} integration
@@ -239,8 +237,6 @@ functions:
         else
           trap 'set +o errexit; mongo-orchestration stop;' EXIT
           echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
-          pip uninstall -y mongo-orchestration
-          pip install --upgrade git@github.com:10gen/mongo-orchestration.git
           TMPDIR=/data/db mongo-orchestration -f orchestration.config -e default start
         fi
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} install # static lib install step
