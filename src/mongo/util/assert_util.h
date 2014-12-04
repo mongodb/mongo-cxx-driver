@@ -145,8 +145,10 @@ namespace mongo {
         virtual void appendPrefix( std::stringstream& ss ) const;
     };
 
+
     MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC verifyFailed(const char *msg, const char *file, unsigned line);
     MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC invariantFailed(const char *msg, const char *file, unsigned line);
+    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC invariantOKFailed(const char *msg, const Status& status, const char *file, unsigned line);
     MONGO_CLIENT_API void MONGO_CLIENT_FUNC wasserted(const char *msg, const char *file, unsigned line);
     MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC fassertFailed( int msgid );
     MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC fassertFailedWithStatus(
@@ -225,23 +227,37 @@ namespace mongo {
         }
     }
 
+    MONGO_CLIENT_API inline void massertNoTraceStatusOK(const Status& status) {
+        if (MONGO_unlikely(!status.isOK())) {
+            msgassertedNoTrace((status.location() != 0 ? status.location() : status.code()),
+                        status.reason());
+        }
+    }
 
     /* same as massert except no msgid */
 #define MONGO_verify(_Expression) do {                                  \
-        if (MONGO_unlikely(!(_Expression))) {                               \
+        if (MONGO_unlikely(!(_Expression))) {                           \
             ::mongo::verifyFailed(#_Expression, __FILE__, __LINE__);    \
         }                                                               \
     } while (false)
 
 #define MONGO_invariant(_Expression) do {                               \
-        if (MONGO_unlikely(!(_Expression))) {                               \
+        if (MONGO_unlikely(!(_Expression))) {                           \
             ::mongo::invariantFailed(#_Expression, __FILE__, __LINE__); \
         }                                                               \
+    } while (false)
+
+#define MONGO_invariantOK(expression) do {                                                    \
+    const ::mongo::Status _invariantOK_status = expression;                                   \
+        if (MONGO_unlikely(!_invariantOK_status.isOK())) {                                    \
+            ::mongo::invariantOKFailed(#expression, _invariantOK_status, __FILE__, __LINE__); \
+        }                                                                                     \
     } while (false)
 
 #ifdef MONGO_EXPOSE_MACROS
 # define verify MONGO_verify
 # define invariant MONGO_invariant
+# define invariantOK MONGO_invariantOK
 # define uassert MONGO_uassert
 # define wassert MONGO_wassert
 # define massert MONGO_massert

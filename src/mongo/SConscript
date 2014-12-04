@@ -61,6 +61,7 @@ unittests = [
     'client/replica_set_monitor_test',
     'client/write_concern_test',
     'db/dbmessage_test',
+    'db/namespace_string_test',
     'dbtests/jsobjtests',
     'dbtests/jsontests',
     'dbtests/mock_dbclient_conn_test',
