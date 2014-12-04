@@ -122,6 +122,13 @@ namespace mongo {
         abort();
     }
 
+    MONGO_COMPILER_NORETURN void fassertFailedWithStatusNoTrace(int msgid, const Status& status) {
+        log() << "Fatal assertion " <<  msgid << " " << status;
+        logContext();
+        log() << "\n\n***aborting after fassert() failure\n\n" << endl;
+        abort();
+    }
+
     void uasserted(int msgid , const string &msg) {
         uasserted(msgid, msg.c_str());
     }

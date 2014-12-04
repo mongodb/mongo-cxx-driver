@@ -153,6 +153,8 @@ namespace mongo {
     MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC fassertFailed( int msgid );
     MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC fassertFailedWithStatus(
             int msgid, const Status& status);
+    MONGO_CLIENT_API MONGO_COMPILER_NORETURN void MONGO_CLIENT_FUNC fassertFailedWithStatusNoTrace(
+            int msgid, const Status& status);
 
     /** a "user assertion".  throws UserAssertion.  logs.  typically used for errors that a user
         could cause, such as duplicate key, disk full, etc.
@@ -184,6 +186,12 @@ namespace mongo {
     MONGO_CLIENT_API inline void MONGO_CLIENT_FUNC fassert(int msgid, const Status& status) {
         if (MONGO_unlikely(!status.isOK())) {
             fassertFailedWithStatus(msgid, status);
+        }
+    }
+
+    MONGO_CLIENT_API inline void fassertNoTrace(int msgid, const Status& status) {
+        if (MONGO_unlikely(!status.isOK())) {
+            fassertFailedWithStatusNoTrace(msgid, status);
         }
     }
 

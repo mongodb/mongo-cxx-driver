@@ -1060,6 +1060,10 @@ def doConfigure(myenv):
         # primary mongo sources as well.
         AddToCCFLAGSIfSupported(myenv, "-Wno-unused-const-variable")
 
+        # This has been suppressed in gcc 4.8, due to false positives, but not in clang.  So
+        # we explicitly disable it here.
+        AddToCCFLAGSIfSupported(myenv, "-Wno-missing-braces")
+
     # Check if we need to disable null-conversion warnings
     if using_clang():
         def CheckNullConversion(context):
