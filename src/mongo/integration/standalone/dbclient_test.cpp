@@ -1124,11 +1124,11 @@ namespace {
     const bool kCompiledWithSSL = false;
 #endif
 
-    void createUser(DBClientConnection& c, const string& name, const string& password) {
+    void createUser(DBClientConnection& c, const std::string& db, const string& name, const string& password) {
         if (serverGTE(&c, 2, 6)) {
             BSONObj ret;
             ASSERT_TRUE(
-                c.runCommand("test",
+                c.runCommand(db,
                              BSON( "createUser" << name
                                 << "pwd" << password
                                 << "roles" << BSON_ARRAY("readWrite")),
@@ -1136,7 +1136,7 @@ namespace {
             );
         } else if (serverGTE(&c, 2, 4)) {
             ASSERT_NO_THROW(
-                c.insert("test.system.users" ,
+                c.insert(db + ".system.users" ,
                          BSON( "user" << name
                             << "pwd" << c.createPasswordDigest(name , password)))
             );
@@ -1144,7 +1144,7 @@ namespace {
     }
 
     TEST_F(DBClientTest, CreateUser) {
-        createUser(c, "user1", "password1");
+        createUser(c, TEST_DB, "user1", "password1");
     }
 
     // This test would fail against a fresh 2.8 if we did not use the SCRAM-SHA-1 auth mechanism
@@ -1155,7 +1155,7 @@ namespace {
          *  to use the SCRAM-SHA-1 auth mechanism which it will likely require.
          */
         if (serverGTE(&c, 2, 4) && (!serverGTE(&c, 2, 7) || kCompiledWithSSL)) {
-            createUser(c, "user2", "password2");
+            createUser(c, TEST_DB, "user2", "password2");
             std::string errmsg;
             ASSERT_TRUE(c.auth("test", "user2", "password2", errmsg));
         }
@@ -1164,10 +1164,34 @@ namespace {
     TEST_F(DBClientTest, AuthenticateUserFailure) {
         // Run test if the server can be authed into, as per AuthenticateUserSuccess
         if (serverGTE(&c, 2, 4) && (!serverGTE(&c, 2, 7) || kCompiledWithSSL)) {
-            createUser(c, "user3", "password3");
+            createUser(c, TEST_DB, "user3", "password3");
             std::string errmsg;
             ASSERT_FALSE(c.auth("test", "user3", "notPassword3", errmsg));
         }
     }
+
+    TEST_F(DBClientTest, ConnectionStringWithNoDB) {
+        if (serverGTE(&c, 2, 4) && (!serverGTE(&c, 2, 7) || kCompiledWithSSL)) {
+            createUser(c, "admin", "user4", "password4");
+            std::string url = "mongodb://user4:password4@" + _uri;
+            std::string error;
+            ConnectionString connString = ConnectionString::parse(url, error);
+            ASSERT_TRUE(error.empty());
+            ASSERT_NO_THROW(connString.connect(url));
+        }
+    }
+
+    TEST_F(DBClientTest, ConnectionStringWithTestDB) {
+        if (serverGTE(&c, 2, 4) && (!serverGTE(&c, 2, 7) || kCompiledWithSSL)) {
+            createUser(c, TEST_DB, "user5", "password5");
+            std::string url = "mongodb://user5:password5@" + _uri + "/" + TEST_DB;
+            std::string error;
+            ConnectionString connString = ConnectionString::parse(url, error);
+            ASSERT_TRUE(error.empty());
+            ASSERT_NO_THROW(connString.connect(url));
+        }
+    }
+
+
 
 } // namespace

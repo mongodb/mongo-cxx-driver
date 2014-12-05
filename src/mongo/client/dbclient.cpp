@@ -181,7 +181,7 @@ namespace mongo {
         }
     }  // namespace
 
-    BSONObj ConnectionString::_makeAuthObjFromOptions() const {
+    BSONObj ConnectionString::_makeAuthObjFromOptions(int maxWireVersion) const {
         BSONObjBuilder bob;
 
         // Add the username and optional password
@@ -189,15 +189,25 @@ namespace mongo {
         std::string username(_user);  // may have to tack on service realm before we append
 
         if (!_password.empty())
-            bob.append("pwd", _password);
+            bob.append(saslCommandPasswordFieldName, _password);
 
         BSONElement elt = _options.getField("authSource");
-        if (!elt.eoo())
-            bob.appendAs(elt, "db");
+        if (!elt.eoo()) {
+            bob.appendAs(elt, saslCommandUserDBFieldName);
+        } else if (!_database.empty()) {
+            bob.append(saslCommandUserDBFieldName, _database);
+        } else {
+            bob.append(saslCommandUserDBFieldName, "admin");
+        }
 
         elt = _options.getField("authMechanism");
-        if (!elt.eoo())
-            bob.appendAs(elt, "mechanism");
+        if (!elt.eoo()) {
+            bob.appendAs(elt, saslCommandMechanismFieldName);
+        } else if (maxWireVersion >= 3) {
+            bob.append(saslCommandMechanismFieldName, "SCRAM-SHA-1");
+        } else {
+            bob.append(saslCommandMechanismFieldName, "MONGODB-CR");
+        }
 
         elt = _options.getField("authMechanismProperties");
         if (!elt.eoo()) {
@@ -213,7 +223,7 @@ namespace mongo {
             bob.append(kAuthMechanismPropertiesKey, parsed);
             // we still append using the old way the SASL code expects it
             if (hasNameProp) {
-                bob.append("serviceName", parsed[kAuthServiceName].String());
+                bob.append(saslCommandServiceNameFieldName, parsed[kAuthServiceName].String());
             }
             // if we specified a realm, we just append it to the username as the SASL code
             // expects it that way.
@@ -224,7 +234,7 @@ namespace mongo {
 
         elt = _options.getField("gssapiServiceName");
         if (!elt.eoo())
-            bob.appendAs(elt, "serviceName");
+            bob.appendAs(elt, saslCommandServiceNameFieldName);
 
         bob.append("user", username);
 
@@ -248,7 +258,7 @@ namespace mongo {
 
             if (!_user.empty()) {
                 try {
-                    c->auth(_makeAuthObjFromOptions());
+                    c->auth(_makeAuthObjFromOptions(c->getMaxWireVersion()));
                 }
                 catch(...) {
                     delete c;
@@ -272,7 +282,7 @@ namespace mongo {
 
             if (!_user.empty()) {
                 try {
-                    set->auth(_makeAuthObjFromOptions());
+                    set->auth(_makeAuthObjFromOptions(set->getMaxWireVersion()));
                 }
                 catch(...) {
                     delete set;

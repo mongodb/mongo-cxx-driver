@@ -358,7 +358,7 @@ namespace mongo {
         void _fillServers( std::string s );
         void _finishInit();
 
-        BSONObj _makeAuthObjFromOptions() const;
+        BSONObj _makeAuthObjFromOptions(int maxWireVersion) const;
 
         ConnectionType _type;
         std::vector<HostAndPort> _servers;
@@ -722,8 +722,6 @@ namespace mongo {
         /** Authorize access to a particular database.
             Authentication is separate for each database on the server -- you may authenticate for any
             number of databases on a single connection.
-            The "admin" database is special and once authenticated provides access to all databases on the
-            server.
             @param      digestPassword  if password is plain text, set this to true.  otherwise assumed to be pre-digested
             @param[out] authLevel       level of authentication for the given user
             @return true if successful
