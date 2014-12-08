@@ -94,7 +94,7 @@ namespace {
 
     void count(const auto_ptr<DBClientReplicaSet>& test_conn, ReadPreference rp) {
         Query q = Query().readPref(rp, BSONArray());
-        test_conn->count(TEST_NS, q);
+        test_conn->count(TEST_NS, q, QueryOption_SlaveOk);
     }
 
     void distinct(const auto_ptr<DBClientReplicaSet>& test_conn, ReadPreference rp) {

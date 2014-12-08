@@ -31,6 +31,18 @@
 
 using namespace mongo;
 
+bool serverLTE(DBClientBase* c, int major, int minor) {
+    BSONObj result;
+    c->runCommand("admin", BSON("buildinfo" << true), result);
+
+    std::vector<BSONElement> version = result.getField("versionArray").Array();
+    int serverMajor = version[0].Int();
+    int serverMinor = version[1].Int();
+
+    return (serverMajor <= major && serverMinor <= minor);
+}
+
+
 int main( int argc, const char **argv ) {
 
     using std::cout;
@@ -95,9 +107,15 @@ int main( int argc, const char **argv ) {
         return EXIT_FAILURE;
     }
 
-    if (conn->auth("test", "eliot", "bars", errmsg)) { // incorrect password
-        cout << "Authentication with invalid password should have failed but didn't" << endl;
-        return EXIT_FAILURE;
+    try {
+        if (conn->auth("test", "eliot", "bars", errmsg)) { // incorrect password
+            cout << "Authentication with invalid password should have failed but didn't" << endl;
+            return EXIT_FAILURE;
+        }
+    } catch (const DBException&) {
+        //Expected on v2.2 and below
+        assert(serverLTE(conn.get(), 2, 2));
     }
+
     return EXIT_SUCCESS;
 }
