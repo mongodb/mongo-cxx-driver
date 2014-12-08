@@ -37,13 +37,9 @@ int main( int argc, const char **argv ) {
     using std::endl;
     using std::string;
 
-    const char *port = "27017";
-    if ( argc != 1 ) {
-        if ( argc != 3 ) {
-            cout << "need to pass port as second param" << endl;
-            return EXIT_FAILURE;
-        }
-        port = argv[ 2 ];
+    if ( argc > 2 ) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
+        return EXIT_FAILURE;
     }
 
     client::Options autoTimeoutOpts = client::Options();
@@ -51,14 +47,17 @@ int main( int argc, const char **argv ) {
 
     mongo::client::GlobalInstance instance(autoTimeoutOpts);
     if (!instance.initialized()) {
-        std::cout << "failed to initialize the client driver: " << instance.status() << endl;
+        std::cout << "failed to initialize the client driver: " << instance.status() << std::endl;
         return EXIT_FAILURE;
     }
 
-    string errmsg;
-    ConnectionString cs = ConnectionString::parse(string("mongodb://127.0.0.1:") + port, errmsg);
+    std::string uri = argc == 2 ? argv[1] : "mongodb://localhost:27017";
+    std::string errmsg;
+
+    ConnectionString cs = ConnectionString::parse(uri, errmsg);
+
     if (!cs.isValid()) {
-        cout << "error parsing url: " << errmsg << endl;
+        std::cout << "Error parsing connection string " << uri << ": " << errmsg << std::endl;
         return EXIT_FAILURE;
     }
 

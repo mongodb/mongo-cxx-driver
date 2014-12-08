@@ -29,8 +29,8 @@
 using namespace std;
 using namespace mongo;
 
-int printIfAge(DBClientConnection& c, int age) {
-    std::auto_ptr<DBClientCursor> cursor = c.query("tutorial.persons", MONGO_QUERY( "age" << age ).sort("name") );
+int printIfAge(DBClientBase* conn, int age) {
+    std::auto_ptr<DBClientCursor> cursor = conn->query("tutorial.persons", MONGO_QUERY( "age" << age ).sort("name") );
     if (!cursor.get()) {
         cout << "query failure" << endl;
         return EXIT_FAILURE;
@@ -43,36 +43,25 @@ int printIfAge(DBClientConnection& c, int age) {
     return EXIT_SUCCESS;
 }
 
-int run(int argc, char* argv[]) {
+int run(DBClientBase* conn) {
 
-    const char *port = "27017";
-    if ( argc != 1 ) {
-        if ( argc != 3 ) {
-            std::cout << "need to pass port as second param" << endl;
-            return EXIT_FAILURE;
-        }
-        port = argv[ 2 ];
-    }
-
-    DBClientConnection c;
-    c.connect(string("localhost:") + port);
     cout << "connected ok" << endl;
     BSONObj p = BSON( "name" << "Joe" << "age" << 33 );
-    c.insert("tutorial.persons", p);
+    conn->insert("tutorial.persons", p);
     p = BSON( "name" << "Jane" << "age" << 40 );
-    c.insert("tutorial.persons", p);
+    conn->insert("tutorial.persons", p);
     p = BSON( "name" << "Abe" << "age" << 33 );
-    c.insert("tutorial.persons", p);
+    conn->insert("tutorial.persons", p);
     p = BSON( "name" << "Methuselah" << "age" << BSONNULL);
-    c.insert("tutorial.persons", p);
+    conn->insert("tutorial.persons", p);
     p = BSON( "name" << "Samantha" << "age" << 21 << "city" << "Los Angeles" << "state" << "CA" );
-    c.insert("tutorial.persons", p);
+    conn->insert("tutorial.persons", p);
 
-    c.createIndex("tutorial.persons", fromjson("{age:1}"));
+    conn->createIndex("tutorial.persons", fromjson("{age:1}"));
 
-    cout << "count:" << c.count("tutorial.persons") << endl;
+    cout << "count:" << conn->count("tutorial.persons") << endl;
 
-    std::auto_ptr<DBClientCursor> cursor = c.query("tutorial.persons", BSONObj());
+    std::auto_ptr<DBClientCursor> cursor = conn->query("tutorial.persons", BSONObj());
     if (!cursor.get()) {
         cout << "query failure" << endl;
         return EXIT_FAILURE;
@@ -83,20 +72,41 @@ int run(int argc, char* argv[]) {
     }
 
     cout << "\nprintifage:\n";
-    return printIfAge(c, 33);
+    return printIfAge(conn, 33);
 }
 
 int main(int argc, char* argv[]) {
 
+    if ( argc > 2 ) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
+        return EXIT_FAILURE;
+    }
+
     mongo::client::GlobalInstance instance;
     if (!instance.initialized()) {
-        std::cout << "failed to initialize the client driver: " << instance.status() << endl;
+        std::cout << "failed to initialize the client driver: " << instance.status() << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    std::string uri = argc == 2 ? argv[1] : "mongodb://localhost:27017";
+    std::string errmsg;
+
+    ConnectionString cs = ConnectionString::parse(uri, errmsg);
+
+    if (!cs.isValid()) {
+        std::cout << "Error parsing connection string " << uri << ": " << errmsg << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    boost::scoped_ptr<DBClientBase> conn(cs.connect(errmsg));
+    if ( !conn ) {
+        cout << "couldn't connect : " << errmsg << endl;
         return EXIT_FAILURE;
     }
 
     int ret = EXIT_SUCCESS;
     try {
-        ret = run(argc, argv);
+        ret = run(conn.get());
     }
     catch( DBException &e ) {
         cout << "caught " << e.what() << endl;

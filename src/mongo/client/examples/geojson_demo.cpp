@@ -35,7 +35,7 @@ using namespace mongo::geo::coords2dgeographic;
 static const char* kDbCollectionName = "geotest.data";
 static const char* kLocField = "loc";
 
-void insertGeoData(DBClientConnection& conn) {
+void insertGeoData(DBClientBase* conn) {
     Point p1(BSON("type" << "Point" << "coordinates" << BSON_ARRAY(-5.0 << -5.0)));
     Point p2(BSON("type" << "Point" << "coordinates" << BSON_ARRAY(100.0 << 0.0)));
     Point p3(BSON("type" << "Point" << "coordinates" << BSON_ARRAY(20.0 << 30.0)));
@@ -74,16 +74,16 @@ void insertGeoData(DBClientConnection& conn) {
         cout << geoms[i]->getType() << endl;
     }
 
-    conn.insert(kDbCollectionName, BSON(kLocField << p1.toBSON()));
-    conn.insert(kDbCollectionName, BSON(kLocField << p2.toBSON()));
-    conn.insert(kDbCollectionName, BSON(kLocField << p3.toBSON()));
-    conn.insert(kDbCollectionName, BSON(kLocField << p4.toBSON()));
-    conn.insert(kDbCollectionName, BSON(kLocField << line.toBSON()));
-    conn.insert(kDbCollectionName, BSON(kLocField << mls.toBSON()));
-    conn.insert(kDbCollectionName, BSON(kLocField << mp.toBSON()));
-    conn.insert(kDbCollectionName, BSON(kLocField << gcol.toBSON()));
+    conn->insert(kDbCollectionName, BSON(kLocField << p1.toBSON()));
+    conn->insert(kDbCollectionName, BSON(kLocField << p2.toBSON()));
+    conn->insert(kDbCollectionName, BSON(kLocField << p3.toBSON()));
+    conn->insert(kDbCollectionName, BSON(kLocField << p4.toBSON()));
+    conn->insert(kDbCollectionName, BSON(kLocField << line.toBSON()));
+    conn->insert(kDbCollectionName, BSON(kLocField << mls.toBSON()));
+    conn->insert(kDbCollectionName, BSON(kLocField << mp.toBSON()));
+    conn->insert(kDbCollectionName, BSON(kLocField << gcol.toBSON()));
 
-    conn.createIndex(kDbCollectionName, fromjson("{loc:\"2dsphere\"}"));
+    conn->createIndex(kDbCollectionName, fromjson("{loc:\"2dsphere\"}"));
 
     cout << "Coordinates p1 toBSON().toString():" << endl;
     cout << p1.getCoordinates().toBSON().toString() << endl;
@@ -91,7 +91,7 @@ void insertGeoData(DBClientConnection& conn) {
     cout << mls.toBSON().jsonString() << endl << endl;
 }
 
-void queryGeoData(DBClientConnection& conn) {
+void queryGeoData(DBClientBase* conn) {
     BSONObj lineBson = BSON("type" << "LineString" << "coordinates" <<
         BSON_ARRAY(BSON_ARRAY(0.0 << 0.0) <<
                    BSON_ARRAY(50.0 << 50.0)));
@@ -133,13 +133,13 @@ void queryGeoData(DBClientConnection& conn) {
 
     cout << "*** Testing LineString ***" << endl;
 
-    auto_ptr<DBClientCursor> cursor = conn.query(kDbCollectionName, q);
+    auto_ptr<DBClientCursor> cursor = conn->query(kDbCollectionName, q);
     cout << "Results from WITHINQUERY" << endl;
     while (cursor->more())
         cout << cursor->next().toString() << endl;
     cout << "---------------" << endl;
 
-    auto_ptr<DBClientCursor> cursor2 = conn.query(kDbCollectionName, q2);
+    auto_ptr<DBClientCursor> cursor2 = conn->query(kDbCollectionName, q2);
     cout << "Results from INTERSECTSQUERY" << endl;
     while (cursor2->more())
         cout << cursor2->next().toString() << endl;
@@ -147,13 +147,13 @@ void queryGeoData(DBClientConnection& conn) {
 
     cout << "*** Testing MultiPoint ***" << endl;
 
-    auto_ptr<DBClientCursor> cursor3 = conn.query(kDbCollectionName, q3);
+    auto_ptr<DBClientCursor> cursor3 = conn->query(kDbCollectionName, q3);
     cout << "Results from WITHINQUERY" << endl;
     while (cursor3->more())
         cout << cursor3->next().toString() << endl;
     cout << "---------------" << endl;
 
-    auto_ptr<DBClientCursor> cursor4 = conn.query(kDbCollectionName, q4);
+    auto_ptr<DBClientCursor> cursor4 = conn->query(kDbCollectionName, q4);
     cout << "Results from INTERSECTSQUERY" << endl;
     while (cursor4->more())
         cout << cursor4->next().toString() << endl;
@@ -161,13 +161,13 @@ void queryGeoData(DBClientConnection& conn) {
 
     cout << "*** Testing Polygon ***" << endl;
 
-    auto_ptr<DBClientCursor> cursor5 = conn.query(kDbCollectionName, q5);
+    auto_ptr<DBClientCursor> cursor5 = conn->query(kDbCollectionName, q5);
     cout << "Results from GEOWITHIN" << endl;
     while (cursor5->more())
         cout << cursor5->next().toString() << endl;
     cout << "---------------" << endl;
 
-    auto_ptr<DBClientCursor> cursor6 = conn.query(kDbCollectionName, q6);
+    auto_ptr<DBClientCursor> cursor6 = conn->query(kDbCollectionName, q6);
     cout << "Results from INTERSECTSQUERY" << endl;
     while (cursor6->more())
         cout << cursor6->next().toString() << endl;
@@ -177,35 +177,42 @@ void queryGeoData(DBClientConnection& conn) {
 
 int main( int argc, const char **argv ) {
 
-    mongo::client::GlobalInstance instance;
-    if (!instance.initialized()) {
-        std::cout << "failed to initialize the client driver: " << instance.status() << endl;
+    if ( argc > 2 ) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
         return EXIT_FAILURE;
     }
 
-    const char *port = "27017";
-    if (argc != 1) {
-        if (argc != 3) {
-            std::cout << "need to pass port as second param" << endl;
-            return EXIT_FAILURE;
-        }
-        port = argv[2];
+    client::GlobalInstance instance;
+    if (!instance.initialized()) {
+        std::cout << "failed to initialize the client driver: " << instance.status() << std::endl;
+        return EXIT_FAILURE;
     }
 
-    DBClientConnection conn;
-    try {
-        cout << "connecting to localhost..." << endl;
-        conn.connect(string("localhost:") + port);
-        cout << "connected ok" << endl;
+    std::string uri = argc == 2 ? argv[1] : "mongodb://localhost:27017";
+    std::string errmsg;
 
+    ConnectionString cs = ConnectionString::parse(uri, errmsg);
+
+    if (!cs.isValid()) {
+        std::cout << "Error parsing connection string " << uri << ": " << errmsg << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    boost::scoped_ptr<DBClientBase> conn(cs.connect(errmsg));
+    if ( !conn ) {
+        cout << "couldn't connect : " << errmsg << endl;
+        return EXIT_FAILURE;
+    }
+
+    try {
         BSONObj cmdResult;
-        conn.runCommand("admin", BSON("buildinfo" << true), cmdResult);
+        conn->runCommand("admin", BSON("buildinfo" << true), cmdResult);
         if (cmdResult["versionArray"].Array()[1].Int() < 6)
             return EXIT_SUCCESS;
 
-        insertGeoData(conn);
-        queryGeoData(conn);
-        conn.dropCollection(kDbCollectionName);
+        insertGeoData(conn.get());
+        queryGeoData(conn.get());
+        conn->dropCollection(kDbCollectionName);
     }
     catch(const DBException& dbe) {
         cout << "caught DBException " << dbe.toString() << endl;

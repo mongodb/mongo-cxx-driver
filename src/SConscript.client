@@ -550,7 +550,8 @@ clientTestProgramInstalls = staticClientProgramInstalls + sharedClientProgramIns
 # a server to come into being and then have each test depend on it.
 orchestration_uri = "%s:%s" % (clientEnv.GetOption("mongo-orchestration-host"),
                                clientEnv.GetOption("mongo-orchestration-port"))
-headers = { "Content-Type": "application/json" }
+json_headers = { "Content-Type": "application/json" }
+
 params = json.dumps({
     "id": "standalone",
     "name": "mongod",
@@ -558,38 +559,34 @@ params = json.dumps({
 })
 
 # Check if a standalone mongod is already up, resetting if it is
-for attempt in range(1,11):
+for attempt in range(10):
     try:
-        conn = httplib.HTTPConnection(orchestration_uri)
-        conn.request("GET", "/", "", headers)
+        conn = httplib.HTTPConnection(orchestration_uri, timeout=30)
+        conn.request("GET", "/servers/standalone", headers=json_headers)
         response = conn.getresponse()
+        message = response.read()
 
     except IOError:
-        print("Cannot connect to Mongo Orchestration at %s on attempt %d" % (orchestration_uri, attempt))
-        conn = httplib.HTTPConnection(orchestration_uri)
+        print("Cannot connect to Mongo Orchestration at %s on attempt %d" % (orchestration_uri, attempt + 1))
         time.sleep(1)
         continue
 
-    response.read()
-    conn.request("GET", "/servers/standalone", "", headers)
-    response = conn.getresponse()
-    message = response.read()
-
-    if (response.status != 200):
+    if (response.status == 404):
         print("No standalone started, starting one now...")
-        print("Message from orchestration: %s" % message)
-        conn.request("POST", "/servers", params, headers)
+        post_conn = httplib.HTTPConnection(orchestration_uri, timeout=30)
+        post_conn.request("POST", "/servers", params, json_headers)
+        time.sleep(1)
+        continue
+    elif (response.status/100 != 2):
+        print("Mongo Orchestration had an error with code %s" % response.status)
+        if message:
+            print("\tmessage from MO: %s", message)
         time.sleep(1)
         continue
 
     # Grab the port from the response -- use it in the tests
     decoded_response = json.loads(message)
-    try:
-        host_port_match = re.search("mongodb://(\w+)\:(\d+)", decoded_response['mongodb_uri'])
-    except TypeError:
-        print("Bad response: %s" % decoded_response)
-        time.sleep(1)
-        continue
+    mongodb_uri = decoded_response['mongodb_uri']
 
     for clientTest in clientTestProgramInstalls:
 
@@ -606,9 +603,9 @@ for attempt in range(1,11):
 
         clientEnv.AlwaysBuild(
             clientEnv.Alias(
-             'examples',
-             [clientTest],
-             "%s --port %s" % (clientTest.abspath, host_port_match.group(2))
+                'examples',
+                [clientTest],
+                "%s %s" % (clientTest.abspath, mongodb_uri)
             )
         )
 

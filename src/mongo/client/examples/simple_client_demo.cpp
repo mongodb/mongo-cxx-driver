@@ -31,49 +31,57 @@ using namespace mongo;
 
 int main(int argc, char* argv[]) {
 
-    mongo::client::GlobalInstance instance;
-    if (!instance.initialized()) {
-        std::cout << "failed to initialize the client driver: " << instance.status() << endl;
+    if ( argc > 2 ) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
         return EXIT_FAILURE;
     }
 
-    const char *port = "27017";
-    if ( argc != 1 ) {
-        if ( argc != 3 ) {
-            std::cout << "need to pass port as second param" << endl;
-            return EXIT_FAILURE;
-        }
-        port = argv[ 2 ];
+    mongo::client::GlobalInstance instance;
+    if (!instance.initialized()) {
+        std::cout << "failed to initialize the client driver: " << instance.status() << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    std::string uri = argc == 2 ? argv[1] : "mongodb://localhost:27017";
+    std::string errmsg;
+
+    ConnectionString cs = ConnectionString::parse(uri, errmsg);
+
+    if (!cs.isValid()) {
+        std::cout << "Error parsing connection string " << uri << ": " << errmsg << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    boost::scoped_ptr<DBClientBase> conn(cs.connect(errmsg));
+    if ( !conn ) {
+        cout << "couldn't connect : " << errmsg << endl;
+        return EXIT_FAILURE;
     }
 
     try {
-        cout << "connecting to localhost..." << endl;
-        DBClientConnection c;
-        c.connect(string("localhost:") + port);
-        cout << "connected ok" << endl;
-        unsigned long long count = c.count("test.foo");
+        unsigned long long count = conn->count("test.foo");
         cout << "count of exiting documents in collection test.foo : " << count << endl;
 
-        c.remove("test.foo", BSONObj());
+        conn->remove("test.foo", BSONObj());
 
         bo o = BSON( "hello" << "world" );
-        c.insert("test.foo", o);
+        conn->insert("test.foo", o);
 
-        string e = c.getLastError();
+        string e = conn->getLastError();
         if( !e.empty() ) {
             cout << "insert #1 failed: " << e << endl;
         }
 
         // make an index with a unique key constraint
-        c.createIndex("test.foo", IndexSpec().addKeys(BSON("hello"<<1)).unique());
+        conn->createIndex("test.foo", IndexSpec().addKeys(BSON("hello"<<1)).unique());
 
         try {
-            c.insert("test.foo", o); // will cause a dup key error on "hello" field
+            conn->insert("test.foo", o); // will cause a dup key error on "hello" field
         } catch (const OperationException &) {
             // duplicate key error
         }
         cout << "we expect a dup key error here:" << endl;
-        cout << "  " << c.getLastErrorDetailed().toString() << endl;
+        cout << "  " << conn->getLastErrorDetailed().toString() << endl;
     } 
     catch(DBException& e) { 
         cout << "caught DBException " << e.toString() << endl;

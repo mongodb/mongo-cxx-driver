@@ -31,36 +31,41 @@ using namespace mongo;
 
 int main( int argc, const char **argv ) {
 
-    const char *port = "27017";
-    if ( argc != 1 ) {
-        if ( argc != 3 ) {
-            cout << "need to pass port as second param" << endl;
-            return EXIT_FAILURE;
-        }
-        port = argv[ 2 ];
+    if ( argc > 2 ) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
+        return EXIT_FAILURE;
     }
 
     mongo::client::GlobalInstance instance;
     if (!instance.initialized()) {
-        std::cout << "failed to initialize the client driver: " << instance.status() << endl;
+        std::cout << "failed to initialize the client driver: " << instance.status() << std::endl;
         return EXIT_FAILURE;
     }
 
-    DBClientConnection conn;
+    std::string uri = argc == 2 ? argv[1] : "mongodb://localhost:27017";
     std::string errmsg;
-    if ( !conn.connect( string( "127.0.0.1:" ) + port, errmsg) ) {
+
+    ConnectionString cs = ConnectionString::parse(uri, errmsg);
+
+    if (!cs.isValid()) {
+        std::cout << "Error parsing connection string " << uri << ": " << errmsg << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    boost::scoped_ptr<DBClientBase> conn(cs.connect(errmsg));
+    if ( !conn ) {
         cout << "couldn't connect : " << errmsg << endl;
         return EXIT_FAILURE;
     }
 
     const char * ns = "test.second";
 
-    conn.remove( ns , BSONObj() );
+    conn->remove( ns , BSONObj() );
 
-    conn.insert( ns , BSON( "name" << "eliot" << "num" << 17 ) );
-    conn.insert( ns , BSON( "name" << "sara" << "num" << 24 ) );
+    conn->insert( ns , BSON( "name" << "eliot" << "num" << 17 ) );
+    conn->insert( ns , BSON( "name" << "sara" << "num" << 24 ) );
 
-    std::auto_ptr<DBClientCursor> cursor = conn.query( ns , BSONObj() );
+    std::auto_ptr<DBClientCursor> cursor = conn->query( ns , BSONObj() );
 
     if (!cursor.get()) {
         cout << "query failure" << endl;
@@ -73,7 +78,7 @@ int main( int argc, const char **argv ) {
         cout << "\t" << obj.jsonString() << endl;
     }
 
-    conn.createIndex( ns , BSON( "name" << 1 << "num" << -1 ) );
+    conn->createIndex( ns , BSON( "name" << 1 << "num" << -1 ) );
 
     return EXIT_SUCCESS;
 }

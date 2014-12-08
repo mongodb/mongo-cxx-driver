@@ -30,13 +30,9 @@ using namespace mongo;
 
 int main(int argc, char* argv[]) {
 
-    const char *port = "27017";
-    if ( argc != 1 ) {
-        if ( argc != 3 ) {
-            std::cout << "need to pass port as second param" << std::endl;
-            return EXIT_FAILURE;
-        }
-        port = argv[ 2 ];
+    if ( argc > 2 ) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
+        return EXIT_FAILURE;
     }
 
     mongo::client::GlobalInstance instance;
@@ -45,25 +41,38 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    DBClientConnection conn;
-    conn.connect(std::string("localhost:").append(port));
-    conn.dropCollection("test.test");
+    std::string uri = argc == 2 ? argv[1] : "mongodb://localhost:27017";
+    std::string errmsg;
+
+    ConnectionString cs = ConnectionString::parse(uri, errmsg);
+
+    if (!cs.isValid()) {
+        std::cout << "Error parsing connection string " << uri << ": " << errmsg << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    boost::scoped_ptr<DBClientBase> conn(cs.connect(errmsg));
+    if ( !conn ) {
+        std::cout << "couldn't connect : " << errmsg << std::endl;
+        return EXIT_FAILURE;
+    }
+    conn->dropCollection("test.test");
 
     // Don't run on MongoDB < 2.2
     BSONObj cmdResult;
-    conn.runCommand("admin", BSON("buildinfo" << true), cmdResult);
+    conn->runCommand("admin", BSON("buildinfo" << true), cmdResult);
     std::vector<BSONElement> versionArray = cmdResult["versionArray"].Array();
     if (versionArray[0].Int() < 2 || versionArray[1].Int() < 2)
         return EXIT_SUCCESS;
 
-    conn.insert("test.test", BSON("x" << 0));
-    conn.insert("test.test", BSON("x" << 1));
-    conn.insert("test.test", BSON("x" << 1));
-    conn.insert("test.test", BSON("x" << 2));
-    conn.insert("test.test", BSON("x" << 2));
-    conn.insert("test.test", BSON("x" << 2));
+    conn->insert("test.test", BSON("x" << 0));
+    conn->insert("test.test", BSON("x" << 1));
+    conn->insert("test.test", BSON("x" << 1));
+    conn->insert("test.test", BSON("x" << 2));
+    conn->insert("test.test", BSON("x" << 2));
+    conn->insert("test.test", BSON("x" << 2));
 
-    std::auto_ptr<DBClientCursor> cursor = conn.aggregate("test.test",
+    std::auto_ptr<DBClientCursor> cursor = conn->aggregate("test.test",
         BSON_ARRAY(
             BSON("$match" << BSON("x" << GT << 0)) <<
             BSON("$group" << BSON("_id" << "$x" << "count" << BSON("$sum" << 1)))

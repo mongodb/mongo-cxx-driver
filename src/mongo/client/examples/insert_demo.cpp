@@ -29,41 +29,48 @@ using namespace mongo;
 
 int main(int argc, char* argv[]) {
 
-    mongo::client::GlobalInstance instance;
-    if (!instance.initialized()) {
-        std::cout << "failed to initialize the client driver: " << instance.status() << endl;
+    if ( argc > 2 ) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
         return EXIT_FAILURE;
     }
 
-    const char *port = "27017";
-    if ( argc != 1 ) {
-        if ( argc != 3 ) {
-            std::cout << "need to pass port as second param" << endl;
-            return EXIT_FAILURE;
-        }
-        port = argv[ 2 ];
+    mongo::client::GlobalInstance instance;
+    if (!instance.initialized()) {
+        std::cout << "failed to initialize the client driver: " << instance.status() << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    std::string uri = argc == 2 ? argv[1] : "mongodb://localhost:27017";
+    std::string errmsg;
+
+    ConnectionString cs = ConnectionString::parse(uri, errmsg);
+
+    if (!cs.isValid()) {
+        std::cout << "Error parsing connection string " << uri << ": " << errmsg << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    boost::scoped_ptr<DBClientBase> conn(cs.connect(errmsg));
+    if ( !conn ) {
+        cout << "couldn't connect : " << errmsg << endl;
+        return EXIT_FAILURE;
     }
 
     try {
-        cout << "connecting to localhost..." << endl;
-        DBClientConnection c;
-        c.connect(string("localhost:") + port);
-        cout << "connected ok" << endl;
-
         bo o = BSON( "hello" << "world" );
 
         cout << "dropping collection..." << endl;
-        c.dropCollection("test.foo");
+        conn->dropCollection("test.foo");
 
         cout << "inserting..." << endl;
 
         time_t start = time(0);
         for( unsigned i = 0; i < 100000; i++ ) {
-            c.insert("test.foo", o);
+            conn->insert("test.foo", o);
         }
 
         // wait until all operations applied
-        cout << "getlasterror returns: \"" << c.getLastError() << '"' << endl;
+        cout << "getlasterror returns: \"" << conn->getLastError() << '"' << endl;
 
         time_t done = time(0);
         time_t dt = done-start;
