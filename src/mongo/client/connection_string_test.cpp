@@ -117,7 +117,10 @@ namespace {
 
         { "mongodb://user:pwd@[::1]/?authMechanism=GSSAPI&authMechanismProperties=SERVICE_NAME:foobar", "user", "pwd", kMaster, "", 1, 2, "" },
 
-        { "mongodb://user:pwd@[::1]/?authMechanism=GSSAPI&gssapiServiceName=foobar", "user", "pwd", kMaster, "", 1, 2, "" }
+        { "mongodb://user:pwd@[::1]/?authMechanism=GSSAPI&gssapiServiceName=foobar", "user", "pwd", kMaster, "", 1, 2, "" },
+        { "mongodb:///tmp/mongodb-27017.sock", "", "", kMaster, "", 1, 0, "" },
+
+        { "mongodb:///tmp/mongodb-27017.sock,/tmp/mongodb-27018.sock/?replicaSet=replName", "", "", kSet, "replName", 2, 1, "" }
     };
 
     const InvalidURITestCase invalidCases[] = {
@@ -146,6 +149,7 @@ namespace {
             std::cout << "Testing URI: " << testCase.URI << '\n';
             std::string errMsg;
             const ConnectionString result = ConnectionString::parse(testCase.URI, errMsg);
+            if (!errMsg.empty()) { std::cout << "error with uri: " << errMsg << std::endl; }
             ASSERT_TRUE(result.isValid());
             ASSERT_TRUE(errMsg.empty());
             ASSERT_EQ(testCase.uname, result.getUser());

@@ -92,7 +92,7 @@ namespace mongo {
 
     } // namespace
 
-    void ConnectionString::_fillServers( string s ) {
+    void ConnectionString::_fillServers( string s, bool legacy ) {
 
         //
         // Custom-handled servers/replica sets start with '$'
@@ -102,9 +102,9 @@ namespace mongo {
 
         if( s.find( '$' ) == 0 ) _type = CUSTOM;
 
-        {
+        if (legacy) {
             string::size_type idx = s.find( '/' );
-            if ( idx != string::npos ) {
+            if (idx != string::npos && idx != 0) {
                 _setName = s.substr( 0 , idx );
                 s = s.substr( idx + 1 );
                 if( _type != CUSTOM ) _type = SET;
@@ -344,10 +344,10 @@ namespace mongo {
         verify( false );
     }
 
-    ConnectionString ConnectionString::parse( const string& address , string& errmsg ) {
-        if ( boost::algorithm::starts_with( address, "mongodb://" ) )
-            return _parseURL( address, errmsg );
-        errmsg = string("invalid connection string [") + address + "]";
+    ConnectionString ConnectionString::parse( const string& url , string& errmsg ) {
+        if ( boost::algorithm::starts_with( url, "mongodb://" ) )
+            return _parseURL( url, errmsg );
+        errmsg = string("invalid connection string [") + url + "]";
         return ConnectionString(); // INVALID
     }
 

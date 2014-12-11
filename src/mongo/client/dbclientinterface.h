@@ -334,7 +334,7 @@ namespace mongo {
             , _database( database )
             , _options( options ) {
 
-            _fillServers( servers );
+            _fillServers( servers, false );
             switch ( _type ) {
             case MASTER:
                 verify( _servers.size() == 1 );
@@ -355,7 +355,7 @@ namespace mongo {
 
         static ConnectionString _parseURL( const std::string& url, std::string& errmsg );
 
-        void _fillServers( std::string s );
+        void _fillServers( std::string s, bool legacy = true );
         void _finishInit();
 
         BSONObj _makeAuthObjFromOptions(int maxWireVersion) const;
