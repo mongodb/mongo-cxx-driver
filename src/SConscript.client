@@ -228,7 +228,6 @@ clientHeaders = [
     'mongo/bson/ordering.h',
     'mongo/bson/timestamp.h',
     'mongo/bson/util/builder.h',
-    'mongo/bson/util/misc.h',
     'mongo/client/autolib.h',
     'mongo/client/bulk_operation_builder.h',
     'mongo/client/bulk_update_builder.h',

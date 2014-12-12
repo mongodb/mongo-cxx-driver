@@ -21,7 +21,6 @@
 #include "mongo/db/json.h"
 #include "mongo/util/hex.h"
 #include "mongo/util/log.h"
-#include "mongo/util/md5.hpp"
 #include "mongo/util/mongoutils/str.h"
 
 namespace mongo {
@@ -71,15 +70,6 @@ namespace mongo {
 
     BSONObjIterator BSONObj::begin() const {
         return BSONObjIterator(*this);
-    }
-
-    string BSONObj::md5() const {
-        md5digest d;
-        md5_state_t st;
-        md5_init(&st);
-        md5_append( &st , (const md5_byte_t*)_objdata , objsize() );
-        md5_finish(&st, d);
-        return digestToString( d );
     }
 
     string BSONObj::jsonString( JsonStringFormat format, int pretty, bool isArray ) const {

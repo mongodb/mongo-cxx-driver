@@ -56,7 +56,7 @@ namespace mongo {
     }
 
     /* "warning" assert -- safe to continue, so we don't throw exception. */
-    NOINLINE_DECL void wasserted(const char *msg, const char *file, unsigned line) {
+    NOINLINE_DECL void wasserted(const char* expr, const char* file, unsigned line) {
         static bool rateLimited;
         static time_t lastWhen;
         static unsigned lastLine;
@@ -70,7 +70,7 @@ namespace mongo {
         lastWhen = time(0);
         lastLine = line;
 
-        log() << "warning assertion failure " << msg << ' ' << file << ' ' << dec << line << endl;
+        log() << "warning assertion failure " << expr << ' ' << file << ' ' << dec << line << endl;
         logContext();
 #if defined(MONGO_DEBUG_BUILD)
         // this is so we notice in buildbot
@@ -79,8 +79,8 @@ namespace mongo {
 #endif
     }
 
-    NOINLINE_DECL void verifyFailed(const char *msg, const char *file, unsigned line) {
-        log() << "Assertion failure " << msg << ' ' << file << ' ' << dec << line << endl;
+    NOINLINE_DECL void verifyFailed(const char *expr, const char *file, unsigned line) {
+        log() << "Assertion failure " << expr << ' ' << file << ' ' << dec << line << endl;
         logContext();
         stringstream temp;
         temp << "assertion " << file << ":" << line;
@@ -93,16 +93,17 @@ namespace mongo {
         throw e;
     }
 
-    NOINLINE_DECL void invariantFailed(const char *msg, const char *file, unsigned line) {
-        log() << "Invariant failure " << msg << ' ' << file << ' ' << dec << line << endl;
+    NOINLINE_DECL void invariantFailed(const char* expr, const char* file, unsigned line) {
+        log() << "Invariant failure " << expr << ' ' << file << ' ' << dec << line << endl;
         logContext();
         log() << "\n\n***aborting after invariant() failure\n\n" << endl;
         abort();
     }
 
-    NOINLINE_DECL void invariantOKFailed(const char *msg, const Status& status, const char *file,
+    NOINLINE_DECL void invariantOKFailed(const char* expr, const Status& status, const char *file,
                                          unsigned line) {
-        log() << "Invariant failure " << msg << ' ' << status << ' ' << file << ' ' << dec << line;
+        log() << "Invariant failure: " << expr << " resulted in status " << status
+              << " at " << file << ' ' << dec << line;
         logContext();
         log() << "\n\n***aborting after invariant() failure\n\n" << endl;
         abort();
@@ -182,14 +183,6 @@ namespace mongo {
 
     std::string causedBy( const Status& e ){
         return causedBy( e.reason() );
-    }
-
-    NOINLINE_DECL void streamNotGood( int code , const std::string& msg , std::ios& myios ) {
-        stringstream ss;
-        // errno might not work on all systems for streams
-        // if it doesn't for a system should deal with here
-        ss << msg << " stream invalid: " << errnoWithDescription();
-        throw UserException( code , ss.str() );
     }
 
     string errnoWithPrefix( const char * prefix ) {
