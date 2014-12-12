@@ -101,6 +101,7 @@ clientSourceBasic = [
     'mongo/client/dbclientcursor.cpp',
     'mongo/client/dbclientcursorshimarray.cpp',
     'mongo/client/dbclientcursorshimcursorid.cpp',
+    'mongo/client/dbclientcursorshimtransform.cpp',
     'mongo/client/delete_write_operation.cpp',
     'mongo/client/exceptions.cpp',
     'mongo/client/gridfs.cpp',

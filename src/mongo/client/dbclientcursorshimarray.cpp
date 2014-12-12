@@ -20,10 +20,15 @@
 
 namespace mongo  {
 
-    DBClientCursorShimArray::DBClientCursorShimArray(DBClientCursor& c) :
-        cursor(c),
-        iter(NULL, NULL),
-        has_array(false) {}
+    DBClientCursorShimArray::DBClientCursorShimArray(
+        DBClientCursor& c,
+        const std::string& arrayField
+    )
+        : cursor(c)
+        , iter(NULL, NULL)
+        , has_array(false)
+        , array_field(arrayField)
+    {}
 
     bool DBClientCursorShimArray::more() {
         bool r = false;
@@ -31,11 +36,14 @@ namespace mongo  {
         if (!has_array) {
             if (cursor.rawMore()) {
                 BSONObj val = cursor.rawNext();
-                BSONElement result = val["result"];
 
-                if (!result.eoo()) {
-                    iter = BSONObjIterator(result.Obj());
-                    r = true;
+                if (val.hasField(array_field)) {
+                    BSONObj arr = val[array_field].Obj();
+
+                    if (!arr.isEmpty()) {
+                        iter = BSONObjIterator(arr);
+                        r = true;
+                    }
                 }
             }
 

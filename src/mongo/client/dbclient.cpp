@@ -29,6 +29,7 @@
 #include "mongo/client/dbclientcursorshim.h"
 #include "mongo/client/dbclientcursorshimarray.h"
 #include "mongo/client/dbclientcursorshimcursorid.h"
+#include "mongo/client/dbclientcursorshimtransform.h"
 #include "mongo/client/dbclient_writer.h"
 #include "mongo/client/insert_write_operation.h"
 #include "mongo/client/options.h"
@@ -1327,61 +1328,49 @@ namespace mongo {
         return names;
     }
 
-    list<string> DBClientWithCommands::getCollectionNames( const string& db ) {
-        list<BSONObj> infos = getCollectionInfos( db );
+    list<string> DBClientWithCommands::getCollectionNames( const string& db,
+                                                           const BSONObj& filter ) {
+        auto_ptr<DBClientCursor> infos = enumerateCollections( db, filter );
         list<string> names;
-        for ( list<BSONObj>::iterator it = infos.begin(); it != infos.end(); ++it ) {
-            names.push_back( db + "." + (*it)["name"].valuestr() );
+
+        while (infos->more()) {
+            names.push_back(infos->nextSafe()["name"].valuestr());
         }
+
         return names;
     }
 
     list<BSONObj> DBClientWithCommands::getCollectionInfos( const string& db,
                                                             const BSONObj& filter ) {
+        auto_ptr<DBClientCursor> info_cursor = enumerateCollections( db, filter );
         list<BSONObj> infos;
 
-        // first we're going to try the command
-        // it was only added in 2.8, so if we're talking to an older server
-        // we'll fail back to querying system.namespaces
-        // TODO(spencer): remove fallback behavior after 2.8
-
-        {
-            // TODO: This implementation only reads the first batch of results from the
-            // listCollections command, and masserts if there are multiple batches to read.  A
-            // correct implementation needs to instantiate a command cursor from the command
-            // response object, and use it to read in all of the command results.
-            BSONObj res;
-            if (runCommand(db,
-                           BSON("listCollections" << 1 << "filter" << filter
-                                                       << "cursor" << BSONObj()),
-                           res,
-                           QueryOption_SlaveOk)) {
-                BSONObj cursorObj = res["cursor"].Obj();
-                massert(28586, "reading multiple batches from listCollections not implemented",
-                        cursorObj["id"].numberInt() == 0);
-                BSONObj collections = cursorObj["firstBatch"].Obj();
-                BSONObjIterator it( collections );
-                while ( it.more() ) {
-                    BSONElement e = it.next();
-                    infos.push_back( e.Obj().getOwned() );
-                }
-                return infos;
-            }
-
-            // command failed
-
-            int code = res["code"].numberInt();
-            string errmsg = res["errmsg"].valuestrsafe();
-            if ( code == ErrorCodes::CommandNotFound ||
-                 errmsg.find( "no such cmd" ) != string::npos ) {
-                // old version of server, ok, fall through to old code
-            }
-            else {
-                uasserted( 18630, str::stream() << "listCollections failed: " << res );
-            }
-
+        while (info_cursor->more()) {
+            infos.push_back(info_cursor->nextSafe().getOwned());
         }
 
+        return infos;
+    }
+
+    // Entries in the system.namespaces collection are fully qualified so the database name
+    // must be stripped from the query output for each collection's name
+    bool transformLegacyCollectionInfos(const BSONObj& input, BSONObj* output) {
+        const StringData ns = input["name"].checkAndGetStringData();
+
+        // Filter the $ collections out
+        if ( ns.find( '$' ) != string::npos )
+            return false;
+
+        // Strip the database from the name
+        BSONObjBuilder b;
+        b.append( "name", ns.substr( ns.find(".") + 1 ) );
+        b.appendElementsUnique( input );
+        *output = b.obj();
+        return true;
+    }
+
+    auto_ptr<DBClientCursor> DBClientWithCommands::_legacyCollectionInfo( const string& db,
+                                                                          const BSONObj& filter ) {
         // SERVER-14951 filter for old version fallback needs to db qualify the 'name' element
         BSONObjBuilder fallbackFilter;
         if ( filter.hasField( "name" ) && filter["name"].type() == String ) {
@@ -1389,27 +1378,70 @@ namespace mongo {
         }
         fallbackFilter.appendElementsUnique( filter );
 
-        string ns = db + ".system.namespaces";
-        auto_ptr<DBClientCursor> c = query(
-                ns.c_str(), fallbackFilter.obj(), 0, 0, 0, QueryOption_SlaveOk);
-        while ( c->more() ) {
-            BSONObj obj = c->nextSafe();
-            string ns = obj["name"].valuestr();
-            if ( ns.find( "$" ) != string::npos )
-                continue;
-            BSONObjBuilder b;
-            b.append( "name", ns.substr( db.size() + 1 ) );
-            b.appendElementsUnique( obj );
-            infos.push_back( b.obj() );
+        string namespaces_ns = db + ".system.namespaces";
+
+        auto_ptr<DBClientCursor> simple = query(namespaces_ns, fallbackFilter.obj(),
+                                                0, 0, 0, QueryOption_SlaveOk);
+
+        simple->shim.reset(new DBClientCursorShimTransform(*simple, transformLegacyCollectionInfos));
+        simple->nToReturn = 0;
+
+        return simple;
+    }
+
+    auto_ptr<DBClientCursor> DBClientWithCommands::enumerateCollections( const string& db,
+                                                                         const BSONObj& filter ) {
+        const std::string command_ns = db + ".$cmd";
+
+        BSONObj cmd = BSON("listCollections" << 1 << "filter" << filter << "cursor" << BSONObj());
+        auto_ptr<DBClientCursor> cursor = this->query(command_ns, cmd, 1, 0, NULL,
+                                                      QueryOption_SlaveOk, 0);
+        BSONObj result = cursor->peekFirst();
+
+        if ( isOk(result) ) {
+            // Command worked -- we are on MongoDB 2.7.6 or above
+            DBClientCursorShim* cursor_shim;
+
+            // Select the appropriate shim for this version of MongoDB
+            if ( result.hasField("collections") ) {
+                // MongoDB 2.7.6 to 2.8.0-rc2 behavior
+                cursor_shim = new DBClientCursorShimArray(*cursor, "collections");
+            }
+            else {
+                // MongoDB 2.8.0-rc3+ behavior
+                cursor_shim = new DBClientCursorShimCursorID(*cursor);
+                static_cast<DBClientCursorShimCursorID*>(cursor_shim)->get_cursor();
+            }
+
+            // Insert the shim
+            cursor->shim.reset(cursor_shim);
+        }
+        else {
+            // Command failed -- we are either on an older MongoDB or something else happened
+            int error_code = result["code"].numberInt();
+            string errmsg = result["errmsg"].valuestrsafe();
+
+            if (
+                ( error_code == ErrorCodes::CommandNotFound ) ||
+                ( error_code == 13390 ) ||
+                ( errmsg.find( "no such cmd" ) != string::npos )
+            ) {
+                // MongoDB < 2.7.6 behavior -- run legacy code to produce a cursor
+                cursor.reset(_legacyCollectionInfo(db, filter).release());
+            }
+            else {
+                // Something else happened, uassert with the reason
+                uasserted( 18630, str::stream() << "listCollections failed: " << result );
+            }
         }
 
-        return infos;
+        return cursor;
     }
 
     bool DBClientWithCommands::exists( const string& ns ) {
         BSONObj filter = BSON( "name" << nsToCollectionSubstring( ns ) );
-        list<BSONObj> results = getCollectionInfos( nsToDatabase( ns ), filter );
-        return !results.empty();
+        auto_ptr<DBClientCursor> results = enumerateCollections( nsToDatabase( ns ), filter );
+        return results->more();
     }
 
     /* --- dbclientconnection --- */
@@ -1737,7 +1769,7 @@ namespace mongo {
                         this->query(nsToDatabase(ns) + ".$cmd", request.removeField(
                                         "cursor"), 1, 0, NULL, queryOptions, 0);
 
-                    simple->shim.reset(new DBClientCursorShimArray(*simple));
+                    simple->shim.reset(new DBClientCursorShimArray(*simple, "result"));
                     simple->nToReturn = 0;
 
                     return simple;
