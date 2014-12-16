@@ -70,7 +70,6 @@ unittests = [
     'geo/geo_test',
     'logger/log_test',
     'platform/atomic_word_test',
-    'platform/process_id_test',
     'platform/random_test',
     'unittest/connection_string_test',
     'unittest/query_test',

@@ -128,7 +128,6 @@ clientSourceBasic = [
     'mongo/logger/logstream_builder.cpp',
     'mongo/logger/message_event_utf8_encoder.cpp',
     'mongo/logger/message_log_domain.cpp',
-    'mongo/platform/process_id.cpp',
     'mongo/platform/random.cpp',
     'mongo/util/assert_util.cpp',
     'mongo/util/background.cpp',
