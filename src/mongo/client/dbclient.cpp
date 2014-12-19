@@ -1978,61 +1978,84 @@ namespace mongo {
     list<BSONObj> DBClientWithCommands::getIndexSpecs( const string &ns, int options ) {
         list<BSONObj> specs;
 
-        {
-            // TODO: This implementation only reads the first batch of results from the
-            // listIndexes command, and masserts if there are multiple batches to read.  A
-            // correct implementation needs to instantiate a command cursor from the command
-            // response object, and use it to read in all of the command results.
-            BSONObj cmd = BSON(
-                "listIndexes" << nsToCollectionSubstring( ns ) <<
-                "cursor" << BSONObj()
-            );
+        auto_ptr<DBClientCursor> specs_cursor = enumerateIndexes(ns, options);
 
-            BSONObj res;
-            if ( runCommand( nsToDatabase( ns ), cmd, res, options ) ) {
-                BSONObj cursorObj = res["cursor"].Obj();
-                massert(28587, "reading multiple batches from listIndexes not implemented",
-                        cursorObj["id"].numberInt() == 0);
-                BSONObjIterator i( cursorObj["firstBatch"].Obj() );
-                while ( i.more() ) {
-                    specs.push_back( i.next().Obj().getOwned() );
-                }
-                return specs;
-            }
-            int code = res["code"].numberInt();
-            string errmsg = res["errmsg"].valuestrsafe();
-            if ( code == ErrorCodes::CommandNotFound ||
-                 errmsg.find( "no such cmd" ) != string::npos ) {
-                // old version of server, ok, fall through to old code
-            }
-            else if ( code == ErrorCodes::NamespaceNotFound ) {
-                return specs;
-            }
-            else {
-                uasserted( 18631, str::stream() << "listIndexes failed: " << res );
+        if ( specs_cursor.get() ) {
+            while ( specs_cursor->more() ) {
+                specs.push_back(specs_cursor->nextSafe().getOwned());
             }
         }
 
-        // fallback to querying system.indexes
-        // TODO(spencer): Remove fallback behavior after 2.8
-        auto_ptr<DBClientCursor> cursor = query(NamespaceString(ns).getSystemIndexesCollection(),
-                                                BSON("ns" << ns), 0, 0, 0, options);
-        while ( cursor->more() ) {
-            BSONObj spec = cursor->nextSafe();
-            specs.push_back( spec.getOwned() );
-        }
         return specs;
     }
 
-    list<std::string> DBClientWithCommands::getIndexNames( const std::string& ns ) {
+    list<std::string> DBClientWithCommands::getIndexNames( const std::string& ns, int options ) {
         list<std::string> indexNames;
-        list<BSONObj> specs( getIndexSpecs(ns) );
 
-        for (list<BSONObj>::const_iterator it = specs.begin(); it != specs.end(); ++it) {
-            indexNames.push_back((*it)["name"].valuestr());
+        auto_ptr<DBClientCursor> specs_cursor = enumerateIndexes(ns, options);
+
+        if ( specs_cursor.get() ) {
+            while ( specs_cursor->more() ) {
+                indexNames.push_back(specs_cursor->nextSafe()["name"].valuestr());
+            }
         }
+
         return indexNames;
     }
+
+    auto_ptr<DBClientCursor> DBClientWithCommands::enumerateIndexes( const string& ns, int options ) {
+        const NamespaceString nsstring(ns);
+
+        BSONObj cmd = BSON("listIndexes" << nsstring.coll() << "cursor" << BSONObj());
+
+        auto_ptr<DBClientCursor> cursor = this->query(nsstring.getCommandNS(), cmd, 1, 0, NULL,
+                                                      options, 0);
+        BSONObj result = cursor->peekFirst();
+
+        if ( isOk(result) ) {
+            // Command worked -- we are on MongoDB 2.7.6 or above
+            DBClientCursorShim* cursor_shim;
+
+            // Select the appropriate shim for this version of MongoDB
+            if ( result.hasField("indexes") ) {
+                // MongoDB 2.7.6 to 2.8.0-rc2 behavior
+                cursor_shim = new DBClientCursorShimArray(*cursor, "indexes");
+            }
+            else {
+                // MongoDB 2.8.0-rc3+ behavior
+                cursor_shim = new DBClientCursorShimCursorID(*cursor);
+                static_cast<DBClientCursorShimCursorID*>(cursor_shim)->get_cursor();
+            }
+
+            // Insert the shim
+            cursor->shim.reset(cursor_shim);
+        }
+        else {
+            // Command failed -- we are either on an older MongoDB or something else happened
+            int error_code = result["code"].numberInt();
+            string errmsg = result["errmsg"].valuestrsafe();
+
+            if ( error_code == ErrorCodes::NamespaceNotFound ) {
+                cursor.reset(NULL);
+            }
+            else if (
+                ( error_code == ErrorCodes::CommandNotFound ) ||
+                ( error_code == 13390 ) ||
+                ( errmsg.find( "no such cmd" ) != string::npos )
+            ) {
+                // MongoDB < 2.7.6 behavior -- query system.indexes
+                cursor.reset(query(nsstring.getSystemIndexesCollection(), BSON("ns" << ns),
+                                   0, 0, 0, options).release());
+            }
+            else {
+                // Something else happened, uassert with the reason
+                uasserted( 18631, str::stream() << "listIndexes failed: " << result );
+            }
+        }
+
+        return cursor;
+    }
+
 
     void DBClientWithCommands::dropIndex( const string& ns , BSONObj keys ) {
         dropIndex( ns , genIndexName( keys ) );

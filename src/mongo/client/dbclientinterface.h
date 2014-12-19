@@ -1144,8 +1144,8 @@ namespace mongo {
          *      }
          *  }
          */
-        std::auto_ptr<DBClientCursor> enumerateCollections ( const std::string& db,
-                                                             const BSONObj& filter = BSONObj() );
+        std::auto_ptr<DBClientCursor> enumerateCollections( const std::string& db,
+                                                            const BSONObj& filter = BSONObj() );
 
         bool exists( const std::string& ns );
 
@@ -1177,7 +1177,9 @@ namespace mongo {
         /**
          * Enumerates all indexes on ns (a db-qualified collection name). Returns a list of the index names.
          */
-        virtual std::list<std::string> getIndexNames( const std::string& ns );
+        virtual std::list<std::string> getIndexNames( const std::string& ns, int options = 0 );
+
+        virtual std::auto_ptr<DBClientCursor> enumerateIndexes( const std::string& ns, int options = 0 );
 
         virtual void dropIndex( const std::string& ns , BSONObj keys );
         virtual void dropIndex( const std::string& ns , const std::string& indexName );

@@ -684,6 +684,7 @@ namespace {
     }
 
     TEST_F(DBClientTest, GetIndexNames) {
+        ASSERT_TRUE(c.getIndexNames(TEST_DB + ".fake").empty());
         ASSERT_TRUE(c.getIndexNames(TEST_NS).empty());
 
         c.insert(TEST_NS, BSON("test" << "random data"));
@@ -696,6 +697,31 @@ namespace {
         ASSERT_EQUALS("_id_", names.front());
         names.pop_front();
         ASSERT_EQUALS("test_1", names.front());
+    }
+
+    TEST_F(DBClientTest, GetIndexSpecs) {
+        ASSERT_TRUE(c.getIndexSpecs(TEST_DB + ".fake").empty());
+        ASSERT_TRUE(c.getIndexSpecs(TEST_NS).empty());
+
+        c.insert(TEST_NS, BSON("test" << "random data"));
+        ASSERT_EQUALS(1U, c.getIndexSpecs(TEST_NS).size());
+
+        IndexSpec spec;
+        spec.addKey("test", IndexSpec::kIndexTypeAscending);
+        spec.unique(true);
+        c.createIndex(TEST_NS, spec);
+
+        list<BSONObj> specs = c.getIndexSpecs(TEST_NS);
+
+        ASSERT_EQUALS(2U, specs.size());
+        ASSERT_EQUALS("_id_", specs.front()["name"].String());
+        ASSERT_EQUALS(BSON("_id" << 1), specs.front()["key"].Obj());
+        ASSERT_EQUALS(TEST_NS, specs.front()["ns"].String());
+        specs.pop_front();
+        ASSERT_EQUALS("test_1", specs.front()["name"].String());
+        ASSERT_EQUALS(BSON("test" << 1), specs.front()["key"].Obj());
+        ASSERT_EQUALS(TEST_NS, specs.front()["ns"].String());
+        ASSERT_TRUE(specs.front()["unique"].trueValue());
     }
 
     TEST_F(DBClientTest, DropIndexes) {
