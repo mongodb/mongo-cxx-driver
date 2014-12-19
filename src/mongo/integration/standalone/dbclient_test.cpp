@@ -336,7 +336,7 @@ namespace {
         list<BSONObj> infos = c.getCollectionInfos(TEST_DB);
 
         // Greater than because we sometimes create system.indexes, etc...
-        ASSERT_GREATER_THAN(infos.size(), 2U);
+        ASSERT_GE(infos.size(), 2U);
 
         size_t count_non_system = 0;
 
