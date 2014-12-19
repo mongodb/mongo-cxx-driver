@@ -368,7 +368,7 @@ namespace {
         list<string> names = c.getCollectionNames(TEST_DB);
 
         // Greater than because we sometimes create system.indexes, etc...
-        ASSERT_GREATER_THAN(names.size(), 2U);
+        ASSERT_GE(names.size(), 2U);
 
         list<string>::iterator it = names.begin();
 
