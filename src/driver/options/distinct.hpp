@@ -61,7 +61,7 @@ class LIBMONGOCXX_EXPORT distinct {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    void read_preference(class read_preference rp);
+    void read_preference(base::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -70,11 +70,11 @@ class LIBMONGOCXX_EXPORT distinct {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    const optional<class read_preference>& read_preference() const;
+    const optional<base::read_preference>& read_preference() const;
 
    private:
     optional<std::int64_t> _max_time_ms;
-    optional<class read_preference> _read_preference;
+    optional<base::read_preference> _read_preference;
 
 };
 

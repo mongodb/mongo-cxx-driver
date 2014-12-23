@@ -36,6 +36,7 @@ class collection;
 class LIBMONGOCXX_EXPORT cursor {
 
    public:
+
     class iterator;
 
     ///

@@ -213,7 +213,7 @@ class LIBMONGOCXX_EXPORT find {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    void read_preference(read_preference rp);
+    void read_preference(base::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -223,7 +223,7 @@ class LIBMONGOCXX_EXPORT find {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    const optional<class read_preference>& read_preference() const;
+    const optional<base::read_preference>& read_preference() const;
 
     ///
     /// Sets the number of documents to skip before returning results.
@@ -275,7 +275,7 @@ class LIBMONGOCXX_EXPORT find {
     optional<bool> _no_cursor_timeout;
     optional<bool> _oplog_replay;
     optional<bson::document::view> _projection;
-    optional<class read_preference> _read_preference;
+    optional<base::read_preference> _read_preference;
     optional<std::int32_t> _skip;
     optional<bson::document::view> _ordering;
 

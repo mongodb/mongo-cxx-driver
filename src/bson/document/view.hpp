@@ -57,8 +57,8 @@ class LIBMONGOCXX_EXPORT view {
 
     element operator[](const string_or_literal& key) const;
 
-    view(const std::uint8_t* b, std::size_t l);
     view();
+    view(const std::uint8_t* b, std::size_t l);
 
     const std::uint8_t* get_buf() const;
     std::size_t get_len() const;

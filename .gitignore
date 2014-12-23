@@ -1,6 +1,5 @@
 
 # Directories that are generated
-/build
 /docs
 
 /callgrind.out.*
@@ -11,7 +10,10 @@
 *#
 .#*
 
+tags
+
 #osx
 .DS_Store
 ._.DS_Store
 *.fuse_*
+*.swp
