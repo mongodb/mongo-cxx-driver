@@ -77,9 +77,9 @@ cxx_driver_variables:
     ## DLL paths
     dll:
       dll_msvc2010: &dllpath_msvc2010
-        dllpath: --runtime-library-search-path="c:\local\boost_1_55_0\lib64-msvc-10.0,c:\openssl\bin,c:\sasl\bin"
+        dllpath: --runtime-library-search-path="c:\local\boost_1_55_0\lib64-msvc-10.0,c:\openssl\bin,c:\sasl\bin,c:\curl\dlls"
       dll_mscv2013: &dllpath_msvc2013
-        dllpath: --runtime-library-search-path="c:\local\boost_1_56_0\lib64-msvc-12.0,c:\openssl\bin,c:\sasl\bin"
+        dllpath: --runtime-library-search-path="c:\local\boost_1_56_0\lib64-msvc-12.0,c:\openssl\bin,c:\sasl\bin,c:\curl\dlls"
     ## C++ paths
     cpp:
       cpp_boost_1_55_0: &cpppath_boost_1_55_0
@@ -201,14 +201,11 @@ functions:
         if [ ${windows|false} = true ]; then
           trap 'set +o errexit; cd mongo-orchestration; mongo-orchestration stop;' EXIT
           taskkill.exe /fi python /f
-          cp /cygdrive/c/curl/dlls/* .
-          rm -rf python_env
-          git clone https://github.com/TylerBrock/mongo-orchestration.git
+          git clone https://github.com/10gen/mongo-orchestration.git
           cd mongo-orchestration
           python setup.py install
           echo "{ \"releases\": { \"default\": \"c:\\\\mongodb\\\\bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
-          mongo-orchestration -f orchestration.config -e default start
-          pip install --upgrade git@github.com:10gen/mongo-orchestration.git
+          mongo-orchestration -f orchestration.config -e default -s wsgiref start
           cd ..
         else
           trap 'set +o errexit; mongo-orchestration stop;' EXIT
@@ -226,13 +223,11 @@ functions:
         if [ ${windows|false} = true ]; then
           trap 'set +o errexit; cd mongo-orchestration; mongo-orchestration stop;' EXIT
           taskkill.exe /fi python /f
-          cp /cygdrive/c/curl/dlls/* .
-          rm -rf python_env
-          git clone https://github.com/TylerBrock/mongo-orchestration.git
+          git clone https://github.com/10gen/mongo-orchestration.git
           cd mongo-orchestration
           python setup.py install
           echo "{ \"releases\": { \"default\": \"c:\\\\mongodb\\\\bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
-          mongo-orchestration -f orchestration.config -e default start
+          mongo-orchestration -f orchestration.config -e default -s wsgiref start
           cd ..
         else
           trap 'set +o errexit; mongo-orchestration stop;' EXIT
