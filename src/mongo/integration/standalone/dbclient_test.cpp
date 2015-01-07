@@ -780,6 +780,12 @@ namespace {
         }
     }
 
+    TEST_F(DBClientTest, AggregateNoResults) {
+        std::auto_ptr<DBClientCursor> cursor = c.aggregate(TEST_NS, BSONObj());
+        ASSERT_TRUE(cursor.get());
+        ASSERT_FALSE(cursor->more());
+    }
+
     TEST_F(DBClientTest, CreateCollection) {
         ASSERT_FALSE(c.exists(TEST_NS));
         ASSERT_TRUE(c.createCollection(TEST_NS));
