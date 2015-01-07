@@ -752,9 +752,9 @@ namespace {
         BSONObj distinct_result;
         this->c->runCommand(TEST_DB, BSON("distinct" << TEST_COLL << "key" << "a"), distinct_result);
         std::vector<BSONElement> distinct_a = distinct_result.getField("values").Array();
-        ASSERT_EQUALS(distinct_a[0].Int(), 1);
-        ASSERT_EQUALS(distinct_a[1].Int(), 2);
-        ASSERT_EQUALS(distinct_a[2].Int(), 3);
+        ASSERT_EQUALS(distinct_a[0].Number(), 1);
+        ASSERT_EQUALS(distinct_a[1].Number(), 2);
+        ASSERT_EQUALS(distinct_a[2].Number(), 3);
     }
 
     TYPED_TEST(BulkOperationTest, OrderedBatchWithErrors) {
