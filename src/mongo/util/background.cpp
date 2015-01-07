@@ -27,7 +27,6 @@
 #include <boost/thread/thread.hpp>
 
 #include "mongo/stdx/functional.h"
-#include "mongo/util/concurrency/thread_name.h"
 #include "mongo/util/debug_util.h"
 #include "mongo/util/log.h"
 #include "mongo/util/mongoutils/str.h"
@@ -59,18 +58,13 @@ namespace mongo {
 
     void BackgroundJob::jobBody() {
 
-        const string threadName = name();
-        if (!threadName.empty()) {
-            setThreadName(threadName.c_str());
-        }
-
-        LOG(1) << "BackgroundJob starting: " << threadName << endl;
+        LOG(1) << "BackgroundJob starting" << endl;
 
         try {
             run();
         }
         catch (const std::exception& e) {
-            error() << "backgroundjob " << threadName << " exception: " << e.what();
+            error() << "backgroundjob " << e.what();
             throw;
         }
 

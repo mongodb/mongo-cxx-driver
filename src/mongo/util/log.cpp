@@ -28,7 +28,6 @@
 
 #include "mongo/util/assert_util.h"
 #include "mongo/util/concurrency/threadlocal.h"
-#include "mongo/util/concurrency/thread_name.h"
 #include "mongo/util/text.h"
 #include "mongo/util/time_support.h"
 

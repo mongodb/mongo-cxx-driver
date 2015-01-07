@@ -32,7 +32,6 @@
 #include "mongo/logger/message_log_domain.h"
 #include "mongo/platform/compiler.h"
 #include "mongo/unittest/unittest.h"
-#include "mongo/util/concurrency/thread_name.h"
 #include "mongo/util/log.h"
 #include "mongo/util/mongoutils/str.h"
 

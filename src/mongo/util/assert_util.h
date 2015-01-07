@@ -27,7 +27,6 @@
 #include "mongo/logger/log_severity.h"
 #include "mongo/logger/logger.h"
 #include "mongo/logger/logstream_builder.h"
-#include "mongo/util/concurrency/thread_name.h"
 
 namespace mongo {
 
@@ -309,13 +308,13 @@ namespace mongo {
         expression; \
     } catch ( const std::exception &e ) { \
         ::mongo::logger::LogstreamBuilder(::mongo::logger::globalLogDomain(), \
-                                          ::mongo::getThreadName(), \
+                                          std::string(), \
                                           ::mongo::logger::LogSeverity::Log()) \
             << "caught exception (" << e.what() << ") in destructor (" << __FUNCTION__ \
             << ")" << std::endl; \
     } catch ( ... ) { \
         ::mongo::logger::LogstreamBuilder(::mongo::logger::globalLogDomain(), \
-                                          ::mongo::getThreadName(), \
+                                          std::string(), \
                                           ::mongo::logger::LogSeverity::Log()) \
             << "caught unknown exception in destructor (" << __FUNCTION__ << ")" \
             << std::endl; \
