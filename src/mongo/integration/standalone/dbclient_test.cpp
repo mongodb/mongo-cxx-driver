@@ -394,6 +394,72 @@ namespace {
         ASSERT_TRUE(saw_capped);
     }
 
+    TEST_F(DBClientTest, EnumerateCollections) {
+        const int n_collections = 9;
+        const int batch_size = 3;
+
+        for (int i = 0; i < n_collections; ++i) {
+            std::stringstream ss;
+            ss << TEST_DB + ".COLL" << i;
+            c.createCollection(ss.str());
+        }
+
+        BSONObjBuilder bob;
+        bob.appendRegex("name", "COLL\\d$");
+        auto_ptr<DBClientCursor> cursor = c.enumerateCollections(TEST_DB, bob.obj(), batch_size);
+
+        if (serverGTE(&c, 2, 8))
+            ASSERT_EQUALS(cursor->getns(), TEST_DB + ".$cmd.listCollections");
+        else
+            ASSERT_EQUALS(cursor->getns(), TEST_DB + ".system.namespaces");
+
+        int coll_count = 0;
+        while (cursor->more()) {
+            // The shims don't support the objsLeftInBatch cursor interface for initial batch.
+            //
+            // In server versions < 2.8 we apply a transformation over the cursor to filter
+            // out the special collections. Since we skip some results in the batch we can't
+            // apply this test here but you can see it work with enumerateIndexes which does
+            // not do the same transformation.
+            if ((coll_count > batch_size) && serverGTE(&c, 2, 8))
+                ASSERT_EQUALS(cursor->objsLeftInBatch(), batch_size - (coll_count % 3));
+            cursor->next();
+            ++coll_count;
+        }
+
+        ASSERT_EQUALS(coll_count, n_collections);
+    }
+
+    TEST_F(DBClientTest, EnumerateIndexes) {
+        const int n_indexes = 8;
+        const int batch_size = 3;
+
+        for (int i = 0; i < n_indexes; ++i) {
+            std::stringstream ss;
+            ss << i;
+            c.createIndex(TEST_NS, BSON(ss.str() << 1));
+        }
+
+        auto_ptr<DBClientCursor> cursor = c.enumerateIndexes(TEST_NS, 0, batch_size);
+
+        if (serverGTE(&c, 2, 8))
+            ASSERT_EQUALS(cursor->getns(), TEST_DB + ".$cmd.listIndexes");
+        else
+            ASSERT_EQUALS(cursor->getns(), TEST_DB + ".system.indexes");
+
+        int index_count = 0;
+        while (cursor->more()) {
+            // The shims don't support the objsLeftInBatch cursor interface for initial batch.
+            if (index_count > batch_size)
+                ASSERT_EQUALS(cursor->objsLeftInBatch(), batch_size - (index_count % 3));
+            cursor->next();
+            ++index_count;
+        }
+
+        // _id index is there when we started so adding 1
+        ASSERT_EQUALS(index_count, n_indexes + 1);
+    }
+
     TEST_F(DBClientTest, GetCollectionNamesFiltered) {
         c.dropDatabase(TEST_DB);
         ASSERT_EQUALS(c.getCollectionNames(TEST_DB).size(), 0U);

@@ -1145,7 +1145,8 @@ namespace mongo {
          *  }
          */
         std::auto_ptr<DBClientCursor> enumerateCollections( const std::string& db,
-                                                            const BSONObj& filter = BSONObj() );
+                                                            const BSONObj& filter = BSONObj(),
+                                                            int batchSize = 0 );
 
         bool exists( const std::string& ns );
 
@@ -1179,7 +1180,9 @@ namespace mongo {
          */
         virtual std::list<std::string> getIndexNames( const std::string& ns, int options = 0 );
 
-        virtual std::auto_ptr<DBClientCursor> enumerateIndexes( const std::string& ns, int options = 0 );
+        virtual std::auto_ptr<DBClientCursor> enumerateIndexes( const std::string& ns,
+                                                                int options = 0,
+                                                                int batchSize = 0 );
 
         virtual void dropIndex( const std::string& ns , BSONObj keys );
         virtual void dropIndex( const std::string& ns , const std::string& indexName );
@@ -1306,7 +1309,8 @@ namespace mongo {
 
         std::auto_ptr<DBClientCursor> _legacyCollectionInfo(
             const std::string& db,
-            const BSONObj& filter
+            const BSONObj& filter,
+            int batchSize
         );
     };
 

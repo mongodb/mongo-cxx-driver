@@ -1370,7 +1370,8 @@ namespace mongo {
     }
 
     auto_ptr<DBClientCursor> DBClientWithCommands::_legacyCollectionInfo( const string& db,
-                                                                          const BSONObj& filter ) {
+                                                                          const BSONObj& filter,
+                                                                          int batchSize ) {
         // SERVER-14951 filter for old version fallback needs to db qualify the 'name' element
         BSONObjBuilder fallbackFilter;
         if ( filter.hasField( "name" ) && filter["name"].type() == String ) {
@@ -1381,19 +1382,23 @@ namespace mongo {
         string namespaces_ns = db + ".system.namespaces";
 
         auto_ptr<DBClientCursor> simple = query(namespaces_ns, fallbackFilter.obj(),
-                                                0, 0, 0, QueryOption_SlaveOk);
+                                                0, 0, 0, QueryOption_SlaveOk, batchSize);
 
         simple->shim.reset(new DBClientCursorShimTransform(*simple, transformLegacyCollectionInfos));
         simple->nToReturn = 0;
+        simple->setBatchSize(batchSize);
 
         return simple;
     }
 
     auto_ptr<DBClientCursor> DBClientWithCommands::enumerateCollections( const string& db,
-                                                                         const BSONObj& filter ) {
+                                                                         const BSONObj& filter,
+                                                                         int batchSize ) {
         const std::string command_ns = db + ".$cmd";
 
-        BSONObj cmd = BSON("listCollections" << 1 << "filter" << filter << "cursor" << BSONObj());
+        BSONObj cmd = BSON("listCollections" << 1 << "filter" << filter
+            << "cursor" << (batchSize ? BSON("batchSize" << batchSize) : BSONObj()));
+
         auto_ptr<DBClientCursor> cursor = this->query(command_ns, cmd, 1, 0, NULL,
                                                       QueryOption_SlaveOk, 0);
         BSONObj result = cursor->peekFirst();
@@ -1415,6 +1420,8 @@ namespace mongo {
 
             // Insert the shim
             cursor->shim.reset(cursor_shim);
+            cursor->nToReturn = 0;
+            cursor->setBatchSize(batchSize);
         }
         else {
             // Command failed -- we are either on an older MongoDB or something else happened
@@ -1427,7 +1434,7 @@ namespace mongo {
                 ( errmsg.find( "no such cmd" ) != string::npos )
             ) {
                 // MongoDB < 2.7.6 behavior -- run legacy code to produce a cursor
-                cursor.reset(_legacyCollectionInfo(db, filter).release());
+                cursor.reset(_legacyCollectionInfo(db, filter, batchSize).release());
             }
             else {
                 // Something else happened, uassert with the reason
@@ -2003,10 +2010,13 @@ namespace mongo {
         return indexNames;
     }
 
-    auto_ptr<DBClientCursor> DBClientWithCommands::enumerateIndexes( const string& ns, int options ) {
+    auto_ptr<DBClientCursor> DBClientWithCommands::enumerateIndexes( const string& ns,
+                                                                     int options,
+                                                                     int batchSize ) {
         const NamespaceString nsstring(ns);
 
-        BSONObj cmd = BSON("listIndexes" << nsstring.coll() << "cursor" << BSONObj());
+        BSONObj cmd = BSON("listIndexes" << nsstring.coll()
+            << "cursor" << (batchSize ? BSON("batchSize" << batchSize) : BSONObj()));
 
         auto_ptr<DBClientCursor> cursor = this->query(nsstring.getCommandNS(), cmd, 1, 0, NULL,
                                                       options, 0);
@@ -2029,6 +2039,8 @@ namespace mongo {
 
             // Insert the shim
             cursor->shim.reset(cursor_shim);
+            cursor->nToReturn = 0;
+            cursor->setBatchSize(batchSize);
         }
         else {
             // Command failed -- we are either on an older MongoDB or something else happened
@@ -2045,7 +2057,7 @@ namespace mongo {
             ) {
                 // MongoDB < 2.7.6 behavior -- query system.indexes
                 cursor.reset(query(nsstring.getSystemIndexesCollection(), BSON("ns" << ns),
-                                   0, 0, 0, options).release());
+                                   0, 0, 0, options, batchSize).release());
             }
             else {
                 // Something else happened, uassert with the reason
