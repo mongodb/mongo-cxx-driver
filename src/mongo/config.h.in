@@ -38,3 +38,7 @@
 
 // Define to 1 if std::is_trivially_copyable is supported
 @mongoclient_have_std_is_trivially_copyable@
+
+// Define to 1 if this platform provides the strnlen(3) function
+@mongoclient_have_strnlen@
+

@@ -28,6 +28,7 @@
 #include "mongo/client/export_macros.h"
 #include "mongo/platform/cstdint.h"
 #include "mongo/platform/float_utils.h"
+#include "mongo/platform/strnlen.h"
 
 namespace mongo {
     class BSONObj;

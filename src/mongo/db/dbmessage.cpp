@@ -21,6 +21,7 @@
 
 #include "mongo/client/options.h"
 #include "mongo/client/private/options.h"
+#include "mongo/platform/strnlen.h"
 
 namespace mongo {
 

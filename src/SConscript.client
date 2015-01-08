@@ -58,6 +58,7 @@ configSubstitutions = [
     libEnv.makeConfigHDefine('@mongoclient_have_gcc_atomic_builtins@', 'MONGO_HAVE_GCC_ATOMIC_BUILTINS'),
     libEnv.makeConfigHDefine('@mongoclient_have_gcc_sync_builtins@', 'MONGO_HAVE_GCC_SYNC_BUILTINS'),
     libEnv.makeConfigHDefine('@mongoclient_have_std_is_trivially_copyable@', 'MONGO_HAVE_STD_IS_TRIVIALLY_COPYABLE'),
+    libEnv.makeConfigHDefine('@mongoclient_have_strnlen@', 'MONGO_HAVE_STRNLEN'),
     libEnv.makeConfigHDefineWithValue('@mongoclient_byte_order@', 'MONGO_BYTE_ORDER'),
 ]
 libEnv.Substfile('mongo/config.h.in', SUBST_DICT=configSubstitutions)
@@ -130,6 +131,7 @@ clientSourceBasic = [
     'mongo/logger/message_event_utf8_encoder.cpp',
     'mongo/logger/message_log_domain.cpp',
     'mongo/platform/random.cpp',
+    'mongo/platform/strnlen.cpp',
     'mongo/util/assert_util.cpp',
     'mongo/util/background.cpp',
     'mongo/util/base64.cpp',
@@ -154,6 +156,7 @@ clientSourceBasic = [
     'third_party/murmurhash3/MurmurHash3.cpp',
     ]
 
+# polyfills for platforms that don't have certain system provided functions
 clientSourceTz = [] if (clientEnv['MONGO_HAVE_TIMEGM'] or windows) else ['third_party/tz/timegm.c']
 
 clientSourceSSL = [
@@ -298,6 +301,7 @@ clientHeaders = [
     'mongo/platform/endian.h',
     'mongo/platform/float_utils.h',
     'mongo/platform/hash_namespace.h',
+    'mongo/platform/strnlen.h',
     'mongo/platform/unordered_map.h',
     'mongo/platform/windows_basic.h',
     'mongo/stdx/functional.h',

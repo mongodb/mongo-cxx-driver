@@ -1651,10 +1651,15 @@ def doConfigure(myenv):
         if not conf.CheckLib("execinfo"):
             Exit(1)
 
+    # check for presence of timegm(3) and polyfill if needed
     conf.env['MONGO_HAVE_TIMEGM'] = conf.CheckDeclaration(
         'timegm', includes="#include <time.h>", language='C')
     if conf.env['MONGO_HAVE_TIMEGM']:
         conf.env.Append(CPPDEFINES=['MONGO_HAVE_TIMEGM'])
+
+    # check for presence of strnlen(3) and polyfill if needed
+    if conf.CheckDeclaration('strnlen', includes="#include <string.h>", language='C'):
+        conf.env['MONGO_HAVE_STRNLEN'] = True
 
     return conf.Finish()
 

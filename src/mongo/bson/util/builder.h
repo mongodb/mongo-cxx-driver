@@ -22,7 +22,6 @@
 #include <sstream>
 #include <stdio.h>
 #include <string>
-#include <string.h>
 
 #include <boost/static_assert.hpp>
 
