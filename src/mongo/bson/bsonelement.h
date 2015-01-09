@@ -35,11 +35,6 @@ namespace mongo {
     class BSONElement;
     class BSONObjBuilder;
 
-    typedef mongo::BSONElement be;
-    typedef mongo::BSONObj bo;
-    typedef mongo::BSONObjBuilder bob;
-
-
     /* l and r MUST have same type when called: check that first. */
     int compareElementValues(const BSONElement& l, const BSONElement& r);
 

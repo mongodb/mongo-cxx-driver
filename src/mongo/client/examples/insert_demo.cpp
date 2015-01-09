@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
     }
 
     try {
-        bo o = BSON( "hello" << "world" );
+        BSONObj o = BSON( "hello" << "world" );
 
         cout << "dropping collection..." << endl;
         conn->dropCollection("test.foo");

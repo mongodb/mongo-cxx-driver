@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
 
         conn->remove("test.foo", BSONObj());
 
-        bo o = BSON( "hello" << "world" );
+        BSONObj o = BSON( "hello" << "world" );
         conn->insert("test.foo", o);
 
         string e = conn->getLastError();
