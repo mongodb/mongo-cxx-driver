@@ -183,11 +183,13 @@ namespace mongo {
 
     void GridFS::removeFile( const string& fileName ) {
         auto_ptr<DBClientCursor> files = _client.query( _filesNS , BSON( "filename" << fileName ) );
-        while (files->more()) {
-            BSONObj file = files->next();
-            BSONElement id = file["_id"];
-            _client.remove( _filesNS.c_str() , BSON( "_id" << id ) );
-            _client.remove( _chunksNS.c_str() , BSON( "files_id" << id ) );
+        if (files.get()) {
+            while (files->more()) {
+                BSONObj file = files->next();
+                BSONElement id = file["_id"];
+                _client.remove( _filesNS.c_str() , BSON( "_id" << id ) );
+                _client.remove( _chunksNS.c_str() , BSON( "files_id" << id ) );
+            }
         }
     }
 

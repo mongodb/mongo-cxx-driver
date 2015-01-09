@@ -1401,44 +1401,47 @@ namespace mongo {
 
         auto_ptr<DBClientCursor> cursor = this->query(command_ns, cmd, 1, 0, NULL,
                                                       QueryOption_SlaveOk, 0);
-        BSONObj result = cursor->peekFirst();
 
-        if ( isOk(result) ) {
-            // Command worked -- we are on MongoDB 2.7.6 or above
-            DBClientCursorShim* cursor_shim;
+        if ( cursor.get() ) {
+            BSONObj result = cursor->peekFirst();
 
-            // Select the appropriate shim for this version of MongoDB
-            if ( result.hasField("collections") ) {
-                // MongoDB 2.7.6 to 2.8.0-rc2 behavior
-                cursor_shim = new DBClientCursorShimArray(*cursor, "collections");
+            if ( isOk(result) ) {
+                // Command worked -- we are on MongoDB 2.7.6 or above
+                DBClientCursorShim* cursor_shim;
+
+                // Select the appropriate shim for this version of MongoDB
+                if ( result.hasField("collections") ) {
+                    // MongoDB 2.7.6 to 2.8.0-rc2 behavior
+                    cursor_shim = new DBClientCursorShimArray(*cursor, "collections");
+                }
+                else {
+                    // MongoDB 2.8.0-rc3+ behavior
+                    cursor_shim = new DBClientCursorShimCursorID(*cursor);
+                    static_cast<DBClientCursorShimCursorID*>(cursor_shim)->get_cursor();
+                }
+
+                // Insert the shim
+                cursor->shim.reset(cursor_shim);
+                cursor->nToReturn = 0;
+                cursor->setBatchSize(batchSize);
             }
             else {
-                // MongoDB 2.8.0-rc3+ behavior
-                cursor_shim = new DBClientCursorShimCursorID(*cursor);
-                static_cast<DBClientCursorShimCursorID*>(cursor_shim)->get_cursor();
-            }
+                // Command failed -- we are either on an older MongoDB or something else happened
+                int error_code = result["code"].numberInt();
+                string errmsg = result["errmsg"].valuestrsafe();
 
-            // Insert the shim
-            cursor->shim.reset(cursor_shim);
-            cursor->nToReturn = 0;
-            cursor->setBatchSize(batchSize);
-        }
-        else {
-            // Command failed -- we are either on an older MongoDB or something else happened
-            int error_code = result["code"].numberInt();
-            string errmsg = result["errmsg"].valuestrsafe();
-
-            if (
-                ( error_code == ErrorCodes::CommandNotFound ) ||
-                ( error_code == 13390 ) ||
-                ( errmsg.find( "no such cmd" ) != string::npos )
-            ) {
-                // MongoDB < 2.7.6 behavior -- run legacy code to produce a cursor
-                cursor.reset(_legacyCollectionInfo(db, filter, batchSize).release());
-            }
-            else {
-                // Something else happened, uassert with the reason
-                uasserted( 18630, str::stream() << "listCollections failed: " << result );
+                if (
+                    ( error_code == ErrorCodes::CommandNotFound ) ||
+                    ( error_code == 13390 ) ||
+                    ( errmsg.find( "no such cmd" ) != string::npos )
+                ) {
+                    // MongoDB < 2.7.6 behavior -- run legacy code to produce a cursor
+                    cursor.reset(_legacyCollectionInfo(db, filter, batchSize).release());
+                }
+                else {
+                    // Something else happened, uassert with the reason
+                    uasserted( 18630, str::stream() << "listCollections failed: " << result );
+                }
             }
         }
 
@@ -2020,48 +2023,51 @@ namespace mongo {
 
         auto_ptr<DBClientCursor> cursor = this->query(nsstring.getCommandNS(), cmd, 1, 0, NULL,
                                                       options, 0);
-        BSONObj result = cursor->peekFirst();
 
-        if ( isOk(result) ) {
-            // Command worked -- we are on MongoDB 2.7.6 or above
-            DBClientCursorShim* cursor_shim;
+        if ( cursor.get() ) {
+            BSONObj result = cursor->peekFirst();
 
-            // Select the appropriate shim for this version of MongoDB
-            if ( result.hasField("indexes") ) {
-                // MongoDB 2.7.6 to 2.8.0-rc2 behavior
-                cursor_shim = new DBClientCursorShimArray(*cursor, "indexes");
+            if ( isOk(result) ) {
+                // Command worked -- we are on MongoDB 2.7.6 or above
+                DBClientCursorShim* cursor_shim;
+
+                // Select the appropriate shim for this version of MongoDB
+                if ( result.hasField("indexes") ) {
+                    // MongoDB 2.7.6 to 2.8.0-rc2 behavior
+                    cursor_shim = new DBClientCursorShimArray(*cursor, "indexes");
+                }
+                else {
+                    // MongoDB 2.8.0-rc3+ behavior
+                    cursor_shim = new DBClientCursorShimCursorID(*cursor);
+                    static_cast<DBClientCursorShimCursorID*>(cursor_shim)->get_cursor();
+                }
+
+                // Insert the shim
+                cursor->shim.reset(cursor_shim);
+                cursor->nToReturn = 0;
+                cursor->setBatchSize(batchSize);
             }
             else {
-                // MongoDB 2.8.0-rc3+ behavior
-                cursor_shim = new DBClientCursorShimCursorID(*cursor);
-                static_cast<DBClientCursorShimCursorID*>(cursor_shim)->get_cursor();
-            }
+                // Command failed -- we are either on an older MongoDB or something else happened
+                int error_code = result["code"].numberInt();
+                string errmsg = result["errmsg"].valuestrsafe();
 
-            // Insert the shim
-            cursor->shim.reset(cursor_shim);
-            cursor->nToReturn = 0;
-            cursor->setBatchSize(batchSize);
-        }
-        else {
-            // Command failed -- we are either on an older MongoDB or something else happened
-            int error_code = result["code"].numberInt();
-            string errmsg = result["errmsg"].valuestrsafe();
-
-            if ( error_code == ErrorCodes::NamespaceNotFound ) {
-                cursor.reset(NULL);
-            }
-            else if (
-                ( error_code == ErrorCodes::CommandNotFound ) ||
-                ( error_code == 13390 ) ||
-                ( errmsg.find( "no such cmd" ) != string::npos )
-            ) {
-                // MongoDB < 2.7.6 behavior -- query system.indexes
-                cursor.reset(query(nsstring.getSystemIndexesCollection(), BSON("ns" << ns),
-                                   0, 0, 0, options, batchSize).release());
-            }
-            else {
-                // Something else happened, uassert with the reason
-                uasserted( 18631, str::stream() << "listIndexes failed: " << result );
+                if ( error_code == ErrorCodes::NamespaceNotFound ) {
+                    cursor.reset(NULL);
+                }
+                else if (
+                    ( error_code == ErrorCodes::CommandNotFound ) ||
+                    ( error_code == 13390 ) ||
+                    ( errmsg.find( "no such cmd" ) != string::npos )
+                ) {
+                    // MongoDB < 2.7.6 behavior -- query system.indexes
+                    cursor.reset(query(nsstring.getSystemIndexesCollection(), BSON("ns" << ns),
+                                       0, 0, 0, options, batchSize).release());
+                }
+                else {
+                    // Something else happened, uassert with the reason
+                    uasserted( 18631, str::stream() << "listIndexes failed: " << result );
+                }
             }
         }
 
