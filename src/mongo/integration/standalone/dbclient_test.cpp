@@ -442,8 +442,10 @@ namespace {
 
         auto_ptr<DBClientCursor> cursor = c.enumerateIndexes(TEST_NS, 0, batch_size);
 
+        // Note: as per spec we aren't supposed to check the 2.8+ ns explicitly because it's
+        // subject to change... but we do. If this test ever fails just safely adjust/remove.
         if (serverGTE(&c, 2, 8))
-            ASSERT_EQUALS(cursor->getns(), TEST_DB + ".$cmd.listIndexes");
+            ASSERT_EQUALS(cursor->getns(), TEST_DB + ".$cmd.listIndexes." + TEST_COLL);
         else
             ASSERT_EQUALS(cursor->getns(), TEST_DB + ".system.indexes");
 
