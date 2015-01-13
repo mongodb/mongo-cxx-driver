@@ -47,6 +47,9 @@ libIntegrationTestMain = staticClientEnv.StaticLibrary(
 )
 
 unittests = [
+    'base/data_cursor_test',
+    'base/data_view_test',
+    'base/encoded_value_storage_test',
     'base/parse_number_test',
     'bson/bson_field_test',
     'bson/bson_obj_test',
@@ -70,6 +73,7 @@ unittests = [
     'geo/geo_test',
     'logger/log_test',
     'platform/atomic_word_test',
+    'platform/endian_test',
     'platform/random_test',
     'unittest/connection_string_test',
     'unittest/query_test',
