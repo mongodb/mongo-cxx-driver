@@ -43,7 +43,7 @@ cxx_driver_variables:
       mongo_url_prefix: "http://downloads.mongodb.com/win32/mongodb-win32-x86_64-"
       mongo_url_platform: "windows-64"
     rhel55: &mongo_url_rhel55
-      mongo_url_prefix: "http://downloads.10gen.com/linux/mongodb-linux-x86_64-"
+      mongo_url_prefix: "http://downloads.mongodb.com/linux/mongodb-linux-x86_64-"
       mongo_url_platform: "rhel57"
     rhel55_32: &mongo_url_rhel55_32
       mongo_url_prefix: "http://downloads.mongodb.org/linux/mongodb-linux-i686"
