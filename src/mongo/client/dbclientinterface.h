@@ -897,7 +897,13 @@ namespace mongo {
 
            returns true if successful
         */
-        bool copyDatabase(const std::string &fromdb, const std::string &todb, const std::string &fromhost = "", BSONObj *info = 0);
+        bool copyDatabase(const std::string& fromdb,
+                          const std::string& todb,
+                          const std::string& fromhost = "",
+                          const std::string& mechanism = "DEFAULT",
+                          const std::string& username = "",
+                          const std::string& password = "",
+                          BSONObj *info = 0);
 
         /** The Mongo database provides built-in performance profiling capabilities.  Uset setDbProfilingLevel()
            to enable.  Profiling information is then written to the system.profile collection, which one can

@@ -55,6 +55,10 @@
 #include <algorithm>
 #include <cstdlib>
 
+#ifdef MONGO_SSL
+#include "mongo/client/native_sasl_client_session.h"
+#endif
+
 namespace mongo {
 
     using std::auto_ptr;
@@ -149,6 +153,10 @@ namespace mongo {
         const char kAuthServiceName[] = "SERVICE_NAME";
         const char kAuthServiceRealm[] = "SERVICE_REALM";
 
+        const char kAuthMechMongoCR[] = "MONGODB-CR";
+        const char kAuthMechScramSha1[] = "SCRAM-SHA-1";
+        const char kAuthMechDefault[] = "DEFAULT";
+
         const char* const kSupportedAuthMechanismProperties[] = {
             kAuthServiceName,
             kAuthServiceRealm
@@ -180,6 +188,24 @@ namespace mongo {
             }
             return bob.obj();
         }
+
+        string authKeyCopyDBMongoCR(const string& username,
+                                    const string& password,
+                                    const string& nonce)
+        {
+            md5digest d;
+            string passwordDigest = createPasswordDigest( username, password );
+            {
+                md5_state_t st;
+                md5_init(&st);
+                md5_append(&st, reinterpret_cast<const md5_byte_t *>(nonce.c_str()), nonce.size() );
+                md5_append(&st, reinterpret_cast<const md5_byte_t *>(username.data()), username.length());
+                md5_append(&st, reinterpret_cast<const md5_byte_t *>(passwordDigest.c_str()), passwordDigest.size() );
+                md5_finish(&st, d);
+            }
+            return digestToString( d );
+        }
+
     }  // namespace
 
     BSONObj ConnectionString::_makeAuthObjFromOptions(int maxWireVersion) const {
@@ -205,9 +231,9 @@ namespace mongo {
         if (!elt.eoo()) {
             bob.appendAs(elt, saslCommandMechanismFieldName);
         } else if (maxWireVersion >= 3) {
-            bob.append(saslCommandMechanismFieldName, "SCRAM-SHA-1");
+            bob.append(saslCommandMechanismFieldName, kAuthMechScramSha1);
         } else {
-            bob.append(saslCommandMechanismFieldName, "MONGODB-CR");
+            bob.append(saslCommandMechanismFieldName, kAuthMechMongoCR);
         }
 
         elt = _options.getField("authMechanismProperties");
@@ -705,7 +731,7 @@ namespace mongo {
             BSONObjBuilder cmdObj;
             cmdObj.appendElements(cmd);
             _runCommandHook(&cmdObj);
-            
+
             info = findOne(ns, cmdObj.done(), 0 , options);
         }
         else {
@@ -848,7 +874,7 @@ namespace mongo {
                 !(params.hasField(saslCommandUserDBFieldName)
                   && params.hasField(saslCommandUserSourceFieldName)));
 
-        if (mechanism == StringData("MONGODB-CR", StringData::LiteralTag())) {
+        if (mechanism == kAuthMechMongoCR) {
             std::string db;
             if (params.hasField(saslCommandUserSourceFieldName)) {
                 uassertStatusOK(bsonExtractStringField(params,
@@ -942,9 +968,9 @@ namespace mongo {
                                     string& errmsg,
                                     bool digestPassword) {
         try {
-            const char* mech = "MONGODB-CR";
+            const char* mech = kAuthMechMongoCR;
             if( _maxWireVersion >= 3 ) {
-                mech = "SCRAM-SHA-1";
+                mech = kAuthMechScramSha1;
             }
             _auth(BSON(saslCommandMechanismFieldName << mech <<
                        saslCommandUserDBFieldName << dbname <<
@@ -1066,15 +1092,153 @@ namespace mongo {
         return runCommand(db.c_str(), b.done(), *info);
     }
 
-    bool DBClientWithCommands::copyDatabase(const string &fromdb, const string &todb, const string &fromhost, BSONObj *info) {
+    bool DBClientWithCommands::copyDatabase(const string& fromdb,
+                                            const string& todb,
+                                            const string& fromhost,
+                                            const string& mechanism,
+                                            const string& username,
+                                            const string& password,
+                                            BSONObj *info) {
         BSONObj o;
         if ( info == 0 ) info = &o;
-        BSONObjBuilder b;
-        b.append("copydb", 1);
-        b.append("fromhost", fromhost);
-        b.append("fromdb", fromdb);
-        b.append("todb", todb);
-        return runCommand("admin", b.done(), *info);
+        BSONObjBuilder copydbCmd;
+        copydbCmd.append("copydb", 1);
+        copydbCmd.append("fromhost", fromhost);
+        copydbCmd.append("fromdb", fromdb);
+        copydbCmd.append("todb", todb);
+
+        // If we don't have a username, or if we're copying locally,
+        // just run the command without authenticating
+        if ( username == "" || fromhost == "" ) {
+            return runCommand("admin", copydbCmd.done(), *info);
+        }
+
+        // Otherwise, take or guess the auth mechanism
+        string authMech;
+        if ( mechanism != kAuthMechDefault ) {
+            uassert( 0, "auth mechanism must be MONGODB-CR or SCRAM-SHA-1",
+                     ( mechanism == kAuthMechMongoCR ||
+                       mechanism == kAuthMechScramSha1));
+            authMech = mechanism;
+        }
+#ifdef MONGO_SSL
+        else if ( (static_cast<DBClientBase*>(this))->getMaxWireVersion() >= 3 ) {
+            authMech = kAuthMechScramSha1;
+        }
+#endif
+        else {
+            authMech = kAuthMechMongoCR;
+        }
+
+        if ( authMech == kAuthMechMongoCR ) {
+            // run MONGODB-CR copydb
+            BSONObj nonceInfo;
+            BSONObjBuilder nonceCmd;
+            BSONElement e;
+            string nonce;
+
+            nonceCmd.append("copydbgetnonce", 1);
+            nonceCmd.append("fromhost", fromhost);
+
+            verify( runCommand("admin", nonceCmd.done(), nonceInfo) );
+            {
+                BSONElement e = nonceInfo.getField("nonce");
+                verify( e.type() == String );
+                nonce = e.valuestr();
+            }
+
+            copydbCmd.append("username", username);
+            copydbCmd.append("nonce", nonce);
+            copydbCmd.append("key", authKeyCopyDBMongoCR(username, password, nonce));
+            return runCommand("admin", copydbCmd.done(), *info);
+        }
+        else {
+            // run SCRAM-SHA-1 copydb, but only with SSL
+#ifndef MONGO_SSL
+            uassert( 0, "SCRAM-SHA-1 authentication requires driver to be built with SSL", false );
+#endif
+#ifdef MONGO_SSL
+            string hashedPwd = createPasswordDigest(username, password);
+
+            // create and initialize our sasl session
+            boost::scoped_ptr<SaslClientSession> session(new NativeSaslClientSession());
+            session->setParameter(SaslClientSession::parameterMechanism, kAuthMechScramSha1);
+            session->setParameter(SaslClientSession::parameterUser, username);
+            session->setParameter(SaslClientSession::parameterPassword, hashedPwd);
+            session->initialize();
+
+            // set up commands to feed the sasl state machine
+            BSONObj saslFirstCommandPrefix = BSON("copydbsaslstart" << 1 <<
+                                                  "fromhost" << fromhost <<
+                                                  "fromdb" << fromdb <<
+                                                  saslCommandMechanismFieldName << kAuthMechScramSha1);
+
+            BSONObj saslFollowupCommandPrefix = BSON("copydb" << 1 <<
+                                                     "fromhost" << fromhost <<
+                                                     "fromdb" << fromdb <<
+                                                     "todb" << todb);
+
+            BSONObj saslCommandPrefix = saslFirstCommandPrefix;
+            BSONObj inputObj = BSON(saslCommandPayloadFieldName << "");
+            bool isServerDone = false;
+
+            // send copydbsaslstart, then continue to send copydb until we are done.
+            while (!session->isDone()) {
+                string payload;
+                BSONType type;
+
+                Status status = saslExtractPayload(inputObj, &payload, &type);
+                if (!status.isOK()) {
+                    throw DBException( str::stream() << "sasl session failure: " << status.reason(), 0 );
+                }
+
+                string responsePayload;
+                status = session->step(payload, &responsePayload);
+                if (!status.isOK()) {
+                    throw DBException( str::stream() << "sasl session failure: " << status.reason(), 0 );
+                }
+
+                // build command to send to server
+                BSONObjBuilder commandBuilder;
+                commandBuilder.appendElements(saslCommandPrefix);
+                commandBuilder.appendBinData(saslCommandPayloadFieldName,
+                                             int(responsePayload.size()),
+                                             BinDataGeneral,
+                                             responsePayload.c_str());
+                BSONElement conversationId = inputObj[saslCommandConversationIdFieldName];
+                if (!conversationId.eoo()) {
+                    commandBuilder.append(conversationId);
+                }
+
+                BSONObj command = commandBuilder.obj();
+                bool ok = runCommand("admin", command, inputObj);
+
+                ErrorCodes::Error code =
+                    ErrorCodes::fromInt(inputObj[saslCommandCodeFieldName].numberInt());
+
+                if (!ok || code != ErrorCodes::OK) {
+                    if (code == ErrorCodes::OK)
+                        code = ErrorCodes::UnknownError;
+                    // attempt to give a sane error message
+                    if ( inputObj.hasField("errmsg") ) {
+                        BSONElement e = inputObj.getField("errmsg");
+                        uassert( 0, "fromhost " + fromhost + " doesn't support SCRAM-SHA-1, use MONGODB-CR",
+                                 ( e.type() == String &&
+                                   strstr( e.valuestr(), "no such cmd: saslStart")));
+                    }
+                    throw OperationException( inputObj );
+                }
+
+                isServerDone = inputObj[saslCommandDoneFieldName].trueValue();
+                saslCommandPrefix = saslFollowupCommandPrefix;
+            }
+            if (!isServerDone) {
+                invariant(false);
+            }
+            return true;
+#endif /* MONGO_SSL */
+        }
+        invariant(false);
     }
 
     bool DBClientWithCommands::setDbProfilingLevel(const string &dbname, ProfilingLevel level, BSONObj *info ) {
@@ -1581,7 +1745,7 @@ namespace mongo {
                                         int options) {
         if (DBClientWithCommands::runCommand(dbname, cmd, info, options))
             return true;
-        
+
         if ( clientSet && isNotMasterErrorString( info["errmsg"] ) ) {
             clientSet->isntMaster();
         }
