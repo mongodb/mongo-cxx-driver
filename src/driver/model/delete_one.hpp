@@ -22,14 +22,30 @@ namespace mongo {
 namespace driver {
 namespace model {
 
+///
+/// Class representing a MongoDB delete operation that removes a single document.
+///
 class LIBMONGOCXX_EXPORT delete_one {
 
    public:
-    delete_one(bson::document::view filter);
 
+    ///
+    /// Constructs a delete operation that will delete the first document matching the filter.
+    ///
+    /// @param filter
+    ///   Document representing the criteria for deletion.
+    ///
+    explicit delete_one(bson::document::view filter);
+
+    ///
+    /// Gets the filter.
+    ///
+    /// @return The filter to be used for the delete operation.
+    ///
     const bson::document::view& filter() const;
 
    private:
+    // Required
     bson::document::view _filter;
 
 };

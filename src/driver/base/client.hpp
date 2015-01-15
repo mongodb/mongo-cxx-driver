@@ -26,36 +26,124 @@
 
 namespace mongo {
 namespace driver {
+namespace base {
 
-/// The client class is the entry point into the MongoDB driver. It acts as a logical gateway for
-/// accessing the databases of MongoDB clusters. Databases that are accessed via a client inherit
-/// all of the options specified on the client.
+///
+/// Class representing a client connection to MongoDB.
+///
+/// Acts as a logical gateway for working with databases contained within a MongoDB server.
+///
+/// Databases that are created via this client inherit the read_preference and write_concern
+/// settings of this client at the time they are created. The lifetimes of objects created via this
+/// client (databases, collections, cursors, etc...) @b must be a subset of the lifetime of the
+/// client that created them.
+///
+/// Example:
+/// @code
+///   mongo::driver::client mongo_client;
+///   mongo::driver::client mongo_client("mongodb://localhost:27017");
+/// @endcode
+///
+/// @todo Make iterable for databases on the server
+/// @todo Add + implement missing client api methods
+///
 class LIBMONGOCXX_EXPORT client {
 
-    // TODO: iterable for databases on the server
-    // TODO: add + implement client api methods
    public:
+
+    ///
+    /// Creates a new connection to MongoDB.
+    ///
+    /// @param mongodb_uri
+    ///   A MongoDB URI representing the connection parameters
+    /// @param options
+    ///   Additional options that cannot be specified via the mongodb_uri
+    ///
     client(
         const uri& mongodb_uri = uri(),
         const options::client& options = options::client()
     );
 
-    client(client&& rhs) noexcept;
-    client& operator=(client&& rhs) noexcept;
+    ///
+    /// Move constructs a client.
+    ///
+    client(client&&) noexcept;
 
+    ///
+    /// Move assigns a client.
+    ///
+    client& operator=(client&&) noexcept;
+
+    ///
+    /// Destroys a client.
+    ///
     ~client();
 
-    // TODO: document that modifications at this level do not affect existing clients + databases
+    ///
+    /// Sets the read_preference for this client.
+    ///
+    /// Modifications at this level do not effect existing databases instances that have have been
+    /// created by this client but do effect new ones as databases inherit the read_preference
+    /// settings of their parent upon instantiation.
+    ///
+    /// @param rp
+    ///   The new read_preference
+    ///
+    /// @see http://docs.mongodb.org/manual/core/read-preference/
+    ///
     void read_preference(class read_preference rp);
+
+    ///
+    /// Returns the current read preference for this client.
+    ///
+    /// @return The current read_preference
+    ///
+    /// @see http://docs.mongodb.org/manual/core/read-preference/
+    ///
     class read_preference read_preference() const;
 
-    // TODO: document that modifications at this level do not affect existing clients + databases
+    ///
+    /// Sets the write_concern for this client.
+    ///
+    /// @note Modifications at this level do not effect existing databases or collection instances
+    /// that have come from this client but do effect new ones as databases will receive a copy of
+    /// the write_concern of this client upon instantiation.
+    ///
+    /// @param wc
+    ///   The new write concern
+    ///
     void write_concern(class write_concern wc);
+
+    ///
+    /// Returns the current write_concern for this client.
+    ///
+    /// @return the current write_concern
     class write_concern write_concern() const;
 
+    ///
+    /// Obtains a database which represents a logical grouping of collections on a MongoDB server.
+    ///
+    /// @note A database cannot be obtained from a temporary client object.
+    ///
+    /// @param name
+    ///   The name of the database to get
+    ///
+    /// @return The database
+    ///
     class database database(const std::string& name) const &;
     class database database(const std::string& name) const && = delete;
 
+    ///
+    /// Allows the syntax @c client["db_name"] as a convenient shorthand for the client::database()
+    /// method by implementing the array subscript operator.
+    ///
+    /// @note A database cannot be obtained from a temporary client object.
+    ///
+    /// @param name
+    ///   The name of the database.
+    ///
+    /// @return Client side representation of a server side database
+    ///
     inline class database operator[](const std::string& name) const &;
     inline class database operator[](const std::string& name) const && = delete;
 
@@ -66,12 +154,13 @@ class LIBMONGOCXX_EXPORT client {
     class impl;
     std::unique_ptr<impl> _impl;
 
-}; // class client
+};
 
 inline class database client::operator[](const std::string& name) const & {
     return database(name);
 }
 
+}  // namespace base
 }  // namespace driver
 }  // namespace mongo
 

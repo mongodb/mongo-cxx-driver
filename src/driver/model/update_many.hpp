@@ -23,21 +23,64 @@ namespace mongo {
 namespace driver {
 namespace model {
 
+///
+/// Class representing a MongoDB update operation that modifies multiple documents.
+///
 class LIBMONGOCXX_EXPORT update_many {
 
    public:
+
+    ///
+    /// Constructs an update operation that will modify all documents matching the filter.
+    ///
+    /// @param filter
+    ///   Document representing the criteria for applying the update.
+    /// @param update
+    ///   Document representing the modifications to be applied to matching documents.
+    ///
     update_many(bson::document::view filter, bson::document::view update);
 
+    ///
+    /// Gets the filter
+    ///
+    /// @return The filter to be used for the update operation.
+    ///
     const bson::document::view& filter() const;
+
+    ///
+    /// Gets the update document.
+    ///
+    /// @return The modifications to be applied as part of the update.
+    ///
     const bson::document::view& update() const;
 
+    ///
+    /// Sets the upsert option.
+    ///
+    /// By default, if no document matches the filter, the update operation does nothing.
+    /// However, by specifying upsert as @c true, this operation either updates matching documents
+    /// or inserts a new document using the update specification if no matching document exists.
+    ///
+    /// @param upsert
+    ///   If set to @c true, creates a new document when no document matches the query criteria.
+    ///   The server side default is @c false, which does not insert a new document if a match
+    ///   is not found.
+    ///
     update_many& upsert(bool upsert);
+
+    ///
+    /// Gets the current value of the upsert option.
+    ///
+    /// @return The optional value of the upsert option.
+    ///
     const optional<bool>& upsert() const;
 
    private:
+    // Required
     bson::document::view _filter;
     bson::document::view _update;
 
+    // Optional
     optional<bool> _upsert;
 
 };

@@ -22,15 +22,31 @@ namespace mongo {
 namespace driver {
 namespace model {
 
+///
+/// Class representing a MongoDB insert operation that creates a single document.
+///
 class LIBMONGOCXX_EXPORT insert_one {
 
    public:
+
+    ///
+    /// Constructs an insert operation that will create a single document.
+    ///
+    /// @param document
+    ///   The document to insert.
+    ///
     insert_one(bson::document::view document);
 
+    ///
+    /// Gets the document to be inserted.
+    ///
+    /// @return The document to be inserted.
+    ///
     const bson::document::view& document() const;
 
    private:
     // TODO: should this be a value?
+    // Required
     bson::document::view _document;
 
 };

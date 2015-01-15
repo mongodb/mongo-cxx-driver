@@ -18,9 +18,9 @@
 
 namespace mongo {
 namespace driver {
+namespace base {
 
 enum class write_type {
-
     k_insert_one,
     k_delete_one,
     k_delete_many,
@@ -28,9 +28,9 @@ enum class write_type {
     k_update_many,
     k_replace_one,
     k_uninitialized,
+};
 
-}; // enum class write_type
-
+}  // namespace base
 }  // namespace driver
 }  // namespace mongo
 

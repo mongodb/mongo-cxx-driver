@@ -23,13 +23,25 @@ namespace mongo {
 namespace driver {
 namespace result {
 
+/// Class representing the result of a MongoDB insert operation
 class LIBMONGOCXX_EXPORT insert_one {
 
    public:
+    // This constructor is public for testing purposes only
     insert_one(result::bulk_write result, bson::document::element generated_id);
 
+    ///
+    /// Returns the bulk write result.
+    ///
+    /// @return The raw bulk write result.
+    ///
     const result::bulk_write& result() const;
 
+    ///
+    /// Gets the id of the inserted document.
+    ///
+    /// @return The value of the _id field for inserted document.
+    ///
     bson::document::element inserted_id() const;
 
    private:

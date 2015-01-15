@@ -25,15 +25,28 @@ namespace mongo {
 namespace driver {
 namespace result {
 
+///
+/// Class representing the result of a MongoDB delete operation.
+///
 class LIBMONGOCXX_EXPORT delete_result {
 
    public:
-    // TODO: indicate that making the constructor public is for testing only in documentation
+    // This constructor is public for testing purposes only
     explicit delete_result(result::bulk_write result);
 
+    ///
+    /// Returns the bulk write result.
+    ///
+    /// @return The raw bulk write result.
+    ///
     const result::bulk_write& result() const;
 
-    std::int64_t removed_count() const;
+    ///
+    /// Gets the number of documents that were deleted during this operation.
+    ///
+    /// @return The number of documents that were deleted.
+    ///
+    std::int64_t deleted_count() const;
 
    private:
     result::bulk_write _result;

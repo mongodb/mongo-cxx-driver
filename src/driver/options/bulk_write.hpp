@@ -22,20 +22,58 @@ namespace mongo {
 namespace driver {
 namespace options {
 
+///
+/// Class representing the optional arguments to a MongoDB bulk write
+///
 class LIBMONGOCXX_EXPORT bulk_write {
 
    public:
+
+    ///
+    /// Sets whether the writes must be executed in order by the server.
+    ///
+    /// The server side default is true.
+    ///
+    /// @param ordered
+    ///   If @c true all write operations will be executed serially in the order they were appended
+    ///   and the entire bulk operation will abort on the first error. If @c false operations will
+    ///   be executed in arbitrary order (possibly in parallel on the server) and any errors will be
+    ///   reported after attempting all operations.
+    ///
     void ordered(bool ordered);
+
+    ///
+    /// Gets the current value of the ordered option.
+    ///
+    /// @return The optional value of the ordered option.
+    ///
     const optional<bool>& ordered() const;
 
+    ///
+    /// Sets the write_concern for this operation.
+    ///
+    /// @param wc
+    ///   The new write_concern.
+    ///
+    /// @see http://docs.mongodb.org/manual/core/write-concern/
+    ///
     void write_concern(class write_concern wc);
+
+    ///
+    /// The current write_concern for this operation.
+    ///
+    /// @return
+    ///   The current write_concern.
+    ///
+    /// @see http://docs.mongodb.org/manual/core/write-concern/
+    ///
     const optional<class write_concern>& write_concern() const;
 
    private:
     optional<bool> _ordered;
     optional<class write_concern> _write_concern;
 
-}; // class bulk_write
+};
 
 }  // namespace options
 }  // namespace driver

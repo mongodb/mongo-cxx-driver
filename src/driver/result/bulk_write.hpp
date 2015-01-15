@@ -17,6 +17,7 @@
 #include "driver/config/prelude.hpp"
 
 #include <cstdint>
+#include <vector>
 
 #include "bson/document.hpp"
 #include "bson/types.hpp"
@@ -25,23 +26,66 @@ namespace mongo {
 namespace driver {
 namespace result {
 
+///
+/// Class representing the result of a MongoDB bulk write operation.
+///
 class LIBMONGOCXX_EXPORT bulk_write {
 
    public:
     explicit bulk_write(bson::document::value raw_response);
 
-    bson::document::view view() const;
-
+    ///
+    /// Gets the number of documents that were inserted during this operation.
+    ///
+    /// @return The number of documents that were inserted.
+    ///
     std::int64_t inserted_count() const;
+
+    ///
+    /// Gets the number of documents that were matched during this operation.
+    ///
+    /// @return The number of documents that were matched.
+    ///
     std::int64_t matched_count() const;
+
+    ///
+    /// Gets the number of documents that were modified during this operation.
+    ///
+    /// @return The number of documents that were modified.
+    ///
     std::int64_t modified_count() const;
+
+    ///
+    /// Gets the number of documents that were deleted during this operation.
+    ///
+    /// @return The number of documents that were deleted.
+    ///
     std::int64_t deleted_count() const;
+
+    ///
+    /// Gets the number of documents that were upserted during this operation.
+    ///
+    /// @return The number of documents that were upserted.
+    ///
     std::int64_t upserted_count() const;
 
+    ///
+    /// Gets the ids of the inserted documents.
+    ///
+    /// @return The values of the _id field for inserted documents.
+    ///
     bson::document::element inserted_ids() const;
+
+    ///
+    /// Gets the ids of the upserted documents.
+    ///
+    /// @return The values of the _id field for upserted documents.
+    ///
     bson::document::element upserted_ids() const;
 
    private:
+    bson::document::view view() const;
+
     bson::document::value _response;
 
 }; // class bulk_write

@@ -24,6 +24,9 @@ namespace mongo {
 namespace driver {
 namespace options {
 
+///
+/// Class representing the optional arguments to a MongoDB driver client (SSL)
+///
 class LIBMONGOCXX_EXPORT ssl {
 
    public:
@@ -49,7 +52,7 @@ class LIBMONGOCXX_EXPORT ssl {
     optional<std::string> _ca_dir;
     optional<bool> _weak_cert_validation;
 
-}; // class ssl
+};
 
 }  // namespace options
 }  // namespace driver

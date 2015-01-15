@@ -20,23 +20,43 @@
 
 namespace mongo {
 namespace driver {
+namespace base {
 
+///
+/// Class representing an instance of the MongoDB driver.
+///
+/// Life cycle: An instance of the driver *MUST* be kept around.
+///
 class instance {
 
    public:
+    ///
+    /// Creates an instance of the driver.
+    ///
     instance();
 
-    instance(instance&& other) noexcept;
-    instance& operator=(instance&& rhs) noexcept;
+    ///
+    /// Move constructs an instance of the driver.
+    ///
+    instance(instance&&) noexcept;
 
+    ///
+    /// Move assigns an instance of the driver.
+    ///
+    instance& operator=(instance&&) noexcept;
+
+    ///
+    /// Destroys an instance.
+    ///
     ~instance();
 
    private:
     class impl;
     std::unique_ptr<impl> _impl;
 
-}; // class instance
+};
 
+}  // namespace base
 }  // namespace driver
 }  // namespace mongo
 

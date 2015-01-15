@@ -23,22 +23,63 @@ namespace mongo {
 namespace driver {
 namespace model {
 
+///
+/// Class representing a MongoDB update operation that replaces a single document.
+///
 class LIBMONGOCXX_EXPORT replace_one {
 
    public:
+    ///
+    /// Constructs an update operation that will replace a single documents matching the filter.
+    ///
+    /// @param filter
+    ///   Document representing the criteria for replacement.
+    /// @param replacement
+    ///   Document that will serve as the replacement.
+    ///
     replace_one(bson::document::view filter, bson::document::view replacement);
 
-    replace_one& upsert(bool upsert);
-
+    ///
+    /// Gets the filter.
+    ///
+    /// @return The filter to be used for the delete operation.
+    ///
     const bson::document::view& filter() const;
+
+    ///
+    /// Gets the replacement.
+    ///
+    /// @return The filter to be used for the delete operation.
+    ///
     const bson::document::view& replacement() const;
 
+    ///
+    /// Sets the upsert option.
+    ///
+    /// By default, if no document matches the filter, the replacement operation does nothing.
+    /// However, by specifying upsert as @c true, this operation will insert the replacement
+    /// as a new document if no matching document exists.
+    ///
+    /// @param upsert
+    ///   If set to @c true, creates a new document when no document matches the query criteria.
+    ///   The server side default is @c false, which does not insert a new document if a match
+    ///   is not found.
+    ///
+    replace_one& upsert(bool upsert);
+
+    ///
+    /// Gets the current value of the upsert option.
+    ///
+    /// @return The optional value of the upsert option.
+    ///
     const optional<bool>& upsert() const;
 
    private:
+    // Required
     bson::document::view _filter;
     bson::document::view _replacement;
 
+    // Optional
     optional<bool> _upsert;
 
 };

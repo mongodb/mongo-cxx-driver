@@ -22,20 +22,45 @@
 
 namespace mongo {
 namespace driver {
+namespace base {
 
 class collection;
 
+///
+/// Class representing a pointer to the result set of a query on a MongoDB server.
+///
+/// Clients can iterate through a cursor::iterator to retrieve results.
+///
+/// @note By default, cursors timeout after 10 minutes of inactivity. 
+///
 class LIBMONGOCXX_EXPORT cursor {
 
    public:
     class iterator;
 
-    cursor(cursor&& other) noexcept;
-    cursor& operator=(cursor&& rhs) noexcept;
+    ///
+    /// Move constructs a cursor.
+    ///
+    cursor(cursor&&) noexcept;
 
+    ///
+    /// Move assigns a cursor.
+    ///
+    cursor& operator=(cursor&&) noexcept;
+
+    ///
+    /// Destroys a cursor.
+    ///
     ~cursor();
 
+    /// A cursor::iterator which points to the begining of the results.
+    ///
+    /// @return the cursor::iterator
     iterator begin();
+
+    /// A cursor::iterator which points to the end of the results.
+    ///
+    /// @return the cursor::iterator
     iterator end();
 
    private:
@@ -46,18 +71,36 @@ class LIBMONGOCXX_EXPORT cursor {
     class impl;
     std::unique_ptr<impl> _impl;
 
-}; // class cursor
+};
 
+///
+/// Class representing an input iterator of documents in a MongoDB cursor result set.
+///
 class cursor::iterator : public std::iterator<
     std::input_iterator_tag,
     bson::document::view
 > {
 
    public:
+
+    ///
+    /// Dereferences the view for the document currently being pointed to.
+    ///
     const bson::document::view& operator*() const;
+
+    ///
+    /// Access a member of the dereferenced document currently being pointed to.
+    ///
     const bson::document::view* operator->() const;
 
+    ///
+    /// Postfix increments the iterator to move to the next document.
+    ///
     iterator& operator++();
+
+    ///
+    /// Prefix increments the iterator to move to the next document.
+    ///
     void operator++(int);
 
    private:
@@ -70,11 +113,12 @@ class cursor::iterator : public std::iterator<
     cursor* _cursor;
     bson::document::view _doc;
 
-}; // class iterator
+};
 
 bool operator==(const cursor::iterator& lhs, const cursor::iterator& rhs);
 bool operator!=(const cursor::iterator& lhs, const cursor::iterator& rhs);
 
+}  // namespace base
 }  // namespace driver
 }  // namespace mongo
 

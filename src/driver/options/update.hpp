@@ -25,20 +25,59 @@ namespace mongo {
 namespace driver {
 namespace options {
 
+///
+/// Class representing the optional arguments to a MongoDB update operation
+///
 class LIBMONGOCXX_EXPORT update {
 
    public:
+
+    ///
+    /// Sets the upsert option.
+    ///
+    /// By default, if no document matches the filter, the update operation does nothing.
+    /// However, by specifying upsert as @c true, this operation either updates matching documents
+    /// or inserts a new document using the update specification if no matching document exists.
+    ///
+    /// @param upsert
+    ///   If set to @c true, creates a new document when no document matches the query criteria.
+    ///   The server side default is @c false, which does not insert a new document if a match
+    ///   is not found.
+    ///
     void upsert(bool upsert);
+
+    ///
+    /// Gets the current value of the upsert option.
+    ///
+    /// @return The optional value of the upsert option.
+    ///
     const optional<bool>& upsert() const;
 
+    ///
+    /// Sets the write_concern for this operation.
+    ///
+    /// @param wc
+    ///   The new write_concern
+    ///
+    /// @see http://docs.mongodb.org/manual/core/write-concern/
+    ///
     void write_concern(class write_concern wc);
+
+    ///
+    /// The current write_concern for this operation.
+    ///
+    /// @return
+    ///   The current write_concern
+    ///
+    /// @see http://docs.mongodb.org/manual/core/write-concern/
+    ///
     const optional<class write_concern>& write_concern() const;
 
    private:
     optional<bool> _upsert;
     optional<class write_concern> _write_concern;
 
-}; // class update
+};
 
 }  // namespace options
 }  // namespace driver

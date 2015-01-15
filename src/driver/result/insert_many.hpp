@@ -26,18 +26,39 @@ namespace mongo {
 namespace driver {
 namespace result {
 
+///
+/// Class representing the result of a MongoDB insert many operation
+///
 class LIBMONGOCXX_EXPORT insert_many {
 
    public:
     // TODO: public alias the map
+    // This constructor is public for testing purposes only
     insert_many(
         result::bulk_write result,
         std::map<std::size_t, bson::document::element> inserted_ids
     );
 
-    std::map<std::size_t, bson::document::element> inserted_ids();
+    ///
+    /// Returns the bulk write result.
+    ///
+    /// @return The raw bulk write result.
+    ///
+    const result::bulk_write& result() const;
 
+    ///
+    /// Gets the number of documents that were inserted during this operation.
+    ///
+    /// @return The number of documents that were inserted.
+    ///
     std::int64_t inserted_count() const;
+
+    ///
+    /// Gets the ids of the inserted documents.
+    ///
+    /// @return The values of the _id field for inserted documents.
+    ///
+    std::map<std::size_t, bson::document::element> inserted_ids();
 
    private:
     result::bulk_write _result;

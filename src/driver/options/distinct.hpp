@@ -27,20 +27,56 @@ namespace mongo {
 namespace driver {
 namespace options {
 
+///
+/// Class representing the optional arguments to a MongoDB distinct command
+///
 class LIBMONGOCXX_EXPORT distinct {
 
    public:
+
+    ///
+    /// Sets the maximum amount of time for this operation to run (server side) in milliseconds.
+    ///
+    /// @param max_time_ms
+    ///   The max amount of time (in milliseconds).
+    ///
+    /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
+    ///
     void max_time_ms(std::int64_t max_time_ms);
+
+    ///
+    /// The current max_time_ms setting.
+    ///
+    /// @return The current max time (in milliseconds).
+    ///
+    /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
+    ///
     const optional<std::int64_t>& max_time_ms() const;
 
+    ///
+    /// Sets the read_preference for this operation.
+    ///
+    /// @param rp
+    ///   The new read_preference.
+    ///
+    /// @see http://docs.mongodb.org/manual/core/read-preference/
+    ///
     void read_preference(class read_preference rp);
+
+    ///
+    /// The current read_preference for this operation.
+    ///
+    /// @return the current read_preference.
+    ///
+    /// @see http://docs.mongodb.org/manual/core/read-preference/
+    ///
     const optional<class read_preference>& read_preference() const;
 
    private:
     optional<std::int64_t> _max_time_ms;
     optional<class read_preference> _read_preference;
 
-}; // class distinct
+};
 
 }  // namespace options
 }  // namespace driver

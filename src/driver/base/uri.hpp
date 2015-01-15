@@ -26,41 +26,133 @@
 
 namespace mongo {
 namespace driver {
+namespace base {
 
+///
+/// Class representing a MongoDB connection string URI.
+///
+/// @todo: return const char* instead or stringview
+/// @todo: harmonize with C library (options, credentials, etc...)
+///
 class uri {
-
-   struct host {
-        std::string host;
-        std::uint16_t port;
-        std::int32_t family;
-   }; // class host
 
    public:
 
-    static const std::string kDefaultURI;
+    struct host {
+         std::string host;
+         std::uint16_t port;
+         std::int32_t family;
+    };
 
-    // TODO: document the default is localhost:27017...
-    // TODO: this should really take a stringview (polyfilled)?
-    uri(const std::string& uri_string = kDefaultURI);
+    static const std::string k_default_uri;
 
-    uri(uri&& other) noexcept;
-    uri& operator=(uri&& rhs) noexcept;
+    ///
+    /// Constructs a uri from an optional MongoDB uri string.
+    ///
+    /// @param uri_string
+    ///   String representing a MongoDB connection string uri, defaults to k_default_uri.
+    ///
+    /// @todo document the default is localhost:27017...
+    /// @todo this should really take a stringview (polyfilled)?
+    ///
+    uri(const std::string& uri_string = k_default_uri);
 
+    ///
+    /// Move constructs a uri.
+    ///
+    uri(uri&&) noexcept;
+
+    ///
+    /// Move assigns a uri.
+    ///
+    uri& operator=(uri&&) noexcept;
+
+    ///
+    /// Destroys a uri.
+    ///
     ~uri();
 
-    // TODO: return const char* instead or stringview
-    // TODO: harmonize with C library (options, credentials, etc...)
+    ///
+    /// Returns the authentication mechanism from the uri.
+    ///
+    /// @return A string representing the authentication mechanism.
+    ///
     std::string auth_mechanism() const;
+
+    ///
+    /// Returns the authentication source from the uri.
+    ///
+    /// @return A string representing the authentication source.
+    ///
     std::string auth_source() const;
+
+    ///
+    /// Returns the hosts from the uri.
+    ///
+    /// @return A vector of hosts.
+    ///
     std::vector<host> hosts() const;
+
+    ///
+    /// Returns the database from the uri.
+    ///
+    /// @return A string with the name of the database.
+    ///
     std::string database() const;
+
+    ///
+    /// Returns other uri options.
+    ///
+    /// @return A document view containing other options.
+    ///
     bson::document::view options() const;
+
+    ///
+    /// Returns the password from the uri.
+    ///
+    /// @return A string containing the supplied password.
+    ///
     std::string password() const;
+
+    ///
+    /// Returns the read preference from the uri.
+    ///
+    /// @return A read_preference that represents what was specified in the uri.
+    ///
     class read_preference read_preference() const;
+
+    ///
+    /// Returns the replica set specified in the uri.
+    ///
+    /// @return A string representing the replica set name.
+    ///
     std::string replica_set() const;
+
+    ///
+    /// Returns the ssl parameter from the uri.
+    ///
+    /// @return Boolean that is @c true if ssl is enabled and @c false if not.
+    ///
     bool ssl() const;
+
+    ///
+    /// Returns the uri in a string format.
+    ///
+    /// @return A string with the uri.
     std::string to_string() const;
+
+    ///
+    /// Returns the supplied username from the uri.
+    ///
+    /// @return A string with the username.
+    ///
     std::string username() const;
+
+    ///
+    /// Returns the write concern specified in the uri.
+    ///
+    /// @return A write_concern that represents what was specified in the uri.
+    ///
     class write_concern write_concern() const;
 
    private:
@@ -69,8 +161,9 @@ class uri {
     class impl;
     std::unique_ptr<impl> _impl;
 
-}; // class uri
+};
 
+}  // namespace base
 }  // namespace driver
 }  // namespace mongo
 

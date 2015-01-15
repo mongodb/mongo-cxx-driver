@@ -10,51 +10,19 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
-// limitations under the License.
-
-#pragma once
+// limitations under the License./**
 
 #include "driver/config/prelude.hpp"
 
-#include <string>
-
-#include "driver/options/ssl.hpp"
-#include "stdx/optional.hpp"
+#include "driver/exception/write.hpp"
 
 namespace mongo {
 namespace driver {
-namespace options {
+namespace exception {
 
-// NOTE: client options interface still evolving
+class LIBMONGOCXX_EXPORT bulk_write : public write {};
 
-///
-/// Class representing the optional arguments to a MongoDB driver client
-///
-class LIBMONGOCXX_EXPORT client {
-
-   public:
-
-    ///
-    /// Sets the SSL related options.
-    ///
-    /// @param ssl_opts
-    ///   The SSL related options.
-    ///
-    void ssl_opts(ssl ssl_opts);
-
-    ///
-    /// The current SSL related options.
-    ///
-    /// @return The SSL related options.
-    ///
-    const optional<ssl>& ssl_opts() const;
-
-   private:
-    optional<ssl> _ssl_opts;
-
-};
-
-}  // namespace options
+}  // namespace exception
 }  // namespace driver
 }  // namespace mongo
 

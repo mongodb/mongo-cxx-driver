@@ -25,16 +25,38 @@ namespace mongo {
 namespace driver {
 namespace options {
 
+///
+/// Class representing the optional arguments to a MongoDB delete operation
+///
 class LIBMONGOCXX_EXPORT delete_options {
 
    public:
+
+    ///
+    /// Sets the write_concern for this operation.
+    ///
+    /// @param wc
+    ///   The new write_concern.
+    ///
+    /// @see http://docs.mongodb.org/manual/core/write-concern/
+    ///
     void write_concern(class write_concern wc);
+
+    ///
+    /// The current write_concern for this operation.
+    ///
+    /// @return
+    ///   The current write_concern.
+    ///
+    /// @see http://docs.mongodb.org/manual/core/write-concern/
+    ///
+    ///
     const optional<class write_concern>& write_concern() const;
 
    private:
     optional<class write_concern> _write_concern;
 
-}; // class delete_options
+};
 
 }  // namespace options
 }  // namespace driver

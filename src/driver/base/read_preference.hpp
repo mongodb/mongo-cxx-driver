@@ -25,38 +25,146 @@
 
 namespace mongo {
 namespace driver {
+namespace base {
 
 class client;
 class collection;
 class database;
 
-// TODO: move to own file?
-enum class read_mode {
-    k_primary,
-    k_secondary,
-    k_primary_preferred,
-    k_secondary_preferred,
-    k_nearest,
-};
-
+///
+/// Class representing a preference for how the driver routes read operations to members of a
+/// replica set.
+///
+/// By default read operations are directed to the primary member in a replica set. Reading from the
+/// primary guarantees that read operations reflect the latest version of a document. However, by
+/// distributing some or all reads to secondary members of the replica set, you can improve read
+/// throughput or reduce latency for an application that does not require fully up-to-date data.
+///
+/// Read preference can be customized by setting a mode (broad stroke preference) as well as
+/// optionally setting tags to provide more granular control and to target specific members of a
+/// replica set via attributes other than their current state as a primary or secondary node.
+///
+/// Read preferences aren’t relevant to direct connections to a single mongod instance. However,
+/// in order to perform read operations on a direct connection to a secondary member of a replica
+/// set, you must set a read preference that allows reading from secondaries.
+///
+/// @see http://docs.mongodb.org/manual/core/read-preference/
+///
 class LIBMONGOCXX_EXPORT read_preference {
 
    public:
-    explicit read_preference(read_mode rm = read_mode::k_primary);
-    read_preference(read_mode, bson::document::view tags);
 
+    ///
+    /// Determines which members in a replica set are acceptable to read from.
+    ///
+    /// @warning Read preference tags are not respected when the mode is set to primary.
+    ///
+    /// @warning All read preference modes except primary may return stale data because secondaries
+    /// replicate operations from the primary with some delay. Ensure that your application
+    /// can tolerate stale data if you choose to use a non-primary mode.
+    ///
+    /// @see http://docs.mongodb.org/manual/core/read-preference/#read-preference-modes
+    ///
+    enum class read_mode : std::uint8_t {
+        ///
+        /// Only read from a primary node.
+        ///
+        k_primary = 0x01,
+
+        ///
+        /// Prefer to read from a primary node.
+        ///
+        k_primary_preferred = 0x05,
+
+        ///
+        /// Only read from secondary nodes.
+        ///
+        k_secondary = 0x02,
+
+        ///
+        /// Prefer to read from secondary nodes.
+        ///
+        k_secondary_preferred = 0x06,
+
+        ///
+        /// Read from the node with the lowest latency irrespective of state.
+        ///
+        k_nearest = 0x0A
+    };
+
+    ///
+    /// Constructs a new read_preference.
+    ///
+    /// @param mode
+    ///   Optional parameter to specify the read_mode, defaults to k_primary.
+    ///
+    explicit read_preference(read_mode mode = read_mode::k_primary);
+
+    ///
+    /// Constructs a new read_preference with tags.
+    ///
+    /// @param mode
+    ///   A read_preference read_mode.
+    /// @param tags
+    ///   A document representing tags to use for the read_preference.
+    ///
+    /// @see http://docs.mongodb.org/manual/core/read-preference/#tag-sets
+    ///
+    read_preference(read_mode mode, bson::document::view tags);
+
+    ///
+    /// Copy constructs a read_preference.
+    ///
     read_preference(const read_preference&);
+
+    ///
+    /// Copy assigns a read_preference.
+    ///
     read_preference& operator=(const read_preference&);
 
-    read_preference(read_preference&& other) noexcept;
-    read_preference& operator=(read_preference&& rhs) noexcept;
+    ///
+    /// Move constructs a read_preference.
+    ///
+    read_preference(read_preference&&) noexcept;
 
+    ///
+    /// Move assigns a read_preference.
+    ///
+    read_preference& operator=(read_preference&&) noexcept;
+
+    ///
+    /// Destroys a read_preference.
+    ///
     ~read_preference();
 
+    ///
+    /// Sets a new mode for this read_preference.
+    ///
+    /// @param mode
+    ///   The new read preference mode.
+    ///
     void mode(read_mode mode);
+
+    ///
+    /// Returns the current read_mode for this read_preference.
+    ///
+    /// @return The current read_mode.
+    ///
     read_mode mode() const;
 
+    ///
+    /// Sets or updates the tags for this read_preference.
+    ///
+    /// @param tags
+    ///   Document representing the tags.
+    ///
     void tags(bson::document::view tags);
+
+    ///
+    /// Returns the current tags for this read_preference.
+    ///
+    /// @return The optionally set current tags.
+    ///
     optional<bson::document::view> tags() const;
 
    private:
@@ -70,8 +178,9 @@ class LIBMONGOCXX_EXPORT read_preference {
 
     std::unique_ptr<impl> _impl;
 
-}; // class read_preference
+};
 
+}  // namespace base
 }  // namespace driver
 }  // namespace mongo
 
