@@ -23,6 +23,7 @@
 #include <boost/smart_ptr.hpp>
 #include <fcntl.h>
 #include <fstream>
+#include <iostream>
 #include <utility>
 
 #if defined(_WIN32)

@@ -43,7 +43,7 @@ namespace mongo {
             appendBool(fieldName, true);
             //appendDate( fieldName , numeric_limits<long long>::min() ); 
             return;
-        case Timestamp: // TODO integrate with Date SERVER-3304
+        case Timestamp:
             appendTimestamp( fieldName, Timestamp_t() );
             return;
         case Undefined: // shared with EOO
@@ -98,7 +98,7 @@ namespace mongo {
             appendMinForType( fieldName, Object ); return;
         case Date:
             appendDate( fieldName , numeric_limits<long long>::max() ); return;
-        case Timestamp: { // TODO integrate with Date SERVER-3304
+        case Timestamp: {
             const int32_t max = numeric_limits<int32_t>::max();
             appendTimestamp( fieldName, Timestamp_t( max, max ) );
             return;

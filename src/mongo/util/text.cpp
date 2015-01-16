@@ -20,6 +20,7 @@
 #include <boost/integer_traits.hpp>
 #include <boost/smart_ptr/scoped_array.hpp>
 #include <errno.h>
+#include <iostream>
 #include <sstream>
 
 #ifdef _WIN32

@@ -36,16 +36,8 @@ using namespace std;
 // TODO: Win32 unicode console writing (in logger/console_appender?).
 // TODO: Extra log context appending, and re-enable log_user_*.js
 // TODO: Eliminate cout/cerr.
-// TODO: LogIndent (for mongodump).
 
 namespace mongo {
-
-    // Guard that alters the indentation level used by log messages on the current thread.
-    // Used only by mongodump (mongo/tools/dump.cpp).  Do not introduce new uses.
-    struct LogIndentLevel {
-        LogIndentLevel();
-        ~LogIndentLevel();
-    };
 
     static logger::ExtraLogContextFn _appendExtraLogContext;
 
@@ -112,12 +104,6 @@ namespace mongo {
         if ( errmsg ) {
             log() << errmsg << endl;
         }
-    }
-
-    LogIndentLevel::LogIndentLevel() {
-    }
-
-    LogIndentLevel::~LogIndentLevel() {
     }
 
 }  // namespace mongo

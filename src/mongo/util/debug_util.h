@@ -29,10 +29,6 @@ namespace mongo {
 #define MONGO_DEV if( debug )
 #define DEV MONGO_DEV
 
-#if defined(_WIN32)
-    inline int strcasecmp(const char* s1, const char* s2) {return _stricmp(s1, s2);}
-#endif
-
     /* dassert is 'debug assert' -- might want to turn off for production as these
        could be slow.
     */
