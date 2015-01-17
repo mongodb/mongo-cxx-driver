@@ -35,7 +35,6 @@ namespace logger {
          * Predicate that answers the questwion, "Should I, the caller, append to you, the log
          * domain, messages of the given severity?"  True means yes.
          */
-        bool shouldLog(LogSeverity severity) const;
         bool shouldLog(LogComponent component, LogSeverity severity) const;
         bool shouldLog(LogComponent component1, LogComponent component2,
                        LogSeverity severity) const;
