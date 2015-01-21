@@ -37,33 +37,39 @@ cxx_driver_variables:
   mongo_download_url_prefixes:
     ubuntu1404: &mongo_url_ubuntu1404
       mongo_url_prefix: "http://downloads.mongodb.com/linux/mongodb-linux-x86_64-"
-      mongo_url_platform: "ubuntu1404"
+      mongo_url_platform: "ubuntu1404-"
     windows64-bitcomm: &mongo_url_windows64
       mongo_url_extension: "zip"
       mongo_url_prefix: "http://downloads.mongodb.com/win32/mongodb-win32-x86_64-"
-      mongo_url_platform: "windows-64"
+      mongo_url_platform: "windows-64-"
     rhel55: &mongo_url_rhel55
       mongo_url_prefix: "http://downloads.mongodb.com/linux/mongodb-linux-x86_64-"
-      mongo_url_platform: "rhel57"
+      mongo_url_platform: "rhel57-"
     rhel55_32: &mongo_url_rhel55_32
-      mongo_url_prefix: "http://downloads.mongodb.org/linux/mongodb-linux-i686"
-      mongo_url_platform: ""
+      mongo_url_prefix: "http://downloads.mongodb.org/linux/mongodb-linux-i686-"
+      mongo_url_enterprise_keyword: ""
+      mongo_url_subscription_keyword: ""
+    osx-108: &mongo_url_osx_108
+      mongo_url_prefix: "http://downloads.mongodb.org/osx/mongodb-osx-x86_64-"
+      mongo_url_enterprise_keyword: ""
 
 ## Common sets of scons flags
   scons_flags:
     standard: &scons_flags_64
-      scons_flags: "--64 --ssl --use-sasl-client --sharedclient"
+      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
     standard_32: &scons_flags_32
-      scons_flags: "--32 --ssl --use-sasl-client --sharedclient"
+      scons_flags: "--32 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
     ubuntu_c++11: &scons_flags_cpp11
-      scons_flags: "--64 --c++11 --ssl --use-sasl-client --sharedclient"
+      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --c++11 --ssl --use-sasl-client --sharedclient"
+    osx_108: &scons_flags_osx_108
+      scons_flags: "--64 -j$(sysctl -n hw.logicalcpu) --ssl --use-sasl-client --sharedclient"
     ## test all plausible combinations of static/dynamic mongo client and windows runtime:
     static_windows: &scons_flags_64_windows_static
-      scons_flags: "--64 --ssl --use-sasl-client"
+      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client"
     dynamic_RT_windows: &scons_flags_64_windows_dynamic_rt
-      scons_flags: "--64 --ssl --use-sasl-client --dynamic-windows"
+      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows"
     dynamic_windows: &scons_flags_64_windows_dynamic
-      scons_flags: "--64 --ssl --use-sasl-client --dynamic-windows --sharedclient"
+      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows --sharedclient"
 
 ## Common compile flags
   compile_flags:
@@ -106,6 +112,12 @@ cxx_driver_variables:
     msvc2013: &toolchain_msvc2013
       toolchain_flags: --msvc-version=12.0
 
+## Paths for OS X builds
+  osx_fixups:
+    scons:
+      boost_headers: &extrapath_osx_108
+        extrapath: --extrapath="/opt/local"
+
 ## Paths and flags for RHEL 5.5 builds
   rhel55_fixups:
     scons:
@@ -121,6 +133,35 @@ cxx_driver_variables:
         libpath: --libpath="/usr/lib/boost141"
       lib64_boost: &libpath_rhel55_64
         libpath: --libpath="/usr/lib64/boost141"
+
+## Scripts that are shared between buildvariants
+  scripts:
+    mongo_orchestration:
+      windows: &mongo_orchestration_windows
+        start_mongo_orchestration: |
+          echo "Installing Mongo Orchestration..."
+          trap 'set +o errexit; cd mongo-orchestration; mongo-orchestration stop;' EXIT
+          taskkill.exe /fi python /f
+          git clone https://github.com/10gen/mongo-orchestration.git
+          cd mongo-orchestration
+          python setup.py install
+          echo "Starting Mongo Orchestration..."
+          echo "{ \"releases\": { \"default\": \"c:\\\\mongodb\\\\bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
+          mongo-orchestration -f orchestration.config -e default -s wsgiref start
+          cd ..
+      linux: &mongo_orchestration_linux
+        ## mongo orchestration is included on linux, no installation needed
+        start_mongo_orchestration: |
+          echo "Starting Mongo Orchestration..."
+          trap 'set +o errexit; mongo-orchestration stop;' EXIT
+          echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
+          TMPDIR=/data/db mongo-orchestration -f orchestration.config -e default start
+      osx: &mongo_orchestration_osx
+        start_mongo_orchestration: |
+          echo "Starting Mongo Orchestration..."
+          trap 'set +o errexit; /usr/local/bin/mongo-orchestration stop;' EXIT
+          echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
+          TMPDIR=/data/db /usr/local/bin/mongo-orchestration -f orchestration.config -e default start
 
 #######################################
 #            Functions                #
@@ -162,7 +203,7 @@ functions:
     params:
       updates:
         - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform}-latest.${mongo_url_extension|tgz}
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform|}latest.${mongo_url_extension|tgz}
 
   "use inMemoryExperiment storage" :
     command: expansions.update
@@ -183,35 +224,21 @@ functions:
     params:
       updates:
         - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform}-2.6.5.${mongo_url_extension|tgz}
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform|}2.6.5.${mongo_url_extension|tgz}
 
   "set version 2.4" :
     command: expansions.update
     params:
       updates:
         - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|"subscription-"}${mongo_url_platform}-2.4.12.${mongo_url_extension|tgz}
+          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|"subscription-"}${mongo_url_platform|}2.4.12.${mongo_url_extension|tgz}
 
   "run integration tests" :
     command: shell.exec
     params:
       working_dir: "mongo-cxx-driver"
       script: |
-        echo "Starting Mongo Orchestration..."
-        if [ ${windows|false} = true ]; then
-          trap 'set +o errexit; cd mongo-orchestration; mongo-orchestration stop;' EXIT
-          taskkill.exe /fi python /f
-          git clone https://github.com/10gen/mongo-orchestration.git
-          cd mongo-orchestration
-          python setup.py install
-          echo "{ \"releases\": { \"default\": \"c:\\\\mongodb\\\\bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
-          mongo-orchestration -f orchestration.config -e default -s wsgiref start
-          cd ..
-        else
-          trap 'set +o errexit; mongo-orchestration stop;' EXIT
-          echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
-          TMPDIR=/data/db mongo-orchestration -f orchestration.config -e default start
-        fi
+        ${start_mongo_orchestration}
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} integration
 
   "run client tests" :
@@ -219,21 +246,7 @@ functions:
     params:
       working_dir: "mongo-cxx-driver"
       script: |
-        echo "Starting Mongo Orchestration..."
-        if [ ${windows|false} = true ]; then
-          trap 'set +o errexit; cd mongo-orchestration; mongo-orchestration stop;' EXIT
-          taskkill.exe /fi python /f
-          git clone https://github.com/10gen/mongo-orchestration.git
-          cd mongo-orchestration
-          python setup.py install
-          echo "{ \"releases\": { \"default\": \"c:\\\\mongodb\\\\bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
-          mongo-orchestration -f orchestration.config -e default -s wsgiref start
-          cd ..
-        else
-          trap 'set +o errexit; mongo-orchestration stop;' EXIT
-          echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
-          TMPDIR=/data/db mongo-orchestration -f orchestration.config -e default start
-        fi
+        ${start_mongo_orchestration}
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} install # static lib install step
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} check-install # static build installation header check
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} examples
@@ -289,7 +302,7 @@ tasks:
             script: |
                 set -o errexit
                 set -o verbose
-                ${scons|scons} -j$(grep -c ^processor /proc/cpuinfo) ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} all
+                ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} all
         - command: shell.exec
           params:
               working_dir: "mongo-cxx-driver"
@@ -436,6 +449,7 @@ buildvariants:
     <<: *cpppath_rhel55
     <<: *libpath_rhel55_64
     <<: *mongo_url_rhel55
+    <<: *mongo_orchestration_linux
   run_on:
   - rhel55-test
   tasks: *version_tests
@@ -445,14 +459,13 @@ buildvariants:
 - name: rhel55-32-bit
   display_name: "RHEL 5.5 32-bit"
   expansions:
-    mongo_url_enterprise_keyword: ""
-    mongo_url_subscription_keyword: ""
     <<: *compile_flags
     <<: *scons_flags_32
     <<: *warning_flags_rhel55
     <<: *cpppath_rhel55
     <<: *libpath_rhel55_32
     <<: *mongo_url_rhel55_32
+    <<: *mongo_orchestration_linux
   run_on:
   - rhel55-test
   tasks: *latest_tests
@@ -465,6 +478,7 @@ buildvariants:
     <<: *compile_flags
     <<: *scons_flags_64
     <<: *mongo_url_ubuntu1404
+    <<: *mongo_orchestration_linux
   run_on:
   - ubuntu1404-test
   tasks: *storage_engine_tests
@@ -477,6 +491,7 @@ buildvariants:
     <<: *compile_flags_debug
     <<: *scons_flags_64
     <<: *mongo_url_ubuntu1404
+    <<: *mongo_orchestration_linux
   run_on:
   - ubuntu1404-test
   tasks: *latest_tests
@@ -490,8 +505,27 @@ buildvariants:
     <<: *compile_flags
     <<: *scons_flags_cpp11
     <<: *mongo_url_ubuntu1404
+    <<: *mongo_orchestration_linux
   run_on:
   - ubuntu1404-test
+  tasks: *latest_tests
+
+#######################################
+#         OS X Buildvariants          #
+#######################################
+
+## OS X 10.8
+
+- name: os-x-108
+  display_name: "OS X 10.8"
+  expansions:
+    <<: *compile_flags
+    <<: *mongo_url_osx_108
+    <<: *scons_flags_osx_108
+    <<: *extrapath_osx_108
+    <<: *mongo_orchestration_osx
+  run_on:
+  - osx-108
   tasks: *latest_tests
 
 #######################################
@@ -516,6 +550,7 @@ buildvariants:
     <<: *libpath_msvc2010
     <<: *extrapath
     <<: *cpppath_boost_1_55_0
+    <<: *mongo_orchestration_windows
     extension: ".exe"
     scons: scons.bat
   run_on:
@@ -537,6 +572,7 @@ buildvariants:
     <<: *libpath_msvc2010
     <<: *extrapath
     <<: *cpppath_boost_1_55_0
+    <<: *mongo_orchestration_windows
     extension: ".exe"
     scons: scons.bat
   run_on:
@@ -558,6 +594,7 @@ buildvariants:
     <<: *libpath_msvc2013
     <<: *extrapath
     <<: *cpppath_boost_1_56_0
+    <<: *mongo_orchestration_windows
     extension: ".exe"
     scons: scons.bat
   run_on:
@@ -579,6 +616,7 @@ buildvariants:
     <<: *libpath_msvc2013
     <<: *extrapath
     <<: *cpppath_boost_1_56_0
+    <<: *mongo_orchestration_windows
     extension: ".exe"
     scons: scons.bat
   run_on:
