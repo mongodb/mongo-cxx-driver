@@ -160,6 +160,7 @@ cxx_driver_variables:
           cd mongo-orchestration
           if [ "$(whoami)" != "root" ]; then
               sudo python setup.py install
+              sudo chown -R ubuntu .
           else
               python setup.py install
           fi
