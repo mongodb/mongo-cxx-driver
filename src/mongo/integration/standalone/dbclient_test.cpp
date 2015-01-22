@@ -1414,11 +1414,7 @@ namespace {
         if (serverGTE(&c, 2, 4) && (!serverGTE(&c, 2, 7) || kCompiledWithSSL)) {
             createUser(c, TEST_DB, "user3", "password3");
             std::string errmsg;
-            try {
-                ASSERT_FALSE(c.auth("test", "user3", "notPassword3", errmsg));
-            } catch (const DBException&) {
-                //Expected on 2.2
-            }
+            ASSERT_FALSE(c.auth("test", "user3", "notPassword3", errmsg));
         }
     }
 
