@@ -152,10 +152,19 @@ cxx_driver_variables:
           echo "{ \"releases\": { \"default\": \"c:\\\\mongodb\\\\bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
           mongo-orchestration -f orchestration.config -e default -s wsgiref start
       linux: &mongo_orchestration_linux
-        ## mongo orchestration is included on linux, no installation needed
+        ## we are going to manually install mongo-orchestration for now on Linux until it is stable enough that we don't always to install from HEAD
         start_mongo_orchestration: |
-          echo "Starting Mongo Orchestration..."
+          echo "Installing Mongo Orchestration..."
           trap 'set +o errexit; mongo-orchestration stop;' EXIT
+          git clone https://github.com/10gen/mongo-orchestration.git
+          cd mongo-orchestration
+          if [ "$(whoami)" != "root" ]; then
+              sudo python setup.py install
+          else
+              python setup.py install
+          fi
+          cd ..
+          echo "Starting Mongo Orchestration..."
           echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
           TMPDIR=/data/db mongo-orchestration -f orchestration.config -e default start
       osx: &mongo_orchestration_osx
@@ -226,21 +235,21 @@ functions:
     params:
       updates:
         - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise}-${mongo_url_platform|}2.6.5.${mongo_url_extension|tgz}
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise-}${mongo_url_platform|}2.6.5.${mongo_url_extension|tgz}
 
   "set version 2.4" :
     command: expansions.update
     params:
       updates:
         - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|subscription}-${mongo_url_platform|}2.4.12.${mongo_url_extension|tgz}
+          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|subscription-}${mongo_url_platform|}2.4.12.${mongo_url_extension|tgz}
 
   "set version 2.2" :
     command: expansions.update
     params:
       updates:
         - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|subscription}-${mongo_url_platform|}2.2.7.${mongo_url_extension|tgz}
+          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|subscription-}${mongo_url_platform|}2.2.7.${mongo_url_extension|tgz}
 
   "run integration tests" :
     command: shell.exec
