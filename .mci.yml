@@ -62,7 +62,7 @@ cxx_driver_variables:
     ubuntu_c++11: &scons_flags_cpp11
       scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --c++11 --ssl --use-sasl-client --sharedclient"
     osx_108: &scons_flags_osx_108
-      scons_flags: "--64 -j$(sysctl -n hw.logicalcpu) --ssl --use-sasl-client --sharedclient"
+      scons_flags: "--64 -j$(sysctl -n hw.logicalcpu) --ssl --use-sasl-client --sharedclient --osx-version-min=10.6"
     ## test all plausible combinations of static/dynamic mongo client and windows runtime:
     static_windows: &scons_flags_64_windows_static
       scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client"
