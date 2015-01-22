@@ -26,9 +26,11 @@ cxx_driver_variables:
   version_test_list: &version_tests
     - name: "compile"
     - name: "unit test"
+    - name: "integration test 2.2"
     - name: "integration test 2.4"
     - name: "integration test 2.6"
     - name: "integration test latest"
+    - name: "client test 2.2"
     - name: "client test 2.4"
     - name: "client test 2.6"
     - name: "client test latest"
@@ -145,10 +147,10 @@ cxx_driver_variables:
           git clone https://github.com/10gen/mongo-orchestration.git
           cd mongo-orchestration
           python setup.py install
+          cd ..
           echo "Starting Mongo Orchestration..."
           echo "{ \"releases\": { \"default\": \"c:\\\\mongodb\\\\bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
           mongo-orchestration -f orchestration.config -e default -s wsgiref start
-          cd ..
       linux: &mongo_orchestration_linux
         ## mongo orchestration is included on linux, no installation needed
         start_mongo_orchestration: |
@@ -224,14 +226,21 @@ functions:
     params:
       updates:
         - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform|}2.6.5.${mongo_url_extension|tgz}
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise}-${mongo_url_platform|}2.6.5.${mongo_url_extension|tgz}
 
   "set version 2.4" :
     command: expansions.update
     params:
       updates:
         - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|"subscription-"}${mongo_url_platform|}2.4.12.${mongo_url_extension|tgz}
+          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|subscription}-${mongo_url_platform|}2.4.12.${mongo_url_extension|tgz}
+
+  "set version 2.2" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "mongo_url"
+          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|subscription}-${mongo_url_platform|}2.2.7.${mongo_url_extension|tgz}
 
   "run integration tests" :
     command: shell.exec
@@ -332,6 +341,15 @@ tasks:
                 set -o verbose
                 ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} unit
 
+    - name: "integration test 2.2"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 2.2"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
     - name: "integration test 2.4"
       depends_on:
         - name: "compile"
@@ -378,6 +396,15 @@ tasks:
         - func: "fetch artifacts"
         - func: "fetch mongodb"
         - func: "run integration tests"
+
+    - name: "client test 2.2"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 2.2"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
 
     - name: "client test 2.4"
       depends_on:
