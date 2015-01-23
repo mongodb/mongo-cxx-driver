@@ -21,6 +21,7 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "mongo/stdx/functional.h"
@@ -65,7 +66,9 @@ namespace {
         int serverMajor = version[0].Int();
         int serverMinor = version[1].Int();
 
-        return (serverMajor >= major && serverMinor >= minor);
+        // std::pair uses lexicographic ordering
+        return std::make_pair(serverMajor, serverMinor) >=
+               std::make_pair(major, minor);
     }
 
     bool serverStorageEngine(DBClientBase& c, const StringData& engineName) {

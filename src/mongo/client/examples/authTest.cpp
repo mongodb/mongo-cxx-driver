@@ -28,6 +28,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
+#include <utility>
 
 using namespace mongo;
 
@@ -39,7 +40,9 @@ bool serverLTE(DBClientBase* c, int major, int minor) {
     int serverMajor = version[0].Int();
     int serverMinor = version[1].Int();
 
-    return (serverMajor <= major && serverMinor <= minor);
+    // std::pair uses lexicographic ordering
+    return std::make_pair(serverMajor, serverMinor) <=
+           std::make_pair(major, minor);
 }
 
 
