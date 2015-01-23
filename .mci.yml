@@ -282,6 +282,12 @@ pre:
     params:
       script: |
         rm -rf "mongo-cxx-driver"
+        if [ ! -e /data/db ]; then
+            mkdir /data/db
+        elif [ ! -d /data/db ]; then
+            echo "/data/db already exists and is not a directory!"
+            exit 1
+        fi
 
 post:
   - command: shell.exec
