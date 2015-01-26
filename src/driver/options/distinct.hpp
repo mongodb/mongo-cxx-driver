@@ -28,14 +28,14 @@ namespace driver {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB distinct command
+/// Class representing the optional arguments to a MongoDB distinct command.
 ///
 class LIBMONGOCXX_EXPORT distinct {
 
    public:
 
     ///
-    /// Sets the maximum amount of time for this operation to run (server side) in milliseconds.
+    /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
     ///
     /// @param max_time_ms
     ///   The max amount of time (in milliseconds).

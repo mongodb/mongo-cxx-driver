@@ -46,7 +46,7 @@ class instance {
     instance& operator=(instance&&) noexcept;
 
     ///
-    /// Destroys an instance.
+    /// Destroys an instance of the driver.
     ///
     ~instance();
 

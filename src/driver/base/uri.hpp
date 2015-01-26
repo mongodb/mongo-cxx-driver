@@ -34,6 +34,8 @@ namespace base {
 /// @todo: return const char* instead or stringview
 /// @todo: harmonize with C library (options, credentials, etc...)
 ///
+/// @see http://docs.mongodb.org/manual/reference/connection-string/
+///
 class uri {
 
    public:
@@ -47,12 +49,12 @@ class uri {
     static const std::string k_default_uri;
 
     ///
-    /// Constructs a uri from an optional MongoDB uri string.
+    /// Constructs a uri from an optional MongoDB uri string. If no uri string is specified,
+    /// uses the default uri string, 'mongodb://localhost:27017'.
     ///
     /// @param uri_string
     ///   String representing a MongoDB connection string uri, defaults to k_default_uri.
     ///
-    /// @todo document the default is localhost:27017...
     /// @todo this should really take a stringview (polyfilled)?
     ///
     uri(const std::string& uri_string = k_default_uri);
@@ -124,7 +126,7 @@ class uri {
     ///
     /// Returns the replica set specified in the uri.
     ///
-    /// @return A string representing the replica set name.
+    /// @return A string representing the supplied replica set name.
     ///
     std::string replica_set() const;
 
@@ -139,12 +141,13 @@ class uri {
     /// Returns the uri in a string format.
     ///
     /// @return A string with the uri.
+    ///
     std::string to_string() const;
 
     ///
     /// Returns the supplied username from the uri.
     ///
-    /// @return A string with the username.
+    /// @return A string with the username specified in the uri.
     ///
     std::string username() const;
 

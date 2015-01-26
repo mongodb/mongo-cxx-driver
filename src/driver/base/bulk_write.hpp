@@ -29,8 +29,8 @@ class collection;
 ///
 /// Class representing a batch of write operations that can be sent to the server as a group.
 ///
-/// If you have a lot of write operations to execute it can be more efficient to send them as
-/// part of a bulk_write in order to avoid unnecessary network level round trips between the driver
+/// If you have a lot of write operations to execute, it can be more efficient to send them as
+/// part of a bulk_write in order to avoid unnecessary network-level round trips between the driver
 /// and the server.
 ///
 /// Bulk writes affect a single collection only and are executed via the collection::bulk_write()
@@ -56,8 +56,9 @@ class LIBMONGOCXX_EXPORT bulk_write {
     /// @param ordered
     ///   If @c true all write operations will be executed serially in the order they were appended
     ///   and the entire bulk operation will abort on the first error. If @c false operations will
-    ///   be executed in arbitrary order (possibly in parallel on the server) and any errors will be
-    ///   reported after attempting all operations.
+    ///   be executed in an arbitrary order (possibly in parallel on the server) and any errors will
+    ///   be reported after attempting all operations. Unordered bulk writes may be more efficient
+    ///   than ordered bulk writes.
     ///
     explicit bulk_write(bool ordered);
 
@@ -78,7 +79,7 @@ class LIBMONGOCXX_EXPORT bulk_write {
 
     ///
     /// Appends a single write to the bulk write operation. The write operation's contents are
-    /// copied into the bulk operation completely so there is no dependency between the life of an
+    /// copied into the bulk operation completely, so there is no dependency between the life of an
     /// appended write operation and the bulk operation itself.
     ///
     /// @param operation

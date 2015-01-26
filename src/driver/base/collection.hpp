@@ -80,7 +80,7 @@ class LIBMONGOCXX_EXPORT collection {
     collection(collection&&) noexcept;
 
     ///
-    /// Move assigns a client.
+    /// Move assigns a collection.
     ///
     collection& operator=(collection&&) noexcept;
 
@@ -183,7 +183,7 @@ class LIBMONGOCXX_EXPORT collection {
     ///   Optional arguments, see mongo::driver::options::count.
     ///
     /// @return The count of the documents that matched the filter.
-    /// @throws operation_exception if the aggregation fails.
+    /// @throws operation_exception if the count operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/count/
     ///
@@ -193,7 +193,7 @@ class LIBMONGOCXX_EXPORT collection {
     );
 
     ///
-    /// Creates an index over the collection for the provided keys with the options provided.
+    /// Creates an index over the collection for the provided keys with the provided options.
     ///
     /// @param keys
     ///   The keys for the index: @c {a: 1, b: -1}
@@ -231,7 +231,7 @@ class LIBMONGOCXX_EXPORT collection {
     ///
     /// Deletes a single matching document from the collection.
     ///
-    /// @param filter 
+    /// @param filter
     ///   Document view representing the data to be deleted.
     /// @param options
     ///   Optional arguments, see mongo::driver::options::delete_options.
@@ -257,7 +257,7 @@ class LIBMONGOCXX_EXPORT collection {
     ///   Optional arguments, see options::distinct.
     ///
     /// @return Cursor having the distinct values for the specified field, a driver::cursor.
-    /// @throws operation_exception when the distinct fails.
+    /// @throws operation_exception if the distinct operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/distinct/
     ///
@@ -268,9 +268,9 @@ class LIBMONGOCXX_EXPORT collection {
     );
 
     ///
-    /// Drops this collection and the contained documents from the database.
+    /// Drops this collection and all its contained documents from the database.
     ///
-    /// @throws operation_exception when the operation fails.
+    /// @throws operation_exception if the operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.drop/
     ///
@@ -296,7 +296,7 @@ class LIBMONGOCXX_EXPORT collection {
 
 
     ///
-    /// Finds a single document in this collection matching the provided filter.
+    /// Finds a single document in this collection that match the provided filter.
     ///
     /// @param filter
     ///   Document view representing a document that should match the query.
@@ -304,7 +304,7 @@ class LIBMONGOCXX_EXPORT collection {
     ///   Optional arguments, see options::find
     ///
     /// @return An optional document that matched the filter.
-    /// @throws operation_exception when the operation fails.
+    /// @throws operation_exception if the operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/core/read-operations-introduction/
     ///
@@ -322,7 +322,7 @@ class LIBMONGOCXX_EXPORT collection {
     ///   Optional arguments, see options::find_one_and_delete
     ///
     /// @return The document that was deleted.
-    /// @throws write_exception when the operation fails
+    /// @throws write_exception if the operation fails.
     ///
     optional<bson::document::value> find_one_and_delete(
         bson::document::view filter,
@@ -330,8 +330,8 @@ class LIBMONGOCXX_EXPORT collection {
     );
 
     ///
-    /// Finds a single document matching the filter, replaces it and returns either the original
-    /// or the replaced document.
+    /// Finds a single document matching the filter, replaces it, and returns either the original
+    /// or the replacement document.
     ///
     /// @param filter
     ///   Document view representing a document that should be replaced.
@@ -341,7 +341,7 @@ class LIBMONGOCXX_EXPORT collection {
     ///   Optional arguments, see options::find_one_and_replace.
     ///
     /// @return The original or replaced document.
-    /// @throws write_exception when the operation fails.
+    /// @throws write_exception if the operation fails.
     ///
     optional<bson::document::value> find_one_and_replace(
         bson::document::view filter,
@@ -351,7 +351,7 @@ class LIBMONGOCXX_EXPORT collection {
 
     ///
     /// Finds a single document matching the filter, updates it, and returns either the original
-    /// or the updated document.
+    /// or the newly-updated document.
     ///
     /// @param filter
     ///   Document view representing a document that should be updated.
@@ -371,7 +371,7 @@ class LIBMONGOCXX_EXPORT collection {
 
     ///
     /// Inserts a single document into the collection. If the document is missing an identifier
-    /// one will be generated for it.
+    /// (@c _id field) one will be generated for it.
     ///
     /// @param document
     ///   The document to insert.
@@ -379,7 +379,7 @@ class LIBMONGOCXX_EXPORT collection {
     ///   Optional arguments, see options::insert.
     ///
     /// @return The result of attempting to perform the insert.
-    /// @throws write_exception when the operation fails.
+    /// @throws write_exception if the operation fails.
     ///
     optional<result::insert_one> insert_one(
         bson::document::view document,
@@ -432,7 +432,7 @@ class LIBMONGOCXX_EXPORT collection {
     ///   Optional arguments, see options::insert.
     ///
     /// @return The result of attempting to performing the insert.
-    /// @throws write_exception when the operation fails.
+    /// @throws write_exception if the operation fails.
     ///
     /// TODO: document DocumentViewIterator concept or static assert
     template<typename document_view_iterator_type>
@@ -443,10 +443,12 @@ class LIBMONGOCXX_EXPORT collection {
     );
 
     ///
-    /// Produces a list of indexes currently on this collection.
+    /// Returns a list of the indexes currently on this collection.
     ///
     /// @return Cursor yielding the index specifications.
-    /// @throws write_exception when the operation fails.
+    /// @throws operation_exception if the operation fails.
+    ///
+    /// @see http://docs.mongodb.org/manual/reference/command/listIndexes/
     ///
     cursor list_indexes() const;
 
@@ -458,7 +460,7 @@ class LIBMONGOCXX_EXPORT collection {
     const std::string& name() const noexcept;
 
     ///
-    /// Sets the read_preference for the collection. Changes will not have any effect on existing
+    /// Sets the read_preference for this collection. Changes will not have any effect on existing
     /// cursors or other read operations which use the read preference.
     ///
     /// @param rp
@@ -530,7 +532,7 @@ class LIBMONGOCXX_EXPORT collection {
     ///   Optional arguments, see options::update.
     ///
     /// @return The result of attempting to update a document.
-    /// @throws write_exception when the update operation fails.
+    /// @throws write_exception if the update operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
@@ -541,11 +543,11 @@ class LIBMONGOCXX_EXPORT collection {
     );
 
     ///
-    /// Sets the write_concern for the collection. Changes will not have any effect on existing
+    /// Sets the write_concern for this collection. Changes will not have any effect on existing
     /// write operations.
     ///
     /// @param wc
-    ///   The write_concern to set.
+    ///   The new write_concern to use.
     ///
     void write_concern(class write_concern wc);
 

@@ -33,9 +33,9 @@ namespace base {
 ///
 /// Acts as a logical gateway for working with databases contained within a MongoDB server.
 ///
-/// Databases that are created via this client inherit the read_preference and write_concern
-/// settings of this client at the time they are created. The lifetimes of objects created via this
-/// client (databases, collections, cursors, etc...) @b must be a subset of the lifetime of the
+/// Databases that are created via this client inherit the @c read_preference and @c write_concern
+/// settings of this client when they are created. The lifetimes of objects created via a client
+/// object (databases, collections, cursors, etc...) @b must be a subset of the lifetime of the
 /// client that created them.
 ///
 /// Example:
@@ -52,7 +52,7 @@ class LIBMONGOCXX_EXPORT client {
    public:
 
     ///
-    /// Creates a new connection to MongoDB.
+    /// Creates a new client connection to MongoDB.
     ///
     /// @param mongodb_uri
     ///   A MongoDB URI representing the connection parameters
@@ -80,14 +80,14 @@ class LIBMONGOCXX_EXPORT client {
     ~client();
 
     ///
-    /// Sets the read_preference for this client.
+    /// Sets the read preference for this client.
     ///
     /// Modifications at this level do not effect existing databases instances that have have been
-    /// created by this client but do effect new ones as databases inherit the read_preference
+    /// created by this client but do effect new ones as databases inherit the @c read_preference
     /// settings of their parent upon instantiation.
     ///
     /// @param rp
-    ///   The new read_preference
+    ///   The new @c read_preference
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
@@ -96,18 +96,18 @@ class LIBMONGOCXX_EXPORT client {
     ///
     /// Returns the current read preference for this client.
     ///
-    /// @return The current read_preference
+    /// @return The current @c read_preference
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
     class read_preference read_preference() const;
 
     ///
-    /// Sets the write_concern for this client.
+    /// Sets the write concern for this client.
     ///
     /// @note Modifications at this level do not effect existing databases or collection instances
     /// that have come from this client but do effect new ones as databases will receive a copy of
-    /// the write_concern of this client upon instantiation.
+    /// this client's @c write_concern upon instantiation.
     ///
     /// @param wc
     ///   The new write concern
@@ -115,13 +115,13 @@ class LIBMONGOCXX_EXPORT client {
     void write_concern(class write_concern wc);
 
     ///
-    /// Returns the current write_concern for this client.
+    /// Returns the current write concern for this client.
     ///
-    /// @return the current write_concern
+    /// @return the current @c write_concern
     class write_concern write_concern() const;
 
     ///
-    /// Obtains a database which represents a logical grouping of collections on a MongoDB server.
+    /// Obtains a database that represents a logical grouping of collections on a MongoDB server.
     ///
     /// @note A database cannot be obtained from a temporary client object.
     ///

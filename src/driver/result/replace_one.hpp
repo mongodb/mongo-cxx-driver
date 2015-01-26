@@ -26,7 +26,7 @@ namespace mongo {
 namespace driver {
 namespace result {
 
-/// Class representing the result of a MongoDB replace operation
+/// Class representing the result of a MongoDB replace_one operation.
 class LIBMONGOCXX_EXPORT replace_one {
 
    public:
@@ -34,7 +34,7 @@ class LIBMONGOCXX_EXPORT replace_one {
     explicit replace_one(result::bulk_write result);
 
     ///
-    /// Returns the bulk write result.
+    /// Returns the bulk write result for this replace_one operation.
     ///
     /// @return The raw bulk write result.
     ///

@@ -33,18 +33,18 @@ class database;
 
 ///
 /// Class representing a preference for how the driver routes read operations to members of a
-/// replica set.
+/// replica set or to a sharded cluster.
 ///
 /// By default read operations are directed to the primary member in a replica set. Reading from the
 /// primary guarantees that read operations reflect the latest version of a document. However, by
 /// distributing some or all reads to secondary members of the replica set, you can improve read
 /// throughput or reduce latency for an application that does not require fully up-to-date data.
 ///
-/// Read preference can be customized by setting a mode (broad stroke preference) as well as
-/// optionally setting tags to provide more granular control and to target specific members of a
+/// Read preference can be broadly specified by setting a mode. It is also possible to
+/// set tags in the read preference for more granular control, and to target specific members of a
 /// replica set via attributes other than their current state as a primary or secondary node.
 ///
-/// Read preferences aren’t relevant to direct connections to a single mongod instance. However,
+/// Read preferences are ignored for direct connections to a single mongod instance. However,
 /// in order to perform read operations on a direct connection to a secondary member of a replica
 /// set, you must set a read preference that allows reading from secondaries.
 ///

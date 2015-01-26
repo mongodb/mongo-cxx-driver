@@ -1,4 +1,3 @@
-
 // Copyright 2014 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +25,7 @@ namespace driver {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB update operation
+/// Class representing the optional arguments to a MongoDB update operation.
 ///
 class LIBMONGOCXX_EXPORT update {
 
@@ -41,7 +40,7 @@ class LIBMONGOCXX_EXPORT update {
     ///
     /// @param upsert
     ///   If set to @c true, creates a new document when no document matches the query criteria.
-    ///   The server side default is @c false, which does not insert a new document if a match
+    ///   The server-side default is @c false, which does not insert a new document if a match
     ///   is not found.
     ///
     void upsert(bool upsert);

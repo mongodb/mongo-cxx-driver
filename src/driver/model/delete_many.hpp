@@ -38,7 +38,7 @@ class LIBMONGOCXX_EXPORT delete_many {
     explicit delete_many(bson::document::view filter);
 
     ///
-    /// Gets the filter.
+    /// Gets the filter for this delete operation.
     ///
     /// @return The filter to be used for the delete operation.
     ///

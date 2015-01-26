@@ -57,9 +57,10 @@ class LIBMONGOCXX_EXPORT update_one {
     ///
     /// Sets the upsert option.
     ///
-    /// By default, if no document matches the filter, the update operation does nothing.
+    /// When upsert is @false, if no document matches the filter, the update operation does nothing.
     /// However, by specifying upsert as @c true, this operation either updates a matching document
     /// or inserts a new document using the update specification if no matching document exists.
+    /// By default upsert is @false.
     ///
     /// @param upsert
     ///   If set to @c true, creates a new document when no document matches the query criteria.

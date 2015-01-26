@@ -29,7 +29,7 @@ namespace base {
 class collection;
 
 ///
-/// Class representing a MongoDB aggregation pipeline
+/// Class representing a MongoDB aggregation pipeline.
 ///
 class LIBMONGOCXX_EXPORT pipeline {
 
@@ -59,16 +59,16 @@ class LIBMONGOCXX_EXPORT pipeline {
 
     ///
     /// Groups documents by some specified expression and outputs to the next stage a
-    /// document for each distinct grouping. The output documents contain an _id field
+    /// document for each distinct grouping. The output documents contain an @c _id field
     /// which contains the the distinct key for that group. The output documents can also
     /// contain computed fields that hold the values of some accumulator expression grouped
-    /// by the group's _id field.
+    /// by the group's @c _id field.
     ///
-    /// @note group does not order output documents
+    /// @note group does not order output documents.
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group
     ///
-    /// @param group the group expression as a document
+    /// @param group the group expression, as a document.
     ///
     pipeline& group(bson::document::view group);
 
@@ -77,17 +77,17 @@ class LIBMONGOCXX_EXPORT pipeline {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/limit/#pipe._S_limit
     ///
-    /// @param limit the limit
+    /// @param limit the number of documents to which output should be limited.
     ///
     pipeline& limit(std::int32_t limit);
 
     ///
-    /// Filters the documents. Only the documents that match the specified condition(s) continue
-    /// to the next pipeline stage.
+    /// Filters the documents. Only the documents that match the condition(s) specified by the
+    /// @c filter will continue to the next pipeline stage.
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/match/#pipe._S_match
     ///
-    /// @param filter the filter
+    /// @param filter the filter.
     ///
     pipeline& match(bson::document::view filter);
 
@@ -107,7 +107,7 @@ class LIBMONGOCXX_EXPORT pipeline {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/project/#pipe._S_project
     ///
-    /// @param projection projection specification
+    /// @param projection projection specification.
     ///
     pipeline& project(bson::document::view projection);
 
@@ -117,7 +117,7 @@ class LIBMONGOCXX_EXPORT pipeline {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/redact/#pipe._S_redact
     ///
-    /// @param restrictions the document restrictions
+    /// @param restrictions the document restrictions.
     ///
     pipeline& redact(bson::document::view restrictions);
 
@@ -127,7 +127,7 @@ class LIBMONGOCXX_EXPORT pipeline {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/skip/#pipe._S_skip
     ///
-    /// @param skip the number of documents to skip
+    /// @param skip the number of input documents to skip.
     ///
     pipeline& skip(std::int32_t skip);
 
@@ -136,18 +136,18 @@ class LIBMONGOCXX_EXPORT pipeline {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/sort/#pipe._S_sort
     ///
-    /// @param ordering document specifying the ordering in which the documents are to be sorted
+    /// @param ordering document specifying the ordering by which the documents are sorted.
     ///
     pipeline& sort(bson::document::view ordering);
 
     ///
     /// Deconstructs an array field from the input documents to output a document for each element.
-    /// Each output document is the input docuemnts with the value of the array field replaced by
-    /// the element which was unwound.
+    /// Each output document is an input document with the value of its array field replaced by
+    /// an element from the unwound array.
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/unwind/#pipe._S_unwind
     ///
-    /// @param field_name the name of the field to unwind
+    /// @param field_name the name of the field to unwind.
     ///
     pipeline& unwind(std::string field_name);
 

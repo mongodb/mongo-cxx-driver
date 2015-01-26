@@ -31,7 +31,7 @@ class collection;
 ///
 /// Clients can iterate through a cursor::iterator to retrieve results.
 ///
-/// @note By default, cursors timeout after 10 minutes of inactivity. 
+/// @note By default, cursors timeout after 10 minutes of inactivity.
 ///
 class LIBMONGOCXX_EXPORT cursor {
 
@@ -53,12 +53,12 @@ class LIBMONGOCXX_EXPORT cursor {
     ///
     ~cursor();
 
-    /// A cursor::iterator which points to the begining of the results.
+    /// A cursor::iterator that points to the begining of the results.
     ///
     /// @return the cursor::iterator
     iterator begin();
 
-    /// A cursor::iterator which points to the end of the results.
+    /// A cursor::iterator that points to the end of the results.
     ///
     /// @return the cursor::iterator
     iterator end();
@@ -89,7 +89,7 @@ class cursor::iterator : public std::iterator<
     const bson::document::view& operator*() const;
 
     ///
-    /// Access a member of the dereferenced document currently being pointed to.
+    /// Accesses a member of the dereferenced document currently being pointed to.
     ///
     const bson::document::view* operator->() const;
 

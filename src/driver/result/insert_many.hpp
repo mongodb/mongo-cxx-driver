@@ -28,6 +28,7 @@ namespace result {
 
 ///
 /// Class representing the result of a MongoDB insert many operation
+/// (executed as a bulk write).
 ///
 class LIBMONGOCXX_EXPORT insert_many {
 
@@ -40,7 +41,7 @@ class LIBMONGOCXX_EXPORT insert_many {
     );
 
     ///
-    /// Returns the bulk write result.
+    /// Returns the bulk write result for this insert many operation.
     ///
     /// @return The raw bulk write result.
     ///
@@ -54,7 +55,7 @@ class LIBMONGOCXX_EXPORT insert_many {
     std::int64_t inserted_count() const;
 
     ///
-    /// Gets the ids of the inserted documents.
+    /// Gets the _ids of the inserted documents.
     ///
     /// @return The values of the _id field for inserted documents.
     ///

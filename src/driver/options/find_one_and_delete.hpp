@@ -34,10 +34,10 @@ class LIBMONGOCXX_EXPORT find_one_and_delete {
    public:
 
     ///
-    /// Sets the maximum amount of time for this operation to run (server side) in milliseconds.
+    /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
     ///
     /// @param max_time_ms
-    ///   The max amount of time (in milliseconds).
+    ///   The max amount of running time (in milliseconds).
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
@@ -53,7 +53,7 @@ class LIBMONGOCXX_EXPORT find_one_and_delete {
     const optional<std::int64_t>& max_time_ms() const;
 
     ///
-    /// Sets a projection which limits the fields to return.
+    /// Sets a projection that limits the fields to return.
     ///
     /// @param projection
     ///   The projection document.
@@ -63,7 +63,7 @@ class LIBMONGOCXX_EXPORT find_one_and_delete {
     void projection(bson::document::view projection);
 
     ///
-    /// Gets the current projection.
+    /// Gets the current projection set on this operation.
     ///
     /// @return The current projection.
     ///

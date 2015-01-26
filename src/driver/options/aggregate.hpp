@@ -27,15 +27,15 @@ namespace driver {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB aggregation.
+/// Class representing the optional arguments to a MongoDB aggregation operation.
 ///
 class LIBMONGOCXX_EXPORT aggregate {
 
    public:
 
     ///
-    /// Enables writing to temporary files. When set to true, aggregation stages can write data
-    /// to the _tmp subdirectory in the dbPath directory. The server side default is false.
+    /// Enables writing to temporary files. When set to @c true, aggregation stages can write data
+    /// to the _tmp subdirectory in the dbPath directory. The server-side default is @c false.
     ///
     /// @param allow_disk_use
     ///   Whether or not to allow disk use.
@@ -65,7 +65,7 @@ class LIBMONGOCXX_EXPORT aggregate {
     const optional<std::int32_t>& batch_size() const;
 
     ///
-    /// Sets the maximum amount of time for this operation to run (server side) in milliseconds.
+    /// Sets the maximum amount of time for this operation to run server-side in milliseconds.
     ///
     /// @param max_time_ms
     ///   The max amount of time (in milliseconds).
@@ -85,13 +85,13 @@ class LIBMONGOCXX_EXPORT aggregate {
     const optional<std::int64_t>& max_time_ms() const;
 
     ///
-    /// Sets whether the results should be returned via a cursor.
+    /// Sets whether the results of this aggregation should be returned via a cursor.
     ///
     /// @note The default for this value depends on the version of the server:
-    ///   - Servers >= 2.6 will use a server side default of true.
-    ///   - Servers < 2.6 will use a server side default of false.
+    ///   - Servers >= 2.6 will use a server-side default of true.
+    ///   - Servers < 2.6 will use a server-side default of false.
     ///
-    /// If this optional setting is not engaged client side, the server default will be used.
+    /// If this optional setting is not engaged client-side, the server default will be used.
     ///
     /// @param use_cursor whether or not to use a cursor
     ///

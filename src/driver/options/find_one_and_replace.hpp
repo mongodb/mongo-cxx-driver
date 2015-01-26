@@ -34,7 +34,7 @@ class LIBMONGOCXX_EXPORT find_one_and_replace {
    public:
 
     ///
-    /// Sets the maximum amount of time for this operation to run (server side) in milliseconds.
+    /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
     ///
     /// @param max_time_ms
     ///   The max amount of time (in milliseconds).
@@ -53,7 +53,7 @@ class LIBMONGOCXX_EXPORT find_one_and_replace {
     const optional<std::int64_t>& max_time_ms() const;
 
     ///
-    /// Sets a projection which limits the fields to return.
+    /// Sets a projection, which limits the fields to return.
     ///
     /// @param projection
     ///   The projection document.
@@ -63,7 +63,7 @@ class LIBMONGOCXX_EXPORT find_one_and_replace {
     void projection(bson::document::view projection);
 
     ///
-    /// Gets the current projection.
+    /// Gets the current projection set for this operation.
     ///
     /// @return The current projection.
     ///
@@ -73,10 +73,11 @@ class LIBMONGOCXX_EXPORT find_one_and_replace {
     const optional<bson::document::view>& projection() const;
 
     ///
-    /// Sets the state of the document to be returned by the operation.
+    /// Set the desired version of the replaced document to return, either the original
+    /// document, or the replacement. By default, the original document is returned.
     ///
     /// @param return_document
-    ///   State of document to return.
+    ///   Version of document to return, either original or updated.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     /// @see mongo::driver::options::return_document
@@ -84,9 +85,9 @@ class LIBMONGOCXX_EXPORT find_one_and_replace {
     void return_document(return_document return_document);
 
     ///
-    /// Gets the state of the document to be returned by the operation.
+    /// Which version of the updated document to return.
     ///
-    /// @return State of document to return.
+    /// @return State of document to return, either original or updated.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     /// @see mongo::driver::options::return_document
@@ -94,7 +95,7 @@ class LIBMONGOCXX_EXPORT find_one_and_replace {
     const optional<enum return_document>& return_document() const;
 
     ///
-    /// Sets the order to search for a matching document.
+    /// Sets the order by which to search the collection for a matching document.
     ///
     /// @warning This can influence which document the operation modifies if the provided filter
     /// selects multiple documents.
@@ -116,8 +117,9 @@ class LIBMONGOCXX_EXPORT find_one_and_replace {
     const optional<bson::document::view>& sort() const;
 
     ///
-    /// Sets the upsert flag on the operation. When true, the operation creates a new document if
-    /// no document matches the filter. The server side default is false.
+    /// Sets the upsert flag on the operation. When @c true, the operation creates a new document if
+    /// no document matches the filter. When @c false, this operation does nothing if there are no
+    /// matching documents. The server-side default is false.
     ///
     /// @param upsert
     ///   Whether or not to perform an upsert.

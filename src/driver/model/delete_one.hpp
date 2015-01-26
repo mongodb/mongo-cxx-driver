@@ -38,7 +38,7 @@ class LIBMONGOCXX_EXPORT delete_one {
     explicit delete_one(bson::document::view filter);
 
     ///
-    /// Gets the filter.
+    /// Gets the filter on this delete operation.
     ///
     /// @return The filter to be used for the delete operation.
     ///

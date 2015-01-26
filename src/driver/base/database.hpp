@@ -63,41 +63,41 @@ class LIBMONGOCXX_EXPORT database {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.runCommand/
     ///
-    /// @param command document representing the command to be run
-    /// @return the result of executing the command
-    /// @throws operation_exception
+    /// @param command document representing the command to be run.
+    /// @return the result of executing the command.
+    /// @throws operation_exception if the operation fails.
     ///
     bson::document::value command(bson::document::view command);
 
     ///
-    /// Explicitly creates a collection with specified options.
+    /// Explicitly creates a collection in this database with the specified options.
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.createCollection/
     ///
-    /// @param name the new collection's name
-    /// @param options the options for the new collection
+    /// @param name the new collection's name.
+    /// @param options the options for the new collection.
     ///
     class collection create_collection(const std::string& name, bson::document::view options);
 
     ///
-    /// Drops the database.
+    /// Drops the database and all its collections.
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.dropDatabase/
     ///
     void drop();
 
     ///
-    /// Checks whether this database contains a collection having name.
+    /// Checks whether this database contains a collection having the given name.
     ///
-    /// @param name the name of the collection
-    /// @return bool whether the collection exists in this database
+    /// @param name the name of the collection.
+    /// @return bool whether the collection exists in this database.
     ///
     bool has_collection(const std::string& name);
 
     ///
-    /// Enumerates the collections of this database.
+    /// Enumerates the collections in this database.
     ///
-    /// @return mongo::driver::cursor containing the collection information
+    /// @return mongo::driver::cursor containing the collection information.
     ///
     cursor list_collections();
 
@@ -111,8 +111,8 @@ class LIBMONGOCXX_EXPORT database {
     ///
     /// Renames this database.
     ///
-    /// @param new_name the new name for the database
-    /// @param drop_target_before_rename whether to drop existing databases having the new name
+    /// @param new_name the new name for the database.
+    /// @param drop_target_before_rename whether to drop existing databases with the new name.
     ///
     void rename(
         const std::string& new_name,
@@ -120,9 +120,11 @@ class LIBMONGOCXX_EXPORT database {
     );
 
     ///
-    /// Get server side statistics for the database.
+    /// Get server-side statistics for the database.
     ///
     /// @return document containing statistics for this database.
+    ///
+    /// @see http://docs.mongodb.org/manual/reference/command/dbStats/
     ///
     bson::document::value stats();
 
@@ -130,12 +132,12 @@ class LIBMONGOCXX_EXPORT database {
     /// Sets the read_preference for this database.
     ///
     /// @note Modifications at this level do not effect existing collection instances that have come
-    /// from this database but do effect new ones as new collections will receive a copy of the
-    /// read_preference of this database upon instantiation.
+    /// from this database, but do affect new ones. New collections will receive a copy of the
+    /// new read_preference for this database upon instantiation.
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    /// @param rp the new read_preference
+    /// @param rp the new read_preference.
     ///
     void read_preference(class read_preference rp);
 
@@ -152,8 +154,8 @@ class LIBMONGOCXX_EXPORT database {
     /// Sets the write_concern for this database.
     ///
     /// @note Modifications at this level do not effect existing collection instances that have come
-    /// from this database but do effect new ones as new collections will receive a copy of the
-    /// write_concern of this client upon instantiation.
+    /// from this database, but do effect new ones as new collections will receive a copy of the
+    /// write_concern of this database upon instantiation.
     ///
     void write_concern(class write_concern wc);
 
@@ -165,20 +167,20 @@ class LIBMONGOCXX_EXPORT database {
     class write_concern write_concern() const;
 
     ///
-    /// Access a collection (logical grouping of documents)
+    /// Access a collection (logical grouping of documents) within this database.
     ///
-    /// @param name the name of the collection to get
+    /// @param name the name of the collection to get.
     ///
-    /// @return the collection
+    /// @return the collection.
     ///
     class collection collection(const std::string& name) const;
 
     ///
-    /// Syntactic sugar for accessing a collection.
+    /// Allows the db["collection_name"] syntax to be used to access a collection within this database.
     ///
-    /// @param name the name of the collection to get
+    /// @param name the name of the collection to get.
     ///
-    /// @return the collection
+    /// @return the collection.
     ///
     inline class collection operator[](const std::string& name) const;
 

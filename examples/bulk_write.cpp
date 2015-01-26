@@ -16,7 +16,7 @@ int main() {
     client mongo_client;
     auto coll = mongo_client["database"]["collection"];
 
-    // Build document to insert (_id will be generated as none was provided)
+    // Build document to insert ('_id' field will be generated as none was provided)
     document::builder doc;
     doc << "x" << true;
 
@@ -24,8 +24,10 @@ int main() {
     model::insert_one insert_one(doc);
     model::insert_one insert_two(doc);
 
-    // Build the bulk_write operation (to be executed in order because of the first argument)
+    // Create the bulk_write operation (to be executed in order because we pass 'true')
     bulk_write writes(true);
+
+    // Append the write operations we constructed above
     writes.append(insert_one);
     writes.append(insert_two);
 

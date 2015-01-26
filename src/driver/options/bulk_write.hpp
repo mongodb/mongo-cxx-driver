@@ -32,10 +32,10 @@ class LIBMONGOCXX_EXPORT bulk_write {
     ///
     /// Sets whether the writes must be executed in order by the server.
     ///
-    /// The server side default is true.
+    /// The server-side default is @c true.
     ///
     /// @param ordered
-    ///   If @c true all write operations will be executed serially in the order they were appended
+    ///   If @c true all write operations will be executed serially in the order they were appended,
     ///   and the entire bulk operation will abort on the first error. If @c false operations will
     ///   be executed in arbitrary order (possibly in parallel on the server) and any errors will be
     ///   reported after attempting all operations.

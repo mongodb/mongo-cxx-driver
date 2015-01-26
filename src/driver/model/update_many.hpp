@@ -41,7 +41,7 @@ class LIBMONGOCXX_EXPORT update_many {
     update_many(bson::document::view filter, bson::document::view update);
 
     ///
-    /// Gets the filter
+    /// Gets the filter.
     ///
     /// @return The filter to be used for the update operation.
     ///
@@ -57,9 +57,10 @@ class LIBMONGOCXX_EXPORT update_many {
     ///
     /// Sets the upsert option.
     ///
-    /// By default, if no document matches the filter, the update operation does nothing.
+    /// When upsert is @false, the update operation does nothing when no documents match the filter.
     /// However, by specifying upsert as @c true, this operation either updates matching documents
     /// or inserts a new document using the update specification if no matching document exists.
+    /// By default, upsert is unset by the driver, and the server-side default, @false, is used.
     ///
     /// @param upsert
     ///   If set to @c true, creates a new document when no document matches the query criteria.

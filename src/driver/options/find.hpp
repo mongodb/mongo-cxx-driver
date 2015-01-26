@@ -27,7 +27,7 @@ namespace driver {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB query
+/// Class representing the optional arguments to a MongoDB query.
 ///
 class LIBMONGOCXX_EXPORT find {
 
@@ -48,7 +48,7 @@ class LIBMONGOCXX_EXPORT find {
     ///
     /// Gets the current setting for allowing partial results from mongos.
     ///
-    /// @return Whether or not we allow partial results from mongos.
+    /// @return Whether partial results from mongos are allowed.
     ///
     /// @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
     ///
@@ -128,7 +128,7 @@ class LIBMONGOCXX_EXPORT find {
     const optional<std::int32_t>& limit() const;
 
     ///
-    /// Sets the maximum amount of time for this operation to run (server side) in milliseconds.
+    /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
     ///
     /// @param max_time_ms
     ///   The max amount of time (in milliseconds).
@@ -164,7 +164,7 @@ class LIBMONGOCXX_EXPORT find {
     const optional<bson::document::view>& modifiers() const;
 
     ///
-    /// Sets the cursor flag to prevent cursor from timing out server side due to a period of
+    /// Sets the cursor flag to prevent cursor from timing out server-side due to a period of
     /// inactivity.
     ///
     /// @param no_cursor_timeout
@@ -175,9 +175,9 @@ class LIBMONGOCXX_EXPORT find {
     void no_cursor_timeout(bool no_cursor_timeout);
 
     ///
-    /// Gets the current no cursor timeout setting.
+    /// Gets the current no_cursor_timeout setting.
     ///
-    /// @return The current no cursor timeout setting.
+    /// @return The current no_cursor_timeout setting.
     ///
     /// @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
     ///
@@ -187,7 +187,7 @@ class LIBMONGOCXX_EXPORT find {
     const optional<bool>& oplog_replay() const;
 
     ///
-    /// Sets a projection which limits the fields to return for all matching documents.
+    /// Sets a projection which limits the returned fields for all matching documents.
     ///
     /// @param projection
     ///   The projection document.
@@ -197,7 +197,7 @@ class LIBMONGOCXX_EXPORT find {
     void projection(bson::document::view projection);
 
     ///
-    /// Gets the current projection.
+    /// Gets the current projection set on this query.
     ///
     /// @return The current projection.
     ///
@@ -246,7 +246,7 @@ class LIBMONGOCXX_EXPORT find {
 
     ///
     /// The order in which to return matching documents. If $orderby also exists in the modifiers
-    /// document, the sort field overwrites $orderby.
+    /// document, the sort field takes precedence over $orderby.
     ///
     /// @param ordering
     ///   Document describing the order of the documents to be returned.
@@ -256,7 +256,7 @@ class LIBMONGOCXX_EXPORT find {
     void sort(bson::document::view ordering);
 
     ///
-    /// Gets the current sort ordering.
+    /// Gets the current sort ordering for this query.
     ///
     /// @return The current sort ordering.
     ///

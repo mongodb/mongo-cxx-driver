@@ -38,7 +38,7 @@ class LIBMONGOCXX_EXPORT count {
    public:
 
     ///
-    /// Sets the index to use.
+    /// Sets the index to use for this operation.
     ///
     /// @param hint
     ///   Document representing the index to use.
@@ -53,7 +53,7 @@ class LIBMONGOCXX_EXPORT count {
     const optional<bson::document::view>& hint() const;
 
     ///
-    /// Sets maximum number of documents to count.
+    /// Sets the maximum number of documents to count.
     ///
     /// @param limit
     ///  The max number of documents to count.
@@ -68,7 +68,7 @@ class LIBMONGOCXX_EXPORT count {
     const optional<std::int64_t>& limit() const;
 
     ///
-    /// Sets the maximum amount of time for this operation to run (server side) in milliseconds.
+    /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
     ///
     /// @param max_time_ms
     ///   The max amount of time (in milliseconds).
