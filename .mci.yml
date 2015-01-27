@@ -142,7 +142,7 @@ cxx_driver_variables:
       windows: &mongo_orchestration_windows
         start_mongo_orchestration: |
           echo "Installing Mongo Orchestration..."
-          trap 'set +o errexit; cd mongo-orchestration; mongo-orchestration stop;' EXIT
+          trap 'set +o errexit; mongo-orchestration stop;' EXIT
           taskkill.exe /fi python /f
           git clone https://github.com/10gen/mongo-orchestration.git
           cd mongo-orchestration
