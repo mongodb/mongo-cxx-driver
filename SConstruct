@@ -421,7 +421,7 @@ if releaseBuild and (debugBuild or not optBuild):
     print("Error: A --release build may not have debugging, and must have optimization")
     Exit(1)
 
-mongoclientVersion = "1.0.0-rc5-pre"
+mongoclientVersion = "1.0.0"
 # We don't keep the -pre in the user testable version identifiers, because
 # nobody should be conditioning on the pre-release status.
 mongoclientVersionComponents = re.split(r'\.|-rc', mongoclientVersion.partition('-pre')[0])
