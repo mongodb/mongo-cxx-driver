@@ -1296,24 +1296,30 @@ namespace {
     }
 
     TEST_F(DBClientTest, CreateSimpleV0Index) {
-        c.createIndex(TEST_NS, IndexSpec()
-                      .addKey("aField")
-                      .version(0));
+        if (serverStorageEngine(c, "mmapv1")) {
+            c.createIndex(TEST_NS, IndexSpec()
+                          .addKey("aField")
+                          .version(0));
+        }
     }
 
     TEST_F(DBClientTest, CreateSimpleNamedV0Index) {
-        c.createIndex(TEST_NS, IndexSpec()
-                      .addKey("aField")
-                      .version(0)
-                      .name("aFieldV0Index"));
+        if (serverStorageEngine(c, "mmapv1")) {
+            c.createIndex(TEST_NS, IndexSpec()
+                          .addKey("aField")
+                          .version(0)
+                          .name("aFieldV0Index"));
+        }
     }
 
     TEST_F(DBClientTest, CreateCompoundNamedV0Index) {
-        c.createIndex(TEST_NS, IndexSpec()
-                      .addKey("aField")
-                      .addKey("bField", IndexSpec::kIndexTypeDescending)
-                      .version(0)
-                      .name("aFieldbFieldV0Index"));
+        if (serverStorageEngine(c, "mmapv1")) {
+            c.createIndex(TEST_NS, IndexSpec()
+                          .addKey("aField")
+                          .addKey("bField", IndexSpec::kIndexTypeDescending)
+                          .version(0)
+                          .name("aFieldbFieldV0Index"));
+        }
     }
 
     TEST_F(DBClientTest, CreateSimpleV1Index) {
