@@ -29,10 +29,12 @@ cxx_driver_variables:
     - name: "integration test 2.2"
     - name: "integration test 2.4"
     - name: "integration test 2.6"
+    - name: "integration test 3.0"
     - name: "integration test latest"
     - name: "client test 2.2"
     - name: "client test 2.4"
     - name: "client test 2.6"
+    - name: "client test 3.0"
     - name: "client test latest"
 
 ## Common download urls (merge in as hashes)
@@ -231,12 +233,19 @@ functions:
         - key: "orchestration_preset"
           value: "--mongo-orchestration-preset=wiredtiger.json"
 
+  "set version 3.0" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "mongo_url"
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise-}${mongo_url_platform|}3.0.0-rc6.${mongo_url_extension|tgz}
+
   "set version 2.6" :
     command: expansions.update
     params:
       updates:
         - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise-}${mongo_url_platform|}2.6.5.${mongo_url_extension|tgz}
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise-}${mongo_url_platform|}2.6.7.${mongo_url_extension|tgz}
 
   "set version 2.4" :
     command: expansions.update
@@ -384,6 +393,15 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
+    - name: "integration test 3.0"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.0"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
     - name: "integration test latest"
       depends_on:
         - name: "compile"
@@ -436,6 +454,15 @@ tasks:
         - name: "compile"
       commands:
         - func: "set version 2.6"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
+    - name: "client test 3.0"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.0"
         - func: "fetch artifacts"
         - func: "fetch mongodb"
         - func: "run client tests"
