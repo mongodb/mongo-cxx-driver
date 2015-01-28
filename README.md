@@ -15,11 +15,11 @@ Switch to the legacy branch if:
 
 ## Repository Overview
 
-| Branch   | Stability | Development       | Purpose                                               |
-| -------- | ----------| ----------------- | ----------------------------------------------------- |
-| master   | Unstable  | Planning          | New C++ driver (work in progress)                     |
-| legacy   | Unstable  | Active            | Existing C++ driver with non-compatible improvements  |
-| 26compat | Stable    | Maintenance Only  | Drop in replacement for users of existing C++ driver  |
+| Branch   | Stability   | Development       | Purpose                                                      |
+| -------- | ------------| ----------------- | -----------------------------------------------------        |
+| master   | Unstable    | Planning          | New C++11 driver (work in progress)                          |
+| legacy   | Stable      | Stable Evolution  | Primary stable C++ driver release                            |
+| 26compat | Stable      | Maintenance Only  | Drop in replacement for users of existing 2.6 era C++ driver |
 
 > **WARNING:** The master branch will contain future development work on a new driver with a completely new API and implementation. It is a work in progress and currently should not be used.
 
