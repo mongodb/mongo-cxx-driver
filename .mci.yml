@@ -43,9 +43,11 @@ cxx_driver_variables:
       mongo_url_prefix: "http://downloads.mongodb.com/linux/mongodb-linux-x86_64-"
       mongo_url_platform: "ubuntu1404-"
     windows64-bitcomm: &mongo_url_windows64
-      mongo_url_extension: "zip"
       mongo_url_prefix: "http://downloads.mongodb.com/win32/mongodb-win32-x86_64-"
       mongo_url_platform: "windows-64-"
+    windows32: &mongo_url_windows32
+      mongo_url_prefix: "http://downloads.mongodb.org/win32/mongodb-win32-i386-"
+      mongo_url_enterprise_keyword: ""
     rhel55: &mongo_url_rhel55
       mongo_url_prefix: "http://downloads.mongodb.com/linux/mongodb-linux-x86_64-"
       mongo_url_platform: "rhel57-"
@@ -74,71 +76,15 @@ cxx_driver_variables:
       scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows"
     dynamic_windows: &scons_flags_64_windows_dynamic
       scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows --sharedclient"
+    32bit_windows: &scons_flags_32_windows_dynamic
+      scons_flags: "--32 -j$(grep -c ^processor /proc/cpuinfo) --dynamic-windows --sharedclient"
 
-## Common compile flags
+## Special compile flags
   compile_flags:
-    basic: &compile_flags
-      compile_flags: ""
     debug: &compile_flags_debug
       compile_flags: "--dbg=on"
 
-## Paths for Windows builds
-  windows_paths:
-    ## DLL paths
-    dll:
-      dll_msvc2010: &dllpath_msvc2010
-        dllpath: --runtime-library-search-path="c:\local\boost_1_55_0\lib64-msvc-10.0,c:\openssl\bin,c:\sasl\bin,c:\curl\dlls"
-      dll_mscv2013: &dllpath_msvc2013
-        dllpath: --runtime-library-search-path="c:\local\boost_1_56_0\lib64-msvc-12.0,c:\openssl\bin,c:\sasl\bin,c:\curl\dlls"
-    ## C++ paths
-    cpp:
-      cpp_boost_1_55_0: &cpppath_boost_1_55_0
-        cpppath: --cpppath="c:\local\boost_1_55_0"
-      cpp_boost_1_56_0: &cpppath_boost_1_56_0
-        cpppath: --cpppath="c:\local\boost_1_56_0"
-    ## Extras
-    extra:
-      basic_extras: &extrapath
-        extrapath: --extrapath="c:\openssl,c:\sasl,c:\curl"
-    ## Library paths
-    lib:
-      lib_msvc2010: &libpath_msvc2010
-        libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-10.0"
-      lib_msvc2013: &libpath_msvc2013
-        libpath: --libpath="c:\local\boost_1_56_0\lib64-msvc-12.0"
-
-  ## Toolchain options for windows
-  windows_toolchains:
-    msvc2010: &toolchain_msvc2010
-      toolchain_flags: --msvc-version=10.0
-    msvc2012: &toolchain_msvc2012
-      toolchain_flags: --msvc-version=11.0
-    msvc2013: &toolchain_msvc2013
-      toolchain_flags: --msvc-version=12.0
-
-## Paths for OS X builds
-  osx_fixups:
-    scons:
-      boost_headers: &extrapath_osx_108
-        extrapath: --extrapath="/opt/local"
-
-## Paths and flags for RHEL 5.5 builds
-  rhel55_fixups:
-    scons:
-      warning_flags: &warning_flags_rhel55
-        # For some reason GCC on RHEL 5.5 gives lots of warnings from its own headers when using
-        # visibility attributes.
-        warning_flags: --disable-warnings-as-errors
-    cpp:
-      cpp_boost: &cpppath_rhel55
-        cpppath: --cpppath="/usr/include/boost141"
-    lib:
-      lib32_boost: &libpath_rhel55_32
-        libpath: --libpath="/usr/lib/boost141"
-      lib64_boost: &libpath_rhel55_64
-        libpath: --libpath="/usr/lib64/boost141"
-
-## Scripts that are shared between buildvariants
+  ## Scripts that are shared between buildvariants
   scripts:
     mongo_orchestration:
       windows: &mongo_orchestration_windows
@@ -176,6 +122,61 @@ cxx_driver_variables:
           trap 'set +o errexit; /usr/local/bin/mongo-orchestration stop;' EXIT
           echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
           TMPDIR=/data/db /usr/local/bin/mongo-orchestration -f orchestration.config -e default start
+
+## Other os-specific attributes, grouped by OS
+
+## Misc. for Windows builds
+  windows_compilers:
+    ## msvc2010
+    msvc2010: &with_msvc2010
+      toolchain_flags: --msvc-version=10.0
+      libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-10.0"
+      cpppath: --cpppath="c:\local\boost_1_55_0"
+      dllpath: --runtime-library-search-path="c:\local\boost_1_55_0\lib64-msvc-10.0,c:\openssl\bin,c:\sasl\bin,c:\curl\dlls"
+      extrapath: --extrapath="c:\openssl,c:\sasl,c:\curl"
+    ## msvc2013, 32-bit boost headers
+    msvc2013-32: &with_msvc2010_32bit
+      toolchain_flags: --msvc-version=10.0
+      libpath: --libpath="c:\local\boost_1_57_0\lib32-msvc-10.0"
+      cpppath: --cpppath="c:\local\boost_1_57_0"
+      dllpath: --runtime-library-search-path="c:\local\boost_1_57_0\lib32-msvc-10.0,c:\curl\dlls"
+      extrapath: --extrapath="c:\curl"
+    msvc2013: &with_msvc2013
+      toolchain_flags: --msvc-version=12.0
+      libpath: --libpath="c:\local\boost_1_56_0\lib64-msvc-12.0"
+      cpppath: --cpppath="c:\local\boost_1_56_0"
+      dllpath: --runtime-library-search-path="c:\local\boost_1_56_0\lib64-msvc-12.0,c:\openssl\bin,c:\sasl\bin,c:\curl\dlls"
+      extrapath: --extrapath="c:\openssl,c:\sasl,c:\curl"
+
+  ## all windows buildvariants have these attributes in common
+  windows_common: &windows_common
+    mongo_url_extension: "zip"
+    scons: scons.bat
+    extension: ".exe"
+    windows: true
+    <<: *mongo_orchestration_windows
+
+## Paths for OS X builds
+  osx_fixups:
+    scons:
+      boost_headers: &extrapath_osx_108
+        extrapath: --extrapath="/opt/local"
+
+## Paths and flags for RHEL 5.5 builds
+  rhel55_fixups:
+    scons:
+      warning_flags: &warning_flags_rhel55
+        # For some reason GCC on RHEL 5.5 gives lots of warnings from its own headers when using
+        # visibility attributes.
+        warning_flags: --disable-warnings-as-errors
+    cpp:
+      cpp_boost: &cpppath_rhel55
+        cpppath: --cpppath="/usr/include/boost141"
+    lib:
+      lib32_boost: &libpath_rhel55_32
+        libpath: --libpath="/usr/lib/boost141"
+      lib64_boost: &libpath_rhel55_64
+        libpath: --libpath="/usr/lib64/boost141"
 
 #######################################
 #            Functions                #
@@ -336,7 +337,7 @@ tasks:
             script: |
                 set -o errexit
                 set -o verbose
-                ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} all
+                ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${compile_target|all}
         - command: shell.exec
           params:
               working_dir: "mongo-cxx-driver"
@@ -497,7 +498,6 @@ tasks:
         - func: "run client tests"
 
 
-
 #######################################
 #           Buildvariants             #
 #######################################
@@ -513,7 +513,6 @@ buildvariants:
 - name: rhel55
   display_name: "RHEL 5.5"
   expansions:
-    <<: *compile_flags
     <<: *scons_flags_64
     <<: *warning_flags_rhel55
     <<: *cpppath_rhel55
@@ -529,7 +528,6 @@ buildvariants:
 - name: rhel55-32-bit
   display_name: "RHEL 5.5 32-bit"
   expansions:
-    <<: *compile_flags
     <<: *scons_flags_32
     <<: *warning_flags_rhel55
     <<: *cpppath_rhel55
@@ -545,7 +543,6 @@ buildvariants:
 - name: ubuntu1404
   display_name: "Ubuntu1404"
   expansions:
-    <<: *compile_flags
     <<: *scons_flags_64
     <<: *mongo_url_ubuntu1404
     <<: *mongo_orchestration_linux
@@ -566,13 +563,11 @@ buildvariants:
   - ubuntu1404-test
   tasks: *latest_tests
 
-
 ## Ubuntu 1404 C++11
 
 - name: ubuntu1404-cpp11
   display_name: "Ubuntu1404 C++11"
   expansions:
-    <<: *compile_flags
     <<: *scons_flags_cpp11
     <<: *mongo_url_ubuntu1404
     <<: *mongo_orchestration_linux
@@ -589,7 +584,6 @@ buildvariants:
 - name: os-x-108
   display_name: "OS X 10.8"
   expansions:
-    <<: *compile_flags
     <<: *mongo_url_osx_108
     <<: *scons_flags_osx_108
     <<: *extrapath_osx_108
@@ -602,27 +596,33 @@ buildvariants:
 #        Windows Buildvariants        #
 #######################################
 
+## Windows 32-bit (msvc2010)
+## dynamic client and RT
+
+- name: windows-32-msvc2010-dyn-dyn
+  display_name: "Win32(2010) dyn-dyn"
+  expansions:
+    <<: *windows_common
+    <<: *scons_flags_32_windows_dynamic
+    <<: *mongo_url_windows32
+    <<: *with_msvc2010_32bit
+    compile_target: driver build-unit
+  run_on:
+  - windows-64-compile
+  tasks:
+    - name: "compile"
+    - name: "unit test"
+
 ## Windows 64-bit (msvc2010)
 ## static client and RT
 
 - name: windows-64-msvc2010-static-static
   display_name: "Win64(2010) static-static"
   expansions:
-    windows: true
-    mongo_url_extension: "zip"
-    ## basic compilation and installation
-    <<: *compile_flags
+    <<: *windows_common
     <<: *scons_flags_64_windows_static
-    <<: *toolchain_msvc2010
     <<: *mongo_url_windows64
-    ## additional paths for windows builds
-    <<: *dllpath_msvc2010
-    <<: *libpath_msvc2010
-    <<: *extrapath
-    <<: *cpppath_boost_1_55_0
-    <<: *mongo_orchestration_windows
-    extension: ".exe"
-    scons: scons.bat
+    <<: *with_msvc2010
   run_on:
   - windows-64-compile
   tasks: *latest_tests
@@ -633,18 +633,11 @@ buildvariants:
 - name: windows-64-msvc2010-dbg-dyn-dyn
   display_name: "Win64(2010) dbg dyn-dyn"
   expansions:
-    windows: true
+    <<: *windows_common
     <<: *compile_flags_debug
     <<: *scons_flags_64_windows_dynamic
-    <<: *toolchain_msvc2010
     <<: *mongo_url_windows64
-    <<: *dllpath_msvc2010
-    <<: *libpath_msvc2010
-    <<: *extrapath
-    <<: *cpppath_boost_1_55_0
-    <<: *mongo_orchestration_windows
-    extension: ".exe"
-    scons: scons.bat
+    <<: *with_msvc2010
   run_on:
   - windows-64-compile
   tasks: *latest_tests
@@ -655,18 +648,10 @@ buildvariants:
 - name: windows-64-msvc2013-dyn-dyn
   display_name: "Win64(2013) dyn-dyn"
   expansions:
-    windows: true
-    <<: *compile_flags
+    <<: *windows_common
     <<: *scons_flags_64_windows_dynamic
-    <<: *toolchain_msvc2013
     <<: *mongo_url_windows64
-    <<: *dllpath_msvc2013
-    <<: *libpath_msvc2013
-    <<: *extrapath
-    <<: *cpppath_boost_1_56_0
-    <<: *mongo_orchestration_windows
-    extension: ".exe"
-    scons: scons.bat
+    <<: *with_msvc2013
   run_on:
   - windows-64-vs2013-compile
   tasks: *latest_tests
@@ -677,18 +662,10 @@ buildvariants:
 - name: windows-64-msvc-2013-static-dyn
   display_name: "Win64(2013) static-dyn"
   expansions:
-    windows: true
-    <<: *compile_flags
+    <<: *windows_common
     <<: *scons_flags_64_windows_dynamic_rt
-    <<: *toolchain_msvc2013
     <<: *mongo_url_windows64
-    <<: *dllpath_msvc2013
-    <<: *libpath_msvc2013
-    <<: *extrapath
-    <<: *cpppath_boost_1_56_0
-    <<: *mongo_orchestration_windows
-    extension: ".exe"
-    scons: scons.bat
+    <<: *with_msvc2013
   run_on:
   - windows-64-vs2013-compile
   tasks: *latest_tests
