@@ -164,7 +164,7 @@ namespace {
             try {
                 replset_conn->findOne(TEST_NS, Query().readPref(ReadPreference_SecondaryOnly, BSONArray()));
                 break;
-            } catch (DBException& ex) {
+            } catch (const DBException& ex) {
                 std::cout << ex.what() <<std::endl;
                 mongo::sleepsecs(1);
             }

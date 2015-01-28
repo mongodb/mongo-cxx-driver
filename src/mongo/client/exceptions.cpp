@@ -22,15 +22,11 @@ namespace mongo {
     }
 
     OperationException::OperationException(const BSONObj& errorObj)
-        : _lastError(errorObj)
-        , _errorString(std::string(kName) + ": " + errorObj.toString())
+        : DBException(std::string(kName) + ": " + errorObj.toString(), 0)
+        , _lastError(errorObj)
     {}
 
     OperationException::~OperationException() throw() {
-    }
-
-    const char* OperationException::what() const throw() {
-        return _errorString.c_str();
     }
 
 } // namespace mongo

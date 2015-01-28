@@ -54,7 +54,7 @@ namespace {
             try {
                 conn->insert(TEST_NS, BSON("x" << 2), 0, &WriteConcern::acknowledged);
                 break;
-            } catch (DBException&) {
+            } catch (const DBException&) {
                 mongo::sleepsecs(1);
             }
         }
@@ -69,10 +69,9 @@ namespace {
                 conn->insert(TEST_NS, BSON("x" << 2), 0, &wcAll);
                 break;
 
-            } catch (OperationException&) {
+            } catch (const DBException&) {
                 // try again
-            } catch (std::exception&) {
-                // try again
+                mongo::sleepsecs(1);
             }
         }
     }
