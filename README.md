@@ -1,4 +1,4 @@
-# MongoDB C++ Driver [![Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=master)](https://travis-ci.org/mongodb/mongo-cxx-driver)
+# MongoDB C++ Driver [![Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=develop)](https://travis-ci.org/mongodb/mongo-cxx-driver)
 Welcome to the MongoDB C++ Driver!
 
 This branch contains active development on a new driver written in C++11.

@@ -1,0 +1,64 @@
+language: cpp
+
+compiler:
+    - gcc
+    - clang
+
+env:
+    global:
+        - MONGO_REPO="http://repo.mongodb.com/apt/ubuntu"
+        - REPO_TYPE="precise/mongodb-enterprise/2.6 multiverse"
+        - SOURCES_LOC="/etc/apt/sources.list.d/mongodb-enterprise.list"
+        - KEY_SERVER="hkp://keyserver.ubuntu.com:80"
+
+    matrix:
+        - CONFIG=Release
+        - CONFIG=Debug
+
+# Setup required repositories before installation
+before_install:
+    # Add the modern toolchain repositories (llvm repo depends on ubunut-toolchain-r + gcc)
+    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    - sudo add-apt-repository -y 'deb http://llvm.org/apt/precise/ llvm-toolchain-precise-3.5 main'
+    - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
+
+    # MongoDB Enterprise Edition 2.6
+    - sudo apt-key adv --keyserver ${KEY_SERVER} --recv 7F0CEB10
+    - echo "deb ${MONGO_REPO} ${REPO_TYPE}" | sudo tee ${SOURCES_LOC}
+
+    # CMake
+    - sudo add-apt-repository --yes ppa:kalakris/cmake
+
+    # Update all the repositories
+    - sudo apt-get update -qq
+
+    # Mongo C Driver
+    - git clone https://github.com/mongodb/mongo-c-driver.git
+
+install:
+    # GCC
+    - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.9; export CXX="g++-4.9"; export CC="gcc-4.9"; fi
+
+    # Clang
+    - if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq clang-3.5; export CXX="clang++-3.5"; export CC="clang-3.5"; fi
+
+    # Install MongoDB Enterprise
+    - sudo apt-get install mongodb-enterprise-server
+
+    # Install CMake (Versions lower than 2.8.8 do not support object libraries)
+    - sudo apt-get install cmake
+
+    # Install Mongo C Driver
+    - pushd mongo-c-driver; ./autogen.sh --enable-tests=no --enable-examples=no; make; sudo make install; popd;
+
+before_script:
+    - $CC --version
+    - $CXX --version
+
+    # Build the driver and the tests
+    - cd build
+    - cmake -DCMAKE_BUILD_TYPE=$CONFIG -DBUILD_UNIT_TESTS=true ..
+
+script:
+    - make
+    - make test
