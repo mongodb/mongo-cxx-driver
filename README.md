@@ -9,12 +9,11 @@ This branch contains active development on a new driver written in C++11.
 The new driver will contain a completely new API and implementation. A complete rewrite allows us to take full advantage of the features offered in C++11, and gives us the chance to re-architect the driver based on past driver design decisions and their effectiveness. We aim for this new driver to be more modern, more lightweight, and friendlier to contributors than its predecessors.
 
 ## Repository Overview
-
-| Branch   | Stability    | Development       | Purpose                                               |
-| -------- | ------------ | ----------------- | ----------------------------------------------------- |
-| master   | Unstable     | Active            | New C++ driver (work in progress)                     |
-| legacy   | Pre-release  | RC Testing        | Existing C++ driver with non-compatible improvements  |
-| 26compat | Stable       | Maintenance Only  | Drop in replacement for users of existing C++ driver  |
+| Branch   | Stability   | Development       | Purpose                                                      |
+| -------- | ------------| ----------------- | ------------------------------------------------------------ |
+| master   | Unstable    | Planning          | New C++11 driver (work in progress)                          |
+| legacy   | Stable      | Stable Evolution  | Primary stable C++ driver release                            |
+| 26compat | Stable      | Maintenance Only  | Drop in replacement for users of existing 2.6 era C++ driver |
 
 ## Bugs and Issues
 
