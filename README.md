@@ -9,7 +9,7 @@ Please see our [wiki page](https://github.com/mongodb/mongo-cxx-driver/wiki/Down
 Use the legacy branch if:
 
  - You are using MongoDB's C++ driver for the first time.
- - You had been using 26compat (or the driver inside of the server source), can tolerate source level changes, and want to benefit from incremental improvements while having the same overall API.
+ - You had been using 26compat (or the driver inside of the server source) and want to benefit from incremental improvements while having the same overall API.
 
 Use the 26compat branch only if:
 
