@@ -3,12 +3,11 @@ Welcome to the MongoDB C++ Driver!
 
 Use this branch if:
 
- - You need a production ready release of the C++ driver that is not under active development.
  - You have existing code that used the driver from the server source and want it to continue working without modification.
 
 Switch to the legacy branch if:
 
- - You are using MongoDB's C++ driver for the first time and do not mind the driver being actively worked on.
+ - You are using MongoDB's C++ driver for the first time.
  - You had been using 26compat (or the driver inside of the server source) and want to benefit from incremental improvements while having the same overall API.
 
 > **Note:** As of MongoDB 2.6.0-rc1, it is no longer possible to build the driver from the server sources: this repository is the only approved source for driver builds.
