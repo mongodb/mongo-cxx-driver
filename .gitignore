@@ -1,6 +1,5 @@
 
 # Directories that are generated
-/build
 /docs
 
 /callgrind.out.*

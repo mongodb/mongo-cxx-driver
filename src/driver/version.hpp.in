@@ -11,3 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+#define MONGOCXX_VERSION_MAJOR @MONGOCXX_VERSION_MAJOR@
+#define MONGOCXX_VERSION_MINOR @MONGOCXX_VERSION_MINOR@
+#define MONGOCXX_VERSION_PATCH @MONGOCXX_VERSION_PATCH@
+#define MONGOCXX_VERSION_EXTRA @MONGOCXX_VERSION_EXTRA@
