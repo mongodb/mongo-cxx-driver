@@ -2,11 +2,6 @@
 #      CXX Driver Config for MCI      #
 #######################################
 
-cxx_driver_variables:
-    all_tasks_list: &all_tasks
-        - name: "compile"
-        - name: "test"
-
 #######################################
 #            Functions                #
 #######################################
@@ -17,25 +12,16 @@ functions:
         params:
             directory: "mongo-cxx-driver"
 
-    "put_artifacts":
-        command: s3.put
+    "install_c_driver":
+        command: shell.exec
         params:
-            aws_key: ${aws_key}
-            aws_secret: ${aws_secret}
-            local_file: mongo-cxx-driver.tar.gz
-            remote_file: mongo-cxx-driver/${build_variant}/${revision}/artifacts/cxx-${build_id}.tar.gz
-            bucket: mciuploads
-            permissions: public-read
-            content-type: ${content_type|application/x-gzip}
-
-    "fetch_artifacts":
-        command: s3.get
-        params:
-            aws_key: ${aws_key}
-            aws_secret: ${aws_secret}
-            remote_file: mongo-cxx-driver/${build_variant}/${revision}/artifacts/cxx-${build_id}.tar.gz
-            bucket: mciuploads
-            extract_to: mongo-cxx-driver
+            working_dir: "."
+            script: |
+                git clone https://github.com/mongo/mongo-c-driver.git
+                cd mongo-c-driver
+                ./autogen.sh --prefix="$(pwd)/c-driver-install" --enable-tests=no --enable-examples=no
+                make
+                make install
 
 #######################################
 #              Pre Task               #
@@ -53,13 +39,15 @@ pre:
     params:
       script: |
         rm -rf "mongo-cxx-driver"
+        rm -fr "mongo-c-driver"
+        rm -fr "c-driver-install"
 
 #######################################
 #               Tasks                 #
 #######################################
 
 tasks:
-    - name: compile
+    - name: compile_and_test
       commands:
         - func: "fetch_source"
         - command: git.apply_patch
@@ -69,24 +57,9 @@ tasks:
           params:
               working_dir: "mongo-cxx-driver/build"
               script: |
-                  cmake -DBUILD_UNIT_TESTS=on -DCMAKE_BUILD_TYPE=${build_type} ..
+                  PKG_CONFIG_PATH="../c-driver-install -DBUILD_UNIT_TESTS=on -DCMAKE_BUILD_TYPE=${build_type} ..
                   make
-        - command: shell.exec
-          params:
-              working_dir: "mongo-cxx-driver"
-              script: |
-                  tar -czf ../mongo-cxx-driver.tar.gz .
-        - func: "put_artifacts"
-
-    - name: test
-      depends_on:
-        - name: "compile"
-      commands:
-        - func: "fetch_artifacts"
-        - command: shell.exec
-          params:
-              working_dir: "mongo-cxx-driver"
-              script: make test
+                  make test
 
 #######################################
 #           Buildvariants             #
@@ -103,7 +76,8 @@ buildvariants:
           build_type: "Release"
       run_on:
           - ubuntu1404-test
-      tasks: *all_tasks
+      tasks:
+          - compile_and_test
 
     - name: ubuntu1404-debug
       display_name: "Ubuntu 14.04 LTS (Trusty Tahr) Debug"
@@ -111,4 +85,5 @@ buildvariants:
           build_type: "Debug"
       run_on:
           - ubuntu1404-test
-      tasks: *all_tasks
+      tasks:
+          - compile_and_test
