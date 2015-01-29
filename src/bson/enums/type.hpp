@@ -12,34 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
-#include "driver/config/prelude.hpp"
-
-#include <cstdlib>
-#include <memory>
-
-#include "bson/document/view.hpp"
-
-namespace bson {
-namespace document {
-
-class LIBMONGOCXX_API value {
-
-   public:
-    value(const std::uint8_t* b, std::size_t l, void(*)(void*) = std::free);
-    value(const view& view);
-
-    document::view view() const;
-    operator document::view() const;
-
-   private:
-    std::unique_ptr<void, decltype(&std::free)> _buf;
-    std::size_t _len;
-
-};
-
-}  // namespace document
-}  // namespace bson
-
-#include "driver/config/postlude.hpp"
+MONGOCXX_ENUM(eod, 0x00)
+MONGOCXX_ENUM(double, 0x01)
+MONGOCXX_ENUM(utf8, 0x02)
+MONGOCXX_ENUM(document, 0x03)
+MONGOCXX_ENUM(array, 0x04)
+MONGOCXX_ENUM(binary, 0x05)
+MONGOCXX_ENUM(undefined, 0x06)
+MONGOCXX_ENUM(oid, 0x07)
+MONGOCXX_ENUM(bool, 0x08)
+MONGOCXX_ENUM(date, 0x09)
+MONGOCXX_ENUM(null, 0x0A)
+MONGOCXX_ENUM(regex, 0x0B)
+MONGOCXX_ENUM(dbpointer, 0x0C)
+MONGOCXX_ENUM(code, 0x0D)
+MONGOCXX_ENUM(symbol, 0x0E)
+MONGOCXX_ENUM(codewscope, 0x0F)
+MONGOCXX_ENUM(int32, 0x10)
+MONGOCXX_ENUM(timestamp, 0x11)
+MONGOCXX_ENUM(int64, 0x12)
+MONGOCXX_ENUM(maxkey, 0x7F)
+MONGOCXX_ENUM(minkey, 0xFF)

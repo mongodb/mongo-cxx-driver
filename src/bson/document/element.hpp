@@ -61,7 +61,7 @@ namespace document {
 
 class view;
 
-class LIBMONGOCXX_EXPORT element {
+class LIBMONGOCXX_API element {
     friend class document::view;
     friend class builder::concrete;
 

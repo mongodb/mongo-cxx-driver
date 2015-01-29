@@ -12,34 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#undef DOC
+#undef ARRAY
 
-#include "driver/config/prelude.hpp"
-
-#include <cstdlib>
-#include <memory>
-
-#include "bson/document/view.hpp"
-
-namespace bson {
-namespace document {
-
-class LIBMONGOCXX_API value {
-
-   public:
-    value(const std::uint8_t* b, std::size_t l, void(*)(void*) = std::free);
-    value(const view& view);
-
-    document::view view() const;
-    operator document::view() const;
-
-   private:
-    std::unique_ptr<void, decltype(&std::free)> _buf;
-    std::size_t _len;
-
-};
-
-}  // namespace document
-}  // namespace bson
-
-#include "driver/config/postlude.hpp"
+#pragma pop_macro("DOC")
+#pragma pop_macro("ARRAY")

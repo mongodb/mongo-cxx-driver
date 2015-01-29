@@ -12,34 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
-#include "driver/config/prelude.hpp"
-
-#include <cstdlib>
-#include <memory>
-
-#include "bson/document/view.hpp"
-
-namespace bson {
-namespace document {
-
-class LIBMONGOCXX_API value {
-
-   public:
-    value(const std::uint8_t* b, std::size_t l, void(*)(void*) = std::free);
-    value(const view& view);
-
-    document::view view() const;
-    operator document::view() const;
-
-   private:
-    std::unique_ptr<void, decltype(&std::free)> _buf;
-    std::size_t _len;
-
-};
-
-}  // namespace document
-}  // namespace bson
-
-#include "driver/config/postlude.hpp"
+MONGOCXX_ENUM(binary, 0x00)
+MONGOCXX_ENUM(function, 0x01)
+MONGOCXX_ENUM(binary_deprecated, 0x02)
+MONGOCXX_ENUM(uuid_deprecated, 0x03)
+MONGOCXX_ENUM(uuid, 0x04)
+MONGOCXX_ENUM(md5, 0x05)
+MONGOCXX_ENUM(user, 0x80)

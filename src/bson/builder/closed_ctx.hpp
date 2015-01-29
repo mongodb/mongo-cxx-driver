@@ -16,30 +16,16 @@
 
 #include "driver/config/prelude.hpp"
 
-#include <cstdlib>
-#include <memory>
-
-#include "bson/document/view.hpp"
-
 namespace bson {
-namespace document {
+namespace builder {
 
-class LIBMONGOCXX_API value {
+    class concrete;
 
-   public:
-    value(const std::uint8_t* b, std::size_t l, void(*)(void*) = std::free);
-    value(const view& view);
+    struct closed_ctx {
+        closed_ctx(concrete*) {}
+    };
 
-    document::view view() const;
-    operator document::view() const;
-
-   private:
-    std::unique_ptr<void, decltype(&std::free)> _buf;
-    std::size_t _len;
-
-};
-
-}  // namespace document
+}
 }  // namespace bson
 
 #include "driver/config/postlude.hpp"

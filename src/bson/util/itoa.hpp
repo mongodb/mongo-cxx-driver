@@ -16,30 +16,33 @@
 
 #include "driver/config/prelude.hpp"
 
-#include <cstdlib>
-#include <memory>
-
-#include "bson/document/view.hpp"
+#include <cstddef>
+#include <cstdint>
 
 namespace bson {
-namespace document {
+namespace util {
 
-class LIBMONGOCXX_API value {
-
+class itoa {
    public:
-    value(const std::uint8_t* b, std::size_t l, void(*)(void*) = std::free);
-    value(const view& view);
+    itoa();
+    itoa(uint32_t i);
+    itoa(const itoa& rhs);
+    itoa& operator=(const itoa& rhs);
+    itoa& operator=(uint32_t i);
 
-    document::view view() const;
-    operator document::view() const;
+    const char* c_str() const;
+    std::size_t length() const;
 
    private:
-    std::unique_ptr<void, decltype(&std::free)> _buf;
-    std::size_t _len;
+    void init();
 
+    uint32_t _val;
+    const char* _str;
+    uint8_t _len;
+    char _buf[11];
 };
 
-}  // namespace document
+}  // namespace util
 }  // namespace bson
 
 #include "driver/config/postlude.hpp"

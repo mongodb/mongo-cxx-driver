@@ -16,26 +16,35 @@
 
 #include "driver/config/prelude.hpp"
 
-#include <cstdlib>
-#include <memory>
-
 #include "bson/document/view.hpp"
+#include "bson/document/value.hpp"
 
 namespace bson {
 namespace document {
 
-class LIBMONGOCXX_API value {
+class LIBMONGOCXX_API view_or_value {
 
    public:
-    value(const std::uint8_t* b, std::size_t l, void(*)(void*) = std::free);
-    value(const view& view);
+    view_or_value(bson::document::view view);
+    view_or_value(bson::document::value value);
+
+    view_or_value(view_or_value&& rhs);
+    view_or_value& operator=(view_or_value&& rhs);
+
+    ~view_or_value();
 
     document::view view() const;
     operator document::view() const;
 
    private:
-    std::unique_ptr<void, decltype(&std::free)> _buf;
-    std::size_t _len;
+    view_or_value(const bson::document::view_or_value& view) = delete;
+    view_or_value& operator=(const bson::document::view_or_value& view) = delete;
+
+    bool _is_view;
+    union {
+        bson::document::view _view;
+        bson::document::value _value;
+    };
 
 };
 

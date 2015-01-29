@@ -16,30 +16,38 @@
 
 #include "driver/config/prelude.hpp"
 
-#include <cstdlib>
-#include <memory>
-
-#include "bson/document/view.hpp"
+#include "bson/builder/concrete.hpp"
+#include "bson/document.hpp"
+#include "bson/builder/key_ctx.hpp"
 
 namespace bson {
-namespace document {
+namespace builder {
 
-class LIBMONGOCXX_API value {
+    class document : public key_ctx<> {
+    public:
+        document() : key_ctx<>(&_concrete), _concrete(false) {}
 
-   public:
-    value(const std::uint8_t* b, std::size_t l, void(*)(void*) = std::free);
-    value(const view& view);
+        bson::document::view view() const {
+            return _concrete.view();
+        }
 
-    document::view view() const;
-    operator document::view() const;
+        operator bson::document::view() const {
+            return _concrete.view();
+        }
 
-   private:
-    std::unique_ptr<void, decltype(&std::free)> _buf;
-    std::size_t _len;
+        bson::document::value extract() {
+            return _concrete.extract();
+        }
 
-};
+        void clear() {
+            _concrete.clear();
+        }
 
-}  // namespace document
+    private:
+        concrete _concrete;
+    };
+
+}  // namespace builder
 }  // namespace bson
 
 #include "driver/config/postlude.hpp"

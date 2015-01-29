@@ -14,32 +14,24 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
-
-#include <cstdlib>
-#include <memory>
-
-#include "bson/document/view.hpp"
+#include "bson/builder/array_ctx.hpp"
+#include "bson/builder/value_ctx.hpp"
+#include "bson/builder/single_ctx.hpp"
 
 namespace bson {
-namespace document {
+namespace builder {
 
-class LIBMONGOCXX_API value {
+template <class T>
+array_ctx<T>::operator single_ctx() {
+    return single_ctx(_concrete);
+}
 
-   public:
-    value(const std::uint8_t* b, std::size_t l, void(*)(void*) = std::free);
-    value(const view& view);
+template <class T>
+value_ctx<T>::operator single_ctx() {
+    return single_ctx(_concrete);
+}
 
-    document::view view() const;
-    operator document::view() const;
-
-   private:
-    std::unique_ptr<void, decltype(&std::free)> _buf;
-    std::size_t _len;
-
-};
-
-}  // namespace document
+}  // namespace builder
 }  // namespace bson
 
 #include "driver/config/postlude.hpp"

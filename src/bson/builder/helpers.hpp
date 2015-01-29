@@ -15,31 +15,32 @@
 #pragma once
 
 #include "driver/config/prelude.hpp"
-
-#include <cstdlib>
-#include <memory>
-
-#include "bson/document/view.hpp"
+#include "bson/document.hpp"
 
 namespace bson {
-namespace document {
+namespace builder {
+namespace helpers {
 
-class LIBMONGOCXX_API value {
+struct open_doc_t {};
+extern open_doc_t open_doc;
 
-   public:
-    value(const std::uint8_t* b, std::size_t l, void(*)(void*) = std::free);
-    value(const view& view);
+struct open_array_t {};
+extern open_array_t open_array;
 
-    document::view view() const;
-    operator document::view() const;
+struct close_doc_t {};
+extern close_doc_t close_doc;
 
-   private:
-    std::unique_ptr<void, decltype(&std::free)> _buf;
-    std::size_t _len;
+struct close_array_t {};
+extern close_array_t close_array;
 
+struct LIBMONGOCXX_API concat {
+    document::view view;
+
+    operator document::view() const { return view; }
 };
 
-}  // namespace document
+}  // namespace helpers
+}  // namespace builder
 }  // namespace bson
 
 #include "driver/config/postlude.hpp"

@@ -12,34 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
-#include "driver/config/prelude.hpp"
-
 #include <cstdlib>
-#include <memory>
+#include <cstring>
 
-#include "bson/document/view.hpp"
+#include "bson/document/value.hpp"
 
 namespace bson {
 namespace document {
 
-class LIBMONGOCXX_API value {
+value::value(const std::uint8_t* b, std::size_t l, void (*dtor)(void*))
+    : _buf((void*)b, dtor), _len(l) {}
 
-   public:
-    value(const std::uint8_t* b, std::size_t l, void(*)(void*) = std::free);
-    value(const view& view);
+value::value(const document::view& view)
+    : _buf(malloc((std::size_t)view.get_len()), free), _len(view.get_len()) {
+    std::memcpy(_buf.get(), view.get_buf(), view.get_len());
+}
 
-    document::view view() const;
-    operator document::view() const;
+document::view value::view() const { return document::view{(uint8_t*)_buf.get(), _len}; }
 
-   private:
-    std::unique_ptr<void, decltype(&std::free)> _buf;
-    std::size_t _len;
-
-};
+value::operator document::view() const { return view(); }
 
 }  // namespace document
 }  // namespace bson
-
-#include "driver/config/postlude.hpp"
