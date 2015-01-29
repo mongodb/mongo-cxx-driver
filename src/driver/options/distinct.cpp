@@ -19,11 +19,17 @@ namespace mongo {
 namespace driver {
 namespace options {
 
-void distinct::max_time_ms(std::int64_t max_time_ms) { _max_time_ms = std::move(max_time_ms); }
+void distinct::max_time_ms(std::int64_t max_time_ms) {
+    _max_time_ms = std::move(max_time_ms);
+}
 
-void distinct::read_preference(base::read_preference rp) { _read_preference = std::move(rp); }
+void distinct::read_preference(base::read_preference rp) {
+    _read_preference = std::move(rp);
+}
 
-const optional<std::int64_t>& distinct::max_time_ms() const { return _max_time_ms; }
+const optional<std::int64_t>& distinct::max_time_ms() const {
+    return _max_time_ms;
+}
 const optional<base::read_preference>& distinct::read_preference() const {
     return _read_preference;
 }

@@ -22,7 +22,8 @@ using namespace mongo::driver;
 
 TEST_CASE("update", "[update][result]") {
     bson::builder::document build;
-    build << "_id" << bson::oid{bson::oid::init_tag} << "nMatched" << bson::types::b_int64{2} << "nModified" << bson::types::b_int64{1};
+    build << "_id" << bson::oid{bson::oid::init_tag} << "nMatched" << bson::types::b_int64{2}
+          << "nModified" << bson::types::b_int64{1};
 
     result::bulk_write b(bson::document::value(build.view()));
 
@@ -32,5 +33,4 @@ TEST_CASE("update", "[update][result]") {
         REQUIRE(update.matched_count() == 2);
         REQUIRE(update.modified_count() == 1);
     }
-
 }

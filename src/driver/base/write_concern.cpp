@@ -23,9 +23,8 @@ namespace mongo {
 namespace driver {
 namespace base {
 
-write_concern::write_concern()
-    : _impl{stdx::make_unique<impl>(mongoc_write_concern_new())}
-{}
+write_concern::write_concern() : _impl{stdx::make_unique<impl>(mongoc_write_concern_new())} {
+}
 
 write_concern::write_concern(std::unique_ptr<impl>&& implementation) {
     _impl.reset(implementation.release());
@@ -35,11 +34,12 @@ write_concern::write_concern(write_concern&&) noexcept = default;
 write_concern& write_concern::operator=(write_concern&&) noexcept = default;
 
 write_concern::write_concern(const write_concern& other)
-    : _impl(stdx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))) {}
+    : _impl(stdx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))) {
+}
 
 write_concern& write_concern::operator=(const write_concern& other) {
-    _impl.reset(
-        stdx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t)).release());
+    _impl.reset(stdx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))
+                    .release());
     return *this;
 }
 
@@ -92,9 +92,7 @@ bool write_concern::majority() const {
 }
 
 std::chrono::milliseconds write_concern::timeout() const {
-    return std::chrono::milliseconds(
-        libmongoc::write_concern_get_wtimeout(_impl->write_concern_t)
-    );
+    return std::chrono::milliseconds(libmongoc::write_concern_get_wtimeout(_impl->write_concern_t));
 }
 
 }  // namespace base

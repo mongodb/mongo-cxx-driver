@@ -55,9 +55,9 @@ TEST_CASE("the destruction of a bulk_write will destroy the mongoc operation",
     REQUIRE(destruct_called);
 }
 
-//TEST_CASE("bulk_write has a write_concern", "[bulk_write][base]") {
-    //bulk_write bw(true);
-    //CHECK_OPTIONAL_ARGUMENT_WITHOUT_EQUALITY(bw, write_concern, write_concern());
+// TEST_CASE("bulk_write has a write_concern", "[bulk_write][base]") {
+// bulk_write bw(true);
+// CHECK_OPTIONAL_ARGUMENT_WITHOUT_EQUALITY(bw, write_concern, write_concern());
 //}
 
 class SingleDocumentFun {
@@ -70,7 +70,9 @@ class SingleDocumentFun {
         _called = true;
         REQUIRE(bson_get_data(document) == _document.get_buf());
     }
-    bool called() const { return _called; }
+    bool called() const {
+        return _called;
+    }
 
    private:
     bool& _called;
@@ -80,14 +82,17 @@ class SingleDocumentFun {
 class FilteredDocumentFun : public SingleDocumentFun {
    public:
     FilteredDocumentFun(bool& called, bson::document::view filter, bson::document::view document)
-        : SingleDocumentFun(called, document), _expected_upsert(false), _filter{filter} {}
+        : SingleDocumentFun(called, document), _expected_upsert(false), _filter{filter} {
+    }
     void operator()(mongoc_bulk_operation_t* bulk, const bson_t* filter, const bson_t* document,
                     bool upsert) {
         SingleDocumentFun::operator()(bulk, document);
         REQUIRE(bson_get_data(filter) == _filter.get_buf());
         REQUIRE(upsert == _expected_upsert);
     }
-    void upsert(bool upsert) { _expected_upsert = upsert; }
+    void upsert(bool upsert) {
+        _expected_upsert = upsert;
+    }
 
    private:
     bool _expected_upsert;

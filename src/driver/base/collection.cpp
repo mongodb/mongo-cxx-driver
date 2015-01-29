@@ -17,7 +17,6 @@
 #include "bson/builder.hpp"
 #include "bson/libbson.hpp"
 
-
 #include "driver/base/private/client.hpp"
 #include "driver/base/private/collection.hpp"
 #include "driver/base/private/database.hpp"
@@ -61,12 +60,15 @@ collection::collection(collection&&) noexcept = default;
 collection& collection::operator=(collection&&) noexcept = default;
 collection::~collection() = default;
 
-const std::string& collection::name() const noexcept { return _impl->name; }
+const std::string& collection::name() const noexcept {
+    return _impl->name;
+}
 
 collection::collection(const database& database, const std::string& collection_name)
     : _impl(stdx::make_unique<impl>(
           libmongoc::database_get_collection(database._impl->database_t, collection_name.c_str()),
-          database.name(), database._impl->client_impl, collection_name.c_str())) {}
+          database.name(), database._impl->client_impl, collection_name.c_str())) {
+}
 
 optional<result::bulk_write> collection::bulk_write(const class bulk_write& bulk_write) {
     mongoc_bulk_operation_t* b = bulk_write._impl->operation_t;
@@ -111,10 +113,10 @@ cursor collection::find(bson::document::view filter, const options::find& option
         rp_ptr = options.read_preference()->_impl->read_preference_t;
     }
 
-    return cursor(libmongoc::collection_find(_impl->collection_t, mongoc_query_flags_t(0),
-                                             options.skip().value_or(0), options.limit().value_or(0),
-                                             options.batch_size().value_or(0), filter_bson.bson(),
-                                             projection.bson(), rp_ptr));
+    return cursor(libmongoc::collection_find(
+        _impl->collection_t, mongoc_query_flags_t(0), options.skip().value_or(0),
+        options.limit().value_or(0), options.batch_size().value_or(0), filter_bson.bson(),
+        projection.bson(), rp_ptr));
 }
 
 optional<bson::document::value> collection::find_one(bson::document::view filter,
@@ -162,8 +164,8 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
     }
 
     return cursor(libmongoc::collection_aggregate(_impl->collection_t,
-                                                  static_cast<mongoc_query_flags_t>(0), stages.bson(),
-                                                  options_bson.bson(), rp_ptr));
+                                                  static_cast<mongoc_query_flags_t>(0),
+                                                  stages.bson(), options_bson.bson(), rp_ptr));
 }
 
 optional<result::insert_one> collection::insert_one(bson::document::view document,
@@ -188,7 +190,7 @@ optional<result::insert_one> collection::insert_one(bson::document::view documen
     }
 
     auto result = bulk_write(bulk_op);
-    if (! result) {
+    if (!result) {
         return optional<result::insert_one>();
     }
     return optional<result::insert_one>(result::insert_one(std::move(result.value()), oid));
@@ -228,7 +230,7 @@ optional<result::update> collection::update_many(bson::document::view filter,
         return optional<result::update>();
     }
 
-    return optional<result::update> (result::update(std::move(result.value())));
+    return optional<result::update>(result::update(std::move(result.value())));
 }
 
 optional<result::delete_result> collection::delete_many(bson::document::view filter,
@@ -244,7 +246,7 @@ optional<result::delete_result> collection::delete_many(bson::document::view fil
         return optional<result::delete_result>();
     }
 
-    return optional<result::delete_result> (result::delete_result(std::move(result.value())));
+    return optional<result::delete_result>(result::delete_result(std::move(result.value())));
 }
 
 optional<result::update> collection::update_one(bson::document::view filter,
@@ -264,8 +266,7 @@ optional<result::update> collection::update_one(bson::document::view filter,
         return optional<result::update>();
     }
 
-    return optional<result::update> (result::update(std::move(result.value())));
-
+    return optional<result::update>(result::update(std::move(result.value())));
 }
 
 optional<result::delete_result> collection::delete_one(bson::document::view filter,
@@ -364,9 +365,9 @@ optional<bson::document::value> collection::find_one_and_delete(
 
     bson_error_t error;
 
-    bool r = libmongoc::collection_find_and_modify(_impl->collection_t, bson_filter.bson(),
-                                                   bson_sort.bson(), nullptr, bson_projection.bson(),
-                                                   true, false, false, reply.bson(), &error);
+    bool r = libmongoc::collection_find_and_modify(
+        _impl->collection_t, bson_filter.bson(), bson_sort.bson(), nullptr, bson_projection.bson(),
+        true, false, false, reply.bson(), &error);
 
     if (!r) {
         throw std::runtime_error("baddd");
@@ -392,9 +393,9 @@ std::int64_t collection::count(bson::document::view filter, const options::count
         rp_ptr = options.read_preference()->_impl->read_preference_t;
     }
 
-    auto result = libmongoc::collection_count(_impl->collection_t, static_cast<mongoc_query_flags_t>(0),
-                                              bson_filter.bson(), options.skip().value_or(0),
-                                              options.limit().value_or(0), rp_ptr, &error);
+    auto result = libmongoc::collection_count(
+        _impl->collection_t, static_cast<mongoc_query_flags_t>(0), bson_filter.bson(),
+        options.skip().value_or(0), options.limit().value_or(0), rp_ptr, &error);
 
     /* TODO throw an exception if error
     if (result < 0)
@@ -426,9 +427,8 @@ void collection::write_concern(class write_concern wc) {
 }
 
 class write_concern collection::write_concern() const {
-    class write_concern wc(stdx::make_unique<write_concern::impl>(
-        libmongoc::write_concern_copy(libmongoc::collection_get_write_concern(_impl->collection_t)))
-    );
+    class write_concern wc(stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
+        libmongoc::collection_get_write_concern(_impl->collection_t))));
     return wc;
 }
 

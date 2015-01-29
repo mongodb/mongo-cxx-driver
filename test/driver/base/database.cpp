@@ -82,13 +82,14 @@ TEST_CASE("A database", "[database][base]") {
         std::unique_ptr<mongoc_read_prefs_t, decltype(deleter)> saved_preference(nullptr, deleter);
 
         bool called = false;
-        database_set_preference->interpose(
-            [&](mongoc_database_t* db, const mongoc_read_prefs_t* read_prefs) {
-                called = true;
-                saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
-                REQUIRE(mongoc_read_prefs_get_mode(read_prefs) ==
-                        static_cast<mongoc_read_mode_t>(read_preference::read_mode::k_secondary_preferred));
-            });
+        database_set_preference->interpose([&](mongoc_database_t* db,
+                                               const mongoc_read_prefs_t* read_prefs) {
+            called = true;
+            saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
+            REQUIRE(
+                mongoc_read_prefs_get_mode(read_prefs) ==
+                static_cast<mongoc_read_mode_t>(read_preference::read_mode::k_secondary_preferred));
+        });
 
         database_get_preference->interpose([&](const mongoc_database_t* client) {
                                                return saved_preference.get();
@@ -97,7 +98,8 @@ TEST_CASE("A database", "[database][base]") {
         mongo_database.read_preference(std::move(preference));
         REQUIRE(called);
 
-        REQUIRE(read_preference::read_mode::k_secondary_preferred == mongo_database.read_preference().mode());
+        REQUIRE(read_preference::read_mode::k_secondary_preferred ==
+                mongo_database.read_preference().mode());
     }
 
     SECTION("has a write concern which may be set and obtained") {
@@ -118,22 +120,20 @@ TEST_CASE("A database", "[database][base]") {
             });
 
         bool get_called = false;
-        database_get_concern->interpose(
-            [&](const mongoc_database_t* client) {
-                get_called = true;
-                return underlying_wc;
-            });
+        database_get_concern->interpose([&](const mongoc_database_t* client) {
+            get_called = true;
+            return underlying_wc;
+        });
 
         mongo_database.write_concern(concern);
         REQUIRE(set_called);
 
         MOCK_CONCERN
         bool copy_called = false;
-        concern_copy->interpose(
-            [&](const mongoc_write_concern_t* concern) {
-                copy_called = true;
-                return mongoc_write_concern_copy(underlying_wc);
-            });
+        concern_copy->interpose([&](const mongoc_write_concern_t* concern) {
+            copy_called = true;
+            return mongoc_write_concern_copy(underlying_wc);
+        });
 
         REQUIRE(concern.majority() == mongo_database.write_concern().majority());
 

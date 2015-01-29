@@ -18,17 +18,28 @@ namespace mongo {
 namespace driver {
 namespace model {
 
-write::write(insert_one value) : _type(base::write_type::k_insert_one), _insert_one(std::move(value)) {}
-write::write(delete_one value) : _type(base::write_type::k_delete_one), _delete_one(std::move(value)) {}
+write::write(insert_one value)
+    : _type(base::write_type::k_insert_one), _insert_one(std::move(value)) {
+}
+write::write(delete_one value)
+    : _type(base::write_type::k_delete_one), _delete_one(std::move(value)) {
+}
 write::write(delete_many value)
-    : _type(base::write_type::k_delete_many), _delete_many(std::move(value)) {}
-write::write(update_one value) : _type(base::write_type::k_update_one), _update_one(std::move(value)) {}
+    : _type(base::write_type::k_delete_many), _delete_many(std::move(value)) {
+}
+write::write(update_one value)
+    : _type(base::write_type::k_update_one), _update_one(std::move(value)) {
+}
 write::write(update_many value)
-    : _type(base::write_type::k_update_many), _update_many(std::move(value)) {}
+    : _type(base::write_type::k_update_many), _update_many(std::move(value)) {
+}
 write::write(replace_one value)
-    : _type(base::write_type::k_replace_one), _replace_one(std::move(value)) {}
+    : _type(base::write_type::k_replace_one), _replace_one(std::move(value)) {
+}
 
-write::write(write&& rhs) : _type(base::write_type::k_uninitialized) { *this = std::move(rhs); }
+write::write(write&& rhs) : _type(base::write_type::k_uninitialized) {
+    *this = std::move(rhs);
+}
 
 void write::destroy_member() {
     switch (_type) {
@@ -88,16 +99,32 @@ write& write::operator=(write&& rhs) {
     return *this;
 }
 
-base::write_type write::type() const { return _type; }
+base::write_type write::type() const {
+    return _type;
+}
 
-const insert_one& write::get_insert_one() const { return _insert_one; }
-const update_one& write::get_update_one() const { return _update_one; }
-const update_many& write::get_update_many() const { return _update_many; }
-const delete_one& write::get_delete_one() const { return _delete_one; }
-const delete_many& write::get_delete_many() const { return _delete_many; }
-const replace_one& write::get_replace_one() const { return _replace_one; }
+const insert_one& write::get_insert_one() const {
+    return _insert_one;
+}
+const update_one& write::get_update_one() const {
+    return _update_one;
+}
+const update_many& write::get_update_many() const {
+    return _update_many;
+}
+const delete_one& write::get_delete_one() const {
+    return _delete_one;
+}
+const delete_many& write::get_delete_many() const {
+    return _delete_many;
+}
+const replace_one& write::get_replace_one() const {
+    return _replace_one;
+}
 
-write::~write() { destroy_member(); }
+write::~write() {
+    destroy_member();
+}
 
 }  // namespace model
 }  // namespace driver

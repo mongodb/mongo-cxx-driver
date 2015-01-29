@@ -32,7 +32,8 @@ bulk_write& bulk_write::operator=(bulk_write&&) noexcept = default;
 bulk_write::~bulk_write() = default;
 
 bulk_write::bulk_write(bool ordered)
-    : _impl(stdx::make_unique<impl>(libmongoc::bulk_operation_new(ordered))) {}
+    : _impl(stdx::make_unique<impl>(libmongoc::bulk_operation_new(ordered))) {
+}
 
 void bulk_write::append(const model::write& operation) {
     switch (operation.type()) {
@@ -88,13 +89,13 @@ void bulk_write::write_concern(class write_concern wc) {
     libmongoc::bulk_operation_set_write_concern(_impl->operation_t, wc._impl->write_concern_t);
 }
 
-//class write_concern bulk_write::write_concern() const {
-    //class write_concern wc(stdx::make_unique<write_concern::impl>(
-        //libmongoc::write_concern_copy(
-            //libmongoc::bulk_operation_get_write_concern(_impl->operation_t)
-        //)
-    //));
-    //return wc;
+// class write_concern bulk_write::write_concern() const {
+// class write_concern wc(stdx::make_unique<write_concern::impl>(
+// libmongoc::write_concern_copy(
+// libmongoc::bulk_operation_get_write_concern(_impl->operation_t)
+//)
+//));
+// return wc;
 //}
 
 }  // namespace base

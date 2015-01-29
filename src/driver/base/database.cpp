@@ -34,9 +34,12 @@ database::~database() = default;
 database::database(const class client& client, const std::string& name)
     : _impl(stdx::make_unique<impl>(
           libmongoc::client_get_database(client._impl->client_t, name.c_str()), client._impl.get(),
-          name.c_str())) {}
+          name.c_str())) {
+}
 
-const std::string& database::name() const { return _impl->name; }
+const std::string& database::name() const {
+    return _impl->name;
+}
 
 void database::read_preference(class read_preference rp) {
     libmongoc::database_set_read_prefs(_impl->database_t, rp._impl->read_preference_t);
@@ -54,8 +57,7 @@ void database::write_concern(class write_concern wc) {
 
 class write_concern database::write_concern() const {
     class write_concern wc(stdx::make_unique<write_concern::impl>(
-        libmongoc::write_concern_copy(libmongoc::database_get_write_concern(_impl->database_t)))
-    );
+        libmongoc::write_concern_copy(libmongoc::database_get_write_concern(_impl->database_t))));
     return wc;
 }
 

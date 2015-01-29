@@ -20,11 +20,15 @@
 namespace bson {
 namespace document {
 
-view_or_value::view_or_value(bson::document::view view) : _is_view(true), _view(std::move(view)) {}
+view_or_value::view_or_value(bson::document::view view) : _is_view(true), _view(std::move(view)) {
+}
 view_or_value::view_or_value(bson::document::value value)
-    : _is_view(false), _value(std::move(value)) {}
+    : _is_view(false), _value(std::move(value)) {
+}
 
-view_or_value::view_or_value(view_or_value&& rhs) : _is_view(true) { *this = std::move(rhs); }
+view_or_value::view_or_value(view_or_value&& rhs) : _is_view(true) {
+    *this = std::move(rhs);
+}
 
 view_or_value& view_or_value::operator=(view_or_value&& rhs) {
     if (!_is_view) {
@@ -58,7 +62,9 @@ document::view view_or_value::view() const {
     }
 }
 
-view_or_value::operator document::view() const { return view(); }
+view_or_value::operator document::view() const {
+    return view();
+}
 
 }  // namespace document
 }  // namespace bson

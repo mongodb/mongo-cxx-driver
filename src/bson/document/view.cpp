@@ -23,11 +23,17 @@
 namespace bson {
 namespace document {
 
-view::iterator::iterator(const void* i) : iter(i), is_end(false) {}
-view::iterator::iterator(bool is_end) : is_end(is_end) {}
+view::iterator::iterator(const void* i) : iter(i), is_end(false) {
+}
+view::iterator::iterator(bool is_end) : is_end(is_end) {
+}
 
-const element& view::iterator::operator*() const { return iter; }
-const element* view::iterator::operator->() const { return &iter; }
+const element& view::iterator::operator*() const {
+    return iter;
+}
+const element* view::iterator::operator->() const {
+    return &iter;
+}
 
 view::iterator& view::iterator::operator++() {
     bson_iter_t i;
@@ -59,7 +65,9 @@ bool view::iterator::operator==(const iterator& rhs) const {
     return false;
 }
 
-bool view::iterator::operator!=(const iterator& rhs) const { return !(*this == rhs); }
+bool view::iterator::operator!=(const iterator& rhs) const {
+    return !(*this == rhs);
+}
 
 view::iterator view::begin() const {
     bson_t b;
@@ -76,7 +84,9 @@ bool view::has_key(const string_or_literal& key) const {
     return !((*this)[key] == bson::document::element{});
 }
 
-view::iterator view::end() const { return iterator(true); }
+view::iterator view::end() const {
+    return iterator(true);
+}
 
 element view::operator[](const string_or_literal& key) const {
     bson_t b;
@@ -91,14 +101,20 @@ element view::operator[](const string_or_literal& key) const {
     }
 }
 
-view::view(const std::uint8_t* b, std::size_t l) : buf(b), len(l) {}
+view::view(const std::uint8_t* b, std::size_t l) : buf(b), len(l) {
+}
 
 static uint8_t kDefaultView[5] = {5, 0, 0, 0, 0};
 
-view::view() : buf(kDefaultView), len(5) {}
+view::view() : buf(kDefaultView), len(5) {
+}
 
-const std::uint8_t* view::get_buf() const { return buf; }
-std::size_t view::get_len() const { return len; }
+const std::uint8_t* view::get_buf() const {
+    return buf;
+}
+std::size_t view::get_len() const {
+    return len;
+}
 
 std::ostream& operator<<(std::ostream& out, const bson::document::view& view) {
     json_visitor v(out, false, 0);

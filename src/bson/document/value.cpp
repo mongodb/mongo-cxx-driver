@@ -21,16 +21,21 @@ namespace bson {
 namespace document {
 
 value::value(const std::uint8_t* b, std::size_t l, void (*dtor)(void*))
-    : _buf((void*)b, dtor), _len(l) {}
+    : _buf((void*)b, dtor), _len(l) {
+}
 
 value::value(const document::view& view)
     : _buf(malloc((std::size_t)view.get_len()), free), _len(view.get_len()) {
     std::memcpy(_buf.get(), view.get_buf(), view.get_len());
 }
 
-document::view value::view() const { return document::view{(uint8_t*)_buf.get(), _len}; }
+document::view value::view() const {
+    return document::view{(uint8_t*)_buf.get(), _len};
+}
 
-value::operator document::view() const { return view(); }
+value::operator document::view() const {
+    return view();
+}
 
 }  // namespace document
 }  // namespace bson

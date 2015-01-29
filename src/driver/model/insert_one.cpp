@@ -18,9 +18,12 @@ namespace mongo {
 namespace driver {
 namespace model {
 
-insert_one::insert_one(bson::document::view document) : _document(std::move(document)) {}
+insert_one::insert_one(bson::document::view document) : _document(std::move(document)) {
+}
 
-const bson::document::view& insert_one::document() const { return _document; }
+const bson::document::view& insert_one::document() const {
+    return _document;
+}
 
 }  // namespace model
 }  // namespace driver

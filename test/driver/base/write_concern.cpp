@@ -22,9 +22,13 @@ using namespace mongo::driver::base;
 TEST_CASE("a default write_concern", "[write_concern][base]") {
     write_concern wc{};
 
-    SECTION("doesn't require the server to fsync") { REQUIRE(wc.fsync() == false); }
+    SECTION("doesn't require the server to fsync") {
+        REQUIRE(wc.fsync() == false);
+    }
 
-    SECTION("doesn't require the server to journal") { REQUIRE(wc.journal() == false); }
+    SECTION("doesn't require the server to journal") {
+        REQUIRE(wc.journal() == false);
+    }
 
     SECTION("will not timeout") {
         auto timeout = wc.timeout();
@@ -36,7 +40,9 @@ TEST_CASE("a default write_concern", "[write_concern][base]") {
         REQUIRE(-2 == wc.nodes());
     }
 
-    SECTION("has empty tag set") { REQUIRE(wc.tag().empty()); }
+    SECTION("has empty tag set") {
+        REQUIRE(wc.tag().empty());
+    }
 }
 
 TEST_CASE("write_concern fields may be set and retrieved", "[write_concern][base]") {

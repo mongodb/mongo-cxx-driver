@@ -75,7 +75,9 @@ class concrete::impl {
         _stack.emplace_back(back(), key, len, true);
     }
 
-    void pop_back() { _stack.pop_back(); }
+    void pop_back() {
+        _stack.pop_back();
+    }
 
     const string_or_literal& next_key() {
         if (is_array()) {
@@ -95,9 +97,13 @@ class concrete::impl {
         _has_user_key = true;
     }
 
-    bson_t* root() { return &_root; }
+    bson_t* root() {
+        return &_root;
+    }
 
-    bool is_array() { return _stack.empty() ? _root_is_array : _stack.back().is_array; }
+    bool is_array() {
+        return _stack.empty() ? _root_is_array : _stack.back().is_array;
+    }
 
    private:
     struct frame {
@@ -136,7 +142,8 @@ class concrete::impl {
     bool _has_user_key;
 };
 
-concrete::concrete(bool is_array) : _impl(new impl(is_array)) {}
+concrete::concrete(bool is_array) : _impl(new impl(is_array)) {
+}
 concrete::concrete(concrete&&) = default;
 concrete& concrete::operator=(concrete&&) = default;
 concrete::~concrete() = default;
@@ -286,19 +293,29 @@ void concrete::value_append(const types::b_maxkey&) {
     bson_append_maxkey(_impl->back(), key.c_str(), key.length());
 }
 
-void concrete::value_append(double value) { value_append(types::b_double{value}); }
+void concrete::value_append(double value) {
+    value_append(types::b_double{value});
+}
 
 void concrete::value_append(string_or_literal value) {
     value_append(types::b_utf8{std::move(value)});
 }
 
-void concrete::value_append(std::int32_t value) { value_append(types::b_int32{value}); }
+void concrete::value_append(std::int32_t value) {
+    value_append(types::b_int32{value});
+}
 
-void concrete::value_append(const oid& value) { value_append(types::b_oid{value}); }
+void concrete::value_append(const oid& value) {
+    value_append(types::b_oid{value});
+}
 
-void concrete::value_append(std::int64_t value) { value_append(types::b_int64{value}); }
+void concrete::value_append(std::int64_t value) {
+    value_append(types::b_int64{value});
+}
 
-void concrete::value_append(bool value) { value_append(types::b_bool{value}); }
+void concrete::value_append(bool value) {
+    value_append(types::b_bool{value});
+}
 
 void concrete::open_doc_append() {
     const string_or_literal& key = _impl->next_key();
@@ -365,11 +382,17 @@ bson::document::view concrete::view() const {
     return bson::document::view(bson_get_data(_impl->root()), _impl->root()->len);
 }
 
-concrete::operator bson::document::view() const { return view(); }
+concrete::operator bson::document::view() const {
+    return view();
+}
 
-bson::document::value concrete::extract() { return _impl->steal(); }
+bson::document::value concrete::extract() {
+    return _impl->steal();
+}
 
-void concrete::clear() { _impl->reinit(); }
+void concrete::clear() {
+    _impl->reinit();
+}
 
 }  // namespace builder
 }  // namespace bson

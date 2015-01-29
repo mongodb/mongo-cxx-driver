@@ -19,18 +19,25 @@ namespace driver {
 namespace model {
 
 update_many::update_many(bson::document::view filter, bson::document::view update)
-    : _filter(std::move(filter)), _update(std::move(update)) {}
+    : _filter(std::move(filter)), _update(std::move(update)) {
+}
 
 update_many& update_many::upsert(bool upsert) {
     _upsert = upsert;
     return *this;
 }
 
-const optional<bool>& update_many::upsert() const { return _upsert; }
+const optional<bool>& update_many::upsert() const {
+    return _upsert;
+}
 
-const bson::document::view& update_many::filter() const { return _filter; }
+const bson::document::view& update_many::filter() const {
+    return _filter;
+}
 
-const bson::document::view& update_many::update() const { return _update; }
+const bson::document::view& update_many::update() const {
+    return _update;
+}
 
 }  // namespace model
 }  // namespace driver

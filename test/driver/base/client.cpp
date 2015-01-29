@@ -83,13 +83,13 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client][base]
     auto deleter = [](mongoc_read_prefs_t* var) { mongoc_read_prefs_destroy(var); };
     std::unique_ptr<mongoc_read_prefs_t, decltype(deleter)> saved_preference(nullptr, deleter);
 
-    client_set_preference->interpose(
-        [&](mongoc_client_t* client, const mongoc_read_prefs_t* read_prefs) {
-            called_set = true;
-            saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
-            REQUIRE(mongoc_read_prefs_get_mode(read_prefs) ==
-                    static_cast<mongoc_read_mode_t>(read_preference::read_mode::k_secondary_preferred));
-        });
+    client_set_preference->interpose([&](mongoc_client_t* client,
+                                         const mongoc_read_prefs_t* read_prefs) {
+        called_set = true;
+        saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
+        REQUIRE(mongoc_read_prefs_get_mode(read_prefs) ==
+                static_cast<mongoc_read_mode_t>(read_preference::read_mode::k_secondary_preferred));
+    });
 
     client_get_preference->interpose([&](const mongoc_client_t* client) {
                                          return saved_preference.get();
@@ -98,7 +98,8 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client][base]
     mongo_client.read_preference(std::move(preference));
     REQUIRE(called_set);
 
-    REQUIRE(read_preference::read_mode::k_secondary_preferred == mongo_client.read_preference().mode());
+    REQUIRE(read_preference::read_mode::k_secondary_preferred ==
+            mongo_client.read_preference().mode());
 }
 
 TEST_CASE("A client's write concern may be set and obtained", "[client][base]") {
@@ -118,22 +119,20 @@ TEST_CASE("A client's write concern may be set and obtained", "[client][base]") 
         });
 
     bool get_called = false;
-    client_get_concern->interpose(
-        [&](const mongoc_client_t* client) {
-            get_called = true;
-            return underlying_wc;
-        });
+    client_get_concern->interpose([&](const mongoc_client_t* client) {
+        get_called = true;
+        return underlying_wc;
+    });
 
     mongo_client.write_concern(concern);
     REQUIRE(set_called);
 
     MOCK_CONCERN
     bool copy_called = false;
-    concern_copy->interpose(
-        [&](const mongoc_write_concern_t* concern) {
-            copy_called = true;
-            return mongoc_write_concern_copy(underlying_wc);
-        });
+    concern_copy->interpose([&](const mongoc_write_concern_t* concern) {
+        copy_called = true;
+        return mongoc_write_concern_copy(underlying_wc);
+    });
 
     REQUIRE(concern.majority() == mongo_client.write_concern().majority());
 

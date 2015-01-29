@@ -33,6 +33,4 @@ TEST_CASE("insert_one", "[insert_one][result]") {
     SECTION("returns correct response") {
         REQUIRE(insert_one.inserted_id() == g_oid);
     }
-
 }
-

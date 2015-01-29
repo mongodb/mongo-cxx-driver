@@ -21,7 +21,6 @@
 using namespace mongo::driver;
 
 TEST_CASE("delete", "[delete][result]") {
-
     bson::builder::document build;
     build << "_id" << bson::oid{bson::oid::init_tag} << "nRemoved" << bson::types::b_int64{1};
 
@@ -33,5 +32,4 @@ TEST_CASE("delete", "[delete][result]") {
         std::cout << build.view();
         REQUIRE(delete_result.deleted_count() == 1);
     }
-
 }

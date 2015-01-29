@@ -18,15 +18,21 @@ namespace mongo {
 namespace driver {
 namespace options {
 
-void find_one_and_delete::projection(bson::document::view projection) { _projection = projection; }
+void find_one_and_delete::projection(bson::document::view projection) {
+    _projection = projection;
+}
 
-void find_one_and_delete::sort(bson::document::view ordering) { _ordering = ordering; }
+void find_one_and_delete::sort(bson::document::view ordering) {
+    _ordering = ordering;
+}
 
 const optional<bson::document::view>& find_one_and_delete::projection() const {
     return _projection;
 }
 
-const optional<bson::document::view>& find_one_and_delete::sort() const { return _ordering; }
+const optional<bson::document::view>& find_one_and_delete::sort() const {
+    return _ordering;
+}
 
 }  // namespace options
 }  // namespace driver

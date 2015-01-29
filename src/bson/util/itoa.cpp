@@ -1019,7 +1019,9 @@ const char* kIndexTable =
     "998\0"
     "999\0";
 
-itoa::itoa(uint32_t val) : _val(val) { init(); }
+itoa::itoa(uint32_t val) : _val(val) {
+    init();
+}
 
 void itoa::init() {
     if (_val < 10) {
@@ -1048,9 +1050,11 @@ void itoa::init() {
     }
 }
 
-itoa::itoa() : itoa(0) {}
+itoa::itoa() : itoa(0) {
+}
 
-itoa::itoa(const itoa& rhs) : itoa(rhs._val) {}
+itoa::itoa(const itoa& rhs) : itoa(rhs._val) {
+}
 
 itoa& itoa::operator=(const itoa& rhs) {
     _val = rhs._val;
@@ -1064,9 +1068,13 @@ itoa& itoa::operator=(uint32_t i) {
     return *this;
 }
 
-const char* itoa::c_str() const { return _str; }
+const char* itoa::c_str() const {
+    return _str;
+}
 
-std::size_t itoa::length() const { return _len; }
+std::size_t itoa::length() const {
+    return _len;
+}
 
 }  // namespace util
 }  // namespace bson

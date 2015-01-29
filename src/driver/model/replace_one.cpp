@@ -19,7 +19,8 @@ namespace driver {
 namespace model {
 
 replace_one::replace_one(bson::document::view filter, bson::document::view replacement)
-    : _filter(std::move(filter)), _replacement(std::move(replacement)) {}
+    : _filter(std::move(filter)), _replacement(std::move(replacement)) {
+}
 
 replace_one& replace_one::upsert(bool upsert) {
     _upsert = upsert;
@@ -27,11 +28,17 @@ replace_one& replace_one::upsert(bool upsert) {
     return *this;
 }
 
-const bson::document::view& replace_one::filter() const { return _filter; }
+const bson::document::view& replace_one::filter() const {
+    return _filter;
+}
 
-const bson::document::view& replace_one::replacement() const { return _replacement; }
+const bson::document::view& replace_one::replacement() const {
+    return _replacement;
+}
 
-const optional<bool>& replace_one::upsert() const { return _upsert; }
+const optional<bool>& replace_one::upsert() const {
+    return _upsert;
+}
 
 }  // namespace model
 }  // namespace driver

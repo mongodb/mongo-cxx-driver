@@ -18,11 +18,11 @@ namespace mongo {
 namespace driver {
 namespace result {
 
-insert_many::insert_many(result::bulk_write result, std::map<std::size_t, bson::document::element> inserted_ids)
-    : _result(std::move(result)),
-      _generated_ids(std::move(inserted_ids))
-{}
-std::map<std::size_t, bson::document::element> insert_many::inserted_ids()  {
+insert_many::insert_many(result::bulk_write result,
+                         std::map<std::size_t, bson::document::element> inserted_ids)
+    : _result(std::move(result)), _generated_ids(std::move(inserted_ids)) {
+}
+std::map<std::size_t, bson::document::element> insert_many::inserted_ids() {
     return _generated_ids;
 }
 

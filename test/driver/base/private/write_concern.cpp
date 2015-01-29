@@ -70,8 +70,7 @@ TEST_CASE("creation of write_concern passes universal parameters to c-driver's m
     }
 }
 
-TEST_CASE("write_concern is called with w MAJORITY",
-          "[write_concern][base][c-driver]") {
+TEST_CASE("write_concern is called with w MAJORITY", "[write_concern][base][c-driver]") {
     bool w_called = false, wmajority_called = false, wtag_called = false;
     auto w_instance = libmongoc::write_concern_set_w.create_instance();
     auto wmajority_instance = libmongoc::write_concern_set_wmajority.create_instance();
@@ -85,11 +84,17 @@ TEST_CASE("write_concern is called with w MAJORITY",
     wc.majority(std::chrono::milliseconds(100));
     write_concern{wc};
 
-    SECTION("mongoc_write_concern_set_wmajority is called") { REQUIRE(wmajority_called == true); }
+    SECTION("mongoc_write_concern_set_wmajority is called") {
+        REQUIRE(wmajority_called == true);
+    }
 
-    SECTION("mongoc_write_concern_set_w is not called") { REQUIRE(w_called == false); }
+    SECTION("mongoc_write_concern_set_w is not called") {
+        REQUIRE(w_called == false);
+    }
 
-    SECTION("mongoc_write_concern_set_wtag is not called") { REQUIRE(wtag_called == false); }
+    SECTION("mongoc_write_concern_set_wtag is not called") {
+        REQUIRE(wtag_called == false);
+    }
 }
 
 TEST_CASE("write_concern is called with a number of necessary confirmations",
@@ -121,7 +126,9 @@ TEST_CASE("write_concern is called with a number of necessary confirmations",
         REQUIRE(wmajority_called == false);
     }
 
-    SECTION("mongoc_write_concern_set_wtag is not called") { REQUIRE(wtag_called == false); }
+    SECTION("mongoc_write_concern_set_wtag is not called") {
+        REQUIRE(wtag_called == false);
+    }
 }
 
 TEST_CASE("write_concern is called with a tag", "[write_concern][base][c-driver]") {
@@ -143,7 +150,9 @@ TEST_CASE("write_concern is called with a tag", "[write_concern][base][c-driver]
     wc.tag(expected_wtag);
     write_concern{wc};
 
-    SECTION("mongoc_write_concern_set_w is not called") { REQUIRE(w_called == false); }
+    SECTION("mongoc_write_concern_set_w is not called") {
+        REQUIRE(w_called == false);
+    }
 
     SECTION("mongoc_write_concern_set_wmajority is not called") {
         REQUIRE(wmajority_called == false);

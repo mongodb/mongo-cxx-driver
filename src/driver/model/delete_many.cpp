@@ -18,9 +18,12 @@ namespace mongo {
 namespace driver {
 namespace model {
 
-delete_many::delete_many(bson::document::view filter) : _filter(std::move(filter)) {}
+delete_many::delete_many(bson::document::view filter) : _filter(std::move(filter)) {
+}
 
-const bson::document::view& delete_many::filter() const { return _filter; }
+const bson::document::view& delete_many::filter() const {
+    return _filter;
+}
 
 }  // namespace model
 }  // namespace driver

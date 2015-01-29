@@ -25,7 +25,8 @@ namespace driver {
 namespace base {
 
 client::client(const uri& uri, const options::client&)
-    : _impl(stdx::make_unique<impl>(libmongoc::client_new_from_uri(uri._impl->uri_t))) {}
+    : _impl(stdx::make_unique<impl>(libmongoc::client_new_from_uri(uri._impl->uri_t))) {
+}
 
 client::client(client&&) noexcept = default;
 client& client::operator=(client&&) noexcept = default;
@@ -38,8 +39,7 @@ void client::read_preference(class read_preference rp) {
 
 class read_preference client::read_preference() const {
     class read_preference rp(stdx::make_unique<read_preference::impl>(
-        libmongoc::read_prefs_copy(libmongoc::client_get_read_prefs(_impl->client_t)))
-    );
+        libmongoc::read_prefs_copy(libmongoc::client_get_read_prefs(_impl->client_t))));
     return rp;
 }
 
@@ -49,8 +49,7 @@ void client::write_concern(class write_concern wc) {
 
 class write_concern client::write_concern() const {
     class write_concern wc(stdx::make_unique<write_concern::impl>(
-        libmongoc::write_concern_copy(libmongoc::client_get_write_concern(_impl->client_t)))
-    );
+        libmongoc::write_concern_copy(libmongoc::client_get_write_concern(_impl->client_t))));
     return wc;
 }
 
