@@ -26,7 +26,7 @@ namespace model {
 ///
 /// Class representing a MongoDB update operation that replaces a single document.
 ///
-class LIBMONGOCXX_EXPORT replace_one {
+class LIBMONGOCXX_API replace_one {
 
    public:
     ///

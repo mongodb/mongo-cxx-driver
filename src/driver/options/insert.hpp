@@ -27,7 +27,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB insert operation
 ///
-class LIBMONGOCXX_EXPORT insert {
+class LIBMONGOCXX_API insert {
 
    public:
 
@@ -39,7 +39,7 @@ class LIBMONGOCXX_EXPORT insert {
     ///
     /// @see http://docs.mongodb.org/manual/core/write-concern/
     ///
-    void write_concern(class write_concern wc);
+    void write_concern(base::write_concern wc);
 
     ///
     /// The current write_concern for this operation.
@@ -48,10 +48,10 @@ class LIBMONGOCXX_EXPORT insert {
     ///
     /// @see http://docs.mongodb.org/manual/core/write-concern/
     ///
-    const optional<class write_concern>& write_concern() const;
+    const optional<base::write_concern>& write_concern() const;
 
    private:
-    optional<class write_concern> _write_concern;
+    optional<base::write_concern> _write_concern;
 
 };
 

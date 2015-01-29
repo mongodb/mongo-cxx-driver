@@ -24,7 +24,7 @@ namespace driver {
 namespace result {
 
 /// Class representing the result of a MongoDB insert operation.
-class LIBMONGOCXX_EXPORT insert_one {
+class LIBMONGOCXX_API insert_one {
 
    public:
     // This constructor is public for testing purposes only

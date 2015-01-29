@@ -28,6 +28,10 @@ namespace mongo {
 namespace driver {
 namespace base {
 
+// TODO: inline namespace LIBMONGOCXX_INLINE_NAMESPACE_<MAJOR>
+// this will come from the prelude -> export header (look at intel tbb)
+// also look at libcxx which uses an inline namespace
+
 ///
 /// Class representing a client connection to MongoDB.
 ///
@@ -47,7 +51,7 @@ namespace base {
 /// @todo Make iterable for databases on the server
 /// @todo Add + implement missing client api methods
 ///
-class LIBMONGOCXX_EXPORT client {
+class LIBMONGOCXX_API client {
 
    public:
 

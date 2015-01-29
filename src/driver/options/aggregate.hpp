@@ -29,7 +29,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB aggregation operation.
 ///
-class LIBMONGOCXX_EXPORT aggregate {
+class LIBMONGOCXX_API aggregate {
 
    public:
 
@@ -111,7 +111,7 @@ class LIBMONGOCXX_EXPORT aggregate {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    void read_preference(read_preference rp);
+    void read_preference(base::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -120,14 +120,14 @@ class LIBMONGOCXX_EXPORT aggregate {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    const optional<class read_preference>& read_preference() const;
+    const optional<base::read_preference>& read_preference() const;
 
    private:
     optional<bool> _allow_disk_use;
     optional<std::int32_t> _batch_size;
     optional<std::int64_t> _max_time_ms;
     optional<bool> _use_cursor;
-    optional<class read_preference> _read_preference;
+    optional<base::read_preference> _read_preference;
 
 };
 

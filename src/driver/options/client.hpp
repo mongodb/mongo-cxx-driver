@@ -30,7 +30,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB driver client object.
 ///
-class LIBMONGOCXX_EXPORT client {
+class LIBMONGOCXX_API client {
 
    public:
 

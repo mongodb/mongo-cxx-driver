@@ -33,9 +33,10 @@ class collection;
 ///
 /// @note By default, cursors timeout after 10 minutes of inactivity.
 ///
-class LIBMONGOCXX_EXPORT cursor {
+class LIBMONGOCXX_API cursor {
 
    public:
+
     class iterator;
 
     ///

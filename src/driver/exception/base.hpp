@@ -20,7 +20,7 @@ namespace mongo {
 namespace driver {
 namespace exception {
 
-class LIBMONGOCXX_EXPORT base : public std::exception {};
+class LIBMONGOCXX_API base : public std::exception {};
 
 }  // namespace exception
 }  // namespace driver

@@ -46,7 +46,7 @@ class collection;
 /// @see http://docs.mongodb.org/manual/core/write-operations/
 /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
 ///
-class LIBMONGOCXX_EXPORT bulk_write {
+class LIBMONGOCXX_API bulk_write {
 
    public:
 

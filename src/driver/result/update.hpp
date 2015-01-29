@@ -27,7 +27,7 @@ namespace driver {
 namespace result {
 
 /// Class representing the result of a MongoDB update operation.
-class LIBMONGOCXX_EXPORT update {
+class LIBMONGOCXX_API update {
 
    public:
     // This constructor is public for testing purposes only

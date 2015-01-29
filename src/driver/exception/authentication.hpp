@@ -20,7 +20,7 @@ namespace mongo {
 namespace driver {
 namespace exception {
 
-class LIBMONGOCXX_EXPORT authentication : public operation {};
+class LIBMONGOCXX_API authentication : public operation {};
 
 }  // namespace exception
 }  // namespace driver

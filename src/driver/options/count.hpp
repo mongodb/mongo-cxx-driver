@@ -33,7 +33,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB count command
 ///
-class LIBMONGOCXX_EXPORT count {
+class LIBMONGOCXX_API count {
 
    public:
 
@@ -113,7 +113,7 @@ class LIBMONGOCXX_EXPORT count {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    void read_preference(class read_preference rp);
+    void read_preference(base::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -122,14 +122,14 @@ class LIBMONGOCXX_EXPORT count {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    const optional<class read_preference>& read_preference() const;
+    const optional<base::read_preference>& read_preference() const;
 
    private:
     optional<bson::document::view> _hint;
     optional<std::int64_t> _limit;
     optional<std::int64_t> _max_time_ms;
     optional<std::int64_t> _skip;
-    optional<class read_preference> _read_preference;
+    optional<base::read_preference> _read_preference;
 
 };
 

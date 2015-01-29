@@ -25,7 +25,7 @@ namespace model {
 ///
 /// Class representing a MongoDB delete operation that removes a single document.
 ///
-class LIBMONGOCXX_EXPORT delete_one {
+class LIBMONGOCXX_API delete_one {
 
    public:
 

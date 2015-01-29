@@ -25,7 +25,7 @@ namespace model {
 ///
 /// Class representing a MongoDB delete operation that removes multiple documents.
 ///
-class LIBMONGOCXX_EXPORT delete_many {
+class LIBMONGOCXX_API delete_many {
 
    public:
 

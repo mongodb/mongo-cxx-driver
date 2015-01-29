@@ -26,7 +26,7 @@ namespace model {
 ///
 /// Class representing a MongoDB update operation that modifies multiple documents.
 ///
-class LIBMONGOCXX_EXPORT update_many {
+class LIBMONGOCXX_API update_many {
 
    public:
 

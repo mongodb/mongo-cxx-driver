@@ -70,7 +70,7 @@ class pipeline;
 ///
 /// @todo Make this class copyable when C driver supports this.
 ///
-class LIBMONGOCXX_EXPORT collection {
+class LIBMONGOCXX_API collection {
 
    public:
 

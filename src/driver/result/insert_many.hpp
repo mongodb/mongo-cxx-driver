@@ -30,7 +30,7 @@ namespace result {
 /// Class representing the result of a MongoDB insert many operation
 /// (executed as a bulk write).
 ///
-class LIBMONGOCXX_EXPORT insert_many {
+class LIBMONGOCXX_API insert_many {
 
    public:
     // TODO: public alias the map

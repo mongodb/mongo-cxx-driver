@@ -29,7 +29,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB find_and_modify delete operation
 ///
-class LIBMONGOCXX_EXPORT find_one_and_delete {
+class LIBMONGOCXX_API find_one_and_delete {
 
    public:
 

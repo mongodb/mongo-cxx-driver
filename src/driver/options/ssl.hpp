@@ -27,7 +27,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB driver client (SSL)
 ///
-class LIBMONGOCXX_EXPORT ssl {
+class LIBMONGOCXX_API ssl {
 
    public:
     void pem_file(std::string pem_file);

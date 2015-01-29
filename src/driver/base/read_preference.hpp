@@ -50,7 +50,7 @@ class database;
 ///
 /// @see http://docs.mongodb.org/manual/core/read-preference/
 ///
-class LIBMONGOCXX_EXPORT read_preference {
+class LIBMONGOCXX_API read_preference {
 
    public:
 

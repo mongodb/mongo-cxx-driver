@@ -27,7 +27,7 @@ namespace base {
 ///
 /// Life cycle: An instance of the driver *MUST* be kept around.
 ///
-class instance {
+class LIBMONGOCXX_API instance {
 
    public:
     ///

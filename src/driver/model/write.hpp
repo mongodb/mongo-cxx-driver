@@ -31,7 +31,7 @@ namespace mongo {
 namespace driver {
 namespace model {
 
-class LIBMONGOCXX_EXPORT write {
+class LIBMONGOCXX_API write {
 
    public:
     write(insert_one value);
@@ -49,7 +49,7 @@ class LIBMONGOCXX_EXPORT write {
 
     ~write();
 
-    write_type type() const;
+    base::write_type type() const;
 
     const insert_one& get_insert_one() const;
     const update_one& get_update_one() const;
@@ -61,7 +61,7 @@ class LIBMONGOCXX_EXPORT write {
    private:
     void destroy_member();
 
-    write_type _type;
+    base::write_type _type;
 
     union {
         insert_one _insert_one;
