@@ -50,7 +50,7 @@ class LIBMONGOCXX_API count {
     ///
     /// @return The current hint.
     ///
-    const optional<bson::document::view>& hint() const;
+    const stdx::optional<bson::document::view>& hint() const;
 
     ///
     /// Sets the maximum number of documents to count.
@@ -65,7 +65,7 @@ class LIBMONGOCXX_API count {
     ///
     /// @return The current limit.
     ///
-    const optional<std::int64_t>& limit() const;
+    const stdx::optional<std::int64_t>& limit() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -84,7 +84,7 @@ class LIBMONGOCXX_API count {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    const optional<std::int64_t>& max_time_ms() const;
+    const stdx::optional<std::int64_t>& max_time_ms() const;
 
     ///
     /// Sets the number of documents to skip before counting documents.
@@ -103,7 +103,7 @@ class LIBMONGOCXX_API count {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/cursor.skip/
     ///
-    const optional<std::int64_t>& skip() const;
+    const stdx::optional<std::int64_t>& skip() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -122,14 +122,14 @@ class LIBMONGOCXX_API count {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    const optional<base::read_preference>& read_preference() const;
+    const stdx::optional<base::read_preference>& read_preference() const;
 
    private:
-    optional<bson::document::view> _hint;
-    optional<std::int64_t> _limit;
-    optional<std::int64_t> _max_time_ms;
-    optional<std::int64_t> _skip;
-    optional<base::read_preference> _read_preference;
+    stdx::optional<bson::document::view> _hint;
+    stdx::optional<std::int64_t> _limit;
+    stdx::optional<std::int64_t> _max_time_ms;
+    stdx::optional<std::int64_t> _skip;
+    stdx::optional<base::read_preference> _read_preference;
 
 };
 

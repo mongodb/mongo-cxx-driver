@@ -67,13 +67,13 @@ read_preference::read_mode read_preference::mode() const {
     return static_cast<read_mode>(libmongoc::read_prefs_get_mode(_impl->read_preference_t));
 }
 
-optional<bson::document::view> read_preference::tags() const {
+stdx::optional<bson::document::view> read_preference::tags() const {
     const bson_t* bson_tags = libmongoc::read_prefs_get_tags(_impl->read_preference_t);
 
     if (bson_count_keys(bson_tags))
         return bson::document::view(bson_get_data(bson_tags), bson_tags->len);
 
-    return optional<bson::document::view>{};
+    return stdx::optional<bson::document::view>{};
 }
 
 }  // namespace base

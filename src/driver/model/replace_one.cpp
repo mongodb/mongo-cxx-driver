@@ -36,7 +36,7 @@ const bson::document::view& replace_one::replacement() const {
     return _replacement;
 }
 
-const optional<bool>& replace_one::upsert() const {
+const stdx::optional<bool>& replace_one::upsert() const {
     return _upsert;
 }
 

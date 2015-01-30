@@ -70,7 +70,7 @@ collection::collection(const database& database, const std::string& collection_n
           database.name(), database._impl->client_impl, collection_name.c_str())) {
 }
 
-optional<result::bulk_write> collection::bulk_write(const class bulk_write& bulk_write) {
+stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write& bulk_write) {
     mongoc_bulk_operation_t* b = bulk_write._impl->operation_t;
     libmongoc::bulk_operation_set_database(b, _impl->database_name.c_str());
     libmongoc::bulk_operation_set_collection(b, _impl->name.c_str());
@@ -87,7 +87,7 @@ optional<result::bulk_write> collection::bulk_write(const class bulk_write& bulk
 
     result::bulk_write result(reply.steal());
 
-    return optional<result::bulk_write>(std::move(result));
+    return stdx::optional<result::bulk_write>(std::move(result));
 }
 
 cursor collection::find(bson::document::view filter, const options::find& options) {
@@ -119,16 +119,16 @@ cursor collection::find(bson::document::view filter, const options::find& option
         projection.bson(), rp_ptr));
 }
 
-optional<bson::document::value> collection::find_one(bson::document::view filter,
+stdx::optional<bson::document::value> collection::find_one(bson::document::view filter,
                                                      const options::find& options) {
     options::find copy(options);
     copy.limit(1);
     cursor cursor = find(filter, copy);
     cursor::iterator it = cursor.begin();
     if (it == cursor.end()) {
-        return nullopt;
+        return stdx::nullopt;
     }
-    return optional<bson::document::value>(*it);
+    return stdx::optional<bson::document::value>(*it);
 }
 
 cursor collection::aggregate(const pipeline& pipeline, const options::aggregate& options) {
@@ -168,7 +168,7 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
                                                   stages.bson(), options_bson.bson(), rp_ptr));
 }
 
-optional<result::insert_one> collection::insert_one(bson::document::view document,
+stdx::optional<result::insert_one> collection::insert_one(bson::document::view document,
                                                     const options::insert& options) {
     class bulk_write bulk_op(false);
     bson::document::element oid{};
@@ -191,12 +191,12 @@ optional<result::insert_one> collection::insert_one(bson::document::view documen
 
     auto result = bulk_write(bulk_op);
     if (!result) {
-        return optional<result::insert_one>();
+        return stdx::optional<result::insert_one>();
     }
-    return optional<result::insert_one>(result::insert_one(std::move(result.value()), oid));
+    return stdx::optional<result::insert_one>(result::insert_one(std::move(result.value()), oid));
 }
 
-optional<result::replace_one> collection::replace_one(bson::document::view filter,
+stdx::optional<result::replace_one> collection::replace_one(bson::document::view filter,
                                                       bson::document::view replacement,
                                                       const options::update& options) {
     class bulk_write bulk_op(false);
@@ -207,13 +207,13 @@ optional<result::replace_one> collection::replace_one(bson::document::view filte
 
     auto result = bulk_write(bulk_op);
     if (!result) {
-        return optional<result::replace_one>();
+        return stdx::optional<result::replace_one>();
     }
 
-    return optional<result::replace_one>(result::replace_one(std::move(result.value())));
+    return stdx::optional<result::replace_one>(result::replace_one(std::move(result.value())));
 };
 
-optional<result::update> collection::update_many(bson::document::view filter,
+stdx::optional<result::update> collection::update_many(bson::document::view filter,
                                                  bson::document::view update,
                                                  const options::update& options) {
     class bulk_write bulk_op(false);
@@ -227,13 +227,13 @@ optional<result::update> collection::update_many(bson::document::view filter,
 
     auto result = bulk_write(bulk_op);
     if (!result) {
-        return optional<result::update>();
+        return stdx::optional<result::update>();
     }
 
-    return optional<result::update>(result::update(std::move(result.value())));
+    return stdx::optional<result::update>(result::update(std::move(result.value())));
 }
 
-optional<result::delete_result> collection::delete_many(bson::document::view filter,
+stdx::optional<result::delete_result> collection::delete_many(bson::document::view filter,
                                                         const options::delete_options& options) {
     class bulk_write bulk_op(false);
     model::delete_many delete_op(filter);
@@ -243,13 +243,13 @@ optional<result::delete_result> collection::delete_many(bson::document::view fil
 
     auto result = bulk_write(bulk_op);
     if (!result) {
-        return optional<result::delete_result>();
+        return stdx::optional<result::delete_result>();
     }
 
-    return optional<result::delete_result>(result::delete_result(std::move(result.value())));
+    return stdx::optional<result::delete_result>(result::delete_result(std::move(result.value())));
 }
 
-optional<result::update> collection::update_one(bson::document::view filter,
+stdx::optional<result::update> collection::update_one(bson::document::view filter,
                                                 bson::document::view update,
                                                 const options::update& options) {
     class bulk_write bulk_op(false);
@@ -263,13 +263,13 @@ optional<result::update> collection::update_one(bson::document::view filter,
 
     auto result = bulk_write(bulk_op);
     if (!result) {
-        return optional<result::update>();
+        return stdx::optional<result::update>();
     }
 
-    return optional<result::update>(result::update(std::move(result.value())));
+    return stdx::optional<result::update>(result::update(std::move(result.value())));
 }
 
-optional<result::delete_result> collection::delete_one(bson::document::view filter,
+stdx::optional<result::delete_result> collection::delete_one(bson::document::view filter,
                                                        const options::delete_options& options) {
     class bulk_write bulk_op(false);
     model::delete_one delete_op(filter);
@@ -279,12 +279,12 @@ optional<result::delete_result> collection::delete_one(bson::document::view filt
 
     auto result = bulk_write(bulk_op);
     if (!result) {
-        return optional<result::delete_result>();
+        return stdx::optional<result::delete_result>();
     }
-    return optional<result::delete_result>(result::delete_result(std::move(result.value())));
+    return stdx::optional<result::delete_result>(result::delete_result(std::move(result.value())));
 }
 
-optional<bson::document::value> collection::find_one_and_replace(
+stdx::optional<bson::document::value> collection::find_one_and_replace(
     bson::document::view filter, bson::document::view replacement,
     const options::find_one_and_replace& options) {
     scoped_bson_t bson_filter{filter};
@@ -311,7 +311,7 @@ optional<bson::document::value> collection::find_one_and_replace(
 
     bson::document::view result = reply.view();
 
-    if (result["value"].type() == bson::type::k_null) return optional<bson::document::value>{};
+    if (result["value"].type() == bson::type::k_null) return stdx::optional<bson::document::value>{};
 
     using namespace bson::builder::helpers;
     bson::builder::document b;
@@ -319,7 +319,7 @@ optional<bson::document::value> collection::find_one_and_replace(
     return b.extract();
 }
 
-optional<bson::document::value> collection::find_one_and_update(
+stdx::optional<bson::document::value> collection::find_one_and_update(
     bson::document::view filter, bson::document::view update,
     const options::find_one_and_update& options) {
     scoped_bson_t bson_filter{filter};
@@ -346,7 +346,7 @@ optional<bson::document::value> collection::find_one_and_update(
 
     bson::document::view result = reply.view();
 
-    if (result["value"].type() == bson::type::k_null) return optional<bson::document::value>{};
+    if (result["value"].type() == bson::type::k_null) return stdx::optional<bson::document::value>{};
 
     using namespace bson::builder::helpers;
     bson::builder::document b;
@@ -354,7 +354,7 @@ optional<bson::document::value> collection::find_one_and_update(
     return b.extract();
 }
 
-optional<bson::document::value> collection::find_one_and_delete(
+stdx::optional<bson::document::value> collection::find_one_and_delete(
     bson::document::view filter, const options::find_one_and_delete& options) {
     scoped_bson_t bson_filter{filter};
     scoped_bson_t bson_sort{options.sort()};
@@ -375,7 +375,7 @@ optional<bson::document::value> collection::find_one_and_delete(
 
     bson::document::view result = reply.view();
 
-    if (result["value"].type() == bson::type::k_null) return optional<bson::document::value>{};
+    if (result["value"].type() == bson::type::k_null) return stdx::optional<bson::document::value>{};
 
     using namespace bson::builder::helpers;
     bson::builder::document b;

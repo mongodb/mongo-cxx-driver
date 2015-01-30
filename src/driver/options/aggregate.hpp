@@ -47,7 +47,7 @@ class LIBMONGOCXX_API aggregate {
     ///
     /// @return Whether disk use is allowed.
     ///
-    const optional<bool>& allow_disk_use() const;
+    const stdx::optional<bool>& allow_disk_use() const;
 
     ///
     /// Sets the number of documents to return per batch.
@@ -62,7 +62,7 @@ class LIBMONGOCXX_API aggregate {
     ///
     /// @return The current batch size.
     ///
-    const optional<std::int32_t>& batch_size() const;
+    const stdx::optional<std::int32_t>& batch_size() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run server-side in milliseconds.
@@ -82,7 +82,7 @@ class LIBMONGOCXX_API aggregate {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    const optional<std::int64_t>& max_time_ms() const;
+    const stdx::optional<std::int64_t>& max_time_ms() const;
 
     ///
     /// Sets whether the results of this aggregation should be returned via a cursor.
@@ -102,7 +102,7 @@ class LIBMONGOCXX_API aggregate {
     ///
     /// @return the current use_cursor setting
     ///
-    const optional<bool>& use_cursor() const;
+    const stdx::optional<bool>& use_cursor() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -120,14 +120,14 @@ class LIBMONGOCXX_API aggregate {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    const optional<base::read_preference>& read_preference() const;
+    const stdx::optional<base::read_preference>& read_preference() const;
 
    private:
-    optional<bool> _allow_disk_use;
-    optional<std::int32_t> _batch_size;
-    optional<std::int64_t> _max_time_ms;
-    optional<bool> _use_cursor;
-    optional<base::read_preference> _read_preference;
+    stdx::optional<bool> _allow_disk_use;
+    stdx::optional<std::int32_t> _batch_size;
+    stdx::optional<std::int64_t> _max_time_ms;
+    stdx::optional<bool> _use_cursor;
+    stdx::optional<base::read_preference> _read_preference;
 
 };
 

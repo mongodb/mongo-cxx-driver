@@ -50,7 +50,7 @@ class LIBMONGOCXX_API find_one_and_replace {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    const optional<std::int64_t>& max_time_ms() const;
+    const stdx::optional<std::int64_t>& max_time_ms() const;
 
     ///
     /// Sets a projection, which limits the fields to return.
@@ -70,7 +70,7 @@ class LIBMONGOCXX_API find_one_and_replace {
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
     ///
-    const optional<bson::document::view>& projection() const;
+    const stdx::optional<bson::document::view>& projection() const;
 
     ///
     /// Set the desired version of the replaced document to return, either the original
@@ -92,7 +92,7 @@ class LIBMONGOCXX_API find_one_and_replace {
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     /// @see mongo::driver::options::return_document
     ///
-    const optional<enum return_document>& return_document() const;
+    const stdx::optional<enum return_document>& return_document() const;
 
     ///
     /// Sets the order by which to search the collection for a matching document.
@@ -114,7 +114,7 @@ class LIBMONGOCXX_API find_one_and_replace {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     ///
-    const optional<bson::document::view>& sort() const;
+    const stdx::optional<bson::document::view>& sort() const;
 
     ///
     /// Sets the upsert flag on the operation. When @c true, the operation creates a new document if
@@ -135,14 +135,14 @@ class LIBMONGOCXX_API find_one_and_replace {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     ///
-    const optional<bool>& upsert() const;
+    const stdx::optional<bool>& upsert() const;
 
    private:
-    optional<std::int64_t> _max_time_ms;
-    optional<bson::document::view> _projection;
-    optional<enum return_document> _return_document;
-    optional<bson::document::view> _ordering;
-    optional<bool> _upsert;
+    stdx::optional<std::int64_t> _max_time_ms;
+    stdx::optional<bson::document::view> _projection;
+    stdx::optional<enum return_document> _return_document;
+    stdx::optional<bson::document::view> _ordering;
+    stdx::optional<bool> _upsert;
 
 };
 

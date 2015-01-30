@@ -50,7 +50,7 @@ class LIBMONGOCXX_API update {
     ///
     /// @return The optional value of the upsert option.
     ///
-    const optional<bool>& upsert() const;
+    const stdx::optional<bool>& upsert() const;
 
     ///
     /// Sets the write_concern for this operation.
@@ -70,11 +70,11 @@ class LIBMONGOCXX_API update {
     ///
     /// @see http://docs.mongodb.org/manual/core/write-concern/
     ///
-    const optional<base::write_concern>& write_concern() const;
+    const stdx::optional<base::write_concern>& write_concern() const;
 
    private:
-    optional<bool> _upsert;
-    optional<base::write_concern> _write_concern;
+    stdx::optional<bool> _upsert;
+    stdx::optional<base::write_concern> _write_concern;
 
 };
 

@@ -27,7 +27,7 @@ update_many& update_many::upsert(bool upsert) {
     return *this;
 }
 
-const optional<bool>& update_many::upsert() const {
+const stdx::optional<bool>& update_many::upsert() const {
     return _upsert;
 }
 

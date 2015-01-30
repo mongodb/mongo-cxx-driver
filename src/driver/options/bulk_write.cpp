@@ -27,7 +27,7 @@ void bulk_write::write_concern(base::write_concern wc) {
     _write_concern = std::move(wc);
 }
 
-const optional<bool>& bulk_write::ordered() const {
+const stdx::optional<bool>& bulk_write::ordered() const {
     return _ordered;
 }
 

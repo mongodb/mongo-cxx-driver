@@ -59,7 +59,7 @@ class LIBMONGOCXX_API update {
     ///
     /// @return The value of the _id field for upserted document.
     ///
-    optional <bson::document::element> upserted_id() const;
+    stdx::optional<bson::document::element> upserted_id() const;
 
    private:
     result::bulk_write _result;

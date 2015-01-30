@@ -27,7 +27,7 @@ update_one& update_one::upsert(bool upsert) {
     return *this;
 }
 
-const optional<bool>& update_one::upsert() const {
+const stdx::optional<bool>& update_one::upsert() const {
     return _upsert;
 }
 

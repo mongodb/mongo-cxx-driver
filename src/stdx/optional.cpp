@@ -15,9 +15,10 @@
 #include "stdx/optional.hpp"
 
 namespace mongo {
-namespace driver {
+namespace stdx {
 
 in_place_t in_place;
 nullopt_t nullopt(0);
+
 }
 }

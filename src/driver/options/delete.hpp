@@ -50,10 +50,10 @@ class LIBMONGOCXX_API delete_options {
     /// @see http://docs.mongodb.org/manual/core/write-concern/
     ///
     ///
-    const optional<base::write_concern>& write_concern() const;
+    const stdx::optional<base::write_concern>& write_concern() const;
 
    private:
-    optional<base::write_concern> _write_concern;
+    stdx::optional<base::write_concern> _write_concern;
 
 };
 

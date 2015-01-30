@@ -31,26 +31,26 @@ class LIBMONGOCXX_API ssl {
 
    public:
     void pem_file(std::string pem_file);
-    const optional<std::string>& pem_file() const;
+    const stdx::optional<std::string>& pem_file() const;
 
     void pem_password(std::string pem_password);
-    const optional<std::string>& pem_password() const;
+    const stdx::optional<std::string>& pem_password() const;
 
     void ca_file(std::string ca_file);
-    const optional<std::string>& ca_file() const;
+    const stdx::optional<std::string>& ca_file() const;
 
     void ca_dir(std::string ca_file);
-    const optional<std::string>& ca_dir() const;
+    const stdx::optional<std::string>& ca_dir() const;
 
     void weak_cert_validation(bool weak_cert_validation);
-    const optional<bool>& weak_cert_validation() const;
+    const stdx::optional<bool>& weak_cert_validation() const;
 
    private:
-    optional<std::string> _pem_file;
-    optional<std::string> _pem_password;
-    optional<std::string> _ca_file;
-    optional<std::string> _ca_dir;
-    optional<bool> _weak_cert_validation;
+    stdx::optional<std::string> _pem_file;
+    stdx::optional<std::string> _pem_password;
+    stdx::optional<std::string> _ca_file;
+    stdx::optional<std::string> _ca_dir;
+    stdx::optional<bool> _weak_cert_validation;
 
 };
 

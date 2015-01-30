@@ -69,47 +69,47 @@ void find::sort(bson::document::view ordering) {
     _ordering = ordering;
 }
 
-const optional<bool>& find::allow_partial_results() const {
+const stdx::optional<bool>& find::allow_partial_results() const {
     return _allow_partial_results;
 }
 
-const optional<std::int32_t>& find::batch_size() const {
+const stdx::optional<std::int32_t>& find::batch_size() const {
     return _batch_size;
 }
 
-const optional<std::int32_t>& find::limit() const {
+const stdx::optional<std::int32_t>& find::limit() const {
     return _limit;
 }
 
-const optional<std::int64_t>& find::max_time_ms() const {
+const stdx::optional<std::int64_t>& find::max_time_ms() const {
     return _max_time_ms;
 }
 
-const optional<bson::document::view>& find::modifiers() const {
+const stdx::optional<bson::document::view>& find::modifiers() const {
     return _modifiers;
 }
 
-const optional<bool>& find::no_cursor_timeout() const {
+const stdx::optional<bool>& find::no_cursor_timeout() const {
     return _no_cursor_timeout;
 }
 
-const optional<bool>& find::oplog_replay() const {
+const stdx::optional<bool>& find::oplog_replay() const {
     return _oplog_replay;
 }
 
-const optional<bson::document::view>& find::projection() const {
+const stdx::optional<bson::document::view>& find::projection() const {
     return _projection;
 }
 
-const optional<std::int32_t>& find::skip() const {
+const stdx::optional<std::int32_t>& find::skip() const {
     return _skip;
 }
 
-const optional<bson::document::view>& find::sort() const {
+const stdx::optional<bson::document::view>& find::sort() const {
     return _ordering;
 }
 
-const optional<base::read_preference>& find::read_preference() const {
+const stdx::optional<base::read_preference>& find::read_preference() const {
     return _read_preference;
 }
 

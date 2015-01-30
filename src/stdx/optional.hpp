@@ -23,7 +23,7 @@
 #include <cassert>
 
 namespace mongo {
-namespace driver {
+namespace stdx {
 
 class bad_optional_access : public std::logic_error {
    public:

@@ -22,7 +22,7 @@ void delete_options::write_concern(base::write_concern wc) {
     _write_concern = std::move(wc);
 }
 
-const optional<base::write_concern>& delete_options::write_concern() const {
+const stdx::optional<base::write_concern>& delete_options::write_concern() const {
     return _write_concern;
 }
 

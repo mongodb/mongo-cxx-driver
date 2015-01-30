@@ -74,7 +74,7 @@ class LIBMONGOCXX_API update_many {
     ///
     /// @return The optional value of the upsert option.
     ///
-    const optional<bool>& upsert() const;
+    const stdx::optional<bool>& upsert() const;
 
    private:
     // Required
@@ -82,7 +82,7 @@ class LIBMONGOCXX_API update_many {
     bson::document::view _update;
 
     // Optional
-    optional<bool> _upsert;
+    stdx::optional<bool> _upsert;
 
 };
 

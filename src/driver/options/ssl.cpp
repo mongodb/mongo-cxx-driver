@@ -22,7 +22,7 @@ void ssl::pem_file(std::string pem_file) {
     _pem_file = std::move(pem_file);
 }
 
-const optional<std::string>& ssl::pem_file() const {
+const stdx::optional<std::string>& ssl::pem_file() const {
     return _pem_file;
 }
 
@@ -30,7 +30,7 @@ void ssl::pem_password(std::string pem_password) {
     _pem_password = std::move(pem_password);
 }
 
-const optional<std::string>& ssl::pem_password() const {
+const stdx::optional<std::string>& ssl::pem_password() const {
     return _pem_password;
 }
 
@@ -38,14 +38,14 @@ void ssl::ca_file(std::string ca_file) {
     _ca_file = std::move(ca_file);
 }
 
-const optional<std::string>& ssl::ca_file() const {
+const stdx::optional<std::string>& ssl::ca_file() const {
     return _ca_file;
 }
 
 void ssl::ca_dir(std::string ca_dir) {
     _ca_dir = std::move(ca_dir);
 }
-const optional<std::string>& ssl::ca_dir() const {
+const stdx::optional<std::string>& ssl::ca_dir() const {
     return _ca_dir;
 }
 
@@ -53,7 +53,7 @@ void ssl::weak_cert_validation(bool weak_cert_validation) {
     _weak_cert_validation = weak_cert_validation;
 }
 
-const optional<bool>& ssl::weak_cert_validation() const {
+const stdx::optional<bool>& ssl::weak_cert_validation() const {
     return _weak_cert_validation;
 }
 
