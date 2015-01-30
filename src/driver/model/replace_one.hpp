@@ -56,9 +56,9 @@ class LIBMONGOCXX_API replace_one {
     ///
     /// Sets the upsert option.
     ///
-    /// When upsert is @true, this operation will insert the replacement document as a new document
-    /// if no existing documents match the filter. When upsert is @false, the replacement operation
-    /// does nothing if there are no matching documents. By default, upsert is @false.
+    /// When upsert is @c true, this operation will insert the replacement document as a new document
+    /// if no existing documents match the filter. When upsert is @c false, the replacement operation
+    /// does nothing if there are no matching documents. By default, upsert is @c false.
     ///
     /// @param upsert
     ///   If set to @c true, creates a new document when no document matches the query criteria.

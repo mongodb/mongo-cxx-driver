@@ -57,10 +57,10 @@ class LIBMONGOCXX_API update_many {
     ///
     /// Sets the upsert option.
     ///
-    /// When upsert is @false, the update operation does nothing when no documents match the filter.
+    /// When upsert is @c false, the update operation does nothing when no documents match the filter.
     /// However, by specifying upsert as @c true, this operation either updates matching documents
     /// or inserts a new document using the update specification if no matching document exists.
-    /// By default, upsert is unset by the driver, and the server-side default, @false, is used.
+    /// By default, upsert is unset by the driver, and the server-side default, @c false, is used.
     ///
     /// @param upsert
     ///   If set to @c true, creates a new document when no document matches the query criteria.

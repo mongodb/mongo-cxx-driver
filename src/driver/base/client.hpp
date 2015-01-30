@@ -160,7 +160,7 @@ class LIBMONGOCXX_API client {
 
 };
 
-inline class database client::operator[](const std::string& name) const & {
+inline database client::operator[](const std::string& name) const & {
     return database(name);
 }
 
