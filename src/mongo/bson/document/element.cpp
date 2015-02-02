@@ -15,7 +15,8 @@
 #include <cstdlib>
 #include <cstring>
 
-#include <mongo/bson.h>
+#include <bson.h>
+
 #include <mongo/bson/document/element.hpp>
 #include <mongo/bson/types.hpp>
 #include <mongo/bson/json.hpp>
@@ -27,6 +28,7 @@
     iter.next_off = _off; \
     bson_iter_next(&iter)
 
+namespace mongo {
 namespace bson {
 namespace document {
 
@@ -237,3 +239,4 @@ std::ostream& operator<<(std::ostream& out, const element& element) {
 
 }  // namespace document
 }  // namespace bson
+}  // namespace mongo

@@ -12,22 +12,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
+//#include <mongo/driver/config/private/config.hpp>
 #include <mongo/bson/config/prelude.hpp>
-
-namespace mongo {
-namespace bson {
-namespace builder {
-
-    class concrete;
-
-    struct closed_ctx {
-        closed_ctx(concrete*) {}
-    };
-
-}  // namespace builder
-}  // namespace bson
-}  // namespace mongo
-
-#include <mongo/driver/config/postlude.hpp>

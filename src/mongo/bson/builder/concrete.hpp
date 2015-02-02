@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongo/driver/config/prelude.hpp>
+#include <mongo/bson/config/prelude.hpp>
 
 #include <memory>
 #include <stdexcept>
@@ -23,10 +23,11 @@
 #include <mongo/bson/types.hpp>
 #include <mongo/bson/string_or_literal.hpp>
 
+namespace mongo {
 namespace bson {
 namespace builder {
 
-class LIBMONGOCXX_API concrete {
+class LIBBSONCXX_API concrete {
 
    public:
     class impl;
@@ -94,5 +95,6 @@ class LIBMONGOCXX_API concrete {
 
 }  // namespace builder
 }  // namespace bson
+}  // namespace mongo
 
 #include <mongo/driver/config/postlude.hpp>

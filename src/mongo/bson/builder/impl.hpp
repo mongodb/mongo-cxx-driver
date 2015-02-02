@@ -18,6 +18,7 @@
 #include <mongo/bson/builder/value_ctx.hpp>
 #include <mongo/bson/builder/single_ctx.hpp>
 
+namespace mongo {
 namespace bson {
 namespace builder {
 
@@ -33,5 +34,6 @@ value_ctx<T>::operator single_ctx() {
 
 }  // namespace builder
 }  // namespace bson
+}  // namespace mongo
 
 #include <mongo/driver/config/postlude.hpp>

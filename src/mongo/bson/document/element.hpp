@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongo/driver/config/prelude.hpp>
+#include <mongo/bson/config/prelude.hpp>
 
 #include <iostream>
 #include <cstddef>
@@ -61,7 +61,7 @@ namespace document {
 
 class view;
 
-class LIBMONGOCXX_API element {
+class LIBBSONCXX_API element {
     friend class document::view;
     friend class builder::concrete;
 

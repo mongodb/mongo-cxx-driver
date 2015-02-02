@@ -15,7 +15,7 @@
 #pragma once
 
 #include <mongoc.h>
-#include "mock/mock.hpp"
+#include <mongo/driver/mock/mock.hpp>
 
 namespace mongo {
 namespace driver {

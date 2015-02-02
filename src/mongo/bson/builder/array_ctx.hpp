@@ -20,6 +20,7 @@
 #include <mongo/bson/builder/forward_decls.hpp>
 #include <mongo/bson/util/functor.hpp>
 
+namespace mongo {
 namespace bson {
 namespace builder {
 
@@ -76,5 +77,6 @@ class array_ctx {
 
 }  // namespace builder
 }  // namespace bson
+}  // namespace mongo
 
 #include <mongo/driver/config/postlude.hpp>

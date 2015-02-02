@@ -14,6 +14,7 @@
 
 #include <mongo/bson/builder.hpp>
 
+namespace mongo {
 namespace bson {
 namespace builder {
 namespace helpers {
@@ -26,5 +27,6 @@ close_array_t close_array;
 }  // namespace helpers
 }  // namespace builders
 }  // namespace bson
+}  // namespace mongo
 
 #include <mongo/driver/config/postlude.hpp>

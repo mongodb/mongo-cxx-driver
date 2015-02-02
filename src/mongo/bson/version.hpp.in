@@ -12,22 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
-#include <mongo/bson/config/prelude.hpp>
-
-namespace mongo {
-namespace bson {
-namespace builder {
-
-    class concrete;
-
-    struct closed_ctx {
-        closed_ctx(concrete*) {}
-    };
-
-}  // namespace builder
-}  // namespace bson
-}  // namespace mongo
-
-#include <mongo/driver/config/postlude.hpp>
+#define BSONCXX_VERSION_MAJOR @BSONCXX_VERSION_MAJOR@
+#define BSONCXX_VERSION_MINOR @BSONCXX_VERSION_MINOR@
+#define BSONCXX_VERSION_PATCH @BSONCXX_VERSION_PATCH@
+#define BSONCXX_VERSION_EXTRA @BSONCXX_VERSION_EXTRA@

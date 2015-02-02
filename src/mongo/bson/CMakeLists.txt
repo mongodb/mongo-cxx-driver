@@ -1,4 +1,72 @@
-file (GLOB_RECURSE mongocxx-bson_headers *.hpp)
-file (GLOB_RECURSE mongocxx-bson_sources *.cpp)
+project(BSONCXX)
 
-add_library(mongocxx-bson ${mongocxx-bson_sources})
+set(BSONCXX_VERSION_MAJOR 0)
+set(BSONCXX_VERSION_MINOR 0)
+set(BSONCXX_VERSION_PATCH 1)
+set(BSONCXX_VERSION_EXTRA "")
+set(BSONCXX_VERSION ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.${BSONCXX_VERSION_PATCH})
+
+set(BSONCXX_ABI_MAJOR 0)
+set(BSONCXX_ABI_MINOR 0)
+set(BSONCXX_ABI ${BSONCXX_ABI_MAJOR}.${BSONCXX_ABI_MINOR})
+
+set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
+pkg_check_modules(LIBBSON REQUIRED libbson-${LIBBSON_REQUIRED_ABI_VERSION})
+
+link_directories(${LIBBSON_LIBRARY_DIRS})
+
+include_directories(
+    ${LIBBSON_INCLUDE_DIRS}
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_BINARY_DIR}/src
+)
+
+file(GLOB BSONCXX_HEADERS *.hpp)
+file(GLOB BSONCXX_SOURCES *.cpp)
+
+add_library(bsoncxx SHARED
+    ${BSONCXX_SOURCES}
+    $<TARGET_OBJECTS:bsoncxx-builder>
+    $<TARGET_OBJECTS:bsoncxx-document>
+    $<TARGET_OBJECTS:bsoncxx-stdx>
+    $<TARGET_OBJECTS:bsoncxx-util>
+)
+
+set_target_properties (bsoncxx PROPERTIES
+    OUTPUT_NAME bsoncxx
+    CXX_STANDARD 11
+    VERSION ${BSONCXX_VERSION}
+    SOVERSION ${BSONCXX_ABI}
+)
+
+target_link_libraries(bsoncxx ${LIBBSON_LIBRARIES})
+
+install(TARGETS
+    bsoncxx
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
+
+install (DIRECTORY
+    DESTINATION "include/mongo/bson"
+    FILES_MATCHING
+        PATTERN "*.hpp"
+        PATTERN "*private*" EXCLUDE
+)
+
+configure_file (
+    ${PROJECT_SOURCE_DIR}/version.hpp.in
+    ${PROJECT_BINARY_DIR}/version.hpp
+)
+
+generate_export_header(bsoncxx
+    BASE_NAME LIBBSONCXX
+    EXPORT_MACRO_NAME LIBBSONCXX_API
+    EXPORT_FILE_NAME export.hpp
+    STATIC_DEFINE LIBBSONCXX_STATIC
+)
+
+add_subdirectory(builder)
+add_subdirectory(document)
+add_subdirectory(stdx)
+add_subdirectory(util)

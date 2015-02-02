@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongo/driver/config/prelude.hpp>
+#include <mongo/bson/config/prelude.hpp>
 
 #include <mongo/bson/document/view.hpp>
 #include <mongo/bson/document/value.hpp>
@@ -22,7 +22,7 @@
 namespace bson {
 namespace document {
 
-class LIBMONGOCXX_API view_or_value {
+class LIBBSONCXX_API view_or_value {
 
    public:
     view_or_value(bson::document::view view);

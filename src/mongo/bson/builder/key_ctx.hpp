@@ -19,6 +19,7 @@
 #include <mongo/bson/builder/value_ctx.hpp>
 #include <mongo/bson/util/functor.hpp>
 
+namespace mongo {
 namespace bson {
 namespace builder {
 
@@ -65,5 +66,6 @@ class key_ctx {
 
 }  // namespace builder
 }  // namespace bson
+}  // namespace mongo
 
 #include <mongo/driver/config/postlude.hpp>

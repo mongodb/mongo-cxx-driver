@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongo/driver/config/prelude.hpp>
+#include <mongo/bson/config/prelude.hpp>
 
 #include <iostream>
 #include <cstddef>
@@ -28,7 +28,7 @@
 namespace bson {
 namespace document {
 
-class LIBMONGOCXX_API view {
+class LIBBSONCXX_API view {
 
    public:
     class iterator : public std::iterator<std::forward_iterator_tag, element> {

@@ -16,8 +16,8 @@
 
 #include <cstring>
 
+#include <bson.h>
 #include <mongo/bson/string_or_literal.hpp>
-#include <mongo/bson.h>
 
 namespace bson {
 

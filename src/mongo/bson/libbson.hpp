@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongoc.h>
+#include <bson.h>
 
 #include <mongo/bson/document.hpp>
 

@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/bson.h>
+#include <bson.h>
+
 #include <mongo/bson/builder.hpp>
 #include <mongo/bson/util/itoa.hpp>
 #include <mongo/bson/util/stack.hpp>
@@ -20,6 +21,7 @@
 
 #include <cstring>
 
+namespace mongo {
 namespace bson {
 namespace builder {
 
@@ -396,5 +398,6 @@ void concrete::clear() {
 
 }  // namespace builder
 }  // namespace bson
+}  // namespace mongo
 
 #include <mongo/driver/config/postlude.hpp>

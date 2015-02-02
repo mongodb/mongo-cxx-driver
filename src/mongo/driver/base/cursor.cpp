@@ -15,7 +15,7 @@
 #include <cstdint>
 #include <memory>
 
-#include <mongo/bson.h>
+#include <bson.h>
 
 #include <mongo/driver/base/cursor.hpp>
 #include <mongo/driver/base/private/cursor.hpp>

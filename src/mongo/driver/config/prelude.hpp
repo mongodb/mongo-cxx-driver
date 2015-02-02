@@ -15,4 +15,4 @@
 // TODO: this will be where these files eventually wind up
 //#include "mongo/driver/config/config.hpp"
 //#include "mongo/driver/export.hpp"
-#include "export.hpp"
+#include <mongo/driver/export.hpp>
