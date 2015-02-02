@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/result/delete.hpp"
+#include <mongo/driver/result/delete.hpp>
 
 namespace mongo {
 namespace driver {
@@ -33,4 +33,4 @@ std::int64_t delete_result::deleted_count() const {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

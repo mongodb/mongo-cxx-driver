@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
-#include "bson/document.hpp"
+#include <mongo/bson/document.hpp>
 
 namespace mongo {
 namespace driver {
@@ -55,4 +55,4 @@ class LIBMONGOCXX_API insert_one {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

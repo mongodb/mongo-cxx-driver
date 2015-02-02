@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/options/find_one_and_update.hpp"
+#include <mongo/driver/options/find_one_and_update.hpp>
 
 namespace mongo {
 namespace driver {

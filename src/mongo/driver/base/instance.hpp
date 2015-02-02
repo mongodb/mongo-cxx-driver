@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
 #include <memory>
 
@@ -60,4 +60,4 @@ class LIBMONGOCXX_API instance {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

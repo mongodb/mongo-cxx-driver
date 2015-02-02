@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/options/count.hpp"
-#include "driver/base/private/read_preference.hpp"
+#include <mongo/driver/options/count.hpp>
+#include <mongo/driver/base/private/read_preference.hpp>
 
 namespace mongo {
 namespace driver {
@@ -63,4 +63,4 @@ const stdx::optional<base::read_preference>& count::read_preference() const {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

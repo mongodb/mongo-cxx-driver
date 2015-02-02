@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stdx/optional.hpp"
+#include <mongo/bson/stdx/optional.hpp>
 
 namespace mongo {
 namespace stdx {

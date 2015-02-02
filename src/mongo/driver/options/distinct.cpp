@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/options/distinct.hpp"
-#include "driver/base/private/read_preference.hpp"
+#include <mongo/driver/options/distinct.hpp>
+#include <mongo/driver/base/private/read_preference.hpp>
 
 namespace mongo {
 namespace driver {
@@ -38,4 +38,4 @@ const stdx::optional<base::read_preference>& distinct::read_preference() const {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

@@ -14,10 +14,10 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
-#include "bson/document.hpp"
-#include "stdx/optional.hpp"
+#include <mongo/bson/document.hpp>
+#include <mongo/bson/stdx/optional.hpp>
 
 namespace mongo {
 namespace driver {
@@ -90,4 +90,4 @@ class LIBMONGOCXX_API update_many {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

@@ -14,10 +14,10 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
-#include "bson/document/view.hpp"
-#include "bson/document/value.hpp"
+#include <mongo/bson/document/view.hpp>
+#include <mongo/bson/document/value.hpp>
 
 namespace bson {
 namespace document {
@@ -51,4 +51,4 @@ class LIBMONGOCXX_API view_or_value {
 }  // namespace document
 }  // namespace bson
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

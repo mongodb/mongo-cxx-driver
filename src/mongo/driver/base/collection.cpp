@@ -14,30 +14,30 @@
 
 #include <cstdint>
 
-#include "bson/builder.hpp"
-#include "bson/libbson.hpp"
+#include <mongo/bson/builder.hpp>
+#include <mongo/bson/libbson.hpp>
 
-#include "driver/base/private/client.hpp"
-#include "driver/base/private/collection.hpp"
-#include "driver/base/private/database.hpp"
-#include "driver/base/private/pipeline.hpp"
-#include "driver/base/private/bulk_write.hpp"
-#include "driver/base/private/read_preference.hpp"
-#include "driver/base/private/write_concern.hpp"
-#include "driver/base/write_concern.hpp"
-#include "driver/base/collection.hpp"
-#include "driver/base/client.hpp"
-#include "driver/model/write.hpp"
-#include "driver/private/libmongoc.hpp"
-#include "driver/result/bulk_write.hpp"
-#include "driver/result/delete.hpp"
-#include "driver/result/insert_many.hpp"
-#include "driver/result/insert_one.hpp"
-#include "driver/result/replace_one.hpp"
-#include "driver/result/update.hpp"
-#include "stdx/optional.hpp"
+#include <mongo/driver/base/private/client.hpp>
+#include <mongo/driver/base/private/collection.hpp>
+#include <mongo/driver/base/private/database.hpp>
+#include <mongo/driver/base/private/pipeline.hpp>
+#include <mongo/driver/base/private/bulk_write.hpp>
+#include <mongo/driver/base/private/read_preference.hpp>
+#include <mongo/driver/base/private/write_concern.hpp>
+#include <mongo/driver/base/write_concern.hpp>
+#include <mongo/driver/base/collection.hpp>
+#include <mongo/driver/base/client.hpp>
+#include <mongo/driver/model/write.hpp>
+#include <mongo/driver/private/libmongoc.hpp>
+#include <mongo/driver/result/bulk_write.hpp>
+#include <mongo/driver/result/delete.hpp>
+#include <mongo/driver/result/insert_many.hpp>
+#include <mongo/driver/result/insert_one.hpp>
+#include <mongo/driver/result/replace_one.hpp>
+#include <mongo/driver/result/update.hpp>
+#include <mongo/bson/stdx/optional.hpp>
 
-#include "stdx/make_unique.hpp"
+#include <mongo/bson/stdx/make_unique.hpp>
 
 namespace {
 enum class cursor_flag : uint32_t {

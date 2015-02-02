@@ -15,10 +15,10 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "bson.h"
-#include "bson/document/element.hpp"
-#include "bson/types.hpp"
-#include "bson/json.hpp"
+#include <mongo/bson.h>
+#include <mongo/bson/document/element.hpp>
+#include <mongo/bson/types.hpp>
+#include <mongo/bson/json.hpp>
 
 #define CITER             \
     bson_iter_t iter;     \
@@ -228,7 +228,7 @@ std::ostream& operator<<(std::ostream& out, const element& element) {
         v.visit_key(element.key());          \
         v.visit_value(element.get_##name()); \
         break;
-#include "bson/enums/type.hpp"
+#include <mongo/bson/enums/type.hpp>
 #undef MONGOCXX_ENUM
     }
 

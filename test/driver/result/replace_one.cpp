@@ -15,8 +15,8 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
-#include "bson/builder.hpp"
-#include "driver/result/replace_one.hpp"
+#include <mongo/bson/builder.hpp>
+#include <mongo/driver/result/replace_one.hpp>
 
 using namespace mongo::driver;
 

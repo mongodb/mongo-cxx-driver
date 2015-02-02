@@ -2,7 +2,7 @@
 #include "mongocxx/driver/collection.hpp"
 #include "mongocxx/driver/bulk_write.hpp"
 #include "mongocxx/driver/model/insert_one.hpp"
-#include "bsoncxx/document/builder.hpp"
+#include <mongo/bsoncxx/document/builder.hpp>
 
 using namespace bson;
 using namespace mongo;

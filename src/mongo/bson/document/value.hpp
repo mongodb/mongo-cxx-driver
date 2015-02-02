@@ -14,12 +14,12 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
 #include <cstdlib>
 #include <memory>
 
-#include "bson/document/view.hpp"
+#include <mongo/bson/document/view.hpp>
 
 namespace bson {
 namespace document {
@@ -42,4 +42,4 @@ class LIBMONGOCXX_API value {
 }  // namespace document
 }  // namespace bson
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

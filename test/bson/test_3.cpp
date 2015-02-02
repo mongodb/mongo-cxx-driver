@@ -3,8 +3,8 @@
 #include <cstring>
 #include <vector>
 
-#include "bson/builder.hpp"
-#include "driver/private/libmongoc.hpp"
+#include <mongo/bson/builder.hpp>
+#include <mongo/driver/private/libmongoc.hpp>
 
 using namespace mongo::driver;
 

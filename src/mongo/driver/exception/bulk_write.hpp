@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License./**
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
-#include "driver/exception/write.hpp"
+#include <mongo/driver/exception/write.hpp>
 
 namespace mongo {
 namespace driver {
@@ -26,4 +26,4 @@ class LIBMONGOCXX_API bulk_write : public write {};
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

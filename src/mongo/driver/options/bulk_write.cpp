@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/base/write_concern.hpp"
-#include "driver/options/bulk_write.hpp"
+#include <mongo/driver/base/write_concern.hpp>
+#include <mongo/driver/options/bulk_write.hpp>
 
 namespace mongo {
 namespace driver {
@@ -35,4 +35,4 @@ const stdx::optional<bool>& bulk_write::ordered() const {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

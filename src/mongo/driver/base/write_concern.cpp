@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/base/write_concern.hpp"
+#include <mongo/driver/base/write_concern.hpp>
 
-#include "driver/base/private/write_concern.hpp"
+#include <mongo/driver/base/private/write_concern.hpp>
 
-#include "stdx/make_unique.hpp"
-#include "driver/private/libmongoc.hpp"
+#include <mongo/bson/stdx/make_unique.hpp>
+#include <mongo/driver/private/libmongoc.hpp>
 
 namespace mongo {
 namespace driver {

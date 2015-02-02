@@ -14,12 +14,12 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
 #include <string>
 
-#include "driver/options/ssl.hpp"
-#include "stdx/optional.hpp"
+#include <mongo/driver/options/ssl.hpp>
+#include <mongo/bson/stdx/optional.hpp>
 
 namespace mongo {
 namespace driver {
@@ -58,4 +58,4 @@ class LIBMONGOCXX_API client {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

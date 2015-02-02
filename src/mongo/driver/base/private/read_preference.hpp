@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
-#include "driver/base/read_preference.hpp"
+#include <mongo/driver/base/read_preference.hpp>
 
-#include "driver/private/libmongoc.hpp"
+#include <mongo/driver/private/libmongoc.hpp>
 
 namespace mongo {
 namespace driver {
@@ -43,4 +43,4 @@ class read_preference::impl {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

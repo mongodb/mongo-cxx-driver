@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include "driver/base/uri.hpp"
+#include <mongo/driver/base/uri.hpp>
 
-#include "mongoc.h"
+#include <mongoc.h>
 
 namespace mongo {
 namespace driver {
@@ -34,4 +34,4 @@ class uri::impl {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

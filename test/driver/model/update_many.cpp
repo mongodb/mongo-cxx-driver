@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
-#include "driver/model/update_many.hpp"
+#include <mongo/driver/model/update_many.hpp>
 
 using namespace mongo::driver;
 

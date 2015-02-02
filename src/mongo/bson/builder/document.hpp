@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
-#include "bson/builder/concrete.hpp"
-#include "bson/document.hpp"
-#include "bson/builder/key_ctx.hpp"
+#include <mongo/bson/builder/concrete.hpp>
+#include <mongo/bson/document.hpp>
+#include <mongo/bson/builder/key_ctx.hpp>
 
 namespace bson {
 namespace builder {
@@ -50,4 +50,4 @@ namespace builder {
 }  // namespace builder
 }  // namespace bson
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

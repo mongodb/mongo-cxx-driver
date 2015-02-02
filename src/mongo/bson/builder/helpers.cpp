@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "bson/builder.hpp"
+#include <mongo/bson/builder.hpp>
 
 namespace bson {
 namespace builder {
@@ -27,4 +27,4 @@ close_array_t close_array;
 }  // namespace builders
 }  // namespace bson
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

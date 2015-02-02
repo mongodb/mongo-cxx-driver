@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/options/find_one_and_delete.hpp"
+#include <mongo/driver/options/find_one_and_delete.hpp>
 
 namespace mongo {
 namespace driver {
@@ -38,4 +38,4 @@ const stdx::optional<bson::document::view>& find_one_and_delete::sort() const {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

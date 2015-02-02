@@ -14,10 +14,10 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
-#include "bson/builder.hpp"
-#include "driver/base/pipeline.hpp"
+#include <mongo/bson/builder.hpp>
+#include <mongo/driver/base/pipeline.hpp>
 
 namespace mongo {
 namespace driver {
@@ -43,4 +43,4 @@ class pipeline::impl {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

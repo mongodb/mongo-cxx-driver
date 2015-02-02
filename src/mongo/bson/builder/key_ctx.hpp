@@ -14,10 +14,10 @@
 
 #pragma once
 
-#include "bson/builder/concrete.hpp"
-#include "bson/builder/closed_ctx.hpp"
-#include "bson/builder/value_ctx.hpp"
-#include "bson/util/functor.hpp"
+#include <mongo/bson/builder/concrete.hpp>
+#include <mongo/bson/builder/closed_ctx.hpp>
+#include <mongo/bson/builder/value_ctx.hpp>
+#include <mongo/bson/util/functor.hpp>
 
 namespace bson {
 namespace builder {
@@ -66,4 +66,4 @@ class key_ctx {
 }  // namespace builder
 }  // namespace bson
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

@@ -14,10 +14,10 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
-#include "driver/base/bulk_write.hpp"
-#include "driver/private/libmongoc.hpp"
+#include <mongo/driver/base/bulk_write.hpp>
+#include <mongo/driver/private/libmongoc.hpp>
 
 namespace mongo {
 namespace driver {
@@ -42,4 +42,4 @@ class bulk_write::impl {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

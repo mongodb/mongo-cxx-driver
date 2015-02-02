@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
 #include <iostream>
 #include <cstddef>
@@ -22,8 +22,8 @@
 #include <iterator>
 #include <type_traits>
 
-#include "bson/string_or_literal.hpp"
-#include "bson/document/element.hpp"
+#include <mongo/bson/string_or_literal.hpp>
+#include <mongo/bson/document/element.hpp>
 
 namespace bson {
 namespace document {
@@ -74,4 +74,4 @@ class LIBMONGOCXX_API view {
 }  // namespace document
 }  // namespace bson
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

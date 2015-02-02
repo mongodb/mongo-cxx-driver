@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/base/read_preference.hpp"
+#include <mongo/driver/base/read_preference.hpp>
 
-#include "bson/libbson.hpp"
-#include "driver/base/private/read_preference.hpp"
+#include <mongo/bson/libbson.hpp>
+#include <mongo/driver/base/private/read_preference.hpp>
 
-#include "stdx/make_unique.hpp"
+#include <mongo/bson/stdx/make_unique.hpp>
 
-#include "driver/private/libmongoc.hpp"
+#include <mongo/driver/private/libmongoc.hpp>
 
 namespace mongo {
 namespace driver {

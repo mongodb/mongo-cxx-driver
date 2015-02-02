@@ -15,7 +15,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "bson/document/view_or_value.hpp"
+#include <mongo/bson/document/view_or_value.hpp>
 
 namespace bson {
 namespace document {

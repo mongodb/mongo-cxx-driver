@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/base/client.hpp"
+#include <mongo/driver/base/client.hpp>
 
-#include "driver/base/private/client.hpp"
-#include "driver/base/private/read_preference.hpp"
-#include "driver/base/private/write_concern.hpp"
-#include "driver/base/private/uri.hpp"
-#include "stdx/make_unique.hpp"
+#include <mongo/driver/base/private/client.hpp>
+#include <mongo/driver/base/private/read_preference.hpp>
+#include <mongo/driver/base/private/write_concern.hpp>
+#include <mongo/driver/base/private/uri.hpp>
+#include <mongo/bson/stdx/make_unique.hpp>
 
 namespace mongo {
 namespace driver {

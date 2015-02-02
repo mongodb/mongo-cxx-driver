@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License./**
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
 #include <cstdint>
 #include <string>
@@ -32,4 +32,4 @@ class write {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

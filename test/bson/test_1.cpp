@@ -2,8 +2,8 @@
 #include <memory>
 #include <cstring>
 
-#include "bson/types.hpp"
-#include "bson/builder.hpp"
+#include <mongo/bson/types.hpp>
+#include <mongo/bson/builder.hpp>
 
 int main() {
     bson::builder::document builder;

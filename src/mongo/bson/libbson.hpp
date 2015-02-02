@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include "mongoc.h"
+#include <mongoc.h>
 
-#include "bson/document.hpp"
+#include <mongo/bson/document.hpp>
 
-#include "stdx/optional.hpp"
+#include <mongo/bson/stdx/optional.hpp>
 
 namespace bson {
 namespace libbson {

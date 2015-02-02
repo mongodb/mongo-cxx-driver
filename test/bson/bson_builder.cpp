@@ -1,8 +1,8 @@
 #include "catch.hpp"
 
 #include <cstring>
-#include "bson/builder.hpp"
-#include "bson.h"
+#include <mongo/bson/builder.hpp>
+#include <mongo/bson.h>
 
 void bson_eq_builder(const bson_t* bson, const bson::builder::document& builder) {
     bson::document::view expected(bson_get_data(bson), bson->len);

@@ -15,13 +15,13 @@
 #include <cstdint>
 #include <memory>
 
-#include "bson.h"
+#include <mongo/bson.h>
 
-#include "driver/base/cursor.hpp"
-#include "driver/base/private/cursor.hpp"
-#include "driver/private/libmongoc.hpp"
+#include <mongo/driver/base/cursor.hpp>
+#include <mongo/driver/base/private/cursor.hpp>
+#include <mongo/driver/private/libmongoc.hpp>
 
-#include "stdx/make_unique.hpp"
+#include <mongo/bson/stdx/make_unique.hpp>
 
 namespace mongo {
 namespace driver {

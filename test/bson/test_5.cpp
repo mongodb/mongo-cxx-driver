@@ -4,7 +4,7 @@
 #include <chrono>
 
 #include <bson.h>
-#include "bson/builder.hpp"
+#include <mongo/bson/builder.hpp>
 
 int main(int argc, char** argv) {
     if (argc < 2) {
@@ -29,11 +29,11 @@ int main(int argc, char** argv) {
 
             b.clear();
 
-#include "bson/builder/macros_on.hpp"
+#include <mongo/bson/builder/macros_on.hpp>
             b << "level1"
               << DOC("level2" << DOC("level3" << ARRAY(ARRAY(ARRAY(1 << 2 << 3 << 4 << 5 << "hello"
                                                                      << "world")))));
-#include "bson/builder/macros_off.hpp"
+#include <mongo/bson/builder/macros_off.hpp>
         }
 
         auto after = std::chrono::steady_clock::now();
@@ -96,7 +96,7 @@ int main(int argc, char** argv) {
 
         auto after = std::chrono::steady_clock::now();
 
-        std::cout << "bson: iterations = " << iterations << ", duration = "
+        std::cout << <mongo/bson: iterations = " << iterations << ", duration = >
                   << std::chrono::duration_cast<std::chrono::milliseconds>(after - before).count()
                   << std::endl;
     }
@@ -157,7 +157,7 @@ int main(int argc, char** argv) {
 
         auto after = std::chrono::steady_clock::now();
 
-        std::cout << "bson-simple: iterations = " << iterations << ", duration = "
+        std::cout << <mongo/bson-simple: iterations = " << iterations << ", duration = >
                   << std::chrono::duration_cast<std::chrono::milliseconds>(after - before).count()
                   << std::endl;
     }
@@ -169,11 +169,11 @@ int main(int argc, char** argv) {
 
         bson::builder::document b;
 
-#include "bson/builder/macros_on.hpp"
+#include <mongo/bson/builder/macros_on.hpp>
         b << "level1"
           << DOC("level2" << DOC("level3" << ARRAY(ARRAY(ARRAY(1 << 2 << 3 << 4 << 5 << "hello"
                                                                  << "world")))));
-#include "bson/builder/macros_off.hpp"
+#include <mongo/bson/builder/macros_off.hpp>
 
         for (long i = 0; i < iterations; i++) {
             std::stringstream s;
@@ -195,11 +195,11 @@ int main(int argc, char** argv) {
 
         bson::builder::document b;
 
-#include "bson/builder/macros_on.hpp"
+#include <mongo/bson/builder/macros_on.hpp>
         b << "level1"
           << DOC("level2" << DOC("level3" << ARRAY(ARRAY(ARRAY(1 << 2 << 3 << 4 << 5 << "hello"
                                                                  << "world")))));
-#include "bson/builder/macros_off.hpp"
+#include <mongo/bson/builder/macros_off.hpp>
 
         bson_t bson;
         bson_init_static(&bson, b.view().get_buf(), b.view().get_len());
@@ -211,7 +211,7 @@ int main(int argc, char** argv) {
 
         auto after = std::chrono::steady_clock::now();
 
-        std::cout << "bson-complex dump: iterations = " << iterations << ", duration = "
+        std::cout << <mongo/bson-complex dump: iterations = " << iterations << ", duration = >
                   << std::chrono::duration_cast<std::chrono::milliseconds>(after - before).count()
                   << std::endl;
     }

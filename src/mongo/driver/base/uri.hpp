@@ -14,15 +14,15 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "bson/document.hpp"
-#include "driver/base/read_preference.hpp"
-#include "driver/base/write_concern.hpp"
+#include <mongo/bson/document.hpp>
+#include <mongo/driver/base/read_preference.hpp>
+#include <mongo/driver/base/write_concern.hpp>
 
 namespace mongo {
 namespace driver {
@@ -170,4 +170,4 @@ class uri {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
 namespace bson {
 namespace builder {
@@ -28,4 +28,4 @@ namespace builder {
 }
 }  // namespace bson
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

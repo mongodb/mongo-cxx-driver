@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "bson/util/itoa.hpp"
+#include <mongo/bson/util/itoa.hpp>
 
 namespace bson {
 namespace util {

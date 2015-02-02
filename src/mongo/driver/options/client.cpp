@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/options/client.hpp"
+#include <mongo/driver/options/client.hpp>
 
 namespace mongo {
 namespace driver {
@@ -30,4 +30,4 @@ const stdx::optional<ssl>& client::ssl_opts() const {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

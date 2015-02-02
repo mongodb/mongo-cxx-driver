@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/options/ssl.hpp"
+#include <mongo/driver/options/ssl.hpp>
 
 namespace mongo {
 namespace driver {
@@ -61,4 +61,4 @@ const stdx::optional<bool>& ssl::weak_cert_validation() const {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

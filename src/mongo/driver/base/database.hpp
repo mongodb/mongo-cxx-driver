@@ -14,14 +14,14 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
 #include <memory>
 #include <string>
 
-#include "driver/base/collection.hpp"
-#include "driver/base/write_concern.hpp"
-#include "driver/base/read_preference.hpp"
+#include <mongo/driver/base/collection.hpp>
+#include <mongo/driver/base/write_concern.hpp>
+#include <mongo/driver/base/read_preference.hpp>
 
 namespace mongo {
 namespace driver {
@@ -203,4 +203,4 @@ inline collection database::operator[](const std::string& name) const {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

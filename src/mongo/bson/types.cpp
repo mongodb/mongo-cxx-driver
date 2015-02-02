@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "bson/types.hpp"
-#include "bson/json.hpp"
+#include <mongo/bson/types.hpp>
+#include <mongo/bson/json.hpp>
 
 namespace bson {
 
@@ -23,7 +23,7 @@ std::ostream& operator<<(std::ostream& out, type rhs) {
     case val:                    \
         out << #name;            \
         break;
-#include "bson/enums/type.hpp"
+#include <mongo/bson/enums/type.hpp>
 #undef MONGOCXX_ENUM
         default:
             out << "?";
@@ -38,7 +38,7 @@ std::ostream& operator<<(std::ostream& out, binary_sub_type rhs) {
     case val:                    \
         out << #name;            \
         break;
-#include "bson/enums/binary_sub_type.hpp"
+#include <mongo/bson/enums/binary_sub_type.hpp>
 #undef MONGOCXX_ENUM
         default:
             out << "?";
@@ -55,7 +55,7 @@ namespace types {
         jv.visit_value(rhs);                                           \
         return out;                                                    \
     }
-#include "bson/enums/type.hpp"
+#include <mongo/bson/enums/type.hpp>
 #undef MONGOCXX_ENUM
 
 }  // namespace types

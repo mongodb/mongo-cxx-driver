@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "bson/util/itoa.hpp"
+#include <mongo/bson/util/itoa.hpp>
 
 TEST_CASE("util::itoa is equivalent to to_string(int)", "[bson::util::itoa]") {
     using namespace bson;

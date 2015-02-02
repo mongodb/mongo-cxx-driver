@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
-#include "driver/base/write_concern.hpp"
-#include "driver/model/write.hpp"
-#include "stdx/optional.hpp"
+#include <mongo/driver/base/write_concern.hpp>
+#include <mongo/driver/model/write.hpp>
+#include <mongo/bson/stdx/optional.hpp>
 
 namespace mongo {
 namespace driver {
@@ -115,4 +115,4 @@ class LIBMONGOCXX_API bulk_write {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

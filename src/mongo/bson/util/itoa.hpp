@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
 #include <cstddef>
 #include <cstdint>
@@ -45,4 +45,4 @@ class itoa {
 }  // namespace util
 }  // namespace bson
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

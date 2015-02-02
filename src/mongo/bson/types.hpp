@@ -14,23 +14,23 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
-#include "bson/string_or_literal.hpp"
-#include "bson/document.hpp"
-#include "bson/oid.hpp"
+#include <mongo/bson/string_or_literal.hpp>
+#include <mongo/bson/document.hpp>
+#include <mongo/bson/oid.hpp>
 
 namespace bson {
 
 enum class type : std::uint8_t {
 #define MONGOCXX_ENUM(name, val) k_##name = val,
-#include "bson/enums/type.hpp"
+#include <mongo/bson/enums/type.hpp>
 #undef MONGOCXX_ENUM
 };
 
 enum class binary_sub_type : std::uint8_t {
 #define MONGOCXX_ENUM(name, val) k_##name = val,
-#include "bson/enums/binary_sub_type.hpp"
+#include <mongo/bson/enums/binary_sub_type.hpp>
 #undef MONGOCXX_ENUM
 };
 std::ostream& operator<<(std::ostream& out, type rhs);
@@ -201,10 +201,10 @@ struct b_maxkey {
 };
 
 #define MONGOCXX_ENUM(name, val) std::ostream& operator<<(std::ostream& out, const b_##name& rhs);
-#include "bson/enums/type.hpp"
+#include <mongo/bson/enums/type.hpp>
 #undef MONGOCXX_ENUM
 
 }  // namespace types
 }  // namespace bson
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

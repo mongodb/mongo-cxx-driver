@@ -14,15 +14,15 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
-#include "driver/base/collection.hpp"
-#include "driver/base/database.hpp"
-#include "driver/base/private/database.hpp"
-#include "driver/base/private/read_preference.hpp"
-#include "driver/base/private/write_concern.hpp"
+#include <mongo/driver/base/collection.hpp>
+#include <mongo/driver/base/database.hpp>
+#include <mongo/driver/base/private/database.hpp>
+#include <mongo/driver/base/private/read_preference.hpp>
+#include <mongo/driver/base/private/write_concern.hpp>
 
-#include "mongoc.h"
+#include <mongoc.h>
 
 namespace mongo {
 namespace driver {
@@ -51,4 +51,4 @@ class collection::impl {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

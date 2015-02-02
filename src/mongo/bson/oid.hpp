@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
 #include <iostream>
 #include <ctime>
@@ -60,4 +60,4 @@ class oid {
 
 }  // namespace bson
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

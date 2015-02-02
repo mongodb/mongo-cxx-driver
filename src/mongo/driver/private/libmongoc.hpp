@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "mongoc.h"
+#include <mongoc.h>
 #include "mock/mock.hpp"
 
 namespace mongo {

@@ -14,15 +14,15 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
 #include <memory>
 
-#include "driver/base/database.hpp"
-#include "driver/base/read_preference.hpp"
-#include "driver/base/uri.hpp"
-#include "driver/base/write_concern.hpp"
-#include "driver/options/client.hpp"
+#include <mongo/driver/base/database.hpp>
+#include <mongo/driver/base/read_preference.hpp>
+#include <mongo/driver/base/uri.hpp>
+#include <mongo/driver/base/write_concern.hpp>
+#include <mongo/driver/options/client.hpp>
 
 namespace mongo {
 namespace driver {
@@ -168,4 +168,4 @@ inline database client::operator[](const std::string& name) const & {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

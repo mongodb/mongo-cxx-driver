@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/base/pipeline.hpp"
+#include <mongo/driver/base/pipeline.hpp>
 
-#include "bson/util/itoa.hpp"
-#include "driver/base/private/pipeline.hpp"
+#include <mongo/bson/util/itoa.hpp>
+#include <mongo/driver/base/private/pipeline.hpp>
 
-#include "stdx/make_unique.hpp"
+#include <mongo/bson/stdx/make_unique.hpp>
 
 namespace mongo {
 namespace driver {
@@ -82,4 +82,4 @@ pipeline& pipeline::unwind(std::string field_name) {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "bson/oid.hpp"
+#include <mongo/bson/oid.hpp>
 
 #include <cstring>
 
-#include "bson/string_or_literal.hpp"
-#include "bson.h"
+#include <mongo/bson/string_or_literal.hpp>
+#include <mongo/bson.h>
 
 namespace bson {
 

@@ -14,16 +14,16 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
 #include <iostream>
 #include <iomanip>
 #include <vector>
-#include "bson/types.hpp"
-#include "bson/builder.hpp"
+#include <mongo/bson/types.hpp>
+#include <mongo/bson/builder.hpp>
 
 extern "C" {
-#include "bson/util/b64_ntop.h"
+#include <mongo/bson/util/b64_ntop.h>
 }
 
 namespace bson {
@@ -204,7 +204,7 @@ class json_visitor {
     case val:                        \
         visit_value(x.get_##name()); \
         break;
-#include "bson/enums/type.hpp"
+#include <mongo/bson/enums/type.hpp>
 #undef MONGOCXX_ENUM
             }
         }
@@ -215,4 +215,4 @@ class json_visitor {
 
 }  // namespace bson
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "bson.h"
-#include "bson/builder.hpp"
-#include "bson/util/itoa.hpp"
-#include "bson/util/stack.hpp"
-#include "bson/types.hpp"
+#include <mongo/bson.h>
+#include <mongo/bson/builder.hpp>
+#include <mongo/bson/util/itoa.hpp>
+#include <mongo/bson/util/stack.hpp>
+#include <mongo/bson/types.hpp>
 
 #include <cstring>
 
@@ -397,4 +397,4 @@ void concrete::clear() {
 }  // namespace builder
 }  // namespace bson
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

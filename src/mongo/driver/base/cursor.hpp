@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
 #include <memory>
 
-#include "bson/document.hpp"
+#include <mongo/bson/document.hpp>
 
 namespace mongo {
 namespace driver {
@@ -123,4 +123,4 @@ bool operator!=(const cursor::iterator& lhs, const cursor::iterator& rhs);
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

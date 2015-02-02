@@ -15,10 +15,10 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
-#include "driver/private/libmongoc.hpp"
+#include <mongo/driver/private/libmongoc.hpp>
 
-#include "driver/base/client.hpp"
-#include "driver/base/database.hpp"
+#include <mongo/driver/base/client.hpp>
+#include <mongo/driver/base/database.hpp>
 
 using namespace mongo::driver;
 using namespace mongo::driver::base;

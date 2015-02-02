@@ -1,5 +1,5 @@
-#include "bson/document.hpp"
-#include "bson/builder.hpp"
+#include <mongo/bson/document.hpp>
+#include <mongo/bson/builder.hpp>
 
 using namespace bson;
 using namespace bson::builder;
@@ -41,9 +41,9 @@ int main() {
     std::cout << builder.view() << std::endl;
     builder.clear();
 
-#include "bson/builder/macros_on.hpp"
+#include <mongo/bson/builder/macros_on.hpp>
     builder << "doc_macro" << DOC("baz" << ARRAY(DOC("quz" << ARRAY(1 << 2 << 3 << 4))));
-#include "bson/builder/macros_off.hpp"
+#include <mongo/bson/builder/macros_off.hpp>
 
     std::cout << builder.view() << std::endl;
 

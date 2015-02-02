@@ -14,14 +14,14 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
 #include <memory>
 #include <stdexcept>
 
-#include "bson/document.hpp"
-#include "bson/types.hpp"
-#include "bson/string_or_literal.hpp"
+#include <mongo/bson/document.hpp>
+#include <mongo/bson/types.hpp>
+#include <mongo/bson/string_or_literal.hpp>
 
 namespace bson {
 namespace builder {
@@ -95,4 +95,4 @@ class LIBMONGOCXX_API concrete {
 }  // namespace builder
 }  // namespace bson
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

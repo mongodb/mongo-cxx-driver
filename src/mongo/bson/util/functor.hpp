@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <mongo/driver/config/prelude.hpp>
 
 #include <type_traits>
 
@@ -93,4 +93,4 @@ struct is_functor : functor::is_functor_impl<C, S, std::is_class<C>::value> {};
 }  // util
 }  // bson
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

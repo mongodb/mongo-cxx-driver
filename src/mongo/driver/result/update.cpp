@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/result/update.hpp"
+#include <mongo/driver/result/update.hpp>
 
 namespace mongo {
 namespace driver {
@@ -40,4 +40,4 @@ stdx::optional<bson::document::element> update::upserted_id() const {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

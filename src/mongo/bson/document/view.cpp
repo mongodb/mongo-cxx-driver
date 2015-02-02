@@ -15,10 +15,10 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "bson.h"
-#include "bson/document/view.hpp"
-#include "bson/types.hpp"
-#include "bson/json.hpp"
+#include <mongo/bson.h>
+#include <mongo/bson/document/view.hpp>
+#include <mongo/bson/types.hpp>
+#include <mongo/bson/json.hpp>
 
 namespace bson {
 namespace document {

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/result/replace_one.hpp"
+#include <mongo/driver/result/replace_one.hpp>
 
 namespace mongo {
 namespace driver {
@@ -41,4 +41,4 @@ stdx::optional<bson::document::element> replace_one::upserted_id() const {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

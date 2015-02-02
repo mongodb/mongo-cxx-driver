@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/model/delete_many.hpp"
+#include <mongo/driver/model/delete_many.hpp>
 
 namespace mongo {
 namespace driver {

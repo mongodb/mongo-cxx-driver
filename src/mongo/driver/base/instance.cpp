@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/base/instance.hpp"
+#include <mongo/driver/base/instance.hpp>
 
-#include "stdx/make_unique.hpp"
+#include <mongo/bson/stdx/make_unique.hpp>
 
-#include "mongoc.h"
+#include <mongoc.h>
 
 namespace {
 void log_handler(mongoc_log_level_t, const char *, const char *, void *) {

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/options/find.hpp"
-#include "driver/base/private/read_preference.hpp"
+#include <mongo/driver/options/find.hpp>
+#include <mongo/driver/base/private/read_preference.hpp>
 
 namespace mongo {
 namespace driver {
@@ -117,4 +117,4 @@ const stdx::optional<base::read_preference>& find::read_preference() const {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>

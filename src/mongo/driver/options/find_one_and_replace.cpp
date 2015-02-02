@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "driver/options/find_one_and_replace.hpp"
+#include <mongo/driver/options/find_one_and_replace.hpp>
 
 namespace mongo {
 namespace driver {
@@ -54,4 +54,4 @@ const stdx::optional<bool>& find_one_and_replace::upsert() const {
 }  // namespace driver
 }  // namespace mongo
 
-#include "driver/config/postlude.hpp"
+#include <mongo/driver/config/postlude.hpp>
