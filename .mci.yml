@@ -17,10 +17,8 @@ cxx_driver_variables:
     - name: "compile"
     - name: "unit test"
     - name: "integration test latest"
-    - name: "integration test latest with inMemoryExperiment"
     - name: "integration test latest with WiredTiger"
     - name: "client test latest"
-    - name: "client test latest with inMemoryExperiment"
     - name: "client test latest with WiredTiger"
 
   version_test_list: &version_tests
@@ -220,13 +218,6 @@ functions:
         - key: "mongo_url"
           value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform|}latest.${mongo_url_extension|tgz}
 
-  "use inMemoryExperiment storage" :
-    command: expansions.update
-    params:
-      updates:
-        - key: "orchestration_preset"
-          value: "--mongo-orchestration-preset=in_memory.json"
-
   "use WiredTiger storage" :
     command: expansions.update
     params:
@@ -412,16 +403,6 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
-    - name: "integration test latest with inMemoryExperiment"
-      depends_on:
-        - name: "compile"
-      commands:
-        - func: "set version latest"
-        - func: "use inMemoryExperiment storage"
-        - func: "fetch artifacts"
-        - func: "fetch mongodb"
-        - func: "run integration tests"
-
     - name: "integration test latest with WiredTiger"
       depends_on:
         - name: "compile"
@@ -473,16 +454,6 @@ tasks:
         - name: "compile"
       commands:
         - func: "set version latest"
-        - func: "fetch artifacts"
-        - func: "fetch mongodb"
-        - func: "run client tests"
-
-    - name: "client test latest with inMemoryExperiment"
-      depends_on:
-        - name: "compile"
-      commands:
-        - func: "set version latest"
-        - func: "use inMemoryExperiment storage"
         - func: "fetch artifacts"
         - func: "fetch mongodb"
         - func: "run client tests"
