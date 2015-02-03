@@ -59,15 +59,18 @@ configure_file (
     ${PROJECT_BINARY_DIR}/version.hpp
 )
 
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/version.hpp"
-  DESTINATION "include/mongo/bson"
-)
-
 generate_export_header(bsoncxx
     BASE_NAME LIBBSONCXX
     EXPORT_MACRO_NAME LIBBSONCXX_API
     EXPORT_FILE_NAME export.hpp
     STATIC_DEFINE LIBBSONCXX_STATIC
+)
+
+# install generated files
+install (FILES 
+    "${CMAKE_CURRENT_BINARY_DIR}/version.hpp"
+    "${CMAKE_CURRENT_BINARY_DIR}/export.hpp"
+    DESTINATION "include/mongo/bson"
 )
 
 add_subdirectory(builder)

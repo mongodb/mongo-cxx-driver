@@ -81,10 +81,6 @@ configure_file (
     ${PROJECT_BINARY_DIR}/version.hpp
 )
 
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/version.hpp"
-  DESTINATION "include/mongo/driver"
-)
-
 # TODO: MONGOCXX_SHARED_NO_EXPORT -> LIBMONGOCXX_PRIVATE
 # TODO: LIBMONGOCXX_EXPORTS -> LIBMONGOCXX_BUILDING
 # TODO: Need deprecated defines? or do the same?
@@ -93,6 +89,13 @@ generate_export_header(mongocxx
     EXPORT_MACRO_NAME LIBMONGOCXX_API
     EXPORT_FILE_NAME export.hpp
     STATIC_DEFINE LIBMONGOCXX_STATIC
+)
+
+# install generated files
+install (FILES 
+    "${CMAKE_CURRENT_BINARY_DIR}/version.hpp"
+    "${CMAKE_CURRENT_BINARY_DIR}/export.hpp"
+    DESTINATION "include/mongo/driver"
 )
 
 add_subdirectory(base)
