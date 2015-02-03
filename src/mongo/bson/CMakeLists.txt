@@ -47,8 +47,8 @@ install(TARGETS
     ARCHIVE DESTINATION lib
 )
 
-install (DIRECTORY
-    DESTINATION "include/mongo/bson"
+install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    DESTINATION "include/mongo"
     FILES_MATCHING
         PATTERN "*.hpp"
         PATTERN "*private*" EXCLUDE
@@ -57,6 +57,10 @@ install (DIRECTORY
 configure_file (
     ${PROJECT_SOURCE_DIR}/version.hpp.in
     ${PROJECT_BINARY_DIR}/version.hpp
+)
+
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/version.hpp"
+  DESTINATION "include/mongo/bson"
 )
 
 generate_export_header(bsoncxx
