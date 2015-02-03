@@ -16,6 +16,7 @@
 #include "helpers.hpp"
 
 #include <mongo/bson/builder.hpp>
+#include <mongo/bson/json.hpp>
 #include <mongo/driver/result/delete.hpp>
 
 using namespace mongo;
@@ -29,7 +30,7 @@ TEST_CASE("delete", "[delete][result]") {
     driver::result::delete_result delete_result(std::move(b));
 
     SECTION("returns correct removed count") {
-        std::cout << build.view();
+        std::cout << bson::to_json(build.view());
         REQUIRE(delete_result.deleted_count() == 1);
     }
 }

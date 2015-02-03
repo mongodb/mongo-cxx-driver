@@ -20,7 +20,7 @@
 #include <string>
 #include <memory>
 
-#include <mongo/bson/document.hpp>
+#include <mongo/bson/document/view.hpp>
 
 namespace mongo {
 namespace driver {

@@ -16,9 +16,9 @@
 
 #include <mongo/bson/config/prelude.hpp>
 
-#include <iostream>
 #include <cstddef>
 #include <cstdint>
+#include <iostream>
 #include <iterator>
 #include <type_traits>
 
@@ -71,6 +71,7 @@ namespace document {
         element(const void* iter);
 
         bool operator==(const element& rhs) const;
+        explicit operator bool() const;
 
         bson::type type() const;
 

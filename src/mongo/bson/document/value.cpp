@@ -21,21 +21,23 @@ namespace mongo {
 namespace bson {
 namespace document {
 
-value::value(const std::uint8_t* b, std::size_t l, void (*dtor)(void*))
-    : _buf((void*)b, dtor), _len(l) {
+value::value(std::uint8_t* data, std::size_t length, deleter_type dtor)
+    : _data(static_cast<void*>(data), dtor), _length(length) {
 }
 
-value::value(const document::view& view)
-    : _buf(malloc((std::size_t)view.get_len()), free), _len(view.get_len()) {
-    std::memcpy(_buf.get(), view.get_buf(), view.get_len());
+value::value(document::view view)
+    : _data(operator new(static_cast<std::size_t>(view.length())), operator delete),
+      _length(view.length()) {
+    std::copy(view.data(), view.data() + view.length(), static_cast<uint8_t*>(_data.get()));
 }
 
-document::view value::view() const {
-    return document::view{(uint8_t*)_buf.get(), _len};
+value::value(const value& rhs) : value(rhs.view()) {
 }
 
-value::operator document::view() const {
-    return view();
+value& value::operator=(const value& rhs) {
+    *this = std::move(value{rhs.view()});
+
+    return *this;
 }
 
 }  // namespace document

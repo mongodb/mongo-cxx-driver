@@ -19,9 +19,10 @@
 #include <memory>
 #include <stdexcept>
 
-#include <mongo/bson/document.hpp>
-#include <mongo/bson/types.hpp>
+#include <mongo/bson/document/value.hpp>
+#include <mongo/bson/document/view.hpp>
 #include <mongo/bson/string_or_literal.hpp>
+#include <mongo/bson/types.hpp>
 
 namespace mongo {
 namespace bson {

@@ -16,11 +16,14 @@
 
 #include <mongo/bson/config/prelude.hpp>
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
+#include <sstream>
 #include <vector>
-#include <mongo/bson/types.hpp>
+
 #include <mongo/bson/builder.hpp>
+#include <mongo/bson/document/view.hpp>
+#include <mongo/bson/types.hpp>
 
 extern "C" {
 #include <mongo/bson/util/b64_ntop.h>
@@ -75,7 +78,7 @@ class json_visitor {
 
         out << "{" << std::endl;
         pad(1);
-        out << "\"$type\" : " << value.sub_type << "," << std::endl;
+        out << "\"$type\" : " << to_string(value.sub_type) << "," << std::endl;
         pad(1);
         out << "\"$binary\" : " << b64.get() << "," << std::endl;
         pad();
@@ -201,18 +204,27 @@ class json_visitor {
             first = false;
             visit_key(x.key());
             switch (static_cast<int>(x.type())) {
-#define MONGOCXX_ENUM(name, val)     \
+#define LIBBSONCXX_ENUM(name, val)     \
     case val:                        \
         visit_value(x.get_##name()); \
         break;
 #include <mongo/bson/enums/type.hpp>
-#undef MONGOCXX_ENUM
+#undef LIBBSONCXX_ENUM
             }
         }
         out << std::endl;
         stack.pop_back();
     }
 };
+
+inline std::string to_json(document::view view) {
+    std::stringstream ss;
+
+    json_visitor v(ss, false, 0);
+    v.visit_value(types::b_document{view});
+
+    return ss.str();
+}
 
 }  // namespace bson
 }  // namespace mongo

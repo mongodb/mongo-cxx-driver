@@ -16,12 +16,13 @@
 
 #include <bson.h>
 
-#include <mongo/bson/document.hpp>
+#include <mongo/bson/document/value.hpp>
+#include <mongo/bson/document/view.hpp>
 
 #include <mongo/bson/stdx/optional.hpp>
 
 namespace mongo {
-namespace bson {
+namespace driver {
 namespace libbson {
 
 class scoped_bson_t {
@@ -53,5 +54,5 @@ class scoped_bson_t {
 };
 
 }  // namespace libbson
-}  // namespace bson
+}  // namespace driver
 }  // namespace mongo

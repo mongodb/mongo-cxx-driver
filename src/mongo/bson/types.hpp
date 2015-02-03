@@ -17,25 +17,26 @@
 #include <mongo/bson/config/prelude.hpp>
 
 #include <mongo/bson/string_or_literal.hpp>
-#include <mongo/bson/document.hpp>
+#include <mongo/bson/document/view.hpp>
 #include <mongo/bson/oid.hpp>
 
 namespace mongo {
 namespace bson {
 
 enum class type : std::uint8_t {
-#define MONGOCXX_ENUM(name, val) k_##name = val,
+#define LIBBSONCXX_ENUM(name, val) k_##name = val,
 #include <mongo/bson/enums/type.hpp>
-#undef MONGOCXX_ENUM
+#undef LIBBSONCXX_ENUM
 };
 
 enum class binary_sub_type : std::uint8_t {
-#define MONGOCXX_ENUM(name, val) k_##name = val,
+#define LIBBSONCXX_ENUM(name, val) k_##name = val,
 #include <mongo/bson/enums/binary_sub_type.hpp>
-#undef MONGOCXX_ENUM
+#undef LIBBSONCXX_ENUM
 };
-std::ostream& operator<<(std::ostream& out, type rhs);
-std::ostream& operator<<(std::ostream& out, binary_sub_type rhs);
+
+std::string to_string(type rhs);
+std::string to_string(binary_sub_type rhs);
 
 namespace types {
 
@@ -201,9 +202,9 @@ struct b_maxkey {
     static constexpr auto type_id = type::k_maxkey;
 };
 
-#define MONGOCXX_ENUM(name, val) std::ostream& operator<<(std::ostream& out, const b_##name& rhs);
+#define LIBBSONCXX_ENUM(name, val) std::ostream& operator<<(std::ostream& out, const b_##name& rhs);
 #include <mongo/bson/enums/type.hpp>
-#undef MONGOCXX_ENUM
+#undef LIBBSONCXX_ENUM
 
 }  // namespace types
 }  // namespace bson

@@ -12,8 +12,8 @@ TEST_CASE("update_many", "[update_many][model]") {
     driver::model::update_many um(a, b);
 
     SECTION("stores required arguments") {
-        REQUIRE(um.filter().get_buf() == a.get_buf());
-        REQUIRE(um.update().get_buf() == b.get_buf());
+        REQUIRE(um.filter().data() == a.data());
+        REQUIRE(um.update().data() == b.data());
     }
 
     CHECK_OPTIONAL_ARGUMENT(um, upsert, true)

@@ -68,7 +68,7 @@ class SingleDocumentFun {
     }
     void operator()(mongoc_bulk_operation_t* bulk, const bson_t* document) {
         _called = true;
-        REQUIRE(bson_get_data(document) == _document.get_buf());
+        REQUIRE(bson_get_data(document) == _document.data());
     }
     bool called() const {
         return _called;
@@ -87,7 +87,7 @@ class FilteredDocumentFun : public SingleDocumentFun {
     void operator()(mongoc_bulk_operation_t* bulk, const bson_t* filter, const bson_t* document,
                     bool upsert) {
         SingleDocumentFun::operator()(bulk, document);
-        REQUIRE(bson_get_data(filter) == _filter.get_buf());
+        REQUIRE(bson_get_data(filter) == _filter.data());
         REQUIRE(upsert == _expected_upsert);
     }
     void upsert(bool upsert) {

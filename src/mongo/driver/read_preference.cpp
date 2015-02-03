@@ -14,12 +14,10 @@
 
 #include <mongo/driver/read_preference.hpp>
 
-#include <mongo/bson/libbson.hpp>
-#include <mongo/driver/private/read_preference.hpp>
-
 #include <mongo/bson/stdx/make_unique.hpp>
-
+#include <mongo/driver/private/libbson.hpp>
 #include <mongo/driver/private/libmongoc.hpp>
+#include <mongo/driver/private/read_preference.hpp>
 
 namespace mongo {
 namespace driver {
@@ -58,7 +56,7 @@ void read_preference::mode(read_mode mode) {
 }
 
 void read_preference::tags(bson::document::view tags) {
-    bson::libbson::scoped_bson_t scoped_bson_tags(tags);
+    libbson::scoped_bson_t scoped_bson_tags(tags);
     libmongoc::read_prefs_set_tags(_impl->read_preference_t, scoped_bson_tags.bson());
 }
 

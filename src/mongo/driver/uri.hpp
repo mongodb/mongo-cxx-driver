@@ -20,7 +20,7 @@
 #include <string>
 #include <vector>
 
-#include <mongo/bson/document.hpp>
+#include <mongo/bson/document/view.hpp>
 #include <mongo/driver/read_preference.hpp>
 #include <mongo/driver/write_concern.hpp>
 

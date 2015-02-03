@@ -18,7 +18,7 @@
 
 #include <cstdint>
 
-#include <mongo/bson/document.hpp>
+#include <mongo/bson/document/view.hpp>
 #include <mongo/driver/options/find_one_and_modify.hpp>
 #include <mongo/bson/stdx/optional.hpp>
 

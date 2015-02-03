@@ -17,8 +17,9 @@
 #include <mongo/bson/config/prelude.hpp>
 
 #include <mongo/bson/builder/concrete.hpp>
-#include <mongo/bson/document.hpp>
 #include <mongo/bson/builder/key_ctx.hpp>
+#include <mongo/bson/document/value.hpp>
+#include <mongo/bson/document/view.hpp>
 
 namespace mongo {
 namespace bson {

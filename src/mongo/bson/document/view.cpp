@@ -24,30 +24,40 @@ namespace mongo {
 namespace bson {
 namespace document {
 
-view::iterator::iterator(const void* i) : iter(i), is_end(false) {
-}
-view::iterator::iterator(bool is_end) : is_end(is_end) {
+view::iterator::iterator() {
 }
 
-const element& view::iterator::operator*() const {
-    return iter;
+view::iterator::iterator(const element& element) : _element(element) {
 }
-const element* view::iterator::operator->() const {
-    return &iter;
+
+view::iterator::reference view::iterator::operator*() {
+    return _element;
+}
+
+view::iterator::pointer view::iterator::operator->() {
+    return &_element;
 }
 
 view::iterator& view::iterator::operator++() {
+    if (! _element) {
+        return *this;
+    }
+
     bson_iter_t i;
-    i.raw = iter._raw;
-    i.len = iter._len;
-    i.next_off = iter._off;
+    i.raw = _element._raw;
+    i.len = _element._len;
+    i.next_off = _element._off;
     bson_iter_next(&i);
 
-    is_end = !bson_iter_next(&i);
-
-    iter._raw = i.raw;
-    iter._len = i.len;
-    iter._off = i.off;
+    if (!bson_iter_next(&i)) {
+        _element._raw = nullptr;
+        _element._len = 0;
+        _element._off = 0;
+    } else {
+        _element._raw = i.raw;
+        _element._len = i.len;
+        _element._off = i.off;
+    }
 
     return *this;
 }
@@ -58,70 +68,128 @@ view::iterator view::iterator::operator++(int) {
     return before;
 }
 
-bool view::iterator::operator==(const iterator& rhs) const {
-    if (is_end && rhs.is_end) return true;
-    if (is_end || rhs.is_end) return false;
-    return iter == rhs.iter;
-
-    return false;
+bool operator==(const view::iterator& lhs, const view::iterator& rhs) {
+    return lhs._element == rhs._element;
 }
 
-bool view::iterator::operator!=(const iterator& rhs) const {
-    return !(*this == rhs);
+bool operator!=(const view::iterator& lhs, const view::iterator& rhs) {
+    return !(lhs == rhs);
+}
+
+view::const_iterator::const_iterator() {
+}
+
+view::const_iterator::const_iterator(const element& element) : _element(element) {
+}
+
+view::const_iterator::reference view::const_iterator::operator*() {
+    return _element;
+}
+
+view::const_iterator::pointer view::const_iterator::operator->() {
+    return &_element;
+}
+
+view::const_iterator& view::const_iterator::operator++() {
+    if (! _element) {
+        return *this;
+    }
+
+    bson_iter_t i;
+    i.raw = _element._raw;
+    i.len = _element._len;
+    i.next_off = _element._off;
+    bson_iter_next(&i);
+
+    if (!bson_iter_next(&i)) {
+        _element._raw = nullptr;
+        _element._len = 0;
+        _element._off = 0;
+    } else {
+        _element._raw = i.raw;
+        _element._len = i.len;
+        _element._off = i.off;
+    }
+
+    return *this;
+}
+
+view::const_iterator view::const_iterator::operator++(int) {
+    const_iterator before(*this);
+    operator++();
+    return before;
+}
+
+bool operator==(const view::const_iterator& lhs, const view::const_iterator& rhs) {
+    return lhs._element == rhs._element;
+}
+
+bool operator!=(const view::const_iterator& lhs, const view::const_iterator& rhs) {
+    return !(lhs == rhs);
+}
+
+view::const_iterator view::cbegin() const {
+    bson_t b;
+    bson_iter_t iter;
+
+    bson_init_static(&b, _data, _length);
+    bson_iter_init(&iter, &b);
+    bson_iter_next(&iter);
+
+    return const_iterator(element{&iter});
+}
+
+view::const_iterator view::cend() const {
+    return const_iterator();
 }
 
 view::iterator view::begin() const {
     bson_t b;
     bson_iter_t iter;
 
-    bson_init_static(&b, buf, len);
+    bson_init_static(&b, _data, _length);
     bson_iter_init(&iter, &b);
     bson_iter_next(&iter);
 
-    return iterator(&iter);
-}
-
-bool view::has_key(const string_or_literal& key) const {
-    return !((*this)[key] == bson::document::element{});
+    return iterator(element{&iter});
 }
 
 view::iterator view::end() const {
-    return iterator(true);
+    return iterator();
 }
 
-element view::operator[](const string_or_literal& key) const {
+view::iterator view::find(const string_or_literal& key) const {
     bson_t b;
     bson_iter_t iter;
 
-    bson_init_static(&b, buf, len);
+    bson_init_static(&b, _data, _length);
 
     if (bson_iter_init_find(&iter, &b, key.c_str())) {
-        return element(reinterpret_cast<const void*>(&iter));
+        return iterator{static_cast<void *>(&iter)};
     } else {
-        return element{};
+        return end();
     }
 }
 
-view::view(const std::uint8_t* b, std::size_t l) : buf(b), len(l) {
+element view::operator[](const string_or_literal& key) const {
+    return *(this->find(key));
 }
 
-static uint8_t kDefaultView[5] = {5, 0, 0, 0, 0};
-
-view::view() : buf(kDefaultView), len(5) {
+view::view(const std::uint8_t* data, std::size_t length) : _data(data), _length(length) {
 }
 
-const std::uint8_t* view::get_buf() const {
-    return buf;
-}
-std::size_t view::get_len() const {
-    return len;
+namespace {
+uint8_t k_default_view[5] = {5, 0, 0, 0, 0};
 }
 
-std::ostream& operator<<(std::ostream& out, const bson::document::view& view) {
-    json_visitor v(out, false, 0);
-    v.visit_value(types::b_document{view});
+view::view() : _data(k_default_view), _length(sizeof(k_default_view)) {
+}
 
-    return out;
+const std::uint8_t* view::data() const {
+    return _data;
+}
+std::size_t view::length() const {
+    return _length;
 }
 
 }  // namespace document

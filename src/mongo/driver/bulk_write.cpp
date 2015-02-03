@@ -14,16 +14,16 @@
 
 #include <mongo/driver/bulk_write.hpp>
 
-#include <mongo/bson/libbson.hpp>
-#include <mongo/driver/private/bulk_write.hpp>
-#include <mongo/driver/private/write_concern.hpp>
-#include <mongo/driver/private/libmongoc.hpp>
 #include <mongo/bson/stdx/make_unique.hpp>
+#include <mongo/driver/private/libbson.hpp>
+#include <mongo/driver/private/bulk_write.hpp>
+#include <mongo/driver/private/libmongoc.hpp>
+#include <mongo/driver/private/write_concern.hpp>
 
 namespace mongo {
 namespace driver {
 
-using namespace bson::libbson;
+using namespace libbson;
 
 bulk_write::bulk_write(bulk_write&&) noexcept = default;
 bulk_write& bulk_write::operator=(bulk_write&&) noexcept = default;

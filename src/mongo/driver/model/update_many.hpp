@@ -16,7 +16,7 @@
 
 #include <mongo/driver/config/prelude.hpp>
 
-#include <mongo/bson/document.hpp>
+#include <mongo/bson/document/view.hpp>
 #include <mongo/bson/stdx/optional.hpp>
 
 namespace mongo {

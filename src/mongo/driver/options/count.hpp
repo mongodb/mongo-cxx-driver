@@ -19,9 +19,9 @@
 #include <cstdint>
 #include <string>
 
-#include <mongo/bson/document.hpp>
-#include <mongo/driver/read_preference.hpp>
+#include <mongo/bson/document/view.hpp>
 #include <mongo/bson/stdx/optional.hpp>
+#include <mongo/driver/read_preference.hpp>
 
 namespace mongo {
 namespace driver {

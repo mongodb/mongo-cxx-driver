@@ -15,7 +15,6 @@
 #include <cstdint>
 
 #include <mongo/bson/builder.hpp>
-#include <mongo/bson/libbson.hpp>
 
 #include <mongo/driver/private/client.hpp>
 #include <mongo/driver/private/collection.hpp>
@@ -28,6 +27,7 @@
 #include <mongo/driver/collection.hpp>
 #include <mongo/driver/client.hpp>
 #include <mongo/driver/model/write.hpp>
+#include <mongo/driver/private/libbson.hpp>
 #include <mongo/driver/private/libmongoc.hpp>
 #include <mongo/driver/result/bulk_write.hpp>
 #include <mongo/driver/result/delete.hpp>
@@ -53,7 +53,7 @@ enum class cursor_flag : uint32_t {
 namespace mongo {
 namespace driver {
 
-using namespace bson::libbson;
+using namespace libbson;
 
 collection::collection(collection&&) noexcept = default;
 collection& collection::operator=(collection&&) noexcept = default;
@@ -127,7 +127,7 @@ stdx::optional<bson::document::value> collection::find_one(bson::document::view 
     if (it == cursor.end()) {
         return stdx::nullopt;
     }
-    return stdx::optional<bson::document::value>(*it);
+    return stdx::optional<bson::document::value>(bson::document::value{*it});
 }
 
 cursor collection::aggregate(const pipeline& pipeline, const options::aggregate& options) {
@@ -172,7 +172,7 @@ stdx::optional<result::insert_one> collection::insert_one(bson::document::view d
     class bulk_write bulk_op(false);
     bson::document::element oid{};
 
-    if (!document.has_key("_id")) {
+    if (!document["_id"]) {
         bson::builder::document new_document;
         new_document << "_id" << bson::oid(bson::oid::init_tag);
         new_document << bson::builder::helpers::concat{document};

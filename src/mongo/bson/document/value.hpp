@@ -26,19 +26,31 @@ namespace bson {
 namespace document {
 
 class LIBBSONCXX_API value {
+   using deleter_type = void(*)(void*);
 
    public:
-    value(const std::uint8_t* b, std::size_t l, void(*)(void*) = std::free);
-    value(const view& view);
+    value(std::uint8_t* data, std::size_t length, deleter_type dtor);
+    explicit value(document::view view);
 
-    document::view view() const;
-    operator document::view() const;
+    value(const value& rhs);
+    value& operator=(const value& rhs);
+
+    inline document::view view() const noexcept;
+    inline operator document::view() const noexcept;
 
    private:
-    std::unique_ptr<void, decltype(&std::free)> _buf;
-    std::size_t _len;
+    std::unique_ptr<void, deleter_type> _data;
+    std::size_t _length;
 
 };
+
+document::view value::view() const noexcept {
+    return document::view{static_cast<uint8_t*>(_data.get()), _length};
+}
+
+value::operator document::view() const noexcept {
+    return view();
+}
 
 }  // namespace document
 }  // namespace bson

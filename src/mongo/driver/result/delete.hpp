@@ -18,7 +18,6 @@
 
 #include <cstdint>
 
-#include <mongo/bson/document.hpp>
 #include <mongo/driver/result/bulk_write.hpp>
 
 namespace mongo {

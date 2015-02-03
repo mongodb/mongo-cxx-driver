@@ -16,14 +16,14 @@
 
 #include <mongo/bson/config/prelude.hpp>
 
-#include <iostream>
 #include <cstddef>
 #include <cstdint>
+#include <iostream>
 #include <iterator>
 #include <type_traits>
 
-#include <mongo/bson/string_or_literal.hpp>
 #include <mongo/bson/document/element.hpp>
+#include <mongo/bson/string_or_literal.hpp>
 
 namespace mongo {
 namespace bson {
@@ -32,44 +32,65 @@ namespace document {
 class LIBBSONCXX_API view {
 
    public:
-    class iterator : public std::iterator<std::forward_iterator_tag, element> {
-       public:
-        iterator(const void* iter);
-        iterator(bool is_end);
+    class iterator;
+    class const_iterator;
 
-        const element& operator*() const;
-        const element* operator->() const;
-
-        iterator& operator++();
-        iterator operator++(int);
-
-        bool operator==(const iterator& rhs) const;
-        bool operator!=(const iterator& rhs) const;
-
-       private:
-        element iter;
-        bool is_end;
-    };
+    const_iterator cbegin() const;
+    const_iterator cend() const;
 
     iterator begin() const;
     iterator end() const;
 
-    bool has_key(const string_or_literal& key) const;
-
+    iterator find(const string_or_literal& key) const;
     element operator[](const string_or_literal& key) const;
 
     view();
-    view(const std::uint8_t* b, std::size_t l);
 
-    const std::uint8_t* get_buf() const;
-    std::size_t get_len() const;
+    view(const std::uint8_t* data, std::size_t length);
 
-    friend std::ostream& operator<<(std::ostream& out, const bson::document::view& doc);
+    const std::uint8_t* data() const;
+    std::size_t length() const;
 
-   protected:
-    const std::uint8_t* buf;
-    std::size_t len;
+   private:
+    const std::uint8_t* _data;
+    std::size_t _length;
+};
 
+class view::iterator : public std::iterator<std::forward_iterator_tag, element> {
+   public:
+    iterator();
+    explicit iterator(const element& element);
+
+    reference operator*();
+    pointer operator->();
+
+    iterator& operator++();
+    iterator operator++(int);
+
+    friend bool operator==(const iterator&, const iterator&);
+    friend bool operator!=(const iterator&, const iterator&);
+
+   private:
+    element _element;
+};
+
+class view::const_iterator : public std::iterator<std::forward_iterator_tag, element, ptrdiff_t,
+                                                  const element*, const element&> {
+   public:
+    const_iterator();
+    explicit const_iterator(const element& element);
+
+    reference operator*();
+    pointer operator->();
+
+    const_iterator& operator++();
+    const_iterator operator++(int);
+
+    friend bool operator==(const const_iterator&, const const_iterator&);
+    friend bool operator!=(const const_iterator&, const const_iterator&);
+
+   private:
+    element _element;
 };
 
 }  // namespace document

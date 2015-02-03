@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/bson/libbson.hpp>
+#include <mongo/driver/private/libbson.hpp>
 
 namespace mongo {
-namespace bson {
+namespace driver {
 namespace libbson {
 
 static void doc_to_bson_t(const bson::document::view& doc, bson_t* bson) {
-    bson_init_static(bson, doc.get_buf(), doc.get_len());
+    bson_init_static(bson, doc.data(), doc.length());
 }
 
 static void optional_doc_to_bson_t(const mongo::stdx::optional<bson::document::view>& doc,
@@ -77,7 +77,7 @@ bson::document::view scoped_bson_t::view() {
 
 bson::document::value scoped_bson_t::steal() {
     if (!_is_initialized) {
-        return bson::document::view();
+        return bson::document::value{bson::document::view()};
     }
 
     std::uint32_t length;
@@ -87,5 +87,5 @@ bson::document::value scoped_bson_t::steal() {
 }
 
 }  // namespace libbson
-}  // namespace bson
+}  // namespace driver
 }  // namespace mongo

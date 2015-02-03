@@ -58,7 +58,7 @@ class concrete::impl {
         uint8_t* buf_ptr = bson_destroy_with_steal(&_root, true, &buf_len);
         bson_init(&_root);
 
-        return bson::document::value{buf_ptr, buf_len};
+        return bson::document::value{buf_ptr, buf_len, bson_free};
     }
 
     bson_t* back() {
@@ -173,7 +173,7 @@ void concrete::value_append(const types::b_utf8& value) {
 void concrete::value_append(const types::b_document& value) {
     const string_or_literal& key = _impl->next_key();
     bson_t bson;
-    bson_init_static(&bson, value.value.get_buf(), value.value.get_len());
+    bson_init_static(&bson, value.value.data(), value.value.length());
 
     bson_append_document(_impl->back(), key.c_str(), key.length(), &bson);
 }
@@ -181,7 +181,7 @@ void concrete::value_append(const types::b_document& value) {
 void concrete::value_append(const types::b_array& value) {
     const string_or_literal& key = _impl->next_key();
     bson_t bson;
-    bson_init_static(&bson, value.value.get_buf(), value.value.get_len());
+    bson_init_static(&bson, value.value.data(), value.value.length());
 
     bson_append_array(_impl->back(), key.c_str(), key.length(), &bson);
 }
@@ -258,7 +258,7 @@ void concrete::value_append(const types::b_codewscope& value) {
     const string_or_literal& key = _impl->next_key();
 
     bson_t bson;
-    bson_init_static(&bson, value.scope.get_buf(), value.scope.get_len());
+    bson_init_static(&bson, value.scope.data(), value.scope.length());
 
     bson_append_code_with_scope(_impl->back(), key.c_str(), key.length(), value.code.c_str(),
                                 &bson);
@@ -333,7 +333,7 @@ void concrete::open_array_append() {
 
 void concrete::concat_append(const bson::document::view& view) {
     bson_t other;
-    bson_init_static(&other, view.get_buf(), view.get_len());
+    bson_init_static(&other, view.data(), view.length());
 
     if (_impl->is_array()) {
         bson_iter_t iter;

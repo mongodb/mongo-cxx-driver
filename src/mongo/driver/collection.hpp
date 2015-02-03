@@ -22,7 +22,7 @@
 #include <string>
 
 #include <mongo/bson/builder.hpp>
-#include <mongo/bson/document.hpp>
+#include <mongo/bson/document/view.hpp>
 #include <mongo/driver/bulk_write.hpp>
 #include <mongo/driver/cursor.hpp>
 #include <mongo/driver/options/aggregate.hpp>
@@ -610,7 +610,7 @@ inline stdx::optional<result::insert_many> collection::insert_many(
     size_t index = 0;
     std::for_each(begin, end, [&](const bson::document::view& current){
         // TODO: put this somewhere else not in header scope (bson::builder)
-        if ( !current.has_key("_id")) {
+        if ( !current["_id"]) {
             bson::builder::document new_document;
             new_document << "_id" << bson::oid(bson::oid::init_tag);
             new_document << bson::builder::helpers::concat{current};

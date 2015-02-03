@@ -32,7 +32,7 @@ namespace mongo {
 namespace bson {
 namespace document {
 
-element::element() : _raw(nullptr) {
+element::element() : _raw(nullptr), _len(0), _off(0) {
 }
 
 element::element(const void* iter_) {
@@ -221,17 +221,21 @@ types::b_array element::get_array() const {
     return types::b_array{document::view{buf, len}};
 }
 
+element::operator bool() const {
+   return _raw != nullptr;
+}
+
 std::ostream& operator<<(std::ostream& out, const element& element) {
     json_visitor v(out, false, 0);
 
     switch ((int)element.type()) {
-#define MONGOCXX_ENUM(name, val)             \
+#define LIBBSONCXX_ENUM(name, val)           \
     case val:                                \
         v.visit_key(element.key());          \
         v.visit_value(element.get_##name()); \
         break;
 #include <mongo/bson/enums/type.hpp>
-#undef MONGOCXX_ENUM
+#undef LIBBSONCXX_ENUM
     }
 
     return out;
