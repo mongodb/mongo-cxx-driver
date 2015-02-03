@@ -18,6 +18,7 @@
 
 #include <type_traits>
 
+namespace mongo {
 namespace bson {
 namespace util {
 namespace functor {
@@ -85,12 +86,14 @@ struct is_functor_impl : is_class_method_with_signature<C, S> {};
 template <typename F, typename S>
 struct is_functor_impl<F, S, false> : is_function_with_signature<F, S> {};
 
-}  // functor
+}  // namespace functor
 
 template <typename C, typename S>
 struct is_functor : functor::is_functor_impl<C, S, std::is_class<C>::value> {};
 
-}  // util
-}  // bson
+}  // namespace util
+}  // namespace bson
+}  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+
+#include <mongo/bson/config/postlude.hpp>

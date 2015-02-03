@@ -14,6 +14,7 @@
 
 #include <mongo/bson/util/itoa.hpp>
 
+namespace mongo {
 namespace bson {
 namespace util {
 
@@ -1078,3 +1079,4 @@ std::size_t itoa::length() const {
 
 }  // namespace util
 }  // namespace bson
+}  // namespace mongo

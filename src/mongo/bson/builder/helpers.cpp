@@ -28,5 +28,3 @@ close_array_t close_array;
 }  // namespace builders
 }  // namespace bson
 }  // namespace mongo
-
-#include <mongo/driver/config/postlude.hpp>

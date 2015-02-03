@@ -20,6 +20,7 @@
 #include <memory>
 #include <list>
 
+namespace mongo {
 namespace bson {
 namespace util {
 
@@ -133,5 +134,6 @@ class stack {
 
 }  // namespace util
 }  // namespace bson
+}  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongo/bson/config/postlude.hpp>

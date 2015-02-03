@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongo/bson/config/prelude.hpp>
+
 #include <mongo/bson/builder/array_ctx.hpp>
 #include <mongo/bson/builder/value_ctx.hpp>
 #include <mongo/bson/builder/single_ctx.hpp>
@@ -36,4 +38,4 @@ value_ctx<T>::operator single_ctx() {
 }  // namespace bson
 }  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongo/bson/config/postlude.hpp>

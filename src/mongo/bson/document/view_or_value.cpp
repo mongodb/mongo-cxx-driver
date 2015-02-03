@@ -17,6 +17,7 @@
 
 #include <mongo/bson/document/view_or_value.hpp>
 
+namespace mongo {
 namespace bson {
 namespace document {
 
@@ -68,3 +69,4 @@ view_or_value::operator document::view() const {
 
 }  // namespace document
 }  // namespace bson
+}  // namespace mongo

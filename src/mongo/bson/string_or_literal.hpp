@@ -18,6 +18,7 @@
 #include <string>
 #include <iostream>
 
+namespace mongo {
 namespace bson {
 
 class string_or_literal {
@@ -54,5 +55,6 @@ class string_or_literal {
 };
 
 }  // namespace bson
+}  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongo/bson/config/postlude.hpp>

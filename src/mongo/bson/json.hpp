@@ -26,6 +26,7 @@ extern "C" {
 #include <mongo/bson/util/b64_ntop.h>
 }
 
+namespace mongo {
 namespace bson {
 
 class json_visitor {
@@ -214,5 +215,6 @@ class json_visitor {
 };
 
 }  // namespace bson
+}  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongo/bson/config/postlude.hpp>

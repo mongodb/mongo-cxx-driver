@@ -19,6 +19,7 @@
 #include <cstddef>
 #include <cstdint>
 
+namespace mongo {
 namespace bson {
 namespace util {
 
@@ -44,5 +45,6 @@ class itoa {
 
 }  // namespace util
 }  // namespace bson
+}  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongo/bson/config/postlude.hpp>

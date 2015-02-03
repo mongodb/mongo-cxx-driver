@@ -19,6 +19,7 @@
 #include <mongo/bson/document/view.hpp>
 #include <mongo/bson/document/value.hpp>
 
+namespace mongo {
 namespace bson {
 namespace document {
 
@@ -50,5 +51,6 @@ class LIBBSONCXX_API view_or_value {
 
 }  // namespace document
 }  // namespace bson
+}  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongo/bson/config/postlude.hpp>

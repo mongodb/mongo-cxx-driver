@@ -19,6 +19,7 @@
 #include <iostream>
 #include <ctime>
 
+namespace mongo {
 namespace bson {
 
 class string_or_literal;
@@ -59,5 +60,6 @@ class oid {
 };
 
 }  // namespace bson
+}  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongo/bson/config/postlude.hpp>

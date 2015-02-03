@@ -20,6 +20,7 @@
 #include <mongo/bson/types.hpp>
 #include <mongo/bson/json.hpp>
 
+namespace mongo {
 namespace bson {
 namespace document {
 
@@ -125,3 +126,4 @@ std::ostream& operator<<(std::ostream& out, const bson::document::view& view) {
 
 }  // namespace document
 }  // namespace bson
+}  // namespace mongo

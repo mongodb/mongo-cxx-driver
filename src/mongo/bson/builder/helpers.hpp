@@ -15,6 +15,7 @@
 #pragma once
 
 #include <mongo/bson/config/prelude.hpp>
+
 #include <mongo/bson/document.hpp>
 
 namespace mongo {
@@ -45,4 +46,4 @@ struct LIBBSONCXX_API concat {
 }  // namespace bson
 }  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongo/bson/config/postlude.hpp>

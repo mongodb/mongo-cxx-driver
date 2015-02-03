@@ -15,6 +15,7 @@
 #include <mongo/bson/types.hpp>
 #include <mongo/bson/json.hpp>
 
+namespace mongo {
 namespace bson {
 
 std::ostream& operator<<(std::ostream& out, type rhs) {
@@ -60,3 +61,4 @@ namespace types {
 
 }  // namespace types
 }  // namespace bson
+}  // namespace mongo

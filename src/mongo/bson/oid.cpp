@@ -19,6 +19,7 @@
 #include <bson.h>
 #include <mongo/bson/string_or_literal.hpp>
 
+namespace mongo {
 namespace bson {
 
 oid::oid() : _is_valid(false) {
@@ -126,3 +127,4 @@ std::ostream& operator<<(std::ostream& out, const oid& rhs) {
 }
 
 }  // namespace bson
+}  // namespace mongo

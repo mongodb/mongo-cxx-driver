@@ -20,6 +20,7 @@
 
 #include <mongo/bson/stdx/optional.hpp>
 
+namespace mongo {
 namespace bson {
 namespace libbson {
 
@@ -53,3 +54,4 @@ class scoped_bson_t {
 
 }  // namespace libbson
 }  // namespace bson
+}  // namespace mongo

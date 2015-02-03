@@ -14,6 +14,7 @@
 
 #include <mongo/bson/libbson.hpp>
 
+namespace mongo {
 namespace bson {
 namespace libbson {
 
@@ -87,3 +88,4 @@ bson::document::value scoped_bson_t::steal() {
 
 }  // namespace libbson
 }  // namespace bson
+}  // namespace mongo

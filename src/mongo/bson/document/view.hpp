@@ -25,6 +25,7 @@
 #include <mongo/bson/string_or_literal.hpp>
 #include <mongo/bson/document/element.hpp>
 
+namespace mongo {
 namespace bson {
 namespace document {
 
@@ -73,5 +74,6 @@ class LIBBSONCXX_API view {
 
 }  // namespace document
 }  // namespace bson
+}  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongo/bson/config/postlude.hpp>

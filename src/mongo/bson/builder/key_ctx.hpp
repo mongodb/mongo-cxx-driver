@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongo/bson/config/prelude.hpp>
+
 #include <mongo/bson/builder/concrete.hpp>
 #include <mongo/bson/builder/closed_ctx.hpp>
 #include <mongo/bson/builder/value_ctx.hpp>
@@ -68,4 +70,4 @@ class key_ctx {
 }  // namespace bson
 }  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongo/bson/config/postlude.hpp>

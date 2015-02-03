@@ -15,6 +15,7 @@
 #include <cstring>
 #include <mongo/bson/string_or_literal.hpp>
 
+namespace mongo {
 namespace bson {
 
 string_or_literal::string_or_literal() : _len(0), _is_owning(false), _literal("") {
@@ -105,3 +106,4 @@ std::ostream& operator<<(std::ostream& out, const string_or_literal& rhs) {
 }
 
 }  // namespace bson
+}  // namespace mongo
