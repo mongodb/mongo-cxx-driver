@@ -18,6 +18,7 @@
 #include <iosfwd>
 #include <string>
 
+#include "mongo/client/export_macros.h"
 #include "mongo/base/string_data.h"
 
 namespace mongo {
@@ -29,7 +30,7 @@ namespace logger {
      * Severities are totally ordered, from most severe to least severe as follows:
      * Severe, Error, Warning, Info, Log, Debug(1), Debug(2), ...
      */
-    class LogSeverity {
+    class MONGO_CLIENT_API LogSeverity {
     public:
         //
         // Static factory methods for getting LogSeverity objects of the various severity levels.

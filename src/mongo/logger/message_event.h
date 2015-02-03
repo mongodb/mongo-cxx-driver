@@ -29,7 +29,7 @@ namespace logger {
      *
      * Used and owned by one thread.  This is the message type used by MessageLogDomain.
      */
-    class MessageEventEphemeral {
+    class MONGO_CLIENT_API MessageEventEphemeral {
     public:
         MessageEventEphemeral(
                 Date_t date,
