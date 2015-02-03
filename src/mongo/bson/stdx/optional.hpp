@@ -22,6 +22,9 @@
 #include <new>
 #include <cassert>
 
+// TODO: I realize these are not in mongo::bson::stdx yet but I think their placement here
+// is a mistake so I'm going to wait it out.
+//
 namespace mongo {
 namespace stdx {
 

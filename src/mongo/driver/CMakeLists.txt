@@ -42,6 +42,27 @@ set_target_properties (mongocxx PROPERTIES
 
 target_link_libraries(mongocxx bsoncxx ${LIBMONGOC_LIBRARIES})
 
+if(BUILD_UNIT_TESTS)
+    add_library(mongocxx-mocked SHARED
+        ${MONGOCXX_SOURCES}
+        $<TARGET_OBJECTS:mongocxx-driver-base-mocked>
+        $<TARGET_OBJECTS:mongocxx-driver-model>
+        $<TARGET_OBJECTS:mongocxx-driver-options>
+        $<TARGET_OBJECTS:mongocxx-driver-private-mocked>
+        $<TARGET_OBJECTS:mongocxx-driver-result>
+    )
+
+    set_target_properties (mongocxx-mocked PROPERTIES
+        OUTPUT_NAME mongocxx-mocked
+        CXX_STANDARD 11
+        VERSION ${MONGOCXX_VERSION}
+        SOVERSION ${MONGOCXX_ABI}
+        COMPILE_FLAGS "-DMONGOCXX_TESTING"
+    )
+
+    target_link_libraries(mongocxx-mocked bsoncxx ${LIBMONGOC_LIBRARIES})
+endif()
+
 install(TARGETS
     mongocxx
     LIBRARY DESTINATION lib

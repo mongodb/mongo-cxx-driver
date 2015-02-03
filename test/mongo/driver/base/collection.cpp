@@ -6,6 +6,7 @@
 #include <mongo/driver/base/client.hpp>
 #include <mongo/driver/base/pipeline.hpp>
 
+using namespace mongo;
 using namespace mongo::driver;
 using namespace mongo::driver::base;
 

@@ -16,21 +16,21 @@
 #include "helpers.hpp"
 
 #include <mongo/bson/builder.hpp>
-#include <mongo/driver/result/replace_one.hpp>
+#include <mongo/driver/result/update.hpp>
 
-using namespace mongo::driver;
+using namespace mongo;
 
-TEST_CASE("replace_one", "[replace_one][result]") {
+TEST_CASE("update", "[update][result]") {
     bson::builder::document build;
     build << "_id" << bson::oid{bson::oid::init_tag} << "nMatched" << bson::types::b_int64{2}
           << "nModified" << bson::types::b_int64{1};
 
-    result::bulk_write b(bson::document::value(build.view()));
+    driver::result::bulk_write b(bson::document::value(build.view()));
 
-    result::replace_one replace_one(std::move(b));
+    driver::result::update update(std::move(b));
 
     SECTION("returns correct matched and modified count") {
-        REQUIRE(replace_one.matched_count() == 2);
-        REQUIRE(replace_one.modified_count() == 1);
+        REQUIRE(update.matched_count() == 2);
+        REQUIRE(update.modified_count() == 1);
     }
 }

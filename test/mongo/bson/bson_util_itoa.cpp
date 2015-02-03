@@ -3,7 +3,7 @@
 #include <mongo/bson/util/itoa.hpp>
 
 TEST_CASE("util::itoa is equivalent to to_string(int)", "[bson::util::itoa]") {
-    using namespace bson;
+    using namespace mongo::bson;
 
     for (int i = 0; i <= 10000; i++) {
         util::itoa val(i);

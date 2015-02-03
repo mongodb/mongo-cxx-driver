@@ -16,21 +16,20 @@
 #include "helpers.hpp"
 
 #include <mongo/bson/builder.hpp>
-#include <mongo/driver/result/insert_one.hpp>
+#include <mongo/driver/result/delete.hpp>
 
-using namespace mongo::driver;
+using namespace mongo;
 
-TEST_CASE("insert_one", "[insert_one][result]") {
+TEST_CASE("delete", "[delete][result]") {
     bson::builder::document build;
-    build << "_id" << bson::oid{bson::oid::init_tag} << "x" << 1;
+    build << "_id" << bson::oid{bson::oid::init_tag} << "nRemoved" << bson::types::b_int64{1};
 
-    bson::document::element g_oid{};
+    driver::result::bulk_write b(bson::document::value(build.view()));
 
-    result::bulk_write b(bson::document::value(build.view()));
+    driver::result::delete_result delete_result(std::move(b));
 
-    result::insert_one insert_one(std::move(b), g_oid);
-
-    SECTION("returns correct response") {
-        REQUIRE(insert_one.inserted_id() == g_oid);
+    SECTION("returns correct removed count") {
+        std::cout << build.view();
+        REQUIRE(delete_result.deleted_count() == 1);
     }
 }

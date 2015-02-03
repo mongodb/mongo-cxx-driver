@@ -3,13 +3,13 @@
 
 #include <mongo/driver/model/update_many.hpp>
 
-using namespace mongo::driver;
+using namespace mongo;
 
 TEST_CASE("update_many", "[update_many][model]") {
     const bson::document::view a((std::uint8_t *)"", 0);
     const bson::document::view b((std::uint8_t *)"", 0);
 
-    model::update_many um(a, b);
+    driver::model::update_many um(a, b);
 
     SECTION("stores required arguments") {
         REQUIRE(um.filter().get_buf() == a.get_buf());

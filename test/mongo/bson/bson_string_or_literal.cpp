@@ -4,7 +4,7 @@
 #include <mongo/bson/string_or_literal.hpp>
 
 TEST_CASE("string_or_literal default construction works", "[bson::string_or_literal]") {
-    using namespace bson;
+    using namespace mongo::bson;
 
     string_or_literal val;
 
@@ -13,7 +13,7 @@ TEST_CASE("string_or_literal default construction works", "[bson::string_or_lite
 }
 
 TEST_CASE("string_or_literal literal construction works", "[bson::string_or_literal]") {
-    using namespace bson;
+    using namespace mongo::bson;
 
     string_or_literal val("foo");
 
@@ -22,7 +22,7 @@ TEST_CASE("string_or_literal literal construction works", "[bson::string_or_lite
 }
 
 TEST_CASE("string_or_literal string construction works", "[bson::string_or_literal]") {
-    using namespace bson;
+    using namespace mongo::bson;
 
     string_or_literal val(std::string("foo"));
 
@@ -30,14 +30,14 @@ TEST_CASE("string_or_literal string construction works", "[bson::string_or_liter
     REQUIRE(std::string(val.c_str()) == std::string("foo"));
 }
 
-void ensure_string_or_literal(const bson::string_or_literal& sol, const char* compare) {
+void ensure_string_or_literal(const mongo::bson::string_or_literal& sol, const char* compare) {
     REQUIRE(sol.length() == std::strlen(compare));
     REQUIRE(std::string(sol.c_str()) == std::string(compare));
 }
 
 TEST_CASE("string_or_literal construction from a literal string_or_literal works",
           "[bson::string_or_literal]") {
-    using namespace bson;
+    using namespace mongo::bson;
 
     string_or_literal val("foo");
 
@@ -72,7 +72,7 @@ TEST_CASE("string_or_literal construction from a literal string_or_literal works
 
 TEST_CASE("string_or_literal construction from a string string_or_literal works",
           "[bson::string_or_literal]") {
-    using namespace bson;
+    using namespace mongo::bson;
 
     string_or_literal val(std::string("foo"));
 

@@ -16,20 +16,21 @@
 #include "helpers.hpp"
 
 #include <mongo/bson/builder.hpp>
-#include <mongo/driver/result/delete.hpp>
+#include <mongo/driver/result/replace_one.hpp>
 
-using namespace mongo::driver;
+using namespace mongo;
 
-TEST_CASE("delete", "[delete][result]") {
+TEST_CASE("replace_one", "[replace_one][result]") {
     bson::builder::document build;
-    build << "_id" << bson::oid{bson::oid::init_tag} << "nRemoved" << bson::types::b_int64{1};
+    build << "_id" << bson::oid{bson::oid::init_tag} << "nMatched" << bson::types::b_int64{2}
+          << "nModified" << bson::types::b_int64{1};
 
-    result::bulk_write b(bson::document::value(build.view()));
+    driver::result::bulk_write b(bson::document::value(build.view()));
 
-    result::delete_result delete_result(std::move(b));
+    driver::result::replace_one replace_one(std::move(b));
 
-    SECTION("returns correct removed count") {
-        std::cout << build.view();
-        REQUIRE(delete_result.deleted_count() == 1);
+    SECTION("returns correct matched and modified count") {
+        REQUIRE(replace_one.matched_count() == 2);
+        REQUIRE(replace_one.modified_count() == 1);
     }
 }

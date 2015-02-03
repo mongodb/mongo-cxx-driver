@@ -1,19 +1,22 @@
 #include "catch.hpp"
 
 #include <cstring>
-#include <mongo/bson/builder.hpp>
-#include <mongo/bson.h>
 
-void bson_eq_builder(const bson_t* bson, const bson::builder::document& builder) {
-    bson::document::view expected(bson_get_data(bson), bson->len);
-    bson::document::view test(builder.view());
+#include <bson.h>
+#include <mongo/bson/builder.hpp>
+
+void bson_eq_builder(const bson_t* bson, const mongo::bson::builder::document& builder) {
+    mongo::bson::document::view expected(bson_get_data(bson), bson->len);
+    mongo::bson::document::view test(builder.view());
     INFO("expected = " << expected);
     INFO("builder = " << test);
     REQUIRE(expected.get_len() == test.get_len());
     REQUIRE(std::memcmp(expected.get_buf(), test.get_buf(), expected.get_len()) == 0);
 }
 
-using namespace bson;
+// TODO: remove the need for mongo namespace to be jammed in here.
+using namespace mongo;
+using namespace mongo::bson;
 
 TEST_CASE("builder appends utf8", "[bson::builder]") {
     bson_t expected;

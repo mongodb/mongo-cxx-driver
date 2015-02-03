@@ -16,6 +16,7 @@
 
 #include <mongo/driver/base/write_concern.hpp>
 
+using namespace mongo;
 using namespace mongo::driver;
 using namespace mongo::driver::base;
 

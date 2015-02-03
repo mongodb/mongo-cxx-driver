@@ -16,21 +16,21 @@
 #include "helpers.hpp"
 
 #include <mongo/bson/builder.hpp>
-#include <mongo/driver/result/update.hpp>
+#include <mongo/driver/result/insert_one.hpp>
 
-using namespace mongo::driver;
+using namespace mongo;
 
-TEST_CASE("update", "[update][result]") {
+TEST_CASE("insert_one", "[insert_one][result]") {
     bson::builder::document build;
-    build << "_id" << bson::oid{bson::oid::init_tag} << "nMatched" << bson::types::b_int64{2}
-          << "nModified" << bson::types::b_int64{1};
+    build << "_id" << bson::oid{bson::oid::init_tag} << "x" << 1;
 
-    result::bulk_write b(bson::document::value(build.view()));
+    bson::document::element g_oid{};
 
-    result::update update(std::move(b));
+    driver::result::bulk_write b(bson::document::value(build.view()));
 
-    SECTION("returns correct matched and modified count") {
-        REQUIRE(update.matched_count() == 2);
-        REQUIRE(update.modified_count() == 1);
+    driver::result::insert_one insert_one(std::move(b), g_oid);
+
+    SECTION("returns correct response") {
+        REQUIRE(insert_one.inserted_id() == g_oid);
     }
 }

@@ -21,8 +21,13 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Werror -fPIC${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Werror -fPIC ${CMAKE_CXX_FLAGS}")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG "-ggdb3 -O0")
 
 add_subdirectory(src)
+
+if(BUILD_UNIT_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+endif()
