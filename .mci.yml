@@ -58,7 +58,7 @@ pre:
       script: |
         rm -rf "mongo-cxx-driver"
         rm -fr "mongo-c-driver"
-        rm -fr "c-driver-install"
+        rm -fr mongod
 
 #######################################
 #               Tasks                 #
@@ -92,7 +92,7 @@ buildvariants:
     #         Linux Buildvariants         #
     #######################################
     - name: ubuntu1404-release
-      display_name: "Ubuntu 14.04 LTS (Trusty Tahr) Release"
+      display_name: "Ubuntu 14.04 Release"
       expansions:
           build_type: "Release"
       run_on:
@@ -101,7 +101,7 @@ buildvariants:
           - name: compile_and_test
 
     - name: ubuntu1404-debug
-      display_name: "Ubuntu 14.04 LTS (Trusty Tahr) Debug"
+      display_name: "Ubuntu 14.04 Debug"
       expansions:
           build_type: "Debug"
       run_on:
