@@ -12,16 +12,34 @@ functions:
         params:
             directory: "mongo-cxx-driver"
 
+    "start_mongod":
+        command: shell.exec
+        params:
+            working_dir: "."
+            script: |
+                wget -O mongodb.tgz https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-latest.tgz
+                tar --extract --file mongodb.tgz --strip-components=2 --wildcards --no-anchored "*/bin/mongod"
+                ./mongod --fork --logpath=/data/log --dbpath=/data/db --pidfilepath=/data/pid
+
     "install_c_driver":
         command: shell.exec
         params:
             working_dir: "."
             script: |
-                git clone https://github.com/mongo/mongo-c-driver.git
+                git clone https://github.com/mongodb/mongo-c-driver.git
                 cd mongo-c-driver
-                ./autogen.sh --prefix="$(pwd)/c-driver-install" --enable-tests=no --enable-examples=no
+                rm -rf /data/c-driver-install
+                ./autogen.sh --prefix="/data/c-driver-install" --enable-tests=no --enable-examples=no
                 make
                 make install
+
+    "stop_mongod":
+        command: shell.exec
+        params:
+            working_dir: "."
+            script:
+               kill -TERM $(cat /data/pid) 
+
 
 #######################################
 #              Pre Task               #
@@ -53,13 +71,16 @@ tasks:
         - command: git.apply_patch
           params:
               directory: "mongo-cxx-driver"
+        - func: "install_c_driver"
+        - func: "start_mongod"
         - command: shell.exec
           params:
               working_dir: "mongo-cxx-driver/build"
               script: |
-                  PKG_CONFIG_PATH="../c-driver-install -DBUILD_UNIT_TESTS=on -DCMAKE_BUILD_TYPE=${build_type} ..
+                  PKG_CONFIG_PATH="/data/c-driver-install/lib/pkgconfig" /opt/cmake-3.1.1-Linux-x86_64/bin/cmake -DBUILD_UNIT_TESTS=on -DCMAKE_BUILD_TYPE=${build_type} ..
                   make
                   make test
+        - func: "stop_mongod"
 
 #######################################
 #           Buildvariants             #
@@ -77,7 +98,7 @@ buildvariants:
       run_on:
           - ubuntu1404-test
       tasks:
-          - compile_and_test
+          - name: compile_and_test
 
     - name: ubuntu1404-debug
       display_name: "Ubuntu 14.04 LTS (Trusty Tahr) Debug"
@@ -86,4 +107,4 @@ buildvariants:
       run_on:
           - ubuntu1404-test
       tasks:
-          - compile_and_test
+          - name: compile_and_test
