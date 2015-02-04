@@ -66,11 +66,21 @@ generate_export_header(bsoncxx
     STATIC_DEFINE LIBBSONCXX_STATIC
 )
 
+configure_file (
+    ${PROJECT_SOURCE_DIR}/libbsoncxx.pc.in
+    ${PROJECT_BINARY_DIR}/libbsoncxx.pc
+)
+
 # install generated files
 install (FILES 
     "${CMAKE_CURRENT_BINARY_DIR}/version.hpp"
     "${CMAKE_CURRENT_BINARY_DIR}/export.hpp"
     DESTINATION "include/mongo/bson"
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx.pc"
+  DESTINATION "${PKG_CONFIG_PATH}"
 )
 
 add_subdirectory(builder)

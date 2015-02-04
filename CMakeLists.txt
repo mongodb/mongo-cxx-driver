@@ -11,6 +11,13 @@ include(InstallRequiredSystemLibraries)
 # Ensure we have Package Config
 find_package(PkgConfig)
 
+# Set PKG_CONFIG_PATH
+if (DEFINED $ENV{PKG_CONFIG_PATH})
+    set(PKG_CONFIG_PATH $ENV{PKG_CONFIG_PATH})
+else()
+    set(PKG_CONFIG_PATH "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
+endif()
+
 # Ensure that RPATH is used on OSX
 set(CMAKE_MACOSX_RPATH 1)
 

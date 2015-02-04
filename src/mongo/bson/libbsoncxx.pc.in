@@ -1,0 +1,12 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: bsoncxx
+Description: The BSON C++ Library
+URL: http://github.com/mongodb/mongo-cxx-driver
+Version: @BSONCXX_VERSION@
+Requires.private: libbson-@LIBBSON_REQUIRED_ABI_VERSION@
+CFlags -I{includedir}/bsoncxx/v@BSONCXX_VERSION_MAJOR@.@BSONCXX_VERSION_MINOR@
+Libs: -L${libdir} -lbsoncxx

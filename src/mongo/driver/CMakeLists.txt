@@ -6,6 +6,8 @@ set(MONGOCXX_VERSION_PATCH 1)
 set(MONGOCXX_VERSION_EXTRA "")
 set(MONGOCXX_VERSION ${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR}.${MONGOCXX_VERSION_PATCH})
 
+set(MONGOCXX_REQUIRED_BSONCXX_VERSION "0.0.0")
+
 set(MONGOCXX_ABI_MAJOR 0)
 set(MONGOCXX_ABI_MINOR 0)
 set(MONGOCXX_ABI ${MONGOCXX_ABI_MAJOR}.${MONGOCXX_ABI_MINOR})
@@ -84,11 +86,16 @@ configure_file (
 # TODO: MONGOCXX_SHARED_NO_EXPORT -> LIBMONGOCXX_PRIVATE
 # TODO: LIBMONGOCXX_EXPORTS -> LIBMONGOCXX_BUILDING
 # TODO: Need deprecated defines? or do the same?
-generate_export_header(mongocxx
+generate_export_header (mongocxx
     BASE_NAME LIBMONGOCXX
     EXPORT_MACRO_NAME LIBMONGOCXX_API
     EXPORT_FILE_NAME export.hpp
     STATIC_DEFINE LIBMONGOCXX_STATIC
+)
+
+configure_file (
+    ${PROJECT_SOURCE_DIR}/libmongocxx.pc.in
+    ${PROJECT_BINARY_DIR}/libmongocxx.pc
 )
 
 # install generated files
@@ -96,6 +103,11 @@ install (FILES
     "${CMAKE_CURRENT_BINARY_DIR}/version.hpp"
     "${CMAKE_CURRENT_BINARY_DIR}/export.hpp"
     DESTINATION "include/mongo/driver"
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/libmongocxx.pc"
+  DESTINATION "${PKG_CONFIG_PATH}"
 )
 
 add_subdirectory(base)
