@@ -13,6 +13,8 @@ include_directories(
 file(GLOB_RECURSE test_driver_headers mongo/driver/*.hpp)
 file(GLOB_RECURSE test_driver_sources mongo/driver/*.cpp)
 
+link_directories(${LIBMONGOC_LIBRARY_DIRS} ${LIBBSON_LIBRARY_DIRS})
+
 add_executable(test_driver 
     ${CMAKE_SOURCE_DIR}/test/main.cpp
     ${test_driver_sources}
