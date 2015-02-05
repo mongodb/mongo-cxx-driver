@@ -26,9 +26,9 @@ TEST_CASE("insert_one", "[insert_one][result]") {
 
     bsoncxx::document::element g_oid{};
 
-    driver::result::bulk_write b(bsoncxx::document::value(build.view()));
+    mongocxx::result::bulk_write b(bsoncxx::document::value(build.view()));
 
-    driver::result::insert_one insert_one(std::move(b), g_oid);
+    mongocxx::result::insert_one insert_one(std::move(b), g_oid);
 
     SECTION("returns correct response") {
         REQUIRE(insert_one.inserted_id() == g_oid);

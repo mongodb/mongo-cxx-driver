@@ -25,7 +25,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace mongo {
+namespace mongocxx {
 namespace mock {
 
 template <typename T>

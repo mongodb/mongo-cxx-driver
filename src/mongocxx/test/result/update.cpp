@@ -25,9 +25,9 @@ TEST_CASE("update", "[update][result]") {
     build << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "nMatched" << bsoncxx::types::b_int64{2}
           << "nModified" << bsoncxx::types::b_int64{1};
 
-    driver::result::bulk_write b(bsoncxx::document::value(build.view()));
+    mongocxx::result::bulk_write b(bsoncxx::document::value(build.view()));
 
-    driver::result::update update(std::move(b));
+    mongocxx::result::update update(std::move(b));
 
     SECTION("returns correct matched and modified count") {
         REQUIRE(update.matched_count() == 2);

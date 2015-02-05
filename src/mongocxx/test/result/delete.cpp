@@ -25,9 +25,9 @@ TEST_CASE("delete", "[delete][result]") {
     bsoncxx::builder::document build;
     build << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "nRemoved" << bsoncxx::types::b_int64{1};
 
-    driver::result::bulk_write b(bsoncxx::document::value(build.view()));
+    mongocxx::result::bulk_write b(bsoncxx::document::value(build.view()));
 
-    driver::result::delete_result delete_result(std::move(b));
+    mongocxx::result::delete_result delete_result(std::move(b));
 
     SECTION("returns correct removed count") {
         std::cout << bsoncxx::to_json(build.view());
