@@ -5,7 +5,7 @@ configure_file (
 
 install (FILES
     ${CMAKE_CURRENT_BINARY_DIR}/config.hpp
-    DESTINATION ${BSONCXX_INSTALL_DIR}/bson/config
+    DESTINATION ${BSONCXX_INSTALL_DIR}/bsoncxx/config
 )
 
 configure_file (

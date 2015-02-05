@@ -5,7 +5,7 @@ configure_file (
 
 install (FILES
     ${CMAKE_CURRENT_BINARY_DIR}/config.hpp
-    DESTINATION ${MONGOCXX_INSTALL_DIR}/driver/config
+    DESTINATION ${MONGOCXX_INSTALL_DIR}/mongocxx/config
 )
 
 configure_file (
