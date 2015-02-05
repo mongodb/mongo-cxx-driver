@@ -25,7 +25,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 const std::string uri::k_default_uri = "mongodb://localhost:27017";
 
 uri::uri(const std::string& uri_string)
-    : _impl(stdx::make_unique<impl>(mongoc_uri_new(uri_string.c_str()))) {
+    : _impl(bsoncxx::stdx::make_unique<impl>(mongoc_uri_new(uri_string.c_str()))) {
 }
 
 uri::uri(uri&&) noexcept = default;

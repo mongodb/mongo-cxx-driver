@@ -125,7 +125,7 @@ class LIBMONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
     ///
     template<typename container_type>
-    inline stdx::optional<result::bulk_write> bulk_write(
+    inline bsoncxx::stdx::optional<result::bulk_write> bulk_write(
         const container_type& writes,
         const options::bulk_write& options = options::bulk_write()
     );
@@ -152,7 +152,7 @@ class LIBMONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
     ///
     template<typename write_model_iterator_type>
-    inline stdx::optional<result::bulk_write> bulk_write(
+    inline bsoncxx::stdx::optional<result::bulk_write> bulk_write(
         write_model_iterator_type begin,
         write_model_iterator_type end,
         const options::bulk_write& options = options::bulk_write()
@@ -169,7 +169,7 @@ class LIBMONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
     ///
-    stdx::optional<result::bulk_write> bulk_write(
+    bsoncxx::stdx::optional<result::bulk_write> bulk_write(
         const class bulk_write& bulk_write
     );
 
@@ -222,7 +222,7 @@ class LIBMONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/delete/
     ///
-    stdx::optional<result::delete_result> delete_many(
+    bsoncxx::stdx::optional<result::delete_result> delete_many(
         bsoncxx::document::view filter,
         const options::delete_options& options = options::delete_options()
     );
@@ -240,7 +240,7 @@ class LIBMONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/delete/
     ///
-    stdx::optional<result::delete_result> delete_one(
+    bsoncxx::stdx::optional<result::delete_result> delete_one(
         bsoncxx::document::view filter,
         const options::delete_options& options = options::delete_options()
     );
@@ -307,7 +307,7 @@ class LIBMONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-operations-introduction/
     ///
-    stdx::optional<bsoncxx::document::value> find_one(
+    bsoncxx::stdx::optional<bsoncxx::document::value> find_one(
         bsoncxx::document::view filter,
         const options::find& options = options::find()
     );
@@ -323,7 +323,7 @@ class LIBMONGOCXX_API collection {
     /// @return The document that was deleted.
     /// @throws write_exception if the operation fails.
     ///
-    stdx::optional<bsoncxx::document::value> find_one_and_delete(
+    bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_delete(
         bsoncxx::document::view filter,
         const options::find_one_and_delete& options = options::find_one_and_delete()
     );
@@ -342,7 +342,7 @@ class LIBMONGOCXX_API collection {
     /// @return The original or replaced document.
     /// @throws write_exception if the operation fails.
     ///
-    stdx::optional<bsoncxx::document::value> find_one_and_replace(
+    bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_replace(
         bsoncxx::document::view filter,
         bsoncxx::document::view replacement,
         const options::find_one_and_replace& options = options::find_one_and_replace()
@@ -362,7 +362,7 @@ class LIBMONGOCXX_API collection {
     /// @return The original or updated document.
     /// @throws write_exception when the operation fails.
     ///
-    stdx::optional<bsoncxx::document::value> find_one_and_update(
+    bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_update(
         bsoncxx::document::view filter,
         bsoncxx::document::view update,
         const options::find_one_and_update& options = options::find_one_and_update()
@@ -380,7 +380,7 @@ class LIBMONGOCXX_API collection {
     /// @return The result of attempting to perform the insert.
     /// @throws write_exception if the operation fails.
     ///
-    stdx::optional<result::insert_one> insert_one(
+    bsoncxx::stdx::optional<result::insert_one> insert_one(
         bsoncxx::document::view document,
         const options::insert& options = options::insert()
     );
@@ -406,7 +406,7 @@ class LIBMONGOCXX_API collection {
     /// @throws write_exception when the operation fails.
     ///
     template<typename container_type>
-    inline stdx::optional<result::insert_many> insert_many(
+    inline bsoncxx::stdx::optional<result::insert_many> insert_many(
         const container_type& container,
         const options::insert& options = options::insert()
     );
@@ -435,7 +435,7 @@ class LIBMONGOCXX_API collection {
     ///
     /// TODO: document DocumentViewIterator concept or static assert
     template<typename document_view_iterator_type>
-    inline stdx::optional<result::insert_many> insert_many(
+    inline bsoncxx::stdx::optional<result::insert_many> insert_many(
         document_view_iterator_type begin,
         document_view_iterator_type end,
         const options::insert& options = options::insert()
@@ -493,7 +493,7 @@ class LIBMONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
-    stdx::optional<result::replace_one> replace_one(
+    bsoncxx::stdx::optional<result::replace_one> replace_one(
         bsoncxx::document::view filter,
         bsoncxx::document::view replacement,
         const options::update& options = options::update()
@@ -514,7 +514,7 @@ class LIBMONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
-    stdx::optional<result::update> update_many(
+    bsoncxx::stdx::optional<result::update> update_many(
         bsoncxx::document::view filter,
         bsoncxx::document::view update,
         const options::update& options = options::update()
@@ -535,7 +535,7 @@ class LIBMONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
-    stdx::optional<result::update> update_one(
+    bsoncxx::stdx::optional<result::update> update_one(
         bsoncxx::document::view filter,
         bsoncxx::document::view update,
         const options::update& options = options::update()
@@ -568,7 +568,7 @@ class LIBMONGOCXX_API collection {
 };
 
 template<typename container_type>
-inline stdx::optional<result::bulk_write> collection::bulk_write(
+inline bsoncxx::stdx::optional<result::bulk_write> collection::bulk_write(
     const container_type& requests,
     const options::bulk_write& options
 ) {
@@ -576,7 +576,7 @@ inline stdx::optional<result::bulk_write> collection::bulk_write(
 }
 
 template<typename write_model_iterator_type>
-inline stdx::optional<result::bulk_write> collection::bulk_write(
+inline bsoncxx::stdx::optional<result::bulk_write> collection::bulk_write(
     write_model_iterator_type begin,
     write_model_iterator_type end,
     const options::bulk_write& options
@@ -591,7 +591,7 @@ inline stdx::optional<result::bulk_write> collection::bulk_write(
 }
 
 template<typename container_type>
-inline stdx::optional<result::insert_many> collection::insert_many(
+inline bsoncxx::stdx::optional<result::insert_many> collection::insert_many(
     const container_type& container,
     const options::insert& options
 ) {
@@ -599,7 +599,7 @@ inline stdx::optional<result::insert_many> collection::insert_many(
 }
 
 template<typename document_view_iterator_type>
-inline stdx::optional<result::insert_many> collection::insert_many(
+inline bsoncxx::stdx::optional<result::insert_many> collection::insert_many(
     document_view_iterator_type begin,
     document_view_iterator_type end,
     const options::insert& options
@@ -629,7 +629,7 @@ inline stdx::optional<result::insert_many> collection::insert_many(
     if (options.write_concern())
         writes.write_concern(*options.write_concern());
     result::bulk_write res(std::move(bulk_write(writes).value()));
-    stdx::optional<result::insert_many> result(result::insert_many(std::move(res), std::move(inserted_ids)));
+    bsoncxx::stdx::optional<result::insert_many> result(result::insert_many(std::move(res), std::move(inserted_ids)));
     return result;
 }
 

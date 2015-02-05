@@ -69,47 +69,47 @@ void find::sort(bsoncxx::document::view ordering) {
     _ordering = ordering;
 }
 
-const stdx::optional<bool>& find::allow_partial_results() const {
+const bsoncxx::stdx::optional<bool>& find::allow_partial_results() const {
     return _allow_partial_results;
 }
 
-const stdx::optional<std::int32_t>& find::batch_size() const {
+const bsoncxx::stdx::optional<std::int32_t>& find::batch_size() const {
     return _batch_size;
 }
 
-const stdx::optional<std::int32_t>& find::limit() const {
+const bsoncxx::stdx::optional<std::int32_t>& find::limit() const {
     return _limit;
 }
 
-const stdx::optional<std::int64_t>& find::max_time_ms() const {
+const bsoncxx::stdx::optional<std::int64_t>& find::max_time_ms() const {
     return _max_time_ms;
 }
 
-const stdx::optional<bsoncxx::document::view>& find::modifiers() const {
+const bsoncxx::stdx::optional<bsoncxx::document::view>& find::modifiers() const {
     return _modifiers;
 }
 
-const stdx::optional<bool>& find::no_cursor_timeout() const {
+const bsoncxx::stdx::optional<bool>& find::no_cursor_timeout() const {
     return _no_cursor_timeout;
 }
 
-const stdx::optional<bool>& find::oplog_replay() const {
+const bsoncxx::stdx::optional<bool>& find::oplog_replay() const {
     return _oplog_replay;
 }
 
-const stdx::optional<bsoncxx::document::view>& find::projection() const {
+const bsoncxx::stdx::optional<bsoncxx::document::view>& find::projection() const {
     return _projection;
 }
 
-const stdx::optional<std::int32_t>& find::skip() const {
+const bsoncxx::stdx::optional<std::int32_t>& find::skip() const {
     return _skip;
 }
 
-const stdx::optional<bsoncxx::document::view>& find::sort() const {
+const bsoncxx::stdx::optional<bsoncxx::document::view>& find::sort() const {
     return _ordering;
 }
 
-const stdx::optional<class read_preference>& find::read_preference() const {
+const bsoncxx::stdx::optional<class read_preference>& find::read_preference() const {
     return _read_preference;
 }
 

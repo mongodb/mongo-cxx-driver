@@ -34,19 +34,19 @@ void find_one_and_update::upsert(bool upsert) {
     _upsert = upsert;
 }
 
-const stdx::optional<bsoncxx::document::view>& find_one_and_update::projection() const {
+const bsoncxx::stdx::optional<bsoncxx::document::view>& find_one_and_update::projection() const {
     return _projection;
 }
 
-const stdx::optional<return_document>& find_one_and_update::return_document() const {
+const bsoncxx::stdx::optional<return_document>& find_one_and_update::return_document() const {
     return _return_document;
 }
 
-const stdx::optional<bsoncxx::document::view>& find_one_and_update::sort() const {
+const bsoncxx::stdx::optional<bsoncxx::document::view>& find_one_and_update::sort() const {
     return _ordering;
 }
 
-const stdx::optional<bool>& find_one_and_update::upsert() const {
+const bsoncxx::stdx::optional<bool>& find_one_and_update::upsert() const {
     return _upsert;
 }
 

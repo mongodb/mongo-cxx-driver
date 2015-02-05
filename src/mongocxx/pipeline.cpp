@@ -25,7 +25,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 using namespace bsoncxx::builder::helpers;
 using namespace bsoncxx::types;
 
-pipeline::pipeline() : _impl(stdx::make_unique<impl>()) {
+pipeline::pipeline() : _impl(bsoncxx::stdx::make_unique<impl>()) {
 }
 
 pipeline::pipeline(pipeline&&) noexcept = default;

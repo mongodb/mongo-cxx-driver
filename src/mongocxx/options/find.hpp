@@ -52,7 +52,7 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
     ///
-    const stdx::optional<bool>& allow_partial_results() const;
+    const bsoncxx::stdx::optional<bool>& allow_partial_results() const;
 
     ///
     /// Sets the number of documents to return per batch.
@@ -71,7 +71,7 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/cursor.batchSize/
     ///
-    const stdx::optional<std::int32_t>& batch_size() const;
+    const bsoncxx::stdx::optional<std::int32_t>& batch_size() const;
 
     ///
     /// Attaches a comment to the query. If $comment also exists in the modifiers document then
@@ -91,7 +91,7 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/comment/
     ///
-    const stdx::optional<std::string>& comment() const;
+    const bsoncxx::stdx::optional<std::string>& comment() const;
 
     ///
     /// Indicates the type of cursor to use for this query.
@@ -110,7 +110,7 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
     ///
-    const stdx::optional<enum cursor_type>& cursor_type() const;
+    const bsoncxx::stdx::optional<enum cursor_type>& cursor_type() const;
 
     ///
     /// Sets maximum number of documents to return.
@@ -125,7 +125,7 @@ class LIBMONGOCXX_API find {
     ///
     /// @return The current limit.
     ///
-    const stdx::optional<std::int32_t>& limit() const;
+    const bsoncxx::stdx::optional<std::int32_t>& limit() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -144,7 +144,7 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    const stdx::optional<std::int64_t>& max_time_ms() const;
+    const bsoncxx::stdx::optional<std::int64_t>& max_time_ms() const;
 
     ///
     /// Sets the meta-operators modifying the output or behavior of the query.
@@ -161,7 +161,7 @@ class LIBMONGOCXX_API find {
     ///
     /// @return The current query modifiers.
     ///
-    const stdx::optional<bsoncxx::document::view>& modifiers() const;
+    const bsoncxx::stdx::optional<bsoncxx::document::view>& modifiers() const;
 
     ///
     /// Sets the cursor flag to prevent cursor from timing out server-side due to a period of
@@ -181,10 +181,10 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
     ///
-    const stdx::optional<bool>& no_cursor_timeout() const;
+    const bsoncxx::stdx::optional<bool>& no_cursor_timeout() const;
 
     void oplog_replay(bool oplog_replay);
-    const stdx::optional<bool>& oplog_replay() const;
+    const bsoncxx::stdx::optional<bool>& oplog_replay() const;
 
     ///
     /// Sets a projection which limits the returned fields for all matching documents.
@@ -203,7 +203,7 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
-    const stdx::optional<bsoncxx::document::view>& projection() const;
+    const bsoncxx::stdx::optional<bsoncxx::document::view>& projection() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -223,7 +223,7 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    const stdx::optional<class read_preference>& read_preference() const;
+    const bsoncxx::stdx::optional<class read_preference>& read_preference() const;
 
     ///
     /// Sets the number of documents to skip before returning results.
@@ -242,7 +242,7 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/cursor.skip/
     ///
-    const stdx::optional<std::int32_t>& skip() const;
+    const bsoncxx::stdx::optional<std::int32_t>& skip() const;
 
     ///
     /// The order in which to return matching documents. If $orderby also exists in the modifiers
@@ -262,22 +262,22 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/cursor.sort/
     ///
-    const stdx::optional<bsoncxx::document::view>& sort() const;
+    const bsoncxx::stdx::optional<bsoncxx::document::view>& sort() const;
 
    private:
-    stdx::optional<bool> _allow_partial_results;
-    stdx::optional<std::int32_t> _batch_size;
-    stdx::optional<std::string> _comment;
-    stdx::optional<enum cursor_type> _cursor_type;
-    stdx::optional<std::int32_t> _limit;
-    stdx::optional<std::int64_t> _max_time_ms;
-    stdx::optional<bsoncxx::document::view> _modifiers;
-    stdx::optional<bool> _no_cursor_timeout;
-    stdx::optional<bool> _oplog_replay;
-    stdx::optional<bsoncxx::document::view> _projection;
-    stdx::optional<class read_preference> _read_preference;
-    stdx::optional<std::int32_t> _skip;
-    stdx::optional<bsoncxx::document::view> _ordering;
+    bsoncxx::stdx::optional<bool> _allow_partial_results;
+    bsoncxx::stdx::optional<std::int32_t> _batch_size;
+    bsoncxx::stdx::optional<std::string> _comment;
+    bsoncxx::stdx::optional<enum cursor_type> _cursor_type;
+    bsoncxx::stdx::optional<std::int32_t> _limit;
+    bsoncxx::stdx::optional<std::int64_t> _max_time_ms;
+    bsoncxx::stdx::optional<bsoncxx::document::view> _modifiers;
+    bsoncxx::stdx::optional<bool> _no_cursor_timeout;
+    bsoncxx::stdx::optional<bool> _oplog_replay;
+    bsoncxx::stdx::optional<bsoncxx::document::view> _projection;
+    bsoncxx::stdx::optional<class read_preference> _read_preference;
+    bsoncxx::stdx::optional<std::int32_t> _skip;
+    bsoncxx::stdx::optional<bsoncxx::document::view> _ordering;
 
 };
 

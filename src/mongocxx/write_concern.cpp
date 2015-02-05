@@ -22,7 +22,7 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-write_concern::write_concern() : _impl{stdx::make_unique<impl>(mongoc_write_concern_new())} {
+write_concern::write_concern() : _impl{bsoncxx::stdx::make_unique<impl>(mongoc_write_concern_new())} {
 }
 
 write_concern::write_concern(std::unique_ptr<impl>&& implementation) {
@@ -33,11 +33,11 @@ write_concern::write_concern(write_concern&&) noexcept = default;
 write_concern& write_concern::operator=(write_concern&&) noexcept = default;
 
 write_concern::write_concern(const write_concern& other)
-    : _impl(stdx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))) {
+    : _impl(bsoncxx::stdx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))) {
 }
 
 write_concern& write_concern::operator=(const write_concern& other) {
-    _impl.reset(stdx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))
+    _impl.reset(bsoncxx::stdx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))
                     .release());
     return *this;
 }

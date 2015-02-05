@@ -164,7 +164,7 @@ class LIBMONGOCXX_API read_preference {
     ///
     /// @return The optionally set current tags.
     ///
-    stdx::optional<bsoncxx::document::view> tags() const;
+    bsoncxx::stdx::optional<bsoncxx::document::view> tags() const;
 
    private:
     friend client;

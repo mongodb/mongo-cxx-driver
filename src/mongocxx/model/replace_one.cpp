@@ -36,7 +36,7 @@ const bsoncxx::document::view& replace_one::replacement() const {
     return _replacement;
 }
 
-const stdx::optional<bool>& replace_one::upsert() const {
+const bsoncxx::stdx::optional<bool>& replace_one::upsert() const {
     return _upsert;
 }
 

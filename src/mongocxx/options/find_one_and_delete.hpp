@@ -50,7 +50,7 @@ class LIBMONGOCXX_API find_one_and_delete {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    const stdx::optional<std::int64_t>& max_time_ms() const;
+    const bsoncxx::stdx::optional<std::int64_t>& max_time_ms() const;
 
     ///
     /// Sets a projection that limits the fields to return.
@@ -69,7 +69,7 @@ class LIBMONGOCXX_API find_one_and_delete {
     ///
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
-    const stdx::optional<bsoncxx::document::view>& projection() const;
+    const bsoncxx::stdx::optional<bsoncxx::document::view>& projection() const;
 
     ///
     /// Sets the order to search for a matching document.
@@ -91,12 +91,12 @@ class LIBMONGOCXX_API find_one_and_delete {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.findAndModify/
     ///
-    const stdx::optional<bsoncxx::document::view>& sort() const;
+    const bsoncxx::stdx::optional<bsoncxx::document::view>& sort() const;
 
    private:
-    stdx::optional<std::int64_t> _max_time_ms;
-    stdx::optional<bsoncxx::document::view> _projection;
-    stdx::optional<bsoncxx::document::view> _ordering;
+    bsoncxx::stdx::optional<std::int64_t> _max_time_ms;
+    bsoncxx::stdx::optional<bsoncxx::document::view> _projection;
+    bsoncxx::stdx::optional<bsoncxx::document::view> _ordering;
 
 };
 

@@ -27,10 +27,10 @@ void distinct::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
 }
 
-const stdx::optional<std::int64_t>& distinct::max_time_ms() const {
+const bsoncxx::stdx::optional<std::int64_t>& distinct::max_time_ms() const {
     return _max_time_ms;
 }
-const stdx::optional<class read_preference>& distinct::read_preference() const {
+const bsoncxx::stdx::optional<class read_preference>& distinct::read_preference() const {
     return _read_preference;
 }
 

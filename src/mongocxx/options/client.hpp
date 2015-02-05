@@ -47,10 +47,10 @@ class LIBMONGOCXX_API client {
     ///
     /// @return The SSL-related options.
     ///
-    const stdx::optional<ssl>& ssl_opts() const;
+    const bsoncxx::stdx::optional<ssl>& ssl_opts() const;
 
    private:
-    stdx::optional<ssl> _ssl_opts;
+    bsoncxx::stdx::optional<ssl> _ssl_opts;
 
 };
 

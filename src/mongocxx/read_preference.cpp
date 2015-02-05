@@ -26,11 +26,11 @@ read_preference::read_preference(read_preference&&) noexcept = default;
 read_preference& read_preference::operator=(read_preference&&) noexcept = default;
 
 read_preference::read_preference(const read_preference& other)
-    : _impl(stdx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t))) {
+    : _impl(bsoncxx::stdx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t))) {
 }
 
 read_preference& read_preference::operator=(const read_preference& other) {
-    _impl.reset(stdx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t))
+    _impl.reset(bsoncxx::stdx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t))
                     .release());
     return *this;
 }
@@ -40,7 +40,7 @@ read_preference::read_preference(std::unique_ptr<impl>&& implementation) {
 }
 
 read_preference::read_preference(read_mode mode)
-    : _impl(stdx::make_unique<impl>(
+    : _impl(bsoncxx::stdx::make_unique<impl>(
           libmongoc::read_prefs_new(static_cast<mongoc_read_mode_t>(mode)))) {
 }
 
@@ -56,7 +56,7 @@ void read_preference::mode(read_mode mode) {
 }
 
 void read_preference::tags(bsoncxx::document::view tags) {
-    libbsoncxx::scoped_bson_t scoped_bson_tags(tags);
+    libbson::scoped_bson_t scoped_bson_tags(tags);
     libmongoc::read_prefs_set_tags(_impl->read_preference_t, scoped_bson_tags.bson());
 }
 
@@ -64,13 +64,13 @@ read_preference::read_mode read_preference::mode() const {
     return static_cast<read_mode>(libmongoc::read_prefs_get_mode(_impl->read_preference_t));
 }
 
-stdx::optional<bsoncxx::document::view> read_preference::tags() const {
+bsoncxx::stdx::optional<bsoncxx::document::view> read_preference::tags() const {
     const bson_t* bson_tags = libmongoc::read_prefs_get_tags(_impl->read_preference_t);
 
     if (bson_count_keys(bson_tags))
         return bsoncxx::document::view(bson_get_data(bson_tags), bson_tags->len);
 
-    return stdx::optional<bsoncxx::document::view>{};
+    return bsoncxx::stdx::optional<bsoncxx::document::view>{};
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

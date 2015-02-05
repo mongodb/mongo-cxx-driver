@@ -31,7 +31,7 @@ database& database::operator=(database&&) noexcept = default;
 database::~database() = default;
 
 database::database(const class client& client, const std::string& name)
-    : _impl(stdx::make_unique<impl>(
+    : _impl(bsoncxx::stdx::make_unique<impl>(
           libmongoc::client_get_database(client._impl->client_t, name.c_str()), client._impl.get(),
           name.c_str())) {
 }
@@ -45,7 +45,7 @@ void database::read_preference(class read_preference rp) {
 }
 
 class read_preference database::read_preference() const {
-    class read_preference rp(stdx::make_unique<read_preference::impl>(
+    class read_preference rp(bsoncxx::stdx::make_unique<read_preference::impl>(
         libmongoc::read_prefs_copy(libmongoc::database_get_read_prefs(_impl->database_t))));
     return rp;
 }
@@ -55,7 +55,7 @@ void database::write_concern(class write_concern wc) {
 }
 
 class write_concern database::write_concern() const {
-    class write_concern wc(stdx::make_unique<write_concern::impl>(
+    class write_concern wc(bsoncxx::stdx::make_unique<write_concern::impl>(
         libmongoc::write_concern_copy(libmongoc::database_get_write_concern(_impl->database_t))));
     return wc;
 }

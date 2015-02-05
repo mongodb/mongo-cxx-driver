@@ -26,11 +26,11 @@ void update::write_concern(class write_concern wc) {
     _write_concern = std::move(wc);
 }
 
-const stdx::optional<bool>& update::upsert() const {
+const bsoncxx::stdx::optional<bool>& update::upsert() const {
     return _upsert;
 }
 
-const stdx::optional<class write_concern>& update::write_concern() const {
+const bsoncxx::stdx::optional<class write_concern>& update::write_concern() const {
     return _write_concern;
 }
 

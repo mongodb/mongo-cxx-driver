@@ -38,7 +38,7 @@ class instance::impl {
     }
 };
 
-instance::instance() : _impl(stdx::make_unique<impl>()) {
+instance::instance() : _impl(bsoncxx::stdx::make_unique<impl>()) {
 }
 
 instance::instance(instance &&) noexcept = default;

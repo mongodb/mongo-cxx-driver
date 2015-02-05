@@ -29,7 +29,7 @@ namespace libbson {
 
 class scoped_bson_t {
    public:
-    scoped_bson_t(const mongo::stdx::optional<bsoncxx::document::view>& doc);
+    scoped_bson_t(const bsoncxx::stdx::optional<bsoncxx::document::view>& doc);
     scoped_bson_t(const bsoncxx::document::view& doc);
     scoped_bson_t();
 
@@ -38,7 +38,7 @@ class scoped_bson_t {
     scoped_bson_t(scoped_bson_t&& rhs) = delete;
     scoped_bson_t& operator=(scoped_bson_t&& rhs) = delete;
 
-    void init_from_static(const mongo::stdx::optional<bsoncxx::document::view>& doc);
+    void init_from_static(const bsoncxx::stdx::optional<bsoncxx::document::view>& doc);
     void init_from_static(const bsoncxx::document::view& doc);
     void init();
     void flag_init();

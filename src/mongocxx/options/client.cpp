@@ -22,7 +22,7 @@ void client::ssl_opts(ssl ssl_opts) {
     _ssl_opts = ssl_opts;
 }
 
-const stdx::optional<ssl>& client::ssl_opts() const {
+const bsoncxx::stdx::optional<ssl>& client::ssl_opts() const {
     return _ssl_opts;
 }
 

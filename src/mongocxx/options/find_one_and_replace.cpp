@@ -34,19 +34,19 @@ void find_one_and_replace::upsert(bool upsert) {
     _upsert = upsert;
 }
 
-const stdx::optional<bsoncxx::document::view>& find_one_and_replace::projection() const {
+const bsoncxx::stdx::optional<bsoncxx::document::view>& find_one_and_replace::projection() const {
     return _projection;
 }
 
-const stdx::optional<enum return_document>& find_one_and_replace::return_document() const {
+const bsoncxx::stdx::optional<enum return_document>& find_one_and_replace::return_document() const {
     return _return_document;
 }
 
-const stdx::optional<bsoncxx::document::view>& find_one_and_replace::sort() const {
+const bsoncxx::stdx::optional<bsoncxx::document::view>& find_one_and_replace::sort() const {
     return _ordering;
 }
 
-const stdx::optional<bool>& find_one_and_replace::upsert() const {
+const bsoncxx::stdx::optional<bool>& find_one_and_replace::upsert() const {
     return _upsert;
 }
 

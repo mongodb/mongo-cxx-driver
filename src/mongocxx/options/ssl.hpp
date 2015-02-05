@@ -31,26 +31,26 @@ class LIBMONGOCXX_API ssl {
 
    public:
     void pem_file(std::string pem_file);
-    const stdx::optional<std::string>& pem_file() const;
+    const bsoncxx::stdx::optional<std::string>& pem_file() const;
 
     void pem_password(std::string pem_password);
-    const stdx::optional<std::string>& pem_password() const;
+    const bsoncxx::stdx::optional<std::string>& pem_password() const;
 
     void ca_file(std::string ca_file);
-    const stdx::optional<std::string>& ca_file() const;
+    const bsoncxx::stdx::optional<std::string>& ca_file() const;
 
     void ca_dir(std::string ca_file);
-    const stdx::optional<std::string>& ca_dir() const;
+    const bsoncxx::stdx::optional<std::string>& ca_dir() const;
 
     void weak_cert_validation(bool weak_cert_validation);
-    const stdx::optional<bool>& weak_cert_validation() const;
+    const bsoncxx::stdx::optional<bool>& weak_cert_validation() const;
 
    private:
-    stdx::optional<std::string> _pem_file;
-    stdx::optional<std::string> _pem_password;
-    stdx::optional<std::string> _ca_file;
-    stdx::optional<std::string> _ca_dir;
-    stdx::optional<bool> _weak_cert_validation;
+    bsoncxx::stdx::optional<std::string> _pem_file;
+    bsoncxx::stdx::optional<std::string> _pem_password;
+    bsoncxx::stdx::optional<std::string> _ca_file;
+    bsoncxx::stdx::optional<std::string> _ca_dir;
+    bsoncxx::stdx::optional<bool> _weak_cert_validation;
 
 };
 

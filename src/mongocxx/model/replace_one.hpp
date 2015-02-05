@@ -72,7 +72,7 @@ class LIBMONGOCXX_API replace_one {
     ///
     /// @return The optional value of the upsert option.
     ///
-    const stdx::optional<bool>& upsert() const;
+    const bsoncxx::stdx::optional<bool>& upsert() const;
 
    private:
     // Required
@@ -80,7 +80,7 @@ class LIBMONGOCXX_API replace_one {
     bsoncxx::document::view _replacement;
 
     // Optional
-    stdx::optional<bool> _upsert;
+    bsoncxx::stdx::optional<bool> _upsert;
 
 };
 

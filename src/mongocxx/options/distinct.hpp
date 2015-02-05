@@ -51,7 +51,7 @@ class LIBMONGOCXX_API distinct {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    const stdx::optional<std::int64_t>& max_time_ms() const;
+    const bsoncxx::stdx::optional<std::int64_t>& max_time_ms() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -70,11 +70,11 @@ class LIBMONGOCXX_API distinct {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    const stdx::optional<class read_preference>& read_preference() const;
+    const bsoncxx::stdx::optional<class read_preference>& read_preference() const;
 
    private:
-    stdx::optional<std::int64_t> _max_time_ms;
-    stdx::optional<class read_preference> _read_preference;
+    bsoncxx::stdx::optional<std::int64_t> _max_time_ms;
+    bsoncxx::stdx::optional<class read_preference> _read_preference;
 
 };
 
