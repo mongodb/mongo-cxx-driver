@@ -12,7 +12,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// TODO: this will be where these files eventually wind up
-//#include "mongo/driver/config/config.hpp"
-//#include "mongo/driver/export.hpp"
+#include <mongo/bson/config/config.hpp>
 #include <mongo/bson/export.hpp>
