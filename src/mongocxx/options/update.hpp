@@ -70,11 +70,11 @@ class LIBMONGOCXX_API update {
     ///
     /// @see http://docs.mongodb.org/manual/core/write-concern/
     ///
-    const bsoncxx::stdx::optional<typename write_concern>& write_concern() const;
+    const bsoncxx::stdx::optional<class write_concern>& write_concern() const;
 
    private:
     bsoncxx::stdx::optional<bool> _upsert;
-    bsoncxx::stdx::optional<typename write_concern> _write_concern;
+    bsoncxx::stdx::optional<class write_concern> _write_concern;
 
 };
 

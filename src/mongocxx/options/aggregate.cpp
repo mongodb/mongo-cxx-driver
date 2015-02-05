@@ -47,7 +47,7 @@ const bsoncxx::stdx::optional<std::int64_t>& aggregate::max_time_ms() const {
 const bsoncxx::stdx::optional<bool>& aggregate::use_cursor() const {
     return _use_cursor;
 }
-const bsoncxx::stdx::optional<typename read_preference>& aggregate::read_preference() const {
+const bsoncxx::stdx::optional<class read_preference>& aggregate::read_preference() const {
     return _read_preference;
 }
 

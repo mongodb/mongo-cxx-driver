@@ -109,7 +109,7 @@ const bsoncxx::stdx::optional<bsoncxx::document::view>& find::sort() const {
     return _ordering;
 }
 
-const bsoncxx::stdx::optional<typename read_preference>& find::read_preference() const {
+const bsoncxx::stdx::optional<class read_preference>& find::read_preference() const {
     return _read_preference;
 }
 
