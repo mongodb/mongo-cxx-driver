@@ -17,6 +17,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 void aggregate::allow_disk_use(bool allow_disk_use) {
@@ -52,6 +53,7 @@ const stdx::optional<class read_preference>& aggregate::read_preference() const 
 }
 
 }  // namespace options
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

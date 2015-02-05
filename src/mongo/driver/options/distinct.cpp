@@ -17,6 +17,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 void distinct::max_time_ms(std::int64_t max_time_ms) {
@@ -35,6 +36,7 @@ const stdx::optional<class read_preference>& distinct::read_preference() const {
 }
 
 }  // namespace options
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

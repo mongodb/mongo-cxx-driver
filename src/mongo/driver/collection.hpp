@@ -47,6 +47,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class client;
 class database;
@@ -633,6 +634,7 @@ inline stdx::optional<result::insert_many> collection::insert_many(
     return result;
 }
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

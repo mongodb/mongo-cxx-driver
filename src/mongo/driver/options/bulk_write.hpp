@@ -20,6 +20,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 ///
@@ -76,6 +77,7 @@ class LIBMONGOCXX_API bulk_write {
 };
 
 }  // namespace options
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

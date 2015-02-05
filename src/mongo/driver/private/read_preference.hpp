@@ -22,6 +22,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class read_preference::impl {
 
@@ -38,6 +39,7 @@ class read_preference::impl {
 
 }; // class impl
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

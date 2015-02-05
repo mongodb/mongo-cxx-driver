@@ -22,6 +22,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
 ///
@@ -53,6 +54,7 @@ class LIBMONGOCXX_API delete_result {
 }; // class delete_result
 
 }  // namespace result
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

@@ -21,6 +21,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 read_preference::read_preference(read_preference&&) noexcept = default;
 read_preference& read_preference::operator=(read_preference&&) noexcept = default;
@@ -73,5 +74,6 @@ stdx::optional<bson::document::view> read_preference::tags() const {
     return stdx::optional<bson::document::view>{};
 }
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo

@@ -25,6 +25,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class database::impl {
    public:
@@ -44,6 +45,7 @@ class database::impl {
 
 };
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

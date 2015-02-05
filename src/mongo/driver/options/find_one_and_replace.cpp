@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 void find_one_and_replace::projection(bson::document::view projection) {
@@ -51,6 +52,7 @@ const stdx::optional<bool>& find_one_and_replace::upsert() const {
 }
 
 }  // namespace options
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

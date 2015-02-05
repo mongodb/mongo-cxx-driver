@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
 insert_one::insert_one(bson::document::view document) : _document(std::move(document)) {
@@ -26,5 +27,6 @@ const bson::document::view& insert_one::document() const {
 }
 
 }  // namespace model
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo

@@ -23,6 +23,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 // NOTE: client options interface still evolving
@@ -55,6 +56,7 @@ class LIBMONGOCXX_API client {
 };
 
 }  // namespace options
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

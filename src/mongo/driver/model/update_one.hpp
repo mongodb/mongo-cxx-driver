@@ -21,6 +21,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
 ///
@@ -87,6 +88,7 @@ class LIBMONGOCXX_API update_one {
 };
 
 }  // namespace model
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

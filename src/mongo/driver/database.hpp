@@ -25,6 +25,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class client;
 
@@ -198,6 +199,7 @@ inline collection database::operator[](const std::string& name) const {
     return collection(name);
 }
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

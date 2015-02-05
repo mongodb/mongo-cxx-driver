@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
 update_many::update_many(bson::document::view filter, bson::document::view update)
@@ -40,5 +41,6 @@ const bson::document::view& update_many::update() const {
 }
 
 }  // namespace model
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo

@@ -22,6 +22,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace error {
 
 class write_concern {
@@ -32,6 +33,7 @@ class write_concern {
 };
 
 }  // namespace error
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

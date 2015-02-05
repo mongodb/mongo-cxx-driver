@@ -21,6 +21,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 const std::string uri::k_default_uri = "mongodb://localhost:27017";
 
@@ -80,5 +81,6 @@ std::string uri::username() const {
 // return mongoc_uri_get_write_concern(_impl->uri_t);
 //}
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo

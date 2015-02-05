@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
 delete_result::delete_result(result::bulk_write result) : _result(std::move(result)) {
@@ -30,6 +31,7 @@ std::int64_t delete_result::deleted_count() const {
 }
 
 }  // namespace result
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

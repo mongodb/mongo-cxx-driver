@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
 replace_one::replace_one(result::bulk_write result) : _result(std::move(result)) {
@@ -38,6 +39,7 @@ stdx::optional<bson::document::element> replace_one::upserted_id() const {
 }
 
 }  // namespace result
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

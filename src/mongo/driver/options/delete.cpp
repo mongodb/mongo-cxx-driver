@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 void delete_options::write_concern(class write_concern wc) {
@@ -27,5 +28,6 @@ const stdx::optional<class write_concern>& delete_options::write_concern() const
 }
 
 }  // namespace options
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo

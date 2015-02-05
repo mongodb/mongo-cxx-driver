@@ -25,6 +25,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 // TODO: take hint as a std::string parameter in addition to bson::document::view
@@ -134,6 +135,7 @@ class LIBMONGOCXX_API count {
 };
 
 }  // namespace options
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

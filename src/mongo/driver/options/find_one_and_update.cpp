@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 void find_one_and_update::projection(bson::document::view projection) {
@@ -51,5 +52,6 @@ const stdx::optional<bool>& find_one_and_update::upsert() const {
 }
 
 }  // namespace options
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo

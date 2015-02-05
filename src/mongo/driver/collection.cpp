@@ -52,6 +52,7 @@ enum class cursor_flag : uint32_t {
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 using namespace libbson;
 
@@ -431,5 +432,6 @@ class write_concern collection::write_concern() const {
     return wc;
 }
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo

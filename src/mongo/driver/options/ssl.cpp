@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 void ssl::pem_file(std::string pem_file) {
@@ -58,6 +59,7 @@ const stdx::optional<bool>& ssl::weak_cert_validation() const {
 }
 
 }  // namespace options
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

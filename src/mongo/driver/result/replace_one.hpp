@@ -24,6 +24,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
 /// Class representing the result of a MongoDB replace_one operation.
@@ -67,6 +68,7 @@ class LIBMONGOCXX_API replace_one {
 }; // class replace_one
 
 }  // namespace result
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

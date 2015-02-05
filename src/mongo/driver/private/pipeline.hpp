@@ -21,6 +21,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class pipeline::impl {
 
@@ -38,6 +39,7 @@ class pipeline::impl {
 
 }; // class impl
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

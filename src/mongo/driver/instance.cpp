@@ -25,6 +25,7 @@ void log_handler(mongoc_log_level_t, const char *, const char *, void *) {
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class instance::impl {
    public:
@@ -45,5 +46,6 @@ instance::instance(instance &&) noexcept = default;
 instance &instance::operator=(instance &&) noexcept = default;
 instance::~instance() = default;
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo

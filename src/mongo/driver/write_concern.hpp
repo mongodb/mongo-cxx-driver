@@ -26,6 +26,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class client;
 class collection;
@@ -207,6 +208,7 @@ class LIBMONGOCXX_API write_concern {
 
 };
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

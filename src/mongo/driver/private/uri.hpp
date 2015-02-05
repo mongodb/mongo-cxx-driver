@@ -20,6 +20,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class uri::impl {
    public:
@@ -29,6 +30,7 @@ class uri::impl {
 
 }; // class impl
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

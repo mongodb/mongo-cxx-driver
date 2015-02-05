@@ -25,6 +25,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 cursor::cursor(void* cursor_ptr)
     : _impl(stdx::make_unique<impl>(static_cast<mongoc_cursor_t*>(cursor_ptr))) {
@@ -83,5 +84,6 @@ bool operator!=(const cursor::iterator& lhs, const cursor::iterator& rhs) {
     return !(lhs == rhs);
 }
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo

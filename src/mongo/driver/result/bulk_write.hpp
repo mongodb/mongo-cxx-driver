@@ -25,6 +25,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
 ///
@@ -92,6 +93,7 @@ class LIBMONGOCXX_API bulk_write {
 }; // class bulk_write
 
 }  // namespace result
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

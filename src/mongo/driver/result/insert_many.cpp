@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
 insert_many::insert_many(result::bulk_write result,
@@ -31,6 +32,7 @@ std::int64_t insert_many::inserted_count() const {
 }
 
 }  // namespace result
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

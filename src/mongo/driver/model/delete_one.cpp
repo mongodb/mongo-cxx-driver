@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
 delete_one::delete_one(bson::document::view filter) : _filter(std::move(filter)) {
@@ -26,5 +27,6 @@ const bson::document::view& delete_one::filter() const {
 }
 
 }  // namespace model
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo

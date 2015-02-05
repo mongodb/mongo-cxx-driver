@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
 insert_one::insert_one(result::bulk_write result, bson::document::element generated_id)
@@ -31,6 +32,7 @@ bson::document::element insert_one::inserted_id() const {
 }
 
 }  // namespace result
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

@@ -17,6 +17,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 enum class find::cursor_type : std::uint8_t { k_non_tailable, k_tailable, k_tailable_await };
@@ -114,6 +115,7 @@ const stdx::optional<class read_preference>& find::read_preference() const {
 }
 
 }  // namespace options
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

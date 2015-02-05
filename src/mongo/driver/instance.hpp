@@ -20,6 +20,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
 /// Class representing an instance of the MongoDB driver.
@@ -55,6 +56,7 @@ class LIBMONGOCXX_API instance {
 
 };
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

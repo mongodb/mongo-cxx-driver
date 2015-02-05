@@ -17,6 +17,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 void count::hint(bson::document::view hint) {
@@ -60,6 +61,7 @@ const stdx::optional<read_preference>& count::read_preference() const {
 }
 
 }  // namespace options
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

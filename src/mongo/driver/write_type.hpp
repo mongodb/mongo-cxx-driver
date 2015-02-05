@@ -18,6 +18,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 enum class write_type {
     k_insert_one,
@@ -29,7 +30,8 @@ enum class write_type {
     k_uninitialized,
 };
 
-}  // namespace driver
+MONGOCXX_INLINE_NAMESPACE_END
+} // namespace driver
 }  // namespace mongo
 
 #include <mongo/driver/config/postlude.hpp>

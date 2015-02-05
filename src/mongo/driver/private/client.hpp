@@ -24,6 +24,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class client::impl {
 
@@ -36,6 +37,7 @@ class client::impl {
 
 }; // class impl
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

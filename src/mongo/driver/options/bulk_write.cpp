@@ -17,6 +17,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 void bulk_write::ordered(bool ordered) {
@@ -32,6 +33,7 @@ const stdx::optional<bool>& bulk_write::ordered() const {
 }
 
 }  // namespace options
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

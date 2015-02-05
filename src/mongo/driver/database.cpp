@@ -24,6 +24,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 database::database(database&&) noexcept = default;
 database& database::operator=(database&&) noexcept = default;
@@ -64,5 +65,6 @@ collection database::collection(const std::string& name) const {
     return mongo::driver::collection(*this, name);
 }
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo

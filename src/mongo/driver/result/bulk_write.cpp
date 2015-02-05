@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
 bulk_write::bulk_write(bson::document::value raw_response) : _response(std::move(raw_response)) {
@@ -54,5 +55,6 @@ bson::document::view bulk_write::view() const {
 }
 
 }  // namespace result
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo

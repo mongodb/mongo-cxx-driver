@@ -26,6 +26,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
 /// Class representing a MongoDB connection string URI.
@@ -165,6 +166,7 @@ class uri {
 
 };
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

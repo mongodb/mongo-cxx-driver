@@ -21,6 +21,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 using namespace bson::builder::helpers;
 using namespace bson::types;
@@ -77,6 +78,7 @@ pipeline& pipeline::unwind(std::string field_name) {
     return *this;
 }
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

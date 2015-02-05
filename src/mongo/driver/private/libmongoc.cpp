@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace libmongoc {
 
 #ifdef MONGOCXX_TESTING
@@ -25,5 +26,6 @@ namespace libmongoc {
 #endif  // MONGOCXX_TESTING
 
 }  // namespace libmongoc
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo

@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 void find_one_and_delete::projection(bson::document::view projection) {
@@ -35,6 +36,7 @@ const stdx::optional<bson::document::view>& find_one_and_delete::sort() const {
 }
 
 }  // namespace options
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

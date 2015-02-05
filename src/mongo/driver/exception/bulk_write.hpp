@@ -18,11 +18,13 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace exception {
 
 class LIBMONGOCXX_API bulk_write : public write {};
 
 }  // namespace exception
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 

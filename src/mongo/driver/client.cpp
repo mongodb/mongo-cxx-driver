@@ -22,6 +22,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 client::client(const uri& uri, const options::client&)
     : _impl(stdx::make_unique<impl>(libmongoc::client_new_from_uri(uri._impl->uri_t))) {
@@ -56,5 +57,6 @@ class database client::database(const std::string& name) const & {
     return mongo::driver::database(*this, name);
 }
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
