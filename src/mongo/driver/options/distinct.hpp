@@ -20,7 +20,7 @@
 #include <string>
 
 #include <mongo/bson/document.hpp>
-#include <mongo/driver/base/read_preference.hpp>
+#include <mongo/driver/read_preference.hpp>
 #include <mongo/bson/stdx/optional.hpp>
 
 namespace mongo {
@@ -61,7 +61,7 @@ class LIBMONGOCXX_API distinct {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    void read_preference(base::read_preference rp);
+    void read_preference(class read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -70,11 +70,11 @@ class LIBMONGOCXX_API distinct {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    const stdx::optional<base::read_preference>& read_preference() const;
+    const stdx::optional<class read_preference>& read_preference() const;
 
    private:
     stdx::optional<std::int64_t> _max_time_ms;
-    stdx::optional<base::read_preference> _read_preference;
+    stdx::optional<class read_preference> _read_preference;
 
 };
 

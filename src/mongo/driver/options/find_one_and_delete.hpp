@@ -19,7 +19,7 @@
 #include <cstdint>
 
 #include <mongo/bson/document.hpp>
-#include <mongo/driver/base/write_concern.hpp>
+#include <mongo/driver/write_concern.hpp>
 #include <mongo/bson/stdx/optional.hpp>
 
 namespace mongo {

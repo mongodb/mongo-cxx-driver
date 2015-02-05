@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <mongo/driver/options/aggregate.hpp>
-#include <mongo/driver/base/private/read_preference.hpp>
+#include <mongo/driver/private/read_preference.hpp>
 
 namespace mongo {
 namespace driver {
@@ -31,7 +31,7 @@ void aggregate::max_time_ms(std::int64_t max_time_ms) {
 void aggregate::use_cursor(bool use_cursor) {
     _use_cursor = use_cursor;
 }
-void aggregate::read_preference(base::read_preference rp) {
+void aggregate::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
 }
 
@@ -47,7 +47,7 @@ const stdx::optional<std::int64_t>& aggregate::max_time_ms() const {
 const stdx::optional<bool>& aggregate::use_cursor() const {
     return _use_cursor;
 }
-const stdx::optional<base::read_preference>& aggregate::read_preference() const {
+const stdx::optional<class read_preference>& aggregate::read_preference() const {
     return _read_preference;
 }
 

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <mongo/driver/options/count.hpp>
-#include <mongo/driver/base/private/read_preference.hpp>
+#include <mongo/driver/private/read_preference.hpp>
 
 namespace mongo {
 namespace driver {
@@ -35,7 +35,7 @@ void count::skip(std::int64_t skip) {
     _skip = skip;
 }
 
-void count::read_preference(base::read_preference rp) {
+void count::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
 }
 
@@ -55,7 +55,7 @@ const stdx::optional<std::int64_t>& count::skip() const {
     return _skip;
 }
 
-const stdx::optional<base::read_preference>& count::read_preference() const {
+const stdx::optional<read_preference>& count::read_preference() const {
     return _read_preference;
 }
 

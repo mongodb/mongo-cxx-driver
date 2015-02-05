@@ -22,7 +22,7 @@ void update::upsert(bool upsert) {
     _upsert = upsert;
 }
 
-void update::write_concern(base::write_concern wc) {
+void update::write_concern(class write_concern wc) {
     _write_concern = std::move(wc);
 }
 
@@ -30,7 +30,7 @@ const stdx::optional<bool>& update::upsert() const {
     return _upsert;
 }
 
-const stdx::optional<base::write_concern>& update::write_concern() const {
+const stdx::optional<class write_concern>& update::write_concern() const {
     return _write_concern;
 }
 

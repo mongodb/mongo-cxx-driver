@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <mongo/driver/options/find.hpp>
-#include <mongo/driver/base/private/read_preference.hpp>
+#include <mongo/driver/private/read_preference.hpp>
 
 namespace mongo {
 namespace driver {
@@ -57,7 +57,7 @@ void find::projection(bson::document::view projection) {
     _projection = projection;
 }
 
-void find::read_preference(base::read_preference rp) {
+void find::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
 }
 
@@ -109,7 +109,7 @@ const stdx::optional<bson::document::view>& find::sort() const {
     return _ordering;
 }
 
-const stdx::optional<base::read_preference>& find::read_preference() const {
+const stdx::optional<class read_preference>& find::read_preference() const {
     return _read_preference;
 }
 

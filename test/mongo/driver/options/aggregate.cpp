@@ -4,7 +4,6 @@
 #include <mongo/driver/options/aggregate.hpp>
 
 using namespace mongo::driver;
-using namespace mongo::driver::base;
 
 TEST_CASE("aggregate", "[aggregate][option]") {
     options::aggregate agg;

@@ -12,29 +12,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/options/distinct.hpp>
+#pragma once
+
+#include <mongo/driver/config/prelude.hpp>
+
+#include <mongo/driver/collection.hpp>
+#include <mongo/driver/database.hpp>
+#include <mongo/driver/private/database.hpp>
 #include <mongo/driver/private/read_preference.hpp>
+#include <mongo/driver/private/write_concern.hpp>
+
+#include <mongoc.h>
 
 namespace mongo {
 namespace driver {
-namespace options {
 
-void distinct::max_time_ms(std::int64_t max_time_ms) {
-    _max_time_ms = std::move(max_time_ms);
-}
+class collection::impl {
 
-void distinct::read_preference(class read_preference rp) {
-    _read_preference = std::move(rp);
-}
+   public:
+    impl(mongoc_collection_t* collection, std::string database_name, const class client::impl* client, std::string name) :
+        collection_t(collection),
+        database_name(std::move(database_name)),
+        client_impl(client),
+        name(name)
+    {}
 
-const stdx::optional<std::int64_t>& distinct::max_time_ms() const {
-    return _max_time_ms;
-}
-const stdx::optional<class read_preference>& distinct::read_preference() const {
-    return _read_preference;
-}
+    ~impl() { libmongoc::collection_destroy(collection_t); }
 
-}  // namespace options
+    mongoc_collection_t* collection_t;
+    std::string database_name;
+    const class client::impl* client_impl;
+    std::string name;
+
+}; // class impl
+
 }  // namespace driver
 }  // namespace mongo
 

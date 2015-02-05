@@ -18,7 +18,7 @@
 
 #include <cstdint>
 
-#include <mongo/driver/base/write_type.hpp>
+#include <mongo/driver/write_type.hpp>
 #include <mongo/driver/model/insert_one.hpp>
 #include <mongo/driver/model/delete_one.hpp>
 #include <mongo/driver/model/delete_many.hpp>
@@ -49,7 +49,7 @@ class LIBMONGOCXX_API write {
 
     ~write();
 
-    base::write_type type() const;
+    write_type type() const;
 
     const insert_one& get_insert_one() const;
     const update_one& get_update_one() const;
@@ -61,7 +61,7 @@ class LIBMONGOCXX_API write {
    private:
     void destroy_member();
 
-    base::write_type _type;
+    write_type _type;
 
     union {
         insert_one _insert_one;

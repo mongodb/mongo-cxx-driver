@@ -25,12 +25,12 @@ include_directories(
     ${CMAKE_BINARY_DIR}/src
 )
 
-file(WRITE ${PROJECT_BINARY_DIR}/mongocxx.cpp "")
-set(MONGOCXX_SOURCES ${PROJECT_BINARY_DIR}/mongocxx.cpp)
+# driver files in top level driver directory
+file (GLOB mongocxx-driver-core_headers *.hpp)
+file (GLOB mongocxx-driver-core_sources *.cpp)
 
 add_library(mongocxx SHARED
-    ${MONGOCXX_SOURCES}
-    $<TARGET_OBJECTS:mongocxx-driver-base>
+    ${mongocxx-driver-core_sources}
     $<TARGET_OBJECTS:mongocxx-driver-model>
     $<TARGET_OBJECTS:mongocxx-driver-options>
     $<TARGET_OBJECTS:mongocxx-driver-private>
@@ -49,8 +49,7 @@ target_link_libraries(mongocxx bsoncxx ${LIBMONGOC_LIBRARIES})
 
 if(BUILD_UNIT_TESTS)
     add_library(mongocxx-mocked SHARED
-        ${MONGOCXX_SOURCES}
-        $<TARGET_OBJECTS:mongocxx-driver-base-mocked>
+        ${mongocxx-driver-core_sources}
         $<TARGET_OBJECTS:mongocxx-driver-model>
         $<TARGET_OBJECTS:mongocxx-driver-options>
         $<TARGET_OBJECTS:mongocxx-driver-private-mocked>
@@ -73,8 +72,6 @@ install(TARGETS
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
-
-
 
 install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     DESTINATION ${MONGOCXX_INSTALL_DIR}
@@ -115,7 +112,6 @@ install(FILES
   DESTINATION "${PKG_CONFIG_PATH}"
 )
 
-add_subdirectory(base)
 add_subdirectory(model)
 add_subdirectory(options)
 add_subdirectory(private)

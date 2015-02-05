@@ -57,7 +57,7 @@ class LIBMONGOCXX_API bulk_write {
     ///
     /// @see http://docs.mongodb.org/manual/core/write-concern/
     ///
-    void write_concern(base::write_concern wc);
+    void write_concern(class write_concern wc);
 
     ///
     /// The current write_concern for this operation.
@@ -67,11 +67,11 @@ class LIBMONGOCXX_API bulk_write {
     ///
     /// @see http://docs.mongodb.org/manual/core/write-concern/
     ///
-    const stdx::optional<base::write_concern>& write_concern() const;
+    const stdx::optional<class write_concern>& write_concern() const;
 
    private:
     stdx::optional<bool> _ordered;
-    stdx::optional<base::write_concern> _write_concern;
+    stdx::optional<class write_concern> _write_concern;
 
 };
 

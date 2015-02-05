@@ -12,27 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/write_concern.hpp>
-#include <mongo/driver/options/bulk_write.hpp>
+#include <mongo/driver/instance.hpp>
+
+#include <mongo/bson/stdx/make_unique.hpp>
+
+#include <mongoc.h>
+
+namespace {
+void log_handler(mongoc_log_level_t, const char *, const char *, void *) {
+}
+}
 
 namespace mongo {
 namespace driver {
-namespace options {
 
-void bulk_write::ordered(bool ordered) {
-    _ordered = ordered;
+class instance::impl {
+   public:
+    impl() {
+        mongoc_init();
+        mongoc_log_set_handler(log_handler, nullptr);
+    }
+
+    ~impl() {
+        mongoc_cleanup();
+    }
+};
+
+instance::instance() : _impl(stdx::make_unique<impl>()) {
 }
 
-void bulk_write::write_concern(class write_concern wc) {
-    _write_concern = std::move(wc);
-}
+instance::instance(instance &&) noexcept = default;
+instance &instance::operator=(instance &&) noexcept = default;
+instance::~instance() = default;
 
-const stdx::optional<bool>& bulk_write::ordered() const {
-    return _ordered;
-}
-
-}  // namespace options
 }  // namespace driver
 }  // namespace mongo
-
-#include <mongo/driver/config/postlude.hpp>

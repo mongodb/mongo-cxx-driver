@@ -47,7 +47,7 @@ Example:
 
 #include <vector>
 
-#include "driver/base/blah.hpp"
+#include "driver/blah.hpp"
 
 namespace mongo {
 namespace driver {

@@ -12,26 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/write_concern.hpp>
-#include <mongo/driver/options/bulk_write.hpp>
+#pragma once
+
+#include <mongo/driver/config/prelude.hpp>
+
+#include <mongo/bson/builder.hpp>
+#include <mongo/driver/pipeline.hpp>
 
 namespace mongo {
 namespace driver {
-namespace options {
 
-void bulk_write::ordered(bool ordered) {
-    _ordered = ordered;
-}
+class pipeline::impl {
 
-void bulk_write::write_concern(class write_concern wc) {
-    _write_concern = std::move(wc);
-}
+   public:
+    bson::builder::single_ctx sink() {
+        return _builder;
+    }
 
-const stdx::optional<bool>& bulk_write::ordered() const {
-    return _ordered;
-}
+    bson::document::view view() {
+        return _builder.view();
+    }
 
-}  // namespace options
+   private:
+    bson::builder::array _builder;
+
+}; // class impl
+
 }  // namespace driver
 }  // namespace mongo
 

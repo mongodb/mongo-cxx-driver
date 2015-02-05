@@ -18,11 +18,11 @@ namespace mongo {
 namespace driver {
 namespace options {
 
-void delete_options::write_concern(base::write_concern wc) {
+void delete_options::write_concern(class write_concern wc) {
     _write_concern = std::move(wc);
 }
 
-const stdx::optional<base::write_concern>& delete_options::write_concern() const {
+const stdx::optional<class write_concern>& delete_options::write_concern() const {
     return _write_concern;
 }
 

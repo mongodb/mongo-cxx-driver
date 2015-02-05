@@ -1,11 +1,10 @@
 #include "mongo/bson/builder.hpp"
-#include "mongo/driver/base/client.hpp"
-#include "mongo/driver/base/collection.hpp"
-#include "mongo/driver/base/bulk_write.hpp"
+#include "mongo/driver/client.hpp"
+#include "mongo/driver/collection.hpp"
+#include "mongo/driver/bulk_write.hpp"
 #include "mongo/driver/model/insert_one.hpp"
 
 using namespace mongo::bson;
-using namespace mongo::driver::base;
 
 ///
 /// How to create and execute bulk writes against MongoDB

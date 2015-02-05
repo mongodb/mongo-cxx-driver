@@ -12,26 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/write_concern.hpp>
-#include <mongo/driver/options/bulk_write.hpp>
+#pragma once
+
+#include <mongo/driver/config/prelude.hpp>
+
+#include <mongo/driver/database.hpp>
+#include <mongo/driver/client.hpp>
+#include <mongo/driver/private/client.hpp>
+#include <mongo/driver/private/write_concern.hpp>
+
+#include <mongoc.h>
 
 namespace mongo {
 namespace driver {
-namespace options {
 
-void bulk_write::ordered(bool ordered) {
-    _ordered = ordered;
-}
+class database::impl {
+   public:
+    impl(mongoc_database_t* db, const class client::impl* client, std::string name) :
+        database_t(db),
+        client_impl(client),
+        name(std::move(name))
+    {}
 
-void bulk_write::write_concern(class write_concern wc) {
-    _write_concern = std::move(wc);
-}
+    ~impl() {
+        libmongoc::database_destroy(database_t);
+    }
 
-const stdx::optional<bool>& bulk_write::ordered() const {
-    return _ordered;
-}
+    mongoc_database_t* database_t;
+    const class client::impl* client_impl;
+    std::string name;
 
-}  // namespace options
+};
+
 }  // namespace driver
 }  // namespace mongo
 

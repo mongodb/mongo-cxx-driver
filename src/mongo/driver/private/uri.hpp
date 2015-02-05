@@ -12,26 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/write_concern.hpp>
-#include <mongo/driver/options/bulk_write.hpp>
+#pragma once
+
+#include <mongo/driver/uri.hpp>
+
+#include <mongoc.h>
 
 namespace mongo {
 namespace driver {
-namespace options {
 
-void bulk_write::ordered(bool ordered) {
-    _ordered = ordered;
-}
+class uri::impl {
+   public:
+    impl(mongoc_uri_t* uri) : uri_t(uri) {}
+    ~impl() { mongoc_uri_destroy(uri_t); }
+    mongoc_uri_t* uri_t;
 
-void bulk_write::write_concern(class write_concern wc) {
-    _write_concern = std::move(wc);
-}
+}; // class impl
 
-const stdx::optional<bool>& bulk_write::ordered() const {
-    return _ordered;
-}
-
-}  // namespace options
 }  // namespace driver
 }  // namespace mongo
 
