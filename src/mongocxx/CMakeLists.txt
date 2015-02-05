@@ -117,3 +117,7 @@ add_subdirectory(model)
 add_subdirectory(options)
 add_subdirectory(private)
 add_subdirectory(result)
+
+if(BUILD_UNIT_TESTS)
+  add_subdirectory(test)
+endif()

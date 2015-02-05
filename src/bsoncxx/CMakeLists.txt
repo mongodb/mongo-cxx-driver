@@ -91,3 +91,7 @@ add_subdirectory(builder)
 add_subdirectory(document)
 add_subdirectory(stdx)
 add_subdirectory(util)
+
+if(BUILD_UNIT_TESTS)
+  add_subdirectory(test)
+endif()

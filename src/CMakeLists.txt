@@ -1,2 +1,3 @@
-add_subdirectory (mongo/bson)
-add_subdirectory (mongo/driver)
+add_subdirectory (third_party)
+add_subdirectory (bsoncxx)
+add_subdirectory (mongocxx)
