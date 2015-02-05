@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongo/driver/config/prelude.hpp>
+
 #include <bson.h>
 
 #include <mongo/bson/document/value.hpp>
@@ -23,6 +25,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace libbson {
 
 class scoped_bson_t {
@@ -54,5 +57,6 @@ class scoped_bson_t {
 };
 
 }  // namespace libbson
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo

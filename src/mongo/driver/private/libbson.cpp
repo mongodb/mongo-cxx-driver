@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace driver {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace libbson {
 
 static void doc_to_bson_t(const bson::document::view& doc, bson_t* bson) {
@@ -87,5 +88,6 @@ bson::document::value scoped_bson_t::steal() {
 }
 
 }  // namespace libbson
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
