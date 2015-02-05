@@ -17,6 +17,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 
 std::string to_string(type rhs) {
     switch (static_cast<uint8_t>(rhs)) {
@@ -56,5 +57,6 @@ namespace types {
 #undef LIBBSONCXX_ENUM
 
 }  // namespace types
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo

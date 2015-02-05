@@ -24,6 +24,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 
 template <class Base = closed_ctx>
@@ -66,6 +67,7 @@ class value_ctx {
 };
 
 }  // namespace builder
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

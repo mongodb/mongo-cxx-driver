@@ -26,6 +26,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 
 enum class type : std::uint8_t;
 enum class binary_sub_type : std::uint8_t;
@@ -109,6 +110,7 @@ namespace document {
 
 }  // namespace document
 
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

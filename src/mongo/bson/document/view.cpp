@@ -22,6 +22,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
 view::iterator::iterator() {
@@ -193,5 +194,6 @@ std::size_t view::length() const {
 }
 
 }  // namespace document
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo

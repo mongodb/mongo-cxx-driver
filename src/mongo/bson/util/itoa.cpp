@@ -16,6 +16,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace util {
 
 const char* kIndexTable =
@@ -1078,5 +1079,6 @@ std::size_t itoa::length() const {
 }
 
 }  // namespace util
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo

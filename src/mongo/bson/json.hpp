@@ -31,6 +31,7 @@ extern "C" {
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 
 class json_visitor {
    public:
@@ -226,6 +227,7 @@ inline std::string to_json(document::view view) {
     return ss.str();
 }
 
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

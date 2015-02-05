@@ -19,6 +19,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
 view_or_value::view_or_value(bson::document::view view) : _is_view(true), _view(std::move(view)) {
@@ -68,5 +69,6 @@ view_or_value::operator document::view() const {
 }
 
 }  // namespace document
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo

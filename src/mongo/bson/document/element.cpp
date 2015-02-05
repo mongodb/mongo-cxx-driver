@@ -30,6 +30,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
 element::element() : _raw(nullptr), _len(0), _off(0) {
@@ -242,5 +243,6 @@ std::ostream& operator<<(std::ostream& out, const element& element) {
 }
 
 }  // namespace document
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo

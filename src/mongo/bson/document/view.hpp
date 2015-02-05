@@ -27,6 +27,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
 class LIBBSONCXX_API view {
@@ -94,6 +95,7 @@ class view::const_iterator : public std::iterator<std::forward_iterator_tag, ele
 };
 
 }  // namespace document
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

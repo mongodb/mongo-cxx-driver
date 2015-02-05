@@ -20,6 +20,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 namespace helpers {
 
@@ -43,6 +44,7 @@ struct LIBBSONCXX_API concat {
 
 }  // namespace helpers
 }  // namespace builder
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

@@ -18,6 +18,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 
     class concrete;
@@ -27,6 +28,7 @@ namespace builder {
     };
 
 }  // namespace builder
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

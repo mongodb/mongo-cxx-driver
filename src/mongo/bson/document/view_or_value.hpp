@@ -21,6 +21,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
 class LIBBSONCXX_API view_or_value {
@@ -50,6 +51,7 @@ class LIBBSONCXX_API view_or_value {
 };
 
 }  // namespace document
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

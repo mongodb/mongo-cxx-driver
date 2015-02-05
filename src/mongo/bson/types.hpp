@@ -22,6 +22,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 
 enum class type : std::uint8_t {
 #define LIBBSONCXX_ENUM(name, val) k_##name = val,
@@ -207,6 +208,7 @@ struct b_maxkey {
 #undef LIBBSONCXX_ENUM
 
 }  // namespace types
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

@@ -20,6 +20,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace util {
 namespace functor {
 
@@ -92,6 +93,7 @@ template <typename C, typename S>
 struct is_functor : functor::is_functor_impl<C, S, std::is_class<C>::value> {};
 
 }  // namespace util
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

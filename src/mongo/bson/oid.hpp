@@ -21,6 +21,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 
 class string_or_literal;
 
@@ -59,6 +60,7 @@ class oid {
     char _bytes[12];
 };
 
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

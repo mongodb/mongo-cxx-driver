@@ -23,6 +23,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
 class LIBBSONCXX_API value {
@@ -53,6 +54,7 @@ value::operator document::view() const noexcept {
 }
 
 }  // namespace document
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

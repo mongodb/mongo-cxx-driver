@@ -21,6 +21,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace util {
 
 class itoa {
@@ -44,6 +45,7 @@ class itoa {
 };
 
 }  // namespace util
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

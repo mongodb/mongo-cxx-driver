@@ -21,6 +21,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 
 oid::oid() : _is_valid(false) {
 }
@@ -126,5 +127,6 @@ std::ostream& operator<<(std::ostream& out, const oid& rhs) {
     return out;
 }
 
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo

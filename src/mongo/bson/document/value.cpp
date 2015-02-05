@@ -19,6 +19,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
 value::value(std::uint8_t* data, std::size_t length, deleter_type dtor)
@@ -41,5 +42,6 @@ value& value::operator=(const value& rhs) {
 }
 
 }  // namespace document
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo

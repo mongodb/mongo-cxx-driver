@@ -23,6 +23,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 
 class single_ctx {
@@ -54,6 +55,7 @@ class single_ctx {
 };
 
 }  // namespace builder
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

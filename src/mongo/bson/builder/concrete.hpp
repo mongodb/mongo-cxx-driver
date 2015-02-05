@@ -26,6 +26,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 
 class LIBBSONCXX_API concrete {
@@ -95,6 +96,7 @@ class LIBBSONCXX_API concrete {
 };
 
 }  // namespace builder
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

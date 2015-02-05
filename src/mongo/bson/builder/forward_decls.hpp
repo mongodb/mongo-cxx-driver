@@ -18,6 +18,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 
     template <class T>
@@ -32,6 +33,7 @@ namespace builder {
     struct closed_ctx;
 
 }  // namespace builder
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

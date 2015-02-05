@@ -14,12 +14,15 @@
 
 #pragma once
 
+#include <mongo/bson/config/prelude.hpp>
+
 #include <cstddef>
 #include <string>
 #include <iostream>
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 
 class string_or_literal {
    public:
@@ -54,6 +57,7 @@ class string_or_literal {
     };
 };
 
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 

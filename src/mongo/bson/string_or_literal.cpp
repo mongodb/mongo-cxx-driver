@@ -17,6 +17,7 @@
 
 namespace mongo {
 namespace bson {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 
 string_or_literal::string_or_literal() : _len(0), _is_owning(false), _literal("") {
 }
@@ -105,5 +106,6 @@ std::ostream& operator<<(std::ostream& out, const string_or_literal& rhs) {
     return out;
 }
 
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
