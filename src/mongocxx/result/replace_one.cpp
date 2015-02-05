@@ -14,8 +14,7 @@
 
 #include <mongocxx/result/replace_one.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
@@ -34,13 +33,12 @@ std::int64_t replace_one::modified_count() const {
     return _result.modified_count();
 }
 
-stdx::optional<bson::document::element> replace_one::upserted_id() const {
+stdx::optional<bsoncxx::document::element> replace_one::upserted_id() const {
     return _result.upserted_ids();
 }
 
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

@@ -22,8 +22,7 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 database::database(database&&) noexcept = default;
@@ -62,9 +61,8 @@ class write_concern database::write_concern() const {
 }
 
 collection database::collection(const std::string& name) const {
-    return mongo::driver::collection(*this, name);
+    return mongocxx::collection(*this, name);
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

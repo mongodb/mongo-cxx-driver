@@ -16,8 +16,8 @@
 
 #include <mongocxx/write_concern.hpp>
 
-using namespace mongo;
-using namespace mongo::driver;
+
+using namespace mongocxx;
 
 TEST_CASE("a default write_concern", "[write_concern]") {
     write_concern wc{};

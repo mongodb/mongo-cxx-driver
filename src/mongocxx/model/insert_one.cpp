@@ -14,19 +14,17 @@
 
 #include <mongocxx/model/insert_one.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
-insert_one::insert_one(bson::document::view document) : _document(std::move(document)) {
+insert_one::insert_one(bsoncxx::document::view document) : _document(std::move(document)) {
 }
 
-const bson::document::view& insert_one::document() const {
+const bsoncxx::document::view& insert_one::document() const {
     return _document;
 }
 
 }  // namespace model
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

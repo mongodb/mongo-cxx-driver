@@ -23,8 +23,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class client;
@@ -110,7 +109,7 @@ class LIBMONGOCXX_API read_preference {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/#tag-sets
     ///
-    read_preference(read_mode mode, bson::document::view tags);
+    read_preference(read_mode mode, bsoncxx::document::view tags);
 
     ///
     /// Copy constructs a read_preference.
@@ -158,14 +157,14 @@ class LIBMONGOCXX_API read_preference {
     /// @param tags
     ///   Document representing the tags.
     ///
-    void tags(bson::document::view tags);
+    void tags(bsoncxx::document::view tags);
 
     ///
     /// Returns the current tags for this read_preference.
     ///
     /// @return The optionally set current tags.
     ///
-    stdx::optional<bson::document::view> tags() const;
+    stdx::optional<bsoncxx::document::view> tags() const;
 
    private:
     friend client;
@@ -181,7 +180,6 @@ class LIBMONGOCXX_API read_preference {
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

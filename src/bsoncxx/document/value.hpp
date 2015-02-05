@@ -21,8 +21,7 @@
 
 #include <bsoncxx/document/view.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
@@ -55,7 +54,6 @@ value::operator document::view() const noexcept {
 
 }  // namespace document
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

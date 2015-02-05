@@ -18,14 +18,14 @@
 #include <bsoncxx/builder.hpp>
 #include <mongocxx/result/update.hpp>
 
-using namespace mongo;
+
 
 TEST_CASE("update", "[update][result]") {
-    bson::builder::document build;
-    build << "_id" << bson::oid{bson::oid::init_tag} << "nMatched" << bson::types::b_int64{2}
-          << "nModified" << bson::types::b_int64{1};
+    bsoncxx::builder::document build;
+    build << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "nMatched" << bsoncxx::types::b_int64{2}
+          << "nModified" << bsoncxx::types::b_int64{1};
 
-    driver::result::bulk_write b(bson::document::value(build.view()));
+    driver::result::bulk_write b(bsoncxx::document::value(build.view()));
 
     driver::result::update update(std::move(b));
 

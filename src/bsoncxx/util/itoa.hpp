@@ -19,8 +19,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace util {
 
@@ -46,7 +45,6 @@ class itoa {
 
 }  // namespace util
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

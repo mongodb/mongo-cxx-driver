@@ -22,8 +22,7 @@
 #include <mongocxx/options/find_one_and_modify.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
@@ -61,7 +60,7 @@ class LIBMONGOCXX_API find_one_and_replace {
     ///
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
-    void projection(bson::document::view projection);
+    void projection(bsoncxx::document::view projection);
 
     ///
     /// Gets the current projection set for this operation.
@@ -71,7 +70,7 @@ class LIBMONGOCXX_API find_one_and_replace {
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
     ///
-    const stdx::optional<bson::document::view>& projection() const;
+    const stdx::optional<bsoncxx::document::view>& projection() const;
 
     ///
     /// Set the desired version of the replaced document to return, either the original
@@ -81,7 +80,7 @@ class LIBMONGOCXX_API find_one_and_replace {
     ///   Version of document to return, either original or updated.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-    /// @see mongo::driver::options::return_document
+    /// @see mongocxx::options::return_document
     ///
     void return_document(return_document return_document);
 
@@ -91,7 +90,7 @@ class LIBMONGOCXX_API find_one_and_replace {
     /// @return State of document to return, either original or updated.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-    /// @see mongo::driver::options::return_document
+    /// @see mongocxx::options::return_document
     ///
     const stdx::optional<enum return_document>& return_document() const;
 
@@ -106,7 +105,7 @@ class LIBMONGOCXX_API find_one_and_replace {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     ///
-    void sort(bson::document::view ordering);
+    void sort(bsoncxx::document::view ordering);
 
     ///
     /// Gets the current sort ordering.
@@ -115,7 +114,7 @@ class LIBMONGOCXX_API find_one_and_replace {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<bson::document::view>& sort() const;
+    const stdx::optional<bsoncxx::document::view>& sort() const;
 
     ///
     /// Sets the upsert flag on the operation. When @c true, the operation creates a new document if
@@ -140,16 +139,15 @@ class LIBMONGOCXX_API find_one_and_replace {
 
    private:
     stdx::optional<std::int64_t> _max_time_ms;
-    stdx::optional<bson::document::view> _projection;
+    stdx::optional<bsoncxx::document::view> _projection;
     stdx::optional<enum return_document> _return_document;
-    stdx::optional<bson::document::view> _ordering;
+    stdx::optional<bsoncxx::document::view> _ordering;
     stdx::optional<bool> _upsert;
 
 };
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

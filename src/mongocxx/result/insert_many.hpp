@@ -22,8 +22,7 @@
 
 #include <bsoncxx/types.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
@@ -38,7 +37,7 @@ class LIBMONGOCXX_API insert_many {
     // This constructor is public for testing purposes only
     insert_many(
         result::bulk_write result,
-        std::map<std::size_t, bson::document::element> inserted_ids
+        std::map<std::size_t, bsoncxx::document::element> inserted_ids
     );
 
     ///
@@ -60,17 +59,16 @@ class LIBMONGOCXX_API insert_many {
     ///
     /// @return The values of the _id field for inserted documents.
     ///
-    std::map<std::size_t, bson::document::element> inserted_ids();
+    std::map<std::size_t, bsoncxx::document::element> inserted_ids();
 
    private:
     result::bulk_write _result;
-    std::map<std::size_t, bson::document::element> _generated_ids;
+    std::map<std::size_t, bsoncxx::document::element> _generated_ids;
 
 }; // class insert_many
 
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

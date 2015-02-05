@@ -21,8 +21,7 @@
 #include <bsoncxx/builder/value_ctx.hpp>
 #include <bsoncxx/builder/key_ctx.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 
@@ -56,7 +55,6 @@ class single_ctx {
 
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

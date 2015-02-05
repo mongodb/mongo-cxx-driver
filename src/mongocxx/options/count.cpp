@@ -15,12 +15,11 @@
 #include <mongocxx/options/count.hpp>
 #include <mongocxx/private/read_preference.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-void count::hint(bson::document::view hint) {
+void count::hint(bsoncxx::document::view hint) {
     _hint = std::move(hint);
 }
 
@@ -40,7 +39,7 @@ void count::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
 }
 
-const stdx::optional<bson::document::view>& count::hint() const {
+const stdx::optional<bsoncxx::document::view>& count::hint() const {
     return _hint;
 }
 
@@ -62,7 +61,6 @@ const stdx::optional<read_preference>& count::read_preference() const {
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

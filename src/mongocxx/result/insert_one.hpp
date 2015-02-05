@@ -19,8 +19,7 @@
 #include <bsoncxx/types.hpp>
 #include <mongocxx/result/bulk_write.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
@@ -29,7 +28,7 @@ class LIBMONGOCXX_API insert_one {
 
    public:
     // This constructor is public for testing purposes only
-    insert_one(result::bulk_write result, bson::document::element generated_id);
+    insert_one(result::bulk_write result, bsoncxx::document::element generated_id);
 
     ///
     /// Returns the bulk write result for this insert operation.
@@ -43,17 +42,16 @@ class LIBMONGOCXX_API insert_one {
     ///
     /// @return The value of the _id field for inserted document.
     ///
-    bson::document::element inserted_id() const;
+    bsoncxx::document::element inserted_id() const;
 
    private:
     result::bulk_write _result;
-    bson::document::element _generated_id;
+    bsoncxx::document::element _generated_id;
 
 }; // class insert_one
 
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

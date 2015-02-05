@@ -6,8 +6,8 @@
 #include <bsoncxx/builder.hpp>
 #include <bsoncxx/json.hpp>
 
-void bson_eq_builder(const bson_t* bson, const mongo::bson::builder::document& builder) {
-    using namespace mongo::bson;
+void bson_eq_builder(const bson_t* bson, const bsoncxx::builder::document& builder) {
+    using namespace bsoncxx;
 
     document::view expected(bson_get_data(bson), bson->len);
     document::view test(builder.view());
@@ -19,10 +19,10 @@ void bson_eq_builder(const bson_t* bson, const mongo::bson::builder::document& b
 }
 
 // TODO: remove the need for mongo namespace to be jammed in here.
-using namespace mongo;
-using namespace mongo::bson;
 
-TEST_CASE("builder appends utf8", "[bson::builder]") {
+using namespace bsoncxx;
+
+TEST_CASE("builder appends utf8", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -52,7 +52,7 @@ TEST_CASE("builder appends utf8", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends double", "[bson::builder]") {
+TEST_CASE("builder appends double", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -75,7 +75,7 @@ TEST_CASE("builder appends double", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends binary", "[bson::builder]") {
+TEST_CASE("builder appends binary", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -90,7 +90,7 @@ TEST_CASE("builder appends binary", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends undefined", "[bson::builder]") {
+TEST_CASE("builder appends undefined", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -105,7 +105,7 @@ TEST_CASE("builder appends undefined", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends oid", "[bson::builder]") {
+TEST_CASE("builder appends oid", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -117,13 +117,13 @@ TEST_CASE("builder appends oid", "[bson::builder]") {
     builder::document b;
 
     SECTION("b_oid works") {
-        b << "foo" << types::b_oid{bson::oid{(char*)oid.bytes, 12}};
+        b << "foo" << types::b_oid{bsoncxx::oid{(char*)oid.bytes, 12}};
 
         bson_eq_builder(&expected, b);
     }
 
     SECTION("raw oid works") {
-        b << "foo" << bson::oid{(char*)oid.bytes, 12};
+        b << "foo" << bsoncxx::oid{(char*)oid.bytes, 12};
 
         bson_eq_builder(&expected, b);
     }
@@ -131,7 +131,7 @@ TEST_CASE("builder appends oid", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends bool", "[bson::builder]") {
+TEST_CASE("builder appends bool", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
     builder::document b;
@@ -171,7 +171,7 @@ TEST_CASE("builder appends bool", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends date time", "[bson::builder]") {
+TEST_CASE("builder appends date time", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
     builder::document b;
@@ -185,7 +185,7 @@ TEST_CASE("builder appends date time", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends null", "[bson::builder]") {
+TEST_CASE("builder appends null", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
     builder::document b;
@@ -199,7 +199,7 @@ TEST_CASE("builder appends null", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends regex", "[bson::builder]") {
+TEST_CASE("builder appends regex", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
     builder::document b;
@@ -213,7 +213,7 @@ TEST_CASE("builder appends regex", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends code", "[bson::builder]") {
+TEST_CASE("builder appends code", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
     builder::document b;
@@ -227,7 +227,7 @@ TEST_CASE("builder appends code", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends symbol", "[bson::builder]") {
+TEST_CASE("builder appends symbol", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
     builder::document b;
@@ -241,7 +241,7 @@ TEST_CASE("builder appends symbol", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends code with scope", "[bson::builder]") {
+TEST_CASE("builder appends code with scope", "[bsoncxx::builder]") {
     bson_t expected, scope;
     bson_init(&expected);
     builder::document b;
@@ -262,7 +262,7 @@ TEST_CASE("builder appends code with scope", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends int32", "[bson::builder]") {
+TEST_CASE("builder appends int32", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
     builder::document b;
@@ -284,7 +284,7 @@ TEST_CASE("builder appends int32", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends timestamp", "[bson::builder]") {
+TEST_CASE("builder appends timestamp", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
     builder::document b;
@@ -298,7 +298,7 @@ TEST_CASE("builder appends timestamp", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends int64", "[bson::builder]") {
+TEST_CASE("builder appends int64", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
     builder::document b;
@@ -320,7 +320,7 @@ TEST_CASE("builder appends int64", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends minkey", "[bson::builder]") {
+TEST_CASE("builder appends minkey", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
     builder::document b;
@@ -334,7 +334,7 @@ TEST_CASE("builder appends minkey", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends maxkey", "[bson::builder]") {
+TEST_CASE("builder appends maxkey", "[bsoncxx::builder]") {
     bson_t expected;
     bson_init(&expected);
     builder::document b;
@@ -348,7 +348,7 @@ TEST_CASE("builder appends maxkey", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends array", "[bson::builder]") {
+TEST_CASE("builder appends array", "[bsoncxx::builder]") {
     bson_t expected, child;
     bson_init(&expected);
     bson_init(&child);
@@ -369,7 +369,7 @@ TEST_CASE("builder appends array", "[bson::builder]") {
     bson_destroy(&child);
 }
 
-TEST_CASE("builder appends document", "[bson::builder]") {
+TEST_CASE("builder appends document", "[bsoncxx::builder]") {
     bson_t expected, child;
     bson_init(&expected);
     bson_init(&child);
@@ -390,7 +390,7 @@ TEST_CASE("builder appends document", "[bson::builder]") {
     bson_destroy(&child);
 }
 
-TEST_CASE("builder appends inline array", "[bson::builder]") {
+TEST_CASE("builder appends inline array", "[bsoncxx::builder]") {
     bson_t expected, child;
     bson_init(&expected);
     bson_init(&child);
@@ -407,7 +407,7 @@ TEST_CASE("builder appends inline array", "[bson::builder]") {
     bson_destroy(&child);
 }
 
-TEST_CASE("builder appends inline document", "[bson::builder]") {
+TEST_CASE("builder appends inline document", "[bsoncxx::builder]") {
     bson_t expected, child;
     bson_init(&expected);
     bson_init(&child);
@@ -425,7 +425,7 @@ TEST_CASE("builder appends inline document", "[bson::builder]") {
     bson_destroy(&child);
 }
 
-TEST_CASE("builder appends inline nested", "[bson::builder]") {
+TEST_CASE("builder appends inline nested", "[bsoncxx::builder]") {
     using namespace builder::helpers;
 
     bson_t expected, foo, bar, third;
@@ -454,7 +454,7 @@ TEST_CASE("builder appends inline nested", "[bson::builder]") {
     bson_destroy(&third);
 }
 
-TEST_CASE("builder appends concat", "[bson::builder]") {
+TEST_CASE("builder appends concat", "[bsoncxx::builder]") {
     using namespace builder::helpers;
 
     bson_t expected, child;
@@ -497,7 +497,7 @@ TEST_CASE("builder appends concat", "[bson::builder]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends element", "[bson::builder]") {
+TEST_CASE("builder appends element", "[bsoncxx::builder]") {
     using namespace builder::helpers;
 
     bson_t expected;

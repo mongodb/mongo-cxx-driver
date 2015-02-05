@@ -20,8 +20,7 @@
 #include <mongocxx/private/uri.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 client::client(const uri& uri, const options::client&)
@@ -54,9 +53,8 @@ class write_concern client::write_concern() const {
 }
 
 class database client::database(const std::string& name) const & {
-    return mongo::driver::database(*this, name);
+    return mongocxx::database(*this, name);
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

@@ -19,8 +19,7 @@
 #include <bson.h>
 #include <bsoncxx/string_or_literal.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
 oid::oid() : _is_valid(false) {
@@ -128,5 +127,4 @@ std::ostream& operator<<(std::ostream& out, const oid& rhs) {
 }
 
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx

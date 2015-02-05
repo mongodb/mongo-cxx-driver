@@ -19,8 +19,7 @@
 #include <iostream>
 #include <ctime>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
 class string_or_literal;
@@ -61,7 +60,6 @@ class oid {
 };
 
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

@@ -20,8 +20,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/oid.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
 enum class type : std::uint8_t {
@@ -209,7 +208,6 @@ struct b_maxkey {
 
 }  // namespace types
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

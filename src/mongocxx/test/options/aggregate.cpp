@@ -3,7 +3,7 @@
 
 #include <mongocxx/options/aggregate.hpp>
 
-using namespace mongo::driver;
+using namespace mongocxx;
 
 TEST_CASE("aggregate", "[aggregate][option]") {
     options::aggregate agg;

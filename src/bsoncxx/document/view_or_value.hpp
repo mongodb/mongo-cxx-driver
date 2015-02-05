@@ -19,16 +19,15 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/value.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
 class LIBBSONCXX_API view_or_value {
 
    public:
-    view_or_value(bson::document::view view);
-    view_or_value(bson::document::value value);
+    view_or_value(bsoncxx::document::view view);
+    view_or_value(bsoncxx::document::value value);
 
     view_or_value(view_or_value&& rhs);
     view_or_value& operator=(view_or_value&& rhs);
@@ -39,20 +38,19 @@ class LIBBSONCXX_API view_or_value {
     operator document::view() const;
 
    private:
-    view_or_value(const bson::document::view_or_value& view) = delete;
-    view_or_value& operator=(const bson::document::view_or_value& view) = delete;
+    view_or_value(const bsoncxx::document::view_or_value& view) = delete;
+    view_or_value& operator=(const bsoncxx::document::view_or_value& view) = delete;
 
     bool _is_view;
     union {
-        bson::document::view _view;
-        bson::document::value _value;
+        bsoncxx::document::view _view;
+        bsoncxx::document::value _value;
     };
 
 };
 
 }  // namespace document
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

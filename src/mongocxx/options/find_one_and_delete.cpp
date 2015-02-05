@@ -14,30 +14,28 @@
 
 #include <mongocxx/options/find_one_and_delete.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-void find_one_and_delete::projection(bson::document::view projection) {
+void find_one_and_delete::projection(bsoncxx::document::view projection) {
     _projection = projection;
 }
 
-void find_one_and_delete::sort(bson::document::view ordering) {
+void find_one_and_delete::sort(bsoncxx::document::view ordering) {
     _ordering = ordering;
 }
 
-const stdx::optional<bson::document::view>& find_one_and_delete::projection() const {
+const stdx::optional<bsoncxx::document::view>& find_one_and_delete::projection() const {
     return _projection;
 }
 
-const stdx::optional<bson::document::view>& find_one_and_delete::sort() const {
+const stdx::optional<bsoncxx::document::view>& find_one_and_delete::sort() const {
     return _ordering;
 }
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

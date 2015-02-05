@@ -20,8 +20,8 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/uri.hpp>
 
-using namespace mongo;
-using namespace mongo::driver;
+
+using namespace mongocxx;
 
 TEST_CASE("A client connects to a provided mongodb uri", "[client]") {
     MOCK_CLIENT

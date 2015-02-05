@@ -20,8 +20,7 @@
 #include <bsoncxx/builder/forward_decls.hpp>
 #include <bsoncxx/util/functor.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 
@@ -78,7 +77,6 @@ class array_ctx {
 
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

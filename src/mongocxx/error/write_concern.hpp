@@ -20,21 +20,19 @@
 // TODO: figure out if we need this
 // TODO: figure out if bson document should be view/value, etc.
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace error {
 
 class write_concern {
   private:
     std::int32_t code;
-    // bson::document::view details;
+    // bsoncxx::document::view details;
     std::string message;
 };
 
 }  // namespace error
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

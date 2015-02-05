@@ -24,8 +24,7 @@
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/write_concern.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
@@ -107,7 +106,7 @@ class uri {
     ///
     /// @return A document view containing other options.
     ///
-    bson::document::view options() const;
+    bsoncxx::document::view options() const;
 
     ///
     /// Returns the password from the uri.
@@ -167,7 +166,6 @@ class uri {
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

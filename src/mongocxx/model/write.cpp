@@ -14,8 +14,7 @@
 
 #include <mongocxx/model/write.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
@@ -129,5 +128,4 @@ write::~write() {
 
 }  // namespace model
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

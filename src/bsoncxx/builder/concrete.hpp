@@ -24,8 +24,7 @@
 #include <bsoncxx/string_or_literal.hpp>
 #include <bsoncxx/types.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 
@@ -97,7 +96,6 @@ class LIBBSONCXX_API concrete {
 
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

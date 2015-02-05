@@ -17,8 +17,7 @@
 
 #include <bsoncxx/document/value.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
@@ -43,5 +42,4 @@ value& value::operator=(const value& rhs) {
 
 }  // namespace document
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx

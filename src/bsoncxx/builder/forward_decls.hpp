@@ -16,8 +16,7 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 
@@ -34,7 +33,6 @@ namespace builder {
 
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

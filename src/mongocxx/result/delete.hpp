@@ -20,8 +20,7 @@
 
 #include <mongocxx/result/bulk_write.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
@@ -55,7 +54,6 @@ class LIBMONGOCXX_API delete_result {
 
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

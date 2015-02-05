@@ -18,8 +18,7 @@
 
 #include <type_traits>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace util {
 namespace functor {
@@ -94,8 +93,7 @@ struct is_functor : functor::is_functor_impl<C, S, std::is_class<C>::value> {};
 
 }  // namespace util
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
 
 
 #include <bsoncxx/config/postlude.hpp>

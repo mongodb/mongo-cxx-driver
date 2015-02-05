@@ -23,8 +23,7 @@
 #include <mongocxx/write_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class client;
@@ -67,7 +66,7 @@ class LIBMONGOCXX_API database {
     /// @return the result of executing the command.
     /// @throws operation_exception if the operation fails.
     ///
-    bson::document::value command(bson::document::view command);
+    bsoncxx::document::value command(bsoncxx::document::view command);
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
@@ -77,7 +76,7 @@ class LIBMONGOCXX_API database {
     /// @param name the new collection's name.
     /// @param options the options for the new collection.
     ///
-    class collection create_collection(const std::string& name, bson::document::view options);
+    class collection create_collection(const std::string& name, bsoncxx::document::view options);
 
     ///
     /// Drops the database and all its collections.
@@ -97,7 +96,7 @@ class LIBMONGOCXX_API database {
     ///
     /// Enumerates the collections in this database.
     ///
-    /// @return mongo::driver::cursor containing the collection information.
+    /// @return mongocxx::cursor containing the collection information.
     ///
     cursor list_collections();
 
@@ -126,7 +125,7 @@ class LIBMONGOCXX_API database {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/dbStats/
     ///
-    bson::document::value stats();
+    bsoncxx::document::value stats();
 
     ///
     /// Sets the read_preference for this database.
@@ -200,7 +199,6 @@ inline collection database::operator[](const std::string& name) const {
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

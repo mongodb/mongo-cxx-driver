@@ -14,19 +14,17 @@
 
 #include <mongocxx/model/delete_one.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
-delete_one::delete_one(bson::document::view filter) : _filter(std::move(filter)) {
+delete_one::delete_one(bsoncxx::document::view filter) : _filter(std::move(filter)) {
 }
 
-const bson::document::view& delete_one::filter() const {
+const bsoncxx::document::view& delete_one::filter() const {
     return _filter;
 }
 
 }  // namespace model
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

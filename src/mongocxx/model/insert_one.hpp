@@ -18,8 +18,7 @@
 
 #include <bsoncxx/document/view.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
@@ -36,25 +35,24 @@ class LIBMONGOCXX_API insert_one {
     /// @param document
     ///   The document to insert.
     ///
-    insert_one(bson::document::view document);
+    insert_one(bsoncxx::document::view document);
 
     ///
     /// Gets the document to be inserted.
     ///
     /// @return The document to be inserted.
     ///
-    const bson::document::view& document() const;
+    const bsoncxx::document::view& document() const;
 
    private:
     // TODO: should this be a value?
     // Required
-    bson::document::view _document;
+    bsoncxx::document::view _document;
 
 };
 
 }  // namespace model
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

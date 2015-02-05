@@ -21,8 +21,7 @@
 
 #include <cstring>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 
@@ -50,7 +49,7 @@ class concrete::impl {
         _has_user_key = false;
     }
 
-    bson::document::value steal() {
+    bsoncxx::document::value steal() {
         while (!_stack.empty()) {
             _stack.pop_back();
         }
@@ -59,7 +58,7 @@ class concrete::impl {
         uint8_t* buf_ptr = bson_destroy_with_steal(&_root, true, &buf_len);
         bson_init(&_root);
 
-        return bson::document::value{buf_ptr, buf_len, bson_free};
+        return bsoncxx::document::value{buf_ptr, buf_len, bson_free};
     }
 
     bson_t* back() {
@@ -332,7 +331,7 @@ void concrete::open_array_append() {
     _impl->push_back_array(key.c_str(), key.length());
 }
 
-void concrete::concat_append(const bson::document::view& view) {
+void concrete::concat_append(const bsoncxx::document::view& view) {
     bson_t other;
     bson_init_static(&other, view.data(), view.length());
 
@@ -351,7 +350,7 @@ void concrete::concat_append(const bson::document::view& view) {
     }
 }
 
-void concrete::value_append(const bson::document::element& value) {
+void concrete::value_append(const bsoncxx::document::element& value) {
     const string_or_literal& key = _impl->next_key();
 
     bson_iter_t iter;
@@ -381,15 +380,15 @@ void concrete::close_array_append() {
     _impl->pop_back();
 }
 
-bson::document::view concrete::view() const {
-    return bson::document::view(bson_get_data(_impl->root()), _impl->root()->len);
+bsoncxx::document::view concrete::view() const {
+    return bsoncxx::document::view(bson_get_data(_impl->root()), _impl->root()->len);
 }
 
-concrete::operator bson::document::view() const {
+concrete::operator bsoncxx::document::view() const {
     return view();
 }
 
-bson::document::value concrete::extract() {
+bsoncxx::document::value concrete::extract() {
     return _impl->steal();
 }
 
@@ -399,7 +398,6 @@ void concrete::clear() {
 
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

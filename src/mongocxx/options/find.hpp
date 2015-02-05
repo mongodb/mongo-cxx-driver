@@ -22,8 +22,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/read_preference.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
@@ -155,14 +154,14 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/query-modifier/
     ///
-    void modifiers(bson::document::view modifiers);
+    void modifiers(bsoncxx::document::view modifiers);
 
     ///
     /// Gets the current query modifiers.
     ///
     /// @return The current query modifiers.
     ///
-    const stdx::optional<bson::document::view>& modifiers() const;
+    const stdx::optional<bsoncxx::document::view>& modifiers() const;
 
     ///
     /// Sets the cursor flag to prevent cursor from timing out server-side due to a period of
@@ -195,7 +194,7 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
-    void projection(bson::document::view projection);
+    void projection(bsoncxx::document::view projection);
 
     ///
     /// Gets the current projection set on this query.
@@ -204,7 +203,7 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
-    const stdx::optional<bson::document::view>& projection() const;
+    const stdx::optional<bsoncxx::document::view>& projection() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -254,7 +253,7 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/cursor.sort/
     ///
-    void sort(bson::document::view ordering);
+    void sort(bsoncxx::document::view ordering);
 
     ///
     /// Gets the current sort ordering for this query.
@@ -263,7 +262,7 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/cursor.sort/
     ///
-    const stdx::optional<bson::document::view>& sort() const;
+    const stdx::optional<bsoncxx::document::view>& sort() const;
 
    private:
     stdx::optional<bool> _allow_partial_results;
@@ -272,19 +271,18 @@ class LIBMONGOCXX_API find {
     stdx::optional<enum cursor_type> _cursor_type;
     stdx::optional<std::int32_t> _limit;
     stdx::optional<std::int64_t> _max_time_ms;
-    stdx::optional<bson::document::view> _modifiers;
+    stdx::optional<bsoncxx::document::view> _modifiers;
     stdx::optional<bool> _no_cursor_timeout;
     stdx::optional<bool> _oplog_replay;
-    stdx::optional<bson::document::view> _projection;
+    stdx::optional<bsoncxx::document::view> _projection;
     stdx::optional<class read_preference> _read_preference;
     stdx::optional<std::int32_t> _skip;
-    stdx::optional<bson::document::view> _ordering;
+    stdx::optional<bsoncxx::document::view> _ordering;
 
 };
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

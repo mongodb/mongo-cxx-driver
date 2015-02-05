@@ -22,8 +22,7 @@
 #include <mongocxx/result/bulk_write.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
@@ -60,7 +59,7 @@ class LIBMONGOCXX_API update {
     ///
     /// @return The value of the _id field for upserted document.
     ///
-    stdx::optional<bson::document::element> upserted_id() const;
+    stdx::optional<bsoncxx::document::element> upserted_id() const;
 
    private:
     result::bulk_write _result;
@@ -69,7 +68,6 @@ class LIBMONGOCXX_API update {
 
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

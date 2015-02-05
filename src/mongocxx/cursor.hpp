@@ -20,8 +20,7 @@
 
 #include <bsoncxx/document/view.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class collection;
@@ -79,7 +78,7 @@ class LIBMONGOCXX_API cursor {
 ///
 class cursor::iterator : public std::iterator<
     std::input_iterator_tag,
-    bson::document::view
+    bsoncxx::document::view
 > {
 
    public:
@@ -87,12 +86,12 @@ class cursor::iterator : public std::iterator<
     ///
     /// Dereferences the view for the document currently being pointed to.
     ///
-    const bson::document::view& operator*() const;
+    const bsoncxx::document::view& operator*() const;
 
     ///
     /// Accesses a member of the dereferenced document currently being pointed to.
     ///
-    const bson::document::view* operator->() const;
+    const bsoncxx::document::view* operator->() const;
 
     ///
     /// Postfix increments the iterator to move to the next document.
@@ -112,7 +111,7 @@ class cursor::iterator : public std::iterator<
     explicit iterator(cursor* cursor);
 
     cursor* _cursor;
-    bson::document::view _doc;
+    bsoncxx::document::view _doc;
 
 };
 
@@ -120,7 +119,6 @@ bool operator==(const cursor::iterator& lhs, const cursor::iterator& rhs);
 bool operator!=(const cursor::iterator& lhs, const cursor::iterator& rhs);
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

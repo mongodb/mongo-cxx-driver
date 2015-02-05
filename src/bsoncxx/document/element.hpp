@@ -24,8 +24,7 @@
 
 #include <bsoncxx/string_or_literal.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
 enum class type : std::uint8_t;
@@ -74,7 +73,7 @@ namespace document {
         bool operator==(const element& rhs) const;
         explicit operator bool() const;
 
-        bson::type type() const;
+        bsoncxx::type type() const;
 
         string_or_literal key() const;
 
@@ -111,7 +110,6 @@ namespace document {
 }  // namespace document
 
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

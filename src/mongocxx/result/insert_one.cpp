@@ -14,12 +14,11 @@
 
 #include <mongocxx/result/insert_one.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
-insert_one::insert_one(result::bulk_write result, bson::document::element generated_id)
+insert_one::insert_one(result::bulk_write result, bsoncxx::document::element generated_id)
     : _result(std::move(result)), _generated_id(std::move(generated_id)) {
 }
 
@@ -27,13 +26,12 @@ const result::bulk_write& insert_one::result() const {
     return _result;
 }
 
-bson::document::element insert_one::inserted_id() const {
+bsoncxx::document::element insert_one::inserted_id() const {
     return _generated_id;
 }
 
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

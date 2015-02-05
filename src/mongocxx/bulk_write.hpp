@@ -20,8 +20,7 @@
 #include <mongocxx/model/write.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class collection;
@@ -51,7 +50,7 @@ class LIBMONGOCXX_API bulk_write {
    public:
 
     ///
-    /// Initializes a new bulk operation to be executed against a mongo::driver::collection.
+    /// Initializes a new bulk operation to be executed against a mongocxx::collection.
     ///
     /// @param ordered
     ///   If @c true all write operations will be executed serially in the order they were appended
@@ -112,7 +111,6 @@ class LIBMONGOCXX_API bulk_write {
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

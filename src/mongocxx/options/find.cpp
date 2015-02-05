@@ -15,8 +15,7 @@
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/private/read_preference.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
@@ -42,7 +41,7 @@ void find::max_time_ms(std::int64_t max_time_ms) {
     _max_time_ms = max_time_ms;
 }
 
-void find::modifiers(bson::document::view modifiers) {
+void find::modifiers(bsoncxx::document::view modifiers) {
     _modifiers = modifiers;
 }
 
@@ -54,7 +53,7 @@ void find::oplog_replay(bool oplog_replay) {
     _oplog_replay = oplog_replay;
 }
 
-void find::projection(bson::document::view projection) {
+void find::projection(bsoncxx::document::view projection) {
     _projection = projection;
 }
 
@@ -66,7 +65,7 @@ void find::skip(std::int32_t skip) {
     _skip = skip;
 }
 
-void find::sort(bson::document::view ordering) {
+void find::sort(bsoncxx::document::view ordering) {
     _ordering = ordering;
 }
 
@@ -86,7 +85,7 @@ const stdx::optional<std::int64_t>& find::max_time_ms() const {
     return _max_time_ms;
 }
 
-const stdx::optional<bson::document::view>& find::modifiers() const {
+const stdx::optional<bsoncxx::document::view>& find::modifiers() const {
     return _modifiers;
 }
 
@@ -98,7 +97,7 @@ const stdx::optional<bool>& find::oplog_replay() const {
     return _oplog_replay;
 }
 
-const stdx::optional<bson::document::view>& find::projection() const {
+const stdx::optional<bsoncxx::document::view>& find::projection() const {
     return _projection;
 }
 
@@ -106,7 +105,7 @@ const stdx::optional<std::int32_t>& find::skip() const {
     return _skip;
 }
 
-const stdx::optional<bson::document::view>& find::sort() const {
+const stdx::optional<bsoncxx::document::view>& find::sort() const {
     return _ordering;
 }
 
@@ -116,7 +115,6 @@ const stdx::optional<class read_preference>& find::read_preference() const {
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

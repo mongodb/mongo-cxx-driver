@@ -29,8 +29,7 @@ extern "C" {
 #include <bsoncxx/util/b64_ntop.h>
 }
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
 class json_visitor {
@@ -228,7 +227,6 @@ inline std::string to_json(document::view view) {
 }
 
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

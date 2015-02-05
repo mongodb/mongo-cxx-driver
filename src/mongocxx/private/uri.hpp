@@ -18,8 +18,7 @@
 
 #include <mongoc.h>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class uri::impl {
@@ -31,7 +30,6 @@ class uri::impl {
 }; // class impl
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

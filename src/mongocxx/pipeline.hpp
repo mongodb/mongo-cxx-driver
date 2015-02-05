@@ -22,8 +22,7 @@
 
 #include <bsoncxx/document/view.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class collection;
@@ -70,7 +69,7 @@ class LIBMONGOCXX_API pipeline {
     ///
     /// @param group the group expression, as a document.
     ///
-    pipeline& group(bson::document::view group);
+    pipeline& group(bsoncxx::document::view group);
 
     ///
     /// Limits the number of documents passed to the next stage in the pipeline.
@@ -89,7 +88,7 @@ class LIBMONGOCXX_API pipeline {
     ///
     /// @param filter the filter.
     ///
-    pipeline& match(bson::document::view filter);
+    pipeline& match(bsoncxx::document::view filter);
 
     ///
     /// Takes documents returned by the aggregation pipeline and writes them to a specified
@@ -109,7 +108,7 @@ class LIBMONGOCXX_API pipeline {
     ///
     /// @param projection projection specification.
     ///
-    pipeline& project(bson::document::view projection);
+    pipeline& project(bsoncxx::document::view projection);
 
     ///
     /// Restricts the contents of the documents based on information stored in the documents
@@ -119,7 +118,7 @@ class LIBMONGOCXX_API pipeline {
     ///
     /// @param restrictions the document restrictions.
     ///
-    pipeline& redact(bson::document::view restrictions);
+    pipeline& redact(bsoncxx::document::view restrictions);
 
     ///
     /// Skips over the specified number of documents that pass into the stage and passes the
@@ -138,7 +137,7 @@ class LIBMONGOCXX_API pipeline {
     ///
     /// @param ordering document specifying the ordering by which the documents are sorted.
     ///
-    pipeline& sort(bson::document::view ordering);
+    pipeline& sort(bsoncxx::document::view ordering);
 
     ///
     /// Deconstructs an array field from the input documents to output a document for each element.
@@ -160,7 +159,6 @@ class LIBMONGOCXX_API pipeline {
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

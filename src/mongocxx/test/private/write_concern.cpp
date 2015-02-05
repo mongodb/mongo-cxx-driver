@@ -19,7 +19,7 @@
 #include <mongocxx/write_concern.hpp>
 #include <mongocxx/private/write_concern.hpp>
 
-using namespace mongo::driver;
+using namespace mongocxx;
 
 TEST_CASE("creation of write_concern passes universal parameters to c-driver's methods",
           "[write_concern][base][c-driver]") {

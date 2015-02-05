@@ -19,8 +19,7 @@
 
 // TODO: figure out if we need this
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace error {
 
@@ -31,7 +30,6 @@ class write {
 
 }  // namespace error
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

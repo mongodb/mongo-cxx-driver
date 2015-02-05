@@ -22,8 +22,8 @@
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/write_concern.hpp>
 
-using namespace mongo;
-using namespace mongo::driver;
+
+using namespace mongocxx;
 
 TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
     auto construct = libmongoc::bulk_operation_new.create_instance();
@@ -62,7 +62,7 @@ TEST_CASE("the destruction of a bulk_write will destroy the mongoc operation",
 
 class SingleDocumentFun {
    public:
-    SingleDocumentFun(bool& called, bson::document::view document)
+    SingleDocumentFun(bool& called, bsoncxx::document::view document)
         : _called{called}, _document{document} {
         _called = false;
     }
@@ -76,12 +76,12 @@ class SingleDocumentFun {
 
    private:
     bool& _called;
-    bson::document::view _document;
+    bsoncxx::document::view _document;
 };
 
 class FilteredDocumentFun : public SingleDocumentFun {
    public:
-    FilteredDocumentFun(bool& called, bson::document::view filter, bson::document::view document)
+    FilteredDocumentFun(bool& called, bsoncxx::document::view filter, bsoncxx::document::view document)
         : SingleDocumentFun(called, document), _expected_upsert(false), _filter{filter} {
     }
     void operator()(mongoc_bulk_operation_t* bulk, const bson_t* filter, const bson_t* document,
@@ -96,17 +96,17 @@ class FilteredDocumentFun : public SingleDocumentFun {
 
    private:
     bool _expected_upsert;
-    bson::document::view _filter;
+    bsoncxx::document::view _filter;
 };
 
 TEST_CASE("passing valid write operations to append calls the corresponding C function",
           "[bulk_write]") {
     bulk_write bw(true);
-    bson::builder::document filter_builder, doc_builder;
+    bsoncxx::builder::document filter_builder, doc_builder;
     filter_builder << "_id" << 1;
     doc_builder << "_id" << 2;
-    bson::document::view filter = filter_builder.view();
-    bson::document::view doc = doc_builder.view();
+    bsoncxx::document::view filter = filter_builder.view();
+    bsoncxx::document::view doc = doc_builder.view();
     bool single_doc_fun_called;
     SingleDocumentFun single_doc_fun(single_doc_fun_called, doc);
     bool filtered_doc_fun_called;

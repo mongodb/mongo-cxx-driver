@@ -15,8 +15,7 @@
 #include <mongocxx/write_concern.hpp>
 #include <mongocxx/options/bulk_write.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
@@ -34,7 +33,6 @@ const stdx::optional<bool>& bulk_write::ordered() const {
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

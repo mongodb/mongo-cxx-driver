@@ -23,8 +23,7 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 cursor::cursor(void* cursor_ptr)
@@ -43,7 +42,7 @@ void cursor::iterator::operator++(int) {
 cursor::iterator& cursor::iterator::operator++() {
     const bson_t* out;
     if (libmongoc::cursor_next(_cursor->_impl->cursor_t, &out)) {
-        _doc = bson::document::view(bson_get_data(out), out->len);
+        _doc = bsoncxx::document::view(bson_get_data(out), out->len);
     } else {
         _cursor = nullptr;
     }
@@ -67,11 +66,11 @@ cursor::iterator::iterator(cursor* cursor) : _cursor(cursor) {
     if (cursor) operator++();
 }
 
-const bson::document::view& cursor::iterator::operator*() const {
+const bsoncxx::document::view& cursor::iterator::operator*() const {
     return _doc;
 }
 
-const bson::document::view* cursor::iterator::operator->() const {
+const bsoncxx::document::view* cursor::iterator::operator->() const {
     return &_doc;
 }
 
@@ -85,5 +84,4 @@ bool operator!=(const cursor::iterator& lhs, const cursor::iterator& rhs) {
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

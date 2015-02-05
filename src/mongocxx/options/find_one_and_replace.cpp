@@ -14,12 +14,11 @@
 
 #include <mongocxx/options/find_one_and_replace.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-void find_one_and_replace::projection(bson::document::view projection) {
+void find_one_and_replace::projection(bsoncxx::document::view projection) {
     _projection = projection;
 }
 
@@ -27,7 +26,7 @@ void find_one_and_replace::return_document(enum return_document return_document)
     _return_document = return_document;
 }
 
-void find_one_and_replace::sort(bson::document::view ordering) {
+void find_one_and_replace::sort(bsoncxx::document::view ordering) {
     _ordering = ordering;
 }
 
@@ -35,7 +34,7 @@ void find_one_and_replace::upsert(bool upsert) {
     _upsert = upsert;
 }
 
-const stdx::optional<bson::document::view>& find_one_and_replace::projection() const {
+const stdx::optional<bsoncxx::document::view>& find_one_and_replace::projection() const {
     return _projection;
 }
 
@@ -43,7 +42,7 @@ const stdx::optional<enum return_document>& find_one_and_replace::return_documen
     return _return_document;
 }
 
-const stdx::optional<bson::document::view>& find_one_and_replace::sort() const {
+const stdx::optional<bsoncxx::document::view>& find_one_and_replace::sort() const {
     return _ordering;
 }
 
@@ -53,7 +52,6 @@ const stdx::optional<bool>& find_one_and_replace::upsert() const {
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

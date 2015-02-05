@@ -19,8 +19,7 @@
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/private/read_preference.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 read_preference::read_preference(read_preference&&) noexcept = default;
@@ -45,7 +44,7 @@ read_preference::read_preference(read_mode mode)
           libmongoc::read_prefs_new(static_cast<mongoc_read_mode_t>(mode)))) {
 }
 
-read_preference::read_preference(read_mode mode, bson::document::view tags)
+read_preference::read_preference(read_mode mode, bsoncxx::document::view tags)
     : read_preference(mode) {
     read_preference::tags(tags);
 }
@@ -56,8 +55,8 @@ void read_preference::mode(read_mode mode) {
     libmongoc::read_prefs_set_mode(_impl->read_preference_t, static_cast<mongoc_read_mode_t>(mode));
 }
 
-void read_preference::tags(bson::document::view tags) {
-    libbson::scoped_bson_t scoped_bson_tags(tags);
+void read_preference::tags(bsoncxx::document::view tags) {
+    libbsoncxx::scoped_bson_t scoped_bson_tags(tags);
     libmongoc::read_prefs_set_tags(_impl->read_preference_t, scoped_bson_tags.bson());
 }
 
@@ -65,15 +64,14 @@ read_preference::read_mode read_preference::mode() const {
     return static_cast<read_mode>(libmongoc::read_prefs_get_mode(_impl->read_preference_t));
 }
 
-stdx::optional<bson::document::view> read_preference::tags() const {
+stdx::optional<bsoncxx::document::view> read_preference::tags() const {
     const bson_t* bson_tags = libmongoc::read_prefs_get_tags(_impl->read_preference_t);
 
     if (bson_count_keys(bson_tags))
-        return bson::document::view(bson_get_data(bson_tags), bson_tags->len);
+        return bsoncxx::document::view(bson_get_data(bson_tags), bson_tags->len);
 
-    return stdx::optional<bson::document::view>{};
+    return stdx::optional<bsoncxx::document::view>{};
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

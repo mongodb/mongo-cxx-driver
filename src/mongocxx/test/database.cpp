@@ -20,8 +20,8 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
 
-using namespace mongo;
-using namespace mongo::driver;
+
+using namespace mongocxx;
 
 TEST_CASE("A database", "[database]") {
     const std::string database_name("database");

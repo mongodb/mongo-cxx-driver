@@ -28,8 +28,7 @@
     iter.next_off = _off; \
     bson_iter_next(&iter)
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
@@ -48,13 +47,13 @@ bool element::operator==(const element& rhs) const {
     return (_raw == rhs._raw && _off == rhs._off);
 }
 
-bson::type element::type() const {
+bsoncxx::type element::type() const {
     if (_raw == nullptr) {
-        return bson::type::k_eod;
+        return bsoncxx::type::k_eod;
     }
 
     CITER;
-    return static_cast<bson::type>(bson_iter_type(&iter));
+    return static_cast<bsoncxx::type>(bson_iter_type(&iter));
 }
 
 string_or_literal element::key() const {
@@ -244,5 +243,4 @@ std::ostream& operator<<(std::ostream& out, const element& element) {
 
 }  // namespace document
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx

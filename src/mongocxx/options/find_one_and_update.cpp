@@ -14,12 +14,11 @@
 
 #include <mongocxx/options/find_one_and_update.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-void find_one_and_update::projection(bson::document::view projection) {
+void find_one_and_update::projection(bsoncxx::document::view projection) {
     _projection = projection;
 }
 
@@ -27,7 +26,7 @@ void find_one_and_update::return_document(enum return_document return_document) 
     _return_document = return_document;
 }
 
-void find_one_and_update::sort(bson::document::view ordering) {
+void find_one_and_update::sort(bsoncxx::document::view ordering) {
     _ordering = ordering;
 }
 
@@ -35,7 +34,7 @@ void find_one_and_update::upsert(bool upsert) {
     _upsert = upsert;
 }
 
-const stdx::optional<bson::document::view>& find_one_and_update::projection() const {
+const stdx::optional<bsoncxx::document::view>& find_one_and_update::projection() const {
     return _projection;
 }
 
@@ -43,7 +42,7 @@ const stdx::optional<return_document>& find_one_and_update::return_document() co
     return _return_document;
 }
 
-const stdx::optional<bson::document::view>& find_one_and_update::sort() const {
+const stdx::optional<bsoncxx::document::view>& find_one_and_update::sort() const {
     return _ordering;
 }
 
@@ -53,5 +52,4 @@ const stdx::optional<bool>& find_one_and_update::upsert() const {
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

@@ -14,10 +14,10 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 
-// TODO: I realize these are not in mongo::bson::stdx yet but I think their placement here
+// TODO: I realize these are not in bsoncxx::stdx yet but I think their placement here
 // is a mistake so I'm going to wait it out.
 
-namespace mongo {
+namespace bsoncxx {
 namespace stdx {
 
 in_place_t in_place;

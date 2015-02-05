@@ -19,8 +19,7 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 const std::string uri::k_default_uri = "mongodb://localhost:27017";
@@ -82,5 +81,4 @@ std::string uri::username() const {
 //}
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

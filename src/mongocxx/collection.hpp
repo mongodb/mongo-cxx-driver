@@ -45,8 +45,7 @@
 #include <mongocxx/result/update.hpp>
 #include <mongocxx/write_concern.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class client;
@@ -64,7 +63,7 @@ class pipeline;
 /// Example:
 /// @code
 ///   // Connect and get a collection
-///   mongo::driver::client mongo_client;
+///   mongocxx::client mongo_client;
 ///   auto coll = mongo_client["database"]["collection"];
 /// @endcode
 ///
@@ -95,9 +94,9 @@ class LIBMONGOCXX_API collection {
     /// @param pipeline
     ///   The pipeline of aggregation operations to perform.
     /// @param options
-    ///   Optional arguments, see mongo::driver::options::aggregate.
+    ///   Optional arguments, see mongocxx::options::aggregate.
     ///
-    /// @return A mongo::driver::cursor with the results.
+    /// @return A mongocxx::cursor with the results.
     /// @throws operation_exception if the aggregation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/aggregate/
@@ -122,7 +121,7 @@ class LIBMONGOCXX_API collection {
     /// @return The optional result of the bulk operation execution, a result::bulk_write.
     /// @throws bulk_write_exception when there are errors processing the writes.
     ///
-    /// @see mongo::driver::bulk_write
+    /// @see mongocxx::bulk_write
     /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
     ///
     template<typename container_type>
@@ -149,7 +148,7 @@ class LIBMONGOCXX_API collection {
     /// @return The optional result of the bulk operation execution, a result::bulk_write.
     /// @throws bulk_write_exception when there are errors processing the writes.
     ///
-    /// @see mongo::driver::bulk_write
+    /// @see mongocxx::bulk_write
     /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
     ///
     template<typename write_model_iterator_type>
@@ -180,7 +179,7 @@ class LIBMONGOCXX_API collection {
     /// @param filter
     ///   The filter that documents must match in order to be counted.
     /// @param options
-    ///   Optional arguments, see mongo::driver::options::count.
+    ///   Optional arguments, see mongocxx::options::count.
     ///
     /// @return The count of the documents that matched the filter.
     /// @throws operation_exception if the count operation fails.
@@ -188,7 +187,7 @@ class LIBMONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/reference/command/count/
     ///
     std::int64_t count(
-        bson::document::view filter,
+        bsoncxx::document::view filter,
         const options::count& options = options::count()
     );
 
@@ -205,9 +204,9 @@ class LIBMONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.ensureIndex/#ensureindex-options
     ///
-    bson::document::value create_index(
-        bson::document::view keys,
-        bson::document::view options
+    bsoncxx::document::value create_index(
+        bsoncxx::document::view keys,
+        bsoncxx::document::view options
     );
 
     ///
@@ -216,7 +215,7 @@ class LIBMONGOCXX_API collection {
     /// @param filter
     ///   Document view representing the data to be deleted.
     /// @param options
-    ///   Optional arguments, see mongo::driver::options::delete_options.
+    ///   Optional arguments, see mongocxx::options::delete_options.
     ///
     /// @return The optional result of performing the deletion, a result::delete_result.
     /// @throws write_exception if the delete fails.
@@ -224,7 +223,7 @@ class LIBMONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/reference/command/delete/
     ///
     stdx::optional<result::delete_result> delete_many(
-        bson::document::view filter,
+        bsoncxx::document::view filter,
         const options::delete_options& options = options::delete_options()
     );
 
@@ -234,7 +233,7 @@ class LIBMONGOCXX_API collection {
     /// @param filter
     ///   Document view representing the data to be deleted.
     /// @param options
-    ///   Optional arguments, see mongo::driver::options::delete_options.
+    ///   Optional arguments, see mongocxx::options::delete_options.
     ///
     /// @return The optional result of performing the deletion, a result::delete_result.
     /// @throws write_exception if the delete fails.
@@ -242,7 +241,7 @@ class LIBMONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/reference/command/delete/
     ///
     stdx::optional<result::delete_result> delete_one(
-        bson::document::view filter,
+        bsoncxx::document::view filter,
         const options::delete_options& options = options::delete_options()
     );
 
@@ -263,7 +262,7 @@ class LIBMONGOCXX_API collection {
     ///
     cursor distinct(
         const std::string& field_name,
-        bson::document::view filter,
+        bsoncxx::document::view filter,
         const options::distinct& options = options::distinct()
     );
 
@@ -290,7 +289,7 @@ class LIBMONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/core/read-operations-introduction/
     ///
     cursor find(
-        bson::document::view filter,
+        bsoncxx::document::view filter,
         const options::find& options = options::find()
     );
 
@@ -308,8 +307,8 @@ class LIBMONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-operations-introduction/
     ///
-    stdx::optional<bson::document::value> find_one(
-        bson::document::view filter,
+    stdx::optional<bsoncxx::document::value> find_one(
+        bsoncxx::document::view filter,
         const options::find& options = options::find()
     );
 
@@ -324,8 +323,8 @@ class LIBMONGOCXX_API collection {
     /// @return The document that was deleted.
     /// @throws write_exception if the operation fails.
     ///
-    stdx::optional<bson::document::value> find_one_and_delete(
-        bson::document::view filter,
+    stdx::optional<bsoncxx::document::value> find_one_and_delete(
+        bsoncxx::document::view filter,
         const options::find_one_and_delete& options = options::find_one_and_delete()
     );
 
@@ -343,9 +342,9 @@ class LIBMONGOCXX_API collection {
     /// @return The original or replaced document.
     /// @throws write_exception if the operation fails.
     ///
-    stdx::optional<bson::document::value> find_one_and_replace(
-        bson::document::view filter,
-        bson::document::view replacement,
+    stdx::optional<bsoncxx::document::value> find_one_and_replace(
+        bsoncxx::document::view filter,
+        bsoncxx::document::view replacement,
         const options::find_one_and_replace& options = options::find_one_and_replace()
     );
 
@@ -363,9 +362,9 @@ class LIBMONGOCXX_API collection {
     /// @return The original or updated document.
     /// @throws write_exception when the operation fails.
     ///
-    stdx::optional<bson::document::value> find_one_and_update(
-        bson::document::view filter,
-        bson::document::view update,
+    stdx::optional<bsoncxx::document::value> find_one_and_update(
+        bsoncxx::document::view filter,
+        bsoncxx::document::view update,
         const options::find_one_and_update& options = options::find_one_and_update()
     );
 
@@ -382,7 +381,7 @@ class LIBMONGOCXX_API collection {
     /// @throws write_exception if the operation fails.
     ///
     stdx::optional<result::insert_one> insert_one(
-        bson::document::view document,
+        bsoncxx::document::view document,
         const options::insert& options = options::insert()
     );
 
@@ -422,7 +421,7 @@ class LIBMONGOCXX_API collection {
     ///
     /// @tparam document_view_iterator_type
     ///   The iterator type. Must meet the requirements for the input iterator concept with a value
-    ///   type of bson::document::view.
+    ///   type of bsoncxx::document::view.
     ///
     /// @param begin
     ///   Iterator pointing to the first document to be inserted.
@@ -495,8 +494,8 @@ class LIBMONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
     stdx::optional<result::replace_one> replace_one(
-        bson::document::view filter,
-        bson::document::view replacement,
+        bsoncxx::document::view filter,
+        bsoncxx::document::view replacement,
         const options::update& options = options::update()
     );
 
@@ -516,8 +515,8 @@ class LIBMONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
     stdx::optional<result::update> update_many(
-        bson::document::view filter,
-        bson::document::view update,
+        bsoncxx::document::view filter,
+        bsoncxx::document::view update,
         const options::update& options = options::update()
     );
 
@@ -537,8 +536,8 @@ class LIBMONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
     stdx::optional<result::update> update_one(
-        bson::document::view filter,
-        bson::document::view update,
+        bsoncxx::document::view filter,
+        bsoncxx::document::view update,
         const options::update& options = options::update()
     );
 
@@ -607,14 +606,14 @@ inline stdx::optional<result::insert_many> collection::insert_many(
 ) {
     class bulk_write writes(false);
 
-    std::map<std::size_t, bson::document::element> inserted_ids{};
+    std::map<std::size_t, bsoncxx::document::element> inserted_ids{};
     size_t index = 0;
-    std::for_each(begin, end, [&](const bson::document::view& current){
-        // TODO: put this somewhere else not in header scope (bson::builder)
+    std::for_each(begin, end, [&](const bsoncxx::document::view& current){
+        // TODO: put this somewhere else not in header scope (bsoncxx::builder)
         if ( !current["_id"]) {
-            bson::builder::document new_document;
-            new_document << "_id" << bson::oid(bson::oid::init_tag);
-            new_document << bson::builder::helpers::concat{current};
+            bsoncxx::builder::document new_document;
+            new_document << "_id" << bsoncxx::oid(bsoncxx::oid::init_tag);
+            new_document << bsoncxx::builder::helpers::concat{current};
 
             writes.append(model::insert_one(new_document.view()));
 
@@ -635,7 +634,6 @@ inline stdx::optional<result::insert_many> collection::insert_many(
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

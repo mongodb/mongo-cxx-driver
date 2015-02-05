@@ -24,8 +24,7 @@
 #include <mongocxx/write_concern.hpp>
 #include <mongocxx/options/client.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
@@ -40,8 +39,8 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 ///
 /// Example:
 /// @code
-///   mongo::driver::client mongo_client;
-///   mongo::driver::client mongo_client("mongodb://localhost:27017");
+///   mongocxx::client mongo_client;
+///   mongocxx::client mongo_client("mongodb://localhost:27017");
 /// @endcode
 ///
 /// @todo Make iterable for databases on the server
@@ -161,7 +160,6 @@ inline database client::operator[](const std::string& name) const & {
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

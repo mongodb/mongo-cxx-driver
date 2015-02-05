@@ -19,28 +19,26 @@
 #include <bsoncxx/builder.hpp>
 #include <mongocxx/pipeline.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class pipeline::impl {
 
    public:
-    bson::builder::single_ctx sink() {
+    bsoncxx::builder::single_ctx sink() {
         return _builder;
     }
 
-    bson::document::view view() {
+    bsoncxx::document::view view() {
         return _builder.view();
     }
 
    private:
-    bson::builder::array _builder;
+    bsoncxx::builder::array _builder;
 
 }; // class impl
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

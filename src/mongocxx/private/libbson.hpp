@@ -23,15 +23,14 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace libbson {
 
 class scoped_bson_t {
    public:
-    scoped_bson_t(const mongo::stdx::optional<bson::document::view>& doc);
-    scoped_bson_t(const bson::document::view& doc);
+    scoped_bson_t(const mongo::stdx::optional<bsoncxx::document::view>& doc);
+    scoped_bson_t(const bsoncxx::document::view& doc);
     scoped_bson_t();
 
     scoped_bson_t(const scoped_bson_t& rhs) = delete;
@@ -39,8 +38,8 @@ class scoped_bson_t {
     scoped_bson_t(scoped_bson_t&& rhs) = delete;
     scoped_bson_t& operator=(scoped_bson_t&& rhs) = delete;
 
-    void init_from_static(const mongo::stdx::optional<bson::document::view>& doc);
-    void init_from_static(const bson::document::view& doc);
+    void init_from_static(const mongo::stdx::optional<bsoncxx::document::view>& doc);
+    void init_from_static(const bsoncxx::document::view& doc);
     void init();
     void flag_init();
 
@@ -48,8 +47,8 @@ class scoped_bson_t {
 
     bson_t* bson();
 
-    bson::document::view view();
-    bson::document::value steal();
+    bsoncxx::document::view view();
+    bsoncxx::document::value steal();
 
    private:
     bson_t _bson;
@@ -58,5 +57,4 @@ class scoped_bson_t {
 
 }  // namespace libbson
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

@@ -25,8 +25,7 @@
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/string_or_literal.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
@@ -96,7 +95,6 @@ class view::const_iterator : public std::iterator<std::forward_iterator_tag, ele
 
 }  // namespace document
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

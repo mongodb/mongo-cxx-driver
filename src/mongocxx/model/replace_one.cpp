@@ -14,12 +14,11 @@
 
 #include <mongocxx/model/replace_one.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
-replace_one::replace_one(bson::document::view filter, bson::document::view replacement)
+replace_one::replace_one(bsoncxx::document::view filter, bsoncxx::document::view replacement)
     : _filter(std::move(filter)), _replacement(std::move(replacement)) {
 }
 
@@ -29,11 +28,11 @@ replace_one& replace_one::upsert(bool upsert) {
     return *this;
 }
 
-const bson::document::view& replace_one::filter() const {
+const bsoncxx::document::view& replace_one::filter() const {
     return _filter;
 }
 
-const bson::document::view& replace_one::replacement() const {
+const bsoncxx::document::view& replace_one::replacement() const {
     return _replacement;
 }
 
@@ -43,5 +42,4 @@ const stdx::optional<bool>& replace_one::upsert() const {
 
 }  // namespace model
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

@@ -16,8 +16,7 @@
 
 #include <mongocxx/exception/operation.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace exception {
 
@@ -25,7 +24,6 @@ class LIBMONGOCXX_API write : public operation {};
 
 }  // namespace exception
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

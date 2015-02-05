@@ -19,8 +19,7 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 write_concern::write_concern() : _impl{stdx::make_unique<impl>(mongoc_write_concern_new())} {
@@ -96,5 +95,4 @@ std::chrono::milliseconds write_concern::timeout() const {
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

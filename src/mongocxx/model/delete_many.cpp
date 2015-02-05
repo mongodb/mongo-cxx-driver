@@ -14,19 +14,17 @@
 
 #include <mongocxx/model/delete_many.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
-delete_many::delete_many(bson::document::view filter) : _filter(std::move(filter)) {
+delete_many::delete_many(bsoncxx::document::view filter) : _filter(std::move(filter)) {
 }
 
-const bson::document::view& delete_many::filter() const {
+const bsoncxx::document::view& delete_many::filter() const {
     return _filter;
 }
 
 }  // namespace model
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

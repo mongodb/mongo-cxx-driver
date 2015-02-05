@@ -15,8 +15,7 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/json.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
 std::string to_string(type rhs) {
@@ -58,5 +57,4 @@ namespace types {
 
 }  // namespace types
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx

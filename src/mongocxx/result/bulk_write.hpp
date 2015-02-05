@@ -23,8 +23,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/types.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
@@ -34,7 +33,7 @@ namespace result {
 class LIBMONGOCXX_API bulk_write {
 
    public:
-    explicit bulk_write(bson::document::value raw_response);
+    explicit bulk_write(bsoncxx::document::value raw_response);
 
     ///
     /// Gets the number of documents that were inserted during this operation.
@@ -76,25 +75,24 @@ class LIBMONGOCXX_API bulk_write {
     ///
     /// @return The values of the _id field for inserted documents.
     ///
-    bson::document::element inserted_ids() const;
+    bsoncxx::document::element inserted_ids() const;
 
     ///
     /// Gets the ids of the upserted documents.
     ///
     /// @return The values of the _id field for upserted documents.
     ///
-    bson::document::element upserted_ids() const;
+    bsoncxx::document::element upserted_ids() const;
 
    private:
-    bson::document::view view() const;
+    bsoncxx::document::view view() const;
 
-    bson::document::value _response;
+    bsoncxx::document::value _response;
 
 }; // class bulk_write
 
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

@@ -22,8 +22,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/write_concern.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
@@ -61,7 +60,7 @@ class LIBMONGOCXX_API find_one_and_delete {
     ///
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
-    void projection(bson::document::view projection);
+    void projection(bsoncxx::document::view projection);
 
     ///
     /// Gets the current projection set on this operation.
@@ -70,7 +69,7 @@ class LIBMONGOCXX_API find_one_and_delete {
     ///
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
-    const stdx::optional<bson::document::view>& projection() const;
+    const stdx::optional<bsoncxx::document::view>& projection() const;
 
     ///
     /// Sets the order to search for a matching document.
@@ -83,7 +82,7 @@ class LIBMONGOCXX_API find_one_and_delete {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.findAndModify/
     ///
-    void sort(bson::document::view ordering);
+    void sort(bsoncxx::document::view ordering);
 
     ///
     /// Gets the current sort ordering.
@@ -92,18 +91,17 @@ class LIBMONGOCXX_API find_one_and_delete {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.findAndModify/
     ///
-    const stdx::optional<bson::document::view>& sort() const;
+    const stdx::optional<bsoncxx::document::view>& sort() const;
 
    private:
     stdx::optional<std::int64_t> _max_time_ms;
-    stdx::optional<bson::document::view> _projection;
-    stdx::optional<bson::document::view> _ordering;
+    stdx::optional<bsoncxx::document::view> _projection;
+    stdx::optional<bsoncxx::document::view> _ordering;
 
 };
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

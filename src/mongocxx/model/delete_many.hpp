@@ -18,8 +18,7 @@
 
 #include <bsoncxx/document/view.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
@@ -36,24 +35,23 @@ class LIBMONGOCXX_API delete_many {
     /// @param filter
     ///   Document representing the criteria for deletion.
     ///
-    explicit delete_many(bson::document::view filter);
+    explicit delete_many(bsoncxx::document::view filter);
 
     ///
     /// Gets the filter for this delete operation.
     ///
     /// @return The filter to be used for the delete operation.
     ///
-    const bson::document::view& filter() const;
+    const bsoncxx::document::view& filter() const;
 
    private:
     // Required
-    bson::document::view _filter;
+    bsoncxx::document::view _filter;
 
 };
 
 }  // namespace model
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

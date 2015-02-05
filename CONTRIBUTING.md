@@ -49,8 +49,7 @@ Example:
 
 #include "driver/blah.hpp"
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 // Declarations
@@ -58,8 +57,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 // Inline Implementations
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include "driver/config/postlude.hpp"
 ```

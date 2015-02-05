@@ -19,8 +19,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
@@ -39,21 +38,21 @@ class LIBMONGOCXX_API update_many {
     /// @param update
     ///   Document representing the modifications to be applied to matching documents.
     ///
-    update_many(bson::document::view filter, bson::document::view update);
+    update_many(bsoncxx::document::view filter, bsoncxx::document::view update);
 
     ///
     /// Gets the filter.
     ///
     /// @return The filter to be used for the update operation.
     ///
-    const bson::document::view& filter() const;
+    const bsoncxx::document::view& filter() const;
 
     ///
     /// Gets the update document.
     ///
     /// @return The modifications to be applied as part of the update.
     ///
-    const bson::document::view& update() const;
+    const bsoncxx::document::view& update() const;
 
     ///
     /// Sets the upsert option.
@@ -79,8 +78,8 @@ class LIBMONGOCXX_API update_many {
 
    private:
     // Required
-    bson::document::view _filter;
-    bson::document::view _update;
+    bsoncxx::document::view _filter;
+    bsoncxx::document::view _update;
 
     // Optional
     stdx::optional<bool> _upsert;
@@ -89,7 +88,6 @@ class LIBMONGOCXX_API update_many {
 
 }  // namespace model
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

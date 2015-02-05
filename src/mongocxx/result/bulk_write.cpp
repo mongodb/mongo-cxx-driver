@@ -14,12 +14,11 @@
 
 #include <mongocxx/result/bulk_write.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
-bulk_write::bulk_write(bson::document::value raw_response) : _response(std::move(raw_response)) {
+bulk_write::bulk_write(bsoncxx::document::value raw_response) : _response(std::move(raw_response)) {
 }
 
 std::int64_t bulk_write::inserted_count() const {
@@ -42,19 +41,18 @@ std::int64_t bulk_write::upserted_count() const {
     return view()["nUpserted"].get_int64();
 }
 
-bson::document::element bulk_write::inserted_ids() const {
+bsoncxx::document::element bulk_write::inserted_ids() const {
     return view()["inserted_ids"];
 }
 
-bson::document::element bulk_write::upserted_ids() const {
+bsoncxx::document::element bulk_write::upserted_ids() const {
     return view()["upserted_ids"];
 }
 
-bson::document::view bulk_write::view() const {
+bsoncxx::document::view bulk_write::view() const {
     return _response.view();
 }
 
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

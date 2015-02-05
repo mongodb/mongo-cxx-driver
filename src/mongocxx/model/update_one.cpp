@@ -14,12 +14,11 @@
 
 #include <mongocxx/model/update_one.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
-update_one::update_one(bson::document::view filter, bson::document::view update)
+update_one::update_one(bsoncxx::document::view filter, bsoncxx::document::view update)
     : _filter(std::move(filter)), _update(std::move(update)) {
 }
 
@@ -32,15 +31,14 @@ const stdx::optional<bool>& update_one::upsert() const {
     return _upsert;
 }
 
-const bson::document::view& update_one::filter() const {
+const bsoncxx::document::view& update_one::filter() const {
     return _filter;
 }
 
-const bson::document::view& update_one::update() const {
+const bsoncxx::document::view& update_one::update() const {
     return _update;
 }
 
 }  // namespace model
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

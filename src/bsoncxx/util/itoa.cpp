@@ -14,8 +14,7 @@
 
 #include <bsoncxx/util/itoa.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace util {
 
@@ -1080,5 +1079,4 @@ std::size_t itoa::length() const {
 
 }  // namespace util
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx

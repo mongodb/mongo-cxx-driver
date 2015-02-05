@@ -19,8 +19,7 @@
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class cursor::impl {
@@ -39,7 +38,6 @@ class cursor::impl {
 }; // class impl
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

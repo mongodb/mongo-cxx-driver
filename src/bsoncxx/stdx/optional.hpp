@@ -22,10 +22,10 @@
 #include <new>
 #include <cassert>
 
-// TODO: I realize these are not in mongo::bson::stdx yet but I think their placement here
+// TODO: I realize these are not in bsoncxx::stdx yet but I think their placement here
 // is a mistake so I'm going to wait it out.
 //
-namespace mongo {
+namespace bsoncxx {
 namespace stdx {
 
 class bad_optional_access : public std::logic_error {
@@ -320,5 +320,6 @@ template <class _Tp>
 inline bool operator==(const _Tp& __v, const optional<_Tp>& __x) {
     return static_cast<bool>(__x) ? *__x == __v : false;
 }
+
 }
 }

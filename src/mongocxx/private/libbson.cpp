@@ -14,37 +14,36 @@
 
 #include <mongocxx/private/libbson.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace libbson {
 
-static void doc_to_bson_t(const bson::document::view& doc, bson_t* bson) {
+static void doc_to_bson_t(const bsoncxx::document::view& doc, bson_t* bson) {
     bson_init_static(bson, doc.data(), doc.length());
 }
 
-static void optional_doc_to_bson_t(const mongo::stdx::optional<bson::document::view>& doc,
+static void optional_doc_to_bson_t(const mongo::stdx::optional<bsoncxx::document::view>& doc,
                                    bson_t* bson) {
     if (doc) {
         doc_to_bson_t(*doc, bson);
     }
 }
 
-scoped_bson_t::scoped_bson_t(const mongo::stdx::optional<bson::document::view>& doc)
+scoped_bson_t::scoped_bson_t(const mongo::stdx::optional<bsoncxx::document::view>& doc)
     : _is_initialized(doc) {
     optional_doc_to_bson_t(doc, &_bson);
 }
 
-scoped_bson_t::scoped_bson_t(const bson::document::view& doc) : _is_initialized(true) {
+scoped_bson_t::scoped_bson_t(const bsoncxx::document::view& doc) : _is_initialized(true) {
     doc_to_bson_t(doc, &_bson);
 }
 
-void scoped_bson_t::init_from_static(const mongo::stdx::optional<bson::document::view>& doc) {
+void scoped_bson_t::init_from_static(const mongo::stdx::optional<bsoncxx::document::view>& doc) {
     _is_initialized = static_cast<bool>(doc);
     optional_doc_to_bson_t(doc, &_bson);
 }
 
-void scoped_bson_t::init_from_static(const bson::document::view& doc) {
+void scoped_bson_t::init_from_static(const bsoncxx::document::view& doc) {
     _is_initialized = true;
     doc_to_bson_t(doc, &_bson);
 }
@@ -71,23 +70,22 @@ bson_t* scoped_bson_t::bson() {
     return _is_initialized ? &_bson : nullptr;
 }
 
-bson::document::view scoped_bson_t::view() {
-    return _is_initialized ? bson::document::view(bson_get_data(bson()), bson()->len)
-                           : bson::document::view();
+bsoncxx::document::view scoped_bson_t::view() {
+    return _is_initialized ? bsoncxx::document::view(bson_get_data(bson()), bson()->len)
+                           : bsoncxx::document::view();
 }
 
-bson::document::value scoped_bson_t::steal() {
+bsoncxx::document::value scoped_bson_t::steal() {
     if (!_is_initialized) {
-        return bson::document::value{bson::document::view()};
+        return bsoncxx::document::value{bsoncxx::document::view()};
     }
 
     std::uint32_t length;
     std::uint8_t* buff = bson_destroy_with_steal(bson(), true, &length);
 
-    return bson::document::value(buff, length, bson_free);
+    return bsoncxx::document::value(buff, length, bson_free);
 }
 
 }  // namespace libbson
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx

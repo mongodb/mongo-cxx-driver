@@ -19,8 +19,7 @@
 #include <bsoncxx/builder/concrete.hpp>
 #include <bsoncxx/builder/array_ctx.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 
@@ -28,15 +27,15 @@ namespace builder {
     public:
         array() : array_ctx<>(&_concrete), _concrete(true) {}
 
-        bson::document::view view() const {
+        bsoncxx::document::view view() const {
             return _concrete.view();
         }
 
-        operator bson::document::view() const {
+        operator bsoncxx::document::view() const {
             return _concrete.view();
         }
 
-        bson::document::value extract() {
+        bsoncxx::document::value extract() {
             return _concrete.extract();
         }
 
@@ -50,7 +49,6 @@ namespace builder {
 
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

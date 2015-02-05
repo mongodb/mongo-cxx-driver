@@ -18,8 +18,7 @@
 
 #include <memory>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
@@ -57,7 +56,6 @@ class LIBMONGOCXX_API instance {
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

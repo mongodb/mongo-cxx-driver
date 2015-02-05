@@ -19,18 +19,18 @@
 #include <bsoncxx/json.hpp>
 #include <mongocxx/result/delete.hpp>
 
-using namespace mongo;
+
 
 TEST_CASE("delete", "[delete][result]") {
-    bson::builder::document build;
-    build << "_id" << bson::oid{bson::oid::init_tag} << "nRemoved" << bson::types::b_int64{1};
+    bsoncxx::builder::document build;
+    build << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "nRemoved" << bsoncxx::types::b_int64{1};
 
-    driver::result::bulk_write b(bson::document::value(build.view()));
+    driver::result::bulk_write b(bsoncxx::document::value(build.view()));
 
     driver::result::delete_result delete_result(std::move(b));
 
     SECTION("returns correct removed count") {
-        std::cout << bson::to_json(build.view());
+        std::cout << bsoncxx::to_json(build.view());
         REQUIRE(delete_result.deleted_count() == 1);
     }
 }

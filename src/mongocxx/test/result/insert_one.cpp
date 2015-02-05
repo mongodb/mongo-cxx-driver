@@ -18,15 +18,15 @@
 #include <bsoncxx/builder.hpp>
 #include <mongocxx/result/insert_one.hpp>
 
-using namespace mongo;
+
 
 TEST_CASE("insert_one", "[insert_one][result]") {
-    bson::builder::document build;
-    build << "_id" << bson::oid{bson::oid::init_tag} << "x" << 1;
+    bsoncxx::builder::document build;
+    build << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "x" << 1;
 
-    bson::document::element g_oid{};
+    bsoncxx::document::element g_oid{};
 
-    driver::result::bulk_write b(bson::document::value(build.view()));
+    driver::result::bulk_write b(bsoncxx::document::value(build.view()));
 
     driver::result::insert_one insert_one(std::move(b), g_oid);
 

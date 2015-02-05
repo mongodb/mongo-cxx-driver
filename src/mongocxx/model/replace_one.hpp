@@ -19,8 +19,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
@@ -38,21 +37,21 @@ class LIBMONGOCXX_API replace_one {
     /// @param replacement
     ///   Document that will serve as the replacement.
     ///
-    replace_one(bson::document::view filter, bson::document::view replacement);
+    replace_one(bsoncxx::document::view filter, bsoncxx::document::view replacement);
 
     ///
     /// Gets the filter for replacement.
     ///
     /// @return The filter to be used for the replacement operation.
     ///
-    const bson::document::view& filter() const;
+    const bsoncxx::document::view& filter() const;
 
     ///
     /// Gets the replacement document.
     ///
     /// @return The document that will replace the original selected document.
     ///
-    const bson::document::view& replacement() const;
+    const bsoncxx::document::view& replacement() const;
 
     ///
     /// Sets the upsert option.
@@ -77,8 +76,8 @@ class LIBMONGOCXX_API replace_one {
 
    private:
     // Required
-    bson::document::view _filter;
-    bson::document::view _replacement;
+    bsoncxx::document::view _filter;
+    bsoncxx::document::view _replacement;
 
     // Optional
     stdx::optional<bool> _upsert;
@@ -87,7 +86,6 @@ class LIBMONGOCXX_API replace_one {
 
 }  // namespace model
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

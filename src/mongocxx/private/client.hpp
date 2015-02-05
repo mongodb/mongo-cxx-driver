@@ -22,8 +22,7 @@
 
 #include <mongocxx/private/write_concern.hpp>
 
-namespace mongo {
-namespace driver {
+namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class client::impl {
@@ -38,7 +37,6 @@ class client::impl {
 }; // class impl
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace driver
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

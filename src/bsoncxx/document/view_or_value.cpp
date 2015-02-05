@@ -17,14 +17,13 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
-view_or_value::view_or_value(bson::document::view view) : _is_view(true), _view(std::move(view)) {
+view_or_value::view_or_value(bsoncxx::document::view view) : _is_view(true), _view(std::move(view)) {
 }
-view_or_value::view_or_value(bson::document::value value)
+view_or_value::view_or_value(bsoncxx::document::value value)
     : _is_view(false), _value(std::move(value)) {
 }
 
@@ -70,5 +69,4 @@ view_or_value::operator document::view() const {
 
 }  // namespace document
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx

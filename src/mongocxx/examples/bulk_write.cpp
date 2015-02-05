@@ -4,7 +4,7 @@
 #include "mongo/driver/bulk_write.hpp"
 #include "mongo/driver/model/insert_one.hpp"
 
-using namespace mongo::bson;
+using namespace bsoncxx;
 
 ///
 /// How to create and execute bulk writes against MongoDB

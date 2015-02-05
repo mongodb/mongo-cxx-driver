@@ -14,8 +14,7 @@
 
 #include <bsoncxx/builder.hpp>
 
-namespace mongo {
-namespace bson {
+namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 namespace helpers {
@@ -28,5 +27,4 @@ close_array_t close_array;
 }  // namespace helpers
 }  // namespace builders
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bson
-}  // namespace mongo
+}  // namespace bsoncxx
