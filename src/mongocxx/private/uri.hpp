@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongo/driver/uri.hpp>
+#include <mongocxx/uri.hpp>
 
 #include <mongoc.h>
 
@@ -34,4 +34,4 @@ MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongocxx/config/postlude.hpp>

@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/instance.hpp>
+#include <mongocxx/instance.hpp>
 
-#include <mongo/bson/stdx/make_unique.hpp>
+#include <bsoncxx/stdx/make_unique.hpp>
 
 #include <mongoc.h>
 

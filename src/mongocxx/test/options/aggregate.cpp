@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
-#include <mongo/driver/options/aggregate.hpp>
+#include <mongocxx/options/aggregate.hpp>
 
 using namespace mongo::driver;
 

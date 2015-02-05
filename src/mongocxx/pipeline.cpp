@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/pipeline.hpp>
+#include <mongocxx/pipeline.hpp>
 
-#include <mongo/bson/util/itoa.hpp>
-#include <mongo/driver/private/pipeline.hpp>
+#include <bsoncxx/util/itoa.hpp>
+#include <mongocxx/private/pipeline.hpp>
 
-#include <mongo/bson/stdx/make_unique.hpp>
+#include <bsoncxx/stdx/make_unique.hpp>
 
 namespace mongo {
 namespace driver {
@@ -82,4 +82,4 @@ MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongocxx/config/postlude.hpp>

@@ -12,5 +12,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/config/config.hpp>
-#include <mongo/driver/export.hpp>
+#include <mongocxx/config/config.hpp>
+#include <mongocxx/export.hpp>

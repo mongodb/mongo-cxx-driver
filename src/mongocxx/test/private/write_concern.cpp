@@ -14,10 +14,10 @@
 
 #include "catch.hpp"
 
-#include <mongo/driver/private/libmongoc.hpp>
+#include <mongocxx/private/libmongoc.hpp>
 
-#include <mongo/driver/write_concern.hpp>
-#include <mongo/driver/private/write_concern.hpp>
+#include <mongocxx/write_concern.hpp>
+#include <mongocxx/private/write_concern.hpp>
 
 using namespace mongo::driver;
 

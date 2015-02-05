@@ -14,18 +14,18 @@
 
 #pragma once
 
-#include <mongo/driver/config/prelude.hpp>
+#include <mongocxx/config/prelude.hpp>
 
 #include <cstdint>
 
-#include <mongo/driver/write_type.hpp>
-#include <mongo/driver/model/insert_one.hpp>
-#include <mongo/driver/model/delete_one.hpp>
-#include <mongo/driver/model/delete_many.hpp>
-#include <mongo/driver/model/update_one.hpp>
-#include <mongo/driver/model/update_many.hpp>
-#include <mongo/driver/model/replace_one.hpp>
-#include <mongo/bson/stdx/optional.hpp>
+#include <mongocxx/write_type.hpp>
+#include <mongocxx/model/insert_one.hpp>
+#include <mongocxx/model/delete_one.hpp>
+#include <mongocxx/model/delete_many.hpp>
+#include <mongocxx/model/update_one.hpp>
+#include <mongocxx/model/update_many.hpp>
+#include <mongocxx/model/replace_one.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 
 namespace mongo {
 namespace driver {
@@ -79,4 +79,4 @@ MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongocxx/config/postlude.hpp>

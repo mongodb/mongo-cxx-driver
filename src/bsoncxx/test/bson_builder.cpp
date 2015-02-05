@@ -3,8 +3,8 @@
 #include <cstring>
 
 #include <bson.h>
-#include <mongo/bson/builder.hpp>
-#include <mongo/bson/json.hpp>
+#include <bsoncxx/builder.hpp>
+#include <bsoncxx/json.hpp>
 
 void bson_eq_builder(const bson_t* bson, const mongo::bson::builder::document& builder) {
     using namespace mongo::bson;

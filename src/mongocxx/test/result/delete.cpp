@@ -15,9 +15,9 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
-#include <mongo/bson/builder.hpp>
-#include <mongo/bson/json.hpp>
-#include <mongo/driver/result/delete.hpp>
+#include <bsoncxx/builder.hpp>
+#include <bsoncxx/json.hpp>
+#include <mongocxx/result/delete.hpp>
 
 using namespace mongo;
 

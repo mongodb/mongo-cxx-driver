@@ -1,7 +1,7 @@
 #include "catch.hpp"
 
 #include <cstring>
-#include <mongo/bson/string_or_literal.hpp>
+#include <bsoncxx/string_or_literal.hpp>
 
 TEST_CASE("string_or_literal default construction works", "[bson::string_or_literal]") {
     using namespace mongo::bson;

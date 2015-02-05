@@ -17,11 +17,11 @@
 
 #include <bson.h>
 
-#include <mongo/driver/cursor.hpp>
-#include <mongo/driver/private/cursor.hpp>
-#include <mongo/driver/private/libmongoc.hpp>
+#include <mongocxx/cursor.hpp>
+#include <mongocxx/private/cursor.hpp>
+#include <mongocxx/private/libmongoc.hpp>
 
-#include <mongo/bson/stdx/make_unique.hpp>
+#include <bsoncxx/stdx/make_unique.hpp>
 
 namespace mongo {
 namespace driver {

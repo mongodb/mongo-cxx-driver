@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <cstring>
-#include <mongo/bson/string_or_literal.hpp>
+#include <bsoncxx/string_or_literal.hpp>
 
 namespace mongo {
 namespace bson {

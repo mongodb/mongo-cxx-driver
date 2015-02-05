@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/options/insert.hpp>
+#include <mongocxx/options/insert.hpp>
 
 namespace mongo {
 namespace driver {

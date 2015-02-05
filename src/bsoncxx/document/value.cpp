@@ -15,7 +15,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include <mongo/bson/document/value.hpp>
+#include <bsoncxx/document/value.hpp>
 
 namespace mongo {
 namespace bson {

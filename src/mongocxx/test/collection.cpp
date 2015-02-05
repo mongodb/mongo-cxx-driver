@@ -1,10 +1,10 @@
 #include "catch.hpp"
 
-#include <mongo/bson/builder.hpp>
-#include <mongo/bson/types.hpp>
-#include <mongo/driver/collection.hpp>
-#include <mongo/driver/client.hpp>
-#include <mongo/driver/pipeline.hpp>
+#include <bsoncxx/builder.hpp>
+#include <bsoncxx/types.hpp>
+#include <mongocxx/collection.hpp>
+#include <mongocxx/client.hpp>
+#include <mongocxx/pipeline.hpp>
 
 using namespace mongo;
 using namespace mongo::driver;

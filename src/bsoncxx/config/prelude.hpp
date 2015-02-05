@@ -12,5 +12,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/bson/config/config.hpp>
-#include <mongo/bson/export.hpp>
+#include <bsoncxx/config/config.hpp>
+#include <bsoncxx/export.hpp>

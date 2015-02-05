@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongo/bson/config/prelude.hpp>
+#include <bsoncxx/config/prelude.hpp>
 
 #include <cstddef>
 #include <cstdint>
@@ -22,7 +22,7 @@
 #include <iterator>
 #include <type_traits>
 
-#include <mongo/bson/string_or_literal.hpp>
+#include <bsoncxx/string_or_literal.hpp>
 
 namespace mongo {
 namespace bson {
@@ -114,4 +114,4 @@ BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 
-#include <mongo/bson/config/postlude.hpp>
+#include <bsoncxx/config/postlude.hpp>

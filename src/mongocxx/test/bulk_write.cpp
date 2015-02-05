@@ -15,12 +15,12 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
-#include <mongo/bson/builder.hpp>
-#include <mongo/bson/types.hpp>
+#include <bsoncxx/builder.hpp>
+#include <bsoncxx/types.hpp>
 
-#include <mongo/driver/private/libmongoc.hpp>
-#include <mongo/driver/bulk_write.hpp>
-#include <mongo/driver/write_concern.hpp>
+#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/bulk_write.hpp>
+#include <mongocxx/write_concern.hpp>
 
 using namespace mongo;
 using namespace mongo::driver;

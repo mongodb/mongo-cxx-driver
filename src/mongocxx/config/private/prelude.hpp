@@ -12,5 +12,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/config/prelude.hpp>
-#include <mongo/driver/config/private/config.hpp>
+#include <mongocxx/config/prelude.hpp>
+#include <mongocxx/config/private/config.hpp>

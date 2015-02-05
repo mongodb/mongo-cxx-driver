@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include <mongo/bson/builder/concrete.hpp>
-#include <mongo/bson/builder/closed_ctx.hpp>
-#include <mongo/bson/builder/helpers.hpp>
-#include <mongo/bson/builder/forward_decls.hpp>
-#include <mongo/bson/util/functor.hpp>
+#include <bsoncxx/builder/concrete.hpp>
+#include <bsoncxx/builder/closed_ctx.hpp>
+#include <bsoncxx/builder/helpers.hpp>
+#include <bsoncxx/builder/forward_decls.hpp>
+#include <bsoncxx/util/functor.hpp>
 
 namespace mongo {
 namespace bson {
@@ -81,4 +81,4 @@ BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 
-#include <mongo/bson/config/postlude.hpp>
+#include <bsoncxx/config/postlude.hpp>

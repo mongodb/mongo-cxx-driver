@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/uri.hpp>
+#include <mongocxx/uri.hpp>
 
-#include <mongo/driver/private/uri.hpp>
-#include <mongo/driver/private/libmongoc.hpp>
+#include <mongocxx/private/uri.hpp>
+#include <mongocxx/private/libmongoc.hpp>
 
-#include <mongo/bson/stdx/make_unique.hpp>
+#include <bsoncxx/stdx/make_unique.hpp>
 
 namespace mongo {
 namespace driver {

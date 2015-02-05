@@ -14,10 +14,10 @@
 
 #pragma once
 
-#include <mongo/bson/config/prelude.hpp>
+#include <bsoncxx/config/prelude.hpp>
 
-#include <mongo/bson/builder/concrete.hpp>
-#include <mongo/bson/builder/array_ctx.hpp>
+#include <bsoncxx/builder/concrete.hpp>
+#include <bsoncxx/builder/array_ctx.hpp>
 
 namespace mongo {
 namespace bson {
@@ -53,4 +53,4 @@ BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 
-#include <mongo/bson/config/postlude.hpp>
+#include <bsoncxx/config/postlude.hpp>

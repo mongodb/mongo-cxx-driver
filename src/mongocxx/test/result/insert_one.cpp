@@ -15,8 +15,8 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
-#include <mongo/bson/builder.hpp>
-#include <mongo/driver/result/insert_one.hpp>
+#include <bsoncxx/builder.hpp>
+#include <mongocxx/result/insert_one.hpp>
 
 using namespace mongo;
 

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/model/update_one.hpp>
+#include <mongocxx/model/update_one.hpp>
 
 namespace mongo {
 namespace driver {

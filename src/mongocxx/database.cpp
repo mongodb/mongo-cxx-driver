@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/database.hpp>
+#include <mongocxx/database.hpp>
 
-#include <mongo/driver/client.hpp>
-#include <mongo/driver/private/database.hpp>
-#include <mongo/driver/private/client.hpp>
-#include <mongo/driver/private/read_preference.hpp>
-#include <mongo/driver/private/libmongoc.hpp>
+#include <mongocxx/client.hpp>
+#include <mongocxx/private/database.hpp>
+#include <mongocxx/private/client.hpp>
+#include <mongocxx/private/read_preference.hpp>
+#include <mongocxx/private/libmongoc.hpp>
 
-#include <mongo/bson/stdx/make_unique.hpp>
+#include <bsoncxx/stdx/make_unique.hpp>
 
 namespace mongo {
 namespace driver {

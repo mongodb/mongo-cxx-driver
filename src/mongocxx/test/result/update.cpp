@@ -15,8 +15,8 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
-#include <mongo/bson/builder.hpp>
-#include <mongo/driver/result/update.hpp>
+#include <bsoncxx/builder.hpp>
+#include <mongocxx/result/update.hpp>
 
 using namespace mongo;
 

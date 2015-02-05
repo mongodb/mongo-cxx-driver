@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/bson/types.hpp>
-#include <mongo/bson/json.hpp>
+#include <bsoncxx/types.hpp>
+#include <bsoncxx/json.hpp>
 
 namespace mongo {
 namespace bson {
@@ -25,7 +25,7 @@ std::string to_string(type rhs) {
     case val:                      \
         return(#name);             \
         break;
-#include <mongo/bson/enums/type.hpp>
+#include <bsoncxx/enums/type.hpp>
 #undef LIBBSONCXX_ENUM
         default:
             return "?";
@@ -38,7 +38,7 @@ std::string to_string(binary_sub_type rhs) {
     case val:                      \
         return(#name);             \
         break;
-#include <mongo/bson/enums/binary_sub_type.hpp>
+#include <bsoncxx/enums/binary_sub_type.hpp>
 #undef LIBBSONCXX_ENUM
         default:
             return "?";
@@ -53,7 +53,7 @@ namespace types {
         jv.visit_value(rhs);                                           \
         return out;                                                    \
     }
-#include <mongo/bson/enums/type.hpp>
+#include <bsoncxx/enums/type.hpp>
 #undef LIBBSONCXX_ENUM
 
 }  // namespace types

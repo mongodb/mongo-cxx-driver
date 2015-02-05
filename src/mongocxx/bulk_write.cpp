@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/bulk_write.hpp>
+#include <mongocxx/bulk_write.hpp>
 
-#include <mongo/bson/stdx/make_unique.hpp>
-#include <mongo/driver/private/libbson.hpp>
-#include <mongo/driver/private/bulk_write.hpp>
-#include <mongo/driver/private/libmongoc.hpp>
-#include <mongo/driver/private/write_concern.hpp>
+#include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/private/libbson.hpp>
+#include <mongocxx/private/bulk_write.hpp>
+#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/write_concern.hpp>
 
 namespace mongo {
 namespace driver {

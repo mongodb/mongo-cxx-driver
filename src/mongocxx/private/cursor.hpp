@@ -14,10 +14,10 @@
 
 #pragma once
 
-#include <mongo/driver/config/prelude.hpp>
+#include <mongocxx/config/prelude.hpp>
 
-#include <mongo/driver/cursor.hpp>
-#include <mongo/driver/private/libmongoc.hpp>
+#include <mongocxx/cursor.hpp>
+#include <mongocxx/private/libmongoc.hpp>
 
 namespace mongo {
 namespace driver {
@@ -42,4 +42,4 @@ MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongocxx/config/postlude.hpp>

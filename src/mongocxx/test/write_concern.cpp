@@ -14,7 +14,7 @@
 
 #include "catch.hpp"
 
-#include <mongo/driver/write_concern.hpp>
+#include <mongocxx/write_concern.hpp>
 
 using namespace mongo;
 using namespace mongo::driver;

@@ -14,10 +14,10 @@
 
 #pragma once
 
-#include <mongo/driver/config/prelude.hpp>
+#include <mongocxx/config/prelude.hpp>
 
 #include <mongoc.h>
-#include <mongo/driver/mock/mock.hpp>
+#include <mongocxx/mock/mock.hpp>
 
 namespace mongo {
 namespace driver {

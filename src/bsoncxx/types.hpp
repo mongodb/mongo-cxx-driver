@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include <mongo/bson/config/prelude.hpp>
+#include <bsoncxx/config/prelude.hpp>
 
-#include <mongo/bson/string_or_literal.hpp>
-#include <mongo/bson/document/view.hpp>
-#include <mongo/bson/oid.hpp>
+#include <bsoncxx/string_or_literal.hpp>
+#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/oid.hpp>
 
 namespace mongo {
 namespace bson {
@@ -26,13 +26,13 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 
 enum class type : std::uint8_t {
 #define LIBBSONCXX_ENUM(name, val) k_##name = val,
-#include <mongo/bson/enums/type.hpp>
+#include <bsoncxx/enums/type.hpp>
 #undef LIBBSONCXX_ENUM
 };
 
 enum class binary_sub_type : std::uint8_t {
 #define LIBBSONCXX_ENUM(name, val) k_##name = val,
-#include <mongo/bson/enums/binary_sub_type.hpp>
+#include <bsoncxx/enums/binary_sub_type.hpp>
 #undef LIBBSONCXX_ENUM
 };
 
@@ -204,7 +204,7 @@ struct b_maxkey {
 };
 
 #define LIBBSONCXX_ENUM(name, val) std::ostream& operator<<(std::ostream& out, const b_##name& rhs);
-#include <mongo/bson/enums/type.hpp>
+#include <bsoncxx/enums/type.hpp>
 #undef LIBBSONCXX_ENUM
 
 }  // namespace types
@@ -212,4 +212,4 @@ BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 
-#include <mongo/bson/config/postlude.hpp>
+#include <bsoncxx/config/postlude.hpp>

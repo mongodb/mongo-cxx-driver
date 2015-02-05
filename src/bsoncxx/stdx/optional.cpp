@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/bson/stdx/optional.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 
 // TODO: I realize these are not in mongo::bson::stdx yet but I think their placement here
 // is a mistake so I'm going to wait it out.

@@ -12,5 +12,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/bson/config/prelude.hpp>
-#include <mongo/bson/config/private/config.hpp>
+#include <bsoncxx/config/prelude.hpp>
+#include <bsoncxx/config/private/config.hpp>

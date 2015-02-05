@@ -14,19 +14,19 @@
 
 #pragma once
 
-#include <mongo/bson/config/prelude.hpp>
+#include <bsoncxx/config/prelude.hpp>
 
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <vector>
 
-#include <mongo/bson/builder.hpp>
-#include <mongo/bson/document/view.hpp>
-#include <mongo/bson/types.hpp>
+#include <bsoncxx/builder.hpp>
+#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/types.hpp>
 
 extern "C" {
-#include <mongo/bson/util/b64_ntop.h>
+#include <bsoncxx/util/b64_ntop.h>
 }
 
 namespace mongo {
@@ -209,7 +209,7 @@ class json_visitor {
     case val:                        \
         visit_value(x.get_##name()); \
         break;
-#include <mongo/bson/enums/type.hpp>
+#include <bsoncxx/enums/type.hpp>
 #undef LIBBSONCXX_ENUM
             }
         }
@@ -231,4 +231,4 @@ BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 
-#include <mongo/bson/config/postlude.hpp>
+#include <bsoncxx/config/postlude.hpp>

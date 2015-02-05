@@ -14,14 +14,14 @@
 
 #pragma once
 
-#include <mongo/driver/config/prelude.hpp>
+#include <mongocxx/config/prelude.hpp>
 
 #include <bson.h>
 
-#include <mongo/bson/document/value.hpp>
-#include <mongo/bson/document/view.hpp>
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view.hpp>
 
-#include <mongo/bson/stdx/optional.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 
 namespace mongo {
 namespace driver {

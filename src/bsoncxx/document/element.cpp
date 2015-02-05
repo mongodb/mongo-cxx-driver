@@ -17,9 +17,9 @@
 
 #include <bson.h>
 
-#include <mongo/bson/document/element.hpp>
-#include <mongo/bson/types.hpp>
-#include <mongo/bson/json.hpp>
+#include <bsoncxx/document/element.hpp>
+#include <bsoncxx/types.hpp>
+#include <bsoncxx/json.hpp>
 
 #define CITER             \
     bson_iter_t iter;     \
@@ -235,7 +235,7 @@ std::ostream& operator<<(std::ostream& out, const element& element) {
         v.visit_key(element.key());          \
         v.visit_value(element.get_##name()); \
         break;
-#include <mongo/bson/enums/type.hpp>
+#include <bsoncxx/enums/type.hpp>
 #undef LIBBSONCXX_ENUM
     }
 

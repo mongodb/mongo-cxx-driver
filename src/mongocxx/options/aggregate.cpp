@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/options/aggregate.hpp>
-#include <mongo/driver/private/read_preference.hpp>
+#include <mongocxx/options/aggregate.hpp>
+#include <mongocxx/private/read_preference.hpp>
 
 namespace mongo {
 namespace driver {
@@ -57,4 +57,4 @@ MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongocxx/config/postlude.hpp>

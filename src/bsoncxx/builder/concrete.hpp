@@ -14,15 +14,15 @@
 
 #pragma once
 
-#include <mongo/bson/config/prelude.hpp>
+#include <bsoncxx/config/prelude.hpp>
 
 #include <memory>
 #include <stdexcept>
 
-#include <mongo/bson/document/value.hpp>
-#include <mongo/bson/document/view.hpp>
-#include <mongo/bson/string_or_literal.hpp>
-#include <mongo/bson/types.hpp>
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/string_or_literal.hpp>
+#include <bsoncxx/types.hpp>
 
 namespace mongo {
 namespace bson {
@@ -100,4 +100,4 @@ BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 
-#include <mongo/bson/config/postlude.hpp>
+#include <bsoncxx/config/postlude.hpp>

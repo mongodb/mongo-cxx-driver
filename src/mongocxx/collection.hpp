@@ -14,36 +14,36 @@
 
 #pragma once
 
-#include <mongo/driver/config/prelude.hpp>
+#include <mongocxx/config/prelude.hpp>
 
 #include <algorithm>
 #include <cstdint>
 #include <memory>
 #include <string>
 
-#include <mongo/bson/builder.hpp>
-#include <mongo/bson/document/view.hpp>
-#include <mongo/driver/bulk_write.hpp>
-#include <mongo/driver/cursor.hpp>
-#include <mongo/driver/options/aggregate.hpp>
-#include <mongo/driver/options/bulk_write.hpp>
-#include <mongo/driver/options/count.hpp>
-#include <mongo/driver/options/delete.hpp>
-#include <mongo/driver/options/distinct.hpp>
-#include <mongo/driver/options/find.hpp>
-#include <mongo/driver/options/find_one_and_delete.hpp>
-#include <mongo/driver/options/find_one_and_replace.hpp>
-#include <mongo/driver/options/find_one_and_update.hpp>
-#include <mongo/driver/options/insert.hpp>
-#include <mongo/driver/options/update.hpp>
-#include <mongo/driver/read_preference.hpp>
-#include <mongo/driver/result/bulk_write.hpp>
-#include <mongo/driver/result/delete.hpp>
-#include <mongo/driver/result/insert_many.hpp>
-#include <mongo/driver/result/insert_one.hpp>
-#include <mongo/driver/result/replace_one.hpp>
-#include <mongo/driver/result/update.hpp>
-#include <mongo/driver/write_concern.hpp>
+#include <bsoncxx/builder.hpp>
+#include <bsoncxx/document/view.hpp>
+#include <mongocxx/bulk_write.hpp>
+#include <mongocxx/cursor.hpp>
+#include <mongocxx/options/aggregate.hpp>
+#include <mongocxx/options/bulk_write.hpp>
+#include <mongocxx/options/count.hpp>
+#include <mongocxx/options/delete.hpp>
+#include <mongocxx/options/distinct.hpp>
+#include <mongocxx/options/find.hpp>
+#include <mongocxx/options/find_one_and_delete.hpp>
+#include <mongocxx/options/find_one_and_replace.hpp>
+#include <mongocxx/options/find_one_and_update.hpp>
+#include <mongocxx/options/insert.hpp>
+#include <mongocxx/options/update.hpp>
+#include <mongocxx/read_preference.hpp>
+#include <mongocxx/result/bulk_write.hpp>
+#include <mongocxx/result/delete.hpp>
+#include <mongocxx/result/insert_many.hpp>
+#include <mongocxx/result/insert_one.hpp>
+#include <mongocxx/result/replace_one.hpp>
+#include <mongocxx/result/update.hpp>
+#include <mongocxx/write_concern.hpp>
 
 namespace mongo {
 namespace driver {
@@ -638,4 +638,4 @@ MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongocxx/config/postlude.hpp>

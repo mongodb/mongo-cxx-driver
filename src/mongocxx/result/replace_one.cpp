@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongo/driver/result/replace_one.hpp>
+#include <mongocxx/result/replace_one.hpp>
 
 namespace mongo {
 namespace driver {
@@ -43,4 +43,4 @@ MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace driver
 }  // namespace mongo
 
-#include <mongo/driver/config/postlude.hpp>
+#include <mongocxx/config/postlude.hpp>

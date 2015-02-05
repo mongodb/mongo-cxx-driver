@@ -16,9 +16,9 @@
 #include <cstring>
 
 #include <bson.h>
-#include <mongo/bson/document/view.hpp>
-#include <mongo/bson/types.hpp>
-#include <mongo/bson/json.hpp>
+#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/types.hpp>
+#include <bsoncxx/json.hpp>
 
 namespace mongo {
 namespace bson {

@@ -14,10 +14,10 @@
 
 #include <bson.h>
 
-#include <mongo/bson/builder.hpp>
-#include <mongo/bson/util/itoa.hpp>
-#include <mongo/bson/util/stack.hpp>
-#include <mongo/bson/types.hpp>
+#include <bsoncxx/builder.hpp>
+#include <bsoncxx/util/itoa.hpp>
+#include <bsoncxx/util/stack.hpp>
+#include <bsoncxx/types.hpp>
 
 #include <cstring>
 
@@ -402,4 +402,4 @@ BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bson
 }  // namespace mongo
 
-#include <mongo/bson/config/postlude.hpp>
+#include <bsoncxx/config/postlude.hpp>
