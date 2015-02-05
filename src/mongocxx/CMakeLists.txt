@@ -98,6 +98,7 @@ generate_export_header (mongocxx
 configure_file (
     ${PROJECT_SOURCE_DIR}/libmongocxx.pc.in
     ${PROJECT_BINARY_DIR}/libmongocxx.pc
+    @ONLY
 )
 
 # install generated files

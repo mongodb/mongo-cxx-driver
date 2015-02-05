@@ -72,6 +72,7 @@ generate_export_header(bsoncxx
 configure_file (
     ${PROJECT_SOURCE_DIR}/libbsoncxx.pc.in
     ${PROJECT_BINARY_DIR}/libbsoncxx.pc
+    @ONLY
 )
 
 # install generated files

@@ -1,5 +1,4 @@
 prefix=@CMAKE_INSTALL_PREFIX@
-exec_prefix=${prefix}
 includedir=${prefix}/include
 libdir=${prefix}/lib
 
@@ -9,5 +8,5 @@ URL: http://github.com/mongodb/mongo-cxx-driver
 Version: @MONGOCXX_VERSION@
 Requires.private: libmongoc-@LIBMONGOC_REQUIRED_ABI_VERSION@
 Requires: libbsoncxx >= @MONGOCXX_REQUIRED_BSONCXX_VERSION@
-CFlags -I{includedir}/mongocxx/@MONGOCXX_DIRECTORY_PREFIX@
+Cflags: -I${includedir}/mongocxx/@MONGOCXX_DIRECTORY_PREFIX@
 Libs: -L${libdir} -lmongocxx
