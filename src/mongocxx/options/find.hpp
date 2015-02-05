@@ -223,7 +223,7 @@ class LIBMONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    const bsoncxx::stdx::optional<class read_preference>& read_preference() const;
+    const bsoncxx::stdx::optional<typename read_preference>& read_preference() const;
 
     ///
     /// Sets the number of documents to skip before returning results.
@@ -275,7 +275,7 @@ class LIBMONGOCXX_API find {
     bsoncxx::stdx::optional<bool> _no_cursor_timeout;
     bsoncxx::stdx::optional<bool> _oplog_replay;
     bsoncxx::stdx::optional<bsoncxx::document::view> _projection;
-    bsoncxx::stdx::optional<class read_preference> _read_preference;
+    bsoncxx::stdx::optional<typename read_preference> _read_preference;
     bsoncxx::stdx::optional<std::int32_t> _skip;
     bsoncxx::stdx::optional<bsoncxx::document::view> _ordering;
 

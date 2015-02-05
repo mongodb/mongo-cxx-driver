@@ -30,7 +30,7 @@ const bsoncxx::stdx::optional<bool>& update::upsert() const {
     return _upsert;
 }
 
-const bsoncxx::stdx::optional<class write_concern>& update::write_concern() const {
+const bsoncxx::stdx::optional<typename write_concern>& update::write_concern() const {
     return _write_concern;
 }
 

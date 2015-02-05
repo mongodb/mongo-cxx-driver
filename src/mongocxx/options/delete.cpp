@@ -22,7 +22,7 @@ void delete_options::write_concern(class write_concern wc) {
     _write_concern = std::move(wc);
 }
 
-const bsoncxx::stdx::optional<class write_concern>& delete_options::write_concern() const {
+const bsoncxx::stdx::optional<typename write_concern>& delete_options::write_concern() const {
     return _write_concern;
 }
 

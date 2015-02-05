@@ -120,14 +120,14 @@ class LIBMONGOCXX_API aggregate {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    const bsoncxx::stdx::optional<class read_preference>& read_preference() const;
+    const bsoncxx::stdx::optional<typename read_preference>& read_preference() const;
 
    private:
     bsoncxx::stdx::optional<bool> _allow_disk_use;
     bsoncxx::stdx::optional<std::int32_t> _batch_size;
     bsoncxx::stdx::optional<std::int64_t> _max_time_ms;
     bsoncxx::stdx::optional<bool> _use_cursor;
-    bsoncxx::stdx::optional<class read_preference> _read_preference;
+    bsoncxx::stdx::optional<typename read_preference> _read_preference;
 
 };
 
