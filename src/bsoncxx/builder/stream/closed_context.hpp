@@ -16,34 +16,20 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
-#include <cstddef>
-#include <cstdint>
-
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
-namespace util {
+namespace builder {
 
-class itoa {
-   public:
-    itoa();
-    itoa(uint32_t i);
-    itoa(const itoa& rhs);
-    itoa& operator=(const itoa& rhs);
-    itoa& operator=(uint32_t i);
+class core;
 
-    const char* c_str() const;
-    std::size_t length() const;
+namespace stream {
 
-   private:
-    void init();
+    struct closed_context {
+        closed_context(core*) {}
+    };
 
-    uint32_t _val;
-    const char* _str;
-    uint8_t _len;
-    char _buf[11];
-};
-
-}  // namespace util
+}  // namespace stream
+}  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 

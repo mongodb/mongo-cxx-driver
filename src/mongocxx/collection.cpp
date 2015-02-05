@@ -14,7 +14,7 @@
 
 #include <cstdint>
 
-#include <bsoncxx/builder.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 
 #include <mongocxx/private/client.hpp>
 #include <mongocxx/private/collection.hpp>
@@ -91,14 +91,14 @@ bsoncxx::stdx::optional<result::bulk_write> collection::bulk_write(const class b
 
 cursor collection::find(bsoncxx::document::view filter, const options::find& options) {
     using namespace bsoncxx;
-    builder::document filter_builder;
+    builder::stream::document filter_builder;
 
     scoped_bson_t filter_bson;
     scoped_bson_t projection(options.projection());
 
     if (options.modifiers()) {
         filter_builder << "$query" << types::b_document{filter}
-                       << builder::helpers::concat{options.modifiers().value_or(document::view{})};
+                       << builder::stream::concatenate{options.modifiers().value_or(document::view{})};
 
         filter_bson.init_from_static(filter_builder.view());
     } else {
@@ -130,23 +130,23 @@ bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one(bsoncxx::
 }
 
 cursor collection::aggregate(const pipeline& pipeline, const options::aggregate& options) {
-    using namespace bsoncxx::builder::helpers;
+    using namespace bsoncxx::builder::stream;
 
     scoped_bson_t stages(pipeline._impl->view());
 
-    bsoncxx::builder::document b;
+    bsoncxx::builder::stream::document b;
 
     if (options.allow_disk_use()) {
         /* TODO */
     }
     if (options.use_cursor()) {
-        auto inner = b << "cursor" << open_doc;
+        auto inner = b << "cursor" << open_document;
 
         if (options.batch_size()) {
             inner << "batchSize" << *options.batch_size();
         }
 
-        inner << close_doc;
+        inner << close_document;
     }
 
     if (options.max_time_ms()) {
@@ -172,9 +172,9 @@ bsoncxx::stdx::optional<result::insert_one> collection::insert_one(bsoncxx::docu
     bsoncxx::document::element oid{};
 
     if (!document["_id"]) {
-        bsoncxx::builder::document new_document;
+        bsoncxx::builder::stream::document new_document;
         new_document << "_id" << bsoncxx::oid(bsoncxx::oid::init_tag);
-        new_document << bsoncxx::builder::helpers::concat{document};
+        new_document << bsoncxx::builder::stream::concatenate{document};
         bulk_op.append(model::insert_one(new_document.view()));
 
         oid = new_document.view()["_id"];
@@ -311,9 +311,8 @@ bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one_and_repla
 
     if (result["value"].type() == bsoncxx::type::k_null) return bsoncxx::stdx::optional<bsoncxx::document::value>{};
 
-    using namespace bsoncxx::builder::helpers;
-    bsoncxx::builder::document b;
-    b << concat{result["value"].get_document()};
+    bsoncxx::builder::stream::document b;
+    b << bsoncxx::builder::stream::concatenate{result["value"].get_document()};
     return b.extract();
 }
 
@@ -346,9 +345,8 @@ bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one_and_updat
 
     if (result["value"].type() == bsoncxx::type::k_null) return bsoncxx::stdx::optional<bsoncxx::document::value>{};
 
-    using namespace bsoncxx::builder::helpers;
-    bsoncxx::builder::document b;
-    b << concat{result["value"].get_document()};
+    bsoncxx::builder::stream::document b;
+    b << bsoncxx::builder::stream::concatenate{result["value"].get_document()};
     return b.extract();
 }
 
@@ -375,9 +373,8 @@ bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one_and_delet
 
     if (result["value"].type() == bsoncxx::type::k_null) return bsoncxx::stdx::optional<bsoncxx::document::value>{};
 
-    using namespace bsoncxx::builder::helpers;
-    bsoncxx::builder::document b;
-    b << concat{result["value"].get_document()};
+    bsoncxx::builder::stream::document b;
+    b << bsoncxx::builder::stream::concatenate{result["value"].get_document()};
     return b.extract();
 }
 

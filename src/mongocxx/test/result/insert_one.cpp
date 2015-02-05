@@ -15,22 +15,22 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
-#include <bsoncxx/builder.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/types/value.hpp>
 #include <mongocxx/result/insert_one.hpp>
 
 
-
 TEST_CASE("insert_one", "[insert_one][result]") {
-    bsoncxx::builder::document build;
-    build << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "x" << 1;
+    using namespace bsoncxx;
+    builder::stream::document build;
+    auto oid = types::b_oid{bsoncxx::oid{bsoncxx::oid::init_tag}};
+    build << "_id" << oid << "x" << 1;
 
-    bsoncxx::document::element g_oid{};
+    mongocxx::result::bulk_write b(document::value(build.view()));
 
-    mongocxx::result::bulk_write b(bsoncxx::document::value(build.view()));
-
-    mongocxx::result::insert_one insert_one(std::move(b), g_oid);
+    mongocxx::result::insert_one insert_one(std::move(b), build.view()["_id"]);
 
     SECTION("returns correct response") {
-        REQUIRE(insert_one.inserted_id() == g_oid);
+        REQUIRE(insert_one.inserted_id().get_value() == types::value{oid});
     }
 }

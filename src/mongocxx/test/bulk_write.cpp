@@ -15,7 +15,7 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
-#include <bsoncxx/builder.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/private/libmongoc.hpp>
@@ -102,7 +102,7 @@ class FilteredDocumentFun : public SingleDocumentFun {
 TEST_CASE("passing valid write operations to append calls the corresponding C function",
           "[bulk_write]") {
     bulk_write bw(true);
-    bsoncxx::builder::document filter_builder, doc_builder;
+    bsoncxx::builder::stream::document filter_builder, doc_builder;
     filter_builder << "_id" << 1;
     doc_builder << "_id" << 2;
     bsoncxx::document::view filter = filter_builder.view();

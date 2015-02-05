@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef LIBBSONCXX_ENUM
-#error "This header is only meant to be included as an X-macro over LIBBSONCXX_ENUM"
+#ifndef BSONCXX_ENUM
+#error "This header is only meant to be included as an X-macro over BSONCXX_ENUM"
 #endif
 
-LIBBSONCXX_ENUM(binary, 0x00)
-LIBBSONCXX_ENUM(function, 0x01)
-LIBBSONCXX_ENUM(binary_deprecated, 0x02)
-LIBBSONCXX_ENUM(uuid_deprecated, 0x03)
-LIBBSONCXX_ENUM(uuid, 0x04)
-LIBBSONCXX_ENUM(md5, 0x05)
-LIBBSONCXX_ENUM(user, 0x80)
+BSONCXX_ENUM(binary, 0x00)
+BSONCXX_ENUM(function, 0x01)
+BSONCXX_ENUM(binary_deprecated, 0x02)
+BSONCXX_ENUM(uuid_deprecated, 0x03)
+BSONCXX_ENUM(uuid, 0x04)
+BSONCXX_ENUM(md5, 0x05)
+BSONCXX_ENUM(user, 0x80)

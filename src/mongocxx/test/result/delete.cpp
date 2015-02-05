@@ -15,14 +15,14 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
-#include <bsoncxx/builder.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
 #include <mongocxx/result/delete.hpp>
 
 
 
 TEST_CASE("delete", "[delete][result]") {
-    bsoncxx::builder::document build;
+    bsoncxx::builder::stream::document build;
     build << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "nRemoved" << bsoncxx::types::b_int64{1};
 
     mongocxx::result::bulk_write b(bsoncxx::document::value(build.view()));

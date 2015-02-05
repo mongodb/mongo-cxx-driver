@@ -40,11 +40,26 @@
  * IF IBM IS APPRISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
-#define Assert(Cond) if (!(Cond)) abort ()
+#pragma once
 
-static const char Base64[] =
+#include <bsoncxx/config/prelude.hpp>
+
+#include <cstdint>
+#include <cstdlib>
+
+namespace bsoncxx {
+BSONCXX_INLINE_NAMESPACE_BEGIN
+namespace b64 {
+
+#define BSONCXX_B64_ASSERT(Cond) if (!(Cond)) std::abort ()
+
+namespace {
+
+const char Base64[] =
    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-static const char Pad64 = '=';
+const char Pad64 = '=';
+
+}  // anonymous namespace
 
 /* (From RFC1521 and draft-ietf-dnssec-secext-03.txt)
  * The following encoding technique is taken from RFC 1521 by Borenstein
@@ -108,16 +123,16 @@ static const char Pad64 = '=';
  *    characters followed by one "=" padding character.
  */
 
-static int
-b64_ntop (uint8_t const *src,
-          size_t         srclength,
-          char          *target,
-          size_t         targsize)
+inline int
+ntop (std::uint8_t const *src,
+      std::size_t         srclength,
+      char          *target,
+      std::size_t         targsize)
 {
-   size_t datalength = 0;
-   uint8_t input[3];
-   uint8_t output[4];
-   size_t i;
+   std::size_t datalength = 0;
+   std::uint8_t input[3];
+   std::uint8_t output[4];
+   std::size_t i;
 
    while (2 < srclength) {
       input[0] = *src++;
@@ -129,10 +144,10 @@ b64_ntop (uint8_t const *src,
       output[1] = ((input[0] & 0x03) << 4) + (input[1] >> 4);
       output[2] = ((input[1] & 0x0f) << 2) + (input[2] >> 6);
       output[3] = input[2] & 0x3f;
-      Assert (output[0] < 64);
-      Assert (output[1] < 64);
-      Assert (output[2] < 64);
-      Assert (output[3] < 64);
+      BSONCXX_B64_ASSERT (output[0] < 64);
+      BSONCXX_B64_ASSERT (output[1] < 64);
+      BSONCXX_B64_ASSERT (output[2] < 64);
+      BSONCXX_B64_ASSERT (output[3] < 64);
 
       if (datalength + 4 > targsize) {
          return -1;
@@ -154,9 +169,9 @@ b64_ntop (uint8_t const *src,
       output[0] = input[0] >> 2;
       output[1] = ((input[0] & 0x03) << 4) + (input[1] >> 4);
       output[2] = ((input[1] & 0x0f) << 2) + (input[2] >> 6);
-      Assert (output[0] < 64);
-      Assert (output[1] < 64);
-      Assert (output[2] < 64);
+      BSONCXX_B64_ASSERT (output[0] < 64);
+      BSONCXX_B64_ASSERT (output[1] < 64);
+      BSONCXX_B64_ASSERT (output[2] < 64);
 
       if (datalength + 4 > targsize) {
          return -1;
@@ -178,3 +193,9 @@ b64_ntop (uint8_t const *src,
    target[datalength] = '\0'; /* Returned value doesn't count \0. */
    return (int)datalength;
 }
+
+}  // namespace b64
+BSONCXX_INLINE_NAMESPACE_END
+}  // namespace bsoncxx
+
+#include <bsoncxx/config/postlude.hpp>

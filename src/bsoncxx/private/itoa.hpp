@@ -14,13 +14,35 @@
 
 #pragma once
 
-#include <bsoncxx/builder/helpers.hpp>
-#include <bsoncxx/builder/concrete.hpp>
-#include <bsoncxx/builder/array_ctx.hpp>
-#include <bsoncxx/builder/value_ctx.hpp>
-#include <bsoncxx/builder/key_ctx.hpp>
-#include <bsoncxx/builder/single_ctx.hpp>
-#include <bsoncxx/builder/array.hpp>
-#include <bsoncxx/builder/document.hpp>
-#include <bsoncxx/builder/impl.hpp>
-#include <bsoncxx/types.hpp>
+#include <bsoncxx/config/prelude.hpp>
+
+#include <cstddef>
+#include <cstdint>
+
+namespace bsoncxx {
+BSONCXX_INLINE_NAMESPACE_BEGIN
+
+class itoa {
+   public:
+    itoa();
+    itoa(uint32_t i);
+    itoa(const itoa& rhs);
+    itoa& operator=(const itoa& rhs);
+    itoa& operator=(uint32_t i);
+
+    const char* c_str() const;
+    std::size_t length() const;
+
+   private:
+    void init();
+
+    uint32_t _val;
+    const char* _str;
+    uint8_t _len;
+    char _buf[11];
+};
+
+BSONCXX_INLINE_NAMESPACE_END
+}  // namespace bsoncxx
+
+#include <bsoncxx/config/postlude.hpp>

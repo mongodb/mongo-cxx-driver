@@ -12,30 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
-#include <bsoncxx/config/prelude.hpp>
-
-#include <bsoncxx/builder/array_ctx.hpp>
-#include <bsoncxx/builder/value_ctx.hpp>
-#include <bsoncxx/builder/single_ctx.hpp>
+#include <bsoncxx/builder/stream/helpers.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
+namespace stream {
 
-template <class T>
-array_ctx<T>::operator single_ctx() {
-    return single_ctx(_concrete);
-}
+open_document_t open_document;
+close_document_t close_document;
+open_array_t open_array;
+close_array_t close_array;
+finalize_t finalize;
 
-template <class T>
-value_ctx<T>::operator single_ctx() {
-    return single_ctx(_concrete);
-}
-
-}  // namespace builder
+}  // namespace stream
+}  // namespace builders
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
-
-#include <bsoncxx/config/postlude.hpp>

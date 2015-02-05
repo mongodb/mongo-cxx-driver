@@ -16,43 +16,55 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
-#include <bsoncxx/builder/concrete.hpp>
-#include <bsoncxx/builder/array_ctx.hpp>
-#include <bsoncxx/builder/value_ctx.hpp>
-#include <bsoncxx/builder/key_ctx.hpp>
+#include <bsoncxx/builder/core.hpp>
+#include <bsoncxx/builder/stream/array_context.hpp>
+#include <bsoncxx/builder/stream/value_context.hpp>
+#include <bsoncxx/builder/stream/key_context.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
+namespace stream {
 
-class single_ctx {
+class single_context {
    public:
-    single_ctx(concrete* concrete) : _concrete(concrete) {}
+    single_context(core* core) : _core(core) {}
 
-    array_ctx<single_ctx> wrap_array() { return array_ctx<single_ctx>(_concrete); }
-    key_ctx<single_ctx> wrap_document() { return key_ctx<single_ctx>(_concrete); }
+    array_context<single_context> wrap_array() { return array_context<single_context>(_core); }
+    key_context<single_context> wrap_document() { return key_context<single_context>(_core); }
 
-    key_ctx<single_ctx> operator<<(builder::helpers::open_doc_t) {
-        _concrete->open_doc_append();
+    key_context<single_context> operator<<(builder::stream::open_document_t) {
+        _core->open_document();
 
         return wrap_document();
     }
 
-    array_ctx<single_ctx> operator<<(builder::helpers::open_array_t) {
-        _concrete->open_array_append();
+    array_context<single_context> operator<<(builder::stream::open_array_t) {
+        _core->open_array();
 
         return wrap_array();
     }
 
     template <class T>
     void operator<<(T&& t) {
-        _concrete->value_append(std::forward<T>(t));
+        _core->append(std::forward<T>(t));
     }
 
    private:
-    concrete* _concrete;
+    core* _core;
 };
 
+template <class T>
+array_context<T>::operator single_context() {
+    return single_context(_core);
+}
+
+template <class T>
+value_context<T>::operator single_context() {
+    return single_context(_core);
+}
+
+}  // namespace stream
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

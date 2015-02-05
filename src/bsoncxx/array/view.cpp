@@ -16,13 +16,13 @@
 #include <cstring>
 
 #include <bson.h>
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/array/view.hpp>
+#include <bsoncxx/private/itoa.hpp>
 #include <bsoncxx/types.hpp>
-#include <bsoncxx/json.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
-namespace document {
+namespace array {
 
 view::iterator::iterator() {
 }
@@ -132,7 +132,7 @@ view::const_iterator view::cbegin() const {
     bson_t b;
     bson_iter_t iter;
 
-    bson_init_static(&b, _data, _length);
+    bson_init_static(&b, data(), length());
     bson_iter_init(&iter, &b);
     bson_iter_next(&iter);
 
@@ -147,7 +147,7 @@ view::iterator view::begin() const {
     bson_t b;
     bson_iter_t iter;
 
-    bson_init_static(&b, _data, _length);
+    bson_init_static(&b, data(), length());
     bson_iter_init(&iter, &b);
     bson_iter_next(&iter);
 
@@ -158,11 +158,13 @@ view::iterator view::end() const {
     return iterator();
 }
 
-view::iterator view::find(const string_or_literal& key) const {
+view::iterator view::find(std::uint32_t i) const {
+    itoa key(i);
+
     bson_t b;
     bson_iter_t iter;
 
-    bson_init_static(&b, _data, _length);
+    bson_init_static(&b, data(), length());
 
     if (bson_iter_init_find(&iter, &b, key.c_str())) {
         return iterator(element(iter.raw, iter.len, iter.off));
@@ -171,25 +173,25 @@ view::iterator view::find(const string_or_literal& key) const {
     }
 }
 
-element view::operator[](const string_or_literal& key) const {
-    return *(this->find(key));
+element view::operator[](std::uint32_t i) const {
+    return *(this->find(i));
 }
 
-view::view(const std::uint8_t* data, std::size_t length) : _data(data), _length(length) {
+view::view(const std::uint8_t* data, std::size_t length) : _view(data, length) {
 }
 
-namespace {
-uint8_t k_default_view[5] = {5, 0, 0, 0, 0};
-}
-
-view::view() : _data(k_default_view), _length(sizeof(k_default_view)) {
+view::view() : _view() {
 }
 
 const std::uint8_t* view::data() const {
-    return _data;
+    return _view.data();
 }
 std::size_t view::length() const {
-    return _length;
+    return _view.length();
+}
+
+view::operator document::view() const {
+    return _view;
 }
 
 }  // namespace document

@@ -3,6 +3,8 @@
  - how do we integrate mongoc's memory management with c++'s memory management facilities
  - header include discipline (eg. do we put package prefixes?)
  - remove type tags on closing braces?
+ - inlining pass for trivial methods / free functions
+ - noexcept pass where possible
 
 ## Build
  - find_libmongocxx cmake helper thing

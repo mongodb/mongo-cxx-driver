@@ -16,7 +16,8 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <bsoncxx/builder.hpp>
+#include <bsoncxx/builder/stream/array.hpp>
+#include <bsoncxx/builder/stream/single_context.hpp>
 #include <mongocxx/pipeline.hpp>
 
 namespace mongocxx {
@@ -25,7 +26,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 class pipeline::impl {
 
    public:
-    bsoncxx::builder::single_ctx sink() {
+    bsoncxx::builder::stream::single_context sink() {
         return _builder;
     }
 
@@ -34,7 +35,7 @@ class pipeline::impl {
     }
 
    private:
-    bsoncxx::builder::array _builder;
+    bsoncxx::builder::stream::array _builder;
 
 }; // class impl
 

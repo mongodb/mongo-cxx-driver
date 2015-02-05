@@ -20,12 +20,12 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 
 std::string to_string(type rhs) {
     switch (static_cast<uint8_t>(rhs)) {
-#define LIBBSONCXX_ENUM(name, val) \
+#define BSONCXX_ENUM(name, val) \
     case val:                      \
         return(#name);             \
         break;
 #include <bsoncxx/enums/type.hpp>
-#undef LIBBSONCXX_ENUM
+#undef BSONCXX_ENUM
         default:
             return "?";
     }
@@ -33,12 +33,12 @@ std::string to_string(type rhs) {
 
 std::string to_string(binary_sub_type rhs) {
     switch (static_cast<uint8_t>(rhs)) {
-#define LIBBSONCXX_ENUM(name, val) \
+#define BSONCXX_ENUM(name, val) \
     case val:                      \
         return(#name);             \
         break;
 #include <bsoncxx/enums/binary_sub_type.hpp>
-#undef LIBBSONCXX_ENUM
+#undef BSONCXX_ENUM
         default:
             return "?";
     }
@@ -46,14 +46,14 @@ std::string to_string(binary_sub_type rhs) {
 
 namespace types {
 
-#define LIBBSONCXX_ENUM(name, val)                                       \
+#define BSONCXX_ENUM(name, val)                                       \
     std::ostream& operator<<(std::ostream& out, const b_##name& rhs) { \
         json_visitor jv(out, false, 0);                                \
         jv.visit_value(rhs);                                           \
         return out;                                                    \
     }
 #include <bsoncxx/enums/type.hpp>
-#undef LIBBSONCXX_ENUM
+#undef BSONCXX_ENUM
 
 }  // namespace types
 BSONCXX_INLINE_NAMESPACE_END

@@ -16,37 +16,59 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
-#include <bsoncxx/builder/concrete.hpp>
-#include <bsoncxx/builder/array_ctx.hpp>
+#include <bsoncxx/builder/core.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
+namespace basic {
 
-    class array : public array_ctx<> {
+    class document {
     public:
-        array() : array_ctx<>(&_concrete), _concrete(true) {}
+        document() : _core(false) {}
+
+        template <typename Arg, typename ...Args>
+        void append(Arg&& a, Args&& ...args) {
+            append(std::forward<Arg>(a));
+            append(std::forward<Args>(args)...);
+        }
+
+        template <typename T>
+        void append(T&& t) {
+            _core.key_owning(std::get<0>(t));
+            _core.append(std::get<1>(t));
+        }
+
+        template <std::size_t n, typename T>
+        void append(std::tuple<const char(&)[n], T>&& t) {
+            _core.key_literal(std::get<0>(t), n - 1);
+            _core.append(std::get<1>(t));
+        }
 
         bsoncxx::document::view view() const {
-            return _concrete.view();
+            return _core.view_document();
         }
 
         operator bsoncxx::document::view() const {
-            return _concrete.view();
+            return view();
         }
 
         bsoncxx::document::value extract() {
-            return _concrete.extract();
+            return _core.extract_document();
         }
 
         void clear() {
-            _concrete.clear();
+            _core.clear();
         }
 
     private:
-        concrete _concrete;
+        core _core;
     };
 
+}  // namespace basic
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

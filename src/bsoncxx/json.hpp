@@ -18,16 +18,15 @@
 
 #include <iomanip>
 #include <iostream>
+#include <memory>
 #include <sstream>
 #include <vector>
 
-#include <bsoncxx/builder.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/types/value.hpp>
 
-extern "C" {
-#include <bsoncxx/util/b64_ntop.h>
-}
+#include <bsoncxx/private/b64_ntop.h>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -74,7 +73,7 @@ class json_visitor {
 
         b64_len = (value.size / 3 + 1) * 4 + 1;
         std::unique_ptr<char> b64(reinterpret_cast<char*>(operator new(b64_len)));
-        b64_ntop(value.bytes, value.size, b64.get(), b64_len);
+        b64::ntop(value.bytes, value.size, b64.get(), b64_len);
 
         out << "{" << std::endl;
         pad(1);
@@ -204,12 +203,12 @@ class json_visitor {
             first = false;
             visit_key(x.key());
             switch (static_cast<int>(x.type())) {
-#define LIBBSONCXX_ENUM(name, val)     \
+#define BSONCXX_ENUM(name, val)     \
     case val:                        \
         visit_value(x.get_##name()); \
         break;
 #include <bsoncxx/enums/type.hpp>
-#undef LIBBSONCXX_ENUM
+#undef BSONCXX_ENUM
             }
         }
         out << std::endl;
@@ -222,6 +221,41 @@ inline std::string to_json(document::view view) {
 
     json_visitor v(ss, false, 0);
     v.visit_value(types::b_document{view});
+
+    return ss.str();
+}
+
+inline std::string to_json(document::element element) {
+    std::stringstream ss;
+
+    json_visitor v(ss, false, 0);
+
+    switch ((int)element.type()) {
+#define BSONCXX_ENUM(name, val)           \
+    case val:                                \
+        v.visit_key(element.key());          \
+        v.visit_value(element.get_##name()); \
+        break;
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
+    }
+
+    return ss.str();
+}
+
+inline std::string to_json(types::value value) {
+    std::stringstream ss;
+
+    json_visitor v(ss, false, 0);
+
+    switch ((int)value.type()) {
+#define BSONCXX_ENUM(name, val)           \
+    case val:                                \
+        v.visit_value(value.get_##name()); \
+        break;
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
+    }
 
     return ss.str();
 }

@@ -12,11 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma push_macro("DOC")
-#pragma push_macro("ARRAY")
+#pragma once
 
-#undef DOC
-#undef ARRAY
+#include <bsoncxx/config/prelude.hpp>
 
-#define DOC(arg) open_doc << arg << close_doc
-#define ARRAY(arg) open_array << arg << close_array
+#include <tuple>
+
+namespace bsoncxx {
+BSONCXX_INLINE_NAMESPACE_BEGIN
+namespace builder {
+namespace basic {
+
+    template <typename ...Args>
+    std::tuple<Args&...> kvp(Args&&... args) {
+        return std::tuple<Args&&...>(std::forward<Args>(args)...);
+    }
+
+}  // namespace basic
+}  // namespace builder
+BSONCXX_INLINE_NAMESPACE_END
+}  // namespace bsoncxx
+
+#include <bsoncxx/config/postlude.hpp>

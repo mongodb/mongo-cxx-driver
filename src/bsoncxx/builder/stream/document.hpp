@@ -16,21 +16,42 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
+#include <bsoncxx/builder/core.hpp>
+#include <bsoncxx/builder/stream/key_context.hpp>
+#include <bsoncxx/builder/stream/single_context.hpp>
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view.hpp>
+
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
+namespace stream {
 
-    template <class T>
-    class array_ctx;
-    template <class T>
-    class value_ctx;
-    template <class T>
-    class key_ctx;
+    class document : public key_context<> {
+    public:
+        document() : key_context<>(&_core), _core(false) {}
 
-    class single_ctx;
+        bsoncxx::document::view view() const {
+            return _core.view_document();
+        }
 
-    struct closed_ctx;
+        operator bsoncxx::document::view() const {
+            return view();
+        }
 
+        bsoncxx::document::value extract() {
+            return _core.extract_document();
+        }
+
+        void clear() {
+            _core.clear();
+        }
+
+    private:
+        core _core;
+    };
+
+}  // namespace stream
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

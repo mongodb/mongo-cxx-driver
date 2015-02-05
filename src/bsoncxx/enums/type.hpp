@@ -12,28 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef LIBBSONCXX_ENUM
-#error "This header is only meant to be included as an X-macro over LIBBSONCXX_ENUM"
+#ifndef BSONCXX_ENUM
+#error "This header is only meant to be included as an X-macro over BSONCXX_ENUM"
 #endif
 
-LIBBSONCXX_ENUM(eod, 0x00)
-LIBBSONCXX_ENUM(double, 0x01)
-LIBBSONCXX_ENUM(utf8, 0x02)
-LIBBSONCXX_ENUM(document, 0x03)
-LIBBSONCXX_ENUM(array, 0x04)
-LIBBSONCXX_ENUM(binary, 0x05)
-LIBBSONCXX_ENUM(undefined, 0x06)
-LIBBSONCXX_ENUM(oid, 0x07)
-LIBBSONCXX_ENUM(bool, 0x08)
-LIBBSONCXX_ENUM(date, 0x09)
-LIBBSONCXX_ENUM(null, 0x0A)
-LIBBSONCXX_ENUM(regex, 0x0B)
-LIBBSONCXX_ENUM(dbpointer, 0x0C)
-LIBBSONCXX_ENUM(code, 0x0D)
-LIBBSONCXX_ENUM(symbol, 0x0E)
-LIBBSONCXX_ENUM(codewscope, 0x0F)
-LIBBSONCXX_ENUM(int32, 0x10)
-LIBBSONCXX_ENUM(timestamp, 0x11)
-LIBBSONCXX_ENUM(int64, 0x12)
-LIBBSONCXX_ENUM(maxkey, 0x7F)
-LIBBSONCXX_ENUM(minkey, 0xFF)
+BSONCXX_ENUM(double, 0x01)
+BSONCXX_ENUM(utf8, 0x02)
+BSONCXX_ENUM(document, 0x03)
+BSONCXX_ENUM(array, 0x04)
+BSONCXX_ENUM(binary, 0x05)
+BSONCXX_ENUM(undefined, 0x06)
+BSONCXX_ENUM(oid, 0x07)
+BSONCXX_ENUM(bool, 0x08)
+BSONCXX_ENUM(date, 0x09)
+BSONCXX_ENUM(null, 0x0A)
+BSONCXX_ENUM(regex, 0x0B)
+BSONCXX_ENUM(dbpointer, 0x0C)
+BSONCXX_ENUM(code, 0x0D)
+BSONCXX_ENUM(symbol, 0x0E)
+BSONCXX_ENUM(codewscope, 0x0F)
+BSONCXX_ENUM(int32, 0x10)
+BSONCXX_ENUM(timestamp, 0x11)
+BSONCXX_ENUM(int64, 0x12)
+BSONCXX_ENUM(maxkey, 0x7F)
+BSONCXX_ENUM(minkey, 0xFF)

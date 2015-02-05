@@ -52,31 +52,25 @@ namespace types {
     struct b_int64;
     struct b_minkey;
     struct b_maxkey;
+    class value;
 }  // namespace types
-
-namespace builder {
-    class concrete;
-}  // namespace builder
 
 namespace document {
 
-    class view;
-
     class BSONCXX_API element {
-        friend class document::view;
-        friend class builder::concrete;
 
        public:
         element();
-        element(const void* iter);
 
-        bool operator==(const element& rhs) const;
+        explicit element(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset);
+
         explicit operator bool() const;
 
         bsoncxx::type type() const;
 
         string_or_literal key() const;
 
+        // TODO figure out a better exception than std::runtime_error
         types::b_eod get_eod() const;
         types::b_double get_double() const;
         types::b_utf8 get_utf8() const;
@@ -99,12 +93,11 @@ namespace document {
         types::b_minkey get_minkey() const;
         types::b_maxkey get_maxkey() const;
 
-        friend std::ostream& operator<<(std::ostream& out, const element& element);
+        types::value get_value() const;
 
-       private:
-        const uint8_t* _raw;
-        uint32_t _len;
-        uint32_t _off;
+        const std::uint8_t* raw;
+        std::uint32_t length;
+        std::uint32_t offset;
     };
 
 }  // namespace document

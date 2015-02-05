@@ -14,15 +14,13 @@
 
 #include <mongocxx/pipeline.hpp>
 
-#include <bsoncxx/util/itoa.hpp>
-#include <mongocxx/private/pipeline.hpp>
-
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/private/pipeline.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-using namespace bsoncxx::builder::helpers;
+using namespace bsoncxx::builder::stream;
 using namespace bsoncxx::types;
 
 pipeline::pipeline() : _impl(bsoncxx::stdx::make_unique<impl>()) {
@@ -33,47 +31,47 @@ pipeline& pipeline::operator=(pipeline&&) noexcept = default;
 pipeline::~pipeline() = default;
 
 pipeline& pipeline::group(bsoncxx::document::view group) {
-    _impl->sink() << open_doc << "$group" << b_document{group} << close_doc;
+    _impl->sink() << open_document << "$group" << b_document{group} << close_document;
     return *this;
 }
 
 pipeline& pipeline::limit(std::int32_t limit) {
-    _impl->sink() << open_doc << "$limit" << limit << close_doc;
+    _impl->sink() << open_document << "$limit" << limit << close_document;
     return *this;
 }
 
 pipeline& pipeline::match(bsoncxx::document::view criteria) {
-    _impl->sink() << open_doc << "$match" << b_document{criteria} << close_doc;
+    _impl->sink() << open_document << "$match" << b_document{criteria} << close_document;
     return *this;
 }
 
 pipeline& pipeline::out(std::string collection_name) {
-    _impl->sink() << open_doc << "$out" << collection_name << close_doc;
+    _impl->sink() << open_document << "$out" << collection_name << close_document;
     return *this;
 }
 
 pipeline& pipeline::project(bsoncxx::document::view projection) {
-    _impl->sink() << open_doc << "$project" << b_document{projection} << close_doc;
+    _impl->sink() << open_document << "$project" << b_document{projection} << close_document;
     return *this;
 }
 
 pipeline& pipeline::redact(bsoncxx::document::view restrictions) {
-    _impl->sink() << open_doc << "$redact" << b_document{restrictions} << close_doc;
+    _impl->sink() << open_document << "$redact" << b_document{restrictions} << close_document;
     return *this;
 }
 
 pipeline& pipeline::skip(std::int32_t skip) {
-    _impl->sink() << open_doc << "$skip" << skip << close_doc;
+    _impl->sink() << open_document << "$skip" << skip << close_document;
     return *this;
 }
 
 pipeline& pipeline::sort(bsoncxx::document::view sort) {
-    _impl->sink() << open_doc << "$sort" << b_document{sort} << close_doc;
+    _impl->sink() << open_document << "$sort" << b_document{sort} << close_document;
     return *this;
 }
 
 pipeline& pipeline::unwind(std::string field_name) {
-    _impl->sink() << open_doc << "$unwind" << field_name << close_doc;
+    _impl->sink() << open_document << "$unwind" << field_name << close_document;
     return *this;
 }
 

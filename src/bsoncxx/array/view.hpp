@@ -22,12 +22,13 @@
 #include <iterator>
 #include <type_traits>
 
-#include <bsoncxx/document/element.hpp>
+#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/array/element.hpp>
 #include <bsoncxx/string_or_literal.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
-namespace document {
+namespace array {
 
 class BSONCXX_API view {
 
@@ -41,9 +42,8 @@ class BSONCXX_API view {
     iterator begin() const;
     iterator end() const;
 
-    // TODO switch to stdx::string_view
-    iterator find(const string_or_literal& key) const;
-    element operator[](const string_or_literal& key) const;
+    iterator find(std::uint32_t i) const;
+    element operator[](std::uint32_t i) const;
 
     view();
 
@@ -52,9 +52,10 @@ class BSONCXX_API view {
     const std::uint8_t* data() const;
     std::size_t length() const;
 
+    operator document::view() const;
+
    private:
-    const std::uint8_t* _data;
-    std::size_t _length;
+    document::view _view;
 };
 
 class view::iterator : public std::iterator<std::forward_iterator_tag, element> {
@@ -75,7 +76,7 @@ class view::iterator : public std::iterator<std::forward_iterator_tag, element> 
     element _element;
 };
 
-class view::const_iterator : public std::iterator<std::forward_iterator_tag, element, ptrdiff_t,
+class view::const_iterator : public std::iterator<std::forward_iterator_tag, element, std::ptrdiff_t,
                                                   const element*, const element&> {
    public:
     const_iterator();
@@ -94,7 +95,7 @@ class view::const_iterator : public std::iterator<std::forward_iterator_tag, ele
     element _element;
 };
 
-}  // namespace document
+}  // namespace array
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 

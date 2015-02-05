@@ -12,38 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#include <cstdlib>
+#include <cstring>
+#include <stdexcept>
 
-#include <bsoncxx/config/prelude.hpp>
-
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/array/element.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
-namespace builder {
-namespace helpers {
+namespace array {
 
-struct open_doc_t {};
-extern open_doc_t open_doc;
+element::element() : document::element() {
+}
 
-struct open_array_t {};
-extern open_array_t open_array;
+element::element(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset)
+    : document::element(raw, length, offset) {
+}
 
-struct close_doc_t {};
-extern close_doc_t close_doc;
-
-struct close_array_t {};
-extern close_array_t close_array;
-
-struct BSONCXX_API concat {
-    document::view view;
-
-    operator document::view() const { return view; }
-};
-
-}  // namespace helpers
-}  // namespace builder
+}  // namespace document
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
-
-#include <bsoncxx/config/postlude.hpp>

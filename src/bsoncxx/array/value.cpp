@@ -15,11 +15,11 @@
 #include <cstdlib>
 #include <cstring>
 
-#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/array/value.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
-namespace document {
+namespace array {
 
 value::value(std::uint8_t* data, std::size_t length, deleter_type dtor)
     : _data(data, dtor), _length(length) {
@@ -30,7 +30,7 @@ value::value(unique_ptr_type ptr, std::size_t length)
 }
 
 // TODO should we revisit generic new/delete
-value::value(document::view view)
+value::value(array::view view)
     : _data(static_cast<std::uint8_t*>(operator new(static_cast<std::size_t>(view.length()))),
             operator delete),
       _length(view.length()) {
@@ -54,6 +54,6 @@ value::unique_ptr_type value::release() {
     return std::move(x);
 }
 
-}  // namespace document
+}  // namespace array
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

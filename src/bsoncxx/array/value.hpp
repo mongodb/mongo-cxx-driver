@@ -19,11 +19,12 @@
 #include <cstdlib>
 #include <memory>
 
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/array/view.hpp>
+#include <bsoncxx/document/value.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
-namespace document {
+namespace array {
 
 class BSONCXX_API value {
 
@@ -33,7 +34,7 @@ class BSONCXX_API value {
 
     value(std::uint8_t* data, std::size_t length, deleter_type dtor);
     value(unique_ptr_type ptr, std::size_t length);
-    explicit value(document::view view);
+    explicit value(array::view view);
 
     value(const value&);
     value& operator=(const value&);
@@ -41,26 +42,25 @@ class BSONCXX_API value {
     value(value&&) = default;
     value& operator=(value&&) = default;
 
-    inline document::view view() const noexcept;
-    inline operator document::view() const noexcept;
+    inline array::view view() const noexcept;
+    inline operator array::view() const noexcept;
 
     unique_ptr_type release();
 
    private:
     unique_ptr_type _data;
     std::size_t _length;
-
 };
 
-document::view value::view() const noexcept {
-    return document::view{static_cast<uint8_t*>(_data.get()), _length};
+array::view value::view() const noexcept {
+    return array::view{static_cast<uint8_t*>(_data.get()), _length};
 }
 
-value::operator document::view() const noexcept {
+value::operator array::view() const noexcept {
     return view();
 }
 
-}  // namespace document
+}  // namespace array
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 

@@ -22,7 +22,6 @@
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
-namespace util {
 
 template <typename T, std::size_t size>
 class stack {
@@ -132,7 +131,6 @@ class stack {
     }
 };
 
-}  // namespace util
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 

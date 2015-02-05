@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/util/itoa.hpp>
+#include <bsoncxx/private/itoa.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
-namespace util {
+namespace {
 
 const char* kIndexTable =
     "0\0"
@@ -1019,6 +1019,7 @@ const char* kIndexTable =
     "997\0"
     "998\0"
     "999\0";
+}  // anonymous namespace
 
 itoa::itoa(uint32_t val) : _val(val) {
     init();
@@ -1077,6 +1078,5 @@ std::size_t itoa::length() const {
     return _len;
 }
 
-}  // namespace util
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

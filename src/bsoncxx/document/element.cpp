@@ -18,38 +18,38 @@
 #include <bson.h>
 
 #include <bsoncxx/document/element.hpp>
-#include <bsoncxx/types.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/types.hpp>
+#include <bsoncxx/types/value.hpp>
 
-#define CITER             \
-    bson_iter_t iter;     \
-    iter.raw = _raw;      \
-    iter.len = _len;      \
-    iter.next_off = _off; \
+#define CITER               \
+    bson_iter_t iter;       \
+    iter.raw = raw;         \
+    iter.len = length;      \
+    iter.next_off = offset; \
     bson_iter_next(&iter)
+
+#define BSONCXX_TYPE_CHECK(name) \
+    do { \
+        if (type() != bsoncxx::type::name) { \
+            throw std::runtime_error("type is not " #name); \
+        } \
+    } while (0)
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
-element::element() : _raw(nullptr), _len(0), _off(0) {
+element::element() : raw(nullptr), length(0), offset(0) {
 }
 
-element::element(const void* iter_) {
-    const bson_iter_t* iter = reinterpret_cast<const bson_iter_t*>(iter_);
-
-    _raw = iter->raw;
-    _len = iter->len;
-    _off = iter->off;
-}
-
-bool element::operator==(const element& rhs) const {
-    return (_raw == rhs._raw && _off == rhs._off);
+element::element(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset)
+    : raw(raw), length(length), offset(offset) {
 }
 
 bsoncxx::type element::type() const {
-    if (_raw == nullptr) {
-        return bsoncxx::type::k_eod;
+    if (raw == nullptr) {
+        throw std::runtime_error("unset element");
     }
 
     CITER;
@@ -57,8 +57,8 @@ bsoncxx::type element::type() const {
 }
 
 string_or_literal element::key() const {
-    if (_raw == nullptr) {
-        return string_or_literal{""};
+    if (raw == nullptr) {
+        throw std::runtime_error("unset element");
     }
 
     CITER;
@@ -69,6 +69,8 @@ string_or_literal element::key() const {
 }
 
 types::b_binary element::get_binary() const {
+    BSONCXX_TYPE_CHECK(k_binary);
+
     CITER;
 
     bson_subtype_t type;
@@ -80,11 +82,9 @@ types::b_binary element::get_binary() const {
     return types::b_binary{static_cast<binary_sub_type>(type), len, binary};
 }
 
-types::b_eod element::get_eod() const {
-    return types::b_eod{};
-}
-
 types::b_utf8 element::get_utf8() const {
+    BSONCXX_TYPE_CHECK(k_utf8);
+
     CITER;
 
     uint32_t len;
@@ -94,21 +94,26 @@ types::b_utf8 element::get_utf8() const {
 }
 
 types::b_double element::get_double() const {
+    BSONCXX_TYPE_CHECK(k_double);
     CITER;
     return types::b_double{bson_iter_double(&iter)};
 }
 types::b_int32 element::get_int32() const {
+    BSONCXX_TYPE_CHECK(k_int32);
     CITER;
     return types::b_int32{bson_iter_int32(&iter)};
 }
 types::b_int64 element::get_int64() const {
+    BSONCXX_TYPE_CHECK(k_int64);
     CITER;
     return types::b_int64{bson_iter_int64(&iter)};
 }
 types::b_undefined element::get_undefined() const {
+    BSONCXX_TYPE_CHECK(k_undefined);
     return types::b_undefined{};
 }
 types::b_oid element::get_oid() const {
+    BSONCXX_TYPE_CHECK(k_oid);
     CITER;
 
     const bson_oid_t* boid = bson_iter_oid(&iter);
@@ -118,18 +123,22 @@ types::b_oid element::get_oid() const {
 }
 
 types::b_bool element::get_bool() const {
+    BSONCXX_TYPE_CHECK(k_bool);
     CITER;
     return types::b_bool{bson_iter_bool(&iter)};
 }
 types::b_date element::get_date() const {
+    BSONCXX_TYPE_CHECK(k_date);
     CITER;
     return types::b_date{bson_iter_date_time(&iter)};
 }
 types::b_null element::get_null() const {
+    BSONCXX_TYPE_CHECK(k_null);
     return types::b_null{};
 }
 
 types::b_regex element::get_regex() const {
+    BSONCXX_TYPE_CHECK(k_regex);
     CITER;
 
     const char* options;
@@ -140,6 +149,7 @@ types::b_regex element::get_regex() const {
 }
 
 types::b_dbpointer element::get_dbpointer() const {
+    BSONCXX_TYPE_CHECK(k_dbpointer);
     CITER;
 
     uint32_t collection_len;
@@ -153,6 +163,7 @@ types::b_dbpointer element::get_dbpointer() const {
 }
 
 types::b_code element::get_code() const {
+    BSONCXX_TYPE_CHECK(k_code);
     CITER;
 
     uint32_t len;
@@ -162,6 +173,7 @@ types::b_code element::get_code() const {
 }
 
 types::b_symbol element::get_symbol() const {
+    BSONCXX_TYPE_CHECK(k_symbol);
     CITER;
 
     uint32_t len;
@@ -171,6 +183,7 @@ types::b_symbol element::get_symbol() const {
 }
 
 types::b_codewscope element::get_codewscope() const {
+    BSONCXX_TYPE_CHECK(k_codewscope);
     CITER;
 
     uint32_t code_len;
@@ -183,6 +196,7 @@ types::b_codewscope element::get_codewscope() const {
 }
 
 types::b_timestamp element::get_timestamp() const {
+    BSONCXX_TYPE_CHECK(k_timestamp);
     CITER;
 
     uint32_t timestamp;
@@ -193,13 +207,16 @@ types::b_timestamp element::get_timestamp() const {
 }
 
 types::b_minkey element::get_minkey() const {
+    BSONCXX_TYPE_CHECK(k_minkey);
     return types::b_minkey{};
 }
 types::b_maxkey element::get_maxkey() const {
+    BSONCXX_TYPE_CHECK(k_maxkey);
     return types::b_maxkey{};
 }
 
 types::b_document element::get_document() const {
+    BSONCXX_TYPE_CHECK(k_document);
     CITER;
 
     const std::uint8_t* buf;
@@ -211,6 +228,7 @@ types::b_document element::get_document() const {
 }
 
 types::b_array element::get_array() const {
+    BSONCXX_TYPE_CHECK(k_array);
     CITER;
 
     const std::uint8_t* buf;
@@ -218,27 +236,15 @@ types::b_array element::get_array() const {
 
     bson_iter_array(&iter, &len, &buf);
 
-    return types::b_array{document::view{buf, len}};
+    return types::b_array{array::view{buf, len}};
+}
+
+types::value element::get_value() const {
+    return types::value{*this};
 }
 
 element::operator bool() const {
-   return _raw != nullptr;
-}
-
-std::ostream& operator<<(std::ostream& out, const element& element) {
-    json_visitor v(out, false, 0);
-
-    switch ((int)element.type()) {
-#define LIBBSONCXX_ENUM(name, val)           \
-    case val:                                \
-        v.visit_key(element.key());          \
-        v.visit_value(element.get_##name()); \
-        break;
-#include <bsoncxx/enums/type.hpp>
-#undef LIBBSONCXX_ENUM
-    }
-
-    return out;
+   return raw != nullptr;
 }
 
 }  // namespace document

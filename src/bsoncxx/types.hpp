@@ -16,6 +16,7 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
+#include <bsoncxx/array/view.hpp>
 #include <bsoncxx/string_or_literal.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/oid.hpp>
@@ -24,25 +25,21 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
 enum class type : std::uint8_t {
-#define LIBBSONCXX_ENUM(name, val) k_##name = val,
+#define BSONCXX_ENUM(name, val) k_##name = val,
 #include <bsoncxx/enums/type.hpp>
-#undef LIBBSONCXX_ENUM
+#undef BSONCXX_ENUM
 };
 
 enum class binary_sub_type : std::uint8_t {
-#define LIBBSONCXX_ENUM(name, val) k_##name = val,
+#define BSONCXX_ENUM(name, val) k_##name = val,
 #include <bsoncxx/enums/binary_sub_type.hpp>
-#undef LIBBSONCXX_ENUM
+#undef BSONCXX_ENUM
 };
 
 std::string to_string(type rhs);
 std::string to_string(binary_sub_type rhs);
 
 namespace types {
-
-struct b_eod {
-    static constexpr auto type_id = type::k_eod;
-};
 
 struct b_double {
     static constexpr auto type_id = type::k_double;
@@ -75,9 +72,9 @@ struct b_document {
 struct b_array {
     static constexpr auto type_id = type::k_array;
 
-    document::view value;
+    array::view value;
 
-    operator document::view() { return value; }
+    operator array::view() { return value; }
 };
 
 struct b_binary {
@@ -202,9 +199,9 @@ struct b_maxkey {
     static constexpr auto type_id = type::k_maxkey;
 };
 
-#define LIBBSONCXX_ENUM(name, val) std::ostream& operator<<(std::ostream& out, const b_##name& rhs);
+#define BSONCXX_ENUM(name, val) std::ostream& operator<<(std::ostream& out, const b_##name& rhs);
 #include <bsoncxx/enums/type.hpp>
-#undef LIBBSONCXX_ENUM
+#undef BSONCXX_ENUM
 
 }  // namespace types
 BSONCXX_INLINE_NAMESPACE_END

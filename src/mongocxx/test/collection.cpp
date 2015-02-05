@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include <bsoncxx/builder.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/client.hpp>
@@ -16,12 +16,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     coll.drop();
 
     SECTION("insert and read single document", "[collection]") {
-        bsoncxx::builder::document b;
+        bsoncxx::builder::stream::document b;
         b << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "x" << 1;
 
         REQUIRE(coll.insert_one(b));
 
-        bsoncxx::builder::document c;
+        bsoncxx::builder::stream::document c;
         c << "x" << 1;
 
         REQUIRE(coll.insert_one(c.view()));
@@ -38,8 +38,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("insert and update single document", "[collection]") {
-        using namespace bsoncxx::builder::helpers;
-        bsoncxx::builder::document b1;
+        using namespace bsoncxx::builder::stream;
+        bsoncxx::builder::stream::document b1;
         b1 << "_id" << 1;
 
         coll.insert_one(b1);
@@ -48,8 +48,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         REQUIRE(doc);
         REQUIRE(doc->view()["_id"].get_int32() == 1);
 
-        bsoncxx::builder::document update_doc;
-        update_doc << "$set" << open_doc << "changed" << true << close_doc;
+        bsoncxx::builder::stream::document update_doc;
+        update_doc << "$set" << open_document << "changed" << true << close_document;
 
         coll.update_one(b1, update_doc);
 
@@ -59,23 +59,23 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("insert and update multiple documents", "[collection]") {
-        bsoncxx::builder::document b1;
+        bsoncxx::builder::stream::document b1;
         b1 << "x" << 1;
 
         coll.insert_one(b1);
         coll.insert_one(b1);
 
-        bsoncxx::builder::document b2;
+        bsoncxx::builder::stream::document b2;
         b2 << "x" << 2;
 
         coll.insert_one(b2);
 
         REQUIRE(coll.count(b1) == 2);
 
-        bsoncxx::builder::document bchanged;
+        bsoncxx::builder::stream::document bchanged;
         bchanged << "changed" << true;
 
-        bsoncxx::builder::document update_doc;
+        bsoncxx::builder::stream::document update_doc;
         update_doc << "$set" << bsoncxx::types::b_document{bchanged};
 
         coll.update_many(b1, update_doc);
@@ -84,7 +84,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("replace document replaces only one document", "[collection]") {
-        bsoncxx::builder::document doc;
+        bsoncxx::builder::stream::document doc;
         doc << "x" << 1;
 
         coll.insert_one(doc);
@@ -92,7 +92,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         REQUIRE(coll.count(doc) == 2);
 
-        bsoncxx::builder::document replacement;
+        bsoncxx::builder::stream::document replacement;
         replacement << "x" << 2;
 
         coll.replace_one(doc, replacement);
@@ -101,12 +101,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("non-matching upsert creates document", "[collection]") {
-        using namespace bsoncxx::builder::helpers;
-        bsoncxx::builder::document b1;
+        using namespace bsoncxx::builder::stream;
+        bsoncxx::builder::stream::document b1;
         b1 << "_id" << 1;
 
-        bsoncxx::builder::document update_doc;
-        update_doc << "$set" << open_doc << "changed" << true << close_doc;
+        bsoncxx::builder::stream::document update_doc;
+        update_doc << "$set" << open_document << "changed" << true << close_document;
 
         options::update options;
         options.upsert(true);
@@ -121,14 +121,14 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("matching upsert updates document", "[collection]") {
-        using namespace bsoncxx::builder::helpers;
-        bsoncxx::builder::document b1;
+        using namespace bsoncxx::builder::stream;
+        bsoncxx::builder::stream::document b1;
         b1 << "_id" << 1;
 
         coll.insert_one(b1);
 
-        bsoncxx::builder::document update_doc;
-        update_doc << "$set" << open_doc << "changed" << true << close_doc;
+        bsoncxx::builder::stream::document update_doc;
+        update_doc << "$set" << open_document << "changed" << true << close_document;
 
         options::update options;
         options.upsert(true);
@@ -143,7 +143,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     // SECTION("matching upsert updates document", "[collection]") {
-    // bsoncxx::builder::document b1;
+    // bsoncxx::builder::stream::document b1;
     // b1 << "x" << 1;
     // model::insert_many docs{std::initializer_list<bsoncxx::document::view>{b1, b1, b1}};
     // coll.insert_many(docs);
@@ -154,11 +154,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     //}
 
     SECTION("document replacement", "[collection]") {
-        bsoncxx::builder::document b1;
+        bsoncxx::builder::stream::document b1;
         b1 << "x" << 1;
         coll.insert_one(b1);
 
-        bsoncxx::builder::document b2;
+        bsoncxx::builder::stream::document b2;
         b2 << "x" << 2;
 
         coll.replace_one(b1, b2);
@@ -170,12 +170,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("filtered document delete one works", "[collection]") {
-        bsoncxx::builder::document b1;
+        bsoncxx::builder::stream::document b1;
         b1 << "x" << 1;
 
         coll.insert_one(b1);
 
-        bsoncxx::builder::document b2;
+        bsoncxx::builder::stream::document b2;
         b2 << "x" << 2;
 
         coll.insert_one(b2);
@@ -224,12 +224,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("delete many works", "[collection]") {
-        bsoncxx::builder::document b1;
+        bsoncxx::builder::stream::document b1;
         b1 << "x" << 1;
 
         coll.insert_one(b1);
 
-        bsoncxx::builder::document b2;
+        bsoncxx::builder::stream::document b2;
         b2 << "x" << 2;
 
         coll.insert_one(b2);
@@ -265,7 +265,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("find_one_and_replace works", "[collection]") {
-        bsoncxx::builder::document b1;
+        bsoncxx::builder::stream::document b1;
         b1 << "x" << 1;
 
         coll.insert_one(b1);
@@ -273,8 +273,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         REQUIRE(coll.count(bsoncxx::document::view()) == 2);
 
-        bsoncxx::builder::document criteria;
-        bsoncxx::builder::document replacement;
+        bsoncxx::builder::stream::document criteria;
+        bsoncxx::builder::stream::document replacement;
 
         criteria << "x" << 1;
         replacement << "x" << 2;
@@ -293,7 +293,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("bad criteria returns negative optional") {
-            bsoncxx::builder::document bad_criteria;
+            bsoncxx::builder::stream::document bad_criteria;
             bad_criteria << "x" << 3;
 
             auto doc = coll.find_one_and_replace(bad_criteria, replacement);
@@ -303,9 +303,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("find_one_and_update works", "[collection]") {
-        using namespace bsoncxx::builder::helpers;
+        using namespace bsoncxx::builder::stream;
 
-        bsoncxx::builder::document b1;
+        bsoncxx::builder::stream::document b1;
         b1 << "x" << 1;
 
         coll.insert_one(b1);
@@ -313,11 +313,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         REQUIRE(coll.count(bsoncxx::document::view()) == 2);
 
-        bsoncxx::builder::document criteria;
-        bsoncxx::builder::document update;
+        bsoncxx::builder::stream::document criteria;
+        bsoncxx::builder::stream::document update;
 
         criteria << "x" << 1;
-        update << "$set" << open_doc << "x" << 2 << close_doc;
+        update << "$set" << open_document << "x" << 2 << close_document;
 
         SECTION("without return update returns original") {
             auto doc = coll.find_one_and_update(criteria, update);
@@ -337,7 +337,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("bad criteria returns negative optional") {
-            bsoncxx::builder::document bad_criteria;
+            bsoncxx::builder::stream::document bad_criteria;
             bad_criteria << "x" << 3;
 
             auto doc = coll.find_one_and_update(bad_criteria, update);
@@ -347,9 +347,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("find_one_and_delete works", "[collection]") {
-        using namespace bsoncxx::builder::helpers;
+        using namespace bsoncxx::builder::stream;
 
-        bsoncxx::builder::document b1;
+        bsoncxx::builder::stream::document b1;
         b1 << "x" << 1;
 
         coll.insert_one(b1);
@@ -357,7 +357,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         REQUIRE(coll.count(bsoncxx::document::view()) == 2);
 
-        bsoncxx::builder::document criteria;
+        bsoncxx::builder::stream::document criteria;
 
         criteria << "x" << 1;
 
@@ -372,10 +372,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("aggregate some things", "[collection]") {
-        bsoncxx::builder::document b1;
+        bsoncxx::builder::stream::document b1;
         b1 << "x" << 1;
 
-        bsoncxx::builder::document b2;
+        bsoncxx::builder::stream::document b2;
         b2 << "x" << 2;
 
         coll.insert_one(b1);

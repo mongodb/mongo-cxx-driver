@@ -15,13 +15,13 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
-#include <bsoncxx/builder.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 #include <mongocxx/result/replace_one.hpp>
 
 
 
 TEST_CASE("replace_one", "[replace_one][result]") {
-    bsoncxx::builder::document build;
+    bsoncxx::builder::stream::document build;
     build << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "nMatched" << bsoncxx::types::b_int64{2}
           << "nModified" << bsoncxx::types::b_int64{1};
 

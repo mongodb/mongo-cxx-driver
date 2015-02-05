@@ -17,39 +17,35 @@
 #include <bsoncxx/config/prelude.hpp>
 
 #include <bsoncxx/document/view.hpp>
-#include <bsoncxx/document/value.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
-namespace document {
+namespace builder {
+namespace stream {
 
-class BSONCXX_API view_or_value {
+struct open_document_t {};
+extern open_document_t open_document;
 
-   public:
-    view_or_value(bsoncxx::document::view view);
-    view_or_value(bsoncxx::document::value value);
+struct open_array_t {};
+extern open_array_t open_array;
 
-    view_or_value(view_or_value&& rhs);
-    view_or_value& operator=(view_or_value&& rhs);
+struct close_document_t {};
+extern close_document_t close_document;
 
-    ~view_or_value();
+struct close_array_t {};
+extern close_array_t close_array;
 
-    document::view view() const;
-    operator document::view() const;
+struct finalize_t {};
+extern finalize_t finalize;
 
-   private:
-    view_or_value(const bsoncxx::document::view_or_value& view) = delete;
-    view_or_value& operator=(const bsoncxx::document::view_or_value& view) = delete;
+struct BSONCXX_API concatenate {
+    document::view view;
 
-    bool _is_view;
-    union {
-        bsoncxx::document::view _view;
-        bsoncxx::document::value _value;
-    };
-
+    operator document::view() const { return view; }
 };
 
-}  // namespace document
+}  // namespace stream
+}  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 

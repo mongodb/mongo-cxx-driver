@@ -16,16 +16,44 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
+#include <bsoncxx/array/view.hpp>
+#include <bsoncxx/array/value.hpp>
+#include <bsoncxx/builder/core.hpp>
+#include <bsoncxx/builder/stream/array_context.hpp>
+#include <bsoncxx/builder/stream/key_context.hpp>
+#include <bsoncxx/builder/stream/single_context.hpp>
+#include <bsoncxx/builder/stream/value_context.hpp>
+
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
+namespace stream {
 
-    class concrete;
+    class array : public array_context<> {
+    public:
+        array() : array_context<>(&_core), _core(true) {}
 
-    struct closed_ctx {
-        closed_ctx(concrete*) {}
+        bsoncxx::array::view view() const {
+            return _core.view_array();
+        }
+
+        operator bsoncxx::array::view() const {
+            return view();
+        }
+
+        bsoncxx::array::value extract() {
+            return _core.extract_array();
+        }
+
+        void clear() {
+            _core.clear();
+        }
+
+    private:
+        core _core;
     };
 
+}  // namespace stream
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

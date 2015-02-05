@@ -21,7 +21,7 @@
 #include <memory>
 #include <string>
 
-#include <bsoncxx/builder.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/cursor.hpp>
@@ -607,13 +607,13 @@ inline bsoncxx::stdx::optional<result::insert_many> collection::insert_many(
     class bulk_write writes(false);
 
     std::map<std::size_t, bsoncxx::document::element> inserted_ids{};
-    size_t index = 0;
+    std::size_t index = 0;
     std::for_each(begin, end, [&](const bsoncxx::document::view& current){
         // TODO: put this somewhere else not in header scope (bsoncxx::builder)
         if ( !current["_id"]) {
-            bsoncxx::builder::document new_document;
-            new_document << "_id" << bsoncxx::oid(bsoncxx::oid::init_tag);
-            new_document << bsoncxx::builder::helpers::concat{current};
+            bsoncxx::builder::stream::document new_document;
+            new_document << "_id" << bsoncxx::oid(bsoncxx::oid::init_tag)
+                         << bsoncxx::builder::stream::concatenate{current};
 
             writes.append(model::insert_one(new_document.view()));
 
