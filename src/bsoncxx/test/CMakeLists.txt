@@ -1,5 +1,3 @@
-set(CMAKE_CXX_FLAGS "-DMONGOCXX_TESTING ${CMAKE_CXX_FLAGS}")
-
 include_directories(
     ${CMAKE_SOURCE_DIR}/src/third_party/catch/include
     ${CMAKE_BINARY_DIR}/src
