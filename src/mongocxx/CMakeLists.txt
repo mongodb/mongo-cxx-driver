@@ -26,16 +26,16 @@ include_directories(
 )
 
 # driver files in top level driver directory
-file(GLOB mongocxx-core_headers    ${PROJECT_SOURCE_DIR}/*.hpp)
-file(GLOB mongocxx-core_sources    ${PROJECT_SOURCE_DIR}/*.cpp)
-file(GLOB mongocxx-model_headers   ${PROJECT_SOURCE_DIR}/model/*.hpp)
-file(GLOB mongocxx-model_sources   ${PROJECT_SOURCE_DIR}/model/*.cpp)
-file(GLOB mongocxx-options_headers ${PROJECT_SOURCE_DIR}/options/*.hpp)
-file(GLOB mongocxx-options_sources ${PROJECT_SOURCE_DIR}/options/*.cpp)
-file(GLOB mongocxx-private_headers ${PROJECT_SOURCE_DIR}/private/*.hpp)
-file(GLOB mongocxx-private_sources ${PROJECT_SOURCE_DIR}/private/*.cpp)
-file(GLOB mongocxx-result_headers  ${PROJECT_SOURCE_DIR}/result/*.hpp)
-file(GLOB mongocxx-result_sources  ${PROJECT_SOURCE_DIR}/result/*.cpp)
+file(GLOB mongocxx-core_headers *.hpp)
+file(GLOB mongocxx-core_sources *.cpp)
+file(GLOB mongocxx-model_headers model/*.hpp)
+file(GLOB mongocxx-model_sources model/*.cpp)
+file(GLOB mongocxx-options_headers options/*.hpp)
+file(GLOB mongocxx-options_sources options/*.cpp)
+file(GLOB mongocxx-private_headers private/*.hpp)
+file(GLOB mongocxx-private_sources private/*.cpp)
+file(GLOB mongocxx-result_headers result/*.hpp)
+file(GLOB mongocxx-result_sources result/*.cpp)
 
 set(mongocxx_sources
     ${mongocxx-core_sources}
@@ -116,6 +116,8 @@ install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/libmongocxx.pc"
   DESTINATION "${PKG_CONFIG_PATH}"
 )
+
+add_subdirectory(config)
 
 if(BUILD_UNIT_TESTS)
   add_subdirectory(test)

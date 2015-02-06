@@ -23,16 +23,27 @@ include_directories(
     ${CMAKE_BINARY_DIR}/src
 )
 
-file(GLOB bsoncxx-core_headers ${PROJECT_SOURCE_DIR}/*.hpp)
-file(GLOB bsoncxx-core_sources ${PROJECT_SOURCE_DIR}/*.cpp)
-file(GLOB bsoncxx-builder_headers ${PROJECT_SOURCE_DIR}/builder/*.hpp)
-file(GLOB bsoncxx-builder_sources ${PROJECT_SOURCE_DIR}/builder/*.cpp)
-file(GLOB bsoncxx-document_headers ${PROJECT_SOURCE_DIR}/document/*.hpp)
-file(GLOB bsoncxx-document_sources ${PROJECT_SOURCE_DIR}/document/*.cpp)
-file(GLOB bsoncxx-stdx_headers ${PROJECT_SOURCE_DIR}/stdx/*.hpp)
-file(GLOB bsoncxx-stdx_sources ${PROJECT_SOURCE_DIR}/stdx/*.cpp)
-file(GLOB bsoncxx-util_headers ${PROJECT_SOURCE_DIR}/util/*.hpp)
-file(GLOB bsoncxx-util_sources ${PROJECT_SOURCE_DIR}/util/*.cpp)
+configure_file (
+    ${PROJECT_SOURCE_DIR}/version.hpp.in
+    ${PROJECT_BINARY_DIR}/version.hpp
+)
+
+configure_file (
+    ${PROJECT_SOURCE_DIR}/libbsoncxx.pc.in
+    ${PROJECT_BINARY_DIR}/libbsoncxx.pc
+    @ONLY
+)
+
+file(GLOB bsoncxx-core_headers *.hpp)
+file(GLOB bsoncxx-core_sources *.cpp)
+file(GLOB bsoncxx-builder_headers builder/*.hpp)
+file(GLOB bsoncxx-builder_sources builder/*.cpp)
+file(GLOB bsoncxx-document_headers document/*.hpp)
+file(GLOB bsoncxx-document_sources document/*.cpp)
+file(GLOB bsoncxx-stdx_headers stdx/*.hpp)
+file(GLOB bsoncxx-stdx_sources stdx/*.cpp)
+file(GLOB bsoncxx-util_headers util/*.hpp)
+file(GLOB bsoncxx-util_sources util/*.cpp)
 
 add_library(bsoncxx SHARED
     ${bsoncxx-core_sources}
@@ -65,22 +76,11 @@ install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         PATTERN "*private*" EXCLUDE
 )
 
-configure_file (
-    ${PROJECT_SOURCE_DIR}/version.hpp.in
-    ${PROJECT_BINARY_DIR}/version.hpp
-)
-
 generate_export_header(bsoncxx
     BASE_NAME LIBBSONCXX
     EXPORT_MACRO_NAME LIBBSONCXX_API
     EXPORT_FILE_NAME export.hpp
     STATIC_DEFINE LIBBSONCXX_STATIC
-)
-
-configure_file (
-    ${PROJECT_SOURCE_DIR}/libbsoncxx.pc.in
-    ${PROJECT_BINARY_DIR}/libbsoncxx.pc
-    @ONLY
 )
 
 # install generated files
@@ -94,6 +94,8 @@ install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx.pc"
   DESTINATION "${PKG_CONFIG_PATH}"
 )
+
+add_subdirectory(config)
 
 if(BUILD_UNIT_TESTS)
   add_subdirectory(test)
