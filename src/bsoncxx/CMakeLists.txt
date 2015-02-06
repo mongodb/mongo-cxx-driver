@@ -42,7 +42,8 @@ file(GLOB bsoncxx-document_headers document/*.hpp)
 file(GLOB bsoncxx-document_sources document/*.cpp)
 file(GLOB bsoncxx-stdx_headers stdx/*.hpp)
 file(GLOB bsoncxx-stdx_sources stdx/*.cpp)
-file(GLOB bsoncxx-util_headers util/*.hpp)
+# note that bson_ntop is a c-style header
+file(GLOB bsoncxx-util_headers util/*.hpp util/*.h)
 file(GLOB bsoncxx-util_sources util/*.cpp)
 
 add_library(bsoncxx SHARED
@@ -69,10 +70,14 @@ install(TARGETS
     ARCHIVE DESTINATION lib
 )
 
+# TODO: instead of doing this, use the lists of headers from above
+# so we can include the generated headers and avoid having a separate
+# install step for them
 install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     DESTINATION ${BSONCXX_INSTALL_DIR}
     FILES_MATCHING
         PATTERN "*.hpp"
+        PATTERN "*.h"
         PATTERN "*private*" EXCLUDE
 )
 
