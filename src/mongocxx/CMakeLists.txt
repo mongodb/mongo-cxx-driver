@@ -26,16 +26,26 @@ include_directories(
 )
 
 # driver files in top level driver directory
-file (GLOB mongocxx-driver-core_headers *.hpp)
-file (GLOB mongocxx-driver-core_sources *.cpp)
+file(GLOB mongocxx-core_headers ${PROJECT_SOURCE_DIR}/*.hpp)
+file(GLOB mongocxx-core_sources ${PROJECT_SOURCE_DIR}/*.cpp)
+file(GLOB mongocxx-model_headers ${PROJECT_SOURCE_DIR}/model/*.hpp)
+file(GLOB mongocxx-model_sources ${PROJECT_SOURCE_DIR}/model/*.cpp)
+file(GLOB mongocxx-options_headers ${PROJECT_SOURCE_DIR}/options/*.hpp)
+file(GLOB mongocxx-options_sources ${PROJECT_SOURCE_DIR}/options/*.cpp)
+file(GLOB mongocxx-private_headers ${PROJECT_SOURCE_DIR}/private/*.hpp)
+file(GLOB mongocxx-private_sources ${PROJECT_SOURCE_DIR}/private/*.cpp)
+file(GLOB mongocxx-result_headers ${PROJECT_SOURCE_DIR}/result/*.hpp)
+file(GLOB mongocxx-result_sources ${PROJECT_SOURCE_DIR}/result/*.cpp)
 
-add_library(mongocxx SHARED
-    ${mongocxx-driver-core_sources}
-    $<TARGET_OBJECTS:mongocxx-driver-model>
-    $<TARGET_OBJECTS:mongocxx-driver-options>
-    $<TARGET_OBJECTS:mongocxx-driver-private>
-    $<TARGET_OBJECTS:mongocxx-driver-result>
+set(mongocxx_sources
+    ${mongocxx-core_sources}
+    ${mongocxx-model_sources}
+    ${mongocxx-options_sources}
+    ${mongocxx-private_sources}
+    ${mongocxx-result_sources}
 )
+
+add_library(mongocxx SHARED ${mongocxx_sources})
 
 set_target_properties (mongocxx PROPERTIES
     OUTPUT_NAME mongocxx
@@ -48,13 +58,7 @@ set_target_properties (mongocxx PROPERTIES
 target_link_libraries(mongocxx bsoncxx ${LIBMONGOC_LIBRARIES})
 
 if(BUILD_UNIT_TESTS)
-    add_library(mongocxx-mocked SHARED
-        ${mongocxx-driver-core_sources}
-        $<TARGET_OBJECTS:mongocxx-driver-model>
-        $<TARGET_OBJECTS:mongocxx-driver-options>
-        $<TARGET_OBJECTS:mongocxx-driver-private-mocked>
-        $<TARGET_OBJECTS:mongocxx-driver-result>
-    )
+    add_library(mongocxx-mocked SHARED ${mongocxx_sources})
 
     set_target_properties (mongocxx-mocked PROPERTIES
         OUTPUT_NAME mongocxx-mocked
@@ -112,12 +116,6 @@ install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/libmongocxx.pc"
   DESTINATION "${PKG_CONFIG_PATH}"
 )
-
-add_subdirectory(config)
-add_subdirectory(model)
-add_subdirectory(options)
-add_subdirectory(private)
-add_subdirectory(result)
 
 if(BUILD_UNIT_TESTS)
   add_subdirectory(test)

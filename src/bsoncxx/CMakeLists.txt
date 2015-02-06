@@ -23,15 +23,23 @@ include_directories(
     ${CMAKE_BINARY_DIR}/src
 )
 
-file(GLOB BSONCXX_HEADERS *.hpp)
-file(GLOB BSONCXX_SOURCES *.cpp)
+file(GLOB bsoncxx-core_headers ${PROJECT_SOURCE_DIR}/*.hpp)
+file(GLOB bsoncxx-core_sources ${PROJECT_SOURCE_DIR}/*.cpp)
+file(GLOB bsoncxx-builder_headers ${PROJECT_SOURCE_DIR}/builder/*.hpp)
+file(GLOB bsoncxx-builder_sources ${PROJECT_SOURCE_DIR}/builder/*.cpp)
+file(GLOB bsoncxx-document_headers ${PROJECT_SOURCE_DIR}/document/*.hpp)
+file(GLOB bsoncxx-document_sources ${PROJECT_SOURCE_DIR}/document/*.cpp)
+file(GLOB bsoncxx-stdx_headers ${PROJECT_SOURCE_DIR}/stdx/*.hpp)
+file(GLOB bsoncxx-stdx_sources ${PROJECT_SOURCE_DIR}/stdx/*.cpp)
+file(GLOB bsoncxx-util_headers ${PROJECT_SOURCE_DIR}/util/*.hpp)
+file(GLOB bsoncxx-util_sources ${PROJECT_SOURCE_DIR}/util/*.cpp)
 
 add_library(bsoncxx SHARED
-    ${BSONCXX_SOURCES}
-    $<TARGET_OBJECTS:bsoncxx-builder>
-    $<TARGET_OBJECTS:bsoncxx-document>
-    $<TARGET_OBJECTS:bsoncxx-stdx>
-    $<TARGET_OBJECTS:bsoncxx-util>
+    ${bsoncxx-core_sources}
+    ${bsoncxx-builder_sources}
+    ${bsoncxx-document_sources}
+    ${bsoncxx-stdx_sources}
+    ${bsoncxx-util_sources}
 )
 
 set_target_properties (bsoncxx PROPERTIES
@@ -86,12 +94,6 @@ install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx.pc"
   DESTINATION "${PKG_CONFIG_PATH}"
 )
-
-add_subdirectory(config)
-add_subdirectory(builder)
-add_subdirectory(document)
-add_subdirectory(stdx)
-add_subdirectory(util)
 
 if(BUILD_UNIT_TESTS)
   add_subdirectory(test)
