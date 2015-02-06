@@ -4,11 +4,17 @@ include_directories(
   ${MONGOCXX_INCLUDE_DIRS}
 )
 
-set(MONGOCXX_EXAMPLES insert)
+set(MONGOCXX_EXAMPLES
+  insert_data.cpp
+  find_or_query_data.cpp
+)
 
-foreach(EXAMPLE ${MONGOCXX_EXAMPLES})
-  add_executable(${EXAMPLE} ${EXAMPLE}.cpp)
-  target_link_libraries(${EXAMPLE} ${MONGOCXX_LIBRARIES})
-endforeach(EXAMPLE)
+foreach(EXAMPLE_SRC ${MONGOCXX_EXAMPLES})
+  message(STATUS ${EXAMPLE_SRC})
+  get_filename_component(EXAMPLE_TARGET ${EXAMPLE_SRC} NAME)
+  message(STATUS ${EXAMPLE_TARGET})
+  add_executable(${EXAMPLE_TARGET} ${EXAMPLE_SRC})
+  target_link_libraries(${EXAMPLE_TARGET} ${MONGOCXX_LIBRARIES})
+endforeach(EXAMPLE_SRC)
 
 add_custom_target(examples DEPENDS ${MONGOCXX_EXAMPLES})
