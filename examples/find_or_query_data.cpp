@@ -6,7 +6,8 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/options/find.hpp>
 
-namespace helpers = bsoncxx::builder::helpers;
+using namespace bsoncxx::builder::helpers;
+using bsoncxx::builder::document;
 
 int main(int, char**) {
     mongocxx::client conn{};
@@ -26,7 +27,7 @@ int main(int, char**) {
     // Query for equality on a top level field.
     {
         // @begin: cpp-query-top-level-field
-        bsoncxx::builder::document filter;
+        document filter;
         filter << "borough" << "Manhattan";
 
         auto cursor = db["restaurants"].find(filter.view());
@@ -39,7 +40,7 @@ int main(int, char**) {
     // Query by a field in an embedded document.
     {
         // @begin: cpp-query-embedded-document
-        bsoncxx::builder::document filter;
+        document filter;
         filter << "address.zipcode" << "10075";
 
         auto cursor = db["restaurants"].find(filter.view());
@@ -52,7 +53,7 @@ int main(int, char**) {
     // Query by a field in an array.
     {
         // @begin: cpp-query-field-in-array
-        bsoncxx::builder::document filter;
+        document filter;
         filter << "grades.grade" << "B";
 
         auto cursor = db["restaurants"].find(filter.view());
@@ -66,11 +67,9 @@ int main(int, char**) {
     // TODO: need to bikeshed how to indent this
     {
         // @begin: cpp-query-greater-than
-        bsoncxx::builder::document filter;
-        filter << "grades.score"
-               << helpers::open_doc
-                   << "$gt" << 30
-               << helpers::close_doc;
+        document filter;
+        filter << "grades.score" << open_doc
+                   << "$gt" << 30 << close_doc;
 
         auto cursor = db["restaurants"].find(filter.view());
         for (auto&& doc : cursor) {
@@ -82,11 +81,9 @@ int main(int, char**) {
     // Query with the less-than operator ($lt).
     {
         // @begin: cpp-query-less-than
-        bsoncxx::builder::document filter;
-        filter << "grades.score"
-               << helpers::open_doc
-                   << "$lt" << 10
-               << helpers::close_doc;
+        document filter;
+        filter << "grades.score" << open_doc
+                   << "$lt" << 10 << close_doc;
 
         auto cursor = db["restaurants"].find(filter.view());
         for (auto&& doc : cursor) {
@@ -98,7 +95,7 @@ int main(int, char**) {
     // Query with a logical conjunction (AND) of query conditions.
     {
         // @begin: cpp-query-logical-and
-        bsoncxx::builder::document filter;
+        document filter;
         filter << "cuisine" << "Italian"
                << "address.zipcode" << "10075";
 
@@ -112,16 +109,13 @@ int main(int, char**) {
     // Query with a logical disjunction (OR) of query conditions.
     {
         // @begin: cpp-query-logical-or
-        bsoncxx::builder::document filter;
-        filter << "$or"
-               << helpers::open_array
-                   << helpers::open_doc
-                       << "cuisine" << "Italian"
-                   << helpers::close_doc
-                   << helpers::open_doc
-                       << "address.zipcode" << "10075"
-                   << helpers::close_doc
-               << helpers::close_array;
+        document filter;
+        filter << "$or" << open_array
+                   << open_doc
+                       << "cuisine" << "Italian" << close_doc
+                   << open_doc
+                      << "address.zipcode" << "10075" << close_doc 
+               << close_array;
 
         auto cursor = db["restaurants"].find(filter.view());
         for (auto&& doc : cursor) {
@@ -134,7 +128,7 @@ int main(int, char**) {
     {
         // @begin: cpp-query-sort
         mongocxx::options::find opts;
-        bsoncxx::builder::document ordering;
+        document ordering;
         ordering << "borough" << 1
                  << "address.zipcode" << -1;
 
