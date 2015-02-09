@@ -32,7 +32,7 @@ namespace builder {
 class BSONCXX_API core {
 
    public:
-    class impl;
+    class BSONCXX_PRIVATE impl;
 
     // TODO this should fit with the larger bson exception heirarchy
     class invalid_state : public std::runtime_error {};

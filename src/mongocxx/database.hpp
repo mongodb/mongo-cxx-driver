@@ -189,7 +189,7 @@ class MONGOCXX_API database {
 
     database(const class client& client, const std::string& name);
 
-    class impl;
+    class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
 
 };

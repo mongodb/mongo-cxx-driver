@@ -160,7 +160,7 @@ class uri {
    private:
     friend class client;
 
-    class impl;
+    class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
 
 };

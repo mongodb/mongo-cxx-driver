@@ -90,7 +90,7 @@ class foo {
     private:
       friend baz;
 
-      class impl;
+      class MONGOCXX_PRIVATE impl;
       std::unique_ptr<impl> _impl;
 
 };

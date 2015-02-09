@@ -199,7 +199,7 @@ class MONGOCXX_API write_concern {
     friend database;
     friend bulk_write;
 
-    class impl;
+    class MONGOCXX_PRIVATE impl;
 
     write_concern(std::unique_ptr<impl>&& implementation);
 

@@ -68,7 +68,7 @@ class MONGOCXX_API cursor {
 
     cursor(void* cursor_ptr);
 
-    class impl;
+    class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
 
 };

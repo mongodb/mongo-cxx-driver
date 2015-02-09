@@ -171,7 +171,7 @@ class MONGOCXX_API read_preference {
     friend collection;
     friend database;
 
-    class impl;
+    class MONGOCXX_PRIVATE impl;
 
     read_preference(std::unique_ptr<impl>&& implementation);
 

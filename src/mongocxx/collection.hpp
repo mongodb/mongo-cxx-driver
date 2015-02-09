@@ -562,7 +562,7 @@ class MONGOCXX_API collection {
 
     collection(const database& database, const std::string& collection_name);
 
-    class impl;
+    class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
 
 };

@@ -50,7 +50,7 @@ class MONGOCXX_API instance {
     ~instance();
 
    private:
-    class impl;
+    class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
 
 };

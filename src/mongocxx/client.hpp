@@ -150,7 +150,7 @@ class MONGOCXX_API client {
     friend class database;
     friend class collection;
 
-    class impl;
+    class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
 
 };
