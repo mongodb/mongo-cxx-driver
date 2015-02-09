@@ -10,9 +10,7 @@ set(MONGOCXX_EXAMPLES
 )
 
 foreach(EXAMPLE_SRC ${MONGOCXX_EXAMPLES})
-  message(STATUS ${EXAMPLE_SRC})
-  get_filename_component(EXAMPLE_TARGET ${EXAMPLE_SRC} NAME)
-  message(STATUS ${EXAMPLE_TARGET})
+  get_filename_component(EXAMPLE_TARGET ${EXAMPLE_SRC} NAME_WE)
   add_executable(${EXAMPLE_TARGET} ${EXAMPLE_SRC})
   target_link_libraries(${EXAMPLE_TARGET} ${MONGOCXX_LIBRARIES})
 endforeach(EXAMPLE_SRC)

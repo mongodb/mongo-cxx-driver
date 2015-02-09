@@ -16,7 +16,6 @@ int main(int, char**) {
     // Query for all the documents in a collection.
     {
         // @begin: cpp-query-all
-
         auto cursor = db["restaurants"].find({});
         for (auto&& doc : cursor) {
            std::cout << bsoncxx::to_json(doc) << std::endl;
