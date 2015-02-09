@@ -1,23 +1,63 @@
 project(MONGOCXX)
 
+# Update these as needed.
+# TODO: read from file
 set(MONGOCXX_VERSION_MAJOR 0)
 set(MONGOCXX_VERSION_MINOR 0)
 set(MONGOCXX_VERSION_PATCH 1)
 set(MONGOCXX_VERSION_EXTRA "")
-set(MONGOCXX_VERSION ${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR}.${MONGOCXX_VERSION_PATCH})
-
-set(MONGOCXX_REQUIRED_BSONCXX_VERSION "0.0.0")
-
 set(MONGOCXX_ABI_VERSION 0)
-set(MONGOCXX_INLINE_NAMESPACE "v${MONGOCXX_ABI_VERSION}")
-
-set(MONGOCXX_DIRECTORY_PREFIX "v${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR}")
-set(MONGOCXX_INSTALL_DIR "include/mongocxx/${MONGOCXX_DIRECTORY_PREFIX}")
-
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
+
+set(MONGOCXX_VERSION ${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR}.${MONGOCXX_VERSION_PATCH})
+set(MONGOCXX_INLINE_NAMESPACE "v${MONGOCXX_ABI_VERSION}")
+set(MONGOCXX_DIRECTORY_PREFIX "v${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR}")
+set(MONGOCXX_HEADER_INSTALL_DIR "include/mongocxx/${MONGOCXX_DIRECTORY_PREFIX}" CACHE INTERNAL "")
+
 pkg_check_modules(LIBMONGOC REQUIRED libmongoc-${LIBMONGOC_REQUIRED_ABI_VERSION})
 
-link_directories(${LIBMONGOC_LIBRARY_DIRS})
+add_subdirectory(config)
+
+set(mongocxx_sources
+    bulk_write.cpp
+    client.cpp
+    collection.cpp
+    cursor.cpp
+    database.cpp
+    instance.cpp
+    model/delete_many.cpp
+    model/delete_one.cpp
+    model/insert_one.cpp
+    model/replace_one.cpp
+    model/update_many.cpp
+    model/update_one.cpp
+    model/write.cpp
+    options/aggregate.cpp
+    options/bulk_write.cpp
+    options/client.cpp
+    options/count.cpp
+    options/delete.cpp
+    options/distinct.cpp
+    options/find.cpp
+    options/find_one_and_delete.cpp
+    options/find_one_and_replace.cpp
+    options/find_one_and_update.cpp
+    options/insert.cpp
+    options/ssl.cpp
+    options/update.cpp
+    pipeline.cpp
+    private/libbson.cpp
+    private/libmongoc.cpp
+    read_preference.cpp
+    result/bulk_write.cpp
+    result/delete.cpp
+    result/insert_many.cpp
+    result/insert_one.cpp
+    result/replace_one.cpp
+    result/update.cpp
+    uri.cpp
+    write_concern.cpp
+)
 
 include_directories(
     ${LIBMONGOC_INCLUDE_DIRS}
@@ -25,27 +65,34 @@ include_directories(
     ${CMAKE_BINARY_DIR}/src
 )
 
-# driver files in top level driver directory
-file(GLOB mongocxx-core_headers *.hpp)
-file(GLOB mongocxx-core_sources *.cpp)
-file(GLOB mongocxx-model_headers model/*.hpp)
-file(GLOB mongocxx-model_sources model/*.cpp)
-file(GLOB mongocxx-options_headers options/*.hpp)
-file(GLOB mongocxx-options_sources options/*.cpp)
-file(GLOB mongocxx-private_headers private/*.hpp)
-file(GLOB mongocxx-private_sources private/*.cpp)
-file(GLOB mongocxx-result_headers result/*.hpp)
-file(GLOB mongocxx-result_sources result/*.cpp)
+link_directories(${LIBMONGOC_LIBRARY_DIRS})
 
-set(mongocxx_sources
-    ${mongocxx-core_sources}
-    ${mongocxx-model_sources}
-    ${mongocxx-options_sources}
-    ${mongocxx-private_sources}
-    ${mongocxx-result_sources}
+if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
+    ExternalProject_Get_Property(EP_mnmlstc_core source_dir)
+    include_directories(${source_dir}/include)
+endif()
+
+add_library(mongocxx_static STATIC
+    ${mongocxx_sources}
 )
 
-add_library(mongocxx SHARED ${mongocxx_sources})
+set_target_properties(mongocxx_static PROPERTIES
+    OUTPUT_NAME mongocxx
+)
+
+add_library(mongocxx_mocked STATIC
+    ${mongocxx_sources}
+)
+
+set_target_properties(mongocxx_mocked PROPERTIES
+    OUTPUT_NAME mongocxx_mocked
+    VERSION ${MONGOCXX_VERSION}
+    COMPILE_FLAGS "-DMONGOCXX_TESTING"
+)
+
+add_library(mongocxx SHARED
+    ${mongocxx_sources}
+)
 
 set_target_properties (mongocxx PROPERTIES
     OUTPUT_NAME mongocxx
@@ -53,46 +100,9 @@ set_target_properties (mongocxx PROPERTIES
     DEFINE_SYMBOL MONGOCXX_EXPORTS
     CXX_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN ON
-    # uncomment below line when we start promising a stable ABI
-    # SOVERSION ${MONGOCXX_ABI_VERSION}
+    SOVERSION ${MONGOCXX_ABI_VERSION}
 )
 
-set(mongocxx_libs bsoncxx ${LIBMONGOC_LIBRARIES})
-
-target_link_libraries(mongocxx ${mongocxx_libs})
-
-if(BUILD_UNIT_TESTS)
-    add_library(mongocxx-mocked STATIC ${mongocxx_sources})
-
-    set_target_properties (mongocxx-mocked PROPERTIES
-        OUTPUT_NAME mongocxx-mocked
-        VERSION ${MONGOCXX_VERSION}
-        COMPILE_FLAGS "-DMONGOCXX_TESTING"
-    )
-
-    target_link_libraries(mongocxx-mocked ${mongocxx_libs})
-endif()
-
-install(TARGETS
-    mongocxx
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
-)
-
-install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    DESTINATION ${MONGOCXX_INSTALL_DIR}
-    FILES_MATCHING
-        PATTERN "*.hpp"
-        PATTERN "*private*" EXCLUDE
-)
-
-configure_file (
-    ${PROJECT_SOURCE_DIR}/version.hpp.in
-    ${PROJECT_BINARY_DIR}/version.hpp
-)
-
-# TODO: LIBMONGOCXX_EXPORTS -> LIBMONGOCXX_BUILDING
-# TODO: Need deprecated defines? or do the same?
 generate_export_header (mongocxx
     BASE_NAME MONGOCXX
     EXPORT_MACRO_NAME MONGOCXX_API
@@ -101,26 +111,37 @@ generate_export_header (mongocxx
     STATIC_DEFINE MONGOCXX_STATIC
 )
 
-configure_file (
-    ${PROJECT_SOURCE_DIR}/libmongocxx.pc.in
-    ${PROJECT_BINARY_DIR}/libmongocxx.pc
-    @ONLY
-)
+set(mongocxx_libs bsoncxx )
 
-# install generated files
-install (FILES 
-    "${CMAKE_CURRENT_BINARY_DIR}/version.hpp"
-    "${CMAKE_CURRENT_BINARY_DIR}/export.hpp"
-    DESTINATION "${MONGOCXX_INSTALL_DIR}/mongocxx"
+target_link_libraries(mongocxx_static bsoncxx ${LIBMONGOC_LIBRARIES})
+target_link_libraries(mongocxx_mocked bsoncxx ${LIBMONGOC_LIBRARIES})
+target_link_libraries(mongocxx PUBLIC bsoncxx PRIVATE ${LIBMONGOC_LIBRARIES})
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    DESTINATION ${MONGOCXX_HEADER_INSTALL_DIR}
+    COMPONENT dev
+    FILES_MATCHING
+        PATTERN "*.h"
+        PATTERN "*.hpp"
+        REGEX ".+/mock" EXCLUDE
+        REGEX ".+/private" EXCLUDE
+        REGEX ".+/test" EXCLUDE
 )
 
 install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/libmongocxx.pc"
-  DESTINATION "${PKG_CONFIG_PATH}"
+    ${CMAKE_CURRENT_BINARY_DIR}/export.hpp
+    DESTINATION ${MONGOCXX_HEADER_INSTALL_DIR}/mongocxx
+    COMPONENT dev
 )
 
-add_subdirectory(config)
+install(TARGETS
+    mongocxx
+    LIBRARY DESTINATION lib COMPONENT runtime
+)
 
-if(BUILD_UNIT_TESTS)
-  add_subdirectory(test)
-endif()
+install(TARGETS
+    mongocxx_static
+    ARCHIVE DESTINATION lib COMPONENT runtime
+)
+
+add_subdirectory(test)

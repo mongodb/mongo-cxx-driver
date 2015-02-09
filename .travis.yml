@@ -68,5 +68,5 @@ before_script:
     - ${CMAKE_BINARY} -DCMAKE_BUILD_TYPE=$CONFIG -DBUILD_UNIT_TESTS=true -DBUILD_EXAMPLES=true ..
 
 script:
-    - LD_LIBRARY_PATH="/usr/local/lib" make
-    - LD_LIBRARY_PATH="/usr/local/lib" make test
+    - LD_LIBRARY_PATH="/usr/local/lib" make VERBOSE=1
+    - LD_LIBRARY_PATH="/usr/local/lib" make VERBOSE=1 test

@@ -1,4 +1,3 @@
-# Versions < 2.8.8 do not support Object Libraries
 project(MONGO_CXX_DRIVER LANGUAGES CXX)
 
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
@@ -49,21 +48,12 @@ endif()
 # Ensure that RPATH is used on OSX
 set(CMAKE_MACOSX_RPATH 1)
 
-option(BUILD_UNIT_TESTS "Build unit tests")
-option(BUILD_EXAMPLES "Build examples")
-
 if (NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type selected, default is Release")
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-if(BUILD_UNIT_TESTS)
-    enable_testing()
-endif()
+enable_testing()
 
 add_subdirectory(src)
-
-if(BUILD_EXAMPLES)
-    add_subdirectory(examples)
-endif()
-
+add_subdirectory(examples)

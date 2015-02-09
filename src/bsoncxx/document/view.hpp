@@ -24,6 +24,7 @@
 
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/string_or_literal.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -42,8 +43,8 @@ class BSONCXX_API view {
     iterator end() const;
 
     // TODO switch to stdx::string_view
-    iterator find(const string_or_literal& key) const;
-    element operator[](const string_or_literal& key) const;
+    iterator find(stdx::string_view key) const;
+    element operator[](stdx::string_view key) const;
 
     view();
 

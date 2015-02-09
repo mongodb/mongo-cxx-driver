@@ -158,20 +158,20 @@ view::iterator view::end() const {
     return iterator();
 }
 
-view::iterator view::find(const string_or_literal& key) const {
+view::iterator view::find(stdx::string_view key) const {
     bson_t b;
     bson_iter_t iter;
 
     bson_init_static(&b, _data, _length);
 
-    if (bson_iter_init_find(&iter, &b, key.c_str())) {
+    if (bson_iter_init_find(&iter, &b, key.data())) {
         return iterator(element(iter.raw, iter.len, iter.off));
     } else {
         return end();
     }
 }
 
-element view::operator[](const string_or_literal& key) const {
+element view::operator[](stdx::string_view key) const {
     return *(this->find(key));
 }
 

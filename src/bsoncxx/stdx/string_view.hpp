@@ -19,34 +19,32 @@
 #if defined(BSONCXX_POLY_USE_MNMLSTC)
 
 #if defined(MONGO_CXX_DRIVER_COMPILING) || defined(BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
-#include <core/optional.hpp>
+#include <core/string.hpp>
 #else
-#include <bsoncxx/third_party/mnmlstc/core/optional.hpp>
+#include <bsoncxx/third_party/mnmlstc/core/string.hpp>
 #endif
 
 namespace bsoncxx {
 namespace stdx {
 
-using ::core::optional;
-using ::core::nullopt;
+using ::core::string_view;
 
 }  // namespace stdx
 }  // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_STD_EXPERIMENTAL)
-#include <experimental/optional>
+#include <experimental/string_view>
 
 namespace bsoncxx {
 namespace stdx {
 
-using ::std::experimental::optional;
-using ::std::experimental::nullopt;
+using ::std::experimental::string_view;
 
 }  // namespace stdx
 }  // namespace bsoncxx
 
 #else
-#error "Cannot find a valid polyfill for optional"
+#error "Cannot find a valid polyfill for string_view"
 #endif
 
 #include <bsoncxx/config/postlude.hpp>

@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2015 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,16 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/stdx/optional.hpp>
+#pragma once
 
-// TODO: I realize these are not in bsoncxx::stdx yet but I think their placement here
-// is a mistake so I'm going to wait it out.
+#include <mongocxx/config/prelude.hpp>
 
-namespace bsoncxx {
+namespace mongocxx {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace stdx {
 
-in_place_t in_place;
-nullopt_t nullopt(0);
+// We adopt all the bsoncxx polyfills
+using namespace bsoncxx::stdx;
 
-}
-}
+} // namespace stdx;
+MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace mongocxx
+
+#include <mongocxx/config/postlude.hpp>
