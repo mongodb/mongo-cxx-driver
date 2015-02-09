@@ -199,7 +199,7 @@ class LIBMONGOCXX_API collection {
     /// @param options
     ///   Optional arguments to index creation command, see ensureindex-options link
     ///
-    /// @throws operation_exception if the aggregation fails.
+    /// @throws operation_exception if index creation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.ensureIndex/#ensureindex-options

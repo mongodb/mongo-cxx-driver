@@ -402,6 +402,22 @@ std::int64_t collection::count(bsoncxx::document::view filter, const options::co
     return result;
 }
 
+bsoncxx::document::value collection::create_index(bsoncxx::document::view keys, bsoncxx::document::view options) {
+    scoped_bson_t bson_keys{keys};
+    bson_error_t error;
+
+    auto result = libmongoc::collection_create_index(_impl->collection_t, bson_keys.bson(),
+                                                     nullptr, &error);
+
+    if (!result) {
+        // TODO: throw an exception here
+    }
+
+    // TODO: return the response from the server, this is not possible now due to the way
+    // libmongoc works.
+    return bsoncxx::document::value{bsoncxx::document::view{}};
+}
+
 void collection::drop() {
     bson_error_t error;
 
