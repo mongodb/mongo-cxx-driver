@@ -106,7 +106,7 @@ class MONGOCXX_API bulk_write {
     friend class collection;
 
     class MONGOCXX_PRIVATE impl;
-    MONGOCXX_PRIVATE std::unique_ptr<impl> _impl;
+    std::unique_ptr<impl> _impl;
 
 };
 
