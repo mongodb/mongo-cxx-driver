@@ -8,6 +8,7 @@ set(MONGOCXX_EXAMPLES
   insert_data.cpp
   find_or_query_data.cpp
   update.cpp
+  remove.cpp
 )
 
 foreach(EXAMPLE_SRC ${MONGOCXX_EXAMPLES})
