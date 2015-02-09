@@ -5,8 +5,8 @@ include_directories(
 )
 
 set(MONGOCXX_EXAMPLES
-  insert_data.cpp
-  find_or_query_data.cpp
+  create.cpp
+  query.cpp
   update.cpp
   remove.cpp
 )
