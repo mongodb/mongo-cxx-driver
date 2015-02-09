@@ -1,15 +1,29 @@
 # Versions < 2.8.8 do not support Object Libraries
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 
 # Add in our modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-# Enforce the C++ standard
-set (CXX_STANDARD_REQUIRED true)
+# Enforce the C++ standard, and disable extensions
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# CMake 3.1 doesn't know how to C++11 for clang.
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+else()
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
 
 # Include the required modules
 include(GenerateExportHeader)
 include(InstallRequiredSystemLibraries)
+
+# If the user did not customize the install prefix,
+# set it to live under build so we don't inadverently pollute /usr/local
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "default install path" FORCE )
+endif()
 
 # Ensure we have Package Config
 find_package(PkgConfig)
@@ -31,10 +45,6 @@ if (NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type selected, default is Release")
     set(CMAKE_BUILD_TYPE "Release")
 endif()
-
-set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Werror -fPIC ${CMAKE_CXX_FLAGS}")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-set(CMAKE_CXX_FLAGS_DEBUG "-ggdb3 -O0")
 
 if(BUILD_UNIT_TESTS)
     enable_testing()

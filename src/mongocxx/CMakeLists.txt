@@ -49,8 +49,10 @@ add_library(mongocxx SHARED ${mongocxx_sources})
 
 set_target_properties (mongocxx PROPERTIES
     OUTPUT_NAME mongocxx
-    CXX_STANDARD 11
     VERSION ${MONGOCXX_VERSION}
+    DEFINE_SYMBOL MONGOCXX_EXPORTS
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN ON
     # uncomment below line when we start promising a stable ABI
     # SOVERSION ${MONGOCXX_ABI_VERSION}
 )
@@ -62,7 +64,6 @@ if(BUILD_UNIT_TESTS)
 
     set_target_properties (mongocxx-mocked PROPERTIES
         OUTPUT_NAME mongocxx-mocked
-        CXX_STANDARD 11
         VERSION ${MONGOCXX_VERSION}
         SOVERSION ${MONGOCXX_ABI_VERSION}
         COMPILE_FLAGS "-DMONGOCXX_TESTING"
