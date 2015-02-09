@@ -5,10 +5,11 @@ include_directories(
 )
 
 set(MONGOCXX_EXAMPLES
-  create.cpp
+  aggregate.cpp
   query.cpp
-  update.cpp
   remove.cpp
+  update.cpp
+  create.cpp
 )
 
 foreach(EXAMPLE_SRC ${MONGOCXX_EXAMPLES})
