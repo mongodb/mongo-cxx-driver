@@ -19,6 +19,7 @@ int main(int, char**) {
                    << "cuisine" << "American (New)" << close_doc
                << "$currentDate" << open_doc
                    << "lastModified" << true << close_doc;
+        
         db["restaurants"].update_one(filter, update);
         // @end: cpp-update-top-level-fields
     }
@@ -30,8 +31,9 @@ int main(int, char**) {
         filter << "restaurant_id" << "41156888";
         update << "$set" << open_doc <<
                    "address.street" << "East 31st Street" << close_doc;
-        // @end: cpp-update-embedded-field
+
         db["restaurants"].update_one(filter, update);
+        // @end: cpp-update-embedded-field
     }
 
     // Update multiple documents.
@@ -44,8 +46,8 @@ int main(int, char**) {
                << "$currentDate" << open_doc
                    << "lastModified" << true << close_doc;
 
-        // @end: cpp-update-multiple-documents
         db["restaurants"].update_many(filter, update);
+        // @end: cpp-update-multiple-documents
     }
 
     // Replace the contents of a single document.
@@ -60,6 +62,7 @@ int main(int, char**) {
                         << "building" << "1480"
                         << "street" << "2 Avenue"
                         << "zipcode" << "10075" << close_doc;
+
         db["restaurants"].replace_one(filter, replacement);
         // @end: cpp-replace-document
     }
