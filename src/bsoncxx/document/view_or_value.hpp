@@ -23,7 +23,7 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
-class LIBBSONCXX_API view_or_value {
+class BSONCXX_API view_or_value {
 
    public:
     view_or_value(bsoncxx::document::view view);

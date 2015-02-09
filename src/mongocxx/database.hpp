@@ -38,7 +38,7 @@ class client;
 /// @todo Make copyable when c-driver supports this
 /// @todo Add auth functions (add_user, remove_all_users, remove_user)
 
-class LIBMONGOCXX_API database {
+class MONGOCXX_API database {
 
    public:
 

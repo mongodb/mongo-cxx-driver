@@ -27,7 +27,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB insert operation
 ///
-class LIBMONGOCXX_API insert {
+class MONGOCXX_API insert {
 
    public:
 

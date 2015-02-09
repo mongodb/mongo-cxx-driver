@@ -30,7 +30,7 @@ class collection;
 ///
 /// Class representing a MongoDB aggregation pipeline.
 ///
-class LIBMONGOCXX_API pipeline {
+class MONGOCXX_API pipeline {
 
    public:
 

@@ -33,7 +33,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB count command
 ///
-class LIBMONGOCXX_API count {
+class MONGOCXX_API count {
 
    public:
 

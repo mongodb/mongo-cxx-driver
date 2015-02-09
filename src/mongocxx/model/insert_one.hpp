@@ -25,7 +25,7 @@ namespace model {
 ///
 /// Class representing a MongoDB insert operation that creates a single document.
 ///
-class LIBMONGOCXX_API insert_one {
+class MONGOCXX_API insert_one {
 
    public:
 

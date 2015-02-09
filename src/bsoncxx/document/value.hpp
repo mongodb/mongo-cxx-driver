@@ -25,7 +25,7 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
-class LIBBSONCXX_API value {
+class BSONCXX_API value {
    using deleter_type = void(*)(void*);
 
    public:

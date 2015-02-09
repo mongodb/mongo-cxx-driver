@@ -62,7 +62,7 @@ namespace document {
 
     class view;
 
-    class LIBBSONCXX_API element {
+    class BSONCXX_API element {
         friend class document::view;
         friend class builder::concrete;
 

@@ -27,7 +27,7 @@ namespace result {
 ///
 /// Class representing the result of a MongoDB delete operation.
 ///
-class LIBMONGOCXX_API delete_result {
+class MONGOCXX_API delete_result {
 
    public:
     // This constructor is public for testing purposes only

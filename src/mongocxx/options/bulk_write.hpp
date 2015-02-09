@@ -25,7 +25,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB bulk write
 ///
-class LIBMONGOCXX_API bulk_write {
+class MONGOCXX_API bulk_write {
 
    public:
 

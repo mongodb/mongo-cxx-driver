@@ -29,7 +29,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB aggregation operation.
 ///
-class LIBMONGOCXX_API aggregate {
+class MONGOCXX_API aggregate {
 
    public:
 

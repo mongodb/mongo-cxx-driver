@@ -51,7 +51,7 @@ class bulk_write;
 ///
 /// @todo this interface is terrible -- it's exactly what you get with the c-driver essentially.
 ///
-class LIBMONGOCXX_API write_concern {
+class MONGOCXX_API write_concern {
 
    public:
 

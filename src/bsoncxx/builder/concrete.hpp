@@ -28,7 +28,7 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 
-class LIBBSONCXX_API concrete {
+class BSONCXX_API concrete {
 
    public:
     class impl;

@@ -32,7 +32,7 @@ class collection;
 ///
 /// @note By default, cursors timeout after 10 minutes of inactivity.
 ///
-class LIBMONGOCXX_API cursor {
+class MONGOCXX_API cursor {
 
    public:
 

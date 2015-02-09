@@ -27,7 +27,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
 /// Class representing the result of a MongoDB replace_one operation.
-class LIBMONGOCXX_API replace_one {
+class MONGOCXX_API replace_one {
 
    public:
     // This constructor is public for testing purposes only

@@ -46,7 +46,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 /// @todo Make iterable for databases on the server
 /// @todo Add + implement missing client api methods
 ///
-class LIBMONGOCXX_API client {
+class MONGOCXX_API client {
 
    public:
 

@@ -20,7 +20,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace exception {
 
-class LIBMONGOCXX_API base : public std::exception {};
+class MONGOCXX_API base : public std::exception {};
 
 }  // namespace exception
 MONGOCXX_INLINE_NAMESPACE_END

@@ -24,7 +24,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
 /// Class representing the result of a MongoDB insert operation.
-class LIBMONGOCXX_API insert_one {
+class MONGOCXX_API insert_one {
 
    public:
     // This constructor is public for testing purposes only

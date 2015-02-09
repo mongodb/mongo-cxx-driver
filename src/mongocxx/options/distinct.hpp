@@ -30,7 +30,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB distinct command.
 ///
-class LIBMONGOCXX_API distinct {
+class MONGOCXX_API distinct {
 
    public:
 

@@ -29,7 +29,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB query.
 ///
-class LIBMONGOCXX_API find {
+class MONGOCXX_API find {
 
    public:
     enum class cursor_type: std::uint8_t;

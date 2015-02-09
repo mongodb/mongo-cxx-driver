@@ -27,7 +27,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB delete operation
 ///
-class LIBMONGOCXX_API delete_options {
+class MONGOCXX_API delete_options {
 
    public:
 

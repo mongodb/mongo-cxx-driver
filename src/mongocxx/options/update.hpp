@@ -27,7 +27,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB update operation.
 ///
-class LIBMONGOCXX_API update {
+class MONGOCXX_API update {
 
    public:
 

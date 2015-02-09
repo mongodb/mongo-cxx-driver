@@ -26,7 +26,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 ///
 /// Life cycle: An instance of the driver *MUST* be kept around.
 ///
-class LIBMONGOCXX_API instance {
+class MONGOCXX_API instance {
 
    public:
     ///

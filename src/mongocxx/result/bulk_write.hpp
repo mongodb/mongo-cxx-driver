@@ -30,7 +30,7 @@ namespace result {
 ///
 /// Class representing the result of a MongoDB bulk write operation.
 ///
-class LIBMONGOCXX_API bulk_write {
+class MONGOCXX_API bulk_write {
 
    public:
     explicit bulk_write(bsoncxx::document::value raw_response);

@@ -29,7 +29,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB find_and_modify replace operation
 ///
-class LIBMONGOCXX_API find_one_and_replace {
+class MONGOCXX_API find_one_and_replace {
 
    public:
 

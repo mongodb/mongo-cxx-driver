@@ -20,7 +20,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace exception {
 
-class LIBMONGOCXX_API operation : public base {};
+class MONGOCXX_API operation : public base {};
 
 }  // namespace exception
 MONGOCXX_INLINE_NAMESPACE_END

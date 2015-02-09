@@ -29,7 +29,7 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
-class LIBBSONCXX_API view {
+class BSONCXX_API view {
 
    public:
     class iterator;

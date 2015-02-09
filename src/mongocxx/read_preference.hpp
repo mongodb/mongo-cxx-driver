@@ -49,7 +49,7 @@ class database;
 ///
 /// @see http://docs.mongodb.org/manual/core/read-preference/
 ///
-class LIBMONGOCXX_API read_preference {
+class MONGOCXX_API read_preference {
 
    public:
 
