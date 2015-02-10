@@ -35,7 +35,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 ///
 /// @see http://docs.mongodb.org/manual/reference/connection-string/
 ///
-class uri {
+class MONGOCXX_API uri {
 
    public:
 
