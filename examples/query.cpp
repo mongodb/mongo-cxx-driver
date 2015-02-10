@@ -1,13 +1,17 @@
 #include <iostream>
 
-#include <bsoncxx/builder.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/options/find.hpp>
 
-using namespace bsoncxx::builder::helpers;
-using bsoncxx::builder::document;
+using bsoncxx::builder::stream::document;
+using bsoncxx::builder::stream::open_document;
+using bsoncxx::builder::stream::close_document;
+using bsoncxx::builder::stream::open_array;
+using bsoncxx::builder::stream::close_array;
+using bsoncxx::builder::stream::finalize;
 
 int main(int, char**) {
     mongocxx::client conn{};
@@ -27,10 +31,9 @@ int main(int, char**) {
     // Query for equality on a top level field.
     {
         // @begin: cpp-query-top-level-field
-        document filter;
-        filter << "borough" << "Manhattan";
-
-        auto cursor = db["restaurants"].find(filter.view());
+        auto cursor = db["restaurants"]
+            .find(document{} << "borough" << "Manhattan" << finalize);
+        
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
@@ -68,8 +71,8 @@ int main(int, char**) {
     {
         // @begin: cpp-query-greater-than
         document filter;
-        filter << "grades.score" << open_doc
-                   << "$gt" << 30 << close_doc;
+        filter << "grades.score" << open_document
+                   << "$gt" << 30 << close_document;
 
         auto cursor = db["restaurants"].find(filter.view());
         for (auto&& doc : cursor) {
@@ -82,8 +85,8 @@ int main(int, char**) {
     {
         // @begin: cpp-query-less-than
         document filter;
-        filter << "grades.score" << open_doc
-                   << "$lt" << 10 << close_doc;
+        filter << "grades.score" << open_document
+                   << "$lt" << 10 << close_document;
 
         auto cursor = db["restaurants"].find(filter.view());
         for (auto&& doc : cursor) {
@@ -111,10 +114,10 @@ int main(int, char**) {
         // @begin: cpp-query-logical-or
         document filter;
         filter << "$or" << open_array
-                   << open_doc
-                       << "cuisine" << "Italian" << close_doc
-                   << open_doc
-                      << "address.zipcode" << "10075" << close_doc 
+                   << open_document
+                       << "cuisine" << "Italian" << close_document
+                   << open_document
+                      << "address.zipcode" << "10075" << close_document 
                << close_array;
 
         auto cursor = db["restaurants"].find(filter.view());

@@ -1,9 +1,12 @@
-#include <bsoncxx/builder.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 
 #include <mongocxx/client.hpp>
 
-using namespace bsoncxx::builder::helpers;
-using bsoncxx::builder::document;
+using bsoncxx::builder::stream::document;
+using bsoncxx::builder::stream::open_document;
+using bsoncxx::builder::stream::close_document;
+using bsoncxx::builder::stream::close_array;
+using bsoncxx::builder::stream::finalize;
 
 int main(int, char**) {
     mongocxx::client conn{};

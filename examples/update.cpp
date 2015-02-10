@@ -1,9 +1,13 @@
-#include <bsoncxx/builder.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 
 #include <mongocxx/client.hpp>
 
-using namespace bsoncxx::builder::helpers;
-using bsoncxx::builder::document;
+using bsoncxx::builder::stream::document;
+using bsoncxx::builder::stream::open_document;
+using bsoncxx::builder::stream::close_document;
+using bsoncxx::builder::stream::open_array;
+using bsoncxx::builder::stream::close_array;
+using bsoncxx::builder::stream::finalize;
 
 int main(int, char**) {
     mongocxx::client conn{};
@@ -15,10 +19,10 @@ int main(int, char**) {
         // @begin: cpp-update-top-level-fields
         document filter, update;
         filter << "name" << "Juni";
-        update << "$set" << open_doc
-                   << "cuisine" << "American (New)" << close_doc
-               << "$currentDate" << open_doc
-                   << "lastModified" << true << close_doc;
+        update << "$set" << open_document
+                   << "cuisine" << "American (New)" << close_document
+               << "$currentDate" << open_document
+                   << "lastModified" << true << close_document;
         
         db["restaurants"].update_one(filter, update);
         // @end: cpp-update-top-level-fields
@@ -29,8 +33,8 @@ int main(int, char**) {
         // @begin: cpp-update-embedded-field
         document filter, update;
         filter << "restaurant_id" << "41156888";
-        update << "$set" << open_doc <<
-                   "address.street" << "East 31st Street" << close_doc;
+        update << "$set" << open_document <<
+                   "address.street" << "East 31st Street" << close_document;
 
         db["restaurants"].update_one(filter, update);
         // @end: cpp-update-embedded-field
@@ -41,10 +45,10 @@ int main(int, char**) {
         // @begin: cpp-update-multiple-documents
         document filter, update;
         filter << "address.zipcode" << "10016";
-        update << "$set" << open_doc
-                   << "borough" << "Midtown" << close_doc
-               << "$currentDate" << open_doc
-                   << "lastModified" << true << close_doc;
+        update << "$set" << open_document
+                   << "borough" << "Midtown" << close_document
+               << "$currentDate" << open_document
+                   << "lastModified" << true << close_document;
 
         db["restaurants"].update_many(filter, update);
         // @end: cpp-update-multiple-documents
@@ -56,12 +60,12 @@ int main(int, char**) {
         document filter, replacement;
         filter << "restaurant_id" << "41704620";
         replacement << "name" << "Vella 2"
-                    << "address" << open_doc
+                    << "address" << open_document
                         << "coord" << open_array
                             << -73.9557413 << 40.7720266 << close_array
                         << "building" << "1480"
                         << "street" << "2 Avenue"
-                        << "zipcode" << "10075" << close_doc;
+                        << "zipcode" << "10075" << close_document;
 
         db["restaurants"].replace_one(filter, replacement);
         // @end: cpp-replace-document

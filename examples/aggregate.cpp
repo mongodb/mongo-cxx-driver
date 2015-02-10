@@ -1,13 +1,17 @@
 #include <iostream>
 
-#include <bsoncxx/builder.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/pipeline.hpp>
 
-using namespace bsoncxx::builder::helpers;
-using bsoncxx::builder::document;
+using bsoncxx::builder::stream::document;
+using bsoncxx::builder::stream::open_document;
+using bsoncxx::builder::stream::close_document;
+using bsoncxx::builder::stream::open_array;
+using bsoncxx::builder::stream::close_array;
+using bsoncxx::builder::stream::finalize;
 
 int main(int, char**) {
     mongocxx::client conn{};
@@ -21,8 +25,8 @@ int main(int, char**) {
         document group_stage;
 
         group_stage << "_id" << "$borough"
-                    << "count" << open_doc
-                        << "$sum" << 1 << close_doc;
+                    << "count" << open_document
+                        << "$sum" << 1 << close_document;
         
         stages.group(group_stage);
         
@@ -44,8 +48,8 @@ int main(int, char**) {
                     << "cuisine" << "Brazilian";
 
         group_stage << "_id" << "$address.zipcode"
-                    << "count" << open_doc
-                        << "$sum" << 1 << close_doc;
+                    << "count" << open_document
+                        << "$sum" << 1 << close_document;
 
         stages.match(match_stage).group(group_stage);
 
