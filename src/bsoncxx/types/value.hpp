@@ -33,7 +33,7 @@ class element;
 
 namespace types {
 
-    class value {
+    class BSONCXX_API value {
 
        public:
         value();
@@ -71,8 +71,8 @@ namespace types {
 
         explicit operator bool() const;
 
-        friend bool operator==(const value&, const value&);
-        friend bool operator!=(const value&, const value&);
+        friend bool BSONCXX_API operator==(const value&, const value&);
+        friend bool BSONCXX_API operator!=(const value&, const value&);
 
         bsoncxx::type type() const;
 

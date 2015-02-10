@@ -199,7 +199,7 @@ struct BSONCXX_API b_maxkey {
     static constexpr auto type_id = type::k_maxkey;
 };
 
-#define BSONCXX_ENUM(name, val) std::ostream& operator<<(std::ostream& out, const b_##name& rhs);
+#define BSONCXX_ENUM(name, val) std::ostream& BSONCXX_API operator<<(std::ostream& out, const b_##name& rhs);
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
