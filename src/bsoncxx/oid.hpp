@@ -24,7 +24,7 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 
 class string_or_literal;
 
-class oid {
+class BSONCXX_API oid {
    public:
     struct init_tag_t {};
     static constexpr init_tag_t init_tag{};
@@ -37,18 +37,18 @@ class oid {
 
     string_or_literal to_string() const;
 
-    friend bool operator<(const oid& lhs, const oid& rhs);
-    friend bool operator>(const oid& lhs, const oid& rhs);
-    friend bool operator<=(const oid& lhs, const oid& rhs);
-    friend bool operator>=(const oid& lhs, const oid& rhs);
-    friend bool operator==(const oid& lhs, const oid& rhs);
-    friend bool operator!=(const oid& lhs, const oid& rhs);
+    friend bool BSONCXX_API operator<(const oid& lhs, const oid& rhs);
+    friend bool BSONCXX_API operator>(const oid& lhs, const oid& rhs);
+    friend bool BSONCXX_API operator<=(const oid& lhs, const oid& rhs);
+    friend bool BSONCXX_API operator>=(const oid& lhs, const oid& rhs);
+    friend bool BSONCXX_API operator==(const oid& lhs, const oid& rhs);
+    friend bool BSONCXX_API operator!=(const oid& lhs, const oid& rhs);
 
     explicit operator bool() const;
 
     std::time_t get_time_t() const;
 
-    friend std::ostream& operator<<(std::ostream& out, const oid& rhs);
+    friend std::ostream& BSONCXX_API operator<<(std::ostream& out, const oid& rhs);
 
     const char* bytes() const;
 

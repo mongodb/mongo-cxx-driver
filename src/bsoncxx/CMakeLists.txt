@@ -66,11 +66,9 @@ add_library(bsoncxx SHARED
 set_target_properties (bsoncxx PROPERTIES
     OUTPUT_NAME bsoncxx
     VERSION ${BSONCXX_VERSION}
-    DEFINE_SYMBOL BSONCXX_EXPORTS
-    # uncomment when BSONCXX_API is applied as needed
-    # CXX_VISIBILITY_PRESET hidden
-    # VISIBILITY_INLINES_HIDDEN ON
-    #
+    DEFINE_SYMBOL BSONCXX_EXPORT
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN ON
     # uncomment this line when we start promising a stable ABI
     # SOVERSION ${BSONCXX_ABI_VERSION}
 )

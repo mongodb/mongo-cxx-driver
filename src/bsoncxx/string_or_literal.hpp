@@ -23,7 +23,7 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
-class string_or_literal {
+class BSONCXX_API string_or_literal {
    public:
     template <std::size_t n>
     constexpr string_or_literal(const char (&v)[n])
@@ -44,7 +44,7 @@ class string_or_literal {
     std::size_t length() const;
     const char* c_str() const;
 
-    friend std::ostream& operator<<(std::ostream& out, const string_or_literal& rhs);
+    friend std::ostream& BSONCXX_API operator<<(std::ostream& out, const string_or_literal& rhs);
 
    private:
     std::size_t _len;

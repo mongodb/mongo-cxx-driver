@@ -24,24 +24,24 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
-enum class type : std::uint8_t {
+enum class BSONCXX_API type : std::uint8_t {
 #define BSONCXX_ENUM(name, val) k_##name = val,
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 };
 
-enum class binary_sub_type : std::uint8_t {
+enum class BSONCXX_API binary_sub_type : std::uint8_t {
 #define BSONCXX_ENUM(name, val) k_##name = val,
 #include <bsoncxx/enums/binary_sub_type.hpp>
 #undef BSONCXX_ENUM
 };
 
-std::string to_string(type rhs);
-std::string to_string(binary_sub_type rhs);
+std::string BSONCXX_API to_string(type rhs);
+std::string BSONCXX_API to_string(binary_sub_type rhs);
 
 namespace types {
 
-struct b_double {
+struct BSONCXX_API b_double {
     static constexpr auto type_id = type::k_double;
 
     double value;
@@ -49,7 +49,7 @@ struct b_double {
     operator double() { return value; }
 };
 
-struct b_utf8 {
+struct BSONCXX_API b_utf8 {
     static constexpr auto type_id = type::k_utf8;
 
     template <typename T>
@@ -61,7 +61,7 @@ struct b_utf8 {
     operator string_or_literal() { return value; }
 };
 
-struct b_document {
+struct BSONCXX_API b_document {
     static constexpr auto type_id = type::k_document;
 
     document::view value;
@@ -69,7 +69,7 @@ struct b_document {
     operator document::view() { return value; }
 };
 
-struct b_array {
+struct BSONCXX_API b_array {
     static constexpr auto type_id = type::k_array;
 
     array::view value;
@@ -77,7 +77,7 @@ struct b_array {
     operator array::view() { return value; }
 };
 
-struct b_binary {
+struct BSONCXX_API b_binary {
     static constexpr auto type_id = type::k_binary;
 
     binary_sub_type sub_type;
@@ -85,17 +85,17 @@ struct b_binary {
     const uint8_t* bytes;
 };
 
-struct b_undefined {
+struct BSONCXX_API b_undefined {
     static constexpr auto type_id = type::k_undefined;
 };
 
-struct b_oid {
+struct BSONCXX_API b_oid {
     static constexpr auto type_id = type::k_oid;
 
     oid value;
 };
 
-struct b_bool {
+struct BSONCXX_API b_bool {
     static constexpr auto type_id = type::k_bool;
 
     bool value;
@@ -103,7 +103,7 @@ struct b_bool {
     operator bool() { return value; }
 };
 
-struct b_date {
+struct BSONCXX_API b_date {
     static constexpr auto type_id = type::k_date;
 
     int64_t value;
@@ -111,11 +111,11 @@ struct b_date {
     operator int64_t() { return value; }
 };
 
-struct b_null {
+struct BSONCXX_API b_null {
     static constexpr auto type_id = type::k_null;
 };
 
-struct b_regex {
+struct BSONCXX_API b_regex {
     static constexpr auto type_id = type::k_regex;
 
     template <typename T, typename U>
@@ -126,14 +126,14 @@ struct b_regex {
     string_or_literal options;
 };
 
-struct b_dbpointer {
+struct BSONCXX_API b_dbpointer {
     static constexpr auto type_id = type::k_dbpointer;
 
     string_or_literal collection;
     oid value;
 };
 
-struct b_code {
+struct BSONCXX_API b_code {
     static constexpr auto type_id = type::k_code;
 
     template <typename T>
@@ -145,7 +145,7 @@ struct b_code {
     operator string_or_literal() { return code; }
 };
 
-struct b_symbol {
+struct BSONCXX_API b_symbol {
     static constexpr auto type_id = type::k_symbol;
 
     template <typename T>
@@ -157,7 +157,7 @@ struct b_symbol {
     operator string_or_literal() { return symbol; }
 };
 
-struct b_codewscope {
+struct BSONCXX_API b_codewscope {
     static constexpr auto type_id = type::k_codewscope;
 
     template <typename T, typename U>
@@ -168,7 +168,7 @@ struct b_codewscope {
     document::view scope;
 };
 
-struct b_int32 {
+struct BSONCXX_API b_int32 {
     static constexpr auto type_id = type::k_int32;
 
     int32_t value;
@@ -176,14 +176,14 @@ struct b_int32 {
     operator int32_t() { return value; }
 };
 
-struct b_timestamp {
+struct BSONCXX_API b_timestamp {
     static constexpr auto type_id = type::k_timestamp;
 
     uint32_t increment;
     uint32_t timestamp;
 };
 
-struct b_int64 {
+struct BSONCXX_API b_int64 {
     static constexpr auto type_id = type::k_int64;
 
     int64_t value;
@@ -191,11 +191,11 @@ struct b_int64 {
     operator int64_t() { return value; }
 };
 
-struct b_minkey {
+struct BSONCXX_API b_minkey {
     static constexpr auto type_id = type::k_minkey;
 };
 
-struct b_maxkey {
+struct BSONCXX_API b_maxkey {
     static constexpr auto type_id = type::k_maxkey;
 };
 
