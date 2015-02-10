@@ -8,22 +8,22 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 # Enforce the C++ standard, and disable extensions
 if (NOT DEFINED CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD 11)
 endif()
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # CMake 3.1 doesn't know how to C++11 for clang.
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  if (CMAKE_CXX_STANDARD EQUAL 11)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-  elseif (CMAKE_CXX_STANDARD EQUAL 14)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-  else()
-    error("Don't know how to do that standard for Clang")
-  endif()
+    if (CMAKE_CXX_STANDARD EQUAL 11)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    elseif (CMAKE_CXX_STANDARD EQUAL 14)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+    else()
+        error("Don't know how to do that standard for Clang")
+    endif()
 else()
-  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
 # Include the required modules
