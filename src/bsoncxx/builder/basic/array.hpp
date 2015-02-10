@@ -18,48 +18,40 @@
 
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/array/view.hpp>
-#include <bsoncxx/builder/core.hpp>
+#include <bsoncxx/builder/basic/impl.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/basic/sub_array.hpp>
+#include <bsoncxx/builder/core.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 namespace basic {
 
-    class array {
-    public:
-        array() : _core(true) {}
+class BSONCXX_API array : public sub_array {
+   public:
+    array() : sub_array(&_core), _core(true) {
+    }
 
-        template <typename Arg, typename ...Args>
-        void append(Arg&& a, Args&& ...args) {
-            append(std::forward<Arg>(a));
-            append(std::forward<Args>(args)...);
-        }
+    bsoncxx::array::view view() const {
+        return _core.view_array();
+    }
 
-        template <typename T>
-        void append(T&& t) {
-            _core.append(std::forward<T>(t));
-        }
+    operator bsoncxx::array::view() const {
+        return view();
+    }
 
-        bsoncxx::array::view view() const {
-            return _core.view_array();
-        }
+    bsoncxx::array::value extract() {
+        return _core.extract_array();
+    }
 
-        operator bsoncxx::array::view() const {
-            return view();
-        }
+    void clear() {
+        _core.clear();
+    }
 
-        bsoncxx::array::value extract() {
-            return _core.extract_array();
-        }
-
-        void clear() {
-            _core.clear();
-        }
-
-    private:
-        core _core;
-    };
+   private:
+    core _core;
+};
 
 }  // namespace basic
 }  // namespace builder

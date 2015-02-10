@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <bsoncxx/config/prelude.hpp>
+
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/builder/stream/closed_context.hpp>
@@ -36,7 +38,7 @@ class array_context {
     array_context(core* core) : _core(core) {}
 
     template <class T>
-    typename std::enable_if<!(util::is_functor<T, void(array_context<>)>::value || util::is_functor<T, void(single_context)>::value || std::is_same<T, builder::stream::close_document_t>::value || std::is_same<typename std::remove_reference<T>::type, builder::stream::finalize_t>::value), array_context>::type& operator<<(
+    typename std::enable_if<!(util::is_functor<T, void(array_context<>)>::value || util::is_functor<T, void(single_context)>::value || std::is_same<T, const close_document_type>::value || std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value), array_context>::type& operator<<(
         T&& t) {
         _core->append(std::forward<T>(t));
         return *this;
@@ -51,28 +53,28 @@ class array_context {
 
     template <typename T>
     typename std::enable_if<std::is_same<base, closed_context>::value &&
-                            std::is_same<typename std::remove_reference<T>::type, builder::stream::finalize_t>::value,
+                            std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value,
                             array::value>::type
     operator<<(T&&) {
         return _core->extract_array();
     }
 
-    key_context<array_context> operator<<(builder::stream::open_document_t) {
+    key_context<array_context> operator<<(const open_document_type) {
         _core->open_document();
         return wrap_document();
     }
 
-    array_context operator<<(builder::stream::concatenate concatenate) {
+    array_context operator<<(concatenate concatenate) {
         _core->concatenate(concatenate);
         return *this;
     }
 
-    array_context<array_context> operator<<(builder::stream::open_array_t) {
+    array_context<array_context> operator<<(const open_array_type) {
         _core->open_array();
         return wrap_array();
     }
 
-    base operator<<(builder::stream::close_array_t) {
+    base operator<<(const close_array_type) {
         _core->close_array();
         return unwrap();
     }

@@ -12,20 +12,47 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/stream/helpers.hpp>
+#pragma once
+
+#include <bsoncxx/config/prelude.hpp>
+
+#include <bsoncxx/builder/core.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
-namespace stream {
+namespace basic {
 
-open_document_t open_document;
-close_document_t close_document;
-open_array_t open_array;
-close_array_t close_array;
-finalize_t finalize;
+namespace impl {
 
-}  // namespace stream
-}  // namespace builders
+template <typename T>
+void value_append(core* core, T&& t);
+
+}  // namespace impl
+
+class BSONCXX_API sub_array {
+   public:
+    sub_array(core* core) : _core(core) {
+    }
+
+    template <typename Arg, typename... Args>
+    void append(Arg&& a, Args&&... args) {
+        append(std::forward<Arg>(a));
+        append(std::forward<Args>(args)...);
+    }
+
+    template <typename T>
+    void append(T&& t) {
+        impl::value_append(_core, std::forward<T>(t));
+    }
+
+   private:
+    core* _core;
+};
+
+}  // namespace basic
+}  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
+
+#include <bsoncxx/config/postlude.hpp>

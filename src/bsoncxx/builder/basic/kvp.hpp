@@ -23,10 +23,10 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 namespace basic {
 
-    template <typename ...Args>
-    std::tuple<Args&&...> kvp(Args&&... args) {
-        return std::tuple<Args&&...>(std::forward<Args>(args)...);
-    }
+template <typename T, typename U>
+std::tuple<T&&, U&&> kvp(T&& t, U&& u) {
+    return std::tuple < T &&, U && > (std::forward<T>(t), std::forward<U>(u));
+}
 
 }  // namespace basic
 }  // namespace builder

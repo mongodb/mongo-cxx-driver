@@ -191,7 +191,9 @@ bsoncxx::stdx::optional<result::insert_one> collection::insert_one(bsoncxx::docu
     if (!result) {
         return bsoncxx::stdx::optional<result::insert_one>();
     }
-    return bsoncxx::stdx::optional<result::insert_one>(result::insert_one(std::move(result.value()), oid));
+
+    return bsoncxx::stdx::optional<result::insert_one>(
+        result::insert_one(std::move(result.value()), std::move(oid.get_value())));
 }
 
 bsoncxx::stdx::optional<result::replace_one> collection::replace_one(bsoncxx::document::view filter,

@@ -33,13 +33,13 @@ class single_context {
     array_context<single_context> wrap_array() { return array_context<single_context>(_core); }
     key_context<single_context> wrap_document() { return key_context<single_context>(_core); }
 
-    key_context<single_context> operator<<(builder::stream::open_document_t) {
+    key_context<single_context> operator<<(open_document_type) {
         _core->open_document();
 
         return wrap_document();
     }
 
-    array_context<single_context> operator<<(builder::stream::open_array_t) {
+    array_context<single_context> operator<<(open_array_type) {
         _core->open_array();
 
         return wrap_array();

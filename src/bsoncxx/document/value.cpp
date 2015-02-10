@@ -29,10 +29,17 @@ value::value(unique_ptr_type ptr, std::size_t length)
     : _data(std::move(ptr)), _length(length) {
 }
 
-// TODO should we revisit generic new/delete
+namespace {
+
+void uint8_t_deleter(std::uint8_t* ptr) {
+    delete[] ptr;
+}
+
+}  // namespace
+
 value::value(document::view view)
-    : _data(static_cast<std::uint8_t*>(operator new(static_cast<std::size_t>(view.length()))),
-            operator delete),
+    : _data(new std::uint8_t[static_cast<std::size_t>(view.length())],
+            uint8_t_deleter),
       _length(view.length()) {
     std::copy(view.data(), view.data() + view.length(), _data.get());
 }

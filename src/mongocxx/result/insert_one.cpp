@@ -18,7 +18,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
-insert_one::insert_one(result::bulk_write result, bsoncxx::document::element generated_id)
+insert_one::insert_one(result::bulk_write result, bsoncxx::types::value generated_id)
     : _result(std::move(result)), _generated_id(std::move(generated_id)) {
 }
 
@@ -26,7 +26,7 @@ const result::bulk_write& insert_one::result() const {
     return _result;
 }
 
-bsoncxx::document::element insert_one::inserted_id() const {
+const bsoncxx::types::value& insert_one::inserted_id() const {
     return _generated_id;
 }
 

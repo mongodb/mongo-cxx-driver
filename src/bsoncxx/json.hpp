@@ -130,7 +130,7 @@ class json_visitor {
 
         out << "{" << std::endl;
         pad(1);
-        out << "\"$ref\" : \"" << value.collection << "\"";
+        out << "\"$ref\" : \"" << value.collection.c_str() << "\"";
 
         if (value.value) {
             out << "," << std::endl;

@@ -16,6 +16,8 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
+#include <cstring>
+
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/string_or_literal.hpp>
 #include <bsoncxx/document/view.hpp>
@@ -53,6 +55,10 @@ struct BSONCXX_API b_double {
     operator double() { return value; }
 };
 
+inline bool operator==(const b_double& lhs, const b_double& rhs) {
+    return lhs.value == rhs.value;
+}
+
 struct BSONCXX_API b_utf8 {
     static constexpr auto type_id = type::k_utf8;
 
@@ -65,6 +71,10 @@ struct BSONCXX_API b_utf8 {
     operator string_or_literal() { return value; }
 };
 
+inline bool operator==(const b_utf8& lhs, const b_utf8& rhs) {
+    return lhs.value == rhs.value;
+}
+
 struct BSONCXX_API b_document {
     static constexpr auto type_id = type::k_document;
 
@@ -72,6 +82,10 @@ struct BSONCXX_API b_document {
 
     operator document::view() { return value; }
 };
+
+inline bool operator==(const b_document& lhs, const b_document& rhs) {
+    return lhs.value == rhs.value;
+}
 
 struct BSONCXX_API b_array {
     static constexpr auto type_id = type::k_array;
@@ -81,6 +95,10 @@ struct BSONCXX_API b_array {
     operator array::view() { return value; }
 };
 
+inline bool operator==(const b_array& lhs, const b_array& rhs) {
+    return lhs.value == rhs.value;
+}
+
 struct BSONCXX_API b_binary {
     static constexpr auto type_id = type::k_binary;
 
@@ -89,15 +107,27 @@ struct BSONCXX_API b_binary {
     const uint8_t* bytes;
 };
 
+inline bool operator==(const b_binary& lhs, const b_binary& rhs) {
+    return lhs.sub_type == rhs.sub_type && lhs.size == rhs.size && (std::memcmp(lhs.bytes, rhs.bytes, lhs.size) == 0);
+}
+
 struct BSONCXX_API b_undefined {
     static constexpr auto type_id = type::k_undefined;
 };
+
+inline bool operator==(const b_undefined&, const b_undefined&) {
+    return true;
+}
 
 struct BSONCXX_API b_oid {
     static constexpr auto type_id = type::k_oid;
 
     oid value;
 };
+
+inline bool operator==(const b_oid& lhs, const b_oid& rhs) {
+    return lhs.value == rhs.value;
+}
 
 struct BSONCXX_API b_bool {
     static constexpr auto type_id = type::k_bool;
@@ -107,6 +137,10 @@ struct BSONCXX_API b_bool {
     operator bool() { return value; }
 };
 
+inline bool operator==(const b_bool& lhs, const b_bool& rhs) {
+    return lhs.value == rhs.value;
+}
+
 struct BSONCXX_API b_date {
     static constexpr auto type_id = type::k_date;
 
@@ -115,9 +149,17 @@ struct BSONCXX_API b_date {
     operator int64_t() { return value; }
 };
 
+inline bool operator==(const b_date& lhs, const b_date& rhs) {
+    return lhs.value == rhs.value;
+}
+
 struct BSONCXX_API b_null {
     static constexpr auto type_id = type::k_null;
 };
+
+inline bool operator==(const b_null&, const b_null&) {
+    return true;
+}
 
 struct BSONCXX_API b_regex {
     static constexpr auto type_id = type::k_regex;
@@ -130,12 +172,20 @@ struct BSONCXX_API b_regex {
     string_or_literal options;
 };
 
+inline bool operator==(const b_regex& lhs, const b_regex& rhs) {
+    return lhs.regex == rhs.regex && lhs.options == rhs.options;
+}
+
 struct BSONCXX_API b_dbpointer {
     static constexpr auto type_id = type::k_dbpointer;
 
     string_or_literal collection;
     oid value;
 };
+
+inline bool operator==(const b_dbpointer& lhs, const b_dbpointer& rhs) {
+    return lhs.collection == rhs.collection && lhs.value == rhs.value;
+}
 
 struct BSONCXX_API b_code {
     static constexpr auto type_id = type::k_code;
@@ -149,6 +199,10 @@ struct BSONCXX_API b_code {
     operator string_or_literal() { return code; }
 };
 
+inline bool operator==(const b_code& lhs, const b_code& rhs) {
+    return lhs.code == rhs.code;
+}
+
 struct BSONCXX_API b_symbol {
     static constexpr auto type_id = type::k_symbol;
 
@@ -161,6 +215,10 @@ struct BSONCXX_API b_symbol {
     operator string_or_literal() { return symbol; }
 };
 
+inline bool operator==(const b_symbol& lhs, const b_symbol& rhs) {
+    return lhs.symbol == rhs.symbol;
+}
+
 struct BSONCXX_API b_codewscope {
     static constexpr auto type_id = type::k_codewscope;
 
@@ -172,6 +230,10 @@ struct BSONCXX_API b_codewscope {
     document::view scope;
 };
 
+inline bool operator==(const b_codewscope& lhs, const b_codewscope& rhs) {
+    return lhs.code == rhs.code && lhs.scope == rhs.scope;
+}
+
 struct BSONCXX_API b_int32 {
     static constexpr auto type_id = type::k_int32;
 
@@ -180,12 +242,20 @@ struct BSONCXX_API b_int32 {
     operator int32_t() { return value; }
 };
 
+inline bool operator==(const b_int32& lhs, const b_int32& rhs) {
+    return lhs.value == rhs.value;
+}
+
 struct BSONCXX_API b_timestamp {
     static constexpr auto type_id = type::k_timestamp;
 
     uint32_t increment;
     uint32_t timestamp;
 };
+
+inline bool operator==(const b_timestamp& lhs, const b_timestamp& rhs) {
+    return lhs.increment == rhs.increment && lhs.timestamp == rhs.timestamp;
+}
 
 struct BSONCXX_API b_int64 {
     static constexpr auto type_id = type::k_int64;
@@ -195,15 +265,30 @@ struct BSONCXX_API b_int64 {
     operator int64_t() { return value; }
 };
 
+inline bool operator==(const b_int64& lhs, const b_int64& rhs) {
+    return lhs.value == rhs.value;
+}
+
 struct BSONCXX_API b_minkey {
     static constexpr auto type_id = type::k_minkey;
 };
+
+inline bool operator==(const b_minkey&, const b_minkey&) {
+    return true;
+}
 
 struct BSONCXX_API b_maxkey {
     static constexpr auto type_id = type::k_maxkey;
 };
 
-#define BSONCXX_ENUM(name, val) BSONCXX_API std::ostream& operator<<(std::ostream& out, const b_##name& rhs);
+inline bool operator==(const b_maxkey&, const b_maxkey&) {
+    return true;
+}
+
+#define BSONCXX_ENUM(name, val) \
+inline bool operator!=(const b_##name& lhs, const b_##name& rhs) { \
+    return !(lhs == rhs); \
+}
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 

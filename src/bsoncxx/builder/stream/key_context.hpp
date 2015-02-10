@@ -51,18 +51,18 @@ class key_context {
 
     template <typename T>
     typename std::enable_if<std::is_same<base, closed_context>::value &&
-                            std::is_same<typename std::remove_reference<T>::type, builder::stream::finalize_t>::value,
+                            std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value,
                             document::value>::type
     operator<<(T&&) {
         return _core->extract_document();
     }
 
-    key_context operator<<(builder::stream::concatenate concatenate) {
+    key_context operator<<(concatenate concatenate) {
         _core->concatenate(concatenate);
         return *this;
     }
 
-    base operator<<(builder::stream::close_document_t) {
+    base operator<<(const close_document_type) {
         _core->close_document();
         return unwrap();
     }

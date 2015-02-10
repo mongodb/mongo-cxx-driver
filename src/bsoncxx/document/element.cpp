@@ -240,7 +240,16 @@ types::b_array element::get_array() const {
 }
 
 types::value element::get_value() const {
-    return types::value{*this};
+    switch (static_cast<int>(type())) {
+#define BSONCXX_ENUM(type, val) \
+        case val: \
+            return types::value{get_##type()};
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
+    }
+
+    // TODO shouldn't be reachable.  replace with macro unreachable
+    std::abort();
 }
 
 element::operator bool() const {

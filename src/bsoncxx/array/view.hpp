@@ -54,6 +54,9 @@ class BSONCXX_API view {
 
     operator document::view() const;
 
+    friend BSONCXX_API bool operator==(view, view);
+    friend BSONCXX_API bool operator!=(view, view);
+
    private:
     document::view _view;
 };

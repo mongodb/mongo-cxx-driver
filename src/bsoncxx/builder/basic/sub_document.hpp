@@ -16,43 +16,43 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
-#include <bsoncxx/builder/basic/impl.hpp>
-#include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/builder/basic/sub_document.hpp>
 #include <bsoncxx/builder/core.hpp>
-#include <bsoncxx/document/value.hpp>
-#include <bsoncxx/document/view.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 namespace basic {
 
-class array;
+namespace impl {
+template <typename T>
+void value_append(core* core, T&& t);
+}  // namespace impl
 
-class BSONCXX_API document : public sub_document {
+class BSONCXX_API sub_document {
    public:
-    document() : sub_document(&_core), _core(false) {
+    sub_document(core* core) : _core(core) {
     }
 
-    bsoncxx::document::view view() const {
-        return _core.view_document();
+    template <typename Arg, typename... Args>
+    void append(Arg&& a, Args&&... args) {
+        append(std::forward<Arg>(a));
+        append(std::forward<Args>(args)...);
     }
 
-    operator bsoncxx::document::view() const {
-        return view();
+    template <typename T>
+    void append(T&& t) {
+        _core->key_owning(std::get<0>(t));
+        impl::value_append(_core, std::forward<T>(std::get<1>(t)));
     }
 
-    bsoncxx::document::value extract() {
-        return _core.extract_document();
-    }
-
-    void clear() {
-        _core.clear();
+    template <std::size_t n, typename T>
+    void append(std::tuple<const char (&)[n], T>&& t) {
+        _core->key_literal(std::get<0>(t), n - 1);
+        impl::value_append(_core, std::forward<T>(std::get<1>(t)));
     }
 
    private:
-    core _core;
+    core* _core;
 };
 
 }  // namespace basic

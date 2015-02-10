@@ -71,7 +71,6 @@ namespace document {
         string_or_literal key() const;
 
         // TODO figure out a better exception than std::runtime_error
-        types::b_eod get_eod() const;
         types::b_double get_double() const;
         types::b_utf8 get_utf8() const;
         types::b_document get_document() const;

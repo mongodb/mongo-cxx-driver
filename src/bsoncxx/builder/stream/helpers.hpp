@@ -23,20 +23,20 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 namespace stream {
 
-struct BSONCXX_API open_document_t {};
-extern BSONCXX_API open_document_t open_document;
+struct BSONCXX_API open_document_type { constexpr open_document_type() {} };
+constexpr open_document_type open_document;
 
-struct BSONCXX_API open_array_t {};
-extern BSONCXX_API open_array_t open_array;
+struct BSONCXX_API close_document_type { constexpr close_document_type() {} };
+constexpr close_document_type close_document;
 
-struct BSONCXX_API close_document_t {};
-extern BSONCXX_API close_document_t close_document;
+struct BSONCXX_API open_array_type { constexpr open_array_type() {} };
+constexpr open_array_type open_array;
 
-struct BSONCXX_API close_array_t {};
-extern BSONCXX_API close_array_t close_array;
+struct BSONCXX_API close_array_type { constexpr close_array_type() {} };
+constexpr close_array_type close_array;
 
-struct BSONCXX_API finalize_t {};
-extern BSONCXX_API finalize_t finalize;
+struct BSONCXX_API finalize_type { constexpr finalize_type() {} };
+constexpr finalize_type finalize;
 
 struct BSONCXX_API concatenate {
     document::view view;

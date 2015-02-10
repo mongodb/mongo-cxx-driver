@@ -46,12 +46,12 @@ class value_context {
         return unwrap();
     }
 
-    key_context<base> operator<<(builder::stream::open_document_t) {
+    key_context<base> operator<<(const open_document_type) {
         _core->open_document();
         return wrap_document();
     }
 
-    array_context<base> operator<<(builder::stream::open_array_t) {
+    array_context<base> operator<<(const open_array_type) {
         _core->open_array();
         return wrap_array();
     }

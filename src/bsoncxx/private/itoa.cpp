@@ -1019,7 +1019,7 @@ const char* kIndexTable =
     "997\0"
     "998\0"
     "999\0";
-}  // anonymous namespace
+}  // namespace
 
 itoa::itoa(uint32_t val) : _val(val) {
     init();

@@ -75,6 +75,14 @@ bsoncxx::document::view scoped_bson_t::view() {
                            : bsoncxx::document::view();
 }
 
+namespace {
+
+void bson_free_deleter(std::uint8_t* ptr) {
+    bson_free(ptr);
+}
+
+}  // anonymous namespace
+
 bsoncxx::document::value scoped_bson_t::steal() {
     if (!_is_initialized) {
         return bsoncxx::document::value{bsoncxx::document::view()};
@@ -83,7 +91,7 @@ bsoncxx::document::value scoped_bson_t::steal() {
     std::uint32_t length;
     std::uint8_t* buff = bson_destroy_with_steal(bson(), true, &length);
 
-    return bsoncxx::document::value(buff, length, bson_free);
+    return bsoncxx::document::value(buff, length, bson_free_deleter);
 }
 
 }  // namespace libbson

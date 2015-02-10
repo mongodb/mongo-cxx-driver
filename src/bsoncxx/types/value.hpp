@@ -27,18 +27,12 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
-namespace document {
-class element;
-}  // namespace document
-
 namespace types {
 
     class BSONCXX_API value {
 
        public:
         value();
-
-        explicit value(const document::element& element);
 
         explicit value(b_double);
         explicit value(b_utf8);
@@ -69,42 +63,33 @@ namespace types {
 
         ~value();
 
-        explicit operator bool() const;
-
         friend BSONCXX_API bool operator==(const value&, const value&);
         friend BSONCXX_API bool operator!=(const value&, const value&);
 
         bsoncxx::type type() const;
 
-        b_double get_double() const;
-        b_utf8 get_utf8() const;
-        b_document get_document() const;
-        b_array get_array() const;
-        b_binary get_binary() const;
-        b_undefined get_undefined() const;
-        b_oid get_oid() const;
-        b_bool get_bool() const;
-        b_date get_date() const;
-        b_null get_null() const;
-        b_regex get_regex() const;
-        b_dbpointer get_dbpointer() const;
-        b_code get_code() const;
-        b_symbol get_symbol() const;
-        b_codewscope get_codewscope() const;
-        b_int32 get_int32() const;
-        b_timestamp get_timestamp() const;
-        b_int64 get_int64() const;
-        b_minkey get_minkey() const;
-        b_maxkey get_maxkey() const;
+        const b_double& get_double() const;
+        const b_utf8& get_utf8() const;
+        const b_document& get_document() const;
+        const b_array& get_array() const;
+        const b_binary& get_binary() const;
+        const b_undefined& get_undefined() const;
+        const b_oid& get_oid() const;
+        const b_bool& get_bool() const;
+        const b_date& get_date() const;
+        const b_null& get_null() const;
+        const b_regex& get_regex() const;
+        const b_dbpointer& get_dbpointer() const;
+        const b_code& get_code() const;
+        const b_symbol& get_symbol() const;
+        const b_codewscope& get_codewscope() const;
+        const b_int32& get_int32() const;
+        const b_timestamp& get_timestamp() const;
+        const b_int64& get_int64() const;
+        const b_minkey& get_minkey() const;
+        const b_maxkey& get_maxkey() const;
 
        private:
-        enum class mode : std::uint8_t {
-            unset,
-            element,
-            variant,
-        } _mode;
-        const document::element* _element;
-
         bsoncxx::type _type;
         union {
             struct b_double _b_double;
@@ -129,6 +114,34 @@ namespace types {
             struct b_maxkey _b_maxkey;
         };
     };
+
+    // sfinae in the bool return to avoid competing with the value == value
+    // operators
+    namespace {
+        template <typename T>
+        using not_value = typename std::enable_if<! std::is_same<typename std::remove_reference<T>::type, value>::value, bool>::type;
+    }  // namespace
+
+    // these all return bool
+    template <typename T>
+    not_value<T> operator==(const value& lhs, T&& rhs) {
+        return lhs == value{std::forward<T>(rhs)};
+    }
+
+    template <typename T>
+    not_value<T> operator==(T&& lhs, const value& rhs) {
+        return value{std::forward<T>(lhs)} == rhs;
+    }
+
+    template <typename T>
+    not_value<T> operator!=(const value& lhs, T&& rhs) {
+        return lhs != value{std::forward<T>(rhs)};
+    }
+
+    template <typename T>
+    not_value<T> operator!=(T&& lhs, const value& rhs) {
+        return value{std::forward<T>(lhs)} != rhs;
+    }
 
 }  // namespace types
 

@@ -28,9 +28,9 @@ TEST_CASE("insert_one", "[insert_one][result]") {
 
     mongocxx::result::bulk_write b(document::value(build.view()));
 
-    mongocxx::result::insert_one insert_one(std::move(b), build.view()["_id"]);
+    mongocxx::result::insert_one insert_one(std::move(b), types::value{oid});
 
     SECTION("returns correct response") {
-        REQUIRE(insert_one.inserted_id().get_value() == types::value{oid});
+        REQUIRE(insert_one.inserted_id() == oid);
     }
 }

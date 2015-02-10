@@ -31,15 +31,14 @@ set(bsoncxx_sources
     array/value.cpp
     array/view.cpp
     builder/core.cpp
-    builder/stream/helpers.cpp
     document/element.cpp
     document/value.cpp
     document/view.cpp
     oid.cpp
     private/itoa.cpp
     string_or_literal.cpp
-    types/value.cpp
     types.cpp
+    types/value.cpp
 )
 
 include_directories(

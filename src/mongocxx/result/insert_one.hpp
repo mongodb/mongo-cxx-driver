@@ -17,6 +17,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/types/value.hpp>
 #include <mongocxx/result/bulk_write.hpp>
 
 namespace mongocxx {
@@ -28,7 +29,7 @@ class MONGOCXX_API insert_one {
 
    public:
     // This constructor is public for testing purposes only
-    insert_one(result::bulk_write result, bsoncxx::document::element generated_id);
+    insert_one(result::bulk_write result, bsoncxx::types::value generated_id);
 
     ///
     /// Returns the bulk write result for this insert operation.
@@ -42,11 +43,11 @@ class MONGOCXX_API insert_one {
     ///
     /// @return The value of the _id field for inserted document.
     ///
-    bsoncxx::document::element inserted_id() const;
+    const bsoncxx::types::value& inserted_id() const;
 
    private:
     result::bulk_write _result;
-    bsoncxx::document::element _generated_id;
+    bsoncxx::types::value _generated_id;
 
 }; // class insert_one
 

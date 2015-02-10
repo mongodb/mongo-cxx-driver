@@ -194,6 +194,14 @@ view::operator document::view() const {
     return _view;
 }
 
-}  // namespace document
+bool operator==(view lhs, view rhs) {
+    return (lhs.length() == rhs.length()) && (std::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0);
+}
+
+bool operator!=(view lhs, view rhs) {
+    return !(lhs == rhs);
+}
+
+}  // namespace array
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

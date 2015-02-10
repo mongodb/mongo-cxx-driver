@@ -59,7 +59,7 @@ const char Base64[] =
    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 const char Pad64 = '=';
 
-}  // anonymous namespace
+}  // namespace
 
 /* (From RFC1521 and draft-ietf-dnssec-secext-03.txt)
  * The following encoding technique is taken from RFC 1521 by Borenstein

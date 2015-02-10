@@ -53,6 +53,9 @@ class BSONCXX_API view {
     const std::uint8_t* data() const;
     std::size_t length() const;
 
+    friend BSONCXX_API bool operator==(view, view);
+    friend BSONCXX_API bool operator!=(view, view);
+
    private:
     const std::uint8_t* _data;
     std::size_t _length;
@@ -76,7 +79,7 @@ class view::iterator : public std::iterator<std::forward_iterator_tag, element> 
     element _element;
 };
 
-class view::const_iterator : public std::iterator<std::forward_iterator_tag, element, ptrdiff_t,
+class view::const_iterator : public std::iterator<std::forward_iterator_tag, element, std::ptrdiff_t,
                                                   const element*, const element&> {
    public:
     const_iterator();

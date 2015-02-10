@@ -192,6 +192,14 @@ std::size_t view::length() const {
     return _length;
 }
 
+bool operator==(view lhs, view rhs) {
+    return (lhs.length() == rhs.length()) && (std::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0);
+}
+
+bool operator!=(view lhs, view rhs) {
+    return !(lhs == rhs);
+}
+
 }  // namespace document
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

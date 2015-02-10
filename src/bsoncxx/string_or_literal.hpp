@@ -44,7 +44,8 @@ class BSONCXX_API string_or_literal {
     std::size_t length() const;
     const char* c_str() const;
 
-    friend BSONCXX_API std::ostream& operator<<(std::ostream& out, const string_or_literal& rhs);
+    friend BSONCXX_API bool operator==(const string_or_literal&, const string_or_literal&);
+    friend BSONCXX_API bool operator!=(const string_or_literal&, const string_or_literal&);
 
    private:
     std::size_t _len;

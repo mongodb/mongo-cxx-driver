@@ -29,7 +29,7 @@ namespace array {
 class BSONCXX_API value {
 
    public:
-    using deleter_type = void(*)(void*);
+    using deleter_type = void(*)(std::uint8_t*);
     using unique_ptr_type = std::unique_ptr<uint8_t, deleter_type>;
 
     value(std::uint8_t* data, std::size_t length, deleter_type dtor);

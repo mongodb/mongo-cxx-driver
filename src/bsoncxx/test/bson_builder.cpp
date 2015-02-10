@@ -517,7 +517,7 @@ TEST_CASE("builder appends concatenate", "[bsoncxx::builder::stream]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("builder appends element", "[bsoncxx::builder::stream]") {
+TEST_CASE("builder appends value", "[bsoncxx::builder::stream]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -528,11 +528,39 @@ TEST_CASE("builder appends element", "[bsoncxx::builder::stream]") {
 
     tmp << "foo" << 999;
 
-    b << "foo" << tmp.view()["foo"];
+    b << "foo" << tmp.view()["foo"].get_value();
 
     bson_eq_stream(&expected, b);
 
     bson_destroy(&expected);
+}
+
+TEST_CASE("builder appends lambdas", "[bsoncxx::builder::stream]") {
+    builder::stream::document expected;
+    builder::stream::document stream;
+
+    {
+        using namespace builder::stream;
+        expected << "a" << "single"
+                 << "b" << open_document
+                    << "key1" << "value1"
+                    << "key2" << "value2"
+                 << close_document
+                 << "c" << open_array
+                    << 1 << 2 << 3
+                << close_array;
+
+        stream << "a" << [](single_context s) { s << "single"; }
+               << "b" << open_document << [](key_context<> k) {
+                      k << "key1" << "value1"
+                        << "key2" << "value2";
+                  } << close_document
+               << "c" << open_array << [](array_context<> a) {
+                   a << 1 << 2 << 3;
+               } << close_array;
+    }
+
+    viewable_eq_viewable(expected, stream);
 }
 
 TEST_CASE("document builder finalizes", "[bsoncxx::builder::stream]") {
@@ -614,26 +642,35 @@ TEST_CASE("core builder open/close works", "[bsoncxx::builder::core]") {
 }
 
 TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
-    using namespace builder::basic;
-
     builder::stream::document stream;
     builder::basic::document basic;
 
     stream << "hello" << "world";
 
     SECTION("kvp works") {
-        basic.append(kvp("hello", "world"));
+        {
+            using namespace builder::basic;
+            basic.append(kvp("hello", "world"));
+        }
 
         viewable_eq_viewable(stream, basic);
     }
 
     SECTION("variadic works") {
-        stream << "foo" << 35;
+        {
+            using namespace builder::stream;
+            stream << "foo" << 35 << "bar" << open_document << "que"
+                   << "qux" << close_document << "baz" << open_array << 1 << 2 << 3 << close_array;
 
-        basic.append(
-            kvp("hello", "world"),
-            kvp("foo", 35)
-        );
+        }
+
+        {
+            using namespace builder::basic;
+
+            basic.append(kvp("hello", "world"), kvp("foo", 35),
+                         kvp("bar", [](sub_document sd) { sd.append(kvp("que", "qux")); }),
+                         kvp("baz", [](sub_array sa) { sa.append(1, 2, 3); }));
+        }
 
         viewable_eq_viewable(stream, basic);
     }

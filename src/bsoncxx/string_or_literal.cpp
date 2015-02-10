@@ -99,10 +99,12 @@ const char* string_or_literal::c_str() const {
     }
 }
 
-std::ostream& operator<<(std::ostream& out, const string_or_literal& rhs) {
-    out << "\"" << rhs.c_str() << "\"";
+bool operator==(const string_or_literal& lhs, const string_or_literal& rhs) {
+    return lhs._len == rhs._len && (std::memcmp(lhs.c_str(), rhs.c_str(), lhs._len) == 0);
+}
 
-    return out;
+bool operator!=(const string_or_literal& lhs, const string_or_literal& rhs) {
+    return !(lhs == rhs);
 }
 
 BSONCXX_INLINE_NAMESPACE_END

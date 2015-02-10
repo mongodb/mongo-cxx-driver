@@ -18,6 +18,7 @@
 #include <bsoncxx/private/itoa.hpp>
 #include <bsoncxx/private/stack.hpp>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/types/value.hpp>
 
 #include <cstring>
 
@@ -25,6 +26,14 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
+
+namespace {
+
+void bson_free_deleter(std::uint8_t* ptr) {
+    bson_free(ptr);
+}
+
+}  // namespace
 
 class core::impl {
    public:
@@ -63,7 +72,7 @@ class core::impl {
         uint8_t* buf_ptr = bson_destroy_with_steal(&_root, true, &buf_len);
         bson_init(&_root);
 
-        return bsoncxx::document::value{buf_ptr, buf_len, bson_free};
+        return bsoncxx::document::value{buf_ptr, buf_len, bson_free_deleter};
     }
 
     bsoncxx::array::value steal_array() {
@@ -75,7 +84,7 @@ class core::impl {
         uint8_t* buf_ptr = bson_destroy_with_steal(&_root, true, &buf_len);
         bson_init(&_root);
 
-        return bsoncxx::array::value{buf_ptr, buf_len, bson_free};
+        return bsoncxx::array::value{buf_ptr, buf_len, bson_free_deleter};
     }
 
     bson_t* back() {
@@ -387,16 +396,15 @@ void core::concatenate(const bsoncxx::document::view& view) {
     }
 }
 
-void core::append(const bsoncxx::document::element& value) {
-    const string_or_literal& key = _impl->next_key();
-
-    bson_iter_t iter;
-    iter.raw = value.raw;
-    iter.len = value.length;
-    iter.next_off = value.offset;
-    bson_iter_next(&iter);
-
-    bson_append_iter(_impl->back(), key.c_str(), key.length(), &iter);
+void core::append(const bsoncxx::types::value& value) {
+    switch (static_cast<int>(value.type())) {
+#define BSONCXX_ENUM(type, val) \
+        case val: \
+            append(value.get_##type()); \
+            break;
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
+    }
 }
 
 void core::close_document() {
