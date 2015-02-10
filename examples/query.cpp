@@ -134,6 +134,7 @@ int main(int, char**) {
         document ordering;
         ordering << "borough" << 1
                  << "address.zipcode" << -1;
+        opts.sort(ordering);
 
         auto cursor = db["restaurants"].find({}, opts);
         for (auto&& doc : cursor) {
