@@ -26,7 +26,7 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
 
-#include <bsoncxx/private/b64_ntop.h>
+#include <bsoncxx/b64_ntop.h>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
