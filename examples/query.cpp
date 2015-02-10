@@ -27,13 +27,13 @@ int main(int, char**) {
         }
         // @end: cpp-query-all
     }
-    
+
     // Query for equality on a top level field.
     {
         // @begin: cpp-query-top-level-field
         auto cursor = db["restaurants"]
             .find(document{} << "borough" << "Manhattan" << finalize);
-        
+
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
@@ -46,7 +46,7 @@ int main(int, char**) {
         document filter;
         filter << "address.zipcode" << "10075";
 
-        auto cursor = db["restaurants"].find(filter.view());
+        auto cursor = db["restaurants"].find(filter);
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
@@ -59,7 +59,7 @@ int main(int, char**) {
         document filter;
         filter << "grades.grade" << "B";
 
-        auto cursor = db["restaurants"].find(filter.view());
+        auto cursor = db["restaurants"].find(filter);
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
@@ -74,7 +74,7 @@ int main(int, char**) {
         filter << "grades.score" << open_document
                    << "$gt" << 30 << close_document;
 
-        auto cursor = db["restaurants"].find(filter.view());
+        auto cursor = db["restaurants"].find(filter);
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
@@ -88,7 +88,7 @@ int main(int, char**) {
         filter << "grades.score" << open_document
                    << "$lt" << 10 << close_document;
 
-        auto cursor = db["restaurants"].find(filter.view());
+        auto cursor = db["restaurants"].find(filter);
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
@@ -102,13 +102,13 @@ int main(int, char**) {
         filter << "cuisine" << "Italian"
                << "address.zipcode" << "10075";
 
-        auto cursor = db["restaurants"].find(filter.view());
+        auto cursor = db["restaurants"].find(filter);
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
         // @end: cpp-query-logical-and
     }
-    
+
     // Query with a logical disjunction (OR) of query conditions.
     {
         // @begin: cpp-query-logical-or
@@ -117,10 +117,10 @@ int main(int, char**) {
                    << open_document
                        << "cuisine" << "Italian" << close_document
                    << open_document
-                      << "address.zipcode" << "10075" << close_document 
+                      << "address.zipcode" << "10075" << close_document
                << close_array;
 
-        auto cursor = db["restaurants"].find(filter.view());
+        auto cursor = db["restaurants"].find(filter);
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
