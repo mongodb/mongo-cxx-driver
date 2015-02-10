@@ -1,7 +1,6 @@
-find_package(mongocxx REQUIRED)
-
 include_directories(
-  ${MONGOCXX_INCLUDE_DIRS}
+  ${CMAKE_SOURCE_DIR}/src
+  ${CMAKE_BINARY_DIR}/src
 )
 
 set(MONGOCXX_EXAMPLES
@@ -16,7 +15,7 @@ set(MONGOCXX_EXAMPLES
 foreach(EXAMPLE_SRC ${MONGOCXX_EXAMPLES})
   get_filename_component(EXAMPLE_TARGET ${EXAMPLE_SRC} NAME_WE)
   add_executable(${EXAMPLE_TARGET} ${EXAMPLE_SRC})
-  target_link_libraries(${EXAMPLE_TARGET} ${MONGOCXX_LIBRARIES})
+  target_link_libraries(${EXAMPLE_TARGET} mongocxx ${mongocxx_libs})
 endforeach(EXAMPLE_SRC)
 
 add_custom_target(examples DEPENDS ${MONGOCXX_EXAMPLES})
