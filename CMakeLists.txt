@@ -1,16 +1,27 @@
 # Versions < 2.8.8 do not support Object Libraries
+project(MONGO_CXX_DRIVER LANGUAGES CXX)
+
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 
 # Add in our modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 # Enforce the C++ standard, and disable extensions
-set(CMAKE_CXX_STANDARD 11)
+if (NOT DEFINED CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 11)
+endif()
+
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # CMake 3.1 doesn't know how to C++11 for clang.
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  if (CMAKE_CXX_STANDARD EQUAL 11)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  elseif (CMAKE_CXX_STANDARD EQUAL 14)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+  else()
+    error("Don't know how to do that standard for Clang")
+  endif()
 else()
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
