@@ -52,7 +52,7 @@ file(GLOB bsoncxx-stdx_sources stdx/*.cpp)
 file(GLOB bsoncxx-util_headers util/*.hpp util/*.h)
 file(GLOB bsoncxx-util_sources util/*.cpp)
 
-add_library(bsoncxx SHARED
+set(bsoncxx_sources
     ${bsoncxx-array_sources}
     ${bsoncxx-core_sources}
     ${bsoncxx-builder_sources}
@@ -62,6 +62,9 @@ add_library(bsoncxx SHARED
     ${bsoncxx-stdx_sources}
     ${bsoncxx-util_sources}
 )
+
+add_library(bsoncxx SHARED ${bsoncxx_sources})
+
 
 set_target_properties (bsoncxx PROPERTIES
     OUTPUT_NAME bsoncxx
@@ -74,6 +77,12 @@ set_target_properties (bsoncxx PROPERTIES
 )
 
 target_link_libraries(bsoncxx ${LIBBSON_LIBRARIES})
+
+if(BUILD_UNIT_TESTS)
+    # unit tests link statically
+    add_library(bsoncxx_static STATIC ${bsoncxx_sources})
+    target_link_libraries(bsoncxx_static ${LIBBSON_LIBRARIES})
+endif()
 
 install(TARGETS
     bsoncxx

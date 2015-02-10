@@ -57,19 +57,20 @@ set_target_properties (mongocxx PROPERTIES
     # SOVERSION ${MONGOCXX_ABI_VERSION}
 )
 
-target_link_libraries(mongocxx bsoncxx ${LIBMONGOC_LIBRARIES})
+set(mongocxx_libs bsoncxx ${LIBMONGOC_LIBRARIES})
+
+target_link_libraries(mongocxx ${mongocxx_libs})
 
 if(BUILD_UNIT_TESTS)
-    add_library(mongocxx-mocked SHARED ${mongocxx_sources})
+    add_library(mongocxx-mocked STATIC ${mongocxx_sources})
 
     set_target_properties (mongocxx-mocked PROPERTIES
         OUTPUT_NAME mongocxx-mocked
         VERSION ${MONGOCXX_VERSION}
-        SOVERSION ${MONGOCXX_ABI_VERSION}
         COMPILE_FLAGS "-DMONGOCXX_TESTING"
     )
 
-    target_link_libraries(mongocxx-mocked bsoncxx ${LIBMONGOC_LIBRARIES})
+    target_link_libraries(mongocxx-mocked ${mongocxx_libs})
 endif()
 
 install(TARGETS
