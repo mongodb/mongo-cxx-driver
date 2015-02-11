@@ -115,8 +115,8 @@ class cursor::iterator : public std::iterator<
 
 };
 
-bool MONGOCXX_API operator==(const cursor::iterator& lhs, const cursor::iterator& rhs);
-bool MONGOCXX_API operator!=(const cursor::iterator& lhs, const cursor::iterator& rhs);
+MONGOCXX_API bool operator==(const cursor::iterator& lhs, const cursor::iterator& rhs);
+MONGOCXX_API bool operator!=(const cursor::iterator& lhs, const cursor::iterator& rhs);
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

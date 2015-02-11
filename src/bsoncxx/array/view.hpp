@@ -69,8 +69,8 @@ class view::iterator : public std::iterator<std::forward_iterator_tag, element> 
     iterator& operator++();
     iterator operator++(int);
 
-    friend bool BSONCXX_API operator==(const iterator&, const iterator&);
-    friend bool BSONCXX_API operator!=(const iterator&, const iterator&);
+    friend BSONCXX_API bool operator==(const iterator&, const iterator&);
+    friend BSONCXX_API bool operator!=(const iterator&, const iterator&);
 
    private:
     element _element;
@@ -88,8 +88,8 @@ class view::const_iterator : public std::iterator<std::forward_iterator_tag, ele
     const_iterator& operator++();
     const_iterator operator++(int);
 
-    friend bool BSONCXX_API operator==(const const_iterator&, const const_iterator&);
-    friend bool BSONCXX_API operator!=(const const_iterator&, const const_iterator&);
+    friend BSONCXX_API bool operator==(const const_iterator&, const const_iterator&);
+    friend BSONCXX_API bool operator!=(const const_iterator&, const const_iterator&);
 
    private:
     element _element;

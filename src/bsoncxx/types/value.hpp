@@ -71,8 +71,8 @@ namespace types {
 
         explicit operator bool() const;
 
-        friend bool BSONCXX_API operator==(const value&, const value&);
-        friend bool BSONCXX_API operator!=(const value&, const value&);
+        friend BSONCXX_API bool operator==(const value&, const value&);
+        friend BSONCXX_API bool operator!=(const value&, const value&);
 
         bsoncxx::type type() const;
 

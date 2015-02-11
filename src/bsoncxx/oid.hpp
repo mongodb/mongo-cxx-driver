@@ -37,23 +37,23 @@ class BSONCXX_API oid {
 
     string_or_literal to_string() const;
 
-    friend bool BSONCXX_API operator<(const oid& lhs, const oid& rhs);
-    friend bool BSONCXX_API operator>(const oid& lhs, const oid& rhs);
-    friend bool BSONCXX_API operator<=(const oid& lhs, const oid& rhs);
-    friend bool BSONCXX_API operator>=(const oid& lhs, const oid& rhs);
-    friend bool BSONCXX_API operator==(const oid& lhs, const oid& rhs);
-    friend bool BSONCXX_API operator!=(const oid& lhs, const oid& rhs);
+    friend BSONCXX_API bool operator<(const oid& lhs, const oid& rhs);
+    friend BSONCXX_API bool operator>(const oid& lhs, const oid& rhs);
+    friend BSONCXX_API bool operator<=(const oid& lhs, const oid& rhs);
+    friend BSONCXX_API bool operator>=(const oid& lhs, const oid& rhs);
+    friend BSONCXX_API bool operator==(const oid& lhs, const oid& rhs);
+    friend BSONCXX_API bool operator!=(const oid& lhs, const oid& rhs);
 
     explicit operator bool() const;
 
     std::time_t get_time_t() const;
 
-    friend std::ostream& BSONCXX_API operator<<(std::ostream& out, const oid& rhs);
+    friend BSONCXX_API std::ostream& operator<<(std::ostream& out, const oid& rhs);
 
     const char* bytes() const;
 
    private:
-    friend int oid_compare(const oid& lhs, const oid& rhs);
+    friend BSONCXX_API int oid_compare(const oid& lhs, const oid& rhs);
 
     bool _is_valid;
     char _bytes[12];

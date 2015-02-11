@@ -24,20 +24,23 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
-enum class BSONCXX_API type : std::uint8_t {
+// Note: GCC complains unless visibility attributes are in this position
+// when declaring enum classes.
+// See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=43407
+enum class type : std::uint8_t BSONCXX_API {
 #define BSONCXX_ENUM(name, val) k_##name = val,
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 };
 
-enum class BSONCXX_API binary_sub_type : std::uint8_t {
+enum class binary_sub_type : std::uint8_t BSONCXX_API {
 #define BSONCXX_ENUM(name, val) k_##name = val,
 #include <bsoncxx/enums/binary_sub_type.hpp>
 #undef BSONCXX_ENUM
 };
 
-std::string BSONCXX_API to_string(type rhs);
-std::string BSONCXX_API to_string(binary_sub_type rhs);
+BSONCXX_API std::string to_string(type rhs);
+BSONCXX_API std::string to_string(binary_sub_type rhs);
 
 namespace types {
 
@@ -199,7 +202,7 @@ struct BSONCXX_API b_maxkey {
     static constexpr auto type_id = type::k_maxkey;
 };
 
-#define BSONCXX_ENUM(name, val) std::ostream& BSONCXX_API operator<<(std::ostream& out, const b_##name& rhs);
+#define BSONCXX_ENUM(name, val) BSONCXX_API std::ostream& operator<<(std::ostream& out, const b_##name& rhs);
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
