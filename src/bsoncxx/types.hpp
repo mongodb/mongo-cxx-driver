@@ -24,16 +24,17 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
+// TODO(amidvidy): figure out if enum classes need visibility attributes.
 // Note: GCC complains unless visibility attributes are in this position
 // when declaring enum classes.
 // See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=43407
-enum class type : std::uint8_t BSONCXX_API {
+enum class type : std::uint8_t {
 #define BSONCXX_ENUM(name, val) k_##name = val,
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 };
 
-enum class binary_sub_type : std::uint8_t BSONCXX_API {
+enum class binary_sub_type : std::uint8_t {
 #define BSONCXX_ENUM(name, val) k_##name = val,
 #include <bsoncxx/enums/binary_sub_type.hpp>
 #undef BSONCXX_ENUM
