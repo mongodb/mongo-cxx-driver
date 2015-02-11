@@ -26,14 +26,50 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace array {
 
+///
+/// A read-only BSON array that owns its underlying buffer. When a array::value goes
+/// out of scope, the underlying buffer is freed. Generally this class should be used
+/// sparingly; array::view should be used instead wherever possible.
+///
 class BSONCXX_API value {
 
    public:
     using deleter_type = void(*)(std::uint8_t*);
     using unique_ptr_type = std::unique_ptr<uint8_t, deleter_type>;
 
+    ///
+    /// Constructs a value from a buffer.
+    /// This constructor transfers ownership of the buffer to the resulting
+    /// value. A user-provided deleter is used to destroy the buffer.
+    ///
+    /// @param data
+    ///   A pointer to a buffer containing a valid BSON array.
+    /// @param length
+    ///   The length of the document.
+    /// @param dtor
+    ///   A user provided deleter.
+    ///
     value(std::uint8_t* data, std::size_t length, deleter_type dtor);
+
+    ///
+    /// Constructs a value from a std::unique_ptr to a buffer. The ownership
+    /// of the buffer is transferred to the resulting value.
+    ///
+    /// @param ptr
+    ///   A pointer to a buffer containing a valid BSON array.
+    /// @param length
+    ///   The length of the document.
+    ///
     value(unique_ptr_type ptr, std::size_t length);
+
+    ///
+    /// Constructs a value from a view of an array. The data referenced
+    /// by the array::view will be copied into a new buffer managed by the
+    /// constructed value.
+    ///
+    /// @param view
+    ///   A view of another array to copy.
+    ///
     explicit value(array::view view);
 
     value(const value&);
@@ -42,9 +78,19 @@ class BSONCXX_API value {
     value(value&&) = default;
     value& operator=(value&&) = default;
 
+    ///
+    /// Get a view over the document owned by this value.
+    ///
     inline array::view view() const noexcept;
     inline operator array::view() const noexcept;
 
+    ///
+    /// Transfer ownership of the underlying buffer to the caller.
+    /// After calling release() it is illegal to call any methods
+    /// on this class, unless it is subsequently moved into.
+    ///
+    /// @return A std::unique_ptr with ownership of the buffer.
+    ///
     unique_ptr_type release();
 
    private:

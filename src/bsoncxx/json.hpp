@@ -216,6 +216,14 @@ class json_visitor {
     }
 };
 
+///
+/// Converts a BSON document to a JSON string.
+///
+/// @param view
+///   A valid BSON document.
+///
+/// @returns A JSON string.
+///
 inline std::string to_json(document::view view) {
     std::stringstream ss;
 
@@ -225,6 +233,15 @@ inline std::string to_json(document::view view) {
     return ss.str();
 }
 
+///
+/// Converts an element (key-value pair) to a JSON key-value pair.
+/// This is not actually a valid JSON document, but it can be useful for debugging.
+///
+/// @param element
+///   A BSON element.
+///
+/// @returns A JSON key-value pair.
+///
 inline std::string to_json(document::element element) {
     std::stringstream ss;
 
@@ -243,6 +260,15 @@ inline std::string to_json(document::element element) {
     return ss.str();
 }
 
+///
+/// Converts a BSON value to its JSON string representation.
+/// This is not actually a valid JSON document, but it can be useful for debugging.
+///
+/// @param element
+///   A BSON element.
+///
+/// @returns A JSON value.
+///
 inline std::string to_json(types::value value) {
     std::stringstream ss;
 

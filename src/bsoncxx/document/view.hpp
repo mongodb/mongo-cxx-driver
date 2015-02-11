@@ -30,27 +30,96 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
+///
+/// A read-only, non-owning view of a BSON document.
+///
 class BSONCXX_API view {
 
    public:
     class iterator;
     class const_iterator;
 
+    ///
+    /// @returns A const_iterator to the first element of the document.
+    ///
     const_iterator cbegin() const;
+
+    ///
+    /// @returns A const_iterator to the past-the-end element of the document.
+    ///
     const_iterator cend() const;
 
+    ///
+    /// @returns An iterator to the first element of the document.
+    ///
     iterator begin() const;
+
+    ///
+    /// @returns An iterator to the past-the-end element of the document.
+    ///
     iterator end() const;
 
-    // TODO switch to stdx::string_view
+    ///
+    /// Finds the first element of the document with the provided key. If there is
+    /// no such element, the past-the-end iterator will be returned. The runtime of
+    /// find() is linear in the length of the document. This method only searches
+    /// the top-level document, and will not recurse to any subdocuments.
+    ///
+    /// @remark In BSON, keys are not required to be unique. If there are multiple
+    /// elements with a matching key in the document, the first matching element from
+    /// the start will be returned.
+    ///
+    /// @param key
+    ///   The key to search for.
+    ///
+    /// @return An iterator to the matching element, if found, or the past-the-end iterator.
+    ///
     iterator find(stdx::string_view key) const;
+
+    ///
+    /// Finds the first element of the document with the provided key. If there is no
+    /// such element, the invalid document::element will be returned. The runtime of operator[]
+    /// is linear in the length of the document.
+    ///
+    /// @param key
+    ///   The key to search for.
+    ///
+    /// @return The matching element, if found, or the invalid element.
+    ///
     element operator[](stdx::string_view key) const;
 
+    ///
+    /// Default constructs a view. The resulting view will be initialized to point at
+    /// an empty BSON document.
+    ///
     view();
 
+    ///
+    /// Constructs a view from a buffer. The caller is responsible for ensuring that
+    /// the lifetime of the resulting view is a subset of the buffer's.
+    ///
+    /// @param data
+    ///   A buffer containing a valid BSON document.
+    /// @param length
+    ///   The size of the buffer, in bytes.
+    ///
     view(const std::uint8_t* data, std::size_t length);
 
+    ///
+    /// Access the raw bytes of the underlying document.
+    ///
+    /// @return A (non-owning) pointer to the view's buffer.
+    ///
     const std::uint8_t* data() const;
+
+    ///
+    /// Gets the length of the underlying buffer.
+    ///
+    /// @remark This is not the number of elements in the document.
+    /// To compute the number of elements, use std::distance.
+    ///
+    /// @return The length of the document, in bytes.
+    ///
     std::size_t length() const;
 
     friend BSONCXX_API bool operator==(view, view);
