@@ -61,7 +61,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
-#include "driver/config/postlude.hpp"
+#include <driver/config/postlude.hpp>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### Class Declarations
