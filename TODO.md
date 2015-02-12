@@ -1,3 +1,5 @@
+# TODO
+
 ## Systemic Issues
  - how do we integrate mongoc's error handling with c++'s error handling facilities
  - how do we integrate mongoc's memory management with c++'s memory management facilities
@@ -7,7 +9,7 @@
  - noexcept pass where possible
 
 ## Build
- - find_libmongocxx cmake helper thing
+ - `find_libmongocxx` cmake helper thing
  - figure out how to generate pc files (package config)
  - understand libc++ inline macros and determine if we need to use them
  - inline visibility macros -- do we want/need? how do we define them?

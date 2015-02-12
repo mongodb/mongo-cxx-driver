@@ -1,5 +1,7 @@
+# Contributing Guidelines
+
 ### Lifecycle Methods
-```
+
  - default-or-argument-bearing 'user' constructors
 
  - declaration-or-deletion-of-copy-contructor
@@ -9,24 +11,24 @@
  - declaration-or-deletion-of-move-assignment-operator
 
  - declaration-of-dtor
-```
 
 ### Headers
 
  - License
  - Include Guard (`#pragma once`)
  - Header Prelude
- - System Headers `<>` (alphabetical order)
- - Driver Headers `""` (alphabetical order)
- - Open Namespace mongo
- - Open Namespace driver
+ - System Headers `<vector>` (alphabetical order)
+ - Driver Headers `<path/to/header.hpp>` (alphabetical order)
+ - Open Namespace mongocxx 
+ - `MONGOCXX_INLINE_NAMESPACE_BEGIN`
  -    Code
- - Close Namespace driver
- - Close Namespace mongo
+ - `MONGOCXX_INLINE_NAMESPACE_END`
+ - Close Namespace mongocxx
  - Header Postlude
 
 Example:
-```cpp
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
 // Copyright 2014 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,11 +45,11 @@ Example:
 
 #pragma once
 
-#include "driver/config/prelude.hpp"
+#include <driver/config/prelude.hpp>
 
 #include <vector>
 
-#include "driver/blah.hpp"
+#include <driver/blah.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -60,7 +62,7 @@ MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
 #include "driver/config/postlude.hpp"
-```
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### Class Declarations
 
@@ -76,7 +78,8 @@ Guidelines:
    - Private Variables
 
 Example:
-```cpp
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
 class foo {
 
     public:
@@ -94,7 +97,7 @@ class foo {
       std::unique_ptr<impl> _impl;
 
 };
-```
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### Inlines
  - Define outside of class declaration
