@@ -24,7 +24,6 @@
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/array/element.hpp>
-#include <bsoncxx/string_or_literal.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

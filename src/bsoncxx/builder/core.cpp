@@ -17,6 +17,7 @@
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/private/itoa.hpp>
 #include <bsoncxx/private/stack.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
 
@@ -110,21 +111,27 @@ class core::impl {
         _stack.pop_back();
     }
 
-    const string_or_literal& next_key() {
+    stdx::string_view next_key() {
         if (is_array()) {
             _itoa_key = _stack.empty() ? _n++ : _stack.back().n++;
-            _user_key = string_or_literal{_itoa_key.c_str(), _itoa_key.length()};
+            _user_key_view = stdx::string_view{_itoa_key.c_str(), _itoa_key.length()};
         } else if (!_has_user_key) {
             throw std::runtime_error("no user specified key and not in an array context");
         }
 
         _has_user_key = false;
 
-        return _user_key;
+        return _user_key_view;
     }
 
-    void push_key(string_or_literal sol) {
-        _user_key = std::move(sol);
+    void push_key(stdx::string_view str) {
+        _user_key_view = std::move(str);
+        _has_user_key = true;
+    }
+
+    void push_key(std::string str) {
+        _user_key_owned = std::move(str);
+        _user_key_view = _user_key_owned;
         _has_user_key = true;
     }
 
@@ -178,7 +185,9 @@ class core::impl {
     bson_t _root;
 
     itoa _itoa_key;
-    string_or_literal _user_key;
+
+    stdx::string_view _user_key_view;
+    std::string _user_key_owned;
 
     bool _has_user_key;
 };
@@ -189,14 +198,14 @@ core::core(core&&) = default;
 core& core::operator=(core&&) = default;
 core::~core() = default;
 
-void core::key_literal(const char *key, std::size_t len) {
+void core::key_view(stdx::string_view key) {
     if (_impl->is_array()) {
         throw(std::runtime_error("in subarray"));
     }
-    _impl->push_key(string_or_literal{key, len});
+    _impl->push_key(std::move(key));
 }
 
-void core::key_owning(std::string key) {
+void core::key_owned(std::string key) {
     if (_impl->is_array()) {
         throw(std::runtime_error("in subarray"));
     }
@@ -204,144 +213,148 @@ void core::key_owning(std::string key) {
 }
 
 void core::append(const types::b_double& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    bson_append_double(_impl->back(), key.c_str(), key.length(), value.value);
+    bson_append_double(_impl->back(), key.data(), key.length(), value.value);
 }
 
 void core::append(const types::b_utf8& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    bson_append_utf8(_impl->back(), key.c_str(), key.length(), value.value.c_str(),
+    bson_append_utf8(_impl->back(), key.data(), key.length(), value.value.data(),
                      value.value.length());
 }
 
 void core::append(const types::b_document& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
     bson_t bson;
     bson_init_static(&bson, value.value.data(), value.value.length());
 
-    bson_append_document(_impl->back(), key.c_str(), key.length(), &bson);
+    bson_append_document(_impl->back(), key.data(), key.length(), &bson);
 }
 
 void core::append(const types::b_array& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
     bson_t bson;
     bson_init_static(&bson, value.value.data(), value.value.length());
 
-    bson_append_array(_impl->back(), key.c_str(), key.length(), &bson);
+    bson_append_array(_impl->back(), key.data(), key.length(), &bson);
 }
 
 void core::append(const types::b_binary& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    bson_append_binary(_impl->back(), key.c_str(), key.length(),
+    bson_append_binary(_impl->back(), key.data(), key.length(),
                        static_cast<bson_subtype_t>(value.sub_type), value.bytes, value.size);
 }
 
 void core::append(const types::b_undefined&) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    bson_append_undefined(_impl->back(), key.c_str(), key.length());
+    bson_append_undefined(_impl->back(), key.data(), key.length());
 }
 
 void core::append(const types::b_oid& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
     bson_oid_t oid;
     std::memcpy(&oid.bytes, value.value.bytes(), sizeof(oid.bytes));
 
-    bson_append_oid(_impl->back(), key.c_str(), key.length(), &oid);
+    bson_append_oid(_impl->back(), key.data(), key.length(), &oid);
 }
 
 void core::append(const types::b_bool& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    bson_append_bool(_impl->back(), key.c_str(), key.length(), value.value);
+    bson_append_bool(_impl->back(), key.data(), key.length(), value.value);
 }
 
 void core::append(const types::b_date& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    bson_append_date_time(_impl->back(), key.c_str(), key.length(), value.value);
+    bson_append_date_time(_impl->back(), key.data(), key.length(), value.value);
 }
 
 void core::append(const types::b_null&) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    bson_append_null(_impl->back(), key.c_str(), key.length());
+    bson_append_null(_impl->back(), key.data(), key.length());
 }
 
 void core::append(const types::b_regex& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    bson_append_regex(_impl->back(), key.c_str(), key.length(), value.regex.c_str(),
-                      value.options.c_str());
+    bson_append_regex(_impl->back(), key.data(), key.length(), value.regex.data(),
+                      value.options.data());
 }
 
 void core::append(const types::b_dbpointer& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
     bson_oid_t oid;
     std::memcpy(&oid.bytes, value.value.bytes(), sizeof(oid.bytes));
 
-    bson_append_dbpointer(_impl->back(), key.c_str(), key.length(), value.collection.c_str(), &oid);
+    bson_append_dbpointer(_impl->back(), key.data(), key.length(), value.collection.data(), &oid);
 }
 
 void core::append(const types::b_code& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    bson_append_code(_impl->back(), key.c_str(), key.length(), value.code.c_str());
+    bson_append_code(_impl->back(), key.data(), key.length(), value.code.data());
 }
 
 void core::append(const types::b_symbol& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    bson_append_symbol(_impl->back(), key.c_str(), key.length(), value.symbol.c_str(),
+    bson_append_symbol(_impl->back(), key.data(), key.length(), value.symbol.data(),
                        value.symbol.length());
 }
 
 void core::append(const types::b_codewscope& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
     bson_t bson;
     bson_init_static(&bson, value.scope.data(), value.scope.length());
 
-    bson_append_code_with_scope(_impl->back(), key.c_str(), key.length(), value.code.c_str(),
+    bson_append_code_with_scope(_impl->back(), key.data(), key.length(), value.code.data(),
                                 &bson);
 }
 
 void core::append(const types::b_int32& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    bson_append_int32(_impl->back(), key.c_str(), key.length(), value.value);
+    bson_append_int32(_impl->back(), key.data(), key.length(), value.value);
 }
 
 void core::append(const types::b_timestamp& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    bson_append_timestamp(_impl->back(), key.c_str(), key.length(), value.increment,
+    bson_append_timestamp(_impl->back(), key.data(), key.length(), value.increment,
                           value.timestamp);
 }
 
 void core::append(const types::b_int64& value) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    bson_append_int64(_impl->back(), key.c_str(), key.length(), value.value);
+    bson_append_int64(_impl->back(), key.data(), key.length(), value.value);
 }
 
 void core::append(const types::b_minkey&) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    bson_append_minkey(_impl->back(), key.c_str(), key.length());
+    bson_append_minkey(_impl->back(), key.data(), key.length());
 }
 
 void core::append(const types::b_maxkey&) {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    bson_append_maxkey(_impl->back(), key.c_str(), key.length());
+    bson_append_maxkey(_impl->back(), key.data(), key.length());
 }
 
 void core::append(std::string str) {
+    append(types::b_utf8{std::move(str)});
+}
+
+void core::append(stdx::string_view str) {
     append(types::b_utf8{std::move(str)});
 }
 
@@ -366,15 +379,15 @@ void core::append(bool value) {
 }
 
 void core::open_document() {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    _impl->push_back_document(key.c_str(), key.length());
+    _impl->push_back_document(key.data(), key.length());
 }
 
 void core::open_array() {
-    const string_or_literal& key = _impl->next_key();
+    stdx::string_view key = _impl->next_key();
 
-    _impl->push_back_array(key.c_str(), key.length());
+    _impl->push_back_array(key.data(), key.length());
 }
 
 void core::concatenate(const bsoncxx::document::view& view) {
@@ -386,9 +399,9 @@ void core::concatenate(const bsoncxx::document::view& view) {
         bson_iter_init(&iter, &other);
 
         while (bson_iter_next(&iter)) {
-            const string_or_literal& key = _impl->next_key();
+            stdx::string_view key = _impl->next_key();
 
-            bson_append_iter(_impl->back(), key.c_str(), key.length(), &iter);
+            bson_append_iter(_impl->back(), key.data(), key.length(), &iter);
         }
 
     } else {

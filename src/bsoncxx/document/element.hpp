@@ -22,7 +22,7 @@
 #include <iterator>
 #include <type_traits>
 
-#include <bsoncxx/string_or_literal.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -68,7 +68,7 @@ namespace document {
 
         bsoncxx::type type() const;
 
-        string_or_literal key() const;
+        stdx::string_view key() const;
 
         // TODO figure out a better exception than std::runtime_error
         types::b_double get_double() const;

@@ -17,6 +17,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 #include <bsoncxx/builder/core.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -47,11 +48,20 @@ class BSONCXX_API sub_document {
     }
 
     ///
-    /// Appends a basic::kvp
+    /// Appends a basic::kvp where the key is a non-owning string view.
     ///
     template <typename T>
-    void append(T&& t) {
-        _core->key_owning(std::get<0>(t));
+    void append(std::tuple<stdx::string_view, T>&& t) {
+        _core->key_view(std::get<0>(t));
+        impl::value_append(_core, std::forward<T>(std::get<1>(t)));
+    }
+
+    ///
+    /// Appends a basic::kvp where the key is an owning STL string.
+    ///
+    template <typename T>
+        void append(std::tuple<std::string, T>&& t) {
+        _core->key_owned(std::get<0>(t));
         impl::value_append(_core, std::forward<T>(std::get<1>(t)));
     }
 
@@ -60,7 +70,7 @@ class BSONCXX_API sub_document {
     ///
     template <std::size_t n, typename T>
     void append(std::tuple<const char (&)[n], T>&& t) {
-        _core->key_literal(std::get<0>(t), n - 1);
+        _core->key_view(stdx::string_view{std::get<0>(t), n - 1});
         impl::value_append(_core, std::forward<T>(std::get<1>(t)));
     }
 

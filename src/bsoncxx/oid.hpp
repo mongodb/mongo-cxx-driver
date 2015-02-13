@@ -18,11 +18,12 @@
 
 #include <iostream>
 #include <ctime>
+#include <string>
+
+#include <bsoncxx/stdx/string_view.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
-
-class string_or_literal;
 
 ///
 /// Represents a MongoDB ObjectId. As this BSON type is used within the MongoDB server
@@ -65,17 +66,17 @@ class BSONCXX_API oid {
     ///
     /// Constructs and oid an initializes it from the provided hex string.
     ///
-    /// @param sol
+    /// @param str
     ///   A string_view of a hexadecimal representation of a valid ObjectId.
     ///
-    explicit oid(const string_or_literal& sol);
+    explicit oid(stdx::string_view str);
 
     ///
     /// Converts this oid to a hexadecimal string.
     ///
     /// @return A hexadecimal string representation of this ObjectId.
     ///
-    string_or_literal to_string() const;
+    std::string to_string() const;
 
     friend BSONCXX_API bool operator<(const oid& lhs, const oid& rhs);
     friend BSONCXX_API bool operator>(const oid& lhs, const oid& rhs);

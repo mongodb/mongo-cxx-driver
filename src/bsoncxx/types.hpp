@@ -19,9 +19,9 @@
 #include <cstring>
 
 #include <bsoncxx/array/view.hpp>
-#include <bsoncxx/string_or_literal.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/oid.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -76,9 +76,9 @@ struct BSONCXX_API b_utf8 {
     explicit b_utf8(T&& value)
         : value(std::forward<T>(value)) {}
 
-    string_or_literal value;
+    stdx::string_view value;
 
-    operator string_or_literal() { return value; }
+    operator stdx::string_view() { return value; }
 };
 
 inline bool operator==(const b_utf8& lhs, const b_utf8& rhs) {
@@ -217,8 +217,8 @@ struct BSONCXX_API b_regex {
     explicit b_regex(T&& regex, U&& options)
         : regex(std::forward<T>(regex)), options(std::forward<U>(options)) {}
 
-    string_or_literal regex;
-    string_or_literal options;
+    stdx::string_view regex;
+    stdx::string_view options;
 };
 
 inline bool operator==(const b_regex& lhs, const b_regex& rhs) {
@@ -234,7 +234,7 @@ inline bool operator==(const b_regex& lhs, const b_regex& rhs) {
 struct BSONCXX_API b_dbpointer {
     static constexpr auto type_id = type::k_dbpointer;
 
-    string_or_literal collection;
+    stdx::string_view collection;
     oid value;
 };
 
@@ -256,9 +256,9 @@ struct BSONCXX_API b_code {
     explicit b_code(T&& code)
         : code(std::forward<T>(code)) {}
 
-    string_or_literal code;
+    stdx::string_view code;
 
-    operator string_or_literal() { return code; }
+    operator stdx::string_view() { return code; }
 };
 
 inline bool operator==(const b_code& lhs, const b_code& rhs) {
@@ -279,9 +279,9 @@ struct BSONCXX_API b_symbol {
     explicit b_symbol(T&& symbol)
         : symbol(std::forward<T>(symbol)) {}
 
-    string_or_literal symbol;
+    stdx::string_view symbol;
 
-    operator string_or_literal() { return symbol; }
+    operator stdx::string_view() { return symbol; }
 };
 
 inline bool operator==(const b_symbol& lhs, const b_symbol& rhs) {
@@ -302,7 +302,7 @@ struct BSONCXX_API b_codewscope {
     explicit b_codewscope(T&& code, U&& scope)
         : code(std::forward<T>(code)), scope(std::forward<U>(scope)) {}
 
-    string_or_literal code;
+    stdx::string_view code;
     document::view scope;
 };
 

@@ -19,6 +19,7 @@
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/builder/stream/closed_context.hpp>
 #include <bsoncxx/builder/stream/value_context.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/util/functor.hpp>
 
 namespace bsoncxx {
@@ -36,12 +37,17 @@ class key_context {
 
     template <std::size_t n>
     value_context<key_context> operator<<(const char (&v)[n]) {
-        _core->key_literal(v, n - 1);
+        _core->key_view(stdx::string_view{v, n - 1});
         return value_context<key_context>(_core);
     }
 
     value_context<key_context> operator<<(std::string str) {
-        _core->key_owning(std::move(str));
+        _core->key_owned(std::move(str));
+        return value_context<key_context>(_core);
+    }
+
+    value_context<key_context> operator<<(stdx::string_view str) {
+        _core->key_view(std::move(str));
         return value_context<key_context>(_core);
     }
 

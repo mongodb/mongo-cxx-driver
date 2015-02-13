@@ -56,7 +56,7 @@ bsoncxx::type element::type() const {
     return static_cast<bsoncxx::type>(bson_iter_type(&iter));
 }
 
-string_or_literal element::key() const {
+stdx::string_view element::key() const {
     if (raw == nullptr) {
         throw std::runtime_error("unset element");
     }
@@ -65,7 +65,7 @@ string_or_literal element::key() const {
 
     const char* key = bson_iter_key(&iter);
 
-    return string_or_literal{key, std::strlen(key)};
+    return stdx::string_view{key};
 }
 
 types::b_binary element::get_binary() const {
@@ -90,7 +90,7 @@ types::b_utf8 element::get_utf8() const {
     uint32_t len;
     const char* val = bson_iter_utf8(&iter, &len);
 
-    return types::b_utf8{string_or_literal{val, len}};
+    return types::b_utf8{stdx::string_view{val, len}};
 }
 
 types::b_double element::get_double() const {
@@ -144,8 +144,8 @@ types::b_regex element::get_regex() const {
     const char* options;
     const char* regex = bson_iter_regex(&iter, &options);
 
-    return types::b_regex{string_or_literal{regex, std::strlen(regex)},
-                          string_or_literal{options, std::strlen(options)}};
+    return types::b_regex{stdx::string_view{regex},
+                          stdx::string_view{options}};
 }
 
 types::b_dbpointer element::get_dbpointer() const {
@@ -159,7 +159,7 @@ types::b_dbpointer element::get_dbpointer() const {
 
     oid v{reinterpret_cast<const char*>(boid->bytes), sizeof(boid->bytes)};
 
-    return types::b_dbpointer{string_or_literal{collection, collection_len}, v};
+    return types::b_dbpointer{stdx::string_view{collection, collection_len}, v};
 }
 
 types::b_code element::get_code() const {
@@ -169,7 +169,7 @@ types::b_code element::get_code() const {
     uint32_t len;
     const char* code = bson_iter_code(&iter, &len);
 
-    return types::b_code{string_or_literal{code, len}};
+    return types::b_code{stdx::string_view{code, len}};
 }
 
 types::b_symbol element::get_symbol() const {
@@ -179,7 +179,7 @@ types::b_symbol element::get_symbol() const {
     uint32_t len;
     const char* symbol = bson_iter_symbol(&iter, &len);
 
-    return types::b_symbol{string_or_literal{symbol, len}};
+    return types::b_symbol{stdx::string_view{symbol, len}};
 }
 
 types::b_codewscope element::get_codewscope() const {
@@ -192,7 +192,7 @@ types::b_codewscope element::get_codewscope() const {
     const char* code = bson_iter_codewscope(&iter, &code_len, &scope_len, &scope_ptr);
     document::view view(scope_ptr, scope_len);
 
-    return types::b_codewscope{string_or_literal{code, code_len}, view};
+    return types::b_codewscope{stdx::string_view{code, code_len}, view};
 }
 
 types::b_timestamp element::get_timestamp() const {

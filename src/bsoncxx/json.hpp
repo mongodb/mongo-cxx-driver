@@ -23,6 +23,7 @@
 #include <vector>
 
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
 
@@ -36,11 +37,11 @@ class json_visitor {
     json_visitor(std::ostream& out, bool is_array, std::size_t padding)
         : out(out), stack({is_array}), padding(padding) {}
 
-    void visit_key(const string_or_literal& value) {
+    void visit_key(stdx::string_view value) {
         pad();
 
         if (!stack.back()) {
-            out << "\"" << value.c_str() << "\""
+            out << "\"" << value.data() << "\""
                 << " : ";
         }
     }
@@ -49,7 +50,7 @@ class json_visitor {
 
     void visit_value(const types::b_double& value) { out << value.value; }
 
-    void visit_value(const types::b_utf8& value) { out << "\"" << value.value.c_str() << "\""; }
+    void visit_value(const types::b_utf8& value) { out << "\"" << value.value.data() << "\""; }
 
     void visit_value(const types::b_document& value) {
         out << "{" << std::endl;
@@ -119,9 +120,9 @@ class json_visitor {
 
         out << "{" << std::endl;
         pad(1);
-        out << "\"$regex\" : \"" << value.regex.c_str() << "\"," << std::endl;
+        out << "\"$regex\" : \"" << value.regex.data() << "\"," << std::endl;
         pad();
-        out << "\"$options\" : \"" << value.options.c_str() << "\"" << std::endl;
+        out << "\"$options\" : \"" << value.options.data() << "\"" << std::endl;
         pad();
         out << "}";
     }
@@ -130,23 +131,23 @@ class json_visitor {
 
         out << "{" << std::endl;
         pad(1);
-        out << "\"$ref\" : \"" << value.collection.c_str() << "\"";
+        out << "\"$ref\" : \"" << value.collection.data() << "\"";
 
         if (value.value) {
             out << "," << std::endl;
             pad();
-            out << "\"$id\" : \"" << value.value.to_string().c_str() << "\"" << std::endl;
+            out << "\"$id\" : \"" << value.value.to_string().data() << "\"" << std::endl;
         }
 
         pad();
         out << "}";
     }
 
-    void visit_value(const types::b_code& value) { out << value.code.c_str(); }
+    void visit_value(const types::b_code& value) { out << value.code.data(); }
 
-    void visit_value(const types::b_symbol& value) { out << value.symbol.c_str(); }
+    void visit_value(const types::b_symbol& value) { out << value.symbol.data(); }
 
-    void visit_value(const types::b_codewscope& value) { out << value.code.c_str(); }
+    void visit_value(const types::b_codewscope& value) { out << value.code.data(); }
 
     void visit_value(const types::b_int32& value) { out << value.value; }
 

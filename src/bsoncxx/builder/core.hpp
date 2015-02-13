@@ -57,22 +57,28 @@ class BSONCXX_API core {
     ~core();
 
     ///
-    /// Appends a key passed as c-style string.
+    /// Appends a key passed as a non-owning stdx::string_view.
+    ///
+    /// @remark
+    ///   Use key_owned() unless you know what you are doing.
+    ///
+    /// @warning
+    ///   The caller must ensure that the lifetime of the backing
+    ///   string extends until the next value is appended.
     ///
     /// @param key
     ///   A null-terminated array of characters.
-    /// @param len
-    ///   The length of the key.
     ///
-    void key_literal(const char *key, std::size_t len);
+    void key_view(stdx::string_view key);
 
     ///
     /// Appends a key passed as a STL string.
+    /// Transfers ownership of the key to this class.
     ///
     /// @param key
     ///   A string key.
     ///
-    void key_owning(std::string key);
+    void key_owned(std::string key);
 
     ///
     /// Opens a sub-document within this BSON datum.
@@ -220,6 +226,11 @@ class BSONCXX_API core {
     /// Append a STL string as a BSON UTF-8 string.
     ///
     void append(std::string str);
+
+    ///
+    /// Append a string view as a BSON UTF-8 string.
+    ///
+    void append(stdx::string_view str);
 
     ///
     /// Append a native boolean as a BSON boolean.

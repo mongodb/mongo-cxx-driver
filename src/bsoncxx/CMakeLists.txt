@@ -36,7 +36,6 @@ set(bsoncxx_sources
     document/view.cpp
     oid.cpp
     private/itoa.cpp
-    string_or_literal.cpp
     types.cpp
     types/value.cpp
 )

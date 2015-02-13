@@ -9,6 +9,7 @@
 #include <bsoncxx/builder/stream/array.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/types.hpp>
 
 void bson_eq_stream(const bson_t* bson, const bsoncxx::builder::stream::document& builder) {
     using namespace bsoncxx;
@@ -583,10 +584,33 @@ TEST_CASE("array builder finalizes", "[bsoncxx::builder::stream]") {
     viewable_eq_viewable(expected, value);
 }
 
+TEST_CASE("document core builder ownership", "[bsoncxx::builder::core]") {
+    builder::core b(false);
+
+    SECTION("when passing a std::string key, ownership transfers to the instance") {
+        {
+            std::string key{"falafel"};
+            b.key_owned(key);
+        }
+        b.append(types::b_int32{1});
+        auto doc = b.view_document();
+        auto ele = doc["falafel"];
+        REQUIRE(ele.type() == type::k_int32);
+        REQUIRE(ele.get_value() == types::b_int32{1});
+    }
+
+    SECTION("when passing a stdx::string_view, ownership handled by caller") {
+        std::string key{"sabich"};
+        stdx::string_view key_view{key};
+        b.key_view(key_view);
+        b.append(1);
+    }
+}
+
 TEST_CASE("document core builder throws on insufficient stack", "[bsoncxx::builder::core]") {
     builder::core b(false);
 
-    b.key_literal("hi", 2);
+    b.key_view("hi");
     REQUIRE_THROWS(b.close_document());
 }
 
@@ -599,7 +623,7 @@ TEST_CASE("array core builder throws on insufficient stack", "[bsoncxx::builder:
 TEST_CASE("core builder open/close works", "[bsoncxx::builder::core]") {
     builder::core b(false);
 
-    b.key_literal("hi", 2);
+    b.key_view("hi");
 
     SECTION("opening and closing a document works") {
         b.open_document();

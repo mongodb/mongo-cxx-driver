@@ -4,7 +4,6 @@ include_directories(
 
 add_executable(test_bson
     bson_builder.cpp
-    bson_string_or_literal.cpp
     bson_util_itoa.cpp
     new_tests.cpp
 )

@@ -17,7 +17,6 @@
 #include <cstring>
 
 #include <bson.h>
-#include <bsoncxx/string_or_literal.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -32,10 +31,10 @@ oid::oid(init_tag_t) : _is_valid(true) {
     std::memcpy(_bytes, oid.bytes, sizeof(oid.bytes));
 }
 
-oid::oid(const string_or_literal& sol) : _is_valid(bson_oid_is_valid(sol.c_str(), sol.length())) {
+oid::oid(stdx::string_view str) : _is_valid(bson_oid_is_valid(str.data(), str.length())) {
     if (_is_valid) {
         bson_oid_t oid;
-        bson_oid_init_from_string(&oid, sol.c_str());
+        bson_oid_init_from_string(&oid, str.data());
     }
 }
 
@@ -45,14 +44,14 @@ oid::oid(const char* bytes, std::size_t len) : _is_valid(len == 12) {
     }
 }
 
-string_or_literal oid::to_string() const {
+std::string oid::to_string() const {
     bson_oid_t oid;
     std::memcpy(oid.bytes, _bytes, sizeof(oid.bytes));
     char str[25];
 
     bson_oid_to_string(&oid, str);
 
-    return string_or_literal(str);
+    return std::string(str);
 }
 
 oid::operator bool() const {

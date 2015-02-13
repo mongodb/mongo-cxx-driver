@@ -23,7 +23,6 @@
 #include <type_traits>
 
 #include <bsoncxx/document/element.hpp>
-#include <bsoncxx/string_or_literal.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
 namespace bsoncxx {
