@@ -24,6 +24,9 @@ class core;
 
 namespace stream {
 
+    ///
+    /// An internal struct of builder::stream. Users should not use this directly.
+    ///
     struct closed_context {
         closed_context(core*) {}
     };

@@ -24,20 +24,45 @@ namespace builder {
 namespace stream {
 
 struct BSONCXX_API open_document_type { constexpr open_document_type() {} };
+
+///
+/// A stream manipulator to open a subdocument.
+///
 constexpr open_document_type open_document;
 
 struct BSONCXX_API close_document_type { constexpr close_document_type() {} };
+
+///
+/// A stream manipulator to close a subdocument.
+///
 constexpr close_document_type close_document;
 
 struct BSONCXX_API open_array_type { constexpr open_array_type() {} };
+
+///
+/// A stream manipulator to open a subarray.
+///
 constexpr open_array_type open_array;
 
 struct BSONCXX_API close_array_type { constexpr close_array_type() {} };
+
+///
+/// A stream manipulator to close a subarray.
+///
 constexpr close_array_type close_array;
 
 struct BSONCXX_API finalize_type { constexpr finalize_type() {} };
+
+///
+/// A stream manipulator to finalize a document. When finalize is passed,
+/// the expression will evaluate to an owning document::value or array::value.
+///
 constexpr finalize_type finalize;
 
+///
+/// Container to concatenate a document. Use it by constructing an instance with the
+/// document to be concatenated, and pass it into the stream.
+///
 struct BSONCXX_API concatenate {
     document::view view;
 

@@ -30,6 +30,10 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 // Note: GCC complains unless visibility attributes are in this position
 // when declaring enum classes.
 // See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=43407
+
+///
+/// An enumeration of each BSON type.
+///
 enum class type : std::uint8_t {
 #define BSONCXX_ENUM(name, val) k_##name = val,
 #include <bsoncxx/enums/type.hpp>
@@ -47,6 +51,9 @@ BSONCXX_API std::string to_string(binary_sub_type rhs);
 
 namespace types {
 
+///
+/// A BSON double value.
+///
 struct BSONCXX_API b_double {
     static constexpr auto type_id = type::k_double;
 
@@ -59,6 +66,9 @@ inline bool operator==(const b_double& lhs, const b_double& rhs) {
     return lhs.value == rhs.value;
 }
 
+///
+/// A BSON UTF-8 encoded string value.
+///
 struct BSONCXX_API b_utf8 {
     static constexpr auto type_id = type::k_utf8;
 
@@ -75,6 +85,9 @@ inline bool operator==(const b_utf8& lhs, const b_utf8& rhs) {
     return lhs.value == rhs.value;
 }
 
+///
+/// A BSON document value.
+///
 struct BSONCXX_API b_document {
     static constexpr auto type_id = type::k_document;
 
@@ -87,6 +100,9 @@ inline bool operator==(const b_document& lhs, const b_document& rhs) {
     return lhs.value == rhs.value;
 }
 
+///
+/// A BSON array value.
+///
 struct BSONCXX_API b_array {
     static constexpr auto type_id = type::k_array;
 
@@ -99,6 +115,9 @@ inline bool operator==(const b_array& lhs, const b_array& rhs) {
     return lhs.value == rhs.value;
 }
 
+///
+/// A BSON binary data value.
+///
 struct BSONCXX_API b_binary {
     static constexpr auto type_id = type::k_binary;
 
@@ -111,6 +130,13 @@ inline bool operator==(const b_binary& lhs, const b_binary& rhs) {
     return lhs.sub_type == rhs.sub_type && lhs.size == rhs.size && (std::memcmp(lhs.bytes, rhs.bytes, lhs.size) == 0);
 }
 
+///
+/// A BSON undefined value.
+///
+/// @warning
+///   This BSON type is used internally by the MongoDB server - use by clients
+///   is discouraged.
+///
 struct BSONCXX_API b_undefined {
     static constexpr auto type_id = type::k_undefined;
 };
@@ -119,6 +145,9 @@ inline bool operator==(const b_undefined&, const b_undefined&) {
     return true;
 }
 
+///
+/// A BSON ObjectId value.
+///
 struct BSONCXX_API b_oid {
     static constexpr auto type_id = type::k_oid;
 
@@ -129,6 +158,9 @@ inline bool operator==(const b_oid& lhs, const b_oid& rhs) {
     return lhs.value == rhs.value;
 }
 
+///
+/// A BSON boolean value.
+///
 struct BSONCXX_API b_bool {
     static constexpr auto type_id = type::k_bool;
 
@@ -141,6 +173,9 @@ inline bool operator==(const b_bool& lhs, const b_bool& rhs) {
     return lhs.value == rhs.value;
 }
 
+///
+/// A BSON date value.
+///
 struct BSONCXX_API b_date {
     static constexpr auto type_id = type::k_date;
 
@@ -153,6 +188,13 @@ inline bool operator==(const b_date& lhs, const b_date& rhs) {
     return lhs.value == rhs.value;
 }
 
+///
+/// A BSON null value.
+///
+/// @warning
+///   This BSON type is used internally by the MongoDB server - use by clients
+///   is discouraged.
+///
 struct BSONCXX_API b_null {
     static constexpr auto type_id = type::k_null;
 };
@@ -161,6 +203,13 @@ inline bool operator==(const b_null&, const b_null&) {
     return true;
 }
 
+///
+/// A BSON regex value.
+///
+/// @warning
+///   This BSON type is used internally by the MongoDB server - use by clients
+///   is discouraged.
+///
 struct BSONCXX_API b_regex {
     static constexpr auto type_id = type::k_regex;
 
@@ -176,6 +225,12 @@ inline bool operator==(const b_regex& lhs, const b_regex& rhs) {
     return lhs.regex == rhs.regex && lhs.options == rhs.options;
 }
 
+///
+/// A BSON DBPointer.
+///
+/// @deprecated
+///   A BSON DBPointer (aka DBRef) is still supported but deprecated.
+///
 struct BSONCXX_API b_dbpointer {
     static constexpr auto type_id = type::k_dbpointer;
 
@@ -187,6 +242,13 @@ inline bool operator==(const b_dbpointer& lhs, const b_dbpointer& rhs) {
     return lhs.collection == rhs.collection && lhs.value == rhs.value;
 }
 
+///
+/// The JavaScript code value.
+///
+/// @warning
+///   This BSON type is used internally by the MongoDB server - use by clients
+///   is discouraged.
+///
 struct BSONCXX_API b_code {
     static constexpr auto type_id = type::k_code;
 
@@ -203,6 +265,13 @@ inline bool operator==(const b_code& lhs, const b_code& rhs) {
     return lhs.code == rhs.code;
 }
 
+///
+/// A BSON JavaScript code value.
+///
+/// @warning
+///   This BSON type is used internally by the MongoDB server - use by clients
+///   is discouraged.
+///
 struct BSONCXX_API b_symbol {
     static constexpr auto type_id = type::k_symbol;
 
@@ -219,6 +288,13 @@ inline bool operator==(const b_symbol& lhs, const b_symbol& rhs) {
     return lhs.symbol == rhs.symbol;
 }
 
+///
+/// A BSON JavaScript code with scope value.
+///
+/// @warning
+///   This BSON type is used internally by the MongoDB server - use by clients
+///   is discouraged.
+///
 struct BSONCXX_API b_codewscope {
     static constexpr auto type_id = type::k_codewscope;
 
@@ -234,6 +310,9 @@ inline bool operator==(const b_codewscope& lhs, const b_codewscope& rhs) {
     return lhs.code == rhs.code && lhs.scope == rhs.scope;
 }
 
+///
+/// A BSON signed 32-bit integer value.
+///
 struct BSONCXX_API b_int32 {
     static constexpr auto type_id = type::k_int32;
 
@@ -246,6 +325,13 @@ inline bool operator==(const b_int32& lhs, const b_int32& rhs) {
     return lhs.value == rhs.value;
 }
 
+///
+/// A BSON replication timestamp value.
+///
+/// @warning
+///   This BSON type is used internally by the MongoDB server - use by clients
+///   is discouraged.
+///
 struct BSONCXX_API b_timestamp {
     static constexpr auto type_id = type::k_timestamp;
 
@@ -257,6 +343,9 @@ inline bool operator==(const b_timestamp& lhs, const b_timestamp& rhs) {
     return lhs.increment == rhs.increment && lhs.timestamp == rhs.timestamp;
 }
 
+///
+/// A BSON 64-bit signed integer value.
+///
 struct BSONCXX_API b_int64 {
     static constexpr auto type_id = type::k_int64;
 
@@ -269,6 +358,13 @@ inline bool operator==(const b_int64& lhs, const b_int64& rhs) {
     return lhs.value == rhs.value;
 }
 
+///
+/// A BSON min-key value.
+///
+/// @warning
+///   This BSON type is used internally by the MongoDB server - use by clients
+///   is discouraged.
+///
 struct BSONCXX_API b_minkey {
     static constexpr auto type_id = type::k_minkey;
 };
@@ -277,6 +373,13 @@ inline bool operator==(const b_minkey&, const b_minkey&) {
     return true;
 }
 
+///
+/// A BSON max-key value.
+///
+/// @warning
+///   This BSON type is used internally by the MongoDB server - use by clients
+///   is discouraged.
+///
 struct BSONCXX_API b_maxkey {
     static constexpr auto type_id = type::k_maxkey;
 };

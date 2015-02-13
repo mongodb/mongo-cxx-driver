@@ -27,10 +27,17 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 namespace stream {
 
+    ///
+    /// A streaming interface for constructing
+    /// a BSON document.
+    ///
     class document : public key_context<> {
     public:
         document() : key_context<>(&_core), _core(false) {}
 
+        ///
+        /// @return A view of the BSON document.
+        ///
         bsoncxx::document::view view() const {
             return _core.view_document();
         }
@@ -39,10 +46,22 @@ namespace stream {
             return view();
         }
 
+        ///
+        /// Transfer ownership of the underlying document to the caller.
+        ///
+        /// @return A document::value with ownership of the document.
+        ///
+        /// @warning
+        ///  After calling extract() it is illegal to call any methods
+        ///  on this class, unless it is subsequenly moved into.
+        ///
         bsoncxx::document::value extract() {
             return _core.extract_document();
         }
 
+        ///
+        /// Reset the underlying BSON to an empty document.
+        ///
         void clear() {
             _core.clear();
         }

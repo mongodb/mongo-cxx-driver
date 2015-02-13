@@ -86,8 +86,10 @@ class BSONCXX_API value {
 
     ///
     /// Transfer ownership of the underlying buffer to the caller.
-    /// After calling release() it is illegal to call any methods
-    /// on this class, unless it is subsequently moved into.
+    ///
+    /// @warning
+    ///   After calling release() it is illegal to call any methods
+    ///   on this class, unless it is subsequently moved into.
     ///
     /// @return A std::unique_ptr with ownership of the buffer.
     ///

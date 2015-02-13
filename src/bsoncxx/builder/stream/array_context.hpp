@@ -32,6 +32,9 @@ namespace stream {
 
  class single_context;
 
+///
+/// An internal class of builder::stream. Users should not use this directly.
+///
 template <class base = closed_context>
 class array_context {
    public:

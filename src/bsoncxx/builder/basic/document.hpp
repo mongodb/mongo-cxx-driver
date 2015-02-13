@@ -30,11 +30,18 @@ namespace basic {
 
 class array;
 
+///
+/// A traditional builder-style interface for constructing
+/// a BSON document.
+///
 class BSONCXX_API document : public sub_document {
    public:
     document() : sub_document(&_core), _core(false) {
     }
 
+    ///
+    /// @return A view of the BSON document.
+    ///
     bsoncxx::document::view view() const {
         return _core.view_document();
     }
@@ -43,10 +50,22 @@ class BSONCXX_API document : public sub_document {
         return view();
     }
 
+    ///
+    /// Transfer ownership of the underlying document to the caller.
+    ///
+    /// @return A document::value with ownership of the document.
+    ///
+    /// @warning
+    ///  After calling extract() it is illegal to call any methods
+    ///  on this class, unless it is subsequenly moved into.
+    ///
     bsoncxx::document::value extract() {
         return _core.extract_document();
     }
 
+    ///
+    /// Reset the underlying BSON to an empty document.
+    ///
     void clear() {
         _core.clear();
     }

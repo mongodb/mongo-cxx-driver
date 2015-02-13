@@ -26,6 +26,9 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 namespace stream {
 
+///
+/// An internal class of builder::stream. Users should not use this directly.
+///
 template <class base = closed_context>
 class key_context {
    public:

@@ -28,23 +28,36 @@ template <typename T>
 void value_append(core* core, T&& t);
 }  // namespace impl
 
+///
+/// An internal class of builder::basic.
+/// Users should almost always construct a builder::basic::document instead.
+///
 class BSONCXX_API sub_document {
    public:
     sub_document(core* core) : _core(core) {
     }
 
+    ///
+    /// Appends multiple basic::kvp key-value pairs.
+    ///
     template <typename Arg, typename... Args>
     void append(Arg&& a, Args&&... args) {
         append(std::forward<Arg>(a));
         append(std::forward<Args>(args)...);
     }
 
+    ///
+    /// Appends a basic::kvp
+    ///
     template <typename T>
     void append(T&& t) {
         _core->key_owning(std::get<0>(t));
         impl::value_append(_core, std::forward<T>(std::get<1>(t)));
     }
 
+    ///
+    /// Appends a basic::kvp where the key is a string literal
+    ///
     template <std::size_t n, typename T>
     void append(std::tuple<const char (&)[n], T>&& t) {
         _core->key_literal(std::get<0>(t), n - 1);

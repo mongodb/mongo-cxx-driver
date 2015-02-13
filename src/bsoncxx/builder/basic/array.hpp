@@ -28,11 +28,18 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 namespace basic {
 
+///
+/// A traditional builder-style interface for constructing
+/// a BSON array.
+///
 class BSONCXX_API array : public sub_array {
    public:
     array() : sub_array(&_core), _core(true) {
     }
 
+    ///
+    /// @return A view of the BSON array.
+    ///
     bsoncxx::array::view view() const {
         return _core.view_array();
     }
@@ -41,10 +48,22 @@ class BSONCXX_API array : public sub_array {
         return view();
     }
 
+    ///
+    /// Transfer ownership of the underlying array to the caller.
+    ///
+    /// @return An array::value with ownership of the array.
+    ///
+    /// @warning
+    ///  After calling extract() it is illegal to call any methods
+    ///  on this class, unless it is subsequenly moved into.
+    ///
     bsoncxx::array::value extract() {
         return _core.extract_array();
     }
 
+    ///
+    /// Reset the underlying BSON to an empty array.
+    ///
     void clear() {
         _core.clear();
     }

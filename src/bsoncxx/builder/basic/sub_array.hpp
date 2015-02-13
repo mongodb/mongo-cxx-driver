@@ -30,17 +30,27 @@ void value_append(core* core, T&& t);
 
 }  // namespace impl
 
+///
+/// An internal class of builder::basic.
+/// Users should almost always construct a builder::basic::array instead.
+///
 class BSONCXX_API sub_array {
    public:
     sub_array(core* core) : _core(core) {
     }
 
+    ///
+    /// Appends multiple BSON values.
+    ///
     template <typename Arg, typename... Args>
     void append(Arg&& a, Args&&... args) {
         append(std::forward<Arg>(a));
         append(std::forward<Args>(args)...);
     }
 
+    ///
+    /// Appends a BSON value.
+    ///
     template <typename T>
     void append(T&& t) {
         impl::value_append(_core, std::forward<T>(t));

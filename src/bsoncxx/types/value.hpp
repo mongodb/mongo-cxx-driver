@@ -29,30 +29,116 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 
 namespace types {
 
+    ///
+    /// A variant that can contain any BSON type.
+    ///
+    /// @warning
+    ///   It is undefined behavior to call the wrong get_<type> method. Check
+    ///   the underlying type() first.
+    ///
     class BSONCXX_API value {
 
        public:
         value();
 
+        ///
+        /// Construct a value from a BSON double.
+        ///
         explicit value(b_double);
+
+        ///
+        /// Construct a value from a BSON UTF-8 string.
+        ///
         explicit value(b_utf8);
+
+        ///
+        /// Construct a value from a BSON document.
+        ///
         explicit value(b_document);
+
+        ///
+        /// Construct a value from a BSON array.
+        ///
         explicit value(b_array);
+
+        ///
+        /// Construct a value from a BSON binary datum.
+        ///
         explicit value(b_binary);
+
+        ///
+        /// Construct a value from a BSON undefined.
+        ///
         explicit value(b_undefined);
+
+        ///
+        /// Construct a value from a BSON ObjectId.
+        ///
         explicit value(b_oid);
+
+        ///
+        /// Construct a value from a BSON boolean.
+        ///
         explicit value(b_bool);
+
+        ///
+        /// Construct a value from a BSON date.
+        ///
         explicit value(b_date);
+
+        ///
+        /// Construct a value from a BSON null.
+        ///
         explicit value(b_null);
+
+        ///
+        /// Construct a value from a BSON regex.
+        ///
         explicit value(b_regex);
+
+        ///
+        /// Construct a value from a BSON DBPointer.
+        ///
         explicit value(b_dbpointer);
+
+        ///
+        /// Construct a value from a BSON JavaScript code.
+        ///
         explicit value(b_code);
+
+        ///
+        /// Construct a value from a BSON symbol.
+        ///
         explicit value(b_symbol);
+
+        ///
+        /// Construct a value from a BSON JavaScript code with scope.
+        ///
         explicit value(b_codewscope);
+
+        ///
+        /// Construct a value from a BSON 32-bit signed integer.
+        ///
         explicit value(b_int32);
+
+        ///
+        /// Construct a value from a BSON replication timestamp.
+        ///
         explicit value(b_timestamp);
+
+        ///
+        /// Construct a value from a BSON 64-bit signed integer.
+        ///
         explicit value(b_int64);
+
+        ///
+        /// Construct a value from a BSON min-key.
+        ///
         explicit value(b_minkey);
+
+        ///
+        /// Construct a value from a BSON max-key.
+        ///
         explicit value(b_maxkey);
 
         value(const value&);
@@ -66,27 +152,189 @@ namespace types {
         friend BSONCXX_API bool operator==(const value&, const value&);
         friend BSONCXX_API bool operator!=(const value&, const value&);
 
+        ///
+        /// @return The type of the underlying BSON value stored in this object.
+        ///
         bsoncxx::type type() const;
 
+        ///
+        /// @return The underlying BSON double value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_double& get_double() const;
+
+        ///
+        /// @return The underlying BSON UTF-8 string value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_utf8& get_utf8() const;
+
+        ///
+        /// @return The underlying BSON document value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_document& get_document() const;
+
+        ///
+        /// @return The underlying BSON array value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_array& get_array() const;
+
+        ///
+        /// @return The underlying BSON binary data value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_binary& get_binary() const;
+
+        ///
+        /// @return The underlying BSON undefined value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_undefined& get_undefined() const;
+
+        ///
+        /// @return The underlying BSON ObjectId value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_oid& get_oid() const;
+
+        ///
+        /// @return The underlying BSON boolean value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_bool& get_bool() const;
+
+        ///
+        /// @return The underlying BSON date value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_date& get_date() const;
+
+        ///
+        /// @return The underlying BSON null value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_null& get_null() const;
+
+        ///
+        /// @return The underlying BSON regex value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_regex& get_regex() const;
+
+        ///
+        /// @return The underlying BSON DBPointer value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_dbpointer& get_dbpointer() const;
+
+        ///
+        /// @return The underlying BSON JavaScript code value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_code& get_code() const;
+
+        ///
+        /// @return The underlying BSON symbol value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_symbol& get_symbol() const;
+
+        ///
+        /// @return The underlying BSON JavaScript code with scope value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_codewscope& get_codewscope() const;
+
+        ///
+        /// @return The underlying BSON 32-bit signed integer value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_int32& get_int32() const;
+
+        ///
+        /// @return The underlying BSON replication timestamp value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_timestamp& get_timestamp() const;
+
+        ///
+        /// @return The underlying BSON 64-bit signed integer value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_int64& get_int64() const;
+
+        ///
+        /// @return The underlying BSON min-key value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_minkey& get_minkey() const;
+
+        ///
+        /// @return The underlying BSON max-key value.
+        ///
+        /// @warning
+        ///   It is undefined behavior to call the wrong get_<type> method. Check
+        ///   the underlying type() first.
+        ///
         const b_maxkey& get_maxkey() const;
 
        private:
