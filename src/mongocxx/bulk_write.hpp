@@ -36,9 +36,6 @@ class collection;
 /// method. Options that you would typically specify for individual write operations (such as write
 /// concern) are instead specified for the aggregate operation.
 ///
-/// @todo Uncomment and implement when c-driver provides this functionality
-///     class write_concern write_concern() const;
-///
 /// @see http://docs.mongodb.org/manual/core/write-operations/
 /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
 ///
@@ -98,6 +95,13 @@ class MONGOCXX_API bulk_write {
     ///   The write_concern to set
     ///
     void write_concern(class write_concern wc);
+
+    ///
+    /// Gets the write_concern for the bulk write.
+    ///
+    /// @return The current write_concern.
+    ///
+    class write_concern write_concern() const;
 
    private:
     friend class collection;

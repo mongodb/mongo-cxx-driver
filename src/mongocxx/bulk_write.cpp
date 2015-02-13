@@ -88,6 +88,12 @@ void bulk_write::write_concern(class write_concern wc) {
     libmongoc::bulk_operation_set_write_concern(_impl->operation_t, wc._impl->write_concern_t);
 }
 
+class write_concern bulk_write::write_concern() const {
+    class write_concern wc(bsoncxx::stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
+        libmongoc::bulk_operation_get_write_concern(_impl->operation_t))));
+    return wc;
+}
+
 // class write_concern bulk_write::write_concern() const {
 // class write_concern wc(bsoncxx::stdx::make_unique<write_concern::impl>(
 // libmongoc::write_concern_copy(
