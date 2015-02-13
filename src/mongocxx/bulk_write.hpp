@@ -36,9 +36,6 @@ class collection;
 /// method. Options that you would typically specify for individual write operations (such as write
 /// concern) are instead specified for the aggregate operation.
 ///
-/// Example usage:
-/// @include examples/bulk_write.cpp
-///
 /// @todo Uncomment and implement when c-driver provides this functionality
 ///     class write_concern write_concern() const;
 ///
