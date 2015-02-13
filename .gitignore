@@ -1,19 +1,11 @@
-
 # Directories that are generated
 /docs
+/tags
 
-/callgrind.out.*
-/massif.out.*
-
+# Filetypes
 *~
 *.pyc
-*#
-.#*
-
-tags
-
-#osx
-.DS_Store
-._.DS_Store
-*.fuse_*
 *.swp
+
+# OSX
+.DS_Store
