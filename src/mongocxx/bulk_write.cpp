@@ -94,14 +94,5 @@ class write_concern bulk_write::write_concern() const {
     return wc;
 }
 
-// class write_concern bulk_write::write_concern() const {
-// class write_concern wc(bsoncxx::stdx::make_unique<write_concern::impl>(
-// libmongoc::write_concern_copy(
-// libmongoc::bulk_operation_get_write_concern(_impl->operation_t)
-//)
-//));
-// return wc;
-//}
-
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
