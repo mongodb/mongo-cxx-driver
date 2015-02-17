@@ -171,12 +171,11 @@ bsoncxx::stdx::optional<result::insert_one> collection::insert_one(bsoncxx::docu
     class bulk_write bulk_op(false);
     bsoncxx::document::element oid{};
 
+    bsoncxx::builder::stream::document new_document;
     if (!document["_id"]) {
-        bsoncxx::builder::stream::document new_document;
         new_document << "_id" << bsoncxx::oid(bsoncxx::oid::init_tag);
         new_document << bsoncxx::builder::stream::concatenate{document};
         bulk_op.append(model::insert_one(new_document.view()));
-
         oid = new_document.view()["_id"];
     } else {
         bulk_op.append(model::insert_one(document));
