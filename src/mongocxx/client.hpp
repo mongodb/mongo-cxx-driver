@@ -59,7 +59,7 @@ class MONGOCXX_API client {
     ///   Additional options that cannot be specified via the mongodb_uri
     ///
     client(
-        const uri& mongodb_uri = uri(),
+        const class uri& mongodb_uri = mongocxx::uri(),
         const options::client& options = options::client()
     );
 
@@ -100,6 +100,13 @@ class MONGOCXX_API client {
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
     class read_preference read_preference() const;
+
+    ///
+    /// Returns the current uri for this client.
+    ///
+    /// @return The @c uri that this client was created with.
+    ///
+    class uri uri() const;
 
     ///
     /// Sets the write concern for this client.

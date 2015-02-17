@@ -23,7 +23,7 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-client::client(const uri& uri, const options::client&)
+client::client(const class uri& uri, const options::client&)
     : _impl(bsoncxx::stdx::make_unique<impl>(libmongoc::client_new_from_uri(uri._impl->uri_t))) {
 }
 
@@ -40,6 +40,12 @@ class read_preference client::read_preference() const {
     class read_preference rp(bsoncxx::stdx::make_unique<read_preference::impl>(
         libmongoc::read_prefs_copy(libmongoc::client_get_read_prefs(_impl->client_t))));
     return rp;
+}
+
+class uri client::uri() const {
+    class uri connection_string(bsoncxx::stdx::make_unique<uri::impl>(
+        libmongoc::uri_copy(libmongoc::client_get_uri(_impl->client_t))));
+    return connection_string;
 }
 
 void client::write_concern(class write_concern wc) {

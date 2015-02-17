@@ -161,6 +161,9 @@ class MONGOCXX_API uri {
     friend class client;
 
     class MONGOCXX_PRIVATE impl;
+
+    uri(std::unique_ptr<impl>&& implementation);
+
     std::unique_ptr<impl> _impl;
 
 };
