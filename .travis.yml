@@ -65,8 +65,8 @@ before_script:
 
     # Build the driver and the tests
     - cd build
-    - ${CMAKE_BINARY} -DCMAKE_BUILD_TYPE=$CONFIG -DBUILD_UNIT_TESTS=true -DBUILD_EXAMPLES=true ..
+    - ${CMAKE_BINARY} -DCMAKE_BUILD_TYPE=$CONFIG ..
 
 script:
-    - LD_LIBRARY_PATH="/usr/local/lib" make VERBOSE=1
-    - LD_LIBRARY_PATH="/usr/local/lib" make VERBOSE=1 test
+    - make -j3
+    - make test
