@@ -12,7 +12,7 @@ int main(int, char**) {
     mongocxx::client conn{};
 
     auto db = conn["test"];
-    
+
     // Create a single field index.
     {
         // @begin: cpp-single-field-index
@@ -21,7 +21,7 @@ int main(int, char**) {
         db["restaurants"].create_index(index_spec, {});
         // @end: cpp-single-field-index
     }
-    
+
     // Create a compound index.
     {
         // @begin: cpp-create-compound-index

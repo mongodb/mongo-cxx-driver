@@ -65,6 +65,8 @@ add_library(bsoncxx SHARED
     ${bsoncxx_sources}
 )
 
+set(bsoncxx_libs ${LIBBSON_LIBRARIES})
+
 set_target_properties(bsoncxx PROPERTIES
     OUTPUT_NAME bsoncxx
     VERSION ${BSONCXX_VERSION}
@@ -87,8 +89,8 @@ if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
     add_dependencies(bsoncxx EP_mnmlstc_core)
 endif()
 
-target_link_libraries(bsoncxx_static ${LIBBSON_LIBRARIES})
-target_link_libraries(bsoncxx PRIVATE ${LIBBSON_LIBRARIES})
+target_link_libraries(bsoncxx_static ${bsoncxx_libs})
+target_link_libraries(bsoncxx PRIVATE ${bsoncxx_libs})
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     DESTINATION ${BSONCXX_HEADER_INSTALL_DIR}

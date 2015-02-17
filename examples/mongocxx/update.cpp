@@ -23,7 +23,7 @@ int main(int, char**) {
                    << "cuisine" << "American (New)" << close_document
                << "$currentDate" << open_document
                    << "lastModified" << true << close_document;
-        
+
         db["restaurants"].update_one(filter, update);
         // @end: cpp-update-top-level-fields
     }

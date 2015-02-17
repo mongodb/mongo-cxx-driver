@@ -15,7 +15,7 @@ using bsoncxx::builder::stream::finalize;
 
 int main(int, char**) {
     mongocxx::client conn{};
-    
+
     auto db = conn["test"];
 
     // Group documents by field and calculate count.
@@ -27,11 +27,11 @@ int main(int, char**) {
         group_stage << "_id" << "$borough"
                     << "count" << open_document
                         << "$sum" << 1 << close_document;
-        
+
         stages.group(group_stage);
-        
+
         auto cursor = db["restaurants"].aggregate(stages);
-        
+
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }

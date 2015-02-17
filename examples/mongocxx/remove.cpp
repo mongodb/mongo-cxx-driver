@@ -18,7 +18,7 @@ int main(int, char**) {
         // @begin: cpp-remove-matching-documents
         document filter;
         filter << "borough" << "Manhattan";
-        
+
         db["restaurants"].delete_many(filter);
         // @end: cpp-remove-matching-documents
     }
@@ -28,11 +28,11 @@ int main(int, char**) {
         // @begin: cpp-remove-justone
         document filter;
         filter << "borough" << "Queens";
-        
+
         db["restaurants"].delete_one(filter);
         // @end: cpp-remove-justone
     }
-    
+
     // Remove all documents in a collection.
     {
         // @begin: cpp-remove-all-documents
