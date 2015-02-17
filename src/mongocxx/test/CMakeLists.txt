@@ -1,6 +1,6 @@
 add_definitions(-DMONGOCXX_TESTING)
 
-set(mongocxx_test_srcs
+set(mongocxx_test_sources
     bulk_write.cpp
     client.cpp
     CMakeLists.txt
@@ -24,7 +24,7 @@ link_directories(${LIBMONGOC_LIBRARY_DIRS} ${LIBBSON_LIBRARY_DIRS})
 
 add_executable(test_driver
     ${CMAKE_SOURCE_DIR}/src/third_party/catch/main.cpp
-    ${test_driver_sources}
+    ${mongocxx_test_sources}
 )
 
 target_link_libraries(test_driver mongocxx_mocked)
