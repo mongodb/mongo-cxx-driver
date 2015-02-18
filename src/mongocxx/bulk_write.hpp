@@ -89,6 +89,15 @@ class MONGOCXX_API bulk_write {
     void append(const model::write& operation);
 
     ///
+    /// Gets a handle to the underlying implementation.
+    ///
+    /// Returned pointer is only valid for the lifetime of this object.
+    ///
+    /// @return Pointer to implementation of this object, or nullptr if not available.
+    ///
+    MONGOCXX_DEPRECATED void* implementation() const;
+
+    ///
     /// Sets the write_concern for this operation.
     ///
     /// @param wc

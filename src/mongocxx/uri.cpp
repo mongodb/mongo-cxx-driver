@@ -60,6 +60,10 @@ std::vector<uri::host> uri::hosts() const {
     return result;
 }
 
+void* uri::implementation() const {
+    return _impl->uri_t;
+}
+
 std::string uri::password() const {
     return mongoc_uri_get_password(_impl->uri_t);
 }

@@ -32,6 +32,10 @@ client& client::operator=(client&&) noexcept = default;
 
 client::~client() = default;
 
+void* client::implementation() const {
+    return _impl->client_t;
+}
+
 void client::read_preference(class read_preference rp) {
     libmongoc::client_set_read_prefs(_impl->client_t, rp._impl->read_preference_t);
 }

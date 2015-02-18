@@ -79,6 +79,15 @@ class MONGOCXX_API client {
     ~client();
 
     ///
+    /// Gets a handle to the underlying implementation.
+    ///
+    /// Returned pointer is only valid for the lifetime of this object.
+    ///
+    /// @return Pointer to implementation of this object, or nullptr if not available.
+    ///
+    MONGOCXX_DEPRECATED void* implementation() const;
+
+    ///
     /// Sets the read preference for this client.
     ///
     /// Modifications at this level do not effect existing databases instances that have have been

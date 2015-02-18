@@ -48,6 +48,10 @@ void write_concern::fsync(bool fsync) {
     libmongoc::write_concern_set_fsync(_impl->write_concern_t, fsync);
 }
 
+void* write_concern::implementation() const {
+    return _impl->write_concern_t;
+}
+
 void write_concern::journal(bool journal) {
     libmongoc::write_concern_set_journal(_impl->write_concern_t, journal);
 }

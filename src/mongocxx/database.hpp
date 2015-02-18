@@ -94,6 +94,15 @@ class MONGOCXX_API database {
     bool has_collection(const std::string& name);
 
     ///
+    /// Gets a handle to the underlying implementation.
+    ///
+    /// Returned pointer is only valid for the lifetime of this object.
+    ///
+    /// @return Pointer to implementation of this object, or nullptr if not available.
+    ///
+    MONGOCXX_DEPRECATED void* implementation() const;
+
+    ///
     /// Enumerates the collections in this database.
     ///
     /// @return mongocxx::cursor containing the collection information.

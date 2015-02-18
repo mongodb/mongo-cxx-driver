@@ -36,6 +36,10 @@ database::database(const class client& client, const std::string& name)
           name.c_str())) {
 }
 
+void* database::implementation() const {
+    return _impl->database_t;
+}
+
 const std::string& database::name() const {
     return _impl->name;
 }

@@ -369,6 +369,15 @@ class MONGOCXX_API collection {
     );
 
     ///
+    /// Gets a handle to the underlying implementation.
+    ///
+    /// Returned pointer is only valid for the lifetime of this object.
+    ///
+    /// @return Pointer to implementation of this object, or nullptr if not available.
+    ///
+    MONGOCXX_DEPRECATED void* implementation() const;
+
+    ///
     /// Inserts a single document into the collection. If the document is missing an identifier
     /// (@c _id field) one will be generated for it.
     ///

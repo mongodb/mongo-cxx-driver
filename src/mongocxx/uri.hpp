@@ -102,6 +102,15 @@ class MONGOCXX_API uri {
     std::string database() const;
 
     ///
+    /// Gets a handle to the underlying implementation.
+    ///
+    /// Returned pointer is only valid for the lifetime of this object.
+    ///
+    /// @return Pointer to implementation of this object, or nullptr if not available.
+    ///
+    MONGOCXX_DEPRECATED void* implementation() const;
+
+    ///
     /// Returns other uri options.
     ///
     /// @return A document view containing other options.

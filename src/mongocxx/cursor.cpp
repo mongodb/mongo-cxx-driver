@@ -62,6 +62,10 @@ cursor::iterator cursor::end() {
     return iterator(nullptr);
 }
 
+void* cursor::implementation() const {
+    return _impl->cursor_t;
+}
+
 cursor::iterator::iterator(cursor* cursor) : _cursor(cursor) {
     if (cursor) operator++();
 }
