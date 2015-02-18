@@ -456,7 +456,7 @@ tools = decide_platform_tools() + ["unittest", "integration_test", "textfile"]
 envDict = dict(BUILD_DIR=buildDir,
                VARIANT_DIR=get_variant_dir(),
                EXTRAPATH=get_option("extrapath"),
-               PYTHON=buildscripts.utils.find_python(),
+               PYTHON=File(buildscripts.utils.find_python()),
                tools=tools,
                PYSYSPLATFORM=os.sys.platform,
                CONFIGUREDIR=sconsDataDir.Dir('sconf_temp'),
