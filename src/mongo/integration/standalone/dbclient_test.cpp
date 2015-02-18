@@ -1100,6 +1100,12 @@ namespace {
         c.insert(TEST_NS, BSON("a" << true));
         BSONObj result;
 
+        // Use a dummy query in order to check if maxTimeMs() is correctly applied
+        Query dummyQuery("{}");
+        ASSERT_EQUALS(&dummyQuery.maxTimeMs(10), &dummyQuery);
+        ASSERT_TRUE(dummyQuery.hasMaxTimeMs());
+        ASSERT_EQUALS(dummyQuery.getMaxTimeMs(), 10);
+
         if (serverGTE(&c, 2, 6)) {
             c.runCommand("admin", BSON(
                 "configureFailPoint" << "maxTimeAlwaysTimeOut" <<

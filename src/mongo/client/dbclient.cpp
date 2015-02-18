@@ -498,6 +498,7 @@ namespace mongo {
     const BSONField<BSONObj> Query::ReadPrefField("$readPreference");
     const BSONField<string> Query::ReadPrefModeField("mode");
     const BSONField<BSONArray> Query::ReadPrefTagsField("tags");
+    static const char* maxTimeMsField = "$maxTimeMS";
 
     Query::Query( const string &json ) : obj( fromjson( json ) ) {}
 
@@ -537,7 +538,7 @@ namespace mongo {
     }
 
     Query& Query::maxTimeMs(int millis) {
-        appendComplex( "$maxTimeMS", millis );
+        appendComplex( maxTimeMsField, millis );
         return *this;
     }
 
@@ -647,7 +648,7 @@ namespace mongo {
     }
 
     bool Query::hasMaxTimeMs() const {
-        return obj.hasField( "$maxTimeMS" );
+        return obj.hasField( maxTimeMsField );
     }
 
     BSONObj Query::getFilter() const {
@@ -676,7 +677,7 @@ namespace mongo {
     }
 
     int Query::getMaxTimeMs() const {
-        return obj.getIntField("maxTimeMs");
+        return obj.getIntField(maxTimeMsField);
     }
 
     bool Query::isExplain() const {
