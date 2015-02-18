@@ -34,7 +34,7 @@ del env
 
 libEnv.Command(['mongo/base/error_codes.h', 'mongo/base/error_codes.cpp',],
                ['mongo/base/generate_error_codes.py', 'mongo/base/error_codes.err'],
-               '$PYTHON $SOURCES $TARGETS')
+               '"$PYTHON" $SOURCES $TARGETS')
 
 def makeConfigHDefine(env, subst_key, env_var):
     replacement = "// #undef %s"
