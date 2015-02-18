@@ -23,6 +23,7 @@
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 
 namespace bsoncxx {
