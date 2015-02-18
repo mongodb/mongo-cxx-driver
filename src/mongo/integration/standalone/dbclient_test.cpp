@@ -1102,6 +1102,7 @@ namespace {
 
         // Use a dummy query in order to check if maxTimeMs() is correctly applied
         Query dummyQuery("{}");
+        ASSERT_FALSE(dummyQuery.hasMaxTimeMs());
         ASSERT_EQUALS(&dummyQuery.maxTimeMs(10), &dummyQuery);
         ASSERT_TRUE(dummyQuery.hasMaxTimeMs());
         ASSERT_EQUALS(dummyQuery.getMaxTimeMs(), 10);
@@ -1112,13 +1113,23 @@ namespace {
                 "mode" << BSON("times" << 2)
             ), result);
 
+            Query query = Query("{}");
+            Query query_max_time = Query("{}").maxTimeMs(1);
+
+            // Check the boolean method
+            ASSERT_FALSE(query.hasMaxTimeMs());
+            ASSERT_TRUE(query_max_time.hasMaxTimeMs());
+
+            // Check the getter
+            ASSERT_EQUALS(query_max_time.getMaxTimeMs(), 1);
+
             // First test with a query
-            ASSERT_NO_THROW(c.findOne(TEST_NS, Query("{}")););
-            ASSERT_THROWS(c.findOne(TEST_NS, Query("{}").maxTimeMs(1)), DBException);
+            ASSERT_NO_THROW(c.findOne(TEST_NS, query););
+            ASSERT_THROWS(c.findOne(TEST_NS, query_max_time), DBException);
 
             // Then test with a command
-            ASSERT_NO_THROW(c.count(TEST_NS, Query("{}")));
-            ASSERT_THROWS(c.count(TEST_NS, Query("{}").maxTimeMs(1)), DBException);
+            ASSERT_NO_THROW(c.count(TEST_NS, query));
+            ASSERT_THROWS(c.count(TEST_NS, query_max_time), DBException);
         } else {
             // we are not connected to MongoDB >= 2.6, skip
             SUCCEED();
