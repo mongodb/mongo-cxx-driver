@@ -260,7 +260,7 @@ bsoncxx::stdx::optional<result::update> collection::update_one(bsoncxx::document
                                                                bsoncxx::document::view update,
                                                                const options::update& options) {
     class bulk_write bulk_op(false);
-    model::update_many update_op(filter, update);
+    model::update_one update_op(filter, update);
 
     if (options.upsert()) update_op.upsert(options.upsert().value());
 
