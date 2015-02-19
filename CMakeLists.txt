@@ -48,10 +48,29 @@ endif()
 # Ensure that RPATH is used on OSX
 set(CMAKE_MACOSX_RPATH 1)
 
-if (NOT CMAKE_BUILD_TYPE)
+if(NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type selected, default is Release")
     set(CMAKE_BUILD_TYPE "Release")
 endif()
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+add_custom_target(modernize
+    clang-modernize
+        -p ${CMAKE_BINARY_DIR}/compile_commands.json
+        -include ${CMAKE_CURRENT_SOURCE_DIR}
+        -exclude ${CMAKE_CURRENT_SOURCE_DIR}/mongocxx/test ${CMAKE_CURRENT_SORUCE_DIR}/bsoncxx/test
+        -format
+    VERBATIM
+)
+
+add_custom_target(format
+    perl -nle "/file/ or next; print ((split /: (.*)/)[1])" ${CMAKE_BINARY_DIR}/compile_commands.json |
+    grep -v "catch.hpp" |
+    grep -v "examples" |
+    xargs clang-format -i
+    VERBATIM
+)
 
 enable_testing()
 
