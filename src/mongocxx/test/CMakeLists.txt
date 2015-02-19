@@ -5,6 +5,7 @@ set(mongocxx_test_sources
     client.cpp
     CMakeLists.txt
     collection.cpp
+    collection_mocked.cpp
     database.cpp
     model/update_many.cpp
     options/aggregate.cpp
