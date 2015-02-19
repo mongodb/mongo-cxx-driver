@@ -41,6 +41,7 @@ TEST_CASE("Collection", "[collection]") {
         auto bulk_operation_new = libmongoc::bulk_operation_new.create_instance();
         auto bulk_operation_insert = libmongoc::bulk_operation_insert.create_instance();
         auto bulk_operation_remove_one = libmongoc::bulk_operation_remove_one.create_instance();
+        auto bulk_operation_update_one = libmongoc::bulk_operation_update_one.create_instance();
         auto bulk_operation_set_client = libmongoc::bulk_operation_set_client.create_instance();
         auto bulk_operation_set_database = libmongoc::bulk_operation_set_database.create_instance();
         auto bulk_operation_set_collection = libmongoc::bulk_operation_set_collection.create_instance();
@@ -50,6 +51,7 @@ TEST_CASE("Collection", "[collection]") {
         bool bulk_operation_new_called = false;
         bool bulk_operation_insert_called = false;
         bool bulk_operation_remove_one_called = false;
+        bool bulk_operation_update_one_called = false;
         bool bulk_operation_set_client_called = false;
         bool bulk_operation_set_database_called = false;
         bool bulk_operation_set_collection_called = false;
@@ -58,6 +60,10 @@ TEST_CASE("Collection", "[collection]") {
 
         auto test_doc = builder::stream::document{} 
             << "_id" << "wow" << "foo" << "bar"
+        << builder::stream::finalize;
+
+        auto test_doc2 = builder::stream::document{}
+            << "cool" << "wow" << "foo" << "bar"
         << builder::stream::finalize;
 
         SECTION("Insert One", "[collection::insert_one]") {
@@ -104,6 +110,56 @@ TEST_CASE("Collection", "[collection]") {
             mongo_coll.insert_one(test_doc);
 
             REQUIRE(bulk_operation_insert_called);
+        }
+
+        SECTION("Update One", "[collection::update_one]") {
+            bool expected_order_setting = false;
+
+            bulk_operation_new->interpose([&](bool ordered) -> mongoc_bulk_operation_t* {
+                bulk_operation_new_called = true;
+                REQUIRE(ordered == expected_order_setting);
+                return nullptr;
+            });
+
+            bulk_operation_update_one->interpose([&](mongoc_bulk_operation_t* bulk, const bson_t* query, const bson_t* update, bool upsert) {
+                bulk_operation_update_one_called = true;
+                // TODO: use different docs
+                // TODO: test upsert
+                REQUIRE(bson_get_data(query) == test_doc.view().data());
+                REQUIRE(bson_get_data(update) == test_doc2.view().data());
+            });
+
+            // TODO: pull this and the next two up a level
+            bulk_operation_set_client->interpose([&](mongoc_bulk_operation_t* bulk, void* client) {
+                bulk_operation_set_client_called = true;
+                REQUIRE(client == mongo_client.implementation());
+            });
+
+            bulk_operation_set_database->interpose([&](mongoc_bulk_operation_t* bulk, const char* db) {
+                bulk_operation_set_database_called = true;
+                REQUIRE(!database_name.compare(db));
+            });
+
+            bulk_operation_set_collection->interpose([&](mongoc_bulk_operation_t* bulk, const char* coll) {
+                bulk_operation_set_collection_called = true;
+                REQUIRE(!collection_name.compare(coll));
+            });
+
+            bulk_operation_execute->interpose([&](mongoc_bulk_operation_t* bulk, bson_t* reply,
+                bson_error_t *error) {
+                bulk_operation_execute_called = true;
+                bson_init(reply);
+                return 1;
+            });
+
+            bulk_operation_destroy->interpose([&](mongoc_bulk_operation_t*){
+                bulk_operation_destroy_called = true;
+            });
+
+            // Run the operation
+            mongo_coll.update_one(test_doc, test_doc2);
+
+            REQUIRE(bulk_operation_update_one_called);
         }
 
         SECTION("Delete One", "[collection::delete_one]") {
