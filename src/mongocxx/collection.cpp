@@ -72,9 +72,9 @@ collection::collection(const database& database, const std::string& collection_n
 bsoncxx::stdx::optional<result::bulk_write> collection::bulk_write(
     const class bulk_write& bulk_write) {
     mongoc_bulk_operation_t* b = bulk_write._impl->operation_t;
+    libmongoc::bulk_operation_set_client(b, _impl->client_impl->client_t);
     libmongoc::bulk_operation_set_database(b, _impl->database_name.c_str());
     libmongoc::bulk_operation_set_collection(b, _impl->name.c_str());
-    libmongoc::bulk_operation_set_client(b, _impl->client_impl->client_t);
 
     scoped_bson_t reply;
     reply.flag_init();
