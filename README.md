@@ -6,7 +6,7 @@ This branch contains active development on a new driver written in C++11.
 > **WARNING:** This branch is being actively developed. For a stable driver, switch to the ['legacy'](https://github.com/mongodb/mongo-cxx-driver/tree/legacy) or ['26compat'](https://github.com/mongodb/mongo-cxx-driver/tree/26compat) branch.
 
 #### Why a rewrite?
-The new driver will contain a completely new API and implementation. A complete rewrite allows us to take full advantage of the features offered in C++11, and gives us the chance to re-architect the driver based on past driver design decisions and their effectiveness. We aim for this new driver to be more modern, more lightweight, and friendlier to contributors than its predecessors.
+This driver contains a completely new API and implementation. A complete rewrite allows us to take full advantage of the features offered in C++11, and gives us the chance to re-architect the driver based on past driver design decisions and their effectiveness. We aim for this new driver to be more modern, more lightweight, and friendlier to contributors than its predecessors.
 
 ## Repository Overview
 | Branch   | Stability   | Development       | Purpose                                                      |
