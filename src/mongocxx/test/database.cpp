@@ -30,9 +30,9 @@ TEST_CASE("A database", "[database]") {
 
     SECTION("is created by a client") {
         bool called = false;
-        get_database->interpose([&](mongoc_client_t* client, const char* c_name) {
+        get_database->interpose([&](mongoc_client_t* client, const char* d_name) {
             called = true;
-            REQUIRE(database_name == c_name);
+            REQUIRE(database_name == d_name);
             return nullptr;
         });
 
@@ -40,6 +40,7 @@ TEST_CASE("A database", "[database]") {
         REQUIRE(called);
         REQUIRE(obtained_database.name() == database_name);
     }
+
     SECTION("cleans up its underlying mongoc database on destruction") {
         bool destroy_called = false;
 
