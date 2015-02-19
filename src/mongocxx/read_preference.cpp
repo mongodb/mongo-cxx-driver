@@ -26,12 +26,13 @@ read_preference::read_preference(read_preference&&) noexcept = default;
 read_preference& read_preference::operator=(read_preference&&) noexcept = default;
 
 read_preference::read_preference(const read_preference& other)
-    : _impl(bsoncxx::stdx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t))) {
+    : _impl(bsoncxx::stdx::make_unique<impl>(
+          libmongoc::read_prefs_copy(other._impl->read_preference_t))) {
 }
 
 read_preference& read_preference::operator=(const read_preference& other) {
-    _impl.reset(bsoncxx::stdx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t))
-                    .release());
+    _impl.reset(bsoncxx::stdx::make_unique<impl>(
+                    libmongoc::read_prefs_copy(other._impl->read_preference_t)).release());
     return *this;
 }
 

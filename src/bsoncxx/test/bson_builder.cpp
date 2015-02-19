@@ -542,23 +542,21 @@ TEST_CASE("builder appends lambdas", "[bsoncxx::builder::stream]") {
 
     {
         using namespace builder::stream;
-        expected << "a" << "single"
-                 << "b" << open_document
-                    << "key1" << "value1"
-                    << "key2" << "value2"
-                 << close_document
-                 << "c" << open_array
-                    << 1 << 2 << 3
-                << close_array;
+        expected << "a"
+                 << "single"
+                 << "b" << open_document << "key1"
+                 << "value1"
+                 << "key2"
+                 << "value2" << close_document << "c" << open_array << 1 << 2 << 3 << close_array;
 
-        stream << "a" << [](single_context s) { s << "single"; }
-               << "b" << open_document << [](key_context<> k) {
-                      k << "key1" << "value1"
-                        << "key2" << "value2";
-                  } << close_document
-               << "c" << open_array << [](array_context<> a) {
-                   a << 1 << 2 << 3;
-               } << close_array;
+        stream << "a" << [](single_context s) { s << "single"; } << "b" << open_document
+               << [](key_context<> k) {
+                      k << "key1"
+                        << "value1"
+                        << "key2"
+                        << "value2";
+                  } << close_document << "c" << open_array
+               << [](array_context<> a) { a << 1 << 2 << 3; } << close_array;
     }
 
     viewable_eq_viewable(expected, stream);
@@ -569,7 +567,8 @@ TEST_CASE("document builder finalizes", "[bsoncxx::builder::stream]") {
 
     expected << "foo" << 999;
 
-    document::value value = builder::stream::document{} << "foo" << 999 << bsoncxx::builder::stream::finalize;
+    document::value value = builder::stream::document{} << "foo" << 999
+                                                        << bsoncxx::builder::stream::finalize;
 
     viewable_eq_viewable(expected, value);
 }
@@ -579,7 +578,8 @@ TEST_CASE("array builder finalizes", "[bsoncxx::builder::stream]") {
 
     expected << 1 << 2 << 3;
 
-    array::value value = builder::stream::array{} << 1 << 2 << 3 << bsoncxx::builder::stream::finalize;
+    array::value value = builder::stream::array{} << 1 << 2 << 3
+                                                  << bsoncxx::builder::stream::finalize;
 
     viewable_eq_viewable(expected, value);
 }
@@ -669,7 +669,8 @@ TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
     builder::stream::document stream;
     builder::basic::document basic;
 
-    stream << "hello" << "world";
+    stream << "hello"
+           << "world";
 
     SECTION("kvp works") {
         {
@@ -685,7 +686,6 @@ TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
             using namespace builder::stream;
             stream << "foo" << 35 << "bar" << open_document << "que"
                    << "qux" << close_document << "baz" << open_array << 1 << 2 << 3 << close_array;
-
         }
 
         {

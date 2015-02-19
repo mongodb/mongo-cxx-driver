@@ -20,7 +20,6 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
 
-
 using namespace mongocxx;
 
 TEST_CASE("A database", "[database]") {

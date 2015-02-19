@@ -69,7 +69,8 @@ collection::collection(const database& database, const std::string& collection_n
           database.name(), database._impl->client_impl, collection_name.c_str())) {
 }
 
-bsoncxx::stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write& bulk_write) {
+bsoncxx::stdx::optional<result::bulk_write> collection::bulk_write(
+    const class bulk_write& bulk_write) {
     mongoc_bulk_operation_t* b = bulk_write._impl->operation_t;
     libmongoc::bulk_operation_set_database(b, _impl->database_name.c_str());
     libmongoc::bulk_operation_set_collection(b, _impl->name.c_str());
@@ -98,7 +99,8 @@ cursor collection::find(bsoncxx::document::view filter, const options::find& opt
 
     if (options.modifiers()) {
         filter_builder << "$query" << types::b_document{filter}
-                       << builder::stream::concatenate{options.modifiers().value_or(document::view{})};
+                       << builder::stream::concatenate{
+                              options.modifiers().value_or(document::view{})};
 
         filter_bson.init_from_static(filter_builder.view());
     } else {
@@ -117,8 +119,8 @@ cursor collection::find(bsoncxx::document::view filter, const options::find& opt
         projection.bson(), rp_ptr));
 }
 
-bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one(bsoncxx::document::view filter,
-                                                     const options::find& options) {
+bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one(
+    bsoncxx::document::view filter, const options::find& options) {
     options::find copy(options);
     copy.limit(1);
     cursor cursor = find(filter, copy);
@@ -171,7 +173,7 @@ void* collection::implementation() const {
 }
 
 bsoncxx::stdx::optional<result::insert_one> collection::insert_one(bsoncxx::document::view document,
-                                                    const options::insert& options) {
+                                                                   const options::insert& options) {
     class bulk_write bulk_op(false);
     bsoncxx::document::element oid{};
 
@@ -199,9 +201,9 @@ bsoncxx::stdx::optional<result::insert_one> collection::insert_one(bsoncxx::docu
         result::insert_one(std::move(result.value()), std::move(oid.get_value())));
 }
 
-bsoncxx::stdx::optional<result::replace_one> collection::replace_one(bsoncxx::document::view filter,
-                                                      bsoncxx::document::view replacement,
-                                                      const options::update& options) {
+bsoncxx::stdx::optional<result::replace_one> collection::replace_one(
+    bsoncxx::document::view filter, bsoncxx::document::view replacement,
+    const options::update& options) {
     class bulk_write bulk_op(false);
     model::replace_one replace_op(filter, replacement);
     bulk_op.append(replace_op);
@@ -213,12 +215,13 @@ bsoncxx::stdx::optional<result::replace_one> collection::replace_one(bsoncxx::do
         return bsoncxx::stdx::optional<result::replace_one>();
     }
 
-    return bsoncxx::stdx::optional<result::replace_one>(result::replace_one(std::move(result.value())));
+    return bsoncxx::stdx::optional<result::replace_one>(
+        result::replace_one(std::move(result.value())));
 };
 
 bsoncxx::stdx::optional<result::update> collection::update_many(bsoncxx::document::view filter,
-                                                 bsoncxx::document::view update,
-                                                 const options::update& options) {
+                                                                bsoncxx::document::view update,
+                                                                const options::update& options) {
     class bulk_write bulk_op(false);
     model::update_many update_op(filter, update);
 
@@ -236,8 +239,8 @@ bsoncxx::stdx::optional<result::update> collection::update_many(bsoncxx::documen
     return bsoncxx::stdx::optional<result::update>(result::update(std::move(result.value())));
 }
 
-bsoncxx::stdx::optional<result::delete_result> collection::delete_many(bsoncxx::document::view filter,
-                                                        const options::delete_options& options) {
+bsoncxx::stdx::optional<result::delete_result> collection::delete_many(
+    bsoncxx::document::view filter, const options::delete_options& options) {
     class bulk_write bulk_op(false);
     model::delete_many delete_op(filter);
     bulk_op.append(delete_op);
@@ -249,12 +252,13 @@ bsoncxx::stdx::optional<result::delete_result> collection::delete_many(bsoncxx::
         return bsoncxx::stdx::optional<result::delete_result>();
     }
 
-    return bsoncxx::stdx::optional<result::delete_result>(result::delete_result(std::move(result.value())));
+    return bsoncxx::stdx::optional<result::delete_result>(
+        result::delete_result(std::move(result.value())));
 }
 
 bsoncxx::stdx::optional<result::update> collection::update_one(bsoncxx::document::view filter,
-                                                bsoncxx::document::view update,
-                                                const options::update& options) {
+                                                               bsoncxx::document::view update,
+                                                               const options::update& options) {
     class bulk_write bulk_op(false);
     model::update_many update_op(filter, update);
 
@@ -272,8 +276,8 @@ bsoncxx::stdx::optional<result::update> collection::update_one(bsoncxx::document
     return bsoncxx::stdx::optional<result::update>(result::update(std::move(result.value())));
 }
 
-bsoncxx::stdx::optional<result::delete_result> collection::delete_one(bsoncxx::document::view filter,
-                                                       const options::delete_options& options) {
+bsoncxx::stdx::optional<result::delete_result> collection::delete_one(
+    bsoncxx::document::view filter, const options::delete_options& options) {
     class bulk_write bulk_op(false);
     model::delete_one delete_op(filter);
     bulk_op.append(delete_op);
@@ -284,7 +288,8 @@ bsoncxx::stdx::optional<result::delete_result> collection::delete_one(bsoncxx::d
     if (!result) {
         return bsoncxx::stdx::optional<result::delete_result>();
     }
-    return bsoncxx::stdx::optional<result::delete_result>(result::delete_result(std::move(result.value())));
+    return bsoncxx::stdx::optional<result::delete_result>(
+        result::delete_result(std::move(result.value())));
 }
 
 bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
@@ -314,7 +319,8 @@ bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one_and_repla
 
     bsoncxx::document::view result = reply.view();
 
-    if (result["value"].type() == bsoncxx::type::k_null) return bsoncxx::stdx::optional<bsoncxx::document::value>{};
+    if (result["value"].type() == bsoncxx::type::k_null)
+        return bsoncxx::stdx::optional<bsoncxx::document::value>{};
 
     bsoncxx::builder::stream::document b;
     b << bsoncxx::builder::stream::concatenate{result["value"].get_document()};
@@ -348,7 +354,8 @@ bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one_and_updat
 
     bsoncxx::document::view result = reply.view();
 
-    if (result["value"].type() == bsoncxx::type::k_null) return bsoncxx::stdx::optional<bsoncxx::document::value>{};
+    if (result["value"].type() == bsoncxx::type::k_null)
+        return bsoncxx::stdx::optional<bsoncxx::document::value>{};
 
     bsoncxx::builder::stream::document b;
     b << bsoncxx::builder::stream::concatenate{result["value"].get_document()};
@@ -376,7 +383,8 @@ bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one_and_delet
 
     bsoncxx::document::view result = reply.view();
 
-    if (result["value"].type() == bsoncxx::type::k_null) return bsoncxx::stdx::optional<bsoncxx::document::value>{};
+    if (result["value"].type() == bsoncxx::type::k_null)
+        return bsoncxx::stdx::optional<bsoncxx::document::value>{};
 
     bsoncxx::builder::stream::document b;
     b << bsoncxx::builder::stream::concatenate{result["value"].get_document()};
@@ -404,12 +412,13 @@ std::int64_t collection::count(bsoncxx::document::view filter, const options::co
     return result;
 }
 
-bsoncxx::document::value collection::create_index(bsoncxx::document::view keys, bsoncxx::document::view options) {
+bsoncxx::document::value collection::create_index(bsoncxx::document::view keys,
+                                                  bsoncxx::document::view options) {
     scoped_bson_t bson_keys{keys};
     bson_error_t error;
 
-    auto result = libmongoc::collection_create_index(_impl->collection_t, bson_keys.bson(),
-                                                     nullptr, &error);
+    auto result =
+        libmongoc::collection_create_index(_impl->collection_t, bson_keys.bson(), nullptr, &error);
 
     if (!result) {
         // TODO: throw an exception here
@@ -443,8 +452,9 @@ void collection::write_concern(class write_concern wc) {
 }
 
 class write_concern collection::write_concern() const {
-    class write_concern wc(bsoncxx::stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
-        libmongoc::collection_get_write_concern(_impl->collection_t))));
+    class write_concern wc(
+        bsoncxx::stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
+            libmongoc::collection_get_write_concern(_impl->collection_t))));
     return wc;
 }
 

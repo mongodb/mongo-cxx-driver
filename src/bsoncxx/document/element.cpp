@@ -29,11 +29,11 @@
     iter.next_off = offset; \
     bson_iter_next(&iter)
 
-#define BSONCXX_TYPE_CHECK(name) \
-    do { \
-        if (type() != bsoncxx::type::name) { \
+#define BSONCXX_TYPE_CHECK(name)                            \
+    do {                                                    \
+        if (type() != bsoncxx::type::name) {                \
             throw std::runtime_error("type is not " #name); \
-        } \
+        }                                                   \
     } while (0)
 
 namespace bsoncxx {
@@ -144,8 +144,7 @@ types::b_regex element::get_regex() const {
     const char* options;
     const char* regex = bson_iter_regex(&iter, &options);
 
-    return types::b_regex{stdx::string_view{regex},
-                          stdx::string_view{options}};
+    return types::b_regex{stdx::string_view{regex}, stdx::string_view{options}};
 }
 
 types::b_dbpointer element::get_dbpointer() const {
@@ -242,8 +241,8 @@ types::b_array element::get_array() const {
 types::value element::get_value() const {
     switch (static_cast<int>(type())) {
 #define BSONCXX_ENUM(type, val) \
-        case val: \
-            return types::value{get_##type()};
+    case val:                   \
+        return types::value{get_##type()};
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
     }
@@ -253,7 +252,7 @@ types::value element::get_value() const {
 }
 
 element::operator bool() const {
-   return raw != nullptr;
+    return raw != nullptr;
 }
 
 }  // namespace document

@@ -6,7 +6,6 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/pipeline.hpp>
 
-
 using namespace mongocxx;
 
 TEST_CASE("CRUD functionality", "[driver::collection]") {

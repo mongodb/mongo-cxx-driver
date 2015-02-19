@@ -20,7 +20,6 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/uri.hpp>
 
-
 using namespace mongocxx;
 
 TEST_CASE("A client connects to a provided mongodb uri", "[client]") {

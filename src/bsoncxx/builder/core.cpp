@@ -23,7 +23,6 @@
 
 #include <cstring>
 
-
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
@@ -144,7 +143,7 @@ class core::impl {
     }
 
     bool is_viewable() {
-        return _depth == 0 && ! _has_user_key;
+        return _depth == 0 && !_has_user_key;
     }
 
     std::size_t depth() {
@@ -315,8 +314,7 @@ void core::append(const types::b_codewscope& value) {
     bson_t bson;
     bson_init_static(&bson, value.scope.data(), value.scope.length());
 
-    bson_append_code_with_scope(_impl->back(), key.data(), key.length(), value.code.data(),
-                                &bson);
+    bson_append_code_with_scope(_impl->back(), key.data(), key.length(), value.code.data(), &bson);
 }
 
 void core::append(const types::b_int32& value) {
@@ -411,10 +409,10 @@ void core::concatenate(const bsoncxx::document::view& view) {
 
 void core::append(const bsoncxx::types::value& value) {
     switch (static_cast<int>(value.type())) {
-#define BSONCXX_ENUM(type, val) \
-        case val: \
-            append(value.get_##type()); \
-            break;
+#define BSONCXX_ENUM(type, val)     \
+    case val:                       \
+        append(value.get_##type()); \
+        break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
     }
@@ -445,7 +443,7 @@ void core::close_array() {
 }
 
 bsoncxx::document::view core::view_document() const {
-    if (! _impl->is_viewable()) {
+    if (!_impl->is_viewable()) {
         throw(std::runtime_error("not viewable"));
     }
 
@@ -453,7 +451,7 @@ bsoncxx::document::view core::view_document() const {
 }
 
 bsoncxx::document::value core::extract_document() {
-    if (! _impl->is_viewable()) {
+    if (!_impl->is_viewable()) {
         throw(std::runtime_error("not viewable"));
     }
 
@@ -461,7 +459,7 @@ bsoncxx::document::value core::extract_document() {
 }
 
 bsoncxx::array::view core::view_array() const {
-    if (! _impl->is_viewable()) {
+    if (!_impl->is_viewable()) {
         throw(std::runtime_error("not viewable"));
     }
 
@@ -469,7 +467,7 @@ bsoncxx::array::view core::view_array() const {
 }
 
 bsoncxx::array::value core::extract_array() {
-    if (! _impl->is_viewable()) {
+    if (!_impl->is_viewable()) {
         throw(std::runtime_error("not viewable"));
     }
 

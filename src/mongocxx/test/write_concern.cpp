@@ -16,7 +16,6 @@
 
 #include <mongocxx/write_concern.hpp>
 
-
 using namespace mongocxx;
 
 TEST_CASE("a default write_concern", "[write_concern]") {

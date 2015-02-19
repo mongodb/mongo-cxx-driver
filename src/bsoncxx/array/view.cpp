@@ -39,7 +39,7 @@ view::iterator::pointer view::iterator::operator->() {
 }
 
 view::iterator& view::iterator::operator++() {
-    if (! _element) {
+    if (!_element) {
         return *this;
     }
 
@@ -91,7 +91,7 @@ view::const_iterator::pointer view::const_iterator::operator->() {
 }
 
 view::const_iterator& view::const_iterator::operator++() {
-    if (! _element) {
+    if (!_element) {
         return *this;
     }
 
@@ -195,7 +195,8 @@ view::operator document::view() const {
 }
 
 bool operator==(view lhs, view rhs) {
-    return (lhs.length() == rhs.length()) && (std::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0);
+    return (lhs.length() == rhs.length()) &&
+           (std::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0);
 }
 
 bool operator!=(view lhs, view rhs) {

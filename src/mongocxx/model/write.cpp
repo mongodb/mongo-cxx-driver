@@ -18,23 +18,17 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
-write::write(insert_one value)
-    : _type(write_type::k_insert_one), _insert_one(std::move(value)) {
+write::write(insert_one value) : _type(write_type::k_insert_one), _insert_one(std::move(value)) {
 }
-write::write(delete_one value)
-    : _type(write_type::k_delete_one), _delete_one(std::move(value)) {
+write::write(delete_one value) : _type(write_type::k_delete_one), _delete_one(std::move(value)) {
 }
-write::write(delete_many value)
-    : _type(write_type::k_delete_many), _delete_many(std::move(value)) {
+write::write(delete_many value) : _type(write_type::k_delete_many), _delete_many(std::move(value)) {
 }
-write::write(update_one value)
-    : _type(write_type::k_update_one), _update_one(std::move(value)) {
+write::write(update_one value) : _type(write_type::k_update_one), _update_one(std::move(value)) {
 }
-write::write(update_many value)
-    : _type(write_type::k_update_many), _update_many(std::move(value)) {
+write::write(update_many value) : _type(write_type::k_update_many), _update_many(std::move(value)) {
 }
-write::write(replace_one value)
-    : _type(write_type::k_replace_one), _replace_one(std::move(value)) {
+write::write(replace_one value) : _type(write_type::k_replace_one), _replace_one(std::move(value)) {
 }
 
 write::write(write&& rhs) : _type(write_type::k_uninitialized) {

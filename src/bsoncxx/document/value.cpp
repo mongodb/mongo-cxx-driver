@@ -25,8 +25,7 @@ value::value(std::uint8_t* data, std::size_t length, deleter_type dtor)
     : _data(data, dtor), _length(length) {
 }
 
-value::value(unique_ptr_type ptr, std::size_t length)
-    : _data(std::move(ptr)), _length(length) {
+value::value(unique_ptr_type ptr, std::size_t length) : _data(std::move(ptr)), _length(length) {
 }
 
 namespace {
@@ -38,8 +37,7 @@ void uint8_t_deleter(std::uint8_t* ptr) {
 }  // namespace
 
 value::value(document::view view)
-    : _data(new std::uint8_t[static_cast<std::size_t>(view.length())],
-            uint8_t_deleter),
+    : _data(new std::uint8_t[static_cast<std::size_t>(view.length())], uint8_t_deleter),
       _length(view.length()) {
     std::copy(view.data(), view.data() + view.length(), _data.get());
 }

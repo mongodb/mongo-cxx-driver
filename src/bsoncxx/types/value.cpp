@@ -25,11 +25,10 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace types {
 
-#define BSONCXX_ENUM(name, val) \
-value::value(b_##name value) : \
-    _type(static_cast<bsoncxx::type>(val)), \
-    _b_##name(std::move(value)) \
-{}
+#define BSONCXX_ENUM(name, val)                                                 \
+    value::value(b_##name value)                                                \
+        : _type(static_cast<bsoncxx::type>(val)), _b_##name(std::move(value)) { \
+    }
 
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
@@ -42,10 +41,10 @@ value& value::operator=(const value& rhs) {
     _type = rhs._type;
 
     switch (static_cast<int>(_type)) {
-#define BSONCXX_ENUM(type, val) \
-        case val: \
-            _b_##type = rhs.get_##type(); \
-            break;
+#define BSONCXX_ENUM(type, val)       \
+    case val:                         \
+        _b_##type = rhs.get_##type(); \
+        break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
     }
@@ -61,10 +60,10 @@ value& value::operator=(value&& rhs) {
     _type = rhs._type;
 
     switch (static_cast<int>(_type)) {
-#define BSONCXX_ENUM(type, val) \
-        case val: \
-            _b_##type = std::move(rhs._b_##type); \
-            break;
+#define BSONCXX_ENUM(type, val)               \
+    case val:                                 \
+        _b_##type = std::move(rhs._b_##type); \
+        break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
     }
@@ -75,9 +74,9 @@ value& value::operator=(value&& rhs) {
 value::~value() {
     switch (static_cast<int>(_type)) {
 #define BSONCXX_ENUM(type, val) \
-        case val: \
-            _b_##type.~b_##type(); \
-            break;
+    case val:                   \
+        _b_##type.~b_##type();  \
+        break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
     }
@@ -87,10 +86,10 @@ bsoncxx::type value::type() const {
     return _type;
 }
 
-#define BSONCXX_ENUM(type, val) \
-const types::b_##type& value::get_##type() const { \
-    return _b_##type; \
-}
+#define BSONCXX_ENUM(type, val)                        \
+    const types::b_##type& value::get_##type() const { \
+        return _b_##type;                              \
+    }
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
@@ -101,8 +100,8 @@ bool operator==(const value& lhs, const value& rhs) {
 
     switch (static_cast<int>(lhs.type())) {
 #define BSONCXX_ENUM(type, val) \
-        case val: \
-            return lhs.get_##type() == rhs.get_##type();
+    case val:                   \
+        return lhs.get_##type() == rhs.get_##type();
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
     }

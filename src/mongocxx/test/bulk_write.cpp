@@ -22,7 +22,6 @@
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/write_concern.hpp>
 
-
 using namespace mongocxx;
 
 TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
@@ -52,9 +51,7 @@ TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_wr
     auto destruct = libmongoc::bulk_operation_destroy.create_instance();
     bool destruct_called = false;
 
-    destruct->visit([&destruct_called](mongoc_bulk_operation_t* op) {
-        destruct_called = true;
-    });
+    destruct->visit([&destruct_called](mongoc_bulk_operation_t* op) { destruct_called = true; });
 
     bulk_write(true);
     REQUIRE(destruct_called);
@@ -63,14 +60,18 @@ TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_wr
 class SingleDocumentFun {
    public:
     SingleDocumentFun(bool& called, bsoncxx::document::view document)
-        : _called{called}, _document{document} { _called = false; }
+        : _called{called}, _document{document} {
+        _called = false;
+    }
 
     void operator()(mongoc_bulk_operation_t* bulk, const bson_t* document) {
         _called = true;
         REQUIRE(bson_get_data(document) == _document.data());
     }
 
-    bool called() const { return _called; }
+    bool called() const {
+        return _called;
+    }
 
    private:
     bool& _called;
@@ -79,16 +80,13 @@ class SingleDocumentFun {
 
 class FilteredDocumentFun : public SingleDocumentFun {
    public:
-    FilteredDocumentFun(bool& called, bsoncxx::document::view filter, bsoncxx::document::view document)
+    FilteredDocumentFun(bool& called, bsoncxx::document::view filter,
+                        bsoncxx::document::view document)
         : SingleDocumentFun(called, document), _expected_upsert(false), _filter{filter} {
     }
 
-    void operator()(
-        mongoc_bulk_operation_t* bulk,
-        const bson_t* filter,
-        const bson_t* document,
-        bool upsert
-    ) {
+    void operator()(mongoc_bulk_operation_t* bulk, const bson_t* filter, const bson_t* document,
+                    bool upsert) {
         SingleDocumentFun::operator()(bulk, document);
         REQUIRE(bson_get_data(filter) == _filter.data());
         REQUIRE(upsert == _expected_upsert);

@@ -19,7 +19,6 @@
 #include <bsoncxx/types/value.hpp>
 #include <mongocxx/result/insert_one.hpp>
 
-
 TEST_CASE("insert_one", "[insert_one][result]") {
     using namespace bsoncxx;
     builder::stream::document build;
