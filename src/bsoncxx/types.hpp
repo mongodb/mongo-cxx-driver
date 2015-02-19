@@ -226,7 +226,7 @@ inline bool operator==(const b_regex& lhs, const b_regex& rhs) {
 }
 
 ///
-/// A BSON DBPointer.
+/// A BSON DBPointer value.
 ///
 /// @deprecated
 ///   A BSON DBPointer (aka DBRef) is still supported but deprecated.
@@ -243,7 +243,7 @@ inline bool operator==(const b_dbpointer& lhs, const b_dbpointer& rhs) {
 }
 
 ///
-/// The JavaScript code value.
+/// A BSON JavaScript code value.
 ///
 /// @warning
 ///   This BSON type is used internally by the MongoDB server - use by clients

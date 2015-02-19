@@ -68,6 +68,9 @@ class MONGOCXX_API cursor {
     ///
     /// Returned pointer is only valid for the lifetime of this object.
     ///
+    /// @deprecated Future versions of the driver reserve the right to change the implementation
+    ///   and remove this interface entirely.
+    ///
     /// @return Pointer to implementation of this object, or nullptr if not available.
     ///
     MONGOCXX_DEPRECATED void* implementation() const;
