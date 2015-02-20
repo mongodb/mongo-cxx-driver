@@ -39,22 +39,19 @@ flags = [
     '-Wall',
     '-Wextra',
     '-Werror',
-    '-std=c++14',
-    '-x c++',
-    '-Isrc/',
-    '-Isrc/third_party/catch/include',
+    '-Wno-long-long',
+    '-Wno-variadic-macros',
+    '-std=c++11',
+    '-x', 'c++',
+    '-Isrc',
     '-Ibuild/src',
-    '-Iusr/local/include/libmongoc-1.0',
-    '-Iusr/local/include/libbson-1.0',
+    '-Ibuild/src/bsoncxx/third_party/EP_mnmlstc_core-prefix/src/EP_mnmlstc_core/include',
+    '-Isrc/third_party/catch/include',
+    '-I/usr/local/include/libmongoc-1.0',
+    '-I/usr/local/include/libbson-1.0',
+    '-I/usr/include'
+    '-I/usr/local/include',
     '-isystem/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1',
-    '-Wno-unknown-pragmas',
-    '-Wsign-compare',
-    '-Wno-unused-private-field',
-    '-Wno-mismatched-tags',
-    '-Winvalid-pch',
-    '-Wnon-virtual-dtor',
-    '-Woverloaded-virtual',
-    '-pipe'
 ]
 
 # Set this to the absolute path to the folder (NOT the file!) containing the
