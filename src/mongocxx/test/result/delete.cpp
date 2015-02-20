@@ -29,7 +29,6 @@ TEST_CASE("delete", "[delete][result]") {
     mongocxx::result::delete_result delete_result(std::move(b));
 
     SECTION("returns correct removed count") {
-        std::cout << bsoncxx::to_json(build.view());
         REQUIRE(delete_result.deleted_count() == 1);
     }
 }
