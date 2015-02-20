@@ -204,8 +204,12 @@ bsoncxx::stdx::optional<result::insert_one> collection::insert_one(bsoncxx::docu
 bsoncxx::stdx::optional<result::replace_one> collection::replace_one(
     bsoncxx::document::view filter, bsoncxx::document::view replacement,
     const options::update& options) {
+
     class bulk_write bulk_op(false);
     model::replace_one replace_op(filter, replacement);
+
+    if (options.upsert()) replace_op.upsert(options.upsert().value());
+
     bulk_op.append(replace_op);
 
     if (options.write_concern()) bulk_op.write_concern(*options.write_concern());
