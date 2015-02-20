@@ -206,7 +206,7 @@ class MONGOCXX_API collection {
     ///
     bsoncxx::document::value create_index(
         bsoncxx::document::view keys,
-        bsoncxx::document::view options
+        bsoncxx::document::view options = bsoncxx::document::view{}
     );
 
     ///

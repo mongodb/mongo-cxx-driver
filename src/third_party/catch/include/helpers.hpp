@@ -68,7 +68,9 @@
     auto database_get_collection = libmongoc::database_get_collection.create_instance();\
     database_get_collection->interpose([](mongoc_database_t*, const char*) { \
         return nullptr; \
-    }).forever();
+    }).forever(); \
+    auto database_command = libmongoc::database_command.create_instance(); \
+    auto database_command_simple = libmongoc::database_command_simple.create_instance();
 
 #define MOCK_COLLECTION \
     auto collection_set_preference = libmongoc::collection_set_read_prefs.create_instance(); \
@@ -80,7 +82,33 @@
     collection_set_concern->interpose([](mongoc_collection_t*,\
                                      const mongoc_write_concern_t*) {}).forever(); \
     auto collection_destroy = libmongoc::collection_destroy.create_instance();\
-    collection_destroy->interpose([](mongoc_collection_t*) {});
+    collection_destroy->interpose([](mongoc_collection_t*) {}); \
+    auto collection_drop = libmongoc::collection_drop.create_instance(); \
+    auto collection_count = libmongoc::collection_count.create_instance(); \
+    auto collection_create_index = libmongoc::collection_create_index.create_instance(); \
+
+#define MOCK_BULK \
+    auto bulk_operation_new = libmongoc::bulk_operation_new.create_instance(); \
+    auto bulk_operation_insert = libmongoc::bulk_operation_insert.create_instance(); \
+    auto bulk_operation_remove_one = libmongoc::bulk_operation_remove_one.create_instance(); \
+    auto bulk_operation_update_one = libmongoc::bulk_operation_update_one.create_instance(); \
+    auto bulk_operation_replace_one = libmongoc::bulk_operation_replace_one.create_instance(); \
+    auto bulk_operation_update = libmongoc::bulk_operation_update.create_instance(); \
+    auto bulk_operation_remove = libmongoc::bulk_operation_remove.create_instance(); \
+    auto bulk_operation_set_client = libmongoc::bulk_operation_set_client.create_instance(); \
+    auto bulk_operation_set_database = libmongoc::bulk_operation_set_database.create_instance(); \
+    auto bulk_operation_set_collection = libmongoc::bulk_operation_set_collection.create_instance(); \
+    auto bulk_operation_set_write_concern = libmongoc::bulk_operation_set_write_concern.create_instance(); \
+    auto bulk_operation_execute = libmongoc::bulk_operation_execute.create_instance(); \
+    auto bulk_operation_destroy = libmongoc::bulk_operation_destroy.create_instance(); \
+    bool bulk_operation_new_called = false; \
+    bool bulk_operation_op_called = false; \
+    bool bulk_operation_set_client_called = false; \
+    bool bulk_operation_set_database_called = false; \
+    bool bulk_operation_set_collection_called = false; \
+    bool bulk_operation_set_write_concern_called = false; \
+    bool bulk_operation_execute_called = false; \
+    bool bulk_operation_destroy_called = false; \
 
 #define MOCK_CONCERN \
     auto concern_copy = libmongoc::write_concern_copy.create_instance(); \

@@ -1,4 +1,7 @@
-add_definitions(-DMONGOCXX_TESTING)
+add_definitions(
+    -DMONGOCXX_TESTING
+    -Wno-deprecated-declarations
+)
 
 set(mongocxx_test_sources
     bulk_write.cpp

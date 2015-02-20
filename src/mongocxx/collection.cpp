@@ -26,6 +26,7 @@
 #include <mongocxx/write_concern.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/operation.hpp>
 #include <mongocxx/model/write.hpp>
 #include <mongocxx/private/libbson.hpp>
 #include <mongocxx/private/libmongoc.hpp>
@@ -409,9 +410,9 @@ std::int64_t collection::count(bsoncxx::document::view filter, const options::co
         _impl->collection_t, static_cast<mongoc_query_flags_t>(0), bson_filter.bson(),
         options.skip().value_or(0), options.limit().value_or(0), rp_ptr, &error);
 
-    /* TODO throw an exception if error
-    if (result < 0)
-    */
+    if (result < 0) {
+        throw exception::operation();
+    }
 
     return result;
 }
@@ -425,7 +426,7 @@ bsoncxx::document::value collection::create_index(bsoncxx::document::view keys,
         libmongoc::collection_create_index(_impl->collection_t, bson_keys.bson(), nullptr, &error);
 
     if (!result) {
-        // TODO: throw an exception here
+        throw exception::operation();
     }
 
     // TODO: return the response from the server, this is not possible now due to the way
@@ -433,11 +434,40 @@ bsoncxx::document::value collection::create_index(bsoncxx::document::view keys,
     return bsoncxx::document::value{bsoncxx::document::view{}};
 }
 
+cursor collection::distinct(const std::string& field_name, bsoncxx::document::view,
+    const options::distinct& options
+) {
+    auto command = bsoncxx::builder::stream::document{}
+        << "distinct" << name() << "key" << field_name
+    << bsoncxx::builder::stream::finalize;
+
+    //auto database = libmongoc::client_get_database(
+        //_impl->client_impl->client_t,
+        //_impl->database_name.c_str()
+    //);
+
+    //auto result = libmongoc::database_command(
+        //database,
+        //MONGOC_QUERY_NONE,
+        //0,
+        //0,
+        //0,
+        //NULL,
+        //NULL,
+        //NULL
+    //);
+
+    //return cursor(result);
+    return cursor(nullptr);
+}
+
 void collection::drop() {
     bson_error_t error;
 
-    if (libmongoc::collection_drop(_impl->collection_t, &error)) {
-        /* TODO handle errors */
+    auto result = libmongoc::collection_drop(_impl->collection_t, &error);
+
+    if (!result) {
+        throw exception::operation();
     }
 }
 
