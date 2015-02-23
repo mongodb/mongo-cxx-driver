@@ -904,7 +904,7 @@ namespace {
 
     TEST_F(DBClientTest, CreateCollectionAdvanced) {
         BSONObjBuilder opts;
-        opts.append("usePowerOf2Sizes", 0);
+        opts.append("flags", 0);
         opts.append("autoIndexId", false);
         c.createCollectionWithOptions(TEST_NS, 1, true, 1, opts.obj());
 
