@@ -284,6 +284,7 @@ TEST_CASE("Collection", "[collection]") {
             }
 
             SECTION("Write Concern provided") {
+                upsert_option = false;
                 options.write_concern(concern);
                 expect_set_write_concern_called = true;
             }
