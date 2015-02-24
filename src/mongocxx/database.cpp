@@ -18,6 +18,7 @@
 #include <mongocxx/private/database.hpp>
 #include <mongocxx/private/client.hpp>
 #include <mongocxx/private/read_preference.hpp>
+#include <mongocxx/private/libbson.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
@@ -46,6 +47,11 @@ const std::string& database::name() const {
 
 void database::read_preference(class read_preference rp) {
     libmongoc::database_set_read_prefs(_impl->database_t, rp._impl->read_preference_t);
+}
+
+bool database::has_collection(const std::string& name) {
+    bson_error_t error;
+    return libmongoc::database_has_collection(_impl->database_t, name.c_str(), &error);
 }
 
 class read_preference database::read_preference() const {

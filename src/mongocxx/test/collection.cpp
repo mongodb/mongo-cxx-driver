@@ -12,7 +12,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     client mongodb_client;
     database db = mongodb_client["test"];
     collection coll = db["mongo_cxx_driver"];
-    coll.drop();
+
+    if (db.has_collection("mongo_cxx_driver"))
+        coll.drop();
 
     SECTION("insert and read single document", "[collection]") {
         bsoncxx::builder::stream::document b;
