@@ -55,6 +55,11 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+add_custom_target(docs
+    doxygen ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
+    VERBATIM
+)
+
 add_custom_target(modernize
     clang-modernize
         -p ${CMAKE_BINARY_DIR}/compile_commands.json
