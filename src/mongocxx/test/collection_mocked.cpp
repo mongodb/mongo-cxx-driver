@@ -141,6 +141,41 @@ TEST_CASE("Collection", "[collection]") {
         REQUIRE(collection_drop_called);
     }
 
+    SECTION("Find", "[collection::find]") {
+        auto cursor_destroy = libmongoc::cursor_destroy.create_instance();
+        cursor_destroy->interpose([&](mongoc_cursor_t*){});
+
+        auto doc = bsoncxx::document::view{};
+
+        collection_find->interpose([&](
+            mongoc_collection_t* coll,
+            mongoc_query_flags_t flags,
+            uint32_t skip,
+            uint32_t limit,
+            uint32_t batch_size,
+            const bson_t* query,
+            const bson_t* fields,
+            const mongoc_read_prefs_t* read_prefs
+        ) {
+            collection_find_called = true;
+            REQUIRE(coll == mongo_coll.implementation());
+            REQUIRE(flags == MONGOC_QUERY_NONE);
+            REQUIRE(skip == skip);
+            REQUIRE(limit == limit);
+            REQUIRE(batch_size == batch_size);
+            REQUIRE(bson_get_data(query) == doc.data());
+            REQUIRE(fields == NULL);
+            REQUIRE(read_prefs == NULL);
+
+            mongoc_cursor_t* cursor = NULL;
+            return cursor;
+        });
+
+        mongo_coll.find(doc);
+
+        REQUIRE(collection_find_called);
+    }
+
     SECTION("Writes", "[collection::writes]") {
         auto expected_order_setting = false;
         auto expect_set_write_concern_called = false;

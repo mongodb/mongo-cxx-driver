@@ -86,6 +86,8 @@
     auto collection_drop = libmongoc::collection_drop.create_instance(); \
     auto collection_count = libmongoc::collection_count.create_instance(); \
     auto collection_create_index = libmongoc::collection_create_index.create_instance(); \
+    auto collection_find = libmongoc::collection_find.create_instance(); \
+    bool collection_find_called = false;
 
 #define MOCK_BULK \
     auto bulk_operation_new = libmongoc::bulk_operation_new.create_instance(); \

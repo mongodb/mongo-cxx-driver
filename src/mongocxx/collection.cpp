@@ -142,6 +142,7 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
     if (options.allow_disk_use()) {
         /* TODO */
     }
+
     if (options.use_cursor()) {
         auto inner = b << "cursor" << open_document;
 
