@@ -15,6 +15,7 @@
 #include <mongocxx/database.hpp>
 
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/operation.hpp>
 #include <mongocxx/private/database.hpp>
 #include <mongocxx/private/client.hpp>
 #include <mongocxx/private/read_preference.hpp>
@@ -43,6 +44,25 @@ void* database::implementation() const {
 
 const std::string& database::name() const {
     return _impl->name;
+}
+
+bsoncxx::document::value database::command(bsoncxx::document::view command) {
+    libbson::scoped_bson_t command_bson{command};
+    libbson::scoped_bson_t reply_bson;
+    bson_error_t error;
+
+    auto result = libmongoc::database_command_simple(
+        _impl->database_t,
+        command_bson.bson(),
+        NULL,
+        reply_bson.bson(),
+        &error
+    );
+
+    if (!result)
+        throw exception::operation();
+
+    return reply_bson.steal();
 }
 
 void database::read_preference(class read_preference rp) {
