@@ -110,7 +110,7 @@ generate_export_header (mongocxx
     STATIC_DEFINE MONGOCXX_STATIC
 )
 
-set(mongocxx_libs bsoncxx )
+set(mongocxx_libs bsoncxx)
 
 target_link_libraries(mongocxx_static bsoncxx ${LIBMONGOC_LIBRARIES})
 target_link_libraries(mongocxx_mocked bsoncxx ${LIBMONGOC_LIBRARIES})

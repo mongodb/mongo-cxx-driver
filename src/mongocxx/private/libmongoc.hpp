@@ -31,7 +31,7 @@ namespace libmongoc {
 #define MONGOCXX_LIBMONGOC_SYMBOL(name) constexpr auto name = mongoc_##name;
 #include "libmongoc_symbols.hpp"
 #undef MONGOCXX_LIBMONGOC_SYMBOL
-#endif  // MONGOCXX_TESTING
+#endif
 
 }  // namespace libmongoc
 MONGOCXX_INLINE_NAMESPACE_END
