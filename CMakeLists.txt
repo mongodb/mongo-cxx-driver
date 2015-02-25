@@ -80,4 +80,7 @@ add_custom_target(format
 enable_testing()
 
 add_subdirectory(src)
-add_subdirectory(examples)
+
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
