@@ -16,6 +16,6 @@ set(BSONCXX_EXAMPLES
 foreach(EXAMPLE_SRC ${BSONCXX_EXAMPLES})
     get_filename_component(EXAMPLE_TARGET ${EXAMPLE_SRC} NAME_WE)
     add_executable(${EXAMPLE_TARGET} ${EXAMPLE_SRC})
-    add_dependencies(${EXAMPLE_TARGET} install_headers)
+    add_dependencies(${EXAMPLE_TARGET} install_headers install_libs)
     target_link_libraries(${EXAMPLE_TARGET} bsoncxx ${bsoncxx_libs})
 endforeach(EXAMPLE_SRC)
