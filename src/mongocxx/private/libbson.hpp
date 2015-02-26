@@ -27,24 +27,87 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace libbson {
 
+///
+/// Class that wraps and manages libmongoc's bson_t structures. It is useful for converting between
+/// mongocxx's bson::document::view() and libmongoc's bson_t when communicating with the underlying
+/// driver. It is an RAII style class that will destroy an initialized bson_t when destructed.
+///
+/// Libmongoc's bson_destroy will not be called on the bson_t upon destruction unless either
+/// init(), flag_init(), or init_from_static() are called during a scoped_bson_t's lifetime
+/// after which the internal bson_t is considered initialized.
+///
+/// Initialization of a scoped bson_t depends on how it is expected to be used.
+///
+/// If the bson_t will be used in a read-only fashion then init_from_static should be called.
+///
+/// If this bson_t will be used by a function that calls bson_init itself then flag_init()
+/// should be called after such use. If this bson_t will be used by a function that does
+/// not call init itself (expecting an already initialized bson_t) then init() could be called
+/// instead.
+///
 class scoped_bson_t {
+
    public:
-    scoped_bson_t(const bsoncxx::stdx::optional<bsoncxx::document::view>& doc);
-    scoped_bson_t(const bsoncxx::document::view& doc);
+    ///
+    /// Constructs a new scoped_bson_t having a non-initialized interal bson_t.
+    ///
     scoped_bson_t();
+
+    ///
+    /// Constructs a new scoped_bson_t from an optional document view.
+    ///
+    /// If the optional argument is engaged the internal bson_t is considered initialized.
+    ///
+    scoped_bson_t(const bsoncxx::stdx::optional<bsoncxx::document::view>& doc);
+
+    ///
+    /// Constructs a new scoped_bson_t from a document view.
+    ///
+    /// The internal bson_t is considered initialized.
+    ///
+    scoped_bson_t(const bsoncxx::document::view& doc);
+
+    ///
+    /// Constructs a read-only bson_t from the document::view argument if one is provided.
+    ///
+    /// If the optional argument is engaged the internal bson_t is considered initialized.
+    ///
+    void init_from_static(const bsoncxx::stdx::optional<bsoncxx::document::view>& doc);
+
+    ///
+    /// Constructs a read-only bson_t from the provided document.
+    ///
+    /// The internal bson_t is considered initialized.
+    ///
+    void init_from_static(const bsoncxx::document::view& doc);
+
+    ///
+    /// Initialize the internal bson_t.
+    ///
+    /// This is equivalent to calling libmongoc's bson_init() and informing this scoped_bson_t
+    /// instance that it should call bson_destroy on the internal bson_t when destructed.
+    ///
+    void init();
+
+    ///
+    /// Marks this bson_t as initialized (presumably by another libmongoc function).
+    ///
+    /// This C++ class has no way of knowing that the C driver has initialized this bson_t
+    /// internally (possibly as a side effect of a function call) so this is a way of explictly
+    /// saying so.
+    ///
+    void flag_init();
+
+    ~scoped_bson_t();
 
     scoped_bson_t(const scoped_bson_t& rhs) = delete;
     scoped_bson_t& operator=(const scoped_bson_t& rhs) = delete;
     scoped_bson_t(scoped_bson_t&& rhs) = delete;
     scoped_bson_t& operator=(scoped_bson_t&& rhs) = delete;
 
-    void init_from_static(const bsoncxx::stdx::optional<bsoncxx::document::view>& doc);
-    void init_from_static(const bsoncxx::document::view& doc);
-    void init();
-    void flag_init();
-
-    ~scoped_bson_t();
-
+    ///
+    /// Get a pointer to the wrapped internal bson_t structure.
+    ///
     bson_t* bson();
 
     bsoncxx::document::view view();
