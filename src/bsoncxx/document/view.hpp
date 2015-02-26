@@ -39,6 +39,23 @@ class BSONCXX_API view {
     class const_iterator;
 
     ///
+    /// Default constructs a view. The resulting view will be initialized to point at
+    /// an empty BSON document.
+    ///
+    view();
+
+    ///
+    /// Constructs a view from a buffer. The caller is responsible for ensuring that
+    /// the lifetime of the resulting view is a subset of the buffer's.
+    ///
+    /// @param data
+    ///   A buffer containing a valid BSON document.
+    /// @param length
+    ///   The size of the buffer, in bytes.
+    ///
+    view(const std::uint8_t* data, std::size_t length);
+
+    ///
     /// @returns A const_iterator to the first element of the document.
     ///
     const_iterator cbegin() const;
@@ -86,23 +103,6 @@ class BSONCXX_API view {
     /// @return The matching element, if found, or the invalid element.
     ///
     element operator[](stdx::string_view key) const;
-
-    ///
-    /// Default constructs a view. The resulting view will be initialized to point at
-    /// an empty BSON document.
-    ///
-    view();
-
-    ///
-    /// Constructs a view from a buffer. The caller is responsible for ensuring that
-    /// the lifetime of the resulting view is a subset of the buffer's.
-    ///
-    /// @param data
-    ///   A buffer containing a valid BSON document.
-    /// @param length
-    ///   The size of the buffer, in bytes.
-    ///
-    view(const std::uint8_t* data, std::size_t length);
 
     ///
     /// Access the raw bytes of the underlying document.
