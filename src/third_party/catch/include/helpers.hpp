@@ -87,7 +87,12 @@
     auto collection_count = libmongoc::collection_count.create_instance(); \
     auto collection_create_index = libmongoc::collection_create_index.create_instance(); \
     auto collection_find = libmongoc::collection_find.create_instance(); \
-    bool collection_find_called = false;
+    auto collection_aggregate = libmongoc::collection_aggregate.create_instance(); \
+
+#define MOCK_CURSOR \
+    auto cursor_destroy = libmongoc::cursor_destroy.create_instance(); \
+    cursor_destroy->interpose([&](mongoc_cursor_t*){});
+
 
 #define MOCK_BULK \
     auto bulk_operation_new = libmongoc::bulk_operation_new.create_instance(); \

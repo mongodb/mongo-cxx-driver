@@ -140,7 +140,7 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
     bsoncxx::builder::stream::document b;
 
     if (options.allow_disk_use()) {
-        /* TODO */
+        b << "allowDiskUse" << *options.allow_disk_use();
     }
 
     if (options.use_cursor()) {
@@ -154,7 +154,7 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
     }
 
     if (options.max_time_ms()) {
-        /* TODO */
+        b << "maxTimeMS" << *options.max_time_ms();
     }
 
     scoped_bson_t options_bson(b.view());

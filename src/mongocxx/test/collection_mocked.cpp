@@ -23,6 +23,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/collection.hpp>
+#include <mongocxx/pipeline.hpp>
 #include <mongocxx/options/update.hpp>
 #include <mongocxx/exception/operation.hpp>
 
@@ -37,6 +38,7 @@ TEST_CASE("Collection", "[collection]") {
     MOCK_DATABASE
     MOCK_COLLECTION
     MOCK_BULK
+    MOCK_CURSOR
 
     client mongo_client;
     write_concern concern;
@@ -47,7 +49,61 @@ TEST_CASE("Collection", "[collection]") {
         << "_id" << "wow" << "foo" << "bar"
     << builder::stream::finalize;
 
-    SECTION("Count" "[collection::count]") {
+    SECTION("Aggregate", "[Collection::aggregate]") {
+        auto collection_aggregate_called = false;
+
+        collection_aggregate->interpose([&](
+            mongoc_collection_t* collection,
+            mongoc_query_flags_t flags,
+            const bson_t* pipeline,
+            const bson_t* options,
+            const mongoc_read_prefs_t* read_prefs
+        ) {
+            collection_aggregate_called = true;
+            REQUIRE(collection == mongo_coll.implementation());
+            REQUIRE(flags == MONGOC_QUERY_NONE);
+
+            bsoncxx::array::view p(bson_get_data(pipeline), pipeline->len);
+
+            bsoncxx::stdx::string_view bar(
+                p[0].get_document().value["$match"].get_document().value["foo"].get_utf8()
+            );
+            std::int32_t one(
+                p[1].get_document().value["$sort"].get_document().value["foo"].get_int32()
+            );
+
+            REQUIRE(bar == bsoncxx::stdx::string_view("bar"));
+            REQUIRE(one == 1);
+
+            REQUIRE(read_prefs == mongo_coll.read_preference().implementation());
+
+            mongoc_cursor_t* cursor = NULL;
+            return cursor;
+        });
+
+        pipeline pipe;
+        pipe.match(builder::stream::document{} << "foo" << "bar" << builder::stream::finalize);
+        pipe.sort(builder::stream::document{} << "foo" << 1 << builder::stream::finalize);
+
+        options::aggregate options;
+
+        SECTION("Without any options") {
+        }
+
+        SECTION("With some options") {
+            options.allow_disk_use(true);
+            options.max_time_ms(1234);
+            // TODO: doesn't our design mandate the use of cursors
+            options.use_cursor(true);
+            options.batch_size(5678);
+        }
+
+        mongo_coll.aggregate(pipe);
+
+        REQUIRE(collection_aggregate_called);
+    }
+
+    SECTION("Count", "[collection::count]") {
         auto collection_count_called = false;
         bool success;
 
@@ -66,6 +122,7 @@ TEST_CASE("Collection", "[collection]") {
             REQUIRE(bson_get_data(query) == filter_doc.view().data());
             REQUIRE(skip == 0);
             REQUIRE(limit == 0);
+            REQUIRE(read_prefs == mongo_coll.read_preference().implementation());
             return success ? 123 : -1;
         });
 
@@ -142,9 +199,7 @@ TEST_CASE("Collection", "[collection]") {
     }
 
     SECTION("Find", "[collection::find]") {
-        auto cursor_destroy = libmongoc::cursor_destroy.create_instance();
-        cursor_destroy->interpose([&](mongoc_cursor_t*){});
-
+        auto collection_find_called = false;
         auto doc = bsoncxx::document::view{};
 
         collection_find->interpose([&](
