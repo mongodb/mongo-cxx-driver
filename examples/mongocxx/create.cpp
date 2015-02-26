@@ -2,6 +2,7 @@
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/client.hpp>
+#include <mongocxx/instance.hpp>
 
 using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::open_document;

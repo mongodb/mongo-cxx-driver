@@ -5,6 +5,7 @@
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/options/find.hpp>
+#include <mongocxx/instance.hpp>
 
 using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::open_document;

@@ -4,6 +4,7 @@
 #include <bsoncxx/json.hpp>
 
 #include <mongocxx/client.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/pipeline.hpp>
 
 using bsoncxx::builder::stream::document;
