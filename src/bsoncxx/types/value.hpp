@@ -372,25 +372,21 @@ namespace types {
 
     // these all return bool
     template <typename T>
-    BSONCXX_INLINE
     not_value<T> operator==(const value& lhs, T&& rhs) {
         return lhs == value{std::forward<T>(rhs)};
     }
 
     template <typename T>
-    BSONCXX_INLINE
     not_value<T> operator==(T&& lhs, const value& rhs) {
         return value{std::forward<T>(lhs)} == rhs;
     }
 
     template <typename T>
-    BSONCXX_INLINE
     not_value<T> operator!=(const value& lhs, T&& rhs) {
         return lhs != value{std::forward<T>(rhs)};
     }
 
     template <typename T>
-    BSONCXX_INLINE
     not_value<T> operator!=(T&& lhs, const value& rhs) {
         return value{std::forward<T>(lhs)} != rhs;
     }

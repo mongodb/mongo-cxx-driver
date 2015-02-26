@@ -38,10 +38,9 @@ namespace stream {
 template <class base = closed_context>
 class array_context {
    public:
-    BSONCXX_INLINE array_context(core* core) : _core(core) {}
+    array_context(core* core) : _core(core) {}
 
     template <class T>
-    BSONCXX_INLINE
     typename std::enable_if<!(util::is_functor<T, void(array_context<>)>::value || util::is_functor<T, void(single_context)>::value || std::is_same<T, const close_document_type>::value || std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value), array_context>::type& operator<<(
         T&& t) {
         _core->append(std::forward<T>(t));
@@ -49,7 +48,6 @@ class array_context {
     }
 
     template <typename Func>
-    BSONCXX_INLINE
     typename std::enable_if<(util::is_functor<Func, void(array_context<>)>::value || util::is_functor<Func, void(single_context)>::value), array_context>::type& operator<<(
         Func func) {
         func(*this);
@@ -57,7 +55,6 @@ class array_context {
     }
 
     template <typename T>
-    BSONCXX_INLINE
     typename std::enable_if<std::is_same<base, closed_context>::value &&
                             std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value,
                             array::value>::type
@@ -65,34 +62,34 @@ class array_context {
         return _core->extract_array();
     }
 
-    BSONCXX_INLINE key_context<array_context> operator<<(const open_document_type) {
+    key_context<array_context> operator<<(const open_document_type) {
         _core->open_document();
         return wrap_document();
     }
 
-    BSONCXX_INLINE array_context operator<<(concatenate concatenate) {
+    array_context operator<<(concatenate concatenate) {
         _core->concatenate(concatenate);
         return *this;
     }
 
-    BSONCXX_INLINE array_context<array_context> operator<<(const open_array_type) {
+    array_context<array_context> operator<<(const open_array_type) {
         _core->open_array();
         return wrap_array();
     }
 
-    BSONCXX_INLINE base operator<<(const close_array_type) {
+    base operator<<(const close_array_type) {
         _core->close_array();
         return unwrap();
     }
 
-    BSONCXX_INLINE operator array_context<>() { return array_context<>(_core); }
+    operator array_context<>() { return array_context<>(_core); }
 
-    BSONCXX_INLINE operator single_context();
+    operator single_context();
 
    private:
-    BSONCXX_INLINE base unwrap() { return base(_core); }
-    BSONCXX_INLINE array_context<array_context> wrap_array() { return array_context<array_context>(_core); }
-    BSONCXX_INLINE key_context<array_context> wrap_document() { return key_context<array_context>(_core); }
+    base unwrap() { return base(_core); }
+    array_context<array_context> wrap_array() { return array_context<array_context>(_core); }
+    key_context<array_context> wrap_document() { return key_context<array_context>(_core); }
 
     core* _core;
 };

@@ -34,10 +34,10 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 
 class json_visitor {
    public:
-    BSONCXX_INLINE json_visitor(std::ostream& out, bool is_array, std::size_t padding)
+    json_visitor(std::ostream& out, bool is_array, std::size_t padding)
         : out(out), stack({is_array}), padding(padding) {}
 
-    BSONCXX_INLINE void visit_key(stdx::string_view value) {
+    void visit_key(stdx::string_view value) {
         pad();
 
         if (!stack.back()) {
@@ -46,13 +46,13 @@ class json_visitor {
         }
     }
 
-    BSONCXX_INLINE void visit_value(const types::b_eod&) {}
+    void visit_value(const types::b_eod&) {}
 
-    BSONCXX_INLINE void visit_value(const types::b_double& value) { out << value.value; }
+    void visit_value(const types::b_double& value) { out << value.value; }
 
-    BSONCXX_INLINE void visit_value(const types::b_utf8& value) { out << "\"" << value.value.data() << "\""; }
+    void visit_value(const types::b_utf8& value) { out << "\"" << value.value.data() << "\""; }
 
-    BSONCXX_INLINE void visit_value(const types::b_document& value) {
+    void visit_value(const types::b_document& value) {
         out << "{" << std::endl;
         stack.push_back(false);
         visit_children(value.value);
@@ -60,7 +60,7 @@ class json_visitor {
         out << "}";
     }
 
-    BSONCXX_INLINE void visit_value(const types::b_array& value) {
+    void visit_value(const types::b_array& value) {
         out << "[" << std::endl;
         stack.push_back(true);
         visit_children(value.value);
@@ -68,7 +68,7 @@ class json_visitor {
         out << "]";
     }
 
-    BSONCXX_INLINE void visit_value(const types::b_binary& value) {
+    void visit_value(const types::b_binary& value) {
 
         std::size_t b64_len;
 
@@ -85,7 +85,7 @@ class json_visitor {
         out << "}";
     }
 
-    BSONCXX_INLINE void visit_value(const types::b_undefined&) {
+    void visit_value(const types::b_undefined&) {
 
         out << "{" << std::endl;
         pad(1);
@@ -94,7 +94,7 @@ class json_visitor {
         out << "}";
     }
 
-    BSONCXX_INLINE void visit_value(const types::b_oid& value) {
+    void visit_value(const types::b_oid& value) {
 
         out << "{" << std::endl;
         pad(1);
@@ -103,11 +103,9 @@ class json_visitor {
         out << "}";
     }
 
-    BSONCXX_INLINE void visit_value(const types::b_bool& value) {
-        out << (value.value ? "true" : "false");
-    }
+    void visit_value(const types::b_bool& value) { out << (value.value ? "true" : "false"); }
 
-    BSONCXX_INLINE void visit_value(const types::b_date& value) {
+    void visit_value(const types::b_date& value) {
 
         out << "{" << std::endl;
         pad(1);
@@ -116,9 +114,9 @@ class json_visitor {
         out << "}";
     }
 
-    BSONCXX_INLINE void visit_value(const types::b_null&) { out << "null"; }
+    void visit_value(const types::b_null&) { out << "null"; }
 
-    BSONCXX_INLINE void visit_value(const types::b_regex& value) {
+    void visit_value(const types::b_regex& value) {
 
         out << "{" << std::endl;
         pad(1);
@@ -129,7 +127,7 @@ class json_visitor {
         out << "}";
     }
 
-    BSONCXX_INLINE void visit_value(const types::b_dbpointer& value) {
+    void visit_value(const types::b_dbpointer& value) {
 
         out << "{" << std::endl;
         pad(1);
@@ -145,15 +143,15 @@ class json_visitor {
         out << "}";
     }
 
-    BSONCXX_INLINE void visit_value(const types::b_code& value) { out << value.code.data(); }
+    void visit_value(const types::b_code& value) { out << value.code.data(); }
 
-    BSONCXX_INLINE void visit_value(const types::b_symbol& value) { out << value.symbol.data(); }
+    void visit_value(const types::b_symbol& value) { out << value.symbol.data(); }
 
-    BSONCXX_INLINE void visit_value(const types::b_codewscope& value) { out << value.code.data(); }
+    void visit_value(const types::b_codewscope& value) { out << value.code.data(); }
 
-    BSONCXX_INLINE void visit_value(const types::b_int32& value) { out << value.value; }
+    void visit_value(const types::b_int32& value) { out << value.value; }
 
-    BSONCXX_INLINE void visit_value(const types::b_timestamp& value) {
+    void visit_value(const types::b_timestamp& value) {
 
         out << "{" << std::endl;
         pad(1);
@@ -168,9 +166,9 @@ class json_visitor {
         out << "}";
     }
 
-    BSONCXX_INLINE void visit_value(const types::b_int64& value) { out << value.value; }
+    void visit_value(const types::b_int64& value) { out << value.value; }
 
-    BSONCXX_INLINE void visit_value(const types::b_minkey&) {
+    void visit_value(const types::b_minkey&) {
 
         out << "{" << std::endl;
         pad(1);
@@ -179,7 +177,7 @@ class json_visitor {
         out << "}";
     }
 
-    BSONCXX_INLINE void visit_value(const types::b_maxkey&) {
+    void visit_value(const types::b_maxkey&) {
 
         out << "{" << std::endl;
         pad(1);
@@ -193,11 +191,11 @@ class json_visitor {
     std::vector<bool> stack;
     std::size_t padding;
 
-    BSONCXX_INLINE void pad(std::size_t extra = 0) {
+    void pad(std::size_t extra = 0) {
         out << std::setw((stack.size() + -1 + extra + padding) * 4) << "" << std::setw(0);
     }
 
-    BSONCXX_INLINE void visit_children(const document::view& view) {
+    void visit_children(const document::view& view) {
         bool first = true;
         for (auto&& x : view) {
             if (!first) {
@@ -227,7 +225,7 @@ class json_visitor {
 ///
 /// @returns A JSON string.
 ///
-inline BSONCXX_INLINE std::string to_json(document::view view) {
+inline std::string to_json(document::view view) {
     std::stringstream ss;
 
     json_visitor v(ss, false, 0);
@@ -245,7 +243,7 @@ inline BSONCXX_INLINE std::string to_json(document::view view) {
 ///
 /// @returns A JSON key-value pair.
 ///
-inline BSONCXX_INLINE std::string to_json(document::element element) {
+inline std::string to_json(document::element element) {
     std::stringstream ss;
 
     json_visitor v(ss, false, 0);
@@ -272,7 +270,7 @@ inline BSONCXX_INLINE std::string to_json(document::element element) {
 ///
 /// @returns A JSON value.
 ///
-inline BSONCXX_INLINE std::string to_json(types::value value) {
+inline std::string to_json(types::value value) {
     std::stringstream ss;
 
     json_visitor v(ss, false, 0);

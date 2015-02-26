@@ -219,7 +219,6 @@ class BSONCXX_API core {
     /// Append a string literal as a BSON UTF-8 string.
     ///
     template <std::size_t n>
-    BSONCXX_INLINE
     void append(const char (&v)[n]) {
         append(types::b_utf8{v});
     }

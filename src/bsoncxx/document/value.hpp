@@ -80,9 +80,9 @@ class BSONCXX_API value {
     ///
     /// Get a view over the document owned by this value.
     ///
-    inline BSONCXX_INLINE document::view view() const noexcept;
+    inline document::view view() const noexcept;
 
-    inline BSONCXX_INLINE operator document::view() const noexcept;
+    inline operator document::view() const noexcept;
 
     ///
     /// Transfer ownership of the underlying buffer to the caller.
@@ -101,11 +101,11 @@ class BSONCXX_API value {
 
 };
 
-inline BSONCXX_INLINE document::view value::view() const noexcept {
+document::view value::view() const noexcept {
     return document::view{static_cast<uint8_t*>(_data.get()), _length};
 }
 
-inline BSONCXX_INLINE value::operator document::view() const noexcept {
+value::operator document::view() const noexcept {
     return view();
 }
 

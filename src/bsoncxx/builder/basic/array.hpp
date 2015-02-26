@@ -40,11 +40,11 @@ class BSONCXX_API array : public sub_array {
     ///
     /// @return A view of the BSON array.
     ///
-    BSONCXX_INLINE bsoncxx::array::view view() const {
+    bsoncxx::array::view view() const {
         return _core.view_array();
     }
 
-    BSONCXX_INLINE operator bsoncxx::array::view() const {
+    operator bsoncxx::array::view() const {
         return view();
     }
 
@@ -57,14 +57,14 @@ class BSONCXX_API array : public sub_array {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequenly moved into.
     ///
-    BSONCXX_INLINE bsoncxx::array::value extract() {
+    bsoncxx::array::value extract() {
         return _core.extract_array();
     }
 
     ///
     /// Reset the underlying BSON to an empty array.
     ///
-    BSONCXX_INLINE void clear() {
+    void clear() {
         _core.clear();
     }
 

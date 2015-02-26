@@ -193,7 +193,7 @@ class MONGOCXX_API database {
     ///
     /// @return the collection.
     ///
-    inline MONGOCXX_INLINE class collection operator[](const std::string& name) const;
+    inline class collection operator[](const std::string& name) const;
 
    private:
     friend class client;
@@ -206,7 +206,7 @@ class MONGOCXX_API database {
 
 };
 
-inline MONGOCXX_INLINE collection database::operator[](const std::string& name) const {
+inline collection database::operator[](const std::string& name) const {
     return collection(name);
 }
 

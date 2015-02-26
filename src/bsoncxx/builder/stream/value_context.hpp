@@ -30,10 +30,9 @@ namespace stream {
 template <class base>
 class value_context {
    public:
-    BSONCXX_INLINE value_context(core* core) : _core(core) {}
+    value_context(core* core) : _core(core) {}
 
     template <class T>
-    BSONCXX_INLINE
     typename std::enable_if<!util::is_functor<T, void(single_context)>::value, base>::type operator<<(
         T&& t) {
         _core->append(std::forward<T>(t));
@@ -41,19 +40,18 @@ class value_context {
     }
 
     template <typename T>
-    BSONCXX_INLINE
     typename std::enable_if<util::is_functor<T, void(single_context)>::value, base>::type operator<<(
         T&& func) {
         func(*this);
         return unwrap();
     }
 
-    BSONCXX_INLINE key_context<base> operator<<(const open_document_type) {
+    key_context<base> operator<<(const open_document_type) {
         _core->open_document();
         return wrap_document();
     }
 
-    BSONCXX_INLINE array_context<base> operator<<(const open_array_type) {
+    array_context<base> operator<<(const open_array_type) {
         _core->open_array();
         return wrap_array();
     }
@@ -64,9 +62,9 @@ class value_context {
                   "value_context must be templatized on a key_context");
 
    private:
-    BSONCXX_INLINE base unwrap() { return base(_core); }
-    BSONCXX_INLINE array_context<base> wrap_array() { return array_context<base>(_core); }
-    BSONCXX_INLINE key_context<base> wrap_document() { return key_context<base>(_core); }
+    base unwrap() { return base(_core); }
+    array_context<base> wrap_array() { return array_context<base>(_core); }
+    key_context<base> wrap_document() { return key_context<base>(_core); }
 
     core* _core;
 };

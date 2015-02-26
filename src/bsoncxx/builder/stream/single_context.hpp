@@ -28,25 +28,24 @@ namespace stream {
 
 class single_context {
    public:
-    BSONCXX_INLINE single_context(core* core) : _core(core) {}
+    single_context(core* core) : _core(core) {}
 
-    BSONCXX_INLINE array_context<single_context> wrap_array() { return array_context<single_context>(_core); }
-    BSONCXX_INLINE key_context<single_context> wrap_document() { return key_context<single_context>(_core); }
+    array_context<single_context> wrap_array() { return array_context<single_context>(_core); }
+    key_context<single_context> wrap_document() { return key_context<single_context>(_core); }
 
-    BSONCXX_INLINE key_context<single_context> operator<<(open_document_type) {
+    key_context<single_context> operator<<(open_document_type) {
         _core->open_document();
 
         return wrap_document();
     }
 
-    BSONCXX_INLINE array_context<single_context> operator<<(open_array_type) {
+    array_context<single_context> operator<<(open_array_type) {
         _core->open_array();
 
         return wrap_array();
     }
 
     template <class T>
-    BSONCXX_INLINE
     void operator<<(T&& t) {
         _core->append(std::forward<T>(t));
     }
@@ -56,13 +55,11 @@ class single_context {
 };
 
 template <class T>
-BSONCXX_INLINE
 array_context<T>::operator single_context() {
     return single_context(_core);
 }
 
 template <class T>
-BSONCXX_INLINE
 value_context<T>::operator single_context() {
     return single_context(_core);
 }

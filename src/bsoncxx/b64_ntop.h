@@ -123,7 +123,7 @@ const char Pad64 = '=';
  *    characters followed by one "=" padding character.
  */
 
-inline BSONCXX_INLINE int
+inline int
 ntop (std::uint8_t const *src,
       std::size_t         srclength,
       char          *target,
