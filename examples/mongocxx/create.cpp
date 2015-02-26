@@ -11,6 +11,7 @@ using bsoncxx::builder::stream::close_array;
 using bsoncxx::builder::stream::finalize;
 
 int main(int, char**) {
+    mongocxx::instance inst{};
     mongocxx::client conn{};
 
     auto db = conn["test"];
