@@ -35,16 +35,16 @@ namespace stream {
     ///
     class array : public array_context<> {
     public:
-        array() : array_context<>(&_core), _core(true) {}
+        BSONCXX_INLINE array() : array_context<>(&_core), _core(true) {}
 
         ///
         /// @return A view of the BSON array.
         ///
-        bsoncxx::array::view view() const {
+        BSONCXX_INLINE bsoncxx::array::view view() const {
             return _core.view_array();
         }
 
-        operator bsoncxx::array::view() const {
+        BSONCXX_INLINE operator bsoncxx::array::view() const {
             return view();
         }
 
@@ -57,14 +57,14 @@ namespace stream {
         ///  After calling extract() it is illegal to call any methods
         ///  on this class, unless it is subsequenly moved into.
         ///
-        bsoncxx::array::value extract() {
+        BSONCXX_INLINE bsoncxx::array::value extract() {
             return _core.extract_array();
         }
 
         ///
         /// Reset the underlying BSON to an empty array.
         ///
-        void clear() {
+        BSONCXX_INLINE void clear() {
             _core.clear();
         }
 

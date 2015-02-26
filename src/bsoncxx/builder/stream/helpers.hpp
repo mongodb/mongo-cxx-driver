@@ -66,7 +66,7 @@ constexpr finalize_type finalize;
 struct BSONCXX_API concatenate {
     document::view view;
 
-    operator document::view() const { return view; }
+    BSONCXX_INLINE operator document::view() const { return view; }
 };
 
 }  // namespace stream

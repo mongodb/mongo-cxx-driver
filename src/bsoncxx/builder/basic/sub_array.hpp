@@ -36,13 +36,14 @@ void value_append(core* core, T&& t);
 ///
 class BSONCXX_API sub_array {
    public:
-    sub_array(core* core) : _core(core) {
+    BSONCXX_INLINE sub_array(core* core) : _core(core) {
     }
 
     ///
     /// Appends multiple BSON values.
     ///
     template <typename Arg, typename... Args>
+    BSONCXX_INLINE
     void append(Arg&& a, Args&&... args) {
         append(std::forward<Arg>(a));
         append(std::forward<Args>(args)...);
@@ -52,6 +53,7 @@ class BSONCXX_API sub_array {
     /// Appends a BSON value.
     ///
     template <typename T>
+    BSONCXX_INLINE
     void append(T&& t) {
         impl::value_append(_core, std::forward<T>(t));
     }
