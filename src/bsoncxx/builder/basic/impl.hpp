@@ -35,6 +35,7 @@ template <typename T>
 using takes_array = typename util::is_functor<T, void(sub_array)>;
 
 template <typename T>
+BSONCXX_INLINE
 typename std::enable_if<takes_document<T>::value, void>::type generic_append(core* core, T&& func) {
     core->open_document();
     func(sub_document(core));
@@ -42,6 +43,7 @@ typename std::enable_if<takes_document<T>::value, void>::type generic_append(cor
 }
 
 template <typename T>
+BSONCXX_INLINE
 typename std::enable_if<takes_array<T>::value, void>::type generic_append(core* core, T&& func) {
     core->open_array();
     func(sub_array(core));
@@ -49,6 +51,7 @@ typename std::enable_if<takes_array<T>::value, void>::type generic_append(core* 
 }
 
 template <typename T>
+BSONCXX_INLINE
 typename std::enable_if<!takes_document<T>::value && !takes_array<T>::value, void>::type
 generic_append(core* core, T&& t) {
     core->append(std::forward<T>(t));
@@ -57,6 +60,7 @@ generic_append(core* core, T&& t) {
 }  // namespace
 
 template <typename T>
+BSONCXX_INLINE
 void value_append(core* core, T&& t) {
     generic_append(core, std::forward<T>(t));
 }

@@ -33,16 +33,16 @@ namespace stream {
     ///
     class document : public key_context<> {
     public:
-        document() : key_context<>(&_core), _core(false) {}
+        BSONCXX_INLINE document() : key_context<>(&_core), _core(false) {}
 
         ///
         /// @return A view of the BSON document.
         ///
-        bsoncxx::document::view view() const {
+        BSONCXX_INLINE bsoncxx::document::view view() const {
             return _core.view_document();
         }
 
-        operator bsoncxx::document::view() const {
+        BSONCXX_INLINE operator bsoncxx::document::view() const {
             return view();
         }
 
@@ -55,14 +55,14 @@ namespace stream {
         ///  After calling extract() it is illegal to call any methods
         ///  on this class, unless it is subsequenly moved into.
         ///
-        bsoncxx::document::value extract() {
+        BSONCXX_INLINE bsoncxx::document::value extract() {
             return _core.extract_document();
         }
 
         ///
         /// Reset the underlying BSON to an empty document.
         ///
-        void clear() {
+        BSONCXX_INLINE void clear() {
             _core.clear();
         }
 

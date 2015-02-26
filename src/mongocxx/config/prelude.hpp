@@ -14,3 +14,5 @@
 
 #include <mongocxx/config/config.hpp>
 #include <mongocxx/export.hpp>
+
+#define MONGOCXX_INLINE __attribute__ ((__visibility__("hidden"), __always_inline__))
