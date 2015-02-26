@@ -46,15 +46,6 @@ std::string to_string(binary_sub_type rhs) {
 
 namespace types {
 
-#define BSONCXX_ENUM(name, val)                                        \
-    std::ostream& operator<<(std::ostream& out, const b_##name& rhs) { \
-        json_visitor jv(out, false, 0);                                \
-        jv.visit_value(rhs);                                           \
-        return out;                                                    \
-    }
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
-
 }  // namespace types
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

@@ -34,6 +34,7 @@ set(bsoncxx_sources
     document/element.cpp
     document/value.cpp
     document/view.cpp
+    json.cpp
     oid.cpp
     private/itoa.cpp
     types.cpp

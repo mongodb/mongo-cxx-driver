@@ -10,6 +10,7 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/types/value.hpp>
 
 void bson_eq_stream(const bson_t* bson, const bsoncxx::builder::stream::document& builder) {
     using namespace bsoncxx;
