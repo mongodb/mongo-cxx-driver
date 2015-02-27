@@ -78,5 +78,9 @@ bsoncxx::stdx::optional<bsoncxx::document::view> read_preference::tags() const {
     return bsoncxx::stdx::optional<bsoncxx::document::view>{};
 }
 
+bool read_preference::operator==(const read_preference& other) const {
+    return mode() == other.mode() && tags() == other.tags();
+}
+
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

@@ -178,6 +178,11 @@ class MONGOCXX_API read_preference {
     ///
     bsoncxx::stdx::optional<bsoncxx::document::view> tags() const;
 
+    ///
+    /// Comparison operator
+    ///
+    bool operator==(const read_preference&) const;
+
    private:
     friend client;
     friend collection;

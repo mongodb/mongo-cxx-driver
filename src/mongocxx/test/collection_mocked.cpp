@@ -17,13 +17,13 @@
 
 #include <string>
 
-#include <mongocxx/private/libmongoc.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
-
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/collection.hpp>
+#include <mongocxx/read_preference.hpp>
 #include <mongocxx/pipeline.hpp>
+#include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/options/update.hpp>
 #include <mongocxx/exception/operation.hpp>
 
@@ -65,7 +65,7 @@ TEST_CASE("Collection", "[collection]") {
             const bson_t* pipeline,
             const bson_t* options,
             const mongoc_read_prefs_t* read_prefs
-        ) {
+        ) -> mongoc_cursor_t* {
             collection_aggregate_called = true;
             REQUIRE(collection == mongo_coll.implementation());
             REQUIRE(flags == MONGOC_QUERY_NONE);
@@ -93,16 +93,19 @@ TEST_CASE("Collection", "[collection]") {
             else
                 REQUIRE(o.find("maxTimeMS") == o.end());
 
-            if (opts.batch_size())
-                REQUIRE(o["cursor"].get_document().value["batchSize"].get_int32() == expected_batch_size);
-
             if (opts.use_cursor())
                 REQUIRE(o.find("cursor") != o.end());
 
+            if (opts.batch_size()) {
+                REQUIRE(o.find("cursor") != o.end());
+                REQUIRE(
+                    o["cursor"].get_document().value["batchSize"].get_int32() == expected_batch_size
+                );
+            }
+
             REQUIRE(read_prefs == mongo_coll.read_preference().implementation());
 
-            mongoc_cursor_t* cursor = NULL;
-            return cursor;
+            return NULL;
         });
 
         pipe.match(builder::stream::document{} << "foo" << "bar" << builder::stream::finalize);
@@ -124,7 +127,10 @@ TEST_CASE("Collection", "[collection]") {
 
     SECTION("Count", "[collection::count]") {
         auto collection_count_called = false;
-        bool success;
+        bool success = true;
+        std::int64_t expected_skip = 0;
+        std::int64_t expected_limit = 0;
+        auto expected_read_pref = mongo_coll.read_preference().implementation();
 
         collection_count->interpose([&](
             mongoc_collection_t* coll,
@@ -139,15 +145,31 @@ TEST_CASE("Collection", "[collection]") {
             REQUIRE(coll == mongo_coll.implementation());
             REQUIRE(flags == MONGOC_QUERY_NONE);
             REQUIRE(bson_get_data(query) == filter_doc.view().data());
-            REQUIRE(skip == 0);
-            REQUIRE(limit == 0);
-            REQUIRE(read_prefs == mongo_coll.read_preference().implementation());
+            REQUIRE(skip == expected_skip);
+            REQUIRE(limit == expected_limit);
+            if (expected_read_pref) {
+                REQUIRE(MONGOC_READ_SECONDARY == mongoc_read_prefs_get_mode(read_prefs));
+            }
             return success ? 123 : -1;
         });
 
-        SECTION("Succeeds") {
-            success = true;
-            mongo_coll.count(filter_doc);
+        SECTION("Succeeds with defaults") {
+            REQUIRE_NOTHROW(mongo_coll.count(filter_doc));
+        }
+
+        SECTION("Succeeds with options") {
+            options::count opts;
+            opts.skip(expected_skip);
+            opts.limit(expected_limit);
+            REQUIRE_NOTHROW(mongo_coll.count(filter_doc, opts));
+        }
+
+        SECTION("Succeeds with read_prefs") {
+            options::count opts;
+            read_preference rp;
+            rp.mode(read_preference::read_mode::k_secondary);
+            opts.read_preference(rp);
+            REQUIRE_NOTHROW(mongo_coll.count(filter_doc, opts));
         }
 
         SECTION("Fails") {
@@ -180,7 +202,7 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Succeeds") {
             success = true;
-            mongo_coll.create_index(index_spec);
+            REQUIRE_NOTHROW(mongo_coll.create_index(index_spec));
         }
 
         SECTION("Fails") {
@@ -206,7 +228,7 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Succeeds") {
             success = true;
-            mongo_coll.drop();
+            REQUIRE_NOTHROW(mongo_coll.drop());
         }
 
         SECTION("Fails") {
@@ -245,7 +267,7 @@ TEST_CASE("Collection", "[collection]") {
             return cursor;
         });
 
-        mongo_coll.find(doc);
+        REQUIRE_NOTHROW(mongo_coll.find(doc));
 
         REQUIRE(collection_find_called);
     }

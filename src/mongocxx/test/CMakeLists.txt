@@ -10,6 +10,7 @@ set(mongocxx_test_sources
     collection.cpp
     collection_mocked.cpp
     database.cpp
+    read_preference.cpp
     model/update_many.cpp
     options/aggregate.cpp
     private/write_concern.cpp
