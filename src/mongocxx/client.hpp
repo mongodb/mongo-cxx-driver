@@ -162,8 +162,8 @@ class MONGOCXX_API client {
     ///
     /// @return Client side representation of a server side database
     ///
-    inline class database operator[](const std::string& name) const &;
-    inline class database operator[](const std::string& name) const && = delete;
+    inline MONGOCXX_INLINE class database operator[](const std::string& name) const &;
+    inline MONGOCXX_INLINE class database operator[](const std::string& name) const && = delete;
 
    private:
     friend class database;
@@ -174,7 +174,7 @@ class MONGOCXX_API client {
 
 };
 
-inline database client::operator[](const std::string& name) const & {
+inline MONGOCXX_INLINE database client::operator[](const std::string& name) const & {
     return database(name);
 }
 

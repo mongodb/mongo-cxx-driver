@@ -36,22 +36,24 @@ class key_context {
     key_context(core* core) : _core(core) {}
 
     template <std::size_t n>
+    BSONCXX_INLINE
     value_context<key_context> operator<<(const char (&v)[n]) {
         _core->key_view(stdx::string_view{v, n - 1});
         return value_context<key_context>(_core);
     }
 
-    value_context<key_context> operator<<(std::string str) {
+    BSONCXX_INLINE value_context<key_context> operator<<(std::string str) {
         _core->key_owned(std::move(str));
         return value_context<key_context>(_core);
     }
 
-    value_context<key_context> operator<<(stdx::string_view str) {
+    BSONCXX_INLINE value_context<key_context> operator<<(stdx::string_view str) {
         _core->key_view(std::move(str));
         return value_context<key_context>(_core);
     }
 
     template <typename T>
+    BSONCXX_INLINE
     typename std::enable_if<util::is_functor<T, void(key_context<>)>::value, key_context>::type& operator<<(
         T&& func) {
         func(*this);
@@ -59,6 +61,7 @@ class key_context {
     }
 
     template <typename T>
+    BSONCXX_INLINE
     typename std::enable_if<std::is_same<base, closed_context>::value &&
                             std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value,
                             document::value>::type
@@ -66,20 +69,20 @@ class key_context {
         return _core->extract_document();
     }
 
-    key_context operator<<(concatenate concatenate) {
+    BSONCXX_INLINE key_context operator<<(concatenate concatenate) {
         _core->concatenate(concatenate);
         return *this;
     }
 
-    base operator<<(const close_document_type) {
+    BSONCXX_INLINE base operator<<(const close_document_type) {
         _core->close_document();
         return unwrap();
     }
 
-    operator key_context<>() { return key_context<>(_core); }
+    BSONCXX_INLINE operator key_context<>() { return key_context<>(_core); }
 
    private:
-    base unwrap() { return base(_core); }
+    BSONCXX_INLINE base unwrap() { return base(_core); }
 
     core* _core;
 };

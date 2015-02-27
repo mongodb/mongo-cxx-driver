@@ -28,6 +28,7 @@ namespace basic {
 /// and a BSON value.
 ///
 template <typename T, typename U>
+BSONCXX_INLINE
 std::tuple<T&&, U&&> kvp(T&& t, U&& u) {
     return std::tuple < T &&, U && > (std::forward<T>(t), std::forward<U>(u));
 }
