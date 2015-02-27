@@ -244,4 +244,26 @@ namespace {
         ASSERT_FALSE(e.eoo());
     }
 
+    TEST(BSONObjBuilderTest, AppendFieldNameContainingNullThrows) {
+        BSONObjBuilder b;
+        std::string middleNull("foo\0bar", 7);
+        std::string beginNull("\0foobar", 7);
+        std::string endNull("foobar\0", 7);
+        ASSERT_THROWS(b.append(middleNull, "baz"), UserException);
+        ASSERT_THROWS(b.append(beginNull, "baz"), UserException);
+        ASSERT_THROWS(b.append(endNull, "baz"), UserException);
+    }
+
+    TEST(BSONObjBuilderTest, AppendFieldNameContainingNullIsExceptionSafe) {
+        BSONObjBuilder b;
+        b.append("foo", 1);
+        b.append("bar", 2);
+
+        std::string trollField("foo\0bar", 7);
+        ASSERT_THROWS(b.append(trollField, "baz"), UserException);
+        b.append("garply", "yoooo");
+        BSONObj bo = b.done();
+        ASSERT_TRUE(bo.valid());
+    }
+
 } // unnamed namespace
