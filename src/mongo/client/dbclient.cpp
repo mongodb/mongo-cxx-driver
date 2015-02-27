@@ -1458,11 +1458,15 @@ namespace mongo {
         return result.obj();
     }
 
-    bool DBClientWithCommands::eval(const string &dbname, const string &jscode, BSONObj& info, BSONElement& retValue, BSONObj *args) {
+    bool DBClientWithCommands::eval(const string &dbname, const string &jscode, BSONObj& info, BSONElement& retValue, BSONObj *args, bool nolock) {
         BSONObjBuilder b;
         b.appendCode("$eval", jscode);
-        if ( args )
+        if ( args ) {
             b.appendArray("args", *args);
+        }
+        if ( nolock ) {
+            b.appendBool("nolock", true);
+        }
         bool ok = runCommand(dbname, b.done(), info);
         if ( ok )
             retValue = info.getField("retval");

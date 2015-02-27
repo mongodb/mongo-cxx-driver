@@ -1075,12 +1075,13 @@ namespace mongo {
            retValue  return value from the jscode function.
            args      args to pass to the jscode function.  when invoked, the 'args' variable will be defined
                      for use by the jscode.
+           nolock    if true, the server will not take a global write lock when executing the jscode.
 
            returns true if runs ok.
 
            See testDbEval() in dbclient.cpp for an example of usage.
         */
-        bool eval(const std::string &dbname, const std::string &jscode, BSONObj& info, BSONElement& retValue, BSONObj *args = 0);
+        bool eval(const std::string &dbname, const std::string &jscode, BSONObj& info, BSONElement& retValue, BSONObj *args = 0, bool nolock = false);
 
         /** validate a collection, checking for errors and reporting back statistics.
             this operation is slow and blocking.
