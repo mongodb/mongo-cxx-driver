@@ -51,6 +51,13 @@ TEST_CASE("Collection", "[collection]") {
 
     SECTION("Aggregate", "[Collection::aggregate]") {
         auto collection_aggregate_called = false;
+        auto expected_allow_disk_use = true;
+        auto expected_max_time_ms = 1234;
+        auto expected_batch_size = 5678;
+        auto expected_use_cursor = true;
+
+        pipeline pipe;
+        options::aggregate opts;
 
         collection_aggregate->interpose([&](
             mongoc_collection_t* collection,
@@ -64,6 +71,7 @@ TEST_CASE("Collection", "[collection]") {
             REQUIRE(flags == MONGOC_QUERY_NONE);
 
             bsoncxx::array::view p(bson_get_data(pipeline), pipeline->len);
+            bsoncxx::document::view o(bson_get_data(options), options->len);
 
             bsoncxx::stdx::string_view bar(
                 p[0].get_document().value["$match"].get_document().value["foo"].get_utf8()
@@ -75,30 +83,41 @@ TEST_CASE("Collection", "[collection]") {
             REQUIRE(bar == bsoncxx::stdx::string_view("bar"));
             REQUIRE(one == 1);
 
+            if (opts.allow_disk_use())
+                REQUIRE(o["allowDiskUse"].get_bool().value == expected_allow_disk_use);
+            else
+                REQUIRE(o.find("allowDiskUse") == o.end());
+
+            if (opts.max_time_ms())
+                REQUIRE(o["maxTimeMS"].get_int64().value == expected_max_time_ms);
+            else
+                REQUIRE(o.find("maxTimeMS") == o.end());
+
+            if (opts.batch_size())
+                REQUIRE(o["cursor"].get_document().value["batchSize"].get_int32() == expected_batch_size);
+
+            if (opts.use_cursor())
+                REQUIRE(o.find("cursor") != o.end());
+
             REQUIRE(read_prefs == mongo_coll.read_preference().implementation());
 
             mongoc_cursor_t* cursor = NULL;
             return cursor;
         });
 
-        pipeline pipe;
         pipe.match(builder::stream::document{} << "foo" << "bar" << builder::stream::finalize);
         pipe.sort(builder::stream::document{} << "foo" << 1 << builder::stream::finalize);
 
-        options::aggregate options;
-
-        SECTION("Without any options") {
-        }
+        SECTION("With default options") {}
 
         SECTION("With some options") {
-            options.allow_disk_use(true);
-            options.max_time_ms(1234);
-            // TODO: doesn't our design mandate the use of cursors
-            options.use_cursor(true);
-            options.batch_size(5678);
+            opts.allow_disk_use(expected_allow_disk_use);
+            opts.max_time_ms(expected_max_time_ms);
+            opts.batch_size(expected_batch_size);
+            opts.use_cursor(expected_use_cursor);
         }
 
-        mongo_coll.aggregate(pipe);
+        mongo_coll.aggregate(pipe, opts);
 
         REQUIRE(collection_aggregate_called);
     }
