@@ -26,7 +26,9 @@
 #include <mongocxx/write_concern.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/bulk_write.hpp>
 #include <mongocxx/exception/operation.hpp>
+#include <mongocxx/exception/write.hpp>
 #include <mongocxx/model/write.hpp>
 #include <mongocxx/private/libbson.hpp>
 #include <mongocxx/private/libmongoc.hpp>
@@ -83,7 +85,7 @@ bsoncxx::stdx::optional<result::bulk_write> collection::bulk_write(
     bson_error_t error;
 
     if (!libmongoc::bulk_operation_execute(b, reply.bson(), &error)) {
-        throw std::runtime_error(error.message);
+        throw exception::bulk_write();
     }
 
     result::bulk_write result(reply.steal());
@@ -320,7 +322,7 @@ bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one_and_repla
         rd == options::return_document::k_after, reply.bson(), &error);
 
     if (!r) {
-        throw std::runtime_error("baddd");
+        throw exception::operation();
     }
 
     bsoncxx::document::view result = reply.view();
@@ -355,7 +357,7 @@ bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one_and_updat
         rd == options::return_document::k_after, reply.bson(), &error);
 
     if (!r) {
-        throw std::runtime_error("baddd");
+        throw exception::operation();
     }
 
     bsoncxx::document::view result = reply.view();
@@ -384,7 +386,7 @@ bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one_and_delet
         true, false, false, reply.bson(), &error);
 
     if (!r) {
-        throw std::runtime_error("baddd");
+        throw exception::operation();
     }
 
     bsoncxx::document::view result = reply.view();
