@@ -17,6 +17,7 @@
 
 #include "mongo/client/insert_write_operation.h"
 
+#include "mongo/bson/bsontypes.h"
 #include "mongo/client/dbclientinterface.h"
 #include "mongo/db/namespace_string.h"
 
@@ -66,8 +67,11 @@ namespace mongo {
     }
 
     BSONObj InsertWriteOperation::_ensureId(const BSONObj& doc) {
-        if (doc.hasField("_id"))
+        BSONElement id = doc.getField("_id");
+        if (!id.eoo()) {
+            uassert(0, "value of _id element cannot contain any fields starting with $", !id.isABSONObj() || id.Obj().okForStorage());
             return doc;
+        }
 
         BSONObjBuilder bob;
         bob.append("_id", OID::gen());
