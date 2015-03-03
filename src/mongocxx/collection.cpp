@@ -51,6 +51,7 @@ enum class cursor_flag : uint32_t {
     k_exhaust,
     k_partial
 };
+
 }  // namespace
 
 namespace mongocxx {

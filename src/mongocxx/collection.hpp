@@ -299,7 +299,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::find_one_and_delete
     ///
     /// @return The document that was deleted.
-    /// @throws exception::write if the operation fails.
+    /// @throws exception::operation if the operation fails.
     ///
     bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_delete(
         bsoncxx::document::view filter,
@@ -318,7 +318,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::find_one_and_replace.
     ///
     /// @return The original or replaced document.
-    /// @throws exception::write if the operation fails.
+    /// @throws exception::operation if the operation fails.
     ///
     bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_replace(
         bsoncxx::document::view filter,
@@ -338,7 +338,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::find_one_and_update.
     ///
     /// @return The original or updated document.
-    /// @throws exception::write when the operation fails.
+    /// @throws exception::operation when the operation fails.
     ///
     bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_update(
         bsoncxx::document::view filter,
