@@ -244,7 +244,7 @@ functions:
     params:
       updates:
         - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|subscription-}${mongo_url_platform|}2.4.12.${mongo_url_extension|tgz}
+          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|subscription-}${mongo_url_platform|}2.4.13.${mongo_url_extension|tgz}
 
   "set version 2.2" :
     command: expansions.update
