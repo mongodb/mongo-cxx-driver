@@ -96,7 +96,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see mongocxx::options::aggregate.
     ///
     /// @return A mongocxx::cursor with the results.
-    /// @throws operation_exception if the aggregation fails.
+    /// @throws exception::operation if the aggregation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/aggregate/
     ///
@@ -118,7 +118,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::bulk_write.
     ///
     /// @return The optional result of the bulk operation execution, a result::bulk_write.
-    /// @throws bulk_write_exception when there are errors processing the writes.
+    /// @throws exception::bulk_write when there are errors processing the writes.
     ///
     /// @see mongocxx::bulk_write
     /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
@@ -145,7 +145,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::bulk_write.
     ///
     /// @return The optional result of the bulk operation execution, a result::bulk_write.
-    /// @throws bulk_write_exception when there are errors processing the writes.
+    /// @throws exception::bulk_write when there are errors processing the writes.
     ///
     /// @see mongocxx::bulk_write
     /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
@@ -164,7 +164,7 @@ class MONGOCXX_API collection {
     ///   A bulk write which contains multiple write operations.
     ///
     /// @return The optional result of the bulk operation execution, a result::bulk_write.
-    /// @throws bulk_write_exception when there are errors processing the writes.
+    /// @throws exception::bulk_write when there are errors processing the writes.
     ///
     /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
     ///
@@ -181,7 +181,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see mongocxx::options::count.
     ///
     /// @return The count of the documents that matched the filter.
-    /// @throws operation_exception if the count operation fails.
+    /// @throws exception::operation if the count operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/count/
     ///
@@ -198,7 +198,7 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments to index creation command, see ensureindex-options link
     ///
-    /// @throws operation_exception if index creation fails.
+    /// @throws exception::operation if index creation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.ensureIndex/#ensureindex-options
@@ -217,7 +217,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see mongocxx::options::delete_options.
     ///
     /// @return The optional result of performing the deletion, a result::delete_result.
-    /// @throws write_exception if the delete fails.
+    /// @throws exception::write if the delete fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/delete/
     ///
@@ -235,7 +235,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see mongocxx::options::delete_options.
     ///
     /// @return The optional result of performing the deletion, a result::delete_result.
-    /// @throws write_exception if the delete fails.
+    /// @throws exception::write if the delete fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/delete/
     ///
@@ -247,7 +247,7 @@ class MONGOCXX_API collection {
     ///
     /// Drops this collection and all its contained documents from the database.
     ///
-    /// @throws operation_exception if the operation fails.
+    /// @throws exception::operation if the operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.drop/
     ///
@@ -262,7 +262,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::find
     ///
     /// @return Cursor with the matching documents from the collection, a driver::cursor.
-    /// @throws operation_exception when the operation fails.
+    /// @throws exception::operation when the operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/core/read-operations-introduction/
     ///
@@ -281,7 +281,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::find
     ///
     /// @return An optional document that matched the filter.
-    /// @throws operation_exception if the operation fails.
+    /// @throws exception::operation if the operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/core/read-operations-introduction/
     ///
@@ -299,7 +299,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::find_one_and_delete
     ///
     /// @return The document that was deleted.
-    /// @throws write_exception if the operation fails.
+    /// @throws exception::write if the operation fails.
     ///
     bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_delete(
         bsoncxx::document::view filter,
@@ -318,7 +318,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::find_one_and_replace.
     ///
     /// @return The original or replaced document.
-    /// @throws write_exception if the operation fails.
+    /// @throws exception::write if the operation fails.
     ///
     bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_replace(
         bsoncxx::document::view filter,
@@ -338,7 +338,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::find_one_and_update.
     ///
     /// @return The original or updated document.
-    /// @throws write_exception when the operation fails.
+    /// @throws exception::write when the operation fails.
     ///
     bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_update(
         bsoncxx::document::view filter,
@@ -368,7 +368,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::insert.
     ///
     /// @return The result of attempting to perform the insert.
-    /// @throws write_exception if the operation fails.
+    /// @throws exception::write if the operation fails.
     ///
     bsoncxx::stdx::optional<result::insert_one> insert_one(
         bsoncxx::document::view document,
@@ -393,7 +393,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::insert.
     ///
     /// @return The result of attempting to performing the insert.
-    /// @throws write_exception when the operation fails.
+    /// @throws exception::write when the operation fails.
     ///
     template<typename container_type>
     inline MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> insert_many(
@@ -421,7 +421,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::insert.
     ///
     /// @return The result of attempting to performing the insert.
-    /// @throws write_exception if the operation fails.
+    /// @throws exception::write if the operation fails.
     ///
     /// TODO: document DocumentViewIterator concept or static assert
     template<typename document_view_iterator_type>
@@ -435,7 +435,7 @@ class MONGOCXX_API collection {
     /// Returns a list of the indexes currently on this collection.
     ///
     /// @return Cursor yielding the index specifications.
-    /// @throws operation_exception if the operation fails.
+    /// @throws exception::operation if the operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/listIndexes/
     ///
@@ -479,7 +479,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::update.
     ///
     /// @return The result of attempting to replace a document.
-    /// @throws write_exception if the operation fails.
+    /// @throws exception::write if the operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
@@ -500,7 +500,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::update.
     ///
     /// @return The result of attempting to update multiple documents.
-    /// @throws write_exception if the update operation fails.
+    /// @throws exception::write if the update operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
@@ -521,7 +521,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::update.
     ///
     /// @return The result of attempting to update a document.
-    /// @throws write_exception if the update operation fails.
+    /// @throws exception::write if the update operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///

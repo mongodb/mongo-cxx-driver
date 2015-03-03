@@ -64,7 +64,7 @@ class MONGOCXX_API database {
     ///
     /// @param command document representing the command to be run.
     /// @return the result of executing the command.
-    /// @throws operation_exception if the operation fails.
+    /// @throws exception::operation if the operation fails.
     ///
     bsoncxx::document::value command(bsoncxx::document::view command);
 
