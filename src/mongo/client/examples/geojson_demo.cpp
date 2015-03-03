@@ -131,6 +131,12 @@ void queryGeoData(DBClientBase* conn) {
     Query q5 = MONGO_QUERY(kLocField << WITHINQUERY(poly.getBoundingBox()));
     Query q6 = MONGO_QUERY(kLocField << INTERSECTSQUERY(poly));
 
+    geo::Coordinates2DGeographic coords(1, 2);
+    geo::coords2dgeographic::Point point(coords);
+
+    Query nearQuery = MONGO_QUERY(kLocField << NEARQUERY(point, 0.5));
+    Query nearSphereQuery = MONGO_QUERY(kLocField << NEARSPHEREQUERY(point, 0.5));
+
     cout << "*** Testing LineString ***" << endl;
 
     auto_ptr<DBClientCursor> cursor = conn->query(kDbCollectionName, q);
@@ -171,6 +177,18 @@ void queryGeoData(DBClientBase* conn) {
     cout << "Results from INTERSECTSQUERY" << endl;
     while (cursor6->more())
         cout << cursor6->next().toString() << endl;
+    cout << "---------------" << endl;
+
+    auto_ptr<DBClientCursor> nearQueryCursor = conn->query(kDbCollectionName, nearQuery);
+    cout << "Results from NEAR" << endl;
+    while (nearQueryCursor->more())
+        cout << nearQueryCursor->next().toString() << endl;
+    cout << "---------------" << endl;
+
+    auto_ptr<DBClientCursor> nearSphereQueryCursor = conn->query(kDbCollectionName, nearSphereQuery);
+    cout << "Results from NEARSPHERE" << endl;
+    while (nearSphereQueryCursor->more())
+        cout << nearSphereQueryCursor->next().toString() << endl;
     cout << "---------------" << endl;
 
 }
