@@ -7,6 +7,6 @@ Description: The MongoDB C++ Driver
 URL: http://github.com/mongodb/mongo-cxx-driver
 Version: @MONGOCXX_VERSION@
 Requires.private: libmongoc-@LIBMONGOC_REQUIRED_ABI_VERSION@
-Requires: libbsoncxx >= @MONGOCXX_REQUIRED_BSONCXX_VERSION@
+Requires: libbsoncxx
 Cflags: -I${includedir}/mongocxx/@MONGOCXX_DIRECTORY_PREFIX@
 Libs: -L${libdir} -lmongocxx
