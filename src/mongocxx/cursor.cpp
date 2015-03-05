@@ -18,6 +18,8 @@
 #include <bson.h>
 
 #include <mongocxx/cursor.hpp>
+
+#include <mongocxx/exception/operation.hpp>
 #include <mongocxx/private/cursor.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
@@ -41,12 +43,15 @@ void cursor::iterator::operator++(int) {
 
 cursor::iterator& cursor::iterator::operator++() {
     const bson_t* out;
+    bson_error_t error;
     if (libmongoc::cursor_next(_cursor->_impl->cursor_t, &out)) {
         _doc = bsoncxx::document::view(bson_get_data(out), out->len);
+    } else if (libmongoc::cursor_error(_cursor->_impl->cursor_t, &error)) {
+        // TODO: put cursor error message in here.
+        throw exception::operation();
     } else {
         _cursor = nullptr;
-    }
-
+    };
     return *this;
 }
 
