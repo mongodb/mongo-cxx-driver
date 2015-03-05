@@ -231,6 +231,7 @@ TEST_CASE("Collection", "[collection]") {
             REQUIRE(db == mongo_db.implementation());
             // TODO: test some actual implementation details here
             // TODO: figure out how to return a legit mongoc_cursor_t back to the driver
+            return nullptr;
         });
 
         SECTION("Succeeds") {
