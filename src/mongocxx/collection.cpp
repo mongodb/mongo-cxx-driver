@@ -15,6 +15,8 @@
 #include <cstdint>
 
 #include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/types.hpp>
 
 #include <mongocxx/private/client.hpp>
 #include <mongocxx/private/collection.hpp>
@@ -38,9 +40,10 @@
 #include <mongocxx/result/insert_one.hpp>
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
-#include <bsoncxx/stdx/optional.hpp>
 
+#include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
+
 
 namespace {
 enum class cursor_flag : uint32_t {
@@ -102,7 +105,7 @@ cursor collection::find(bsoncxx::document::view filter, const options::find& opt
     scoped_bson_t projection(options.projection());
 
     if (options.modifiers()) {
-        filter_builder << "$query" << types::b_document{filter}
+        filter_builder << "$query" << bsoncxx::types::b_document{filter}
                        << builder::stream::concatenate{
                               options.modifiers().value_or(document::view{})};
 
@@ -438,31 +441,31 @@ bsoncxx::document::value collection::create_index(bsoncxx::document::view keys,
     return bsoncxx::document::value{bsoncxx::document::view{}};
 }
 
-cursor collection::distinct(const std::string& field_name, bsoncxx::document::view,
+cursor collection::distinct(const std::string& field_name, bsoncxx::document::view query,
     const options::distinct& options
 ) {
     auto command = bsoncxx::builder::stream::document{}
-        << "distinct" << name() << "key" << field_name
+        << "distinct" << name() << "key" << field_name << "query" << bsoncxx::types::b_document{query}
     << bsoncxx::builder::stream::finalize;
+    scoped_bson_t command_bson{command};
 
-    //auto database = libmongoc::client_get_database(
-        //_impl->client_impl->client_t,
-        //_impl->database_name.c_str()
-    //);
+    auto database = libmongoc::client_get_database(
+        _impl->client_impl->client_t,
+        _impl->database_name.c_str()
+    );
 
-    //auto result = libmongoc::database_command(
-        //database,
-        //MONGOC_QUERY_NONE,
-        //0,
-        //0,
-        //0,
-        //NULL,
-        //NULL,
-        //NULL
-    //);
+    auto result = libmongoc::database_command(
+        database,
+        MONGOC_QUERY_NONE,
+        0,
+        0,
+        0,
+        command_bson.bson(),
+        NULL,
+        NULL
+    );
 
-    //return cursor(result);
-    return cursor(nullptr);
+    return cursor(result);
 }
 
 void collection::drop() {
