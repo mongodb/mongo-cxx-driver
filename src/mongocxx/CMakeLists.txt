@@ -37,6 +37,7 @@ set(mongocxx_sources
     options/client.cpp
     options/count.cpp
     options/delete.cpp
+    options/distinct.cpp
     options/find.cpp
     options/find_one_and_delete.cpp
     options/find_one_and_replace.cpp

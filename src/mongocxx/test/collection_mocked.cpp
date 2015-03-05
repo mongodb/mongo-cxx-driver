@@ -213,6 +213,44 @@ TEST_CASE("Collection", "[collection]") {
         REQUIRE(collection_create_index_called);
     }
 
+    SECTION("Distinct" "[collection::distinct]") {
+        auto database_command_called = false;
+        bool success;
+
+        database_command->interpose([&](
+            mongoc_database_t* db,
+            mongoc_query_flags_t flags,
+            uint32_t skip,
+            uint32_t limit,
+            uint32_t batch_size,
+            const bson_t* command,
+            const bson_t* fields,
+            const mongoc_read_prefs_t* read_prefs
+        ) -> mongoc_cursor_t* {
+            database_command_called = true;
+            REQUIRE(db == mongo_db.implementation());
+            // TODO: test some actual implementation details here
+            // TODO: figure out how to return a legit mongoc_cursor_t back to the driver
+        });
+
+        SECTION("Succeeds") {
+            success = true;
+            // TODO: fixme
+            //mongo_coll.distinct("field_name", bsoncxx::document::view{});
+        }
+
+        SECTION("Fails") {
+            success = false;
+            // TODO: fixme
+            //REQUIRE_THROWS_AS(
+                //mongo_coll.distinct("field_name", bsoncxx::document::view{}),
+                //exception::operation
+            //);
+        }
+
+        //REQUIRE(database_command_called);
+    }
+
     SECTION("Drop" "[collection::drop]") {
         auto collection_drop_called = false;
         bool success;

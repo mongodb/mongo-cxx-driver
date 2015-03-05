@@ -438,6 +438,33 @@ bsoncxx::document::value collection::create_index(bsoncxx::document::view keys,
     return bsoncxx::document::value{bsoncxx::document::view{}};
 }
 
+cursor collection::distinct(const std::string& field_name, bsoncxx::document::view,
+    const options::distinct& options
+) {
+    auto command = bsoncxx::builder::stream::document{}
+        << "distinct" << name() << "key" << field_name
+    << bsoncxx::builder::stream::finalize;
+
+    //auto database = libmongoc::client_get_database(
+        //_impl->client_impl->client_t,
+        //_impl->database_name.c_str()
+    //);
+
+    //auto result = libmongoc::database_command(
+        //database,
+        //MONGOC_QUERY_NONE,
+        //0,
+        //0,
+        //0,
+        //NULL,
+        //NULL,
+        //NULL
+    //);
+
+    //return cursor(result);
+    return cursor(nullptr);
+}
+
 void collection::drop() {
     bson_error_t error;
 

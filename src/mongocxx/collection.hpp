@@ -29,6 +29,7 @@
 #include <mongocxx/options/bulk_write.hpp>
 #include <mongocxx/options/count.hpp>
 #include <mongocxx/options/delete.hpp>
+#include <mongocxx/options/distinct.hpp>
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/options/find_one_and_delete.hpp>
 #include <mongocxx/options/find_one_and_replace.hpp>
@@ -242,6 +243,27 @@ class MONGOCXX_API collection {
     bsoncxx::stdx::optional<result::delete_result> delete_one(
         bsoncxx::document::view filter,
         const options::delete_options& options = options::delete_options()
+    );
+
+    ///
+    /// Finds the distinct values for a specified field accross the collection.
+    ///
+    /// @param field_name
+    ///   The field for which the distinct values will be found.
+    /// @param filter
+    ///   Document view representing the documents for which the distinct operation will apply.
+    /// @param options
+    ///   Optional arguments, see options::distinct.
+    ///
+    /// @return Cursor having the distinct values for the specified field, a driver::cursor.
+    /// @throws operation_exception if the distinct operation fails.
+    ///
+    /// @see http://docs.mongodb.org/manual/reference/command/distinct/
+    ///
+    cursor distinct(
+        const std::string& field_name,
+        bsoncxx::document::view filter,
+        const options::distinct& options = options::distinct()
     );
 
     ///
