@@ -74,8 +74,8 @@ class BSONCXX_API value {
     value(const value&);
     value& operator=(const value&);
 
-    value(value&&) = default;
-    value& operator=(value&&) = default;
+    value(value&&) noexcept = default;
+    value& operator=(value&&) noexcept = default;
 
     ///
     /// Get a view over the document owned by this value.

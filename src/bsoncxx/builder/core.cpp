@@ -193,8 +193,8 @@ class core::impl {
 
 core::core(bool is_array) : _impl(new impl(is_array)) {
 }
-core::core(core&&) = default;
-core& core::operator=(core&&) = default;
+core::core(core&&) noexcept = default;
+core& core::operator=(core&&) noexcept = default;
 core::~core() = default;
 
 void core::key_view(stdx::string_view key) {

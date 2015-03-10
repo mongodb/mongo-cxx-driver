@@ -53,8 +53,8 @@ class BSONCXX_API core {
     ///   true if the top-level BSON datum should be an array.
     ///
     explicit core(bool is_array);
-    core(core&& rhs);
-    core& operator=(core&& rhs);
+    core(core&& rhs) noexcept;
+    core& operator=(core&& rhs) noexcept;
     ~core();
 
     ///

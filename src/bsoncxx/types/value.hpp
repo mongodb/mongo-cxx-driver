@@ -144,8 +144,8 @@ namespace types {
         value(const value&);
         value& operator=(const value&);
 
-        value(value&&);
-        value& operator=(value&&);
+        value(value&&) noexcept;
+        value& operator=(value&&) noexcept;
 
         ~value();
 

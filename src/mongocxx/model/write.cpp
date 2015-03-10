@@ -31,7 +31,7 @@ write::write(update_many value) : _type(write_type::k_update_many), _update_many
 write::write(replace_one value) : _type(write_type::k_replace_one), _replace_one(std::move(value)) {
 }
 
-write::write(write&& rhs) : _type(write_type::k_uninitialized) {
+write::write(write&& rhs) noexcept : _type(write_type::k_uninitialized) {
     *this = std::move(rhs);
 }
 
@@ -62,7 +62,7 @@ void write::destroy_member() {
     _type = write_type::k_uninitialized;
 }
 
-write& write::operator=(write&& rhs) {
+write& write::operator=(write&& rhs) noexcept {
     destroy_member();
 
     switch (rhs._type) {

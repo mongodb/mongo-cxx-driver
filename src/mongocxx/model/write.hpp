@@ -41,8 +41,8 @@ class MONGOCXX_API write {
     write(delete_many value);
     write(replace_one value);
 
-    write(write&& rhs);
-    write& operator=(write&& rhs);
+    write(write&& rhs) noexcept;
+    write& operator=(write&& rhs) noexcept;
 
     write(const write& rhs) = delete;
     write& operator=(const write& rhs) = delete;
