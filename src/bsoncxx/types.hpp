@@ -35,15 +35,36 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 /// An enumeration of each BSON type.
 ///
 enum class type : std::uint8_t {
-#define BSONCXX_ENUM(name, val) k_##name = val,
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
+    k_double = 0x01,
+    k_utf8 = 0x02,
+    k_document = 0x03,
+    k_array = 0x04,
+    k_binary = 0x05,
+    k_undefined = 0x06,
+    k_oid = 0x07,
+    k_bool = 0x08,
+    k_date = 0x09,
+    k_null = 0x0A,
+    k_regex = 0x0B,
+    k_dbpointer = 0x0C,
+    k_code = 0x0D,
+    k_symbol = 0x0E,
+    k_codewscope = 0x0F,
+    k_int32 = 0x10,
+    k_timestamp = 0x11,
+    k_int64 = 0x12,
+    k_maxkey = 0x7F,
+    k_minkey = 0xFF
 };
 
 enum class binary_sub_type : std::uint8_t {
-#define BSONCXX_ENUM(name, val) k_##name = val,
-#include <bsoncxx/enums/binary_sub_type.hpp>
-#undef BSONCXX_ENUM
+    k_binary = 0x00,
+    k_function = 0x01,
+    k_binary_deprecated = 0x02,
+    k_uuid_deprecated = 0x03,
+    k_uuid = 0x04,
+    k_md5 = 0x05,
+    k_user = 0x80
 };
 
 BSONCXX_API std::string to_string(type rhs);
