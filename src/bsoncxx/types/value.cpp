@@ -52,11 +52,11 @@ value& value::operator=(const value& rhs) {
     return *this;
 }
 
-value::value(value&& rhs) {
+value::value(value&& rhs) noexcept {
     *this = std::move(rhs);
 }
 
-value& value::operator=(value&& rhs) {
+value& value::operator=(value&& rhs) noexcept {
     _type = rhs._type;
 
     switch (static_cast<int>(_type)) {
