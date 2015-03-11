@@ -39,6 +39,7 @@ set(bsoncxx_sources
     private/itoa.cpp
     types.cpp
     types/value.cpp
+    validate.cpp
 )
 
 include_directories(

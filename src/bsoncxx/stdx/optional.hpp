@@ -29,6 +29,7 @@ namespace stdx {
 
 using ::core::optional;
 using ::core::nullopt;
+using ::core::make_optional;
 
 }  // namespace stdx
 }  // namespace bsoncxx
@@ -41,6 +42,7 @@ namespace stdx {
 
 using ::std::experimental::optional;
 using ::std::experimental::nullopt;
+using ::std::experimental::make_optional;
 
 }  // namespace stdx
 }  // namespace bsoncxx
