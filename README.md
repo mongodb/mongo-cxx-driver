@@ -7,7 +7,7 @@ This branch contains active development on a new driver written in C++11.
 
 #### Quickstart Guide
 
-See the [wiki page](https://github.com/mongodb/mongo-cxx-driver/wiki/Quickstart-Guide-(New-Driver).
+See the [wiki page](https://github.com/mongodb/mongo-cxx-driver/wiki/Quickstart-Guide-(New-Driver)).
 
 #### Why a rewrite?
 This driver contains a completely new API and implementation. A complete rewrite allows us to take full advantage of the features offered in C++11, and gives us the chance to re-architect the driver based on past driver design decisions and their effectiveness. We aim for this new driver to be more modern, more lightweight, and friendlier to contributors than its predecessors.
