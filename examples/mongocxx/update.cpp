@@ -46,9 +46,10 @@ int main(int, char**) {
     {
         // @begin: cpp-update-multiple-documents
         document filter, update;
-        filter << "address.zipcode" << "10016";
+        filter << "address.zipcode" << "10016"
+               << "cuisine" << "Other";
         update << "$set" << open_document
-                   << "borough" << "Midtown" << close_document
+                   << "cuisine" << "Category To Be Determined" << close_document
                << "$currentDate" << open_document
                    << "lastModified" << true << close_document;
 
