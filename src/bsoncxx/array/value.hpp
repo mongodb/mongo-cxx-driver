@@ -81,8 +81,11 @@ class BSONCXX_API value {
     ///
     /// Get a view over the document owned by this value.
     ///
-    inline BSONCXX_INLINE array::view view() const noexcept;
-    inline BSONCXX_INLINE operator array::view() const noexcept;
+    inline BSONCXX_INLINE array::view view() const & noexcept;
+    inline BSONCXX_INLINE array::view view() const && = delete;
+
+    inline BSONCXX_INLINE operator array::view() const & noexcept;
+    inline BSONCXX_INLINE operator array::view() const && = delete;
 
     ///
     /// Transfer ownership of the underlying buffer to the caller.
@@ -100,11 +103,11 @@ class BSONCXX_API value {
     std::size_t _length;
 };
 
-inline BSONCXX_INLINE array::view value::view() const noexcept {
+inline BSONCXX_INLINE array::view value::view() const & noexcept {
     return array::view{static_cast<uint8_t*>(_data.get()), _length};
 }
 
-inline BSONCXX_INLINE value::operator array::view() const noexcept {
+inline BSONCXX_INLINE value::operator array::view() const & noexcept {
     return view();
 }
 

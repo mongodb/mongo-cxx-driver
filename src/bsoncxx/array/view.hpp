@@ -30,7 +30,7 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace array {
 
 ///
-/// A read-only, non-owning view of a BSON document.
+/// A read-only, non-owning view of a BSON array.
 ///
 class BSONCXX_API view {
 
