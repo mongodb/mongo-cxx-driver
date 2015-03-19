@@ -13,6 +13,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/types/value.hpp>
 
 using namespace bsoncxx;
 
