@@ -81,10 +81,10 @@ class BSONCXX_API value {
     /// Get a view over the document owned by this value.
     ///
     inline BSONCXX_INLINE document::view view() const & noexcept;
-    inline BSONCXX_INLINE document::view view() const && = delete;
+    document::view view() const && = delete;
 
     inline BSONCXX_INLINE operator document::view() const & noexcept;
-    inline BSONCXX_INLINE operator document::view() const && = delete;
+    operator document::view() const && = delete;
 
     ///
     /// Transfer ownership of the underlying buffer to the caller.
