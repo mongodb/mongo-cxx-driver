@@ -246,14 +246,7 @@ add_option('variables-help',
            "Print the help text for SCons variables", 0, False)
 
 if darwin:
-    osx_version_choices = ['10.6', '10.7', '10.8', '10.9', '10.10']
-
-    my_version, _, _ = py_platform.mac_ver()
-    my_version = '.'.join(my_version.split('.')[:2])
-
-    add_option("osx-version-min",
-               "minimum OS X version to support, defaults to current version", 1, True,
-               type = 'choice', default = my_version, choices = osx_version_choices)
+    add_option("osx-version-min", "minimum OS X version to support", 1, True)
 
 elif windows:
     win_version_min_choices = {
@@ -366,7 +359,7 @@ if buildDir[0] not in ['$', '#']:
 
 cacheDir = get_option('cache-dir').rstrip('/')
 if cacheDir[0] not in ['$', '#']:
-    if not os.path.isabs(cachdDIr):
+    if not os.path.isabs(cacheDir):
         print("Do not use relative paths with --cache-dir")
         Exit(1)
 
