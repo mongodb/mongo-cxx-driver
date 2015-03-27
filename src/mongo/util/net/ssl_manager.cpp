@@ -134,6 +134,7 @@ namespace mongo {
                    const std::string& clusterpwd,
                    const std::string& cafile = "",
                    const std::string& crlfile = "",
+                   const std::string& cipherConfig = "",
                    bool weakCertificateValidation = false,
                    bool allowInvalidCertificates = false,
                    bool allowInvalidHostnames = false,
@@ -144,6 +145,7 @@ namespace mongo {
                 clusterpwd(clusterpwd),
                 cafile(cafile),
                 crlfile(crlfile),
+                cipherConfig(cipherConfig),
                 weakCertificateValidation(weakCertificateValidation),
                 allowInvalidCertificates(allowInvalidCertificates),
                 allowInvalidHostnames(allowInvalidHostnames),
@@ -155,6 +157,7 @@ namespace mongo {
             std::string clusterpwd;
             std::string cafile;
             std::string crlfile;
+            std::string cipherConfig;
             bool weakCertificateValidation;
             bool allowInvalidCertificates;
             bool allowInvalidHostnames;
@@ -293,6 +296,7 @@ namespace mongo {
                 sslGlobalParams.sslClusterPassword,
                 sslGlobalParams.sslCAFile,
                 sslGlobalParams.sslCRLFile,
+                sslGlobalParams.sslCipherConfig,
                 sslGlobalParams.sslWeakCertificateValidation,
                 sslGlobalParams.sslAllowInvalidCertificates,
                 sslGlobalParams.sslAllowInvalidHostnames,
@@ -540,15 +544,29 @@ namespace mongo {
         // !EXPORT - Disable export ciphers (40/56 bit) 
         // !aNULL - Disable anonymous auth ciphers
         // @STRENGTH - Sort ciphers based on strength 
-        SSL_CTX_set_cipher_list(*context, "HIGH:!EXPORT:!aNULL@STRENGTH");
+        std::string cipherConfig = "HIGH:!EXPORT:!aNULL@STRENGTH";
+
+        // Allow the cipher configuration string to be overriden by --sslCipherConfig
+        if (!params.cipherConfig.empty()) {
+            cipherConfig = params.cipherConfig;
+        }
+
+        massert(28615, mongoutils::str::stream() << "can't set supported cipher suites: " <<
+                getSSLErrorMessage(ERR_get_error()),
+                SSL_CTX_set_cipher_list(*context, cipherConfig.c_str()));
 
         // If renegotiation is needed, don't return from recv() or send() until it's successful.
         // Note: this is for blocking sockets only.
         SSL_CTX_set_mode(*context, SSL_MODE_AUTO_RETRY);
 
-        // Disable session caching (see SERVER-10261)
-        SSL_CTX_set_session_cache_mode(*context, SSL_SESS_CACHE_OFF);
- 
+        massert(28607,
+                mongoutils::str::stream() << "can't store ssl session id context: " <<
+                    getSSLErrorMessage(ERR_get_error()),
+                SSL_CTX_set_session_id_context(
+                    *context,
+                    static_cast<unsigned char*>(static_cast<void*>(context)),
+                    sizeof(*context)));
+
         // Use the clusterfile for internal outgoing SSL connections if specified 
         if (context == &_clientContext && !params.clusterfile.empty()) {
             EVP_set_pw_prompt("Enter cluster certificate passphrase");
