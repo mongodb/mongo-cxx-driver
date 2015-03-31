@@ -1837,7 +1837,6 @@ Export("darwin windows solaris linux freebsd nix")
 Export("debugBuild optBuild")
 Export("use_clang")
 
-env.SConscript('src/SConscript.client', variant_dir='$VARIANT_DIR', duplicate=False)
 env.SConscript('src/SConscript', variant_dir='$VARIANT_DIR', duplicate=False)
 
 # --- Coverage ---

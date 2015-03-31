@@ -2,13 +2,13 @@
 
 # This SConscript describes build and install rules for the Mongo C++ driver and associated exmaple
 # programs.
-import os
+import buildscripts.git
 import httplib
-import urllib
 import json
+import os
 import re
 import time
-import buildscripts.git
+import urllib
 
 Import('env has_option get_option')
 Import('nix linux darwin windows')
@@ -545,74 +545,92 @@ clientEnv.Alias('build-examples', clientTestPrograms)
 
 clientTestProgramInstalls = staticClientProgramInstalls + sharedClientProgramInstalls
 
-# TODO: Make this more Scons-like with an action target that causes
-# a server to come into being and then have each test depend on it.
-orchestration_uri = "%s:%s" % (clientEnv.GetOption("mongo-orchestration-host"),
-                               clientEnv.GetOption("mongo-orchestration-port"))
-json_headers = { "Content-Type": "application/json" }
+mongoDBUri = str()
+def getMongoDBUri():
+    return mongoDBUri
+clientEnv['getMongoDBUri'] = getMongoDBUri
 
-params = json.dumps({
-    "id": "standalone",
-    "name": "mongod",
-    "preset": clientEnv.GetOption("mongo-orchestration-preset")
-})
+def setupMongoOrchestration(target, source, env):
 
-# Check if a standalone mongod is already up, resetting if it is
-MO_MAX_RETRIES = 10
-for attempt in range(1, MO_MAX_RETRIES+1):
+    orchestration_uri = "%s:%s" % (env.GetOption("mongo-orchestration-host"),
+                                   env.GetOption("mongo-orchestration-port"))
+    json_headers = { "Content-Type": "application/json" }
 
-    if attempt > 1:
-        # don't sleep before first attempt
-        time.sleep(1)
+    params = json.dumps({
+        "id": "standalone",
+        "name": "mongod",
+        "preset": env.GetOption("mongo-orchestration-preset")
+    })
 
-    try:
-        conn = httplib.HTTPConnection(orchestration_uri, timeout=30)
-        conn.request("GET", "/servers/standalone", headers=json_headers)
-        response = conn.getresponse()
-        message = response.read()
+    # Check if a standalone mongod is already up, resetting if it is
+    MO_MAX_RETRIES = 10
+    for attempt in range(1, MO_MAX_RETRIES+1):
 
-    except IOError:
-        print("Cannot connect to Mongo Orchestration at %s on attempt %d. %d attempts remaining..."
-              % (orchestration_uri, attempt, MO_MAX_RETRIES - (attempt)))
-        continue
+        if attempt > 1:
+            # don't sleep before first attempt
+            time.sleep(1)
 
-    if (response.status == 404):
-        print("No standalone started, starting one now...")
-        post_conn = httplib.HTTPConnection(orchestration_uri, timeout=30)
-        post_conn.request("POST", "/servers", params, json_headers)
-        continue
-    elif (response.status/100 != 2):
-        print("Mongo Orchestration had an error with code %s" % response.status)
-        if message:
-            print("\tmessage from MO: %s", message)
-        continue
+        try:
+            conn = httplib.HTTPConnection(orchestration_uri, timeout=30)
+            conn.request("GET", "/servers/standalone", headers=json_headers)
+            response = conn.getresponse()
+            message = response.read()
 
-    # Grab the port from the response -- use it in the tests
-    decoded_response = json.loads(message)
-    mongodb_uri = decoded_response['mongodb_uri']
-
-    for clientTest in clientTestProgramInstalls:
-
-        # On windows, the installs also install PDB files, which we end up picking up.
-        # Obviously, we can't run those, so filter them out. Lets hope nobody creates
-        # a new client test with pdb in the name.
-        if clientTest.abspath.endswith('.pdb'):
+        except IOError:
+            print("Cannot connect to Mongo Orchestration at %s on attempt %d. %d attempts remaining..."
+                  % (orchestration_uri, attempt, MO_MAX_RETRIES - (attempt)))
             continue
 
-        # the rsExample test needs a replica set to talk to. The old smokeClient never tested it
-        # The old smoke subsystem did test authTest, not sure why it isn't working now.
-        if 'rsExample' in clientTest.abspath:
+        if (response.status == 404):
+            print("No standalone started, starting one now...")
+            post_conn = httplib.HTTPConnection(orchestration_uri, timeout=30)
+            post_conn.request("POST", "/servers", params, json_headers)
+            continue
+        elif (response.status/100 != 2):
+            print("Mongo Orchestration had an error with code %s" % response.status)
+            if message:
+                print("\tmessage from MO: %s", message)
             continue
 
-        clientEnv.AlwaysBuild(
-            clientEnv.Alias(
-                'examples',
-                [clientTest],
-                "%s %s" % (clientTest.abspath, mongodb_uri)
-            )
-        )
+        # Grab the port from the response -- use it in the tests
+        decoded_response = json.loads(message)
 
-    # The last attempt succeeded so we don't need to keep trying
-    break
+        global mongoDBUri
+        mongoDBUri = decoded_response['mongodb_uri']
+
+        # The last attempt succeeded so we don't need to keep trying
+        break
+
+clientEnv.Alias('setup-mongo-orchestration',
+                clientEnv.Command(
+                    target="#setup-mongo-orchestration",
+                    source=[],
+                    action=clientEnv.Action(
+                        setupMongoOrchestration,
+                        cmdstr="Configuring MongoOrchestration for Examples")
+                ))
+
+for clientTest in clientTestProgramInstalls:
+
+    # On windows, the installs also install PDB files, which we end up picking up.
+    # Obviously, we can't run those, so filter them out. Lets hope nobody creates
+    # a new client test with pdb in the name.
+    if clientTest.abspath.endswith('.pdb'):
+        continue
+
+    # the rsExample test needs a replica set to talk to. The old smokeClient never tested it
+    # The old smoke subsystem did test authTest, not sure why it isn't working now.
+    if 'rsExample' in clientTest.abspath:
+        continue
+
+    command = clientEnv.Command(
+        target="${SOURCE}-run",
+        source=[clientTest],
+        action="$SOURCE ${getMongoDBUri()}")
+
+    clientEnv.SideEffect("#example-running", command)
+    clientEnv.AlwaysBuild(command)
+    clientEnv.Depends(command, 'setup-mongo-orchestration')
+    clientEnv.Alias('examples', command)
 
 clientEnv.Alias('install-examples', clientTestProgramInstalls)
