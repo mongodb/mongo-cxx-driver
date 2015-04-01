@@ -119,7 +119,7 @@ cxx_driver_variables:
           echo "Starting Mongo Orchestration..."
           trap 'set +o errexit; /usr/local/bin/mongo-orchestration stop;' EXIT
           echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
-          TMPDIR=/data/db /usr/local/bin/mongo-orchestration -f orchestration.config -e default start --socket-timeout-ms=60000
+          TMPDIR=/data/db /usr/local/bin/mongo-orchestration -f orchestration.config -e default start # --socket-timeout-ms=60000 <- uncomment when OSX builders get new MO
 
 ## Other os-specific attributes, grouped by OS
 
