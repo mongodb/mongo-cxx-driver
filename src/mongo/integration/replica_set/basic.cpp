@@ -27,8 +27,8 @@ namespace {
     using namespace mongo;
     using namespace mongo::integration;
 
-    const string TEST_NS = "test.basic";
-    const string TEST_DB = "test";
+    const string TEST_NS = "test-basic.basic";
+    const string TEST_DB = "test-basic";
     const string TEST_COLL = "basic";
 
     class RSBasicTest : public ReplicaSetTest {

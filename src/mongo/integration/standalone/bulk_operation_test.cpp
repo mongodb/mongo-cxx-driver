@@ -32,9 +32,9 @@ namespace {
     using namespace mongo;
     using namespace mongo::integration;
 
-    const string TEST_DB = "test";
+    const string TEST_DB = "test-bulk_operation";
     const string TEST_COLL = "bulk_operation";
-    const string TEST_NS = "test.bulk_operation";
+    const string TEST_NS = "test-bulk_operation.bulk_operation";
 
     template <typename T>
     struct RequiredWireVersion;

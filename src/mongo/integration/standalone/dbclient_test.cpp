@@ -43,8 +43,8 @@ using namespace mongo;
 using namespace mongo::integration;
 
 namespace {
-    const string TEST_NS = "test.dbclient";
-    const string TEST_DB = "test";
+    const string TEST_NS = "test-dbclient.dbclient";
+    const string TEST_DB = "test-dbclient";
     const string TEST_COLL = "dbclient";
 
     class DBClientTest : public StandaloneTest {
@@ -984,7 +984,7 @@ namespace {
             if (kCompiledWithSSL) {
                 createUser(c, TEST_DB, "jane", "pwd");
                 std::string errmsg;
-                ASSERT_TRUE(c.auth("test", "jane", "pwd", errmsg));
+                ASSERT_TRUE(c.auth(TEST_DB, "jane", "pwd", errmsg));
 
                 c.dropDatabase("copy");
                 c.insert(TEST_NS, BSON("flavor" << "vanilla"));
@@ -1431,7 +1431,7 @@ namespace {
         if (serverGTE(&c, 2, 4) && (!serverGTE(&c, 2, 7) || kCompiledWithSSL)) {
             createUser(c, TEST_DB, "user2", "password2");
             std::string errmsg;
-            ASSERT_TRUE(c.auth("test", "user2", "password2", errmsg));
+            ASSERT_TRUE(c.auth(TEST_DB, "user2", "password2", errmsg));
         }
     }
 
@@ -1440,7 +1440,7 @@ namespace {
         if (serverGTE(&c, 2, 4) && (!serverGTE(&c, 2, 7) || kCompiledWithSSL)) {
             createUser(c, TEST_DB, "user3", "password3");
             std::string errmsg;
-            ASSERT_FALSE(c.auth("test", "user3", "notPassword3", errmsg));
+            ASSERT_FALSE(c.auth(TEST_DB, "user3", "notPassword3", errmsg));
         }
     }
 

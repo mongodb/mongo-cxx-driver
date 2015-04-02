@@ -27,8 +27,8 @@ namespace {
     using namespace mongo;
     using namespace mongo::integration;
 
-    const string TEST_NS = "test.read_pref";
-    const string TEST_DB = "test";
+    const string TEST_NS = "test-read_pref.read_pref";
+    const string TEST_DB = "test-read_pref";
     const string TEST_COLL = "read_pref";
 
     class ReadPreferenceTest : public ReplicaSetTest {
