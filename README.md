@@ -6,6 +6,10 @@ Please see our [wiki page](https://github.com/mongodb/mongo-cxx-driver/wiki/Down
   Version [1.0.0](https://github.com/mongodb/mongo-cxx-driver/releases/tag/legacy-1.0.0)
   of the C++ legacy driver has been released. Please report any bugs or issues in the C++ [JIRA project](http://jira.mongodb.org/browse/CXX).
 
+  Version [1.0.1-rc0](https://github.com/mongodb/mongo-cxx-driver/releases/tag/legacy-1.0.1-rc0) of the
+  C++ legacy driver is available for *testing*. Please report any bugs or issues in the C++
+  [JIRA project](http://jira.mongodb.org/browse/CXX).
+
 Use the legacy branch if:
 
  - You are using MongoDB's C++ driver for the first time.
@@ -25,7 +29,12 @@ Use the 26compat branch only if:
 | legacy   | Stable      | Stable Evolution  | Primary stable C++ driver release                            |
 | 26compat | Stable      | Maintenance Only  | Drop in replacement for users of existing 2.6 era C++ driver |
 
-> **WARNING:** The master branch will contain future development work on a new driver with a completely new API and implementation. It is a work in progress and currently should not be used.
+Please note that stable branches are only production quality at stable release tags. Other
+commits or pre-release tags on a stable branch represent ongoing development work towards the
+next stable release, and therefore may be unstable.
+
+> **WARNING:** The master branch contains development work on a new driver with a completely
+> new API and implementation. It is a work in progress and currently should not be used.
 
 ## Components
 
