@@ -43,6 +43,18 @@ namespace mongo {
         return "";
     }
 #else
+
+// Old copies of OpenSSL will not have constants to disable protocols they don't support.
+// Define them to values we can OR together safely to generically disable these protocols across
+// all versions of OpenSSL.
+#ifndef SSL_OP_NO_TLSv1_1
+#define SSL_OP_NO_TLSv1_1 0
+#endif
+#ifndef SSL_OP_NO_TLSv1_2
+#define SSL_OP_NO_TLSv1_2 0
+#endif
+
+
     const std::string getSSLVersion(const std::string &prefix, const std::string &suffix) {
         return prefix + SSLeay_version(SSLEAY_VERSION) + suffix;
     }
@@ -132,6 +144,7 @@ namespace mongo {
                    const std::string& pempwd,
                    const std::string& clusterfile,
                    const std::string& clusterpwd,
+                   const std::vector<SSLGlobalParams::Protocols>& disabledProtocols,
                    const std::string& cafile = "",
                    const std::string& crlfile = "",
                    const std::string& cipherConfig = "",
@@ -146,6 +159,7 @@ namespace mongo {
                 cafile(cafile),
                 crlfile(crlfile),
                 cipherConfig(cipherConfig),
+                disabledProtocols(disabledProtocols),
                 weakCertificateValidation(weakCertificateValidation),
                 allowInvalidCertificates(allowInvalidCertificates),
                 allowInvalidHostnames(allowInvalidHostnames),
@@ -158,6 +172,7 @@ namespace mongo {
             std::string cafile;
             std::string crlfile;
             std::string cipherConfig;
+            std::vector<SSLGlobalParams::Protocols> disabledProtocols;
             bool weakCertificateValidation;
             bool allowInvalidCertificates;
             bool allowInvalidHostnames;
@@ -294,6 +309,7 @@ namespace mongo {
                 sslGlobalParams.sslPEMKeyPassword,
                 sslGlobalParams.sslClusterFile,
                 sslGlobalParams.sslClusterPassword,
+                sslGlobalParams.sslDisabledProtocols,
                 sslGlobalParams.sslCAFile,
                 sslGlobalParams.sslCRLFile,
                 sslGlobalParams.sslCipherConfig,
@@ -538,7 +554,22 @@ namespace mongo {
         // SSL_OP_ALL - Activate all bug workaround options, to support buggy client SSL's.
         // SSL_OP_NO_SSLv2 - Disable SSL v2 support
         // SSL_OP_NO_SSLv3 - Disable SSL v3 support
-        SSL_CTX_set_options(*context, SSL_OP_ALL|SSL_OP_NO_SSLv2|SSL_OP_NO_SSLv3);
+        long supportedProtocols = SSL_OP_ALL|SSL_OP_NO_SSLv2|SSL_OP_NO_SSLv3;
+
+        // Set the supported TLS protocols. Allow --disabledProtocols to disable selected ciphers.
+        if (!params.disabledProtocols.empty()) {
+            for (std::vector<SSLGlobalParams::Protocols>::const_iterator it =
+                    params.disabledProtocols.begin(); it != params.disabledProtocols.end(); ++it) {
+                if (*it == SSLGlobalParams::TLS1_0) {
+                    supportedProtocols |= SSL_OP_NO_TLSv1;
+                } else if (*it == SSLGlobalParams::TLS1_1) {
+                    supportedProtocols |= SSL_OP_NO_TLSv1_1;
+                } else if (*it == SSLGlobalParams::TLS1_2) {
+                    supportedProtocols |= SSL_OP_NO_TLSv1_2;
+                }
+            }
+        }
+        SSL_CTX_set_options(*context, supportedProtocols);
 
         // HIGH - Enable strong ciphers
         // !EXPORT - Disable export ciphers (40/56 bit) 
@@ -769,39 +800,31 @@ namespace mongo {
     }
 
     SSLConnection* SSLManager::connect(Socket* socket) {
-        SSLConnection* sslConn = new SSLConnection(_clientContext, socket, NULL, 0);
-        ScopeGuard sslGuard = MakeGuard(::SSL_free, sslConn->ssl);
-        ScopeGuard bioGuard = MakeGuard(::BIO_free, sslConn->networkBIO);
+        std::auto_ptr<SSLConnection> sslConn(new SSLConnection(_clientContext, socket, NULL, 0));
  
         int ret;
         do {
             ret = ::SSL_connect(sslConn->ssl);
-        } while(!_doneWithSSLOp(sslConn, ret));
+        } while(!_doneWithSSLOp(sslConn.get(), ret));
  
         if (ret != 1)
-            _handleSSLError(SSL_get_error(sslConn, ret), ret);
+            _handleSSLError(SSL_get_error(sslConn.get(), ret), ret);
  
-        sslGuard.Dismiss();
-        bioGuard.Dismiss();
-        return sslConn;
+        return sslConn.release();
     }
 
     SSLConnection* SSLManager::accept(Socket* socket, const char* initialBytes, int len) {
-        SSLConnection* sslConn = new SSLConnection(_serverContext, socket, initialBytes, len);
-        ScopeGuard sslGuard = MakeGuard(::SSL_free, sslConn->ssl);
-        ScopeGuard bioGuard = MakeGuard(::BIO_free, sslConn->networkBIO);
+        std::auto_ptr<SSLConnection> sslConn(new SSLConnection(_serverContext, socket, initialBytes, len));
  
         int ret;
         do {
             ret = ::SSL_accept(sslConn->ssl);
-        } while(!_doneWithSSLOp(sslConn, ret));
+        } while(!_doneWithSSLOp(sslConn.get(), ret));
  
         if (ret != 1)
-            _handleSSLError(SSL_get_error(sslConn, ret), ret);
+            _handleSSLError(SSL_get_error(sslConn.get(), ret), ret);
  
-        sslGuard.Dismiss();
-        bioGuard.Dismiss();
-        return sslConn;
+        return sslConn.release();
     }
 
     // TODO SERVER-11601 Use NFC Unicode canonicalization
