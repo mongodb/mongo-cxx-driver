@@ -16,6 +16,8 @@
 
 #include <mongocxx/config/prelude.hpp>
 
+#include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/private/database.hpp>
@@ -30,7 +32,10 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 class collection::impl {
 
    public:
-    impl(mongoc_collection_t* collection, std::string database_name, const class client::impl* client, std::string name) :
+    impl(mongoc_collection_t* collection,
+         bsoncxx::stdx::string_view database_name,
+         const class client::impl* client,
+         bsoncxx::stdx::string_view name) :
         collection_t(collection),
         database_name(std::move(database_name)),
         client_impl(client),

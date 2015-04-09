@@ -32,17 +32,17 @@ database& database::operator=(database&&) noexcept = default;
 
 database::~database() = default;
 
-database::database(const class client& client, const std::string& name)
+database::database(const class client& client, bsoncxx::stdx::string_view name)
     : _impl(bsoncxx::stdx::make_unique<impl>(
-          libmongoc::client_get_database(client._impl->client_t, name.c_str()), client._impl.get(),
-          name.c_str())) {
+          libmongoc::client_get_database(client._impl->client_t, name.data()), client._impl.get(),
+          name.data())) {
 }
 
 void* database::implementation() const {
     return _impl->database_t;
 }
 
-const std::string& database::name() const {
+bsoncxx::stdx::string_view database::name() const {
     return _impl->name;
 }
 
@@ -69,9 +69,9 @@ void database::read_preference(class read_preference rp) {
     libmongoc::database_set_read_prefs(_impl->database_t, rp._impl->read_preference_t);
 }
 
-bool database::has_collection(const std::string& name) {
+bool database::has_collection(bsoncxx::stdx::string_view name) {
     bson_error_t error;
-    return libmongoc::database_has_collection(_impl->database_t, name.c_str(), &error);
+    return libmongoc::database_has_collection(_impl->database_t, name.data(), &error);
 }
 
 class read_preference database::read_preference() const {
@@ -90,7 +90,7 @@ class write_concern database::write_concern() const {
     return wc;
 }
 
-collection database::collection(const std::string& name) const {
+collection database::collection(bsoncxx::stdx::string_view name) const {
     return mongocxx::collection(*this, name);
 }
 

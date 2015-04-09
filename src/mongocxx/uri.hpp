@@ -21,6 +21,8 @@
 #include <vector>
 
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/write_concern.hpp>
 
@@ -56,7 +58,7 @@ class MONGOCXX_API uri {
     ///
     /// @todo this should really take a stringview (polyfilled)?
     ///
-    uri(const std::string& uri_string = k_default_uri);
+    uri(bsoncxx::stdx::string_view uri_string = k_default_uri);
 
     ///
     /// Move constructs a uri.

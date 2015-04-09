@@ -62,7 +62,7 @@ class write_concern client::write_concern() const {
     return wc;
 }
 
-class database client::database(const std::string& name) const & {
+class database client::database(bsoncxx::stdx::string_view name) const & {
     return mongocxx::database(*this, name);
 }
 

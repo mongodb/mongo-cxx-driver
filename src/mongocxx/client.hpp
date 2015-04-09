@@ -18,6 +18,8 @@
 
 #include <memory>
 
+#include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/database.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/uri.hpp>
@@ -148,8 +150,8 @@ class MONGOCXX_API client {
     ///
     /// @return The database
     ///
-    class database database(const std::string& name) const &;
-    class database database(const std::string& name) const && = delete;
+    class database database(bsoncxx::stdx::string_view name) const &;
+    class database database(bsoncxx::stdx::string_view name) const && = delete;
 
     ///
     /// Allows the syntax @c client["db_name"] as a convenient shorthand for the client::database()
@@ -162,8 +164,8 @@ class MONGOCXX_API client {
     ///
     /// @return Client side representation of a server side database
     ///
-    inline MONGOCXX_INLINE class database operator[](const std::string& name) const &;
-    inline MONGOCXX_INLINE class database operator[](const std::string& name) const && = delete;
+    inline MONGOCXX_INLINE class database operator[](bsoncxx::stdx::string_view name) const &;
+    inline MONGOCXX_INLINE class database operator[](bsoncxx::stdx::string_view name) const && = delete;
 
    private:
     friend class database;
@@ -174,7 +176,7 @@ class MONGOCXX_API client {
 
 };
 
-inline MONGOCXX_INLINE database client::operator[](const std::string& name) const & {
+inline MONGOCXX_INLINE database client::operator[](bsoncxx::stdx::string_view name) const & {
     return database(name);
 }
 

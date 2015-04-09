@@ -66,14 +66,14 @@ collection::collection(collection&&) noexcept = default;
 collection& collection::operator=(collection&&) noexcept = default;
 collection::~collection() = default;
 
-const std::string& collection::name() const noexcept {
+bsoncxx::stdx::string_view collection::name() const noexcept {
     return _impl->name;
 }
 
-collection::collection(const database& database, const std::string& collection_name)
+collection::collection(const database& database, bsoncxx::stdx::string_view collection_name)
     : _impl(bsoncxx::stdx::make_unique<impl>(
-          libmongoc::database_get_collection(database._impl->database_t, collection_name.c_str()),
-          database.name(), database._impl->client_impl, collection_name.c_str())) {
+          libmongoc::database_get_collection(database._impl->database_t, collection_name.data()),
+          database.name(), database._impl->client_impl, collection_name.data())) {
 }
 
 bsoncxx::stdx::optional<result::bulk_write> collection::bulk_write(
@@ -441,7 +441,7 @@ bsoncxx::document::value collection::create_index(bsoncxx::document::view keys,
     return bsoncxx::document::value{bsoncxx::document::view{}};
 }
 
-cursor collection::distinct(const std::string& field_name, bsoncxx::document::view query,
+cursor collection::distinct(bsoncxx::stdx::string_view field_name, bsoncxx::document::view query,
     const options::distinct& options
 ) {
     auto command = bsoncxx::builder::stream::document{}
@@ -451,7 +451,7 @@ cursor collection::distinct(const std::string& field_name, bsoncxx::document::vi
 
     auto database = libmongoc::client_get_database(
         _impl->client_impl->client_t,
-        _impl->database_name.c_str()
+        _impl->database_name.data()
     );
 
     auto result = libmongoc::database_command(

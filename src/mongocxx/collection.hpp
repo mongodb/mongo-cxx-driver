@@ -23,6 +23,8 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/options/aggregate.hpp>
@@ -261,7 +263,7 @@ class MONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/reference/command/distinct/
     ///
     cursor distinct(
-        const std::string& field_name,
+        bsoncxx::stdx::string_view name,
         bsoncxx::document::view filter,
         const options::distinct& options = options::distinct()
     );
@@ -468,7 +470,7 @@ class MONGOCXX_API collection {
     ///
     /// @return The name of the collection.
     ///
-    const std::string& name() const noexcept;
+    bsoncxx::stdx::string_view name() const noexcept;
 
     ///
     /// Sets the read_preference for this collection. Changes will not have any effect on existing
@@ -572,7 +574,7 @@ class MONGOCXX_API collection {
    private:
     friend class database;
 
-    collection(const database& database, const std::string& collection_name);
+    collection(const database& database, bsoncxx::stdx::string_view collection_name);
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;

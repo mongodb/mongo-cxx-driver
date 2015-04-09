@@ -23,7 +23,7 @@
 using namespace mongocxx;
 
 TEST_CASE("A database", "[database]") {
-    const std::string database_name("database");
+    bsoncxx::stdx::string_view database_name{"database"};
     MOCK_CLIENT
     MOCK_DATABASE
     client mongo_client;
@@ -32,7 +32,7 @@ TEST_CASE("A database", "[database]") {
         bool called = false;
         get_database->interpose([&](mongoc_client_t* client, const char* d_name) {
             called = true;
-            REQUIRE(database_name == d_name);
+            REQUIRE(database_name == bsoncxx::stdx::string_view{d_name});
             return nullptr;
         });
 
@@ -143,7 +143,7 @@ TEST_CASE("A database", "[database]") {
 
     SECTION("may create a collection") {
         MOCK_COLLECTION
-        const std::string collection_name("collection");
+        bsoncxx::stdx::string_view collection_name{"collection"};
         database database = mongo_client[database_name];
         collection obtained_collection = database[collection_name];
         REQUIRE(obtained_collection.name() == collection_name);

@@ -62,8 +62,8 @@ void write_concern::nodes(std::int32_t confirm_from) {
     libmongoc::write_concern_set_w(_impl->write_concern_t, confirm_from);
 }
 
-void write_concern::tag(const std::string& confirm_from) {
-    libmongoc::write_concern_set_wtag(_impl->write_concern_t, confirm_from.c_str());
+void write_concern::tag(bsoncxx::stdx::string_view confirm_from) {
+    libmongoc::write_concern_set_wtag(_impl->write_concern_t, confirm_from.data());
 }
 
 void write_concern::majority(std::chrono::milliseconds timeout) {

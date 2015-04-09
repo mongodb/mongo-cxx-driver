@@ -28,8 +28,8 @@ uri::uri(std::unique_ptr<impl>&& implementation) {
     _impl.reset(implementation.release());
 }
 
-uri::uri(const std::string& uri_string)
-    : _impl(bsoncxx::stdx::make_unique<impl>(mongoc_uri_new(uri_string.c_str()))) {
+uri::uri(bsoncxx::stdx::string_view uri_string)
+    : _impl(bsoncxx::stdx::make_unique<impl>(mongoc_uri_new(uri_string.data()))) {
 }
 
 uri::uri(uri&&) noexcept = default;

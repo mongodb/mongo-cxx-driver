@@ -19,10 +19,10 @@
 #include <chrono>
 #include <cstdint>
 #include <stdexcept>
-#include <string>
 #include <memory>
 
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -150,7 +150,7 @@ class MONGOCXX_API write_concern {
     /// @param tag
     ///   The string representing on of the "getLastErrorModes" in the replica set configuration.
     ///
-    void tag(const std::string& tag);
+    void tag(bsoncxx::stdx::string_view tag);
 
     ///
     /// Sets an upper bound on the time a write concern can take to be satisfied. If the write
