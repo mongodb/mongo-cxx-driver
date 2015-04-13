@@ -17,6 +17,8 @@
 
 #include "mongo/integration/integration_test.h"
 
+#include <cstdlib>
+
 #include <memory>
 
 #include "mongo/client/dbclient.h"
@@ -34,18 +36,27 @@ namespace {
     class ReadPreferenceTest : public ReplicaSetTest {
     public:
         static void SetUpTestCase() {
-            ReplicaSetTest::SetUpTestCase();
-            std::string errmsg;
+            try {
+                ReplicaSetTest::SetUpTestCase();
+                std::string errmsg;
 
-            ConnectionString cs = ConnectionString::parse(rs().mongodbUri(), errmsg);
-            replset_conn.reset(static_cast<DBClientReplicaSet*>(cs.connect(errmsg)));
-            replset_conn->dropCollection(TEST_NS);
+                ConnectionString cs = ConnectionString::parse(rs().mongodbUri(), errmsg);
+                replset_conn.reset(static_cast<DBClientReplicaSet*>(cs.connect(errmsg)));
+                replset_conn->dropCollection(TEST_NS);
 
-            primary_conn.reset(new DBClientConnection());
-            primary_conn->connect(rs().primary().uri());
+                primary_conn.reset(new DBClientConnection());
+                primary_conn->connect(rs().primary().uri());
 
-            secondary_conn.reset(new DBClientConnection());
-            secondary_conn->connect(rs().secondaries().front().uri());
+                secondary_conn.reset(new DBClientConnection());
+                secondary_conn->connect(rs().secondaries().front().uri());
+                return;
+
+            } catch (const std::exception& ex) {
+                std::cout << "Got fatal error during test setup: " << ex.what() << std::endl;
+            } catch (...) {
+                std::cout << "Got unknown error during test setup" << std::endl;
+            }
+            std::abort();
         }
 
         static auto_ptr<DBClientReplicaSet> replset_conn;
