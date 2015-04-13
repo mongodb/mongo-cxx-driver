@@ -15,6 +15,7 @@
  */
 
 #include "mongo/orchestration/mongo_resource.h"
+#include "mongo/util/mongoutils/str.h"
 
 #include <stdexcept>
 
@@ -45,7 +46,10 @@ namespace orchestration {
         std::string uri = handleResponse(status())["mongodb_uri"].asString();
         const std::string prefix("mongodb://");
         if (uri.substr(0, prefix.size()) != prefix) {
-            throw std::runtime_error("mongodb_uri does not begin with prefix 'mongodb://'");
+            throw std::runtime_error(
+                      str::stream() << "mongodb_uri does not begin with prefix 'mongodb://'"
+                                    << ", got: " << uri
+                  );
         }
         uri = uri.substr(prefix.size());
         const size_t suffix = uri.find('/');
