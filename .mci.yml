@@ -90,10 +90,6 @@ cxx_driver_variables:
           echo "Installing Mongo Orchestration..."
           trap 'set +o errexit; mongo-orchestration stop;' EXIT
           taskkill.exe /fi python /f
-          git clone https://github.com/10gen/mongo-orchestration.git
-          cd mongo-orchestration
-          python setup.py install
-          cd ..
           echo "Starting Mongo Orchestration..."
           echo "{ \"releases\": { \"default\": \"c:\\\\mongodb\\\\bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
           mongo-orchestration -f orchestration.config -e default -s wsgiref start --socket-timeout-ms=60000
@@ -102,15 +98,6 @@ cxx_driver_variables:
         start_mongo_orchestration: |
           echo "Installing Mongo Orchestration..."
           trap 'set +o errexit; mongo-orchestration stop;' EXIT
-          git clone https://github.com/10gen/mongo-orchestration.git
-          cd mongo-orchestration
-          if [ "$(whoami)" != "root" ]; then
-              sudo python setup.py install
-              sudo chown -R ubuntu .
-          else
-              python setup.py install
-          fi
-          cd ..
           echo "Starting Mongo Orchestration..."
           echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
           TMPDIR=/data/db mongo-orchestration -f orchestration.config -e default start --socket-timeout-ms=60000
