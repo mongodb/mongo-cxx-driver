@@ -1084,15 +1084,16 @@ namespace {
     }
 
     TEST_F(DBClientTest, ShowDiskLoc) {
-        c.insert(TEST_NS, BSON("a" << true));
+        if (!serverGTE(&c, 3, 1)) {
+            c.insert(TEST_NS, BSON("a" << true));
 
-        BSONObj result;
+            BSONObj result;
+            result = c.findOne(TEST_NS, Query("{$query: {}}"));
+            ASSERT_FALSE(result.hasField("$diskLoc"));
 
-        result = c.findOne(TEST_NS, Query("{$query: {}}"));
-        ASSERT_FALSE(result.hasField("$diskLoc"));
-
-        result = c.findOne(TEST_NS, Query("{$query: {}, $showDiskLoc: true}"));
-        ASSERT_TRUE(result.hasField("$diskLoc"));
+            result = c.findOne(TEST_NS, Query("{$query: {}, $showDiskLoc: true}"));
+            ASSERT_TRUE(result.hasField("$diskLoc"));
+        }
     }
 
     TEST_F(DBClientTest, MaxTimeMS) {
