@@ -1,7 +1,12 @@
 #include "catch.hpp"
 
+#include <vector>
+
 #include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/json.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/collection.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/pipeline.hpp>
@@ -388,4 +393,57 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto results = coll.aggregate(p);
     }
+
+    SECTION("distinct works", "[collection]") {
+        using bsoncxx::builder::stream::document;
+
+        auto distinct_cname = "distinct_coll";
+        auto distinct_coll = db[distinct_cname];
+        if (db.has_collection(distinct_cname)) {
+            distinct_coll.drop();
+        }
+
+        document doc1{};
+        doc1 << "foo" << "baz" << "garply" << 1;
+        document doc2{};
+        doc2 << "foo" << "bar" << "garply" << 2;
+        document doc3{};
+        doc3 << "foo" << "baz" << "garply" << 2;
+        document doc4{};
+        doc4 << "foo" << "quux" << "garply" << 9;
+
+        bulk_write bulk{false /* unordered */};
+
+        bulk.append(model::insert_one{doc1});
+        bulk.append(model::insert_one{doc2});
+        bulk.append(model::insert_one{doc3});
+        bulk.append(model::insert_one{doc4});
+
+        distinct_coll.bulk_write(bulk);
+
+        auto distinct_results = distinct_coll.distinct("foo", {});
+
+        // copy into a vector.
+        std::vector<bsoncxx::document::value> results(distinct_results.begin(),
+                                                      distinct_results.end());
+        REQUIRE(results.size() == std::size_t{1});
+
+        auto res_doc = results[0].view();
+
+        auto values_array = res_doc["values"].get_array().value;
+
+        std::vector<bsoncxx::stdx::string_view> distinct_values;
+        for (auto&& value : values_array) {
+            distinct_values.push_back(value.get_utf8().value);
+        }
+
+        const auto assert_contains_one = [&](bsoncxx::stdx::string_view val) {
+            REQUIRE(std::count(distinct_values.begin(), distinct_values.end(), val) == 1);
+        };
+
+        assert_contains_one("baz");
+        assert_contains_one("bar");
+        assert_contains_one("quux");
+    }
+
 }
