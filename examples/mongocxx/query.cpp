@@ -33,8 +33,8 @@ int main(int, char**) {
     // Query for equality on a top level field.
     {
         // @begin: cpp-query-top-level-field
-        auto cursor = db["restaurants"]
-            .find(document{} << "borough" << "Manhattan" << finalize);
+        auto query = document{} << "borough" << "Manhattan" << finalize;
+        auto cursor = db["restaurants"].find(query.view());
 
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;

@@ -108,8 +108,10 @@ TEST_CASE("Collection", "[collection]") {
             return NULL;
         });
 
-        pipe.match(builder::stream::document{} << "foo" << "bar" << builder::stream::finalize);
-        pipe.sort(builder::stream::document{} << "foo" << 1 << builder::stream::finalize);
+        auto match_stage = builder::stream::document{} << "foo" << "bar" << builder::stream::finalize;
+        pipe.match(match_stage);
+        auto sort_stage = builder::stream::document{} << "foo" << 1 << builder::stream::finalize;
+        pipe.sort(sort_stage);
 
         SECTION("With default options") {}
 
