@@ -15,4 +15,4 @@
 #include <bsoncxx/config/config.hpp>
 #include <bsoncxx/export.hpp>
 
-#define BSONCXX_INLINE __attribute__ ((__visibility__("hidden"), __always_inline__))
+#define BSONCXX_INLINE inline __attribute__ ((__visibility__("hidden"), __always_inline__))

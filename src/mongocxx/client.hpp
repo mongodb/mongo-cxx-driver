@@ -164,8 +164,8 @@ class MONGOCXX_API client {
     ///
     /// @return Client side representation of a server side database
     ///
-    inline MONGOCXX_INLINE class database operator[](bsoncxx::stdx::string_view name) const &;
-    inline MONGOCXX_INLINE class database operator[](bsoncxx::stdx::string_view name) const && = delete;
+    MONGOCXX_INLINE class database operator[](bsoncxx::stdx::string_view name) const &;
+    MONGOCXX_INLINE class database operator[](bsoncxx::stdx::string_view name) const && = delete;
 
    private:
     friend class database;
@@ -176,7 +176,7 @@ class MONGOCXX_API client {
 
 };
 
-inline MONGOCXX_INLINE database client::operator[](bsoncxx::stdx::string_view name) const & {
+MONGOCXX_INLINE database client::operator[](bsoncxx::stdx::string_view name) const & {
     return database(name);
 }
 

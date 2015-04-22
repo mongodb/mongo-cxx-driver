@@ -198,7 +198,7 @@ class MONGOCXX_API database {
     ///
     /// @return the collection.
     ///
-    inline MONGOCXX_INLINE class collection operator[](bsoncxx::stdx::string_view name) const;
+    MONGOCXX_INLINE class collection operator[](bsoncxx::stdx::string_view name) const;
 
    private:
     friend class client;
@@ -211,7 +211,7 @@ class MONGOCXX_API database {
 
 };
 
-inline MONGOCXX_INLINE collection database::operator[](bsoncxx::stdx::string_view name) const {
+MONGOCXX_INLINE collection database::operator[](bsoncxx::stdx::string_view name) const {
     return collection(name);
 }
 

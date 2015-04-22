@@ -129,7 +129,7 @@ class MONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
     ///
     template<typename container_type>
-    inline MONGOCXX_INLINE bsoncxx::stdx::optional<result::bulk_write> bulk_write(
+    MONGOCXX_INLINE bsoncxx::stdx::optional<result::bulk_write> bulk_write(
         const container_type& writes,
         const options::bulk_write& options = options::bulk_write()
     );
@@ -156,7 +156,7 @@ class MONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
     ///
     template<typename write_model_iterator_type>
-    inline MONGOCXX_INLINE bsoncxx::stdx::optional<result::bulk_write> bulk_write(
+    MONGOCXX_INLINE bsoncxx::stdx::optional<result::bulk_write> bulk_write(
         write_model_iterator_type begin,
         write_model_iterator_type end,
         const options::bulk_write& options = options::bulk_write()
@@ -426,7 +426,7 @@ class MONGOCXX_API collection {
     /// @throws exception::write when the operation fails.
     ///
     template<typename container_type>
-    inline MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> insert_many(
+    MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> insert_many(
         const container_type& container,
         const options::insert& options = options::insert()
     );
@@ -455,7 +455,7 @@ class MONGOCXX_API collection {
     ///
     /// TODO: document DocumentViewIterator concept or static assert
     template<typename document_view_iterator_type>
-    inline MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> insert_many(
+    MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> insert_many(
         document_view_iterator_type begin,
         document_view_iterator_type end,
         const options::insert& options = options::insert()
@@ -588,7 +588,7 @@ class MONGOCXX_API collection {
 };
 
 template<typename container_type>
-inline MONGOCXX_INLINE bsoncxx::stdx::optional<result::bulk_write> collection::bulk_write(
+MONGOCXX_INLINE bsoncxx::stdx::optional<result::bulk_write> collection::bulk_write(
     const container_type& requests,
     const options::bulk_write& options
 ) {
@@ -596,7 +596,7 @@ inline MONGOCXX_INLINE bsoncxx::stdx::optional<result::bulk_write> collection::b
 }
 
 template<typename write_model_iterator_type>
-inline MONGOCXX_INLINE bsoncxx::stdx::optional<result::bulk_write> collection::bulk_write(
+MONGOCXX_INLINE bsoncxx::stdx::optional<result::bulk_write> collection::bulk_write(
     write_model_iterator_type begin,
     write_model_iterator_type end,
     const options::bulk_write& options
@@ -611,7 +611,7 @@ inline MONGOCXX_INLINE bsoncxx::stdx::optional<result::bulk_write> collection::b
 }
 
 template<typename container_type>
-inline MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> collection::insert_many(
+MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> collection::insert_many(
     const container_type& container,
     const options::insert& options
 ) {
@@ -619,7 +619,7 @@ inline MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> collection::
 }
 
 template<typename document_view_iterator_type>
-inline MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> collection::insert_many(
+MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> collection::insert_many(
     document_view_iterator_type begin,
     document_view_iterator_type end,
     const options::insert& options
