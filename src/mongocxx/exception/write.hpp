@@ -16,13 +16,18 @@
 
 #include <mongocxx/config/prelude.hpp>
 
+#include <bsoncxx/document/value.hpp>
+
 #include <mongocxx/exception/operation.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace exception {
 
-class MONGOCXX_API write : public operation {};
+class MONGOCXX_API write : public operation {
+   public:
+    using operation::operation;
+};
 
 }  // namespace exception
 MONGOCXX_INLINE_NAMESPACE_END

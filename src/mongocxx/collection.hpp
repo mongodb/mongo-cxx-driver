@@ -99,7 +99,9 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see mongocxx::options::aggregate.
     ///
     /// @return A mongocxx::cursor with the results.
-    /// @throws exception::operation if the aggregation fails.
+    /// @throws
+    ///   If the operation failed, the returned cursor will throw an exception::query
+    ///   when it is iterated.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/aggregate/
     ///
@@ -184,7 +186,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see mongocxx::options::count.
     ///
     /// @return The count of the documents that matched the filter.
-    /// @throws exception::operation if the count operation fails.
+    /// @throws exception::query if the count operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/count/
     ///
@@ -258,7 +260,9 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::distinct.
     ///
     /// @return Cursor having the distinct values for the specified field, a driver::cursor.
-    /// @throws operation_exception if the distinct operation fails.
+    /// @throws
+    ///   If the operation failed, the returned cursor will throw exception::query
+    ///   when it is iterated.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/distinct/
     ///
@@ -286,7 +290,9 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::find
     ///
     /// @return Cursor with the matching documents from the collection, a driver::cursor.
-    /// @throws exception::operation when the operation fails.
+    /// @throws
+    ///   If the find failed, the returned cursor will throw exception::query when it
+    ///   is iterated.
     ///
     /// @see http://docs.mongodb.org/manual/core/read-operations-introduction/
     ///
@@ -305,7 +311,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::find
     ///
     /// @return An optional document that matched the filter.
-    /// @throws exception::operation if the operation fails.
+    /// @throws exception::query if the operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/core/read-operations-introduction/
     ///
@@ -323,7 +329,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::find_one_and_delete
     ///
     /// @return The document that was deleted.
-    /// @throws exception::operation if the operation fails.
+    /// @throws exception::write if the operation fails.
     ///
     bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_delete(
         bsoncxx::document::view filter,
@@ -342,7 +348,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::find_one_and_replace.
     ///
     /// @return The original or replaced document.
-    /// @throws exception::operation if the operation fails.
+    /// @throws exception::write if the operation fails.
     ///
     bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_replace(
         bsoncxx::document::view filter,
@@ -362,7 +368,7 @@ class MONGOCXX_API collection {
     ///   Optional arguments, see options::find_one_and_update.
     ///
     /// @return The original or updated document.
-    /// @throws exception::operation when the operation fails.
+    /// @throws exception::write when the operation fails.
     ///
     bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_update(
         bsoncxx::document::view filter,

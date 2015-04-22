@@ -17,10 +17,12 @@
 #include <mongocxx/config/prelude.hpp>
 
 #include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/document/value.hpp>
 
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/private/database.hpp>
+#include <mongocxx/private/libbson.hpp>
 #include <mongocxx/private/read_preference.hpp>
 #include <mongocxx/private/write_concern.hpp>
 
@@ -43,6 +45,13 @@ class collection::impl {
     {}
 
     ~impl() { libmongoc::collection_destroy(collection_t); }
+
+    bsoncxx::document::value gle() {
+        const bson_t* gle = mongoc_collection_get_last_error(collection_t);
+        libbson::scoped_bson_t error_copy;
+        bson_copy_to(gle, error_copy.bson());
+        return std::move(error_copy.steal());
+    }
 
     mongoc_collection_t* collection_t;
     std::string database_name;

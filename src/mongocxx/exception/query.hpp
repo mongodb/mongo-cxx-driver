@@ -16,13 +16,24 @@
 
 #include <mongocxx/config/prelude.hpp>
 
+#include <cstdint>
+#include <string>
+
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/exception/operation.hpp>
+#include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace exception {
 
-class MONGOCXX_API query : public operation {};
+class MONGOCXX_API query : public operation {
+   public:
+    using operation::operation;
+};
 
 }  // namespace exception
 MONGOCXX_INLINE_NAMESPACE_END

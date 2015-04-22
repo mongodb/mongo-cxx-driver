@@ -16,13 +16,19 @@
 
 #include <mongocxx/config/prelude.hpp>
 
+#include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/exception/base.hpp>
+#include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace exception {
 
-class MONGOCXX_API operation : public base {};
+class MONGOCXX_API operation : public base {
+   public:
+    using base::base;
+};
 
 }  // namespace exception
 MONGOCXX_INLINE_NAMESPACE_END

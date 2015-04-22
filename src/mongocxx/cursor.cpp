@@ -14,12 +14,14 @@
 
 #include <cstdint>
 #include <memory>
+#include <string>
+#include <tuple>
 
 #include <bson.h>
 
 #include <mongocxx/cursor.hpp>
 
-#include <mongocxx/exception/operation.hpp>
+#include <mongocxx/exception/query.hpp>
 #include <mongocxx/private/cursor.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
@@ -47,8 +49,7 @@ cursor::iterator& cursor::iterator::operator++() {
     if (libmongoc::cursor_next(_cursor->_impl->cursor_t, &out)) {
         _doc = bsoncxx::document::view(bson_get_data(out), out->len);
     } else if (libmongoc::cursor_error(_cursor->_impl->cursor_t, &error)) {
-        // TODO: put cursor error message in here.
-        throw exception::operation();
+        throw exception::query(std::make_tuple(error.message, error.code));
     } else {
         _cursor = nullptr;
     };

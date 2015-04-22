@@ -22,7 +22,10 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace exception {
 
-class MONGOCXX_API authentication : public operation {};
+class MONGOCXX_API authentication : public base {
+   public:
+    using base::base;
+};
 
 }  // namespace exception
 MONGOCXX_INLINE_NAMESPACE_END

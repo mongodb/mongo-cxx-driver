@@ -12,38 +12,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/collection.hpp>
+
 #include <cstdint>
+#include <utility>
+#include <tuple>
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
 
-#include <mongocxx/private/client.hpp>
-#include <mongocxx/private/collection.hpp>
-#include <mongocxx/private/database.hpp>
-#include <mongocxx/private/pipeline.hpp>
-#include <mongocxx/private/bulk_write.hpp>
-#include <mongocxx/private/read_preference.hpp>
-#include <mongocxx/private/write_concern.hpp>
-#include <mongocxx/write_concern.hpp>
-#include <mongocxx/collection.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/bulk_write.hpp>
 #include <mongocxx/exception/operation.hpp>
+#include <mongocxx/exception/query.hpp>
 #include <mongocxx/exception/write.hpp>
 #include <mongocxx/model/write.hpp>
+#include <mongocxx/private/bulk_write.hpp>
+#include <mongocxx/private/client.hpp>
+#include <mongocxx/private/collection.hpp>
+#include <mongocxx/private/database.hpp>
 #include <mongocxx/private/libbson.hpp>
 #include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/pipeline.hpp>
+#include <mongocxx/private/read_preference.hpp>
+#include <mongocxx/private/write_concern.hpp>
 #include <mongocxx/result/bulk_write.hpp>
 #include <mongocxx/result/delete.hpp>
 #include <mongocxx/result/insert_many.hpp>
 #include <mongocxx/result/insert_one.hpp>
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
-
-#include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
-
+#include <mongocxx/write_concern.hpp>
 
 namespace {
 enum class cursor_flag : uint32_t {
@@ -89,7 +91,7 @@ bsoncxx::stdx::optional<result::bulk_write> collection::bulk_write(
     bson_error_t error;
 
     if (!libmongoc::bulk_operation_execute(b, reply.bson(), &error)) {
-        throw exception::bulk_write();
+        throw exception::bulk_write(reply.steal(), std::make_tuple(error.message, error.code));
     }
 
     result::bulk_write result(reply.steal());
@@ -326,7 +328,7 @@ bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one_and_repla
         rd == options::return_document::k_after, reply.bson(), &error);
 
     if (!r) {
-        throw exception::operation();
+        throw exception::write(std::move(_impl->gle()), std::make_tuple(error.message, error.code));
     }
 
     bsoncxx::document::view result = reply.view();
@@ -361,7 +363,7 @@ bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one_and_updat
         rd == options::return_document::k_after, reply.bson(), &error);
 
     if (!r) {
-        throw exception::operation();
+        throw exception::write(std::move(_impl->gle()), std::make_tuple(error.message, error.code));
     }
 
     bsoncxx::document::view result = reply.view();
@@ -390,7 +392,7 @@ bsoncxx::stdx::optional<bsoncxx::document::value> collection::find_one_and_delet
         true, false, false, reply.bson(), &error);
 
     if (!r) {
-        throw exception::operation();
+        throw exception::write(std::move(_impl->gle()), std::make_tuple(error.message, error.code));
     }
 
     bsoncxx::document::view result = reply.view();
@@ -418,7 +420,7 @@ std::int64_t collection::count(bsoncxx::document::view filter, const options::co
         options.skip().value_or(0), options.limit().value_or(0), rp_ptr, &error);
 
     if (result < 0) {
-        throw exception::operation();
+        throw exception::query(std::make_tuple(error.message, error.code));
     }
 
     return result;
@@ -433,7 +435,7 @@ bsoncxx::document::value collection::create_index(bsoncxx::document::view keys,
         libmongoc::collection_create_index(_impl->collection_t, bson_keys.bson(), nullptr, &error);
 
     if (!result) {
-        throw exception::operation();
+        throw exception::operation(std::make_tuple(error.message, error.code));
     }
 
     // TODO: return the response from the server, this is not possible now due to the way
@@ -474,7 +476,7 @@ void collection::drop() {
     auto result = libmongoc::collection_drop(_impl->collection_t, &error);
 
     if (!result) {
-        throw exception::operation();
+        throw exception::operation(std::make_tuple(error.message, error.code));
     }
 }
 

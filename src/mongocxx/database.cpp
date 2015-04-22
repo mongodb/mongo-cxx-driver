@@ -14,6 +14,10 @@
 
 #include <mongocxx/database.hpp>
 
+#include <utility>
+
+#include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/operation.hpp>
 #include <mongocxx/private/database.hpp>
@@ -21,8 +25,6 @@
 #include <mongocxx/private/read_preference.hpp>
 #include <mongocxx/private/libbson.hpp>
 #include <mongocxx/private/libmongoc.hpp>
-
-#include <bsoncxx/stdx/make_unique.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -60,7 +62,7 @@ bsoncxx::document::value database::command(bsoncxx::document::view command) {
     );
 
     if (!result)
-        throw exception::operation();
+        throw exception::operation(std::move(reply_bson.steal()));
 
     return reply_bson.steal();
 }
