@@ -21,18 +21,15 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace exception {
 
 base::base(bsoncxx::document::value raw_server_error)
-    : _raw_server_error(std::move(raw_server_error))
-{}
+    : _raw_server_error(std::move(raw_server_error)) {
+}
 
-base::base(error_and_code_type error_and_code)
-    : _error_and_code(std::move(error_and_code))
-{}
+base::base(error_and_code_type error_and_code) : _error_and_code(std::move(error_and_code)) {
+}
 
-base::base(bsoncxx::document::value raw_server_error,
-           error_and_code_type error_and_code)
-    : _raw_server_error(std::move(raw_server_error))
-    , _error_and_code(std::move(error_and_code))
-{}
+base::base(bsoncxx::document::value raw_server_error, error_and_code_type error_and_code)
+    : _raw_server_error(std::move(raw_server_error)), _error_and_code(std::move(error_and_code)) {
+}
 
 const stdx::optional<bsoncxx::document::value>& base::raw_server_error() const {
     return _raw_server_error;

@@ -53,16 +53,10 @@ bsoncxx::document::value database::command(bsoncxx::document::view command) {
     libbson::scoped_bson_t reply_bson;
     bson_error_t error;
 
-    auto result = libmongoc::database_command_simple(
-        _impl->database_t,
-        command_bson.bson(),
-        NULL,
-        reply_bson.bson(),
-        &error
-    );
+    auto result = libmongoc::database_command_simple(_impl->database_t, command_bson.bson(), NULL,
+                                                     reply_bson.bson(), &error);
 
-    if (!result)
-        throw exception::operation(std::move(reply_bson.steal()));
+    if (!result) throw exception::operation(std::move(reply_bson.steal()));
 
     return reply_bson.steal();
 }

@@ -550,14 +550,14 @@ TEST_CASE("builder appends lambdas", "[bsoncxx::builder::stream]") {
                  << "key2"
                  << "value2" << close_document << "c" << open_array << 1 << 2 << 3 << close_array;
 
-        stream << "a" << [](single_context s) { s << "single"; } << "b" << open_document
-               << [](key_context<> k) {
-                      k << "key1"
-                        << "value1"
-                        << "key2"
-                        << "value2";
-                  } << close_document << "c" << open_array
-               << [](array_context<> a) { a << 1 << 2 << 3; } << close_array;
+        stream << "a" << [](single_context s) { s << "single"; } << "b" << open_document <<
+            [](key_context<> k) {
+                k << "key1"
+                  << "value1"
+                  << "key2"
+                  << "value2";
+            } << close_document << "c" << open_array << [](array_context<> a) { a << 1 << 2 << 3; }
+               << close_array;
     }
 
     viewable_eq_viewable(expected, stream);
@@ -692,9 +692,9 @@ TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
         {
             using namespace builder::basic;
 
-            basic.append(kvp("hello", "world"), kvp("foo", 35),
-                         kvp("bar", [](sub_document sd) { sd.append(kvp("que", "qux")); }),
-                         kvp("baz", [](sub_array sa) { sa.append(1, 2, 3); }));
+            basic.append(kvp("hello", "world"), kvp("foo", 35), kvp("bar", [](sub_document sd) {
+                sd.append(kvp("que", "qux"));
+            }), kvp("baz", [](sub_array sa) { sa.append(1, 2, 3); }));
         }
 
         viewable_eq_viewable(stream, basic);

@@ -91,8 +91,8 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
     });
 
     client_get_preference->interpose([&](const mongoc_client_t* client) {
-                                         return saved_preference.get();
-                                     }).forever();
+        return saved_preference.get();
+    }).forever();
 
     mongo_client.read_preference(std::move(preference));
     REQUIRE(called_set);

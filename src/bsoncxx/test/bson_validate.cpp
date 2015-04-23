@@ -14,29 +14,29 @@ using namespace bsoncxx;
 // inputs.
 
 namespace {
-    // polymorphic lambdas would be nice here.
-    template<typename T>
-    bool is_engaged(const stdx::optional<T>& opt) {
-        return opt != stdx::nullopt;
-    }
+// polymorphic lambdas would be nice here.
+template <typename T>
+bool is_engaged(const stdx::optional<T>& opt) {
+    return opt != stdx::nullopt;
+}
 
-    template<typename T>
-    bool is_disengaged(const stdx::optional<T>& opt) {
-        return opt == stdx::nullopt;
-    }
+template <typename T>
+bool is_disengaged(const stdx::optional<T>& opt) {
+    return opt == stdx::nullopt;
+}
 }  // namespace
-
 
 TEST_CASE("validate accepts bson we produce", "[bsoncxx::validate]") {
     builder::stream::document doc{};
-    doc << "hello" << "world";
+    doc << "hello"
+        << "world";
     auto view = doc.view();
     // option has explicit bool conversion operator
     REQUIRE(is_engaged(validate(view.data(), view.length())));
 }
 
 TEST_CASE("validate doesn't accept random bytes", "[bsoncxx::validate]") {
-    std::array<uint8_t, 12> arr{ 0xDE, 0xAD, 0xBE, 0xEF, 0xF0, 0x0B, 0x45 };
+    std::array<uint8_t, 12> arr{0xDE, 0xAD, 0xBE, 0xEF, 0xF0, 0x0B, 0x45};
     REQUIRE(is_disengaged(validate(arr.data(), arr.size())));
 }
 
@@ -70,7 +70,6 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
             auto view = doc.view();
             REQUIRE(is_disengaged(validate(view.data(), view.length(), vtor)));
         }
-
 
         SECTION("and in nested documents") {
             using namespace bsoncxx::builder::stream;
@@ -133,5 +132,4 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
 
         REQUIRE(invalid_offset == std::size_t{9});
     }
-
 }

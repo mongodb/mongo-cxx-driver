@@ -68,5 +68,4 @@ TEST_CASE("Read Preference", "[read_preference]") {
         other.tags(other_tags);
         REQUIRE_FALSE(rp == other);
     }
-
 }

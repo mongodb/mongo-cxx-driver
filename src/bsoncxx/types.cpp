@@ -44,8 +44,6 @@ std::string to_string(binary_sub_type rhs) {
     }
 }
 
-namespace types {
-
-}  // namespace types
+namespace types {}  // namespace types
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

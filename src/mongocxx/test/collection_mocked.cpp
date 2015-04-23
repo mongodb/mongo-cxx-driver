@@ -59,59 +59,53 @@ TEST_CASE("Collection", "[collection]") {
         pipeline pipe;
         options::aggregate opts;
 
-        collection_aggregate->interpose([&](
-            mongoc_collection_t* collection,
-            mongoc_query_flags_t flags,
-            const bson_t* pipeline,
-            const bson_t* options,
-            const mongoc_read_prefs_t* read_prefs
-        ) -> mongoc_cursor_t* {
-            collection_aggregate_called = true;
-            REQUIRE(collection == mongo_coll.implementation());
-            REQUIRE(flags == MONGOC_QUERY_NONE);
+        collection_aggregate->interpose(
+            [&](mongoc_collection_t* collection, mongoc_query_flags_t flags, const bson_t* pipeline,
+                const bson_t* options, const mongoc_read_prefs_t* read_prefs) -> mongoc_cursor_t* {
+                collection_aggregate_called = true;
+                REQUIRE(collection == mongo_coll.implementation());
+                REQUIRE(flags == MONGOC_QUERY_NONE);
 
-            bsoncxx::array::view p(bson_get_data(pipeline), pipeline->len);
-            bsoncxx::document::view o(bson_get_data(options), options->len);
+                bsoncxx::array::view p(bson_get_data(pipeline), pipeline->len);
+                bsoncxx::document::view o(bson_get_data(options), options->len);
 
-            bsoncxx::stdx::string_view bar(
-                p[0].get_document().value["$match"].get_document().value["foo"].get_utf8()
-            );
-            std::int32_t one(
-                p[1].get_document().value["$sort"].get_document().value["foo"].get_int32()
-            );
+                bsoncxx::stdx::string_view bar(
+                    p[0].get_document().value["$match"].get_document().value["foo"].get_utf8());
+                std::int32_t one(
+                    p[1].get_document().value["$sort"].get_document().value["foo"].get_int32());
 
-            REQUIRE(bar == bsoncxx::stdx::string_view("bar"));
-            REQUIRE(one == 1);
+                REQUIRE(bar == bsoncxx::stdx::string_view("bar"));
+                REQUIRE(one == 1);
 
-            if (opts.allow_disk_use())
-                REQUIRE(o["allowDiskUse"].get_bool().value == expected_allow_disk_use);
-            else
-                REQUIRE(o.find("allowDiskUse") == o.end());
+                if (opts.allow_disk_use())
+                    REQUIRE(o["allowDiskUse"].get_bool().value == expected_allow_disk_use);
+                else
+                    REQUIRE(o.find("allowDiskUse") == o.end());
 
-            if (opts.max_time_ms())
-                REQUIRE(o["maxTimeMS"].get_int64().value == expected_max_time_ms);
-            else
-                REQUIRE(o.find("maxTimeMS") == o.end());
+                if (opts.max_time_ms())
+                    REQUIRE(o["maxTimeMS"].get_int64().value == expected_max_time_ms);
+                else
+                    REQUIRE(o.find("maxTimeMS") == o.end());
 
-            if (opts.use_cursor())
-                REQUIRE(o.find("cursor") != o.end());
+                if (opts.use_cursor()) REQUIRE(o.find("cursor") != o.end());
 
-            if (opts.batch_size()) {
-                REQUIRE(o.find("cursor") != o.end());
-                REQUIRE(
-                    o["cursor"].get_document().value["batchSize"].get_int32() == expected_batch_size
-                );
-            }
+                if (opts.batch_size()) {
+                    REQUIRE(o.find("cursor") != o.end());
+                    REQUIRE(o["cursor"].get_document().value["batchSize"].get_int32() ==
+                            expected_batch_size);
+                }
 
-            REQUIRE(read_prefs == mongo_coll.read_preference().implementation());
+                REQUIRE(read_prefs == mongo_coll.read_preference().implementation());
 
-            return NULL;
-        });
+                return NULL;
+            });
 
-        pipe.match(builder::stream::document{} << "foo" << "bar" << builder::stream::finalize);
+        pipe.match(builder::stream::document{} << "foo"
+                                               << "bar" << builder::stream::finalize);
         pipe.sort(builder::stream::document{} << "foo" << 1 << builder::stream::finalize);
 
-        SECTION("With default options") {}
+        SECTION("With default options") {
+        }
 
         SECTION("With some options") {
             opts.allow_disk_use(expected_allow_disk_use);
@@ -132,15 +126,10 @@ TEST_CASE("Collection", "[collection]") {
         std::int64_t expected_limit = 0;
         auto expected_read_pref = mongo_coll.read_preference().implementation();
 
-        collection_count->interpose([&](
-            mongoc_collection_t* coll,
-            mongoc_query_flags_t flags,
-            const bson_t* query,
-            int64_t skip,
-            int64_t limit,
-            const mongoc_read_prefs_t* read_prefs,
-            bson_error_t* error
-        ){
+        collection_count->interpose([&](mongoc_collection_t* coll, mongoc_query_flags_t flags,
+                                        const bson_t* query, int64_t skip, int64_t limit,
+                                        const mongoc_read_prefs_t* read_prefs,
+                                        bson_error_t* error) {
             collection_count_called = true;
             REQUIRE(coll == mongo_coll.implementation());
             REQUIRE(flags == MONGOC_QUERY_NONE);
@@ -183,18 +172,15 @@ TEST_CASE("Collection", "[collection]") {
     SECTION("Create Index", "collection::create_index") {
         auto collection_create_index_called = false;
 
-        auto index_spec = builder::stream::document{} 
-            << "_id" << "wow" << "foo" << "bar"
-        << builder::stream::finalize;
+        auto index_spec = builder::stream::document{} << "_id"
+                                                      << "wow"
+                                                      << "foo"
+                                                      << "bar" << builder::stream::finalize;
 
         bool success;
 
-        collection_create_index->interpose([&](
-            mongoc_collection_t* coll,
-            const bson_t* keys,
-            const mongoc_index_opt_t* opt,
-            bson_error_t* error
-        ){
+        collection_create_index->interpose([&](mongoc_collection_t* coll, const bson_t* keys,
+                                               const mongoc_index_opt_t* opt, bson_error_t* error) {
             collection_create_index_called = true;
             REQUIRE(coll == mongo_coll.implementation());
             return success;
@@ -213,14 +199,13 @@ TEST_CASE("Collection", "[collection]") {
         REQUIRE(collection_create_index_called);
     }
 
-    SECTION("Drop" "[collection::drop]") {
+    SECTION(
+        "Drop"
+        "[collection::drop]") {
         auto collection_drop_called = false;
         bool success;
 
-        collection_drop->interpose([&](
-            mongoc_collection_t* coll,
-            bson_error_t* error
-        ) {
+        collection_drop->interpose([&](mongoc_collection_t* coll, bson_error_t* error) {
             collection_drop_called = true;
             REQUIRE(coll == mongo_coll.implementation());
             return success;
@@ -243,16 +228,10 @@ TEST_CASE("Collection", "[collection]") {
         auto collection_find_called = false;
         auto doc = bsoncxx::document::view{};
 
-        collection_find->interpose([&](
-            mongoc_collection_t* coll,
-            mongoc_query_flags_t flags,
-            uint32_t skip,
-            uint32_t limit,
-            uint32_t batch_size,
-            const bson_t* query,
-            const bson_t* fields,
-            const mongoc_read_prefs_t* read_prefs
-        ) {
+        collection_find->interpose([&](mongoc_collection_t* coll, mongoc_query_flags_t flags,
+                                       uint32_t skip, uint32_t limit, uint32_t batch_size,
+                                       const bson_t* query, const bson_t* fields,
+                                       const mongoc_read_prefs_t* read_prefs) {
             collection_find_called = true;
             REQUIRE(coll == mongo_coll.implementation());
             REQUIRE(flags == MONGOC_QUERY_NONE);
@@ -286,58 +265,41 @@ TEST_CASE("Collection", "[collection]") {
             return nullptr;
         });
 
-        bulk_operation_set_client->interpose([&](
-            mongoc_bulk_operation_t* bulk,
-            void* client
-        ) {
+        bulk_operation_set_client->interpose([&](mongoc_bulk_operation_t* bulk, void* client) {
             bulk_operation_set_client_called = true;
             REQUIRE(client == mongo_client.implementation());
         });
 
-        bulk_operation_set_database->interpose([&](
-            mongoc_bulk_operation_t* bulk,
-            const char* db
-        ) {
+        bulk_operation_set_database->interpose([&](mongoc_bulk_operation_t* bulk, const char* db) {
             bulk_operation_set_database_called = true;
             REQUIRE(database_name == db);
         });
 
-        bulk_operation_set_collection->interpose([&](
-            mongoc_bulk_operation_t* bulk,
-            const char* coll
-        ) {
-            bulk_operation_set_collection_called = true;
-            REQUIRE(collection_name == coll);
-        });
+        bulk_operation_set_collection->interpose(
+            [&](mongoc_bulk_operation_t* bulk, const char* coll) {
+                bulk_operation_set_collection_called = true;
+                REQUIRE(collection_name == coll);
+            });
 
-        bulk_operation_set_write_concern->interpose([&](
-            mongoc_bulk_operation_t* bulk,
-            const mongoc_write_concern_t* wc
-        ) {
-            bulk_operation_set_write_concern_called = true;
-            // TODO: actually test the write concern setting is correct or default
-            //REQUIRE(wc == concern.implementation());
-        });
+        bulk_operation_set_write_concern->interpose(
+            [&](mongoc_bulk_operation_t* bulk, const mongoc_write_concern_t* wc) {
+                bulk_operation_set_write_concern_called = true;
+                // TODO: actually test the write concern setting is correct or default
+                // REQUIRE(wc == concern.implementation());
+            });
 
-        bulk_operation_execute->interpose([&](
-            mongoc_bulk_operation_t* bulk,
-            bson_t* reply,
-            bson_error_t *error
-        ) {
-            bulk_operation_execute_called = true;
-            bson_init(reply);
-            return 1;
-        });
+        bulk_operation_execute->interpose(
+            [&](mongoc_bulk_operation_t* bulk, bson_t* reply, bson_error_t* error) {
+                bulk_operation_execute_called = true;
+                bson_init(reply);
+                return 1;
+            });
 
-        bulk_operation_destroy->interpose([&](mongoc_bulk_operation_t*) {
-            bulk_operation_destroy_called = true;
-        });
+        bulk_operation_destroy->interpose(
+            [&](mongoc_bulk_operation_t*) { bulk_operation_destroy_called = true; });
 
         SECTION("Insert One", "[collection::insert_one]") {
-            bulk_operation_insert->interpose([&](
-                mongoc_bulk_operation_t* bulk,
-                const bson_t* doc
-            ) {
+            bulk_operation_insert->interpose([&](mongoc_bulk_operation_t* bulk, const bson_t* doc) {
                 bulk_operation_op_called = true;
                 REQUIRE(bson_get_data(doc) == filter_doc.view().data());
             });
@@ -348,12 +310,9 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Update One", "[collection::update_one]") {
             bool upsert_option;
 
-            bulk_operation_update_one->interpose([&](
-                mongoc_bulk_operation_t* bulk,
-                const bson_t* query,
-                const bson_t* update,
-                bool upsert
-            ) {
+            bulk_operation_update_one->interpose([&](mongoc_bulk_operation_t* bulk,
+                                                     const bson_t* query, const bson_t* update,
+                                                     bool upsert) {
                 bulk_operation_op_called = true;
                 REQUIRE(upsert == upsert_option);
                 REQUIRE(bson_get_data(query) == filter_doc.view().data());
@@ -388,12 +347,8 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Update Many", "[collection::update_many]") {
             bool upsert_option;
 
-            bulk_operation_update->interpose([&](
-                mongoc_bulk_operation_t* bulk,
-                const bson_t* query,
-                const bson_t* update,
-                bool upsert
-            ) {
+            bulk_operation_update->interpose([&](mongoc_bulk_operation_t* bulk, const bson_t* query,
+                                                 const bson_t* update, bool upsert) {
                 bulk_operation_op_called = true;
                 REQUIRE(upsert == upsert_option);
                 REQUIRE(bson_get_data(query) == filter_doc.view().data());
@@ -422,12 +377,9 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Replace One", "[collection::replace_one]") {
             bool upsert_option;
 
-            bulk_operation_replace_one->interpose([&](
-                mongoc_bulk_operation_t* bulk,
-                const bson_t* query,
-                const bson_t* update,
-                bool upsert
-            ) {
+            bulk_operation_replace_one->interpose([&](mongoc_bulk_operation_t* bulk,
+                                                      const bson_t* query, const bson_t* update,
+                                                      bool upsert) {
                 bulk_operation_op_called = true;
                 REQUIRE(upsert == upsert_option);
                 REQUIRE(bson_get_data(query) == filter_doc.view().data());
@@ -454,22 +406,17 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Delete One", "[collection::delete_one]") {
-            bulk_operation_remove_one->interpose([&](
-                mongoc_bulk_operation_t* bulk,
-                const bson_t* doc
-            ) {
-                bulk_operation_op_called = true;
-                REQUIRE(bson_get_data(doc) == filter_doc.view().data());
-            });
+            bulk_operation_remove_one->interpose(
+                [&](mongoc_bulk_operation_t* bulk, const bson_t* doc) {
+                    bulk_operation_op_called = true;
+                    REQUIRE(bson_get_data(doc) == filter_doc.view().data());
+                });
 
             mongo_coll.delete_one(filter_doc);
         }
 
         SECTION("Delete Many", "[collection::delete_many]") {
-            bulk_operation_remove->interpose([&](
-                mongoc_bulk_operation_t* bulk,
-                const bson_t* doc
-            ) {
+            bulk_operation_remove->interpose([&](mongoc_bulk_operation_t* bulk, const bson_t* doc) {
                 bulk_operation_op_called = true;
                 REQUIRE(bson_get_data(doc) == filter_doc.view().data());
             });

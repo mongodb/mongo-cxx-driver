@@ -92,8 +92,8 @@ TEST_CASE("A database", "[database]") {
         });
 
         database_get_preference->interpose([&](const mongoc_database_t* client) {
-                                               return saved_preference.get();
-                                           }).forever();
+            return saved_preference.get();
+        }).forever();
 
         mongo_database.read_preference(std::move(preference));
         REQUIRE(called);

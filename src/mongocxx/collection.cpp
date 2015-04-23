@@ -214,7 +214,6 @@ bsoncxx::stdx::optional<result::insert_one> collection::insert_one(bsoncxx::docu
 bsoncxx::stdx::optional<result::replace_one> collection::replace_one(
     bsoncxx::document::view filter, bsoncxx::document::view replacement,
     const options::update& options) {
-
     class bulk_write bulk_op(false);
     model::replace_one replace_op(filter, replacement);
 
@@ -444,28 +443,17 @@ bsoncxx::document::value collection::create_index(bsoncxx::document::view keys,
 }
 
 cursor collection::distinct(bsoncxx::stdx::string_view field_name, bsoncxx::document::view query,
-    const options::distinct& options
-) {
+                            const options::distinct& options) {
     auto command = bsoncxx::builder::stream::document{}
-        << "distinct" << name() << "key" << field_name << "query" << bsoncxx::types::b_document{query}
-    << bsoncxx::builder::stream::finalize;
+                   << "distinct" << name() << "key" << field_name << "query"
+                   << bsoncxx::types::b_document{query} << bsoncxx::builder::stream::finalize;
     scoped_bson_t command_bson{command};
 
-    auto database = libmongoc::client_get_database(
-        _impl->client_impl->client_t,
-        _impl->database_name.data()
-    );
+    auto database =
+        libmongoc::client_get_database(_impl->client_impl->client_t, _impl->database_name.data());
 
-    auto result = libmongoc::database_command(
-        database,
-        MONGOC_QUERY_NONE,
-        0,
-        0,
-        0,
-        command_bson.bson(),
-        NULL,
-        NULL
-    );
+    auto result = libmongoc::database_command(database, MONGOC_QUERY_NONE, 0, 0, 0,
+                                              command_bson.bson(), NULL, NULL);
 
     return cursor(result);
 }

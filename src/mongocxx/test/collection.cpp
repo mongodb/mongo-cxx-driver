@@ -18,8 +18,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     database db = mongodb_client["test"];
     collection coll = db["mongo_cxx_driver"];
 
-    if (db.has_collection("mongo_cxx_driver"))
-        coll.drop();
+    if (db.has_collection("mongo_cxx_driver")) coll.drop();
 
     SECTION("insert and read single document", "[collection]") {
         bsoncxx::builder::stream::document b;
@@ -445,5 +444,4 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         assert_contains_one("bar");
         assert_contains_one("quux");
     }
-
 }
