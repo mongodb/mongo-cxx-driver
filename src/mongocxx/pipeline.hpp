@@ -150,6 +150,11 @@ class MONGOCXX_API pipeline {
     ///
     pipeline& unwind(std::string field_name);
 
+    ///
+    /// Return a string representation of the pipeline.
+    ///
+    std::string to_string();
+
    private:
     friend class collection;
 

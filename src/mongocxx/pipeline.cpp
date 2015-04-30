@@ -15,6 +15,7 @@
 #include <mongocxx/pipeline.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/json.hpp>
 #include <mongocxx/private/pipeline.hpp>
 
 namespace mongocxx {
@@ -73,6 +74,10 @@ pipeline& pipeline::sort(bsoncxx::document::view sort) {
 pipeline& pipeline::unwind(std::string field_name) {
     _impl->sink() << open_document << "$unwind" << field_name << close_document;
     return *this;
+}
+
+std::string pipeline::to_string() {
+    return bsoncxx::to_json(_impl->view());
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
