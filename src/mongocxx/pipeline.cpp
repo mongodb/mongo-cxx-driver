@@ -75,6 +75,10 @@ pipeline& pipeline::unwind(std::string field_name) {
     return *this;
 }
 
+bsoncxx::document::view pipeline::view() const {
+    return _impl->view();
+}
+
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 

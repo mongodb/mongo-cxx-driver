@@ -150,6 +150,11 @@ class MONGOCXX_API pipeline {
     ///
     pipeline& unwind(std::string field_name);
 
+    ///
+    /// @return A view of the underlying BSON document this pipeline represents.
+    ///
+    bsoncxx::document::view view() const;
+
    private:
     friend class collection;
 
