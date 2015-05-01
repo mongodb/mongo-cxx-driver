@@ -113,9 +113,17 @@ class MONGOCXX_API database {
     ///
     /// Enumerates the collections in this database.
     ///
+    /// @param filter
+    ///   An optional query expression to filter the returned collections.
+    ///
     /// @return mongocxx::cursor containing the collection information.
     ///
-    cursor list_collections();
+    /// @throws exception::operation if the underlying 'listCollections'
+    ///   command fails.
+    ///
+    /// @see http://docs.mongodb.org/manual/reference/command/listCollections/
+    ///
+    cursor list_collections(bsoncxx::document::view filter);
 
     ///
     /// Get the name of this database.

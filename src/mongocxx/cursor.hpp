@@ -77,6 +77,8 @@ class MONGOCXX_API cursor {
 
    private:
     friend class collection;
+    friend class client;
+    friend class database;
 
     cursor(void* cursor_ptr);
 
