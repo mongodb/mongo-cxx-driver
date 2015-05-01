@@ -423,8 +423,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto distinct_results = distinct_coll.distinct("foo", {});
 
         // copy into a vector.
-        std::vector<bsoncxx::document::value> results(distinct_results.begin(),
-                                                      distinct_results.end());
+        std::vector<bsoncxx::document::value> results;
+        for (auto&& result : results) {
+            results.emplace_back(result);
+        }
+
         REQUIRE(results.size() == std::size_t{1});
 
         auto res_doc = results[0].view();
