@@ -15,7 +15,6 @@
 #include <mongocxx/pipeline.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <bsoncxx/json.hpp>
 #include <mongocxx/private/pipeline.hpp>
 
 namespace mongocxx {
@@ -76,8 +75,8 @@ pipeline& pipeline::unwind(std::string field_name) {
     return *this;
 }
 
-std::string pipeline::to_string() {
-    return bsoncxx::to_json(_impl->view());
+bsoncxx::document::view pipeline::view() const {
+    return _impl->view();
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
