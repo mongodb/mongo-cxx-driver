@@ -53,6 +53,7 @@ bsoncxx::document::value database::command(bsoncxx::document::view command) {
     libbson::scoped_bson_t reply_bson;
     bson_error_t error;
 
+    reply_bson.flag_init();
     auto result = libmongoc::database_command_simple(_impl->database_t, command_bson.bson(), NULL,
                                                      reply_bson.bson(), &error);
 
