@@ -167,6 +167,13 @@ class MONGOCXX_API client {
     MONGOCXX_INLINE class database operator[](bsoncxx::stdx::string_view name) const &;
     MONGOCXX_INLINE class database operator[](bsoncxx::stdx::string_view name) const && = delete;
 
+    ///
+    /// Enumerates the databases in the client
+    ///
+    /// @return mongocxx::cursor containing the databases information.
+    ///
+    cursor list_databases() const;
+
    private:
     friend class database;
     friend class collection;

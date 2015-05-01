@@ -66,5 +66,11 @@ class database client::database(bsoncxx::stdx::string_view name) const & {
     return mongocxx::database(*this, name);
 }
 
+cursor client::list_databases() const {
+    bson_error_t error;
+    auto result = libmongoc::client_find_databases(_impl->client_t, &error);
+    return cursor(result);
+}
+
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
