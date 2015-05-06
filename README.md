@@ -22,7 +22,7 @@ Use the 26compat branch only if:
 
 | Branch   | Stability   | Development       | Purpose                                                      |
 | -------- | ------------| ----------------- | -----------------------------------------------------        |
-| master   | Unstable    | Planning          | New C++11 driver (work in progress)                          |
+| master   | Alpha       | In progress       | New C++11 driver                                             |
 | legacy   | Stable      | Stable Evolution  | Primary stable C++ driver release                            |
 | 26compat | Stable      | Maintenance Only  | Drop in replacement for users of existing 2.6 era C++ driver |
 
