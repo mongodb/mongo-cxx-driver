@@ -192,6 +192,10 @@ std::size_t view::length() const {
     return _length;
 }
 
+bool view::empty() const {
+    return _length == 5;
+}
+
 bool operator==(view lhs, view rhs) {
     return (lhs.length() == rhs.length()) &&
            (std::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0);
