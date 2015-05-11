@@ -99,6 +99,15 @@ namespace client {
         return _useFIPSMode;
     }
 
+    Options& Options::setSSLDisabledTLSProtocols(const std::vector<TLSProtocol>& protocols) {
+        _sslDisabledTLSProtocols = protocols;
+        return *this;
+    }
+
+    const std::vector<Options::TLSProtocol>& Options::SSLDisabledTLSProtocols() const {
+        return _sslDisabledTLSProtocols;
+    }
+
     Options& Options::setSSLCAFile(const std::string& fileName) {
         _sslCAFile = fileName;
         return *this;
