@@ -153,6 +153,15 @@ namespace client {
         return _sslAllowInvalidHostnames;
     }
 
+    Options& Options::setSSLCipherConfig(const std::string& config) {
+        _sslCipherConfig = config;
+        return *this;
+    }
+
+    const std::string& Options::SSLCipherConfig() const {
+        return _sslCipherConfig;
+    }
+
     Options& Options::setLogAppenderFactory(const Options::LogAppenderFactory& factory) {
         _appenderFactory = factory;
         return *this;

@@ -189,6 +189,13 @@ namespace client {
         Options& setSSLAllowInvalidHostnames(bool value = true);
         const bool SSLAllowInvalidHostnames() const;
 
+        /** Override the default OpenSSL cipher configuration
+         *
+         *  Default: OpenSSL default
+         */
+        Options& setSSLCipherConfig(const std::string& config);
+        const std::string& SSLCipherConfig() const;
+
         //
         // Logging
         //
@@ -230,6 +237,7 @@ namespace client {
         std::string _sslCRLFile;
         bool _sslAllowInvalidCertificates;
         bool _sslAllowInvalidHostnames;
+        std::string _sslCipherConfig;
         int _defaultLocalThresholdMillis;
         LogAppenderFactory _appenderFactory;
         logger::LogSeverity _minLoggedSeverity;

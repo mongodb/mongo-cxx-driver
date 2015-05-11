@@ -141,6 +141,7 @@ namespace mongo {
                    const std::string& clusterpwd,
                    const std::string& cafile = "",
                    const std::string& crlfile = "",
+                   const std::string& cipherConfig = "",
                    bool weakCertificateValidation = false,
                    bool allowInvalidCertificates = false,
                    bool allowInvalidHostnames = false,
@@ -151,6 +152,7 @@ namespace mongo {
                 clusterpwd(clusterpwd),
                 cafile(cafile),
                 crlfile(crlfile),
+                cipherConfig(cipherConfig),
                 weakCertificateValidation(weakCertificateValidation),
                 allowInvalidCertificates(allowInvalidCertificates),
                 allowInvalidHostnames(allowInvalidHostnames),
@@ -162,6 +164,7 @@ namespace mongo {
             std::string clusterpwd;
             std::string cafile;
             std::string crlfile;
+            std::string cipherConfig;
             bool weakCertificateValidation;
             bool allowInvalidCertificates;
             bool allowInvalidHostnames;
@@ -303,6 +306,7 @@ namespace mongo {
                 std::string(), // server only parameter
                 options.SSLCAFile(),
                 options.SSLCRLFile(),
+                options.SSLCipherConfig(),
                 false, // server only parameter
                 options.SSLAllowInvalidCertificates(),
                 options.SSLAllowInvalidHostnames(),
@@ -550,7 +554,16 @@ namespace mongo {
         // !EXPORT - Disable export ciphers (40/56 bit) 
         // !aNULL - Disable anonymous auth ciphers
         // @STRENGTH - Sort ciphers based on strength 
-        SSL_CTX_set_cipher_list(*context, "HIGH:!EXPORT:!aNULL@STRENGTH");
+        std::string cipherConfig = "HIGH:!EXPORT:!aNULL@STRENGTH";
+
+        // Allow the cipher configuration string to be overriden by --sslCipherConfig
+        if (!params.cipherConfig.empty()) {
+            cipherConfig = params.cipherConfig;
+        }
+
+        massert(28615, mongoutils::str::stream() << "can't set supported cipher suites: " <<
+                getSSLErrorMessage(ERR_get_error()),
+                SSL_CTX_set_cipher_list(*context, cipherConfig.c_str()));
 
         // If renegotiation is needed, don't return from recv() or send() until it's successful.
         // Note: this is for blocking sockets only.
