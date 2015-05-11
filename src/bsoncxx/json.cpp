@@ -216,6 +216,9 @@ class json_visitor {
     void visit_children(const document::view& view) {
         bool first = true;
         for (auto&& x : view) {
+            if (!x) {
+                break;
+            }
             if (!first) {
                 out << ", " << std::endl;
             }
