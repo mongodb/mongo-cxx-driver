@@ -50,6 +50,11 @@ cursor database::list_collections(bsoncxx::document::view filter) {
 
     auto result = libmongoc::database_find_collections(_impl->database_t,
                                                        filter_bson.bson(), &error);
+
+    if (!result) {
+        throw exception::operation(std::make_tuple(error.message, error.code));
+    }
+
     return cursor(result);
 }
 bsoncxx::stdx::string_view database::name() const {

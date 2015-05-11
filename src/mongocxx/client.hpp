@@ -168,9 +168,17 @@ class MONGOCXX_API client {
     MONGOCXX_INLINE class database operator[](bsoncxx::stdx::string_view name) const && = delete;
 
     ///
-    /// Enumerates the databases in the client
+    /// Enumerates the databases in the client.
     ///
-    /// @return mongocxx::cursor containing the databases information.
+    /// @return A mongocxx::cursor containing a BSON document for each
+    ///   database. Each document contains a name field with the database
+    ///   name, a sizeOnDisk field with the total size of the database file on
+    ///   disk in bytes, and an empty field specifying whether the database
+    ///   has any data.
+    ///
+    /// @throws exception::operation if the underlying 'listDatabases' command fails.
+    ///
+    /// @see http://docs.mongodb.org/manual/reference/command/listDatabases
     ///
     cursor list_databases() const;
 

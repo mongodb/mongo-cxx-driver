@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <mongocxx/client.hpp>
-
+#include <mongocxx/exception/operation.hpp>
 #include <mongocxx/private/client.hpp>
 #include <mongocxx/private/read_preference.hpp>
 #include <mongocxx/private/write_concern.hpp>
@@ -69,6 +69,11 @@ class database client::database(bsoncxx::stdx::string_view name) const & {
 cursor client::list_databases() const {
     bson_error_t error;
     auto result = libmongoc::client_find_databases(_impl->client_t, &error);
+
+    if (!result) {
+        throw exception::operation(std::make_tuple(error.message, error.code));
+    }
+
     return cursor(result);
 }
 
