@@ -22,6 +22,8 @@
 
 #include "mongo/platform/basic.h"
 
+#include "mongo/util/scopeguard.h"
+
 #include <openssl/sha.h>
 #include <openssl/evp.h>
 #include <openssl/hmac.h>
@@ -34,7 +36,20 @@ namespace crypto {
     bool sha1(const unsigned char* input,
               const size_t inputLen,
               unsigned char* output) {
-        return SHA1(input, inputLen, output);
+
+        EVP_MD_CTX digestCtx;
+        EVP_MD_CTX_init(&digestCtx);
+        ON_BLOCK_EXIT(EVP_MD_CTX_cleanup, &digestCtx);
+
+        if (1 != EVP_DigestInit_ex(&digestCtx, EVP_sha1(), NULL)) {
+            return false;
+        }
+
+        if (1 != EVP_DigestUpdate(&digestCtx, input, inputLen)) {
+            return false;
+        }
+
+        return (1 == EVP_DigestFinal_ex(&digestCtx, output, NULL));
     }
 
     /*
