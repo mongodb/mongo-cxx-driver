@@ -60,27 +60,33 @@ cxx_driver_variables:
 ## Common sets of scons flags
   scons_flags:
     standard: &scons_flags_64
-      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
+      scons_flags: "--64 --ssl --use-sasl-client --sharedclient"
     standard_32: &scons_flags_32
-      scons_flags: "--32 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --sharedclient"
+      scons_flags: "--32 --ssl --use-sasl-client --sharedclient"
     ubuntu_c++11: &scons_flags_cpp11
-      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --c++11 --ssl --use-sasl-client --sharedclient"
+      scons_flags: "--64 --c++11 --ssl --use-sasl-client --sharedclient"
     osx_108: &scons_flags_osx_108
-      scons_flags: "--64 -j$(sysctl -n hw.logicalcpu) --ssl --use-sasl-client --sharedclient --osx-version-min=10.6"
+      scons_flags: "--64 --ssl --use-sasl-client --sharedclient --osx-version-min=10.6"
     ## test all plausible combinations of static/dynamic mongo client and windows runtime:
     static_windows: &scons_flags_64_windows_static
-      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client"
+      scons_flags: "--64 --ssl --use-sasl-client"
     dynamic_RT_windows: &scons_flags_64_windows_dynamic_rt
-      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows"
+      scons_flags: "--64 --ssl --use-sasl-client --dynamic-windows"
     dynamic_windows: &scons_flags_64_windows_dynamic
-      scons_flags: "--64 -j$(grep -c ^processor /proc/cpuinfo) --ssl --use-sasl-client --dynamic-windows --sharedclient"
+      scons_flags: "--64 --ssl --use-sasl-client --dynamic-windows --sharedclient"
     32bit_windows: &scons_flags_32_windows_dynamic
-      scons_flags: "--32 -j$(grep -c ^processor /proc/cpuinfo) --dynamic-windows --sharedclient"
+      scons_flags: "--32 --dynamic-windows --sharedclient"
 
 ## Special compile flags
   compile_flags:
     debug: &compile_flags_debug
       compile_flags: "--dbg=on"
+
+  parallel_compile_flags:
+    proc_parallel: &parallel_compile_flags_proc
+      parallel_compile_flags: "-j$(grep -c ^processor /proc/cpuinfo)"
+    sysctl_parallel: &parallel_compile_flags_sysctl
+      parallel_compile_flags: "-j$(sysctl -n hw.logicalcpu)"
 
   ## Scripts that are shared between buildvariants
   scripts:
@@ -254,8 +260,6 @@ functions:
       working_dir: "mongo-cxx-driver"
       script: |
         ${start_mongo_orchestration}
-        ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} install # static lib install step
-        ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} check-install # static build installation header check
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} examples
 
 pre:
@@ -315,7 +319,7 @@ tasks:
             script: |
                 set -o errexit
                 set -o verbose
-                ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${compile_target|all}
+                ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${parallel_compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${compile_target|all check-install}
         - command: shell.exec
           params:
               working_dir: "mongo-cxx-driver"
@@ -472,6 +476,7 @@ buildvariants:
   display_name: "RHEL 5.5"
   expansions:
     <<: *scons_flags_64
+    <<: *parallel_compile_flags_proc
     <<: *warning_flags_rhel55
     <<: *cpppath_rhel55
     <<: *libpath_rhel55_64
@@ -487,6 +492,7 @@ buildvariants:
   display_name: "RHEL 5.5 32-bit"
   expansions:
     <<: *scons_flags_32
+    <<: *parallel_compile_flags_proc
     <<: *warning_flags_rhel55
     <<: *cpppath_rhel55
     <<: *libpath_rhel55_32
@@ -502,6 +508,7 @@ buildvariants:
   display_name: "Ubuntu1404"
   expansions:
     <<: *scons_flags_64
+    <<: *parallel_compile_flags_proc
     <<: *mongo_url_ubuntu1404
     <<: *mongo_orchestration_linux
   run_on:
@@ -514,6 +521,7 @@ buildvariants:
   display_name: "Ubuntu1404 dbg"
   expansions:
     <<: *compile_flags_debug
+    <<: *parallel_compile_flags_proc
     <<: *scons_flags_64
     <<: *mongo_url_ubuntu1404
     <<: *mongo_orchestration_linux
@@ -527,6 +535,7 @@ buildvariants:
   display_name: "Ubuntu1404 C++11"
   expansions:
     <<: *scons_flags_cpp11
+    <<: *parallel_compile_flags_proc
     <<: *mongo_url_ubuntu1404
     <<: *mongo_orchestration_linux
   run_on:
@@ -544,6 +553,7 @@ buildvariants:
   expansions:
     <<: *mongo_url_osx_108
     <<: *scons_flags_osx_108
+    <<: *parallel_compile_flags_sysctl
     <<: *extrapath_osx_108
     <<: *mongo_orchestration_osx
   run_on:
@@ -562,9 +572,9 @@ buildvariants:
   expansions:
     <<: *windows_common
     <<: *scons_flags_32_windows_dynamic
+    <<: *parallel_compile_flags_proc
     <<: *mongo_url_windows32
     <<: *with_msvc2010_32bit
-    compile_target: driver build-unit
   run_on:
   - windows-64-compile
   tasks:
@@ -579,6 +589,7 @@ buildvariants:
   expansions:
     <<: *windows_common
     <<: *scons_flags_64_windows_static
+    <<: *parallel_compile_flags_proc
     <<: *mongo_url_windows64
     <<: *with_msvc2010
   run_on:
@@ -593,6 +604,7 @@ buildvariants:
   expansions:
     <<: *windows_common
     <<: *compile_flags_debug
+    <<: *parallel_compile_flags_proc
     <<: *scons_flags_64_windows_dynamic
     <<: *mongo_url_windows64
     <<: *with_msvc2010
@@ -607,6 +619,7 @@ buildvariants:
   display_name: "Win64(2013) dyn-dyn"
   expansions:
     <<: *windows_common
+    <<: *parallel_compile_flags_proc
     <<: *scons_flags_64_windows_dynamic
     <<: *mongo_url_windows64
     <<: *with_msvc2013
@@ -621,6 +634,7 @@ buildvariants:
   display_name: "Win64(2013) static-dyn"
   expansions:
     <<: *windows_common
+    <<: *parallel_compile_flags_proc
     <<: *scons_flags_64_windows_dynamic_rt
     <<: *mongo_url_windows64
     <<: *with_msvc2013
