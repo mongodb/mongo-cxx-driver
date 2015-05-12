@@ -20,6 +20,8 @@
 #include <sstream>
 #include <vector>
 
+#include <bson.h>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -32,6 +34,10 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
 namespace {
+
+void bson_free_deleter(std::uint8_t* ptr) {
+    bson_free(ptr);
+}
 
 class json_visitor {
    public:
@@ -273,6 +279,20 @@ std::string to_json(types::value value) {
     }
 
     return ss.str();
+}
+
+stdx::optional<document::value> from_json(stdx::string_view json) {
+    bson_error_t error;
+    bson_t* result = bson_new_from_json(
+        reinterpret_cast<const uint8_t*>(json.data()), json.size(), &error);
+
+    if (!result)
+        return stdx::nullopt;
+
+    std::uint32_t length;
+    std::uint8_t* buf = bson_destroy_with_steal(result, true, &length);
+
+    return document::value{buf, length, bson_free_deleter};
 }
 
 BSONCXX_INLINE_NAMESPACE_END
