@@ -76,6 +76,12 @@ namespace client {
             kSSLRequired
         };
 
+        /** The TLS protocols */
+        enum TLSProtocol {
+            kTLS1_0,
+            kTLS1_1,
+            kTLS1_2
+        };
 
         //
         // Startup and shutdown
@@ -147,6 +153,14 @@ namespace client {
         Options& setFIPSMode(bool value = true);
         const bool FIPSMode() const;
 
+        /** Allow disabling particular TLS protocols
+         *
+         * Default: OpenSSL default
+         */
+
+        Options& setSSLDisabledTLSProtocols(const std::vector<TLSProtocol>& protocols);
+        const std::vector<TLSProtocol>& SSLDisabledTLSProtocols() const;
+
         /** Configure the SSL CA file to use. Has no effect if 'useSSL' is false.
          *
          *  Default: false
@@ -189,6 +203,13 @@ namespace client {
         Options& setSSLAllowInvalidHostnames(bool value = true);
         const bool SSLAllowInvalidHostnames() const;
 
+        /** Override the default OpenSSL cipher configuration
+         *
+         *  Default: OpenSSL default
+         */
+        Options& setSSLCipherConfig(const std::string& config);
+        const std::string& SSLCipherConfig() const;
+
         //
         // Logging
         //
@@ -224,12 +245,14 @@ namespace client {
         unsigned int _autoShutdownGracePeriodMillis;
         SSLModes _sslMode;
         bool _useFIPSMode;
+        std::vector<TLSProtocol> _sslDisabledTLSProtocols;
         std::string _sslCAFile;
         std::string _sslPEMKeyFile;
         std::string _sslPEMKeyPassword;
         std::string _sslCRLFile;
         bool _sslAllowInvalidCertificates;
         bool _sslAllowInvalidHostnames;
+        std::string _sslCipherConfig;
         int _defaultLocalThresholdMillis;
         LogAppenderFactory _appenderFactory;
         logger::LogSeverity _minLoggedSeverity;

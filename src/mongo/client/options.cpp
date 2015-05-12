@@ -99,6 +99,15 @@ namespace client {
         return _useFIPSMode;
     }
 
+    Options& Options::setSSLDisabledTLSProtocols(const std::vector<TLSProtocol>& protocols) {
+        _sslDisabledTLSProtocols = protocols;
+        return *this;
+    }
+
+    const std::vector<Options::TLSProtocol>& Options::SSLDisabledTLSProtocols() const {
+        return _sslDisabledTLSProtocols;
+    }
+
     Options& Options::setSSLCAFile(const std::string& fileName) {
         _sslCAFile = fileName;
         return *this;
@@ -151,6 +160,15 @@ namespace client {
 
     const bool Options::SSLAllowInvalidHostnames() const {
         return _sslAllowInvalidHostnames;
+    }
+
+    Options& Options::setSSLCipherConfig(const std::string& config) {
+        _sslCipherConfig = config;
+        return *this;
+    }
+
+    const std::string& Options::SSLCipherConfig() const {
+        return _sslCipherConfig;
     }
 
     Options& Options::setLogAppenderFactory(const Options::LogAppenderFactory& factory) {

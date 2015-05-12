@@ -283,9 +283,19 @@ add_option('cache-dir',
            "Specify the directory to use for caching objects if --cache is in use",
            1, False, default="$BUILD_DIR/scons/cache")
 
+variable_parse_mode_choices=['auto', 'posix', 'other']
+add_option('variable-parse-mode',
+           "Select which parsing mode is used to interpret command line variables",
+           1, False,
+           type='choice', default=variable_parse_mode_choices[0],
+           choices=variable_parse_mode_choices)
+
 # Setup the command-line variables
 def variable_shlex_converter(val):
-    return shlex.split(val)
+    parse_mode = get_option('variable-parse-mode')
+    if parse_mode == 'auto':
+        parse_mode = 'other' if windows else 'posix'
+    return shlex.split(val, posix=(parse_mode == 'posix'))
 
 env_vars = Variables()
 
@@ -323,6 +333,10 @@ env_vars.Add('LIBS',
 
 env_vars.Add('LINKFLAGS',
     help='Sets flags for the linker',
+    converter=variable_shlex_converter)
+
+env_vars.Add('RPATH',
+    help='Set the RPATH for dynamic libraries and executables',
     converter=variable_shlex_converter)
 
 env_vars.Add('SHCCFLAGS',
