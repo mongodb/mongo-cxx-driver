@@ -575,6 +575,7 @@ buildvariants:
     <<: *parallel_compile_flags_proc
     <<: *mongo_url_windows32
     <<: *with_msvc2010_32bit
+    compile_target: driver build-unit
   run_on:
   - windows-64-compile
   tasks:
