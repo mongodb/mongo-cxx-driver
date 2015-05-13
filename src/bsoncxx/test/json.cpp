@@ -30,3 +30,17 @@ TEST_CASE("valid json is converted to equivalent BSON") {
     REQUIRE(expected_view.length() == actual_view.length());
     REQUIRE(0 == memcmp(expected_view.data(), actual_view.data(), expected_view.length()));
 }
+
+TEST_CASE("empty document is converted correctly to json string") {
+    using namespace bsoncxx;
+
+    REQUIRE(0 == to_json(builder::stream::document{}.view()).compare("{\n\n}"));
+}
+
+TEST_CASE("empty array is converted correctly to json string") {
+    using bsoncxx::to_json;
+    using namespace bsoncxx::builder::stream;
+    auto doc = document{};
+    doc << "array" << open_array << close_array;
+    REQUIRE(0 == to_json(doc.view()["array"]).compare("\"array\" : [\n\n]"));
+}
