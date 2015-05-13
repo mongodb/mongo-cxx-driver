@@ -682,6 +682,29 @@ TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
         viewable_eq_viewable(stream, basic);
     }
 
+    SECTION("kvp works with std::string key/value") {
+        {
+            using namespace builder::basic;
+
+            std::string a("hello");
+            std::string b("world");
+            basic.append(kvp(a, b));
+        }
+
+        viewable_eq_viewable(stream, basic);
+    }
+
+    SECTION("kvp works with stdx::string_view key/value") {
+        {
+            using namespace builder::basic;
+
+            stdx::string_view a("hello");
+            stdx::string_view b("world");
+            basic.append(kvp(a, b));
+        }
+
+        viewable_eq_viewable(stream, basic);
+    }
     SECTION("variadic works") {
         {
             using namespace builder::stream;
