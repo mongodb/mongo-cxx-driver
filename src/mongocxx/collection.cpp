@@ -458,6 +458,17 @@ cursor collection::distinct(bsoncxx::stdx::string_view field_name, bsoncxx::docu
     return cursor(result);
 }
 
+cursor collection::list_indexes() const {
+    bson_error_t error;
+    auto result = libmongoc::collection_find_indexes(_impl->collection_t, &error);
+
+    if (!result) {
+        throw exception::operation(std::make_tuple(error.message, error.code));
+    }
+
+    return cursor(result);
+}
+
 void collection::drop() {
     bson_error_t error;
 
