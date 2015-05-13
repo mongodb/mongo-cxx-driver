@@ -18,7 +18,9 @@
 
 #include <string>
 
+#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -54,6 +56,16 @@ BSONCXX_API std::string to_json(document::element element);
 /// @returns A JSON value.
 ///
 BSONCXX_API std::string to_json(types::value value);
+
+///
+/// Constructs a new document::value from the provided JSON text
+///
+/// @param 'json'
+///  A string_view into a JSON document
+///
+/// @returns An engaged optional containing a document::value if conversion worked.
+///
+BSONCXX_API stdx::optional<document::value> from_json(stdx::string_view json);
 
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

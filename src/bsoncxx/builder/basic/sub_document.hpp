@@ -34,6 +34,7 @@ void value_append(core* core, T&& t);
 /// Users should almost always construct a builder::basic::document instead.
 ///
 class BSONCXX_API sub_document {
+
    public:
     BSONCXX_INLINE sub_document(core* core) : _core(core) {
     }
@@ -51,31 +52,33 @@ class BSONCXX_API sub_document {
     ///
     /// Appends a basic::kvp where the key is a non-owning string view.
     ///
-    template <typename T>
+    template <typename K, typename V>
     BSONCXX_INLINE
-    void append(std::tuple<stdx::string_view, T>&& t) {
-        _core->key_view(std::get<0>(t));
-        impl::value_append(_core, std::forward<T>(std::get<1>(t)));
+    typename std::enable_if<std::is_same<typename std::decay<K>::type, stdx::string_view>::value>::type
+    append(std::tuple<K, V>&& t) {
+        _core->key_view(std::forward<K>(std::get<0>(t)));
+        impl::value_append(_core, std::forward<V>(std::get<1>(t)));
     }
 
     ///
     /// Appends a basic::kvp where the key is an owning STL string.
     ///
-    template <typename T>
+    template <typename K, typename V>
     BSONCXX_INLINE
-    void append(std::tuple<std::string, T>&& t) {
-        _core->key_owned(std::get<0>(t));
-        impl::value_append(_core, std::forward<T>(std::get<1>(t)));
+    typename std::enable_if<std::is_same<typename std::decay<K>::type, std::string>::value>::type
+    append(std::tuple<K, V>&& t) {
+        _core->key_owned(std::forward<K>(std::get<0>(t)));
+        impl::value_append(_core, std::forward<V>(std::get<1>(t)));
     }
 
     ///
     /// Appends a basic::kvp where the key is a string literal
     ///
-    template <std::size_t n, typename T>
+    template <std::size_t n, typename V>
     BSONCXX_INLINE
-    void append(std::tuple<const char (&)[n], T>&& t) {
+    void append(std::tuple<const char (&)[n], V>&& t) {
         _core->key_view(stdx::string_view{std::get<0>(t), n - 1});
-        impl::value_append(_core, std::forward<T>(std::get<1>(t)));
+        impl::value_append(_core, std::forward<V>(std::get<1>(t)));
     }
 
    private:

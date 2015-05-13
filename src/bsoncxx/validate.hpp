@@ -17,6 +17,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 #include <cstdint>
+#include <memory>
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>

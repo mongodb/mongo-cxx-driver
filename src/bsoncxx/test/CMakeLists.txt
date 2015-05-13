@@ -3,10 +3,11 @@ include_directories(
 )
 
 add_executable(test_bson
+    bson_builder.cpp
     bson_util_itoa.cpp
     bson_validate.cpp
+    json.cpp
     new_tests.cpp
-    bson_builder.cpp
 )
 
 target_link_libraries(test_bson bsoncxx_static)
