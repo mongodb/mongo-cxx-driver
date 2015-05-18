@@ -3,7 +3,7 @@ Welcome to the MongoDB C++ Driver!
 
 Please see our [wiki page](https://github.com/mongodb/mongo-cxx-driver/wiki/Download%20and%20Compile) for information about building, testing, and using the driver.
 
-  Version [1.0.1](https://github.com/mongodb/mongo-cxx-driver/releases/tag/legacy-1.0.1) of the
+  Version [1.0.2](https://github.com/mongodb/mongo-cxx-driver/releases/tag/legacy-1.0.2) of the
   C++ legacy driver has been released. Please report any bugs or issues in the C++
   [JIRA project](http://jira.mongodb.org/browse/CXX).
 
