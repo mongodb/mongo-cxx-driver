@@ -226,21 +226,45 @@ namespace {
 
     TEST_F(GridFSTest, GridFileBuilder) {
         GridFileBuilder gfb(_gfs.get());
-        for (int i=0; i<DATA_LEN; i+=2)
-            gfb.appendChunk(DATA + i, min(2, DATA_LEN - i));
+        size_t totalSize = 0;
+        for (int i=0; i<DATA_LEN; i+=2) {
+            size_t chunkSize = min(2, DATA_LEN - i);
+            gfb.appendChunk(DATA + i, chunkSize);
+            totalSize += chunkSize;
+        }
         gfb.buildFile(DATA_NAME);
         GridFile gf = _gfs->findFileByName(DATA_NAME);
         ASSERT_EQUALS(gf.getNumChunks(), 1);
+        ASSERT_EQUALS(gf.getContentLength(), totalSize);
     }
 
     TEST_F(GridFSTest, GridFileBuilderMultipleChunks) {
         _gfs->setChunkSize(1);
         GridFileBuilder gfb(_gfs.get());
-        for (int i=0; i<DATA_LEN; i+=2)
-            gfb.appendChunk(DATA + i, min(2, DATA_LEN - i));
+        size_t total_size = 0;
+        for (int i=0; i<DATA_LEN; i+=2) {
+            size_t chunk_size = min(2, DATA_LEN - i);
+            gfb.appendChunk(DATA + i, chunk_size);
+            total_size += chunk_size;
+        }
         gfb.buildFile(DATA_NAME);
         GridFile gf = _gfs->findFileByName(DATA_NAME);
         ASSERT_EQUALS(gf.getNumChunks(), DATA_LEN);
+        ASSERT_EQUALS(gf.getContentLength(), total_size);
+    }
+
+    TEST_F(GridFSTest, GridFileBuilderAcrossChunkBoundry) {
+        _gfs->setChunkSize(11);
+        GridFileBuilder gfb(_gfs.get());
+        size_t total_size = 0;
+        for (int i=0; i<DATA_LEN; i+=2) {
+            size_t chunk_size = min(2, DATA_LEN - i);
+            gfb.appendChunk(DATA + i, chunk_size);
+            total_size += chunk_size;
+        }
+        gfb.buildFile(DATA_NAME);
+        GridFile gf = _gfs->findFileByName(DATA_NAME);
+        ASSERT_EQUALS(gf.getContentLength(), total_size);
     }
 
 } // namespace
