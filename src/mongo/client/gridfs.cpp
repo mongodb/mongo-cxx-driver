@@ -321,7 +321,14 @@ namespace mongo {
             invariant( _pendingDataSize <= _chunkSize );
             if (_pendingDataSize == _chunkSize) {
                 _appendPendingData();
-                _appendChunk( data + size, length - size, false );
+                const char* const end = data + length;
+                data = _appendChunk( data + size, length - size, false );
+                if (data != end) {
+                    invariant(data < end);
+                    size_t nsize = static_cast<size_t>(end - data);
+                    memcpy( _pendingData.get() + _pendingDataSize, data, nsize );
+                    _pendingDataSize += nsize;
+                }
             }
         }
         else {
