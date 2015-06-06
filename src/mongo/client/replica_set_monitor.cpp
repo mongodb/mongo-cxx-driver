@@ -537,8 +537,16 @@ namespace {
             return;
         }
 
-        if (reply.isMaster)
-            receivedIsMasterFromMaster(reply);
+        if (reply.isMaster) {
+            const bool stalePrimary = !receivedIsMasterFromMaster(reply);
+            if (stalePrimary) {
+                log() << "node " << from << " believes it is primary, but its election id of "
+                      << reply.electionId << " is older than the most recent election id"
+                      << " for this set, " << _set->maxElectionId;
+                failedHost(from);
+                return;
+            }
+        }
 
         if (_scan->foundUpMaster) {
             // We only update a Node if a master has confirmed it is in the set.
@@ -614,8 +622,15 @@ namespace {
         return scan;
     }
 
-    void Refresher::receivedIsMasterFromMaster(const IsMasterReply& reply) {
+    bool Refresher::receivedIsMasterFromMaster(const IsMasterReply& reply) {
         invariant(reply.isMaster);
+
+        if (reply.electionId.isSet()) {
+            if (_set->maxElectionId.isSet() && _set->maxElectionId.compare(reply.electionId) > 0) {
+                return false;
+            }
+            _set->maxElectionId = reply.electionId;
+        }
 
         // Mark all nodes as not master. We will mark ourself as master before releasing the lock.
         // NOTE: we use a "last-wins" policy if multiple hosts claim to be master.
@@ -686,6 +701,8 @@ namespace {
 
         _scan->foundUpMaster = true;
         _set->lastSeenMaster = reply.host;
+
+        return true;
     }
 
     void Refresher::receivedIsMasterBeforeFoundMaster(const IsMasterReply& reply) {
@@ -778,6 +795,10 @@ namespace {
 
             // hidden nodes can't be master, even if they claim to be.
             isMaster = !hidden && raw["ismaster"].trueValue();
+
+            if (isMaster && raw.hasField("electionId")) {
+                electionId = raw["electionId"].OID();
+            }
 
             const string primaryString = raw["primary"].str();
             primary = primaryString.empty() ? HostAndPort() : HostAndPort(primaryString);
