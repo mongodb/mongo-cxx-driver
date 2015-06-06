@@ -327,7 +327,7 @@ namespace {
 
         _masterHost = h;
         _master.reset(newConn);
-        _master->setReplSetClientCallback(this);
+        _master->setParentReplSetName(_setName);
         _master->setRunCommandHook(_runCommandHook);
         _master->setPostRunCommandHook(_postRunCommandHook);
 
@@ -722,23 +722,18 @@ namespace {
         // callback. We should eventually not need this after we remove the
         // callback.
         std::string errmsg;
-        // Need to use ConnectionString so that the MockDBClientConnection can be
-        // hooked in in the tests....
-        _lastSlaveOkConn.reset(dynamic_cast<DBClientConnection*>
+        std::auto_ptr<DBClientConnection> newConn(dynamic_cast<DBClientConnection*>
             (ConnectionString(_lastSlaveOkHost).connect(errmsg, _so_timeout)));
 
         // Assert here instead of returning NULL since the contract of this method is such
         // returning NULL means none of the nodes were good, which is not the case here.
-        uassert(0, "Unable to construct DBClientConnection", _lastSlaveOkConn.get());
-
-        bool connected = _lastSlaveOkConn->connect(_lastSlaveOkHost, errmsg);
-
         uassert(0,
                 str::stream() << "Failed to connect to " << _lastSlaveOkHost.toString()
                               << ": " << errmsg,
-                connected);
+                newConn.get());
 
-        _lastSlaveOkConn->setReplSetClientCallback(this);
+        _lastSlaveOkConn.reset(newConn.release());
+        _lastSlaveOkConn->setParentReplSetName(_setName);
         _lastSlaveOkConn->setRunCommandHook(_runCommandHook);
         _lastSlaveOkConn->setPostRunCommandHook(_postRunCommandHook);
 

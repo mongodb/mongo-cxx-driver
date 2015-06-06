@@ -33,6 +33,7 @@
 #include "mongo/client/dbclient_writer.h"
 #include "mongo/client/insert_write_operation.h"
 #include "mongo/client/options.h"
+#include "mongo/client/replica_set_monitor.h"
 #include "mongo/client/update_write_operation.h"
 #include "mongo/client/delete_write_operation.h"
 #include "mongo/client/sasl_client_authenticate.h"
@@ -275,49 +276,37 @@ namespace mongo {
 
         switch ( _type ) {
         case MASTER: {
-            DBClientConnection * c = new DBClientConnection(true);
+            auto_ptr<DBClientConnection> c(new DBClientConnection(true));
             c->setSoTimeout( socketTimeout );
             LOG(1) << "creating new connection to:" << _servers[0] << endl;
             if ( ! c->connect( _servers[0] , errmsg ) ) {
-                delete c;
                 return 0;
             }
 
             if (!_user.empty()) {
-                try {
-                    c->auth(_makeAuthObjFromOptions(c->getMaxWireVersion()));
-                }
-                catch(...) {
-                    delete c;
-                    throw;
-                }
+                c->auth(_makeAuthObjFromOptions(c->getMaxWireVersion()));
             }
 
             LOG(1) << "connected connection!" << endl;
-            return c;
+            return c.release();
         }
 
         case PAIR:
         case SET: {
-            DBClientReplicaSet * set = new DBClientReplicaSet( _setName , _servers , socketTimeout );
+            auto_ptr<DBClientReplicaSet> set(
+                new DBClientReplicaSet(_setName, _servers, socketTimeout));
+
             if( ! set->connect() ) {
-                delete set;
                 errmsg = "connect failed to replica set ";
                 errmsg += toString();
                 return 0;
             }
 
             if (!_user.empty()) {
-                try {
-                    set->auth(_makeAuthObjFromOptions(set->getMaxWireVersion()));
-                }
-                catch(...) {
-                    delete set;
-                    throw;
-                }
+                set->auth(_makeAuthObjFromOptions(set->getMaxWireVersion()));
             }
 
-            return set;
+            return set.release();
         }
 
         case CUSTOM: {
@@ -1751,13 +1740,12 @@ namespace mongo {
         if (DBClientWithCommands::runCommand(dbname, cmd, info, options))
             return true;
 
-        if ( clientSet && isNotMasterErrorString( info["errmsg"] ) ) {
-            clientSet->isntMaster();
+        if (!_parentReplSetName.empty()) {
+            handleNotMasterResponse(info["errmsg"]);
         }
 
         return false;
     }
-
 
     void DBClientConnection::_checkConnection() {
         if ( !_failed )
@@ -2003,10 +1991,6 @@ namespace mongo {
             n += i.n();
         }
         return n;
-    }
-
-    void DBClientConnection::setReplSetClientCallback(DBClientReplicaSet* rsClient) {
-        clientSet = rsClient;
     }
 
     std::auto_ptr<DBClientCursor> DBClientConnection::query(const std::string &ns, Query query, int nToReturn, int nToSkip,
@@ -2359,6 +2343,14 @@ namespace mongo {
         toSend.setData(dbQuery, b.buf(), b.len());
     }
 
+    DBClientConnection::DBClientConnection(bool _autoReconnect, DBClientReplicaSet*, double so_timeout):
+                    _failed(false),
+                    autoReconnect(_autoReconnect),
+                    autoReconnectBackoff(1000, 2000),
+                    _so_timeout(so_timeout) {
+        _numConnections.fetchAndAdd(1);
+    }
+
     void DBClientConnection::say( Message &toSend, bool isRetry , string * actualServer ) {
         checkConnection();
         try {
@@ -2435,12 +2427,10 @@ namespace mongo {
         *retry = false;
         *host = _serverString;
 
-        if ( clientSet && nReturned ) {
+        if (!_parentReplSetName.empty() && nReturned) {
             verify(data);
-            BSONObj o(data);
-            if ( isNotMasterErrorString( getErrField(o) ) ) {
-                clientSet->isntMaster();
-            }
+            BSONObj bsonView(data);
+            handleNotMasterResponse(getErrField(bsonView));
         }
     }
 
@@ -2457,6 +2447,27 @@ namespace mongo {
             sayPiggyBack( m );
         else
             say(m);
+    }
+
+    void DBClientConnection::setParentReplSetName(const string& replSetName) {
+        _parentReplSetName = replSetName;
+    }
+
+    void DBClientConnection::handleNotMasterResponse(const BSONElement& elemToCheck) {
+        if (!isNotMasterErrorString(elemToCheck)) {
+            return;
+        }
+
+        MONGO_LOG_COMPONENT(1, logger::LogComponent::kReplication)
+            << "got not master from: " << _serverString
+            << " of repl set: " << _parentReplSetName;
+
+        ReplicaSetMonitorPtr monitor = ReplicaSetMonitor::get(_parentReplSetName);
+        if (monitor) {
+            monitor->failedHost(_server);
+        }
+
+        _failed = true;
     }
 
 #ifdef MONGO_SSL
