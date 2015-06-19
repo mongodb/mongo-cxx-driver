@@ -215,7 +215,7 @@ namespace mongo {
     /**
      * class which allow to build GridFiles in a stream fashion way
      */
-    class GridFileBuilder {
+    class MONGO_CLIENT_API GridFileBuilder {
     public:
         /**
          * @param grid - gridfs instance
