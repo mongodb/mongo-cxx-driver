@@ -103,40 +103,43 @@ namespace {
         test_conn->findOne(TEST_NS, q);
     }
 
+    BSONObj makeReadPreferenceObject(ReadPreference rp) {
+        switch (rp) {
+        case ReadPreference_PrimaryOnly:
+            return BSON("mode" << "primary");
+        case ReadPreference_PrimaryPreferred:
+            return BSON("mode" << "primaryPreferred");
+        case ReadPreference_SecondaryOnly:
+            return BSON("mode" << "secondary");
+        case ReadPreference_SecondaryPreferred:
+            return BSON("mode" << "secondaryPreferred");
+        case ReadPreference_Nearest:
+            return BSON("mode" << "nearest");
+        default:
+            return BSONObj();
+        }
+    }
+
+    BSONObj makeTestCommand(const std::string& cmdName, ReadPreference rp) {
+        BSONObjBuilder cmd;
+        cmd.append("query", BSON(cmdName << TEST_COLL));
+        cmd.append("$readPreference", makeReadPreferenceObject(rp));
+        return cmd.obj();
+    }
+
     void count(const auto_ptr<DBClientReplicaSet>& test_conn, ReadPreference rp) {
-        Query q = Query().readPref(rp, BSONArray());
-        test_conn->count(TEST_NS, q, QueryOption_SlaveOk);
+        BSONObj ignoredResult;
+        test_conn->runCommand(TEST_DB,  makeTestCommand("count", rp), ignoredResult);
     }
 
     void distinct(const auto_ptr<DBClientReplicaSet>& test_conn, ReadPreference rp) {
-        Query q = Query().readPref(rp, BSONArray());
-        test_conn->distinct(TEST_NS, "a", q);
+        BSONObj ignoredResult;
+        test_conn->runCommand(TEST_DB, makeTestCommand("distinct", rp), ignoredResult);
     }
 
     void collStats(const auto_ptr<DBClientReplicaSet>& test_conn, ReadPreference rp) {
-        BSONObjBuilder cmd;
-        cmd.append("query", BSON("collStats" << TEST_COLL));
-
-        switch (rp) {
-            case ReadPreference_PrimaryOnly:
-                cmd.append("$readPreference", BSON("mode" << "primary"));
-                break;
-            case ReadPreference_PrimaryPreferred:
-                cmd.append("$readPreference", BSON("mode" << "primaryPreferred"));
-                break;
-            case ReadPreference_SecondaryOnly:
-                cmd.append("$readPreference", BSON("mode" << "secondary"));
-                break;
-            case ReadPreference_SecondaryPreferred:
-                cmd.append("$readPreference", BSON("mode" << "secondaryPreferred"));
-                break;
-            case ReadPreference_Nearest:
-                // for completeness
-                break;
-        }
-
-        BSONObj info;
-        test_conn->runCommand(TEST_DB, cmd.obj(), info);
+        BSONObj ignoredResult;
+        test_conn->runCommand(TEST_DB, makeTestCommand("collStats", rp), ignoredResult);
     }
 
     TEST_F(ReadPreferenceTest, RoutingQuery) {
