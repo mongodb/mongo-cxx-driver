@@ -13,13 +13,20 @@ cxx_driver_variables:
     - name: "integration test latest"
     - name: "client test latest"
 
+  ## Note that the in 3.0, the default storage engine is MMAPv1 and
+  ## WiredTiger is opt-in, but in latest as of MongoDB 3.1.4, the
+  ## default is WiredTiger and MMAPv1 is opt-in.
   storage_engine_test_list: &storage_engine_tests
     - name: "compile"
     - name: "unit test"
+    - name: "integration test 3.0"
+    - name: "integration test 3.0 with WiredTiger"
     - name: "integration test latest"
-    - name: "integration test latest with WiredTiger"
+    - name: "integration test latest with MMAPv1"
+    - name: "client test 3.0"
+    - name: "client test 3.0 with WiredTiger"
     - name: "client test latest"
-    - name: "client test latest with WiredTiger"
+    - name: "client test latest with MMAPv1"
 
   version_test_list: &version_tests
     - name: "compile"
@@ -218,6 +225,14 @@ functions:
         - key: "orchestration_preset"
           value: "--mongo-orchestration-preset=wiredtiger.json"
 
+  "use MMAPv1 storage" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "orchestration_preset"
+          # Requires mongo-orchestration 0.4
+          value: "--mongo-orchestration-preset=mmapv1.json"
+
   "set version 3.0" :
     command: expansions.update
     params:
@@ -385,6 +400,16 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
+    - name: "integration test 3.0 with WiredTiger"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.0"
+        - func: "use WiredTiger storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
     - name: "integration test latest"
       depends_on:
         - name: "compile"
@@ -394,12 +419,12 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
-    - name: "integration test latest with WiredTiger"
+    - name: "integration test latest with MMAPv1"
       depends_on:
         - name: "compile"
       commands:
         - func: "set version latest"
-        - func: "use WiredTiger storage"
+        - func: "use MMAPv1 storage"
         - func: "fetch artifacts"
         - func: "fetch mongodb"
         - func: "run integration tests"
@@ -440,6 +465,16 @@ tasks:
         - func: "fetch mongodb"
         - func: "run client tests"
 
+    - name: "client test 3.0 with WiredTiger"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.0"
+        - func: "use WiredTiger storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
     - name: "client test latest"
       depends_on:
         - name: "compile"
@@ -449,12 +484,12 @@ tasks:
         - func: "fetch mongodb"
         - func: "run client tests"
 
-    - name: "client test latest with WiredTiger"
+    - name: "client test latest with MMAPv1"
       depends_on:
         - name: "compile"
       commands:
         - func: "set version latest"
-        - func: "use WiredTiger storage"
+        - func: "use MMAPv1 storage"
         - func: "fetch artifacts"
         - func: "fetch mongodb"
         - func: "run client tests"
