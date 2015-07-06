@@ -69,6 +69,7 @@
 
 #include "mongo/client/autolib.h"
 
+#include "mongo/bson/bson_validate.h"
 #include "mongo/bson/bsonelement.h"
 #include "mongo/bson/bsonobj.h"
 #include "mongo/bson/bsonobjbuilder.h"

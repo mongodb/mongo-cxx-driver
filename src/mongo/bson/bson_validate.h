@@ -20,6 +20,7 @@
 #include "mongo/base/status.h"
 #include "mongo/base/string_data.h"
 #include "mongo/bson/bsontypes.h"
+#include "mongo/client/export_macros.h"
 #include "mongo/platform/cstdint.h"
 
 namespace mongo {
@@ -29,7 +30,6 @@ namespace mongo {
      * @param maxLength - maxLength of buffer
      *                    this is NOT the bson size, but how far we know the buffer is valid
      */
-    Status validateBSON( const char* buf, uint64_t maxLength );
+    MONGO_CLIENT_API Status MONGO_CLIENT_FUNC validateBSON( const char* buf, uint64_t maxLength );
 
 }
-

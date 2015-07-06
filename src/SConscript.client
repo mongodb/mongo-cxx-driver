@@ -220,6 +220,7 @@ clientHeaders = [
     'mongo/bson/bson.h',
     'mongo/bson/bson_db.h',
     'mongo/bson/bson_field.h',
+    'mongo/bson/bson_validate.h',
     'mongo/bson/bsonelement.h',
     'mongo/bson/bsonmisc.h',
     'mongo/bson/bsonobj.h',
