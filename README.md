@@ -7,6 +7,10 @@ Please see our [wiki page](https://github.com/mongodb/mongo-cxx-driver/wiki/Down
   C++ legacy driver has been released. Please report any bugs or issues in the C++
   [JIRA project](http://jira.mongodb.org/browse/CXX).
 
+  Version [1.0.4-rc0](https://github.com/mongodb/mongo-cxx-driver/releases/tag/legacy-1.0.4-rc0) of the
+  C++ legacy driver has been released *for testing*. Please report any bugs or issues in the C++
+  [JIRA project](http://jira.mongodb.org/browse/CXX).
+
 Use the legacy branch if:
 
  - You are using MongoDB's C++ driver for the first time.
