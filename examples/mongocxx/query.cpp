@@ -69,7 +69,6 @@ int main(int, char**) {
     }
 
     // Query with the greater-than operator ($gt).
-    // TODO: need to bikeshed how to indent this
     {
         // @begin: cpp-query-greater-than
         document filter;
