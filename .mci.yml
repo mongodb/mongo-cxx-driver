@@ -106,6 +106,7 @@ cxx_driver_variables:
           echo "Starting Mongo Orchestration..."
           echo "{ \"releases\": { \"default\": \"c:\\\\mongodb\\\\bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
           mongo-orchestration -f orchestration.config -e default -s wsgiref start --socket-timeout-ms=60000
+          sleep 15
       linux: &mongo_orchestration_linux
         ## we are going to manually install mongo-orchestration for now on Linux until it is stable enough that we don't always to install from HEAD
         start_mongo_orchestration: |
@@ -114,12 +115,14 @@ cxx_driver_variables:
           echo "Starting Mongo Orchestration..."
           echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
           TMPDIR=/data/db mongo-orchestration -f orchestration.config -e default start --socket-timeout-ms=60000
+          sleep 15
       osx: &mongo_orchestration_osx
         start_mongo_orchestration: |
           echo "Starting Mongo Orchestration..."
           trap 'set +o errexit; /usr/local/bin/mongo-orchestration stop;' EXIT
           echo "{ \"releases\": { \"default\": \"`pwd`/mongodb/bin\" }, \"last_updated\": \"2014-08-29 20:57:00.000000\" }" > orchestration.config
           TMPDIR=/data/db /usr/local/bin/mongo-orchestration -f orchestration.config -e default start # --socket-timeout-ms=60000 <- uncomment when OSX builders get new MO
+          sleep 15
 
 ## Other os-specific attributes, grouped by OS
 
