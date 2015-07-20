@@ -183,12 +183,14 @@ class MONGOCXX_API client {
     cursor list_databases() const;
 
    private:
-    friend class database;
     friend class collection;
+    friend class database;
+    friend class pool;
+
+    explicit client(void* implementation);
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
-
 };
 
 MONGOCXX_INLINE database client::operator[](bsoncxx::stdx::string_view name) const & {

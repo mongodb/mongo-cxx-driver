@@ -4,16 +4,17 @@ add_definitions(
 )
 
 set(mongocxx_test_sources
+    CMakeLists.txt
     bulk_write.cpp
     client.cpp
-    CMakeLists.txt
     collection.cpp
     collection_mocked.cpp
     database.cpp
-    read_preference.cpp
     model/update_many.cpp
     options/aggregate.cpp
+    pool.cpp
     private/write_concern.cpp
+    read_preference.cpp
     result/delete.cpp
     result/insert_one.cpp
     result/replace_one.cpp

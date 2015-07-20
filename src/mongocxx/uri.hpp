@@ -173,13 +173,13 @@ class MONGOCXX_API uri {
 
    private:
     friend class client;
+    friend class pool;
 
     class MONGOCXX_PRIVATE impl;
 
     uri(std::unique_ptr<impl>&& implementation);
 
     std::unique_ptr<impl> _impl;
-
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
