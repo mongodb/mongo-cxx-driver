@@ -72,11 +72,6 @@ namespace mongo {
 
         log() << "warning assertion failure " << expr << ' ' << file << ' ' << dec << line << endl;
         logContext();
-#if defined(MONGO_DEBUG_BUILD)
-        // this is so we notice in buildbot
-        log() << "\n\n***aborting after wassert() failure in a debug/test build\n\n" << endl;
-        abort();
-#endif
     }
 
     NOINLINE_DECL void verifyFailed(const char *expr, const char *file, unsigned line) {
@@ -85,11 +80,6 @@ namespace mongo {
         stringstream temp;
         temp << "assertion " << file << ":" << line;
         AssertionException e(temp.str(),0);
-#if defined(_DEBUG)
-        // this is so we notice in buildbot
-        log() << "\n\n***aborting after verify() failure as this is a debug/test build\n\n" << endl;
-        abort();
-#endif
         throw e;
     }
 
