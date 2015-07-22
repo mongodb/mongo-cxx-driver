@@ -10,6 +10,7 @@ set(mongocxx_test_sources
     collection.cpp
     collection_mocked.cpp
     database.cpp
+    instance.cpp
     model/update_many.cpp
     options/aggregate.cpp
     pool.cpp

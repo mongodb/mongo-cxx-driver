@@ -21,18 +21,25 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+class logger;
+
 ///
 /// Class representing an instance of the MongoDB driver.
 ///
 /// Life cycle: An instance of the driver *MUST* be kept around.
 ///
 class MONGOCXX_API instance {
-
    public:
     ///
     /// Creates an instance of the driver.
     ///
     instance();
+
+    ///
+    /// Creates an instance of the driver with a user provided log handler.
+    ///  @param logger The logger that the driver will direct log messages to.
+    ///
+    instance(std::unique_ptr<logger> logger);
 
     ///
     /// Move constructs an instance of the driver.
@@ -52,7 +59,6 @@ class MONGOCXX_API instance {
    private:
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
-
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
