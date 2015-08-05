@@ -22,6 +22,7 @@
 #include <memory>
 
 #include "mongo/bson/util/builder.h"
+#include "mongo/bson/bsonobjbuilder.h"
 #include "mongo/client/dbclientcursor.h"
 #include "mongo/client/replica_set_monitor.h"
 #include "mongo/client/sasl_client_authenticate.h"
@@ -426,10 +427,25 @@ namespace {
                     break;
                 }
 
-                conn->auth( params );
+                BSONObj interposedParams;
+
+                // Force usage of SCRAM-SHA-1 if host has maxWireVersion > 3.
+                if ((conn->getMaxWireVersion() >= 3) &&
+                    (params[saslCommandMechanismFieldName].str() == "MONGODB-CR")) {
+                    BSONObjBuilder interposedParamsBob;
+                    interposedParamsBob.append(saslCommandMechanismFieldName, "SCRAM-SHA-1");
+                    interposedParamsBob.appendElementsUnique(params);
+                    interposedParams = interposedParamsBob.obj();
+                }
+                else {
+                    interposedParams = params;
+                }
+
+                conn->auth( interposedParams );
 
                 // Cache the new auth information since we now validated it's good
-                _auths[params[saslCommandUserDBFieldName].str()] = params.getOwned();
+                _auths[interposedParams[saslCommandUserDBFieldName].str()] =
+                    interposedParams.getOwned();
 
                 // Ensure the only child connection open is the one we authenticated against - other
                 // child connections may not have full authentication information.
