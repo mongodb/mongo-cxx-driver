@@ -215,6 +215,10 @@ class json_visitor {
 
     void visit_children(const document::view& view) {
         bool first = true;
+        if (view.empty()) {
+            stack.pop_back();
+            return;
+        }
         for (auto&& x : view) {
             if (!x) {
                 break;
