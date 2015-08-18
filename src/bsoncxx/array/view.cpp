@@ -190,6 +190,10 @@ std::size_t view::length() const {
     return _view.length();
 }
 
+bool view::empty() const {
+    return _view.empty();
+}
+
 view::operator document::view() const {
     return _view;
 }
