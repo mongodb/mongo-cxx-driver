@@ -392,7 +392,7 @@ def printLocalInfo():
 
 printLocalInfo()
 
-boostLibs = [ "regex", "thread" , "system" ]
+boostLibs = [ "regex", "system" , "thread" ]
 
 linux64  = False
 force32 = has_option( "force32" ) 
