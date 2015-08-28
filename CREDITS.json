@@ -1,0 +1,38 @@
+{
+    "readme": "Chronological by date of first commit: add yourself at the end",
+    "contributors": [
+        {
+            "name": "Andrew Morrow",
+            "email": [
+                "acm@mongodb.com",
+                "andrew.c.morrow@gmail.com"
+            ],
+            "description": "Project architect and team lead. Library structure, interface design, coding conventions, build system, versioning model, C++11 usage, etc."
+        },
+        {
+            "name": "Tyler Brock",
+            "email": [
+                "tyler.brock@gmail"
+            ],
+            "description": "Principle author of mongocxx library CRUD interfaces and unit tests."
+        },
+        {
+            "name": "Samantha Ritter"
+        },
+        {
+            "name": "Adam Midvidy"
+        },
+        {
+            "name": "Jason Carey"
+        },
+        {
+            "name": "Matt Cotter"
+        },
+        {
+            "name": "Tess Avitabile"
+        },
+        {
+            "name": "Mark Benvenuto"
+        }
+    ]
+}
