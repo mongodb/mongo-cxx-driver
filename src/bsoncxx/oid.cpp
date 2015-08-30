@@ -35,6 +35,7 @@ oid::oid(stdx::string_view str) : _is_valid(bson_oid_is_valid(str.data(), str.le
     if (_is_valid) {
         bson_oid_t oid;
         bson_oid_init_from_string(&oid, str.data());
+        memcpy(_bytes, oid.bytes, sizeof(_bytes));
     }
 }
 
