@@ -51,6 +51,7 @@ namespace client {
         , _sslAllowInvalidHostnames(false)
         , _defaultLocalThresholdMillis(kDefaultDefaultLocalThresholdMillis)
         , _minLoggedSeverity(logger::LogSeverity::Log())
+        , _IPv6Enabled(false)
         , _validateObjects(false)
     {}
 
@@ -196,6 +197,15 @@ namespace client {
 
     bool Options::validateObjects() const {
         return _validateObjects;
+    }
+
+    Options& Options::setIPv6Enabled(bool state) {
+        _IPv6Enabled = state;
+        return *this;
+    }
+
+    bool Options::IPv6Enabled() const {
+        return _IPv6Enabled;
     }
 
 } // namespace client
