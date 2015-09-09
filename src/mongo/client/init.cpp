@@ -87,6 +87,8 @@ namespace client {
                 }
             }
 
+            enableIPv6(options.IPv6Enabled());
+
             Status result = runGlobalInitializers(0, NULL, NULL);
             if (!result.isOK())
                 return result;
