@@ -16,6 +16,7 @@ def run_lint( paths, nudgeOn=False ):
     later = [] # things that are unlikely anytime soon, so meh
     never = [] # things we totally disagree with
 
+    nudge.append( '-build/class' ) # errors found: 1
     never.append( '-build/header_guard' ) # errors found: 345
     nudge.append( '-build/include' ) # errors found: 924
     nudge.append( '-build/include_order' ) # errors found: 511
@@ -27,6 +28,7 @@ def run_lint( paths, nudgeOn=False ):
     later.append( '-readability/streams' ) # errors found: 72
     later.append( '-readability/todo' ) # errors found: 309
     nudge.append( '-runtime/arrays' ) # errors found: 5
+    nudge.append( '-runtime/casting' ) # errors found: 2
     later.append( '-runtime/explicit' ) # errors found: 322
     later.append( '-runtime/int' ) # errors found: 1420
     later.append( '-runtime/printf' ) # errors found: 29
