@@ -29,6 +29,12 @@ namespace mongo {
 
 const size_t MaxDatabaseNameLen = 128;  // max str len for the db name, including null char
 
+/** @return true if a client can modify this namespace even though it is under ".system."
+    For example <dbname>.system.users is ok for regular clients to update.
+    @param write used when .system.js
+*/
+bool legalClientSystemNS(const StringData& ns, bool write);
+
 /* e.g.
    NamespaceString ns("acme.orders");
    cout << ns.coll; // "orders"
@@ -110,9 +116,18 @@ public:
     bool isNormal() const {
         return normal(_ns);
     }
+    bool isListCollectionsGetMore() const;
+    bool isListIndexesGetMore() const;
 
     /**
-     * @return true if the namespace is valid. Special namespaces for internal use are considered as valid.
+     * Given a NamespaceString for which isListIndexesGetMore() returns true, returns the
+     * NamespaceString for the collection that the "listIndexesGetMore" targets.
+     */
+    NamespaceString getTargetNSForListIndexesGetMore() const;
+
+    /**
+     * @return true if the namespace is valid. Special namespaces for internal use are considered as
+     * valid.
      */
     bool isValid() const {
         return validDBName(db()) && !coll().empty();

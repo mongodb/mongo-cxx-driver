@@ -34,8 +34,8 @@ namespace mongo {
 /* Note the limit here is rather arbitrary and is simply a standard. generally the code works
    with any object that fits in ram.
 
-   Also note that the server has some basic checks to enforce this limit but those checks are not exhaustive
-   for example need to check for size too big after
+   Also note that the server has some basic checks to enforce this limit but those checks are not
+   exhaustive for example need to check for size too big after
      update $push (append) operation
      various db.eval() type operations
 */
@@ -141,7 +141,8 @@ public:
     }
 
     /** leave room for some stuff later
-        @return point to region that was skipped.  pointer may change later (on realloc), so for immediate use only
+        @return point to region that was skipped.  pointer may change later (on realloc), so for
+        immediate use only
     */
     char* skip(int n) {
         return grow(n);

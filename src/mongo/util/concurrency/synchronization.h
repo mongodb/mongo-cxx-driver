@@ -24,8 +24,8 @@
 namespace mongo {
 
 /*
- * A class to establish a synchronization point between two threads. One thread is the waiter and one is
- * the notifier. After the notification event, both proceed normally.
+ * A class to establish a synchronization point between two threads. One thread is the waiter
+ * and one is the notifier. After the notification event, both proceed normally.
  *
  * This class is thread-safe.
  */

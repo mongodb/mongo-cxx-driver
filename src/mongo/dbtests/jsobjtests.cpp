@@ -172,7 +172,8 @@ using namespace std;
 // cout << r3 << endl;
 //}
 // ASSERT(ok);
-// if( k.isCompactFormat() && kLast->isCompactFormat() ) { // only check if not bson as bson woEqual is broken! (or was may2011)
+// if( k.isCompactFormat() && kLast->isCompactFormat() ) { // only check if not bson as bson woEqual
+// is broken! (or was may2011)
 // if( k.woEqual(*kLast) != (r2 == 0) ) { // check woEqual matches
 // cout << r2 << endl;
 // cout << k.toString() << endl;
@@ -900,7 +901,8 @@ public:
 
         ASSERT_EQUALS("123.4567891234568", x["d"].toString(false, true));
         ASSERT_EQUALS("123456789.1234568", x["e"].toString(false, true));
-        // ASSERT_EQUALS( "1.234567891234568e+21" , x["f"].toString( false , true ) ); // windows and *nix are different - TODO, work around for test or not bother?
+        // ASSERT_EQUALS( "1.234567891234568e+21" , x["f"].toString( false , true ) ); // windows
+        // and *nix are different - TODO, work around for test or not bother?
 
         ASSERT_EQUALS("-123.456", x["g"].toString(false, true));
 

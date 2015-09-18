@@ -161,8 +161,8 @@ public:
     /**
      * Starts the ReplicaSetMonitorWatcher. You shouldn't have to call this in production code
      * as it is called in init.cpp. However, it may be useful to pair calls to initalize
-     * and cleanup in tests. The behavior of other methods in this class is undefined if initialize()
-     * has not been called.
+     * and cleanup in tests. The behavior of other methods in this class is undefined if
+     * initialize() has not been called.
      */
     static Status initialize();
 
