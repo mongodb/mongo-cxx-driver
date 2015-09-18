@@ -25,26 +25,26 @@
 namespace mongo {
 namespace orchestration {
 
-    class Service : public Resource {
-    public:
-        explicit Service(const std::string& url);
+class Service : public Resource {
+public:
+    explicit Service(const std::string& url);
 
-        std::vector<Server> servers() const;
-        std::vector<ReplicaSet> replica_sets() const;
-        std::vector<ShardedCluster> clusters() const;
+    std::vector<Server> servers() const;
+    std::vector<ReplicaSet> replica_sets() const;
+    std::vector<ShardedCluster> clusters() const;
 
-        std::string createMongod(const Document& params = Document());
-        std::string createMongos(const Document& params = Document());
-        std::string createReplicaSet(const Document& params = Document());
-        std::string createShardedCluster(const Document& params = Document());
+    std::string createMongod(const Document& params = Document());
+    std::string createMongos(const Document& params = Document());
+    std::string createReplicaSet(const Document& params = Document());
+    std::string createShardedCluster(const Document& params = Document());
 
-        Server server(const std::string& id) const;
-        ReplicaSet replicaSet(const std::string& id) const;
-        ShardedCluster shardedCluster(const std::string& id) const;
+    Server server(const std::string& id) const;
+    ReplicaSet replicaSet(const std::string& id) const;
+    ShardedCluster shardedCluster(const std::string& id) const;
 
-    private:
-        std::string _createResource(const char resource[], const Document& params);
-    };
+private:
+    std::string _createResource(const char resource[], const Document& params);
+};
 
-} // namespace orchestration
-} // namespace mongo
+}  // namespace orchestration
+}  // namespace mongo

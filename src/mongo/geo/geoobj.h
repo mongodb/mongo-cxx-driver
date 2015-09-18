@@ -30,45 +30,44 @@
 namespace mongo {
 namespace geo {
 
-    template<typename TCoordinates>
-    class GeoObj {
-    public:
-        virtual ~GeoObj() {}
+template <typename TCoordinates>
+class GeoObj {
+public:
+    virtual ~GeoObj() {}
 
-        /**
-         * Obtain a BSON representation of this GeoObj.
-         *
-         * @return A BSON representation of this GeoObj.
-         */
-        virtual BSONObj toBSON() const = 0;
+    /**
+     * Obtain a BSON representation of this GeoObj.
+     *
+     * @return A BSON representation of this GeoObj.
+     */
+    virtual BSONObj toBSON() const = 0;
 
-        /**
-         * Obtain the bounding box of this GeoObj.
-         *
-         * @return The bounding box of this GeoObj.
-         */
-        virtual BoundingBox<TCoordinates> getBoundingBox() const = 0;
+    /**
+     * Obtain the bounding box of this GeoObj.
+     *
+     * @return The bounding box of this GeoObj.
+     */
+    virtual BoundingBox<TCoordinates> getBoundingBox() const = 0;
 
-        /**
-         * Get the geometry type of this object.
-         *
-         * @return The appropriate GeoObjType enum value for this object.
-         */
-        virtual GeoObjType getType() const = 0;
+    /**
+     * Get the geometry type of this object.
+     *
+     * @return The appropriate GeoObjType enum value for this object.
+     */
+    virtual GeoObjType getType() const = 0;
 
-    protected:
-        static BSONObj validateType(const BSONObj& bson, const StringData& typeStr);
-    };
+protected:
+    static BSONObj validateType(const BSONObj& bson, const StringData& typeStr);
+};
 
-    template<typename TCoordinates>
-    BSONObj GeoObj<TCoordinates>::validateType(const BSONObj& bson, const StringData& typeStr) {
-        BSONElement typeField = bson.getField(kTypeFieldName);
-        uassert(0, "bson must be a valid " + typeStr.toString() + " type",
-                !typeField.eoo() &&
-                ((typeField.type() == String) ||
-                (typeField.String() == typeStr)));
-        return bson;
-    }
+template <typename TCoordinates>
+BSONObj GeoObj<TCoordinates>::validateType(const BSONObj& bson, const StringData& typeStr) {
+    BSONElement typeField = bson.getField(kTypeFieldName);
+    uassert(0,
+            "bson must be a valid " + typeStr.toString() + " type",
+            !typeField.eoo() && ((typeField.type() == String) || (typeField.String() == typeStr)));
+    return bson;
+}
 
-} // namespace geo
-} // namespace mongo
+}  // namespace geo
+}  // namespace mongo

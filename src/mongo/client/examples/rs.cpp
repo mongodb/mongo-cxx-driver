@@ -35,55 +35,49 @@
 using namespace mongo;
 using namespace std;
 
-void workerThread( string collName , bool print , DBClientReplicaSet * conn ) {
-
-    while ( true ) {
+void workerThread(string collName, bool print, DBClientReplicaSet* conn) {
+    while (true) {
         try {
-            conn->update( collName , BSONObj() , BSON( "$inc" << BSON( "x" << 1 ) ) , true );
-            
-            BSONObj x = conn->findOne( collName , BSONObj() );
+            conn->update(collName, BSONObj(), BSON("$inc" << BSON("x" << 1)), true);
 
-            if ( print ) {
+            BSONObj x = conn->findOne(collName, BSONObj());
+
+            if (print) {
                 cout << x << endl;
             }
-            
-            BSONObj a = conn->slaveConn().findOne( collName , BSONObj() , 0 , QueryOption_SlaveOk );
-            BSONObj b = conn->findOne( collName , BSONObj() , 0 , QueryOption_SlaveOk );
-            
-            if ( print ) {
+
+            BSONObj a = conn->slaveConn().findOne(collName, BSONObj(), 0, QueryOption_SlaveOk);
+            BSONObj b = conn->findOne(collName, BSONObj(), 0, QueryOption_SlaveOk);
+
+            if (print) {
                 cout << "\t A " << a << endl;
                 cout << "\t B " << b << endl;
             }
-        }
-        catch ( std::exception& e ) {
+        } catch (std::exception& e) {
             cout << "ERROR: " << e.what() << endl;
         }
-        sleepmillis( 10 );
+        sleepmillis(10);
     }
 }
 
-int main( int argc , const char ** argv ) {
-    
+int main(int argc, const char** argv) {
     unsigned nThreads = 1;
     bool print = false;
     bool testTimeout = false;
 
-    for ( int i=1; i<argc; i++ ) {
-        if ( mongoutils::str::equals( "--threads" , argv[i] ) ) {
-            nThreads = atoi( argv[++i] );
-        }
-        else if ( mongoutils::str::equals( "--print" , argv[i] ) ) {
+    for (int i = 1; i < argc; i++) {
+        if (mongoutils::str::equals("--threads", argv[i])) {
+            nThreads = atoi(argv[++i]);
+        } else if (mongoutils::str::equals("--print", argv[i])) {
             print = true;
         }
         // Run a special mode to demonstrate the DBClientReplicaSet so_timeout option.
-        else if ( mongoutils::str::equals( "--testTimeout" , argv[i] ) ) {
+        else if (mongoutils::str::equals("--testTimeout", argv[i])) {
             testTimeout = true;
-        }
-        else {
+        } else {
             cerr << "unknown option: " << argv[i] << endl;
             return EXIT_FAILURE;
         }
-            
     }
 
     mongo::client::GlobalInstance instance;
@@ -93,46 +87,45 @@ int main( int argc , const char ** argv ) {
     }
 
     string errmsg;
-    ConnectionString cs = ConnectionString::parse( "mongodb://127.0.0.1/?replicaSet=foo" , errmsg );
+    ConnectionString cs = ConnectionString::parse("mongodb://127.0.0.1/?replicaSet=foo", errmsg);
 
-    if ( ! cs.isValid() ) {
+    if (!cs.isValid()) {
         cout << "error parsing url: " << errmsg << endl;
         return EXIT_FAILURE;
     }
 
-    DBClientReplicaSet * conn = static_cast<DBClientReplicaSet*>( cs.connect( errmsg, testTimeout ? 10 : 0 ) );
-    if ( ! conn ) {
+    DBClientReplicaSet* conn =
+        static_cast<DBClientReplicaSet*>(cs.connect(errmsg, testTimeout ? 10 : 0));
+    if (!conn) {
         cout << "error connecting: " << errmsg << endl;
         return EXIT_FAILURE;
     }
 
     string collName = "test.rs1";
 
-    conn->dropCollection( collName );
+    conn->dropCollection(collName);
 
-    if ( testTimeout ) {
-        conn->insert( collName, BSONObj() );
+    if (testTimeout) {
+        conn->insert(collName, BSONObj());
         try {
-            conn->count( collName, BSON( "$where" << "sleep(40000)" ) );
-        } catch( DBException& ) {
+            conn->count(collName,
+                        BSON("$where"
+                             << "sleep(40000)"));
+        } catch (DBException&) {
             return EXIT_SUCCESS;
         }
         cout << "expected socket exception" << endl;
         return EXIT_FAILURE;
     }
-    
+
     vector<boost::shared_ptr<boost::thread> > threads;
-    for ( unsigned i=0; i<nThreads; i++ ) {
+    for (unsigned i = 0; i < nThreads; i++) {
         string errmsg;
-        threads.push_back( boost::shared_ptr<boost::thread>( 
-                               new boost::thread( 
-                                   boost::bind( workerThread , 
-                                                collName , 
-                                                print , 
-                                                static_cast<DBClientReplicaSet*>( cs.connect(errmsg) ) ) ) ) );
+        threads.push_back(boost::shared_ptr<boost::thread>(new boost::thread(boost::bind(
+            workerThread, collName, print, static_cast<DBClientReplicaSet*>(cs.connect(errmsg))))));
     }
-    
-    for ( unsigned i=0; i<threads.size(); i++ ) {
+
+    for (unsigned i = 0; i < threads.size(); i++) {
         threads[i]->join();
     }
 

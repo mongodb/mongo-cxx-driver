@@ -19,56 +19,54 @@
 namespace mongo {
 namespace orchestration {
 
-    namespace {
-        const char kRequiredVersion[] = "0.9";
-        const char kAPIVersion[] = "v1";
-        const char kServers[] = "servers";
-        const char kReplicaSets[] = "replica_sets";
-        const char kShardedClusters[] = "sharded_clusters";
-    } // namespace
+namespace {
+const char kRequiredVersion[] = "0.9";
+const char kAPIVersion[] = "v1";
+const char kServers[] = "servers";
+const char kReplicaSets[] = "replica_sets";
+const char kShardedClusters[] = "sharded_clusters";
+}  // namespace
 
-    Service::Service(const std::string& url)
-        : Resource(url)
-    {}
+Service::Service(const std::string& url) : Resource(url) {}
 
-    std::vector<Server> Service::servers() const {
-        return pluralResource<Server>(kServers);
-    }
+std::vector<Server> Service::servers() const {
+    return pluralResource<Server>(kServers);
+}
 
-    std::vector<ReplicaSet> Service::replica_sets() const {
-        return pluralResource<ReplicaSet>(kReplicaSets);
-    }
+std::vector<ReplicaSet> Service::replica_sets() const {
+    return pluralResource<ReplicaSet>(kReplicaSets);
+}
 
-    std::vector<ShardedCluster> Service::clusters() const {
-        return pluralResource<ShardedCluster>(kShardedClusters);
-    }
+std::vector<ShardedCluster> Service::clusters() const {
+    return pluralResource<ShardedCluster>(kShardedClusters);
+}
 
-    Server Service::server(const std::string& id) const {
-        return Server(relativeUrl(std::string(kServers).append("/").append(id)));
-    }
+Server Service::server(const std::string& id) const {
+    return Server(relativeUrl(std::string(kServers).append("/").append(id)));
+}
 
-    ReplicaSet Service::replicaSet(const std::string& id) const {
-        return ReplicaSet(relativeUrl(std::string(kReplicaSets).append("/").append(id)));
-    }
+ReplicaSet Service::replicaSet(const std::string& id) const {
+    return ReplicaSet(relativeUrl(std::string(kReplicaSets).append("/").append(id)));
+}
 
-    std::string Service::createMongod(const Document& params) {
-        return _createResource(kServers, params);
-    }
+std::string Service::createMongod(const Document& params) {
+    return _createResource(kServers, params);
+}
 
-    std::string Service::createReplicaSet(const Document& params) {
-        return _createResource(kReplicaSets, params);
-    }
+std::string Service::createReplicaSet(const Document& params) {
+    return _createResource(kReplicaSets, params);
+}
 
-    std::string Service::createShardedCluster(const Document& params) {
-        return _createResource(kShardedClusters, params);
-    }
+std::string Service::createShardedCluster(const Document& params) {
+    return _createResource(kShardedClusters, params);
+}
 
-    std::string Service::_createResource(const char resource[], const Document& params) {
-        Json::FastWriter writer;
-        RestClient::response result = post(resource, writer.write(params));
-        Document result_doc = handleResponse(result);
-        return result_doc["id"].asString();
-    }
+std::string Service::_createResource(const char resource[], const Document& params) {
+    Json::FastWriter writer;
+    RestClient::response result = post(resource, writer.write(params));
+    Document result_doc = handleResponse(result);
+    return result_doc["id"].asString();
+}
 
-} // namespace orchestration
-} // namespace mongo
+}  // namespace orchestration
+}  // namespace mongo

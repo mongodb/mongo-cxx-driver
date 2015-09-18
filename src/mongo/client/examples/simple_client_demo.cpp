@@ -22,7 +22,7 @@
 #include <windows.h>
 #endif
 
-#include "mongo/client/dbclient.h" // the mongo c++ driver
+#include "mongo/client/dbclient.h"  // the mongo c++ driver
 
 #include <iostream>
 
@@ -30,9 +30,8 @@ using namespace std;
 using namespace mongo;
 
 int main(int argc, char* argv[]) {
-
-    if ( argc > 2 ) {
-        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
+    if (argc > 2) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -53,7 +52,7 @@ int main(int argc, char* argv[]) {
     }
 
     boost::scoped_ptr<DBClientBase> conn(cs.connect(errmsg));
-    if ( !conn ) {
+    if (!conn) {
         cout << "couldn't connect : " << errmsg << endl;
         return EXIT_FAILURE;
     }
@@ -64,30 +63,29 @@ int main(int argc, char* argv[]) {
 
         conn->remove("test.foo", BSONObj());
 
-        BSONObj o = BSON( "hello" << "world" );
+        BSONObj o = BSON("hello"
+                         << "world");
         conn->insert("test.foo", o);
 
         string e = conn->getLastError();
-        if( !e.empty() ) {
+        if (!e.empty()) {
             cout << "insert #1 failed: " << e << endl;
         }
 
         // make an index with a unique key constraint
-        conn->createIndex("test.foo", IndexSpec().addKeys(BSON("hello"<<1)).unique());
+        conn->createIndex("test.foo", IndexSpec().addKeys(BSON("hello" << 1)).unique());
 
         try {
-            conn->insert("test.foo", o); // will cause a dup key error on "hello" field
-        } catch (const OperationException &) {
+            conn->insert("test.foo", o);  // will cause a dup key error on "hello" field
+        } catch (const OperationException&) {
             // duplicate key error
         }
         cout << "we expect a dup key error here:" << endl;
         cout << "  " << conn->getLastErrorDetailed().toString() << endl;
-    } 
-    catch(DBException& e) { 
+    } catch (DBException& e) {
         cout << "caught DBException " << e.toString() << endl;
         return 1;
     }
 
     return 0;
 }
-

@@ -22,20 +22,20 @@
 namespace mongo {
 namespace orchestration {
 
-    class ShardedCluster : public MongoResource {
-        friend class Resource;
-        friend class Service;
+class ShardedCluster : public MongoResource {
+    friend class Resource;
+    friend class Service;
 
-    public:
-        std::vector<Server> members() const;
-        std::vector<Server> configs() const;
-        std::vector<Server> routers() const;
+public:
+    std::vector<Server> members() const;
+    std::vector<Server> configs() const;
+    std::vector<Server> routers() const;
 
-        static std::string resourceName();
+    static std::string resourceName();
 
-    private:
-        ShardedCluster(const std::string& url);
-    };
+private:
+    ShardedCluster(const std::string& url);
+};
 
-} // namespace orchestration
-} // namespace mongo
+}  // namespace orchestration
+}  // namespace mongo

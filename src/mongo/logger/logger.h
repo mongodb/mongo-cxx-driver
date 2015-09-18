@@ -22,16 +22,17 @@
 namespace mongo {
 namespace logger {
 
-    /**
-     * Gets a global singleton instance of LogManager.
-     */
-    MONGO_CLIENT_API LogManager* MONGO_CLIENT_FUNC globalLogManager();
+/**
+ * Gets a global singleton instance of LogManager.
+ */
+MONGO_CLIENT_API LogManager* MONGO_CLIENT_FUNC globalLogManager();
 
-    /**
-     * Gets the global MessageLogDomain associated for the global log manager.
-     */
-    inline ComponentMessageLogDomain* globalLogDomain() { return globalLogManager()->getGlobalDomain(); }
+/**
+ * Gets the global MessageLogDomain associated for the global log manager.
+ */
+inline ComponentMessageLogDomain* globalLogDomain() {
+    return globalLogManager()->getGlobalDomain();
+}
 
 }  // namespace logger
 }  // namespace mongo
-

@@ -107,7 +107,7 @@
  *    Same correct/incorrect usage as for MONGO_COMPILER_API_EXPORT.
  *
  * MONGO_COMPILER_API_DEPRECATED(MSG)
- *    
+ *
  *    Designates a function declaration as deprecated, causing the compiler to emit a warning
  *    if it is invoked.
  *

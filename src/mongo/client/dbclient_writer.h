@@ -21,22 +21,20 @@
 
 namespace mongo {
 
-    class WriteConcern;
-    class WriteResult;
+class WriteConcern;
+class WriteResult;
 
-    class DBClientWriter {
-    public:
-        virtual ~DBClientWriter() {};
+class DBClientWriter {
+public:
+    virtual ~DBClientWriter(){};
 
-        // This function assumes that WriteOperations have been checked to ensure
-        // involved objects are less than the client's maximum BSON object size.
-        virtual void write(
-            const StringData& ns,
-            const std::vector<WriteOperation*>& write_operations,
-            bool ordered,
-            const WriteConcern* writeConcern,
-            WriteResult* writeResult
-        ) = 0;
-    };
+    // This function assumes that WriteOperations have been checked to ensure
+    // involved objects are less than the client's maximum BSON object size.
+    virtual void write(const StringData& ns,
+                       const std::vector<WriteOperation*>& write_operations,
+                       bool ordered,
+                       const WriteConcern* writeConcern,
+                       WriteResult* writeResult) = 0;
+};
 
-} // namespace mongo
+}  // namespace mongo

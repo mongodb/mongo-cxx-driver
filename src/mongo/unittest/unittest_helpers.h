@@ -19,9 +19,9 @@
 #include <ostream>
 
 namespace mongo {
-    struct Date_t;
+struct Date_t;
 
-    // So that you can ASSERT_EQUALS two Date_ts
-    std::ostream& operator<<(std::ostream& s, const Date_t& t);
+// So that you can ASSERT_EQUALS two Date_ts
+std::ostream& operator<<(std::ostream& s, const Date_t& t);
 
-} // namespace mongo
+}  // namespace mongo

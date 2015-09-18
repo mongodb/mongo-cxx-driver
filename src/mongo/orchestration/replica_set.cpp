@@ -18,38 +18,36 @@
 #include <iostream>
 
 namespace {
-    const std::string kResourceName = "replica_sets";
+const std::string kResourceName = "replica_sets";
 }
 
 namespace mongo {
 namespace orchestration {
 
-    ReplicaSet::ReplicaSet(const std::string& url)
-        : MongoResource(url)
-    {}
+ReplicaSet::ReplicaSet(const std::string& url) : MongoResource(url) {}
 
-    Server ReplicaSet::primary() const {
-        Document doc = handleResponse(get("primary"));
-        std::string server_id = doc["server_id"].asString();
-        std::string url = Server::resourceName().append("/").append(server_id);
-        return Server(baseRelativeUrl(url));
-    }
+Server ReplicaSet::primary() const {
+    Document doc = handleResponse(get("primary"));
+    std::string server_id = doc["server_id"].asString();
+    std::string url = Server::resourceName().append("/").append(server_id);
+    return Server(baseRelativeUrl(url));
+}
 
-    std::vector<Server> ReplicaSet::secondaries() const {
-        return pluralResource<Server>("secondaries");
-    }
+std::vector<Server> ReplicaSet::secondaries() const {
+    return pluralResource<Server>("secondaries");
+}
 
-    std::vector<Server> ReplicaSet::hidden() const {
-        return pluralResource<Server>("hidden");
-    }
+std::vector<Server> ReplicaSet::hidden() const {
+    return pluralResource<Server>("hidden");
+}
 
-    std::vector<Server> ReplicaSet::arbiters() const {
-        return pluralResource<Server>("arbiters");
-    }
+std::vector<Server> ReplicaSet::arbiters() const {
+    return pluralResource<Server>("arbiters");
+}
 
-    std::string ReplicaSet::resourceName() {
-        return kResourceName;
-    }
+std::string ReplicaSet::resourceName() {
+    return kResourceName;
+}
 
-} // namespace orchestration
-} // namespace mongo
+}  // namespace orchestration
+}  // namespace mongo

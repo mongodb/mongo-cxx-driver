@@ -26,9 +26,9 @@
 
 #define MONGO_COMPILER_VARIABLE_UNUSED
 
-#define MONGO_COMPILER_ALIGN_TYPE(ALIGNMENT) __declspec( align( ALIGNMENT ) )
+#define MONGO_COMPILER_ALIGN_TYPE(ALIGNMENT) __declspec(align(ALIGNMENT))
 
-#define MONGO_COMPILER_ALIGN_VARIABLE(ALIGNMENT) __declspec( align( ALIGNMENT ) )
+#define MONGO_COMPILER_ALIGN_VARIABLE(ALIGNMENT) __declspec(align(ALIGNMENT))
 
 #define MONGO_COMPILER_API_EXPORT __declspec(dllexport)
 #define MONGO_COMPILER_API_IMPORT __declspec(dllimport)
@@ -42,7 +42,7 @@
 #define MONGO_COMPILER_API_CALLING_CONVENTION
 #endif
 
-#define MONGO_COMPILER_API_DEPRECATED(MSG) __declspec( deprecated( MSG ) )
+#define MONGO_COMPILER_API_DEPRECATED(MSG) __declspec(deprecated(MSG))
 
 #define MONGO_likely(x) bool(x)
 #define MONGO_unlikely(x) bool(x)

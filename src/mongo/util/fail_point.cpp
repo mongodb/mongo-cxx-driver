@@ -27,90 +27,86 @@ using mongoutils::str::stream;
 
 namespace mongo {
 
-    using std::endl;
+using std::endl;
 
-    FailPoint::FailPoint():
-            _fpInfo(0),
-            _mode(off),
-            _timesOrPeriod(0),
-            _modMutex() {
+FailPoint::FailPoint() : _fpInfo(0), _mode(off), _timesOrPeriod(0), _modMutex() {}
+
+void FailPoint::shouldFailCloseBlock() {
+    _fpInfo.subtractAndFetch(1);
+}
+
+void FailPoint::setMode(Mode mode, ValType val, const BSONObj& extra) {
+    /**
+     * Outline:
+     *
+     * 1. Deactivates fail point to enter write-only mode
+     * 2. Waits for all current readers of the fail point to finish
+     * 3. Sets the new mode.
+     */
+
+    boost::lock_guard<boost::mutex> scoped(_modMutex);
+
+    // Step 1
+    disableFailPoint();
+
+    // Step 2
+    while (_fpInfo.load() != 0) {
+        sleepmillis(50);
     }
 
-    void FailPoint::shouldFailCloseBlock() {
-        _fpInfo.subtractAndFetch(1);
+    // Step 3
+    uassert(16442,
+            stream() << "mode not supported " << static_cast<int>(mode),
+            mode >= off && mode < numModes);
+
+    _mode = mode;
+    _timesOrPeriod.store(val);
+
+    _data = extra.copy();
+
+    if (_mode != off) {
+        enableFailPoint();
+    }
+}
+
+const BSONObj& FailPoint::getData() const {
+    return _data;
+}
+
+void FailPoint::enableFailPoint() {
+    // TODO: Better to replace with a bitwise OR, once available for AU32
+    ValType currentVal = _fpInfo.load();
+    ValType expectedCurrentVal;
+    ValType newVal;
+
+    do {
+        expectedCurrentVal = currentVal;
+        newVal = expectedCurrentVal | ACTIVE_BIT;
+        currentVal = _fpInfo.compareAndSwap(expectedCurrentVal, newVal);
+    } while (expectedCurrentVal != currentVal);
+}
+
+void FailPoint::disableFailPoint() {
+    // TODO: Better to replace with a bitwise AND, once available for AU32
+    ValType currentVal = _fpInfo.load();
+    ValType expectedCurrentVal;
+    ValType newVal;
+
+    do {
+        expectedCurrentVal = currentVal;
+        newVal = expectedCurrentVal & REF_COUNTER_MASK;
+        currentVal = _fpInfo.compareAndSwap(expectedCurrentVal, newVal);
+    } while (expectedCurrentVal != currentVal);
+}
+
+FailPoint::RetCode FailPoint::slowShouldFailOpenBlock() {
+    ValType localFpInfo = _fpInfo.addAndFetch(1);
+
+    if ((localFpInfo & ACTIVE_BIT) == 0) {
+        return slowOff;
     }
 
-    void FailPoint::setMode(Mode mode, ValType val, const BSONObj& extra) {
-        /**
-         * Outline:
-         *
-         * 1. Deactivates fail point to enter write-only mode
-         * 2. Waits for all current readers of the fail point to finish
-         * 3. Sets the new mode.
-         */
-
-        boost::lock_guard<boost::mutex> scoped(_modMutex);
-
-        // Step 1
-        disableFailPoint();
-
-        // Step 2
-        while (_fpInfo.load() != 0) {
-            sleepmillis(50);
-        }
-
-        // Step 3
-        uassert(16442, stream() << "mode not supported " << static_cast<int>(mode),
-                mode >= off && mode < numModes);
-
-        _mode = mode;
-        _timesOrPeriod.store(val);
-
-        _data = extra.copy();
-
-        if (_mode != off) {
-            enableFailPoint();
-        }
-    }
-
-    const BSONObj& FailPoint::getData() const {
-        return _data;
-    }
-
-    void FailPoint::enableFailPoint() {
-        // TODO: Better to replace with a bitwise OR, once available for AU32
-        ValType currentVal = _fpInfo.load();
-        ValType expectedCurrentVal;
-        ValType newVal;
-
-        do {
-            expectedCurrentVal = currentVal;
-            newVal = expectedCurrentVal | ACTIVE_BIT;
-            currentVal = _fpInfo.compareAndSwap(expectedCurrentVal, newVal);
-        } while (expectedCurrentVal != currentVal);
-    }
-
-    void FailPoint::disableFailPoint() {
-        // TODO: Better to replace with a bitwise AND, once available for AU32
-        ValType currentVal = _fpInfo.load();
-        ValType expectedCurrentVal;
-        ValType newVal;
-
-        do {
-            expectedCurrentVal = currentVal;
-            newVal = expectedCurrentVal & REF_COUNTER_MASK;
-            currentVal = _fpInfo.compareAndSwap(expectedCurrentVal, newVal);
-        } while (expectedCurrentVal != currentVal);
-    }
-
-    FailPoint::RetCode FailPoint::slowShouldFailOpenBlock() {
-        ValType localFpInfo = _fpInfo.addAndFetch(1);
-
-        if ((localFpInfo & ACTIVE_BIT) == 0) {
-            return slowOff;
-        }
-
-        switch (_mode) {
+    switch (_mode) {
         case alwaysOn:
             return slowOn;
 
@@ -119,8 +115,7 @@ namespace mongo {
             error() << "FailPoint Mode random is not yet supported." << endl;
             fassertFailed(16443);
 
-        case nTimes:
-        {
+        case nTimes: {
             AtomicInt32::WordType newVal = _timesOrPeriod.subtractAndFetch(1);
 
             if (newVal <= 0) {
@@ -133,34 +128,31 @@ namespace mongo {
         default:
             error() << "FailPoint Mode not supported: " << static_cast<int>(_mode) << endl;
             fassertFailed(16444);
-        }
     }
+}
 
-    BSONObj FailPoint::toBSON() const {
-        BSONObjBuilder builder;
+BSONObj FailPoint::toBSON() const {
+    BSONObjBuilder builder;
 
-        boost::lock_guard<boost::mutex> scoped(_modMutex);
-        builder.append("mode", _mode);
-        builder.append("data", _data);
+    boost::lock_guard<boost::mutex> scoped(_modMutex);
+    builder.append("mode", _mode);
+    builder.append("data", _data);
 
-        return builder.obj();
+    return builder.obj();
+}
+
+ScopedFailPoint::ScopedFailPoint(FailPoint* failPoint)
+    : _failPoint(failPoint), _once(false), _shouldClose(false) {}
+
+ScopedFailPoint::~ScopedFailPoint() {
+    if (_shouldClose) {
+        _failPoint->shouldFailCloseBlock();
     }
+}
 
-    ScopedFailPoint::ScopedFailPoint(FailPoint* failPoint):
-            _failPoint(failPoint),
-            _once(false),
-            _shouldClose(false) {
-    }
-
-    ScopedFailPoint::~ScopedFailPoint() {
-        if (_shouldClose) {
-            _failPoint->shouldFailCloseBlock();
-        }
-    }
-
-    const BSONObj& ScopedFailPoint::getData() const {
-        // Assert when attempting to get data without incrementing ref counter.
-        fassert(16445, _shouldClose);
-        return _failPoint->getData();
-    }
+const BSONObj& ScopedFailPoint::getData() const {
+    // Assert when attempting to get data without incrementing ref counter.
+    fassert(16445, _shouldClose);
+    return _failPoint->getData();
+}
 }

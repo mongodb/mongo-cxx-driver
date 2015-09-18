@@ -29,17 +29,16 @@
 
 using namespace mongo;
 
-void tail(DBClientBase& conn, const char *ns) {
+void tail(DBClientBase& conn, const char* ns) {
     BSONElement lastId = minKey.firstElement();
     Query query = Query();
 
-    auto_ptr<DBClientCursor> c =
-        conn.query(ns, query, 0, 0, 0, QueryOption_CursorTailable);
+    auto_ptr<DBClientCursor> c = conn.query(ns, query, 0, 0, 0, QueryOption_CursorTailable);
 
-    while( 1 ) {
-        if( !c->more() ) {
-            if( c->isDead() ) {
-                break;    // we need to requery
+    while (1) {
+        if (!c->more()) {
+            if (c->isDead()) {
+                break;  // we need to requery
             }
 
             // all data (so far) exhausted, wait for more

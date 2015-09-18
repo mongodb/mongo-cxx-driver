@@ -19,20 +19,18 @@
 #include "mongo/client/init.h"
 
 namespace mongo {
-    namespace integration {
-        std::auto_ptr<mongo::orchestration::Service> Environment::_orchestration;
-        std::string Environment::_preset;
-        std::string mongo::integration::StandaloneTest::_id;
-        std::string mongo::integration::ReplicaSetTest::_id;
-    } // namespace integration
-} // namespace mongo
+namespace integration {
+std::auto_ptr<mongo::orchestration::Service> Environment::_orchestration;
+std::string Environment::_preset;
+std::string mongo::integration::StandaloneTest::_id;
+std::string mongo::integration::ReplicaSetTest::_id;
+}  // namespace integration
+}  // namespace mongo
 
-int main(int argc, char **argv) {
-
+int main(int argc, char** argv) {
     if (!(argc == 2 || argc == 3)) {
-        std::cout << "usage: " << argv[0] <<
-            " MONGO_ORCHESTRATION_HOST:MONGO_ORCHESTRATION_PORT" <<
-            " [MONGO_ORCHESTRATION_PRESET]" << std::endl;
+        std::cout << "usage: " << argv[0] << " MONGO_ORCHESTRATION_HOST:MONGO_ORCHESTRATION_PORT"
+                  << " [MONGO_ORCHESTRATION_PRESET]" << std::endl;
     }
 
     mongo::client::GlobalInstance instance;

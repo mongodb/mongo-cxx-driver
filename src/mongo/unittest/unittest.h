@@ -44,40 +44,39 @@
 #define ASSERT_THROWS(STATEMENT, EXCEPTION) ASSERT_THROW(STATEMENT, EXCEPTION)
 
 namespace mongo {
-    namespace unittest {
-        class Test : public ::testing::Test {
-            virtual void setUp() {}
-            virtual void SetUp() {
-                setUp();
-            }
+namespace unittest {
+class Test : public ::testing::Test {
+    virtual void setUp() {}
+    virtual void SetUp() {
+        setUp();
+    }
 
-            virtual void tearDown() {}
-            virtual void TearDown() {
-                tearDown();
-            }
-        };
+    virtual void tearDown() {}
+    virtual void TearDown() {
+        tearDown();
+    }
+};
 
-        /**
-         * Get the value out of a StatusWith<T>, or throw an exception if it is not OK.
-         */
-        template <typename T>
-        const T& assertGet(const StatusWith<T>& swt) {
-            if (!swt.getStatus().isOK())
-                ::abort();
-            return swt.getValue();
-        }
+/**
+ * Get the value out of a StatusWith<T>, or throw an exception if it is not OK.
+ */
+template <typename T>
+const T& assertGet(const StatusWith<T>& swt) {
+    if (!swt.getStatus().isOK())
+        ::abort();
+    return swt.getValue();
+}
 
 
-    } // unittest
-} // mongo
+}  // unittest
+}  // mongo
 
 using namespace mongo;
 using namespace mongoutils;
 
-#define DBTEST_SHIM_TEST_NAMED(klass, name, ...)     \
-    TEST(klass, name) {                              \
-        klass(__VA_ARGS__).run();                    \
+#define DBTEST_SHIM_TEST_NAMED(klass, name, ...) \
+    TEST(klass, name) {                          \
+        klass(__VA_ARGS__).run();                \
     }
 
-#define DBTEST_SHIM_TEST(klass, ...)                 \
-    DBTEST_SHIM_TEST_NAMED(klass, Test, __VA_ARGS__)
+#define DBTEST_SHIM_TEST(klass, ...) DBTEST_SHIM_TEST_NAMED(klass, Test, __VA_ARGS__)

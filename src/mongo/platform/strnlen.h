@@ -21,9 +21,9 @@
 namespace mongo {
 
 #ifdef MONGO_HAVE_STRNLEN
-    using ::strnlen;
+using ::strnlen;
 #else
-    size_t strnlen(const char *s, size_t maxlen);
+size_t strnlen(const char* s, size_t maxlen);
 #endif
 
 }  // namespace mongo

@@ -18,28 +18,27 @@
 #include "mongo/client/dbclientcursorshim.h"
 #include "mongo/stdx/functional.h"
 
-namespace mongo  {
+namespace mongo {
 
-    class DBClientCursor;
+class DBClientCursor;
 
-    /**
-     * DBClientCursorShimTransform implements the shim interface over a cursor
-     * reply document by allowing a transformation to be applied.
-     */
-    class DBClientCursorShimTransform : public DBClientCursorShim {
-    public:
-        DBClientCursorShimTransform(
-            DBClientCursor& c,
-            const stdx::function<bool(const BSONObj& input, BSONObj* output)>& transformation
-        );
+/**
+ * DBClientCursorShimTransform implements the shim interface over a cursor
+ * reply document by allowing a transformation to be applied.
+ */
+class DBClientCursorShimTransform : public DBClientCursorShim {
+public:
+    DBClientCursorShimTransform(
+        DBClientCursor& c,
+        const stdx::function<bool(const BSONObj& input, BSONObj* output)>& transformation);
 
-        virtual BSONObj next();
-        virtual bool more();
+    virtual BSONObj next();
+    virtual bool more();
 
-    private:
-        DBClientCursor& cursor;
-        stdx::function<bool(const BSONObj&, BSONObj*)> transformation;
-        BSONObj nextDoc;
-    };
+private:
+    DBClientCursor& cursor;
+    stdx::function<bool(const BSONObj&, BSONObj*)> transformation;
+    BSONObj nextDoc;
+};
 
-} // namespace mongo
+}  // namespace mongo

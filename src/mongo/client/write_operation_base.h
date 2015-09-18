@@ -21,14 +21,14 @@
 
 namespace mongo {
 
-    class WriteOperationBase : public WriteOperation {
-    public:
-        WriteOperationBase();
-        virtual void setBulkIndex(size_t index);
-        virtual size_t getBulkIndex() const;
+class WriteOperationBase : public WriteOperation {
+public:
+    WriteOperationBase();
+    virtual void setBulkIndex(size_t index);
+    virtual size_t getBulkIndex() const;
 
-    private:
-        size_t _bulkIndex;
-    };
+private:
+    size_t _bulkIndex;
+};
 
-} // namespace mongo
+}  // namespace mongo

@@ -33,14 +33,15 @@
 namespace mongo {
 namespace geo {
 
-    template<typename TCoordinates>
-    GeoObj<TCoordinates>* Parser<TCoordinates>::parse(const BSONObj& bson) {
-        BSONElement typeField = bson.getField(kTypeFieldName);
+template <typename TCoordinates>
+GeoObj<TCoordinates>* Parser<TCoordinates>::parse(const BSONObj& bson) {
+    BSONElement typeField = bson.getField(kTypeFieldName);
 
-        uassert(0, "bson argument must have field \"type\" that has value of type string.",
-                !typeField.eoo() && typeField.type() == String);
+    uassert(0,
+            "bson argument must have field \"type\" that has value of type string.",
+            !typeField.eoo() && typeField.type() == String);
 
-        switch(stringToType(typeField.String())) {
+    switch (stringToType(typeField.String())) {
         case GeoObjType_Point:
             return new Point<TCoordinates>(bson);
         case GeoObjType_MultiPoint:
@@ -57,28 +58,28 @@ namespace geo {
             return new GeometryCollection<TCoordinates>(bson);
         default:
             uassert(0, "bson must contain a type supported by MongoDB.", false);
-        }
     }
+}
 
-    template<typename TCoordinates>
-    GeoObjType Parser<TCoordinates>::stringToType(const StringData& typeStr) {
-        if (typeStr == kPointTypeStr)
-            return GeoObjType_Point;
-        if (typeStr == kLineStringTypeStr)
-            return GeoObjType_LineString;
-        if (typeStr == kPolygonTypeStr)
-            return GeoObjType_Polygon;
-        if (typeStr == kMultiPointTypeStr)
-            return GeoObjType_MultiPoint;
-        if (typeStr == kMultiLineStringTypeStr)
-            return GeoObjType_MultiLineString;
-        if (typeStr == kMultiPolygonTypeStr)
-            return GeoObjType_MultiPolygon;
-        if (typeStr == kGeometryCollectionTypeStr)
-            return GeoObjType_GeometryCollection;
+template <typename TCoordinates>
+GeoObjType Parser<TCoordinates>::stringToType(const StringData& typeStr) {
+    if (typeStr == kPointTypeStr)
+        return GeoObjType_Point;
+    if (typeStr == kLineStringTypeStr)
+        return GeoObjType_LineString;
+    if (typeStr == kPolygonTypeStr)
+        return GeoObjType_Polygon;
+    if (typeStr == kMultiPointTypeStr)
+        return GeoObjType_MultiPoint;
+    if (typeStr == kMultiLineStringTypeStr)
+        return GeoObjType_MultiLineString;
+    if (typeStr == kMultiPolygonTypeStr)
+        return GeoObjType_MultiPolygon;
+    if (typeStr == kGeometryCollectionTypeStr)
+        return GeoObjType_GeometryCollection;
 
-        uassert(0, "typeStr must contain a GeoJSON type supported by MongoDB", false);
-    }
+    uassert(0, "typeStr must contain a GeoJSON type supported by MongoDB", false);
+}
 
-} // namespace geo
-} // namespace mongo
+}  // namespace geo
+}  // namespace mongo

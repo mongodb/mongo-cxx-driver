@@ -34,22 +34,21 @@
 using namespace std;
 using namespace mongo;
 
-void insert( DBClientBase* conn , const char * name , int num ) {
+void insert(DBClientBase* conn, const char* name, int num) {
     BSONObjBuilder obj;
-    obj.append( "name" , name );
-    obj.append( "num" , num );
-    conn->insert( "test.people" , obj.obj() );
+    obj.append("name", name);
+    obj.append("num", num);
+    conn->insert("test.people", obj.obj());
     std::string e = conn->getLastError();
-    if( !e.empty() ) {
+    if (!e.empty()) {
         cout << "insert failed: " << e << endl;
         exit(EXIT_FAILURE);
     }
 }
 
-int main( int argc, const char **argv ) {
-
-    if ( argc > 2 ) {
-        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
+int main(int argc, const char** argv) {
+    if (argc > 2) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -70,7 +69,7 @@ int main( int argc, const char **argv ) {
     }
 
     boost::scoped_ptr<DBClientBase> conn(cs.connect(errmsg));
-    if ( !conn ) {
+    if (!conn) {
         cout << "couldn't connect : " << errmsg << endl;
         return EXIT_FAILURE;
     }
@@ -78,39 +77,38 @@ int main( int argc, const char **argv ) {
     {
         // clean up old data from any previous tests
         BSONObjBuilder query;
-        conn->remove( "test.people" , query.obj() );
+        conn->remove("test.people", query.obj());
     }
 
-    insert( conn.get() , "eliot" , 15 );
-    insert( conn.get() , "sara" , 23 );
+    insert(conn.get(), "eliot", 15);
+    insert(conn.get(), "sara", 23);
 
     {
         mongo::BSONObjBuilder query;
-        std::auto_ptr<mongo::DBClientCursor> cursor = conn->query( "test.people" , query.obj() );
+        std::auto_ptr<mongo::DBClientCursor> cursor = conn->query("test.people", query.obj());
         if (!cursor.get()) {
             cout << "query failure" << endl;
             return EXIT_FAILURE;
         }
 
         cout << "using cursor" << endl;
-        while ( cursor->more() ) {
+        while (cursor->more()) {
             mongo::BSONObj obj = cursor->next();
             cout << "\t" << obj.jsonString() << endl;
         }
-
     }
 
     {
         mongo::BSONObjBuilder query;
-        query.append( "name" , "eliot" );
-        mongo::BSONObj res = conn->findOne( "test.people" , query.obj() );
+        query.append("name", "eliot");
+        mongo::BSONObj res = conn->findOne("test.people", query.obj());
         cout << res.isEmpty() << "\t" << res.jsonString() << endl;
     }
 
     {
         mongo::BSONObjBuilder query;
-        query.append( "name" , "asd" );
-        mongo::BSONObj res = conn->findOne( "test.people" , query.obj() );
+        query.append("name", "asd");
+        mongo::BSONObj res = conn->findOne("test.people", query.obj());
         cout << res.isEmpty() << "\t" << res.jsonString() << endl;
     }
 

@@ -20,64 +20,63 @@
 
 namespace mongo {
 
-    class BulkOperationBuilder;
+class BulkOperationBuilder;
+
+/**
+ * Class for constructing bulk write operations which have an applied filter.
+ *
+ * Not to be instantiated directly. Comes into being via the find() method on
+ * BulkOperationBuilder.
+ */
+class MONGO_CLIENT_API BulkUpdateBuilder {
+    friend class BulkOperationBuilder;
+
+public:
+    /**
+     * Enqueues an operation which updates a single document matching the selector by
+     * applying the supplied update document.
+     *
+     * @param update The update to apply to matching documents.
+     */
+    void updateOne(const BSONObj& update);
 
     /**
-     * Class for constructing bulk write operations which have an applied filter.
+     * Enqueues an operation which updates any document matching the selector by applying
+     * the supplied update document.
      *
-     * Not to be instantiated directly. Comes into being via the find() method on
-     * BulkOperationBuilder.
+     * @param update The update to apply to matching documents.
      */
-    class MONGO_CLIENT_API BulkUpdateBuilder {
+    void update(const BSONObj& update);
 
-        friend class BulkOperationBuilder;
+    /**
+     * Enqueues an operation which replaces a single document matching the selector
+     * with the supplied replacement.
+     */
+    void replaceOne(const BSONObj& replacement);
 
-    public:
-        /**
-         * Enqueues an operation which updates a single document matching the selector by
-         * applying the supplied update document.
-         *
-         * @param update The update to apply to matching documents.
-         */
-        void updateOne(const BSONObj& update);
+    /**
+     * Enqueues an operation which removes any document matching the selector.
+     */
+    void remove();
 
-        /**
-         * Enqueues an operation which updates any document matching the selector by applying
-         * the supplied update document.
-         *
-         * @param update The update to apply to matching documents.
-         */
-        void update(const BSONObj& update);
+    /**
+     * Enqueues an operation which removes a single document matching the selector.
+     */
+    void removeOne();
 
-        /**
-         * Enqueues an operation which replaces a single document matching the selector
-         * with the supplied replacement.
-         */
-        void replaceOne(const BSONObj& replacement);
+    /**
+     * Specifies that this write operation will be an upsert.
+     *
+     * @return BulkUpsertOperation A BulkUpdateBuilder that is an upsert.
+     */
+    BulkUpsertBuilder upsert();
 
-        /**
-         * Enqueues an operation which removes any document matching the selector.
-         */
-        void remove();
+private:
+    BulkOperationBuilder* const _builder;
+    const BSONObj& _selector;
 
-        /**
-         * Enqueues an operation which removes a single document matching the selector.
-         */
-        void removeOne();
+    /* Only created by freind class BulkOperationBuilder */
+    BulkUpdateBuilder(BulkOperationBuilder* const builder, const BSONObj& selector);
+};
 
-        /**
-         * Specifies that this write operation will be an upsert.
-         *
-         * @return BulkUpsertOperation A BulkUpdateBuilder that is an upsert.
-         */
-        BulkUpsertBuilder upsert();
-
-    private:
-        BulkOperationBuilder* const _builder;
-        const BSONObj& _selector;
-
-        /* Only created by freind class BulkOperationBuilder */
-        BulkUpdateBuilder(BulkOperationBuilder* const builder, const BSONObj& selector);
-    };
-
-} // namespace mongo
+}  // namespace mongo

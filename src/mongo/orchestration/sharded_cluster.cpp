@@ -17,31 +17,29 @@
 #include "mongo/orchestration/sharded_cluster.h"
 
 namespace {
-    const std::string kResourceName = "sharded_clusters";
+const std::string kResourceName = "sharded_clusters";
 }
 
 namespace mongo {
 namespace orchestration {
 
-    ShardedCluster::ShardedCluster(const std::string& url)
-        : MongoResource(url)
-    {}
+ShardedCluster::ShardedCluster(const std::string& url) : MongoResource(url) {}
 
-    std::vector<Server> ShardedCluster::members() const {
-        return pluralResource<Server>("members");
-    }
+std::vector<Server> ShardedCluster::members() const {
+    return pluralResource<Server>("members");
+}
 
-    std::vector<Server> ShardedCluster::configs() const {
-        return pluralResource<Server>("configs");
-    }
+std::vector<Server> ShardedCluster::configs() const {
+    return pluralResource<Server>("configs");
+}
 
-    std::vector<Server> ShardedCluster::routers() const {
-        return pluralResource<Server>("routers");
-    }
+std::vector<Server> ShardedCluster::routers() const {
+    return pluralResource<Server>("routers");
+}
 
-    std::string ShardedCluster::resourceName() {
-        return kResourceName;
-    }
+std::string ShardedCluster::resourceName() {
+    return kResourceName;
+}
 
-} // namespace orchestration
-} // namespace mongo
+}  // namespace orchestration
+}  // namespace mongo

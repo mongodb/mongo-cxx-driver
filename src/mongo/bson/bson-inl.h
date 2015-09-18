@@ -22,17 +22,16 @@
 
 namespace mongo {
 
-    template<class T>
-    inline BSONObjBuilder& BSONObjBuilderValueStream::operator<<( T value ) {
-        _builder->append(_fieldName, value);
-        _fieldName = StringData();
-        return *_builder;
-    }
+template <class T>
+inline BSONObjBuilder& BSONObjBuilderValueStream::operator<<(T value) {
+    _builder->append(_fieldName, value);
+    _fieldName = StringData();
+    return *_builder;
+}
 
-    template<class T> inline
-    BSONObjBuilder& Labeler::operator<<( T value ) {
-        s_->subobj()->append( l_.l_, value );
-        return *s_->_builder;
-    }
-
+template <class T>
+inline BSONObjBuilder& Labeler::operator<<(T value) {
+    s_->subobj()->append(l_.l_, value);
+    return *s_->_builder;
+}
 }

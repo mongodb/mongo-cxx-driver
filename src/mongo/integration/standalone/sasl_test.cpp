@@ -24,108 +24,114 @@
 using namespace mongo;
 
 namespace {
-    bool supports_sasl(DBClientConnection& conn) {
-        BSONObj result;
-        conn.runCommand("admin", BSON( "buildinfo" << true ), result);
-        return result["version"].toString() >= "2.5.3";
+bool supports_sasl(DBClientConnection& conn) {
+    BSONObj result;
+    conn.runCommand("admin", BSON("buildinfo" << true), result);
+    return result["version"].toString() >= "2.5.3";
+}
+
+TEST(SASLAuthentication, LDAP) {
+    DBClientConnection conn;
+    conn.connect("ldaptest.10gen.cc");  // only available internally or on jenkins
+
+    if (supports_sasl(conn)) {
+        conn.auth(BSON("mechanism"
+                       << "PLAIN"
+                       << "user"
+                       << "drivers-team"
+                       << "pwd"
+                       << "mongor0x$xgen"
+                       << "digestPassword" << false));
+    } else {
+        // MongoDB version too old to support SASL
+        SUCCEED();
     }
 
-    TEST(SASLAuthentication, LDAP) {
-        DBClientConnection conn;
-        conn.connect("ldaptest.10gen.cc"); // only available internally or on jenkins
+    BSONObj result = conn.findOne("ldap.test", Query("{}"));
+    ASSERT_TRUE(result["ldap"].trueValue());
+    ASSERT_EQUALS(result["authenticated"].str(), "yeah");
+}
 
-        if (supports_sasl(conn)) {
-            conn.auth(BSON(
-                "mechanism" << "PLAIN" <<
-                "user" << "drivers-team" <<
-                "pwd" << "mongor0x$xgen" <<
-                "digestPassword" << false
-            ));
-        } else {
-            // MongoDB version too old to support SASL
-            SUCCEED();
-        }
+TEST(SASLAuthentication, DISABLED_Kerberos) {
+    // You must run kinit -p drivers@LDAPTEST.10GEN.CC before this test
+    DBClientConnection conn;
+    conn.connect("ldaptest.10gen.cc");  // only available internally or on jenkins
 
-        BSONObj result = conn.findOne("ldap.test", Query("{}"));
-        ASSERT_TRUE(result["ldap"].trueValue());
-        ASSERT_EQUALS(result["authenticated"].str(), "yeah");
+    if (supports_sasl(conn)) {
+        conn.auth(BSON("mechanism"
+                       << "GSSAPI"
+                       << "user"
+                       << "drivers@LDAPTEST.10GEN.CC"));
+    } else {
+        // MongoDB version too old to support SASL
+        SUCCEED();
     }
 
-    TEST(SASLAuthentication, DISABLED_Kerberos) {
-        // You must run kinit -p drivers@LDAPTEST.10GEN.CC before this test
-        DBClientConnection conn;
-        conn.connect("ldaptest.10gen.cc"); // only available internally or on jenkins
+    BSONObj result = conn.findOne("kerberos.test", Query("{}"));
+    ASSERT_TRUE(result["kerberos"].trueValue());
+    ASSERT_EQUALS(result["authenticated"].str(), "yeah");
+}
 
-        if (supports_sasl(conn)) {
-            conn.auth(BSON(
-                "mechanism" << "GSSAPI" <<
-                "user" << "drivers@LDAPTEST.10GEN.CC"
-            ));
-        } else {
-            // MongoDB version too old to support SASL
-            SUCCEED();
-        }
+TEST(SASLAuthentication, DISABLED_KerberosProperties) {
+    // You must run kinit -p drivers@LDAPTEST.10GEN.CC before this test
+    std::string connStr = str::stream() << "mongodb://drivers@ldaptest.10gen.cc/?"
+                                        << "authMechanism=GSSAPI"
+                                        << "&"
+                                        << "authMechanismProperties="
+                                        << "SERVICE_NAME:mongodb"
+                                        << ","
+                                        << "SERVICE_REALM:LDAPTEST.10GEN.CC";
 
-        BSONObj result = conn.findOne("kerberos.test", Query("{}"));
-        ASSERT_TRUE(result["kerberos"].trueValue());
-        ASSERT_EQUALS(result["authenticated"].str(), "yeah");
-    }
+    std::string errmsg;
+    ConnectionString parsed(ConnectionString::parse(connStr, errmsg));
+    std::cout << errmsg << std::endl;
+    boost::scoped_ptr<DBClientConnection> conn;
 
-    TEST(SASLAuthentication, DISABLED_KerberosProperties) {
-        // You must run kinit -p drivers@LDAPTEST.10GEN.CC before this test
-        std::string connStr = str::stream()
-            << "mongodb://drivers@ldaptest.10gen.cc/?"
-            << "authMechanism=GSSAPI" << "&"
-            << "authMechanismProperties="
-                << "SERVICE_NAME:mongodb" << ","
-                << "SERVICE_REALM:LDAPTEST.10GEN.CC";
+    ASSERT_NO_THROW(conn.reset(dynamic_cast<DBClientConnection*>(parsed.connect(errmsg, 0))));
 
-        std::string errmsg;
-        ConnectionString parsed(ConnectionString::parse(connStr, errmsg));
-        std::cout << errmsg << std::endl;
-        boost::scoped_ptr<DBClientConnection> conn;
+    BSONObj result = conn->findOne("kerberos.test", Query("{}"));
+    ASSERT_TRUE(result["kerberos"].trueValue());
+    ASSERT_EQUALS(result["authenticated"].str(), "yeah");
+}
 
-        ASSERT_NO_THROW(conn.reset(dynamic_cast<DBClientConnection*>(parsed.connect(errmsg, 0))));
+TEST(SASLAuthentication, DISABLED_KerberosPropertiesInvalid) {
+    // You must run kinit -p drivers@LDAPTEST.10GEN.CC before this test
+    std::string connStr = str::stream() << "mongodb://drivers@ldaptest.10gen.cc/?"
+                                        << "authMechanism=GSSAPI"
+                                        << "&"
+                                        << "authMechanismProperties="
+                                        << "SERVICE_NAME:mongodb"
+                                        << ","
+                                        << "SERVICE_REALM:LDAPTEST.10GEN.CC"
+                                        << ","
+                                        << "I_AM_NOT_VALID:meow";
 
-        BSONObj result = conn->findOne("kerberos.test", Query("{}"));
-        ASSERT_TRUE(result["kerberos"].trueValue());
-        ASSERT_EQUALS(result["authenticated"].str(), "yeah");
-    }
+    std::string errmsg;
+    ConnectionString parsed(ConnectionString::parse(connStr, errmsg));
+    std::cout << errmsg << std::endl;
+    boost::scoped_ptr<DBClientConnection> conn;
+    ASSERT_THROW(conn.reset(dynamic_cast<DBClientConnection*>(parsed.connect(errmsg, 0))),
+                 UserException);
+}
 
-    TEST(SASLAuthentication, DISABLED_KerberosPropertiesInvalid) {
-        // You must run kinit -p drivers@LDAPTEST.10GEN.CC before this test
-        std::string connStr = str::stream()
-            << "mongodb://drivers@ldaptest.10gen.cc/?"
-            << "authMechanism=GSSAPI" << "&"
-            << "authMechanismProperties="
-                << "SERVICE_NAME:mongodb" << ","
-                << "SERVICE_REALM:LDAPTEST.10GEN.CC" << ","
-                << "I_AM_NOT_VALID:meow";
+TEST(SASLAuthentication, DISABLED_KerberosPropertiesRedundant) {
+    // You must run kinit -p drivers@LDAPTEST.10GEN.CC before this test
+    std::string connStr = str::stream() << "mongodb://drivers@ldaptest.10gen.cc/?"
+                                        << "gssapiServiceName=thisshouldnotwork"
+                                        << "&"  // can't set this and SERVICE_NAME
+                                        << "authMechanism=GSSAPI"
+                                        << "&"
+                                        << "authMechanismProperties="
+                                        << "SERVICE_NAME:mongodb"
+                                        << ","
+                                        << "SERVICE_REALM:LDAPTEST.10GEN.CC";
 
-        std::string errmsg;
-        ConnectionString parsed(ConnectionString::parse(connStr, errmsg));
-        std::cout << errmsg << std::endl;
-        boost::scoped_ptr<DBClientConnection> conn;
-        ASSERT_THROW(conn.reset(dynamic_cast<DBClientConnection*>(parsed.connect(errmsg, 0))),
-                     UserException);
-    }
+    std::string errmsg;
+    ConnectionString parsed(ConnectionString::parse(connStr, errmsg));
+    std::cout << errmsg << std::endl;
+    boost::scoped_ptr<DBClientConnection> conn;
+    ASSERT_THROW(conn.reset(dynamic_cast<DBClientConnection*>(parsed.connect(errmsg, 0))),
+                 UserException);
+}
 
-    TEST(SASLAuthentication, DISABLED_KerberosPropertiesRedundant) {
-        // You must run kinit -p drivers@LDAPTEST.10GEN.CC before this test
-        std::string connStr = str::stream()
-            << "mongodb://drivers@ldaptest.10gen.cc/?"
-            << "gssapiServiceName=thisshouldnotwork" << "&"  // can't set this and SERVICE_NAME
-            << "authMechanism=GSSAPI" << "&"
-            << "authMechanismProperties="
-                << "SERVICE_NAME:mongodb" << ","
-                << "SERVICE_REALM:LDAPTEST.10GEN.CC";
-
-        std::string errmsg;
-        ConnectionString parsed(ConnectionString::parse(connStr, errmsg));
-        std::cout << errmsg << std::endl;
-        boost::scoped_ptr<DBClientConnection> conn;
-        ASSERT_THROW(conn.reset(dynamic_cast<DBClientConnection*>(parsed.connect(errmsg, 0))),
-                     UserException);
-    }
-
-} // namespace
+}  // namespace

@@ -19,32 +19,28 @@
 
 namespace mongo {
 
-    class DBClientBase;
+class DBClientBase;
 
-    class WireProtocolWriter : public DBClientWriter {
-    public:
-        explicit WireProtocolWriter(DBClientBase* client);
+class WireProtocolWriter : public DBClientWriter {
+public:
+    explicit WireProtocolWriter(DBClientBase* client);
 
-        virtual void write(
-            const StringData& ns,
-            const std::vector<WriteOperation*>& write_operations,
-            bool ordered,
-            const WriteConcern* writeConcern,
-            WriteResult* writeResult
-        );
+    virtual void write(const StringData& ns,
+                       const std::vector<WriteOperation*>& write_operations,
+                       bool ordered,
+                       const WriteConcern* writeConcern,
+                       WriteResult* writeResult);
 
-    private:
-        BSONObj _send(
-            WriteOpType opCode,
-            const BufBuilder& builder,
-            const WriteConcern* wc,
-            const StringData& ns
-        );
+private:
+    BSONObj _send(WriteOpType opCode,
+                  const BufBuilder& builder,
+                  const WriteConcern* wc,
+                  const StringData& ns);
 
-        bool _batchableRequest(WriteOpType opCode, const WriteResult* const writeResult);
-        bool _fits(BufBuilder* builder, WriteOperation* operation);
+    bool _batchableRequest(WriteOpType opCode, const WriteResult* const writeResult);
+    bool _fits(BufBuilder* builder, WriteOperation* operation);
 
-        DBClientBase* const _client;
-    };
+    DBClientBase* const _client;
+};
 
-} // namespace mongo
+}  // namespace mongo

@@ -41,19 +41,17 @@ bool serverLTE(DBClientBase* c, int major, int minor) {
     int serverMinor = version[1].Int();
 
     // std::pair uses lexicographic ordering
-    return std::make_pair(serverMajor, serverMinor) <=
-           std::make_pair(major, minor);
+    return std::make_pair(serverMajor, serverMinor) <= std::make_pair(major, minor);
 }
 
 
-int main( int argc, const char **argv ) {
-
+int main(int argc, const char** argv) {
     using std::cout;
     using std::endl;
     using std::string;
 
-    if ( argc > 2 ) {
-        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
+    if (argc > 2) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -86,37 +84,42 @@ int main( int argc, const char **argv ) {
     BSONObj ret;
 
     // clean up old data from any previous tests
-    worked = conn->runCommand( "test", BSON("dropAllUsersFromDatabase" << 1), ret );
+    worked = conn->runCommand("test", BSON("dropAllUsersFromDatabase" << 1), ret);
     if (!worked) {
         cout << "Running MongoDB < 2.5.3 so falling back to old remove" << endl;
-        conn->remove( "test.system.users" , BSONObj() );
+        conn->remove("test.system.users", BSONObj());
     }
 
     // create a new user
-    worked = conn->runCommand( "test",
-        BSON( "createUser" << "eliot" <<
-                "pwd" << "bar" <<
-                "roles" << BSON_ARRAY("readWrite")),
-        ret);
+    worked = conn->runCommand("test",
+                              BSON("createUser"
+                                   << "eliot"
+                                   << "pwd"
+                                   << "bar"
+                                   << "roles" << BSON_ARRAY("readWrite")),
+                              ret);
     if (!worked) {
         cout << "Running MongoDB < 2.5.3 so falling back to old user creation" << endl;
-        conn->insert( "test.system.users" , BSON( "user" <<
-            "eliot" << "pwd" << conn->createPasswordDigest( "eliot" , "bar" ) ) );
+        conn->insert("test.system.users",
+                     BSON("user"
+                          << "eliot"
+                          << "pwd" << conn->createPasswordDigest("eliot", "bar")));
     }
 
     errmsg.clear();
     if (!conn->auth("test", "eliot", "bar", errmsg)) {
-        cout << "Authentication failed, when it should have succeeded. Got error: " << errmsg << endl;
+        cout << "Authentication failed, when it should have succeeded. Got error: " << errmsg
+             << endl;
         return EXIT_FAILURE;
     }
 
     try {
-        if (conn->auth("test", "eliot", "bars", errmsg)) { // incorrect password
+        if (conn->auth("test", "eliot", "bars", errmsg)) {  // incorrect password
             cout << "Authentication with invalid password should have failed but didn't" << endl;
             return EXIT_FAILURE;
         }
     } catch (const DBException&) {
-        //Expected on v2.2 and below
+        // Expected on v2.2 and below
         assert(serverLTE(conn.get(), 2, 2));
     }
 

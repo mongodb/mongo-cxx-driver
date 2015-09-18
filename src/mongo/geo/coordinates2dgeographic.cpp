@@ -26,50 +26,48 @@
 namespace mongo {
 namespace geo {
 
-    Coordinates2DGeographic::Coordinates2DGeographic(
-        const std::vector<double>& coords) {
-        uassert(0, "Number of elements in coords must match dimensionality of coordinate type",
-                coords.size() == dimensionality());
-        _longitude = coords[0];
-        _latitude  = coords[1];
-    }
+Coordinates2DGeographic::Coordinates2DGeographic(const std::vector<double>& coords) {
+    uassert(0,
+            "Number of elements in coords must match dimensionality of coordinate type",
+            coords.size() == dimensionality());
+    _longitude = coords[0];
+    _latitude = coords[1];
+}
 
-    Coordinates2DGeographic::Coordinates2DGeographic(
-        const std::pair<double, double>& coords) {
-        _longitude = coords.first;
-        _latitude  = coords.second;
-    }
+Coordinates2DGeographic::Coordinates2DGeographic(const std::pair<double, double>& coords) {
+    _longitude = coords.first;
+    _latitude = coords.second;
+}
 
-    Coordinates2DGeographic::Coordinates2DGeographic(double longitude,
-                                                                   double latitude)
-        : _longitude(longitude)
-        , _latitude(latitude) {
-    }
+Coordinates2DGeographic::Coordinates2DGeographic(double longitude, double latitude)
+    : _longitude(longitude), _latitude(latitude) {}
 
-    std::vector<double> Coordinates2DGeographic::getValues() const {
-        double vals[] = {_longitude, _latitude};
-        return std::vector<double>(vals, vals + sizeof(vals) / sizeof(vals[0]));
-    }
+std::vector<double> Coordinates2DGeographic::getValues() const {
+    double vals[] = {_longitude, _latitude};
+    return std::vector<double>(vals, vals + sizeof(vals) / sizeof(vals[0]));
+}
 
-    std::pair<double, double> Coordinates2DGeographic::getValuesAsPair() const {
-        return std::make_pair(_longitude, _latitude);
-    }
+std::pair<double, double> Coordinates2DGeographic::getValuesAsPair() const {
+    return std::make_pair(_longitude, _latitude);
+}
 
-    BSONObj Coordinates2DGeographic::toBSON() const {
-        return BSON(kCoordsFieldName << BSON_ARRAY(_longitude << _latitude));
-    }
+BSONObj Coordinates2DGeographic::toBSON() const {
+    return BSON(kCoordsFieldName << BSON_ARRAY(_longitude << _latitude));
+}
 
-    double Coordinates2DGeographic::operator[](size_t dimension) const {
-        switch(dimension) {
+double Coordinates2DGeographic::operator[](size_t dimension) const {
+    switch (dimension) {
         case 0:
             return _longitude;
         case 1:
             return _latitude;
         default:
-            uassert(0, "Attempt to access out-of-bounds element (only valid indices are 0 and 1 for"
-                       " Coordinates2DGeographic)", false);
-        }
+            uassert(0,
+                    "Attempt to access out-of-bounds element (only valid indices are 0 and 1 for"
+                    " Coordinates2DGeographic)",
+                    false);
     }
+}
 
-} // namespace geo
-} // namespace mongo
+}  // namespace geo
+}  // namespace mongo

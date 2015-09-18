@@ -38,11 +38,11 @@
 #if defined(_MSC_VER)
 #pragma warning(push)
 // Don't emit deprecation warnings
-#pragma warning(disable:4996)
+#pragma warning(disable : 4996)
 #if defined(_DLL)
 // Don't spam DLL consumers with warnings about STL symbol exports
-#pragma warning(disable:4251)
-#pragma warning(disable:4275)
+#pragma warning(disable : 4251)
+#pragma warning(disable : 4275)
 #endif
 #endif
 

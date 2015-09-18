@@ -30,77 +30,81 @@
 namespace mongo {
 namespace geo {
 
-    template <typename TCoordinates>
-    class MultiPoint : public Geometry<TCoordinates> {
-    public:
+template <typename TCoordinates>
+class MultiPoint : public Geometry<TCoordinates> {
+public:
+    /**
+     * MultiPoint constructor
+     *
+     * @param  bson A BSON representation of this MultiPoint.
+     */
+    explicit MultiPoint(const BSONObj& bson);
 
-        /**
-         * MultiPoint constructor
-         *
-         * @param  bson A BSON representation of this MultiPoint.
-         */
-        explicit MultiPoint(const BSONObj& bson);
-
-        /**
-         * Obtain a BSON representation of the MultiPoint.
-         *
-         * @return a BSON representation of the MultiPoint.
-         */
-        virtual BSONObj toBSON() const { return _bson; }
-
-        /**
-         * Obtain the bounding box surrounding this MultiPoint.
-         *
-         * @return A bounding box surrounding this MultiPoint.
-         */
-        virtual BoundingBox<TCoordinates> getBoundingBox() const;
-
-        /**
-         * Get the geometry type of this object.
-         *
-         * @return GeoObjType_MultiPoint
-         */
-        virtual GeoObjType getType() const { return GeoObjType_MultiPoint; }
-
-        /**
-         * Obtain the points that make up this MultiPoint.
-         *
-         * @return a vector of points making up this MultiPoint.
-         */
-        std::vector<Point<TCoordinates> > getPoints() const { return _points; }
-
-    private:
-        BSONObj _bson;
-        std::vector<Point<TCoordinates> > _points;
-        mutable boost::scoped_ptr<BoundingBox<TCoordinates> > _boundingBox;
-
-        /**
-         * Compute the bounding box arround this MultiPoint. Caller has ownership of the
-         * returned pointer.
-         *
-         * @return a pointer to the bounding box of this MultiPoint.
-         */
-        BoundingBox<TCoordinates>* computeBoundingBox() const;
-    };
-
-    template<typename TCoordinates>
-    MultiPoint<TCoordinates>::MultiPoint(const BSONObj& bson)
-        : _bson(GeoObj<TCoordinates>::validateType(bson, kMultiPointTypeStr))
-        , _points(Geometry<TCoordinates>::parseAllPoints(bson))
-        , _boundingBox(Geometry<TCoordinates>::parseBoundingBox(bson)) {
+    /**
+     * Obtain a BSON representation of the MultiPoint.
+     *
+     * @return a BSON representation of the MultiPoint.
+     */
+    virtual BSONObj toBSON() const {
+        return _bson;
     }
 
-    template<typename TCoordinates>
-    BoundingBox<TCoordinates> MultiPoint<TCoordinates>::getBoundingBox() const {
-        if (!_boundingBox)
-            _boundingBox.reset(computeBoundingBox());
-        return *_boundingBox.get();
+    /**
+     * Obtain the bounding box surrounding this MultiPoint.
+     *
+     * @return A bounding box surrounding this MultiPoint.
+     */
+    virtual BoundingBox<TCoordinates> getBoundingBox() const;
+
+    /**
+     * Get the geometry type of this object.
+     *
+     * @return GeoObjType_MultiPoint
+     */
+    virtual GeoObjType getType() const {
+        return GeoObjType_MultiPoint;
     }
 
-    template<typename TCoordinates>
-    BoundingBox<TCoordinates>* MultiPoint<TCoordinates>::computeBoundingBox() const {
-        return Geometry<TCoordinates>::computeBoundingBox(_points);
+    /**
+     * Obtain the points that make up this MultiPoint.
+     *
+     * @return a vector of points making up this MultiPoint.
+     */
+    std::vector<Point<TCoordinates> > getPoints() const {
+        return _points;
     }
 
-} // namespace geo
-} // namespace mongo
+private:
+    BSONObj _bson;
+    std::vector<Point<TCoordinates> > _points;
+    mutable boost::scoped_ptr<BoundingBox<TCoordinates> > _boundingBox;
+
+    /**
+     * Compute the bounding box arround this MultiPoint. Caller has ownership of the
+     * returned pointer.
+     *
+     * @return a pointer to the bounding box of this MultiPoint.
+     */
+    BoundingBox<TCoordinates>* computeBoundingBox() const;
+};
+
+template <typename TCoordinates>
+MultiPoint<TCoordinates>::MultiPoint(const BSONObj& bson)
+    : _bson(GeoObj<TCoordinates>::validateType(bson, kMultiPointTypeStr)),
+      _points(Geometry<TCoordinates>::parseAllPoints(bson)),
+      _boundingBox(Geometry<TCoordinates>::parseBoundingBox(bson)) {}
+
+template <typename TCoordinates>
+BoundingBox<TCoordinates> MultiPoint<TCoordinates>::getBoundingBox() const {
+    if (!_boundingBox)
+        _boundingBox.reset(computeBoundingBox());
+    return *_boundingBox.get();
+}
+
+template <typename TCoordinates>
+BoundingBox<TCoordinates>* MultiPoint<TCoordinates>::computeBoundingBox() const {
+    return Geometry<TCoordinates>::computeBoundingBox(_points);
+}
+
+}  // namespace geo
+}  // namespace mongo

@@ -29,9 +29,8 @@
 using namespace mongo;
 
 int main(int argc, char* argv[]) {
-
-    if ( argc > 2 ) {
-        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
+    if (argc > 2) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -52,7 +51,7 @@ int main(int argc, char* argv[]) {
     }
 
     boost::scoped_ptr<DBClientBase> conn(cs.connect(errmsg));
-    if ( !conn ) {
+    if (!conn) {
         std::cout << "couldn't connect : " << errmsg << std::endl;
         return EXIT_FAILURE;
     }
@@ -72,12 +71,12 @@ int main(int argc, char* argv[]) {
     conn->insert("test.test", BSON("x" << 2));
     conn->insert("test.test", BSON("x" << 2));
 
-    std::auto_ptr<DBClientCursor> cursor = conn->aggregate("test.test",
-        BSON_ARRAY(
-            BSON("$match" << BSON("x" << GT << 0)) <<
-            BSON("$group" << BSON("_id" << "$x" << "count" << BSON("$sum" << 1)))
-        )
-    );
+    std::auto_ptr<DBClientCursor> cursor =
+        conn->aggregate("test.test",
+                        BSON_ARRAY(BSON("$match" << BSON("x" << GT << 0))
+                                   << BSON("$group" << BSON("_id"
+                                                            << "$x"
+                                                            << "count" << BSON("$sum" << 1)))));
 
     std::cout << "------- AGGREGATION -------" << std::endl;
     while (cursor->more()) {

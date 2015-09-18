@@ -17,16 +17,13 @@
 
 namespace mongo {
 
-    namespace {
-        const char kName[] = "OperationException";
-    }
+namespace {
+const char kName[] = "OperationException";
+}
 
-    OperationException::OperationException(const BSONObj& errorObj)
-        : DBException(std::string(kName) + ": " + errorObj.toString(), 0)
-        , _lastError(errorObj)
-    {}
+OperationException::OperationException(const BSONObj& errorObj)
+    : DBException(std::string(kName) + ": " + errorObj.toString(), 0), _lastError(errorObj) {}
 
-    OperationException::~OperationException() throw() {
-    }
+OperationException::~OperationException() throw() {}
 
-} // namespace mongo
+}  // namespace mongo

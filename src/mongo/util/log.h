@@ -25,7 +25,8 @@
 // inclusion of log.h will ensure that the default component will be set correctly.
 
 #if defined(MONGO_UTIL_LOG_H_)
-#error "mongo/util/log.h cannot be included multiple times. " \
+#error \
+    "mongo/util/log.h cannot be included multiple times. " \
        "This may occur when log.h is included in a header. " \
        "Please check your #include's."
 #else  // MONGO_UTIL_LOG_H_
@@ -44,140 +45,156 @@
 const ::mongo::logger::LogComponent MongoLogDefaultComponent_component =
     MONGO_LOG_DEFAULT_COMPONENT;
 #else
-#error "mongo/util/log.h requires MONGO_LOG_DEFAULT_COMPONENT to be defined. " \
+#error \
+    "mongo/util/log.h requires MONGO_LOG_DEFAULT_COMPONENT to be defined. " \
        "Please see http://www.mongodb.org/about/contributors/reference/server-logging-rules/ "
 #endif  // MONGO_LOG_DEFAULT_COMPONENT
 
 namespace mongo {
 
 namespace logger {
-    typedef void (*ExtraLogContextFn)(BufBuilder& builder);
-    Status registerExtraLogContextFn(ExtraLogContextFn contextFn);
+typedef void (*ExtraLogContextFn)(BufBuilder& builder);
+Status registerExtraLogContextFn(ExtraLogContextFn contextFn);
 
 }  // namespace logger
 
 namespace {
 
-    using logger::LogstreamBuilder;
-    using logger::LabeledLevel;
-    using logger::Tee;
+using logger::LogstreamBuilder;
+using logger::LabeledLevel;
+using logger::Tee;
 
-    /**
-     * Returns a LogstreamBuilder for logging a message with LogSeverity::Severe().
-     */
-    inline LogstreamBuilder severe() {
-        return LogstreamBuilder(logger::globalLogDomain(),
-                                std::string(),
-                                logger::LogSeverity::Severe(),
-                                ::MongoLogDefaultComponent_component);
-    }
+/**
+ * Returns a LogstreamBuilder for logging a message with LogSeverity::Severe().
+ */
+inline LogstreamBuilder severe() {
+    return LogstreamBuilder(logger::globalLogDomain(),
+                            std::string(),
+                            logger::LogSeverity::Severe(),
+                            ::MongoLogDefaultComponent_component);
+}
 
-    inline LogstreamBuilder severe(logger::LogComponent component) {
-        return LogstreamBuilder(logger::globalLogDomain(),
-                                std::string(),
-                                logger::LogSeverity::Severe(),
-                                component);
-    }
+inline LogstreamBuilder severe(logger::LogComponent component) {
+    return LogstreamBuilder(
+        logger::globalLogDomain(), std::string(), logger::LogSeverity::Severe(), component);
+}
 
-    /**
-     * Returns a LogstreamBuilder for logging a message with LogSeverity::Error().
-     */
-    inline LogstreamBuilder error() {
-        return LogstreamBuilder(logger::globalLogDomain(),
-                                std::string(),
-                                logger::LogSeverity::Error(),
-                                ::MongoLogDefaultComponent_component);
-    }
+/**
+ * Returns a LogstreamBuilder for logging a message with LogSeverity::Error().
+ */
+inline LogstreamBuilder error() {
+    return LogstreamBuilder(logger::globalLogDomain(),
+                            std::string(),
+                            logger::LogSeverity::Error(),
+                            ::MongoLogDefaultComponent_component);
+}
 
-    inline LogstreamBuilder error(logger::LogComponent component) {
-        return LogstreamBuilder(logger::globalLogDomain(),
-                                std::string(),
-                                logger::LogSeverity::Error(),
-                                component);
-    }
+inline LogstreamBuilder error(logger::LogComponent component) {
+    return LogstreamBuilder(
+        logger::globalLogDomain(), std::string(), logger::LogSeverity::Error(), component);
+}
 
-    /**
-     * Returns a LogstreamBuilder for logging a message with LogSeverity::Warning().
-     */
-    inline LogstreamBuilder warning() {
-        return LogstreamBuilder(logger::globalLogDomain(),
-                                std::string(),
-                                logger::LogSeverity::Warning(),
-                                ::MongoLogDefaultComponent_component);
-    }
+/**
+ * Returns a LogstreamBuilder for logging a message with LogSeverity::Warning().
+ */
+inline LogstreamBuilder warning() {
+    return LogstreamBuilder(logger::globalLogDomain(),
+                            std::string(),
+                            logger::LogSeverity::Warning(),
+                            ::MongoLogDefaultComponent_component);
+}
 
-    inline LogstreamBuilder warning(logger::LogComponent component) {
-        return LogstreamBuilder(logger::globalLogDomain(),
-                                std::string(),
-                                logger::LogSeverity::Warning(),
-                                component);
-    }
+inline LogstreamBuilder warning(logger::LogComponent component) {
+    return LogstreamBuilder(
+        logger::globalLogDomain(), std::string(), logger::LogSeverity::Warning(), component);
+}
 
-    /**
-     * Returns a LogstreamBuilder for logging a message with LogSeverity::Log().
-     */
-    inline LogstreamBuilder log() {
-        return LogstreamBuilder(logger::globalLogDomain(),
-                                std::string(),
-                                logger::LogSeverity::Log(),
-                                ::MongoLogDefaultComponent_component);
-    }
+/**
+ * Returns a LogstreamBuilder for logging a message with LogSeverity::Log().
+ */
+inline LogstreamBuilder log() {
+    return LogstreamBuilder(logger::globalLogDomain(),
+                            std::string(),
+                            logger::LogSeverity::Log(),
+                            ::MongoLogDefaultComponent_component);
+}
 
-    inline LogstreamBuilder log(logger::LogComponent component) {
-        return LogstreamBuilder(logger::globalLogDomain(),
-                                std::string(),
-                                logger::LogSeverity::Log(),
-                                component);
-    }
+inline LogstreamBuilder log(logger::LogComponent component) {
+    return LogstreamBuilder(
+        logger::globalLogDomain(), std::string(), logger::LogSeverity::Log(), component);
+}
 
-    inline LogstreamBuilder log(logger::LogComponent::Value componentValue) {
-        return LogstreamBuilder(logger::globalLogDomain(),
-                                std::string(),
-                                logger::LogSeverity::Log(),
-                                componentValue);
-    }
+inline LogstreamBuilder log(logger::LogComponent::Value componentValue) {
+    return LogstreamBuilder(
+        logger::globalLogDomain(), std::string(), logger::LogSeverity::Log(), componentValue);
+}
 
-    /**
-     * Runs the same logic as log()/warning()/error(), without actually outputting a stream.
-     */
-    inline bool shouldLog(logger::LogSeverity severity) {
-        return logger::globalLogDomain()->shouldLog(::MongoLogDefaultComponent_component, severity);
-    }
+/**
+ * Runs the same logic as log()/warning()/error(), without actually outputting a stream.
+ */
+inline bool shouldLog(logger::LogSeverity severity) {
+    return logger::globalLogDomain()->shouldLog(::MongoLogDefaultComponent_component, severity);
+}
 
 }  // namespace
 
 // MONGO_LOG uses log component from MongoLogDefaultComponent from current or global namespace.
-#define MONGO_LOG(DLEVEL) \
-    if (!(::mongo::logger::globalLogDomain())->shouldLog(MongoLogDefaultComponent_component, ::mongo::LogstreamBuilder::severityCast(DLEVEL))) {} \
-    else ::mongo::logger::LogstreamBuilder(::mongo::logger::globalLogDomain(), std::string(), ::mongo::LogstreamBuilder::severityCast(DLEVEL), MongoLogDefaultComponent_component)
+#define MONGO_LOG(DLEVEL)                                                              \
+    if (!(::mongo::logger::globalLogDomain())                                          \
+             ->shouldLog(MongoLogDefaultComponent_component,                           \
+                         ::mongo::LogstreamBuilder::severityCast(DLEVEL))) {           \
+    } else                                                                             \
+    ::mongo::logger::LogstreamBuilder(::mongo::logger::globalLogDomain(),              \
+                                      std::string(),                                   \
+                                      ::mongo::LogstreamBuilder::severityCast(DLEVEL), \
+                                      MongoLogDefaultComponent_component)
 
 #define LOG MONGO_LOG
 
-#define MONGO_LOG_COMPONENT(DLEVEL, COMPONENT1) \
-    if (!(::mongo::logger::globalLogDomain())->shouldLog((COMPONENT1), ::mongo::LogstreamBuilder::severityCast(DLEVEL))) {} \
-    else ::mongo::logger::LogstreamBuilder(::mongo::logger::globalLogDomain(), std::string(), ::mongo::LogstreamBuilder::severityCast(DLEVEL), (COMPONENT1))
+#define MONGO_LOG_COMPONENT(DLEVEL, COMPONENT1)                                            \
+    if (!(::mongo::logger::globalLogDomain())                                              \
+             ->shouldLog((COMPONENT1), ::mongo::LogstreamBuilder::severityCast(DLEVEL))) { \
+    } else                                                                                 \
+    ::mongo::logger::LogstreamBuilder(::mongo::logger::globalLogDomain(),                  \
+                                      std::string(),                                       \
+                                      ::mongo::LogstreamBuilder::severityCast(DLEVEL),     \
+                                      (COMPONENT1))
 
-#define MONGO_LOG_COMPONENT2(DLEVEL, COMPONENT1, COMPONENT2) \
-    if (!(::mongo::logger::globalLogDomain())->shouldLog((COMPONENT1), (COMPONENT2), ::mongo::LogstreamBuilder::severityCast(DLEVEL))) {} \
-    else ::mongo::logger::LogstreamBuilder(::mongo::logger::globalLogDomain(), std::string(), ::mongo::LogstreamBuilder::severityCast(DLEVEL), (COMPONENT1))
+#define MONGO_LOG_COMPONENT2(DLEVEL, COMPONENT1, COMPONENT2)                                     \
+    if (!(::mongo::logger::globalLogDomain())                                                    \
+             ->shouldLog(                                                                        \
+                 (COMPONENT1), (COMPONENT2), ::mongo::LogstreamBuilder::severityCast(DLEVEL))) { \
+    } else                                                                                       \
+    ::mongo::logger::LogstreamBuilder(::mongo::logger::globalLogDomain(),                        \
+                                      std::string(),                                             \
+                                      ::mongo::LogstreamBuilder::severityCast(DLEVEL),           \
+                                      (COMPONENT1))
 
-#define MONGO_LOG_COMPONENT3(DLEVEL, COMPONENT1, COMPONENT2, COMPONENT3) \
-    if (!(::mongo::logger::globalLogDomain())->shouldLog((COMPONENT1), (COMPONENT2), (COMPONENT3), ::mongo::LogstreamBuilder::severityCast(DLEVEL))) {} \
-    else ::mongo::logger::LogstreamBuilder(::mongo::logger::globalLogDomain(), std::string(), ::mongo::LogstreamBuilder::severityCast(DLEVEL), (COMPONENT1))
+#define MONGO_LOG_COMPONENT3(DLEVEL, COMPONENT1, COMPONENT2, COMPONENT3)               \
+    if (!(::mongo::logger::globalLogDomain())                                          \
+             ->shouldLog((COMPONENT1),                                                 \
+                         (COMPONENT2),                                                 \
+                         (COMPONENT3),                                                 \
+                         ::mongo::LogstreamBuilder::severityCast(DLEVEL))) {           \
+    } else                                                                             \
+    ::mongo::logger::LogstreamBuilder(::mongo::logger::globalLogDomain(),              \
+                                      std::string(),                                   \
+                                      ::mongo::LogstreamBuilder::severityCast(DLEVEL), \
+                                      (COMPONENT1))
 
 
-    /** output the error # and error message with prefix.
-        handy for use as parm in uassert/massert.
-        */
-    std::string errnoWithPrefix( const char * prefix );
+/** output the error # and error message with prefix.
+    handy for use as parm in uassert/massert.
+    */
+std::string errnoWithPrefix(const char* prefix);
 
-    std::string errnoWithDescription(int errorcode = -1);
+std::string errnoWithDescription(int errorcode = -1);
 
-    /**
-     * Write the optional "msg".
-     */
-    void logContext(const char *msg = NULL);
+/**
+ * Write the optional "msg".
+ */
+void logContext(const char* msg = NULL);
 
-} // namespace mongo
+}  // namespace mongo
 
 #endif  // MONGO_UTIL_LOG_H_

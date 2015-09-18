@@ -19,50 +19,47 @@
 #include "mongo/client/dbclientcursorshimarray.h"
 #include "mongo/client/dbclientcursorshimcursorid.h"
 
-namespace mongo  {
+namespace mongo {
 
-    DBClientCursorShimCursorID::DBClientCursorShimCursorID(DBClientCursor& c) :
-        cursor(c),
-        iter(NULL, NULL),
-        in_first_batch(false) {}
+DBClientCursorShimCursorID::DBClientCursorShimCursorID(DBClientCursor& c)
+    : cursor(c), iter(NULL, NULL), in_first_batch(false) {}
 
-    BSONObj DBClientCursorShimCursorID::get_cursor() {
-        BSONObj b = cursor.rawNext();
+BSONObj DBClientCursorShimCursorID::get_cursor() {
+    BSONObj b = cursor.rawNext();
 
-        BSONElement ele = b["cursor"];
+    BSONElement ele = b["cursor"];
 
-        if (!ele.eoo()) {
-            cursor.cursorId = ele["id"].Long();
-            cursor.ns = ele["ns"].String();
+    if (!ele.eoo()) {
+        cursor.cursorId = ele["id"].Long();
+        cursor.ns = ele["ns"].String();
 
-            if (!ele["firstBatch"].eoo()) {
-                iter = BSONObjIterator(ele["firstBatch"].Obj());
-                in_first_batch = true;
-            }
+        if (!ele["firstBatch"].eoo()) {
+            iter = BSONObjIterator(ele["firstBatch"].Obj());
+            in_first_batch = true;
         }
-
-        return b;
     }
 
-    bool DBClientCursorShimCursorID::more() {
-        if (in_first_batch) {
-            if (iter.more())
-                return true;
+    return b;
+}
 
-            in_first_batch = false;
+bool DBClientCursorShimCursorID::more() {
+    if (in_first_batch) {
+        if (iter.more())
+            return true;
 
-            if (!cursor.cursorId)
-                return false;
-        }
+        in_first_batch = false;
 
-        return cursor.rawMore();
+        if (!cursor.cursorId)
+            return false;
     }
 
-    BSONObj DBClientCursorShimCursorID::next() {
-        if (in_first_batch && iter.more())
-            return iter.next().Obj();
+    return cursor.rawMore();
+}
 
-        return cursor.rawNext();
-    }
+BSONObj DBClientCursorShimCursorID::next() {
+    if (in_first_batch && iter.more())
+        return iter.next().Obj();
 
+    return cursor.rawNext();
+}
 }

@@ -21,25 +21,25 @@
 namespace mongo {
 
 #if defined(MONGO_DEBUG_BUILD)
-    const bool debug=true;
+const bool debug = true;
 #else
-    const bool debug=false;
+const bool debug = false;
 #endif
 
-#define MONGO_DEV if( debug )
+#define MONGO_DEV if (debug)
 #define DEV MONGO_DEV
 
-    /* dassert is 'debug assert' -- might want to turn off for production as these
-       could be slow.
-    */
+/* dassert is 'debug assert' -- might want to turn off for production as these
+   could be slow.
+*/
 #if defined(MONGO_DEBUG_BUILD)
-# define MONGO_dassert(x) invariant(x)
+#define MONGO_dassert(x) invariant(x)
 #else
-# define MONGO_dassert(x)
+#define MONGO_dassert(x)
 #endif
 
 #ifdef MONGO_EXPOSE_MACROS
-# define dassert MONGO_dassert
+#define dassert MONGO_dassert
 #endif
 
-} // namespace mongo
+}  // namespace mongo

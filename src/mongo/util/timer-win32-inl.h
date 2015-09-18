@@ -33,10 +33,10 @@
 
 namespace mongo {
 
-    unsigned long long Timer::now() const {
-        LARGE_INTEGER i;
-        fassert(16161, QueryPerformanceCounter(&i));
-        return i.QuadPart;
-    }
+unsigned long long Timer::now() const {
+    LARGE_INTEGER i;
+    fassert(16161, QueryPerformanceCounter(&i));
+    return i.QuadPart;
+}
 
 }  // namespace mongo

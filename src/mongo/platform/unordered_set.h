@@ -29,7 +29,7 @@
 
 namespace mongo {
 
-    using std::unordered_set;
+using std::unordered_set;
 
 }  // namespace mongo
 
@@ -39,10 +39,10 @@ namespace mongo {
 
 namespace mongo {
 
-#if _MSC_VER >= 1600  /* Visual Studio 2010+ */
-    using std::unordered_set;
+#if _MSC_VER >= 1600 /* Visual Studio 2010+ */
+using std::unordered_set;
 #else
-    using std::tr1::unordered_set;
+using std::tr1::unordered_set;
 #endif
 
 }  // namespace mongo
@@ -53,7 +53,7 @@ namespace mongo {
 
 namespace mongo {
 
-    using std::tr1::unordered_set;
+using std::tr1::unordered_set;
 
 }  // namespace mongo
 

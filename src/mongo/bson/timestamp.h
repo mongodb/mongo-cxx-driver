@@ -20,24 +20,23 @@
 
 namespace mongo {
 
-    class Timestamp_t {
-     public:
-        Timestamp_t()
-            : _seconds()
-            , _increment()
-        {}
+class Timestamp_t {
+public:
+    Timestamp_t() : _seconds(), _increment() {}
 
-        Timestamp_t(const uint32_t seconds, const uint32_t increment)
-            : _seconds(seconds)
-            , _increment(increment)
-        {}
+    Timestamp_t(const uint32_t seconds, const uint32_t increment)
+        : _seconds(seconds), _increment(increment) {}
 
-        uint32_t seconds() const { return _seconds; }
-        uint32_t increment() const { return _increment; }
+    uint32_t seconds() const {
+        return _seconds;
+    }
+    uint32_t increment() const {
+        return _increment;
+    }
 
-     private:
-        const uint32_t _seconds;
-        const uint32_t _increment;
-    };
+private:
+    const uint32_t _seconds;
+    const uint32_t _increment;
+};
 
 }  // namespace mongo

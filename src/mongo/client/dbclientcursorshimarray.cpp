@@ -18,54 +18,45 @@
 #include "mongo/client/dbclientcursorshimarray.h"
 #include "mongo/client/dbclientcursor.h"
 
-namespace mongo  {
+namespace mongo {
 
-    DBClientCursorShimArray::DBClientCursorShimArray(
-        DBClientCursor& c,
-        const std::string& arrayField
-    )
-        : cursor(c)
-        , iter(NULL, NULL)
-        , has_array(false)
-        , array_field(arrayField)
-    {}
+DBClientCursorShimArray::DBClientCursorShimArray(DBClientCursor& c, const std::string& arrayField)
+    : cursor(c), iter(NULL, NULL), has_array(false), array_field(arrayField) {}
 
-    bool DBClientCursorShimArray::more() {
-        bool r = false;
+bool DBClientCursorShimArray::more() {
+    bool r = false;
 
-        if (!has_array) {
-            if (cursor.rawMore()) {
-                BSONObj val = cursor.rawNext();
+    if (!has_array) {
+        if (cursor.rawMore()) {
+            BSONObj val = cursor.rawNext();
 
-                if (val.hasField(array_field)) {
-                    BSONObj arr = val[array_field].Obj();
+            if (val.hasField(array_field)) {
+                BSONObj arr = val[array_field].Obj();
 
-                    if (!arr.isEmpty()) {
-                        iter = BSONObjIterator(arr);
-                        r = true;
-                    }
+                if (!arr.isEmpty()) {
+                    iter = BSONObjIterator(arr);
+                    r = true;
                 }
             }
-
-            has_array = true;
-        }
-        else {
-            r = iter.more();
         }
 
-        return r;
+        has_array = true;
+    } else {
+        r = iter.more();
     }
 
-    BSONObj DBClientCursorShimArray::next() {
-        BSONObj b;
+    return r;
+}
 
-        if (!has_array) {
-            uassert(0, "DBClientCursorShimArray next() called but more() is false", more());
-        }
-        else {
-            b = iter.next().Obj();
-        }
+BSONObj DBClientCursorShimArray::next() {
+    BSONObj b;
 
-        return b;
+    if (!has_array) {
+        uassert(0, "DBClientCursorShimArray next() called but more() is false", more());
+    } else {
+        b = iter.next().Obj();
     }
+
+    return b;
+}
 }

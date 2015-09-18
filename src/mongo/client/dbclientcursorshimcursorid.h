@@ -18,27 +18,26 @@
 #include "mongo/client/dbclientcursorshim.h"
 #include "mongo/bson/bsonobjiterator.h"
 
-namespace mongo  {
+namespace mongo {
 
-    class DBClientCursor;
+class DBClientCursor;
 
-    /** DBClientCursorShimCursorID implements the shim interface over a cursor
-     * reply document, rather than the traditional OP_REPLY.  It additionally
-     * handles a possible initial firstBatch which is part of the 2.6 aggregate
-     * command api. */
-    class DBClientCursorShimCursorID : public DBClientCursorShim {
-    public:
-        DBClientCursorShimCursorID(DBClientCursor& c);
+/** DBClientCursorShimCursorID implements the shim interface over a cursor
+ * reply document, rather than the traditional OP_REPLY.  It additionally
+ * handles a possible initial firstBatch which is part of the 2.6 aggregate
+ * command api. */
+class DBClientCursorShimCursorID : public DBClientCursorShim {
+public:
+    DBClientCursorShimCursorID(DBClientCursor& c);
 
-        virtual BSONObj next();
-        virtual bool more();
+    virtual BSONObj next();
+    virtual bool more();
 
-        BSONObj get_cursor();
+    BSONObj get_cursor();
 
-    private:
-        DBClientCursor& cursor;
-        BSONObjIterator iter;
-        bool in_first_batch;
-    };
-
+private:
+    DBClientCursor& cursor;
+    BSONObjIterator iter;
+    bool in_first_batch;
+};
 }

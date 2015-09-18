@@ -24,59 +24,61 @@
 
 namespace mongo {
 
-    namespace {
-        const char kCommandKey[] = "insert";
-        const char kBatchName[] = "documents";
-    } // namespace
+namespace {
+const char kCommandKey[] = "insert";
+const char kBatchName[] = "documents";
+}  // namespace
 
-    InsertWriteOperation::InsertWriteOperation(const BSONObj& doc)
-        : _doc(_ensureId(doc))
-    {}
+InsertWriteOperation::InsertWriteOperation(const BSONObj& doc) : _doc(_ensureId(doc)) {}
 
-    WriteOpType InsertWriteOperation::operationType() const {
-        return dbWriteInsert;
+WriteOpType InsertWriteOperation::operationType() const {
+    return dbWriteInsert;
+}
+
+const char* InsertWriteOperation::batchName() const {
+    return kBatchName;
+}
+
+int InsertWriteOperation::incrementalSize() const {
+    return _doc.objsize();
+}
+
+void InsertWriteOperation::startRequest(const std::string& ns,
+                                        bool ordered,
+                                        BufBuilder* builder) const {
+    builder->appendNum(ordered ? 0 : 1);
+    builder->appendStr(ns);
+}
+
+void InsertWriteOperation::appendSelfToRequest(BufBuilder* builder) const {
+    _doc.appendSelfToBufBuilder(*builder);
+}
+
+void InsertWriteOperation::startCommand(const std::string& ns, BSONObjBuilder* command) const {
+    command->append(kCommandKey, nsToCollectionSubstring(ns));
+}
+
+void InsertWriteOperation::appendSelfToCommand(BSONArrayBuilder* batch) const {
+    batch->append(_doc);
+}
+
+void InsertWriteOperation::appendSelfToBSONObj(BSONObjBuilder* obj) const {
+    obj->appendElements(_doc);
+}
+
+BSONObj InsertWriteOperation::_ensureId(const BSONObj& doc) {
+    BSONElement id = doc.getField("_id");
+    if (!id.eoo()) {
+        uassert(0,
+                "value of _id element cannot contain any fields starting with $",
+                !id.isABSONObj() || id.Obj().okForStorage());
+        return doc;
     }
 
-    const char* InsertWriteOperation::batchName() const {
-        return kBatchName;
-    }
+    BSONObjBuilder bob;
+    bob.append("_id", OID::gen());
+    bob.appendElements(doc);
+    return bob.obj();
+}
 
-    int InsertWriteOperation::incrementalSize() const {
-        return _doc.objsize();
-    }
-
-    void InsertWriteOperation::startRequest(const std::string& ns, bool ordered, BufBuilder* builder) const {
-        builder->appendNum(ordered ? 0 : 1);
-        builder->appendStr(ns);
-    }
-
-    void InsertWriteOperation::appendSelfToRequest(BufBuilder* builder) const {
-        _doc.appendSelfToBufBuilder(*builder);
-    }
-
-    void InsertWriteOperation::startCommand(const std::string& ns, BSONObjBuilder* command) const {
-        command->append(kCommandKey, nsToCollectionSubstring(ns));
-    }
-
-    void InsertWriteOperation::appendSelfToCommand(BSONArrayBuilder* batch) const {
-        batch->append(_doc);
-    }
-
-    void InsertWriteOperation::appendSelfToBSONObj(BSONObjBuilder* obj) const {
-        obj->appendElements(_doc);
-    }
-
-    BSONObj InsertWriteOperation::_ensureId(const BSONObj& doc) {
-        BSONElement id = doc.getField("_id");
-        if (!id.eoo()) {
-            uassert(0, "value of _id element cannot contain any fields starting with $", !id.isABSONObj() || id.Obj().okForStorage());
-            return doc;
-        }
-
-        BSONObjBuilder bob;
-        bob.append("_id", OID::gen());
-        bob.appendElements(doc);
-        return bob.obj();
-    }
-
-} // namespace mongo
+}  // namespace mongo

@@ -22,43 +22,40 @@
 namespace mongo {
 namespace orchestration {
 
-    MongoResource::MongoResource(const std::string& url)
-        : Resource(url)
-    {}
+MongoResource::MongoResource(const std::string& url) : Resource(url) {}
 
-    void MongoResource::destroy() {
-        del();
+void MongoResource::destroy() {
+    del();
+}
+
+RestClient::response MongoResource::status() const {
+    return get();
+}
+
+RestClient::response MongoResource::action(const std::string& action) {
+    Json::Value doc;
+    Json::FastWriter writer;
+    doc["action"] = action;
+    return post("", writer.write(doc));
+}
+
+std::string MongoResource::uri() const {
+    // mongodb_uri has the format: mongodb://<hostport>[/stuff not in standalones]
+    std::string uri = handleResponse(status())["mongodb_uri"].asString();
+    const std::string prefix("mongodb://");
+    if (uri.substr(0, prefix.size()) != prefix) {
+        throw std::runtime_error(str::stream()
+                                 << "mongodb_uri does not begin with prefix 'mongodb://'"
+                                 << ", got: " << uri);
     }
+    uri = uri.substr(prefix.size());
+    const size_t suffix = uri.find('/');
+    return uri.substr(0, suffix);
+}
 
-    RestClient::response MongoResource::status() const {
-        return get();
-    }
+std::string MongoResource::mongodbUri() const {
+    return handleResponse(status())["mongodb_uri"].asString();
+}
 
-    RestClient::response MongoResource::action(const std::string& action) {
-        Json::Value doc;
-        Json::FastWriter writer;
-        doc["action"] = action;
-        return post("", writer.write(doc));
-    }
-
-    std::string MongoResource::uri() const {
-        // mongodb_uri has the format: mongodb://<hostport>[/stuff not in standalones]
-        std::string uri = handleResponse(status())["mongodb_uri"].asString();
-        const std::string prefix("mongodb://");
-        if (uri.substr(0, prefix.size()) != prefix) {
-            throw std::runtime_error(
-                      str::stream() << "mongodb_uri does not begin with prefix 'mongodb://'"
-                                    << ", got: " << uri
-                  );
-        }
-        uri = uri.substr(prefix.size());
-        const size_t suffix = uri.find('/');
-        return uri.substr(0, suffix);
-    }
-
-    std::string MongoResource::mongodbUri() const {
-        return handleResponse(status())["mongodb_uri"].asString();
-    }
-
-} // namespace orchestration
-} // namespace mongo
+}  // namespace orchestration
+}  // namespace mongo

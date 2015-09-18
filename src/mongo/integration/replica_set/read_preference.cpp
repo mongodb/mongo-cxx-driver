@@ -25,204 +25,210 @@
 
 namespace {
 
-    using namespace std;
-    using namespace mongo;
-    using namespace mongo::integration;
+using namespace std;
+using namespace mongo;
+using namespace mongo::integration;
 
-    const string TEST_NS = "test-read_pref.read_pref";
-    const string TEST_DB = "test-read_pref";
-    const string TEST_COLL = "read_pref";
+const string TEST_NS = "test-read_pref.read_pref";
+const string TEST_DB = "test-read_pref";
+const string TEST_COLL = "read_pref";
 
-    class ReadPreferenceTest : public ReplicaSetTest {
-    public:
-        static void SetUpTestCase() {
-            try {
-                ReplicaSetTest::SetUpTestCase();
-                std::string errmsg;
+class ReadPreferenceTest : public ReplicaSetTest {
+public:
+    static void SetUpTestCase() {
+        try {
+            ReplicaSetTest::SetUpTestCase();
+            std::string errmsg;
 
-                ConnectionString cs = ConnectionString::parse(rs().mongodbUri(), errmsg);
-                replset_conn.reset(static_cast<DBClientReplicaSet*>(cs.connect(errmsg)));
-                replset_conn->dropCollection(TEST_NS);
+            ConnectionString cs = ConnectionString::parse(rs().mongodbUri(), errmsg);
+            replset_conn.reset(static_cast<DBClientReplicaSet*>(cs.connect(errmsg)));
+            replset_conn->dropCollection(TEST_NS);
 
-                primary_conn.reset(new DBClientConnection());
-                primary_conn->connect(rs().primary().uri());
+            primary_conn.reset(new DBClientConnection());
+            primary_conn->connect(rs().primary().uri());
 
-                secondary_conn.reset(new DBClientConnection());
-                secondary_conn->connect(rs().secondaries().front().uri());
-                return;
+            secondary_conn.reset(new DBClientConnection());
+            secondary_conn->connect(rs().secondaries().front().uri());
+            return;
 
-            } catch (const std::exception& ex) {
-                std::cout << "Got fatal error during test setup: " << ex.what() << std::endl;
-            } catch (...) {
-                std::cout << "Got unknown error during test setup" << std::endl;
-            }
-            std::abort();
+        } catch (const std::exception& ex) {
+            std::cout << "Got fatal error during test setup: " << ex.what() << std::endl;
+        } catch (...) {
+            std::cout << "Got unknown error during test setup" << std::endl;
         }
-
-        static auto_ptr<DBClientReplicaSet> replset_conn;
-        static auto_ptr<DBClientConnection> primary_conn;
-        static auto_ptr<DBClientConnection> secondary_conn;
-    };
-
-    auto_ptr<DBClientReplicaSet> ReadPreferenceTest::replset_conn;
-    auto_ptr<DBClientConnection> ReadPreferenceTest::primary_conn;
-    auto_ptr<DBClientConnection> ReadPreferenceTest::secondary_conn;
-
-    int op_count(const auto_ptr<DBClientConnection>& connection, const std::string& op_type) {
-        BSONObj cmd = BSON("serverStatus" << 1);
-        BSONObj info;
-        connection->runCommand("admin", cmd, info);
-        return info["opcounters"][op_type].Int();
+        std::abort();
     }
 
-    void assert_route(
-        const auto_ptr<DBClientReplicaSet>& test_conn,
-        const auto_ptr<DBClientConnection>& expected_target,
-        void (*op)(const auto_ptr<DBClientReplicaSet>&, ReadPreference),
-        ReadPreference rp,
-        const std::string& op_type)
-    {
-        // Prime the test connection
-        test_conn->findOne(TEST_NS, Query().readPref(rp, BSONArray()));
+    static auto_ptr<DBClientReplicaSet> replset_conn;
+    static auto_ptr<DBClientConnection> primary_conn;
+    static auto_ptr<DBClientConnection> secondary_conn;
+};
 
-        // Record operations of this type before running operation
-        int ops_before = op_count(expected_target, op_type);
+auto_ptr<DBClientReplicaSet> ReadPreferenceTest::replset_conn;
+auto_ptr<DBClientConnection> ReadPreferenceTest::primary_conn;
+auto_ptr<DBClientConnection> ReadPreferenceTest::secondary_conn;
 
-        // Run the Operation
-        op(test_conn, rp);
+int op_count(const auto_ptr<DBClientConnection>& connection, const std::string& op_type) {
+    BSONObj cmd = BSON("serverStatus" << 1);
+    BSONObj info;
+    connection->runCommand("admin", cmd, info);
+    return info["opcounters"][op_type].Int();
+}
 
-        // Record operations of this type after running operation
-        int ops_after = op_count(expected_target, op_type);
+void assert_route(const auto_ptr<DBClientReplicaSet>& test_conn,
+                  const auto_ptr<DBClientConnection>& expected_target,
+                  void (*op)(const auto_ptr<DBClientReplicaSet>&, ReadPreference),
+                  ReadPreference rp,
+                  const std::string& op_type) {
+    // Prime the test connection
+    test_conn->findOne(TEST_NS, Query().readPref(rp, BSONArray()));
 
-        // The serverStatus command itself adds a command to the count
-        ASSERT_EQUALS(ops_after - ops_before, op_type == "command" ? 2 : 1);
-    }
+    // Record operations of this type before running operation
+    int ops_before = op_count(expected_target, op_type);
 
-    void query(const auto_ptr<DBClientReplicaSet>& test_conn, ReadPreference rp) {
-        Query q = Query().readPref(rp, BSONArray());
-        test_conn->findOne(TEST_NS, q);
-    }
+    // Run the Operation
+    op(test_conn, rp);
 
-    BSONObj makeReadPreferenceObject(ReadPreference rp) {
-        switch (rp) {
+    // Record operations of this type after running operation
+    int ops_after = op_count(expected_target, op_type);
+
+    // The serverStatus command itself adds a command to the count
+    ASSERT_EQUALS(ops_after - ops_before, op_type == "command" ? 2 : 1);
+}
+
+void query(const auto_ptr<DBClientReplicaSet>& test_conn, ReadPreference rp) {
+    Query q = Query().readPref(rp, BSONArray());
+    test_conn->findOne(TEST_NS, q);
+}
+
+BSONObj makeReadPreferenceObject(ReadPreference rp) {
+    switch (rp) {
         case ReadPreference_PrimaryOnly:
-            return BSON("mode" << "primary");
+            return BSON("mode"
+                        << "primary");
         case ReadPreference_PrimaryPreferred:
-            return BSON("mode" << "primaryPreferred");
+            return BSON("mode"
+                        << "primaryPreferred");
         case ReadPreference_SecondaryOnly:
-            return BSON("mode" << "secondary");
+            return BSON("mode"
+                        << "secondary");
         case ReadPreference_SecondaryPreferred:
-            return BSON("mode" << "secondaryPreferred");
+            return BSON("mode"
+                        << "secondaryPreferred");
         case ReadPreference_Nearest:
-            return BSON("mode" << "nearest");
+            return BSON("mode"
+                        << "nearest");
         default:
             return BSONObj();
+    }
+}
+
+BSONObj makeTestCommand(const std::string& cmdName, ReadPreference rp) {
+    BSONObjBuilder cmd;
+    cmd.append("query", BSON(cmdName << TEST_COLL));
+    cmd.append("$readPreference", makeReadPreferenceObject(rp));
+    return cmd.obj();
+}
+
+void count(const auto_ptr<DBClientReplicaSet>& test_conn, ReadPreference rp) {
+    BSONObj ignoredResult;
+    test_conn->runCommand(TEST_DB, makeTestCommand("count", rp), ignoredResult);
+}
+
+void distinct(const auto_ptr<DBClientReplicaSet>& test_conn, ReadPreference rp) {
+    BSONObj ignoredResult;
+    test_conn->runCommand(TEST_DB, makeTestCommand("distinct", rp), ignoredResult);
+}
+
+void collStats(const auto_ptr<DBClientReplicaSet>& test_conn, ReadPreference rp) {
+    BSONObj ignoredResult;
+    test_conn->runCommand(TEST_DB, makeTestCommand("collStats", rp), ignoredResult);
+}
+
+TEST_F(ReadPreferenceTest, RoutingQuery) {
+    assert_route(replset_conn, primary_conn, query, ReadPreference_PrimaryOnly, "query");
+    assert_route(replset_conn, primary_conn, query, ReadPreference_PrimaryPreferred, "query");
+    assert_route(replset_conn, secondary_conn, query, ReadPreference_SecondaryOnly, "query");
+    assert_route(replset_conn, secondary_conn, query, ReadPreference_SecondaryPreferred, "query");
+}
+
+TEST_F(ReadPreferenceTest, RoutingCount) {
+    assert_route(replset_conn, primary_conn, count, ReadPreference_PrimaryOnly, "command");
+    assert_route(replset_conn, primary_conn, count, ReadPreference_PrimaryPreferred, "command");
+    assert_route(replset_conn, secondary_conn, count, ReadPreference_SecondaryOnly, "command");
+    assert_route(replset_conn, secondary_conn, count, ReadPreference_SecondaryPreferred, "command");
+}
+
+TEST_F(ReadPreferenceTest, RoutingDistinct) {
+    assert_route(replset_conn, primary_conn, distinct, ReadPreference_PrimaryOnly, "command");
+    assert_route(replset_conn, primary_conn, distinct, ReadPreference_PrimaryPreferred, "command");
+    assert_route(replset_conn, secondary_conn, distinct, ReadPreference_SecondaryOnly, "command");
+    assert_route(
+        replset_conn, secondary_conn, distinct, ReadPreference_SecondaryPreferred, "command");
+}
+
+TEST_F(ReadPreferenceTest, RoutingCollStats) {
+    assert_route(replset_conn, primary_conn, collStats, ReadPreference_PrimaryOnly, "command");
+    assert_route(replset_conn, primary_conn, collStats, ReadPreference_PrimaryPreferred, "command");
+    assert_route(replset_conn, secondary_conn, collStats, ReadPreference_SecondaryOnly, "command");
+    assert_route(
+        replset_conn, secondary_conn, collStats, ReadPreference_SecondaryPreferred, "command");
+}
+
+TEST_F(ReadPreferenceTest, RoutingPrimaryDown) {
+    mongo::orchestration::Server primary = rs().primary();
+    primary.stop();
+
+    while (true) {
+        try {
+            replset_conn->findOne(TEST_NS,
+                                  Query().readPref(ReadPreference_SecondaryOnly, BSONArray()));
+            break;
+        } catch (const DBException& ex) {
+            std::cout << ex.what() << std::endl;
+            mongo::sleepsecs(1);
         }
     }
 
-    BSONObj makeTestCommand(const std::string& cmdName, ReadPreference rp) {
-        BSONObjBuilder cmd;
-        cmd.append("query", BSON(cmdName << TEST_COLL));
-        cmd.append("$readPreference", makeReadPreferenceObject(rp));
-        return cmd.obj();
-    }
+    assert_route(replset_conn, secondary_conn, query, ReadPreference_PrimaryPreferred, "query");
+    assert_route(replset_conn, secondary_conn, query, ReadPreference_SecondaryOnly, "query");
+    assert_route(replset_conn, secondary_conn, query, ReadPreference_SecondaryPreferred, "query");
 
-    void count(const auto_ptr<DBClientReplicaSet>& test_conn, ReadPreference rp) {
-        BSONObj ignoredResult;
-        test_conn->runCommand(TEST_DB,  makeTestCommand("count", rp), ignoredResult);
-    }
+    primary.start();
 
-    void distinct(const auto_ptr<DBClientReplicaSet>& test_conn, ReadPreference rp) {
-        BSONObj ignoredResult;
-        test_conn->runCommand(TEST_DB, makeTestCommand("distinct", rp), ignoredResult);
-    }
-
-    void collStats(const auto_ptr<DBClientReplicaSet>& test_conn, ReadPreference rp) {
-        BSONObj ignoredResult;
-        test_conn->runCommand(TEST_DB, makeTestCommand("collStats", rp), ignoredResult);
-    }
-
-    TEST_F(ReadPreferenceTest, RoutingQuery) {
-        assert_route(replset_conn, primary_conn, query, ReadPreference_PrimaryOnly, "query");
-        assert_route(replset_conn, primary_conn, query, ReadPreference_PrimaryPreferred, "query");
-        assert_route(replset_conn, secondary_conn, query, ReadPreference_SecondaryOnly, "query");
-        assert_route(replset_conn, secondary_conn, query, ReadPreference_SecondaryPreferred, "query");
-    }
-
-    TEST_F(ReadPreferenceTest, RoutingCount) {
-        assert_route(replset_conn, primary_conn, count, ReadPreference_PrimaryOnly, "command");
-        assert_route(replset_conn, primary_conn, count, ReadPreference_PrimaryPreferred, "command");
-        assert_route(replset_conn, secondary_conn, count, ReadPreference_SecondaryOnly, "command");
-        assert_route(replset_conn, secondary_conn, count, ReadPreference_SecondaryPreferred, "command");
-    }
-
-    TEST_F(ReadPreferenceTest, RoutingDistinct) {
-        assert_route(replset_conn, primary_conn, distinct, ReadPreference_PrimaryOnly, "command");
-        assert_route(replset_conn, primary_conn, distinct, ReadPreference_PrimaryPreferred, "command");
-        assert_route(replset_conn, secondary_conn, distinct, ReadPreference_SecondaryOnly, "command");
-        assert_route(replset_conn, secondary_conn, distinct, ReadPreference_SecondaryPreferred, "command");
-    }
-
-    TEST_F(ReadPreferenceTest, RoutingCollStats) {
-        assert_route(replset_conn, primary_conn, collStats, ReadPreference_PrimaryOnly, "command");
-        assert_route(replset_conn, primary_conn, collStats, ReadPreference_PrimaryPreferred, "command");
-        assert_route(replset_conn, secondary_conn, collStats, ReadPreference_SecondaryOnly, "command");
-        assert_route(replset_conn, secondary_conn, collStats, ReadPreference_SecondaryPreferred, "command");
-    }
-
-    TEST_F(ReadPreferenceTest, RoutingPrimaryDown) {
-        mongo::orchestration::Server primary = rs().primary();
-        primary.stop();
-
-        while (true) {
-            try {
-                replset_conn->findOne(TEST_NS, Query().readPref(ReadPreference_SecondaryOnly, BSONArray()));
-                break;
-            } catch (const DBException& ex) {
-                std::cout << ex.what() <<std::endl;
-                mongo::sleepsecs(1);
-            }
-        }
-
-        assert_route(replset_conn, secondary_conn, query, ReadPreference_PrimaryPreferred, "query");
-        assert_route(replset_conn, secondary_conn, query, ReadPreference_SecondaryOnly, "query");
-        assert_route(replset_conn, secondary_conn, query, ReadPreference_SecondaryPreferred, "query");
-
-        primary.start();
-
-        while (true) {
-            try {
-                WriteConcern wcAll = WriteConcern().nodes(2);
-                replset_conn->insert(TEST_NS, BSON("x" << 2), 0, &wcAll);
-                break;
-            } catch (const DBException&) {
-                mongo::sleepsecs(1);
-            }
+    while (true) {
+        try {
+            WriteConcern wcAll = WriteConcern().nodes(2);
+            replset_conn->insert(TEST_NS, BSON("x" << 2), 0, &wcAll);
+            break;
+        } catch (const DBException&) {
+            mongo::sleepsecs(1);
         }
     }
+}
 
-    TEST_F(ReadPreferenceTest, QueryPrimaryOnly) {
-        Query q = Query().readPref(ReadPreference_PrimaryOnly, BSONArray());
-        auto_ptr<DBClientCursor> cursor_ptr = replset_conn->query(TEST_NS, q);
-        ASSERT_TRUE(cursor_ptr->originalHost() == replset_conn->masterConn().getServerAddress());
-    }
+TEST_F(ReadPreferenceTest, QueryPrimaryOnly) {
+    Query q = Query().readPref(ReadPreference_PrimaryOnly, BSONArray());
+    auto_ptr<DBClientCursor> cursor_ptr = replset_conn->query(TEST_NS, q);
+    ASSERT_TRUE(cursor_ptr->originalHost() == replset_conn->masterConn().getServerAddress());
+}
 
-    TEST_F(ReadPreferenceTest, QueryPrimaryPreferred) {
-        Query q = Query().readPref(ReadPreference_PrimaryPreferred, BSONArray());
-        auto_ptr<DBClientCursor> cursor_ptr = replset_conn->query(TEST_NS, q);
-        ASSERT_TRUE(cursor_ptr->originalHost() == replset_conn->masterConn().getServerAddress());
-    }
+TEST_F(ReadPreferenceTest, QueryPrimaryPreferred) {
+    Query q = Query().readPref(ReadPreference_PrimaryPreferred, BSONArray());
+    auto_ptr<DBClientCursor> cursor_ptr = replset_conn->query(TEST_NS, q);
+    ASSERT_TRUE(cursor_ptr->originalHost() == replset_conn->masterConn().getServerAddress());
+}
 
-    TEST_F(ReadPreferenceTest, QuerySecondaryOnly) {
-        Query q = Query().readPref(ReadPreference_SecondaryOnly, BSONArray());
-        auto_ptr<DBClientCursor> cursor_ptr = replset_conn->query(TEST_NS, q);
-        ASSERT_TRUE(cursor_ptr->originalHost() != replset_conn->masterConn().getServerAddress());
-    }
+TEST_F(ReadPreferenceTest, QuerySecondaryOnly) {
+    Query q = Query().readPref(ReadPreference_SecondaryOnly, BSONArray());
+    auto_ptr<DBClientCursor> cursor_ptr = replset_conn->query(TEST_NS, q);
+    ASSERT_TRUE(cursor_ptr->originalHost() != replset_conn->masterConn().getServerAddress());
+}
 
-    TEST_F(ReadPreferenceTest, QuerySecondaryPreferred) {
-        Query q = Query().readPref(ReadPreference_SecondaryPreferred, BSONArray());
-        auto_ptr<DBClientCursor> cursor_ptr = replset_conn->query(TEST_NS, q);
-        ASSERT_TRUE(cursor_ptr->originalHost() != replset_conn->masterConn().getServerAddress());
-    }
+TEST_F(ReadPreferenceTest, QuerySecondaryPreferred) {
+    Query q = Query().readPref(ReadPreference_SecondaryPreferred, BSONArray());
+    auto_ptr<DBClientCursor> cursor_ptr = replset_conn->query(TEST_NS, q);
+    ASSERT_TRUE(cursor_ptr->originalHost() != replset_conn->masterConn().getServerAddress());
+}
 
-} // namespace
+}  // namespace

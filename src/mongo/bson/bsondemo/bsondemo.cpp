@@ -49,13 +49,12 @@ using mongo::BSONObjBuilder;
 void iter(BSONObj o) {
     /* iterator example */
     std::cout << "\niter()\n";
-    for( BSONObj::iterator i(o); i.more(); ) {
+    for (BSONObj::iterator i(o); i.more();) {
         std::cout << ' ' << i.next().toString() << '\n';
     }
 }
 
 int main() {
-
     // As of legacy-1.0-rc1-pre, you must initialize the driver in order to use
     // the BSON library OID class.
     mongo::client::GlobalInstance instance;
@@ -64,7 +63,7 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    std::cout << "build bits: " << 8 * sizeof(char *) << '\n' <<  std::endl;
+    std::cout << "build bits: " << 8 * sizeof(char*) << '\n' << std::endl;
 
     /* a bson object defaults on construction to { } */
     BSONObj empty;
@@ -93,12 +92,15 @@ int main() {
     std::cout << "json for x:" << json << std::endl;
 
     /* access some fields of bson object x */
-    std::cout << "Some x things: " << x["name"] << ' ' << x["age"].Number() << ' ' << x.isEmpty() << std::endl;
+    std::cout << "Some x things: " << x["name"] << ' ' << x["age"].Number() << ' ' << x.isEmpty()
+              << std::endl;
 
     /* make a bit more complex object with some nesting
        { x : 'asdf', y : true, subobj : { z : 3, q : 4 } }
     */
-    BSONObj y = BSON( "x" << "asdf" << "y" << true << "subobj" << BSON( "z" << 3 << "q" << 4 ) );
+    BSONObj y = BSON("x"
+                     << "asdf"
+                     << "y" << true << "subobj" << BSON("z" << 3 << "q" << 4));
 
     /* print it */
     std::cout << "y: " << y << std::endl;

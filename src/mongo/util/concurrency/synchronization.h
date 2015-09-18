@@ -23,64 +23,66 @@
 
 namespace mongo {
 
+/*
+ * A class to establish a synchronization point between two threads. One thread is the waiter and one is
+ * the notifier. After the notification event, both proceed normally.
+ *
+ * This class is thread-safe.
+ */
+class Notification : boost::noncopyable {
+public:
+    Notification();
+
     /*
-     * A class to establish a synchronization point between two threads. One thread is the waiter and one is
-     * the notifier. After the notification event, both proceed normally.
-     *
-     * This class is thread-safe.
+     * Blocks until the method 'notifyOne()' is called.
      */
-    class Notification : boost::noncopyable {
-    public:
-        Notification();
+    void waitToBeNotified();
 
-        /*
-         * Blocks until the method 'notifyOne()' is called.
-         */
-        void waitToBeNotified();
+    /*
+     * Notifies the waiter of '*this' that it can proceed.  Can only be called once.
+     */
+    void notifyOne();
 
-        /*
-         * Notifies the waiter of '*this' that it can proceed.  Can only be called once.
-         */
-        void notifyOne();
+private:
+    boost::mutex _mutex;  // protects state below
+    unsigned long long lookFor;
+    unsigned long long cur;
+    boost::condition_variable _condition;  // cond over _notified being true
+};
 
-    private:
-        boost::mutex _mutex;          // protects state below
-        unsigned long long lookFor;
-        unsigned long long cur;
-        boost::condition_variable _condition;  // cond over _notified being true
-    };
+/** establishes a synchronization point between threads. N threads are waits and one is notifier.
+    threadsafe.
+*/
+class NotifyAll : boost::noncopyable {
+public:
+    NotifyAll();
 
-    /** establishes a synchronization point between threads. N threads are waits and one is notifier.
-        threadsafe.
+    typedef unsigned long long When;
+
+    When now();
+
+    /** awaits the next notifyAll() call by another thread. notifications that precede this
+        call are ignored -- we are looking for a fresh event.
     */
-    class NotifyAll : boost::noncopyable {
-    public:
-        NotifyAll();
+    void waitFor(When);
 
-        typedef unsigned long long When;
+    /** a bit faster than waitFor( now() ) */
+    void awaitBeyondNow();
 
-        When now();
+    /** may be called multiple times. notifies all waiters */
+    void notifyAll(When);
 
-        /** awaits the next notifyAll() call by another thread. notifications that precede this
-            call are ignored -- we are looking for a fresh event.
-        */
-        void waitFor(When);
+    /** indicates how many threads are waiting for a notify. */
+    unsigned nWaiting() const {
+        return _nWaiting;
+    }
 
-        /** a bit faster than waitFor( now() ) */
-        void awaitBeyondNow();
+private:
+    boost::mutex _mutex;
+    boost::condition_variable _condition;
+    When _lastDone;
+    When _lastReturned;
+    unsigned _nWaiting;
+};
 
-        /** may be called multiple times. notifies all waiters */
-        void notifyAll(When);
-
-        /** indicates how many threads are waiting for a notify. */
-        unsigned nWaiting() const { return _nWaiting; }
-
-    private:
-        boost::mutex _mutex;
-        boost::condition_variable _condition;
-        When _lastDone;
-        When _lastReturned;
-        unsigned _nWaiting;
-    };
-
-} // namespace mongo
+}  // namespace mongo

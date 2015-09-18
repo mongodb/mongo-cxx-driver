@@ -24,60 +24,60 @@
 
 namespace mongo {
 
-    Notification::Notification() : _mutex() {
-        lookFor = 1;
-        cur = 0;
+Notification::Notification() : _mutex() {
+    lookFor = 1;
+    cur = 0;
+}
+
+void Notification::waitToBeNotified() {
+    boost::unique_lock<boost::mutex> lock(_mutex);
+    while (lookFor != cur)
+        _condition.wait(lock);
+    lookFor++;
+}
+
+void Notification::notifyOne() {
+    boost::lock_guard<boost::mutex> lock(_mutex);
+    verify(cur != lookFor);
+    cur++;
+    _condition.notify_one();
+}
+
+/* --- NotifyAll --- */
+
+NotifyAll::NotifyAll() : _mutex() {
+    _lastDone = 0;
+    _lastReturned = 0;
+    _nWaiting = 0;
+}
+
+NotifyAll::When NotifyAll::now() {
+    boost::lock_guard<boost::mutex> lock(_mutex);
+    return ++_lastReturned;
+}
+
+void NotifyAll::waitFor(When e) {
+    boost::unique_lock<boost::mutex> lock(_mutex);
+    ++_nWaiting;
+    while (_lastDone < e) {
+        _condition.wait(lock);
     }
+}
 
-    void Notification::waitToBeNotified() {
-        boost::unique_lock<boost::mutex> lock( _mutex );
-        while ( lookFor != cur )
-            _condition.wait( lock );
-        lookFor++;
+void NotifyAll::awaitBeyondNow() {
+    boost::unique_lock<boost::mutex> lock(_mutex);
+    ++_nWaiting;
+    When e = ++_lastReturned;
+    while (_lastDone <= e) {
+        _condition.wait(lock);
     }
+}
 
-    void Notification::notifyOne() {
-        boost::lock_guard<boost::mutex> lock( _mutex );
-        verify( cur != lookFor );
-        cur++;
-        _condition.notify_one();
-    }
+void NotifyAll::notifyAll(When e) {
+    boost::lock_guard<boost::mutex> lock(_mutex);
+    _lastDone = e;
+    _nWaiting = 0;
+    _condition.notify_all();
+}
 
-    /* --- NotifyAll --- */
-
-    NotifyAll::NotifyAll() : _mutex() {
-        _lastDone = 0;
-        _lastReturned = 0;
-        _nWaiting = 0;
-    }
-
-    NotifyAll::When NotifyAll::now() { 
-        boost::lock_guard<boost::mutex> lock( _mutex );
-        return ++_lastReturned;
-    }
-
-    void NotifyAll::waitFor(When e) {
-        boost::unique_lock<boost::mutex> lock( _mutex );
-        ++_nWaiting;
-        while( _lastDone < e ) {
-            _condition.wait( lock );
-        }
-    }
-
-    void NotifyAll::awaitBeyondNow() { 
-        boost::unique_lock<boost::mutex> lock( _mutex );
-        ++_nWaiting;
-        When e = ++_lastReturned;
-        while( _lastDone <= e ) {
-            _condition.wait( lock );
-        }
-    }
-
-    void NotifyAll::notifyAll(When e) {
-        boost::lock_guard<boost::mutex> lock( _mutex );
-        _lastDone = e;
-        _nWaiting = 0;
-        _condition.notify_all();
-    }
-
-} // namespace mongo
+}  // namespace mongo

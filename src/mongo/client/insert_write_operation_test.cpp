@@ -23,28 +23,28 @@
 
 namespace {
 
-    using namespace mongo;
+using namespace mongo;
 
-    TEST(InsertWriteOperation, IdFieldCannotContainDollarSignTopLevel) {
-        BSONObjBuilder bob;
-        bob.append("foo", "bar");
-        BSONObjBuilder subbob(bob.subobjStart("_id"));
-        subbob.append("$bad", "nogood");
-        subbob.done();
-        ASSERT_THROWS(InsertWriteOperation w(bob.done()), UserException);
-    }
+TEST(InsertWriteOperation, IdFieldCannotContainDollarSignTopLevel) {
+    BSONObjBuilder bob;
+    bob.append("foo", "bar");
+    BSONObjBuilder subbob(bob.subobjStart("_id"));
+    subbob.append("$bad", "nogood");
+    subbob.done();
+    ASSERT_THROWS(InsertWriteOperation w(bob.done()), UserException);
+}
 
-    TEST(InsertWriteOperation, IdFieldCannotContainDollarSignNested) {
-        BSONObjBuilder bob;
-        bob.append("garply", "nnnnoooo");
-        BSONObjBuilder subbob(bob.subobjStart("_id"));
-        BSONObjBuilder subsubbob(subbob.subobjStart("foo"));
-        BSONObjBuilder subsubsubbob(subbob.subobjStart("baz"));
-        subsubsubbob.append("$blah", "borked");
-        subsubsubbob.done();
-        subsubbob.done();
-        subbob.done();
-        ASSERT_THROWS(InsertWriteOperation w(bob.done()), UserException);
-    }
+TEST(InsertWriteOperation, IdFieldCannotContainDollarSignNested) {
+    BSONObjBuilder bob;
+    bob.append("garply", "nnnnoooo");
+    BSONObjBuilder subbob(bob.subobjStart("_id"));
+    BSONObjBuilder subsubbob(subbob.subobjStart("foo"));
+    BSONObjBuilder subsubsubbob(subbob.subobjStart("baz"));
+    subsubsubbob.append("$blah", "borked");
+    subsubsubbob.done();
+    subsubbob.done();
+    subbob.done();
+    ASSERT_THROWS(InsertWriteOperation w(bob.done()), UserException);
+}
 
 }  // namespace

@@ -28,16 +28,15 @@
 #include <iostream>
 
 #ifndef verify
-#  define verify(x) MONGO_verify(x)
+#define verify(x) MONGO_verify(x)
 #endif
 
 using namespace std;
 using namespace mongo;
 
-int main( int argc, const char **argv ) {
-
-    if ( argc > 2 ) {
-        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
+int main(int argc, const char** argv) {
+    if (argc > 2) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -58,46 +57,54 @@ int main( int argc, const char **argv ) {
     }
 
     boost::scoped_ptr<DBClientBase> conn(cs.connect(errmsg));
-    if ( !conn ) {
+    if (!conn) {
         cout << "couldn't connect : " << errmsg << endl;
         return EXIT_FAILURE;
     }
 
-    const char * ns = "test.where";
+    const char* ns = "test.where";
 
-    conn->remove( ns , BSONObj() );
+    conn->remove(ns, BSONObj());
 
-    conn->insert( ns , BSON( "name" << "eliot" << "num" << 17 ) );
-    conn->insert( ns , BSON( "name" << "sara" << "num" << 24 ) );
+    conn->insert(ns,
+                 BSON("name"
+                      << "eliot"
+                      << "num" << 17));
+    conn->insert(ns,
+                 BSON("name"
+                      << "sara"
+                      << "num" << 24));
 
-    std::auto_ptr<DBClientCursor> cursor = conn->query( ns , BSONObj() );
+    std::auto_ptr<DBClientCursor> cursor = conn->query(ns, BSONObj());
     if (!cursor.get()) {
         cout << "query failure" << endl;
         return EXIT_FAILURE;
     }
 
-    while ( cursor->more() ) {
+    while (cursor->more()) {
         BSONObj obj = cursor->next();
         cout << "\t" << obj.jsonString() << endl;
     }
 
     cout << "now using $where" << endl;
 
-    Query q = Query("{}").where("this.name == name" , BSON( "name" << "sara" ));
+    Query q = Query("{}").where("this.name == name",
+                                BSON("name"
+                                     << "sara"));
 
-    cursor = conn->query( ns , q );
+    cursor = conn->query(ns, q);
     if (!cursor.get()) {
         cout << "query failure" << endl;
         return EXIT_FAILURE;
     }
 
     int num = 0;
-    while ( cursor->more() ) {
+    while (cursor->more()) {
         BSONObj obj = cursor->next();
         cout << "\t" << obj.jsonString() << endl;
         num++;
     }
-    verify( num == 1 );
+    verify(num == 1);
 
     return EXIT_SUCCESS;
 }

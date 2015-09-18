@@ -17,22 +17,18 @@
 
 namespace mongo {
 
-    enum Operations {
-        opReply = 1,     /* reply. responseTo is set. */
-        dbMsg = 1000,    /* generic msg command followed by a string */
-        dbUpdate = 2001, /* update object */
-        dbInsert = 2002,
-        //dbGetByOID = 2003,
-        dbQuery = 2004,
-        dbGetMore = 2005,
-        dbDelete = 2006,
-        dbKillCursors = 2007
-    };
+enum Operations {
+    opReply = 1,     /* reply. responseTo is set. */
+    dbMsg = 1000,    /* generic msg command followed by a string */
+    dbUpdate = 2001, /* update object */
+    dbInsert = 2002,
+    // dbGetByOID = 2003,
+    dbQuery = 2004,
+    dbGetMore = 2005,
+    dbDelete = 2006,
+    dbKillCursors = 2007
+};
 
-    enum WriteOpType {
-        dbWriteUpdate = dbUpdate,
-        dbWriteInsert = dbInsert,
-        dbWriteDelete = dbDelete
-    };
+enum WriteOpType { dbWriteUpdate = dbUpdate, dbWriteInsert = dbInsert, dbWriteDelete = dbDelete };
 
-} // namespace mongo
+}  // namespace mongo

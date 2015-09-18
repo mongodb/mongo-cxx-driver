@@ -26,29 +26,28 @@
 namespace mongo {
 namespace geo {
 
-    template<typename TCoordinates>
-    class Parser {
-    public:
+template <typename TCoordinates>
+class Parser {
+public:
+    /**
+     * Parse the given BSON into a geometry type. Caller has ownership
+     * of the returned pointer. An assertion is raised if the BSON is not a
+     * valid GeoJSON object.
+     *
+     * @param bson The BSON defining the geometry type. Must be a valid GeoJSON
+     * object and define a "type" field that describes its specific geometry.
+     *
+     * @return A pointer to the instantiated geometry object. This object will
+     * be instantiated as the appropriate subclass of GeoObj. E.g., if the bson
+     * parameter defines a LineString, the returned GeoObj* actually points to a
+     * LineString. So the returned GeoObj* can be statically cast to a LineString*
+     * in such case.
+     */
+    static GeoObj<TCoordinates>* parse(const BSONObj& bson);
 
-        /**
-         * Parse the given BSON into a geometry type. Caller has ownership
-         * of the returned pointer. An assertion is raised if the BSON is not a
-         * valid GeoJSON object.
-         *
-         * @param bson The BSON defining the geometry type. Must be a valid GeoJSON
-         * object and define a "type" field that describes its specific geometry.
-         *
-         * @return A pointer to the instantiated geometry object. This object will
-         * be instantiated as the appropriate subclass of GeoObj. E.g., if the bson
-         * parameter defines a LineString, the returned GeoObj* actually points to a
-         * LineString. So the returned GeoObj* can be statically cast to a LineString*
-         * in such case.
-         */
-        static GeoObj<TCoordinates>* parse(const BSONObj& bson);
+private:
+    static GeoObjType stringToType(const StringData& typeStr);
+};
 
-    private:
-        static GeoObjType stringToType(const StringData& typeStr);
-    };
-
-} // namespace geo
-} // namespace mongo
+}  // namespace geo
+}  // namespace mongo

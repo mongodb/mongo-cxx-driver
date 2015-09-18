@@ -25,37 +25,37 @@
 namespace mongo {
 namespace geo {
 
-    class MONGO_CLIENT_API Coordinates {
-    public:
-        virtual ~Coordinates() {}
+class MONGO_CLIENT_API Coordinates {
+public:
+    virtual ~Coordinates() {}
 
-        /**
-         * Get the values of these coordinates as a vector of doubles.
-         *
-         * @return A vector<double> of the values of these coordinates.
-         */
-        virtual std::vector<double> getValues() const = 0;
+    /**
+     * Get the values of these coordinates as a vector of doubles.
+     *
+     * @return A vector<double> of the values of these coordinates.
+     */
+    virtual std::vector<double> getValues() const = 0;
 
-        /**
-         * Obtain a BSON representation of these coordinates.
-         *
-         * Example structure:
-         * { "coordinates" : [ value1, value2 ] }
-         *
-         * @return a BSON representation of this point.
-         */
-        virtual BSONObj toBSON() const = 0;
+    /**
+     * Obtain a BSON representation of these coordinates.
+     *
+     * Example structure:
+     * { "coordinates" : [ value1, value2 ] }
+     *
+     * @return a BSON representation of this point.
+     */
+    virtual BSONObj toBSON() const = 0;
 
-        /**
-         * Obtain the value of these coordinates in a particular dimension.
-         *
-         * @param  dimension The dimension whose coordinate value to return. 0 for x or longitude,
-         * 1 for y or latitude
-         *
-         * @return The value of these coordinates in the given dimension.
-         */
-        virtual double operator[](size_t dimension) const = 0;
-    };
+    /**
+     * Obtain the value of these coordinates in a particular dimension.
+     *
+     * @param  dimension The dimension whose coordinate value to return. 0 for x or longitude,
+     * 1 for y or latitude
+     *
+     * @return The value of these coordinates in the given dimension.
+     */
+    virtual double operator[](size_t dimension) const = 0;
+};
 
-} // namespace geo
-} // namespace mongo
+}  // namespace geo
+}  // namespace mongo

@@ -26,7 +26,7 @@
 namespace mongo {
 namespace logger {
 
-    typedef LogDomain<MessageEventEphemeral> MessageLogDomain;
+typedef LogDomain<MessageEventEphemeral> MessageLogDomain;
 
 }  // namespace logger
 }  // namespace mongo

@@ -17,7 +17,7 @@
 #include "mongo/client/sasl_client_conversation.h"
 
 namespace mongo {
-    
-    SaslClientConversation::~SaslClientConversation() {};
-    
+
+SaslClientConversation::~SaslClientConversation(){};
+
 }  // namespace mongo

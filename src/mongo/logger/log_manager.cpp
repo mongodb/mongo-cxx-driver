@@ -20,22 +20,21 @@
 namespace mongo {
 namespace logger {
 
-    LogManager::LogManager() {
-    }
+LogManager::LogManager() {}
 
-    LogManager::~LogManager() {
-        for (DomainsByNameMap::iterator iter = _domains.begin(); iter != _domains.end(); ++iter) {
-            delete iter->second;
-        }
+LogManager::~LogManager() {
+    for (DomainsByNameMap::iterator iter = _domains.begin(); iter != _domains.end(); ++iter) {
+        delete iter->second;
     }
+}
 
-    MessageLogDomain* LogManager::getNamedDomain(const std::string& name) {
-        MessageLogDomain*& domain = _domains[name];
-        if (!domain) {
-            domain = new MessageLogDomain;
-        }
-        return domain;
+MessageLogDomain* LogManager::getNamedDomain(const std::string& name) {
+    MessageLogDomain*& domain = _domains[name];
+    if (!domain) {
+        domain = new MessageLogDomain;
     }
+    return domain;
+}
 
 }  // logger
 }  // mongo

@@ -25,11 +25,10 @@
 
 namespace mongo {
 
-    /**
-     * @param buf - bson data
-     * @param maxLength - maxLength of buffer
-     *                    this is NOT the bson size, but how far we know the buffer is valid
-     */
-    MONGO_CLIENT_API Status MONGO_CLIENT_FUNC validateBSON( const char* buf, uint64_t maxLength );
-
+/**
+ * @param buf - bson data
+ * @param maxLength - maxLength of buffer
+ *                    this is NOT the bson size, but how far we know the buffer is valid
+ */
+MONGO_CLIENT_API Status MONGO_CLIENT_FUNC validateBSON(const char* buf, uint64_t maxLength);
 }

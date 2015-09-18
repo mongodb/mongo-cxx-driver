@@ -19,26 +19,26 @@
 
 namespace mongo {
 
-    class UpdateWriteOperation : public WriteOperationBase {
-    public:
-        UpdateWriteOperation(const BSONObj& selector, const BSONObj& update, int flags);
+class UpdateWriteOperation : public WriteOperationBase {
+public:
+    UpdateWriteOperation(const BSONObj& selector, const BSONObj& update, int flags);
 
-        virtual WriteOpType operationType() const;
-        virtual const char* batchName() const;
-        virtual int incrementalSize() const;
+    virtual WriteOpType operationType() const;
+    virtual const char* batchName() const;
+    virtual int incrementalSize() const;
 
-        virtual void startRequest(const std::string& ns, bool ordered, BufBuilder* builder) const;
-        virtual void appendSelfToRequest(BufBuilder* builder) const;
+    virtual void startRequest(const std::string& ns, bool ordered, BufBuilder* builder) const;
+    virtual void appendSelfToRequest(BufBuilder* builder) const;
 
-        virtual void startCommand(const std::string& ns, BSONObjBuilder* command) const;
-        virtual void appendSelfToCommand(BSONArrayBuilder* batch) const;
+    virtual void startCommand(const std::string& ns, BSONObjBuilder* command) const;
+    virtual void appendSelfToCommand(BSONArrayBuilder* batch) const;
 
-        virtual void appendSelfToBSONObj(BSONObjBuilder* obj) const;
+    virtual void appendSelfToBSONObj(BSONObjBuilder* obj) const;
 
-    private:
-        const BSONObj _selector;
-        const BSONObj _update;
-        const int _flags;
-    };
+private:
+    const BSONObj _selector;
+    const BSONObj _update;
+    const int _flags;
+};
 
-} // namespace mongo
+}  // namespace mongo

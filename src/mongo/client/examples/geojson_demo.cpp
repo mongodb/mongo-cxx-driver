@@ -36,14 +36,24 @@ static const char* kDbCollectionName = "geotest.data";
 static const char* kLocField = "loc";
 
 void insertGeoData(DBClientBase* conn) {
-    Point p1(BSON("type" << "Point" << "coordinates" << BSON_ARRAY(-5.0 << -5.0)));
-    Point p2(BSON("type" << "Point" << "coordinates" << BSON_ARRAY(100.0 << 0.0)));
-    Point p3(BSON("type" << "Point" << "coordinates" << BSON_ARRAY(20.0 << 30.0)));
-    Point p4(BSON("type" << "Point" << "coordinates" << BSON_ARRAY(50.0 << 50.0)));
+    Point p1(BSON("type"
+                  << "Point"
+                  << "coordinates" << BSON_ARRAY(-5.0 << -5.0)));
+    Point p2(BSON("type"
+                  << "Point"
+                  << "coordinates" << BSON_ARRAY(100.0 << 0.0)));
+    Point p3(BSON("type"
+                  << "Point"
+                  << "coordinates" << BSON_ARRAY(20.0 << 30.0)));
+    Point p4(BSON("type"
+                  << "Point"
+                  << "coordinates" << BSON_ARRAY(50.0 << 50.0)));
     cout << p4.toBSON().jsonString() << endl;
 
-    BSONObj lineBson = BSON("type" << "LineString" << "coordinates" <<
-        BSON_ARRAY(BSON_ARRAY(0.0 << 10.0) << BSON_ARRAY(100.0 << 10.0)));
+    BSONObj lineBson = BSON("type"
+                            << "LineString"
+                            << "coordinates"
+                            << BSON_ARRAY(BSON_ARRAY(0.0 << 10.0) << BSON_ARRAY(100.0 << 10.0)));
     LineString line(lineBson);
     std::vector<LineString> lineStrings;
     lineStrings.push_back(line);
@@ -51,21 +61,23 @@ void insertGeoData(DBClientBase* conn) {
     MultiLineString mls(lineStrings);
     geo::coords2dgeographic::Polygon poly(lineStrings);
 
-    BSONObj mpBson = BSON("type" << "MultiPolygon" << "coordinates" << BSON_ARRAY(
-        BSON_ARRAY(
-            BSON_ARRAY(
-                BSON_ARRAY(0.0 << 10.0) <<
-                BSON_ARRAY(100.0 << 10.0) <<
-                BSON_ARRAY(5.0 << 5.0) <<
-                BSON_ARRAY(0.0 << 10.0)))));
+    BSONObj mpBson =
+        BSON("type"
+             << "MultiPolygon"
+             << "coordinates"
+             << BSON_ARRAY(BSON_ARRAY(BSON_ARRAY(
+                    BSON_ARRAY(0.0 << 10.0) << BSON_ARRAY(100.0 << 10.0) << BSON_ARRAY(5.0 << 5.0)
+                                            << BSON_ARRAY(0.0 << 10.0)))));
 
     cout << "MULTIPOLYGON BSON:" << endl;
     cout << mpBson.jsonString() << endl;
     MultiPolygon mp(mpBson);
     cout << mp.toBSON().jsonString() << endl;
 
-    BSONObj gcolBson = BSON("type" << "GeometryCollection" << "geometries" <<
-        BSON_ARRAY(p1.toBSON() << p2.toBSON() << line.toBSON()));
+    BSONObj gcolBson = BSON("type"
+                            << "GeometryCollection"
+                            << "geometries"
+                            << BSON_ARRAY(p1.toBSON() << p2.toBSON() << line.toBSON()));
     GeometryCollection gcol(gcolBson);
     cout << "GEO COLLECTION BSON:" << endl;
     cout << gcol.toBSON() << endl;
@@ -88,35 +100,36 @@ void insertGeoData(DBClientBase* conn) {
     cout << "Coordinates p1 toBSON().toString():" << endl;
     cout << p1.getCoordinates().toBSON().toString() << endl;
     cout << "MultiLineString mls toBSON().jsonString():" << endl;
-    cout << mls.toBSON().jsonString() << endl << endl;
+    cout << mls.toBSON().jsonString() << endl
+         << endl;
 }
 
 void queryGeoData(DBClientBase* conn) {
-    BSONObj lineBson = BSON("type" << "LineString" << "coordinates" <<
-        BSON_ARRAY(BSON_ARRAY(0.0 << 0.0) <<
-                   BSON_ARRAY(50.0 << 50.0)));
+    BSONObj lineBson = BSON("type"
+                            << "LineString"
+                            << "coordinates"
+                            << BSON_ARRAY(BSON_ARRAY(0.0 << 0.0) << BSON_ARRAY(50.0 << 50.0)));
     LineString line(lineBson);
     Query q = MONGO_QUERY(kLocField << WITHINQUERY(line.getBoundingBox()));
     Query q2 = MONGO_QUERY(kLocField << INTERSECTSQUERY(line));
 
-    BSONObj multipointBson = BSON("type" << "MultiPoint" << "coordinates" <<
-        BSON_ARRAY(BSON_ARRAY(0.0 << 0.0) <<
-                   BSON_ARRAY(50.0 << 50.0)));
+    BSONObj multipointBson = BSON("type"
+                                  << "MultiPoint"
+                                  << "coordinates" << BSON_ARRAY(BSON_ARRAY(0.0 << 0.0)
+                                                                 << BSON_ARRAY(50.0 << 50.0)));
 
     MultiPoint mPoint(multipointBson);
     Query q3 = MONGO_QUERY(kLocField << WITHINQUERY(mPoint.getBoundingBox()));
     Query q4 = MONGO_QUERY(kLocField << INTERSECTSQUERY(mPoint));
 
-    BSONObj polygonBson = BSON("type" << "Polygon" << "coordinates" <<
-        BSON_ARRAY( // list of linear rings
-            BSON_ARRAY( // a single linear ring
-                BSON_ARRAY(0.0 << 0.0) <<
-                BSON_ARRAY(0.0 << 50.0) <<
-                BSON_ARRAY(80.0 << 80.0) <<
-                BSON_ARRAY(0.0 << 0.0)
-            )
-        )
-    );
+    BSONObj polygonBson = BSON("type"
+                               << "Polygon"
+                               << "coordinates"
+                               << BSON_ARRAY(      // list of linear rings
+                                      BSON_ARRAY(  // a single linear ring
+                                          BSON_ARRAY(0.0 << 0.0) << BSON_ARRAY(0.0 << 50.0)
+                                                                 << BSON_ARRAY(80.0 << 80.0)
+                                                                 << BSON_ARRAY(0.0 << 0.0))));
     geo::coords2dgeographic::Polygon poly(polygonBson);
 
     // Make sure printing is ok:
@@ -126,7 +139,8 @@ void queryGeoData(DBClientBase* conn) {
     cout << mPoint.toBSON().jsonString() << endl;
     cout << "Polygon json:" << endl;
     cout << poly.toBSON().jsonString() << endl;
-    cout << endl << endl;
+    cout << endl
+         << endl;
 
     Query q5 = MONGO_QUERY(kLocField << WITHINQUERY(poly.getBoundingBox()));
     Query q6 = MONGO_QUERY(kLocField << INTERSECTSQUERY(poly));
@@ -185,18 +199,17 @@ void queryGeoData(DBClientBase* conn) {
         cout << nearQueryCursor->next().toString() << endl;
     cout << "---------------" << endl;
 
-    auto_ptr<DBClientCursor> nearSphereQueryCursor = conn->query(kDbCollectionName, nearSphereQuery);
+    auto_ptr<DBClientCursor> nearSphereQueryCursor =
+        conn->query(kDbCollectionName, nearSphereQuery);
     cout << "Results from NEARSPHERE" << endl;
     while (nearSphereQueryCursor->more())
         cout << nearSphereQueryCursor->next().toString() << endl;
     cout << "---------------" << endl;
-
 }
 
-int main( int argc, const char **argv ) {
-
-    if ( argc > 2 ) {
-        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
+int main(int argc, const char** argv) {
+    if (argc > 2) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -217,7 +230,7 @@ int main( int argc, const char **argv ) {
     }
 
     boost::scoped_ptr<DBClientBase> conn(cs.connect(errmsg));
-    if ( !conn ) {
+    if (!conn) {
         cout << "couldn't connect : " << errmsg << endl;
         return EXIT_FAILURE;
     }
@@ -231,8 +244,7 @@ int main( int argc, const char **argv ) {
         insertGeoData(conn.get());
         queryGeoData(conn.get());
         conn->dropCollection(kDbCollectionName);
-    }
-    catch(const DBException& dbe) {
+    } catch (const DBException& dbe) {
         cout << "caught DBException " << dbe.toString() << endl;
         return EXIT_FAILURE;
     }

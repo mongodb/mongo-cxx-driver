@@ -30,128 +30,127 @@
 namespace mongo {
 namespace geo {
 
-    template <typename TCoordinates>
-    class LineString : public Geometry<TCoordinates> {
-    public:
+template <typename TCoordinates>
+class LineString : public Geometry<TCoordinates> {
+public:
+    /**
+     * LineString constructor
+     *
+     * @param bson A BSON representation of the line string.
+     */
+    explicit LineString(const BSONObj& bson);
 
-        /**
-         * LineString constructor
-         *
-         * @param bson A BSON representation of the line string.
-         */
-        explicit LineString(const BSONObj& bson);
+    /**
+     * LineString constructor
+     *
+     * @param points The points that make up the line string.
+     */
+    explicit LineString(const std::vector<Point<TCoordinates> >& points);
 
-        /**
-         * LineString constructor
-         *
-         * @param points The points that make up the line string.
-         */
-        explicit LineString(const std::vector<Point<TCoordinates> >& points);
+    LineString(const LineString<TCoordinates>& other);
+    LineString& operator=(LineString<TCoordinates> other);
 
-        LineString(const LineString<TCoordinates>& other);
-        LineString& operator=(LineString<TCoordinates> other);
-
-        /**
-         * Obtain a BSON representation of the line string.
-         *
-         * @return a BSON representation of the line string.
-         */
-        virtual BSONObj toBSON() const { return _bson; }
-
-        /**
-         * Obtain the bounding box surrounding this line string.
-         *
-         * @return A bounding box surrounding this line string.
-         */
-        virtual BoundingBox<TCoordinates> getBoundingBox() const;
-
-        /**
-         * Get the geometry type of this object.
-         *
-         * @return GeoObjType_LineString
-         */
-        virtual GeoObjType getType() const { return GeoObjType_LineString; }
-
-        /**
-         * Obtain the points that make up this LineString.
-         *
-         * @return a vector of points making up this LineString.
-         */
-        std::vector<Point<TCoordinates> > getPoints() const { return _points; }
-
-    private:
-        static BSONObj createBSON(const std::vector<Point<TCoordinates> >& points);
-
-        BSONObj _bson;
-        std::vector<Point<TCoordinates> > _points;
-        mutable boost::scoped_ptr<BoundingBox<TCoordinates> > _boundingBox;
-
-        /**
-         * Compute the bounding box arround this LineString. Caller has ownership of the
-         * returned pointer.
-         *
-         * @return a pointer to the bounding box of this LineString.
-         */
-        BoundingBox<TCoordinates>* computeBoundingBox() const;
-    };
-
-    template<typename TCoordinates>
-    LineString<TCoordinates>::LineString(const BSONObj& bson)
-        : _bson(GeoObj<TCoordinates>::validateType(bson, kLineStringTypeStr))
-        , _points(Geometry<TCoordinates>::parseAllPoints(bson))
-        , _boundingBox(Geometry<TCoordinates>::parseBoundingBox(bson)) {
+    /**
+     * Obtain a BSON representation of the line string.
+     *
+     * @return a BSON representation of the line string.
+     */
+    virtual BSONObj toBSON() const {
+        return _bson;
     }
 
-    template<typename TCoordinates>
-    LineString<TCoordinates>::LineString(const std::vector<Point<TCoordinates> >& points)
-        : _bson(createBSON(points))
-        , _points(points) {
+    /**
+     * Obtain the bounding box surrounding this line string.
+     *
+     * @return A bounding box surrounding this line string.
+     */
+    virtual BoundingBox<TCoordinates> getBoundingBox() const;
+
+    /**
+     * Get the geometry type of this object.
+     *
+     * @return GeoObjType_LineString
+     */
+    virtual GeoObjType getType() const {
+        return GeoObjType_LineString;
     }
 
-    template<typename TCoordinates>
-    LineString<TCoordinates>::LineString(const LineString<TCoordinates>& other)
-        : _bson(other._bson)
-        , _points(other._points) {
-        // TODO: consider refactoring this to not make deep copies,
-        // and instead use a boost::shared_ptr to share the same bounding
-        // box across all copies of a Point. This would also let the
-        // compiler generate copy and assignment constructors, so we can drop
-        // them from the implementation.
-        if (other._boundingBox)
-            _boundingBox.reset(new BoundingBox<TCoordinates>(*other._boundingBox));
+    /**
+     * Obtain the points that make up this LineString.
+     *
+     * @return a vector of points making up this LineString.
+     */
+    std::vector<Point<TCoordinates> > getPoints() const {
+        return _points;
     }
 
-    template<typename TCoordinates>
-    LineString<TCoordinates>& LineString<TCoordinates>::operator=(LineString<TCoordinates> other) {
-        using std::swap;
-        swap(_bson, other._bson);
-        swap(_points, other._points);
-        swap(_boundingBox, other._boundingBox);
-        return *this;
-    }
+private:
+    static BSONObj createBSON(const std::vector<Point<TCoordinates> >& points);
 
-    template<typename TCoordinates>
-    BoundingBox<TCoordinates> LineString<TCoordinates>::getBoundingBox() const {
-        if (!_boundingBox)
-            _boundingBox.reset(computeBoundingBox());
-        return *_boundingBox.get();
-    }
+    BSONObj _bson;
+    std::vector<Point<TCoordinates> > _points;
+    mutable boost::scoped_ptr<BoundingBox<TCoordinates> > _boundingBox;
 
-    template<typename TCoordinates>
-    BSONObj LineString<TCoordinates>::createBSON(const std::vector<Point<TCoordinates> >& points) {
-        BSONArrayBuilder bab;
-        for (size_t i = 0; i < points.size(); ++i)
-            bab.append(points[i].toBSON()[kCoordsFieldName]);
-        BSONObjBuilder bob;
-        return bob.append(kTypeFieldName, kLineStringTypeStr)
-                  .append(kCoordsFieldName, bab.arr())
-                  .obj();
-    }
+    /**
+     * Compute the bounding box arround this LineString. Caller has ownership of the
+     * returned pointer.
+     *
+     * @return a pointer to the bounding box of this LineString.
+     */
+    BoundingBox<TCoordinates>* computeBoundingBox() const;
+};
 
-    template<typename TCoordinates>
-    BoundingBox<TCoordinates>* LineString<TCoordinates>::computeBoundingBox() const {
-        return Geometry<TCoordinates>::computeBoundingBox(_points);
-    }
+template <typename TCoordinates>
+LineString<TCoordinates>::LineString(const BSONObj& bson)
+    : _bson(GeoObj<TCoordinates>::validateType(bson, kLineStringTypeStr)),
+      _points(Geometry<TCoordinates>::parseAllPoints(bson)),
+      _boundingBox(Geometry<TCoordinates>::parseBoundingBox(bson)) {}
 
-} // namespace geo
-} // namespace mongo
+template <typename TCoordinates>
+LineString<TCoordinates>::LineString(const std::vector<Point<TCoordinates> >& points)
+    : _bson(createBSON(points)), _points(points) {}
+
+template <typename TCoordinates>
+LineString<TCoordinates>::LineString(const LineString<TCoordinates>& other)
+    : _bson(other._bson), _points(other._points) {
+    // TODO: consider refactoring this to not make deep copies,
+    // and instead use a boost::shared_ptr to share the same bounding
+    // box across all copies of a Point. This would also let the
+    // compiler generate copy and assignment constructors, so we can drop
+    // them from the implementation.
+    if (other._boundingBox)
+        _boundingBox.reset(new BoundingBox<TCoordinates>(*other._boundingBox));
+}
+
+template <typename TCoordinates>
+LineString<TCoordinates>& LineString<TCoordinates>::operator=(LineString<TCoordinates> other) {
+    using std::swap;
+    swap(_bson, other._bson);
+    swap(_points, other._points);
+    swap(_boundingBox, other._boundingBox);
+    return *this;
+}
+
+template <typename TCoordinates>
+BoundingBox<TCoordinates> LineString<TCoordinates>::getBoundingBox() const {
+    if (!_boundingBox)
+        _boundingBox.reset(computeBoundingBox());
+    return *_boundingBox.get();
+}
+
+template <typename TCoordinates>
+BSONObj LineString<TCoordinates>::createBSON(const std::vector<Point<TCoordinates> >& points) {
+    BSONArrayBuilder bab;
+    for (size_t i = 0; i < points.size(); ++i)
+        bab.append(points[i].toBSON()[kCoordsFieldName]);
+    BSONObjBuilder bob;
+    return bob.append(kTypeFieldName, kLineStringTypeStr).append(kCoordsFieldName, bab.arr()).obj();
+}
+
+template <typename TCoordinates>
+BoundingBox<TCoordinates>* LineString<TCoordinates>::computeBoundingBox() const {
+    return Geometry<TCoordinates>::computeBoundingBox(_points);
+}
+
+}  // namespace geo
+}  // namespace mongo

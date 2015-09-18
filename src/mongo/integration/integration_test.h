@@ -32,90 +32,89 @@
 namespace mongo {
 namespace integration {
 
-    //
-    // MongoDB Integration Test Environment
-    //
-    // Augments the testing environment such that the orchestration service is available.
-    //
-    // This Environment is available globally in tests and test fixtures that use the provided
-    // integration_test_main.cpp.
-    //
-    // Google test takes ownership and is responsible for destructing new heap allocated
-    // instances of this object via AddGlobalTestEnvironment.
-    //
-    class Environment : public ::testing::Environment {
-    public:
-        Environment(const std::string& uri, const std::string& preset)
-        {
-            _orchestration.reset(new mongo::orchestration::Service(uri));
-            _preset = preset;
-        }
+//
+// MongoDB Integration Test Environment
+//
+// Augments the testing environment such that the orchestration service is available.
+//
+// This Environment is available globally in tests and test fixtures that use the provided
+// integration_test_main.cpp.
+//
+// Google test takes ownership and is responsible for destructing new heap allocated
+// instances of this object via AddGlobalTestEnvironment.
+//
+class Environment : public ::testing::Environment {
+public:
+    Environment(const std::string& uri, const std::string& preset) {
+        _orchestration.reset(new mongo::orchestration::Service(uri));
+        _preset = preset;
+    }
 
-        static const std::auto_ptr<mongo::orchestration::Service>& orchestration() {
-            return _orchestration;
-        }
+    static const std::auto_ptr<mongo::orchestration::Service>& orchestration() {
+        return _orchestration;
+    }
 
-        static const std::string& getPreset() {
-            return _preset;
-        }
+    static const std::string& getPreset() {
+        return _preset;
+    }
 
-    private:
-        static std::string _preset;
-        static std::auto_ptr<mongo::orchestration::Service> _orchestration;
-    };
+private:
+    static std::string _preset;
+    static std::auto_ptr<mongo::orchestration::Service> _orchestration;
+};
 
-    //
-    // MongoDB Integration Test Fixture for single server ("standalone") tests
-    //
-    // Creates a Mongod instance which is unique per test-case and destroys it upon test
-    // termination.
-    //
-    class StandaloneTest : public ::testing::Test {
-    public:
-        static mongo::orchestration::Server server() {
-            return Environment::orchestration()->server(_id);
-        }
+//
+// MongoDB Integration Test Fixture for single server ("standalone") tests
+//
+// Creates a Mongod instance which is unique per test-case and destroys it upon test
+// termination.
+//
+class StandaloneTest : public ::testing::Test {
+public:
+    static mongo::orchestration::Server server() {
+        return Environment::orchestration()->server(_id);
+    }
 
-        static void SetUpTestCase() {
-            mongo::orchestration::Document params;
-            params["preset"] = Environment::getPreset();
-            _id = Environment::orchestration()->createMongod(params);
-        }
+    static void SetUpTestCase() {
+        mongo::orchestration::Document params;
+        params["preset"] = Environment::getPreset();
+        _id = Environment::orchestration()->createMongod(params);
+    }
 
-        static void TearDownTestCase() {
-            Environment::orchestration()->server(_id).destroy();
-        }
+    static void TearDownTestCase() {
+        Environment::orchestration()->server(_id).destroy();
+    }
 
-    private:
-        static std::string _id;
-    };
+private:
+    static std::string _id;
+};
 
-    //
-    // MongoDB Integration Test Fixture for replica set tests
-    //
-    // Creates a Replica Set which is unique per test-case and destroys it upon test
-    // termination. Uses the arbiter preset which creates a 3 node set with 2 data bearing
-    // members and an arbiter.
-    //
-    class ReplicaSetTest : public ::testing::Test {
-    public:
-        static mongo::orchestration::ReplicaSet rs() {
-            return Environment::orchestration()->replicaSet(_id);
-        }
+//
+// MongoDB Integration Test Fixture for replica set tests
+//
+// Creates a Replica Set which is unique per test-case and destroys it upon test
+// termination. Uses the arbiter preset which creates a 3 node set with 2 data bearing
+// members and an arbiter.
+//
+class ReplicaSetTest : public ::testing::Test {
+public:
+    static mongo::orchestration::ReplicaSet rs() {
+        return Environment::orchestration()->replicaSet(_id);
+    }
 
-        static void SetUpTestCase() {
-            mongo::orchestration::Document params;
-            params["preset"] = Environment::getPreset();
-            _id = Environment::orchestration()->createReplicaSet(params);
-        }
+    static void SetUpTestCase() {
+        mongo::orchestration::Document params;
+        params["preset"] = Environment::getPreset();
+        _id = Environment::orchestration()->createReplicaSet(params);
+    }
 
-        static void TearDownTestCase() {
-            Environment::orchestration()->replicaSet(_id).destroy();
-        }
+    static void TearDownTestCase() {
+        Environment::orchestration()->replicaSet(_id).destroy();
+    }
 
-    private:
-        static std::string _id;
-    };
+private:
+    static std::string _id;
+};
 
-} // namespace integration
-} // namespace mongo
+}  // namespace integration
+}  // namespace mongo

@@ -29,18 +29,18 @@
 
 namespace mongo {
 
-    unsigned long long Timer::now() const {
-        timespec the_time;
-        unsigned long long result;
+unsigned long long Timer::now() const {
+    timespec the_time;
+    unsigned long long result;
 
-        fassert(16160, !clock_gettime(CLOCK_MONOTONIC, &the_time));
+    fassert(16160, !clock_gettime(CLOCK_MONOTONIC, &the_time));
 
-        // Safe for 292 years after the clock epoch, even if we switch to a signed time value.  On
-        // Linux, the monotonic clock's epoch is the UNIX epoch.
-        result = static_cast<unsigned long long>(the_time.tv_sec);
-        result *= nanosPerSecond;
-        result += static_cast<unsigned long long>(the_time.tv_nsec);
-        return result;
-    }
+    // Safe for 292 years after the clock epoch, even if we switch to a signed time value.  On
+    // Linux, the monotonic clock's epoch is the UNIX epoch.
+    result = static_cast<unsigned long long>(the_time.tv_sec);
+    result *= nanosPerSecond;
+    result += static_cast<unsigned long long>(the_time.tv_nsec);
+    return result;
+}
 
 }  // namespace mongo

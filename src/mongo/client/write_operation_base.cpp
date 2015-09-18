@@ -17,15 +17,14 @@
 
 namespace mongo {
 
-    WriteOperationBase::WriteOperationBase() : _bulkIndex(0) {
-    }
+WriteOperationBase::WriteOperationBase() : _bulkIndex(0) {}
 
-    void WriteOperationBase::setBulkIndex(size_t index) {
-        _bulkIndex = index;
-    }
+void WriteOperationBase::setBulkIndex(size_t index) {
+    _bulkIndex = index;
+}
 
-    size_t WriteOperationBase::getBulkIndex() const {
-        return _bulkIndex;
-    }
+size_t WriteOperationBase::getBulkIndex() const {
+    return _bulkIndex;
+}
 
-} // namespace mongo
+}  // namespace mongo

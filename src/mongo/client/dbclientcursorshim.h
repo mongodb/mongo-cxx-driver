@@ -19,15 +19,15 @@
 
 namespace mongo {
 
-    /** DBClientCursorShim provides an abstract interface for providing
-     * polymorphic cursors.  When a shim is attached to a DBClientCursor, the
-     * shim intercepts next() and more() calls.  These methods may call through
-     * to the underlying cursor object via rawNext() and rawMore(), or handle
-     * them entirely themselves. */
-    class DBClientCursorShim {
-    public:
-        virtual BSONObj next() = 0;
-        virtual bool more() = 0;
-        virtual ~DBClientCursorShim() {}
-    };
+/** DBClientCursorShim provides an abstract interface for providing
+ * polymorphic cursors.  When a shim is attached to a DBClientCursor, the
+ * shim intercepts next() and more() calls.  These methods may call through
+ * to the underlying cursor object via rawNext() and rawMore(), or handle
+ * them entirely themselves. */
+class DBClientCursorShim {
+public:
+    virtual BSONObj next() = 0;
+    virtual bool more() = 0;
+    virtual ~DBClientCursorShim() {}
+};
 }

@@ -27,9 +27,9 @@
 
 #define MONGO_COMPILER_VARIABLE_UNUSED __attribute__((__unused__))
 
-#define MONGO_COMPILER_ALIGN_TYPE(ALIGNMENT) __attribute__(( __aligned__(ALIGNMENT) ))
+#define MONGO_COMPILER_ALIGN_TYPE(ALIGNMENT) __attribute__((__aligned__(ALIGNMENT)))
 
-#define MONGO_COMPILER_ALIGN_VARIABLE(ALIGNMENT) __attribute__(( __aligned__(ALIGNMENT) ))
+#define MONGO_COMPILER_ALIGN_VARIABLE(ALIGNMENT) __attribute__((__aligned__(ALIGNMENT)))
 
 // NOTE(schwerin): These visibility and calling-convention macro definitions assume we're not using
 // GCC/CLANG to target native Windows. If/when we decide to do such targeting, we'll need to change
@@ -47,7 +47,7 @@
 // #endif
 // #else ... fall through to the definitions below.
 
-#define MONGO_COMPILER_API_EXPORT __attribute__(( __visibility__("default") ))
+#define MONGO_COMPILER_API_EXPORT __attribute__((__visibility__("default")))
 #define MONGO_COMPILER_API_IMPORT
 #define MONGO_COMPILER_API_CALLING_CONVENTION
 
@@ -63,17 +63,17 @@
 // GCC and clang accept it at the start, which eases compatibility with MSVC
 
 #if __has_extension(attribute_deprecated_with_message)
-#define MONGO_COMPILER_API_DEPRECATED(MSG) __attribute__(( deprecated( MSG ) ))
-#else // older clang doesn't support message
-#define MONGO_COMPILER_API_DEPRECATED(MSG) __attribute__(( deprecated ))
+#define MONGO_COMPILER_API_DEPRECATED(MSG) __attribute__((deprecated(MSG)))
+#else  // older clang doesn't support message
+#define MONGO_COMPILER_API_DEPRECATED(MSG) __attribute__((deprecated))
 #endif
 
-#else // we are using GCC
+#else  // we are using GCC
 
-#if __GNUC__ > 4 || ((__GNUC__ == 4) && __GNUC_MINOR > 5) // deprecation messages were added in 4.5
-#define MONGO_COMPILER_API_DEPRECATED(MSG) __attribute__(( deprecated( MSG ) ))
-#else // Older GCC doesn't support message
-#define MONGO_COMPILER_API_DEPRECATED(MSG) __attribute__(( deprecated ))
+#if __GNUC__ > 4 || ((__GNUC__ == 4) && __GNUC_MINOR > 5)  // deprecation messages were added in 4.5
+#define MONGO_COMPILER_API_DEPRECATED(MSG) __attribute__((deprecated(MSG)))
+#else  // Older GCC doesn't support message
+#define MONGO_COMPILER_API_DEPRECATED(MSG) __attribute__((deprecated))
 #endif
 
 #endif

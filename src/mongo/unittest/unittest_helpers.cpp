@@ -24,8 +24,8 @@
 
 namespace mongo {
 
-    std::ostream& operator<<(std::ostream &s, const Date_t &t) {
-        s << t.toString();
-        return s;
-    }
+std::ostream& operator<<(std::ostream& s, const Date_t& t) {
+    s << t.toString();
+    return s;
+}
 }

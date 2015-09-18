@@ -29,10 +29,9 @@
 using namespace std;
 using namespace mongo;
 
-int main( int argc, const char **argv ) {
-
-    if ( argc > 2 ) {
-        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
+int main(int argc, const char** argv) {
+    if (argc > 2) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -53,19 +52,25 @@ int main( int argc, const char **argv ) {
     }
 
     boost::scoped_ptr<DBClientBase> conn(cs.connect(errmsg));
-    if ( !conn ) {
+    if (!conn) {
         cout << "couldn't connect : " << errmsg << endl;
         return EXIT_FAILURE;
     }
 
-    const char * ns = "test.second";
+    const char* ns = "test.second";
 
-    conn->remove( ns , BSONObj() );
+    conn->remove(ns, BSONObj());
 
-    conn->insert( ns , BSON( "name" << "eliot" << "num" << 17 ) );
-    conn->insert( ns , BSON( "name" << "sara" << "num" << 24 ) );
+    conn->insert(ns,
+                 BSON("name"
+                      << "eliot"
+                      << "num" << 17));
+    conn->insert(ns,
+                 BSON("name"
+                      << "sara"
+                      << "num" << 24));
 
-    std::auto_ptr<DBClientCursor> cursor = conn->query( ns , BSONObj() );
+    std::auto_ptr<DBClientCursor> cursor = conn->query(ns, BSONObj());
 
     if (!cursor.get()) {
         cout << "query failure" << endl;
@@ -73,12 +78,12 @@ int main( int argc, const char **argv ) {
     }
 
     cout << "using cursor" << endl;
-    while ( cursor->more() ) {
+    while (cursor->more()) {
         BSONObj obj = cursor->next();
         cout << "\t" << obj.jsonString() << endl;
     }
 
-    conn->createIndex( ns , BSON( "name" << 1 << "num" << -1 ) );
+    conn->createIndex(ns, BSON("name" << 1 << "num" << -1));
 
     return EXIT_SUCCESS;
 }

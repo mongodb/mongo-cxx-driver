@@ -26,56 +26,53 @@
 
 namespace mongo {
 
-    namespace {
-        inline bool compare(WriteOperation* const lhs, WriteOperation* const rhs) {
-            return lhs->operationType() > rhs->operationType();
-        }
-    } // namespace
+namespace {
+inline bool compare(WriteOperation* const lhs, WriteOperation* const rhs) {
+    return lhs->operationType() > rhs->operationType();
+}
+}  // namespace
 
-    BulkOperationBuilder::BulkOperationBuilder(DBClientBase* const client, const std::string& ns, bool ordered)
-        : _client(client)
-        , _ns(ns)
-        , _ordered(ordered)
-        , _executed(false)
-        , _currentIndex(0)
-    {}
+BulkOperationBuilder::BulkOperationBuilder(DBClientBase* const client,
+                                           const std::string& ns,
+                                           bool ordered)
+    : _client(client), _ns(ns), _ordered(ordered), _executed(false), _currentIndex(0) {}
 
-    BulkOperationBuilder::~BulkOperationBuilder() {
-        std::vector<WriteOperation*>::iterator it;
-        for (it = _write_operations.begin(); it != _write_operations.end(); ++it)
-            delete *it;
-    }
+BulkOperationBuilder::~BulkOperationBuilder() {
+    std::vector<WriteOperation*>::iterator it;
+    for (it = _write_operations.begin(); it != _write_operations.end(); ++it)
+        delete *it;
+}
 
-    BulkUpdateBuilder BulkOperationBuilder::find(const BSONObj& selector) {
-        return BulkUpdateBuilder(this, selector);
-    }
+BulkUpdateBuilder BulkOperationBuilder::find(const BSONObj& selector) {
+    return BulkUpdateBuilder(this, selector);
+}
 
-    void BulkOperationBuilder::insert(const BSONObj& doc) {
-        InsertWriteOperation* insert_op = new InsertWriteOperation(doc);
-        enqueue(insert_op);
-    }
+void BulkOperationBuilder::insert(const BSONObj& doc) {
+    InsertWriteOperation* insert_op = new InsertWriteOperation(doc);
+    enqueue(insert_op);
+}
 
-    void BulkOperationBuilder::execute(const WriteConcern* writeConcern, WriteResult* writeResult) {
-        uassert(0, "Bulk operations cannot be re-executed", !_executed);
-        uassert(0, "Bulk operations cannot be executed without any operations",
-            !_write_operations.empty());
+void BulkOperationBuilder::execute(const WriteConcern* writeConcern, WriteResult* writeResult) {
+    uassert(0, "Bulk operations cannot be re-executed", !_executed);
+    uassert(
+        0, "Bulk operations cannot be executed without any operations", !_write_operations.empty());
 
-        _executed = true;
+    _executed = true;
 
-        if (!_ordered)
-            std::sort(_write_operations.begin(), _write_operations.end(), compare);
+    if (!_ordered)
+        std::sort(_write_operations.begin(), _write_operations.end(), compare);
 
-        // This signals to the DBClientWriter that we cannot batch inserts together
-        // over the wire protocol and must send them individually to the server in
-        // order to understand what happened to them.
-        writeResult->_requiresDetailedInsertResults = true;
+    // This signals to the DBClientWriter that we cannot batch inserts together
+    // over the wire protocol and must send them individually to the server in
+    // order to understand what happened to them.
+    writeResult->_requiresDetailedInsertResults = true;
 
-        _client->_write(_ns, _write_operations, _ordered, writeConcern, writeResult);
-    }
+    _client->_write(_ns, _write_operations, _ordered, writeConcern, writeResult);
+}
 
-    void BulkOperationBuilder::enqueue(WriteOperation* operation) {
-        operation->setBulkIndex(_currentIndex++);
-        _write_operations.push_back(operation);
-    }
+void BulkOperationBuilder::enqueue(WriteOperation* operation) {
+    operation->setBulkIndex(_currentIndex++);
+    _write_operations.push_back(operation);
+}
 
-} // namespace mongo
+}  // namespace mongo

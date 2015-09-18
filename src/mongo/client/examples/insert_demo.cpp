@@ -20,7 +20,7 @@
 #include <windows.h>
 #endif
 
-#include "mongo/client/dbclient.h" // the mongo c++ driver
+#include "mongo/client/dbclient.h"  // the mongo c++ driver
 
 #include <iostream>
 
@@ -28,9 +28,8 @@ using namespace std;
 using namespace mongo;
 
 int main(int argc, char* argv[]) {
-
-    if ( argc > 2 ) {
-        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
+    if (argc > 2) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -51,13 +50,14 @@ int main(int argc, char* argv[]) {
     }
 
     boost::scoped_ptr<DBClientBase> conn(cs.connect(errmsg));
-    if ( !conn ) {
+    if (!conn) {
         cout << "couldn't connect : " << errmsg << endl;
         return EXIT_FAILURE;
     }
 
     try {
-        BSONObj o = BSON( "hello" << "world" );
+        BSONObj o = BSON("hello"
+                         << "world");
 
         cout << "dropping collection..." << endl;
         conn->dropCollection("test.foo");
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
         cout << "inserting..." << endl;
 
         time_t start = time(0);
-        for( unsigned i = 0; i < 100000; i++ ) {
+        for (unsigned i = 0; i < 100000; i++) {
             conn->insert("test.foo", o);
         }
 
@@ -73,10 +73,9 @@ int main(int argc, char* argv[]) {
         cout << "getlasterror returns: \"" << conn->getLastError() << '"' << endl;
 
         time_t done = time(0);
-        time_t dt = done-start;
-        cout << dt << " seconds " << 100000/dt << " per second" << endl;
-    }
-    catch(DBException& e) {
+        time_t dt = done - start;
+        cout << dt << " seconds " << 100000 / dt << " per second" << endl;
+    } catch (DBException& e) {
         cout << "caught DBException " << e.toString() << endl;
         return EXIT_FAILURE;
     }

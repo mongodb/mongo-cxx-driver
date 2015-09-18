@@ -1,5 +1,5 @@
 /** @file redef_macros.h macros for mongo internals
-    
+
     @see undef_macros.h undefines these after use to minimize name pollution.
 */
 

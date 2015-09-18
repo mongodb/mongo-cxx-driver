@@ -32,34 +32,33 @@ using namespace mongo;
 
 void successfulInit(client::Options opts) {
     Status status = client::initialize(opts);
-    if ( !status.isOK() ) {
+    if (!status.isOK()) {
         throw std::runtime_error("Failed to initialize the driver");
     }
 }
 
 void failedInit(string errMsg) {
     Status status = client::initialize();
-    if ( status.isOK() ) {
+    if (status.isOK()) {
         throw std::runtime_error(errMsg);
     }
 }
 
 void successfulShutdown() {
     Status status = client::shutdown();
-    if ( !status.isOK() ) {
+    if (!status.isOK()) {
         throw std::runtime_error("Failed to shutdown properly");
     }
 }
 
 void failedShutdown(string errMsg) {
     Status status = client::shutdown();
-    if ( status.isOK() ) {
+    if (status.isOK()) {
         throw std::runtime_error(errMsg);
     }
 }
 
 int main() {
-
     client::Options manualShutdownOpts = client::Options();
     manualShutdownOpts.setCallShutdownAtExit(false);
 
@@ -81,8 +80,7 @@ int main() {
 
         // a final shutdown, should also fail
         failedShutdown("Can't shutdown, driver has already been terminated");
-    }
-    catch (const std::runtime_error& e) {
+    } catch (const std::runtime_error& e) {
         cout << e.what() << endl;
         return EXIT_FAILURE;
     }

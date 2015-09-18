@@ -23,53 +23,51 @@
 
 namespace mongo {
 
-    namespace {
-        const char kCommandKey[] = "delete";
-        const char kBatchName[] = "deletes";
-        const char kSelectorKey[] = "q";
-        const char kLimitKey[] = "limit";
-    } // namespace
+namespace {
+const char kCommandKey[] = "delete";
+const char kBatchName[] = "deletes";
+const char kSelectorKey[] = "q";
+const char kLimitKey[] = "limit";
+}  // namespace
 
-    DeleteWriteOperation::DeleteWriteOperation(const BSONObj& selector, int flags)
-        : _selector(selector)
-        , _flags(flags)
-    {}
+DeleteWriteOperation::DeleteWriteOperation(const BSONObj& selector, int flags)
+    : _selector(selector), _flags(flags) {}
 
-    WriteOpType DeleteWriteOperation::operationType() const {
-        return dbWriteDelete;
-    }
+WriteOpType DeleteWriteOperation::operationType() const {
+    return dbWriteDelete;
+}
 
-    int DeleteWriteOperation::incrementalSize() const {
-        return _selector.objsize();
-    }
+int DeleteWriteOperation::incrementalSize() const {
+    return _selector.objsize();
+}
 
-    const char* DeleteWriteOperation::batchName() const {
-        return kBatchName;
-    }
+const char* DeleteWriteOperation::batchName() const {
+    return kBatchName;
+}
 
-    void DeleteWriteOperation::startRequest(const std::string& ns, bool, BufBuilder* builder) const {
-        builder->appendNum(0);
-        builder->appendStr(ns);
-        builder->appendNum(_flags);
-    }
+void DeleteWriteOperation::startRequest(const std::string& ns, bool, BufBuilder* builder) const {
+    builder->appendNum(0);
+    builder->appendStr(ns);
+    builder->appendNum(_flags);
+}
 
-    void DeleteWriteOperation::appendSelfToRequest(BufBuilder* builder) const {
-        _selector.appendSelfToBufBuilder(*builder);
-    }
+void DeleteWriteOperation::appendSelfToRequest(BufBuilder* builder) const {
+    _selector.appendSelfToBufBuilder(*builder);
+}
 
-    void DeleteWriteOperation::startCommand(const std::string& ns, BSONObjBuilder* command) const {
-        command->append(kCommandKey, nsToCollectionSubstring(ns));
-    }
+void DeleteWriteOperation::startCommand(const std::string& ns, BSONObjBuilder* command) const {
+    command->append(kCommandKey, nsToCollectionSubstring(ns));
+}
 
-    void DeleteWriteOperation::appendSelfToCommand(BSONArrayBuilder* batch) const {
-        BSONObjBuilder updateBuilder;
-        appendSelfToBSONObj(&updateBuilder);
-        batch->append(updateBuilder.obj());
-    }
+void DeleteWriteOperation::appendSelfToCommand(BSONArrayBuilder* batch) const {
+    BSONObjBuilder updateBuilder;
+    appendSelfToBSONObj(&updateBuilder);
+    batch->append(updateBuilder.obj());
+}
 
-    void DeleteWriteOperation::appendSelfToBSONObj(BSONObjBuilder* obj) const {
-        obj->append(kSelectorKey, _selector);
-        obj->append(kLimitKey, _flags & RemoveOption_JustOne);
-    }
+void DeleteWriteOperation::appendSelfToBSONObj(BSONObjBuilder* obj) const {
+    obj->append(kSelectorKey, _selector);
+    obj->append(kLimitKey, _flags & RemoveOption_JustOne);
+}
 
-} // namespace mongo
+}  // namespace mongo

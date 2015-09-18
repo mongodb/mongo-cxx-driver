@@ -17,31 +17,29 @@
 #include "mongo/orchestration/server.h"
 
 namespace {
-    const std::string kResourceName = "servers";
+const std::string kResourceName = "servers";
 }
 
 namespace mongo {
 namespace orchestration {
 
-    Server::Server(const std::string& url)
-        : MongoResource(url)
-    {}
+Server::Server(const std::string& url) : MongoResource(url) {}
 
-    void Server::start() {
-        action("start");
-    }
+void Server::start() {
+    action("start");
+}
 
-    void Server::stop() {
-        action("stop");
-    }
+void Server::stop() {
+    action("stop");
+}
 
-    void Server::restart() {
-        action("restart");
-    }
+void Server::restart() {
+    action("restart");
+}
 
-    std::string Server::resourceName() {
-        return kResourceName;
-    }
+std::string Server::resourceName() {
+    return kResourceName;
+}
 
-} // namespace orchestration
-} // namespace mongo
+}  // namespace orchestration
+}  // namespace mongo

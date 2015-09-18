@@ -36,35 +36,35 @@ namespace geo {
 
 namespace coords2d {
 
-    typedef BoundingBox<Coordinates2D> BoundingBox;
-    typedef Geometry<Coordinates2D> Geometry;
-    typedef GeometryCollection<Coordinates2D> GeometryCollection;
-    typedef LineString<Coordinates2D> LineString;
-    typedef MultiLineString<Coordinates2D> MultiLineString;
-    typedef MultiPoint<Coordinates2D> MultiPoint;
-    typedef MultiPolygon<Coordinates2D> MultiPolygon;
-    typedef GeoObj<Coordinates2D> GeoObj;
-    typedef Point<Coordinates2D> Point;
-    typedef Polygon<Coordinates2D> Polygon;
-    typedef Parser<Coordinates2D> Parser;
+typedef BoundingBox<Coordinates2D> BoundingBox;
+typedef Geometry<Coordinates2D> Geometry;
+typedef GeometryCollection<Coordinates2D> GeometryCollection;
+typedef LineString<Coordinates2D> LineString;
+typedef MultiLineString<Coordinates2D> MultiLineString;
+typedef MultiPoint<Coordinates2D> MultiPoint;
+typedef MultiPolygon<Coordinates2D> MultiPolygon;
+typedef GeoObj<Coordinates2D> GeoObj;
+typedef Point<Coordinates2D> Point;
+typedef Polygon<Coordinates2D> Polygon;
+typedef Parser<Coordinates2D> Parser;
 
-} // namespace coords2d
+}  // namespace coords2d
 
 namespace coords2dgeographic {
 
-    typedef BoundingBox<Coordinates2DGeographic> BoundingBox;
-    typedef Geometry<Coordinates2DGeographic> Geometry;
-    typedef GeometryCollection<Coordinates2DGeographic> GeometryCollection;
-    typedef LineString<Coordinates2DGeographic> LineString;
-    typedef MultiLineString<Coordinates2DGeographic> MultiLineString;
-    typedef MultiPoint<Coordinates2DGeographic> MultiPoint;
-    typedef MultiPolygon<Coordinates2DGeographic> MultiPolygon;
-    typedef GeoObj<Coordinates2DGeographic> GeoObj;
-    typedef Point<Coordinates2DGeographic> Point;
-    typedef Polygon<Coordinates2DGeographic> Polygon;
-    typedef Parser<Coordinates2DGeographic> Parser;
+typedef BoundingBox<Coordinates2DGeographic> BoundingBox;
+typedef Geometry<Coordinates2DGeographic> Geometry;
+typedef GeometryCollection<Coordinates2DGeographic> GeometryCollection;
+typedef LineString<Coordinates2DGeographic> LineString;
+typedef MultiLineString<Coordinates2DGeographic> MultiLineString;
+typedef MultiPoint<Coordinates2DGeographic> MultiPoint;
+typedef MultiPolygon<Coordinates2DGeographic> MultiPolygon;
+typedef GeoObj<Coordinates2DGeographic> GeoObj;
+typedef Point<Coordinates2DGeographic> Point;
+typedef Polygon<Coordinates2DGeographic> Polygon;
+typedef Parser<Coordinates2DGeographic> Parser;
 
-} // namespace coords2dgeographic
+}  // namespace coords2dgeographic
 
-} // namespace geo
-} // namespace mongo
+}  // namespace geo
+}  // namespace mongo

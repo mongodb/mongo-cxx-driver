@@ -20,37 +20,37 @@
 namespace mongo {
 namespace geo {
 
-    /**
-     * The special field names defined by the GeoJSON specification.
-     */
-    const char kBoundingBoxFieldName[] = "bbox";
-    const char kCoordsFieldName[] = "coordinates";
-    const char kGeometriesFieldName[] = "geometries";
-    const char kTypeFieldName[] = "type";
+/**
+ * The special field names defined by the GeoJSON specification.
+ */
+const char kBoundingBoxFieldName[] = "bbox";
+const char kCoordsFieldName[] = "coordinates";
+const char kGeometriesFieldName[] = "geometries";
+const char kTypeFieldName[] = "type";
 
-    /**
-     * The different possible geometry type names in GeoJSON.
-     */
-    const char kGeometryCollectionTypeStr[] = "GeometryCollection";
-    const char kLineStringTypeStr[] = "LineString";
-    const char kMultiLineStringTypeStr[] = "MultiLineString";
-    const char kMultiPointTypeStr[] = "MultiPoint";
-    const char kMultiPolygonTypeStr[] = "MultiPolygon";
-    const char kPointTypeStr[] = "Point";
-    const char kPolygonTypeStr[] = "Polygon";
+/**
+ * The different possible geometry type names in GeoJSON.
+ */
+const char kGeometryCollectionTypeStr[] = "GeometryCollection";
+const char kLineStringTypeStr[] = "LineString";
+const char kMultiLineStringTypeStr[] = "MultiLineString";
+const char kMultiPointTypeStr[] = "MultiPoint";
+const char kMultiPolygonTypeStr[] = "MultiPolygon";
+const char kPointTypeStr[] = "Point";
+const char kPolygonTypeStr[] = "Polygon";
 
-    /**
-     * An enum to represent the type of geometry of a Geo object.
-     */
-    enum GeoObjType {
-        GeoObjType_GeometryCollection,
-        GeoObjType_LineString,
-        GeoObjType_MultiLineString,
-        GeoObjType_MultiPoint,
-        GeoObjType_MultiPolygon,
-        GeoObjType_Point,
-        GeoObjType_Polygon
-    };
+/**
+ * An enum to represent the type of geometry of a Geo object.
+ */
+enum GeoObjType {
+    GeoObjType_GeometryCollection,
+    GeoObjType_LineString,
+    GeoObjType_MultiLineString,
+    GeoObjType_MultiPoint,
+    GeoObjType_MultiPolygon,
+    GeoObjType_Point,
+    GeoObjType_Polygon
+};
 
-} // namespace geo
-} // namespace mongo
+}  // namespace geo
+}  // namespace mongo

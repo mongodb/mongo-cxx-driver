@@ -34,190 +34,198 @@ using namespace std;
 
 namespace mongo {
 
-    string DBException::toString() const {
-        stringstream ss;
-        ss << getCode() << " " << what();
-        return ss.str();
-    }
+string DBException::toString() const {
+    stringstream ss;
+    ss << getCode() << " " << what();
+    return ss.str();
+}
 
-    ErrorCodes::Error DBException::convertExceptionCode(int exCode) {
-        if (exCode == 0) return ErrorCodes::UnknownError;
-        return static_cast<ErrorCodes::Error>(exCode);
-    }
+ErrorCodes::Error DBException::convertExceptionCode(int exCode) {
+    if (exCode == 0)
+        return ErrorCodes::UnknownError;
+    return static_cast<ErrorCodes::Error>(exCode);
+}
 
-    void ExceptionInfo::append( BSONObjBuilder& b , const char * m , const char * c ) const {
-        if ( msg.empty() )
-            b.append( m , "unknown assertion" );
-        else
-            b.append( m , msg );
+void ExceptionInfo::append(BSONObjBuilder& b, const char* m, const char* c) const {
+    if (msg.empty())
+        b.append(m, "unknown assertion");
+    else
+        b.append(m, msg);
 
-        if ( code )
-            b.append( c , code );
-    }
+    if (code)
+        b.append(c, code);
+}
 
-    /* "warning" assert -- safe to continue, so we don't throw exception. */
-    NOINLINE_DECL void wasserted(const char* expr, const char* file, unsigned line) {
-        static bool rateLimited;
-        static time_t lastWhen;
-        static unsigned lastLine;
-        if( lastLine == line && time(0)-lastWhen < 5 ) { 
-            if( !rateLimited ) { 
-                rateLimited = true;
-                log() << "rate limiting wassert" << endl;
-            }
-            return;
+/* "warning" assert -- safe to continue, so we don't throw exception. */
+NOINLINE_DECL void wasserted(const char* expr, const char* file, unsigned line) {
+    static bool rateLimited;
+    static time_t lastWhen;
+    static unsigned lastLine;
+    if (lastLine == line && time(0) - lastWhen < 5) {
+        if (!rateLimited) {
+            rateLimited = true;
+            log() << "rate limiting wassert" << endl;
         }
-        lastWhen = time(0);
-        lastLine = line;
-
-        log() << "warning assertion failure " << expr << ' ' << file << ' ' << dec << line << endl;
-        logContext();
+        return;
     }
+    lastWhen = time(0);
+    lastLine = line;
 
-    NOINLINE_DECL void verifyFailed(const char *expr, const char *file, unsigned line) {
-        log() << "Assertion failure " << expr << ' ' << file << ' ' << dec << line << endl;
-        logContext();
-        stringstream temp;
-        temp << "assertion " << file << ":" << line;
-        AssertionException e(temp.str(),0);
-        throw e;
-    }
+    log() << "warning assertion failure " << expr << ' ' << file << ' ' << dec << line << endl;
+    logContext();
+}
 
-    NOINLINE_DECL void invariantFailed(const char* expr, const char* file, unsigned line) {
-        log() << "Invariant failure " << expr << ' ' << file << ' ' << dec << line << endl;
-        logContext();
-        log() << "\n\n***aborting after invariant() failure\n\n" << endl;
-        abort();
-    }
+NOINLINE_DECL void verifyFailed(const char* expr, const char* file, unsigned line) {
+    log() << "Assertion failure " << expr << ' ' << file << ' ' << dec << line << endl;
+    logContext();
+    stringstream temp;
+    temp << "assertion " << file << ":" << line;
+    AssertionException e(temp.str(), 0);
+    throw e;
+}
 
-    NOINLINE_DECL void invariantOKFailed(const char* expr, const Status& status, const char *file,
-                                         unsigned line) {
-        log() << "Invariant failure: " << expr << " resulted in status " << status
-              << " at " << file << ' ' << dec << line;
-        logContext();
-        log() << "\n\n***aborting after invariant() failure\n\n" << endl;
-        abort();
-    }
+NOINLINE_DECL void invariantFailed(const char* expr, const char* file, unsigned line) {
+    log() << "Invariant failure " << expr << ' ' << file << ' ' << dec << line << endl;
+    logContext();
+    log() << "\n\n***aborting after invariant() failure\n\n" << endl;
+    abort();
+}
 
-    NOINLINE_DECL void fassertFailed( int msgid ) {
-        log() << "Fatal Assertion " << msgid << endl;
-        logContext();
-        log() << "\n\n***aborting after fassert() failure\n\n" << endl;
-        abort();
-    }
+NOINLINE_DECL void invariantOKFailed(const char* expr,
+                                     const Status& status,
+                                     const char* file,
+                                     unsigned line) {
+    log() << "Invariant failure: " << expr << " resulted in status " << status << " at " << file
+          << ' ' << dec << line;
+    logContext();
+    log() << "\n\n***aborting after invariant() failure\n\n" << endl;
+    abort();
+}
 
-    MONGO_COMPILER_NORETURN void fassertFailedWithStatus(int msgid, const Status& status) {
-        log() << "Fatal assertion " <<  msgid << " " << status;
-        logContext();
-        log() << "\n\n***aborting after fassert() failure\n\n" << endl;
-        abort();
-    }
+NOINLINE_DECL void fassertFailed(int msgid) {
+    log() << "Fatal Assertion " << msgid << endl;
+    logContext();
+    log() << "\n\n***aborting after fassert() failure\n\n" << endl;
+    abort();
+}
 
-    MONGO_COMPILER_NORETURN void fassertFailedWithStatusNoTrace(int msgid, const Status& status) {
-        log() << "Fatal assertion " <<  msgid << " " << status;
-        logContext();
-        log() << "\n\n***aborting after fassert() failure\n\n" << endl;
-        abort();
-    }
+MONGO_COMPILER_NORETURN void fassertFailedWithStatus(int msgid, const Status& status) {
+    log() << "Fatal assertion " << msgid << " " << status;
+    logContext();
+    log() << "\n\n***aborting after fassert() failure\n\n" << endl;
+    abort();
+}
 
-    void uasserted(int msgid , const string &msg) {
-        uasserted(msgid, msg.c_str());
-    }
+MONGO_COMPILER_NORETURN void fassertFailedWithStatusNoTrace(int msgid, const Status& status) {
+    log() << "Fatal assertion " << msgid << " " << status;
+    logContext();
+    log() << "\n\n***aborting after fassert() failure\n\n" << endl;
+    abort();
+}
 
-    void UserException::appendPrefix( stringstream& ss ) const { ss << "userassert:"; }
-    void MsgAssertionException::appendPrefix( stringstream& ss ) const { ss << "massert:"; }
+void uasserted(int msgid, const string& msg) {
+    uasserted(msgid, msg.c_str());
+}
 
-    NOINLINE_DECL void uasserted(int msgid, const char *msg) {
-        LOG(1) << "User Assertion: " << msgid << ":" << msg << endl;
-        throw UserException(msgid, msg);
-    }
+void UserException::appendPrefix(stringstream& ss) const {
+    ss << "userassert:";
+}
+void MsgAssertionException::appendPrefix(stringstream& ss) const {
+    ss << "massert:";
+}
 
-    void msgasserted(int msgid, const string &msg) {
-        msgasserted(msgid, msg.c_str());
-    }
+NOINLINE_DECL void uasserted(int msgid, const char* msg) {
+    LOG(1) << "User Assertion: " << msgid << ":" << msg << endl;
+    throw UserException(msgid, msg);
+}
 
-    NOINLINE_DECL void msgasserted(int msgid, const char *msg) {
-        log() << "Assertion: " << msgid << ":" << msg << endl;
-        logContext();
-        throw MsgAssertionException(msgid, msg);
-    }
+void msgasserted(int msgid, const string& msg) {
+    msgasserted(msgid, msg.c_str());
+}
 
-    NOINLINE_DECL void msgassertedNoTrace(int msgid, const char *msg) {
-        log() << "Assertion: " << msgid << ":" << msg << endl;
-        throw MsgAssertionException(msgid, msg);
-    }
+NOINLINE_DECL void msgasserted(int msgid, const char* msg) {
+    log() << "Assertion: " << msgid << ":" << msg << endl;
+    logContext();
+    throw MsgAssertionException(msgid, msg);
+}
 
-    void msgassertedNoTrace(int msgid, const std::string& msg) {
-        msgassertedNoTrace(msgid, msg.c_str());
-    }
+NOINLINE_DECL void msgassertedNoTrace(int msgid, const char* msg) {
+    log() << "Assertion: " << msgid << ":" << msg << endl;
+    throw MsgAssertionException(msgid, msg);
+}
 
-    std::string causedBy( const char* e ) {
-        return std::string(" :: caused by :: ") + e;
-    }
+void msgassertedNoTrace(int msgid, const std::string& msg) {
+    msgassertedNoTrace(msgid, msg.c_str());
+}
 
-    std::string causedBy( const DBException& e ){
-        return causedBy( e.toString() );
-    }
+std::string causedBy(const char* e) {
+    return std::string(" :: caused by :: ") + e;
+}
 
-    std::string causedBy( const std::exception& e ) {
-        return causedBy( e.what() );
-    }
+std::string causedBy(const DBException& e) {
+    return causedBy(e.toString());
+}
 
-    std::string causedBy( const std::string& e ){
-        return causedBy( e.c_str() );
-    }
+std::string causedBy(const std::exception& e) {
+    return causedBy(e.what());
+}
 
-    std::string causedBy( const std::string* e ) {
-        return (e && *e != "") ? causedBy(*e) : "";
-    }
+std::string causedBy(const std::string& e) {
+    return causedBy(e.c_str());
+}
 
-    std::string causedBy( const Status& e ){
-        return causedBy( e.reason() );
-    }
+std::string causedBy(const std::string* e) {
+    return (e && *e != "") ? causedBy(*e) : "";
+}
 
-    string errnoWithPrefix( const char * prefix ) {
-        stringstream ss;
-        if ( prefix )
-            ss << prefix << ": ";
-        ss << errnoWithDescription();
-        return ss.str();
-    }
+std::string causedBy(const Status& e) {
+    return causedBy(e.reason());
+}
 
-    string demangleName( const type_info& typeinfo ) {
+string errnoWithPrefix(const char* prefix) {
+    stringstream ss;
+    if (prefix)
+        ss << prefix << ": ";
+    ss << errnoWithDescription();
+    return ss.str();
+}
+
+string demangleName(const type_info& typeinfo) {
 #ifdef _WIN32
-        return typeinfo.name();
+    return typeinfo.name();
 #else
-        int status;
+    int status;
 
-        char * niceName = abi::__cxa_demangle(typeinfo.name(), 0, 0, &status);
-        if ( ! niceName )
-            return typeinfo.name();
+    char* niceName = abi::__cxa_demangle(typeinfo.name(), 0, 0, &status);
+    if (!niceName)
+        return typeinfo.name();
 
-        string s = niceName;
-        free(niceName);
-        return s;
+    string s = niceName;
+    free(niceName);
+    return s;
 #endif
-    }
+}
 
-    string ExceptionInfo::toString() const {
-        stringstream ss; ss << "exception: " << code << " " << msg; return ss.str(); 
-    }
+string ExceptionInfo::toString() const {
+    stringstream ss;
+    ss << "exception: " << code << " " << msg;
+    return ss.str();
+}
 
-    NOINLINE_DECL ErrorMsg::ErrorMsg(const char *msg, char ch) {
-        int l = strlen(msg);
-        verify( l < 128);
-        memcpy(buf, msg, l);
-        char *p = buf + l;
-        p[0] = ch;
-        p[1] = 0;
-    }
+NOINLINE_DECL ErrorMsg::ErrorMsg(const char* msg, char ch) {
+    int l = strlen(msg);
+    verify(l < 128);
+    memcpy(buf, msg, l);
+    char* p = buf + l;
+    p[0] = ch;
+    p[1] = 0;
+}
 
-    NOINLINE_DECL ErrorMsg::ErrorMsg(const char *msg, unsigned val) {
-        int l = strlen(msg);
-        verify( l < 128);
-        memcpy(buf, msg, l);
-        char *p = buf + l;
-        sprintf(p, "%u", val);
-    }
-
+NOINLINE_DECL ErrorMsg::ErrorMsg(const char* msg, unsigned val) {
+    int l = strlen(msg);
+    verify(l < 128);
+    memcpy(buf, msg, l);
+    char* p = buf + l;
+    sprintf(p, "%u", val);
+}
 }

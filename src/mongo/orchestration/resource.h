@@ -29,47 +29,47 @@
 namespace mongo {
 namespace orchestration {
 
-    typedef Json::Value Document;
+typedef Json::Value Document;
 
-    class Resource {
-    public:
-        Resource(const std::string& url);
-        virtual ~Resource();
+class Resource {
+public:
+    Resource(const std::string& url);
+    virtual ~Resource();
 
-    protected:
-        RestClient::response get(const std::string& relative_path = "") const;
-        RestClient::response put(const std::string& relative_path = "",
-                const std::string& payload = "{}");
-        RestClient::response post(const std::string& relative_path = "",
-                const std::string& payload = "{}");
-        RestClient::response del(const std::string& relative_path = "");
+protected:
+    RestClient::response get(const std::string& relative_path = "") const;
+    RestClient::response put(const std::string& relative_path = "",
+                             const std::string& payload = "{}");
+    RestClient::response post(const std::string& relative_path = "",
+                              const std::string& payload = "{}");
+    RestClient::response del(const std::string& relative_path = "");
 
-        std::string url() const;
-        std::string relativeUrl(const std::string& relative_path) const;
-        std::string baseRelativeUrl(const std::string& relative_path) const;
+    std::string url() const;
+    std::string relativeUrl(const std::string& relative_path) const;
+    std::string baseRelativeUrl(const std::string& relative_path) const;
 
-        Document handleResponse(const RestClient::response& response) const;
+    Document handleResponse(const RestClient::response& response) const;
 
-        static std::string resourceName();
+    static std::string resourceName();
 
-        template <typename T>
-        std::vector<T> pluralResource(const std::string& resource_name) const {
-            std::vector<T> resources;
-            Document doc = handleResponse(get(resource_name));
+    template <typename T>
+    std::vector<T> pluralResource(const std::string& resource_name) const {
+        std::vector<T> resources;
+        Document doc = handleResponse(get(resource_name));
 
-            for (unsigned i=0; i<doc.size(); i++) {
-                std::string server_id = doc[resource_name][i]["server_id"].asString();
-                std::string url = T::resourceName().append("/").append(server_id);
-                T resource(baseRelativeUrl(url));
-                resources.push_back(resource);
-            }
-
-            return resources;
+        for (unsigned i = 0; i < doc.size(); i++) {
+            std::string server_id = doc[resource_name][i]["server_id"].asString();
+            std::string url = T::resourceName().append("/").append(server_id);
+            T resource(baseRelativeUrl(url));
+            resources.push_back(resource);
         }
 
-    private:
-        std::string _url;
-    };
+        return resources;
+    }
 
-} // namespace orchestration
-} // namesace mongo
+private:
+    std::string _url;
+};
+
+}  // namespace orchestration
+}  // namesace mongo

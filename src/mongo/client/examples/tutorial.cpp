@@ -1,4 +1,4 @@
-//tutorial.cpp
+// tutorial.cpp
 
 /*    Copyright 2009 10gen Inc.
  *
@@ -30,13 +30,14 @@ using namespace std;
 using namespace mongo;
 
 int printIfAge(DBClientBase* conn, int age) {
-    std::auto_ptr<DBClientCursor> cursor = conn->query("tutorial.persons", MONGO_QUERY( "age" << age ).sort("name") );
+    std::auto_ptr<DBClientCursor> cursor =
+        conn->query("tutorial.persons", MONGO_QUERY("age" << age).sort("name"));
     if (!cursor.get()) {
         cout << "query failure" << endl;
         return EXIT_FAILURE;
     }
 
-    while( cursor->more() ) {
+    while (cursor->more()) {
         BSONObj p = cursor->next();
         cout << p.getStringField("name") << endl;
     }
@@ -44,17 +45,29 @@ int printIfAge(DBClientBase* conn, int age) {
 }
 
 int run(DBClientBase* conn) {
-
     cout << "connected ok" << endl;
-    BSONObj p = BSON( "name" << "Joe" << "age" << 33 );
+    BSONObj p = BSON("name"
+                     << "Joe"
+                     << "age" << 33);
     conn->insert("tutorial.persons", p);
-    p = BSON( "name" << "Jane" << "age" << 40 );
+    p = BSON("name"
+             << "Jane"
+             << "age" << 40);
     conn->insert("tutorial.persons", p);
-    p = BSON( "name" << "Abe" << "age" << 33 );
+    p = BSON("name"
+             << "Abe"
+             << "age" << 33);
     conn->insert("tutorial.persons", p);
-    p = BSON( "name" << "Methuselah" << "age" << BSONNULL);
+    p = BSON("name"
+             << "Methuselah"
+             << "age" << BSONNULL);
     conn->insert("tutorial.persons", p);
-    p = BSON( "name" << "Samantha" << "age" << 21 << "city" << "Los Angeles" << "state" << "CA" );
+    p = BSON("name"
+             << "Samantha"
+             << "age" << 21 << "city"
+             << "Los Angeles"
+             << "state"
+             << "CA");
     conn->insert("tutorial.persons", p);
 
     conn->createIndex("tutorial.persons", fromjson("{age:1}"));
@@ -67,7 +80,7 @@ int run(DBClientBase* conn) {
         return EXIT_FAILURE;
     }
 
-    while( cursor->more() ) {
+    while (cursor->more()) {
         cout << cursor->next().toString() << endl;
     }
 
@@ -76,9 +89,8 @@ int run(DBClientBase* conn) {
 }
 
 int main(int argc, char* argv[]) {
-
-    if ( argc > 2 ) {
-        std::cout << "usage: " << argv[0] << " [MONGODB_URI]"  << std::endl;
+    if (argc > 2) {
+        std::cout << "usage: " << argv[0] << " [MONGODB_URI]" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -99,7 +111,7 @@ int main(int argc, char* argv[]) {
     }
 
     boost::scoped_ptr<DBClientBase> conn(cs.connect(errmsg));
-    if ( !conn ) {
+    if (!conn) {
         cout << "couldn't connect : " << errmsg << endl;
         return EXIT_FAILURE;
     }
@@ -107,8 +119,7 @@ int main(int argc, char* argv[]) {
     int ret = EXIT_SUCCESS;
     try {
         ret = run(conn.get());
-    }
-    catch( DBException &e ) {
+    } catch (DBException& e) {
         cout << "caught " << e.what() << endl;
         ret = EXIT_FAILURE;
     }

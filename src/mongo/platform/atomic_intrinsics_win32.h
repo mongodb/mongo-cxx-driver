@@ -28,224 +28,213 @@
 
 namespace mongo {
 
-    /**
-     * Default instantiation of AtomicIntrinsics<>, for unsupported types.
-     */
-    template <typename T, typename _IsTSupported=void>
-    class AtomicIntrinsics {
-    private:
-        AtomicIntrinsics();
-        ~AtomicIntrinsics();
-    };
+/**
+ * Default instantiation of AtomicIntrinsics<>, for unsupported types.
+ */
+template <typename T, typename _IsTSupported = void>
+class AtomicIntrinsics {
+private:
+    AtomicIntrinsics();
+    ~AtomicIntrinsics();
+};
 
-    /**
-     * Instantiation of AtomicIntrinsics<> for 32-bit word sizes (i.e., unsigned).
-     */
-    template <typename T>
-    class AtomicIntrinsics<T, typename boost::enable_if_c<sizeof(T) == sizeof(LONG)>::type> {
-    public:
+/**
+ * Instantiation of AtomicIntrinsics<> for 32-bit word sizes (i.e., unsigned).
+ */
+template <typename T>
+class AtomicIntrinsics<T, typename boost::enable_if_c<sizeof(T) == sizeof(LONG)>::type> {
+public:
+    static T compareAndSwap(volatile T* dest, T expected, T newValue) {
+        return InterlockedCompareExchange(
+            reinterpret_cast<volatile LONG*>(dest), LONG(newValue), LONG(expected));
+    }
 
-        static T compareAndSwap(volatile T* dest, T expected, T newValue) {
-            return InterlockedCompareExchange(reinterpret_cast<volatile LONG*>(dest),
-                                              LONG(newValue),
-                                              LONG(expected));
-        }
+    static T swap(volatile T* dest, T newValue) {
+        return InterlockedExchange(reinterpret_cast<volatile LONG*>(dest), LONG(newValue));
+    }
 
-        static T swap(volatile T* dest, T newValue) {
-            return InterlockedExchange(reinterpret_cast<volatile LONG*>(dest), LONG(newValue));
-        }
+    static T load(volatile const T* value) {
+        MemoryBarrier();
+        T result = *value;
+        MemoryBarrier();
+        return result;
+    }
 
-        static T load(volatile const T* value) {
-            MemoryBarrier();
-            T result = *value;
-            MemoryBarrier();
-            return result;
-        }
+    static T loadRelaxed(volatile const T* value) {
+        return *value;
+    }
 
-        static T loadRelaxed(volatile const T* value) {
-            return *value;
-        }
+    static void store(volatile T* dest, T newValue) {
+        MemoryBarrier();
+        *dest = newValue;
+        MemoryBarrier();
+    }
 
-        static void store(volatile T* dest, T newValue) {
-            MemoryBarrier();
-            *dest = newValue;
-            MemoryBarrier();
-        }
+    static T fetchAndAdd(volatile T* dest, T increment) {
+        return InterlockedExchangeAdd(reinterpret_cast<volatile LONG*>(dest), LONG(increment));
+    }
 
-        static T fetchAndAdd(volatile T* dest, T increment) {
-            return InterlockedExchangeAdd(reinterpret_cast<volatile LONG*>(dest), LONG(increment));
-        }
-
-    private:
-        AtomicIntrinsics();
-        ~AtomicIntrinsics();
-    };
+private:
+    AtomicIntrinsics();
+    ~AtomicIntrinsics();
+};
 
 
-    namespace details {
+namespace details {
 
-        template <typename T, bool HaveInterlocked64Ops>
-        struct InterlockedImpl64;
+template <typename T, bool HaveInterlocked64Ops>
+struct InterlockedImpl64;
 
-        // Implementation of 64-bit Interlocked operations via Windows API calls.
-        template<typename T>
-        struct InterlockedImpl64<T, true> {
-            static T compareAndSwap(volatile T* dest, T expected, T newValue) {
-                return InterlockedCompareExchange64(
-                    reinterpret_cast<volatile LONGLONG*>(dest),
-                    LONGLONG(newValue),
-                    LONGLONG(expected));
-            }
+// Implementation of 64-bit Interlocked operations via Windows API calls.
+template <typename T>
+struct InterlockedImpl64<T, true> {
+    static T compareAndSwap(volatile T* dest, T expected, T newValue) {
+        return InterlockedCompareExchange64(
+            reinterpret_cast<volatile LONGLONG*>(dest), LONGLONG(newValue), LONGLONG(expected));
+    }
 
-            static T swap(volatile T* dest, T newValue) {
-                return InterlockedExchange64(
-                    reinterpret_cast<volatile LONGLONG*>(dest),
-                    LONGLONG(newValue));
-            }
+    static T swap(volatile T* dest, T newValue) {
+        return InterlockedExchange64(reinterpret_cast<volatile LONGLONG*>(dest),
+                                     LONGLONG(newValue));
+    }
 
-            static T fetchAndAdd(volatile T* dest, T increment) {
-                return InterlockedExchangeAdd64(
-                    reinterpret_cast<volatile LONGLONG*>(dest),
-                    LONGLONG(increment));
-            }
-        };
+    static T fetchAndAdd(volatile T* dest, T increment) {
+        return InterlockedExchangeAdd64(reinterpret_cast<volatile LONGLONG*>(dest),
+                                        LONGLONG(increment));
+    }
+};
 
-        // Implementation of 64-bit Interlocked operations for systems where the API does not
-        // yet provide the Interlocked...64 operations.
-        template<typename T>
-        struct InterlockedImpl64<T, false> {
-            static T compareAndSwap(volatile T* dest, T expected, T newValue) {
-                // NOTE: We must use the compiler intrinsic here: WinXP does not offer
-                // InterlockedCompareExchange64 as an API call.
-                return _InterlockedCompareExchange64(
-                    reinterpret_cast<volatile LONGLONG*>(dest),
-                    LONGLONG(newValue),
-                    LONGLONG(expected));
-            }
+// Implementation of 64-bit Interlocked operations for systems where the API does not
+// yet provide the Interlocked...64 operations.
+template <typename T>
+struct InterlockedImpl64<T, false> {
+    static T compareAndSwap(volatile T* dest, T expected, T newValue) {
+        // NOTE: We must use the compiler intrinsic here: WinXP does not offer
+        // InterlockedCompareExchange64 as an API call.
+        return _InterlockedCompareExchange64(
+            reinterpret_cast<volatile LONGLONG*>(dest), LONGLONG(newValue), LONGLONG(expected));
+    }
 
-            static T swap(volatile T* dest, T newValue) {
-                // NOTE: You may be tempted to replace this with
-                // 'InterlockedExchange64'. Resist! It will compile just fine despite not being
-                // listed in the docs as available on XP, but the compiler may replace it with
-                // calls to the non-intrinsic 'InterlockedCompareExchange64', which does not
-                // exist on XP. We work around this by rolling our own synthetic in terms of
-                // compareAndSwap which we have explicitly formulated in terms of the compiler
-                // provided _InterlockedCompareExchange64 intrinsic.
-                T currentValue = *dest;
-                while (true) {
-                    const T result = compareAndSwap(dest, currentValue, newValue);
-                    if (result == currentValue)
-                        return result;
-                    currentValue = result;
-                }
-            }
-
-            static T fetchAndAdd(volatile T* dest, T increment) {
-                // NOTE: See note for 'swap' on why we roll this ourselves.
-                T currentValue = *dest;
-                while (true) {
-                    const T incremented = currentValue + increment;
-                    const T result = compareAndSwap(dest, currentValue, incremented);
-                    if (result == currentValue)
-                        return result;
-                    currentValue = result;
-                }
-            }
-        };
-
-        // On 32-bit IA-32 systems, 64-bit load and store must be implemented in terms of
-        // Interlocked operations, but on 64-bit systems they support a simpler, native
-        // implementation.  The LoadStoreImpl type represents the abstract implementation of
-        // loading and storing 64-bit values.
-        template <typename U, typename _IsTTooBig=void>
-        struct LoadStoreImpl;
-
-        // Implementation on 64-bit systems.
-        template <typename U>
-        struct LoadStoreImpl<U, typename boost::enable_if_c<sizeof(U) <= sizeof(void*)>::type> {
-            static U load(volatile const U* value) {
-                MemoryBarrier();
-                U result = *value;
-                MemoryBarrier();
+    static T swap(volatile T* dest, T newValue) {
+        // NOTE: You may be tempted to replace this with
+        // 'InterlockedExchange64'. Resist! It will compile just fine despite not being
+        // listed in the docs as available on XP, but the compiler may replace it with
+        // calls to the non-intrinsic 'InterlockedCompareExchange64', which does not
+        // exist on XP. We work around this by rolling our own synthetic in terms of
+        // compareAndSwap which we have explicitly formulated in terms of the compiler
+        // provided _InterlockedCompareExchange64 intrinsic.
+        T currentValue = *dest;
+        while (true) {
+            const T result = compareAndSwap(dest, currentValue, newValue);
+            if (result == currentValue)
                 return result;
-            }
+            currentValue = result;
+        }
+    }
+
+    static T fetchAndAdd(volatile T* dest, T increment) {
+        // NOTE: See note for 'swap' on why we roll this ourselves.
+        T currentValue = *dest;
+        while (true) {
+            const T incremented = currentValue + increment;
+            const T result = compareAndSwap(dest, currentValue, incremented);
+            if (result == currentValue)
+                return result;
+            currentValue = result;
+        }
+    }
+};
+
+// On 32-bit IA-32 systems, 64-bit load and store must be implemented in terms of
+// Interlocked operations, but on 64-bit systems they support a simpler, native
+// implementation.  The LoadStoreImpl type represents the abstract implementation of
+// loading and storing 64-bit values.
+template <typename U, typename _IsTTooBig = void>
+struct LoadStoreImpl;
+
+// Implementation on 64-bit systems.
+template <typename U>
+struct LoadStoreImpl<U, typename boost::enable_if_c<sizeof(U) <= sizeof(void*)>::type> {
+    static U load(volatile const U* value) {
+        MemoryBarrier();
+        U result = *value;
+        MemoryBarrier();
+        return result;
+    }
 
 
-            static void store(volatile U* dest, U newValue) {
-                MemoryBarrier();
-                *dest = newValue;
-                MemoryBarrier();
-            }
-        };
+    static void store(volatile U* dest, U newValue) {
+        MemoryBarrier();
+        *dest = newValue;
+        MemoryBarrier();
+    }
+};
 
-        // Implementation on 32-bit systems.
-        template <typename U>
-        struct LoadStoreImpl<U, typename boost::disable_if_c<sizeof(U) <= sizeof(void*)>::type> {
-            // NOTE: Implemented out-of-line below since the implementation relies on
-            // AtomicIntrinsics.
-            static U load(volatile const U* value);
-            static void store(volatile U* dest, U newValue);
-        };
+// Implementation on 32-bit systems.
+template <typename U>
+struct LoadStoreImpl<U, typename boost::disable_if_c<sizeof(U) <= sizeof(void*)>::type> {
+    // NOTE: Implemented out-of-line below since the implementation relies on
+    // AtomicIntrinsics.
+    static U load(volatile const U* value);
+    static void store(volatile U* dest, U newValue);
+};
 
-    } // namespace details
+}  // namespace details
 
-    /**
-     * Instantiation of AtomicIntrinsics<> for 64-bit word sizes.
-     */
-    template <typename T>
-    class AtomicIntrinsics<T, typename boost::enable_if_c<sizeof(T) == sizeof(LONGLONG)>::type> {
-    public:
-
+/**
+ * Instantiation of AtomicIntrinsics<> for 64-bit word sizes.
+ */
+template <typename T>
+class AtomicIntrinsics<T, typename boost::enable_if_c<sizeof(T) == sizeof(LONGLONG)>::type> {
+public:
 #if defined(NTDDI_VERSION) && defined(NTDDI_WS03SP2) && (NTDDI_VERSION >= NTDDI_WS03SP2)
-        static const bool kHaveInterlocked64 = true;
+    static const bool kHaveInterlocked64 = true;
 #else
-        static const bool kHaveInterlocked64 = false;
+    static const bool kHaveInterlocked64 = false;
 #endif
 
-        typedef details::InterlockedImpl64<T, kHaveInterlocked64> InterlockedImpl;
-        typedef details::LoadStoreImpl<T> LoadStoreImpl;
+    typedef details::InterlockedImpl64<T, kHaveInterlocked64> InterlockedImpl;
+    typedef details::LoadStoreImpl<T> LoadStoreImpl;
 
-        static T compareAndSwap(volatile T* dest, T expected, T newValue) {
-            return InterlockedImpl::compareAndSwap(dest, expected, newValue);
-        }
+    static T compareAndSwap(volatile T* dest, T expected, T newValue) {
+        return InterlockedImpl::compareAndSwap(dest, expected, newValue);
+    }
 
-        static T swap(volatile T* dest, T newValue) {
-            return InterlockedImpl::swap(dest, newValue);
-        }
+    static T swap(volatile T* dest, T newValue) {
+        return InterlockedImpl::swap(dest, newValue);
+    }
 
-        static T load(volatile const T* value) {
-            return LoadStoreImpl::load(value);
-        }
+    static T load(volatile const T* value) {
+        return LoadStoreImpl::load(value);
+    }
 
-        static void store(volatile T* dest, T newValue) {
-            LoadStoreImpl::store(dest, newValue);
-        }
+    static void store(volatile T* dest, T newValue) {
+        LoadStoreImpl::store(dest, newValue);
+    }
 
-        static T fetchAndAdd(volatile T* dest, T increment) {
-            return InterlockedImpl::fetchAndAdd(dest, increment);
-        }
+    static T fetchAndAdd(volatile T* dest, T increment) {
+        return InterlockedImpl::fetchAndAdd(dest, increment);
+    }
 
-    private:
-        AtomicIntrinsics();
-        ~AtomicIntrinsics();
-    };
+private:
+    AtomicIntrinsics();
+    ~AtomicIntrinsics();
+};
 
-    namespace details {
+namespace details {
 
-        template <typename U>
-        U LoadStoreImpl<U, typename boost::disable_if_c<sizeof(U) <= sizeof(void*)>::type>
-        ::load(volatile const U* value) {
-            return AtomicIntrinsics<U>::compareAndSwap(const_cast<volatile U*>(value),
-                                                       U(0),
-                                                       U(0));
-        }
+template <typename U>
+U LoadStoreImpl<U, typename boost::disable_if_c<sizeof(U) <= sizeof(void*)>::type>::load(
+    volatile const U* value) {
+    return AtomicIntrinsics<U>::compareAndSwap(const_cast<volatile U*>(value), U(0), U(0));
+}
 
-        template<typename U>
-        void LoadStoreImpl<U, typename boost::disable_if_c<sizeof(U) <= sizeof(void*)>::type>
-        ::store(volatile U* dest, U newValue) {
-            AtomicIntrinsics<U>::swap(dest, newValue);
-        }
+template <typename U>
+void LoadStoreImpl<U, typename boost::disable_if_c<sizeof(U) <= sizeof(void*)>::type>::store(
+    volatile U* dest, U newValue) {
+    AtomicIntrinsics<U>::swap(dest, newValue);
+}
 
-    } // namespace details
+}  // namespace details
 
 }  // namespace mongo

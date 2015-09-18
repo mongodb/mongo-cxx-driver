@@ -18,11 +18,11 @@
 namespace mongo {
 namespace client {
 
-    class Options;
+class Options;
 
-    // Sets the current global options. It is expected that this will be called from
-    // 'initialize' and nowhere else.
-    void setOptions(const Options& newOptions);
+// Sets the current global options. It is expected that this will be called from
+// 'initialize' and nowhere else.
+void setOptions(const Options& newOptions);
 
-} // namespace client
-} // namespace mongo
+}  // namespace client
+}  // namespace mongo

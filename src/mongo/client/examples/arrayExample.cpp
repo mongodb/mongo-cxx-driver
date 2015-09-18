@@ -38,7 +38,6 @@ using std::list;
 using std::vector;
 
 int main() {
-
     mongo::client::GlobalInstance instance;
     if (!instance.initialized()) {
         std::cout << "failed to initialize the client driver: " << instance.status() << endl;
@@ -59,7 +58,9 @@ int main() {
     bob.appendArray("x", bab.arr());
 
     // Use BSON_ARRAY macro like BSON macro, but without keys
-    BSONArray arr = BSON_ARRAY( "hello" << 1 << BSON( "foo" << BSON_ARRAY( "bar" << "baz" << "qux" ) ) );
+    BSONArray arr = BSON_ARRAY("hello" << 1 << BSON("foo" << BSON_ARRAY("bar"
+                                                                        << "baz"
+                                                                        << "qux")));
 
     // Place the second array in object at key "y"
     bob.appendArray("y", arr);
@@ -79,7 +80,7 @@ int main() {
 
     // Print the array out
     cout << "Our Array:" << endl;
-    for (vector<BSONElement>::iterator it = elements.begin(); it != elements.end(); ++it){
+    for (vector<BSONElement>::iterator it = elements.begin(); it != elements.end(); ++it) {
         cout << *it << endl;
     }
     cout << endl;
@@ -97,7 +98,7 @@ int main() {
 
     // Print the vector out
     cout << "The Vector Version:" << endl;
-    for (vector<BSONElement>::iterator it = v.begin(); it != v.end(); ++it){
+    for (vector<BSONElement>::iterator it = v.begin(); it != v.end(); ++it) {
         cout << *it << endl;
     }
 
@@ -105,7 +106,7 @@ int main() {
 
     // Print the list out
     cout << "The List Version:" << endl;
-    for (list<BSONElement>::iterator it = L.begin(); it != L.end(); ++it){
+    for (list<BSONElement>::iterator it = L.begin(); it != L.end(); ++it) {
         cout << *it << endl;
     }
 }

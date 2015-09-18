@@ -18,25 +18,24 @@
 #include "mongo/client/dbclientcursorshim.h"
 #include "mongo/bson/bsonobjiterator.h"
 
-namespace mongo  {
+namespace mongo {
 
-    class DBClientCursor;
+class DBClientCursor;
 
-    /** DBClientCursorShimArray implements the shim interface over an array of
-     * bson obj's.  This is useful for providing a cursor when we receive only
-     * a single batch, as in the 2.4 aggregate command reply */
-    class DBClientCursorShimArray : public DBClientCursorShim {
-    public:
-        DBClientCursorShimArray(DBClientCursor& c, const std::string& arrayField);
+/** DBClientCursorShimArray implements the shim interface over an array of
+ * bson obj's.  This is useful for providing a cursor when we receive only
+ * a single batch, as in the 2.4 aggregate command reply */
+class DBClientCursorShimArray : public DBClientCursorShim {
+public:
+    DBClientCursorShimArray(DBClientCursor& c, const std::string& arrayField);
 
-        virtual BSONObj next();
-        virtual bool more();
+    virtual BSONObj next();
+    virtual bool more();
 
-    private:
-        DBClientCursor& cursor;
-        BSONObjIterator iter;
-        bool has_array;
-        const std::string array_field;
-    };
-
+private:
+    DBClientCursor& cursor;
+    BSONObjIterator iter;
+    bool has_array;
+    const std::string array_field;
+};
 }

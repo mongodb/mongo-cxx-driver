@@ -19,26 +19,23 @@
 
 #include "mongo/client/dbclientcursor.h"
 
-namespace mongo  {
+namespace mongo {
 
-    DBClientCursorShimTransform::DBClientCursorShimTransform(
-        DBClientCursor& c,
-        const stdx::function<bool(const BSONObj& input, BSONObj* output)>& transformation
-    )
-        : cursor(c)
-        , transformation(transformation)
-    {}
+DBClientCursorShimTransform::DBClientCursorShimTransform(
+    DBClientCursor& c,
+    const stdx::function<bool(const BSONObj& input, BSONObj* output)>& transformation)
+    : cursor(c), transformation(transformation) {}
 
-    bool DBClientCursorShimTransform::more() {
-        while (cursor.rawMore()) {
-            if (transformation(cursor.rawNext(), &nextDoc))
-                return true;
-        }
-        return false;
+bool DBClientCursorShimTransform::more() {
+    while (cursor.rawMore()) {
+        if (transformation(cursor.rawNext(), &nextDoc))
+            return true;
     }
+    return false;
+}
 
-    BSONObj DBClientCursorShimTransform::next() {
-        return nextDoc;
-    }
+BSONObj DBClientCursorShimTransform::next() {
+    return nextDoc;
+}
 
-} // namespace mongo
+}  // namespace mongo

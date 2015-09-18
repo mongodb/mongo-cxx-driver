@@ -22,23 +22,23 @@
 namespace mongo {
 namespace orchestration {
 
-    class ReplicaSet : public MongoResource {
-        friend class Resource;
-        friend class Service;
-        friend class Cluster;
+class ReplicaSet : public MongoResource {
+    friend class Resource;
+    friend class Service;
+    friend class Cluster;
 
-    public:
-        Server primary() const;
-        std::vector<Server> secondaries() const;
-        std::vector<Server> arbiters() const;
-        std::vector<Server> hidden() const;
-        std::vector<Server> members() const;
+public:
+    Server primary() const;
+    std::vector<Server> secondaries() const;
+    std::vector<Server> arbiters() const;
+    std::vector<Server> hidden() const;
+    std::vector<Server> members() const;
 
-        static std::string resourceName();
+    static std::string resourceName();
 
-    private:
-        ReplicaSet(const std::string& url);
-    };
+private:
+    ReplicaSet(const std::string& url);
+};
 
-} // namespace orchestration
-} // namespace mongo
+}  // namespace orchestration
+}  // namespace mongo

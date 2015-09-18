@@ -26,42 +26,45 @@
 namespace mongo {
 namespace geo {
 
-    Coordinates2D::Coordinates2D(const std::vector<double>& coords) {
-        uassert(0, "Number of elements in coords must match dimensionality of coordinate type",
-                coords.size() == dimensionality());
-        _x = coords[0];
-        _y = coords[1];
-    }
+Coordinates2D::Coordinates2D(const std::vector<double>& coords) {
+    uassert(0,
+            "Number of elements in coords must match dimensionality of coordinate type",
+            coords.size() == dimensionality());
+    _x = coords[0];
+    _y = coords[1];
+}
 
-    Coordinates2D::Coordinates2D(const std::pair<double, double>& coords) {
-        _x = coords.first;
-        _y = coords.second;
-    }
+Coordinates2D::Coordinates2D(const std::pair<double, double>& coords) {
+    _x = coords.first;
+    _y = coords.second;
+}
 
-    std::vector<double> Coordinates2D::getValues() const {
-        double vals[] = {_x, _y};
-        return std::vector<double>(vals, vals + sizeof(vals) / sizeof(vals[0]));
-    }
+std::vector<double> Coordinates2D::getValues() const {
+    double vals[] = {_x, _y};
+    return std::vector<double>(vals, vals + sizeof(vals) / sizeof(vals[0]));
+}
 
-    std::pair<double, double> Coordinates2D::getValuesAsPair() const {
-        return std::make_pair(_x, _y);
-    }
+std::pair<double, double> Coordinates2D::getValuesAsPair() const {
+    return std::make_pair(_x, _y);
+}
 
-    BSONObj Coordinates2D::toBSON() const {
-        return BSON(kCoordsFieldName << BSON_ARRAY(_x << _y));
-    }
+BSONObj Coordinates2D::toBSON() const {
+    return BSON(kCoordsFieldName << BSON_ARRAY(_x << _y));
+}
 
-    double Coordinates2D::operator[](size_t dimension) const {
-        switch(dimension) {
+double Coordinates2D::operator[](size_t dimension) const {
+    switch (dimension) {
         case 0:
             return _x;
         case 1:
             return _y;
         default:
-            uassert(0, "Attempt to access out-of-bounds element (only valid indices are 0 and 1 for"
-                       " Coordinates2D)", false);
-        }
+            uassert(0,
+                    "Attempt to access out-of-bounds element (only valid indices are 0 and 1 for"
+                    " Coordinates2D)",
+                    false);
     }
+}
 
-} // namespace geo
-} // namespace mongo
+}  // namespace geo
+}  // namespace mongo

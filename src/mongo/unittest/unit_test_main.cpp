@@ -16,7 +16,7 @@
 #include "gtest/gtest.h"
 #include "mongo/client/init.h"
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
     mongo::client::GlobalInstance instance;

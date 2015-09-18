@@ -33,7 +33,7 @@
 
 #elif defined(_MSC_VER) && _MSC_VER >= 1500
 
-#if _MSC_VER >= 1600  /* Visual Studio 2010+ */
+#if _MSC_VER >= 1600 /* Visual Studio 2010+ */
 
 #include <functional>
 
@@ -45,8 +45,12 @@
 
 #include <tr1/functional>
 
-#define MONGO_HASH_NAMESPACE_START namespace std { namespace tr1 {
-#define MONGO_HASH_NAMESPACE_END }}
+#define MONGO_HASH_NAMESPACE_START \
+    namespace std {                \
+    namespace tr1 {
+#define MONGO_HASH_NAMESPACE_END \
+    }                            \
+    }
 #define MONGO_HASH_NAMESPACE std::tr1
 
 #endif
@@ -55,8 +59,12 @@
 
 #include <tr1/functional>
 
-#define MONGO_HASH_NAMESPACE_START namespace std { namespace tr1 {
-#define MONGO_HASH_NAMESPACE_END }}
+#define MONGO_HASH_NAMESPACE_START \
+    namespace std {                \
+    namespace tr1 {
+#define MONGO_HASH_NAMESPACE_END \
+    }                            \
+    }
 #define MONGO_HASH_NAMESPACE std::tr1
 
 #else

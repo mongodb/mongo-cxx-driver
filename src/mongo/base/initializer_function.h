@@ -20,14 +20,14 @@
 
 namespace mongo {
 
-    class InitializerContext;
+class InitializerContext;
 
-    /**
-     * An InitializerFunction implements the behavior of an initializer operation.
-     *
-     * On successful execution, an InitializerFunction returns Status::OK().  It may
-     * inspect and mutate the supplied InitializerContext.
-     */
-    typedef stdx::function<Status (InitializerContext*)> InitializerFunction;
+/**
+ * An InitializerFunction implements the behavior of an initializer operation.
+ *
+ * On successful execution, an InitializerFunction returns Status::OK().  It may
+ * inspect and mutate the supplied InitializerContext.
+ */
+typedef stdx::function<Status(InitializerContext*)> InitializerFunction;
 
 }  // namespace mongo
