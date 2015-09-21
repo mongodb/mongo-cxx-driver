@@ -1,6 +1,6 @@
 project(MONGO_CXX_DRIVER LANGUAGES CXX)
 
-cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 
 # Add in our modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
@@ -12,8 +12,8 @@ endif()
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# CMake 3.1 doesn't know how to C++11 for clang.
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+# CMake 3.0 doesn't support CMAKE_CXX_STANDARD_REQUIRED yet
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     if (CMAKE_CXX_STANDARD EQUAL 11)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
     elseif (CMAKE_CXX_STANDARD EQUAL 14)
