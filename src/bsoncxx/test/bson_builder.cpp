@@ -747,6 +747,56 @@ TEST_CASE("basic array builder works", "[bsoncxx::builder::basic]") {
     }
 }
 
+TEST_CASE("basic document builder works with concat", "[bsoncxx::builder::basic]") {
+    using namespace builder::basic;
+
+    auto subdoc = builder::stream::document{} << "hello" << "world" << builder::stream::finalize;
+
+    builder::stream::document stream;
+    builder::basic::document basic;
+
+    stream << builder::stream::concatenate{subdoc};
+
+    SECTION("single insert works") {
+        basic.append(builder::basic::concatenate{subdoc});
+
+        viewable_eq_viewable(stream, basic);
+    }
+
+    SECTION("variadic works") {
+        stream << builder::stream::concatenate{subdoc};
+
+        basic.append(builder::basic::concatenate{subdoc}, builder::basic::concatenate{subdoc});
+
+        viewable_eq_viewable(stream, basic);
+    }
+}
+
+TEST_CASE("basic array builder works with concat", "[bsoncxx::builder::basic]") {
+    using namespace builder::basic;
+
+    auto subdoc = builder::stream::array{} << 1 << 2 << builder::stream::finalize;
+
+    builder::stream::array stream;
+    builder::basic::array basic;
+
+    stream << builder::stream::concatenate{subdoc.view()};
+
+    SECTION("single insert works") {
+        basic.append(builder::basic::concatenate{subdoc.view()});
+
+        viewable_eq_viewable(stream, basic);
+    }
+
+    SECTION("variadic works") {
+        stream << builder::stream::concatenate{subdoc.view()};
+
+        basic.append(builder::basic::concatenate{subdoc.view()}, builder::basic::concatenate{subdoc.view()});
+
+        viewable_eq_viewable(stream, basic);
+    }
+}
+
 TEST_CASE("element throws on bad get_", "[bsoncxx::builder::basic]") {
     using namespace builder::basic;
 
