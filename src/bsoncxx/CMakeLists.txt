@@ -60,7 +60,7 @@ add_library(bsoncxx_static STATIC
 )
 
 set_target_properties(bsoncxx_static PROPERTIES
-    OUTPUT_NAME bson
+    OUTPUT_NAME bsoncxx
 )
 
 add_library(bsoncxx SHARED
