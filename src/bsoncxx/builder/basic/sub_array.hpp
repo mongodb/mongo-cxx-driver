@@ -16,6 +16,7 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
+#include <bsoncxx/builder/basic/helpers.hpp>
 #include <bsoncxx/builder/core.hpp>
 
 namespace bsoncxx {
@@ -45,20 +46,31 @@ class BSONCXX_API sub_array {
     template <typename Arg, typename... Args>
     BSONCXX_INLINE
     void append(Arg&& a, Args&&... args) {
-        append(std::forward<Arg>(a));
+        append_(std::forward<Arg>(a));
         append(std::forward<Args>(args)...);
     }
 
+    BSONCXX_INLINE
+    void append() {}
+
+   private:
     ///
     /// Appends a BSON value.
     ///
     template <typename T>
     BSONCXX_INLINE
-    void append(T&& t) {
+    void append_(T&& t) {
         impl::value_append(_core, std::forward<T>(t));
     }
 
-   private:
+    ///
+    /// Concatenates another bson document directly.
+    ///
+    BSONCXX_INLINE
+    void append_(concatenate concatenate) {
+        _core->concatenate(concatenate);
+    }
+
     core* _core;
 };
 
