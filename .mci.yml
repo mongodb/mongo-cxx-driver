@@ -635,7 +635,7 @@ buildvariants:
     <<: *with_msvc2010_32bit
     compile_target: driver build-unit
   run_on:
-  - windows-64-compile
+  - windows-64-vs2010-compile
   tasks:
     - name: "compile"
     - name: "unit-test"
@@ -652,7 +652,7 @@ buildvariants:
     <<: *mongo_url_windows64
     <<: *with_msvc2010
   run_on:
-  - windows-64-compile
+  - windows-64-vs2010-compile
   tasks: *latest_tests
 
 ## Windows 64-bit DEBUG DYNAMIC (msvc2010)
@@ -668,7 +668,7 @@ buildvariants:
     <<: *mongo_url_windows64
     <<: *with_msvc2010
   run_on:
-  - windows-64-compile
+  - windows-64-vs2010-compile
   tasks: *latest_tests
 
 ## Windows 64-bit DYNAMIC (msvc2013)
