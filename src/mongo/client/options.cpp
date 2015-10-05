@@ -51,6 +51,7 @@ Options::Options()
       _sslAllowInvalidHostnames(false),
       _defaultLocalThresholdMillis(kDefaultDefaultLocalThresholdMillis),
       _minLoggedSeverity(logger::LogSeverity::Log()),
+      _IPv6Enabled(false),
       _validateObjects(false) {}
 
 Options& Options::setCallShutdownAtExit(bool value) {
@@ -186,6 +187,15 @@ Options& Options::setMinLoggedSeverity(logger::LogSeverity level) {
 
 logger::LogSeverity Options::minLoggedSeverity() const {
     return _minLoggedSeverity;
+}
+
+Options& Options::setIPv6Enabled(bool state) {
+    _IPv6Enabled = state;
+    return *this;
+}
+
+bool Options::IPv6Enabled() const {
+    return _IPv6Enabled;
 }
 
 Options& Options::setValidateObjects(bool value) {
