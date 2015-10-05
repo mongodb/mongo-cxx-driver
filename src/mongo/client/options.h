@@ -221,6 +221,17 @@ public:
     logger::LogSeverity minLoggedSeverity() const;
 
     //
+    // Networking
+    //
+
+    /** Enable support for the IPv6 protocol family.
+     *
+     *  Default: false
+     */
+    Options& setIPv6Enabled(bool state);
+    bool IPv6Enabled() const;
+
+    //
     // Misc
     //
 
@@ -247,6 +258,7 @@ private:
     int _defaultLocalThresholdMillis;
     LogAppenderFactory _appenderFactory;
     logger::LogSeverity _minLoggedSeverity;
+    bool _IPv6Enabled;
     bool _validateObjects;
 };
 
