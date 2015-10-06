@@ -35,6 +35,7 @@ cxx_driver_variables:
     - name: "integration-test-2.4"
     - name: "integration-test-2.6"
     - name: "integration-test-3.0"
+    - name: "integration-test-3.0-with-auth"
     - name: "integration-test-latest"
     - name: "client-test-2.2"
     - name: "client-test-2.4"
@@ -236,6 +237,14 @@ functions:
           # Requires mongo-orchestration 0.4
           value: "--mongo-orchestration-preset=mmapv1.json"
 
+  "use auth" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "orchestration_preset"
+          # Requires mongo-orchestration 0.4.2
+          value: "--mongo-orchestration-preset=auth.json"
+
   "set version 3.0" :
     command: expansions.update
     params:
@@ -400,6 +409,16 @@ tasks:
       commands:
         - func: "set version 3.0"
         - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
+    - name: "integration-test-3.0-with-auth"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.0"
+        - func: "fetch artifacts"
+        - func: "use auth"
         - func: "fetch mongodb"
         - func: "run integration tests"
 

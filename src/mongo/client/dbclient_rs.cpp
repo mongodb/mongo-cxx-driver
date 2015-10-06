@@ -21,8 +21,8 @@
 
 #include <memory>
 
-#include "mongo/bson/util/builder.h"
 #include "mongo/bson/bsonobjbuilder.h"
+#include "mongo/bson/util/builder.h"
 #include "mongo/client/dbclientcursor.h"
 #include "mongo/client/replica_set_monitor.h"
 #include "mongo/client/sasl_client_authenticate.h"
@@ -418,20 +418,23 @@ void DBClientReplicaSet::_auth(const BSONObj& params) {
                 break;
             }
 
-            BSONObj interposedParams;
+            BSONObj interposedParams = params;
 
-            // Force usage of SCRAM-SHA-1 if host has maxWireVersion > 3.
+            // The auth mechanism we select is based on the wire version of DBClientReplicaSet -
+            // which doesn't make sense as we need to pick a separate auth mechanism for each host
+            // depending on its own wire version. In particular 3.0+ MongoDB will refuse to
+            // authenticate with MONGODB-CR, so we need to force usage of SCRAM - SHA - 1 if host
+            // has maxWireVersion > 3
             if ((conn->getMaxWireVersion() >= 3) &&
                 (params[saslCommandMechanismFieldName].str() == "MONGODB-CR")) {
                 BSONObjBuilder interposedParamsBob;
                 interposedParamsBob.append(saslCommandMechanismFieldName, "SCRAM-SHA-1");
                 interposedParamsBob.appendElementsUnique(params);
                 interposedParams = interposedParamsBob.obj();
-            } else {
-                interposedParams = params;
             }
 
             conn->auth(interposedParams);
+
             // Cache the new auth information since we now validated it's good
             _auths[interposedParams[saslCommandUserDBFieldName].str()] =
                 interposedParams.getOwned();
