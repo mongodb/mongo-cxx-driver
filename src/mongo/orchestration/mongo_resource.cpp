@@ -54,7 +54,11 @@ std::string MongoResource::uri() const {
 }
 
 std::string MongoResource::mongodbUri() const {
-    return handleResponse(status())["mongodb_uri"].asString();
+    Document response = handleResponse(status());
+    if (response.isMember("mongodb_auth_uri")) {
+        return response["mongodb_auth_uri"].asString();
+    }
+    return response["mongodb_uri"].asString();
 }
 
 }  // namespace orchestration
