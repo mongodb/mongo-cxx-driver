@@ -44,11 +44,13 @@ public:
             replset_conn.reset(static_cast<DBClientReplicaSet*>(cs.connect(errmsg)));
             replset_conn->dropCollection(TEST_NS);
 
-            primary_conn.reset(new DBClientConnection());
-            primary_conn->connect(rs().primary().uri());
+            ConnectionString primaryCs =
+                ConnectionString::parse(rs().primary().mongodbUri(), errmsg);
+            primary_conn.reset(static_cast<DBClientConnection*>(primaryCs.connect(errmsg)));
 
-            secondary_conn.reset(new DBClientConnection());
-            secondary_conn->connect(rs().secondaries().front().uri());
+            ConnectionString secondaryCs =
+                ConnectionString::parse(rs().secondaries().front().mongodbUri(), errmsg);
+            secondary_conn.reset(static_cast<DBClientConnection*>(secondaryCs.connect(errmsg)));
             return;
 
         } catch (const std::exception& ex) {

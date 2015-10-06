@@ -53,8 +53,9 @@ template <typename T>
 class BulkOperationTest : public StandaloneTest {
 public:
     BulkOperationTest() {
-        c = new DBClientConnection;
-        c->connect(server().uri());
+        std::string errmsg;
+        ConnectionString cs = ConnectionString::parse(server().mongodbUri(), errmsg);
+        c = static_cast<DBClientConnection*>(cs.connect(errmsg));
         c->dropCollection(TEST_NS);
         _originalWireVersion = c->getMaxWireVersion();
         c->setWireVersions(RequiredWireVersion<T>::value, RequiredWireVersion<T>::value);

@@ -52,9 +52,11 @@ template <typename T>
 class DBClientWriterTest : public StandaloneTest {
 public:
     DBClientWriterTest() {
-        c.connect(server().uri());
-        c.dropCollection(TEST_NS);
-        writer = new T(&c);
+        std::string errmsg;
+        ConnectionString connStr = ConnectionString::parse(server().mongodbUri(), errmsg);
+        c.reset(static_cast<DBClientConnection*>(connStr.connect(errmsg)));
+        c->dropCollection(TEST_NS);
+        writer = new T(c.get());
     }
     ~DBClientWriterTest() {
         delete writer;
@@ -62,11 +64,11 @@ public:
 
     // Returns true if connection supports the parameterized DBClientWriter
     bool testSupported() {
-        return (c.getMaxWireVersion() >= RequiredWireVersion<T>::value);
+        return (c->getMaxWireVersion() >= RequiredWireVersion<T>::value);
     }
 
     DBClientWriter* writer;
-    DBClientConnection c;
+    std::auto_ptr<DBClientConnection> c;
 };
 
 typedef ::testing::Types<WireProtocolWriter, CommandWriter> DBClientWriters;
@@ -80,7 +82,7 @@ TYPED_TEST(DBClientWriterTest, SingleInsert) {
     inserts.push_back(&insert);
     WriteResult result;
     this->writer->write(TEST_NS, inserts, true, &WriteConcern::acknowledged, &result);
-    ASSERT_EQUALS(this->c.findOne(TEST_NS, Query())["a"].numberInt(), 1);
+    ASSERT_EQUALS(this->c->findOne(TEST_NS, Query())["a"].numberInt(), 1);
 }
 
 TYPED_TEST(DBClientWriterTest, MultipleOrderedInserts) {
@@ -93,8 +95,8 @@ TYPED_TEST(DBClientWriterTest, MultipleOrderedInserts) {
     inserts.push_back(&insert2);
     WriteResult result;
     this->writer->write(TEST_NS, inserts, true, &WriteConcern::acknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 2}")), 1U);
     ASSERT_FALSE(result.hasErrors());
 }
 
@@ -108,8 +110,8 @@ TYPED_TEST(DBClientWriterTest, MultipleUnorderedInserts) {
     inserts.push_back(&insert2);
     WriteResult result;
     this->writer->write(TEST_NS, inserts, false, &WriteConcern::acknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 2}")), 1U);
     ASSERT_FALSE(result.hasErrors());
 }
 
@@ -125,8 +127,8 @@ TYPED_TEST(DBClientWriterTest, MultipleOrderedInsertsWithError) {
     WriteResult result;
     ASSERT_THROWS(this->writer->write(TEST_NS, inserts, true, &WriteConcern::acknowledged, &result),
                   OperationException);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 2}")), 0U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{_id: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{_id: 2}")), 0U);
 }
 
 TYPED_TEST(DBClientWriterTest, MultipleUnorderedInsertsWithError) {
@@ -142,8 +144,8 @@ TYPED_TEST(DBClientWriterTest, MultipleUnorderedInsertsWithError) {
     ASSERT_THROWS(
         this->writer->write(TEST_NS, inserts, false, &WriteConcern::acknowledged, &result),
         OperationException);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 2}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{_id: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{_id: 2}")), 1U);
 }
 
 TYPED_TEST(DBClientWriterTest, MultipleOrderedInsertsWithErrorNoConcern) {
@@ -157,8 +159,8 @@ TYPED_TEST(DBClientWriterTest, MultipleOrderedInsertsWithErrorNoConcern) {
     inserts.push_back(&insert2);
     WriteResult result;
     this->writer->write(TEST_NS, inserts, true, &WriteConcern::unacknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 2}")), 0U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{_id: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{_id: 2}")), 0U);
 }
 
 TYPED_TEST(DBClientWriterTest, MultipleUnorderedInsertsWithErrorNoConcern) {
@@ -172,45 +174,45 @@ TYPED_TEST(DBClientWriterTest, MultipleUnorderedInsertsWithErrorNoConcern) {
     inserts.push_back(&insert2);
     WriteResult result;
     this->writer->write(TEST_NS, inserts, false, &WriteConcern::unacknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 1}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{_id: 2}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{_id: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{_id: 2}")), 1U);
 }
 
 TYPED_TEST(DBClientWriterTest, SingleUpdate) {
     if (!this->testSupported())
         return;
-    this->c.insert(TEST_NS, BSON("a" << 1));
-    this->c.insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("a" << 1));
 
     vector<WriteOperation*> updates;
     UpdateWriteOperation update(BSON("a" << 1), BSON("$set" << BSON("a" << 2)), 0);
     updates.push_back(&update);
     WriteResult result;
     this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 2}")), 1U);
 }
 
 TYPED_TEST(DBClientWriterTest, SingleMultiUpdate) {
     if (!this->testSupported())
         return;
-    this->c.insert(TEST_NS, BSON("a" << 1));
-    this->c.insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("a" << 1));
 
     vector<WriteOperation*> updates;
     UpdateWriteOperation update(BSON("a" << 1), BSON("$set" << BSON("a" << 2)), UpdateOption_Multi);
     updates.push_back(&update);
     WriteResult result;
     this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 0U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 2U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}")), 0U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 2}")), 2U);
 }
 
 TYPED_TEST(DBClientWriterTest, SingleUpsertDoesUpdate) {
     if (!this->testSupported())
         return;
-    this->c.insert(TEST_NS, BSON("a" << 1));
-    this->c.insert(TEST_NS, BSON("a" << 2));
+    this->c->insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("a" << 2));
 
     vector<WriteOperation*> updates;
     UpdateWriteOperation update(
@@ -218,15 +220,15 @@ TYPED_TEST(DBClientWriterTest, SingleUpsertDoesUpdate) {
     updates.push_back(&update);
     WriteResult result;
     this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 0U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 2U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}")), 0U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 2}")), 2U);
 }
 
 TYPED_TEST(DBClientWriterTest, SingleUpsertDoesUpsert) {
     if (!this->testSupported())
         return;
-    this->c.insert(TEST_NS, BSON("a" << 1));
-    this->c.insert(TEST_NS, BSON("a" << 2));
+    this->c->insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("a" << 2));
 
     vector<WriteOperation*> updates;
     UpdateWriteOperation update(
@@ -234,15 +236,15 @@ TYPED_TEST(DBClientWriterTest, SingleUpsertDoesUpsert) {
     updates.push_back(&update);
     WriteResult result;
     this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 2U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 2}")), 2U);
 }
 
 TYPED_TEST(DBClientWriterTest, MultipleOrderedUpdates) {
     if (!this->testSupported())
         return;
-    this->c.insert(TEST_NS, BSON("a" << 1));
-    this->c.insert(TEST_NS, BSON("b" << 1));
+    this->c->insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("b" << 1));
 
     vector<WriteOperation*> updates;
     UpdateWriteOperation updateA(BSON("a" << 1), BSON("$set" << BSON("a" << 2)), 0);
@@ -251,15 +253,15 @@ TYPED_TEST(DBClientWriterTest, MultipleOrderedUpdates) {
     updates.push_back(&updateB);
     WriteResult result;
     this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 2}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 2}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{b: 2}")), 1U);
 }
 
 TYPED_TEST(DBClientWriterTest, MultipleUnorderedUpdates) {
     if (!this->testSupported())
         return;
-    this->c.insert(TEST_NS, BSON("a" << 1));
-    this->c.insert(TEST_NS, BSON("b" << 1));
+    this->c->insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("b" << 1));
 
     vector<WriteOperation*> updates;
     UpdateWriteOperation updateA(BSON("a" << 1), BSON("$set" << BSON("a" << 2)), 0);
@@ -268,16 +270,16 @@ TYPED_TEST(DBClientWriterTest, MultipleUnorderedUpdates) {
     updates.push_back(&updateB);
     WriteResult result;
     this->writer->write(TEST_NS, updates, false, &WriteConcern::acknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 2}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 2}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{b: 2}")), 1U);
 }
 
 TYPED_TEST(DBClientWriterTest, MultipleOrderedUpdatesWithError) {
     if (!this->testSupported())
         return;
-    this->c.createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
-    this->c.insert(TEST_NS, BSON("a" << 1));
-    this->c.insert(TEST_NS, BSON("b" << 1));
+    this->c->createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
+    this->c->insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("b" << 1));
 
     vector<WriteOperation*> updates;
     UpdateWriteOperation updateA(BSON("a" << 1), BSON("$set" << BSON("a" << 2)), 0);
@@ -287,16 +289,16 @@ TYPED_TEST(DBClientWriterTest, MultipleOrderedUpdatesWithError) {
     WriteResult result;
     ASSERT_THROWS(this->writer->write(TEST_NS, updates, true, &WriteConcern::acknowledged, &result),
                   OperationException);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 2}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{b: 1}")), 1U);
 }
 
 TYPED_TEST(DBClientWriterTest, MultipleUnorderedUpdatesWithError) {
     if (!this->testSupported())
         return;
-    this->c.createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
-    this->c.insert(TEST_NS, BSON("a" << 1));
-    this->c.insert(TEST_NS, BSON("b" << 1));
+    this->c->createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
+    this->c->insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("b" << 1));
 
     vector<WriteOperation*> updates;
     UpdateWriteOperation updateA(BSON("a" << 1), BSON("$set" << BSON("a" << 2)), 0);
@@ -307,16 +309,16 @@ TYPED_TEST(DBClientWriterTest, MultipleUnorderedUpdatesWithError) {
     ASSERT_THROWS(
         this->writer->write(TEST_NS, updates, false, &WriteConcern::acknowledged, &result),
         OperationException);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 2}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{b: 1}")), 1U);
 }
 
 TYPED_TEST(DBClientWriterTest, MultipleOrderedUpdatesWithErrorNoConcern) {
     if (!this->testSupported())
         return;
-    this->c.createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
-    this->c.insert(TEST_NS, BSON("a" << 1));
-    this->c.insert(TEST_NS, BSON("b" << 1));
+    this->c->createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
+    this->c->insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("b" << 1));
 
     vector<WriteOperation*> updates;
     UpdateWriteOperation updateA(BSON("a" << 1), BSON("$set" << BSON("a" << 2)), 0);
@@ -325,16 +327,16 @@ TYPED_TEST(DBClientWriterTest, MultipleOrderedUpdatesWithErrorNoConcern) {
     updates.push_back(&updateB);
     WriteResult result;
     this->writer->write(TEST_NS, updates, true, &WriteConcern::unacknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 2}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{b: 1}")), 1U);
 }
 
 TYPED_TEST(DBClientWriterTest, MultipleUnorderedUpdatesWithErrorNoConcern) {
     if (!this->testSupported())
         return;
-    this->c.createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
-    this->c.insert(TEST_NS, BSON("a" << 1));
-    this->c.insert(TEST_NS, BSON("b" << 1));
+    this->c->createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
+    this->c->insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("b" << 1));
 
     vector<WriteOperation*> updates;
     UpdateWriteOperation updateA(BSON("a" << 1), BSON("$set" << BSON("a" << 2)), 0);
@@ -343,49 +345,49 @@ TYPED_TEST(DBClientWriterTest, MultipleUnorderedUpdatesWithErrorNoConcern) {
     updates.push_back(&updateB);
     WriteResult result;
     this->writer->write(TEST_NS, updates, false, &WriteConcern::unacknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 2}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{b: 1}")), 1U);
 }
 
 TYPED_TEST(DBClientWriterTest, SingleDelete) {
     if (!this->testSupported())
         return;
-    this->c.insert(TEST_NS, BSON("a" << 0));
-    this->c.insert(TEST_NS, BSON("a" << 1));
-    this->c.insert(TEST_NS, BSON("a" << 2));
+    this->c->insert(TEST_NS, BSON("a" << 0));
+    this->c->insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("a" << 2));
 
     vector<WriteOperation*> deletes;
     DeleteWriteOperation delete_op(BSON("a" << BSON("$gt" << 0)), 0);
     deletes.push_back(&delete_op);
     WriteResult result;
     this->writer->write(TEST_NS, deletes, true, &WriteConcern::acknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 0}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 0U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 0U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 0}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}")), 0U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 2}")), 0U);
 }
 
 TYPED_TEST(DBClientWriterTest, SingleDeleteJustOne) {
     if (!this->testSupported())
         return;
-    this->c.insert(TEST_NS, BSON("a" << 0));
-    this->c.insert(TEST_NS, BSON("a" << 1));
-    this->c.insert(TEST_NS, BSON("a" << 2));
+    this->c->insert(TEST_NS, BSON("a" << 0));
+    this->c->insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("a" << 2));
 
     vector<WriteOperation*> deletes;
     DeleteWriteOperation delete_op(BSON("a" << BSON("$gt" << 0)), RemoveOption_JustOne);
     deletes.push_back(&delete_op);
     WriteResult result;
     this->writer->write(TEST_NS, deletes, true, &WriteConcern::acknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 0}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 0U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 2}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 0}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}")), 0U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 2}")), 1U);
 }
 
 TYPED_TEST(DBClientWriterTest, MultipleOrderedDeletes) {
     if (!this->testSupported())
         return;
-    this->c.insert(TEST_NS, BSON("a" << 1));
-    this->c.insert(TEST_NS, BSON("b" << 1));
+    this->c->insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("b" << 1));
 
     vector<WriteOperation*> deletes;
     DeleteWriteOperation deleteA(BSON("a" << 1), 0);
@@ -393,18 +395,18 @@ TYPED_TEST(DBClientWriterTest, MultipleOrderedDeletes) {
     deletes.push_back(&deleteA);
     deletes.push_back(&deleteB);
     WriteResult result;
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{b: 1}")), 1U);
     this->writer->write(TEST_NS, deletes, true, &WriteConcern::acknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 0U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 0U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}")), 0U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{b: 1}")), 0U);
 }
 
 TYPED_TEST(DBClientWriterTest, MultipleUnorderedDeletes) {
     if (!this->testSupported())
         return;
-    this->c.insert(TEST_NS, BSON("a" << 1));
-    this->c.insert(TEST_NS, BSON("b" << 1));
+    this->c->insert(TEST_NS, BSON("a" << 1));
+    this->c->insert(TEST_NS, BSON("b" << 1));
 
     vector<WriteOperation*> deletes;
     DeleteWriteOperation deleteA(BSON("a" << 1), 0);
@@ -412,10 +414,10 @@ TYPED_TEST(DBClientWriterTest, MultipleUnorderedDeletes) {
     deletes.push_back(&deleteA);
     deletes.push_back(&deleteB);
     WriteResult result;
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 1U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}")), 1U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{b: 1}")), 1U);
     this->writer->write(TEST_NS, deletes, false, &WriteConcern::acknowledged, &result);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{a: 1}")), 0U);
-    ASSERT_EQUALS(this->c.count(TEST_NS, Query("{b: 1}")), 0U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{a: 1}")), 0U);
+    ASSERT_EQUALS(this->c->count(TEST_NS, Query("{b: 1}")), 0U);
 }
 }

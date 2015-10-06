@@ -50,8 +50,10 @@ const char DATA_LOC[] = "./src/mongo/integration/data";
 
 class GridFSTest : public StandaloneTest {
 public:
-    GridFSTest() : _conn(new DBClientConnection()) {
-        _conn->connect(server().uri());
+    GridFSTest() {
+        std::string errmsg;
+        ConnectionString connStr = ConnectionString::parse(server().mongodbUri(), errmsg);
+        _conn.reset(static_cast<DBClientConnection*>(connStr.connect(errmsg)));
         _conn->dropDatabase(TEST_DB);
         _gfs.reset(new GridFS(*_conn, TEST_DB));
     }
