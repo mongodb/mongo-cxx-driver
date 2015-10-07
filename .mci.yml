@@ -18,8 +18,9 @@ functions:
             working_dir: "."
             script: |
                 wget -O mongodb.tgz https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-latest.tgz
-                tar --extract --file mongodb.tgz --strip-components=2 --wildcards --no-anchored "*/bin/mongod"
-                ./mongod --fork --logpath=/data/log --dbpath=/data/db --pidfilepath=/data/pid
+                tar --extract --file mongodb.tgz --strip-components=2 --wildcards --no-anchored "*/bin/mongod
+                mkdir -p /data/tmp/db
+                ./mongod --fork --logpath=/data/tmp/log --dbpath=/data/tmp/db --pidfilepath=/data/tmp/pid
 
     "install_c_driver":
         command: shell.exec
@@ -28,8 +29,8 @@ functions:
             script: |
                 git clone -b r1.2 https://github.com/mongodb/mongo-c-driver.git
                 cd mongo-c-driver
-                rm -rf /data/c-driver-install
-                ./autogen.sh --prefix="/data/c-driver-install" --enable-tests=no --enable-examples=no
+                rm -rf /data/tmp/c-driver-install
+                ./autogen.sh --prefix="/data/tmp/c-driver-install" --enable-tests=no --enable-examples=no
                 make
                 make install
 
@@ -38,7 +39,7 @@ functions:
         params:
             working_dir: "."
             script:
-               kill -TERM $(cat /data/pid) 
+               kill -TERM $(cat /data/tmp/pid)
 
 
 #######################################
@@ -77,7 +78,7 @@ tasks:
           params:
               working_dir: "mongo-cxx-driver/build"
               script: |
-                  PKG_CONFIG_PATH="/data/c-driver-install/lib/pkgconfig" /opt/cmake/bin/cmake -DBUILD_UNIT_TESTS=true -DBUILD_EXAMPLES=true -DCMAKE_BUILD_TYPE=${build_type} ..
+                  PKG_CONFIG_PATH="/data/tmp/c-driver-install" /opt/cmake/bin/cmake -DBUILD_UNIT_TESTS=true -DBUILD_EXAMPLES=true -DCMAKE_BUILD_TYPE=${build_type} CMAKE_INSTALL_PREFIX=/data/tmp/cxx-driver-install ..
                   make
                   make test
         - func: "stop_mongod"
