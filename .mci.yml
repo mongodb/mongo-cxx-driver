@@ -26,7 +26,7 @@ functions:
         params:
             working_dir: "."
             script: |
-                git clone -b 1.2.0-dev https://github.com/mongodb/mongo-c-driver.git
+                git clone -b r1.2 https://github.com/mongodb/mongo-c-driver.git
                 cd mongo-c-driver
                 rm -rf /data/c-driver-install
                 ./autogen.sh --prefix="/data/c-driver-install" --enable-tests=no --enable-examples=no
@@ -77,7 +77,7 @@ tasks:
           params:
               working_dir: "mongo-cxx-driver/build"
               script: |
-                  PKG_CONFIG_PATH="/data/c-driver-install/lib/pkgconfig" /opt/cmake-3.1.1-Linux-x86_64/bin/cmake -DBUILD_UNIT_TESTS=true -DBUILD_EXAMPLES=true -DCMAKE_BUILD_TYPE=${build_type} ..
+                  PKG_CONFIG_PATH="/data/c-driver-install/lib/pkgconfig" /opt/cmake/bin/cmake -DBUILD_UNIT_TESTS=true -DBUILD_EXAMPLES=true -DCMAKE_BUILD_TYPE=${build_type} ..
                   make
                   make test
         - func: "stop_mongod"
