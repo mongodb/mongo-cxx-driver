@@ -18,7 +18,7 @@ functions:
             working_dir: "."
             script: |
                 wget -O mongodb.tgz https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-latest.tgz
-                tar --extract --file mongodb.tgz --strip-components=2 --wildcards --no-anchored "*/bin/mongod
+                tar --extract --file mongodb.tgz --strip-components=2 --wildcards --no-anchored "*/bin/mongod"
                 mkdir -p /data/tmp/db
                 ./mongod --fork --logpath=/data/tmp/log --dbpath=/data/tmp/db --pidfilepath=/data/tmp/pid
 
