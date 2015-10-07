@@ -92,16 +92,11 @@ void DBClientCursor::_finishConsInit() {
 }
 
 int DBClientCursor::nextBatchSize() {
-    if (nToReturn) {
-        int remaining = nToReturn - nReturned;
-
-        if (batchSize && batchSize < remaining)
-            return batchSize;
-
-        return -remaining;
-    }
-
-    return batchSize;
+    if (nToReturn == 0)
+        return batchSize;
+    if (batchSize == 0)
+        return nToReturn;
+    return std::min(batchSize, nToReturn);
 }
 
 void DBClientCursor::_assembleInit(Message& toSend) {

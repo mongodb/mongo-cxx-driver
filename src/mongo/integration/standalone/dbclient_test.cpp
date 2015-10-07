@@ -1422,5 +1422,83 @@ TEST_F(DBClientTest, ConnectionStringWithTestDB) {
     }
 }
 
+std::size_t cursorCount(DBClientCursor* cursor) {
+    std::size_t count = 0;
+    while (cursor->more()) {
+        cursor->nextSafe();
+        ++count;
+    }
+    return count;
+}
+
+TEST_F(DBClientTest, LimitWithMultipleBatches) {
+    // We need to insert enough documents in to our collection such that we can require multiple
+    // batches to fill our limit.
+    std::size_t totalInserts = 25000;
+    std::size_t bulkSize = 1000;
+    for (std::size_t i = 0; i < totalInserts; i += bulkSize) {
+        BulkOperationBuilder bulk(&c, TEST_NS, false);
+        WriteResult result;
+        for (std::size_t j = 0; j < bulkSize; ++j) {
+            bulk.insert(BSON("i" << static_cast<long long>(i) << "j" << static_cast<long long>(j)
+                                 << "a"
+                                 << "bbbbbbbbbbbbbbbbbbbbbbbbbb"
+                                 << "c"
+                                 << "dddddddddddddddddddddddddddd"));
+        }
+        bulk.execute(&WriteConcern::acknowledged, &result);
+        ASSERT_EQUALS(static_cast<std::size_t>(result.nInserted()), bulkSize);
+    }
+
+    {
+        // A sanity check.
+        auto_ptr<DBClientCursor> limitQuery1 = c.query(TEST_NS, mongo::Query("{}"), 1);
+        ASSERT_EQUALS(cursorCount(limitQuery1.get()), 1u);
+    }
+    {
+        // One more sanity check.
+        auto_ptr<DBClientCursor> limitQuery2 = c.query(TEST_NS, mongo::Query("{}"), 101);
+        ASSERT_EQUALS(cursorCount(limitQuery2.get()), 101u);
+    }
+    {
+        auto_ptr<DBClientCursor> limitQuery3 = c.query(TEST_NS, mongo::Query("{}"), 9000);
+        ASSERT_EQUALS(cursorCount(limitQuery3.get()), 9000u);
+    }
+    {
+        auto_ptr<DBClientCursor> limitQuery4 = c.query(TEST_NS, mongo::Query("{}"), 6000);
+        ASSERT_EQUALS(cursorCount(limitQuery4.get()), 6000u);
+    }
+    {
+        auto_ptr<DBClientCursor> limitQuery5 = c.query(TEST_NS, mongo::Query("{}"), 15000);
+        ASSERT_EQUALS(cursorCount(limitQuery5.get()), 15000u);
+    }
+    {
+        auto_ptr<DBClientCursor> limitQuery6 = c.query(TEST_NS, mongo::Query("{}"), 24999);
+        ASSERT_EQUALS(cursorCount(limitQuery6.get()), 24999u);
+    }
+    {
+        // Try with nToReturn 24999, batchSize 5
+        auto_ptr<DBClientCursor> limitQuery6 =
+            c.query(TEST_NS, mongo::Query("{}"), 24999, 0, 0, 0, 5);
+        ASSERT_EQUALS(cursorCount(limitQuery6.get()), 24999u);
+    }
+    {
+        // Try with nToReturn 1, batchSize 5
+        auto_ptr<DBClientCursor> limitQuery6 = c.query(TEST_NS, mongo::Query("{}"), 1, 0, 0, 0, 5);
+        ASSERT_EQUALS(cursorCount(limitQuery6.get()), 1u);
+    }
+    {
+        // Try with nToReturn 10000, batchSize 4
+        auto_ptr<DBClientCursor> limitQuery6 =
+            c.query(TEST_NS, mongo::Query("{}"), 10000, 0, 0, 0, 4);
+        ASSERT_EQUALS(cursorCount(limitQuery6.get()), 10000u);
+    }
+    {
+        // Try with nToReturn 23000, batchSize 10000
+        auto_ptr<DBClientCursor> limitQuery6 =
+            c.query(TEST_NS, mongo::Query("{}"), 23000, 0, 0, 0, 10000);
+        ASSERT_EQUALS(cursorCount(limitQuery6.get()), 23000u);
+    }
+}
 
 }  // namespace
