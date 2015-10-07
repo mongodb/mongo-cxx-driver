@@ -78,7 +78,7 @@ tasks:
           params:
               working_dir: "mongo-cxx-driver/build"
               script: |
-                  PKG_CONFIG_PATH="/data/tmp/c-driver-install" /opt/cmake/bin/cmake -DBUILD_UNIT_TESTS=true -DBUILD_EXAMPLES=true -DCMAKE_BUILD_TYPE=${build_type} CMAKE_INSTALL_PREFIX=/data/tmp/cxx-driver-install ..
+                  PKG_CONFIG_PATH="/data/tmp/c-driver-install/lib/pkgconfig" /opt/cmake/bin/cmake -DBUILD_UNIT_TESTS=true -DBUILD_EXAMPLES=true -DCMAKE_BUILD_TYPE=${build_type} CMAKE_INSTALL_PREFIX=/data/tmp/cxx-driver-install ..
                   make
                   make test
         - func: "stop_mongod"
