@@ -1129,11 +1129,20 @@ TEST_F(DBClientTest, Comment) {
     c.setDbProfilingLevel(TEST_DB, c.ProfileAll);
     c.findOne(TEST_NS, Query("{$query: {a: 'z'}, $comment: 'wow'})"));
     c.setDbProfilingLevel(TEST_DB, c.ProfileOff);
-    BSONObj result = c.findOne(profile_coll,
-                               BSON("ns" << TEST_NS << "op"
-                                         << "query"
-                                         << "query.$comment"
-                                         << "wow"));
+    BSONObj result;
+    if (serverGTE(&c, 3, 1)) {
+        result = c.findOne(profile_coll,
+                           BSON("ns" << TEST_NS << "op"
+                                     << "query"
+                                     << "query.comment"
+                                     << "wow"));
+    } else {
+        result = c.findOne(profile_coll,
+                           BSON("ns" << TEST_NS << "op"
+                                     << "query"
+                                     << "query.$comment"
+                                     << "wow"));
+    }
     ASSERT_FALSE(result.isEmpty());
 }
 
