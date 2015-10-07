@@ -38,7 +38,7 @@ before_install:
     - sudo apt-get update -qq
 
     # Mongo C Driver
-    - git clone -b 1.2.0-dev https://github.com/mongodb/mongo-c-driver.git
+    - git clone -b r1.2 https://github.com/mongodb/mongo-c-driver.git
 
 install:
     # GCC
