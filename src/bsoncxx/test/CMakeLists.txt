@@ -3,6 +3,7 @@ include_directories(
 )
 
 add_executable(test_bson
+    bson_b_date.cpp
     bson_builder.cpp
     bson_util_itoa.cpp
     bson_validate.cpp

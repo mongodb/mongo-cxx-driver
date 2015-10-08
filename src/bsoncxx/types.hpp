@@ -16,6 +16,7 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
+#include <chrono>
 #include <cstring>
 
 #include <bsoncxx/array/view.hpp>
@@ -201,9 +202,21 @@ BSONCXX_INLINE bool operator==(const b_bool& lhs, const b_bool& rhs) {
 struct BSONCXX_API b_date {
     static constexpr auto type_id = type::k_date;
 
+    BSONCXX_INLINE
+    explicit b_date(int64_t value)
+        : value(value) {}
+
+    BSONCXX_INLINE
+    explicit b_date(const std::chrono::system_clock::time_point& tp)
+        : value(std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch()).count()) {}
+
     int64_t value;
 
     BSONCXX_INLINE operator int64_t() { return value; }
+
+    BSONCXX_INLINE operator std::chrono::system_clock::time_point()
+        { return std::chrono::system_clock::time_point(
+            std::chrono::duration_cast<std::chrono::system_clock::duration>(std::chrono::milliseconds{value})); }
 };
 
 BSONCXX_INLINE bool operator==(const b_date& lhs, const b_date& rhs) {
