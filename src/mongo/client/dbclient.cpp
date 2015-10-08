@@ -1395,12 +1395,12 @@ BSONObj DBClientWithCommands::findAndRemove(const StringData& ns,
     return result.obj();
 }
 
-bool DBClientWithCommands::eval(const string& dbname,
-                                const string& jscode,
-                                BSONObj& info,
-                                BSONElement& retValue,
-                                BSONObj* args,
-                                bool nolock) {
+bool DBClientWithCommands::evalDeprecated(const string& dbname,
+                                          const string& jscode,
+                                          BSONObj& info,
+                                          BSONElement& retValue,
+                                          BSONObj* args,
+                                          bool nolock) {
     BSONObjBuilder b;
     b.appendCode("$eval", jscode);
     if (args) {
@@ -1415,7 +1415,7 @@ bool DBClientWithCommands::eval(const string& dbname,
     return ok;
 }
 
-bool DBClientWithCommands::eval(const string& dbname, const string& jscode) {
+bool DBClientWithCommands::evalDeprecated(const string& dbname, const string& jscode) {
     BSONObj info;
     BSONElement retValue;
     return eval(dbname, jscode, info, retValue);

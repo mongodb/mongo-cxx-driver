@@ -1186,12 +1186,22 @@ public:
 
        See testDbEval() in dbclient.cpp for an example of usage.
     */
+    MONGO_CLIENT_DEPRECATED("deprecated in MongoDB 3.0")
     bool eval(const std::string& dbname,
               const std::string& jscode,
               BSONObj& info,
               BSONElement& retValue,
               BSONObj* args = 0,
-              bool nolock = false);
+              bool nolock = false) {
+        return evalDeprecated(dbname, jscode, info, retValue, args, nolock);
+    }
+
+    bool evalDeprecated(const std::string& dbname,
+                        const std::string& jscode,
+                        BSONObj& info,
+                        BSONElement& retValue,
+                        BSONObj* args = 0,
+                        bool nolock = false);
 
     /** validate a collection, checking for errors and reporting back statistics.
         this operation is slow and blocking.
@@ -1205,9 +1215,23 @@ public:
     /* The following helpers are simply more convenient forms of eval() for certain common cases */
 
     /* invocation with no return value of interest -- with or without one simple parameter */
-    bool eval(const std::string& dbname, const std::string& jscode);
+
+    MONGO_CLIENT_DEPRECATED("deprecated in MongoDB 3.0")
+    bool eval(const std::string& dbname, const std::string& jscode) {
+        return evalDeprecated(dbname, jscode);
+    }
+
+    bool evalDeprecated(const std::string& dbname, const std::string& jscode);
+
     template <class T>
-    bool eval(const std::string& dbname, const std::string& jscode, T parm1) {
+    MONGO_CLIENT_DEPRECATED("deprecated in MongoDB 3.0") bool eval(const std::string& dbname,
+                                                                   const std::string& jscode,
+                                                                   T parm1) {
+        return evalDeprecated(dbname, jscode, parm1);
+    }
+
+    template <class T>
+    bool evalDeprecated(const std::string& dbname, const std::string& jscode, T parm1) {
         BSONObj info;
         BSONElement retValue;
         BSONObjBuilder b;
@@ -1218,8 +1242,20 @@ public:
 
     /** eval invocation with one parm to server and one numeric field (either int or double)
      * returned */
+
     template <class T, class NumType>
-    bool eval(const std::string& dbname, const std::string& jscode, T parm1, NumType& ret) {
+    MONGO_CLIENT_DEPRECATED("deprecated in MongoDB 3.0") bool eval(const std::string& dbname,
+                                                                   const std::string& jscode,
+                                                                   T parm1,
+                                                                   NumType& ret) {
+        return evalDeprecated(dbname, jscode, parm1, ret);
+    }
+
+    template <class T, class NumType>
+    bool evalDeprecated(const std::string& dbname,
+                        const std::string& jscode,
+                        T parm1,
+                        NumType& ret) {
         BSONObj info;
         BSONElement retValue;
         BSONObjBuilder b;
