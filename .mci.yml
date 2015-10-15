@@ -27,7 +27,7 @@ functions:
         params:
             working_dir: "."
             script: |
-                git clone -b r1.2 https://github.com/mongodb/mongo-c-driver.git
+                git clone -b master https://github.com/mongodb/mongo-c-driver.git
                 cd mongo-c-driver
                 rm -rf /data/tmp/c-driver-install
                 ./autogen.sh --prefix="/data/tmp/c-driver-install" --enable-tests=no --enable-examples=no
