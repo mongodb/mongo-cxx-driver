@@ -30,6 +30,7 @@ cxx_driver_variables:
 
   version_test_list: &version_tests
     - name: "compile"
+    - name: "lint"
     - name: "unit-test"
     - name: "integration-test-2.2"
     - name: "integration-test-2.4"
