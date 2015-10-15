@@ -317,9 +317,9 @@ int main(int argc, const char** argv) {
         BSONObj res;
 
         bool gotError = false;
-        verify(conn->eval("test", "return db.totest.findOne().x", res));
+        verify(conn->evalDeprecated("test", "return db.totest.findOne().x", res));
         try {
-            conn->eval("test", "sleep(5000); return db.totest.findOne().x", res);
+            conn->evalDeprecated("test", "sleep(5000); return db.totest.findOne().x", res);
         } catch (std::exception& e) {
             gotError = true;
             std::cout << e.what() << endl;
@@ -328,7 +328,7 @@ int main(int argc, const char** argv) {
         // sleep so the server isn't locked anymore
         sleepsecs(4);
 
-        verify(conn->eval("test", "return db.totest.findOne().x", res));
+        verify(conn->evalDeprecated("test", "return db.totest.findOne().x", res));
     }
 
     cout << "client test finished!" << endl;

@@ -1401,6 +1401,14 @@ bool DBClientWithCommands::eval(const string& dbname,
                                 BSONElement& retValue,
                                 BSONObj* args,
                                 bool nolock) {
+    return evalDeprecated(dbname, jscode, info, retValue, args, nolock);
+}
+bool DBClientWithCommands::evalDeprecated(const string& dbname,
+                                          const string& jscode,
+                                          BSONObj& info,
+                                          BSONElement& retValue,
+                                          BSONObj* args,
+                                          bool nolock) {
     BSONObjBuilder b;
     b.appendCode("$eval", jscode);
     if (args) {
@@ -1416,6 +1424,10 @@ bool DBClientWithCommands::eval(const string& dbname,
 }
 
 bool DBClientWithCommands::eval(const string& dbname, const string& jscode) {
+    return evalDeprecated(dbname, jscode);
+}
+
+bool DBClientWithCommands::evalDeprecated(const string& dbname, const string& jscode) {
     BSONObj info;
     BSONElement retValue;
     return eval(dbname, jscode, info, retValue);
