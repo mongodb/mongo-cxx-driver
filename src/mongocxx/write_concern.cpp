@@ -17,13 +17,15 @@
 #include <mongocxx/private/write_concern.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/stdx.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 write_concern::write_concern()
-    : _impl{bsoncxx::stdx::make_unique<impl>(mongoc_write_concern_new())} {
+    : _impl{stdx::make_unique<impl>(libmongoc::write_concern_new())} {
 }
 
 write_concern::write_concern(std::unique_ptr<impl>&& implementation) {
@@ -34,12 +36,12 @@ write_concern::write_concern(write_concern&&) noexcept = default;
 write_concern& write_concern::operator=(write_concern&&) noexcept = default;
 
 write_concern::write_concern(const write_concern& other)
-    : _impl(bsoncxx::stdx::make_unique<impl>(
+    : _impl(stdx::make_unique<impl>(
           libmongoc::write_concern_copy(other._impl->write_concern_t))) {
 }
 
 write_concern& write_concern::operator=(const write_concern& other) {
-    _impl.reset(bsoncxx::stdx::make_unique<impl>(
+    _impl.reset(stdx::make_unique<impl>(
                     libmongoc::write_concern_copy(other._impl->write_concern_t)).release());
     return *this;
 }
@@ -62,7 +64,7 @@ void write_concern::nodes(std::int32_t confirm_from) {
     libmongoc::write_concern_set_w(_impl->write_concern_t, confirm_from);
 }
 
-void write_concern::tag(bsoncxx::stdx::string_view confirm_from) {
+void write_concern::tag(stdx::string_view confirm_from) {
     libmongoc::write_concern_set_wtag(_impl->write_concern_t, confirm_from.data());
 }
 
@@ -86,10 +88,9 @@ std::int32_t write_concern::nodes() const {
     return libmongoc::write_concern_get_w(_impl->write_concern_t);
 }
 
-// TODO: should this be an optional... probably
-std::string write_concern::tag() const {
+stdx::optional<std::string> write_concern::tag() const {
     const char* tag_str = libmongoc::write_concern_get_wtag(_impl->write_concern_t);
-    return tag_str ? tag_str : std::string();
+    return tag_str ? stdx::make_optional<std::string>(tag_str) : stdx::nullopt;
 }
 
 bool write_concern::majority() const {
