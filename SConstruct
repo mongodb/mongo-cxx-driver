@@ -18,6 +18,7 @@ import urllib2
 import buildscripts.utils
 import buildscripts.docs
 import buildscripts.lint
+import buildscripts.clang_format
 
 EnsureSConsVersion( 1, 1, 0 )
 
@@ -1854,6 +1855,10 @@ env.AlwaysBuild("docs")
 # --- lint ----
 
 def doLint( env , target , source ):
+    import buildscripts.clang_format
+    if not buildscripts.clang_format.lint(None, []):
+        raise Exception("clang-format lint errors")
+
     if not buildscripts.lint.run_lint( [ "src/mongo/" ] ):
         raise Exception( "lint errors" )
 
