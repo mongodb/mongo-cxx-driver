@@ -64,6 +64,12 @@ void write_concern::nodes(std::int32_t confirm_from) {
     libmongoc::write_concern_set_w(_impl->write_concern_t, confirm_from);
 }
 
+void write_concern::acknowledge_level(write_concern::level confirm_level) {
+    libmongoc::write_concern_set_w(
+        _impl->write_concern_t,
+        static_cast<std::underlying_type<write_concern::level>::type>(confirm_level));
+}
+
 void write_concern::tag(stdx::string_view confirm_from) {
     libmongoc::write_concern_set_wtag(_impl->write_concern_t, confirm_from.data());
 }
@@ -84,8 +90,15 @@ bool write_concern::journal() const {
     return libmongoc::write_concern_get_journal(_impl->write_concern_t);
 }
 
-std::int32_t write_concern::nodes() const {
-    return libmongoc::write_concern_get_w(_impl->write_concern_t);
+stdx::optional<std::int32_t> write_concern::nodes() const {
+    std::int32_t w = libmongoc::write_concern_get_w(_impl->write_concern_t);
+    return w >= 1 ? stdx::optional<std::int32_t>{w} : stdx::nullopt;
+}
+
+stdx::optional<write_concern::level> write_concern::acknowledge_level() const {
+    std::int32_t w = libmongoc::write_concern_get_w(_impl->write_concern_t);
+    return w < 1 ? stdx::optional<write_concern::level>{static_cast<write_concern::level>(w)}
+                 : stdx::nullopt;
 }
 
 stdx::optional<std::string> write_concern::tag() const {

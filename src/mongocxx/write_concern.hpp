@@ -55,6 +55,15 @@ class bulk_write;
 class MONGOCXX_API write_concern {
 
    public:
+    ///
+    /// A class to represent the special case values for write_concern::nodes.
+    /// @see http://docs.mongodb.org/manual/reference/write-concern/#w-option
+    ///
+    enum class level : std::int32_t {
+        kUnacknowledged = 0,
+        kDefault = -2,
+        kMajority = -3
+    };
 
     ///
     /// Constructs a new write_concern.
@@ -125,7 +134,7 @@ class MONGOCXX_API write_concern {
     /// @param confirm_from
     ///   The number of replica set nodes that must acknowledge the write.
     ///
-    /// @warning Setting the number of nodes to 0 disables write acknowledgement and all other
+    /// @warning Setting the number of nodes to 0 disables write acknowledgment and all other
     /// write concern options.
     ///
     /// @warning Setting the number of nodes required to an amount greater than the number of
@@ -133,6 +142,18 @@ class MONGOCXX_API write_concern {
     /// is set.
     ///
     void nodes(std::int32_t confirm_from);
+
+    ///
+    /// Sets the acknowledge level.
+    /// @see http://docs.mongodb.org/manual/reference/write-concern/#w-option
+    ///
+    /// @param confirm_level
+    ///   Either level::kUnacknowledged, level::kDefault, or level::kMajority.
+    ///
+    /// @warning Setting this to level::kUnacknowledged disables write acknowledgment and all other
+    /// write concern options.
+    ///
+    void acknowledge_level(level confirm_level);
 
     ///
     /// Requires that a majority of the nodes in a replica set acknowledge a write operation before
@@ -180,10 +201,25 @@ class MONGOCXX_API write_concern {
 
     ///
     /// Gets the current number of nodes that this write_concern requires operations to reach.
+    /// This value will be unset iff the acknowledge_level is set instead.
+    /// This is unset by default.
+    ///
+    /// @see http://docs.mongodb.org/manual/reference/write-concern/#w-option
     ///
     /// @return The number of required nodes.
     ///
-    std::int32_t nodes() const;
+    stdx::optional<std::int32_t> nodes() const;
+
+    ///
+    /// Gets the current acknowledgment level.
+    /// This value will be unset iff the nodes value is set instead.
+    /// This is set by default.
+    ///
+    /// @see http://docs.mongodb.org/manual/reference/write-concern/#w-option
+    ///
+    /// @return The acknowledgment level.
+    ///
+    stdx::optional<level> acknowledge_level() const;
 
     ///
     /// Gets the current getLastErrorMode that is required by this write_concern.

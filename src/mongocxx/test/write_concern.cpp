@@ -35,8 +35,13 @@ TEST_CASE("a default write_concern", "[write_concern]") {
     }
 
     SECTION("will require confirmation from just the primary or standalone mongod") {
-        // TODO: fix me
-        REQUIRE(-2 == wc.nodes());
+        REQUIRE(write_concern::level::kDefault == *wc.acknowledge_level());
+    }
+
+    SECTION("can set acknowledge_level") {
+        wc.acknowledge_level(write_concern::level::kUnacknowledged);
+        REQUIRE(!wc.nodes());
+        REQUIRE(write_concern::level::kUnacknowledged == *wc.acknowledge_level());
     }
 
     SECTION("has empty tag set") {
@@ -72,7 +77,7 @@ TEST_CASE("write_concern fields may be set and retrieved", "[write_concern]") {
 
     SECTION("the number of nodes requiring confirmation may be set to a number") {
         wc.nodes(10);
-        REQUIRE(wc.nodes() == 10);
+        REQUIRE(*wc.nodes() == 10);
     }
 
     SECTION("the number of nodes requiring confirmation may be set to the majority") {
@@ -102,7 +107,7 @@ TEST_CASE("confirmation from tags, a repl-member count, and majority are mutuall
         write_concern wc{};
         wc.nodes(10);
         wc.tag("MultipleDC");
-        REQUIRE(-4 == wc.nodes());
+        REQUIRE(!wc.nodes());
     }
 
     SECTION("setting the tag unsets majority") {
@@ -116,7 +121,7 @@ TEST_CASE("confirmation from tags, a repl-member count, and majority are mutuall
         write_concern wc{};
         wc.nodes(10);
         wc.majority(std::chrono::milliseconds(100));
-        REQUIRE(-3 == wc.nodes());
+        REQUIRE(write_concern::level::kMajority == *wc.acknowledge_level());
     }
 
     SECTION("setting majority unsets the tag") {
