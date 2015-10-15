@@ -40,7 +40,7 @@ TEST_CASE("a default write_concern", "[write_concern]") {
     }
 
     SECTION("has empty tag set") {
-        REQUIRE(wc.tag().empty());
+        REQUIRE(!wc.tag());
     }
 }
 
@@ -88,7 +88,7 @@ TEST_CASE("confirmation from tags, a repl-member count, and majority are mutuall
         write_concern wc{};
         wc.tag("MultipleDC");
         wc.nodes(10);
-        REQUIRE(wc.tag().empty());
+        REQUIRE(!wc.tag());
     }
 
     SECTION("setting the confirmation number unsets majority") {
@@ -123,6 +123,6 @@ TEST_CASE("confirmation from tags, a repl-member count, and majority are mutuall
         write_concern wc{};
         wc.tag("MultipleDC");
         wc.majority(std::chrono::milliseconds(100));
-        REQUIRE(wc.tag().empty());
+        REQUIRE(!wc.tag());
     }
 }

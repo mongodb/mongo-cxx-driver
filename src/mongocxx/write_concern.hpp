@@ -23,6 +23,7 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+#include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -150,7 +151,7 @@ class MONGOCXX_API write_concern {
     /// @param tag
     ///   The string representing on of the "getLastErrorModes" in the replica set configuration.
     ///
-    void tag(bsoncxx::stdx::string_view tag);
+    void tag(stdx::string_view tag);
 
     ///
     /// Sets an upper bound on the time a write concern can take to be satisfied. If the write
@@ -189,7 +190,7 @@ class MONGOCXX_API write_concern {
     ///
     /// @return The current getLastErrorMode.
     ///
-    std::string tag() const;
+    stdx::optional<std::string> tag() const;
 
     ///
     /// Gets whether the majority of nodes is currently required by this write_concern.
