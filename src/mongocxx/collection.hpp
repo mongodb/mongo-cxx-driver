@@ -37,6 +37,7 @@
 #include <mongocxx/options/find_one_and_delete.hpp>
 #include <mongocxx/options/find_one_and_replace.hpp>
 #include <mongocxx/options/find_one_and_update.hpp>
+#include <mongocxx/options/index.hpp>
 #include <mongocxx/options/insert.hpp>
 #include <mongocxx/options/update.hpp>
 #include <mongocxx/read_preference.hpp>
@@ -203,16 +204,14 @@ class MONGOCXX_API collection {
     /// @param keys
     ///   The keys for the index: @c {a: 1, b: -1}
     /// @param options
-    ///   Optional arguments to index creation command, see ensureindex-options link
+    ///   Optional arguments, see mongocxx::options::index.
     ///
     /// @throws exception::operation if index creation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
-    /// @see
-    /// http://docs.mongodb.org/manual/reference/method/db.collection.ensureIndex/#ensureindex-options
     ///
-    bsoncxx::document::value create_index(
-        bsoncxx::document::view keys, bsoncxx::document::view options = bsoncxx::document::view{});
+    bsoncxx::document::value create_index(bsoncxx::document::view keys,
+                                          const options::index& options = options::index());
 
     ///
     /// Deletes all matching documents from the collection.

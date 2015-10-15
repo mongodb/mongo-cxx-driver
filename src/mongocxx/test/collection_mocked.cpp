@@ -21,11 +21,13 @@
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/operation.hpp>
+#include <mongocxx/options/index.hpp>
 #include <mongocxx/options/update.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/private/libbson.hpp>
@@ -238,19 +240,33 @@ TEST_CASE("Collection", "[collection]") {
     }
 
     SECTION("Create Index", "collection::create_index") {
-        auto collection_create_index_called = false;
+        bool collection_create_index_called = false;
+        bool success;
+        bool expected_unique = true;
+        std::int32_t expected_expire_after_seconds = 500;
+        std::string expected_config_string = "block_allocation=first";
+        std::string expected_name = "index name";
+        options::index options{};
 
         auto index_spec = builder::stream::document{} << "_id"
                                                       << "wow"
                                                       << "foo"
                                                       << "bar" << builder::stream::finalize;
 
-        bool success;
 
         collection_create_index->interpose([&](mongoc_collection_t* coll, const bson_t* keys,
                                                const mongoc_index_opt_t* opt, bson_error_t* error) {
             collection_create_index_called = true;
             REQUIRE(coll == mongo_coll.implementation());
+            if (options.unique()) {
+                REQUIRE(opt->unique == expected_unique);
+            }
+            if (options.expire_after_seconds()) {
+                REQUIRE(opt->expire_after_seconds == expected_expire_after_seconds);
+            }
+            if (options.name()) {
+                REQUIRE(opt->name == expected_name);
+            }
             return success;
         });
 
@@ -262,6 +278,23 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Fails") {
             success = false;
             REQUIRE_THROWS_AS(mongo_coll.create_index(index_spec), exception::operation);
+        }
+
+        SECTION("Succeeds With Options") {
+            success = true;
+            options.unique(expected_unique);
+            options.expire_after_seconds(expected_expire_after_seconds);
+            options.name(expected_name);
+            REQUIRE_NOTHROW(mongo_coll.create_index(index_spec, options));
+        }
+
+        SECTION("Succeeds With Storage Engine Options") {
+            success = true;
+            std::unique_ptr<options::index::wiredtiger_storage_options> wt_options =
+                mongocxx::stdx::make_unique<options::index::wiredtiger_storage_options>();
+            wt_options->config_string(expected_config_string);
+            REQUIRE_NOTHROW(options.storage_options(std::move(wt_options)));
+            REQUIRE_NOTHROW(mongo_coll.create_index(index_spec, options));
         }
 
         REQUIRE(collection_create_index_called);

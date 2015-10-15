@@ -466,12 +466,102 @@ std::int64_t collection::count(bsoncxx::document::view filter, const options::co
 }
 
 bsoncxx::document::value collection::create_index(bsoncxx::document::view keys,
-                                                  bsoncxx::document::view options) {
+                                                  const options::index& options) {
     scoped_bson_t bson_keys{keys};
     bson_error_t error;
+    ::mongoc_index_opt_geo_t geo_opt{};
+    ::mongoc_index_opt_t opt{};
+    ::mongoc_index_opt_wt_t wt_opt{};
+    libmongoc::index_opt_init(&opt);
+
+    if (options.background()) {
+        opt.background = *options.background();
+    }
+
+    if (options.unique()) {
+        opt.unique = *options.unique();
+    }
+
+    if (options.name()) {
+        opt.name = options.name()->c_str();
+    }
+
+    if (options.sparse()) {
+        opt.sparse = *options.sparse();
+    }
+
+    if (options.storage_options()) {
+        const options::index::wiredtiger_storage_options* wt_options;
+        libmongoc::index_opt_wt_init(&wt_opt);
+
+        if (options.storage_options()->type() ==
+            ::mongoc_index_storage_opt_type_t::MONGOC_INDEX_STORAGE_OPT_WIREDTIGER) {
+            wt_options = static_cast<const options::index::wiredtiger_storage_options*>(
+                options.storage_options().get());
+
+            if (wt_options->config_string()) {
+                wt_opt.config_str = wt_options->config_string()->c_str();
+            }
+            opt.storage_options = reinterpret_cast<mongoc_index_opt_storage_t*>(&wt_opt);
+        }
+    }
+
+    if (options.expire_after_seconds()) {
+        opt.expire_after_seconds = *options.expire_after_seconds();
+    }
+
+    if (options.version()) {
+        opt.v = *options.version();
+    }
+
+    if (options.weights()) {
+        scoped_bson_t weights{options.weights()};
+        opt.weights = weights.bson();
+    }
+
+    if (options.default_language()) {
+        opt.default_language = options.default_language()->c_str();
+    }
+
+    if (options.language_override()) {
+        opt.language_override = options.language_override()->c_str();
+    }
+
+    if (options.partial_filter_expression()) {
+        scoped_bson_t partial_filter_expression{options.partial_filter_expression()};
+        opt.partial_filter_expression = partial_filter_expression.bson();
+    }
+
+    if (options.twod_sphere_version() || options.twod_bits_precision() ||
+        options.twod_location_min() || options.twod_location_max() ||
+        options.haystack_bucket_size()) {
+        libmongoc::index_opt_geo_init(&geo_opt);
+
+        if (options.twod_sphere_version()) {
+            geo_opt.twod_sphere_version = *options.twod_sphere_version();
+        }
+
+        if (options.twod_bits_precision()) {
+            geo_opt.twod_bits_precision = *options.twod_bits_precision();
+        }
+
+        if (options.twod_location_min()) {
+            geo_opt.twod_location_min = *options.twod_location_min();
+        }
+
+        if (options.twod_location_max()) {
+            geo_opt.twod_location_max = *options.twod_location_max();
+        }
+
+        if (options.haystack_bucket_size()) {
+            geo_opt.haystack_bucket_size = *options.haystack_bucket_size();
+        }
+
+        opt.geo_options = &geo_opt;
+    }
 
     auto result =
-        libmongoc::collection_create_index(_impl->collection_t, bson_keys.bson(), nullptr, &error);
+        libmongoc::collection_create_index(_impl->collection_t, bson_keys.bson(), &opt, &error);
 
     if (!result) {
         throw exception::operation(std::make_tuple(error.message, error.code));
