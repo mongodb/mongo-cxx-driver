@@ -9,38 +9,38 @@ cxx_driver_variables:
 ## The basic set of tests to run on most buildvariants
   latest_test_list: &latest_tests
     - name: "compile"
-    - name: "unit test"
-    - name: "integration test latest"
-    - name: "client test latest"
+    - name: "unit-test"
+    - name: "integration-test-latest"
+    - name: "client-test-latest"
 
   ## Note that the in 3.0, the default storage engine is MMAPv1 and
   ## WiredTiger is opt-in, but in latest as of MongoDB 3.1.4, the
   ## default is WiredTiger and MMAPv1 is opt-in.
   storage_engine_test_list: &storage_engine_tests
     - name: "compile"
-    - name: "unit test"
-    - name: "integration test 3.0"
-    - name: "integration test 3.0 with WiredTiger"
-    - name: "integration test latest"
-    - name: "integration test latest with MMAPv1"
-    - name: "client test 3.0"
-    - name: "client test 3.0 with WiredTiger"
-    - name: "client test latest"
-    - name: "client test latest with MMAPv1"
+    - name: "unit-test"
+    - name: "integration-test-3.0"
+    - name: "integration-test-3.0-with-WiredTiger"
+    - name: "integration-test-latest"
+    - name: "integration-test-latest-with-MMAPv1"
+    - name: "client-test-3.0"
+    - name: "client-test-3.0-with-WiredTiger"
+    - name: "client-test-latest"
+    - name: "client-test-latest-with-MMAPv1"
 
   version_test_list: &version_tests
     - name: "compile"
-    - name: "unit test"
-    - name: "integration test 2.2"
-    - name: "integration test 2.4"
-    - name: "integration test 2.6"
-    - name: "integration test 3.0"
-    - name: "integration test latest"
-    - name: "client test 2.2"
-    - name: "client test 2.4"
-    - name: "client test 2.6"
-    - name: "client test 3.0"
-    - name: "client test latest"
+    - name: "unit-test"
+    - name: "integration-test-2.2"
+    - name: "integration-test-2.4"
+    - name: "integration-test-2.6"
+    - name: "integration-test-3.0"
+    - name: "integration-test-latest"
+    - name: "client-test-2.2"
+    - name: "client-test-2.4"
+    - name: "client-test-2.6"
+    - name: "client-test-3.0"
+    - name: "client-test-latest"
 
 ## Common download urls (merge in as hashes)
   mongo_download_url_prefixes:
@@ -355,7 +355,7 @@ tasks:
             permissions: public-read
             content_type: ${content_type|application/x-gzip}
 
-    - name: "unit test"
+    - name: "unit-test"
       depends_on:
         - name: "compile"
       commands:
@@ -367,7 +367,7 @@ tasks:
                 set -o verbose
                 ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} unit
 
-    - name: "integration test 2.2"
+    - name: "integration-test-2.2"
       depends_on:
         - name: "compile"
       commands:
@@ -376,7 +376,7 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
-    - name: "integration test 2.4"
+    - name: "integration-test-2.4"
       depends_on:
         - name: "compile"
       commands:
@@ -385,7 +385,7 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
-    - name: "integration test 2.6"
+    - name: "integration-test-2.6"
       depends_on:
         - name: "compile"
       commands:
@@ -394,7 +394,7 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
-    - name: "integration test 3.0"
+    - name: "integration-test-3.0"
       depends_on:
         - name: "compile"
       commands:
@@ -403,7 +403,7 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
-    - name: "integration test 3.0 with WiredTiger"
+    - name: "integration-test-3.0-with-WiredTiger"
       depends_on:
         - name: "compile"
       commands:
@@ -413,7 +413,7 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
-    - name: "integration test latest"
+    - name: "integration-test-latest"
       depends_on:
         - name: "compile"
       commands:
@@ -422,7 +422,7 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
-    - name: "integration test latest with MMAPv1"
+    - name: "integration-test-latest-with-MMAPv1"
       depends_on:
         - name: "compile"
       commands:
@@ -432,7 +432,7 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
-    - name: "client test 2.2"
+    - name: "client-test-2.2"
       depends_on:
         - name: "compile"
       commands:
@@ -441,7 +441,7 @@ tasks:
         - func: "fetch mongodb"
         - func: "run client tests"
 
-    - name: "client test 2.4"
+    - name: "client-test-2.4"
       depends_on:
         - name: "compile"
       commands:
@@ -450,7 +450,7 @@ tasks:
         - func: "fetch mongodb"
         - func: "run client tests"
 
-    - name: "client test 2.6"
+    - name: "client-test-2.6"
       depends_on:
         - name: "compile"
       commands:
@@ -459,7 +459,7 @@ tasks:
         - func: "fetch mongodb"
         - func: "run client tests"
 
-    - name: "client test 3.0"
+    - name: "client-test-3.0"
       depends_on:
         - name: "compile"
       commands:
@@ -468,7 +468,7 @@ tasks:
         - func: "fetch mongodb"
         - func: "run client tests"
 
-    - name: "client test 3.0 with WiredTiger"
+    - name: "client-test-3.0-with-WiredTiger"
       depends_on:
         - name: "compile"
       commands:
@@ -478,7 +478,7 @@ tasks:
         - func: "fetch mongodb"
         - func: "run client tests"
 
-    - name: "client test latest"
+    - name: "client-test-latest"
       depends_on:
         - name: "compile"
       commands:
@@ -487,7 +487,7 @@ tasks:
         - func: "fetch mongodb"
         - func: "run client tests"
 
-    - name: "client test latest with MMAPv1"
+    - name: "client-test-latest-with-MMAPv1"
       depends_on:
         - name: "compile"
       commands:
@@ -618,7 +618,7 @@ buildvariants:
   - windows-64-compile
   tasks:
     - name: "compile"
-    - name: "unit test"
+    - name: "unit-test"
 
 ## Windows 64-bit (msvc2010)
 ## static client and RT
