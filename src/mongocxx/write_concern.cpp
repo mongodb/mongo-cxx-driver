@@ -89,12 +89,8 @@ std::int32_t write_concern::nodes() const {
 }
 
 stdx::optional<std::string> write_concern::tag() const {
-    stdx::optional<std::string> to_return;
     const char* tag_str = libmongoc::write_concern_get_wtag(_impl->write_concern_t);
-    if (tag_str) {
-        to_return = tag_str;
-    }
-    return to_return;
+    return tag_str ? stdx::make_optional<std::string>(tag_str) : stdx::nullopt;
 }
 
 bool write_concern::majority() const {
