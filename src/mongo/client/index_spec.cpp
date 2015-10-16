@@ -124,6 +124,12 @@ IndexSpec& IndexSpec::version(int value) {
     return *this;
 }
 
+IndexSpec& IndexSpec::partialFilterExpression(const BSONObj& value) {
+    uassert(0, kDuplicateOption, !_options.asTempObj().hasField("partialFilterExpression"));
+    _options.append("partialFilterExpression", value);
+    return *this;
+}
+
 IndexSpec& IndexSpec::textWeights(const BSONObj& value) {
     uassert(0, kDuplicateOption, !_options.asTempObj().hasField("weights"));
     _options.append("weights", value);
