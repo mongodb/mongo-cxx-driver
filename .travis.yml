@@ -12,7 +12,6 @@ env:
     - KEY_SERVER="hkp://keyserver.ubuntu.com:80"
     - MONGOD_PARAMS="--setParameter=enableTestCommands=1"
     - MONGOD_OPTS="--port 27999 --httpinterface --dbpath ./data --fork --logpath mongod.log ${MONGOD_PARAMS}"
-    - MONGO_ORCHESTRATION_REPO="git+git://github.com/mongodb/mongo-orchestration@master"
   matrix:
     - SANITIZE= DEBUG=
     - SANITIZE= DEBUG=--dbg=on
@@ -62,9 +61,6 @@ install:
     # Install MongoDB Enterprise and let smoke drive
     - sudo apt-get install mongodb-enterprise-server
 
-    # Install Mongo Orchestration
-    - sudo pip install ${MONGO_ORCHESTRATION_REPO}
-
 before_script:
     # Set SCONS_FLAGS based on new $CXX and $CC
     - $CXX --version
@@ -86,10 +82,7 @@ before_script:
 
     # Start Mongo Orchestration
     - mongod --version
-    - sudo mongo-orchestration start
 
 script:
     # Test the driver
     - scons $SCONS_FLAGS unit
-    - scons $SCONS_FLAGS integration
-    - scons $SCONS_FLAGS examples
