@@ -1289,19 +1289,19 @@ TEST_F(DBClientTest, AcknowledgeMultipleNodesNonReplicated) {
 }
 
 TEST_F(DBClientTest, CreateSimpleV0Index) {
-    if (serverStorageEngine(c.get(), "mmapv1")) {
+    if (serverStorageEngine(c.get(), "mmapv1") && !serverGTE(c.get(), 3, 1)) {
         c->createIndex(TEST_NS, IndexSpec().addKey("aField").version(0));
     }
 }
 
 TEST_F(DBClientTest, CreateSimpleNamedV0Index) {
-    if (serverStorageEngine(c.get(), "mmapv1")) {
+    if (serverStorageEngine(c.get(), "mmapv1") && !serverGTE(c.get(), 3, 1)) {
         c->createIndex(TEST_NS, IndexSpec().addKey("aField").version(0).name("aFieldV0Index"));
     }
 }
 
 TEST_F(DBClientTest, CreateCompoundNamedV0Index) {
-    if (serverStorageEngine(c.get(), "mmapv1")) {
+    if (serverStorageEngine(c.get(), "mmapv1") && !serverGTE(c.get(), 3, 1)) {
         c->createIndex(TEST_NS,
                        IndexSpec()
                            .addKey("aField")
