@@ -133,7 +133,7 @@ class json_visitor {
         out << "{" << std::endl;
         pad(1);
         out << "\"$regex\" : \"" << value.regex.data() << "\"," << std::endl;
-        pad();
+        pad(1);
         out << "\"$options\" : \"" << value.options.data() << "\"" << std::endl;
         pad();
         out << "}";
