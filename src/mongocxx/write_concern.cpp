@@ -25,7 +25,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 write_concern::write_concern()
-    : _impl{stdx::make_unique<impl>(mongoc_write_concern_new())} {
+    : _impl{stdx::make_unique<impl>(libmongoc::write_concern_new())} {
 }
 
 write_concern::write_concern(std::unique_ptr<impl>&& implementation) {
