@@ -125,6 +125,8 @@ public:
      */
     IndexSpec& version(int value);
 
+    /** Sets the 'partialFilterExpression' document for a partial index. */
+    IndexSpec& partialFilterExpression(const BSONObj& value);
 
     //
     // Text options

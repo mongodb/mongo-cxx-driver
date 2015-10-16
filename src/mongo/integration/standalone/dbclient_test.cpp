@@ -1377,6 +1377,14 @@ TEST_F(DBClientTest, CreateHashedIndex) {
     c->createIndex(TEST_NS, IndexSpec().addKey("aField", IndexSpec::kIndexTypeHashed));
 }
 
+TEST_F(DBClientTest, CreatePartialIndex) {
+    if (serverGTE(c.get(), 3, 1)) {
+        c->createIndex(
+            TEST_NS,
+            IndexSpec().addKey("aField").partialFilterExpression(BSON("aField" << GT << 5)));
+    }
+}
+
 TEST_F(DBClientTest, CreateUser) {
     createUser(c.get(), TEST_DB, "user1", "password1");
 }
