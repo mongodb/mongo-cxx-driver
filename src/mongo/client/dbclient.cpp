@@ -1418,7 +1418,7 @@ bool DBClientWithCommands::evalDeprecated(const string& dbname,
 bool DBClientWithCommands::evalDeprecated(const string& dbname, const string& jscode) {
     BSONObj info;
     BSONElement retValue;
-    return eval(dbname, jscode, info, retValue);
+    return evalDeprecated(dbname, jscode, info, retValue);
 }
 
 list<string> DBClientWithCommands::getDatabaseNames() {
