@@ -34,6 +34,9 @@ void aggregate::use_cursor(bool use_cursor) {
 void aggregate::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
 }
+void aggregate::bypass_document_validation(bool bypass_document_validation) {
+    _bypass_document_validation = bypass_document_validation;
+}
 
 const stdx::optional<bool>& aggregate::allow_disk_use() const {
     return _allow_disk_use;
@@ -49,6 +52,9 @@ const stdx::optional<bool>& aggregate::use_cursor() const {
 }
 const stdx::optional<class read_preference>& aggregate::read_preference() const {
     return _read_preference;
+}
+const stdx::optional<bool>& aggregate::bypass_document_validation() const {
+    return _bypass_document_validation;
 }
 
 }  // namespace options

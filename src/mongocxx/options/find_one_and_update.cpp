@@ -36,6 +36,10 @@ void find_one_and_update::upsert(bool upsert) {
     _upsert = upsert;
 }
 
+void find_one_and_update::bypass_document_validation(bool bypass_document_validation) {
+    _bypass_document_validation = bypass_document_validation;
+}
+
 const stdx::optional<bsoncxx::document::view>& find_one_and_update::projection() const {
     return _projection;
 }
@@ -50,6 +54,10 @@ const stdx::optional<bsoncxx::document::view>& find_one_and_update::sort() const
 
 const stdx::optional<bool>& find_one_and_update::upsert() const {
     return _upsert;
+}
+
+const stdx::optional<bool>& find_one_and_update::bypass_document_validation() const {
+    return _bypass_document_validation;
 }
 
 }  // namespace options

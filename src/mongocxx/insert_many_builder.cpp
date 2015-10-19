@@ -27,6 +27,9 @@ insert_many_builder::insert_many_builder(const options::insert& options)
     if (options.write_concern()) {
         _writes.write_concern(*options.write_concern());
     }
+    if (options.bypass_document_validation()) {
+        _writes.bypass_document_validation(*options.bypass_document_validation());
+    }
 };
 
 void insert_many_builder::operator()(const bsoncxx::document::view& doc) {

@@ -36,6 +36,10 @@ void find_one_and_replace::upsert(bool upsert) {
     _upsert = upsert;
 }
 
+void find_one_and_replace::bypass_document_validation(bool bypass_document_validation) {
+    _bypass_document_validation = bypass_document_validation;
+}
+
 const stdx::optional<bsoncxx::document::view>& find_one_and_replace::projection() const {
     return _projection;
 }
@@ -50,6 +54,10 @@ const stdx::optional<bsoncxx::document::view>& find_one_and_replace::sort() cons
 
 const stdx::optional<bool>& find_one_and_replace::upsert() const {
     return _upsert;
+}
+
+const stdx::optional<bool>& find_one_and_replace::bypass_document_validation() const {
+    return _bypass_document_validation;
 }
 
 }  // namespace options

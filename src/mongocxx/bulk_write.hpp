@@ -101,6 +101,14 @@ class MONGOCXX_API bulk_write {
     MONGOCXX_DEPRECATED void* implementation() const;
 
     ///
+    /// Whether or not to bypass document validation for this operation.
+    ///
+    /// @param bypass_document_validation
+    ///   Whether or not to bypass document validation.
+    ///
+    void bypass_document_validation(bool bypass_document_validation);
+
+    ///
     /// Sets the write_concern for this operation.
     ///
     /// @param wc

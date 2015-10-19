@@ -138,12 +138,33 @@ class MONGOCXX_API find_one_and_update {
     ///
     const stdx::optional<bool>& upsert() const;
 
+    ///
+    /// Sets the bypass_document_validation option.
+    /// If true, allows the write to opt-out of document level validation.
+    ///
+    /// @note
+    ///   On servers >= 3.2, the server applies validation by default. On servers < 3.2, this option
+    ///   is ignored.
+    ///
+    /// @param bypass_document_validation
+    ///   Whether or not to bypass document validation
+    ///
+    void bypass_document_validation(bool bypass_document_validation);
+
+    ///
+    /// Gets the current value of the bypass_document_validation option.
+    ///
+    /// @return The optional value of the bypass_document_validation option.
+    ///
+    const stdx::optional<bool>& bypass_document_validation() const;
+
    private:
     stdx::optional<std::int64_t> _max_time_ms;
     stdx::optional<bsoncxx::document::view> _projection;
     stdx::optional<enum return_document> _return_document;
     stdx::optional<bsoncxx::document::view> _ordering;
     stdx::optional<bool> _upsert;
+    stdx::optional<bool> _bypass_document_validation;
 };
 
 }  // namespace options

@@ -165,16 +165,20 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
         b << "maxTimeMS" << *options.max_time_ms();
     }
 
+    if (options.bypass_document_validation()) {
+        b << "bypassDocumentValidation" << *options.bypass_document_validation();
+    }
+
     scoped_bson_t options_bson(b.view());
 
-    const mongoc_read_prefs_t* rp_ptr = NULL;
+    const ::mongoc_read_prefs_t* rp_ptr = NULL;
 
     if (options.read_preference()) {
         rp_ptr = read_preference()._impl->read_preference_t;
     }
 
     return cursor(libmongoc::collection_aggregate(_impl->collection_t,
-                                                  static_cast<mongoc_query_flags_t>(0),
+                                                  static_cast<::mongoc_query_flags_t>(0),
                                                   stages.bson(), options_bson.bson(), rp_ptr));
 }
 
@@ -202,6 +206,10 @@ stdx::optional<result::insert_one> collection::insert_one(bsoncxx::document::vie
         bulk_op.write_concern(*options.write_concern());
     }
 
+    if (options.bypass_document_validation()) {
+        bulk_op.bypass_document_validation(*options.bypass_document_validation());
+    }
+
     auto result = bulk_write(bulk_op);
     if (!result) {
         return stdx::optional<result::insert_one>();
@@ -221,6 +229,8 @@ stdx::optional<result::replace_one> collection::replace_one(bsoncxx::document::v
 
     bulk_op.append(replace_op);
 
+    if (options.bypass_document_validation())
+        bulk_op.bypass_document_validation(*options.bypass_document_validation());
     if (options.write_concern()) bulk_op.write_concern(*options.write_concern());
 
     auto result = bulk_write(bulk_op);
@@ -241,6 +251,8 @@ stdx::optional<result::update> collection::update_many(bsoncxx::document::view f
 
     bulk_op.append(update_op);
 
+    if (options.bypass_document_validation())
+        bulk_op.bypass_document_validation(*options.bypass_document_validation());
     if (options.write_concern()) bulk_op.write_concern(*options.write_concern());
 
     auto result = bulk_write(bulk_op);
@@ -277,6 +289,8 @@ stdx::optional<result::update> collection::update_one(bsoncxx::document::view fi
 
     bulk_op.append(update_op);
 
+    if (options.bypass_document_validation())
+        bulk_op.bypass_document_validation(*options.bypass_document_validation());
     if (options.write_concern()) bulk_op.write_concern(*options.write_concern());
 
     auto result = bulk_write(bulk_op);
@@ -318,6 +332,7 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
     options::return_document rd =
         options.return_document().value_or(options::return_document::k_before);
 
+    // TODO handle bypass document validation when CDRIVER-945 is done.
     bool r = mongoc_collection_find_and_modify(
         _impl->collection_t, bson_filter.bson(), bson_sort.bson(), bson_replacement.bson(),
         bson_projection.bson(), false, options.upsert().value_or(false),
@@ -353,6 +368,7 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
     options::return_document rd =
         options.return_document().value_or(options::return_document::k_before);
 
+    // TODO handle bypass document validation when CDRIVER-945 is done.
     bool r = libmongoc::collection_find_and_modify(
         _impl->collection_t, bson_filter.bson(), bson_sort.bson(), bson_update.bson(),
         bson_projection.bson(), false, options.upsert().value_or(false),

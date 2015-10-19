@@ -68,6 +68,7 @@ TEST_CASE("Collection", "[collection]") {
         auto expected_max_time_ms = 1234;
         auto expected_batch_size = 5678;
         auto expected_use_cursor = true;
+        auto expected_bypass_document_validation = true;
 
         pipeline pipe;
         options::aggregate opts;
@@ -108,6 +109,12 @@ TEST_CASE("Collection", "[collection]") {
                             expected_batch_size);
                 }
 
+                if (opts.bypass_document_validation())
+                    REQUIRE(o["bypassDocumentValidation"].get_bool().value ==
+                            expected_bypass_document_validation);
+                else
+                    REQUIRE(!o["bypassDocumentValidation"]);
+
                 REQUIRE(read_prefs == mongo_coll.read_preference().implementation());
 
                 return NULL;
@@ -124,6 +131,7 @@ TEST_CASE("Collection", "[collection]") {
             opts.allow_disk_use(expected_allow_disk_use);
             opts.max_time_ms(expected_max_time_ms);
             opts.batch_size(expected_batch_size);
+            opts.bypass_document_validation(expected_bypass_document_validation);
             opts.use_cursor(expected_use_cursor);
         }
 
@@ -304,6 +312,8 @@ TEST_CASE("Collection", "[collection]") {
     SECTION("Writes", "[collection::writes]") {
         auto expected_order_setting = false;
         auto expect_set_write_concern_called = false;
+        auto expect_set_bypass_document_validation_called = false;
+        auto expected_bypass_document_validation = false;
 
         auto modification_doc = builder::stream::document{} << "cool"
                                                             << "wow"
@@ -315,6 +325,12 @@ TEST_CASE("Collection", "[collection]") {
             REQUIRE(ordered == expected_order_setting);
             return nullptr;
         });
+
+        bulk_operation_set_bypass_document_validation->interpose(
+            [&](mongoc_bulk_operation_t* bulk, bool bypass) {
+                bulk_operation_set_bypass_document_validation_called = true;
+                REQUIRE(expected_bypass_document_validation == bypass);
+            });
 
         bulk_operation_set_client->interpose([&](mongoc_bulk_operation_t* bulk, void* client) {
             bulk_operation_set_client_called = true;
@@ -358,8 +374,26 @@ TEST_CASE("Collection", "[collection]") {
             mongo_coll.insert_one(filter_doc);
         }
 
+        SECTION("Insert One Bypassing Validation", "[collection::insert_one]") {
+            bulk_operation_insert->interpose([&](mongoc_bulk_operation_t* bulk, const bson_t* doc) {
+                bulk_operation_op_called = true;
+                REQUIRE(bson_get_data(doc) == filter_doc.view().data());
+            });
+
+            expect_set_bypass_document_validation_called = true;
+            SECTION("...set to false"){
+                expected_bypass_document_validation = false;
+            }
+            SECTION("...set to true"){
+                expected_bypass_document_validation = true;
+            }
+            options::insert opts{};
+            opts.bypass_document_validation(expected_bypass_document_validation);
+            mongo_coll.insert_one(filter_doc, opts);
+        }
+
         SECTION("Update One", "[collection::update_one]") {
-            bool upsert_option;
+            bool upsert_option = false;
 
             bulk_operation_update_one->interpose([&](mongoc_bulk_operation_t* bulk,
                                                      const bson_t* query, const bson_t* update,
@@ -373,7 +407,6 @@ TEST_CASE("Collection", "[collection]") {
             options::update options;
 
             SECTION("Default Options") {
-                upsert_option = false;
             }
 
             SECTION("Upsert true") {
@@ -386,8 +419,13 @@ TEST_CASE("Collection", "[collection]") {
                 options.upsert(upsert_option);
             }
 
+            SECTION("With bypass_document_validation") {
+                expect_set_bypass_document_validation_called = true;
+                expected_bypass_document_validation = true;
+                options.bypass_document_validation(expected_bypass_document_validation);
+            }
+
             SECTION("Write Concern provided") {
-                upsert_option = false;
                 options.write_concern(concern);
                 expect_set_write_concern_called = true;
             }
@@ -477,6 +515,7 @@ TEST_CASE("Collection", "[collection]") {
 
         REQUIRE(bulk_operation_new_called);
         REQUIRE(expect_set_write_concern_called == bulk_operation_set_write_concern_called);
+        REQUIRE(expect_set_bypass_document_validation_called == bulk_operation_set_bypass_document_validation_called);
         REQUIRE(bulk_operation_op_called);
         REQUIRE(bulk_operation_set_client_called);
         REQUIRE(bulk_operation_set_database_called);

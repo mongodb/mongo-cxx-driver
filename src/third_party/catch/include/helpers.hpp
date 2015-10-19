@@ -117,6 +117,8 @@
     auto bulk_operation_replace_one = libmongoc::bulk_operation_replace_one.create_instance();   \
     auto bulk_operation_update = libmongoc::bulk_operation_update.create_instance();             \
     auto bulk_operation_remove = libmongoc::bulk_operation_remove.create_instance();             \
+    auto bulk_operation_set_bypass_document_validation =                                         \
+        libmongoc::bulk_operation_set_bypass_document_validation.create_instance();              \
     auto bulk_operation_set_client = libmongoc::bulk_operation_set_client.create_instance();     \
     auto bulk_operation_set_database = libmongoc::bulk_operation_set_database.create_instance(); \
     auto bulk_operation_set_collection =                                                         \
@@ -127,6 +129,7 @@
     auto bulk_operation_destroy = libmongoc::bulk_operation_destroy.create_instance();           \
     bool bulk_operation_new_called = false;                                                      \
     bool bulk_operation_op_called = false;                                                       \
+    bool bulk_operation_set_bypass_document_validation_called = false;                           \
     bool bulk_operation_set_client_called = false;                                               \
     bool bulk_operation_set_database_called = false;                                             \
     bool bulk_operation_set_collection_called = false;                                           \

@@ -22,6 +22,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/read_preference.hpp>
+#include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -123,12 +124,27 @@ class MONGOCXX_API aggregate {
     ///
     const stdx::optional<class read_preference>& read_preference() const;
 
+    ///
+    /// Sets whether the $out stage should bypass document validation.
+    ///
+    /// @param bypass_document_validation whether or not to bypass validation.
+    ///
+    void bypass_document_validation(bool bypass_document_validation);
+
+    ///
+    /// The current bypass_document_validation setting.
+    ///
+    /// @return the current bypass_document_validation setting
+    ///
+    const stdx::optional<bool>& bypass_document_validation() const;
+
    private:
     stdx::optional<bool> _allow_disk_use;
     stdx::optional<std::int32_t> _batch_size;
     stdx::optional<std::int64_t> _max_time_ms;
     stdx::optional<bool> _use_cursor;
     stdx::optional<class read_preference> _read_preference;
+    stdx::optional<bool> _bypass_document_validation;
 };
 
 }  // namespace options

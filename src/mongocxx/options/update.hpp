@@ -18,6 +18,8 @@
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
+#include <mongocxx/stdx.hpp>
 #include <mongocxx/write_concern.hpp>
 
 namespace mongocxx {
@@ -53,6 +55,26 @@ class MONGOCXX_API update {
     const stdx::optional<bool>& upsert() const;
 
     ///
+    /// Sets the bypass_document_validation option.
+    /// If true, allows the write to opt-out of document level validation.
+    ///
+    /// @note
+    ///   On servers >= 3.2, the server applies validation by default. On servers < 3.2, this option
+    ///   is ignored.
+    ///
+    /// @param bypass_document_validation
+    ///   Whether or not to bypass document validation
+    ///
+    void bypass_document_validation(bool bypass_document_validation);
+
+    ///
+    /// Gets the current value of the bypass_document_validation option.
+    ///
+    /// @return The optional value of the bypass_document_validation option.
+    ///
+    const stdx::optional<bool>& bypass_document_validation() const;
+
+    ///
     /// Sets the write_concern for this operation.
     ///
     /// @param wc
@@ -74,6 +96,7 @@ class MONGOCXX_API update {
 
    private:
     stdx::optional<bool> _upsert;
+    stdx::optional<bool> _bypass_document_validation;
     stdx::optional<class write_concern> _write_concern;
 };
 

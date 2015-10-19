@@ -20,12 +20,20 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+void insert::bypass_document_validation(bool bypass_document_validation) {
+    _bypass_document_validation = bypass_document_validation;
+}
+
 void insert::write_concern(class write_concern wc) {
     _write_concern = std::move(wc);
 }
 
 void insert::ordered(bool ordered) {
     _ordered = ordered;
+}
+
+const stdx::optional<bool>& insert::bypass_document_validation() const {
+    return _bypass_document_validation;
 }
 
 const stdx::optional<class write_concern>& insert::write_concern() const {

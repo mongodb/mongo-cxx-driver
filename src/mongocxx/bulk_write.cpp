@@ -91,6 +91,11 @@ void* bulk_write::implementation() const {
     return _impl->operation_t;
 }
 
+void bulk_write::bypass_document_validation(bool bypass_document_validation) {
+    libmongoc::bulk_operation_set_bypass_document_validation(_impl->operation_t,
+                                                             bypass_document_validation);
+}
+
 void bulk_write::write_concern(class write_concern wc) {
     libmongoc::bulk_operation_set_write_concern(_impl->operation_t, wc._impl->write_concern_t);
 }
