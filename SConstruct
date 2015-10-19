@@ -562,7 +562,8 @@ if has_option('runtime-library-search-path'):
     for lib in libs:
         env.AppendENVPath(envVar, env.Dir(lib), delete_existing=0)
 
-if has_option('build-fast-and-loose'):
+# Ignore fast-and-loose option if the scons cache is enabled (see SERVER-19088)
+if has_option('build-fast-and-loose') and not has_option('cache'):
     # See http://www.scons.org/wiki/GoFastButton for details
     env.Decider('MD5-timestamp')
     env.SetOption('max_drift', 1)
