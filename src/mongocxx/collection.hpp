@@ -638,7 +638,7 @@ MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> collection::insert_
     document_view_iterator_type end,
     const options::insert& options
 ) {
-    class bulk_write writes(false);
+    class bulk_write writes(options.ordered().value_or(true));
 
     result::insert_many::id_map inserted_ids{};
     std::size_t index = 0;

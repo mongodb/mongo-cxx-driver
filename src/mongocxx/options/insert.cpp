@@ -22,8 +22,16 @@ void insert::write_concern(class write_concern wc) {
     _write_concern = std::move(wc);
 }
 
-const bsoncxx::stdx::optional<class write_concern>& insert::write_concern() const {
+void insert::ordered(bool ordered) {
+    _ordered = ordered;
+}
+
+const stdx::optional<class write_concern>& insert::write_concern() const {
     return _write_concern;
+}
+
+const stdx::optional<bool>& insert::ordered() const {
+    return _ordered;
 }
 
 }  // namespace options
