@@ -1382,6 +1382,11 @@ TEST_F(DBClientTest, CreatePartialIndex) {
         c->createIndex(
             TEST_NS,
             IndexSpec().addKey("aField").partialFilterExpression(BSON("aField" << GT << 5)));
+
+        std::list<BSONObj> indexes = c->getIndexSpecs(TEST_NS);
+        ASSERT_EQUALS(2U, indexes.size());
+        indexes.pop_front();
+        ASSERT_EQUALS(BSON("aField" << GT << 5), indexes.front()["partialFilterExpression"].Obj());
     }
 }
 
