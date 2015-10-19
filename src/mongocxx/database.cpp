@@ -29,6 +29,8 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+database::database() noexcept = default;
+
 database::database(database&&) noexcept = default;
 database& database::operator=(database&&) noexcept = default;
 
@@ -38,6 +40,10 @@ database::database(const class client& client, bsoncxx::stdx::string_view name)
     : _impl(bsoncxx::stdx::make_unique<impl>(
           libmongoc::client_get_database(client._impl->client_t, name.data()), client._impl.get(),
           name.data())) {
+}
+
+database::operator bool() const noexcept {
+    return static_cast<bool>(_impl);
 }
 
 void* database::implementation() const {

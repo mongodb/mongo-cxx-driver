@@ -76,6 +76,14 @@ class MONGOCXX_API collection {
    public:
 
     ///
+    /// Default constructs a collection object. The collection is
+    /// equivalent to the state of a moved from colletion. The only
+    /// valid actions to take with a default constructed collection
+    /// are to assign to it, or destroy it.
+    ///
+    collection() noexcept;
+
+    ///
     /// Move constructs a collection.
     ///
     collection(collection&&) noexcept;
@@ -89,6 +97,12 @@ class MONGOCXX_API collection {
     /// Destroys a collection.
     ///
     ~collection();
+
+    ///
+    /// Returns true if the collection is valid, meaning it was not
+    /// default constructed or moved from.
+    ///
+    explicit operator bool() const noexcept;
 
     ///
     /// Runs an aggregation framework pipeline against this collection.
@@ -580,7 +594,7 @@ class MONGOCXX_API collection {
    private:
     friend class database;
 
-    collection(const database& database, bsoncxx::stdx::string_view collection_name);
+    MONGOCXX_PRIVATE collection(const database& database, bsoncxx::stdx::string_view collection_name);
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;

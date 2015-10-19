@@ -22,6 +22,20 @@
 
 using namespace mongocxx;
 
+TEST_CASE("A default constructed client is false-ish", "[client]") {
+    MOCK_CLIENT
+
+    client a;
+    REQUIRE(!a);
+}
+
+TEST_CASE("A client constructed with a URI is truthy", "[client]") {
+    MOCK_CLIENT
+
+    client a{uri{}};
+    REQUIRE(a);
+}
+
 TEST_CASE("A client connects to a provided mongodb uri", "[client]") {
     MOCK_CLIENT
     std::string expected_url("mongodb://mongodb.example.com:9999");
@@ -47,7 +61,7 @@ TEST_CASE("A client cleans up its underlying mongoc client on destruction", "[cl
     client_destroy->interpose([&](mongoc_client_t*) { destroy_called = true; });
 
     {
-        client object{};
+        client object{uri{}};
         REQUIRE(!destroy_called);
     }
 
@@ -57,7 +71,7 @@ TEST_CASE("A client cleans up its underlying mongoc client on destruction", "[cl
 TEST_CASE("A client supports move operations", "[client]") {
     MOCK_CLIENT
 
-    client a;
+    client a{uri{}};
 
     bool called = false;
     client_new->interpose([&](const mongoc_uri_t* url) {
@@ -75,7 +89,7 @@ TEST_CASE("A client supports move operations", "[client]") {
 TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
     MOCK_CLIENT
 
-    client mongo_client;
+    client mongo_client{uri{}};
     read_preference preference{read_preference::read_mode::k_secondary_preferred};
 
     bool called_set = false;
@@ -104,7 +118,7 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
 TEST_CASE("A client's write concern may be set and obtained", "[client]") {
     MOCK_CLIENT
 
-    client mongo_client;
+    client mongo_client{uri{}};
     write_concern concern;
     concern.majority(std::chrono::milliseconds(100));
 
@@ -154,7 +168,7 @@ TEST_CASE("A client can create a named database object", "[client]") {
 
     bsoncxx::stdx::string_view name("database");
 
-    client mongo_client;
+    client mongo_client{uri{}};
     database obtained_database = mongo_client[name];
     REQUIRE(obtained_database.name() == name);
 }

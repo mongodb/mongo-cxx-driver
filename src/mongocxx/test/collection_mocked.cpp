@@ -30,6 +30,11 @@
 using namespace mongocxx;
 using namespace bsoncxx;
 
+TEST_CASE("A default constructed collection is false-ish", "[collection]") {
+    collection c;
+    REQUIRE(!c);
+}
+
 TEST_CASE("Collection", "[collection]") {
     const std::string collection_name("mongocxx");
     const std::string database_name("test");
@@ -40,10 +45,11 @@ TEST_CASE("Collection", "[collection]") {
     MOCK_BULK
     MOCK_CURSOR
 
-    client mongo_client;
+    client mongo_client{uri{}};
     write_concern concern;
     database mongo_db = mongo_client[database_name];
     collection mongo_coll = mongo_db[collection_name];
+    REQUIRE(mongo_coll);
 
     auto filter_doc = builder::stream::document{} 
         << "_id" << "wow" << "foo" << "bar"

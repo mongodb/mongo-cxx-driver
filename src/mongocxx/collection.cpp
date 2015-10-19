@@ -64,9 +64,14 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 using namespace libbson;
 
+collection::collection() noexcept = default;
 collection::collection(collection&&) noexcept = default;
 collection& collection::operator=(collection&&) noexcept = default;
 collection::~collection() = default;
+
+collection::operator bool() const noexcept {
+    return static_cast<bool>(_impl);
+}
 
 bsoncxx::stdx::string_view collection::name() const noexcept {
     return _impl->name;

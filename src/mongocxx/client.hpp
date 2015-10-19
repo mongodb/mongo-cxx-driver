@@ -53,6 +53,13 @@ class MONGOCXX_API client {
    public:
 
     ///
+    /// Default constructs a new client. The client is not connected and is equivalent to the
+    /// state of a moved-from client. The only valid actions to take with a default constructed
+    /// 'client' are to assign to it, or destroy it.
+    ///
+    client() noexcept;
+
+    ///
     /// Creates a new client connection to MongoDB.
     ///
     /// @param mongodb_uri
@@ -61,7 +68,7 @@ class MONGOCXX_API client {
     ///   Additional options that cannot be specified via the mongodb_uri
     ///
     client(
-        const class uri& mongodb_uri = mongocxx::uri(),
+        const class uri& mongodb_uri,
         const options::client& options = options::client()
     );
 
@@ -79,6 +86,12 @@ class MONGOCXX_API client {
     /// Destroys a client.
     ///
     ~client();
+
+    ///
+    /// Returns true if the client is valid, meaning it was not default constructed
+    /// or moved from.
+    ///
+    explicit operator bool() const noexcept;
 
     ///
     /// Gets a handle to the underlying implementation.
@@ -187,7 +200,7 @@ class MONGOCXX_API client {
     friend class database;
     friend class pool;
 
-    explicit client(void* implementation);
+    MONGOCXX_PRIVATE explicit client(void* implementation);
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;

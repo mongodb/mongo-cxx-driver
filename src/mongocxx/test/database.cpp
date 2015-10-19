@@ -22,11 +22,16 @@
 
 using namespace mongocxx;
 
+TEST_CASE("A default constructed database is false-ish", "[database]") {
+    database d;
+    REQUIRE(!d);
+}
+
 TEST_CASE("A database", "[database]") {
     bsoncxx::stdx::string_view database_name{"database"};
     MOCK_CLIENT
     MOCK_DATABASE
-    client mongo_client;
+    client mongo_client{uri{}};
 
     SECTION("is created by a client") {
         bool called = false;
@@ -37,6 +42,7 @@ TEST_CASE("A database", "[database]") {
         });
 
         database obtained_database = mongo_client[database_name];
+        REQUIRE(obtained_database);
         REQUIRE(called);
         REQUIRE(obtained_database.name() == database_name);
     }
@@ -59,7 +65,7 @@ TEST_CASE("A database", "[database]") {
         database_destroy->interpose([&](mongoc_database_t* client) { destroy_called = true; });
 
         {
-            client mongo_client;
+            client mongo_client{uri{}};
             database a = mongo_client[database_name];
 
             database b{std::move(a)};

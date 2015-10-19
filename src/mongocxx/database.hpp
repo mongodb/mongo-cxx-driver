@@ -45,6 +45,13 @@ class MONGOCXX_API database {
    public:
 
     ///
+    /// Default constructs a new database. The database is not valid for use and is equivalent
+    /// to the state of a moved-from database. The only valid actions to take with a default
+    /// constructed database are to assign to it, or destroy it.
+    ///
+    database() noexcept;
+
+    ///
     /// Move constructs a database.
     ///
     database(database&&) noexcept;
@@ -58,6 +65,12 @@ class MONGOCXX_API database {
     /// Destroys a database.
     ///
     ~database();
+
+    ///
+    /// Returns true if the client is valid, meaning it was not default constructed
+    /// or moved from.
+    ///
+    explicit operator bool() const noexcept;
 
     ///
     /// Runs a command against this database.
@@ -212,7 +225,7 @@ class MONGOCXX_API database {
     friend class client;
     friend class collection;
 
-    database(const class client& client, bsoncxx::stdx::string_view name);
+    MONGOCXX_PRIVATE database(const class client& client, bsoncxx::stdx::string_view name);
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;

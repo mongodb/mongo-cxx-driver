@@ -14,7 +14,7 @@
 using namespace mongocxx;
 
 TEST_CASE("CRUD functionality", "[driver::collection]") {
-    client mongodb_client;
+    client mongodb_client{uri{}};
     database db = mongodb_client["test"];
     collection coll = db["mongo_cxx_driver"];
 

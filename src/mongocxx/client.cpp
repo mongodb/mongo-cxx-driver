@@ -23,6 +23,8 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+client::client() noexcept = default;
+
 // TODO: actually set client options
 client::client(const class uri& uri, const options::client&)
     : _impl(bsoncxx::stdx::make_unique<impl>(libmongoc::client_new_from_uri(uri._impl->uri_t))) {
@@ -36,6 +38,10 @@ client::client(client&&) noexcept = default;
 client& client::operator=(client&&) noexcept = default;
 
 client::~client() = default;
+
+client::operator bool() const noexcept {
+    return static_cast<bool>(_impl);
+}
 
 void* client::implementation() const {
     return _impl->client_t;
