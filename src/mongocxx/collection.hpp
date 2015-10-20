@@ -364,6 +364,10 @@ class MONGOCXX_API collection {
     /// @return The original or replaced document.
     /// @throws exception::write if the operation fails.
     ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the collection
+    ///   level set write concern - collection::write_concern(wc).
+    ///
     bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_replace(
         bsoncxx::document::view filter,
         bsoncxx::document::view replacement,
@@ -383,6 +387,10 @@ class MONGOCXX_API collection {
     ///
     /// @return The original or updated document.
     /// @throws exception::write when the operation fails.
+    ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the collection
+    ///   level set write concern - collection::write_concern(wc).
     ///
     bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_update(
         bsoncxx::document::view filter,
