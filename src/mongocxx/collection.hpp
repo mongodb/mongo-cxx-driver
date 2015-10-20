@@ -626,7 +626,7 @@ MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> collection::insert_
 ) {
     class bulk_write writes(false);
 
-    std::map<std::size_t, bsoncxx::document::element> inserted_ids{};
+    result::insert_many::id_map inserted_ids{};
     std::size_t index = 0;
     std::for_each(begin, end, [&](const bsoncxx::document::view& current){
         // TODO: put this somewhere else not in header scope (bsoncxx::builder)

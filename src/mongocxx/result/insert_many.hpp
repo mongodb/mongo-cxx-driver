@@ -24,6 +24,9 @@
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
+
+class collection;
+
 namespace result {
 
 ///
@@ -33,12 +36,7 @@ namespace result {
 class MONGOCXX_API insert_many {
 
    public:
-    // TODO: public alias the map
-    // This constructor is public for testing purposes only
-    insert_many(
-        result::bulk_write result,
-        std::map<std::size_t, bsoncxx::document::element> inserted_ids
-    );
+    using id_map = std::map<std::size_t, bsoncxx::document::element>;
 
     ///
     /// Returns the bulk write result for this insert many operation.
@@ -59,11 +57,15 @@ class MONGOCXX_API insert_many {
     ///
     /// @return The values of the _id field for inserted documents.
     ///
-    std::map<std::size_t, bsoncxx::document::element> inserted_ids();
+    id_map inserted_ids();
 
    private:
+    friend collection;
+
+    insert_many(result::bulk_write result, id_map inserted_ids);
+
     result::bulk_write _result;
-    std::map<std::size_t, bsoncxx::document::element> _generated_ids;
+    id_map _generated_ids;
 
 }; // class insert_many
 
