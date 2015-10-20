@@ -25,9 +25,20 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 client::client() noexcept = default;
 
-// TODO: actually set client options
-client::client(const class uri& uri, const options::client&)
+client::client(const class uri& uri, const options::client& options)
     : _impl(bsoncxx::stdx::make_unique<impl>(libmongoc::client_new_from_uri(uri._impl->uri_t))) {
+    if (options.ssl_opts()) {
+        auto ssl_opts = options.ssl_opts();
+        ::mongoc_ssl_opt_t opts{
+            ssl_opts->pem_file() ? ssl_opts->pem_file()->c_str() : nullptr,
+            ssl_opts->pem_password() ? ssl_opts->pem_password()->c_str() : nullptr,
+            ssl_opts->ca_file() ? ssl_opts->ca_file()->c_str() : nullptr,
+            ssl_opts->ca_dir() ? ssl_opts->ca_dir()->c_str() : nullptr};
+        if (ssl_opts->weak_cert_validation()) {
+            opts.weak_cert_validation = *ssl_opts->weak_cert_validation();
+        }
+        libmongoc::client_set_ssl_opts(_impl->client_t, &opts);
+    }
 }
 
 client::client(void* implementation)
