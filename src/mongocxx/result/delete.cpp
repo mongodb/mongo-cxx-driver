@@ -25,7 +25,7 @@ const result::bulk_write& delete_result::result() const {
     return _result;
 }
 
-std::int64_t delete_result::deleted_count() const {
+std::int32_t delete_result::deleted_count() const {
     return _result.deleted_count();
 }
 

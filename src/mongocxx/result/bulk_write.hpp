@@ -40,35 +40,35 @@ class MONGOCXX_API bulk_write {
     ///
     /// @return The number of documents that were inserted.
     ///
-    std::int64_t inserted_count() const;
+    std::int32_t inserted_count() const;
 
     ///
     /// Gets the number of documents that were matched during this operation.
     ///
     /// @return The number of documents that were matched.
     ///
-    std::int64_t matched_count() const;
+    std::int32_t matched_count() const;
 
     ///
     /// Gets the number of documents that were modified during this operation.
     ///
     /// @return The number of documents that were modified.
     ///
-    std::int64_t modified_count() const;
+    std::int32_t modified_count() const;
 
     ///
     /// Gets the number of documents that were deleted during this operation.
     ///
     /// @return The number of documents that were deleted.
     ///
-    std::int64_t deleted_count() const;
+    std::int32_t deleted_count() const;
 
     ///
     /// Gets the number of documents that were upserted during this operation.
     ///
     /// @return The number of documents that were upserted.
     ///
-    std::int64_t upserted_count() const;
+    std::int32_t upserted_count() const;
 
     ///
     /// Gets the ids of the inserted documents.

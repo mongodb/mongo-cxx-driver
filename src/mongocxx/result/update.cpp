@@ -24,11 +24,11 @@ update::update(result::bulk_write result) : _result(std::move(result)) {
 const result::bulk_write& update::result() const {
     return _result;
 }
-std::int64_t update::matched_count() const {
+std::int32_t update::matched_count() const {
     return _result.matched_count();
 }
 
-std::int64_t update::modified_count() const {
+std::int32_t update::modified_count() const {
     return _result.modified_count();
 }
 

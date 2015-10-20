@@ -21,7 +21,7 @@
 TEST_CASE("replace_one", "[replace_one][result]") {
     bsoncxx::builder::stream::document build;
     build << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "nMatched"
-          << bsoncxx::types::b_int64{2} << "nModified" << bsoncxx::types::b_int64{1};
+          << bsoncxx::types::b_int32{2} << "nModified" << bsoncxx::types::b_int32{1};
 
     mongocxx::result::bulk_write b(bsoncxx::document::value(build.view()));
 

@@ -45,14 +45,13 @@ class MONGOCXX_API update {
     ///
     /// @return The number of documents that were matched.
     ///
-    std::int64_t matched_count() const;
+    std::int32_t matched_count() const;
 
     ///
     /// Gets the number of documents that were modified during this operation.
     ///
     /// @return The number of documents that were modified.
-    ///    std::int64_t matched_count() const;
-    std::int64_t modified_count() const;
+    std::int32_t modified_count() const;
 
     ///
     /// If a document was upserted during this operation, gets the _id of the upserted document.

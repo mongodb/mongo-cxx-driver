@@ -22,7 +22,7 @@
 TEST_CASE("delete", "[delete][result]") {
     bsoncxx::builder::stream::document build;
     build << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "nRemoved"
-          << bsoncxx::types::b_int64{1};
+          << bsoncxx::types::b_int32{1};
 
     mongocxx::result::bulk_write b(bsoncxx::document::value(build.view()));
 

@@ -26,7 +26,7 @@ insert_many::id_map insert_many::inserted_ids() {
     return _generated_ids;
 }
 
-std::int64_t insert_many::inserted_count() const {
+std::int32_t insert_many::inserted_count() const {
     return _result.inserted_count();
 }
 

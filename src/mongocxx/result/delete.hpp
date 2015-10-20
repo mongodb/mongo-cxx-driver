@@ -45,7 +45,7 @@ class MONGOCXX_API delete_result {
     ///
     /// @return The number of documents that were deleted.
     ///
-    std::int64_t deleted_count() const;
+    std::int32_t deleted_count() const;
 
    private:
     result::bulk_write _result;

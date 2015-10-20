@@ -50,7 +50,7 @@ class MONGOCXX_API insert_many {
     ///
     /// @return The number of documents that were inserted.
     ///
-    std::int64_t inserted_count() const;
+    std::int32_t inserted_count() const;
 
     ///
     /// Gets the _ids of the inserted documents.

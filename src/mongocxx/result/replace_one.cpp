@@ -25,11 +25,11 @@ const result::bulk_write& replace_one::result() const {
     return _result;
 }
 
-std::int64_t replace_one::matched_count() const {
+std::int32_t replace_one::matched_count() const {
     return _result.matched_count();
 }
 
-std::int64_t replace_one::modified_count() const {
+std::int32_t replace_one::modified_count() const {
     return _result.modified_count();
 }
 
