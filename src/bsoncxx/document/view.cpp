@@ -162,7 +162,9 @@ view::iterator view::find(stdx::string_view key) const {
     bson_t b;
     bson_iter_t iter;
 
-    bson_init_static(&b, _data, _length);
+    if (!bson_init_static(&b, _data, _length)) {
+        return end();
+    }
 
     if (bson_iter_init_find(&iter, &b, key.data())) {
         return iterator(element(iter.raw, iter.len, iter.off));
