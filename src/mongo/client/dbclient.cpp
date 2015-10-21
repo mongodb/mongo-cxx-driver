@@ -1371,6 +1371,8 @@ void DBClientBase::_findAndModify(const StringData& ns,
             writeConcern ? writeConcern : &getWriteConcern();
 
         commandBuilder.append("writeConcern", operationWriteConcern->obj());
+    } else {
+        uassert(0, "WriteConcern is not supported for findAndModify with this server version.", writeConcern != NULL);
     }
 
     BSONObj result;
