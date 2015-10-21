@@ -59,10 +59,12 @@ class MONGOCXX_API write_concern {
     /// A class to represent the special case values for write_concern::nodes.
     /// @see http://docs.mongodb.org/manual/reference/write-concern/#w-option
     ///
-    enum class level : std::int32_t {
-        kUnacknowledged = 0,
-        kDefault = -2,
-        kMajority = -3
+    enum class level {
+        k_default,
+        k_majority,
+        k_tag,
+        k_unacknowledged,
+        k_unknown,
     };
 
     ///
@@ -148,9 +150,11 @@ class MONGOCXX_API write_concern {
     /// @see http://docs.mongodb.org/manual/reference/write-concern/#w-option
     ///
     /// @param confirm_level
-    ///   Either level::kUnacknowledged, level::kDefault, or level::kMajority.
+    ///   Either level::k_unacknowledged, level::k_default, or level::k_majority.
     ///
-    /// @warning Setting this to level::kUnacknowledged disables write acknowledgment and all other
+    /// @note the acknowledge level of level::k_tag is set automatically when a tag is set.
+    ///
+    /// @warning Setting this to level::k_unacknowledged disables write acknowledgment and all other
     /// write concern options.
     ///
     void acknowledge_level(level confirm_level);
@@ -168,6 +172,8 @@ class MONGOCXX_API write_concern {
     ///
     /// Sets the name representing the server-side getLastErrorMode entry containing the list of
     /// nodes that must acknowledge a write operation before it is considered a success.
+    ///
+    /// @note the acknowledge level of level::k_tag is set automatically when a tag is set.
     ///
     /// @param tag
     ///   The string representing on of the "getLastErrorModes" in the replica set configuration.

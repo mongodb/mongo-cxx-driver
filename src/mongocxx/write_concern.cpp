@@ -65,9 +65,29 @@ void write_concern::nodes(std::int32_t confirm_from) {
 }
 
 void write_concern::acknowledge_level(write_concern::level confirm_level) {
-    libmongoc::write_concern_set_w(
-        _impl->write_concern_t,
-        static_cast<std::underlying_type<write_concern::level>::type>(confirm_level));
+    std::int32_t w;
+    switch (confirm_level) {
+    case write_concern::level::k_default:
+        w = MONGOC_WRITE_CONCERN_W_DEFAULT;
+        break;
+    case write_concern::level::k_majority:
+        w = MONGOC_WRITE_CONCERN_W_MAJORITY;
+        break;
+    case write_concern::level::k_unacknowledged:
+        w = MONGOC_WRITE_CONCERN_W_UNACKNOWLEDGED;
+        break;
+    case write_concern::level::k_tag:
+        // no exception for setting tag if it's set
+        if (libmongoc::write_concern_get_w(_impl->write_concern_t) == MONGOC_WRITE_CONCERN_W_TAG)
+            return;
+    default:
+        // TODO throw a mongocxx exception
+        throw std::invalid_argument(
+            "acknowledge_level can only be used to set levels of k_default, k_majority, or "
+            "k_unacknowledged.");
+        return;
+    }
+    libmongoc::write_concern_set_w(_impl->write_concern_t, w);
 }
 
 void write_concern::tag(stdx::string_view confirm_from) {
@@ -96,9 +116,21 @@ stdx::optional<std::int32_t> write_concern::nodes() const {
 }
 
 stdx::optional<write_concern::level> write_concern::acknowledge_level() const {
+    stdx::optional<write_concern::level> ack_level;
     std::int32_t w = libmongoc::write_concern_get_w(_impl->write_concern_t);
-    return w < 1 ? stdx::optional<write_concern::level>{static_cast<write_concern::level>(w)}
-                 : stdx::nullopt;
+    if (w >= 1) return stdx::nullopt;
+    switch (w) {
+    case MONGOC_WRITE_CONCERN_W_UNACKNOWLEDGED:
+        return write_concern::level::k_unacknowledged;
+    case MONGOC_WRITE_CONCERN_W_DEFAULT:
+        return write_concern::level::k_default;
+    case MONGOC_WRITE_CONCERN_W_MAJORITY:
+        return write_concern::level::k_majority;
+    case MONGOC_WRITE_CONCERN_W_TAG:
+        return write_concern::level::k_tag;
+    default:
+        return write_concern::level::k_unknown;
+    }
 }
 
 stdx::optional<std::string> write_concern::tag() const {
