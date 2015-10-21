@@ -25,6 +25,7 @@ set(mongocxx_sources
     cursor.cpp
     database.cpp
     exception/base.cpp
+    hint.cpp
     instance.cpp
     logger.cpp
     model/delete_many.cpp
