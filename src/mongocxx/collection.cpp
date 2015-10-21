@@ -403,9 +403,19 @@ std::int64_t collection::count(bsoncxx::document::view filter, const options::co
         rp_ptr = options.read_preference()->_impl->read_preference_t;
     }
 
-    auto result = libmongoc::collection_count(
+    // Some options must be added via the options struct
+    bsoncxx::builder::stream::document cmd_opts_builder{};
+
+    if (options.hint()) {
+        cmd_opts_builder << bsoncxx::builder::stream::concatenate{options.hint()->to_document()};
+    }
+
+    scoped_bson_t cmd_opts_bson{cmd_opts_builder.view()};
+
+    auto result = libmongoc::collection_count_with_opts(
         _impl->collection_t, static_cast<mongoc_query_flags_t>(0), bson_filter.bson(),
-        options.skip().value_or(0), options.limit().value_or(0), rp_ptr, &error);
+        options.skip().value_or(0), options.limit().value_or(0), cmd_opts_bson.bson(), rp_ptr,
+        &error);
 
     if (result < 0) {
         throw exception::query(std::make_tuple(error.message, error.code));

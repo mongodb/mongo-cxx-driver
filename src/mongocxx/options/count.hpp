@@ -21,36 +21,33 @@
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/hint.hpp>
 #include <mongocxx/read_preference.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
-namespace options {
 
-// TODO: take hint as a std::string parameter in addition to bsoncxx::document::view
-// TODO: figure out hint (make a new type or use bsoncxx::element?)
+namespace options {
 
 ///
 /// Class representing the optional arguments to a MongoDB count command
 ///
 class MONGOCXX_API count {
-
    public:
-
     ///
     /// Sets the index to use for this operation.
     ///
-    /// @param hint
-    ///   Document representing the index to use.
+    /// @param index_hint
+    ///   Object representing the index to use.
     ///
-    void hint(bsoncxx::document::view hint);
+    void hint(class hint index_hint);
 
     ///
-    /// Gets the current index being hinted.
+    /// Gets the current hint.
     ///
-    /// @return The current hint.
+    /// @return The current hint, if one is set.
     ///
-    const stdx::optional<bsoncxx::document::view>& hint() const;
+    const stdx::optional<class hint>& hint() const;
 
     ///
     /// Sets the maximum number of documents to count.
@@ -125,7 +122,7 @@ class MONGOCXX_API count {
     const stdx::optional<class read_preference>& read_preference() const;
 
    private:
-    stdx::optional<bsoncxx::document::view> _hint;
+    stdx::optional<class hint> _hint;
     stdx::optional<std::int64_t> _limit;
     stdx::optional<std::int64_t> _max_time_ms;
     stdx::optional<std::int64_t> _skip;

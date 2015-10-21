@@ -19,8 +19,8 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-void count::hint(bsoncxx::document::view hint) {
-    _hint = std::move(hint);
+void count::hint(class hint index_hint) {
+    _hint = std::move(index_hint);
 }
 
 void count::limit(std::int64_t limit) {
@@ -39,7 +39,7 @@ void count::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
 }
 
-const stdx::optional<bsoncxx::document::view>& count::hint() const {
+const stdx::optional<class hint>& count::hint() const {
     return _hint;
 }
 

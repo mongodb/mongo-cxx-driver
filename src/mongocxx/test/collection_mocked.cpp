@@ -17,12 +17,16 @@
 
 #include <string>
 
+#include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/document/element.hpp>
+#include <bsoncxx/json.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/pipeline.hpp>
+#include <mongocxx/private/libbson.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/options/update.hpp>
 #include <mongocxx/exception/operation.hpp>
@@ -51,9 +55,10 @@ TEST_CASE("Collection", "[collection]") {
     collection mongo_coll = mongo_db[collection_name];
     REQUIRE(mongo_coll);
 
-    auto filter_doc = builder::stream::document{} 
-        << "_id" << "wow" << "foo" << "bar"
-    << builder::stream::finalize;
+    auto filter_doc = builder::stream::document{} << "_id"
+                                                  << "wow"
+                                                  << "foo"
+                                                  << "bar" << builder::stream::finalize;
 
     SECTION("Aggregate", "[Collection::aggregate]") {
         auto collection_aggregate_called = false;
@@ -132,21 +137,26 @@ TEST_CASE("Collection", "[collection]") {
         std::int64_t expected_limit = 0;
         auto expected_read_pref = mongo_coll.read_preference().implementation();
 
-        collection_count->interpose([&](mongoc_collection_t* coll, mongoc_query_flags_t flags,
-                                        const bson_t* query, int64_t skip, int64_t limit,
-                                        const mongoc_read_prefs_t* read_prefs,
-                                        bson_error_t* error) {
-            collection_count_called = true;
-            REQUIRE(coll == mongo_coll.implementation());
-            REQUIRE(flags == MONGOC_QUERY_NONE);
-            REQUIRE(bson_get_data(query) == filter_doc.view().data());
-            REQUIRE(skip == expected_skip);
-            REQUIRE(limit == expected_limit);
-            if (expected_read_pref) {
-                REQUIRE(MONGOC_READ_SECONDARY == mongoc_read_prefs_get_mode(read_prefs));
-            }
-            return success ? 123 : -1;
-        });
+        const bson_t* expected_opts = nullptr;
+
+        collection_count_with_opts->interpose(
+            [&](mongoc_collection_t* coll, mongoc_query_flags_t flags, const bson_t* query,
+                int64_t skip, int64_t limit, const bson_t* cmd_opts,
+                const mongoc_read_prefs_t* read_prefs, bson_error_t* error) {
+                collection_count_called = true;
+                REQUIRE(coll == mongo_coll.implementation());
+                REQUIRE(flags == MONGOC_QUERY_NONE);
+                REQUIRE(bson_get_data(query) == filter_doc.view().data());
+                REQUIRE(skip == expected_skip);
+                REQUIRE(limit == expected_limit);
+                if (expected_read_pref) {
+                    REQUIRE(MONGOC_READ_SECONDARY == mongoc_read_prefs_get_mode(read_prefs));
+                }
+                if (expected_opts) {
+                    REQUIRE(bson_equal(cmd_opts, expected_opts));
+                }
+                return success ? 123 : -1;
+            });
 
         SECTION("Succeeds with defaults") {
             REQUIRE_NOTHROW(mongo_coll.count(filter_doc));
@@ -156,6 +166,22 @@ TEST_CASE("Collection", "[collection]") {
             options::count opts;
             opts.skip(expected_skip);
             opts.limit(expected_limit);
+            REQUIRE_NOTHROW(mongo_coll.count(filter_doc, opts));
+        }
+
+        SECTION("Succeeds with hint") {
+            options::count opts;
+            hint index_hint("a_1");
+            opts.hint(index_hint);
+
+            // set our expected_opts so we check against that
+            bsoncxx::document::value doc =
+                bsoncxx::builder::stream::document{}
+                << bsoncxx::builder::stream::concatenate{index_hint.to_document()}
+                << bsoncxx::builder::stream::finalize;
+            libbson::scoped_bson_t cmd_opts{doc};
+            expected_opts = cmd_opts.bson();
+
             REQUIRE_NOTHROW(mongo_coll.count(filter_doc, opts));
         }
 
@@ -261,9 +287,10 @@ TEST_CASE("Collection", "[collection]") {
         auto expected_order_setting = false;
         auto expect_set_write_concern_called = false;
 
-        auto modification_doc = builder::stream::document{}
-            << "cool" << "wow" << "foo" << "bar"
-        << builder::stream::finalize;
+        auto modification_doc = builder::stream::document{} << "cool"
+                                                            << "wow"
+                                                            << "foo"
+                                                            << "bar" << builder::stream::finalize;
 
         bulk_operation_new->interpose([&](bool ordered) -> mongoc_bulk_operation_t* {
             bulk_operation_new_called = true;
