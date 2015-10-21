@@ -1336,14 +1336,15 @@ BSONObj DBClientWithCommands::distinct(const StringData& ns,
     return result.getField("values").Obj().getOwned();
 }
 
-void DBClientWithCommands::_findAndModify(const StringData& ns,
-                                          const BSONObj& query,
-                                          const BSONObj& update,
-                                          const BSONObj& sort,
-                                          bool returnNew,
-                                          bool upsert,
-                                          const BSONObj& fields,
-                                          BSONObjBuilder* out) {
+void DBClientBase::_findAndModify(const StringData& ns,
+                                  const BSONObj& query,
+                                  const BSONObj& update,
+                                  const BSONObj& sort,
+                                  bool returnNew,
+                                  bool upsert,
+                                  const BSONObj& fields,
+                                  const WriteConcern* writeConcern,
+                                  BSONObjBuilder* out) {
     BSONObjBuilder commandBuilder;
 
     commandBuilder.append("findAndModify", nsGetCollection(ns.toString()));
@@ -1365,6 +1366,15 @@ void DBClientWithCommands::_findAndModify(const StringData& ns,
     commandBuilder.append("new", returnNew);
     commandBuilder.append("upsert", upsert);
 
+    if (getMaxWireVersion() >= 4) {
+        const WriteConcern* operationWriteConcern =
+            writeConcern ? writeConcern : &getWriteConcern();
+
+        commandBuilder.append("writeConcern", operationWriteConcern->obj());
+    } else {
+        uassert(0, "WriteConcern is not supported for findAndModify with this server version.", writeConcern != NULL);
+    }
+
     BSONObj result;
     bool ok = runCommand(nsGetDB(ns.toString()), commandBuilder.obj(), result);
 
@@ -1374,24 +1384,26 @@ void DBClientWithCommands::_findAndModify(const StringData& ns,
     out->appendElements(result.getObjectField("value"));
 }
 
-BSONObj DBClientWithCommands::findAndModify(const StringData& ns,
-                                            const BSONObj& query,
-                                            const BSONObj& update,
-                                            bool upsert,
-                                            bool returnNew,
-                                            const BSONObj& sort,
-                                            const BSONObj& fields) {
+BSONObj DBClientBase::findAndModify(const StringData& ns,
+                                    const BSONObj& query,
+                                    const BSONObj& update,
+                                    bool upsert,
+                                    bool returnNew,
+                                    const BSONObj& sort,
+                                    const BSONObj& fields,
+                                    const WriteConcern* wc) {
     BSONObjBuilder result;
-    _findAndModify(ns, query, update, sort, returnNew, upsert, fields, &result);
+    _findAndModify(ns, query, update, sort, returnNew, upsert, fields, wc, &result);
     return result.obj();
 }
 
-BSONObj DBClientWithCommands::findAndRemove(const StringData& ns,
-                                            const BSONObj& query,
-                                            const BSONObj& sort,
-                                            const BSONObj& fields) {
+BSONObj DBClientBase::findAndRemove(const StringData& ns,
+                                    const BSONObj& query,
+                                    const BSONObj& sort,
+                                    const BSONObj& fields,
+                                    const WriteConcern* wc) {
     BSONObjBuilder result;
-    _findAndModify(ns, query, BSONObj(), sort, false, false, fields, &result);
+    _findAndModify(ns, query, BSONObj(), sort, false, false, fields, wc, &result);
     return result.obj();
 }
 

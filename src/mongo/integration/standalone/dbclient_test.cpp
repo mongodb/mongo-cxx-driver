@@ -240,6 +240,23 @@ TEST_F(DBClientTest, FindAndModifyDuplicateKeyError) {
         OperationException);
 }
 
+TEST_F(DBClientTest, FindAndModifyWriteConcern) {
+    c->insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
+
+    BSONObj result = c->findAndModify(TEST_NS,
+                                      BSON("i" << 1),
+                                      BSON("$inc" << BSON("i" << 1)),
+                                      false,
+                                      false,
+                                      BSONObj(),
+                                      BSONObj(),
+                                      &WriteConcern::journaled);
+
+    ASSERT_EQUALS(result.getIntField("_id"), 1);
+    ASSERT_EQUALS(result.getIntField("i"), 1);
+    ASSERT_EQUALS(c->count(TEST_NS), 1U);
+}
+
 TEST_F(DBClientTest, FindAndRemove) {
     c->insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
 
@@ -278,6 +295,17 @@ TEST_F(DBClientTest, FindAndRemoveProjection) {
 
     ASSERT_FALSE(result.hasField("_id"));
     ASSERT_TRUE(result.hasField("i"));
+    ASSERT_EQUALS(c->count(TEST_NS), 0U);
+}
+
+TEST_F(DBClientTest, FindAndRemoveWriteConcern) {
+    c->insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
+
+    BSONObj result =
+        c->findAndRemove(TEST_NS, BSON("i" << 1), BSONObj(), BSONObj(), &WriteConcern::journaled);
+
+    ASSERT_EQUALS(result.getIntField("_id"), 1);
+    ASSERT_EQUALS(result.getIntField("i"), 1);
     ASSERT_EQUALS(c->count(TEST_NS), 0U);
 }
 
