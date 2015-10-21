@@ -34,7 +34,7 @@ class itoa {
     std::size_t length() const;
 
    private:
-    void init();
+    BSONCXX_PRIVATE void init();
 
     uint32_t _val;
     const char* _str;

@@ -62,7 +62,7 @@ class MONGOCXX_API insert_many {
    private:
     friend collection;
 
-    insert_many(result::bulk_write result, id_map inserted_ids);
+    MONGOCXX_PRIVATE insert_many(result::bulk_write result, id_map inserted_ids);
 
     result::bulk_write _result;
     id_map _generated_ids;

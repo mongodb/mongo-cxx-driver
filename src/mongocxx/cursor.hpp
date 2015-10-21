@@ -80,7 +80,7 @@ class MONGOCXX_API cursor {
     friend class client;
     friend class database;
 
-    cursor(void* cursor_ptr);
+    MONGOCXX_PRIVATE cursor(void* cursor_ptr);
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
@@ -122,7 +122,7 @@ class cursor::iterator : public std::iterator<
     friend bool operator==(const iterator&, const iterator&);
     friend bool operator!=(const iterator&, const iterator&);
 
-    explicit iterator(cursor* cursor);
+    MONGOCXX_PRIVATE explicit iterator(cursor* cursor);
 
     cursor* _cursor;
     bsoncxx::document::view _doc;

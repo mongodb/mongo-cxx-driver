@@ -177,7 +177,7 @@ class MONGOCXX_API uri {
 
     class MONGOCXX_PRIVATE impl;
 
-    uri(std::unique_ptr<impl>&& implementation);
+    MONGOCXX_PRIVATE uri(std::unique_ptr<impl>&& implementation);
 
     std::unique_ptr<impl> _impl;
 };

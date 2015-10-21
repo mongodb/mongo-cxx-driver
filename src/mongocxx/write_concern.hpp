@@ -250,7 +250,7 @@ class MONGOCXX_API write_concern {
 
     class MONGOCXX_PRIVATE impl;
 
-    write_concern(std::unique_ptr<impl>&& implementation);
+    MONGOCXX_PRIVATE write_concern(std::unique_ptr<impl>&& implementation);
 
     std::unique_ptr<impl> _impl;
 

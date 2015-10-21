@@ -59,7 +59,7 @@ class MONGOCXX_API write {
     const replace_one& get_replace_one() const;
 
    private:
-    void destroy_member();
+    MONGOCXX_PRIVATE void destroy_member();
 
     write_type _type;
 
