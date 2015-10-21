@@ -73,6 +73,7 @@ using std::vector;
 AtomicInt64 DBClientBase::ConnectionIdSequence;
 
 const char* const saslCommandUserSourceFieldName = "userSource";
+const char kBypassDocumentValidationKey[] = "bypassDocumentValidation";
 
 const int defaultMaxBsonObjectSize = 16 * 1024 * 1024;
 const int defaultMaxMessageSizeBytes = defaultMaxBsonObjectSize * 2;
@@ -1344,6 +1345,7 @@ void DBClientBase::_findAndModify(const StringData& ns,
                                   bool upsert,
                                   const BSONObj& fields,
                                   const WriteConcern* writeConcern,
+                                  bool bypassDocumentValidation,
                                   BSONObjBuilder* out) {
     BSONObjBuilder commandBuilder;
 
@@ -1377,6 +1379,14 @@ void DBClientBase::_findAndModify(const StringData& ns,
                 writeConcern == NULL);
     }
 
+    if (bypassDocumentValidation) {
+        uassert(
+            0,
+            "bypassDocumentValidation is not supported for findAndModify with this server version.",
+            getMaxWireVersion() >= 4);
+        commandBuilder.append(kBypassDocumentValidationKey, true);
+    }
+
     BSONObj result;
     bool ok = runCommand(nsGetDB(ns.toString()), commandBuilder.obj(), result);
 
@@ -1393,9 +1403,11 @@ BSONObj DBClientBase::findAndModify(const StringData& ns,
                                     bool returnNew,
                                     const BSONObj& sort,
                                     const BSONObj& fields,
-                                    const WriteConcern* wc) {
+                                    const WriteConcern* wc,
+                                    bool bypassDocumentValidation) {
     BSONObjBuilder result;
-    _findAndModify(ns, query, update, sort, returnNew, upsert, fields, wc, &result);
+    _findAndModify(
+        ns, query, update, sort, returnNew, upsert, fields, wc, bypassDocumentValidation, &result);
     return result.obj();
 }
 
@@ -1405,7 +1417,7 @@ BSONObj DBClientBase::findAndRemove(const StringData& ns,
                                     const BSONObj& fields,
                                     const WriteConcern* wc) {
     BSONObjBuilder result;
-    _findAndModify(ns, query, BSONObj(), sort, false, false, fields, wc, &result);
+    _findAndModify(ns, query, BSONObj(), sort, false, false, fields, wc, false, &result);
     return result.obj();
 }
 
@@ -2023,14 +2035,18 @@ unsigned long long DBClientConnection::query(stdx::function<void(DBClientCursorB
 void DBClientBase::_write(const string& ns,
                           const vector<WriteOperation*>& writes,
                           bool ordered,
+                          bool bypassDocumentValidation,
                           const WriteConcern* writeConcern,
                           WriteResult* writeResult) {
     const WriteConcern* operationWriteConcern = writeConcern ? writeConcern : &getWriteConcern();
 
-    if (getMaxWireVersion() >= 2 && operationWriteConcern->requiresConfirmation())
-        _commandWriter->write(ns, writes, ordered, operationWriteConcern, writeResult);
+    if (getMaxWireVersion() >= 2 &&
+        (operationWriteConcern->requiresConfirmation() || bypassDocumentValidation))
+        _commandWriter->write(
+            ns, writes, ordered, bypassDocumentValidation, operationWriteConcern, writeResult);
     else
-        _wireProtocolWriter->write(ns, writes, ordered, operationWriteConcern, writeResult);
+        _wireProtocolWriter->write(
+            ns, writes, ordered, bypassDocumentValidation, operationWriteConcern, writeResult);
 }
 
 namespace {
@@ -2070,9 +2086,10 @@ void DBClientBase::insert(const string& ns,
     }
 
     bool ordered = !(flags & InsertOption_ContinueOnError);
+    bool bypassDocumentValidation = flags & InsertOption_BypassDocumentValidation;
 
     WriteResult writeResult;
-    _write(ns, inserts.ops, ordered, wc, &writeResult);
+    _write(ns, inserts.ops, ordered, bypassDocumentValidation, wc, &writeResult);
 }
 
 void DBClientBase::remove(const string& ns, Query obj, bool justOne, const WriteConcern* wc) {
@@ -2087,7 +2104,7 @@ void DBClientBase::remove(const string& ns, Query obj, int flags, const WriteCon
     deletes.enqueue(new DeleteWriteOperation(obj.obj, flags));
 
     WriteResult writeResult;
-    _write(ns, deletes.ops, true, wc, &writeResult);
+    _write(ns, deletes.ops, true, false, wc, &writeResult);
 }
 
 void DBClientBase::update(
@@ -2110,16 +2127,18 @@ void DBClientBase::update(
         0, "update document exceeds maxBsonObjectSize", obj.objsize() <= getMaxBsonObjectSize());
     updates.enqueue(new UpdateWriteOperation(query.obj, obj, flags));
 
+    bool bypassDocumentValidation = flags & UpdateOption_BypassDocumentValidation;
+
     WriteResult writeResult;
-    _write(ns, updates.ops, true, wc, &writeResult);
+    _write(ns, updates.ops, true, bypassDocumentValidation, wc, &writeResult);
 }
 
 BulkOperationBuilder DBClientBase::initializeOrderedBulkOp(const std::string& ns) {
-    return BulkOperationBuilder(this, ns, true);
+    return BulkOperationBuilder(this, ns, true, false);
 }
 
 BulkOperationBuilder DBClientBase::initializeUnorderedBulkOp(const std::string& ns) {
-    return BulkOperationBuilder(this, ns, false);
+    return BulkOperationBuilder(this, ns, false, false);
 }
 
 list<BSONObj> DBClientWithCommands::getIndexSpecs(const string& ns, int options) {

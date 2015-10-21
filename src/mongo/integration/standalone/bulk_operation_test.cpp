@@ -81,7 +81,7 @@ TYPED_TEST(BulkOperationTest, InsertOrdered) {
     if (!this->testSupported())
         return;
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.insert(BSON("a" << 1));
 
     WriteResult result;
@@ -105,7 +105,7 @@ TYPED_TEST(BulkOperationTest, InsertUnordered) {
     if (!this->testSupported())
         return;
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, false);
+    BulkOperationBuilder bulk(this->c, TEST_NS, false, false);
     bulk.insert(BSON("a" << 1));
 
     WriteResult result;
@@ -128,7 +128,7 @@ TYPED_TEST(BulkOperationTest, InsertBadKeyOrdered) {
     if (!this->testSupported())
         return;
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.insert(BSON("$a" << 1));
 
     WriteResult result;
@@ -140,7 +140,7 @@ TYPED_TEST(BulkOperationTest, InsertBadKeyUnordered) {
     if (!this->testSupported())
         return;
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, false);
+    BulkOperationBuilder bulk(this->c, TEST_NS, false, false);
     bulk.insert(BSON("$a" << 1));
 
     WriteResult result;
@@ -155,7 +155,7 @@ TYPED_TEST(BulkOperationTest, UpdateOneMatchingSelector) {
     this->c->insert(TEST_NS, BSON("a" << 1));
     this->c->insert(TEST_NS, BSON("a" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.find(BSON("a" << 1)).updateOne(BSON("$inc" << BSON("x" << 1)));
 
     WriteResult result;
@@ -181,7 +181,7 @@ TYPED_TEST(BulkOperationTest, UpdateMultiMatchingSelector) {
     this->c->insert(TEST_NS, BSON("a" << 1));
     this->c->insert(TEST_NS, BSON("b" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.find(BSON("a" << 1)).update(BSON("$inc" << BSON("x" << 1)));
 
     WriteResult result;
@@ -207,7 +207,7 @@ TYPED_TEST(BulkOperationTest, UpdateAllDocuments) {
     this->c->insert(TEST_NS, BSON("a" << 1));
     this->c->insert(TEST_NS, BSON("b" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.find(fromjson("{}")).update(BSON("$inc" << BSON("x" << 1)));
 
     WriteResult result;
@@ -233,7 +233,7 @@ TYPED_TEST(BulkOperationTest, ReplaceEntireDocument) {
     this->c->insert(TEST_NS, BSON("a" << 1));
     this->c->insert(TEST_NS, BSON("b" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.find(BSON("a" << 1)).replaceOne(BSON("x" << 1));
 
     WriteResult result;
@@ -261,7 +261,7 @@ TYPED_TEST(BulkOperationTest, UpsertOneMatchingSelector) {
     this->c->insert(TEST_NS, BSON("a" << 1));
     this->c->insert(TEST_NS, BSON("b" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.find(BSON("a" << 1)).upsert().updateOne(BSON("$inc" << BSON("x" << 1)));
 
     WriteResult result;
@@ -287,7 +287,7 @@ TYPED_TEST(BulkOperationTest, UpsertOneNotMatchingSelector) {
     this->c->insert(TEST_NS, BSON("a" << 1));
     this->c->insert(TEST_NS, BSON("b" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.find(BSON("a" << 2)).upsert().updateOne(BSON("$inc" << BSON("x" << 1)));
 
     WriteResult result;
@@ -315,7 +315,7 @@ TYPED_TEST(BulkOperationTest, UpsertMultiMatchingSelector) {
     this->c->insert(TEST_NS, BSON("a" << 1));
     this->c->insert(TEST_NS, BSON("b" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.find(BSON("a" << 1)).upsert().update(BSON("$inc" << BSON("x" << 1)));
 
     WriteResult result;
@@ -341,7 +341,7 @@ TYPED_TEST(BulkOperationTest, UpsertMultiNotMatchingSelector) {
     this->c->insert(TEST_NS, BSON("a" << 1));
     this->c->insert(TEST_NS, BSON("a" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.find(BSON("a" << 2)).upsert().update(BSON("$inc" << BSON("x" << 1)));
 
     WriteResult result;
@@ -368,7 +368,7 @@ TYPED_TEST(BulkOperationTest, MultipleUpsertsMixedBatchHaveCorrectSequence) {
     this->c->insert(TEST_NS, BSON("a" << 1));
     this->c->insert(TEST_NS, BSON("a" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.find(BSON("a" << 2)).upsert().update(BSON("$inc" << BSON("x" << 1)));
     bulk.find(BSON("a" << 3)).upsert().update(BSON("$inc" << BSON("x" << 1)));
     bulk.insert(BSON("a" << 4));
@@ -389,7 +389,7 @@ TYPED_TEST(BulkOperationTest, UpsertReplaceMatchingSelector) {
     this->c->insert(TEST_NS, BSON("a" << 1));
     this->c->insert(TEST_NS, BSON("b" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.find(BSON("a" << 1)).upsert().replaceOne(BSON("x" << 1));
 
     WriteResult result;
@@ -416,7 +416,7 @@ TYPED_TEST(BulkOperationTest, UpsertReplaceNotMatchingSelector) {
     this->c->insert(TEST_NS, BSON("a" << 1));
     this->c->insert(TEST_NS, BSON("a" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.find(BSON("a" << 2)).upsert().replaceOne(BSON("x" << 1));
 
     WriteResult result;
@@ -445,7 +445,7 @@ TYPED_TEST(BulkOperationTest, RemoveOneMatchingSelector) {
     this->c->insert(TEST_NS, BSON("a" << 1));
     this->c->insert(TEST_NS, BSON("b" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.find(BSON("a" << 1)).removeOne();
 
     WriteResult result;
@@ -472,7 +472,7 @@ TYPED_TEST(BulkOperationTest, RemoveAllMatchingSelector) {
     this->c->insert(TEST_NS, BSON("a" << 1));
     this->c->insert(TEST_NS, BSON("b" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.find(BSON("a" << 1)).remove();
 
     WriteResult result;
@@ -499,7 +499,7 @@ TYPED_TEST(BulkOperationTest, RemoveAll) {
     this->c->insert(TEST_NS, BSON("a" << 1));
     this->c->insert(TEST_NS, BSON("b" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.find(fromjson("{}")).remove();
 
     WriteResult result;
@@ -524,7 +524,7 @@ TYPED_TEST(BulkOperationTest, MultipleOrderedOperations) {
 
     this->c->insert(TEST_NS, BSON("c" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     bulk.insert(BSON("a" << 1));
     bulk.insert(BSON("a" << 1));
     bulk.insert(BSON("b" << 1));
@@ -554,7 +554,7 @@ TYPED_TEST(BulkOperationTest, MultipleUnorderedOperations) {
 
     this->c->insert(TEST_NS, BSON("c" << 1));
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, false);
+    BulkOperationBuilder bulk(this->c, TEST_NS, false, false);
     bulk.insert(BSON("a" << 1));
     bulk.insert(BSON("a" << 1));
     bulk.insert(BSON("b" << 1));
@@ -583,7 +583,7 @@ TYPED_TEST(BulkOperationTest, ExceedBatchSize) {
     if (!this->testSupported())
         return;
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, false);
+    BulkOperationBuilder bulk(this->c, TEST_NS, false, false);
     for (int i = 0; i < this->c->getMaxWriteBatchSize() + 1; ++i)
         bulk.insert(BSON("a" << 1));
 
@@ -603,7 +603,7 @@ TYPED_TEST(BulkOperationTest, ExceedBatchSize) {
 TYPED_TEST(BulkOperationTest, UpdateEmpty) {
     if (!this->testSupported())
         return;
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     ASSERT_THROWS(bulk.find(BSON("b" << 1)).update(BSONObj()), std::exception);
 }
@@ -611,7 +611,7 @@ TYPED_TEST(BulkOperationTest, UpdateEmpty) {
 TYPED_TEST(BulkOperationTest, UpdateMissingDollarSign) {
     if (!this->testSupported())
         return;
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     ASSERT_THROWS(bulk.find(BSON("b" << 1)).update(BSON("a" << 2)), std::exception);
 }
@@ -619,7 +619,7 @@ TYPED_TEST(BulkOperationTest, UpdateMissingDollarSign) {
 TYPED_TEST(BulkOperationTest, UpdateOneMissingDollarSign) {
     if (!this->testSupported())
         return;
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     ASSERT_THROWS(bulk.find(BSON("b" << 1)).updateOne(BSON("a" << 2)), std::exception);
 }
@@ -627,7 +627,7 @@ TYPED_TEST(BulkOperationTest, UpdateOneMissingDollarSign) {
 TYPED_TEST(BulkOperationTest, UpdateMixedDollarSign) {
     if (!this->testSupported())
         return;
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     bulk.find(BSON("b" << 1))
         .update(BSON("$set" << BSON("a"
@@ -640,7 +640,7 @@ TYPED_TEST(BulkOperationTest, UpdateMixedDollarSign) {
 TYPED_TEST(BulkOperationTest, ReplaceOneEmpty) {
     if (!this->testSupported())
         return;
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     bulk.insert(BSON("b" << 1));
     bulk.find(BSON("b" << 1)).replaceOne(BSONObj());
@@ -650,7 +650,7 @@ TYPED_TEST(BulkOperationTest, ReplaceOneEmpty) {
 TYPED_TEST(BulkOperationTest, ReplaceOneHavingDollarSign) {
     if (!this->testSupported())
         return;
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     ASSERT_THROWS(bulk.find(BSON("b" << 1)).replaceOne(BSON("$set" << BSON("a" << 2))),
                   std::exception);
@@ -659,7 +659,7 @@ TYPED_TEST(BulkOperationTest, ReplaceOneHavingDollarSign) {
 TYPED_TEST(BulkOperationTest, UpdateUpsertEmpty) {
     if (!this->testSupported())
         return;
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     ASSERT_THROWS(bulk.find(BSON("b" << 1)).upsert().update(BSONObj()), std::exception);
 }
@@ -667,7 +667,7 @@ TYPED_TEST(BulkOperationTest, UpdateUpsertEmpty) {
 TYPED_TEST(BulkOperationTest, UpdateUpsertMissingDollarSign) {
     if (!this->testSupported())
         return;
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     ASSERT_THROWS(bulk.find(BSON("b" << 1)).upsert().update(BSON("a" << 2)), std::exception);
 }
@@ -675,7 +675,7 @@ TYPED_TEST(BulkOperationTest, UpdateUpsertMissingDollarSign) {
 TYPED_TEST(BulkOperationTest, UpdateOneUpsertMissingDollarSign) {
     if (!this->testSupported())
         return;
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     ASSERT_THROWS(bulk.find(BSON("b" << 1)).upsert().updateOne(BSON("a" << 2)), std::exception);
 }
@@ -683,7 +683,7 @@ TYPED_TEST(BulkOperationTest, UpdateOneUpsertMissingDollarSign) {
 TYPED_TEST(BulkOperationTest, UpdateUpsertMixedDollarSign) {
     if (!this->testSupported())
         return;
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     bulk.find(BSON("b" << 1))
         .upsert()
@@ -697,7 +697,7 @@ TYPED_TEST(BulkOperationTest, UpdateUpsertMixedDollarSign) {
 TYPED_TEST(BulkOperationTest, ReplaceOneUpsertHavingDollarSign) {
     if (!this->testSupported())
         return;
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     ASSERT_THROWS(bulk.find(BSON("b" << 1)).upsert().replaceOne(BSON("$set" << BSON("a" << 2))),
                   std::exception);
@@ -706,7 +706,7 @@ TYPED_TEST(BulkOperationTest, ReplaceOneUpsertHavingDollarSign) {
 TYPED_TEST(BulkOperationTest, ReplaceOneUpsertEmpty) {
     if (!this->testSupported())
         return;
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     bulk.insert(BSON("b" << 1));
     bulk.find(BSON("b" << 1)).upsert().replaceOne(BSONObj());
@@ -719,7 +719,7 @@ TYPED_TEST(BulkOperationTest, UnorderedBatchWithErrors) {
 
     this->c->createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, false);
+    BulkOperationBuilder bulk(this->c, TEST_NS, false, false);
 
     bulk.insert(BSON("b" << 1 << "a" << 1));
 
@@ -763,7 +763,7 @@ TYPED_TEST(BulkOperationTest, OrderedBatchWithErrors) {
 
     this->c->createIndex(TEST_NS, IndexSpec().addKeys(BSON("a" << 1)).unique());
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     bulk.insert(BSON("b" << 1 << "a" << 1));
 
@@ -805,7 +805,7 @@ TYPED_TEST(BulkOperationTest, OrderedBatchSplitting) {
     if (!this->testSupported())
         return;
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     const int fourMb = 4 * 1024 * 1024;
     std::string fourMbStr;
@@ -843,7 +843,7 @@ TYPED_TEST(BulkOperationTest, UnorderedBatchSplitting) {
     if (!this->testSupported())
         return;
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, false);
+    BulkOperationBuilder bulk(this->c, TEST_NS, false, false);
 
     int fourMb = 4 * 1024 * 1024;
 
@@ -882,7 +882,7 @@ TYPED_TEST(BulkOperationTest, EmptyBatch) {
     if (!this->testSupported())
         return;
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     WriteResult result;
 
@@ -893,7 +893,7 @@ TYPED_TEST(BulkOperationTest, ExecuteBatchTwice) {
     if (!this->testSupported())
         return;
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     bulk.insert(BSONObj());
     WriteResult result;
@@ -909,7 +909,7 @@ TYPED_TEST(BulkOperationTest, W2WithOneNode) {
     if (!this->testSupported())
         return;
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     bulk.insert(BSONObj());
     WriteResult result;
@@ -921,7 +921,7 @@ TYPED_TEST(BulkOperationTest, WZeroWithWriteError) {
     if (!this->testSupported())
         return;
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
 
     bulk.insert(BSON("_id" << 1));
     bulk.insert(BSON("_id" << 1));
@@ -939,7 +939,7 @@ TYPED_TEST(BulkOperationTest, ClientGeneratedUpsertId) {
     if (!this->testSupported())
         return;
 
-    BulkOperationBuilder bulk(this->c, TEST_NS, true);
+    BulkOperationBuilder bulk(this->c, TEST_NS, true, false);
     BSONObj cmdResult;
     this->c->runCommand("admin", BSON("buildinfo" << true), cmdResult);
 

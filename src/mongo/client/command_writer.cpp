@@ -25,12 +25,14 @@ namespace mongo {
 
 const int kOverhead = 8 * 1024;
 const char kOrderedKey[] = "ordered";
+const char kBypassDocumentValidationKey[] = "bypassDocumentValidation";
 
 CommandWriter::CommandWriter(DBClientBase* client) : _client(client) {}
 
 void CommandWriter::write(const StringData& ns,
                           const std::vector<WriteOperation*>& write_operations,
                           bool ordered,
+                          bool bypassDocumentValidation,
                           const WriteConcern* writeConcern,
                           WriteResult* writeResult) {
     // Effectively a map of batch relative indexes to WriteOperations
@@ -87,7 +89,7 @@ void CommandWriter::write(const StringData& ns,
         }
 
         // End the command for this batch.
-        _endCommand(batch.get(), *batch_iter, ordered, command.get());
+        _endCommand(batch.get(), *batch_iter, ordered, bypassDocumentValidation, command.get());
 
         // Issue the complete command.
         BSONObj batchResult = _send(command.get(), writeConcern, ns);
@@ -119,9 +121,18 @@ bool CommandWriter::_fits(BSONArrayBuilder* builder, WriteOperation* operation) 
 void CommandWriter::_endCommand(BSONArrayBuilder* batch,
                                 WriteOperation* operation,
                                 bool ordered,
+                                bool bypassDocumentValidation,
                                 BSONObjBuilder* command) {
     command->append(operation->batchName(), batch->arr());
     command->append(kOrderedKey, ordered);
+
+    if (bypassDocumentValidation) {
+        uassert(0,
+                "bypassDocumentValidation is not supported for write operations with this server "
+                "version.",
+                _client->getMaxWireVersion() >= 4);
+        command->append(kBypassDocumentValidationKey, true);
+    }
 }
 
 BSONObj CommandWriter::_send(BSONObjBuilder* command,

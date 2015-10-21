@@ -28,6 +28,7 @@ public:
     virtual void write(const StringData& ns,
                        const std::vector<WriteOperation*>& write_operations,
                        bool ordered,
+                       bool bypassDocumentValidation,
                        const WriteConcern* writeConcern,
                        WriteResult* writeResult);
 
@@ -35,6 +36,7 @@ private:
     void _endCommand(BSONArrayBuilder* batch,
                      WriteOperation* op,
                      bool ordered,
+                     bool bypassDocumentValidation,
                      BSONObjBuilder* command);
 
     BSONObj _send(BSONObjBuilder* command, const WriteConcern* writeConcern, const StringData& ns);

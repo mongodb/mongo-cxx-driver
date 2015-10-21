@@ -1434,6 +1434,7 @@ protected:
     void _write(const std::string& ns,
                 const std::vector<WriteOperation*>& writes,
                 bool ordered,
+                bool bypassDocumentValidation,
                 const WriteConcern* writeConcern,
                 WriteResult* writeResult);
 
@@ -1612,7 +1613,8 @@ public:
                           bool returnNew = false,
                           const BSONObj& sort = BSONObj(),
                           const BSONObj& fields = BSONObj(),
-                          const WriteConcern* wc = NULL);
+                          const WriteConcern* wc = NULL,
+                          bool bypassDocumentValidation = false);
 
     /**
      * Removes and returns a single document.
@@ -1695,6 +1697,7 @@ private:
                         bool upsert,
                         const BSONObj& fields,
                         const WriteConcern* wc,
+                        bool bypassDocumentValidation,
                         BSONObjBuilder* out);
 
 };  // DBClientBase

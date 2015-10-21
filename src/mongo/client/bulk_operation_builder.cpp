@@ -34,8 +34,14 @@ inline bool compare(WriteOperation* const lhs, WriteOperation* const rhs) {
 
 BulkOperationBuilder::BulkOperationBuilder(DBClientBase* const client,
                                            const std::string& ns,
-                                           bool ordered)
-    : _client(client), _ns(ns), _ordered(ordered), _executed(false), _currentIndex(0) {}
+                                           bool ordered,
+                                           bool bypassDocumentValidation)
+    : _client(client),
+      _ns(ns),
+      _ordered(ordered),
+      _bypassDocumentValidation(bypassDocumentValidation),
+      _executed(false),
+      _currentIndex(0) {}
 
 BulkOperationBuilder::~BulkOperationBuilder() {
     std::vector<WriteOperation*>::iterator it;
@@ -67,7 +73,8 @@ void BulkOperationBuilder::execute(const WriteConcern* writeConcern, WriteResult
     // order to understand what happened to them.
     writeResult->_requiresDetailedInsertResults = true;
 
-    _client->_write(_ns, _write_operations, _ordered, writeConcern, writeResult);
+    _client->_write(
+        _ns, _write_operations, _ordered, _bypassDocumentValidation, writeConcern, writeResult);
 }
 
 void BulkOperationBuilder::enqueue(WriteOperation* operation) {

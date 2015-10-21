@@ -28,8 +28,11 @@ WireProtocolWriter::WireProtocolWriter(DBClientBase* client) : _client(client) {
 void WireProtocolWriter::write(const StringData& ns,
                                const std::vector<WriteOperation*>& write_operations,
                                bool ordered,
+                               bool bypassDocumentValidation,
                                const WriteConcern* writeConcern,
                                WriteResult* writeResult) {
+    invariant(bypassDocumentValidation == false);
+
     // Effectively a map of batch relative indexes to WriteOperations
     std::vector<WriteOperation*> batchOps;
 

@@ -28,6 +28,7 @@ public:
     virtual void write(const StringData& ns,
                        const std::vector<WriteOperation*>& write_operations,
                        bool ordered,
+                       bool bypassDocumentValidation,
                        const WriteConcern* writeConcern,
                        WriteResult* writeResult);
 
