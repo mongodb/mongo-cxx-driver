@@ -42,3 +42,11 @@
 // Define to 1 if this platform provides the strnlen(3) function
 @mongoclient_have_strnlen@
 
+// Defines the C++ version the library was compiled with
+@mongoclient_lib_cxx_version@
+
+// Verifies that the currently used C++ version is compatible
+#if __cplusplus != MONGOCLIENT_LIB_CXX_VERSION
+#  error Incompatible C++ versions used (different C++ standard for lib than current module)
+#endif
+

@@ -50,6 +50,12 @@ def makeConfigHDefineWithValue(env, subst_key, env_var):
     return (subst_key, replacement % (env_var, value))
 libEnv.AddMethod(makeConfigHDefineWithValue)
 
+def makeConfigHDefineWithNameAndValue(env, subst_key, name, env_var):
+    value = env.get(env_var)
+    replacement = "#define %s %s"
+    return (subst_key, replacement % (name, value))
+libEnv.AddMethod(makeConfigHDefineWithNameAndValue)
+
 configSubstitutions = [
     libEnv.makeConfigHDefine('@mongoclient_ssl@', 'MONGO_SSL'),
     libEnv.makeConfigHDefine('@mongoclient_sasl@', 'MONGO_SASL'),
@@ -60,6 +66,7 @@ configSubstitutions = [
     libEnv.makeConfigHDefine('@mongoclient_have_std_is_trivially_copyable@', 'MONGO_HAVE_STD_IS_TRIVIALLY_COPYABLE'),
     libEnv.makeConfigHDefine('@mongoclient_have_strnlen@', 'MONGO_HAVE_STRNLEN'),
     libEnv.makeConfigHDefineWithValue('@mongoclient_byte_order@', 'MONGO_BYTE_ORDER'),
+    libEnv.makeConfigHDefineWithNameAndValue('@mongoclient_lib_cxx_version@', 'MONGOCLIENT_LIB_CXX_VERSION', 'CXX_VERSION'),
 ]
 libEnv.Substfile('mongo/config.h.in', SUBST_DICT=configSubstitutions)
 

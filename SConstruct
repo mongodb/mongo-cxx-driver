@@ -1696,11 +1696,28 @@ def doConfigure(myenv):
         context.Result(ret)
         return ret
 
+    def GetCXXVersion(context):
+        test_body = """
+        #include <cstdio>
+
+        int
+        main(int argc, char **argv)
+        {
+          printf("%lu", __cplusplus);
+          return 0;
+        }
+        """
+        context.Message('Checking for C++ version... ')
+        ret = context.TryRun(textwrap.dedent(test_body), '.cpp')
+        context.Result(ret[1])
+        return ret[1]
+
     conf = Configure(myenv, help=False, custom_tests = {
         'CheckCXX11Atomics': CheckCXX11Atomics,
         'CheckGCCAtomicBuiltins': CheckGCCAtomicBuiltins,
         'CheckGCCSyncBuiltins': CheckGCCSyncBuiltins,
         'CheckCXX11IsTriviallyCopyable': CheckCXX11IsTriviallyCopyable,
+	'GetCXXVersion': GetCXXVersion
     })
 
     # Figure out what atomics mode to use by way of the tests defined above.
@@ -1733,6 +1750,8 @@ def doConfigure(myenv):
 
     if (cxx11_mode == "on") and conf.CheckCXX11IsTriviallyCopyable():
         conf.env['MONGO_HAVE_STD_IS_TRIVIALLY_COPYABLE'] = True
+
+    conf.env["CXX_VERSION"] = conf.GetCXXVersion()
 
     myenv = conf.Finish()
 
