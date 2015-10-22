@@ -30,6 +30,8 @@ TEST(Options, RepeatedOptionsFail) {
     ASSERT_UASSERTS(IndexSpec().sparse().sparse());
     ASSERT_UASSERTS(IndexSpec().expireAfterSeconds(1).expireAfterSeconds(1));
     ASSERT_UASSERTS(IndexSpec().version(0).version(0));
+    ASSERT_UASSERTS(
+        IndexSpec().partialFilterExpression(BSONObj()).partialFilterExpression(BSONObj()));
     ASSERT_UASSERTS(IndexSpec().textWeights(BSONObj()).textWeights(BSONObj()));
     ASSERT_UASSERTS(IndexSpec().textDefaultLanguage("foo").textDefaultLanguage("foo"));
     ASSERT_UASSERTS(IndexSpec().textLanguageOverride("foo").textLanguageOverride("foo"));
