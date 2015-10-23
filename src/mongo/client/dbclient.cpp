@@ -2040,8 +2040,7 @@ void DBClientBase::_write(const string& ns,
                           WriteResult* writeResult) {
     const WriteConcern* operationWriteConcern = writeConcern ? writeConcern : &getWriteConcern();
 
-    if (getMaxWireVersion() >= 2 &&
-        (operationWriteConcern->requiresConfirmation() || bypassDocumentValidation))
+    if (getMaxWireVersion() >= 2 && operationWriteConcern->requiresConfirmation())
         _commandWriter->write(
             ns, writes, ordered, bypassDocumentValidation, operationWriteConcern, writeResult);
     else

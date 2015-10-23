@@ -125,6 +125,13 @@ TEST_F(DBClientTest, ByPassDocumentValidation) {
 
         ASSERT_EQUALS(c->count(TEST_NS), 1U);
 
+        // Validate we fail with ByPassDocumentValidation, and unacknowledged writes against 3.2
+        ASSERT_THROWS(c->insert(TEST_NS,
+                                BSON("fieldName" << 1000),
+                                InsertOption_BypassDocumentValidation,
+                                &WriteConcern::unacknowledged),
+                      std::exception);
+
         c->update(TEST_NS,
                   BSON("fieldName" << 1000),
                   BSON("fieldName" << 1001),

@@ -31,7 +31,17 @@ void WireProtocolWriter::write(const StringData& ns,
                                bool bypassDocumentValidation,
                                const WriteConcern* writeConcern,
                                WriteResult* writeResult) {
-    invariant(bypassDocumentValidation == false);
+    if (_client->getMaxWireVersion() >= 4) {
+        // Per DRIVERS-250:
+        // If your driver sends unacknowledged writes using op codes (OP_INSERT, OP_UPDATE,
+        // OP_DELETE), you MUST raise an error when bypassDocumentValidation is explicitly set by a
+        // user on >= 3.2 servers.
+        //
+        uassert(0,
+                "bypassDocumentValidation is not supported for unacknowledged writes with MongoDB "
+                "3.2 and later.",
+                !bypassDocumentValidation);
+    }
 
     // Effectively a map of batch relative indexes to WriteOperations
     std::vector<WriteOperation*> batchOps;
