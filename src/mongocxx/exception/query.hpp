@@ -16,15 +16,7 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <cstdint>
-#include <string>
-
-#include <bsoncxx/document/value.hpp>
-#include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/stdx/string_view.hpp>
-
 #include <mongocxx/exception/operation.hpp>
-#include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

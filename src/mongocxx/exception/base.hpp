@@ -16,12 +16,9 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <cstdint>
 #include <exception>
-#include <tuple>
 
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/stdx.hpp>
@@ -30,17 +27,15 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace exception {
 
-using error_and_code_type = std::tuple<std::string, std::int32_t>;
-
 class MONGOCXX_API base : virtual public std::exception {
    public:
-    base(bsoncxx::document::value raw_server_error);
-    base(error_and_code_type error_and_code);
+    base(std::error_code ec);
 
-    base(
-      bsoncxx::document::value raw_server_error,
-      error_and_code_type error_and_code
-    );
+    base(std::error_code ec, std::string what_arg);
+
+    base(bsoncxx::document::value raw_server_error, std::error_code ec);
+
+    base(bsoncxx::document::value raw_server_error, std::error_code ec, std::string what_arg);
 
     ///
     /// @returns The raw server error, if it is available.
@@ -48,15 +43,14 @@ class MONGOCXX_API base : virtual public std::exception {
     const stdx::optional<bsoncxx::document::value>& raw_server_error() const;
     stdx::optional<bsoncxx::document::value>& raw_server_error();
 
-    ///
-    /// @returns The error message and code, if it is available.
-    ///
-    const stdx::optional<error_and_code_type>& error_and_code() const;
-    stdx::optional<error_and_code_type>& error_and_code();
+    const std::error_code& code() const;
+
+    const char* what() const noexcept override;
 
    private:
-    stdx::optional<bsoncxx::document::value> _raw_server_error{};
-    stdx::optional<error_and_code_type> _error_and_code{};
+    stdx::optional<bsoncxx::document::value> _raw_server_error;
+    std::error_code _ec;
+    stdx::optional<std::string> _what;
 };
 
 }  // namespace exception

@@ -26,7 +26,9 @@
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/bulk_write.hpp>
+#include <mongocxx/exception/error_category.hpp>
 #include <mongocxx/exception/operation.hpp>
+#include <mongocxx/exception/private/mongoc_error.hpp>
 #include <mongocxx/exception/query.hpp>
 #include <mongocxx/exception/write.hpp>
 #include <mongocxx/model/write.hpp>
@@ -89,7 +91,7 @@ stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write
     bson_error_t error;
 
     if (!libmongoc::bulk_operation_execute(b, reply.bson(), &error)) {
-        throw exception::bulk_write(reply.steal(), std::make_tuple(error.message, error.code));
+        exception::throw_exception<exception::bulk_write>(reply.steal(), error);
     }
 
     result::bulk_write result(reply.steal());
@@ -322,7 +324,7 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
         rd == options::return_document::k_after, reply.bson(), &error);
 
     if (!r) {
-        throw exception::write(std::move(_impl->gle()), std::make_tuple(error.message, error.code));
+        exception::throw_exception<exception::write>(std::move(_impl->gle()), error);
     }
 
     bsoncxx::document::view result = reply.view();
@@ -357,7 +359,7 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
         rd == options::return_document::k_after, reply.bson(), &error);
 
     if (!r) {
-        throw exception::write(std::move(_impl->gle()), std::make_tuple(error.message, error.code));
+        exception::throw_exception<exception::write>(std::move(_impl->gle()), error);
     }
 
     bsoncxx::document::view result = reply.view();
@@ -386,7 +388,7 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
         true, false, false, reply.bson(), &error);
 
     if (!r) {
-        throw exception::write(std::move(_impl->gle()), std::make_tuple(error.message, error.code));
+        exception::throw_exception<exception::write>(std::move(_impl->gle()), error);
     }
 
     bsoncxx::document::view result = reply.view();
@@ -424,7 +426,7 @@ std::int64_t collection::count(bsoncxx::document::view filter, const options::co
         &error);
 
     if (result < 0) {
-        throw exception::query(std::make_tuple(error.message, error.code));
+        exception::throw_exception<exception::query>(error);
     }
 
     return result;
@@ -439,7 +441,7 @@ bsoncxx::document::value collection::create_index(bsoncxx::document::view keys,
         libmongoc::collection_create_index(_impl->collection_t, bson_keys.bson(), nullptr, &error);
 
     if (!result) {
-        throw exception::operation(std::make_tuple(error.message, error.code));
+        exception::throw_exception<exception::operation>(error);
     }
 
     // TODO: return the response from the server, this is not possible now due to the way
@@ -468,7 +470,7 @@ cursor collection::list_indexes() const {
     auto result = libmongoc::collection_find_indexes(_impl->collection_t, &error);
 
     if (!result) {
-        throw exception::operation(std::make_tuple(error.message, error.code));
+        exception::throw_exception<exception::operation>(error);
     }
 
     return cursor(result);
@@ -480,7 +482,7 @@ void collection::drop() {
     auto result = libmongoc::collection_drop(_impl->collection_t, &error);
 
     if (!result) {
-        throw exception::operation(std::make_tuple(error.message, error.code));
+        exception::throw_exception<exception::operation>(error);
     }
 }
 

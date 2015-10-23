@@ -19,12 +19,14 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/error_category.hpp>
 #include <mongocxx/exception/operation.hpp>
-#include <mongocxx/private/database.hpp>
+#include <mongocxx/exception/private/mongoc_error.hpp>
 #include <mongocxx/private/client.hpp>
-#include <mongocxx/private/read_preference.hpp>
+#include <mongocxx/private/database.hpp>
 #include <mongocxx/private/libbson.hpp>
 #include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/read_preference.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -58,7 +60,7 @@ cursor database::list_collections(bsoncxx::document::view filter) {
         libmongoc::database_find_collections(_impl->database_t, filter_bson.bson(), &error);
 
     if (!result) {
-        throw exception::operation(std::make_tuple(error.message, error.code));
+        exception::throw_exception<exception::operation>(error);
     }
 
     return cursor(result);
@@ -76,7 +78,9 @@ bsoncxx::document::value database::command(bsoncxx::document::view command) {
     auto result = libmongoc::database_command_simple(_impl->database_t, command_bson.bson(), NULL,
                                                      reply_bson.bson(), &error);
 
-    if (!result) throw exception::operation(std::move(reply_bson.steal()));
+    if (!result) {
+        exception::throw_exception<exception::operation>(std::move(reply_bson.steal()));
+    }
 
     return reply_bson.steal();
 }
@@ -91,7 +95,7 @@ class collection database::create_collection(stdx::string_view name,
                                                         opts_bson.bson(), &error);
 
     if (!result) {
-        throw exception::operation(std::make_tuple(error.message, error.code));
+        exception::throw_exception<exception::operation>(error);
     }
 
     return mongocxx::collection(*this, name, static_cast<void*>(result));
