@@ -17,7 +17,9 @@
 #include <mongocxx/client.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <mongocxx/exception/operation.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/exception/private/error_category.hpp>
+#include <mongocxx/exception/private/mongoc_error.hpp>
 #include <mongocxx/private/client.hpp>
 #include <mongocxx/private/read_concern.hpp>
 #include <mongocxx/private/read_preference.hpp>
@@ -107,7 +109,7 @@ cursor client::list_databases() const {
     auto result = libmongoc::client_find_databases(_impl->client_t, &error);
 
     if (!result) {
-        throw exception::operation(std::make_tuple(error.message, error.code));
+        throw_exception<operation_exception>(error);
     }
 
     return cursor(result);

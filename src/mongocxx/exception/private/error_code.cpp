@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2015 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,30 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
 #include <mongocxx/config/prelude.hpp>
 
-#include <cstdint>
-#include <string>
+#include <system_error>
 
-#include <bsoncxx/document/value.hpp>
-#include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/stdx/string_view.hpp>
+#include <mongocxx/exception/private/error_code.hpp>
 
-#include <mongocxx/exception/operation.hpp>
-#include <mongocxx/stdx.hpp>
+#include <mongocxx/exception/error_category.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
-namespace exception {
 
-class MONGOCXX_API query : public operation {
-   public:
-    using operation::operation;
-};
+///
+/// Translate a mongocxx::error_code into a std::error_code.
+///
+/// @param error A mongocxx::error_code
+///
+/// @return A std::error_code
+///
+std::error_code make_error_code(mongocxx::error_code error) {
+    return std::error_code(static_cast<int>(error), mongocxx_error_category());
+}
 
-}  // namespace exception
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 

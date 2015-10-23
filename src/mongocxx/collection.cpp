@@ -26,10 +26,12 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
-#include <mongocxx/exception/bulk_write.hpp>
-#include <mongocxx/exception/operation.hpp>
-#include <mongocxx/exception/query.hpp>
-#include <mongocxx/exception/write.hpp>
+#include <mongocxx/exception/bulk_write_exception.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/exception/private/error_category.hpp>
+#include <mongocxx/exception/private/mongoc_error.hpp>
+#include <mongocxx/exception/query_exception.hpp>
+#include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/model/write.hpp>
 #include <mongocxx/private/bulk_write.hpp>
 #include <mongocxx/private/client.hpp>
@@ -68,8 +70,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
 
     if (!r) {
         auto gle = mongocxx::libmongoc::collection_get_last_error(collection);
-        throw mongocxx::exception::write(bsoncxx::helpers::value_from_bson_t(gle),
-                                         std::make_tuple(error.message, error.code));
+        mongocxx::throw_exception<mongocxx::write_exception>(bsoncxx::helpers::value_from_bson_t(gle), error);
     }
 
     bsoncxx::document::view result = reply.view();
@@ -129,7 +130,7 @@ void collection::rename(stdx::string_view new_name, bool drop_target_before_rena
                                                new_name.data(), drop_target_before_rename, &error);
 
     if (!result) {
-        throw exception::operation(std::make_tuple(error.message, error.code));
+        throw_exception<operation_exception>(error);
     }
 }
 
@@ -164,7 +165,7 @@ stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write
     bson_error_t error;
 
     if (!libmongoc::bulk_operation_execute(b, reply.bson(), &error)) {
-        throw exception::bulk_write(reply.steal(), std::make_tuple(error.message, error.code));
+        throw_exception<bulk_write_exception>(reply.steal(), error);
     }
 
     result::bulk_write result(reply.steal());
@@ -535,7 +536,7 @@ std::int64_t collection::count(view_or_value filter, const options::count& optio
         &error);
 
     if (result < 0) {
-        throw exception::query(std::make_tuple(error.message, error.code));
+        throw_exception<query_exception>(error);
     }
 
     return result;
@@ -640,7 +641,7 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
         libmongoc::collection_create_index(_impl->collection_t, bson_keys.bson(), &opt, &error);
 
     if (!result) {
-        throw exception::operation(std::make_tuple(error.message, error.code));
+        throw_exception<operation_exception>(error);
     }
 
     if (options.name()) {
@@ -680,7 +681,7 @@ cursor collection::list_indexes() const {
     auto result = libmongoc::collection_find_indexes(_impl->collection_t, &error);
 
     if (!result) {
-        throw exception::operation(std::make_tuple(error.message, error.code));
+        throw_exception<operation_exception>(error);
     }
 
     return cursor(result);
@@ -692,7 +693,7 @@ void collection::drop() {
     auto result = libmongoc::collection_drop(_impl->collection_t, &error);
 
     if (!result) {
-        throw exception::operation(std::make_tuple(error.message, error.code));
+        throw_exception<operation_exception>(error);
     }
 }
 

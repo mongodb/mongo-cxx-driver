@@ -10,28 +10,23 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
-// limitations under the License./**
+// limitations under the License.
+
+#pragma once
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <cstdint>
-#include <string>
-
-// TODO: figure out if we need this
-// TODO: figure out if bson document should be view/value, etc.
+#include <bsoncxx/document/value.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
-namespace error {
 
-class write_concern {
-  private:
-    std::int32_t code;
-    // bsoncxx::document::view details;
-    std::string message;
+class MONGOCXX_API authentication_exception : public operation_exception {
+   public:
+   	using operation_exception::operation_exception;
 };
 
-}  // namespace error
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 

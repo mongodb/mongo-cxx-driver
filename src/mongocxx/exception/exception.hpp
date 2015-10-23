@@ -16,21 +16,19 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <bsoncxx/stdx/optional.hpp>
-
-#include <mongocxx/exception/base.hpp>
-#include <mongocxx/stdx.hpp>
+#include <string>
+#include <system_error>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
-namespace exception {
 
-class MONGOCXX_API operation : public base {
-   public:
-    using base::base;
+///
+/// A class to be used as the base class for all mongocxx exceptions.
+///
+class MONGOCXX_API exception : public std::system_error {
+   using system_error::system_error;
 };
 
-}  // namespace exception
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 

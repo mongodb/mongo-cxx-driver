@@ -16,18 +16,16 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <mongocxx/exception/operation.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
-namespace exception {
 
-class MONGOCXX_API authentication : public base {
+class MONGOCXX_API query_exception : public operation_exception {
    public:
-    using base::base;
+    using operation_exception::operation_exception;
 };
 
-}  // namespace exception
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 

@@ -17,19 +17,16 @@
 #include <mongocxx/config/prelude.hpp>
 
 #include <bsoncxx/document/value.hpp>
-
-#include <mongocxx/exception/operation.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
-namespace exception {
 
-class MONGOCXX_API write : public operation {
+class MONGOCXX_API bulk_write_exception : public operation_exception {
    public:
-    using operation::operation;
+    using operation_exception::operation_exception;
 };
 
-}  // namespace exception
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 

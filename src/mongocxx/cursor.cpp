@@ -21,7 +21,9 @@
 
 #include <mongocxx/cursor.hpp>
 
-#include <mongocxx/exception/query.hpp>
+#include <mongocxx/exception/private/error_category.hpp>
+#include <mongocxx/exception/private/mongoc_error.hpp>
+#include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/private/cursor.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
@@ -49,7 +51,7 @@ cursor::iterator& cursor::iterator::operator++() {
     if (libmongoc::cursor_next(_cursor->_impl->cursor_t, &out)) {
         _doc = bsoncxx::document::view(bson_get_data(out), out->len);
     } else if (libmongoc::cursor_error(_cursor->_impl->cursor_t, &error)) {
-        throw exception::query(std::make_tuple(error.message, error.code));
+        throw_exception<query_exception>(error);
     } else {
         _cursor = nullptr;
     };

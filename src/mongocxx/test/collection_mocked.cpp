@@ -28,7 +28,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
-#include <mongocxx/exception/operation.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/options/update.hpp>
 #include <mongocxx/pipeline.hpp>
@@ -36,6 +36,8 @@
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/stdx.hpp>
+#include <mongocxx/options/update.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 
 using namespace mongocxx;
 using namespace bsoncxx;
@@ -254,7 +256,7 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Fails") {
             success = false;
-            REQUIRE_THROWS_AS(mongo_coll.count(filter_doc.view()), exception::operation);
+            REQUIRE_THROWS_AS(mongo_coll.count(filter_doc.view()), operation_exception);
         }
 
         REQUIRE(collection_count_called);
@@ -297,7 +299,7 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Fails") {
             success = false;
-            REQUIRE_THROWS_AS(mongo_coll.create_index(index_spec.view()), exception::operation);
+            REQUIRE_THROWS_AS(mongo_coll.create_index(index_spec.view()), operation_exception);
         }
 
         SECTION("Succeeds With Options") {
@@ -339,7 +341,7 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Fails") {
             success = false;
-            REQUIRE_THROWS_AS(mongo_coll.drop(), exception::operation);
+            REQUIRE_THROWS_AS(mongo_coll.drop(), operation_exception);
         }
 
         REQUIRE(collection_drop_called);

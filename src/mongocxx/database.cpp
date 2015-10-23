@@ -18,7 +18,9 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/client.hpp>
-#include <mongocxx/exception/operation.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/exception/private/error_category.hpp>
+#include <mongocxx/exception/private/mongoc_error.hpp>
 #include <mongocxx/private/client.hpp>
 #include <mongocxx/private/database.hpp>
 #include <mongocxx/private/libbson.hpp>
@@ -66,7 +68,7 @@ cursor database::list_collections(bsoncxx::document::view_or_value filter) {
         libmongoc::database_find_collections(_impl->database_t, filter_bson.bson(), &error);
 
     if (!result) {
-        throw exception::operation(std::make_tuple(error.message, error.code));
+        throw_exception<operation_exception>(error);
     }
 
     return cursor(result);
@@ -84,7 +86,9 @@ bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value 
     auto result = libmongoc::database_command_simple(_impl->database_t, command_bson.bson(), NULL,
                                                      reply_bson.bson(), &error);
 
-    if (!result) throw exception::operation(std::move(reply_bson.steal()));
+    if (!result) {
+        throw_exception<operation_exception>(std::move(reply_bson.steal()), error);
+    }
 
     return reply_bson.steal();
 }
@@ -99,7 +103,7 @@ class collection database::create_collection(stdx::string_view name,
                                                         opts_bson.bson(), &error);
 
     if (!result) {
-        throw exception::operation(std::make_tuple(error.message, error.code));
+        throw_exception<operation_exception>(error);
     }
 
     return mongocxx::collection(*this, static_cast<void*>(result));
@@ -108,7 +112,7 @@ class collection database::create_collection(stdx::string_view name,
 void database::drop() {
     bson_error_t error;
     if (!libmongoc::database_drop(_impl->database_t, &error)) {
-        throw exception::operation(std::make_tuple(error.message, error.code));
+        throw_exception<operation_exception>(error);
     }
 }
 

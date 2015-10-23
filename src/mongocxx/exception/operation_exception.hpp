@@ -16,50 +16,43 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <cstdint>
-#include <exception>
-#include <tuple>
-
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
-namespace exception {
 
-using error_and_code_type = std::tuple<std::string, std::int32_t>;
-
-class MONGOCXX_API base : virtual public std::exception {
+class MONGOCXX_API operation_exception : public exception {
    public:
-    base(bsoncxx::document::value raw_server_error);
-    base(error_and_code_type error_and_code);
+   	using exception::exception;
 
-    base(
-      bsoncxx::document::value raw_server_error,
-      error_and_code_type error_and_code
-    );
+    ///
+    /// Constructs a new operation exception.
+    ///
+    /// @param ec
+    ///   The error code associated with this exception.
+    /// @param raw_server_error
+    ///   The optional raw bson error document to be associated with this exception.
+    /// @param what_arg
+    ///   An optional message to be returned by `what`.
+    ///
+    operation_exception(std::error_code ec, bsoncxx::document::value&& raw_server_error,
+                  std::string what_arg = "");
 
+    ///
+    /// The optional raw bson error document from the server.
     ///
     /// @returns The raw server error, if it is available.
     ///
     const stdx::optional<bsoncxx::document::value>& raw_server_error() const;
     stdx::optional<bsoncxx::document::value>& raw_server_error();
 
-    ///
-    /// @returns The error message and code, if it is available.
-    ///
-    const stdx::optional<error_and_code_type>& error_and_code() const;
-    stdx::optional<error_and_code_type>& error_and_code();
-
    private:
-    stdx::optional<bsoncxx::document::value> _raw_server_error{};
-    stdx::optional<error_and_code_type> _error_and_code{};
+    stdx::optional<bsoncxx::document::value> _raw_server_error;
 };
 
-}  // namespace exception
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
