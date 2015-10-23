@@ -45,16 +45,25 @@ const bsoncxx::stdx::optional<std::string>& ssl::ca_file() const {
 void ssl::ca_dir(std::string ca_dir) {
     _ca_dir = std::move(ca_dir);
 }
+
 const bsoncxx::stdx::optional<std::string>& ssl::ca_dir() const {
     return _ca_dir;
 }
 
-void ssl::weak_cert_validation(bool weak_cert_validation) {
-    _weak_cert_validation = weak_cert_validation;
+void ssl::crl_file(std::string crl_file) {
+    _crl_file = std::move(crl_file);
 }
 
-const bsoncxx::stdx::optional<bool>& ssl::weak_cert_validation() const {
-    return _weak_cert_validation;
+const bsoncxx::stdx::optional<std::string>& ssl::crl_file() const {
+    return _crl_file;
+}
+
+void ssl::allow_invalid_certificates(bool allow_invalid_certificates) {
+    _allow_invalid_certificates = allow_invalid_certificates;
+}
+
+const bsoncxx::stdx::optional<bool>& ssl::allow_invalid_certificates() const {
+    return _allow_invalid_certificates;
 }
 
 }  // namespace options

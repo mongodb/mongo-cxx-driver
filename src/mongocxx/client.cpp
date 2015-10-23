@@ -13,12 +13,15 @@
 // limitations under the License.
 
 #include <mongocxx/client.hpp>
+
+#include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/exception/operation.hpp>
 #include <mongocxx/private/client.hpp>
 #include <mongocxx/private/read_preference.hpp>
-#include <mongocxx/private/write_concern.hpp>
+#include <mongocxx/private/ssl.hpp>
 #include <mongocxx/private/uri.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/private/write_concern.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -26,23 +29,15 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 client::client() noexcept = default;
 
 client::client(const class uri& uri, const options::client& options)
-    : _impl(bsoncxx::stdx::make_unique<impl>(libmongoc::client_new_from_uri(uri._impl->uri_t))) {
+    : _impl(stdx::make_unique<impl>(libmongoc::client_new_from_uri(uri._impl->uri_t))) {
     if (options.ssl_opts()) {
-        auto ssl_opts = options.ssl_opts();
-        ::mongoc_ssl_opt_t opts{
-            ssl_opts->pem_file() ? ssl_opts->pem_file()->c_str() : nullptr,
-            ssl_opts->pem_password() ? ssl_opts->pem_password()->c_str() : nullptr,
-            ssl_opts->ca_file() ? ssl_opts->ca_file()->c_str() : nullptr,
-            ssl_opts->ca_dir() ? ssl_opts->ca_dir()->c_str() : nullptr};
-        if (ssl_opts->weak_cert_validation()) {
-            opts.weak_cert_validation = *ssl_opts->weak_cert_validation();
-        }
-        libmongoc::client_set_ssl_opts(_impl->client_t, &opts);
+        auto mongoc_opts = options::make_ssl_opts(*options.ssl_opts());
+        libmongoc::client_set_ssl_opts(_impl->client_t, &mongoc_opts);
     }
 }
 
 client::client(void* implementation)
-    : _impl{bsoncxx::stdx::make_unique<impl>(static_cast<mongoc_client_t*>(implementation))} {
+    : _impl{stdx::make_unique<impl>(static_cast<::mongoc_client_t*>(implementation))} {
 }
 
 client::client(client&&) noexcept = default;
@@ -63,13 +58,13 @@ void client::read_preference(class read_preference rp) {
 }
 
 class read_preference client::read_preference() const {
-    class read_preference rp(bsoncxx::stdx::make_unique<read_preference::impl>(
+    class read_preference rp(stdx::make_unique<read_preference::impl>(
         libmongoc::read_prefs_copy(libmongoc::client_get_read_prefs(_impl->client_t))));
     return rp;
 }
 
 class uri client::uri() const {
-    class uri connection_string(bsoncxx::stdx::make_unique<uri::impl>(
+    class uri connection_string(stdx::make_unique<uri::impl>(
         libmongoc::uri_copy(libmongoc::client_get_uri(_impl->client_t))));
     return connection_string;
 }
@@ -79,12 +74,12 @@ void client::write_concern(class write_concern wc) {
 }
 
 class write_concern client::write_concern() const {
-    class write_concern wc(bsoncxx::stdx::make_unique<write_concern::impl>(
+    class write_concern wc(stdx::make_unique<write_concern::impl>(
         libmongoc::write_concern_copy(libmongoc::client_get_write_concern(_impl->client_t))));
     return wc;
 }
 
-class database client::database(bsoncxx::stdx::string_view name) const & {
+class database client::database(stdx::string_view name) const & {
     return mongocxx::database(*this, name);
 }
 

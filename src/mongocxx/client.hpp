@@ -21,10 +21,11 @@
 #include <bsoncxx/stdx/string_view.hpp>
 
 #include <mongocxx/database.hpp>
+#include <mongocxx/options/client.hpp>
 #include <mongocxx/read_preference.hpp>
+#include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 #include <mongocxx/write_concern.hpp>
-#include <mongocxx/options/client.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -163,8 +164,8 @@ class MONGOCXX_API client {
     ///
     /// @return The database
     ///
-    class database database(bsoncxx::stdx::string_view name) const &;
-    class database database(bsoncxx::stdx::string_view name) const && = delete;
+    class database database(stdx::string_view name) const &;
+    class database database(stdx::string_view name) const && = delete;
 
     ///
     /// Allows the syntax @c client["db_name"] as a convenient shorthand for the client::database()
@@ -177,8 +178,8 @@ class MONGOCXX_API client {
     ///
     /// @return Client side representation of a server side database
     ///
-    MONGOCXX_INLINE class database operator[](bsoncxx::stdx::string_view name) const &;
-    MONGOCXX_INLINE class database operator[](bsoncxx::stdx::string_view name) const && = delete;
+    MONGOCXX_INLINE class database operator[](stdx::string_view name) const &;
+    MONGOCXX_INLINE class database operator[](stdx::string_view name) const && = delete;
 
     ///
     /// Enumerates the databases in the client.
@@ -206,7 +207,7 @@ class MONGOCXX_API client {
     std::unique_ptr<impl> _impl;
 };
 
-MONGOCXX_INLINE database client::operator[](bsoncxx::stdx::string_view name) const & {
+MONGOCXX_INLINE database client::operator[](stdx::string_view name) const & {
     return database(name);
 }
 

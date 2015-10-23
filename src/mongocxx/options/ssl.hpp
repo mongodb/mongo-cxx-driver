@@ -28,30 +28,106 @@ namespace options {
 /// Class representing the optional arguments to a MongoDB driver client (SSL)
 ///
 class MONGOCXX_API ssl {
-
    public:
+    ///
+    /// The path to the .pem file containing a public key certificate and its associated private
+    /// key.
+    ///
+    /// @param pem_file
+    ///   The path to the .pem file.
+    ///
     void pem_file(std::string pem_file);
+
+    ///
+    /// Retrieves the current path to the .pem file.
+    ///
+    /// @return The path to the .pem file.
+    ///
     const bsoncxx::stdx::optional<std::string>& pem_file() const;
 
+    ///
+    /// The pass phrase used to decrypt an encrypted PEM file.
+    ///
+    /// @param pem_password
+    ///   The pass phrase.
+    ///
     void pem_password(std::string pem_password);
+
+    ///
+    /// Retrieves the current decryption pass phrase.
+    ///
+    /// @return The pass phrase.
+    ///
     const bsoncxx::stdx::optional<std::string>& pem_password() const;
 
+    ///
+    /// The path to the .pem file that contains the root certificate chain from the Certificate
+    /// Authority.
+    ///
+    /// @param ca_file
+    ///   The path to the CA file.
+    ///
     void ca_file(std::string ca_file);
+
+    ///
+    /// Retrieves the current path to the CA file.
+    ///
+    /// @return The path to the CA file.
+    ///
     const bsoncxx::stdx::optional<std::string>& ca_file() const;
 
-    void ca_dir(std::string ca_file);
+    ///
+    /// The path to the Certificate Authority directory.
+    ///
+    /// @param ca_dir
+    ///   The path to the CA directory.
+    ///
+    void ca_dir(std::string ca_dir);
+
+    ///
+    /// Retrieves the current path to the CA directory.
+    ///
+    /// @return The path to the CA directory.
+    ///
     const bsoncxx::stdx::optional<std::string>& ca_dir() const;
 
-    void weak_cert_validation(bool weak_cert_validation);
-    const bsoncxx::stdx::optional<bool>& weak_cert_validation() const;
+    ///
+    /// The path to the .pem file that contains revoked certificates.
+    ///
+    /// @param crl_file
+    ///   The path to the PEM file.
+    ///
+    void crl_file(std::string crl_file);
+
+    ///
+    /// Retrieves the current path to the .pem file that contains revoked certificates.
+    ///
+    /// @return The path to the revoked certificates file.
+    ///
+    const bsoncxx::stdx::optional<std::string>& crl_file() const;
+
+    ///
+    /// If false, the driver will not verify the server's CA file.
+    ///
+    /// @param allow_invalid_certificates
+    ///   Whether or not to check the server's CA file.
+    ///
+    void allow_invalid_certificates(bool allow_invalid_certificates);
+
+    ///
+    /// Retrieves whether or not the driver will check the server's CA file.
+    ///
+    /// @return Whether or not the driver will check the server's CA file.
+    ///
+    const bsoncxx::stdx::optional<bool>& allow_invalid_certificates() const;
 
    private:
     bsoncxx::stdx::optional<std::string> _pem_file;
     bsoncxx::stdx::optional<std::string> _pem_password;
     bsoncxx::stdx::optional<std::string> _ca_file;
     bsoncxx::stdx::optional<std::string> _ca_dir;
-    bsoncxx::stdx::optional<bool> _weak_cert_validation;
-
+    bsoncxx::stdx::optional<std::string> _crl_file;
+    bsoncxx::stdx::optional<bool> _allow_invalid_certificates;
 };
 
 }  // namespace options

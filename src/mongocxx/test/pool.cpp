@@ -66,7 +66,8 @@ TEST_CASE(
     const std::string pem_password = "bar";
     const std::string ca_file = "baz";
     const std::string ca_dir = "garply";
-    const bool weak_cert_validation = true;
+    const std::string crl_file = "crl_file";
+    const bool allow_invalid_certificates = true;
 
     bool set_ssl_opts_called = false;
     options::ssl ssl_opts;
@@ -74,7 +75,8 @@ TEST_CASE(
     ssl_opts.pem_password(pem_password);
     ssl_opts.ca_file(ca_file);
     ssl_opts.ca_dir(ca_dir);
-    ssl_opts.weak_cert_validation(weak_cert_validation);
+    ssl_opts.crl_file(crl_file);
+    ssl_opts.allow_invalid_certificates(allow_invalid_certificates);
 
     ::mongoc_ssl_opt_t interposed = {0};
 
@@ -91,7 +93,8 @@ TEST_CASE(
     REQUIRE(interposed.pem_pwd == pem_password);
     REQUIRE(interposed.ca_file == ca_file);
     REQUIRE(interposed.ca_dir == ca_dir);
-    REQUIRE(interposed.weak_cert_validation == weak_cert_validation);
+    REQUIRE(interposed.crl_file == crl_file);
+    REQUIRE(interposed.weak_cert_validation == allow_invalid_certificates);
 }
 
 TEST_CASE(
