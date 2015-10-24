@@ -135,7 +135,7 @@ cxx_driver_variables:
       toolchain_flags: --msvc-version=10.0
       libpath: --libpath="c:\local\boost_1_57_0\lib64-msvc-10.0"
       cpppath: --cpppath="c:\local\boost_1_57_0"
-      dllpath: --runtime-library-search-path="c:\local\boost_1_55_0\lib64-msvc-10.0,c:\openssl\bin,c:\sasl\bin,c:\curl\dlls"
+      dllpath: --runtime-library-search-path="c:\local\boost_1_57_0\lib64-msvc-10.0,c:\openssl\bin,c:\sasl\bin,c:\curl\dlls"
       extrapath: --extrapath="c:\openssl,c:\sasl,c:\curl"
     ## msvc2013, 32-bit boost headers
     msvc2013-32: &with_msvc2010_32bit
