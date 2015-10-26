@@ -20,8 +20,9 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
-
 #include <bsoncxx/stdx/optional.hpp>
+
+#include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -58,7 +59,7 @@ class scoped_bson_t {
     ///
     /// If the optional argument is engaged the internal bson_t is considered initialized.
     ///
-    scoped_bson_t(const bsoncxx::stdx::optional<bsoncxx::document::view>& doc);
+    scoped_bson_t(const stdx::optional<bsoncxx::document::view>& doc);
 
     ///
     /// Constructs a new scoped_bson_t from a document view.
@@ -72,7 +73,7 @@ class scoped_bson_t {
     ///
     /// If the optional argument is engaged the internal bson_t is considered initialized.
     ///
-    void init_from_static(const bsoncxx::stdx::optional<bsoncxx::document::view>& doc);
+    void init_from_static(const stdx::optional<bsoncxx::document::view>& doc);
 
     ///
     /// Constructs a read-only bson_t from the provided document.

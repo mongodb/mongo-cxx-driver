@@ -434,12 +434,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto values_array = res_doc["values"].get_array().value;
 
-        std::vector<bsoncxx::stdx::string_view> distinct_values;
+        std::vector<stdx::string_view> distinct_values;
         for (auto&& value : values_array) {
             distinct_values.push_back(value.get_utf8().value);
         }
 
-        const auto assert_contains_one = [&](bsoncxx::stdx::string_view val) {
+        const auto assert_contains_one = [&](stdx::string_view val) {
             REQUIRE(std::count(distinct_values.begin(), distinct_values.end(), val) == 1);
         };
 

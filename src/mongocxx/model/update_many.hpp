@@ -19,6 +19,8 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
+#include <mongocxx/stdx.hpp>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
@@ -74,7 +76,7 @@ class MONGOCXX_API update_many {
     ///
     /// @return The optional value of the upsert option.
     ///
-    const bsoncxx::stdx::optional<bool>& upsert() const;
+    const stdx::optional<bool>& upsert() const;
 
    private:
     // Required
@@ -82,8 +84,7 @@ class MONGOCXX_API update_many {
     bsoncxx::document::view _update;
 
     // Optional
-    bsoncxx::stdx::optional<bool> _upsert;
-
+    stdx::optional<bool> _upsert;
 };
 
 }  // namespace model

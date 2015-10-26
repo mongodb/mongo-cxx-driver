@@ -32,7 +32,7 @@ std::int32_t update::modified_count() const {
     return _result.modified_count();
 }
 
-bsoncxx::stdx::optional<bsoncxx::document::element> update::upserted_id() const {
+stdx::optional<bsoncxx::document::element> update::upserted_id() const {
     return _result.upserted_ids();
 }
 

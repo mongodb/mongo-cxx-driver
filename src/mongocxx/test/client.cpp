@@ -166,7 +166,7 @@ TEST_CASE("A client can create a named database object", "[client]") {
     database_set_concern->interpose([](mongoc_database_t*, const mongoc_write_concern_t*) {})
         .forever();
 
-    bsoncxx::stdx::string_view name("database");
+    stdx::string_view name("database");
 
     client mongo_client{uri{}};
     database obtained_database = mongo_client[name];

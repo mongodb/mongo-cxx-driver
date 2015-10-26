@@ -26,11 +26,11 @@ void find_one_and_delete::sort(bsoncxx::document::view ordering) {
     _ordering = ordering;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::document::view>& find_one_and_delete::projection() const {
+const stdx::optional<bsoncxx::document::view>& find_one_and_delete::projection() const {
     return _projection;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::document::view>& find_one_and_delete::sort() const {
+const stdx::optional<bsoncxx::document::view>& find_one_and_delete::sort() const {
     return _ordering;
 }
 

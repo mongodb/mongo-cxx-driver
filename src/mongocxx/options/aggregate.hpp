@@ -20,6 +20,7 @@
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/read_preference.hpp>
 
 namespace mongocxx {
@@ -47,7 +48,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @return Whether disk use is allowed.
     ///
-    const bsoncxx::stdx::optional<bool>& allow_disk_use() const;
+    const stdx::optional<bool>& allow_disk_use() const;
 
     ///
     /// Sets the number of documents to return per batch.
@@ -62,7 +63,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @return The current batch size.
     ///
-    const bsoncxx::stdx::optional<std::int32_t>& batch_size() const;
+    const stdx::optional<std::int32_t>& batch_size() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run server-side in milliseconds.
@@ -82,7 +83,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    const bsoncxx::stdx::optional<std::int64_t>& max_time_ms() const;
+    const stdx::optional<std::int64_t>& max_time_ms() const;
 
     ///
     /// Sets whether the results of this aggregation should be returned via a cursor.
@@ -102,7 +103,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @return the current use_cursor setting
     ///
-    const bsoncxx::stdx::optional<bool>& use_cursor() const;
+    const stdx::optional<bool>& use_cursor() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -120,15 +121,14 @@ class MONGOCXX_API aggregate {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    const bsoncxx::stdx::optional<class read_preference>& read_preference() const;
+    const stdx::optional<class read_preference>& read_preference() const;
 
    private:
-    bsoncxx::stdx::optional<bool> _allow_disk_use;
-    bsoncxx::stdx::optional<std::int32_t> _batch_size;
-    bsoncxx::stdx::optional<std::int64_t> _max_time_ms;
-    bsoncxx::stdx::optional<bool> _use_cursor;
-    bsoncxx::stdx::optional<class read_preference> _read_preference;
-
+    stdx::optional<bool> _allow_disk_use;
+    stdx::optional<std::int32_t> _batch_size;
+    stdx::optional<std::int64_t> _max_time_ms;
+    stdx::optional<bool> _use_cursor;
+    stdx::optional<class read_preference> _read_preference;
 };
 
 }  // namespace options

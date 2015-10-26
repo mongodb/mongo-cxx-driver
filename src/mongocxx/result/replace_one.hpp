@@ -19,8 +19,10 @@
 #include <cstdint>
 
 #include <bsoncxx/types.hpp>
-#include <mongocxx/result/bulk_write.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
+#include <mongocxx/result/bulk_write.hpp>
+#include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -59,7 +61,7 @@ class MONGOCXX_API replace_one {
     ///
     /// @return The value of the _id field for upserted document.
     ///
-    bsoncxx::stdx::optional<bsoncxx::document::element> upserted_id() const;
+    stdx::optional<bsoncxx::document::element> upserted_id() const;
 
    private:
     result::bulk_write _result;

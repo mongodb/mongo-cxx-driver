@@ -20,6 +20,8 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 
+#include <mongocxx/stdx.hpp>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
@@ -43,7 +45,7 @@ class MONGOCXX_API ssl {
     ///
     /// @return The path to the .pem file.
     ///
-    const bsoncxx::stdx::optional<std::string>& pem_file() const;
+    const stdx::optional<std::string>& pem_file() const;
 
     ///
     /// The pass phrase used to decrypt an encrypted PEM file.
@@ -58,7 +60,7 @@ class MONGOCXX_API ssl {
     ///
     /// @return The pass phrase.
     ///
-    const bsoncxx::stdx::optional<std::string>& pem_password() const;
+    const stdx::optional<std::string>& pem_password() const;
 
     ///
     /// The path to the .pem file that contains the root certificate chain from the Certificate
@@ -74,7 +76,7 @@ class MONGOCXX_API ssl {
     ///
     /// @return The path to the CA file.
     ///
-    const bsoncxx::stdx::optional<std::string>& ca_file() const;
+    const stdx::optional<std::string>& ca_file() const;
 
     ///
     /// The path to the Certificate Authority directory.
@@ -89,7 +91,7 @@ class MONGOCXX_API ssl {
     ///
     /// @return The path to the CA directory.
     ///
-    const bsoncxx::stdx::optional<std::string>& ca_dir() const;
+    const stdx::optional<std::string>& ca_dir() const;
 
     ///
     /// The path to the .pem file that contains revoked certificates.
@@ -104,7 +106,7 @@ class MONGOCXX_API ssl {
     ///
     /// @return The path to the revoked certificates file.
     ///
-    const bsoncxx::stdx::optional<std::string>& crl_file() const;
+    const stdx::optional<std::string>& crl_file() const;
 
     ///
     /// If false, the driver will not verify the server's CA file.
@@ -119,15 +121,15 @@ class MONGOCXX_API ssl {
     ///
     /// @return Whether or not the driver will check the server's CA file.
     ///
-    const bsoncxx::stdx::optional<bool>& allow_invalid_certificates() const;
+    const stdx::optional<bool>& allow_invalid_certificates() const;
 
    private:
-    bsoncxx::stdx::optional<std::string> _pem_file;
-    bsoncxx::stdx::optional<std::string> _pem_password;
-    bsoncxx::stdx::optional<std::string> _ca_file;
-    bsoncxx::stdx::optional<std::string> _ca_dir;
-    bsoncxx::stdx::optional<std::string> _crl_file;
-    bsoncxx::stdx::optional<bool> _allow_invalid_certificates;
+    stdx::optional<std::string> _pem_file;
+    stdx::optional<std::string> _pem_password;
+    stdx::optional<std::string> _ca_file;
+    stdx::optional<std::string> _ca_dir;
+    stdx::optional<std::string> _crl_file;
+    stdx::optional<bool> _allow_invalid_certificates;
 };
 
 }  // namespace options

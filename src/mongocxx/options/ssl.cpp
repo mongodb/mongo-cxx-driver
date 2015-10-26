@@ -22,7 +22,7 @@ void ssl::pem_file(std::string pem_file) {
     _pem_file = std::move(pem_file);
 }
 
-const bsoncxx::stdx::optional<std::string>& ssl::pem_file() const {
+const stdx::optional<std::string>& ssl::pem_file() const {
     return _pem_file;
 }
 
@@ -30,7 +30,7 @@ void ssl::pem_password(std::string pem_password) {
     _pem_password = std::move(pem_password);
 }
 
-const bsoncxx::stdx::optional<std::string>& ssl::pem_password() const {
+const stdx::optional<std::string>& ssl::pem_password() const {
     return _pem_password;
 }
 
@@ -38,7 +38,7 @@ void ssl::ca_file(std::string ca_file) {
     _ca_file = std::move(ca_file);
 }
 
-const bsoncxx::stdx::optional<std::string>& ssl::ca_file() const {
+const stdx::optional<std::string>& ssl::ca_file() const {
     return _ca_file;
 }
 
@@ -46,7 +46,7 @@ void ssl::ca_dir(std::string ca_dir) {
     _ca_dir = std::move(ca_dir);
 }
 
-const bsoncxx::stdx::optional<std::string>& ssl::ca_dir() const {
+const stdx::optional<std::string>& ssl::ca_dir() const {
     return _ca_dir;
 }
 
@@ -54,7 +54,7 @@ void ssl::crl_file(std::string crl_file) {
     _crl_file = std::move(crl_file);
 }
 
-const bsoncxx::stdx::optional<std::string>& ssl::crl_file() const {
+const stdx::optional<std::string>& ssl::crl_file() const {
     return _crl_file;
 }
 
@@ -62,7 +62,7 @@ void ssl::allow_invalid_certificates(bool allow_invalid_certificates) {
     _allow_invalid_certificates = allow_invalid_certificates;
 }
 
-const bsoncxx::stdx::optional<bool>& ssl::allow_invalid_certificates() const {
+const stdx::optional<bool>& ssl::allow_invalid_certificates() const {
     return _allow_invalid_certificates;
 }
 

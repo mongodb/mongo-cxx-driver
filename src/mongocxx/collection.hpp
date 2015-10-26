@@ -142,11 +142,9 @@ class MONGOCXX_API collection {
     /// @see mongocxx::bulk_write
     /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
     ///
-    template<typename container_type>
-    MONGOCXX_INLINE bsoncxx::stdx::optional<result::bulk_write> bulk_write(
-        const container_type& writes,
-        const options::bulk_write& options = options::bulk_write()
-    );
+    template <typename container_type>
+    MONGOCXX_INLINE stdx::optional<result::bulk_write> bulk_write(
+        const container_type& writes, const options::bulk_write& options = options::bulk_write());
 
     ///
     /// Sends writes starting at @c begin and ending at @c end to the server as a bulk write
@@ -169,12 +167,10 @@ class MONGOCXX_API collection {
     /// @see mongocxx::bulk_write
     /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
     ///
-    template<typename write_model_iterator_type>
-    MONGOCXX_INLINE bsoncxx::stdx::optional<result::bulk_write> bulk_write(
-        write_model_iterator_type begin,
-        write_model_iterator_type end,
-        const options::bulk_write& options = options::bulk_write()
-    );
+    template <typename write_model_iterator_type>
+    MONGOCXX_INLINE stdx::optional<result::bulk_write> bulk_write(
+        write_model_iterator_type begin, write_model_iterator_type end,
+        const options::bulk_write& options = options::bulk_write());
 
     ///
     /// Sends a batch of writes represented by the bulk_write to the server.
@@ -187,9 +183,7 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
     ///
-    bsoncxx::stdx::optional<result::bulk_write> bulk_write(
-        const class bulk_write& bulk_write
-    );
+    stdx::optional<result::bulk_write> bulk_write(const class bulk_write& bulk_write);
 
     ///
     /// Counts the number of documents matching the provided filter.
@@ -240,10 +234,9 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/delete/
     ///
-    bsoncxx::stdx::optional<result::delete_result> delete_many(
+    stdx::optional<result::delete_result> delete_many(
         bsoncxx::document::view filter,
-        const options::delete_options& options = options::delete_options()
-    );
+        const options::delete_options& options = options::delete_options());
 
     ///
     /// Deletes a single matching document from the collection.
@@ -258,10 +251,9 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/delete/
     ///
-    bsoncxx::stdx::optional<result::delete_result> delete_one(
+    stdx::optional<result::delete_result> delete_one(
         bsoncxx::document::view filter,
-        const options::delete_options& options = options::delete_options()
-    );
+        const options::delete_options& options = options::delete_options());
 
     ///
     /// Finds the distinct values for a specified field accross the collection.
@@ -280,11 +272,8 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/distinct/
     ///
-    cursor distinct(
-        bsoncxx::stdx::string_view name,
-        bsoncxx::document::view filter,
-        const options::distinct& options = options::distinct()
-    );
+    cursor distinct(stdx::string_view name, bsoncxx::document::view filter,
+                    const options::distinct& options = options::distinct());
 
     ///
     /// Drops this collection and all its contained documents from the database.
@@ -329,10 +318,8 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-operations-introduction/
     ///
-    bsoncxx::stdx::optional<bsoncxx::document::value> find_one(
-        bsoncxx::document::view filter,
-        const options::find& options = options::find()
-    );
+    stdx::optional<bsoncxx::document::value> find_one(
+        bsoncxx::document::view filter, const options::find& options = options::find());
 
     ///
     /// Finds a single document matching the filter, deletes it, and returns the original.
@@ -345,10 +332,9 @@ class MONGOCXX_API collection {
     /// @return The document that was deleted.
     /// @throws exception::write if the operation fails.
     ///
-    bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_delete(
+    stdx::optional<bsoncxx::document::value> find_one_and_delete(
         bsoncxx::document::view filter,
-        const options::find_one_and_delete& options = options::find_one_and_delete()
-    );
+        const options::find_one_and_delete& options = options::find_one_and_delete());
 
     ///
     /// Finds a single document matching the filter, replaces it, and returns either the original
@@ -368,11 +354,9 @@ class MONGOCXX_API collection {
     ///   In order to pass a write concern to this, you must use the collection
     ///   level set write concern - collection::write_concern(wc).
     ///
-    bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_replace(
-        bsoncxx::document::view filter,
-        bsoncxx::document::view replacement,
-        const options::find_one_and_replace& options = options::find_one_and_replace()
-    );
+    stdx::optional<bsoncxx::document::value> find_one_and_replace(
+        bsoncxx::document::view filter, bsoncxx::document::view replacement,
+        const options::find_one_and_replace& options = options::find_one_and_replace());
 
     ///
     /// Finds a single document matching the filter, updates it, and returns either the original
@@ -392,11 +376,9 @@ class MONGOCXX_API collection {
     ///   In order to pass a write concern to this, you must use the collection
     ///   level set write concern - collection::write_concern(wc).
     ///
-    bsoncxx::stdx::optional<bsoncxx::document::value> find_one_and_update(
-        bsoncxx::document::view filter,
-        bsoncxx::document::view update,
-        const options::find_one_and_update& options = options::find_one_and_update()
-    );
+    stdx::optional<bsoncxx::document::value> find_one_and_update(
+        bsoncxx::document::view filter, bsoncxx::document::view update,
+        const options::find_one_and_update& options = options::find_one_and_update());
 
     ///
     /// Gets a handle to the underlying implementation.
@@ -422,10 +404,8 @@ class MONGOCXX_API collection {
     /// @return The result of attempting to perform the insert.
     /// @throws exception::write if the operation fails.
     ///
-    bsoncxx::stdx::optional<result::insert_one> insert_one(
-        bsoncxx::document::view document,
-        const options::insert& options = options::insert()
-    );
+    stdx::optional<result::insert_one> insert_one(
+        bsoncxx::document::view document, const options::insert& options = options::insert());
 
     ///
     /// Inserts multiple documents into the collection. If any of the documents are missing
@@ -447,11 +427,9 @@ class MONGOCXX_API collection {
     /// @return The result of attempting to performing the insert.
     /// @throws exception::write when the operation fails.
     ///
-    template<typename container_type>
-    MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> insert_many(
-        const container_type& container,
-        const options::insert& options = options::insert()
-    );
+    template <typename container_type>
+    MONGOCXX_INLINE stdx::optional<result::insert_many> insert_many(
+        const container_type& container, const options::insert& options = options::insert());
 
     ///
     /// Inserts multiple documents into the collection. If any of the documents are missing
@@ -476,12 +454,10 @@ class MONGOCXX_API collection {
     /// @throws exception::write if the operation fails.
     ///
     /// TODO: document DocumentViewIterator concept or static assert
-    template<typename document_view_iterator_type>
-    MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> insert_many(
-        document_view_iterator_type begin,
-        document_view_iterator_type end,
-        const options::insert& options = options::insert()
-    );
+    template <typename document_view_iterator_type>
+    MONGOCXX_INLINE stdx::optional<result::insert_many> insert_many(
+        document_view_iterator_type begin, document_view_iterator_type end,
+        const options::insert& options = options::insert());
 
     ///
     /// Returns a list of the indexes currently on this collection.
@@ -498,7 +474,7 @@ class MONGOCXX_API collection {
     ///
     /// @return The name of the collection.
     ///
-    bsoncxx::stdx::string_view name() const noexcept;
+    stdx::string_view name() const noexcept;
 
     ///
     /// Sets the read_preference for this collection. Changes will not have any effect on existing
@@ -535,11 +511,9 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
-    bsoncxx::stdx::optional<result::replace_one> replace_one(
-        bsoncxx::document::view filter,
-        bsoncxx::document::view replacement,
-        const options::update& options = options::update()
-    );
+    stdx::optional<result::replace_one> replace_one(
+        bsoncxx::document::view filter, bsoncxx::document::view replacement,
+        const options::update& options = options::update());
 
     ///
     /// Updates multiple documents matching the provided filter in this collection.
@@ -556,11 +530,9 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
-    bsoncxx::stdx::optional<result::update> update_many(
-        bsoncxx::document::view filter,
-        bsoncxx::document::view update,
-        const options::update& options = options::update()
-    );
+    stdx::optional<result::update> update_many(bsoncxx::document::view filter,
+                                               bsoncxx::document::view update,
+                                               const options::update& options = options::update());
 
     ///
     /// Updates a single document matching the provided filter in this collection.
@@ -577,11 +549,9 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
-    bsoncxx::stdx::optional<result::update> update_one(
-        bsoncxx::document::view filter,
-        bsoncxx::document::view update,
-        const options::update& options = options::update()
-    );
+    stdx::optional<result::update> update_one(bsoncxx::document::view filter,
+                                              bsoncxx::document::view update,
+                                              const options::update& options = options::update());
 
     ///
     /// Sets the write_concern for this collection. Changes will not have any effect on existing
@@ -602,27 +572,23 @@ class MONGOCXX_API collection {
    private:
     friend class database;
 
-    MONGOCXX_PRIVATE collection(const database& database, bsoncxx::stdx::string_view collection_name);
+    MONGOCXX_PRIVATE collection(const database& database, stdx::string_view collection_name);
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
 
 };
 
-template<typename container_type>
-MONGOCXX_INLINE bsoncxx::stdx::optional<result::bulk_write> collection::bulk_write(
-    const container_type& requests,
-    const options::bulk_write& options
-) {
+template <typename container_type>
+MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
+    const container_type& requests, const options::bulk_write& options) {
     return bulk_write(requests.begin(), requests.end(), options);
 }
 
-template<typename write_model_iterator_type>
-MONGOCXX_INLINE bsoncxx::stdx::optional<result::bulk_write> collection::bulk_write(
-    write_model_iterator_type begin,
-    write_model_iterator_type end,
-    const options::bulk_write& options
-) {
+template <typename write_model_iterator_type>
+MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
+    write_model_iterator_type begin, write_model_iterator_type end,
+    const options::bulk_write& options) {
     class bulk_write writes(options.ordered().value_or(true));
 
     std::for_each(begin, end, [&](const model::write& current){
@@ -632,20 +598,16 @@ MONGOCXX_INLINE bsoncxx::stdx::optional<result::bulk_write> collection::bulk_wri
     return bulk_write(writes);
 }
 
-template<typename container_type>
-MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> collection::insert_many(
-    const container_type& container,
-    const options::insert& options
-) {
+template <typename container_type>
+MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
+    const container_type& container, const options::insert& options) {
     return insert_many(container.begin(), container.end(), options);
 }
 
-template<typename document_view_iterator_type>
-MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> collection::insert_many(
-    document_view_iterator_type begin,
-    document_view_iterator_type end,
-    const options::insert& options
-) {
+template <typename document_view_iterator_type>
+MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
+    document_view_iterator_type begin, document_view_iterator_type end,
+    const options::insert& options) {
     class bulk_write writes(options.ordered().value_or(true));
 
     result::insert_many::id_map inserted_ids{};
@@ -671,7 +633,8 @@ MONGOCXX_INLINE bsoncxx::stdx::optional<result::insert_many> collection::insert_
     if (options.write_concern())
         writes.write_concern(*options.write_concern());
     result::bulk_write res(std::move(bulk_write(writes).value()));
-    bsoncxx::stdx::optional<result::insert_many> result(result::insert_many(std::move(res), std::move(inserted_ids)));
+    stdx::optional<result::insert_many> result(
+        result::insert_many(std::move(res), std::move(inserted_ids)));
     return result;
 }
 

@@ -50,7 +50,7 @@ class MONGOCXX_API count {
     ///
     /// @return The current hint.
     ///
-    const bsoncxx::stdx::optional<bsoncxx::document::view>& hint() const;
+    const stdx::optional<bsoncxx::document::view>& hint() const;
 
     ///
     /// Sets the maximum number of documents to count.
@@ -65,7 +65,7 @@ class MONGOCXX_API count {
     ///
     /// @return The current limit.
     ///
-    const bsoncxx::stdx::optional<std::int64_t>& limit() const;
+    const stdx::optional<std::int64_t>& limit() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -84,7 +84,7 @@ class MONGOCXX_API count {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    const bsoncxx::stdx::optional<std::int64_t>& max_time_ms() const;
+    const stdx::optional<std::int64_t>& max_time_ms() const;
 
     ///
     /// Sets the number of documents to skip before counting documents.
@@ -103,7 +103,7 @@ class MONGOCXX_API count {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/cursor.skip/
     ///
-    const bsoncxx::stdx::optional<std::int64_t>& skip() const;
+    const stdx::optional<std::int64_t>& skip() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -122,15 +122,14 @@ class MONGOCXX_API count {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    const bsoncxx::stdx::optional<class read_preference>& read_preference() const;
+    const stdx::optional<class read_preference>& read_preference() const;
 
    private:
-    bsoncxx::stdx::optional<bsoncxx::document::view> _hint;
-    bsoncxx::stdx::optional<std::int64_t> _limit;
-    bsoncxx::stdx::optional<std::int64_t> _max_time_ms;
-    bsoncxx::stdx::optional<std::int64_t> _skip;
-    bsoncxx::stdx::optional<class read_preference> _read_preference;
-
+    stdx::optional<bsoncxx::document::view> _hint;
+    stdx::optional<std::int64_t> _limit;
+    stdx::optional<std::int64_t> _max_time_ms;
+    stdx::optional<std::int64_t> _skip;
+    stdx::optional<class read_preference> _read_preference;
 };
 
 }  // namespace options

@@ -58,7 +58,7 @@ class MONGOCXX_API uri {
     ///
     /// @todo this should really take a stringview (polyfilled)?
     ///
-    uri(bsoncxx::stdx::string_view uri_string = k_default_uri);
+    uri(stdx::string_view uri_string = k_default_uri);
 
     ///
     /// Move constructs a uri.

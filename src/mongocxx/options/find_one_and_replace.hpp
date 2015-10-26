@@ -19,8 +19,10 @@
 #include <cstdint>
 
 #include <bsoncxx/document/view.hpp>
-#include <mongocxx/options/find_one_and_modify.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
+#include <mongocxx/options/find_one_and_modify.hpp>
+#include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -50,7 +52,7 @@ class MONGOCXX_API find_one_and_replace {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    const bsoncxx::stdx::optional<std::int64_t>& max_time_ms() const;
+    const stdx::optional<std::int64_t>& max_time_ms() const;
 
     ///
     /// Sets a projection, which limits the fields to return.
@@ -70,7 +72,7 @@ class MONGOCXX_API find_one_and_replace {
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
     ///
-    const bsoncxx::stdx::optional<bsoncxx::document::view>& projection() const;
+    const stdx::optional<bsoncxx::document::view>& projection() const;
 
     ///
     /// Set the desired version of the replaced document to return, either the original
@@ -92,7 +94,7 @@ class MONGOCXX_API find_one_and_replace {
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     /// @see mongocxx::options::return_document
     ///
-    const bsoncxx::stdx::optional<enum return_document>& return_document() const;
+    const stdx::optional<enum return_document>& return_document() const;
 
     ///
     /// Sets the order by which to search the collection for a matching document.
@@ -114,7 +116,7 @@ class MONGOCXX_API find_one_and_replace {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     ///
-    const bsoncxx::stdx::optional<bsoncxx::document::view>& sort() const;
+    const stdx::optional<bsoncxx::document::view>& sort() const;
 
     ///
     /// Sets the upsert flag on the operation. When @c true, the operation creates a new document if
@@ -135,15 +137,14 @@ class MONGOCXX_API find_one_and_replace {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     ///
-    const bsoncxx::stdx::optional<bool>& upsert() const;
+    const stdx::optional<bool>& upsert() const;
 
    private:
-    bsoncxx::stdx::optional<std::int64_t> _max_time_ms;
-    bsoncxx::stdx::optional<bsoncxx::document::view> _projection;
-    bsoncxx::stdx::optional<enum return_document> _return_document;
-    bsoncxx::stdx::optional<bsoncxx::document::view> _ordering;
-    bsoncxx::stdx::optional<bool> _upsert;
-
+    stdx::optional<std::int64_t> _max_time_ms;
+    stdx::optional<bsoncxx::document::view> _projection;
+    stdx::optional<enum return_document> _return_document;
+    stdx::optional<bsoncxx::document::view> _ordering;
+    stdx::optional<bool> _upsert;
 };
 
 }  // namespace options

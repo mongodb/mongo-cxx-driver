@@ -47,7 +47,7 @@ class MONGOCXX_API bulk_write {
     ///
     /// @return The optional value of the ordered option.
     ///
-    const bsoncxx::stdx::optional<bool>& ordered() const;
+    const stdx::optional<bool>& ordered() const;
 
     ///
     /// Sets the write_concern for this operation.
@@ -67,12 +67,11 @@ class MONGOCXX_API bulk_write {
     ///
     /// @see http://docs.mongodb.org/manual/core/write-concern/
     ///
-    const bsoncxx::stdx::optional<class write_concern>& write_concern() const;
+    const stdx::optional<class write_concern>& write_concern() const;
 
    private:
-    bsoncxx::stdx::optional<bool> _ordered;
-    bsoncxx::stdx::optional<class write_concern> _write_concern;
-
+    stdx::optional<bool> _ordered;
+    stdx::optional<class write_concern> _write_concern;
 };
 
 }  // namespace options

@@ -36,8 +36,8 @@ database& database::operator=(database&&) noexcept = default;
 
 database::~database() = default;
 
-database::database(const class client& client, bsoncxx::stdx::string_view name)
-    : _impl(bsoncxx::stdx::make_unique<impl>(
+database::database(const class client& client, stdx::string_view name)
+    : _impl(stdx::make_unique<impl>(
           libmongoc::client_get_database(client._impl->client_t, name.data()), client._impl.get(),
           name.data())) {
 }
@@ -63,7 +63,7 @@ cursor database::list_collections(bsoncxx::document::view filter) {
 
     return cursor(result);
 }
-bsoncxx::stdx::string_view database::name() const {
+stdx::string_view database::name() const {
     return _impl->name;
 }
 
@@ -85,13 +85,13 @@ void database::read_preference(class read_preference rp) {
     libmongoc::database_set_read_prefs(_impl->database_t, rp._impl->read_preference_t);
 }
 
-bool database::has_collection(bsoncxx::stdx::string_view name) {
+bool database::has_collection(stdx::string_view name) {
     bson_error_t error;
     return libmongoc::database_has_collection(_impl->database_t, name.data(), &error);
 }
 
 class read_preference database::read_preference() const {
-    class read_preference rp(bsoncxx::stdx::make_unique<read_preference::impl>(
+    class read_preference rp(stdx::make_unique<read_preference::impl>(
         libmongoc::read_prefs_copy(libmongoc::database_get_read_prefs(_impl->database_t))));
     return rp;
 }
@@ -101,12 +101,12 @@ void database::write_concern(class write_concern wc) {
 }
 
 class write_concern database::write_concern() const {
-    class write_concern wc(bsoncxx::stdx::make_unique<write_concern::impl>(
+    class write_concern wc(stdx::make_unique<write_concern::impl>(
         libmongoc::write_concern_copy(libmongoc::database_get_write_concern(_impl->database_t))));
     return wc;
 }
 
-collection database::collection(bsoncxx::stdx::string_view name) const {
+collection database::collection(stdx::string_view name) const {
     return mongocxx::collection(*this, name);
 }
 

@@ -23,6 +23,7 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/stdx.hpp>
 
 namespace mongocxx {

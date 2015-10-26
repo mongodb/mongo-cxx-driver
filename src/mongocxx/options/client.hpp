@@ -47,11 +47,10 @@ class MONGOCXX_API client {
     ///
     /// @return The SSL-related options.
     ///
-    const bsoncxx::stdx::optional<ssl>& ssl_opts() const;
+    const stdx::optional<ssl>& ssl_opts() const;
 
    private:
-    bsoncxx::stdx::optional<ssl> _ssl_opts;
-
+    stdx::optional<ssl> _ssl_opts;
 };
 
 }  // namespace options

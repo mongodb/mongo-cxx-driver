@@ -39,23 +39,23 @@ void count::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
 }
 
-const bsoncxx::stdx::optional<bsoncxx::document::view>& count::hint() const {
+const stdx::optional<bsoncxx::document::view>& count::hint() const {
     return _hint;
 }
 
-const bsoncxx::stdx::optional<std::int64_t>& count::limit() const {
+const stdx::optional<std::int64_t>& count::limit() const {
     return _limit;
 }
 
-const bsoncxx::stdx::optional<std::int64_t>& count::max_time_ms() const {
+const stdx::optional<std::int64_t>& count::max_time_ms() const {
     return _max_time_ms;
 }
 
-const bsoncxx::stdx::optional<std::int64_t>& count::skip() const {
+const stdx::optional<std::int64_t>& count::skip() const {
     return _skip;
 }
 
-const bsoncxx::stdx::optional<read_preference>& count::read_preference() const {
+const stdx::optional<read_preference>& count::read_preference() const {
     return _read_preference;
 }
 

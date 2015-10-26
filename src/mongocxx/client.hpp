@@ -164,8 +164,8 @@ class MONGOCXX_API client {
     ///
     /// @return The database
     ///
-    class database database(stdx::string_view name) const &;
-    class database database(stdx::string_view name) const && = delete;
+    class database database(stdx::string_view name) const&;
+    class database database(stdx::string_view name) const&& = delete;
 
     ///
     /// Allows the syntax @c client["db_name"] as a convenient shorthand for the client::database()
@@ -178,8 +178,8 @@ class MONGOCXX_API client {
     ///
     /// @return Client side representation of a server side database
     ///
-    MONGOCXX_INLINE class database operator[](stdx::string_view name) const &;
-    MONGOCXX_INLINE class database operator[](stdx::string_view name) const && = delete;
+    MONGOCXX_INLINE class database operator[](stdx::string_view name) const&;
+    MONGOCXX_INLINE class database operator[](stdx::string_view name) const&& = delete;
 
     ///
     /// Enumerates the databases in the client.

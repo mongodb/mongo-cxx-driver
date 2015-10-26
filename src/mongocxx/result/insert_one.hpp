@@ -18,6 +18,7 @@
 
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
+
 #include <mongocxx/result/bulk_write.hpp>
 
 namespace mongocxx {

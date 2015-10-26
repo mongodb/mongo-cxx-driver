@@ -15,7 +15,9 @@
 #include <mongocxx/pipeline.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/private/pipeline.hpp>
+#include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -23,7 +25,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 using namespace bsoncxx::builder::stream;
 using namespace bsoncxx::types;
 
-pipeline::pipeline() : _impl(bsoncxx::stdx::make_unique<impl>()) {
+pipeline::pipeline() : _impl(stdx::make_unique<impl>()) {
 }
 
 pipeline::pipeline(pipeline&&) noexcept = default;

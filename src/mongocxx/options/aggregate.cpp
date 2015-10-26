@@ -35,19 +35,19 @@ void aggregate::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
 }
 
-const bsoncxx::stdx::optional<bool>& aggregate::allow_disk_use() const {
+const stdx::optional<bool>& aggregate::allow_disk_use() const {
     return _allow_disk_use;
 }
-const bsoncxx::stdx::optional<std::int32_t>& aggregate::batch_size() const {
+const stdx::optional<std::int32_t>& aggregate::batch_size() const {
     return _batch_size;
 }
-const bsoncxx::stdx::optional<std::int64_t>& aggregate::max_time_ms() const {
+const stdx::optional<std::int64_t>& aggregate::max_time_ms() const {
     return _max_time_ms;
 }
-const bsoncxx::stdx::optional<bool>& aggregate::use_cursor() const {
+const stdx::optional<bool>& aggregate::use_cursor() const {
     return _use_cursor;
 }
-const bsoncxx::stdx::optional<class read_preference>& aggregate::read_preference() const {
+const stdx::optional<class read_preference>& aggregate::read_preference() const {
     return _read_preference;
 }
 

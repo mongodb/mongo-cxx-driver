@@ -34,15 +34,13 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 class collection::impl {
 
    public:
-    impl(mongoc_collection_t* collection,
-         bsoncxx::stdx::string_view database_name,
-         const class client::impl* client,
-         bsoncxx::stdx::string_view name) :
-        collection_t(collection),
-        database_name(std::move(database_name)),
-        client_impl(client),
-        name(name)
-    {}
+    impl(mongoc_collection_t* collection, stdx::string_view database_name,
+         const class client::impl* client, stdx::string_view name)
+        : collection_t(collection),
+          database_name(std::move(database_name)),
+          client_impl(client),
+          name(name) {
+    }
 
     ~impl() { libmongoc::collection_destroy(collection_t); }
 

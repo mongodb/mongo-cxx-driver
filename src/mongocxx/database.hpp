@@ -91,10 +91,7 @@ class MONGOCXX_API database {
     /// @param name the new collection's name.
     /// @param options the options for the new collection.
     ///
-    class collection create_collection(
-        bsoncxx::stdx::string_view name,
-        bsoncxx::document::view options
-    );
+    class collection create_collection(stdx::string_view name, bsoncxx::document::view options);
 
     ///
     /// Drops the database and all its collections.
@@ -109,7 +106,7 @@ class MONGOCXX_API database {
     /// @param name the name of the collection.
     /// @return bool whether the collection exists in this database.
     ///
-    bool has_collection(bsoncxx::stdx::string_view name);
+    bool has_collection(stdx::string_view name);
 
     ///
     /// Gets a handle to the underlying implementation.
@@ -143,7 +140,7 @@ class MONGOCXX_API database {
     ///
     /// @return the name of this database.
     ///
-    bsoncxx::stdx::string_view name() const;
+    stdx::string_view name() const;
 
     ///
     /// Renames this database.
@@ -151,10 +148,7 @@ class MONGOCXX_API database {
     /// @param new_name the new name for the database.
     /// @param drop_target_before_rename whether to drop existing databases with the new name.
     ///
-    void rename(
-        bsoncxx::stdx::string_view new_name,
-        bool drop_target_before_rename
-    );
+    void rename(stdx::string_view new_name, bool drop_target_before_rename);
 
     ///
     /// Get server-side statistics for the database.
@@ -210,7 +204,7 @@ class MONGOCXX_API database {
     ///
     /// @return the collection.
     ///
-    class collection collection(bsoncxx::stdx::string_view name) const;
+    class collection collection(stdx::string_view name) const;
 
     ///
     /// Allows the db["collection_name"] syntax to be used to access a collection within this database.
@@ -219,20 +213,20 @@ class MONGOCXX_API database {
     ///
     /// @return the collection.
     ///
-    MONGOCXX_INLINE class collection operator[](bsoncxx::stdx::string_view name) const;
+    MONGOCXX_INLINE class collection operator[](stdx::string_view name) const;
 
    private:
     friend class client;
     friend class collection;
 
-    MONGOCXX_PRIVATE database(const class client& client, bsoncxx::stdx::string_view name);
+    MONGOCXX_PRIVATE database(const class client& client, stdx::string_view name);
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
 
 };
 
-MONGOCXX_INLINE collection database::operator[](bsoncxx::stdx::string_view name) const {
+MONGOCXX_INLINE collection database::operator[](stdx::string_view name) const {
     return collection(name);
 }
 

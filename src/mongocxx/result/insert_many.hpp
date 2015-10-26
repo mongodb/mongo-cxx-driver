@@ -15,12 +15,13 @@
 #pragma once
 
 #include <mongocxx/config/prelude.hpp>
-#include <mongocxx/result/bulk_write.hpp>
 
 #include <cstdint>
 #include <map>
 
 #include <bsoncxx/types.hpp>
+
+#include <mongocxx/result/bulk_write.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

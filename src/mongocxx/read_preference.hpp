@@ -23,6 +23,8 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
+#include <mongocxx/stdx.hpp>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
@@ -176,7 +178,7 @@ class MONGOCXX_API read_preference {
     ///
     /// @return The optionally set current tags.
     ///
-    bsoncxx::stdx::optional<bsoncxx::document::view> tags() const;
+    stdx::optional<bsoncxx::document::view> tags() const;
 
     ///
     /// Comparison operator
