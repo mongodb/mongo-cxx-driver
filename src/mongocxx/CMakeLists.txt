@@ -39,6 +39,7 @@ set(mongocxx_sources
     options/bulk_write.cpp
     options/client.cpp
     options/count.cpp
+    options/create_collection.cpp
     options/delete.cpp
     options/distinct.cpp
     options/find.cpp

@@ -14,6 +14,7 @@ set(mongocxx_test_sources
     instance.cpp
     model/update_many.cpp
     options/aggregate.cpp
+    options/create_collection.cpp
     pool.cpp
     private/write_concern.cpp
     read_preference.cpp
