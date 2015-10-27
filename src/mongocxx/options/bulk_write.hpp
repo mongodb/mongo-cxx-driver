@@ -18,6 +18,8 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 
+#include <mongocxx/write_concern.hpp>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {

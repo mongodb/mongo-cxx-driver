@@ -16,6 +16,9 @@
 #include <cstring>
 
 #include <bson.h>
+
+#include <bsoncxx/config/prelude.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/json.hpp>

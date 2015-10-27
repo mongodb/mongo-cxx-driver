@@ -14,6 +14,8 @@
 
 #include <mongocxx/result/update.hpp>
 
+#include <mongocxx/config/prelude.hpp>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
@@ -39,5 +41,3 @@ stdx::optional<bsoncxx::document::element> update::upserted_id() const {
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>

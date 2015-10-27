@@ -18,6 +18,8 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 
+#include <mongocxx/config/prelude.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/private/client.hpp>
 #include <mongocxx/private/pool.hpp>

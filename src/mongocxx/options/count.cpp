@@ -13,6 +13,9 @@
 // limitations under the License.
 
 #include <mongocxx/options/count.hpp>
+
+#include <mongocxx/config/prelude.hpp>
+
 #include <mongocxx/private/read_preference.hpp>
 
 namespace mongocxx {
@@ -62,5 +65,3 @@ const stdx::optional<read_preference>& count::read_preference() const {
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>

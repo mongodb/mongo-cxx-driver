@@ -16,6 +16,8 @@
 #include <cstring>
 #include <stdexcept>
 
+#include <bsoncxx/config/prelude.hpp>
+
 #include <bsoncxx/array/element.hpp>
 
 namespace bsoncxx {

@@ -14,6 +14,8 @@
 
 #include <mongocxx/options/client.hpp>
 
+#include <mongocxx/config/prelude.hpp>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
@@ -29,5 +31,3 @@ const stdx::optional<ssl>& client::ssl_opts() const {
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>

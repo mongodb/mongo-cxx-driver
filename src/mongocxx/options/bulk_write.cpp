@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/write_concern.hpp>
 #include <mongocxx/options/bulk_write.hpp>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -34,5 +35,3 @@ const stdx::optional<bool>& bulk_write::ordered() const {
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>

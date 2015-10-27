@@ -14,6 +14,8 @@
 
 #include <mongocxx/options/create_collection.hpp>
 
+#include <mongocxx/config/prelude.hpp>
+
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 
@@ -80,5 +82,3 @@ bsoncxx::document::value create_collection::to_document() const {
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>

@@ -16,6 +16,8 @@
 
 #include <utility>
 
+#include <mongocxx/config/prelude.hpp>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace exception {

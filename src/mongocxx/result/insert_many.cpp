@@ -14,6 +14,8 @@
 
 #include <mongocxx/result/insert_many.hpp>
 
+#include <mongocxx/config/prelude.hpp>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
@@ -33,5 +35,3 @@ std::int32_t insert_many::inserted_count() const {
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>

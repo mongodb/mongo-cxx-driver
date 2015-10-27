@@ -15,7 +15,7 @@
 #include <mongocxx/pipeline.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-
+#include <mongocxx/config/prelude.hpp>
 #include <mongocxx/private/pipeline.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -83,5 +83,3 @@ bsoncxx::document::view pipeline::view() const {
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>

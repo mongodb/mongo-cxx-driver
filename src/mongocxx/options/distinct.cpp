@@ -13,6 +13,9 @@
 // limitations under the License.
 
 #include <mongocxx/options/distinct.hpp>
+
+#include <mongocxx/config/prelude.hpp>
+
 #include <mongocxx/private/read_preference.hpp>
 
 namespace mongocxx {
@@ -37,5 +40,3 @@ const stdx::optional<class read_preference>& distinct::read_preference() const {
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>

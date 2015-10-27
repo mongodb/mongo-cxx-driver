@@ -14,6 +14,8 @@
 
 #include <mongocxx/hint.hpp>
 
+#include <mongocxx/config/prelude.hpp>
+
 #include <bsoncxx/stdx/make_unique.hpp>
 
 namespace mongocxx {

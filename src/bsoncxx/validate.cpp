@@ -16,6 +16,8 @@
 
 #include <bson.h>
 
+#include <bsoncxx/config/prelude.hpp>
+
 #include <bsoncxx/stdx/make_unique.hpp>
 
 namespace bsoncxx {

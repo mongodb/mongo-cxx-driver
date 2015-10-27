@@ -14,6 +14,8 @@
 
 #include <bson.h>
 
+#include <bsoncxx/config/prelude.hpp>
+
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/private/itoa.hpp>
 #include <bsoncxx/private/stack.hpp>
@@ -481,5 +483,3 @@ void core::clear() {
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
-
-#include <bsoncxx/config/postlude.hpp>

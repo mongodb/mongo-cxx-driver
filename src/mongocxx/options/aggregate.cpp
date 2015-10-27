@@ -54,5 +54,3 @@ const stdx::optional<class read_preference>& aggregate::read_preference() const 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>

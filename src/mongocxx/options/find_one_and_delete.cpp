@@ -14,6 +14,8 @@
 
 #include <mongocxx/options/find_one_and_delete.hpp>
 
+#include <mongocxx/config/prelude.hpp>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
@@ -37,5 +39,3 @@ const stdx::optional<bsoncxx::document::view>& find_one_and_delete::sort() const
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>

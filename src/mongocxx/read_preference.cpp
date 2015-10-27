@@ -15,6 +15,9 @@
 #include <mongocxx/read_preference.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+
+#include <mongocxx/config/prelude.hpp>
+
 #include <mongocxx/private/libbson.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/private/read_preference.hpp>

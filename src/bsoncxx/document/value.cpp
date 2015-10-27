@@ -15,6 +15,8 @@
 #include <cstdlib>
 #include <cstring>
 
+#include <bsoncxx/config/prelude.hpp>
+
 #include <bsoncxx/document/value.hpp>
 
 namespace bsoncxx {

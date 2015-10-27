@@ -16,6 +16,9 @@
 #include <cstring>
 
 #include <bson.h>
+
+#include <bsoncxx/config/prelude.hpp>
+
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/private/itoa.hpp>
 #include <bsoncxx/types.hpp>

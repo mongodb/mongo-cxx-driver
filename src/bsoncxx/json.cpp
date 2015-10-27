@@ -22,6 +22,8 @@
 
 #include <bson.h>
 
+#include <bsoncxx/config/prelude.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>

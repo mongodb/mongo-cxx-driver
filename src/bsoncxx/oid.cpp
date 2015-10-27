@@ -18,6 +18,8 @@
 
 #include <bson.h>
 
+#include <bsoncxx/config/prelude.hpp>
+
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 

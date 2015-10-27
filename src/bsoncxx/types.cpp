@@ -13,6 +13,9 @@
 // limitations under the License.
 
 #include <bsoncxx/types.hpp>
+
+#include <bsoncxx/config/prelude.hpp>
+
 #include <bsoncxx/json.hpp>
 
 namespace bsoncxx {
