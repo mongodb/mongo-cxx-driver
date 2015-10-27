@@ -32,7 +32,7 @@ namespace options {
 class MONGOCXX_API find {
 
    public:
-    enum class cursor_type: std::uint8_t;
+    enum class cursor_type : std::uint8_t { k_non_tailable, k_tailable, k_tailable_await };
 
     ///
     /// Sets whether to allow partial results from a mongos if some shards are down (instead of

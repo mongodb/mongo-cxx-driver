@@ -27,11 +27,6 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
-// TODO(amidvidy): figure out if enum classes need visibility attributes.
-// Note: GCC complains unless visibility attributes are in this position
-// when declaring enum classes.
-// See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=43407
-
 ///
 /// An enumeration of each BSON type.
 ///
