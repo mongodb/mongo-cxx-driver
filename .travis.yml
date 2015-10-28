@@ -70,4 +70,6 @@ before_script:
 
 script:
     - make -j3
-    - make test
+
+    # Run tests with catch
+    - ./src/mongocxx/test/test_driver

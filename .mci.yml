@@ -80,7 +80,7 @@ tasks:
               script: |
                   PKG_CONFIG_PATH="/data/tmp/c-driver-install/lib/pkgconfig" /opt/cmake/bin/cmake -DBUILD_UNIT_TESTS=true -DBUILD_EXAMPLES=true -DCMAKE_BUILD_TYPE=${build_type} CMAKE_INSTALL_PREFIX=/data/tmp/cxx-driver-install ..
                   make
-                  make test
+                  ./src/mongocxx/test/test_driver
         - func: "stop_mongod"
 
 #######################################
