@@ -17,6 +17,8 @@
 
 #include <bson.h>
 
+#include <bsoncxx/config/prelude.hpp>
+
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
@@ -247,8 +249,7 @@ types::value element::get_value() const {
 #undef BSONCXX_ENUM
     }
 
-    // TODO shouldn't be reachable.  replace with macro unreachable
-    std::abort();
+    BSONCXX_UNREACHABLE;
 }
 
 element::operator bool() const {

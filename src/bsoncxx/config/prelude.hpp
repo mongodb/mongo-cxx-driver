@@ -16,3 +16,7 @@
 #include <bsoncxx/export.hpp>
 
 #define BSONCXX_INLINE inline __attribute__ ((__visibility__("hidden"), __always_inline__))
+
+#pragma push_macro("BSONCXX_UNREACHABLE")
+#undef BSONCXX_UNREACHABLE
+#define BSONCXX_UNREACHABLE std::abort()

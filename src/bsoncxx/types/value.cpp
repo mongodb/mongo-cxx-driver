@@ -19,6 +19,8 @@
 
 #include <bson.h>
 
+#include <bsoncxx/config/prelude.hpp>
+
 #include <bsoncxx/json.hpp>
 
 namespace bsoncxx {
@@ -106,8 +108,7 @@ bool operator==(const value& lhs, const value& rhs) {
 #undef BSONCXX_ENUM
     }
 
-    // TODO It shouldn't be possible to get here.  replace with macro unreachable
-    std::abort();
+    BSONCXX_UNREACHABLE;
 }
 
 bool operator!=(const value& lhs, const value& rhs) {
