@@ -58,7 +58,7 @@ install:
     - sudo apt-get install cmake
 
     # Install Mongo C Driver
-    - pushd mongo-c-driver; ./autogen.sh --enable-tests=no --enable-examples=no; make; sudo make install; popd;
+    - pushd mongo-c-driver; ./autogen.sh --enable-tests=no --enable-examples=no --with-libbson=bundled; make; sudo make install; popd;
 
 before_script:
     - $CC --version
