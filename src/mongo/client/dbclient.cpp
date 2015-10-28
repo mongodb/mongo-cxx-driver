@@ -1393,6 +1393,11 @@ void DBClientBase::_findAndModify(const StringData& ns,
     if (!ok)
         throw OperationException(result);
 
+    // Check for any write concern errors
+    WriteResult writeResult;
+    writeResult._mergeWriteConcern(result);
+    writeResult._check(true);
+
     out->appendElements(result.getObjectField("value"));
 }
 

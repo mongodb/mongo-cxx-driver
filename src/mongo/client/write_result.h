@@ -34,6 +34,7 @@ class MONGO_CLIENT_API WriteResult {
     friend class WireProtocolWriter;
     friend class CommandWriter;
     friend class BulkOperationBuilder;
+    friend class DBClientBase;
 
 public:
     /**
@@ -140,6 +141,7 @@ public:
     const std::vector<BSONObj>& writeConcernErrors() const;
 
 private:
+    void _mergeWriteConcern(const BSONObj& result);
     void _mergeCommandResult(const std::vector<WriteOperation*>& ops, const BSONObj& result);
     void _mergeGleResult(const std::vector<WriteOperation*>& ops, const BSONObj& result);
 

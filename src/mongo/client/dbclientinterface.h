@@ -1463,10 +1463,10 @@ public:
         _maxWireVersion = maxWireVersion;
     }
 
-    int getMinWireVersion() {
+    virtual int getMinWireVersion() {
         return _minWireVersion;
     }
-    int getMaxWireVersion() {
+    virtual int getMaxWireVersion() {
         return _maxWireVersion;
     }
     int getMaxBsonObjectSize() {
