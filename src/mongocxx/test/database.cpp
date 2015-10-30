@@ -22,6 +22,17 @@
 
 using namespace mongocxx;
 
+namespace {
+
+// Clean up the given collection if it exists
+void clear_collection(const database& database, bsoncxx::stdx::string_view collection_name) {
+    if (database.has_collection(collection_name)) {
+        database[collection_name].drop();
+    }
+}
+
+}  // namespace
+
 TEST_CASE("A default constructed database is false-ish", "[database]") {
     database d;
     REQUIRE(!d);
@@ -153,5 +164,44 @@ TEST_CASE("A database", "[database]") {
         database database = mongo_client[database_name];
         collection obtained_collection = database[collection_name];
         REQUIRE(obtained_collection.name() == collection_name);
+    }
+}
+
+TEST_CASE("Database integration tests", "[database]") {
+    client mongo_client{uri{}};
+    bsoncxx::stdx::string_view database_name{"database"};
+    database database = mongo_client[database_name];
+    bsoncxx::stdx::string_view collection_name{"collection"};
+
+    SECTION("A database may create a collection via create_collection") {
+        SECTION("without any options") {
+            clear_collection(database, collection_name);
+
+            collection obtained_collection = database.create_collection(collection_name);
+            REQUIRE(obtained_collection.name() == collection_name);
+        }
+
+        SECTION("with options") {
+            clear_collection(database, collection_name);
+
+            options::create_collection opts;
+            opts.capped(true);
+            opts.size(256);
+            opts.max(100);
+            opts.no_padding(false);
+
+            collection obtained_collection = database.create_collection(collection_name, opts);
+            REQUIRE(obtained_collection.name() == collection_name);
+        }
+
+        SECTION("but raises exception when collection already exists") {
+            clear_collection(database, collection_name);
+
+            database.create_collection(collection_name);
+
+            REQUIRE_THROWS(database.create_collection(collection_name));
+        }
+
+        clear_collection(database, collection_name);
     }
 }

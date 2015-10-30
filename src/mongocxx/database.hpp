@@ -22,6 +22,7 @@
 #include <bsoncxx/stdx/string_view.hpp>
 
 #include <mongocxx/collection.hpp>
+#include <mongocxx/options/create_collection.hpp>
 #include <mongocxx/write_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 
@@ -41,9 +42,7 @@ class client;
 /// @todo Add auth functions (add_user, remove_all_users, remove_user)
 
 class MONGOCXX_API database {
-
    public:
-
     ///
     /// Default constructs a new database. The database is not valid for use and is equivalent
     /// to the state of a moved-from database. The only valid actions to take with a default
@@ -91,7 +90,9 @@ class MONGOCXX_API database {
     /// @param name the new collection's name.
     /// @param options the options for the new collection.
     ///
-    class collection create_collection(stdx::string_view name, bsoncxx::document::view options);
+    class collection create_collection(
+        stdx::string_view name,
+        const options::create_collection& options = options::create_collection());
 
     ///
     /// Drops the database and all its collections.
@@ -106,7 +107,7 @@ class MONGOCXX_API database {
     /// @param name the name of the collection.
     /// @return bool whether the collection exists in this database.
     ///
-    bool has_collection(stdx::string_view name);
+    bool has_collection(stdx::string_view name) const;
 
     ///
     /// Gets a handle to the underlying implementation.
@@ -207,7 +208,8 @@ class MONGOCXX_API database {
     class collection collection(stdx::string_view name) const;
 
     ///
-    /// Allows the db["collection_name"] syntax to be used to access a collection within this database.
+    /// Allows the db["collection_name"] syntax to be used to access a collection within this
+    /// database.
     ///
     /// @param name the name of the collection to get.
     ///
@@ -223,7 +225,6 @@ class MONGOCXX_API database {
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
-
 };
 
 MONGOCXX_INLINE collection database::operator[](stdx::string_view name) const {

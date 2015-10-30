@@ -54,7 +54,6 @@ class client;
 class database;
 class pipeline;
 
-
 ///
 /// Class representing server side document groupings within a MongoDB database.
 ///
@@ -72,9 +71,7 @@ class pipeline;
 /// @todo Make this class copyable when C driver supports this.
 ///
 class MONGOCXX_API collection {
-
    public:
-
     ///
     /// Default constructs a collection object. The collection is
     /// equivalent to the state of a moved from colletion. The only
@@ -119,10 +116,8 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/aggregate/
     ///
-    cursor aggregate(
-        const pipeline& pipeline,
-        const options::aggregate& options = options::aggregate()
-    );
+    cursor aggregate(const pipeline& pipeline,
+                     const options::aggregate& options = options::aggregate());
 
     ///
     /// Sends a container of writes to the server as a bulk write operation.
@@ -198,10 +193,8 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/count/
     ///
-    std::int64_t count(
-        bsoncxx::document::view filter,
-        const options::count& options = options::count()
-    );
+    std::int64_t count(bsoncxx::document::view filter,
+                       const options::count& options = options::count());
 
     ///
     /// Creates an index over the collection for the provided keys with the provided options.
@@ -214,12 +207,11 @@ class MONGOCXX_API collection {
     /// @throws exception::operation if index creation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
-    /// @see http://docs.mongodb.org/manual/reference/method/db.collection.ensureIndex/#ensureindex-options
+    /// @see
+    /// http://docs.mongodb.org/manual/reference/method/db.collection.ensureIndex/#ensureindex-options
     ///
     bsoncxx::document::value create_index(
-        bsoncxx::document::view keys,
-        bsoncxx::document::view options = bsoncxx::document::view{}
-    );
+        bsoncxx::document::view keys, bsoncxx::document::view options = bsoncxx::document::view{});
 
     ///
     /// Deletes all matching documents from the collection.
@@ -299,11 +291,7 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-operations-introduction/
     ///
-    cursor find(
-        bsoncxx::document::view filter,
-        const options::find& options = options::find()
-    );
-
+    cursor find(bsoncxx::document::view filter, const options::find& options = options::find());
 
     ///
     /// Finds a single document in this collection that match the provided filter.
@@ -574,9 +562,11 @@ class MONGOCXX_API collection {
 
     MONGOCXX_PRIVATE collection(const database& database, stdx::string_view collection_name);
 
+    MONGOCXX_PRIVATE collection(const database& database, stdx::string_view collection_name,
+                                void* collection);
+
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
-
 };
 
 template <typename container_type>
@@ -591,9 +581,7 @@ MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
     const options::bulk_write& options) {
     class bulk_write writes(options.ordered().value_or(true));
 
-    std::for_each(begin, end, [&](const model::write& current){
-        writes.append(current);
-    });
+    std::for_each(begin, end, [&](const model::write& current) { writes.append(current); });
 
     return bulk_write(writes);
 }
@@ -612,9 +600,9 @@ MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
 
     result::insert_many::id_map inserted_ids{};
     std::size_t index = 0;
-    std::for_each(begin, end, [&](const bsoncxx::document::view& current){
+    std::for_each(begin, end, [&](const bsoncxx::document::view& current) {
         // TODO: put this somewhere else not in header scope (bsoncxx::builder)
-        if ( !current["_id"]) {
+        if (!current["_id"]) {
             bsoncxx::builder::stream::document new_document;
             new_document << "_id" << bsoncxx::oid(bsoncxx::oid::init_tag)
                          << bsoncxx::builder::stream::concatenate{current};
@@ -630,8 +618,7 @@ MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
 
     });
 
-    if (options.write_concern())
-        writes.write_concern(*options.write_concern());
+    if (options.write_concern()) writes.write_concern(*options.write_concern());
     result::bulk_write res(std::move(bulk_write(writes).value()));
     stdx::optional<result::insert_many> result(
         result::insert_many(std::move(res), std::move(inserted_ids)));

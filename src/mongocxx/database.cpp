@@ -54,8 +54,8 @@ cursor database::list_collections(bsoncxx::document::view filter) {
     libbson::scoped_bson_t filter_bson{filter};
     bson_error_t error;
 
-    auto result = libmongoc::database_find_collections(_impl->database_t,
-                                                       filter_bson.bson(), &error);
+    auto result =
+        libmongoc::database_find_collections(_impl->database_t, filter_bson.bson(), &error);
 
     if (!result) {
         throw exception::operation(std::make_tuple(error.message, error.code));
@@ -81,11 +81,27 @@ bsoncxx::document::value database::command(bsoncxx::document::view command) {
     return reply_bson.steal();
 }
 
+class collection database::create_collection(stdx::string_view name,
+                                             const options::create_collection& options) {
+    bson_error_t error;
+
+    libbson::scoped_bson_t opts_bson{options.to_document()};
+
+    auto result = libmongoc::database_create_collection(_impl->database_t, name.data(),
+                                                        opts_bson.bson(), &error);
+
+    if (!result) {
+        throw exception::operation(std::make_tuple(error.message, error.code));
+    }
+
+    return mongocxx::collection(*this, name, static_cast<void*>(result));
+}
+
 void database::read_preference(class read_preference rp) {
     libmongoc::database_set_read_prefs(_impl->database_t, rp._impl->read_preference_t);
 }
 
-bool database::has_collection(stdx::string_view name) {
+bool database::has_collection(stdx::string_view name) const {
     bson_error_t error;
     return libmongoc::database_has_collection(_impl->database_t, name.data(), &error);
 }
