@@ -104,15 +104,17 @@ cursor collection::find(bsoncxx::document::view filter, const options::find& opt
     scoped_bson_t filter_bson;
     scoped_bson_t projection(options.projection());
 
-    if (options.modifiers()) {
-        filter_builder << "$query" << bsoncxx::types::b_document{filter}
-                       << builder::stream::concatenate{
-                              options.modifiers().value_or(document::view{})};
+    filter_builder << "$query" << bsoncxx::types::b_document{filter};
 
-        filter_bson.init_from_static(filter_builder.view());
-    } else {
-        filter_bson.init_from_static(filter);
+    if (options.modifiers()) {
+        filter_builder << builder::stream::concatenate{*options.modifiers()};
     }
+
+    if (options.sort()) {
+        filter_builder << "$orderby" << bsoncxx::types::b_document{*options.sort()};
+    }
+
+    filter_bson.init_from_static(filter_builder.view());
 
     const mongoc_read_prefs_t* rp_ptr = NULL;
 

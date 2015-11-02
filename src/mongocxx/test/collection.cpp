@@ -302,6 +302,51 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         REQUIRE(seen == 1);
     }
 
+    SECTION("find works with sort", "[collection]") {
+        bsoncxx::builder::stream::document b1;
+        b1 << "x" << 1;
+
+        bsoncxx::builder::stream::document b2;
+        b2 << "x" << 2;
+
+        bsoncxx::builder::stream::document b3;
+        b3 << "x" << 3;
+
+        coll.insert_one(b1);
+        coll.insert_one(b3);
+        coll.insert_one(b2);
+
+        SECTION("sort ascending") {
+            bsoncxx::builder::stream::document sort;
+            sort << "x" << 1;
+            options::find opts{};
+            opts.sort(sort);
+
+            auto cursor = coll.find(bsoncxx::document::view(), opts);
+
+            std::int32_t x = 1;
+            for (auto&& doc : cursor) {
+                REQUIRE(x == doc["x"].get_int32());
+                x++;
+            }
+        }
+
+        SECTION("sort descending") {
+            bsoncxx::builder::stream::document sort;
+            sort << "x" << -1;
+            options::find opts{};
+            opts.sort(sort);
+
+            auto cursor = coll.find(bsoncxx::document::view(), opts);
+
+            std::int32_t x = 3;
+            for (auto&& doc : cursor) {
+                REQUIRE(x == doc["x"].get_int32());
+                x--;
+            }
+        }
+    }
+
     SECTION("find_one_and_replace works", "[collection]") {
         bsoncxx::builder::stream::document b1;
         b1 << "x" << 1;

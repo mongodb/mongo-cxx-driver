@@ -17,19 +17,21 @@
 
 #include <string>
 
-#include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/client.hpp>
-#include <mongocxx/database.hpp>
 #include <mongocxx/collection.hpp>
-#include <mongocxx/read_preference.hpp>
+#include <mongocxx/database.hpp>
+#include <mongocxx/exception/operation.hpp>
+#include <mongocxx/options/update.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/private/libbson.hpp>
 #include <mongocxx/private/libmongoc.hpp>
-#include <mongocxx/options/update.hpp>
-#include <mongocxx/exception/operation.hpp>
+#include <mongocxx/read_preference.hpp>
+#include <mongocxx/stdx.hpp>
 
 using namespace mongocxx;
 using namespace bsoncxx;
@@ -258,7 +260,9 @@ TEST_CASE("Collection", "[collection]") {
 
     SECTION("Find", "[collection::find]") {
         auto collection_find_called = false;
-        auto doc = bsoncxx::document::view{};
+        auto find_doc = builder::stream::document{} << "a" << 1 << builder::stream::finalize;
+        auto doc = find_doc.view();
+        mongocxx::stdx::optional<bsoncxx::document::view> expected_sort{};
 
         collection_find->interpose([&](mongoc_collection_t* coll, mongoc_query_flags_t flags,
                                        uint32_t skip, uint32_t limit, uint32_t batch_size,
@@ -270,7 +274,11 @@ TEST_CASE("Collection", "[collection]") {
             REQUIRE(skip == skip);
             REQUIRE(limit == limit);
             REQUIRE(batch_size == batch_size);
-            REQUIRE(bson_get_data(query) == doc.data());
+            bsoncxx::document::view query_view{bson_get_data(query), query->len};
+            REQUIRE(query_view["$query"].get_document() == doc);
+            if (expected_sort) {
+                REQUIRE(query_view["$orderby"].get_document() == *expected_sort);
+            }
             REQUIRE(fields == NULL);
             REQUIRE(read_prefs == NULL);
 
@@ -278,7 +286,17 @@ TEST_CASE("Collection", "[collection]") {
             return cursor;
         });
 
-        REQUIRE_NOTHROW(mongo_coll.find(doc));
+        SECTION("find succeeds") {
+            REQUIRE_NOTHROW(mongo_coll.find(doc));
+        }
+
+        SECTION("find with sort succeeds") {
+            options::find opts{};
+            auto sort_doc = builder::stream::document{} << "x" << -1 << builder::stream::finalize;
+            expected_sort = sort_doc.view();
+            opts.sort(*expected_sort);
+            REQUIRE_NOTHROW(mongo_coll.find(doc,opts));
+        }
 
         REQUIRE(collection_find_called);
     }
