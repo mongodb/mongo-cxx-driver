@@ -21,7 +21,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <mongocxx/options/find_one_and_modify.hpp>
+#include <mongocxx/options/find_one_common_options.hpp>
 #include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
