@@ -25,7 +25,7 @@ before_install:
     - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
 
     # Get the latest CMake
-    - wget http://www.cmake.org/files/v3.1/${CMAKE_VERSION}.tar.gz
+    - curl -O https://cmake.org/files/v3.1/${CMAKE_VERSION}.tar.gz
 
     # MongoDB Enterprise Edition 2.6
     - sudo apt-key adv --keyserver ${KEY_SERVER} --recv 7F0CEB10
