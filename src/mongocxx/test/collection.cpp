@@ -42,6 +42,39 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         REQUIRE(i == 1);
     }
 
+    SECTION("insert and read multiple documents", "[collection]") {
+        bsoncxx::builder::stream::document b1;
+        bsoncxx::builder::stream::document b2;
+        bsoncxx::builder::stream::document b3;
+        bsoncxx::builder::stream::document b4;
+
+        b1 << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "x" << 1;
+        b2 << "x" << 2;
+        b3 << "x" << 3;
+        b4 << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "x" << 4;
+
+        std::vector<bsoncxx::document::view> docs{};
+        docs.push_back(b1);
+        docs.push_back(b2);
+        docs.push_back(b3);
+        docs.push_back(b4);
+
+        auto result = coll.insert_many(docs, options::insert{});
+
+        REQUIRE(result);
+        REQUIRE(result->inserted_count() == 4);
+
+        auto cursor = coll.find({});
+
+        std::size_t i = 0;
+        for (auto&& x : cursor) {
+            i++;
+            REQUIRE(x["x"].get_int32() == i);
+        }
+
+        REQUIRE(i == 4);
+    }
+
     SECTION("insert and update single document", "[collection]") {
         using namespace bsoncxx::builder::stream;
         bsoncxx::builder::stream::document b1;

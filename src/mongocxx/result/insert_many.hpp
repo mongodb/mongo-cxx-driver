@@ -27,6 +27,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class collection;
+class insert_many_builder;
 
 namespace result {
 
@@ -62,6 +63,7 @@ class MONGOCXX_API insert_many {
 
    private:
     friend collection;
+    friend insert_many_builder;
 
     MONGOCXX_PRIVATE insert_many(result::bulk_write result, id_map inserted_ids);
 

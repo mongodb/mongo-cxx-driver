@@ -27,6 +27,7 @@
 
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/cursor.hpp>
+#include <mongocxx/insert_many_builder.hpp>
 #include <mongocxx/options/aggregate.hpp>
 #include <mongocxx/options/bulk_write.hpp>
 #include <mongocxx/options/count.hpp>
@@ -596,33 +597,9 @@ template <typename document_view_iterator_type>
 MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
     document_view_iterator_type begin, document_view_iterator_type end,
     const options::insert& options) {
-    class bulk_write writes(options.ordered().value_or(true));
+    auto op = std::for_each(begin, end, insert_many_builder{options});
 
-    result::insert_many::id_map inserted_ids{};
-    std::size_t index = 0;
-    std::for_each(begin, end, [&](const bsoncxx::document::view& current) {
-        // TODO: put this somewhere else not in header scope (bsoncxx::builder)
-        if (!current["_id"]) {
-            bsoncxx::builder::stream::document new_document;
-            new_document << "_id" << bsoncxx::oid(bsoncxx::oid::init_tag)
-                         << bsoncxx::builder::stream::concatenate{current};
-
-            writes.append(model::insert_one(new_document.view()));
-
-            inserted_ids.emplace(index++, new_document.view()["_id"]);
-        } else {
-            writes.append(model::insert_one(current));
-
-            inserted_ids.emplace(index++, current["_id"]);
-        }
-
-    });
-
-    if (options.write_concern()) writes.write_concern(*options.write_concern());
-    result::bulk_write res(std::move(bulk_write(writes).value()));
-    stdx::optional<result::insert_many> result(
-        result::insert_many(std::move(res), std::move(inserted_ids)));
-    return result;
+    return op.insert(this);
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
