@@ -105,7 +105,8 @@
     auto collection_find = libmongoc::collection_find.create_instance();                          \
     auto collection_aggregate = libmongoc::collection_aggregate.create_instance();                \
     auto collection_get_name = libmongoc::collection_get_name.create_instance();                  \
-    collection_get_name->interpose([](mongoc_collection_t*){ return "dummy_collection"; });
+    collection_get_name->interpose([](mongoc_collection_t*){ return "dummy_collection"; });       \
+    auto collection_rename = libmongoc::collection_rename.create_instance();
 
 #define MOCK_CURSOR                                                    \
     auto cursor_destroy = libmongoc::cursor_destroy.create_instance(); \
