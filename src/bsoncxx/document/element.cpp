@@ -20,6 +20,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 #include <bsoncxx/document/element.hpp>
+
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
@@ -250,6 +251,16 @@ types::value element::get_value() const {
     }
 
     BSONCXX_UNREACHABLE;
+}
+
+element element::operator[](stdx::string_view key) const {
+    document::view doc = get_document();
+    return doc[key];
+}
+
+array::element element::operator[](std::uint32_t i) const {
+    array::view arr = get_array();
+    return arr[i];
 }
 
 element::operator bool() const {

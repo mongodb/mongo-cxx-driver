@@ -10,6 +10,7 @@ set(BSONCXX_EXAMPLES
     builder_core.cpp
     builder_basic.cpp
     builder_stream.cpp
+    getting_values.cpp
     view_and_value.cpp
 )
 
