@@ -65,6 +65,18 @@ stdx::string_view collection::name() const noexcept {
     return stdx::string_view{libmongoc::collection_get_name(_impl->collection_t)};
 }
 
+void collection::rename(stdx::string_view new_name, bool drop_target_before_rename) {
+    bson_error_t error;
+
+    auto result = libmongoc::collection_rename(_impl->collection_t, _impl->database_name.c_str(),
+                                                new_name.data(), drop_target_before_rename, &error);
+
+    if (!result) {
+      throw exception::operation(std::make_tuple(error.message, error.code));
+    }
+}
+
+
 collection::collection(const database& database, stdx::string_view collection_name)
     : _impl(stdx::make_unique<impl>(
           libmongoc::database_get_collection(database._impl->database_t, collection_name.data()),

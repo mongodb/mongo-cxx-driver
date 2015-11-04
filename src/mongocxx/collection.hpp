@@ -477,6 +477,20 @@ class MONGOCXX_API collection {
     stdx::string_view name() const noexcept;
 
     ///
+    /// Rename this collection.
+    ///
+    /// @param new_name The new name to assign to the collection.
+    /// @param drop_target_before_rename Whether to overwrite any
+    ///   existing collections called new_name. The default is false.
+    ///
+    /// @throws exception::operation if the operation fails.
+    ///
+    /// @see https://docs.mongodb.org/manual/reference/command/renameCollection/
+    ///
+    void rename(stdx::string_view new_name, bool drop_target_before_rename = false);
+
+
+    ///
     /// Sets the read_preference for this collection. Changes will not have any effect on existing
     /// cursors or other read operations which use the read preference.
     ///
