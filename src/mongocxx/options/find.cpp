@@ -34,6 +34,10 @@ void find::comment(std::string comment) {
     _comment = comment;
 }
 
+void find::cursor_type(enum cursor_type cursor_type) {
+    _cursor_type = cursor_type;
+}
+
 void find::limit(std::int32_t limit) {
     _limit = limit;
 }
@@ -76,6 +80,14 @@ const stdx::optional<bool>& find::allow_partial_results() const {
 
 const stdx::optional<std::int32_t>& find::batch_size() const {
     return _batch_size;
+}
+
+const stdx::optional<std::string>& find::comment() const {
+    return _comment;
+}
+
+const stdx::optional<cursor_type>& find::cursor_type() const {
+    return _cursor_type;
 }
 
 const stdx::optional<std::int32_t>& find::limit() const {

@@ -26,13 +26,14 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+enum class cursor_type : std::uint8_t { k_non_tailable, k_tailable, k_tailable_await };
+
 ///
 /// Class representing the optional arguments to a MongoDB query.
 ///
 class MONGOCXX_API find {
 
    public:
-    enum class cursor_type : std::uint8_t { k_non_tailable, k_tailable, k_tailable_await };
 
     ///
     /// Sets whether to allow partial results from a mongos if some shards are down (instead of
@@ -101,7 +102,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
     ///
-    void cursor_type(cursor_type cursor_type);
+    void cursor_type(enum cursor_type cursor_type);
 
     ///
     /// Gets the current cursor type.
