@@ -133,10 +133,16 @@ cursor collection::find(bsoncxx::document::view filter, const options::find& opt
         rp_ptr = options.read_preference()->_impl->read_preference_t;
     }
 
-    return cursor(libmongoc::collection_find(
+    auto mongoc_cursor = libmongoc::collection_find(
         _impl->collection_t, mongoc_query_flags_t(0), options.skip().value_or(0),
         options.limit().value_or(0), options.batch_size().value_or(0), filter_bson.bson(),
-        projection.bson(), rp_ptr));
+        projection.bson(), rp_ptr);
+
+    if (options.max_await_time_ms()) {
+        libmongoc::cursor_set_max_await_time_ms(mongoc_cursor, *options.max_await_time_ms());
+    }
+
+    return cursor{mongoc_cursor};
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one(bsoncxx::document::view filter,

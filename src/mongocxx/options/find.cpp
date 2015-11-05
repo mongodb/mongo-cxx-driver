@@ -34,12 +34,16 @@ void find::comment(std::string comment) {
     _comment = comment;
 }
 
-void find::cursor_type(enum cursor_type cursor_type) {
+void find::cursor_type(enum find::cursor_type cursor_type) {
     _cursor_type = cursor_type;
 }
 
 void find::limit(std::int32_t limit) {
     _limit = limit;
+}
+
+void find::max_await_time_ms(std::int64_t max_await_time_ms) {
+    _max_await_time_ms = max_await_time_ms;
 }
 
 void find::max_time_ms(std::int64_t max_time_ms) {
@@ -86,12 +90,16 @@ const stdx::optional<std::string>& find::comment() const {
     return _comment;
 }
 
-const stdx::optional<cursor_type>& find::cursor_type() const {
+const stdx::optional<enum find::cursor_type>& find::cursor_type() const {
     return _cursor_type;
 }
 
 const stdx::optional<std::int32_t>& find::limit() const {
     return _limit;
+}
+
+const stdx::optional<std::int64_t>& find::max_await_time_ms() const {
+    return _max_await_time_ms;
 }
 
 const stdx::optional<std::int64_t>& find::max_time_ms() const {

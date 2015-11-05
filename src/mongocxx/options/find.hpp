@@ -26,14 +26,12 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-enum class cursor_type : std::uint8_t { k_non_tailable, k_tailable, k_tailable_await };
-
 ///
 /// Class representing the optional arguments to a MongoDB query.
 ///
 class MONGOCXX_API find {
-
    public:
+    enum class cursor_type : std::uint8_t { k_non_tailable, k_tailable, k_tailable_await };
 
     ///
     /// Sets whether to allow partial results from a mongos if some shards are down (instead of
@@ -127,6 +125,29 @@ class MONGOCXX_API find {
     /// @return The current limit.
     ///
     const stdx::optional<std::int32_t>& limit() const;
+
+    ///
+    /// The maximum amount of time for the server to wait on new documents to satisfy a tailable
+    /// cursor query. This only applies to a TAILABLE_AWAIT cursor. When the cursor is not a
+    /// TAILABLE_AWAIT cursor, this option is ignored. The default on the server is to wait for one
+    /// second.
+    ///
+    /// @note On servers < 3.2, this option is ignored.
+    ///
+    /// @param max_await_time_ms
+    ///   The max amount of time (in milliseconds) to wait for new documents.
+    ///
+    /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
+    ///
+    void max_await_time_ms(std::int64_t max_await_time_ms);
+
+    ///
+    /// The maximum amount of time for the server to wait on new documents to satisfy a tailable
+    /// cursor query.
+    ///
+    /// @return The current max await time (in milliseconds).
+    ///
+    const stdx::optional<std::int64_t>& max_await_time_ms() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -271,6 +292,7 @@ class MONGOCXX_API find {
     stdx::optional<std::string> _comment;
     stdx::optional<enum cursor_type> _cursor_type;
     stdx::optional<std::int32_t> _limit;
+    stdx::optional<std::int64_t> _max_await_time_ms;
     stdx::optional<std::int64_t> _max_time_ms;
     stdx::optional<bsoncxx::document::view> _modifiers;
     stdx::optional<bool> _no_cursor_timeout;

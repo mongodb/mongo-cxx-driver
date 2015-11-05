@@ -15,6 +15,7 @@ set(mongocxx_test_sources
     model/update_many.cpp
     options/aggregate.cpp
     options/create_collection.cpp
+    options/find.cpp
     options/insert.cpp
     options/update.cpp
     pool.cpp
