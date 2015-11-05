@@ -103,7 +103,9 @@
     auto collection_count_with_opts = libmongoc::collection_count_with_opts.create_instance();    \
     auto collection_create_index = libmongoc::collection_create_index.create_instance();          \
     auto collection_find = libmongoc::collection_find.create_instance();                          \
-    auto collection_aggregate = libmongoc::collection_aggregate.create_instance();
+    auto collection_aggregate = libmongoc::collection_aggregate.create_instance();                \
+    auto collection_get_name = libmongoc::collection_get_name.create_instance();                  \
+    collection_get_name->interpose([](mongoc_collection_t*){ return "dummy_collection"; });
 
 #define MOCK_CURSOR                                                    \
     auto cursor_destroy = libmongoc::cursor_destroy.create_instance(); \

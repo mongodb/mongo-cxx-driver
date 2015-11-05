@@ -62,7 +62,7 @@ collection::operator bool() const noexcept {
 }
 
 stdx::string_view collection::name() const noexcept {
-    return _impl->name;
+    return stdx::string_view{libmongoc::collection_get_name(_impl->collection_t)};
 }
 
 collection::collection(const database& database, stdx::string_view collection_name)
@@ -75,7 +75,7 @@ stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write
     mongoc_bulk_operation_t* b = bulk_write._impl->operation_t;
     libmongoc::bulk_operation_set_client(b, _impl->client_impl->client_t);
     libmongoc::bulk_operation_set_database(b, _impl->database_name.c_str());
-    libmongoc::bulk_operation_set_collection(b, _impl->name.c_str());
+    libmongoc::bulk_operation_set_collection(b, name().data());
 
     scoped_bson_t reply;
     reply.flag_init();

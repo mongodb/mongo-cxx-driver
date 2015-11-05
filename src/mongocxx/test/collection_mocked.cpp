@@ -40,7 +40,8 @@ TEST_CASE("A default constructed collection is false-ish", "[collection]") {
 }
 
 TEST_CASE("Collection", "[collection]") {
-    const std::string collection_name("mongocxx");
+    // dummy_collection is the name the mocked collection_get_name returns
+    const std::string collection_name("dummy_collection");
     const std::string database_name("test");
 
     MOCK_CLIENT

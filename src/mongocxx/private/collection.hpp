@@ -38,8 +38,7 @@ class collection::impl {
          const class client::impl* client, stdx::string_view name)
         : collection_t(collection),
           database_name(std::move(database_name)),
-          client_impl(client),
-          name(name) {
+          client_impl(client) {
     }
 
     ~impl() { libmongoc::collection_destroy(collection_t); }
@@ -52,9 +51,7 @@ class collection::impl {
     }
 
     mongoc_collection_t* collection_t;
-    std::string database_name;
     const class client::impl* client_impl;
-    std::string name;
 
 }; // class impl
 
