@@ -563,8 +563,7 @@ class MONGOCXX_API collection {
 
     MONGOCXX_PRIVATE collection(const database& database, stdx::string_view collection_name);
 
-    MONGOCXX_PRIVATE collection(const database& database, stdx::string_view collection_name,
-                                void* collection);
+    MONGOCXX_PRIVATE collection(const database& database, void* collection);
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;

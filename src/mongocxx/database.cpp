@@ -94,7 +94,7 @@ class collection database::create_collection(stdx::string_view name,
         throw exception::operation(std::make_tuple(error.message, error.code));
     }
 
-    return mongocxx::collection(*this, name, static_cast<void*>(result));
+    return mongocxx::collection(*this, static_cast<void*>(result));
 }
 
 void database::read_preference(class read_preference rp) {

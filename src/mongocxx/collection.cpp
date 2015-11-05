@@ -62,26 +62,25 @@ collection::operator bool() const noexcept {
 }
 
 stdx::string_view collection::name() const noexcept {
-    return _impl->name;
+    return stdx::string_view{libmongoc::collection_get_name(_impl->collection_t)};
 }
 
 collection::collection(const database& database, stdx::string_view collection_name)
     : _impl(stdx::make_unique<impl>(
           libmongoc::database_get_collection(database._impl->database_t, collection_name.data()),
-          database.name(), database._impl->client_impl, collection_name.data())) {
+          database.name(), database._impl->client_impl)) {
 }
 
-collection::collection(const database& database, stdx::string_view collection_name,
-                       void* collection)
+collection::collection(const database& database, void* collection)
     : _impl(stdx::make_unique<impl>(static_cast<mongoc_collection_t*>(collection), database.name(),
-                                    database._impl->client_impl, collection_name.data())) {
+                                    database._impl->client_impl)) {
 }
 
 stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write& bulk_write) {
     mongoc_bulk_operation_t* b = bulk_write._impl->operation_t;
     libmongoc::bulk_operation_set_client(b, _impl->client_impl->client_t);
     libmongoc::bulk_operation_set_database(b, _impl->database_name.c_str());
-    libmongoc::bulk_operation_set_collection(b, _impl->name.c_str());
+    libmongoc::bulk_operation_set_collection(b, name().data());
 
     scoped_bson_t reply;
     reply.flag_init();
