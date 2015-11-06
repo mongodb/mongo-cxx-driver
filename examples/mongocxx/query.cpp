@@ -6,6 +6,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/uri.hpp>
 
 using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::open_document;
@@ -16,7 +17,7 @@ using bsoncxx::builder::stream::finalize;
 
 int main(int, char**) {
     mongocxx::instance inst{};
-    mongocxx::client conn{};
+    mongocxx::client conn{mongocxx::uri{}};
 
     auto db = conn["test"];
 
@@ -25,7 +26,7 @@ int main(int, char**) {
         // @begin: cpp-query-all
         auto cursor = db["restaurants"].find({});
         for (auto&& doc : cursor) {
-           std::cout << bsoncxx::to_json(doc) << std::endl;
+            std::cout << bsoncxx::to_json(doc) << std::endl;
         }
         // @end: cpp-query-all
     }
@@ -33,8 +34,8 @@ int main(int, char**) {
     // Query for equality on a top level field.
     {
         // @begin: cpp-query-top-level-field
-        auto cursor = db["restaurants"]
-            .find(document{} << "borough" << "Manhattan" << finalize);
+        auto cursor = db["restaurants"].find(document{} << "borough"
+                                                        << "Manhattan" << finalize);
 
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
@@ -46,7 +47,8 @@ int main(int, char**) {
     {
         // @begin: cpp-query-embedded-document
         document filter;
-        filter << "address.zipcode" << "10075";
+        filter << "address.zipcode"
+               << "10075";
 
         auto cursor = db["restaurants"].find(filter);
         for (auto&& doc : cursor) {
@@ -59,7 +61,8 @@ int main(int, char**) {
     {
         // @begin: cpp-query-field-in-array
         document filter;
-        filter << "grades.grade" << "B";
+        filter << "grades.grade"
+               << "B";
 
         auto cursor = db["restaurants"].find(filter);
         for (auto&& doc : cursor) {
@@ -72,8 +75,7 @@ int main(int, char**) {
     {
         // @begin: cpp-query-greater-than
         document filter;
-        filter << "grades.score" << open_document
-                   << "$gt" << 30 << close_document;
+        filter << "grades.score" << open_document << "$gt" << 30 << close_document;
 
         auto cursor = db["restaurants"].find(filter);
         for (auto&& doc : cursor) {
@@ -86,8 +88,7 @@ int main(int, char**) {
     {
         // @begin: cpp-query-less-than
         document filter;
-        filter << "grades.score" << open_document
-                   << "$lt" << 10 << close_document;
+        filter << "grades.score" << open_document << "$lt" << 10 << close_document;
 
         auto cursor = db["restaurants"].find(filter);
         for (auto&& doc : cursor) {
@@ -100,8 +101,10 @@ int main(int, char**) {
     {
         // @begin: cpp-query-logical-and
         document filter;
-        filter << "cuisine" << "Italian"
-               << "address.zipcode" << "10075";
+        filter << "cuisine"
+               << "Italian"
+               << "address.zipcode"
+               << "10075";
 
         auto cursor = db["restaurants"].find(filter);
         for (auto&& doc : cursor) {
@@ -114,12 +117,9 @@ int main(int, char**) {
     {
         // @begin: cpp-query-logical-or
         document filter;
-        filter << "$or" << open_array
-                   << open_document
-                       << "cuisine" << "Italian" << close_document
-                   << open_document
-                      << "address.zipcode" << "10075" << close_document
-               << close_array;
+        filter << "$or" << open_array << open_document << "cuisine"
+               << "Italian" << close_document << open_document << "address.zipcode"
+               << "10075" << close_document << close_array;
 
         auto cursor = db["restaurants"].find(filter);
         for (auto&& doc : cursor) {
@@ -133,8 +133,7 @@ int main(int, char**) {
         // @begin: cpp-query-sort
         mongocxx::options::find opts;
         document ordering;
-        ordering << "borough" << 1
-                 << "address.zipcode" << -1;
+        ordering << "borough" << 1 << "address.zipcode" << -1;
         opts.sort(ordering);
 
         auto cursor = db["restaurants"].find({}, opts);

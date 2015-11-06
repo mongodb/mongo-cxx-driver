@@ -6,6 +6,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pipeline.hpp>
+#include <mongocxx/uri.hpp>
 
 using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::open_document;
@@ -16,7 +17,7 @@ using bsoncxx::builder::stream::finalize;
 
 int main(int, char**) {
     mongocxx::instance inst{};
-    mongocxx::client conn{};
+    mongocxx::client conn{mongocxx::uri{}};
 
     auto db = conn["test"];
 
@@ -26,9 +27,9 @@ int main(int, char**) {
         mongocxx::pipeline stages;
         document group_stage;
 
-        group_stage << "_id" << "$borough"
-                    << "count" << open_document
-                        << "$sum" << 1 << close_document;
+        group_stage << "_id"
+                    << "$borough"
+                    << "count" << open_document << "$sum" << 1 << close_document;
 
         stages.group(group_stage);
 
@@ -46,12 +47,14 @@ int main(int, char**) {
         mongocxx::pipeline stages;
         document match_stage, group_stage;
 
-        match_stage << "borough" << "Queens"
-                    << "cuisine" << "Brazilian";
+        match_stage << "borough"
+                    << "Queens"
+                    << "cuisine"
+                    << "Brazilian";
 
-        group_stage << "_id" << "$address.zipcode"
-                    << "count" << open_document
-                        << "$sum" << 1 << close_document;
+        group_stage << "_id"
+                    << "$address.zipcode"
+                    << "count" << open_document << "$sum" << 1 << close_document;
 
         stages.match(match_stage).group(group_stage);
 

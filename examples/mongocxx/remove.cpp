@@ -2,6 +2,7 @@
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/uri.hpp>
 
 using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::open_document;
@@ -11,7 +12,7 @@ using bsoncxx::builder::stream::finalize;
 
 int main(int, char**) {
     mongocxx::instance inst{};
-    mongocxx::client conn{};
+    mongocxx::client conn{mongocxx::uri{}};
 
     auto db = conn["test"];
 
@@ -19,7 +20,8 @@ int main(int, char**) {
     {
         // @begin: cpp-remove-matching-documents
         document filter;
-        filter << "borough" << "Manhattan";
+        filter << "borough"
+               << "Manhattan";
 
         db["restaurants"].delete_many(filter);
         // @end: cpp-remove-matching-documents
@@ -29,7 +31,8 @@ int main(int, char**) {
     {
         // @begin: cpp-remove-justone
         document filter;
-        filter << "borough" << "Queens";
+        filter << "borough"
+               << "Queens";
 
         db["restaurants"].delete_one(filter);
         // @end: cpp-remove-justone

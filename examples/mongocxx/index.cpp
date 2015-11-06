@@ -2,6 +2,7 @@
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/uri.hpp>
 
 using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::open_document;
@@ -11,7 +12,7 @@ using bsoncxx::builder::stream::finalize;
 
 int main(int, char**) {
     mongocxx::instance inst{};
-    mongocxx::client conn{};
+    mongocxx::client conn{mongocxx::uri{}};
 
     auto db = conn["test"];
 
