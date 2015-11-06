@@ -21,4 +21,7 @@ foreach(EXAMPLE_SRC ${MONGOCXX_EXAMPLES})
     add_executable(${EXAMPLE_TARGET} ${EXAMPLE_SRC})
     add_dependencies(${EXAMPLE_TARGET} install_headers install_libs)
     target_link_libraries(${EXAMPLE_TARGET} mongocxx ${mongocxx_libs})
+    set(MONGOCXX_EXAMPLE_EXECUTABLES ${MONGOCXX_EXAMPLE_EXECUTABLES} ${EXAMPLE_TARGET})
 endforeach(EXAMPLE_SRC)
+
+set(MONGOCXX_EXAMPLE_EXECUTABLES ${MONGOCXX_EXAMPLE_EXECUTABLES} PARENT_SCOPE)

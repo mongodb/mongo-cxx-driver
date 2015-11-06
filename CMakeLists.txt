@@ -2,6 +2,10 @@ project(MONGO_CXX_DRIVER LANGUAGES CXX)
 
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 
+set (CMAKE_SKIP_BUILD_RPATH false)
+set (CMAKE_BUILD_WITH_INSTALL_RPATH false)
+set (CMAKE_INSTALL_RPATH_USE_LINK_PATH true)
+
 # Add in our modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
@@ -81,6 +85,4 @@ enable_testing()
 
 add_subdirectory(src)
 
-if(BUILD_EXAMPLES)
-    add_subdirectory(examples)
-endif()
+add_subdirectory(examples)

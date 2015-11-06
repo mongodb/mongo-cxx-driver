@@ -19,4 +19,7 @@ foreach(EXAMPLE_SRC ${BSONCXX_EXAMPLES})
     add_executable(${EXAMPLE_TARGET} ${EXAMPLE_SRC})
     add_dependencies(${EXAMPLE_TARGET} install_headers install_libs)
     target_link_libraries(${EXAMPLE_TARGET} bsoncxx ${bsoncxx_libs})
+    set(BSONCXX_EXAMPLE_EXECUTABLES ${BSONCXX_EXAMPLE_EXECUTABLES} ${EXAMPLE_TARGET})
 endforeach(EXAMPLE_SRC)
+
+set(BSONCXX_EXAMPLE_EXECUTABLES ${BSONCXX_EXAMPLE_EXECUTABLES} PARENT_SCOPE)
