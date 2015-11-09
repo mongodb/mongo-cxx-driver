@@ -69,7 +69,10 @@ before_script:
     - ${CMAKE_BINARY} -DCMAKE_BUILD_TYPE=$CONFIG ..
 
 script:
-    - make -j3
+    - make
+
+    # Run all examples
+    - make run-examples
 
     # Run tests with catch
     - ./src/mongocxx/test/test_driver
