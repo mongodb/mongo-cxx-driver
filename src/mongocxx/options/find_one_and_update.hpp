@@ -20,7 +20,6 @@
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-
 #include <mongocxx/options/find_one_common_options.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -32,8 +31,27 @@ namespace options {
 /// Class representing the optional arguments to a MongoDB find_and_modify update operation.
 ///
 class MONGOCXX_API find_one_and_update {
-
    public:
+    ///
+    /// Whether or not to bypass document validation for this operation.
+    ///
+    /// @note
+    ///   On servers >= 3.2, the server applies validation by default. On servers < 3.2, this option
+    ///   is ignored.
+    ///
+    /// @param bypass_document_validation
+    ///   Whether or not to bypass document validation.
+    ///
+    /// TODO add a link to the documentation when available.
+    ///
+    void bypass_document_validation(bool bypass_document_validation);
+
+    ///
+    /// The current setting for bypassing document validation.
+    ///
+    /// @return the current bypass document validation setting.
+    ///
+    const stdx::optional<bool>& bypass_document_validation() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -74,8 +92,8 @@ class MONGOCXX_API find_one_and_update {
     const stdx::optional<bsoncxx::document::view>& projection() const;
 
     ///
-    /// Set the desired version of the replaced document to return, either the original
-    /// document, or the replacement. By default, the original document is returned.
+    /// Set the desired version of the updated document to return, either the original
+    /// document, or the updated. By default, the original document is returned.
     ///
     /// @param return_document
     ///   Version of document to return, either original or updated.
@@ -138,33 +156,13 @@ class MONGOCXX_API find_one_and_update {
     ///
     const stdx::optional<bool>& upsert() const;
 
-    ///
-    /// Sets the bypass_document_validation option.
-    /// If true, allows the write to opt-out of document level validation.
-    ///
-    /// @note
-    ///   On servers >= 3.2, the server applies validation by default. On servers < 3.2, this option
-    ///   is ignored.
-    ///
-    /// @param bypass_document_validation
-    ///   Whether or not to bypass document validation
-    ///
-    void bypass_document_validation(bool bypass_document_validation);
-
-    ///
-    /// Gets the current value of the bypass_document_validation option.
-    ///
-    /// @return The optional value of the bypass_document_validation option.
-    ///
-    const stdx::optional<bool>& bypass_document_validation() const;
-
    private:
+    stdx::optional<bool> _bypass_document_validation;
     stdx::optional<std::int64_t> _max_time_ms;
     stdx::optional<bsoncxx::document::view> _projection;
     stdx::optional<enum return_document> _return_document;
     stdx::optional<bsoncxx::document::view> _ordering;
     stdx::optional<bool> _upsert;
-    stdx::optional<bool> _bypass_document_validation;
 };
 
 }  // namespace options

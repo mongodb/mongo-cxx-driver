@@ -15,15 +15,15 @@
 #include <mongocxx/collection.hpp>
 
 #include <cstdint>
-#include <utility>
 #include <tuple>
+#include <utility>
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/private/helpers.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
-
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/bulk_write.hpp>
 #include <mongocxx/exception/operation.hpp>
@@ -46,6 +46,58 @@
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
 #include <mongocxx/write_concern.hpp>
+
+namespace {
+
+mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
+    ::mongoc_collection_t* collection, bsoncxx::document::view filter,
+    const ::mongoc_find_and_modify_opts_t* opts) {
+    mongocxx::libbson::scoped_bson_t bson_filter{filter};
+    mongocxx::libbson::scoped_bson_t reply;
+    reply.flag_init();
+
+    ::bson_error_t error;
+
+    bool r = mongocxx::libmongoc::collection_find_and_modify_with_opts(
+        collection, bson_filter.bson(), opts, reply.bson(), &error);
+
+    if (!r) {
+        auto gle = mongocxx::libmongoc::collection_get_last_error(collection);
+        throw mongocxx::exception::write(bsoncxx::helpers::value_from_bson_t(gle),
+                                         std::make_tuple(error.message, error.code));
+    }
+
+    bsoncxx::document::view result = reply.view();
+
+    if (result["value"].type() == bsoncxx::type::k_null)
+        return mongocxx::stdx::optional<bsoncxx::document::value>{};
+
+    bsoncxx::builder::stream::document b{};
+    b << bsoncxx::builder::stream::concatenate{result["value"].get_document()};
+    return b.extract();
+}
+
+// TODO move these to a private header
+template <typename T>
+class guard {
+   public:
+    guard(T&& t) : _t{std::move(t)} {
+    }
+
+    ~guard() {
+        _t();
+    }
+
+   private:
+    T _t;
+};
+
+template <typename T>
+guard<T> make_guard(T&& t) {
+    return guard<T>{std::forward<T>(t)};
+};
+
+}  // namespace
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -336,102 +388,100 @@ stdx::optional<result::delete_result> collection::delete_one(
 stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
     bsoncxx::document::view filter, bsoncxx::document::view replacement,
     const options::find_one_and_replace& options) {
-    scoped_bson_t bson_filter{filter};
+    auto opts = libmongoc::find_and_modify_opts_new();
+    auto opts_cleanup = make_guard([&opts] { libmongoc::find_and_modify_opts_destroy(opts); });
+    int flags = ::MONGOC_FIND_AND_MODIFY_NONE;
     scoped_bson_t bson_replacement{replacement};
     scoped_bson_t bson_sort{options.sort()};
     scoped_bson_t bson_projection{options.projection()};
 
-    scoped_bson_t reply;
-    reply.flag_init();
+    libmongoc::find_and_modify_opts_set_update(opts, bson_replacement.bson());
 
-    bson_error_t error;
-
-    options::return_document rd =
-        options.return_document().value_or(options::return_document::k_before);
-
-    // TODO handle bypass document validation when CDRIVER-945 is done.
-    bool r = mongoc_collection_find_and_modify(
-        _impl->collection_t, bson_filter.bson(), bson_sort.bson(), bson_replacement.bson(),
-        bson_projection.bson(), false, options.upsert().value_or(false),
-        rd == options::return_document::k_after, reply.bson(), &error);
-
-    if (!r) {
-        throw exception::write(std::move(_impl->gle()), std::make_tuple(error.message, error.code));
+    if (options.bypass_document_validation()) {
+        libmongoc::find_and_modify_opts_set_bypass_document_validation(
+            opts, *options.bypass_document_validation());
     }
 
-    bsoncxx::document::view result = reply.view();
+    if (options.sort()) {
+        libmongoc::find_and_modify_opts_set_sort(opts, bson_sort.bson());
+    }
 
-    if (result["value"].type() == bsoncxx::type::k_null)
-        return stdx::optional<bsoncxx::document::value>{};
+    if (options.projection()) {
+        libmongoc::find_and_modify_opts_set_fields(opts, bson_projection.bson());
+    }
 
-    bsoncxx::builder::stream::document b;
-    b << bsoncxx::builder::stream::concatenate{result["value"].get_document()};
-    return b.extract();
+    if (options.upsert().value_or(false)) {
+        flags |= ::MONGOC_FIND_AND_MODIFY_UPSERT;
+    }
+
+    if (options.return_document() == options::return_document::k_after) {
+        flags |= ::MONGOC_FIND_AND_MODIFY_RETURN_NEW;
+    }
+
+    libmongoc::find_and_modify_opts_set_flags(opts,
+                                              static_cast<::mongoc_find_and_modify_flags_t>(flags));
+
+    return find_and_modify(_impl->collection_t, filter, opts);
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
     bsoncxx::document::view filter, bsoncxx::document::view update,
     const options::find_one_and_update& options) {
-    scoped_bson_t bson_filter{filter};
+    auto opts = libmongoc::find_and_modify_opts_new();
+    auto opts_cleanup = make_guard([&opts] { libmongoc::find_and_modify_opts_destroy(opts); });
+    int flags = ::MONGOC_FIND_AND_MODIFY_NONE;
     scoped_bson_t bson_update{update};
     scoped_bson_t bson_sort{options.sort()};
     scoped_bson_t bson_projection{options.projection()};
 
-    scoped_bson_t reply;
-    reply.flag_init();
+    libmongoc::find_and_modify_opts_set_update(opts, bson_update.bson());
 
-    bson_error_t error;
-
-    options::return_document rd =
-        options.return_document().value_or(options::return_document::k_before);
-
-    // TODO handle bypass document validation when CDRIVER-945 is done.
-    bool r = libmongoc::collection_find_and_modify(
-        _impl->collection_t, bson_filter.bson(), bson_sort.bson(), bson_update.bson(),
-        bson_projection.bson(), false, options.upsert().value_or(false),
-        rd == options::return_document::k_after, reply.bson(), &error);
-
-    if (!r) {
-        throw exception::write(std::move(_impl->gle()), std::make_tuple(error.message, error.code));
+    if (options.bypass_document_validation()) {
+        libmongoc::find_and_modify_opts_set_bypass_document_validation(
+            opts, *options.bypass_document_validation());
     }
 
-    bsoncxx::document::view result = reply.view();
+    if (options.sort()) {
+        libmongoc::find_and_modify_opts_set_sort(opts, bson_sort.bson());
+    }
 
-    if (result["value"].type() == bsoncxx::type::k_null)
-        return stdx::optional<bsoncxx::document::value>{};
+    if (options.projection()) {
+        libmongoc::find_and_modify_opts_set_fields(opts, bson_projection.bson());
+    }
 
-    bsoncxx::builder::stream::document b;
-    b << bsoncxx::builder::stream::concatenate{result["value"].get_document()};
-    return b.extract();
+    if (options.upsert().value_or(false)) {
+        flags |= ::MONGOC_FIND_AND_MODIFY_UPSERT;
+    }
+
+    if (options.return_document() == options::return_document::k_after) {
+        flags |= ::MONGOC_FIND_AND_MODIFY_RETURN_NEW;
+    }
+
+    libmongoc::find_and_modify_opts_set_flags(opts,
+                                              static_cast<::mongoc_find_and_modify_flags_t>(flags));
+
+    return find_and_modify(_impl->collection_t, filter, opts);
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
     bsoncxx::document::view filter, const options::find_one_and_delete& options) {
-    scoped_bson_t bson_filter{filter};
+    auto opts = libmongoc::find_and_modify_opts_new();
+    auto opts_cleanup = make_guard([&opts] { libmongoc::find_and_modify_opts_destroy(opts); });
+    auto flags = ::MONGOC_FIND_AND_MODIFY_REMOVE;
     scoped_bson_t bson_sort{options.sort()};
     scoped_bson_t bson_projection{options.projection()};
 
-    scoped_bson_t reply;
-    reply.flag_init();
-
-    bson_error_t error;
-
-    bool r = libmongoc::collection_find_and_modify(
-        _impl->collection_t, bson_filter.bson(), bson_sort.bson(), nullptr, bson_projection.bson(),
-        true, false, false, reply.bson(), &error);
-
-    if (!r) {
-        throw exception::write(std::move(_impl->gle()), std::make_tuple(error.message, error.code));
+    if (options.sort()) {
+        libmongoc::find_and_modify_opts_set_sort(opts, bson_sort.bson());
     }
 
-    bsoncxx::document::view result = reply.view();
+    if (options.projection()) {
+        libmongoc::find_and_modify_opts_set_fields(opts, bson_projection.bson());
+    }
 
-    if (result["value"].type() == bsoncxx::type::k_null)
-        return stdx::optional<bsoncxx::document::value>{};
+    libmongoc::find_and_modify_opts_set_flags(opts, flags);
 
-    bsoncxx::builder::stream::document b;
-    b << bsoncxx::builder::stream::concatenate{result["value"].get_document()};
-    return b.extract();
+    return find_and_modify(_impl->collection_t, filter, opts);
 }
 
 std::int64_t collection::count(bsoncxx::document::view filter, const options::count& options) {

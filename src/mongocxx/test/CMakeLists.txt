@@ -19,6 +19,9 @@ set(mongocxx_test_sources
     options/index.cpp
     options/insert.cpp
     options/update.cpp
+    options/find_one_and_delete.cpp
+    options/find_one_and_replace.cpp
+    options/find_one_and_update.cpp
     pool.cpp
     private/write_concern.cpp
     read_preference.cpp

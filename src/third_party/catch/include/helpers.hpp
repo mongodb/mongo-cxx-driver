@@ -105,8 +105,61 @@
     auto collection_find = libmongoc::collection_find.create_instance();                          \
     auto collection_aggregate = libmongoc::collection_aggregate.create_instance();                \
     auto collection_get_name = libmongoc::collection_get_name.create_instance();                  \
-    collection_get_name->interpose([](mongoc_collection_t*){ return "dummy_collection"; });       \
-    auto collection_rename = libmongoc::collection_rename.create_instance();
+    collection_get_name->interpose([](mongoc_collection_t*) { return "dummy_collection"; });      \
+    auto collection_rename = libmongoc::collection_rename.create_instance();                      \
+    auto collection_find_and_modify_with_opts =                                                   \
+        libmongoc::collection_find_and_modify_with_opts.create_instance();
+
+#define MOCK_FAM                                                                                   \
+    auto find_and_modify_opts_destroy = libmongoc::find_and_modify_opts_destroy.create_instance(); \
+    find_and_modify_opts_destroy->interpose([](mongoc_find_and_modify_opts_t*) {}).forever();      \
+    auto find_and_modify_opts_new = libmongoc::find_and_modify_opts_new.create_instance();         \
+    find_and_modify_opts_new->interpose([]() { return nullptr; }).forever();                       \
+    bool expected_find_and_modify_opts_bypass_document_validation;                                 \
+    auto find_and_modify_opts_set_bypass_document_validation =                                     \
+        libmongoc::find_and_modify_opts_set_bypass_document_validation.create_instance();          \
+    find_and_modify_opts_set_bypass_document_validation->interpose(                                \
+        [&expected_find_and_modify_opts_bypass_document_validation](                               \
+            mongoc_find_and_modify_opts_t*, bool bypass_document_validation) {                     \
+            REQUIRE(bypass_document_validation ==                                                  \
+                    expected_find_and_modify_opts_bypass_document_validation);                     \
+            return true;                                                                           \
+        });                                                                                        \
+    bsoncxx::document::view expected_find_and_modify_opts_fields;                                  \
+    auto find_and_modify_opts_set_fields =                                                         \
+        libmongoc::find_and_modify_opts_set_fields.create_instance();                              \
+    find_and_modify_opts_set_fields->interpose([&expected_find_and_modify_opts_fields](            \
+        mongoc_find_and_modify_opts_t*, const ::bson_t* fields) {                                  \
+        auto fields_view = bsoncxx::helpers::view_from_bson_t(fields);                             \
+        REQUIRE(fields_view == expected_find_and_modify_opts_fields);                              \
+        return true;                                                                               \
+    });                                                                                            \
+    ::mongoc_find_and_modify_flags_t expected_find_and_modify_opts_flags;                          \
+    auto find_and_modify_opts_set_flags =                                                          \
+        libmongoc::find_and_modify_opts_set_flags.create_instance();                               \
+    find_and_modify_opts_set_flags->interpose([&expected_find_and_modify_opts_flags](              \
+        mongoc_find_and_modify_opts_t*, const ::mongoc_find_and_modify_flags_t flags) {            \
+        REQUIRE(flags == expected_find_and_modify_opts_flags);                                     \
+        return true;                                                                               \
+    });                                                                                            \
+    bsoncxx::document::view expected_find_and_modify_opts_sort;                                    \
+    auto find_and_modify_opts_set_sort =                                                           \
+        libmongoc::find_and_modify_opts_set_sort.create_instance();                                \
+    find_and_modify_opts_set_sort->interpose([&expected_find_and_modify_opts_sort](                \
+        mongoc_find_and_modify_opts_t*, const ::bson_t* sort) {                                    \
+        auto sort_view = bsoncxx::helpers::view_from_bson_t(sort);                                 \
+        REQUIRE(sort_view == expected_find_and_modify_opts_sort);                                  \
+        return true;                                                                               \
+    });                                                                                            \
+    bsoncxx::document::view expected_find_and_modify_opts_update;                                  \
+    auto find_and_modify_opts_set_update =                                                         \
+        libmongoc::find_and_modify_opts_set_update.create_instance();                              \
+    find_and_modify_opts_set_update->interpose([&expected_find_and_modify_opts_update](            \
+        mongoc_find_and_modify_opts_t*, const ::bson_t* update) {                                  \
+        auto update_view = bsoncxx::helpers::view_from_bson_t(update);                             \
+        REQUIRE(update_view == expected_find_and_modify_opts_update);                              \
+        return true;                                                                               \
+    });
 
 #define MOCK_CURSOR                                                    \
     auto cursor_destroy = libmongoc::cursor_destroy.create_instance(); \
