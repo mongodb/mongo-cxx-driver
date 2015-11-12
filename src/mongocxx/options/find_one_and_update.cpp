@@ -20,6 +20,10 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+void find_one_and_update::max_time_ms(std::int64_t max_time_ms) {
+    _max_time_ms = max_time_ms;
+}
+
 void find_one_and_update::projection(bsoncxx::document::view projection) {
     _projection = projection;
 }
@@ -38,6 +42,10 @@ void find_one_and_update::upsert(bool upsert) {
 
 void find_one_and_update::bypass_document_validation(bool bypass_document_validation) {
     _bypass_document_validation = bypass_document_validation;
+}
+
+const stdx::optional<std::int64_t>& find_one_and_update::max_time_ms() const {
+    return _max_time_ms;
 }
 
 const stdx::optional<bsoncxx::document::view>& find_one_and_update::projection() const {

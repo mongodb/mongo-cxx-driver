@@ -55,7 +55,7 @@ class MONGOCXX_API find_one_and_update {
     const stdx::optional<std::int64_t>& max_time_ms() const;
 
     ///
-    /// Sets a projection which limits the fields to return.
+    /// Sets a projection, which limits the fields to return.
     ///
     /// @param projection
     ///   The projection document.
@@ -65,7 +65,7 @@ class MONGOCXX_API find_one_and_update {
     void projection(bsoncxx::document::view projection);
 
     ///
-    /// Gets the current projection.
+    /// Gets the current projection for this operation.
     ///
     /// @return The current projection.
     ///
@@ -74,11 +74,11 @@ class MONGOCXX_API find_one_and_update {
     const stdx::optional<bsoncxx::document::view>& projection() const;
 
     ///
-    /// Sets the state of the document to be returned by the operation, either the
-    /// original document or its newly-update form.
+    /// Set the desired version of the replaced document to return, either the original
+    /// document, or the replacement. By default, the original document is returned.
     ///
     /// @param return_document
-    ///   State of document to return.
+    ///   Version of document to return, either original or updated.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     /// @see mongocxx::options::return_document
@@ -86,9 +86,9 @@ class MONGOCXX_API find_one_and_update {
     void return_document(return_document return_document);
 
     ///
-    /// Gets the state of the document to be returned by the operation.
+    /// Which version of the updated document to return.
     ///
-    /// @return State of document to return.
+    /// @return Version of document to return, either original or updated.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     /// @see mongocxx::options::return_document

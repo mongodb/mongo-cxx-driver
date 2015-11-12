@@ -20,6 +20,10 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+void find_one_and_delete::max_time_ms(std::int64_t max_time_ms) {
+    _max_time_ms = max_time_ms;
+}
+
 void find_one_and_delete::projection(bsoncxx::document::view projection) {
     _projection = projection;
 }
@@ -34,6 +38,10 @@ const stdx::optional<bsoncxx::document::view>& find_one_and_delete::projection()
 
 const stdx::optional<bsoncxx::document::view>& find_one_and_delete::sort() const {
     return _ordering;
+}
+
+const stdx::optional<std::int64_t>& find_one_and_delete::max_time_ms() const {
+    return _max_time_ms;
 }
 
 }  // namespace options

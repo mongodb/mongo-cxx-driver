@@ -48,7 +48,7 @@ class MONGOCXX_API find_one_and_replace {
     ///
     /// The current max_time_ms setting.
     ///
-    /// @return the current max time (in milliseconds).
+    /// @return the current max allowed running time (in milliseconds).
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
@@ -65,12 +65,11 @@ class MONGOCXX_API find_one_and_replace {
     void projection(bsoncxx::document::view projection);
 
     ///
-    /// Gets the current projection set for this operation.
+    /// Gets the current projection for this operation.
     ///
     /// @return The current projection.
     ///
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
-    ///
     ///
     const stdx::optional<bsoncxx::document::view>& projection() const;
 
@@ -89,7 +88,7 @@ class MONGOCXX_API find_one_and_replace {
     ///
     /// Which version of the updated document to return.
     ///
-    /// @return State of document to return, either original or updated.
+    /// @return Version of document to return, either original or updated.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     /// @see mongocxx::options::return_document
@@ -120,8 +119,8 @@ class MONGOCXX_API find_one_and_replace {
 
     ///
     /// Sets the upsert flag on the operation. When @c true, the operation creates a new document if
-    /// no document matches the filter. When @c false, this operation does nothing if there are no
-    /// matching documents. The server-side default is false.
+    /// no document matches the filter. When @c false, this operation will do nothing if there are
+    /// no matching documents. The server-side default is false.
     ///
     /// @param upsert
     ///   Whether or not to perform an upsert.
