@@ -58,6 +58,31 @@ TEST_CASE("Collection", "[collection]") {
     collection mongo_coll = mongo_db[collection_name];
     REQUIRE(mongo_coll);
 
+    SECTION("Collection Rename", "[collection]") {
+        std::string expected_rename;
+        bool expected_drop;
+
+        collection_rename->interpose([&expected_rename, &expected_drop](
+            ::mongoc_collection_t* collection, const char* new_db, const char* new_name,
+            bool drop_target_before_rename, ::bson_error_t* error) {
+            REQUIRE(expected_rename == std::string{new_name});
+            REQUIRE(expected_drop == drop_target_before_rename);
+            return true;
+        });
+
+        SECTION("with drop_target_before_rename false") {
+            expected_rename = "the_best_collection";
+            expected_drop = false;
+            mongo_coll.rename(expected_rename, expected_drop);
+        }
+
+        SECTION("with drop_target_before_rename true") {
+            expected_rename = "brand_new_name";
+            expected_drop = true;
+            mongo_coll.rename(expected_rename, expected_drop);
+        }
+    }
+
     auto filter_doc = builder::stream::document{} << "_id"
                                                   << "wow"
                                                   << "foo"

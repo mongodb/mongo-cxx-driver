@@ -13,6 +13,22 @@
 
 using namespace mongocxx;
 
+TEST_CASE("collection renaming", "[collection]") {
+    client mongodb_client{uri{}};
+    database db = mongodb_client["test"];
+
+    std::string collname{"mongo_cxx_driver"};
+    collection coll = db[collname];
+    coll.insert_one({});  // Ensure that the collection exists.
+
+    REQUIRE(coll.name() == stdx::string_view{collname});
+
+    std::string new_name{"mongo_cxx_newname"};
+    coll.rename(new_name, true);
+
+    REQUIRE(coll.name() == stdx::string_view{new_name});
+}
+
 TEST_CASE("CRUD functionality", "[driver::collection]") {
     client mongodb_client{uri{}};
     database db = mongodb_client["test"];
