@@ -62,8 +62,20 @@ collection::operator bool() const noexcept {
 }
 
 stdx::string_view collection::name() const noexcept {
-    return _impl->name;
+    return stdx::string_view{libmongoc::collection_get_name(_impl->collection_t)};
 }
+
+void collection::rename(stdx::string_view new_name, bool drop_target_before_rename) {
+    bson_error_t error;
+
+    auto result = libmongoc::collection_rename(_impl->collection_t, _impl->database_name.c_str(),
+                                                new_name.data(), drop_target_before_rename, &error);
+
+    if (!result) {
+      throw exception::operation(std::make_tuple(error.message, error.code));
+    }
+}
+
 
 collection::collection(const database& database, stdx::string_view collection_name)
     : _impl(stdx::make_unique<impl>(
@@ -81,7 +93,7 @@ stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write
     mongoc_bulk_operation_t* b = bulk_write._impl->operation_t;
     libmongoc::bulk_operation_set_client(b, _impl->client_impl->client_t);
     libmongoc::bulk_operation_set_database(b, _impl->database_name.c_str());
-    libmongoc::bulk_operation_set_collection(b, _impl->name.c_str());
+    libmongoc::bulk_operation_set_collection(b, name().data());
 
     scoped_bson_t reply;
     reply.flag_init();

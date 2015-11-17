@@ -144,14 +144,6 @@ class MONGOCXX_API database {
     stdx::string_view name() const;
 
     ///
-    /// Renames this database.
-    ///
-    /// @param new_name the new name for the database.
-    /// @param drop_target_before_rename whether to drop existing databases with the new name.
-    ///
-    void rename(stdx::string_view new_name, bool drop_target_before_rename);
-
-    ///
     /// Get server-side statistics for the database.
     ///
     /// @return document containing statistics for this database.

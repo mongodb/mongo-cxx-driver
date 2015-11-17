@@ -160,7 +160,8 @@ TEST_CASE("A database", "[database]") {
 
     SECTION("may create a collection") {
         MOCK_COLLECTION
-        stdx::string_view collection_name{"collection"};
+        // dummy_collection is the name the mocked collection_get_name returns
+        stdx::string_view collection_name{"dummy_collection"};
         database database = mongo_client[database_name];
         collection obtained_collection = database[collection_name];
         REQUIRE(obtained_collection.name() == collection_name);
