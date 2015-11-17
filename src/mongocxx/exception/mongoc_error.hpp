@@ -15,6 +15,7 @@
 #pragma once
 
 #include <cstdint>
+#include <limits>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -59,7 +60,7 @@ enum class mongoc_error : std::int32_t {
     k_stream_not_established,
     k_stream_socket,
     k_raw_bson,
-    k_unknown,
+    k_unknown = std::numeric_limits<std::int32_t>::max(),
 };
 
 }  // namespace exception

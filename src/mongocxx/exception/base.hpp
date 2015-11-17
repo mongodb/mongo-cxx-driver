@@ -29,13 +29,10 @@ namespace exception {
 
 class MONGOCXX_API base : virtual public std::exception {
    public:
-    base(std::error_code ec);
+    explicit base(std::error_code ec, std::string what_arg = "");
 
-    base(std::error_code ec, std::string what_arg);
-
-    base(bsoncxx::document::value raw_server_error, std::error_code ec);
-
-    base(bsoncxx::document::value raw_server_error, std::error_code ec, std::string what_arg);
+    explicit base(std::error_code ec, bsoncxx::document::value raw_server_error,
+                  std::string what_arg = "");
 
     ///
     /// @returns The raw server error, if it is available.

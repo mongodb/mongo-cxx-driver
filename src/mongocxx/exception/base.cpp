@@ -24,17 +24,10 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace exception {
 
-base::base(std::error_code ec) : _ec{ec} {
-}
-
 base::base(std::error_code ec, std::string what_arg) : _ec{ec}, _what{std::move(what_arg)} {
 }
 
-base::base(bsoncxx::document::value raw_server_error, std::error_code ec)
-    : _raw_server_error{std::move(raw_server_error)}, _ec{ec} {
-}
-
-base::base(bsoncxx::document::value raw_server_error, std::error_code ec, std::string what_arg)
+base::base(std::error_code ec, bsoncxx::document::value raw_server_error, std::string what_arg)
     : _raw_server_error{std::move(raw_server_error)}, _ec{ec}, _what{std::move(what_arg)} {
 }
 

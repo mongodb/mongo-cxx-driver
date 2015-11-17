@@ -30,7 +30,7 @@ std::error_code error_code_from_bson_error_t(::bson_error_t error);
 
 template <typename exception_type>
 void throw_exception(bsoncxx::document::value raw_server_error) {
-    throw exception_type{std::move(raw_server_error), make_error_code(mongoc_error::k_raw_bson)};
+    throw exception_type{make_error_code(mongoc_error::k_raw_bson), std::move(raw_server_error)};
 }
 
 template <typename exception_type>
@@ -40,8 +40,8 @@ void throw_exception(::bson_error_t error) {
 
 template <typename exception_type>
 void throw_exception(bsoncxx::document::value raw_server_error, ::bson_error_t error) {
-    throw exception_type{std::move(raw_server_error), error_code_from_bson_error_t(error),
-                    std::move(error.message)};
+    throw exception_type{error_code_from_bson_error_t(error), std::move(raw_server_error),
+                         std::move(error.message)};
 }
 
 }  // namespace exception

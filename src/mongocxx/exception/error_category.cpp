@@ -20,17 +20,15 @@
 
 #include <mongocxx/exception/mongoc_error.hpp>
 
-namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-namespace exception {
-
+namespace {
+using mongocxx::exception::mongoc_error;
 ///
 /// A std::error_category for codes returned by libmongoc (via bson_error_t's).
 ///
 class mongoc_error_category_impl final : public std::error_category {
    public:
     const char* name() const noexcept override {
-        return "mongoc";
+        return "libmongoc";
     }
 
     std::string message(int ev) const override {
@@ -111,6 +109,11 @@ class mongoc_error_category_impl final : public std::error_category {
         }
     }
 };
+}  // namespace
+
+namespace mongocxx {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
+namespace exception {
 
 const std::error_category& mongoc_error_category() {
     static const mongoc_error_category_impl instance{};
