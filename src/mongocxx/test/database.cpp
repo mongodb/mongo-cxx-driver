@@ -15,6 +15,10 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
+#define MONGOC_I_AM_A_DRIVER true
+#include "mongoc.h"
+#include "mongoc-read-concern-private.h"
+
 #include <mongocxx/private/libmongoc.hpp>
 
 #include <mongocxx/client.hpp>
@@ -122,6 +126,25 @@ TEST_CASE("A database", "[database]") {
             REQUIRE(!destroy_called);
         }
         REQUIRE(destroy_called);
+    }
+
+    SECTION("Read Concern", "[database]") {
+        database mongo_database(mongo_client["database"]);
+
+        auto database_set_rc_called = false;
+        read_concern rc{};
+        rc.acknowledge_level(read_concern::level::k_majority);
+
+        database_set_read_concern->interpose([&database_set_rc_called](
+            ::mongoc_database_t* coll, const ::mongoc_read_concern_t* rc_t) {
+            REQUIRE(rc_t);
+            REQUIRE(rc_t->level);
+            REQUIRE(strcmp(rc_t->level, "majority") == 0);
+            database_set_rc_called = true;
+        });
+
+        mongo_database.read_concern(rc);
+        REQUIRE(database_set_rc_called);
     }
 
     SECTION("has a read preferences which may be set and obtained") {

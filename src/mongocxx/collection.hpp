@@ -40,6 +40,7 @@
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/options/insert.hpp>
 #include <mongocxx/options/update.hpp>
+#include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/result/bulk_write.hpp>
 #include <mongocxx/result/delete.hpp>
@@ -485,6 +486,24 @@ class MONGOCXX_API collection {
     ///
     void rename(stdx::string_view new_name, bool drop_target_before_rename = false);
 
+    ///
+    /// Sets the read_concern for this collection. Changes will not have any effect on existing
+    /// cursors or other read operations which use the previously-set read concern.
+    ///
+    /// @param rc
+    ///   The new @c read_concern
+    ///
+    /// TODO add link to docs once they exist.
+    ///
+    void read_concern(class read_concern rc);
+
+    ///
+    /// Gets the read_concern for the collection.
+    /// TODO fix this method after https://jira.mongodb.org/browse/CXX-758 is done.
+    ///
+    /// @return The current read_concern.
+    ///
+    stdx::optional<class read_concern> read_concern() const;
 
     ///
     /// Sets the read_preference for this collection. Changes will not have any effect on existing

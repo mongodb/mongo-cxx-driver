@@ -19,7 +19,7 @@
         REQUIRE(!OBJECT.NAME());                     \
     }                                                \
                                                      \
-    SECTION("has a method to set the upsert") {      \
+    SECTION("has a method to set the NAME") {        \
         OBJECT.NAME(VALUE);                          \
         REQUIRE(OBJECT.NAME().value() == VALUE);     \
     }
@@ -53,6 +53,7 @@
     client_new->interpose([](const mongoc_uri_t*) { return nullptr; }).forever();               \
     auto client_destroy = libmongoc::client_destroy.create_instance();                          \
     client_destroy->interpose([](mongoc_client_t*) {}).forever();                               \
+    auto client_set_read_concern = libmongoc::client_set_read_concern.create_instance();        \
     auto client_set_preference = libmongoc::client_set_read_prefs.create_instance();            \
     client_set_preference->interpose([](mongoc_client_t*, const mongoc_read_prefs_t*) {})       \
         .forever();                                                                             \
@@ -67,6 +68,7 @@
 #define MOCK_DATABASE                                                                            \
     auto get_database = libmongoc::client_get_database.create_instance();                        \
     get_database->interpose([&](mongoc_client_t*, const char*) { return nullptr; });             \
+    auto database_set_read_concern = libmongoc::database_set_read_concern.create_instance();     \
     auto database_set_preference = libmongoc::database_set_read_prefs.create_instance();         \
     database_set_preference->interpose([](mongoc_database_t*, const mongoc_read_prefs_t*) {})    \
         .forever();                                                                              \
@@ -95,6 +97,7 @@
     auto collection_get_preference = libmongoc::collection_get_read_prefs.create_instance();      \
     collection_get_preference->interpose([](const mongoc_collection_t*) { return nullptr; })      \
         .forever();                                                                               \
+    auto collection_set_read_concern = libmongoc::collection_set_read_concern.create_instance();  \
     auto collection_set_concern = libmongoc::collection_set_write_concern.create_instance();      \
     collection_set_concern->interpose([](mongoc_collection_t*, const mongoc_write_concern_t*) {}) \
         .forever();                                                                               \

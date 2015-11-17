@@ -24,6 +24,7 @@ set(mongocxx_test_sources
     options/find_one_and_update.cpp
     pool.cpp
     private/write_concern.cpp
+    read_concern.cpp
     read_preference.cpp
     result/delete.cpp
     result/insert_one.cpp

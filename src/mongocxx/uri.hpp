@@ -22,7 +22,7 @@
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
-
+#include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/write_concern.hpp>
 
@@ -128,6 +128,13 @@ class MONGOCXX_API uri {
     /// @return A string containing the supplied password.
     ///
     std::string password() const;
+
+    ///
+    /// Returns the read concern from the uri.
+    ///
+    /// @return A read_concern that represents what was specified in the uri.
+    ///
+    class read_concern read_concern() const;
 
     ///
     /// Returns the read preference from the uri.

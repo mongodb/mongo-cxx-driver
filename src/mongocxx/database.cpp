@@ -17,14 +17,14 @@
 #include <utility>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/operation.hpp>
-#include <mongocxx/private/database.hpp>
 #include <mongocxx/private/client.hpp>
-#include <mongocxx/private/read_preference.hpp>
+#include <mongocxx/private/database.hpp>
 #include <mongocxx/private/libbson.hpp>
 #include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/read_concern.hpp>
+#include <mongocxx/private/read_preference.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -109,6 +109,19 @@ void database::drop() {
     if (!libmongoc::database_drop(_impl->database_t, &error)) {
         throw exception::operation(std::make_tuple(error.message, error.code));
     }
+}
+
+void database::read_concern(class read_concern rc) {
+    libmongoc::database_set_read_concern(_impl->database_t, rc._impl->read_concern_t);
+}
+
+stdx::optional<class read_concern> database::read_concern() const {
+    auto rc = libmongoc::database_get_read_concern(_impl->database_t);
+    if (!libmongoc::read_concern_get_level(rc)) {
+        return stdx::nullopt;
+    }
+    return {
+        stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
 void database::read_preference(class read_preference rp) {

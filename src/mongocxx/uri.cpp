@@ -18,6 +18,7 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/read_concern.hpp>
 #include <mongocxx/private/read_preference.hpp>
 #include <mongocxx/private/uri.hpp>
 #include <mongocxx/private/write_concern.hpp>
@@ -74,6 +75,12 @@ bsoncxx::document::view uri::options() const {
 
 std::string uri::password() const {
     return libmongoc::uri_get_password(_impl->uri_t);
+}
+
+class read_concern uri::read_concern() const {
+    auto rc = libmongoc::uri_get_read_concern(_impl->uri_t);
+    return (class read_concern){
+        stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
 class read_preference uri::read_preference() const {

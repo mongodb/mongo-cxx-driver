@@ -22,6 +22,7 @@
 
 #include <mongocxx/database.hpp>
 #include <mongocxx/options/client.hpp>
+#include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
@@ -35,10 +36,10 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 ///
 /// Acts as a logical gateway for working with databases contained within a MongoDB server.
 ///
-/// Databases that are created via this client inherit the @c read_preference and @c write_concern
-/// settings of this client when they are created. The lifetimes of objects created via a client
-/// object (databases, collections, cursors, etc...) @b must be a subset of the lifetime of the
-/// client that created them.
+/// Databases that are created via this client inherit the @c read_concern, @c read_preference, and
+/// @c write_concern settings of this client when they are created. The lifetimes of objects created
+/// via a client object (databases, collections, cursors, etc...) @b must be a subset of the
+/// lifetime of the client that created them.
 ///
 /// Example:
 /// @code
@@ -107,10 +108,31 @@ class MONGOCXX_API client {
     MONGOCXX_DEPRECATED void* implementation() const;
 
     ///
+    /// Sets the read concern for this client.
+    ///
+    /// Modifications at this level do not affect existing databases instances that have have been
+    /// created by this client but do affect new ones as databases inherit the @c read_concern
+    /// settings of their parent upon instantiation.
+    ///
+    /// @param rc
+    ///   The new @c read_concern
+    ///
+    /// TODO add link to docs once they exist.
+    ///
+    void read_concern(class read_concern rc);
+
+    ///
+    /// Returns the current read concern for this client.
+    ///
+    /// @return The current @c read_concern
+    ///
+    stdx::optional<class read_concern> read_concern() const;
+
+    ///
     /// Sets the read preference for this client.
     ///
-    /// Modifications at this level do not effect existing databases instances that have have been
-    /// created by this client but do effect new ones as databases inherit the @c read_preference
+    /// Modifications at this level do not affect existing databases instances that have have been
+    /// created by this client but do affect new ones as databases inherit the @c read_preference
     /// settings of their parent upon instantiation.
     ///
     /// @param rp
@@ -139,8 +161,8 @@ class MONGOCXX_API client {
     ///
     /// Sets the write concern for this client.
     ///
-    /// @note Modifications at this level do not effect existing databases or collection instances
-    /// that have come from this client but do effect new ones as databases will receive a copy of
+    /// @note Modifications at this level do not affect existing databases or collection instances
+    /// that have come from this client but do affect new ones as databases will receive a copy of
     /// this client's @c write_concern upon instantiation.
     ///
     /// @param wc

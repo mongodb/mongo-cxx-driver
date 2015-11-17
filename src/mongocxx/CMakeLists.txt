@@ -55,6 +55,7 @@ set(mongocxx_sources
     pool.cpp
     private/libbson.cpp
     private/libmongoc.cpp
+    read_concern.cpp
     read_preference.cpp
     result/bulk_write.cpp
     result/delete.cpp

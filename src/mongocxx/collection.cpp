@@ -37,6 +37,7 @@
 #include <mongocxx/private/libbson.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/private/pipeline.hpp>
+#include <mongocxx/private/read_concern.hpp>
 #include <mongocxx/private/read_preference.hpp>
 #include <mongocxx/private/write_concern.hpp>
 #include <mongocxx/result/bulk_write.hpp>
@@ -664,6 +665,19 @@ void collection::drop() {
     if (!result) {
         throw exception::operation(std::make_tuple(error.message, error.code));
     }
+}
+
+void collection::read_concern(class read_concern rc) {
+    libmongoc::collection_set_read_concern(_impl->collection_t, rc._impl->read_concern_t);
+}
+
+stdx::optional<class read_concern> collection::read_concern() const {
+    auto rc = libmongoc::collection_get_read_concern(_impl->collection_t);
+    if (!libmongoc::read_concern_get_level(rc)) {
+        return stdx::nullopt;
+    }
+    return {
+        stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
 void collection::read_preference(class read_preference rp) {

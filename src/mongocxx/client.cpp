@@ -17,9 +17,9 @@
 #include <mongocxx/client.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-
 #include <mongocxx/exception/operation.hpp>
 #include <mongocxx/private/client.hpp>
+#include <mongocxx/private/read_concern.hpp>
 #include <mongocxx/private/read_preference.hpp>
 #include <mongocxx/private/ssl.hpp>
 #include <mongocxx/private/uri.hpp>
@@ -53,6 +53,19 @@ client::operator bool() const noexcept {
 
 void* client::implementation() const {
     return _impl->client_t;
+}
+
+void client::read_concern(class read_concern rc) {
+    libmongoc::client_set_read_concern(_impl->client_t, rc._impl->read_concern_t);
+}
+
+stdx::optional<class read_concern> client::read_concern() const {
+    auto rc = libmongoc::client_get_read_concern(_impl->client_t);
+    if (!libmongoc::read_concern_get_level(rc)) {
+        return stdx::nullopt;
+    }
+    return {
+        stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
 void client::read_preference(class read_preference rp) {

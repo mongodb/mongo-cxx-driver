@@ -162,9 +162,31 @@ class MONGOCXX_API database {
     bsoncxx::document::value stats();
 
     ///
+    /// Sets the read_concern for this database.
+    ///
+    /// @note Modifications at this level do not affect existing collection instances that have come
+    /// from this database, but do affect new ones. New collections will receive a copy of the
+    /// new read_concern for this database upon instantiation.
+    ///
+    /// @param rc
+    ///   The new @c read_concern
+    ///
+    /// TODO add link to docs once they exist.
+    ///
+    void read_concern(class read_concern rc);
+
+    ///
+    /// The current read concern for this database.
+    /// TODO fix this method after https://jira.mongodb.org/browse/CXX-758 is done.
+    ///
+    /// @return the current read_concern
+    ///
+    stdx::optional<class read_concern> read_concern() const;
+
+    ///
     /// Sets the read_preference for this database.
     ///
-    /// @note Modifications at this level do not effect existing collection instances that have come
+    /// @note Modifications at this level do not affect existing collection instances that have come
     /// from this database, but do affect new ones. New collections will receive a copy of the
     /// new read_preference for this database upon instantiation.
     ///
@@ -186,8 +208,8 @@ class MONGOCXX_API database {
     ///
     /// Sets the write_concern for this database.
     ///
-    /// @note Modifications at this level do not effect existing collection instances that have come
-    /// from this database, but do effect new ones as new collections will receive a copy of the
+    /// @note Modifications at this level do not affect existing collection instances that have come
+    /// from this database, but do affect new ones as new collections will receive a copy of the
     /// write_concern of this database upon instantiation.
     ///
     void write_concern(class write_concern wc);

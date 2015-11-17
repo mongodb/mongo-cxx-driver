@@ -17,6 +17,10 @@
 
 #include <string>
 
+#define MONGOC_I_AM_A_DRIVER true
+#include "mongoc.h"
+#include "mongoc-read-concern-private.h"
+
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/document/element.hpp>
@@ -61,6 +65,23 @@ TEST_CASE("Collection", "[collection]") {
     database mongo_db = mongo_client[database_name];
     collection mongo_coll = mongo_db[collection_name];
     REQUIRE(mongo_coll);
+
+    SECTION("Read Concern", "[collection]") {
+        auto collection_set_rc_called = false;
+        read_concern rc{};
+        rc.acknowledge_level(read_concern::level::k_majority);
+
+        collection_set_read_concern->interpose([&collection_set_rc_called](
+            ::mongoc_collection_t* coll, const ::mongoc_read_concern_t* rc_t) {
+            REQUIRE(rc_t);
+            REQUIRE(rc_t->level);
+            REQUIRE(strcmp(rc_t->level, "majority") == 0);
+            collection_set_rc_called = true;
+        });
+
+        mongo_coll.read_concern(rc);
+        REQUIRE(collection_set_rc_called);
+    }
 
     SECTION("Collection Rename", "[collection]") {
         std::string expected_rename;

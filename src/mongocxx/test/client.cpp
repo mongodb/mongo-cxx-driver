@@ -15,6 +15,10 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
+#define MONGOC_I_AM_A_DRIVER true
+#include "mongoc.h"
+#include "mongoc-read-concern-private.h"
+
 #include <mongocxx/private/libmongoc.hpp>
 
 #include <mongocxx/client.hpp>
@@ -84,6 +88,27 @@ TEST_CASE("A client supports move operations", "[client]") {
 
     client c = std::move(b);
     REQUIRE(!called);
+}
+
+TEST_CASE("A client has a settable Read Concern", "[collection]") {
+    MOCK_CLIENT
+
+    client mongo_client{uri{}};
+
+    auto client_set_rc_called = false;
+    read_concern rc{};
+    rc.acknowledge_level(read_concern::level::k_majority);
+
+    client_set_read_concern->interpose(
+        [&client_set_rc_called](::mongoc_client_t* coll, const ::mongoc_read_concern_t* rc_t) {
+            REQUIRE(rc_t);
+            REQUIRE(rc_t->level);
+            REQUIRE(strcmp(rc_t->level, "majority") == 0);
+            client_set_rc_called = true;
+        });
+
+    mongo_client.read_concern(rc);
+    REQUIRE(client_set_rc_called);
 }
 
 TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
