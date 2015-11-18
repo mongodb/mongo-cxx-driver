@@ -29,10 +29,11 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+class bulk_write;
 class client;
 class collection;
 class database;
-class bulk_write;
+class uri;
 
 ///
 /// Class representing the server-side requirement for reporting the success of a write
@@ -250,10 +251,11 @@ class MONGOCXX_API write_concern {
     std::chrono::milliseconds timeout() const;
 
    private:
+    friend bulk_write;
     friend client;
     friend collection;
     friend database;
-    friend bulk_write;
+    friend uri;
 
     class MONGOCXX_PRIVATE impl;
 

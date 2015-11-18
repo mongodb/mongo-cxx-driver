@@ -31,6 +31,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 class client;
 class collection;
 class database;
+class uri;
 
 ///
 /// Class representing a preference for how the driver routes read operations to members of a
@@ -189,6 +190,7 @@ class MONGOCXX_API read_preference {
     friend client;
     friend collection;
     friend database;
+    friend uri;
 
     class MONGOCXX_PRIVATE impl;
 
