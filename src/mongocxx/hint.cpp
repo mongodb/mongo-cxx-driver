@@ -31,11 +31,11 @@ bsoncxx::document::value hint::to_document() const {
     auto doc = bsoncxx::builder::stream::document{};
 
     if (_index_doc) {
-        doc << "hint" << bsoncxx::builder::stream::open_document
+        doc << "$hint" << bsoncxx::builder::stream::open_document
             << bsoncxx::builder::stream::concatenate(*_index_doc)
             << bsoncxx::builder::stream::close_document;
     } else {
-        doc << "hint" << *_index_string;
+        doc << "$hint" << *_index_string;
     }
 
     return doc.extract();

@@ -350,21 +350,30 @@ TEST_CASE("Collection", "[collection]") {
         auto find_doc = builder::stream::document{} << "a" << 1 << builder::stream::finalize;
         auto doc = find_doc.view();
         mongocxx::stdx::optional<bsoncxx::document::view> expected_sort{};
+        mongocxx::stdx::optional<bsoncxx::document::view> expected_hint{};
 
         collection_find->interpose([&](mongoc_collection_t* coll, mongoc_query_flags_t flags,
                                        uint32_t skip, uint32_t limit, uint32_t batch_size,
                                        const bson_t* query, const bson_t* fields,
                                        const mongoc_read_prefs_t* read_prefs) {
             collection_find_called = true;
+
             REQUIRE(coll == mongo_coll.implementation());
             REQUIRE(flags == MONGOC_QUERY_NONE);
             REQUIRE(skip == skip);
             REQUIRE(limit == limit);
             REQUIRE(batch_size == batch_size);
+
             bsoncxx::document::view query_view{bson_get_data(query), query->len};
+
             REQUIRE(query_view["$query"].get_document() == doc);
+
             if (expected_sort) {
                 REQUIRE(query_view["$orderby"].get_document() == *expected_sort);
+            }
+            if (expected_hint) {
+                REQUIRE(query_view["$hint"].get_utf8() ==
+                        expected_hint->operator[]("$hint").get_utf8());
             }
             REQUIRE(fields == NULL);
             REQUIRE(read_prefs == NULL);
@@ -375,6 +384,18 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("find succeeds") {
             REQUIRE_NOTHROW(mongo_coll.find(doc));
+        }
+
+        SECTION("Succeeds with hint") {
+            options::find opts;
+            hint index_hint("a_1");
+            opts.hint(index_hint);
+
+            // set our expected_hint so we check against that
+            bsoncxx::document::value hint_doc = index_hint.to_document();
+            expected_hint = hint_doc.view();
+
+            REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
         }
 
         SECTION("find with sort succeeds") {

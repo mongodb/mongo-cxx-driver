@@ -38,6 +38,10 @@ void find::cursor_type(enum find::cursor_type cursor_type) {
     _cursor_type = cursor_type;
 }
 
+void find::hint(class hint index_hint) {
+    _hint = std::move(index_hint);
+}
+
 void find::limit(std::int32_t limit) {
     _limit = limit;
 }
@@ -92,6 +96,10 @@ const stdx::optional<std::string>& find::comment() const {
 
 const stdx::optional<enum find::cursor_type>& find::cursor_type() const {
     return _cursor_type;
+}
+
+const stdx::optional<class hint>& find::hint() const {
+    return _hint;
 }
 
 const stdx::optional<std::int32_t>& find::limit() const {

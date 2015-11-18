@@ -21,6 +21,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/hint.hpp>
 #include <mongocxx/read_preference.hpp>
 
 namespace mongocxx {
@@ -111,6 +112,26 @@ class MONGOCXX_API find {
     /// @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
     ///
     const stdx::optional<enum cursor_type>& cursor_type() const;
+
+    ///
+    /// Sets the index to use for this operation.
+    ///
+    /// @see https://docs.mongodb.org/manual/reference/operator/meta/hint/
+    ///
+    /// @note if the server already has a cached shape for this query, it may
+    /// ignore a hint.
+    ///
+    /// @param index_hint
+    ///   Object representing the index to use.
+    ///
+    void hint(class hint index_hint);
+
+    ///
+    /// Gets the current hint.
+    ///
+    /// @return The current hint, if one is set.
+    ///
+    const stdx::optional<class hint>& hint() const;
 
     ///
     /// Sets maximum number of documents to return.
@@ -292,6 +313,7 @@ class MONGOCXX_API find {
     stdx::optional<std::int32_t> _batch_size;
     stdx::optional<std::string> _comment;
     stdx::optional<enum cursor_type> _cursor_type;
+    stdx::optional<class hint> _hint;
     stdx::optional<std::int32_t> _limit;
     stdx::optional<std::chrono::milliseconds> _max_await_time;
     stdx::optional<std::chrono::milliseconds> _max_time;

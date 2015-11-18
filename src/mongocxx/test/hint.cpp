@@ -35,7 +35,7 @@ TEST_CASE("Hint", "[hint]") {
                                      << builder::stream::concatenate(index_hint.to_document())
                                      << builder::stream::finalize;
             document::view view{filter.view()};
-            document::element ele{view["hint"]};
+            document::element ele{view["$hint"]};
             REQUIRE(ele);
             REQUIRE(ele.type() == type::k_utf8);
             REQUIRE(ele.get_utf8().value.to_string() == index_name);
@@ -69,7 +69,7 @@ TEST_CASE("Hint", "[hint]") {
                                      << builder::stream::concatenate(index_hint.to_document())
                                      << builder::stream::finalize;
             document::view view{filter.view()};
-            document::element ele{view["hint"]};
+            document::element ele{view["$hint"]};
             REQUIRE(ele);
             REQUIRE(ele.type() == type::k_document);
             REQUIRE(ele.get_document().value == index_copy);

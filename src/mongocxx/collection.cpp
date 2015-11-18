@@ -192,6 +192,10 @@ cursor collection::find(view_or_value filter, const options::find& options) {
         filter_builder << "$maxTimeMS" << options.max_time()->count();
     }
 
+    if (options.hint()) {
+        filter_builder << builder::stream::concatenate(options.hint()->to_document());
+    }
+
     filter_bson.init_from_static(filter_builder.view());
 
     const mongoc_read_prefs_t* rp_ptr = NULL;
