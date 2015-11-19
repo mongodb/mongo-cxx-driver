@@ -16,6 +16,10 @@
 #undef BSONCXX_B64_ASSERT
 #pragma pop_macro("BSONCXX_B64_ASSERT")
 
+// compiler.hpp
+#undef BSONCXX_INLINE
+#pragma pop_macro("BSONCXX_INLINE")
+
 // src/bsoncxx/config/config.hpp.in
 #undef BSONCXX_INLINE_NAMESPACE_BEGIN
 #pragma pop_macro("BSONCXX_INLINE_NAMESPACE_BEGIN")
@@ -53,7 +57,5 @@
 #pragma pop_macro("BSONCXX_PRIVATE")
 
 // prelude.hpp
-#undef BSONCXX_INLINE
-#pragma pop_macro("BSONCXX_INLINE")
 #undef BSONCXX_UNREACHABLE
 #pragma pop_macro("BSONCXX_UNREACHABLE")

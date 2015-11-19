@@ -16,6 +16,10 @@
 #pragma push_macro("BSONCXX_B64_ASSERT")
 #undef BSONCXX_B64_ASSERT
 
+// compiler.hpp
+#pragma push_macro("BSONCXX_INLINE")
+#undef BSONCXX_INLINE
+
 // src/bsoncxx/config/config.hpp.in
 #pragma push_macro("BSONCXX_INLINE_NAMESPACE_BEGIN")
 #undef BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -52,14 +56,10 @@
 #pragma push_macro("BSONCXX_PRIVATE")
 #undef BSONCXX_PRIVATE
 
+#include <bsoncxx/config/compiler.hpp>
 #include <bsoncxx/config/config.hpp>
 #include <bsoncxx/config/version.hpp>
 #include <bsoncxx/export.hpp>
-
-// TODO to move this to a compiler.hpp header (CXX-733)
-#pragma push_macro("BSONCXX_INLINE")
-#undef BSONCXX_INLINE
-#define BSONCXX_INLINE inline __attribute__((__visibility__("hidden"), __always_inline__))
 
 #pragma push_macro("BSONCXX_UNREACHABLE")
 #undef BSONCXX_UNREACHABLE

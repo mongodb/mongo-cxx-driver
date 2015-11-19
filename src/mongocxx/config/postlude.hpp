@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// src/mongocxx/config/compiler.hpp
+#undef MONGOCXX_INLINE
+#pragma pop_macro("MONGOCXX_INLINE")
+
 // src/mongocxx/config/config.hpp.in
 #undef MONGOCXX_INLINE_NAMESPACE_BEGIN
 #pragma pop_macro("MONGOCXX_INLINE_NAMESPACE_BEGIN")
@@ -45,7 +49,3 @@
 #pragma pop_macro("MONGOCXX_NO_DEPRECATED")
 #undef MONGOCXX_PRIVATE
 #pragma pop_macro("MONGOCXX_PRIVATE")
-
-// prelude.hpp
-#undef MONGOCXX_INLINE
-#pragma pop_macro("MONGOCXX_INLINE")

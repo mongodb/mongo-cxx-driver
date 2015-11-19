@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// src/mongocxx/config/compiler.hpp
+#pragma push_macro("MONGOCXX_INLINE")
+#undef MONGOCXX_INLINE
+
 // src/mongocxx/config/config.hpp.in
 #pragma push_macro("MONGOCXX_INLINE_NAMESPACE_BEGIN")
 #undef MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -46,11 +50,7 @@
 #pragma push_macro("MONGOCXX_PRIVATE")
 #undef MONGOCXX_PRIVATE
 
+#include <mongocxx/config/compiler.hpp>
 #include <mongocxx/config/config.hpp>
 #include <mongocxx/config/version.hpp>
 #include <mongocxx/export.hpp>
-
-// TODO to move this to a compiler.hpp header (CXX-733)
-#pragma push_macro("MONGOCXX_INLINE")
-#undef MONGOCXX_INLINE
-#define MONGOCXX_INLINE inline __attribute__ ((__visibility__("hidden"), __always_inline__))
