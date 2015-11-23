@@ -25,6 +25,8 @@ set(mongocxx_sources
     cursor.cpp
     database.cpp
     exception/base.cpp
+    exception/error_category.cpp
+    exception/private/mongoc_error.cpp
     hint.cpp
     insert_many_builder.cpp
     instance.cpp

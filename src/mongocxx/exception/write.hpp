@@ -16,8 +16,6 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <bsoncxx/document/value.hpp>
-
 #include <mongocxx/exception/operation.hpp>
 
 namespace mongocxx {

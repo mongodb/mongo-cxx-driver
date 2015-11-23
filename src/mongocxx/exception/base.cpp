@@ -12,25 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/exception/base.hpp>
+#include <mongocxx/config/prelude.hpp>
 
+#include <string>
 #include <utility>
 
-#include <mongocxx/config/prelude.hpp>
+#include <mongocxx/exception/base.hpp>
+#include <mongocxx/exception/error_category.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace exception {
 
-base::base(bsoncxx::document::value raw_server_error)
-    : _raw_server_error(std::move(raw_server_error)) {
+base::base(std::error_code ec, std::string what_arg) : _ec{ec}, _what{std::move(what_arg)} {
 }
 
-base::base(error_and_code_type error_and_code) : _error_and_code(std::move(error_and_code)) {
-}
-
-base::base(bsoncxx::document::value raw_server_error, error_and_code_type error_and_code)
-    : _raw_server_error(std::move(raw_server_error)), _error_and_code(std::move(error_and_code)) {
+base::base(std::error_code ec, bsoncxx::document::value raw_server_error, std::string what_arg)
+    : _raw_server_error{std::move(raw_server_error)}, _ec{ec}, _what{std::move(what_arg)} {
 }
 
 const stdx::optional<bsoncxx::document::value>& base::raw_server_error() const {
@@ -41,12 +39,12 @@ stdx::optional<bsoncxx::document::value>& base::raw_server_error() {
     return _raw_server_error;
 }
 
-const stdx::optional<error_and_code_type>& base::error_and_code() const {
-    return _error_and_code;
+const std::error_code& base::code() const {
+    return _ec;
 }
 
-stdx::optional<error_and_code_type>& base::error_and_code() {
-    return _error_and_code;
+const char* base::what() const noexcept {
+    return _what ? _what->c_str() : "";
 }
 
 }  // namespace exception
