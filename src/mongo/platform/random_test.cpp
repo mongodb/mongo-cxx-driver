@@ -125,7 +125,7 @@ TEST(RandomTest, NextInt64SanityCheck) {
     for (int bit = 0; bit < 64; bit++) {
         int onesCount = 0;
         for (size_t i = 0; i != nums.size(); ++i) {
-            int32_t num = nums[i];
+            int64_t num = nums[i];
 
             bool isSet = (num >> bit) & 1;
             if (isSet)
@@ -149,7 +149,7 @@ TEST(RandomTest, NextInt32InRange) {
 TEST(RandomTest, NextInt64InRange) {
     PseudoRandom a(11);
     for (int i = 0; i < 1000; i++) {
-        int32_t res = a.nextInt64(10);
+        int64_t res = a.nextInt64(10);
         ASSERT_GE(res, 0);
         ASSERT_LT(res, 10);
     }
