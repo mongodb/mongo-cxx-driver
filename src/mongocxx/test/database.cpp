@@ -71,6 +71,27 @@ TEST_CASE("A database", "[database]") {
         REQUIRE(destroy_called);
     }
 
+    SECTION("is dropped") {
+        bool drop_called = false;
+
+        database_drop->interpose([&](mongoc_database_t* database, bson_error_t* error) { 
+            drop_called = true; 
+            return true;
+        });
+
+        database database = mongo_client["database"];
+        REQUIRE(!drop_called);
+        database.drop();
+        REQUIRE(drop_called);
+    }
+
+    SECTION("throws an exception when dropping causes an error") {
+        database_drop->interpose([&](mongoc_database_t* database, bson_error_t* error) { return false; });
+
+        database database = mongo_client["database"];
+        REQUIRE_THROWS(database.drop());
+    }
+
     SECTION("supports move operations") {
         bool destroy_called = false;
         database_destroy->interpose([&](mongoc_database_t* client) { destroy_called = true; });
@@ -204,5 +225,14 @@ TEST_CASE("Database integration tests", "[database]") {
         }
 
         clear_collection(database, collection_name);
+    }
+
+    SECTION("A database may be dropped") {
+        clear_collection(database, collection_name);
+
+        database.create_collection(collection_name);
+        REQUIRE(database.has_collection(collection_name));
+        database.drop();
+        REQUIRE(!database.has_collection(collection_name));
     }
 }

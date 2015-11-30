@@ -97,6 +97,13 @@ class collection database::create_collection(stdx::string_view name,
     return mongocxx::collection(*this, static_cast<void*>(result));
 }
 
+void database::drop() {
+    bson_error_t error;
+    if (!libmongoc::database_drop(_impl->database_t, &error)) {
+        throw exception::operation(std::make_tuple(error.message, error.code));
+    }
+}
+
 void database::read_preference(class read_preference rp) {
     libmongoc::database_set_read_prefs(_impl->database_t, rp._impl->read_preference_t);
 }

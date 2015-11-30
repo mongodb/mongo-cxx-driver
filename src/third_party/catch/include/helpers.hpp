@@ -80,6 +80,8 @@
     database_get_concern->interpose([](const mongoc_database_t*) { return nullptr; }).forever(); \
     auto database_destroy = libmongoc::database_destroy.create_instance();                       \
     database_destroy->interpose([](mongoc_database_t*) {}).forever();                            \
+    auto database_drop = libmongoc::database_drop.create_instance();                             \
+    database_drop->interpose([](mongoc_database_t*, bson_error_t*) { return true; }).forever();  \
     auto database_get_collection = libmongoc::database_get_collection.create_instance();         \
     database_get_collection->interpose([](mongoc_database_t*, const char*) { return nullptr; })  \
         .forever();                                                                              \
