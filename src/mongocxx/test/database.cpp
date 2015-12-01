@@ -38,6 +38,21 @@ TEST_CASE("A default constructed database is false-ish", "[database]") {
     REQUIRE(!d);
 }
 
+TEST_CASE("database copy", "[database]") {
+    client mongodb_client{uri{}};
+
+    std::string dbname{"foo"};
+    std::string dbname2{"bar"};
+    database db = mongodb_client[dbname];
+
+    database db2{db};
+    database db3 = mongodb_client[dbname2];
+    db3 = db;
+
+    REQUIRE(db2.name() == stdx::string_view{dbname});
+    REQUIRE(db3.name() == stdx::string_view{dbname});
+}
+
 TEST_CASE("A database", "[database]") {
     stdx::string_view database_name{"database"};
     MOCK_CLIENT

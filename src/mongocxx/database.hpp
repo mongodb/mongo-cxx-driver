@@ -38,7 +38,6 @@ class client;
 /// all of its default settings from the client that creates it.
 ///
 /// @todo Make iterable for collections in the database
-/// @todo Make copyable when c-driver supports this
 /// @todo Add auth functions (add_user, remove_all_users, remove_user)
 
 class MONGOCXX_API database {
@@ -59,6 +58,16 @@ class MONGOCXX_API database {
     /// Move assigns a database.
     ///
     database& operator=(database&&) noexcept;
+
+    ///
+    /// Copy constructs a database.
+    ///
+    database(const database&);
+
+    ///
+    /// Copy assigns a database.
+    ///
+    database& operator=(const database&);
 
     ///
     /// Destroys a database.

@@ -42,6 +42,13 @@ database::database(const class client& client, stdx::string_view name)
           name.data())) {
 }
 
+database::database(const database& d) : _impl{stdx::make_unique<impl>(*(d._impl))} { }
+
+database& database::operator=(const database& d) {
+    _impl = stdx::make_unique<impl>(*(d._impl));
+    return *this;
+}
+
 database::operator bool() const noexcept {
     return static_cast<bool>(_impl);
 }
