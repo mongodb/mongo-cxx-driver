@@ -70,8 +70,6 @@ class pipeline;
 ///   auto coll = mongo_client["database"]["collection"];
 /// @endcode
 ///
-/// @todo Make this class copyable when C driver supports this.
-///
 class MONGOCXX_API collection {
    public:
     ///
@@ -91,6 +89,16 @@ class MONGOCXX_API collection {
     /// Move assigns a collection.
     ///
     collection& operator=(collection&&) noexcept;
+
+    ///
+    /// Copy constructs a collection.
+    ///
+    collection(const collection&);
+
+    ///
+    /// Copy assigns a collection.
+    ///
+    collection& operator=(const collection&);
 
     ///
     /// Destroys a collection.

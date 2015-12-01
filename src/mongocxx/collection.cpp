@@ -140,6 +140,13 @@ collection::collection(const database& database, void* collection)
                                     database._impl->client_impl)) {
 }
 
+collection::collection(const collection& c) : _impl{stdx::make_unique<impl>(*(c._impl))} { }
+
+collection& collection::operator=(const collection& c) {
+    _impl = stdx::make_unique<impl>(*(c._impl));
+    return *this;
+}
+
 stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write& bulk_write) {
     mongoc_bulk_operation_t* b = bulk_write._impl->operation_t;
     libmongoc::bulk_operation_set_client(b, _impl->client_impl->client_t);

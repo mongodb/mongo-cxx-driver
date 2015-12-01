@@ -13,6 +13,22 @@
 
 using namespace mongocxx;
 
+TEST_CASE("collection copy", "[collection]") {
+    client mongodb_client{uri{}};
+    database db = mongodb_client["test"];
+
+    std::string collname{"foo"};
+    std::string collname2{"bar"};
+    collection coll = db[collname];
+
+    collection coll2{coll};
+    collection coll3 = db[collname2];
+    coll3 = coll;
+
+    REQUIRE(coll2.name() == stdx::string_view{collname});
+    REQUIRE(coll3.name() == stdx::string_view{collname});
+}
+
 TEST_CASE("collection renaming", "[collection]") {
     client mongodb_client{uri{}};
     database db = mongodb_client["test"];
