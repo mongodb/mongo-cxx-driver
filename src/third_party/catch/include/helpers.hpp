@@ -88,7 +88,13 @@
     database_get_collection->interpose([](mongoc_database_t*, const char*) { return nullptr; })  \
         .forever();                                                                              \
     auto database_command = libmongoc::database_command.create_instance();                       \
-    auto database_command_simple = libmongoc::database_command_simple.create_instance();
+    auto database_command_simple = libmongoc::database_command_simple.create_instance();         \
+    database_command_simple->interpose([](mongoc_database_t*,                                    \
+        const bson_t*,                                                                           \
+        const mongoc_read_prefs_t*,                                                              \
+        bson_t*,                                                                                 \
+        bson_error_t*) { return true; })                                                         \
+        .forever();                                                                              \
 
 #define MOCK_COLLECTION                                                                           \
     auto collection_set_preference = libmongoc::collection_set_read_prefs.create_instance();      \

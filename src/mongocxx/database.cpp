@@ -74,7 +74,7 @@ stdx::string_view database::name() const {
     return _impl->name;
 }
 
-bsoncxx::document::value database::command(bsoncxx::document::view command) {
+bsoncxx::document::value database::run_command(bsoncxx::document::view command) {
     libbson::scoped_bson_t command_bson{command};
     libbson::scoped_bson_t reply_bson;
     bson_error_t error;

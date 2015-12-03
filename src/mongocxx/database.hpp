@@ -89,7 +89,7 @@ class MONGOCXX_API database {
     /// @return the result of executing the command.
     /// @throws exception::operation if the operation fails.
     ///
-    bsoncxx::document::value command(bsoncxx::document::view command);
+    bsoncxx::document::value run_command(bsoncxx::document::view command);
 
     ///
     /// Explicitly creates a collection in this database with the specified options.

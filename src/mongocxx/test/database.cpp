@@ -20,6 +20,7 @@
 #include "mongoc-read-concern-private.h"
 
 #include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/libbson.hpp>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
@@ -225,6 +226,33 @@ TEST_CASE("A database", "[database]") {
         collection obtained_collection = database[collection_name];
         REQUIRE(obtained_collection.name() == collection_name);
     }
+
+    SECTION("supports run_command") {
+        bool called = false;
+
+        bsoncxx::document::value doc = bsoncxx::builder::stream::document{} 
+            << "foo" << 5 << bsoncxx::builder::stream::finalize;
+        libbson::scoped_bson_t bson_doc{doc};
+
+        database_command_simple->interpose([&](mongoc_database_t* database, 
+            const bson_t* command,
+            const mongoc_read_prefs_t* read_prefs,
+            bson_t* reply,
+            bson_error_t* error) 
+        {
+            called = true;
+            ::bson_copy_to(bson_doc.bson(), reply);
+            return true;
+        });
+
+        database database = mongo_client[database_name];
+        bsoncxx::document::value command = bsoncxx::builder::stream::document{} 
+            << "command" << 1 << bsoncxx::builder::stream::finalize;
+        auto response = database.run_command(command);
+        REQUIRE(called);
+        REQUIRE(response.view()["foo"].get_int32() == 5);
+    }
+
 }
 
 TEST_CASE("Database integration tests", "[database]") {
