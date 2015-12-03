@@ -137,7 +137,9 @@ view::const_iterator view::cbegin() const {
 
     bson_init_static(&b, data(), length());
     bson_iter_init(&iter, &b);
-    bson_iter_next(&iter);
+    if (!bson_iter_next(&iter)) {
+        return const_iterator{};
+    }
 
     return const_iterator(element{iter.raw, iter.len, iter.off});
 }
@@ -152,7 +154,9 @@ view::iterator view::begin() const {
 
     bson_init_static(&b, data(), length());
     bson_iter_init(&iter, &b);
-    bson_iter_next(&iter);
+    if (!bson_iter_next(&iter)) {
+        return iterator{};
+    }
 
     return iterator(element{iter.raw, iter.len, iter.off});
 }
