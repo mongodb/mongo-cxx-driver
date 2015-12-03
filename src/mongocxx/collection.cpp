@@ -625,9 +625,15 @@ bsoncxx::document::value collection::create_index(bsoncxx::document::view keys,
         throw exception::operation(std::make_tuple(error.message, error.code));
     }
 
-    // TODO: return the response from the server, this is not possible now due to the way
-    // libmongoc works.
-    return bsoncxx::document::value{bsoncxx::document::view{}};
+    if (options.name()) {
+        return bsoncxx::builder::stream::document{} 
+            << "name" << *options.name() 
+            << bsoncxx::builder::stream::finalize;
+    } else {
+        return bsoncxx::builder::stream::document{} 
+            << "name" << std::string{libmongoc::collection_keys_to_index_string(bson_keys.bson())}
+            << bsoncxx::builder::stream::finalize;
+    }
 }
 
 cursor collection::distinct(stdx::string_view field_name, bsoncxx::document::view query,
