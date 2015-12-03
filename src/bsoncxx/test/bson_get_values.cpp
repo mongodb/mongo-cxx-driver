@@ -1,5 +1,6 @@
 #include "catch.hpp"
 
+#include <bsoncxx/builder/stream/array.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 
@@ -204,4 +205,24 @@ TEST_CASE("[] with large nesting levels", "[bsoncxx]") {
         x = x["x"];
     }
     REQUIRE(x.get_int32() == nesting_level);
+}
+
+TEST_CASE("empty document view has working iterators", "[bsoncxx]") {
+    using namespace builder::stream;
+
+    auto value = builder::stream::document{} << finalize;
+    auto doc = value.view();
+
+    REQUIRE(doc.begin() == doc.end());
+    REQUIRE(doc.cbegin() == doc.cend());
+}
+
+TEST_CASE("empty array view has working iterators", "[bsoncxx]") {
+    using namespace builder::stream;
+
+    auto value = builder::stream::array{} << finalize;
+    auto doc = value.view();
+
+    REQUIRE(doc.begin() == doc.end());
+    REQUIRE(doc.cbegin() == doc.cend());
 }
