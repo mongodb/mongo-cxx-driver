@@ -66,6 +66,27 @@ TEST_CASE("builder appends utf8", "[bsoncxx::builder::stream]") {
         bson_eq_stream(&expected, b);
     }
 
+    SECTION("works with const char*") {
+        const char* world = "world";
+        b << "hello" << world;
+
+        bson_eq_stream(&expected, b);
+    }
+
+    SECTION("works with char*") {
+        char* world = const_cast<char*>("world");
+        b << "hello" << world;
+
+        bson_eq_stream(&expected, b);
+    }
+
+    // SECTION("fails to compile with non-char*") {
+    //     int world = 10;
+    //     b << "hello" << &world;
+
+    //     bson_eq_stream(&expected, b);
+    // }
+
     bson_destroy(&expected);
 }
 
