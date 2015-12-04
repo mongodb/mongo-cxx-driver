@@ -274,15 +274,16 @@ std::string to_json(types::value value) {
 
     json_visitor v(ss, false, 0);
 
-    switch ((int)value.type()) {
-#define BSONCXX_ENUM(name, val)            \
-    case val:                              \
-        v.visit_value(value.get_##name()); \
-        break;
+    if(value.type()) {
+        switch ((int)*(value.type())) {
+#define BSONCXX_ENUM(name, val)                \
+        case val:                              \
+            v.visit_value(value.get_##name()); \
+            break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
+        }
     }
-
     return ss.str();
 }
 
