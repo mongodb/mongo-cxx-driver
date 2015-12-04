@@ -27,6 +27,16 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace array {
 
+namespace {
+bson_iter_t to_bson_iter_t(element e) {
+    bson_iter_t i;
+    i.raw = e.raw();
+    i.len = e.length();
+    i.next_off = e.offset();
+    return i;
+}
+}  // namespace
+
 view::iterator::iterator() {
 }
 
@@ -46,20 +56,13 @@ view::iterator& view::iterator::operator++() {
         return *this;
     }
 
-    bson_iter_t i;
-    i.raw = _element.raw;
-    i.len = _element.length;
-    i.next_off = _element.offset;
+    bson_iter_t i = to_bson_iter_t(_element);
     bson_iter_next(&i);
 
     if (!bson_iter_next(&i)) {
-        _element.raw = nullptr;
-        _element.length = 0;
-        _element.offset = 0;
+        _element = element{nullptr, 0, 0};
     } else {
-        _element.raw = i.raw;
-        _element.length = i.len;
-        _element.offset = i.off;
+        _element = element{i.raw, i.len, i.off};
     }
 
     return *this;
@@ -72,7 +75,8 @@ view::iterator view::iterator::operator++(int) {
 }
 
 bool operator==(const view::iterator& lhs, const view::iterator& rhs) {
-    return (lhs._element.raw == rhs._element.raw && lhs._element.offset == rhs._element.offset);
+    return std::forward_as_tuple(lhs._element.raw(), lhs._element.offset()) ==
+           std::forward_as_tuple(rhs._element.raw(), rhs._element.offset());
 }
 
 bool operator!=(const view::iterator& lhs, const view::iterator& rhs) {
@@ -98,20 +102,13 @@ view::const_iterator& view::const_iterator::operator++() {
         return *this;
     }
 
-    bson_iter_t i;
-    i.raw = _element.raw;
-    i.len = _element.length;
-    i.next_off = _element.offset;
+    bson_iter_t i = to_bson_iter_t(_element);
     bson_iter_next(&i);
 
     if (!bson_iter_next(&i)) {
-        _element.raw = nullptr;
-        _element.length = 0;
-        _element.offset = 0;
+        _element = element{nullptr, 0, 0};
     } else {
-        _element.raw = i.raw;
-        _element.length = i.len;
-        _element.offset = i.off;
+        _element = element{i.raw, i.len, i.off};
     }
 
     return *this;
@@ -124,7 +121,8 @@ view::const_iterator view::const_iterator::operator++(int) {
 }
 
 bool operator==(const view::const_iterator& lhs, const view::const_iterator& rhs) {
-    return (lhs._element.raw == rhs._element.raw && lhs._element.offset == rhs._element.offset);
+    return std::forward_as_tuple(lhs._element.raw(), lhs._element.offset()) ==
+           std::forward_as_tuple(rhs._element.raw(), rhs._element.offset());
 }
 
 bool operator!=(const view::const_iterator& lhs, const view::const_iterator& rhs) {

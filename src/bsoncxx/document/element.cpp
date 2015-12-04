@@ -25,11 +25,11 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
 
-#define CITER               \
-    bson_iter_t iter;       \
-    iter.raw = raw;         \
-    iter.len = length;      \
-    iter.next_off = offset; \
+#define CITER                \
+    bson_iter_t iter;        \
+    iter.raw = _raw;         \
+    iter.len = _length;      \
+    iter.next_off = _offset; \
     bson_iter_next(&iter)
 
 #define BSONCXX_TYPE_CHECK(name)                            \
@@ -43,15 +43,36 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
-element::element() : raw(nullptr), length(0), offset(0) {
+element::element() : _raw(nullptr), _length(0), _offset(0) {
 }
 
 element::element(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset)
-    : raw(raw), length(length), offset(offset) {
+    : _raw(raw), _length(length), _offset(offset) {
+}
+
+const std::uint8_t* const element::raw() const {
+    return _raw;
+}
+void element::raw(const std::uint8_t* raw) {
+    _raw = raw;
+}
+
+const std::uint32_t element::length() const {
+    return _length;
+}
+void element::length(std::uint32_t length) {
+    _length = length;
+}
+
+const std::uint32_t element::offset() const {
+    return _offset;
+}
+void element::offset(std::uint32_t offset) {
+    _offset = offset;
 }
 
 bsoncxx::type element::type() const {
-    if (raw == nullptr) {
+    if (_raw == nullptr) {
         throw std::runtime_error("unset element");
     }
 
@@ -60,7 +81,7 @@ bsoncxx::type element::type() const {
 }
 
 stdx::string_view element::key() const {
-    if (raw == nullptr) {
+    if (_raw == nullptr) {
         throw std::runtime_error("unset element");
     }
 
@@ -264,7 +285,7 @@ array::element element::operator[](std::uint32_t i) const {
 }
 
 element::operator bool() const {
-    return raw != nullptr;
+    return _raw != nullptr;
 }
 
 }  // namespace document

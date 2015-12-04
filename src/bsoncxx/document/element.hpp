@@ -57,7 +57,7 @@ class value;
 
 namespace array {
 class element;
-}  //namespace array
+}  // namespace array
 
 namespace document {
 
@@ -68,6 +68,15 @@ class BSONCXX_API element {
     explicit element(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset);
 
     explicit operator bool() const;
+
+    const std::uint8_t* const raw() const;
+    void raw(const std::uint8_t*);
+
+    const std::uint32_t length() const;
+    void length(std::uint32_t);
+
+    const std::uint32_t offset() const;
+    void offset(std::uint32_t);
 
     bsoncxx::type type() const;
 
@@ -125,9 +134,10 @@ class BSONCXX_API element {
     ///
     array::element operator[](std::uint32_t i) const;
 
-    const std::uint8_t* raw;
-    std::uint32_t length;
-    std::uint32_t offset;
+   private:
+    const std::uint8_t* _raw;
+    std::uint32_t _length;
+    std::uint32_t _offset;
 };
 
 }  // namespace document
