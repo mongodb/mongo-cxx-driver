@@ -5,8 +5,7 @@ Please see our [wiki page](https://github.com/mongodb/mongo-cxx-driver/wiki/Down
 
   Version [1.1.0](https://github.com/mongodb/mongo-cxx-driver/releases/tag/legacy-1.1.0) of the
   C++ legacy driver has been released. Please report any bugs or issues in the C++
-  [JIRA project](http://jira.mongodb.org/browse/CXX). Please note that this is a release candidate version
-  of the next minor point release of the legacy C++ driver and is not suitable for production use.
+  [JIRA project](http://jira.mongodb.org/browse/CXX).
 
 Use the legacy branch if:
 
