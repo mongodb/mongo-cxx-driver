@@ -446,7 +446,7 @@ void core::close_array() {
 
 bsoncxx::document::view core::view_document() const {
     if (!_impl->is_viewable()) {
-        throw(std::runtime_error("not viewable"));
+        throw(std::runtime_error("can't convert builder to a valid view: unmatched key"));
     }
 
     return bsoncxx::document::view(bson_get_data(_impl->root()), _impl->root()->len);
@@ -454,7 +454,7 @@ bsoncxx::document::view core::view_document() const {
 
 bsoncxx::document::value core::extract_document() {
     if (!_impl->is_viewable()) {
-        throw(std::runtime_error("not viewable"));
+        throw(std::runtime_error("can't convert builder to a valid view: unmatched key"));
     }
 
     return _impl->steal_document();
@@ -462,7 +462,7 @@ bsoncxx::document::value core::extract_document() {
 
 bsoncxx::array::view core::view_array() const {
     if (!_impl->is_viewable()) {
-        throw(std::runtime_error("not viewable"));
+        throw(std::runtime_error("can't convert builder to a valid view: unmatched key"));
     }
 
     return bsoncxx::array::view(bson_get_data(_impl->root()), _impl->root()->len);
@@ -470,7 +470,7 @@ bsoncxx::array::view core::view_array() const {
 
 bsoncxx::array::value core::extract_array() {
     if (!_impl->is_viewable()) {
-        throw(std::runtime_error("not viewable"));
+        throw(std::runtime_error("can't convert builder to a valid view: unmatched key"));
     }
 
     return _impl->steal_array();
