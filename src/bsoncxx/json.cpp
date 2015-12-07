@@ -274,26 +274,28 @@ std::string to_json(types::value value) {
 
     json_visitor v(ss, false, 0);
 
-    if(value.type()) {
-        switch ((int)*(value.type())) {
-#define BSONCXX_ENUM(name, val)                \
-        case val:                              \
-            v.visit_value(value.get_##name()); \
-            break;
+    if (!value.type()) {
+        // TODO: use bsoncxx error category
+        throw std::runtime_error("invalid value");
+    }
+
+    switch (static_cast<typename std::underlying_type<bsoncxx::type>::type>(*value.type())) {
+#define BSONCXX_ENUM(name, val)            \
+    case val:                              \
+        v.visit_value(value.get_##name()); \
+        break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
-        }
     }
     return ss.str();
 }
 
 stdx::optional<document::value> from_json(stdx::string_view json) {
     bson_error_t error;
-    bson_t* result = bson_new_from_json(
-        reinterpret_cast<const uint8_t*>(json.data()), json.size(), &error);
+    bson_t* result =
+        bson_new_from_json(reinterpret_cast<const uint8_t*>(json.data()), json.size(), &error);
 
-    if (!result)
-        return stdx::nullopt;
+    if (!result) return stdx::nullopt;
 
     std::uint32_t length;
     std::uint8_t* buf = bson_destroy_with_steal(result, true, &length);

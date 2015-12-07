@@ -29,11 +29,11 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace types {
 
 // The default constructor does not initialize the value union.
-value::value() : _type(0) {}
+value::value() : _type(0) {
+}
 
-#define BSONCXX_ENUM(name, val)                                                 \
-    value::value(b_##name value)                                                \
-        : _type(val), _b_##name(std::move(value)) { \
+#define BSONCXX_ENUM(name, val)                                              \
+    value::value(b_##name value) : _type(val), _b_##name(std::move(value)) { \
     }
 
 #include <bsoncxx/enums/type.hpp>
@@ -60,10 +60,12 @@ value& value::operator=(const value& rhs) {
 
 value::value(value&& rhs) noexcept {
     *this = std::move(rhs);
+    rhs._type = 0;  // indicate rhs is in an invalid state
 }
 
 value& value::operator=(value&& rhs) noexcept {
     _type = rhs._type;
+    rhs._type = 0;  // indicate rhs is in an invalid state
 
     switch (_type) {
 #define BSONCXX_ENUM(type, val)               \
@@ -89,11 +91,7 @@ value::~value() {
 }
 
 stdx::optional<bsoncxx::type> value::type() const {
-    if (_type == 0) {
-        return stdx::nullopt;
-    } else {
-        return stdx::optional<bsoncxx::type>(static_cast<bsoncxx::type>(_type));
-    }
+    return _type ? stdx::optional<bsoncxx::type>(static_cast<bsoncxx::type>(_type)) : stdx::nullopt;
 }
 
 #define BSONCXX_ENUM(type, val)                        \
@@ -104,11 +102,11 @@ stdx::optional<bsoncxx::type> value::type() const {
 #undef BSONCXX_ENUM
 
 bool operator==(const value& lhs, const value& rhs) {
-    if(!lhs.type() && !rhs.type()) {
+    if (!lhs.type() && !rhs.type()) {
         return true;
     }
 
-    if(!lhs.type() || !rhs.type()) {
+    if (!lhs.type() || !rhs.type()) {
         return false;
     }
 

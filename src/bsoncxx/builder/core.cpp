@@ -411,7 +411,8 @@ void core::concatenate(const bsoncxx::document::view& view) {
 
 void core::append(const bsoncxx::types::value& value) {
     if (!value.type()) {
-        throw(std::runtime_error("invalid value"));
+        // TODO: use bsoncxx error category
+        throw std::runtime_error("invalid value");
     }
 
     switch (static_cast<int>(*(value.type()))) {
