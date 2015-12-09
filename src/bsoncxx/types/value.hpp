@@ -23,6 +23,7 @@
 #include <type_traits>
 
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -154,8 +155,9 @@ namespace types {
 
         ///
         /// @return The type of the underlying BSON value stored in this object.
+        /// If the type is invalid, a disengaged optional is returned.
         ///
-        bsoncxx::type type() const;
+        stdx::optional<bsoncxx::type> type() const;
 
         ///
         /// @return The underlying BSON double value.
@@ -338,7 +340,7 @@ namespace types {
         const b_maxkey& get_maxkey() const;
 
        private:
-        bsoncxx::type _type;
+        stdx::optional<bsoncxx::type> _type;
         union {
             struct b_double _b_double;
             struct b_utf8 _b_utf8;

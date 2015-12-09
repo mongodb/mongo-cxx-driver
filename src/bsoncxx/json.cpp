@@ -274,7 +274,12 @@ std::string to_json(types::value value) {
 
     json_visitor v(ss, false, 0);
 
-    switch ((int)value.type()) {
+    if (!value.type()) {
+        // TODO: use bsoncxx error category
+        throw std::runtime_error("invalid value");
+    }
+
+    switch (static_cast<typename std::underlying_type<bsoncxx::type>::type>(*(value.type()))) {
 #define BSONCXX_ENUM(name, val)            \
     case val:                              \
         v.visit_value(value.get_##name()); \
