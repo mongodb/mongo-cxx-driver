@@ -1,3 +1,5 @@
+#include <chrono>
+
 #include "catch.hpp"
 #include "helpers.hpp"
 
@@ -15,8 +17,8 @@ TEST_CASE("find", "[find][option]") {
     CHECK_OPTIONAL_ARGUMENT(find_opts, comment, "comment");
     CHECK_OPTIONAL_ARGUMENT(find_opts, cursor_type, cursor_type::k_non_tailable);
     CHECK_OPTIONAL_ARGUMENT(find_opts, limit, 3);
-    CHECK_OPTIONAL_ARGUMENT(find_opts, max_await_time_ms, 300);
-    CHECK_OPTIONAL_ARGUMENT(find_opts, max_time_ms, 300);
+    CHECK_OPTIONAL_ARGUMENT(find_opts, max_await_time, std::chrono::milliseconds{300});
+    CHECK_OPTIONAL_ARGUMENT(find_opts, max_time, std::chrono::milliseconds{300});
     CHECK_OPTIONAL_ARGUMENT(find_opts, no_cursor_timeout, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, oplog_replay, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, skip, 3);

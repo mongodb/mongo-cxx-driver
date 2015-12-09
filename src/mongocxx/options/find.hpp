@@ -16,6 +16,7 @@
 
 #include <mongocxx/config/prelude.hpp>
 
+#include <chrono>
 #include <cstdint>
 
 #include <bsoncxx/document/view.hpp>
@@ -134,12 +135,12 @@ class MONGOCXX_API find {
     ///
     /// @note On servers < 3.2, this option is ignored.
     ///
-    /// @param max_await_time_ms
+    /// @param max_await_time
     ///   The max amount of time (in milliseconds) to wait for new documents.
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    void max_await_time_ms(std::int64_t max_await_time_ms);
+    void max_await_time(std::chrono::milliseconds max_await_time);
 
     ///
     /// The maximum amount of time for the server to wait on new documents to satisfy a tailable
@@ -147,17 +148,17 @@ class MONGOCXX_API find {
     ///
     /// @return The current max await time (in milliseconds).
     ///
-    const stdx::optional<std::int64_t>& max_await_time_ms() const;
+    const stdx::optional<std::chrono::milliseconds>& max_await_time() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
     ///
-    /// @param max_time_ms
+    /// @param max_time
     ///   The max amount of time (in milliseconds).
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    void max_time_ms(std::int64_t max_time_ms);
+    void max_time(std::chrono::milliseconds max_time);
 
     ///
     /// The current max_time_ms setting.
@@ -166,7 +167,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    const stdx::optional<std::int64_t>& max_time_ms() const;
+    const stdx::optional<std::chrono::milliseconds>& max_time() const;
 
     ///
     /// Sets the meta-operators modifying the output or behavior of the query.
@@ -292,8 +293,8 @@ class MONGOCXX_API find {
     stdx::optional<std::string> _comment;
     stdx::optional<enum cursor_type> _cursor_type;
     stdx::optional<std::int32_t> _limit;
-    stdx::optional<std::int64_t> _max_await_time_ms;
-    stdx::optional<std::int64_t> _max_time_ms;
+    stdx::optional<std::chrono::milliseconds> _max_await_time;
+    stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<bsoncxx::document::view> _modifiers;
     stdx::optional<bool> _no_cursor_timeout;
     stdx::optional<bool> _oplog_replay;

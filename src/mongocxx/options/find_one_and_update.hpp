@@ -16,6 +16,7 @@
 
 #include <mongocxx/config/prelude.hpp>
 
+#include <chrono>
 #include <cstdint>
 
 #include <bsoncxx/document/view.hpp>
@@ -56,21 +57,21 @@ class MONGOCXX_API find_one_and_update {
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
     ///
-    /// @param max_time_ms
+    /// @param max_time
     ///   The max amount of time (in milliseconds).
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    void max_time_ms(std::int64_t max_time_ms);
+    void max_time(std::chrono::milliseconds max_time);
 
     ///
-    /// The current max_time_ms setting.
+    /// The current max_time setting.
     ///
     /// @return the current max allowed running time (in milliseconds).
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    const stdx::optional<std::int64_t>& max_time_ms() const;
+    const stdx::optional<std::chrono::milliseconds>& max_time() const;
 
     ///
     /// Sets a projection, which limits the fields to return.
@@ -158,7 +159,7 @@ class MONGOCXX_API find_one_and_update {
 
    private:
     stdx::optional<bool> _bypass_document_validation;
-    stdx::optional<std::int64_t> _max_time_ms;
+    stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<bsoncxx::document::view> _projection;
     stdx::optional<enum return_document> _return_document;
     stdx::optional<bsoncxx::document::view> _ordering;

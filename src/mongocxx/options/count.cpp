@@ -30,8 +30,8 @@ void count::limit(std::int64_t limit) {
     _limit = limit;
 }
 
-void count::max_time_ms(std::int64_t max_time_ms) {
-    _max_time_ms = max_time_ms;
+void count::max_time(std::chrono::milliseconds max_time) {
+    _max_time = std::move(max_time);
 }
 
 void count::skip(std::int64_t skip) {
@@ -50,8 +50,8 @@ const stdx::optional<std::int64_t>& count::limit() const {
     return _limit;
 }
 
-const stdx::optional<std::int64_t>& count::max_time_ms() const {
-    return _max_time_ms;
+const stdx::optional<std::chrono::milliseconds>& count::max_time() const {
+    return _max_time;
 }
 
 const stdx::optional<std::int64_t>& count::skip() const {

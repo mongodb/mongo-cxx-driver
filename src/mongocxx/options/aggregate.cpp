@@ -25,8 +25,8 @@ void aggregate::allow_disk_use(bool allow_disk_use) {
 void aggregate::batch_size(std::int32_t batch_size) {
     _batch_size = batch_size;
 }
-void aggregate::max_time_ms(std::int64_t max_time_ms) {
-    _max_time_ms = max_time_ms;
+void aggregate::max_time(std::chrono::milliseconds max_time) {
+    _max_time = std::move(max_time);
 }
 void aggregate::use_cursor(bool use_cursor) {
     _use_cursor = use_cursor;
@@ -44,9 +44,11 @@ const stdx::optional<bool>& aggregate::allow_disk_use() const {
 const stdx::optional<std::int32_t>& aggregate::batch_size() const {
     return _batch_size;
 }
-const stdx::optional<std::int64_t>& aggregate::max_time_ms() const {
-    return _max_time_ms;
+
+const stdx::optional<std::chrono::milliseconds>& aggregate::max_time() const {
+    return _max_time;
 }
+
 const stdx::optional<bool>& aggregate::use_cursor() const {
     return _use_cursor;
 }

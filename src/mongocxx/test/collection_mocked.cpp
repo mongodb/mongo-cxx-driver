@@ -15,6 +15,7 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
+#include <chrono>
 #include <string>
 
 #define MONGOC_I_AM_A_DRIVER true
@@ -147,7 +148,7 @@ TEST_CASE("Collection", "[collection]") {
                 else
                     REQUIRE(o.find("allowDiskUse") == o.end());
 
-                if (opts.max_time_ms())
+                if (opts.max_time())
                     REQUIRE(o["maxTimeMS"].get_int64().value == expected_max_time_ms);
                 else
                     REQUIRE(o.find("maxTimeMS") == o.end());
@@ -180,7 +181,7 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("With some options") {
             opts.allow_disk_use(expected_allow_disk_use);
-            opts.max_time_ms(expected_max_time_ms);
+            opts.max_time(std::chrono::milliseconds{expected_max_time_ms});
             opts.batch_size(expected_batch_size);
             opts.bypass_document_validation(expected_bypass_document_validation);
             opts.use_cursor(expected_use_cursor);

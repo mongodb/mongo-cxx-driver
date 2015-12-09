@@ -14,6 +14,7 @@
 
 #include <mongocxx/collection.hpp>
 
+#include <chrono>
 #include <cstdint>
 #include <tuple>
 #include <utility>
@@ -185,6 +186,10 @@ cursor collection::find(bsoncxx::document::view filter, const options::find& opt
         filter_builder << "$orderby" << bsoncxx::types::b_document{*options.sort()};
     }
 
+    if (options.max_time()) {
+        filter_builder << "$maxTimeMS" << options.max_time()->count();
+    }
+
     filter_bson.init_from_static(filter_builder.view());
 
     const mongoc_read_prefs_t* rp_ptr = NULL;
@@ -198,8 +203,8 @@ cursor collection::find(bsoncxx::document::view filter, const options::find& opt
         options.limit().value_or(0), options.batch_size().value_or(0), filter_bson.bson(),
         projection.bson(), rp_ptr);
 
-    if (options.max_await_time_ms()) {
-        libmongoc::cursor_set_max_await_time_ms(mongoc_cursor, *options.max_await_time_ms());
+    if (options.max_await_time()) {
+        libmongoc::cursor_set_max_await_time_ms(mongoc_cursor, (*options.max_await_time()).count());
     }
 
     return cursor{mongoc_cursor};
@@ -238,8 +243,8 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
         inner << close_document;
     }
 
-    if (options.max_time_ms()) {
-        b << "maxTimeMS" << *options.max_time_ms();
+    if (options.max_time()) {
+        b << "maxTimeMS" << options.max_time()->count();
     }
 
     if (options.bypass_document_validation()) {
@@ -426,6 +431,8 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
         flags |= ::MONGOC_FIND_AND_MODIFY_RETURN_NEW;
     }
 
+    // TODO: use options.max_time() when available in the C driver
+
     libmongoc::find_and_modify_opts_set_flags(opts,
                                               static_cast<::mongoc_find_and_modify_flags_t>(flags));
 
@@ -465,6 +472,8 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
         flags |= ::MONGOC_FIND_AND_MODIFY_RETURN_NEW;
     }
 
+    // TODO: use options.max_time() when available in the C driver
+
     libmongoc::find_and_modify_opts_set_flags(opts,
                                               static_cast<::mongoc_find_and_modify_flags_t>(flags));
 
@@ -487,6 +496,8 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
         libmongoc::find_and_modify_opts_set_fields(opts, bson_projection.bson());
     }
 
+    // TODO: use options.max_time() when available in the C driver
+
     libmongoc::find_and_modify_opts_set_flags(opts, flags);
 
     return find_and_modify(_impl->collection_t, filter, opts);
@@ -504,6 +515,10 @@ std::int64_t collection::count(bsoncxx::document::view filter, const options::co
 
     // Some options must be added via the options struct
     bsoncxx::builder::stream::document cmd_opts_builder{};
+
+    if (options.max_time()) {
+        cmd_opts_builder << "maxTimeMS" << options.max_time()->count();
+    }
 
     if (options.hint()) {
         cmd_opts_builder << bsoncxx::builder::stream::concatenate{options.hint()->to_document()};
@@ -638,10 +653,14 @@ bsoncxx::document::value collection::create_index(bsoncxx::document::view keys,
 
 cursor collection::distinct(stdx::string_view field_name, bsoncxx::document::view query,
                             const options::distinct& options) {
-    auto command = bsoncxx::builder::stream::document{}
-                   << "distinct" << name() << "key" << field_name << "query"
-                   << bsoncxx::types::b_document{query} << bsoncxx::builder::stream::finalize;
-    scoped_bson_t command_bson{command};
+    bsoncxx::builder::stream::document command{};
+    command << "distinct" << name() << "key" << field_name << "query" << bsoncxx::types::b_document{query};
+
+    if (options.max_time()) {
+        command << "maxTimeMS" << options.max_time()->count();
+    }
+
+    scoped_bson_t command_bson{command.extract()};
 
     auto database =
         libmongoc::client_get_database(_impl->client_impl->client_t, _impl->database_name.data());

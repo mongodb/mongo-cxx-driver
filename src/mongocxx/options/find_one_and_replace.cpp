@@ -24,8 +24,8 @@ void find_one_and_replace::bypass_document_validation(bool bypass_document_valid
     _bypass_document_validation = bypass_document_validation;
 }
 
-void find_one_and_replace::max_time_ms(std::int64_t max_time_ms) {
-    _max_time_ms = max_time_ms;
+void find_one_and_replace::max_time(std::chrono::milliseconds max_time) {
+    _max_time = std::move(max_time);
 }
 
 void find_one_and_replace::projection(bsoncxx::document::view projection) {
@@ -48,8 +48,8 @@ const stdx::optional<bool>& find_one_and_replace::bypass_document_validation() c
     return _bypass_document_validation;
 }
 
-const stdx::optional<std::int64_t>& find_one_and_replace::max_time_ms() const {
-    return _max_time_ms;
+const stdx::optional<std::chrono::milliseconds>& find_one_and_replace::max_time() const {
+    return _max_time;
 }
 
 const stdx::optional<bsoncxx::document::view>& find_one_and_replace::projection() const {

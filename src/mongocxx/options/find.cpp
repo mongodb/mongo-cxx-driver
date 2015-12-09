@@ -42,12 +42,12 @@ void find::limit(std::int32_t limit) {
     _limit = limit;
 }
 
-void find::max_await_time_ms(std::int64_t max_await_time_ms) {
-    _max_await_time_ms = max_await_time_ms;
+void find::max_await_time(std::chrono::milliseconds max_await_time) {
+    _max_await_time = std::move(max_await_time);
 }
 
-void find::max_time_ms(std::int64_t max_time_ms) {
-    _max_time_ms = max_time_ms;
+void find::max_time(std::chrono::milliseconds max_time) {
+    _max_time = std::move(max_time);
 }
 
 void find::modifiers(bsoncxx::document::view modifiers) {
@@ -98,12 +98,12 @@ const stdx::optional<std::int32_t>& find::limit() const {
     return _limit;
 }
 
-const stdx::optional<std::int64_t>& find::max_await_time_ms() const {
-    return _max_await_time_ms;
+const stdx::optional<std::chrono::milliseconds>& find::max_await_time() const {
+    return _max_await_time;
 }
 
-const stdx::optional<std::int64_t>& find::max_time_ms() const {
-    return _max_time_ms;
+const stdx::optional<std::chrono::milliseconds>& find::max_time() const {
+    return _max_time;
 }
 
 const stdx::optional<bsoncxx::document::view>& find::modifiers() const {
