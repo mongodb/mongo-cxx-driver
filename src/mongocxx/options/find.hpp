@@ -100,7 +100,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
     ///
-    void cursor_type(enum cursor_type cursor_type);
+    void cursor_type(enum class cursor_type cursor_type);
 
     ///
     /// Gets the current cursor type.
@@ -109,7 +109,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
     ///
-    const stdx::optional<enum cursor_type>& cursor_type() const;
+    const stdx::optional<enum class cursor_type>& cursor_type() const;
 
     ///
     /// Sets maximum number of documents to return.
@@ -290,7 +290,7 @@ class MONGOCXX_API find {
     stdx::optional<bool> _allow_partial_results;
     stdx::optional<std::int32_t> _batch_size;
     stdx::optional<std::string> _comment;
-    stdx::optional<enum cursor_type> _cursor_type;
+    stdx::optional<enum class cursor_type> _cursor_type;
     stdx::optional<std::int32_t> _limit;
     stdx::optional<std::int64_t> _max_await_time_ms;
     stdx::optional<std::int64_t> _max_time_ms;

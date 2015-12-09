@@ -32,7 +32,7 @@ void find_one_and_update::projection(bsoncxx::document::view projection) {
     _projection = projection;
 }
 
-void find_one_and_update::return_document(enum return_document return_document) {
+void find_one_and_update::return_document(enum class return_document return_document) {
     _return_document = return_document;
 }
 

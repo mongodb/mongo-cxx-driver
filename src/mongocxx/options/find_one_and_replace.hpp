@@ -111,7 +111,7 @@ class MONGOCXX_API find_one_and_replace {
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     /// @see mongocxx::options::return_document
     ///
-    const stdx::optional<enum return_document>& return_document() const;
+    const stdx::optional<enum class return_document>& return_document() const;
 
     ///
     /// Sets the order by which to search the collection for a matching document.
@@ -160,7 +160,7 @@ class MONGOCXX_API find_one_and_replace {
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<std::int64_t> _max_time_ms;
     stdx::optional<bsoncxx::document::view> _projection;
-    stdx::optional<enum return_document> _return_document;
+    stdx::optional<enum class return_document> _return_document;
     stdx::optional<bsoncxx::document::view> _ordering;
     stdx::optional<bool> _upsert;
 };
