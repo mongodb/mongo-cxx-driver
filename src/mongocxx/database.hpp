@@ -143,7 +143,7 @@ class MONGOCXX_API database {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/listCollections/
     ///
-    cursor list_collections(bsoncxx::document::view filter);
+    cursor list_collections(bsoncxx::document::view filter = {});
 
     ///
     /// Get the name of this database.
