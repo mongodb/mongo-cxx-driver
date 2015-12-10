@@ -410,7 +410,7 @@ void core::concatenate(const bsoncxx::document::view& view) {
 }
 
 void core::append(const bsoncxx::types::value& value) {
-    if (!value.type()) {
+    if (!value) {
         // TODO: use bsoncxx error category
         throw std::runtime_error("invalid value");
     }

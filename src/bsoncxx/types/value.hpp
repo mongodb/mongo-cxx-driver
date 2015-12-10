@@ -160,6 +160,11 @@ namespace types {
         stdx::optional<bsoncxx::type> type() const;
 
         ///
+        /// @return Whether the underlying BSON value is engaged.
+        ///
+        BSONCXX_INLINE explicit operator bool() const { return type() ? true : false; }
+
+        ///
         /// @return The underlying BSON double value.
         ///
         /// @warning

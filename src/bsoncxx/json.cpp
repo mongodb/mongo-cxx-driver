@@ -274,7 +274,7 @@ std::string to_json(types::value value) {
 
     json_visitor v(ss, false, 0);
 
-    if (!value.type()) {
+    if (!value) {
         // TODO: use bsoncxx error category
         throw std::runtime_error("invalid value");
     }

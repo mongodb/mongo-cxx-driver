@@ -29,12 +29,12 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace types {
 
 // The default constructor does not initialize the value union.
-value::value() : _type(stdx::nullopt) {
+value::value() : _type{} {
 }
 
 #define BSONCXX_ENUM(name, val)                                                 \
     value::value(b_##name value)                                                \
-        : _type(stdx::optional<bsoncxx::type>(static_cast<bsoncxx::type>(val))), _b_##name(std::move(value)) { \
+        : _type(static_cast<bsoncxx::type>(val)), _b_##name(std::move(value)) { \
     }
 
 #include <bsoncxx/enums/type.hpp>
@@ -45,7 +45,11 @@ value::value(const value& rhs) {
 }
 
 value& value::operator=(const value& rhs) {
-    if(_type && !rhs._type) {
+    if (this == &rhs) {
+        return *this;
+    }
+
+    if (_type) {
             switch (static_cast<typename std::underlying_type<bsoncxx::type>::type>(*_type)) {
 #define BSONCXX_ENUM(type, val)     \
         case val:                   \
@@ -58,7 +62,7 @@ value& value::operator=(const value& rhs) {
 
     _type = rhs._type;
  
-    if(_type) {
+    if (_type) {
         switch (static_cast<typename std::underlying_type<bsoncxx::type>::type>(*_type)) {
 #define BSONCXX_ENUM(type, val)           \
         case val:                         \
@@ -78,7 +82,12 @@ value::value(value&& rhs) noexcept {
 }
 
 value& value::operator=(value&& rhs) noexcept {
-    if(_type && !rhs._type) {
+    if (this == &rhs) {
+        // TODO: use bsoncxx error category
+        throw std::runtime_error("self move assign");
+    }
+
+    if (_type) {
             switch (static_cast<typename std::underlying_type<bsoncxx::type>::type>(*_type)) {
 #define BSONCXX_ENUM(type, val)     \
         case val:                   \
@@ -92,7 +101,7 @@ value& value::operator=(value&& rhs) noexcept {
     _type = rhs._type;
     rhs._type = stdx::nullopt;
 
-    if(_type) {
+    if (_type) {
         switch (static_cast<typename std::underlying_type<bsoncxx::type>::type>(*_type)) {
 #define BSONCXX_ENUM(type, val)                   \
         case val:                                 \
@@ -107,7 +116,7 @@ value& value::operator=(value&& rhs) noexcept {
 }
 
 value::~value() {
-    if(_type) {
+    if (_type) {
             switch (static_cast<typename std::underlying_type<bsoncxx::type>::type>(*_type)) {
 #define BSONCXX_ENUM(type, val)     \
         case val:                   \
@@ -131,11 +140,11 @@ stdx::optional<bsoncxx::type> value::type() const {
 #undef BSONCXX_ENUM
 
 bool operator==(const value& lhs, const value& rhs) {
-    if(!lhs.type() && !rhs.type()) {
+    if (!lhs && !rhs) {
         return true;
     }
 
-    if(!lhs.type() || !rhs.type()) {
+    if (!lhs || !rhs) {
         return false;
     }
 
