@@ -22,14 +22,18 @@
 #include <bsoncxx/config/prelude.hpp>
 
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace types {
 
-#define BSONCXX_ENUM(name, val)                                                 \
-    value::value(b_##name value)                                                \
-        : _type(static_cast<bsoncxx::type>(val)), _b_##name(std::move(value)) { \
+// The default constructor does not initialize the value union.
+value::value() : _type(0) {
+}
+
+#define BSONCXX_ENUM(name, val)                                              \
+    value::value(b_##name value) : _type(val), _b_##name(std::move(value)) { \
     }
 
 #include <bsoncxx/enums/type.hpp>
@@ -42,7 +46,7 @@ value::value(const value& rhs) {
 value& value::operator=(const value& rhs) {
     _type = rhs._type;
 
-    switch (static_cast<int>(_type)) {
+    switch (_type) {
 #define BSONCXX_ENUM(type, val)       \
     case val:                         \
         _b_##type = rhs.get_##type(); \
@@ -56,12 +60,14 @@ value& value::operator=(const value& rhs) {
 
 value::value(value&& rhs) noexcept {
     *this = std::move(rhs);
+    rhs._type = 0;  // indicate rhs is in an invalid state
 }
 
 value& value::operator=(value&& rhs) noexcept {
     _type = rhs._type;
+    rhs._type = 0;  // indicate rhs is in an invalid state
 
-    switch (static_cast<int>(_type)) {
+    switch (_type) {
 #define BSONCXX_ENUM(type, val)               \
     case val:                                 \
         _b_##type = std::move(rhs._b_##type); \
@@ -74,7 +80,7 @@ value& value::operator=(value&& rhs) noexcept {
 }
 
 value::~value() {
-    switch (static_cast<int>(_type)) {
+    switch (_type) {
 #define BSONCXX_ENUM(type, val) \
     case val:                   \
         _b_##type.~b_##type();  \
@@ -84,8 +90,8 @@ value::~value() {
     }
 }
 
-bsoncxx::type value::type() const {
-    return _type;
+stdx::optional<bsoncxx::type> value::type() const {
+    return _type ? stdx::optional<bsoncxx::type>(static_cast<bsoncxx::type>(_type)) : stdx::nullopt;
 }
 
 #define BSONCXX_ENUM(type, val)                        \
@@ -96,11 +102,19 @@ bsoncxx::type value::type() const {
 #undef BSONCXX_ENUM
 
 bool operator==(const value& lhs, const value& rhs) {
-    if (lhs.type() != rhs.type()) {
+    if (!lhs.type() && !rhs.type()) {
+        return true;
+    }
+
+    if (!lhs.type() || !rhs.type()) {
         return false;
     }
 
-    switch (static_cast<int>(lhs.type())) {
+    if (*(lhs.type()) != *(rhs.type())) {
+        return false;
+    }
+
+    switch (static_cast<int>(*(lhs.type()))) {
 #define BSONCXX_ENUM(type, val) \
     case val:                   \
         return lhs.get_##type() == rhs.get_##type();

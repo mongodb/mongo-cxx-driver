@@ -410,7 +410,12 @@ void core::concatenate(const bsoncxx::document::view& view) {
 }
 
 void core::append(const bsoncxx::types::value& value) {
-    switch (static_cast<int>(value.type())) {
+    if (!value.type()) {
+        // TODO: use bsoncxx error category
+        throw std::runtime_error("invalid value");
+    }
+
+    switch (static_cast<int>(*(value.type()))) {
 #define BSONCXX_ENUM(type, val)     \
     case val:                       \
         append(value.get_##type()); \
