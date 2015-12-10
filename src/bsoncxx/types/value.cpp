@@ -27,61 +27,52 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace types {
 
-#define BSONCXX_ENUM(name, val)                                                 \
-    value::value(b_##name value)                                                \
-        : _type(static_cast<bsoncxx::type>(val)), _b_##name(std::move(value)) { \
+#define BSONCXX_ENUM(name, val)                                                                \
+    value::value(b_##name value) noexcept : _type(static_cast<bsoncxx::type>(val)),            \
+                                            _b_##name(std::move(value)) {                      \
+        static_assert(std::is_nothrow_copy_constructible<b_##name>::value, "Copy may throw");  \
+        static_assert(std::is_nothrow_copy_assignable<b_##name>::value, "Copy may throw");     \
+        static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw"); \
     }
 
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
-value::value(const value& rhs) {
-    *this = rhs;
-}
-
-value& value::operator=(const value& rhs) {
-    _type = rhs._type;
-
-    switch (static_cast<int>(_type)) {
-#define BSONCXX_ENUM(type, val)       \
-    case val:                         \
-        _b_##type = rhs.get_##type(); \
+value::value(const value& rhs) noexcept {
+    switch (static_cast<int>(rhs._type)) {
+#define BSONCXX_ENUM(type, val)                      \
+    case val:                                        \
+        new (&_b_##type) b_##type(rhs.get_##type()); \
         break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
     }
 
-    return *this;
-}
-
-value::value(value&& rhs) noexcept {
-    *this = std::move(rhs);
-}
-
-value& value::operator=(value&& rhs) noexcept {
     _type = rhs._type;
+}
 
-    switch (static_cast<int>(_type)) {
-#define BSONCXX_ENUM(type, val)               \
-    case val:                                 \
-        _b_##type = std::move(rhs._b_##type); \
+value& value::operator=(const value& rhs) noexcept {
+    if (this == &rhs) {
+        return *this;
+    }
+
+    destroy();
+
+    switch (static_cast<int>(rhs._type)) {
+#define BSONCXX_ENUM(type, val)                      \
+    case val:                                        \
+        new (&_b_##type) b_##type(rhs.get_##type()); \
         break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
     }
 
+    _type = rhs._type;
     return *this;
 }
 
 value::~value() {
-    switch (static_cast<int>(_type)) {
-#define BSONCXX_ENUM(type, val) \
-    case val:                   \
-        _b_##type.~b_##type();  \
-        break;
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
-    }
+    destroy();
 }
 
 bsoncxx::type value::type() const {
@@ -107,12 +98,21 @@ bool operator==(const value& lhs, const value& rhs) {
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
     }
-
-    BSONCXX_UNREACHABLE;
 }
 
 bool operator!=(const value& lhs, const value& rhs) {
     return !(lhs == rhs);
+}
+
+void value::destroy() noexcept {
+    switch (static_cast<int>(_type)) {
+#define BSONCXX_ENUM(type, val) \
+    case val:                   \
+        _b_##type.~b_##type();  \
+        break;
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
+    }
 }
 
 }  // namespace types
