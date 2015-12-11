@@ -660,7 +660,8 @@ cursor collection::distinct(stdx::string_view field_name, bsoncxx::document::vie
         command << "maxTimeMS" << options.max_time()->count();
     }
 
-    scoped_bson_t command_bson{command.extract()};
+    bsoncxx::document::value final_command = command.extract();
+    scoped_bson_t command_bson{final_command};
 
     auto database =
         libmongoc::client_get_database(_impl->client_impl->client_t, _impl->database_name.data());
