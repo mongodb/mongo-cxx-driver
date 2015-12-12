@@ -14,6 +14,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <tuple>
 
 #include <bson.h>
 

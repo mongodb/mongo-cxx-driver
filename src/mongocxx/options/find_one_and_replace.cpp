@@ -32,7 +32,7 @@ void find_one_and_replace::projection(bsoncxx::document::view projection) {
     _projection = projection;
 }
 
-void find_one_and_replace::return_document(enum return_document return_document) {
+void find_one_and_replace::return_document(enum class return_document return_document) {
     _return_document = return_document;
 }
 
@@ -56,7 +56,7 @@ const stdx::optional<bsoncxx::document::view>& find_one_and_replace::projection(
     return _projection;
 }
 
-const stdx::optional<enum return_document>& find_one_and_replace::return_document() const {
+const stdx::optional<enum class return_document>& find_one_and_replace::return_document() const {
     return _return_document;
 }
 

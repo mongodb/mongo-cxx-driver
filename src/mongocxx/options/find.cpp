@@ -34,7 +34,7 @@ void find::comment(std::string comment) {
     _comment = comment;
 }
 
-void find::cursor_type(enum find::cursor_type cursor_type) {
+void find::cursor_type(enum class find::cursor_type cursor_type) {
     _cursor_type = cursor_type;
 }
 
@@ -90,7 +90,7 @@ const stdx::optional<std::string>& find::comment() const {
     return _comment;
 }
 
-const stdx::optional<enum find::cursor_type>& find::cursor_type() const {
+const stdx::optional<enum class find::cursor_type>& find::cursor_type() const {
     return _cursor_type;
 }
 

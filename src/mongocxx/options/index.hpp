@@ -19,6 +19,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
+#include <memory>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
