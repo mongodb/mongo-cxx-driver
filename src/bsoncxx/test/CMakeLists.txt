@@ -10,6 +10,7 @@ add_executable(test_bson
     bson_validate.cpp
     json.cpp
     new_tests.cpp
+    view_or_value.cpp
 )
 
 target_link_libraries(test_bson bsoncxx_static)
