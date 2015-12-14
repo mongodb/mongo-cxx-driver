@@ -15,8 +15,8 @@ This driver contains a completely new API and implementation. A complete rewrite
 ## Repository Overview
 | Branch   | Stability   | Development       | Purpose                                                      |
 | -------- | ------------| ----------------- | ------------------------------------------------------------ |
-| master   | Alpha       | Planning          | New C++11 driver (work in progress)                          |
-| legacy   | Stable      | Stable Evolution  | Primary stable C++ driver release                            |
+| master   | Alpha       | Active            | New C++11 driver (work in progress)                          |
+| legacy   | Stable      | Stable Evolution  | Stable C++ driver release                                    |
 | 26compat | Stable      | Maintenance Only  | Drop in replacement for users of existing 2.6 era C++ driver |
 
 ## Bugs and Issues
