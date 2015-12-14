@@ -36,7 +36,7 @@ void insert_many_builder::operator()(const bsoncxx::document::view& doc) {
     if (!doc["_id"]) {
         bsoncxx::builder::stream::document new_document;
         new_document << "_id" << bsoncxx::oid(bsoncxx::oid::init_tag)
-                     << bsoncxx::builder::stream::concatenate{doc};
+                     << bsoncxx::builder::stream::concatenate(doc);
 
         _writes.append(model::insert_one{new_document.view()});
         _inserted_ids.emplace(_index++, new_document.view()["_id"]);

@@ -16,7 +16,7 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/stdx.hpp>
@@ -29,9 +29,7 @@ namespace model {
 /// Class representing a MongoDB update operation that modifies multiple documents.
 ///
 class MONGOCXX_API update_many {
-
    public:
-
     ///
     /// Constructs an update operation that will modify all documents matching the filter.
     ///
@@ -40,26 +38,26 @@ class MONGOCXX_API update_many {
     /// @param update
     ///   Document representing the modifications to be applied to matching documents.
     ///
-    update_many(bsoncxx::document::view filter, bsoncxx::document::view update);
+    update_many(bsoncxx::document::view_or_value filter, bsoncxx::document::view_or_value update);
 
     ///
     /// Gets the filter.
     ///
     /// @return The filter to be used for the update operation.
     ///
-    const bsoncxx::document::view& filter() const;
+    const bsoncxx::document::view_or_value& filter() const;
 
     ///
     /// Gets the update document.
     ///
     /// @return The modifications to be applied as part of the update.
     ///
-    const bsoncxx::document::view& update() const;
+    const bsoncxx::document::view_or_value& update() const;
 
     ///
     /// Sets the upsert option.
     ///
-    /// When upsert is @c false, the update operation does nothing when no documents match the filter.
+    /// When upsert is @c false, update does nothing when no documents match the filter.
     /// However, by specifying upsert as @c true, this operation either updates matching documents
     /// or inserts a new document using the update specification if no matching document exists.
     /// By default, upsert is unset by the driver, and the server-side default, @c false, is used.
@@ -80,8 +78,8 @@ class MONGOCXX_API update_many {
 
    private:
     // Required
-    bsoncxx::document::view _filter;
-    bsoncxx::document::view _update;
+    bsoncxx::document::view_or_value _filter;
+    bsoncxx::document::view_or_value _update;
 
     // Optional
     stdx::optional<bool> _upsert;

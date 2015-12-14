@@ -39,7 +39,7 @@ void create_collection::max(int max_documents) {
     _max_documents = max_documents;
 }
 
-void create_collection::storage_engine(bsoncxx::document::value storage_engine_opts) {
+void create_collection::storage_engine(bsoncxx::document::view_or_value storage_engine_opts) {
     _storage_engine_opts = std::move(storage_engine_opts);
 }
 
@@ -68,7 +68,7 @@ bsoncxx::document::value create_collection::to_document() const {
 
     if (_storage_engine_opts) {
         doc << "storageEngine" << bsoncxx::builder::stream::open_document
-            << bsoncxx::builder::stream::concatenate{*_storage_engine_opts}
+            << bsoncxx::builder::stream::concatenate(*_storage_engine_opts)
             << bsoncxx::builder::stream::close_document;
     }
 

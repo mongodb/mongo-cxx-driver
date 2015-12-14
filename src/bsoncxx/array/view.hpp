@@ -33,7 +33,6 @@ namespace array {
 /// A read-only, non-owning view of a BSON document.
 ///
 class BSONCXX_API view {
-
    public:
     class iterator;
     class const_iterator;
@@ -151,8 +150,8 @@ class view::iterator : public std::iterator<std::forward_iterator_tag, element> 
     element _element;
 };
 
-class view::const_iterator : public std::iterator<std::forward_iterator_tag, element, std::ptrdiff_t,
-                                                  const element*, const element&> {
+class view::const_iterator : public std::iterator<std::forward_iterator_tag, element,
+                                                  std::ptrdiff_t, const element*, const element&> {
    public:
     const_iterator();
     explicit const_iterator(const element& element);

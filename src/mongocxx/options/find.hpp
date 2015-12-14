@@ -19,7 +19,7 @@
 #include <chrono>
 #include <cstdint>
 
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/read_preference.hpp>
 
@@ -177,14 +177,14 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/query-modifier/
     ///
-    void modifiers(bsoncxx::document::view modifiers);
+    void modifiers(bsoncxx::document::view_or_value modifiers);
 
     ///
     /// Gets the current query modifiers.
     ///
     /// @return The current query modifiers.
     ///
-    const stdx::optional<bsoncxx::document::view>& modifiers() const;
+    const stdx::optional<bsoncxx::document::view_or_value>& modifiers() const;
 
     ///
     /// Sets the cursor flag to prevent cursor from timing out server-side due to a period of
@@ -217,7 +217,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
-    void projection(bsoncxx::document::view projection);
+    void projection(bsoncxx::document::view_or_value projection);
 
     ///
     /// Gets the current projection set on this query.
@@ -226,7 +226,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
-    const stdx::optional<bsoncxx::document::view>& projection() const;
+    const stdx::optional<bsoncxx::document::view_or_value>& projection() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -276,7 +276,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/cursor.sort/
     ///
-    void sort(bsoncxx::document::view ordering);
+    void sort(bsoncxx::document::view_or_value ordering);
 
     ///
     /// Gets the current sort ordering for this query.
@@ -285,7 +285,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/cursor.sort/
     ///
-    const stdx::optional<bsoncxx::document::view>& sort() const;
+    const stdx::optional<bsoncxx::document::view_or_value>& sort() const;
 
    private:
     stdx::optional<bool> _allow_partial_results;
@@ -295,13 +295,13 @@ class MONGOCXX_API find {
     stdx::optional<std::int32_t> _limit;
     stdx::optional<std::chrono::milliseconds> _max_await_time;
     stdx::optional<std::chrono::milliseconds> _max_time;
-    stdx::optional<bsoncxx::document::view> _modifiers;
+    stdx::optional<bsoncxx::document::view_or_value> _modifiers;
     stdx::optional<bool> _no_cursor_timeout;
     stdx::optional<bool> _oplog_replay;
-    stdx::optional<bsoncxx::document::view> _projection;
+    stdx::optional<bsoncxx::document::view_or_value> _projection;
     stdx::optional<class read_preference> _read_preference;
     stdx::optional<std::int32_t> _skip;
-    stdx::optional<bsoncxx::document::view> _ordering;
+    stdx::optional<bsoncxx::document::view_or_value> _ordering;
 };
 
 }  // namespace options

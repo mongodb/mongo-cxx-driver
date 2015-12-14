@@ -17,6 +17,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 #include <bsoncxx/builder/basic/helpers.hpp>
+#include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
@@ -35,7 +36,6 @@ void value_append(core* core, T&& t);
 /// Users should almost always construct a builder::basic::document instead.
 ///
 class BSONCXX_API sub_document {
-
    public:
     BSONCXX_INLINE sub_document(core* core) : _core(core) {
     }
@@ -44,22 +44,22 @@ class BSONCXX_API sub_document {
     /// Appends multiple basic::kvp key-value pairs.
     ///
     template <typename Arg, typename... Args>
-    BSONCXX_INLINE
-    void append(Arg&& a, Args&&... args) {
+    BSONCXX_INLINE void append(Arg&& a, Args&&... args) {
         append_(std::forward<Arg>(a));
         append(std::forward<Args>(args)...);
     }
 
     BSONCXX_INLINE
-    void append() {}
+    void append() {
+    }
 
    private:
     ///
     /// Appends a basic::kvp where the key is a non-owning string view.
     ///
     template <typename K, typename V>
-    BSONCXX_INLINE
-    typename std::enable_if<std::is_same<typename std::decay<K>::type, stdx::string_view>::value>::type
+    BSONCXX_INLINE typename std::enable_if<
+        std::is_same<typename std::decay<K>::type, stdx::string_view>::value>::type
     append_(std::tuple<K, V>&& t) {
         _core->key_view(std::forward<K>(std::get<0>(t)));
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));
@@ -69,8 +69,8 @@ class BSONCXX_API sub_document {
     /// Appends a basic::kvp where the key is an owning STL string.
     ///
     template <typename K, typename V>
-    BSONCXX_INLINE
-    typename std::enable_if<std::is_same<typename std::decay<K>::type, std::string>::value>::type
+    BSONCXX_INLINE typename std::enable_if<
+        std::is_same<typename std::decay<K>::type, std::string>::value>::type
     append_(std::tuple<K, V>&& t) {
         _core->key_owned(std::forward<K>(std::get<0>(t)));
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));
@@ -80,8 +80,7 @@ class BSONCXX_API sub_document {
     /// Appends a basic::kvp where the key is a string literal
     ///
     template <std::size_t n, typename V>
-    BSONCXX_INLINE
-    void append_(std::tuple<const char (&)[n], V>&& t) {
+    BSONCXX_INLINE void append_(std::tuple<const char(&)[n], V>&& t) {
         _core->key_view(stdx::string_view{std::get<0>(t), n - 1});
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));
     }
@@ -90,8 +89,8 @@ class BSONCXX_API sub_document {
     /// Concatenates another bson document directly.
     ///
     BSONCXX_INLINE
-    void append_(concatenate concatenate) {
-        _core->concatenate(concatenate);
+    void append_(concatenate_doc doc) {
+        _core->concatenate(doc);
     }
 
     core* _core;

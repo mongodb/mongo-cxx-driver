@@ -15,8 +15,8 @@
 void bson_eq_stream(const bson_t* bson, const bsoncxx::builder::stream::document& builder) {
     using namespace bsoncxx;
 
-    document::view expected(bson_get_data(bson), bson->len);
-    document::view test(builder.view());
+    bsoncxx::document::view expected(bson_get_data(bson), bson->len);
+    bsoncxx::document::view test(builder.view());
 
     INFO("expected = " << to_json(expected));
     INFO("builder = " << to_json(test));
@@ -28,8 +28,8 @@ template <typename T, typename U>
 void viewable_eq_viewable(const T& stream, const U& basic) {
     using namespace bsoncxx;
 
-    document::view expected(stream.view());
-    document::view test(basic.view());
+    bsoncxx::document::view expected(stream.view());
+    bsoncxx::document::view test(basic.view());
 
     INFO("expected = " << to_json(expected));
     INFO("basic = " << to_json(test));
@@ -512,7 +512,7 @@ TEST_CASE("builder appends concatenate", "[bsoncxx::builder::stream]") {
 
         {
             using namespace builder::stream;
-            b << "foo" << open_document << concatenate{child_builder.view()} << close_document;
+            b << "foo" << open_document << concatenate(child_builder.view()) << close_document;
         }
 
         bson_eq_stream(&expected, b);
@@ -520,17 +520,18 @@ TEST_CASE("builder appends concatenate", "[bsoncxx::builder::stream]") {
 
     SECTION("array context works") {
         bson_append_utf8(&child, "0", -1, "bar", -1);
-        bson_append_utf8(&child, "1", -1, "baz", -1);
+        bson_append_utf8(&child, "1", -1, "0", -1);
+        bson_append_utf8(&child, "2", -1, "baz", -1);
         bson_append_array(&expected, "foo", -1, &child);
 
-        builder::stream::document child_builder;
+        builder::stream::array child_builder;
 
         child_builder << "0"
                       << "baz";
 
         {
             using namespace builder::stream;
-            b << "foo" << open_array << "bar" << concatenate{child_builder.view()} << close_array;
+            b << "foo" << open_array << "bar" << concatenate(child_builder.view()) << close_array;
         }
 
         bson_eq_stream(&expected, b);
@@ -771,23 +772,25 @@ TEST_CASE("basic array builder works", "[bsoncxx::builder::basic]") {
 TEST_CASE("basic document builder works with concat", "[bsoncxx::builder::basic]") {
     using namespace builder::basic;
 
-    auto subdoc = builder::stream::document{} << "hello" << "world" << builder::stream::finalize;
+    auto subdoc = builder::stream::document{} << "hello"
+                                              << "world" << builder::stream::finalize;
 
     builder::stream::document stream;
     builder::basic::document basic;
 
-    stream << builder::stream::concatenate{subdoc};
+    stream << builder::stream::concatenate(subdoc.view());
 
     SECTION("single insert works") {
-        basic.append(builder::basic::concatenate{subdoc});
+        basic.append(builder::basic::concatenate(subdoc.view()));
 
         viewable_eq_viewable(stream, basic);
     }
 
     SECTION("variadic works") {
-        stream << builder::stream::concatenate{subdoc};
+        stream << builder::stream::concatenate(subdoc.view());
 
-        basic.append(builder::basic::concatenate{subdoc}, builder::basic::concatenate{subdoc});
+        basic.append(builder::basic::concatenate(subdoc.view()),
+                     builder::basic::concatenate(subdoc.view()));
 
         viewable_eq_viewable(stream, basic);
     }
@@ -796,23 +799,25 @@ TEST_CASE("basic document builder works with concat", "[bsoncxx::builder::basic]
 TEST_CASE("basic array builder works with concat", "[bsoncxx::builder::basic]") {
     using namespace builder::basic;
 
-    auto subdoc = builder::stream::array{} << 1 << 2 << builder::stream::finalize;
+    auto array_builder = builder::stream::array{} << 1 << 2 << builder::stream::finalize;
+    auto array_view = array_builder.view();
 
     builder::stream::array stream;
     builder::basic::array basic;
 
-    stream << builder::stream::concatenate{subdoc.view()};
+    stream << builder::stream::concatenate(array_view);
 
     SECTION("single insert works") {
-        basic.append(builder::basic::concatenate{subdoc.view()});
+        basic.append(builder::basic::concatenate(array_view));
 
         viewable_eq_viewable(stream, basic);
     }
 
     SECTION("variadic works") {
-        stream << builder::stream::concatenate{subdoc.view()};
+        stream << builder::stream::concatenate(array_view);
 
-        basic.append(builder::basic::concatenate{subdoc.view()}, builder::basic::concatenate{subdoc.view()});
+        basic.append(builder::basic::concatenate(array_view),
+                     builder::basic::concatenate(array_view));
 
         viewable_eq_viewable(stream, basic);
     }

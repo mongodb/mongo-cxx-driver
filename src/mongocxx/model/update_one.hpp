@@ -16,7 +16,7 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/stdx.hpp>
@@ -29,9 +29,7 @@ namespace model {
 /// Class representing a MongoDB update operation that modifies a single document.
 ///
 class MONGOCXX_API update_one {
-
    public:
-
     ///
     /// Constructs an update operation that will modify a single document matching the filter.
     ///
@@ -40,26 +38,26 @@ class MONGOCXX_API update_one {
     /// @param update
     ///   Document representing the modifications to be applied to the matching document.
     ///
-    update_one(bsoncxx::document::view filter, bsoncxx::document::view update);
+    update_one(bsoncxx::document::view_or_value filter, bsoncxx::document::view_or_value update);
 
     ///
     /// Gets the filter
     ///
     /// @return The filter to be used for the update operation.
     ///
-    const bsoncxx::document::view& filter() const;
+    const bsoncxx::document::view_or_value& filter() const;
 
     ///
     /// Gets the update document.
     ///
     /// @return The modifications to be applied as part of the update.
     ///
-    const bsoncxx::document::view& update() const;
+    const bsoncxx::document::view_or_value& update() const;
 
     ///
     /// Sets the upsert option.
     ///
-    /// When upsert is @c false, if no document matches the filter, the update operation does nothing.
+    /// When upsert is @c false, if no document matches the filter, update does nothing.
     /// However, by specifying upsert as @c true, this operation either updates a matching document
     /// or inserts a new document using the update specification if no matching document exists.
     /// By default upsert is @c false.
@@ -80,8 +78,8 @@ class MONGOCXX_API update_one {
 
    private:
     // Required
-    bsoncxx::document::view _filter;
-    bsoncxx::document::view _update;
+    bsoncxx::document::view_or_value _filter;
+    bsoncxx::document::view_or_value _update;
 
     // Optional
     stdx::optional<bool> _upsert;

@@ -23,6 +23,7 @@ set(mongocxx_test_sources
     options/find_one_and_replace.cpp
     options/find_one_and_update.cpp
     pool.cpp
+    private/scoped_bson_t.cpp
     private/write_concern.cpp
     read_concern.cpp
     read_preference.cpp

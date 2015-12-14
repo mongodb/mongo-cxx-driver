@@ -1,3 +1,17 @@
+// Copyright 2015 MongoDB Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #include <bsoncxx/builder/stream/document.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
@@ -6,7 +20,6 @@
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 
-using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::open_document;
 using bsoncxx::builder::stream::close_document;
 using bsoncxx::builder::stream::close_array;
@@ -26,9 +39,9 @@ int main(int, char**) {
     // Create a single field index.
     {
         // @begin: cpp-single-field-index
-        document index_spec;
-        index_spec << "cuisine" << 1;
-        db["restaurants"].create_index(index_spec, {});
+        bsoncxx::builder::stream::document index_builder;
+        index_builder << "cuisine" << 1;
+        db["restaurants"].create_index(index_builder.view(), {});
         // @end: cpp-single-field-index
     }
 
@@ -36,9 +49,9 @@ int main(int, char**) {
     {
         db["restaurants"].drop();
         // @begin: cpp-create-compound-index
-        document index_spec;
-        index_spec << "cuisine" << 1 << "address.zipcode" << -1;
-        db["restaurants"].create_index(index_spec, {});
+        bsoncxx::builder::stream::document index_builder;
+        index_builder << "cuisine" << 1 << "address.zipcode" << -1;
+        db["restaurants"].create_index(index_builder.view(), {});
         // @end: cpp-create-compound-index
     }
 
@@ -46,11 +59,11 @@ int main(int, char**) {
     {
         db["restaurants"].drop();
         // @begin: cpp-create-unique-index
-        document index_spec;
+        bsoncxx::builder::stream::document index_builder;
         mongocxx::options::index index_options{};
-        index_spec << "website" << 1;
+        index_builder << "website" << 1;
         index_options.unique(true);
-        db["restaurants"].create_index(index_spec, index_options);
+        db["restaurants"].create_index(index_builder.view(), index_options);
         // @end: cpp-create-unique-index
     }
 
@@ -58,14 +71,14 @@ int main(int, char**) {
     {
         db["restaurants"].drop();
         // @begin: cpp-create-wt-options-index
-        document index_spec;
+        bsoncxx::builder::stream::document index_builder;
         mongocxx::options::index index_options{};
         std::unique_ptr<mongocxx::options::index::wiredtiger_storage_options> wt_options =
             mongocxx::stdx::make_unique<mongocxx::options::index::wiredtiger_storage_options>();
-        index_spec << "cuisine" << 1;
+        index_builder << "cuisine" << 1;
         wt_options->config_string("block_allocation=first");
         index_options.storage_options(std::move(wt_options));
-        db["restaurants"].create_index(index_spec, index_options);
+        db["restaurants"].create_index(index_builder.view(), index_options);
         // @begin: cpp-create-wt-options-index
     }
 }

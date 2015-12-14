@@ -20,10 +20,10 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
-delete_many::delete_many(bsoncxx::document::view filter) : _filter(std::move(filter)) {
+delete_many::delete_many(bsoncxx::document::view_or_value filter) : _filter(std::move(filter)) {
 }
 
-const bsoncxx::document::view& delete_many::filter() const {
+const bsoncxx::document::view_or_value& delete_many::filter() const {
     return _filter;
 }
 

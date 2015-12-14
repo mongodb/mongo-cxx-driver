@@ -33,11 +33,11 @@ namespace stream {
 template <class base = closed_context>
 class key_context {
    public:
-    key_context(core* core) : _core(core) {}
+    key_context(core* core) : _core(core) {
+    }
 
     template <std::size_t n>
-    BSONCXX_INLINE
-    value_context<key_context> operator<<(const char (&v)[n]) {
+    BSONCXX_INLINE value_context<key_context> operator<<(const char(&v)[n]) {
         _core->key_view(stdx::string_view{v, n - 1});
         return value_context<key_context>(_core);
     }
@@ -54,23 +54,23 @@ class key_context {
 
     template <typename T>
     BSONCXX_INLINE
-    typename std::enable_if<util::is_functor<T, void(key_context<>)>::value, key_context>::type& operator<<(
-        T&& func) {
+        typename std::enable_if<util::is_functor<T, void(key_context<>)>::value, key_context>::type&
+        operator<<(T&& func) {
         func(*this);
         return *this;
     }
 
     template <typename T>
-    BSONCXX_INLINE
-    typename std::enable_if<std::is_same<base, closed_context>::value &&
-                            std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value,
-                            document::value>::type
+    BSONCXX_INLINE typename std::enable_if<
+        std::is_same<base, closed_context>::value &&
+            std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value,
+        document::value>::type
     operator<<(T&&) {
         return _core->extract_document();
     }
 
-    BSONCXX_INLINE key_context operator<<(concatenate concatenate) {
-        _core->concatenate(concatenate);
+    BSONCXX_INLINE key_context operator<<(concatenate_doc doc) {
+        _core->concatenate(doc);
         return *this;
     }
 
@@ -79,10 +79,14 @@ class key_context {
         return unwrap();
     }
 
-    BSONCXX_INLINE operator key_context<>() { return key_context<>(_core); }
+    BSONCXX_INLINE operator key_context<>() {
+        return key_context<>(_core);
+    }
 
    private:
-    BSONCXX_INLINE base unwrap() { return base(_core); }
+    BSONCXX_INLINE base unwrap() {
+        return base(_core);
+    }
 
     core* _core;
 };

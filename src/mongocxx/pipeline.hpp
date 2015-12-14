@@ -21,6 +21,7 @@
 #include <memory>
 
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -31,9 +32,7 @@ class collection;
 /// Class representing a MongoDB aggregation pipeline.
 ///
 class MONGOCXX_API pipeline {
-
    public:
-
     ///
     /// Creates a new aggregation pipeline.
     ///
@@ -69,7 +68,7 @@ class MONGOCXX_API pipeline {
     ///
     /// @param group the group expression, as a document.
     ///
-    pipeline& group(bsoncxx::document::view group);
+    pipeline& group(bsoncxx::document::view_or_value group);
 
     ///
     /// Limits the number of documents passed to the next stage in the pipeline.
@@ -88,7 +87,7 @@ class MONGOCXX_API pipeline {
     ///
     /// @param filter the filter.
     ///
-    pipeline& match(bsoncxx::document::view filter);
+    pipeline& match(bsoncxx::document::view_or_value filter);
 
     ///
     /// Takes documents returned by the aggregation pipeline and writes them to a specified
@@ -108,7 +107,7 @@ class MONGOCXX_API pipeline {
     ///
     /// @param projection projection specification.
     ///
-    pipeline& project(bsoncxx::document::view projection);
+    pipeline& project(bsoncxx::document::view_or_value projection);
 
     ///
     /// Restricts the contents of the documents based on information stored in the documents
@@ -118,7 +117,7 @@ class MONGOCXX_API pipeline {
     ///
     /// @param restrictions the document restrictions.
     ///
-    pipeline& redact(bsoncxx::document::view restrictions);
+    pipeline& redact(bsoncxx::document::view_or_value restrictions);
 
     ///
     /// Skips over the specified number of documents that pass into the stage and passes the
@@ -137,7 +136,7 @@ class MONGOCXX_API pipeline {
     ///
     /// @param ordering document specifying the ordering by which the documents are sorted.
     ///
-    pipeline& sort(bsoncxx::document::view ordering);
+    pipeline& sort(bsoncxx::document::view_or_value ordering);
 
     ///
     /// Deconstructs an array field from the input documents to output a document for each element.
@@ -160,7 +159,6 @@ class MONGOCXX_API pipeline {
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
-
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

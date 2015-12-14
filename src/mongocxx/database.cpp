@@ -42,7 +42,8 @@ database::database(const class client& client, stdx::string_view name)
           name.data())) {
 }
 
-database::database(const database& d) : _impl{stdx::make_unique<impl>(*(d._impl))} { }
+database::database(const database& d) : _impl{stdx::make_unique<impl>(*(d._impl))} {
+}
 
 database& database::operator=(const database& d) {
     _impl = stdx::make_unique<impl>(*(d._impl));
@@ -57,7 +58,7 @@ void* database::implementation() const {
     return _impl->database_t;
 }
 
-cursor database::list_collections(bsoncxx::document::view filter) {
+cursor database::list_collections(bsoncxx::document::view_or_value filter) {
     libbson::scoped_bson_t filter_bson{filter};
     bson_error_t error;
 
@@ -74,7 +75,7 @@ stdx::string_view database::name() const {
     return _impl->name;
 }
 
-bsoncxx::document::value database::run_command(bsoncxx::document::view command) {
+bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value command) {
     libbson::scoped_bson_t command_bson{command};
     libbson::scoped_bson_t reply_bson;
     bson_error_t error;
@@ -120,8 +121,7 @@ stdx::optional<class read_concern> database::read_concern() const {
     if (!libmongoc::read_concern_get_level(rc)) {
         return stdx::nullopt;
     }
-    return {
-        stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
+    return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
 void database::read_preference(class read_preference rp) {

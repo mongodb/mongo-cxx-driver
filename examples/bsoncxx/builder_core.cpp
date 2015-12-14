@@ -1,10 +1,23 @@
+// Copyright 2015 MongoDB Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/types.hpp>
 
 using namespace bsoncxx;
 
 int main(int, char**) {
-
     // bsoncxx::builder::core is a low-level primitive that can be useful for building other
     // BSON abstractions. Most users should just use builder::stream or builder::basic.
 
@@ -46,10 +59,10 @@ int main(int, char**) {
 
     // Appending values is pretty simple.
     // Just call append() and pass a value wrapped in the corresponding BSON type.
-    auto array = builder::core{true}; // we are building an array
+    auto array = builder::core{true};  // we are building an array
 
-    array.append(types::b_utf8{"hello"}); // append a UTF-8 string
-    array.append(types::b_double{1.234}); // append a double
-    array.append(types::b_int32{1234}); // append an int32
+    array.append(types::b_utf8{"hello"});  // append a UTF-8 string
+    array.append(types::b_double{1.234});  // append a double
+    array.append(types::b_int32{1234});    // append an int32
     // ... etc.
 }

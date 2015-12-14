@@ -19,8 +19,8 @@
 #include <memory>
 #include <string>
 
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
-
 #include <mongocxx/collection.hpp>
 #include <mongocxx/options/create_collection.hpp>
 #include <mongocxx/write_concern.hpp>
@@ -89,7 +89,7 @@ class MONGOCXX_API database {
     /// @return the result of executing the command.
     /// @throws exception::operation if the operation fails.
     ///
-    bsoncxx::document::value run_command(bsoncxx::document::view command);
+    bsoncxx::document::value run_command(bsoncxx::document::view_or_value command);
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
@@ -143,7 +143,7 @@ class MONGOCXX_API database {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/listCollections/
     ///
-    cursor list_collections(bsoncxx::document::view filter = {});
+    cursor list_collections(bsoncxx::document::view_or_value filter = {});
 
     ///
     /// Get the name of this database.

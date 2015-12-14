@@ -16,22 +16,14 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/builder/concatenate.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 namespace basic {
 
-///
-/// Container to concatenate a document. Use it by constructing an instance with the
-/// document to be concatenated, and pass it to append.
-///
-struct BSONCXX_API concatenate {
-    document::view view;
-
-    BSONCXX_INLINE operator document::view() const { return view; }
-};
+using bsoncxx::builder::concatenate;
 
 }  // namespace basic
 }  // namespace builder

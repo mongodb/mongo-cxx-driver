@@ -22,7 +22,7 @@
 #include <string>
 
 #include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
 #include <mongocxx/bulk_write.hpp>
@@ -204,7 +204,7 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/count/
     ///
-    std::int64_t count(bsoncxx::document::view filter,
+    std::int64_t count(bsoncxx::document::view_or_value filter,
                        const options::count& options = options::count());
 
     ///
@@ -219,7 +219,7 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
     ///
-    bsoncxx::document::value create_index(bsoncxx::document::view keys,
+    bsoncxx::document::value create_index(bsoncxx::document::view_or_value keys,
                                           const options::index& options = options::index());
 
     ///
@@ -236,7 +236,7 @@ class MONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/reference/command/delete/
     ///
     stdx::optional<result::delete_result> delete_many(
-        bsoncxx::document::view filter,
+        bsoncxx::document::view_or_value filter,
         const options::delete_options& options = options::delete_options());
 
     ///
@@ -253,7 +253,7 @@ class MONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/reference/command/delete/
     ///
     stdx::optional<result::delete_result> delete_one(
-        bsoncxx::document::view filter,
+        bsoncxx::document::view_or_value filter,
         const options::delete_options& options = options::delete_options());
 
     ///
@@ -273,7 +273,7 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/distinct/
     ///
-    cursor distinct(stdx::string_view name, bsoncxx::document::view filter,
+    cursor distinct(stdx::string_view name, bsoncxx::document::view_or_value filter,
                     const options::distinct& options = options::distinct());
 
     ///
@@ -300,7 +300,8 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-operations-introduction/
     ///
-    cursor find(bsoncxx::document::view filter, const options::find& options = options::find());
+    cursor find(bsoncxx::document::view_or_value filter,
+                const options::find& options = options::find());
 
     ///
     /// Finds a single document in this collection that match the provided filter.
@@ -316,7 +317,7 @@ class MONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/core/read-operations-introduction/
     ///
     stdx::optional<bsoncxx::document::value> find_one(
-        bsoncxx::document::view filter, const options::find& options = options::find());
+        bsoncxx::document::view_or_value filter, const options::find& options = options::find());
 
     ///
     /// Finds a single document matching the filter, deletes it, and returns the original.
@@ -330,7 +331,7 @@ class MONGOCXX_API collection {
     /// @throws exception::write if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_delete(
-        bsoncxx::document::view filter,
+        bsoncxx::document::view_or_value filter,
         const options::find_one_and_delete& options = options::find_one_and_delete());
 
     ///
@@ -352,7 +353,7 @@ class MONGOCXX_API collection {
     ///   level set write concern - collection::write_concern(wc).
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_replace(
-        bsoncxx::document::view filter, bsoncxx::document::view replacement,
+        bsoncxx::document::view_or_value filter, bsoncxx::document::view_or_value replacement,
         const options::find_one_and_replace& options = options::find_one_and_replace());
 
     ///
@@ -374,7 +375,7 @@ class MONGOCXX_API collection {
     ///   level set write concern - collection::write_concern(wc).
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_update(
-        bsoncxx::document::view filter, bsoncxx::document::view update,
+        bsoncxx::document::view_or_value filter, bsoncxx::document::view_or_value update,
         const options::find_one_and_update& options = options::find_one_and_update());
 
     ///
@@ -402,7 +403,8 @@ class MONGOCXX_API collection {
     /// @throws exception::write if the operation fails.
     ///
     stdx::optional<result::insert_one> insert_one(
-        bsoncxx::document::view document, const options::insert& options = options::insert());
+        bsoncxx::document::view_or_value document,
+        const options::insert& options = options::insert());
 
     ///
     /// Inserts multiple documents into the collection. If any of the documents are missing
@@ -541,7 +543,7 @@ class MONGOCXX_API collection {
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
     stdx::optional<result::replace_one> replace_one(
-        bsoncxx::document::view filter, bsoncxx::document::view replacement,
+        bsoncxx::document::view_or_value filter, bsoncxx::document::view_or_value replacement,
         const options::update& options = options::update());
 
     ///
@@ -559,8 +561,8 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
-    stdx::optional<result::update> update_many(bsoncxx::document::view filter,
-                                               bsoncxx::document::view update,
+    stdx::optional<result::update> update_many(bsoncxx::document::view_or_value filter,
+                                               bsoncxx::document::view_or_value update,
                                                const options::update& options = options::update());
 
     ///
@@ -578,8 +580,8 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
-    stdx::optional<result::update> update_one(bsoncxx::document::view filter,
-                                              bsoncxx::document::view update,
+    stdx::optional<result::update> update_one(bsoncxx::document::view_or_value filter,
+                                              bsoncxx::document::view_or_value update,
                                               const options::update& options = options::update());
 
     ///

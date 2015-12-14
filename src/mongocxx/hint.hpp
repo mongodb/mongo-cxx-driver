@@ -17,7 +17,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/builder/stream/key_context.hpp>
@@ -35,20 +35,13 @@ class MONGOCXX_API hint {
     ///
     /// Constructs a new hint.
     ///
-    /// @param index
-    ///   Document representing the index to be used.
-    ///
-    explicit hint(bsoncxx::document::value index);
-
-    ///
-    /// Constructs a new hint from a document view.
-    ///
-    /// Index must be a view into a document::value that outlives this hint object.
+    /// Note: this constructor is purposefully not explicit, to allow conversion
+    /// from either document::view or document::value to view_or_value.
     ///
     /// @param index
-    ///   Document representing the index to be used.
+    ///   Document view or value representing the index to be used.
     ///
-    explicit hint(bsoncxx::document::view index);
+    hint(bsoncxx::document::view_or_value index);
 
     ///
     /// Constructs a new hint.
@@ -70,8 +63,7 @@ class MONGOCXX_API hint {
     MONGOCXX_INLINE operator bsoncxx::document::value() const;
 
    private:
-    stdx::optional<bsoncxx::document::value> _owned_index_doc;
-    stdx::optional<bsoncxx::document::view> _index_doc;
+    stdx::optional<bsoncxx::document::view_or_value> _index_doc;
     stdx::optional<stdx::string_view> _index_string;
 };
 

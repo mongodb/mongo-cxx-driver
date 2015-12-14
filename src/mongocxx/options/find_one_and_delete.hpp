@@ -19,7 +19,7 @@
 #include <chrono>
 #include <cstdint>
 
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/write_concern.hpp>
 
@@ -31,9 +31,7 @@ namespace options {
 /// Class representing the optional arguments to a MongoDB find_and_modify delete operation
 ///
 class MONGOCXX_API find_one_and_delete {
-
    public:
-
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
     ///
@@ -61,7 +59,7 @@ class MONGOCXX_API find_one_and_delete {
     ///
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
-    void projection(bsoncxx::document::view projection);
+    void projection(bsoncxx::document::view_or_value projection);
 
     ///
     /// Gets the current projection set on this operation.
@@ -70,7 +68,7 @@ class MONGOCXX_API find_one_and_delete {
     ///
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
-    const stdx::optional<bsoncxx::document::view>& projection() const;
+    const stdx::optional<bsoncxx::document::view_or_value>& projection() const;
 
     ///
     /// Sets the order to search for a matching document.
@@ -83,7 +81,7 @@ class MONGOCXX_API find_one_and_delete {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.findAndModify/
     ///
-    void sort(bsoncxx::document::view ordering);
+    void sort(bsoncxx::document::view_or_value ordering);
 
     ///
     /// Gets the current sort ordering.
@@ -92,12 +90,12 @@ class MONGOCXX_API find_one_and_delete {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.findAndModify/
     ///
-    const stdx::optional<bsoncxx::document::view>& sort() const;
+    const stdx::optional<bsoncxx::document::view_or_value>& sort() const;
 
    private:
     stdx::optional<std::chrono::milliseconds> _max_time;
-    stdx::optional<bsoncxx::document::view> _projection;
-    stdx::optional<bsoncxx::document::view> _ordering;
+    stdx::optional<bsoncxx::document::view_or_value> _projection;
+    stdx::optional<bsoncxx::document::view_or_value> _ordering;
 };
 
 }  // namespace options

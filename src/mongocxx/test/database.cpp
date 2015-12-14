@@ -94,8 +94,8 @@ TEST_CASE("A database", "[database]") {
     SECTION("is dropped") {
         bool drop_called = false;
 
-        database_drop->interpose([&](mongoc_database_t* database, bson_error_t* error) { 
-            drop_called = true; 
+        database_drop->interpose([&](mongoc_database_t* database, bson_error_t* error) {
+            drop_called = true;
             return true;
         });
 
@@ -106,7 +106,8 @@ TEST_CASE("A database", "[database]") {
     }
 
     SECTION("throws an exception when dropping causes an error") {
-        database_drop->interpose([&](mongoc_database_t* database, bson_error_t* error) { return false; });
+        database_drop->interpose(
+            [&](mongoc_database_t* database, bson_error_t* error) { return false; });
 
         database database = mongo_client["database"];
         REQUIRE_THROWS(database.drop());
@@ -230,29 +231,25 @@ TEST_CASE("A database", "[database]") {
     SECTION("supports run_command") {
         bool called = false;
 
-        bsoncxx::document::value doc = bsoncxx::builder::stream::document{} 
-            << "foo" << 5 << bsoncxx::builder::stream::finalize;
-        libbson::scoped_bson_t bson_doc{doc};
+        bsoncxx::document::value doc = bsoncxx::builder::stream::document{}
+                                       << "foo" << 5 << bsoncxx::builder::stream::finalize;
+        libbson::scoped_bson_t bson_doc{doc.view()};
 
-        database_command_simple->interpose([&](mongoc_database_t* database, 
-            const bson_t* command,
-            const mongoc_read_prefs_t* read_prefs,
-            bson_t* reply,
-            bson_error_t* error) 
-        {
+        database_command_simple->interpose([&](mongoc_database_t* database, const bson_t* command,
+                                               const mongoc_read_prefs_t* read_prefs, bson_t* reply,
+                                               bson_error_t* error) {
             called = true;
             ::bson_copy_to(bson_doc.bson(), reply);
             return true;
         });
 
         database database = mongo_client[database_name];
-        bsoncxx::document::value command = bsoncxx::builder::stream::document{} 
-            << "command" << 1 << bsoncxx::builder::stream::finalize;
-        auto response = database.run_command(command);
+        bsoncxx::document::value command = bsoncxx::builder::stream::document{}
+                                           << "command" << 1 << bsoncxx::builder::stream::finalize;
+        auto response = database.run_command(command.view());
         REQUIRE(called);
         REQUIRE(response.view()["foo"].get_int32() == 5);
     }
-
 }
 
 TEST_CASE("Database integration tests", "[database]") {

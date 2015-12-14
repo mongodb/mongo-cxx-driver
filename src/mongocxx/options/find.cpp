@@ -50,8 +50,8 @@ void find::max_time(std::chrono::milliseconds max_time) {
     _max_time = std::move(max_time);
 }
 
-void find::modifiers(bsoncxx::document::view modifiers) {
-    _modifiers = modifiers;
+void find::modifiers(bsoncxx::document::view_or_value modifiers) {
+    _modifiers = std::move(modifiers);
 }
 
 void find::no_cursor_timeout(bool no_cursor_timeout) {
@@ -62,8 +62,8 @@ void find::oplog_replay(bool oplog_replay) {
     _oplog_replay = oplog_replay;
 }
 
-void find::projection(bsoncxx::document::view projection) {
-    _projection = projection;
+void find::projection(bsoncxx::document::view_or_value projection) {
+    _projection = std::move(projection);
 }
 
 void find::read_preference(class read_preference rp) {
@@ -74,8 +74,8 @@ void find::skip(std::int32_t skip) {
     _skip = skip;
 }
 
-void find::sort(bsoncxx::document::view ordering) {
-    _ordering = ordering;
+void find::sort(bsoncxx::document::view_or_value ordering) {
+    _ordering = std::move(ordering);
 }
 
 const stdx::optional<bool>& find::allow_partial_results() const {
@@ -106,7 +106,7 @@ const stdx::optional<std::chrono::milliseconds>& find::max_time() const {
     return _max_time;
 }
 
-const stdx::optional<bsoncxx::document::view>& find::modifiers() const {
+const stdx::optional<bsoncxx::document::view_or_value>& find::modifiers() const {
     return _modifiers;
 }
 
@@ -118,7 +118,7 @@ const stdx::optional<bool>& find::oplog_replay() const {
     return _oplog_replay;
 }
 
-const stdx::optional<bsoncxx::document::view>& find::projection() const {
+const stdx::optional<bsoncxx::document::view_or_value>& find::projection() const {
     return _projection;
 }
 
@@ -126,7 +126,7 @@ const stdx::optional<std::int32_t>& find::skip() const {
     return _skip;
 }
 
-const stdx::optional<bsoncxx::document::view>& find::sort() const {
+const stdx::optional<bsoncxx::document::view_or_value>& find::sort() const {
     return _ordering;
 }
 

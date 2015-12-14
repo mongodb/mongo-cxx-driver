@@ -16,7 +16,7 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -26,28 +26,25 @@ namespace model {
 /// Class representing a MongoDB delete operation that removes multiple documents.
 ///
 class MONGOCXX_API delete_many {
-
    public:
-
     ///
     /// Constructs a delete operation that will delete all documents matching the filter.
     ///
     /// @param filter
     ///   Document representing the criteria for deletion.
     ///
-    explicit delete_many(bsoncxx::document::view filter);
+    explicit delete_many(bsoncxx::document::view_or_value filter);
 
     ///
     /// Gets the filter for this delete operation.
     ///
     /// @return The filter to be used for the delete operation.
     ///
-    const bsoncxx::document::view& filter() const;
+    const bsoncxx::document::view_or_value& filter() const;
 
    private:
     // Required
-    bsoncxx::document::view _filter;
-
+    bsoncxx::document::view_or_value _filter;
 };
 
 }  // namespace model

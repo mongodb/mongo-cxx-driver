@@ -28,16 +28,16 @@ void find_one_and_update::max_time(std::chrono::milliseconds max_time) {
     _max_time = std::move(max_time);
 }
 
-void find_one_and_update::projection(bsoncxx::document::view projection) {
-    _projection = projection;
+void find_one_and_update::projection(bsoncxx::document::view_or_value projection) {
+    _projection = std::move(projection);
 }
 
 void find_one_and_update::return_document(enum return_document return_document) {
     _return_document = return_document;
 }
 
-void find_one_and_update::sort(bsoncxx::document::view ordering) {
-    _ordering = ordering;
+void find_one_and_update::sort(bsoncxx::document::view_or_value ordering) {
+    _ordering = std::move(ordering);
 }
 
 void find_one_and_update::upsert(bool upsert) {
@@ -52,7 +52,7 @@ const stdx::optional<std::chrono::milliseconds>& find_one_and_update::max_time()
     return _max_time;
 }
 
-const stdx::optional<bsoncxx::document::view>& find_one_and_update::projection() const {
+const stdx::optional<bsoncxx::document::view_or_value>& find_one_and_update::projection() const {
     return _projection;
 }
 
@@ -60,7 +60,7 @@ const stdx::optional<return_document>& find_one_and_update::return_document() co
     return _return_document;
 }
 
-const stdx::optional<bsoncxx::document::view>& find_one_and_update::sort() const {
+const stdx::optional<bsoncxx::document::view_or_value>& find_one_and_update::sort() const {
     return _ordering;
 }
 

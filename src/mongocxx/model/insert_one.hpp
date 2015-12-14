@@ -16,7 +16,7 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -26,29 +26,25 @@ namespace model {
 /// Class representing a MongoDB insert operation that creates a single document.
 ///
 class MONGOCXX_API insert_one {
-
    public:
-
     ///
     /// Constructs an insert operation that will create a single document.
     ///
     /// @param document
     ///   The document to insert.
     ///
-    insert_one(bsoncxx::document::view document);
+    insert_one(bsoncxx::document::view_or_value document);
 
     ///
     /// Gets the document to be inserted.
     ///
     /// @return The document to be inserted.
     ///
-    const bsoncxx::document::view& document() const;
+    const bsoncxx::document::view_or_value& document() const;
 
    private:
-    // TODO: should this be a value?
     // Required
-    bsoncxx::document::view _document;
-
+    bsoncxx::document::view_or_value _document;
 };
 
 }  // namespace model

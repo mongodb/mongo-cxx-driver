@@ -10,8 +10,8 @@ TEST_CASE("update_many", "[update_many][model]") {
     mongocxx::model::update_many um(a, b);
 
     SECTION("stores required arguments") {
-        REQUIRE(um.filter().data() == a.data());
-        REQUIRE(um.update().data() == b.data());
+        REQUIRE(um.filter().view().data() == a.data());
+        REQUIRE(um.update().view().data() == b.data());
     }
 
     CHECK_OPTIONAL_ARGUMENT(um, upsert, true)

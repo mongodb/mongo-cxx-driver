@@ -17,6 +17,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 #include <bsoncxx/array/value.hpp>
+#include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/builder/stream/closed_context.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
@@ -27,10 +28,10 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 namespace stream {
 
- template <class T>
- class key_context;
+template <class T>
+class key_context;
 
- class single_context;
+class single_context;
 
 ///
 /// An internal class of builder::stream. Users should not use this directly.
@@ -38,29 +39,35 @@ namespace stream {
 template <class base = closed_context>
 class array_context {
    public:
-    BSONCXX_INLINE array_context(core* core) : _core(core) {}
+    BSONCXX_INLINE array_context(core* core) : _core(core) {
+    }
 
     template <class T>
-    BSONCXX_INLINE
-    typename std::enable_if<!(util::is_functor<T, void(array_context<>)>::value || util::is_functor<T, void(single_context)>::value || std::is_same<T, const close_document_type>::value || std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value), array_context>::type& operator<<(
-        T&& t) {
+    BSONCXX_INLINE typename std::enable_if<
+        !(util::is_functor<T, void(array_context<>)>::value ||
+          util::is_functor<T, void(single_context)>::value ||
+          std::is_same<T, const close_document_type>::value ||
+          std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value),
+        array_context>::type&
+    operator<<(T&& t) {
         _core->append(std::forward<T>(t));
         return *this;
     }
 
     template <typename Func>
-    BSONCXX_INLINE
-    typename std::enable_if<(util::is_functor<Func, void(array_context<>)>::value || util::is_functor<Func, void(single_context)>::value), array_context>::type& operator<<(
-        Func func) {
+    BSONCXX_INLINE typename std::enable_if<(util::is_functor<Func, void(array_context<>)>::value ||
+                                            util::is_functor<Func, void(single_context)>::value),
+                                           array_context>::type&
+    operator<<(Func func) {
         func(*this);
         return *this;
     }
 
     template <typename T>
-    BSONCXX_INLINE
-    typename std::enable_if<std::is_same<base, closed_context>::value &&
-                            std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value,
-                            array::value>::type
+    BSONCXX_INLINE typename std::enable_if<
+        std::is_same<base, closed_context>::value &&
+            std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value,
+        array::value>::type
     operator<<(T&&) {
         return _core->extract_array();
     }
@@ -70,8 +77,8 @@ class array_context {
         return wrap_document();
     }
 
-    BSONCXX_INLINE array_context operator<<(concatenate concatenate) {
-        _core->concatenate(concatenate);
+    BSONCXX_INLINE array_context operator<<(concatenate_array array) {
+        _core->concatenate(array.view());
         return *this;
     }
 
@@ -85,14 +92,22 @@ class array_context {
         return unwrap();
     }
 
-    BSONCXX_INLINE operator array_context<>() { return array_context<>(_core); }
+    BSONCXX_INLINE operator array_context<>() {
+        return array_context<>(_core);
+    }
 
     BSONCXX_INLINE operator single_context();
 
    private:
-    BSONCXX_INLINE base unwrap() { return base(_core); }
-    BSONCXX_INLINE array_context<array_context> wrap_array() { return array_context<array_context>(_core); }
-    BSONCXX_INLINE key_context<array_context> wrap_document() { return key_context<array_context>(_core); }
+    BSONCXX_INLINE base unwrap() {
+        return base(_core);
+    }
+    BSONCXX_INLINE array_context<array_context> wrap_array() {
+        return array_context<array_context>(_core);
+    }
+    BSONCXX_INLINE key_context<array_context> wrap_document() {
+        return key_context<array_context>(_core);
+    }
 
     core* _core;
 };

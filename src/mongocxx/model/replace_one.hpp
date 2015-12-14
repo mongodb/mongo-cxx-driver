@@ -16,7 +16,7 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/stdx.hpp>
@@ -29,7 +29,6 @@ namespace model {
 /// Class representing a MongoDB update operation that replaces a single document.
 ///
 class MONGOCXX_API replace_one {
-
    public:
     ///
     /// Constructs an update operation that will replace a single document matching the filter.
@@ -39,28 +38,30 @@ class MONGOCXX_API replace_one {
     /// @param replacement
     ///   Document that will serve as the replacement.
     ///
-    replace_one(bsoncxx::document::view filter, bsoncxx::document::view replacement);
+    replace_one(bsoncxx::document::view_or_value filter,
+                bsoncxx::document::view_or_value replacement);
 
     ///
     /// Gets the filter for replacement.
     ///
     /// @return The filter to be used for the replacement operation.
     ///
-    const bsoncxx::document::view& filter() const;
+    const bsoncxx::document::view_or_value& filter() const;
 
     ///
     /// Gets the replacement document.
     ///
     /// @return The document that will replace the original selected document.
     ///
-    const bsoncxx::document::view& replacement() const;
+    const bsoncxx::document::view_or_value& replacement() const;
 
     ///
     /// Sets the upsert option.
     ///
-    /// When upsert is @c true, this operation will insert the replacement document as a new document
-    /// if no existing documents match the filter. When upsert is @c false, the replacement operation
-    /// does nothing if there are no matching documents. By default, upsert is @c false.
+    /// When upsert is @c true, this operation will insert the replacement document as a new
+    /// document if no existing documents match the filter. When upsert is @c false, the
+    /// replacement operation does nothing if there are no matching documents. By default,
+    /// upsert is @c false.
     ///
     /// @param upsert
     ///   If set to @c true, creates a new document when no document matches the query criteria.
@@ -78,8 +79,8 @@ class MONGOCXX_API replace_one {
 
    private:
     // Required
-    bsoncxx::document::view _filter;
-    bsoncxx::document::view _replacement;
+    bsoncxx::document::view_or_value _filter;
+    bsoncxx::document::view_or_value _replacement;
 
     // Optional
     stdx::optional<bool> _upsert;

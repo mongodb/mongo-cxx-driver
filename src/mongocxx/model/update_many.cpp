@@ -20,7 +20,8 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
-update_many::update_many(bsoncxx::document::view filter, bsoncxx::document::view update)
+update_many::update_many(bsoncxx::document::view_or_value filter,
+                         bsoncxx::document::view_or_value update)
     : _filter(std::move(filter)), _update(std::move(update)) {
 }
 
@@ -33,11 +34,11 @@ const stdx::optional<bool>& update_many::upsert() const {
     return _upsert;
 }
 
-const bsoncxx::document::view& update_many::filter() const {
+const bsoncxx::document::view_or_value& update_many::filter() const {
     return _filter;
 }
 
-const bsoncxx::document::view& update_many::update() const {
+const bsoncxx::document::view_or_value& update_many::update() const {
     return _update;
 }
 

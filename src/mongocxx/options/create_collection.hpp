@@ -16,7 +16,7 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -84,7 +84,7 @@ class MONGOCXX_API create_collection {
     /// @param storage_engine_options
     ///   Configuration options specific to the storage engine.
     ///
-    void storage_engine(bsoncxx::document::value storage_engine_opts);
+    void storage_engine(bsoncxx::document::view_or_value storage_engine_opts);
 
     ///
     /// When true, disables the power of 2 sizes allocation for the collection.
@@ -110,7 +110,7 @@ class MONGOCXX_API create_collection {
     stdx::optional<bool> _auto_index_id;
     stdx::optional<int> _max_size;
     stdx::optional<int> _max_documents;
-    stdx::optional<bsoncxx::document::value> _storage_engine_opts;
+    stdx::optional<bsoncxx::document::view_or_value> _storage_engine_opts;
     stdx::optional<bool> _no_padding;
 };
 
