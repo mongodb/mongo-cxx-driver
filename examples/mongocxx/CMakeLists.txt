@@ -14,6 +14,7 @@ set(MONGOCXX_EXAMPLES
     query.cpp
     remove.cpp
     update.cpp
+    view_or_value_variant.cpp
 )
 
 foreach(EXAMPLE_SRC ${MONGOCXX_EXAMPLES})
