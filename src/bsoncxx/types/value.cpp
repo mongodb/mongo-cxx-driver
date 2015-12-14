@@ -22,10 +22,15 @@
 #include <bsoncxx/config/prelude.hpp>
 
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace types {
+
+// The default constructor does not initialize the value union.
+value::value() : _type{} {
+}
 
 #define BSONCXX_ENUM(name, val)                                                 \
     value::value(b_##name value)                                                \
@@ -40,15 +45,32 @@ value::value(const value& rhs) {
 }
 
 value& value::operator=(const value& rhs) {
-    _type = rhs._type;
+    if (this == &rhs) {
+        return *this;
+    }
 
-    switch (static_cast<int>(_type)) {
-#define BSONCXX_ENUM(type, val)       \
-    case val:                         \
-        _b_##type = rhs.get_##type(); \
-        break;
+    if (_type) {
+            switch (static_cast<typename std::underlying_type<bsoncxx::type>::type>(*_type)) {
+#define BSONCXX_ENUM(type, val)     \
+        case val:                   \
+            _b_##type.~b_##type();  \
+            break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
+        }
+    }
+
+    _type = rhs._type;
+ 
+    if (_type) {
+        switch (static_cast<typename std::underlying_type<bsoncxx::type>::type>(*_type)) {
+#define BSONCXX_ENUM(type, val)           \
+        case val:                         \
+            _b_##type = rhs.get_##type(); \
+            break;
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
+        }
     }
 
     return *this;
@@ -56,35 +78,57 @@ value& value::operator=(const value& rhs) {
 
 value::value(value&& rhs) noexcept {
     *this = std::move(rhs);
+    rhs._type = stdx::nullopt;
 }
 
 value& value::operator=(value&& rhs) noexcept {
-    _type = rhs._type;
+    if (this == &rhs) {
+        // TODO: use bsoncxx error category
+        throw std::runtime_error("self move assign");
+    }
 
-    switch (static_cast<int>(_type)) {
-#define BSONCXX_ENUM(type, val)               \
-    case val:                                 \
-        _b_##type = std::move(rhs._b_##type); \
-        break;
+    if (_type) {
+            switch (static_cast<typename std::underlying_type<bsoncxx::type>::type>(*_type)) {
+#define BSONCXX_ENUM(type, val)     \
+        case val:                   \
+            _b_##type.~b_##type();  \
+            break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
+        }
+    }
+
+    _type = rhs._type;
+    rhs._type = stdx::nullopt;
+
+    if (_type) {
+        switch (static_cast<typename std::underlying_type<bsoncxx::type>::type>(*_type)) {
+#define BSONCXX_ENUM(type, val)                   \
+        case val:                                 \
+            _b_##type = std::move(rhs._b_##type); \
+            break;
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
+        }
     }
 
     return *this;
 }
 
 value::~value() {
-    switch (static_cast<int>(_type)) {
-#define BSONCXX_ENUM(type, val) \
-    case val:                   \
-        _b_##type.~b_##type();  \
-        break;
+    if (_type) {
+            switch (static_cast<typename std::underlying_type<bsoncxx::type>::type>(*_type)) {
+#define BSONCXX_ENUM(type, val)     \
+        case val:                   \
+            _b_##type.~b_##type();  \
+            break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
+        }
     }
 }
 
-bsoncxx::type value::type() const {
+stdx::optional<bsoncxx::type> value::type() const {
     return _type;
 }
 
@@ -96,11 +140,19 @@ bsoncxx::type value::type() const {
 #undef BSONCXX_ENUM
 
 bool operator==(const value& lhs, const value& rhs) {
+    if (!lhs && !rhs) {
+        return true;
+    }
+
+    if (!lhs || !rhs) {
+        return false;
+    }
+
     if (lhs.type() != rhs.type()) {
         return false;
     }
 
-    switch (static_cast<int>(lhs.type())) {
+    switch (static_cast<typename std::underlying_type<bsoncxx::type>::type>(*(lhs.type()))) {
 #define BSONCXX_ENUM(type, val) \
     case val:                   \
         return lhs.get_##type() == rhs.get_##type();
