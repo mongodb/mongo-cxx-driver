@@ -98,6 +98,9 @@ bool operator==(const value& lhs, const value& rhs) {
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
     }
+
+    // Silence compiler warnings about failing to return a value.
+    BSONCXX_UNREACHABLE;
 }
 
 bool operator!=(const value& lhs, const value& rhs) {

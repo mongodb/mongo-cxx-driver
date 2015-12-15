@@ -82,6 +82,7 @@ class view_or_value {
     BSONCXX_INLINE view_or_value& operator=(const view_or_value& other) {
         _value = other._value;
         _view = _value ? _value->view() : other._view;
+        return *this;
     }
 
     ///
@@ -101,6 +102,7 @@ class view_or_value {
         _view = _value ? _value->view() : std::move(other._view);
         other._view = View();
         other._value = stdx::nullopt;
+        return *this;
     }
 
     ///
