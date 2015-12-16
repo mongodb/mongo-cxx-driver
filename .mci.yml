@@ -60,7 +60,7 @@ post:
 #               Tasks                 #
 #######################################
 
-tasks:
+tasks: &all_tasks
     - name: compile
       depends_on: []
       commands:
@@ -134,11 +134,7 @@ buildvariants:
           build_type: "Release"
       run_on:
           - ubuntu1404-test
-      tasks:
-          - name: compile
-          - name: run_examples
-          - name: test_driver
-          - name: test_bson
+      tasks: *all_tasks
 
     - name: ubuntu1404-debug
       display_name: "Ubuntu 14.04 Debug"
@@ -146,8 +142,4 @@ buildvariants:
           build_type: "Debug"
       run_on:
           - ubuntu1404-test
-      tasks:
-          - name: compile
-          - name: run_examples
-          - name: test_driver
-          - name: test_bson
+      tasks: *all_tasks
