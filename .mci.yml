@@ -75,8 +75,8 @@ tasks:
           params:
             script: |
               rm -rf "mongo-cxx-driver"
-              rm -fr "mongo-c-driver"
-              rm -fr mongod
+              rm -rf "mongo-c-driver"
+              rm -rf mongod
         - func: "fetch_source"
         - command: git.apply_patch
           params:
