@@ -56,6 +56,7 @@ TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
     REQUIRE(destroy_called);
 }
 
+#if defined(MONGOC_HAVE_SSL)
 TEST_CASE(
     "If we pass an engaged SSL options struct to the pool class, we will use it to configure the "
     "underlying mongoc pool",
@@ -96,6 +97,7 @@ TEST_CASE(
     REQUIRE(interposed.crl_file == crl_file);
     REQUIRE(interposed.weak_cert_validation == allow_invalid_certificates);
 }
+#endif
 
 TEST_CASE(
     "calling acquire on a pool returns a entry that is released when it goes out of "

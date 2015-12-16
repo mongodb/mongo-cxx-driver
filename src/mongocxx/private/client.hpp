@@ -17,9 +17,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 #include <mongocxx/client.hpp>
-
-#include <mongoc.h>
-
+#include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/private/write_concern.hpp>
 
 namespace mongocxx {

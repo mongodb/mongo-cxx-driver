@@ -33,8 +33,12 @@ client::client() noexcept = default;
 client::client(const class uri& uri, const options::client& options)
     : _impl(stdx::make_unique<impl>(libmongoc::client_new_from_uri(uri._impl->uri_t))) {
     if (options.ssl_opts()) {
+#if defined(MONGOC_HAVE_SSL)
         auto mongoc_opts = options::make_ssl_opts(*options.ssl_opts());
         libmongoc::client_set_ssl_opts(_impl->client_t, &mongoc_opts);
+#else
+        // TODO: For now, just ignoring. Should we throw?
+#endif
     }
 }
 

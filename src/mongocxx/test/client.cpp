@@ -15,13 +15,8 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
-#define MONGOC_I_AM_A_DRIVER true
-#include "mongoc.h"
-#include "mongoc-read-concern-private.h"
-
-#include <mongocxx/private/libmongoc.hpp>
-
 #include <mongocxx/client.hpp>
+#include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/uri.hpp>
 
 using namespace mongocxx;
@@ -102,8 +97,9 @@ TEST_CASE("A client has a settable Read Concern", "[collection]") {
     client_set_read_concern->interpose(
         [&client_set_rc_called](::mongoc_client_t* coll, const ::mongoc_read_concern_t* rc_t) {
             REQUIRE(rc_t);
-            REQUIRE(rc_t->level);
-            REQUIRE(strcmp(rc_t->level, "majority") == 0);
+            const auto result = libmongoc::read_concern_get_level(rc_t);
+            REQUIRE(result);
+            REQUIRE(strcmp(result, "majority") == 0);
             client_set_rc_called = true;
         });
 

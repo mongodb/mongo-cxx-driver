@@ -16,11 +16,9 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <mongocxx/pool.hpp>
-
-#include <mongoc.h>
 #include <utility>
 
+#include <mongocxx/pool.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
 namespace mongocxx {

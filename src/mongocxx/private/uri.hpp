@@ -15,8 +15,7 @@
 #pragma once
 
 #include <mongocxx/uri.hpp>
-
-#include <mongoc.h>
+#include <mongocxx/private/libmongoc.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -24,7 +23,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 class uri::impl {
    public:
     impl(mongoc_uri_t* uri) : uri_t(uri) {}
-    ~impl() { mongoc_uri_destroy(uri_t); }
+    ~impl() { libmongoc::uri_destroy(uri_t); }
     mongoc_uri_t* uri_t;
 
 }; // class impl

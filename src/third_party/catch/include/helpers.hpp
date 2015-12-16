@@ -34,7 +34,7 @@
         REQUIRE(OBJECT.NAME());                                       \
     }
 
-#define MOCK_POOL                                                                              \
+#define MOCK_POOL_NOSSL                                                                        \
     auto client_pool_new = libmongoc::client_pool_new.create_instance();                       \
     client_pool_new->interpose([](const mongoc_uri_t*) { return nullptr; }).forever();         \
     auto client_pool_destroy = libmongoc::client_pool_destroy.create_instance();               \
@@ -45,8 +45,15 @@
     client_pool_push->interpose([](::mongoc_client_pool_t*, ::mongoc_client_t*) {}).forever(); \
     auto client_pool_try_pop = libmongoc::client_pool_try_pop.create_instance();               \
     client_pool_try_pop->interpose([](::mongoc_client_pool_t*) { return nullptr; }).forever(); \
-    auto client_pool_set_ssl_opts = libmongoc::client_pool_set_ssl_opts.create_instance();     \
+
+#if defined(MONGOC_HAVE_SSL)
+#define MOCK_POOL                                                                          \
+    MOCK_POOL_NOSSL                                                                        \
+    auto client_pool_set_ssl_opts = libmongoc::client_pool_set_ssl_opts.create_instance(); \
     client_pool_set_ssl_opts->interpose([](::mongoc_client_pool_t*, const ::mongoc_ssl_opt_t*) {});
+#else
+#define MOCK_POOL MOCK_POOL_NOSSL
+#endif
 
 #define MOCK_CLIENT                                                                             \
     auto client_new = libmongoc::client_new_from_uri.create_instance();                         \

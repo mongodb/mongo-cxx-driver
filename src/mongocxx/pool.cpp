@@ -42,11 +42,15 @@ pool::pool(const uri& mongodb_uri, stdx::optional<options::ssl> ssl_options)
     : _impl{stdx::make_unique<impl>(libmongoc::client_pool_new(mongodb_uri._impl->uri_t),
                                     std::move(ssl_options))} {
     if (_impl->ssl_options) {
+#if defined(MONGOC_HAVE_SSL)
         auto mongoc_opts = options::make_ssl_opts(*_impl->ssl_options);
         // We store ssl options in a member variable because we need the strings to stay alive so
         // libmongoc can use the raw char arrays, however, the mongoc_ssl_opt_t struct can be a
         // temporary as the driver will copy it.
         libmongoc::client_pool_set_ssl_opts(_impl->client_pool_t, &mongoc_opts);
+#else
+        // TODO: For now, just ignoring. Should we throw?
+#endif
     }
 }
 

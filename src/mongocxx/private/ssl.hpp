@@ -22,6 +22,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+#if defined(MONGOC_HAVE_SSL)
 inline ::mongoc_ssl_opt_t make_ssl_opts(const ssl& ssl_opts) {
     ::mongoc_ssl_opt_t out;
     if (ssl_opts.pem_file()) {
@@ -44,6 +45,7 @@ inline ::mongoc_ssl_opt_t make_ssl_opts(const ssl& ssl_opts) {
     }
     return out;
 }
+#endif
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
