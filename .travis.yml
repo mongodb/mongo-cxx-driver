@@ -7,7 +7,7 @@ compiler:
 env:
     global:
         - MONGO_REPO="http://repo.mongodb.com/apt/ubuntu"
-        - REPO_TYPE="precise/mongodb-enterprise/2.6 multiverse"
+        - REPO_TYPE="precise/mongodb-enterprise/stable multiverse"
         - SOURCES_LOC="/etc/apt/sources.list.d/mongodb-enterprise.list"
         - KEY_SERVER="hkp://keyserver.ubuntu.com:80"
         - CMAKE_VERSION="cmake-3.1.3-Linux-x86_64"
@@ -27,8 +27,9 @@ before_install:
     # Get the latest CMake
     - curl -O https://cmake.org/files/v3.1/${CMAKE_VERSION}.tar.gz
 
-    # MongoDB Enterprise Edition 2.6
+    # MongoDB Enterprise Edition, latest stable version
     - sudo apt-key adv --keyserver ${KEY_SERVER} --recv 7F0CEB10
+    - sudo apt-key adv --keyserver ${KEY_SERVER} --recv D68FA50FEA312927
     - echo "deb ${MONGO_REPO} ${REPO_TYPE}" | sudo tee ${SOURCES_LOC}
 
     # CMake
