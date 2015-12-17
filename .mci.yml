@@ -47,42 +47,77 @@ functions:
 #######################################
 
 pre:
-  - command: expansions.fetch
-    params:
-      keys:
-        - local_key: "aws_key"
-          remote_key: "project_aws_key"
-        - local_key: "aws_secret"
-          remote_key: "project_aws_secret"
-  - command: shell.exec
-    params:
-      script: |
-        rm -rf "mongo-cxx-driver"
-        rm -fr "mongo-c-driver"
-        rm -fr mongod
+  - func: "start_mongod"
+
+#######################################
+#              Post Task               #
+#######################################
+
+post:
+  - func: "stop_mongod"
 
 #######################################
 #               Tasks                 #
 #######################################
 
-tasks:
-    - name: compile_and_test
+tasks: &all_tasks
+    - name: compile
+      depends_on: []
       commands:
+        - command: expansions.fetch
+          params:
+            keys:
+              - local_key: "aws_key"
+                remote_key: "project_aws_key"
+              - local_key: "aws_secret"
+                remote_key: "project_aws_secret"
+        - command: shell.exec
+          params:
+            script: |
+              rm -rf "mongo-cxx-driver"
+              rm -rf "mongo-c-driver"
+              rm -rf mongod
         - func: "fetch_source"
         - command: git.apply_patch
           params:
-              directory: "mongo-cxx-driver"
+            directory: "mongo-cxx-driver"
         - func: "install_c_driver"
-        - func: "start_mongod"
         - command: shell.exec
           params:
               working_dir: "mongo-cxx-driver/build"
               script: |
                   PKG_CONFIG_PATH="/data/tmp/c-driver-install/lib/pkgconfig" /opt/cmake/bin/cmake -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=./install ..
                   make
+
+    - name: run_examples
+      depends_on: 
+      - name: compile
+      commands:
+        - command: shell.exec
+          params:
+              working_dir: "mongo-cxx-driver/build"
+              script: |
                   make run-examples
+
+    - name: test_driver
+      depends_on: 
+      - name: compile
+      commands:
+        - command: shell.exec
+          params:
+              working_dir: "mongo-cxx-driver/build"
+              script: |
                   ./src/mongocxx/test/test_driver
-        - func: "stop_mongod"
+
+    - name: test_bson
+      depends_on: 
+      - name: compile
+      commands:
+        - command: shell.exec
+          params:
+              working_dir: "mongo-cxx-driver/build"
+              script: |
+                  ./src/bsoncxx/test/test_bson
 
 #######################################
 #           Buildvariants             #
@@ -99,8 +134,7 @@ buildvariants:
           build_type: "Release"
       run_on:
           - ubuntu1404-test
-      tasks:
-          - name: compile_and_test
+      tasks: *all_tasks
 
     - name: ubuntu1404-debug
       display_name: "Ubuntu 14.04 Debug"
@@ -108,5 +142,4 @@ buildvariants:
           build_type: "Debug"
       run_on:
           - ubuntu1404-test
-      tasks:
-          - name: compile_and_test
+      tasks: *all_tasks
