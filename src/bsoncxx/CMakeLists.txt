@@ -36,7 +36,10 @@ set(bsoncxx_sources
     document/view.cpp
     json.cpp
     oid.cpp
+    private/error_category.cpp
+    private/error_code.cpp
     private/itoa.cpp
+    private/libbson_error.cpp
     types.cpp
     types/value.cpp
     validate.cpp
