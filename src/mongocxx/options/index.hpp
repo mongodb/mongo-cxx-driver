@@ -16,6 +16,8 @@
 
 #include <mongocxx/config/prelude.hpp>
 
+#include <memory>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>

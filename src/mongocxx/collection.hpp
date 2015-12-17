@@ -23,6 +23,7 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
 #include <mongocxx/bulk_write.hpp>

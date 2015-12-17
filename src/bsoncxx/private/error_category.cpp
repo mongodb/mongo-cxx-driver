@@ -14,6 +14,7 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
+#include <string>
 #include <system_error>
 
 #include <bson.h>
