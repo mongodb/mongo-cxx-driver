@@ -123,6 +123,30 @@ class view_or_value {
     View _view;
 };
 
+///
+/// Equality operators for comparison with plain Views.
+///
+
+template <typename View, typename Value>
+BSONCXX_INLINE bool operator==(view_or_value<View, Value> lhs, View rhs) {
+    return lhs.view() == rhs;
+}
+
+template <typename View, typename Value>
+BSONCXX_INLINE bool operator==(View lhs, view_or_value<View, Value> rhs) {
+    return rhs == lhs;
+}
+
+template <typename View, typename Value>
+BSONCXX_INLINE bool operator!=(view_or_value<View, Value> lhs, View rhs) {
+    return !(lhs == rhs);
+}
+
+template <typename View, typename Value>
+BSONCXX_INLINE bool operator!=(View lhs, view_or_value<View, Value> rhs) {
+    return !(rhs == lhs);
+}
+
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
