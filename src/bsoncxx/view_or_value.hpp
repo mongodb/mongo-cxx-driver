@@ -128,22 +128,22 @@ class view_or_value {
 ///
 
 template <typename View, typename Value>
-BSONCXX_INLINE bool operator==(view_or_value<View, Value> lhs, View rhs) {
+BSONCXX_INLINE bool operator==(const view_or_value<View, Value>& lhs, View rhs) {
     return lhs.view() == rhs;
 }
 
 template <typename View, typename Value>
-BSONCXX_INLINE bool operator==(View lhs, view_or_value<View, Value> rhs) {
+BSONCXX_INLINE bool operator==(View lhs, const view_or_value<View, Value>& rhs) {
     return rhs == lhs;
 }
 
 template <typename View, typename Value>
-BSONCXX_INLINE bool operator!=(view_or_value<View, Value> lhs, View rhs) {
+BSONCXX_INLINE bool operator!=(const view_or_value<View, Value>& lhs, View rhs) {
     return !(lhs == rhs);
 }
 
 template <typename View, typename Value>
-BSONCXX_INLINE bool operator!=(View lhs, view_or_value<View, Value> rhs) {
+BSONCXX_INLINE bool operator!=(View lhs, const view_or_value<View, Value>& rhs) {
     return !(rhs == lhs);
 }
 
