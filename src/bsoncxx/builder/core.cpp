@@ -17,6 +17,9 @@
 #include <bsoncxx/config/prelude.hpp>
 
 #include <bsoncxx/builder/core.hpp>
+#include <bsoncxx/exception/error_code.hpp>
+#include <bsoncxx/exception/exception.hpp>
+#include <bsoncxx/private/error_code.hpp>
 #include <bsoncxx/private/itoa.hpp>
 #include <bsoncxx/private/stack.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -67,7 +70,8 @@ class core::impl {
 
     bsoncxx::document::value steal_document() {
         if (_root_is_array) {
-            throw std::runtime_error("root is array");
+            throw bsoncxx::exception{
+                make_error_code(error_code::k_cannot_perform_document_operation_on_array)};
         }
 
         uint32_t buf_len;
@@ -79,7 +83,8 @@ class core::impl {
 
     bsoncxx::array::value steal_array() {
         if (!_root_is_array) {
-            throw std::runtime_error("root is not an array");
+            throw bsoncxx::exception{
+                make_error_code(error_code::k_cannot_perform_array_operation_on_document)};
         }
 
         uint32_t buf_len;
@@ -117,7 +122,7 @@ class core::impl {
             _itoa_key = _stack.empty() ? _n++ : _stack.back().n++;
             _user_key_view = stdx::string_view{_itoa_key.c_str(), _itoa_key.length()};
         } else if (!_has_user_key) {
-            throw std::runtime_error("no user specified key and not in an array context");
+            throw bsoncxx::exception{make_error_code(error_code::k_need_key)};
         }
 
         _has_user_key = false;
@@ -201,14 +206,14 @@ core::~core() = default;
 
 void core::key_view(stdx::string_view key) {
     if (_impl->is_array()) {
-        throw(std::runtime_error("in subarray"));
+        throw bsoncxx::exception{make_error_code(error_code::k_cannot_append_key_in_sub_array)};
     }
     _impl->push_key(std::move(key));
 }
 
 void core::key_owned(std::string key) {
     if (_impl->is_array()) {
-        throw(std::runtime_error("in subarray"));
+        throw bsoncxx::exception{make_error_code(error_code::k_cannot_append_key_in_sub_array)};
     }
     _impl->push_key(std::move(key));
 }
@@ -422,11 +427,11 @@ void core::append(const bsoncxx::types::value& value) {
 
 void core::close_document() {
     if (_impl->is_array()) {
-        throw(std::runtime_error("in subdocument"));
+        throw bsoncxx::exception{make_error_code(error_code::k_cannot_close_document_in_sub_array)};
     }
 
     if (_impl->depth() == 0) {
-        throw(std::runtime_error("insufficient stack"));
+        throw bsoncxx::exception{make_error_code(error_code::k_no_document_to_close)};
     }
 
     _impl->pop_back();
@@ -434,11 +439,11 @@ void core::close_document() {
 
 void core::close_array() {
     if (!_impl->is_array()) {
-        throw(std::runtime_error("in subdocument"));
+        throw bsoncxx::exception{make_error_code(error_code::k_cannot_close_array_in_sub_document)};
     }
 
     if (_impl->depth() == 0) {
-        throw(std::runtime_error("insufficient stack"));
+        throw bsoncxx::exception{make_error_code(error_code::k_no_array_to_close)};
     }
 
     _impl->pop_back();
@@ -446,7 +451,7 @@ void core::close_array() {
 
 bsoncxx::document::view core::view_document() const {
     if (!_impl->is_viewable()) {
-        throw(std::runtime_error("can't convert builder to a valid view: unmatched key"));
+        throw bsoncxx::exception{make_error_code(error_code::k_unmatched_key_in_builder)};
     }
 
     return bsoncxx::document::view(bson_get_data(_impl->root()), _impl->root()->len);
@@ -454,7 +459,7 @@ bsoncxx::document::view core::view_document() const {
 
 bsoncxx::document::value core::extract_document() {
     if (!_impl->is_viewable()) {
-        throw(std::runtime_error("can't convert builder to a valid view: unmatched key"));
+        throw bsoncxx::exception{make_error_code(error_code::k_unmatched_key_in_builder)};
     }
 
     return _impl->steal_document();
@@ -462,7 +467,7 @@ bsoncxx::document::value core::extract_document() {
 
 bsoncxx::array::view core::view_array() const {
     if (!_impl->is_viewable()) {
-        throw(std::runtime_error("can't convert builder to a valid view: unmatched key"));
+        throw bsoncxx::exception{make_error_code(error_code::k_unmatched_key_in_builder)};
     }
 
     return bsoncxx::array::view(bson_get_data(_impl->root()), _impl->root()->len);
@@ -470,7 +475,7 @@ bsoncxx::array::view core::view_array() const {
 
 bsoncxx::array::value core::extract_array() {
     if (!_impl->is_viewable()) {
-        throw(std::runtime_error("can't convert builder to a valid view: unmatched key"));
+        throw bsoncxx::exception{make_error_code(error_code::k_unmatched_key_in_builder)};
     }
 
     return _impl->steal_array();

@@ -21,7 +21,10 @@
 
 #include <bsoncxx/document/element.hpp>
 
+#include <bsoncxx/exception/error_code.hpp>
+#include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/private/error_code.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
 
@@ -32,11 +35,11 @@
     iter.next_off = _offset; \
     bson_iter_next(&iter)
 
-#define BSONCXX_TYPE_CHECK(name)                            \
-    do {                                                    \
-        if (type() != bsoncxx::type::name) {                \
-            throw std::runtime_error("type is not " #name); \
-        }                                                   \
+#define BSONCXX_TYPE_CHECK(name)                                                               \
+    do {                                                                                       \
+        if (type() != bsoncxx::type::name) {                                                   \
+            throw bsoncxx::exception{make_error_code(error_code::k_need_element_type_##name)}; \
+        }                                                                                      \
     } while (0)
 
 namespace bsoncxx {
@@ -73,7 +76,7 @@ void element::offset(std::uint32_t offset) {
 
 bsoncxx::type element::type() const {
     if (_raw == nullptr) {
-        throw std::runtime_error("unset element");
+        throw bsoncxx::exception{make_error_code(error_code::k_unset_element)};
     }
 
     CITER;
@@ -82,7 +85,7 @@ bsoncxx::type element::type() const {
 
 stdx::string_view element::key() const {
     if (_raw == nullptr) {
-        throw std::runtime_error("unset element");
+        throw bsoncxx::exception{make_error_code(error_code::k_unset_element)};
     }
 
     CITER;

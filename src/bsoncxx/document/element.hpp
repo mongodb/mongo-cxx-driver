@@ -111,7 +111,7 @@ class BSONCXX_API element {
     /// key. If there is no such element, an invalid document::element will be returned. The
     /// runtime of operator[] is linear in the length of the document.
     ///
-    /// @throws std::runtime_error if this element is not a document.
+    /// @throws bsoncxx::exception if this element is not a document.
     ///
     /// @param key
     ///   The key to search for.
@@ -125,7 +125,7 @@ class BSONCXX_API element {
     /// an invalid array::element will be returned. As BSON represents arrays as documents, the
     /// runtime of operator[] is linear in the length of the array.
     ///
-    /// @throws std::runtime_error if this element is not an array.
+    /// @throws bsoncxx::exception if this element is not an array.
     ///
     /// @param i
     ///   The index of the element.
