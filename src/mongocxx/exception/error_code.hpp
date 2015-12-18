@@ -22,6 +22,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 enum class error_code : std::int32_t {
+	k_bulk_write_type_uninitialized = 1,
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

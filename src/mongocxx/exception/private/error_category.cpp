@@ -19,6 +19,7 @@
 
 #include <mongocxx/exception/private/error_category.hpp>
 
+#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
 namespace {
@@ -382,7 +383,12 @@ class mongocxx_error_category_impl final : public std::error_category {
     }
 
     std::string message(int code) const noexcept override {
-        return "unknown mongocxx error";
+        switch(static_cast<error_code>(code)) {
+        case error_code::k_bulk_write_type_uninitialized:
+            return "bulk write type was k_uninitialized";
+        default:
+            return "unknown mongocxx error";
+        }
     }
 };
 }  // namespace
