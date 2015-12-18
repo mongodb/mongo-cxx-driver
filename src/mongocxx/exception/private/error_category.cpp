@@ -385,7 +385,7 @@ class mongocxx_error_category_impl final : public std::error_category {
     std::string message(int code) const noexcept override {
         switch(static_cast<error_code>(code)) {
         case error_code::k_bulk_write_type_uninitialized:
-            return "bulk write type was k_uninitialized";
+            return "cannot operate on uninitialized bulk write";
         default:
             return "unknown mongocxx error";
         }
