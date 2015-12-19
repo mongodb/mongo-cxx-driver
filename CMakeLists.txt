@@ -68,7 +68,7 @@ add_custom_target(modernize
     clang-modernize
         -p ${CMAKE_BINARY_DIR}/compile_commands.json
         -include ${CMAKE_CURRENT_SOURCE_DIR}
-        -exclude ${CMAKE_CURRENT_SOURCE_DIR}/mongocxx/test ${CMAKE_CURRENT_SORUCE_DIR}/bsoncxx/test
+        -exclude ${CMAKE_CURRENT_SOURCE_DIR}/mongocxx/test ${CMAKE_CURRENT_SOURCE_DIR}/bsoncxx/test
         -format
     VERBATIM
 )
@@ -80,6 +80,8 @@ add_custom_target(format
     xargs clang-format -i
     VERBATIM
 )
+
+set(THIRD_PARTY_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party)
 
 enable_testing()
 

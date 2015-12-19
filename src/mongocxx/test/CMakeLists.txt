@@ -35,13 +35,13 @@ set(mongocxx_test_sources
 )
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/src/third_party/catch/include
+    ${THIRD_PARTY_SOURCE_DIR}/catch/include
 )
 
 link_directories(${LIBMONGOC_LIBRARY_DIRS} ${LIBBSON_LIBRARY_DIRS})
 
 add_executable(test_driver
-    ${CMAKE_SOURCE_DIR}/src/third_party/catch/main.cpp
+    ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     ${mongocxx_test_sources}
 )
 
