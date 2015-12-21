@@ -262,6 +262,10 @@ class MONGOCXX_API database {
     MONGOCXX_PRIVATE database(const class client& client, stdx::string_view name);
 
     class MONGOCXX_PRIVATE impl;
+
+    MONGOCXX_PRIVATE impl& _get_impl();
+    MONGOCXX_PRIVATE const impl& _get_impl() const;
+
     std::unique_ptr<impl> _impl;
 };
 

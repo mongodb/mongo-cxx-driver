@@ -19,8 +19,11 @@
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/error_category.hpp>
+#include <mongocxx/exception/private/error_code.hpp>
 #include <mongocxx/exception/private/mongoc_error.hpp>
 #include <mongocxx/private/client.hpp>
 #include <mongocxx/private/database.hpp>
@@ -45,15 +48,20 @@ database::~database() = default;
 
 database::database(const class client& client, stdx::string_view name)
     : _impl(stdx::make_unique<impl>(
-          libmongoc::client_get_database(client._impl->client_t, name.data()), client._impl.get(),
+          libmongoc::client_get_database(client._get_impl().client_t, name.data()), &client._get_impl(),
           name.data())) {
 }
 
-database::database(const database& d) : _impl{stdx::make_unique<impl>(*(d._impl))} {
+database::database(const database& d) {
+    if (d) {
+        _impl = stdx::make_unique<impl>(d._get_impl());
+    }
 }
 
 database& database::operator=(const database& d) {
-    _impl = stdx::make_unique<impl>(*(d._impl));
+    if (d) {
+        _impl = stdx::make_unique<impl>(d._get_impl());
+    }
     return *this;
 }
 
@@ -62,7 +70,7 @@ database::operator bool() const noexcept {
 }
 
 void* database::implementation() const {
-    return _impl->database_t;
+    return _get_impl().database_t;
 }
 
 cursor database::list_collections(bsoncxx::document::view_or_value filter) {
@@ -70,7 +78,7 @@ cursor database::list_collections(bsoncxx::document::view_or_value filter) {
     bson_error_t error;
 
     auto result =
-        libmongoc::database_find_collections(_impl->database_t, filter_bson.bson(), &error);
+        libmongoc::database_find_collections(_get_impl().database_t, filter_bson.bson(), &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
@@ -79,7 +87,7 @@ cursor database::list_collections(bsoncxx::document::view_or_value filter) {
     return cursor(result);
 }
 stdx::string_view database::name() const {
-    return _impl->name;
+    return _get_impl().name;
 }
 
 bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value command) {
@@ -88,7 +96,7 @@ bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value 
     bson_error_t error;
 
     reply_bson.flag_init();
-    auto result = libmongoc::database_command_simple(_impl->database_t, command_bson.bson(), NULL,
+    auto result = libmongoc::database_command_simple(_get_impl().database_t, command_bson.bson(), NULL,
                                                      reply_bson.bson(), &error);
 
     if (!result) {
@@ -110,7 +118,7 @@ class collection database::create_collection(stdx::string_view name,
     bson_error_t error;
 
     libbson::scoped_bson_t opts_bson{options.to_document()};
-    auto result = libmongoc::database_create_collection(_impl->database_t, name.data(),
+    auto result = libmongoc::database_create_collection(_get_impl().database_t, name.data(),
                                                         opts_bson.bson(), &error);
 
     if (!result) {
@@ -122,17 +130,17 @@ class collection database::create_collection(stdx::string_view name,
 
 void database::drop() {
     bson_error_t error;
-    if (!libmongoc::database_drop(_impl->database_t, &error)) {
+    if (!libmongoc::database_drop(_get_impl().database_t, &error)) {
         throw_exception<operation_exception>(error);
     }
 }
 
 void database::read_concern(class read_concern rc) {
-    libmongoc::database_set_read_concern(_impl->database_t, rc._impl->read_concern_t);
+    libmongoc::database_set_read_concern(_get_impl().database_t, rc._impl->read_concern_t);
 }
 
 stdx::optional<class read_concern> database::read_concern() const {
-    auto rc = libmongoc::database_get_read_concern(_impl->database_t);
+    auto rc = libmongoc::database_get_read_concern(_get_impl().database_t);
     if (!libmongoc::read_concern_get_level(rc)) {
         return stdx::nullopt;
     }
@@ -140,32 +148,44 @@ stdx::optional<class read_concern> database::read_concern() const {
 }
 
 void database::read_preference(class read_preference rp) {
-    libmongoc::database_set_read_prefs(_impl->database_t, rp._impl->read_preference_t);
+    libmongoc::database_set_read_prefs(_get_impl().database_t, rp._impl->read_preference_t);
 }
 
 bool database::has_collection(stdx::string_view name) const {
     bson_error_t error;
-    return libmongoc::database_has_collection(_impl->database_t, name.data(), &error);
+    return libmongoc::database_has_collection(_get_impl().database_t, name.data(), &error);
 }
 
 class read_preference database::read_preference() const {
     class read_preference rp(stdx::make_unique<read_preference::impl>(
-        libmongoc::read_prefs_copy(libmongoc::database_get_read_prefs(_impl->database_t))));
+        libmongoc::read_prefs_copy(libmongoc::database_get_read_prefs(_get_impl().database_t))));
     return rp;
 }
 
 void database::write_concern(class write_concern wc) {
-    libmongoc::database_set_write_concern(_impl->database_t, wc._impl->write_concern_t);
+    libmongoc::database_set_write_concern(_get_impl().database_t, wc._impl->write_concern_t);
 }
 
 class write_concern database::write_concern() const {
     class write_concern wc(stdx::make_unique<write_concern::impl>(
-        libmongoc::write_concern_copy(libmongoc::database_get_write_concern(_impl->database_t))));
+        libmongoc::write_concern_copy(libmongoc::database_get_write_concern(_get_impl().database_t))));
     return wc;
 }
 
 collection database::collection(stdx::string_view name) const {
     return mongocxx::collection(*this, name);
+}
+
+const database::impl& database::_get_impl() const {
+    if(!_impl) {
+        throw logic_error{make_error_code(error_code::k_invalid_database_object)};
+    }
+    return *_impl;
+}
+
+database::impl& database::_get_impl() {
+    auto cthis = const_cast<const database*>(this);
+    return const_cast<database::impl&>(cthis->_get_impl());
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

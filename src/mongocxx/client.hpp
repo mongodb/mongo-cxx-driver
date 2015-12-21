@@ -226,6 +226,10 @@ class MONGOCXX_API client {
     MONGOCXX_PRIVATE explicit client(void* implementation);
 
     class MONGOCXX_PRIVATE impl;
+
+    MONGOCXX_PRIVATE impl& _get_impl();
+    MONGOCXX_PRIVATE const impl& _get_impl() const;
+
     std::unique_ptr<impl> _impl;
 };
 

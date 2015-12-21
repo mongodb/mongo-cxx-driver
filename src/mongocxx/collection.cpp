@@ -27,8 +27,11 @@
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/error_category.hpp>
+#include <mongocxx/exception/private/error_code.hpp>
 #include <mongocxx/exception/private/mongoc_error.hpp>
 #include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/exception/write_exception.hpp>
@@ -119,14 +122,14 @@ collection::operator bool() const noexcept {
     return static_cast<bool>(_impl);
 }
 
-stdx::string_view collection::name() const noexcept {
-    return stdx::string_view{libmongoc::collection_get_name(_impl->collection_t)};
+stdx::string_view collection::name() const {
+    return stdx::string_view{libmongoc::collection_get_name(_get_impl().collection_t)};
 }
 
 void collection::rename(stdx::string_view new_name, bool drop_target_before_rename) {
     bson_error_t error;
 
-    auto result = libmongoc::collection_rename(_impl->collection_t, _impl->database_name.c_str(),
+    auto result = libmongoc::collection_rename(_get_impl().collection_t, _get_impl().database_name.c_str(),
                                                new_name.data(), drop_target_before_rename, &error);
 
     if (!result) {
@@ -136,27 +139,32 @@ void collection::rename(stdx::string_view new_name, bool drop_target_before_rena
 
 collection::collection(const database& database, stdx::string_view collection_name)
     : _impl(stdx::make_unique<impl>(
-          libmongoc::database_get_collection(database._impl->database_t, collection_name.data()),
-          database.name(), database._impl->client_impl)) {
+          libmongoc::database_get_collection(database._get_impl().database_t, collection_name.data()),
+          database.name(), database._get_impl().client_impl)) {
 }
 
 collection::collection(const database& database, void* collection)
     : _impl(stdx::make_unique<impl>(static_cast<mongoc_collection_t*>(collection), database.name(),
-                                    database._impl->client_impl)) {
+                                    database._get_impl().client_impl)) {
 }
 
-collection::collection(const collection& c) : _impl{stdx::make_unique<impl>(*(c._impl))} {
+collection::collection(const collection& c) {
+    if (c) {
+        _impl = stdx::make_unique<impl>(c._get_impl());
+    }
 }
 
 collection& collection::operator=(const collection& c) {
-    _impl = stdx::make_unique<impl>(*(c._impl));
+    if (c) {
+        _impl = stdx::make_unique<impl>(c._get_impl());
+    }
     return *this;
 }
 
 stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write& bulk_write) {
     mongoc_bulk_operation_t* b = bulk_write._impl->operation_t;
-    libmongoc::bulk_operation_set_client(b, _impl->client_impl->client_t);
-    libmongoc::bulk_operation_set_database(b, _impl->database_name.c_str());
+    libmongoc::bulk_operation_set_client(b, _get_impl().client_impl->client_t);
+    libmongoc::bulk_operation_set_database(b, _get_impl().database_name.c_str());
     libmongoc::bulk_operation_set_collection(b, name().data());
 
     scoped_bson_t reply;
@@ -206,7 +214,7 @@ cursor collection::find(view_or_value filter, const options::find& options) {
     }
 
     auto mongoc_cursor = libmongoc::collection_find(
-        _impl->collection_t, mongoc_query_flags_t(0), options.skip().value_or(0),
+        _get_impl().collection_t, mongoc_query_flags_t(0), options.skip().value_or(0),
         options.limit().value_or(0), options.batch_size().value_or(0), filter_bson.bson(),
         projection.bson(), rp_ptr);
 
@@ -266,13 +274,13 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
         rp_ptr = read_preference()._impl->read_preference_t;
     }
 
-    return cursor(libmongoc::collection_aggregate(_impl->collection_t,
+    return cursor(libmongoc::collection_aggregate(_get_impl().collection_t,
                                                   static_cast<::mongoc_query_flags_t>(0),
                                                   stages.bson(), options_bson.bson(), rp_ptr));
 }
 
 void* collection::implementation() const {
-    return _impl->collection_t;
+    return _get_impl().collection_t;
 }
 
 stdx::optional<result::insert_one> collection::insert_one(view_or_value document,
@@ -440,7 +448,7 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
     libmongoc::find_and_modify_opts_set_flags(opts,
                                               static_cast<::mongoc_find_and_modify_flags_t>(flags));
 
-    return find_and_modify(_impl->collection_t, filter, opts);
+    return find_and_modify(_get_impl().collection_t, filter, opts);
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
@@ -480,7 +488,7 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
     libmongoc::find_and_modify_opts_set_flags(opts,
                                               static_cast<::mongoc_find_and_modify_flags_t>(flags));
 
-    return find_and_modify(_impl->collection_t, filter, opts);
+    return find_and_modify(_get_impl().collection_t, filter, opts);
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
@@ -504,7 +512,7 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
 
     libmongoc::find_and_modify_opts_set_flags(opts, flags);
 
-    return find_and_modify(_impl->collection_t, filter, opts);
+    return find_and_modify(_get_impl().collection_t, filter, opts);
 }
 
 std::int64_t collection::count(view_or_value filter, const options::count& options) {
@@ -531,7 +539,7 @@ std::int64_t collection::count(view_or_value filter, const options::count& optio
     scoped_bson_t cmd_opts_bson{cmd_opts_builder.view()};
 
     auto result = libmongoc::collection_count_with_opts(
-        _impl->collection_t, static_cast<mongoc_query_flags_t>(0), bson_filter.bson(),
+        _get_impl().collection_t, static_cast<mongoc_query_flags_t>(0), bson_filter.bson(),
         options.skip().value_or(0), options.limit().value_or(0), cmd_opts_bson.bson(), rp_ptr,
         &error);
 
@@ -638,7 +646,7 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
     }
 
     auto result =
-        libmongoc::collection_create_index(_impl->collection_t, bson_keys.bson(), &opt, &error);
+        libmongoc::collection_create_index(_get_impl().collection_t, bson_keys.bson(), &opt, &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
@@ -668,7 +676,7 @@ cursor collection::distinct(stdx::string_view field_name, view_or_value query,
     scoped_bson_t command_bson{command_builder.extract()};
 
     auto database =
-        libmongoc::client_get_database(_impl->client_impl->client_t, _impl->database_name.data());
+        libmongoc::client_get_database(_get_impl().client_impl->client_t, _get_impl().database_name.data());
 
     auto result = libmongoc::database_command(database, MONGOC_QUERY_NONE, 0, 0, 0,
                                               command_bson.bson(), NULL, NULL);
@@ -678,7 +686,7 @@ cursor collection::distinct(stdx::string_view field_name, view_or_value query,
 
 cursor collection::list_indexes() const {
     bson_error_t error;
-    auto result = libmongoc::collection_find_indexes(_impl->collection_t, &error);
+    auto result = libmongoc::collection_find_indexes(_get_impl().collection_t, &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
@@ -690,7 +698,7 @@ cursor collection::list_indexes() const {
 void collection::drop() {
     bson_error_t error;
 
-    auto result = libmongoc::collection_drop(_impl->collection_t, &error);
+    auto result = libmongoc::collection_drop(_get_impl().collection_t, &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
@@ -698,11 +706,11 @@ void collection::drop() {
 }
 
 void collection::read_concern(class read_concern rc) {
-    libmongoc::collection_set_read_concern(_impl->collection_t, rc._impl->read_concern_t);
+    libmongoc::collection_set_read_concern(_get_impl().collection_t, rc._impl->read_concern_t);
 }
 
 stdx::optional<class read_concern> collection::read_concern() const {
-    auto rc = libmongoc::collection_get_read_concern(_impl->collection_t);
+    auto rc = libmongoc::collection_get_read_concern(_get_impl().collection_t);
     if (!libmongoc::read_concern_get_level(rc)) {
         return stdx::nullopt;
     }
@@ -710,23 +718,35 @@ stdx::optional<class read_concern> collection::read_concern() const {
 }
 
 void collection::read_preference(class read_preference rp) {
-    libmongoc::collection_set_read_prefs(_impl->collection_t, rp._impl->read_preference_t);
+    libmongoc::collection_set_read_prefs(_get_impl().collection_t, rp._impl->read_preference_t);
 }
 
 class read_preference collection::read_preference() const {
     class read_preference rp(stdx::make_unique<read_preference::impl>(
-        libmongoc::read_prefs_copy(libmongoc::collection_get_read_prefs(_impl->collection_t))));
+        libmongoc::read_prefs_copy(libmongoc::collection_get_read_prefs(_get_impl().collection_t))));
     return rp;
 }
 
 void collection::write_concern(class write_concern wc) {
-    libmongoc::collection_set_write_concern(_impl->collection_t, wc._impl->write_concern_t);
+    libmongoc::collection_set_write_concern(_get_impl().collection_t, wc._impl->write_concern_t);
 }
 
 class write_concern collection::write_concern() const {
     class write_concern wc(stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
-        libmongoc::collection_get_write_concern(_impl->collection_t))));
+        libmongoc::collection_get_write_concern(_get_impl().collection_t))));
     return wc;
+}
+
+const collection::impl& collection::_get_impl() const {
+    if(!_impl) {
+        throw logic_error{make_error_code(error_code::k_invalid_collection_object)};
+    }
+    return *_impl;
+}
+
+collection::impl& collection::_get_impl() {
+    auto cthis = const_cast<const collection*>(this);
+    return const_cast<collection::impl&>(cthis->_get_impl());
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

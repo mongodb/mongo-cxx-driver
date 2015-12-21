@@ -16,6 +16,7 @@
 #include "helpers.hpp"
 
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/uri.hpp>
 
@@ -26,6 +27,11 @@ TEST_CASE("A default constructed client is false-ish", "[client]") {
 
     client a;
     REQUIRE(!a);
+}
+
+TEST_CASE("A default constructed client cannot perform operations", "[client]") {
+    client a;
+    REQUIRE_THROWS_AS(a.list_databases(), mongocxx::logic_error);
 }
 
 TEST_CASE("A client constructed with a URI is truthy", "[client]") {

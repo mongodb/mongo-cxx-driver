@@ -19,6 +19,7 @@
 
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/modify_collection.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/private/libbson.hpp>
@@ -45,6 +46,11 @@ void clear_collection(const database& database, bsoncxx::stdx::string_view colle
 TEST_CASE("A default constructed database is false-ish", "[database]") {
     database d;
     REQUIRE(!d);
+}
+
+TEST_CASE("A default constructed database cannot perform operations", "[database]") {
+    database d;
+    REQUIRE_THROWS_AS(d.name(), mongocxx::logic_error);
 }
 
 TEST_CASE("database copy", "[database]") {

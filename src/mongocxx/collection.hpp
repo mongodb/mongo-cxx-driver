@@ -474,7 +474,7 @@ class MONGOCXX_API collection {
     ///
     /// @return The name of the collection.
     ///
-    stdx::string_view name() const noexcept;
+    stdx::string_view name() const;
 
     ///
     /// Rename this collection.
@@ -609,6 +609,10 @@ class MONGOCXX_API collection {
     MONGOCXX_PRIVATE collection(const database& database, void* collection);
 
     class MONGOCXX_PRIVATE impl;
+
+    MONGOCXX_PRIVATE impl& _get_impl();
+    MONGOCXX_PRIVATE const impl& _get_impl() const;
+
     std::unique_ptr<impl> _impl;
 };
 

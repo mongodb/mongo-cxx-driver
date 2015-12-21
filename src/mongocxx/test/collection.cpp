@@ -24,10 +24,16 @@
 
 #include <mongocxx/collection.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/pipeline.hpp>
 
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
+
+TEST_CASE("A default constructed collection cannot perform operations", "[collection]") {
+    collection c;
+    REQUIRE_THROWS_AS(c.name(), mongocxx::logic_error);
+}
 
 TEST_CASE("collection copy", "[collection]") {
     client mongodb_client{uri{}};

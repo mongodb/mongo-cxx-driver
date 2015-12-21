@@ -30,9 +30,9 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 void pool::_release(client* client) {
-    libmongoc::client_pool_push(_impl->client_pool_t, client->_impl->client_t);
+    libmongoc::client_pool_push(_impl->client_pool_t, client->_get_impl().client_t);
     // prevent client destructor from destroying the underlying mongoc_client_t
-    client->_impl->client_t = nullptr;
+    client->_get_impl().client_t = nullptr;
     delete client;
 }
 
