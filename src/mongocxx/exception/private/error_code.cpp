@@ -18,7 +18,7 @@
 
 #include <mongocxx/exception/private/error_code.hpp>
 
-#include <mongocxx/exception/error_category.hpp>
+#include <mongocxx/exception/private/error_category.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

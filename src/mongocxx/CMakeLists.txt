@@ -26,6 +26,7 @@ set(mongocxx_sources
     database.cpp
     exception/operation_exception.cpp
     exception/private/error_category.cpp
+    exception/private/error_code.cpp
     exception/private/mongoc_error.cpp
     hint.cpp
     insert_many_builder.cpp

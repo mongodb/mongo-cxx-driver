@@ -18,6 +18,9 @@
 
 #include <mongocxx/config/prelude.hpp>
 
+#include <mongocxx/exception/bulk_write_exception.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/private/error_code.hpp>
 #include <mongocxx/private/libbson.hpp>
 #include <mongocxx/private/bulk_write.hpp>
 #include <mongocxx/private/libmongoc.hpp>
@@ -83,7 +86,7 @@ void bulk_write::append(const model::write& operation) {
             break;
         }
         case write_type::k_uninitialized:
-            break;  // TODO: something exceptiony
+            throw bulk_write_exception{make_error_code(error_code::k_bulk_write_type_uninitialized)};
     }
 }
 
