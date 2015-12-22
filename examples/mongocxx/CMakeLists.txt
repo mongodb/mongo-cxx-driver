@@ -10,6 +10,7 @@ link_directories(
 set(MONGOCXX_EXAMPLES
     aggregate.cpp
     create.cpp
+    document_validation.cpp
     index.cpp
     query.cpp
     remove.cpp
