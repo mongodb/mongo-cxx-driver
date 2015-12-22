@@ -18,6 +18,7 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/types.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -47,6 +48,10 @@ void create_collection::no_padding(bool no_padding) {
     _no_padding = no_padding;
 }
 
+void create_collection::validation_criteria(class validation_criteria validation) {
+    _validation = std::move(validation);
+}
+
 bsoncxx::document::value create_collection::to_document() const {
     auto doc = bsoncxx::builder::stream::document{};
 
@@ -67,13 +72,15 @@ bsoncxx::document::value create_collection::to_document() const {
     }
 
     if (_storage_engine_opts) {
-        doc << "storageEngine" << bsoncxx::builder::stream::open_document
-            << bsoncxx::builder::stream::concatenate(*_storage_engine_opts)
-            << bsoncxx::builder::stream::close_document;
+        doc << "storageEngine" << bsoncxx::types::b_document{*_storage_engine_opts};
     }
 
     if (_no_padding) {
         doc << "noPadding" << *_no_padding;
+    }
+
+    if (_validation) {
+        doc << bsoncxx::builder::stream::concatenate(_validation->to_document());
     }
 
     return doc.extract();

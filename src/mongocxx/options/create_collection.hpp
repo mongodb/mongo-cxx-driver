@@ -19,6 +19,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
+#include <mongocxx/validation_criteria.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -97,6 +98,16 @@ class MONGOCXX_API create_collection {
     void no_padding(bool no_padding);
 
     ///
+    /// Specify validation criteria for this collection.
+    ///
+    /// TODO: link to documentation once it is published.
+    ///
+    /// @param validation
+    ///   Validation criteria for this collection.
+    ///
+    void validation_criteria(class validation_criteria validation);
+
+    ///
     /// Return a bson document representing the options set on this object.
     ///
     /// @return Options, as a document.
@@ -112,6 +123,7 @@ class MONGOCXX_API create_collection {
     stdx::optional<int> _max_documents;
     stdx::optional<bsoncxx::document::view_or_value> _storage_engine_opts;
     stdx::optional<bool> _no_padding;
+    stdx::optional<class validation_criteria> _validation;
 };
 
 MONGOCXX_INLINE create_collection::operator bsoncxx::document::value() const {
