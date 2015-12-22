@@ -51,6 +51,7 @@ set(mongocxx_sources
     options/find_one_and_update.cpp
     options/index.cpp
     options/insert.cpp
+    options/modify_collection.cpp
     options/ssl.cpp
     options/update.cpp
     pipeline.cpp

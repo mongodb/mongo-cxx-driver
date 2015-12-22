@@ -22,6 +22,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <mongocxx/collection.hpp>
+#include <mongocxx/options/modify_collection.hpp>
 #include <mongocxx/options/create_collection.hpp>
 #include <mongocxx/write_concern.hpp>
 #include <mongocxx/read_preference.hpp>
@@ -102,6 +103,20 @@ class MONGOCXX_API database {
     class collection create_collection(
         stdx::string_view name,
         const options::create_collection& options = options::create_collection());
+
+    ///
+    /// Modify an existing collection.
+    ///
+    /// @see https://docs.mongodb.org/manual/reference/command/collMod/
+    ///
+    /// @param name the name of the collection to be modified.
+    /// @param options the modifications to be performed.
+    ///
+    /// @return the result of executing the command.
+    ///
+    bsoncxx::document::value modify_collection(
+        stdx::string_view name,
+        const options::modify_collection& options = options::modify_collection());
 
     ///
     /// Drops the database and all its collections.

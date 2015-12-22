@@ -15,13 +15,21 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
-#include <mongocxx/client.hpp>
-#include <mongocxx/private/libmongoc.hpp>
-#include <mongocxx/private/libbson.hpp>
-
 #include <mongocxx/database.hpp>
 
+#include <bsoncxx/builder/stream/helpers.hpp>
+#include <mongocxx/client.hpp>
+#include <mongocxx/options/modify_collection.hpp>
+#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/libbson.hpp>
+#include <mongocxx/validation_criteria.hpp>
+
 using namespace mongocxx;
+
+using bsoncxx::builder::stream::close_document;
+using bsoncxx::builder::stream::document;
+using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::stream::open_document;
 
 namespace {
 
@@ -285,6 +293,28 @@ TEST_CASE("Database integration tests", "[database]") {
         }
 
         clear_collection(database, collection_name);
+    }
+
+    SECTION("A collection may be modified via modify_collection") {
+        database.create_collection(collection_name);
+
+        auto rule = document{} << "email" << open_document << "$exists"
+                               << "true" << close_document << finalize;
+
+        validation_criteria criteria;
+        criteria.rule(rule.view());
+
+        options::modify_collection opts;
+        opts.validation_criteria(criteria);
+
+        auto res = database.modify_collection(collection_name, opts);
+
+        auto cursor = database.list_collections();
+        for (auto&& coll : cursor) {
+            if (coll["name"].get_utf8().value == collection_name) {
+                REQUIRE(coll["options"]["validator"].get_document().value == rule);
+            }
+        }
     }
 
     SECTION("A database may be dropped") {

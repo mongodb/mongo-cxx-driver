@@ -16,12 +16,13 @@ set(mongocxx_test_sources
     options/aggregate.cpp
     options/create_collection.cpp
     options/find.cpp
-    options/index.cpp
-    options/insert.cpp
-    options/update.cpp
     options/find_one_and_delete.cpp
     options/find_one_and_replace.cpp
     options/find_one_and_update.cpp
+    options/index.cpp
+    options/insert.cpp
+    options/modify_collection.cpp
+    options/update.cpp
     pool.cpp
     private/scoped_bson_t.cpp
     private/write_concern.cpp

@@ -16,6 +16,7 @@
 
 #include <utility>
 
+#include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -27,6 +28,10 @@
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/private/read_concern.hpp>
 #include <mongocxx/private/read_preference.hpp>
+
+using bsoncxx::builder::stream::concatenate;
+using bsoncxx::builder::stream::document;
+using bsoncxx::builder::stream::finalize;
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -93,12 +98,18 @@ bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value 
     return reply_bson.steal();
 }
 
+bsoncxx::document::value database::modify_collection(stdx::string_view name,
+                                                     const options::modify_collection& options) {
+    auto doc = document{} << "collMod" << name << concatenate(options.to_document()) << finalize;
+
+    return run_command(doc.view());
+}
+
 class collection database::create_collection(stdx::string_view name,
                                              const options::create_collection& options) {
     bson_error_t error;
 
     libbson::scoped_bson_t opts_bson{options.to_document()};
-
     auto result = libmongoc::database_create_collection(_impl->database_t, name.data(),
                                                         opts_bson.bson(), &error);
 
