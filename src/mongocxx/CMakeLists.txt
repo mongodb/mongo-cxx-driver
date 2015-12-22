@@ -66,6 +66,7 @@ set(mongocxx_sources
     result/replace_one.cpp
     result/update.cpp
     uri.cpp
+    validation_criteria.cpp
     write_concern.cpp
 )
 
