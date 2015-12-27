@@ -89,18 +89,6 @@ class MONGOCXX_API bulk_write {
     void append(const model::write& operation);
 
     ///
-    /// Gets a handle to the underlying implementation.
-    ///
-    /// Returned pointer is only valid for the lifetime of this object.
-    ///
-    /// @deprecated Future versions of the driver reserve the right to change the implementation
-    ///   and remove this interface entirely.
-    ///
-    /// @return Pointer to implementation of this object, or nullptr if not available.
-    ///
-    MONGOCXX_DEPRECATED void* implementation() const;
-
-    ///
     /// Whether or not to bypass document validation for this operation.
     ///
     /// @param bypass_document_validation

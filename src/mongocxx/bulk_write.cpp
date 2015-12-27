@@ -87,10 +87,6 @@ void bulk_write::append(const model::write& operation) {
     }
 }
 
-void* bulk_write::implementation() const {
-    return _impl->operation_t;
-}
-
 void bulk_write::bypass_document_validation(bool bypass_document_validation) {
     libmongoc::bulk_operation_set_bypass_document_validation(_impl->operation_t,
                                                              bypass_document_validation);

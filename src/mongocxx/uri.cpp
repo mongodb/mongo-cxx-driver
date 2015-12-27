@@ -64,10 +64,6 @@ std::vector<uri::host> uri::hosts() const {
     return result;
 }
 
-void* uri::implementation() const {
-    return _impl->uri_t;
-}
-
 bsoncxx::document::view uri::options() const {
     auto opts_bson = libmongoc::uri_get_options(_impl->uri_t);
     return bsoncxx::document::view{::bson_get_data(opts_bson), opts_bson->len};

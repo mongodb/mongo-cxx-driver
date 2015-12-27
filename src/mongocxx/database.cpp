@@ -69,10 +69,6 @@ database::operator bool() const noexcept {
     return static_cast<bool>(_impl);
 }
 
-void* database::implementation() const {
-    return _get_impl().database_t;
-}
-
 cursor database::list_collections(bsoncxx::document::view_or_value filter) {
     libbson::scoped_bson_t filter_bson{filter};
     bson_error_t error;

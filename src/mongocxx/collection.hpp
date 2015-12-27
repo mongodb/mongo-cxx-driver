@@ -380,18 +380,6 @@ class MONGOCXX_API collection {
         const options::find_one_and_update& options = options::find_one_and_update());
 
     ///
-    /// Gets a handle to the underlying implementation.
-    ///
-    /// Returned pointer is only valid for the lifetime of this object.
-    ///
-    /// @deprecated Future versions of the driver reserve the right to change the implementation
-    ///   and remove this interface entirely.
-    ///
-    /// @return Pointer to implementation of this object, or nullptr if not available.
-    ///
-    MONGOCXX_DEPRECATED void* implementation() const;
-
-    ///
     /// Inserts a single document into the collection. If the document is missing an identifier
     /// (@c _id field) one will be generated for it.
     ///

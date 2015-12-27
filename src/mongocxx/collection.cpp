@@ -283,10 +283,6 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
                                                   stages.bson(), options_bson.bson(), rp_ptr));
 }
 
-void* collection::implementation() const {
-    return _get_impl().collection_t;
-}
-
 stdx::optional<result::insert_one> collection::insert_one(view_or_value document,
                                                           const options::insert& options) {
     class bulk_write bulk_op(false);

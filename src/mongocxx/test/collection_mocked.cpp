@@ -128,7 +128,6 @@ TEST_CASE("Collection", "[collection]") {
             [&](mongoc_collection_t* collection, mongoc_query_flags_t flags, const bson_t* pipeline,
                 const bson_t* options, const mongoc_read_prefs_t* read_prefs) -> mongoc_cursor_t* {
                 collection_aggregate_called = true;
-                REQUIRE(collection == mongo_coll.implementation());
                 REQUIRE(flags == MONGOC_QUERY_NONE);
 
                 bsoncxx::array::view p(bson_get_data(pipeline), pipeline->len);
@@ -166,8 +165,6 @@ TEST_CASE("Collection", "[collection]") {
                 else
                     REQUIRE(!o["bypassDocumentValidation"]);
 
-                REQUIRE(read_prefs == mongo_coll.read_preference().implementation());
-
                 return NULL;
             });
 
@@ -196,7 +193,6 @@ TEST_CASE("Collection", "[collection]") {
         bool success = true;
         std::int64_t expected_skip = 0;
         std::int64_t expected_limit = 0;
-        auto expected_read_pref = mongo_coll.read_preference().implementation();
 
         const bson_t* expected_opts = nullptr;
 
@@ -205,14 +201,10 @@ TEST_CASE("Collection", "[collection]") {
                 int64_t skip, int64_t limit, const bson_t* cmd_opts,
                 const mongoc_read_prefs_t* read_prefs, bson_error_t*) {
                 collection_count_called = true;
-                REQUIRE(coll == mongo_coll.implementation());
                 REQUIRE(flags == MONGOC_QUERY_NONE);
                 REQUIRE(bson_get_data(query) == filter_doc.view().data());
                 REQUIRE(skip == expected_skip);
                 REQUIRE(limit == expected_limit);
-                if (expected_read_pref) {
-                    REQUIRE(MONGOC_READ_SECONDARY == mongoc_read_prefs_get_mode(read_prefs));
-                }
                 if (expected_opts) {
                     REQUIRE(bson_equal(cmd_opts, expected_opts));
                 }
@@ -279,7 +271,6 @@ TEST_CASE("Collection", "[collection]") {
         collection_create_index->interpose([&](mongoc_collection_t* coll, const bson_t*,
                                                const mongoc_index_opt_t* opt, bson_error_t*) {
             collection_create_index_called = true;
-            REQUIRE(coll == mongo_coll.implementation());
             if (options.unique()) {
                 REQUIRE(opt->unique == expected_unique);
             }
@@ -330,7 +321,6 @@ TEST_CASE("Collection", "[collection]") {
 
         collection_drop->interpose([&](mongoc_collection_t* coll, bson_error_t*) {
             collection_drop_called = true;
-            REQUIRE(coll == mongo_coll.implementation());
             return success;
         });
 
@@ -360,7 +350,6 @@ TEST_CASE("Collection", "[collection]") {
                                        const mongoc_read_prefs_t* read_prefs) {
             collection_find_called = true;
 
-            REQUIRE(coll == mongo_coll.implementation());
             REQUIRE(flags == MONGOC_QUERY_NONE);
             REQUIRE(skip == skip);
             REQUIRE(limit == limit);
@@ -436,7 +425,6 @@ TEST_CASE("Collection", "[collection]") {
 
         bulk_operation_set_client->interpose([&](mongoc_bulk_operation_t*, void* client) {
             bulk_operation_set_client_called = true;
-            REQUIRE(client == mongo_client.implementation());
         });
 
         bulk_operation_set_database->interpose([&](mongoc_bulk_operation_t*, const char* db) {
@@ -454,7 +442,6 @@ TEST_CASE("Collection", "[collection]") {
             [&](mongoc_bulk_operation_t*, const mongoc_write_concern_t*) {
                 bulk_operation_set_write_concern_called = true;
                 // TODO: actually test the write concern setting is correct or default
-                // REQUIRE(wc == concern.implementation());
             });
 
         bulk_operation_execute->interpose(

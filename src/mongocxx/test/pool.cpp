@@ -148,7 +148,6 @@ TEST_CASE(
 
         REQUIRE(!!client);
         REQUIRE(try_pop_called);
-        REQUIRE(client->get()->implementation() == fake);
     }
 }
 

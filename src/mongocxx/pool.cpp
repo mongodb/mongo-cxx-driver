@@ -72,9 +72,5 @@ stdx::optional<pool::entry> pool::try_acquire() {
         }};
 }
 
-void* pool::implementation() const {
-    return _impl->client_pool_t;
-}
-
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

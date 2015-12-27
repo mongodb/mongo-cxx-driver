@@ -60,10 +60,6 @@ client::operator bool() const noexcept {
     return static_cast<bool>(_impl);
 }
 
-void* client::implementation() const {
-    return _get_impl().client_t;
-}
-
 void client::read_concern(class read_concern rc) {
     libmongoc::client_set_read_concern(_get_impl().client_t, rc._impl->read_concern_t);
 }

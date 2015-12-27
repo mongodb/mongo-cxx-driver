@@ -93,18 +93,6 @@ class MONGOCXX_API client {
     explicit operator bool() const noexcept;
 
     ///
-    /// Gets a handle to the underlying implementation.
-    ///
-    /// Returned pointer is only valid for the lifetime of this object.
-    ///
-    /// @deprecated Future versions of the driver reserve the right to change the implementation
-    ///   and remove this interface entirely.
-    ///
-    /// @return Pointer to implementation of this object, or nullptr if not available.
-    ///
-    MONGOCXX_DEPRECATED void* implementation() const;
-
-    ///
     /// Sets the read concern for this client.
     ///
     /// Modifications at this level do not affect existing databases instances that have have been
