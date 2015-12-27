@@ -26,6 +26,9 @@ enum class error_code : std::int32_t {
     k_invalid_collection_object,
     k_invalid_database_object,
     k_invalid_parameter,
+    k_ssl_not_supported,
+    k_unknown_read_concern,
+    k_unknown_write_concern,
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

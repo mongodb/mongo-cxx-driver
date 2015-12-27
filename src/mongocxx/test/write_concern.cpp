@@ -14,6 +14,7 @@
 
 #include "catch.hpp"
 
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/write_concern.hpp>
 
 using namespace mongocxx;
@@ -91,9 +92,8 @@ TEST_CASE("write_concern fields may be set and retrieved", "[write_concern]") {
     }
 
     SECTION("setting invalid acknowledge levels throws") {
-        // TODO fix exception
-        REQUIRE_THROWS_AS(wc.acknowledge_level(write_concern::level::k_unknown), std::invalid_argument);
-        REQUIRE_THROWS_AS(wc.acknowledge_level(write_concern::level::k_tag), std::invalid_argument);
+        REQUIRE_THROWS_AS(wc.acknowledge_level(write_concern::level::k_unknown), exception);
+        REQUIRE_THROWS_AS(wc.acknowledge_level(write_concern::level::k_tag), exception);
         wc.tag("AnyTag");
         REQUIRE_NOTHROW(wc.acknowledge_level(write_concern::level::k_tag));
     }

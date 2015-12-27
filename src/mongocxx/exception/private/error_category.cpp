@@ -393,6 +393,12 @@ class mongocxx_error_category_impl final : public std::error_category {
                 return "invalid use of default constructed or moved-from mongocxx::database object";
             case error_code::k_invalid_parameter:
                 return "an invalid or out-of-bounds parameter was provided";
+            case error_code::k_ssl_not_supported:
+                return "SSL support not available";
+            case error_code::k_unknown_read_concern:
+                return "invalid attempt to set an unknown read concern level";
+            case error_code::k_unknown_write_concern:
+                return "invalid attempt to set an unknown write concern level";
             default:
                 return "unknown mongocxx error";
         }

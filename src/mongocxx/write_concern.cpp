@@ -18,11 +18,14 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/private/error_category.hpp>
 #include <mongocxx/exception/private/error_code.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/private/write_concern.hpp>
+#include <mongocxx/stdx.hpp>
 #include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
@@ -85,11 +88,7 @@ void write_concern::acknowledge_level(write_concern::level confirm_level) {
         if (libmongoc::write_concern_get_w(_impl->write_concern_t) == MONGOC_WRITE_CONCERN_W_TAG)
             return;
     default:
-        // TODO throw a mongocxx exception
-        throw std::invalid_argument(
-            "acknowledge_level can only be used to set levels of k_default, k_majority, or "
-            "k_unacknowledged.");
-        return;
+        throw exception{make_error_code(error_code::k_unknown_write_concern)};
     }
     libmongoc::write_concern_set_w(_impl->write_concern_t, w);
 }

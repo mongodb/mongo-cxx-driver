@@ -82,7 +82,6 @@ class BSONCXX_API element {
 
     stdx::string_view key() const;
 
-    // TODO figure out a better exception than std::runtime_error
     types::b_double get_double() const;
     types::b_utf8 get_utf8() const;
     types::b_document get_document() const;

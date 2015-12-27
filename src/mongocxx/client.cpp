@@ -42,7 +42,7 @@ client::client(const class uri& uri, const options::client& options)
         auto mongoc_opts = options::make_ssl_opts(*options.ssl_opts());
         libmongoc::client_set_ssl_opts(_get_impl().client_t, &mongoc_opts);
 #else
-        // TODO: For now, just ignoring. Should we throw?
+        throw exception{make_error_code(error_code::k_ssl_not_supported)};
 #endif
     }
 }

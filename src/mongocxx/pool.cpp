@@ -21,10 +21,13 @@
 #include <mongocxx/config/prelude.hpp>
 
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/exception.hpp>
+#include <mongocxx/exception/private/error_code.hpp>
 #include <mongocxx/private/client.hpp>
 #include <mongocxx/private/pool.hpp>
-#include <mongocxx/private/uri.hpp>
 #include <mongocxx/private/ssl.hpp>
+#include <mongocxx/private/uri.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -49,7 +52,7 @@ pool::pool(const uri& mongodb_uri, stdx::optional<options::ssl> ssl_options)
         // temporary as the driver will copy it.
         libmongoc::client_pool_set_ssl_opts(_impl->client_pool_t, &mongoc_opts);
 #else
-        // TODO: For now, just ignoring. Should we throw?
+        throw exception{make_error_code(error_code::k_ssl_not_supported)};
 #endif
     }
 }

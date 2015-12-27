@@ -47,9 +47,6 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 ///   mongocxx::client mongo_client("mongodb://localhost:27017");
 /// @endcode
 ///
-/// @todo Make iterable for databases on the server
-/// @todo Add + implement missing client api methods
-///
 class MONGOCXX_API client {
 
    public:
