@@ -118,7 +118,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto cursor = coll.find({});
 
-        std::size_t i = 0;
+        std::int32_t i = 0;
         for (auto&& x : cursor) {
             i++;
             REQUIRE(x["x"].get_int32() == i);

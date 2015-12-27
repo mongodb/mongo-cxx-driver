@@ -86,7 +86,7 @@ class mock<R (*)(Args...)> {
             std::array<R, sizeof...(rs)+1> vec = {r, rs...};
             std::size_t i = 0;
 
-            _callbacks.emplace([vec, i](Args... args) mutable -> R {
+            _callbacks.emplace([vec, i](Args...) mutable -> R {
                 if (i == vec.size()) {
                     i = 0;
                 }

@@ -64,6 +64,8 @@ class bsoncxx_error_category_impl final : public std::error_category {
                 return "can't convert builder to a valid view: unmatched key";
             case error_code::k_unset_element:
                 return "unset document::element";
+            default:
+                return "unknown bsoncxx error code";
         }
     }
 };
@@ -120,7 +122,7 @@ class libbson_unknown_error final : public std::error_category {
         return "libbson unknown error";
     }
 
-    std::string message(int code) const noexcept override {
+    std::string message(int) const noexcept override {
         return "unknown libbson error in unknown domain";
     }
 };

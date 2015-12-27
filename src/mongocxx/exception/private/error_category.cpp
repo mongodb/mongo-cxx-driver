@@ -167,7 +167,7 @@ class mongoc_insert_error_category final : public std::error_category {
         return "libmongoc insert error";
     }
 
-    std::string message(int code) const noexcept override {
+    std::string message(int) const noexcept override {
         return "unknown mongoc insert error";
     }
 };
@@ -267,7 +267,7 @@ class mongoc_sasl_error_category final : public std::error_category {
         return "libmongoc sasl error";
     }
 
-    std::string message(int code) const noexcept override {
+    std::string message(int) const noexcept override {
         return "unknown mongoc sasl error";
     }
 };
@@ -354,7 +354,7 @@ class mongoc_write_concern_error_category final : public std::error_category {
         return "libmongoc write concern error";
     }
 
-    std::string message(int code) const noexcept override {
+    std::string message(int) const noexcept override {
         return "unknown mongoc write concern error";
     }
 };
@@ -368,7 +368,7 @@ class mongoc_unknown_error_category final : public std::error_category {
         return "libmongoc unknown error";
     }
 
-    std::string message(int code) const noexcept override {
+    std::string message(int) const noexcept override {
         return "unknown mongoc error";
     }
 };
@@ -391,6 +391,8 @@ class mongocxx_error_category_impl final : public std::error_category {
                        "object";
             case error_code::k_invalid_database_object:
                 return "invalid use of default constructed or moved-from mongocxx::database object";
+            case error_code::k_invalid_parameter:
+                return "an invalid or out-of-bounds parameter was provided";
             default:
                 return "unknown mongocxx error";
         }

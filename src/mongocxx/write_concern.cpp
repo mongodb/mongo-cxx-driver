@@ -14,12 +14,16 @@
 
 #include <mongocxx/write_concern.hpp>
 
-#include <mongocxx/private/write_concern.hpp>
+#include <limits>
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-#include <mongocxx/stdx.hpp>
+#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/private/error_category.hpp>
+#include <mongocxx/exception/private/error_code.hpp>
 #include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/write_concern.hpp>
+#include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -95,11 +99,17 @@ void write_concern::tag(stdx::string_view confirm_from) {
 }
 
 void write_concern::majority(std::chrono::milliseconds timeout) {
-    libmongoc::write_concern_set_wmajority(_impl->write_concern_t, timeout.count());
+    const auto count = timeout.count();
+    if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
+        throw logic_error{make_error_code(error_code::k_invalid_parameter)};
+    libmongoc::write_concern_set_wmajority(_impl->write_concern_t, static_cast<std::int32_t>(count));
 }
 
 void write_concern::timeout(std::chrono::milliseconds timeout) {
-    libmongoc::write_concern_set_wtimeout(_impl->write_concern_t, timeout.count());
+    const auto count = timeout.count();
+    if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
+        throw logic_error{make_error_code(error_code::k_invalid_parameter)};
+    libmongoc::write_concern_set_wtimeout(_impl->write_concern_t, static_cast<std::int32_t>(count));
 }
 
 bool write_concern::fsync() const {

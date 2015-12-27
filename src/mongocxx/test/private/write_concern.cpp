@@ -27,7 +27,7 @@ TEST_CASE("creation of write_concern passes universal parameters to c-driver's m
         bool fsync_called = false;
         bool fsync_value = false;
         auto mock_instance = libmongoc::write_concern_set_fsync.create_instance();
-        mock_instance->visit([&](mongoc_write_concern_t* wc, bool fsync) {
+        mock_instance->visit([&](mongoc_write_concern_t*, bool fsync) {
             fsync_called = true;
             fsync_value = fsync;
         });
@@ -42,7 +42,7 @@ TEST_CASE("creation of write_concern passes universal parameters to c-driver's m
         bool journal_called = false;
         bool journal_value = false;
         auto mock_instance = libmongoc::write_concern_set_journal.create_instance();
-        mock_instance->visit([&](mongoc_write_concern_t* wc, bool journal) {
+        mock_instance->visit([&](mongoc_write_concern_t*, bool journal) {
             journal_called = true;
             journal_value = journal;
         });
@@ -57,7 +57,7 @@ TEST_CASE("creation of write_concern passes universal parameters to c-driver's m
         bool wtimeout_called = false;
         int wtimeout_value = 0;
         auto mock_instance = libmongoc::write_concern_set_wtimeout.create_instance();
-        mock_instance->visit([&](mongoc_write_concern_t* wc, int wtimeout) {
+        mock_instance->visit([&](mongoc_write_concern_t*, int wtimeout) {
             wtimeout_called = true;
             wtimeout_value = wtimeout;
         });
@@ -74,10 +74,10 @@ TEST_CASE("write_concern is called with w MAJORITY", "[write_concern][base][c-dr
     auto w_instance = libmongoc::write_concern_set_w.create_instance();
     auto wmajority_instance = libmongoc::write_concern_set_wmajority.create_instance();
     auto wtag_instance = libmongoc::write_concern_set_wtag.create_instance();
-    w_instance->visit([&](mongoc_write_concern_t* wc, int w) { w_called = true; });
+    w_instance->visit([&](mongoc_write_concern_t*, int) { w_called = true; });
     wmajority_instance->visit(
-        [&](mongoc_write_concern_t* wc, int wtimout) { wmajority_called = true; });
-    wtag_instance->visit([&](mongoc_write_concern_t* wc, const char* wtag) { wtag_called = true; });
+        [&](mongoc_write_concern_t*, int) { wmajority_called = true; });
+    wtag_instance->visit([&](mongoc_write_concern_t*, const char*) { wtag_called = true; });
 
     write_concern wc{};
     wc.majority(std::chrono::milliseconds(100));
@@ -104,13 +104,13 @@ TEST_CASE("write_concern is called with a number of necessary confirmations",
     auto w_instance = libmongoc::write_concern_set_w.create_instance();
     auto wmajority_instance = libmongoc::write_concern_set_wmajority.create_instance();
     auto wtag_instance = libmongoc::write_concern_set_wtag.create_instance();
-    w_instance->visit([&](mongoc_write_concern_t* wc, int w) {
+    w_instance->visit([&](mongoc_write_concern_t*, int w) {
         w_called = true;
         w_value = w;
     });
     wmajority_instance->visit(
-        [&](mongoc_write_concern_t* wc, int wtimout) { wmajority_called = true; });
-    wtag_instance->visit([&](mongoc_write_concern_t* wc, const char* wtag) { wtag_called = true; });
+        [&](mongoc_write_concern_t*, int) { wmajority_called = true; });
+    wtag_instance->visit([&](mongoc_write_concern_t*, const char*) { wtag_called = true; });
 
     write_concern wc{};
     wc.nodes(expected_w);
@@ -137,10 +137,10 @@ TEST_CASE("write_concern is called with a tag", "[write_concern][base][c-driver]
     auto w_instance = libmongoc::write_concern_set_w.create_instance();
     auto wmajority_instance = libmongoc::write_concern_set_wmajority.create_instance();
     auto wtag_instance = libmongoc::write_concern_set_wtag.create_instance();
-    w_instance->visit([&](mongoc_write_concern_t* wc, int w) { w_called = true; });
+    w_instance->visit([&](mongoc_write_concern_t*, int) { w_called = true; });
     wmajority_instance->visit(
-        [&](mongoc_write_concern_t* wc, int wtimout) { wmajority_called = true; });
-    wtag_instance->visit([&](mongoc_write_concern_t* wc, const char* wtag) {
+        [&](mongoc_write_concern_t*, int) { wmajority_called = true; });
+    wtag_instance->visit([&](mongoc_write_concern_t*, const char* wtag) {
         wtag_called = true;
         wtag_value = wtag;
     });

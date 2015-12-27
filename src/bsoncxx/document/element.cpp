@@ -53,21 +53,21 @@ element::element(const std::uint8_t* raw, std::uint32_t length, std::uint32_t of
     : _raw(raw), _length(length), _offset(offset) {
 }
 
-const std::uint8_t* const element::raw() const {
+const std::uint8_t* element::raw() const {
     return _raw;
 }
 void element::raw(const std::uint8_t* raw) {
     _raw = raw;
 }
 
-const std::uint32_t element::length() const {
+std::uint32_t element::length() const {
     return _length;
 }
 void element::length(std::uint32_t length) {
     _length = length;
 }
 
-const std::uint32_t element::offset() const {
+std::uint32_t element::offset() const {
     return _offset;
 }
 void element::offset(std::uint32_t offset) {

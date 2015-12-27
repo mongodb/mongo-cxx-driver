@@ -76,7 +76,7 @@ TEST_CASE("A database", "[database]") {
 
     SECTION("is created by a client") {
         bool called = false;
-        get_database->interpose([&](mongoc_client_t* client, const char* d_name) {
+        get_database->interpose([&](mongoc_client_t*, const char* d_name) {
             called = true;
             REQUIRE(database_name == stdx::string_view{d_name});
             return nullptr;
@@ -91,7 +91,7 @@ TEST_CASE("A database", "[database]") {
     SECTION("cleans up its underlying mongoc database on destruction") {
         bool destroy_called = false;
 
-        database_destroy->interpose([&](mongoc_database_t* client) { destroy_called = true; });
+        database_destroy->interpose([&](mongoc_database_t*) { destroy_called = true; });
 
         {
             database database = mongo_client["database"];
@@ -104,7 +104,7 @@ TEST_CASE("A database", "[database]") {
     SECTION("is dropped") {
         bool drop_called = false;
 
-        database_drop->interpose([&](mongoc_database_t* database, bson_error_t* error) {
+        database_drop->interpose([&](mongoc_database_t*, bson_error_t*) {
             drop_called = true;
             return true;
         });
@@ -117,7 +117,7 @@ TEST_CASE("A database", "[database]") {
 
     SECTION("throws an exception when dropping causes an error") {
         database_drop->interpose(
-            [&](mongoc_database_t* database, bson_error_t* error) { return false; });
+            [&](mongoc_database_t*, bson_error_t*) { return false; });
 
         database database = mongo_client["database"];
         REQUIRE_THROWS(database.drop());
@@ -125,7 +125,7 @@ TEST_CASE("A database", "[database]") {
 
     SECTION("supports move operations") {
         bool destroy_called = false;
-        database_destroy->interpose([&](mongoc_database_t* client) { destroy_called = true; });
+        database_destroy->interpose([&](mongoc_database_t*) { destroy_called = true; });
 
         {
             client mongo_client{uri{}};
@@ -148,7 +148,7 @@ TEST_CASE("A database", "[database]") {
         rc.acknowledge_level(read_concern::level::k_majority);
 
         database_set_read_concern->interpose([&database_set_rc_called](
-            ::mongoc_database_t* coll, const ::mongoc_read_concern_t* rc_t) {
+            ::mongoc_database_t*, const ::mongoc_read_concern_t* rc_t) {
             REQUIRE(rc_t);
             const auto result = libmongoc::read_concern_get_level(rc_t);
             REQUIRE(result);
@@ -162,7 +162,7 @@ TEST_CASE("A database", "[database]") {
 
     SECTION("has a read preferences which may be set and obtained") {
         bool destroy_called = false;
-        database_destroy->interpose([&](mongoc_database_t* client) { destroy_called = true; });
+        database_destroy->interpose([&](mongoc_database_t*) { destroy_called = true; });
 
         database mongo_database(mongo_client["database"]);
         read_preference preference{read_preference::read_mode::k_secondary_preferred};
@@ -171,7 +171,7 @@ TEST_CASE("A database", "[database]") {
         std::unique_ptr<mongoc_read_prefs_t, decltype(deleter)> saved_preference(nullptr, deleter);
 
         bool called = false;
-        database_set_preference->interpose([&](mongoc_database_t* db,
+        database_set_preference->interpose([&](mongoc_database_t*,
                                                const mongoc_read_prefs_t* read_prefs) {
             called = true;
             saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
@@ -180,7 +180,7 @@ TEST_CASE("A database", "[database]") {
                 static_cast<mongoc_read_mode_t>(read_preference::read_mode::k_secondary_preferred));
         });
 
-        database_get_preference->interpose([&](const mongoc_database_t* client) {
+        database_get_preference->interpose([&](const mongoc_database_t*) {
             return saved_preference.get();
         }).forever();
 
@@ -193,7 +193,7 @@ TEST_CASE("A database", "[database]") {
 
     SECTION("has a write concern which may be set and obtained") {
         bool destroy_called = false;
-        database_destroy->interpose([&](mongoc_database_t* client) { destroy_called = true; });
+        database_destroy->interpose([&](mongoc_database_t*) { destroy_called = true; });
 
         database mongo_database(mongo_client[database_name]);
         write_concern concern;
@@ -203,13 +203,13 @@ TEST_CASE("A database", "[database]") {
 
         bool set_called = false;
         database_set_concern->interpose(
-            [&](mongoc_database_t* client, const mongoc_write_concern_t* concern) {
+            [&](mongoc_database_t*, const mongoc_write_concern_t* concern) {
                 set_called = true;
                 underlying_wc = mongoc_write_concern_copy(concern);
             });
 
         bool get_called = false;
-        database_get_concern->interpose([&](const mongoc_database_t* client) {
+        database_get_concern->interpose([&](const mongoc_database_t*) {
             get_called = true;
             return underlying_wc;
         });
@@ -219,7 +219,7 @@ TEST_CASE("A database", "[database]") {
 
         MOCK_CONCERN
         bool copy_called = false;
-        concern_copy->interpose([&](const mongoc_write_concern_t* concern) {
+        concern_copy->interpose([&](const mongoc_write_concern_t*) {
             copy_called = true;
             return mongoc_write_concern_copy(underlying_wc);
         });
@@ -246,9 +246,9 @@ TEST_CASE("A database", "[database]") {
                                        << "foo" << 5 << bsoncxx::builder::stream::finalize;
         libbson::scoped_bson_t bson_doc{doc.view()};
 
-        database_command_simple->interpose([&](mongoc_database_t* database, const bson_t* command,
-                                               const mongoc_read_prefs_t* read_prefs, bson_t* reply,
-                                               bson_error_t* error) {
+        database_command_simple->interpose([&](mongoc_database_t*, const bson_t*,
+                                               const mongoc_read_prefs_t*, bson_t* reply,
+                                               bson_error_t*) {
             called = true;
             ::bson_copy_to(bson_doc.bson(), reply);
             return true;

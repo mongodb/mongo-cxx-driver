@@ -49,3 +49,7 @@
 #pragma pop_macro("MONGOCXX_NO_DEPRECATED")
 #undef MONGOCXX_PRIVATE
 #pragma pop_macro("MONGOCXX_PRIVATE")
+
+// prelude.hpp
+#undef MONGOCXX_UNREACHABLE
+#pragma pop_macro("MONGOCXX_UNREACHABLE")

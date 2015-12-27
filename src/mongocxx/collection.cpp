@@ -16,6 +16,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <limits>
 #include <tuple>
 #include <utility>
 
@@ -219,7 +220,10 @@ cursor collection::find(view_or_value filter, const options::find& options) {
         projection.bson(), rp_ptr);
 
     if (options.max_await_time()) {
-        libmongoc::cursor_set_max_await_time_ms(mongoc_cursor, (*options.max_await_time()).count());
+        const auto count = options.max_await_time()->count();
+        if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max()))
+            throw logic_error{make_error_code(error_code::k_invalid_parameter)};
+        libmongoc::cursor_set_max_await_time_ms(mongoc_cursor, static_cast<std::uint32_t>(count));
     }
 
     return cursor{mongoc_cursor};

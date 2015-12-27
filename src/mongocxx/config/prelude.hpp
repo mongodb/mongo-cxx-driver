@@ -54,3 +54,8 @@
 #include <mongocxx/config/config.hpp>
 #include <mongocxx/config/version.hpp>
 #include <mongocxx/export.hpp>
+
+// TODO: Find a way to DRY this with BSONCXX_UNREACHABLE
+#pragma push_macro("MONGOCXX_UNREACHABLE")
+#undef MONGOCXX_UNREACHABLE
+#define MONGOCXX_UNREACHABLE std::abort()

@@ -51,7 +51,7 @@ TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_wr
     auto destruct = libmongoc::bulk_operation_destroy.create_instance();
     bool destruct_called = false;
 
-    destruct->visit([&destruct_called](mongoc_bulk_operation_t* op) { destruct_called = true; });
+    destruct->visit([&destruct_called](mongoc_bulk_operation_t*) { destruct_called = true; });
 
     bulk_write(true);
     REQUIRE(destruct_called);
@@ -64,7 +64,7 @@ class SingleDocumentFun {
         _called = false;
     }
 
-    void operator()(mongoc_bulk_operation_t* bulk, const bson_t* document) {
+    void operator()(mongoc_bulk_operation_t*, const bson_t* document) {
         _called = true;
         REQUIRE(bson_get_data(document) == _document.data());
     }

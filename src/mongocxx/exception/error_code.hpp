@@ -22,9 +22,10 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 enum class error_code : std::int32_t {
-	k_invalid_client_object = 1,
-	k_invalid_collection_object,
-	k_invalid_database_object,
+    k_invalid_client_object = 1,
+    k_invalid_collection_object,
+    k_invalid_database_object,
+    k_invalid_parameter,
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

@@ -71,7 +71,7 @@ TEST_CASE("Collection", "[collection]") {
         rc.acknowledge_level(read_concern::level::k_majority);
 
         collection_set_read_concern->interpose([&collection_set_rc_called](
-            ::mongoc_collection_t* coll, const ::mongoc_read_concern_t* rc_t) {
+            ::mongoc_collection_t*, const ::mongoc_read_concern_t* rc_t) {
             REQUIRE(rc_t);
             const auto result = libmongoc::read_concern_get_level(rc_t);
             REQUIRE(result);
@@ -88,8 +88,8 @@ TEST_CASE("Collection", "[collection]") {
         bool expected_drop;
 
         collection_rename->interpose([&expected_rename, &expected_drop](
-            ::mongoc_collection_t* collection, const char* new_db, const char* new_name,
-            bool drop_target_before_rename, ::bson_error_t* error) {
+            ::mongoc_collection_t*, const char*, const char* new_name,
+            bool drop_target_before_rename, ::bson_error_t*) {
             REQUIRE(expected_rename == std::string{new_name});
             REQUIRE(expected_drop == drop_target_before_rename);
             return true;
@@ -203,7 +203,7 @@ TEST_CASE("Collection", "[collection]") {
         collection_count_with_opts->interpose(
             [&](mongoc_collection_t* coll, mongoc_query_flags_t flags, const bson_t* query,
                 int64_t skip, int64_t limit, const bson_t* cmd_opts,
-                const mongoc_read_prefs_t* read_prefs, bson_error_t* error) {
+                const mongoc_read_prefs_t* read_prefs, bson_error_t*) {
                 collection_count_called = true;
                 REQUIRE(coll == mongo_coll.implementation());
                 REQUIRE(flags == MONGOC_QUERY_NONE);
@@ -276,8 +276,8 @@ TEST_CASE("Collection", "[collection]") {
                                                       << "foo"
                                                       << "bar" << builder::stream::finalize;
 
-        collection_create_index->interpose([&](mongoc_collection_t* coll, const bson_t* keys,
-                                               const mongoc_index_opt_t* opt, bson_error_t* error) {
+        collection_create_index->interpose([&](mongoc_collection_t* coll, const bson_t*,
+                                               const mongoc_index_opt_t* opt, bson_error_t*) {
             collection_create_index_called = true;
             REQUIRE(coll == mongo_coll.implementation());
             if (options.unique()) {
@@ -328,7 +328,7 @@ TEST_CASE("Collection", "[collection]") {
         auto collection_drop_called = false;
         bool success;
 
-        collection_drop->interpose([&](mongoc_collection_t* coll, bson_error_t* error) {
+        collection_drop->interpose([&](mongoc_collection_t* coll, bson_error_t*) {
             collection_drop_called = true;
             REQUIRE(coll == mongo_coll.implementation());
             return success;
@@ -429,36 +429,36 @@ TEST_CASE("Collection", "[collection]") {
         });
 
         bulk_operation_set_bypass_document_validation->interpose(
-            [&](mongoc_bulk_operation_t* bulk, bool bypass) {
+            [&](mongoc_bulk_operation_t*, bool bypass) {
                 bulk_operation_set_bypass_document_validation_called = true;
                 REQUIRE(expected_bypass_document_validation == bypass);
             });
 
-        bulk_operation_set_client->interpose([&](mongoc_bulk_operation_t* bulk, void* client) {
+        bulk_operation_set_client->interpose([&](mongoc_bulk_operation_t*, void* client) {
             bulk_operation_set_client_called = true;
             REQUIRE(client == mongo_client.implementation());
         });
 
-        bulk_operation_set_database->interpose([&](mongoc_bulk_operation_t* bulk, const char* db) {
+        bulk_operation_set_database->interpose([&](mongoc_bulk_operation_t*, const char* db) {
             bulk_operation_set_database_called = true;
             REQUIRE(database_name == db);
         });
 
         bulk_operation_set_collection->interpose(
-            [&](mongoc_bulk_operation_t* bulk, const char* coll) {
+            [&](mongoc_bulk_operation_t*, const char* coll) {
                 bulk_operation_set_collection_called = true;
                 REQUIRE(collection_name == coll);
             });
 
         bulk_operation_set_write_concern->interpose(
-            [&](mongoc_bulk_operation_t* bulk, const mongoc_write_concern_t* wc) {
+            [&](mongoc_bulk_operation_t*, const mongoc_write_concern_t*) {
                 bulk_operation_set_write_concern_called = true;
                 // TODO: actually test the write concern setting is correct or default
                 // REQUIRE(wc == concern.implementation());
             });
 
         bulk_operation_execute->interpose(
-            [&](mongoc_bulk_operation_t* bulk, bson_t* reply, bson_error_t* error) {
+            [&](mongoc_bulk_operation_t*, bson_t* reply, bson_error_t*) {
                 bulk_operation_execute_called = true;
                 bson_init(reply);
                 return 1;
@@ -468,7 +468,7 @@ TEST_CASE("Collection", "[collection]") {
             [&](mongoc_bulk_operation_t*) { bulk_operation_destroy_called = true; });
 
         SECTION("Insert One", "[collection::insert_one]") {
-            bulk_operation_insert->interpose([&](mongoc_bulk_operation_t* bulk, const bson_t* doc) {
+            bulk_operation_insert->interpose([&](mongoc_bulk_operation_t*, const bson_t* doc) {
                 bulk_operation_op_called = true;
                 REQUIRE(bson_get_data(doc) == filter_doc.view().data());
             });
@@ -477,7 +477,7 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Insert One Bypassing Validation", "[collection::insert_one]") {
-            bulk_operation_insert->interpose([&](mongoc_bulk_operation_t* bulk, const bson_t* doc) {
+            bulk_operation_insert->interpose([&](mongoc_bulk_operation_t*, const bson_t* doc) {
                 bulk_operation_op_called = true;
                 REQUIRE(bson_get_data(doc) == filter_doc.view().data());
             });
@@ -497,7 +497,7 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Update One", "[collection::update_one]") {
             bool upsert_option = false;
 
-            bulk_operation_update_one->interpose([&](mongoc_bulk_operation_t* bulk,
+            bulk_operation_update_one->interpose([&](mongoc_bulk_operation_t*,
                                                      const bson_t* query, const bson_t* update,
                                                      bool upsert) {
                 bulk_operation_op_called = true;
@@ -538,7 +538,7 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Update Many", "[collection::update_many]") {
             bool upsert_option;
 
-            bulk_operation_update->interpose([&](mongoc_bulk_operation_t* bulk, const bson_t* query,
+            bulk_operation_update->interpose([&](mongoc_bulk_operation_t*, const bson_t* query,
                                                  const bson_t* update, bool upsert) {
                 bulk_operation_op_called = true;
                 REQUIRE(upsert == upsert_option);
@@ -568,7 +568,7 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Replace One", "[collection::replace_one]") {
             bool upsert_option;
 
-            bulk_operation_replace_one->interpose([&](mongoc_bulk_operation_t* bulk,
+            bulk_operation_replace_one->interpose([&](mongoc_bulk_operation_t*,
                                                       const bson_t* query, const bson_t* update,
                                                       bool upsert) {
                 bulk_operation_op_called = true;
@@ -598,7 +598,7 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Delete One", "[collection::delete_one]") {
             bulk_operation_remove_one->interpose(
-                [&](mongoc_bulk_operation_t* bulk, const bson_t* doc) {
+                [&](mongoc_bulk_operation_t*, const bson_t* doc) {
                     bulk_operation_op_called = true;
                     REQUIRE(bson_get_data(doc) == filter_doc.view().data());
                 });
@@ -607,7 +607,7 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Delete Many", "[collection::delete_many]") {
-            bulk_operation_remove->interpose([&](mongoc_bulk_operation_t* bulk, const bson_t* doc) {
+            bulk_operation_remove->interpose([&](mongoc_bulk_operation_t*, const bson_t* doc) {
                 bulk_operation_op_called = true;
                 REQUIRE(bson_get_data(doc) == filter_doc.view().data());
             });
@@ -639,8 +639,8 @@ TEST_CASE("Collection", "[collection]") {
         bsoncxx::stdx::optional<bsoncxx::document::value> fam_result;
 
         collection_find_and_modify_with_opts->interpose(
-            [&](::mongoc_collection_t* collection, const ::bson_t* filter,
-                const ::mongoc_find_and_modify_opts_t* opts, ::bson_t* reply, ::bson_error_t*) {
+            [&](::mongoc_collection_t*, const ::bson_t* filter,
+                const ::mongoc_find_and_modify_opts_t*, ::bson_t* reply, ::bson_error_t*) {
                 fam_called = true;
                 document::view filter_view{bson_get_data(filter), filter->len};
                 REQUIRE(expected_filter == filter_view);

@@ -45,7 +45,7 @@ class MONGOCXX_API index {
 
        private:
         friend collection;
-        MONGOCXX_PRIVATE virtual const int type() const = 0;
+        MONGOCXX_PRIVATE virtual int type() const = 0;
     };
 
     ///
@@ -72,7 +72,7 @@ class MONGOCXX_API index {
 
        private:
         friend collection;
-        MONGOCXX_PRIVATE const int type() const override;
+        MONGOCXX_PRIVATE int type() const override;
         stdx::optional<std::string> _config_string;
     };
 

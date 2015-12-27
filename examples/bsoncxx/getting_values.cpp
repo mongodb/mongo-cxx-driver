@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cstdlib>
+
 #include <bsoncxx/builder/stream/array.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
@@ -86,4 +88,8 @@ int main(int, char**) {
     } catch (const std::runtime_error&) {
         // Trying to index into a non-array throws.
     };
+
+    // Make all variables used.
+    return (awards && first_award_year && second_award_year && last_name) ?
+        EXIT_SUCCESS : EXIT_FAILURE;
 }

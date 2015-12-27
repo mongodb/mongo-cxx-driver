@@ -69,13 +69,13 @@ class BSONCXX_API element {
 
     explicit operator bool() const;
 
-    const std::uint8_t* const raw() const;
+    const std::uint8_t* raw() const;
     void raw(const std::uint8_t*);
 
-    const std::uint32_t length() const;
+    std::uint32_t length() const;
     void length(std::uint32_t);
 
-    const std::uint32_t offset() const;
+    std::uint32_t offset() const;
     void offset(std::uint32_t);
 
     bsoncxx::type type() const;

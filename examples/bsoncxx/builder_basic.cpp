@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cstdlib>
+
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
@@ -70,4 +72,7 @@ int main(int, char**) {
 
     // We can get a view of the resulting bson by calling view()
     auto v = doc.view();
+
+    // Use 'v' so we don't get compiler warnings.
+    return v.empty() ? EXIT_FAILURE : EXIT_SUCCESS;
 }

@@ -31,6 +31,8 @@ std::string validation_level_to_string(mongocxx::validation_criteria::validation
         case mongocxx::validation_criteria::validation_level::k_strict:
             return "strict";
     }
+
+    MONGOCXX_UNREACHABLE;
 }
 
 // Convert validation actions to strings.
@@ -41,6 +43,8 @@ std::string validation_action_to_string(mongocxx::validation_criteria::validatio
         case mongocxx::validation_criteria::validation_action::k_error:
             return "error";
     }
+
+    MONGOCXX_UNREACHABLE;
 }
 
 }  // namespace

@@ -168,7 +168,7 @@ const stdx::optional<std::string>& index::wiredtiger_storage_options::config_str
     return _config_string;
 }
 
-const int index::wiredtiger_storage_options::type() const {
+int index::wiredtiger_storage_options::type() const {
     return mongoc_index_storage_opt_type_t::MONGOC_INDEX_STORAGE_OPT_WIREDTIGER;
 }
 

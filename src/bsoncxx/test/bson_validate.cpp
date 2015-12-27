@@ -36,7 +36,7 @@ TEST_CASE("validate accepts bson we produce", "[bsoncxx::validate]") {
 }
 
 TEST_CASE("validate doesn't accept random bytes", "[bsoncxx::validate]") {
-    std::array<uint8_t, 12> arr{0xDE, 0xAD, 0xBE, 0xEF, 0xF0, 0x0B, 0x45};
+    std::array<uint8_t, 12> arr{{0xDE, 0xAD, 0xBE, 0xEF, 0xF0, 0x0B, 0x45}};
     REQUIRE(is_disengaged(validate(arr.data(), arr.size())));
 }
 
