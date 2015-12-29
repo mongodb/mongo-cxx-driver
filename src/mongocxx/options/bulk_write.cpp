@@ -20,16 +20,31 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+bulk_write::bulk_write()
+    : _ordered(true) {}
+
 void bulk_write::ordered(bool ordered) {
     _ordered = ordered;
+}
+
+bool bulk_write::ordered() const {
+    return _ordered;
 }
 
 void bulk_write::write_concern(class write_concern wc) {
     _write_concern = std::move(wc);
 }
 
-const stdx::optional<bool>& bulk_write::ordered() const {
-    return _ordered;
+const stdx::optional<class write_concern>& bulk_write::write_concern() const {
+    return _write_concern;
+}
+
+void bulk_write::bypass_document_validation(bool bypass_document_validation) {
+    _bypass_document_validation = bypass_document_validation;
+}
+
+const stdx::optional<bool> bulk_write::bypass_document_validation() const {
+    return _bypass_document_validation;
 }
 
 }  // namespace options

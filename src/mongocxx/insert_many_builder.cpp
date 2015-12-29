@@ -22,14 +22,24 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+namespace {
+
+options::bulk_write make_bulk_write_options(const options::insert& insert_options) {
+    options::bulk_write bw;
+    bw.ordered(insert_options.ordered().value_or(true));
+    if (insert_options.write_concern()) {
+        bw.write_concern(*insert_options.write_concern());
+    }
+    if (insert_options.bypass_document_validation()) {
+        bw.bypass_document_validation(*insert_options.bypass_document_validation());
+    }
+    return bw;
+}
+
+} // namespace
+
 insert_many_builder::insert_many_builder(const options::insert& options)
-    : _writes{options.ordered().value_or(true)}, _inserted_ids{}, _index{0} {
-    if (options.write_concern()) {
-        _writes.write_concern(*options.write_concern());
-    }
-    if (options.bypass_document_validation()) {
-        _writes.bypass_document_validation(*options.bypass_document_validation());
-    }
+    : _writes{make_bulk_write_options(options)}, _inserted_ids{}, _index{0} {
 };
 
 void insert_many_builder::operator()(const bsoncxx::document::view& doc) {

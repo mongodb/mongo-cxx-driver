@@ -35,16 +35,19 @@ TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
     });
 
     SECTION("with an ordered bulk write") {
-        bulk_write(true);
+        { bulk_write bw; }
         REQUIRE(construct_called);
         REQUIRE(ordered_value);
     }
 
     SECTION("with an unordered bulk write") {
-        bulk_write(false);
+        options::bulk_write bw_opts;
+        bw_opts.ordered(false);
+        { bulk_write bw(bw_opts); }
         REQUIRE(construct_called);
         REQUIRE(!ordered_value);
     }
+
 }
 
 TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_write]") {
@@ -53,7 +56,7 @@ TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_wr
 
     destruct->visit([&destruct_called](mongoc_bulk_operation_t*) { destruct_called = true; });
 
-    bulk_write(true);
+    { bulk_write bw; }
     REQUIRE(destruct_called);
 }
 
@@ -102,7 +105,7 @@ class FilteredDocumentFun : public SingleDocumentFun {
 };
 
 TEST_CASE("passing write operations to append calls corresponding C function", "[bulk_write]") {
-    bulk_write bw(true);
+    bulk_write bw;
     bsoncxx::builder::stream::document filter_builder, doc_builder;
     filter_builder << "_id" << 1;
     doc_builder << "_id" << 2;

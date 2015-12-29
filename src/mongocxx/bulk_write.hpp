@@ -16,9 +16,8 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-#include <mongocxx/write_concern.hpp>
+#include <mongocxx/options/bulk_write.hpp>
 #include <mongocxx/model/write.hpp>
-#include <bsoncxx/stdx/optional.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -53,7 +52,7 @@ class MONGOCXX_API bulk_write {
     ///   be reported after attempting all operations. Unordered bulk writes may be more efficient
     ///   than ordered bulk writes.
     ///
-    explicit bulk_write(bool ordered);
+    explicit bulk_write(options::bulk_write options = {});
 
     ///
     /// Move constructs a bulk write operation.
@@ -87,29 +86,6 @@ class MONGOCXX_API bulk_write {
     ///     - model::update_one
     ///
     void append(const model::write& operation);
-
-    ///
-    /// Whether or not to bypass document validation for this operation.
-    ///
-    /// @param bypass_document_validation
-    ///   Whether or not to bypass document validation.
-    ///
-    void bypass_document_validation(bool bypass_document_validation);
-
-    ///
-    /// Sets the write_concern for this operation.
-    ///
-    /// @param wc
-    ///   The write_concern to set
-    ///
-    void write_concern(class write_concern wc);
-
-    ///
-    /// Gets the write_concern for the bulk write.
-    ///
-    /// @return The current write_concern.
-    ///
-    class write_concern write_concern() const;
 
    private:
     friend class collection;

@@ -533,7 +533,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                                << "quux"
                                << "garply" << 9 << finalize;
 
-        bulk_write bulk{false /* unordered */};
+        options::bulk_write bulk_opts;
+        bulk_opts.ordered(false);
+        bulk_write bulk{bulk_opts};
 
         bulk.append(model::insert_one{std::move(doc1)});
         bulk.append(model::insert_one{std::move(doc2)});

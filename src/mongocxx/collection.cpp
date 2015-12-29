@@ -285,7 +285,25 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
 
 stdx::optional<result::insert_one> collection::insert_one(view_or_value document,
                                                           const options::insert& options) {
-    class bulk_write bulk_op(false);
+
+    // TODO: We should consider making it possible to convert from an options::insert into
+    // an options::bulk_write at the type level, removing the need to re-iterate this code
+    // many times here and below.
+    //
+    // See comments in: https://github.com/mongodb/mongo-cxx-driver/pull/409
+
+    options::bulk_write bulk_opts;
+    bulk_opts.ordered(false);
+
+    if (options.write_concern()) {
+        bulk_opts.write_concern(*options.write_concern());
+    }
+
+    if (options.bypass_document_validation()) {
+        bulk_opts.bypass_document_validation(*options.bypass_document_validation());
+    }
+
+    class bulk_write bulk_op(bulk_opts);
     bsoncxx::document::element oid{};
 
     bsoncxx::builder::stream::document new_document;
@@ -297,14 +315,6 @@ stdx::optional<result::insert_one> collection::insert_one(view_or_value document
     } else {
         bulk_op.append(model::insert_one(document));
         oid = document.view()["_id"];
-    }
-
-    if (options.write_concern()) {
-        bulk_op.write_concern(*options.write_concern());
-    }
-
-    if (options.bypass_document_validation()) {
-        bulk_op.bypass_document_validation(*options.bypass_document_validation());
     }
 
     auto result = bulk_write(bulk_op);
@@ -319,16 +329,19 @@ stdx::optional<result::insert_one> collection::insert_one(view_or_value document
 stdx::optional<result::replace_one> collection::replace_one(view_or_value filter,
                                                             view_or_value replacement,
                                                             const options::update& options) {
-    class bulk_write bulk_op(false);
-    model::replace_one replace_op(filter, replacement);
+    options::bulk_write bulk_opts;
+    bulk_opts.ordered(false);
 
+    if (options.bypass_document_validation())
+        bulk_opts.bypass_document_validation(*options.bypass_document_validation());
+    if (options.write_concern()) bulk_opts.write_concern(*options.write_concern());
+
+    class bulk_write bulk_op(bulk_opts);
+
+    model::replace_one replace_op(filter, replacement);
     if (options.upsert()) replace_op.upsert(options.upsert().value());
 
     bulk_op.append(replace_op);
-
-    if (options.bypass_document_validation())
-        bulk_op.bypass_document_validation(*options.bypass_document_validation());
-    if (options.write_concern()) bulk_op.write_concern(*options.write_concern());
 
     auto result = bulk_write(bulk_op);
     if (!result) {
@@ -340,16 +353,19 @@ stdx::optional<result::replace_one> collection::replace_one(view_or_value filter
 
 stdx::optional<result::update> collection::update_many(view_or_value filter, view_or_value update,
                                                        const options::update& options) {
-    class bulk_write bulk_op(false);
-    model::update_many update_op(filter, update);
+    options::bulk_write bulk_opts;
+    bulk_opts.ordered(false);
 
+    if (options.bypass_document_validation())
+        bulk_opts.bypass_document_validation(*options.bypass_document_validation());
+    if (options.write_concern()) bulk_opts.write_concern(*options.write_concern());
+
+    class bulk_write bulk_op(bulk_opts);
+
+    model::update_many update_op(filter, update);
     if (options.upsert()) update_op.upsert(options.upsert().value());
 
     bulk_op.append(update_op);
-
-    if (options.bypass_document_validation())
-        bulk_op.bypass_document_validation(*options.bypass_document_validation());
-    if (options.write_concern()) bulk_op.write_concern(*options.write_concern());
 
     auto result = bulk_write(bulk_op);
     if (!result) {
@@ -361,11 +377,16 @@ stdx::optional<result::update> collection::update_many(view_or_value filter, vie
 
 stdx::optional<result::delete_result> collection::delete_many(
     view_or_value filter, const options::delete_options& options) {
-    class bulk_write bulk_op(false);
+
+    options::bulk_write bulk_opts;
+    bulk_opts.ordered(false);
+
+    if (options.write_concern()) bulk_opts.write_concern(*options.write_concern());
+
+    class bulk_write bulk_op(bulk_opts);
+
     model::delete_many delete_op(filter);
     bulk_op.append(delete_op);
-
-    if (options.write_concern()) bulk_op.write_concern(*options.write_concern());
 
     auto result = bulk_write(bulk_op);
     if (!result) {
@@ -377,16 +398,20 @@ stdx::optional<result::delete_result> collection::delete_many(
 
 stdx::optional<result::update> collection::update_one(view_or_value filter, view_or_value update,
                                                       const options::update& options) {
-    class bulk_write bulk_op(false);
-    model::update_one update_op(filter, update);
 
+    options::bulk_write bulk_opts;
+    bulk_opts.ordered(false);
+
+    if (options.bypass_document_validation())
+        bulk_opts.bypass_document_validation(*options.bypass_document_validation());
+    if (options.write_concern()) bulk_opts.write_concern(*options.write_concern());
+
+    class bulk_write bulk_op(bulk_opts);
+
+    model::update_one update_op(filter, update);
     if (options.upsert()) update_op.upsert(options.upsert().value());
 
     bulk_op.append(update_op);
-
-    if (options.bypass_document_validation())
-        bulk_op.bypass_document_validation(*options.bypass_document_validation());
-    if (options.write_concern()) bulk_op.write_concern(*options.write_concern());
 
     auto result = bulk_write(bulk_op);
     if (!result) {
@@ -398,11 +423,16 @@ stdx::optional<result::update> collection::update_one(view_or_value filter, view
 
 stdx::optional<result::delete_result> collection::delete_one(
     view_or_value filter, const options::delete_options& options) {
-    class bulk_write bulk_op(false);
+
+    options::bulk_write bulk_opts;
+    bulk_opts.ordered(false);
+
+    if (options.write_concern()) bulk_opts.write_concern(*options.write_concern());
+
+    class bulk_write bulk_op(bulk_opts);
+
     model::delete_one delete_op(filter);
     bulk_op.append(delete_op);
-
-    if (options.write_concern()) bulk_op.write_concern(*options.write_concern());
 
     auto result = bulk_write(bulk_op);
     if (!result) {

@@ -33,8 +33,16 @@ bulk_write& bulk_write::operator=(bulk_write&&) noexcept = default;
 
 bulk_write::~bulk_write() = default;
 
-bulk_write::bulk_write(bool ordered)
-    : _impl(stdx::make_unique<impl>(libmongoc::bulk_operation_new(ordered))) {
+bulk_write::bulk_write(options::bulk_write options)
+    : _impl(stdx::make_unique<impl>(libmongoc::bulk_operation_new(options.ordered()))) {
+    auto options_wc = options.write_concern();
+    if (options_wc)
+        libmongoc::bulk_operation_set_write_concern(_impl->operation_t,
+                                                    options_wc->_impl->write_concern_t);
+
+    auto options_bdv = options.bypass_document_validation();
+    if (options_bdv)
+        libmongoc::bulk_operation_set_bypass_document_validation(_impl->operation_t, *options_bdv);
 }
 
 void bulk_write::append(const model::write& operation) {
@@ -85,21 +93,6 @@ void bulk_write::append(const model::write& operation) {
         case write_type::k_uninitialized:
             break;  // TODO: something exceptiony (see CXX-630)
     }
-}
-
-void bulk_write::bypass_document_validation(bool bypass_document_validation) {
-    libmongoc::bulk_operation_set_bypass_document_validation(_impl->operation_t,
-                                                             bypass_document_validation);
-}
-
-void bulk_write::write_concern(class write_concern wc) {
-    libmongoc::bulk_operation_set_write_concern(_impl->operation_t, wc._impl->write_concern_t);
-}
-
-class write_concern bulk_write::write_concern() const {
-    class write_concern wc(stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
-        libmongoc::bulk_operation_get_write_concern(_impl->operation_t))));
-    return wc;
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

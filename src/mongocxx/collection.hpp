@@ -614,7 +614,7 @@ template <typename write_model_iterator_type>
 MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
     write_model_iterator_type begin, write_model_iterator_type end,
     const options::bulk_write& options) {
-    class bulk_write writes(options.ordered().value_or(true));
+    class bulk_write writes(options);
 
     std::for_each(begin, end, [&](const model::write& current) { writes.append(current); });
 

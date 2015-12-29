@@ -32,6 +32,13 @@ class MONGOCXX_API bulk_write {
    public:
 
     ///
+    /// Constructs a new bulk_write object. By default, bulk writes are considered ordered
+    /// as this is the only safe choice. If you want an unordered update, you must call
+    /// ordered(false) to switch to unordered mode.
+    ///
+    bulk_write();
+
+    ///
     /// Sets whether the writes must be executed in order by the server.
     ///
     /// The server-side default is @c true.
@@ -47,9 +54,9 @@ class MONGOCXX_API bulk_write {
     ///
     /// Gets the current value of the ordered option.
     ///
-    /// @return The optional value of the ordered option.
+    /// @return The value of the ordered option.
     ///
-    const stdx::optional<bool>& ordered() const;
+    bool ordered() const;
 
     ///
     /// Sets the write_concern for this operation.
@@ -71,9 +78,26 @@ class MONGOCXX_API bulk_write {
     ///
     const stdx::optional<class write_concern>& write_concern() const;
 
+    ///
+    /// Set whether or not to bypass document validation for this operation.
+    ///
+    /// @param bypass_document_validation
+    ///   Whether or not to bypass document validation.
+    ///
+    void bypass_document_validation(bool bypass_document_validation);
+
+    ///
+    /// The current setting for bypassing document validation for this operation.
+    ///
+    /// @return
+    ///  The current document validation bypass setting.
+    ///
+    const stdx::optional<bool> bypass_document_validation() const;
+
    private:
-    stdx::optional<bool> _ordered;
+    bool _ordered;
     stdx::optional<class write_concern> _write_concern;
+    stdx::optional<bool> _bypass_document_validation;
 };
 
 }  // namespace options
