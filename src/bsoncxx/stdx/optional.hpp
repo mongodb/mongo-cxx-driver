@@ -34,7 +34,24 @@ using ::core::make_optional;
 }  // namespace stdx
 }  // namespace bsoncxx
 
+#elif defined(BSONCXX_POLY_USE_BOOST)
+
+#include <boost/none.hpp>
+#include <boost/optional/optional.hpp>
+
+namespace bsoncxx {
+namespace stdx {
+
+using ::boost::optional;
+using nullopt_t = ::boost::none_t;
+constexpr nullopt_t nullopt{};
+using ::boost::make_optional;
+
+}  // namespace stdx
+}  // namespace bsoncxx
+
 #elif defined(BSONCXX_POLY_USE_STD_EXPERIMENTAL)
+
 #include <experimental/optional>
 
 namespace bsoncxx {

@@ -31,6 +31,8 @@
 #pragma pop_macro("BSONCXX_POLY_USE_STD_EXPERIMENTAL")
 #undef BSONCXX_POLY_USE_SYSTEM_MNMLSTC
 #pragma pop_macro("BSONCXX_POLY_USE_SYSTEM_MNMLSTC")
+#undef BSONCXX_POLY_USE_BOOST
+#pragma pop_macro("BSONCXX_POLY_USE_BOOST")
 
 // src/bsoncxx/config/version.hpp.in
 #undef BSONCXX_VERSION_EXTRA

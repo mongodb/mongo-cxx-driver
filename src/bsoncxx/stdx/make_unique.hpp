@@ -32,12 +32,24 @@ using ::core::make_unique;
 }  // namespace stdx
 }  // namespace bsoncxx
 
-#elif __cplusplus >= 201402L
+#elif defined(BSONCXX_POLY_USE_BOOST)
+
+#include <boost/smart_ptr/make_unique.hpp>
 
 namespace bsoncxx {
 namespace stdx {
 
+using ::boost::make_unique;
+
+}  // namespace stdx
+}  // namespace bsoncxx
+
+#elif __cplusplus >= 201402L
+
 #include <memory>
+
+namespace bsoncxx {
+namespace stdx {
 
 using ::std::make_unique;
 

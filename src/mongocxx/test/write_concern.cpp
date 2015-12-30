@@ -73,7 +73,9 @@ TEST_CASE("write_concern fields may be set and retrieved", "[write_concern]") {
     SECTION("a tag may be set") {
         const std::string tag{"MultipleDC"};
         wc.tag(tag);
-        REQUIRE(tag == wc.tag());
+        auto maybe_tag = wc.tag();
+        REQUIRE(maybe_tag);
+        REQUIRE(tag == *maybe_tag);
     }
 
     SECTION("the number of nodes requiring confirmation may be set to a number") {

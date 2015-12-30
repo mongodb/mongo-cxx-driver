@@ -82,7 +82,7 @@ stdx::optional<stdx::string_view> read_concern::acknowledge_string() const {
     if (!level) {
         return stdx::nullopt;
     }
-    return {level};
+    return {stdx::string_view{level}};
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

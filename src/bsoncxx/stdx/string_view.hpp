@@ -32,7 +32,20 @@ using ::core::string_view;
 }  // namespace stdx
 }  // namespace bsoncxx
 
+#elif defined(BSONCXX_POLY_USE_BOOST)
+
+#include <boost/utility/string_ref.hpp>
+
+namespace bsoncxx {
+namespace stdx {
+
+using string_view = ::boost::string_ref;
+
+}  // namespace stdx
+}  // namespace bsoncxx
+
 #elif defined(BSONCXX_POLY_USE_STD_EXPERIMENTAL)
+
 #include <experimental/string_view>
 
 namespace bsoncxx {

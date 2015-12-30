@@ -144,7 +144,7 @@ stdx::optional<class read_concern> database::read_concern() const {
     if (!libmongoc::read_concern_get_level(rc)) {
         return stdx::nullopt;
     }
-    return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
+    return {(class read_concern){stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))}};
 }
 
 void database::read_preference(class read_preference rp) {

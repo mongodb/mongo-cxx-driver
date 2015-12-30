@@ -20,6 +20,7 @@ set(BSONCXX_HEADER_INSTALL_DIR "include/bsoncxx/${BSONCXX_DIRECTORY_PREFIX}" CAC
 option(BSONCXX_POLY_USE_STD_EXPERIMENTAL "Use <experimental/ for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_MNMLSTC "Use mnmlstc/core for stdx polyfills" ON)
 option(BSONCXX_POLY_USE_SYSTEM_MNMLSTC "Obtain mnmlstc/core from system" OFF)
+option(BSONCXX_POLY_USE_BOOST "Use boost for stdx polyfills" OFF)
 
 pkg_check_modules(LIBBSON REQUIRED libbson-${LIBBSON_REQUIRED_ABI_VERSION})
 
@@ -56,6 +57,8 @@ link_directories(${LIBBSON_LIBRARY_DIRS})
 if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
     ExternalProject_Get_Property(EP_mnmlstc_core source_dir)
     include_directories(${source_dir}/include)
+elseif (BSONCXX_POLY_USE_BOOST)
+    find_package(Boost REQUIRED)
 endif()
 
 add_library(bsoncxx_static STATIC
@@ -92,6 +95,9 @@ generate_export_header(bsoncxx
 if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
     add_dependencies(bsoncxx_static EP_mnmlstc_core)
     add_dependencies(bsoncxx EP_mnmlstc_core)
+elseif (BSONCXX_POLY_USE_BOOST)
+    target_include_directories(bsoncxx_static PUBLIC ${Boost_INCLUDE_DIRS})
+    target_include_directories(bsoncxx PUBLIC ${Boost_INCLUDE_DIRS})
 endif()
 
 target_link_libraries(bsoncxx_static ${bsoncxx_libs})
