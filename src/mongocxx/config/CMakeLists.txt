@@ -28,6 +28,6 @@ configure_file(
 
 install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/libmongocxx.pc"
-    DESTINATION "${PKG_CONFIG_PATH}"
-    COMPONENT runtime
+    DESTINATION lib/pkgconfig
+    COMPONENT dev
 )

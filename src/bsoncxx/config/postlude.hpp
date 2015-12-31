@@ -19,6 +19,9 @@
 // compiler.hpp
 #undef BSONCXX_INLINE
 #pragma pop_macro("BSONCXX_INLINE")
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
 
 // src/bsoncxx/config/config.hpp.in
 #undef BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -63,6 +66,8 @@ static_assert(false, "BSONCXX_ENUM must be undef'ed");
 #pragma pop_macro("BSONCXX_NO_DEPRECATED")
 #undef BSONCXX_PRIVATE
 #pragma pop_macro("BSONCXX_PRIVATE")
+#undef BSONCXX_API
+#pragma pop_macro("BSONCXX_API")
 
 // prelude.hpp
 #undef BSONCXX_UNREACHABLE

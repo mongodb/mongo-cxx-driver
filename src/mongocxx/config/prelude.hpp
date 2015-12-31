@@ -49,11 +49,13 @@
 #undef MONGOCXX_NO_DEPRECATED
 #pragma push_macro("MONGOCXX_PRIVATE")
 #undef MONGOCXX_PRIVATE
+#pragma push_macro("MONGOCXX_API")
+#undef MONGOCXX_API
 
 #include <mongocxx/config/compiler.hpp>
 #include <mongocxx/config/config.hpp>
 #include <mongocxx/config/version.hpp>
-#include <mongocxx/export.hpp>
+#include <mongocxx/config/export.hpp>
 
 // TODO: Find a way to DRY this with BSONCXX_UNREACHABLE
 #pragma push_macro("MONGOCXX_UNREACHABLE")

@@ -45,13 +45,13 @@ std::error_code make_error_code(::bson_error_t error);
 
 template <typename exception_type>
 void throw_exception(::bson_error_t error) {
-    throw exception_type{make_error_code(error), std::move(error.message)};
+    throw exception_type{make_error_code(error), error.message};
 }
 
 template <typename exception_type>
 void throw_exception(bsoncxx::document::value raw_server_error, ::bson_error_t error) {
     throw exception_type{make_error_code(error), std::move(raw_server_error),
-                         std::move(error.message)};
+                         error.message};
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

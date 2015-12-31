@@ -15,6 +15,9 @@
 // src/mongocxx/config/compiler.hpp
 #undef MONGOCXX_INLINE
 #pragma pop_macro("MONGOCXX_INLINE")
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
 
 // src/mongocxx/config/config.hpp.in
 #undef MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -49,6 +52,8 @@
 #pragma pop_macro("MONGOCXX_NO_DEPRECATED")
 #undef MONGOCXX_PRIVATE
 #pragma pop_macro("MONGOCXX_PRIVATE")
+#undef MONGOCXX_API
+#pragma pop_macro("MONGOCXX_API")
 
 // prelude.hpp
 #undef MONGOCXX_UNREACHABLE

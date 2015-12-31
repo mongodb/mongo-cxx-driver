@@ -139,15 +139,18 @@ const std::error_category& bsoncxx_error_category() {
 
 const std::error_category& libbson_error_category(int domain) {
     switch (domain) {
-        case BSON_ERROR_JSON:
+        case BSON_ERROR_JSON: {
             static const libbson_json_error json_category{};
             return json_category;
-        case BSON_ERROR_READER:
+        }
+        case BSON_ERROR_READER: {
             static const libbson_reader_error reader_category{};
             return reader_category;
-        default:
+        }
+        default: {
             static const libbson_unknown_error unknown_category{};
             return unknown_category;
+        }
     }
 }
 

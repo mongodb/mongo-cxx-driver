@@ -418,57 +418,74 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 ///
 const std::error_category& mongoc_error_category(int domain) {
     switch (domain) {
-        case ::MONGOC_ERROR_BSON:
+        case ::MONGOC_ERROR_BSON: {
             static const mongoc_bson_error_category bson_category{};
             return bson_category;
-        case ::MONGOC_ERROR_CLIENT:
+        }
+        case ::MONGOC_ERROR_CLIENT: {
             static const mongoc_client_error_category client_category{};
             return client_category;
-        case ::MONGOC_ERROR_COLLECTION:
+        }
+        case ::MONGOC_ERROR_COLLECTION: {
             static const mongoc_collection_error_category collection_category{};
             return collection_category;
-        case ::MONGOC_ERROR_COMMAND:
+        }
+        case ::MONGOC_ERROR_COMMAND: {
             static const mongoc_command_error_category command_category{};
             return command_category;
-        case ::MONGOC_ERROR_CURSOR:
+        }
+        case ::MONGOC_ERROR_CURSOR: {
             static const mongoc_cursor_error_category cursor_category{};
             return cursor_category;
-        case ::MONGOC_ERROR_GRIDFS:
+        }
+        case ::MONGOC_ERROR_GRIDFS: {
             static const mongoc_gridfs_error_category gridfs_category{};
             return gridfs_category;
-        case ::MONGOC_ERROR_INSERT:
+        }
+        case ::MONGOC_ERROR_INSERT: {
             static const mongoc_insert_error_category insert_category{};
             return insert_category;
-        case ::MONGOC_ERROR_MATCHER:
+        }
+        case ::MONGOC_ERROR_MATCHER: {
             static const mongoc_matcher_error_category matcher_category{};
             return matcher_category;
-        case ::MONGOC_ERROR_NAMESPACE:
+        }
+        case ::MONGOC_ERROR_NAMESPACE: {
             static const mongoc_namespace_error_category namespace_category{};
             return namespace_category;
-        case ::MONGOC_ERROR_PROTOCOL:
+        }
+        case ::MONGOC_ERROR_PROTOCOL: {
             static const mongoc_protocol_error_category protocol_category{};
             return protocol_category;
-        case ::MONGOC_ERROR_QUERY:
+        }
+        case ::MONGOC_ERROR_QUERY: {
             static const mongoc_query_error_category query_category{};
             return query_category;
-        case ::MONGOC_ERROR_SASL:
+        }
+        case ::MONGOC_ERROR_SASL: {
             static const mongoc_sasl_error_category sasl_category{};
             return sasl_category;
-        case ::MONGOC_ERROR_SCRAM:
+        }
+        case ::MONGOC_ERROR_SCRAM: {
             static const mongoc_scram_error_category scram_category{};
             return scram_category;
-        case ::MONGOC_ERROR_SERVER_SELECTION:
+        }
+        case ::MONGOC_ERROR_SERVER_SELECTION: {
             static const mongoc_server_selection_error_category server_selection_category{};
             return server_selection_category;
-        case ::MONGOC_ERROR_STREAM:
+        }
+        case ::MONGOC_ERROR_STREAM: {
             static const mongoc_stream_error_category stream_category{};
             return stream_category;
-        case ::MONGOC_ERROR_WRITE_CONCERN:
+        }
+        case ::MONGOC_ERROR_WRITE_CONCERN: {
             static const mongoc_write_concern_error_category write_concern_category{};
             return write_concern_category;
-        default:
+        }
+        default: {
             static const mongoc_unknown_error_category unknown_category{};
             return unknown_category;
+        }
     }
 }
 

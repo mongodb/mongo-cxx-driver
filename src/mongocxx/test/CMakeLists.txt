@@ -1,8 +1,3 @@
-add_definitions(
-    -DMONGOCXX_TESTING
-    -Wno-deprecated-declarations
-)
-
 set(mongocxx_test_sources
     CMakeLists.txt
     bulk_write.cpp

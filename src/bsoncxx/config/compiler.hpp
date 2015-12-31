@@ -12,4 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#if defined(_MSC_VER)
+
+// Disable MSVC warnings that cause a lot of noise related to DLL visibility
+// for types that we don't control (like std::unique_ptr).
+#pragma warning(push)
+#pragma warning(disable: 4251)
+
+#define BSONCXX_INLINE inline __forceinline
+
+#else
 #define BSONCXX_INLINE inline __attribute__((__visibility__("hidden"), __always_inline__))
+#endif

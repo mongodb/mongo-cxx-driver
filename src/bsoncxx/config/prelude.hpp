@@ -61,11 +61,13 @@
 #undef BSONCXX_NO_DEPRECATED
 #pragma push_macro("BSONCXX_PRIVATE")
 #undef BSONCXX_PRIVATE
+#pragma push_macro("BSONCXX_API")
+#undef BSONCXX_API
 
 #include <bsoncxx/config/compiler.hpp>
 #include <bsoncxx/config/config.hpp>
 #include <bsoncxx/config/version.hpp>
-#include <bsoncxx/export.hpp>
+#include <bsoncxx/config/export.hpp>
 
 #pragma push_macro("BSONCXX_UNREACHABLE")
 #undef BSONCXX_UNREACHABLE

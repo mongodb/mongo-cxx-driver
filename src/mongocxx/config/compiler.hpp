@@ -14,4 +14,15 @@
 
 // TODO: DRY this definition with the one from bsoncxx/config/compiler.hpp per discussion
 //       here - https://github.com/mongodb/mongo-cxx-driver/pull/374#issuecomment-158179295
+#if defined(_MSC_VER)
+
+// Disable MSVC warnings that cause a lot of noise related to DLL visibility
+// for types that we don't control (like std::unique_ptr).
+#pragma warning(push)
+#pragma warning(disable: 4251)
+
+#define MONGOCXX_INLINE inline __forceinline
+
+#else
 #define MONGOCXX_INLINE inline __attribute__((__visibility__("hidden"), __always_inline__))
+#endif
