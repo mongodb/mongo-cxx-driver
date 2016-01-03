@@ -78,7 +78,7 @@ tasks:
           params:
               working_dir: "mongo-cxx-driver/build"
               script: |
-                  PKG_CONFIG_PATH="/data/tmp/c-driver-install/lib/pkgconfig" /opt/cmake/bin/cmake -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=./install ..
+                  PKG_CONFIG_PATH="/data/tmp/c-driver-install/lib/pkgconfig" /opt/cmake/bin/cmake -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror" ..
                   make
                   ./src/bsoncxx/test/test_bson
                   ./src/mongocxx/test/test_driver
