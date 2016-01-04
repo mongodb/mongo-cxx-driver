@@ -9,6 +9,7 @@ link_directories(
 
 set(MONGOCXX_EXAMPLES
     aggregate.cpp
+    bulk_write.cpp
     create.cpp
     document_validation.cpp
     index.cpp
