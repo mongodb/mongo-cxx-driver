@@ -72,8 +72,11 @@ before_script:
 script:
     - make
 
+    # Run bsoncxx tests with catch
+    - ./src/bsoncxx/test/test_bson
+
+    # Run mongocxx tests with catch
+    - ./src/mongocxx/test/test_driver
+
     # Run all examples
     - make run-examples
-
-    # Run tests with catch
-    - ./src/mongocxx/test/test_driver

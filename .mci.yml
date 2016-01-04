@@ -80,8 +80,9 @@ tasks:
               script: |
                   PKG_CONFIG_PATH="/data/tmp/c-driver-install/lib/pkgconfig" /opt/cmake/bin/cmake -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=./install ..
                   make
-                  make run-examples
+                  ./src/bsoncxx/test/test_bson
                   ./src/mongocxx/test/test_driver
+                  make run-examples
         - func: "stop_mongod"
 
 #######################################
