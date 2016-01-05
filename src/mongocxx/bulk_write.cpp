@@ -90,8 +90,6 @@ void bulk_write::append(const model::write& operation) {
                                                   upsert);
             break;
         }
-        case write_type::k_uninitialized:
-            break;  // TODO: something exceptiony (see CXX-630)
     }
 }
 

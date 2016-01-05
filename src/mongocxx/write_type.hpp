@@ -26,7 +26,6 @@ enum class write_type {
     k_update_one,
     k_update_many,
     k_replace_one,
-    k_uninitialized,
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

@@ -88,7 +88,8 @@ class view_or_value {
     ///
     /// Construct a view_or_value from a moved-in view_or_value.
     ///
-    BSONCXX_INLINE view_or_value(view_or_value&& other)
+    /// TODO CXX-800: Create a noexcept expression to check the conditions that must be met.
+    BSONCXX_INLINE view_or_value(view_or_value&& other) noexcept
         : _value{std::move(other._value)}, _view{_value ? _value->view() : std::move(other._view)} {
         other._view = View();
         other._value = stdx::nullopt;
@@ -97,7 +98,8 @@ class view_or_value {
     ///
     /// Assign to this view_or_value from a moved-in view_or_value.
     ///
-    BSONCXX_INLINE view_or_value& operator=(view_or_value&& other) {
+    /// TODO CXX-800: Create a noexcept expression to check the conditions that must be met.
+    BSONCXX_INLINE view_or_value& operator=(view_or_value&& other) noexcept {
         _value = std::move(other._value);
         _view = _value ? _value->view() : std::move(other._view);
         other._view = View();
