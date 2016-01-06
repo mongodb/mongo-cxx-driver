@@ -132,7 +132,7 @@ TEST_CASE(
     "[pool]") {
     MOCK_POOL
 
-    ::max_align_t dummy_address;
+    std::max_align_t dummy_address;
     bool try_pop_called = false;
 
     mongoc_client_t* fake = reinterpret_cast<mongoc_client_t*>(&dummy_address);

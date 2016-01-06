@@ -44,7 +44,9 @@ namespace stdx {
 
 using ::boost::optional;
 using nullopt_t = ::boost::none_t;
-constexpr nullopt_t nullopt{};
+
+// TODO(MSVC): This would be better expressed as constexpr, but VS2015U1 can't do it.
+const nullopt_t nullopt{::boost::none};
 using ::boost::make_optional;
 
 }  // namespace stdx

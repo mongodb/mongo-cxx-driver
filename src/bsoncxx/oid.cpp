@@ -24,6 +24,8 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
+const oid::init_tag_t oid::init_tag{};
+
 oid::oid() : _is_valid(false) {
 }
 

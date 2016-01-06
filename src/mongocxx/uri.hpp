@@ -42,7 +42,7 @@ class MONGOCXX_API uri {
    public:
 
     struct host {
-         std::string host;
+         std::string name;
          std::uint16_t port;
          std::int32_t family;
     };

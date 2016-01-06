@@ -19,8 +19,8 @@
 #pragma warning(push)
 #pragma warning(disable: 4251)
 
-#define BSONCXX_INLINE inline __forceinline
+#define BSONCXX_INLINE inline __forceinline BSONCXX_PRIVATE
 
 #else
-#define BSONCXX_INLINE inline __attribute__((__visibility__("hidden"), __always_inline__))
+#define BSONCXX_INLINE inline __attribute__((__always_inline__)) BSONCXX_PRIVATE
 #endif

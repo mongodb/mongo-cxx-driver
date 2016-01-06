@@ -67,7 +67,9 @@ class array_context {
     BSONCXX_INLINE typename std::enable_if<
         std::is_same<base, closed_context>::value &&
             std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value,
-        array::value>::type
+        // TODO(MSVC): This should just be 'array::value', but
+        // VS2015U1 can't resolve the name.
+        bsoncxx::array::value>::type
     operator<<(T&&) {
         return _core->extract_array();
     }

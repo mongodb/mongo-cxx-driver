@@ -21,8 +21,8 @@
 #pragma warning(push)
 #pragma warning(disable: 4251)
 
-#define MONGOCXX_INLINE inline __forceinline
+#define MONGOCXX_INLINE inline __forceinline MONGOCXX_PRIVATE
 
 #else
-#define MONGOCXX_INLINE inline __attribute__((__visibility__("hidden"), __always_inline__))
+#define MONGOCXX_INLINE inline __attribute__((__always_inline__)) MONGOCXX_PRIVATE
 #endif

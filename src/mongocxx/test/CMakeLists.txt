@@ -43,4 +43,9 @@ add_executable(test_driver
 )
 
 target_link_libraries(test_driver mongocxx_mocked)
+
+if (WIN32)
+    target_compile_options(test_driver PRIVATE /bigobj)
+endif()
+
 add_test(driver test_driver)

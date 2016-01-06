@@ -107,8 +107,8 @@ class cursor::iterator : public std::iterator<
 
    private:
     friend class cursor;
-    friend bool operator==(const iterator&, const iterator&);
-    friend bool operator!=(const iterator&, const iterator&);
+    friend MONGOCXX_API bool operator==(const iterator&, const iterator&);
+    friend MONGOCXX_API bool operator!=(const iterator&, const iterator&);
 
     MONGOCXX_PRIVATE explicit iterator(cursor* cursor);
 

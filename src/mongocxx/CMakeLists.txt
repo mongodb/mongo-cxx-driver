@@ -143,8 +143,8 @@ generate_export_header (mongocxx
 
 set(mongocxx_libs ${LIBMONGOC_LIBRARIES} ${LIBBSON_LIBRARIES})
 
-target_link_libraries(mongocxx_static bsoncxx ${mongocxx_libs})
-target_link_libraries(mongocxx_mocked bsoncxx ${mongocxx_libs})
+target_link_libraries(mongocxx_static bsoncxx_static ${mongocxx_libs})
+target_link_libraries(mongocxx_mocked bsoncxx_static ${mongocxx_libs})
 target_link_libraries(mongocxx PUBLIC bsoncxx PRIVATE ${mongocxx_libs})
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -166,6 +166,7 @@ install(FILES
 
 install(TARGETS
     mongocxx
+    RUNTIME DESTINATION bin COMPONENT runtime
     LIBRARY DESTINATION lib COMPONENT runtime
     ARCHIVE DESTINATION lib COMPONENT dev
 )

@@ -27,8 +27,12 @@ namespace builder {
 /// Container to concatenate a document. Use it by constructing an instance with the
 /// document to be concatenated, and pass it into a document stream builder.
 ///
-struct BSONCXX_API concatenate_doc {
+struct concatenate_doc {
     document::view_or_value doc;
+
+    // MSVC seems to need a hint that it should always
+    // inline this destructor;
+    BSONCXX_INLINE ~concatenate_doc() = default;
 
     BSONCXX_INLINE operator document::view() const {
         return doc;
@@ -43,8 +47,12 @@ struct BSONCXX_API concatenate_doc {
 /// Container to concatenate an array. Use this with the array stream builder in order
 /// to pass an array into a new builder and append its values to the stream.
 ///
-struct BSONCXX_API concatenate_array {
+struct concatenate_array {
     array::view_or_value array;
+
+    // MSVC seems to need a hint that it should always
+    // inline this destructor;
+    BSONCXX_INLINE ~concatenate_array() = default;
 
     BSONCXX_INLINE operator array::view() const {
         return array;

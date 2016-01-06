@@ -131,6 +131,7 @@ install(FILES
 
 install(TARGETS
     bsoncxx
+    RUNTIME DESTINATION bin COMPONENT runtime
     LIBRARY DESTINATION lib COMPONENT runtime
     ARCHIVE DESTINATION lib COMPONENT dev
 )

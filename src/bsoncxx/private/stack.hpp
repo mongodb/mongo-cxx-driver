@@ -69,7 +69,7 @@ class stack {
 
     std::list<T *> _buckets;
 
-    typename decltype(_buckets)::iterator _bucket_iter;
+    typename std::list<T*>::iterator _bucket_iter;
 
     int _bucket_index;
     int _bucket_size;

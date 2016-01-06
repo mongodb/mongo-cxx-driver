@@ -38,7 +38,13 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 class BSONCXX_API oid {
    public:
     struct init_tag_t {};
-    static constexpr init_tag_t init_tag{};
+
+    // TODO(MSVC): Ideally this would be constexpr, but VS2015U1 can't
+    // handle it.
+    //
+    // See https://connect.microsoft.com/VisualStudio/feedback/details/2092790
+    //
+    static const init_tag_t init_tag;
 
     ///
     /// Constructs an uninitialized oid.
