@@ -41,6 +41,11 @@ class BSONCXX_API view_or_value : public bsoncxx::view_or_value<stdx::string_vie
     using bsoncxx::view_or_value<stdx::string_view, std::string>::view_or_value;
 
     ///
+    /// Default constructor, equivalent to using an empty string.
+    ///
+    BSONCXX_INLINE view_or_value() = default;
+
+    ///
     /// Construct a string::view_or_value using a null-terminated const char *.
     /// The resulting view_or_value will keep a string_view of 'str', so it is
     /// important that the passed-in string outlive this object.

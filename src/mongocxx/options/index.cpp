@@ -31,7 +31,7 @@ void index::unique(bool unique) {
     _unique = unique;
 }
 
-void index::name(std::string name) {
+void index::name(bsoncxx::string::view_or_value name) {
     _name = std::move(name);
 }
 
@@ -60,11 +60,11 @@ void index::weights(bsoncxx::document::view weights) {
     _weights = weights;
 }
 
-void index::default_language(std::string default_language) {
+void index::default_language(bsoncxx::string::view_or_value default_language) {
     _default_language = std::move(default_language);
 }
 
-void index::language_override(std::string language_override) {
+void index::language_override(bsoncxx::string::view_or_value language_override) {
     _language_override = std::move(language_override);
 }
 
@@ -100,7 +100,7 @@ const stdx::optional<bool>& index::unique() const {
     return _unique;
 }
 
-const stdx::optional<std::string>& index::name() const {
+const stdx::optional<bsoncxx::string::view_or_value>& index::name() const {
     return _name;
 }
 
@@ -124,11 +124,11 @@ const stdx::optional<bsoncxx::document::view>& index::weights() const {
     return _weights;
 }
 
-const stdx::optional<std::string>& index::default_language() const {
+const stdx::optional<bsoncxx::string::view_or_value>& index::default_language() const {
     return _default_language;
 }
 
-const stdx::optional<std::string>& index::language_override() const {
+const stdx::optional<bsoncxx::string::view_or_value>& index::language_override() const {
     return _language_override;
 }
 
@@ -160,11 +160,13 @@ index::base_storage_options::~base_storage_options() = default;
 
 index::wiredtiger_storage_options::~wiredtiger_storage_options() = default;
 
-void index::wiredtiger_storage_options::config_string(std::string config_string) {
+void index::wiredtiger_storage_options::config_string(
+    bsoncxx::string::view_or_value config_string) {
     _config_string = std::move(config_string);
 }
 
-const stdx::optional<std::string>& index::wiredtiger_storage_options::config_string() const {
+const stdx::optional<bsoncxx::string::view_or_value>&
+index::wiredtiger_storage_options::config_string() const {
     return _config_string;
 }
 

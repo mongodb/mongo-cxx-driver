@@ -20,6 +20,7 @@
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
@@ -61,19 +62,19 @@ class MONGOCXX_API index {
         /// @param config_string
         ///   The WiredTiger configuration string.
         ///
-        void config_string(std::string config_string);
+        void config_string(bsoncxx::string::view_or_value config_string);
 
         ///
         /// The current config_string setting.
         ///
         /// @return The current config_string.
         ///
-        const stdx::optional<std::string>& config_string() const;
+        const stdx::optional<bsoncxx::string::view_or_value>& config_string() const;
 
        private:
         friend collection;
         MONGOCXX_PRIVATE int type() const override;
-        stdx::optional<std::string> _config_string;
+        stdx::optional<bsoncxx::string::view_or_value> _config_string;
     };
 
     index();
@@ -120,14 +121,14 @@ class MONGOCXX_API index {
     /// @param name
     ///   The name of the index.
     ///
-    void name(std::string name);
+    void name(bsoncxx::string::view_or_value name);
 
     ///
     /// The current name setting.
     ///
     /// @return The current name.
     ///
-    const stdx::optional<std::string>& name() const;
+    const stdx::optional<bsoncxx::string::view_or_value>& name() const;
 
     ///
     /// Whether or not to create a sparse index. Sparse indexes only reference documents with the
@@ -213,14 +214,14 @@ class MONGOCXX_API index {
     /// @param default_language
     ///   The default language used when creating text indexes.
     ///
-    void default_language(std::string default_language);
+    void default_language(bsoncxx::string::view_or_value default_language);
 
     ///
     /// The current default_language setting.
     ///
     /// @return The current default_language.
     ///
-    const stdx::optional<std::string>& default_language() const;
+    const stdx::optional<bsoncxx::string::view_or_value>& default_language() const;
 
     ///
     /// For text indexes, the name of the field, in the collection’s documents, that contains the
@@ -229,14 +230,14 @@ class MONGOCXX_API index {
     /// @param language_override
     ///   The name of the field that contains the override language for text indexes.
     ///
-    void language_override(std::string language_override);
+    void language_override(bsoncxx::string::view_or_value language_override);
 
     ///
     /// The current name of the field that contains the override language for text indexes.
     ///
     /// @return The name of the field that contains the override language for text indexes.
     ///
-    const stdx::optional<std::string>& language_override() const;
+    const stdx::optional<bsoncxx::string::view_or_value>& language_override() const;
 
     ///
     /// Sets the document for the partial filter expression for partial indexes.
@@ -337,14 +338,14 @@ class MONGOCXX_API index {
 
     stdx::optional<bool> _background;
     stdx::optional<bool> _unique;
-    stdx::optional<std::string> _name;
+    stdx::optional<bsoncxx::string::view_or_value> _name;
     stdx::optional<bool> _sparse;
     std::unique_ptr<base_storage_options> _storage_options;
     stdx::optional<std::int32_t> _expire_after_seconds;
     stdx::optional<std::int32_t> _version;
     stdx::optional<bsoncxx::document::view> _weights;
-    stdx::optional<std::string> _default_language;
-    stdx::optional<std::string> _language_override;
+    stdx::optional<bsoncxx::string::view_or_value> _default_language;
+    stdx::optional<bsoncxx::string::view_or_value> _language_override;
     stdx::optional<bsoncxx::document::view> _partial_filter_expression;
     stdx::optional<std::uint8_t> _twod_sphere_version;
     stdx::optional<std::uint8_t> _twod_bits_precision;

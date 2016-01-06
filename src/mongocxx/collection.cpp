@@ -18,6 +18,7 @@
 #include <cstdint>
 #include <limits>
 #include <tuple>
+#include <unordered_set>
 #include <utility>
 
 #include <bsoncxx/builder/stream/document.hpp>
@@ -591,6 +592,12 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
     ::mongoc_index_opt_wt_t wt_opt{};
     libmongoc::index_opt_init(&opt);
 
+    // keep our safe copies alive
+    bsoncxx::string::view_or_value name_copy{};
+    bsoncxx::string::view_or_value wt_config_copy{};
+    bsoncxx::string::view_or_value default_language_copy{};
+    bsoncxx::string::view_or_value language_override_copy{};
+
     if (options.background()) {
         opt.background = *options.background();
     }
@@ -600,7 +607,8 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
     }
 
     if (options.name()) {
-        opt.name = options.name()->c_str();
+        name_copy = options.name()->terminated();
+        opt.name = name_copy.data();
     }
 
     if (options.sparse()) {
@@ -617,7 +625,8 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
                 options.storage_options().get());
 
             if (wt_options->config_string()) {
-                wt_opt.config_str = wt_options->config_string()->c_str();
+                wt_config_copy = wt_options->config_string()->terminated();
+                wt_opt.config_str = wt_config_copy.data();
             }
             opt.storage_options = reinterpret_cast<mongoc_index_opt_storage_t*>(&wt_opt);
         }
@@ -637,11 +646,13 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
     }
 
     if (options.default_language()) {
-        opt.default_language = options.default_language()->c_str();
+        default_language_copy = options.default_language()->terminated();
+        opt.default_language = default_language_copy.data();
     }
 
     if (options.language_override()) {
-        opt.language_override = options.language_override()->c_str();
+        language_override_copy = options.language_override()->terminated();
+        opt.language_override = language_override_copy.data();
     }
 
     if (options.partial_filter_expression()) {
