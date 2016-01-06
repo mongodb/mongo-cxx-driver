@@ -16,7 +16,7 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
-#include <iostream>
+#include <iosfwd>
 #include <ctime>
 #include <string>
 

@@ -18,9 +18,7 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <iostream>
 #include <iterator>
-#include <type_traits>
 
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
