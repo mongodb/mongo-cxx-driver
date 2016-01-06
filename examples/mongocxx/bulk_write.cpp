@@ -13,9 +13,10 @@
 // limitations under the License.
 
 #include <cstdlib>
+#include <iostream>
 
 #include <bsoncxx/builder/stream/document.hpp>
-
+#include <bsoncxx/json.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
@@ -98,7 +99,10 @@ int main(int, char**) {
         return EXIT_FAILURE;
     }
 
-    // TODO: print inserted and upserted IDs once CXX-798 is resolved
+    std::cout << "Upserted IDs" << std::endl;
+    for (const auto &id : result->upserted_ids()) {
+        std::cout << "Bulk write index: " << id.first << std::endl << bsoncxx::to_json(id.second) << std::endl;
+    }
 
     // The collection should contain two copies of {"a": 2}.
     auto cursor = coll.find({});

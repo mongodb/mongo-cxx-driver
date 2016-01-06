@@ -17,6 +17,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 #include <cstdint>
+#include <map>
 #include <vector>
 
 #include <bsoncxx/document/value.hpp>
@@ -33,6 +34,8 @@ namespace result {
 class MONGOCXX_API bulk_write {
 
    public:
+    using id_map = std::map<std::size_t, bsoncxx::document::element>;
+
     explicit bulk_write(bsoncxx::document::value raw_response);
 
     ///
@@ -71,18 +74,12 @@ class MONGOCXX_API bulk_write {
     std::int32_t upserted_count() const;
 
     ///
-    /// Gets the ids of the inserted documents.
-    ///
-    /// @return The values of the _id field for inserted documents.
-    ///
-    bsoncxx::document::element inserted_ids() const;
-
-    ///
     /// Gets the ids of the upserted documents.
     ///
-    /// @return The values of the _id field for upserted documents.
+    /// @note The returned id_map must not be accessed after the bulk_write object is destroyed.
+    /// @return A map from bulk write index to _id field for upserted documents.
     ///
-    bsoncxx::document::element upserted_ids() const;
+    id_map upserted_ids() const;
 
    private:
     MONGOCXX_PRIVATE bsoncxx::document::view view() const;

@@ -43,12 +43,17 @@ std::int32_t bulk_write::upserted_count() const {
     return view()["nUpserted"].get_int32();
 }
 
-bsoncxx::document::element bulk_write::inserted_ids() const {
-    return view()["inserted_ids"];
-}
+bulk_write::id_map bulk_write::upserted_ids() const {
+    id_map upserted_ids;
 
-bsoncxx::document::element bulk_write::upserted_ids() const {
-    return view()["upserted_ids"];
+    if (!view()["upserted"]) {
+        return upserted_ids;
+    }
+
+    for (auto&& id : view()["upserted"].get_array().value) {
+        upserted_ids.emplace(id["index"].get_int32(), id["_id"]);
+    }
+    return upserted_ids;
 }
 
 bsoncxx::document::view bulk_write::view() const {

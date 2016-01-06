@@ -197,7 +197,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         options::update options;
         options.upsert(true);
 
-        coll.update_one(b1.view(), update_doc.view(), options);
+        auto result = coll.update_one(b1.view(), update_doc.view(), options);
+        REQUIRE(result->upserted_id());
 
         auto updated = coll.find_one({});
 
@@ -218,7 +219,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         options::update options;
         options.upsert(true);
 
-        coll.update_one(b1.view(), update_doc.view(), options);
+        auto result = coll.update_one(b1.view(), update_doc.view(), options);
+        REQUIRE(!(result->upserted_id()));
 
         auto updated = coll.find_one({});
 

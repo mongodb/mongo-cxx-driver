@@ -35,7 +35,10 @@ std::int32_t update::modified_count() const {
 }
 
 stdx::optional<bsoncxx::document::element> update::upserted_id() const {
-    return _result.upserted_ids();
+    if (_result.upserted_ids().size() == 0) {
+		return stdx::nullopt;
+	}
+	return _result.upserted_ids()[0];
 }
 
 }  // namespace result
