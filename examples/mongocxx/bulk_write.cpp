@@ -29,8 +29,14 @@ int main(int, char**) {
     mongocxx::instance inst{};
     mongocxx::client conn{mongocxx::uri{}};
 
-    auto coll = conn["test"]["coll"];
-    coll.drop();
+    auto db = conn["test"];
+
+    // Ensure collection is empty.
+    if (db.has_collection("coll")) {
+        db["coll"].drop();
+    }
+
+    auto coll = db["coll"];
 
     // @begin: cpp-bulk-write
     auto doc1 = document{} << "a" << 1 << finalize;
