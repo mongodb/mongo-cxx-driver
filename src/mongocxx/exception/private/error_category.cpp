@@ -252,6 +252,8 @@ class mongoc_query_error_category final : public std::error_category {
                 return "mongoc query_failure error";
             case ::MONGOC_ERROR_QUERY_NOT_TAILABLE:
                 return "mongoc query_not_tailable error";
+            case ::MONGOC_ERROR_COLLECTION_DOES_NOT_EXIST:
+                return "mongoc collection_does_not_exist error";
             default:
                 return "unknown mongoc query error";
         }

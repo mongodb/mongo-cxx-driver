@@ -29,15 +29,8 @@ using bsoncxx::builder::stream::open_document;
 int main(int, char**) {
     mongocxx::instance inst{};
     mongocxx::client conn{mongocxx::uri{}};
-
-    auto db = conn["test"];
-
-    // Ensure collection is empty.
-    if (db.has_collection("coll")) {
-        db["coll"].drop();
-    }
-
-    auto coll = db["coll"];
+    auto coll = conn["test"]["coll"];
+    coll.drop();
 
     // @begin: cpp-bulk-write
     auto doc1 = document{} << "a" << 1 << finalize;

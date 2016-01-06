@@ -735,7 +735,7 @@ void collection::drop() {
 
     auto result = libmongoc::collection_drop(_get_impl().collection_t, &error);
 
-    if (!result) {
+    if (!result && (error.code != ::MONGOC_ERROR_COLLECTION_DOES_NOT_EXIST)) {
         throw_exception<operation_exception>(error);
     }
 }

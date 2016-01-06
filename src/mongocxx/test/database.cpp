@@ -32,17 +32,6 @@ using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::finalize;
 using bsoncxx::builder::stream::open_document;
 
-namespace {
-
-// Clean up the given collection if it exists
-void clear_collection(const database& database, bsoncxx::stdx::string_view collection_name) {
-    if (database.has_collection(collection_name)) {
-        database[collection_name].drop();
-    }
-}
-
-}  // namespace
-
 TEST_CASE("A default constructed database is false-ish", "[database]") {
     database d;
     REQUIRE(!d);
@@ -269,14 +258,14 @@ TEST_CASE("Database integration tests", "[database]") {
 
     SECTION("A database may create a collection via create_collection") {
         SECTION("without any options") {
-            clear_collection(database, collection_name);
+            database[collection_name].drop();
 
             collection obtained_collection = database.create_collection(collection_name);
             REQUIRE(obtained_collection.name() == collection_name);
         }
 
         SECTION("with options") {
-            clear_collection(database, collection_name);
+            database[collection_name].drop();
 
             options::create_collection opts;
             opts.capped(true);
@@ -289,14 +278,14 @@ TEST_CASE("Database integration tests", "[database]") {
         }
 
         SECTION("but raises exception when collection already exists") {
-            clear_collection(database, collection_name);
+            database[collection_name].drop();
 
             database.create_collection(collection_name);
 
             REQUIRE_THROWS(database.create_collection(collection_name));
         }
 
-        clear_collection(database, collection_name);
+        database[collection_name].drop();
     }
 
     SECTION("A collection may be modified via modify_collection") {
@@ -322,7 +311,7 @@ TEST_CASE("Database integration tests", "[database]") {
     }
 
     SECTION("A database may be dropped") {
-        clear_collection(database, collection_name);
+        database[collection_name].drop();
 
         database.create_collection(collection_name);
         REQUIRE(database.has_collection(collection_name));

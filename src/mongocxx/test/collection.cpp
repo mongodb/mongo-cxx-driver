@@ -73,7 +73,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     database db = mongodb_client["test"];
     collection coll = db["mongo_cxx_driver"];
 
-    if (db.has_collection("mongo_cxx_driver")) coll.drop();
+    coll.drop();
 
     SECTION("insert and read single document", "[collection]") {
         auto b = document{} << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "x" << 1
@@ -526,9 +526,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("distinct works", "[collection]") {
         auto distinct_cname = "distinct_coll";
         auto distinct_coll = db[distinct_cname];
-        if (db.has_collection(distinct_cname)) {
-            distinct_coll.drop();
-        }
+        distinct_coll.drop();
+        
         auto doc1 = document{} << "foo"
                                << "baz"
                                << "garply" << 1 << finalize;
