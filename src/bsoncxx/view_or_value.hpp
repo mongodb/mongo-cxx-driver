@@ -66,14 +66,14 @@ class view_or_value {
     /// @param value
     ///   A Value type.
     ///
-    BSONCXX_INLINE view_or_value(Value&& value) : _value{std::move(value)}, _view{_value->view()} {
+    BSONCXX_INLINE view_or_value(Value&& value) : _value(std::move(value)), _view(*_value) {
     }
 
     ///
     /// Construct a view_or_value from a copied view_or_value.
     ///
     BSONCXX_INLINE view_or_value(const view_or_value& other)
-        : _value{other._value}, _view{_value ? _value->view() : other._view} {
+        : _value(other._value), _view(_value ? *_value : other._view) {
     }
 
     ///
@@ -81,16 +81,17 @@ class view_or_value {
     ///
     BSONCXX_INLINE view_or_value& operator=(const view_or_value& other) {
         _value = other._value;
-        _view = _value ? _value->view() : other._view;
+        _view = _value ? *_value : other._view;
         return *this;
     }
 
     ///
     /// Construct a view_or_value from a moved-in view_or_value.
     ///
+
     /// TODO CXX-800: Create a noexcept expression to check the conditions that must be met.
     BSONCXX_INLINE view_or_value(view_or_value&& other) noexcept
-        : _value{std::move(other._value)}, _view{_value ? _value->view() : std::move(other._view)} {
+        : _value{std::move(other._value)}, _view(_value ? *_value : std::move(other._view)) {
         other._view = View();
         other._value = stdx::nullopt;
     }
@@ -101,7 +102,7 @@ class view_or_value {
     /// TODO CXX-800: Create a noexcept expression to check the conditions that must be met.
     BSONCXX_INLINE view_or_value& operator=(view_or_value&& other) noexcept {
         _value = std::move(other._value);
-        _view = _value ? _value->view() : std::move(other._view);
+        _view = _value ? *_value : std::move(other._view);
         other._view = View();
         other._value = stdx::nullopt;
         return *this;
@@ -120,7 +121,8 @@ class view_or_value {
         return _view;
     }
 
-   private:
+    // TODO: make these private again (CXX-801)
+   protected:
     stdx::optional<Value> _value;
     View _view;
 };

@@ -41,6 +41,7 @@ set(bsoncxx_sources
     private/error_code.cpp
     private/itoa.cpp
     private/libbson_error.cpp
+    string/view_or_value.cpp
     types.cpp
     types/value.cpp
     validate.cpp
