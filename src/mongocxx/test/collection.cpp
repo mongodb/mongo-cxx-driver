@@ -229,17 +229,22 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         REQUIRE(coll.count({}) == 1);
     }
 
-    // TODO: CXX-799 update this test
-    // SECTION("matching upsert updates document", "[collection]") {
-    // bsoncxx::builder::stream::document b1;
-    // b1 << "x" << 1;
-    // model::insert_many docs{std::initializer_list<bsoncxx::document::view>{b1, b1, b1}};
-    // coll.insert_many(docs);
+    SECTION("test using an insert_many_builder on this collection", "[collection]") {
+        auto doc_value = document{} << "x" << 1 << finalize;
+        auto doc_view = doc_value.view();
 
-    // coll.insert_one(bsoncxx::document::view{});
-    // REQUIRE(coll.count(b1) == 3);
-    // REQUIRE(coll.count() == 4);
-    //}
+        insert_many_builder insert_many{options::insert()};
+        insert_many(doc_view);
+        insert_many(doc_view);
+        insert_many(doc_view);
+
+        insert_many.insert(&coll);
+
+        coll.insert_one(document{} << "b" << 1 << finalize);
+
+        REQUIRE(coll.count(doc_view) == 3);
+        REQUIRE(coll.count({}) == 4);
+    }
 
     SECTION("document replacement", "[collection]") {
         document b1;
