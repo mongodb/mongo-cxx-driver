@@ -128,6 +128,22 @@ class view_or_value {
 };
 
 ///
+/// Compare view_or_value objects.
+///
+
+template <typename View, typename Value>
+BSONCXX_INLINE bool operator==(const view_or_value<View, Value>& lhs,
+                               const view_or_value<View, Value>& rhs) {
+    return lhs.view() == rhs.view();
+}
+
+template <typename View, typename Value>
+BSONCXX_INLINE bool operator!=(const view_or_value<View, Value>& lhs,
+                               const view_or_value<View, Value>& rhs) {
+    return !(lhs == rhs);
+}
+
+///
 /// Equality operators for comparison with plain Views.
 ///
 
@@ -148,6 +164,30 @@ BSONCXX_INLINE bool operator!=(const view_or_value<View, Value>& lhs, View rhs) 
 
 template <typename View, typename Value>
 BSONCXX_INLINE bool operator!=(View lhs, const view_or_value<View, Value>& rhs) {
+    return !(rhs == lhs);
+}
+
+///
+/// Equality operators for comparison with plain Values.
+///
+
+template <typename View, typename Value>
+BSONCXX_INLINE bool operator==(const view_or_value<View, Value>& lhs, const Value& rhs) {
+    return lhs.view() == View(rhs);
+}
+
+template <typename View, typename Value>
+BSONCXX_INLINE bool operator==(const Value& lhs, const view_or_value<View, Value>& rhs) {
+    return rhs == lhs;
+}
+
+template <typename View, typename Value>
+BSONCXX_INLINE bool operator!=(const view_or_value<View, Value>& lhs, const Value& rhs) {
+    return !(lhs == rhs);
+}
+
+template <typename View, typename Value>
+BSONCXX_INLINE bool operator!=(const Value& lhs, const view_or_value<View, Value>& rhs) {
     return !(rhs == lhs);
 }
 
