@@ -9,5 +9,5 @@ Version: @MONGOCXX_VERSION@
 Requires.private: libbson-@LIBBSON_REQUIRED_ABI_VERSION@
 Requires.private: libmongoc-@LIBMONGOC_REQUIRED_ABI_VERSION@
 Requires: libbsoncxx
-Cflags: -I${includedir}/mongocxx/@MONGOCXX_DIRECTORY_PREFIX@
+Cflags: -I${includedir}/mongocxx/@MONGOCXX_INLINE_NAMESPACE@
 Libs: -L${libdir} -lmongocxx
