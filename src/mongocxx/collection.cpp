@@ -74,7 +74,8 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
 
     if (!r) {
         auto gle = mongocxx::libmongoc::collection_get_last_error(collection);
-        mongocxx::throw_exception<mongocxx::write_exception>(bsoncxx::helpers::value_from_bson_t(gle), error);
+        mongocxx::throw_exception<mongocxx::write_exception>(
+            bsoncxx::helpers::value_from_bson_t(gle), error);
     }
 
     bsoncxx::document::view result = reply.view();
@@ -124,24 +125,25 @@ collection::operator bool() const noexcept {
 }
 
 stdx::string_view collection::name() const {
-    return stdx::string_view{libmongoc::collection_get_name(_get_impl().collection_t)};
+    return {libmongoc::collection_get_name(_get_impl().collection_t)};
 }
 
-void collection::rename(stdx::string_view new_name, bool drop_target_before_rename) {
+void collection::rename(bsoncxx::string::view_or_value new_name, bool drop_target_before_rename) {
     bson_error_t error;
 
-    auto result = libmongoc::collection_rename(_get_impl().collection_t, _get_impl().database_name.c_str(),
-                                               new_name.data(), drop_target_before_rename, &error);
+    auto result =
+        libmongoc::collection_rename(_get_impl().collection_t, _get_impl().database_name.c_str(),
+                                     new_name.c_str(), drop_target_before_rename, &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
     }
 }
 
-collection::collection(const database& database, stdx::string_view collection_name)
-    : _impl(stdx::make_unique<impl>(
-          libmongoc::database_get_collection(database._get_impl().database_t, collection_name.data()),
-          database.name(), database._get_impl().client_impl)) {
+collection::collection(const database& database, bsoncxx::string::view_or_value collection_name)
+    : _impl(stdx::make_unique<impl>(libmongoc::database_get_collection(
+                                        database._get_impl().database_t, collection_name.c_str()),
+                                    database.name(), database._get_impl().client_impl)) {
 }
 
 collection::collection(const database& database, void* collection)
@@ -166,6 +168,9 @@ stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write
     mongoc_bulk_operation_t* b = bulk_write._impl->operation_t;
     libmongoc::bulk_operation_set_client(b, _get_impl().client_impl->client_t);
     libmongoc::bulk_operation_set_database(b, _get_impl().database_name.c_str());
+
+    // collection::name() is guaranteed to return a null-terminated string, so it
+    // is safe to use .data() here.
     libmongoc::bulk_operation_set_collection(b, name().data());
 
     scoped_bson_t reply;
@@ -675,8 +680,8 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
         opt.geo_options = &geo_opt;
     }
 
-    auto result =
-        libmongoc::collection_create_index(_get_impl().collection_t, bson_keys.bson(), &opt, &error);
+    auto result = libmongoc::collection_create_index(_get_impl().collection_t, bson_keys.bson(),
+                                                     &opt, &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
@@ -693,10 +698,10 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
     }
 }
 
-cursor collection::distinct(stdx::string_view field_name, view_or_value query,
+cursor collection::distinct(bsoncxx::string::view_or_value field_name, view_or_value query,
                             const options::distinct& options) {
     bsoncxx::builder::stream::document command_builder{};
-    command_builder << "distinct" << name() << "key" << field_name << "query"
+    command_builder << "distinct" << name() << "key" << field_name.view() << "query"
                     << bsoncxx::types::b_document{query};
 
     if (options.max_time()) {
@@ -705,8 +710,8 @@ cursor collection::distinct(stdx::string_view field_name, view_or_value query,
 
     scoped_bson_t command_bson{command_builder.extract()};
 
-    auto database =
-        libmongoc::client_get_database(_get_impl().client_impl->client_t, _get_impl().database_name.data());
+    auto database = libmongoc::client_get_database(_get_impl().client_impl->client_t,
+                                                   _get_impl().database_name.c_str());
 
     auto result = libmongoc::database_command(database, MONGOC_QUERY_NONE, 0, 0, 0,
                                               command_bson.bson(), NULL, NULL);
@@ -744,7 +749,8 @@ stdx::optional<class read_concern> collection::read_concern() const {
     if (!libmongoc::read_concern_get_level(rc)) {
         return stdx::nullopt;
     }
-    return {(class read_concern){stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))}};
+    return {(class read_concern){
+        stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))}};
 }
 
 void collection::read_preference(class read_preference rp) {
@@ -752,8 +758,8 @@ void collection::read_preference(class read_preference rp) {
 }
 
 class read_preference collection::read_preference() const {
-    class read_preference rp(stdx::make_unique<read_preference::impl>(
-        libmongoc::read_prefs_copy(libmongoc::collection_get_read_prefs(_get_impl().collection_t))));
+    class read_preference rp(stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(
+        libmongoc::collection_get_read_prefs(_get_impl().collection_t))));
     return rp;
 }
 
@@ -768,7 +774,7 @@ class write_concern collection::write_concern() const {
 }
 
 const collection::impl& collection::_get_impl() const {
-    if(!_impl) {
+    if (!_impl) {
         throw logic_error{make_error_code(error_code::k_invalid_collection_object)};
     }
     return *_impl;

@@ -24,7 +24,7 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
 
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/cursor.hpp>
@@ -274,10 +274,9 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/distinct/
     ///
-    cursor distinct(stdx::string_view name, bsoncxx::document::view_or_value filter,
+    cursor distinct(bsoncxx::string::view_or_value name, bsoncxx::document::view_or_value filter,
                     const options::distinct& options = options::distinct());
 
-    ///
     /// Drops this collection and all its contained documents from the database.
     ///
     /// @throws exception::operation if the operation fails.
@@ -458,7 +457,7 @@ class MONGOCXX_API collection {
     cursor list_indexes() const;
 
     ///
-    /// Returns the name of this collection.
+    /// Returns the name of this collection as a view of a null-terminated string.
     ///
     /// @return The name of the collection.
     ///
@@ -475,7 +474,7 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.org/manual/reference/command/renameCollection/
     ///
-    void rename(stdx::string_view new_name, bool drop_target_before_rename = false);
+    void rename(bsoncxx::string::view_or_value new_name, bool drop_target_before_rename = false);
 
     ///
     /// Sets the read_concern for this collection. Changes will not have any effect on existing
@@ -592,7 +591,8 @@ class MONGOCXX_API collection {
    private:
     friend class database;
 
-    MONGOCXX_PRIVATE collection(const database& database, stdx::string_view collection_name);
+    MONGOCXX_PRIVATE collection(const database& database,
+                                bsoncxx::string::view_or_value collection_name);
 
     MONGOCXX_PRIVATE collection(const database& database, void* collection);
 

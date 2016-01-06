@@ -20,7 +20,7 @@
 #include <string>
 
 #include <bsoncxx/document/view_or_value.hpp>
-#include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/options/modify_collection.hpp>
 #include <mongocxx/options/create_collection.hpp>
@@ -100,7 +100,7 @@ class MONGOCXX_API database {
     /// @param options the options for the new collection.
     ///
     class collection create_collection(
-        stdx::string_view name,
+        bsoncxx::string::view_or_value name,
         const options::create_collection& options = options::create_collection());
 
     ///
@@ -130,7 +130,7 @@ class MONGOCXX_API database {
     /// @param name the name of the collection.
     /// @return bool whether the collection exists in this database.
     ///
-    bool has_collection(stdx::string_view name) const;
+    bool has_collection(bsoncxx::string::view_or_value name) const;
 
     ///
     /// Enumerates the collections in this database.
@@ -230,7 +230,7 @@ class MONGOCXX_API database {
     ///
     /// @return the collection.
     ///
-    class collection collection(stdx::string_view name) const;
+    class collection collection(bsoncxx::string::view_or_value name) const;
 
     ///
     /// Allows the db["collection_name"] syntax to be used to access a collection within this
@@ -240,13 +240,13 @@ class MONGOCXX_API database {
     ///
     /// @return the collection.
     ///
-    MONGOCXX_INLINE class collection operator[](stdx::string_view name) const;
+    MONGOCXX_INLINE class collection operator[](bsoncxx::string::view_or_value name) const;
 
    private:
     friend class client;
     friend class collection;
 
-    MONGOCXX_PRIVATE database(const class client& client, stdx::string_view name);
+    MONGOCXX_PRIVATE database(const class client& client, bsoncxx::string::view_or_value name);
 
     class MONGOCXX_PRIVATE impl;
 
@@ -256,7 +256,7 @@ class MONGOCXX_API database {
     std::unique_ptr<impl> _impl;
 };
 
-MONGOCXX_INLINE collection database::operator[](stdx::string_view name) const {
+MONGOCXX_INLINE collection database::operator[](bsoncxx::string::view_or_value name) const {
     return collection(name);
 }
 

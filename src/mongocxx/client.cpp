@@ -69,9 +69,8 @@ stdx::optional<class read_concern> client::read_concern() const {
     if (!libmongoc::read_concern_get_level(rc)) {
         return stdx::nullopt;
     }
-
     return {(class read_concern){
-            stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))}};
+        stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))}};
 }
 
 void client::read_preference(class read_preference rp) {
@@ -100,8 +99,8 @@ class write_concern client::write_concern() const {
     return wc;
 }
 
-class database client::database(stdx::string_view name) const & {
-    return mongocxx::database(*this, name);
+class database client::database(bsoncxx::string::view_or_value name) const & {
+    return mongocxx::database(*this, std::move(name));
 }
 
 cursor client::list_databases() const {
@@ -116,7 +115,7 @@ cursor client::list_databases() const {
 }
 
 const client::impl& client::_get_impl() const {
-    if(!_impl) {
+    if (!_impl) {
         throw logic_error{make_error_code(error_code::k_invalid_client_object)};
     }
     return *_impl;

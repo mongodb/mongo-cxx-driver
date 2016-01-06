@@ -116,8 +116,7 @@ TEST_CASE("A database", "[database]") {
     }
 
     SECTION("throws an exception when dropping causes an error") {
-        database_drop->interpose(
-            [&](mongoc_database_t*, bson_error_t*) { return false; });
+        database_drop->interpose([&](mongoc_database_t*, bson_error_t*) { return false; });
 
         database database = mongo_client["database"];
         REQUIRE_THROWS(database.drop());
@@ -147,14 +146,14 @@ TEST_CASE("A database", "[database]") {
         read_concern rc{};
         rc.acknowledge_level(read_concern::level::k_majority);
 
-        database_set_read_concern->interpose([&database_set_rc_called](
-            ::mongoc_database_t*, const ::mongoc_read_concern_t* rc_t) {
-            REQUIRE(rc_t);
-            const auto result = libmongoc::read_concern_get_level(rc_t);
-            REQUIRE(result);
-            REQUIRE(strcmp(result, "majority") == 0);
-            database_set_rc_called = true;
-        });
+        database_set_read_concern->interpose(
+            [&database_set_rc_called](::mongoc_database_t*, const ::mongoc_read_concern_t* rc_t) {
+                REQUIRE(rc_t);
+                const auto result = libmongoc::read_concern_get_level(rc_t);
+                REQUIRE(result);
+                REQUIRE(strcmp(result, "majority") == 0);
+                database_set_rc_called = true;
+            });
 
         mongo_database.read_concern(rc);
         REQUIRE(database_set_rc_called);
@@ -232,7 +231,6 @@ TEST_CASE("A database", "[database]") {
 
     SECTION("may create a collection") {
         MOCK_COLLECTION
-        // dummy_collection is the name the mocked collection_get_name returns
         stdx::string_view collection_name{"dummy_collection"};
         database database = mongo_client[database_name];
         collection obtained_collection = database[collection_name];
@@ -265,9 +263,9 @@ TEST_CASE("A database", "[database]") {
 
 TEST_CASE("Database integration tests", "[database]") {
     client mongo_client{uri{}};
-    bsoncxx::stdx::string_view database_name{"database"};
+    stdx::string_view database_name{"database"};
     database database = mongo_client[database_name];
-    bsoncxx::stdx::string_view collection_name{"collection"};
+    stdx::string_view collection_name{"collection"};
 
     SECTION("A database may create a collection via create_collection") {
         SECTION("without any options") {

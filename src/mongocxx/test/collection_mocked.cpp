@@ -432,11 +432,10 @@ TEST_CASE("Collection", "[collection]") {
             REQUIRE(database_name == db);
         });
 
-        bulk_operation_set_collection->interpose(
-            [&](mongoc_bulk_operation_t*, const char* coll) {
-                bulk_operation_set_collection_called = true;
-                REQUIRE(collection_name == coll);
-            });
+        bulk_operation_set_collection->interpose([&](mongoc_bulk_operation_t*, const char* coll) {
+            bulk_operation_set_collection_called = true;
+            REQUIRE(collection_name == coll);
+        });
 
         bulk_operation_set_write_concern->interpose(
             [&](mongoc_bulk_operation_t*, const mongoc_write_concern_t*) {
@@ -484,9 +483,8 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Update One", "[collection::update_one]") {
             bool upsert_option = false;
 
-            bulk_operation_update_one->interpose([&](mongoc_bulk_operation_t*,
-                                                     const bson_t* query, const bson_t* update,
-                                                     bool upsert) {
+            bulk_operation_update_one->interpose([&](mongoc_bulk_operation_t*, const bson_t* query,
+                                                     const bson_t* update, bool upsert) {
                 bulk_operation_op_called = true;
                 REQUIRE(upsert == upsert_option);
                 REQUIRE(bson_get_data(query) == filter_doc.view().data());
@@ -555,9 +553,8 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Replace One", "[collection::replace_one]") {
             bool upsert_option;
 
-            bulk_operation_replace_one->interpose([&](mongoc_bulk_operation_t*,
-                                                      const bson_t* query, const bson_t* update,
-                                                      bool upsert) {
+            bulk_operation_replace_one->interpose([&](mongoc_bulk_operation_t*, const bson_t* query,
+                                                      const bson_t* update, bool upsert) {
                 bulk_operation_op_called = true;
                 REQUIRE(upsert == upsert_option);
                 REQUIRE(bson_get_data(query) == filter_doc.view().data());
@@ -584,11 +581,10 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Delete One", "[collection::delete_one]") {
-            bulk_operation_remove_one->interpose(
-                [&](mongoc_bulk_operation_t*, const bson_t* doc) {
-                    bulk_operation_op_called = true;
-                    REQUIRE(bson_get_data(doc) == filter_doc.view().data());
-                });
+            bulk_operation_remove_one->interpose([&](mongoc_bulk_operation_t*, const bson_t* doc) {
+                bulk_operation_op_called = true;
+                REQUIRE(bson_get_data(doc) == filter_doc.view().data());
+            });
 
             mongo_coll.delete_one(filter_doc.view());
         }

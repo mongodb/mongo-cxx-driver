@@ -25,6 +25,7 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/insert_many_builder.hpp>
 #include <mongocxx/pipeline.hpp>
 
 using namespace bsoncxx::builder::stream;
@@ -132,7 +133,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         coll.insert_one(b1.view());
 
-        auto doc = coll.find_one(bsoncxx::document::view());
+        auto doc = coll.find_one({});
         REQUIRE(doc);
         REQUIRE(doc->view()["_id"].get_int32() == 1);
 
@@ -141,7 +142,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         coll.update_one(b1.view(), update_doc.view());
 
-        auto updated = coll.find_one(bsoncxx::document::view());
+        auto updated = coll.find_one({});
         REQUIRE(updated);
         REQUIRE(updated->view()["changed"].get_bool() == true);
     }
@@ -198,11 +199,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         coll.update_one(b1.view(), update_doc.view(), options);
 
-        auto updated = coll.find_one(bsoncxx::document::view());
+        auto updated = coll.find_one({});
 
         REQUIRE(updated);
         REQUIRE(updated->view()["changed"].get_bool() == true);
-        REQUIRE(coll.count(bsoncxx::document::view()) == (std::int64_t)1);
+        REQUIRE(coll.count({}) == (std::int64_t)1);
     }
 
     SECTION("matching upsert updates document", "[collection]") {
@@ -219,13 +220,14 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         coll.update_one(b1.view(), update_doc.view(), options);
 
-        auto updated = coll.find_one(bsoncxx::document::view());
+        auto updated = coll.find_one({});
 
         REQUIRE(updated);
         REQUIRE(updated->view()["changed"].get_bool() == true);
-        REQUIRE(coll.count(bsoncxx::document::view()) == 1);
+        REQUIRE(coll.count({}) == 1);
     }
 
+    // TODO: CXX-799 update this test
     // SECTION("matching upsert updates document", "[collection]") {
     // bsoncxx::builder::stream::document b1;
     // b1 << "x" << 1;
@@ -250,7 +252,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto replaced = coll.find_one(b2.view());
 
         REQUIRE(replaced);
-        REQUIRE(coll.count(bsoncxx::document::view()) == 1);
+        REQUIRE(coll.count({}) == 1);
     }
 
     SECTION("filtered document delete one works", "[collection]") {
@@ -265,13 +267,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         coll.insert_one(b2.view());
         coll.insert_one(b2.view());
 
-        REQUIRE(coll.count(bsoncxx::document::view()) == 3);
+        REQUIRE(coll.count({}) == 3);
 
         coll.delete_one(b2.view());
 
-        REQUIRE(coll.count(bsoncxx::document::view()) == (std::int64_t)2);
+        REQUIRE(coll.count({}) == (std::int64_t)2);
 
-        auto cursor = coll.find(bsoncxx::document::view());
+        auto cursor = coll.find({});
 
         unsigned seen = 0;
         for (auto&& x : cursor) {
@@ -282,9 +284,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         coll.delete_one(b2.view());
 
-        REQUIRE(coll.count(bsoncxx::document::view()) == 1);
+        REQUIRE(coll.count({}) == 1);
 
-        cursor = coll.find(bsoncxx::document::view());
+        cursor = coll.find({});
 
         seen = 0;
         for (auto&& x : cursor) {
@@ -295,9 +297,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         coll.delete_one(b2.view());
 
-        REQUIRE(coll.count(bsoncxx::document::view()) == 1);
+        REQUIRE(coll.count({}) == 1);
 
-        cursor = coll.find(bsoncxx::document::view());
+        cursor = coll.find({});
 
         seen = 0;
         for (auto&& x : cursor) {
@@ -319,13 +321,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         coll.insert_one(b2.view());
         coll.insert_one(b2.view());
 
-        REQUIRE(coll.count(bsoncxx::document::view()) == 3);
+        REQUIRE(coll.count({}) == 3);
 
         coll.delete_many(b2.view());
 
-        REQUIRE(coll.count(bsoncxx::document::view()) == 1);
+        REQUIRE(coll.count({}) == 1);
 
-        auto cursor = coll.find(bsoncxx::document::view());
+        auto cursor = coll.find({});
 
         unsigned seen = 0;
         for (auto&& x : cursor) {
@@ -336,9 +338,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         coll.delete_many(b2.view());
 
-        REQUIRE(coll.count(bsoncxx::document::view()) == 1);
+        REQUIRE(coll.count({}) == 1);
 
-        cursor = coll.find(bsoncxx::document::view());
+        cursor = coll.find({});
 
         seen = 0;
         for (auto&& x : cursor) {
@@ -400,7 +402,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         coll.insert_one(b1.view());
         coll.insert_one(b1.view());
 
-        REQUIRE(coll.count(bsoncxx::document::view()) == 2);
+        REQUIRE(coll.count({}) == 2);
 
         document criteria;
         document replacement;
@@ -439,7 +441,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         coll.insert_one(b1.view());
         coll.insert_one(b1.view());
 
-        REQUIRE(coll.count(bsoncxx::document::view()) == 2);
+        REQUIRE(coll.count({}) == 2);
 
         document criteria;
         document update;
@@ -481,7 +483,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         coll.insert_one(b1.view());
         coll.insert_one(b1.view());
 
-        REQUIRE(coll.count(bsoncxx::document::view()) == 2);
+        REQUIRE(coll.count({}) == 2);
 
         document criteria;
 
@@ -493,7 +495,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE(doc);
 
             REQUIRE(doc->view()["x"].get_int32() == 1);
-            REQUIRE(coll.count(bsoncxx::document::view()) == 1);
+            REQUIRE(coll.count({}) == 1);
         }
     }
 
