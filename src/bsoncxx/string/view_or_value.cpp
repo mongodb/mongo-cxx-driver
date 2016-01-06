@@ -20,15 +20,19 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace string {
 
-const char* view_or_value::c_str() {
+view_or_value view_or_value::terminated() const {
     // If we do not own our string, we cannot guarantee that it is null-terminated,
     // so make an owned copy.
-    if (!_value) {
-        _value = std::move(_view.to_string());
-        _view = *_value;
+    if (!is_owning()) {
+        return view_or_value(std::move(view().to_string()));
     }
 
-    return _value->c_str();
+    // If we are owning, return a view_or_value viewing our string
+    return {view()};
+}
+
+const char* view_or_value::data() const {
+    return view().data();
 }
 
 }  // namespace string

@@ -66,15 +66,25 @@ class BSONCXX_API view_or_value : public bsoncxx::view_or_value<stdx::string_vie
     }
 
     ///
-    /// Return a null-terminated string from this string::view_or_value.
+    /// Return a string_view_or_value that is guaranteed to hold a null-terminated
+    /// string. The lifetime of the returned object must be a subset of this object's
+    /// lifetime, because the new view_or_value might hold a view into this one.
     ///
-    /// @note if we are non-owning, we cannot assume our string_view is null-terminated.
-    /// In this case we must make a new, owning view_or_value with a null-terminated
-    /// copy of our view.
+    /// It is recommended that this method be used before calling .data() on a
+    /// view_or_value, as that method may return a non-null-terminated string.
     ///
-    /// @return A pointer to the original string, or a null-terminated copy.
+    /// @return A new view_or_value object.
     ///
-    const char* c_str();
+    view_or_value terminated() const;
+
+    ///
+    /// Call data() on this view_or_value's string_view. This method is not
+    /// guaranteed to return a null-terminated string unless it is used in
+    /// combination with terminated().
+    ///
+    /// @return A const char* of this string.
+    ///
+    const char* data() const;
 };
 
 ///

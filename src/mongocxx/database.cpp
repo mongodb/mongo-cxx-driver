@@ -48,8 +48,8 @@ database::~database() = default;
 
 database::database(const class client& client, bsoncxx::string::view_or_value name)
     : _impl(stdx::make_unique<impl>(
-          libmongoc::client_get_database(client._get_impl().client_t, name.c_str()),
-          &client._get_impl(), name.c_str())) {
+          libmongoc::client_get_database(client._get_impl().client_t, name.terminated().data()),
+          &client._get_impl(), name.terminated().data())) {
 }
 
 database::database(const database& d) {
@@ -115,8 +115,8 @@ class collection database::create_collection(bsoncxx::string::view_or_value name
     bson_error_t error;
 
     libbson::scoped_bson_t opts_bson{options.to_document()};
-    auto result = libmongoc::database_create_collection(_get_impl().database_t, name.c_str(),
-                                                        opts_bson.bson(), &error);
+    auto result = libmongoc::database_create_collection(
+        _get_impl().database_t, name.terminated().data(), opts_bson.bson(), &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
@@ -151,7 +151,8 @@ void database::read_preference(class read_preference rp) {
 
 bool database::has_collection(bsoncxx::string::view_or_value name) const {
     bson_error_t error;
-    return libmongoc::database_has_collection(_get_impl().database_t, name.c_str(), &error);
+    return libmongoc::database_has_collection(_get_impl().database_t, name.terminated().data(),
+                                              &error);
 }
 
 class read_preference database::read_preference() const {

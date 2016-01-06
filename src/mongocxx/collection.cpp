@@ -131,9 +131,9 @@ stdx::string_view collection::name() const {
 void collection::rename(bsoncxx::string::view_or_value new_name, bool drop_target_before_rename) {
     bson_error_t error;
 
-    auto result =
-        libmongoc::collection_rename(_get_impl().collection_t, _get_impl().database_name.c_str(),
-                                     new_name.c_str(), drop_target_before_rename, &error);
+    auto result = libmongoc::collection_rename(
+        _get_impl().collection_t, _get_impl().database_name.c_str(), new_name.terminated().data(),
+        drop_target_before_rename, &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
@@ -141,9 +141,10 @@ void collection::rename(bsoncxx::string::view_or_value new_name, bool drop_targe
 }
 
 collection::collection(const database& database, bsoncxx::string::view_or_value collection_name)
-    : _impl(stdx::make_unique<impl>(libmongoc::database_get_collection(
-                                        database._get_impl().database_t, collection_name.c_str()),
-                                    database.name(), database._get_impl().client_impl)) {
+    : _impl(stdx::make_unique<impl>(
+          libmongoc::database_get_collection(database._get_impl().database_t,
+                                             collection_name.terminated().data()),
+          database.name(), database._get_impl().client_impl)) {
 }
 
 collection::collection(const database& database, void* collection)
@@ -290,7 +291,6 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
 
 stdx::optional<result::insert_one> collection::insert_one(view_or_value document,
                                                           const options::insert& options) {
-
     // TODO: We should consider making it possible to convert from an options::insert into
     // an options::bulk_write at the type level, removing the need to re-iterate this code
     // many times here and below.
@@ -382,7 +382,6 @@ stdx::optional<result::update> collection::update_many(view_or_value filter, vie
 
 stdx::optional<result::delete_result> collection::delete_many(
     view_or_value filter, const options::delete_options& options) {
-
     options::bulk_write bulk_opts;
     bulk_opts.ordered(false);
 
@@ -403,7 +402,6 @@ stdx::optional<result::delete_result> collection::delete_many(
 
 stdx::optional<result::update> collection::update_one(view_or_value filter, view_or_value update,
                                                       const options::update& options) {
-
     options::bulk_write bulk_opts;
     bulk_opts.ordered(false);
 
@@ -428,7 +426,6 @@ stdx::optional<result::update> collection::update_one(view_or_value filter, view
 
 stdx::optional<result::delete_result> collection::delete_one(
     view_or_value filter, const options::delete_options& options) {
-
     options::bulk_write bulk_opts;
     bulk_opts.ordered(false);
 

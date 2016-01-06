@@ -91,7 +91,8 @@ class view_or_value {
 
     /// TODO CXX-800: Create a noexcept expression to check the conditions that must be met.
     BSONCXX_INLINE view_or_value(view_or_value&& other) noexcept
-        : _value{std::move(other._value)}, _view(_value ? *_value : std::move(other._view)) {
+        : _value{std::move(other._value)},
+          _view(_value ? *_value : std::move(other._view)) {
         other._view = View();
         other._value = stdx::nullopt;
     }
@@ -109,6 +110,15 @@ class view_or_value {
     }
 
     ///
+    /// Return whether or not this view_or_value owns an underlying Value.
+    ///
+    /// @return bool Whether we are owning.
+    ///
+    BSONCXX_INLINE bool is_owning() const noexcept {
+        return static_cast<bool>(_value);
+    }
+
+    ///
     /// This type may be used as a View.
     ///
     /// @return a View into this view_or_value.
@@ -121,8 +131,7 @@ class view_or_value {
         return _view;
     }
 
-    // TODO: make these private again (CXX-801)
-   protected:
+   private:
     stdx::optional<Value> _value;
     View _view;
 };

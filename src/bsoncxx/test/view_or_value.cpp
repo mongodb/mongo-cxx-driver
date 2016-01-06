@@ -226,4 +226,38 @@ TEST_CASE("string::document::view_or_value", "[bsoncxx::string::view_or_value]")
         REQUIRE(carlin != other_name);
         REQUIRE(other_name != carlin);
     }
+
+    SECTION("has a terminated() method that returns a copy") {
+        SECTION("when owning, copy is non-owning") {
+            std::string name{"Rob"};
+            string::view_or_value original{std::move(name)};
+
+            string::view_or_value copy{original.terminated()};
+            REQUIRE(copy == "Rob");
+
+            char* original_name = const_cast<char*>(original.data());
+            original_name[0] = 'B';
+
+            // copy should also reflect the change
+            REQUIRE(copy == "Bob");
+        }
+
+        SECTION("when non-owning, copy is owning") {
+            std::string name{"Sam"};
+            string::view_or_value original{name};
+
+            string::view_or_value copy{original.terminated()};
+            REQUIRE(copy == "Sam");
+
+            char* original_name = const_cast<char*>(original.data());
+            original_name[0] = 'P';
+
+            // copy should not reflect the change
+            REQUIRE(copy == "Sam");
+
+            SECTION("and null-terminated") {
+                REQUIRE(copy.data()[3] == '\0');
+            }
+        }
+    }
 }
