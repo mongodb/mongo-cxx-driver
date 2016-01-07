@@ -1,7 +1,7 @@
 # MongoDB C++ Driver [![Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=legacy)](https://travis-ci.org/mongodb/mongo-cxx-driver)
 Welcome to the MongoDB C++ Driver!
 
-Please see our [wiki page](https://github.com/mongodb/mongo-cxx-driver/wiki/Download%20and%20Compile) for information about building, testing, and using the driver.
+Please see our [wiki page](https://github.com/mongodb/mongo-cxx-driver/wiki/Download-and-Compile-the-Legacy-Driver) for information about building, testing, and using the driver.
 
   Version [1.1.0](https://github.com/mongodb/mongo-cxx-driver/releases/tag/legacy-1.1.0) of the
   C++ legacy driver has been released. Please report any bugs or issues in the C++
