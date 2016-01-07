@@ -32,8 +32,8 @@ namespace array {
 ///
 class BSONCXX_API view {
    public:
-    class iterator;
-    class const_iterator;
+    class BSONCXX_API iterator;
+    class BSONCXX_API const_iterator;
 
     ///
     /// @returns An const_iterator to the first element of the array.
@@ -130,7 +130,7 @@ class BSONCXX_API view {
     document::view _view;
 };
 
-class view::iterator : public std::iterator<std::forward_iterator_tag, element> {
+class BSONCXX_API view::iterator : public std::iterator<std::forward_iterator_tag, element> {
    public:
     iterator();
     explicit iterator(const element& element);
@@ -148,7 +148,7 @@ class view::iterator : public std::iterator<std::forward_iterator_tag, element> 
     element _element;
 };
 
-class view::const_iterator : public std::iterator<std::forward_iterator_tag, element,
+class BSONCXX_API view::const_iterator : public std::iterator<std::forward_iterator_tag, element,
                                                   std::ptrdiff_t, const element*, const element&> {
    public:
     const_iterator();

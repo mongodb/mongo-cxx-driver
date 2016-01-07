@@ -32,9 +32,9 @@ namespace basic {
 /// A traditional builder-style interface for constructing
 /// a BSON array.
 ///
-class BSONCXX_API array : public sub_array {
+class array : public sub_array {
    public:
-    array() : sub_array(&_core), _core(true) {
+    BSONCXX_INLINE array() : sub_array(&_core), _core(true) {
     }
 
     ///

@@ -33,8 +33,8 @@ namespace document {
 class BSONCXX_API view {
 
    public:
-    class iterator;
-    class const_iterator;
+    class BSONCXX_API iterator;
+    class BSONCXX_API const_iterator;
 
     ///
     /// Default constructs a view. The resulting view will be initialized to point at
@@ -135,7 +135,7 @@ class BSONCXX_API view {
     std::size_t _length;
 };
 
-class view::iterator : public std::iterator<std::forward_iterator_tag, element> {
+class BSONCXX_API view::iterator : public std::iterator<std::forward_iterator_tag, element> {
    public:
     iterator();
     explicit iterator(const element& element);
@@ -153,7 +153,7 @@ class view::iterator : public std::iterator<std::forward_iterator_tag, element> 
     element _element;
 };
 
-class view::const_iterator : public std::iterator<std::forward_iterator_tag, element, std::ptrdiff_t,
+class BSONCXX_API view::const_iterator : public std::iterator<std::forward_iterator_tag, element, std::ptrdiff_t,
                                                   const element*, const element&> {
    public:
     const_iterator();

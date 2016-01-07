@@ -40,7 +40,7 @@ class MONGOCXX_API index {
     ///
     /// Base class representing the optional storage engine options for indexes.
     ///
-    class base_storage_options {
+    class MONGOCXX_API base_storage_options {
        public:
         virtual ~base_storage_options();
 
@@ -52,7 +52,7 @@ class MONGOCXX_API index {
     ///
     /// Class representing the optional WiredTiger storage engine options for indexes.
     ///
-    class wiredtiger_storage_options final : public base_storage_options {
+    class MONGOCXX_API wiredtiger_storage_options final : public base_storage_options {
        public:
         ~wiredtiger_storage_options() override;
 

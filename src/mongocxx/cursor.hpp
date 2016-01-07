@@ -36,7 +36,7 @@ class MONGOCXX_API cursor {
 
    public:
 
-    class iterator;
+    class MONGOCXX_API iterator;
 
     ///
     /// Move constructs a cursor.
@@ -78,7 +78,7 @@ class MONGOCXX_API cursor {
 ///
 /// Class representing an input iterator of documents in a MongoDB cursor result set.
 ///
-class cursor::iterator : public std::iterator<
+class MONGOCXX_API cursor::iterator : public std::iterator<
     std::input_iterator_tag,
     bsoncxx::document::view
 > {

@@ -34,9 +34,9 @@ class array;
 /// A traditional builder-style interface for constructing
 /// a BSON document.
 ///
-class BSONCXX_API document : public sub_document {
+class document : public sub_document {
    public:
-    document() : sub_document(&_core), _core(false) {
+    BSONCXX_INLINE document() : sub_document(&_core), _core(false) {
     }
 
     ///
