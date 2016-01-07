@@ -19,6 +19,7 @@
 #include <string>
 
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
 
 #include <mongocxx/stdx.hpp>
 
@@ -38,14 +39,14 @@ class MONGOCXX_API ssl {
     /// @param pem_file
     ///   The path to the .pem file.
     ///
-    void pem_file(std::string pem_file);
+    void pem_file(bsoncxx::string::view_or_value pem_file);
 
     ///
     /// Retrieves the current path to the .pem file.
     ///
     /// @return The path to the .pem file.
     ///
-    const stdx::optional<std::string>& pem_file() const;
+    const stdx::optional<bsoncxx::string::view_or_value>& pem_file() const;
 
     ///
     /// The pass phrase used to decrypt an encrypted PEM file.
@@ -53,14 +54,14 @@ class MONGOCXX_API ssl {
     /// @param pem_password
     ///   The pass phrase.
     ///
-    void pem_password(std::string pem_password);
+    void pem_password(bsoncxx::string::view_or_value pem_password);
 
     ///
     /// Retrieves the current decryption pass phrase.
     ///
     /// @return The pass phrase.
     ///
-    const stdx::optional<std::string>& pem_password() const;
+    const stdx::optional<bsoncxx::string::view_or_value>& pem_password() const;
 
     ///
     /// The path to the .pem file that contains the root certificate chain from the Certificate
@@ -69,14 +70,14 @@ class MONGOCXX_API ssl {
     /// @param ca_file
     ///   The path to the CA file.
     ///
-    void ca_file(std::string ca_file);
+    void ca_file(bsoncxx::string::view_or_value ca_file);
 
     ///
     /// Retrieves the current path to the CA file.
     ///
     /// @return The path to the CA file.
     ///
-    const stdx::optional<std::string>& ca_file() const;
+    const stdx::optional<bsoncxx::string::view_or_value>& ca_file() const;
 
     ///
     /// The path to the Certificate Authority directory.
@@ -84,14 +85,14 @@ class MONGOCXX_API ssl {
     /// @param ca_dir
     ///   The path to the CA directory.
     ///
-    void ca_dir(std::string ca_dir);
+    void ca_dir(bsoncxx::string::view_or_value ca_dir);
 
     ///
     /// Retrieves the current path to the CA directory.
     ///
     /// @return The path to the CA directory.
     ///
-    const stdx::optional<std::string>& ca_dir() const;
+    const stdx::optional<bsoncxx::string::view_or_value>& ca_dir() const;
 
     ///
     /// The path to the .pem file that contains revoked certificates.
@@ -99,14 +100,14 @@ class MONGOCXX_API ssl {
     /// @param crl_file
     ///   The path to the PEM file.
     ///
-    void crl_file(std::string crl_file);
+    void crl_file(bsoncxx::string::view_or_value crl_file);
 
     ///
     /// Retrieves the current path to the .pem file that contains revoked certificates.
     ///
     /// @return The path to the revoked certificates file.
     ///
-    const stdx::optional<std::string>& crl_file() const;
+    const stdx::optional<bsoncxx::string::view_or_value>& crl_file() const;
 
     ///
     /// If false, the driver will not verify the server's CA file.
@@ -124,11 +125,11 @@ class MONGOCXX_API ssl {
     const stdx::optional<bool>& allow_invalid_certificates() const;
 
    private:
-    stdx::optional<std::string> _pem_file;
-    stdx::optional<std::string> _pem_password;
-    stdx::optional<std::string> _ca_file;
-    stdx::optional<std::string> _ca_dir;
-    stdx::optional<std::string> _crl_file;
+    stdx::optional<bsoncxx::string::view_or_value> _pem_file;
+    stdx::optional<bsoncxx::string::view_or_value> _pem_password;
+    stdx::optional<bsoncxx::string::view_or_value> _ca_file;
+    stdx::optional<bsoncxx::string::view_or_value> _ca_dir;
+    stdx::optional<bsoncxx::string::view_or_value> _crl_file;
     stdx::optional<bool> _allow_invalid_certificates;
 };
 

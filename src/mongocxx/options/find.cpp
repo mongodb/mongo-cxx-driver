@@ -30,8 +30,8 @@ void find::batch_size(std::int32_t batch_size) {
     _batch_size = batch_size;
 }
 
-void find::comment(std::string comment) {
-    _comment = comment;
+void find::comment(bsoncxx::string::view_or_value comment) {
+    _comment = std::move(comment);
 }
 
 void find::cursor_type(enum find::cursor_type cursor_type) {
@@ -90,7 +90,7 @@ const stdx::optional<std::int32_t>& find::batch_size() const {
     return _batch_size;
 }
 
-const stdx::optional<std::string>& find::comment() const {
+const stdx::optional<bsoncxx::string::view_or_value>& find::comment() const {
     return _comment;
 }
 

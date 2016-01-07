@@ -21,6 +21,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/read_preference.hpp>
 
@@ -83,7 +84,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/comment/
     ///
-    void comment(std::string comment);
+    void comment(bsoncxx::string::view_or_value comment);
 
     ///
     /// Gets the current comment attached to this query.
@@ -92,7 +93,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/comment/
     ///
-    const stdx::optional<std::string>& comment() const;
+    const stdx::optional<bsoncxx::string::view_or_value>& comment() const;
 
     ///
     /// Indicates the type of cursor to use for this query.
@@ -311,7 +312,7 @@ class MONGOCXX_API find {
    private:
     stdx::optional<bool> _allow_partial_results;
     stdx::optional<std::int32_t> _batch_size;
-    stdx::optional<std::string> _comment;
+    stdx::optional<bsoncxx::string::view_or_value> _comment;
     stdx::optional<enum cursor_type> _cursor_type;
     stdx::optional<class hint> _hint;
     stdx::optional<std::int32_t> _limit;

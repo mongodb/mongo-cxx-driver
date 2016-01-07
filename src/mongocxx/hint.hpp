@@ -22,6 +22,7 @@
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/builder/stream/key_context.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
@@ -49,7 +50,7 @@ class MONGOCXX_API hint {
     /// @param index
     ///   String representing the name of the index to be used.
     ///
-    explicit hint(stdx::string_view index);
+    explicit hint(bsoncxx::string::view_or_value index);
 
     friend bool operator==(const hint& index_hint, std::string index);
     friend bool operator==(const hint& index_hint, bsoncxx::document::view index);
@@ -64,7 +65,7 @@ class MONGOCXX_API hint {
 
    private:
     stdx::optional<bsoncxx::document::view_or_value> _index_doc;
-    stdx::optional<stdx::string_view> _index_string;
+    stdx::optional<bsoncxx::string::view_or_value> _index_string;
 };
 
 ///

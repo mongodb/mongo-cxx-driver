@@ -20,43 +20,43 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-void ssl::pem_file(std::string pem_file) {
+void ssl::pem_file(bsoncxx::string::view_or_value pem_file) {
     _pem_file = std::move(pem_file);
 }
 
-const stdx::optional<std::string>& ssl::pem_file() const {
+const stdx::optional<bsoncxx::string::view_or_value>& ssl::pem_file() const {
     return _pem_file;
 }
 
-void ssl::pem_password(std::string pem_password) {
+void ssl::pem_password(bsoncxx::string::view_or_value pem_password) {
     _pem_password = std::move(pem_password);
 }
 
-const stdx::optional<std::string>& ssl::pem_password() const {
+const stdx::optional<bsoncxx::string::view_or_value>& ssl::pem_password() const {
     return _pem_password;
 }
 
-void ssl::ca_file(std::string ca_file) {
+void ssl::ca_file(bsoncxx::string::view_or_value ca_file) {
     _ca_file = std::move(ca_file);
 }
 
-const stdx::optional<std::string>& ssl::ca_file() const {
+const stdx::optional<bsoncxx::string::view_or_value>& ssl::ca_file() const {
     return _ca_file;
 }
 
-void ssl::ca_dir(std::string ca_dir) {
+void ssl::ca_dir(bsoncxx::string::view_or_value ca_dir) {
     _ca_dir = std::move(ca_dir);
 }
 
-const stdx::optional<std::string>& ssl::ca_dir() const {
+const stdx::optional<bsoncxx::string::view_or_value>& ssl::ca_dir() const {
     return _ca_dir;
 }
 
-void ssl::crl_file(std::string crl_file) {
+void ssl::crl_file(bsoncxx::string::view_or_value crl_file) {
     _crl_file = std::move(crl_file);
 }
 
-const stdx::optional<std::string>& ssl::crl_file() const {
+const stdx::optional<bsoncxx::string::view_or_value>& ssl::crl_file() const {
     return _crl_file;
 }
 

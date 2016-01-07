@@ -20,7 +20,7 @@
 #include <ctime>
 #include <string>
 
-#include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -64,12 +64,12 @@ class BSONCXX_API oid {
     explicit oid(const char* bytes, std::size_t len);
 
     ///
-    /// Constructs and oid an initializes it from the provided hex string.
+    /// Constructs an oid and initializes it from the provided hex string.
     ///
     /// @param str
-    ///   A string_view of a hexadecimal representation of a valid ObjectId.
+    ///   A string of a hexadecimal representation of a valid ObjectId.
     ///
-    explicit oid(stdx::string_view str);
+    explicit oid(const string::view_or_value& str);
 
     ///
     /// Converts this oid to a hexadecimal string.

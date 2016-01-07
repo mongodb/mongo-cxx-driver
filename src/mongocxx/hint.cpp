@@ -24,7 +24,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 hint::hint(bsoncxx::document::view_or_value index) : _index_doc(std::move(index)) {
 }
 
-hint::hint(stdx::string_view index) : _index_string(std::move(index)) {
+hint::hint(bsoncxx::string::view_or_value index) : _index_string(std::move(index)) {
 }
 
 bsoncxx::document::value hint::to_document() const {
@@ -42,7 +42,7 @@ bsoncxx::document::value hint::to_document() const {
 }
 
 bool operator==(const hint& index_hint, std::string index) {
-    return index_hint._index_string && index_hint._index_string->to_string() == index;
+    return ((index_hint._index_string) && (*(index_hint._index_string) == index));
 }
 
 bool operator==(std::string index, const hint& index_hint) {

@@ -18,7 +18,6 @@
 #include <cstdint>
 #include <limits>
 #include <tuple>
-#include <unordered_set>
 #include <utility>
 
 #include <bsoncxx/builder/stream/document.hpp>
