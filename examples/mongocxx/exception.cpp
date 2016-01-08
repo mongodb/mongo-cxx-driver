@@ -18,6 +18,7 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
@@ -40,6 +41,9 @@ int main(int, char**) {
     try {
         coll.name();
     } catch (mongocxx::logic_error& e) {
+        if (e.code() != mongocxx::invalid_collection_object_error()) {
+            return EXIT_FAILURE;
+        }
         std::cout << "Using an uninitialized collection throws:" << std::endl;
         std::cout << e.what() << std::endl << std::endl;
     }
