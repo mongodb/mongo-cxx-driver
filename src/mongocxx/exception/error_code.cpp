@@ -19,6 +19,7 @@
 #include <mongocxx/private/libmongoc.hpp>
 
 namespace mongocxx {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 const std::error_code& bson_invalid_error() {
     static const std::error_code bson_invalid_error = make_error_code(::MONGOC_ERROR_BSON_INVALID, ::MONGOC_ERROR_BSON);
@@ -235,6 +236,7 @@ const std::error_code& unknown_write_concern_error() {
     return unknown_write_concern_error;
 }
 
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

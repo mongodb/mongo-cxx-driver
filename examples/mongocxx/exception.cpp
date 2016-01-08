@@ -41,9 +41,12 @@ int main(int, char**) {
     try {
         coll.name();
     } catch (mongocxx::logic_error& e) {
+
+        // We can compare e.code() to a known std::error_code.
         if (e.code() != mongocxx::invalid_collection_object_error()) {
             return EXIT_FAILURE;
         }
+
         std::cout << "Using an uninitialized collection throws:" << std::endl;
         std::cout << e.what() << std::endl << std::endl;
     }
