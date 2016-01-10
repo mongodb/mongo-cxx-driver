@@ -112,7 +112,7 @@ class MONGOCXX_API find_one_and_update {
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     /// @see mongocxx::options::return_document
     ///
-    const stdx::optional<enum return_document>& return_document() const;
+    const stdx::optional<mongocxx::options::return_document>& return_document() const;
 
     ///
     /// Sets the order by which to search the collection for a matching document.
@@ -161,7 +161,7 @@ class MONGOCXX_API find_one_and_update {
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<bsoncxx::document::view_or_value> _projection;
-    stdx::optional<enum return_document> _return_document;
+    stdx::optional<mongocxx::options::return_document> _return_document;
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
     stdx::optional<bool> _upsert;
 };

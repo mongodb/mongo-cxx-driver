@@ -32,7 +32,7 @@ void find_one_and_update::projection(bsoncxx::document::view_or_value projection
     _projection = std::move(projection);
 }
 
-void find_one_and_update::return_document(enum return_document return_document) {
+void find_one_and_update::return_document(mongocxx::options::return_document return_document) {
     _return_document = return_document;
 }
 

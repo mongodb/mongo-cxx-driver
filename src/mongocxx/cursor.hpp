@@ -36,6 +36,8 @@ class MONGOCXX_API cursor {
 
    public:
 
+    enum class type { k_non_tailable, k_tailable, k_tailable_await };
+
     class MONGOCXX_API iterator;
 
     ///

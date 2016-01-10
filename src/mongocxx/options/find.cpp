@@ -34,7 +34,7 @@ void find::comment(bsoncxx::string::view_or_value comment) {
     _comment = std::move(comment);
 }
 
-void find::cursor_type(enum find::cursor_type cursor_type) {
+void find::cursor_type(cursor::type cursor_type) {
     _cursor_type = cursor_type;
 }
 
@@ -94,7 +94,7 @@ const stdx::optional<bsoncxx::string::view_or_value>& find::comment() const {
     return _comment;
 }
 
-const stdx::optional<enum find::cursor_type>& find::cursor_type() const {
+const stdx::optional<cursor::type>& find::cursor_type() const {
     return _cursor_type;
 }
 
