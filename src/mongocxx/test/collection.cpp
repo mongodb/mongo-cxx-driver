@@ -527,7 +527,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto distinct_cname = "distinct_coll";
         auto distinct_coll = db[distinct_cname];
         distinct_coll.drop();
-        
+
         auto doc1 = document{} << "foo"
                                << "baz"
                                << "garply" << 1 << finalize;

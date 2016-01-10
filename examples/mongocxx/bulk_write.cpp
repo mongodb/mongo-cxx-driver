@@ -93,8 +93,9 @@ int main(int, char**) {
     }
 
     std::cout << "Upserted IDs" << std::endl;
-    for (const auto &id : result->upserted_ids()) {
-        std::cout << "Bulk write index: " << id.first << std::endl << bsoncxx::to_json(id.second) << std::endl;
+    for (const auto& id : result->upserted_ids()) {
+        std::cout << "Bulk write index: " << id.first << std::endl
+                  << bsoncxx::to_json(id.second) << std::endl;
     }
 
     // The collection should contain two copies of {"a": 2}.

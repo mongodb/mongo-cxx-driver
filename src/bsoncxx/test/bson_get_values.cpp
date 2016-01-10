@@ -49,7 +49,6 @@ TEST_CASE("[] can reach into nested arrays", "[bsoncxx]") {
         REQUIRE(!doc["ints"][2][9]);
         REQUIRE(!doc["bools"][9]);
     }
-
 }
 
 TEST_CASE("[] can reach into nested documents", "[bsoncxx]") {

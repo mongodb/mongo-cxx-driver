@@ -35,7 +35,7 @@ bson_iter_t to_bson_iter_t(element e) {
     i.next_off = e.offset();
     return i;
 }
-} // namespace
+}  // namespace
 
 view::iterator::iterator() {
 }

@@ -20,8 +20,8 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-bulk_write::bulk_write()
-    : _ordered(true) {}
+bulk_write::bulk_write() : _ordered(true) {
+}
 
 void bulk_write::ordered(bool ordered) {
     _ordered = ordered;

@@ -25,14 +25,10 @@ int main(int, char**) {
     using builder::basic::sub_array;
 
     auto doc = builder::basic::document{};
-    doc.append(kvp("team", "platforms"),
-               kvp("id", types::b_oid{oid(oid::init_tag)}),
+    doc.append(kvp("team", "platforms"), kvp("id", types::b_oid{oid(oid::init_tag)}),
                kvp("members", [](sub_array sa) {
-                   sa.append("tyler", "jason", "drew",
-                             "sam", "ernie", "john",
-                             "mark", "crystal");
-               })
-    );
+                   sa.append("tyler", "jason", "drew", "sam", "ernie", "john", "mark", "crystal");
+               }));
 
     // document::value is an owning bson document conceptually similar to string.
     document::value value{doc.extract()};
@@ -49,7 +45,6 @@ int main(int, char**) {
 
     // iterate over the elements in a bson document
     for (document::element ele : view) {
-
         // element is non owning view of a key-value pair within a document.
 
         // we can use the key() method to get a string_view of the key.
@@ -59,23 +54,23 @@ int main(int, char**) {
 
         // we can use type() to get the type of the value.
         switch (ele.type()) {
-        case type::k_utf8:
-            std::cout << "Got String!" << std::endl;
-            break;
-        case type::k_oid:
-            std::cout << "Got ObjectId!" << std::endl;
-            break;
-        case type::k_array: {
-            std::cout << "Got Array!" << std::endl;
-            // if we have a subarray, we can access it by getting a view of it.
-            array::view subarr{ele.get_array().value};
-            for (array::element ele : subarr) {
-                std::cout << "array element: " << to_json(ele.get_value()) << std::endl;
+            case type::k_utf8:
+                std::cout << "Got String!" << std::endl;
+                break;
+            case type::k_oid:
+                std::cout << "Got ObjectId!" << std::endl;
+                break;
+            case type::k_array: {
+                std::cout << "Got Array!" << std::endl;
+                // if we have a subarray, we can access it by getting a view of it.
+                array::view subarr{ele.get_array().value};
+                for (array::element ele : subarr) {
+                    std::cout << "array element: " << to_json(ele.get_value()) << std::endl;
+                }
+                break;
             }
-            break;
-        }
-        default:
-            std::cout << "We messed up!" << std::endl;
+            default:
+                std::cout << "We messed up!" << std::endl;
         }
 
         // usually we don't need to actually use a switch statement, because we can also
@@ -83,7 +78,8 @@ int main(int, char**) {
         types::value ele_val{ele.get_value()};
         // if we need to print an arbitrary value, we can use to_json, which provides
         // a suitable overload.
-        std::cout << "the value is " << to_json(ele_val) << std::endl;;
+        std::cout << "the value is " << to_json(ele_val) << std::endl;
+        ;
     }
 
     // If we want to search for an element we can use operator[]

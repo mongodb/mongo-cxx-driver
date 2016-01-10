@@ -90,6 +90,6 @@ int main(int, char**) {
     };
 
     // Make all variables used.
-    return (awards && first_award_year && second_award_year && last_name) ?
-        EXIT_SUCCESS : EXIT_FAILURE;
+    return (awards && first_award_year && second_award_year && last_name) ? EXIT_SUCCESS
+                                                                          : EXIT_FAILURE;
 }

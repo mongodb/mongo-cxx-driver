@@ -288,11 +288,10 @@ std::string to_json(types::value value) {
 
 stdx::optional<document::value> from_json(stdx::string_view json) {
     bson_error_t error;
-    bson_t* result = bson_new_from_json(
-        reinterpret_cast<const uint8_t*>(json.data()), json.size(), &error);
+    bson_t* result =
+        bson_new_from_json(reinterpret_cast<const uint8_t*>(json.data()), json.size(), &error);
 
-    if (!result)
-        return stdx::nullopt;
+    if (!result) return stdx::nullopt;
 
     std::uint32_t length;
     std::uint8_t* buf = bson_destroy_with_steal(result, true, &length);

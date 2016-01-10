@@ -4,8 +4,8 @@
 #include <bsoncxx/json.hpp>
 
 namespace {
-    constexpr auto k_invalid_json = R"({])";
-    constexpr auto k_valid_json = R"({ "a" : 1, "b" : 2.0 })";
+constexpr auto k_invalid_json = R"({])";
+constexpr auto k_valid_json = R"({ "a" : 1, "b" : 2.0 })";
 }
 
 TEST_CASE("invalid json returns disengaged optional") {
@@ -21,7 +21,8 @@ TEST_CASE("valid json returns an engaged optional") {
 TEST_CASE("valid json is converted to equivalent BSON") {
     using namespace bsoncxx;
 
-    const auto expected = builder::stream::document{} << "a" << 1 << "b" << 2.0 << builder::stream::finalize;
+    const auto expected = builder::stream::document{} << "a" << 1 << "b" << 2.0
+                                                      << builder::stream::finalize;
     const auto expected_view = expected.view();
 
     const auto actual = from_json(k_valid_json);

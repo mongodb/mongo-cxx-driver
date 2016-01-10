@@ -36,11 +36,10 @@ options::bulk_write make_bulk_write_options(const options::insert& insert_option
     return bw;
 }
 
-} // namespace
+}  // namespace
 
 insert_many_builder::insert_many_builder(const options::insert& options)
-    : _writes{make_bulk_write_options(options)}, _inserted_ids{}, _index{0} {
-};
+    : _writes{make_bulk_write_options(options)}, _inserted_ids{}, _index{0} {};
 
 void insert_many_builder::operator()(const bsoncxx::document::view& doc) {
     if (!doc["_id"]) {

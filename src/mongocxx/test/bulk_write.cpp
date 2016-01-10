@@ -47,7 +47,6 @@ TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
         REQUIRE(construct_called);
         REQUIRE(!ordered_value);
     }
-
 }
 
 TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_write]") {

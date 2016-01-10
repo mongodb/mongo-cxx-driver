@@ -36,10 +36,10 @@ std::int32_t replace_one::modified_count() const {
 }
 
 stdx::optional<bsoncxx::document::element> replace_one::upserted_id() const {
-	if (_result.upserted_ids().size() == 0) {
-		return stdx::nullopt;
-	}
-	return _result.upserted_ids()[0];
+    if (_result.upserted_ids().size() == 0) {
+        return stdx::nullopt;
+    }
+    return _result.upserted_ids()[0];
 }
 
 }  // namespace result

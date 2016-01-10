@@ -31,8 +31,7 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-write_concern::write_concern()
-    : _impl{stdx::make_unique<impl>(libmongoc::write_concern_new())} {
+write_concern::write_concern() : _impl{stdx::make_unique<impl>(libmongoc::write_concern_new())} {
 }
 
 write_concern::write_concern(std::unique_ptr<impl>&& implementation) {
@@ -43,13 +42,12 @@ write_concern::write_concern(write_concern&&) noexcept = default;
 write_concern& write_concern::operator=(write_concern&&) noexcept = default;
 
 write_concern::write_concern(const write_concern& other)
-    : _impl(stdx::make_unique<impl>(
-          libmongoc::write_concern_copy(other._impl->write_concern_t))) {
+    : _impl(stdx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))) {
 }
 
 write_concern& write_concern::operator=(const write_concern& other) {
-    _impl.reset(stdx::make_unique<impl>(
-                    libmongoc::write_concern_copy(other._impl->write_concern_t)).release());
+    _impl.reset(stdx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))
+                    .release());
     return *this;
 }
 
@@ -70,21 +68,22 @@ void write_concern::nodes(std::int32_t confirm_from) {
 void write_concern::acknowledge_level(write_concern::level confirm_level) {
     std::int32_t w;
     switch (confirm_level) {
-    case write_concern::level::k_default:
-        w = MONGOC_WRITE_CONCERN_W_DEFAULT;
-        break;
-    case write_concern::level::k_majority:
-        w = MONGOC_WRITE_CONCERN_W_MAJORITY;
-        break;
-    case write_concern::level::k_unacknowledged:
-        w = MONGOC_WRITE_CONCERN_W_UNACKNOWLEDGED;
-        break;
-    case write_concern::level::k_tag:
-        // no exception for setting tag if it's set
-        if (libmongoc::write_concern_get_w(_impl->write_concern_t) == MONGOC_WRITE_CONCERN_W_TAG)
-            return;
-    default:
-        throw exception{make_error_code(error_code::k_unknown_write_concern)};
+        case write_concern::level::k_default:
+            w = MONGOC_WRITE_CONCERN_W_DEFAULT;
+            break;
+        case write_concern::level::k_majority:
+            w = MONGOC_WRITE_CONCERN_W_MAJORITY;
+            break;
+        case write_concern::level::k_unacknowledged:
+            w = MONGOC_WRITE_CONCERN_W_UNACKNOWLEDGED;
+            break;
+        case write_concern::level::k_tag:
+            // no exception for setting tag if it's set
+            if (libmongoc::write_concern_get_w(_impl->write_concern_t) ==
+                MONGOC_WRITE_CONCERN_W_TAG)
+                return;
+        default:
+            throw exception{make_error_code(error_code::k_unknown_write_concern)};
     }
     libmongoc::write_concern_set_w(_impl->write_concern_t, w);
 }
@@ -97,7 +96,8 @@ void write_concern::majority(std::chrono::milliseconds timeout) {
     const auto count = timeout.count();
     if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
         throw logic_error{make_error_code(error_code::k_invalid_parameter)};
-    libmongoc::write_concern_set_wmajority(_impl->write_concern_t, static_cast<std::int32_t>(count));
+    libmongoc::write_concern_set_wmajority(_impl->write_concern_t,
+                                           static_cast<std::int32_t>(count));
 }
 
 void write_concern::timeout(std::chrono::milliseconds timeout) {
@@ -125,16 +125,16 @@ stdx::optional<write_concern::level> write_concern::acknowledge_level() const {
     std::int32_t w = libmongoc::write_concern_get_w(_impl->write_concern_t);
     if (w >= 1) return stdx::nullopt;
     switch (w) {
-    case MONGOC_WRITE_CONCERN_W_UNACKNOWLEDGED:
-        return write_concern::level::k_unacknowledged;
-    case MONGOC_WRITE_CONCERN_W_DEFAULT:
-        return write_concern::level::k_default;
-    case MONGOC_WRITE_CONCERN_W_MAJORITY:
-        return write_concern::level::k_majority;
-    case MONGOC_WRITE_CONCERN_W_TAG:
-        return write_concern::level::k_tag;
-    default:
-        return write_concern::level::k_unknown;
+        case MONGOC_WRITE_CONCERN_W_UNACKNOWLEDGED:
+            return write_concern::level::k_unacknowledged;
+        case MONGOC_WRITE_CONCERN_W_DEFAULT:
+            return write_concern::level::k_default;
+        case MONGOC_WRITE_CONCERN_W_MAJORITY:
+            return write_concern::level::k_majority;
+        case MONGOC_WRITE_CONCERN_W_TAG:
+            return write_concern::level::k_tag;
+        default:
+            return write_concern::level::k_unknown;
     }
 }
 

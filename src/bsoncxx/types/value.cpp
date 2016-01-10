@@ -30,17 +30,17 @@ namespace types {
 // Boost doesn't mark the copy constructor and copy-assignment operator of string_ref as noexcept
 // so we can't rely on automatic noexcept propagation. It really is though, so it is OK.
 #if !defined(BSONCXX_POLY_USE_BOOST)
-#define BSONCXX_ENUM(name, val)                                         \
-    value::value(b_##name value) noexcept : _type(static_cast<bsoncxx::type>(val)), \
-        _b_##name(std::move(value)) {                                   \
-        static_assert(std::is_nothrow_copy_constructible<b_##name>::value, "Copy may throw"); \
-        static_assert(std::is_nothrow_copy_assignable<b_##name>::value, "Copy may throw"); \
+#define BSONCXX_ENUM(name, val)                                                                \
+    value::value(b_##name value) noexcept : _type(static_cast<bsoncxx::type>(val)),            \
+                                            _b_##name(std::move(value)) {                      \
+        static_assert(std::is_nothrow_copy_constructible<b_##name>::value, "Copy may throw");  \
+        static_assert(std::is_nothrow_copy_assignable<b_##name>::value, "Copy may throw");     \
         static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw"); \
     }
 #else
-#define BSONCXX_ENUM(name, val)                                         \
-    value::value(b_##name value) noexcept : _type(static_cast<bsoncxx::type>(val)), \
-        _b_##name(std::move(value)) {                                   \
+#define BSONCXX_ENUM(name, val)                                                                \
+    value::value(b_##name value) noexcept : _type(static_cast<bsoncxx::type>(val)),            \
+                                            _b_##name(std::move(value)) {                      \
         static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw"); \
     }
 #endif
