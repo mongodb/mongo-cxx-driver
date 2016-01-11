@@ -20,13 +20,9 @@ var searchData=
   ['b_5ftimestamp',['b_timestamp',['../structbsoncxx_1_1types_1_1b__timestamp.html',1,'bsoncxx::types']]],
   ['b_5fundefined',['b_undefined',['../structbsoncxx_1_1types_1_1b__undefined.html',1,'bsoncxx::types']]],
   ['b_5futf8',['b_utf8',['../structbsoncxx_1_1types_1_1b__utf8.html',1,'bsoncxx::types']]],
-  ['base',['base',['../classmongocxx_1_1exception_1_1base.html',1,'mongocxx::exception']]],
-  ['build_5fclass_5ffunction',['build_class_function',['../structbsoncxx_1_1util_1_1functor_1_1build__class__function.html',1,'bsoncxx::util::functor']]],
-  ['build_5fclass_5ffunction_3c_20c_2c_20r_28args_2e_2e_2e_29_3e',['build_class_function&lt; C, R(Args...)&gt;',['../structbsoncxx_1_1util_1_1functor_1_1build__class__function_3_01C_00_01R_07Args_8_8_8_08_4.html',1,'bsoncxx::util::functor']]],
-  ['build_5ffree_5ffunction',['build_free_function',['../structbsoncxx_1_1util_1_1functor_1_1build__free__function.html',1,'bsoncxx::util::functor']]],
-  ['build_5ffree_5ffunction_3c_20f_2c_20r_28args_2e_2e_2e_29_3e',['build_free_function&lt; F, R(Args...)&gt;',['../structbsoncxx_1_1util_1_1functor_1_1build__free__function_3_01F_00_01R_07Args_8_8_8_08_4.html',1,'bsoncxx::util::functor']]],
+  ['base_5fstorage_5foptions',['base_storage_options',['../classmongocxx_1_1options_1_1index_1_1base__storage__options.html',1,'mongocxx::options::index']]],
   ['bulk_5fwrite',['bulk_write',['../classmongocxx_1_1options_1_1bulk__write.html',1,'mongocxx::options']]],
   ['bulk_5fwrite',['bulk_write',['../classmongocxx_1_1bulk__write.html',1,'mongocxx']]],
   ['bulk_5fwrite',['bulk_write',['../classmongocxx_1_1result_1_1bulk__write.html',1,'mongocxx::result']]],
-  ['bulk_5fwrite',['bulk_write',['../classmongocxx_1_1exception_1_1bulk__write.html',1,'mongocxx::exception']]]
+  ['bulk_5fwrite_5fexception',['bulk_write_exception',['../classmongocxx_1_1bulk__write__exception.html',1,'mongocxx']]]
 ];

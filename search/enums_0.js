@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['read_5fmode',['read_mode',['../classmongocxx_1_1read__preference.html#a180dc16b93d9f5ace72c128def6334df',1,'mongocxx::read_preference']]]
+  ['level',['level',['../classmongocxx_1_1read__concern.html#a638e23ff887c158ffb41dfd7a69af229',1,'mongocxx::read_concern::level()'],['../classmongocxx_1_1write__concern.html#a37c5c6ed8af1e4d04306b4246284a8a9',1,'mongocxx::write_concern::level()']]]
 ];

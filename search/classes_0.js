@@ -5,5 +5,5 @@ var searchData=
   ['array',['array',['../classbsoncxx_1_1builder_1_1stream_1_1array.html',1,'bsoncxx::builder::stream']]],
   ['array_5fcontext',['array_context',['../classbsoncxx_1_1builder_1_1stream_1_1array__context.html',1,'bsoncxx::builder::stream']]],
   ['array_5fcontext_3c_3e',['array_context&lt;&gt;',['../classbsoncxx_1_1builder_1_1stream_1_1array__context.html',1,'bsoncxx::builder::stream']]],
-  ['authentication',['authentication',['../classmongocxx_1_1exception_1_1authentication.html',1,'mongocxx::exception']]]
+  ['authentication_5fexception',['authentication_exception',['../classmongocxx_1_1authentication__exception.html',1,'mongocxx']]]
 ];

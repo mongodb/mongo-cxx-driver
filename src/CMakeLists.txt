@@ -1,3 +1,0 @@
-add_definitions(-DMONGO_CXX_DRIVER_COMPILING)
-add_subdirectory(bsoncxx)
-add_subdirectory(mongocxx)

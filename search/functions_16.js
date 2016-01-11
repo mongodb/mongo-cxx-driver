@@ -7,6 +7,8 @@ var searchData=
   ['_7edatabase',['~database',['../classmongocxx_1_1database.html#a97a9e0a0edf617cb878b8ea3a40c8ba1',1,'mongocxx::database']]],
   ['_7einstance',['~instance',['../classmongocxx_1_1instance.html#afd1dc8caf8123c0f6902de801e7b73d6',1,'mongocxx::instance']]],
   ['_7epipeline',['~pipeline',['../classmongocxx_1_1pipeline.html#a2570e47a0502be4872b60428fd91a964',1,'mongocxx::pipeline']]],
+  ['_7epool',['~pool',['../classmongocxx_1_1pool.html#a8aeb1d9a619a9f54e7da0651170eedc6',1,'mongocxx::pool']]],
+  ['_7eread_5fconcern',['~read_concern',['../classmongocxx_1_1read__concern.html#a01505c768de14bbcc8cb1800d3960c4a',1,'mongocxx::read_concern']]],
   ['_7eread_5fpreference',['~read_preference',['../classmongocxx_1_1read__preference.html#a66bcdfc2b6a945d2d1f4e21900f29ec2',1,'mongocxx::read_preference']]],
   ['_7euri',['~uri',['../classmongocxx_1_1uri.html#a39b1d2afeec7e90f107213317e40a817',1,'mongocxx::uri']]],
   ['_7evalidator',['~validator',['../classbsoncxx_1_1validator.html#a28320624d228eaa5e195734cd317526b',1,'bsoncxx::validator']]],

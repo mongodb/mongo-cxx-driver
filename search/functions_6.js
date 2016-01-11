@@ -21,5 +21,5 @@ var searchData=
   ['get_5ftimestamp',['get_timestamp',['../classbsoncxx_1_1types_1_1value.html#a4a8b657a20c22b9b6c6d3cbf097a7966',1,'bsoncxx::types::value']]],
   ['get_5fundefined',['get_undefined',['../classbsoncxx_1_1types_1_1value.html#ad2fbc33e209a1371121cdde0beb70f0a',1,'bsoncxx::types::value']]],
   ['get_5futf8',['get_utf8',['../classbsoncxx_1_1types_1_1value.html#a215272e9bca2780e88c036a59e51b90e',1,'bsoncxx::types::value']]],
-  ['group',['group',['../classmongocxx_1_1pipeline.html#ade56123c1bb038002fb648dce506da08',1,'mongocxx::pipeline']]]
+  ['group',['group',['../classmongocxx_1_1pipeline.html#a168fe1474b9b2fce2c2036382e3f6b67',1,'mongocxx::pipeline']]]
 ];

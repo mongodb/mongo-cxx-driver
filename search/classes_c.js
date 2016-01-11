@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['read_5fpreference',['read_preference',['../classmongocxx_1_1read__preference.html',1,'mongocxx']]],
-  ['replace_5fone',['replace_one',['../classmongocxx_1_1result_1_1replace__one.html',1,'mongocxx::result']]],
-  ['replace_5fone',['replace_one',['../classmongocxx_1_1model_1_1replace__one.html',1,'mongocxx::model']]]
+  ['pipeline',['pipeline',['../classmongocxx_1_1pipeline.html',1,'mongocxx']]],
+  ['pool',['pool',['../classmongocxx_1_1pool.html',1,'mongocxx']]]
 ];
