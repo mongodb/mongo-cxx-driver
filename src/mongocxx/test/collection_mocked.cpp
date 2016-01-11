@@ -342,6 +342,8 @@ TEST_CASE("Collection", "[collection]") {
         auto doc = find_doc.view();
         mongocxx::stdx::optional<bsoncxx::document::view> expected_sort{};
         mongocxx::stdx::optional<bsoncxx::document::view> expected_hint{};
+        mongocxx::stdx::optional<bsoncxx::stdx::string_view> expected_comment{};
+
 
         collection_find->interpose([&](mongoc_collection_t*, mongoc_query_flags_t flags,
                                        uint32_t skip, uint32_t limit, uint32_t batch_size,
@@ -364,6 +366,9 @@ TEST_CASE("Collection", "[collection]") {
             if (expected_hint) {
                 REQUIRE(query_view["$hint"].get_utf8() ==
                         expected_hint->operator[]("$hint").get_utf8());
+            }
+            if (expected_comment) {
+                REQUIRE(query_view["$comment"].get_utf8().value == *expected_comment);
             }
             REQUIRE(fields == NULL);
             REQUIRE(read_prefs == NULL);
@@ -393,6 +398,14 @@ TEST_CASE("Collection", "[collection]") {
             auto sort_doc = builder::stream::document{} << "x" << -1 << builder::stream::finalize;
             expected_sort = sort_doc.view();
             opts.sort(*expected_sort);
+            REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
+        }
+
+        SECTION("Succeeds with comment") {
+            expected_comment = "my comment";
+            options::find opts;
+            opts.comment(*expected_comment);
+
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
         }
 
