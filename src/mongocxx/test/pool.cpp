@@ -132,7 +132,13 @@ TEST_CASE(
     "[pool]") {
     MOCK_POOL
 
+    // GCC before 4.9.0 doesn't place max_align_t in the std namespace.
+#if defined(__clang__) || !defined(__GNUC__) || (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 9)
     std::max_align_t dummy_address;
+#else
+    max_align_t dummy_address;
+#endif
+
     bool try_pop_called = false;
 
     mongoc_client_t* fake = reinterpret_cast<mongoc_client_t*>(&dummy_address);
