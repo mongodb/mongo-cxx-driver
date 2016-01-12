@@ -103,6 +103,7 @@ tasks:
           params:
               working_dir: "mongo-cxx-driver/build"
               script: |
+                  set -e
                   PKG_CONFIG_PATH="/data/tmp/c-driver-install/lib/pkgconfig" ${cmake_path} ${cmake_flags} -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" ..
                   make
                   ./src/bsoncxx/test/test_bson
