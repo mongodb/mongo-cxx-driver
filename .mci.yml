@@ -25,6 +25,11 @@ variables:
     cmake_flags:
         ubuntu_cmake_flags: &ubuntu_cmake_flags -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers"
         osx_cmake_flags: &osx_cmake_flags -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DBSONCXX_POLY_USE_BOOST=ON -DLIBBSON_DIR=/data/tmp/c-driver-install -DLIBMONGOC_DIR=/data/tmp/c-driver-install
+        asan_cmake_flags: &asan_cmake_flags -DCMAKE_CXX_FLAGS="-fsanitize=address -O1 -fno-omit-frame-pointer -Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers"
+
+    ## test parameters
+    test_params:
+        asan_test_params: &asan_test_params ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer-3.5 ASAN_OPTIONS="detect_leaks=1"
 
 
 #######################################
@@ -106,8 +111,8 @@ tasks:
                   set -e
                   PKG_CONFIG_PATH="/data/tmp/c-driver-install/lib/pkgconfig" ${cmake_path} ${cmake_flags} -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" ..
                   make
-                  ./src/bsoncxx/test/test_bson
-                  ./src/mongocxx/test/test_driver
+                  ${test_params} ./src/bsoncxx/test/test_bson
+                  ${test_params} ./src/mongocxx/test/test_driver
                   make run-examples
         - func: "stop_mongod"
 
@@ -155,5 +160,19 @@ buildvariants:
           cmake_flags: *osx_cmake_flags
       run_on:
           - osx-108
+      tasks:
+          - name: compile_and_test
+
+    - name: ubuntu1410-debug-asan
+      display_name: "ASAN Ubuntu 14.10 Debug"
+      expansions:
+          build_type: "Debug"
+          source: *ubuntu_source
+          tar_options: *ubuntu_tar_options
+          cmake_path: *ubuntu_cmake_path
+          cmake_flags: *asan_cmake_flags
+          test_params: *asan_test_params
+      run_on:
+          - ubuntu1410-build
       tasks:
           - name: compile_and_test
