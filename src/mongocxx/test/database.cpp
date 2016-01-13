@@ -216,6 +216,8 @@ TEST_CASE("A database", "[database]") {
 
         REQUIRE(get_called);
         REQUIRE(copy_called);
+
+        libmongoc::write_concern_destroy(underlying_wc);
     }
 
     SECTION("may create a collection") {

@@ -53,6 +53,9 @@ value& value::operator=(const value& rhs) {
     return *this;
 }
 
+value::value(value&& rhs) noexcept: _data{std::move(rhs._data)}, _length{std::move(rhs._length)} {
+}
+
 value::unique_ptr_type value::release() {
     auto x = std::move(_data);
 

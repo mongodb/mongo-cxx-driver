@@ -175,6 +175,8 @@ TEST_CASE("A client's write concern may be set and obtained", "[client]") {
 
     REQUIRE(get_called);
     REQUIRE(copy_called);
+
+    libmongoc::write_concern_destroy(underlying_wc);
 }
 
 TEST_CASE("A client can create a named database object", "[client]") {
