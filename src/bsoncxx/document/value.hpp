@@ -74,7 +74,7 @@ class BSONCXX_API value {
     value(const value&);
     value& operator=(const value&);
 
-    value(value&&) noexcept;
+    value(value&&) noexcept = default;
     value& operator=(value&&) noexcept = default;
 
     ///
