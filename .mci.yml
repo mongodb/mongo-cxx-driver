@@ -157,7 +157,7 @@ buildvariants:
           - name: compile_and_test
 
     - name: ubuntu1404-debug-boost
-      display_name: "Ubuntu 14.04 Debug with boost"
+      display_name: Ubuntu 14.04 Debug (boost)"
       expansions:
           build_type: "Debug"
           source: *ubuntu_source
@@ -170,7 +170,7 @@ buildvariants:
           - name: compile_and_test
 
     - name: ubuntu1404-debug-std-experimental
-      display_name: "Ubuntu 14.04 Debug with std experimental"
+      display_name: "Ubuntu 14.04 Debug (experimental)"
       expansions:
           build_type: "Debug"
           source: *ubuntu_source
