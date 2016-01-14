@@ -14,9 +14,6 @@
 
 project(BSONCXX)
 
-set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
-find_package(LibBSON 1.3.0 REQUIRED)
-
 # Update these as needed.
 # TODO: read from file
 set(BSONCXX_VERSION_MAJOR 3)
@@ -25,17 +22,41 @@ set(BSONCXX_VERSION_PATCH 0)
 set(BSONCXX_VERSION_EXTRA "-rc1-pre")
 set(BSONCXX_ABI_VERSION _noabi)
 
+option(BSONCXX_POLY_USE_STD_EXPERIMENTAL "Use std::experimental for stdx polyfills" OFF)
+option(BSONCXX_POLY_USE_SYSTEM_MNMLSTC "Obtain mnmlstc/core from system" OFF)
+option(BSONCXX_POLY_USE_BOOST "Use boost for stdx polyfills" OFF)
+
+# Default to using MNMLSTC
+set(BSONCXX_POLY_USE_MNMLSTC ON)
+
+# If the user explicitly selected boost or std::experimental
+# turn off mnmlstc
+if (BSONCXX_POLY_USE_BOOST OR BSONCXX_POLY_USE_STD_EXPERIMENTAL)
+  set(BSONCXX_POLY_USE_MNMLSTC OFF)
+endif()
+
+# It doesn't make sense to say we aren't using MNMLSTC but then
+# request the system version of it.
+if (NOT BSONCXX_POLY_USE_MNMLSTC AND BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
+  MESSAGE(FATAL_ERROR "Can't specify system mnmlstc when using boost or std::experimental for bsoncxx polyfills")
+endif()
+
+# It doesn't make sense to request both other sources of polyfills
+if (BSONCXX_POLY_USE_BOOST AND BSONCXX_POLY_USE_STD_EXPERIMENTAL)
+  message(FATAL_ERROR "Can't choose both boost and std::experimental for bsoncx polyfills")
+endif()
+
+# Can only use STD_EXPERIMENTAL in C++14 mode
+if (BSONCXX_POLY_USE_STD_EXPERIMENTAL AND CMAKE_CXX_STANDARD LESS 14)
+  message(FATAL_ERROR "Can only use BSONCXX_POLY_USE_STD_EXPERIMENTAL if CMAKE_CXX_STANDARD is 14 or higher")
+endif()
+
 set(BSONCXX_VERSION ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.${BSONCXX_VERSION_PATCH}${BSONCXX_VERSION_EXTRA})
 set(BSONCXX_INLINE_NAMESPACE "v${BSONCXX_ABI_VERSION}")
 set(BSONCXX_HEADER_INSTALL_DIR "include/bsoncxx/${BSONCXX_INLINE_NAMESPACE}" CACHE INTERNAL "")
 
-# TODO: Not all combinations of options are valid, and USE_STD is only valid
-# for C++14 compiles. Add logic to validate options and configure checks to validate
-# STD_EX vs C++14.
-option(BSONCXX_POLY_USE_STD_EXPERIMENTAL "Use <experimental/ for stdx polyfills" OFF)
-option(BSONCXX_POLY_USE_MNMLSTC "Use mnmlstc/core for stdx polyfills" ON)
-option(BSONCXX_POLY_USE_SYSTEM_MNMLSTC "Obtain mnmlstc/core from system" OFF)
-option(BSONCXX_POLY_USE_BOOST "Use boost for stdx polyfills" OFF)
+set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
+find_package(LibBSON 1.3.0 REQUIRED)
 
 add_subdirectory(third_party)
 add_subdirectory(config)
@@ -68,10 +89,7 @@ include_directories(
 
 link_directories(${LIBBSON_LIBRARY_DIRS})
 
-if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
-    ExternalProject_Get_Property(EP_mnmlstc_core source_dir)
-    include_directories(${source_dir}/include)
-elseif (BSONCXX_POLY_USE_BOOST)
+if (BSONCXX_POLY_USE_BOOST)
     find_package(Boost REQUIRED)
 endif()
 
@@ -119,6 +137,9 @@ generate_export_header(bsoncxx
 if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
     add_dependencies(bsoncxx_static EP_mnmlstc_core)
     add_dependencies(bsoncxx EP_mnmlstc_core)
+    ExternalProject_Get_Property(EP_mnmlstc_core source_dir)
+    target_include_directories(bsoncxx_static PUBLIC ${source_dir}/include)
+    target_include_directories(bsoncxx PUBLIC ${source_dir}/include)
 elseif (BSONCXX_POLY_USE_BOOST)
     target_include_directories(bsoncxx_static PUBLIC ${Boost_INCLUDE_DIRS})
     target_include_directories(bsoncxx PUBLIC ${Boost_INCLUDE_DIRS})

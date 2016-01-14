@@ -344,7 +344,6 @@ TEST_CASE("Collection", "[collection]") {
         mongocxx::stdx::optional<bsoncxx::document::view> expected_hint{};
         mongocxx::stdx::optional<bsoncxx::stdx::string_view> expected_comment{};
 
-
         collection_find->interpose([&](mongoc_collection_t*, mongoc_query_flags_t flags,
                                        uint32_t skip, uint32_t limit, uint32_t batch_size,
                                        const bson_t* query, const bson_t* fields,
@@ -402,7 +401,7 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Succeeds with comment") {
-            expected_comment = "my comment";
+            expected_comment.emplace("my comment");
             options::find opts;
             opts.comment(*expected_comment);
 

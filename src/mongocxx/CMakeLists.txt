@@ -100,11 +100,6 @@ link_directories(
   ${LIBMONGOC_LIBRARY_DIRS}
 )
 
-if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
-    ExternalProject_Get_Property(EP_mnmlstc_core source_dir)
-    include_directories(${source_dir}/include)
-endif()
-
 add_library(mongocxx_static STATIC
     ${mongocxx_sources}
 )
