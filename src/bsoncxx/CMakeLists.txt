@@ -90,7 +90,7 @@ include_directories(
 link_directories(${LIBBSON_LIBRARY_DIRS})
 
 if (BSONCXX_POLY_USE_BOOST)
-    find_package(Boost REQUIRED)
+    find_package(Boost 1.56.0 REQUIRED)
 endif()
 
 add_library(bsoncxx_static STATIC
