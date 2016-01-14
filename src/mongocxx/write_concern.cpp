@@ -53,10 +53,6 @@ write_concern& write_concern::operator=(const write_concern& other) {
 
 write_concern::~write_concern() = default;
 
-void write_concern::fsync(bool fsync) {
-    libmongoc::write_concern_set_fsync(_impl->write_concern_t, fsync);
-}
-
 void write_concern::journal(bool journal) {
     libmongoc::write_concern_set_journal(_impl->write_concern_t, journal);
 }
@@ -105,10 +101,6 @@ void write_concern::timeout(std::chrono::milliseconds timeout) {
     if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
         throw logic_error{make_error_code(error_code::k_invalid_parameter)};
     libmongoc::write_concern_set_wtimeout(_impl->write_concern_t, static_cast<std::int32_t>(count));
-}
-
-bool write_concern::fsync() const {
-    return libmongoc::write_concern_get_fsync(_impl->write_concern_t);
 }
 
 bool write_concern::journal() const {

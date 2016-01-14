@@ -52,8 +52,6 @@ class uri;
 ///
 /// @see http://docs.mongodb.org/manual/core/write-concern/
 ///
-/// @todo this interface is terrible -- it's exactly what you get with the c-driver essentially.
-///
 class MONGOCXX_API write_concern {
 
    public:
@@ -98,15 +96,6 @@ class MONGOCXX_API write_concern {
     /// Destroys a write_concern.
     ///
     ~write_concern();
-
-    ///
-    /// Sets the fsync parameter for this write concern.
-    ///
-    /// @param fsync
-    ///   If @c true forces the database to fsync all files before reporting a write operation was
-    ///   successful.
-    ///
-    void fsync(bool fsync);
 
     ///
     /// Sets the journal parameter for this write concern.
@@ -180,13 +169,6 @@ class MONGOCXX_API write_concern {
     /// @throw exception::write
     ///
     void timeout(std::chrono::milliseconds timeout);
-
-    ///
-    /// Gets the current status of the fsync parameter.
-    ///
-    /// @return @c true if fsync is required, @c false if not.
-    ///
-    bool fsync() const;
 
     ///
     /// Gets the current status of the journal parameter.

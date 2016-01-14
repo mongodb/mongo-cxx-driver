@@ -23,20 +23,6 @@ using namespace mongocxx;
 
 TEST_CASE("creation of write_concern passes universal parameters to c-driver's methods",
           "[write_concern][base][c-driver]") {
-    SECTION("when fsync is requested, mongoc_write_concern_set_fsync is called with true") {
-        bool fsync_called = false;
-        bool fsync_value = false;
-        auto mock_instance = libmongoc::write_concern_set_fsync.create_instance();
-        mock_instance->visit([&](mongoc_write_concern_t*, bool fsync) {
-            fsync_called = true;
-            fsync_value = fsync;
-        });
-        write_concern wc{};
-        wc.fsync(true);
-        write_concern{wc};
-        REQUIRE(fsync_called == true);
-        REQUIRE(fsync_value == true);
-    }
 
     SECTION("when journal is requested, mongoc_write_concern_set_journal is called with true") {
         bool journal_called = false;

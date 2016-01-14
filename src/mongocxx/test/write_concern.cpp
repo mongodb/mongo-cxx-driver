@@ -22,10 +22,6 @@ using namespace mongocxx;
 TEST_CASE("a default write_concern", "[write_concern]") {
     write_concern wc{};
 
-    SECTION("doesn't require the server to fsync") {
-        REQUIRE(wc.fsync() == false);
-    }
-
     SECTION("doesn't require the server to journal") {
         REQUIRE(wc.journal() == false);
     }
@@ -53,11 +49,6 @@ TEST_CASE("a default write_concern", "[write_concern]") {
 
 TEST_CASE("write_concern fields may be set and retrieved", "[write_concern]") {
     write_concern wc{};
-
-    SECTION("fsync may be configured") {
-        wc.fsync(true);
-        REQUIRE(wc.fsync() == true);
-    }
 
     SECTION("journal may be configured") {
         wc.journal(true);
