@@ -25,7 +25,7 @@ variables:
     cmake_flags:
         ubuntu_cmake_flags: &ubuntu_cmake_flags -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers"
         ubuntu_boost_cmake_flags: &ubuntu_boost_cmake_flags -DBSONCXX_POLY_USE_BOOST=ON -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers"
-        ubuntu_std_experimental_cmake_flags: &ubuntu_std_experimental_cmake_flags -DBSONCXX_POLY_USE_STD_EXPERIMENTAL=ON -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers"
+        ubuntu_std_experimental_cmake_flags: &ubuntu_std_experimental_cmake_flags -DBSONCXX_POLY_USE_STD_EXPERIMENTAL=ON -DCMAKE_CXX_STANDARD=14 -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers"
         osx_cmake_flags: &osx_cmake_flags -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DBSONCXX_POLY_USE_BOOST=ON -DLIBBSON_DIR=/data/tmp/c-driver-install -DLIBMONGOC_DIR=/data/tmp/c-driver-install
         asan_cmake_flags: &asan_cmake_flags -DCMAKE_CXX_FLAGS="-fsanitize=address -O1 -fno-omit-frame-pointer -Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers -Wno-error=maybe-uninitialized"
         ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-fsanitize=undefined -g -fno-omit-frame-pointer -fsanitize-blacklist=$(pwd)/../etc/ubsan.blacklist -fno-sanitize-recover -Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers"
