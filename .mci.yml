@@ -24,6 +24,8 @@ variables:
     ## cmake flag variables
     cmake_flags:
         ubuntu_cmake_flags: &ubuntu_cmake_flags -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers"
+        ubuntu_boost_cmake_flags: &ubuntu_boost_cmake_flags -DBSONCXX_POLY_USE_BOOST=ON -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers"
+        ubuntu_std_experimental_cmake_flags: &ubuntu_std_experimental_cmake_flags -DCMAKE_CXX_COMPILER="/usr/bin/clang" -DBSONCXX_POLY_USE_STD_EXPERIMENTAL=ON -DCMAKE_CXX_STANDARD=14 -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers"
         osx_cmake_flags: &osx_cmake_flags -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DBSONCXX_POLY_USE_BOOST=ON -DLIBBSON_DIR=/data/tmp/c-driver-install -DLIBMONGOC_DIR=/data/tmp/c-driver-install
         asan_cmake_flags: &asan_cmake_flags -DCMAKE_CXX_FLAGS="-fsanitize=address -O1 -fno-omit-frame-pointer -Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers -Wno-error=maybe-uninitialized"
         ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-fsanitize=undefined -g -fno-omit-frame-pointer -fsanitize-blacklist=$(pwd)/../etc/ubsan.blacklist -fno-sanitize-recover -Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers"
@@ -151,6 +153,32 @@ buildvariants:
           cmake_flags: *ubuntu_cmake_flags
       run_on:
           - ubuntu1404-test
+      tasks:
+          - name: compile_and_test
+
+    - name: ubuntu1404-debug-boost
+      display_name: "Ubuntu 14.04 Debug (boost)"
+      expansions:
+          build_type: "Debug"
+          source: *ubuntu_source
+          tar_options: *ubuntu_tar_options
+          cmake_path: *ubuntu_cmake_path
+          cmake_flags: *ubuntu_boost_cmake_flags
+      run_on:
+          - ubuntu1404-test
+      tasks:
+          - name: compile_and_test
+
+    - name: ubuntu1404-debug-std-experimental
+      display_name: "Ubuntu 14.10 Debug (experimental)"
+      expansions:
+          build_type: "Debug"
+          source: *ubuntu_source
+          tar_options: *ubuntu_tar_options
+          cmake_path: *ubuntu_cmake_path
+          cmake_flags: *ubuntu_std_experimental_cmake_flags
+      run_on:
+          - ubuntu1410-build
       tasks:
           - name: compile_and_test
 
