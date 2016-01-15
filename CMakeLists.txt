@@ -79,20 +79,13 @@ add_custom_target(docs
     VERBATIM
 )
 
-add_custom_target(modernize
-    clang-modernize
-        -p ${CMAKE_BINARY_DIR}/compile_commands.json
-        -include ${CMAKE_CURRENT_SOURCE_DIR}
-        -exclude ${CMAKE_CURRENT_SOURCE_DIR}/mongocxx/test ${CMAKE_CURRENT_SOURCE_DIR}/bsoncxx/test
-        -format
+add_custom_target(format
+    python ${CMAKE_SOURCE_DIR}/etc/clang_format.py format
     VERBATIM
 )
 
-add_custom_target(format
-    perl -nle "/file/ or next; print ((split /: (.*)/)[1])" ${CMAKE_BINARY_DIR}/compile_commands.json |
-    grep -v "catch.hpp" |
-    grep -v "examples" |
-    xargs clang-format -i
+add_custom_target(format-lint
+    python ${CMAKE_SOURCE_DIR}/etc/clang_format.py lint
     VERBATIM
 )
 
