@@ -15,12 +15,11 @@
 #include <mongocxx/read_preference.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-
-#include <mongocxx/config/prelude.hpp>
-
 #include <mongocxx/private/libbson.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/private/read_preference.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

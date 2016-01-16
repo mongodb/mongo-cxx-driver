@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include <bsoncxx/config/prelude.hpp>
-
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/view_or_value.hpp>
+
+#include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

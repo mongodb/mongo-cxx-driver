@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <mongocxx/client.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/private/write_concern.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -37,4 +37,4 @@ class client::impl {
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
-#include <mongocxx/config/postlude.hpp>
+#include <mongocxx/config/private/postlude.hpp>

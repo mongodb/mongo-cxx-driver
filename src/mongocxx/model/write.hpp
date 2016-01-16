@@ -14,10 +14,9 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <cstdint>
 
+#include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/write_type.hpp>
 #include <mongocxx/model/insert_one.hpp>
 #include <mongocxx/model/delete_one.hpp>
@@ -25,7 +24,8 @@
 #include <mongocxx/model/update_one.hpp>
 #include <mongocxx/model/update_many.hpp>
 #include <mongocxx/model/replace_one.hpp>
-#include <bsoncxx/stdx/optional.hpp>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/prelude.hpp>
+#include <mongocxx/exception/private/error_code.hpp>
 
 #include <system_error>
 
-#include <mongocxx/exception/private/error_code.hpp>
-
 #include <mongocxx/exception/private/error_category.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -36,5 +36,3 @@ std::error_code make_error_code(mongocxx::error_code error) {
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>

@@ -14,12 +14,12 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <system_error>
 
 #include <bsoncxx/document/value.hpp>
 #include <mongocxx/private/libmongoc.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -57,4 +57,4 @@ void throw_exception(bsoncxx::document::value raw_server_error, ::bson_error_t e
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
-#include <mongocxx/config/postlude.hpp>
+#include <mongocxx/config/private/postlude.hpp>

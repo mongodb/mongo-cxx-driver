@@ -13,4 +13,8 @@
 // limitations under the License.
 
 #include <bsoncxx/config/prelude.hpp>
+
+// NOTE: Push any macros here that are defined by the following
+// headers here.
+
 #include <bsoncxx/config/private/config.hpp>

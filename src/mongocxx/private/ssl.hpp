@@ -15,8 +15,9 @@
 #pragma once
 
 #include <mongocxx/options/ssl.hpp>
-
 #include <mongocxx/private/libmongoc.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -50,3 +51,5 @@ inline ::mongoc_ssl_opt_t make_ssl_opts(const ssl& ssl_opts) {
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
+
+#include <mongocxx/config/private/postlude.hpp>

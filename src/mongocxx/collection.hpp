@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <algorithm>
 #include <cstdint>
 #include <memory>
@@ -25,7 +23,6 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
-
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/insert_many_builder.hpp>
@@ -50,6 +47,8 @@
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
 #include <mongocxx/write_concern.hpp>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

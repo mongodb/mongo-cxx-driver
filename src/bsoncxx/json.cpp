@@ -22,15 +22,14 @@
 
 #include <bson.h>
 
-#include <bsoncxx/config/prelude.hpp>
-
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/private/b64_ntop.h>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
 
-#include <bsoncxx/private/b64_ntop.h>
+#include <bsoncxx/config/private/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

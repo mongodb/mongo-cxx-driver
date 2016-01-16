@@ -14,14 +14,14 @@
 
 #include <mongocxx/uri.hpp>
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/private/read_concern.hpp>
 #include <mongocxx/private/read_preference.hpp>
 #include <mongocxx/private/uri.hpp>
 #include <mongocxx/private/write_concern.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

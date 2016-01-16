@@ -14,10 +14,10 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <mongocxx/options/bulk_write.hpp>
 #include <mongocxx/model/write.hpp>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

@@ -17,9 +17,10 @@
 #include <utility>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-
 #include <mongocxx/logger.hpp>
 #include <mongocxx/private/libmongoc.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

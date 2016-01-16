@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/config/prelude.hpp>
+#include <bsoncxx/private/error_category.hpp>
 
 #include <string>
 #include <system_error>
 
 #include <bson.h>
 
-#include <bsoncxx/private/error_category.hpp>
-
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/private/libbson_error.hpp>
+
+#include <bsoncxx/config/private/prelude.hpp>
 
 namespace {
 

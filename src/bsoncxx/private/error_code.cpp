@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/config/prelude.hpp>
+#include <bsoncxx/exception/error_code.hpp>
 
 #include <system_error>
 
-#include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/private/error_category.hpp>
+
+#include <bsoncxx/config/private/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

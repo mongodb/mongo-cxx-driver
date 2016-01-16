@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/array/element.hpp>
+
 #include <cstdlib>
 #include <cstring>
 #include <stdexcept>
 
-#include <bsoncxx/config/prelude.hpp>
-
-#include <bsoncxx/array/element.hpp>
+#include <bsoncxx/config/private/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

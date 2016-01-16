@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/builder/core.hpp>
+
+#include <cstring>
+
 #include <bson.h>
 
-#include <bsoncxx/config/prelude.hpp>
-
-#include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/private/error_code.hpp>
@@ -26,7 +27,7 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
 
-#include <cstring>
+#include <bsoncxx/config/private/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

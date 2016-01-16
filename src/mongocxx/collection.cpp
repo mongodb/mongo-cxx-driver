@@ -55,6 +55,8 @@
 #include <mongocxx/result/update.hpp>
 #include <mongocxx/write_concern.hpp>
 
+#include <mongocxx/config/private/prelude.hpp>
+
 using bsoncxx::document::view_or_value;
 using bsoncxx::builder::stream::concatenate;
 

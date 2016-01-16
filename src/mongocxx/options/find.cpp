@@ -14,9 +14,9 @@
 
 #include <mongocxx/options/find.hpp>
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <mongocxx/private/read_preference.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

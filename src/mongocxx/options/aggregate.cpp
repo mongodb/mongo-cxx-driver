@@ -13,7 +13,10 @@
 // limitations under the License.
 
 #include <mongocxx/options/aggregate.hpp>
+
 #include <mongocxx/private/read_preference.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

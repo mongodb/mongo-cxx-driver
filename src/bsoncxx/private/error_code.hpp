@@ -14,12 +14,12 @@
 
 #pragma once
 
-#include <bsoncxx/config/prelude.hpp>
-
 #include <limits>
 #include <system_error>
 
 #include <bsoncxx/exception/error_code.hpp>
+
+#include <bsoncxx/config/private/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -35,4 +35,4 @@ std::error_code make_error_code(error_code error);
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
-#include <bsoncxx/config/postlude.hpp>
+#include <bsoncxx/config/private/postlude.hpp>

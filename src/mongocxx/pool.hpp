@@ -14,16 +14,15 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <functional>
 #include <memory>
 
 #include <bsoncxx/stdx/optional.hpp>
-
 #include <mongocxx/options/ssl.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

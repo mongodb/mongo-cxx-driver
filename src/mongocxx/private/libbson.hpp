@@ -14,16 +14,15 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <bson.h>
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-
 #include <mongocxx/stdx.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -125,3 +124,5 @@ class scoped_bson_t {
 }  // namespace libbson
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
+
+#include <mongocxx/config/private/postlude.hpp>

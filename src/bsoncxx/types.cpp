@@ -14,9 +14,9 @@
 
 #include <bsoncxx/types.hpp>
 
-#include <bsoncxx/config/prelude.hpp>
-
 #include <bsoncxx/json.hpp>
+
+#include <bsoncxx/config/private/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

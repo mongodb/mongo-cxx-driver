@@ -19,7 +19,7 @@
 
 #include <bson.h>
 
-#include <bsoncxx/config/prelude.hpp>
+#include <bsoncxx/config/private/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

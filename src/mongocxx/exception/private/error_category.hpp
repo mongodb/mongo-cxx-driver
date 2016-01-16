@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <system_error>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -40,4 +40,4 @@ const std::error_category& mongocxx_error_category();
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
-#include <mongocxx/config/postlude.hpp>
+#include <mongocxx/config/private/postlude.hpp>

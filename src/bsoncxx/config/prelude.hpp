@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// src/bsoncxx/b64_ntop.h
-#pragma push_macro("BSONCXX_B64_ASSERT")
-#undef BSONCXX_B64_ASSERT
-
 // compiler.hpp
 #pragma push_macro("BSONCXX_INLINE")
 #undef BSONCXX_INLINE

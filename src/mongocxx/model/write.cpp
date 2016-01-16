@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <type_traits>
-
 #include <mongocxx/model/write.hpp>
 
-#include <mongocxx/config/prelude.hpp>
+#include <type_traits>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

@@ -28,6 +28,8 @@
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/stdx.hpp>
 
+#include <mongocxx/config/private/prelude.hpp>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 

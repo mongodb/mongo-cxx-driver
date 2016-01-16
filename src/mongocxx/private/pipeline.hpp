@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <bsoncxx/builder/stream/array.hpp>
 #include <bsoncxx/builder/stream/single_context.hpp>
 #include <mongocxx/pipeline.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -42,4 +42,4 @@ class pipeline::impl {
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
-#include <mongocxx/config/postlude.hpp>
+#include <mongocxx/config/private/postlude.hpp>

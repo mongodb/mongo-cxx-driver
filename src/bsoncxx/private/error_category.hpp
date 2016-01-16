@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <bsoncxx/config/prelude.hpp>
-
 #include <system_error>
+
+#include <bsoncxx/config/private/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -40,4 +40,4 @@ const std::error_category& libbson_error_category(int domain);
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
-#include <bsoncxx/config/postlude.hpp>
+#include <bsoncxx/config/private/postlude.hpp>

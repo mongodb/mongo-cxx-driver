@@ -32,6 +32,8 @@
 #include <mongocxx/private/read_concern.hpp>
 #include <mongocxx/private/read_preference.hpp>
 
+#include <mongocxx/config/private/prelude.hpp>
+
 using bsoncxx::builder::stream::concatenate;
 using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::finalize;

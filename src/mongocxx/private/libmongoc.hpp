@@ -14,10 +14,11 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <mongoc.h>
+
 #include <mongocxx/mock/mock.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -36,3 +37,5 @@ namespace libmongoc {
 }  // namespace libmongoc
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
+
+#include <mongocxx/config/private/postlude.hpp>

@@ -14,13 +14,14 @@
 
 #include <mongocxx/read_concern.hpp>
 
-#include <mongocxx/private/read_concern.hpp>
-
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/private/error_code.hpp>
 #include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/read_concern.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

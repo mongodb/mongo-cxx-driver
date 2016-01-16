@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/cursor.hpp>
+
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -19,15 +21,14 @@
 
 #include <bson.h>
 
-#include <mongocxx/cursor.hpp>
-
+#include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/exception/private/error_category.hpp>
 #include <mongocxx/exception/private/mongoc_error.hpp>
 #include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/private/cursor.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

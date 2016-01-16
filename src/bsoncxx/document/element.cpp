@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/document/element.hpp>
+
 #include <cstdlib>
 #include <cstring>
 
 #include <bson.h>
-
-#include <bsoncxx/config/prelude.hpp>
-
-#include <bsoncxx/document/element.hpp>
 
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
@@ -27,6 +25,8 @@
 #include <bsoncxx/private/error_code.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
+
+#include <bsoncxx/config/private/prelude.hpp>
 
 #define CITER                \
     bson_iter_t iter;        \

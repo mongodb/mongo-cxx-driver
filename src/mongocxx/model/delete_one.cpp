@@ -14,7 +14,7 @@
 
 #include <mongocxx/model/delete_one.hpp>
 
-#include <mongocxx/config/prelude.hpp>
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

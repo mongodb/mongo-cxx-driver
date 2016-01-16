@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <mongocxx/insert_many_builder.hpp>
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <mongocxx/collection.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

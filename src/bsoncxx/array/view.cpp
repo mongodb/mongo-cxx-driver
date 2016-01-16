@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/array/view.hpp>
+
 #include <cstdlib>
 #include <cstring>
 #include <tuple>
 
 #include <bson.h>
 
-#include <bsoncxx/config/prelude.hpp>
-
-#include <bsoncxx/array/view.hpp>
 #include <bsoncxx/private/itoa.hpp>
 #include <bsoncxx/types.hpp>
+
+#include <bsoncxx/config/private/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

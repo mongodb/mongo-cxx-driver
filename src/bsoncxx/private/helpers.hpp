@@ -14,12 +14,12 @@
 
 #pragma once
 
-#include <bsoncxx/config/prelude.hpp>
-
 #include <bson.h>
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
+
+#include <bsoncxx/config/private/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -38,4 +38,4 @@ inline document::value value_from_bson_t(const bson_t* bson) {
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
-#include <bsoncxx/config/postlude.hpp>
+#include <bsoncxx/config/private/postlude.hpp>

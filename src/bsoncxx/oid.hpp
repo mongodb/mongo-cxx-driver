@@ -14,13 +14,13 @@
 
 #pragma once
 
-#include <bsoncxx/config/prelude.hpp>
-
 #include <iosfwd>
 #include <ctime>
 #include <string>
 
 #include <bsoncxx/string/view_or_value.hpp>
+
+#include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

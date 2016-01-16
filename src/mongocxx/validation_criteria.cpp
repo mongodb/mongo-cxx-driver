@@ -17,7 +17,7 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 
-#include <mongocxx/config/prelude.hpp>
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace {
 

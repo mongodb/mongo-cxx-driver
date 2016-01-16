@@ -14,11 +14,11 @@
 
 #include <mongocxx/options/create_collection.hpp>
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/types.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

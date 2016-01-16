@@ -17,9 +17,6 @@
 #include <utility>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-
-#include <mongocxx/config/prelude.hpp>
-
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
@@ -28,6 +25,8 @@
 #include <mongocxx/private/pool.hpp>
 #include <mongocxx/private/ssl.hpp>
 #include <mongocxx/private/uri.hpp>
+
+#include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

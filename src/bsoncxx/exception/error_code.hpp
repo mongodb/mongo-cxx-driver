@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
