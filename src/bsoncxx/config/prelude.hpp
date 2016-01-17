@@ -15,6 +15,8 @@
 // compiler.hpp
 #pragma push_macro("BSONCXX_INLINE")
 #undef BSONCXX_INLINE
+#pragma push_macro("BSONCXX_CALL")
+#undef BSONCXX_CALL
 
 // src/bsoncxx/config/config.hpp.in
 #pragma push_macro("BSONCXX_INLINE_NAMESPACE_BEGIN")

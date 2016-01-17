@@ -127,8 +127,8 @@ class BSONCXX_API view {
     ///
     bool empty() const;
 
-    friend BSONCXX_API bool operator==(view, view);
-    friend BSONCXX_API bool operator!=(view, view);
+    friend BSONCXX_API bool BSONCXX_CALL operator==(view, view);
+    friend BSONCXX_API bool BSONCXX_CALL operator!=(view, view);
 
    private:
     const std::uint8_t* _data;
@@ -146,8 +146,8 @@ class BSONCXX_API view::iterator : public std::iterator<std::forward_iterator_ta
     iterator& operator++();
     iterator operator++(int);
 
-    friend BSONCXX_API bool operator==(const iterator&, const iterator&);
-    friend BSONCXX_API bool operator!=(const iterator&, const iterator&);
+    friend BSONCXX_API bool BSONCXX_CALL operator==(const iterator&, const iterator&);
+    friend BSONCXX_API bool BSONCXX_CALL operator!=(const iterator&, const iterator&);
 
    private:
     element _element;
@@ -165,8 +165,8 @@ class BSONCXX_API view::const_iterator : public std::iterator<std::forward_itera
     const_iterator& operator++();
     const_iterator operator++(int);
 
-    friend BSONCXX_API bool operator==(const const_iterator&, const const_iterator&);
-    friend BSONCXX_API bool operator!=(const const_iterator&, const const_iterator&);
+    friend BSONCXX_API bool BSONCXX_CALL operator==(const const_iterator&, const const_iterator&);
+    friend BSONCXX_API bool BSONCXX_CALL operator!=(const const_iterator&, const const_iterator&);
 
    private:
     element _element;

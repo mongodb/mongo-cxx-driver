@@ -86,7 +86,7 @@ class MONGOCXX_API bulk_write {
 
     bsoncxx::document::value _response;
 
-}; // class bulk_write
+};
 
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END

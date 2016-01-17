@@ -142,8 +142,8 @@ namespace types {
 
         ~value();
 
-        friend BSONCXX_API bool operator==(const value&, const value&);
-        friend BSONCXX_API bool operator!=(const value&, const value&);
+        friend BSONCXX_API bool BSONCXX_CALL operator==(const value&, const value&);
+        friend BSONCXX_API bool BSONCXX_CALL operator!=(const value&, const value&);
 
         ///
         /// @return The type of the underlying BSON value stored in this object.
@@ -331,7 +331,7 @@ namespace types {
         const b_maxkey& get_maxkey() const;
 
        private:
-        void destroy() noexcept;
+        void BSONCXX_PRIVATE destroy() noexcept;
 
         bsoncxx::type _type;
         union {
@@ -360,10 +360,8 @@ namespace types {
 
     // sfinae in the bool return to avoid competing with the value == value
     // operators
-    namespace {
-        template <typename T>
-        using not_value = typename std::enable_if<! std::is_same<typename std::remove_reference<T>::type, value>::value, bool>::type;
-    }  // namespace
+    template <typename T>
+    using not_value = typename std::enable_if<! std::is_same<typename std::remove_reference<T>::type, value>::value, bool>::type;
 
     // these all return bool
     template <typename T>

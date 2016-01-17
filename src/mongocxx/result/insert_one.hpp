@@ -49,7 +49,7 @@ class MONGOCXX_API insert_one {
     result::bulk_write _result;
     bsoncxx::types::value _generated_id;
 
-}; // class insert_one
+};
 
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END

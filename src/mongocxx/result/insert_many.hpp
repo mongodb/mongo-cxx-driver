@@ -69,7 +69,7 @@ class MONGOCXX_API insert_many {
     result::bulk_write _result;
     id_map _generated_ids;
 
-}; // class insert_many
+};
 
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END

@@ -18,6 +18,8 @@
 #if defined(_MSC_VER)
 #pragma warning(pop)
 #endif
+#undef BSONCXX_CALL
+#pragma pop_macro("BSONCXX_CALL")
 
 // src/bsoncxx/config/config.hpp.in
 #undef BSONCXX_INLINE_NAMESPACE_BEGIN

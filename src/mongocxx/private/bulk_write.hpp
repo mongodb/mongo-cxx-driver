@@ -35,7 +35,7 @@ class bulk_write::impl {
 
     mongoc_bulk_operation_t* operation_t;
 
-}; // class impl
+};
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

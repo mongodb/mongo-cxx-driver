@@ -166,16 +166,12 @@ class MONGOCXX_API read_preference {
     ///
     stdx::optional<bsoncxx::document::view> tags() const;
 
-    ///
-    /// Comparison operator
-    ///
-    bool operator==(const read_preference&) const;
-
    private:
     friend client;
     friend collection;
     friend database;
     friend uri;
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const read_preference&, const read_preference&);
 
     class MONGOCXX_PRIVATE impl;
 

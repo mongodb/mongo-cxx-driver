@@ -35,7 +35,7 @@ class read_preference::impl {
 
     mongoc_read_prefs_t* read_preference_t;
 
-}; // class impl
+};
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

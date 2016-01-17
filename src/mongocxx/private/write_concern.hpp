@@ -35,7 +35,7 @@ class write_concern::impl {
 
     mongoc_write_concern_t* write_concern_t;
 
-}; // class impl
+};
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

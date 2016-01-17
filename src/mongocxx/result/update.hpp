@@ -64,7 +64,7 @@ class MONGOCXX_API update {
    private:
     result::bulk_write _result;
 
-}; // class update
+};
 
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END

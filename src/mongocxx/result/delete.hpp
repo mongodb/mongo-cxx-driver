@@ -50,7 +50,7 @@ class MONGOCXX_API delete_result {
    private:
     result::bulk_write _result;
 
-}; // class delete_result
+};
 
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END

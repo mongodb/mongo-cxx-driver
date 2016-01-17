@@ -23,6 +23,12 @@
 
 #define MONGOCXX_INLINE inline __forceinline MONGOCXX_PRIVATE
 
+#define MONGOCXX_CALL __cdecl
+
 #else
+
 #define MONGOCXX_INLINE inline __attribute__((__always_inline__)) MONGOCXX_PRIVATE
+
+#define MONGOCXX_CALL
+
 #endif

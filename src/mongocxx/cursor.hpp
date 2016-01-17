@@ -109,8 +109,8 @@ class MONGOCXX_API cursor::iterator : public std::iterator<
 
    private:
     friend class cursor;
-    friend MONGOCXX_API bool operator==(const iterator&, const iterator&);
-    friend MONGOCXX_API bool operator!=(const iterator&, const iterator&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const iterator&, const iterator&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const iterator&, const iterator&);
 
     MONGOCXX_PRIVATE explicit iterator(cursor* cursor);
 
@@ -118,9 +118,6 @@ class MONGOCXX_API cursor::iterator : public std::iterator<
     bsoncxx::document::view _doc;
 
 };
-
-MONGOCXX_API bool operator==(const cursor::iterator& lhs, const cursor::iterator& rhs);
-MONGOCXX_API bool operator!=(const cursor::iterator& lhs, const cursor::iterator& rhs);
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

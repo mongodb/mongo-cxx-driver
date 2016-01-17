@@ -18,6 +18,8 @@
 #if defined(_MSC_VER)
 #pragma warning(pop)
 #endif
+#undef MONGOCXX_CALL
+#pragma pop_macro("MONGOCXX_CALL")
 
 // src/mongocxx/config/config.hpp.in
 #undef MONGOCXX_INLINE_NAMESPACE_BEGIN

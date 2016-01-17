@@ -22,6 +22,12 @@ add_custom_target(install_libs
     DEPENDS bsoncxx_built mongocxx_built
 )
 
+# Build the examples with vectorcall as the default on Windows
+# so that we shake out missing _CALL macros.
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Gv")
+endif()
+
 add_subdirectory(bsoncxx)
 add_subdirectory(mongocxx)
 

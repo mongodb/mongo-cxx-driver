@@ -58,7 +58,7 @@ class collection::impl {
     std::string database_name;
     const class client::impl* client_impl;
 
-};  // class impl
+};
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

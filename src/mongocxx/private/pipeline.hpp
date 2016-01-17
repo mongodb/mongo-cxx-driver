@@ -37,7 +37,7 @@ class pipeline::impl {
    private:
     bsoncxx::builder::stream::array _builder;
 
-}; // class impl
+};
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

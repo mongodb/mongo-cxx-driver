@@ -36,7 +36,7 @@ class pool::impl {
 
     mongoc_client_pool_t* client_pool_t;
     stdx::optional<options::ssl> ssl_options;
-};  // class impl
+};
 
 MONGOCXX_INLINE_NAMESPACE_END
 };  // namespace mongocxx

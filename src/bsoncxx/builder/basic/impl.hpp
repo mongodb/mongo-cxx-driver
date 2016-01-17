@@ -26,8 +26,6 @@ namespace builder {
 namespace basic {
 namespace impl {
 
-namespace {
-
 template <typename T>
 using takes_document = typename util::is_functor<T, void(sub_document)>;
 
@@ -56,8 +54,6 @@ typename std::enable_if<!takes_document<T>::value && !takes_array<T>::value, voi
 generic_append(core* core, T&& t) {
     core->append(std::forward<T>(t));
 }
-
-}  // namespace
 
 template <typename T>
 BSONCXX_INLINE

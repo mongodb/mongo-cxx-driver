@@ -35,7 +35,7 @@ class cursor::impl {
 
     mongoc_cursor_t* cursor_t;
 
-}; // class impl
+};
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

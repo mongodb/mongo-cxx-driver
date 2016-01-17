@@ -32,7 +32,7 @@ class client::impl {
 
     mongoc_client_t* client_t;
 
-}; // class impl
+};
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

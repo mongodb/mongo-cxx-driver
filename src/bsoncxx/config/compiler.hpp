@@ -21,6 +21,12 @@
 
 #define BSONCXX_INLINE inline __forceinline BSONCXX_PRIVATE
 
+#define BSONCXX_CALL __cdecl
+
 #else
+
 #define BSONCXX_INLINE inline __attribute__((__always_inline__)) BSONCXX_PRIVATE
+
+#define BSONCXX_CALL
+
 #endif

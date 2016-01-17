@@ -56,8 +56,8 @@ enum class binary_sub_type : std::uint8_t {
 #undef BSONCXX_ENUM
 };
 
-BSONCXX_API std::string to_string(type rhs);
-BSONCXX_API std::string to_string(binary_sub_type rhs);
+BSONCXX_API std::string BSONCXX_CALL to_string(type rhs);
+BSONCXX_API std::string BSONCXX_CALL to_string(binary_sub_type rhs);
 
 namespace types {
 

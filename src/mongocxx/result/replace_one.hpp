@@ -65,7 +65,7 @@ class MONGOCXX_API replace_one {
    private:
     result::bulk_write _result;
 
-}; // class replace_one
+};
 
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END

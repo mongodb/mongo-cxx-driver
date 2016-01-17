@@ -15,6 +15,8 @@
 // src/mongocxx/config/compiler.hpp
 #pragma push_macro("MONGOCXX_INLINE")
 #undef MONGOCXX_INLINE
+#pragma push_macro("MONGOCXX_CALL")
+#undef MONGOCXX_CALL
 
 // src/mongocxx/config/config.hpp.in
 #pragma push_macro("MONGOCXX_INLINE_NAMESPACE_BEGIN")

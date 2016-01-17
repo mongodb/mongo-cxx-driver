@@ -75,8 +75,8 @@ stdx::optional<bsoncxx::document::view> read_preference::tags() const {
     return stdx::optional<bsoncxx::document::view>{};
 }
 
-bool read_preference::operator==(const read_preference& other) const {
-    return mode() == other.mode() && tags() == other.tags();
+bool operator==(const read_preference& lhs, const read_preference& rhs) {
+    return (lhs.mode() == rhs.mode()) && (lhs.tags() == rhs.tags());
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

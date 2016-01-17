@@ -28,7 +28,7 @@ class uri::impl {
     ~impl() { libmongoc::uri_destroy(uri_t); }
     mongoc_uri_t* uri_t;
 
-}; // class impl
+};
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
