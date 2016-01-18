@@ -22,12 +22,19 @@ set(BSONCXX_VERSION_PATCH 0)
 set(BSONCXX_VERSION_EXTRA "-rc1-pre")
 set(BSONCXX_ABI_VERSION _noabi)
 
+set(BSONCXX_POLY_USE_MNMLSTC_DEFAULT ON)
+set(BSONCXX_POLY_USE_BOOST_DEFAULT OFF)
+
+# MSVC can't handle mnmlstc yet, default to boost on that platform
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  set(BSONCXX_POLY_USE_MNMLSTC_DEFAULT OFF)
+  set(BSONCXX_POLY_USE_BOOST_DEFAULT ON)
+endif()
+
+option(BSONCXX_POLY_USE_MNMLSTC "Use MNMLSTC/core for stdx polyfills" ${BSONCXX_POLY_USE_MNMLSTC_DEFAULT})
 option(BSONCXX_POLY_USE_STD_EXPERIMENTAL "Use std::experimental for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_SYSTEM_MNMLSTC "Obtain mnmlstc/core from system" OFF)
-option(BSONCXX_POLY_USE_BOOST "Use boost for stdx polyfills" OFF)
-
-# Default to using MNMLSTC
-set(BSONCXX_POLY_USE_MNMLSTC ON)
+option(BSONCXX_POLY_USE_BOOST "Use boost for stdx polyfills" ${BSONCXX_POLY_USE_BOOST_DEFAULT})
 
 # If the user explicitly selected boost or std::experimental
 # turn off mnmlstc
