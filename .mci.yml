@@ -32,6 +32,7 @@ variables:
     test_params:
         asan_test_params: &asan_test_params ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer-3.5 ASAN_OPTIONS="detect_leaks=1"
         ubsan_test_params: &ubsan_test_params UBSAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer UBSAN_OPTIONS="print_stacktrace=1"
+        valgrind_test_params: &valgrind_test_params valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes
 
 
 #######################################
@@ -116,7 +117,10 @@ tasks:
                   make
                   ${test_params} ./src/bsoncxx/test/test_bson
                   ${test_params} ./src/mongocxx/test/test_driver
-                  make run-examples
+                  # The break -1 is a hack to cause us to have a bad
+                  # exit status if any test exits with a bad exit
+                  # status.
+                  for test in $(find examples -type f -perm /u+x | sort) ; do ${test_params} $test || break -1 ; done
         - func: "stop_mongod"
 
 #######################################
@@ -163,6 +167,20 @@ buildvariants:
           cmake_flags: *osx_cmake_flags
       run_on:
           - osx-108
+      tasks:
+          - name: compile_and_test
+
+    - name: ubuntu1410-debug-valgrind
+      display_name: "Valgrind Ubuntu 14.10 Debug"
+      expansions:
+          build_type: "Debug"
+          source: *ubuntu_source
+          tar_options: *ubuntu_tar_options
+          cmake_path: *ubuntu_cmake_path
+          cmake_flags: *ubuntu_cmake_flags
+          test_params: *valgrind_test_params
+      run_on:
+          - ubuntu1410-build
       tasks:
           - name: compile_and_test
 
