@@ -26,6 +26,7 @@ set(MONGOCXX_EXAMPLES
     bulk_write.cpp
     create.cpp
     document_validation.cpp
+    exception.cpp
     index.cpp
     query.cpp
     remove.cpp
