@@ -482,13 +482,15 @@ class MONGOCXX_API collection {
     /// @param rc
     ///   The new @c read_concern
     ///
-    /// TODO add link to docs once they exist.
+    /// @see https://docs.mongodb.org/manual/reference/read-concern/
     ///
     void read_concern(class read_concern rc);
 
     ///
     /// Gets the read_concern for the collection.
-    /// TODO fix this method after https://jira.mongodb.org/browse/CXX-758 is done.
+    ///
+    /// If a read_concern has not been explicitly set for this collection object, it inherits
+    /// the read_concern from its parent database or client object.
     ///
     /// @return The current read_concern.
     ///
