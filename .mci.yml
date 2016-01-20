@@ -115,7 +115,9 @@ tasks:
                   set -e
                   PKG_CONFIG_PATH="/data/tmp/c-driver-install/lib/pkgconfig" ${cmake_path} ${cmake_flags} -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" ..
                   make format-lint
-                  make
+                  make all
+                  make install
+                  make examples
                   ${test_params} ./src/bsoncxx/test/test_bson
                   ${test_params} ./src/mongocxx/test/test_driver
                   # The break -1 is a hack to cause us to have a bad

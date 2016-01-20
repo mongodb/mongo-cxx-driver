@@ -58,7 +58,7 @@ add_executable(test_driver
 
 target_link_libraries(test_driver mongocxx_mocked)
 
-if (WIN32)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(test_driver PRIVATE /bigobj)
 endif()
 

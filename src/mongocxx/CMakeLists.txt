@@ -124,6 +124,10 @@ add_library(mongocxx_mocked STATIC
 
 target_compile_definitions(mongocxx_mocked PUBLIC MONGOCXX_STATIC MONGOCXX_TESTING)
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_compile_options(mongocxx_mocked PRIVATE /bigobj)
+endif()
+
 set_target_properties(mongocxx_mocked PROPERTIES
     OUTPUT_NAME mongocxx_mocked
     VERSION ${MONGOCXX_VERSION}
@@ -206,21 +210,6 @@ write_basic_package_version_file(
 install(
   FILES ${CMAKE_CURRENT_BINARY_DIR}/libmongocxx-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/libmongocxx-config-version.cmake
   DESTINATION lib/cmake/libmongocxx-${MONGOCXX_VERSION}
-)
-
-# Add all generated targets as dependencies here. This is a proxy
-# to allow the examples build to be sequenced after the mongocxx build
-# since you can't currently depend on an install target in CMake.
-add_custom_target(mongocxx_built
-  DEPENDS
-  mongocxx
-  mongocxx_static
-  ${CMAKE_CURRENT_BINARY_DIR}/config/export.hpp
-  ${CMAKE_CURRENT_BINARY_DIR}/config/version.hpp
-  ${CMAKE_CURRENT_BINARY_DIR}/config/config.hpp
-  ${CMAKE_CURRENT_BINARY_DIR}/config/private/config.hpp
-  ${CMAKE_CURRENT_BINARY_DIR}/libmongocxx-config.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/libmongocxx-config-version.cmake
 )
 
 add_subdirectory(test)

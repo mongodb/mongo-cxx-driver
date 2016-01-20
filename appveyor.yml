@@ -28,6 +28,7 @@ build_script:
   - cmd: cmake.exe -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=C:\usr -DBSON_ROOT_DIR=C:\usr
   - cmd: msbuild INSTALL.vcxproj
   - cmd: cd /d c:\build
-  - cmd: cmake.exe -G "Visual Studio 14 2015 Win64" -DLIBBSON_DIR=c:\usr -DLIBMONGOC_DIR=c:\usr -DBSONCXX_POLY_USE_BOOST=1 -DBOOST_ROOT=c:\Libraries\boost_1_59_0 -DCMAKE_BUILD_TYPE=Release
+  - cmd: cmake.exe -G "Visual Studio 14 2015 Win64" -DLIBBSON_DIR=c:\usr -DLIBMONGOC_DIR=c:\usr -DBSONCXX_POLY_USE_BOOST=1 -DBOOST_ROOT=c:\Libraries\boost_1_59_0 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=.\install
   - cmd: msbuild.exe ALL_BUILD.vcxproj /p:Configuration=Release
-
+  - cmd: msbuild.exe INSTALL.vcxproj /p:Configuration=Release
+  - cmd: msbuild.exe examples\examples.vcxproj /p:Configuration=Release

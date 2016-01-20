@@ -72,7 +72,7 @@ before_script:
 script:
     - make format-lint
 
-    - make
+    - make all
 
     # Run bsoncxx tests with catch
     - ./src/bsoncxx/test/test_bson
@@ -80,5 +80,11 @@ script:
     # Run mongocxx tests with catch
     - ./src/mongocxx/test/test_driver
 
-    # Run all examples
+    # Install headers and libs for the examples
+    - make install
+
+    # Make the examples
+    - make examples
+
+    # Run the examples
     - make run-examples

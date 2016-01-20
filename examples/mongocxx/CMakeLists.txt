@@ -36,8 +36,7 @@ set(MONGOCXX_EXAMPLES
 foreach(EXAMPLE_SRC ${MONGOCXX_EXAMPLES})
     get_filename_component(EXAMPLE_TARGET ${EXAMPLE_SRC} NAME_WE)
     add_executable(${EXAMPLE_TARGET} ${EXAMPLE_SRC})
-    add_dependencies(${EXAMPLE_TARGET} install_headers install_libs)
-    target_link_libraries(${EXAMPLE_TARGET} mongocxx ${mongocxx_libs})
+    target_link_libraries(${EXAMPLE_TARGET} mongocxx)
     set(MONGOCXX_EXAMPLE_EXECUTABLES ${MONGOCXX_EXAMPLE_EXECUTABLES} ${EXAMPLE_TARGET})
 endforeach(EXAMPLE_SRC)
 

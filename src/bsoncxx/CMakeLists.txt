@@ -206,19 +206,4 @@ install(
   DESTINATION lib/cmake/libbsoncxx-${BSONCXX_VERSION}
 )
 
-# Add all generated targets as dependencies here. This is a proxy
-# to allow the examples build to be sequenced after the mongocxx build
-# since you can't currently depend on an install target in CMake.
-add_custom_target(bsoncxx_built
-  DEPENDS
-  bsoncxx
-  bsoncxx_static
-  ${CMAKE_CURRENT_BINARY_DIR}/config/export.hpp
-  ${CMAKE_CURRENT_BINARY_DIR}/config/version.hpp
-  ${CMAKE_CURRENT_BINARY_DIR}/config/config.hpp
-  ${CMAKE_CURRENT_BINARY_DIR}/config/private/config.hpp
-  ${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx-config.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx-config-version.cmake
-)
-
 add_subdirectory(test)
