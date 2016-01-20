@@ -24,7 +24,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class MONGOCXX_API authentication_exception : public operation_exception {
    public:
-   	using operation_exception::operation_exception;
+    using operation_exception::operation_exception;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

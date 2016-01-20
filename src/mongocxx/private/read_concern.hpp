@@ -32,7 +32,6 @@ class read_concern::impl {
     }
 
     ::mongoc_read_concern_t* read_concern_t;
-
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

@@ -32,9 +32,8 @@ namespace array {
 /// sparingly; array::view should be used instead wherever possible.
 ///
 class BSONCXX_API value {
-
    public:
-    using deleter_type = void(*)(std::uint8_t*);
+    using deleter_type = void (*)(std::uint8_t*);
     using unique_ptr_type = std::unique_ptr<uint8_t, deleter_type>;
 
     ///

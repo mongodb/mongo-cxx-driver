@@ -35,7 +35,6 @@ namespace result {
 /// (executed as a bulk write).
 ///
 class MONGOCXX_API insert_many {
-
    public:
     using id_map = std::map<std::size_t, bsoncxx::document::element>;
 
@@ -68,7 +67,6 @@ class MONGOCXX_API insert_many {
 
     result::bulk_write _result;
     id_map _generated_ids;
-
 };
 
 }  // namespace result

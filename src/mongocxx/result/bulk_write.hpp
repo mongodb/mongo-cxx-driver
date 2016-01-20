@@ -32,7 +32,6 @@ namespace result {
 /// Class representing the result of a MongoDB bulk write operation.
 ///
 class MONGOCXX_API bulk_write {
-
    public:
     using id_map = std::map<std::size_t, bsoncxx::document::element>;
 
@@ -85,7 +84,6 @@ class MONGOCXX_API bulk_write {
     MONGOCXX_PRIVATE bsoncxx::document::view view() const;
 
     bsoncxx::document::value _response;
-
 };
 
 }  // namespace result

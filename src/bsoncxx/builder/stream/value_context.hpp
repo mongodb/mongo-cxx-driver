@@ -30,20 +30,21 @@ namespace stream {
 template <class base>
 class value_context {
    public:
-    BSONCXX_INLINE value_context(core* core) : _core(core) {}
+    BSONCXX_INLINE value_context(core* core) : _core(core) {
+    }
 
     template <class T>
     BSONCXX_INLINE
-    typename std::enable_if<!util::is_functor<T, void(single_context)>::value, base>::type operator<<(
-        T&& t) {
+        typename std::enable_if<!util::is_functor<T, void(single_context)>::value, base>::type
+        operator<<(T&& t) {
         _core->append(std::forward<T>(t));
         return unwrap();
     }
 
     template <typename T>
     BSONCXX_INLINE
-    typename std::enable_if<util::is_functor<T, void(single_context)>::value, base>::type operator<<(
-        T&& func) {
+        typename std::enable_if<util::is_functor<T, void(single_context)>::value, base>::type
+        operator<<(T&& func) {
         func(*this);
         return unwrap();
     }
@@ -62,14 +63,21 @@ class value_context {
 
 #if !defined(_MSC_VER)
     // TODO(MSVC): Causes an ICE under VS2015U1
-    static_assert(std::is_same<value_context, decltype(std::declval<value_context>() << 1 << "str")>::value,
-                  "value_context must be templatized on a key_context");
+    static_assert(
+        std::is_same<value_context, decltype(std::declval<value_context>() << 1 << "str")>::value,
+        "value_context must be templatized on a key_context");
 #endif
 
    private:
-    BSONCXX_INLINE base unwrap() { return base(_core); }
-    BSONCXX_INLINE array_context<base> wrap_array() { return array_context<base>(_core); }
-    BSONCXX_INLINE key_context<base> wrap_document() { return key_context<base>(_core); }
+    BSONCXX_INLINE base unwrap() {
+        return base(_core);
+    }
+    BSONCXX_INLINE array_context<base> wrap_array() {
+        return array_context<base>(_core);
+    }
+    BSONCXX_INLINE key_context<base> wrap_document() {
+        return key_context<base>(_core);
+    }
 
     core* _core;
 };

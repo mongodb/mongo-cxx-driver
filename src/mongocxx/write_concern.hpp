@@ -52,7 +52,6 @@ class uri;
 /// @see http://docs.mongodb.org/manual/core/write-concern/
 ///
 class MONGOCXX_API write_concern {
-
    public:
     ///
     /// A class to represent the special case values for write_concern::nodes.
@@ -231,7 +230,6 @@ class MONGOCXX_API write_concern {
     MONGOCXX_PRIVATE write_concern(std::unique_ptr<impl>&& implementation);
 
     std::unique_ptr<impl> _impl;
-
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

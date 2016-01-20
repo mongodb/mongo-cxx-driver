@@ -35,7 +35,6 @@ namespace options {
 ///
 class MONGOCXX_API find {
    public:
-
     ///
     /// Sets whether to allow partial results from a mongos if some shards are down (instead of
     /// throwing an error).

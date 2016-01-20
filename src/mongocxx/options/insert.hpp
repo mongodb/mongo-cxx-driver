@@ -29,7 +29,6 @@ namespace options {
 /// Class representing the optional arguments to a MongoDB insert operation
 ///
 class MONGOCXX_API insert {
-
    public:
     ///
     /// Sets the bypass_document_validation option.

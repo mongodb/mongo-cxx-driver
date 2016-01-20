@@ -80,24 +80,17 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
         vtor.check_dollar_keys(true);
 
         SECTION("at top level") {
-            doc << "$foo" << "bar";
+            doc << "$foo"
+                << "bar";
             auto view = doc.view();
             REQUIRE(is_disengaged(validate(view.data(), view.length(), vtor)));
         }
 
         SECTION("and in nested documents") {
             using namespace bsoncxx::builder::stream;
-            doc << "foo"
-                  << open_array
-                    << open_document
-                      << "garply"
-                        << open_array
-                          << open_document
-                            << "$bar" << "baz"
-                          << close_document
-                        << close_array
-                      << close_document
-                    << close_array;
+            doc << "foo" << open_array << open_document << "garply" << open_array << open_document
+                << "$bar"
+                << "baz" << close_document << close_array << close_document << close_array;
 
             auto view = doc.view();
             REQUIRE(is_disengaged(validate(view.data(), view.length(), vtor)));
@@ -108,25 +101,17 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
         vtor.check_dot_keys(true);
 
         SECTION("at top level") {
-            doc << "foo.noooo" << "bar";
+            doc << "foo.noooo"
+                << "bar";
             auto view = doc.view();
             REQUIRE(is_disengaged(validate(view.data(), view.length(), vtor)));
         }
 
-
         SECTION("and in nested documents") {
             using namespace bsoncxx::builder::stream;
-            doc << "foo"
-                  << open_array
-                    << open_document
-                      << "garply"
-                        << open_array
-                          << open_document
-                            << "bad.dot" << "baz"
-                          << close_document
-                        << close_array
-                      << close_document
-                    << close_array;
+            doc << "foo" << open_array << open_document << "garply" << open_array << open_document
+                << "bad.dot"
+                << "baz" << close_document << close_array << close_document << close_array;
 
             auto view = doc.view();
             REQUIRE(is_disengaged(validate(view.data(), view.length(), vtor)));
@@ -134,7 +119,10 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
     }
 
     SECTION("we can get the invalid offset") {
-        doc << "foo" << "bar" << "baz" << "garply";
+        doc << "foo"
+            << "bar"
+            << "baz"
+            << "garply";
         auto view = doc.view();
 
         // write a null byte at offset 9

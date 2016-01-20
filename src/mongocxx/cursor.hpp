@@ -33,9 +33,7 @@ class collection;
 /// @note By default, cursors timeout after 10 minutes of inactivity.
 ///
 class MONGOCXX_API cursor {
-
    public:
-
     enum class type { k_non_tailable, k_tailable, k_tailable_await };
 
     class MONGOCXX_API iterator;
@@ -74,19 +72,14 @@ class MONGOCXX_API cursor {
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
-
 };
 
 ///
 /// Class representing an input iterator of documents in a MongoDB cursor result set.
 ///
-class MONGOCXX_API cursor::iterator : public std::iterator<
-    std::input_iterator_tag,
-    bsoncxx::document::view
-> {
-
+class MONGOCXX_API cursor::iterator
+    : public std::iterator<std::input_iterator_tag, bsoncxx::document::view> {
    public:
-
     ///
     /// Dereferences the view for the document currently being pointed to.
     ///
@@ -116,7 +109,6 @@ class MONGOCXX_API cursor::iterator : public std::iterator<
 
     cursor* _cursor;
     bsoncxx::document::view _doc;
-
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

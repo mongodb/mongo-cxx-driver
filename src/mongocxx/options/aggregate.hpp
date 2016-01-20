@@ -32,9 +32,7 @@ namespace options {
 /// Class representing the optional arguments to a MongoDB aggregation operation.
 ///
 class MONGOCXX_API aggregate {
-
    public:
-
     ///
     /// Enables writing to temporary files. When set to @c true, aggregation stages can write data
     /// to the _tmp subdirectory in the dbPath directory. The server-side default is @c false.

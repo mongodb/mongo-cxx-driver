@@ -23,7 +23,6 @@ using namespace mongocxx;
 
 TEST_CASE("creation of write_concern passes universal parameters to c-driver's methods",
           "[write_concern][base][c-driver]") {
-
     SECTION("when journal is requested, mongoc_write_concern_set_journal is called with true") {
         bool journal_called = false;
         bool journal_value = false;

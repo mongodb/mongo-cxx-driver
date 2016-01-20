@@ -44,7 +44,6 @@ class uri;
 /// @TODO link to the docs when they exist.
 ///
 class MONGOCXX_API read_concern {
-
    public:
     ///
     /// A class to represent the read concern level.
@@ -132,7 +131,6 @@ class MONGOCXX_API read_concern {
     MONGOCXX_PRIVATE read_concern(std::unique_ptr<impl>&& implementation);
 
     std::unique_ptr<impl> _impl;
-
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

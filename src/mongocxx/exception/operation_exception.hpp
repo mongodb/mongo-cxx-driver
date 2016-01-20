@@ -26,7 +26,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class MONGOCXX_API operation_exception : public exception {
    public:
-   	using exception::exception;
+    using exception::exception;
 
     ///
     /// Constructs a new operation exception.
@@ -39,7 +39,7 @@ class MONGOCXX_API operation_exception : public exception {
     ///   An optional message to be returned by `what`.
     ///
     operation_exception(std::error_code ec, bsoncxx::document::value&& raw_server_error,
-                  std::string what_arg = "");
+                        std::string what_arg = "");
 
     ///
     /// The optional raw bson error document from the server.

@@ -23,7 +23,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class MONGOCXX_API logic_error : public exception {
    public:
-   	using exception::exception;
+    using exception::exception;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

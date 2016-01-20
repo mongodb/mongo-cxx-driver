@@ -38,13 +38,11 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 /// @see http://docs.mongodb.org/manual/reference/connection-string/
 ///
 class MONGOCXX_API uri {
-
    public:
-
     struct host {
-         std::string name;
-         std::uint16_t port;
-         std::int32_t family;
+        std::string name;
+        std::uint16_t port;
+        std::int32_t family;
     };
 
     static const std::string k_default_uri;

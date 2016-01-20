@@ -26,7 +26,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 /// A class to be used as the base class for all mongocxx exceptions.
 ///
 class MONGOCXX_API exception : public std::system_error {
-   using system_error::system_error;
+    using system_error::system_error;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

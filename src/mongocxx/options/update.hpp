@@ -29,9 +29,7 @@ namespace options {
 /// Class representing the optional arguments to a MongoDB update operation.
 ///
 class MONGOCXX_API update {
-
    public:
-
     ///
     /// Sets the upsert option.
     ///

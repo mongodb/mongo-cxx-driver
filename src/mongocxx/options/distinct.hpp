@@ -32,9 +32,7 @@ namespace options {
 /// Class representing the optional arguments to a MongoDB distinct command.
 ///
 class MONGOCXX_API distinct {
-
    public:
-
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
     ///

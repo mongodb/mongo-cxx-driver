@@ -53,7 +53,8 @@ class MONGOCXX_API hint {
     explicit hint(bsoncxx::string::view_or_value index);
 
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const hint& index_hint, std::string index);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const hint& index_hint, bsoncxx::document::view index);
+    friend MONGOCXX_API bool MONGOCXX_CALL
+    operator==(const hint& index_hint, bsoncxx::document::view index);
 
     ///
     /// Return a bson document representing this hint.

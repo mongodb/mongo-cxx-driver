@@ -27,9 +27,7 @@ namespace options {
 /// Class representing the optional arguments to a MongoDB bulk write
 ///
 class MONGOCXX_API bulk_write {
-
    public:
-
     ///
     /// Constructs a new bulk_write object. By default, bulk writes are considered ordered
     /// as this is the only safe choice. If you want an unordered update, you must call

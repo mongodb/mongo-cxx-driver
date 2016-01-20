@@ -40,7 +40,6 @@ namespace builder {
 ///   who wish to write their own abstractions may find this class useful.
 ///
 class BSONCXX_API core {
-
    public:
     class BSONCXX_PRIVATE impl;
 
@@ -230,8 +229,7 @@ class BSONCXX_API core {
     /// conversion to bool.
     ///
     template <typename T>
-    BSONCXX_INLINE
-    void append(T* v) {
+    BSONCXX_INLINE void append(T* v) {
         static_assert(std::is_same<typename std::remove_const<T>::type, char>::value,
                       "append is disabled for non-char pointer types");
         append(types::b_utf8{v});

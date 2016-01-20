@@ -24,7 +24,6 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class pipeline::impl {
-
    public:
     bsoncxx::builder::stream::single_context sink() {
         return _builder;
@@ -36,7 +35,6 @@ class pipeline::impl {
 
    private:
     bsoncxx::builder::stream::array _builder;
-
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

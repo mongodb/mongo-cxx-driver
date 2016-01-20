@@ -29,7 +29,6 @@ namespace result {
 
 /// Class representing the result of a MongoDB update operation.
 class MONGOCXX_API update {
-
    public:
     // This constructor is public for testing purposes only
     explicit update(result::bulk_write result);
@@ -63,7 +62,6 @@ class MONGOCXX_API update {
 
    private:
     result::bulk_write _result;
-
 };
 
 }  // namespace result

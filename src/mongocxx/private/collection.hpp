@@ -57,7 +57,6 @@ class collection::impl {
     mongoc_collection_t* collection_t;
     std::string database_name;
     const class client::impl* client_impl;
-
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

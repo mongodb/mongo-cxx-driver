@@ -19,7 +19,7 @@
 // Disable MSVC warnings that cause a lot of noise related to DLL visibility
 // for types that we don't control (like std::unique_ptr).
 #pragma warning(push)
-#pragma warning(disable: 4251 4275)
+#pragma warning(disable : 4251 4275)
 
 #define MONGOCXX_INLINE inline __forceinline MONGOCXX_PRIVATE
 

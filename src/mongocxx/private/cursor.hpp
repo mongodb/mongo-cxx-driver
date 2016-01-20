@@ -23,18 +23,15 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class cursor::impl {
-
    public:
-    impl(mongoc_cursor_t* cursor)
-        : cursor_t(cursor)
-    {}
+    impl(mongoc_cursor_t* cursor) : cursor_t(cursor) {
+    }
 
     ~impl() {
         libmongoc::cursor_destroy(cursor_t);
     }
 
     mongoc_cursor_t* cursor_t;
-
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

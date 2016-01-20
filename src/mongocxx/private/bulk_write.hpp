@@ -23,18 +23,15 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class bulk_write::impl {
-
    public:
-    impl(mongoc_bulk_operation_t* op)
-        : operation_t(op)
-    {}
+    impl(mongoc_bulk_operation_t* op) : operation_t(op) {
+    }
 
     ~impl() {
         libmongoc::bulk_operation_destroy(operation_t);
     }
 
     mongoc_bulk_operation_t* operation_t;
-
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

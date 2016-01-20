@@ -50,8 +50,7 @@ void throw_exception(::bson_error_t error) {
 
 template <typename exception_type>
 void throw_exception(bsoncxx::document::value raw_server_error, ::bson_error_t error) {
-    throw exception_type{make_error_code(error), std::move(raw_server_error),
-                         error.message};
+    throw exception_type{make_error_code(error), std::move(raw_server_error), error.message};
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

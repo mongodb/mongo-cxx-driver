@@ -29,7 +29,6 @@ namespace result {
 
 /// Class representing the result of a MongoDB replace_one operation.
 class MONGOCXX_API replace_one {
-
    public:
     // This constructor is public for testing purposes only
     explicit replace_one(result::bulk_write result);
@@ -64,7 +63,6 @@ class MONGOCXX_API replace_one {
 
    private:
     result::bulk_write _result;
-
 };
 
 }  // namespace result

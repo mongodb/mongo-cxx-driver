@@ -28,9 +28,7 @@ namespace options {
 /// Class representing the optional arguments to a MongoDB delete operation
 ///
 class MONGOCXX_API delete_options {
-
    public:
-
     ///
     /// Sets the write_concern for this operation.
     ///

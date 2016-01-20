@@ -31,9 +31,7 @@ namespace options {
 /// Class representing the optional arguments to a MongoDB driver client object.
 ///
 class MONGOCXX_API client {
-
    public:
-
     ///
     /// Sets the SSL-related options.
     ///

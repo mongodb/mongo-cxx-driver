@@ -81,7 +81,7 @@ struct is_class_method_with_signature {
                                                        typename strip_cv_from_class_function<
                                                            decltype(&T::operator())>::type>::value,
                                    yes>::type
-        sfinae(void *);
+    sfinae(void *);
 
     template <typename>
     static no sfinae(...);

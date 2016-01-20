@@ -148,8 +148,9 @@ class BSONCXX_API view::iterator : public std::iterator<std::forward_iterator_ta
     element _element;
 };
 
-class BSONCXX_API view::const_iterator : public std::iterator<std::forward_iterator_tag, element,
-                                                  std::ptrdiff_t, const element*, const element&> {
+class BSONCXX_API view::const_iterator
+    : public std::iterator<std::forward_iterator_tag, element, std::ptrdiff_t, const element*,
+                           const element&> {
    public:
     const_iterator();
     explicit const_iterator(const element& element);

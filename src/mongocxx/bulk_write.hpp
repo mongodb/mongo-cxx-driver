@@ -39,9 +39,7 @@ class collection;
 /// @see http://docs.mongodb.org/manual/core/bulk-write-operations/
 ///
 class MONGOCXX_API bulk_write {
-
    public:
-
     ///
     /// Initializes a new bulk operation to be executed against a mongocxx::collection.
     ///
@@ -92,7 +90,6 @@ class MONGOCXX_API bulk_write {
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
-
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

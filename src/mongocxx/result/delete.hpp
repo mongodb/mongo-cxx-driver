@@ -28,7 +28,6 @@ namespace result {
 /// Class representing the result of a MongoDB delete operation.
 ///
 class MONGOCXX_API delete_result {
-
    public:
     // This constructor is public for testing purposes only
     explicit delete_result(result::bulk_write result);
@@ -49,7 +48,6 @@ class MONGOCXX_API delete_result {
 
    private:
     result::bulk_write _result;
-
 };
 
 }  // namespace result
