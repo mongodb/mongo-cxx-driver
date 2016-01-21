@@ -26,6 +26,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
 /// Translate an error code and domain from libmongoc into a std::error_code.
+/// Determine whether to use the implementation_error or server_error category.
 ///
 /// @param code A libmongoc error code
 /// @param domain A libmongoc error domain
@@ -36,6 +37,7 @@ std::error_code make_error_code(int code, int domain);
 
 ///
 /// Translate a bson_error_t from libmongoc into a std::error_code.
+/// Determine whether to use the implementation_error or server_error category.
 ///
 /// @param error A libmongoc bson_error_t
 ///

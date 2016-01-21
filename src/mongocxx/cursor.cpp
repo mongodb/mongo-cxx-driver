@@ -21,8 +21,7 @@
 
 #include <mongocxx/cursor.hpp>
 
-#include <mongocxx/exception/private/error_category.hpp>
-#include <mongocxx/exception/private/mongoc_error.hpp>
+#include <mongocxx/exception/private/error_helpers.hpp>
 #include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/private/cursor.hpp>
 #include <mongocxx/private/libmongoc.hpp>

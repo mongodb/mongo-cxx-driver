@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/exception/private/mongoc_error.hpp>
+#include <mongocxx/config/prelude.hpp>
+
+#include <system_error>
+
+#include <mongocxx/exception/server_error.hpp>
 
 #include <mongocxx/exception/private/error_category.hpp>
 
@@ -20,27 +24,17 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
-/// Translate an error code and domain from libmongoc into a std::error_code.
+/// Translate a mongocxx::server_error into a std::error_code.
 ///
-/// @param code A libmongoc error code
-/// @param domain A libmongoc error domain
-///
-/// @return A std::error_code
-///
-std::error_code make_error_code(int code, int domain) {
-    return {code, mongoc_error_category(domain)};
-}
-
-///
-/// Translate a bson_error_t from libmongoc into a std::error_code.
-///
-/// @param error A libmongoc bson_error_t
+/// @param error A mongocxx::server_error
 ///
 /// @return A std::error_code
 ///
-std::error_code make_error_code(::bson_error_t error) {
-    return make_error_code(error.code, error.domain);
+std::error_code make_error_code(mongocxx::server_error error) {
+    return std::error_code(static_cast<int>(error), server_error_category());
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
+
+#include <mongocxx/config/postlude.hpp>

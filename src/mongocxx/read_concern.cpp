@@ -17,9 +17,8 @@
 #include <mongocxx/private/read_concern.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/inherent_error.hpp>
 #include <mongocxx/exception/exception.hpp>
-#include <mongocxx/exception/private/error_code.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
 namespace mongocxx {
@@ -57,7 +56,7 @@ void read_concern::acknowledge_level(read_concern::level rc_level) {
                                               MONGOC_READ_CONCERN_LEVEL_MAJORITY);
             break;
         default:
-            throw exception{make_error_code(error_code::k_unknown_read_concern)};
+            throw exception{make_error_code(inherent_error::k_unknown_read_concern)};
     }
 }
 

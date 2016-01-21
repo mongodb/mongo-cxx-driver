@@ -12,27 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#pragma once
+
 #include <mongocxx/config/prelude.hpp>
 
 #include <system_error>
 
-#include <mongocxx/exception/private/error_code.hpp>
-
-#include <mongocxx/exception/private/error_category.hpp>
-
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+enum class inherent_error : std::int32_t {
+    k_invalid_client_object = 1,
+    k_invalid_collection_object,
+    k_invalid_database_object,
+    k_invalid_parameter,
+    k_ssl_not_supported,
+    k_unknown_read_concern,
+    k_unknown_write_concern,
+};
+
 ///
-/// Translate a mongocxx::error_code into a std::error_code.
+/// Translate a mongocxx::inherent_error into a std::error_code.
 ///
-/// @param error A mongocxx::error_code
+/// @param error A mongocxx::inherent_error
 ///
 /// @return A std::error_code
 ///
-std::error_code make_error_code(mongocxx::error_code error) {
-    return std::error_code(static_cast<int>(error), mongocxx_error_category());
-}
+MONGOCXX_API std::error_code make_error_code(inherent_error error);
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

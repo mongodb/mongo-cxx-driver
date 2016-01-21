@@ -18,9 +18,12 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/bulk_write_exception.hpp>
+#include <mongocxx/exception/implementation_error.hpp>
+#include <mongocxx/exception/inherent_error.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/bulk_write_exception.hpp>
+#include <mongocxx/exception/server_error.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
 
@@ -41,6 +44,12 @@ int main(int, char**) {
         coll.name();
     } catch (mongocxx::logic_error& e) {
         std::cout << "Using an uninitialized collection throws:" << std::endl;
+
+        // We can compare the error_code to a known std::error_code.
+        if (e.code() != make_error_code(mongocxx::inherent_error::k_invalid_collection_object)) {
+            return EXIT_FAILURE;
+        }
+
         std::cout << e.what() << std::endl << std::endl;
     }
     // @end: cpp-logic-error
@@ -54,6 +63,12 @@ int main(int, char**) {
         coll.rename("coll2");
     } catch (mongocxx::operation_exception& e) {
         std::cout << "Renaming a collection that does not exist throws:" << std::endl;
+/*
+        // We can compare the error_code to a known std::error_code.
+        if (e.code() != make_error_code(mongocxx::implementation_error::MONGOC_ERROR_COLLECTION_DOES_NOT_EXIST)) {
+            return EXIT_FAILURE;
+        }
+*/
         std::cout << e.what() << std::endl;
         if (e.raw_server_error()) {
             std::cout << bsoncxx::to_json(*(e.raw_server_error())) << std::endl;
@@ -72,6 +87,12 @@ int main(int, char**) {
         coll.insert_one(doc1.view());
     } catch (mongocxx::bulk_write_exception& e) {
         std::cout << "Adding a document whose _id is already present throws:" << std::endl;
+
+        // We can compare the error_code to a known std::error_code.
+        if (e.code() != make_error_code(mongocxx::server_error::DuplicateKey)) {
+            return EXIT_FAILURE;
+        }
+
         std::cout << e.what() << std::endl;
         if (e.raw_server_error()) {
             std::cout << "Raw server error:" << std::endl;

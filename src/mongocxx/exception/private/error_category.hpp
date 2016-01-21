@@ -22,20 +22,25 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
+/// Get the error_category for exceptions originating from the server.
+///
+/// @return The server error_category
+///
+const std::error_category& server_error_category();
+
+///
 /// Get the error_category for exceptions originating from the libmongoc library.
 ///
-/// @param domain A libmongoc error domain
+/// @return The implementation error_category
 ///
-/// @return The mongoc error_category
-///
-const std::error_category& mongoc_error_category(int domain);
+const std::error_category& implementation_error_category();
 
 ///
 /// Get the error_category for inherent mongocxx exceptions.
 ///
-/// @return The mongocxx error_category
+/// @return The inherent error_category
 ///
-const std::error_category& mongocxx_error_category();
+const std::error_category& inherent_error_category();
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
