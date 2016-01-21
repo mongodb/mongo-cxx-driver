@@ -20,11 +20,14 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/json.hpp>
 #include <mongocxx/hint.hpp>
+#include <mongocxx/instance.hpp>
 
 using namespace mongocxx;
 using namespace bsoncxx;
 
 TEST_CASE("Hint", "[hint]") {
+    instance::current();
+
     SECTION("Can be constructed with index name") {
         std::string index_name = "a_1";
         hint index_hint{index_name};

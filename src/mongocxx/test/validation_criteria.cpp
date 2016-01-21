@@ -16,6 +16,7 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/element.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/validation_criteria.hpp>
 
 using namespace mongocxx;
@@ -26,6 +27,8 @@ using builder::stream::close_document;
 using builder::stream::finalize;
 
 TEST_CASE("validation_criteria", "[validation_criteria]") {
+    instance::current();
+
     validation_criteria criteria;
 
     auto doc = builder::stream::document{} << "email" << open_document << "$exists"

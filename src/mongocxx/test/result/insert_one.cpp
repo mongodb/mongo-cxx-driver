@@ -17,10 +17,14 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/types/value.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/result/insert_one.hpp>
 
 TEST_CASE("insert_one", "[insert_one][result]") {
     using namespace bsoncxx;
+
+    mongocxx::instance::current();
+
     builder::stream::document build;
     auto oid = types::b_oid{bsoncxx::oid{bsoncxx::oid::init_tag}};
     build << "_id" << oid << "x" << 1;

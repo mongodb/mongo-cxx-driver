@@ -18,12 +18,15 @@
 #include "helpers.hpp"
 
 #include <bsoncxx/builder/stream/document.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/options/find_one_and_replace.hpp>
 
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
 TEST_CASE("find_one_and_replace", "[find_one_and_replace][option]") {
+    instance::current();
+
     options::find_one_and_replace opts{};
 
     std::chrono::milliseconds ms{400};

@@ -704,10 +704,12 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
         return bsoncxx::builder::stream::document{} << "name" << *options.name()
                                                     << bsoncxx::builder::stream::finalize;
     } else {
-        return bsoncxx::builder::stream::document{}
-               << "name"
-               << std::string{libmongoc::collection_keys_to_index_string(bson_keys.bson())}
-               << bsoncxx::builder::stream::finalize;
+        const auto keys = libmongoc::collection_keys_to_index_string(bson_keys.bson());
+
+        const auto clean_keys = make_guard([&] { bson_free(keys); });
+
+        return bsoncxx::builder::stream::document{} << "name" << keys
+                                                    << bsoncxx::builder::stream::finalize;
     }
 }
 
@@ -725,6 +727,8 @@ cursor collection::distinct(bsoncxx::string::view_or_value field_name, view_or_v
 
     auto database = libmongoc::client_get_database(_get_impl().client_impl->client_t,
                                                    _get_impl().database_name.c_str());
+
+    const auto cleanup_database = make_guard([&] { libmongoc::database_destroy(database); });
 
     auto result = libmongoc::database_command(database, MONGOC_QUERY_NONE, 0, 0, 0,
                                               command_bson.bson(), NULL, NULL);

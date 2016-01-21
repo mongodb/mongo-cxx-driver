@@ -26,7 +26,7 @@ class logger;
 ///
 /// Class representing an instance of the MongoDB driver.
 ///
-/// Life cycle: An instance of the driver *MUST* be kept around.
+/// Life cycle: A unique instance of the driver *MUST* be kept around.
 ///
 class MONGOCXX_API instance {
    public:
@@ -55,6 +55,14 @@ class MONGOCXX_API instance {
     /// Destroys an instance of the driver.
     ///
     ~instance();
+
+    ///
+    /// Returns the current unique instance of the driver. If an
+    /// instance was explicitly created, that will be returned. If no
+    /// instance has yet been created, a default instance will be
+    /// constructed and returned.
+    ///
+    static instance& current();
 
    private:
     class MONGOCXX_PRIVATE impl;

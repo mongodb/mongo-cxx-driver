@@ -20,6 +20,7 @@
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/options/modify_collection.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/private/libbson.hpp>
@@ -33,16 +34,22 @@ using bsoncxx::builder::stream::finalize;
 using bsoncxx::builder::stream::open_document;
 
 TEST_CASE("A default constructed database is false-ish", "[database]") {
+    instance::current();
+
     database d;
     REQUIRE(!d);
 }
 
 TEST_CASE("A default constructed database cannot perform operations", "[database]") {
+    instance::current();
+
     database d;
     REQUIRE_THROWS_AS(d.name(), mongocxx::logic_error);
 }
 
 TEST_CASE("database copy", "[database]") {
+    instance::current();
+
     client mongodb_client{uri{}};
 
     std::string dbname{"foo"};
@@ -61,6 +68,9 @@ TEST_CASE("A database", "[database]") {
     stdx::string_view database_name{"database"};
     MOCK_CLIENT
     MOCK_DATABASE
+
+    instance::current();
+
     client mongo_client{uri{}};
 
     SECTION("is created by a client") {
@@ -105,7 +115,11 @@ TEST_CASE("A database", "[database]") {
     }
 
     SECTION("throws an exception when dropping causes an error") {
-        database_drop->interpose([&](mongoc_database_t*, bson_error_t*) { return false; });
+        database_drop->interpose([&](mongoc_database_t*, bson_error_t* error) {
+            bson_set_error(error, MONGOC_ERROR_COMMAND, MONGOC_ERROR_COMMAND_INVALID_ARG,
+                           "expected error from mock");
+            return false;
+        });
 
         database database = mongo_client["database"];
         REQUIRE_THROWS(database.drop());
@@ -253,6 +267,8 @@ TEST_CASE("A database", "[database]") {
 }
 
 TEST_CASE("Database integration tests", "[database]") {
+    instance::current();
+
     client mongo_client{uri{}};
     stdx::string_view database_name{"database"};
     database database = mongo_client[database_name];

@@ -12,6 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+include_directories(
+    ${THIRD_PARTY_SOURCE_DIR}/catch/include
+)
+
+link_directories(${LIBMONGOC_LIBRARY_DIRS} ${LIBBSON_LIBRARY_DIRS})
+
 set(mongocxx_test_sources
     CMakeLists.txt
     bulk_write.cpp
@@ -20,7 +26,6 @@ set(mongocxx_test_sources
     collection_mocked.cpp
     database.cpp
     hint.cpp
-    instance.cpp
     model/update_many.cpp
     options/aggregate.cpp
     options/create_collection.cpp
@@ -45,12 +50,6 @@ set(mongocxx_test_sources
     write_concern.cpp
 )
 
-include_directories(
-    ${THIRD_PARTY_SOURCE_DIR}/catch/include
-)
-
-link_directories(${LIBMONGOC_LIBRARY_DIRS} ${LIBBSON_LIBRARY_DIRS})
-
 add_executable(test_driver
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     ${mongocxx_test_sources}
@@ -58,8 +57,16 @@ add_executable(test_driver
 
 target_link_libraries(test_driver mongocxx_mocked)
 
+add_executable(test_instance
+  ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
+  instance.cpp
+)
+
+target_link_libraries(test_instance mongocxx_mocked)
+
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(test_driver PRIVATE /bigobj)
 endif()
 
 add_test(driver test_driver)
+add_test(instance test_instance)

@@ -120,6 +120,8 @@ tasks:
                   make examples
                   ${test_params} ./src/bsoncxx/test/test_bson
                   ${test_params} ./src/mongocxx/test/test_driver
+                  ${test_params} ./src/mongocxx/test/test_instance
+
                   # The break -1 is a hack to cause us to have a bad
                   # exit status if any test exits with a bad exit
                   # status.

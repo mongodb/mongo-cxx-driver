@@ -18,11 +18,14 @@
 #include "helpers.hpp"
 
 #include <bsoncxx/document/view.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
 
 using namespace mongocxx;
 
 TEST_CASE("find", "[find][option]") {
+    instance::current();
+
     options::find find_opts{};
 
     CHECK_OPTIONAL_ARGUMENT(find_opts, allow_partial_results, true);

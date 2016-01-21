@@ -14,10 +14,13 @@
 
 #include <mongocxx/instance.hpp>
 
+#include <mutex>
 #include <utility>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/logger.hpp>
+#include <mongocxx/exception/private/error_code.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
 #include <mongocxx/config/private/prelude.hpp>
@@ -57,6 +60,10 @@ void user_log_handler(::mongoc_log_level_t mongoc_log_level, const char *log_dom
                                         stdx::string_view{log_domain}, stdx::string_view{message});
 }
 
+std::recursive_mutex instance_mutex;
+instance *current_instance = nullptr;
+std::unique_ptr<instance> global_instance;
+
 }  // namespace
 
 class instance::impl {
@@ -85,13 +92,33 @@ class instance::impl {
 instance::instance() : instance(nullptr) {
 }
 
-instance::instance(std::unique_ptr<logger> logger)
-    : _impl(stdx::make_unique<impl>(std::move(logger))) {
+instance::instance(std::unique_ptr<logger> logger) {
+    std::lock_guard<std::recursive_mutex> lock(instance_mutex);
+    if (current_instance) {
+        throw logic_error(make_error_code(error_code::k_instance_already_exists));
+    }
+    _impl = stdx::make_unique<impl>(std::move(logger));
+    current_instance = this;
 }
 
 instance::instance(instance &&) noexcept = default;
 instance &instance::operator=(instance &&) noexcept = default;
-instance::~instance() = default;
+
+instance::~instance() {
+    std::lock_guard<std::recursive_mutex> lock(instance_mutex);
+    if (current_instance != this) std::abort();
+    _impl.reset();
+    current_instance = nullptr;
+}
+
+instance &instance::current() {
+    std::lock_guard<std::recursive_mutex> lock(instance_mutex);
+    if (!current_instance) {
+        global_instance.reset(new instance);
+        current_instance = global_instance.get();
+    }
+    return *current_instance;
+}
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

@@ -80,6 +80,9 @@ script:
     # Run mongocxx tests with catch
     - ./src/mongocxx/test/test_driver
 
+    # Run mongocxx instance tests with catch
+    - ./src/mongocxx/test/test_instance
+
     # Install headers and libs for the examples
     - make install
 

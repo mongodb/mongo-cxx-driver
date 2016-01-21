@@ -17,6 +17,7 @@
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/uri.hpp>
 
@@ -25,11 +26,15 @@ using namespace mongocxx;
 TEST_CASE("A default constructed client is false-ish", "[client]") {
     MOCK_CLIENT
 
+    instance::current();
+
     client a;
     REQUIRE(!a);
 }
 
 TEST_CASE("A default constructed client cannot perform operations", "[client]") {
+    instance::current();
+
     client a;
     REQUIRE_THROWS_AS(a.list_databases(), mongocxx::logic_error);
 }
@@ -37,12 +42,17 @@ TEST_CASE("A default constructed client cannot perform operations", "[client]") 
 TEST_CASE("A client constructed with a URI is truthy", "[client]") {
     MOCK_CLIENT
 
+    instance::current();
+
     client a{uri{}};
     REQUIRE(a);
 }
 
 TEST_CASE("A client connects to a provided mongodb uri", "[client]") {
     MOCK_CLIENT
+
+    instance::current();
+
     std::string expected_url("mongodb://mongodb.example.com:9999");
     uri mongodb_uri(expected_url);
     std::string actual_url{};
@@ -62,6 +72,9 @@ TEST_CASE("A client connects to a provided mongodb uri", "[client]") {
 
 TEST_CASE("A client cleans up its underlying mongoc client on destruction", "[client]") {
     MOCK_CLIENT
+
+    instance::current();
+
     bool destroy_called = false;
     client_destroy->interpose([&](mongoc_client_t*) { destroy_called = true; });
 
@@ -75,6 +88,8 @@ TEST_CASE("A client cleans up its underlying mongoc client on destruction", "[cl
 
 TEST_CASE("A client supports move operations", "[client]") {
     MOCK_CLIENT
+
+    instance::current();
 
     client a{uri{}};
 
@@ -93,6 +108,8 @@ TEST_CASE("A client supports move operations", "[client]") {
 
 TEST_CASE("A client has a settable Read Concern", "[collection]") {
     MOCK_CLIENT
+
+    instance::current();
 
     client mongo_client{uri{}};
 
@@ -115,6 +132,8 @@ TEST_CASE("A client has a settable Read Concern", "[collection]") {
 
 TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
     MOCK_CLIENT
+
+    instance::current();
 
     client mongo_client{uri{}};
     read_preference preference{read_preference::read_mode::k_secondary_preferred};
@@ -142,6 +161,8 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
 
 TEST_CASE("A client's write concern may be set and obtained", "[client]") {
     MOCK_CLIENT
+
+    instance::current();
 
     client mongo_client{uri{}};
     write_concern concern;
@@ -181,6 +202,9 @@ TEST_CASE("A client's write concern may be set and obtained", "[client]") {
 
 TEST_CASE("A client can create a named database object", "[client]") {
     MOCK_CLIENT
+
+    instance::current();
+
     auto database_get = libmongoc::client_get_database.create_instance();
     database_get->interpose([](mongoc_client_t*, const char*) { return nullptr; }).forever();
     auto database_destroy = libmongoc::database_destroy.create_instance();

@@ -16,6 +16,7 @@
 #include "helpers.hpp"
 
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -23,6 +24,8 @@ using namespace mongocxx;
 using namespace mongocxx::options;
 
 TEST_CASE("index", "[index][option]") {
+    instance::current();
+
     options::index idx;
     std::unique_ptr<index::wiredtiger_storage_options> storage =
         stdx::make_unique<index::wiredtiger_storage_options>();

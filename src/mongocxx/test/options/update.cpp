@@ -15,11 +15,14 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
+#include <mongocxx/instance.hpp>
 #include <mongocxx/options/update.hpp>
 
 using namespace mongocxx;
 
 TEST_CASE("update opts", "[update][option]") {
+    instance::current();
+
     options::update updt;
 
     CHECK_OPTIONAL_ARGUMENT(updt, upsert, true);

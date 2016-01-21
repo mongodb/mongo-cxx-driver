@@ -15,11 +15,14 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
+#include <mongocxx/instance.hpp>
 #include <mongocxx/options/insert.hpp>
 
 using namespace mongocxx;
 
 TEST_CASE("insert opts", "[insert][option]") {
+    instance::current();
+
     options::insert ins;
 
     CHECK_OPTIONAL_ARGUMENT(ins, bypass_document_validation, true);

@@ -21,7 +21,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
-
+#include <mongocxx/instance.hpp>
 #include <mongocxx/options/modify_collection.hpp>
 
 using namespace bsoncxx;
@@ -32,6 +32,8 @@ using builder::stream::finalize;
 using builder::stream::open_document;
 
 TEST_CASE("modify_collection", "[modify_collection]") {
+    instance::current();
+
     options::modify_collection cm;
 
     SECTION("Can be exported to a document") {

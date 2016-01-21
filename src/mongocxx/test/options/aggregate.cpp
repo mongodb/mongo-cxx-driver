@@ -17,11 +17,14 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
+#include <mongocxx/instance.hpp>
 #include <mongocxx/options/aggregate.hpp>
 
 using namespace mongocxx;
 
 TEST_CASE("aggregate", "[aggregate][option]") {
+    instance::current();
+
     options::aggregate agg;
 
     CHECK_OPTIONAL_ARGUMENT(agg, allow_disk_use, true);

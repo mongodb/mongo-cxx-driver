@@ -18,8 +18,8 @@
 #include <cstddef>
 #include <string>
 
+#include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hpp>
-
 #include <mongocxx/client.hpp>
 #include <mongocxx/options/ssl.hpp>
 #include <mongocxx/pool.hpp>
@@ -28,6 +28,8 @@ using namespace mongocxx;
 
 TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
     MOCK_POOL
+
+    instance::current();
 
     bool destroy_called = false;
     client_pool_destroy->interpose([&](::mongoc_client_pool_t*) { destroy_called = true; });
@@ -62,6 +64,8 @@ TEST_CASE(
     "underlying mongoc pool",
     "[pool]") {
     MOCK_POOL
+
+    instance::current();
 
     const std::string pem_file = "foo";
     const std::string pem_password = "bar";
@@ -105,6 +109,8 @@ TEST_CASE(
     "[pool]") {
     MOCK_POOL
 
+    instance::current();
+
     bool pop_called = false;
     client_pool_pop->interpose([&](::mongoc_client_pool_t*) {
         pop_called = true;
@@ -131,6 +137,8 @@ TEST_CASE(
     "returns a non-null pointer",
     "[pool]") {
     MOCK_POOL
+
+    instance::current();
 
 // GCC before 4.9.0 doesn't place max_align_t in the std namespace.
 #if defined(__clang__) || !defined(__GNUC__) || (__GNUC__ > 4) || \
@@ -163,6 +171,8 @@ TEST_CASE(
     "returns a null pointer",
     "[pool]") {
     MOCK_POOL
+
+    instance::current();
 
     client_pool_try_pop->interpose([](::mongoc_client_pool_t*) { return nullptr; });
 

@@ -15,11 +15,14 @@
 #include "catch.hpp"
 
 #include <mongocxx/exception/exception.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/write_concern.hpp>
 
 using namespace mongocxx;
 
 TEST_CASE("a default write_concern", "[write_concern]") {
+    instance::current();
+
     write_concern wc{};
 
     SECTION("doesn't require the server to journal") {
@@ -48,6 +51,8 @@ TEST_CASE("a default write_concern", "[write_concern]") {
 }
 
 TEST_CASE("write_concern fields may be set and retrieved", "[write_concern]") {
+    instance::current();
+
     write_concern wc{};
 
     SECTION("journal may be configured") {
@@ -98,6 +103,8 @@ TEST_CASE("write_concern fields may be set and retrieved", "[write_concern]") {
 
 TEST_CASE("confirmation from tags, a repl-member count, and majority are mutually exclusive",
           "[write_concern]") {
+    instance::current();
+
     SECTION("setting the confirmation number unsets the confirmation tag") {
         write_concern wc{};
         wc.tag("MultipleDC");

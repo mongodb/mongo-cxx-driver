@@ -16,12 +16,15 @@
 #include "helpers.hpp"
 
 #include <bsoncxx/stdx/string_view.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/stdx.hpp>
 
 using namespace mongocxx;
 
 TEST_CASE("a default read_concern", "[read_concern]") {
+    instance::current();
+
     read_concern rc{};
 
     SECTION("has level k_server_default") {
@@ -34,6 +37,8 @@ TEST_CASE("a default read_concern", "[read_concern]") {
 }
 
 TEST_CASE("read_concern fields may be set and retrieved", "[read_concern]") {
+    instance::current();
+
     read_concern rc{};
 
     REQUIRE_NOTHROW(rc.acknowledge_level(read_concern::level::k_majority));
@@ -44,6 +49,8 @@ TEST_CASE("read_concern fields may be set and retrieved", "[read_concern]") {
 }
 
 TEST_CASE("read_concern level and string affect each other", "[read_concern]") {
+    instance::current();
+
     read_concern rc{};
 
     SECTION("setting the level changes the string") {
@@ -63,6 +70,8 @@ TEST_CASE("read_concern level and string affect each other", "[read_concern]") {
 }
 
 TEST_CASE("read_concern throws when trying to set level to k_unknown", "[read_concern]") {
+    instance::current();
+
     read_concern rc{};
 
     REQUIRE_THROWS(rc.acknowledge_level(read_concern::level::k_unknown));

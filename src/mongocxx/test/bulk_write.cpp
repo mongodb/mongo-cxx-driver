@@ -17,7 +17,7 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/types.hpp>
-
+#include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/write_concern.hpp>
@@ -25,6 +25,8 @@
 using namespace mongocxx;
 
 TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
+    instance::current();
+
     auto construct = libmongoc::bulk_operation_new.create_instance();
     bool construct_called = false;
     bool ordered_value = false;
@@ -50,6 +52,8 @@ TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
 }
 
 TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_write]") {
+    instance::current();
+
     auto destruct = libmongoc::bulk_operation_destroy.create_instance();
     bool destruct_called = false;
 
@@ -104,6 +108,8 @@ class FilteredDocumentFun : public SingleDocumentFun {
 };
 
 TEST_CASE("passing write operations to append calls corresponding C function", "[bulk_write]") {
+    instance::current();
+
     bulk_write bw;
     bsoncxx::builder::stream::document filter_builder, doc_builder, update_doc_builder;
     filter_builder << "_id" << 1;

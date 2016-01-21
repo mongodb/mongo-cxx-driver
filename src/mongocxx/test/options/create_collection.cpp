@@ -20,7 +20,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
-
+#include <mongocxx/instance.hpp>
 #include <mongocxx/options/create_collection.hpp>
 
 using namespace bsoncxx;
@@ -31,6 +31,8 @@ using builder::stream::finalize;
 using builder::stream::open_document;
 
 TEST_CASE("create_collection", "[create_collection]") {
+    instance::current();
+
     options::create_collection cc;
 
     SECTION("Can be exported to a document") {

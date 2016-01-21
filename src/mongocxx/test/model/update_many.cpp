@@ -15,9 +15,12 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
+#include <mongocxx/instance.hpp>
 #include <mongocxx/model/update_many.hpp>
 
 TEST_CASE("update_many", "[update_many][model]") {
+    mongocxx::instance::current();
+
     const bsoncxx::document::view a((std::uint8_t *)"", 0);
     const bsoncxx::document::view b((std::uint8_t *)"", 0);
 

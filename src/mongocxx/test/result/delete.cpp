@@ -17,9 +17,12 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/result/delete.hpp>
 
 TEST_CASE("delete", "[delete][result]") {
+    mongocxx::instance::current();
+
     bsoncxx::builder::stream::document build;
     build << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "nRemoved"
           << bsoncxx::types::b_int32{1};

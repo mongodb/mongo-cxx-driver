@@ -21,10 +21,10 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
-
 #include <mongocxx/collection.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/insert_many_builder.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/read_concern.hpp>
@@ -33,11 +33,15 @@ using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
 TEST_CASE("A default constructed collection cannot perform operations", "[collection]") {
+    instance::current();
+
     collection c;
     REQUIRE_THROWS_AS(c.name(), mongocxx::logic_error);
 }
 
 TEST_CASE("collection copy", "[collection]") {
+    instance::current();
+
     client mongodb_client{uri{}};
     database db = mongodb_client["test"];
 
@@ -54,6 +58,8 @@ TEST_CASE("collection copy", "[collection]") {
 }
 
 TEST_CASE("collection renaming", "[collection]") {
+    instance::current();
+
     client mongodb_client{uri{}};
     database db = mongodb_client["test"];
 
@@ -70,6 +76,8 @@ TEST_CASE("collection renaming", "[collection]") {
 }
 
 TEST_CASE("CRUD functionality", "[driver::collection]") {
+    instance::current();
+
     client mongodb_client{uri{}};
     database db = mongodb_client["test"];
     collection coll = db["mongo_cxx_driver"];
@@ -610,6 +618,8 @@ TEST_CASE("read_concern is inherited from parent", "[collection]") {
 }
 
 TEST_CASE("create_index returns index name", "[collection]") {
+    instance::current();
+
     client mongodb_client{uri{}};
     database db = mongodb_client["test"];
     collection coll = db["collection"];

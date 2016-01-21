@@ -401,6 +401,8 @@ class mongocxx_error_category_impl final : public std::error_category {
                 return "invalid attempt to set an unknown read concern level";
             case error_code::k_unknown_write_concern:
                 return "invalid attempt to set an unknown write concern level";
+            case error_code::k_instance_already_exists:
+                return "cannot create more than one mongocxx::instance object";
             default:
                 return "unknown mongocxx error";
         }

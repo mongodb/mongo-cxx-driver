@@ -29,6 +29,7 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/options/update.hpp>
 #include <mongocxx/pipeline.hpp>
@@ -43,11 +44,15 @@ using namespace mongocxx;
 using namespace bsoncxx;
 
 TEST_CASE("A default constructed collection is false-ish", "[collection]") {
+    instance::current();
+
     collection c;
     REQUIRE(!c);
 }
 
 TEST_CASE("Collection", "[collection]") {
+    instance::current();
+
     // dummy_collection is the name the mocked collection_get_name returns
     const std::string collection_name("dummy_collection");
     const std::string database_name("test");
@@ -196,19 +201,29 @@ TEST_CASE("Collection", "[collection]") {
 
         const bson_t* expected_opts = nullptr;
 
-        collection_count_with_opts->interpose(
-            [&](mongoc_collection_t*, mongoc_query_flags_t flags, const bson_t* query, int64_t skip,
-                int64_t limit, const bson_t* cmd_opts, const mongoc_read_prefs_t*, bson_error_t*) {
-                collection_count_called = true;
-                REQUIRE(flags == MONGOC_QUERY_NONE);
-                REQUIRE(bson_get_data(query) == filter_doc.view().data());
-                REQUIRE(skip == expected_skip);
-                REQUIRE(limit == expected_limit);
-                if (expected_opts) {
-                    REQUIRE(bson_equal(cmd_opts, expected_opts));
-                }
-                return success ? 123 : -1;
-            });
+        collection_count_with_opts->interpose([&](mongoc_collection_t*, mongoc_query_flags_t flags,
+                                                  const bson_t* query, int64_t skip, int64_t limit,
+                                                  const bson_t* cmd_opts,
+                                                  const mongoc_read_prefs_t*, bson_error_t* error) {
+            collection_count_called = true;
+            REQUIRE(flags == MONGOC_QUERY_NONE);
+            REQUIRE(bson_get_data(query) == filter_doc.view().data());
+            REQUIRE(skip == expected_skip);
+            REQUIRE(limit == expected_limit);
+            if (expected_opts) {
+                REQUIRE(bson_equal(cmd_opts, expected_opts));
+            }
+
+            if (success) return 123;
+
+            // The caller expects the bson_error_t to have been
+            // initialized by the call to count in the event of an
+            // error.
+            bson_set_error(error, MONGOC_ERROR_COMMAND, MONGOC_ERROR_COMMAND_INVALID_ARG,
+                           "expected error from mock");
+
+            return -1;
+        });
 
         SECTION("Succeeds with defaults") {
             REQUIRE_NOTHROW(mongo_coll.count(filter_doc.view()));
@@ -267,20 +282,25 @@ TEST_CASE("Collection", "[collection]") {
                                                       << "foo"
                                                       << "bar" << builder::stream::finalize;
 
-        collection_create_index->interpose(
-            [&](mongoc_collection_t*, const bson_t*, const mongoc_index_opt_t* opt, bson_error_t*) {
-                collection_create_index_called = true;
-                if (options.unique()) {
-                    REQUIRE(opt->unique == expected_unique);
-                }
-                if (options.expire_after_seconds()) {
-                    REQUIRE(opt->expire_after_seconds == expected_expire_after_seconds);
-                }
-                if (options.name()) {
-                    REQUIRE(opt->name == expected_name);
-                }
-                return success;
-            });
+        collection_create_index->interpose([&](mongoc_collection_t*, const bson_t*,
+                                               const mongoc_index_opt_t* opt, bson_error_t* error) {
+            collection_create_index_called = true;
+            if (options.unique()) {
+                REQUIRE(opt->unique == expected_unique);
+            }
+            if (options.expire_after_seconds()) {
+                REQUIRE(opt->expire_after_seconds == expected_expire_after_seconds);
+            }
+            if (options.name()) {
+                REQUIRE(opt->name == expected_name);
+            }
+
+            if (!success)
+                bson_set_error(error, MONGOC_ERROR_COMMAND, MONGOC_ERROR_COMMAND_INVALID_ARG,
+                               "expected error from mock");
+
+            return success;
+        });
 
         SECTION("Succeeds") {
             success = true;
@@ -318,8 +338,13 @@ TEST_CASE("Collection", "[collection]") {
         auto collection_drop_called = false;
         bool success;
 
-        collection_drop->interpose([&](mongoc_collection_t*, bson_error_t*) {
+        collection_drop->interpose([&](mongoc_collection_t*, bson_error_t* error) {
             collection_drop_called = true;
+
+            if (!success)
+                bson_set_error(error, MONGOC_ERROR_COMMAND, MONGOC_ERROR_COMMAND_INVALID_ARG,
+                               "expected error from mock");
+
             return success;
         });
 

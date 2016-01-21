@@ -19,11 +19,14 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <mongocxx/options/find_one_and_update.hpp>
+#include <mongocxx/instance.hpp>
 
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
 TEST_CASE("find_one_and_update", "[find_one_and_update][option]") {
+    instance::current();
+
     options::find_one_and_update opts{};
 
     std::chrono::milliseconds ms{400};

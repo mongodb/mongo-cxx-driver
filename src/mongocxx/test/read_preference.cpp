@@ -16,12 +16,15 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/read_preference.hpp>
 
 using namespace mongocxx;
 using namespace bsoncxx;
 
 TEST_CASE("Read Preference", "[read_preference]") {
+    instance::current();
+
     read_preference rp;
     auto tags = builder::stream::document{} << "blah"
                                             << "wow" << builder::stream::finalize;
