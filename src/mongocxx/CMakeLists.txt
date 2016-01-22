@@ -15,10 +15,10 @@
 project(MONGOCXX)
 
 set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
-find_package(LibBSON 1.3.0 REQUIRED)
+find_package(LibBSON 1.3.1 REQUIRED)
 
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
-find_package(LibMongoC 1.3.0 REQUIRED)
+find_package(LibMongoC 1.3.1 REQUIRED)
 
 # Update these as needed.
 # TODO: read from file

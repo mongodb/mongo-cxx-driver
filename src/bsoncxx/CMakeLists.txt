@@ -63,7 +63,7 @@ set(BSONCXX_INLINE_NAMESPACE "v${BSONCXX_ABI_VERSION}")
 set(BSONCXX_HEADER_INSTALL_DIR "include/bsoncxx/${BSONCXX_INLINE_NAMESPACE}" CACHE INTERNAL "")
 
 set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
-find_package(LibBSON 1.3.0 REQUIRED)
+find_package(LibBSON 1.3.1 REQUIRED)
 
 add_subdirectory(third_party)
 add_subdirectory(config)
