@@ -47,7 +47,8 @@ class MONGOCXX_API read_concern {
    public:
     ///
     /// A class to represent the read concern level.
-    /// @TODO link to the docs when they exist.
+    ///
+    /// @see https://docs.mongodb.org/manual/reference/read-concern/#read-concern-levels
     ///
     enum class level {
         k_local,
