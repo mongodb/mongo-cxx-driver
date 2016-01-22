@@ -61,16 +61,13 @@ client::operator bool() const noexcept {
 }
 
 void client::read_concern(class read_concern rc) {
-    libmongoc::client_set_read_concern(_get_impl().client_t, rc._impl->read_concern_t);
+    auto client_t = _get_impl().client_t;
+    libmongoc::client_set_read_concern(client_t, rc._impl->read_concern_t);
 }
 
-stdx::optional<class read_concern> client::read_concern() const {
+class read_concern client::read_concern() const {
     auto rc = libmongoc::client_get_read_concern(_get_impl().client_t);
-    if (!libmongoc::read_concern_get_level(rc)) {
-        return stdx::nullopt;
-    }
-    return {(class read_concern)(
-        stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)))};
+    return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
 void client::read_preference(class read_preference rp) {

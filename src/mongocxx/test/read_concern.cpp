@@ -24,12 +24,12 @@ using namespace mongocxx;
 TEST_CASE("a default read_concern", "[read_concern]") {
     read_concern rc{};
 
-    SECTION("does not have a level") {
-        REQUIRE(!rc.acknowledge_level());
+    SECTION("has level k_server_default") {
+        REQUIRE(rc.acknowledge_level() == read_concern::level::k_server_default);
     }
 
-    SECTION("does not have a string") {
-        REQUIRE(!rc.acknowledge_string());
+    SECTION("has an empty string") {
+        REQUIRE(rc.acknowledge_string() == "");
     }
 }
 
@@ -37,12 +37,10 @@ TEST_CASE("read_concern fields may be set and retrieved", "[read_concern]") {
     read_concern rc{};
 
     REQUIRE_NOTHROW(rc.acknowledge_level(read_concern::level::k_majority));
-    REQUIRE(rc.acknowledge_level());
-    REQUIRE(*rc.acknowledge_level() == read_concern::level::k_majority);
+    REQUIRE(rc.acknowledge_level() == read_concern::level::k_majority);
 
     REQUIRE_NOTHROW(rc.acknowledge_string(stdx::string_view{"local"}));
-    REQUIRE(rc.acknowledge_string());
-    REQUIRE(*rc.acknowledge_string() == stdx::string_view{"local"});
+    REQUIRE(rc.acknowledge_string() == stdx::string_view{"local"});
 }
 
 TEST_CASE("read_concern level and string affect each other", "[read_concern]") {
@@ -50,17 +48,17 @@ TEST_CASE("read_concern level and string affect each other", "[read_concern]") {
 
     SECTION("setting the level changes the string") {
         rc.acknowledge_level(read_concern::level::k_local);
-        REQUIRE(*rc.acknowledge_string() == stdx::string_view{"local"});
+        REQUIRE(rc.acknowledge_string() == stdx::string_view{"local"});
     }
 
     SECTION("setting the string changes the level") {
         rc.acknowledge_string("majority");
-        REQUIRE(*rc.acknowledge_level() == read_concern::level::k_majority);
+        REQUIRE(rc.acknowledge_level() == read_concern::level::k_majority);
     }
 
     SECTION("setting the string to an unknown value changes the level to unknown") {
         rc.acknowledge_string("futureCompatible");
-        REQUIRE(*rc.acknowledge_level() == read_concern::level::k_unknown);
+        REQUIRE(rc.acknowledge_level() == read_concern::level::k_unknown);
     }
 }
 

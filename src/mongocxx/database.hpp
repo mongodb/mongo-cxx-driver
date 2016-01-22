@@ -185,7 +185,7 @@ class MONGOCXX_API database {
     ///
     /// @return the current read_concern
     ///
-    stdx::optional<class read_concern> read_concern() const;
+    class read_concern read_concern() const;
 
     ///
     /// Sets the read_preference for this database.

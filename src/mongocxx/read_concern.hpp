@@ -41,7 +41,7 @@ class uri;
 /// been written to a majority of nodes and thus cannot be rolled back. By default, MongoDB uses a
 /// readConcern of "local" which does not guarantee that the read data would not be rolled back.
 ///
-/// @TODO link to the docs when they exist.
+/// @see https://docs.mongodb.org/manual/reference/read-concern/
 ///
 class MONGOCXX_API read_concern {
    public:
@@ -52,12 +52,16 @@ class MONGOCXX_API read_concern {
     enum class level {
         k_local,
         k_majority,
+        k_server_default,
         k_unknown,
     };
 
     ///
-    /// Constructs a new read_concern with default acknowledge_level of k_empty and default
-    /// acknowledge_string of "" (empty string).
+    /// Constructs a new read_concern with default acknowledge_level of k_server_default.
+    ///
+    /// The k_server_default acknowledge level has an empty acknowledge_string. Queries that
+    /// run with this read_concern will use the server's default read_concern instead of
+    /// specifying one.
     ///
     read_concern();
 
@@ -90,22 +94,26 @@ class MONGOCXX_API read_concern {
     /// Sets the read concern level.
     ///
     /// @param rc_level
-    ///   Either k_local or k_majority.
+    ///   Either k_local, k_majority, or k_server_default.
     ///
-    /// @throws std::invalid_argument if rc_level is not k_local or k_majority.
+    /// @throws std::invalid_argument if rc_level is not k_local, k_majority, or k_server_default.
     ///
     void acknowledge_level(level rc_level);
 
     ///
-    /// Gets the current read concern level. If this was set with acknowledge_string to anything
-    /// other than "local" or "majority", this will return k_unknown.
+    /// Gets the current read concern level.
+    ///
+    /// If this was set with acknowledge_string to anything other than "local", "majority",
+    /// or an empty string, this will return k_unknown.
     ///
     /// @return The read concern level.
     ///
-    stdx::optional<level> acknowledge_level() const;
+    level acknowledge_level() const;
 
     ///
     /// Sets the read concern string.
+    ///
+    /// One of "local", "majority", or "".
     ///
     /// @param rc_string
     ///   The read concern string.
@@ -113,12 +121,14 @@ class MONGOCXX_API read_concern {
     void acknowledge_string(stdx::string_view rc_string);
 
     ///
-    /// Gets the current read concern string. If the read concern level was set with
-    /// acknowledge_level, this will return either "local" or "majority".
+    /// Gets the current read concern string.
+    ///
+    /// If the read concern level was set with acknowledge_level, this will return either "local",
+    /// "majority", or an empty string for k_server_default.
     ///
     /// @return The read concern string.
     ///
-    stdx::optional<stdx::string_view> acknowledge_string() const;
+    stdx::string_view acknowledge_string() const;
 
    private:
     friend client;

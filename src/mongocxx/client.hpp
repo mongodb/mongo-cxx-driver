@@ -96,7 +96,7 @@ class MONGOCXX_API client {
     /// @param rc
     ///   The new @c read_concern
     ///
-    /// TODO add link to docs once they exist.
+    /// @see https://docs.mongodb.org/manual/reference/read-concern/
     ///
     void read_concern(class read_concern rc);
 
@@ -105,7 +105,7 @@ class MONGOCXX_API client {
     ///
     /// @return The current @c read_concern
     ///
-    stdx::optional<class read_concern> read_concern() const;
+    class read_concern read_concern() const;
 
     ///
     /// Sets the read preference for this client.

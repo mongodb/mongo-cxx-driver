@@ -494,7 +494,7 @@ class MONGOCXX_API collection {
     ///
     /// @return The current read_concern.
     ///
-    stdx::optional<class read_concern> read_concern() const;
+    class read_concern read_concern() const;
 
     ///
     /// Sets the read_preference for this collection. Changes will not have any effect on existing

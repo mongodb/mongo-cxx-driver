@@ -757,13 +757,9 @@ void collection::read_concern(class read_concern rc) {
     libmongoc::collection_set_read_concern(_get_impl().collection_t, rc._impl->read_concern_t);
 }
 
-stdx::optional<class read_concern> collection::read_concern() const {
+class read_concern collection::read_concern() const {
     auto rc = libmongoc::collection_get_read_concern(_get_impl().collection_t);
-    if (!libmongoc::read_concern_get_level(rc)) {
-        return stdx::nullopt;
-    }
-    return {(class read_concern)(
-        stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)))};
+    return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
 void collection::read_preference(class read_preference rp) {

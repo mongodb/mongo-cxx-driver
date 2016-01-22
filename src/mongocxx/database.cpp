@@ -138,13 +138,9 @@ void database::read_concern(class read_concern rc) {
     libmongoc::database_set_read_concern(_get_impl().database_t, rc._impl->read_concern_t);
 }
 
-stdx::optional<class read_concern> database::read_concern() const {
+class read_concern database::read_concern() const {
     auto rc = libmongoc::database_get_read_concern(_get_impl().database_t);
-    if (!libmongoc::read_concern_get_level(rc)) {
-        return stdx::nullopt;
-    }
-    return {(class read_concern)(
-        stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)))};
+    return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
 void database::read_preference(class read_preference rp) {

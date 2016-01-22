@@ -57,6 +57,10 @@ void read_concern::acknowledge_level(read_concern::level rc_level) {
             libmongoc::read_concern_set_level(_impl->read_concern_t,
                                               MONGOC_READ_CONCERN_LEVEL_MAJORITY);
             break;
+        case read_concern::level::k_server_default:
+            // libmongoc uses a NULL level to mean "use the server's default read_concern."
+            libmongoc::read_concern_set_level(_impl->read_concern_t, NULL);
+            break;
         default:
             throw exception{make_error_code(error_code::k_unknown_read_concern)};
     }
@@ -66,10 +70,10 @@ void read_concern::acknowledge_string(stdx::string_view rc_string) {
     libmongoc::read_concern_set_level(_impl->read_concern_t, rc_string.data());
 }
 
-stdx::optional<read_concern::level> read_concern::acknowledge_level() const {
+read_concern::level read_concern::acknowledge_level() const {
     auto level = libmongoc::read_concern_get_level(_impl->read_concern_t);
     if (!level) {
-        return stdx::nullopt;
+        return read_concern::level::k_server_default;
     }
     if (strcmp(MONGOC_READ_CONCERN_LEVEL_LOCAL, level) == 0) {
         return read_concern::level::k_local;
@@ -80,10 +84,10 @@ stdx::optional<read_concern::level> read_concern::acknowledge_level() const {
     }
 }
 
-stdx::optional<stdx::string_view> read_concern::acknowledge_string() const {
+stdx::string_view read_concern::acknowledge_string() const {
     auto level = libmongoc::read_concern_get_level(_impl->read_concern_t);
     if (!level) {
-        return stdx::nullopt;
+        return "";
     }
     return {stdx::string_view{level}};
 }
