@@ -32,7 +32,7 @@ variables:
     test_params:
         asan_test_params: &asan_test_params ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer-3.5 ASAN_OPTIONS="detect_leaks=1"
         ubsan_test_params: &ubsan_test_params UBSAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer UBSAN_OPTIONS="print_stacktrace=1"
-        valgrind_test_params: &valgrind_test_params valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes
+        valgrind_test_params: &valgrind_test_params valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions
 
 
 #######################################
