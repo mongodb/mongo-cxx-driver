@@ -43,7 +43,7 @@ class MONGOCXX_API find_one_and_replace {
     /// @param bypass_document_validation
     ///   Whether or not to bypass document validation.
     ///
-    /// TODO add a link to the documentation when available.
+    /// @see https://docs.mongodb.org/manual/core/document-validation/#bypass-document-validation
     ///
     void bypass_document_validation(bool bypass_document_validation);
 

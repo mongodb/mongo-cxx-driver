@@ -55,10 +55,10 @@ class MONGOCXX_API modify_collection {
     ///
     /// Specify validation criteria for this collection.
     ///
-    /// TODO: link to documentation once it is published.
-    ///
     /// @param validation
     ///   Validation criteria for this collection.
+    ///
+    /// @see https://docs.mongodb.org/manual/core/document-validation/
     ///
     void validation_criteria(class validation_criteria validation);
 
