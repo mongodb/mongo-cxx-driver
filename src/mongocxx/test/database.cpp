@@ -320,4 +320,27 @@ TEST_CASE("Database integration tests", "[database]") {
         database.drop();
         REQUIRE(!database.has_collection(collection_name));
     }
+
+    SECTION("read_concern is inherited from parent", "[database]") {
+        read_concern::level majority = read_concern::level::k_majority;
+        read_concern::level local = read_concern::level::k_local;
+
+        read_concern rc{};
+        rc.acknowledge_level(majority);
+        mongo_client.read_concern(rc);
+
+        mongocxx::database rc_db = mongo_client[database_name];
+
+        SECTION("when parent is a client") {
+            REQUIRE(rc_db.read_concern().acknowledge_level() == majority);
+        }
+
+        SECTION("except when read_concern is explicitly set") {
+            read_concern set_rc{};
+            set_rc.acknowledge_level(read_concern::level::k_local);
+            rc_db.read_concern(set_rc);
+
+            REQUIRE(rc_db.read_concern().acknowledge_level() == local);
+        }
+    }
 }

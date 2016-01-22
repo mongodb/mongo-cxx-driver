@@ -27,6 +27,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/insert_many_builder.hpp>
 #include <mongocxx/pipeline.hpp>
+#include <mongocxx/read_concern.hpp>
 
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
@@ -577,6 +578,34 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         assert_contains_one("baz");
         assert_contains_one("bar");
         assert_contains_one("quux");
+    }
+}
+
+TEST_CASE("read_concern is inherited from parent", "[collection]") {
+    client mongo_client{uri{}};
+    database db = mongo_client["test"];
+
+    read_concern::level majority = read_concern::level::k_majority;
+    read_concern::level local = read_concern::level::k_local;
+
+    read_concern rc{};
+    rc.acknowledge_level(majority);
+    db.read_concern(rc);
+
+    collection coll = db["rc"];
+
+    SECTION("when parent is a database") {
+        // CDRIVER-1031 collections currently inherit read_concern from the parent client
+        // instead of the parent database object.
+        // REQUIRE(coll.read_concern().acknowledge_level() == read_concern::level::k_majority);
+    }
+
+    SECTION("except when read_concern is explicitly set") {
+        read_concern set_rc{};
+        set_rc.acknowledge_level(read_concern::level::k_local);
+        coll.read_concern(set_rc);
+
+        REQUIRE(coll.read_concern().acknowledge_level() == local);
     }
 }
 
