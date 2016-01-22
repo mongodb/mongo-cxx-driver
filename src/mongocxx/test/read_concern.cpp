@@ -29,7 +29,7 @@ TEST_CASE("a default read_concern", "[read_concern]") {
     }
 
     SECTION("has an empty string") {
-        REQUIRE(rc.acknowledge_string() == "");
+        REQUIRE(rc.acknowledge_string() == stdx::string_view{""});
     }
 }
 
