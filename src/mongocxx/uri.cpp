@@ -32,8 +32,8 @@ uri::uri(std::unique_ptr<impl>&& implementation) {
     _impl.reset(implementation.release());
 }
 
-uri::uri(stdx::string_view uri_string)
-    : _impl(stdx::make_unique<impl>(libmongoc::uri_new(uri_string.data()))) {
+uri::uri(bsoncxx::string::view_or_value uri_string)
+    : _impl(stdx::make_unique<impl>(libmongoc::uri_new(uri_string.terminated().data()))) {
 }
 
 uri::uri(uri&&) noexcept = default;

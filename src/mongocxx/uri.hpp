@@ -19,7 +19,7 @@
 #include <vector>
 
 #include <bsoncxx/document/view.hpp>
-#include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/write_concern.hpp>
@@ -54,9 +54,7 @@ class MONGOCXX_API uri {
     /// @param uri_string
     ///   String representing a MongoDB connection string uri, defaults to k_default_uri.
     ///
-    /// @todo this should really take a stringview (polyfilled)?
-    ///
-    uri(stdx::string_view uri_string = k_default_uri);
+    uri(bsoncxx::string::view_or_value uri_string = k_default_uri);
 
     ///
     /// Move constructs a uri.
