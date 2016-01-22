@@ -23,6 +23,11 @@ include(FindPackageHandleStandardArgs)
 find_package(PkgConfig QUIET)
 
 if (PKG_CONFIG_FOUND)
+  
+  if (LIBBSON_DIR) 
+      set( ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${LIBBSON_DIR}/lib/pkgconfig" )
+  endif()
+
   pkg_check_modules(LIBBSON REQUIRED libbson-1.0>=${LibBSON_FIND_VERSION} )
   # We don't reiterate the version information here because we assume that
   # pkg_check_modules has honored our request.
