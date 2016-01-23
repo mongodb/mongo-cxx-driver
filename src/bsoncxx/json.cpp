@@ -50,7 +50,7 @@ class json_visitor {
         pad();
 
         if (!stack.back()) {
-            out << "\"" << value.data() << "\""
+            out << "\"" << value.to_string().data() << "\""
                 << " : ";
         }
     }
@@ -63,7 +63,7 @@ class json_visitor {
     }
 
     void visit_value(const types::b_utf8& value) {
-        out << "\"" << value.value.data() << "\"";
+        out << "\"" << value.value.to_string().data() << "\"";
     }
 
     void visit_value(const types::b_document& value) {
@@ -133,9 +133,9 @@ class json_visitor {
     void visit_value(const types::b_regex& value) {
         out << "{" << std::endl;
         pad(1);
-        out << "\"$regex\" : \"" << value.regex.data() << "\"," << std::endl;
+        out << "\"$regex\" : \"" << value.regex.to_string().data() << "\"," << std::endl;
         pad(1);
-        out << "\"$options\" : \"" << value.options.data() << "\"" << std::endl;
+        out << "\"$options\" : \"" << value.options.to_string().data() << "\"" << std::endl;
         pad();
         out << "}";
     }
@@ -143,7 +143,7 @@ class json_visitor {
     void visit_value(const types::b_dbpointer& value) {
         out << "{" << std::endl;
         pad(1);
-        out << "\"$ref\" : \"" << value.collection.data() << "\"";
+        out << "\"$ref\" : \"" << value.collection.to_string().data() << "\"";
 
         if (value.value) {
             out << "," << std::endl;
@@ -156,15 +156,15 @@ class json_visitor {
     }
 
     void visit_value(const types::b_code& value) {
-        out << value.code.data();
+        out << value.code.to_string().data();
     }
 
     void visit_value(const types::b_symbol& value) {
-        out << value.symbol.data();
+        out << value.symbol.to_string().data();
     }
 
     void visit_value(const types::b_codewscope& value) {
-        out << value.code.data();
+        out << value.code.to_string().data();
     }
 
     void visit_value(const types::b_int32& value) {

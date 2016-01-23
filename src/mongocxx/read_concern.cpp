@@ -67,7 +67,7 @@ void read_concern::acknowledge_level(read_concern::level rc_level) {
 }
 
 void read_concern::acknowledge_string(stdx::string_view rc_string) {
-    libmongoc::read_concern_set_level(_impl->read_concern_t, rc_string.data());
+    libmongoc::read_concern_set_level(_impl->read_concern_t, rc_string.to_string().data());
 }
 
 read_concern::level read_concern::acknowledge_level() const {
