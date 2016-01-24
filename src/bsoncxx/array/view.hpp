@@ -123,13 +123,26 @@ class BSONCXX_API view {
 
     operator document::view() const;
 
+    ///
+    /// @{
+    ///
+    /// Compare two views for (in)-equality
+    ///
+    /// @relates view
+    ///
     friend BSONCXX_API bool BSONCXX_CALL operator==(view, view);
     friend BSONCXX_API bool BSONCXX_CALL operator!=(view, view);
+    ///
+    /// @}
+    ///
 
    private:
     document::view _view;
 };
 
+///
+/// @todo document this class
+///
 class BSONCXX_API view::iterator : public std::iterator<std::forward_iterator_tag, element> {
    public:
     iterator();
@@ -141,13 +154,26 @@ class BSONCXX_API view::iterator : public std::iterator<std::forward_iterator_ta
     iterator& operator++();
     iterator operator++(int);
 
+    ///
+    /// @{
+    ///
+    /// Compare two iterators for (in)-equality
+    ///
+    /// @relates view::iterator
+    ///
     friend BSONCXX_API bool BSONCXX_CALL operator==(const iterator&, const iterator&);
     friend BSONCXX_API bool BSONCXX_CALL operator!=(const iterator&, const iterator&);
+    ///
+    /// @}
+    ///
 
    private:
     element _element;
 };
 
+///
+/// @todo document this class
+///
 class BSONCXX_API view::const_iterator
     : public std::iterator<std::forward_iterator_tag, element, std::ptrdiff_t, const element*,
                            const element&> {
@@ -161,8 +187,18 @@ class BSONCXX_API view::const_iterator
     const_iterator& operator++();
     const_iterator operator++(int);
 
+    ///
+    /// @{
+    ///
+    /// Compare two const_iterators for (in)-equality
+    ///
+    /// @relates view::const_iterator
+    ///
     friend BSONCXX_API bool BSONCXX_CALL operator==(const const_iterator&, const const_iterator&);
     friend BSONCXX_API bool BSONCXX_CALL operator!=(const const_iterator&, const const_iterator&);
+    ///
+    /// @}
+    ///
 
    private:
     element _element;

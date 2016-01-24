@@ -21,6 +21,9 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
+///
+/// @todo document this enum - including the values
+///
 enum class error_code : std::int32_t {
     k_cannot_append_key_in_sub_array = 1,
     k_cannot_close_array_in_sub_document,

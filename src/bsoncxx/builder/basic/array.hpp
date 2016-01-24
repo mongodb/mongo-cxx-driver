@@ -34,6 +34,10 @@ namespace basic {
 ///
 class array : public sub_array {
    public:
+
+    ///
+    /// Default constructor
+    ///
     BSONCXX_INLINE array() : sub_array(&_core), _core(true) {
     }
 
@@ -44,6 +48,9 @@ class array : public sub_array {
         return _core.view_array();
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator bsoncxx::array::view() const {
         return view();
     }

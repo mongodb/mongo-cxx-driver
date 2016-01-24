@@ -58,6 +58,8 @@ class MONGOCXX_API validation_criteria {
     ///
     /// A class to represent the different validation action options.
     ///
+    /// @todo document enum values
+    ///
     enum class validation_action {
         k_error,
         k_warn,
@@ -78,6 +80,10 @@ class MONGOCXX_API validation_criteria {
     /// @return Validation criteria, as a document.
     ///
     bsoncxx::document::value to_document() const;
+
+    ///
+    /// @todo document this method
+    ///
     MONGOCXX_INLINE operator bsoncxx::document::value() const;
 
    private:

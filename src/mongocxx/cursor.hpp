@@ -102,8 +102,19 @@ class MONGOCXX_API cursor::iterator
 
    private:
     friend class cursor;
+
+    /// 
+    /// @{
+    ///
+    /// Compare two iterators for (in)-equality
+    ///
+    /// @relates iterator
+    ///
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const iterator&, const iterator&);
     friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const iterator&, const iterator&);
+    ///
+    /// @}
+    ///
 
     MONGOCXX_PRIVATE explicit iterator(cursor* cursor);
 

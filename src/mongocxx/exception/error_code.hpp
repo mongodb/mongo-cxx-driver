@@ -21,6 +21,9 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+///
+/// @todo document this enum and the values
+///
 enum class error_code : std::int32_t {
     k_instance_already_exists = 1,
     k_invalid_client_object,

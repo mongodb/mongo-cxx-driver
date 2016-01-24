@@ -81,6 +81,10 @@ class BSONCXX_API value {
     /// Get a view over the document owned by this value.
     ///
     BSONCXX_INLINE array::view view() const noexcept;
+
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator array::view() const noexcept;
 
     ///

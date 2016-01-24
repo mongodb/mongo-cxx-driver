@@ -21,6 +21,9 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+///
+/// @todo document this class
+///
 class MONGOCXX_API logic_error : public exception {
    public:
     using exception::exception;

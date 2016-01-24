@@ -31,6 +31,9 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
+///
+/// @todo document this class
+///
 class MONGOCXX_API write {
    public:
     write(insert_one value);

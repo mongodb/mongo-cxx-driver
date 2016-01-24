@@ -24,6 +24,9 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+///
+/// @todo document this class
+///
 class MONGOCXX_API operation_exception : public exception {
    public:
     using exception::exception;
@@ -42,12 +45,17 @@ class MONGOCXX_API operation_exception : public exception {
                         std::string what_arg = "");
 
     ///
+    /// @{
+    ///
     /// The optional raw bson error document from the server.
     ///
     /// @returns The raw server error, if it is available.
     ///
     const stdx::optional<bsoncxx::document::value>& raw_server_error() const;
     stdx::optional<bsoncxx::document::value>& raw_server_error();
+    ///
+    /// @}
+    ///
 
    private:
     stdx::optional<bsoncxx::document::value> _raw_server_error;

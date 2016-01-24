@@ -84,13 +84,26 @@ class BSONCXX_API oid {
     ///
     std::string to_string() const;
 
+    ///
+    /// @{
+    ///
+    /// Relational operators for OIDs
+    ///
+    /// @relates oid
+    ///
     friend BSONCXX_API bool BSONCXX_CALL operator<(const oid& lhs, const oid& rhs);
     friend BSONCXX_API bool BSONCXX_CALL operator>(const oid& lhs, const oid& rhs);
     friend BSONCXX_API bool BSONCXX_CALL operator<=(const oid& lhs, const oid& rhs);
     friend BSONCXX_API bool BSONCXX_CALL operator>=(const oid& lhs, const oid& rhs);
     friend BSONCXX_API bool BSONCXX_CALL operator==(const oid& lhs, const oid& rhs);
     friend BSONCXX_API bool BSONCXX_CALL operator!=(const oid& lhs, const oid& rhs);
+    ///
+    /// @}
+    ///
 
+    ///
+    /// @todo document this method
+    ///
     explicit operator bool() const;
 
     ///
@@ -100,14 +113,22 @@ class BSONCXX_API oid {
     ///
     std::time_t get_time_t() const;
 
+    ///
+    /// @todo document this method. Also, do we really want this? This is the only place we use ostreams.
+    ///
     friend BSONCXX_API std::ostream& BSONCXX_CALL operator<<(std::ostream& out, const oid& rhs);
 
+    ///
+    /// @todo document this method
+    ///
     const char* bytes() const;
 
    private:
     friend BSONCXX_PRIVATE int oid_compare(const oid& lhs, const oid& rhs);
 
     bool _is_valid;
+
+    // TODO: Should this be std::array<char, 12>?
     char _bytes[12];
 };
 

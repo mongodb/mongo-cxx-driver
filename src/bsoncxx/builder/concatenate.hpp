@@ -31,13 +31,19 @@ struct concatenate_doc {
     document::view_or_value doc;
 
     // MSVC seems to need a hint that it should always
-    // inline this destructor;
+    // inline this destructor.
     BSONCXX_INLINE ~concatenate_doc() = default;
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator document::view() const {
         return doc;
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE document::view view() const {
         return doc;
     }
@@ -51,13 +57,19 @@ struct concatenate_array {
     array::view_or_value array;
 
     // MSVC seems to need a hint that it should always
-    // inline this destructor;
+    // inline this destructor.
     BSONCXX_INLINE ~concatenate_array() = default;
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator array::view() const {
         return array;
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE array::view view() const {
         return array;
     }
@@ -71,6 +83,8 @@ struct concatenate_array {
 ///
 /// @return concatenate_doc A concatenating struct.
 ///
+/// @relatesalso concatenate_doc
+///
 BSONCXX_INLINE concatenate_doc concatenate(document::view_or_value doc) {
     return {std::move(doc)};
 }
@@ -82,6 +96,8 @@ BSONCXX_INLINE concatenate_doc concatenate(document::view_or_value doc) {
 /// @param array An array to be concatenated.
 ///
 /// @return concatenate_array A concatenating struct.
+///
+/// @relatesalso concatenate_array
 ///
 BSONCXX_INLINE concatenate_array concatenate(array::view_or_value array) {
     return {std::move(array)};

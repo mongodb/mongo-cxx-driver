@@ -33,25 +33,41 @@ namespace stream {
 template <class base = closed_context>
 class key_context {
    public:
+
+    ///
+    /// @todo document this method
+    ///
     key_context(core* core) : _core(core) {
     }
 
+    ///
+    /// @todo document this method
+    ///
     template <std::size_t n>
     BSONCXX_INLINE value_context<key_context> operator<<(const char(&v)[n]) {
         _core->key_view(stdx::string_view{v, n - 1});
         return value_context<key_context>(_core);
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE value_context<key_context> operator<<(std::string str) {
         _core->key_owned(std::move(str));
         return value_context<key_context>(_core);
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE value_context<key_context> operator<<(stdx::string_view str) {
         _core->key_view(std::move(str));
         return value_context<key_context>(_core);
     }
 
+    ///
+    /// @todo document this method
+    ///
     template <typename T>
     BSONCXX_INLINE
         typename std::enable_if<util::is_functor<T, void(key_context<>)>::value, key_context>::type&
@@ -60,6 +76,9 @@ class key_context {
         return *this;
     }
 
+    ///
+    /// @todo document this method
+    ///
     template <typename T>
     BSONCXX_INLINE typename std::enable_if<
         std::is_same<base, closed_context>::value &&
@@ -71,16 +90,25 @@ class key_context {
         return _core->extract_document();
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE key_context operator<<(concatenate_doc doc) {
         _core->concatenate(doc);
         return *this;
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE base operator<<(const close_document_type) {
         _core->close_document();
         return unwrap();
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator key_context<>() {
         return key_context<>(_core);
     }

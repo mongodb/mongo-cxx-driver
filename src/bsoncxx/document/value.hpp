@@ -81,6 +81,9 @@ class BSONCXX_API value {
     ///
     BSONCXX_INLINE document::view view() const noexcept;
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator document::view() const noexcept;
 
     ///

@@ -58,48 +58,170 @@ class element;
 
 namespace document {
 
+///
+/// @todo document this class
+///
 class BSONCXX_API element {
    public:
+
+    ///
+    /// @todo document this method
+    ///
     element();
 
+    ///
+    /// @todo document this method
+    ///
     explicit element(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset);
 
+    ///
+    /// @todo document this method
+    ///
     explicit operator bool() const;
 
+    ///
+    /// @todo document this method
+    ///
     const std::uint8_t* raw() const;
+
+    ///
+    /// @todo document this method
+    ///
     void raw(const std::uint8_t*);
 
+    ///
+    /// @todo document this method
+    ///
     std::uint32_t length() const;
+
+    ///
+    /// @todo document this method
+    ///
     void length(std::uint32_t);
 
+    ///
+    /// @todo document this method
+    ///
     std::uint32_t offset() const;
+
+    ///
+    /// @todo document this method
+    ///
     void offset(std::uint32_t);
 
+    ///
+    /// @todo document this method
+    ///
     bsoncxx::type type() const;
 
+    ///
+    /// @todo document this method
+    ///
     stdx::string_view key() const;
 
+    ///
+    /// @todo document this method
+    ///
     types::b_double get_double() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_utf8 get_utf8() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_document get_document() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_array get_array() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_binary get_binary() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_undefined get_undefined() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_oid get_oid() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_bool get_bool() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_date get_date() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_null get_null() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_regex get_regex() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_dbpointer get_dbpointer() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_code get_code() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_symbol get_symbol() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_codewscope get_codewscope() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_int32 get_int32() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_timestamp get_timestamp() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_int64 get_int64() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_minkey get_minkey() const;
+
+    ///
+    /// @todo document this method
+    ///
     types::b_maxkey get_maxkey() const;
 
+    ///
+    /// @todo document this method
+    ///
     types::value get_value() const;
 
     ///

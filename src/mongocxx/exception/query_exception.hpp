@@ -21,6 +21,9 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+///
+/// @todo document this class
+///
 class MONGOCXX_API query_exception : public operation_exception {
    public:
     using operation_exception::operation_exception;

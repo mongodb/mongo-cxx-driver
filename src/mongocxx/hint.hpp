@@ -52,9 +52,20 @@ class MONGOCXX_API hint {
     ///
     explicit hint(bsoncxx::string::view_or_value index);
 
+    ///
+    /// @{
+    ///
+    /// Compare this hint to a string for (in)-equality
+    ///
+    /// @relates hint
+    ///
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const hint& index_hint, std::string index);
+
     friend MONGOCXX_API bool MONGOCXX_CALL
     operator==(const hint& index_hint, bsoncxx::document::view index);
+    ///
+    /// @}
+    ///
 
     ///
     /// Return a bson document representing this hint.
@@ -62,6 +73,10 @@ class MONGOCXX_API hint {
     /// @return Hint, as a document.
     ///
     bsoncxx::document::value to_document() const;
+
+    ///
+    /// @todo document this method
+    ///
     MONGOCXX_INLINE operator bsoncxx::document::value() const;
 
    private:
@@ -74,18 +89,49 @@ class MONGOCXX_API hint {
 ///
 /// Return true if this hint contains an index name that matches.
 ///
+/// @relates hint
+///
 MONGOCXX_API bool MONGOCXX_CALL operator==(std::string index, const hint& index_hint);
+
+///
+/// @{
+///
+/// Convenience methods to compare for inequality against an index name.
+///
+/// Return true if this hint contains an index name that matches.
+///
+/// @relates hint
+///
 MONGOCXX_API bool MONGOCXX_CALL operator!=(const hint& index_hint, std::string index);
 MONGOCXX_API bool MONGOCXX_CALL operator!=(std::string index, const hint& index_index);
+///
+/// @}
+///
 
 ///
 /// Convenience methods to compare for equality against an index document.
 ///
 /// Return true if this hint contains an index document that matches.
 ///
+/// @relates hint
+///
 MONGOCXX_API bool MONGOCXX_CALL operator==(bsoncxx::document::view index, const hint& index_hint);
+
+///
+/// @{
+///
+/// Convenience methods to compare for equality against an index document.
+///
+/// Return true if this hint contains an index document that matches.
+///
+///
+/// @relates hint
+///
 MONGOCXX_API bool MONGOCXX_CALL operator!=(const hint& index_hint, bsoncxx::document::view index);
 MONGOCXX_API bool MONGOCXX_CALL operator!=(bsoncxx::document::view index, const hint& index_hint);
+///
+/// @}
+///
 
 MONGOCXX_INLINE hint::operator bsoncxx::document::value() const {
     return to_document();

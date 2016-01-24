@@ -19,6 +19,9 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+///
+/// @todo document this enumeration and the each value
+///
 enum class write_type {
     k_insert_one,
     k_delete_one,

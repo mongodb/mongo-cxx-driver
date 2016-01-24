@@ -56,7 +56,14 @@ enum class binary_sub_type : std::uint8_t {
 #undef BSONCXX_ENUM
 };
 
+///
+/// @todo document this function
+///
 BSONCXX_API std::string BSONCXX_CALL to_string(type rhs);
+
+///
+/// @todo document this function
+///
 BSONCXX_API std::string BSONCXX_CALL to_string(binary_sub_type rhs);
 
 namespace types {
@@ -69,11 +76,17 @@ struct BSONCXX_API b_double {
 
     double value;
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator double() {
         return value;
     }
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_double& lhs, const b_double& rhs) {
     return lhs.value == rhs.value;
 }
@@ -84,6 +97,9 @@ BSONCXX_INLINE bool operator==(const b_double& lhs, const b_double& rhs) {
 struct BSONCXX_API b_utf8 {
     static constexpr auto type_id = type::k_utf8;
 
+    ///
+    /// @todo document this method
+    ///
     template <typename T>
     BSONCXX_INLINE explicit b_utf8(T&& value)
         : value(std::forward<T>(value)) {
@@ -91,11 +107,17 @@ struct BSONCXX_API b_utf8 {
 
     stdx::string_view value;
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator stdx::string_view() {
         return value;
     }
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_utf8& lhs, const b_utf8& rhs) {
     return lhs.value == rhs.value;
 }
@@ -108,15 +130,24 @@ struct BSONCXX_API b_document {
 
     document::view value;
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator document::view() {
         return value;
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE document::view view() {
         return value;
     }
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_document& lhs, const b_document& rhs) {
     return lhs.value == rhs.value;
 }
@@ -129,11 +160,17 @@ struct BSONCXX_API b_array {
 
     array::view value;
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator array::view() {
         return value;
     }
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_array& lhs, const b_array& rhs) {
     return lhs.value == rhs.value;
 }
@@ -149,6 +186,9 @@ struct BSONCXX_API b_binary {
     const uint8_t* bytes;
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_binary& lhs, const b_binary& rhs) {
     return lhs.sub_type == rhs.sub_type && lhs.size == rhs.size &&
            (std::memcmp(lhs.bytes, rhs.bytes, lhs.size) == 0);
@@ -165,6 +205,9 @@ struct BSONCXX_API b_undefined {
     static constexpr auto type_id = type::k_undefined;
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_undefined&, const b_undefined&) {
     return true;
 }
@@ -178,6 +221,9 @@ struct BSONCXX_API b_oid {
     oid value;
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_oid& lhs, const b_oid& rhs) {
     return lhs.value == rhs.value;
 }
@@ -190,11 +236,17 @@ struct BSONCXX_API b_bool {
 
     bool value;
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator bool() {
         return value;
     }
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_bool& lhs, const b_bool& rhs) {
     return lhs.value == rhs.value;
 }
@@ -205,10 +257,16 @@ BSONCXX_INLINE bool operator==(const b_bool& lhs, const b_bool& rhs) {
 struct BSONCXX_API b_date {
     static constexpr auto type_id = type::k_date;
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE
     explicit b_date(int64_t value) : value(value) {
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE
     explicit b_date(const std::chrono::system_clock::time_point& tp)
         : value(std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch())
@@ -217,10 +275,16 @@ struct BSONCXX_API b_date {
 
     int64_t value;
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator int64_t() {
         return value;
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator std::chrono::system_clock::time_point() {
         return std::chrono::system_clock::time_point(
             std::chrono::duration_cast<std::chrono::system_clock::duration>(
@@ -228,6 +292,9 @@ struct BSONCXX_API b_date {
     }
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_date& lhs, const b_date& rhs) {
     return lhs.value == rhs.value;
 }
@@ -243,6 +310,9 @@ struct BSONCXX_API b_null {
     static constexpr auto type_id = type::k_null;
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_null&, const b_null&) {
     return true;
 }
@@ -257,6 +327,9 @@ BSONCXX_INLINE bool operator==(const b_null&, const b_null&) {
 struct BSONCXX_API b_regex {
     static constexpr auto type_id = type::k_regex;
 
+    ///
+    /// @todo document this method
+    ///
     template <typename T, typename U>
     BSONCXX_INLINE explicit b_regex(T&& regex, U&& options)
         : regex(std::forward<T>(regex)), options(std::forward<U>(options)) {
@@ -266,6 +339,9 @@ struct BSONCXX_API b_regex {
     stdx::string_view options;
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_regex& lhs, const b_regex& rhs) {
     return lhs.regex == rhs.regex && lhs.options == rhs.options;
 }
@@ -283,6 +359,9 @@ struct BSONCXX_API b_dbpointer {
     oid value;
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_dbpointer& lhs, const b_dbpointer& rhs) {
     return lhs.collection == rhs.collection && lhs.value == rhs.value;
 }
@@ -297,6 +376,9 @@ BSONCXX_INLINE bool operator==(const b_dbpointer& lhs, const b_dbpointer& rhs) {
 struct BSONCXX_API b_code {
     static constexpr auto type_id = type::k_code;
 
+    ///
+    /// @todo document this method
+    ///
     template <typename T>
     BSONCXX_INLINE explicit b_code(T&& code)
         : code(std::forward<T>(code)) {
@@ -304,11 +386,17 @@ struct BSONCXX_API b_code {
 
     stdx::string_view code;
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator stdx::string_view() {
         return code;
     }
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_code& lhs, const b_code& rhs) {
     return lhs.code == rhs.code;
 }
@@ -323,6 +411,9 @@ BSONCXX_INLINE bool operator==(const b_code& lhs, const b_code& rhs) {
 struct BSONCXX_API b_symbol {
     static constexpr auto type_id = type::k_symbol;
 
+    ///
+    /// @todo document this method
+    ///
     template <typename T>
     BSONCXX_INLINE explicit b_symbol(T&& symbol)
         : symbol(std::forward<T>(symbol)) {
@@ -330,11 +421,17 @@ struct BSONCXX_API b_symbol {
 
     stdx::string_view symbol;
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator stdx::string_view() {
         return symbol;
     }
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_symbol& lhs, const b_symbol& rhs) {
     return lhs.symbol == rhs.symbol;
 }
@@ -349,6 +446,9 @@ BSONCXX_INLINE bool operator==(const b_symbol& lhs, const b_symbol& rhs) {
 struct BSONCXX_API b_codewscope {
     static constexpr auto type_id = type::k_codewscope;
 
+    ///
+    /// @todo document this method
+    ///
     template <typename T, typename U>
     BSONCXX_INLINE explicit b_codewscope(T&& code, U&& scope)
         : code(std::forward<T>(code)), scope(std::forward<U>(scope)) {
@@ -358,6 +458,9 @@ struct BSONCXX_API b_codewscope {
     document::view scope;
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_codewscope& lhs, const b_codewscope& rhs) {
     return lhs.code == rhs.code && lhs.scope == rhs.scope;
 }
@@ -370,11 +473,17 @@ struct BSONCXX_API b_int32 {
 
     int32_t value;
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator int32_t() {
         return value;
     }
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_int32& lhs, const b_int32& rhs) {
     return lhs.value == rhs.value;
 }
@@ -393,6 +502,9 @@ struct BSONCXX_API b_timestamp {
     uint32_t timestamp;
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_timestamp& lhs, const b_timestamp& rhs) {
     return lhs.increment == rhs.increment && lhs.timestamp == rhs.timestamp;
 }
@@ -405,11 +517,17 @@ struct BSONCXX_API b_int64 {
 
     int64_t value;
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator int64_t() {
         return value;
     }
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_int64& lhs, const b_int64& rhs) {
     return lhs.value == rhs.value;
 }
@@ -425,6 +543,9 @@ struct BSONCXX_API b_minkey {
     static constexpr auto type_id = type::k_minkey;
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_minkey&, const b_minkey&) {
     return true;
 }
@@ -440,6 +561,9 @@ struct BSONCXX_API b_maxkey {
     static constexpr auto type_id = type::k_maxkey;
 };
 
+///
+/// @todo document this method
+///
 BSONCXX_INLINE bool operator==(const b_maxkey&, const b_maxkey&) {
     return true;
 }

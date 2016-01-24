@@ -90,6 +90,10 @@ class BSONCXX_API validator {
     ///   If true, UTF-8 validation is performed.
     ///
     void check_utf8(bool check_utf8);
+
+    ///
+    /// @todo : document this method
+    ///
     bool check_utf8() const;
 
     ///
@@ -101,6 +105,10 @@ class BSONCXX_API validator {
     ///   If true, UTF-8 validation (with null bytes allowed) is performed.
     ///
     void check_utf8_allow_null(bool check_utf8_allow_null);
+
+    ///
+    /// @todo : document this method
+    ///
     bool check_utf8_allow_null() const;
 
     ///
@@ -111,6 +119,10 @@ class BSONCXX_API validator {
     ///   If true, keys starting with '$' will be treated as invalid.
     ///
     void check_dollar_keys(bool check_dollar_keys);
+
+    ///
+    /// @todo : document this method
+    ///
     bool check_dollar_keys() const;
 
     ///
@@ -121,6 +133,10 @@ class BSONCXX_API validator {
     ///   If true, keys containing '.' will be treated as invalid.
     ///
     void check_dot_keys(bool check_dot_keys);
+
+    ///
+    /// @todo : document this method
+    ///
     bool check_dot_keys() const;
 
    private:

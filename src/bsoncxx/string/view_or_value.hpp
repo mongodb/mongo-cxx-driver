@@ -93,9 +93,12 @@ class BSONCXX_API view_or_value : public bsoncxx::view_or_value<stdx::string_vie
 };
 
 ///
-/// Compare string::view_or_value directly with const char *.
+/// @{
 ///
-
+/// Comparison operators for comparing string::view_or_value directly with const char *.
+///
+/// @relates view_or_value
+///
 BSONCXX_INLINE bool operator==(const view_or_value& lhs, const char* rhs) {
     return lhs.view() == stdx::string_view(rhs);
 }
@@ -111,6 +114,9 @@ BSONCXX_INLINE bool operator==(const char* lhs, const view_or_value& rhs) {
 BSONCXX_INLINE bool operator!=(const char* lhs, const view_or_value& rhs) {
     return !(rhs == lhs);
 }
+///
+/// @}
+///
 
 }  // namespace string
 BSONCXX_INLINE_NAMESPACE_END

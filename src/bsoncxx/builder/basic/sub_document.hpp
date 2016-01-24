@@ -49,14 +49,17 @@ class BSONCXX_API sub_document {
         append(std::forward<Args>(args)...);
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE
     void append() {
     }
 
    private:
-    ///
-    /// Appends a basic::kvp where the key is a non-owning string view.
-    ///
+    //
+    // Appends a basic::kvp where the key is a non-owning string view.
+    //
     template <typename K, typename V>
     BSONCXX_INLINE typename std::enable_if<
         std::is_same<typename std::decay<K>::type, stdx::string_view>::value>::type
@@ -65,9 +68,9 @@ class BSONCXX_API sub_document {
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));
     }
 
-    ///
-    /// Appends a basic::kvp where the key is an owning STL string.
-    ///
+    //
+    // Appends a basic::kvp where the key is an owning STL string.
+    //
     template <typename K, typename V>
     BSONCXX_INLINE typename std::enable_if<
         std::is_same<typename std::decay<K>::type, std::string>::value>::type
@@ -76,18 +79,18 @@ class BSONCXX_API sub_document {
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));
     }
 
-    ///
-    /// Appends a basic::kvp where the key is a string literal
-    ///
+    //
+    // Appends a basic::kvp where the key is a string literal
+    //
     template <std::size_t n, typename V>
     BSONCXX_INLINE void append_(std::tuple<const char(&)[n], V>&& t) {
         _core->key_view(stdx::string_view{std::get<0>(t), n - 1});
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));
     }
 
-    ///
-    /// Concatenates another bson document directly.
-    ///
+    //
+    // Concatenates another bson document directly.
+    //
     BSONCXX_INLINE
     void append_(concatenate_doc doc) {
         _core->concatenate(doc);

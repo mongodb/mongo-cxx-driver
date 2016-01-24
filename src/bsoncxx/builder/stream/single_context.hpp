@@ -26,30 +26,53 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 namespace stream {
 
+///
+/// @todo document this class
+///
 class single_context {
    public:
+
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE single_context(core* core) : _core(core) {
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE array_context<single_context> wrap_array() {
         return array_context<single_context>(_core);
     }
+
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE key_context<single_context> wrap_document() {
         return key_context<single_context>(_core);
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE key_context<single_context> operator<<(open_document_type) {
         _core->open_document();
 
         return wrap_document();
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE array_context<single_context> operator<<(open_array_type) {
         _core->open_array();
 
         return wrap_array();
     }
 
+    ///
+    /// @todo document this method
+    ///
     template <class T>
     BSONCXX_INLINE void operator<<(T&& t) {
         _core->append(std::forward<T>(t));
@@ -59,11 +82,17 @@ class single_context {
     core* _core;
 };
 
+///
+/// @todo document this method
+///
 template <class T>
 BSONCXX_INLINE array_context<T>::operator single_context() {
     return single_context(_core);
 }
 
+///
+/// @todo document this method
+///
 template <class T>
 BSONCXX_INLINE value_context<T>::operator single_context() {
     return single_context(_core);

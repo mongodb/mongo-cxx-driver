@@ -35,6 +35,10 @@ namespace stream {
 ///
 class array : public array_context<> {
    public:
+
+    ///
+    /// Default constructor.
+    ///
     BSONCXX_INLINE array() : array_context<>(&_core), _core(true) {
     }
 
@@ -45,6 +49,9 @@ class array : public array_context<> {
         return _core.view_array();
     }
 
+    ///
+    /// @return A view of the BSON array.
+    ///
     BSONCXX_INLINE operator bsoncxx::array::view() const {
         return view();
     }

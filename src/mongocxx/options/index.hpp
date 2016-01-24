@@ -156,6 +156,10 @@ class MONGOCXX_API index {
     ///   The storage engine options for the index.
     ///
     void storage_options(std::unique_ptr<base_storage_options> storage_options);
+
+    ///
+    /// @todo document this method
+    ///
     void storage_options(std::unique_ptr<wiredtiger_storage_options> storage_options);
 
     ///
@@ -353,11 +357,9 @@ class MONGOCXX_API index {
     stdx::optional<double> _twod_location_max;
     stdx::optional<double> _haystack_bucket_size;
 
-    ///
-    /// The current storage_options setting.
-    ///
-    /// @return The current storage_options.
-    ///
+    //
+    // Return the current storage_options setting.
+    //
     const std::unique_ptr<base_storage_options>& storage_options() const;
 };
 

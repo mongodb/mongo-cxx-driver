@@ -141,8 +141,18 @@ class BSONCXX_API value {
 
     ~value();
 
+    ///
+    /// @{
+    ///
+    /// Compare two values for equality
+    ///
+    /// @relates value
+    ///
     friend BSONCXX_API bool BSONCXX_CALL operator==(const value&, const value&);
     friend BSONCXX_API bool BSONCXX_CALL operator!=(const value&, const value&);
+    ///
+    /// @}
+    ///
 
     ///
     /// @return The type of the underlying BSON value stored in this object.

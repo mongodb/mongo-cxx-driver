@@ -46,6 +46,9 @@ class document : public sub_document {
         return _core.view_document();
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator bsoncxx::document::view() const {
         return view();
     }

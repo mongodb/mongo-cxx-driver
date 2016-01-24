@@ -38,6 +38,10 @@ void value_append(core* core, T&& t);
 ///
 class BSONCXX_API sub_array {
    public:
+
+    ///
+    /// Default constructor
+    ///
     BSONCXX_INLINE sub_array(core* core) : _core(core) {
     }
 
@@ -50,22 +54,25 @@ class BSONCXX_API sub_array {
         append(std::forward<Args>(args)...);
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE
     void append() {
     }
 
    private:
-    ///
-    /// Appends a BSON value.
-    ///
+    //
+    // Appends a BSON value.
+    //
     template <typename T>
     BSONCXX_INLINE void append_(T&& t) {
         impl::value_append(_core, std::forward<T>(t));
     }
 
-    ///
-    /// Concatenates another bson array directly.
-    ///
+    //
+    // Concatenates another bson array directly.
+    //
     BSONCXX_INLINE
     void append_(concatenate_array array) {
         _core->concatenate(array.view());

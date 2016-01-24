@@ -20,6 +20,9 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+///
+/// @todo documemt this enum
+///
 enum class return_document {
     k_before,
     k_after,

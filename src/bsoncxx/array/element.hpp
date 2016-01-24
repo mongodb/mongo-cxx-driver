@@ -26,6 +26,9 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 
 namespace array {
 
+///
+/// @todo document this class
+///
 class BSONCXX_API element : private document::element {
    public:
     element();

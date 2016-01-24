@@ -39,9 +39,16 @@ class single_context;
 template <class base = closed_context>
 class array_context {
    public:
+
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE array_context(core* core) : _core(core) {
     }
 
+    ///
+    /// @todo document this method
+    ///
     template <class T>
     BSONCXX_INLINE typename std::enable_if<
         !(util::is_functor<T, void(array_context<>)>::value ||
@@ -54,6 +61,9 @@ class array_context {
         return *this;
     }
 
+    ///
+    /// @todo document this method
+    ///
     template <typename Func>
     BSONCXX_INLINE typename std::enable_if<(util::is_functor<Func, void(array_context<>)>::value ||
                                             util::is_functor<Func, void(single_context)>::value),
@@ -63,6 +73,9 @@ class array_context {
         return *this;
     }
 
+    ///
+    /// @todo document this method
+    ///
     template <typename T>
     BSONCXX_INLINE typename std::enable_if<
         std::is_same<base, closed_context>::value &&
@@ -74,39 +87,59 @@ class array_context {
         return _core->extract_array();
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE key_context<array_context> operator<<(const open_document_type) {
         _core->open_document();
         return wrap_document();
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE array_context operator<<(concatenate_array array) {
         _core->concatenate(array.view());
         return *this;
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE array_context<array_context> operator<<(const open_array_type) {
         _core->open_array();
         return wrap_array();
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE base operator<<(const close_array_type) {
         _core->close_array();
         return unwrap();
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator array_context<>() {
         return array_context<>(_core);
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE operator single_context();
 
    private:
     BSONCXX_INLINE base unwrap() {
         return base(_core);
     }
+
     BSONCXX_INLINE array_context<array_context> wrap_array() {
         return array_context<array_context>(_core);
     }
+
     BSONCXX_INLINE key_context<array_context> wrap_document() {
         return key_context<array_context>(_core);
     }

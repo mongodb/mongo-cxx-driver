@@ -32,8 +32,8 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 ///
 /// Class representing a MongoDB connection string URI.
 ///
-/// @todo: return const char* instead or stringview
-/// @todo: harmonize with C library (options, credentials, etc...)
+/// @todo return const char* instead or stringview
+/// @todo harmonize with C library (options, credentials, etc...)
 ///
 /// @see http://docs.mongodb.org/manual/reference/connection-string/
 ///

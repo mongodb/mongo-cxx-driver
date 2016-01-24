@@ -33,6 +33,10 @@ namespace stream {
 ///
 class document : public key_context<> {
    public:
+
+    ///
+    /// Default constructor.
+    ///
     BSONCXX_INLINE document() : key_context<>(&_core), _core(false) {
     }
 
@@ -43,6 +47,9 @@ class document : public key_context<> {
         return _core.view_document();
     }
 
+    ///
+    /// @return A view of the BSON document.
+    ///
     BSONCXX_INLINE operator bsoncxx::document::view() const {
         return view();
     }

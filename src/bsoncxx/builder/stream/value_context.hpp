@@ -27,12 +27,22 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 namespace stream {
 
+///
+/// @todo document this class
+///
 template <class base>
 class value_context {
    public:
+
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE value_context(core* core) : _core(core) {
     }
 
+    ///
+    /// @todo document this method
+    ///
     template <class T>
     BSONCXX_INLINE
         typename std::enable_if<!util::is_functor<T, void(single_context)>::value, base>::type
@@ -41,6 +51,9 @@ class value_context {
         return unwrap();
     }
 
+    ///
+    /// @todo document this method
+    ///
     template <typename T>
     BSONCXX_INLINE
         typename std::enable_if<util::is_functor<T, void(single_context)>::value, base>::type
@@ -49,16 +62,25 @@ class value_context {
         return unwrap();
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE key_context<base> operator<<(const open_document_type) {
         _core->open_document();
         return wrap_document();
     }
 
+    ///
+    /// @todo document this method
+    ///
     BSONCXX_INLINE array_context<base> operator<<(const open_array_type) {
         _core->open_array();
         return wrap_array();
     }
 
+    ///
+    /// @todo document this method
+    ///
     operator single_context();
 
 #if !defined(_MSC_VER)
@@ -72,9 +94,11 @@ class value_context {
     BSONCXX_INLINE base unwrap() {
         return base(_core);
     }
+
     BSONCXX_INLINE array_context<base> wrap_array() {
         return array_context<base>(_core);
     }
+
     BSONCXX_INLINE key_context<base> wrap_document() {
         return key_context<base>(_core);
     }

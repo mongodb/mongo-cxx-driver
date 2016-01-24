@@ -58,6 +58,9 @@ class MONGOCXX_API logger {
                             stdx::string_view message) noexcept = 0;
 
    protected:
+    ///
+    /// Default constructor
+    ///
     logger();
 };
 
