@@ -12,7 +12,7 @@
         {
             "name": "Tyler Brock",
             "email": [
-                "tyler.brock@gmail"
+                "tyler.brock@gmail.com"
             ],
             "description": "Principle author of mongocxx library CRUD interfaces and unit tests."
         },
