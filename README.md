@@ -7,14 +7,10 @@ Please see our [wiki page](https://github.com/mongodb/mongo-cxx-driver/wiki/Down
   C++ legacy driver has been released. Please report any bugs or issues in the C++
   [JIRA project](http://jira.mongodb.org/browse/CXX).
 
-Use the legacy branch if:
-
- - You are using MongoDB's C++ driver for the first time.
- - You had been using 26compat (or the driver inside of the server source) and want to benefit from incremental improvements while having the same overall API.
-
-Use the 26compat branch only if:
-
- - You have existing code that used the driver from the 2.6 or earlier server source and want it to continue working without modification.
+You should only use the "legacy" branch if you had been previously using
+the "26compat" branch (or the driver inside of the server source) and want to
+benefit from incremental improvements while having the same overall
+API.
 
 > **Note:** As of MongoDB 2.6.0-rc1, it is no longer possible to build the driver from the server sources: this repository is the only approved source for C++ driver builds.
 
@@ -22,16 +18,13 @@ Use the 26compat branch only if:
 
 | Branch   | Stability   | Development       | Purpose                                                      |
 | -------- | ------------| ----------------- | -----------------------------------------------------        |
-| master   | Alpha       | In progress       | New C++11 driver                                             |
+| master   | Stable      | Stable Evolution  | New C++11 driver                                             |
 | legacy   | Stable      | Stable Evolution  | Primary stable C++ driver release                            |
 | 26compat | Stable      | Maintenance Only  | Drop in replacement for users of existing 2.6 era C++ driver |
 
 Please note that stable branches are only production quality at stable release tags. Other
 commits or pre-release tags on a stable branch represent ongoing development work towards the
 next stable release, and therefore may be unstable.
-
-> **WARNING:** The master branch contains development work on a new driver with a completely
-> new API and implementation. It is a work in progress and currently should not be used.
 
 ## Components
 
