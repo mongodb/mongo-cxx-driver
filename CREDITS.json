@@ -30,7 +30,11 @@
             "name": "Jason Carey"
         },
         {
-            "name": "Matt Cotter"
+            "name": "Matt Cotter",
+            "email": [
+                "mc@mongodb.com"
+            ],
+            "description": "MongodB 3.2 feature support."
         },
         {
             "name": "Tess Avitabile"
