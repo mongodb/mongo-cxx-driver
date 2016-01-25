@@ -17,7 +17,11 @@
             "description": "Principle author of mongocxx library CRUD interfaces and unit tests."
         },
         {
-            "name": "Samantha Ritter"
+            "name": "Samantha Ritter",
+            "email" : [
+                "samantha.ritter@mongodb.com"
+            ],
+            "description" : "View_or_value variant types, bsoncxx error handling, various features and bug fixes."
         },
         {
             "name": "Adam Midvidy"
