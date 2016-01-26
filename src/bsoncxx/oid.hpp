@@ -15,7 +15,6 @@
 #pragma once
 
 #include <array>
-#include <iosfwd>
 #include <ctime>
 #include <string>
 

@@ -28,7 +28,7 @@ namespace builder {
 namespace stream {
 
 ///
-/// A stream context which expects a key, which will later be followed by
+/// A stream context which expects a key, which can later be followed by
 /// value, then more key/value pairs.
 ///
 /// The template argument can be used to hold additional information about

@@ -15,7 +15,6 @@
 #include <bsoncxx/oid.hpp>
 
 #include <cstring>
-#include <ostream>
 
 #include <bson.h>
 

@@ -128,7 +128,7 @@ class view_or_value {
     }
 
     ///
-    /// Get a view for the type.
+    /// Get a View for the type.
     ///
     /// @return a View into this view_or_value.
     ///

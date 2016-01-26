@@ -97,6 +97,8 @@ struct BSONCXX_API b_double {
 ///
 /// free function comparator for b_double
 ///
+/// @relatesalso b_double
+///
 BSONCXX_INLINE bool operator==(const b_double& lhs, const b_double& rhs) {
     return lhs.value == rhs.value;
 }
@@ -131,6 +133,8 @@ struct BSONCXX_API b_utf8 {
 ///
 /// free function comparator for b_utf8
 ///
+/// @relatesalso b_utf8
+///
 BSONCXX_INLINE bool operator==(const b_utf8& lhs, const b_utf8& rhs) {
     return lhs.value == rhs.value;
 }
@@ -161,6 +165,8 @@ struct BSONCXX_API b_document {
 ///
 /// free function comparator for b_document
 ///
+/// @relatesalso b_document
+///
 BSONCXX_INLINE bool operator==(const b_document& lhs, const b_document& rhs) {
     return lhs.value == rhs.value;
 }
@@ -184,6 +190,8 @@ struct BSONCXX_API b_array {
 ///
 /// free function comparator for b_array
 ///
+/// @relatesalso b_array
+///
 BSONCXX_INLINE bool operator==(const b_array& lhs, const b_array& rhs) {
     return lhs.value == rhs.value;
 }
@@ -201,6 +209,8 @@ struct BSONCXX_API b_binary {
 
 ///
 /// free function comparator for b_binary
+///
+/// @relatesalso b_binary
 ///
 BSONCXX_INLINE bool operator==(const b_binary& lhs, const b_binary& rhs) {
     return lhs.sub_type == rhs.sub_type && lhs.size == rhs.size &&
@@ -221,6 +231,8 @@ struct BSONCXX_API b_undefined {
 ///
 /// free function comparator for b_undefined
 ///
+/// @relatesalso b_undefined
+///
 BSONCXX_INLINE bool operator==(const b_undefined&, const b_undefined&) {
     return true;
 }
@@ -236,6 +248,8 @@ struct BSONCXX_API b_oid {
 
 ///
 /// free function comparator for b_oid
+///
+/// @relatesalso b_oid
 ///
 BSONCXX_INLINE bool operator==(const b_oid& lhs, const b_oid& rhs) {
     return lhs.value == rhs.value;
@@ -259,6 +273,8 @@ struct BSONCXX_API b_bool {
 
 ///
 /// free function comparator for b_bool
+///
+/// @relatesalso b_bool
 ///
 BSONCXX_INLINE bool operator==(const b_bool& lhs, const b_bool& rhs) {
     return lhs.value == rhs.value;
@@ -314,6 +330,8 @@ struct BSONCXX_API b_date {
 ///
 /// free function comparator for b_date
 ///
+/// @relatesalso b_date
+///
 BSONCXX_INLINE bool operator==(const b_date& lhs, const b_date& rhs) {
     return lhs.value == rhs.value;
 }
@@ -331,6 +349,8 @@ struct BSONCXX_API b_null {
 
 ///
 /// free function comparator for b_null
+///
+/// @relatesalso b_null
 ///
 BSONCXX_INLINE bool operator==(const b_null&, const b_null&) {
     return true;
@@ -367,6 +387,8 @@ struct BSONCXX_API b_regex {
 ///
 /// free function comparator for b_regex
 ///
+/// @relatesalso b_regex
+///
 BSONCXX_INLINE bool operator==(const b_regex& lhs, const b_regex& rhs) {
     return lhs.regex == rhs.regex && lhs.options == rhs.options;
 }
@@ -387,6 +409,8 @@ struct BSONCXX_API b_dbpointer {
 ///
 /// free function comparator for b_dbpointer
 ///
+/// @relatesalso b_dbpointer
+///
 BSONCXX_INLINE bool operator==(const b_dbpointer& lhs, const b_dbpointer& rhs) {
     return lhs.collection == rhs.collection && lhs.value == rhs.value;
 }
@@ -405,7 +429,7 @@ struct BSONCXX_API b_code {
     /// Constructor for b_code.
     ///
     /// @param code
-    ///   The js code.
+    ///   The js code
     ///
     template <typename T>
     BSONCXX_INLINE explicit b_code(T&& code)
@@ -424,6 +448,8 @@ struct BSONCXX_API b_code {
 
 ///
 /// free function comparator for b_code
+///
+/// @relatesalso b_code
 ///
 BSONCXX_INLINE bool operator==(const b_code& lhs, const b_code& rhs) {
     return lhs.code == rhs.code;
@@ -463,6 +489,8 @@ struct BSONCXX_API b_symbol {
 ///
 /// free function comparator for b_symbol
 ///
+/// @relatesalso b_symbol
+///
 BSONCXX_INLINE bool operator==(const b_symbol& lhs, const b_symbol& rhs) {
     return lhs.symbol == rhs.symbol;
 }
@@ -481,7 +509,7 @@ struct BSONCXX_API b_codewscope {
     /// Constructor for b_codewscope.
     ///
     /// @param code
-    ///   The js code.
+    ///   The js code
     ///
     /// @param scope
     ///   A bson document view holding the scope environment.
@@ -497,6 +525,8 @@ struct BSONCXX_API b_codewscope {
 
 ///
 /// free function comparator for b_codewscope
+///
+/// @relatesalso b_codewscope
 ///
 BSONCXX_INLINE bool operator==(const b_codewscope& lhs, const b_codewscope& rhs) {
     return lhs.code == rhs.code && lhs.scope == rhs.scope;
@@ -521,6 +551,8 @@ struct BSONCXX_API b_int32 {
 ///
 /// free function comparator for b_int32
 ///
+/// @relatesalso b_int32
+///
 BSONCXX_INLINE bool operator==(const b_int32& lhs, const b_int32& rhs) {
     return lhs.value == rhs.value;
 }
@@ -541,6 +573,8 @@ struct BSONCXX_API b_timestamp {
 
 ///
 /// free function comparator for b_timestamp
+///
+/// @relatesalso b_timestamp
 ///
 BSONCXX_INLINE bool operator==(const b_timestamp& lhs, const b_timestamp& rhs) {
     return lhs.increment == rhs.increment && lhs.timestamp == rhs.timestamp;
@@ -565,6 +599,8 @@ struct BSONCXX_API b_int64 {
 ///
 /// free function comparator for b_int64
 ///
+/// @relatesalso b_int64
+///
 BSONCXX_INLINE bool operator==(const b_int64& lhs, const b_int64& rhs) {
     return lhs.value == rhs.value;
 }
@@ -583,6 +619,8 @@ struct BSONCXX_API b_minkey {
 ///
 /// free function comparator for b_minkey
 ///
+/// @relatesalso b_minkey
+///
 BSONCXX_INLINE bool operator==(const b_minkey&, const b_minkey&) {
     return true;
 }
@@ -600,6 +638,8 @@ struct BSONCXX_API b_maxkey {
 
 ///
 /// free function comparator for b_maxkey
+///
+/// @relatesalso b_maxkey
 ///
 BSONCXX_INLINE bool operator==(const b_maxkey&, const b_maxkey&) {
     return true;
