@@ -49,7 +49,10 @@ class array : public sub_array {
     }
 
     ///
-    /// @todo document this method
+    /// Conversion operator that provides a view of the current builder
+    /// contents.
+    ///
+    /// @return A view of the current builder contents.
     ///
     BSONCXX_INLINE operator bsoncxx::array::view() const {
         return view();

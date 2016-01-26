@@ -47,7 +47,10 @@ class document : public sub_document {
     }
 
     ///
-    /// @todo document this method
+    /// Conversion operator that provides a view of the current builder
+    /// contents.
+    ///
+    /// @return A view of the current builder contents.
     ///
     BSONCXX_INLINE operator bsoncxx::document::view() const {
         return view();

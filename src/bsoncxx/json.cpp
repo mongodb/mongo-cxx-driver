@@ -109,7 +109,7 @@ class json_visitor {
     void visit_value(const types::b_oid& value) {
         out << "{" << std::endl;
         pad(1);
-        out << "\"$oid\" : \"" << value.value << "\"" << std::endl;
+        out << "\"$oid\" : \"" << value.value.to_string() << "\"" << std::endl;
         pad();
         out << "}";
     }

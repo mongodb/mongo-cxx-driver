@@ -82,7 +82,9 @@ class BSONCXX_API value {
     BSONCXX_INLINE document::view view() const noexcept;
 
     ///
-    /// @todo document this method
+    /// Conversion operator that provides a view given a value.
+    ///
+    /// @return A view over the value.
     ///
     BSONCXX_INLINE operator document::view() const noexcept;
 

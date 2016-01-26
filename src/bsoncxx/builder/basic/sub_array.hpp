@@ -55,7 +55,7 @@ class BSONCXX_API sub_array {
     }
 
     ///
-    /// @todo document this method
+    /// Inductive base-case for the variadic append(...)
     ///
     BSONCXX_INLINE
     void append() {

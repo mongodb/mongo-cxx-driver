@@ -35,14 +35,20 @@ struct concatenate_doc {
     BSONCXX_INLINE ~concatenate_doc() = default;
 
     ///
-    /// @todo document this method
+    /// Conversion operator that provides a view of the wrapped concatenate
+    /// document.
+    ///
+    /// @return A view of the wrapped concatenate document.
     ///
     BSONCXX_INLINE operator document::view() const {
         return doc;
     }
 
     ///
-    /// @todo document this method
+    /// Accessor that provides a view of the wrapped concatenate
+    /// document.
+    ///
+    /// @return A view of the wrapped concatenate document.
     ///
     BSONCXX_INLINE document::view view() const {
         return doc;
@@ -61,14 +67,20 @@ struct concatenate_array {
     BSONCXX_INLINE ~concatenate_array() = default;
 
     ///
-    /// @todo document this method
+    /// Conversion operator that provides a view of the wrapped concatenate
+    /// array.
+    ///
+    /// @return A view of the wrapped concatenate array.
     ///
     BSONCXX_INLINE operator array::view() const {
         return array;
     }
 
     ///
-    /// @todo document this method
+    /// Accessor that provides a view of the wrapped concatenate
+    /// array.
+    ///
+    /// @return A view of the wrapped concatenate array.
     ///
     BSONCXX_INLINE array::view view() const {
         return array;

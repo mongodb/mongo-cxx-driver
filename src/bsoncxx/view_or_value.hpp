@@ -128,7 +128,9 @@ class view_or_value {
     }
 
     ///
-    /// @todo : document this method
+    /// Get a View for the type.
+    ///
+    /// @return a View into this view_or_value.
     ///
     BSONCXX_INLINE const View& view() const {
         return _view;

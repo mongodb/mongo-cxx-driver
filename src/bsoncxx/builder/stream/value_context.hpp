@@ -28,20 +28,41 @@ namespace builder {
 namespace stream {
 
 ///
-/// @todo document this class
+/// A stream context which expects a value, which can later be followed by
+/// more key/value pairs.
+///
+/// The template argument can be used to hold additional information about
+/// containing documents or arrays. I.e. value_context<> implies that this
+/// document is a sub_document in a document, while array_context would
+/// indicated a sub_document in an array. These types can be nested, such that
+/// contextual parsing (for key/value pairs) and depth (to prevent an invalid
+/// document_close) are enforced by the type system.
+///
+/// When in document context, the first parameter will be in key_context, then
+/// in value_context, then in key_context, etc.
+///
+/// I.e.
+/// builder << key_context << value_context << key_context << ...
 ///
 template <class base>
 class value_context {
    public:
 
     ///
-    /// @todo document this method
+    /// Create a value_context given a core builder
+    ///
+    /// @param core
+    ///   The core builder to orchestrate
     ///
     BSONCXX_INLINE value_context(core* core) : _core(core) {
     }
 
     ///
-    /// @todo document this method
+    /// << operator for accepting a real value and appending it to the core
+    ///   builder.
+    ///
+    /// @param t
+    ///   The value to append
     ///
     template <class T>
     BSONCXX_INLINE
@@ -52,7 +73,11 @@ class value_context {
     }
 
     ///
-    /// @todo document this method
+    /// << operator for accepting a callable of the form void(single_context)
+    ///   and invoking it to perform a value append to the core builder.
+    ///
+    /// @param func
+    ///   The callback to invoke
     ///
     template <typename T>
     BSONCXX_INLINE
@@ -63,7 +88,10 @@ class value_context {
     }
 
     ///
-    /// @todo document this method
+    /// << operator for opening a new subdocument in the core builder.
+    ///
+    /// @param _
+    ///   An open_document_type token
     ///
     BSONCXX_INLINE key_context<base> operator<<(const open_document_type) {
         _core->open_document();
@@ -71,7 +99,10 @@ class value_context {
     }
 
     ///
-    /// @todo document this method
+    /// << operator for opening a new subarray in the core builder.
+    ///
+    /// @param _
+    ///   An open_array_type token
     ///
     BSONCXX_INLINE array_context<base> operator<<(const open_array_type) {
         _core->open_array();
@@ -79,7 +110,9 @@ class value_context {
     }
 
     ///
-    /// @todo document this method
+    /// Conversion operator for single_context.
+    ///
+    /// @relatesalso single_context
     ///
     operator single_context();
 

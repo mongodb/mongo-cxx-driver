@@ -57,12 +57,22 @@ enum class binary_sub_type : std::uint8_t {
 };
 
 ///
-/// @todo document this function
+/// Returns a stringification of the given type.
+///
+/// @param rhs
+///   The type to stringify.
+///
+/// @return a std::string representation of the type.
 ///
 BSONCXX_API std::string BSONCXX_CALL to_string(type rhs);
 
 ///
-/// @todo document this function
+/// Returns a stringification of the given binary sub type.
+///
+/// @param rhs
+///   The type to stringify.
+///
+/// @return a std::string representation of the type.
 ///
 BSONCXX_API std::string BSONCXX_CALL to_string(binary_sub_type rhs);
 
@@ -77,7 +87,7 @@ struct BSONCXX_API b_double {
     double value;
 
     ///
-    /// @todo document this method
+    /// Conversion operator unwrapping a double
     ///
     BSONCXX_INLINE operator double() {
         return value;
@@ -85,7 +95,9 @@ struct BSONCXX_API b_double {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_double
+///
+/// @relatesalso b_double
 ///
 BSONCXX_INLINE bool operator==(const b_double& lhs, const b_double& rhs) {
     return lhs.value == rhs.value;
@@ -98,7 +110,10 @@ struct BSONCXX_API b_utf8 {
     static constexpr auto type_id = type::k_utf8;
 
     ///
-    /// @todo document this method
+    /// Constructor for b_utf8.
+    ///
+    /// @param value
+    ///   The value to wrap.
     ///
     template <typename T>
     BSONCXX_INLINE explicit b_utf8(T&& value)
@@ -108,7 +123,7 @@ struct BSONCXX_API b_utf8 {
     stdx::string_view value;
 
     ///
-    /// @todo document this method
+    /// Conversion operator unwrapping a string_view
     ///
     BSONCXX_INLINE operator stdx::string_view() {
         return value;
@@ -116,7 +131,9 @@ struct BSONCXX_API b_utf8 {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_utf8
+///
+/// @relatesalso b_utf8
 ///
 BSONCXX_INLINE bool operator==(const b_utf8& lhs, const b_utf8& rhs) {
     return lhs.value == rhs.value;
@@ -131,14 +148,14 @@ struct BSONCXX_API b_document {
     document::view value;
 
     ///
-    /// @todo document this method
+    /// Conversion operator unwrapping a document::view
     ///
     BSONCXX_INLINE operator document::view() {
         return value;
     }
 
     ///
-    /// @todo document this method
+    /// Returns an unwrapped document::view
     ///
     BSONCXX_INLINE document::view view() {
         return value;
@@ -146,7 +163,9 @@ struct BSONCXX_API b_document {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_document
+///
+/// @relatesalso b_document
 ///
 BSONCXX_INLINE bool operator==(const b_document& lhs, const b_document& rhs) {
     return lhs.value == rhs.value;
@@ -161,7 +180,7 @@ struct BSONCXX_API b_array {
     array::view value;
 
     ///
-    /// @todo document this method
+    /// Conversion operator unwrapping an array::view
     ///
     BSONCXX_INLINE operator array::view() {
         return value;
@@ -169,7 +188,9 @@ struct BSONCXX_API b_array {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_array
+///
+/// @relatesalso b_array
 ///
 BSONCXX_INLINE bool operator==(const b_array& lhs, const b_array& rhs) {
     return lhs.value == rhs.value;
@@ -187,7 +208,9 @@ struct BSONCXX_API b_binary {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_binary
+///
+/// @relatesalso b_binary
 ///
 BSONCXX_INLINE bool operator==(const b_binary& lhs, const b_binary& rhs) {
     return lhs.sub_type == rhs.sub_type && lhs.size == rhs.size &&
@@ -206,7 +229,9 @@ struct BSONCXX_API b_undefined {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_undefined
+///
+/// @relatesalso b_undefined
 ///
 BSONCXX_INLINE bool operator==(const b_undefined&, const b_undefined&) {
     return true;
@@ -222,7 +247,9 @@ struct BSONCXX_API b_oid {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_oid
+///
+/// @relatesalso b_oid
 ///
 BSONCXX_INLINE bool operator==(const b_oid& lhs, const b_oid& rhs) {
     return lhs.value == rhs.value;
@@ -237,7 +264,7 @@ struct BSONCXX_API b_bool {
     bool value;
 
     ///
-    /// @todo document this method
+    /// Conversion operator unwrapping a bool
     ///
     BSONCXX_INLINE operator bool() {
         return value;
@@ -245,7 +272,9 @@ struct BSONCXX_API b_bool {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_bool
+///
+/// @relatesalso b_bool
 ///
 BSONCXX_INLINE bool operator==(const b_bool& lhs, const b_bool& rhs) {
     return lhs.value == rhs.value;
@@ -258,14 +287,20 @@ struct BSONCXX_API b_date {
     static constexpr auto type_id = type::k_date;
 
     ///
-    /// @todo document this method
+    /// Constructor for b_date
+    ///
+    /// @param value
+    ///   An int64_t representing milliseconds since the epoch.
     ///
     BSONCXX_INLINE
     explicit b_date(int64_t value) : value(value) {
     }
 
     ///
-    /// @todo document this method
+    /// Constructor for b_date
+    ///
+    /// @param value
+    ///   A system_clock time_point.
     ///
     BSONCXX_INLINE
     explicit b_date(const std::chrono::system_clock::time_point& tp)
@@ -276,14 +311,14 @@ struct BSONCXX_API b_date {
     int64_t value;
 
     ///
-    /// @todo document this method
+    /// Conversion operator unwrapping a int64_t
     ///
     BSONCXX_INLINE operator int64_t() {
         return value;
     }
 
     ///
-    /// @todo document this method
+    /// Conversion operator unwrapping a time_point
     ///
     BSONCXX_INLINE operator std::chrono::system_clock::time_point() {
         return std::chrono::system_clock::time_point(
@@ -293,7 +328,9 @@ struct BSONCXX_API b_date {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_date
+///
+/// @relatesalso b_date
 ///
 BSONCXX_INLINE bool operator==(const b_date& lhs, const b_date& rhs) {
     return lhs.value == rhs.value;
@@ -311,7 +348,9 @@ struct BSONCXX_API b_null {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_null
+///
+/// @relatesalso b_null
 ///
 BSONCXX_INLINE bool operator==(const b_null&, const b_null&) {
     return true;
@@ -328,7 +367,13 @@ struct BSONCXX_API b_regex {
     static constexpr auto type_id = type::k_regex;
 
     ///
-    /// @todo document this method
+    /// Constructor for b_regex
+    ///
+    /// @param regex
+    ///   The regex pattern
+    ///
+    /// @param options
+    ///   The regex options
     ///
     template <typename T, typename U>
     BSONCXX_INLINE explicit b_regex(T&& regex, U&& options)
@@ -340,7 +385,9 @@ struct BSONCXX_API b_regex {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_regex
+///
+/// @relatesalso b_regex
 ///
 BSONCXX_INLINE bool operator==(const b_regex& lhs, const b_regex& rhs) {
     return lhs.regex == rhs.regex && lhs.options == rhs.options;
@@ -360,7 +407,9 @@ struct BSONCXX_API b_dbpointer {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_dbpointer
+///
+/// @relatesalso b_dbpointer
 ///
 BSONCXX_INLINE bool operator==(const b_dbpointer& lhs, const b_dbpointer& rhs) {
     return lhs.collection == rhs.collection && lhs.value == rhs.value;
@@ -377,7 +426,10 @@ struct BSONCXX_API b_code {
     static constexpr auto type_id = type::k_code;
 
     ///
-    /// @todo document this method
+    /// Constructor for b_code.
+    ///
+    /// @param code
+    ///   The js code
     ///
     template <typename T>
     BSONCXX_INLINE explicit b_code(T&& code)
@@ -387,7 +439,7 @@ struct BSONCXX_API b_code {
     stdx::string_view code;
 
     ///
-    /// @todo document this method
+    /// Conversion operator unwrapping a string_view
     ///
     BSONCXX_INLINE operator stdx::string_view() {
         return code;
@@ -395,7 +447,9 @@ struct BSONCXX_API b_code {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_code
+///
+/// @relatesalso b_code
 ///
 BSONCXX_INLINE bool operator==(const b_code& lhs, const b_code& rhs) {
     return lhs.code == rhs.code;
@@ -412,7 +466,10 @@ struct BSONCXX_API b_symbol {
     static constexpr auto type_id = type::k_symbol;
 
     ///
-    /// @todo document this method
+    /// Constructor for b_symbol.
+    ///
+    /// @param symbol
+    ///   The symbol.
     ///
     template <typename T>
     BSONCXX_INLINE explicit b_symbol(T&& symbol)
@@ -422,7 +479,7 @@ struct BSONCXX_API b_symbol {
     stdx::string_view symbol;
 
     ///
-    /// @todo document this method
+    /// Conversion operator unwrapping a string_view
     ///
     BSONCXX_INLINE operator stdx::string_view() {
         return symbol;
@@ -430,7 +487,9 @@ struct BSONCXX_API b_symbol {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_symbol
+///
+/// @relatesalso b_symbol
 ///
 BSONCXX_INLINE bool operator==(const b_symbol& lhs, const b_symbol& rhs) {
     return lhs.symbol == rhs.symbol;
@@ -447,7 +506,13 @@ struct BSONCXX_API b_codewscope {
     static constexpr auto type_id = type::k_codewscope;
 
     ///
-    /// @todo document this method
+    /// Constructor for b_codewscope.
+    ///
+    /// @param code
+    ///   The js code
+    ///
+    /// @param scope
+    ///   A bson document view holding the scope environment.
     ///
     template <typename T, typename U>
     BSONCXX_INLINE explicit b_codewscope(T&& code, U&& scope)
@@ -459,7 +524,9 @@ struct BSONCXX_API b_codewscope {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_codewscope
+///
+/// @relatesalso b_codewscope
 ///
 BSONCXX_INLINE bool operator==(const b_codewscope& lhs, const b_codewscope& rhs) {
     return lhs.code == rhs.code && lhs.scope == rhs.scope;
@@ -474,7 +541,7 @@ struct BSONCXX_API b_int32 {
     int32_t value;
 
     ///
-    /// @todo document this method
+    /// Conversion operator unwrapping a int32_t
     ///
     BSONCXX_INLINE operator int32_t() {
         return value;
@@ -482,7 +549,9 @@ struct BSONCXX_API b_int32 {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_int32
+///
+/// @relatesalso b_int32
 ///
 BSONCXX_INLINE bool operator==(const b_int32& lhs, const b_int32& rhs) {
     return lhs.value == rhs.value;
@@ -503,7 +572,9 @@ struct BSONCXX_API b_timestamp {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_timestamp
+///
+/// @relatesalso b_timestamp
 ///
 BSONCXX_INLINE bool operator==(const b_timestamp& lhs, const b_timestamp& rhs) {
     return lhs.increment == rhs.increment && lhs.timestamp == rhs.timestamp;
@@ -518,7 +589,7 @@ struct BSONCXX_API b_int64 {
     int64_t value;
 
     ///
-    /// @todo document this method
+    /// Conversion operator unwrapping a int64_t
     ///
     BSONCXX_INLINE operator int64_t() {
         return value;
@@ -526,7 +597,9 @@ struct BSONCXX_API b_int64 {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_int64
+///
+/// @relatesalso b_int64
 ///
 BSONCXX_INLINE bool operator==(const b_int64& lhs, const b_int64& rhs) {
     return lhs.value == rhs.value;
@@ -544,7 +617,9 @@ struct BSONCXX_API b_minkey {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_minkey
+///
+/// @relatesalso b_minkey
 ///
 BSONCXX_INLINE bool operator==(const b_minkey&, const b_minkey&) {
     return true;
@@ -562,7 +637,9 @@ struct BSONCXX_API b_maxkey {
 };
 
 ///
-/// @todo document this method
+/// free function comparator for b_maxkey
+///
+/// @relatesalso b_maxkey
 ///
 BSONCXX_INLINE bool operator==(const b_maxkey&, const b_maxkey&) {
     return true;
