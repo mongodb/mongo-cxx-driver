@@ -40,7 +40,11 @@
             "name": "Tess Avitabile"
         },
         {
-            "name": "Mark Benvenuto"
+            "name": "Mark Benvenuto",
+            "email": [
+                "mark.benvenuto@mongodb.com"
+            ],
+            "description": "Windows Support, Clang-Format Integration, AppVeyor Integration."
         }
     ]
 }
