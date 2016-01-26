@@ -33,7 +33,7 @@ oid::oid(init_tag_t) : _is_valid(true) {
     bson_oid_t oid;
     bson_oid_init(&oid, nullptr);
 
-    std::memcpy(_bytes, oid.bytes, sizeof(oid.bytes));
+    std::memcpy(_bytes.data(), oid.bytes, sizeof(oid.bytes));
 }
 
 oid::oid(const string::view_or_value& str)
@@ -41,19 +41,19 @@ oid::oid(const string::view_or_value& str)
     if (_is_valid) {
         bson_oid_t oid;
         bson_oid_init_from_string(&oid, str.terminated().data());
-        memcpy(_bytes, oid.bytes, sizeof(_bytes));
+        memcpy(_bytes.data(), oid.bytes, _bytes.size());
     }
 }
 
 oid::oid(const char* bytes, std::size_t len) : _is_valid(len == 12) {
     if (_is_valid) {
-        std::memcpy(_bytes, bytes, sizeof(_bytes));
+        std::memcpy(_bytes.data(), bytes, _bytes.size());
     }
 }
 
 std::string oid::to_string() const {
     bson_oid_t oid;
-    std::memcpy(oid.bytes, _bytes, sizeof(oid.bytes));
+    std::memcpy(oid.bytes, _bytes.data(), sizeof(oid.bytes));
     char str[25];
 
     bson_oid_to_string(&oid, str);
@@ -67,13 +67,13 @@ oid::operator bool() const {
 
 std::time_t oid::get_time_t() const {
     bson_oid_t oid;
-    std::memcpy(oid.bytes, _bytes, sizeof(oid.bytes));
+    std::memcpy(oid.bytes, _bytes.data(), sizeof(oid.bytes));
 
     return bson_oid_get_time_t(&oid);
 }
 
 const char* oid::bytes() const {
-    return _bytes;
+    return _bytes.data();
 }
 
 int oid_compare(const oid& lhs, const oid& rhs) {
@@ -118,18 +118,6 @@ bool operator==(const oid& lhs, const oid& rhs) {
 
 bool operator!=(const oid& lhs, const oid& rhs) {
     return oid_compare(lhs, rhs) != 0;
-}
-
-std::ostream& operator<<(std::ostream& out, const oid& rhs) {
-    bson_oid_t oid;
-    std::memcpy(oid.bytes, rhs._bytes, sizeof(oid.bytes));
-    char str[25];
-
-    bson_oid_to_string(&oid, str);
-
-    out << str;
-
-    return out;
 }
 
 BSONCXX_INLINE_NAMESPACE_END

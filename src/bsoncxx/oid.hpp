@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <array>
 #include <iosfwd>
 #include <ctime>
 #include <string>
@@ -102,7 +103,9 @@ class BSONCXX_API oid {
     ///
 
     ///
-    /// @todo document this method
+    /// Conversion operator that indicates that the oid is initialized.
+    ///
+    /// @return True if the oid is initialized.
     ///
     explicit operator bool() const;
 
@@ -114,12 +117,9 @@ class BSONCXX_API oid {
     std::time_t get_time_t() const;
 
     ///
-    /// @todo document this method. Also, do we really want this? This is the only place we use ostreams.
+    /// An accessor for the internal data buffer in the oid.
     ///
-    friend BSONCXX_API std::ostream& BSONCXX_CALL operator<<(std::ostream& out, const oid& rhs);
-
-    ///
-    /// @todo document this method
+    /// @return A pointer to the internal buffer holding the oid bytes.
     ///
     const char* bytes() const;
 
@@ -128,8 +128,7 @@ class BSONCXX_API oid {
 
     bool _is_valid;
 
-    // TODO: Should this be std::array<char, 12>?
-    char _bytes[12];
+    std::array<char, 12> _bytes;
 };
 
 BSONCXX_INLINE_NAMESPACE_END

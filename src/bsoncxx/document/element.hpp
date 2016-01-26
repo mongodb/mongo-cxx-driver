@@ -59,168 +59,285 @@ class element;
 namespace document {
 
 ///
-/// @todo document this class
+/// A variant view type that accesses values in serialized BSON documents.
+///
+/// Element functions as a variant type, where the kind of the element can be
+/// interrogated by calling type(), the key can be extracted by calling key() and
+/// a specific value can be extracted through get_X() accessors.
+///
+/// @relatesalso array::element
 ///
 class BSONCXX_API element {
    public:
 
     ///
-    /// @todo document this method
+    /// Construct an invalid element.
+    ///
+    /// This is useful when mapping the end iterator of a document or array
+    /// view.
     ///
     element();
 
     ///
-    /// @todo document this method
+    /// Construct an element as an offset into a buffer of bson bytes.
+    ///
+    /// @param raw
+    ///   A pointer to the raw bson bytes.
+    ///
+    /// @param length
+    ///   The size of the bson buffer.
+    ///
+    /// @param offset
+    ///   The element's offset into the buffer.
     ///
     explicit element(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset);
 
     ///
-    /// @todo document this method
+    /// Conversion operator to bool which is true for valid elements.
     ///
     explicit operator bool() const;
 
     ///
-    /// @todo document this method
+    /// Getter for the raw bson bytes the element points to.
+    ///
+    /// @return a pointer to the raw bson bytes.
     ///
     const std::uint8_t* raw() const;
 
     ///
-    /// @todo document this method
+    /// Setter for the raw bson bytes the element points to.
     ///
-    void raw(const std::uint8_t*);
+    /// @param raw
+    ///   The bytes this element should point to.
+    ///
+    void raw(const std::uint8_t* raw);
 
     ///
-    /// @todo document this method
+    /// Getter for length of the raw bson bytes the element points to.
+    ///
+    /// @return a pointer to the length of the raw bson bytes.
     ///
     std::uint32_t length() const;
 
     ///
-    /// @todo document this method
+    /// Setter for length of the raw bson bytes the element points to.
     ///
-    void length(std::uint32_t);
+    /// @param length
+    ///   The length of the bytes this element points to.
+    ///
+    void length(std::uint32_t length);
 
     ///
-    /// @todo document this method
+    /// Getter for the offset into the raw bson bytes the element points to.
+    ///
+    /// @return the offset into the raw bson bytes.
     ///
     std::uint32_t offset() const;
 
     ///
-    /// @todo document this method
+    /// Setter for the offset into the raw bson bytes the element points to.
     ///
-    void offset(std::uint32_t);
+    /// @param offset
+    ///   The offset into the bytes this element points to.
+    ///
+    void offset(std::uint32_t offset);
 
     ///
-    /// @todo document this method
+    /// Getter for the type of the element.
+    ///
+    /// @return the element's type.
     ///
     bsoncxx::type type() const;
 
     ///
-    /// @todo document this method
+    /// Getter for the element's key.
+    ///
+    /// @return the element's key.
     ///
     stdx::string_view key() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_double type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_double.
+    ///
+    /// @return the element's value.
     ///
     types::b_double get_double() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_utf8 type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_utf8.
+    ///
+    /// @return the element's value.
     ///
     types::b_utf8 get_utf8() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_document type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_document.
+    ///
+    /// @return the element's value.
     ///
     types::b_document get_document() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_array type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_array.
+    ///
+    /// @return the element's value.
     ///
     types::b_array get_array() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_binary type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_binary.
+    ///
+    /// @return the element's value.
     ///
     types::b_binary get_binary() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_undefined type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_undefined.
+    ///
+    /// @return the element's value.
     ///
     types::b_undefined get_undefined() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_oid type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_oid.
+    ///
+    /// @return the element's value.
     ///
     types::b_oid get_oid() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_bool type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_bool.
+    ///
+    /// @return the element's value.
     ///
     types::b_bool get_bool() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_date type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_date.
+    ///
+    /// @return the element's value.
     ///
     types::b_date get_date() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_null type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_null.
+    ///
+    /// @return the element's value.
     ///
     types::b_null get_null() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_regex type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_regex.
+    ///
+    /// @return the element's value.
     ///
     types::b_regex get_regex() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_dbpointer type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_dbpointer.
+    ///
+    /// @return the element's value.
     ///
     types::b_dbpointer get_dbpointer() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_code type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_code.
+    ///
+    /// @return the element's value.
     ///
     types::b_code get_code() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_symbol type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_symbol.
+    ///
+    /// @return the element's value.
     ///
     types::b_symbol get_symbol() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_codewscope type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_codewscope.
+    ///
+    /// @return the element's value.
     ///
     types::b_codewscope get_codewscope() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_int32 type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_int32.
+    ///
+    /// @return the element's value.
     ///
     types::b_int32 get_int32() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_timestamp type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_timestamp.
+    ///
+    /// @return the element's value.
     ///
     types::b_timestamp get_timestamp() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_int64 type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_int64.
+    ///
+    /// @return the element's value.
     ///
     types::b_int64 get_int64() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_minkey type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_minkey.
+    ///
+    /// @return the element's value.
     ///
     types::b_minkey get_minkey() const;
 
     ///
-    /// @todo document this method
+    /// Getter for elements of the b_maxkey type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_maxkey.
+    ///
+    /// @return the element's value.
     ///
     types::b_maxkey get_maxkey() const;
 
     ///
-    /// @todo document this method
+    /// Getter for a type
     ///
     types::value get_value() const;
 

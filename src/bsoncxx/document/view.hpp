@@ -145,7 +145,10 @@ class BSONCXX_API view {
 };
 
 ///
-/// @todo document this class
+/// A mutable iterator over the contents of a document view.
+///
+/// This iterator type provides a mutable forward iterator interface to document
+/// view elements.
 ///
 class BSONCXX_API view::iterator : public std::iterator<std::forward_iterator_tag, element> {
    public:
@@ -176,7 +179,10 @@ class BSONCXX_API view::iterator : public std::iterator<std::forward_iterator_ta
 };
 
 ///
-/// @todo document this class
+/// A const iterator over the contents of a document view.
+///
+/// This iterator type provides a const forward iterator interface to document
+/// view elements.
 ///
 class BSONCXX_API view::const_iterator
     : public std::iterator<std::forward_iterator_tag, element, std::ptrdiff_t, const element*,

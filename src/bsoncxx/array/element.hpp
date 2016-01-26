@@ -27,7 +27,13 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace array {
 
 ///
-/// @todo document this class
+/// A variant view type that accesses values in serialized BSON arrays.
+///
+/// Element functions as a variant type, where the kind of the element can be
+/// interrogated by calling type() and a specific value can be extracted through
+/// get_X() accessors.
+///
+/// @relatesalso document::element
 ///
 class BSONCXX_API element : private document::element {
    public:

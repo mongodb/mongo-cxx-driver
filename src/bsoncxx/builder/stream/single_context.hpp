@@ -27,33 +27,29 @@ namespace builder {
 namespace stream {
 
 ///
-/// @todo document this class
+/// A stream context which appends a single value.
+///
+/// This type is useful as the argument to a callable passed to other stream
+/// modes. Specifically, any callback that takes a single_context can be used to
+/// write a value in value_context or array_context.
 ///
 class single_context {
    public:
 
     ///
-    /// @todo document this method
+    /// Create a single_context given a core builder
+    ///
+    /// @param core
+    ///   The core builder to orchestrate
     ///
     BSONCXX_INLINE single_context(core* core) : _core(core) {
     }
 
     ///
-    /// @todo document this method
+    /// << operator for opening a new subdocument in the core builder.
     ///
-    BSONCXX_INLINE array_context<single_context> wrap_array() {
-        return array_context<single_context>(_core);
-    }
-
-    ///
-    /// @todo document this method
-    ///
-    BSONCXX_INLINE key_context<single_context> wrap_document() {
-        return key_context<single_context>(_core);
-    }
-
-    ///
-    /// @todo document this method
+    /// @param _
+    ///   An open_document_type token
     ///
     BSONCXX_INLINE key_context<single_context> operator<<(open_document_type) {
         _core->open_document();
@@ -62,7 +58,10 @@ class single_context {
     }
 
     ///
-    /// @todo document this method
+    /// << operator for opening a new subarray in the core builder.
+    ///
+    /// @param _
+    ///   An open_array_type token
     ///
     BSONCXX_INLINE array_context<single_context> operator<<(open_array_type) {
         _core->open_array();
@@ -71,7 +70,11 @@ class single_context {
     }
 
     ///
-    /// @todo document this method
+    /// << operator for accepting a real value and appending it to the core
+    ///   builder.
+    ///
+    /// @param t
+    ///   The value to append
     ///
     template <class T>
     BSONCXX_INLINE void operator<<(T&& t) {
@@ -79,11 +82,19 @@ class single_context {
     }
 
    private:
+    BSONCXX_INLINE array_context<single_context> wrap_array() {
+        return array_context<single_context>(_core);
+    }
+
+    BSONCXX_INLINE key_context<single_context> wrap_document() {
+        return key_context<single_context>(_core);
+    }
+
     core* _core;
 };
 
 ///
-/// @todo document this method
+/// Implementation of the single_context conversion operator for array_context.
 ///
 template <class T>
 BSONCXX_INLINE array_context<T>::operator single_context() {
@@ -91,7 +102,7 @@ BSONCXX_INLINE array_context<T>::operator single_context() {
 }
 
 ///
-/// @todo document this method
+/// Implementation of the single_context conversion operator for value_context.
 ///
 template <class T>
 BSONCXX_INLINE value_context<T>::operator single_context() {

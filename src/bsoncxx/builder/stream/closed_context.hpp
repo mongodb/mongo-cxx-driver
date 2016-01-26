@@ -25,7 +25,11 @@ class core;
 namespace stream {
 
 ///
-/// An internal struct of builder::stream. Users should not use this directly.
+/// The closed_context, when used as a template parameter for array_context,
+/// value_context or key_context, indicates that the document cannot be closed
+/// further. This could indicate that the document is the root, or that the type
+/// stack has been intentionally erased, as is the case when using callbacks in
+/// the stream api.
 ///
 struct closed_context {
     closed_context(core*) {
