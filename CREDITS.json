@@ -37,7 +37,11 @@
             "description": "MongodB 3.2 feature support."
         },
         {
-            "name": "Tess Avitabile"
+            "name": "Tess Avitabile",
+            "email" : [
+                "tess.avitabile@mongodb.com"
+            ],
+            "description" : "mongocxx error handling, various features and bug fixes."
         },
         {
             "name": "Mark Benvenuto",
