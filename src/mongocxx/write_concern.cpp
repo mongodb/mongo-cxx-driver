@@ -22,7 +22,6 @@
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/private/error_category.hpp>
-#include <mongocxx/exception/private/error_code.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/private/write_concern.hpp>
 #include <mongocxx/stdx.hpp>
@@ -81,7 +80,7 @@ void write_concern::acknowledge_level(write_concern::level confirm_level) {
                 MONGOC_WRITE_CONCERN_W_TAG)
                 return;
         default:
-            throw exception{make_error_code(error_code::k_unknown_write_concern)};
+            throw exception{error_code::k_unknown_write_concern};
     }
     libmongoc::write_concern_set_w(_impl->write_concern_t, w);
 }
@@ -93,7 +92,7 @@ void write_concern::tag(stdx::string_view confirm_from) {
 void write_concern::majority(std::chrono::milliseconds timeout) {
     const auto count = timeout.count();
     if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
-        throw logic_error{make_error_code(error_code::k_invalid_parameter)};
+        throw logic_error{error_code::k_invalid_parameter};
     libmongoc::write_concern_set_wmajority(_impl->write_concern_t,
                                            static_cast<std::int32_t>(count));
 }
@@ -101,7 +100,7 @@ void write_concern::majority(std::chrono::milliseconds timeout) {
 void write_concern::timeout(std::chrono::milliseconds timeout) {
     const auto count = timeout.count();
     if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
-        throw logic_error{make_error_code(error_code::k_invalid_parameter)};
+        throw logic_error{error_code::k_invalid_parameter};
     libmongoc::write_concern_set_wtimeout(_impl->write_concern_t, static_cast<std::int32_t>(count));
 }
 

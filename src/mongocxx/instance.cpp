@@ -18,9 +18,9 @@
 #include <utility>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/logger.hpp>
-#include <mongocxx/exception/private/error_code.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
 #include <mongocxx/config/private/prelude.hpp>
@@ -95,7 +95,7 @@ instance::instance() : instance(nullptr) {
 instance::instance(std::unique_ptr<logger> logger) {
     std::lock_guard<std::recursive_mutex> lock(instance_mutex);
     if (current_instance) {
-        throw logic_error(make_error_code(error_code::k_instance_already_exists));
+        throw logic_error{error_code::k_instance_already_exists};
     }
     _impl = stdx::make_unique<impl>(std::move(logger));
     current_instance = this;

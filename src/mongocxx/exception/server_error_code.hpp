@@ -24,15 +24,8 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 ///
 /// @todo document this enum and the values
 ///
-enum class error_code : std::int32_t {
-    k_instance_already_exists = 1,
-    k_invalid_client_object,
-    k_invalid_collection_object,
-    k_invalid_database_object,
-    k_invalid_parameter,
-    k_ssl_not_supported,
-    k_unknown_read_concern,
-    k_unknown_write_concern,
+enum class server_error_code : std::int32_t {
+    // Intentionally empty at this time!
 };
 
 ///
@@ -40,17 +33,17 @@ enum class error_code : std::int32_t {
 ///
 /// @return The mongocxx error_category
 ///
-MONGOCXX_API const std::error_category& MONGOCXX_CALL error_category();
+MONGOCXX_API const std::error_category& MONGOCXX_CALL server_error_category();
 
 ///
-/// Translate a mongocxx::error_code into a std::error_code.
+/// Translate a mongocxx::server_error_code into a std::error_code.
 ///
 /// @param error A mongocxx::error_code
 ///
 /// @return A std::error_code
 ///
-MONGOCXX_INLINE std::error_code make_error_code(error_code error) {
-    return {static_cast<int>(error), error_category()};
+MONGOCXX_INLINE std::error_code make_error_code(server_error_code error) {
+    return {static_cast<int>(error), server_error_category()};
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
@@ -61,5 +54,5 @@ MONGOCXX_INLINE_NAMESPACE_END
 namespace std {
 // Specialize is_error_code_enum so we get simpler std::error_code construction
 template<>
-struct is_error_code_enum<mongocxx::error_code> : public true_type{};
+struct is_error_code_enum<mongocxx::server_error_code> : public true_type{};
 }  // namespace std

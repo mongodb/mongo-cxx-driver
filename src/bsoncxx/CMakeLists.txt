@@ -77,12 +77,10 @@ set(bsoncxx_sources
     document/element.cpp
     document/value.cpp
     document/view.cpp
+    exception/error_code.cpp
     json.cpp
     oid.cpp
-    private/error_category.cpp
-    private/error_code.cpp
     private/itoa.cpp
-    private/libbson_error.cpp
     string/view_or_value.cpp
     types.cpp
     types/value.cpp

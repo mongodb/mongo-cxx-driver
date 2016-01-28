@@ -32,7 +32,6 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/error_category.hpp>
-#include <mongocxx/exception/private/error_code.hpp>
 #include <mongocxx/exception/private/mongoc_error.hpp>
 #include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/exception/write_exception.hpp>
@@ -234,7 +233,7 @@ cursor collection::find(view_or_value filter, const options::find& options) {
     if (options.max_await_time()) {
         const auto count = options.max_await_time()->count();
         if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max()))
-            throw logic_error{make_error_code(error_code::k_invalid_parameter)};
+            throw logic_error{error_code::k_invalid_parameter};
         libmongoc::cursor_set_max_await_time_ms(mongoc_cursor, static_cast<std::uint32_t>(count));
     }
 
@@ -788,7 +787,7 @@ class write_concern collection::write_concern() const {
 
 const collection::impl& collection::_get_impl() const {
     if (!_impl) {
-        throw logic_error{make_error_code(error_code::k_invalid_collection_object)};
+        throw logic_error{error_code::k_invalid_collection_object};
     }
     return *_impl;
 }

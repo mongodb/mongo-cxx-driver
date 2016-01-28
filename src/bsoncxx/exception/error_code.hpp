@@ -15,6 +15,7 @@
 #pragma once
 
 #include <cstdint>
+#include <system_error>
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -37,10 +38,34 @@ enum class error_code : std::int32_t {
     k_no_array_to_close,
     k_no_document_to_close,
     k_unmatched_key_in_builder,
-    k_unset_element
+    k_unset_element,
+    k_json_parse_failure,
 };
+
+///
+/// Get the error_category for exceptions originating from the bsoncxx library.
+///
+/// @return The bsoncxx error_category
+///
+BSONCXX_API const std::error_category& BSONCXX_CALL error_category();
+
+///
+/// Translate a bsoncxx::error_code into a std::error_code.
+///
+/// @param an error from bsoncxx
+/// @return an error_code
+///
+BSONCXX_INLINE std::error_code make_error_code(error_code error) {
+    return {static_cast<int>(error), error_category()};
+}
 
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+namespace std {
+// Specialize is_error_code_enum so we get simpler std::error_code construction
+template<>
+struct is_error_code_enum<bsoncxx::error_code> : public true_type{};
+}  // namespace std

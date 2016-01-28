@@ -17,7 +17,6 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
-#include <mongocxx/exception/private/error_code.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/private/read_concern.hpp>
 
@@ -62,7 +61,7 @@ void read_concern::acknowledge_level(read_concern::level rc_level) {
             libmongoc::read_concern_set_level(_impl->read_concern_t, NULL);
             break;
         default:
-            throw exception{make_error_code(error_code::k_unknown_read_concern)};
+            throw exception{error_code::k_unknown_read_concern};
     }
 }
 

@@ -42,10 +42,9 @@ set(mongocxx_sources
     collection.cpp
     cursor.cpp
     database.cpp
+    exception/error_code.cpp
+    exception/server_error_code.cpp
     exception/operation_exception.cpp
-    exception/private/error_category.cpp
-    exception/private/error_code.cpp
-    exception/private/mongoc_error.cpp
     hint.cpp
     insert_many_builder.cpp
     instance.cpp

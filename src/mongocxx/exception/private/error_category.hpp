@@ -30,13 +30,6 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 ///
 const std::error_category& mongoc_error_category(int domain);
 
-///
-/// Get the error_category for inherent mongocxx exceptions.
-///
-/// @return The mongocxx error_category
-///
-const std::error_category& mongocxx_error_category();
-
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 

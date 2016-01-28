@@ -23,6 +23,8 @@
 #include <bson.h>
 
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/exception/error_code.hpp>
+#include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/private/b64_ntop.h>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -285,12 +287,13 @@ std::string to_json(types::value value) {
     return ss.str();
 }
 
-stdx::optional<document::value> from_json(stdx::string_view json) {
+document::value from_json(stdx::string_view json) {
     bson_error_t error;
     bson_t* result =
         bson_new_from_json(reinterpret_cast<const uint8_t*>(json.data()), json.size(), &error);
 
-    if (!result) return stdx::nullopt;
+    if (!result)
+        throw exception(error_code::k_json_parse_failure, error.message);
 
     std::uint32_t length;
     std::uint8_t* buf = bson_destroy_with_steal(result, true, &length);

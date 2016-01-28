@@ -19,7 +19,6 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/error_category.hpp>
-#include <mongocxx/exception/private/error_code.hpp>
 #include <mongocxx/exception/private/mongoc_error.hpp>
 #include <mongocxx/private/client.hpp>
 #include <mongocxx/private/read_concern.hpp>
@@ -42,7 +41,7 @@ client::client(const class uri& uri, const options::client& options)
         auto mongoc_opts = options::make_ssl_opts(*options.ssl_opts());
         libmongoc::client_set_ssl_opts(_get_impl().client_t, &mongoc_opts);
 #else
-        throw exception{make_error_code(error_code::k_ssl_not_supported)};
+        throw exception{error_code::k_ssl_not_supported};
 #endif
     }
 }
@@ -113,7 +112,7 @@ cursor client::list_databases() const {
 
 const client::impl& client::_get_impl() const {
     if (!_impl) {
-        throw logic_error{make_error_code(error_code::k_invalid_client_object)};
+        throw logic_error{error_code::k_invalid_client_object};
     }
     return *_impl;
 }

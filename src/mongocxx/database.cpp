@@ -23,7 +23,6 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/error_category.hpp>
-#include <mongocxx/exception/private/error_code.hpp>
 #include <mongocxx/exception/private/mongoc_error.hpp>
 #include <mongocxx/private/client.hpp>
 #include <mongocxx/private/database.hpp>
@@ -175,7 +174,7 @@ collection database::collection(bsoncxx::string::view_or_value name) const {
 
 const database::impl& database::_get_impl() const {
     if (!_impl) {
-        throw logic_error{make_error_code(error_code::k_invalid_database_object)};
+        throw logic_error{error_code::k_invalid_database_object};
     }
     return *_impl;
 }

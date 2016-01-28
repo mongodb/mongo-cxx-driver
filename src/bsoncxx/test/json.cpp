@@ -15,6 +15,7 @@
 #include "catch.hpp"
 
 #include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
 
 namespace {
@@ -22,14 +23,14 @@ constexpr auto k_invalid_json = R"({])";
 constexpr auto k_valid_json = R"({ "a" : 1, "b" : 2.0 })";
 }
 
-TEST_CASE("invalid json returns disengaged optional") {
+TEST_CASE("invalid json throws") {
     using namespace bsoncxx;
-    REQUIRE(!from_json(k_invalid_json));
+    REQUIRE_THROWS_AS(from_json(k_invalid_json), bsoncxx::exception);
 }
 
-TEST_CASE("valid json returns an engaged optional") {
+TEST_CASE("valid json does not throw") {
     using namespace bsoncxx;
-    REQUIRE(from_json(k_valid_json));
+    REQUIRE_NOTHROW(from_json(k_valid_json));
 }
 
 TEST_CASE("valid json is converted to equivalent BSON") {
@@ -39,8 +40,8 @@ TEST_CASE("valid json is converted to equivalent BSON") {
                                                       << builder::stream::finalize;
     const auto expected_view = expected.view();
 
-    const auto actual = from_json(k_valid_json);
-    const auto actual_view = actual->view();
+    const auto actual_doc = from_json(k_valid_json);
+    const auto actual_view = actual_doc.view();
 
     REQUIRE(expected_view.length() == actual_view.length());
     REQUIRE(0 == memcmp(expected_view.data(), actual_view.data(), expected_view.length()));

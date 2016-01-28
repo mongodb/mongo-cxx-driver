@@ -14,9 +14,8 @@
 
 #pragma once
 
-#include <system_error>
-
 #include <bsoncxx/document/value.hpp>
+#include <mongocxx/exception/server_error_code.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
 #include <mongocxx/config/private/prelude.hpp>
@@ -24,24 +23,14 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-///
-/// Translate an error code and domain from libmongoc into a std::error_code.
-///
-/// @param code A libmongoc error code
-/// @param domain A libmongoc error domain
-///
-/// @return A std::error_code
-///
-std::error_code make_error_code(int code, int domain);
+inline std::error_code make_error_code(int code, int) {
+    // Domain is ignored. We simply issue the code.
+    return {code, server_error_category()};
+}
 
-///
-/// Translate a bson_error_t from libmongoc into a std::error_code.
-///
-/// @param error A libmongoc bson_error_t
-///
-/// @return A std::error_code
-///
-std::error_code make_error_code(::bson_error_t error);
+inline std::error_code make_error_code(::bson_error_t error) {
+    return make_error_code(error.code, error.domain);
+}
 
 template <typename exception_type>
 void throw_exception(::bson_error_t error) {

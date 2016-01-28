@@ -12,27 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
-#include <system_error>
-
-#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/server_error_code.hpp>
 
 #include <mongocxx/config/private/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-///
-/// Translate a mongocxx::error_code into a std::error_code.
-///
-/// @param error A mongocxx::error_code
-///
-/// @return A std::error_code
-///
-std::error_code make_error_code(error_code error);
+namespace {
+
+//
+// An error_category for codes returned by the server.
+//
+class server_error_category final : public std::error_category {
+   public:
+    const char* name() const noexcept override {
+        return "mongodb";
+    }
+
+    std::string message(int) const noexcept override {
+        return "generic server error";
+    }
+};
+
+}  // namespace
+
+const std::error_category& server_error_category() {
+    static const class server_error_category category{};
+    return category;
+}
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
-
-#include <mongocxx/config/private/postlude.hpp>

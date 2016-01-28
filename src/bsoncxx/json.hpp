@@ -63,9 +63,12 @@ BSONCXX_API std::string BSONCXX_CALL to_json(types::value value);
 /// @param 'json'
 ///  A string_view into a JSON document
 ///
-/// @returns An engaged optional containing a document::value if conversion worked.
+/// @returns A document::value if conversion worked.
 ///
-BSONCXX_API stdx::optional<document::value> BSONCXX_CALL from_json(stdx::string_view json);
+/// @throws A bsoncxx::exception containing error details, if the
+/// conversion failed.
+///
+BSONCXX_API document::value BSONCXX_CALL from_json(stdx::string_view json);
 
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
