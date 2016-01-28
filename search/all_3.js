@@ -14,8 +14,8 @@ var searchData=
   ['deprecated_20list',['Deprecated List',['../deprecated.html',1,'']]],
   ['distinct',['distinct',['../classmongocxx_1_1collection.html#a5df7b438b4ceeb5582bb9273b5518272',1,'mongocxx::collection']]],
   ['distinct',['distinct',['../classmongocxx_1_1options_1_1distinct.html',1,'mongocxx::options']]],
-  ['document',['document',['../classbsoncxx_1_1builder_1_1basic_1_1document.html',1,'bsoncxx::builder::basic']]],
   ['document',['document',['../classbsoncxx_1_1builder_1_1stream_1_1document.html',1,'bsoncxx::builder::stream']]],
-  ['document',['document',['../classmongocxx_1_1model_1_1insert__one.html#aa805c976771e597de13974b2cdba6237',1,'mongocxx::model::insert_one']]],
+  ['document',['document',['../classbsoncxx_1_1builder_1_1basic_1_1document.html',1,'bsoncxx::builder::basic']]],
+  ['document',['document',['../classbsoncxx_1_1builder_1_1stream_1_1document.html#a644a975ceb2cb01957fc6e58687444e4',1,'bsoncxx::builder::stream::document::document()'],['../classmongocxx_1_1model_1_1insert__one.html#aa805c976771e597de13974b2cdba6237',1,'mongocxx::model::insert_one::document()']]],
   ['drop',['drop',['../classmongocxx_1_1collection.html#a2e6f9689b531a0be1e5b202177bb163d',1,'mongocxx::collection::drop()'],['../classmongocxx_1_1database.html#a3ef1159bcd38e6be752b597950a18502',1,'mongocxx::database::drop()']]]
 ];

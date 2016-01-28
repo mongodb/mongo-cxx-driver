@@ -157,9 +157,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab77d3e56fc61b255a0828e27fe404dcd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1database.html#ab77d3e56fc61b255a0828e27fe404dcd">read_concern</a> (class <a class="el" href="classmongocxx_1_1read__concern.html">read_concern</a> rc)</td></tr>
 <tr class="memdesc:ab77d3e56fc61b255a0828e27fe404dcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the <a class="el" href="classmongocxx_1_1read__concern.html" title="A class to represent the read concern. ">read_concern</a> for this database.  <a href="#ab77d3e56fc61b255a0828e27fe404dcd">More...</a><br /></td></tr>
 <tr class="separator:ab77d3e56fc61b255a0828e27fe404dcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3ba868b67d5d12227e1783f650a58f2"><td class="memItemLeft" align="right" valign="top">stdx::optional&lt; class <a class="el" href="classmongocxx_1_1read__concern.html">read_concern</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1database.html#ad3ba868b67d5d12227e1783f650a58f2">read_concern</a> () const </td></tr>
-<tr class="memdesc:ad3ba868b67d5d12227e1783f650a58f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current read concern for this database.  <a href="#ad3ba868b67d5d12227e1783f650a58f2">More...</a><br /></td></tr>
-<tr class="separator:ad3ba868b67d5d12227e1783f650a58f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0cc90222e11d305cb5104f3fc1fa04a"><td class="memItemLeft" align="right" valign="top">class <a class="el" href="classmongocxx_1_1read__concern.html">read_concern</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1database.html#af0cc90222e11d305cb5104f3fc1fa04a">read_concern</a> () const </td></tr>
+<tr class="memdesc:af0cc90222e11d305cb5104f3fc1fa04a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current read concern for this database.  <a href="#af0cc90222e11d305cb5104f3fc1fa04a">More...</a><br /></td></tr>
+<tr class="separator:af0cc90222e11d305cb5104f3fc1fa04a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0b54881773c6e0a12aeaa9c8302f2ee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1database.html#af0b54881773c6e0a12aeaa9c8302f2ee">read_preference</a> (class <a class="el" href="classmongocxx_1_1read__preference.html">read_preference</a> rp)</td></tr>
 <tr class="memdesc:af0b54881773c6e0a12aeaa9c8302f2ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the <a class="el" href="classmongocxx_1_1read__preference.html" title="Class representing a preference for how the driver routes read operations to members of a replica set...">read_preference</a> for this database.  <a href="#af0b54881773c6e0a12aeaa9c8302f2ee">More...</a><br /></td></tr>
 <tr class="separator:af0b54881773c6e0a12aeaa9c8302f2ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,14 +175,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a50f4bcdb62ffdd532902f87c334055fa"><td class="memItemLeft" align="right" valign="top">class <a class="el" href="classmongocxx_1_1collection.html">collection</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1database.html#a50f4bcdb62ffdd532902f87c334055fa">collection</a> (<a class="el" href="classbsoncxx_1_1string_1_1view__or__value.html">bsoncxx::string::view_or_value</a> <a class="el" href="classmongocxx_1_1database.html#a58678d0e1514aae483fb480a3e99947e">name</a>) const </td></tr>
 <tr class="memdesc:a50f4bcdb62ffdd532902f87c334055fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access a collection (logical grouping of documents) within this database.  <a href="#a50f4bcdb62ffdd532902f87c334055fa">More...</a><br /></td></tr>
 <tr class="separator:a50f4bcdb62ffdd532902f87c334055fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae828e9176a46d889d9f34d41a6ca9aeb"><td class="memItemLeft" align="right" valign="top">MONGOCXX_INLINE class <a class="el" href="classmongocxx_1_1collection.html">collection</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1database.html#ae828e9176a46d889d9f34d41a6ca9aeb">operator[]</a> (<a class="el" href="classbsoncxx_1_1string_1_1view__or__value.html">bsoncxx::string::view_or_value</a> <a class="el" href="classmongocxx_1_1database.html#a58678d0e1514aae483fb480a3e99947e">name</a>) const </td></tr>
-<tr class="memdesc:ae828e9176a46d889d9f34d41a6ca9aeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows the db["collection_name"] syntax to be used to access a collection within this database.  <a href="#ae828e9176a46d889d9f34d41a6ca9aeb">More...</a><br /></td></tr>
-<tr class="separator:ae828e9176a46d889d9f34d41a6ca9aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d111c7ec4678f7df255ef4534341aec"><td class="memItemLeft" align="right" valign="top">class <a class="el" href="classmongocxx_1_1collection.html">collection</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1database.html#a7d111c7ec4678f7df255ef4534341aec">operator[]</a> (<a class="el" href="classbsoncxx_1_1string_1_1view__or__value.html">bsoncxx::string::view_or_value</a> <a class="el" href="classmongocxx_1_1database.html#a58678d0e1514aae483fb480a3e99947e">name</a>) const </td></tr>
+<tr class="memdesc:a7d111c7ec4678f7df255ef4534341aec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows the db["collection_name"] syntax to be used to access a collection within this database.  <a href="#a7d111c7ec4678f7df255ef4534341aec">More...</a><br /></td></tr>
+<tr class="separator:a7d111c7ec4678f7df255ef4534341aec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class representing a MongoDB database. </p>
 <p>Acts as a gateway for accessing collections that are contained within a database. It inherits all of its default settings from the client that creates it.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Add auth functions (add_user, remove_all_users, remove_user) </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Add auth functions (add_user, remove_all_users, remove_user) </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a546d18c0f27058c0e2600f96c9d121aa"></a>
 <div class="memitem">
@@ -402,12 +402,12 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ae828e9176a46d889d9f34d41a6ca9aeb"></a>
+<a class="anchor" id="a7d111c7ec4678f7df255ef4534341aec"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">MONGOCXX_INLINE <a class="el" href="classmongocxx_1_1collection.html">collection</a> mongocxx::database::operator[] </td>
+          <td class="memname"><a class="el" href="classmongocxx_1_1collection.html">collection</a> mongocxx::database::operator[] </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classbsoncxx_1_1string_1_1view__or__value.html">bsoncxx::string::view_or_value</a>&#160;</td>
           <td class="paramname"><em>name</em></td><td>)</td>
@@ -424,6 +424,25 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the collection. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="af0cc90222e11d305cb5104f3fc1fa04a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">class <a class="el" href="classmongocxx_1_1read__concern.html">read_concern</a> mongocxx::database::read_concern </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The current read concern for this database. </p>
+<p>If the <a class="el" href="classmongocxx_1_1read__concern.html" title="A class to represent the read concern. ">read_concern</a> is not explicitly set on this database object, it inherits the <a class="el" href="classmongocxx_1_1read__concern.html" title="A class to represent the read concern. ">read_concern</a> from its parent client object.</p>
+<dl class="section return"><dt>Returns</dt><dd>the current <a class="el" href="classmongocxx_1_1read__concern.html" title="A class to represent the read concern. ">read_concern</a> </dd></dl>
 
 </div>
 </div>
@@ -449,26 +468,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>TODO add link to docs once they exist. </p>
-
-</div>
-</div>
-<a class="anchor" id="ad3ba868b67d5d12227e1783f650a58f2"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">stdx::optional&lt;class <a class="el" href="classmongocxx_1_1read__concern.html">read_concern</a>&gt; mongocxx::database::read_concern </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The current read concern for this database. </p>
-<p>TODO fix this method after <a href="https://jira.mongodb.org/browse/CXX-758">https://jira.mongodb.org/browse/CXX-758</a> is done.</p>
-<dl class="section return"><dt>Returns</dt><dd>the current <a class="el" href="classmongocxx_1_1read__concern.html" title="A class to represent the read concern. ">read_concern</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a href="https://docs.mongodb.org/manual/reference/read-concern/">https://docs.mongodb.org/manual/reference/read-concern/</a> </dd></dl>
 
 </div>
 </div>
@@ -611,7 +611,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 11 2016 17:51:11 for MongoDB C++11 Driver by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 28 2016 15:26:19 for MongoDB C++11 Driver by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

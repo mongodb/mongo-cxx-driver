@@ -112,10 +112,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af04dbca57da1cfb09b542500efcadf96"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbsoncxx_1_1document_1_1value.html#af04dbca57da1cfb09b542500efcadf96">value</a> (<a class="el" href="classbsoncxx_1_1document_1_1view.html">document::view</a> <a class="el" href="classbsoncxx_1_1document_1_1view.html">view</a>)</td></tr>
 <tr class="memdesc:af04dbca57da1cfb09b542500efcadf96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a value from a view of a document.  <a href="#af04dbca57da1cfb09b542500efcadf96">More...</a><br /></td></tr>
 <tr class="separator:af04dbca57da1cfb09b542500efcadf96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56733fbb1b89d4edfc257db744819cd1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a56733fbb1b89d4edfc257db744819cd1"></a>
-BSONCXX_INLINE <a class="el" href="classbsoncxx_1_1document_1_1view.html">document::view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbsoncxx_1_1document_1_1value.html#a56733fbb1b89d4edfc257db744819cd1">view</a> () const  noexcept</td></tr>
-<tr class="memdesc:a56733fbb1b89d4edfc257db744819cd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view over the document owned by this value. <br /></td></tr>
-<tr class="separator:a56733fbb1b89d4edfc257db744819cd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e37217fa8f1d4607d2ba22c4c2ad2e6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9e37217fa8f1d4607d2ba22c4c2ad2e6"></a>
+<a class="el" href="classbsoncxx_1_1document_1_1view.html">document::view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbsoncxx_1_1document_1_1value.html#a9e37217fa8f1d4607d2ba22c4c2ad2e6">view</a> () const  noexcept</td></tr>
+<tr class="memdesc:a9e37217fa8f1d4607d2ba22c4c2ad2e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view over the document owned by this value. <br /></td></tr>
+<tr class="separator:a9e37217fa8f1d4607d2ba22c4c2ad2e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8d6e1dfee3d4304e32dadda4312abf5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbsoncxx_1_1document_1_1value.html#aa8d6e1dfee3d4304e32dadda4312abf5">operator document::view</a> () const  noexcept</td></tr>
+<tr class="memdesc:aa8d6e1dfee3d4304e32dadda4312abf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conversion operator that provides a view given a value.  <a href="#aa8d6e1dfee3d4304e32dadda4312abf5">More...</a><br /></td></tr>
+<tr class="separator:aa8d6e1dfee3d4304e32dadda4312abf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6231032e1f94adc11130ef9b81c3191b"><td class="memItemLeft" align="right" valign="top">unique_ptr_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbsoncxx_1_1document_1_1value.html#a6231032e1f94adc11130ef9b81c3191b">release</a> ()</td></tr>
 <tr class="memdesc:a6231032e1f94adc11130ef9b81c3191b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transfer ownership of the underlying buffer to the caller.  <a href="#a6231032e1f94adc11130ef9b81c3191b">More...</a><br /></td></tr>
 <tr class="separator:a6231032e1f94adc11130ef9b81c3191b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -237,6 +240,32 @@ BSONCXX_INLINE <a class="el" href="classbsoncxx_1_1document_1_1view.html">docume
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="aa8d6e1dfee3d4304e32dadda4312abf5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bsoncxx::document::value::operator <a class="el" href="classbsoncxx_1_1document_1_1view.html">document::view</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Conversion operator that provides a view given a value. </p>
+<dl class="section return"><dt>Returns</dt><dd>A view over the value. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a6231032e1f94adc11130ef9b81c3191b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -262,7 +291,7 @@ BSONCXX_INLINE <a class="el" href="classbsoncxx_1_1document_1_1view.html">docume
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 11 2016 17:51:11 for MongoDB C++11 Driver by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 28 2016 15:26:19 for MongoDB C++11 Driver by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

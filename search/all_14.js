@@ -2,9 +2,9 @@ var searchData=
 [
   ['unique',['unique',['../classmongocxx_1_1options_1_1index.html#af012e2059c109185e70ce640ab4e0491',1,'mongocxx::options::index::unique(bool unique)'],['../classmongocxx_1_1options_1_1index.html#a6bdc1943e8d1eb6beedba5e4f048b2b6',1,'mongocxx::options::index::unique() const ']]],
   ['unwind',['unwind',['../classmongocxx_1_1pipeline.html#a3ebf590203518c2fcaee097173832ccb',1,'mongocxx::pipeline']]],
-  ['update',['update',['../classmongocxx_1_1result_1_1update.html',1,'mongocxx::result']]],
-  ['update',['update',['../classmongocxx_1_1model_1_1update__many.html#ab54fb308c99059c48681b11e97b6bb77',1,'mongocxx::model::update_many::update()'],['../classmongocxx_1_1model_1_1update__one.html#adb5d68f21a6c6d3c38a44393c2a07863',1,'mongocxx::model::update_one::update()']]],
   ['update',['update',['../classmongocxx_1_1options_1_1update.html',1,'mongocxx::options']]],
+  ['update',['update',['../classmongocxx_1_1model_1_1update__many.html#ab54fb308c99059c48681b11e97b6bb77',1,'mongocxx::model::update_many::update()'],['../classmongocxx_1_1model_1_1update__one.html#adb5d68f21a6c6d3c38a44393c2a07863',1,'mongocxx::model::update_one::update()']]],
+  ['update',['update',['../classmongocxx_1_1result_1_1update.html',1,'mongocxx::result']]],
   ['update_5fmany',['update_many',['../classmongocxx_1_1collection.html#a33dd70188a6ddde56276f9592bf85dbd',1,'mongocxx::collection::update_many()'],['../classmongocxx_1_1model_1_1update__many.html#aa756593f0a1e57406d17a550d5b2efed',1,'mongocxx::model::update_many::update_many()']]],
   ['update_5fmany',['update_many',['../classmongocxx_1_1model_1_1update__many.html',1,'mongocxx::model']]],
   ['update_5fone',['update_one',['../classmongocxx_1_1model_1_1update__one.html',1,'mongocxx::model']]],
@@ -14,7 +14,7 @@ var searchData=
   ['upserted_5fid',['upserted_id',['../classmongocxx_1_1result_1_1replace__one.html#a248939fe1cf403288b1b94b671319bab',1,'mongocxx::result::replace_one::upserted_id()'],['../classmongocxx_1_1result_1_1update.html#acf4c88b0cc970c25fd65990a354d7bb1',1,'mongocxx::result::update::upserted_id()']]],
   ['upserted_5fids',['upserted_ids',['../classmongocxx_1_1result_1_1bulk__write.html#a7f33a04f539819928a61778b023f8734',1,'mongocxx::result::bulk_write']]],
   ['uri',['uri',['../classmongocxx_1_1uri.html',1,'mongocxx']]],
-  ['uri',['uri',['../classmongocxx_1_1client.html#a1c10135eab53bb755794d79ea31530fb',1,'mongocxx::client::uri()'],['../classmongocxx_1_1uri.html#a2256039cf54baf0b6cb44256f65a3efe',1,'mongocxx::uri::uri(stdx::string_view uri_string=k_default_uri)'],['../classmongocxx_1_1uri.html#a7937e1ff36608219beaecd2fcf726768',1,'mongocxx::uri::uri(uri &amp;&amp;) noexcept']]],
+  ['uri',['uri',['../classmongocxx_1_1client.html#a1c10135eab53bb755794d79ea31530fb',1,'mongocxx::client::uri()'],['../classmongocxx_1_1uri.html#aa9b5e381b627462ce75f11e549b3bfe2',1,'mongocxx::uri::uri(bsoncxx::string::view_or_value uri_string=k_default_uri)'],['../classmongocxx_1_1uri.html#a7937e1ff36608219beaecd2fcf726768',1,'mongocxx::uri::uri(uri &amp;&amp;) noexcept']]],
   ['use_5fcursor',['use_cursor',['../classmongocxx_1_1options_1_1aggregate.html#afdedacbca2dafb73c2e7c563e564c3d6',1,'mongocxx::options::aggregate::use_cursor(bool use_cursor)'],['../classmongocxx_1_1options_1_1aggregate.html#a47374d0f19681335ba56f0c1a9b6470b',1,'mongocxx::options::aggregate::use_cursor() const ']]],
   ['username',['username',['../classmongocxx_1_1uri.html#af4e574d6153d0545d922d12f93222765',1,'mongocxx::uri']]]
 ];

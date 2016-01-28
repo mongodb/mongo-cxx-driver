@@ -131,9 +131,6 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1write__concern.html#ab81f921c8949cdc8da41af0587c4b69f">~write_concern</a> ()</td></tr>
 <tr class="memdesc:ab81f921c8949cdc8da41af0587c4b69f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys a <a class="el" href="classmongocxx_1_1write__concern.html" title="Class representing the server-side requirement for reporting the success of a write operation...">write_concern</a>. <br /></td></tr>
 <tr class="separator:ab81f921c8949cdc8da41af0587c4b69f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fb2bf420a2ef2302cd964b1ce2ae568"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1write__concern.html#a4fb2bf420a2ef2302cd964b1ce2ae568">fsync</a> (bool fsync)</td></tr>
-<tr class="memdesc:a4fb2bf420a2ef2302cd964b1ce2ae568"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the fsync parameter for this write concern.  <a href="#a4fb2bf420a2ef2302cd964b1ce2ae568">More...</a><br /></td></tr>
-<tr class="separator:a4fb2bf420a2ef2302cd964b1ce2ae568"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31f2704d70ded409fd8cad5bad29aabd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1write__concern.html#a31f2704d70ded409fd8cad5bad29aabd">journal</a> (bool journal)</td></tr>
 <tr class="memdesc:a31f2704d70ded409fd8cad5bad29aabd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the journal parameter for this write concern.  <a href="#a31f2704d70ded409fd8cad5bad29aabd">More...</a><br /></td></tr>
 <tr class="separator:a31f2704d70ded409fd8cad5bad29aabd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,9 +149,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6b78606c40af1da22c003e32d001fb02"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1write__concern.html#a6b78606c40af1da22c003e32d001fb02">timeout</a> (std::chrono::milliseconds timeout)</td></tr>
 <tr class="memdesc:a6b78606c40af1da22c003e32d001fb02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets an upper bound on the time a write concern can take to be satisfied.  <a href="#a6b78606c40af1da22c003e32d001fb02">More...</a><br /></td></tr>
 <tr class="separator:a6b78606c40af1da22c003e32d001fb02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a824a5f74e7cfabf664f1426da8ffcd1f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1write__concern.html#a824a5f74e7cfabf664f1426da8ffcd1f">fsync</a> () const </td></tr>
-<tr class="memdesc:a824a5f74e7cfabf664f1426da8ffcd1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current status of the fsync parameter.  <a href="#a824a5f74e7cfabf664f1426da8ffcd1f">More...</a><br /></td></tr>
-<tr class="separator:a824a5f74e7cfabf664f1426da8ffcd1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cfd0c5ece9b978ac02840861907b0c7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1write__concern.html#a2cfd0c5ece9b978ac02840861907b0c7">journal</a> () const </td></tr>
 <tr class="memdesc:a2cfd0c5ece9b978ac02840861907b0c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current status of the journal parameter.  <a href="#a2cfd0c5ece9b978ac02840861907b0c7">More...</a><br /></td></tr>
 <tr class="separator:a2cfd0c5ece9b978ac02840861907b0c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -179,8 +173,7 @@ Public Member Functions</h2></td></tr>
 <p>The strength of the write concern setting determines the level of guarantees that you will receive from MongoDB regarding write durability.</p>
 <p>Weaker requirements that provide fewer guarantees report on success quickly while stronger requirements that provide greater guarantees will take longer (or potentially forever, if the <a class="el" href="classmongocxx_1_1write__concern.html" title="Class representing the server-side requirement for reporting the success of a write operation...">write_concern</a>'s requirements are not satisfied and no timeout is set).</p>
 <p>MongoDB drivers allow for different levels of write concern to better address the specific needs of applications. Clients may adjust write concern to ensure that the most important operations persist successfully to an entire MongoDB deployment. However, for other less critical operations, clients can adjust the write concern to ensure better performance rather than persistence to the entire deployment.</p>
-<dl class="section see"><dt>See also</dt><dd><a href="http://docs.mongodb.org/manual/core/write-concern/">http://docs.mongodb.org/manual/core/write-concern/</a></dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>this interface is terrible &ndash; it's exactly what you get with the c-driver essentially. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a href="http://docs.mongodb.org/manual/core/write-concern/">http://docs.mongodb.org/manual/core/write-concern/</a> </dd></dl>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a class="anchor" id="a37c5c6ed8af1e4d04306b4246284a8a9"></a>
 <div class="memitem">
@@ -250,48 +243,6 @@ Public Member Functions</h2></td></tr>
 <p>This value will be unset iff the nodes value is set instead. This is set by default.</p>
 <dl class="section see"><dt>See also</dt><dd><a href="http://docs.mongodb.org/manual/reference/write-concern/#w-option">http://docs.mongodb.org/manual/reference/write-concern/#w-option</a></dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>The acknowledgment level. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a4fb2bf420a2ef2302cd964b1ce2ae568"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void mongocxx::write_concern::fsync </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>fsync</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Sets the fsync parameter for this write concern. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">fsync</td><td>If <code>true</code> forces the database to fsync all files before reporting a write operation was successful. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a824a5f74e7cfabf664f1426da8ffcd1f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool mongocxx::write_concern::fsync </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Gets the current status of the fsync parameter. </p>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if fsync is required, <code>false</code> if not. </dd></dl>
 
 </div>
 </div>
@@ -526,7 +477,7 @@ Setting the number of nodes required to an amount greater than the number of ava
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 11 2016 17:51:11 for MongoDB C++11 Driver by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 28 2016 15:26:19 for MongoDB C++11 Driver by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

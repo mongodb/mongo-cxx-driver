@@ -90,6 +90,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classmongocxx_1_1instance-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">mongocxx::instance Class Reference</div>  </div>
@@ -122,10 +123,16 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1instance.html#afd1dc8caf8123c0f6902de801e7b73d6">~instance</a> ()</td></tr>
 <tr class="memdesc:afd1dc8caf8123c0f6902de801e7b73d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys an instance of the driver. <br /></td></tr>
 <tr class="separator:afd1dc8caf8123c0f6902de801e7b73d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a2a13ec77c5fac3e46c8fead118c6b879"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classmongocxx_1_1instance.html">instance</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1instance.html#a2a13ec77c5fac3e46c8fead118c6b879">current</a> ()</td></tr>
+<tr class="memdesc:a2a13ec77c5fac3e46c8fead118c6b879"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current unique instance of the driver.  <a href="#a2a13ec77c5fac3e46c8fead118c6b879">More...</a><br /></td></tr>
+<tr class="separator:a2a13ec77c5fac3e46c8fead118c6b879"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class representing an instance of the MongoDB driver. </p>
-<p>Life cycle: An instance of the driver <em>MUST</em> be kept around. </p>
+<p>Life cycle: A unique instance of the driver <em>MUST</em> be kept around. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a785015ce94487d486237d97da3b5dfa6"></a>
 <div class="memitem">
@@ -151,13 +158,40 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a2a13ec77c5fac3e46c8fead118c6b879"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classmongocxx_1_1instance.html">instance</a>&amp; mongocxx::instance::current </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the current unique instance of the driver. </p>
+<p>If an instance was explicitly created, that will be returned. If no instance has yet been created, a default instance will be constructed and returned. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/mongocxx/<a class="el" href="instance_8hpp_source.html">instance.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 11 2016 17:51:11 for MongoDB C++11 Driver by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 28 2016 15:26:19 for MongoDB C++11 Driver by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

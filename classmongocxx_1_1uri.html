@@ -109,9 +109,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2256039cf54baf0b6cb44256f65a3efe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1uri.html#a2256039cf54baf0b6cb44256f65a3efe">uri</a> (stdx::string_view uri_string=k_default_uri)</td></tr>
-<tr class="memdesc:a2256039cf54baf0b6cb44256f65a3efe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a uri from an optional MongoDB uri string.  <a href="#a2256039cf54baf0b6cb44256f65a3efe">More...</a><br /></td></tr>
-<tr class="separator:a2256039cf54baf0b6cb44256f65a3efe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9b5e381b627462ce75f11e549b3bfe2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1uri.html#aa9b5e381b627462ce75f11e549b3bfe2">uri</a> (<a class="el" href="classbsoncxx_1_1string_1_1view__or__value.html">bsoncxx::string::view_or_value</a> uri_string=k_default_uri)</td></tr>
+<tr class="memdesc:aa9b5e381b627462ce75f11e549b3bfe2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a uri from an optional MongoDB uri string.  <a href="#aa9b5e381b627462ce75f11e549b3bfe2">More...</a><br /></td></tr>
+<tr class="separator:aa9b5e381b627462ce75f11e549b3bfe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7937e1ff36608219beaecd2fcf726768"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7937e1ff36608219beaecd2fcf726768"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1uri.html#a7937e1ff36608219beaecd2fcf726768">uri</a> (<a class="el" href="classmongocxx_1_1uri.html">uri</a> &amp;&amp;) noexcept</td></tr>
 <tr class="memdesc:a7937e1ff36608219beaecd2fcf726768"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move constructs a uri. <br /></td></tr>
@@ -166,19 +166,19 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class representing a MongoDB connection string URI. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd><p class="startdd">: return const char* instead or stringview </p>
-<p class="enddd">: harmonize with C library (options, credentials, etc...)</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000016">Todo:</a></b></dt><dd><p class="startdd">return const char* instead or stringview </p>
+<p class="enddd">harmonize with C library (options, credentials, etc...)</p>
 </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a href="http://docs.mongodb.org/manual/reference/connection-string/">http://docs.mongodb.org/manual/reference/connection-string/</a> </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a2256039cf54baf0b6cb44256f65a3efe"></a>
+<a class="anchor" id="aa9b5e381b627462ce75f11e549b3bfe2"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">mongocxx::uri::uri </td>
           <td>(</td>
-          <td class="paramtype">stdx::string_view&#160;</td>
+          <td class="paramtype"><a class="el" href="classbsoncxx_1_1string_1_1view__or__value.html">bsoncxx::string::view_or_value</a>&#160;</td>
           <td class="paramname"><em>uri_string</em> = <code>k_default_uri</code></td><td>)</td>
           <td></td>
         </tr>
@@ -189,11 +189,10 @@ Public Member Functions</h2></td></tr>
 <p>If no uri string is specified, uses the default uri string, 'mongodb://localhost:27017'.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">uri_string</td><td>String representing a MongoDB connection string uri, defaults to k_default_uri.</td></tr>
+    <tr><td class="paramname">uri_string</td><td>String representing a MongoDB connection string uri, defaults to k_default_uri. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>this should really take a stringview (polyfilled)? </dd></dl>
 
 </div>
 </div>
@@ -438,7 +437,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 11 2016 17:51:11 for MongoDB C++11 Driver by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 28 2016 15:26:19 for MongoDB C++11 Driver by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

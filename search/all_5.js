@@ -7,9 +7,8 @@ var searchData=
   ['find_5fone',['find_one',['../classmongocxx_1_1collection.html#a7bc5c6087f55bf9a26b11f85c5ffe2c4',1,'mongocxx::collection']]],
   ['find_5fone_5fand_5fdelete',['find_one_and_delete',['../classmongocxx_1_1collection.html#a3db5124c26fff90fb5f06796c7fefa7d',1,'mongocxx::collection']]],
   ['find_5fone_5fand_5fdelete',['find_one_and_delete',['../classmongocxx_1_1options_1_1find__one__and__delete.html',1,'mongocxx::options']]],
-  ['find_5fone_5fand_5freplace',['find_one_and_replace',['../classmongocxx_1_1options_1_1find__one__and__replace.html',1,'mongocxx::options']]],
   ['find_5fone_5fand_5freplace',['find_one_and_replace',['../classmongocxx_1_1collection.html#a1e1e5146b69faaf263a2003874213993',1,'mongocxx::collection']]],
-  ['find_5fone_5fand_5fupdate',['find_one_and_update',['../classmongocxx_1_1collection.html#a6b04b5265e044c08d1ecd1e4185fb699',1,'mongocxx::collection']]],
+  ['find_5fone_5fand_5freplace',['find_one_and_replace',['../classmongocxx_1_1options_1_1find__one__and__replace.html',1,'mongocxx::options']]],
   ['find_5fone_5fand_5fupdate',['find_one_and_update',['../classmongocxx_1_1options_1_1find__one__and__update.html',1,'mongocxx::options']]],
-  ['fsync',['fsync',['../classmongocxx_1_1write__concern.html#a4fb2bf420a2ef2302cd964b1ce2ae568',1,'mongocxx::write_concern::fsync(bool fsync)'],['../classmongocxx_1_1write__concern.html#a824a5f74e7cfabf664f1426da8ffcd1f',1,'mongocxx::write_concern::fsync() const ']]]
+  ['find_5fone_5fand_5fupdate',['find_one_and_update',['../classmongocxx_1_1collection.html#a6b04b5265e044c08d1ecd1e4185fb699',1,'mongocxx::collection']]]
 ];

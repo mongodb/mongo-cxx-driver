@@ -107,9 +107,8 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad9a4edeedb84a6bce86d7988190fa41d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad9a4edeedb84a6bce86d7988190fa41d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1read__concern.html#ad9a4edeedb84a6bce86d7988190fa41d">read_concern</a> ()</td></tr>
-<tr class="memdesc:ad9a4edeedb84a6bce86d7988190fa41d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a new <a class="el" href="classmongocxx_1_1read__concern.html" title="A class to represent the read concern. ">read_concern</a> with default acknowledge_level of k_empty and default acknowledge_string of "" (empty string). <br /></td></tr>
+<tr class="memitem:ad9a4edeedb84a6bce86d7988190fa41d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1read__concern.html#ad9a4edeedb84a6bce86d7988190fa41d">read_concern</a> ()</td></tr>
+<tr class="memdesc:ad9a4edeedb84a6bce86d7988190fa41d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a new <a class="el" href="classmongocxx_1_1read__concern.html" title="A class to represent the read concern. ">read_concern</a> with default acknowledge_level of k_server_default.  <a href="#ad9a4edeedb84a6bce86d7988190fa41d">More...</a><br /></td></tr>
 <tr class="separator:ad9a4edeedb84a6bce86d7988190fa41d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a978f7e350baffad165143ddedb4eb489"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a978f7e350baffad165143ddedb4eb489"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1read__concern.html#a978f7e350baffad165143ddedb4eb489">read_concern</a> (const <a class="el" href="classmongocxx_1_1read__concern.html">read_concern</a> &amp;)</td></tr>
@@ -134,21 +133,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a52fa000bb3cfa92988e837bbcec4ccaa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1read__concern.html#a52fa000bb3cfa92988e837bbcec4ccaa">acknowledge_level</a> (<a class="el" href="classmongocxx_1_1read__concern.html#a638e23ff887c158ffb41dfd7a69af229">level</a> rc_level)</td></tr>
 <tr class="memdesc:a52fa000bb3cfa92988e837bbcec4ccaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the read concern level.  <a href="#a52fa000bb3cfa92988e837bbcec4ccaa">More...</a><br /></td></tr>
 <tr class="separator:a52fa000bb3cfa92988e837bbcec4ccaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44efffc4866a7fa3cd222dc9df16a316"><td class="memItemLeft" align="right" valign="top">stdx::optional&lt; <a class="el" href="classmongocxx_1_1read__concern.html#a638e23ff887c158ffb41dfd7a69af229">level</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1read__concern.html#a44efffc4866a7fa3cd222dc9df16a316">acknowledge_level</a> () const </td></tr>
-<tr class="memdesc:a44efffc4866a7fa3cd222dc9df16a316"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current read concern level.  <a href="#a44efffc4866a7fa3cd222dc9df16a316">More...</a><br /></td></tr>
-<tr class="separator:a44efffc4866a7fa3cd222dc9df16a316"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cc8da7aa2b73ec18bbf68ff84192f20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmongocxx_1_1read__concern.html#a638e23ff887c158ffb41dfd7a69af229">level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1read__concern.html#a0cc8da7aa2b73ec18bbf68ff84192f20">acknowledge_level</a> () const </td></tr>
+<tr class="memdesc:a0cc8da7aa2b73ec18bbf68ff84192f20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current read concern level.  <a href="#a0cc8da7aa2b73ec18bbf68ff84192f20">More...</a><br /></td></tr>
+<tr class="separator:a0cc8da7aa2b73ec18bbf68ff84192f20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b11657cf38ed37923d786a769fcb03a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1read__concern.html#a3b11657cf38ed37923d786a769fcb03a">acknowledge_string</a> (stdx::string_view rc_string)</td></tr>
 <tr class="memdesc:a3b11657cf38ed37923d786a769fcb03a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the read concern string.  <a href="#a3b11657cf38ed37923d786a769fcb03a">More...</a><br /></td></tr>
 <tr class="separator:a3b11657cf38ed37923d786a769fcb03a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70013f27d9efa185141f78c29d5eec7c"><td class="memItemLeft" align="right" valign="top">stdx::optional&lt; stdx::string_view &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1read__concern.html#a70013f27d9efa185141f78c29d5eec7c">acknowledge_string</a> () const </td></tr>
-<tr class="memdesc:a70013f27d9efa185141f78c29d5eec7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current read concern string.  <a href="#a70013f27d9efa185141f78c29d5eec7c">More...</a><br /></td></tr>
-<tr class="separator:a70013f27d9efa185141f78c29d5eec7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5983f786ea90c2a71d78502e2855d9dc"><td class="memItemLeft" align="right" valign="top">stdx::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1read__concern.html#a5983f786ea90c2a71d78502e2855d9dc">acknowledge_string</a> () const </td></tr>
+<tr class="memdesc:a5983f786ea90c2a71d78502e2855d9dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current read concern string.  <a href="#a5983f786ea90c2a71d78502e2855d9dc">More...</a><br /></td></tr>
+<tr class="separator:a5983f786ea90c2a71d78502e2855d9dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A class to represent the read concern. </p>
 <p>Read concern can be set at the client, database, or collection level. The read concern can also be provided via connection string, and will be parsed and set on the client constructed for the URI.</p>
 <p>For the WiredTiger storage engine, MongoDB 3.2 introduced the readConcern option for replica sets and replica set shards. The readConcern option allows clients to choose a level of isolation for their reads. You can specify a readConcern of "majority" to read data that has been written to a majority of nodes and thus cannot be rolled back. By default, MongoDB uses a readConcern of "local" which does not guarantee that the read data would not be rolled back.</p>
-<p>link to the docs when they exist. </p>
+<dl class="section see"><dt>See also</dt><dd><a href="https://docs.mongodb.org/manual/reference/read-concern/">https://docs.mongodb.org/manual/reference/read-concern/</a> </dd></dl>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a class="anchor" id="a638e23ff887c158ffb41dfd7a69af229"></a>
 <div class="memitem">
@@ -169,7 +168,26 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>A class to represent the read concern level. </p>
-<p>link to the docs when they exist. </p>
+<dl class="section see"><dt>See also</dt><dd><a href="https://docs.mongodb.org/manual/reference/read-concern/#read-concern-levels">https://docs.mongodb.org/manual/reference/read-concern/#read-concern-levels</a> </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="ad9a4edeedb84a6bce86d7988190fa41d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mongocxx::read_concern::read_concern </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructs a new <a class="el" href="classmongocxx_1_1read__concern.html" title="A class to represent the read concern. ">read_concern</a> with default acknowledge_level of k_server_default. </p>
+<p>The k_server_default acknowledge level has an empty acknowledge_string. Queries that run with this <a class="el" href="classmongocxx_1_1read__concern.html" title="A class to represent the read concern. ">read_concern</a> will use the server's default <a class="el" href="classmongocxx_1_1read__concern.html" title="A class to represent the read concern. ">read_concern</a> instead of specifying one. </p>
 
 </div>
 </div>
@@ -191,25 +209,25 @@ Public Member Functions</h2></td></tr>
 <p>Sets the read concern level. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">rc_level</td><td>Either k_local or k_majority.</td></tr>
+    <tr><td class="paramname">rc_level</td><td>Either k_local, k_majority, or k_server_default.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">std::invalid_argument</td><td>if rc_level is not k_local or k_majority. </td></tr>
+    <tr><td class="paramname">std::invalid_argument</td><td>if rc_level is not k_local, k_majority, or k_server_default. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a class="anchor" id="a44efffc4866a7fa3cd222dc9df16a316"></a>
+<a class="anchor" id="a0cc8da7aa2b73ec18bbf68ff84192f20"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">stdx::optional&lt;<a class="el" href="classmongocxx_1_1read__concern.html#a638e23ff887c158ffb41dfd7a69af229">level</a>&gt; mongocxx::read_concern::acknowledge_level </td>
+          <td class="memname"><a class="el" href="classmongocxx_1_1read__concern.html#a638e23ff887c158ffb41dfd7a69af229">level</a> mongocxx::read_concern::acknowledge_level </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -218,7 +236,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Gets the current read concern level. </p>
-<p>If this was set with acknowledge_string to anything other than "local" or "majority", this will return k_unknown.</p>
+<p>If this was set with acknowledge_string to anything other than "local", "majority", or an empty string, this will return k_unknown.</p>
 <dl class="section return"><dt>Returns</dt><dd>The read concern level. </dd></dl>
 
 </div>
@@ -238,6 +256,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Sets the read concern string. </p>
+<p>One of "local", "majority", or "".</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">rc_string</td><td>The read concern string. </td></tr>
@@ -247,12 +266,12 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a70013f27d9efa185141f78c29d5eec7c"></a>
+<a class="anchor" id="a5983f786ea90c2a71d78502e2855d9dc"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">stdx::optional&lt;stdx::string_view&gt; mongocxx::read_concern::acknowledge_string </td>
+          <td class="memname">stdx::string_view mongocxx::read_concern::acknowledge_string </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -261,7 +280,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Gets the current read concern string. </p>
-<p>If the read concern level was set with acknowledge_level, this will return either "local" or "majority".</p>
+<p>If the read concern level was set with acknowledge_level, this will return either "local", "majority", or an empty string for k_server_default.</p>
 <dl class="section return"><dt>Returns</dt><dd>The read concern string. </dd></dl>
 
 </div>
@@ -272,7 +291,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 11 2016 17:51:11 for MongoDB C++11 Driver by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 28 2016 15:26:19 for MongoDB C++11 Driver by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

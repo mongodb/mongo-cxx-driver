@@ -95,6 +95,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">mongocxx::operation_exception Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="operation__exception_8hpp_source.html">operation_exception.hpp</a>&gt;</code></p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Inheritance diagram for mongocxx::operation_exception:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
@@ -116,11 +118,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afd5c7cf50479bc765df9ea5726e5bc8f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1operation__exception.html#afd5c7cf50479bc765df9ea5726e5bc8f">operation_exception</a> (std::error_code ec, <a class="el" href="classbsoncxx_1_1document_1_1value.html">bsoncxx::document::value</a> &amp;&amp;<a class="el" href="classmongocxx_1_1operation__exception.html#a232c42053e4cf7c09966a1c9b0bdef43">raw_server_error</a>, std::string what_arg=&quot;&quot;)</td></tr>
 <tr class="memdesc:afd5c7cf50479bc765df9ea5726e5bc8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a new operation exception.  <a href="#afd5c7cf50479bc765df9ea5726e5bc8f">More...</a><br /></td></tr>
 <tr class="separator:afd5c7cf50479bc765df9ea5726e5bc8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr class="memitem:a232c42053e4cf7c09966a1c9b0bdef43"><td class="memItemLeft" align="right" valign="top">const stdx::optional&lt; <a class="el" href="classbsoncxx_1_1document_1_1value.html">bsoncxx::document::value</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1operation__exception.html#a232c42053e4cf7c09966a1c9b0bdef43">raw_server_error</a> () const </td></tr>
 <tr class="memdesc:a232c42053e4cf7c09966a1c9b0bdef43"><td class="mdescLeft">&#160;</td><td class="mdescRight">The optional raw bson error document from the server.  <a href="#a232c42053e4cf7c09966a1c9b0bdef43">More...</a><br /></td></tr>
 <tr class="separator:a232c42053e4cf7c09966a1c9b0bdef43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5218b049f22c2298e18e6c35a84fb3c0"><td class="memItemLeft" align="right" valign="top">stdx::optional&lt; <a class="el" href="classbsoncxx_1_1document_1_1value.html">bsoncxx::document::value</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1operation__exception.html#a5218b049f22c2298e18e6c35a84fb3c0">raw_server_error</a> ()</td></tr>
+<tr class="memdesc:a5218b049f22c2298e18e6c35a84fb3c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The optional raw bson error document from the server.  <a href="#a5218b049f22c2298e18e6c35a84fb3c0">More...</a><br /></td></tr>
+<tr class="separator:a5218b049f22c2298e18e6c35a84fb3c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>document this class </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="afd5c7cf50479bc765df9ea5726e5bc8f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -182,13 +190,31 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a5218b049f22c2298e18e6c35a84fb3c0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">stdx::optional&lt;<a class="el" href="classbsoncxx_1_1document_1_1value.html">bsoncxx::document::value</a>&gt;&amp; mongocxx::operation_exception::raw_server_error </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The optional raw bson error document from the server. </p>
+<dl class="section return"><dt>Returns</dt><dd>The raw server error, if it is available. </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/mongocxx/exception/<a class="el" href="operation__exception_8hpp_source.html">operation_exception.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 11 2016 17:51:11 for MongoDB C++11 Driver by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 28 2016 15:26:19 for MongoDB C++11 Driver by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>
