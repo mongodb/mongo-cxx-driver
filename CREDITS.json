@@ -27,7 +27,11 @@
             "name": "Adam Midvidy"
         },
         {
-            "name": "Jason Carey"
+            "name": "Jason Carey",
+            "email": [
+                "jcarey@argv.me"
+            ],
+            "description": "Principle author of bsoncxx library, libmongoc integration and mock testing framework."
         },
         {
             "name": "Matt Cotter",
