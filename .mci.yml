@@ -114,7 +114,10 @@ tasks:
               script: |
                   set -e
                   PKG_CONFIG_PATH="/data/tmp/c-driver-install/lib/pkgconfig" ${cmake_path} ${cmake_flags} -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" ..
-                  make format-lint
+                  if [ `uname` != 'Darwin' ]; then
+                      # Evergreen OS X 10.6 does not have tar that can untar tar.bz2 files
+                      make format-lint
+                  fi
                   make all
                   make install
                   make examples

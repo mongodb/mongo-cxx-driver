@@ -579,9 +579,15 @@ class Repo(object):
         """Call git for this repository
         """
         # These two flags are the equivalent of -C in newer versions of Git
-        # but we use these to support versions back to ~1.8
-        return callo(['git', '--git-dir', os.path.join(self.path, ".git"),
-                        '--work-tree', self.path] + args)
+        # but we use these to support versions pre 1.8.5 but it depends on the command
+        # and what the current directory is
+        if "ls-files" in args:
+            # This command depends on the current directory and works better if not run with
+            # work-tree
+            return callo(['git', '--git-dir', os.path.join(self.path, ".git")] + args)
+        else:
+            return callo(['git', '--git-dir', os.path.join(self.path, ".git"),
+                                '--work-tree', self.path] + args)
 
     def _get_local_dir(self, path):
         """Get a directory path relative to the git root directory
