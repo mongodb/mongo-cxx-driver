@@ -24,7 +24,11 @@
             "description" : "View_or_value variant types, bsoncxx error handling, various features and bug fixes."
         },
         {
-            "name": "Adam Midvidy"
+            "name": "Adam Midvidy",
+            "email": [
+                "amidvidy@gmail.com"
+            ],
+            "description" : "Client pool, BSON validator, ABI versioning scheme, pluggable loggers, examples and some documentation"
         },
         {
             "name": "Jason Carey",
