@@ -51,7 +51,6 @@ class single_context;
 template <class base = closed_context>
 class array_context {
    public:
-
     ///
     /// Create an array_context given a core builder
     ///

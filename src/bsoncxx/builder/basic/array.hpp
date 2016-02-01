@@ -34,7 +34,6 @@ namespace basic {
 ///
 class array : public sub_array {
    public:
-
     ///
     /// Default constructor
     ///

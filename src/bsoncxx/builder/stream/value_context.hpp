@@ -47,7 +47,6 @@ namespace stream {
 template <class base>
 class value_context {
    public:
-
     ///
     /// Create a value_context given a core builder
     ///

@@ -35,7 +35,6 @@ namespace stream {
 ///
 class array : public array_context<> {
    public:
-
     ///
     /// Default constructor.
     ///

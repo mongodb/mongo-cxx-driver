@@ -38,7 +38,6 @@ void value_append(core* core, T&& t);
 ///
 class BSONCXX_API sub_array {
    public:
-
     ///
     /// Default constructor
     ///

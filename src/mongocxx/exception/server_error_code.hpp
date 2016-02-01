@@ -53,6 +53,6 @@ MONGOCXX_INLINE_NAMESPACE_END
 
 namespace std {
 // Specialize is_error_code_enum so we get simpler std::error_code construction
-template<>
-struct is_error_code_enum<mongocxx::server_error_code> : public true_type{};
+template <>
+struct is_error_code_enum<mongocxx::server_error_code> : public true_type {};
 }  // namespace std

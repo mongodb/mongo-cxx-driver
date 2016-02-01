@@ -69,7 +69,6 @@ namespace document {
 ///
 class BSONCXX_API element {
    public:
-
     ///
     /// Construct an invalid element.
     ///

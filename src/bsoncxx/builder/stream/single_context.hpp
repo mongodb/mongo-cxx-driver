@@ -35,7 +35,6 @@ namespace stream {
 ///
 class single_context {
    public:
-
     ///
     /// Create a single_context given a core builder
     ///

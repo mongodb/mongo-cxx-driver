@@ -33,7 +33,6 @@ namespace stream {
 ///
 class document : public key_context<> {
    public:
-
     ///
     /// Default constructor.
     ///

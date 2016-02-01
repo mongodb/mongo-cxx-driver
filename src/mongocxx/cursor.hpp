@@ -103,7 +103,7 @@ class MONGOCXX_API cursor::iterator
    private:
     friend class cursor;
 
-    /// 
+    ///
     /// @{
     ///
     /// Compare two iterators for (in)-equality

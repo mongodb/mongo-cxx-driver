@@ -47,7 +47,6 @@ namespace stream {
 template <class base = closed_context>
 class key_context {
    public:
-
     ///
     /// Create a key_context given a core builder
     ///

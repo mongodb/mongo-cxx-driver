@@ -297,7 +297,8 @@ void core::append(const types::b_dbpointer& value) {
     bson_oid_t oid;
     std::memcpy(&oid.bytes, value.value.bytes(), sizeof(oid.bytes));
 
-    bson_append_dbpointer(_impl->back(), key.data(), key.length(), value.collection.to_string().data(), &oid);
+    bson_append_dbpointer(_impl->back(), key.data(), key.length(),
+                          value.collection.to_string().data(), &oid);
 }
 
 void core::append(const types::b_code& value) {
@@ -319,7 +320,8 @@ void core::append(const types::b_codewscope& value) {
     bson_t bson;
     bson_init_static(&bson, value.scope.data(), value.scope.length());
 
-    bson_append_code_with_scope(_impl->back(), key.data(), key.length(), value.code.to_string().data(), &bson);
+    bson_append_code_with_scope(_impl->back(), key.data(), key.length(),
+                                value.code.to_string().data(), &bson);
 }
 
 void core::append(const types::b_int32& value) {
