@@ -3,7 +3,7 @@ Welcome to the MongoDB C++ Driver!
 
 This branch contains the new C++11 driver and is the recommended
 branch for all users. Please see the README.md files in the "legacy"
-and "26comapt" branches for notes on when to use those release
+and "26compat" branches for notes on when to use those release
 streams.
 
 #### Quickstart Guide
