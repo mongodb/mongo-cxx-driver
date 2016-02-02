@@ -603,9 +603,7 @@ TEST_CASE("read_concern is inherited from parent", "[collection]") {
     collection coll = db["rc"];
 
     SECTION("when parent is a database") {
-        // CDRIVER-1031 collections currently inherit read_concern from the parent client
-        // instead of the parent database object.
-        // REQUIRE(coll.read_concern().acknowledge_level() == read_concern::level::k_majority);
+        REQUIRE(coll.read_concern().acknowledge_level() == read_concern::level::k_majority);
     }
 
     SECTION("except when read_concern is explicitly set") {
