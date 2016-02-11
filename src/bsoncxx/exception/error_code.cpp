@@ -14,6 +14,8 @@
 
 #include <bsoncxx/exception/error_code.hpp>
 
+#include <string>
+
 #include <bsoncxx/config/private/prelude.hpp>
 
 namespace bsoncxx {
