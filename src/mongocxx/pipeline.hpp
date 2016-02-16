@@ -129,7 +129,6 @@ class MONGOCXX_API pipeline {
     ///
     pipeline& sample(std::int32_t size);
 
-
     ///
     /// Skips over the specified number of documents that pass into the stage and passes the
     /// remaining documents to the next stage in the pipeline.
