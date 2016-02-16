@@ -65,6 +65,12 @@ pipeline& pipeline::redact(bsoncxx::document::view_or_value restrictions) {
     return *this;
 }
 
+pipeline& pipeline::sample(std::int32_t size) {
+    _impl->sink() << open_document << "$sample" << open_document << "size" << size << close_document
+                  << close_document;
+    return *this;
+}
+
 pipeline& pipeline::skip(std::int32_t skip) {
     _impl->sink() << open_document << "$skip" << skip << close_document;
     return *this;

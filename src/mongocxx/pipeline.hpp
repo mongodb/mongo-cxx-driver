@@ -120,6 +120,16 @@ class MONGOCXX_API pipeline {
     pipeline& redact(bsoncxx::document::view_or_value restrictions);
 
     ///
+    /// Randomly selects the specified number of documents that pass into the stage and passes the
+    /// remaining documents to the next stage in the pipeline.
+    ///
+    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/sample/#pipe._S_sample
+    ///
+    /// @param size the number of input documents to select.
+    ///
+    pipeline& sample(std::int32_t size);
+
+    ///
     /// Skips over the specified number of documents that pass into the stage and passes the
     /// remaining documents to the next stage in the pipeline.
     ///
