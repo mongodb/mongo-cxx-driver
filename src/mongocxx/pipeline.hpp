@@ -125,7 +125,7 @@ class MONGOCXX_API pipeline {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/sample/#pipe._S_sample
     ///
-    /// @param set the number of input documents to select.
+    /// @param size the number of input documents to select.
     ///
     pipeline& sample(std::int32_t size);
 
