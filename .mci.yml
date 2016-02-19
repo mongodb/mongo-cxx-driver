@@ -150,6 +150,12 @@ cxx_driver_variables:
       cpppath: --cpppath="c:\local\boost_1_56_0"
       dllpath: --runtime-library-search-path="c:\local\boost_1_56_0\lib64-msvc-12.0,c:\openssl\bin,c:\sasl\bin,c:\curl\dlls"
       extrapath: --extrapath="c:\openssl,c:\sasl,c:\curl"
+    msvc2015: &with_msvc2015
+      toolchain_flags: --msvc-version=14.0
+      libpath: --libpath="c:\local\boost_1_60_0\lib64-msvc-14.0"
+      cpppath: --cpppath="c:\local\boost_1_60_0"
+      dllpath: --runtime-library-search-path="c:\local\boost_1_60_0\lib64-msvc-14.0,c:\openssl\bin,c:\sasl\bin,c:\curl\dlls"
+      extrapath: --extrapath="c:\openssl,c:\sasl,c:\curl"
 
   ## all windows buildvariants have these attributes in common
   windows_common: &windows_common
@@ -699,4 +705,19 @@ buildvariants:
     <<: *with_msvc2013
   run_on:
   - windows-64-vs2013-compile
+  tasks: *latest_tests
+
+## Windows 64-bit DYNAMIC (msvc2015)
+## dynamic client and RT
+
+- name: windows-64-msvc2015-dyn-dyn
+  display_name: "Win64(2015) dyn-dyn"
+  expansions:
+    <<: *windows_common
+    <<: *parallel_compile_flags_proc
+    <<: *scons_flags_64_windows_dynamic
+    <<: *mongo_url_windows64
+    <<: *with_msvc2015
+  run_on:
+  - windows-64-vs2015-compile
   tasks: *latest_tests
