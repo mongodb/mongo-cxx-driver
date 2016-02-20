@@ -17,7 +17,6 @@
 #include <bsoncxx/private/itoa.hpp>
 
 TEST_CASE("util::itoa is equivalent to to_string(int)", "[bsoncxx::util::itoa]") {
-
 // Cygwin doesn't have std::to_string, see:
 // https://sourceware.org/ml/cygwin/2015-10/msg00446.html
 #if !defined(__CYGWIN__)
