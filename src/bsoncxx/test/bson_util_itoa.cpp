@@ -16,10 +16,23 @@
 
 #include <bsoncxx/private/itoa.hpp>
 
+#if defined(__CYGWIN__)
+#include <cstdio>
+#endif // __CYGWIN__
+
 TEST_CASE("util::itoa is equivalent to to_string(int)", "[bsoncxx::util::itoa]") {
+#if defined(__CYGWIN__)
+    char _cygwin_to_string_buf[128];
+#endif //__CYGWIN__
+    
     for (int i = 0; i <= 10000; i++) {
         bsoncxx::itoa val(i);
+#if defined(__CYGWIN__)
+        snprintf(_cygwin_to_string_buf, 128, "%d", i);
+        std::string str(_cygwin_to_string_buf);
+#else // __CYGWIN__
         std::string str = std::to_string(i);
+#endif // __CYGWIN__
         REQUIRE(val.length() == str.length());
         REQUIRE(std::string(val.c_str()) == str);
     }
