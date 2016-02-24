@@ -62,10 +62,6 @@ void find::no_cursor_timeout(bool no_cursor_timeout) {
     _no_cursor_timeout = no_cursor_timeout;
 }
 
-void find::oplog_replay(bool oplog_replay) {
-    _oplog_replay = oplog_replay;
-}
-
 void find::projection(bsoncxx::document::view_or_value projection) {
     _projection = std::move(projection);
 }
@@ -120,10 +116,6 @@ const stdx::optional<bsoncxx::document::view_or_value>& find::modifiers() const 
 
 const stdx::optional<bool>& find::no_cursor_timeout() const {
     return _no_cursor_timeout;
-}
-
-const stdx::optional<bool>& find::oplog_replay() const {
-    return _oplog_replay;
 }
 
 const stdx::optional<bsoncxx::document::view_or_value>& find::projection() const {

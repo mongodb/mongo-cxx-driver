@@ -227,9 +227,6 @@ class MONGOCXX_API find {
     ///
     const stdx::optional<bool>& no_cursor_timeout() const;
 
-    void oplog_replay(bool oplog_replay);
-    const stdx::optional<bool>& oplog_replay() const;
-
     ///
     /// Sets a projection which limits the returned fields for all matching documents.
     ///
@@ -319,7 +316,6 @@ class MONGOCXX_API find {
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<bsoncxx::document::view_or_value> _modifiers;
     stdx::optional<bool> _no_cursor_timeout;
-    stdx::optional<bool> _oplog_replay;
     stdx::optional<bsoncxx::document::view_or_value> _projection;
     stdx::optional<class read_preference> _read_preference;
     stdx::optional<std::int32_t> _skip;
