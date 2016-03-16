@@ -24,6 +24,7 @@ set(BSONCXX_EXAMPLES
     builder_core.cpp
     builder_basic.cpp
     builder_stream.cpp
+    builder_stream_customization.cpp
     getting_values.cpp
     view_and_value.cpp
 )
