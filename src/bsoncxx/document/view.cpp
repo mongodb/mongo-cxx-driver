@@ -175,9 +175,9 @@ view::iterator view::find(stdx::string_view key) const {
 
     if (bson_iter_init_find(&iter, &b, key.to_string().data())) {
         return iterator(element(iter.raw, iter.len, iter.off));
-    } else {
-        return end();
     }
+
+    return end();
 }
 
 element view::operator[](stdx::string_view key) const {

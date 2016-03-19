@@ -175,9 +175,9 @@ view::iterator view::find(std::uint32_t i) const {
 
     if (bson_iter_init_find(&iter, &b, key.c_str())) {
         return iterator(element(iter.raw, iter.len, iter.off));
-    } else {
-        return end();
     }
+
+    return end();
 }
 
 element view::operator[](std::uint32_t i) const {
