@@ -1634,7 +1634,7 @@ public:
                           const WriteConcern* wc = NULL);
 
     /**
-     * Initializes an ordered bulk operation by returning an object that can be
+     * Initializes an unordered bulk operation by returning an object that can be
      * used to enqueue multiple operations for batch execution.
      *
      * @param ns Namespace on which to apply the operations.
@@ -1643,7 +1643,7 @@ public:
     virtual BulkOperationBuilder initializeUnorderedBulkOp(const std::string& ns);
 
     /**
-     * Initializes an unordered bulk operation by returning an object that can be
+     * Initializes an ordered bulk operation by returning an object that can be
      * used to enqueue multiple operations for batch execution.
      *
      * @param ns Namespace on which to apply the operations.
