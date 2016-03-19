@@ -32,32 +32,105 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
 ///
-/// @todo document this class
+/// Models a single write operation within a @bulk_write.
 ///
 class MONGOCXX_API write {
    public:
+
+    ///
+    /// Constructs a write from an @insert_one.
+    ///
     write(insert_one value);
+
+    ///
+    /// Constructs a write from an @update_one.
+    ///
     write(update_one value);
+
+    ///
+    /// Constructs a write from an @update_many.
+    ///
     write(update_many value);
+
+    ///
+    /// Constructs a write from a @delete_one.
+    ///
     write(delete_one value);
+
+    ///
+    /// Constructs a write from a @delete_many.
+    ///
     write(delete_many value);
+
+    ///
+    /// Constructs a write from a @replace_one.
+    ///
     write(replace_one value);
 
+    ///
+    /// Move constructs a write.
+    ///
     write(write&& rhs) noexcept;
+
+    ///
+    /// Move assigns a write.
+    ///
     write& operator=(write&& rhs) noexcept;
 
     write(const write& rhs) = delete;
     write& operator=(const write& rhs) = delete;
 
+    ///
+    /// Destroys a write.
+    ///
     ~write();
 
+    ///
+    /// Returns the current type of this write. You must call this
+    /// method before calling any of the get methods below.
+    ///
     write_type type() const;
 
+    ///
+    /// Accesses the write as an @insert_one. It is illegal to call
+    /// this method if the return of @type (above) does not indicate
+    /// that this object currently contains the applicable type.
+    ///
     const insert_one& get_insert_one() const;
+
+    ///
+    /// Accesses the write as an @update_one. It is illegal to call
+    /// this method if the return of @type (above) does not indicate
+    /// that this object currently contains the applicable type.
+    ///
     const update_one& get_update_one() const;
+
+    ///
+    /// Accesses the write as an @update_many. It is illegal to call
+    /// this method if the return of @type (above) does not indicate
+    /// that this object currently contains the applicable type.
+    ///
     const update_many& get_update_many() const;
+
+    ///
+    /// Accesses the write as a @delete_one. It is illegal to call
+    /// this method if the return of @type (above) does not indicate
+    /// that this object currently contains the applicable type.
+    ///
     const delete_one& get_delete_one() const;
+
+    ///
+    /// Accesses the write as a @delete_many. It is illegal to call
+    /// this method if the return of @type (above) does not indicate
+    /// that this object currently contains the applicable type.
+    ///
     const delete_many& get_delete_many() const;
+
+    ///
+    /// Accesses the write as a @replace_one. It is illegal to call
+    /// this method if the return of @type (above) does not indicate
+    /// that this object currently contains the applicable type.
+    ///
     const replace_one& get_replace_one() const;
 
    private:
