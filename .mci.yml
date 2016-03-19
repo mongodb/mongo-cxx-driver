@@ -21,6 +21,16 @@ variables:
     tar_options:
         ubuntu_tar_options: &ubuntu_tar_options --wildcards --no-anchored
 
+    ## concurrency for make
+    compile_concurrency:
+        linux_compile_concurrency: &linux_compile_concurrency -j$(grep -c ^processor /proc/cpuinfo)
+        osx_compile_concurrency: &osx_compile_concurrency -j$(sysctl -n hw.logicalcpu)
+
+    ## cdriver configure flags
+    cdriver_configure_flags:
+        linux_cdriver_configure_flags: &linux_cdriver_configure_flags --enable-ssl --enable-sasl
+        osx_cdriver_configure_flags: &osx_cdriver_configure_flags --enable-ssl --enable-sasl
+
     ## cmake flag variables
     cmake_flags:
         ubuntu_cmake_flags: &ubuntu_cmake_flags -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers"
@@ -50,6 +60,8 @@ functions:
         params:
             working_dir: "."
             script: |
+                set -o errexit
+                set -o verbose
                 curl -o mongodb.tgz ${source}
                 tar --extract --file mongodb.tgz --strip-components=2 ${tar_options} "*/bin/mongod"
                 mkdir -p /data/tmp/db
@@ -61,12 +73,14 @@ functions:
             working_dir: "."
             ## Use --disable-extra-align when configuring the C driver to avoid misalignment errors in UBSAN
             script: |
+                set -o errexit
+                set -o verbose
                 git clone https://github.com/mongodb/mongo-c-driver.git
                 git checkout 1.3.2
                 cd mongo-c-driver
                 rm -rf /data/tmp/c-driver-install
-                ./autogen.sh --prefix="/data/tmp/c-driver-install" --enable-tests=no --enable-examples=no --with-libbson=bundled --disable-extra-align
-                make
+                ./autogen.sh --prefix="/data/tmp/c-driver-install" --enable-tests=no --enable-examples=no --with-libbson=bundled --disable-extra-align ${cdriver_configure_flags}
+                make ${compile_concurrency}
                 make install
 
     "stop_mongod":
@@ -113,15 +127,16 @@ tasks:
           params:
               working_dir: "mongo-cxx-driver/build"
               script: |
-                  set -e
+                  set -o errexit
+                  set -o verbose
                   PKG_CONFIG_PATH="/data/tmp/c-driver-install/lib/pkgconfig" ${cmake_path} ${cmake_flags} -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" ..
                   if [ `uname` != 'Darwin' ]; then
                       # Evergreen OS X 10.6 does not have tar that can untar tar.bz2 files
                       make format-lint
                   fi
-                  make all
+                  make ${compile_concurrency} all
                   make install
-                  make examples
+                  make ${compile_concurrency} examples
                   ${test_params} ./src/bsoncxx/test/test_bson
                   ${test_params} ./src/mongocxx/test/test_driver
                   ${test_params} ./src/mongocxx/test/test_instance
@@ -147,6 +162,8 @@ buildvariants:
           build_type: "Release"
           source: *ubuntu_source
           tar_options: *ubuntu_tar_options
+          compile_concurrency: *linux_compile_concurrency
+          cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *ubuntu_cmake_path
           cmake_flags: *ubuntu_cmake_flags
       run_on:
@@ -160,6 +177,8 @@ buildvariants:
           build_type: "Debug"
           source: *ubuntu_source
           tar_options: *ubuntu_tar_options
+          compile_concurrency: *linux_compile_concurrency
+          cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *ubuntu_cmake_path
           cmake_flags: *ubuntu_cmake_flags
       run_on:
@@ -172,6 +191,8 @@ buildvariants:
       expansions:
           build_type: "Release"
           source: *osx_source
+          compile_concurrency: *osx_compile_concurrency
+          cdriver_configure_flags: *osx_cdriver_configure_flags
           cmake_path: *osx_cmake_path
           cmake_flags: *osx_cmake_flags
       run_on:
@@ -185,6 +206,8 @@ buildvariants:
           build_type: "Debug"
           source: *ubuntu_source
           tar_options: *ubuntu_tar_options
+          compile_concurrency: *linux_compile_concurrency
+          cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *ubuntu_cmake_path
           cmake_flags: *ubuntu_cmake_flags
           test_params: *valgrind_test_params
@@ -199,6 +222,8 @@ buildvariants:
           build_type: "Debug"
           source: *ubuntu_source
           tar_options: *ubuntu_tar_options
+          compile_concurrency: *linux_compile_concurrency
+          cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *ubuntu_cmake_path
           cmake_flags: *asan_cmake_flags
           test_params: *asan_test_params
@@ -213,6 +238,8 @@ buildvariants:
           build_type: "Debug"
           source: *ubuntu_source
           tar_options: *ubuntu_tar_options
+          compile_concurrency: *linux_compile_concurrency
+          cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *ubuntu_cmake_path
           cmake_flags: *ubsan_cmake_flags
           test_params: *ubsan_test_params
