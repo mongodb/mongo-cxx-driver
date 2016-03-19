@@ -140,13 +140,13 @@ TEST_CASE(
 
     instance::current();
 
-// GCC before 4.9.0 doesn't place max_align_t in the std namespace.
-#if defined(__clang__) || !defined(__GNUC__) || (__GNUC__ > 4) || \
-    (__GNUC__ == 4 && __GNUC_MINOR__ >= 9)
-    std::max_align_t dummy_address;
-#else
-    max_align_t dummy_address;
-#endif
+    // libstdc++ before GCC 4.9 places max_align_t in the wrong
+    // namespace. Use a limited scope 'using namespace std' to name it
+    // in a way that always works.
+    auto dummy_address = []() {
+        using namespace std;
+        return max_align_t{};
+    }();
 
     bool try_pop_called = false;
 
