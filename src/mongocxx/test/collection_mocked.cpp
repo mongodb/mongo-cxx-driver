@@ -368,6 +368,9 @@ TEST_CASE("Collection", "[collection]") {
         mongocxx::stdx::optional<bsoncxx::document::view> expected_sort{};
         mongocxx::stdx::optional<bsoncxx::document::view> expected_hint{};
         mongocxx::stdx::optional<bsoncxx::stdx::string_view> expected_comment{};
+        mongocxx::stdx::optional<mongocxx::cursor::type> expected_cursor_type{};
+        int expected_flags = 0;
+
 
         collection_find->interpose([&](mongoc_collection_t*, mongoc_query_flags_t flags,
                                        uint32_t skip, uint32_t limit, uint32_t batch_size,
@@ -375,7 +378,6 @@ TEST_CASE("Collection", "[collection]") {
                                        const mongoc_read_prefs_t* read_prefs) {
             collection_find_called = true;
 
-            REQUIRE(flags == MONGOC_QUERY_NONE);
             REQUIRE(skip == skip);
             REQUIRE(limit == limit);
             REQUIRE(batch_size == batch_size);
@@ -393,6 +395,11 @@ TEST_CASE("Collection", "[collection]") {
             }
             if (expected_comment) {
                 REQUIRE(query_view["$comment"].get_utf8().value == *expected_comment);
+            }
+            if (expected_cursor_type) {
+                REQUIRE(flags == expected_flags);
+            } else {
+                REQUIRE(flags == ::MONGOC_QUERY_NONE);
             }
             REQUIRE(fields == NULL);
             REQUIRE(read_prefs == NULL);
@@ -429,6 +436,15 @@ TEST_CASE("Collection", "[collection]") {
             expected_comment.emplace("my comment");
             options::find opts;
             opts.comment(*expected_comment);
+
+            REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
+        }
+
+        SECTION("Succeeds with cursor type") {
+            options::find opts;
+            expected_cursor_type = mongocxx::cursor::type::k_tailable;
+            expected_flags = ::MONGOC_QUERY_TAILABLE_CURSOR;
+            opts.cursor_type(*expected_cursor_type);
 
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
         }

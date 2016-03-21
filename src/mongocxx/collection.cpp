@@ -192,6 +192,7 @@ stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write
 cursor collection::find(view_or_value filter, const options::find& options) {
     using namespace bsoncxx;
     builder::stream::document filter_builder;
+    int query_flags = ::MONGOC_QUERY_NONE;
     scoped_bson_t filter_bson;
     scoped_bson_t projection{options.projection()};
 
@@ -217,6 +218,19 @@ cursor collection::find(view_or_value filter, const options::find& options) {
         filter_builder << "$comment" << *options.comment();
     }
 
+    if (options.cursor_type()) {
+        if (*options.cursor_type() == cursor::type::k_non_tailable) {
+            query_flags &= ~::MONGOC_QUERY_TAILABLE_CURSOR;
+        } else if (*options.cursor_type() == cursor::type::k_tailable) {
+            query_flags |= ::MONGOC_QUERY_TAILABLE_CURSOR;
+        } else if (*options.cursor_type() == cursor::type::k_tailable_await) {
+            query_flags |= ::MONGOC_QUERY_TAILABLE_CURSOR;
+            query_flags |= ::MONGOC_QUERY_AWAIT_DATA;
+        } else {
+            throw logic_error{error_code::k_invalid_parameter};
+        }
+    }
+
     filter_bson.init_from_static(filter_builder.view());
 
     const mongoc_read_prefs_t* rp_ptr = NULL;
@@ -226,9 +240,9 @@ cursor collection::find(view_or_value filter, const options::find& options) {
     }
 
     auto mongoc_cursor = libmongoc::collection_find(
-        _get_impl().collection_t, mongoc_query_flags_t(0), options.skip().value_or(0),
-        options.limit().value_or(0), options.batch_size().value_or(0), filter_bson.bson(),
-        projection.bson(), rp_ptr);
+        _get_impl().collection_t, static_cast<::mongoc_query_flags_t>(query_flags),
+        options.skip().value_or(0), options.limit().value_or(0), options.batch_size().value_or(0),
+        filter_bson.bson(), projection.bson(), rp_ptr);
 
     if (options.max_await_time()) {
         const auto count = options.max_await_time()->count();
