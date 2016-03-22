@@ -72,22 +72,14 @@ int main(int, char**) {
         BSONCXX_UNREACHABLE;  // Not reached.
     }
 
-    // The ["key"] can only be used on document views or elements that are of type k_document. This
-    // will throw otherwise.
-    try {
-        doc["_id"]["throws"];
-        BSONCXX_UNREACHABLE;
-    } catch (const std::runtime_error&) {
-        // Trying to get a value from an int throws.
-    };
+    // Similarly, indexed access (either by string or numeric index) into a type that is not
+    // a document or an array yields invalid eleemnts.
 
-    // Similarly, [index] only works on array views or elements that are of type k_array.
-    try {
-        doc["name"][3];
-        BSONCXX_UNREACHABLE;
-    } catch (const std::runtime_error&) {
-        // Trying to index into a non-array throws.
-    };
+    auto invalid3 = doc["_id"]["invalid"];
+    auto invalid4 = doc["name"][3];
+    if (invalid3 || invalid4) {
+        BSONCXX_UNREACHABLE;  // Not reached.
+    }
 
     // Make all variables used.
     return (awards && first_award_year && second_award_year && last_name) ? EXIT_SUCCESS
