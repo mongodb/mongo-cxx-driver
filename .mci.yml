@@ -61,7 +61,8 @@ functions:
             working_dir: "."
             ## Use --disable-extra-align when configuring the C driver to avoid misalignment errors in UBSAN
             script: |
-                git clone -b master https://github.com/mongodb/mongo-c-driver.git
+                git clone https://github.com/mongodb/mongo-c-driver.git
+                git checkout 1.3.2
                 cd mongo-c-driver
                 rm -rf /data/tmp/c-driver-install
                 ./autogen.sh --prefix="/data/tmp/c-driver-install" --enable-tests=no --enable-examples=no --with-libbson=bundled --disable-extra-align
