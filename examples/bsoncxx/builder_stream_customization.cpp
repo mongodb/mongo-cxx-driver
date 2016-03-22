@@ -79,6 +79,7 @@ int main(int, char**) {
 
     // stream::document builds a BSON document
     auto doc = document{};
+
     // stream::array builds a BSON array
     auto arr = array{};
 
