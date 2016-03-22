@@ -76,8 +76,8 @@ functions:
                 set -o errexit
                 set -o verbose
                 git clone https://github.com/mongodb/mongo-c-driver.git
-                git checkout 1.3.2
                 cd mongo-c-driver
+                git checkout 1.3.2
                 rm -rf /data/tmp/c-driver-install
                 ./autogen.sh --prefix="/data/tmp/c-driver-install" --enable-tests=no --enable-examples=no --with-libbson=bundled --disable-extra-align ${cdriver_configure_flags}
                 make ${compile_concurrency}
