@@ -60,7 +60,7 @@ TEST_CASE("[] can reach into nested arrays", "[bsoncxx]") {
 
     SECTION("returns invalid on index access to non-array") {
         REQUIRE(!doc["bools"][0][1]);
-     }
+    }
 }
 
 TEST_CASE("[] can reach into nested documents", "[bsoncxx]") {
