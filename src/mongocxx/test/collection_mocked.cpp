@@ -371,7 +371,6 @@ TEST_CASE("Collection", "[collection]") {
         mongocxx::stdx::optional<mongocxx::cursor::type> expected_cursor_type{};
         int expected_flags = 0;
 
-
         collection_find->interpose([&](mongoc_collection_t*, mongoc_query_flags_t flags,
                                        uint32_t skip, uint32_t limit, uint32_t batch_size,
                                        const bson_t* query, const bson_t* fields,
