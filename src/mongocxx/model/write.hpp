@@ -36,7 +36,6 @@ namespace model {
 ///
 class MONGOCXX_API write {
    public:
-
     ///
     /// Constructs a write from an @insert_one.
     ///
