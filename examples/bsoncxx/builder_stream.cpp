@@ -58,4 +58,33 @@ int main(int, char**) {
     using builder::stream::finalize;
     auto myQuery = document{} << "foo"
                               << "bar" << finalize;
+
+    // There is a special concatenate helper to add all keys and corresponding values from one
+    // document into another.
+    using bsoncxx::builder::concatenate;
+    doc << concatenate(myQuery.view());
+    // `doc` now looks like:
+    // {
+    //   "myKey": "myValue",
+    //   ...
+    //   "mySubArr": [...],
+    //   "foo": "bar"
+    // }
+
+    // To nest an existing bsoncxx::document::value into a builder stream, you can create a
+    // types::b_document and append it. Alternatively you can open a new document and concatenate
+    // the value in.
+    bsoncxx::document::value nestedValue = document{} << "nested" << true << finalize;
+    document topLevelDoc{};
+    topLevelDoc << "subDoc1" << types::b_document{nestedValue.view()} << "subDoc2" << open_document
+                << concatenate(nestedValue.view()) << close_document;
+    // `topLevelDoc` now looks like:
+    // {
+    //     "subDoc1": {
+    //         "nested": true
+    //     },
+    //     "subDoc2": {
+    //         "nested": true
+    //     }
+    // }
 }
