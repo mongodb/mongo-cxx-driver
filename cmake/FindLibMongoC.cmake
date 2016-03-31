@@ -31,7 +31,7 @@ elseif(LIBMONGOC_DIR)
   # The best we can do until libMONGOC starts installing a libmongoc-config.cmake file
   set(LIBMONGOC_LIBRARIES mongoc-1.0 CACHE INTERNAL "")
   set(LIBMONGOC_LIBRARY_DIRS ${LIBMONGOC_DIR}/lib CACHE INTERNAL "")
-  set(LIBMONGOC_INCLUDE_DIRS ${LIBMONGOC_DIR}/include/libMONGOC-1.0 CACHE INTERNAL "")
+  set(LIBMONGOC_INCLUDE_DIRS ${LIBMONGOC_DIR}/include/libmongoc-1.0 CACHE INTERNAL "")
   find_package_handle_standard_args(LIBMONGOC DEFAULT_MSG LIBMONGOC_LIBRARIES LIBMONGOC_LIBRARY_DIRS LIBMONGOC_INCLUDE_DIRS)
 else()
     message(FATAL_ERROR "Don't know how to find libmongoc; please set LIBMONGOC_DIR to the prefix directory with which libbson was configured.")
