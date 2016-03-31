@@ -62,7 +62,7 @@ cxx_driver_variables:
       mongo_url_prefix: "http://downloads.mongodb.org/linux/mongodb-linux-i686-"
       mongo_url_enterprise_keyword: ""
       mongo_url_subscription_keyword: ""
-    osx-108: &mongo_url_osx_108
+    osx-110: &mongo_url_osx_110
       mongo_url_prefix: "http://downloads.mongodb.org/osx/mongodb-osx-x86_64-"
       mongo_url_enterprise_keyword: ""
 
@@ -74,7 +74,7 @@ cxx_driver_variables:
       scons_flags: "--32 --ssl --use-sasl-client --sharedclient"
     ubuntu_c++11: &scons_flags_cpp11
       scons_flags: "--64 --c++11 --ssl --use-sasl-client --sharedclient"
-    osx_108: &scons_flags_osx_108
+    osx_110: &scons_flags_osx_110
       scons_flags: "--64 --ssl --use-sasl-client --sharedclient --osx-version-min=10.6"
     ## test all plausible combinations of static/dynamic mongo client and windows runtime:
     static_windows: &scons_flags_64_windows_static
@@ -168,7 +168,7 @@ cxx_driver_variables:
 ## Paths for OS X builds
   osx_fixups:
     scons:
-      boost_headers: &extrapath_osx_108
+      boost_headers: &extrapath_osx_110
         extrapath: --extrapath="/opt/local"
 
 ## Paths and flags for RHEL 5.5 builds
@@ -612,16 +612,16 @@ buildvariants:
 
 ## OS X 10.8
 
-- name: os-x-108
-  display_name: "OS X 10.8"
+- name: os-x-110
+  display_name: "OS X 10.10"
   expansions:
-    <<: *mongo_url_osx_108
-    <<: *scons_flags_osx_108
+    <<: *mongo_url_osx_110
+    <<: *scons_flags_osx_110
     <<: *parallel_compile_flags_sysctl
-    <<: *extrapath_osx_108
+    <<: *extrapath_osx_110
     <<: *mongo_orchestration_osx
   run_on:
-  - osx-108
+  - osx-110
   tasks: *latest_tests
 
 #######################################
