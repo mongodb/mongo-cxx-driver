@@ -186,8 +186,8 @@ buildvariants:
       tasks:
           - name: compile_and_test
 
-    - name: osx-108
-      display_name: "OS X 10.8 Release"
+    - name: osx-1010
+      display_name: "OS X 10.10 Release"
       expansions:
           build_type: "Release"
           source: *osx_source
@@ -196,7 +196,7 @@ buildvariants:
           cmake_path: *osx_cmake_path
           cmake_flags: *osx_cmake_flags
       run_on:
-          - osx-108
+          - osx-1010
       tasks:
           - name: compile_and_test
 
