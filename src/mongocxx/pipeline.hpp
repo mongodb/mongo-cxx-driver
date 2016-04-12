@@ -80,6 +80,20 @@ class MONGOCXX_API pipeline {
     pipeline& limit(std::int32_t limit);
 
     ///
+    /// Performs a left outer join to an unsharded collection in the same database to filter in
+    /// documents from the "joined" collection for processing.
+    ///
+    /// @see https://docs.mongodb.org/manual/reference/operator/aggregation/lookup/
+    ///
+    /// @param lookup the lookup expression, as a document with the following fields:
+    ///   from: <collection to join>
+    ///   localField: <field from the input documents>
+    ///   foreignField: <field from the documents of the "from" collection>
+    ///   as: <output array field>
+    ///
+    pipeline& lookup(bsoncxx::document::view_or_value lookup);
+
+    ///
     /// Filters the documents. Only the documents that match the condition(s) specified by the
     /// @c filter will continue to the next pipeline stage.
     ///

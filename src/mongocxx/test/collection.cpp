@@ -532,6 +532,69 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto results = coll.aggregate(p);
     }
 
+    SECTION("aggregation $lookup operator", "[collection]") {
+        auto people_coll_name = "people_on_the_block";
+        auto people_coll = db.create_collection(people_coll_name);
+        auto houses_coll_name = "houses_on_the_block";
+        auto houses_coll = db.create_collection(houses_coll_name);
+
+        // populate one collection with names
+        document name1;
+        name1 << "firstname"
+              << "Tasha"
+              << "lastname"
+              << "Brown";
+        document name2;
+        name2 << "firstname"
+              << "Logan"
+              << "lastname"
+              << "Brown";
+        document name3;
+        name3 << "firstname"
+              << "Tasha"
+              << "lastname"
+              << "Johnson";
+
+        people_coll.insert_one(name1.view());
+        people_coll.insert_one(name2.view());
+        people_coll.insert_one(name3.view());
+
+        // populate the other with addresses
+        document address1;
+        address1 << "household"
+                 << "Brown"
+                 << "address"
+                 << "23 Prince St";
+        document address2;
+        address2 << "household"
+                 << "Johnson"
+                 << "address"
+                 << "15 Prince St";
+
+        houses_coll.insert_one(address1.view());
+        houses_coll.insert_one(address2.view());
+
+        // perform a $lookup
+        document lookup_doc;
+        lookup_doc << "from" << people_coll_name << "localField"
+                   << "household"
+                   << "foreignField"
+                   << "lastname"
+                   << "as"
+                   << "residents";
+
+        pipeline stages;
+        stages.lookup(lookup_doc.view());
+
+        auto results = houses_coll.aggregate(stages);
+
+        // Should have two result documents, one per household
+        REQUIRE(std::distance(results.begin(), results.end()) == 2);
+
+        houses_coll.drop();
+        people_coll.drop();
+    }
+
     SECTION("distinct works", "[collection]") {
         auto distinct_cname = "distinct_coll";
         auto distinct_coll = db[distinct_cname];

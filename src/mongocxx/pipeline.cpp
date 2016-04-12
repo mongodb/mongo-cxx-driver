@@ -43,6 +43,11 @@ pipeline& pipeline::limit(std::int32_t limit) {
     return *this;
 }
 
+pipeline& pipeline::lookup(bsoncxx::document::view_or_value lookup) {
+    _impl->sink() << open_document << "$lookup" << b_document{std::move(lookup)} << close_document;
+    return *this;
+}
+
 pipeline& pipeline::match(bsoncxx::document::view_or_value criteria) {
     _impl->sink() << open_document << "$match" << b_document{std::move(criteria)} << close_document;
     return *this;
