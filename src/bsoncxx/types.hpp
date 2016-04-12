@@ -290,10 +290,10 @@ struct BSONCXX_API b_date {
     /// Constructor for b_date
     ///
     /// @param value
-    ///   An int64_t representing milliseconds since the epoch.
+    ///   Milliseconds since the system_clock epoch.
     ///
     BSONCXX_INLINE
-    explicit b_date(int64_t value) : value(value) {
+    explicit b_date(std::chrono::milliseconds value) : value(value) {
     }
 
     ///
@@ -304,17 +304,23 @@ struct BSONCXX_API b_date {
     ///
     BSONCXX_INLINE
     explicit b_date(const std::chrono::system_clock::time_point& tp)
-        : value(std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch())
-                    .count()) {
+        : value(std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch())) {
     }
 
-    int64_t value;
+    std::chrono::milliseconds value;
 
     ///
     /// Conversion operator unwrapping a int64_t
     ///
     BSONCXX_INLINE operator int64_t() {
-        return value;
+        return value.count();
+    }
+
+    ///
+    /// Manually convert this b_date to an int64_t
+    ///
+    BSONCXX_INLINE int64_t to_int64() const {
+        return value.count();
     }
 
     ///
@@ -322,8 +328,7 @@ struct BSONCXX_API b_date {
     ///
     BSONCXX_INLINE operator std::chrono::system_clock::time_point() {
         return std::chrono::system_clock::time_point(
-            std::chrono::duration_cast<std::chrono::system_clock::duration>(
-                std::chrono::milliseconds{value}));
+            std::chrono::duration_cast<std::chrono::system_clock::duration>(value));
     }
 };
 

@@ -275,7 +275,7 @@ void core::append(const types::b_bool& value) {
 void core::append(const types::b_date& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_date_time(_impl->back(), key.data(), key.length(), value.value);
+    bson_append_date_time(_impl->back(), key.data(), key.length(), value.to_int64());
 }
 
 void core::append(const types::b_null&) {

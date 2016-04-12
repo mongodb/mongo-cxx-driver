@@ -123,7 +123,7 @@ class json_visitor {
     void visit_value(const types::b_date& value) {
         out << "{" << std::endl;
         pad(1);
-        out << "\"$date\" : " << value.value << std::endl;
+        out << "\"$date\" : " << value.to_int64() << std::endl;
         pad();
         out << "}";
     }

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <chrono>
+
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/types.hpp>
 
@@ -48,10 +50,10 @@ int main(int, char**) {
                    << "cuisine"
                    << "Italian"
                    << "grades" << open_array << open_document << "date"
-                   << bsoncxx::types::b_date{12323} << "grade"
+                   << bsoncxx::types::b_date{std::chrono::milliseconds{12323}} << "grade"
                    << "A"
                    << "score" << 11 << close_document << open_document << "date"
-                   << bsoncxx::types::b_date{121212} << "grade"
+                   << bsoncxx::types::b_date{std::chrono::milliseconds{121212}} << "grade"
                    << "B"
                    << "score" << 17 << close_document << close_array << "name"
                    << "Vella"

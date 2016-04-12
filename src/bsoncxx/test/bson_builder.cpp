@@ -230,7 +230,7 @@ TEST_CASE("builder appends date time", "[bsoncxx::builder::stream]") {
 
     bson_append_date_time(&expected, "foo", -1, 10000);
 
-    b << "foo" << types::b_date{10000};
+    b << "foo" << types::b_date{std::chrono::milliseconds{10000}};
 
     bson_eq_stream(&expected, b);
 

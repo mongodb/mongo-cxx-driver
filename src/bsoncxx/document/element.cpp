@@ -156,7 +156,7 @@ types::b_bool element::get_bool() const {
 types::b_date element::get_date() const {
     BSONCXX_TYPE_CHECK(k_date);
     CITER;
-    return types::b_date{bson_iter_date_time(&iter)};
+    return types::b_date{std::chrono::milliseconds{bson_iter_date_time(&iter)}};
 }
 types::b_null element::get_null() const {
     BSONCXX_TYPE_CHECK(k_null);
