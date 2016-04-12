@@ -44,7 +44,7 @@
     auto client_pool_push = libmongoc::client_pool_push.create_instance();                     \
     client_pool_push->interpose([](::mongoc_client_pool_t*, ::mongoc_client_t*) {}).forever(); \
     auto client_pool_try_pop = libmongoc::client_pool_try_pop.create_instance();               \
-    client_pool_try_pop->interpose([](::mongoc_client_pool_t*) { return nullptr; }).forever(); \
+    client_pool_try_pop->interpose([](::mongoc_client_pool_t*) { return nullptr; }).forever();
 
 #if defined(MONGOC_HAVE_SSL)
 #define MOCK_POOL                                                                          \
@@ -94,14 +94,12 @@
     auto database_get_collection = libmongoc::database_get_collection.create_instance();         \
     database_get_collection->interpose([](mongoc_database_t*, const char*) { return nullptr; })  \
         .forever();                                                                              \
+    auto database_has_collection = libmongoc::database_has_collection.create_instance();         \
     auto database_command = libmongoc::database_command.create_instance();                       \
     auto database_command_simple = libmongoc::database_command_simple.create_instance();         \
-    database_command_simple->interpose([](mongoc_database_t*,                                    \
-        const bson_t*,                                                                           \
-        const mongoc_read_prefs_t*,                                                              \
-        bson_t*,                                                                                 \
-        bson_error_t*) { return true; })                                                         \
-        .forever();                                                                              \
+    database_command_simple->interpose([](mongoc_database_t*, const bson_t*,                     \
+                                          const mongoc_read_prefs_t*, bson_t*,                   \
+                                          bson_error_t*) { return true; }).forever();
 
 #define MOCK_COLLECTION                                                                           \
     auto collection_set_preference = libmongoc::collection_set_read_prefs.create_instance();      \
@@ -139,9 +137,9 @@
     find_and_modify_opts_set_bypass_document_validation->interpose(                                \
         [&expected_find_and_modify_opts_bypass_document_validation](                               \
             mongoc_find_and_modify_opts_t*, bool bypass_document_validation) {                     \
-            REQUIRE(bypass_document_validation ==                                                  \
-                    expected_find_and_modify_opts_bypass_document_validation);                     \
-            return true;                                                                           \
+        REQUIRE(bypass_document_validation ==                                                      \
+                expected_find_and_modify_opts_bypass_document_validation);                         \
+        return true;                                                                               \
         });                                                                                        \
     bsoncxx::document::view expected_find_and_modify_opts_fields;                                  \
     auto find_and_modify_opts_set_fields =                                                         \

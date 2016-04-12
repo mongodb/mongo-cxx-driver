@@ -148,8 +148,13 @@ void database::read_preference(class read_preference rp) {
 
 bool database::has_collection(bsoncxx::string::view_or_value name) const {
     bson_error_t error;
-    return libmongoc::database_has_collection(_get_impl().database_t, name.terminated().data(),
-                                              &error);
+    auto result = libmongoc::database_has_collection(_get_impl().database_t,
+                                                     name.terminated().data(), &error);
+    if (error.domain != 0) {
+        throw_exception<operation_exception>(error);
+    }
+
+    return result;
 }
 
 class read_preference database::read_preference() const {

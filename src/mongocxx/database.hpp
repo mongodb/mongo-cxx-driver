@@ -128,7 +128,11 @@ class MONGOCXX_API database {
     /// Checks whether this database contains a collection having the given name.
     ///
     /// @param name the name of the collection.
+    ///
     /// @return bool whether the collection exists in this database.
+    ///
+    /// @throws exception::operation if the underlying 'listCollections'
+    ///   command fails.
     ///
     bool has_collection(bsoncxx::string::view_or_value name) const;
 
