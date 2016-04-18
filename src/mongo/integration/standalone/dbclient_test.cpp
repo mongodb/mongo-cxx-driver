@@ -1051,7 +1051,12 @@ TEST_F(DBClientTest, CountWithHint) {
         ASSERT_NO_THROW(c->count(TEST_NS, bad));
     }
 
-    ASSERT_EQUALS(c->count(TEST_NS, Query().hint("b_1")), 2U);
+    // In 3.3, the behavior here changed, see SERVER-22041 for details.
+    if (serverGTE(c.get(), 3, 3)) {
+        ASSERT_EQUALS(c->count(TEST_NS, Query().hint("b_1")), 0U);
+    } else {
+        ASSERT_EQUALS(c->count(TEST_NS, Query().hint("b_1")), 2U);
+    }
 }
 
 TEST_F(DBClientTest, CopyDatabaseNoAuth) {
