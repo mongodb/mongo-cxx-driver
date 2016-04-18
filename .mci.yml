@@ -77,7 +77,7 @@ cxx_driver_variables:
     ubuntu_c++11: &scons_flags_cpp11
       scons_flags: "--64 --c++11 --ssl --use-sasl-client --sharedclient"
     osx_1010: &scons_flags_osx_1010
-      scons_flags: "--64 --ssl --use-sasl-client --sharedclient --osx-version-min=10.6"
+      scons_flags: "--64 --ssl --use-sasl-client --sharedclient --osx-version-min=10.7 --libc++"
     ## test all plausible combinations of static/dynamic mongo client and windows runtime:
     static_windows: &scons_flags_64_windows_static
       scons_flags: "--64 --ssl --use-sasl-client"
@@ -171,7 +171,7 @@ cxx_driver_variables:
   osx_fixups:
     scons:
       boost_headers: &extrapath_osx_1010
-        extrapath: --extrapath="/opt/local"
+        extrapath: --extrapath="/usr/local"
 
 ## Paths and flags for RHEL 5.5 builds
   rhel55_fixups:
@@ -638,8 +638,8 @@ buildvariants:
 
 ## OS X 10.8
 
-- name: os-x-1010
-  display_name: "OS X 10.10"
+- name: os-x-107
+  display_name: "OS X 10.7"
   expansions:
     <<: *mongo_url_osx_1010
     <<: *scons_flags_osx_1010
