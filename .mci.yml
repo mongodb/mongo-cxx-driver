@@ -11,10 +11,11 @@ cxx_driver_variables:
     - name: "compile"
     - name: "unit-test"
     - name: "integration-test-latest"
+    - name: "integration-test-latest-with-auth"
     - name: "client-test-latest"
 
   ## Note that the in 3.0, the default storage engine is MMAPv1 and
-  ## WiredTiger is opt-in, but in latest as of MongoDB 3.1.4, the
+  ## WiredTiger is opt-in, but as of MongoDB 3.1.4, the
   ## default is WiredTiger and MMAPv1 is opt-in.
   storage_engine_test_list: &storage_engine_tests
     - name: "compile"
@@ -36,12 +37,12 @@ cxx_driver_variables:
     - name: "integration-test-2.4"
     - name: "integration-test-2.6"
     - name: "integration-test-3.0"
-    - name: "integration-test-3.0-with-auth"
-    - name: "integration-test-latest"
+    - name: "integration-test-3.2"
     - name: "client-test-2.2"
     - name: "client-test-2.4"
     - name: "client-test-2.6"
     - name: "client-test-3.0"
+    - name: "client-test-3.2"
     - name: "client-test-latest"
 
 ## Common download urls (merge in as hashes)
@@ -222,13 +223,6 @@ functions:
       bucket: mciuploads
       extract_to: mongo-cxx-driver
 
-  "set version latest" :
-    command: expansions.update
-    params:
-      updates:
-        - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform|}latest.${mongo_url_extension|tgz}
-
   "use WiredTiger storage" :
     command: expansions.update
     params:
@@ -252,19 +246,12 @@ functions:
           # Requires mongo-orchestration 0.4.2
           value: "--mongo-orchestration-preset=auth.json"
 
-  "set version 3.0" :
+  "set version 2.2" :
     command: expansions.update
     params:
       updates:
         - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise-}${mongo_url_platform|}3.0.6.${mongo_url_extension|tgz}
-
-  "set version 2.6" :
-    command: expansions.update
-    params:
-      updates:
-        - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise-}${mongo_url_platform|}2.6.11.${mongo_url_extension|tgz}
+          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|subscription-}${mongo_url_platform|}2.2.7.${mongo_url_extension|tgz}
 
   "set version 2.4" :
     command: expansions.update
@@ -273,12 +260,33 @@ functions:
         - key: "mongo_url"
           value: ${mongo_url_prefix}${mongo_url_subscription_keyword|subscription-}${mongo_url_platform|}2.4.14.${mongo_url_extension|tgz}
 
-  "set version 2.2" :
+  "set version 2.6" :
     command: expansions.update
     params:
       updates:
         - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|subscription-}${mongo_url_platform|}2.2.7.${mongo_url_extension|tgz}
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise-}${mongo_url_platform|}2.6.12.${mongo_url_extension|tgz}
+
+  "set version 3.0" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "mongo_url"
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise-}${mongo_url_platform|}3.0.11.${mongo_url_extension|tgz}
+
+  "set version 3.2" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "mongo_url"
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise-}${mongo_url_platform|}3.2.5.${mongo_url_extension|tgz}
+
+  "set version latest" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "mongo_url"
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform|}latest.${mongo_url_extension|tgz}
 
   "run integration tests" :
     command: shell.exec
@@ -419,22 +427,21 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
-    - name: "integration-test-3.0-with-auth"
-      depends_on:
-        - name: "compile"
-      commands:
-        - func: "set version 3.0"
-        - func: "fetch artifacts"
-        - func: "use auth"
-        - func: "fetch mongodb"
-        - func: "run integration tests"
-
     - name: "integration-test-3.0-with-WiredTiger"
       depends_on:
         - name: "compile"
       commands:
         - func: "set version 3.0"
         - func: "use WiredTiger storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
+    - name: "integration-test-3.2"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.2"
         - func: "fetch artifacts"
         - func: "fetch mongodb"
         - func: "run integration tests"
@@ -455,6 +462,16 @@ tasks:
         - func: "set version latest"
         - func: "use MMAPv1 storage"
         - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
+    - name: "integration-test-latest-with-auth"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version latest"
+        - func: "fetch artifacts"
+        - func: "use auth"
         - func: "fetch mongodb"
         - func: "run integration tests"
 
@@ -500,6 +517,15 @@ tasks:
       commands:
         - func: "set version 3.0"
         - func: "use WiredTiger storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
+    - name: "client-test-3.2"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.0"
         - func: "fetch artifacts"
         - func: "fetch mongodb"
         - func: "run client tests"
