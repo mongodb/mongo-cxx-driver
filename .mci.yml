@@ -22,12 +22,12 @@ cxx_driver_variables:
     - name: "unit-test"
     - name: "integration-test-3.0"
     - name: "integration-test-3.0-with-WiredTiger"
-    - name: "integration-test-latest"
-    - name: "integration-test-latest-with-MMAPv1"
+    - name: "integration-test-3.2"
+    - name: "integration-test-3.2-with-MMAPv1"
     - name: "client-test-3.0"
     - name: "client-test-3.0-with-WiredTiger"
-    - name: "client-test-latest"
-    - name: "client-test-latest-with-MMAPv1"
+    - name: "client-test-3.2"
+    - name: "client-test-3.2-with-MMAPv1"
 
   version_test_list: &version_tests
     - name: "compile"
@@ -38,6 +38,7 @@ cxx_driver_variables:
     - name: "integration-test-2.6"
     - name: "integration-test-3.0"
     - name: "integration-test-3.2"
+    - name: "integration-test-latest"
     - name: "client-test-2.2"
     - name: "client-test-2.4"
     - name: "client-test-2.6"
@@ -446,21 +447,21 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
+    - name: "integration-test-3.2-with-MMAPv1"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.2"
+        - func: "use MMAPv1 storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
     - name: "integration-test-latest"
       depends_on:
         - name: "compile"
       commands:
         - func: "set version latest"
-        - func: "fetch artifacts"
-        - func: "fetch mongodb"
-        - func: "run integration tests"
-
-    - name: "integration-test-latest-with-MMAPv1"
-      depends_on:
-        - name: "compile"
-      commands:
-        - func: "set version latest"
-        - func: "use MMAPv1 storage"
         - func: "fetch artifacts"
         - func: "fetch mongodb"
         - func: "run integration tests"
@@ -530,6 +531,16 @@ tasks:
         - func: "fetch mongodb"
         - func: "run client tests"
 
+    - name: "client-test-3.2-with-MMAPv1"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.0"
+        - func: "use MMAPv1 storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
     - name: "client-test-latest"
       depends_on:
         - name: "compile"
@@ -538,17 +549,6 @@ tasks:
         - func: "fetch artifacts"
         - func: "fetch mongodb"
         - func: "run client tests"
-
-    - name: "client-test-latest-with-MMAPv1"
-      depends_on:
-        - name: "compile"
-      commands:
-        - func: "set version latest"
-        - func: "use MMAPv1 storage"
-        - func: "fetch artifacts"
-        - func: "fetch mongodb"
-        - func: "run client tests"
-
 
 #######################################
 #           Buildvariants             #
