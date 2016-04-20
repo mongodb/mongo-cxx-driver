@@ -1745,6 +1745,41 @@ def doConfigure(myenv):
 
     conf = Configure(myenv)
 
+    def CheckLinkSSL(context):
+        test_body = """
+        #include <openssl/err.h>
+        #include <openssl/ssl.h>
+        #include <stdlib.h>
+
+        int main() {
+            SSL_library_init();
+            SSL_load_error_strings();
+            ERR_load_crypto_strings();
+
+            OpenSSL_add_all_algorithms();
+            ERR_free_strings();
+            return EXIT_SUCCESS;
+        }
+        """
+        context.Message("Checking if OpenSSL is available...")
+        ret = context.TryLink(textwrap.dedent(test_body), ".c")
+        context.Result(ret)
+        return ret
+    conf.AddTest("CheckLinkSSL", CheckLinkSSL)
+
+    if has_option("ssl"):
+        if not conf.CheckLinkSSL():
+            print "SSL is enabled, but is unavailable"
+            Exit(1)
+
+        if conf.CheckDeclaration(
+            "FIPS_mode_set",
+            includes="""
+                #include <openssl/crypto.h>
+                #include <openssl/evp.h>
+            """):
+            conf.env.Append(CPPDEFINES=['MONGO_HAVE_FIPS_MODE_SET'])
+
     if not conf.CheckCXXHeader( "boost/version.hpp" ):
         print( "Could not find boost headers in include search path" )
         Exit(1)
@@ -1804,41 +1839,6 @@ def doConfigure(myenv):
     # check for presence of strnlen(3) and polyfill if needed
     if conf.CheckDeclaration('strnlen', includes="#include <string.h>", language='C'):
         conf.env['MONGO_HAVE_STRNLEN'] = True
-
-    def CheckLinkSSL(context):
-        test_body = """
-        #include <openssl/err.h>
-        #include <openssl/ssl.h>
-        #include <stdlib.h>
-
-        int main() {
-            SSL_library_init();
-            SSL_load_error_strings();
-            ERR_load_crypto_strings();
-
-            OpenSSL_add_all_algorithms();
-            ERR_free_strings();
-            return EXIT_SUCCESS;
-        }
-        """
-        context.Message("Checking if OpenSSL is available...")
-        ret = context.TryLink(textwrap.dedent(test_body), ".c")
-        context.Result(ret)
-        return ret
-    conf.AddTest("CheckLinkSSL", CheckLinkSSL)
-
-    if has_option("ssl"):
-        if not conf.CheckLinkSSL():
-            print "SSL is enabled, but is unavailable"
-            Exit(1)
-
-        if conf.CheckDeclaration(
-            "FIPS_mode_set",
-            includes="""
-                #include <openssl/crypto.h>
-                #include <openssl/evp.h>
-            """):
-            conf.env.Append(CPPDEFINES=['MONGO_HAVE_FIPS_MODE_SET'])
 
     return conf.Finish()
 
