@@ -69,7 +69,7 @@ class json_visitor {
     }
 
     void visit_value(const types::b_document& value) {
-        out << "{" << std::endl;
+        out << "{\n";
         stack.push_back(false);
         visit_children(value.value);
         pad();
@@ -77,7 +77,7 @@ class json_visitor {
     }
 
     void visit_value(const types::b_array& value) {
-        out << "[" << std::endl;
+        out << "[\n";
         stack.push_back(true);
         visit_children(value.value);
         pad();
@@ -91,27 +91,27 @@ class json_visitor {
         auto b64 = stdx::make_unique<char[]>(b64_len);
         b64::ntop(value.bytes, value.size, b64.get(), b64_len);
 
-        out << "{" << std::endl;
+        out << "{\n";
         pad(1);
-        out << "\"$type\" : " << to_string(value.sub_type) << "," << std::endl;
+        out << "\"$type\" : " << to_string(value.sub_type) << ",\n";
         pad(1);
-        out << "\"$binary\" : " << b64.get() << "," << std::endl;
+        out << "\"$binary\" : " << b64.get() << ",\n";
         pad();
         out << "}";
     }
 
     void visit_value(const types::b_undefined&) {
-        out << "{" << std::endl;
+        out << "{\n";
         pad(1);
-        out << "\"$undefined\" : true" << std::endl;
+        out << "\"$undefined\" : true\n";
         pad();
         out << "}";
     }
 
     void visit_value(const types::b_oid& value) {
-        out << "{" << std::endl;
+        out << "{\n";
         pad(1);
-        out << "\"$oid\" : \"" << value.value.to_string() << "\"" << std::endl;
+        out << "\"$oid\" : \"" << value.value.to_string() << "\"\n";
         pad();
         out << "}";
     }
@@ -121,9 +121,9 @@ class json_visitor {
     }
 
     void visit_value(const types::b_date& value) {
-        out << "{" << std::endl;
+        out << "{\n";
         pad(1);
-        out << "\"$date\" : " << value.to_int64() << std::endl;
+        out << "\"$date\" : " << value.to_int64() << '\n';
         pad();
         out << "}";
     }
@@ -133,24 +133,24 @@ class json_visitor {
     }
 
     void visit_value(const types::b_regex& value) {
-        out << "{" << std::endl;
+        out << "{\n";
         pad(1);
-        out << "\"$regex\" : \"" << value.regex.to_string().data() << "\"," << std::endl;
+        out << "\"$regex\" : \"" << value.regex.to_string().data() << "\",\n";
         pad(1);
-        out << "\"$options\" : \"" << value.options.to_string().data() << "\"" << std::endl;
+        out << "\"$options\" : \"" << value.options.to_string().data() << "\"\n";
         pad();
         out << "}";
     }
 
     void visit_value(const types::b_dbpointer& value) {
-        out << "{" << std::endl;
+        out << "{\n";
         pad(1);
         out << "\"$ref\" : \"" << value.collection.to_string().data() << "\"";
 
         if (value.value) {
-            out << "," << std::endl;
+            out << ",\n";
             pad();
-            out << "\"$id\" : \"" << value.value.to_string().data() << "\"" << std::endl;
+            out << "\"$id\" : \"" << value.value.to_string().data() << "\"\n";
         }
 
         pad();
@@ -174,13 +174,13 @@ class json_visitor {
     }
 
     void visit_value(const types::b_timestamp& value) {
-        out << "{" << std::endl;
+        out << "{\n";
         pad(1);
-        out << "\"$timestamp\" : {" << std::endl;
+        out << "\"$timestamp\" : {\n";
         pad(2);
-        out << "\"$t\" : " << value.timestamp << "," << std::endl;
+        out << "\"$t\" : " << value.timestamp << ",\n";
         pad(2);
-        out << "\"$i\" : " << value.increment << std::endl;
+        out << "\"$i\" : " << value.increment << '\n';
         pad(1);
         out << "}";
         pad();
@@ -192,17 +192,17 @@ class json_visitor {
     }
 
     void visit_value(const types::b_minkey&) {
-        out << "{" << std::endl;
+        out << "{\n";
         pad(1);
-        out << "\"$minKey\" : 1" << std::endl;
+        out << "\"$minKey\" : 1\n";
         pad();
         out << "}";
     }
 
     void visit_value(const types::b_maxkey&) {
-        out << "{" << std::endl;
+        out << "{\n";
         pad(1);
-        out << "\"$maxKey\" : 1" << std::endl;
+        out << "\"$maxKey\" : 1\n";
         pad();
         out << "}";
     }
@@ -223,7 +223,7 @@ class json_visitor {
                 break;
             }
             if (!first) {
-                out << ", " << std::endl;
+                out << ", \n";
             }
             first = false;
             visit_key(x.key());
@@ -236,7 +236,7 @@ class json_visitor {
 #undef BSONCXX_ENUM
             }
         }
-        out << std::endl;
+        out << '\n';
         stack.pop_back();
     }
 };
