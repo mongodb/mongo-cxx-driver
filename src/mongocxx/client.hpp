@@ -89,7 +89,7 @@ class MONGOCXX_API client {
     ///
     /// Sets the read concern for this client.
     ///
-    /// Modifications at this level do not affect existing databases instances that have have been
+    /// Modifications at this level do not affect existing database instances that have been
     /// created by this client but do affect new ones as databases inherit the @c read_concern
     /// settings of their parent upon instantiation.
     ///
@@ -110,7 +110,7 @@ class MONGOCXX_API client {
     ///
     /// Sets the read preference for this client.
     ///
-    /// Modifications at this level do not affect existing databases instances that have have been
+    /// Modifications at this level do not affect existing database instances that have been
     /// created by this client but do affect new ones as databases inherit the @c read_preference
     /// settings of their parent upon instantiation.
     ///
