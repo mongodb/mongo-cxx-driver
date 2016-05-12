@@ -50,8 +50,8 @@ void index::storage_options(std::unique_ptr<index::wiredtiger_storage_options> s
         static_cast<index::base_storage_options*>(storage_options.release())));
 }
 
-void index::expire_after_seconds(std::int32_t expire_after_seconds) {
-    _expire_after_seconds = expire_after_seconds;
+void index::expire_after(std::chrono::seconds expire_after) {
+    _expire_after = expire_after;
 }
 
 void index::version(std::int32_t version) {
@@ -114,8 +114,8 @@ const std::unique_ptr<index::base_storage_options>& index::storage_options() con
     return _storage_options;
 }
 
-const stdx::optional<std::int32_t>& index::expire_after_seconds() const {
-    return _expire_after_seconds;
+const stdx::optional<std::chrono::seconds>& index::expire_after() const {
+    return _expire_after;
 }
 
 const stdx::optional<std::int32_t>& index::version() const {

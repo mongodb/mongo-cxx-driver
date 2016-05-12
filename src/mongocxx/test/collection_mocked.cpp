@@ -28,6 +28,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/index.hpp>
@@ -37,8 +38,6 @@
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/stdx.hpp>
-#include <mongocxx/options/update.hpp>
-#include <mongocxx/exception/operation_exception.hpp>
 
 using namespace mongocxx;
 using namespace bsoncxx;
@@ -272,7 +271,7 @@ TEST_CASE("Collection", "[collection]") {
         bool collection_create_index_called = false;
         bool success;
         bool expected_unique = true;
-        std::int32_t expected_expire_after_seconds = 500;
+        auto expected_expire_after = std::chrono::seconds(500);
         std::string expected_config_string = "block_allocation=first";
         std::string expected_name = "index name";
         options::index options{};
@@ -288,8 +287,9 @@ TEST_CASE("Collection", "[collection]") {
             if (options.unique()) {
                 REQUIRE(opt->unique == expected_unique);
             }
-            if (options.expire_after_seconds()) {
-                REQUIRE(opt->expire_after_seconds == expected_expire_after_seconds);
+            if (options.expire_after()) {
+                const auto count = static_cast<std::int32_t>(options.expire_after()->count());
+                REQUIRE(opt->expire_after_seconds == count);
             }
             if (options.name()) {
                 REQUIRE(opt->name == expected_name);
@@ -315,9 +315,22 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Succeeds With Options") {
             success = true;
             options.unique(expected_unique);
-            options.expire_after_seconds(expected_expire_after_seconds);
+            options.expire_after(expected_expire_after);
             options.name(expected_name);
             REQUIRE_NOTHROW(mongo_coll.create_index(index_spec.view(), options));
+        }
+
+        SECTION("Fails with Options") {
+            success = false;
+            expected_expire_after = std::chrono::seconds(std::numeric_limits<int32_t>::max() + 1);
+            options.expire_after(expected_expire_after);
+            REQUIRE_THROWS_AS(mongo_coll.create_index(index_spec.view(), options), logic_error);
+
+            expected_expire_after = std::chrono::seconds(-1);
+            options.expire_after(expected_expire_after);
+            REQUIRE_THROWS_AS(mongo_coll.create_index(index_spec.view(), options), logic_error);
+
+            collection_create_index_called = true;  // mock for this section
         }
 
         SECTION("Succeeds With Storage Engine Options") {

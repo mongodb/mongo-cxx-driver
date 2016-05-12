@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <memory>
 
 #include <bsoncxx/document/view.hpp>
@@ -166,19 +167,19 @@ class MONGOCXX_API index {
     /// Set a value, in seconds, as a TTL to control how long MongoDB retains documents in this
     /// collection.
     ///
-    /// @param expire_after_seconds
+    /// @param seconds
     ///   The amount of time, in seconds, to retain documents.
     ///
     /// @see https://docs.mongodb.org/manual/core/index-ttl/
     ///
-    void expire_after_seconds(std::int32_t expire_after_seconds);
+    void expire_after(std::chrono::seconds seconds);
 
     ///
-    /// The current expire_after_seconds setting.
+    /// The current expire_after setting.
     ///
-    /// @return The current expire_after_seconds.
+    /// @return The current expire_after value.
     ///
-    const stdx::optional<std::int32_t>& expire_after_seconds() const;
+    const stdx::optional<std::chrono::seconds>& expire_after() const;
 
     ///
     /// Sets the index version.
@@ -345,7 +346,7 @@ class MONGOCXX_API index {
     stdx::optional<bsoncxx::string::view_or_value> _name;
     stdx::optional<bool> _sparse;
     std::unique_ptr<base_storage_options> _storage_options;
-    stdx::optional<std::int32_t> _expire_after_seconds;
+    stdx::optional<std::chrono::seconds> _expire_after;
     stdx::optional<std::int32_t> _version;
     stdx::optional<bsoncxx::document::view> _weights;
     stdx::optional<bsoncxx::string::view_or_value> _default_language;

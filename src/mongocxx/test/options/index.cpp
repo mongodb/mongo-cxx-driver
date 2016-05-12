@@ -34,7 +34,7 @@ TEST_CASE("index", "[index][option]") {
     CHECK_OPTIONAL_ARGUMENT(idx, unique, true);
     CHECK_OPTIONAL_ARGUMENT(idx, name, "name");
     CHECK_OPTIONAL_ARGUMENT(idx, sparse, true);
-    CHECK_OPTIONAL_ARGUMENT(idx, expire_after_seconds, 3600);
+    CHECK_OPTIONAL_ARGUMENT(idx, expire_after, std::chrono::seconds(3600));
     CHECK_OPTIONAL_ARGUMENT(idx, version, 540);
     CHECK_OPTIONAL_ARGUMENT(idx, default_language, "en");
     CHECK_OPTIONAL_ARGUMENT(idx, language_override, "lang");

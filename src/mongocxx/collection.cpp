@@ -650,8 +650,11 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
         }
     }
 
-    if (options.expire_after_seconds()) {
-        opt.expire_after_seconds = *options.expire_after_seconds();
+    if (options.expire_after()) {
+        const auto count = options.expire_after()->count();
+        if ((count < 0) || (count > std::numeric_limits<int32_t>::max()))
+            throw logic_error{error_code::k_invalid_parameter};
+        opt.expire_after_seconds = static_cast<std::int32_t>(count);
     }
 
     if (options.version()) {
