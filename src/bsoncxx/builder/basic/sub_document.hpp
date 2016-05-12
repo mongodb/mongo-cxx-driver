@@ -35,7 +35,7 @@ void value_append(core* core, T&& t);
 /// An internal class of builder::basic.
 /// Users should almost always construct a builder::basic::document instead.
 ///
-class BSONCXX_API sub_document {
+class sub_document {
    public:
     BSONCXX_INLINE sub_document(core* core) : _core(core) {
     }

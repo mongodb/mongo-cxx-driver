@@ -36,7 +36,7 @@ void value_append(core* core, T&& t);
 /// An internal class of builder::basic.
 /// Users should almost always construct a builder::basic::array instead.
 ///
-class BSONCXX_API sub_array {
+class sub_array {
    public:
     ///
     /// Default constructor
