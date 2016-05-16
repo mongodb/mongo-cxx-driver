@@ -429,6 +429,9 @@ class ClangFormat(object):
         except CalledProcessError:
             cf_version = "clang-format call failed."
 
+        if CLANG_FORMAT_VERSION in cf_version:
+            return True
+
         if warn:
             print("WARNING: clang-format found in path, but incorrect version found at " +
                     self.path + " with version: " + cf_version)
