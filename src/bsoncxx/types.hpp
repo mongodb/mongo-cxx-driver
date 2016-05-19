@@ -115,9 +115,11 @@ struct BSONCXX_API b_utf8 {
     /// @param value
     ///   The value to wrap.
     ///
-    template <typename T>
-    BSONCXX_INLINE explicit b_utf8(T&& value)
-        : value(std::forward<T>(value)) {
+    template <typename T,
+              typename std::enable_if<!std::is_same<b_utf8, typename std::decay<T>::type>::value,
+                                      int>::type = 0>
+    BSONCXX_INLINE explicit b_utf8(T&& t)
+        : value(std::forward<T>(t)) {
     }
 
     stdx::string_view value;
@@ -436,9 +438,11 @@ struct BSONCXX_API b_code {
     /// @param code
     ///   The js code
     ///
-    template <typename T>
-    BSONCXX_INLINE explicit b_code(T&& code)
-        : code(std::forward<T>(code)) {
+    template <typename T,
+              typename std::enable_if<!std::is_same<b_code, typename std::decay<T>::type>::value,
+                                      int>::type = 0>
+    BSONCXX_INLINE explicit b_code(T&& t)
+        : code(std::forward<T>(t)) {
     }
 
     stdx::string_view code;
@@ -476,9 +480,11 @@ struct BSONCXX_API b_symbol {
     /// @param symbol
     ///   The symbol.
     ///
-    template <typename T>
-    BSONCXX_INLINE explicit b_symbol(T&& symbol)
-        : symbol(std::forward<T>(symbol)) {
+    template <typename T,
+              typename std::enable_if<!std::is_same<b_symbol, typename std::decay<T>::type>::value,
+                                      int>::type = 0>
+    BSONCXX_INLINE explicit b_symbol(T&& t)
+        : symbol(std::forward<T>(t)) {
     }
 
     stdx::string_view symbol;
