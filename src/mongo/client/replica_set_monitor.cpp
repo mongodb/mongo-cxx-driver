@@ -493,6 +493,20 @@ Status ReplicaSetMonitor::shutdown(int gracePeriodMillis) {
     return Status::OK();
 }
 
+bool ReplicaSetMonitor::isKnownToHaveGoodPrimary() const {
+    boost::mutex::scoped_lock lk(_state->mutex);
+
+    std::vector<Node>::const_iterator where = _state->nodes.begin();
+    const std::vector<Node>::const_iterator end = _state->nodes.end();
+    for (; where != end; ++where) {
+        if (where->isMaster) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 Refresher::Refresher(const SetStatePtr& setState)
     : _set(setState), _scan(setState->currentScan), _startedNewScan(false) {
     if (_scan)
