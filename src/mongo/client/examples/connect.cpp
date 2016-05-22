@@ -27,6 +27,30 @@
 
 // this header should be first to ensure that it includes cleanly in any context
 #include "mongo/client/dbclient.h"
+#include "mongo/stdx/functional.h"
+
+namespace {
+
+class OstreamAppender : public mongo::logger::MessageLogDomain::EventAppender {
+public:
+    explicit OstreamAppender(std::ostream& stream) : _stream(stream) {}
+
+    virtual mongo::Status append(
+        const mongo::logger::MessageLogDomain::EventAppender::Event& event) {
+        _stream << event.getDate() << " " << event.getSeverity() << " " << event.getComponent()
+                << " " << event.getContextName() << ": " << event.getMessage() << "\n";
+        return mongo::Status::OK();
+    }
+
+private:
+    std::ostream& _stream;
+};
+
+mongo::client::Options::LogAppenderPtr makeOstreamAppender(std::ostream& stream) {
+    return mongo::client::Options::LogAppenderPtr(new OstreamAppender(stream));
+}
+
+}  // namespace
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
@@ -43,6 +67,12 @@ int main(int argc, char* argv[]) {
     if (uri.find("ssl=true") != std::string::npos) {
         options.setSSLMode(mongo::client::Options::kSSLRequired);
     }
+
+    // Enable logging at an extremely verbose debug level.
+    mongo::client::Options::LogAppenderFactory factory =
+        mongo::stdx::bind(&makeOstreamAppender, boost::ref(std::cout));
+    options.setLogAppenderFactory(factory);
+    options.setMinLoggedSeverity(mongo::logger::LogSeverity::Debug(5));
 
     mongo::client::GlobalInstance instance(options);
     if (!instance.initialized()) {
