@@ -29,6 +29,7 @@ set(MONGOCXX_EXAMPLES
     document_validation.cpp
     exception.cpp
     index.cpp
+    inserted_id.cpp
     query.cpp
     remove.cpp
     update.cpp
