@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/private/libmongoc.hpp>
+
 #define CHECK_OPTIONAL_ARGUMENT(OBJECT, NAME, VALUE) \
     SECTION("has NAME disengaged") {                 \
         REQUIRE(!OBJECT.NAME());                     \
@@ -46,7 +48,7 @@
     auto client_pool_try_pop = libmongoc::client_pool_try_pop.create_instance();               \
     client_pool_try_pop->interpose([](::mongoc_client_pool_t*) { return nullptr; }).forever();
 
-#if defined(MONGOC_HAVE_SSL)
+#if defined(MONGOC_ENABLE_SSL)
 #define MOCK_POOL                                                                          \
     MOCK_POOL_NOSSL                                                                        \
     auto client_pool_set_ssl_opts = libmongoc::client_pool_set_ssl_opts.create_instance(); \

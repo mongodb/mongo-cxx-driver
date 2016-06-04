@@ -33,6 +33,7 @@ class client::impl {
     }
 
     mongoc_client_t* client_t;
+    std::vector<bsoncxx::string::view_or_value> ssl_options;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

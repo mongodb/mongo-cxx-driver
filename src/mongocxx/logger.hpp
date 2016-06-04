@@ -38,6 +38,16 @@ enum class log_level {
 };
 
 ///
+/// Returns a stringification of the given log level.
+///
+/// @param rhs
+///   The type to stringify.
+///
+/// @return a std::string representation of the type.
+///
+MONGOCXX_API stdx::string_view MONGOCXX_CALL to_string(log_level level);
+
+///
 /// The interface that all user-defined loggers must implement.
 ///
 class MONGOCXX_API logger {

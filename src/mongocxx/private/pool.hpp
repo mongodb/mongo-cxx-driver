@@ -26,8 +26,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class pool::impl {
    public:
-    impl(mongoc_client_pool_t* pool, stdx::optional<options::ssl> ssl_opts)
-        : client_pool_t(pool), ssl_options(std::move(ssl_opts)) {
+    impl(mongoc_client_pool_t* pool) : client_pool_t(pool) {
     }
 
     ~impl() {
@@ -35,7 +34,7 @@ class pool::impl {
     }
 
     mongoc_client_pool_t* client_pool_t;
-    stdx::optional<options::ssl> ssl_options;
+    std::vector<bsoncxx::string::view_or_value> ssl_options;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

@@ -23,28 +23,31 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-#if defined(MONGOC_HAVE_SSL)
-inline ::mongoc_ssl_opt_t make_ssl_opts(const ssl& ssl_opts) {
+#if defined(MONGOC_ENABLE_SSL)
+inline std::pair<::mongoc_ssl_opt_t, std::vector<bsoncxx::string::view_or_value>> make_ssl_opts(
+    const ssl& ssl_opts) {
     ::mongoc_ssl_opt_t out{};
+    std::vector<bsoncxx::string::view_or_value> values;
+
     if (ssl_opts.pem_file()) {
-        out.pem_file = ssl_opts.pem_file()->terminated().data();
+        out.pem_file = values.emplace(values.end(), ssl_opts.pem_file()->terminated())->data();
     }
     if (ssl_opts.pem_password()) {
-        out.pem_pwd = ssl_opts.pem_password()->terminated().data();
+        out.pem_pwd = values.emplace(values.end(), ssl_opts.pem_password()->terminated())->data();
     }
     if (ssl_opts.ca_file()) {
-        out.ca_file = ssl_opts.ca_file()->terminated().data();
+        out.ca_file = values.emplace(values.end(), ssl_opts.ca_file()->terminated())->data();
     }
     if (ssl_opts.ca_dir()) {
-        out.ca_dir = ssl_opts.ca_dir()->terminated().data();
+        out.ca_dir = values.emplace(values.end(), ssl_opts.ca_dir()->terminated())->data();
     }
     if (ssl_opts.crl_file()) {
-        out.crl_file = ssl_opts.crl_file()->terminated().data();
+        out.crl_file = values.emplace(values.end(), ssl_opts.crl_file()->terminated())->data();
     }
     if (ssl_opts.allow_invalid_certificates()) {
         out.weak_cert_validation = *(ssl_opts.allow_invalid_certificates());
     }
-    return out;
+    return {out, std::move(values)};
 }
 #endif
 

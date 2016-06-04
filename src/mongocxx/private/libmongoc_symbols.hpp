@@ -138,7 +138,7 @@ MONGOCXX_LIBMONGOC_SYMBOL(write_concern_set_wmajority)
 MONGOCXX_LIBMONGOC_SYMBOL(write_concern_set_wtag)
 MONGOCXX_LIBMONGOC_SYMBOL(write_concern_set_wtimeout)
 
-#if defined(MONGOC_HAVE_SSL)
+#if defined(MONGOC_ENABLE_SSL)
 MONGOCXX_LIBMONGOC_SYMBOL(client_pool_set_ssl_opts)
 MONGOCXX_LIBMONGOC_SYMBOL(client_set_ssl_opts)
 #endif
