@@ -69,7 +69,7 @@ class MONGOCXX_API pool {
     /// @note The lifetime of any entry object must be a subset of the pool object
     ///  from which it was acquired.
     ///
-    using entry = std::unique_ptr<client, std::function<void(client*)>>;
+    using entry = std::unique_ptr<client, std::function<void MONGOCXX_CALL (client*)>>;
 
     ///
     /// Acquires a client from the pool. The calling thread will block until a connection is
