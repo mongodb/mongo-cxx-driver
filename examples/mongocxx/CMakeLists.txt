@@ -30,6 +30,7 @@ set(MONGOCXX_EXAMPLES
     exception.cpp
     index.cpp
     inserted_id.cpp
+    instance_management.cpp
     query.cpp
     query_projection.cpp
     remove.cpp
