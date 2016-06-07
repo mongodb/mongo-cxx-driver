@@ -36,7 +36,8 @@ modify_collection& modify_collection::no_padding(bool no_padding) {
 modify_collection& modify_collection::index(bsoncxx::document::view_or_value index_spec,
                                             std::chrono::seconds seconds) {
     _index.emplace(document{} << "keyPattern" << bsoncxx::types::b_document{std::move(index_spec)}
-                              << "expireAfterSeconds" << seconds.count() << finalize);
+                              << "expireAfterSeconds" << bsoncxx::types::b_int64{seconds.count()}
+                              << finalize);
     return *this;
 }
 

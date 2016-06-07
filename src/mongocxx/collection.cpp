@@ -207,7 +207,7 @@ cursor collection::find(view_or_value filter, const options::find& options) {
     }
 
     if (options.max_time()) {
-        filter_builder << "$maxTimeMS" << options.max_time()->count();
+        filter_builder << "$maxTimeMS" << bsoncxx::types::b_int64{options.max_time()->count()};
     }
 
     if (options.hint()) {
@@ -288,7 +288,7 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
     }
 
     if (options.max_time()) {
-        b << "maxTimeMS" << options.max_time()->count();
+        b << "maxTimeMS" << bsoncxx::types::b_int64{options.max_time()->count()};
     }
 
     if (options.bypass_document_validation()) {
@@ -580,7 +580,7 @@ std::int64_t collection::count(view_or_value filter, const options::count& optio
     bsoncxx::builder::stream::document cmd_opts_builder{};
 
     if (options.max_time()) {
-        cmd_opts_builder << "maxTimeMS" << options.max_time()->count();
+        cmd_opts_builder << "maxTimeMS" << bsoncxx::types::b_int64{options.max_time()->count()};
     }
 
     if (options.hint()) {
@@ -736,7 +736,7 @@ cursor collection::distinct(bsoncxx::string::view_or_value field_name, view_or_v
                     << bsoncxx::types::b_document{query};
 
     if (options.max_time()) {
-        command_builder << "maxTimeMS" << options.max_time()->count();
+        command_builder << "maxTimeMS" << bsoncxx::types::b_int64{options.max_time()->count()};
     }
 
     scoped_bson_t command_bson{command_builder.extract()};
