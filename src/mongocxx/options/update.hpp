@@ -42,7 +42,7 @@ class MONGOCXX_API update {
     ///   The server-side default is @c false, which does not insert a new document if a match
     ///   is not found.
     ///
-    void upsert(bool upsert);
+    update& upsert(bool upsert);
 
     ///
     /// Gets the current value of the upsert option.
@@ -62,7 +62,7 @@ class MONGOCXX_API update {
     /// @param bypass_document_validation
     ///   Whether or not to bypass document validation
     ///
-    void bypass_document_validation(bool bypass_document_validation);
+    update& bypass_document_validation(bool bypass_document_validation);
 
     ///
     /// Gets the current value of the bypass_document_validation option.
@@ -79,7 +79,7 @@ class MONGOCXX_API update {
     ///
     /// @see http://docs.mongodb.org/manual/core/write-concern/
     ///
-    void write_concern(class write_concern wc);
+    update& write_concern(class write_concern wc);
 
     ///
     /// The current write_concern for this operation.

@@ -22,60 +22,74 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-void find::allow_partial_results(bool allow_partial) {
+find& find::allow_partial_results(bool allow_partial) {
     _allow_partial_results = allow_partial;
+    return *this;
 }
 
-void find::batch_size(std::int32_t batch_size) {
+find& find::batch_size(std::int32_t batch_size) {
     _batch_size = batch_size;
+    return *this;
 }
 
-void find::comment(bsoncxx::string::view_or_value comment) {
+find& find::comment(bsoncxx::string::view_or_value comment) {
     _comment = std::move(comment);
+    return *this;
 }
 
-void find::cursor_type(cursor::type cursor_type) {
+find& find::cursor_type(cursor::type cursor_type) {
     _cursor_type = cursor_type;
+    return *this;
 }
 
-void find::hint(class hint index_hint) {
+find& find::hint(class hint index_hint) {
     _hint = std::move(index_hint);
+    return *this;
 }
 
-void find::limit(std::int32_t limit) {
+find& find::limit(std::int32_t limit) {
     _limit = limit;
+    return *this;
 }
 
-void find::max_await_time(std::chrono::milliseconds max_await_time) {
+find& find::max_await_time(std::chrono::milliseconds max_await_time) {
     _max_await_time = std::move(max_await_time);
+    return *this;
 }
 
-void find::max_time(std::chrono::milliseconds max_time) {
+find& find::max_time(std::chrono::milliseconds max_time) {
     _max_time = std::move(max_time);
+    return *this;
 }
 
-void find::modifiers(bsoncxx::document::view_or_value modifiers) {
+find& find::modifiers(bsoncxx::document::view_or_value modifiers) {
     _modifiers = std::move(modifiers);
+    return *this;
 }
 
-void find::no_cursor_timeout(bool no_cursor_timeout) {
+find& find::no_cursor_timeout(bool no_cursor_timeout) {
     _no_cursor_timeout = no_cursor_timeout;
+    return *this;
 }
 
-void find::projection(bsoncxx::document::view_or_value projection) {
+find& find::projection(bsoncxx::document::view_or_value projection) {
     _projection = std::move(projection);
+    return *this;
 }
 
-void find::read_preference(class read_preference rp) {
+find& find::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
+    return *this;
 }
 
-void find::skip(std::int32_t skip) {
+find& find::skip(std::int32_t skip) {
     _skip = skip;
+    return *this;
 }
 
-void find::sort(bsoncxx::document::view_or_value ordering) {
+find& find::sort(bsoncxx::document::view_or_value ordering) {
     _ordering = std::move(ordering);
+    return *this;
 }
 
 const stdx::optional<bool>& find::allow_partial_results() const {

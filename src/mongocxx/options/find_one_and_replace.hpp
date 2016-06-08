@@ -45,7 +45,7 @@ class MONGOCXX_API find_one_and_replace {
     ///
     /// @see https://docs.mongodb.org/manual/core/document-validation/#bypass-document-validation
     ///
-    void bypass_document_validation(bool bypass_document_validation);
+    find_one_and_replace& bypass_document_validation(bool bypass_document_validation);
 
     ///
     /// The current setting for bypassing document validation.
@@ -62,7 +62,7 @@ class MONGOCXX_API find_one_and_replace {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    void max_time(std::chrono::milliseconds max_time);
+    find_one_and_replace& max_time(std::chrono::milliseconds max_time);
 
     ///
     /// The current max_time setting.
@@ -81,7 +81,7 @@ class MONGOCXX_API find_one_and_replace {
     ///
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
-    void projection(bsoncxx::document::view_or_value projection);
+    find_one_and_replace& projection(bsoncxx::document::view_or_value projection);
 
     ///
     /// Gets the current projection for this operation.
@@ -102,7 +102,7 @@ class MONGOCXX_API find_one_and_replace {
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     /// @see mongocxx::options::return_document
     ///
-    void return_document(return_document return_document);
+    find_one_and_replace& return_document(return_document return_document);
 
     ///
     /// Which version of the replaced document to return.
@@ -125,7 +125,7 @@ class MONGOCXX_API find_one_and_replace {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     ///
-    void sort(bsoncxx::document::view_or_value ordering);
+    find_one_and_replace& sort(bsoncxx::document::view_or_value ordering);
 
     ///
     /// Gets the current sort ordering.
@@ -146,7 +146,7 @@ class MONGOCXX_API find_one_and_replace {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
     ///
-    void upsert(bool upsert);
+    find_one_and_replace& upsert(bool upsert);
 
     ///
     /// Gets the current upsert setting.

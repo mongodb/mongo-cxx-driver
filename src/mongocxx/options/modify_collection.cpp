@@ -28,18 +28,21 @@ using bsoncxx::builder::stream::concatenate;
 using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::finalize;
 
-void modify_collection::no_padding(bool no_padding) {
+modify_collection& modify_collection::no_padding(bool no_padding) {
     _no_padding = no_padding;
+    return *this;
 }
 
-void modify_collection::index(bsoncxx::document::view_or_value index_spec,
-                              std::chrono::seconds seconds) {
+modify_collection& modify_collection::index(bsoncxx::document::view_or_value index_spec,
+                                            std::chrono::seconds seconds) {
     _index.emplace(document{} << "keyPattern" << bsoncxx::types::b_document{std::move(index_spec)}
                               << "expireAfterSeconds" << seconds.count() << finalize);
+    return *this;
 }
 
-void modify_collection::validation_criteria(class validation_criteria validation) {
+modify_collection& modify_collection::validation_criteria(class validation_criteria validation) {
     _validation = std::move(validation);
+    return *this;
 }
 
 bsoncxx::document::value modify_collection::to_document() const {

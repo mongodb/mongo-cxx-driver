@@ -44,7 +44,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
     ///
-    void allow_partial_results(bool allow_partial);
+    find& allow_partial_results(bool allow_partial);
 
     ///
     /// Gets the current setting for allowing partial results from mongos.
@@ -63,7 +63,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/cursor.batchSize/
     ///
-    void batch_size(std::int32_t batch_size);
+    find& batch_size(std::int32_t batch_size);
 
     ///
     /// The current batch size setting.
@@ -83,7 +83,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/comment/
     ///
-    void comment(bsoncxx::string::view_or_value comment);
+    find& comment(bsoncxx::string::view_or_value comment);
 
     ///
     /// Gets the current comment attached to this query.
@@ -102,7 +102,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
     ///
-    void cursor_type(cursor::type cursor_type);
+    find& cursor_type(cursor::type cursor_type);
 
     ///
     /// Gets the current cursor type.
@@ -124,7 +124,7 @@ class MONGOCXX_API find {
     /// @param index_hint
     ///   Object representing the index to use.
     ///
-    void hint(class hint index_hint);
+    find& hint(class hint index_hint);
 
     ///
     /// Gets the current hint.
@@ -139,7 +139,7 @@ class MONGOCXX_API find {
     /// @param limit
     ///   The maximum number of documents to return.
     ///
-    void limit(std::int32_t limit);
+    find& limit(std::int32_t limit);
 
     ///
     /// Gets the current limit.
@@ -161,7 +161,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    void max_await_time(std::chrono::milliseconds max_await_time);
+    find& max_await_time(std::chrono::milliseconds max_await_time);
 
     ///
     /// The maximum amount of time for the server to wait on new documents to satisfy a tailable
@@ -179,7 +179,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    void max_time(std::chrono::milliseconds max_time);
+    find& max_time(std::chrono::milliseconds max_time);
 
     ///
     /// The current max_time_ms setting.
@@ -198,7 +198,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/query-modifier/
     ///
-    void modifiers(bsoncxx::document::view_or_value modifiers);
+    find& modifiers(bsoncxx::document::view_or_value modifiers);
 
     ///
     /// Gets the current query modifiers.
@@ -216,7 +216,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
     ///
-    void no_cursor_timeout(bool no_cursor_timeout);
+    find& no_cursor_timeout(bool no_cursor_timeout);
 
     ///
     /// Gets the current no_cursor_timeout setting.
@@ -235,7 +235,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
-    void projection(bsoncxx::document::view_or_value projection);
+    find& projection(bsoncxx::document::view_or_value projection);
 
     ///
     /// Gets the current projection set on this query.
@@ -254,7 +254,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    void read_preference(class read_preference rp);
+    find& read_preference(class read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -274,7 +274,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/cursor.skip/
     ///
-    void skip(std::int32_t skip);
+    find& skip(std::int32_t skip);
 
     ///
     /// Gets the current number of documents to skip.
@@ -294,7 +294,7 @@ class MONGOCXX_API find {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/cursor.sort/
     ///
-    void sort(bsoncxx::document::view_or_value ordering);
+    find& sort(bsoncxx::document::view_or_value ordering);
 
     ///
     /// Gets the current sort ordering for this query.

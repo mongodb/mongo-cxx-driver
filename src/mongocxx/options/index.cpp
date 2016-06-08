@@ -25,73 +25,90 @@ namespace options {
 
 index::index() = default;
 
-void index::background(bool background) {
+index& index::background(bool background) {
     _background = background;
+    return *this;
 }
 
-void index::unique(bool unique) {
+index& index::unique(bool unique) {
     _unique = unique;
+    return *this;
 }
 
-void index::name(bsoncxx::string::view_or_value name) {
+index& index::name(bsoncxx::string::view_or_value name) {
     _name = std::move(name);
+    return *this;
 }
 
-void index::sparse(bool sparse) {
+index& index::sparse(bool sparse) {
     _sparse = sparse;
+    return *this;
 }
 
-void index::storage_options(std::unique_ptr<index::base_storage_options> storage_options) {
+index& index::storage_options(std::unique_ptr<index::base_storage_options> storage_options) {
     _storage_options = std::move(storage_options);
+    return *this;
 }
 
-void index::storage_options(std::unique_ptr<index::wiredtiger_storage_options> storage_options) {
+index& index::storage_options(std::unique_ptr<index::wiredtiger_storage_options> storage_options) {
     _storage_options = std::move(std::unique_ptr<index::base_storage_options>(
         static_cast<index::base_storage_options*>(storage_options.release())));
+    return *this;
 }
 
-void index::expire_after(std::chrono::seconds expire_after) {
+index& index::expire_after(std::chrono::seconds expire_after) {
     _expire_after = expire_after;
+    return *this;
 }
 
-void index::version(std::int32_t version) {
+index& index::version(std::int32_t version) {
     _version = version;
+    return *this;
 }
 
-void index::weights(bsoncxx::document::view weights) {
+index& index::weights(bsoncxx::document::view weights) {
     _weights = weights;
+    return *this;
 }
 
-void index::default_language(bsoncxx::string::view_or_value default_language) {
+index& index::default_language(bsoncxx::string::view_or_value default_language) {
     _default_language = std::move(default_language);
+    return *this;
 }
 
-void index::language_override(bsoncxx::string::view_or_value language_override) {
+index& index::language_override(bsoncxx::string::view_or_value language_override) {
     _language_override = std::move(language_override);
+    return *this;
 }
 
-void index::partial_filter_expression(bsoncxx::document::view partial_filter_expression) {
+index& index::partial_filter_expression(bsoncxx::document::view partial_filter_expression) {
     _partial_filter_expression = partial_filter_expression;
+    return *this;
 }
 
-void index::twod_sphere_version(std::uint8_t twod_sphere_version) {
+index& index::twod_sphere_version(std::uint8_t twod_sphere_version) {
     _twod_sphere_version = twod_sphere_version;
+    return *this;
 }
 
-void index::twod_bits_precision(std::uint8_t twod_bits_precision) {
+index& index::twod_bits_precision(std::uint8_t twod_bits_precision) {
     _twod_bits_precision = twod_bits_precision;
+    return *this;
 }
 
-void index::twod_location_min(double twod_location_min) {
+index& index::twod_location_min(double twod_location_min) {
     _twod_location_min = twod_location_min;
+    return *this;
 }
 
-void index::twod_location_max(double twod_location_max) {
+index& index::twod_location_max(double twod_location_max) {
     _twod_location_max = twod_location_max;
+    return *this;
 }
 
-void index::haystack_bucket_size(double haystack_bucket_size) {
+index& index::haystack_bucket_size(double haystack_bucket_size) {
     _haystack_bucket_size = haystack_bucket_size;
+    return *this;
 }
 
 const stdx::optional<bool>& index::background() const {

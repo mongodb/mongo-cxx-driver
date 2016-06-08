@@ -41,7 +41,7 @@ class MONGOCXX_API distinct {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    void max_time(std::chrono::milliseconds max_time);
+    distinct& max_time(std::chrono::milliseconds max_time);
 
     ///
     /// The current max_time setting.
@@ -60,7 +60,7 @@ class MONGOCXX_API distinct {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    void read_preference(class read_preference rp);
+    distinct& read_preference(class read_preference rp);
 
     ///
     /// The current read_preference for this operation.

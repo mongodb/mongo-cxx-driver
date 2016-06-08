@@ -23,24 +23,27 @@ namespace options {
 bulk_write::bulk_write() : _ordered(true) {
 }
 
-void bulk_write::ordered(bool ordered) {
+bulk_write& bulk_write::ordered(bool ordered) {
     _ordered = ordered;
+    return *this;
 }
 
 bool bulk_write::ordered() const {
     return _ordered;
 }
 
-void bulk_write::write_concern(class write_concern wc) {
+bulk_write& bulk_write::write_concern(class write_concern wc) {
     _write_concern = std::move(wc);
+    return *this;
 }
 
 const stdx::optional<class write_concern>& bulk_write::write_concern() const {
     return _write_concern;
 }
 
-void bulk_write::bypass_document_validation(bool bypass_document_validation) {
+bulk_write& bulk_write::bypass_document_validation(bool bypass_document_validation) {
     _bypass_document_validation = bypass_document_validation;
+    return *this;
 }
 
 const stdx::optional<bool> bulk_write::bypass_document_validation() const {

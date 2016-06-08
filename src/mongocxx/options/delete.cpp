@@ -20,8 +20,9 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-void delete_options::write_concern(class write_concern wc) {
+delete_options& delete_options::write_concern(class write_concern wc) {
     _write_concern = std::move(wc);
+    return *this;
 }
 
 const stdx::optional<class write_concern>& delete_options::write_concern() const {

@@ -41,7 +41,7 @@ class MONGOCXX_API count {
     /// @param index_hint
     ///   Object representing the index to use.
     ///
-    void hint(class hint index_hint);
+    count& hint(class hint index_hint);
 
     ///
     /// Gets the current hint.
@@ -56,7 +56,7 @@ class MONGOCXX_API count {
     /// @param limit
     ///  The max number of documents to count.
     ///
-    void limit(std::int64_t limit);
+    count& limit(std::int64_t limit);
 
     ///
     /// Gets the current limit.
@@ -73,7 +73,7 @@ class MONGOCXX_API count {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    void max_time(std::chrono::milliseconds max_time);
+    count& max_time(std::chrono::milliseconds max_time);
 
     ///
     /// The current max_time setting.
@@ -92,7 +92,7 @@ class MONGOCXX_API count {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/cursor.skip/
     ///
-    void skip(std::int64_t skip);
+    count& skip(std::int64_t skip);
 
     ///
     /// Gets the current number of documents to skip.
@@ -111,7 +111,7 @@ class MONGOCXX_API count {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    void read_preference(class read_preference rp);
+    count& read_preference(class read_preference rp);
 
     ///
     /// The current read_preference for this operation.

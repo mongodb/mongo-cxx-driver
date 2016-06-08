@@ -46,7 +46,7 @@ class MONGOCXX_API bulk_write {
     ///   be executed in arbitrary order (possibly in parallel on the server) and any errors will be
     ///   reported after attempting all operations.
     ///
-    void ordered(bool ordered);
+    bulk_write& ordered(bool ordered);
 
     ///
     /// Gets the current value of the ordered option.
@@ -63,7 +63,7 @@ class MONGOCXX_API bulk_write {
     ///
     /// @see http://docs.mongodb.org/manual/core/write-concern/
     ///
-    void write_concern(class write_concern wc);
+    bulk_write& write_concern(class write_concern wc);
 
     ///
     /// The current write_concern for this operation.
@@ -81,7 +81,7 @@ class MONGOCXX_API bulk_write {
     /// @param bypass_document_validation
     ///   Whether or not to bypass document validation.
     ///
-    void bypass_document_validation(bool bypass_document_validation);
+    bulk_write& bypass_document_validation(bool bypass_document_validation);
 
     ///
     /// The current setting for bypassing document validation for this operation.

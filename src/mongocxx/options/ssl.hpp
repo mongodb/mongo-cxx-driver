@@ -38,7 +38,7 @@ class MONGOCXX_API ssl {
     /// @param pem_file
     ///   The path to the .pem file.
     ///
-    void pem_file(bsoncxx::string::view_or_value pem_file);
+    ssl& pem_file(bsoncxx::string::view_or_value pem_file);
 
     ///
     /// Retrieves the current path to the .pem file.
@@ -53,7 +53,7 @@ class MONGOCXX_API ssl {
     /// @param pem_password
     ///   The pass phrase.
     ///
-    void pem_password(bsoncxx::string::view_or_value pem_password);
+    ssl& pem_password(bsoncxx::string::view_or_value pem_password);
 
     ///
     /// Retrieves the current decryption pass phrase.
@@ -69,7 +69,7 @@ class MONGOCXX_API ssl {
     /// @param ca_file
     ///   The path to the CA file.
     ///
-    void ca_file(bsoncxx::string::view_or_value ca_file);
+    ssl& ca_file(bsoncxx::string::view_or_value ca_file);
 
     ///
     /// Retrieves the current path to the CA file.
@@ -84,7 +84,7 @@ class MONGOCXX_API ssl {
     /// @param ca_dir
     ///   The path to the CA directory.
     ///
-    void ca_dir(bsoncxx::string::view_or_value ca_dir);
+    ssl& ca_dir(bsoncxx::string::view_or_value ca_dir);
 
     ///
     /// Retrieves the current path to the CA directory.
@@ -99,7 +99,7 @@ class MONGOCXX_API ssl {
     /// @param crl_file
     ///   The path to the PEM file.
     ///
-    void crl_file(bsoncxx::string::view_or_value crl_file);
+    ssl& crl_file(bsoncxx::string::view_or_value crl_file);
 
     ///
     /// Retrieves the current path to the .pem file that contains revoked certificates.
@@ -114,7 +114,7 @@ class MONGOCXX_API ssl {
     /// @param allow_invalid_certificates
     ///   Whether or not to check the server's CA file.
     ///
-    void allow_invalid_certificates(bool allow_invalid_certificates);
+    ssl& allow_invalid_certificates(bool allow_invalid_certificates);
 
     ///
     /// Retrieves whether or not the driver will check the server's CA file.

@@ -20,16 +20,19 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-void insert::bypass_document_validation(bool bypass_document_validation) {
+insert& insert::bypass_document_validation(bool bypass_document_validation) {
     _bypass_document_validation = bypass_document_validation;
+    return *this;
 }
 
-void insert::write_concern(class write_concern wc) {
+insert& insert::write_concern(class write_concern wc) {
     _write_concern = std::move(wc);
+    return *this;
 }
 
-void insert::ordered(bool ordered) {
+insert& insert::ordered(bool ordered) {
     _ordered = ordered;
+    return *this;
 }
 
 const stdx::optional<bool>& insert::bypass_document_validation() const {

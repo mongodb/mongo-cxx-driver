@@ -22,24 +22,29 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-void count::hint(class hint index_hint) {
+count& count::hint(class hint index_hint) {
     _hint = std::move(index_hint);
+    return *this;
 }
 
-void count::limit(std::int64_t limit) {
+count& count::limit(std::int64_t limit) {
     _limit = limit;
+    return *this;
 }
 
-void count::max_time(std::chrono::milliseconds max_time) {
+count& count::max_time(std::chrono::milliseconds max_time) {
     _max_time = std::move(max_time);
+    return *this;
 }
 
-void count::skip(std::int64_t skip) {
+count& count::skip(std::int64_t skip) {
     _skip = skip;
+    return *this;
 }
 
-void count::read_preference(class read_preference rp) {
+count& count::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
+    return *this;
 }
 
 const stdx::optional<class hint>& count::hint() const {

@@ -22,12 +22,14 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-void distinct::max_time(std::chrono::milliseconds max_time) {
+distinct& distinct::max_time(std::chrono::milliseconds max_time) {
     _max_time = std::move(max_time);
+    return *this;
 }
 
-void distinct::read_preference(class read_preference rp) {
+distinct& distinct::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
+    return *this;
 }
 
 const stdx::optional<std::chrono::milliseconds>& distinct::max_time() const {

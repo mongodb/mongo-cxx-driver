@@ -41,7 +41,7 @@ class MONGOCXX_API insert {
     /// @param bypass_document_validation
     ///   Whether or not to bypass document validation
     ///
-    void bypass_document_validation(bool bypass_document_validation);
+    insert& bypass_document_validation(bool bypass_document_validation);
 
     ///
     /// Gets the current value of the bypass_document_validation option.
@@ -58,7 +58,7 @@ class MONGOCXX_API insert {
     ///
     /// @see http://docs.mongodb.org/manual/core/write-concern/
     ///
-    void write_concern(class write_concern wc);
+    insert& write_concern(class write_concern wc);
 
     ///
     /// The current write_concern for this operation.
@@ -82,7 +82,7 @@ class MONGOCXX_API insert {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.insert/
     ///
-    void ordered(bool ordered);
+    insert& ordered(bool ordered);
 
     ///
     /// The current ordered value for this operation.

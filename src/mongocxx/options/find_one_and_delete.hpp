@@ -40,7 +40,7 @@ class MONGOCXX_API find_one_and_delete {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    void max_time(std::chrono::milliseconds max_time);
+    find_one_and_delete& max_time(std::chrono::milliseconds max_time);
 
     ///
     /// The current max_time setting.
@@ -59,7 +59,7 @@ class MONGOCXX_API find_one_and_delete {
     ///
     /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
     ///
-    void projection(bsoncxx::document::view_or_value projection);
+    find_one_and_delete& projection(bsoncxx::document::view_or_value projection);
 
     ///
     /// Gets the current projection set on this operation.
@@ -81,7 +81,7 @@ class MONGOCXX_API find_one_and_delete {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.findAndModify/
     ///
-    void sort(bsoncxx::document::view_or_value ordering);
+    find_one_and_delete& sort(bsoncxx::document::view_or_value ordering);
 
     ///
     /// Gets the current sort ordering.

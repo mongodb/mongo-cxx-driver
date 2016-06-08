@@ -20,8 +20,9 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-void client::ssl_opts(ssl ssl_opts) {
+client& client::ssl_opts(ssl ssl_opts) {
     _ssl_opts = ssl_opts;
+    return *this;
 }
 
 const stdx::optional<ssl>& client::ssl_opts() const {

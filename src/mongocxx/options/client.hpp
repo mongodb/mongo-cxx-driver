@@ -38,7 +38,7 @@ class MONGOCXX_API client {
     /// @param ssl_opts
     ///   The SSL related options.
     ///
-    void ssl_opts(ssl ssl_opts);
+    client& ssl_opts(ssl ssl_opts);
 
     ///
     /// The current SSL-related options.

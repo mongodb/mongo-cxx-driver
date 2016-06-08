@@ -40,7 +40,7 @@ class MONGOCXX_API create_collection {
     ///
     /// @see https://docs.mongodb.org/manual/reference/glossary/#term-capped-collection
     ///
-    void capped(bool capped);
+    create_collection& capped(bool capped);
 
     ///
     /// Specify false to disable the automatic creation of an index on the _id field.
@@ -50,7 +50,7 @@ class MONGOCXX_API create_collection {
     /// @param auto_index_id
     ///   Whether or not this collection will automatically generate an index on _id.
     ///
-    void auto_index_id(bool auto_index_id);
+    create_collection& auto_index_id(bool auto_index_id);
 
     ///
     /// A maximum size, in bytes, for a capped collection.
@@ -63,7 +63,7 @@ class MONGOCXX_API create_collection {
     /// @param max_size
     ///   Maximum size, in bytes, of this collection (if capped)
     ///
-    void size(int max_size);
+    create_collection& size(int max_size);
 
     ///
     /// The maximum number of documents allowed in the capped collection.
@@ -75,7 +75,7 @@ class MONGOCXX_API create_collection {
     /// @param max_documents
     ///   Maximum number of documents allowed in the collection (if capped)
     ///
-    void max(int max_documents);
+    create_collection& max(int max_documents);
 
     ///
     /// Specify configuration to the storage on a per-collection basis.
@@ -85,7 +85,7 @@ class MONGOCXX_API create_collection {
     /// @param storage_engine_options
     ///   Configuration options specific to the storage engine.
     ///
-    void storage_engine(bsoncxx::document::view_or_value storage_engine_opts);
+    create_collection& storage_engine(bsoncxx::document::view_or_value storage_engine_opts);
 
     ///
     /// When true, disables the power of 2 sizes allocation for the collection.
@@ -95,7 +95,7 @@ class MONGOCXX_API create_collection {
     /// @param no_padding
     ///   When true, disables power of 2 sizing for this collection.
     ///
-    void no_padding(bool no_padding);
+    create_collection& no_padding(bool no_padding);
 
     ///
     /// Specify validation criteria for this collection.
@@ -105,7 +105,7 @@ class MONGOCXX_API create_collection {
     ///
     /// @see https://docs.mongodb.org/manual/core/document-validation/
     ///
-    void validation_criteria(class validation_criteria validation);
+    create_collection& validation_criteria(class validation_criteria validation);
 
     ///
     /// Return a bson document representing the options set on this object.

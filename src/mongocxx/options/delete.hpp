@@ -37,7 +37,7 @@ class MONGOCXX_API delete_options {
     ///
     /// @see http://docs.mongodb.org/manual/core/write-concern/
     ///
-    void write_concern(write_concern wc);
+    delete_options& write_concern(write_concern wc);
 
     ///
     /// The current write_concern for this operation.

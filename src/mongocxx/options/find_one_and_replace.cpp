@@ -20,28 +20,37 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-void find_one_and_replace::bypass_document_validation(bool bypass_document_validation) {
+find_one_and_replace& find_one_and_replace::bypass_document_validation(
+    bool bypass_document_validation) {
     _bypass_document_validation = bypass_document_validation;
+    return *this;
 }
 
-void find_one_and_replace::max_time(std::chrono::milliseconds max_time) {
+find_one_and_replace& find_one_and_replace::max_time(std::chrono::milliseconds max_time) {
     _max_time = std::move(max_time);
+    return *this;
 }
 
-void find_one_and_replace::projection(bsoncxx::document::view_or_value projection) {
+find_one_and_replace& find_one_and_replace::projection(
+    bsoncxx::document::view_or_value projection) {
     _projection = std::move(projection);
+    return *this;
 }
 
-void find_one_and_replace::return_document(mongocxx::options::return_document return_document) {
+find_one_and_replace& find_one_and_replace::return_document(
+    mongocxx::options::return_document return_document) {
     _return_document = return_document;
+    return *this;
 }
 
-void find_one_and_replace::sort(bsoncxx::document::view_or_value ordering) {
+find_one_and_replace& find_one_and_replace::sort(bsoncxx::document::view_or_value ordering) {
     _ordering = std::move(ordering);
+    return *this;
 }
 
-void find_one_and_replace::upsert(bool upsert) {
+find_one_and_replace& find_one_and_replace::upsert(bool upsert) {
     _upsert = upsert;
+    return *this;
 }
 
 const stdx::optional<bool>& find_one_and_replace::bypass_document_validation() const {

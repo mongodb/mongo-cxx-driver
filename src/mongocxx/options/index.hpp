@@ -89,7 +89,7 @@ class MONGOCXX_API index {
     ///
     /// @see https://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/
     ///
-    void background(bool background);
+    index& background(bool background);
 
     ///
     /// The current background setting.
@@ -107,7 +107,7 @@ class MONGOCXX_API index {
     ///
     /// @see https://docs.mongodb.org/manual/core/index-unique/
     ///
-    void unique(bool unique);
+    index& unique(bool unique);
 
     ///
     /// The current unique setting.
@@ -122,7 +122,7 @@ class MONGOCXX_API index {
     /// @param name
     ///   The name of the index.
     ///
-    void name(bsoncxx::string::view_or_value name);
+    index& name(bsoncxx::string::view_or_value name);
 
     ///
     /// The current name setting.
@@ -140,7 +140,7 @@ class MONGOCXX_API index {
     ///
     /// @see https://docs.mongodb.org/manual/core/index-sparse/
     ///
-    void sparse(bool sparse);
+    index& sparse(bool sparse);
 
     ///
     /// The current sparse setting.
@@ -156,12 +156,12 @@ class MONGOCXX_API index {
     /// @param storage_options
     ///   The storage engine options for the index.
     ///
-    void storage_options(std::unique_ptr<base_storage_options> storage_options);
+    index& storage_options(std::unique_ptr<base_storage_options> storage_options);
 
     ///
     /// @todo document this method
     ///
-    void storage_options(std::unique_ptr<wiredtiger_storage_options> storage_options);
+    index& storage_options(std::unique_ptr<wiredtiger_storage_options> storage_options);
 
     ///
     /// Set a value, in seconds, as a TTL to control how long MongoDB retains documents in this
@@ -172,7 +172,7 @@ class MONGOCXX_API index {
     ///
     /// @see https://docs.mongodb.org/manual/core/index-ttl/
     ///
-    void expire_after(std::chrono::seconds seconds);
+    index& expire_after(std::chrono::seconds seconds);
 
     ///
     /// The current expire_after setting.
@@ -187,7 +187,7 @@ class MONGOCXX_API index {
     /// @param version
     ///   The index version.
     ///
-    void version(std::int32_t v);
+    index& version(std::int32_t v);
 
     ///
     /// The current index version.
@@ -203,7 +203,7 @@ class MONGOCXX_API index {
     /// @param weights
     ///   The weight document for text indexes.
     ///
-    void weights(bsoncxx::document::view weights);
+    index& weights(bsoncxx::document::view weights);
 
     ///
     /// The current weights setting.
@@ -219,7 +219,7 @@ class MONGOCXX_API index {
     /// @param default_language
     ///   The default language used when creating text indexes.
     ///
-    void default_language(bsoncxx::string::view_or_value default_language);
+    index& default_language(bsoncxx::string::view_or_value default_language);
 
     ///
     /// The current default_language setting.
@@ -235,7 +235,7 @@ class MONGOCXX_API index {
     /// @param language_override
     ///   The name of the field that contains the override language for text indexes.
     ///
-    void language_override(bsoncxx::string::view_or_value language_override);
+    index& language_override(bsoncxx::string::view_or_value language_override);
 
     ///
     /// The current name of the field that contains the override language for text indexes.
@@ -250,7 +250,7 @@ class MONGOCXX_API index {
     /// @param partial_filter_expression
     ///   The partial filter expression document.
     ///
-    void partial_filter_expression(bsoncxx::document::view partial_filter_expression);
+    index& partial_filter_expression(bsoncxx::document::view partial_filter_expression);
 
     ///
     /// The current partial_filter_expression setting.
@@ -265,7 +265,7 @@ class MONGOCXX_API index {
     /// @param twod_sphere_version
     ///   The 2dsphere index version number.
     ///
-    void twod_sphere_version(std::uint8_t twod_sphere_version);
+    index& twod_sphere_version(std::uint8_t twod_sphere_version);
 
     ///
     /// The current twod_sphere_version setting.
@@ -280,7 +280,7 @@ class MONGOCXX_API index {
     /// @param twod_bits_precision
     ///   The precision of the stored geohash value.
     ///
-    void twod_bits_precision(std::uint8_t twod_bits_precision);
+    index& twod_bits_precision(std::uint8_t twod_bits_precision);
 
     ///
     /// The current precision of the stored geohash value of the location data.
@@ -295,7 +295,7 @@ class MONGOCXX_API index {
     /// @param twod_location_min
     ///   The lower inclusive boundary.
     ///
-    void twod_location_min(double twod_location_min);
+    index& twod_location_min(double twod_location_min);
 
     ///
     /// The current lower inclusive boundary for the longitude and latitude values.
@@ -310,7 +310,7 @@ class MONGOCXX_API index {
     /// @param twod_location_max
     ///   The upper inclusive boundary.
     ///
-    void twod_location_max(double twod_location_max);
+    index& twod_location_max(double twod_location_max);
 
     ///
     /// The current upper inclusive boundary for the longitude and latitude values.
@@ -329,7 +329,7 @@ class MONGOCXX_API index {
     /// @param haystack_bucket_size
     ///   The geoHaystack bucket size.
     ///
-    void haystack_bucket_size(double haystack_bucket_size);
+    index& haystack_bucket_size(double haystack_bucket_size);
 
     ///
     /// The current haystack_bucket_size setting.

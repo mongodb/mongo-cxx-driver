@@ -40,7 +40,7 @@ class MONGOCXX_API aggregate {
     /// @param allow_disk_use
     ///   Whether or not to allow disk use.
     ///
-    void allow_disk_use(bool allow_disk_use);
+    aggregate& allow_disk_use(bool allow_disk_use);
 
     ///
     /// Retrieves the current allow_disk_use setting.
@@ -55,7 +55,7 @@ class MONGOCXX_API aggregate {
     /// @param batch_size
     ///   The size of the batches to request.
     ///
-    void batch_size(std::int32_t batch_size);
+    aggregate& batch_size(std::int32_t batch_size);
 
     ///
     /// The current batch size setting.
@@ -72,7 +72,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
-    void max_time(std::chrono::milliseconds max_time);
+    aggregate& max_time(std::chrono::milliseconds max_time);
 
     ///
     /// The current max_time setting.
@@ -95,7 +95,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @param use_cursor whether or not to use a cursor
     ///
-    void use_cursor(bool use_cursor);
+    aggregate& use_cursor(bool use_cursor);
 
     ///
     /// The current use_cursor setting.
@@ -111,7 +111,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @see http://docs.mongodb.org/manual/core/read-preference/
     ///
-    void read_preference(class read_preference rp);
+    aggregate& read_preference(class read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -127,7 +127,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @param bypass_document_validation whether or not to bypass validation.
     ///
-    void bypass_document_validation(bool bypass_document_validation);
+    aggregate& bypass_document_validation(bool bypass_document_validation);
 
     ///
     /// The current bypass_document_validation setting.

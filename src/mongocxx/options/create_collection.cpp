@@ -24,32 +24,40 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-void create_collection::capped(bool capped) {
+create_collection& create_collection::capped(bool capped) {
     _capped = capped;
+    return *this;
 }
 
-void create_collection::auto_index_id(bool auto_index_id) {
+create_collection& create_collection::auto_index_id(bool auto_index_id) {
     _auto_index_id = auto_index_id;
+    return *this;
 }
 
-void create_collection::size(int max_size) {
+create_collection& create_collection::size(int max_size) {
     _max_size = max_size;
+    return *this;
 }
 
-void create_collection::max(int max_documents) {
+create_collection& create_collection::max(int max_documents) {
     _max_documents = max_documents;
+    return *this;
 }
 
-void create_collection::storage_engine(bsoncxx::document::view_or_value storage_engine_opts) {
+create_collection& create_collection::storage_engine(
+    bsoncxx::document::view_or_value storage_engine_opts) {
     _storage_engine_opts = std::move(storage_engine_opts);
+    return *this;
 }
 
-void create_collection::no_padding(bool no_padding) {
+create_collection& create_collection::no_padding(bool no_padding) {
     _no_padding = no_padding;
+    return *this;
 }
 
-void create_collection::validation_criteria(class validation_criteria validation) {
+create_collection& create_collection::validation_criteria(class validation_criteria validation) {
     _validation = std::move(validation);
+    return *this;
 }
 
 bsoncxx::document::value create_collection::to_document() const {

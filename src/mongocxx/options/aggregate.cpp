@@ -22,23 +22,34 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-void aggregate::allow_disk_use(bool allow_disk_use) {
+aggregate& aggregate::allow_disk_use(bool allow_disk_use) {
     _allow_disk_use = allow_disk_use;
+    return *this;
 }
-void aggregate::batch_size(std::int32_t batch_size) {
+
+aggregate& aggregate::batch_size(std::int32_t batch_size) {
     _batch_size = batch_size;
+    return *this;
 }
-void aggregate::max_time(std::chrono::milliseconds max_time) {
+
+aggregate& aggregate::max_time(std::chrono::milliseconds max_time) {
     _max_time = std::move(max_time);
+    return *this;
 }
-void aggregate::use_cursor(bool use_cursor) {
+
+aggregate& aggregate::use_cursor(bool use_cursor) {
     _use_cursor = use_cursor;
+    return *this;
 }
-void aggregate::read_preference(class read_preference rp) {
+
+aggregate& aggregate::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
+    return *this;
 }
-void aggregate::bypass_document_validation(bool bypass_document_validation) {
+
+aggregate& aggregate::bypass_document_validation(bool bypass_document_validation) {
     _bypass_document_validation = bypass_document_validation;
+    return *this;
 }
 
 const stdx::optional<bool>& aggregate::allow_disk_use() const {

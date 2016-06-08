@@ -40,7 +40,8 @@ class MONGOCXX_API modify_collection {
     ///
     /// @see https://docs.mongodb.org/manual/tutorial/expire-data/
     ///
-    void index(bsoncxx::document::view_or_value index_spec, std::chrono::seconds seconds);
+    modify_collection& index(bsoncxx::document::view_or_value index_spec,
+                             std::chrono::seconds seconds);
 
     ///
     /// When true, disables the power of 2 sizes allocation for the collection.
@@ -50,7 +51,7 @@ class MONGOCXX_API modify_collection {
     /// @param no_padding
     ///   When true, disables power of 2 sizing for this collection.
     ///
-    void no_padding(bool no_padding);
+    modify_collection& no_padding(bool no_padding);
 
     ///
     /// Specify validation criteria for this collection.
@@ -60,7 +61,7 @@ class MONGOCXX_API modify_collection {
     ///
     /// @see https://docs.mongodb.org/manual/core/document-validation/
     ///
-    void validation_criteria(class validation_criteria validation);
+    modify_collection& validation_criteria(class validation_criteria validation);
 
     ///
     /// Return a bson document representing a collMod command with the given options
