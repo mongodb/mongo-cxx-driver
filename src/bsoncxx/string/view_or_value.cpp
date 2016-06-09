@@ -24,7 +24,7 @@ view_or_value view_or_value::terminated() const {
     // If we do not own our string, we cannot guarantee that it is null-terminated,
     // so make an owned copy.
     if (!is_owning()) {
-        return view_or_value(std::move(view().to_string()));
+        return view_or_value(view().to_string());
     }
 
     // If we are owning, return a view_or_value viewing our string

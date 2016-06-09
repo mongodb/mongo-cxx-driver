@@ -48,8 +48,7 @@ value::value(const value& rhs) : value(rhs.view()) {
 }
 
 value& value::operator=(const value& rhs) {
-    *this = std::move(value{rhs.view()});
-
+    *this = value{rhs.view()};
     return *this;
 }
 
@@ -58,7 +57,7 @@ value::unique_ptr_type value::release() {
 
     _data.release();
 
-    return std::move(x);
+    return x;
 }
 
 }  // namespace document
