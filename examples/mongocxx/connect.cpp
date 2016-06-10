@@ -50,13 +50,8 @@ int main(int argc, char* argv[]) {
 
     mongocxx::instance inst{bsoncxx::stdx::make_unique<logger>(&std::cout)};
 
-    if (argc != 2) {
-        std::cout << "usage: " << argv[0] << " MONGODB_URI" << std::endl;
-        return EXIT_FAILURE;
-    }
-
     try {
-        const auto uri = mongocxx::uri{argv[1]};
+        const auto uri = mongocxx::uri{(argc >= 2) ? argv[1] : mongocxx::uri::k_default_uri};
 
         mongocxx::options::ssl ssl_options;
         // NOTE: To test SSL, you may need to set options. The following
