@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <list>
+
 #include <mongocxx/options/ssl.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
@@ -24,10 +26,10 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 #if defined(MONGOC_ENABLE_SSL)
-inline std::pair<::mongoc_ssl_opt_t, std::vector<bsoncxx::string::view_or_value>> make_ssl_opts(
+inline std::pair<::mongoc_ssl_opt_t, std::list<bsoncxx::string::view_or_value>> make_ssl_opts(
     const ssl& ssl_opts) {
     ::mongoc_ssl_opt_t out{};
-    std::vector<bsoncxx::string::view_or_value> values;
+    std::list<bsoncxx::string::view_or_value> values;
 
     if (ssl_opts.pem_file()) {
         out.pem_file = values.emplace(values.end(), ssl_opts.pem_file()->terminated())->data();

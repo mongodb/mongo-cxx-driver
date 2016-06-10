@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <list>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 #include <mongocxx/private/write_concern.hpp>
@@ -33,7 +35,7 @@ class client::impl {
     }
 
     mongoc_client_t* client_t;
-    std::vector<bsoncxx::string::view_or_value> ssl_options;
+    std::list<bsoncxx::string::view_or_value> ssl_options;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

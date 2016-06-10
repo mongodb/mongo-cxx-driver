@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <list>
 #include <utility>
 
 #include <mongocxx/pool.hpp>
@@ -34,7 +35,7 @@ class pool::impl {
     }
 
     mongoc_client_pool_t* client_pool_t;
-    std::vector<bsoncxx::string::view_or_value> ssl_options;
+    std::list<bsoncxx::string::view_or_value> ssl_options;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
