@@ -53,13 +53,17 @@ int main(int argc, char* argv[]) {
     try {
         const auto uri = mongocxx::uri{(argc >= 2) ? argv[1] : mongocxx::uri::k_default_uri};
 
-        mongocxx::options::ssl ssl_options;
-        // NOTE: To test SSL, you may need to set options. The following
-        // would enable certificates for Homebrew OpenSSL on OS X.
-        // options.ca_file("/usr/local/etc/openssl/cert.pem");
-        // ssl_options.ca_file("/usr/local/etc/openssl/cert.pem");
+        mongocxx::options::client client_options;
+        if (uri.ssl()) {
+            mongocxx::options::ssl ssl_options;
+            // NOTE: To test SSL, you may need to set options. The following
+            // would enable certificates for Homebrew OpenSSL on OS X.
+            // options.ca_file("/usr/local/etc/openssl/cert.pem");
+            // ssl_options.ca_file("/usr/local/etc/openssl/cert.pem");
+            client_options.ssl_opts(ssl_options);
+        }
 
-        auto client = mongocxx::client{uri, mongocxx::options::client{}.ssl_opts(ssl_options)};
+        auto client = mongocxx::client{uri, client_options};
 
         auto admin = client["admin"];
 

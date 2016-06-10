@@ -37,10 +37,13 @@ client::client() noexcept = default;
 client::client(const class uri& uri, const options::client& options)
     : _impl(stdx::make_unique<impl>(libmongoc::client_new_from_uri(uri._impl->uri_t))) {
 #if !defined(MONGOC_ENABLE_SSL)
-    if (uri.ssl())
-        throw exception{error_code::k_ssl_not_supported};
+    if (uri.ssl() || options.ssl_opts()) throw exception{error_code::k_ssl_not_supported};
 #else
-    if (uri.ssl() && options.ssl_opts()) {
+    if (options.ssl_opts()) {
+        if (!uri.ssl())
+            throw exception{error_code::k_invalid_parameter,
+                            "cannot set SSL options if 'ssl=true' not in URI"};
+
         auto mongoc_opts = options::make_ssl_opts(*options.ssl_opts());
         _impl->ssl_options = std::move(mongoc_opts.second);
         libmongoc::client_set_ssl_opts(_get_impl().client_t, &mongoc_opts.first);

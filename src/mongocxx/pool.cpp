@@ -42,10 +42,13 @@ pool::~pool() = default;
 pool::pool(const uri& uri, stdx::optional<options::ssl> ssl_options)
     : _impl{stdx::make_unique<impl>(libmongoc::client_pool_new(uri._impl->uri_t))} {
 #if !defined(MONGOC_ENABLE_SSL)
-    if (client_uri.ssl())
-        throw exception{error_code::k_ssl_not_supported};
+    if (uri.ssl() || ssl_options) throw exception{error_code::k_ssl_not_supported};
 #else
-    if (uri.ssl() && ssl_options) {
+    if (ssl_options) {
+        if (!uri.ssl())
+            throw exception{error_code::k_invalid_parameter,
+                            "cannot set SSL options if 'ssl=true' not in URI"};
+
         auto mongoc_opts = options::make_ssl_opts(*ssl_options);
         _impl->ssl_options = std::move(mongoc_opts.second);
         libmongoc::client_pool_set_ssl_opts(_impl->client_pool_t, &mongoc_opts.first);
