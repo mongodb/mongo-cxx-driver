@@ -103,7 +103,8 @@ SecureRandom* SecureRandom::create() {
     return new WinSecureRandom();
 }
 
-#elif defined(__linux__) || defined(__sunos__) || defined(__APPLE__) || defined(__freebsd__)
+#elif defined(__linux__) || defined(__sunos__) || defined(__APPLE__) || defined(__FreeBSD__) || \
+    defined(__FreeBSD_kernel__)
 
 class InputStreamSecureRandom : public SecureRandom {
 public:
