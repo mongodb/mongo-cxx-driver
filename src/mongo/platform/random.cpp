@@ -104,7 +104,7 @@ SecureRandom* SecureRandom::create() {
 }
 
 #elif defined(__linux__) || defined(__sunos__) || defined(__APPLE__) || defined(__FreeBSD__) || \
-    defined(__FreeBSD_kernel__)
+    defined(__FreeBSD_kernel__) || defined(__gnu_hurd__)
 
 class InputStreamSecureRandom : public SecureRandom {
 public:
