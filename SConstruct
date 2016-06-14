@@ -1734,7 +1734,8 @@ def doConfigure(myenv):
 
     conf = Configure(myenv)
 
-    if has_option( "ssl" ):
+    conf.env["MONGO_SSL"] = bool(has_option("ssl"))
+    if conf.env["MONGO_SSL"]:
         sslLibName = "ssl"
         cryptoLibName = "crypto"
         if windows:
@@ -1783,8 +1784,6 @@ def doConfigure(myenv):
 
         if not conf.CheckLinkSSL():
             conf.env.ConfError("SSL is enabled, but is unavailable")
-
-        conf.env["MONGO_SSL"] = True
 
         if conf.CheckDeclaration(
             "FIPS_mode_set",
