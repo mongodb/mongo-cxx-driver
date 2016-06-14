@@ -1471,6 +1471,7 @@ list<string> DBClientWithCommands::getDatabaseNames() {
 
 list<string> DBClientWithCommands::getCollectionNames(const string& db, const BSONObj& filter) {
     auto_ptr<DBClientCursor> infos = enumerateCollections(db, filter);
+    uassert(0, "failed to read server response from socket when listing collections", infos.get());
     list<string> names;
 
     while (infos->more()) {
@@ -1482,6 +1483,9 @@ list<string> DBClientWithCommands::getCollectionNames(const string& db, const BS
 
 list<BSONObj> DBClientWithCommands::getCollectionInfos(const string& db, const BSONObj& filter) {
     auto_ptr<DBClientCursor> info_cursor = enumerateCollections(db, filter);
+    uassert(0,
+            "failed to read server response from socket when listing collections",
+            info_cursor.get());
     list<BSONObj> infos;
 
     while (info_cursor->more()) {
@@ -1585,6 +1589,8 @@ auto_ptr<DBClientCursor> DBClientWithCommands::enumerateCollections(const string
 bool DBClientWithCommands::exists(const string& ns) {
     BSONObj filter = BSON("name" << nsToCollectionSubstring(ns));
     auto_ptr<DBClientCursor> results = enumerateCollections(nsToDatabase(ns), filter);
+    uassert(
+        0, "failed to read server response from socket when listing collections", results.get());
     return results->more();
 }
 

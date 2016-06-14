@@ -517,6 +517,7 @@ TEST_F(DBClientTest, EnumerateCollections) {
     BSONObjBuilder bob;
     bob.appendRegex("name", "COLL\\d$");
     auto_ptr<DBClientCursor> cursor = c->enumerateCollections(TEST_DB, bob.obj(), batch_size);
+    ASSERT(cursor.get());
 
     if (serverGTE(c.get(), 2, 8))
         ASSERT_EQUALS(cursor->getns(), TEST_DB + ".$cmd.listCollections");
