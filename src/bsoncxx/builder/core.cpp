@@ -375,6 +375,14 @@ void core::append(const oid& value) {
     append(types::b_oid{value});
 }
 
+void core::append(const document::view view) {
+    append(types::b_document{view});
+}
+
+void core::append(const array::view view) {
+    append(types::b_array{view});
+}
+
 void core::append(std::int64_t value) {
     append(types::b_int64{value});
 }

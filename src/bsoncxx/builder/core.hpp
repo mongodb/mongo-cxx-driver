@@ -263,6 +263,16 @@ class BSONCXX_API core {
     void append(const oid& value);
 
     ///
+    /// Append the given document view.
+    ///
+    void append(document::view view);
+
+    ///
+    /// Append the given array view.
+    ///
+    void append(array::view view);
+
+    ///
     /// Get a view over the document.
     ///
     /// @return A document::view of the internal BSON.

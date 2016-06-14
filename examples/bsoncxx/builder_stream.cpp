@@ -73,17 +73,22 @@ int main(int, char**) {
 
     // To nest an existing bsoncxx::document::value into a builder stream, you can create a
     // types::b_document and append it. Alternatively you can open a new document and concatenate
-    // the value in.
+    // the value in. Or, simplest, is just to stream in the view.
     bsoncxx::document::value nestedValue = document{} << "nested" << true << finalize;
     document topLevelDoc{};
     topLevelDoc << "subDoc1" << types::b_document{nestedValue.view()} << "subDoc2" << open_document
-                << concatenate(nestedValue.view()) << close_document;
+                << concatenate(nestedValue.view()) << close_document << "subDoc3"
+                << nestedValue << finalize;
+
     // `topLevelDoc` now looks like:
     // {
     //     "subDoc1": {
     //         "nested": true
     //     },
     //     "subDoc2": {
+    //         "nested": true
+    //     },
+    //     "subDoc3": {
     //         "nested": true
     //     }
     // }

@@ -871,3 +871,25 @@ TEST_CASE("array::view works", "[bsoncxx::builder::array]") {
     REQUIRE(stream.view()[1].get_int32() == 99);
     REQUIRE(stream.view()[2].get_int32() == 98);
 }
+
+TEST_CASE("stream in a document::view works", "[bsoncxx::bulder::stream]") {
+    using namespace builder::stream;
+
+    auto sub_doc = builder::stream::document{} << "b" << 1 << finalize;
+    auto full_doc = builder::stream::document{} << "a" << sub_doc.view() << finalize;
+
+    REQUIRE(full_doc.view()["a"].type() == bsoncxx::types::b_document::type_id);
+    REQUIRE(full_doc.view()["a"]["b"].type() == bsoncxx::types::b_int32::type_id);
+    REQUIRE(full_doc.view()["a"]["b"].get_int32().value == 1);
+}
+
+TEST_CASE("stream in an array::view works", "[bsoncxx::bulder::stream]") {
+    using namespace builder::stream;
+
+    auto sub_array = builder::stream::array{} << 1 << 2 << 3 << finalize;
+    auto full_doc = builder::stream::document{} << "a" << sub_array.view() << finalize;
+
+    REQUIRE(full_doc.view()["a"].type() == bsoncxx::types::b_array::type_id);
+    REQUIRE(full_doc.view()["a"][1].type() == bsoncxx::types::b_int32::type_id);
+    REQUIRE(full_doc.view()["a"][1].get_int32().value == 2);
+}
