@@ -510,14 +510,26 @@ if windows:
 env = Environment(variables=env_vars, **envDict)
 del envDict
 
+def fatal_error(env, msg, *args):
+    print msg.format(*args)
+    Exit(1)
+
+def conf_error(env, msg, *args):
+    print msg.format(*args)
+    print "See {0} for details".format(env['CONFIGURELOG'].abspath)
+
+    Exit(1)
+
+env.AddMethod(fatal_error, 'FatalError')
+env.AddMethod(conf_error, 'ConfError')
+
 if has_option('variables-help'):
     print env_vars.GenerateHelpText(env)
     Exit(0)
 
 unknown_vars = env_vars.UnknownVariables()
 if unknown_vars:
-    print "Unknown variables specified: {0}".format(", ".join(unknown_vars.keys()))
-    Exit(1)
+    env.FatalError("Unknown variables specified: {0}", ", ".join(unknown_vars.keys()))
 
 
 # Add any scons options that conflict with scons variables here.
@@ -533,18 +545,15 @@ variable_conflicts = [
 
 for (opt_name, var_name) in variable_conflicts:
     if has_option(opt_name) and var_name in env:
-        print("Both option \"--{0}\" and variable {1} were specified".
-            format(opt_name, var_name))
-        Exit(1)
+        env.FatalError("Both option \"--{0}\" and variable {1} were specified", opt_name, var_name)
 
 if has_option("cache"):
     EnsureSConsVersion( 2, 3, 0 )
     if has_option("release"):
-        print("Using the experimental --cache option is not permitted for --release builds")
-        Exit(1)
+        env.FatalError(
+            "Using the experimental --cache option is not permitted for --release builds")
     if has_option("gcov"):
-        print("Mixing --cache and --gcov doesn't work correctly yet. See SERVER-11084")
-        Exit(1)
+        env.FatalError("Mixing --cache and --gcov doesn't work correctly yet. See SERVER-11084")
     env.CacheDir(str(env.Dir(cacheDir)))
 
 if has_option("propagate-shell-environment"):
@@ -599,11 +608,9 @@ else:
     env['OS_FAMILY'] = 'posix'
 
 if has_option( "cc-use-shell-environment" ) and has_option( "cc" ):
-    print("Cannot specify both --cc-use-shell-environment and --cc")
-    Exit(1)
+    env.FatalError("Cannot specify both --cc-use-shell-environment and --cc")
 elif has_option( "cxx-use-shell-environment" ) and has_option( "cxx" ):
-    print("Cannot specify both --cxx-use-shell-environment and --cxx")
-    Exit(1)
+    env.FatalError("Cannot specify both --cxx-use-shell-environment and --cxx")
 
 
 if has_option( "gtest-filter" ):
@@ -617,13 +624,11 @@ if has_option( "cc-use-shell-environment" ):
 
 if has_option( "cxx" ):
     if not has_option( "cc" ):
-        print "Must specify C compiler when specifying C++ compiler"
-        exit(1)
+        env.FatalError("Must specify C compiler when specifying C++ compiler")
     env["CXX"] = get_option( "cxx" )
 if has_option( "cc" ):
     if not has_option( "cxx" ):
-        print "Must specify C++ compiler when specifying C compiler"
-        exit(1)
+        env.FatalError("Must specify C++ compiler when specifying C compiler")
     env["CC"] = get_option( "cc" )
 
 if has_option( "libpath" ):
@@ -720,8 +725,7 @@ elif windows:
         env.Append( CPPDEFINES=[ "BOOST_ALL_DYN_LINK" ] )
 
     if has_option("sharedclient") and not dynamicCRT:
-        print("The shared client must be built with the dynamic runtime library")
-        Exit(1)
+        env.FatalError("The shared client must be built with the dynamic runtime library")
 
     # If tools configuration fails to set up 'cl' in the path, fall back to importing the whole
     # shell environment and hope for the best. This will work, for instance, if you have loaded
@@ -954,16 +958,14 @@ def doConfigure(myenv):
 
     if 'CheckCXX' in dir( conf ):
         if not conf.CheckCXX():
-            print("C++ compiler %s does not work" % (conf.env["CXX"]))
-            Exit(1)
+            conf.env.FatalError("C++ compiler {0} does not work", conf.env["CXX"])
 
     # Only do C checks if CC != CXX
     check_c = (myenv["CC"] != myenv["CXX"])
 
     if check_c and 'CheckCC' in dir( conf ):
         if not conf.CheckCC():
-            print("C compiler %s does not work" % (conf.env["CC"]))
-            Exit(1)
+            conf.env.FatalError("C compiler {0} does not work", conf.env["CC"])
     myenv = conf.Finish()
 
     # Identify the toolchain in use. We currently support the following:
@@ -1026,12 +1028,10 @@ def doConfigure(myenv):
             break
 
     if not have_toolchain():
-        print("Couldn't identify the toolchain")
-        Exit(1)
+        conf.env.FatalError("Couldn't identify the toolchain")
 
     if check_c and not conf.CheckForToolchain(toolchain, "C", "CC", ".c"):
-        print("C toolchain doesn't match identified C++ toolchain")
-        Exit(1)
+        conf.env.FatalError("C toolchain doesn't match identified C++ toolchain")
 
     myenv = conf.Finish()
 
@@ -1094,8 +1094,7 @@ def doConfigure(myenv):
             return ret
 
         if using_msvc():
-            print("AddFlagIfSupported is not currently supported with MSVC")
-            Exit(1)
+            env.FatalError("AddFlagIfSupported is not currently supported with MSVC")
 
         test_mutation = mutation
         if using_gcc():
@@ -1201,22 +1200,19 @@ def doConfigure(myenv):
         min_version = get_option('osx-version-min')
         min_version_flag = '-mmacosx-version-min=%s' % (min_version)
         if not AddToCCFLAGSIfSupported(myenv, min_version_flag):
-            print( "Can't set minimum OS X version with this compiler" )
-            Exit(1)
+            myenv.ConfError("Can't set minimum OS X version with this compiler")
         myenv.AppendUnique(LINKFLAGS=[min_version_flag])
 
     usingLibStdCxx = False
     if has_option('libc++'):
         if not using_clang():
-            print( 'libc++ is currently only supported for clang')
-            Exit(1)
+            myenv.ConfError('libc++ is currently only supported for clang')
         if darwin and has_option('osx-version-min') and versiontuple(min_version) < versiontuple('10.7'):
             print("Warning: You passed option 'libc++'. You probably want to also pass 'osx-version-min=10.7' or higher for libc++ support.")
         if AddToCXXFLAGSIfSupported(myenv, '-stdlib=libc++'):
             myenv.Append(LINKFLAGS=['-stdlib=libc++'])
         else:
-            print( 'libc++ requested, but compiler does not support -stdlib=libc++' )
-            Exit(1)
+            myenv.ConfError('libc++ requested, but compiler does not support -stdlib=libc++' )
     else:
         def CheckLibStdCxx(context):
             test_body = """
@@ -1283,10 +1279,11 @@ def doConfigure(myenv):
                 if cxx11_mode == "auto":
                     cxx11_mode = "off"
                 else:
-                    print( 'Detected libstdc++ is too old to support C++11 mode' )
+                    cxx11_error = 'Detected libstdc++ is too old to support C++11 mode'
                     if darwin:
-                        print( 'Try building with --libc++ and --osx-version-min=10.7 or higher' )
-                    Exit(1)
+                        cxx11_error += \
+                            '\nTry building with --libc++ and --osx-version-min=10.7 or higher'
+                    myenv.ConfError(cxx11_error)
 
         # We are going to be adding flags to the environment, but we don't want to persist
         # those changes unless we pass all the below checks. Make a copy of the environment
@@ -1304,8 +1301,8 @@ def doConfigure(myenv):
                     if cxx11_mode == "auto":
                         cxx11_mode = "off"
                     else:
-                        print( 'C++11 mode requested, but cannot find a flag to enable it' )
-                        Exit(1)
+                        cxx11Env.ConfError(
+                            'C++11 mode requested, but cannot find a flag to enable it')
 
         # We appear to have C++11, or at least a flag to enable it, which is now set in the
         # environment. If we are in auto mode, check if the compiler claims that it strictly
@@ -1342,8 +1339,8 @@ def doConfigure(myenv):
                 if cxx11_mode == "auto":
                     cxx11_mode = "off"
                 else:
-                    print( "C++11 mode selected for C++ files, but can't enable C99 for C files" )
-                    Exit(1)
+                    cxx11Env.ConfError(
+                        "C++11 mode selected for C++ files, but can't enable C99 for C files")
 
         # If we got here and cxx11_mode hasn't become false, then its true, so swap in the
         # modified environment.
@@ -1403,8 +1400,7 @@ def doConfigure(myenv):
     if has_option('sanitize'):
 
         if not (using_clang() or using_gcc()):
-            print( 'sanitize is only supported with clang or gcc')
-            Exit(1)
+            myenv.FatalError('sanitize is only supported with clang or gcc')
 
         sanitizer_list = get_option('sanitize').split(',')
 
@@ -1432,8 +1428,7 @@ def doConfigure(myenv):
             myenv.Append(LINKFLAGS=[sanitizer_option])
             myenv.Append(CCFLAGS=['-fno-omit-frame-pointer'])
         else:
-            print( 'Failed to enable sanitizers with flag: ' + sanitizer_option )
-            Exit(1)
+            myenv.ConfError('Failed to enable sanitizers with flag: {0}', sanitizer_option )
 
         blackfiles_map = {
             "address" : myenv.File("#etc/asan.blacklist"),
@@ -1461,8 +1456,7 @@ def doConfigure(myenv):
             myenv['ENV']['ASAN_SYMBOLIZER_PATH'] = llvm_symbolizer
             myenv['ENV']['LSAN_SYMBOLIZER_PATH'] = llvm_symbolizer
         elif using_lsan:
-            print("Using the leak sanitizer requires a valid symbolizer")
-            Exit(1)
+            myenv.ConfError("Using the leak sanitizer requires a valid symbolizer")
 
     # When using msvc, check for VS 2013 Update 2+ so we can use new compiler flags
     if using_msvc():
@@ -1541,18 +1535,15 @@ def doConfigure(myenv):
                 if not conf.LinkHelloWorld():
                     conf.env.Append(LINKFLAGS=["-fuse-ld=gold"])
                     if not conf.LinkHelloWorld("(with -fuse-ld=gold)"):
-                        print("Error: Couldn't link with LTO")
-                        Exit(1)
+                        myenv.ConfError("Error: Couldn't link with LTO")
 
                 myenv = conf.Finish()
 
             else:
-                print( "Link time optimization requested, " +
-                       "but selected compiler does not honor -flto" )
-                Exit(1)
+                myenv.ConfError("Link time optimization requested, " +
+                    "but selected compiler does not honor -flto" )
         else:
-            printf("Don't know how to enable --lto on current toolchain")
-            Exit(1)
+            myenv.ConfError("Don't know how to enable --lto on current toolchain")
 
     # When using msvc, check for support for __declspec(thread), unless we have been asked
     # explicitly not to use it. For other compilers, see if __thread works.
@@ -1795,16 +1786,14 @@ def doConfigure(myenv):
             conf.env.Append(CPPDEFINES=["MONGO_HAVE_FIPS_MODE_SET"])
 
     if not conf.CheckCXXHeader( "boost/version.hpp" ):
-        print( "Could not find boost headers in include search path" )
-        Exit(1)
+        conf.env.ConfError("Could not find boost headers in include search path")
 
     if (not windows) and boostSuffixList:
         # We don't do this for windows because we rely on autolib.
         for b in boostLibs:
             boostCandidates = ["boost_" + b + suffix for suffix in boostSuffixList]
             if not conf.CheckLib(boostCandidates, language="C++"):
-                print( "can't find boost")
-                Exit(1)
+                conf.env.ConfError("can't find boost")
 
     # We need xtime internally no matter what the local boost thread version may be since we
     # cannot require the existence of chrono. It is important that no uses of xtime become part
@@ -1828,8 +1817,7 @@ def doConfigure(myenv):
     conf.env['MONGO_SASL'] = bool(has_option("use-sasl-client"))
 
     if conf.env['MONGO_SASL'] and not conf.env['MONGO_SSL']:
-        print("SASL support requires --ssl")
-        Exit(1)
+        myenv.FatalError("SASL support requires --ssl")
 
     if conf.env['MONGO_SASL'] and not conf.CheckLibWithHeader(
             "sasl2", 
@@ -1837,12 +1825,12 @@ def doConfigure(myenv):
             "C", 
             "sasl_version_info(0, 0, 0, 0, 0, 0);", 
             autoadd=True ):
-        Exit(1)
+        myenv.ConfError("Couldn't find SASL header/libraries")
 
     # requires ports devel/libexecinfo to be installed
     if freebsd or openbsd:
         if not conf.CheckLib("execinfo"):
-            Exit(1)
+            myenv.ConfError("Cannot find libexecinfo, please install devel/libexecinfo")
 
     # check for presence of timegm(3) and polyfill if needed
     conf.env['MONGO_HAVE_TIMEGM'] = conf.CheckDeclaration(
