@@ -500,6 +500,10 @@ int BSONElement::size(int maxLen) const {
             x = (int)(len1 + 1 + len2 + 1);
         } break;
         default: {
+            massert(0,
+                    "This version of the MongoDB C++ driver does not support the Decimal128 BSON "
+                    "type.  Please look for a newer version of the driver that supports it.",
+                    type() != 19);
             StringBuilder ss;
             ss << "BSONElement: bad type " << (int)type();
             std::string msg = ss.str();
@@ -563,6 +567,10 @@ int BSONElement::size() const {
             x = (int)(len1 + 1 + len2 + 1);
         } break;
         default: {
+            massert(0,
+                    "This version of the MongoDB C++ driver does not support the Decimal128 BSON "
+                    "type.  Please look for a newer version of the driver that supports it.",
+                    type() != 19);
             StringBuilder ss;
             ss << "BSONElement: bad type " << (int)type();
             std::string msg = ss.str();
