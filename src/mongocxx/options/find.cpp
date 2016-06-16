@@ -14,6 +14,9 @@
 
 #include <mongocxx/options/find.hpp>
 
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/private/constraints.hpp>
 #include <mongocxx/private/read_preference.hpp>
 
 #include <mongocxx/config/private/prelude.hpp>
@@ -53,11 +56,15 @@ find& find::limit(std::int32_t limit) {
 }
 
 find& find::max_await_time(std::chrono::milliseconds max_await_time) {
+    if (!is_int32_duration<std::chrono::milliseconds>(max_await_time))
+        throw logic_error{error_code::k_invalid_parameter};
     _max_await_time = std::move(max_await_time);
     return *this;
 }
 
 find& find::max_time(std::chrono::milliseconds max_time) {
+    if (!is_int32_duration<std::chrono::milliseconds>(max_time))
+        throw logic_error{error_code::k_invalid_parameter};
     _max_time = std::move(max_time);
     return *this;
 }

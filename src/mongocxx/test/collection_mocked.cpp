@@ -322,14 +322,8 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Fails with Options") {
             success = false;
-            expected_expire_after =
-                std::chrono::seconds(static_cast<int64_t>(std::numeric_limits<int32_t>::max()) + 1);
-            options.expire_after(expected_expire_after);
-            REQUIRE_THROWS_AS(mongo_coll.create_index(index_spec.view(), options), logic_error);
-
             expected_expire_after = std::chrono::seconds(-1);
-            options.expire_after(expected_expire_after);
-            REQUIRE_THROWS_AS(mongo_coll.create_index(index_spec.view(), options), logic_error);
+            REQUIRE_THROWS_AS(options.expire_after(expected_expire_after), logic_error);
 
             collection_create_index_called = true;  // mock for this section
         }

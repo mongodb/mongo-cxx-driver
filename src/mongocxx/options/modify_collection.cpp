@@ -17,6 +17,9 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/types.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/private/constraints.hpp>
 
 #include <mongocxx/config/private/prelude.hpp>
 
@@ -35,6 +38,8 @@ modify_collection& modify_collection::no_padding(bool no_padding) {
 
 modify_collection& modify_collection::index(bsoncxx::document::view_or_value index_spec,
                                             std::chrono::seconds seconds) {
+    if (!is_int32_duration<std::chrono::seconds>(seconds))
+        throw logic_error{error_code::k_invalid_parameter};
     _index.emplace(document{} << "keyPattern" << bsoncxx::types::b_document{std::move(index_spec)}
                               << "expireAfterSeconds" << bsoncxx::types::b_int64{seconds.count()}
                               << finalize);

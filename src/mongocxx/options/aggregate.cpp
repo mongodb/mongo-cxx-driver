@@ -14,6 +14,9 @@
 
 #include <mongocxx/options/aggregate.hpp>
 
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/private/constraints.hpp>
 #include <mongocxx/private/read_preference.hpp>
 
 #include <mongocxx/config/private/prelude.hpp>
@@ -33,6 +36,8 @@ aggregate& aggregate::batch_size(std::int32_t batch_size) {
 }
 
 aggregate& aggregate::max_time(std::chrono::milliseconds max_time) {
+    if (!is_int32_duration<std::chrono::milliseconds>(max_time))
+        throw logic_error{error_code::k_invalid_parameter};
     _max_time = std::move(max_time);
     return *this;
 }
