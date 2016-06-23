@@ -294,6 +294,8 @@ functions:
     params:
       working_dir: "mongo-cxx-driver"
       script: |
+        set -o verbose
+        set -o errexit
         ${start_mongo_orchestration}
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} integration
 
@@ -302,6 +304,8 @@ functions:
     params:
       working_dir: "mongo-cxx-driver"
       script: |
+        set -o verbose
+        set -o errexit
         ${start_mongo_orchestration}
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} examples
 
@@ -316,6 +320,8 @@ pre:
   - command: shell.exec
     params:
       script: |
+        set -o verbose
+        set -o errexit
         rm -rf "mongo-cxx-driver"
         if [ ! -e /data/db ]; then
             mkdir /data/db
@@ -328,6 +334,8 @@ post:
   - command: shell.exec
     params:
       script: |
+        set -o verbose
+        set -o errexit
         cd mongo-cxx-driver && mongo-orchestration stop
         ${killall_mci|pkill -9 mongo-orchestration; pkill -9 mongod; pkill -9 mongos;}
 
