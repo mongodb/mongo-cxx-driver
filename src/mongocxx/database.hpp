@@ -159,15 +159,6 @@ class MONGOCXX_API database {
     stdx::string_view name() const;
 
     ///
-    /// Get server-side statistics for the database.
-    ///
-    /// @return document containing statistics for this database.
-    ///
-    /// @see http://docs.mongodb.org/manual/reference/command/dbStats/
-    ///
-    bsoncxx::document::value stats();
-
-    ///
     /// Sets the read_concern for this database.
     ///
     /// @note Modifications at this level do not affect existing collection instances that have come
