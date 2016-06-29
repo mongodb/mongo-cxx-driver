@@ -14,6 +14,14 @@ cxx_driver_variables:
     - name: "integration-test-latest-with-auth"
     - name: "client-test-latest"
 
+  ## Same as above, but with the MMAPv1 storage engine.
+  latest_test_with_mmapv1_list: &latest_tests_with_mmapv1
+    - name: "compile"
+    - name: "unit-test"
+    - name: "integration-test-latest-with-MMAPv1"
+    - name: "integration-test-latest-with-auth-and-MMAPv1"
+    - name: "client-test-latest-with-MMAPv1"
+
   ## Note that the in 3.0, the default storage engine is MMAPv1 and
   ## WiredTiger is opt-in, but as of MongoDB 3.1.4, the
   ## default is WiredTiger and MMAPv1 is opt-in.
@@ -474,11 +482,32 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
+    - name: "integration-test-latest-with-MMAPv1"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version latest"
+        - func: "use MMAPv1 storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
     - name: "integration-test-latest-with-auth"
       depends_on:
         - name: "compile"
       commands:
         - func: "set version latest"
+        - func: "fetch artifacts"
+        - func: "use auth"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
+    - name: "integration-test-latest-with-auth-and-MMAPv1"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version latest"
+        - func: "use MMAPv1 storage"
         - func: "fetch artifacts"
         - func: "use auth"
         - func: "fetch mongodb"
@@ -558,6 +587,16 @@ tasks:
         - func: "fetch mongodb"
         - func: "run client tests"
 
+    - name: "client-test-latest-with-MMAPv1"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version latest"
+        - func: "use MMAPv1 storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
 #######################################
 #           Buildvariants             #
 #######################################
@@ -598,7 +637,8 @@ buildvariants:
     <<: *mongo_orchestration_linux
   run_on:
   - rhel55-test
-  tasks: *latest_tests
+  # Need to test with mmapv1, as default storage engine (WiredTiger) doesn't have 32-bit support.
+  tasks: *latest_tests_with_mmapv1
 
 ## Ubuntu 1404
 
