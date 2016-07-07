@@ -122,6 +122,11 @@ struct BSONCXX_API b_utf8 {
         : value(std::forward<T>(t)) {
     }
 
+    ///
+    /// Default constructor for b_utf8.
+    ///
+    BSONCXX_INLINE b_utf8() = default;
+
     stdx::string_view value;
 
     ///
@@ -309,6 +314,11 @@ struct BSONCXX_API b_date {
         : value(std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch())) {
     }
 
+    ///
+    /// Default constructor for b_date.
+    ///
+    BSONCXX_INLINE b_date() = default;
+
     std::chrono::milliseconds value;
 
     ///
@@ -387,6 +397,11 @@ struct BSONCXX_API b_regex {
         : regex(std::forward<T>(regex)), options(std::forward<U>(options)) {
     }
 
+    ///
+    /// Default constructor for b_regex.
+    ///
+    BSONCXX_INLINE b_regex() = default;
+
     stdx::string_view regex;
     stdx::string_view options;
 };
@@ -445,6 +460,11 @@ struct BSONCXX_API b_code {
         : code(std::forward<T>(t)) {
     }
 
+    ///
+    /// Default constructor for b_code.
+    ///
+    BSONCXX_INLINE b_code() = default;
+
     stdx::string_view code;
 
     ///
@@ -486,6 +506,11 @@ struct BSONCXX_API b_symbol {
     BSONCXX_INLINE explicit b_symbol(T&& t)
         : symbol(std::forward<T>(t)) {
     }
+
+    ///
+    /// Default constructor for b_symbol.
+    ///
+    BSONCXX_INLINE b_symbol() = default;
 
     stdx::string_view symbol;
 
@@ -529,6 +554,11 @@ struct BSONCXX_API b_codewscope {
     BSONCXX_INLINE explicit b_codewscope(T&& code, U&& scope)
         : code(std::forward<T>(code)), scope(std::forward<U>(scope)) {
     }
+
+    ///
+    /// Default constructor for b_codewscope.
+    ///
+    BSONCXX_INLINE b_codewscope() = default;
 
     stdx::string_view code;
     document::view scope;
