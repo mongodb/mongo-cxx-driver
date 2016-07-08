@@ -332,7 +332,7 @@ stdx::optional<result::insert_one> collection::insert_one(view_or_value document
 
     bsoncxx::builder::stream::document new_document;
     if (!document.view()["_id"]) {
-        new_document << "_id" << bsoncxx::oid(bsoncxx::oid::init_tag);
+        new_document << "_id" << bsoncxx::oid();
         new_document << concatenate(document);
         bulk_op.append(model::insert_one(new_document.view()));
         oid = new_document.view()["_id"];

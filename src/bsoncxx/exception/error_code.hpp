@@ -40,6 +40,7 @@ enum class error_code : std::int32_t {
     k_unmatched_key_in_builder,
     k_unset_element,
     k_json_parse_failure,
+    k_invalid_oid,
 };
 
 ///

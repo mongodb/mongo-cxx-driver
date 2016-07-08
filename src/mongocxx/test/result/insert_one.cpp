@@ -26,7 +26,7 @@ TEST_CASE("insert_one", "[insert_one][result]") {
     mongocxx::instance::current();
 
     builder::stream::document build;
-    auto oid = types::b_oid{bsoncxx::oid{bsoncxx::oid::init_tag}};
+    auto oid = types::b_oid{bsoncxx::oid{}};
     build << "_id" << oid << "x" << 1;
 
     mongocxx::result::bulk_write b(document::value(build.view()));

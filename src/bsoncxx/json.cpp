@@ -147,11 +147,9 @@ class json_visitor {
         pad(1);
         out << "\"$ref\" : \"" << value.collection.to_string().data() << "\"";
 
-        if (value.value) {
-            out << ",\n";
-            pad();
-            out << "\"$id\" : \"" << value.value.to_string().data() << "\"\n";
-        }
+        out << ",\n";
+        pad();
+        out << "\"$id\" : \"" << value.value.to_string().data() << "\"\n";
 
         pad();
         out << "}";

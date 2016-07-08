@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/exception/error_code.hpp>
+#include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/oid.hpp>
 
 #include <cstring>
@@ -23,31 +25,32 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
-const oid::init_tag_t oid::init_tag{};
-
-oid::oid() : _is_valid(false) {
-}
-
-oid::oid(init_tag_t) : _is_valid(true) {
+oid::oid() {
     bson_oid_t oid;
     bson_oid_init(&oid, nullptr);
 
     std::memcpy(_bytes.data(), oid.bytes, sizeof(oid.bytes));
 }
 
-oid::oid(const string::view_or_value& str)
-    : _is_valid(bson_oid_is_valid(str.data(), str.view().length())) {
-    if (_is_valid) {
-        bson_oid_t oid;
-        bson_oid_init_from_string(&oid, str.terminated().data());
-        memcpy(_bytes.data(), oid.bytes, _bytes.size());
-    }
+const oid::init_tag_t oid::init_tag{};
+
+oid::oid(init_tag_t) : oid::oid() {
 }
 
-oid::oid(const char* bytes, std::size_t len) : _is_valid(len == 12) {
-    if (_is_valid) {
-        std::memcpy(_bytes.data(), bytes, _bytes.size());
+oid::oid(const bsoncxx::stdx::string_view& str) {
+    if (!bson_oid_is_valid(str.data(), str.size())) {
+        throw bsoncxx::exception{error_code::k_invalid_oid};
     }
+    bson_oid_t oid;
+    bson_oid_init_from_string(&oid, str.data());
+    memcpy(_bytes.data(), oid.bytes, _bytes.size());
+}
+
+oid::oid(const char* bytes, std::size_t len) {
+    if (len != 12) {
+        throw bsoncxx::exception{error_code::k_invalid_oid};
+    }
+    std::memcpy(_bytes.data(), bytes, _bytes.size());
 }
 
 std::string oid::to_string() const {
@@ -61,7 +64,7 @@ std::string oid::to_string() const {
 }
 
 oid::operator bool() const {
-    return _is_valid;
+    return true;
 }
 
 std::time_t oid::get_time_t() const {
@@ -76,16 +79,6 @@ const char* oid::bytes() const {
 }
 
 int oid_compare(const oid& lhs, const oid& rhs) {
-    if (!lhs._is_valid || !rhs._is_valid) {
-        if (lhs._is_valid) {
-            return 1;
-        } else if (rhs._is_valid) {
-            return -1;
-        } else {
-            return 0;
-        }
-    }
-
     bson_oid_t lhs_oid;
     bson_oid_t rhs_oid;
 
