@@ -18,7 +18,7 @@
 #include <ctime>
 #include <string>
 
-#include <bsoncxx/string/view_or_value.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -37,6 +37,11 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 ///
 class BSONCXX_API oid {
    public:
+    ///
+    /// Constructs an oid and initializes it to a newly generated ObjectId.
+    ///
+    oid();
+
     struct init_tag_t {};
 
     // TODO(MSVC): Ideally this would be constexpr, but VS2015U1 can't
@@ -47,17 +52,15 @@ class BSONCXX_API oid {
     static const init_tag_t init_tag;
 
     ///
-    /// Constructs an uninitialized oid.
-    ///
-    oid();
-
-    ///
     /// Constructs an oid and initializes it to a newly generated ObjectId.
+    ///
+    /// @deprecated
+    ///   This constructor for bsoncxx::oid is still supported but deprecated.
     ///
     /// @param tag
     ///   A bsoncxx::oid::init_tag used to dispatch this overload.
     ///
-    explicit oid(init_tag_t tag);
+    BSONCXX_DEPRECATED explicit oid(init_tag_t tag);
 
     ///
     /// Constructs an oid initializes it to the contents of the provided buffer.
@@ -75,7 +78,7 @@ class BSONCXX_API oid {
     /// @param str
     ///   A string of a hexadecimal representation of a valid ObjectId.
     ///
-    explicit oid(const string::view_or_value& str);
+    explicit oid(const bsoncxx::stdx::string_view& str);
 
     ///
     /// Converts this oid to a hexadecimal string.
@@ -104,9 +107,12 @@ class BSONCXX_API oid {
     ///
     /// Conversion operator that indicates that the oid is initialized.
     ///
-    /// @return True if the oid is initialized.
+    /// @deprecated
+    ///   Uninitialized oids can no longer be created so this function will always return True.
     ///
-    explicit operator bool() const;
+    /// @return True
+    ///
+    BSONCXX_DEPRECATED explicit operator bool() const;
 
     ///
     /// Extracts the timestamp portion of the underlying ObjectId.
@@ -124,8 +130,6 @@ class BSONCXX_API oid {
 
    private:
     friend BSONCXX_PRIVATE int oid_compare(const oid& lhs, const oid& rhs);
-
-    bool _is_valid;
 
     std::array<char, 12> _bytes;
 };

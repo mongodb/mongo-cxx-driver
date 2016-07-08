@@ -39,7 +39,7 @@ int main(int, char**) {
     using builder::basic::sub_array;
 
     auto doc = builder::basic::document{};
-    doc.append(kvp("team", "platforms"), kvp("id", types::b_oid{oid(oid::init_tag)}),
+    doc.append(kvp("team", "platforms"), kvp("id", types::b_oid{oid()}),
                kvp("members", [](sub_array sa) {
                    sa.append("tyler", "jason", "drew", "sam", "ernie", "john", "mark", "crystal");
                }));

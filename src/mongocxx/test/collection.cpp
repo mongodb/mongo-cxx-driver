@@ -21,11 +21,11 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
-#include <mongocxx/collection.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/collection.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/instance.hpp>
 #include <mongocxx/insert_many_builder.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/read_concern.hpp>
 
@@ -85,8 +85,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     coll.drop();
 
     SECTION("insert and read single document", "[collection]") {
-        auto b = document{} << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "x" << 1
-                            << finalize;
+        auto b = document{} << "_id" << bsoncxx::oid{} << "x" << 1 << finalize;
 
         REQUIRE(coll.insert_one(b.view()));
 
@@ -110,10 +109,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         document b3;
         document b4;
 
-        b1 << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "x" << 1;
+        b1 << "_id" << bsoncxx::oid{} << "x" << 1;
         b2 << "x" << 2;
         b3 << "x" << 3;
-        b4 << "_id" << bsoncxx::oid{bsoncxx::oid::init_tag} << "x" << 4;
+        b4 << "_id" << bsoncxx::oid{} << "x" << 4;
 
         std::vector<bsoncxx::document::view> docs{};
         docs.push_back(b1.view());
