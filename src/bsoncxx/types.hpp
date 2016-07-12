@@ -118,8 +118,7 @@ struct BSONCXX_API b_utf8 {
     template <typename T,
               typename std::enable_if<!std::is_same<b_utf8, typename std::decay<T>::type>::value,
                                       int>::type = 0>
-    BSONCXX_INLINE explicit b_utf8(T&& t)
-        : value(std::forward<T>(t)) {
+    BSONCXX_INLINE explicit b_utf8(T&& t) : value(std::forward<T>(t)) {
     }
 
     ///
@@ -317,7 +316,8 @@ struct BSONCXX_API b_date {
     ///
     /// Default constructor for b_date.
     ///
-    BSONCXX_INLINE b_date() = default;
+    BSONCXX_INLINE b_date() : value(0) {
+    }
 
     std::chrono::milliseconds value;
 
@@ -456,8 +456,7 @@ struct BSONCXX_API b_code {
     template <typename T,
               typename std::enable_if<!std::is_same<b_code, typename std::decay<T>::type>::value,
                                       int>::type = 0>
-    BSONCXX_INLINE explicit b_code(T&& t)
-        : code(std::forward<T>(t)) {
+    BSONCXX_INLINE explicit b_code(T&& t) : code(std::forward<T>(t)) {
     }
 
     ///
@@ -503,8 +502,7 @@ struct BSONCXX_API b_symbol {
     template <typename T,
               typename std::enable_if<!std::is_same<b_symbol, typename std::decay<T>::type>::value,
                                       int>::type = 0>
-    BSONCXX_INLINE explicit b_symbol(T&& t)
-        : symbol(std::forward<T>(t)) {
+    BSONCXX_INLINE explicit b_symbol(T&& t) : symbol(std::forward<T>(t)) {
     }
 
     ///
