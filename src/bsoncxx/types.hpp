@@ -110,6 +110,11 @@ struct BSONCXX_API b_utf8 {
     static constexpr auto type_id = type::k_utf8;
 
     ///
+    /// Default constructor for b_utf8.
+    ///
+    BSONCXX_INLINE b_utf8() = default;
+
+    ///
     /// Constructor for b_utf8.
     ///
     /// @param value
@@ -121,11 +126,6 @@ struct BSONCXX_API b_utf8 {
     BSONCXX_INLINE explicit b_utf8(T&& t)
         : value(std::forward<T>(t)) {
     }
-
-    ///
-    /// Default constructor for b_utf8.
-    ///
-    BSONCXX_INLINE b_utf8() = default;
 
     stdx::string_view value;
 
@@ -294,6 +294,12 @@ struct BSONCXX_API b_date {
     static constexpr auto type_id = type::k_date;
 
     ///
+    /// Default constructor for b_date.
+    ///
+    BSONCXX_INLINE b_date() : value(0) {
+    }
+
+    ///
     /// Constructor for b_date
     ///
     /// @param value
@@ -312,12 +318,6 @@ struct BSONCXX_API b_date {
     BSONCXX_INLINE
     explicit b_date(const std::chrono::system_clock::time_point& tp)
         : value(std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch())) {
-    }
-
-    ///
-    /// Default constructor for b_date.
-    ///
-    BSONCXX_INLINE b_date() : value(0) {
     }
 
     std::chrono::milliseconds value;
@@ -385,6 +385,11 @@ struct BSONCXX_API b_regex {
     static constexpr auto type_id = type::k_regex;
 
     ///
+    /// Default constructor for b_regex.
+    ///
+    BSONCXX_INLINE b_regex() = default;
+
+    ///
     /// Constructor for b_regex
     ///
     /// @param regex
@@ -397,11 +402,6 @@ struct BSONCXX_API b_regex {
     BSONCXX_INLINE explicit b_regex(T&& regex, U&& options)
         : regex(std::forward<T>(regex)), options(std::forward<U>(options)) {
     }
-
-    ///
-    /// Default constructor for b_regex.
-    ///
-    BSONCXX_INLINE b_regex() = default;
 
     stdx::string_view regex;
     stdx::string_view options;
@@ -449,6 +449,11 @@ struct BSONCXX_API b_code {
     static constexpr auto type_id = type::k_code;
 
     ///
+    /// Default constructor for b_code.
+    ///
+    BSONCXX_INLINE b_code() = default;
+
+    ///
     /// Constructor for b_code.
     ///
     /// @param code
@@ -460,11 +465,6 @@ struct BSONCXX_API b_code {
     BSONCXX_INLINE explicit b_code(T&& t)
         : code(std::forward<T>(t)) {
     }
-
-    ///
-    /// Default constructor for b_code.
-    ///
-    BSONCXX_INLINE b_code() = default;
 
     stdx::string_view code;
 
@@ -496,6 +496,11 @@ struct BSONCXX_API b_symbol {
     static constexpr auto type_id = type::k_symbol;
 
     ///
+    /// Default constructor for b_symbol.
+    ///
+    BSONCXX_INLINE b_symbol() = default;
+
+    ///
     /// Constructor for b_symbol.
     ///
     /// @param symbol
@@ -507,11 +512,6 @@ struct BSONCXX_API b_symbol {
     BSONCXX_INLINE explicit b_symbol(T&& t)
         : symbol(std::forward<T>(t)) {
     }
-
-    ///
-    /// Default constructor for b_symbol.
-    ///
-    BSONCXX_INLINE b_symbol() = default;
 
     stdx::string_view symbol;
 
