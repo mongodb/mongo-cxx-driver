@@ -48,7 +48,7 @@ set(CMAKE_MACOSX_RPATH 1)
 
 # Add in our modules, we write FindX modules for libbson and libmongoc
 # since they don't currently install them.
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 
 # Enforce the C++ standard, and disable extensions
 if(NOT DEFINED CMAKE_CXX_STANDARD)
@@ -80,12 +80,12 @@ add_custom_target(docs
 )
 
 add_custom_target(format
-    python ${CMAKE_SOURCE_DIR}/etc/clang_format.py format
+    python ${CMAKE_CURRENT_SOURCE_DIR}/etc/clang_format.py format
     VERBATIM
 )
 
 add_custom_target(format-lint
-    python ${CMAKE_SOURCE_DIR}/etc/clang_format.py lint
+    python ${CMAKE_CURRENT_SOURCE_DIR}/etc/clang_format.py lint
     VERBATIM
 )
 
