@@ -75,6 +75,10 @@ class instance::impl {
         } else {
             libmongoc::log_set_handler(null_log_handler, nullptr);
         }
+
+#ifdef MONGOC_EXPERIMENTAL_FEATURES
+        libmongoc::metadata_append("C++11", MONGOCXX_VERSION_STRING, NULL);
+#endif
     }
 
     ~impl() {
