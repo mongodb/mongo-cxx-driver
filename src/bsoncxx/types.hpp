@@ -222,9 +222,8 @@ BSONCXX_INLINE bool operator==(const b_binary& lhs, const b_binary& rhs) {
 ///
 /// A BSON undefined value.
 ///
-/// @warning
-///   This BSON type is used internally by the MongoDB server - use by clients
-///   is discouraged.
+/// @deprecated
+///   This BSON type is deprecated and use by clients is discouraged.
 ///
 struct BSONCXX_API b_undefined {
     static constexpr auto type_id = type::k_undefined;
@@ -346,10 +345,6 @@ BSONCXX_INLINE bool operator==(const b_date& lhs, const b_date& rhs) {
 ///
 /// A BSON null value.
 ///
-/// @warning
-///   This BSON type is used internally by the MongoDB server - use by clients
-///   is discouraged.
-///
 struct BSONCXX_API b_null {
     static constexpr auto type_id = type::k_null;
 };
@@ -365,10 +360,6 @@ BSONCXX_INLINE bool operator==(const b_null&, const b_null&) {
 
 ///
 /// A BSON regex value.
-///
-/// @warning
-///   This BSON type is used internally by the MongoDB server - use by clients
-///   is discouraged.
 ///
 struct BSONCXX_API b_regex {
     static constexpr auto type_id = type::k_regex;
@@ -425,10 +416,6 @@ BSONCXX_INLINE bool operator==(const b_dbpointer& lhs, const b_dbpointer& rhs) {
 ///
 /// A BSON JavaScript code value.
 ///
-/// @warning
-///   This BSON type is used internally by the MongoDB server - use by clients
-///   is discouraged.
-///
 struct BSONCXX_API b_code {
     static constexpr auto type_id = type::k_code;
 
@@ -465,11 +452,10 @@ BSONCXX_INLINE bool operator==(const b_code& lhs, const b_code& rhs) {
 }
 
 ///
-/// A BSON JavaScript code value.
+/// A BSON Symbol value.
 ///
-/// @warning
-///   This BSON type is used internally by the MongoDB server - use by clients
-///   is discouraged.
+/// @deprecated
+///   This BSON type is deprecated and use by clients is discouraged.
 ///
 struct BSONCXX_API b_symbol {
     static constexpr auto type_id = type::k_symbol;
@@ -508,10 +494,6 @@ BSONCXX_INLINE bool operator==(const b_symbol& lhs, const b_symbol& rhs) {
 
 ///
 /// A BSON JavaScript code with scope value.
-///
-/// @warning
-///   This BSON type is used internally by the MongoDB server - use by clients
-///   is discouraged.
 ///
 struct BSONCXX_API b_codewscope {
     static constexpr auto type_id = type::k_codewscope;
@@ -619,10 +601,6 @@ BSONCXX_INLINE bool operator==(const b_int64& lhs, const b_int64& rhs) {
 ///
 /// A BSON min-key value.
 ///
-/// @warning
-///   This BSON type is used internally by the MongoDB server - use by clients
-///   is discouraged.
-///
 struct BSONCXX_API b_minkey {
     static constexpr auto type_id = type::k_minkey;
 };
@@ -638,10 +616,6 @@ BSONCXX_INLINE bool operator==(const b_minkey&, const b_minkey&) {
 
 ///
 /// A BSON max-key value.
-///
-/// @warning
-///   This BSON type is used internally by the MongoDB server - use by clients
-///   is discouraged.
 ///
 struct BSONCXX_API b_maxkey {
     static constexpr auto type_id = type::k_maxkey;
