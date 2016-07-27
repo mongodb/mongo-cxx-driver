@@ -346,10 +346,6 @@ BSONCXX_INLINE bool operator==(const b_date& lhs, const b_date& rhs) {
 ///
 /// A BSON null value.
 ///
-/// @warning
-///   This BSON type is used internally by the MongoDB server - use by clients
-///   is discouraged.
-///
 struct BSONCXX_API b_null {
     static constexpr auto type_id = type::k_null;
 };
