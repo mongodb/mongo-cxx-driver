@@ -222,9 +222,8 @@ BSONCXX_INLINE bool operator==(const b_binary& lhs, const b_binary& rhs) {
 ///
 /// A BSON undefined value.
 ///
-/// @warning
-///   This BSON type is used internally by the MongoDB server - use by clients
-///   is discouraged.
+/// @deprecated
+///   This BSON type is deprecated and use by clients is discouraged.
 ///
 struct BSONCXX_API b_undefined {
     static constexpr auto type_id = type::k_undefined;
@@ -455,9 +454,8 @@ BSONCXX_INLINE bool operator==(const b_code& lhs, const b_code& rhs) {
 ///
 /// A BSON Symbol value.
 ///
-/// @warning
-///   This BSON type is used internally by the MongoDB server - use by clients
-///   is discouraged.
+/// @deprecated
+///   This BSON type is deprecated and use by clients is discouraged.
 ///
 struct BSONCXX_API b_symbol {
     static constexpr auto type_id = type::k_symbol;
