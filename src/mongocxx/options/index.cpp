@@ -51,8 +51,8 @@ index& index::storage_options(std::unique_ptr<index::base_storage_options> stora
 }
 
 index& index::storage_options(std::unique_ptr<index::wiredtiger_storage_options> storage_options) {
-    _storage_options = std::move(std::unique_ptr<index::base_storage_options>(
-        static_cast<index::base_storage_options*>(storage_options.release())));
+    _storage_options = std::unique_ptr<index::base_storage_options>(
+        static_cast<index::base_storage_options*>(storage_options.release()));
     return *this;
 }
 

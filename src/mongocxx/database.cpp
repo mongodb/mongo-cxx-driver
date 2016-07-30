@@ -98,7 +98,7 @@ bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value 
                                                      NULL, reply_bson.bson(), &error);
 
     if (!result) {
-        throw_exception<operation_exception>(std::move(reply_bson.steal()), error);
+        throw_exception<operation_exception>(reply_bson.steal(), error);
     }
 
     return reply_bson.steal();

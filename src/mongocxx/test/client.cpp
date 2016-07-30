@@ -60,7 +60,7 @@ TEST_CASE("A client connects to a provided mongodb uri", "[client]") {
 
     client_new->interpose([&](const mongoc_uri_t* url) {
         called = true;
-        actual_url = std::move(std::string(mongoc_uri_get_string(url)));
+        actual_url = std::string(mongoc_uri_get_string(url));
         return nullptr;
     });
 
