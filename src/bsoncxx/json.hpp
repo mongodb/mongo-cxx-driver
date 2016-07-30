@@ -36,28 +36,6 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 BSONCXX_API std::string BSONCXX_CALL to_json(document::view view);
 
 ///
-/// Converts an element (key-value pair) to a JSON key-value pair.
-/// This is not actually a valid JSON document, but it can be useful for debugging.
-///
-/// @param element
-///   A BSON element.
-///
-/// @returns A JSON key-value pair.
-///
-BSONCXX_API std::string BSONCXX_CALL to_json(document::element element);
-
-///
-/// Converts a BSON value to its JSON string representation.
-/// This is not actually a valid JSON document, but it can be useful for debugging.
-///
-/// @param element
-///   A BSON element.
-///
-/// @returns A JSON value.
-///
-BSONCXX_API std::string BSONCXX_CALL to_json(types::value value);
-
-///
 /// Constructs a new document::value from the provided JSON text
 ///
 /// @param 'json'

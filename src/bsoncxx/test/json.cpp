@@ -49,8 +49,7 @@ TEST_CASE("valid json is converted to equivalent BSON") {
 
 TEST_CASE("empty document is converted correctly to json string") {
     using namespace bsoncxx;
-
-    REQUIRE(0 == to_json(builder::stream::document{}.view()).compare("{\n\n}"));
+    REQUIRE(0 == to_json(builder::stream::document{}.view()).compare("{ }"));
 }
 
 TEST_CASE("empty array is converted correctly to json string") {
@@ -58,5 +57,14 @@ TEST_CASE("empty array is converted correctly to json string") {
     using namespace bsoncxx::builder::stream;
     auto doc = document{};
     doc << "array" << open_array << close_array;
-    REQUIRE(0 == to_json(doc.view()["array"]).compare("\"array\" : [\n\n]"));
+    REQUIRE(0 == to_json(doc.view()).compare(R"({ "array" : [  ] })"));
+}
+
+TEST_CASE("CXX-941 is resolved") {
+    using namespace bsoncxx::builder::stream;
+    document docu{};
+    std::string obj_value = R"({"id1":"val1", "id2":"val2"})";
+    docu << "obj_name" << obj_value;
+    std::string output = bsoncxx::to_json(docu.view());
+    REQUIRE(output == R"({ "obj_name" : "{\"id1\":\"val1\", \"id2\":\"val2\"}" })");
 }

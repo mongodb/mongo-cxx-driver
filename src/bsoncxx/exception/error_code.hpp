@@ -41,6 +41,7 @@ enum class error_code : std::int32_t {
     k_unset_element,
     k_json_parse_failure,
     k_invalid_oid,
+    k_failed_converting_bson_to_json,
 };
 
 ///
