@@ -24,6 +24,7 @@ add_executable(test_bson
     bson_validate.cpp
     json.cpp
     new_tests.cpp
+    values.cpp
     view_or_value.cpp
 )
 

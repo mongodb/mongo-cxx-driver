@@ -23,6 +23,14 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
+namespace {
+const auto nop_deleter = [](uint8_t*){};
+}  // namespace
+
+value::value() noexcept
+    : _data(nullptr, nop_deleter), _length() {
+}
+
 value::value(std::uint8_t* data, std::size_t length, deleter_type dtor)
     : _data(data, dtor), _length(length) {
 }
