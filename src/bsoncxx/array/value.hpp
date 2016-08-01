@@ -36,7 +36,6 @@ class BSONCXX_API value {
     using deleter_type = void (*)(const std::uint8_t*);
     using unique_ptr_type = std::unique_ptr<const uint8_t, deleter_type>;
 
-
     value() noexcept;
 
     ///

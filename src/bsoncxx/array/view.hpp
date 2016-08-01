@@ -39,8 +39,8 @@ class BSONCXX_API view {
     /// Default constructs a view. The resulting view will be initialized to point at
     /// an empty BSON array.
     ///
-    BSONCXX_INLINE constexpr view() noexcept
-        : _view() {}
+    BSONCXX_INLINE constexpr view() noexcept : _view() {
+    }
 
     ///
     /// Constructs a view from a buffer. The caller is responsible for ensuring that
@@ -52,7 +52,8 @@ class BSONCXX_API view {
     ///   The size of the buffer, in bytes.
     ///
     BSONCXX_INLINE constexpr view(const std::uint8_t* data, std::size_t length)
-        : _view(data, length) {}
+        : _view(data, length) {
+    }
 
     ///
     /// @returns An const_iterator to the first element of the array.

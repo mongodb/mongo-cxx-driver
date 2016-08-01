@@ -34,9 +34,9 @@ void noop_deleter(const std::uint8_t* ptr) {
 
 }  // namespace
 
-value::value() noexcept
-    : _data(array::view().data(), noop_deleter)
-    , _length(array::view().length()) {}
+value::value() noexcept : _data(array::view().data(), noop_deleter),
+                          _length(array::view().length()) {
+}
 
 value::value(const std::uint8_t* data, std::size_t length, deleter_type dtor)
     : _data(data, dtor), _length(length) {
