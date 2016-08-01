@@ -29,7 +29,7 @@ void uint8_t_deleter(const std::uint8_t* ptr) {
     delete[] ptr;
 }
 
-void noop_deleter(const std::uint8_t* ptr) {
+void noop_deleter(const std::uint8_t*) {
 }
 
 }  // namespace
