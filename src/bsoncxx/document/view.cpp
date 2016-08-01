@@ -38,7 +38,7 @@ bson_iter_t to_bson_iter_t(element e) {
 }
 }  // namespace
 
-constexpr uint8_t view::k_empty[];
+constexpr uint8_t view::k_empty[std::extent<decltype(view::k_empty)>];
 
 view::iterator::iterator() {
 }
