@@ -184,27 +184,6 @@ element view::operator[](std::uint32_t i) const {
     return *(this->find(i));
 }
 
-view::view(const std::uint8_t* data, std::size_t length) : _view(data, length) {
-}
-
-view::view() : _view() {
-}
-
-const std::uint8_t* view::data() const {
-    return _view.data();
-}
-std::size_t view::length() const {
-    return _view.length();
-}
-
-bool view::empty() const {
-    return _view.empty();
-}
-
-view::operator document::view() const {
-    return _view;
-}
-
 bool operator==(view lhs, view rhs) {
     return (lhs.length() == rhs.length()) &&
            (std::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0);

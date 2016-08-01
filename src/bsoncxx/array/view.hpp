@@ -36,6 +36,25 @@ class BSONCXX_API view {
     class BSONCXX_API const_iterator;
 
     ///
+    /// Default constructs a view. The resulting view will be initialized to point at
+    /// an empty BSON array.
+    ///
+    BSONCXX_INLINE constexpr view() noexcept
+        : _view() {}
+
+    ///
+    /// Constructs a view from a buffer. The caller is responsible for ensuring that
+    /// the lifetime of the resulting view is a subset of the buffer's.
+    ///
+    /// @param data
+    ///   A buffer containing a valid BSON array.
+    /// @param length
+    ///   The size of the buffer, in bytes.
+    ///
+    BSONCXX_INLINE constexpr view(const std::uint8_t* data, std::size_t length)
+        : _view(data, length) {}
+
+    ///
     /// @returns An const_iterator to the first element of the array.
     ///
     const_iterator cbegin() const;
@@ -80,28 +99,13 @@ class BSONCXX_API view {
     element operator[](std::uint32_t i) const;
 
     ///
-    /// Default constructs a view. The resulting view will be initialized to point at
-    /// an empty BSON array.
-    ///
-    view();
-
-    ///
-    /// Constructs a view from a buffer. The caller is responsible for ensuring that
-    /// the lifetime of the resulting view is a subset of the buffer's.
-    ///
-    /// @param data
-    ///   A buffer containing a valid BSON array.
-    /// @param length
-    ///   The size of the buffer, in bytes.
-    ///
-    view(const std::uint8_t* data, std::size_t length);
-
-    ///
     /// Access the raw bytes of the underlying array.
     ///
     /// @return A (non-owning) pointer to the view's buffer.
     ///
-    const std::uint8_t* data() const;
+    BSONCXX_INLINE constexpr const std::uint8_t* data() const noexcept {
+        return _view.data();
+    }
 
     ///
     /// Gets the length of the underlying buffer.
@@ -111,7 +115,9 @@ class BSONCXX_API view {
     ///
     /// @return The length of the array, in bytes.
     ///
-    std::size_t length() const;
+    BSONCXX_INLINE constexpr std::size_t length() const noexcept {
+        return _view.length();
+    }
 
     ///
     /// Checks if the underlying buffer is empty, i.e. it is equivalent to
@@ -119,9 +125,13 @@ class BSONCXX_API view {
     ///
     /// @return true if the underlying document is empty.
     ///
-    bool empty() const;
+    BSONCXX_INLINE constexpr bool empty() const noexcept {
+        return _view.empty();
+    }
 
-    operator document::view() const;
+    BSONCXX_INLINE constexpr operator document::view() const noexcept {
+        return _view;
+    }
 
     ///
     /// @{

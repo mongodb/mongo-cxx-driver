@@ -23,25 +23,32 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
-value::value(std::uint8_t* data, std::size_t length, deleter_type dtor)
+namespace {
+
+void uint8_t_deleter(const std::uint8_t* ptr) {
+    delete[] ptr;
+}
+
+void noop_deleter(const std::uint8_t* ptr) {
+}
+
+}  // namespace
+
+value::value() noexcept
+    : _data(document::view().data(), noop_deleter)
+    , _length(document::view().length()) {}
+
+value::value(const std::uint8_t* data, std::size_t length, deleter_type dtor)
     : _data(data, dtor), _length(length) {
 }
 
 value::value(unique_ptr_type ptr, std::size_t length) : _data(std::move(ptr)), _length(length) {
 }
 
-namespace {
-
-void uint8_t_deleter(std::uint8_t* ptr) {
-    delete[] ptr;
-}
-
-}  // namespace
-
 value::value(document::view view)
     : _data(new std::uint8_t[static_cast<std::size_t>(view.length())], uint8_t_deleter),
       _length(view.length()) {
-    std::copy(view.data(), view.data() + view.length(), _data.get());
+    std::copy(view.data(), view.data() + view.length(), const_cast<std::uint8_t*>(_data.get()));
 }
 
 value::value(const value& rhs) : value(rhs.view()) {
@@ -53,11 +60,7 @@ value& value::operator=(const value& rhs) {
 }
 
 value::unique_ptr_type value::release() {
-    auto x = std::move(_data);
-
-    _data.release();
-
-    return x;
+    return std::move(_data);
 }
 
 }  // namespace document

@@ -235,3 +235,15 @@ TEST_CASE("empty array view has working iterators", "[bsoncxx]") {
     REQUIRE(doc.begin() == doc.end());
     REQUIRE(doc.cbegin() == doc.cend());
 }
+
+TEST_CASE("default constructed document value represents an empty range", "[bsoncxx]") {
+    const document::value value;
+    REQUIRE(value.view().begin() == value.view().end());
+    REQUIRE(value.view().cbegin() == value.view().cend());
+}
+
+TEST_CASE("default constructed array value represents an empty range", "[bsoncxx]") {
+    const array::value value;
+    REQUIRE(value.view().begin() == value.view().end());
+    REQUIRE(value.view().cbegin() == value.view().cend());
+}

@@ -38,6 +38,8 @@ bson_iter_t to_bson_iter_t(element e) {
 }
 }  // namespace
 
+constexpr uint8_t view::k_empty[];
+
 view::iterator::iterator() {
 }
 
@@ -182,27 +184,6 @@ view::iterator view::find(stdx::string_view key) const {
 
 element view::operator[](stdx::string_view key) const {
     return *(this->find(key));
-}
-
-view::view(const std::uint8_t* data, std::size_t length) : _data(data), _length(length) {
-}
-
-namespace {
-const uint8_t k_default_view[5] = {5, 0, 0, 0, 0};
-}
-
-view::view() : _data(k_default_view), _length(sizeof(k_default_view)) {
-}
-
-const std::uint8_t* view::data() const {
-    return _data;
-}
-std::size_t view::length() const {
-    return _length;
-}
-
-bool view::empty() const {
-    return _length == 5;
 }
 
 bool operator==(view lhs, view rhs) {
