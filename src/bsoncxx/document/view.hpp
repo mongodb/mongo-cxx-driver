@@ -152,7 +152,7 @@ class BSONCXX_API view {
    private:
     // The magic representation of an empty BSON document. The first four bytes
     // are the number 5 in little endian, the last byte is a terminating zero byte.
-    static constexpr uint8_t k_empty[] = {5, 0, 0, 0, 0};
+    static constexpr std::uint8_t k_empty[] = {5, 0, 0, 0, 0};
 
     const std::uint8_t* _data;
     std::size_t _length;

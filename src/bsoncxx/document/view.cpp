@@ -16,6 +16,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <type_traits>
 
 #include <bson.h>
 
@@ -38,7 +39,7 @@ bson_iter_t to_bson_iter_t(element e) {
 }
 }  // namespace
 
-constexpr uint8_t view::k_empty[std::extent<decltype(view::k_empty)>];
+constexpr std::uint8_t view::k_empty[std::extent<decltype(view::k_empty)>::value];
 
 view::iterator::iterator() {
 }
