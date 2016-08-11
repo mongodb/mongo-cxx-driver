@@ -1,5 +1,23 @@
 # Contributing Guidelines
 
+### Commit Messages
+
+If a pull-request addresses a JIRA ticket, for a single-commit PR, prefix
+the subject line with the ticket ID.  (For a multi-commit PR, we will add
+the ID later when we squash or merge it.)
+
+> CXX-883 Add commit message conventions to CONTRIBUTING.md
+
+Capitalize subject lines and don't use a trailing period.  Keep the subject
+at most 70 characters long.  Use active voice!  Imagine this preamble to get
+your phrasing right:
+
+> *If applied, this commit will...* [your subject line]
+
+See Chris Beams'
+[How to write a git commit message](http://chris.beams.io/posts/git-commit/)
+for more good guidelines to follow.
+
 ### Lifecycle Methods
 
  - default-or-argument-bearing 'user' constructors
