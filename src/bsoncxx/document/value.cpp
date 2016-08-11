@@ -16,6 +16,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <utility>
 
 #include <bsoncxx/config/private/prelude.hpp>
 
@@ -53,11 +54,7 @@ value& value::operator=(const value& rhs) {
 }
 
 value::unique_ptr_type value::release() {
-    auto x = std::move(_data);
-
-    _data.release();
-
-    return x;
+    return std::move(_data);
 }
 
 }  // namespace document
