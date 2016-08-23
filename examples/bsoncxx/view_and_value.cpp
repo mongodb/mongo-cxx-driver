@@ -79,7 +79,7 @@ int main(int, char**) {
                 // if we have a subarray, we can access it by getting a view of it.
                 array::view subarr{ele.get_array().value};
                 for (array::element ele : subarr) {
-                    std::cout << "array element: " << to_json(ele.get_value()) << std::endl;
+                    std::cout << "array element: " << ele.get_utf8().value.to_string() << std::endl;
                 }
                 break;
             }
@@ -90,10 +90,6 @@ int main(int, char**) {
         // usually we don't need to actually use a switch statement, because we can also
         // get a variant 'value' that can hold any BSON type.
         types::value ele_val{ele.get_value()};
-        // if we need to print an arbitrary value, we can use to_json, which provides
-        // a suitable overload.
-        std::cout << "the value is " << to_json(ele_val) << std::endl;
-        ;
     }
 
     // If we want to search for an element we can use operator[]
@@ -102,7 +98,7 @@ int main(int, char**) {
     document::element ele{view["team"]};
     if (ele) {
         // this block will execute if ele was actually found
-        std::cout << "as expected, we have a team of " << to_json(ele.get_value()) << std::endl;
+        std::cout << "as expected, we have a team" << std::endl;
     }
 
     // Because view implements begin(), end(), we can also use standard STL algorithms.
