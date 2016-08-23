@@ -31,6 +31,7 @@ set(MONGOCXX_EXAMPLES
     index.cpp
     inserted_id.cpp
     query.cpp
+    query_projection.cpp
     remove.cpp
     update.cpp
     view_or_value_variant.cpp
