@@ -22,17 +22,18 @@ include(FindPackageHandleStandardArgs)
 # Load up PkgConfig if we have it
 find_package(PkgConfig QUIET)
 
-if (PKG_CONFIG_FOUND)
-  pkg_check_modules(LIBMONGOC REQUIRED libmongoc-1.0>=${LibMongoC_FIND_VERSION} )
-  # We don't reiterate the version information here because we assume that
-  # pkg_check_modules has honored our request.
-  find_package_handle_standard_args(LIBMONGOC DEFAULT_MSG LIBMONGOC_FOUND)
-elseif(LIBMONGOC_DIR)
-  # The best we can do until libMONGOC starts installing a libmongoc-config.cmake file
+if(LIBMONGOC_DIR)
+  # Trust the user's override path by default
   set(LIBMONGOC_LIBRARIES mongoc-1.0 CACHE INTERNAL "")
   set(LIBMONGOC_LIBRARY_DIRS ${LIBMONGOC_DIR}/lib CACHE INTERNAL "")
   set(LIBMONGOC_INCLUDE_DIRS ${LIBMONGOC_DIR}/include/libmongoc-1.0 CACHE INTERNAL "")
   find_package_handle_standard_args(LIBMONGOC DEFAULT_MSG LIBMONGOC_LIBRARIES LIBMONGOC_LIBRARY_DIRS LIBMONGOC_INCLUDE_DIRS)
+elseif (PKG_CONFIG_FOUND)
+  # The best we can do until libMONGOC starts installing a libmongoc-config.cmake file
+  pkg_check_modules(LIBMONGOC REQUIRED libmongoc-1.0>=${LibMongoC_FIND_VERSION} )
+  # We don't reiterate the version information here because we assume that
+  # pkg_check_modules has honored our request.
+  find_package_handle_standard_args(LIBMONGOC DEFAULT_MSG LIBMONGOC_FOUND)
 else()
     message(FATAL_ERROR "Don't know how to find libmongoc; please set LIBMONGOC_DIR to the prefix directory with which libbson was configured.")
 endif()
