@@ -66,5 +66,5 @@ TEST_CASE("CXX-941 is resolved") {
     std::string obj_value = R"({"id1":"val1", "id2":"val2"})";
     docu << "obj_name" << obj_value;
     std::string output = bsoncxx::to_json(docu.view());
-    REQUIRE(output == R"({ "obj_name" : "{\"id1\":\"val1\", \"id2\":\"val2\"}" })");
+    REQUIRE(output == "{ \"obj_name\" : \"{\\\"id1\\\":\\\"val1\\\", \\\"id2\\\":\\\"val2\\\"}\" }");
 }
