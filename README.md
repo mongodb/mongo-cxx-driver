@@ -21,8 +21,8 @@ friendlier to contributors than its predecessors.
 ## Repository Overview
 | Branch   | Stability   | Development       | Purpose                                                      |
 | -------- | ------------| ----------------- | ------------------------------------------------------------ |
-| master   | Stable      | Stable Evolution  | New C++11 driver                                             |
-| legacy   | Stable      | Stable Evolution  | Stable C++ driver release                                    |
+| master   | Stable      | Stable Evolution  | Primary stable C++ driver release, requires C++11            |
+| legacy   | Stable      | Maintenance Only  | Former stable C++ driver release                             |
 | 26compat | Stable      | Maintenance Only  | Drop in replacement for users of existing 2.6 era C++ driver |
 
 ## Bugs and Issues
