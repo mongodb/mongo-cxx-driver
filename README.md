@@ -18,8 +18,8 @@ API.
 
 | Branch   | Stability   | Development       | Purpose                                                      |
 | -------- | ------------| ----------------- | -----------------------------------------------------        |
-| master   | Stable      | Stable Evolution  | New C++11 driver                                             |
-| legacy   | Stable      | Stable Evolution  | Primary stable C++ driver release                            |
+| master   | Stable      | Stable Evolution  | Primary stable C++ driver release, requires C++11            |
+| legacy   | Stable      | Maintenance Only  | Former stable C++ driver release                             |
 | 26compat | Stable      | Maintenance Only  | Drop in replacement for users of existing 2.6 era C++ driver |
 
 Please note that stable branches are only production quality at stable release tags. Other
