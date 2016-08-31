@@ -37,6 +37,12 @@ class BSONCXX_API value {
     using unique_ptr_type = std::unique_ptr<uint8_t, deleter_type>;
 
     ///
+    /// Constructs a default value. The value is as if moved from. In particular
+    /// it is illegal to access the view of a default constructed value.
+    ///
+    value() noexcept;
+
+    ///
     /// Constructs a value from a buffer.
     /// This constructor transfers ownership of the buffer to the resulting
     /// value. A user-provided deleter is used to destroy the buffer.
@@ -76,6 +82,13 @@ class BSONCXX_API value {
 
     value(value&&) noexcept = default;
     value& operator=(value&&) noexcept = default;
+
+    ///
+    /// Returns true if this value is not default constructed or moved from.
+    ///
+    BSONCXX_INLINE explicit operator bool() const noexcept {
+        return static_cast<bool>(_data);
+    }
 
     ///
     /// Get a view over the document owned by this value.
