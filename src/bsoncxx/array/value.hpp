@@ -33,8 +33,10 @@ namespace array {
 ///
 class BSONCXX_API value {
    public:
-    using deleter_type = void (*)(std::uint8_t*);
-    using unique_ptr_type = std::unique_ptr<uint8_t, deleter_type>;
+    using deleter_type = void (*)(const std::uint8_t*);
+    using unique_ptr_type = std::unique_ptr<const uint8_t, deleter_type>;
+
+    value() noexcept;
 
     ///
     /// Constructs a value from a buffer.
@@ -48,7 +50,7 @@ class BSONCXX_API value {
     /// @param dtor
     ///   A user provided deleter.
     ///
-    value(std::uint8_t* data, std::size_t length, deleter_type dtor);
+    value(const std::uint8_t* data, std::size_t length, deleter_type dtor);
 
     ///
     /// Constructs a value from a std::unique_ptr to a buffer. The ownership
@@ -106,7 +108,7 @@ class BSONCXX_API value {
 };
 
 BSONCXX_INLINE array::view value::view() const noexcept {
-    return array::view{static_cast<uint8_t*>(_data.get()), _length};
+    return array::view{static_cast<const uint8_t*>(_data.get()), _length};
 }
 
 BSONCXX_INLINE value::operator array::view() const noexcept {

@@ -39,7 +39,8 @@ class BSONCXX_API view {
     /// Default constructs a view. The resulting view will be initialized to point at
     /// an empty BSON document.
     ///
-    view();
+    BSONCXX_INLINE constexpr view() noexcept : view(k_empty, sizeof(k_empty)) {
+    }
 
     ///
     /// Constructs a view from a buffer. The caller is responsible for ensuring that
@@ -50,7 +51,10 @@ class BSONCXX_API view {
     /// @param length
     ///   The size of the buffer, in bytes.
     ///
-    view(const std::uint8_t* data, std::size_t length);
+    BSONCXX_INLINE constexpr view(const std::uint8_t* data, std::size_t length) noexcept
+        : _data(data),
+          _length(length) {
+    }
 
     ///
     /// @returns A const_iterator to the first element of the document.
@@ -106,7 +110,9 @@ class BSONCXX_API view {
     ///
     /// @return A (non-owning) pointer to the view's buffer.
     ///
-    const std::uint8_t* data() const;
+    BSONCXX_INLINE constexpr const std::uint8_t* data() const noexcept {
+        return _data;
+    }
 
     ///
     /// Gets the length of the underlying buffer.
@@ -116,7 +122,9 @@ class BSONCXX_API view {
     ///
     /// @return The length of the document, in bytes.
     ///
-    std::size_t length() const;
+    BSONCXX_INLINE constexpr std::size_t length() const noexcept {
+        return _length;
+    }
 
     ///
     /// Checks if the underlying document is empty, i.e. it is equivalent to
@@ -124,7 +132,9 @@ class BSONCXX_API view {
     ///
     /// @return true if the underlying document is empty.
     ///
-    bool empty() const;
+    BSONCXX_INLINE constexpr bool empty() const noexcept {
+        return _length == sizeof(k_empty);
+    }
 
     ///
     /// @{
@@ -140,6 +150,10 @@ class BSONCXX_API view {
     ///
 
    private:
+    // The magic representation of an empty BSON document. The first four bytes
+    // are the number 5 in little endian, the last byte is a terminating zero byte.
+    static constexpr std::uint8_t k_empty[] = {5, 0, 0, 0, 0};
+
     const std::uint8_t* _data;
     std::size_t _length;
 };

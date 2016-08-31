@@ -38,8 +38,8 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 
 namespace {
 
-void bson_free_deleter(std::uint8_t* ptr) {
-    bson_free(ptr);
+void bson_free_deleter(const std::uint8_t* ptr) {
+    bson_free(const_cast<std::uint8_t*>(ptr));
 }
 
 }  // namespace
