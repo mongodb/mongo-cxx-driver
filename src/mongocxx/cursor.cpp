@@ -49,7 +49,8 @@ void cursor::iterator::operator++(int) {
 cursor::iterator& cursor::iterator::operator++() {
     const bson_t* out;
     bson_error_t error;
-    if (libmongoc::cursor_next(_cursor->_impl->cursor_t, &out)) {
+    if (libmongoc::cursor_more(_cursor->_impl->cursor_t) &&
+        libmongoc::cursor_next(_cursor->_impl->cursor_t, &out)) {
         _doc = bsoncxx::document::view(bson_get_data(out), out->len);
     } else if (libmongoc::cursor_error(_cursor->_impl->cursor_t, &error)) {
         throw_exception<query_exception>(error);
