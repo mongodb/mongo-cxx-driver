@@ -23,6 +23,10 @@ include(FindPackageHandleStandardArgs)
 find_package(PkgConfig QUIET)
 
 if (PKG_CONFIG_FOUND)
+  if (LIBMONGOC_DIR) 
+      set( ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${LIBMONGOC_DIR}/lib/pkgconfig" )
+  endif()
+
   pkg_check_modules(LIBMONGOC REQUIRED libmongoc-1.0>=${LibMongoC_FIND_VERSION} )
   # We don't reiterate the version information here because we assume that
   # pkg_check_modules has honored our request.
