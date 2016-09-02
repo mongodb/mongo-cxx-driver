@@ -146,12 +146,16 @@ class BSONCXX_API element {
     ///
     /// @return the element's type.
     ///
+    /// @throws bsoncxx::exception if this element is invalid.
+    ///
     bsoncxx::type type() const;
 
     ///
     /// Getter for the element's key.
     ///
     /// @return the element's key.
+    ///
+    /// @throws bsoncxx::exception if this element is invalid.
     ///
     stdx::string_view key() const;
 

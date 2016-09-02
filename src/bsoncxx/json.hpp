@@ -31,6 +31,8 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 /// @param view
 ///   A valid BSON document.
 ///
+/// @throws bsoncxx::exception with error details if the conversion failed.
+///
 /// @returns A JSON string.
 ///
 BSONCXX_API std::string BSONCXX_CALL to_json(document::view view);
@@ -43,8 +45,7 @@ BSONCXX_API std::string BSONCXX_CALL to_json(document::view view);
 ///
 /// @returns A document::value if conversion worked.
 ///
-/// @throws A bsoncxx::exception containing error details, if the
-/// conversion failed.
+/// @throws bsoncxx::exception with error details if the conversion failed.
 ///
 BSONCXX_API document::value BSONCXX_CALL from_json(stdx::string_view json);
 

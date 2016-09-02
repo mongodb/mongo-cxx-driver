@@ -87,7 +87,8 @@ class MONGOCXX_API database {
     ///
     /// @param command document representing the command to be run.
     /// @return the result of executing the command.
-    /// @throws exception::operation if the operation fails.
+    ///
+    /// @throws mongocxx::operation_exception if the operation fails.
     ///
     bsoncxx::document::value run_command(bsoncxx::document::view_or_value command);
 
@@ -98,6 +99,8 @@ class MONGOCXX_API database {
     ///
     /// @param name the new collection's name.
     /// @param options the options for the new collection.
+    ///
+    /// @throws mongocxx::operation_exception if the operation fails.
     ///
     class collection create_collection(
         bsoncxx::string::view_or_value name,
@@ -120,6 +123,8 @@ class MONGOCXX_API database {
     ///
     /// Drops the database and all its collections.
     ///
+    /// @throws mongocxx::operation_exception if the operation fails.
+    //
     /// @see http://docs.mongodb.org/manual/reference/method/db.dropDatabase/
     ///
     void drop();
@@ -131,8 +136,8 @@ class MONGOCXX_API database {
     ///
     /// @return bool whether the collection exists in this database.
     ///
-    /// @throws exception::operation if the underlying 'listCollections'
-    ///   command fails.
+    /// @throws mongocxx::operation_exception if the underlying 'listCollections'
+    /// command fails.
     ///
     bool has_collection(bsoncxx::string::view_or_value name) const;
 
@@ -144,8 +149,8 @@ class MONGOCXX_API database {
     ///
     /// @return mongocxx::cursor containing the collection information.
     ///
-    /// @throws exception::operation if the underlying 'listCollections'
-    ///   command fails.
+    /// @throws mongocxx::operation_exception if the underlying 'listCollections'
+    /// command fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/listCollections/
     ///

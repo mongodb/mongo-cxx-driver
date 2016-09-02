@@ -55,6 +55,10 @@ class MONGOCXX_API pool {
     ///  A MongoDB URI representing the connection parameters
     /// @param ssl_options
     ///  Optional SSL options to use when connecting to the MongoDB deployment.
+    ///
+    /// @throws mongocxx::exception if SSL is enabled and ssl_options are
+    /// invalid, or if SSL is not enabled and ssl_options is engaged.
+    ///
     pool(const uri& mongodb_uri = mongocxx::uri(),
          stdx::optional<options::ssl> ssl_options = stdx::nullopt);
 
