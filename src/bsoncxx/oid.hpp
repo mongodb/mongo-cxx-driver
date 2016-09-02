@@ -70,6 +70,8 @@ class BSONCXX_API oid {
     /// @param len
     ///   The length of the buffer. Should be 12.
     ///
+    /// @throws bsoncxx::exception if the length is not 12.
+    ///
     explicit oid(const char* bytes, std::size_t len);
 
     ///
@@ -77,6 +79,9 @@ class BSONCXX_API oid {
     ///
     /// @param str
     ///   A string of a hexadecimal representation of a valid ObjectId.
+    ///
+    /// @throws bsoncxx::exception if the string isn't an OID-sized hex
+    /// string.
     ///
     explicit oid(const bsoncxx::stdx::string_view& str);
 

@@ -56,11 +56,15 @@ class MONGOCXX_API cursor {
     /// A cursor::iterator that points to the begining of the results.
     ///
     /// @return the cursor::iterator
+    ///
+    /// @throws mongocxx::query_exception if the query failed
+    ///
     iterator begin();
 
     /// A cursor::iterator that points to the end of the results.
     ///
     /// @return the cursor::iterator
+    ///
     iterator end();
 
    private:
@@ -93,10 +97,14 @@ class MONGOCXX_API cursor::iterator
     ///
     /// Postfix increments the iterator to move to the next document.
     ///
+    /// @throws mongocxx::query_exception if the query failed
+    ///
     iterator& operator++();
 
     ///
     /// Prefix increments the iterator to move to the next document.
+    ///
+    /// @throws mongocxx::query_exception if the query failed
     ///
     void operator++(int);
 

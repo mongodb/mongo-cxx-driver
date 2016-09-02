@@ -134,6 +134,8 @@ class MONGOCXX_API write_concern {
     /// @warning Setting this to level::k_unacknowledged disables write acknowledgment and all other
     /// write concern options.
     ///
+    /// @throws mongocxx::exception for an unknown confirm_level.
+    ///
     void acknowledge_level(level confirm_level);
 
     ///
@@ -144,6 +146,8 @@ class MONGOCXX_API write_concern {
     ///   The amount of time to wait before the write operation times out if it cannot reach
     ///   the majority of nodes in the replica set.
     ///
+    /// @throws mongocxx::logic_error for an invalid timeout value.
+    //
     void majority(std::chrono::milliseconds timeout);
 
     ///
@@ -164,7 +168,7 @@ class MONGOCXX_API write_concern {
     /// @param timeout
     ///   The timeout (in milliseconds) for this write concern.
     ///
-    /// @throw exception::write
+    /// @throws mongocxx::logic_error for an invalid timeout value.
     ///
     void timeout(std::chrono::milliseconds timeout);
 

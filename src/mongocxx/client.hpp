@@ -63,6 +63,9 @@ class MONGOCXX_API client {
     /// @param options
     ///   Additional options that cannot be specified via the mongodb_uri
     ///
+    /// @throws mongocxx::exception if invalid options are provided
+    /// (whether from the URI or provided client options).
+    ///
     client(const class uri& mongodb_uri, const options::client& options = options::client());
 
     ///
@@ -191,7 +194,7 @@ class MONGOCXX_API client {
     ///   disk in bytes, and an empty field specifying whether the database
     ///   has any data.
     ///
-    /// @throws exception::operation if the underlying 'listDatabases' command fails.
+    /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/listDatabases
     ///

@@ -39,6 +39,8 @@ class MONGOCXX_API instance {
     /// Creates an instance of the driver with a user provided log handler.
     ///  @param logger The logger that the driver will direct log messages to.
     ///
+    /// @throws mongocxx::logic_error if an instance already exists.
+    ///
     instance(std::unique_ptr<logger> logger);
 
     ///
