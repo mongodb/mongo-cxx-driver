@@ -170,12 +170,14 @@ install(FILES
     COMPONENT dev
 )
 
-install(TARGETS
-    bsoncxx
-    RUNTIME DESTINATION bin COMPONENT runtime
-    LIBRARY DESTINATION lib COMPONENT runtime
-    ARCHIVE DESTINATION lib COMPONENT dev
-)
+if (BUILD_SHARED_LIBS)
+    install(TARGETS
+        bsoncxx
+        RUNTIME DESTINATION bin COMPONENT runtime
+        LIBRARY DESTINATION lib COMPONENT runtime
+        ARCHIVE DESTINATION lib COMPONENT dev
+    )
+endif()
 
 install(TARGETS
     bsoncxx_static
