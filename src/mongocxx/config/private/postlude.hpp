@@ -15,4 +15,7 @@
 // NOTE: Pop any macros here that are defined by the headers included
 // in private/prelude.hpp.
 
+#undef MONGOCXX_ENABLE_SSL
+#pragma pop_macro("MONGOCXX_ENABLE_SSL")
+
 #include <mongocxx/config/postlude.hpp>

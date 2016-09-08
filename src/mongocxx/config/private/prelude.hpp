@@ -17,4 +17,7 @@
 // NOTE: Push any macros here that are defined by the following
 // headers here.
 
+#pragma push_macro("MONGOCXX_ENABLE_SSL")
+#undef MONGOCXX_ENABLE_SSL
+
 #include <mongocxx/config/private/config.hpp>

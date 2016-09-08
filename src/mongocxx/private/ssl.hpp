@@ -25,7 +25,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-#if defined(MONGOC_ENABLE_SSL)
+#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
 inline std::pair<::mongoc_ssl_opt_t, std::list<bsoncxx::string::view_or_value>> make_ssl_opts(
     const ssl& ssl_opts) {
     ::mongoc_ssl_opt_t out{};
