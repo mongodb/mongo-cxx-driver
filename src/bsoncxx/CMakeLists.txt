@@ -17,8 +17,8 @@ project(BSONCXX)
 # Update these as needed.
 # TODO: read from file
 set(BSONCXX_VERSION_MAJOR 3)
-set(BSONCXX_VERSION_MINOR 0)
-set(BSONCXX_VERSION_PATCH 2)
+set(BSONCXX_VERSION_MINOR 1)
+set(BSONCXX_VERSION_PATCH 0)
 set(BSONCXX_VERSION_EXTRA "-rc0-pre")
 set(BSONCXX_ABI_VERSION _noabi)
 
