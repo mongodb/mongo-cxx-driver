@@ -23,7 +23,7 @@ namespace stdx {
 // We adopt all the bsoncxx polyfills
 using namespace ::bsoncxx::stdx;
 
-}  // namespace stdx;
+}  // namespace stdx
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 

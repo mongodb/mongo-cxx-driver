@@ -25,11 +25,13 @@
 #endif
 
 namespace bsoncxx {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace stdx {
 
 using ::core::make_unique;
 
 }  // namespace stdx
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_BOOST)
@@ -37,11 +39,13 @@ using ::core::make_unique;
 #include <boost/smart_ptr/make_unique.hpp>
 
 namespace bsoncxx {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace stdx {
 
 using ::boost::make_unique;
 
 }  // namespace stdx
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
 #elif __cplusplus >= 201402L
@@ -49,11 +53,13 @@ using ::boost::make_unique;
 #include <memory>
 
 namespace bsoncxx {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace stdx {
 
 using ::std::make_unique;
 
 }  // namespace stdx
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
 #else

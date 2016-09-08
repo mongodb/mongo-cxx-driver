@@ -25,11 +25,13 @@
 #endif
 
 namespace bsoncxx {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace stdx {
 
 using ::core::string_view;
 
 }  // namespace stdx
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_BOOST)
@@ -37,11 +39,13 @@ using ::core::string_view;
 #include <boost/utility/string_ref.hpp>
 
 namespace bsoncxx {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace stdx {
 
 using string_view = ::boost::string_ref;
 
 }  // namespace stdx
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_STD_EXPERIMENTAL)
@@ -49,11 +53,13 @@ using string_view = ::boost::string_ref;
 #include <experimental/string_view>
 
 namespace bsoncxx {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace stdx {
 
 using ::std::experimental::string_view;
 
 }  // namespace stdx
+BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
 #else
