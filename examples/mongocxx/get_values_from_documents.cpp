@@ -22,12 +22,7 @@ using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::close_array;
 using bsoncxx::builder::stream::finalize;
 using bsoncxx::builder::stream::open_array;
-using bsoncxx::type::k_array;
-using bsoncxx::type::k_document;
-using bsoncxx::type::k_int32;
-using bsoncxx::type::k_int64;
-using bsoncxx::type::k_oid;
-using bsoncxx::type::k_utf8;
+using bsoncxx::type;
 
 // Document model, showing array with nested documents:
 //
@@ -65,23 +60,23 @@ void insert_test_data(mongocxx::collection& coll) {
 // Iterate over contents of messagelist.
 void iterate_messagelist(const bsoncxx::document::element& ele) {
     // Check validity and type before trying to iterate.
-    if (ele.type() == k_array) {
+    if (ele.type() == type::k_array) {
         bsoncxx::array::view subarray{ele.get_array().value};
         for (const bsoncxx::array::element& msg : subarray) {
             // Check correct type before trying to access elements.
             // Only print out fields if they exist; don't report missing fields.
-            if (msg.type() == k_document) {
+            if (msg.type() == type::k_document) {
                 bsoncxx::document::view subdoc = msg.get_document().value;
                 bsoncxx::document::element uid = subdoc["uid"];
                 bsoncxx::document::element status = subdoc["status"];
                 bsoncxx::document::element msg = subdoc["msg"];
-                if (uid && uid.type() == k_int64) {
+                if (uid && uid.type() == type::k_int64) {
                     std::cout << "uid: " << uid.get_int64().value << std::endl;
                 }
-                if (status && status.type() == k_int32) {
+                if (status && status.type() == type::k_int32) {
                     std::cout << "status: " << status.get_int32().value << std::endl;
                 }
-                if (msg && msg.type() == k_utf8) {
+                if (msg && msg.type() == type::k_utf8) {
                     std::cout << "msg: " << msg.get_utf8().value << std::endl;
                 }
             } else {
@@ -97,7 +92,7 @@ void iterate_messagelist(const bsoncxx::document::element& ele) {
 void print_document(const bsoncxx::document::view& doc) {
     // Extract _id element as a string.
     bsoncxx::document::element id_ele = doc["_id"];
-    if (id_ele.type() == k_oid) {
+    if (id_ele.type() == type::k_oid) {
         std::string oid = id_ele.get_oid().value.to_string();
         std::cout << "OID: " << oid << std::endl;
     } else {
