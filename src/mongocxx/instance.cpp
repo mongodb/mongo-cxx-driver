@@ -27,6 +27,10 @@
 
 #include <mongocxx/config/private/prelude.hpp>
 
+#if !defined(__has_feature)
+#define __has_feature(x) 0
+#endif
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
@@ -96,7 +100,15 @@ class instance::impl {
         if (_user_logger) {
             libmongoc::log_set_handler(null_log_handler, nullptr);
         }
+
+        // Under ASAN, we don't want to clean up libmongoc, because it causes libraries to become
+        // unloaded, and then ASAN sees non-rooted allocations that it consideres leaks. These are
+        // also inscrutable, because the stack refers into an unloaded library, which ASAN can't
+        // report. Note that this only works if we have built mongoc so that it doesn't do its
+        // unfortunate automatic invocation of 'cleanup'.
+#if !__has_feature(address_sanitizer)
         libmongoc::cleanup();
+#endif
     }
 
     const std::unique_ptr<logger> _user_logger;
