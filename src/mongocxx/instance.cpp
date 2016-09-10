@@ -66,10 +66,13 @@ void user_log_handler(::mongoc_log_level_t mongoc_log_level, const char *log_dom
 // destroyed. We only care about the address of this object, never its contents.
 typename std::aligned_storage<sizeof(instance), alignof(instance)>::type sentinel;
 
-std::atomic<instance*> current_instance{nullptr};
-static_assert(std::is_standard_layout<decltype(current_instance)>::value, "Must be standard layout");
-static_assert(std::is_trivially_constructible<decltype(current_instance)>::value, "Must be trivially constructible");
-static_assert(std::is_trivially_destructible<decltype(current_instance)>::value, "Must be trivially destructible");
+std::atomic<instance *> current_instance{nullptr};
+static_assert(std::is_standard_layout<decltype(current_instance)>::value,
+              "Must be standard layout");
+static_assert(std::is_trivially_constructible<decltype(current_instance)>::value,
+              "Must be trivially constructible");
+static_assert(std::is_trivially_destructible<decltype(current_instance)>::value,
+              "Must be trivially destructible");
 
 }  // namespace
 
@@ -101,12 +104,10 @@ instance::instance() : instance(nullptr) {
 }
 
 instance::instance(std::unique_ptr<logger> logger) {
-
     while (true) {
-        instance* expected = nullptr;
-        if (current_instance.compare_exchange_strong(expected, this))
-            break;
-        if (expected != reinterpret_cast<instance*>(&sentinel))
+        instance *expected = nullptr;
+        if (current_instance.compare_exchange_strong(expected, this)) break;
+        if (expected != reinterpret_cast<instance *>(&sentinel))
             throw logic_error{error_code::k_instance_already_exists};
     }
 
@@ -117,14 +118,14 @@ instance::instance(instance &&) noexcept = default;
 instance &instance::operator=(instance &&) noexcept = default;
 
 instance::~instance() {
-    current_instance.store(reinterpret_cast<instance*>(&sentinel));
+    current_instance.store(reinterpret_cast<instance *>(&sentinel));
     _impl.reset();
     current_instance.store(nullptr);
 }
 
 instance &instance::current() {
     if (!current_instance.load()) {
-         static instance the_instance;
+        static instance the_instance;
     }
     return *current_instance.load();
 }
