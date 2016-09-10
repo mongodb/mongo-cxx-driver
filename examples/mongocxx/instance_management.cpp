@@ -75,7 +75,7 @@ void configure(mongocxx::uri uri) {
     class noop_logger : public mongocxx::logger {
     public:
         virtual void operator()(mongocxx::log_level, mongocxx::stdx::string_view,
-                                mongocxx::stdx::string_view message) noexcept {}
+                                mongocxx::stdx::string_view) noexcept {}
     };
 
     mongo_access::instance().configure(
