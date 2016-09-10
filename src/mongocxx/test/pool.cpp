@@ -83,7 +83,7 @@ TEST_CASE(
     ssl_opts.crl_file(crl_file);
     ssl_opts.allow_invalid_certificates(allow_invalid_certificates);
 
-    ::mongoc_ssl_opt_t interposed = {0};
+    ::mongoc_ssl_opt_t interposed = {};
 
     client_pool_set_ssl_opts->interpose(
         [&](::mongoc_client_pool_t*, const ::mongoc_ssl_opt_t* opts) {
