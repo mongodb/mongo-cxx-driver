@@ -28,7 +28,7 @@ variables:
 
     ## cdriver configure flags
     cdriver_configure_flags:
-        linux_cdriver_configure_flags: &linux_cdriver_configure_flags --enable-ssl --enable-sasl
+        linux_cdriver_configure_flags: &linux_cdriver_configure_flags --enable-ssl --enable-sasl --with-gnu-ld CFLAGS=-fno-omit-frame-pointer
         osx_cdriver_configure_flags: &osx_cdriver_configure_flags --enable-ssl --enable-sasl
 
     ## cmake flag variables
@@ -79,7 +79,7 @@ functions:
                 cd mongo-c-driver
                 git checkout 1.3.4
                 rm -rf /data/tmp/c-driver-install
-                ./autogen.sh --prefix="/data/tmp/c-driver-install" --enable-tests=no --enable-examples=no --with-libbson=bundled --disable-extra-align ${cdriver_configure_flags}
+                ./autogen.sh --prefix="/data/tmp/c-driver-install" --enable-tests=no --enable-examples=no --with-libbson=bundled --disable-extra-align --enable-debug --enable-optimizations --disable-shm-counters --disable-static --disable-dependency-tracking --with-pic --disable-automatic-init-and-cleanup ${cdriver_configure_flags}
                 make ${compile_concurrency}
                 make install
 
