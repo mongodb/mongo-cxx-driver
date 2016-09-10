@@ -33,15 +33,15 @@ variables:
 
     ## cmake flag variables
     cmake_flags:
-        ubuntu_cmake_flags: &ubuntu_cmake_flags -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers"
-        osx_cmake_flags: &osx_cmake_flags -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DBSONCXX_POLY_USE_BOOST=ON
-        asan_cmake_flags: &asan_cmake_flags -DCMAKE_CXX_FLAGS="-fsanitize=address -O1 -fno-omit-frame-pointer -Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers -Wno-error=maybe-uninitialized"
-        ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-fsanitize=undefined -g -fno-omit-frame-pointer -fsanitize-blacklist=$(pwd)/../etc/ubsan.blacklist -fno-sanitize-recover -Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers"
+        ubuntu_cmake_flags: &ubuntu_cmake_flags -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -Wno-error=missing-field-initializers"
+        osx_cmake_flags: &osx_cmake_flags -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Werror" -DBSONCXX_POLY_USE_BOOST=ON
+        asan_cmake_flags: &asan_cmake_flags -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
+        ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/../etc/ubsan.blacklist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
 
     ## test parameters
     test_params:
-        asan_test_params: &asan_test_params ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer-3.5 ASAN_OPTIONS="detect_leaks=1"
-        ubsan_test_params: &ubsan_test_params UBSAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer UBSAN_OPTIONS="print_stacktrace=1"
+        asan_test_params: &asan_test_params PATH="/usr/lib/llvm-3.8/bin" ASAN_OPTIONS="detect_leaks=1"
+        ubsan_test_params: &ubsan_test_params PATH="usr/lib/llvm-3.8/bin" UBSAN_OPTIONS="print_stacktrace=1"
         valgrind_test_params: &valgrind_test_params valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions
 
 
@@ -200,8 +200,8 @@ buildvariants:
       tasks:
           - name: compile_and_test
 
-    - name: ubuntu1410-debug-valgrind
-      display_name: "Valgrind Ubuntu 14.10 Debug"
+    - name: ubuntu1604-debug-valgrind
+      display_name: "Valgrind Ubuntu 16.04 Debug"
       expansions:
           build_type: "Debug"
           source: *ubuntu_source
@@ -212,12 +212,12 @@ buildvariants:
           cmake_flags: *ubuntu_cmake_flags
           test_params: *valgrind_test_params
       run_on:
-          - ubuntu1410-build
+          - ubuntu1604-build
       tasks:
           - name: compile_and_test
 
-    - name: ubuntu1410-debug-asan
-      display_name: "ASAN Ubuntu 14.10 Debug"
+    - name: ubuntu1604-debug-asan
+      display_name: "ASAN Ubuntu 16.04 Debug"
       expansions:
           build_type: "Debug"
           source: *ubuntu_source
@@ -228,12 +228,12 @@ buildvariants:
           cmake_flags: *asan_cmake_flags
           test_params: *asan_test_params
       run_on:
-          - ubuntu1410-build
+          - ubuntu1604-build
       tasks:
           - name: compile_and_test
 
-    - name: ubuntu1410-debug-ubsan
-      display_name: "UBSAN Ubuntu 14.10 Debug"
+    - name: ubuntu1604-debug-ubsan
+      display_name: "UBSAN Ubuntu 16.04 Debug"
       expansions:
           build_type: "Debug"
           source: *ubuntu_source
@@ -244,6 +244,6 @@ buildvariants:
           cmake_flags: *ubsan_cmake_flags
           test_params: *ubsan_test_params
       run_on:
-          - ubuntu1410-build
+          - ubuntu1604-build
       tasks:
           - name: compile_and_test
