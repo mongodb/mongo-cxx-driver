@@ -34,6 +34,7 @@
 #include <mongocxx/exception/private/error_category.hpp>
 #include <mongocxx/exception/private/mongoc_error.hpp>
 #include <mongocxx/exception/query_exception.hpp>
+#include <mongocxx/exception/server_error_code.hpp>
 #include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/model/write.hpp>
 #include <mongocxx/private/bulk_write.hpp>
@@ -75,6 +76,10 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
 
     if (!r) {
         auto gle = mongocxx::libmongoc::collection_get_last_error(collection);
+        if (!gle) {
+          reply.init();
+          throw mongocxx::exception{ mongocxx::make_error_code((mongocxx::server_error_code)error.code), error.message };
+        }
         mongocxx::throw_exception<mongocxx::write_exception>(
             bsoncxx::helpers::value_from_bson_t(gle), error);
     }
