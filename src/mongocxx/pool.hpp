@@ -55,6 +55,10 @@ class MONGOCXX_API pool {
     ///  A MongoDB URI representing the connection parameters
     /// @param ssl_options
     ///  Optional SSL options to use when connecting to the MongoDB deployment.
+    ///
+    /// @throws mongocxx::exception if SSL is enabled and ssl_options are
+    /// invalid, or if SSL is not enabled and ssl_options is engaged.
+    ///
     pool(const uri& mongodb_uri = mongocxx::uri(),
          stdx::optional<options::ssl> ssl_options = stdx::nullopt);
 
@@ -69,7 +73,7 @@ class MONGOCXX_API pool {
     /// @note The lifetime of any entry object must be a subset of the pool object
     ///  from which it was acquired.
     ///
-    using entry = std::unique_ptr<client, std::function<void(client*)>>;
+    using entry = std::unique_ptr<client, std::function<void MONGOCXX_CALL(client*)>>;
 
     ///
     /// Acquires a client from the pool. The calling thread will block until a connection is

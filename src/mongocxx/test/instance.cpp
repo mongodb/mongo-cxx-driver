@@ -57,6 +57,8 @@ TEST_CASE("a user-provided log handler will be used for logging output", "[insta
     std::vector<test_log_handler::event> events;
     mongocxx::instance driver{stdx::make_unique<test_log_handler>(&events)};
 
+    REQUIRE(&mongocxx::instance::current() == &driver);
+
     // The mocking system doesn't play well with varargs functions, so we use a bare
     // mongoc_log call here.
     mongoc_log(::MONGOC_LOG_LEVEL_ERROR, "foo", "bar");
@@ -64,4 +66,9 @@ TEST_CASE("a user-provided log handler will be used for logging output", "[insta
     REQUIRE(events.size() == 1);
     REQUIRE(events[0] == std::make_tuple(log_level::k_error, "foo", "bar"));
 }
+
+TEST_CASE("after destroying a user constructed instance the instance::current method works") {
+    mongocxx::instance::current();
+}
+
 }  // namespace

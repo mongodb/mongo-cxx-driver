@@ -28,8 +28,10 @@ set(MONGOCXX_EXAMPLES
     connect.cpp
     document_validation.cpp
     exception.cpp
+    get_values_from_documents.cpp
     index.cpp
     inserted_id.cpp
+    instance_management.cpp
     query.cpp
     query_projection.cpp
     remove.cpp
