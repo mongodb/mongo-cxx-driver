@@ -702,3 +702,11 @@ TEST_CASE("create_index returns index name", "[collection]") {
     auto response2 = coll.create_index(index2.view(), options::index{});
     REQUIRE(response2.view()["name"].get_utf8().value == stdx::string_view{"b_1_c_-1"});
 }
+
+TEST_CASE("regressions", "CXX-986") {
+    instance::current();
+    mongocxx::uri mongo_uri{"mongodb://non-existent-host.invalid/"};
+    mongocxx::client client{mongo_uri};
+    REQUIRE_THROWS(client.database("irrelevant")["irrelevant"].find_one_and_update(
+        document{} << "irrelevant" << 1 << finalize, document{} << "irrelevant" << 2 << finalize));
+}
