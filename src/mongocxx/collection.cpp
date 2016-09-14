@@ -66,12 +66,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
     const ::mongoc_find_and_modify_opts_t* opts) {
     mongocxx::libbson::scoped_bson_t bson_filter{filter};
     mongocxx::libbson::scoped_bson_t reply;
-
-    // TODO: There is a bug in the 1.3 vintage C driver where collection_find_and_modify_with_opts
-    // does not always initialize its 'reply' parameter in the event of errors. So, explicitly init
-    // the underlying bson_t here.  This can be changed to ''flag_init' once the C driver minimum is
-    // bumped to or past 1.4.0.
-    reply.init();
+    reply.flag_init();
 
     ::bson_error_t error;
 
