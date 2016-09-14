@@ -639,12 +639,10 @@ class Repo(object):
         """
         gito = self._callgito(["ls-files"])
 
-        # This allows us to pick all the interesting files
-        # in the mongo and mongo-enterprise repos
         file_list = [line.rstrip()
-                for line in gito.splitlines() if "src" in line and
-                    not "examples" in line and
-                    not "third_party" in line]
+                for line in gito.splitlines() if
+                    (line.startswith("src/") and not "/third_party/" in line) or
+                    line.startswith("examples/")]
 
         files_match = re.compile('\\.(h|hpp|cpp)$')
 
