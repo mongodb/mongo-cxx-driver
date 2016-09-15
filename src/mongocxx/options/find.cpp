@@ -32,6 +32,11 @@ find& find::batch_size(std::int32_t batch_size) {
     return *this;
 }
 
+find& find::collation(bsoncxx::document::view_or_value collation) {
+    _collation = std::move(collation);
+    return *this;
+}
+
 find& find::comment(bsoncxx::string::view_or_value comment) {
     _comment = std::move(comment);
     return *this;
@@ -98,6 +103,10 @@ const stdx::optional<bool>& find::allow_partial_results() const {
 
 const stdx::optional<std::int32_t>& find::batch_size() const {
     return _batch_size;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& find::collation() const {
+    return _collation;
 }
 
 const stdx::optional<bsoncxx::string::view_or_value>& find::comment() const {

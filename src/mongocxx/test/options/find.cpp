@@ -30,6 +30,8 @@ TEST_CASE("find", "[find][option]") {
 
     options::find find_opts{};
 
+    auto collation = document{} << "locale"
+                                << "en_US" << finalize;
     auto modifiers = document{} << "$comment"
                                 << "comment" << finalize;
     auto projection = document{} << "_id" << false << finalize;
@@ -37,6 +39,7 @@ TEST_CASE("find", "[find][option]") {
 
     CHECK_OPTIONAL_ARGUMENT(find_opts, allow_partial_results, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, batch_size, 3);
+    CHECK_OPTIONAL_ARGUMENT(find_opts, collation, collation.view());
     CHECK_OPTIONAL_ARGUMENT(find_opts, comment, "comment");
     CHECK_OPTIONAL_ARGUMENT(find_opts, cursor_type, cursor::type::k_non_tailable);
     CHECK_OPTIONAL_ARGUMENT(find_opts, limit, 3);
