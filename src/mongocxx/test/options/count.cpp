@@ -17,20 +17,23 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
+#include <bsoncxx/builder/stream/document.hpp>
 #include <mongocxx/instance.hpp>
-#include <mongocxx/options/aggregate.hpp>
+#include <mongocxx/options/count.hpp>
 
+using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
-TEST_CASE("aggregate", "[aggregate][option]") {
+TEST_CASE("count", "[count][option]") {
     instance::current();
 
-    options::aggregate agg;
+    options::count cnt;
 
-    CHECK_OPTIONAL_ARGUMENT(agg, allow_disk_use, true);
-    CHECK_OPTIONAL_ARGUMENT(agg, batch_size, 500);
-    CHECK_OPTIONAL_ARGUMENT(agg, bypass_document_validation, true);
-    CHECK_OPTIONAL_ARGUMENT(agg, max_time, std::chrono::milliseconds{1000});
-    CHECK_OPTIONAL_ARGUMENT_WITHOUT_EQUALITY(agg, read_preference, read_preference{});
-    CHECK_OPTIONAL_ARGUMENT(agg, use_cursor, true);
+    auto hint = bsoncxx::document::view_or_value{document{} << "_id" << 1 << finalize};
+
+    CHECK_OPTIONAL_ARGUMENT(cnt, hint, hint);
+    CHECK_OPTIONAL_ARGUMENT(cnt, limit, 3);
+    CHECK_OPTIONAL_ARGUMENT(cnt, max_time, std::chrono::milliseconds{1000});
+    CHECK_OPTIONAL_ARGUMENT_WITHOUT_EQUALITY(cnt, read_preference, read_preference{});
+    CHECK_OPTIONAL_ARGUMENT(cnt, skip, 3);
 }
