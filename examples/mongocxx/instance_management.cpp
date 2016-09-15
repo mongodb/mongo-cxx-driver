@@ -36,8 +36,7 @@ namespace {
 // and share the instance and pool objects between multiple functions.
 
 class mongo_access {
-public:
-
+   public:
     static mongo_access& instance() {
         static mongo_access instance;
         return instance;
@@ -59,7 +58,7 @@ public:
         return _pool->try_acquire();
     }
 
-private:
+   private:
     mongo_access() = default;
 
     std::unique_ptr<mongocxx::instance> _instance = nullptr;
@@ -73,22 +72,20 @@ private:
 
 void configure(mongocxx::uri uri) {
     class noop_logger : public mongocxx::logger {
-    public:
+       public:
         virtual void operator()(mongocxx::log_level, mongocxx::stdx::string_view,
-                                mongocxx::stdx::string_view) noexcept {}
+                                mongocxx::stdx::string_view) noexcept {
+        }
     };
 
     mongo_access::instance().configure(
         mongocxx::stdx::make_unique<mongocxx::instance>(mongocxx::stdx::make_unique<noop_logger>()),
-        mongocxx::stdx::make_unique<mongocxx::pool>(std::move(uri))
-    );
-
+        mongocxx::stdx::make_unique<mongocxx::pool>(std::move(uri)));
 }
 
 bool do_work() {
     auto connection = mongo_access::instance().get_connection();
-    if (!connection)
-        return false;
+    if (!connection) return false;
     return true;
 }
 
