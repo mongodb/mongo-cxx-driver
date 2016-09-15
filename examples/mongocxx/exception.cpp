@@ -63,7 +63,8 @@ int main(int, char**) {
             return EXIT_FAILURE;
         }
 
-        std::cout << e.what() << std::endl << std::endl;
+        std::cout << e.what() << std::endl
+                  << std::endl;
     }
     // @end: cpp-logic-error
 
