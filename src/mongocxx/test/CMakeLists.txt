@@ -26,7 +26,12 @@ set(mongocxx_test_sources
     collection_mocked.cpp
     database.cpp
     hint.cpp
+    model/delete_many.cpp
+    model/delete_one.cpp
+    model/insert_one.cpp
+    model/replace_one.cpp
     model/update_many.cpp
+    model/update_one.cpp
     options/aggregate.cpp
     options/create_collection.cpp
     options/find.cpp

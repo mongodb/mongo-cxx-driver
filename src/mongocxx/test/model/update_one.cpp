@@ -17,22 +17,22 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <mongocxx/instance.hpp>
-#include <mongocxx/model/update_many.hpp>
+#include <mongocxx/model/update_one.hpp>
 
 using namespace bsoncxx::builder::stream;
 
-TEST_CASE("update_many model tests", "[update_many][model]") {
+TEST_CASE("update_one model tests", "[update_one][model]") {
     mongocxx::instance::current();
 
     auto filter = document{} << "a" << 1 << finalize;
     auto update = document{} << "$set" << open_document << "b" << 1 << close_document << finalize;
 
-    mongocxx::model::update_many um(filter.view(), update.view());
+    mongocxx::model::update_one uo(filter.view(), update.view());
 
     SECTION("stores required arguments") {
-        REQUIRE(um.filter().view() == filter.view());
-        REQUIRE(um.update().view() == update.view());
+        REQUIRE(uo.filter().view() == filter.view());
+        REQUIRE(uo.update().view() == update.view());
     }
 
-    CHECK_OPTIONAL_ARGUMENT(um, upsert, true);
+    CHECK_OPTIONAL_ARGUMENT(uo, upsert, true);
 }

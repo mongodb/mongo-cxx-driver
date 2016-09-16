@@ -25,6 +25,14 @@ update_one::update_one(bsoncxx::document::view_or_value filter,
     : _filter(std::move(filter)), _update(std::move(update)) {
 }
 
+const bsoncxx::document::view_or_value& update_one::filter() const {
+    return _filter;
+}
+
+const bsoncxx::document::view_or_value& update_one::update() const {
+    return _update;
+}
+
 update_one& update_one::upsert(bool upsert) {
     _upsert = upsert;
     return *this;
@@ -32,14 +40,6 @@ update_one& update_one::upsert(bool upsert) {
 
 const stdx::optional<bool>& update_one::upsert() const {
     return _upsert;
-}
-
-const bsoncxx::document::view_or_value& update_one::filter() const {
-    return _filter;
-}
-
-const bsoncxx::document::view_or_value& update_one::update() const {
-    return _update;
 }
 
 }  // namespace model

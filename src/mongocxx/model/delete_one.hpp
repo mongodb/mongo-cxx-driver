@@ -43,7 +43,6 @@ class MONGOCXX_API delete_one {
     const bsoncxx::document::view_or_value& filter() const;
 
    private:
-    // Required
     bsoncxx::document::view_or_value _filter;
 };
 

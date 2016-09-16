@@ -17,22 +17,18 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <mongocxx/instance.hpp>
-#include <mongocxx/model/update_many.hpp>
+#include <mongocxx/model/delete_many.hpp>
 
 using namespace bsoncxx::builder::stream;
 
-TEST_CASE("update_many model tests", "[update_many][model]") {
+TEST_CASE("delete_many model tests", "[delete_many][model]") {
     mongocxx::instance::current();
 
     auto filter = document{} << "a" << 1 << finalize;
-    auto update = document{} << "$set" << open_document << "b" << 1 << close_document << finalize;
 
-    mongocxx::model::update_many um(filter.view(), update.view());
+    mongocxx::model::delete_many dm(filter.view());
 
     SECTION("stores required arguments") {
-        REQUIRE(um.filter().view() == filter.view());
-        REQUIRE(um.update().view() == update.view());
+        REQUIRE(dm.filter().view() == filter.view());
     }
-
-    CHECK_OPTIONAL_ARGUMENT(um, upsert, true);
 }

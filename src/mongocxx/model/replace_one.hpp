@@ -77,11 +77,9 @@ class MONGOCXX_API replace_one {
     const stdx::optional<bool>& upsert() const;
 
    private:
-    // Required
     bsoncxx::document::view_or_value _filter;
     bsoncxx::document::view_or_value _replacement;
 
-    // Optional
     stdx::optional<bool> _upsert;
 };
 
