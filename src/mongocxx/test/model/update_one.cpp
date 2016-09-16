@@ -26,6 +26,8 @@ TEST_CASE("update_one model tests", "[update_one][model]") {
 
     auto filter = document{} << "a" << 1 << finalize;
     auto update = document{} << "$set" << open_document << "b" << 1 << close_document << finalize;
+    auto collation = document{} << "locale"
+                                << "en_US" << finalize;
 
     mongocxx::model::update_one uo(filter.view(), update.view());
 
@@ -35,4 +37,5 @@ TEST_CASE("update_one model tests", "[update_one][model]") {
     }
 
     CHECK_OPTIONAL_ARGUMENT(uo, upsert, true);
+    CHECK_OPTIONAL_ARGUMENT(uo, collation, collation.view());
 }
