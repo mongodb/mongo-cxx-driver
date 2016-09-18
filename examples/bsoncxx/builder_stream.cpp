@@ -77,8 +77,8 @@ int main(int, char**) {
     bsoncxx::document::value nestedValue = document{} << "nested" << true << finalize;
     document topLevelDoc{};
     topLevelDoc << "subDoc1" << types::b_document{nestedValue.view()} << "subDoc2" << open_document
-                << concatenate(nestedValue.view()) << close_document << "subDoc3"
-                << nestedValue << finalize;
+                << concatenate(nestedValue.view()) << close_document << "subDoc3" << nestedValue
+                << finalize;
 
     // `topLevelDoc` now looks like:
     // {
