@@ -78,9 +78,11 @@ void configure(mongocxx::uri uri) {
         }
     };
 
-    mongo_access::instance().configure(
-        mongocxx::stdx::make_unique<mongocxx::instance>(mongocxx::stdx::make_unique<noop_logger>()),
-        mongocxx::stdx::make_unique<mongocxx::pool>(std::move(uri)));
+    auto instance =
+        mongocxx::stdx::make_unique<mongocxx::instance>(mongocxx::stdx::make_unique<noop_logger>());
+
+    mongo_access::instance().configure(std::move(instance),
+                                       mongocxx::stdx::make_unique<mongocxx::pool>(std::move(uri)));
 }
 
 bool do_work() {
