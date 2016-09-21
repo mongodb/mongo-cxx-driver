@@ -231,6 +231,18 @@ cursor collection::find(view_or_value filter, const options::find& options) {
         }
     }
 
+    if (options.allow_partial_results()) {
+        if (*options.allow_partial_results()) {
+            query_flags |= ::MONGOC_QUERY_PARTIAL;
+        }
+    }
+
+    if (options.no_cursor_timeout()) {
+        if (*options.no_cursor_timeout()) {
+            query_flags |= ::MONGOC_QUERY_NO_CURSOR_TIMEOUT;
+        }
+    }
+
     filter_bson.init_from_static(filter_builder.view());
 
     const mongoc_read_prefs_t* rp_ptr = NULL;
