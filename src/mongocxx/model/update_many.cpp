@@ -33,6 +33,15 @@ const bsoncxx::document::view_or_value& update_many::update() const {
     return _update;
 }
 
+update_many& update_many::collation(bsoncxx::document::view_or_value collation) {
+    _collation = collation;
+    return *this;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& update_many::collation() const {
+    return _collation;
+}
+
 update_many& update_many::upsert(bool upsert) {
     _upsert = upsert;
     return *this;

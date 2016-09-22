@@ -26,6 +26,8 @@ TEST_CASE("replace_one model tests", "[replace_one][model]") {
 
     auto filter = document{} << "a" << 1 << finalize;
     auto replacement = document{} << "b" << 1 << finalize;
+    auto collation = document{} << "locale"
+                                << "en_US" << finalize;
 
     mongocxx::model::replace_one ro(filter.view(), replacement.view());
 
@@ -35,4 +37,5 @@ TEST_CASE("replace_one model tests", "[replace_one][model]") {
     }
 
     CHECK_OPTIONAL_ARGUMENT(ro, upsert, true);
+    CHECK_OPTIONAL_ARGUMENT(ro, collation, collation.view());
 }
