@@ -25,10 +25,14 @@ TEST_CASE("delete_many model tests", "[delete_many][model]") {
     mongocxx::instance::current();
 
     auto filter = document{} << "a" << 1 << finalize;
+    auto collation = document{} << "locale"
+                                << "en_US" << finalize;
 
     mongocxx::model::delete_many dm(filter.view());
 
     SECTION("stores required arguments") {
         REQUIRE(dm.filter().view() == filter.view());
     }
+
+    CHECK_OPTIONAL_ARGUMENT(dm, collation, collation.view());
 }
