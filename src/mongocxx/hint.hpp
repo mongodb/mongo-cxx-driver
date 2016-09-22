@@ -21,6 +21,7 @@
 #include <bsoncxx/builder/stream/key_context.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
+#include <bsoncxx/types/value.hpp>
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -68,16 +69,17 @@ class MONGOCXX_API hint {
     ///
 
     ///
-    /// Return a bson document representing this hint.
+    /// Returns a types::value representing this hint.
     ///
-    /// @return Hint, as a document.
+    /// @return Hint, as a types::value. The caller must ensure that the returned object not outlive
+    /// the hint object that it was created from.
     ///
-    bsoncxx::document::value to_document() const;
+    bsoncxx::types::value to_value() const;
 
     ///
     /// @todo document this method
     ///
-    MONGOCXX_INLINE operator bsoncxx::document::value() const;
+    MONGOCXX_INLINE operator bsoncxx::types::value() const;
 
    private:
     stdx::optional<bsoncxx::document::view_or_value> _index_doc;
@@ -133,8 +135,8 @@ MONGOCXX_API bool MONGOCXX_CALL operator!=(bsoncxx::document::view index, const 
 /// @}
 ///
 
-MONGOCXX_INLINE hint::operator bsoncxx::document::value() const {
-    return to_document();
+MONGOCXX_INLINE hint::operator bsoncxx::types::value() const {
+    return to_value();
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

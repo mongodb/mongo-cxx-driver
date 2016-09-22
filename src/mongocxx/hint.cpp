@@ -27,18 +27,12 @@ hint::hint(bsoncxx::document::view_or_value index) : _index_doc(std::move(index)
 hint::hint(bsoncxx::string::view_or_value index) : _index_string(std::move(index)) {
 }
 
-bsoncxx::document::value hint::to_document() const {
-    auto doc = bsoncxx::builder::stream::document{};
-
+bsoncxx::types::value hint::to_value() const {
     if (_index_doc) {
-        doc << "$hint" << bsoncxx::builder::stream::open_document
-            << bsoncxx::builder::stream::concatenate(*_index_doc)
-            << bsoncxx::builder::stream::close_document;
-    } else {
-        doc << "$hint" << *_index_string;
+        return bsoncxx::types::value{bsoncxx::types::b_document{_index_doc->view()}};
     }
 
-    return doc.extract();
+    return bsoncxx::types::value{bsoncxx::types::b_utf8{*_index_string}};
 }
 
 bool operator==(const hint& index_hint, std::string index) {
