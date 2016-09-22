@@ -242,7 +242,7 @@ TEST_CASE("Collection", "[collection]") {
 
             // set our expected_opts so we check against that
             bsoncxx::document::value doc = bsoncxx::builder::stream::document{}
-                                           << "$hint" << index_hint.to_value()
+                                           << "hint" << index_hint.to_value()
                                            << bsoncxx::builder::stream::finalize;
             libbson::scoped_bson_t cmd_opts{std::move(doc)};
             expected_opts = cmd_opts.bson();

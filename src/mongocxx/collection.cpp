@@ -601,7 +601,7 @@ std::int64_t collection::count(view_or_value filter, const options::count& optio
     }
 
     if (options.hint()) {
-        cmd_opts_builder << "$hint" << options.hint()->to_value();
+        cmd_opts_builder << "hint" << options.hint()->to_value();
     }
 
     scoped_bson_t cmd_opts_bson{cmd_opts_builder.view()};
