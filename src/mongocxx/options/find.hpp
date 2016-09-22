@@ -75,6 +75,28 @@ class MONGOCXX_API find {
     const stdx::optional<std::int32_t>& batch_size() const;
 
     ///
+    /// Sets the collation for this operation.
+    ///
+    /// @param collation
+    ///   The new collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/manual/release-notes/3.3-dev-series-collation/#collation-option
+    ///
+    find& collation(bsoncxx::document::view_or_value collation);
+
+    ///
+    /// Retrieves the current collation for this operation.
+    ///
+    /// @return
+    ///   The current collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/manual/release-notes/3.3-dev-series-collation/#collation-option
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+
+    ///
     /// Attaches a comment to the query. If $comment also exists in the modifiers document then
     /// the comment field overwrites $comment.
     ///
@@ -308,6 +330,7 @@ class MONGOCXX_API find {
    private:
     stdx::optional<bool> _allow_partial_results;
     stdx::optional<std::int32_t> _batch_size;
+    stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bsoncxx::string::view_or_value> _comment;
     stdx::optional<cursor::type> _cursor_type;
     stdx::optional<class hint> _hint;
