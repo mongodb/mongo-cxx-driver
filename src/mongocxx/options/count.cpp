@@ -22,6 +22,11 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+count& count::collation(bsoncxx::document::view_or_value collation) {
+    _collation = std::move(collation);
+    return *this;
+}
+
 count& count::hint(class hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
@@ -45,6 +50,10 @@ count& count::skip(std::int64_t skip) {
 count& count::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
     return *this;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& count::collation() const {
+    return _collation;
 }
 
 const stdx::optional<class hint>& count::hint() const {
