@@ -26,6 +26,8 @@ TEST_CASE("update_many model tests", "[update_many][model]") {
 
     auto filter = document{} << "a" << 1 << finalize;
     auto update = document{} << "$set" << open_document << "b" << 1 << close_document << finalize;
+    auto collation = document{} << "locale"
+                                << "en_US" << finalize;
 
     mongocxx::model::update_many um(filter.view(), update.view());
 
@@ -35,4 +37,5 @@ TEST_CASE("update_many model tests", "[update_many][model]") {
     }
 
     CHECK_OPTIONAL_ARGUMENT(um, upsert, true);
+    CHECK_OPTIONAL_ARGUMENT(um, collation, collation.view());
 }
