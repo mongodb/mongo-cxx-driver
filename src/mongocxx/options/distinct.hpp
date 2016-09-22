@@ -18,7 +18,6 @@
 #include <cstdint>
 #include <string>
 
-#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/read_preference.hpp>
 

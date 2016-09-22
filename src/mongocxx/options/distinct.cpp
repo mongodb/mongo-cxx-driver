@@ -35,6 +35,7 @@ distinct& distinct::read_preference(class read_preference rp) {
 const stdx::optional<std::chrono::milliseconds>& distinct::max_time() const {
     return _max_time;
 }
+
 const stdx::optional<class read_preference>& distinct::read_preference() const {
     return _read_preference;
 }

@@ -14,7 +14,6 @@
 
 #pragma once
 
-#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/write_concern.hpp>
