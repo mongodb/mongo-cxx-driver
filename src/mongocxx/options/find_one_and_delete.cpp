@@ -20,6 +20,11 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+find_one_and_delete& find_one_and_delete::collation(bsoncxx::document::view_or_value collation) {
+    _collation = std::move(collation);
+    return *this;
+}
+
 find_one_and_delete& find_one_and_delete::max_time(std::chrono::milliseconds max_time) {
     _max_time = std::move(max_time);
     return *this;
@@ -33,6 +38,10 @@ find_one_and_delete& find_one_and_delete::projection(bsoncxx::document::view_or_
 find_one_and_delete& find_one_and_delete::sort(bsoncxx::document::view_or_value ordering) {
     _ordering = std::move(ordering);
     return *this;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& find_one_and_delete::collation() const {
+    return _collation;
 }
 
 const stdx::optional<bsoncxx::document::view_or_value>& find_one_and_delete::projection() const {

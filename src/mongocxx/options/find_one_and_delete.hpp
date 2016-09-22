@@ -32,6 +32,27 @@ namespace options {
 ///
 class MONGOCXX_API find_one_and_delete {
    public:
+    /// Sets the collation for this operation.
+    ///
+    /// @param collation
+    ///   The new collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/manual/release-notes/3.3-dev-series-collation/#collation-option
+    ///
+    find_one_and_delete& collation(bsoncxx::document::view_or_value collation);
+
+    ///
+    /// Retrieves the current collation for this operation.
+    ///
+    /// @return
+    ///   The current collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/manual/release-notes/3.3-dev-series-collation/#collation-option
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
     ///
@@ -93,6 +114,7 @@ class MONGOCXX_API find_one_and_delete {
     const stdx::optional<bsoncxx::document::view_or_value>& sort() const;
 
    private:
+    stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<bsoncxx::document::view_or_value> _projection;
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
