@@ -32,16 +32,10 @@ TEST_CASE("Hint", "[hint]") {
         std::string index_name = "a_1";
         hint index_hint{index_name};
 
-        SECTION("Can be applied to a query") {
-            document::value filter = builder::stream::document{}
-                                     << "a" << 15
-                                     << builder::stream::concatenate(index_hint.to_document())
-                                     << builder::stream::finalize;
-            document::view view{filter.view()};
-            document::element ele{view["$hint"]};
-            REQUIRE(ele);
-            REQUIRE(ele.type() == type::k_utf8);
-            REQUIRE(ele.get_utf8().value.to_string() == index_name);
+        SECTION("Returns correct value from to_value") {
+            types::value val = index_hint.to_value();
+            REQUIRE(val.type() == type::k_utf8);
+            REQUIRE(val.get_utf8().value.to_string() == index_name);
         }
 
         SECTION("Compares equal to matching index name") {
@@ -66,16 +60,10 @@ TEST_CASE("Hint", "[hint]") {
 
         hint index_hint{std::move(index_doc)};
 
-        SECTION("Can be applied to a query") {
-            document::value filter = builder::stream::document{}
-                                     << "a" << 12
-                                     << builder::stream::concatenate(index_hint.to_document())
-                                     << builder::stream::finalize;
-            document::view view{filter.view()};
-            document::element ele{view["$hint"]};
-            REQUIRE(ele);
-            REQUIRE(ele.type() == type::k_document);
-            REQUIRE(ele.get_document().value == index_copy);
+        SECTION("Returns correct value from to_value") {
+            types::value val = index_hint.to_value();
+            REQUIRE(val.type() == type::k_document);
+            REQUIRE(val.get_document().value == index_copy);
         }
 
         SECTION("Compares equal to matching index doc view or value") {
