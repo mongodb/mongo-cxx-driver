@@ -17,9 +17,11 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
+#include <bsoncxx/builder/stream/document.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/delete.hpp>
 
+using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
 TEST_CASE("delete_options", "[delete][option]") {
@@ -27,5 +29,9 @@ TEST_CASE("delete_options", "[delete][option]") {
 
     options::delete_options del;
 
+    auto collation = document{} << "locale"
+                                << "en_US" << finalize;
+
+    CHECK_OPTIONAL_ARGUMENT(del, collation, collation.view());
     CHECK_OPTIONAL_ARGUMENT_WITHOUT_EQUALITY(del, write_concern, write_concern{});
 }

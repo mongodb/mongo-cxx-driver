@@ -20,9 +20,18 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+delete_options& delete_options::collation(bsoncxx::document::view_or_value collation) {
+    _collation = std::move(collation);
+    return *this;
+}
+
 delete_options& delete_options::write_concern(class write_concern wc) {
     _write_concern = std::move(wc);
     return *this;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& delete_options::collation() const {
+    return _collation;
 }
 
 const stdx::optional<class write_concern>& delete_options::write_concern() const {
