@@ -17,9 +17,11 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
+#include <bsoncxx/builder/stream/document.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/distinct.hpp>
 
+using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
 TEST_CASE("distinct", "[distinct][option]") {
@@ -27,6 +29,10 @@ TEST_CASE("distinct", "[distinct][option]") {
 
     options::distinct dist;
 
+    auto collation = document{} << "locale"
+                                << "en_US" << finalize;
+
+    CHECK_OPTIONAL_ARGUMENT(dist, collation, collation.view());
     CHECK_OPTIONAL_ARGUMENT(dist, max_time, std::chrono::milliseconds{1000});
     CHECK_OPTIONAL_ARGUMENT_WITHOUT_EQUALITY(dist, read_preference, read_preference{});
 }

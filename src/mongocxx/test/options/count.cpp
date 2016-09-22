@@ -29,8 +29,11 @@ TEST_CASE("count", "[count][option]") {
 
     options::count cnt;
 
+    auto collation = document{} << "locale"
+                                << "en_US" << finalize;
     auto hint = bsoncxx::document::view_or_value{document{} << "_id" << 1 << finalize};
 
+    CHECK_OPTIONAL_ARGUMENT(cnt, collation, collation.view());
     CHECK_OPTIONAL_ARGUMENT(cnt, hint, hint);
     CHECK_OPTIONAL_ARGUMENT(cnt, limit, 3);
     CHECK_OPTIONAL_ARGUMENT(cnt, max_time, std::chrono::milliseconds{1000});
