@@ -17,16 +17,23 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
+#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
 
+using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
 TEST_CASE("find", "[find][option]") {
     instance::current();
 
     options::find find_opts{};
+
+    auto modifiers = document{} << "$comment"
+                                << "comment" << finalize;
+    auto projection = document{} << "_id" << false << finalize;
+    auto sort = document{} << "x" << -1 << finalize;
 
     CHECK_OPTIONAL_ARGUMENT(find_opts, allow_partial_results, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, batch_size, 3);
@@ -35,11 +42,10 @@ TEST_CASE("find", "[find][option]") {
     CHECK_OPTIONAL_ARGUMENT(find_opts, limit, 3);
     CHECK_OPTIONAL_ARGUMENT(find_opts, max_await_time, std::chrono::milliseconds{300});
     CHECK_OPTIONAL_ARGUMENT(find_opts, max_time, std::chrono::milliseconds{300});
+    CHECK_OPTIONAL_ARGUMENT(find_opts, modifiers, modifiers.view());
     CHECK_OPTIONAL_ARGUMENT(find_opts, no_cursor_timeout, true);
-    CHECK_OPTIONAL_ARGUMENT(find_opts, skip, 3);
-
+    CHECK_OPTIONAL_ARGUMENT(find_opts, projection, projection.view());
     CHECK_OPTIONAL_ARGUMENT_WITHOUT_EQUALITY(find_opts, read_preference, read_preference{});
-    CHECK_OPTIONAL_ARGUMENT(find_opts, modifiers, bsoncxx::document::view{});
-    CHECK_OPTIONAL_ARGUMENT(find_opts, projection, bsoncxx::document::view{});
-    CHECK_OPTIONAL_ARGUMENT(find_opts, sort, bsoncxx::document::view{});
+    CHECK_OPTIONAL_ARGUMENT(find_opts, skip, 3);
+    CHECK_OPTIONAL_ARGUMENT(find_opts, sort, sort.view());
 }
