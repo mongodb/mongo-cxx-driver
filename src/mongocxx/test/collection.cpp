@@ -24,6 +24,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/insert_many_builder.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pipeline.hpp>
@@ -252,6 +253,17 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         REQUIRE(coll.count(doc_view) == 3);
         REQUIRE(coll.count({}) == 4);
+    }
+
+    SECTION("count with hint", "[collection]") {
+        options::count count_opts;
+        count_opts.hint(hint{"index_doesnt_exist"});
+
+        auto doc = document{} << "x" << 1 << finalize;
+        coll.insert_one(doc.view());
+
+        REQUIRE_THROWS_AS(coll.count({document{} << "x" << 1 << finalize}, count_opts),
+                          operation_exception);
     }
 
     SECTION("document replacement", "[collection]") {
