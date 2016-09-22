@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/write_concern.hpp>
@@ -48,6 +49,28 @@ class MONGOCXX_API update {
     /// @return The optional value of the bypass_document_validation option.
     ///
     const stdx::optional<bool>& bypass_document_validation() const;
+
+    ///
+    /// Sets the collation for this operation.
+    ///
+    /// @param collation
+    ///   The new collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/manual/release-notes/3.3-dev-series-collation/#collation-option
+    ///
+    update& collation(bsoncxx::document::view_or_value collation);
+
+    ///
+    /// Retrieves the current collation for this operation.
+    ///
+    /// @return
+    ///   The current collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/manual/release-notes/3.3-dev-series-collation/#collation-option
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 
     ///
     /// Sets the upsert option.
@@ -92,6 +115,7 @@ class MONGOCXX_API update {
 
    private:
     stdx::optional<bool> _bypass_document_validation;
+    stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bool> _upsert;
     stdx::optional<class write_concern> _write_concern;
 };
