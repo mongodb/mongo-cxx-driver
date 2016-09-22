@@ -22,6 +22,11 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+distinct& distinct::collation(bsoncxx::document::view_or_value collation) {
+    _collation = std::move(collation);
+    return *this;
+}
+
 distinct& distinct::max_time(std::chrono::milliseconds max_time) {
     _max_time = std::move(max_time);
     return *this;
@@ -30,6 +35,10 @@ distinct& distinct::max_time(std::chrono::milliseconds max_time) {
 distinct& distinct::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
     return *this;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& distinct::collation() const {
+    return _collation;
 }
 
 const stdx::optional<std::chrono::milliseconds>& distinct::max_time() const {
