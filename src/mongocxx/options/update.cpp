@@ -20,13 +20,13 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-update& update::upsert(bool upsert) {
-    _upsert = upsert;
+update& update::bypass_document_validation(bool bypass_document_validation) {
+    _bypass_document_validation = bypass_document_validation;
     return *this;
 }
 
-update& update::bypass_document_validation(bool bypass_document_validation) {
-    _bypass_document_validation = bypass_document_validation;
+update& update::upsert(bool upsert) {
+    _upsert = upsert;
     return *this;
 }
 
@@ -35,12 +35,12 @@ update& update::write_concern(class write_concern wc) {
     return *this;
 }
 
-const stdx::optional<bool>& update::upsert() const {
-    return _upsert;
-}
-
 const stdx::optional<bool>& update::bypass_document_validation() const {
     return _bypass_document_validation;
+}
+
+const stdx::optional<bool>& update::upsert() const {
+    return _upsert;
 }
 
 const stdx::optional<class write_concern>& update::write_concern() const {
