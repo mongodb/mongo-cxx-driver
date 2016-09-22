@@ -28,7 +28,10 @@ set(mongocxx_test_sources
     hint.cpp
     model/update_many.cpp
     options/aggregate.cpp
+    options/count.cpp
     options/create_collection.cpp
+    options/delete.cpp
+    options/distinct.cpp
     options/find.cpp
     options/find_one_and_delete.cpp
     options/find_one_and_replace.cpp
