@@ -31,12 +31,15 @@ TEST_CASE("index", "[index][option]") {
     std::unique_ptr<options::index::wiredtiger_storage_options> storage =
         stdx::make_unique<options::index::wiredtiger_storage_options>();
 
+    auto collation = document{} << "locale"
+                                << "en_US" << finalize;
     auto partial_filter_expression = document{} << "x" << true << finalize;
     auto weights = document{} << "a" << 100 << finalize;
 
     CHECK_OPTIONAL_ARGUMENT(idx, background, true);
     CHECK_OPTIONAL_ARGUMENT(idx, unique, true);
     CHECK_OPTIONAL_ARGUMENT(idx, name, "name");
+    CHECK_OPTIONAL_ARGUMENT(idx, collation, collation.view());
     CHECK_OPTIONAL_ARGUMENT(idx, sparse, true);
     CHECK_OPTIONAL_ARGUMENT(idx, expire_after, std::chrono::seconds(3600));
     CHECK_OPTIONAL_ARGUMENT(idx, version, 540);
