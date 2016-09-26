@@ -77,9 +77,27 @@ class MONGOCXX_API hint {
     bsoncxx::types::value to_value() const;
 
     ///
+    /// Return a bson document representing this hint.
+    ///
+    /// @deprecated
+    ///   This method has been deprecated in favor of to_value().
+    ///
+    /// @return Hint, as a document.
+    ///
+    MONGOCXX_DEPRECATED bsoncxx::document::value to_document() const;
+
+    ///
     /// @todo document this method
     ///
     MONGOCXX_INLINE operator bsoncxx::types::value() const;
+
+    ///
+    /// @todo document this method
+    ///
+    /// @deprecated
+    ///   This method has been deprecated in favor of operator bsoncxx::types::value().
+    ///
+    MONGOCXX_DEPRECATED MONGOCXX_INLINE operator bsoncxx::document::value() const;
 
    private:
     stdx::optional<bsoncxx::document::view_or_value> _index_doc;
@@ -137,6 +155,10 @@ MONGOCXX_API bool MONGOCXX_CALL operator!=(bsoncxx::document::view index, const 
 
 MONGOCXX_INLINE hint::operator bsoncxx::types::value() const {
     return to_value();
+}
+
+MONGOCXX_INLINE hint::operator bsoncxx::document::value() const {
+    return to_document();
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

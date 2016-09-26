@@ -35,6 +35,20 @@ bsoncxx::types::value hint::to_value() const {
     return bsoncxx::types::value{bsoncxx::types::b_utf8{*_index_string}};
 }
 
+bsoncxx::document::value hint::to_document() const {
+    auto doc = bsoncxx::builder::stream::document{};
+
+    if (_index_doc) {
+        doc << "$hint" << bsoncxx::builder::stream::open_document
+            << bsoncxx::builder::stream::concatenate(*_index_doc)
+            << bsoncxx::builder::stream::close_document;
+    } else {
+        doc << "$hint" << *_index_string;
+    }
+
+    return doc.extract();
+}
+
 bool operator==(const hint& index_hint, std::string index) {
     return ((index_hint._index_string) && (*(index_hint._index_string) == index));
 }
