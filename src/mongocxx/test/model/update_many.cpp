@@ -15,21 +15,24 @@
 #include "catch.hpp"
 #include "helpers.hpp"
 
+#include <bsoncxx/builder/stream/document.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/model/update_many.hpp>
 
-TEST_CASE("update_many", "[update_many][model]") {
+using namespace bsoncxx::builder::stream;
+
+TEST_CASE("update_many model tests", "[update_many][model]") {
     mongocxx::instance::current();
 
-    const bsoncxx::document::view a((std::uint8_t *)"", 0);
-    const bsoncxx::document::view b((std::uint8_t *)"", 0);
+    auto filter = document{} << "a" << 1 << finalize;
+    auto update = document{} << "$set" << open_document << "b" << 1 << close_document << finalize;
 
-    mongocxx::model::update_many um(a, b);
+    mongocxx::model::update_many um(filter.view(), update.view());
 
     SECTION("stores required arguments") {
-        REQUIRE(um.filter().view().data() == a.data());
-        REQUIRE(um.update().view().data() == b.data());
+        REQUIRE(um.filter().view() == filter.view());
+        REQUIRE(um.update().view() == update.view());
     }
 
-    CHECK_OPTIONAL_ARGUMENT(um, upsert, true)
+    CHECK_OPTIONAL_ARGUMENT(um, upsert, true);
 }
