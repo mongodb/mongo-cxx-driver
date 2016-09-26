@@ -52,6 +52,22 @@ TEST_CASE("Hint", "[hint]") {
             auto index_doc = builder::stream::document{} << "a" << 1 << builder::stream::finalize;
             REQUIRE(index_hint != index_doc);
         }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        SECTION("Test for deprecated method to_document()") {
+            document::value filter = builder::stream::document{}
+                                     << "a" << 15
+                                     << builder::stream::concatenate(index_hint.to_document())
+                                     << builder::stream::finalize;
+            document::view view{filter.view()};
+            document::element ele{view["$hint"]};
+            REQUIRE(ele);
+            REQUIRE(ele.type() == type::k_utf8);
+
+            REQUIRE(ele.get_utf8().value.to_string() == index_name);
+        }
+#pragma clang diagnostic pop
     }
 
     SECTION("Can be constructed with index document value") {
@@ -84,6 +100,21 @@ TEST_CASE("Hint", "[hint]") {
             REQUIRE(index_hint != "totoro_1");
             REQUIRE("a" != index_hint);
         }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        SECTION("Test for deprecated method to_document()") {
+            document::value filter = builder::stream::document{}
+                                     << "a" << 12
+                                     << builder::stream::concatenate(index_hint.to_document())
+                                     << builder::stream::finalize;
+            document::view view{filter.view()};
+            document::element ele{view["$hint"]};
+            REQUIRE(ele);
+            REQUIRE(ele.type() == type::k_document);
+            REQUIRE(ele.get_document().value == index_copy);
+        }
+#pragma clang diagnostic pop
     }
 
     SECTION("Can be constructed with index document view") {
