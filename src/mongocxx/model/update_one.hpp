@@ -76,11 +76,9 @@ class MONGOCXX_API update_one {
     const stdx::optional<bool>& upsert() const;
 
    private:
-    // Required
     bsoncxx::document::view_or_value _filter;
     bsoncxx::document::view_or_value _update;
 
-    // Optional
     stdx::optional<bool> _upsert;
 };
 

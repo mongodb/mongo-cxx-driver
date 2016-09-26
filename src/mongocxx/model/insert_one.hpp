@@ -43,7 +43,6 @@ class MONGOCXX_API insert_one {
     const bsoncxx::document::view_or_value& document() const;
 
    private:
-    // Required
     bsoncxx::document::view_or_value _document;
 };
 
