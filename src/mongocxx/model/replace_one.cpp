@@ -25,18 +25,18 @@ replace_one::replace_one(bsoncxx::document::view_or_value filter,
     : _filter(std::move(filter)), _replacement(std::move(replacement)) {
 }
 
-replace_one& replace_one::upsert(bool upsert) {
-    _upsert = upsert;
-
-    return *this;
-}
-
 const bsoncxx::document::view_or_value& replace_one::filter() const {
     return _filter;
 }
 
 const bsoncxx::document::view_or_value& replace_one::replacement() const {
     return _replacement;
+}
+
+replace_one& replace_one::upsert(bool upsert) {
+    _upsert = upsert;
+
+    return *this;
 }
 
 const stdx::optional<bool>& replace_one::upsert() const {
