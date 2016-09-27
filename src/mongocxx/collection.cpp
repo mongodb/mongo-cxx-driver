@@ -198,9 +198,12 @@ cursor collection::find(view_or_value filter, const options::find& options) {
 
     filter_builder << "$query" << bsoncxx::types::b_document{filter};
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     if (options.modifiers()) {
         filter_builder << builder::stream::concatenate(*options.modifiers());
     }
+#pragma clang diagnostic pop
 
     if (options.sort()) {
         filter_builder << "$orderby" << bsoncxx::types::b_document{*options.sort()};
