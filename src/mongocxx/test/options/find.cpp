@@ -32,6 +32,8 @@ TEST_CASE("find", "[find][option]") {
 
     auto collation = document{} << "locale"
                                 << "en_US" << finalize;
+    auto max = document{} << "a" << 6 << finalize;
+    auto min = document{} << "a" << 3 << finalize;
     auto modifiers = document{} << "$comment"
                                 << "comment" << finalize;
     auto projection = document{} << "_id" << false << finalize;
@@ -43,12 +45,18 @@ TEST_CASE("find", "[find][option]") {
     CHECK_OPTIONAL_ARGUMENT(find_opts, comment, "comment");
     CHECK_OPTIONAL_ARGUMENT(find_opts, cursor_type, cursor::type::k_non_tailable);
     CHECK_OPTIONAL_ARGUMENT(find_opts, limit, 3);
+    CHECK_OPTIONAL_ARGUMENT(find_opts, max, max.view());
     CHECK_OPTIONAL_ARGUMENT(find_opts, max_await_time, std::chrono::milliseconds{300});
+    CHECK_OPTIONAL_ARGUMENT(find_opts, max_scan, 3);
     CHECK_OPTIONAL_ARGUMENT(find_opts, max_time, std::chrono::milliseconds{300});
+    CHECK_OPTIONAL_ARGUMENT(find_opts, min, min.view());
     CHECK_OPTIONAL_ARGUMENT(find_opts, modifiers, modifiers.view());
     CHECK_OPTIONAL_ARGUMENT(find_opts, no_cursor_timeout, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, projection, projection.view());
     CHECK_OPTIONAL_ARGUMENT_WITHOUT_EQUALITY(find_opts, read_preference, read_preference{});
+    CHECK_OPTIONAL_ARGUMENT(find_opts, return_key, true);
+    CHECK_OPTIONAL_ARGUMENT(find_opts, show_record_id, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, skip, 3);
+    CHECK_OPTIONAL_ARGUMENT(find_opts, snapshot, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, sort, sort.view());
 }

@@ -171,6 +171,25 @@ class MONGOCXX_API find {
     const stdx::optional<std::int32_t>& limit() const;
 
     ///
+    /// Gets the current exclusive upper bound for a specific index.
+    ///
+    /// @param max
+    ///   The exclusive upper bound for a specific index.
+    ///
+    /// @see http://docs.mongodb.com/manual/reference/method/cursor.max/
+    ///
+    find& max(bsoncxx::document::view_or_value max);
+
+    ///
+    /// Sets the current exclusive upper bound for a specific index.
+    ///
+    /// @return The exclusive upper bound for a specific index.
+    ///
+    /// @see http://docs.mongodb.com/manual/reference/method/cursor.max/
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& max() const;
+
+    ///
     /// The maximum amount of time for the server to wait on new documents to satisfy a tailable
     /// cursor query. This only applies to a TAILABLE_AWAIT cursor. When the cursor is not a
     /// TAILABLE_AWAIT cursor, this option is ignored. The default on the server is to wait for one
@@ -194,6 +213,26 @@ class MONGOCXX_API find {
     const stdx::optional<std::chrono::milliseconds>& max_await_time() const;
 
     ///
+    /// Sets the maximum number of documents or index keys to scan when executing the query.
+    ///
+    /// @param max
+    ///   The maximum number of documents or index keys to scan.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxScan/
+    ///
+    find& max_scan(std::int32_t max);
+
+    ///
+    /// Gets the current setting for the maximum number of documents to scan when executing the
+    /// query.
+    ///
+    /// @return The current setting for the maximum number of documents or index keys to scan.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxScan/
+    ///
+    const stdx::optional<std::int32_t>& max_scan() const;
+
+    ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
     ///
     /// @param max_time
@@ -211,6 +250,25 @@ class MONGOCXX_API find {
     /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
     ///
     const stdx::optional<std::chrono::milliseconds>& max_time() const;
+
+    ///
+    /// Gets the current inclusive lower bound for a specific index.
+    ///
+    /// @param min
+    ///   The inclusive lower bound for a specific index.
+    ///
+    /// @see http://docs.mongodb.com/manual/reference/method/cursor.min/
+    ///
+    find& min(bsoncxx::document::view_or_value min);
+
+    ///
+    /// Sets the current inclusive lower bound for a specific index.
+    ///
+    /// @return The inclusive lower bound for a specific index.
+    ///
+    /// @see http://docs.mongodb.com/manual/reference/method/cursor.min/
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& min() const;
 
     ///
     /// Sets the meta-operators modifying the output or behavior of the query.
@@ -289,6 +347,47 @@ class MONGOCXX_API find {
     const stdx::optional<class read_preference>& read_preference() const;
 
     ///
+    /// Sets whether to return the index keys associated with the query results, instead of the
+    /// actual query results themselves.
+    ///
+    /// @param return_key
+    ///   Whether to return the index keys associated with the query results, instead of the actual
+    ///   query results themselves.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/method/cursor.returnKey/
+    ///
+    find& return_key(bool return_key);
+
+    ///
+    /// Gets the current setting for returning the index keys associated with the query results,
+    /// instead of the actual query results themselves.
+    ///
+    /// @return
+    ///   Whether index keys associated with the query results are returned, instead of the actual
+    ///   query results themselves.
+    ///
+    const stdx::optional<bool>& return_key() const;
+
+    ///
+    /// Sets whether to include the record identifier for each document in the query results.
+    ///
+    /// @param show_record_id
+    ///   Whether to include the record identifier.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/method/cursor.showRecordId/
+    ///
+    find& show_record_id(bool show_record_id);
+
+    ///
+    /// Gets the current setting for whether the record identifier is returned for each document in
+    /// the query results.
+    ///
+    /// @return
+    ///   Whether the record identifier is included.
+    ///
+    const stdx::optional<bool>& show_record_id() const;
+
+    ///
     /// Sets the number of documents to skip before returning results.
     ///
     /// @param skip
@@ -306,6 +405,25 @@ class MONGOCXX_API find {
     /// @see http://docs.mongodb.org/manual/reference/method/cursor.skip/
     ///
     const stdx::optional<std::int32_t>& skip() const;
+
+    ///
+    /// Sets whether snapshot mode should be used.
+    ///
+    /// @param snapshot
+    ///   Whether to enable snapshot mode.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/method/cursor.snapshot/
+    ///
+    find& snapshot(bool snapshot);
+
+    ///
+    /// Gets the current setting for whether snapshot mode is being used.
+    ///
+    /// @return Whether snapshot mode is being used.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/method/cursor.snapshot/
+    ///
+    const stdx::optional<bool>& snapshot() const;
 
     ///
     /// The order in which to return matching documents. If $orderby also exists in the modifiers
@@ -335,13 +453,19 @@ class MONGOCXX_API find {
     stdx::optional<cursor::type> _cursor_type;
     stdx::optional<class hint> _hint;
     stdx::optional<std::int32_t> _limit;
+    stdx::optional<bsoncxx::document::view_or_value> _max;
     stdx::optional<std::chrono::milliseconds> _max_await_time;
+    stdx::optional<std::int32_t> _max_scan;
     stdx::optional<std::chrono::milliseconds> _max_time;
+    stdx::optional<bsoncxx::document::view_or_value> _min;
     stdx::optional<bsoncxx::document::view_or_value> _modifiers;
     stdx::optional<bool> _no_cursor_timeout;
     stdx::optional<bsoncxx::document::view_or_value> _projection;
     stdx::optional<class read_preference> _read_preference;
+    stdx::optional<bool> _return_key;
+    stdx::optional<bool> _show_record_id;
     stdx::optional<std::int32_t> _skip;
+    stdx::optional<bool> _snapshot;
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
 };
 
