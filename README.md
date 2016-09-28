@@ -1,62 +1,48 @@
-# MongoDB C++ Driver [![Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=legacy)](https://travis-ci.org/mongodb/mongo-cxx-driver)
+# MongoDB C++ Driver [![Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=legacy)](https://travis-ci.org/mongodb/mongo-cxx-driver)[![Windows Build Status](https://ci.appveyor.com/api/projects/status/w95xuowdjpr0img1/branch/legacy?svg=true)](https://ci.appveyor.com/project/markbenvenuto/mongo-cxx-driver)
+
 Welcome to the MongoDB C++ Driver!
 
-Please see our [wiki page](https://github.com/mongodb/mongo-cxx-driver/wiki/Download-and-Compile-the-Legacy-Driver) for information about building, testing, and using the driver.
+This branch contains the legacy C++ driver.  We encourage everyone to use
+the actively maintained `mongocxx` driver in the master branch instead.
 
-  Version [1.1.2](https://github.com/mongodb/mongo-cxx-driver/releases/tag/legacy-1.1.2) of the
-  C++ legacy driver has been released. Please report any bugs or issues in the C++
-  [JIRA project](http://jira.mongodb.org/browse/CXX).
+## Resources
 
-You should only use the "legacy" branch if you had been previously using
-the "26compat" branch (or the driver inside of the server source) and want to
-benefit from incremental improvements while having the same overall
-API.
+* [MongoDB C++ Driver Quickstart](https://mongodb.github.io/mongo-cxx-driver/legacy-v1/tutorial/)
+* [MongoDB C++ Driver Manual](https://mongodb.github.io/mongo-cxx-driver/)
+* [MongoDB C++ Driver API Documentation](https://mongodb.github.io/mongo-cxx-driver/api/legacy-v1)
+* [MongoDB C++ Driver Contribution guidelines](https://mongodb.github.io/mongo-cxx-driver/contributing/)
+* [MongoDB Database Manual](http://docs.mongodb.com/manual/)
 
-> **Note:** As of MongoDB 2.6.0-rc1, it is no longer possible to build the driver from the server sources: this repository is the only approved source for C++ driver builds.
+## Driver status by family and version
 
-## Repository Overview
+Stability indicates whether this driver is recommended for production use.
+Currently, no drivers guarantee API or ABI stability.
 
-| Branch   | Stability   | Development       | Purpose                                                      |
-| -------- | ------------| ----------------- | -----------------------------------------------------        |
-| master   | Stable      | Stable Evolution  | Primary stable C++ driver release, requires C++11            |
-| legacy   | Stable      | Maintenance Only  | Former stable C++ driver release                             |
-| 26compat | Stable      | Maintenance Only  | Drop in replacement for users of existing 2.6 era C++ driver |
+| Family/version | Stability   | Development         | Purpose                                                      |
+| ---------------| ------------| ------------------- | ------------------------------------------------------------ |
+| mongocxx 3.1.x | Unstable    | Active development  | Unstable C++ driver development, requires C++11              |
+| mongocxx 3.0.x | Stable      | Bug fixes only      | Primary stable C++ driver release, requires C++11            |
+| legacy   (all) | Stable      | Critical fixes only | Former stable C++ driver release                             |
+| 26compat (all) | Deprecated  | Critical fixes only | Drop in replacement for users of existing 2.6 era C++ driver |
 
-Please note that stable branches are only production quality at stable release tags. Other
-commits or pre-release tags on a stable branch represent ongoing development work towards the
-next stable release, and therefore may be unstable.
+## MongoDB compatibility
 
-## Components
+The following compatibility table specifies the driver version(s)
+recommended for different versions of MongoDB.  The 3.0.x series
+is recommended for all new development.
 
-  - `libmongoclient.[so|dylib|dll]` - The shared mongoclient library (but see notes)
-  - `libmongoclient.a` - The static mongoclient library
+| Family/version | MongoDB 2.4 | MongoDB 2.6 | MongoDB 3.0 | MongoDB 3.2 |
+| ---------------| ------------| ------------| ------------| ------------|
+| mongocxx 3.0.x | ✓           | ✓           | ✓           | ✓           |
+| legacy   1.1.x | ✓           | ✓           | ✓           | ✓           |
+| legacy   1.0.x | ✓           | ✓           | ✓           |             |
+| 26compat (all) |             | ✓           |             |             |
 
-## Building and Usage
+## Bugs and issues
 
- - [Download and Compile](https://github.com/mongodb/mongo-cxx-driver/wiki/Download%20and%20Compile)
- - [Tutorial](https://github.com/mongodb/mongo-cxx-driver/wiki/Tutorial)
-
-## Bugs and Issues
-
-  See http://jira.mongodb.org/browse/CXX
-
-## Notes
-
-  Use of the shared library is experimental on windows and is currently
-  discouraged. This is primarily due to the complexity of ensuring a matching
-  implementation of STL types between library and consumer code. This problem
-  is unique to windows, as the consistent use of system libraries largely
-  mitigates this danger.
-
-## Documentation
-
-  http://docs.mongodb.org/ecosystem/drivers/cpp/
-
-## Mailing Lists and IRC
-
-  http://dochub.mongodb.org/core/community
+See our [JIRA project](http://jira.mongodb.org/browse/CXX).
 
 ## License
 
-  The source files in this repository are made available under the terms of the
-  Apache License, version 2.0.
+The source files in this repository are made available under the terms of
+the Apache License, version 2.0.
