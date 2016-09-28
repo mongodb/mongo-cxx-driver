@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="keyword" content="">
+
+    <link rel="shortcut icon" href="https://mongodb.github.io/mongo-cxx-driver/img/favicon.png">
+
+    <title>Releasing the mongocxx driver</title>
+
+    <link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/css/mongodb-docs.css" type="text/css" />
+<link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/css/overrides.css" type="text/css" />
+<link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/highlight/styles/idea.css" />
+
+  </head>
+
+  <body>
+  
+  <section id="container" class="">
+      
+      <header id="header-db" class="row" role="navigation">
+  <div class="header-content">
+    <div class="toggle-nav pull-left">
+        <i class="fa fa-bars"></i>
+        <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"></div>
+    </div>
+    
+    <div class="logo pull-left">
+      <a href="https://mongodb.github.io/mongo-cxx-driver">
+        <img src="https://mongodb.github.io/mongo-cxx-driver/img/logo-mongodb-header.png",
+             alt="MongoDB C++ driver" />
+      </a>
+    </div>
+    
+    <div>
+<div class="nav-items pull-right">
+  <a href="https://university.mongodb.com" data-toggle="tooltip" data-placement="bottom" title="Free Online Classes">MongoDB University</a>
+  <a href="http://www.mongodb.org/downloads" data-toggle="tooltip" data-placement="bottom" title="Download MongoDB">Downloads</a>
+  <a href="http://www.mongodb.org/get-involved" data-toggle="tooltip" data-placement="bottom" title="Get involved with MongoDB">Community</a>
+  <a href="http://docs.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Documentation">Docs</a>
+  <a href="http://blog.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Blog">Blog</a>
+  <div id="search">
+<form method="get" action="//www.google.com/search" target="_blank">
+    <input type="text" name="searchQuery" size="20" value="" autocomplete="off" placeholder="Search docs">
+    <input type="hidden" name="site" value="https://mongodb.github.io/mongo-cxx-driver">
+    <input type="hidden" name="q" value="">
+    <label for="searchQuery"><i class="fa fa-search fa-1"></i></label>
+</form>
+</div>
+
+</div>
+</div>
+
+  </div>
+</header>
+
+      
+
+      
+<aside id="sidebar" class="sidebar">
+    <div class="ssidebar nav-collapse">
+      <div class="ssidebarwrapper">
+        <h3>
+          <a class="index-link" href="https://mongodb.github.io/mongo-cxx-driver">MongoDB C&#43;&#43; Driver Manual</a>
+        </h3>
+
+        
+        <ul class="sidebar-menu">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+
+          
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    
+    
+    
+      
+    
+  
+  
+
+
+        
+      
+    
+      
+      
+        
+      
+    
+      
+      
+    
+    
+  
+
+
+          
+
+          
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1 ">
+  <a href="/mongo-cxx-driver/mongocxx-v3/" class="">
+      <i class='fa fa-arrow-right'></i>
+      <span>mongocxx (v3)</span>
+      <span class="menu-arrow fa fa-angle-right"></span>
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/">
+        
+        Overview
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/installation/">
+        
+        Installing the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/tutorial/">
+        
+        Tutorial for mongocxx
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/thread-safety/">
+        
+        Thread safety
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/working-with-bson/">
+        
+        Working with BSON
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/api-abi-versioning/">
+        
+        API and ABI versioning
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1 ">
+  <a href="/mongo-cxx-driver/legacy-v1/" class="">
+      <i class='fa fa-arrow-right'></i>
+      <span>legacy (v1)</span>
+      <span class="menu-arrow fa fa-angle-right"></span>
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/">
+        
+        Overview
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/installation/">
+        
+        Installing the legacy driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/configuration/">
+        
+        Configuring the legacy driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/tutorial/">
+        
+        Legacy driver tutorial
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/working-with-bson/">
+        
+        Working with BSON
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/breaking-changes/">
+        
+        Breaking changes from 26compat
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="https://mongodb.github.io/mongo-cxx-driver/api/current">
+        <i class='fa fa-file-text-o'></i>
+        API Documentation
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/mongo-cxx-driver/getting-help/">
+        <i class='fa fa-question'></i>
+        Getting help
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/mongo-cxx-driver/reporting-bugs/">
+        <i class='fa fa-bug'></i>
+        Reporting Bugs
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="https://github.com/mongodb/mongo-cxx-driver/">
+        <i class='fa fa-github'></i>
+        Source Code
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+<li class="toctree-l1  current">
+  <a href="/mongo-cxx-driver/contributing/" class="">
+      <i class='fa fa-pencil'></i>
+      <span>Contributing</span>
+      <span class="menu-arrow fa fa-angle-down"></span>
+  </a>
+    <ul  class="current">
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/">
+        
+        Contribution Guidelines
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/testing-mongocxx/">
+        
+        Testing the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/mongocxx-release-guide/">
+        
+        Releasing the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/testing-legacy/">
+        
+        Testing the legacy driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/legacy-release-guide/">
+        
+        Releasing the legacy driver
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+        </ul>
+        
+    </div>
+  </div>
+  
+</aside>
+
+
+
+      
+      <section id="main-content" class="content">
+          <section class="main-column pull-left">
+            <div class="document">
+              <div class="documentwrapper">
+                <div class="bodywrapper">
+                  <div class="body">
+
+
+   
+<a class="edit-link" href="https://github.com/mongodb/mongo-cxx-driver/blob/master/content/contributing/mongocxx-release-guide.md" target="_blank" title="Edit contributing/mongocxx-release-guide.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
+
+
+
+
+
+
+
+
+
+
+<div class="bc">
+<ul>
+  
+  
+  
+  
+  
+  <li><a href="/mongo-cxx-driver/contributing/">Contributing</a> <i class="fa fa-angle-right"></i></li>
+  <li>Releasing the mongocxx driver</li>
+</ul>
+</div>
+
+
+
+
+<h2 id="releasing-the-mongocxx-driver">Releasing the mongocxx driver</h2>
+
+<h2 id="confirm-version-status-in-jira">Confirm Version Status in Jira</h2>
+
+<ul>
+<li>Ensure that all tickets under the version to be released are in
+&lsquo;Resolved&rsquo; status on the C++ Driver <a href="https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:versions-panel">project
+page</a></li>
+</ul>
+
+<h2 id="create-a-bump-commit">Create a BUMP commit</h2>
+
+<p>This commit essentially removes the -pre (e.g. 1.0.0-rc79-pre -&gt;
+1.0.0-rc79) and creates what is considered the final commit in the release.</p>
+
+<ul>
+<li>If you haven&rsquo;t already, clone the mongodb-cxx-driver repository</li>
+</ul>
+
+<pre><code>git clone git@github.com:mongodb/mongo-cxx-driver.git 
+cd mongo-cxx-driver
+</code></pre>
+
+<ul>
+<li>Otherwise, pull the latest code down from the origin with <code>git pull</code></li>
+<li>Update the following files (changing version numbers to remove the &ldquo;-pre&rdquo;
+for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
+
+<ul>
+<li><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/CMakeLists.txt#L30"><code>src/mongocxx/CMakeLists.txt</code></a></li>
+<li><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/CMakeLists.txt#L22"><code>src/bsoncxx/CMakeLists.txt</code></a></li>
+</ul></li>
+<li>Commit with message &ldquo;BUMP rx.y.z[-rcq]&ldquo;, e.g.:</li>
+</ul>
+
+<pre><code>git commit -am &quot;BUMP r3.0.1&quot;
+git push origin master
+</code></pre>
+
+<p>Pushing the BUMP commit to the origin will kick off builds in Evergreen,
+Travis CI and AppVeyor (which handles Windows builds). Wait for all three
+builds to finish and pass, re-running any timeout/spot failures.</p>
+
+<h2 id="tag-the-release">Tag the Release</h2>
+
+<ul>
+<li>Create an tag for the commit that will serve as the release (or release candidate), eg:</li>
+</ul>
+
+<pre><code>git tag r3.0.1
+git push origin r3.0.1
+</code></pre>
+
+<h2 id="draft-publish-github-release-notes">Draft &amp; Publish GitHub Release Notes</h2>
+
+<ul>
+<li>Hit up the <a href="https://github.com/mongodb/mongo-cxx-driver/releases">GitHub releases
+page</a></li>
+<li>Copy the previous announcement and modify with release-specific information
+
+<ul>
+<li>The &ldquo;Known Issues&rdquo;, &ldquo;Bug&rdquo;, and &ldquo;Improvement&rdquo; sections are generated by JIRA. Click on the specific version of the <a href="https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:versions-panel">C++ Driver Project</a> and on the version Summary page there is a link for &ldquo;Release Notes&rdquo; where you can copy the HTML and paste it into the GitHub Release Notes markdown.</li>
+</ul></li>
+<li>Draft and publish a new release against the tag you just pushed</li>
+</ul>
+
+<h2 id="release-the-version-in-jira">Release the Version in Jira</h2>
+
+<ul>
+<li>Go
+<a href="https://jira.mongodb.org/plugins/servlet/project-config/CXX/versions">here</a></li>
+<li>Close all the the Resolved tickets via a <a href="https://confluence.atlassian.com/jira/modifying-multiple-bulk-issues-185729606.html">bulk transition</a></li>
+<li>Click the cog next to the version you are about to release and select &ldquo;Release&rdquo;</li>
+<li>Follow the dialogs/wizards and whatnot, setting the release date to the current date</li>
+</ul>
+
+<h2 id="generate-and-publish-documentation">Generate and Publish Documentation</h2>
+
+<ul>
+<li>Clone the <a href="https://github.com/mongodb/apidocs">apidocs repo</a></li>
+</ul>
+
+<pre><code>git clone git@github.com:10gen/apidocs.git
+cd apidocs
+</code></pre>
+
+<ul>
+<li>On the command line, run:</li>
+</ul>
+
+<pre><code>python2 build.py cxx11
+git commit -am &quot;bump for cxx driver release&quot;
+git push origin master
+</code></pre>
+
+<h2 id="create-the-next-version-commit">Create the Next Version commit</h2>
+
+<ul>
+<li>Update the following files (changing version numbers to bump to the next version number and add the &ldquo;-pre&rdquo; suffix for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
+
+<ul>
+<li><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/CMakeLists.txt#L30"><code>src/mongocxx/CMakeLists.txt</code></a></li>
+<li><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/CMakeLists.txt#L22"><code>src/bsoncxx/CMakeLists.txt</code></a></li>
+</ul></li>
+<li>Commit with message &ldquo;post rx.y.z[-rcq]&ldquo;, e.g.:</li>
+</ul>
+
+<pre><code>git commit -am &quot;post r3.0.1&quot;
+git push origin master
+</code></pre>
+
+<h2 id="email-google-groups">Email Google Groups</h2>
+
+<ul>
+<li>Send it to mongodb-announce@googlegroups.com AND mongodb-user@googlegroups.com</li>
+<li>Template:</li>
+</ul>
+
+<blockquote>
+<p>The MongoDB C++ Driver Team is very excited to announce the availability of version X.Y.Z of the new MongoDB C++11 driver.
+We are not promising API or ABI stability until the 3.1.0 release so that we can meaningfully incorporate user feedback after the 3.0.0 GA. We will make every effort to minimize API changes.  The new driver is incompatible with the prior legacy, 26compat, and server C++ drivers.</p>
+
+<p>You can obtain the source for the new driver from GitHub, either under the rX.Y.Z tag or from the releases page. General documentation for the new driver is available on the github wiki. Doxygen API documentation is also available.</p>
+
+<p>Please feel free to post any questions to the mongodb-user mailing list. Bug reports should be filed against the CXX project in the MongoDB JIRA. If you are interested in participating in the development of the C++11 driver, questions should be sent to the mongodb-dev mailing list. Github pull requests are welcome, and should be issued against the master branch of the repository, where the C++11 driver is developed.
+We look forward to hearing from you. Happy C++11’ing!</p>
+
+<p>Thank You,
+The MongoDB C++ Driver Team</p>
+</blockquote>
+
+
+
+
+
+
+<div id="btnv">
+  
+  <div class="pull-left">
+  <a class="navigation prev" href="/mongo-cxx-driver/contributing/testing-mongocxx/">
+      <i class="fa fa-long-arrow-left"> </i> Testing the mongocxx driver
+  </a>
+  </div>
+  
+  
+  <div class="pull-right">
+  <a class="navigation next" href="/mongo-cxx-driver/contributing/testing-legacy/">
+    Testing the legacy driver <i class="fa fa-long-arrow-right"> </i>
+  </a>
+  
+</div>
+</div>
+
+
+</div>
+<div class="right-column">
+<div class="wrapper">
+  
+  <div class="toc">
+    <span class="toc-header">On this page</span>
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#releasing-the-mongocxx-driver">Releasing the mongocxx driver</a></li>
+<li><a href="#confirm-version-status-in-jira">Confirm Version Status in Jira</a></li>
+<li><a href="#create-a-bump-commit">Create a BUMP commit</a></li>
+<li><a href="#tag-the-release">Tag the Release</a></li>
+<li><a href="#draft-publish-github-release-notes">Draft &amp; Publish GitHub Release Notes</a></li>
+<li><a href="#release-the-version-in-jira">Release the Version in Jira</a></li>
+<li><a href="#generate-and-publish-documentation">Generate and Publish Documentation</a></li>
+<li><a href="#create-the-next-version-commit">Create the Next Version commit</a></li>
+<li><a href="#email-google-groups">Email Google Groups</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+  
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+
+</section>
+
+
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+   URL_ROOT:    "https://mongodb.github.io/mongo-cxx-driver",
+   VERSION:     "",
+   COLLAPSE_INDEX: false,
+   FILE_SUFFIX: '.html',
+   HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/js/jquery.js"></script>
+<script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/lib/bootstrap.js"></script>
+<script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/js/navbar.js"></script>
+<script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/lib/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/js/scripts.js"></script>
+
+
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K75Z5Q"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
+{'gtm.start': new Date().getTime(),event:'gtm.js'}
+);var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K75Z5Q');</script>
+
+
+<script type="text/javascript">
+var _elqQ = _elqQ || [];
+_elqQ.push(['elqSetSiteId', '413370795']);
+_elqQ.push(['elqTrackPageView']);
+(function () {
+function async_load()
+{ var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//img03.en25.com/i/elqCfg.min.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); }
+if (window.addEventListener) window.addEventListener('DOMContentLoaded', async_load, false);
+else if (window.attachEvent) window.attachEvent('onload', async_load);
+})();
+</script>
+
+</body>
+</html>
+

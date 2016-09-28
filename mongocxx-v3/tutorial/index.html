@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="keyword" content="">
+
+    <link rel="shortcut icon" href="https://mongodb.github.io/mongo-cxx-driver/img/favicon.png">
+
+    <title>Tutorial for mongocxx</title>
+
+    <link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/css/mongodb-docs.css" type="text/css" />
+<link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/css/overrides.css" type="text/css" />
+<link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/highlight/styles/idea.css" />
+
+  </head>
+
+  <body>
+  
+  <section id="container" class="">
+      
+      <header id="header-db" class="row" role="navigation">
+  <div class="header-content">
+    <div class="toggle-nav pull-left">
+        <i class="fa fa-bars"></i>
+        <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"></div>
+    </div>
+    
+    <div class="logo pull-left">
+      <a href="https://mongodb.github.io/mongo-cxx-driver">
+        <img src="https://mongodb.github.io/mongo-cxx-driver/img/logo-mongodb-header.png",
+             alt="MongoDB C++ driver" />
+      </a>
+    </div>
+    
+    <div>
+<div class="nav-items pull-right">
+  <a href="https://university.mongodb.com" data-toggle="tooltip" data-placement="bottom" title="Free Online Classes">MongoDB University</a>
+  <a href="http://www.mongodb.org/downloads" data-toggle="tooltip" data-placement="bottom" title="Download MongoDB">Downloads</a>
+  <a href="http://www.mongodb.org/get-involved" data-toggle="tooltip" data-placement="bottom" title="Get involved with MongoDB">Community</a>
+  <a href="http://docs.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Documentation">Docs</a>
+  <a href="http://blog.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Blog">Blog</a>
+  <div id="search">
+<form method="get" action="//www.google.com/search" target="_blank">
+    <input type="text" name="searchQuery" size="20" value="" autocomplete="off" placeholder="Search docs">
+    <input type="hidden" name="site" value="https://mongodb.github.io/mongo-cxx-driver">
+    <input type="hidden" name="q" value="">
+    <label for="searchQuery"><i class="fa fa-search fa-1"></i></label>
+</form>
+</div>
+
+</div>
+</div>
+
+  </div>
+</header>
+
+      
+
+      
+<aside id="sidebar" class="sidebar">
+    <div class="ssidebar nav-collapse">
+      <div class="ssidebarwrapper">
+        <h3>
+          <a class="index-link" href="https://mongodb.github.io/mongo-cxx-driver">MongoDB C&#43;&#43; Driver Manual</a>
+        </h3>
+
+        
+        <ul class="sidebar-menu">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+
+          
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    
+    
+    
+  
+  
+
+
+        
+      
+    
+      
+      
+        
+      
+    
+      
+      
+    
+      
+      
+    
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+  
+
+
+          
+
+          
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+<li class="toctree-l1  current">
+  <a href="/mongo-cxx-driver/mongocxx-v3/" class="">
+      <i class='fa fa-arrow-right'></i>
+      <span>mongocxx (v3)</span>
+      <span class="menu-arrow fa fa-angle-down"></span>
+  </a>
+    <ul  class="current">
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/">
+        
+        Overview
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/installation/">
+        
+        Installing the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/tutorial/">
+        
+        Tutorial for mongocxx
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/thread-safety/">
+        
+        Thread safety
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/working-with-bson/">
+        
+        Working with BSON
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/api-abi-versioning/">
+        
+        API and ABI versioning
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1 ">
+  <a href="/mongo-cxx-driver/legacy-v1/" class="">
+      <i class='fa fa-arrow-right'></i>
+      <span>legacy (v1)</span>
+      <span class="menu-arrow fa fa-angle-right"></span>
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/">
+        
+        Overview
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/installation/">
+        
+        Installing the legacy driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/configuration/">
+        
+        Configuring the legacy driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/tutorial/">
+        
+        Legacy driver tutorial
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/working-with-bson/">
+        
+        Working with BSON
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/breaking-changes/">
+        
+        Breaking changes from 26compat
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="https://mongodb.github.io/mongo-cxx-driver/api/current">
+        <i class='fa fa-file-text-o'></i>
+        API Documentation
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/mongo-cxx-driver/getting-help/">
+        <i class='fa fa-question'></i>
+        Getting help
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/mongo-cxx-driver/reporting-bugs/">
+        <i class='fa fa-bug'></i>
+        Reporting Bugs
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="https://github.com/mongodb/mongo-cxx-driver/">
+        <i class='fa fa-github'></i>
+        Source Code
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1 ">
+  <a href="/mongo-cxx-driver/contributing/" class="">
+      <i class='fa fa-pencil'></i>
+      <span>Contributing</span>
+      <span class="menu-arrow fa fa-angle-right"></span>
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/">
+        
+        Contribution Guidelines
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/testing-mongocxx/">
+        
+        Testing the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/mongocxx-release-guide/">
+        
+        Releasing the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/testing-legacy/">
+        
+        Testing the legacy driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/legacy-release-guide/">
+        
+        Releasing the legacy driver
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+        </ul>
+        
+    </div>
+  </div>
+  
+</aside>
+
+
+
+      
+      <section id="main-content" class="content">
+          <section class="main-column pull-left">
+            <div class="document">
+              <div class="documentwrapper">
+                <div class="bodywrapper">
+                  <div class="body">
+
+
+   
+<a class="edit-link" href="https://github.com/mongodb/mongo-cxx-driver/blob/master/content/mongocxx-v3/tutorial.md" target="_blank" title="Edit mongocxx-v3/tutorial.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
+
+
+
+
+
+
+
+
+
+
+<div class="bc">
+<ul>
+  
+  
+  
+  
+  
+  <li><a href="/mongo-cxx-driver/mongocxx-v3/">mongocxx (v3)</a> <i class="fa fa-angle-right"></i></li>
+  <li>Tutorial for mongocxx</li>
+</ul>
+</div>
+
+
+
+
+<h2 id="quick-start">Quick Start</h2>
+
+<h3 id="prerequisites">Prerequisites</h3>
+
+<ul>
+<li><p>A <a href="https://docs.mongodb.com/manual/reference/program/mongod/">mongod</a>
+instance running on localhost on port 27017.</p></li>
+
+<li><p>The mongocxx Driver. See <a href="https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/">Installation for mongocxx</a>.</p></li>
+
+<li><p>The following statements at the top of your source file:</p></li>
+</ul>
+
+<pre><code class="language-c++">#include &lt;cstdint&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;bsoncxx/json.hpp&gt;
+#include &lt;mongocxx/client.hpp&gt;
+#include &lt;mongocxx/stdx.hpp&gt;
+#include &lt;mongocxx/uri.hpp&gt;
+
+using bsoncxx::builder::stream::close_array;
+using bsoncxx::builder::stream::close_document;
+using bsoncxx::builder::stream::document;
+using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::stream::open_array;
+using bsoncxx::builder::stream::open_document;
+</code></pre>
+
+<h3 id="compiling">Compiling</h3>
+
+<p>The mongocxx driver&rsquo;s installation process will install a
+<code>libmongocxx.pc</code> file for use
+with <a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a>.</p>
+
+<p>To compile a program, run the following command:</p>
+
+<pre><code class="language-sh">c++ --std=c++11 &lt;input&gt;.cpp $(pkg-config --cflags --libs libmongocxx)
+</code></pre>
+
+<h3 id="make-a-connection">Make a Connection</h3>
+
+<p>To connect to a running MongoDB instance, use the
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1client.html
+"><code>mongocxx::client</code></a>
+class.</p>
+
+<p>You must specify the host to connect to using a
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1uri.html
+"><code>mongocxx::uri</code></a> instance containing a
+<a href="https://docs.mongodb.com/manual/reference/connection-string/">MongoDB URI</a>,
+and pass that into the <code>mongocxx::client</code> constructor.</p>
+
+<p>The default <code>mongocxx::uri</code> constructor will connect to a
+server running on localhost on port <code>27017</code>:</p>
+
+<pre><code class="language-c++">mongocxx::client client{mongocxx::uri{}};
+</code></pre>
+
+<p>This is equivalent to the following:</p>
+
+<pre><code class="language-c++">mongocxx::uri uri(&quot;mongodb://localhost:27017&quot;);
+mongocxx::client client(uri);
+</code></pre>
+
+<h3 id="access-a-database-and-a-collection">Access a Database and a Collection</h3>
+
+<h4 id="access-a-database">Access a Database</h4>
+
+<p>Once you have a <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1client.html
+"><code>mongocxx::client</code></a>
+instance connected to a MongoDB deployment, use either the
+<code>database()</code> method or <code>operator[]</code> to obtain a
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1database.html
+"><code>mongocxx::database</code></a>
+instance.</p>
+
+<p>If the database you request does not exist, MongoDB creates it when you
+first store data.</p>
+
+<p>The following example accesses the <code>mydb</code> database:</p>
+
+<pre><code class="language-c++">mongocxx::database db = client[&quot;mydb&quot;];
+</code></pre>
+
+<h4 id="access-a-collection">Access a Collection</h4>
+
+<p>Once you have a
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1database.html
+"><code>mongocxx::database</code></a>
+instance, use either the <code>collection()</code> method or <code>operator[]</code> to obtain a
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
+"><code>mongocxx::collection</code></a>
+instance.</p>
+
+<p>If the collection you request does not exist, MongoDB creates it when
+you first store data.</p>
+
+<p>For example, using the <code>db</code> instance created in the previous section,
+the following statement accesses the collection named <code>test</code> in the
+<code>mydb</code> database:</p>
+
+<pre><code class="language-c++">mongocxx::collection coll = db[&quot;test&quot;];
+</code></pre>
+
+<h3 id="create-a-document">Create a Document</h3>
+
+<p>To create a :term:<code>document</code> using the C++ driver, use one of the two
+available builder interfaces:</p>
+
+<p>Stream builder: <code>bsoncxx::builder::stream</code>
+  A document builder using the streaming operators that works well for
+  literal document construction.</p>
+
+<p>Basic builder: <code>bsoncxx::builder::basic</code>
+  A more conventional document builder that involves calling methods on
+  a builder instance.</p>
+
+<p>This guide only briefly describes the stream builder.</p>
+
+<p>For example, consider the following JSON document:</p>
+
+<pre><code class="language-json">{
+   &quot;name&quot; : &quot;MongoDB&quot;,
+   &quot;type&quot; : &quot;database&quot;,
+   &quot;count&quot; : 1,
+   &quot;versions&quot;: [ &quot;v3.2&quot;, &quot;v3.0&quot;, &quot;v2.6&quot; ],
+   &quot;info&quot; : {
+               &quot;x&quot; : 203,
+               &quot;y&quot; : 102
+            }
+}
+</code></pre>
+
+<p>Using the stream builder interface, you can construct this document
+as follows:</p>
+
+<pre><code class="language-c++">auto builder = bsoncxx::builder::stream::document{};
+bsoncxx::document::value doc_value = builder
+  &lt;&lt; &quot;name&quot; &lt;&lt; &quot;MongoDB&quot;
+  &lt;&lt; &quot;type&quot; &lt;&lt; &quot;database&quot;
+  &lt;&lt; &quot;count&quot; &lt;&lt; 1
+  &lt;&lt; &quot;versions&quot; &lt;&lt; bsoncxx::builder::stream::open_array
+    &lt;&lt; &quot;v3.2&quot; &lt;&lt; &quot;v3.0&quot; &lt;&lt; &quot;v2.6&quot;
+  &lt;&lt; close_array
+  &lt;&lt; &quot;info&quot; &lt;&lt; bsoncxx::builder::stream::open_document
+    &lt;&lt; &quot;x&quot; &lt;&lt; 203
+    &lt;&lt; &quot;y&quot; &lt;&lt; 102
+  &lt;&lt; bsoncxx::builder::stream::close_document
+  &lt;&lt; bsoncxx::builder::stream::finalize;
+</code></pre>
+
+<p>Use <code>bsoncxx::builder::stream::finalize</code> to obtain a
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1value.html
+"><code>bsoncxx::document::value</code></a>
+instance.</p>
+
+<p>This <code>bsoncxx::document::value</code> type is a read-only object owning
+its own memory. To use it, you must obtain a
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1view.html
+"><code>bsoncxx::document::view</code></a> using
+the <code>view()</code> method:</p>
+
+<pre><code class="language-c++">bsoncxx::document::view view = doc_value.view();
+</code></pre>
+
+<p>You can access fields within this document view using <code>operator[]</code>,
+which will return a
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1element.html
+"><code>bsoncxx::document::element</code></a>
+instance. For example, the following will extract the <code>name</code> field whose
+value is a string:</p>
+
+<pre><code class="language-c++">bsoncxx::document::element element = view[&quot;name&quot;];
+if(element.type() != bsoncxx::type::k_utf8) {
+  // Error
+}
+std::string name = element.get_utf8().value.to_string();
+</code></pre>
+
+<p>If the value in the <code>name</code> field is not a string and you do not
+include a type guard as seen in the preceding example, this code will
+throw an instance of
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1exception.html
+"><code>bsoncxx::exception</code></a>.</p>
+
+<h3 id="insert-documents">Insert Documents</h3>
+
+<h4 id="insert-one-document">Insert One Document</h4>
+
+<p>To insert a single document into the collection, use a
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
+"><code>mongocxx::collection</code></a>
+instance&rsquo;s <code>insert_one()</code> method:</p>
+
+<pre><code class="language-c++">mongocxx::result::insert_one result = restaurants.insert_one(doc);
+</code></pre>
+
+<p>If you do not specify a top-level <code>_id</code> field in the document,
+MongoDB automatically adds an <code>_id</code> field to the inserted document.</p>
+
+<p>You can obtain this value using the <code>inserted_id()</code> method of the
+returned
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1insert__one.html
+"><code>mongocxx::result::insert_one</code></a>
+instance.</p>
+
+<h4 id="insert-multiple-documents">Insert Multiple Documents</h4>
+
+<p>To insert multiple documents to the collection, use a
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
+"><code>mongocxx::collection</code></a> instance&rsquo;s
+<code>insert_many()</code> method, which takes a list of documents to insert.</p>
+
+<p>The following example will add multiple documents of the form:</p>
+
+<pre><code class="language-json">{ &quot;i&quot; : value }
+</code></pre>
+
+<p>Create the documents in a loop and add to the documents list:</p>
+
+<pre><code class="language-c++">std::vector&lt;bsoncxx::document::value&gt; documents;
+for(int i = 0; i &lt; 100; i++) {
+    documents.push_back(
+      bsoncxx::builder::stream::document{} &lt;&lt; &quot;i&quot; &lt;&lt; i &lt;&lt; finalize);
+}
+</code></pre>
+
+<p>To insert these documents to the collection, pass the list of documents
+to the <code>insert_many()</code> method.</p>
+
+<pre><code class="language-c++">collection.insert_many(documents);
+</code></pre>
+
+<p>If you do not specify a top-level <code>_id</code> field in each document,
+MongoDB automatically adds a <code>_id</code> field to the inserted documents.</p>
+
+<p>You can obtain this value using the <code>inserted_ids()</code> method of the
+returned
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1insert__many.html
+"><code>mongocxx::result::insert_many</code></a>
+instance.</p>
+
+<h3 id="query-the-collection">Query the Collection</h3>
+
+<p>To query the collection, use the collection’s <code>find()</code> and
+<code>find_one</code> methods.</p>
+
+<p><code>find()</code> will return an instance of
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1cursor.html
+"><code>mongocxx::cursor</code></a>,
+while <code>find_one()</code> will return an instance of
+<code>std::optional&lt;</code><a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1value.html
+"><code>bsoncxx::document::value</code></a><code>&gt;</code></p>
+
+<p>You can call either method without any arguments to query all documents
+in a collection, or pass a filter to query for documents that match the
+filter criteria.</p>
+
+<h4 id="find-a-single-document-in-a-collection">Find a Single Document in a Collection</h4>
+
+<p>To return a single document in the collection, use the <code>find_one()</code>
+method without any parameters.</p>
+
+<pre><code class="language-c++">mongocxx::stdx::optional&lt;bsoncxx::document::value&gt; maybe_result =
+  collection.find_one(document{} &lt;&lt; finalize);
+if(maybe_result) {
+  // Do something with *maybe_result;
+}
+</code></pre>
+
+<h4 id="find-all-documents-in-a-collection">Find All Documents in a Collection</h4>
+
+<pre><code class="language-c++">mongocxx::cursor cursor = collection.find(document{} &lt;&lt; finalize);
+for(auto doc : cursor) {
+  std::cout &lt;&lt; bsoncxx::to_json(doc) &lt;&lt; &quot;\n&quot;;
+}
+</code></pre>
+
+<h4 id="specify-a-query-filter">Specify a Query Filter</h4>
+
+<h5 id="get-a-single-document-that-matches-a-filter">Get A Single Document That Matches a Filter</h5>
+
+<p>To find the first document where the field <code>i</code> has the value <code>71</code>,
+pass the document <code>{&quot;i&quot;: 71}</code> to specify the equality condition:</p>
+
+<pre><code class="language-c++">mongocxx::stdx::optional&lt;bsoncxx::document::value&gt; maybe_result =
+  collection.find_one(document{} &lt;&lt; &quot;i&quot; &lt;&lt; 71 &lt;&lt; finalize);
+if(maybe_result) {
+  std::cout &lt;&lt; bsoncxx::to_json(*maybe_result) &lt;&lt; &quot;\n&quot;;
+}
+</code></pre>
+
+<p>The example prints one document:</p>
+
+<pre><code class="language-json">{ &quot;_id&quot; : { &quot;$oid&quot; : &quot;5755e19b38c96f1fb25667a8&quot; },  &quot;i&quot; : 71 }
+</code></pre>
+
+<p>The <code>_id</code> element has been added automatically by MongoDB to your
+document and your value will differ from that shown. MongoDB reserves
+field names that start with an underscore (<code>_</code>) and the dollar sign
+(<code>$</code>) for internal use.</p>
+
+<h5 id="get-all-documents-that-match-a-filter">Get All Documents That Match a Filter</h5>
+
+<p>The following example returns and prints all documents where
+<code>50 &lt; &quot;i&quot; &lt;= 100</code>:</p>
+
+<pre><code class="language-c++">mongocxx::cursor cursor = collection.find(
+  document{} &lt;&lt; &quot;i&quot; &lt;&lt; open_document &lt;&lt;
+    &quot;$gt&quot; &lt;&lt; 50 &lt;&lt;
+    &quot;$lte&quot; &lt;&lt; 100
+  &lt;&lt; close_document &lt;&lt; finalize);
+for(auto doc : cursor) {
+  std::cout &lt;&lt; bsoncxx::to_json(doc) &lt;&lt; &quot;\n&quot;;
+}
+</code></pre>
+
+<h3 id="update-documents">Update Documents</h3>
+
+<p>To update documents in a collection, you can use the collection’s
+<code>update_one()</code> and <code>update_many()</code> methods.</p>
+
+<p>The update methods return an instance of
+<code>std::optional&lt;</code><a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1update.html
+"><code>mongocxx::result::update</code></a><code>&gt;</code>,
+which provides information about the operation including the number of
+documents modified by the update.</p>
+
+<h4 id="update-a-single-document">Update a Single Document</h4>
+
+<p>To update at most one document, use the <code>update_one()</code> method.</p>
+
+<p>The following example updates the first document that matches the filter
+<code>{ &quot;i&quot;: 10 }</code> and sets the value of <code>i</code> to <code>110</code>:</p>
+
+<pre><code class="language-c++">collection.update_one(document{} &lt;&lt; &quot;i&quot; &lt;&lt; 10 &lt;&lt; finalize,
+                      document{} &lt;&lt; &quot;$set&quot; &lt;&lt; open_document &lt;&lt;
+                        &quot;i&quot; &lt;&lt; 110 &lt;&lt; close_document &lt;&lt; finalize);
+</code></pre>
+
+<h4 id="update-multiple-documents">Update Multiple Documents</h4>
+
+<p>To update all documents matching a filter, use the <code>update_many()</code>
+method.</p>
+
+<p>The following example increments the value of <code>i</code> by <code>100</code> where
+<code>i</code> is less than <code>100</code>:</p>
+
+<pre><code class="language-c++">mongocxx::stdx::optional&lt;mongocxx::result::update&gt; result =
+ collection.update_many(
+  document{} &lt;&lt; &quot;i&quot; &lt;&lt; open_document &lt;&lt;
+    &quot;$lt&quot; &lt;&lt; 100 &lt;&lt; close_document &lt;&lt; finalize,
+  document{} &lt;&lt; &quot;$inc&quot; &lt;&lt; open_document &lt;&lt;
+    &quot;i&quot; &lt;&lt; 100 &lt;&lt; close_document &lt;&lt; finalize);
+
+if(result) {
+  std::cout &lt;&lt; result-&gt;modified_count() &lt;&lt; &quot;\n&quot;;
+}
+</code></pre>
+
+<h3 id="delete-documents">Delete Documents</h3>
+
+<p>To delete documents from a collection, you can use a collection’s
+<code>delete_one()</code> and <code>delete_many()</code> methods.</p>
+
+<p>The delete methods return an instance of
+<code>std::optional&lt;</code><a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1delete__result.html
+"><code>mongocxx::result::delete</code></a><code>&gt;</code>,
+which contains the number of documents deleted.</p>
+
+<h4 id="delete-a-single-document">Delete a Single Document</h4>
+
+<p>To delete at most a single document that matches a filter, use the
+<code>delete_one()</code> method.</p>
+
+<p>For example, to delete a document that matches the filter
+<code>{ &quot;i&quot;: 110 }</code>:</p>
+
+<pre><code class="language-c++">collection.delete_one(document{} &lt;&lt; &quot;i&quot; &lt;&lt; 110 &lt;&lt; finalize);
+</code></pre>
+
+<h4 id="delete-all-documents-that-match-a-filter">Delete All Documents That Match a Filter</h4>
+
+<p>To delete all documents matching a filter, use a collection&rsquo;s
+<code>delete_many()</code> method.</p>
+
+<p>The following example deletes all documents where <code>i</code> is greater or
+equal to <code>100</code>:</p>
+
+<pre><code class="language-c++">mongocxx::stdx::optional&lt;mongocxx::result::delete_result&gt; result =
+ collection.delete_many(
+  document{} &lt;&lt; &quot;i&quot; &lt;&lt; open_document &lt;&lt;
+    &quot;$gte&quot; &lt;&lt; 100 &lt;&lt; close_document &lt;&lt; finalize);
+
+if(result) {
+  std::cout &lt;&lt; result-&gt;deleted_count() &lt;&lt; &quot;\n&quot;;
+}
+</code></pre>
+
+<h3 id="create-indexes">Create Indexes</h3>
+
+<p>To create an <a href="https://docs.mongodb.com/manual/indexes/">index</a> on a
+field or set of fields, pass an index specification document to the
+<code>create_index()</code> method of a
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
+"><code>mongocxx::collection</code></a> instance. An
+index key specification document contains the fields to index and the
+index type for each field:</p>
+
+<pre><code class="language-json">{ &quot;index1&quot;: &quot;&lt;type&gt;&quot;, &quot;index2&quot;: &lt;type&gt; }
+</code></pre>
+
+<ul>
+<li>For an ascending index type, specify 1 for <type>.</li>
+<li>For a descending index type, specify -1 for <type>.</li>
+</ul>
+
+<p>The following example creates an ascending index on the <code>i</code> field:</p>
+
+<pre><code class="language-c++">auto index_specification = document{} &lt;&lt; &quot;i&quot; &lt;&lt; 1 &lt;&lt; finalize;
+collection.create_index(std::move(index_specification));
+</code></pre>
+
+
+
+
+
+
+<div id="btnv">
+  
+  <div class="pull-left">
+  <a class="navigation prev" href="/mongo-cxx-driver/mongocxx-v3/installation/">
+      <i class="fa fa-long-arrow-left"> </i> Installing the mongocxx driver
+  </a>
+  </div>
+  
+  
+  <div class="pull-right">
+  <a class="navigation next" href="/mongo-cxx-driver/mongocxx-v3/thread-safety/">
+    Thread safety <i class="fa fa-long-arrow-right"> </i>
+  </a>
+  
+</div>
+</div>
+
+
+</div>
+<div class="right-column">
+<div class="wrapper">
+  
+  <div class="toc">
+    <span class="toc-header">On this page</span>
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#quick-start">Quick Start</a>
+<ul>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#compiling">Compiling</a></li>
+<li><a href="#make-a-connection">Make a Connection</a></li>
+<li><a href="#access-a-database-and-a-collection">Access a Database and a Collection</a>
+<ul>
+<li><a href="#access-a-database">Access a Database</a></li>
+<li><a href="#access-a-collection">Access a Collection</a></li>
+</ul></li>
+<li><a href="#create-a-document">Create a Document</a></li>
+<li><a href="#insert-documents">Insert Documents</a>
+<ul>
+<li><a href="#insert-one-document">Insert One Document</a></li>
+<li><a href="#insert-multiple-documents">Insert Multiple Documents</a></li>
+</ul></li>
+<li><a href="#query-the-collection">Query the Collection</a>
+<ul>
+<li><a href="#find-a-single-document-in-a-collection">Find a Single Document in a Collection</a></li>
+<li><a href="#find-all-documents-in-a-collection">Find All Documents in a Collection</a></li>
+<li><a href="#specify-a-query-filter">Specify a Query Filter</a>
+<ul>
+<li><a href="#get-a-single-document-that-matches-a-filter">Get A Single Document That Matches a Filter</a></li>
+<li><a href="#get-all-documents-that-match-a-filter">Get All Documents That Match a Filter</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#update-documents">Update Documents</a>
+<ul>
+<li><a href="#update-a-single-document">Update a Single Document</a></li>
+<li><a href="#update-multiple-documents">Update Multiple Documents</a></li>
+</ul></li>
+<li><a href="#delete-documents">Delete Documents</a>
+<ul>
+<li><a href="#delete-a-single-document">Delete a Single Document</a></li>
+<li><a href="#delete-all-documents-that-match-a-filter">Delete All Documents That Match a Filter</a></li>
+</ul></li>
+<li><a href="#create-indexes">Create Indexes</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+  
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+
+</section>
+
+
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+   URL_ROOT:    "https://mongodb.github.io/mongo-cxx-driver",
+   VERSION:     "",
+   COLLAPSE_INDEX: false,
+   FILE_SUFFIX: '.html',
+   HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/js/jquery.js"></script>
+<script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/lib/bootstrap.js"></script>
+<script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/js/navbar.js"></script>
+<script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/lib/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/js/scripts.js"></script>
+
+
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K75Z5Q"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
+{'gtm.start': new Date().getTime(),event:'gtm.js'}
+);var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K75Z5Q');</script>
+
+
+<script type="text/javascript">
+var _elqQ = _elqQ || [];
+_elqQ.push(['elqSetSiteId', '413370795']);
+_elqQ.push(['elqTrackPageView']);
+(function () {
+function async_load()
+{ var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//img03.en25.com/i/elqCfg.min.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); }
+if (window.addEventListener) window.addEventListener('DOMContentLoaded', async_load, false);
+else if (window.attachEvent) window.attachEvent('onload', async_load);
+})();
+</script>
+
+</body>
+</html>
+

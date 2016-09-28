@@ -1,0 +1,711 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Contributings on MongoDB C&#43;&#43; Driver Manual</title>
+    <link>https://mongodb.github.io/mongo-cxx-driver/contributing/</link>
+    <description>Recent content in Contributings on MongoDB C&#43;&#43; Driver Manual</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate>
+    <atom:link href="https://mongodb.github.io/mongo-cxx-driver/contributing/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Contribution Guidelines</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/</guid>
+      <description>
+
+&lt;h2 id=&#34;contribution-guidelines&#34;&gt;Contribution Guidelines&lt;/h2&gt;
+
+&lt;h3 id=&#34;commit-messages&#34;&gt;Commit Messages&lt;/h3&gt;
+
+&lt;p&gt;If a pull-request addresses a JIRA ticket, for a single-commit PR, prefix
+the subject line with the ticket ID.  (For a multi-commit PR, we will add
+the ID later when we squash or merge it.)&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;CXX-883 Add commit message conventions to CONTRIBUTING.md&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Capitalize subject lines and don&amp;rsquo;t use a trailing period.  Keep the subject
+at most 70 characters long.  Use active voice!  Imagine this preamble to get
+your phrasing right:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;If applied, this commit will&amp;hellip;&lt;/em&gt; [your subject line]&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;See Chris Beams&amp;rsquo;
+&lt;a href=&#34;http://chris.beams.io/posts/git-commit/&#34;&gt;How to write a git commit message&lt;/a&gt;
+for more good guidelines to follow.&lt;/p&gt;
+
+&lt;h3 id=&#34;lifecycle-methods&#34;&gt;Lifecycle Methods&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;default-or-argument-bearing &amp;lsquo;user&amp;rsquo; constructors&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;declaration-or-deletion-of-copy-contructor&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;declaration-or-deletetion-of-move-constructor&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;declaration-or-deletion-of-copy-assignment-operator&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;declaration-or-deletion-of-move-assignment-operator&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;declaration-of-dtor&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;headers&#34;&gt;Headers&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;License&lt;/li&gt;
+&lt;li&gt;Include Guard (&lt;code&gt;#pragma once&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Header Prelude&lt;/li&gt;
+&lt;li&gt;System Headers &lt;code&gt;&amp;lt;vector&amp;gt;&lt;/code&gt; (alphabetical order)&lt;/li&gt;
+&lt;li&gt;Driver Headers &lt;code&gt;&amp;lt;path/to/header.hpp&amp;gt;&lt;/code&gt; (alphabetical order)&lt;/li&gt;
+&lt;li&gt;Open Namespace mongocxx&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;MONGOCXX_INLINE_NAMESPACE_BEGIN&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Code&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;MONGOCXX_INLINE_NAMESPACE_END&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Close Namespace mongocxx&lt;/li&gt;
+&lt;li&gt;Header Postlude&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;// Copyright 2014 MongoDB Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the &amp;quot;License&amp;quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &amp;quot;AS IS&amp;quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#pragma once
+
+#include &amp;lt;driver/config/prelude.hpp&amp;gt;
+
+#include &amp;lt;vector&amp;gt;
+
+#include &amp;lt;driver/blah.hpp&amp;gt;
+
+namespace mongocxx {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
+
+// Declarations
+
+// Inline Implementations
+
+MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace mongocxx
+
+#include &amp;lt;driver/config/postlude.hpp&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;class-declarations&#34;&gt;Class Declarations&lt;/h3&gt;
+
+&lt;p&gt;Guidelines:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Blank line at beginning and end of class declaration&lt;/li&gt;
+&lt;li&gt;Public section up top / private at bottom&lt;/li&gt;
+&lt;li&gt;Lifecycle methods first (see rules above)&lt;/li&gt;
+&lt;li&gt;Private Member Ordering
+
+&lt;ul&gt;
+&lt;li&gt;Friendships&lt;/li&gt;
+&lt;li&gt;Private Constructors&lt;/li&gt;
+&lt;li&gt;Private Methods&lt;/li&gt;
+&lt;li&gt;Private Variables&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class foo {
+
+    public:
+      foo();
+
+      foo(foo&amp;amp;&amp;amp; other) noexcept;
+      foo&amp;amp; operator=(foo&amp;amp;&amp;amp; other) noexcept;
+
+      ~foo();
+
+    private:
+      friend baz;
+
+      class MONGOCXX_PRIVATE impl;
+      std::unique_ptr&amp;lt;impl&amp;gt; _impl;
+
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;inlines&#34;&gt;Inlines&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Define outside of class declaration&lt;/li&gt;
+&lt;li&gt;Specify inline keyword in declaration and definition (for clarity)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;relational-operators&#34;&gt;Relational Operators&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Prefer to use free functions&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Releasing the legacy driver</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/legacy-release-guide/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/legacy-release-guide/</guid>
+      <description>
+
+&lt;p&gt;If you&amp;rsquo;re reading this, chances are you&amp;rsquo;re about to issue a release for a
+new version of the legacy C++ driver.  Congratulations!&lt;/p&gt;
+
+&lt;h2 id=&#34;before-getting-started&#34;&gt;Before Getting Started&lt;/h2&gt;
+
+&lt;p&gt;To perform the release process, you will need the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;git&lt;/code&gt;, &lt;code&gt;python&lt;/code&gt;, &lt;code&gt;doxygen&lt;/code&gt; installed on your local machine.&lt;/li&gt;
+&lt;li&gt;Push access to the &lt;code&gt;mongodb/mongo-cxx-driver&lt;/code&gt; repository on GitHub.&lt;/li&gt;
+&lt;li&gt;Push access to the &lt;code&gt;10gen/apidocs&lt;/code&gt; repository on GitHub.&lt;/li&gt;
+&lt;li&gt;Administrative access on the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX&#34;&gt;C++ Driver JIRA project&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This guide assumes that you have a local clone of the &lt;code&gt;mongo-cxx-driver&lt;/code&gt;
+and &lt;code&gt;apidocs&lt;/code&gt; repositories, and that your GitHub remote is configured with
+remote name &lt;code&gt;origin&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In addition, this guide assumes that you are about to issue a production
+release named &lt;code&gt;legacy-x.y.z&lt;/code&gt;.  The process for issuing a release candidate
+is nearly identical, with two exceptions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The new version string will be in format &lt;code&gt;legacy-x.y.z-rcw&lt;/code&gt;, instead of
+&lt;code&gt;legacy-x.y.z&lt;/code&gt;.  In this guide, replace all instances of the latter with
+the former.&lt;/li&gt;
+&lt;li&gt;The copy for the release notes and announcement will need to indicate
+that the release is not for production use.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Lastly, this guide also assumes that the following release is is named
+&lt;code&gt;legacy-x.y.(z+1)&lt;/code&gt;.  The name of the following release may differ from
+this.&lt;/p&gt;
+
+&lt;h2 id=&#34;confirm-all-outstanding-issues-resolved-in-jira&#34;&gt;Confirm All Outstanding Issues Resolved in JIRA&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;On the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel&#34;&gt;project roadmap
+panel&lt;/a&gt;
+in JIRA, ensure that all tickets marked for &lt;code&gt;legacy-x.y.z&lt;/code&gt; are resolved.
+Assuming there are 10 issues in the release, you should see the text &amp;ldquo;10
+of 10 issues have been resolved&amp;rdquo; on this page.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;create-and-push-the-bump-commit&#34;&gt;Create and Push the BUMP Commit&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Change directories to your local clone of &lt;code&gt;mongo-cxx-driver&lt;/code&gt;, and use
+&lt;code&gt;git status&lt;/code&gt; to confirm a clean working tree, and that you have the
+&lt;code&gt;legacy&lt;/code&gt; branch checked out.&lt;/li&gt;
+&lt;li&gt;Make edits to the following files.  You will be changing the development
+version string (&lt;code&gt;legacy-x.y.z-rcw-pre&lt;/code&gt;) in these files to the release
+version string (&lt;code&gt;legacy-x.y.z&lt;/code&gt;):
+    * &lt;code&gt;SConstruct&lt;/code&gt;: update value of &lt;code&gt;mongoclientVersion&lt;/code&gt;.
+    * &lt;code&gt;etc/doxygen/config&lt;/code&gt;: update value of &lt;code&gt;PROJECT_NUMBER&lt;/code&gt;.&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Commit and push the bump commit, as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git add SConstruct etc/doxygen/config
+git commit -m &amp;quot;BUMP legacy-x.y.z&amp;quot;
+git push origin legacy
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Pushing the BUMP commit to the origin will kick off builds in Evergreen,
+Travis CI and AppVeyor. Wait for all three builds to finish and pass.&lt;/p&gt;
+
+&lt;h2 id=&#34;tag-the-release&#34;&gt;Tag the Release&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;From the same directory, create and push a tag for the commit that will serve as the release.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git tag legacy-x.y.z
+git push origin legacy-x.y.z
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;generate-and-publish-documentation&#34;&gt;Generate and Publish Documentation&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Warning: this section is obsolete&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;In your local clone of the &lt;code&gt;apidocs&lt;/code&gt; repo, build and publish the release
+documentation as follows.  The &lt;code&gt;build.py&lt;/code&gt; script will modify existing
+files, and also create files in a new directory named &lt;code&gt;cxx/legacy-x.y.z&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;python build.py cxx
+git add cxx/
+git add -u
+git commit -m &amp;quot;Documentation for C++ driver release legacy-x.y.z&amp;quot;
+git push origin master
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Within an hour, a regularly scheduled task will automatically deploy the
+new documentation at the &lt;a href=&#34;http://api.mongodb.com/cxx/&#34;&gt;legacy C++ driver API documentation
+page&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;bulk-transition-all-tickets-targeted-for-release-to-closed&#34;&gt;Bulk Transition All Tickets Targeted for Release to &amp;ldquo;Closed&amp;rdquo;&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Re-visit the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel&#34;&gt;project roadmap
+panel&lt;/a&gt;
+in JIRA.&lt;/li&gt;
+&lt;li&gt;Under the legacy-x.y.z version, click the link &amp;ldquo;X issues&amp;rdquo; on the left-hand side.  This will bring you to the search page that displays all tickets targeted for the version about to be released.&lt;/li&gt;
+&lt;li&gt;Select &amp;ldquo;Tools =&amp;gt; Bulk Change&amp;rdquo; from the upper-right hand corner of the search page.&lt;/li&gt;
+&lt;li&gt;In the &amp;ldquo;Choose Issues&amp;rdquo; dialog, select all issues.&lt;/li&gt;
+&lt;li&gt;In the &amp;ldquo;Choose Operation&amp;rdquo; dialog, select &amp;ldquo;Transition Issues&amp;rdquo;.&lt;/li&gt;
+&lt;li&gt;In the &amp;ldquo;Edit Fields&amp;rdquo; dialog, click &amp;ldquo;Next&amp;rdquo; without modifying any fields.&lt;/li&gt;
+&lt;li&gt;Confirm the change.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;release-the-version-in-jira&#34;&gt;Release the Version in JIRA&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Visit the &lt;a href=&#34;https://jira.mongodb.org/plugins/servlet/project-config/CXX/versions&#34;&gt;versions administrative
+panel&lt;/a&gt;
+in JIRA.&lt;/li&gt;
+&lt;li&gt;Hover over the version to be released.  A cog icon will appear on the right-hand side of the page.&lt;/li&gt;
+&lt;li&gt;Click the cog icon, and select &amp;ldquo;Release&amp;rdquo; from the drop-down.  A pop-up will appear, and it should contain no warnings about unresolved issues.&lt;/li&gt;
+&lt;li&gt;Set &amp;ldquo;Release date&amp;rdquo; to the current date.&lt;/li&gt;
+&lt;li&gt;Confirm the release.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;create-the-next-version-in-jira&#34;&gt;Create the Next Version in JIRA&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;From the &lt;a href=&#34;https://jira.mongodb.org/plugins/servlet/project-config/CXX/versions&#34;&gt;versions administrative
+panel&lt;/a&gt;,
+determine whether or not the version corresponding to the next release
+already exists.&lt;/li&gt;
+&lt;li&gt;If the version already exists, continue to the next step.&lt;/li&gt;
+&lt;li&gt;If the version does not exist, enter the new version&amp;rsquo;s Name and Description at the prompt towards the top of the page.  Select the current date as the next version&amp;rsquo;s start date, and pick a release date.  Typically, the legacy C++ driver is released only a small handful of times each year, so the release date for the new version should likely be at least a couple of months out (barring extraordinary circumstances).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;draft-publish-github-release-notes&#34;&gt;Draft &amp;amp; Publish GitHub Release Notes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Visit the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases&#34;&gt;GitHub releases
+page&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Click &amp;ldquo;Draft a New Release&amp;rdquo;.&lt;/li&gt;
+&lt;li&gt;Select &lt;code&gt;legacy-x.y.z&lt;/code&gt; as the tag.  The page should indicate that this tag is recognized.&lt;/li&gt;
+&lt;li&gt;Enter &amp;ldquo;MongoDB Legacy C++ Driver x.y.z&amp;rdquo; as the release title.&lt;/li&gt;
+&lt;li&gt;Draft the release notes.  Typically, release notes have two sections:
+
+&lt;ul&gt;
+&lt;li&gt;In the first section, describe in a few sentences what this release is all about.  Mention whether this is a major release or a minor patch release, and call out any notable tickets resolved and anything else that users may want to know about.&lt;/li&gt;
+&lt;li&gt;In the second section, paste in a formatted list of tickets that were resolved in this release.  You can copy-paste this formatted list straight from JIRA&amp;rsquo;s automatically-generated release notes, which you can find by clicking on the &amp;ldquo;Release Notes&amp;rdquo; link under the release version at the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel&#34;&gt;project roadmap panel&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Select &amp;ldquo;Publish release&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;send-announcement-email&#34;&gt;Send Announcement Email&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Draft an email to mongodb-announce@googlegroups.com announcing the
+release, with subject &amp;ldquo;Legacy C++ driver legacy-x.y.z released.&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Use the below text as a template, and feel free to include any extra information that seems appropriate for an announcement email:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;The C++ Driver Team is excited to announce the availability of the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases/tag/legacy-x.y.z&#34;&gt;legacy-x.y.z&lt;/a&gt; release of the Legacy C++ Driver.&lt;/p&gt;
+
+&lt;p&gt;This is a stable release.  Please review the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases/tag/legacy-x.y.z&#34;&gt;release notes&lt;/a&gt; for details on what has changed in this release. The legacy-x.y.z release is a recommended upgrade for all users of the LAST_RELEASE and older drivers.&lt;/p&gt;
+
+&lt;p&gt;You can obtain the driver source from GitHub, either under the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/tree/legacy-x.y.z&#34;&gt;legacy-x.y.z&lt;/a&gt; tag or from the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases&#34;&gt;releases page&lt;/a&gt;. The legacy C++ driver is a source level distribution and does not offer a stable ABI across releases.&lt;/p&gt;
+
+&lt;p&gt;Please feel free to post any questions to the &lt;a href=&#34;https://groups.google.com/forum/#!forum/mongodb-user&#34;&gt;mongodb-user&lt;/a&gt; mailing list. Bug reports should be filed against the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX&#34;&gt;CXX&lt;/a&gt; project in the MongoDB JIRA.&lt;/p&gt;
+
+&lt;p&gt;Thank you,&lt;/p&gt;
+
+&lt;p&gt;The C++ Driver Team&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;create-and-push-the-next-version-commit&#34;&gt;Create and Push the Next Version Commit&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Change directories back to your clone of &lt;code&gt;mongo-cxx-driver&lt;/code&gt;.  Edit the following files:
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;SConstruct&lt;/code&gt;: change value of &lt;code&gt;mongoclientVersion&lt;/code&gt; from &lt;code&gt;legacy-x.y.z&lt;/code&gt; to &lt;code&gt;legacy-x.y.(z+1)-rc0-pre&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;etc/doxygen/config&lt;/code&gt;: change value of &lt;code&gt;PROJECT_NUMBER&lt;/code&gt; from &lt;code&gt;legacy-x.y.z&lt;/code&gt; to &lt;code&gt;legacy-x.y.(z+1)-rc0-pre&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;README.md&lt;/code&gt;: change both the link text and link address to refer to &lt;code&gt;legacy-x.y.z&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Commit and push the next version commit, as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git add SConstruct etc/doxygen/config README.md
+git commit -m &amp;quot;post legacy-x.y.z&amp;quot;
+git push origin legacy
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;relax&#34;&gt;Relax&lt;/h2&gt;
+
+&lt;p&gt;You&amp;rsquo;re done!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Releasing the mongocxx driver</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/mongocxx-release-guide/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/mongocxx-release-guide/</guid>
+      <description>
+
+&lt;h2 id=&#34;releasing-the-mongocxx-driver&#34;&gt;Releasing the mongocxx driver&lt;/h2&gt;
+
+&lt;h2 id=&#34;confirm-version-status-in-jira&#34;&gt;Confirm Version Status in Jira&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Ensure that all tickets under the version to be released are in
+&amp;lsquo;Resolved&amp;rsquo; status on the C++ Driver &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:versions-panel&#34;&gt;project
+page&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;create-a-bump-commit&#34;&gt;Create a BUMP commit&lt;/h2&gt;
+
+&lt;p&gt;This commit essentially removes the -pre (e.g. 1.0.0-rc79-pre -&amp;gt;
+1.0.0-rc79) and creates what is considered the final commit in the release.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If you haven&amp;rsquo;t already, clone the mongodb-cxx-driver repository&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone git@github.com:mongodb/mongo-cxx-driver.git 
+cd mongo-cxx-driver
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Otherwise, pull the latest code down from the origin with &lt;code&gt;git pull&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Update the following files (changing version numbers to remove the &amp;ldquo;-pre&amp;rdquo;
+for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/CMakeLists.txt#L30&#34;&gt;&lt;code&gt;src/mongocxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/CMakeLists.txt#L22&#34;&gt;&lt;code&gt;src/bsoncxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Commit with message &amp;ldquo;BUMP rx.y.z[-rcq]&amp;ldquo;, e.g.:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;git commit -am &amp;quot;BUMP r3.0.1&amp;quot;
+git push origin master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Pushing the BUMP commit to the origin will kick off builds in Evergreen,
+Travis CI and AppVeyor (which handles Windows builds). Wait for all three
+builds to finish and pass, re-running any timeout/spot failures.&lt;/p&gt;
+
+&lt;h2 id=&#34;tag-the-release&#34;&gt;Tag the Release&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Create an tag for the commit that will serve as the release (or release candidate), eg:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;git tag r3.0.1
+git push origin r3.0.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;draft-publish-github-release-notes&#34;&gt;Draft &amp;amp; Publish GitHub Release Notes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Hit up the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases&#34;&gt;GitHub releases
+page&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Copy the previous announcement and modify with release-specific information
+
+&lt;ul&gt;
+&lt;li&gt;The &amp;ldquo;Known Issues&amp;rdquo;, &amp;ldquo;Bug&amp;rdquo;, and &amp;ldquo;Improvement&amp;rdquo; sections are generated by JIRA. Click on the specific version of the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:versions-panel&#34;&gt;C++ Driver Project&lt;/a&gt; and on the version Summary page there is a link for &amp;ldquo;Release Notes&amp;rdquo; where you can copy the HTML and paste it into the GitHub Release Notes markdown.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Draft and publish a new release against the tag you just pushed&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;release-the-version-in-jira&#34;&gt;Release the Version in Jira&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Go
+&lt;a href=&#34;https://jira.mongodb.org/plugins/servlet/project-config/CXX/versions&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Close all the the Resolved tickets via a &lt;a href=&#34;https://confluence.atlassian.com/jira/modifying-multiple-bulk-issues-185729606.html&#34;&gt;bulk transition&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Click the cog next to the version you are about to release and select &amp;ldquo;Release&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Follow the dialogs/wizards and whatnot, setting the release date to the current date&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;generate-and-publish-documentation&#34;&gt;Generate and Publish Documentation&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Clone the &lt;a href=&#34;https://github.com/mongodb/apidocs&#34;&gt;apidocs repo&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone git@github.com:10gen/apidocs.git
+cd apidocs
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;On the command line, run:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;python2 build.py cxx11
+git commit -am &amp;quot;bump for cxx driver release&amp;quot;
+git push origin master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;create-the-next-version-commit&#34;&gt;Create the Next Version commit&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Update the following files (changing version numbers to bump to the next version number and add the &amp;ldquo;-pre&amp;rdquo; suffix for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/CMakeLists.txt#L30&#34;&gt;&lt;code&gt;src/mongocxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/CMakeLists.txt#L22&#34;&gt;&lt;code&gt;src/bsoncxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Commit with message &amp;ldquo;post rx.y.z[-rcq]&amp;ldquo;, e.g.:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;git commit -am &amp;quot;post r3.0.1&amp;quot;
+git push origin master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;email-google-groups&#34;&gt;Email Google Groups&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Send it to mongodb-announce@googlegroups.com AND mongodb-user@googlegroups.com&lt;/li&gt;
+&lt;li&gt;Template:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;The MongoDB C++ Driver Team is very excited to announce the availability of version X.Y.Z of the new MongoDB C++11 driver.
+We are not promising API or ABI stability until the 3.1.0 release so that we can meaningfully incorporate user feedback after the 3.0.0 GA. We will make every effort to minimize API changes.  The new driver is incompatible with the prior legacy, 26compat, and server C++ drivers.&lt;/p&gt;
+
+&lt;p&gt;You can obtain the source for the new driver from GitHub, either under the rX.Y.Z tag or from the releases page. General documentation for the new driver is available on the github wiki. Doxygen API documentation is also available.&lt;/p&gt;
+
+&lt;p&gt;Please feel free to post any questions to the mongodb-user mailing list. Bug reports should be filed against the CXX project in the MongoDB JIRA. If you are interested in participating in the development of the C++11 driver, questions should be sent to the mongodb-dev mailing list. Github pull requests are welcome, and should be issued against the master branch of the repository, where the C++11 driver is developed.
+We look forward to hearing from you. Happy C++11’ing!&lt;/p&gt;
+
+&lt;p&gt;Thank You,
+The MongoDB C++ Driver Team&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Testing the legacy driver</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-legacy/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-legacy/</guid>
+      <description>
+
+&lt;h2 id=&#34;testing-the-legacy-c-driver&#34;&gt;Testing the Legacy C++ Driver&lt;/h2&gt;
+
+&lt;p&gt;If you contribute to the C++ driver, you&amp;rsquo;ll need to test your changes.  The
+driver comes with a number of tests to ensure its functionality and
+performance.  There are a few different kinds of tests within the driver&amp;rsquo;s
+codebase.&lt;/p&gt;
+
+&lt;p&gt;Note: if you are running OS X Mavericks or above, you may need to include the &lt;code&gt;--osx-version-min=10.9&lt;/code&gt; flag to the commands below.&lt;/p&gt;
+
+&lt;p&gt;Note: The 26compat branch differs from the instructions below as follows:
+* MongoOrchestration is not required.
+* The target to run unit tests is &amp;lsquo;smokeCppUnittests&amp;rsquo; (or &amp;lsquo;test&amp;rsquo;, or &amp;lsquo;smoke&amp;rsquo;), not &amp;lsquo;unit&amp;rsquo;
+* The build-[test] aliases are not supported (the run- aliases are supported, however)
+* There are no integration tests
+* The target to run the examples is &amp;lsquo;smokeClient&amp;rsquo;, not &amp;lsquo;examples&amp;rsquo;
+* You must have a mongod running on port 27999 to run the examples.
+* The &amp;lsquo;test&amp;rsquo; target does not run all tests, only the unit tests (see above).&lt;/p&gt;
+
+&lt;h3 id=&#34;unit-tests&#34;&gt;Unit tests&lt;/h3&gt;
+
+&lt;p&gt;Unit tests do not require a running mongod or mongo-orchestration. These
+tests are designed to test individual components of the driver in
+isolation, and the test files are found in the same directory as the things
+they test (so, &lt;code&gt;bson_validate.cpp&lt;/code&gt; and &lt;code&gt;bson_validate_test.cpp&lt;/code&gt; are
+both found in &lt;code&gt;src/mongo/bson&lt;/code&gt;).  The different unit tests are listed
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/mongo/SConscript#L49&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Build all the unit tests with scons:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-unit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build and run all the unit tests:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons unit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build an individual unit test:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-full/test/name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build and run an individual unit test:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons run-full/test/name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;integration-tests&#34;&gt;Integration Tests&lt;/h3&gt;
+
+&lt;p&gt;Integration tests must run against &lt;a href=&#34;https://github.com/10gen/mongo-orchestration&#34;&gt;Mongo
+Orchestration&lt;/a&gt;.  Install and
+setup Mongo Orchestration as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; git clone https://github.com/10gen/mongo-orchestration.git
+&amp;gt; cd mongo-orchestration
+&amp;gt; python setup.py install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To run Mongo Orchestration, you&amp;rsquo;ll need to alter the provided config file
+to fit your system.  Open &lt;code&gt;mongo-orchestration.config&lt;/code&gt; and replace the
+paths there with paths to your MongoDB binaries.  It is only required to
+have one MongoDB version defined as well as a last_updated field with a
+date, so feel free to keep one of the &lt;code&gt;&amp;quot;releases&amp;quot;&lt;/code&gt; and delete the other
+entries. Mongo orchestration is &lt;strong&gt;very&lt;/strong&gt; strict about JSON so no trailing
+commas please.&lt;/p&gt;
+
+&lt;p&gt;Start up Mongo Orchestration and leave it running in the background while
+you run the integration test suite:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; mongo-orchestration -f mongo-orchestration.config -e &amp;lt;release_name&amp;gt; start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The integration tests are located in &lt;code&gt;src/mongo/integration&lt;/code&gt;.
+Additionally, some tests require the parameter &lt;code&gt;enableTestCommands&lt;/code&gt; to
+be set. There is a list of the different integration tests
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/mongo/SConscript#L114&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;To build all the integration tests:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-integration
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build and run all the integration tests:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons integration
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Individual integration tests can be run in the same way as individual unit tests, shown above.&lt;/p&gt;
+
+&lt;p&gt;Note: to run the SASL integration tests, you should build with the &lt;code&gt;--use-sasl-client&lt;/code&gt; flag.&lt;/p&gt;
+
+&lt;h3 id=&#34;client-example-programs&#34;&gt;Client Example Programs&lt;/h3&gt;
+
+&lt;p&gt;The driver includes a number of example programs of its use.  The examples
+are listed
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/SConscript.client#L189&#34;&gt;here&lt;/a&gt;,
+and the source files are found in &lt;code&gt;src/mongo/client/examples&lt;/code&gt;.  The
+examples expect a mongod to be running locally on port 27999.&lt;/p&gt;
+
+&lt;p&gt;Build the examples with scons:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-examples
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build and run the examples:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons examples
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;run-all-tests&#34;&gt;Run all tests&lt;/h3&gt;
+
+&lt;p&gt;Run the unit tests, integration tests, and examples with scons:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons test
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Testing the mongocxx driver</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-mongocxx/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-mongocxx/</guid>
+      <description>
+
+&lt;h2 id=&#34;testing-the-mongocxx-driver&#34;&gt;Testing the mongocxx driver&lt;/h2&gt;
+
+&lt;p&gt;Tests for the C++11 driver use
+&lt;a href=&#34;https://github.com/philsquared/Catch&#34;&gt;Catch&lt;/a&gt;, a testing framework for C++.&lt;/p&gt;
+
+&lt;p&gt;Each class in the driver has a corresponding file in &lt;code&gt;src/mongocxx/test&lt;/code&gt;.
+Because the new driver wraps
+&lt;a href=&#34;https://github.com/mongodb/mongo-c-driver&#34;&gt;libmongoc&lt;/a&gt;, we prefer to mock
+and test the behavior of individual classes rather than test end-to-end
+behavior of operations against a running mongod.  In other words, these are
+unit tests rather than integration tests.&lt;/p&gt;
+
+&lt;p&gt;We also have integration tests for this driver in &lt;code&gt;test/collection.cpp&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;running-the-existing-tests&#34;&gt;Running the existing tests&lt;/h2&gt;
+
+&lt;p&gt;Build the tests with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;make
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will generate test binaries.  You can either run all the tests with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;make test
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;or, for more detailed output with Catch, run the generated binary:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./build/src/mongocxx/test/test_driver
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;writing-new-tests&#34;&gt;Writing new tests&lt;/h2&gt;
+
+&lt;p&gt;If you&amp;rsquo;d like to add a feature to the driver, please write a test for it as
+well.  Additions to existing classes should have new sections added to the
+existing test cases:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;TEST_CASE(&amp;quot;existing_class&amp;quot;, &amp;quot;[existing_class]&amp;quot;) {
+   SECTION(&amp;quot;Can do some new thing&amp;quot;) {
+      ...
+      REQUIRE(new_thing_works);
+   }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you are adding a new class, please add a new test file for it to the
+&lt;code&gt;test&lt;/code&gt; directory.  The test file&amp;rsquo;s name should match the new class&amp;rsquo;s file&amp;rsquo;s
+name.  You will need to add your file as a source for the driver&amp;rsquo;s test
+target, in &lt;code&gt;src/mongocxx/test/CMakeLists.txt&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;set(mongocxx_test_sources
+   ...
+   some_new_class.cpp
+   ...
+)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

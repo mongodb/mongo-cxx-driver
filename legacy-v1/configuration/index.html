@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="keyword" content="">
+
+    <link rel="shortcut icon" href="https://mongodb.github.io/mongo-cxx-driver/img/favicon.png">
+
+    <title>Configuring the legacy driver</title>
+
+    <link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/css/mongodb-docs.css" type="text/css" />
+<link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/css/overrides.css" type="text/css" />
+<link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/highlight/styles/idea.css" />
+
+  </head>
+
+  <body>
+  
+  <section id="container" class="">
+      
+      <header id="header-db" class="row" role="navigation">
+  <div class="header-content">
+    <div class="toggle-nav pull-left">
+        <i class="fa fa-bars"></i>
+        <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"></div>
+    </div>
+    
+    <div class="logo pull-left">
+      <a href="https://mongodb.github.io/mongo-cxx-driver">
+        <img src="https://mongodb.github.io/mongo-cxx-driver/img/logo-mongodb-header.png",
+             alt="MongoDB C++ driver" />
+      </a>
+    </div>
+    
+    <div>
+<div class="nav-items pull-right">
+  <a href="https://university.mongodb.com" data-toggle="tooltip" data-placement="bottom" title="Free Online Classes">MongoDB University</a>
+  <a href="http://www.mongodb.org/downloads" data-toggle="tooltip" data-placement="bottom" title="Download MongoDB">Downloads</a>
+  <a href="http://www.mongodb.org/get-involved" data-toggle="tooltip" data-placement="bottom" title="Get involved with MongoDB">Community</a>
+  <a href="http://docs.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Documentation">Docs</a>
+  <a href="http://blog.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Blog">Blog</a>
+  <div id="search">
+<form method="get" action="//www.google.com/search" target="_blank">
+    <input type="text" name="searchQuery" size="20" value="" autocomplete="off" placeholder="Search docs">
+    <input type="hidden" name="site" value="https://mongodb.github.io/mongo-cxx-driver">
+    <input type="hidden" name="q" value="">
+    <label for="searchQuery"><i class="fa fa-search fa-1"></i></label>
+</form>
+</div>
+
+</div>
+</div>
+
+  </div>
+</header>
+
+      
+
+      
+<aside id="sidebar" class="sidebar">
+    <div class="ssidebar nav-collapse">
+      <div class="ssidebarwrapper">
+        <h3>
+          <a class="index-link" href="https://mongodb.github.io/mongo-cxx-driver">MongoDB C&#43;&#43; Driver Manual</a>
+        </h3>
+
+        
+        <ul class="sidebar-menu">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+
+          
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    
+    
+    
+      
+    
+  
+  
+
+
+        
+      
+    
+      
+      
+        
+      
+    
+      
+      
+    
+      
+      
+    
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+  
+
+
+          
+
+          
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1 ">
+  <a href="/mongo-cxx-driver/mongocxx-v3/" class="">
+      <i class='fa fa-arrow-right'></i>
+      <span>mongocxx (v3)</span>
+      <span class="menu-arrow fa fa-angle-right"></span>
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/">
+        
+        Overview
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/installation/">
+        
+        Installing the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/tutorial/">
+        
+        Tutorial for mongocxx
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/thread-safety/">
+        
+        Thread safety
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/working-with-bson/">
+        
+        Working with BSON
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/api-abi-versioning/">
+        
+        API and ABI versioning
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+<li class="toctree-l1  current">
+  <a href="/mongo-cxx-driver/legacy-v1/" class="">
+      <i class='fa fa-arrow-right'></i>
+      <span>legacy (v1)</span>
+      <span class="menu-arrow fa fa-angle-down"></span>
+  </a>
+    <ul  class="current">
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/">
+        
+        Overview
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/installation/">
+        
+        Installing the legacy driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/configuration/">
+        
+        Configuring the legacy driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/tutorial/">
+        
+        Legacy driver tutorial
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/working-with-bson/">
+        
+        Working with BSON
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/breaking-changes/">
+        
+        Breaking changes from 26compat
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="https://mongodb.github.io/mongo-cxx-driver/api/current">
+        <i class='fa fa-file-text-o'></i>
+        API Documentation
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/mongo-cxx-driver/getting-help/">
+        <i class='fa fa-question'></i>
+        Getting help
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/mongo-cxx-driver/reporting-bugs/">
+        <i class='fa fa-bug'></i>
+        Reporting Bugs
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="https://github.com/mongodb/mongo-cxx-driver/">
+        <i class='fa fa-github'></i>
+        Source Code
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1 ">
+  <a href="/mongo-cxx-driver/contributing/" class="">
+      <i class='fa fa-pencil'></i>
+      <span>Contributing</span>
+      <span class="menu-arrow fa fa-angle-right"></span>
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/">
+        
+        Contribution Guidelines
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/testing-mongocxx/">
+        
+        Testing the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/mongocxx-release-guide/">
+        
+        Releasing the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/testing-legacy/">
+        
+        Testing the legacy driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/legacy-release-guide/">
+        
+        Releasing the legacy driver
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+        </ul>
+        
+    </div>
+  </div>
+  
+</aside>
+
+
+
+      
+      <section id="main-content" class="content">
+          <section class="main-column pull-left">
+            <div class="document">
+              <div class="documentwrapper">
+                <div class="bodywrapper">
+                  <div class="body">
+
+
+   
+<a class="edit-link" href="https://github.com/mongodb/mongo-cxx-driver/blob/master/content/legacy-v1/configuration.md" target="_blank" title="Edit legacy-v1/configuration.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
+
+
+
+
+
+
+
+
+
+
+<div class="bc">
+<ul>
+  
+  
+  
+  
+  
+  <li><a href="/mongo-cxx-driver/legacy-v1/">legacy (v1)</a> <i class="fa fa-angle-right"></i></li>
+  <li>Configuring the legacy driver</li>
+</ul>
+</div>
+
+
+
+
+<p>In the legacy-0.9 development cycle, the mechanism by which the driver is
+configured was refactored. Note that these changes <em>do not apply to
+releases on the 26compat branch, or releases pre-dating legacy-0.9.0</em>.This
+page describes the new configuration mechanism and documents the various
+configuration options that may be used.</p>
+
+<h1 id="configuring-the-driver">Configuring the Driver</h1>
+
+<h2 id="the-mongo-client-initialize-function">The <code>mongo::client::initialize</code> function</h2>
+
+<p>The <code>mongo::client::initialize</code> function, found in file
+<a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h"><code>src/mongo/client/init.h</code></a>
+configures the driver and starts background threads critical to the
+functioning of the driver. The function has a single parameter receiving a
+<code>mongo::client::Options</code> object. If no value is provided, a default
+constructed <code>mongo::client::Options</code> object is used.</p>
+
+<p>To configure the driver to use non-default parameters, construct a new
+<code>mongo::client::Options</code> object and use its setter methods to configure the
+parameters of interest, and pass this object to
+<code>mongo::client::initialize</code>.</p>
+
+<p>This method must be called exactly once by your application. Invoke
+<code>mongo::client::initialize</code> as early as possible in your application
+startup phase, before any additional threads have been created. You must
+examine the return value of <code>mongo::client::initialize</code> and deal with any
+returned error appropriately.</p>
+
+<h2 id="the-mongo-client-terminate-function">The <code>mongo::client::terminate</code> function</h2>
+
+<p>When it is time to stop using the client driver, you must terminate its
+background tasks and release resources by invoking the
+<code>mongo::client::terminate</code> function, found in file
+<a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h"><code>src/mongo/client/init.h</code></a>.</p>
+
+<p>The <code>mongo::client::terminate</code> function honors a grace period, specified in
+milliseconds, and defaulting to &lsquo;forever&rsquo;. The shutdown routine will give
+background tasks the selected grace period to terminate cleanly. If they do
+not do so, <code>mongo::client::terminate</code> will return an error status. If the
+returned error status is <code>ExceededTimeLimit</code> it is safe to retry the call
+to <code>mongo::client::terminate</code>. Otherwise, a non-OK return status from
+<code>mongo::client::terminate</code> represents a permanent failure to shut down the
+driver cleanly. Please see the documentation for <code>mongo::client::terminate</code>
+for additional details. The value of the shutdown grace period may be
+changed from its default at driver initialization time by using an
+appropriately configured <code>mongo::client::Options</code> object.</p>
+
+<p>On some platforms, you may be able to arrange for
+<code>mongo::client::terminate</code> to be called via an atexit handler. To request
+this behavior, see the <code>setCallShutdownAtExit</code> option, documented below.</p>
+
+<p>Alternatively, you may use the <code>mongo::client::GlobalInstance</code> class, found
+in
+<a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h"><code>src/mongo/client/init.h</code></a>,
+to instantiate an RAII type that will automatically initialize and
+terminate the driver.</p>
+
+<h2 id="the-mongo-client-options-class">The <code>mongo::client::Options</code> class</h2>
+
+<h3 id="where-to-find-it">Where to find it</h3>
+
+<p>Configuration of the driver is managed through a new class, added in the
+<code>legacy-0.9.0</code> release, called <code>Options</code>. This class is hosted in the
+<code>mongo::client</code> namespace, and is defined in the header
+<a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/options.h"><code>mongo/client/options.h</code></a>.</p>
+
+<h3 id="passing-options-to-mongo-client-initialize">Passing options to <code>mongo::client::initialize</code></h3>
+
+<p>By default, calling <code>mongo::client::initialize()</code> with no parameters is
+equivalent to calling <code>mongo::client::initialize(mongo::client::Options())</code>
+passing a default constructed <code>mongo::client::Options</code> object.</p>
+
+<p>Because the <code>mongo::client::Options</code> class has setters returning a
+<code>mongo::client::Options&amp;</code> you can chain together options to easily
+configure them at the call site:</p>
+
+<pre><code class="language-cpp">using mongo::client::initialize;
+using mongo::client::Options;
+
+// Configure the mongo C++ client driver, enabling SSL and setting
+// the SSL Certificate Authority file to &quot;mycafile&quot;.
+Status status = initialize(
+    Options().setSSLMode(Options::kSSLRequired).setSSLCAFile(&quot;mycafile&quot;)
+);
+
+if (!status.isOK()) {
+    // deal with errors
+} else {
+    // Driver is up in SSL mode.
+}
+</code></pre>
+
+<h3 id="available-options">Available Options</h3>
+
+<h4 id="options-callshutdownatexit-and-options-setcallshutdownatexit"><code>Options::callShutdownAtExit</code> and <code>Options::setCallShutdownAtExit</code></h4>
+
+<ul>
+<li>Type: <code>bool</code></li>
+<li>Default: <code>false</code></li>
+<li>Semantics: If this option is &lsquo;true&rsquo;, then a successful call to
+<code>mongo::client::initialize</code> will schedule a call to
+<code>mongo::client::terminate</code> with <code>atexit</code>. The call to
+<code>mongo::client::terminate</code> will be made with the value of
+<code>mongo::client::Options::current::autoShutdownGracePeriodMillis</code></li>
+</ul>
+
+<h4 id="options-autoshutdowngraceperiodmillis-and-options-setautoshutdowngraceperiodmillis"><code>Options::autoShutdownGracePeriodMillis</code> and <code>Options::setAutoShutdownGracePeriodMillis</code></h4>
+
+<ul>
+<li>Type: <code>int</code>, interpreted as milliseconds</li>
+<li>Default: 0 (wait forever)</li>
+<li>Semantics: If <code>mongo::client::initialize</code> scheduled a call to
+<code>mongo::client::terminate</code> with <code>atexit</code>, then that call to
+<code>mongo::client::terminate</code> will use the value
+<code>Options::autoShutdownGracePeriodMillis</code> when calling
+<code>mongo::client::terminate</code>.</li>
+</ul>
+
+<h4 id="options-setdefaultlocalthresholdmillis-and-options-defaultlocalthresholdmillis"><code>Options::setDefaultLocalThresholdMillis</code> and <code>Options::defaultLocalThresholdMillis</code></h4>
+
+<ul>
+<li>Type: <code>int</code>, interpreted as milliseconds</li>
+<li>Default: 15</li>
+<li>Semantics: TODO</li>
+</ul>
+
+<h4 id="options-setsslmode-and-options-sslmode"><code>Options::setSSLMode</code> and <code>Options::SSLMode</code></h4>
+
+<ul>
+<li>Type: [<code>Options::kSSLEnabled</code>|<code>Options:kSSLDisabled</code>]</li>
+<li>Default: <code>Options::kSSLDisabled</code></li>
+<li>Semantics: If set to <code>Options:kSSLEnabled</code> the driver will require SSL
+connections to all mongo servers. If disabled, it will not request SSL.
+Note that if the servers you are connected to are in SSL required mode,
+you may not be able to connect. This value is an enumeration so that we
+may later extend it with a <code>kSSLPreferred</code> option, but that is not
+currently implemented.</li>
+</ul>
+
+<h4 id="options-setfipsmode-and-options-fipsmode"><code>Options::setFIPSMode</code> and <code>Options::FIPSMode</code></h4>
+
+<ul>
+<li>Type: <code>bool</code></li>
+<li>Default: <code>false</code></li>
+<li>Semantics: If true, will attempt to use FIPS-140 validated crypto if
+supported by the crypto library currently in use.</li>
+</ul>
+
+<h4 id="options-setsslcafile-and-options-sslcafile"><code>Options::setSSLCAFile</code> and <code>Options::SSLCAFile</code></h4>
+
+<ul>
+<li>Type: <code>std::string</code></li>
+<li>Default: <code>&quot;&quot;</code></li>
+<li>Semantics: This flag only has an effect if <code>Options::current::SSLMode</code> is
+<code>Options::kSSLRequired</code>. If set, it specifies a file containing the
+certificate authority file to use. See the <a href="http://docs.mongodb.org/manual/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key">MongoDB SSL
+documentation</a>
+for additional information on the CA file.</li>
+</ul>
+
+<h4 id="options-setsslpemkeyfile-and-options-sslpemkeyfile"><code>Options::setSSLPemKeyFile</code> and <code>Options::SSLPEMKeyFile</code></h4>
+
+<ul>
+<li>Type: <code>std::string</code></li>
+<li>Default: <code>&quot;&quot;</code></li>
+<li>Semantics: This flag only has an effect if <code>Options::current::SSLMode</code> is
+<code>Options::kSSLRequired</code>. If set, it specifies a file containing the SSL
+PEM key file to use. See the <a href="http://docs.mongodb.org/manual/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key">MongoDB SSL
+documentation</a>
+for additional information on the PEM key file.</li>
+</ul>
+
+<h4 id="options-setsslpemkeypassword-and-options-sslpemkeypassword"><code>Options::setSSLPemKeyPassword</code> and <code>Options::SSLPEMKeyPassword</code></h4>
+
+<ul>
+<li>Type: <code>std::string</code></li>
+<li>Default: <code>&quot;&quot;</code></li>
+<li>Semantics: This flag only has an effect if <code>Options::current::SSLMode</code> is
+<code>Options::kSSLRequired</code>, and is only meaningful if a PEM key file has
+been set with <code>Options::setSSLPEMKeyFile</code>. If set, it specifies the
+password to be used to decrypt the SSL PEM key file specified with
+<code>Options::setSSLPEMKeyFile</code>. See the <a href="http://docs.mongodb.org/manual/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key">MongoDB SSL
+documentation</a>
+for additional information on the PEM key file password.</li>
+</ul>
+
+<h4 id="options-setsslcrlfile-and-options-sslcrlfile"><code>Options::setSSLCRLFile</code> and <code>Options::SSLCRLFile</code></h4>
+
+<ul>
+<li>Type: <code>std::string</code></li>
+<li>Default: <code>&quot;&quot;</code></li>
+<li>Semantics: This flag only has an effect if <code>Options::current::SSLMode</code> is
+<code>Options::kSSLRequired</code>. If set, it specifies the file to use as the SSL
+certificate revocation list. See the <a href="http://docs.mongodb.org/manual/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key">MongoDB SSL
+documentation</a>
+for additional information on the certificate revocation list file.</li>
+</ul>
+
+<h4 id="options-setssallowinvalidcertificates-and-options-sslallowinvalidcertificates"><code>Options::setSSAllowInvalidCertificates</code> and <code>Options::SSLAllowInvalidCertificates</code></h4>
+
+<ul>
+<li>Type: <code>bool</code></li>
+<li>Default: <code>false</code></li>
+<li>Semantics: This flag only has an effect if <code>Options::current::SSLMode</code> is
+<code>Options::kSSLRequired</code>. Setting this option to <code>true</code> suppresses
+validation of certificates. In other words, invalid certificates will be
+accepted.</li>
+</ul>
+
+<h4 id="options-setlogappenderfactory-and-options-logappenderfactory"><code>Options::setLogAppenderFactory</code> and <code>Options::logAppenderFactory</code></h4>
+
+<ul>
+<li>Type: <code>Options::LogAppenderFactory</code></li>
+<li>Default: none</li>
+<li>Semantics: Use <code>setLogAppenderFactory</code> if you want to configure a custom
+appender to listen to the driver&rsquo;s internally logged messages. Setting
+such a factory will enable logging and relay logged messages to whatever
+appender you provide a factory method for. An example of how to do this
+can be found
+<a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/loggingTest.cpp">here</a>.
+You may only configure one appender through startup options.</li>
+</ul>
+
+<h4 id="options-setminloggedseverity-and-options-minloggedseverity"><code>Options::setMinLoggedSeverity</code> and `Options::minLoggedSeverity&rsquo;</h4>
+
+<ul>
+<li>Type: <code>logger::LogSeverity</code></li>
+<li>Default: <code>LogSeverity::Log()</code></li>
+<li>Semantics: When providing a custom log appender (see above) use this to
+set the minimum severity level of logged messages. Messages that are of
+less importance than the level you provide will not be logged.</li>
+</ul>
+
+<h4 id="options-setvalidateobjects-and-options-validateobjects"><code>Options::setValidateObjects</code> and <code>Options::validateObjects</code></h4>
+
+<ul>
+<li>Type: <code>bool</code></li>
+<li>Default: <code>false</code></li>
+<li>Semantics: If enabled, the client library will run BSON validation on
+data returned from the server to ensure that the returned data is valid
+BSON. Note that there is a performance cost to doing so.</li>
+</ul>
+
+<h2 id="caveats">Caveats</h2>
+
+<ul>
+<li><p>You must call <code>mongo::client::initialize</code> before using the driver. You
+may only call <code>mongo::client::initialize</code> once.</p></li>
+
+<li><p>Configuration of the driver is global. You may access a <code>const</code> reference
+to the current global configuration state of the driver by calling
+<code>mongo::client::Options::current</code>. If called before entering <code>main</code>, the
+values returned by accessors of the <code>Options</code> object returned by
+<code>Options::current</code> are indeterminate. If called after <code>main</code> but before
+calling <code>mongo::client::initialize</code>, a default constructed instance of
+the <code>Options</code> class will be returned. If called after
+<code>mongo::client::initialize</code>, the value returned by <code>Options::current</code>
+will reflect any customized <code>Options</code> instance passed to
+<code>mongo::client::initialize</code>.</p></li>
+
+<li><p>Configuration of the driver is not synchronized, and you may only invoke
+<code>mongo::client::initialize</code> once. We strongly recommend that you call
+<code>mongo::client::initialize</code> as early as possible in <code>main</code> or your
+application startup code, preferably before creating any additional
+threads.</p></li>
+</ul>
+
+
+
+
+
+
+<div id="btnv">
+  
+  <div class="pull-left">
+  <a class="navigation prev" href="/mongo-cxx-driver/legacy-v1/installation/">
+      <i class="fa fa-long-arrow-left"> </i> Installing the legacy driver
+  </a>
+  </div>
+  
+  
+  <div class="pull-right">
+  <a class="navigation next" href="/mongo-cxx-driver/legacy-v1/tutorial/">
+    Legacy driver tutorial <i class="fa fa-long-arrow-right"> </i>
+  </a>
+  
+</div>
+</div>
+
+
+</div>
+<div class="right-column">
+<div class="wrapper">
+  
+  <div class="toc">
+    <span class="toc-header">On this page</span>
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#configuring-the-driver">Configuring the Driver</a>
+<ul>
+<li><a href="#the-mongo-client-initialize-function">The <code>mongo::client::initialize</code> function</a></li>
+<li><a href="#the-mongo-client-terminate-function">The <code>mongo::client::terminate</code> function</a></li>
+<li><a href="#the-mongo-client-options-class">The <code>mongo::client::Options</code> class</a>
+<ul>
+<li><a href="#where-to-find-it">Where to find it</a></li>
+<li><a href="#passing-options-to-mongo-client-initialize">Passing options to <code>mongo::client::initialize</code></a></li>
+<li><a href="#available-options">Available Options</a>
+<ul>
+<li><a href="#options-callshutdownatexit-and-options-setcallshutdownatexit"><code>Options::callShutdownAtExit</code> and <code>Options::setCallShutdownAtExit</code></a></li>
+<li><a href="#options-autoshutdowngraceperiodmillis-and-options-setautoshutdowngraceperiodmillis"><code>Options::autoShutdownGracePeriodMillis</code> and <code>Options::setAutoShutdownGracePeriodMillis</code></a></li>
+<li><a href="#options-setdefaultlocalthresholdmillis-and-options-defaultlocalthresholdmillis"><code>Options::setDefaultLocalThresholdMillis</code> and <code>Options::defaultLocalThresholdMillis</code></a></li>
+<li><a href="#options-setsslmode-and-options-sslmode"><code>Options::setSSLMode</code> and <code>Options::SSLMode</code></a></li>
+<li><a href="#options-setfipsmode-and-options-fipsmode"><code>Options::setFIPSMode</code> and <code>Options::FIPSMode</code></a></li>
+<li><a href="#options-setsslcafile-and-options-sslcafile"><code>Options::setSSLCAFile</code> and <code>Options::SSLCAFile</code></a></li>
+<li><a href="#options-setsslpemkeyfile-and-options-sslpemkeyfile"><code>Options::setSSLPemKeyFile</code> and <code>Options::SSLPEMKeyFile</code></a></li>
+<li><a href="#options-setsslpemkeypassword-and-options-sslpemkeypassword"><code>Options::setSSLPemKeyPassword</code> and <code>Options::SSLPEMKeyPassword</code></a></li>
+<li><a href="#options-setsslcrlfile-and-options-sslcrlfile"><code>Options::setSSLCRLFile</code> and <code>Options::SSLCRLFile</code></a></li>
+<li><a href="#options-setssallowinvalidcertificates-and-options-sslallowinvalidcertificates"><code>Options::setSSAllowInvalidCertificates</code> and <code>Options::SSLAllowInvalidCertificates</code></a></li>
+<li><a href="#options-setlogappenderfactory-and-options-logappenderfactory"><code>Options::setLogAppenderFactory</code> and <code>Options::logAppenderFactory</code></a></li>
+<li><a href="#options-setminloggedseverity-and-options-minloggedseverity"><code>Options::setMinLoggedSeverity</code> and `Options::minLoggedSeverity&rsquo;</a></li>
+<li><a href="#options-setvalidateobjects-and-options-validateobjects"><code>Options::setValidateObjects</code> and <code>Options::validateObjects</code></a></li>
+</ul></li>
+</ul></li>
+<li><a href="#caveats">Caveats</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+  
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+
+</section>
+
+
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+   URL_ROOT:    "https://mongodb.github.io/mongo-cxx-driver",
+   VERSION:     "",
+   COLLAPSE_INDEX: false,
+   FILE_SUFFIX: '.html',
+   HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/js/jquery.js"></script>
+<script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/lib/bootstrap.js"></script>
+<script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/js/navbar.js"></script>
+<script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/lib/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/js/scripts.js"></script>
+
+
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K75Z5Q"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
+{'gtm.start': new Date().getTime(),event:'gtm.js'}
+);var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K75Z5Q');</script>
+
+
+<script type="text/javascript">
+var _elqQ = _elqQ || [];
+_elqQ.push(['elqSetSiteId', '413370795']);
+_elqQ.push(['elqTrackPageView']);
+(function () {
+function async_load()
+{ var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//img03.en25.com/i/elqCfg.min.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); }
+if (window.addEventListener) window.addEventListener('DOMContentLoaded', async_load, false);
+else if (window.attachEvent) window.attachEvent('onload', async_load);
+})();
+</script>
+
+</body>
+</html>
+
