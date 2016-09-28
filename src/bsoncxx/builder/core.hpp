@@ -200,6 +200,11 @@ class BSONCXX_API core {
     void append(const types::b_int64& value);
 
     ///
+    /// Append a BSON Decimal128.
+    ///
+    void append(const types::b_decimal128& value);
+
+    ///
     /// Append a BSON min-key.
     ///
     void append(const types::b_minkey& value);
@@ -261,6 +266,11 @@ class BSONCXX_API core {
     /// Append an oid as a BSON ObjectId.
     ///
     void append(const oid& value);
+
+    ///
+    /// Append a decimal128 object as a BSON Decimal128.
+    ///
+    void append(decimal128 value);
 
     ///
     /// Append the given document view.

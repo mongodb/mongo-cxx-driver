@@ -343,6 +343,15 @@ void core::append(const types::b_int64& value) {
     bson_append_int64(_impl->back(), key.data(), key.length(), value.value);
 }
 
+void core::append(const types::b_decimal128& value) {
+    stdx::string_view key = _impl->next_key();
+    bson_decimal128_t d128;
+    d128.high = value.value.high();
+    d128.low = value.value.low();
+
+    bson_append_decimal128(_impl->back(), key.data(), key.length(), &d128);
+}
+
 void core::append(const types::b_minkey&) {
     stdx::string_view key = _impl->next_key();
 
@@ -373,6 +382,10 @@ void core::append(std::int32_t value) {
 
 void core::append(const oid& value) {
     append(types::b_oid{value});
+}
+
+void core::append(decimal128 value) {
+    append(types::b_decimal128{value});
 }
 
 void core::append(const document::view view) {

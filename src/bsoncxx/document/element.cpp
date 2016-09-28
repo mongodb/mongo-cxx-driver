@@ -147,6 +147,15 @@ types::b_oid element::get_oid() const {
 
     return types::b_oid{v};
 }
+types::b_decimal128 element::get_decimal128() const {
+    BSONCXX_TYPE_CHECK(k_decimal128);
+    CITER;
+
+    bson_decimal128_t d128;
+    bson_iter_decimal128(&iter, &d128);
+
+    return types::b_decimal128{decimal128{d128.high, d128.low}};
+}
 
 types::b_bool element::get_bool() const {
     BSONCXX_TYPE_CHECK(k_bool);

@@ -1,0 +1,54 @@
+// Copyright 2016 MongoDB Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <bsoncxx/decimal128.hpp>
+#include <bsoncxx/exception/error_code.hpp>
+#include <bsoncxx/exception/exception.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
+
+#include <bson.h>
+
+#include <bsoncxx/config/private/prelude.hh>
+
+namespace bsoncxx {
+BSONCXX_INLINE_NAMESPACE_BEGIN
+
+decimal128::decimal128(stdx::string_view str) {
+    bson_decimal128_t d128;
+    if (!bson_decimal128_from_string(str.to_string().c_str(), &d128)) {
+        throw bsoncxx::exception{error_code::k_invalid_decimal128};
+    }
+    _high = d128.high;
+    _low = d128.low;
+}
+
+std::string decimal128::to_string() const {
+    bson_decimal128_t d128;
+    d128.high = _high;
+    d128.low = _low;
+    char str[BSON_DECIMAL128_STRING];
+    bson_decimal128_to_string(&d128, str);
+    return {str};
+}
+
+bool operator==(const decimal128& lhs, const decimal128& rhs) {
+    return lhs._high == rhs._high && lhs._low == rhs._low;
+}
+
+bool operator!=(const decimal128& lhs, const decimal128& rhs) {
+    return !(lhs == rhs);
+}
+
+BSONCXX_INLINE_NAMESPACE_END
+}  // namespace bsoncxx

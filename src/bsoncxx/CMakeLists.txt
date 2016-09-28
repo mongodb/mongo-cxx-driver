@@ -74,6 +74,7 @@ set(bsoncxx_sources
     array/value.cpp
     array/view.cpp
     builder/core.cpp
+    decimal128.cpp
     document/element.cpp
     document/value.cpp
     document/view.cpp

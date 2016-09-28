@@ -47,6 +47,7 @@ struct b_codewscope;
 struct b_int32;
 struct b_timestamp;
 struct b_int64;
+struct b_decimal128;
 struct b_minkey;
 struct b_maxkey;
 class value;
@@ -320,6 +321,15 @@ class BSONCXX_API element {
     /// @return the element's value.
     ///
     types::b_int64 get_int64() const;
+
+    ///
+    /// Getter for elements of the b_decimal128 type.
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_decimal128.
+    ///
+    /// @return the element's value.
+    ///
+    types::b_decimal128 get_decimal128() const;
 
     ///
     /// Getter for elements of the b_minkey type.
