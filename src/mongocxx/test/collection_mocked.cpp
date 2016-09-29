@@ -378,36 +378,59 @@ TEST_CASE("Collection", "[collection]") {
         auto collection_find_called = false;
         auto find_doc = builder::stream::document{} << "a" << 1 << builder::stream::finalize;
         auto doc = find_doc.view();
-        mongocxx::stdx::optional<bsoncxx::document::view> expected_sort{};
-        mongocxx::stdx::optional<bsoncxx::types::value> expected_hint{};
+        mongocxx::stdx::optional<bool> expected_allow_partial_results;
         mongocxx::stdx::optional<bsoncxx::stdx::string_view> expected_comment{};
-        int expected_flags = 0;
+        mongocxx::stdx::optional<mongocxx::cursor::type> expected_cursor_type{};
+        mongocxx::stdx::optional<bsoncxx::types::value> expected_hint{};
+        mongocxx::stdx::optional<bool> expected_no_cursor_timeout;
+        mongocxx::stdx::optional<bsoncxx::document::view> expected_sort{};
 
-        collection_find->interpose([&](mongoc_collection_t*, mongoc_query_flags_t flags,
-                                       uint32_t skip, uint32_t limit, uint32_t batch_size,
-                                       const bson_t* query, const bson_t* fields,
-                                       const mongoc_read_prefs_t* read_prefs) {
+        collection_find_with_opts->interpose([&](mongoc_collection_t*, const bson_t* filter,
+                                                 const bson_t* opts,
+                                                 const mongoc_read_prefs_t* read_prefs) {
             collection_find_called = true;
 
-            REQUIRE(skip == skip);
-            REQUIRE(limit == limit);
-            REQUIRE(batch_size == batch_size);
+            bsoncxx::document::view filter_view{bson_get_data(filter), filter->len};
+            bsoncxx::document::view opts_view{bson_get_data(opts), opts->len};
 
-            bsoncxx::document::view query_view{bson_get_data(query), query->len};
+            REQUIRE(filter_view == doc);
 
-            REQUIRE(query_view["$query"].get_document() == doc);
-
-            if (expected_sort) {
-                REQUIRE(query_view["$orderby"].get_document() == *expected_sort);
-            }
-            if (expected_hint) {
-                REQUIRE(query_view["$hint"].get_utf8() == expected_hint->get_utf8());
+            if (expected_allow_partial_results) {
+                REQUIRE(opts_view["allowPartialResults"].get_bool().value ==
+                        *expected_allow_partial_results);
             }
             if (expected_comment) {
-                REQUIRE(query_view["$comment"].get_utf8().value == *expected_comment);
+                REQUIRE(opts_view["comment"].get_utf8().value == *expected_comment);
             }
-            REQUIRE(flags == expected_flags);
-            REQUIRE(fields == NULL);
+            if (expected_cursor_type) {
+                bsoncxx::document::element tailable = opts_view["tailable"];
+                bsoncxx::document::element awaitData = opts_view["awaitData"];
+                switch (*expected_cursor_type) {
+                    case mongocxx::cursor::type::k_non_tailable:
+                        REQUIRE(!tailable);
+                        REQUIRE(!awaitData);
+                        break;
+                    case mongocxx::cursor::type::k_tailable:
+                        REQUIRE(tailable.get_bool().value);
+                        REQUIRE(!awaitData);
+                        break;
+                    case mongocxx::cursor::type::k_tailable_await:
+                        REQUIRE(tailable.get_bool().value);
+                        REQUIRE(awaitData.get_bool().value);
+                        break;
+                }
+            }
+            if (expected_hint) {
+                REQUIRE(opts_view["hint"].get_utf8() == expected_hint->get_utf8());
+            }
+            if (expected_no_cursor_timeout) {
+                REQUIRE(opts_view["noCursorTimeout"].get_bool().value ==
+                        *expected_no_cursor_timeout);
+            }
+            if (expected_sort) {
+                REQUIRE(opts_view["sort"].get_document() == *expected_sort);
+            }
+
             REQUIRE(read_prefs == NULL);
 
             mongoc_cursor_t* cursor = NULL;
@@ -418,22 +441,11 @@ TEST_CASE("Collection", "[collection]") {
             REQUIRE_NOTHROW(mongo_coll.find(doc));
         }
 
-        SECTION("Succeeds with hint") {
+        SECTION("Succeeds with allow_partial_results") {
             options::find opts;
-            hint index_hint("a_1");
-            opts.hint(index_hint);
+            expected_allow_partial_results = true;
+            opts.allow_partial_results(*expected_allow_partial_results);
 
-            // set our expected_hint so we check against that
-            expected_hint = index_hint.to_value();
-
-            REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
-        }
-
-        SECTION("find with sort succeeds") {
-            options::find opts{};
-            auto sort_doc = builder::stream::document{} << "x" << -1 << builder::stream::finalize;
-            expected_sort = sort_doc.view();
-            opts.sort(*expected_sort);
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
         }
 
@@ -447,25 +459,34 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Succeeds with cursor type") {
             options::find opts;
-            opts.cursor_type(mongocxx::cursor::type::k_tailable);
-            expected_flags = ::MONGOC_QUERY_TAILABLE_CURSOR;
+            expected_cursor_type = mongocxx::cursor::type::k_tailable;
+            opts.cursor_type(*expected_cursor_type);
+
+            REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
+        }
+
+        SECTION("Succeeds with hint") {
+            options::find opts;
+            hint index_hint("a_1");
+            expected_hint = index_hint.to_value();
+            opts.hint(index_hint);
 
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
         }
 
         SECTION("Succeeds with no_cursor_timeout") {
             options::find opts;
-            opts.no_cursor_timeout(true);
-            expected_flags = ::MONGOC_QUERY_NO_CURSOR_TIMEOUT;
+            expected_no_cursor_timeout = true;
+            opts.no_cursor_timeout(*expected_no_cursor_timeout);
 
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
         }
 
-        SECTION("Succeeds with allow_partial_results") {
-            options::find opts;
-            opts.allow_partial_results(true);
-            expected_flags = ::MONGOC_QUERY_PARTIAL;
-
+        SECTION("Succeeds with sort") {
+            options::find opts{};
+            auto sort_doc = builder::stream::document{} << "x" << -1 << builder::stream::finalize;
+            expected_sort = sort_doc.view();
+            opts.sort(*expected_sort);
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
         }
 
