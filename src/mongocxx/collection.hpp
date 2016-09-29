@@ -542,7 +542,9 @@ class MONGOCXX_API collection {
     ///
     /// @return The result of attempting to replace a document.
     ///
-    /// @throws mongocxx::bulk_write_exception if the operation fails.
+    /// @throws
+    ///   mongocxx::logic_error if the replacement is invalid, or mongocxx::bulk_write_exception if
+    ///   the operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
@@ -562,7 +564,9 @@ class MONGOCXX_API collection {
     ///
     /// @return The result of attempting to update multiple documents.
     ///
-    /// @throws mongocxx::bulk_write_exception if the update operation fails.
+    /// @throws
+    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
+    ///   operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
@@ -582,7 +586,9 @@ class MONGOCXX_API collection {
     ///
     /// @return The result of attempting to update a document.
     ///
-    /// @throws mongocxx::bulk_write_exception if the update operation fails.
+    /// @throws
+    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
+    ///   operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///

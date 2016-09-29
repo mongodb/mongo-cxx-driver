@@ -551,13 +551,31 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Update One", "[collection::update_one]") {
             bool upsert_option = false;
 
-            bulk_operation_update_one->interpose([&](mongoc_bulk_operation_t*, const bson_t* query,
-                                                     const bson_t* update, bool upsert) {
-                bulk_operation_op_called = true;
-                REQUIRE(upsert == upsert_option);
-                REQUIRE(bson_get_data(query) == filter_doc.view().data());
-                REQUIRE(bson_get_data(update) == modification_doc.view().data());
-            });
+            bulk_operation_update_one_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, const bson_t* query, const bson_t* update,
+                    const bson_t* options, bson_error_t* error) {
+                    bulk_operation_op_called = true;
+                    REQUIRE(bson_get_data(query) == filter_doc.view().data());
+                    REQUIRE(bson_get_data(update) == modification_doc.view().data());
+
+                    bsoncxx::document::view options_view{bson_get_data(options), options->len};
+
+                    bsoncxx::document::element upsert = options_view["upsert"];
+                    if (upsert_option) {
+                        REQUIRE(upsert);
+                        REQUIRE(upsert.type() == bsoncxx::type::k_bool);
+                        REQUIRE(upsert.get_bool().value);
+                    } else {
+                        // Allow either no "upsert" option, or an "upsert" option set to false.
+                        if (upsert) {
+                            REQUIRE(upsert);
+                            REQUIRE(upsert.type() == bsoncxx::type::k_bool);
+                            REQUIRE(!upsert.get_bool().value);
+                        }
+                    }
+
+                    return true;
+                });
 
             options::update options;
 
@@ -591,13 +609,36 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Update Many", "[collection::update_many]") {
             bool upsert_option;
 
-            bulk_operation_update->interpose([&](mongoc_bulk_operation_t*, const bson_t* query,
-                                                 const bson_t* update, bool upsert) {
-                bulk_operation_op_called = true;
-                REQUIRE(upsert == upsert_option);
-                REQUIRE(bson_get_data(query) == filter_doc.view().data());
-                REQUIRE(bson_get_data(update) == modification_doc.view().data());
-            });
+            bulk_operation_update_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, const bson_t* query, const bson_t* update,
+                    const bson_t* options, bson_error_t* error) {
+                    bulk_operation_op_called = true;
+                    REQUIRE(bson_get_data(query) == filter_doc.view().data());
+                    REQUIRE(bson_get_data(update) == modification_doc.view().data());
+
+                    bsoncxx::document::view options_view{bson_get_data(options), options->len};
+
+                    bsoncxx::document::element multi = options_view["multi"];
+                    REQUIRE(multi);
+                    REQUIRE(multi.type() == bsoncxx::type::k_bool);
+                    REQUIRE(multi.get_bool().value);
+
+                    bsoncxx::document::element upsert = options_view["upsert"];
+                    if (upsert_option) {
+                        REQUIRE(upsert);
+                        REQUIRE(upsert.type() == bsoncxx::type::k_bool);
+                        REQUIRE(upsert.get_bool().value);
+                    } else {
+                        // Allow either no "upsert" option, or an "upsert" option set to false.
+                        if (upsert) {
+                            REQUIRE(upsert);
+                            REQUIRE(upsert.type() == bsoncxx::type::k_bool);
+                            REQUIRE(!upsert.get_bool().value);
+                        }
+                    }
+
+                    return true;
+                });
 
             options::update options;
 
@@ -621,13 +662,31 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Replace One", "[collection::replace_one]") {
             bool upsert_option;
 
-            bulk_operation_replace_one->interpose([&](mongoc_bulk_operation_t*, const bson_t* query,
-                                                      const bson_t* update, bool upsert) {
-                bulk_operation_op_called = true;
-                REQUIRE(upsert == upsert_option);
-                REQUIRE(bson_get_data(query) == filter_doc.view().data());
-                REQUIRE(bson_get_data(update) == modification_doc.view().data());
-            });
+            bulk_operation_replace_one_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, const bson_t* query, const bson_t* update,
+                    const bson_t* options, bson_error_t* error) {
+                    bulk_operation_op_called = true;
+                    REQUIRE(bson_get_data(query) == filter_doc.view().data());
+                    REQUIRE(bson_get_data(update) == modification_doc.view().data());
+
+                    bsoncxx::document::view options_view{bson_get_data(options), options->len};
+
+                    bsoncxx::document::element upsert = options_view["upsert"];
+                    if (upsert_option) {
+                        REQUIRE(upsert);
+                        REQUIRE(upsert.type() == bsoncxx::type::k_bool);
+                        REQUIRE(upsert.get_bool().value);
+                    } else {
+                        // Allow either no "upsert" option, or an "upsert" option set to false.
+                        if (upsert) {
+                            REQUIRE(upsert);
+                            REQUIRE(upsert.type() == bsoncxx::type::k_bool);
+                            REQUIRE(!upsert.get_bool().value);
+                        }
+                    }
+
+                    return true;
+                });
 
             options::update options;
 
@@ -649,18 +708,31 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Delete One", "[collection::delete_one]") {
-            bulk_operation_remove_one->interpose([&](mongoc_bulk_operation_t*, const bson_t* doc) {
-                bulk_operation_op_called = true;
-                REQUIRE(bson_get_data(doc) == filter_doc.view().data());
-            });
+            bulk_operation_remove_one_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, const bson_t* doc, const bson_t* options,
+                    bson_error_t* error) {
+                    bulk_operation_op_called = true;
+                    REQUIRE(bson_get_data(doc) == filter_doc.view().data());
+                    return true;
+                });
 
             mongo_coll.delete_one(filter_doc.view());
         }
 
         SECTION("Delete Many", "[collection::delete_many]") {
-            bulk_operation_remove->interpose([&](mongoc_bulk_operation_t*, const bson_t* doc) {
+            bulk_operation_remove_with_opts->interpose([&](mongoc_bulk_operation_t*,
+                                                           const bson_t* doc, const bson_t* options,
+                                                           bson_error_t* error) {
                 bulk_operation_op_called = true;
                 REQUIRE(bson_get_data(doc) == filter_doc.view().data());
+
+                bsoncxx::document::view options_view{bson_get_data(options), options->len};
+
+                bsoncxx::document::element limit = options_view["limit"];
+                REQUIRE(limit);
+                REQUIRE(limit.type() == bsoncxx::type::k_int32);
+                REQUIRE(limit.get_int32().value == 0);
+                return true;
             });
 
             mongo_coll.delete_many(filter_doc.view());
