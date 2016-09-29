@@ -186,11 +186,16 @@
 #define MOCK_BULK                                                                                \
     auto bulk_operation_new = libmongoc::bulk_operation_new.create_instance();                   \
     auto bulk_operation_insert = libmongoc::bulk_operation_insert.create_instance();             \
-    auto bulk_operation_remove_one = libmongoc::bulk_operation_remove_one.create_instance();     \
-    auto bulk_operation_update_one = libmongoc::bulk_operation_update_one.create_instance();     \
-    auto bulk_operation_replace_one = libmongoc::bulk_operation_replace_one.create_instance();   \
-    auto bulk_operation_update = libmongoc::bulk_operation_update.create_instance();             \
-    auto bulk_operation_remove = libmongoc::bulk_operation_remove.create_instance();             \
+    auto bulk_operation_remove_one_with_opts =                                                   \
+        libmongoc::bulk_operation_remove_one_with_opts.create_instance();                        \
+    auto bulk_operation_update_one_with_opts =                                                   \
+        libmongoc::bulk_operation_update_one_with_opts.create_instance();                        \
+    auto bulk_operation_replace_one_with_opts =                                                  \
+        libmongoc::bulk_operation_replace_one_with_opts.create_instance();                       \
+    auto bulk_operation_update_with_opts =                                                       \
+        libmongoc::bulk_operation_update_with_opts.create_instance();                            \
+    auto bulk_operation_remove_with_opts =                                                       \
+        libmongoc::bulk_operation_remove_with_opts.create_instance();                            \
     auto bulk_operation_set_bypass_document_validation =                                         \
         libmongoc::bulk_operation_set_bypass_document_validation.create_instance();              \
     auto bulk_operation_set_client = libmongoc::bulk_operation_set_client.create_instance();     \

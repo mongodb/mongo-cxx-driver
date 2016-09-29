@@ -14,7 +14,10 @@
 
 #include <mongocxx/bulk_write.hpp>
 
+#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/bulk_write.hh>
 #include <mongocxx/private/libmongoc.hh>
@@ -55,38 +58,83 @@ void bulk_write::append(const model::write& operation) {
         case write_type::k_update_one: {
             scoped_bson_t filter(operation.get_update_one().filter());
             scoped_bson_t update(operation.get_update_one().update());
-            bool upsert = operation.get_update_one().upsert().value_or(false);
 
-            libmongoc::bulk_operation_update_one(_impl->operation_t, filter.bson(), update.bson(),
-                                                 upsert);
+            bsoncxx::builder::stream::document options_builder;
+            if (operation.get_update_one().upsert()) {
+                options_builder << "upsert" << *operation.get_update_one().upsert();
+            }
+            scoped_bson_t options(options_builder << bsoncxx::builder::stream::finalize);
+
+            bson_error_t error;
+            auto result = libmongoc::bulk_operation_update_one_with_opts(
+                _impl->operation_t, filter.bson(), update.bson(), options.bson(), &error);
+            if (!result) {
+                throw_exception<logic_error>(error);
+            }
             break;
         }
         case write_type::k_update_many: {
             scoped_bson_t filter(operation.get_update_many().filter());
             scoped_bson_t update(operation.get_update_many().update());
-            bool upsert = operation.get_update_many().upsert().value_or(false);
 
-            libmongoc::bulk_operation_update(_impl->operation_t, filter.bson(), update.bson(),
-                                             upsert);
+            bsoncxx::builder::stream::document options_builder;
+            options_builder << "multi" << true;
+            if (operation.get_update_many().upsert()) {
+                options_builder << "upsert" << *operation.get_update_many().upsert();
+            }
+            scoped_bson_t options(options_builder << bsoncxx::builder::stream::finalize);
+
+            bson_error_t error;
+            auto result = libmongoc::bulk_operation_update_with_opts(
+                _impl->operation_t, filter.bson(), update.bson(), options.bson(), &error);
+            if (!result) {
+                throw_exception<logic_error>(error);
+            }
             break;
         }
         case write_type::k_delete_one: {
             scoped_bson_t filter(operation.get_delete_one().filter());
-            libmongoc::bulk_operation_remove_one(_impl->operation_t, filter.bson());
+            scoped_bson_t options(bsoncxx::document::view{});
+
+            bson_error_t error;
+            auto result = libmongoc::bulk_operation_remove_one_with_opts(
+                _impl->operation_t, filter.bson(), options.bson(), &error);
+            if (!result) {
+                throw_exception<logic_error>(error);
+            }
             break;
         }
         case write_type::k_delete_many: {
             scoped_bson_t filter(operation.get_delete_many().filter());
-            libmongoc::bulk_operation_remove(_impl->operation_t, filter.bson());
+
+            bsoncxx::builder::stream::document options_builder;
+            options_builder << "limit" << 0;
+            scoped_bson_t options(options_builder << bsoncxx::builder::stream::finalize);
+
+            bson_error_t error;
+            auto result = libmongoc::bulk_operation_remove_with_opts(
+                _impl->operation_t, filter.bson(), options.bson(), &error);
+            if (!result) {
+                throw_exception<logic_error>(error);
+            }
             break;
         }
         case write_type::k_replace_one: {
             scoped_bson_t filter(operation.get_replace_one().filter());
             scoped_bson_t replace(operation.get_replace_one().replacement());
-            bool upsert = operation.get_replace_one().upsert().value_or(false);
 
-            libmongoc::bulk_operation_replace_one(_impl->operation_t, filter.bson(), replace.bson(),
-                                                  upsert);
+            bsoncxx::builder::stream::document options_builder;
+            if (operation.get_replace_one().upsert()) {
+                options_builder << "upsert" << *operation.get_replace_one().upsert();
+            }
+            scoped_bson_t options(options_builder << bsoncxx::builder::stream::finalize);
+
+            bson_error_t error;
+            auto result = libmongoc::bulk_operation_replace_one_with_opts(
+                _impl->operation_t, filter.bson(), replace.bson(), options.bson(), &error);
+            if (!result) {
+                throw_exception<logic_error>(error);
+            }
             break;
         }
     }
