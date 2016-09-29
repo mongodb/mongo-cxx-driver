@@ -1,17 +1,4 @@
-# MongoDB C++ Driver [![Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=master)](https://travis-ci.org/mongodb/mongo-cxx-driver)[![Windows Build Status](https://ci.appveyor.com/api/projects/status/w95xuowdjpr0img1/branch/master?svg=true)](https://ci.appveyor.com/project/markbenvenuto/mongo-cxx-driver)
-
-Welcome to the MongoDB C++ Driver!
-
-This branch contains `mongocxx`, the new C++11 driver, and is the recommended
-branch for all users.
-
-## Resources
-
-* [MongoDB C++ Driver Quickstart](https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/tutorial/)
-* [MongoDB C++ Driver Manual](https://mongodb.github.io/mongo-cxx-driver/)
-* [MongoDB C++ Driver API Documentation](https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3)
-* [MongoDB C++ Driver Contribution guidelines](https://mongodb.github.io/mongo-cxx-driver/contributing/)
-* [MongoDB Database Manual](http://docs.mongodb.com/manual/)
+# MongoDB C++ Driver
 
 ## Driver status by family and version
 
@@ -25,6 +12,22 @@ Currently, no drivers guarantee API or ABI stability.
 | legacy   (all) | Stable      | Critical fixes only | Former stable C++ driver release                             |
 | 26compat (all) | Deprecated  | Critical fixes only | Drop in replacement for users of existing 2.6 era C++ driver |
 
+## Documentation versions available
+
+| mongocxx                             | legacy
+| -------------------------------------| --------------------------------
+| [mongocxx-3.0.2](../mongocxx-3.0.2/) | [legacy-1.1.2](../legacy-1.1.2/)
+| [mongocxx-3.0.1](../mongocxx-3.0.1/) | [legacy-1.1.1](../legacy-1.1.1/)
+| [mongocxx-3.0.0](../mongocxx-3.0.0/) | [legacy-1.1.0](../legacy-1.1.0/)
+|                                      | [legacy-1.0.7](../legacy-1.0.7/)
+|                                      | [legacy-1.0.6](../legacy-1.0.6/)
+|                                      | [legacy-1.0.5](../legacy-1.0.5/)
+|                                      | [legacy-1.0.4](../legacy-1.0.4/)
+|                                      | [legacy-1.0.3](../legacy-1.0.3/)
+|                                      | [legacy-1.0.2](../legacy-1.0.2/)
+|                                      | [legacy-1.0.1](../legacy-1.0.1/)
+|                                      | [legacy-1.0.0](../legacy-1.0.0/)
+
 ## MongoDB compatibility
 
 The following compatibility table specifies the driver version(s)
@@ -37,6 +40,13 @@ is recommended for all new development.
 | legacy   1.1.x | ✓           | ✓           | ✓           | ✓           |
 | legacy   1.0.x | ✓           | ✓           | ✓           |             |
 | 26compat (all) |             | ✓           |             |             |
+
+## Resources
+
+* [MongoDB C++ Driver Quickstart](https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/tutorial/)
+* [MongoDB C++ Driver Manual](https://mongodb.github.io/mongo-cxx-driver/)
+* [MongoDB C++ Driver Source Code on GitHub](https://github.com/mongodb/mongo-cxx-driver)
+* [MongoDB Database Manual](http://docs.mongodb.com/manual/)
 
 ## Bugs and issues
 

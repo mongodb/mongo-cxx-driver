@@ -79,8 +79,45 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_custom_target(docs
-    doxygen ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
+add_custom_target(hugo_dir
+    COMMAND ${CMAKE_COMMAND} -E make_directory hugo
+)
+
+add_custom_target(hugo
+    DEPENDS hugo_dir
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
+    COMMAND hugo
+    VERBATIM
+)
+
+add_custom_target(hugo-deploy
+    DEPENDS hugo
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMAND etc/deploy-to-ghpages.pl --hugo git@github.com:mongodb/mongo-cxx-driver
+    VERBATIM
+)
+
+add_custom_target(docs_dir_current
+    COMMAND ${CMAKE_COMMAND} -E make_directory docs/api/current
+)
+
+add_custom_target(doxygen-current
+    DEPENDS docs_dir_current
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMAND doxygen ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
+    VERBATIM
+)
+
+add_custom_target(doxygen-all
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMAND etc/generate-all-apidocs.pl
+    VERBATIM
+)
+
+add_custom_target(doxygen-deploy
+    DEPENDS doxygen-all
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMAND etc/deploy-to-ghpages.pl --doxygen git@github.com:mongodb/mongo-cxx-driver
     VERBATIM
 )
 
@@ -92,6 +129,10 @@ add_custom_target(format
 add_custom_target(format-lint
     python ${CMAKE_SOURCE_DIR}/etc/clang_format.py lint
     VERBATIM
+)
+
+add_custom_target(docs
+    DEPENDS hugo doxygen-current
 )
 
 set(THIRD_PARTY_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party)

@@ -382,7 +382,6 @@ TEST_CASE("Collection", "[collection]") {
         mongocxx::stdx::optional<bsoncxx::document::view> expected_sort{};
         mongocxx::stdx::optional<bsoncxx::document::view> expected_hint{};
         mongocxx::stdx::optional<bsoncxx::stdx::string_view> expected_comment{};
-        mongocxx::stdx::optional<mongocxx::cursor::type> expected_cursor_type{};
         int expected_flags = 0;
 
         collection_find->interpose([&](mongoc_collection_t*, mongoc_query_flags_t flags,
@@ -409,11 +408,7 @@ TEST_CASE("Collection", "[collection]") {
             if (expected_comment) {
                 REQUIRE(query_view["$comment"].get_utf8().value == *expected_comment);
             }
-            if (expected_cursor_type) {
-                REQUIRE(flags == expected_flags);
-            } else {
-                REQUIRE(flags == ::MONGOC_QUERY_NONE);
-            }
+            REQUIRE(flags == expected_flags);
             REQUIRE(fields == NULL);
             REQUIRE(read_prefs == NULL);
 
@@ -455,9 +450,24 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Succeeds with cursor type") {
             options::find opts;
-            expected_cursor_type = mongocxx::cursor::type::k_tailable;
+            opts.cursor_type(mongocxx::cursor::type::k_tailable);
             expected_flags = ::MONGOC_QUERY_TAILABLE_CURSOR;
-            opts.cursor_type(*expected_cursor_type);
+
+            REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
+        }
+
+        SECTION("Succeeds with no_cursor_timeout") {
+            options::find opts;
+            opts.no_cursor_timeout(true);
+            expected_flags = ::MONGOC_QUERY_NO_CURSOR_TIMEOUT;
+
+            REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
+        }
+
+        SECTION("Succeeds with allow_partial_results") {
+            options::find opts;
+            opts.allow_partial_results(true);
+            expected_flags = ::MONGOC_QUERY_PARTIAL;
 
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
         }

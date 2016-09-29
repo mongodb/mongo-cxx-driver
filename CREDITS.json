@@ -57,6 +57,13 @@
                 "mark.benvenuto@mongodb.com"
             ],
             "description": "Windows Support, Clang-Format Integration, AppVeyor Integration."
+        },
+        {
+            "name": "David Golden",
+            "email": [
+                "david@mongodb.com"
+            ],
+            "description": "Drivers team Staff Engineer responsible for ongoing development and maintenance of the C++ driver."
         }
     ]
 }

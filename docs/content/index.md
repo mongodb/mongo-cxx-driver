@@ -1,17 +1,15 @@
-# MongoDB C++ Driver [![Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=master)](https://travis-ci.org/mongodb/mongo-cxx-driver)[![Windows Build Status](https://ci.appveyor.com/api/projects/status/w95xuowdjpr0img1/branch/master?svg=true)](https://ci.appveyor.com/project/markbenvenuto/mongo-cxx-driver)
++++
+date = "2016-08-15T16:11:58+05:30"
+title = "MongoDB C++ Driver Manual"
+type = "index"
++++
 
-Welcome to the MongoDB C++ Driver!
+# MongoDB C++ Driver
 
-This branch contains `mongocxx`, the new C++11 driver, and is the recommended
-branch for all users.
-
-## Resources
-
-* [MongoDB C++ Driver Quickstart](https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/tutorial/)
-* [MongoDB C++ Driver Manual](https://mongodb.github.io/mongo-cxx-driver/)
-* [MongoDB C++ Driver API Documentation](https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3)
-* [MongoDB C++ Driver Contribution guidelines](https://mongodb.github.io/mongo-cxx-driver/contributing/)
-* [MongoDB Database Manual](http://docs.mongodb.com/manual/)
+Welcome to the MongoDB C++ driver.  On this site, you'll find guides to
+[installing]({{< ref "mongocxx-v3/installation.md" >}}) and [getting
+started]({{< ref "mongocxx-v3/tutorial.md" >}}) with the C++ driver for MongoDB, plus
+other documentation to help you get the most from MongoDB and C++.
 
 ## Driver status by family and version
 
@@ -38,11 +36,6 @@ is recommended for all new development.
 | legacy   1.0.x | ✓           | ✓           | ✓           |             |
 | 26compat (all) |             | ✓           |             |             |
 
-## Bugs and issues
-
-See our [JIRA project](http://jira.mongodb.org/browse/CXX).
-
 ## License
 
-The source files in this repository are made available under the terms of
-the Apache License, version 2.0.
+MongoDB C++ drivers are available under the terms of the Apache License, version 2.0.
