@@ -1,9 +1,10 @@
-# MongoDB C++ Driver [![Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=master)](https://travis-ci.org/mongodb/mongo-cxx-driver)[![Windows Build Status](https://ci.appveyor.com/api/projects/status/w95xuowdjpr0img1/branch/master?svg=true)](https://ci.appveyor.com/project/markbenvenuto/mongo-cxx-driver)
+# MongoDB C++ Driver [![Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=3.1-dev)](https://travis-ci.org/mongodb/mongo-cxx-driver)[![Windows Build Status](https://ci.appveyor.com/api/projects/status/w95xuowdjpr0img1/branch/3.1-dev?svg=true)](https://ci.appveyor.com/project/markbenvenuto/mongo-cxx-driver)
 
 Welcome to the MongoDB C++ Driver!
 
-This branch contains `mongocxx`, the new C++11 driver, and is the recommended
-branch for all users.
+This branch contains work-in-progress for `mongocxx` version 3.1.
+
+End-users should use a tagged release or the `master` branch instead.
 
 ## Resources
 
