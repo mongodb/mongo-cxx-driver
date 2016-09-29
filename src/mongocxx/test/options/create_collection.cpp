@@ -36,6 +36,8 @@ TEST_CASE("create_collection", "[create_collection]") {
     options::create_collection cc;
 
     SECTION("Can be exported to a document") {
+        auto collation_en_US = builder::stream::document{} << "locale"
+                                                           << "en_US" << finalize;
         auto rule = builder::stream::document{} << "brain" << open_document << "$exists" << true
                                                 << close_document << finalize;
 
@@ -47,6 +49,7 @@ TEST_CASE("create_collection", "[create_collection]") {
         cc.capped(true);
         cc.size(256);
         cc.max(100);
+        cc.collation(collation_en_US.view());
         cc.no_padding(true);
 
         auto doc = cc.to_document();
@@ -73,6 +76,12 @@ TEST_CASE("create_collection", "[create_collection]") {
         REQUIRE(max);
         REQUIRE(max.type() == type::k_int32);
         REQUIRE(max.get_int32() == 100);
+
+        // collation should be set
+        document::element collation{doc_view["collation"]};
+        REQUIRE(collation);
+        REQUIRE(collation.type() == type::k_document);
+        REQUIRE(collation.get_document().value == collation_en_US);
 
         // flags should be set to 0x10
         document::element padding{doc_view["flags"]};

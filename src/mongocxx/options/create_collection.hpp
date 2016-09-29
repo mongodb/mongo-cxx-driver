@@ -78,6 +78,17 @@ class MONGOCXX_API create_collection {
     create_collection& max(int max_documents);
 
     ///
+    /// Sets the default collation for this collection.
+    ///
+    /// @param collation
+    ///   The default collation for the collection.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/manual/release-notes/3.3-dev-series-collation/#collation-option
+    ///
+    create_collection& collation(bsoncxx::document::view_or_value collation);
+
+    ///
     /// Specify configuration to the storage on a per-collection basis.
     ///
     /// @note This option is currently only available with the WiredTiger storage engine.
@@ -121,6 +132,7 @@ class MONGOCXX_API create_collection {
     stdx::optional<bool> _auto_index_id;
     stdx::optional<int> _max_size;
     stdx::optional<int> _max_documents;
+    stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bsoncxx::document::view_or_value> _storage_engine_opts;
     stdx::optional<bool> _no_padding;
     stdx::optional<class validation_criteria> _validation;
