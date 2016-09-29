@@ -454,7 +454,7 @@ class MONGOCXX_API find {
     /// internal use only.
     ///
     /// @throws
-    ///   mongocxx::exception if any modifiers are invalid, or if the unsupported "$query" or
+    ///   mongocxx::logic_error if any modifiers are invalid, or if the unsupported "$query" or
     ///   "$explain" modifiers are set.
     ///
     MONGOCXX_PRIVATE find& convert_all_modifiers();
