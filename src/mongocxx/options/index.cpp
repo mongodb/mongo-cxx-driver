@@ -15,6 +15,9 @@
 #include <mongocxx/options/index.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/private/constraints.hpp>
 #include <mongocxx/private/libmongoc.hpp>
 
 #include <mongocxx/config/private/prelude.hpp>
@@ -57,6 +60,8 @@ index& index::storage_options(std::unique_ptr<index::wiredtiger_storage_options>
 }
 
 index& index::expire_after(std::chrono::seconds expire_after) {
+    if (!is_int32_duration<std::chrono::seconds>(expire_after))
+        throw logic_error{error_code::k_invalid_parameter};
     _expire_after = expire_after;
     return *this;
 }
