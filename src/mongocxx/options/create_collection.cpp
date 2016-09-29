@@ -44,6 +44,11 @@ create_collection& create_collection::max(int max_documents) {
     return *this;
 }
 
+create_collection& create_collection::collation(bsoncxx::document::view_or_value collation) {
+    _collation = std::move(collation);
+    return *this;
+}
+
 create_collection& create_collection::storage_engine(
     bsoncxx::document::view_or_value storage_engine_opts) {
     _storage_engine_opts = std::move(storage_engine_opts);
@@ -77,6 +82,10 @@ bsoncxx::document::value create_collection::to_document() const {
 
     if (_max_documents) {
         doc << "max" << *_max_documents;
+    }
+
+    if (_collation) {
+        doc << "collation" << bsoncxx::types::b_document{*_collation};
     }
 
     if (_storage_engine_opts) {
