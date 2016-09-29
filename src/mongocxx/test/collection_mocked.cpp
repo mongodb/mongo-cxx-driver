@@ -382,37 +382,45 @@ TEST_CASE("Collection", "[collection]") {
         mongocxx::stdx::optional<bsoncxx::types::value> expected_hint{};
         mongocxx::stdx::optional<bsoncxx::stdx::string_view> expected_comment{};
         mongocxx::stdx::optional<mongocxx::cursor::type> expected_cursor_type{};
-        int expected_flags = 0;
 
-        collection_find->interpose([&](mongoc_collection_t*, mongoc_query_flags_t flags,
-                                       uint32_t skip, uint32_t limit, uint32_t batch_size,
-                                       const bson_t* query, const bson_t* fields,
-                                       const mongoc_read_prefs_t* read_prefs) {
+        collection_find_with_opts->interpose([&](mongoc_collection_t*, const bson_t* filter,
+                                                 const bson_t* opts,
+                                                 const mongoc_read_prefs_t* read_prefs) {
             collection_find_called = true;
 
-            REQUIRE(skip == skip);
-            REQUIRE(limit == limit);
-            REQUIRE(batch_size == batch_size);
+            bsoncxx::document::view filter_view{bson_get_data(filter), filter->len};
+            bsoncxx::document::view opts_view{bson_get_data(opts), opts->len};
 
-            bsoncxx::document::view query_view{bson_get_data(query), query->len};
-
-            REQUIRE(query_view["$query"].get_document() == doc);
+            REQUIRE(filter_view == doc);
 
             if (expected_sort) {
-                REQUIRE(query_view["$orderby"].get_document() == *expected_sort);
+                REQUIRE(opts_view["sort"].get_document() == *expected_sort);
             }
             if (expected_hint) {
-                REQUIRE(query_view["$hint"].get_utf8() == expected_hint->get_utf8());
+                REQUIRE(opts_view["hint"].get_utf8() == expected_hint->get_utf8());
             }
             if (expected_comment) {
-                REQUIRE(query_view["$comment"].get_utf8().value == *expected_comment);
+                REQUIRE(opts_view["comment"].get_utf8().value == *expected_comment);
             }
             if (expected_cursor_type) {
-                REQUIRE(flags == expected_flags);
-            } else {
-                REQUIRE(flags == ::MONGOC_QUERY_NONE);
+                bsoncxx::document::element tailable = opts_view["tailable"];
+                bsoncxx::document::element awaitData = opts_view["awaitData"];
+                switch (*expected_cursor_type) {
+                    case mongocxx::cursor::type::k_non_tailable:
+                        REQUIRE(!tailable);
+                        REQUIRE(!awaitData);
+                        break;
+                    case mongocxx::cursor::type::k_tailable:
+                        REQUIRE(tailable.get_bool().value);
+                        REQUIRE(!awaitData);
+                        break;
+                    case mongocxx::cursor::type::k_tailable_await:
+                        REQUIRE(tailable.get_bool().value);
+                        REQUIRE(awaitData.get_bool().value);
+                        break;
+                }
             }
-            REQUIRE(fields == NULL);
+
             REQUIRE(read_prefs == NULL);
 
             mongoc_cursor_t* cursor = NULL;
@@ -453,7 +461,6 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Succeeds with cursor type") {
             options::find opts;
             expected_cursor_type = mongocxx::cursor::type::k_tailable;
-            expected_flags = ::MONGOC_QUERY_TAILABLE_CURSOR;
             opts.cursor_type(*expected_cursor_type);
 
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
