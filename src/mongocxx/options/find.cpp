@@ -16,7 +16,7 @@
 
 #include <bsoncxx/types.hpp>
 #include <mongocxx/exception/error_code.hpp>
-#include <mongocxx/exception/exception.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/private/read_preference.hpp>
 
 #include <mongocxx/config/private/prelude.hpp>
@@ -222,14 +222,14 @@ find& find::convert_all_modifiers() {
     for (auto&& ele : _modifiers->view()) {
         if (ele.key() == stdx::string_view("$comment")) {
             if (ele.type() != bsoncxx::type::k_utf8) {
-                throw exception{error_code::k_invalid_parameter,
-                                "string type required for $comment"};
+                throw logic_error{error_code::k_invalid_parameter,
+                                  "string type required for $comment"};
             }
             if (!_comment) {
                 _comment = std::string{ele.get_utf8().value.to_string()};
             }
         } else if (ele.key() == stdx::string_view("$explain")) {
-            throw exception{error_code::k_invalid_parameter, "$explain modifier unsupported"};
+            throw logic_error{error_code::k_invalid_parameter, "$explain modifier unsupported"};
         } else if (ele.key() == stdx::string_view("$hint")) {
             switch (ele.type()) {
                 case bsoncxx::type::k_document:
@@ -243,12 +243,13 @@ find& find::convert_all_modifiers() {
                     }
                     break;
                 default:
-                    throw exception{error_code::k_invalid_parameter,
-                                    "document or string type required for $hint"};
+                    throw logic_error{error_code::k_invalid_parameter,
+                                      "document or string type required for $hint"};
             }
         } else if (ele.key() == stdx::string_view("$max")) {
             if (ele.type() != bsoncxx::type::k_document) {
-                throw exception{error_code::k_invalid_parameter, "document type required for $max"};
+                throw logic_error{error_code::k_invalid_parameter,
+                                  "document type required for $max"};
             }
             if (!_max) {
                 _max = bsoncxx::document::value{ele.get_document().value};
@@ -261,8 +262,8 @@ find& find::convert_all_modifiers() {
                 case bsoncxx::type::k_int32:
                     max_scan_int32 = ele.get_int32().value;
                     if (max_scan_int32 < 0) {
-                        throw exception{error_code::k_invalid_parameter,
-                                        "non-negative value required for $maxScan"};
+                        throw logic_error{error_code::k_invalid_parameter,
+                                          "non-negative value required for $maxScan"};
                     }
                     if (!_max_scan) {
                         _max_scan = max_scan_int32;
@@ -272,8 +273,8 @@ find& find::convert_all_modifiers() {
                     max_scan_int64 = ele.get_int64().value;
                     if (max_scan_int64 < 0 ||
                         max_scan_int64 > std::numeric_limits<std::int32_t>::max()) {
-                        throw exception{error_code::k_invalid_parameter,
-                                        "value for $maxScan required to be between 0 and 2^31-1"};
+                        throw logic_error{error_code::k_invalid_parameter,
+                                          "value for $maxScan required to be between 0 and 2^31-1"};
                     }
                     if (!_max_scan) {
                         _max_scan = static_cast<std::int32_t>(max_scan_int64);
@@ -283,16 +284,16 @@ find& find::convert_all_modifiers() {
                     max_scan_double = ele.get_double().value;
                     if (max_scan_double < 0 ||
                         max_scan_double > std::numeric_limits<std::int32_t>::max()) {
-                        throw exception{error_code::k_invalid_parameter,
-                                        "value for $maxScan required to be between 0 and 2^31-1"};
+                        throw logic_error{error_code::k_invalid_parameter,
+                                          "value for $maxScan required to be between 0 and 2^31-1"};
                     }
                     if (!_max_scan) {
                         _max_scan = static_cast<std::int32_t>(max_scan_double);
                     }
                     break;
                 default:
-                    throw exception{error_code::k_invalid_parameter,
-                                    "numberic type required for $maxScan"};
+                    throw logic_error{error_code::k_invalid_parameter,
+                                      "numberic type required for $maxScan"};
             }
         } else if (ele.key() == stdx::string_view("$maxTimeMS")) {
             std::int32_t max_time_ms_int32;
@@ -302,8 +303,8 @@ find& find::convert_all_modifiers() {
                 case bsoncxx::type::k_int32:
                     max_time_ms_int32 = ele.get_int32().value;
                     if (max_time_ms_int32 < 0) {
-                        throw exception{error_code::k_invalid_parameter,
-                                        "non-negative value required for $maxTimeMS"};
+                        throw logic_error{error_code::k_invalid_parameter,
+                                          "non-negative value required for $maxTimeMS"};
                     }
                     if (!_max_time) {
                         _max_time = std::chrono::milliseconds{max_time_ms_int32};
@@ -313,8 +314,9 @@ find& find::convert_all_modifiers() {
                     max_time_ms_int64 = ele.get_int64().value;
                     if (max_time_ms_int64 < 0 ||
                         max_time_ms_int64 > std::numeric_limits<std::int32_t>::max()) {
-                        throw exception{error_code::k_invalid_parameter,
-                                        "value for $maxTimeMS required to be between 0 and 2^32-1"};
+                        throw logic_error{
+                            error_code::k_invalid_parameter,
+                            "value for $maxTimeMS required to be between 0 and 2^32-1"};
                     }
                     if (!_max_time) {
                         _max_time =
@@ -325,8 +327,9 @@ find& find::convert_all_modifiers() {
                     max_time_ms_double = ele.get_double().value;
                     if (max_time_ms_double < 0 ||
                         max_time_ms_double > std::numeric_limits<std::int32_t>::max()) {
-                        throw exception{error_code::k_invalid_parameter,
-                                        "value for $maxTimeMS required to be between 0 and 2^32-1"};
+                        throw logic_error{
+                            error_code::k_invalid_parameter,
+                            "value for $maxTimeMS required to be between 0 and 2^32-1"};
                     }
                     if (!_max_time) {
                         _max_time = std::chrono::milliseconds{
@@ -334,53 +337,55 @@ find& find::convert_all_modifiers() {
                     }
                     break;
                 default:
-                    throw exception{error_code::k_invalid_parameter,
-                                    "numberic type required for $maxTimeMS"};
+                    throw logic_error{error_code::k_invalid_parameter,
+                                      "numberic type required for $maxTimeMS"};
             }
         } else if (ele.key() == stdx::string_view("$min")) {
             if (ele.type() != bsoncxx::type::k_document) {
-                throw exception{error_code::k_invalid_parameter, "document type required for $min"};
+                throw logic_error{error_code::k_invalid_parameter,
+                                  "document type required for $min"};
             }
             if (!_min) {
                 _min = bsoncxx::document::value{ele.get_document().value};
             }
         } else if (ele.key() == stdx::string_view("$orderby")) {
             if (ele.type() != bsoncxx::type::k_document) {
-                throw exception{error_code::k_invalid_parameter,
-                                "document type required for $orderby"};
+                throw logic_error{error_code::k_invalid_parameter,
+                                  "document type required for $orderby"};
             }
             if (!_ordering) {
                 _ordering = bsoncxx::document::value{ele.get_document().value};
             }
         } else if (ele.key() == stdx::string_view("$query")) {
-            throw exception{error_code::k_invalid_parameter, "$query modifier unsupported"};
+            throw logic_error{error_code::k_invalid_parameter, "$query modifier unsupported"};
         } else if (ele.key() == stdx::string_view("$returnKey")) {
             if (ele.type() != bsoncxx::type::k_bool) {
-                throw exception{error_code::k_invalid_parameter,
-                                "bool type required for $returnKey"};
+                throw logic_error{error_code::k_invalid_parameter,
+                                  "bool type required for $returnKey"};
             }
             if (!_return_key) {
                 _return_key = ele.get_bool().value;
             }
         } else if (ele.key() == stdx::string_view("$showDiskLoc")) {
             if (ele.type() != bsoncxx::type::k_bool) {
-                throw exception{error_code::k_invalid_parameter,
-                                "bool type required for $showDiskLoc"};
+                throw logic_error{error_code::k_invalid_parameter,
+                                  "bool type required for $showDiskLoc"};
             }
             if (!_show_record_id) {
                 _show_record_id = ele.get_bool().value;
             }
         } else if (ele.key() == stdx::string_view("$snapshot")) {
             if (ele.type() != bsoncxx::type::k_bool) {
-                throw exception{error_code::k_invalid_parameter,
-                                "bool type required for $snapshot"};
+                throw logic_error{error_code::k_invalid_parameter,
+                                  "bool type required for $snapshot"};
             }
             if (!_snapshot) {
                 _snapshot = ele.get_bool().value;
             }
         } else {
-            throw exception{error_code::k_invalid_parameter,
-                            std::string{"unrecognized key in modifiers: "} + ele.key().to_string()};
+            throw logic_error{
+                error_code::k_invalid_parameter,
+                std::string{"unrecognized key in modifiers: "} + ele.key().to_string()};
         }
     }
     _modifiers = stdx::nullopt;
