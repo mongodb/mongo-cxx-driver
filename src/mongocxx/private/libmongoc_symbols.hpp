@@ -142,3 +142,7 @@ MONGOCXX_LIBMONGOC_SYMBOL(write_concern_set_wtimeout)
 MONGOCXX_LIBMONGOC_SYMBOL(client_pool_set_ssl_opts)
 MONGOCXX_LIBMONGOC_SYMBOL(client_set_ssl_opts)
 #endif
+
+#ifdef MONGOC_EXPERIMENTAL_FEATURES
+MONGOCXX_LIBMONGOC_SYMBOL(metadata_append)
+#endif

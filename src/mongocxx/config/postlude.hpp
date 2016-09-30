@@ -28,6 +28,8 @@
 #pragma pop_macro("MONGOCXX_INLINE_NAMESPACE_END")
 
 // src/mongocxx/config/version.hpp.in
+#undef MONGOCXX_VERSION_STRING
+#pragma pop_macro("MONGOCXX_VERSION_STRING")
 #undef MONGOCXX_VERSION_EXTRA
 #pragma pop_macro("MONGOCXX_VERSION_EXTRA")
 #undef MONGOCXX_VERSION_MAJOR
