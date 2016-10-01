@@ -214,182 +214,183 @@ const stdx::optional<class read_preference>& find::read_preference() const {
     return _read_preference;
 }
 
-find& find::convert_all_modifiers() {
-    if (!_modifiers) {
+namespace {
+
+stdx::optional<std::int32_t> element_to_int32_t(bsoncxx::document::element ele) {
+    switch (ele.type()) {
+        case bsoncxx::type::k_int32: {
+            return ele.get_int32().value;
+        }
+        case bsoncxx::type::k_int64: {
+            std::int64_t val_int64 = ele.get_int64().value;
+            if (val_int64 < std::numeric_limits<std::int32_t>::min() ||
+                val_int64 > std::numeric_limits<std::int32_t>::max()) {
+                return stdx::nullopt;
+            }
+            return static_cast<std::int32_t>(val_int64);
+        }
+        case bsoncxx::type::k_double: {
+            double val_double = ele.get_double().value;
+            if (val_double < std::numeric_limits<std::int32_t>::min() ||
+                val_double > std::numeric_limits<std::int32_t>::max()) {
+                return stdx::nullopt;
+            }
+            return static_cast<std::int32_t>(val_double);
+        }
+        default: { return stdx::nullopt; }
+    }
+}
+
+void convert_comment_modifier(find* options, bsoncxx::document::element ele) {
+    if (ele.type() != bsoncxx::type::k_utf8) {
+        throw logic_error{error_code::k_invalid_parameter, "string type required for $comment"};
+    }
+    if (!options->comment()) {
+        options->comment(std::string{ele.get_utf8().value.to_string()});
+    }
+}
+
+void convert_hint_modifier(find* options, bsoncxx::document::element ele) {
+    hint hint{bsoncxx::document::view{}};
+    switch (ele.type()) {
+        case bsoncxx::type::k_document: {
+            hint = mongocxx::hint{bsoncxx::document::value{ele.get_document().value}};
+            break;
+        }
+        case bsoncxx::type::k_utf8: {
+            hint = mongocxx::hint{std::string{ele.get_utf8().value.to_string()}};
+            break;
+        }
+        default: {
+            throw logic_error{error_code::k_invalid_parameter,
+                              "document or string type required for $hint"};
+        }
+    }
+    if (!options->hint()) {
+        options->hint(hint);
+    }
+}
+
+void convert_max_modifier(find* options, bsoncxx::document::element ele) {
+    if (ele.type() != bsoncxx::type::k_document) {
+        throw logic_error{error_code::k_invalid_parameter, "document type required for $max"};
+    }
+    if (!options->max()) {
+        options->max(bsoncxx::document::value{ele.get_document().value});
+    }
+}
+
+void convert_max_scan_modifier(find* options, bsoncxx::document::element ele) {
+    auto max_scan = element_to_int32_t(ele);
+    if (!max_scan) {
+        throw logic_error{error_code::k_invalid_parameter,
+                          "value for $maxScan must be numeric and fit in a signed 32-bit integer"};
+    }
+    if (!options->max_scan()) {
+        options->max_scan(*max_scan);
+    }
+}
+
+void convert_max_time_ms_modifier(find* options, bsoncxx::document::element ele) {
+    auto max_time = element_to_int32_t(ele);
+    if (!max_time) {
+        throw logic_error{
+            error_code::k_invalid_parameter,
+            "value for $maxTimeMS must be numeric and fit in a signed 32-bit integer"};
+    }
+    if (!options->max_time()) {
+        options->max_time(std::chrono::milliseconds{*max_time});
+    }
+}
+
+void convert_min_modifier(find* options, bsoncxx::document::element ele) {
+    if (ele.type() != bsoncxx::type::k_document) {
+        throw logic_error{error_code::k_invalid_parameter, "document type required for $min"};
+    }
+    if (!options->min()) {
+        options->min(bsoncxx::document::value{ele.get_document().value});
+    }
+}
+
+void convert_orderby_modifier(find* options, bsoncxx::document::element ele) {
+    if (ele.type() != bsoncxx::type::k_document) {
+        throw logic_error{error_code::k_invalid_parameter, "document type required for $orderby"};
+    }
+    if (!options->sort()) {
+        options->sort(bsoncxx::document::value{ele.get_document().value});
+    }
+}
+
+void convert_return_key_modifier(find* options, bsoncxx::document::element ele) {
+    if (ele.type() != bsoncxx::type::k_bool) {
+        throw logic_error{error_code::k_invalid_parameter, "bool type required for $returnKey"};
+    }
+    if (!options->return_key()) {
+        options->return_key(ele.get_bool().value);
+    }
+}
+
+void convert_show_disk_loc_modifier(find* options, bsoncxx::document::element ele) {
+    if (ele.type() != bsoncxx::type::k_bool) {
+        throw logic_error{error_code::k_invalid_parameter, "bool type required for $showDiskLoc"};
+    }
+    if (!options->show_record_id()) {
+        options->show_record_id(ele.get_bool().value);
+    }
+}
+
+void convert_snapshot_modifier(find* options, bsoncxx::document::element ele) {
+    if (ele.type() != bsoncxx::type::k_bool) {
+        throw logic_error{error_code::k_invalid_parameter, "bool type required for $snapshot"};
+    }
+    if (!options->snapshot()) {
+        options->snapshot(ele.get_bool().value);
+    }
+}
+
+}  // namespace
+
+find find::convert_all_modifiers() const {
+    find converted_options(*this);
+
+    if (!converted_options.modifiers()) {
         return *this;
     }
 
-    for (auto&& ele : _modifiers->view()) {
+    for (auto&& ele : converted_options.modifiers()->view()) {
         if (ele.key() == stdx::string_view("$comment")) {
-            if (ele.type() != bsoncxx::type::k_utf8) {
-                throw logic_error{error_code::k_invalid_parameter,
-                                  "string type required for $comment"};
-            }
-            if (!_comment) {
-                _comment = std::string{ele.get_utf8().value.to_string()};
-            }
+            convert_comment_modifier(&converted_options, ele);
         } else if (ele.key() == stdx::string_view("$explain")) {
             throw logic_error{error_code::k_invalid_parameter, "$explain modifier unsupported"};
         } else if (ele.key() == stdx::string_view("$hint")) {
-            switch (ele.type()) {
-                case bsoncxx::type::k_document:
-                    if (!_hint) {
-                        _hint = mongocxx::hint{bsoncxx::document::value{ele.get_document().value}};
-                    }
-                    break;
-                case bsoncxx::type::k_utf8:
-                    if (!_hint) {
-                        _hint = mongocxx::hint{std::string{ele.get_utf8().value.to_string()}};
-                    }
-                    break;
-                default:
-                    throw logic_error{error_code::k_invalid_parameter,
-                                      "document or string type required for $hint"};
-            }
+            convert_hint_modifier(&converted_options, ele);
         } else if (ele.key() == stdx::string_view("$max")) {
-            if (ele.type() != bsoncxx::type::k_document) {
-                throw logic_error{error_code::k_invalid_parameter,
-                                  "document type required for $max"};
-            }
-            if (!_max) {
-                _max = bsoncxx::document::value{ele.get_document().value};
-            }
+            convert_max_modifier(&converted_options, ele);
         } else if (ele.key() == stdx::string_view("$maxScan")) {
-            std::int32_t max_scan_int32;
-            std::int64_t max_scan_int64;
-            double max_scan_double;
-            switch (ele.type()) {
-                case bsoncxx::type::k_int32:
-                    max_scan_int32 = ele.get_int32().value;
-                    if (max_scan_int32 < 0) {
-                        throw logic_error{error_code::k_invalid_parameter,
-                                          "non-negative value required for $maxScan"};
-                    }
-                    if (!_max_scan) {
-                        _max_scan = max_scan_int32;
-                    }
-                    break;
-                case bsoncxx::type::k_int64:
-                    max_scan_int64 = ele.get_int64().value;
-                    if (max_scan_int64 < 0 ||
-                        max_scan_int64 > std::numeric_limits<std::int32_t>::max()) {
-                        throw logic_error{error_code::k_invalid_parameter,
-                                          "value for $maxScan required to be between 0 and 2^31-1"};
-                    }
-                    if (!_max_scan) {
-                        _max_scan = static_cast<std::int32_t>(max_scan_int64);
-                    }
-                    break;
-                case bsoncxx::type::k_double:
-                    max_scan_double = ele.get_double().value;
-                    if (max_scan_double < 0 ||
-                        max_scan_double > std::numeric_limits<std::int32_t>::max()) {
-                        throw logic_error{error_code::k_invalid_parameter,
-                                          "value for $maxScan required to be between 0 and 2^31-1"};
-                    }
-                    if (!_max_scan) {
-                        _max_scan = static_cast<std::int32_t>(max_scan_double);
-                    }
-                    break;
-                default:
-                    throw logic_error{error_code::k_invalid_parameter,
-                                      "numberic type required for $maxScan"};
-            }
+            convert_max_scan_modifier(&converted_options, ele);
         } else if (ele.key() == stdx::string_view("$maxTimeMS")) {
-            std::int32_t max_time_ms_int32;
-            std::int64_t max_time_ms_int64;
-            double max_time_ms_double;
-            switch (ele.type()) {
-                case bsoncxx::type::k_int32:
-                    max_time_ms_int32 = ele.get_int32().value;
-                    if (max_time_ms_int32 < 0) {
-                        throw logic_error{error_code::k_invalid_parameter,
-                                          "non-negative value required for $maxTimeMS"};
-                    }
-                    if (!_max_time) {
-                        _max_time = std::chrono::milliseconds{max_time_ms_int32};
-                    }
-                    break;
-                case bsoncxx::type::k_int64:
-                    max_time_ms_int64 = ele.get_int64().value;
-                    if (max_time_ms_int64 < 0 ||
-                        max_time_ms_int64 > std::numeric_limits<std::int32_t>::max()) {
-                        throw logic_error{
-                            error_code::k_invalid_parameter,
-                            "value for $maxTimeMS required to be between 0 and 2^32-1"};
-                    }
-                    if (!_max_time) {
-                        _max_time =
-                            std::chrono::milliseconds{static_cast<std::int32_t>(max_time_ms_int64)};
-                    }
-                    break;
-                case bsoncxx::type::k_double:
-                    max_time_ms_double = ele.get_double().value;
-                    if (max_time_ms_double < 0 ||
-                        max_time_ms_double > std::numeric_limits<std::int32_t>::max()) {
-                        throw logic_error{
-                            error_code::k_invalid_parameter,
-                            "value for $maxTimeMS required to be between 0 and 2^32-1"};
-                    }
-                    if (!_max_time) {
-                        _max_time = std::chrono::milliseconds{
-                            static_cast<std::int32_t>(max_time_ms_double)};
-                    }
-                    break;
-                default:
-                    throw logic_error{error_code::k_invalid_parameter,
-                                      "numberic type required for $maxTimeMS"};
-            }
+            convert_max_time_ms_modifier(&converted_options, ele);
         } else if (ele.key() == stdx::string_view("$min")) {
-            if (ele.type() != bsoncxx::type::k_document) {
-                throw logic_error{error_code::k_invalid_parameter,
-                                  "document type required for $min"};
-            }
-            if (!_min) {
-                _min = bsoncxx::document::value{ele.get_document().value};
-            }
+            convert_min_modifier(&converted_options, ele);
         } else if (ele.key() == stdx::string_view("$orderby")) {
-            if (ele.type() != bsoncxx::type::k_document) {
-                throw logic_error{error_code::k_invalid_parameter,
-                                  "document type required for $orderby"};
-            }
-            if (!_ordering) {
-                _ordering = bsoncxx::document::value{ele.get_document().value};
-            }
+            convert_orderby_modifier(&converted_options, ele);
         } else if (ele.key() == stdx::string_view("$query")) {
             throw logic_error{error_code::k_invalid_parameter, "$query modifier unsupported"};
         } else if (ele.key() == stdx::string_view("$returnKey")) {
-            if (ele.type() != bsoncxx::type::k_bool) {
-                throw logic_error{error_code::k_invalid_parameter,
-                                  "bool type required for $returnKey"};
-            }
-            if (!_return_key) {
-                _return_key = ele.get_bool().value;
-            }
+            convert_return_key_modifier(&converted_options, ele);
         } else if (ele.key() == stdx::string_view("$showDiskLoc")) {
-            if (ele.type() != bsoncxx::type::k_bool) {
-                throw logic_error{error_code::k_invalid_parameter,
-                                  "bool type required for $showDiskLoc"};
-            }
-            if (!_show_record_id) {
-                _show_record_id = ele.get_bool().value;
-            }
+            convert_show_disk_loc_modifier(&converted_options, ele);
         } else if (ele.key() == stdx::string_view("$snapshot")) {
-            if (ele.type() != bsoncxx::type::k_bool) {
-                throw logic_error{error_code::k_invalid_parameter,
-                                  "bool type required for $snapshot"};
-            }
-            if (!_snapshot) {
-                _snapshot = ele.get_bool().value;
-            }
+            convert_snapshot_modifier(&converted_options, ele);
         } else {
             throw logic_error{
                 error_code::k_invalid_parameter,
                 std::string{"unrecognized key in modifiers: "} + ele.key().to_string()};
         }
     }
-    _modifiers = stdx::nullopt;
-    return *this;
+
+    converted_options._modifiers = stdx::nullopt;
+    return converted_options;
 }
 
 }  // namespace options
