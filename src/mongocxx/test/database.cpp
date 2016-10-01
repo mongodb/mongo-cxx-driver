@@ -33,6 +33,18 @@ using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::finalize;
 using bsoncxx::builder::stream::open_document;
 
+namespace {
+
+int get_max_wire_version(const client& mongo_client) {
+    auto reply = mongo_client["admin"].run_command(document{} << "isMaster" << 1 << finalize);
+    auto max_wire_version = reply.view()["maxWireVersion"];
+    REQUIRE(max_wire_version);
+    REQUIRE(max_wire_version.type() == bsoncxx::type::k_int32);
+    return max_wire_version.get_int32().value;
+}
+
+}  // namespace
+
 TEST_CASE("A default constructed database is false-ish", "[database]") {
     instance::current();
 
@@ -368,6 +380,27 @@ TEST_CASE("Database integration tests", "[database]") {
             rc_db.read_concern(set_rc);
 
             REQUIRE(rc_db.read_concern().acknowledge_level() == local);
+        }
+    }
+
+    SECTION("A view can be created on a database", "[database]") {
+        database[collection_name].drop();
+        database["view"].drop();
+
+        database[collection_name].insert_one({});
+        database[collection_name].insert_one({});
+
+        collection view =
+            database.create_view("view", collection_name,
+                                 options::create_view().pipeline(std::move(pipeline({}).limit(1))));
+
+        if (get_max_wire_version(mongo_client) >= 5) {
+            // The server supports views.
+            REQUIRE(view.count(bsoncxx::document::view{}) == 1);
+        } else {
+            // The server doesn't support views. On these versions of the server, view creation
+            // requests are treated as ordinary collection creation requests.
+            REQUIRE(view.count(bsoncxx::document::view{}) == 0);
         }
     }
 }

@@ -118,12 +118,27 @@ class collection database::create_collection(bsoncxx::string::view_or_value name
     libbson::scoped_bson_t opts_bson{options.to_document()};
     auto result = libmongoc::database_create_collection(
         _get_impl().database_t, name.terminated().data(), opts_bson.bson(), &error);
-
     if (!result) {
         throw_exception<operation_exception>(error);
     }
 
-    return mongocxx::collection(*this, static_cast<void*>(result));
+    return mongocxx::collection(*this, result);
+}
+
+class collection database::create_view(bsoncxx::string::view_or_value name,
+                                       bsoncxx::string::view_or_value view_on,
+                                       const options::create_view& options) {
+    bson_error_t error;
+
+    libbson::scoped_bson_t opts_bson{document{} << "viewOn" << view_on
+                                                << concatenate(options.to_document()) << finalize};
+    auto result = libmongoc::database_create_collection(
+        _get_impl().database_t, name.terminated().data(), opts_bson.bson(), &error);
+    if (!result) {
+        throw_exception<operation_exception>(error);
+    }
+
+    return mongocxx::collection(*this, result);
 }
 
 void database::drop() {
