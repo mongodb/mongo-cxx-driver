@@ -18,6 +18,7 @@
 #include <string>
 #include <memory>
 
+#include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 
@@ -174,9 +175,16 @@ class MONGOCXX_API pipeline {
     pipeline& unwind(std::string field_name);
 
     ///
+    /// @return A view of the underlying BSON array this pipeline represents.
+    ///
+    bsoncxx::array::view view_array() const;
+
+    ///
     /// @return A view of the underlying BSON document this pipeline represents.
     ///
-    bsoncxx::document::view view() const;
+    /// @deprecated The view_array() method should be used instead of this method.
+    ///
+    MONGOCXX_DEPRECATED bsoncxx::document::view view() const;
 
    private:
     friend class collection;

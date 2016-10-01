@@ -318,7 +318,7 @@ stdx::optional<bsoncxx::document::value> collection::find_one(view_or_value filt
 cursor collection::aggregate(const pipeline& pipeline, const options::aggregate& options) {
     using namespace bsoncxx::builder::stream;
 
-    scoped_bson_t stages(pipeline._impl->view());
+    scoped_bson_t stages(bsoncxx::document::view(pipeline._impl->view_array()));
 
     bsoncxx::builder::stream::document b;
 

@@ -95,5 +95,9 @@ bsoncxx::document::view pipeline::view() const {
     return _impl->view();
 }
 
+bsoncxx::array::view pipeline::view_array() const {
+    return _impl->view_array();
+}
+
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
