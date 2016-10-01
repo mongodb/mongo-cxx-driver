@@ -35,6 +35,7 @@ set(mongocxx_test_sources
     options/aggregate.cpp
     options/count.cpp
     options/create_collection.cpp
+    options/create_view.cpp
     options/delete.cpp
     options/distinct.cpp
     options/find.cpp

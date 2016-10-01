@@ -63,6 +63,7 @@ set(mongocxx_sources
     options/client.cpp
     options/count.cpp
     options/create_collection.cpp
+    options/create_view.cpp
     options/delete.cpp
     options/distinct.cpp
     options/find.cpp
