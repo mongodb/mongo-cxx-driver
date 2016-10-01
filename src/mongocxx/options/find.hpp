@@ -366,6 +366,8 @@ class MONGOCXX_API find {
     ///   Whether index keys associated with the query results are returned, instead of the actual
     ///   query results themselves.
     ///
+    /// @see https://docs.mongodb.com/manual/reference/method/cursor.returnKey/
+    ///
     const stdx::optional<bool>& return_key() const;
 
     ///
@@ -384,6 +386,8 @@ class MONGOCXX_API find {
     ///
     /// @return
     ///   Whether the record identifier is included.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/method/cursor.showRecordId/
     ///
     const stdx::optional<bool>& show_record_id() const;
 
