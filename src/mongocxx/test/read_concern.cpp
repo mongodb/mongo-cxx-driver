@@ -22,56 +22,68 @@
 
 using namespace mongocxx;
 
-TEST_CASE("a default read_concern", "[read_concern]") {
+TEST_CASE("valid read concern settings", "[read_concern]") {
     instance::current();
 
     read_concern rc{};
 
-    SECTION("has level k_server_default") {
-        REQUIRE(rc.acknowledge_level() == read_concern::level::k_server_default);
+    read_concern::level level_setting;
+    stdx::string_view string_setting;
+
+    SECTION("default-constructed read_concern") {
+        level_setting = read_concern::level::k_server_default;
+        string_setting = stdx::string_view{""};
     }
 
-    SECTION("has an empty string") {
-        REQUIRE(rc.acknowledge_string() == stdx::string_view{""});
+    SECTION("can be assigned with acknowledge_level()") {
+        SECTION("local") {
+            level_setting = read_concern::level::k_local;
+            string_setting = stdx::string_view{"local"};
+        }
+
+        SECTION("majority") {
+            level_setting = read_concern::level::k_majority;
+            string_setting = stdx::string_view{"majority"};
+        }
+
+        SECTION("server default") {
+            level_setting = read_concern::level::k_server_default;
+            string_setting = stdx::string_view{""};
+        }
+
+        REQUIRE_NOTHROW(rc.acknowledge_level(level_setting));
     }
+
+    SECTION("can be assigned with acknowledge_string()") {
+        SECTION("local") {
+            level_setting = read_concern::level::k_local;
+            string_setting = stdx::string_view{"local"};
+        }
+
+        SECTION("majority") {
+            level_setting = read_concern::level::k_majority;
+            string_setting = stdx::string_view{"majority"};
+        }
+
+        SECTION("server default") {
+            level_setting = read_concern::level::k_server_default;
+            string_setting = stdx::string_view{""};
+        }
+
+        REQUIRE_NOTHROW(rc.acknowledge_string(string_setting));
+    }
+
+    REQUIRE(rc.acknowledge_level() == level_setting);
+    REQUIRE(rc.acknowledge_string() == string_setting);
 }
 
-TEST_CASE("read_concern fields may be set and retrieved", "[read_concern]") {
+TEST_CASE("setting the string to an unknown value changes the level to unknown", "[read_concern]") {
     instance::current();
 
     read_concern rc{};
 
-    REQUIRE_NOTHROW(rc.acknowledge_level(read_concern::level::k_majority));
-    REQUIRE(rc.acknowledge_level() == read_concern::level::k_majority);
-
-    REQUIRE_NOTHROW(rc.acknowledge_string(stdx::string_view{"local"}));
-    REQUIRE(rc.acknowledge_string() == stdx::string_view{"local"});
-}
-
-TEST_CASE("read_concern level and string affect each other", "[read_concern]") {
-    instance::current();
-
-    read_concern rc{};
-
-    SECTION("setting the level changes the string") {
-        rc.acknowledge_level(read_concern::level::k_local);
-        REQUIRE(rc.acknowledge_string() == stdx::string_view{"local"});
-    }
-
-    SECTION("setting the string changes the level") {
-        rc.acknowledge_string("majority");
-        REQUIRE(rc.acknowledge_level() == read_concern::level::k_majority);
-    }
-
-    SECTION("setting the string to the empty string changes the level to server default") {
-        rc.acknowledge_string("");
-        REQUIRE(rc.acknowledge_level() == read_concern::level::k_server_default);
-    }
-
-    SECTION("setting the string to an unknown value changes the level to unknown") {
-        rc.acknowledge_string("futureCompatible");
-        REQUIRE(rc.acknowledge_level() == read_concern::level::k_unknown);
-    }
+    rc.acknowledge_string("futureCompatible");
+    REQUIRE(rc.acknowledge_level() == read_concern::level::k_unknown);
 }
 
 TEST_CASE("read_concern throws when trying to set level to k_unknown", "[read_concern]") {
