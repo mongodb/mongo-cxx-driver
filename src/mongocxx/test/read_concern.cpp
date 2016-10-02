@@ -46,6 +46,11 @@ TEST_CASE("valid read concern settings", "[read_concern]") {
             string_setting = stdx::string_view{"majority"};
         }
 
+        SECTION("linearizable") {
+            level_setting = read_concern::level::k_linearizable;
+            string_setting = stdx::string_view{"linearizable"};
+        }
+
         SECTION("server default") {
             level_setting = read_concern::level::k_server_default;
             string_setting = stdx::string_view{""};
@@ -63,6 +68,11 @@ TEST_CASE("valid read concern settings", "[read_concern]") {
         SECTION("majority") {
             level_setting = read_concern::level::k_majority;
             string_setting = stdx::string_view{"majority"};
+        }
+
+        SECTION("linearizable") {
+            level_setting = read_concern::level::k_linearizable;
+            string_setting = stdx::string_view{"linearizable"};
         }
 
         SECTION("server default") {
