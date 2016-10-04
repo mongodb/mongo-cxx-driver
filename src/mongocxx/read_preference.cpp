@@ -15,6 +15,8 @@
 #include <mongocxx/read_preference.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/read_preference.hh>
@@ -75,8 +77,22 @@ stdx::optional<bsoncxx::document::view> read_preference::tags() const {
     return stdx::optional<bsoncxx::document::view>{};
 }
 
+void read_preference::max_staleness(std::chrono::milliseconds max_staleness) {
+    auto max_staleness_ms = max_staleness.count();
+    if (max_staleness_ms < 0 || max_staleness_ms > std::numeric_limits<std::int32_t>::max()) {
+        throw logic_error{error_code::k_invalid_parameter};
+    }
+    libmongoc::read_prefs_set_max_staleness_ms(_impl->read_preference_t, max_staleness_ms);
+}
+
+std::chrono::milliseconds read_preference::max_staleness() const {
+    return static_cast<std::chrono::milliseconds>(
+        libmongoc::read_prefs_get_max_staleness_ms(_impl->read_preference_t));
+}
+
 bool operator==(const read_preference& lhs, const read_preference& rhs) {
-    return (lhs.mode() == rhs.mode()) && (lhs.tags() == rhs.tags());
+    return (lhs.mode() == rhs.mode()) && (lhs.tags() == rhs.tags()) &&
+           (lhs.max_staleness() == rhs.max_staleness());
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

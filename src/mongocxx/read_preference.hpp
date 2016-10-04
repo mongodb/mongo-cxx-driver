@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -44,6 +45,8 @@ class uri;
 /// Read preference can be broadly specified by setting a mode. It is also possible to
 /// set tags in the read preference for more granular control, and to target specific members of a
 /// replica set via attributes other than their current state as a primary or secondary node.
+/// Furthermore, it is also possible to set a staleness threshold, such that the read is limited to
+/// targeting secondaries whose staleness is less than or equal to the given threshold.
 ///
 /// Read preferences are ignored for direct connections to a single mongod instance. However,
 /// in order to perform read operations on a direct connection to a secondary member of a replica
@@ -169,6 +172,24 @@ class MONGOCXX_API read_preference {
     /// @see http://docs.mongodb.org/manual/core/read-preference/#tag-sets
     ///
     stdx::optional<bsoncxx::document::view> tags() const;
+
+    ///
+    /// Sets the max staleness setting for this read_preference.
+    ///
+    /// @param max_staleness
+    ///    The new max staleness setting.  Must be non-negative, and must be less than 2^31
+    ///    milliseconds.
+    ///
+    /// @throws mongocxx::logic_error if the argument is invalid.
+    ///
+    void max_staleness(std::chrono::milliseconds max_staleness);
+
+    ///
+    /// Returns the current max staleness setting for this read_preference.
+    ///
+    /// @return The current max staleness setting.
+    ///
+    std::chrono::milliseconds max_staleness() const;
 
    private:
     friend client;
