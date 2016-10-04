@@ -219,3 +219,9 @@
 #define MOCK_CONCERN                                                     \
     auto concern_copy = libmongoc::write_concern_copy.create_instance(); \
     concern_copy->interpose([](const mongoc_write_concern_t*) { return nullptr; }).forever();
+
+#define MOCK_READ_PREFERENCE                                                                     \
+    auto read_prefs_get_mode = libmongoc::read_prefs_get_mode.create_instance();                 \
+    auto read_prefs_get_tags = libmongoc::read_prefs_get_tags.create_instance();                 \
+    auto read_prefs_set_mode = libmongoc::read_prefs_set_mode.create_instance();                 \
+    auto read_prefs_set_tags = libmongoc::read_prefs_set_tags.create_instance();

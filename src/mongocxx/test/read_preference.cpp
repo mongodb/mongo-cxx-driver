@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "catch.hpp"
+#include "helpers.hpp"
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/view.hpp>
@@ -89,4 +90,31 @@ TEST_CASE("Read preference comparison works", "[read_preference]") {
     }
 }
 
+TEST_CASE("Read preference methods call underlying mongoc methods", "[read_preference]") {
+    instance::current();
+    MOCK_READ_PREFERENCE
+
+    read_preference rp;
+    bool called = false;
+
+    SECTION("mode() calls mongoc_read_prefs_set_mode()") {
+        read_preference::read_mode expected_mode = read_preference::read_mode::k_nearest;
+        read_prefs_set_mode->interpose([&](mongoc_read_prefs_t*, mongoc_read_mode_t mode) {
+            called = true;
+            REQUIRE(mode == static_cast<mongoc_read_mode_t>(expected_mode));
+        });
+        rp.mode(expected_mode);
+    }
+
+    SECTION("tags() calls mongoc_read_prefs_set_tags()") {
+        auto expected_tags = builder::stream::document{} << "foo"
+                                                         << "bar" << builder::stream::finalize;
+        read_prefs_set_tags->interpose([&](mongoc_read_prefs_t*, const bson_t* tags) {
+            called = true;
+            REQUIRE(bson_get_data(tags) == expected_tags.view().data());
+        });
+        rp.tags(expected_tags.view());
+    }
+
+    REQUIRE(called);
 }
