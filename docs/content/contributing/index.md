@@ -40,6 +40,11 @@ for more good guidelines to follow.
 
 ### Headers
 
+Public headers must have a ".hpp" suffix. Private headers must have a ".hh"
+suffix.
+
+General structure:
+
  - License
  - Include Guard (`#pragma once`)
  - Header Prelude

@@ -16,9 +16,9 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <mongocxx/exception/server_error_code.hpp>
-#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -45,4 +45,4 @@ void throw_exception(bsoncxx::document::value raw_server_error, const ::bson_err
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hpp>
+#include <mongocxx/config/private/postlude.hh>

@@ -14,7 +14,7 @@
 
 #include <mongocxx/options/insert.hpp>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

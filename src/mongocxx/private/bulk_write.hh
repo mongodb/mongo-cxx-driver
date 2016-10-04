@@ -14,25 +14,27 @@
 
 #pragma once
 
-#include <mongocxx/uri.hpp>
-#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/bulk_write.hpp>
+#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-class uri::impl {
+class bulk_write::impl {
    public:
-    impl(mongoc_uri_t* uri) : uri_t(uri) {
+    impl(mongoc_bulk_operation_t* op) : operation_t(op) {
     }
+
     ~impl() {
-        libmongoc::uri_destroy(uri_t);
+        libmongoc::bulk_operation_destroy(operation_t);
     }
-    mongoc_uri_t* uri_t;
+
+    mongoc_bulk_operation_t* operation_t;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hpp>
+#include <mongocxx/config/private/postlude.hh>

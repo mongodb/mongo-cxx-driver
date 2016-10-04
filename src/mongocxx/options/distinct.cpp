@@ -14,9 +14,9 @@
 
 #include <mongocxx/options/distinct.hpp>
 
-#include <mongocxx/private/read_preference.hpp>
+#include <mongocxx/private/read_preference.hh>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

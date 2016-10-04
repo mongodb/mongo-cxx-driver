@@ -22,7 +22,7 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
-#include <bsoncxx/private/helpers.hpp>
+#include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
@@ -31,21 +31,21 @@
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/private/error_category.hpp>
-#include <mongocxx/exception/private/mongoc_error.hpp>
+#include <mongocxx/exception/private/error_category.hh>
+#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/model/write.hpp>
-#include <mongocxx/private/bulk_write.hpp>
-#include <mongocxx/private/client.hpp>
-#include <mongocxx/private/collection.hpp>
-#include <mongocxx/private/database.hpp>
-#include <mongocxx/private/libbson.hpp>
-#include <mongocxx/private/libmongoc.hpp>
-#include <mongocxx/private/pipeline.hpp>
-#include <mongocxx/private/read_concern.hpp>
-#include <mongocxx/private/read_preference.hpp>
-#include <mongocxx/private/write_concern.hpp>
+#include <mongocxx/private/bulk_write.hh>
+#include <mongocxx/private/client.hh>
+#include <mongocxx/private/collection.hh>
+#include <mongocxx/private/database.hh>
+#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/pipeline.hh>
+#include <mongocxx/private/read_concern.hh>
+#include <mongocxx/private/read_preference.hh>
+#include <mongocxx/private/write_concern.hh>
 #include <mongocxx/result/bulk_write.hpp>
 #include <mongocxx/result/delete.hpp>
 #include <mongocxx/result/insert_many.hpp>
@@ -54,7 +54,7 @@
 #include <mongocxx/result/update.hpp>
 #include <mongocxx/write_concern.hpp>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 using bsoncxx::document::view_or_value;
 using bsoncxx::builder::stream::concatenate;

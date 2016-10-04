@@ -14,27 +14,28 @@
 
 #pragma once
 
-#include <mongocxx/bulk_write.hpp>
-#include <mongocxx/private/libmongoc.hpp>
+#include <mongoc.h>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/mock/mock.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
+namespace libmongoc {
 
-class bulk_write::impl {
-   public:
-    impl(mongoc_bulk_operation_t* op) : operation_t(op) {
-    }
+#ifdef MONGOCXX_TESTING
+#define MONGOCXX_LIBMONGOC_SYMBOL(name) extern mongocxx::mock::mock<decltype(&mongoc_##name)>& name;
+#include "libmongoc_symbols.hh"
+#undef MONGOCXX_LIBMONGOC_SYMBOL
+#else
+#define MONGOCXX_LIBMONGOC_SYMBOL(name) constexpr auto name = mongoc_##name;
+#include "libmongoc_symbols.hh"
+#undef MONGOCXX_LIBMONGOC_SYMBOL
+#endif
 
-    ~impl() {
-        libmongoc::bulk_operation_destroy(operation_t);
-    }
-
-    mongoc_bulk_operation_t* operation_t;
-};
-
+}  // namespace libmongoc
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hpp>
+#include <mongocxx/config/private/postlude.hh>

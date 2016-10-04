@@ -22,7 +22,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -125,4 +125,4 @@ class scoped_bson_t {
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hpp>
+#include <mongocxx/config/private/postlude.hh>

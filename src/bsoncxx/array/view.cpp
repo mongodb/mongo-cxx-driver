@@ -20,10 +20,10 @@
 
 #include <bson.h>
 
-#include <bsoncxx/private/itoa.hpp>
+#include <bsoncxx/private/itoa.hh>
 #include <bsoncxx/types.hpp>
 
-#include <bsoncxx/config/private/prelude.hpp>
+#include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

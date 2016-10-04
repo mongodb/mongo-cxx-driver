@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2014 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,29 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/string/view_or_value.hpp>
+#pragma once
+
+#include <cstddef>
+#include <cstdint>
 
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
-namespace string {
 
-view_or_value view_or_value::terminated() const {
-    // If we do not own our string, we cannot guarantee that it is null-terminated,
-    // so make an owned copy.
-    if (!is_owning()) {
-        return view_or_value(view().to_string());
-    }
+class itoa {
+   public:
+    itoa();
+    itoa(uint32_t i);
+    itoa(const itoa& rhs);
+    itoa& operator=(const itoa& rhs);
+    itoa& operator=(uint32_t i);
 
-    // If we are owning, return a view_or_value viewing our string
-    return {view()};
-}
+    const char* c_str() const;
+    std::size_t length() const;
 
-const char* view_or_value::data() const {
-    return view().data();
-}
+   private:
+    BSONCXX_PRIVATE void init();
 
-}  // namespace string
+    uint32_t _val;
+    const char* _str;
+    uint8_t _len;
+    char _buf[11];
+};
+
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
+
+#include <bsoncxx/config/private/postlude.hh>

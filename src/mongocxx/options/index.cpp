@@ -15,9 +15,9 @@
 #include <mongocxx/options/index.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

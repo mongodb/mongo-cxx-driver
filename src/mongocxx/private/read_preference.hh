@@ -12,9 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/prelude.hpp>
+#pragma once
 
-// NOTE: Push any macros here that are defined by the following
-// headers here.
+#include <mongocxx/read_preference.hpp>
+#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/config.hpp>
+#include <mongocxx/config/private/prelude.hh>
+
+namespace mongocxx {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
+
+class read_preference::impl {
+   public:
+    impl(mongoc_read_prefs_t* read_pref) : read_preference_t(read_pref) {
+    }
+
+    ~impl() {
+        libmongoc::read_prefs_destroy(read_preference_t);
+    }
+
+    mongoc_read_prefs_t* read_preference_t;
+};
+
+MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace mongocxx
+
+#include <mongocxx/config/private/postlude.hh>

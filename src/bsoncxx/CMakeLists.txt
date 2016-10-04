@@ -158,10 +158,7 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     DESTINATION ${BSONCXX_HEADER_INSTALL_DIR}
     COMPONENT dev
     FILES_MATCHING
-      PATTERN "*.h"
       PATTERN "*.hpp"
-      REGEX ".+/private" EXCLUDE
-      REGEX ".+/test" EXCLUDE
 )
 
 install(FILES

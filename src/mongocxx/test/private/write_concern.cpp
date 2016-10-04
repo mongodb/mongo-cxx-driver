@@ -14,10 +14,10 @@
 
 #include "catch.hpp"
 
-#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/write_concern.hpp>
-#include <mongocxx/private/write_concern.hpp>
+#include <mongocxx/private/write_concern.hh>
 
 using namespace mongocxx;
 

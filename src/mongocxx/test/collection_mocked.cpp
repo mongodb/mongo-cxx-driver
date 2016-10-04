@@ -22,7 +22,7 @@
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/private/helpers.hpp>
+#include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/client.hpp>
@@ -34,8 +34,8 @@
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/options/update.hpp>
 #include <mongocxx/pipeline.hpp>
-#include <mongocxx/private/libbson.hpp>
-#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/stdx.hpp>
 

@@ -21,7 +21,7 @@
 
 #include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
-#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/stdx.hpp>
 
 namespace {

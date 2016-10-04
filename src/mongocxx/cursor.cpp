@@ -22,13 +22,13 @@
 #include <bson.h>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <mongocxx/exception/private/error_category.hpp>
-#include <mongocxx/exception/private/mongoc_error.hpp>
+#include <mongocxx/exception/private/error_category.hh>
+#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/exception/query_exception.hpp>
-#include <mongocxx/private/cursor.hpp>
-#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/cursor.hh>
+#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

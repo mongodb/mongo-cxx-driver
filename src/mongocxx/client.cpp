@@ -18,16 +18,16 @@
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/private/error_category.hpp>
-#include <mongocxx/exception/private/mongoc_error.hpp>
-#include <mongocxx/private/client.hpp>
-#include <mongocxx/private/read_concern.hpp>
-#include <mongocxx/private/read_preference.hpp>
-#include <mongocxx/private/ssl.hpp>
-#include <mongocxx/private/uri.hpp>
-#include <mongocxx/private/write_concern.hpp>
+#include <mongocxx/exception/private/error_category.hh>
+#include <mongocxx/exception/private/mongoc_error.hh>
+#include <mongocxx/private/client.hh>
+#include <mongocxx/private/read_concern.hh>
+#include <mongocxx/private/read_preference.hh>
+#include <mongocxx/private/ssl.hh>
+#include <mongocxx/private/uri.hh>
+#include <mongocxx/private/write_concern.hh>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

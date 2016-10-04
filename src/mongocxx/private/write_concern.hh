@@ -14,30 +14,27 @@
 
 #pragma once
 
-#include <bsoncxx/builder/stream/array.hpp>
-#include <bsoncxx/builder/stream/single_context.hpp>
-#include <mongocxx/pipeline.hpp>
+#include <mongocxx/write_concern.hpp>
+#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-class pipeline::impl {
+class write_concern::impl {
    public:
-    bsoncxx::builder::stream::single_context sink() {
-        return _builder;
+    impl(mongoc_write_concern_t* write_concern) : write_concern_t(write_concern) {
     }
 
-    bsoncxx::document::view view() {
-        return _builder.view();
+    ~impl() {
+        libmongoc::write_concern_destroy(write_concern_t);
     }
 
-   private:
-    bsoncxx::builder::stream::array _builder;
+    mongoc_write_concern_t* write_concern_t;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hpp>
+#include <mongocxx/config/private/postlude.hh>

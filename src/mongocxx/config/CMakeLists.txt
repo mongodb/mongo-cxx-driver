@@ -23,8 +23,8 @@ configure_file(
 )
 
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/private/config.hpp.in
-    ${CMAKE_CURRENT_BINARY_DIR}/private/config.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/private/config.hh.in
+    ${CMAKE_CURRENT_BINARY_DIR}/private/config.hh
 )
 
 install(FILES

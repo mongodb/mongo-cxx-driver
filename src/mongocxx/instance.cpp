@@ -23,9 +23,9 @@
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/logger.hpp>
-#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #if !defined(__has_feature)
 #define __has_feature(x) 0

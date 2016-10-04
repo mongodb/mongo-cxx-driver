@@ -25,7 +25,7 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
 
-#include <bsoncxx/config/private/prelude.hpp>
+#include <bsoncxx/config/private/prelude.hh>
 
 #define CITER                \
     bson_iter_t iter;        \

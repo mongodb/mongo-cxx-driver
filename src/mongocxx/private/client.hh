@@ -14,28 +14,31 @@
 
 #pragma once
 
-#include <mongoc.h>
+#include <list>
 
-#include <mongocxx/mock/mock.hpp>
+#include <mongocxx/client.hpp>
+#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/write_concern.hh>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
-namespace libmongoc {
 
-#ifdef MONGOCXX_TESTING
-#define MONGOCXX_LIBMONGOC_SYMBOL(name) extern mongocxx::mock::mock<decltype(&mongoc_##name)>& name;
-#include "libmongoc_symbols.hpp"
-#undef MONGOCXX_LIBMONGOC_SYMBOL
-#else
-#define MONGOCXX_LIBMONGOC_SYMBOL(name) constexpr auto name = mongoc_##name;
-#include "libmongoc_symbols.hpp"
-#undef MONGOCXX_LIBMONGOC_SYMBOL
-#endif
+class client::impl {
+   public:
+    impl(mongoc_client_t* client) : client_t(client) {
+    }
 
-}  // namespace libmongoc
+    ~impl() {
+        libmongoc::client_destroy(client_t);
+    }
+
+    mongoc_client_t* client_t;
+    std::list<bsoncxx::string::view_or_value> ssl_options;
+};
+
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hpp>
+#include <mongocxx/config/private/postlude.hh>

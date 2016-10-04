@@ -14,7 +14,7 @@
 
 #include <mongocxx/options/find_one_and_update.hpp>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
