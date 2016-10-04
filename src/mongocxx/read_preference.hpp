@@ -15,8 +15,8 @@
 #pragma once
 
 #include <cstdint>
-#include <string>
 #include <memory>
+#include <string>
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -157,12 +157,16 @@ class MONGOCXX_API read_preference {
     /// @param tags
     ///   Document representing the tags.
     ///
+    /// @see http://docs.mongodb.org/manual/core/read-preference/#tag-sets
+    ///
     void tags(bsoncxx::document::view_or_value tags);
 
     ///
     /// Returns the current tags for this read_preference.
     ///
     /// @return The optionally set current tags.
+    ///
+    /// @see http://docs.mongodb.org/manual/core/read-preference/#tag-sets
     ///
     stdx::optional<bsoncxx::document::view> tags() const;
 
