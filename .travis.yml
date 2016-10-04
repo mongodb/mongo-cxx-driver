@@ -63,7 +63,7 @@ install:
     # TODO: Update this to our real minimum for the C++11 driver 3.1 release, once known.
     - git checkout master
 
-    - ./autogen.sh --enable-tests=no --enable-examples=no --with-libbson=bundled --disable-decimal-bid; make; sudo make install
+    - ./autogen.sh --enable-tests=no --enable-examples=no --with-libbson=bundled; make; sudo make install
 
     - popd
 
