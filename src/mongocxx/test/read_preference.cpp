@@ -16,60 +16,77 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/read_preference.hpp>
 
-using namespace mongocxx;
 using namespace bsoncxx;
+using namespace mongocxx;
 
-TEST_CASE("Read Preference", "[read_preference]") {
+TEST_CASE("Read preference", "[read_preference]") {
     instance::current();
 
     read_preference rp;
-    auto tags = builder::stream::document{} << "blah"
-                                            << "wow" << builder::stream::finalize;
 
     SECTION("Defaults to mode primary and empty tags") {
         REQUIRE(rp.mode() == read_preference::read_mode::k_primary);
         REQUIRE_FALSE(rp.tags());
-
-        SECTION("Can have mode changed") {
-            rp.mode(read_preference::read_mode::k_nearest);
-            REQUIRE(rp.mode() == read_preference::read_mode::k_nearest);
-        }
-
-        SECTION("Can have tags changed") {
-            rp.tags(tags.view());
-            REQUIRE(rp.tags().value() == tags);
-        }
     }
 
-    SECTION("Can be constructed with another read_mode") {
-        read_preference rp(read_preference::read_mode::k_secondary);
-        REQUIRE(rp.mode() == read_preference::read_mode::k_secondary);
-        REQUIRE_FALSE(rp.tags());
+    SECTION("Can have mode changed") {
+        rp.mode(read_preference::read_mode::k_nearest);
+        REQUIRE(rp.mode() == read_preference::read_mode::k_nearest);
     }
 
-    SECTION("Can be constructed with a read_mode and tags") {
-        read_preference rp(read_preference::read_mode::k_secondary, tags.view());
-        REQUIRE(rp.mode() == read_preference::read_mode::k_secondary);
+    SECTION("Can have tags changed") {
+        auto tags = builder::stream::document{} << "tag_key"
+                                                << "tag_value" << builder::stream::finalize;
+        rp.tags(tags.view());
         REQUIRE(rp.tags().value() == tags);
     }
 
-    SECTION("Can be compared with another read preference") {
-        read_preference other;
-        REQUIRE(rp == other);
-        other.mode(read_preference::read_mode::k_nearest);
-        REQUIRE_FALSE(rp == other);
-        other.mode(read_preference::read_mode::k_primary);
-        REQUIRE(rp == other);
-        other.tags(tags.view());
-        REQUIRE_FALSE(rp == other);
-        rp.tags(tags.view());
-        REQUIRE(rp == other);
-        auto other_tags = builder::stream::document{} << "blah"
-                                                      << "other" << builder::stream::finalize;
-        other.tags(other_tags.view());
-        REQUIRE_FALSE(rp == other);
+}
+
+TEST_CASE("Read preference can be constructed with another read_mode", "[read_preference]") {
+    instance::current();
+
+    read_preference rp(read_preference::read_mode::k_secondary);
+    REQUIRE(rp.mode() == read_preference::read_mode::k_secondary);
+    REQUIRE_FALSE(rp.tags());
+}
+
+TEST_CASE("Read preference can be constructed with a read_mode and tags", "[read_preference]") {
+    instance::current();
+    auto tags = builder::stream::document{} << "tag_key"
+                                            << "tag_value" << builder::stream::finalize;
+
+    read_preference rp(read_preference::read_mode::k_secondary, tags.view());
+    REQUIRE(rp.mode() == read_preference::read_mode::k_secondary);
+    REQUIRE(rp.tags().value() == tags);
+}
+
+TEST_CASE("Read preference comparison works", "[read_preference]") {
+    instance::current();
+
+    read_preference rp_a;
+    read_preference rp_b;
+    REQUIRE(rp_a == rp_b);
+
+    SECTION("mode is compared") {
+        rp_a.mode(read_preference::read_mode::k_nearest);
+        REQUIRE_FALSE(rp_a == rp_b);
+        rp_b.mode(read_preference::read_mode::k_nearest);
+        REQUIRE(rp_a == rp_b);
     }
+
+    SECTION("tags are compared") {
+        auto tags = builder::stream::document{} << "tag_key"
+                                                << "tag_value" << builder::stream::finalize;
+        rp_a.tags(tags.view());
+        REQUIRE_FALSE(rp_a == rp_b);
+        rp_b.tags(tags.view());
+        REQUIRE(rp_a == rp_b);
+    }
+}
+
 }
