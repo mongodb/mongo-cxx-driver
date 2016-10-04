@@ -63,14 +63,24 @@ class BSONCXX_API view {
     const_iterator cend() const;
 
     ///
+    /// @returns A const_iterator to the first element of the document.
+    ///
+    const_iterator begin() const;
+
+    ///
+    /// @returns A const_iterator to the past-the-end element of the document.
+    ///
+    const_iterator end() const;
+
+    ///
     /// @returns An iterator to the first element of the document.
     ///
-    iterator begin() const;
+    iterator begin();
 
     ///
     /// @returns An iterator to the past-the-end element of the document.
     ///
-    iterator end() const;
+    iterator end();
 
     ///
     /// Finds the first element of the document with the provided key. If there is

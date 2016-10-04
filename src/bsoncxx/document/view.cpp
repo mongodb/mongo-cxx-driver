@@ -148,7 +148,15 @@ view::const_iterator view::cend() const {
     return const_iterator();
 }
 
-view::iterator view::begin() const {
+view::const_iterator view::begin() const {
+    return cbegin();
+}
+
+view::const_iterator view::end() const {
+    return const_iterator();
+}
+
+view::iterator view::begin() {
     bson_t b;
     bson_iter_t iter;
 
@@ -161,7 +169,7 @@ view::iterator view::begin() const {
     return iterator(element{iter.raw, iter.len, iter.off});
 }
 
-view::iterator view::end() const {
+view::iterator view::end() {
     return iterator();
 }
 
@@ -170,14 +178,14 @@ view::iterator view::find(stdx::string_view key) const {
     bson_iter_t iter;
 
     if (!bson_init_static(&b, _data, _length)) {
-        return end();
+        return const_cast<view*>(this)->end();
     }
 
     if (bson_iter_init_find(&iter, &b, key.to_string().data())) {
         return iterator(element(iter.raw, iter.len, iter.off));
     }
 
-    return end();
+    return const_cast<view*>(this)->end();
 }
 
 element view::operator[](stdx::string_view key) const {
