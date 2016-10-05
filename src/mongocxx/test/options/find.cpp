@@ -136,7 +136,7 @@ TEST_CASE("options::find::convert_all_modifiers() with $maxScan", "[find][option
     REQUIRE(*find_opts.max_scan() == 1);
 
     find_opts = options::find{}
-                    .modifiers(document{} << "$maxScan" << 1LL << finalize)
+                    .modifiers(document{} << "$maxScan" << std::int64_t{1} << finalize)
                     .convert_all_modifiers();
     REQUIRE(!find_opts.modifiers());
     REQUIRE(find_opts.max_scan());
