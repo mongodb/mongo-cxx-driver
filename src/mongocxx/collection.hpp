@@ -301,7 +301,8 @@ class MONGOCXX_API collection {
     /// the cursor throws mongocxx::query_exception when the returned cursor
     /// is iterated.
     ///
-    /// @throws mongocxx::logic_error if the options are invalid.
+    /// @throws mongocxx::logic_error if the options are invalid, or if the unsupported option
+    /// modifiers "$query" or "$explain" are used.
     ///
     /// @see http://docs.mongodb.org/manual/core/read-operations-introduction/
     ///

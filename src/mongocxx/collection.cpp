@@ -189,66 +189,111 @@ stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write
     return stdx::optional<result::bulk_write>(std::move(result));
 }
 
-cursor collection::find(view_or_value filter, const options::find& options) {
-    using namespace bsoncxx;
-    builder::stream::document filter_builder;
-    int query_flags = ::MONGOC_QUERY_NONE;
-    scoped_bson_t filter_bson;
-    scoped_bson_t projection{options.projection()};
+namespace {
 
-    filter_builder << "$query" << bsoncxx::types::b_document{filter};
+bsoncxx::document::value build_find_options_document(const options::find& options) {
+    bsoncxx::builder::stream::document options_builder;
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    if (options.modifiers()) {
-        filter_builder << builder::stream::concatenate(*options.modifiers());
-    }
-#pragma clang diagnostic pop
-
-    if (options.sort()) {
-        filter_builder << "$orderby" << bsoncxx::types::b_document{*options.sort()};
+    if (options.allow_partial_results()) {
+        options_builder << "allowPartialResults" << *options.allow_partial_results();
     }
 
-    if (options.max_time()) {
-        filter_builder << "$maxTimeMS" << bsoncxx::types::b_int64{options.max_time()->count()};
-    }
-
-    if (options.hint()) {
-        filter_builder << "$hint" << options.hint()->to_value();
+    if (options.batch_size()) {
+        options_builder << "batchSize" << *options.batch_size();
     }
 
     if (options.comment()) {
-        filter_builder << "$comment" << *options.comment();
+        options_builder << "comment" << *options.comment();
     }
 
     if (options.cursor_type()) {
-        if (*options.cursor_type() == cursor::type::k_non_tailable) {
-            query_flags &= ~::MONGOC_QUERY_TAILABLE_CURSOR;
-        } else if (*options.cursor_type() == cursor::type::k_tailable) {
-            query_flags |= ::MONGOC_QUERY_TAILABLE_CURSOR;
+        if (*options.cursor_type() == cursor::type::k_tailable) {
+            options_builder << "tailable" << bsoncxx::types::b_bool{true};
         } else if (*options.cursor_type() == cursor::type::k_tailable_await) {
-            query_flags |= ::MONGOC_QUERY_TAILABLE_CURSOR;
-            query_flags |= ::MONGOC_QUERY_AWAIT_DATA;
+            options_builder << "tailable" << bsoncxx::types::b_bool{true};
+            options_builder << "awaitData" << bsoncxx::types::b_bool{true};
+        } else if (*options.cursor_type() == cursor::type::k_non_tailable) {
         } else {
             throw logic_error{error_code::k_invalid_parameter};
         }
     }
 
-    filter_bson.init_from_static(filter_builder.view());
-
-    const mongoc_read_prefs_t* rp_ptr = NULL;
-
-    if (options.read_preference()) {
-        rp_ptr = options.read_preference()->_impl->read_preference_t;
+    if (options.hint()) {
+        options_builder << "hint" << options.hint()->to_value();
     }
 
-    auto mongoc_cursor = libmongoc::collection_find(
-        _get_impl().collection_t, static_cast<::mongoc_query_flags_t>(query_flags),
-        options.skip().value_or(0), options.limit().value_or(0), options.batch_size().value_or(0),
-        filter_bson.bson(), projection.bson(), rp_ptr);
+    if (options.limit()) {
+        options_builder << "limit" << *options.limit();
+    }
 
-    if (options.max_await_time()) {
-        const auto count = options.max_await_time()->count();
+    if (options.max()) {
+        options_builder << "max" << *options.max();
+    }
+
+    if (options.max_scan()) {
+        options_builder << "maxScan" << *options.max_scan();
+    }
+
+    if (options.max_time()) {
+        options_builder << "maxTimeMS" << bsoncxx::types::b_int64{options.max_time()->count()};
+    }
+
+    if (options.min()) {
+        options_builder << "min" << *options.min();
+    }
+
+    if (options.no_cursor_timeout()) {
+        options_builder << "noCursorTimeout" << *options.no_cursor_timeout();
+    }
+
+    if (options.projection()) {
+        options_builder << "projection" << bsoncxx::types::b_document{*options.projection()};
+    }
+
+    if (options.return_key()) {
+        options_builder << "returnKey" << *options.return_key();
+    }
+
+    if (options.show_record_id()) {
+        options_builder << "showRecordId" << *options.show_record_id();
+    }
+
+    if (options.snapshot()) {
+        options_builder << "snapshot" << *options.snapshot();
+    }
+
+    if (options.skip()) {
+        options_builder << "skip" << *options.skip();
+    }
+
+    if (options.sort()) {
+        options_builder << "sort" << bsoncxx::types::b_document{*options.sort()};
+    }
+
+    return options_builder.extract();
+}
+
+}  // namespace
+
+cursor collection::find(view_or_value filter, const options::find& options) {
+    // libmongoc::collection_find_with_opts does not support the legacy "modifiers" options, so we
+    // must copy the options struct and convert all of the modifiers options to their modern
+    // equivalents.
+    options::find options_converted = options.convert_all_modifiers();
+
+    scoped_bson_t filter_bson{std::move(filter)};
+    scoped_bson_t options_bson{build_find_options_document(options_converted)};
+
+    const mongoc_read_prefs_t* rp_ptr = NULL;
+    if (options_converted.read_preference()) {
+        rp_ptr = options_converted.read_preference()->_impl->read_preference_t;
+    }
+
+    auto mongoc_cursor = libmongoc::collection_find_with_opts(
+        _get_impl().collection_t, filter_bson.bson(), options_bson.bson(), rp_ptr);
+
+    if (options_converted.max_await_time()) {
+        const auto count = options_converted.max_await_time()->count();
         if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max()))
             throw logic_error{error_code::k_invalid_parameter};
         libmongoc::cursor_set_max_await_time_ms(mongoc_cursor, static_cast<std::uint32_t>(count));
