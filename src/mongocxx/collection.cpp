@@ -189,107 +189,111 @@ stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write
     return stdx::optional<result::bulk_write>(std::move(result));
 }
 
-cursor collection::find(view_or_value filter, const options::find& options) {
-    using namespace bsoncxx;
-    builder::stream::document opts_builder;
-    scoped_bson_t filter_bson{filter};
-    scoped_bson_t opts_bson;
+namespace {
 
-    // libmongoc::collection_find_with_opts does not support the legacy "modifiers" options, so we
-    // must copy the options struct and convert all of the modifiers options to their modern
-    // equivalents.
-    options::find opts(options);
-    opts.convert_all_modifiers();
+bsoncxx::document::value build_find_options_document(const options::find& options) {
+    bsoncxx::builder::stream::document options_builder;
 
-    if (opts.allow_partial_results()) {
-        opts_builder << "allowPartialResults" << *opts.allow_partial_results();
+    if (options.allow_partial_results()) {
+        options_builder << "allowPartialResults" << *options.allow_partial_results();
     }
 
-    if (opts.batch_size()) {
-        opts_builder << "batchSize" << *opts.batch_size();
+    if (options.batch_size()) {
+        options_builder << "batchSize" << *options.batch_size();
     }
 
-    if (opts.comment()) {
-        opts_builder << "comment" << *opts.comment();
+    if (options.comment()) {
+        options_builder << "comment" << *options.comment();
     }
 
-    if (opts.cursor_type()) {
-        if (*opts.cursor_type() == cursor::type::k_tailable) {
-            opts_builder << "tailable" << bsoncxx::types::b_bool{true};
-        } else if (*opts.cursor_type() == cursor::type::k_tailable_await) {
-            opts_builder << "tailable" << bsoncxx::types::b_bool{true};
-            opts_builder << "awaitData" << bsoncxx::types::b_bool{true};
-        } else if (*opts.cursor_type() == cursor::type::k_non_tailable) {
+    if (options.cursor_type()) {
+        if (*options.cursor_type() == cursor::type::k_tailable) {
+            options_builder << "tailable" << bsoncxx::types::b_bool{true};
+        } else if (*options.cursor_type() == cursor::type::k_tailable_await) {
+            options_builder << "tailable" << bsoncxx::types::b_bool{true};
+            options_builder << "awaitData" << bsoncxx::types::b_bool{true};
+        } else if (*options.cursor_type() == cursor::type::k_non_tailable) {
         } else {
             throw logic_error{error_code::k_invalid_parameter};
         }
     }
 
-    if (opts.hint()) {
-        opts_builder << "hint" << opts.hint()->to_value();
+    if (options.hint()) {
+        options_builder << "hint" << options.hint()->to_value();
     }
 
-    if (opts.limit()) {
-        opts_builder << "limit" << *opts.limit();
+    if (options.limit()) {
+        options_builder << "limit" << *options.limit();
     }
 
-    if (opts.max()) {
-        opts_builder << "max" << *opts.max();
+    if (options.max()) {
+        options_builder << "max" << *options.max();
     }
 
-    if (opts.max_scan()) {
-        opts_builder << "maxScan" << *opts.max_scan();
+    if (options.max_scan()) {
+        options_builder << "maxScan" << *options.max_scan();
     }
 
-    if (opts.max_time()) {
-        opts_builder << "maxTimeMS" << bsoncxx::types::b_int64{opts.max_time()->count()};
+    if (options.max_time()) {
+        options_builder << "maxTimeMS" << bsoncxx::types::b_int64{options.max_time()->count()};
     }
 
-    if (opts.min()) {
-        opts_builder << "min" << *opts.min();
+    if (options.min()) {
+        options_builder << "min" << *options.min();
     }
 
-    if (opts.no_cursor_timeout()) {
-        opts_builder << "noCursorTimeout" << *opts.no_cursor_timeout();
+    if (options.no_cursor_timeout()) {
+        options_builder << "noCursorTimeout" << *options.no_cursor_timeout();
     }
 
-    if (opts.projection()) {
-        opts_builder << "projection" << bsoncxx::types::b_document{*opts.projection()};
+    if (options.projection()) {
+        options_builder << "projection" << bsoncxx::types::b_document{*options.projection()};
     }
 
-    if (opts.return_key()) {
-        opts_builder << "returnKey" << *opts.return_key();
+    if (options.return_key()) {
+        options_builder << "returnKey" << *options.return_key();
     }
 
-    if (opts.show_record_id()) {
-        opts_builder << "showRecordId" << *opts.show_record_id();
+    if (options.show_record_id()) {
+        options_builder << "showRecordId" << *options.show_record_id();
     }
 
-    if (opts.snapshot()) {
-        opts_builder << "snapshot" << *opts.snapshot();
+    if (options.snapshot()) {
+        options_builder << "snapshot" << *options.snapshot();
     }
 
-    if (opts.skip()) {
-        opts_builder << "skip" << *opts.skip();
+    if (options.skip()) {
+        options_builder << "skip" << *options.skip();
     }
 
-    if (opts.sort()) {
-        opts_builder << "sort" << bsoncxx::types::b_document{*opts.sort()};
+    if (options.sort()) {
+        options_builder << "sort" << bsoncxx::types::b_document{*options.sort()};
     }
 
-    opts_bson.init_from_static(opts_builder.view());
+    return options_builder.extract();
+}
+
+}  // namespace
+
+cursor collection::find(view_or_value filter, const options::find& options) {
+    // libmongoc::collection_find_with_opts does not support the legacy "modifiers" options, so we
+    // must copy the options struct and convert all of the modifiers options to their modern
+    // equivalents.
+    options::find options_converted = options.convert_all_modifiers();
+
+    scoped_bson_t filter_bson{std::move(filter)};
+    scoped_bson_t options_bson{build_find_options_document(options_converted)};
 
     const mongoc_read_prefs_t* rp_ptr = NULL;
-
-    if (opts.read_preference()) {
-        rp_ptr = opts.read_preference()->_impl->read_preference_t;
+    if (options_converted.read_preference()) {
+        rp_ptr = options_converted.read_preference()->_impl->read_preference_t;
     }
 
     auto mongoc_cursor = libmongoc::collection_find_with_opts(
-        _get_impl().collection_t, filter_bson.bson(), opts_bson.bson(), rp_ptr);
+        _get_impl().collection_t, filter_bson.bson(), options_bson.bson(), rp_ptr);
 
-    if (opts.max_await_time()) {
-        const auto count = opts.max_await_time()->count();
+    if (options_converted.max_await_time()) {
+        const auto count = options_converted.max_await_time()->count();
         if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max()))
             throw logic_error{error_code::k_invalid_parameter};
         libmongoc::cursor_set_max_await_time_ms(mongoc_cursor, static_cast<std::uint32_t>(count));
