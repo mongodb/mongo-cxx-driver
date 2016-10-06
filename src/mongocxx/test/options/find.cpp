@@ -170,7 +170,7 @@ TEST_CASE("options::find::convert_all_modifiers() with $maxTimeMS", "[find][opti
     REQUIRE(find_opts.max_time()->count() == 1);
 
     find_opts = options::find{}
-                    .modifiers(document{} << "$maxTimeMS" << 1LL << finalize)
+                    .modifiers(document{} << "$maxTimeMS" << std::int64_t{1} << finalize)
                     .convert_all_modifiers();
     REQUIRE(!find_opts.modifiers());
     REQUIRE(find_opts.max_time());
