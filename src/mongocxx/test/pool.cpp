@@ -91,7 +91,8 @@ TEST_CASE(
             interposed = *opts;
         });
 
-    pool p{uri{"mongodb://mongodb.example.com:9999?ssl=true"}, std::move(ssl_opts)};
+    pool p{uri{"mongodb://mongodb.example.com:9999?ssl=true"},
+           options::client().ssl_opts(ssl_opts)};
 
     REQUIRE(set_ssl_opts_called);
     REQUIRE(interposed.pem_file == pem_file);
