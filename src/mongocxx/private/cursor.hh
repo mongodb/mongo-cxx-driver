@@ -14,31 +14,27 @@
 
 #pragma once
 
-#include <list>
+#include <mongocxx/cursor.hpp>
+#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/client.hpp>
-#include <mongocxx/private/libmongoc.hpp>
-#include <mongocxx/private/write_concern.hpp>
-
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-class client::impl {
+class cursor::impl {
    public:
-    impl(mongoc_client_t* client) : client_t(client) {
+    impl(mongoc_cursor_t* cursor) : cursor_t(cursor) {
     }
 
     ~impl() {
-        libmongoc::client_destroy(client_t);
+        libmongoc::cursor_destroy(cursor_t);
     }
 
-    mongoc_client_t* client_t;
-    std::list<bsoncxx::string::view_or_value> ssl_options;
+    mongoc_cursor_t* cursor_t;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hpp>
+#include <mongocxx/config/private/postlude.hh>

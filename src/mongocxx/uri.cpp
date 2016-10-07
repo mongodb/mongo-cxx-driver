@@ -15,13 +15,13 @@
 #include <mongocxx/uri.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <mongocxx/private/libmongoc.hpp>
-#include <mongocxx/private/read_concern.hpp>
-#include <mongocxx/private/read_preference.hpp>
-#include <mongocxx/private/uri.hpp>
-#include <mongocxx/private/write_concern.hpp>
+#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/read_concern.hh>
+#include <mongocxx/private/read_preference.hh>
+#include <mongocxx/private/uri.hh>
+#include <mongocxx/private/write_concern.hh>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

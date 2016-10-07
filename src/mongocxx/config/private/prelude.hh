@@ -12,29 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#include <mongocxx/config/prelude.hpp>
 
-#include <mongocxx/cursor.hpp>
-#include <mongocxx/private/libmongoc.hpp>
+// NOTE: Push any macros here that are defined by the following
+// headers here.
 
-#include <mongocxx/config/private/prelude.hpp>
+#pragma push_macro("MONGOCXX_ENABLE_SSL")
+#undef MONGOCXX_ENABLE_SSL
 
-namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
-class cursor::impl {
-   public:
-    impl(mongoc_cursor_t* cursor) : cursor_t(cursor) {
-    }
-
-    ~impl() {
-        libmongoc::cursor_destroy(cursor_t);
-    }
-
-    mongoc_cursor_t* cursor_t;
-};
-
-MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace mongocxx
-
-#include <mongocxx/config/private/postlude.hpp>
+#include <mongocxx/config/private/config.hh>

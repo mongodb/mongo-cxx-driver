@@ -18,7 +18,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
-#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/uri.hpp>
 
 using namespace mongocxx;

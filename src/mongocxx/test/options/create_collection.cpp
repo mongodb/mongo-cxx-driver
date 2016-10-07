@@ -47,7 +47,7 @@ TEST_CASE("create_collection", "[create_collection]") {
         cc.capped(true);
         cc.size(256);
         cc.max(100);
-        cc.no_padding(false);
+        cc.no_padding(true);
 
         auto doc = cc.to_document();
         document::view doc_view{doc.view()};
@@ -74,11 +74,11 @@ TEST_CASE("create_collection", "[create_collection]") {
         REQUIRE(max.type() == type::k_int32);
         REQUIRE(max.get_int32() == 100);
 
-        // noPadding should be set to false
-        document::element padding{doc_view["noPadding"]};
+        // flags should be set to 0x10
+        document::element padding{doc_view["flags"]};
         REQUIRE(padding);
-        REQUIRE(padding.type() == type::k_bool);
-        REQUIRE(padding.get_bool() == false);
+        REQUIRE(padding.type() == type::k_int32);
+        REQUIRE(padding.get_int32() == 0x10);
 
         // storageEngine should not be set
         document::element engine{doc_view["storageEngine"]};

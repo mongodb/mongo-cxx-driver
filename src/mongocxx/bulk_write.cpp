@@ -15,12 +15,12 @@
 #include <mongocxx/bulk_write.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <mongocxx/private/libbson.hpp>
-#include <mongocxx/private/bulk_write.hpp>
-#include <mongocxx/private/libmongoc.hpp>
-#include <mongocxx/private/write_concern.hpp>
+#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/bulk_write.hh>
+#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/write_concern.hh>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

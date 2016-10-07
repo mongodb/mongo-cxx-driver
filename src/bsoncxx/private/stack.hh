@@ -18,7 +18,7 @@
 #include <memory>
 #include <type_traits>
 
-#include <bsoncxx/config/private/prelude.hpp>
+#include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -141,4 +141,4 @@ class stack {
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
-#include <bsoncxx/config/private/postlude.hpp>
+#include <bsoncxx/config/private/postlude.hh>

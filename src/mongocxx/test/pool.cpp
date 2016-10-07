@@ -19,7 +19,7 @@
 #include <string>
 
 #include <mongocxx/instance.hpp>
-#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/options/ssl.hpp>
 #include <mongocxx/pool.hpp>

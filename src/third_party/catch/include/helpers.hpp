@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/libmongoc.hh>
 
 #define CHECK_OPTIONAL_ARGUMENT(OBJECT, NAME, VALUE) \
     SECTION("has NAME disengaged") {                 \

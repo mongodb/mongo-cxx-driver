@@ -22,8 +22,8 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/modify_collection.hpp>
-#include <mongocxx/private/libmongoc.hpp>
-#include <mongocxx/private/libbson.hpp>
+#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/libbson.hh>
 #include <mongocxx/validation_criteria.hpp>
 
 using namespace mongocxx;

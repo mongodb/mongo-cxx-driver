@@ -17,7 +17,7 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <mongocxx/collection.hpp>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

@@ -15,10 +15,10 @@
 #include <mongocxx/pipeline.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <mongocxx/private/pipeline.hpp>
+#include <mongocxx/private/pipeline.hh>
 #include <mongocxx/stdx.hpp>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

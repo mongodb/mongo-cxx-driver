@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2014 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,27 +14,25 @@
 
 #pragma once
 
-#include <mongocxx/read_concern.hpp>
-#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/uri.hpp>
+#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-class read_concern::impl {
+class uri::impl {
    public:
-    impl(::mongoc_read_concern_t* read_concern) : read_concern_t{read_concern} {
+    impl(mongoc_uri_t* uri) : uri_t(uri) {
     }
-
     ~impl() {
-        libmongoc::read_concern_destroy(read_concern_t);
+        libmongoc::uri_destroy(uri_t);
     }
-
-    ::mongoc_read_concern_t* read_concern_t;
+    mongoc_uri_t* uri_t;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hpp>
+#include <mongocxx/config/private/postlude.hh>

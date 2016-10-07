@@ -15,16 +15,16 @@
 #pragma once
 
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/private/helpers.hpp>
+#include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
-#include <mongocxx/private/database.hpp>
-#include <mongocxx/private/libbson.hpp>
-#include <mongocxx/private/read_preference.hpp>
-#include <mongocxx/private/write_concern.hpp>
+#include <mongocxx/private/database.hh>
+#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/read_preference.hh>
+#include <mongocxx/private/write_concern.hh>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -62,4 +62,4 @@ class collection::impl {
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hpp>
+#include <mongocxx/config/private/postlude.hh>

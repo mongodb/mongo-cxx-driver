@@ -17,4 +17,4 @@
 // NOTE: Push any macros here that are defined by the following
 // headers here.
 
-#include <bsoncxx/config/private/config.hpp>
+#include <bsoncxx/config/private/config.hh>

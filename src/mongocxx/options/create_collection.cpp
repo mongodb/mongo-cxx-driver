@@ -18,7 +18,7 @@
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/types.hpp>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -84,7 +84,7 @@ bsoncxx::document::value create_collection::to_document() const {
     }
 
     if (_no_padding) {
-        doc << "noPadding" << *_no_padding;
+        doc << "flags" << (*_no_padding ? 0x10 : 0x00);
     }
 
     if (_validation) {

@@ -21,13 +21,13 @@
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/exception/private/error_category.hpp>
-#include <mongocxx/private/libmongoc.hpp>
-#include <mongocxx/private/write_concern.hpp>
+#include <mongocxx/exception/private/error_category.hh>
+#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/write_concern.hh>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/stdx.hpp>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

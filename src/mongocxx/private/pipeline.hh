@@ -14,35 +14,30 @@
 
 #pragma once
 
-#include <cstddef>
-#include <cstdint>
+#include <bsoncxx/builder/stream/array.hpp>
+#include <bsoncxx/builder/stream/single_context.hpp>
+#include <mongocxx/pipeline.hpp>
 
-#include <bsoncxx/config/private/prelude.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
-namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+namespace mongocxx {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-class itoa {
+class pipeline::impl {
    public:
-    itoa();
-    itoa(uint32_t i);
-    itoa(const itoa& rhs);
-    itoa& operator=(const itoa& rhs);
-    itoa& operator=(uint32_t i);
+    bsoncxx::builder::stream::single_context sink() {
+        return _builder;
+    }
 
-    const char* c_str() const;
-    std::size_t length() const;
+    bsoncxx::document::view view() {
+        return _builder.view();
+    }
 
    private:
-    BSONCXX_PRIVATE void init();
-
-    uint32_t _val;
-    const char* _str;
-    uint8_t _len;
-    char _buf[11];
+    bsoncxx::builder::stream::array _builder;
 };
 
-BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bsoncxx
+MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace mongocxx
 
-#include <bsoncxx/config/private/postlude.hpp>
+#include <mongocxx/config/private/postlude.hh>

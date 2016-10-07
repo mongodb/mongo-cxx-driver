@@ -14,7 +14,7 @@
 
 #include "catch.hpp"
 
-#include <bsoncxx/private/itoa.hpp>
+#include <bsoncxx/private/itoa.hh>
 
 TEST_CASE("util::itoa is equivalent to to_string(int)", "[bsoncxx::util::itoa]") {
 // Cygwin doesn't have std::to_string, see:

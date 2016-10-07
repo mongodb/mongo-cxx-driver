@@ -167,11 +167,7 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     DESTINATION ${MONGOCXX_HEADER_INSTALL_DIR}
     COMPONENT dev
     FILES_MATCHING
-        PATTERN "*.h"
         PATTERN "*.hpp"
-        REGEX ".+/mock" EXCLUDE
-        REGEX ".+/private" EXCLUDE
-        REGEX ".+/test" EXCLUDE
 )
 
 install(FILES

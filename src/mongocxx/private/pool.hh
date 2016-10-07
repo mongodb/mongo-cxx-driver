@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2015 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,27 +14,31 @@
 
 #pragma once
 
-#include <mongocxx/read_preference.hpp>
-#include <mongocxx/private/libmongoc.hpp>
+#include <list>
+#include <utility>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <mongocxx/pool.hpp>
+#include <mongocxx/private/libmongoc.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-class read_preference::impl {
+class pool::impl {
    public:
-    impl(mongoc_read_prefs_t* read_pref) : read_preference_t(read_pref) {
+    impl(mongoc_client_pool_t* pool) : client_pool_t(pool) {
     }
 
     ~impl() {
-        libmongoc::read_prefs_destroy(read_preference_t);
+        libmongoc::client_pool_destroy(client_pool_t);
     }
 
-    mongoc_read_prefs_t* read_preference_t;
+    mongoc_client_pool_t* client_pool_t;
+    std::list<bsoncxx::string::view_or_value> ssl_options;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace mongocxx
+};  // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hpp>
+#include <mongocxx/config/private/postlude.hh>

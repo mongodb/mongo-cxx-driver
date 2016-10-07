@@ -14,23 +14,28 @@
 
 #pragma once
 
-#include <system_error>
+#include <bson.h>
 
-#include <mongocxx/config/private/prelude.hpp>
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view.hpp>
 
-namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+#include <bsoncxx/config/private/prelude.hh>
 
-///
-/// Get the error_category for exceptions originating from the libmongoc library.
-///
-/// @param domain A libmongoc error domain
-///
-/// @return The mongoc error_category
-///
-const std::error_category& mongoc_error_category(int domain);
+namespace bsoncxx {
+BSONCXX_INLINE_NAMESPACE_BEGIN
 
-MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace mongocxx
+namespace helpers {
 
-#include <mongocxx/config/private/postlude.hpp>
+inline document::view view_from_bson_t(const bson_t* bson) {
+    return {::bson_get_data(bson), bson->len};
+}
+
+inline document::value value_from_bson_t(const bson_t* bson) {
+    return document::value{view_from_bson_t(bson)};
+}
+
+}  // namespace helpers
+BSONCXX_INLINE_NAMESPACE_END
+}  // namespace bsoncxx
+
+#include <bsoncxx/config/private/postlude.hh>

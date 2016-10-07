@@ -14,9 +14,9 @@
 
 #include "catch.hpp"
 
-#include <mongocxx/private/libmongoc.hpp>
+#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/private/libbson.hpp>
+#include <mongocxx/private/libbson.hh>
 
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
