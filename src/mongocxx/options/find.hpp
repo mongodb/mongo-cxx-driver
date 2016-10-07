@@ -450,15 +450,9 @@ class MONGOCXX_API find {
     const stdx::optional<bsoncxx::document::view_or_value>& sort() const;
 
     ///
-    /// Returns a new options object with all modifiers converted into their respective top-level
-    /// options. Each modifier is only converted if its respective top-level option doesn't already
-    /// exist. For internal use only.
+    /// Clears the modifiers member. Internal-only.
     ///
-    /// @throws
-    ///   mongocxx::logic_error if any modifiers are invalid, or if the unsupported "$query" or
-    ///   "$explain" modifiers are set.
-    ///
-    MONGOCXX_PRIVATE find convert_all_modifiers() const;
+    MONGOCXX_PRIVATE find& modifiers_clear();
 
    private:
     stdx::optional<bool> _allow_partial_results;

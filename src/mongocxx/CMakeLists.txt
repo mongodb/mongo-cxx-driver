@@ -73,6 +73,7 @@ set(mongocxx_sources
     options/insert.cpp
     options/modify_collection.cpp
     options/pool.cpp
+    options/private/rewriter.cpp
     options/ssl.cpp
     options/update.cpp
     pipeline.cpp

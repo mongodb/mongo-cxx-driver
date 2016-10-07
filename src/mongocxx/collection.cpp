@@ -36,6 +36,7 @@
 #include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/model/write.hpp>
+#include <mongocxx/options/private/rewriter.hh>
 #include <mongocxx/private/bulk_write.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/collection.hh>
@@ -279,7 +280,7 @@ cursor collection::find(view_or_value filter, const options::find& options) {
     // libmongoc::collection_find_with_opts does not support the legacy "modifiers" options, so we
     // must copy the options struct and convert all of the modifiers options to their modern
     // equivalents.
-    options::find options_converted = options.convert_all_modifiers();
+    auto options_converted = options::rewriter::rewrite_find_modifiers(options);
 
     scoped_bson_t filter_bson{std::move(filter)};
     scoped_bson_t options_bson{build_find_options_document(options_converted)};
