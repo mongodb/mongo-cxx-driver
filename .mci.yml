@@ -78,7 +78,7 @@ functions:
                 git clone https://github.com/mongodb/mongo-c-driver.git
                 cd mongo-c-driver
                 # TODO: Update this to our real minimum for the C++11 driver 3.1 release, once known.
-                git checkout master
+                git checkout 1.5.0-rc1
                 rm -rf /data/tmp/c-driver-install
                 ./autogen.sh --prefix="/data/tmp/c-driver-install" --enable-tests=no --enable-examples=no --with-libbson=bundled --disable-extra-align --enable-debug --enable-optimizations --disable-shm-counters --disable-static --disable-dependency-tracking --with-pic --disable-automatic-init-and-cleanup ${cdriver_configure_flags}
                 make ${compile_concurrency}
