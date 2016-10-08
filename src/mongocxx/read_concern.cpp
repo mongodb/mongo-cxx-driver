@@ -56,6 +56,10 @@ void read_concern::acknowledge_level(read_concern::level rc_level) {
             libmongoc::read_concern_set_level(_impl->read_concern_t,
                                               MONGOC_READ_CONCERN_LEVEL_MAJORITY);
             break;
+        case read_concern::level::k_linearizable:
+            libmongoc::read_concern_set_level(_impl->read_concern_t,
+                                              MONGOC_READ_CONCERN_LEVEL_LINEARIZABLE);
+            break;
         case read_concern::level::k_server_default:
             // libmongoc uses a NULL level to mean "use the server's default read_concern."
             libmongoc::read_concern_set_level(_impl->read_concern_t, NULL);
@@ -80,6 +84,8 @@ read_concern::level read_concern::acknowledge_level() const {
         return read_concern::level::k_local;
     } else if (strcmp(MONGOC_READ_CONCERN_LEVEL_MAJORITY, level) == 0) {
         return read_concern::level::k_majority;
+    } else if (strcmp(MONGOC_READ_CONCERN_LEVEL_LINEARIZABLE, level) == 0) {
+        return read_concern::level::k_linearizable;
     } else {
         return read_concern::level::k_unknown;
     }
