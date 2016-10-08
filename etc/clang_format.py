@@ -644,7 +644,7 @@ class Repo(object):
                     (line.startswith("src/") and not "/third_party/" in line) or
                     line.startswith("examples/")]
 
-        files_match = re.compile('\\.(h|hpp|cpp)$')
+        files_match = re.compile('\\.(h|hh|hpp|cpp)$')
 
         file_list = [a for a in file_list if files_match.search(a)]
 

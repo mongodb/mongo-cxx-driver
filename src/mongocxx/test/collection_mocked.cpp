@@ -241,10 +241,9 @@ TEST_CASE("Collection", "[collection]") {
             opts.hint(index_hint);
 
             // set our expected_opts so we check against that
-            bsoncxx::document::value doc =
-                bsoncxx::builder::stream::document{}
-                << bsoncxx::builder::stream::concatenate(index_hint.to_document())
-                << bsoncxx::builder::stream::finalize;
+            bsoncxx::document::value doc = bsoncxx::builder::stream::document{}
+                                           << "hint" << index_hint.to_value()
+                                           << bsoncxx::builder::stream::finalize;
             libbson::scoped_bson_t cmd_opts{std::move(doc)};
             expected_opts = cmd_opts.bson();
 
@@ -380,7 +379,7 @@ TEST_CASE("Collection", "[collection]") {
         auto find_doc = builder::stream::document{} << "a" << 1 << builder::stream::finalize;
         auto doc = find_doc.view();
         mongocxx::stdx::optional<bsoncxx::document::view> expected_sort{};
-        mongocxx::stdx::optional<bsoncxx::document::view> expected_hint{};
+        mongocxx::stdx::optional<bsoncxx::types::value> expected_hint{};
         mongocxx::stdx::optional<bsoncxx::stdx::string_view> expected_comment{};
         int expected_flags = 0;
 
@@ -402,8 +401,7 @@ TEST_CASE("Collection", "[collection]") {
                 REQUIRE(query_view["$orderby"].get_document() == *expected_sort);
             }
             if (expected_hint) {
-                REQUIRE(query_view["$hint"].get_utf8() ==
-                        expected_hint->operator[]("$hint").get_utf8());
+                REQUIRE(query_view["$hint"].get_utf8() == expected_hint->get_utf8());
             }
             if (expected_comment) {
                 REQUIRE(query_view["$comment"].get_utf8().value == *expected_comment);
@@ -426,8 +424,7 @@ TEST_CASE("Collection", "[collection]") {
             opts.hint(index_hint);
 
             // set our expected_hint so we check against that
-            bsoncxx::document::value hint_doc = index_hint.to_document();
-            expected_hint = hint_doc.view();
+            expected_hint = index_hint.to_value();
 
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
         }

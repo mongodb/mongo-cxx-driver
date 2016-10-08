@@ -63,6 +63,11 @@ TEST_CASE("read_concern level and string affect each other", "[read_concern]") {
         REQUIRE(rc.acknowledge_level() == read_concern::level::k_majority);
     }
 
+    SECTION("setting the string to the empty string changes the level to server default") {
+        rc.acknowledge_string("");
+        REQUIRE(rc.acknowledge_level() == read_concern::level::k_server_default);
+    }
+
     SECTION("setting the string to an unknown value changes the level to unknown") {
         rc.acknowledge_string("futureCompatible");
         REQUIRE(rc.acknowledge_level() == read_concern::level::k_unknown);

@@ -27,6 +27,14 @@ hint::hint(bsoncxx::document::view_or_value index) : _index_doc(std::move(index)
 hint::hint(bsoncxx::string::view_or_value index) : _index_string(std::move(index)) {
 }
 
+bsoncxx::types::value hint::to_value() const {
+    if (_index_doc) {
+        return bsoncxx::types::value{bsoncxx::types::b_document{_index_doc->view()}};
+    }
+
+    return bsoncxx::types::value{bsoncxx::types::b_utf8{*_index_string}};
+}
+
 bsoncxx::document::value hint::to_document() const {
     auto doc = bsoncxx::builder::stream::document{};
 

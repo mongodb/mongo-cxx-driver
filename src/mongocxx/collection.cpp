@@ -211,7 +211,7 @@ cursor collection::find(view_or_value filter, const options::find& options) {
     }
 
     if (options.hint()) {
-        filter_builder << builder::stream::concatenate(options.hint()->to_document());
+        filter_builder << "$hint" << options.hint()->to_value();
     }
 
     if (options.comment()) {
@@ -596,7 +596,7 @@ std::int64_t collection::count(view_or_value filter, const options::count& optio
     }
 
     if (options.hint()) {
-        cmd_opts_builder << concatenate(options.hint()->to_document());
+        cmd_opts_builder << "hint" << options.hint()->to_value();
     }
 
     scoped_bson_t cmd_opts_bson{cmd_opts_builder.view()};
