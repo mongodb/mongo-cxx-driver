@@ -20,7 +20,7 @@ build_script:
   - cmd: git clone https://github.com/mongodb/mongo-c-driver.git
   - cmd: cd mongo-c-driver
     # TODO: Update this to our real minimum for the C++11 driver 3.1 release, once known.
-  - cmd: git checkout master
+  - cmd: git checkout 1.5.0-rc1
   - cmd: git submodule init
   - cmd: git submodule update
   - cmd: cd src\libbson
