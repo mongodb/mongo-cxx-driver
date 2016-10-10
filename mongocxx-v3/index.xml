@@ -73,6 +73,54 @@ version of the library installed.&lt;/p&gt;
     </item>
     
     <item>
+      <title>Configuring the mongocxx driver</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/configuration/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/configuration/</guid>
+      <description>
+
+&lt;h1 id=&#34;configuring-the-driver&#34;&gt;Configuring the Driver&lt;/h1&gt;
+
+&lt;p&gt;In the mongocxx driver, most configuration is done via the &lt;a href=&#34;https://docs.mongodb.com/manual/reference/connection-string/&#34;&gt;connection
+URI&lt;/a&gt;.  Some
+additional connection options are possible via the
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1client.html
+&#34;&gt;mongocxx::options::client&lt;/a&gt; class.&lt;/p&gt;
+
+&lt;h2 id=&#34;configuring-tls-ssl&#34;&gt;Configuring TLS/SSL&lt;/h2&gt;
+
+&lt;p&gt;To enable TLS (SSL), set &lt;code&gt;ssl=true&lt;/code&gt; in the URI:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-nohighlight&#34;&gt;mongodb://mongodb.example.com/?ssl=true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;By default, mongocxx will verify server certificates against the local
+system CA list.  You can override that by creating a
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1ssl.html
+&#34;&gt;mongocxx::options::ssl&lt;/a&gt;
+object and passing it to &lt;code&gt;ssl_opts&lt;/code&gt; on mongocxx::options::client.&lt;/p&gt;
+
+&lt;p&gt;For example, to use a custom CA or to disable certificate validation,
+uncomment the corresponding line in the following example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;mongocxx::options::client client_options;
+mongocxx::options::ssl ssl_options;
+
+// If the server certificate is not signed by a well-known CA,
+// you can set a custom CA file with the `ca_file` option.
+// ssl_options.ca_file(&amp;quot;/path/to/custom/cert.pem&amp;quot;);
+
+// If you want to disable certificate verification, you
+// can set the `allow_invalid_certificates` option.
+// ssl_options.allow_invalid_certificates(true);
+
+client_options.ssl_opts(ssl_options);
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Installing the mongocxx driver</title>
       <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>

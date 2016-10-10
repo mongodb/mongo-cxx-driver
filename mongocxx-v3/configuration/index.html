@@ -9,7 +9,7 @@
 
     <link rel="shortcut icon" href="https://mongodb.github.io/mongo-cxx-driver/img/favicon.png">
 
-    <title>Working with BSON</title>
+    <title>Configuring the mongocxx driver</title>
 
     <link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
@@ -174,87 +174,6 @@
 
 
   
-
-
-        
-          
-        
-      
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
   
   
   
@@ -277,6 +196,15 @@
       
       
         
+      
+    
+      
+      
+    
+      
+      
+    
+      
       
     
     
@@ -521,6 +449,8 @@
 
 
 
+  
+
 
 
 
@@ -607,8 +537,6 @@
 
 
 
-
-  
 
 
 
@@ -1165,7 +1093,7 @@
 
 
    
-<a class="edit-link" href="https://github.com/mongodb/mongo-cxx-driver/blob/master/content/mongocxx-v3/working-with-bson.md" target="_blank" title="Edit mongocxx-v3/working-with-bson.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
+<a class="edit-link" href="https://github.com/mongodb/mongo-cxx-driver/blob/master/content/mongocxx-v3/configuration.md" target="_blank" title="Edit mongocxx-v3/configuration.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
 
 
 
@@ -1184,215 +1112,50 @@
   
   
   <li><a href="/mongo-cxx-driver/mongocxx-v3/">mongocxx (v3)</a> <i class="fa fa-angle-right"></i></li>
-  <li>Working with BSON</li>
+  <li>Configuring the mongocxx driver</li>
 </ul>
 </div>
 
 
 
 
-<p>The mongocxx driver ships with a new library, bsoncxx.  This article will
-go over some of the different types in this library, and how and when to
-use each.  For more information and example code, see our
-<a href="https://github.com/mongodb/mongo-cxx-driver/tree/master/examples/bsoncxx">examples</a>.</p>
+<h1 id="configuring-the-driver">Configuring the Driver</h1>
 
-<ol>
-<li><a href="#builders">Document Builders</a><br/></li>
-<li><a href="#value">Owning BSON Documents (values)</a><br/></li>
-<li><a href="#view">Non-owning BSON Documents (views)</a><br/></li>
-<li><a href="#view_or_value">Optionally-owning BSON Documents(view_or_value)</a><br/></li>
-<li><a href="#lifetime">BSON Document Lifetime</a><br/></li>
-<li><a href="#print">Printing BSON Documents</a><br/></li>
-<li><a href="#fields">Getting Fields out of BSON Documents</a><br/></li>
-</ol>
+<p>In the mongocxx driver, most configuration is done via the <a href="https://docs.mongodb.com/manual/reference/connection-string/">connection
+URI</a>.  Some
+additional connection options are possible via the
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1client.html
+">mongocxx::options::client</a> class.</p>
 
-<h3 id="a-name-builders-document-builders-a"><a name="builders">Document Builders</a></h3>
+<h2 id="configuring-tls-ssl">Configuring TLS/SSL</h2>
 
-<p>The bsoncxx library offers two different interfaces for building BSON, a
-basic builder and a stream-based builder.</p>
+<p>To enable TLS (SSL), set <code>ssl=true</code> in the URI:</p>
 
-<p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/builder/basic/document.hpp"><code>bsoncxx::builder::basic::document</code></a><br/>
-<a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/builder/stream/document.hpp"><code>bsoncxx::builder::stream::document</code></a></p>
-
-<p>Both equivalent builder document
-types are helper objects for building up BSON from scratch.  Either
-interface will provide the same results, the choice of which to use is
-entirely aesthetic.</p>
-
-<p><strong>Basic builder</strong></p>
-
-<pre><code>using bsoncxx::builder::basic::kvp;
-
-// { &quot;hello&quot; : &quot;world&quot; }
-bsoncxx::builder::basic::document basic_builder{};
-basic_builder.append(kvp(&quot;hello&quot;, &quot;world&quot;));
+<pre><code class="language-nohighlight">mongodb://mongodb.example.com/?ssl=true
 </code></pre>
 
-<p>More advanced uses of the basic builder are shown in <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/builder_basic.cpp">this
-example</a>.</p>
+<p>By default, mongocxx will verify server certificates against the local
+system CA list.  You can override that by creating a
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1ssl.html
+">mongocxx::options::ssl</a>
+object and passing it to <code>ssl_opts</code> on mongocxx::options::client.</p>
 
-<p><strong>Stream builder</strong></p>
+<p>For example, to use a custom CA or to disable certificate validation,
+uncomment the corresponding line in the following example:</p>
 
-<pre><code>// { &quot;hello&quot; : &quot;world&quot; }
-// Option 1 - build over multiple lines
-bsoncxx::builder::stream::document stream_builder{};
-stream_builder &lt;&lt; &quot;hello&quot; &lt;&lt; &quot;world&quot;;
+<pre><code class="language-cpp">mongocxx::options::client client_options;
+mongocxx::options::ssl ssl_options;
 
-// Option 2 - build in a single line
-auto stream_builder = bsoncxx::builder::stream::document{} &lt;&lt; &quot;hello&quot; &lt;&lt; &quot;world&quot;;
+// If the server certificate is not signed by a well-known CA,
+// you can set a custom CA file with the `ca_file` option.
+// ssl_options.ca_file(&quot;/path/to/custom/cert.pem&quot;);
+
+// If you want to disable certificate verification, you
+// can set the `allow_invalid_certificates` option.
+// ssl_options.allow_invalid_certificates(true);
+
+client_options.ssl_opts(ssl_options);
 </code></pre>
-
-<p>More advanced uses of the stream builder are shown in <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/builder_stream.cpp">this
-example</a>.</p>
-
-<p>The code above, for either interface, produces builder documents, which are
-not yet BSON documents.  The builder documents will need to be converted to
-fully-fledged BSON documents to be used.</p>
-
-<h3 id="a-name-value-owning-bson-documents-values-a"><a name="value">Owning BSON Documents (values)</a></h3>
-
-<p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/document/value.hpp"><code>bsoncxx::document::value</code></a></p>
-
-<p>This type represents an actual BSON document, one that owns its buffer of
-data.  These documents can be constructed from a builder by calling
-<code>extract()</code>:</p>
-
-<pre><code>bsoncxx::document::value basic_doc{basic_builder.extract()};
-bsoncxx::document::value stream_doc{stream_builder.extract()};
-</code></pre>
-
-<p>Note that after calling <code>extract()</code> the builder is in a moved-from state,
-and should not be used.</p>
-
-<p>It&rsquo;s possible to create a <code>bsoncxx::document::value</code> in a single line using
-the stream builder interface and the <code>finalize</code> token. <code>finalize</code> returns a
-<code>document::value</code> from a temporary stream builder:</p>
-
-<pre><code>// { &quot;finalize&quot; : &quot;is nifty&quot; }
-bsoncxx::document::value one_line = bsoncxx::builder::stream::document{} &lt;&lt; &quot;finalize&quot; &lt;&lt; &quot;is nifty&quot; &lt;&lt; bsoncxx::builder::stream::finalize;
-</code></pre>
-
-<h3 id="a-name-view-non-owning-bson-documents-views-a"><a name="view">Non-owning BSON Documents (views)</a></h3>
-
-<p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/document/view.hpp"><code>bsoncxx::document::view</code></a></p>
-
-<p>This type is a view into an owning <code>bsoncxx::document::value</code>.</p>
-
-<pre><code>bsoncxx::document::view document_view{document_value.view()};
-</code></pre>
-
-<p>A <code>document::value</code> also implicitly converts to a <code>document::view</code>:</p>
-
-<pre><code>bsoncxx::document::view document_view{document_value};
-</code></pre>
-
-<p>In performance-critical code, passing views around is preferable to using
-values because we can avoid excess copying. Also, passing a view of a
-document allows us to use the document multiple times:</p>
-
-<pre><code>// { &quot;copies&quot; : { &quot;$gt&quot; : 100 } }
-auto query_value = document{} &lt;&lt; &quot;copies&quot; &lt;&lt; open_document &lt;&lt; &quot;$gt&quot; &lt;&lt; 100 &lt;&lt; close_document &lt;&lt; finalize;
-
-// Run the same query across different collections
-auto collection1 = db[&quot;science_fiction&quot;];
-auto cursor1 = collection1.find(query_value.view());
-
-auto collection2 = db[&quot;cookbooks&quot;];
-auto cursor2 = collection2.find(query_value.view());
-</code></pre>
-
-<h3 id="a-name-view-or-value-optionally-owning-bson-documents-view-or-value-a"><a name="view_or_value">Optionally-owning BSON Documents (view_or_value)</a></h3>
-
-<p>Many driver methods take a document::view_or_value parameter, for example, <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/database.hpp#L83-L92"><code>run_command</code></a>:</p>
-
-<pre><code>bsoncxx::document::value run_command(bsoncxx::document::view_or_value command);
-</code></pre>
-
-<p>Such methods can take either a <code>document::view</code> or a <code>document::value</code>. If
-a <code>document::view</code> is passed in, it must be passed by r-value reference, so
-ownership of the document is transferred to the method.</p>
-
-<pre><code>document::value ismaster = document{} &lt;&lt; &quot;ismaster&quot; &lt;&lt; 1 &lt;&lt; finalize;
-
-// You can pass a document::view into run_command()
-db.run_command(ismaster.view());
-
-// Or you can move in a document::value
-db.run_command(std::move(ismaster));
-</code></pre>
-
-<p>You shouldn&rsquo;t need to create view_or_value types directly in order to use
-the driver.  They are offered as a convenience method to allow driver
-methods to take documents in either an owning or non-owning way.  The
-<code>view_or_value</code> type also helps mitigate some of the lifetime issues
-discussed in the next section.</p>
-
-<h3 id="a-name-lifetime-bson-document-lifetime-a"><a name="lifetime">BSON Document Lifetime</a></h3>
-
-<p>It is imperative that <code>document::value</code>s outlive any <code>document::view</code>s that
-use them. If the underlying value gets cleaned up, the view will be left
-with a dangling pointer.  Consider a method that returns a view of a
-newly-created document:</p>
-
-<pre><code>bsoncxx::document::view make_a_dangling_view() {
-   bsoncxx::builder::basic::document builder{};
-   builder.append(kvp(&quot;hello&quot;, &quot;world&quot;));
-
-   // This creates a document::value on the stack that will disappear when we return.
-   bsoncxx::document::value stack_value{builder.extract()};
-
-   // We're returning a view of the local value
-   return stack_value.view(); // Bad!!
-}
-</code></pre>
-
-<p>This method returns a dangling view that should not be used:</p>
-
-<pre><code>// This view contains a dangling pointer
-bsoncxx::document::view dangling_view = make_a_dangling_view(); // Warning!!
-</code></pre>
-
-<p>Attempting to create a view off of a builder will similarly create a
-dangerous view object, because the temporary value returned from
-<code>extract()</code> isn&rsquo;t captured:</p>
-
-<pre><code>bsoncxx::builder::stream::document temp_builder{};
-temp_builder &lt;&lt; &quot;oh&quot; &lt;&lt; &quot;no&quot;;
-bsoncxx::document::view dangling_view = temp_builder.extract().view(); // Bad!!
-</code></pre>
-
-<h3 id="a-name-print-printing-bson-documents-a"><a name="print">Printing BSON Documents</a></h3>
-
-<p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/json.hpp#L28-L36"><code>bsoncxx::to_json()</code></a></p>
-
-<p>The bsoncxx library comes with a convenience method to convert BSON
-documents to strings for easy inspection:</p>
-
-<pre><code>bsoncxx::document::value = document{} &lt;&lt; &quot;I am&quot; &lt;&lt; &quot;a BSON document&quot; &lt;&lt; finalize;
-std::cout &lt;&lt; bsoncxx::to_json(doc.view()) &lt;&lt; std::endl;
-</code></pre>
-
-<p>There is an analogous method, <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/json.hpp#L60-L68">from_json()</a>, to build document::values out of existing JSON strings.</p>
-
-<h3 id="a-name-fields-getting-fields-out-of-bson-documents-a"><a name="fields">Getting Fields out of BSON Documents</a></h3>
-
-<p>The [ ] operator reaches into a BSON document to retrieve values:</p>
-
-<pre><code>// doc_view = { &quot;store&quot; : &quot;Key Foods&quot;, &quot;fruits&quot; : [ &quot;apple&quot;, &quot;banana&quot; ] }
-auto store = doc_view[&quot;store&quot;];
-auto first_fruit = doc_view[&quot;fruits&quot;][0];
-</code></pre>
-
-<p>This returns a <code>bsoncxx::document::element</code>, which holds the actual desired value:</p>
-
-<pre><code>document::element store_ele{doc_view[&quot;store&quot;]};
-if (store_ele) {
-    // this block will only execute if &quot;store&quot; was found in the document
-    std::cout &lt;&lt; &quot;Examining inventory at &quot; &lt;&lt; to_json(store_ele.get_value()) &lt;&lt; std::endl;
-}
-</code></pre>
-
-<p>This feature is shown in more detail in <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/getting_values.cpp">this example</a> and <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/view_and_value.cpp">this example</a>.</p>
 
 
 
@@ -1402,15 +1165,15 @@ if (store_ele) {
 <div id="btnv">
   
   <div class="pull-left">
-  <a class="navigation prev" href="/mongo-cxx-driver/mongocxx-v3/thread-safety/">
-      <i class="fa fa-long-arrow-left"> </i> Thread safety
+  <a class="navigation prev" href="/mongo-cxx-driver/mongocxx-v3/installation/">
+      <i class="fa fa-long-arrow-left"> </i> Installing the mongocxx driver
   </a>
   </div>
   
   
   <div class="pull-right">
-  <a class="navigation next" href="/mongo-cxx-driver/mongocxx-v3/api-abi-versioning/">
-    API and ABI versioning <i class="fa fa-long-arrow-right"> </i>
+  <a class="navigation next" href="/mongo-cxx-driver/mongocxx-v3/tutorial/">
+    Tutorial for mongocxx <i class="fa fa-long-arrow-right"> </i>
   </a>
   
 </div>
@@ -1425,18 +1188,9 @@ if (store_ele) {
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
 <ul>
-<li>
+<li><a href="#configuring-the-driver">Configuring the Driver</a>
 <ul>
-<li>
-<ul>
-<li><a href="#a-name-builders-document-builders-a"><a name="builders">Document Builders</a></a></li>
-<li><a href="#a-name-value-owning-bson-documents-values-a"><a name="value">Owning BSON Documents (values)</a></a></li>
-<li><a href="#a-name-view-non-owning-bson-documents-views-a"><a name="view">Non-owning BSON Documents (views)</a></a></li>
-<li><a href="#a-name-view-or-value-optionally-owning-bson-documents-view-or-value-a"><a name="view_or_value">Optionally-owning BSON Documents (view_or_value)</a></a></li>
-<li><a href="#a-name-lifetime-bson-document-lifetime-a"><a name="lifetime">BSON Document Lifetime</a></a></li>
-<li><a href="#a-name-print-printing-bson-documents-a"><a name="print">Printing BSON Documents</a></a></li>
-<li><a href="#a-name-fields-getting-fields-out-of-bson-documents-a"><a name="fields">Getting Fields out of BSON Documents</a></a></li>
-</ul></li>
+<li><a href="#configuring-tls-ssl">Configuring TLS/SSL</a></li>
 </ul></li>
 </ul>
 </nav>

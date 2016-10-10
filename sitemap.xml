@@ -22,6 +22,11 @@
   </url>
   
   <url>
+    <loc>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/configuration/</loc>
+    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
+  </url>
+  
+  <url>
     <loc>https://mongodb.github.io/mongo-cxx-driver/contributing/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>

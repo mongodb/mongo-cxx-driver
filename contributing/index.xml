@@ -59,6 +59,11 @@ for more good guidelines to follow.&lt;/p&gt;
 
 &lt;h3 id=&#34;headers&#34;&gt;Headers&lt;/h3&gt;
 
+&lt;p&gt;Public headers must have a &amp;ldquo;.hpp&amp;rdquo; suffix. Private headers must have a &amp;ldquo;.hh&amp;rdquo;
+suffix.&lt;/p&gt;
+
+&lt;p&gt;General structure:&lt;/p&gt;
+
 &lt;ul&gt;
 &lt;li&gt;License&lt;/li&gt;
 &lt;li&gt;Include Guard (&lt;code&gt;#pragma once&lt;/code&gt;)&lt;/li&gt;

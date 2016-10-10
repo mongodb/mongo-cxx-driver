@@ -503,6 +503,54 @@ threads.&lt;/p&gt;&lt;/li&gt;
     </item>
     
     <item>
+      <title>Configuring the mongocxx driver</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/configuration/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/configuration/</guid>
+      <description>
+
+&lt;h1 id=&#34;configuring-the-driver&#34;&gt;Configuring the Driver&lt;/h1&gt;
+
+&lt;p&gt;In the mongocxx driver, most configuration is done via the &lt;a href=&#34;https://docs.mongodb.com/manual/reference/connection-string/&#34;&gt;connection
+URI&lt;/a&gt;.  Some
+additional connection options are possible via the
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1client.html
+&#34;&gt;mongocxx::options::client&lt;/a&gt; class.&lt;/p&gt;
+
+&lt;h2 id=&#34;configuring-tls-ssl&#34;&gt;Configuring TLS/SSL&lt;/h2&gt;
+
+&lt;p&gt;To enable TLS (SSL), set &lt;code&gt;ssl=true&lt;/code&gt; in the URI:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-nohighlight&#34;&gt;mongodb://mongodb.example.com/?ssl=true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;By default, mongocxx will verify server certificates against the local
+system CA list.  You can override that by creating a
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1ssl.html
+&#34;&gt;mongocxx::options::ssl&lt;/a&gt;
+object and passing it to &lt;code&gt;ssl_opts&lt;/code&gt; on mongocxx::options::client.&lt;/p&gt;
+
+&lt;p&gt;For example, to use a custom CA or to disable certificate validation,
+uncomment the corresponding line in the following example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;mongocxx::options::client client_options;
+mongocxx::options::ssl ssl_options;
+
+// If the server certificate is not signed by a well-known CA,
+// you can set a custom CA file with the `ca_file` option.
+// ssl_options.ca_file(&amp;quot;/path/to/custom/cert.pem&amp;quot;);
+
+// If you want to disable certificate verification, you
+// can set the `allow_invalid_certificates` option.
+// ssl_options.allow_invalid_certificates(true);
+
+client_options.ssl_opts(ssl_options);
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Contribution Guidelines</title>
       <link>https://mongodb.github.io/mongo-cxx-driver/contributing/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
@@ -551,6 +599,11 @@ for more good guidelines to follow.&lt;/p&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&#34;headers&#34;&gt;Headers&lt;/h3&gt;
+
+&lt;p&gt;Public headers must have a &amp;ldquo;.hpp&amp;rdquo; suffix. Private headers must have a &amp;ldquo;.hh&amp;rdquo;
+suffix.&lt;/p&gt;
+
+&lt;p&gt;General structure:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;License&lt;/li&gt;
@@ -2236,73 +2289,6 @@ examples expect a mongod to be running locally on port 27999.&lt;/p&gt;
 &lt;p&gt;Run the unit tests, integration tests, and examples with scons:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;gt; scons test
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Testing the mongocxx driver</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-mongocxx/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-mongocxx/</guid>
-      <description>
-
-&lt;h2 id=&#34;testing-the-mongocxx-driver&#34;&gt;Testing the mongocxx driver&lt;/h2&gt;
-
-&lt;p&gt;Tests for the C++11 driver use
-&lt;a href=&#34;https://github.com/philsquared/Catch&#34;&gt;Catch&lt;/a&gt;, a testing framework for C++.&lt;/p&gt;
-
-&lt;p&gt;Each class in the driver has a corresponding file in &lt;code&gt;src/mongocxx/test&lt;/code&gt;.
-Because the new driver wraps
-&lt;a href=&#34;https://github.com/mongodb/mongo-c-driver&#34;&gt;libmongoc&lt;/a&gt;, we prefer to mock
-and test the behavior of individual classes rather than test end-to-end
-behavior of operations against a running mongod.  In other words, these are
-unit tests rather than integration tests.&lt;/p&gt;
-
-&lt;p&gt;We also have integration tests for this driver in &lt;code&gt;test/collection.cpp&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;running-the-existing-tests&#34;&gt;Running the existing tests&lt;/h2&gt;
-
-&lt;p&gt;Build the tests with:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;make
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This will generate test binaries.  You can either run all the tests with:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;make test
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;or, for more detailed output with Catch, run the generated binary:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;./build/src/mongocxx/test/test_driver
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;writing-new-tests&#34;&gt;Writing new tests&lt;/h2&gt;
-
-&lt;p&gt;If you&amp;rsquo;d like to add a feature to the driver, please write a test for it as
-well.  Additions to existing classes should have new sections added to the
-existing test cases:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;TEST_CASE(&amp;quot;existing_class&amp;quot;, &amp;quot;[existing_class]&amp;quot;) {
-   SECTION(&amp;quot;Can do some new thing&amp;quot;) {
-      ...
-      REQUIRE(new_thing_works);
-   }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you are adding a new class, please add a new test file for it to the
-&lt;code&gt;test&lt;/code&gt; directory.  The test file&amp;rsquo;s name should match the new class&amp;rsquo;s file&amp;rsquo;s
-name.  You will need to add your file as a source for the driver&amp;rsquo;s test
-target, in &lt;code&gt;src/mongocxx/test/CMakeLists.txt&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;set(mongocxx_test_sources
-   ...
-   some_new_class.cpp
-   ...
-)
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
