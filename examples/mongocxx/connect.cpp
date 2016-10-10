@@ -56,10 +56,15 @@ int main(int argc, char* argv[]) {
         mongocxx::options::client client_options;
         if (uri.ssl()) {
             mongocxx::options::ssl ssl_options;
-            // NOTE: To test SSL, you may need to set options. The following
-            // would enable certificates for Homebrew OpenSSL on OS X.
-            // options.ca_file("/usr/local/etc/openssl/cert.pem");
-            // ssl_options.ca_file("/usr/local/etc/openssl/cert.pem");
+            // NOTE: To test SSL, you may need to set options.
+            //
+            // If the server certificate is not signed by a well-known CA,
+            // you can set a custom CA file with the `ca_file` option.
+            // ssl_options.ca_file("/path/to/custom/cert.pem");
+            //
+            // If you want to disable certificate verification, you
+            // can set the `allow_invalid_certificates` option.
+            // ssl_options.allow_invalid_certificates(true);
             client_options.ssl_opts(ssl_options);
         }
 
