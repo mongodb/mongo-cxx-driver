@@ -9,17 +9,28 @@ variables:
 
     ## source variables
     source:
-        ubuntu_source: &ubuntu_source https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-latest.tgz
+        linux_64_source: &linux_64_source https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-latest.tgz
+        rhel55_source: &rhel55_source http://downloads.mongodb.org/linux/mongodb-linux-x86_64-rhel55-latest.tgz
         osx_source: &osx_source https://fastdl.mongodb.org/osx/mongodb-osx-x86_64-latest.tgz
+        ubuntu_s390x_source: &ubuntu_s390x_source http://downloads.10gen.com/linux/mongodb-linux-s390x-enterprise-ubuntu1604-latest.tgz
+        ubuntu_ppc64le_source: &ubuntu_ppc64le_source http://downloads.10gen.com/linux/mongodb-linux-ppc64le-enterprise-ubuntu1604-latest.tgz
+        ubuntu_aarch64_source: &ubuntu_aarch64_source http://downloads.10gen.com/linux/mongodb-linux-aarch64-enterprise-ubuntu1604-3.3.10.tgz
+
+
+    ## Use newer compiler path variables
+    compiler_path:
+        rhel55_cc_path: &rhel55_cc_path /opt/mongodbtoolchain/v2/bin/gcc
+        rhel55_cxx_path: &rhel55_cxx_path /opt/mongodbtoolchain/v2/bin/g++
 
     ## cmake path variables
     cmake_path:
-        ubuntu_cmake_path: &ubuntu_cmake_path /opt/cmake/bin/cmake
+        linux_cmake_path: &linux_cmake_path /opt/cmake/bin/cmake
+        ubuntu_zap_cmake_path: &ubuntu_zap_cmake_path /usr/bin/cmake
         osx_cmake_path: &osx_cmake_path /Applications/Cmake.app/Contents/bin/cmake
 
     ## tar options variables
     tar_options:
-        ubuntu_tar_options: &ubuntu_tar_options --wildcards --no-anchored
+        linux_tar_options: &linux_tar_options --wildcards --no-anchored
 
     ## concurrency for make
     compile_concurrency:
@@ -33,7 +44,8 @@ variables:
 
     ## cmake flag variables
     cmake_flags:
-        ubuntu_cmake_flags: &ubuntu_cmake_flags -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -Wno-error=missing-field-initializers"
+        linux_cmake_flags: &linux_cmake_flags -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -Wno-error=missing-field-initializers"
+        rhel55_cmake_flags: &rhel55_cmake_flags -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror"
         osx_cmake_flags: &osx_cmake_flags -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Werror" -DBSONCXX_POLY_USE_BOOST=ON
         asan_cmake_flags: &asan_cmake_flags -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
         ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/../etc/ubsan.blacklist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
@@ -50,6 +62,20 @@ variables:
 #######################################
 
 functions:
+    "getdata":
+        command: shell.exec
+        params:
+            working_dir: "."
+            script: |
+               set -o xtrace
+               cc --version || true
+               c++ --version || true
+               gcc --version || true
+               g++ --version || true
+               clang --version || true
+               cmake --version || true
+               find /opt -name gcc -exec {} --version\;
+
     "fetch_source":
         command: git.get_project
         params:
@@ -61,82 +87,67 @@ functions:
             working_dir: "."
             script: |
                 set -o errexit
-                set -o verbose
+                set -o xtrace
+                export PREFIX=$(pwd)/mongodb/
                 curl -o mongodb.tgz ${source}
                 tar --extract --file mongodb.tgz --strip-components=2 ${tar_options} "*/bin/mongod"
-                mkdir -p /data/tmp/db
-                ./mongod --fork --logpath=/data/tmp/log --dbpath=/data/tmp/db --pidfilepath=/data/tmp/pid
-
-    "install_c_driver":
-        command: shell.exec
-        params:
-            working_dir: "."
-            ## Use --disable-extra-align when configuring the C driver to avoid misalignment errors in UBSAN
-            script: |
-                set -o errexit
-                set -o verbose
-                git clone https://github.com/mongodb/mongo-c-driver.git
-                cd mongo-c-driver
-                git checkout 1.3.4
-                rm -rf /data/tmp/c-driver-install
-                ./autogen.sh --prefix="/data/tmp/c-driver-install" --enable-tests=no --enable-examples=no --with-libbson=bundled --disable-extra-align --enable-debug --enable-optimizations --disable-shm-counters --disable-static --disable-dependency-tracking --with-pic --disable-automatic-init-and-cleanup ${cdriver_configure_flags}
-                make ${compile_concurrency}
-                make install
+                mkdir -p $PREFIX/db
+                ./mongod --fork --logpath=$PREFIX/mongod.log --dbpath=$PREFIX/db --pidfilepath=$PREFIX/mongod.pid
 
     "stop_mongod":
         command: shell.exec
         params:
-            working_dir: "."
+            working_dir: "mongod"
             script:
-               kill -TERM $(cat /data/tmp/pid)
+                kill -TERM $(cat mongod.pid)
 
 
-#######################################
-#              Pre Task               #
-#######################################
+    "install_c_driver":
+        command: shell.exec
+        params:
+            working_dir: "mongo-cxx-driver"
+            script: |
+                    export PREFIX=$(pwd)/../mongoc/
+                    sh ./.evergreen/install.sh libbson ${MONGOC_VERSION|master}
+                    sh ./.evergreen/install.sh mongoc ${MONGOC_VERSION|master}
 
-pre:
-  - command: expansions.fetch
-    params:
-      keys:
-        - local_key: "aws_key"
-          remote_key: "project_aws_key"
-        - local_key: "aws_secret"
-          remote_key: "project_aws_secret"
-  - command: shell.exec
-    params:
-      script: |
-        rm -rf "mongo-cxx-driver"
-        rm -fr "mongo-c-driver"
-        rm -fr mongod
-
-#######################################
-#               Tasks                 #
-#######################################
-
-tasks:
-    - name: compile_and_test
-      commands:
-        - func: "fetch_source"
-        - command: git.apply_patch
+    "lint":
+        - command: shell.exec
           params:
-              directory: "mongo-cxx-driver"
-        - func: "install_c_driver"
-        - func: "start_mongod"
+              working_dir: "mongo-cxx-driver"
+              script: |
+                  set -o errexit
+                  set -o xtrace
+                  python etc/clang_format.py lint
+
+    "compile":
         - command: shell.exec
           params:
               working_dir: "mongo-cxx-driver/build"
               script: |
                   set -o errexit
-                  set -o verbose
-                  PKG_CONFIG_PATH="/data/tmp/c-driver-install/lib/pkgconfig" ${cmake_path} ${cmake_flags} -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" ..
-                  if [ `uname` != 'Darwin' ]; then
-                      # Evergreen OS X 10.6 does not have tar that can untar tar.bz2 files
-                      make format-lint
+                  set -o xtrace
+                  export PREFIX=$(pwd)/../../mongoc/
+                  if [ "${cxx_path|default}" != "default" ]; then
+                        export CXX="${cxx_path}"
                   fi
+                  if [ "${cc_path|default}" != "default" ]; then
+                        export CC="${cc_path}"
+                  fi
+                  PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig" ${cmake_path} ${cmake_flags} -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" ..
                   make ${compile_concurrency} all
                   make install
                   make ${compile_concurrency} examples
+    "test":
+        - command: shell.exec
+          params:
+              working_dir: "mongo-cxx-driver/build"
+              script: |
+                  set -o errexit
+                  set -o xtrace
+                  export PREFIX=$(pwd)/../../mongoc/
+                  export LD_LIBRARY_PATH=.:$PREFIX/lib/
+                  export DYLD_LIBRARY_PATH=.:$PREFIX/lib/
                   ${test_params} ./src/bsoncxx/test/test_bson
                   ${test_params} ./src/mongocxx/test/test_driver
                   ${test_params} ./src/mongocxx/test/test_instance
@@ -145,7 +156,47 @@ tasks:
                   # exit status if any test exits with a bad exit
                   # status.
                   for test in $(find examples -type f -perm /u+x | sort) ; do ${test_params} $test || break -1 ; done
-        - func: "stop_mongod"
+#######################################
+#              Pre Task               #
+#######################################
+
+pre:
+  - command: shell.exec
+    params:
+      script: |
+        rm -rf "mongo-cxx-driver"
+        rm -fr "mongo-c-driver"
+        rm -fr mongod
+  - func: "fetch_source"
+  - func: "getdata"
+  - func: "start_mongod"
+
+post:
+  - func: "stop_mongod"
+#######################################
+#               Tasks                 #
+#######################################
+
+tasks:
+    - name: lint
+      commands:
+        - func: "lint"
+
+    - name: compile_and_test_with_mongoc_current
+      commands:
+        - func: "install_c_driver"
+          vars:
+              MONGOC_VERSION: 1.4.2
+        - func: "compile"
+        - func: "test"
+
+    - name: compile_and_test_with_mongoc_master
+      commands:
+        - func: "install_c_driver"
+          vars:
+              MONGOC_VERSION: master
+        - func: "compile"
+        - func: "test"
 
 #######################################
 #           Buildvariants             #
@@ -160,31 +211,52 @@ buildvariants:
       display_name: "Ubuntu 14.04 Release"
       expansions:
           build_type: "Release"
-          source: *ubuntu_source
-          tar_options: *ubuntu_tar_options
+          source: *linux_64_source
+          tar_options: *linux_tar_options
           compile_concurrency: *linux_compile_concurrency
           cdriver_configure_flags: *linux_cdriver_configure_flags
-          cmake_path: *ubuntu_cmake_path
-          cmake_flags: *ubuntu_cmake_flags
+          cmake_path: *linux_cmake_path
+          cmake_flags: *linux_cmake_flags
       run_on:
           - ubuntu1404-test
       tasks:
-          - name: compile_and_test
+          - name: lint
+          - name: compile_and_test_with_mongoc_current
+          - name: compile_and_test_with_mongoc_master
 
     - name: ubuntu1404-debug
       display_name: "Ubuntu 14.04 Debug"
       expansions:
           build_type: "Debug"
-          source: *ubuntu_source
-          tar_options: *ubuntu_tar_options
+          source: *linux_64_source
+          tar_options: *linux_tar_options
           compile_concurrency: *linux_compile_concurrency
           cdriver_configure_flags: *linux_cdriver_configure_flags
-          cmake_path: *ubuntu_cmake_path
-          cmake_flags: *ubuntu_cmake_flags
+          cmake_path: *linux_cmake_path
+          cmake_flags: *linux_cmake_flags
       run_on:
           - ubuntu1404-test
       tasks:
-          - name: compile_and_test
+          - name: compile_and_test_with_mongoc_current
+          - name: compile_and_test_with_mongoc_master
+
+    - name: rhel55-debug
+      display_name: "RHEL 5.5 Debug"
+      expansions:
+          build_type: "Debug"
+          source: *rhel55_source
+          tar_options: *linux_tar_options
+          compile_concurrency: *linux_compile_concurrency
+          cdriver_configure_flags: *linux_cdriver_configure_flags
+          cmake_path: *linux_cmake_path
+          cmake_flags: *rhel55_cmake_flags
+          cc_path: *rhel55_cc_path
+          cxx_path: *rhel55_cxx_path
+      run_on:
+          - rhel55-test
+      tasks:
+          - name: compile_and_test_with_mongoc_current
+          - name: compile_and_test_with_mongoc_master
 
     - name: osx-1010
       display_name: "OS X 10.10 Release"
@@ -198,52 +270,106 @@ buildvariants:
       run_on:
           - osx-1010
       tasks:
-          - name: compile_and_test
+          - name: compile_and_test_with_mongoc_current
+          - name: compile_and_test_with_mongoc_master
 
     - name: ubuntu1604-debug-valgrind
       display_name: "Valgrind Ubuntu 16.04 Debug"
       expansions:
           build_type: "Debug"
-          source: *ubuntu_source
-          tar_options: *ubuntu_tar_options
+          source: *linux_64_source
+          tar_options: *linux_tar_options
           compile_concurrency: *linux_compile_concurrency
           cdriver_configure_flags: *linux_cdriver_configure_flags
-          cmake_path: *ubuntu_cmake_path
-          cmake_flags: *ubuntu_cmake_flags
+          cmake_path: *linux_cmake_path
+          cmake_flags: *linux_cmake_flags
           test_params: *valgrind_test_params
       run_on:
           - ubuntu1604-build
       tasks:
-          - name: compile_and_test
+          - name: compile_and_test_with_mongoc_current
+          - name: compile_and_test_with_mongoc_master
 
     - name: ubuntu1604-debug-asan
       display_name: "ASAN Ubuntu 16.04 Debug"
       expansions:
           build_type: "Debug"
-          source: *ubuntu_source
-          tar_options: *ubuntu_tar_options
+          source: *linux_64_source
+          tar_options: *linux_tar_options
           compile_concurrency: *linux_compile_concurrency
           cdriver_configure_flags: *linux_cdriver_configure_flags
-          cmake_path: *ubuntu_cmake_path
+          cmake_path: *linux_cmake_path
           cmake_flags: *asan_cmake_flags
           test_params: *asan_test_params
       run_on:
           - ubuntu1604-build
       tasks:
-          - name: compile_and_test
+          - name: compile_and_test_with_mongoc_current
+          - name: compile_and_test_with_mongoc_master
 
     - name: ubuntu1604-debug-ubsan
       display_name: "UBSAN Ubuntu 16.04 Debug"
       expansions:
           build_type: "Debug"
-          source: *ubuntu_source
-          tar_options: *ubuntu_tar_options
+          source: *linux_64_source
+          tar_options: *linux_tar_options
           compile_concurrency: *linux_compile_concurrency
           cdriver_configure_flags: *linux_cdriver_configure_flags
-          cmake_path: *ubuntu_cmake_path
+          cmake_path: *linux_cmake_path
           cmake_flags: *ubsan_cmake_flags
           test_params: *ubsan_test_params
       run_on:
           - ubuntu1604-build
       tasks:
-          - name: compile_and_test
+          - name: compile_and_test_with_mongoc_current
+          - name: compile_and_test_with_mongoc_master
+
+# Doesn't have cmake BUILD-2154
+#    - name: ubuntu1604-zseries
+#      display_name: "s390x Ubuntu 16.04"
+#      batchtime: 1440 # 1 day
+#      expansions:
+#          build_type: "Release"
+#          source: *ubuntu_s390x_source
+#          tar_options: *linux_tar_options
+#          compile_concurrency: *linux_compile_concurrency
+#          cdriver_configure_flags: *linux_cdriver_configure_flags
+#          cmake_path: *ubuntu_zap_cmake_path
+#      run_on:
+#          - ubuntu1604-zseries-small
+#      tasks:
+#          - name: compile_and_test_with_mongoc_current
+#          - name: compile_and_test_with_mongoc_master
+
+    - name: power8-ubuntu1604
+      display_name: "ppc64le Ubuntu 16.04"
+      batchtime: 1440 # 1 day
+      expansions:
+          build_type: "Release"
+          source: *ubuntu_ppc64le_source
+          tar_options: *linux_tar_options
+          compile_concurrency: *linux_compile_concurrency
+          cdriver_configure_flags: *linux_cdriver_configure_flags
+          cmake_path: *ubuntu_zap_cmake_path
+      run_on:
+          - ubuntu1604-power8-build
+      tasks:
+          - name: compile_and_test_with_mongoc_current
+          - name: compile_and_test_with_mongoc_master
+
+    - name: arm-ubuntu1604
+      display_name: "aarch64 Ubuntu 16.04"
+      batchtime: 1440 # 1 day
+      expansions:
+          build_type: "Release"
+          source: *ubuntu_aarch64_source
+          tar_options: *linux_tar_options
+          compile_concurrency: *linux_compile_concurrency
+          cdriver_configure_flags: *linux_cdriver_configure_flags
+          cmake_path: *ubuntu_zap_cmake_path
+      run_on:
+          - ubuntu1604-arm64-small
+      tasks:
+          - name: compile_and_test_with_mongoc_current
+          - name: compile_and_test_with_mongoc_master
+
