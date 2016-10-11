@@ -1,1 +1,1 @@
-http://docs.mongodb.org/manual/{{ .Get 0 }}
+http://docs.mongodb.org/manual/{{ with (.Get 0) }}{{.}}{{end}}

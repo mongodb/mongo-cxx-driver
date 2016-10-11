@@ -3,7 +3,7 @@ date = "2016-08-15T16:11:58+05:30"
 title = "Installing the mongocxx driver"
 [menu.main]
   parent = "mongocxx3"
-  weight = 10
+  weight = 8
 +++
 
 ## Installing the mongocxx driver
