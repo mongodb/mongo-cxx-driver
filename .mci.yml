@@ -221,7 +221,7 @@ buildvariants:
           - ubuntu1404-test
       tasks:
           - name: lint
-          - name: compile_and_test_with_mongoc_current
+#         - name: compile_and_test_with_mongoc_current
           - name: compile_and_test_with_mongoc_master
 
     - name: ubuntu1404-debug
@@ -237,7 +237,7 @@ buildvariants:
       run_on:
           - ubuntu1404-test
       tasks:
-          - name: compile_and_test_with_mongoc_current
+#         - name: compile_and_test_with_mongoc_current
           - name: compile_and_test_with_mongoc_master
 
     - name: rhel55-debug
@@ -255,7 +255,7 @@ buildvariants:
       run_on:
           - rhel55-test
       tasks:
-          - name: compile_and_test_with_mongoc_current
+#         - name: compile_and_test_with_mongoc_current
           - name: compile_and_test_with_mongoc_master
 
     - name: osx-1010
@@ -270,7 +270,7 @@ buildvariants:
       run_on:
           - osx-1010
       tasks:
-          - name: compile_and_test_with_mongoc_current
+#         - name: compile_and_test_with_mongoc_current
           - name: compile_and_test_with_mongoc_master
 
     - name: ubuntu1604-debug-valgrind
@@ -287,7 +287,7 @@ buildvariants:
       run_on:
           - ubuntu1604-build
       tasks:
-          - name: compile_and_test_with_mongoc_current
+#         - name: compile_and_test_with_mongoc_current
           - name: compile_and_test_with_mongoc_master
 
     - name: ubuntu1604-debug-asan
@@ -304,7 +304,7 @@ buildvariants:
       run_on:
           - ubuntu1604-build
       tasks:
-          - name: compile_and_test_with_mongoc_current
+#         - name: compile_and_test_with_mongoc_current
           - name: compile_and_test_with_mongoc_master
 
     - name: ubuntu1604-debug-ubsan
@@ -321,7 +321,7 @@ buildvariants:
       run_on:
           - ubuntu1604-build
       tasks:
-          - name: compile_and_test_with_mongoc_current
+#         - name: compile_and_test_with_mongoc_current
           - name: compile_and_test_with_mongoc_master
 
 # Doesn't have cmake BUILD-2154
@@ -354,7 +354,7 @@ buildvariants:
       run_on:
           - ubuntu1604-power8-build
       tasks:
-          - name: compile_and_test_with_mongoc_current
+#         - name: compile_and_test_with_mongoc_current
           - name: compile_and_test_with_mongoc_master
 
     - name: arm-ubuntu1604
@@ -370,6 +370,6 @@ buildvariants:
       run_on:
           - ubuntu1604-arm64-small
       tasks:
-          - name: compile_and_test_with_mongoc_current
+#         - name: compile_and_test_with_mongoc_current
           - name: compile_and_test_with_mongoc_master
 
