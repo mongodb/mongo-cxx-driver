@@ -44,7 +44,6 @@ set(mongocxx_test_sources
     options/index.cpp
     options/insert.cpp
     options/modify_collection.cpp
-    options/private/rewriter.cpp
     options/update.cpp
     pool.cpp
     private/scoped_bson_t.cpp
