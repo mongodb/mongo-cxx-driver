@@ -93,15 +93,6 @@ class update_functor {
 
         bsoncxx::document::view options_view{bson_get_data(options), options->len};
 
-        bsoncxx::document::element multi = options_view["multi"];
-        if (_expected_many) {
-            REQUIRE(multi);
-            REQUIRE(multi.type() == bsoncxx::type::k_bool);
-            REQUIRE(multi.get_bool().value);
-        } else {
-            REQUIRE(!multi);
-        }
-
         bsoncxx::document::element upsert = options_view["upsert"];
         if (_expected_upsert) {
             REQUIRE(upsert);
@@ -112,10 +103,6 @@ class update_functor {
         }
     }
 
-    void many(bool many) {
-        _expected_many = many;
-    }
-
     void upsert(bool upsert) {
         _expected_upsert = upsert;
     }
@@ -123,7 +110,6 @@ class update_functor {
    private:
     bool* _called;
     bool _expected_upsert = false;
-    bool _expected_many = false;
     bsoncxx::document::view _filter;
     bsoncxx::document::view _update;
 };
@@ -134,32 +120,13 @@ class delete_functor {
         : _called{called}, _filter{filter} {
     }
 
-    void operator()(mongoc_bulk_operation_t*, const bson_t* filter, const bson_t* options,
-                    bson_error_t*) {
+    void operator()(mongoc_bulk_operation_t*, const bson_t* filter, const bson_t*, bson_error_t*) {
         *_called = true;
         REQUIRE(bson_get_data(filter) == _filter.data());
-
-        bsoncxx::document::view options_view{bson_get_data(options), options->len};
-
-        bsoncxx::document::element limit = options_view["limit"];
-        // We pass {limit: 0} as an explicit option to bulk_operation_remove_with_opts, but we don't
-        // pass an explicit limit to bulk_operation_remove_one_with_opts.
-        if (_expected_many) {
-            REQUIRE(limit);
-            REQUIRE(limit.type() == bsoncxx::type::k_int32);
-            REQUIRE(limit.get_int32().value == 0);
-        } else {
-            REQUIRE(!limit);
-        }
-    }
-
-    void many(bool many) {
-        _expected_many = many;
     }
 
    private:
     bool* _called;
-    bool _expected_many = false;
     bsoncxx::document::view _filter;
 };
 
@@ -212,9 +179,8 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
         REQUIRE(called);
     }
 
-    SECTION("update_many invokes mongoc_bulk_operation_update_with_opts") {
-        auto bulk_update = libmongoc::bulk_operation_update_with_opts.create_instance();
-        update_func.many(true);
+    SECTION("update_many invokes mongoc_bulk_operation_update_many_with_opts") {
+        auto bulk_update = libmongoc::bulk_operation_update_many_with_opts.create_instance();
         bulk_update->visit(update_func);
 
         bw.append(model::update_many(filter, update_doc));
@@ -222,9 +188,9 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
     }
 
     SECTION(
-        "update_many with upsert invokes mongoc_bulk_operation_update_with_opts with upsert true") {
-        auto bulk_update = libmongoc::bulk_operation_update_with_opts.create_instance();
-        update_func.many(true);
+        "update_many with upsert invokes mongoc_bulk_operation_update_many_with_opts with upsert "
+        "true") {
+        auto bulk_update = libmongoc::bulk_operation_update_many_with_opts.create_instance();
         update_func.upsert(true);
         bulk_update->visit(update_func);
 
@@ -242,9 +208,8 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
         REQUIRE(called);
     }
 
-    SECTION("delete_many invokes mongoc_bulk_operation_remove_with_opts") {
-        auto bulk_delete = libmongoc::bulk_operation_remove_with_opts.create_instance();
-        delete_func.many(true);
+    SECTION("delete_many invokes mongoc_bulk_operation_remove_many_with_opts") {
+        auto bulk_delete = libmongoc::bulk_operation_remove_many_with_opts.create_instance();
         bulk_delete->visit(delete_func);
 
         bw.append(model::delete_many(doc));

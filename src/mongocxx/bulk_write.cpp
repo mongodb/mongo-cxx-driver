@@ -78,14 +78,13 @@ void bulk_write::append(const model::write& operation) {
             scoped_bson_t update(operation.get_update_many().update());
 
             bsoncxx::builder::stream::document options_builder;
-            options_builder << "multi" << true;
             if (operation.get_update_many().upsert()) {
                 options_builder << "upsert" << *operation.get_update_many().upsert();
             }
             scoped_bson_t options(options_builder << bsoncxx::builder::stream::finalize);
 
             bson_error_t error;
-            auto result = libmongoc::bulk_operation_update_with_opts(
+            auto result = libmongoc::bulk_operation_update_many_with_opts(
                 _impl->operation_t, filter.bson(), update.bson(), options.bson(), &error);
             if (!result) {
                 throw_exception<logic_error>(error);
@@ -106,13 +105,10 @@ void bulk_write::append(const model::write& operation) {
         }
         case write_type::k_delete_many: {
             scoped_bson_t filter(operation.get_delete_many().filter());
-
-            bsoncxx::builder::stream::document options_builder;
-            options_builder << "limit" << 0;
-            scoped_bson_t options(options_builder << bsoncxx::builder::stream::finalize);
+            scoped_bson_t options(bsoncxx::document::view{});
 
             bson_error_t error;
-            auto result = libmongoc::bulk_operation_remove_with_opts(
+            auto result = libmongoc::bulk_operation_remove_many_with_opts(
                 _impl->operation_t, filter.bson(), options.bson(), &error);
             if (!result) {
                 throw_exception<logic_error>(error);
