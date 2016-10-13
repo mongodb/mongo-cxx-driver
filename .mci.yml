@@ -14,7 +14,7 @@ variables:
         osx_source: &osx_source https://fastdl.mongodb.org/osx/mongodb-osx-x86_64-latest.tgz
         ubuntu_s390x_source: &ubuntu_s390x_source http://downloads.10gen.com/linux/mongodb-linux-s390x-enterprise-ubuntu1604-latest.tgz
         ubuntu_ppc64le_source: &ubuntu_ppc64le_source http://downloads.10gen.com/linux/mongodb-linux-ppc64le-enterprise-ubuntu1604-latest.tgz
-        ubuntu_aarch64_source: &ubuntu_aarch64_source http://downloads.10gen.com/linux/mongodb-linux-aarch64-enterprise-ubuntu1604-3.3.10.tgz
+        ubuntu_aarch64_source: &ubuntu_aarch64_source http://downloads.10gen.com/linux/mongodb-linux-arm64-enterprise-ubuntu1604-latest.tgz
 
 
     ## Use newer compiler path variables
