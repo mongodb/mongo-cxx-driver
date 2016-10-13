@@ -10,11 +10,14 @@ variables:
     ## source variables
     source:
         linux_64_source: &linux_64_source https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-latest.tgz
-        rhel55_source: &rhel55_source http://downloads.mongodb.org/linux/mongodb-linux-x86_64-rhel55-latest.tgz
+        # Versions 3.4+ of the server no longer run RHEL 5.5, so we pin to v3.2-latest instead. In
+        # addition, the download tools on the RHEL 5 hosts don't support SNI, so we must use an
+        # http:// link.
+        rhel55_source: &rhel55_source http://downloads.mongodb.org/linux/mongodb-linux-x86_64-rhel55-v3.2-latest.tgz
         osx_source: &osx_source https://fastdl.mongodb.org/osx/mongodb-osx-x86_64-latest.tgz
         ubuntu_s390x_source: &ubuntu_s390x_source http://downloads.10gen.com/linux/mongodb-linux-s390x-enterprise-ubuntu1604-latest.tgz
         ubuntu_ppc64le_source: &ubuntu_ppc64le_source http://downloads.10gen.com/linux/mongodb-linux-ppc64le-enterprise-ubuntu1604-latest.tgz
-        ubuntu_aarch64_source: &ubuntu_aarch64_source http://downloads.10gen.com/linux/mongodb-linux-aarch64-enterprise-ubuntu1604-3.3.10.tgz
+        ubuntu_arm64_source: &ubuntu_arm64_source http://downloads.10gen.com/linux/mongodb-linux-arm64-enterprise-ubuntu1604-latest.tgz
 
 
     ## Use newer compiler path variables
@@ -358,11 +361,11 @@ buildvariants:
           - name: compile_and_test_with_mongoc_master
 
     - name: arm-ubuntu1604
-      display_name: "aarch64 Ubuntu 16.04"
+      display_name: "arm64 Ubuntu 16.04"
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          source: *ubuntu_aarch64_source
+          source: *ubuntu_arm64_source
           tar_options: *linux_tar_options
           compile_concurrency: *linux_compile_concurrency
           cdriver_configure_flags: *linux_cdriver_configure_flags
