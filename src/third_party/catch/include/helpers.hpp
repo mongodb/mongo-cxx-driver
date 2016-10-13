@@ -192,10 +192,10 @@
         libmongoc::bulk_operation_update_one_with_opts.create_instance();                        \
     auto bulk_operation_replace_one_with_opts =                                                  \
         libmongoc::bulk_operation_replace_one_with_opts.create_instance();                       \
-    auto bulk_operation_update_with_opts =                                                       \
-        libmongoc::bulk_operation_update_with_opts.create_instance();                            \
-    auto bulk_operation_remove_with_opts =                                                       \
-        libmongoc::bulk_operation_remove_with_opts.create_instance();                            \
+    auto bulk_operation_update_many_with_opts =                                                  \
+        libmongoc::bulk_operation_update_many_with_opts.create_instance();                       \
+    auto bulk_operation_remove_many_with_opts =                                                  \
+        libmongoc::bulk_operation_remove_many_with_opts.create_instance();                       \
     auto bulk_operation_set_bypass_document_validation =                                         \
         libmongoc::bulk_operation_set_bypass_document_validation.create_instance();              \
     auto bulk_operation_set_client = libmongoc::bulk_operation_set_client.create_instance();     \

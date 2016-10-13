@@ -633,7 +633,7 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Update Many", "[collection::update_many]") {
             bool upsert_option;
 
-            bulk_operation_update_with_opts->interpose(
+            bulk_operation_update_many_with_opts->interpose(
                 [&](mongoc_bulk_operation_t*, const bson_t* query, const bson_t* update,
                     const bson_t* options, bson_error_t*) {
                     bulk_operation_op_called = true;
@@ -641,11 +641,6 @@ TEST_CASE("Collection", "[collection]") {
                     REQUIRE(bson_get_data(update) == modification_doc.view().data());
 
                     bsoncxx::document::view options_view{bson_get_data(options), options->len};
-
-                    bsoncxx::document::element multi = options_view["multi"];
-                    REQUIRE(multi);
-                    REQUIRE(multi.type() == bsoncxx::type::k_bool);
-                    REQUIRE(multi.get_bool().value);
 
                     bsoncxx::document::element upsert = options_view["upsert"];
                     if (upsert_option) {
@@ -743,19 +738,12 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Delete Many", "[collection::delete_many]") {
-            bulk_operation_remove_with_opts->interpose([&](
-                mongoc_bulk_operation_t*, const bson_t* doc, const bson_t* options, bson_error_t*) {
-                bulk_operation_op_called = true;
-                REQUIRE(bson_get_data(doc) == filter_doc.view().data());
-
-                bsoncxx::document::view options_view{bson_get_data(options), options->len};
-
-                bsoncxx::document::element limit = options_view["limit"];
-                REQUIRE(limit);
-                REQUIRE(limit.type() == bsoncxx::type::k_int32);
-                REQUIRE(limit.get_int32().value == 0);
-                return true;
-            });
+            bulk_operation_remove_many_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, const bson_t* doc, const bson_t*, bson_error_t*) {
+                    bulk_operation_op_called = true;
+                    REQUIRE(bson_get_data(doc) == filter_doc.view().data());
+                    return true;
+                });
 
             mongo_coll.delete_many(filter_doc.view());
         }

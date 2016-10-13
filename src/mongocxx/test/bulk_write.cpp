@@ -102,15 +102,6 @@ class update_functor {
             REQUIRE(!collation);
         }
 
-        bsoncxx::document::element multi = options_view["multi"];
-        if (_expected_many) {
-            REQUIRE(multi);
-            REQUIRE(multi.type() == bsoncxx::type::k_bool);
-            REQUIRE(multi.get_bool().value);
-        } else {
-            REQUIRE(!multi);
-        }
-
         bsoncxx::document::element upsert = options_view["upsert"];
         if (_expected_upsert) {
             REQUIRE(upsert);
@@ -125,10 +116,6 @@ class update_functor {
         _expected_collation = collation;
     }
 
-    void many(bool many) {
-        _expected_many = many;
-    }
-
     void upsert(bool upsert) {
         _expected_upsert = upsert;
     }
@@ -137,7 +124,6 @@ class update_functor {
     bool* _called;
     stdx::optional<bsoncxx::document::view> _expected_collation;
     bool _expected_upsert = false;
-    bool _expected_many = false;
     bsoncxx::document::view _filter;
     bsoncxx::document::view _update;
 };
@@ -163,31 +149,15 @@ class delete_functor {
         } else {
             REQUIRE(!collation);
         }
-
-        bsoncxx::document::element limit = options_view["limit"];
-        // We pass {limit: 0} as an explicit option to bulk_operation_remove_with_opts, but we don't
-        // pass an explicit limit to bulk_operation_remove_one_with_opts.
-        if (_expected_many) {
-            REQUIRE(limit);
-            REQUIRE(limit.type() == bsoncxx::type::k_int32);
-            REQUIRE(limit.get_int32().value == 0);
-        } else {
-            REQUIRE(!limit);
-        }
     }
 
     void collation(bsoncxx::document::view collation) {
         _expected_collation = collation;
     }
 
-    void many(bool many) {
-        _expected_many = many;
-    }
-
    private:
     bool* _called;
     stdx::optional<bsoncxx::document::view> _expected_collation;
-    bool _expected_many = false;
     bsoncxx::document::view _filter;
 };
 
@@ -257,9 +227,8 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
         REQUIRE(called);
     }
 
-    SECTION("update_many invokes mongoc_bulk_operation_update_with_opts") {
-        auto bulk_update = libmongoc::bulk_operation_update_with_opts.create_instance();
-        update_func.many(true);
+    SECTION("update_many invokes mongoc_bulk_operation_update_many_with_opts") {
+        auto bulk_update = libmongoc::bulk_operation_update_many_with_opts.create_instance();
         bulk_update->visit(update_func);
 
         bw.append(model::update_many(filter, update_doc));
@@ -267,9 +236,9 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
     }
 
     SECTION(
-        "update_many with upsert invokes mongoc_bulk_operation_update_with_opts with upsert true") {
-        auto bulk_update = libmongoc::bulk_operation_update_with_opts.create_instance();
-        update_func.many(true);
+        "update_many with upsert invokes mongoc_bulk_operation_update_many_with_opts with upsert "
+        "true") {
+        auto bulk_update = libmongoc::bulk_operation_update_many_with_opts.create_instance();
         update_func.upsert(true);
         bulk_update->visit(update_func);
 
@@ -280,11 +249,10 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
     }
 
     SECTION(
-        "update_many with collation invokes mongoc_bulk_operation_update_with_opts with "
+        "update_many with collation invokes mongoc_bulk_operation_update_many_with_opts with "
         "collation") {
-        auto bulk_update = libmongoc::bulk_operation_update_with_opts.create_instance();
+        auto bulk_update = libmongoc::bulk_operation_update_many_with_opts.create_instance();
         update_func.collation(collation);
-        update_func.many(true);
         bulk_update->visit(update_func);
 
         model::update_many um(filter, update_doc);
@@ -314,9 +282,8 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
         REQUIRE(called);
     }
 
-    SECTION("delete_many invokes mongoc_bulk_operation_remove_with_opts") {
-        auto bulk_delete = libmongoc::bulk_operation_remove_with_opts.create_instance();
-        delete_func.many(true);
+    SECTION("delete_many invokes mongoc_bulk_operation_remove_many_with_opts") {
+        auto bulk_delete = libmongoc::bulk_operation_remove_many_with_opts.create_instance();
         bulk_delete->visit(delete_func);
 
         bw.append(model::delete_many(doc));
@@ -324,11 +291,10 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
     }
 
     SECTION(
-        "delete_many with collation invokes mongoc_bulk_operation_remove_with_opts with "
+        "delete_many with collation invokes mongoc_bulk_operation_remove_many_with_opts with "
         "collation") {
-        auto bulk_delete = libmongoc::bulk_operation_remove_with_opts.create_instance();
+        auto bulk_delete = libmongoc::bulk_operation_remove_many_with_opts.create_instance();
         delete_func.collation(collation);
-        delete_func.many(true);
         bulk_delete->visit(delete_func);
 
         model::delete_many dm(doc);
