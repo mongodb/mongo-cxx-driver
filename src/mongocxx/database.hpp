@@ -103,6 +103,11 @@ class MONGOCXX_API database {
     ///
     /// @throws mongocxx::operation_exception if the operation fails.
     ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the database
+    ///   level set write concern - database::write_concern(wc). (MongoDB
+    ///   3.4+)
+    ///
     class collection create_collection(
         bsoncxx::string::view_or_value name,
         const options::create_collection& options = options::create_collection());
@@ -120,6 +125,11 @@ class MONGOCXX_API database {
     /// @param options the options for the new view.
     ///
     /// @throws mongocxx::operation_exception if the operation fails.
+    ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the database
+    ///   level set write concern - database::write_concern(wc). (MongoDB
+    ///   3.4+)
     ///
     class collection create_view(bsoncxx::string::view_or_value name,
                                  bsoncxx::string::view_or_value view_on,
@@ -145,6 +155,11 @@ class MONGOCXX_API database {
     /// @throws mongocxx::operation_exception if the operation fails.
     //
     /// @see http://docs.mongodb.org/manual/reference/method/db.dropDatabase/
+    ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the database
+    ///   level set write concern - database::write_concern(wc). (MongoDB
+    ///   3.4+)
     ///
     void drop();
 

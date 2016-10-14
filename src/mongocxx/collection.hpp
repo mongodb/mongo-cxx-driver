@@ -126,6 +126,12 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/aggregate/
     ///
+    /// @note
+    ///   In order to pass a read or write concern to this, you must use the
+    ///   collection level set read or write concern -
+    ///   collection::write_concern(wc) and collection::read_concern(rc).
+    ///   (Write concern supported only for MongoDB 3.4+)
+    ///
     cursor aggregate(const pipeline& pipeline,
                      const options::aggregate& options = options::aggregate());
 
@@ -223,6 +229,11 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
     ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the collection
+    ///   level set write concern - collection::write_concern(wc). (MongoDB
+    ///   3.4+)
+    ///
     bsoncxx::document::value create_index(bsoncxx::document::view_or_value keys,
                                           const options::index& options = options::index());
 
@@ -286,6 +297,11 @@ class MONGOCXX_API collection {
     /// @throws mongocxx::operation_exception if the operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.drop/
+    ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the collection
+    ///   level set write concern - collection::write_concern(wc). (MongoDB
+    ///   3.4+)
     ///
     void drop();
 
@@ -487,6 +503,11 @@ class MONGOCXX_API collection {
     /// @throws mongocxx::operation_exception if the operation fails.
     ///
     /// @see https://docs.mongodb.org/manual/reference/command/renameCollection/
+    ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the collection
+    ///   level set write concern - collection::write_concern(wc). (MongoDB
+    ///   3.4+)
     ///
     void rename(bsoncxx::string::view_or_value new_name, bool drop_target_before_rename = false);
 
