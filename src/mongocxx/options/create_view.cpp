@@ -23,6 +23,11 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+create_view& create_view::collation(bsoncxx::document::view_or_value collation) {
+    _collation = std::move(collation);
+    return *this;
+}
+
 create_view& create_view::pipeline(class pipeline pipeline) {
     _pipeline = std::move(pipeline);
     return *this;
@@ -30,6 +35,10 @@ create_view& create_view::pipeline(class pipeline pipeline) {
 
 bsoncxx::document::value create_view::to_document() const {
     auto doc = bsoncxx::builder::stream::document{};
+
+    if (_collation) {
+        doc << "collation" << bsoncxx::types::b_document{*_collation};
+    }
 
     if (_pipeline) {
         doc << "pipeline" << _pipeline->view_array();

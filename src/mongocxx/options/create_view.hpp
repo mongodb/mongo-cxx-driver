@@ -36,6 +36,17 @@ class MONGOCXX_API create_view {
     create_view& operator=(const create_view& other) = delete;
 
     ///
+    /// Sets the default collation for this view.
+    ///
+    /// @param collation
+    ///   The default collation for the view.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/manual/release-notes/3.3-dev-series-collation/#collation-option
+    ///
+    create_view& collation(bsoncxx::document::view_or_value collation);
+
+    ///
     /// Sets the pipeline that will be used to compute this view.
     ///
     /// @param pipeline
@@ -53,6 +64,7 @@ class MONGOCXX_API create_view {
     MONGOCXX_INLINE operator bsoncxx::document::value() const;
 
    private:
+    stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<class pipeline> _pipeline;
 };
 

@@ -14,6 +14,7 @@
 
 #include "catch.hpp"
 
+#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/types.hpp>
@@ -30,12 +31,22 @@ TEST_CASE("create_view", "[create_view]") {
     options::create_view cv;
 
     SECTION("Can be exported to a document") {
+        auto collation_en_US = builder::stream::document{} << "locale"
+                                                           << "en_US" << builder::stream::finalize;
+
+        cv.collation(collation_en_US.view());
         cv.pipeline(std::move(pipeline{}.limit(1)));
 
         auto doc = cv.to_document();
         document::view doc_view{doc.view()};
 
-        // pipeline field is set correctly
+        // "collation" field is set correctly.
+        document::element collation{doc_view["collation"]};
+        REQUIRE(collation);
+        REQUIRE(collation.type() == type::k_document);
+        REQUIRE(collation.get_document().value == collation_en_US);
+
+        // "pipeline" field is set correctly.
         document::element pipeline_ele{doc_view["pipeline"]};
         REQUIRE(pipeline_ele);
         REQUIRE(pipeline_ele.type() == type::k_array);
