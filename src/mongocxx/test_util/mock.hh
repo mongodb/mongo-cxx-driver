@@ -25,7 +25,10 @@
 #include <unordered_map>
 #include <vector>
 
+#include <mongocxx/config/private/prelude.hh>
+
 namespace mongocxx {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace test_util {
 
 template <typename T>
@@ -183,4 +186,7 @@ class mock<R (*)(Args...)> {
 };
 
 }  // namespace test_util
+MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongo
+
+#include <mongocxx/config/private/postlude.hh>
