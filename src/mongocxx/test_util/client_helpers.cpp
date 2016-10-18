@@ -30,7 +30,11 @@ std::int32_t get_max_wire_version(const client& client) {
         client["admin"].run_command(bsoncxx::builder::stream::document{}
                                     << "isMaster" << 1 << bsoncxx::builder::stream::finalize);
     auto max_wire_version = reply.view()["maxWireVersion"];
-    if (!max_wire_version || max_wire_version.type() != bsoncxx::type::k_int32) {
+    if (!max_wire_version) {
+        // If wire version is not available (i.e. server version too old), it is assumed to be zero.
+        return 0;
+    }
+    if (max_wire_version.type() != bsoncxx::type::k_int32) {
         throw operation_exception{error_code::k_server_response_malformed};
     }
     return max_wire_version.get_int32().value;
