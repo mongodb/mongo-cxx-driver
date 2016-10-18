@@ -330,6 +330,10 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
         b << "allowDiskUse" << *options.allow_disk_use();
     }
 
+    if (options.collation()) {
+        b << "collation" << *options.collation();
+    }
+
     if (options.use_cursor()) {
         auto inner = b << "cursor" << open_document;
 

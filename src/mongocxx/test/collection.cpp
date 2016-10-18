@@ -651,6 +651,30 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         people_coll.drop();
     }
 
+    SECTION("aggregation with collation", "[collection]") {
+        document b1;
+        b1 << "x"
+           << "foo";
+
+        coll.insert_one(b1.view());
+
+        auto predicate = document{} << "x"
+                                    << "FOO" << finalize;
+
+        pipeline p;
+        p.match(predicate.view());
+
+        auto agg_opts = options::aggregate{}.collation(case_insensitive_collation.view());
+        auto results = coll.aggregate(p, agg_opts);
+
+        if (test_util::supports_collation(mongodb_client)) {
+            REQUIRE(std::distance(results.begin(), results.end()) == 1);
+        } else {
+            // The server does not support collation.
+            REQUIRE_THROWS_AS(std::distance(results.begin(), results.end()), operation_exception);
+        }
+    }
+
     SECTION("distinct works", "[collection]") {
         auto distinct_cname = "distinct_coll";
         auto distinct_coll = db[distinct_cname];
