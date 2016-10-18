@@ -1095,9 +1095,9 @@
 
 
 
-<h2 id="installing-the-mongocxx-driver">Installing the mongocxx driver</h2>
+<h1 id="installing-the-mongocxx-driver">Installing the mongocxx driver</h1>
 
-<h3 id="prerequisites">Prerequisites</h3>
+<h2 id="prerequisites">Prerequisites</h2>
 
 <ul>
 <li>Any standard Unix platform, or Windows 7 SP1+</li>
@@ -1107,16 +1107,16 @@ Update 1 or later</li>
 <li>On Windows, boost 1.56 or later</li>
 </ul>
 
-<h3 id="installation">Installation</h3>
+<h2 id="installation">Installation</h2>
 
-<h4 id="step-1-install-the-latest-version-of-the-mongodb-c-driver">Step 1: Install the latest version of the MongoDB C driver.</h4>
+<h3 id="step-1-install-the-latest-version-of-the-mongodb-c-driver">Step 1: Install the latest version of the MongoDB C driver.</h3>
 
 <p>The mongocxx driver builds on top of the MongoDB C driver.</p>
 
 <p>Follow the instructions at
 <a href="http://mongoc.org/libmongoc/current/installing.html">Installing libmongoc</a>.</p>
 
-<h4 id="step-2-choose-a-c-17-polyfill">Step 2: Choose a C++17 polyfill</h4>
+<h3 id="step-2-choose-a-c-17-polyfill">Step 2: Choose a C++17 polyfill</h3>
 
 <p>The mongocxx driver uses the experimental C++17 features
 <code>std::optional</code> and <code>std::string_view</code>. To compile
@@ -1126,7 +1126,8 @@ implementations for these features:</p>
 <p>MNMLSTC/core (<em>default for non-Windows platforms</em>)
      Select with <code>-DBSONCXX_POLY_USE_MNMLSTC=1</code>. This option vendors a
      header-only installation of MNMLSTC/core into the bsoncxx library
-     installation.</p>
+     installation.  <strong>NOTE</strong>: this will download MLNMLSTC from
+     GitHub during the build process.</p>
 
 <p>Boost (<em>default for Windows platforms</em>)
      Select with <code>-DBSONCXX_POLY_USE_BOOST=1</code>. This is currently the
@@ -1149,31 +1150,59 @@ stable binary interface.</p>
 <p>Be aware that your standard library&rsquo;s <code>std::experimental</code> implementation
 may change over time, breaking binary compatibility in unexpected ways.</p>
 
-<h4 id="step-3-download-and-install-the-latest-version-of-the-mongocxx-driver">Step 3: Download and install the latest version of the mongocxx driver.</h4>
+<h3 id="step-3-download-the-latest-version-of-the-mongocxx-driver">Step 3: Download the latest version of the mongocxx driver.</h3>
 
-<pre><code class="language-sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.0.1.tar.gz
-tar -xzf r3.0.1.tar.gz
-cd mongo-cxx-driver-r3.0.1/build
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
-make &amp;&amp; sudo make install
+<pre><code class="language-sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.0.2.tar.gz
+tar -xzf r3.0.2.tar.gz
+cd mongo-cxx-driver-r3.0.2/build
 </code></pre>
 
-<p>If you did not install the MongoDB C driver into the default path,
-substitute the <code>cmake</code> line above with the following:</p>
+<h3 id="step-4-configure-the-driver">Step 4: Configure the driver</h3>
 
-<pre><code class="language-sh">PKG_CONFIG_PATH=CDRIVER_INSTALL_PATH/lib/pkgconfig \
+<p>By default, <code>libmongoc</code> installs into <code>/usr/local</code>.  To configure
+mongocxx for installation into <code>/usr/local</code> as well, use the following
+<code>cmake</code> command:</p>
+
+<pre><code>cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+</code></pre>
+
+<p>If you did not install the <code>libmongoc</code> into the default prefix,
+substitute the <code>cmake</code> line above with the following lines (replace
+<code>MY_INSTALL_PREFIX</code> with the prefix used for installing the C driver:</p>
+
+<pre><code class="language-sh"># MY_INSTALL_PREFIX=&quot;/your/cdriver/prefix&quot;
+
+PKG_CONFIG_PATH=&quot;$MY_INSTALL_PREFIX/lib/pkgconfig&quot; \
   cmake -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=CXXDRIVER-INSTALL-PATH ..
+        -DCMAKE_INSTALL_PREFIX=&quot;$MY_INSTALL_PREFIX&quot; ..
 </code></pre>
 
-<p>To select a polyfill, pass the option to <code>cmake</code>. For example,
+<p>Remember: to select a polyfill, pass the option to <code>cmake</code>. For example,
 to select the Boost polyfill, substitute the <code>cmake</code> line with
 the following:</p>
 
-<pre><code class="language-sh">cmake -DCMAKE_BUILD_TYPE=Release -DBSONCXX_POLY_USE_BOOST=1 ..
+<pre><code class="language-sh">cmake -DCMAKE_BUILD_TYPE=Release -DBSONCXX_POLY_USE_BOOST=1 \
+    -DCMAKE_INSTALL_PREFIX=/usr/local ..
 </code></pre>
 
-<h4 id="step-4-test-your-installation">Step 4: Test your installation</h4>
+<h3 id="step-5-build-and-install-the-driver">Step 5: Build and install the driver</h3>
+
+<p>If you are using the default MNMLSTC polyfill and are installing to a
+directory requiring root permissions, you should install the polyfill with
+<code>sudo</code> before running <code>make</code> so you don&rsquo;t have to run all of <code>make</code> with
+<code>sudo</code>:</p>
+
+<pre><code class="language-sh"># Only for MNMLSTC polyfill
+sudo make EP_mnmlstc_core
+</code></pre>
+
+<p>Once MNMLSTC is installed, or if you are using a different polyfill,
+build and install the driver:</p>
+
+<pre><code class="language-sh">make &amp;&amp; sudo make install
+</code></pre>
+
+<h3 id="step-6-test-your-installation">Step 6: Test your installation</h3>
 
 <p>Save the following source file with the filename <code>test.cpp</code>
 underneath any directory:</p>
@@ -1209,6 +1238,12 @@ int main(int, char**) {
 <pre><code class="language-sh">c++ --std=c++11 test.cpp -o test $(pkg-config --cflags --libs libmongocxx)
 </code></pre>
 
+<p>If you installed to somewhere not in your pkg-config search path, remember
+to set the <code>PKG_CONFIG_PATH</code> environment variable first:</p>
+
+<pre><code>export PKG_CONFIG_PATH=&quot;$MY_INSTALL_PREFIX/lib/pkgconfig&quot;
+</code></pre>
+
 
 
 
@@ -1240,8 +1275,6 @@ int main(int, char**) {
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
 <ul>
-<li>
-<ul>
 <li><a href="#installing-the-mongocxx-driver">Installing the mongocxx driver</a>
 <ul>
 <li><a href="#prerequisites">Prerequisites</a></li>
@@ -1249,9 +1282,10 @@ int main(int, char**) {
 <ul>
 <li><a href="#step-1-install-the-latest-version-of-the-mongodb-c-driver">Step 1: Install the latest version of the MongoDB C driver.</a></li>
 <li><a href="#step-2-choose-a-c-17-polyfill">Step 2: Choose a C++17 polyfill</a></li>
-<li><a href="#step-3-download-and-install-the-latest-version-of-the-mongocxx-driver">Step 3: Download and install the latest version of the mongocxx driver.</a></li>
-<li><a href="#step-4-test-your-installation">Step 4: Test your installation</a></li>
-</ul></li>
+<li><a href="#step-3-download-the-latest-version-of-the-mongocxx-driver">Step 3: Download the latest version of the mongocxx driver.</a></li>
+<li><a href="#step-4-configure-the-driver">Step 4: Configure the driver</a></li>
+<li><a href="#step-5-build-and-install-the-driver">Step 5: Build and install the driver</a></li>
+<li><a href="#step-6-test-your-installation">Step 6: Test your installation</a></li>
 </ul></li>
 </ul></li>
 </ul>
