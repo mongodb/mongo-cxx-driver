@@ -187,6 +187,6 @@ class mock<R (*)(Args...)> {
 
 }  // namespace test_util
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace mongo
+}  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>
