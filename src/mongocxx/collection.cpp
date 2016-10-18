@@ -796,6 +796,10 @@ cursor collection::distinct(bsoncxx::string::view_or_value field_name, view_or_v
     command_builder << "distinct" << name() << "key" << field_name.view() << "query"
                     << bsoncxx::types::b_document{query};
 
+    if (options.collation()) {
+        command_builder << "collation" << *options.collation();
+    }
+
     if (options.max_time()) {
         command_builder << "maxTimeMS" << bsoncxx::types::b_int64{options.max_time()->count()};
     }

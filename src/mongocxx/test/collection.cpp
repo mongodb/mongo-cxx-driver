@@ -741,6 +741,24 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         assert_contains_one("bar");
         assert_contains_one("quux");
     }
+
+    SECTION("distinct with collation", "[collection]") {
+        auto doc = document{} << "x"
+                              << "foo" << finalize;
+
+        auto predicate = document{} << "x"
+                                    << "FOO" << finalize;
+
+        auto distinct_opts = options::distinct{}.collation(case_insensitive_collation.view());
+
+        auto distinct_results = coll.distinct("x", predicate.view(), distinct_opts);
+        if (test_util::supports_collation(mongodb_client)) {
+            REQUIRE(std::distance(distinct_results.begin(), distinct_results.end()) == 1);
+        } else {
+            // TODO CXX-1093: distinct should return error to the user if a collation is specified
+            // and the server doesn't support collation.
+        }
+    }
 }
 
 TEST_CASE("read_concern is inherited from parent", "[collection]") {
