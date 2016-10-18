@@ -60,6 +60,9 @@ void bulk_write::append(const model::write& operation) {
             scoped_bson_t update(operation.get_update_one().update());
 
             bsoncxx::builder::stream::document options_builder;
+            if (operation.get_update_one().collation()) {
+                options_builder << "collation" << *operation.get_update_one().collation();
+            }
             if (operation.get_update_one().upsert()) {
                 options_builder << "upsert" << *operation.get_update_one().upsert();
             }
@@ -79,6 +82,9 @@ void bulk_write::append(const model::write& operation) {
 
             bsoncxx::builder::stream::document options_builder;
             options_builder << "multi" << true;
+            if (operation.get_update_many().collation()) {
+                options_builder << "collation" << *operation.get_update_many().collation();
+            }
             if (operation.get_update_many().upsert()) {
                 options_builder << "upsert" << *operation.get_update_many().upsert();
             }
@@ -94,7 +100,12 @@ void bulk_write::append(const model::write& operation) {
         }
         case write_type::k_delete_one: {
             scoped_bson_t filter(operation.get_delete_one().filter());
-            scoped_bson_t options(bsoncxx::document::view{});
+
+            bsoncxx::builder::stream::document options_builder;
+            if (operation.get_delete_one().collation()) {
+                options_builder << "collation" << *operation.get_delete_one().collation();
+            }
+            scoped_bson_t options(options_builder << bsoncxx::builder::stream::finalize);
 
             bson_error_t error;
             auto result = libmongoc::bulk_operation_remove_one_with_opts(
@@ -109,6 +120,9 @@ void bulk_write::append(const model::write& operation) {
 
             bsoncxx::builder::stream::document options_builder;
             options_builder << "limit" << 0;
+            if (operation.get_delete_many().collation()) {
+                options_builder << "collation" << *operation.get_delete_many().collation();
+            }
             scoped_bson_t options(options_builder << bsoncxx::builder::stream::finalize);
 
             bson_error_t error;
@@ -124,6 +138,9 @@ void bulk_write::append(const model::write& operation) {
             scoped_bson_t replace(operation.get_replace_one().replacement());
 
             bsoncxx::builder::stream::document options_builder;
+            if (operation.get_replace_one().collation()) {
+                options_builder << "collation" << *operation.get_replace_one().collation();
+            }
             if (operation.get_replace_one().upsert()) {
                 options_builder << "upsert" << *operation.get_replace_one().upsert();
             }
