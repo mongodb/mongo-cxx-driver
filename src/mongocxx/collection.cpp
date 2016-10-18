@@ -203,6 +203,10 @@ bsoncxx::document::value build_find_options_document(const options::find& option
         options_builder << "batchSize" << *options.batch_size();
     }
 
+    if (options.collation()) {
+        options_builder << "collation" << *options.collation();
+    }
+
     if (options.comment()) {
         options_builder << "comment" << *options.comment();
     }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "catch.hpp"
+#include <mongocxx/test_util/client_helpers.hh>
 
 #include <vector>
 
@@ -25,6 +26,7 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/insert_many_builder.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pipeline.hpp>
@@ -83,6 +85,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     database db = mongodb_client["test"];
     collection coll = db["mongo_cxx_driver"];
 
+    auto case_insensitive_collation = document{} << "locale"
+                                                 << "en_US"
+                                                 << "strength" << 2 << finalize;
+
     coll.drop();
 
     SECTION("insert and read single document", "[collection]") {
@@ -135,6 +141,45 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         REQUIRE(i == 4);
+    }
+
+    SECTION("find with collation", "[collection]") {
+        auto b = document{} << "x"
+                            << "foo" << finalize;
+        REQUIRE(coll.insert_one(b.view()));
+
+        auto predicate = document{} << "x"
+                                    << "FOO" << finalize;
+        auto find_opts = options::find{}.collation(case_insensitive_collation.view());
+        auto cursor = coll.find(predicate.view(), find_opts);
+        if (test_util::supports_collation(mongodb_client)) {
+            REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
+        } else if (test_util::get_max_wire_version(mongodb_client) >= 4) {
+            // The server doesn't support collation.
+            REQUIRE_THROWS_AS(std::distance(cursor.begin(), cursor.end()), query_exception);
+        } else {
+            // TODO CDRIVER-1751: due to a C driver issue, no exception is currently thrown when
+            // connected to old servers.
+        }
+    }
+
+    SECTION("find_one with collation", "[collection]") {
+        auto b = document{} << "x"
+                            << "foo" << finalize;
+        REQUIRE(coll.insert_one(b.view()));
+
+        auto predicate = document{} << "x"
+                                    << "FOO" << finalize;
+        auto find_opts = options::find{}.collation(case_insensitive_collation.view());
+        if (test_util::supports_collation(mongodb_client)) {
+            REQUIRE(coll.find_one(predicate.view(), find_opts));
+        } else if (test_util::get_max_wire_version(mongodb_client) >= 4) {
+            // The server doesn't support collation.
+            REQUIRE_THROWS_AS(coll.find_one(predicate.view(), find_opts), query_exception);
+        } else {
+            // TODO CDRIVER-1751: due to a C driver issue, no exception is currently thrown when
+            // connected to old servers.
+        }
     }
 
     SECTION("insert and update single document", "[collection]") {
