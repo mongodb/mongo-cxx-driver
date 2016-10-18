@@ -636,6 +636,10 @@ std::int64_t collection::count(view_or_value filter, const options::count& optio
     // Some options must be added via the options struct
     bsoncxx::builder::stream::document cmd_opts_builder{};
 
+    if (options.collation()) {
+        cmd_opts_builder << "collation" << *options.collation();
+    }
+
     if (options.max_time()) {
         cmd_opts_builder << "maxTimeMS" << bsoncxx::types::b_int64{options.max_time()->count()};
     }

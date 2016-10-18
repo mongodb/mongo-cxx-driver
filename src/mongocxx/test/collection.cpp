@@ -311,6 +311,21 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                           operation_exception);
     }
 
+    SECTION("count with collation", "[collection]") {
+        auto doc = document{} << "x"
+                              << "foo" << finalize;
+        REQUIRE(coll.insert_one(doc.view()));
+
+        auto predicate = document{} << "x"
+                                    << "FOO" << finalize;
+        auto count_opts = options::count{}.collation(case_insensitive_collation.view());
+        if (test_util::supports_collation(mongodb_client)) {
+            REQUIRE(coll.count(predicate.view(), count_opts) == 1);
+        } else {
+            REQUIRE_THROWS_AS(coll.count(predicate.view(), count_opts), query_exception);
+        }
+    }
+
     SECTION("document replacement", "[collection]") {
         document b1;
         b1 << "x" << 1;
