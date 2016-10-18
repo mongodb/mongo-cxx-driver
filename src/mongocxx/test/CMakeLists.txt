@@ -62,6 +62,7 @@ set(mongocxx_test_sources
 )
 
 add_executable(test_driver
+    ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     ${mongocxx_test_sources}
 )

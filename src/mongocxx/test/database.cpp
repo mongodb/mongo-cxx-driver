@@ -14,6 +14,7 @@
 
 #include "catch.hpp"
 #include "helpers.hpp"
+#include <mongocxx/test_util/client_helpers.hh>
 
 #include <mongocxx/database.hpp>
 
@@ -32,18 +33,6 @@ using bsoncxx::builder::stream::close_document;
 using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::finalize;
 using bsoncxx::builder::stream::open_document;
-
-namespace {
-
-int get_max_wire_version(const client& mongo_client) {
-    auto reply = mongo_client["admin"].run_command(document{} << "isMaster" << 1 << finalize);
-    auto max_wire_version = reply.view()["maxWireVersion"];
-    REQUIRE(max_wire_version);
-    REQUIRE(max_wire_version.type() == bsoncxx::type::k_int32);
-    return max_wire_version.get_int32().value;
-}
-
-}  // namespace
 
 TEST_CASE("A default constructed database is false-ish", "[database]") {
     instance::current();
@@ -394,7 +383,7 @@ TEST_CASE("Database integration tests", "[database]") {
             database.create_view("view", collection_name,
                                  options::create_view().pipeline(std::move(pipeline({}).limit(1))));
 
-        if (get_max_wire_version(mongo_client) >= 5) {
+        if (test_util::get_max_wire_version(mongo_client) >= 5) {
             // The server supports views.
             REQUIRE(view.count(bsoncxx::document::view{}) == 1);
         } else {
