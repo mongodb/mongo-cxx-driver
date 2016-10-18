@@ -40,6 +40,10 @@ std::int32_t get_max_wire_version(const client& client) {
     return max_wire_version.get_int32().value;
 }
 
+bool supports_collation(const client& client) {
+    return get_max_wire_version(client) >= 5;
+}
+
 }  // namespace test_util
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

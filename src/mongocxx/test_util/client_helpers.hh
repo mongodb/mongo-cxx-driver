@@ -33,6 +33,14 @@ namespace test_util {
 //
 std::int32_t get_max_wire_version(const client& client);
 
+//
+// Determines whether or not the given client supports the collation feature, by running the
+// "isMaster" command.
+//
+// Throws mongocxx::operation_exception if the operation fails, or the server reply is malformed.
+//
+bool supports_collation(const client& client);
+
 }  // namespace test_util
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
