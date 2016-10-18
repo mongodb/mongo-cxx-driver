@@ -26,7 +26,7 @@
 #include <vector>
 
 namespace mongocxx {
-namespace mock {
+namespace test_util {
 
 template <typename T>
 class mock;
@@ -182,5 +182,5 @@ class mock<R (*)(Args...)> {
     const underlying_ptr _func;
 };
 
-}  // namespace mock
+}  // namespace test_util
 }  // namespace mongo
