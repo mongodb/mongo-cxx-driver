@@ -6,10 +6,12 @@ type = "index"
 
 # MongoDB C++ Driver
 
-Welcome to the MongoDB C++ driver.  On this site, you'll find guides to
-[installing]({{< ref "mongocxx-v3/installation.md" >}}) and [getting
-started]({{< ref "mongocxx-v3/tutorial.md" >}}) with the C++ driver for MongoDB, plus
-other documentation to help you get the most from MongoDB and C++.
+Welcome to the MongoDB C++ driver.  On this site, you'll find documentation
+to help you get the most from MongoDB and C++.  If you're just starting
+out, take a look at these pages first:
+
+* [Installing mongocxx]({{< ref "mongocxx-v3/installation.md" >}})
+* [Quick-start tutorial]({{< ref "mongocxx-v3/tutorial.md" >}})
 
 ## Driver status by family and version
 
