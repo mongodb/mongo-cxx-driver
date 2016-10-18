@@ -691,10 +691,6 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("distinct works", "[collection]") {
-        auto distinct_cname = "distinct_coll";
-        auto distinct_coll = db[distinct_cname];
-        distinct_coll.drop();
-
         auto doc1 = document{} << "foo"
                                << "baz"
                                << "garply" << 1 << finalize;
@@ -717,9 +713,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         bulk.append(model::insert_one{std::move(doc3)});
         bulk.append(model::insert_one{std::move(doc4)});
 
-        distinct_coll.bulk_write(bulk);
+        coll.bulk_write(bulk);
 
-        auto distinct_results = distinct_coll.distinct("foo", {});
+        auto distinct_results = coll.distinct("foo", {});
 
         // copy into a vector.
         std::vector<bsoncxx::document::value> results;
