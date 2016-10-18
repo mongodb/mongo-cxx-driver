@@ -16,7 +16,7 @@
 
 #include <mongoc.h>
 
-#include <mongocxx/mock/mock.hh>
+#include <mongocxx/test_util/mock.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 
