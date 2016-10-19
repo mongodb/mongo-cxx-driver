@@ -971,30 +971,33 @@ TEST_CASE("read_concern is inherited from parent", "[collection]") {
     }
 }
 
-TEST_CASE("create_index returns index name", "[collection]") {
+TEST_CASE("create_index tests", "[collection]") {
     instance::current();
 
     client mongodb_client{uri{}};
     database db = mongodb_client["test"];
     collection coll = db["collection"];
+    coll.drop();
     coll.insert_one({});  // Ensure that the collection exists.
 
-    bsoncxx::document::value index = bsoncxx::builder::stream::document{}
-                                     << "a" << 1 << bsoncxx::builder::stream::finalize;
+    SECTION("returns index name") {
+        bsoncxx::document::value index = bsoncxx::builder::stream::document{}
+                                         << "a" << 1 << bsoncxx::builder::stream::finalize;
 
-    std::string indexName{"myName"};
-    options::index options{};
-    options.name(indexName);
+        std::string indexName{"myName"};
+        options::index options{};
+        options.name(indexName);
 
-    auto response = coll.create_index(index.view(), options);
-    REQUIRE(response.view()["name"].get_utf8().value == stdx::string_view{indexName});
+        auto response = coll.create_index(index.view(), options);
+        REQUIRE(response.view()["name"].get_utf8().value == stdx::string_view{indexName});
 
-    bsoncxx::document::value index2 = bsoncxx::builder::stream::document{}
-                                      << "b" << 1 << "c" << -1
-                                      << bsoncxx::builder::stream::finalize;
+        bsoncxx::document::value index2 = bsoncxx::builder::stream::document{}
+                                          << "b" << 1 << "c" << -1
+                                          << bsoncxx::builder::stream::finalize;
 
-    auto response2 = coll.create_index(index2.view(), options::index{});
-    REQUIRE(response2.view()["name"].get_utf8().value == stdx::string_view{"b_1_c_-1"});
+        auto response2 = coll.create_index(index2.view(), options::index{});
+        REQUIRE(response2.view()["name"].get_utf8().value == stdx::string_view{"b_1_c_-1"});
+    }
 }
 
 TEST_CASE("regressions", "CXX-986") {
