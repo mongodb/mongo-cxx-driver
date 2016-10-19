@@ -21,6 +21,7 @@
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/modify_collection.hpp>
 #include <mongocxx/private/libmongoc.hh>
@@ -286,6 +287,10 @@ TEST_CASE("Database integration tests", "[database]") {
     database database = mongo_client[database_name];
     stdx::string_view collection_name{"collection"};
 
+    auto case_insensitive_collation = document{} << "locale"
+                                                 << "en_US"
+                                                 << "strength" << 2 << finalize;
+
     SECTION("A database may create a collection via create_collection") {
         database[collection_name].drop();
 
@@ -303,6 +308,23 @@ TEST_CASE("Database integration tests", "[database]") {
 
             collection obtained_collection = database.create_collection(collection_name, opts);
             REQUIRE(obtained_collection.name() == collection_name);
+        }
+
+        SECTION("with collation") {
+            options::create_collection opts;
+            opts.collation(case_insensitive_collation.view());
+
+            if (test_util::supports_collation(mongo_client)) {
+                collection obtained_collection = database.create_collection(collection_name, opts);
+                REQUIRE(obtained_collection.insert_one(document{} << "x"
+                                                                  << "foo" << finalize));
+                REQUIRE(obtained_collection.find_one(document{} << "x"
+                                                                << "FOO" << finalize));
+            } else {
+                // The server doesn't support collation.
+                REQUIRE_THROWS_AS(database.create_collection(collection_name, opts),
+                                  operation_exception);
+            }
         }
 
         SECTION("but raises exception when collection already exists") {
