@@ -596,7 +596,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
     SECTION("find_one_and_replace works", "[collection]") {
         document b1;
-        b1 << "x" << 1;
+        b1 << "x"
+           << "foo";
 
         coll.insert_one(b1.view());
         coll.insert_one(b1.view());
@@ -606,13 +607,15 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         document criteria;
         document replacement;
 
-        criteria << "x" << 1;
-        replacement << "x" << 2;
+        criteria << "x"
+                 << "foo";
+        replacement << "x"
+                    << "bar";
 
         SECTION("without return replacement returns original") {
             auto doc = coll.find_one_and_replace(criteria.view(), replacement.view());
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_int32() == 1);
+            REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
         }
 
         SECTION("with return replacement returns new") {
@@ -620,12 +623,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options.return_document(options::return_document::k_after);
             auto doc = coll.find_one_and_replace(criteria.view(), replacement.view(), options);
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_int32() == 2);
+            REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"bar"});
         }
 
         SECTION("bad criteria returns negative optional") {
             document bad_criteria;
-            bad_criteria << "x" << 3;
+            bad_criteria << "x"
+                         << "baz";
 
             auto doc = coll.find_one_and_replace(bad_criteria.view(), replacement.view());
 
@@ -635,7 +639,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
     SECTION("find_one_and_update works", "[collection]") {
         document b1;
-        b1 << "x" << 1;
+        b1 << "x"
+           << "foo";
 
         coll.insert_one(b1.view());
         coll.insert_one(b1.view());
@@ -645,29 +650,31 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         document criteria;
         document update;
 
-        criteria << "x" << 1;
-        update << "$set" << open_document << "x" << 2 << close_document;
+        criteria << "x"
+                 << "foo";
+        update << "$set" << open_document << "x"
+               << "bar" << close_document;
 
         SECTION("without return update returns original") {
             auto doc = coll.find_one_and_update(criteria.view(), update.view());
 
             REQUIRE(doc);
 
-            REQUIRE(doc->view()["x"].get_int32() == 1);
+            REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
         }
 
         SECTION("with return update returns new") {
             options::find_one_and_update options;
             options.return_document(options::return_document::k_after);
             auto doc = coll.find_one_and_update(criteria.view(), update.view(), options);
-
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_int32() == 2);
+            REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"bar"});
         }
 
         SECTION("bad criteria returns negative optional") {
             document bad_criteria;
-            bad_criteria << "x" << 3;
+            bad_criteria << "x"
+                         << "baz";
 
             auto doc = coll.find_one_and_update(bad_criteria.view(), update.view());
 
@@ -677,7 +684,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
     SECTION("find_one_and_delete works", "[collection]") {
         document b1;
-        b1 << "x" << 1;
+        b1 << "x"
+           << "foo";
 
         coll.insert_one(b1.view());
         coll.insert_one(b1.view());
@@ -686,14 +694,15 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         document criteria;
 
-        criteria << "x" << 1;
+        criteria << "x"
+                 << "foo";
 
         SECTION("delete one deletes one and returns it") {
             auto doc = coll.find_one_and_delete(criteria.view());
 
             REQUIRE(doc);
 
-            REQUIRE(doc->view()["x"].get_int32() == 1);
+            REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
             REQUIRE(coll.count({}) == 1);
         }
     }
