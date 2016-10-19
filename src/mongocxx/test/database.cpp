@@ -389,24 +389,29 @@ TEST_CASE("Database integration tests", "[database]") {
         }
     }
 
-    SECTION("A view can be created on a database", "[database]") {
+    SECTION("A database may create a view via create_view") {
+        stdx::string_view view_name{"view"};
         database[collection_name].drop();
-        database["view"].drop();
+        database[view_name].drop();
 
-        database[collection_name].insert_one({});
-        database[collection_name].insert_one({});
+        database[collection_name].insert_one(document{} << "x"
+                                                        << "foo" << finalize);
+        database[collection_name].insert_one(document{} << "x"
+                                                        << "bar" << finalize);
 
-        collection view =
-            database.create_view("view", collection_name,
-                                 options::create_view().pipeline(std::move(pipeline({}).limit(1))));
+        SECTION("View creation with a pipeline") {
+            collection view = database.create_view(
+                view_name, collection_name,
+                options::create_view().pipeline(std::move(pipeline({}).limit(1))));
 
-        if (test_util::get_max_wire_version(mongo_client) >= 5) {
-            // The server supports views.
-            REQUIRE(view.count(bsoncxx::document::view{}) == 1);
-        } else {
-            // The server doesn't support views. On these versions of the server, view creation
-            // requests are treated as ordinary collection creation requests.
-            REQUIRE(view.count(bsoncxx::document::view{}) == 0);
+            if (test_util::get_max_wire_version(mongo_client) >= 5) {
+                // The server supports views.
+                REQUIRE(view.count(bsoncxx::document::view{}) == 1);
+            } else {
+                // The server doesn't support views. On these versions of the server, view creation
+                // requests are treated as ordinary collection creation requests.
+                REQUIRE(view.count(bsoncxx::document::view{}) == 0);
+            }
         }
     }
 }
