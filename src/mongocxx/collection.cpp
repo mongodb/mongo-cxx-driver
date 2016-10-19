@@ -561,11 +561,8 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
     auto opts = libmongoc::find_and_modify_opts_new();
     auto opts_cleanup = make_guard([&opts] { libmongoc::find_and_modify_opts_destroy(opts); });
     int flags = ::MONGOC_FIND_AND_MODIFY_NONE;
-    scoped_bson_t bson_replacement{replacement};
-    scoped_bson_t bson_sort{options.sort()};
-    scoped_bson_t bson_projection{options.projection()};
 
-    libmongoc::find_and_modify_opts_set_update(opts, bson_replacement.bson());
+    libmongoc::find_and_modify_opts_set_update(opts, scoped_bson_t{replacement}.bson());
 
     if (options.bypass_document_validation()) {
         libmongoc::find_and_modify_opts_set_bypass_document_validation(
@@ -573,11 +570,12 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
     }
 
     if (options.sort()) {
-        libmongoc::find_and_modify_opts_set_sort(opts, bson_sort.bson());
+        libmongoc::find_and_modify_opts_set_sort(opts, scoped_bson_t{*options.sort()}.bson());
     }
 
     if (options.projection()) {
-        libmongoc::find_and_modify_opts_set_fields(opts, bson_projection.bson());
+        libmongoc::find_and_modify_opts_set_fields(opts,
+                                                   scoped_bson_t{*options.projection()}.bson());
     }
 
     if (options.upsert().value_or(false)) {
@@ -601,11 +599,8 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
     auto opts = libmongoc::find_and_modify_opts_new();
     auto opts_cleanup = make_guard([&opts] { libmongoc::find_and_modify_opts_destroy(opts); });
     int flags = ::MONGOC_FIND_AND_MODIFY_NONE;
-    scoped_bson_t bson_update{update};
-    scoped_bson_t bson_sort{options.sort()};
-    scoped_bson_t bson_projection{options.projection()};
 
-    libmongoc::find_and_modify_opts_set_update(opts, bson_update.bson());
+    libmongoc::find_and_modify_opts_set_update(opts, scoped_bson_t{update}.bson());
 
     if (options.bypass_document_validation()) {
         libmongoc::find_and_modify_opts_set_bypass_document_validation(
@@ -613,11 +608,12 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
     }
 
     if (options.sort()) {
-        libmongoc::find_and_modify_opts_set_sort(opts, bson_sort.bson());
+        libmongoc::find_and_modify_opts_set_sort(opts, scoped_bson_t{*options.sort()}.bson());
     }
 
     if (options.projection()) {
-        libmongoc::find_and_modify_opts_set_fields(opts, bson_projection.bson());
+        libmongoc::find_and_modify_opts_set_fields(opts,
+                                                   scoped_bson_t{*options.projection()}.bson());
     }
 
     if (options.upsert().value_or(false)) {
@@ -642,15 +638,14 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
     auto opts_cleanup = make_guard([&opts] { libmongoc::find_and_modify_opts_destroy(opts); });
     auto flags = ::MONGOC_FIND_AND_MODIFY_REMOVE;
 
-    scoped_bson_t bson_sort{options.sort()};
-    scoped_bson_t bson_projection{options.projection()};
 
     if (options.sort()) {
-        libmongoc::find_and_modify_opts_set_sort(opts, bson_sort.bson());
+        libmongoc::find_and_modify_opts_set_sort(opts, scoped_bson_t{*options.sort()}.bson());
     }
 
     if (options.projection()) {
-        libmongoc::find_and_modify_opts_set_fields(opts, bson_projection.bson());
+        libmongoc::find_and_modify_opts_set_fields(opts,
+                                                   scoped_bson_t{*options.projection()}.bson());
     }
 
     // TODO: use options.max_time() when available in the C driver
