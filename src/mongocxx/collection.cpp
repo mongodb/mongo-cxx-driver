@@ -426,6 +426,9 @@ stdx::optional<result::replace_one> collection::replace_one(view_or_value filter
     class bulk_write bulk_op(bulk_opts);
 
     model::replace_one replace_op(filter, replacement);
+    if (options.collation()) {
+        replace_op.collation(*options.collation());
+    }
     if (options.upsert()) {
         replace_op.upsert(*options.upsert());
     }

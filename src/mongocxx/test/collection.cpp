@@ -387,6 +387,32 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         REQUIRE(coll.count({}) == 1);
     }
 
+    SECTION("replace_one with collation", "[collection]") {
+        document doc;
+        doc << "x"
+            << "foo";
+        REQUIRE(coll.insert_one(doc.view()));
+
+        document predicate;
+        predicate << "x"
+                  << "FOO";
+
+        document replacement_doc;
+        replacement_doc << "x"
+                        << "bar";
+
+        auto update_opts = options::update{}.collation(case_insensitive_collation.view());
+        if (test_util::supports_collation(mongodb_client)) {
+            auto result = coll.replace_one(predicate.view(), replacement_doc.view(), update_opts);
+            REQUIRE(result);
+            REQUIRE(result->modified_count() == 1);
+        } else {
+            REQUIRE_THROWS_AS(
+                coll.replace_one(predicate.view(), replacement_doc.view(), update_opts),
+                bulk_write_exception);
+        }
+    }
+
     SECTION("filtered document delete one works", "[collection]") {
         document b1;
         b1 << "x" << 1;
