@@ -693,6 +693,27 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"bar"});
         }
 
+        SECTION("with collation") {
+            options::find_one_and_update options;
+            options.collation(case_insensitive_collation.view());
+
+            document collation_criteria;
+            collation_criteria << "x"
+                               << "FOO";
+
+            if (test_util::supports_collation(mongodb_client)) {
+                auto doc =
+                    coll.find_one_and_update(collation_criteria.view(), update.view(), options);
+                REQUIRE(doc);
+                REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
+            } else {
+                // The server doesn't support collation.
+                //
+                // TODO CDRIVER-1779: due to a C driver issue, no exception is currently thrown when
+                // connected to old servers.
+            }
+        }
+
         SECTION("bad criteria returns negative optional") {
             document bad_criteria;
             bad_criteria << "x"
