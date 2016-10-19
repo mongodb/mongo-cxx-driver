@@ -24,6 +24,7 @@
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
+#include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/query_exception.hpp>
@@ -199,6 +200,28 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto updated = coll.find_one({});
         REQUIRE(updated);
         REQUIRE(updated->view()["changed"].get_bool() == true);
+    }
+
+    SECTION("update_one with collation", "[collection]") {
+        auto b = document{} << "x"
+                            << "foo" << finalize;
+        REQUIRE(coll.insert_one(b.view()));
+
+        auto predicate = document{} << "x"
+                                    << "FOO" << finalize;
+
+        document update_doc;
+        update_doc << "$set" << open_document << "changed" << true << close_document;
+
+        auto update_opts = options::update{}.collation(case_insensitive_collation.view());
+        if (test_util::supports_collation(mongodb_client)) {
+            auto result = coll.update_one(predicate.view(), update_doc.view(), update_opts);
+            REQUIRE(result);
+            REQUIRE(result->modified_count() == 1);
+        } else {
+            REQUIRE_THROWS_AS(coll.update_one(predicate.view(), update_doc.view(), update_opts),
+                              bulk_write_exception);
+        }
     }
 
     SECTION("insert and update multiple documents", "[collection]") {

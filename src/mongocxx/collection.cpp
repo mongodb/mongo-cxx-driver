@@ -506,6 +506,9 @@ stdx::optional<result::update> collection::update_one(view_or_value filter, view
     class bulk_write bulk_op(bulk_opts);
 
     model::update_one update_op(filter, update);
+    if (options.collation()) {
+        update_op.collation(*options.collation());
+    }
     if (options.upsert()) {
         update_op.upsert(*options.upsert());
     }
