@@ -748,6 +748,26 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
             REQUIRE(coll.count({}) == 1);
         }
+
+        SECTION("with collation") {
+            options::find_one_and_delete options;
+            options.collation(case_insensitive_collation.view());
+
+            document collation_criteria;
+            collation_criteria << "x"
+                               << "FOO";
+
+            if (test_util::supports_collation(mongodb_client)) {
+                auto doc = coll.find_one_and_delete(collation_criteria.view(), options);
+                REQUIRE(doc);
+                REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
+            } else {
+                // The server doesn't support collation.
+                //
+                // TODO CDRIVER-1779: due to a C driver issue, no exception is currently thrown when
+                // connected to old servers.
+            }
+        }
     }
 
     SECTION("aggregate some things", "[collection]") {

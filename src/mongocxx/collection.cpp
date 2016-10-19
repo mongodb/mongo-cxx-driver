@@ -652,6 +652,12 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
     auto opts_cleanup = make_guard([&opts] { libmongoc::find_and_modify_opts_destroy(opts); });
     auto flags = ::MONGOC_FIND_AND_MODIFY_REMOVE;
 
+    if (options.collation()) {
+        scoped_bson_t bson_collation{bsoncxx::builder::stream::document{}
+                                     << "collation" << *options.collation()
+                                     << bsoncxx::builder::stream::finalize};
+        libmongoc::find_and_modify_opts_append(opts, bson_collation.bson());
+    }
 
     if (options.sort()) {
         libmongoc::find_and_modify_opts_set_sort(opts, scoped_bson_t{*options.sort()}.bson());
