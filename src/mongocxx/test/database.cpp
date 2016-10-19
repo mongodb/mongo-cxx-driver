@@ -287,16 +287,14 @@ TEST_CASE("Database integration tests", "[database]") {
     stdx::string_view collection_name{"collection"};
 
     SECTION("A database may create a collection via create_collection") {
-        SECTION("without any options") {
-            database[collection_name].drop();
+        database[collection_name].drop();
 
+        SECTION("without any options") {
             collection obtained_collection = database.create_collection(collection_name);
             REQUIRE(obtained_collection.name() == collection_name);
         }
 
         SECTION("with options") {
-            database[collection_name].drop();
-
             options::create_collection opts;
             opts.capped(true);
             opts.size(256);
@@ -308,17 +306,14 @@ TEST_CASE("Database integration tests", "[database]") {
         }
 
         SECTION("but raises exception when collection already exists") {
-            database[collection_name].drop();
-
             database.create_collection(collection_name);
 
             REQUIRE_THROWS(database.create_collection(collection_name));
         }
-
-        database[collection_name].drop();
     }
 
     SECTION("A collection may be modified via modify_collection") {
+        database[collection_name].drop();
         database.create_collection(collection_name);
 
         auto rule = document{} << "email" << open_document << "$exists"
