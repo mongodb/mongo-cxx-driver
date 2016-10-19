@@ -790,6 +790,11 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
         opt.language_override = language_override_copy.data();
     }
 
+    if (options.collation()) {
+        scoped_bson_t collation{*options.collation()};
+        opt.collation = collation.bson();
+    }
+
     if (options.partial_filter_expression()) {
         scoped_bson_t partial_filter_expression{*options.partial_filter_expression()};
         opt.partial_filter_expression = partial_filter_expression.bson();

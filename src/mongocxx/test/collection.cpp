@@ -998,6 +998,39 @@ TEST_CASE("create_index tests", "[collection]") {
         auto response2 = coll.create_index(index2.view(), options::index{});
         REQUIRE(response2.view()["name"].get_utf8().value == stdx::string_view{"b_1_c_-1"});
     }
+
+    SECTION("with collation") {
+        bsoncxx::document::value index = bsoncxx::builder::stream::document{}
+                                         << "a" << 1 << bsoncxx::builder::stream::finalize;
+
+        auto collation = document{} << "locale"
+                                    << "en_US" << finalize;
+        options::index options{};
+        options.collation(collation.view());
+
+        if (test_util::supports_collation(mongodb_client)) {
+            coll.create_index(index.view(), options);
+
+            auto cursor = coll.list_indexes();
+            bool found = false;
+            for (auto&& doc : cursor) {
+                auto name_ele = doc["name"];
+                REQUIRE(name_ele);
+                REQUIRE(name_ele.type() == bsoncxx::type::k_utf8);
+                if (name_ele.get_utf8().value != stdx::string_view{"a_1"}) {
+                    continue;
+                }
+                found = true;
+                auto locale_ele = doc["collation"]["locale"];
+                REQUIRE(locale_ele);
+                REQUIRE(locale_ele.type() == bsoncxx::type::k_utf8);
+                REQUIRE(locale_ele.get_utf8() == collation.view()["locale"].get_utf8());
+            }
+            REQUIRE(found);
+        } else {
+            REQUIRE_THROWS_AS(coll.create_index(index.view(), options), operation_exception);
+        }
+    }
 }
 
 TEST_CASE("regressions", "CXX-986") {
