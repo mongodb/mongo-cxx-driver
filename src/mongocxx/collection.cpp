@@ -487,6 +487,9 @@ stdx::optional<result::delete_result> collection::delete_many(
     class bulk_write bulk_op(bulk_opts);
 
     model::delete_many delete_op(filter);
+    if (options.collation()) {
+        delete_op.collation(*options.collation());
+    }
     bulk_op.append(delete_op);
 
     auto result = bulk_write(bulk_op);
