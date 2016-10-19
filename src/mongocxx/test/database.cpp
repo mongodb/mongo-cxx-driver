@@ -413,5 +413,20 @@ TEST_CASE("Database integration tests", "[database]") {
                 REQUIRE(view.count(bsoncxx::document::view{}) == 0);
             }
         }
+
+        SECTION("View creation with collation") {
+            options::create_view opts;
+            opts.collation(case_insensitive_collation.view());
+
+            if (test_util::supports_collation(mongo_client)) {
+                collection obtained_view = database.create_view(view_name, collection_name, opts);
+                REQUIRE(obtained_view.find_one(document{} << "x"
+                                                          << "FOO" << finalize));
+            } else {
+                // The server doesn't support collation.
+                REQUIRE_THROWS_AS(database.create_view(view_name, collection_name, opts),
+                                  operation_exception);
+            }
+        }
     }
 }
