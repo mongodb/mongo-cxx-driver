@@ -569,6 +569,13 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
             opts, *options.bypass_document_validation());
     }
 
+    if (options.collation()) {
+        scoped_bson_t bson_collation{bsoncxx::builder::stream::document{}
+                                     << "collation" << *options.collation()
+                                     << bsoncxx::builder::stream::finalize};
+        libmongoc::find_and_modify_opts_append(opts, bson_collation.bson());
+    }
+
     if (options.sort()) {
         libmongoc::find_and_modify_opts_set_sort(opts, scoped_bson_t{*options.sort()}.bson());
     }

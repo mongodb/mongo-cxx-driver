@@ -28,6 +28,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/query_exception.hpp>
+#include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/insert_many_builder.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pipeline.hpp>
@@ -624,6 +625,27 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             auto doc = coll.find_one_and_replace(criteria.view(), replacement.view(), options);
             REQUIRE(doc);
             REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"bar"});
+        }
+
+        SECTION("with collation") {
+            options::find_one_and_replace options;
+            options.collation(case_insensitive_collation.view());
+
+            document collation_criteria;
+            collation_criteria << "x"
+                               << "FOO";
+
+            if (test_util::supports_collation(mongodb_client)) {
+                auto doc = coll.find_one_and_replace(collation_criteria.view(), replacement.view(),
+                                                     options);
+                REQUIRE(doc);
+                REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
+            } else {
+                // The server doesn't support collation.
+                //
+                // TODO CDRIVER-1779: due to a C driver issue, no exception is currently thrown when
+                // connected to old servers.
+            }
         }
 
         SECTION("bad criteria returns negative optional") {
