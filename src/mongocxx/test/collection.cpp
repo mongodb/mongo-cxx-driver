@@ -247,6 +247,28 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         REQUIRE(coll.count(bchanged.view()) == 2);
     }
 
+    SECTION("update_many with collation", "[collection]") {
+        auto b = document{} << "x"
+                            << "foo" << finalize;
+        REQUIRE(coll.insert_one(b.view()));
+
+        auto predicate = document{} << "x"
+                                    << "FOO" << finalize;
+
+        document update_doc;
+        update_doc << "$set" << open_document << "changed" << true << close_document;
+
+        auto update_opts = options::update{}.collation(case_insensitive_collation.view());
+        if (test_util::supports_collation(mongodb_client)) {
+            auto result = coll.update_many(predicate.view(), update_doc.view(), update_opts);
+            REQUIRE(result);
+            REQUIRE(result->modified_count() == 1);
+        } else {
+            REQUIRE_THROWS_AS(coll.update_many(predicate.view(), update_doc.view(), update_opts),
+                              bulk_write_exception);
+        }
+    }
+
     SECTION("replace document replaces only one document", "[collection]") {
         document doc;
         doc << "x" << 1;
