@@ -75,15 +75,17 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
         collection, bson_filter.bson(), opts, reply.bson(), &error);
 
     if (!r) {
-        if (!reply.view().empty())
+        if (!reply.view().empty()) {
             mongocxx::throw_exception<mongocxx::write_exception>(reply.steal(), error);
+        }
         mongocxx::throw_exception<mongocxx::write_exception>(error);
     }
 
     bsoncxx::document::view result = reply.view();
 
-    if (result["value"].type() == bsoncxx::type::k_null)
+    if (result["value"].type() == bsoncxx::type::k_null) {
         return mongocxx::stdx::optional<bsoncxx::document::value>{};
+    }
 
     bsoncxx::builder::stream::document b{};
     b << concatenate(result["value"].get_document().view());
@@ -299,8 +301,9 @@ cursor collection::find(view_or_value filter, const options::find& options) {
 
     if (options_converted.max_await_time()) {
         const auto count = options_converted.max_await_time()->count();
-        if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max()))
+        if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max())) {
             throw logic_error{error_code::k_invalid_parameter};
+        }
         libmongoc::cursor_set_max_await_time_ms(mongoc_cursor, static_cast<std::uint32_t>(count));
     }
 
@@ -413,14 +416,19 @@ stdx::optional<result::replace_one> collection::replace_one(view_or_value filter
     options::bulk_write bulk_opts;
     bulk_opts.ordered(false);
 
-    if (options.bypass_document_validation())
+    if (options.bypass_document_validation()) {
         bulk_opts.bypass_document_validation(*options.bypass_document_validation());
-    if (options.write_concern()) bulk_opts.write_concern(*options.write_concern());
+    }
+    if (options.write_concern()) {
+        bulk_opts.write_concern(*options.write_concern());
+    }
 
     class bulk_write bulk_op(bulk_opts);
 
     model::replace_one replace_op(filter, replacement);
-    if (options.upsert()) replace_op.upsert(options.upsert().value());
+    if (options.upsert()) {
+        replace_op.upsert(*options.upsert());
+    }
 
     bulk_op.append(replace_op);
 
@@ -437,14 +445,19 @@ stdx::optional<result::update> collection::update_many(view_or_value filter, vie
     options::bulk_write bulk_opts;
     bulk_opts.ordered(false);
 
-    if (options.bypass_document_validation())
+    if (options.bypass_document_validation()) {
         bulk_opts.bypass_document_validation(*options.bypass_document_validation());
-    if (options.write_concern()) bulk_opts.write_concern(*options.write_concern());
+    }
+    if (options.write_concern()) {
+        bulk_opts.write_concern(*options.write_concern());
+    }
 
     class bulk_write bulk_op(bulk_opts);
 
     model::update_many update_op(filter, update);
-    if (options.upsert()) update_op.upsert(options.upsert().value());
+    if (options.upsert()) {
+        update_op.upsert(*options.upsert());
+    }
 
     bulk_op.append(update_op);
 
@@ -461,7 +474,9 @@ stdx::optional<result::delete_result> collection::delete_many(
     options::bulk_write bulk_opts;
     bulk_opts.ordered(false);
 
-    if (options.write_concern()) bulk_opts.write_concern(*options.write_concern());
+    if (options.write_concern()) {
+        bulk_opts.write_concern(*options.write_concern());
+    }
 
     class bulk_write bulk_op(bulk_opts);
 
@@ -481,14 +496,19 @@ stdx::optional<result::update> collection::update_one(view_or_value filter, view
     options::bulk_write bulk_opts;
     bulk_opts.ordered(false);
 
-    if (options.bypass_document_validation())
+    if (options.bypass_document_validation()) {
         bulk_opts.bypass_document_validation(*options.bypass_document_validation());
-    if (options.write_concern()) bulk_opts.write_concern(*options.write_concern());
+    }
+    if (options.write_concern()) {
+        bulk_opts.write_concern(*options.write_concern());
+    }
 
     class bulk_write bulk_op(bulk_opts);
 
     model::update_one update_op(filter, update);
-    if (options.upsert()) update_op.upsert(options.upsert().value());
+    if (options.upsert()) {
+        update_op.upsert(*options.upsert());
+    }
 
     bulk_op.append(update_op);
 
@@ -505,7 +525,9 @@ stdx::optional<result::delete_result> collection::delete_one(
     options::bulk_write bulk_opts;
     bulk_opts.ordered(false);
 
-    if (options.write_concern()) bulk_opts.write_concern(*options.write_concern());
+    if (options.write_concern()) {
+        bulk_opts.write_concern(*options.write_concern());
+    }
 
     class bulk_write bulk_op(bulk_opts);
 
@@ -713,8 +735,9 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
 
     if (options.expire_after()) {
         const auto count = options.expire_after()->count();
-        if ((count < 0) || (count > std::numeric_limits<int32_t>::max()))
+        if ((count < 0) || (count > std::numeric_limits<int32_t>::max())) {
             throw logic_error{error_code::k_invalid_parameter};
+        }
         opt.expire_after_seconds = static_cast<std::int32_t>(count);
     }
 
