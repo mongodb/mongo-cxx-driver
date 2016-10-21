@@ -1198,6 +1198,13 @@ Update 1 or later&lt;/li&gt;
 
 &lt;p&gt;The mongocxx driver builds on top of the MongoDB C driver.&lt;/p&gt;
 
+&lt;ul&gt;
+&lt;li&gt;For mongocxx-3.0.x, we recommend the latest stable version of libmongoc
+(currently version 1.4.2 at the time this page was written).&lt;/li&gt;
+&lt;li&gt;For mongocxx-3.1.0-beta0 or later, libmongoc 1.5.0-rc3 or later is
+required.&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;p&gt;Follow the instructions at
 &lt;a href=&#34;http://mongoc.org/libmongoc/current/installing.html&#34;&gt;Installing libmongoc&lt;/a&gt;.&lt;/p&gt;
 
