@@ -276,6 +276,11 @@ class MONGOCXX_API find {
     /// @param modifiers
     ///   The query modifiers.
     ///
+    /// @deprecated
+    ///   The modifiers option has been deprecated, and has been replaced by new top-level options
+    ///   that have been introduced. For example, users should call find::snapshot() instead of
+    ///   calling find::modifiers() with a document containing a "$snapshot" field.
+    ///
     /// @see http://docs.mongodb.org/manual/reference/operator/query-modifier/
     ///
     find& modifiers(bsoncxx::document::view_or_value modifiers);
@@ -284,6 +289,11 @@ class MONGOCXX_API find {
     /// Gets the current query modifiers.
     ///
     /// @return The current query modifiers.
+    ///
+    /// @deprecated
+    ///   The modifiers option has been deprecated, and has been replaced by new top-level options
+    ///   that have been introduced. For example, users should call find::snapshot() instead of
+    ///   calling find::modifiers() with a document containing a "$snapshot" field.
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& modifiers() const;
 
