@@ -33,6 +33,7 @@ TEST_CASE("find", "[find][option]") {
 
     auto collation = document{} << "locale"
                                 << "en_US" << finalize;
+    auto hint = bsoncxx::document::view_or_value{document{} << "_id" << 1 << finalize};
     auto max = document{} << "a" << 6 << finalize;
     auto min = document{} << "a" << 3 << finalize;
     auto modifiers = document{} << "$comment"
@@ -45,6 +46,7 @@ TEST_CASE("find", "[find][option]") {
     CHECK_OPTIONAL_ARGUMENT(find_opts, collation, collation.view());
     CHECK_OPTIONAL_ARGUMENT(find_opts, comment, "comment");
     CHECK_OPTIONAL_ARGUMENT(find_opts, cursor_type, cursor::type::k_non_tailable);
+    CHECK_OPTIONAL_ARGUMENT(find_opts, hint, hint);
     CHECK_OPTIONAL_ARGUMENT(find_opts, limit, 3);
     CHECK_OPTIONAL_ARGUMENT(find_opts, max, max.view());
     CHECK_OPTIONAL_ARGUMENT(find_opts, max_await_time, std::chrono::milliseconds{300});
