@@ -277,13 +277,13 @@ types::value element::get_value() const {
 }
 
 element element::operator[](stdx::string_view key) const {
-    if (type() != bsoncxx::type::k_document) return element();
+    if (_raw == nullptr || type() != bsoncxx::type::k_document) return element();
     document::view doc = get_document();
     return doc[key];
 }
 
 array::element element::operator[](std::uint32_t i) const {
-    if (type() != bsoncxx::type::k_array) return array::element();
+    if (_raw == nullptr || type() != bsoncxx::type::k_array) return array::element();
     array::view arr = get_array();
     return arr[i];
 }

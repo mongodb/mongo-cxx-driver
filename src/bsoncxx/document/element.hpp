@@ -348,9 +348,13 @@ class BSONCXX_API element {
     types::value get_value() const;
 
     ///
-    /// If this element is a document, finds the first element of the document with the provided
-    /// key. If there is no such element, an invalid document::element will be returned. The
-    /// runtime of operator[] is linear in the length of the document.
+    /// If this element is a document, finds the first element of the document
+    /// with the provided key. If there is no such element, an invalid
+    /// document::element will be returned.  The runtime of operator[] is
+    /// linear in the length of the document.
+    ///
+    /// If this element is not a document, an invalid document::element will
+    /// be returned.
     ///
     /// @param key
     ///   The key to search for.
@@ -360,9 +364,13 @@ class BSONCXX_API element {
     element operator[](stdx::string_view key) const;
 
     ///
-    /// If this element is an array, indexes into this BSON array. If the index is out-of-bounds,
-    /// an invalid array::element will be returned. As BSON represents arrays as documents, the
-    /// runtime of operator[] is linear in the length of the array.
+    /// If this element is an array, indexes into this BSON array. If the
+    /// index is out-of-bounds, an invalid array::element will be returned. As
+    /// BSON represents arrays as documents, the runtime of operator[] is
+    /// linear in the length of the array.
+    ///
+    /// If this element is not an array, an invalid array::element will
+    /// be returned.
     ///
     /// @param i
     ///   The index of the element.

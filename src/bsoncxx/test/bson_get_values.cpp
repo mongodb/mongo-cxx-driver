@@ -61,6 +61,11 @@ TEST_CASE("[] can reach into nested arrays", "[bsoncxx]") {
     SECTION("returns invalid on index access to non-array") {
         REQUIRE(!doc["bools"][0][1]);
     }
+
+    SECTION("returns invalid for operator[] on invalid value") {
+        REQUIRE(!doc["ints"][9][0]);
+        REQUIRE(!doc["ints"][9]["missing"]);
+    }
 }
 
 TEST_CASE("[] can reach into nested documents", "[bsoncxx]") {
@@ -114,6 +119,11 @@ TEST_CASE("[] can reach into nested documents", "[bsoncxx]") {
     SECTION("returns invalid on key access to non-document") {
         REQUIRE(!doc["bools"]["t"]["missing"]);
     }
+
+    SECTION("returns invalid for operator[] on invalid value") {
+        REQUIRE(!doc["missing"]["deep"]);
+        REQUIRE(!doc["missing"][0]);
+    }
 }
 
 TEST_CASE("[] can reach into mixed nested arrays and documents", "[bsoncxx]") {
@@ -161,13 +171,6 @@ TEST_CASE("[] can reach into mixed nested arrays and documents", "[bsoncxx]") {
         REQUIRE(doc["bools"]["f"].get_bool() == false);
         REQUIRE(doc["bools"]["arr"][0].get_bool() == false);
         REQUIRE(doc["bools"]["arr"][1].get_bool() == true);
-    }
-
-    SECTION("throws on invalid") {
-        REQUIRE_THROWS(doc["ints"]["badKey"]["anything"]);
-        REQUIRE_THROWS(doc["ints"]["badKey"][0]);
-        REQUIRE_THROWS(doc["ints"]["arr"][99]["anything"]);
-        REQUIRE_THROWS(doc["ints"]["arr"][99][0]);
     }
 }
 
