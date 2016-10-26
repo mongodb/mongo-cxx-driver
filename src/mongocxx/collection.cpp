@@ -891,7 +891,12 @@ void collection::drop() {
 
     auto result = libmongoc::collection_drop(_get_impl().collection_t, &error);
 
-    if (!result && (error.code != ::MONGOC_ERROR_COLLECTION_DOES_NOT_EXIST)) {
+    // Throw an exception if the command failed, unless the failure was due to a non-existent
+    // collection. We check for this failure using 'code', but we fall back to checking 'message'
+    // for old server versions (3.0 and earlier) that do not send a code with the command response.
+    if (!result &&
+        !(error.code == ::MONGOC_ERROR_COLLECTION_DOES_NOT_EXIST ||
+          stdx::string_view{error.message} == stdx::string_view{"ns not found"})) {
         throw_exception<operation_exception>(error);
     }
 }
