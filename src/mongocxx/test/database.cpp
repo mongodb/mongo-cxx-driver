@@ -338,21 +338,48 @@ TEST_CASE("Database integration tests", "[database]") {
         database[collection_name].drop();
         database.create_collection(collection_name);
 
-        auto rule = document{} << "email" << open_document << "$exists"
-                               << "true" << close_document << finalize;
+        SECTION("index can be modified") {
+            auto key_pattern = document{} << "a" << 1 << finalize;
 
-        validation_criteria criteria;
-        criteria.rule(rule.view());
+            database[collection_name].create_index(
+                key_pattern.view(), options::index{}.expire_after(std::chrono::seconds{1}));
 
-        options::modify_collection opts;
-        opts.validation_criteria(criteria);
+            options::modify_collection opts;
+            opts.index(key_pattern.view(), std::chrono::seconds{2});
 
-        auto res = database.modify_collection(collection_name, opts);
+            database.modify_collection(collection_name, opts);
 
-        auto cursor = database.list_collections();
-        for (auto&& coll : cursor) {
-            if (coll["name"].get_utf8().value == collection_name) {
-                REQUIRE(coll["options"]["validator"].get_document().value == rule);
+            auto cursor = database[collection_name].list_indexes();
+            for (auto&& index : cursor) {
+                if (index["key"].get_document().value == key_pattern.view()) {
+                    auto expire_after_seconds_ele = index["expireAfterSeconds"];
+                    if (expire_after_seconds_ele.type() == bsoncxx::type::k_int32) {
+                        REQUIRE(expire_after_seconds_ele.get_int32().value == 2);
+                    } else {
+                        REQUIRE(expire_after_seconds_ele.type() == bsoncxx::type::k_int64);
+                        REQUIRE(expire_after_seconds_ele.get_int64().value == 2);
+                    }
+                }
+            }
+        }
+
+        SECTION("validation_criteria can be modified") {
+            auto rule = document{} << "email" << open_document << "$exists"
+                                   << "true" << close_document << finalize;
+
+            validation_criteria criteria;
+            criteria.rule(rule.view());
+
+            options::modify_collection opts;
+            opts.validation_criteria(criteria);
+
+            database.modify_collection(collection_name, opts);
+
+            auto cursor = database.list_collections();
+            for (auto&& coll : cursor) {
+                if (coll["name"].get_utf8().value == collection_name) {
+                    REQUIRE(coll["options"]["validator"].get_document().value == rule);
+                }
             }
         }
     }
