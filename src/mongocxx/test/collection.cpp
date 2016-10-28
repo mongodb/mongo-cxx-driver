@@ -353,8 +353,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto doc = document{} << "x" << 1 << finalize;
         coll.insert_one(doc.view());
 
-        REQUIRE_THROWS_AS(coll.count({document{} << "x" << 1 << finalize}, count_opts),
-                          operation_exception);
+        if (test_util::get_max_wire_version(mongodb_client) >= 2) {
+            REQUIRE_THROWS_AS(coll.count(doc.view(), count_opts), operation_exception);
+        } else {
+            // Old server versions ignore hint sent with count.
+            REQUIRE(1 == coll.count(doc.view(), count_opts));
+        }
     }
 
     SECTION("count with collation", "[collection]") {
@@ -843,8 +847,15 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto results = houses_coll.aggregate(stages);
 
-        // Should have two result documents, one per household
-        REQUIRE(std::distance(results.begin(), results.end()) == 2);
+        if (test_util::get_max_wire_version(mongodb_client) >= 4) {
+            // The server supports $lookup.
+            //
+            // Should have two result documents, one per household.
+            REQUIRE(std::distance(results.begin(), results.end()) == 2);
+        } else {
+            // The server does not support $lookup.
+            REQUIRE_THROWS_AS(std::distance(results.begin(), results.end()), operation_exception);
+        }
 
         houses_coll.drop();
         people_coll.drop();

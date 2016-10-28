@@ -373,13 +373,20 @@ TEST_CASE("Database integration tests", "[database]") {
             options::modify_collection opts;
             opts.validation_criteria(criteria);
 
-            database.modify_collection(collection_name, opts);
+            if (test_util::get_max_wire_version(mongo_client) >= 4) {
+                // The server supports document validation.
+                REQUIRE_NOTHROW(database.modify_collection(collection_name, opts));
 
-            auto cursor = database.list_collections();
-            for (auto&& coll : cursor) {
-                if (coll["name"].get_utf8().value == collection_name) {
-                    REQUIRE(coll["options"]["validator"].get_document().value == rule);
+                auto cursor = database.list_collections();
+                for (auto&& coll : cursor) {
+                    if (coll["name"].get_utf8().value == collection_name) {
+                        REQUIRE(coll["options"]["validator"].get_document().value == rule);
+                    }
                 }
+            } else {
+                // The server does not support document validation.
+                REQUIRE_THROWS_AS(database.modify_collection(collection_name, opts),
+                                  operation_exception);
             }
         }
     }
