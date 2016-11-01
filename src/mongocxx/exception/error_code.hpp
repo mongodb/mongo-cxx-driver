@@ -33,6 +33,7 @@ enum class error_code : std::int32_t {
     k_ssl_not_supported,
     k_unknown_read_concern,
     k_unknown_write_concern,
+    k_invalid_uri,
 };
 
 ///
