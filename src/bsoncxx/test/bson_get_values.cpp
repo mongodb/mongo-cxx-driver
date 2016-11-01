@@ -229,12 +229,98 @@ TEST_CASE("empty document view has working iterators", "[bsoncxx]") {
     REQUIRE(doc.cbegin() == doc.cend());
 }
 
+TEST_CASE("document view begin/end/find give expected types", "[bsoncxx]") {
+    auto value = builder::stream::document{} << "a" << 1 << builder::stream::finalize;
+
+    SECTION("const document::view gives const_iterator") {
+        const document::view const_doc = value.view();
+
+        document::view::const_iterator citer = const_doc.begin();
+        REQUIRE(citer != const_doc.end());
+
+        citer = const_doc.cbegin();
+        REQUIRE(citer != const_doc.end());
+
+        citer = const_doc.find("a");
+        REQUIRE(citer == const_doc.begin());
+    }
+
+    SECTION("non-const document::view gives const_iterator") {
+        document::view doc = value.view();
+
+        document::view::const_iterator citer = doc.begin();
+        REQUIRE(citer != doc.end());
+
+        citer = doc.cbegin();
+        REQUIRE(citer != doc.end());
+
+        citer = doc.find("a");
+        REQUIRE(citer == doc.begin());
+    }
+
+    SECTION("iterator is an alias for const_iterator") {
+        document::view doc = value.view();
+
+        document::view::iterator iter = doc.begin();
+        REQUIRE(iter != doc.end());
+
+        iter = doc.cbegin();
+        REQUIRE(iter != doc.end());
+
+        iter = doc.find("a");
+        REQUIRE(iter == doc.begin());
+    }
+}
+
 TEST_CASE("empty array view has working iterators", "[bsoncxx]") {
     using namespace builder::stream;
 
     auto value = builder::stream::array{} << finalize;
-    auto doc = value.view();
+    auto ary = value.view();
 
-    REQUIRE(doc.begin() == doc.end());
-    REQUIRE(doc.cbegin() == doc.cend());
+    REQUIRE(ary.begin() == ary.end());
+    REQUIRE(ary.cbegin() == ary.cend());
+}
+
+TEST_CASE("array view begin/end/find give expected types", "[bsoncxx]") {
+    auto value = builder::stream::array{} << "a" << builder::stream::finalize;
+
+    SECTION("const array::view gives const_iterator") {
+        const array::view const_ary = value.view();
+
+        array::view::const_iterator citer = const_ary.begin();
+        REQUIRE(citer != const_ary.end());
+
+        citer = const_ary.cbegin();
+        REQUIRE(citer != const_ary.end());
+
+        citer = const_ary.find(0);
+        REQUIRE(citer == const_ary.begin());
+    }
+
+    SECTION("non-const array::view gives const_iterator") {
+        array::view ary = value.view();
+
+        array::view::const_iterator citer = ary.begin();
+        REQUIRE(citer != ary.end());
+
+        citer = ary.cbegin();
+        REQUIRE(citer != ary.end());
+
+        citer = ary.find(0);
+        REQUIRE(citer == ary.begin());
+    }
+
+    SECTION("iterator is an alias for const_iterator") {
+        array::view ary = value.view();
+
+        array::view::iterator iter = ary.begin();
+        REQUIRE(iter != ary.end());
+
+        iter = ary.cbegin();
+        REQUIRE(iter != ary.cend());
+
+        iter = ary.find(0);
+        REQUIRE(iter == ary.begin());
+    }
 }
