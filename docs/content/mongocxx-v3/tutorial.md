@@ -47,6 +47,18 @@ To compile a program, run the following command:
 c++ --std=c++11 <input>.cpp $(pkg-config --cflags --libs libmongocxx)
 ```
 
+If you don't have pkg-config available, you will need to set include and
+library flags manually on the command line or in your IDE.  For example, if
+libmongoc and mongocxx are installed in `/usr/local`, then the compilation
+line in above expands to this:
+
+```sh
+c++ --std=c++11 <input>.cpp
+  -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 \
+  -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 \
+  -L/usr/local/lib -lmongocxx -lbsoncxx
+```
+
 ### Make a Connection
 
 To connect to a running MongoDB instance, use the

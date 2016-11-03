@@ -154,6 +154,8 @@ int main(int, char**) {
 }
 ```
 
+#### Compiling with the help of pkg-config
+
 Compile the test program with the following command:
 
 ```sh
@@ -167,3 +169,17 @@ to set the `PKG_CONFIG_PATH` environment variable first:
 export PKG_CONFIG_PATH="$MY_INSTALL_PREFIX/lib/pkgconfig"
 ```
 
+#### Compiling without pkg-config
+
+If you don't have pkg-config available, you will need to set include and
+library flags manually on the command line or in your IDE.
+
+For example, if libmongoc and mongocxx are installed in `/usr/local`, then
+the compilation line in the section above expands to this:
+
+```sh
+c++ --std=c++11 test.cpp -o test \
+  -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 \
+  -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 \
+  -L/usr/local/lib -lmongocxx -lbsoncxx
+```
