@@ -24,12 +24,16 @@ insert_many::insert_many(result::bulk_write result, insert_many::id_map inserted
     : _result(std::move(result)), _generated_ids(std::move(inserted_ids)) {
 }
 
-insert_many::id_map insert_many::inserted_ids() {
-    return _generated_ids;
+const result::bulk_write& insert_many::result() const {
+    return _result;
 }
 
 std::int32_t insert_many::inserted_count() const {
     return _result.inserted_count();
+}
+
+insert_many::id_map insert_many::inserted_ids() {
+    return _generated_ids;
 }
 
 }  // namespace result
