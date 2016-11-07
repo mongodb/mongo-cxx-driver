@@ -14,14 +14,19 @@
 
 #include <mongocxx/result/insert_one.hpp>
 
+#include <bsoncxx/builder/stream/array.hpp>
+
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
-insert_one::insert_one(result::bulk_write result, bsoncxx::types::value generated_id)
-    : _result(std::move(result)), _generated_id(std::move(generated_id)) {
+insert_one::insert_one(result::bulk_write result, bsoncxx::types::value inserted_id)
+    : _result(std::move(result)),
+      _inserted_id_owned(bsoncxx::builder::stream::array{} << inserted_id
+                                                           << bsoncxx::builder::stream::finalize),
+      _inserted_id(_inserted_id_owned.view()[0].get_value()) {
 }
 
 const result::bulk_write& insert_one::result() const {
@@ -29,7 +34,7 @@ const result::bulk_write& insert_one::result() const {
 }
 
 const bsoncxx::types::value& insert_one::inserted_id() const {
-    return _generated_id;
+    return _inserted_id;
 }
 
 }  // namespace result

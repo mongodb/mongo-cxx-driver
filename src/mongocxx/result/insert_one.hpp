@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <bsoncxx/array/value.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
 #include <mongocxx/result/bulk_write.hpp>
@@ -28,7 +29,7 @@ namespace result {
 class MONGOCXX_API insert_one {
    public:
     // This constructor is public for testing purposes only
-    insert_one(result::bulk_write result, bsoncxx::types::value generated_id);
+    insert_one(result::bulk_write result, bsoncxx::types::value inserted_id);
 
     ///
     /// Returns the bulk write result for this insert operation.
@@ -40,13 +41,18 @@ class MONGOCXX_API insert_one {
     ///
     /// Gets the _id of the inserted document.
     ///
-    /// @return The value of the _id field for inserted document.
+    /// @return The value of the _id field for the inserted document.
     ///
     const bsoncxx::types::value& inserted_id() const;
 
    private:
     result::bulk_write _result;
-    bsoncxx::types::value _generated_id;
+
+    // Array with a single element, containing the value of the _id field for the inserted document.
+    bsoncxx::array::value _inserted_id_owned;
+
+    // Points into _inserted_id_owned.
+    bsoncxx::types::value _inserted_id;
 };
 
 }  // namespace result

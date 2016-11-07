@@ -104,6 +104,16 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         REQUIRE(i == 1);
     }
 
+    SECTION("insert_one returns correct result object", "[collection]") {
+        stdx::string_view expected_id{"foo"};
+
+        auto result = coll.insert_one(document{} << "_id" << expected_id << finalize);
+        REQUIRE(result);
+        REQUIRE(result->result().inserted_count() == 1);
+        REQUIRE(result->inserted_id().type() == bsoncxx::type::k_utf8);
+        REQUIRE(result->inserted_id().get_utf8().value == expected_id);
+    }
+
     SECTION("insert and read multiple documents", "[collection]") {
         document b1;
         document b2;
