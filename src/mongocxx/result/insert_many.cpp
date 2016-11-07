@@ -14,14 +14,20 @@
 
 #include <mongocxx/result/insert_many.hpp>
 
+#include <bsoncxx/types/value.hpp>
+
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
-insert_many::insert_many(result::bulk_write result, insert_many::id_map inserted_ids)
-    : _result(std::move(result)), _generated_ids(std::move(inserted_ids)) {
+insert_many::insert_many(result::bulk_write result, bsoncxx::array::view inserted_ids)
+    : _result(std::move(result)), _inserted_ids_owned(inserted_ids) {
+    std::size_t index = 0;
+    for (auto&& ele : _inserted_ids_owned.view()) {
+        _inserted_ids.emplace(index++, ele.get_document().value["_id"]);
+    }
 }
 
 const result::bulk_write& insert_many::result() const {
@@ -33,7 +39,7 @@ std::int32_t insert_many::inserted_count() const {
 }
 
 insert_many::id_map insert_many::inserted_ids() {
-    return _generated_ids;
+    return _inserted_ids;
 }
 
 }  // namespace result
