@@ -15,6 +15,8 @@
 #include <mongocxx/uri.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
@@ -34,6 +36,9 @@ uri::uri(std::unique_ptr<impl>&& implementation) {
 
 uri::uri(bsoncxx::string::view_or_value uri_string)
     : _impl(stdx::make_unique<impl>(libmongoc::uri_new(uri_string.terminated().data()))) {
+    if (_impl->uri_t == nullptr) {
+        throw logic_error{error_code::k_invalid_uri};
+    }
 }
 
 uri::uri(uri&&) noexcept = default;

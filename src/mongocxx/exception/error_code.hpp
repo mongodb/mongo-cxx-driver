@@ -34,6 +34,7 @@ enum class error_code : std::int32_t {
     k_unknown_read_concern,
     k_unknown_write_concern,
     k_server_response_malformed,
+    k_invalid_uri,
     // Add new constant string message to error_code.cpp as well!
 };
 

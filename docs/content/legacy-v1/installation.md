@@ -115,7 +115,7 @@ To get a repository that you can build, you can clone the sources, and then
 check out the branch or tag that you are interested in:
 
 ```sh
-git clone -b legacy https://github.com/mongodb/mongo-cxx-driver.git
+git clone -b releases/legacy https://github.com/mongodb/mongo-cxx-driver.git
 ```
 
 Alternatively, see the

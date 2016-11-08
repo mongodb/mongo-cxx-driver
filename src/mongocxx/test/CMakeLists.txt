@@ -57,6 +57,7 @@ set(mongocxx_test_sources
     result/insert_one.cpp
     result/replace_one.cpp
     result/update.cpp
+    uri.cpp
     validation_criteria.cpp
     write_concern.cpp
 )

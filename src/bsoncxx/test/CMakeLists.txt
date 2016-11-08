@@ -17,13 +17,13 @@ include_directories(
 )
 
 add_executable(test_bson
+    ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     bson_b_date.cpp
     bson_builder.cpp
     bson_get_values.cpp
     bson_util_itoa.cpp
     bson_validate.cpp
     json.cpp
-    new_tests.cpp
     view_or_value.cpp
 )
 

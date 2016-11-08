@@ -66,17 +66,37 @@ may change over time, breaking binary compatibility in unexpected ways.
 
 ### Step 3: Download the latest version of the mongocxx driver.
 
+To get the source via git, the `releases/stable` branch will track the most
+recent stable release. For example, to work from a shallow checkout of the
+stable release branch:
+
+```sh
+git clone https://github.com/mongodb/mongo-cxx-driver.git \
+    --branch releases/stable --depth 1
+cd mongo-cxx-driver/build
+```
+
+If you prefer to download a tarball, look on the [mongocxx
+releases](https://github.com/mongodb/mongo-cxx-driver/releases) page for a
+link to the release tarball for the version you wish you install.  For
+example, to download version 3.0.2:
+
 ```sh
 curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.0.2.tar.gz
 tar -xzf r3.0.2.tar.gz
 cd mongo-cxx-driver-r3.0.2/build
 ```
 
+Make sure you change to the `build` directory of whatever source tree you
+obtain.
+
 ### Step 4: Configure the driver
 
 By default, `libmongoc` installs into `/usr/local`.  To configure
 mongocxx for installation into `/usr/local` as well, use the following
 `cmake` command:
+
+(***NOTE***: The trailing `..` below is important!  Don't omit it.)
 
 ```
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
@@ -154,6 +174,8 @@ int main(int, char**) {
 }
 ```
 
+#### Compiling with the help of pkg-config
+
 Compile the test program with the following command:
 
 ```sh
@@ -167,3 +189,17 @@ to set the `PKG_CONFIG_PATH` environment variable first:
 export PKG_CONFIG_PATH="$MY_INSTALL_PREFIX/lib/pkgconfig"
 ```
 
+#### Compiling without pkg-config
+
+If you don't have pkg-config available, you will need to set include and
+library flags manually on the command line or in your IDE.
+
+For example, if libmongoc and mongocxx are installed in `/usr/local`, then
+the compilation line in the section above expands to this:
+
+```sh
+c++ --std=c++11 test.cpp -o test \
+  -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 \
+  -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 \
+  -L/usr/local/lib -lmongocxx -lbsoncxx
+```

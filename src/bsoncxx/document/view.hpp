@@ -32,8 +32,8 @@ namespace document {
 ///
 class BSONCXX_API view {
    public:
-    class BSONCXX_API iterator;
     class BSONCXX_API const_iterator;
+    using iterator = const_iterator;
 
     ///
     /// Default constructs a view. The resulting view will be initialized to point at
@@ -63,14 +63,14 @@ class BSONCXX_API view {
     const_iterator cend() const;
 
     ///
-    /// @returns An iterator to the first element of the document.
+    /// @returns A const_iterator to the first element of the document.
     ///
-    iterator begin() const;
+    const_iterator begin() const;
 
     ///
-    /// @returns An iterator to the past-the-end element of the document.
+    /// @returns A const_iterator to the past-the-end element of the document.
     ///
-    iterator end() const;
+    const_iterator end() const;
 
     ///
     /// Finds the first element of the document with the provided key. If there is
@@ -87,7 +87,7 @@ class BSONCXX_API view {
     ///
     /// @return An iterator to the matching element, if found, or the past-the-end iterator.
     ///
-    iterator find(stdx::string_view key) const;
+    const_iterator find(stdx::string_view key) const;
 
     ///
     /// Finds the first element of the document with the provided key. If there is no
@@ -142,40 +142,6 @@ class BSONCXX_API view {
    private:
     const std::uint8_t* _data;
     std::size_t _length;
-};
-
-///
-/// A mutable iterator over the contents of a document view.
-///
-/// This iterator type provides a mutable forward iterator interface to document
-/// view elements.
-///
-class BSONCXX_API view::iterator : public std::iterator<std::forward_iterator_tag, element> {
-   public:
-    iterator();
-    explicit iterator(const element& element);
-
-    reference operator*();
-    pointer operator->();
-
-    iterator& operator++();
-    iterator operator++(int);
-
-    ///
-    /// @{
-    ///
-    /// Compares two iterators for in-equality
-    ///
-    /// @relatea view::iterator
-    ///
-    friend BSONCXX_API bool BSONCXX_CALL operator==(const iterator&, const iterator&);
-    friend BSONCXX_API bool BSONCXX_CALL operator!=(const iterator&, const iterator&);
-    ///
-    /// @}
-    ///
-
-   private:
-    element _element;
 };
 
 ///

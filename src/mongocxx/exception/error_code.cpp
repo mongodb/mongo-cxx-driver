@@ -53,6 +53,8 @@ class error_category final : public std::error_category {
                 return "cannot create more than one mongocxx::instance object";
             case error_code::k_server_response_malformed:
                 return "the response from the server was malformed";
+            case error_code::k_invalid_uri:
+                return "an invalid MongoDB URI was provided";
             default:
                 return "unknown mongocxx error";
         }
