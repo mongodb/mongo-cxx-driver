@@ -1183,6 +1183,17 @@ with <a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config<
 <pre><code class="language-sh">c++ --std=c++11 &lt;input&gt;.cpp $(pkg-config --cflags --libs libmongocxx)
 </code></pre>
 
+<p>If you don&rsquo;t have pkg-config available, you will need to set include and
+library flags manually on the command line or in your IDE.  For example, if
+libmongoc and mongocxx are installed in <code>/usr/local</code>, then the compilation
+line in above expands to this:</p>
+
+<pre><code class="language-sh">c++ --std=c++11 &lt;input&gt;.cpp
+  -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 \
+  -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 \
+  -L/usr/local/lib -lmongocxx -lbsoncxx
+</code></pre>
+
 <h3 id="make-a-connection">Make a Connection</h3>
 
 <p>To connect to a running MongoDB instance, use the

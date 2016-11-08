@@ -192,16 +192,35 @@ may change over time, breaking binary compatibility in unexpected ways.&lt;/p&gt
 
 &lt;h3 id=&#34;step-3-download-the-latest-version-of-the-mongocxx-driver&#34;&gt;Step 3: Download the latest version of the mongocxx driver.&lt;/h3&gt;
 
+&lt;p&gt;To get the source via git, the &lt;code&gt;releases/stable&lt;/code&gt; branch will track the most
+recent stable release. For example, to work from a shallow checkout of the
+stable release branch:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;git clone https://github.com/mongodb/mongo-cxx-driver.git \
+    --branch releases/stable --depth 1
+cd mongo-cxx-driver/build
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you prefer to download a tarball, look on the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases&#34;&gt;mongocxx
+releases&lt;/a&gt; page for a
+link to the release tarball for the version you wish you install.  For
+example, to download version 3.0.2:&lt;/p&gt;
+
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.0.2.tar.gz
 tar -xzf r3.0.2.tar.gz
 cd mongo-cxx-driver-r3.0.2/build
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Make sure you change to the &lt;code&gt;build&lt;/code&gt; directory of whatever source tree you
+obtain.&lt;/p&gt;
 
 &lt;h3 id=&#34;step-4-configure-the-driver&#34;&gt;Step 4: Configure the driver&lt;/h3&gt;
 
 &lt;p&gt;By default, &lt;code&gt;libmongoc&lt;/code&gt; installs into &lt;code&gt;/usr/local&lt;/code&gt;.  To configure
 mongocxx for installation into &lt;code&gt;/usr/local&lt;/code&gt; as well, use the following
 &lt;code&gt;cmake&lt;/code&gt; command:&lt;/p&gt;
+
+&lt;p&gt;(&lt;strong&gt;&lt;em&gt;NOTE&lt;/em&gt;&lt;/strong&gt;: The trailing &lt;code&gt;..&lt;/code&gt; below is important!  Don&amp;rsquo;t omit it.)&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
 &lt;/code&gt;&lt;/pre&gt;
@@ -273,6 +292,8 @@ int main(int, char**) {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;h4 id=&#34;compiling-with-the-help-of-pkg-config&#34;&gt;Compiling with the help of pkg-config&lt;/h4&gt;
+
 &lt;p&gt;Compile the test program with the following command:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;c++ --std=c++11 test.cpp -o test $(pkg-config --cflags --libs libmongocxx)
@@ -282,6 +303,20 @@ int main(int, char**) {
 to set the &lt;code&gt;PKG_CONFIG_PATH&lt;/code&gt; environment variable first:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;export PKG_CONFIG_PATH=&amp;quot;$MY_INSTALL_PREFIX/lib/pkgconfig&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;compiling-without-pkg-config&#34;&gt;Compiling without pkg-config&lt;/h4&gt;
+
+&lt;p&gt;If you don&amp;rsquo;t have pkg-config available, you will need to set include and
+library flags manually on the command line or in your IDE.&lt;/p&gt;
+
+&lt;p&gt;For example, if libmongoc and mongocxx are installed in &lt;code&gt;/usr/local&lt;/code&gt;, then
+the compilation line in the section above expands to this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;c++ --std=c++11 test.cpp -o test \
+  -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 \
+  -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 \
+  -L/usr/local/lib -lmongocxx -lbsoncxx
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
@@ -444,6 +479,17 @@ with &lt;a href=&#34;https://www.freedesktop.org/wiki/Software/pkg-config/&#34;&
 &lt;p&gt;To compile a program, run the following command:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;c++ --std=c++11 &amp;lt;input&amp;gt;.cpp $(pkg-config --cflags --libs libmongocxx)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you don&amp;rsquo;t have pkg-config available, you will need to set include and
+library flags manually on the command line or in your IDE.  For example, if
+libmongoc and mongocxx are installed in &lt;code&gt;/usr/local&lt;/code&gt;, then the compilation
+line in above expands to this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;c++ --std=c++11 &amp;lt;input&amp;gt;.cpp
+  -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 \
+  -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 \
+  -L/usr/local/lib -lmongocxx -lbsoncxx
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;make-a-connection&#34;&gt;Make a Connection&lt;/h3&gt;

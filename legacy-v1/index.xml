@@ -594,7 +594,7 @@ linked into boost matches that linked into the driver.&lt;/li&gt;
 &lt;p&gt;To get a repository that you can build, you can clone the sources, and then
 check out the branch or tag that you are interested in:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;git clone -b legacy https://github.com/mongodb/mongo-cxx-driver.git
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;git clone -b releases/legacy https://github.com/mongodb/mongo-cxx-driver.git
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Alternatively, see the

@@ -1159,16 +1159,35 @@ may change over time, breaking binary compatibility in unexpected ways.</p>
 
 <h3 id="step-3-download-the-latest-version-of-the-mongocxx-driver">Step 3: Download the latest version of the mongocxx driver.</h3>
 
+<p>To get the source via git, the <code>releases/stable</code> branch will track the most
+recent stable release. For example, to work from a shallow checkout of the
+stable release branch:</p>
+
+<pre><code class="language-sh">git clone https://github.com/mongodb/mongo-cxx-driver.git \
+    --branch releases/stable --depth 1
+cd mongo-cxx-driver/build
+</code></pre>
+
+<p>If you prefer to download a tarball, look on the <a href="https://github.com/mongodb/mongo-cxx-driver/releases">mongocxx
+releases</a> page for a
+link to the release tarball for the version you wish you install.  For
+example, to download version 3.0.2:</p>
+
 <pre><code class="language-sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.0.2.tar.gz
 tar -xzf r3.0.2.tar.gz
 cd mongo-cxx-driver-r3.0.2/build
 </code></pre>
+
+<p>Make sure you change to the <code>build</code> directory of whatever source tree you
+obtain.</p>
 
 <h3 id="step-4-configure-the-driver">Step 4: Configure the driver</h3>
 
 <p>By default, <code>libmongoc</code> installs into <code>/usr/local</code>.  To configure
 mongocxx for installation into <code>/usr/local</code> as well, use the following
 <code>cmake</code> command:</p>
+
+<p>(<strong><em>NOTE</em></strong>: The trailing <code>..</code> below is important!  Don&rsquo;t omit it.)</p>
 
 <pre><code>cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
 </code></pre>
@@ -1240,6 +1259,8 @@ int main(int, char**) {
 }
 </code></pre>
 
+<h4 id="compiling-with-the-help-of-pkg-config">Compiling with the help of pkg-config</h4>
+
 <p>Compile the test program with the following command:</p>
 
 <pre><code class="language-sh">c++ --std=c++11 test.cpp -o test $(pkg-config --cflags --libs libmongocxx)
@@ -1249,6 +1270,20 @@ int main(int, char**) {
 to set the <code>PKG_CONFIG_PATH</code> environment variable first:</p>
 
 <pre><code>export PKG_CONFIG_PATH=&quot;$MY_INSTALL_PREFIX/lib/pkgconfig&quot;
+</code></pre>
+
+<h4 id="compiling-without-pkg-config">Compiling without pkg-config</h4>
+
+<p>If you don&rsquo;t have pkg-config available, you will need to set include and
+library flags manually on the command line or in your IDE.</p>
+
+<p>For example, if libmongoc and mongocxx are installed in <code>/usr/local</code>, then
+the compilation line in the section above expands to this:</p>
+
+<pre><code class="language-sh">c++ --std=c++11 test.cpp -o test \
+  -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 \
+  -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 \
+  -L/usr/local/lib -lmongocxx -lbsoncxx
 </code></pre>
 
 
@@ -1292,7 +1327,11 @@ to set the <code>PKG_CONFIG_PATH</code> environment variable first:</p>
 <li><a href="#step-3-download-the-latest-version-of-the-mongocxx-driver">Step 3: Download the latest version of the mongocxx driver.</a></li>
 <li><a href="#step-4-configure-the-driver">Step 4: Configure the driver</a></li>
 <li><a href="#step-5-build-and-install-the-driver">Step 5: Build and install the driver</a></li>
-<li><a href="#step-6-test-your-installation">Step 6: Test your installation</a></li>
+<li><a href="#step-6-test-your-installation">Step 6: Test your installation</a>
+<ul>
+<li><a href="#compiling-with-the-help-of-pkg-config">Compiling with the help of pkg-config</a></li>
+<li><a href="#compiling-without-pkg-config">Compiling without pkg-config</a></li>
+</ul></li>
 </ul></li>
 </ul></li>
 </ul>
