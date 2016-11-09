@@ -1208,6 +1208,9 @@ required.&lt;/li&gt;
 &lt;p&gt;Follow the instructions at
 &lt;a href=&#34;http://mongoc.org/libmongoc/current/installing.html&#34;&gt;Installing libmongoc&lt;/a&gt;.&lt;/p&gt;
 
+&lt;p&gt;If you need static libraries, be sure to use the &lt;code&gt;--enable-static&lt;/code&gt;
+configure option when building libmongoc.&lt;/p&gt;
+
 &lt;h3 id=&#34;step-2-choose-a-c-17-polyfill&#34;&gt;Step 2: Choose a C++17 polyfill&lt;/h3&gt;
 
 &lt;p&gt;The mongocxx driver uses the experimental C++17 features
