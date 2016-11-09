@@ -140,19 +140,36 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         docs.push_back(b4.view());
 
         auto result = coll.insert_many(docs, options::insert{});
-
-        REQUIRE(result);
-        REQUIRE(result->inserted_count() == 4);
-
         auto cursor = coll.find({});
 
-        std::int32_t i = 0;
-        for (auto&& x : cursor) {
-            i++;
-            REQUIRE(x["x"].get_int32() == i);
+        SECTION("result count is correct") {
+            REQUIRE(result);
+            REQUIRE(result->inserted_count() == 4);
         }
 
-        REQUIRE(i == 4);
+        SECTION("read inserted values with range-for") {
+            std::int32_t i = 0;
+            for (auto&& x : cursor) {
+                i++;
+                REQUIRE(x["x"].get_int32() == i);
+            }
+
+            REQUIRE(i == 4);
+        }
+
+        SECTION("multiple iterators move in lockstep") {
+            auto end = cursor.end();
+            REQUIRE(cursor.begin() != end);
+
+            auto iter1 = cursor.begin();
+            auto iter2 = cursor.begin();
+            REQUIRE(iter1 == iter2);
+            REQUIRE(*iter1 == *iter2);
+            iter1++;
+            REQUIRE(iter1 == iter2);
+            REQUIRE(iter1 != end);
+            REQUIRE(*iter1 == *iter2);
+        }
     }
 
     SECTION("insert_many returns correct result object", "[collection]") {

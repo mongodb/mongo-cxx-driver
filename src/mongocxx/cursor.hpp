@@ -53,7 +53,10 @@ class MONGOCXX_API cursor {
     ///
     ~cursor();
 
-    /// A cursor::iterator that points to the begining of the results.
+    /// A cursor::iterator that points to the beginning of any available
+    /// results.  If begin() is called more than once, the cursor::iterator
+    /// returned points to the next remaining result, not the result of
+    /// the original call to begin().
     ///
     /// @return the cursor::iterator
     ///
@@ -79,7 +82,13 @@ class MONGOCXX_API cursor {
 };
 
 ///
-/// Class representing an input iterator of documents in a MongoDB cursor result set.
+/// Class representing an input iterator of documents in a MongoDB cursor
+/// result set.
+///
+/// All non-empty iterators derived from the same mongocxx::cursor move in
+/// lock-step.  Dereferencing any non-empty iterator always gives the first
+/// remaining document in the cursor.  Incrementing one iterator is equivalent
+/// to incrementing them all.
 ///
 class MONGOCXX_API cursor::iterator
     : public std::iterator<std::input_iterator_tag, bsoncxx::document::view> {
@@ -95,14 +104,14 @@ class MONGOCXX_API cursor::iterator
     const bsoncxx::document::view* operator->() const;
 
     ///
-    /// Postfix increments the iterator to move to the next document.
+    /// Pre-increments the iterator to move to the next document.
     ///
     /// @throws mongocxx::query_exception if the query failed
     ///
     iterator& operator++();
 
     ///
-    /// Prefix increments the iterator to move to the next document.
+    /// Post-increments the iterator to move to the next document.
     ///
     /// @throws mongocxx::query_exception if the query failed
     ///
@@ -126,8 +135,8 @@ class MONGOCXX_API cursor::iterator
 
     MONGOCXX_PRIVATE explicit iterator(cursor* cursor);
 
+    // If this pointer is null, the iterator is considered "past-the-end".
     cursor* _cursor;
-    bsoncxx::document::view _doc;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
