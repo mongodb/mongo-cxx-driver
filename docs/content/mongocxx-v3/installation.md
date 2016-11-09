@@ -30,6 +30,9 @@ The mongocxx driver builds on top of the MongoDB C driver.
 Follow the instructions at
 [Installing libmongoc](http://mongoc.org/libmongoc/current/installing.html).
 
+If you need static libraries, be sure to use the `--enable-static`
+configure option when building libmongoc.
+
 ### Step 2: Choose a C++17 polyfill
 
 The mongocxx driver uses the experimental C++17 features
