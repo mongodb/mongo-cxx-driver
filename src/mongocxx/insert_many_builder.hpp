@@ -15,6 +15,7 @@
 #pragma once
 
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/options/insert.hpp>
 #include <mongocxx/result/insert_many.hpp>
@@ -60,8 +61,7 @@ class MONGOCXX_API insert_many_builder {
 
    private:
     bulk_write _writes;
-    result::insert_many::id_map _inserted_ids;
-    std::size_t _index;
+    bsoncxx::builder::basic::array _inserted_ids;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

@@ -39,25 +39,30 @@ options::bulk_write make_bulk_write_options(const options::insert& insert_option
 }  // namespace
 
 insert_many_builder::insert_many_builder(const options::insert& options)
-    : _writes{make_bulk_write_options(options)}, _inserted_ids{}, _index{0} {};
+    : _writes{make_bulk_write_options(options)}, _inserted_ids{} {
+}
 
 void insert_many_builder::operator()(const bsoncxx::document::view& doc) {
+    bsoncxx::builder::stream::document id_doc;
     if (!doc["_id"]) {
-        bsoncxx::builder::stream::document new_document;
-        new_document << "_id" << bsoncxx::oid() << bsoncxx::builder::stream::concatenate(doc);
+        id_doc << "_id" << bsoncxx::oid{};
 
+        bsoncxx::builder::stream::document new_document;
+        new_document << bsoncxx::builder::stream::concatenate(id_doc.view())
+                     << bsoncxx::builder::stream::concatenate(doc);
         _writes.append(model::insert_one{new_document.view()});
-        _inserted_ids.emplace(_index++, new_document.view()["_id"]);
     } else {
+        id_doc << "_id" << doc["_id"].get_value();
+
         _writes.append(model::insert_one{doc});
-        _inserted_ids.emplace(_index++, doc["_id"]);
     }
+    _inserted_ids.append(id_doc.view());
 };
 
 stdx::optional<result::insert_many> insert_many_builder::insert(collection* col) const {
     auto val = col->bulk_write(_writes).value();
     result::bulk_write res{std::move(val)};
-    stdx::optional<result::insert_many> result{{std::move(res), std::move(_inserted_ids)}};
+    stdx::optional<result::insert_many> result{{std::move(res), _inserted_ids.view()}};
     return result;
 };
 

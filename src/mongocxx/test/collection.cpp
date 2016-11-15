@@ -112,6 +112,16 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         REQUIRE(i == 1);
     }
 
+    SECTION("insert_one returns correct result object", "[collection]") {
+        stdx::string_view expected_id{"foo"};
+
+        auto result = coll.insert_one(document{} << "_id" << expected_id << finalize);
+        REQUIRE(result);
+        REQUIRE(result->result().inserted_count() == 1);
+        REQUIRE(result->inserted_id().type() == bsoncxx::type::k_utf8);
+        REQUIRE(result->inserted_id().get_utf8().value == expected_id);
+    }
+
     SECTION("insert and read multiple documents", "[collection]") {
         document b1;
         document b2;
@@ -143,6 +153,41 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         REQUIRE(i == 4);
+    }
+
+    SECTION("insert_many returns correct result object", "[collection]") {
+        document b1;
+        document b2;
+
+        b1 << "_id"
+           << "foo"
+           << "x" << 1;
+        b2 << "x" << 2;
+
+        std::vector<bsoncxx::document::view> docs{};
+        docs.push_back(b1.view());
+        docs.push_back(b2.view());
+
+        auto result = coll.insert_many(docs);
+
+        REQUIRE(result);
+
+        // Verify result->result() is correct:
+        REQUIRE(result->result().inserted_count() == 2);
+
+        // Verify result->inserted_count() is correct:
+        REQUIRE(result->inserted_count() == 2);
+
+        // Verify result->inserted_ids() is correct:
+        auto id_map = result->inserted_ids();
+        REQUIRE(id_map[0].type() == bsoncxx::type::k_utf8);
+        REQUIRE(id_map[0].get_utf8().value == stdx::string_view{"foo"});
+        REQUIRE(id_map[1].type() == bsoncxx::type::k_oid);
+        auto second_inserted_doc = coll.find_one(document{} << "x" << 2 << finalize);
+        REQUIRE(second_inserted_doc);
+        REQUIRE(second_inserted_doc->view()["_id"]);
+        REQUIRE(second_inserted_doc->view()["_id"].type() == bsoncxx::type::k_oid);
+        REQUIRE(id_map[1].get_oid().value == second_inserted_doc->view()["_id"].get_oid().value);
     }
 
     SECTION("find with collation", "[collection]") {
