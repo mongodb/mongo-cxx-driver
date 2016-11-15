@@ -62,6 +62,8 @@ class error_category_impl final : public std::error_category {
                 return "could not parse JSON document";
             case error_code::k_invalid_decimal128:
                 return "could not parse Decimal128 string";
+            case error_code::k_internal_error:
+                return "could not process bson data";
             default:
                 return "unknown bsoncxx error code";
         }

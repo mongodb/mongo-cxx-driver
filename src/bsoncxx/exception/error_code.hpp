@@ -43,6 +43,7 @@ enum class error_code : std::int32_t {
     k_invalid_oid,
     k_failed_converting_bson_to_json,
     k_invalid_decimal128,
+    k_internal_error,
     // Add new constant string message to error_code.cpp as well!
 };
 
