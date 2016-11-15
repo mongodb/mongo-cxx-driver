@@ -106,7 +106,11 @@ class scoped_bson_t {
     scoped_bson_t& operator=(scoped_bson_t&& rhs) = delete;
 
     ///
-    /// Get a pointer to the wrapped internal bson_t structure.
+    /// Get a pointer to the wrapped internal bson_t structure.  If not
+    /// initialized, nullptr is returned.  To use this method to take
+    /// ownership of a bson_t (by passing the pointer returned here as the
+    /// output argument of another function), be sure to call flag_init()
+    /// first.
     ///
     bson_t* bson();
 
