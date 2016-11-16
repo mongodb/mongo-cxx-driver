@@ -28,74 +28,74 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace libbson {
 
-///
-/// Class that wraps and manages libmongoc's bson_t structures. It is useful for converting between
-/// mongocxx's bson::document::view() and libmongoc's bson_t when communicating with the underlying
-/// driver. It is an RAII style class that will destroy an initialized bson_t when destructed.
-///
-/// Libmongoc's bson_destroy will not be called on the bson_t upon destruction unless either
-/// init(), flag_init(), or init_from_static() are called during a scoped_bson_t's lifetime
-/// after which the internal bson_t is considered initialized.
-///
-/// Initialization of a scoped bson_t depends on how it is expected to be used.
-///
-/// If the bson_t will be used in a read-only fashion then init_from_static should be called.
-///
-/// If this bson_t will be used by a function that calls bson_init itself then flag_init()
-/// should be called after such use. If this bson_t will be used by a function that does
-/// not call init itself (expecting an already initialized bson_t) then init() could be called
-/// instead.
-///
+//
+// Class that wraps and manages libmongoc's bson_t structures. It is useful for converting between
+// mongocxx's bson::document::view() and libmongoc's bson_t when communicating with the underlying
+// driver. It is an RAII style class that will destroy an initialized bson_t when destructed.
+//
+// Libmongoc's bson_destroy will not be called on the bson_t upon destruction unless either
+// init(), flag_init(), or init_from_static() are called during a scoped_bson_t's lifetime
+// after which the internal bson_t is considered initialized.
+//
+// Initialization of a scoped bson_t depends on how it is expected to be used.
+//
+// If the bson_t will be used in a read-only fashion then init_from_static should be called.
+//
+// If this bson_t will be used by a function that calls bson_init itself then flag_init()
+// should be called after such use. If this bson_t will be used by a function that does
+// not call init itself (expecting an already initialized bson_t) then init() could be called
+// instead.
+//
 class scoped_bson_t {
    public:
-    ///
-    /// Constructs a new scoped_bson_t having a non-initialized internal bson_t.
-    ///
+    //
+    // Constructs a new scoped_bson_t having a non-initialized internal bson_t.
+    //
     scoped_bson_t();
 
-    ///
-    /// Constructs a new scoped_bson_t from a document view_or_value.
-    ///
-    /// The internal bson_t is considered initialized.
-    ///
+    //
+    // Constructs a new scoped_bson_t from a document view_or_value.
+    //
+    // The internal bson_t is considered initialized.
+    //
     explicit scoped_bson_t(bsoncxx::document::view_or_value doc);
 
-    ///
-    /// Constructs a new scoped_bson_t from an optional document view_or_value.
-    ///
-    /// The internal bson_t is initialized if the optional is populated.
-    ///
+    //
+    // Constructs a new scoped_bson_t from an optional document view_or_value.
+    //
+    // The internal bson_t is initialized if the optional is populated.
+    //
     scoped_bson_t(bsoncxx::stdx::optional<bsoncxx::document::view_or_value> doc);
 
-    ///
-    /// Initializes a bson_t from the provided document.
-    ///
-    /// The internal bson_t is considered initialized.
-    ///
+    //
+    // Initializes a bson_t from the provided document.
+    //
+    // The internal bson_t is considered initialized.
+    //
     void init_from_static(bsoncxx::document::view_or_value doc);
 
-    ///
-    /// Initializes a bson_t from the provided optional document.
-    ///
-    /// The internal bson_t is initialized if the optional is populated.
-    ///
+    //
+    // Initializes a bson_t from the provided optional document.
+    //
+    // The internal bson_t is initialized if the optional is populated.
+    //
     void init_from_static(bsoncxx::stdx::optional<bsoncxx::document::view_or_value> doc);
 
-    ///
-    /// Initialize the internal bson_t.
-    ///
-    /// This is equivalent to calling libmongoc's bson_init() and informing this scoped_bson_t
-    /// instance that it should call bson_destroy on the internal bson_t when destructed.
-    ///
+    //
+    // Initialize the internal bson_t.
+    //
+    // This is equivalent to calling libmongoc's bson_init() and informing this scoped_bson_t
+    // instance that it should call bson_destroy on the internal bson_t when destructed.
+    //
     void init();
 
-    ///
-    /// Marks this bson_t as initialized (presumably by another libmongoc function).
-    ///
-    /// This C++ class has no way of knowing that the C driver has initialized this bson_t
-    /// internally (possibly as a side effect of a function call) so this is a way of explictly
-    /// saying so.
-    ///
+    //
+    // Marks this bson_t as initialized (presumably by another libmongoc function).
+    //
+    // This C++ class has no way of knowing that the C driver has initialized this bson_t
+    // internally (possibly as a side effect of a function call) so this is a way of explictly
+    // saying so.
+    //
     void flag_init();
 
     ~scoped_bson_t();
@@ -105,13 +105,13 @@ class scoped_bson_t {
     scoped_bson_t(scoped_bson_t&& rhs) = delete;
     scoped_bson_t& operator=(scoped_bson_t&& rhs) = delete;
 
-    ///
-    /// Get a pointer to the wrapped internal bson_t structure.  If not
-    /// initialized, nullptr is returned.  To use this method to take
-    /// ownership of a bson_t (by passing the pointer returned here as the
-    /// output argument of another function), be sure to call flag_init()
-    /// first.
-    ///
+    //
+    // Get a pointer to the wrapped internal bson_t structure.  If not
+    // initialized, nullptr is returned.  To use this method to take
+    // ownership of a bson_t (by passing the pointer returned here as the
+    // output argument of another function), be sure to call flag_init()
+    // first.
+    //
     bson_t* bson();
 
     bsoncxx::document::view view();
