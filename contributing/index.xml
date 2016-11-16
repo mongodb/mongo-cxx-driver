@@ -464,22 +464,63 @@ page&lt;/a&gt;&lt;/li&gt;
 
 &lt;h2 id=&#34;generate-and-publish-documentation&#34;&gt;Generate and Publish Documentation&lt;/h2&gt;
 
-&lt;ul&gt;
-&lt;li&gt;Clone the &lt;a href=&#34;https://github.com/mongodb/apidocs&#34;&gt;apidocs repo&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code&gt;git clone git@github.com:10gen/apidocs.git
-cd apidocs
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Documentation generation must be run after the release tag has been made
+and pushed.&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;On the command line, run:&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Edit &lt;code&gt;etc/apidocmenu.md&lt;/code&gt; and add the released version in the &amp;lsquo;mongocxx&amp;rsquo;
+column following the established pattern.  If this is a major release,
+revise the entire document as needed.  If revised substantially, also
+edit &lt;code&gt;docs/content/index.md&lt;/code&gt; to match.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Edit &lt;code&gt;etc/generate-all-apidocs.pl&lt;/code&gt; and add the new release version to
+the &lt;code&gt;@DOC_TAGS&lt;/code&gt; array, following the established pattern.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Edit &lt;code&gt;docs/content/mongocxx-v3/installation.md&lt;/code&gt; and update &lt;code&gt;Step 3&lt;/code&gt; to
+reflect the latest version to download.  (Generally, search for the last
+version number and update it.)&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Commit these changes.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;pre&gt;&lt;code&gt;python2 build.py cxx11
-git commit -am &amp;quot;bump for cxx driver release&amp;quot;
-git push origin master
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;git commit -am &amp;quot;Prepare to generate r3.0.2 release documentation&amp;quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Ensure you have &lt;code&gt;doxygen&lt;/code&gt; and &lt;code&gt;hugo&lt;/code&gt; installed and up to date.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Change to the repo top directory and run &lt;code&gt;git clean -dxf&lt;/code&gt; to clear out
+all extraneous files.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Change to the &lt;code&gt;build&lt;/code&gt; directory and run cmake as you usually would.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;To test documentation generation without deploying, run the &lt;code&gt;docs&lt;/code&gt; build
+target.  E.g. &lt;code&gt;ninja docs&lt;/code&gt;.  If this works, your documentation tools are
+correctly installed.  Note that this only generates hugo docs and a
+single set of doxygen docs for the current repo.  To test generation of
+all docs for all tags, use the &lt;code&gt;doxygen-all&lt;/code&gt; target and be prepared to
+wait a while.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;To generate and deploy documentation to GitHub Pages, execute both the
+&lt;code&gt;hugo-deploy&lt;/code&gt; and &lt;code&gt;doxygen-deploy&lt;/code&gt; targets.  The doxygen build will take
+a long time.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Check out the &amp;ldquo;gh-pages&amp;rdquo; branch and &lt;code&gt;git pull&lt;/code&gt; the deployed docs.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Update the api/mongocxx-v3 symlink to point to the newly released
+version.  If a major version bump has occurred, revise the symlink
+structure as needed.  Make sure &amp;lsquo;current&amp;rsquo; always points to a &lt;em&gt;symlink&lt;/em&gt;
+tracking the latest release branch.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Commit and push the symlink change.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;git commit -am &amp;quot;Update symlink for r3.0.3&amp;quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Wait a minute and verify the docs site has been updated.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Return to the original branch.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h2 id=&#34;create-the-next-version-commit&#34;&gt;Create the Next Version commit&lt;/h2&gt;
 

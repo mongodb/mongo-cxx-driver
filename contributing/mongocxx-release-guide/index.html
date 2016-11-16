@@ -1515,22 +1515,63 @@ page</a></li>
 
 <h2 id="generate-and-publish-documentation">Generate and Publish Documentation</h2>
 
-<ul>
-<li>Clone the <a href="https://github.com/mongodb/apidocs">apidocs repo</a></li>
-</ul>
-
-<pre><code>git clone git@github.com:10gen/apidocs.git
-cd apidocs
-</code></pre>
+<p>Documentation generation must be run after the release tag has been made
+and pushed.</p>
 
 <ul>
-<li>On the command line, run:</li>
+<li><p>Edit <code>etc/apidocmenu.md</code> and add the released version in the &lsquo;mongocxx&rsquo;
+column following the established pattern.  If this is a major release,
+revise the entire document as needed.  If revised substantially, also
+edit <code>docs/content/index.md</code> to match.</p></li>
+
+<li><p>Edit <code>etc/generate-all-apidocs.pl</code> and add the new release version to
+the <code>@DOC_TAGS</code> array, following the established pattern.</p></li>
+
+<li><p>Edit <code>docs/content/mongocxx-v3/installation.md</code> and update <code>Step 3</code> to
+reflect the latest version to download.  (Generally, search for the last
+version number and update it.)</p></li>
+
+<li><p>Commit these changes.</p></li>
 </ul>
 
-<pre><code>python2 build.py cxx11
-git commit -am &quot;bump for cxx driver release&quot;
-git push origin master
-</code></pre>
+<p><code>git commit -am &quot;Prepare to generate r3.0.2 release documentation&quot;</code></p>
+
+<ul>
+<li><p>Ensure you have <code>doxygen</code> and <code>hugo</code> installed and up to date.</p></li>
+
+<li><p>Change to the repo top directory and run <code>git clean -dxf</code> to clear out
+all extraneous files.</p></li>
+
+<li><p>Change to the <code>build</code> directory and run cmake as you usually would.</p></li>
+
+<li><p>To test documentation generation without deploying, run the <code>docs</code> build
+target.  E.g. <code>ninja docs</code>.  If this works, your documentation tools are
+correctly installed.  Note that this only generates hugo docs and a
+single set of doxygen docs for the current repo.  To test generation of
+all docs for all tags, use the <code>doxygen-all</code> target and be prepared to
+wait a while.</p></li>
+
+<li><p>To generate and deploy documentation to GitHub Pages, execute both the
+<code>hugo-deploy</code> and <code>doxygen-deploy</code> targets.  The doxygen build will take
+a long time.</p></li>
+
+<li><p>Check out the &ldquo;gh-pages&rdquo; branch and <code>git pull</code> the deployed docs.</p></li>
+
+<li><p>Update the api/mongocxx-v3 symlink to point to the newly released
+version.  If a major version bump has occurred, revise the symlink
+structure as needed.  Make sure &lsquo;current&rsquo; always points to a <em>symlink</em>
+tracking the latest release branch.</p></li>
+
+<li><p>Commit and push the symlink change.</p></li>
+</ul>
+
+<p><code>git commit -am &quot;Update symlink for r3.0.3&quot;</code></p>
+
+<ul>
+<li><p>Wait a minute and verify the docs site has been updated.</p></li>
+
+<li><p>Return to the original branch.</p></li>
+</ul>
 
 <h2 id="create-the-next-version-commit">Create the Next Version commit</h2>
 
