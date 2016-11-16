@@ -109,6 +109,10 @@ sub main {
     # Parse doxygen config
     my $config = _parse_doxygen_config();
 
+    # Remove default apidocmenu so it doesn't conflict with the
+    # new one we'll generate later.
+    $config->{INPUT} =~ s{etc/apidocmenu\.md}{};
+
     # Create output directory
     say "Making '$out_dir'";
     _try_run(qw/mkdir -p/, $out_dir);
