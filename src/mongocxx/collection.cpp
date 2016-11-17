@@ -870,6 +870,11 @@ cursor collection::distinct(bsoncxx::string::view_or_value field_name, view_or_v
         opts_builder << "collation" << *options.collation();
     }
 
+    const mongoc_read_prefs_t* rp_ptr = NULL;
+    if (options.read_preference()) {
+        rp_ptr = options.read_preference()->_impl->read_preference_t;
+    }
+
     //
     // Send the command and validate the reply.
     //
@@ -879,9 +884,9 @@ cursor collection::distinct(bsoncxx::string::view_or_value field_name, view_or_v
     scoped_bson_t command_bson{command_builder.extract()};
     scoped_bson_t opts_bson{opts_builder.extract()};
 
-    auto result =
-        libmongoc::collection_read_command_with_opts(_get_impl().collection_t, command_bson.bson(),
-                                                     NULL, opts_bson.bson(), reply.bson(), &error);
+    auto result = libmongoc::collection_read_command_with_opts(
+        _get_impl().collection_t, command_bson.bson(), rp_ptr, opts_bson.bson(), reply.bson(),
+        &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
