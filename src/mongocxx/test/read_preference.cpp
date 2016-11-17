@@ -29,10 +29,10 @@ TEST_CASE("Read preference", "[read_preference]") {
 
     read_preference rp;
 
-    SECTION("Defaults to mode primary, empty tags, and zero max staleness") {
+    SECTION("Defaults to mode primary, empty tags, and no max staleness") {
         REQUIRE(rp.mode() == read_preference::read_mode::k_primary);
         REQUIRE_FALSE(rp.tags());
-        REQUIRE(rp.max_staleness() == std::chrono::milliseconds{0});
+        REQUIRE_FALSE(rp.max_staleness());
     }
 
     SECTION("Can have mode changed") {
@@ -48,17 +48,20 @@ TEST_CASE("Read preference", "[read_preference]") {
     }
 
     SECTION("Can have max_staleness changed") {
-        std::chrono::milliseconds max_staleness{1000};
+        mongocxx::read_preference::staleness_seconds max_staleness{60};
         rp.max_staleness(max_staleness);
         REQUIRE(rp.max_staleness() == max_staleness);
     }
 
     SECTION("Rejects invalid max_staleness") {
-        REQUIRE_THROWS_AS(rp.max_staleness(std::chrono::milliseconds{-1}), logic_error);
-        REQUIRE_THROWS_AS(
-            rp.max_staleness(std::chrono::milliseconds{std::numeric_limits<std::int32_t>::max()} +
-                             std::chrono::milliseconds{1}),
-            logic_error);
+        REQUIRE_THROWS_AS(rp.max_staleness(mongocxx::read_preference::staleness_seconds{0}),
+                          logic_error);
+        REQUIRE_THROWS_AS(rp.max_staleness(mongocxx::read_preference::staleness_seconds{-0.0}),
+                          logic_error);
+        REQUIRE_THROWS_AS(rp.max_staleness(mongocxx::read_preference::staleness_seconds{-1.0}),
+                          logic_error);
+        REQUIRE_THROWS_AS(rp.max_staleness(mongocxx::read_preference::staleness_seconds{NAN}),
+                          logic_error);
     }
 }
 
@@ -104,7 +107,7 @@ TEST_CASE("Read preference comparison works", "[read_preference]") {
     }
 
     SECTION("max_staleness is compared") {
-        std::chrono::milliseconds max_staleness{10};
+        read_preference::staleness_seconds max_staleness{10};
         rp_a.max_staleness(max_staleness);
         REQUIRE_FALSE(rp_a == rp_b);
         rp_b.max_staleness(max_staleness);
@@ -139,13 +142,14 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
     }
 
     SECTION("max_staleness() calls mongoc_read_prefs_set_max_staleness_ms()") {
-        std::chrono::milliseconds expected_max_staleness_ms{5};
-        read_prefs_set_max_staleness_ms->interpose(
-            [&](mongoc_read_prefs_t*, int32_t max_staleness_ms) {
+        read_preference::staleness_seconds expected_max_staleness_sec{5};
+        read_prefs_set_max_staleness_seconds->interpose(
+            [&](mongoc_read_prefs_t*, double max_staleness_sec) {
                 called = true;
-                REQUIRE(std::chrono::milliseconds{max_staleness_ms} == expected_max_staleness_ms);
+                REQUIRE(read_preference::staleness_seconds{max_staleness_sec} ==
+                        expected_max_staleness_sec);
             });
-        rp.max_staleness(expected_max_staleness_ms);
+        rp.max_staleness(expected_max_staleness_sec);
     }
 
     REQUIRE(called);

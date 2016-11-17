@@ -95,6 +95,11 @@ class MONGOCXX_API read_preference {
     };
 
     ///
+    /// Max staleness is expressed as floating-point seconds.
+    ///
+    using staleness_seconds = std::chrono::duration<double, std::chrono::seconds::period>;
+
+    ///
     /// Constructs a new read_preference.
     ///
     /// @param mode
@@ -174,22 +179,38 @@ class MONGOCXX_API read_preference {
     stdx::optional<bsoncxx::document::view> tags() const;
 
     ///
-    /// Sets the max staleness setting for this read_preference.
+    /// Sets the max staleness setting for this read_preference.  Secondary
+    /// servers with an estimated lag greater than this value will be excluded
+    /// from selection under modes that allow secondaries.
+    ///
+    /// Max staleness must be set greater than the sum (in seconds) of the
+    /// client's heartbeatFrequencyMS and the server's idleWritePeriodMS.  By
+    /// default, that sum is 20 seconds.  If less, a exception will be thrown
+    /// when an operation is attempted.
+    ///
+    /// Max staleness may only be used with MongoDB version 3.4 or later.
+    /// If used with an earlier version, an exception will be thrown when an
+    /// operation is attempted.
+    ///
+    /// @note
+    ///     The max-staleness feature is designed to prevent badly-lagging
+    ///     servers from being selected.  The staleness estimate is
+    ///     imprecise and shouldn't be used to try to select "up-to-date"
+    ///     secondaries.
     ///
     /// @param max_staleness
-    ///    The new max staleness setting.  Must be non-negative, and must be less than 2^31
-    ///    milliseconds.
+    ///    The new max staleness setting.  It must be positive and finite.
     ///
     /// @throws mongocxx::logic_error if the argument is invalid.
     ///
-    void max_staleness(std::chrono::milliseconds max_staleness);
+    void max_staleness(staleness_seconds max_staleness);
 
     ///
     /// Returns the current max staleness setting for this read_preference.
     ///
-    /// @return The current max staleness setting.
+    /// @return The optionally current max staleness setting.
     ///
-    std::chrono::milliseconds max_staleness() const;
+    stdx::optional<staleness_seconds> max_staleness() const;
 
    private:
     friend client;
