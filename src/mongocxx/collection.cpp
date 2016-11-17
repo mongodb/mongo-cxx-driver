@@ -191,6 +191,11 @@ stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write
         throw_exception<bulk_write_exception>(reply.steal(), error);
     }
 
+    // Reply is empty for unacknowledged writes, so return disengaged optional.
+    if (reply.view().empty()) {
+        return stdx::nullopt;
+    }
+
     result::bulk_write result(reply.steal());
 
     return stdx::optional<result::bulk_write>(std::move(result));
@@ -407,7 +412,7 @@ stdx::optional<result::insert_one> collection::insert_one(view_or_value document
 
     auto result = bulk_write(bulk_op);
     if (!result) {
-        return stdx::optional<result::insert_one>();
+        return stdx::nullopt;
     }
 
     return stdx::optional<result::insert_one>(
@@ -441,7 +446,7 @@ stdx::optional<result::replace_one> collection::replace_one(view_or_value filter
 
     auto result = bulk_write(bulk_op);
     if (!result) {
-        return stdx::optional<result::replace_one>();
+        return stdx::nullopt;
     }
 
     return stdx::optional<result::replace_one>(result::replace_one(std::move(result.value())));
@@ -473,7 +478,7 @@ stdx::optional<result::update> collection::update_many(view_or_value filter, vie
 
     auto result = bulk_write(bulk_op);
     if (!result) {
-        return stdx::optional<result::update>();
+        return stdx::nullopt;
     }
 
     return stdx::optional<result::update>(result::update(std::move(result.value())));
@@ -498,7 +503,7 @@ stdx::optional<result::delete_result> collection::delete_many(
 
     auto result = bulk_write(bulk_op);
     if (!result) {
-        return stdx::optional<result::delete_result>();
+        return stdx::nullopt;
     }
 
     return stdx::optional<result::delete_result>(result::delete_result(std::move(result.value())));
@@ -530,7 +535,7 @@ stdx::optional<result::update> collection::update_one(view_or_value filter, view
 
     auto result = bulk_write(bulk_op);
     if (!result) {
-        return stdx::optional<result::update>();
+        return stdx::nullopt;
     }
 
     return stdx::optional<result::update>(result::update(std::move(result.value())));
@@ -555,8 +560,9 @@ stdx::optional<result::delete_result> collection::delete_one(
 
     auto result = bulk_write(bulk_op);
     if (!result) {
-        return stdx::optional<result::delete_result>();
+        return stdx::nullopt;
     }
+
     return stdx::optional<result::delete_result>(result::delete_result(std::move(result.value())));
 }
 

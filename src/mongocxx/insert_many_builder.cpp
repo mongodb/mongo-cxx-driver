@@ -60,10 +60,12 @@ void insert_many_builder::operator()(const bsoncxx::document::view& doc) {
 };
 
 stdx::optional<result::insert_many> insert_many_builder::insert(collection* col) const {
-    auto val = col->bulk_write(_writes).value();
-    result::bulk_write res{std::move(val)};
-    stdx::optional<result::insert_many> result{{std::move(res), _inserted_ids.view()}};
-    return result;
+    auto result = col->bulk_write(_writes);
+    if (!result) {
+        return stdx::nullopt;
+    }
+    return stdx::optional<result::insert_many>{
+        result::insert_many{std::move(result.value()), _inserted_ids.view()}};
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

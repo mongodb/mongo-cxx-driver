@@ -147,7 +147,9 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see options::bulk_write.
     ///
-    /// @return The optional result of the bulk operation execution, a result::bulk_write.
+    /// @return The optional result of the bulk operation execution.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     //
     /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
     ///
@@ -245,7 +247,9 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see mongocxx::options::delete_options.
     ///
-    /// @return The optional result of performing the deletion, a result::delete_result.
+    /// @return The optional result of performing the deletion.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     ///
     /// @throws mongocxx::bulk_write_exception if the delete fails.
     ///
@@ -263,7 +267,9 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see mongocxx::options::delete_options.
     ///
-    /// @return The optional result of performing the deletion, a result::delete_result.
+    /// @return The optional result of performing the deletion.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     ///
     /// @throws mongocxx::bulk_write_exception if the delete fails.
     ///
@@ -417,7 +423,9 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see options::insert.
     ///
-    /// @return The result of attempting to perform the insert.
+    /// @return The optional result of attempting to perform the insert.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     ///
     /// @throws mongocxx::bulk_write_exception if the operation fails.
     ///
@@ -442,7 +450,9 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see options::insert.
     ///
-    /// @return The result of attempting to performing the insert.
+    /// @return The optional result of attempting to performing the insert.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     ///
     /// @throws mongocxx::bulk_write_exception when the operation fails.
     ///
@@ -566,7 +576,9 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see options::update.
     ///
-    /// @return The result of attempting to replace a document.
+    /// @return The optional result of attempting to replace a document.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     ///
     /// @throws
     ///   mongocxx::logic_error if the replacement is invalid, or mongocxx::bulk_write_exception if
@@ -588,7 +600,9 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see options::update.
     ///
-    /// @return The result of attempting to update multiple documents.
+    /// @return The optional result of attempting to update multiple documents.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     ///
     /// @throws
     ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
@@ -610,7 +624,9 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see options::update.
     ///
-    /// @return The result of attempting to update a document.
+    /// @return The optional result of attempting to update a document.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     ///
     /// @throws
     ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the

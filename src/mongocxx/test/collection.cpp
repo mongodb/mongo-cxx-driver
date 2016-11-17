@@ -33,6 +33,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/read_concern.hpp>
+#include <mongocxx/write_concern.hpp>
 
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
@@ -91,6 +92,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                                                  << "en_US"
                                                  << "strength" << 2 << finalize;
 
+    auto noack = write_concern{};
+    noack.acknowledge_level(write_concern::level::k_unacknowledged);
+
     coll.drop();
 
     SECTION("insert and read single document", "[collection]") {
@@ -115,11 +119,31 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("insert_one returns correct result object", "[collection]") {
         stdx::string_view expected_id{"foo"};
 
-        auto result = coll.insert_one(document{} << "_id" << expected_id << finalize);
-        REQUIRE(result);
-        REQUIRE(result->result().inserted_count() == 1);
-        REQUIRE(result->inserted_id().type() == bsoncxx::type::k_utf8);
-        REQUIRE(result->inserted_id().get_utf8().value == expected_id);
+        auto doc = document{} << "_id" << expected_id << finalize;
+
+        SECTION("default write concern returns result") {
+            auto result = coll.insert_one(doc.view());
+            REQUIRE(result);
+            REQUIRE(result->result().inserted_count() == 1);
+            REQUIRE(result->inserted_id().type() == bsoncxx::type::k_utf8);
+            REQUIRE(result->inserted_id().get_utf8().value == expected_id);
+        }
+
+        SECTION("unacknowledged write concern returns disengaged optional", "[collection]") {
+            options::insert opts{};
+            opts.write_concern(noack);
+
+            auto result = coll.insert_one(doc.view(), opts);
+            REQUIRE(!result);
+
+            // Block until server has received the write request, to prevent
+            // this unacknowledged write from racing with writes to this
+            // collection from other sections.
+            db.run_command(document{} << "getLastError" << 1 << finalize);
+
+            auto count = coll.count({});
+            REQUIRE(count == 1);
+        }
     }
 
     SECTION("insert and read multiple documents", "[collection]") {
@@ -185,26 +209,42 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         docs.push_back(b1.view());
         docs.push_back(b2.view());
 
-        auto result = coll.insert_many(docs);
+        SECTION("default write concern returns result") {
+            auto result = coll.insert_many(docs);
 
-        REQUIRE(result);
+            REQUIRE(result);
 
-        // Verify result->result() is correct:
-        REQUIRE(result->result().inserted_count() == 2);
+            // Verify result->result() is correct:
+            REQUIRE(result->result().inserted_count() == 2);
 
-        // Verify result->inserted_count() is correct:
-        REQUIRE(result->inserted_count() == 2);
+            // Verify result->inserted_count() is correct:
+            REQUIRE(result->inserted_count() == 2);
 
-        // Verify result->inserted_ids() is correct:
-        auto id_map = result->inserted_ids();
-        REQUIRE(id_map[0].type() == bsoncxx::type::k_utf8);
-        REQUIRE(id_map[0].get_utf8().value == stdx::string_view{"foo"});
-        REQUIRE(id_map[1].type() == bsoncxx::type::k_oid);
-        auto second_inserted_doc = coll.find_one(document{} << "x" << 2 << finalize);
-        REQUIRE(second_inserted_doc);
-        REQUIRE(second_inserted_doc->view()["_id"]);
-        REQUIRE(second_inserted_doc->view()["_id"].type() == bsoncxx::type::k_oid);
-        REQUIRE(id_map[1].get_oid().value == second_inserted_doc->view()["_id"].get_oid().value);
+            // Verify result->inserted_ids() is correct:
+            auto id_map = result->inserted_ids();
+            REQUIRE(id_map[0].type() == bsoncxx::type::k_utf8);
+            REQUIRE(id_map[0].get_utf8().value == stdx::string_view{"foo"});
+            REQUIRE(id_map[1].type() == bsoncxx::type::k_oid);
+            auto second_inserted_doc = coll.find_one(document{} << "x" << 2 << finalize);
+            REQUIRE(second_inserted_doc);
+            REQUIRE(second_inserted_doc->view()["_id"]);
+            REQUIRE(second_inserted_doc->view()["_id"].type() == bsoncxx::type::k_oid);
+            REQUIRE(id_map[1].get_oid().value ==
+                    second_inserted_doc->view()["_id"].get_oid().value);
+        }
+
+        SECTION("unacknowledged write concern returns disengaged optional") {
+            options::insert opts{};
+            opts.write_concern(noack);
+
+            auto result = coll.insert_many(docs, opts);
+            REQUIRE(!result);
+
+            // Block until server has received the write request, to prevent
+            // this unacknowledged write from racing with writes to this
+            // collection from other sections.
+            db.run_command(document{} << "getLastError" << 1 << finalize);
+        }
     }
 
     SECTION("find with collation", "[collection]") {
@@ -257,6 +297,34 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         REQUIRE(updated->view()["changed"].get_bool() == true);
     }
 
+    SECTION("update_one returns correct result object", "[collection]") {
+        auto b1 = document{} << "_id" << 1 << finalize;
+
+        coll.insert_one(b1.view());
+
+        document update_doc;
+        update_doc << "$set" << open_document << "changed" << true << close_document;
+
+        SECTION("default write concern returns result") {
+            auto result = coll.update_one(b1.view(), update_doc.view());
+            REQUIRE(result);
+            REQUIRE(result->result().matched_count() == 1);
+        }
+
+        SECTION("unacknowledged write concern returns disengaged optional") {
+            options::update opts{};
+            opts.write_concern(noack);
+
+            auto result = coll.update_one(b1.view(), update_doc.view(), opts);
+            REQUIRE(!result);
+
+            // Block until server has received the write request, to prevent
+            // this unacknowledged write from racing with writes to this
+            // collection from other sections.
+            db.run_command(document{} << "getLastError" << 1 << finalize);
+        }
+    }
+
     SECTION("update_one with collation", "[collection]") {
         auto b = document{} << "x"
                             << "foo" << finalize;
@@ -302,6 +370,38 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         REQUIRE(coll.count(bchanged.view()) == 2);
     }
 
+    SECTION("update_many returns correct result object", "[collection]") {
+        auto b1 = document{} << "x" << 1 << finalize;
+
+        coll.insert_one(b1.view());
+        coll.insert_one(b1.view());
+
+        document bchanged;
+        bchanged << "changed" << true;
+
+        document update_doc;
+        update_doc << "$set" << bsoncxx::types::b_document{bchanged};
+
+        SECTION("default write concern returns result") {
+            auto result = coll.update_many(b1.view(), update_doc.view());
+            REQUIRE(result);
+            REQUIRE(result->result().matched_count() == 2);
+        }
+
+        SECTION("unacknowledged write concern returns disengaged optional") {
+            options::update opts{};
+            opts.write_concern(noack);
+
+            auto result = coll.update_many(b1.view(), update_doc.view(), opts);
+            REQUIRE(!result);
+
+            // Block until server has received the write request, to prevent
+            // this unacknowledged write from racing with writes to this
+            // collection from other sections.
+            db.run_command(document{} << "getLastError" << 1 << finalize);
+        }
+    }
+
     SECTION("update_many with collation", "[collection]") {
         auto b = document{} << "x"
                             << "foo" << finalize;
@@ -337,8 +437,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         replacement << "x" << 2;
 
         coll.replace_one(doc.view(), replacement.view());
-        auto c = coll.count(doc.view());
         REQUIRE(coll.count(doc.view()) == 1);
+        REQUIRE(coll.count(replacement.view()) == 1);
     }
 
     SECTION("non-matching upsert creates document", "[collection]") {
@@ -430,7 +530,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
     }
 
-    SECTION("document replacement", "[collection]") {
+    SECTION("replace_one returns correct result object", "[collection]") {
         document b1;
         b1 << "x" << 1;
         coll.insert_one(b1.view());
@@ -438,12 +538,24 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         document b2;
         b2 << "x" << 2;
 
-        coll.replace_one(b1.view(), b2.view());
+        SECTION("default write concern returns result") {
+            auto result = coll.replace_one(b1.view(), b2.view());
+            REQUIRE(result);
+            REQUIRE(result->result().matched_count() == 1);
+        }
 
-        auto replaced = coll.find_one(b2.view());
+        SECTION("unacknowledged write concern returns disengaged optional") {
+            options::update opts{};
+            opts.write_concern(noack);
 
-        REQUIRE(replaced);
-        REQUIRE(coll.count({}) == 1);
+            auto result = coll.replace_one(b1.view(), b2.view(), opts);
+            REQUIRE(!result);
+
+            // Block until server has received the write request, to prevent
+            // this unacknowledged write from racing with writes to this
+            // collection from other sections.
+            db.run_command(document{} << "getLastError" << 1 << finalize);
+        }
     }
 
     SECTION("replace_one with collation", "[collection]") {
@@ -526,6 +638,32 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         REQUIRE(seen == 1);
     }
 
+    SECTION("delete_one returns correct result object", "[collection]") {
+        document b1;
+        b1 << "x" << 1;
+
+        coll.insert_one(b1.view());
+
+        SECTION("default write concern returns result") {
+            auto result = coll.delete_one(b1.view());
+            REQUIRE(result);
+            REQUIRE(result->result().deleted_count() == 1);
+        }
+
+        SECTION("unacknowledged write concern returns disengaged optional") {
+            options::delete_options opts{};
+            opts.write_concern(noack);
+
+            auto result = coll.delete_one(b1.view(), opts);
+            REQUIRE(!result);
+
+            // Block until server has received the write request, to prevent
+            // this unacknowledged write from racing with writes to this
+            // collection from other sections.
+            db.run_command(document{} << "getLastError" << 1 << finalize);
+        }
+    }
+
     SECTION("delete_one with collation", "[collection]") {
         document b1;
         b1 << "x"
@@ -585,6 +723,34 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         REQUIRE(seen == 1);
+    }
+
+    SECTION("delete_many returns correct result object", "[collection]") {
+        document b1;
+        b1 << "x" << 1;
+
+        coll.insert_one(b1.view());
+        coll.insert_one(b1.view());
+        coll.insert_one(b1.view());
+
+        SECTION("default write concern returns result") {
+            auto result = coll.delete_many(b1.view());
+            REQUIRE(result);
+            REQUIRE(result->result().deleted_count() > 1);
+        }
+
+        SECTION("unacknowledged write concern returns disengaged optional") {
+            options::delete_options opts{};
+            opts.write_concern(noack);
+
+            auto result = coll.delete_many(b1.view(), opts);
+            REQUIRE(!result);
+
+            // Block until server has received the write request, to prevent
+            // this unacknowledged write from racing with writes to this
+            // collection from other sections.
+            db.run_command(document{} << "getLastError" << 1 << finalize);
+        }
     }
 
     SECTION("delete_many with collation", "[collection]") {
@@ -934,6 +1100,39 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
     }
 
+    SECTION("bulk_write returns correct result object") {
+        auto doc1 = document{} << "foo" << 1 << finalize;
+        auto doc2 = document{} << "foo" << 2 << finalize;
+
+        options::bulk_write bulk_opts;
+        bulk_opts.ordered(false);
+
+        SECTION("default write concern returns result") {
+            bulk_write abulk{bulk_opts};
+            abulk.append(model::insert_one{std::move(doc1)});
+            abulk.append(model::insert_one{std::move(doc2)});
+            auto result = coll.bulk_write(abulk);
+
+            REQUIRE(result);
+            REQUIRE(result->inserted_count() == 2);
+        }
+
+        SECTION("unacknowledged write concern returns disengaged optional", "[collection]") {
+            bulk_opts.write_concern(noack);
+            bulk_write bbulk{bulk_opts};
+            bbulk.append(model::insert_one{std::move(doc1)});
+            bbulk.append(model::insert_one{std::move(doc2)});
+            auto result = coll.bulk_write(bbulk);
+
+            REQUIRE(!result);
+
+            // Block until server has received the write request, to prevent
+            // this unacknowledged write from racing with writes to this
+            // collection from other sections.
+            db.run_command(document{} << "getLastError" << 1 << finalize);
+        }
+    }
+
     SECTION("distinct works", "[collection]") {
         auto doc1 = document{} << "foo"
                                << "baz"
@@ -958,6 +1157,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         bulk.append(model::insert_one{std::move(doc4)});
 
         coll.bulk_write(bulk);
+
+        REQUIRE(coll.count({}) == 4);
 
         auto distinct_results = coll.distinct("foo", {});
 
