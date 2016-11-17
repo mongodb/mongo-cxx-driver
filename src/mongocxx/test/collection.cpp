@@ -218,12 +218,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto cursor = coll.find(predicate.view(), find_opts);
         if (test_util::supports_collation(mongodb_client)) {
             REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
-        } else if (test_util::get_max_wire_version(mongodb_client) >= 4) {
-            // The server doesn't support collation.
-            REQUIRE_THROWS_AS(std::distance(cursor.begin(), cursor.end()), query_exception);
         } else {
-            // TODO CDRIVER-1751: due to a C driver issue, no exception is currently thrown when
-            // connected to old servers.
+            REQUIRE_THROWS_AS(std::distance(cursor.begin(), cursor.end()), query_exception);
         }
     }
 
@@ -237,12 +233,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto find_opts = options::find{}.collation(case_insensitive_collation.view());
         if (test_util::supports_collation(mongodb_client)) {
             REQUIRE(coll.find_one(predicate.view(), find_opts));
-        } else if (test_util::get_max_wire_version(mongodb_client) >= 4) {
-            // The server doesn't support collation.
-            REQUIRE_THROWS_AS(coll.find_one(predicate.view(), find_opts), query_exception);
         } else {
-            // TODO CDRIVER-1751: due to a C driver issue, no exception is currently thrown when
-            // connected to old servers.
+            REQUIRE_THROWS_AS(coll.find_one(predicate.view(), find_opts), query_exception);
         }
     }
 
@@ -707,10 +699,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                 REQUIRE(doc);
                 REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
             } else {
-                // The server doesn't support collation.
-                //
-                // TODO CDRIVER-1779: due to a C driver issue, no exception is currently thrown when
-                // connected to old servers.
+                REQUIRE_THROWS_AS(coll.find_one_and_replace(collation_criteria.view(),
+                                                            replacement.view(), options),
+                                  write_exception);
             }
         }
 
@@ -773,10 +764,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                 REQUIRE(doc);
                 REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
             } else {
-                // The server doesn't support collation.
-                //
-                // TODO CDRIVER-1779: due to a C driver issue, no exception is currently thrown when
-                // connected to old servers.
+                REQUIRE_THROWS_AS(
+                    coll.find_one_and_update(collation_criteria.view(), update.view(), options),
+                    write_exception);
             }
         }
 
@@ -828,10 +818,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                 REQUIRE(doc);
                 REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
             } else {
-                // The server doesn't support collation.
-                //
-                // TODO CDRIVER-1779: due to a C driver issue, no exception is currently thrown when
-                // connected to old servers.
+                REQUIRE_THROWS_AS(coll.find_one_and_delete(collation_criteria.view(), options),
+                                  write_exception);
             }
         }
     }
