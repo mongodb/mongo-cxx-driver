@@ -855,9 +855,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
     SECTION("aggregation $lookup operator", "[collection]") {
         auto people_coll_name = "people_on_the_block";
-        auto people_coll = db.create_collection(people_coll_name);
+        auto people_coll = db[people_coll_name];
         auto houses_coll_name = "houses_on_the_block";
-        auto houses_coll = db.create_collection(houses_coll_name);
+        auto houses_coll = db[houses_coll_name];
+        houses_coll.drop();
+        people_coll.drop();
 
         // populate one collection with names
         document name1;
@@ -918,9 +920,6 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // The server does not support $lookup.
             REQUIRE_THROWS_AS(std::distance(results.begin(), results.end()), operation_exception);
         }
-
-        houses_coll.drop();
-        people_coll.drop();
     }
 
     SECTION("aggregation with collation", "[collection]") {
