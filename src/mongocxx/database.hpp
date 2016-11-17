@@ -138,6 +138,10 @@ class MONGOCXX_API database {
     ///
     /// Modify an existing collection.
     ///
+    /// @deprecated
+    ///   This method is deprecated.  To modify an existing collection, invoke the "collMod" command
+    ///   with database::run_command().
+    ///
     /// @see https://docs.mongodb.org/manual/reference/command/collMod/
     ///
     /// @param name the name of the collection to be modified.
