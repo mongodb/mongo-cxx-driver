@@ -20,8 +20,12 @@
 #include <tuple>
 #include <utility>
 
+#include <bson.h>
+
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/exception/error_code.hpp>
+#include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -850,29 +854,63 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
 
 cursor collection::distinct(bsoncxx::string::view_or_value field_name, view_or_value query,
                             const options::distinct& options) {
+    //
+    // Construct the distinct command and options.
+    //
     bsoncxx::builder::stream::document command_builder{};
     command_builder << "distinct" << name() << "key" << field_name.view() << "query"
                     << bsoncxx::types::b_document{query};
-
-    if (options.collation()) {
-        command_builder << "collation" << *options.collation();
-    }
 
     if (options.max_time()) {
         command_builder << "maxTimeMS" << bsoncxx::types::b_int64{options.max_time()->count()};
     }
 
+    bsoncxx::builder::stream::document opts_builder{};
+    if (options.collation()) {
+        opts_builder << "collation" << *options.collation();
+    }
+
+    //
+    // Send the command and validate the reply.
+    //
+    scoped_bson_t reply;
+    reply.flag_init();
+    bson_error_t error;
     scoped_bson_t command_bson{command_builder.extract()};
+    scoped_bson_t opts_bson{opts_builder.extract()};
 
-    auto database = libmongoc::client_get_database(_get_impl().client_impl->client_t,
-                                                   _get_impl().database_name.c_str());
+    auto result =
+        libmongoc::collection_read_command_with_opts(_get_impl().collection_t, command_bson.bson(),
+                                                     NULL, opts_bson.bson(), reply.bson(), &error);
 
-    const auto cleanup_database = make_guard([&] { libmongoc::database_destroy(database); });
+    if (!result) {
+        throw_exception<operation_exception>(error);
+    }
 
-    auto result = libmongoc::database_command(database, MONGOC_QUERY_NONE, 0, 0, 0,
-                                              command_bson.bson(), NULL, NULL);
+    //
+    // Fake a cursor with the reply document as a single result.
+    //
+    auto fake_db_reply = bsoncxx::builder::stream::document{}
+                         << "ok" << 1 << "cursor" << bsoncxx::builder::stream::open_document << "ns"
+                         << ""
+                         << "id" << 0 << "firstBatch" << bsoncxx::builder::stream::open_array
+                         << reply.view() << bsoncxx::builder::stream::close_array
+                         << bsoncxx::builder::stream::close_document
+                         << bsoncxx::builder::stream::finalize;
 
-    return cursor(result);
+    bson_t* reply_bson =
+        bson_new_from_data(fake_db_reply.view().data(), fake_db_reply.view().length());
+    if (!reply_bson) {
+        throw bsoncxx::exception{bsoncxx::error_code::k_internal_error};
+    }
+
+    mongoc_cursor_t* fake_cursor =
+        libmongoc::cursor_new_from_command_reply(_get_impl().client_impl->client_t, reply_bson, 0);
+    if (libmongoc::cursor_error(fake_cursor, &error)) {
+        throw_exception<operation_exception>(error);
+    }
+
+    return {fake_cursor};
 }
 
 cursor collection::list_indexes() const {

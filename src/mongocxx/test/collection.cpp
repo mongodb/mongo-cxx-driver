@@ -1003,17 +1003,25 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto doc = document{} << "x"
                               << "foo" << finalize;
 
+        coll.insert_one(doc.view());
+
         auto predicate = document{} << "x"
                                     << "FOO" << finalize;
 
         auto distinct_opts = options::distinct{}.collation(case_insensitive_collation.view());
 
-        auto distinct_results = coll.distinct("x", predicate.view(), distinct_opts);
         if (test_util::supports_collation(mongodb_client)) {
-            REQUIRE(std::distance(distinct_results.begin(), distinct_results.end()) == 1);
+            auto distinct_results = coll.distinct("x", predicate.view(), distinct_opts);
+            auto iter = distinct_results.begin();
+            REQUIRE(iter != distinct_results.end());
+            auto result = *iter;
+            auto values = result["values"].get_array().value;
+            REQUIRE(std::distance(values.begin(), values.end()) == 1);
+            REQUIRE(values[0].get_utf8().value == stdx::string_view{"foo"});
         } else {
-            // TODO CXX-1093: distinct should return error to the user if a collation is specified
-            // and the server doesn't support collation.
+            // The server does not support collation.
+            REQUIRE_THROWS_AS(coll.distinct("x", predicate.view(), distinct_opts),
+                              operation_exception);
         }
     }
 }
