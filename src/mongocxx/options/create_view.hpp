@@ -50,6 +50,17 @@ class MONGOCXX_API create_view {
     create_view& collation(bsoncxx::document::view_or_value collation);
 
     ///
+    /// Gets the default collation for this view.
+    ///
+    /// @return
+    ///   The default collation for the view.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+
+    ///
     /// Sets the pipeline that will be used to compute this view.
     ///
     /// @param pipeline
@@ -58,12 +69,29 @@ class MONGOCXX_API create_view {
     create_view& pipeline(pipeline pipeline);
 
     ///
+    /// Gets the pipeline that will be used to compute this view.
+    ///
+    /// @return
+    ///   Pipeline that will be used to compute the view.
+    ///
+    const stdx::optional<class pipeline>& pipeline() const;
+
+    ///
     /// Return a bson document representing the options set on this object.
+    ///
+    /// @deprecated
+    ///   This method is deprecated. To determine which options are set on this object, use the
+    ///   provided accessors instead.
     ///
     /// @return Options, as a document.
     ///
     bsoncxx::document::value to_document() const;
 
+    ///
+    /// @deprecated
+    ///   This method is deprecated. To determine which options are set on this object, use the
+    ///   provided accessors instead.
+    ///
     MONGOCXX_INLINE operator bsoncxx::document::value() const;
 
    private:

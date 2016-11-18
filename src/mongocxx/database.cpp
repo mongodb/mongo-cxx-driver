@@ -128,10 +128,19 @@ class collection database::create_collection(bsoncxx::string::view_or_value name
 class collection database::create_view(bsoncxx::string::view_or_value name,
                                        bsoncxx::string::view_or_value view_on,
                                        const options::create_view& options) {
-    bson_error_t error;
+    document options_builder{};
+    options_builder << "viewOn" << view_on;
 
-    libbson::scoped_bson_t opts_bson{document{} << "viewOn" << view_on
-                                                << concatenate(options.to_document()) << finalize};
+    if (options.collation()) {
+        options_builder << "collation" << *options.collation();
+    }
+
+    if (options.pipeline()) {
+        options_builder << "pipeline" << options.pipeline()->view_array();
+    }
+
+    libbson::scoped_bson_t opts_bson{options_builder.view()};
+    bson_error_t error;
     auto result = libmongoc::database_create_collection(
         _get_impl().database_t, name.terminated().data(), opts_bson.bson(), &error);
     if (!result) {

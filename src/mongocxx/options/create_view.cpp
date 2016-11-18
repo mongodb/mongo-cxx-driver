@@ -33,6 +33,14 @@ create_view& create_view::pipeline(class pipeline pipeline) {
     return *this;
 }
 
+const stdx::optional<bsoncxx::document::view_or_value>& create_view::collation() const {
+    return _collation;
+}
+
+const stdx::optional<pipeline>& create_view::pipeline() const {
+    return _pipeline;
+}
+
 bsoncxx::document::value create_view::to_document() const {
     auto doc = bsoncxx::builder::stream::document{};
 
