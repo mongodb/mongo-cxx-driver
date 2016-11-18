@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "catch.hpp"
+#include "helpers.hpp"
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/element.hpp>
@@ -26,49 +27,48 @@ using builder::stream::open_document;
 using builder::stream::close_document;
 using builder::stream::finalize;
 
-TEST_CASE("validation_criteria", "[validation_criteria]") {
+TEST_CASE("validation_criteria accessors/mutators", "[validation_criteria]") {
     instance::current();
 
     validation_criteria criteria;
 
-    auto doc = builder::stream::document{} << "email" << open_document << "$exists"
-                                           << "true" << close_document << finalize;
+    auto doc = builder::stream::document{} << "email" << open_document << "$exists" << true
+                                           << close_document << finalize;
 
-    SECTION("Can contain a validation level") {
-        criteria.level(validation_criteria::validation_level::k_off);
-    }
+    CHECK_OPTIONAL_ARGUMENT(criteria, rule, doc.view());
+    CHECK_OPTIONAL_ARGUMENT(criteria, level, validation_criteria::validation_level::k_off);
+    CHECK_OPTIONAL_ARGUMENT(criteria, action, validation_criteria::validation_action::k_warn);
+}
 
-    SECTION("Can contain a validation action") {
-        criteria.action(validation_criteria::validation_action::k_warn);
-    }
+TEST_CASE("validation_criteria can be exported to a document", "[validation_criteria]") {
+    instance::current();
 
-    SECTION("Can contain a validator") {
-        criteria.rule(doc.view());
-    }
+    validation_criteria criteria;
 
-    SECTION("Can be exported to a document") {
-        criteria.level(validation_criteria::validation_level::k_strict);
-        criteria.action(validation_criteria::validation_action::k_warn);
-        criteria.rule(doc.view());
+    auto doc = builder::stream::document{} << "email" << open_document << "$exists" << true
+                                           << close_document << finalize;
 
-        auto criteria_doc = criteria.to_document();
-        auto criteria_view = criteria_doc.view();
+    criteria.level(validation_criteria::validation_level::k_strict);
+    criteria.action(validation_criteria::validation_action::k_warn);
+    criteria.rule(doc.view());
 
-        document::element ele;
+    auto criteria_doc = criteria.to_document();
+    auto criteria_view = criteria_doc.view();
 
-        ele = criteria_view["validationLevel"];
-        REQUIRE(ele);
-        REQUIRE(ele.type() == type::k_utf8);
-        REQUIRE(ele.get_utf8().value.to_string() == "strict");
+    document::element ele;
 
-        ele = criteria_view["validationAction"];
-        REQUIRE(ele);
-        REQUIRE(ele.type() == type::k_utf8);
-        REQUIRE(ele.get_utf8().value.to_string() == "warn");
+    ele = criteria_view["validationLevel"];
+    REQUIRE(ele);
+    REQUIRE(ele.type() == type::k_utf8);
+    REQUIRE(ele.get_utf8().value.to_string() == "strict");
 
-        ele = criteria_view["validator"];
-        REQUIRE(ele);
-        REQUIRE(ele.type() == type::k_document);
-        REQUIRE(ele.get_document().value == doc);
-    }
+    ele = criteria_view["validationAction"];
+    REQUIRE(ele);
+    REQUIRE(ele.type() == type::k_utf8);
+    REQUIRE(ele.get_utf8().value.to_string() == "warn");
+
+    ele = criteria_view["validator"];
+    REQUIRE(ele);
+    REQUIRE(ele.type() == type::k_document);
+    REQUIRE(ele.get_document().value == doc);
 }

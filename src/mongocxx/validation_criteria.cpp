@@ -67,6 +67,18 @@ validation_criteria& validation_criteria::action(validation_criteria::validation
     return *this;
 }
 
+const stdx::optional<bsoncxx::document::view_or_value>& validation_criteria::rule() const {
+    return _rule;
+}
+
+const stdx::optional<validation_criteria::validation_level>& validation_criteria::level() const {
+    return _level;
+}
+
+const stdx::optional<validation_criteria::validation_action>& validation_criteria::action() const {
+    return _action;
+}
+
 bsoncxx::document::value validation_criteria::to_document() const {
     auto doc = bsoncxx::builder::stream::document{};
 
