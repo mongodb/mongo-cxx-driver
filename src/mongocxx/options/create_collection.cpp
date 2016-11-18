@@ -65,6 +65,38 @@ create_collection& create_collection::validation_criteria(class validation_crite
     return *this;
 }
 
+const stdx::optional<bool>& create_collection::capped() const {
+    return _capped;
+}
+
+const stdx::optional<bool>& create_collection::auto_index_id() const {
+    return _auto_index_id;
+}
+
+const stdx::optional<int>& create_collection::size() const {
+    return _max_size;
+}
+
+const stdx::optional<int>& create_collection::max() const {
+    return _max_documents;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& create_collection::collation() const {
+    return _collation;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& create_collection::storage_engine() const {
+    return _storage_engine_opts;
+}
+
+const stdx::optional<bool>& create_collection::no_padding() const {
+    return _no_padding;
+}
+
+const stdx::optional<class validation_criteria>& create_collection::validation_criteria() const {
+    return _validation;
+}
+
 bsoncxx::document::value create_collection::to_document() const {
     auto doc = bsoncxx::builder::stream::document{};
 

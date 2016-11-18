@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "catch.hpp"
+#include "helpers.hpp"
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
@@ -30,81 +31,114 @@ using builder::stream::close_document;
 using builder::stream::finalize;
 using builder::stream::open_document;
 
-TEST_CASE("create_collection", "[create_collection]") {
+TEST_CASE("create_collection accessors/mutators", "[create_collection]") {
     instance::current();
 
     options::create_collection cc;
 
-    SECTION("Can be exported to a document") {
-        auto collation_en_US = builder::stream::document{} << "locale"
-                                                           << "en_US" << finalize;
-        auto rule = builder::stream::document{} << "brain" << open_document << "$exists" << true
-                                                << close_document << finalize;
+    auto collation = builder::stream::document{} << "locale"
+                                                 << "en_US" << finalize;
+    auto storage_engine = builder::stream::document{}
+                          << "wiredTiger" << open_document << "configString"
+                          << "block_compressor=zlib" << close_document << finalize;
+    auto validation =
+        validation_criteria{}.rule(builder::stream::document{} << "a" << 1 << finalize);
 
-        validation_criteria validation;
-        validation.rule(rule.view());
-        validation.level(validation_criteria::validation_level::k_strict);
+    CHECK_OPTIONAL_ARGUMENT(cc, capped, true);
+    CHECK_OPTIONAL_ARGUMENT(cc, auto_index_id, false);
+    CHECK_OPTIONAL_ARGUMENT(cc, size, 5);
+    CHECK_OPTIONAL_ARGUMENT(cc, max, 2);
+    CHECK_OPTIONAL_ARGUMENT(cc, collation, collation.view());
+    CHECK_OPTIONAL_ARGUMENT(cc, storage_engine, storage_engine.view());
+    CHECK_OPTIONAL_ARGUMENT(cc, no_padding, true);
 
-        cc.validation_criteria(validation);
-        cc.capped(true);
-        cc.size(256);
-        cc.max(100);
-        cc.collation(collation_en_US.view());
-        cc.no_padding(true);
-
-        auto doc = cc.to_document();
-        document::view doc_view{doc.view()};
-
-        // capped field is set to true
-        document::element capped{doc_view["capped"]};
-        REQUIRE(capped);
-        REQUIRE(capped.type() == type::k_bool);
-        REQUIRE(capped.get_bool() == true);
-
-        // autoIndexId should not be set
-        document::element autoIndex{doc_view["autoIndexId"]};
-        REQUIRE(!autoIndex);
-
-        // size should be set
-        document::element size{doc_view["size"]};
-        REQUIRE(size);
-        REQUIRE(size.type() == type::k_int32);
-        REQUIRE(size.get_int32() == 256);
-
-        // max should be set
-        document::element max{doc_view["max"]};
-        REQUIRE(max);
-        REQUIRE(max.type() == type::k_int32);
-        REQUIRE(max.get_int32() == 100);
-
-        // collation should be set
-        document::element collation{doc_view["collation"]};
-        REQUIRE(collation);
-        REQUIRE(collation.type() == type::k_document);
-        REQUIRE(collation.get_document().value == collation_en_US);
-
-        // flags should be set to 0x10
-        document::element padding{doc_view["flags"]};
-        REQUIRE(padding);
-        REQUIRE(padding.type() == type::k_int32);
-        REQUIRE(padding.get_int32() == 0x10);
-
-        // storageEngine should not be set
-        document::element engine{doc_view["storageEngine"]};
-        REQUIRE(!engine);
-
-        // validator and validationLevel should be set, but not validationAction
-        document::element validator{doc_view["validator"]};
-        REQUIRE(validator);
-        REQUIRE(validator.type() == type::k_document);
-        REQUIRE(validator.get_document().value == rule);
-
-        document::element validationLevel{doc_view["validationLevel"]};
-        REQUIRE(validationLevel);
-        REQUIRE(validationLevel.type() == type::k_utf8);
-        REQUIRE(validationLevel.get_utf8().value.to_string() == "strict");
-
-        document::element validationAction{doc_view["validationAction"]};
-        REQUIRE(!validationAction);
+    // We verify the accessors/mutators of 'validation_criteria' manually here, since the
+    // validation_criteria class doesn't support equality (and therefore can't be used with
+    // CHECK_OPTIONAL_ARGUMENT()).
+    SECTION("has validation_criteria disengaged") {
+        REQUIRE(!cc.validation_criteria());
     }
+    SECTION("has a method to set the validation_criteria") {
+        cc.validation_criteria(validation);
+        REQUIRE(cc.validation_criteria()->rule() == validation.rule());
+        REQUIRE(cc.validation_criteria()->level() == validation.level());
+        REQUIRE(cc.validation_criteria()->action() == validation.action());
+    }
+}
+
+TEST_CASE("create_collection can be exported to a document", "[create_collection]") {
+    instance::current();
+
+    options::create_collection cc;
+
+    auto collation_en_US = builder::stream::document{} << "locale"
+                                                       << "en_US" << finalize;
+    auto rule = builder::stream::document{} << "brain" << open_document << "$exists" << true
+                                            << close_document << finalize;
+
+    validation_criteria validation;
+    validation.rule(rule.view());
+    validation.level(validation_criteria::validation_level::k_strict);
+
+    cc.validation_criteria(validation);
+    cc.capped(true);
+    cc.size(256);
+    cc.max(100);
+    cc.collation(collation_en_US.view());
+    cc.no_padding(true);
+
+    auto doc = cc.to_document();
+    document::view doc_view{doc.view()};
+
+    // capped field is set to true
+    document::element capped{doc_view["capped"]};
+    REQUIRE(capped);
+    REQUIRE(capped.type() == type::k_bool);
+    REQUIRE(capped.get_bool() == true);
+
+    // autoIndexId should not be set
+    document::element autoIndex{doc_view["autoIndexId"]};
+    REQUIRE(!autoIndex);
+
+    // size should be set
+    document::element size{doc_view["size"]};
+    REQUIRE(size);
+    REQUIRE(size.type() == type::k_int32);
+    REQUIRE(size.get_int32() == 256);
+
+    // max should be set
+    document::element max{doc_view["max"]};
+    REQUIRE(max);
+    REQUIRE(max.type() == type::k_int32);
+    REQUIRE(max.get_int32() == 100);
+
+    // collation should be set
+    document::element collation{doc_view["collation"]};
+    REQUIRE(collation);
+    REQUIRE(collation.type() == type::k_document);
+    REQUIRE(collation.get_document().value == collation_en_US);
+
+    // flags should be set to 0x10
+    document::element padding{doc_view["flags"]};
+    REQUIRE(padding);
+    REQUIRE(padding.type() == type::k_int32);
+    REQUIRE(padding.get_int32() == 0x10);
+
+    // storageEngine should not be set
+    document::element engine{doc_view["storageEngine"]};
+    REQUIRE(!engine);
+
+    // validator and validationLevel should be set, but not validationAction
+    document::element validator{doc_view["validator"]};
+    REQUIRE(validator);
+    REQUIRE(validator.type() == type::k_document);
+    REQUIRE(validator.get_document().value == rule);
+
+    document::element validationLevel{doc_view["validationLevel"]};
+    REQUIRE(validationLevel);
+    REQUIRE(validationLevel.type() == type::k_utf8);
+    REQUIRE(validationLevel.get_utf8().value.to_string() == "strict");
+
+    document::element validationAction{doc_view["validationAction"]};
+    REQUIRE(!validationAction);
 }
