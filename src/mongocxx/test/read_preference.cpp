@@ -50,7 +50,7 @@ TEST_CASE("Read preference", "[read_preference]") {
     SECTION("Can have max_staleness changed") {
         mongocxx::read_preference::staleness_seconds max_staleness{60};
         rp.max_staleness(max_staleness);
-        REQUIRE(rp.max_staleness() == max_staleness);
+        REQUIRE(rp.max_staleness().value() == max_staleness);
     }
 
     SECTION("Rejects invalid max_staleness") {
