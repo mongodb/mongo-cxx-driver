@@ -354,6 +354,10 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::write_exception if the operation fails.
     ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the collection
+    ///   level set write concern - collection::write_concern(wc).
+    ///
     stdx::optional<bsoncxx::document::value> find_one_and_delete(
         bsoncxx::document::view_or_value filter,
         const options::find_one_and_delete& options = options::find_one_and_delete());
