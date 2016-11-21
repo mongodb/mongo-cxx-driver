@@ -24,10 +24,15 @@ The mongocxx driver builds on top of the MongoDB C driver.
 
 * For mongocxx-3.0.x, we recommend the latest stable version of libmongoc
   (currently version 1.4.2 at the time this page was written).
-* For mongocxx-3.1.0-beta0 or later, libmongoc 1.5.0-rc3 or later is
+* For mongocxx-3.1.0-beta0 or later, libmongoc 1.5.0-rc6 or later is
   required.
 
-Follow the instructions at
+Unless you know that your package manager offers a high-enough version, you
+will need to download and build from the source code. Get a tarball from
+the [C Driver releases](https://github.com/mongodb/mongo-c-driver/releases)
+page.
+
+Follow the instructions for building from a tarball at
 [Installing libmongoc](http://mongoc.org/libmongoc/current/installing.html).
 
 If you need static libraries, be sure to use the `--enable-static`
