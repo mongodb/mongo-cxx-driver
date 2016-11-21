@@ -1201,11 +1201,16 @@ Update 1 or later&lt;/li&gt;
 &lt;ul&gt;
 &lt;li&gt;For mongocxx-3.0.x, we recommend the latest stable version of libmongoc
 (currently version 1.4.2 at the time this page was written).&lt;/li&gt;
-&lt;li&gt;For mongocxx-3.1.0-beta0 or later, libmongoc 1.5.0-rc3 or later is
+&lt;li&gt;For mongocxx-3.1.0-beta0 or later, libmongoc 1.5.0-rc6 or later is
 required.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Follow the instructions at
+&lt;p&gt;Unless you know that your package manager offers a high-enough version, you
+will need to download and build from the source code. Get a tarball from
+the &lt;a href=&#34;https://github.com/mongodb/mongo-c-driver/releases&#34;&gt;C Driver releases&lt;/a&gt;
+page.&lt;/p&gt;
+
+&lt;p&gt;Follow the instructions for building from a tarball at
 &lt;a href=&#34;http://mongoc.org/libmongoc/current/installing.html&#34;&gt;Installing libmongoc&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;If you need static libraries, be sure to use the &lt;code&gt;--enable-static&lt;/code&gt;
