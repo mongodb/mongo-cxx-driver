@@ -31,6 +31,24 @@ namespace options {
 class MONGOCXX_API create_collection {
    public:
     ///
+    /// Specify false to disable the automatic creation of an index on the _id field.
+    ///
+    /// @note For replica sets, all collections must have autoIndexId set to true.
+    ///
+    /// @param auto_index_id
+    ///   Whether or not this collection will automatically generate an index on _id.
+    ///
+    create_collection& auto_index_id(bool auto_index_id);
+
+    ///
+    /// Gets the current auto_index_id setting.
+    ///
+    /// @return
+    ///   Whether or not this collection will automatically generate an index on _id.
+    ///
+    const stdx::optional<bool>& auto_index_id() const;
+
+    ///
     /// To create a capped collection, specify true.
     ///
     /// @note If you specify true, you must also set a maximum size using the size() method.
@@ -51,66 +69,6 @@ class MONGOCXX_API create_collection {
     /// @see https://docs.mongodb.org/manual/reference/glossary/#term-capped-collection
     ///
     const stdx::optional<bool>& capped() const;
-
-    ///
-    /// Specify false to disable the automatic creation of an index on the _id field.
-    ///
-    /// @note For replica sets, all collections must have autoIndexId set to true.
-    ///
-    /// @param auto_index_id
-    ///   Whether or not this collection will automatically generate an index on _id.
-    ///
-    create_collection& auto_index_id(bool auto_index_id);
-
-    ///
-    /// Gets the current auto_index_id setting.
-    ///
-    /// @return
-    ///   Whether or not this collection will automatically generate an index on _id.
-    ///
-    const stdx::optional<bool>& auto_index_id() const;
-
-    ///
-    /// A maximum size, in bytes, for a capped collection.
-    ///
-    /// @note Once a capped collection reaches its maximum size, MongoDB removes older
-    ///   documents to make space for new documents.
-    ///
-    /// @note Size is required for capped collections and ignored for other collections.
-    ///
-    /// @param max_size
-    ///   Maximum size, in bytes, of this collection (if capped).
-    ///
-    create_collection& size(int max_size);
-
-    ///
-    /// Gets the current size setting, for a capped collection.
-    ///
-    /// @return
-    ///   Maximum size, in bytes, of this collection (if capped).
-    ///
-    const stdx::optional<int>& size() const;
-
-    ///
-    /// The maximum number of documents allowed in the capped collection.
-    ///
-    /// @note The size limit takes precedence over this limit. If a capped collection reaches
-    ///   the size limit before it reaches the maximum number of documents, MongoDB removes
-    ///   old documents.
-    ///
-    /// @param max_documents
-    ///   Maximum number of documents allowed in the collection (if capped).
-    ///
-    create_collection& max(int max_documents);
-
-    ///
-    /// Gets the current setting for the maximum number of documents allowed in the capped
-    /// collection.
-    ///
-    /// @return
-    ///   Maximum number of documents allowed in the collection (if capped).
-    ///
-    const stdx::optional<int>& max() const;
 
     ///
     /// Sets the default collation for this collection.
@@ -135,22 +93,25 @@ class MONGOCXX_API create_collection {
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 
     ///
-    /// Specify configuration to the storage on a per-collection basis.
+    /// The maximum number of documents allowed in the capped collection.
     ///
-    /// @note This option is currently only available with the WiredTiger storage engine.
+    /// @note The size limit takes precedence over this limit. If a capped collection reaches
+    ///   the size limit before it reaches the maximum number of documents, MongoDB removes
+    ///   old documents.
     ///
-    /// @param storage_engine_options
-    ///   Configuration options specific to the storage engine.
+    /// @param max_documents
+    ///   Maximum number of documents allowed in the collection (if capped).
     ///
-    create_collection& storage_engine(bsoncxx::document::view_or_value storage_engine_opts);
+    create_collection& max(int max_documents);
 
     ///
-    /// Gets the current storage engine configuration for this collection.
+    /// Gets the current setting for the maximum number of documents allowed in the capped
+    /// collection.
     ///
     /// @return
-    ///   Configuration options specific to the storage engine.
+    ///   Maximum number of documents allowed in the collection (if capped).
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& storage_engine() const;
+    const stdx::optional<int>& max() const;
 
     ///
     /// When true, disables the power of 2 sizes allocation for the collection.
@@ -171,6 +132,45 @@ class MONGOCXX_API create_collection {
     ///   When true, power of 2 sizing is disabled for this collection.
     ///
     const stdx::optional<bool>& no_padding() const;
+
+    ///
+    /// A maximum size, in bytes, for a capped collection.
+    ///
+    /// @note Once a capped collection reaches its maximum size, MongoDB removes older
+    ///   documents to make space for new documents.
+    ///
+    /// @note Size is required for capped collections and ignored for other collections.
+    ///
+    /// @param max_size
+    ///   Maximum size, in bytes, of this collection (if capped).
+    ///
+    create_collection& size(int max_size);
+
+    ///
+    /// Gets the current size setting, for a capped collection.
+    ///
+    /// @return
+    ///   Maximum size, in bytes, of this collection (if capped).
+    ///
+    const stdx::optional<int>& size() const;
+
+    ///
+    /// Specify configuration to the storage on a per-collection basis.
+    ///
+    /// @note This option is currently only available with the WiredTiger storage engine.
+    ///
+    /// @param storage_engine_options
+    ///   Configuration options specific to the storage engine.
+    ///
+    create_collection& storage_engine(bsoncxx::document::view_or_value storage_engine_opts);
+
+    ///
+    /// Gets the current storage engine configuration for this collection.
+    ///
+    /// @return
+    ///   Configuration options specific to the storage engine.
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& storage_engine() const;
 
     ///
     /// Specify validation criteria for this collection.
@@ -211,13 +211,13 @@ class MONGOCXX_API create_collection {
     MONGOCXX_INLINE operator bsoncxx::document::value() const;
 
    private:
-    stdx::optional<bool> _capped;
     stdx::optional<bool> _auto_index_id;
-    stdx::optional<int> _max_size;
-    stdx::optional<int> _max_documents;
+    stdx::optional<bool> _capped;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
-    stdx::optional<bsoncxx::document::view_or_value> _storage_engine_opts;
+    stdx::optional<int> _max_documents;
+    stdx::optional<int> _max_size;
     stdx::optional<bool> _no_padding;
+    stdx::optional<bsoncxx::document::view_or_value> _storage_engine_opts;
     stdx::optional<class validation_criteria> _validation;
 };
 
