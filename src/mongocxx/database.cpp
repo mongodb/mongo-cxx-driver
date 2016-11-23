@@ -115,32 +115,32 @@ class collection database::create_collection(bsoncxx::string::view_or_value name
                                              const options::create_collection& options) {
     document options_builder{};
 
-    if (options.capped()) {
-        options_builder << "capped" << *options.capped();
-    }
-
     if (options.auto_index_id()) {
         options_builder << "autoIndexId" << *options.auto_index_id();
     }
 
-    if (options.size()) {
-        options_builder << "size" << *options.size();
-    }
-
-    if (options.max()) {
-        options_builder << "max" << *options.max();
+    if (options.capped()) {
+        options_builder << "capped" << *options.capped();
     }
 
     if (options.collation()) {
         options_builder << "collation" << *options.collation();
     }
 
-    if (options.storage_engine()) {
-        options_builder << "storageEngine" << *options.storage_engine();
+    if (options.max()) {
+        options_builder << "max" << *options.max();
     }
 
     if (options.no_padding()) {
         options_builder << "flags" << (*options.no_padding() ? 0x10 : 0x00);
+    }
+
+    if (options.size()) {
+        options_builder << "size" << *options.size();
+    }
+
+    if (options.storage_engine()) {
+        options_builder << "storageEngine" << *options.storage_engine();
     }
 
     if (options.validation_criteria()) {
