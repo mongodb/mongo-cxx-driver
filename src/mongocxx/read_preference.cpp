@@ -14,8 +14,6 @@
 
 #include <mongocxx/read_preference.hpp>
 
-#include <cmath>
-
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -79,23 +77,23 @@ stdx::optional<bsoncxx::document::view> read_preference::tags() const {
     return stdx::optional<bsoncxx::document::view>{};
 }
 
-void read_preference::max_staleness(read_preference::staleness_seconds max_staleness) {
+void read_preference::max_staleness(std::chrono::seconds max_staleness) {
     auto max_staleness_sec = max_staleness.count();
-    if (!std::isfinite(max_staleness_sec) || max_staleness_sec <= 0) {
+    if (max_staleness_sec <= 0) {
         throw logic_error{error_code::k_invalid_parameter};
     }
     libmongoc::read_prefs_set_max_staleness_seconds(_impl->read_preference_t, max_staleness_sec);
 }
 
-stdx::optional<read_preference::staleness_seconds> read_preference::max_staleness() const {
-    double staleness = libmongoc::read_prefs_get_max_staleness_seconds(_impl->read_preference_t);
+stdx::optional<std::chrono::seconds> read_preference::max_staleness() const {
+    auto staleness = libmongoc::read_prefs_get_max_staleness_seconds(_impl->read_preference_t);
 
-    // libmongoc signals "disabled" with the value -1.0.
-    if (staleness == -1.0) {
+    // libmongoc signals "disabled" with the value -1.
+    if (staleness == -1) {
         return stdx::nullopt;
     }
 
-    return read_preference::staleness_seconds{staleness};
+    return std::chrono::seconds{staleness};
 }
 
 bool operator==(const read_preference& lhs, const read_preference& rhs) {

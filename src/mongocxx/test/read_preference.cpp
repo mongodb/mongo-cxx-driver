@@ -48,20 +48,14 @@ TEST_CASE("Read preference", "[read_preference]") {
     }
 
     SECTION("Can have max_staleness changed") {
-        mongocxx::read_preference::staleness_seconds max_staleness{60};
+        std::chrono::seconds max_staleness{120};
         rp.max_staleness(max_staleness);
         REQUIRE(rp.max_staleness().value() == max_staleness);
     }
 
     SECTION("Rejects invalid max_staleness") {
-        REQUIRE_THROWS_AS(rp.max_staleness(mongocxx::read_preference::staleness_seconds{0}),
-                          logic_error);
-        REQUIRE_THROWS_AS(rp.max_staleness(mongocxx::read_preference::staleness_seconds{-0.0}),
-                          logic_error);
-        REQUIRE_THROWS_AS(rp.max_staleness(mongocxx::read_preference::staleness_seconds{-1.0}),
-                          logic_error);
-        REQUIRE_THROWS_AS(rp.max_staleness(mongocxx::read_preference::staleness_seconds{NAN}),
-                          logic_error);
+        REQUIRE_THROWS_AS(rp.max_staleness(std::chrono::seconds{0}), logic_error);
+        REQUIRE_THROWS_AS(rp.max_staleness(std::chrono::seconds{-1}), logic_error);
     }
 }
 
@@ -107,7 +101,7 @@ TEST_CASE("Read preference comparison works", "[read_preference]") {
     }
 
     SECTION("max_staleness is compared") {
-        read_preference::staleness_seconds max_staleness{10};
+        std::chrono::seconds max_staleness{120};
         rp_a.max_staleness(max_staleness);
         REQUIRE_FALSE(rp_a == rp_b);
         rp_b.max_staleness(max_staleness);
@@ -141,13 +135,12 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
         rp.tags(expected_tags.view());
     }
 
-    SECTION("max_staleness() calls mongoc_read_prefs_set_max_staleness_ms()") {
-        read_preference::staleness_seconds expected_max_staleness_sec{5};
+    SECTION("max_staleness() calls mongoc_read_prefs_set_max_staleness_seconds()") {
+        std::chrono::seconds expected_max_staleness_sec{150};
         read_prefs_set_max_staleness_seconds->interpose(
-            [&](mongoc_read_prefs_t*, double max_staleness_sec) {
+            [&](mongoc_read_prefs_t*, int64_t max_staleness_sec) {
                 called = true;
-                REQUIRE(read_preference::staleness_seconds{max_staleness_sec} ==
-                        expected_max_staleness_sec);
+                REQUIRE(std::chrono::seconds{max_staleness_sec} == expected_max_staleness_sec);
             });
         rp.max_staleness(expected_max_staleness_sec);
     }

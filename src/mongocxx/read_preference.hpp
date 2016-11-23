@@ -95,11 +95,6 @@ class MONGOCXX_API read_preference {
     };
 
     ///
-    /// Max staleness is expressed as floating-point seconds.
-    ///
-    using staleness_seconds = std::chrono::duration<double, std::chrono::seconds::period>;
-
-    ///
     /// Constructs a new read_preference.
     ///
     /// @param mode
@@ -183,10 +178,11 @@ class MONGOCXX_API read_preference {
     /// servers with an estimated lag greater than this value will be excluded
     /// from selection under modes that allow secondaries.
     ///
-    /// Max staleness must be set greater than the sum (in seconds) of the
-    /// client's heartbeatFrequencyMS and the server's idleWritePeriodMS.  By
-    /// default, that sum is 20 seconds.  If less, a exception will be thrown
-    /// when an operation is attempted.
+    /// Max staleness must be at least 90 seconds, and also at least
+    /// the sum (in seconds) of the client's heartbeatFrequencyMS and the
+    /// server's idle write period, which is 10 seconds.  For general use,
+    /// 90 seconds is the effective minimum.  If less, an exception will be
+    /// thrown when an operation is attempted.
     ///
     /// Max staleness may only be used with MongoDB version 3.4 or later.
     /// If used with an earlier version, an exception will be thrown when an
@@ -199,18 +195,18 @@ class MONGOCXX_API read_preference {
     ///     secondaries.
     ///
     /// @param max_staleness
-    ///    The new max staleness setting.  It must be positive and finite.
+    ///    The new max staleness setting.  It must be positive.
     ///
     /// @throws mongocxx::logic_error if the argument is invalid.
     ///
-    void max_staleness(staleness_seconds max_staleness);
+    void max_staleness(std::chrono::seconds max_staleness);
 
     ///
     /// Returns the current max staleness setting for this read_preference.
     ///
     /// @return The optionally current max staleness setting.
     ///
-    stdx::optional<staleness_seconds> max_staleness() const;
+    stdx::optional<std::chrono::seconds> max_staleness() const;
 
    private:
     friend client;
