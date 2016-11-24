@@ -990,89 +990,52 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
     }
 
-    SECTION("aggregate some things", "[collection]") {
-        document b1;
-        b1 << "x" << 1;
+    SECTION("aggregation", "[collection]") {
+        pipeline pipeline;
 
-        document b2;
-        b2 << "x" << 2;
+        auto get_results = [](cursor&& cursor) {
+            std::vector<bsoncxx::document::value> results;
+            std::transform(cursor.begin(), cursor.end(), std::back_inserter(results),
+                           [](bsoncxx::document::view v) { return bsoncxx::document::value{v}; });
+            return results;
+        };
 
-        coll.insert_one(b1.view());
-        coll.insert_one(b2.view());
-        coll.insert_one(b2.view());
+        SECTION("lookup") {
+            coll.insert_one(document{} << "x" << 0 << finalize);
+            coll.insert_one(document{} << "x" << 1 << "y" << 0 << finalize);
 
-        pipeline p;
-        p.match(b1.view());
+            pipeline.lookup(document{} << "from" << coll.name() << "localField"
+                                       << "x"
+                                       << "foreignField"
+                                       << "y"
+                                       << "as"
+                                       << "z" << finalize);
+            // Add a sort to the pipeline, so below tests can make assumptions about result order.
+            pipeline.sort(document{} << "x" << 1 << finalize);
+            auto cursor = coll.aggregate(pipeline);
 
-        auto results = coll.aggregate(p);
-    }
+            if (test_util::get_max_wire_version(mongodb_client) >= 4) {
+                // The server supports lookup().
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.size() == 2);
+                REQUIRE(!results[0].view()["z"].get_array().value.empty());
+                REQUIRE(results[1].view()["z"].get_array().value.empty());
+            } else {
+                // The server does not support lookup().
+                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+            }
+        }
 
-    SECTION("aggregation $lookup operator", "[collection]") {
-        auto people_coll_name = "people_on_the_block";
-        auto people_coll = db[people_coll_name];
-        auto houses_coll_name = "houses_on_the_block";
-        auto houses_coll = db[houses_coll_name];
-        houses_coll.drop();
-        people_coll.drop();
+        SECTION("match") {
+            coll.insert_one(document{} << "x" << 1 << finalize);
+            coll.insert_one(document{} << "x" << 1 << finalize);
+            coll.insert_one(document{} << "x" << 2 << finalize);
 
-        // populate one collection with names
-        document name1;
-        name1 << "firstname"
-              << "Tasha"
-              << "lastname"
-              << "Brown";
-        document name2;
-        name2 << "firstname"
-              << "Logan"
-              << "lastname"
-              << "Brown";
-        document name3;
-        name3 << "firstname"
-              << "Tasha"
-              << "lastname"
-              << "Johnson";
+            pipeline.match(document{} << "x" << 1 << finalize);
+            auto cursor = coll.aggregate(pipeline);
 
-        people_coll.insert_one(name1.view());
-        people_coll.insert_one(name2.view());
-        people_coll.insert_one(name3.view());
-
-        // populate the other with addresses
-        document address1;
-        address1 << "household"
-                 << "Brown"
-                 << "address"
-                 << "23 Prince St";
-        document address2;
-        address2 << "household"
-                 << "Johnson"
-                 << "address"
-                 << "15 Prince St";
-
-        houses_coll.insert_one(address1.view());
-        houses_coll.insert_one(address2.view());
-
-        // perform a $lookup
-        document lookup_doc;
-        lookup_doc << "from" << people_coll_name << "localField"
-                   << "household"
-                   << "foreignField"
-                   << "lastname"
-                   << "as"
-                   << "residents";
-
-        pipeline stages;
-        stages.lookup(lookup_doc.view());
-
-        auto results = houses_coll.aggregate(stages);
-
-        if (test_util::get_max_wire_version(mongodb_client) >= 4) {
-            // The server supports $lookup.
-            //
-            // Should have two result documents, one per household.
-            REQUIRE(std::distance(results.begin(), results.end()) == 2);
-        } else {
-            // The server does not support $lookup.
-            REQUIRE_THROWS_AS(std::distance(results.begin(), results.end()), operation_exception);
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 2);
         }
     }
 
