@@ -1000,6 +1000,188 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             return results;
         };
 
+        SECTION("add_fields") {
+            coll.insert_one({});
+
+            pipeline.add_fields(document{} << "x" << 1 << finalize);
+            auto cursor = coll.aggregate(pipeline);
+
+            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
+                // The server supports add_fields().
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.size() == 1);
+                REQUIRE(results[0].view()["x"].get_int32() == 1);
+            } else {
+                // The server does not support add_fields().
+                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+            }
+        }
+
+        SECTION("bucket") {
+            coll.insert_one(document{} << "x" << 1 << finalize);
+            coll.insert_one(document{} << "x" << 3 << finalize);
+            coll.insert_one(document{} << "x" << 5 << finalize);
+
+            pipeline.bucket(document{} << "groupBy"
+                                       << "$x"
+                                       << "boundaries" << open_array << 0 << 2 << 6 << close_array
+                                       << finalize);
+            auto cursor = coll.aggregate(pipeline);
+
+            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
+                // The server supports bucket().
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.size() == 2);
+
+                REQUIRE(results[0].view()["_id"].get_int32() == 0);
+                REQUIRE(results[0].view()["count"].get_int32() == 1);
+
+                REQUIRE(results[1].view()["_id"].get_int32() == 2);
+                REQUIRE(results[1].view()["count"].get_int32() == 2);
+            } else {
+                // The server does not support bucket().
+                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+            }
+        }
+
+        SECTION("bucket_auto") {
+            coll.insert_one(document{} << "x" << 1 << finalize);
+            coll.insert_one(document{} << "x" << 2 << finalize);
+            coll.insert_one(document{} << "x" << 3 << finalize);
+
+            pipeline.bucket_auto(document{} << "groupBy"
+                                            << "$x"
+                                            << "buckets" << 2 << finalize);
+            auto cursor = coll.aggregate(pipeline);
+
+            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
+                // The server supports bucket_auto().
+
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.size() == 2);
+                // We check that the "count" field exists here, but we don't assert the exact count,
+                // since the server doesn't guarantee what the exact boundaries (and thus the exact
+                // counts) will be.
+                REQUIRE(results[0].view()["count"]);
+                REQUIRE(results[1].view()["count"]);
+            } else {
+                // The server does not support bucket_auto().
+                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+            }
+        }
+
+        SECTION("coll_stats") {
+            coll.insert_one(document{} << "x" << 1 << finalize);
+
+            pipeline.coll_stats(document{} << "latencyStats" << open_document << close_document
+                                           << finalize);
+            auto cursor = coll.aggregate(pipeline);
+
+            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
+                // The server supports coll_stats().
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.size() == 1);
+                REQUIRE(results[0].view()["ns"]);
+                REQUIRE(results[0].view()["latencyStats"]);
+            } else {
+                // The server does not support coll_stats().
+                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+            }
+        }
+
+        SECTION("count") {
+            coll.insert_one({});
+            coll.insert_one({});
+            coll.insert_one({});
+
+            pipeline.count("foo");
+            auto cursor = coll.aggregate(pipeline);
+
+            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
+                // The server supports count().
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.size() == 1);
+                REQUIRE(results[0].view()["foo"].get_int32() == 3);
+            } else {
+                // The server does not support count().
+                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+            }
+        }
+
+        SECTION("facet") {
+            coll.insert_one(document{} << "x" << 1 << finalize);
+            coll.insert_one(document{} << "x" << 2 << finalize);
+            coll.insert_one(document{} << "x" << 3 << finalize);
+
+            pipeline.facet(document{} << "foo" << open_array << open_document << "$limit" << 2
+                                      << close_document << close_array << finalize);
+            auto cursor = coll.aggregate(pipeline);
+
+            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
+                // The server supports facet().
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.size() == 1);
+                auto foo_array = results[0].view()["foo"].get_array().value;
+                REQUIRE(std::distance(foo_array.begin(), foo_array.end()) == 2);
+            } else {
+                // The server does not support facet().
+                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+            }
+        }
+
+        SECTION("geo_near") {
+            coll.insert_one(document{} << "_id" << 0 << "x" << open_array << 0 << 0 << close_array
+                                       << finalize);
+            coll.insert_one(document{} << "_id" << 1 << "x" << open_array << 1 << 1 << close_array
+                                       << finalize);
+            coll.create_index(document{} << "x"
+                                         << "2d" << finalize);
+
+            pipeline.geo_near(document{} << "near" << open_array << 0 << 0 << close_array
+                                         << "distanceField"
+                                         << "d" << finalize);
+            auto cursor = coll.aggregate(pipeline);
+
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 2);
+            REQUIRE(results[0].view()["d"]);
+            REQUIRE(results[0].view()["_id"].get_int32() == 0);
+            REQUIRE(results[1].view()["d"]);
+            REQUIRE(results[1].view()["_id"].get_int32() == 1);
+        }
+
+        SECTION("graph_lookup") {
+            coll.insert_one(document{} << "x"
+                                       << "bar" << finalize);
+            coll.insert_one(document{} << "x"
+                                       << "foo"
+                                       << "y"
+                                       << "bar" << finalize);
+
+            pipeline.graph_lookup(document{} << "from" << coll.name() << "startWith"
+                                             << "$y"
+                                             << "connectFromField"
+                                             << "y"
+                                             << "connectToField"
+                                             << "x"
+                                             << "as"
+                                             << "z" << finalize);
+            // Add a sort to the pipeline, so below tests can make assumptions about result order.
+            pipeline.sort(document{} << "x" << 1 << finalize);
+            auto cursor = coll.aggregate(pipeline);
+
+            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
+                // The server supports graph_lookup().
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.size() == 2);
+                REQUIRE(results[0].view()["z"].get_array().value.empty());
+                REQUIRE(!results[1].view()["z"].get_array().value.empty());
+            } else {
+                // The server does not support graph_lookup().
+                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+            }
+        }
+
         SECTION("group") {
             coll.insert_one(document{} << "x" << 1 << finalize);
             coll.insert_one(document{} << "x" << 1 << finalize);
@@ -1015,6 +1197,24 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE(results.size() == 2);
             REQUIRE(results[0].view()["_id"].get_int32() == 1);
             REQUIRE(results[1].view()["_id"].get_int32() == 2);
+        }
+
+        SECTION("index_stats") {
+            coll.create_index(document{} << "a" << 1 << finalize);
+            coll.create_index(document{} << "b" << 1 << finalize);
+            coll.create_index(document{} << "c" << 1 << finalize);
+
+            pipeline.index_stats();
+            auto cursor = coll.aggregate(pipeline);
+
+            if (test_util::get_max_wire_version(mongodb_client) >= 4) {
+                // The server supports index_stats().
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.size() == 4);
+            } else {
+                // The server does not support index_stats().
+                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+            }
         }
 
         SECTION("limit") {
@@ -1129,6 +1329,25 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             }
         }
 
+        SECTION("replace_root") {
+            coll.insert_one(document{} << "x" << open_document << "y" << 1 << close_document
+                                       << finalize);
+
+            pipeline.replace_root(document{} << "newRoot"
+                                             << "$x" << finalize);
+            auto cursor = coll.aggregate(pipeline);
+
+            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
+                // The server supports replace_root().
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.size() == 1);
+                REQUIRE(results[0].view()["y"]);
+            } else {
+                // The server does not support replace_root().
+                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+            }
+        }
+
         SECTION("sample") {
             coll.insert_one({});
             coll.insert_one({});
@@ -1179,15 +1398,71 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE(results[2].view()["x"].get_int32() == 1);
         }
 
+        SECTION("sort_by_count") {
+            coll.insert_one(document{} << "x" << 1 << finalize);
+            coll.insert_one(document{} << "x" << 2 << finalize);
+            coll.insert_one(document{} << "x" << 2 << finalize);
+
+            SECTION("with string") {
+                pipeline.sort_by_count("$x");
+                auto cursor = coll.aggregate(pipeline);
+
+                if (test_util::get_max_wire_version(mongodb_client) >= 5) {
+                    // The server supports sort_by_count().
+                    auto results = get_results(std::move(cursor));
+                    REQUIRE(results.size() == 2);
+                    REQUIRE(results[0].view()["_id"].get_int32() == 2);
+                    REQUIRE(results[1].view()["_id"].get_int32() == 1);
+                } else {
+                    // The server does not support sort_by_count().
+                    REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+                }
+            }
+
+            SECTION("with document") {
+                pipeline.sort_by_count(document{} << "$mod" << open_array << "$x" << 2
+                                                  << close_array << finalize);
+                auto cursor = coll.aggregate(pipeline);
+
+                if (test_util::get_max_wire_version(mongodb_client) >= 5) {
+                    // The server supports sort_by_count().
+                    auto results = get_results(std::move(cursor));
+                    REQUIRE(results.size() == 2);
+                    REQUIRE(results[0].view()["_id"].get_int32() == 0);
+                    REQUIRE(results[1].view()["_id"].get_int32() == 1);
+                } else {
+                    // The server does not support sort_by_count().
+                    REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+                }
+            }
+        }
+
         SECTION("unwind") {
             coll.insert_one(document{} << "x" << open_array << 1 << 2 << 3 << 4 << 5 << close_array
                                        << finalize);
 
-            pipeline.unwind("$x");
-            auto cursor = coll.aggregate(pipeline);
+            SECTION("with string") {
+                pipeline.unwind("$x");
+                auto cursor = coll.aggregate(pipeline);
 
-            auto results = get_results(std::move(cursor));
-            REQUIRE(results.size() == 5);
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.size() == 5);
+            }
+
+            SECTION("with document") {
+                pipeline.unwind(document{} << "path"
+                                           << "$x" << finalize);
+                auto cursor = coll.aggregate(pipeline);
+
+                if (test_util::get_max_wire_version(mongodb_client) >= 4) {
+                    // The server supports unwind() with a document.
+                    auto results = get_results(std::move(cursor));
+                    REQUIRE(results.size() == 5);
+                } else {
+                    // The server does not support unwind() with a document.
+                    REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+                }
+            }
         }
     }
 

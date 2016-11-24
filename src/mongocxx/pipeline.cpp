@@ -32,8 +32,53 @@ pipeline::pipeline(pipeline&&) noexcept = default;
 pipeline& pipeline::operator=(pipeline&&) noexcept = default;
 pipeline::~pipeline() = default;
 
+pipeline& pipeline::add_fields(bsoncxx::document::view_or_value fields_to_add) {
+    _impl->sink() << open_document << "$addFields" << fields_to_add << close_document;
+    return *this;
+}
+
+pipeline& pipeline::bucket(bsoncxx::document::view_or_value bucket_args) {
+    _impl->sink() << open_document << "$bucket" << bucket_args << close_document;
+    return *this;
+}
+
+pipeline& pipeline::bucket_auto(bsoncxx::document::view_or_value bucket_auto_args) {
+    _impl->sink() << open_document << "$bucketAuto" << bucket_auto_args << close_document;
+    return *this;
+}
+
+pipeline& pipeline::coll_stats(bsoncxx::document::view_or_value coll_stats_args) {
+    _impl->sink() << open_document << "$collStats" << coll_stats_args << close_document;
+    return *this;
+}
+
+pipeline& pipeline::count(std::string field) {
+    _impl->sink() << open_document << "$count" << field << close_document;
+    return *this;
+}
+
+pipeline& pipeline::facet(bsoncxx::document::view_or_value facet_args) {
+    _impl->sink() << open_document << "$facet" << facet_args << close_document;
+    return *this;
+}
+
+pipeline& pipeline::geo_near(bsoncxx::document::view_or_value geo_near_args) {
+    _impl->sink() << open_document << "$geoNear" << geo_near_args << close_document;
+    return *this;
+}
+
+pipeline& pipeline::graph_lookup(bsoncxx::document::view_or_value graph_lookup_args) {
+    _impl->sink() << open_document << "$graphLookup" << graph_lookup_args << close_document;
+    return *this;
+}
+
 pipeline& pipeline::group(bsoncxx::document::view_or_value group_args) {
     _impl->sink() << open_document << "$group" << group_args << close_document;
+    return *this;
+}
+
+pipeline& pipeline::index_stats() {
+    _impl->sink() << open_document << "$indexStats" << bsoncxx::document::view{} << close_document;
     return *this;
 }
 
@@ -67,6 +112,11 @@ pipeline& pipeline::redact(bsoncxx::document::view_or_value restrictions) {
     return *this;
 }
 
+pipeline& pipeline::replace_root(bsoncxx::document::view_or_value replace_root_args) {
+    _impl->sink() << open_document << "$replaceRoot" << replace_root_args << close_document;
+    return *this;
+}
+
 pipeline& pipeline::sample(std::int32_t size) {
     _impl->sink() << open_document << "$sample" << open_document << "size" << size << close_document
                   << close_document;
@@ -80,6 +130,21 @@ pipeline& pipeline::skip(std::int32_t docs_to_skip) {
 
 pipeline& pipeline::sort(bsoncxx::document::view_or_value ordering) {
     _impl->sink() << open_document << "$sort" << ordering << close_document;
+    return *this;
+}
+
+pipeline& pipeline::sort_by_count(bsoncxx::document::view_or_value field_expression) {
+    _impl->sink() << open_document << "$sortByCount" << field_expression << close_document;
+    return *this;
+}
+
+pipeline& pipeline::sort_by_count(std::string field_expression) {
+    _impl->sink() << open_document << "$sortByCount" << field_expression << close_document;
+    return *this;
+}
+
+pipeline& pipeline::unwind(bsoncxx::document::view_or_value unwind_args) {
+    _impl->sink() << open_document << "$unwind" << unwind_args << close_document;
     return *this;
 }
 

@@ -57,6 +57,99 @@ class MONGOCXX_API pipeline {
     ~pipeline();
 
     ///
+    /// Adds new fields to documents.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/addFields/
+    ///
+    /// @param fields_to_add
+    ///   A document specifying the fields to add.  For each field specified in this parameter, a
+    ///   corresponding field will be added to the documents, where the value of the added field is
+    ///   the result of evaluating the specified expression.
+    ///
+    pipeline& add_fields(bsoncxx::document::view_or_value fields_to_add);
+
+    ///
+    /// Categorizes documents into groups, called buckets, based on a specified expression and
+    /// bucket boundaries.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/bucket/
+    ///
+    /// @param bucket_args
+    ///   The specification for the bucket operation.  The required fields `groupBy` and
+    ///   `boundaries` must be included.
+    ///
+    pipeline& bucket(bsoncxx::document::view_or_value bucket_args);
+
+    ///
+    /// Categorizes documents into a specific number of groups, called buckets, based on a
+    /// specified expression.  Bucket boundaries are automatically determined in an attempt to
+    /// evenly distribute the documents into the specified number of buckets.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/bucketAuto/
+    ///
+    /// @param bucket_auto_args
+    ///   The specification for the bucket_auto operation.  This required fields `groupBy` and
+    ///   `buckets` must be included.
+    ///
+    pipeline& bucket_auto(bsoncxx::document::view_or_value bucket_auto_args);
+
+    ///
+    /// Returns statistics regarding a collection or view.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/collStats/
+    ///
+    /// @param coll_stats_args
+    ///   The specification for the coll_stats operation.  See link above for a list of valid
+    ///   options.
+    ///
+    pipeline& coll_stats(
+        bsoncxx::document::view_or_value coll_stats_args = bsoncxx::document::view{});
+
+    ///
+    /// Returns a document containing a count of the number of documents input to the stage.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/count/
+    ///
+    /// @param field
+    ///   Name of the field for the count to be written to.
+    ///
+    pipeline& count(std::string field);
+
+    ///
+    /// Processes multiple aggregation pipelines within a single stage on the same set of input
+    /// documents.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/facet/
+    ///
+    /// @param facet_args
+    ///   The specification for the facet operation.  Each field in the the provided document should
+    ///   specify an aggregation pipeline, as an array.
+    ///
+    pipeline& facet(bsoncxx::document::view_or_value facet_args);
+
+    ///
+    /// Outputs documents in order of nearest to farthest from a specified point.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/geoNear/
+    ///
+    /// @param geo_near_args
+    ///   The specification for the geo_near operation.  The required fields `near` and
+    ///   `distanceField` must be included.
+    ///
+    pipeline& geo_near(bsoncxx::document::view_or_value geo_near_args);
+
+    ///
+    /// Performs a recursive search on a collection.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/graphLookup/
+    ///
+    /// @param graph_lookup_args
+    ///   The specification for the graph_lookup operation.  The required fields `from`,
+    ///   `connectFromField`, `startWith`, `connectToField`, and `as` must be included.
+    ///
+    pipeline& graph_lookup(bsoncxx::document::view_or_value graph_lookup_args);
+
+    ///
     /// Groups documents by some specified expression and outputs to the next stage a
     /// document for each distinct grouping. The output documents contain an `_id` field
     /// which contains the the distinct key for that group. The output documents can also
@@ -71,6 +164,13 @@ class MONGOCXX_API pipeline {
     ///   The specification for the group operation.  The required field `_id` must be included.
     ///
     pipeline& group(bsoncxx::document::view_or_value group_args);
+
+    ///
+    /// Returns statistics regarding the use of each index for the collection.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/indexStats/
+    ///
+    pipeline& index_stats();
 
     ///
     /// Limits the number of documents passed to the next stage in the pipeline.
@@ -139,6 +239,17 @@ class MONGOCXX_API pipeline {
     pipeline& redact(bsoncxx::document::view_or_value restrictions);
 
     ///
+    /// Promotes a specified document to the top level and replaces all other fields.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/replaceRoot/
+    ///
+    /// @param replace_root_args
+    ///   The specification for the replace_root operation.  The required field `newRoot` must be
+    ///   included.
+    ///
+    pipeline& replace_root(bsoncxx::document::view_or_value replace_root_args);
+
+    ///
     /// Randomly selects the specified number of documents that pass into the stage and passes the
     /// remaining documents to the next stage in the pipeline.
     ///
@@ -171,6 +282,53 @@ class MONGOCXX_API pipeline {
     pipeline& sort(bsoncxx::document::view_or_value ordering);
 
     ///
+    /// Groups incoming documents based on the value of a specified expression, then computes the
+    /// count of documents in each distinct group.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/sortByCount/
+    ///
+    /// @param field_expression
+    ///   The expression to group by, as an object.  The expression can not evaluate to an object.
+    ///
+    /// @note
+    ///   This overload of sort_by_count() is intended to be used when the desired sort is over a
+    ///   grouping of the result of a complex expression computed from the input documents.
+    ///
+    pipeline& sort_by_count(bsoncxx::document::view_or_value field_expression);
+
+    ///
+    /// Groups incoming documents based on the value of a specified expression, then computes the
+    /// count of documents in each distinct group.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/sortByCount/
+    ///
+    /// @param field_expression
+    ///   The expression to group by, as a string.  To specify a field path, prefix the field path
+    ///   with a dollar sign (`$`).
+    ///
+    /// @note
+    ///   This overload of sort_by_count() is intended to be used when the desired sort is over a
+    ///   grouping of the value of a particular element in the input documents.
+    ///
+    pipeline& sort_by_count(std::string field_expression);
+
+    ///
+    /// Deconstructs an array field from the input documents to output a document for each element.
+    /// Each output document is an input document with the value of its array field replaced by
+    /// an element from the unwound array.
+    ///
+    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/unwind/
+    ///
+    /// @param unwind_args
+    ///   The specification for the unwind operation.  The required field @path must be included.
+    ///
+    /// @note
+    ///   This overload of unwind() is intended to be used when additional options other than the
+    ///   field name need to be specified.
+    ///
+    pipeline& unwind(bsoncxx::document::view_or_value unwind_args);
+
+    ///
     /// Deconstructs an array field from the input documents to output a document for each element.
     /// Each output document is an input document with the value of its array field replaced by
     /// an element from the unwound array.
@@ -179,6 +337,10 @@ class MONGOCXX_API pipeline {
     ///
     /// @param field_name
     ///   The name of the field to unwind.
+    ///
+    /// @note
+    ///   This overload of unwind() is intended to be used when no options other than the field name
+    ///   need to be specified.
     ///
     pipeline& unwind(std::string field_name);
 
