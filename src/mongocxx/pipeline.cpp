@@ -24,7 +24,6 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 using namespace bsoncxx::builder::stream;
-using namespace bsoncxx::types;
 
 pipeline::pipeline() : _impl(stdx::make_unique<impl>()) {
 }
@@ -33,8 +32,8 @@ pipeline::pipeline(pipeline&&) noexcept = default;
 pipeline& pipeline::operator=(pipeline&&) noexcept = default;
 pipeline::~pipeline() = default;
 
-pipeline& pipeline::group(bsoncxx::document::view_or_value group) {
-    _impl->sink() << open_document << "$group" << b_document{std::move(group)} << close_document;
+pipeline& pipeline::group(bsoncxx::document::view_or_value group_args) {
+    _impl->sink() << open_document << "$group" << group_args << close_document;
     return *this;
 }
 
@@ -43,13 +42,13 @@ pipeline& pipeline::limit(std::int32_t limit) {
     return *this;
 }
 
-pipeline& pipeline::lookup(bsoncxx::document::view_or_value lookup) {
-    _impl->sink() << open_document << "$lookup" << b_document{std::move(lookup)} << close_document;
+pipeline& pipeline::lookup(bsoncxx::document::view_or_value lookup_args) {
+    _impl->sink() << open_document << "$lookup" << lookup_args << close_document;
     return *this;
 }
 
-pipeline& pipeline::match(bsoncxx::document::view_or_value criteria) {
-    _impl->sink() << open_document << "$match" << b_document{std::move(criteria)} << close_document;
+pipeline& pipeline::match(bsoncxx::document::view_or_value filter) {
+    _impl->sink() << open_document << "$match" << filter << close_document;
     return *this;
 }
 
@@ -59,14 +58,12 @@ pipeline& pipeline::out(std::string collection_name) {
 }
 
 pipeline& pipeline::project(bsoncxx::document::view_or_value projection) {
-    _impl->sink() << open_document << "$project" << b_document{std::move(projection)}
-                  << close_document;
+    _impl->sink() << open_document << "$project" << projection << close_document;
     return *this;
 }
 
 pipeline& pipeline::redact(bsoncxx::document::view_or_value restrictions) {
-    _impl->sink() << open_document << "$redact" << b_document{std::move(restrictions)}
-                  << close_document;
+    _impl->sink() << open_document << "$redact" << restrictions << close_document;
     return *this;
 }
 
@@ -76,13 +73,13 @@ pipeline& pipeline::sample(std::int32_t size) {
     return *this;
 }
 
-pipeline& pipeline::skip(std::int32_t skip) {
-    _impl->sink() << open_document << "$skip" << skip << close_document;
+pipeline& pipeline::skip(std::int32_t docs_to_skip) {
+    _impl->sink() << open_document << "$skip" << docs_to_skip << close_document;
     return *this;
 }
 
-pipeline& pipeline::sort(bsoncxx::document::view_or_value sort) {
-    _impl->sink() << open_document << "$sort" << b_document{std::move(sort)} << close_document;
+pipeline& pipeline::sort(bsoncxx::document::view_or_value ordering) {
+    _impl->sink() << open_document << "$sort" << ordering << close_document;
     return *this;
 }
 
