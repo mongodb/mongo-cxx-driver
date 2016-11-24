@@ -1000,6 +1000,39 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             return results;
         };
 
+        SECTION("group") {
+            coll.insert_one(document{} << "x" << 1 << finalize);
+            coll.insert_one(document{} << "x" << 1 << finalize);
+            coll.insert_one(document{} << "x" << 2 << finalize);
+
+            pipeline.group(document{} << "_id"
+                                      << "$x" << finalize);
+            // Add a sort to the pipeline, so below tests can make assumptions about result order.
+            pipeline.sort(document{} << "_id" << 1 << finalize);
+            auto cursor = coll.aggregate(pipeline);
+
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 2);
+            REQUIRE(results[0].view()["_id"].get_int32() == 1);
+            REQUIRE(results[1].view()["_id"].get_int32() == 2);
+        }
+
+        SECTION("limit") {
+            coll.insert_one(document{} << "x" << 1 << finalize);
+            coll.insert_one(document{} << "x" << 2 << finalize);
+            coll.insert_one(document{} << "x" << 3 << finalize);
+
+            // Add a sort to the pipeline, so below tests can make assumptions about result order.
+            pipeline.sort(document{} << "x" << 1 << finalize);
+            pipeline.limit(2);
+            auto cursor = coll.aggregate(pipeline);
+
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 2);
+            REQUIRE(results[0].view()["x"].get_int32() == 1);
+            REQUIRE(results[1].view()["x"].get_int32() == 2);
+        }
+
         SECTION("lookup") {
             coll.insert_one(document{} << "x" << 0 << finalize);
             coll.insert_one(document{} << "x" << 1 << "y" << 0 << finalize);
@@ -1036,6 +1069,125 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             auto results = get_results(std::move(cursor));
             REQUIRE(results.size() == 2);
+        }
+
+        SECTION("out") {
+            coll.insert_one(document{} << "x" << 1 << "y" << 1 << finalize);
+
+            pipeline.project(document{} << "x" << 1 << finalize);
+            pipeline.out(coll.name().to_string());
+            auto cursor = coll.aggregate(pipeline);
+
+            if (test_util::get_max_wire_version(mongodb_client) >= 1) {
+                // The server supports out().
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.empty());
+
+                auto collection_contents = get_results(coll.find({}));
+                REQUIRE(collection_contents.size() == 1);
+                REQUIRE(collection_contents[0].view()["x"].get_int32() == 1);
+                REQUIRE(!collection_contents[0].view()["y"]);
+            } else {
+                // The server does not support out().
+                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+            }
+        }
+
+        SECTION("project") {
+            coll.insert_one(document{} << "x" << 1 << "y" << 1 << finalize);
+
+            pipeline.project(document{} << "x" << 1 << finalize);
+            auto cursor = coll.aggregate(pipeline);
+
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 1);
+            REQUIRE(results[0].view()["x"].get_int32() == 1);
+            REQUIRE(!results[0].view()["y"]);
+        }
+
+        SECTION("redact") {
+            coll.insert_one(document{} << "x" << open_document << "secret" << 1 << close_document
+                                       << "y" << 1 << finalize);
+
+            pipeline.redact(document{} << "$cond" << open_document << "if" << open_document << "$eq"
+                                       << open_array << "$secret" << 1 << close_array
+                                       << close_document << "then"
+                                       << "$$PRUNE"
+                                       << "else"
+                                       << "$$DESCEND" << close_document << finalize);
+            auto cursor = coll.aggregate(pipeline);
+
+            if (test_util::get_max_wire_version(mongodb_client) >= 1) {
+                // The server supports redact().
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.size() == 1);
+                REQUIRE(!results[0].view()["x"]);
+                REQUIRE(results[0].view()["y"].get_int32() == 1);
+            } else {
+                // The server does not support redact().
+                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+            }
+        }
+
+        SECTION("sample") {
+            coll.insert_one({});
+            coll.insert_one({});
+            coll.insert_one({});
+            coll.insert_one({});
+
+            pipeline.sample(3);
+            auto cursor = coll.aggregate(pipeline);
+
+            if (test_util::get_max_wire_version(mongodb_client) >= 4) {
+                // The server supports sample().
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.size() == 3);
+            } else {
+                // The server does not support sample().
+                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+            }
+        }
+
+        SECTION("skip") {
+            coll.insert_one(document{} << "x" << 1 << finalize);
+            coll.insert_one(document{} << "x" << 2 << finalize);
+            coll.insert_one(document{} << "x" << 3 << finalize);
+
+            // Add a sort to the pipeline, so below tests can make assumptions about result order.
+            pipeline.sort(document{} << "x" << 1 << finalize);
+            pipeline.skip(1);
+            auto cursor = coll.aggregate(pipeline);
+
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 2);
+            REQUIRE(results[0].view()["x"].get_int32() == 2);
+            REQUIRE(results[1].view()["x"].get_int32() == 3);
+        }
+
+        SECTION("sort") {
+            coll.insert_one(document{} << "x" << 1 << finalize);
+            coll.insert_one(document{} << "x" << 2 << finalize);
+            coll.insert_one(document{} << "x" << 3 << finalize);
+
+            pipeline.sort(document{} << "x" << -1 << finalize);
+            auto cursor = coll.aggregate(pipeline);
+
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 3);
+            REQUIRE(results[0].view()["x"].get_int32() == 3);
+            REQUIRE(results[1].view()["x"].get_int32() == 2);
+            REQUIRE(results[2].view()["x"].get_int32() == 1);
+        }
+
+        SECTION("unwind") {
+            coll.insert_one(document{} << "x" << open_array << 1 << 2 << 3 << 4 << 5 << close_array
+                                       << finalize);
+
+            pipeline.unwind("$x");
+            auto cursor = coll.aggregate(pipeline);
+
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 5);
         }
     }
 
