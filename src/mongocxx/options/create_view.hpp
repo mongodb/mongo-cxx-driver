@@ -42,7 +42,7 @@ class MONGOCXX_API create_view {
     ///   The default collation for the view.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/release-notes/3.3-dev-series-collation/#collation-option
+    ///   https://docs.mongodb.com/master/reference/collation/
     ///
     create_view& collation(bsoncxx::document::view_or_value collation);
 

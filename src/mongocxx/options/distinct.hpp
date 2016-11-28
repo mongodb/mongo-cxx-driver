@@ -40,7 +40,7 @@ class MONGOCXX_API distinct {
     ///   The new collation.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/release-notes/3.3-dev-series-collation/#collation-option
+    ///   https://docs.mongodb.com/master/reference/collation/
     ///
     distinct& collation(bsoncxx::document::view_or_value collation);
 
@@ -51,7 +51,7 @@ class MONGOCXX_API distinct {
     ///   The current collation.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/release-notes/3.3-dev-series-collation/#collation-option
+    ///   https://docs.mongodb.com/master/reference/collation/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 

@@ -84,7 +84,7 @@ class MONGOCXX_API create_collection {
     ///   The default collation for the collection.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/release-notes/3.3-dev-series-collation/#collation-option
+    ///   https://docs.mongodb.com/master/reference/collation/
     ///
     create_collection& collation(bsoncxx::document::view_or_value collation);
 

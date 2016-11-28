@@ -51,7 +51,7 @@ class MONGOCXX_API delete_many {
     ///   The new collation.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/release-notes/3.3-dev-series-collation/#collation-option
+    ///   https://docs.mongodb.com/master/reference/collation/
     ///
     delete_many& collation(bsoncxx::document::view_or_value collation);
 
@@ -62,7 +62,7 @@ class MONGOCXX_API delete_many {
     ///   The optional value of the collation option.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/release-notes/3.3-dev-series-collation/#collation-option
+    ///   https://docs.mongodb.com/master/reference/collation/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 
