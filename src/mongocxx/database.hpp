@@ -117,7 +117,7 @@ class MONGOCXX_API database {
     /// Non-materialized views are represented by the @c collection objects, and support many of the
     /// same read-only operations that regular collections do.
     ///
-    /// @see https://docs.mongodb.com/master/release-notes/3.4/#views
+    /// @see https://docs.mongodb.com/master/core/views/
     ///
     /// @param name the name of the view to be created.
     /// @param view_on

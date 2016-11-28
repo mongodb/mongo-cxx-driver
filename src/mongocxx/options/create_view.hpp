@@ -28,6 +28,9 @@ namespace options {
 ///
 /// Class representing the optional arguments to a view creation operation.
 ///
+/// @see
+///   https://docs.mongodb.com/master/core/views/
+///
 class MONGOCXX_API create_view {
    public:
     create_view() = default;
