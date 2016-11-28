@@ -52,16 +52,19 @@ std::string validation_action_to_string(mongocxx::validation_criteria::validatio
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-void validation_criteria::rule(bsoncxx::document::view_or_value rule) {
+validation_criteria& validation_criteria::rule(bsoncxx::document::view_or_value rule) {
     _rule = std::move(rule);
+    return *this;
 }
 
-void validation_criteria::level(validation_criteria::validation_level level) {
-    _level = std::move(level);
+validation_criteria& validation_criteria::level(validation_criteria::validation_level level) {
+    _level = level;
+    return *this;
 }
 
-void validation_criteria::action(validation_criteria::validation_action action) {
-    _action = std::move(action);
+validation_criteria& validation_criteria::action(validation_criteria::validation_action action) {
+    _action = action;
+    return *this;
 }
 
 bsoncxx::document::value validation_criteria::to_document() const {

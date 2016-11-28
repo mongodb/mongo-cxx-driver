@@ -36,7 +36,7 @@ class MONGOCXX_API validation_criteria {
     /// @param rule
     ///   Document representing a validation rule.
     ///
-    void rule(bsoncxx::document::view_or_value rule);
+    validation_criteria& rule(bsoncxx::document::view_or_value rule);
 
     ///
     /// A class to represent the different validation level options.
@@ -58,7 +58,7 @@ class MONGOCXX_API validation_criteria {
     /// @param level
     ///   An enumerated validation level.
     ///
-    void level(validation_level level);
+    validation_criteria& level(validation_level level);
 
     ///
     /// A class to represent the different validation action options.
@@ -78,7 +78,7 @@ class MONGOCXX_API validation_criteria {
     /// @param action
     ///   An enumerated validation action.
     ///
-    void action(validation_action action);
+    validation_criteria& action(validation_action action);
 
     ///
     /// Returns a bson document representing this set of validation criteria.
