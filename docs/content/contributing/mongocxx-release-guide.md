@@ -69,20 +69,57 @@ git push origin r3.0.1
 
 ## Generate and Publish Documentation
 
-* Clone the [apidocs repo](https://github.com/mongodb/apidocs)
+Documentation generation must be run after the release tag has been made
+and pushed.
 
-```
-git clone git@github.com:10gen/apidocs.git
-cd apidocs
-```
+* Edit `etc/apidocmenu.md` and add the released version in the 'mongocxx'
+  column following the established pattern.  If this is a major release,
+  revise the entire document as needed.  If revised substantially, also
+  edit `docs/content/index.md` to match.
 
-* On the command line, run:
+* Edit `etc/generate-all-apidocs.pl` and add the new release version to
+  the `@DOC_TAGS` array, following the established pattern.
 
-```
-python2 build.py cxx11
-git commit -am "bump for cxx driver release"
-git push origin master
-```
+* Edit `docs/content/mongocxx-v3/installation.md` and update `Step 3` to
+  reflect the latest version to download.  (Generally, search for the last
+  version number and update it.)
+
+* Commit these changes.
+
+`git commit -am "Prepare to generate r3.0.2 release documentation"`
+
+* Ensure you have `doxygen` and `hugo` installed and up to date.
+
+* Change to the repo top directory and run `git clean -dxf` to clear out
+  all extraneous files.
+
+* Change to the `build` directory and run cmake as you usually would.
+
+* To test documentation generation without deploying, run the `docs` build
+  target.  E.g. `ninja docs`.  If this works, your documentation tools are
+  correctly installed.  Note that this only generates hugo docs and a
+  single set of doxygen docs for the current repo.  To test generation of
+  all docs for all tags, use the `doxygen-all` target and be prepared to
+  wait a while.
+
+* To generate and deploy documentation to GitHub Pages, execute both the
+  `hugo-deploy` and `doxygen-deploy` targets.  The doxygen build will take
+  a long time.
+
+* Check out the "gh-pages" branch and `git pull` the deployed docs.
+
+* Update the api/mongocxx-v3 symlink to point to the newly released
+  version.  If a major version bump has occurred, revise the symlink
+  structure as needed.  Make sure 'current' always points to a *symlink*
+  tracking the latest release branch.
+
+* Commit and push the symlink change.
+
+`git commit -am "Update symlink for r3.0.3"`
+
+* Wait a minute and verify the docs site has been updated.
+
+* Return to the original branch.
 
 ## Create the Next Version commit
 

@@ -1,6 +1,6 @@
 {{ if .IsPage }}
 {{ $File := .File }}  {{with $File.LogicalName }} {{ $srcref := add (add "content/" $File.Dir) $File.LogicalName }}
-<a class="edit-link" href="https://github.com/mongodb/{{ $.Site.Data.mongodb.githubRepo }}/blob/{{ $.Site.Data.mongodb.githubBranch }}/{{ $srcref }}" target="_blank" title="Edit {{ $File.Dir }}{{ $File.LogicalName }} on GitHub"><i class="fa fa-pencil-square-o"></i></a>
+<a class="edit-link" href="https://github.com/mongodb/{{ $.Site.Data.mongodb.githubRepo }}/blob/{{ $.Site.Data.mongodb.githubBranch }}/docs/{{ $srcref }}" target="_blank" title="Edit {{ $File.Dir }}{{ $File.LogicalName }} on GitHub"><i class="fa fa-pencil-square-o"></i></a>
 {{end}}
 {{end}}
 {{ $menuItemL6  := $.Scratch.Get "menu.Item.L6"}}
