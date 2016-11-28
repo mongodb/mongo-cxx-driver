@@ -31,7 +31,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 class MONGOCXX_API validation_criteria {
    public:
     ///
-    /// Set a validation rule for this validation object.
+    /// Sets a validation rule for this validation object.
     ///
     /// @param rule
     ///   Document representing a validation rule.
@@ -41,6 +41,11 @@ class MONGOCXX_API validation_criteria {
     ///
     /// A class to represent the different validation level options.
     ///
+    /// - k_off: Disable validation entirely.
+    /// - k_moderate: Apply validation rules to inserts, and apply validation rules to updates only
+    ///   if the document to be updated already fulfills the validation criteria.
+    /// - k_strict: Apply validation rules to all inserts and updates.
+    ///
     enum class validation_level {
         k_off,
         k_moderate,
@@ -48,17 +53,19 @@ class MONGOCXX_API validation_criteria {
     };
 
     ///
-    /// Set a validation level.
+    /// Sets a validation level.
     ///
     /// @param level
-    ///   A validation level, "off," "strict," or "moderate."
+    ///   An enumerated validation level.
     ///
     void level(validation_level level);
 
     ///
     /// A class to represent the different validation action options.
     ///
-    /// @todo document enum values
+    /// - k_error: Reject any insertion or update that violates the validation criteria.
+    /// - k_warn: Log any violations of the validation criteria, but allow the insertion or update
+    ///   to proceed.
     ///
     enum class validation_action {
         k_error,
@@ -66,16 +73,15 @@ class MONGOCXX_API validation_criteria {
     };
 
     ///
-    /// Set a validation action to run when documents failing validation
-    /// are inserted or modified.
+    /// Sets a validation action to run when documents failing validation are inserted or modified.
     ///
     /// @param action
-    ///   A validation action, either "error" or "warn."
+    ///   An enumerated validation action.
     ///
     void action(validation_action action);
 
     ///
-    /// Return a bson document representing this set of validation criteria.
+    /// Returns a bson document representing this set of validation criteria.
     ///
     /// @return Validation criteria, as a document.
     ///
