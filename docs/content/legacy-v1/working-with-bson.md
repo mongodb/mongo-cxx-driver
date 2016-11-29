@@ -42,7 +42,7 @@ Translates to current date
 BSONObj p = BSON( "created" << DATENOW );
 // result is: { created : "2009-10-09 11:41:42" }
 ```
-   
+
 #### MINKEY, MAXKEY
 
 ```cpp

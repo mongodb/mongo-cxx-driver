@@ -185,7 +185,7 @@ Get the full last error object:
 ```cpp
 BSONObj DBClientWithCommands::getLastErrorDetailed();
 ```
- 
+
 For an example, see [this demo](https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/simple_client_demo.cpp).
 
 For additional background information on getLastError see the [write
@@ -306,7 +306,7 @@ following update in the mongo shell:
 
 ```js
 > use tutorial
-> db.persons.update( 
+> db.persons.update(
     { name : 'Joe', age : 33 },
     { $inc : { visits : 1 } }
 )

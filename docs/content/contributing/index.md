@@ -50,7 +50,7 @@ General structure:
  - Header Prelude
  - System Headers `<vector>` (alphabetical order)
  - Driver Headers `<path/to/header.hpp>` (alphabetical order)
- - Open Namespace mongocxx 
+ - Open Namespace mongocxx
  - `MONGOCXX_INLINE_NAMESPACE_BEGIN`
  -    Code
  - `MONGOCXX_INLINE_NAMESPACE_END`
