@@ -61,7 +61,7 @@ class MONGOCXX_API bulk_write {
     /// @param wc
     ///   The new write_concern.
     ///
-    /// @see http://docs.mongodb.org/manual/core/write-concern/
+    /// @see https://docs.mongodb.com/master/core/write-concern/
     ///
     bulk_write& write_concern(class write_concern wc);
 
@@ -71,7 +71,7 @@ class MONGOCXX_API bulk_write {
     /// @return
     ///   The current write_concern.
     ///
-    /// @see http://docs.mongodb.org/manual/core/write-concern/
+    /// @see https://docs.mongodb.com/master/core/write-concern/
     ///
     const stdx::optional<class write_concern>& write_concern() const;
 

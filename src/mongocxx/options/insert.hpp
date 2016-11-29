@@ -56,7 +56,7 @@ class MONGOCXX_API insert {
     /// @param wc
     ///   The new write_concern.
     ///
-    /// @see http://docs.mongodb.org/manual/core/write-concern/
+    /// @see https://docs.mongodb.com/master/core/write-concern/
     ///
     insert& write_concern(class write_concern wc);
 
@@ -65,7 +65,7 @@ class MONGOCXX_API insert {
     ///
     /// @return The current write_concern.
     ///
-    /// @see http://docs.mongodb.org/manual/core/write-concern/
+    /// @see https://docs.mongodb.com/master/core/write-concern/
     ///
     const stdx::optional<class write_concern>& write_concern() const;
 
@@ -80,7 +80,7 @@ class MONGOCXX_API insert {
     /// @param ordered
     ///   Whether or not the insert_many will be ordered.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/method/db.collection.insert/
+    /// @see https://docs.mongodb.com/master/reference/method/db.collection.insert/
     ///
     insert& ordered(bool ordered);
 
@@ -89,7 +89,7 @@ class MONGOCXX_API insert {
     ///
     /// @return The current ordered value.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/method/db.collection.insert/
+    /// @see https://docs.mongodb.com/master/reference/method/db.collection.insert/
     ///
     const stdx::optional<bool>& ordered() const;
 

@@ -34,7 +34,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB create index operation.
 ///
-/// @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/#options
+/// @see https://docs.mongodb.com/master/reference/method/db.collection.createIndex/#options
 ///
 class MONGOCXX_API index {
    public:
@@ -87,7 +87,7 @@ class MONGOCXX_API index {
     /// @param background
     ///   Whether or not to build the index in the background.
     ///
-    /// @see https://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/
+    /// @see https://docs.mongodb.com/master/tutorial/build-indexes-in-the-background/
     ///
     index& background(bool background);
 
@@ -105,7 +105,7 @@ class MONGOCXX_API index {
     /// @param unique
     ///   Whether or not to create a unique index.
     ///
-    /// @see https://docs.mongodb.org/manual/core/index-unique/
+    /// @see https://docs.mongodb.com/master/core/index-unique/
     ///
     index& unique(bool unique);
 
@@ -160,7 +160,7 @@ class MONGOCXX_API index {
     /// @param sparse
     ///   Whether or not to create a sparse index.
     ///
-    /// @see https://docs.mongodb.org/manual/core/index-sparse/
+    /// @see https://docs.mongodb.com/master/core/index-sparse/
     ///
     index& sparse(bool sparse);
 
@@ -192,7 +192,7 @@ class MONGOCXX_API index {
     /// @param seconds
     ///   The amount of time, in seconds, to retain documents.
     ///
-    /// @see https://docs.mongodb.org/manual/core/index-ttl/
+    /// @see https://docs.mongodb.com/master/core/index-ttl/
     ///
     index& expire_after(std::chrono::seconds seconds);
 
@@ -346,7 +346,7 @@ class MONGOCXX_API index {
     /// values; i.e. group in the same bucket those location values that are within the specified
     /// number of units to each other.
     ///
-    /// @see https://docs.mongodb.org/manual/core/geohaystack/
+    /// @see https://docs.mongodb.com/master/core/geohaystack/
     ///
     /// @param haystack_bucket_size
     ///   The geoHaystack bucket size.

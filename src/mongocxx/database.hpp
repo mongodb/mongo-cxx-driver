@@ -84,7 +84,7 @@ class MONGOCXX_API database {
     ///
     /// Runs a command against this database.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/method/db.runCommand/
+    /// @see https://docs.mongodb.com/master/reference/method/db.runCommand/
     ///
     /// @param command document representing the command to be run.
     /// @return the result of executing the command.
@@ -96,7 +96,7 @@ class MONGOCXX_API database {
     ///
     /// Explicitly creates a collection in this database with the specified options.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/method/db.createCollection/
+    /// @see https://docs.mongodb.com/master/reference/method/db.createCollection/
     ///
     /// @param name the new collection's name.
     /// @param options the options for the new collection.
@@ -142,7 +142,7 @@ class MONGOCXX_API database {
     ///   This method is deprecated.  To modify an existing collection, invoke the "collMod" command
     ///   with database::run_command().
     ///
-    /// @see https://docs.mongodb.org/manual/reference/command/collMod/
+    /// @see https://docs.mongodb.com/master/reference/command/collMod/
     ///
     /// @param name the name of the collection to be modified.
     /// @param options the modifications to be performed.
@@ -158,7 +158,7 @@ class MONGOCXX_API database {
     ///
     /// @throws mongocxx::operation_exception if the operation fails.
     //
-    /// @see http://docs.mongodb.org/manual/reference/method/db.dropDatabase/
+    /// @see https://docs.mongodb.com/master/reference/method/db.dropDatabase/
     ///
     /// @note
     ///   In order to pass a write concern to this, you must use the database
@@ -190,7 +190,7 @@ class MONGOCXX_API database {
     /// @throws mongocxx::operation_exception if the underlying 'listCollections'
     /// command fails.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/command/listCollections/
+    /// @see https://docs.mongodb.com/master/reference/command/listCollections/
     ///
     cursor list_collections(bsoncxx::document::view_or_value filter = {});
 
@@ -211,7 +211,7 @@ class MONGOCXX_API database {
     /// @param rc
     ///   The new @c read_concern
     ///
-    /// @see https://docs.mongodb.org/manual/reference/read-concern/
+    /// @see https://docs.mongodb.com/master/reference/read-concern/
     ///
     void read_concern(class read_concern rc);
 
@@ -232,7 +232,7 @@ class MONGOCXX_API database {
     /// from this database, but do affect new ones. New collections will receive a copy of the
     /// new read_preference for this database upon instantiation.
     ///
-    /// @see http://docs.mongodb.org/manual/core/read-preference/
+    /// @see https://docs.mongodb.com/master/core/read-preference/
     ///
     /// @param rp the new read_preference.
     ///
@@ -241,7 +241,7 @@ class MONGOCXX_API database {
     ///
     /// The current read preference for this database.
     ///
-    /// @see http://docs.mongodb.org/manual/core/read-preference/
+    /// @see https://docs.mongodb.com/master/core/read-preference/
     ///
     /// @return the current read_preference
     ///

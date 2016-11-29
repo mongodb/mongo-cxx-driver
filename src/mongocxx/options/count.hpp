@@ -93,7 +93,7 @@ class MONGOCXX_API count {
     /// @param max_time
     ///   The max amount of time (in milliseconds).
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
+    /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
     count& max_time(std::chrono::milliseconds max_time);
 
@@ -102,7 +102,7 @@ class MONGOCXX_API count {
     ///
     /// @return The current max time (in milliseconds).
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
+    /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
     const stdx::optional<std::chrono::milliseconds>& max_time() const;
 
@@ -112,7 +112,7 @@ class MONGOCXX_API count {
     /// @param skip
     ///   The number of documents to skip.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/method/cursor.skip/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.skip/
     ///
     count& skip(std::int64_t skip);
 
@@ -121,7 +121,7 @@ class MONGOCXX_API count {
     ///
     /// @return The number of documents to skip.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/method/cursor.skip/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.skip/
     ///
     const stdx::optional<std::int64_t>& skip() const;
 
@@ -131,7 +131,7 @@ class MONGOCXX_API count {
     /// @param rp
     ///   The new read_preference.
     ///
-    /// @see http://docs.mongodb.org/manual/core/read-preference/
+    /// @see https://docs.mongodb.com/master/core/read-preference/
     ///
     count& read_preference(class read_preference rp);
 
@@ -140,7 +140,7 @@ class MONGOCXX_API count {
     ///
     /// @return the current read_preference
     ///
-    /// @see http://docs.mongodb.org/manual/core/read-preference/
+    /// @see https://docs.mongodb.com/master/core/read-preference/
     ///
     const stdx::optional<class read_preference>& read_preference() const;
 

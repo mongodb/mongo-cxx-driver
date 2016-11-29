@@ -61,7 +61,7 @@ class MONGOCXX_API find {
     /// @param batch_size
     ///   The size of the batches to request.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/method/cursor.batchSize/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.batchSize/
     ///
     find& batch_size(std::int32_t batch_size);
 
@@ -70,7 +70,7 @@ class MONGOCXX_API find {
     ///
     /// @return The current batch size.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/method/cursor.batchSize/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.batchSize/
     ///
     const stdx::optional<std::int32_t>& batch_size() const;
 
@@ -103,7 +103,7 @@ class MONGOCXX_API find {
     /// @param comment
     ///   The comment to attach to this query.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/meta/comment/
+    /// @see https://docs.mongodb.com/master/reference/operator/meta/comment/
     ///
     find& comment(bsoncxx::string::view_or_value comment);
 
@@ -112,7 +112,7 @@ class MONGOCXX_API find {
     ///
     /// @return The comment attached to this query.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/meta/comment/
+    /// @see https://docs.mongodb.com/master/reference/operator/meta/comment/
     ///
     const stdx::optional<bsoncxx::string::view_or_value>& comment() const;
 
@@ -138,7 +138,7 @@ class MONGOCXX_API find {
     ///
     /// Sets the index to use for this operation.
     ///
-    /// @see https://docs.mongodb.org/manual/reference/operator/meta/hint/
+    /// @see https://docs.mongodb.com/master/reference/operator/meta/hint/
     ///
     /// @note if the server already has a cached shape for this query, it may
     /// ignore a hint.
@@ -176,7 +176,7 @@ class MONGOCXX_API find {
     /// @param max
     ///   The exclusive upper bound for a specific index.
     ///
-    /// @see http://docs.mongodb.com/manual/reference/method/cursor.max/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.max/
     ///
     find& max(bsoncxx::document::view_or_value max);
 
@@ -185,7 +185,7 @@ class MONGOCXX_API find {
     ///
     /// @return The exclusive upper bound for a specific index.
     ///
-    /// @see http://docs.mongodb.com/manual/reference/method/cursor.max/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.max/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& max() const;
 
@@ -200,7 +200,7 @@ class MONGOCXX_API find {
     /// @param max_await_time
     ///   The max amount of time (in milliseconds) to wait for new documents.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
+    /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
     find& max_await_time(std::chrono::milliseconds max_await_time);
 
@@ -218,7 +218,7 @@ class MONGOCXX_API find {
     /// @param max
     ///   The maximum number of documents or index keys to scan.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxScan/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.maxScan/
     ///
     find& max_scan(std::int32_t max);
 
@@ -228,7 +228,7 @@ class MONGOCXX_API find {
     ///
     /// @return The current setting for the maximum number of documents or index keys to scan.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxScan/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.maxScan/
     ///
     const stdx::optional<std::int32_t>& max_scan() const;
 
@@ -238,7 +238,7 @@ class MONGOCXX_API find {
     /// @param max_time
     ///   The max amount of time (in milliseconds).
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
+    /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
     find& max_time(std::chrono::milliseconds max_time);
 
@@ -247,7 +247,7 @@ class MONGOCXX_API find {
     ///
     /// @return The current max time (in milliseconds).
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
+    /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
     const stdx::optional<std::chrono::milliseconds>& max_time() const;
 
@@ -257,7 +257,7 @@ class MONGOCXX_API find {
     /// @param min
     ///   The inclusive lower bound for a specific index.
     ///
-    /// @see http://docs.mongodb.com/manual/reference/method/cursor.min/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.min/
     ///
     find& min(bsoncxx::document::view_or_value min);
 
@@ -266,7 +266,7 @@ class MONGOCXX_API find {
     ///
     /// @return The inclusive lower bound for a specific index.
     ///
-    /// @see http://docs.mongodb.com/manual/reference/method/cursor.min/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.min/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& min() const;
 
@@ -281,7 +281,7 @@ class MONGOCXX_API find {
     ///   that have been introduced. For example, users should call find::snapshot() instead of
     ///   calling find::modifiers() with a document containing a "$snapshot" field.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/query-modifier/
+    /// @see https://docs.mongodb.com/master/reference/operator/query-modifier/
     ///
     find& modifiers(bsoncxx::document::view_or_value modifiers);
 
@@ -323,7 +323,7 @@ class MONGOCXX_API find {
     /// @param projection
     ///   The projection document.
     ///
-    /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
+    /// @see https://docs.mongodb.com/master/tutorial/project-fields-from-query-results/
     ///
     find& projection(bsoncxx::document::view_or_value projection);
 
@@ -332,7 +332,7 @@ class MONGOCXX_API find {
     ///
     /// @return The current projection.
     ///
-    /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
+    /// @see https://docs.mongodb.com/master/tutorial/project-fields-from-query-results/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& projection() const;
 
@@ -342,7 +342,7 @@ class MONGOCXX_API find {
     /// @param rp
     ///   The new read_preference.
     ///
-    /// @see http://docs.mongodb.org/manual/core/read-preference/
+    /// @see https://docs.mongodb.com/master/core/read-preference/
     ///
     find& read_preference(class read_preference rp);
 
@@ -352,7 +352,7 @@ class MONGOCXX_API find {
     /// @return
     ///   The current read_preference.
     ///
-    /// @see http://docs.mongodb.org/manual/core/read-preference/
+    /// @see https://docs.mongodb.com/master/core/read-preference/
     ///
     const stdx::optional<class read_preference>& read_preference() const;
 
@@ -364,7 +364,7 @@ class MONGOCXX_API find {
     ///   Whether to return the index keys associated with the query results, instead of the actual
     ///   query results themselves.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.returnKey/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.returnKey/
     ///
     find& return_key(bool return_key);
 
@@ -376,7 +376,7 @@ class MONGOCXX_API find {
     ///   Whether index keys associated with the query results are returned, instead of the actual
     ///   query results themselves.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.returnKey/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.returnKey/
     ///
     const stdx::optional<bool>& return_key() const;
 
@@ -386,7 +386,7 @@ class MONGOCXX_API find {
     /// @param show_record_id
     ///   Whether to include the record identifier.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.showRecordId/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.showRecordId/
     ///
     find& show_record_id(bool show_record_id);
 
@@ -397,7 +397,7 @@ class MONGOCXX_API find {
     /// @return
     ///   Whether the record identifier is included.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.showRecordId/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.showRecordId/
     ///
     const stdx::optional<bool>& show_record_id() const;
 
@@ -407,7 +407,7 @@ class MONGOCXX_API find {
     /// @param skip
     ///   The number of documents to skip.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/method/cursor.skip/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.skip/
     ///
     find& skip(std::int32_t skip);
 
@@ -416,7 +416,7 @@ class MONGOCXX_API find {
     ///
     /// @return The number of documents to skip.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/method/cursor.skip/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.skip/
     ///
     const stdx::optional<std::int32_t>& skip() const;
 
@@ -426,7 +426,7 @@ class MONGOCXX_API find {
     /// @param snapshot
     ///   Whether to enable snapshot mode.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.snapshot/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.snapshot/
     ///
     find& snapshot(bool snapshot);
 
@@ -435,7 +435,7 @@ class MONGOCXX_API find {
     ///
     /// @return Whether snapshot mode is being used.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.snapshot/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.snapshot/
     ///
     const stdx::optional<bool>& snapshot() const;
 
@@ -446,7 +446,7 @@ class MONGOCXX_API find {
     /// @param ordering
     ///   Document describing the order of the documents to be returned.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/method/cursor.sort/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.sort/
     ///
     find& sort(bsoncxx::document::view_or_value ordering);
 
@@ -455,7 +455,7 @@ class MONGOCXX_API find {
     ///
     /// @return The current sort ordering.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/method/cursor.sort/
+    /// @see https://docs.mongodb.com/master/reference/method/cursor.sort/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& sort() const;
 

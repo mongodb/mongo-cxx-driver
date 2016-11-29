@@ -52,7 +52,7 @@ class uri;
 /// in order to perform read operations on a direct connection to a secondary member of a replica
 /// set, you must set a read preference that allows reading from secondaries.
 ///
-/// @see http://docs.mongodb.org/manual/core/read-preference/
+/// @see https://docs.mongodb.com/master/core/read-preference/
 ///
 class MONGOCXX_API read_preference {
    public:
@@ -65,7 +65,7 @@ class MONGOCXX_API read_preference {
     /// replicate operations from the primary with some delay. Ensure that your application
     /// can tolerate stale data if you choose to use a non-primary mode.
     ///
-    /// @see http://docs.mongodb.org/manual/core/read-preference/#read-preference-modes
+    /// @see https://docs.mongodb.com/master/core/read-preference/#read-preference-modes
     ///
     enum class read_mode : std::uint8_t {
         ///
@@ -110,7 +110,7 @@ class MONGOCXX_API read_preference {
     /// @param tags
     ///   A document representing tags to use for the read_preference.
     ///
-    /// @see http://docs.mongodb.org/manual/core/read-preference/#tag-sets
+    /// @see https://docs.mongodb.com/master/core/read-preference/#tag-sets
     ///
     read_preference(read_mode mode, bsoncxx::document::view_or_value tags);
 
@@ -160,7 +160,7 @@ class MONGOCXX_API read_preference {
     /// @param tags
     ///   Document representing the tags.
     ///
-    /// @see http://docs.mongodb.org/manual/core/read-preference/#tag-sets
+    /// @see https://docs.mongodb.com/master/core/read-preference/#tag-sets
     ///
     void tags(bsoncxx::document::view_or_value tags);
 
@@ -169,7 +169,7 @@ class MONGOCXX_API read_preference {
     ///
     /// @return The optionally set current tags.
     ///
-    /// @see http://docs.mongodb.org/manual/core/read-preference/#tag-sets
+    /// @see https://docs.mongodb.com/master/core/read-preference/#tag-sets
     ///
     stdx::optional<bsoncxx::document::view> tags() const;
 

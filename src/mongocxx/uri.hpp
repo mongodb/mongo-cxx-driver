@@ -35,7 +35,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 /// @todo return const char* instead or stringview
 /// @todo harmonize with C library (options, credentials, etc...)
 ///
-/// @see http://docs.mongodb.org/manual/reference/connection-string/
+/// @see https://docs.mongodb.com/master/reference/connection-string/
 ///
 class MONGOCXX_API uri {
    public:

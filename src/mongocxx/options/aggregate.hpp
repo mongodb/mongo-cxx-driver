@@ -92,7 +92,7 @@ class MONGOCXX_API aggregate {
     /// @param max_time
     ///   The max amount of time (in milliseconds).
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
+    /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
     aggregate& max_time(std::chrono::milliseconds max_time);
 
@@ -102,7 +102,7 @@ class MONGOCXX_API aggregate {
     /// @return
     ///   The current max time (in milliseconds).
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
+    /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
     const stdx::optional<std::chrono::milliseconds>& max_time() const;
 
@@ -131,7 +131,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @param rp the new read_preference
     ///
-    /// @see http://docs.mongodb.org/manual/core/read-preference/
+    /// @see https://docs.mongodb.com/master/core/read-preference/
     ///
     aggregate& read_preference(class read_preference rp);
 
@@ -140,7 +140,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @return the current read_preference
     ///
-    /// @see http://docs.mongodb.org/manual/core/read-preference/
+    /// @see https://docs.mongodb.com/master/core/read-preference/
     ///
     const stdx::optional<class read_preference>& read_preference() const;
 

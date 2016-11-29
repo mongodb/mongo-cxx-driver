@@ -42,7 +42,7 @@ class MONGOCXX_API modify_collection {
     /// @param index_spec the spec for an existing index in the collection
     /// @param seconds number of seconds to subtract from the current time
     ///
-    /// @see https://docs.mongodb.org/manual/tutorial/expire-data/
+    /// @see https://docs.mongodb.com/master/tutorial/expire-data/
     ///
     modify_collection& index(bsoncxx::document::view_or_value index_spec,
                              std::chrono::seconds seconds);
@@ -50,7 +50,7 @@ class MONGOCXX_API modify_collection {
     ///
     /// When true, disables the power of 2 sizes allocation for the collection.
     ///
-    /// @see: https://docs.mongodb.org/manual/reference/method/db.createCollection/
+    /// @see: https://docs.mongodb.com/master/reference/method/db.createCollection/
     ///
     /// @param no_padding
     ///   When true, disables power of 2 sizing for this collection.
@@ -63,7 +63,7 @@ class MONGOCXX_API modify_collection {
     /// @param validation
     ///   Validation criteria for this collection.
     ///
-    /// @see https://docs.mongodb.org/manual/core/document-validation/
+    /// @see https://docs.mongodb.com/master/core/document-validation/
     ///
     modify_collection& validation_criteria(class validation_criteria validation);
 

@@ -49,13 +49,13 @@ class uri;
 /// critical operations, clients can adjust the write concern to ensure better performance
 /// rather than persistence to the entire deployment.
 ///
-/// @see http://docs.mongodb.org/manual/core/write-concern/
+/// @see https://docs.mongodb.com/master/core/write-concern/
 ///
 class MONGOCXX_API write_concern {
    public:
     ///
     /// A class to represent the special case values for write_concern::nodes.
-    /// @see http://docs.mongodb.org/manual/reference/write-concern/#w-option
+    /// @see https://docs.mongodb.com/master/reference/write-concern/#w-option
     ///
     enum class level {
         k_default,
@@ -124,7 +124,7 @@ class MONGOCXX_API write_concern {
 
     ///
     /// Sets the acknowledge level.
-    /// @see http://docs.mongodb.org/manual/reference/write-concern/#w-option
+    /// @see https://docs.mongodb.com/master/reference/write-concern/#w-option
     ///
     /// @param confirm_level
     ///   Either level::k_unacknowledged, level::k_default, or level::k_majority.
@@ -184,7 +184,7 @@ class MONGOCXX_API write_concern {
     /// This value will be unset iff the acknowledge_level is set instead.
     /// This is unset by default.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/write-concern/#w-option
+    /// @see https://docs.mongodb.com/master/reference/write-concern/#w-option
     ///
     /// @return The number of required nodes.
     ///
@@ -195,7 +195,7 @@ class MONGOCXX_API write_concern {
     /// This value will be unset iff the nodes value is set instead.
     /// This is set by default.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/write-concern/#w-option
+    /// @see https://docs.mongodb.com/master/reference/write-concern/#w-option
     ///
     /// @return The acknowledgment level.
     ///

@@ -64,7 +64,7 @@ class MONGOCXX_API find_one_and_replace {
     /// @param bypass_document_validation
     ///   Whether or not to bypass document validation.
     ///
-    /// @see https://docs.mongodb.org/manual/core/document-validation/#bypass-document-validation
+    /// @see https://docs.mongodb.com/master/core/document-validation/#bypass-document-validation
     ///
     find_one_and_replace& bypass_document_validation(bool bypass_document_validation);
 
@@ -81,7 +81,7 @@ class MONGOCXX_API find_one_and_replace {
     /// @param max_time
     ///   The max amount of time (in milliseconds).
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
+    /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
     find_one_and_replace& max_time(std::chrono::milliseconds max_time);
 
@@ -90,7 +90,7 @@ class MONGOCXX_API find_one_and_replace {
     ///
     /// @return the current max allowed running time (in milliseconds).
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS
+    /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
     const stdx::optional<std::chrono::milliseconds>& max_time() const;
 
@@ -100,7 +100,7 @@ class MONGOCXX_API find_one_and_replace {
     /// @param projection
     ///   The projection document.
     ///
-    /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
+    /// @see https://docs.mongodb.com/master/tutorial/project-fields-from-query-results/
     ///
     find_one_and_replace& projection(bsoncxx::document::view_or_value projection);
 
@@ -109,7 +109,7 @@ class MONGOCXX_API find_one_and_replace {
     ///
     /// @return The current projection.
     ///
-    /// @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
+    /// @see https://docs.mongodb.com/master/tutorial/project-fields-from-query-results/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& projection() const;
 
@@ -120,7 +120,7 @@ class MONGOCXX_API find_one_and_replace {
     /// @param return_document
     ///   Version of document to return, either original or replaced.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+    /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     /// @see mongocxx::options::return_document
     ///
     find_one_and_replace& return_document(return_document return_document);
@@ -130,7 +130,7 @@ class MONGOCXX_API find_one_and_replace {
     ///
     /// @return Version of document to return, either original or replacement.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+    /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     /// @see mongocxx::options::return_document
     ///
     const stdx::optional<mongocxx::options::return_document>& return_document() const;
@@ -144,7 +144,7 @@ class MONGOCXX_API find_one_and_replace {
     /// @param ordering
     ///   Document describing the order of the documents to be returned.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+    /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     ///
     find_one_and_replace& sort(bsoncxx::document::view_or_value ordering);
 
@@ -153,7 +153,7 @@ class MONGOCXX_API find_one_and_replace {
     ///
     /// @return The current sort ordering.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+    /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& sort() const;
 
@@ -165,7 +165,7 @@ class MONGOCXX_API find_one_and_replace {
     /// @param upsert
     ///   Whether or not to perform an upsert.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+    /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     ///
     find_one_and_replace& upsert(bool upsert);
 
@@ -174,7 +174,7 @@ class MONGOCXX_API find_one_and_replace {
     ///
     /// @return The current upsert setting.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+    /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     ///
     const stdx::optional<bool>& upsert() const;
 

@@ -99,7 +99,7 @@ class MONGOCXX_API client {
     /// @param rc
     ///   The new @c read_concern
     ///
-    /// @see https://docs.mongodb.org/manual/reference/read-concern/
+    /// @see https://docs.mongodb.com/master/reference/read-concern/
     ///
     void read_concern(class read_concern rc);
 
@@ -120,7 +120,7 @@ class MONGOCXX_API client {
     /// @param rp
     ///   The new @c read_preference
     ///
-    /// @see http://docs.mongodb.org/manual/core/read-preference/
+    /// @see https://docs.mongodb.com/master/core/read-preference/
     ///
     void read_preference(class read_preference rp);
 
@@ -129,7 +129,7 @@ class MONGOCXX_API client {
     ///
     /// @return The current @c read_preference
     ///
-    /// @see http://docs.mongodb.org/manual/core/read-preference/
+    /// @see https://docs.mongodb.com/master/core/read-preference/
     ///
     class read_preference read_preference() const;
 
@@ -196,7 +196,7 @@ class MONGOCXX_API client {
     ///
     /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/command/listDatabases
+    /// @see https://docs.mongodb.com/master/reference/command/listDatabases
     ///
     cursor list_databases() const;
 

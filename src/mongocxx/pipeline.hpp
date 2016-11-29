@@ -37,7 +37,7 @@ class MONGOCXX_API pipeline {
     ///
     /// Creates a new aggregation pipeline.
     ///
-    /// @see http://docs.mongodb.org/manual/core/aggregation-pipeline/
+    /// @see https://docs.mongodb.com/master/core/aggregation-pipeline/
     ///
     pipeline();
 
@@ -130,7 +130,7 @@ class MONGOCXX_API pipeline {
     ///
     /// Outputs documents in order of nearest to farthest from a specified point.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/geoNear/
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/geoNear/
     ///
     /// @param geo_near_args
     ///   The specification for the geo_near operation.  The required fields `near` and
@@ -158,7 +158,7 @@ class MONGOCXX_API pipeline {
     ///
     /// @note group does not order output documents.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/group/
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/group/
     ///
     /// @param group_args
     ///   The specification for the group operation.  The required field `_id` must be included.
@@ -175,7 +175,7 @@ class MONGOCXX_API pipeline {
     ///
     /// Limits the number of documents passed to the next stage in the pipeline.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/limit/
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/limit/
     ///
     /// @param limit
     ///   The number of documents to which output should be limited.
@@ -186,7 +186,7 @@ class MONGOCXX_API pipeline {
     /// Performs a left outer join to an unsharded collection in the same database to filter in
     /// documents from the "joined" collection for processing.
     ///
-    /// @see https://docs.mongodb.org/manual/reference/operator/aggregation/lookup/
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/lookup/
     ///
     /// @param lookup_args
     ///   The specification for the lookup operation.  The required fields `from`, `localField`,
@@ -198,7 +198,7 @@ class MONGOCXX_API pipeline {
     /// Filters the documents. Only the documents that match the condition(s) specified by the
     /// `filter` will continue to the next pipeline stage.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/match/
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/match/
     ///
     /// @param filter
     ///   The filter.
@@ -210,7 +210,7 @@ class MONGOCXX_API pipeline {
     /// collection. This stage must be the last stage in the pipeline. The out operator lets the
     /// aggregation framework return result sets of any size.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/out/
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/out/
     ///
     /// @param collection_name
     ///   The name of the collection where the output documents should go.
@@ -220,7 +220,7 @@ class MONGOCXX_API pipeline {
     ///
     /// Projects a subset of the fields in the documents to the next stage of the pipeline.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/project/
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/project/
     ///
     /// @param projection
     ///   The projection specification.
@@ -231,7 +231,7 @@ class MONGOCXX_API pipeline {
     /// Restricts the contents of the documents based on information stored in the documents
     /// themselves.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/redact/
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/redact/
     ///
     /// @param restrictions
     ///   The document restrictions.
@@ -253,7 +253,7 @@ class MONGOCXX_API pipeline {
     /// Randomly selects the specified number of documents that pass into the stage and passes the
     /// remaining documents to the next stage in the pipeline.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/sample/
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/sample/
     ///
     /// @param size
     ///   The number of input documents to select.
@@ -264,7 +264,7 @@ class MONGOCXX_API pipeline {
     /// Skips over the specified number of documents that pass into the stage and passes the
     /// remaining documents to the next stage in the pipeline.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/skip/
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/skip/
     ///
     /// @param docs_to_skip
     ///   The number of input documents to skip.
@@ -274,7 +274,7 @@ class MONGOCXX_API pipeline {
     ///
     /// Sorts all input documents and returns them to the pipeline in sorted order.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/sort/
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/sort/
     ///
     /// @param ordering
     ///   Document specifying the ordering by which the documents are sorted.
@@ -317,7 +317,7 @@ class MONGOCXX_API pipeline {
     /// Each output document is an input document with the value of its array field replaced by
     /// an element from the unwound array.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/unwind/
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/unwind/
     ///
     /// @param unwind_args
     ///   The specification for the unwind operation.  The required field @path must be included.
@@ -333,7 +333,7 @@ class MONGOCXX_API pipeline {
     /// Each output document is an input document with the value of its array field replaced by
     /// an element from the unwound array.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/unwind/
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/unwind/
     ///
     /// @param field_name
     ///   The name of the field to unwind.

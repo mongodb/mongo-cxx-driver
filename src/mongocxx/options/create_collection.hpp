@@ -56,7 +56,7 @@ class MONGOCXX_API create_collection {
     /// @param capped
     ///   Whether or not this collection will be capped.
     ///
-    /// @see https://docs.mongodb.org/manual/reference/glossary/#term-capped-collection
+    /// @see https://docs.mongodb.com/master/reference/glossary/#term-capped-collection
     ///
     create_collection& capped(bool capped);
 
@@ -66,7 +66,7 @@ class MONGOCXX_API create_collection {
     /// @return
     ///   Whether or not this collection will be capped.
     ///
-    /// @see https://docs.mongodb.org/manual/reference/glossary/#term-capped-collection
+    /// @see https://docs.mongodb.com/master/reference/glossary/#term-capped-collection
     ///
     const stdx::optional<bool>& capped() const;
 
@@ -116,7 +116,7 @@ class MONGOCXX_API create_collection {
     ///
     /// When true, disables the power of 2 sizes allocation for the collection.
     ///
-    /// @see https://docs.mongodb.org/manual/reference/method/db.createCollection/
+    /// @see https://docs.mongodb.com/master/reference/method/db.createCollection/
     ///
     /// @param no_padding
     ///   When true, disables power of 2 sizing for this collection.
@@ -126,7 +126,7 @@ class MONGOCXX_API create_collection {
     ///
     /// Gets the current value of the "no padding" option for the collection.
     ///
-    /// @see https://docs.mongodb.org/manual/reference/method/db.createCollection/
+    /// @see https://docs.mongodb.com/master/reference/method/db.createCollection/
     ///
     /// @return
     ///   When true, power of 2 sizing is disabled for this collection.
@@ -178,7 +178,7 @@ class MONGOCXX_API create_collection {
     /// @param validation
     ///   Validation criteria for this collection.
     ///
-    /// @see https://docs.mongodb.org/manual/core/document-validation/
+    /// @see https://docs.mongodb.com/master/core/document-validation/
     ///
     create_collection& validation_criteria(class validation_criteria validation);
 
@@ -188,7 +188,7 @@ class MONGOCXX_API create_collection {
     /// @return
     ///   Validation criteria for this collection.
     ///
-    /// @see https://docs.mongodb.org/manual/core/document-validation/
+    /// @see https://docs.mongodb.com/master/core/document-validation/
     ///
     const stdx::optional<class validation_criteria>& validation_criteria() const;
 
