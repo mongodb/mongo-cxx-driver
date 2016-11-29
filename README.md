@@ -2,10 +2,6 @@
 
 Welcome to the MongoDB C++ Driver!
 
-This branch contains work-in-progress for `mongocxx` version 3.1.
-
-End-users should use a tagged release or the `master` branch instead.
-
 ## Resources
 
 * [MongoDB C++ Driver Quickstart](https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/tutorial/)
@@ -32,12 +28,13 @@ The following compatibility table specifies the driver version(s)
 recommended for different versions of MongoDB.  The 3.0.x series
 is recommended for all new development.
 
-| Family/version | MongoDB 2.4 | MongoDB 2.6 | MongoDB 3.0 | MongoDB 3.2 |
-| ---------------| ------------| ------------| ------------| ------------|
-| mongocxx 3.0.x | ✓           | ✓           | ✓           | ✓           |
-| legacy   1.1.x | ✓           | ✓           | ✓           | ✓           |
-| legacy   1.0.x | ✓           | ✓           | ✓           |             |
-| 26compat (all) |             | ✓           |             |             |
+| Family/version | MongoDB 2.4 | MongoDB 2.6 | MongoDB 3.0 | MongoDB 3.2 | MongoDB 3.4 |
+| ---------------| ------------| ------------| ------------| ------------|-------------|
+| mongocxx 3.1.x | ✓           | ✓           | ✓           | ✓           | ✓           |
+| mongocxx 3.0.x | ✓           | ✓           | ✓           | ✓           |             |
+| legacy   1.1.x | ✓           | ✓           | ✓           | ✓           |             |
+| legacy   1.0.x | ✓           | ✓           | ✓           |             |             |
+| 26compat (all) |             | ✓           |             |             |             |
 
 ## Bugs and issues
 
