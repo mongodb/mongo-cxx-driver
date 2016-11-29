@@ -60,9 +60,9 @@ TEST_CASE("create_collection accessors/mutators", "[create_collection]") {
     }
     SECTION("has a method to set the validation_criteria") {
         cc.validation_criteria(validation);
-        REQUIRE(cc.validation_criteria()->rule() == validation.rule());
-        REQUIRE(cc.validation_criteria()->level() == validation.level());
-        REQUIRE(cc.validation_criteria()->action() == validation.action());
+        REQUIRE(*cc.validation_criteria()->rule() == *validation.rule());
+        REQUIRE(*cc.validation_criteria()->level() == *validation.level());
+        REQUIRE(*cc.validation_criteria()->action() == *validation.action());
     }
 }
 
