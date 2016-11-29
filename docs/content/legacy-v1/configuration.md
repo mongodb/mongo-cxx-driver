@@ -153,7 +153,7 @@ if (!status.isOK()) {
 - Semantics: This flag only has an effect if `Options::current::SSLMode` is
   `Options::kSSLRequired`. If set, it specifies a file containing the
   certificate authority file to use. See the [MongoDB SSL
-  documentation](http://docs.mongodb.org/manual/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key)
+  documentation](https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key)
   for additional information on the CA file.
 
 #### `Options::setSSLPemKeyFile` and `Options::SSLPEMKeyFile`
@@ -163,7 +163,7 @@ if (!status.isOK()) {
 - Semantics: This flag only has an effect if `Options::current::SSLMode` is
   `Options::kSSLRequired`. If set, it specifies a file containing the SSL
   PEM key file to use. See the [MongoDB SSL
-  documentation](http://docs.mongodb.org/manual/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key)
+  documentation](https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key)
   for additional information on the PEM key file.
 
 #### `Options::setSSLPemKeyPassword` and `Options::SSLPEMKeyPassword`
@@ -175,7 +175,7 @@ if (!status.isOK()) {
   been set with `Options::setSSLPEMKeyFile`. If set, it specifies the
   password to be used to decrypt the SSL PEM key file specified with
   `Options::setSSLPEMKeyFile`. See the [MongoDB SSL
-  documentation](http://docs.mongodb.org/manual/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key)
+  documentation](https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key)
   for additional information on the PEM key file password.
 
 #### `Options::setSSLCRLFile` and `Options::SSLCRLFile`
@@ -185,7 +185,7 @@ if (!status.isOK()) {
 - Semantics: This flag only has an effect if `Options::current::SSLMode` is
   `Options::kSSLRequired`. If set, it specifies the file to use as the SSL
   certificate revocation list. See the [MongoDB SSL
-  documentation](http://docs.mongodb.org/manual/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key)
+  documentation](https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key)
   for additional information on the certificate revocation list file.
 
 #### `Options::setSSAllowInvalidCertificates` and `Options::SSLAllowInvalidCertificates`

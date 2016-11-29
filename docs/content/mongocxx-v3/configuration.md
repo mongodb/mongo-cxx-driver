@@ -9,7 +9,7 @@ title = "Configuring the mongocxx driver"
 # Configuring the Driver
 
 In the mongocxx driver, most configuration is done via the [connection
-URI](https://docs.mongodb.com/manual/reference/connection-string/).  Some
+URI](https://docs.mongodb.com/master/reference/connection-string/).  Some
 additional connection options are possible via the
 [mongocxx::options::client] ({{< api3ref classmongocxx_1_1options_1_1client
 >}}) class.

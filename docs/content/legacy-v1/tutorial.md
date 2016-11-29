@@ -14,13 +14,13 @@ This is an introduction to usage of the MongoDB database from a C++ program.
 NOTE: this tutorial is for the legacy and 26compat versions of the C++ driver.
 
 First, install MongoDB – see the
-[installation](http://docs.mongodb.org/manual/installation/) page for
+[installation](https://docs.mongodb.com/master/installation/) page for
 details.
 
 Next, you may wish to take a look at the [MongoDB
-Manual](http://docs.mongodb.org/manual/) for a language independent look at
+Manual](https://docs.mongodb.com/master/) for a language independent look at
 how to use MongoDB. Also, we suggest some basic familiarity with the [mongo
-shell](http://docs.mongodb.org/manual/mongo/) – the shell is the primary
+shell](https://docs.mongodb.com/master/mongo/) – the shell is the primary
 database administration tool and is useful for manually inspecting the
 contents of a database after your C++ program runs.
 
@@ -189,7 +189,7 @@ BSONObj DBClientWithCommands::getLastErrorDetailed();
 For an example, see [this demo](https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/simple_client_demo.cpp).
 
 For additional background information on getLastError see the [write
-operations documentation](http://docs.mongodb.org/manual/core/write-operations/#write-concern).
+operations documentation](https://docs.mongodb.com/master/core/write-operations/#write-concern).
 
 ### Count
 
@@ -280,7 +280,7 @@ server operation for each call. It's best practice to use this method
 sparingly, for example once at the beginning of your code, or perhaps in an
 external setup script that configures the database for your application.
 For more information about indexing, see the [MongoDB Indexing
-docs](http://docs.mongodb.org/manual/indexes/).
+docs](https://docs.mongodb.com/master/indexes/).
 
 ### Sorting
 
@@ -324,7 +324,7 @@ db.update("tutorial.persons",
 The `update()` method can be used to modify specific fields, replace the
 entire existing document, insert new documents or update multiple
 documents.  In the MongoDB Manual, examples are provided in the [Modify
-Documents Tutorial](http://docs.mongodb.org/manual/tutorial/modify-documents/).
+Documents Tutorial](https://docs.mongodb.com/master/tutorial/modify-documents/).
 
 ### Arrays
 
@@ -336,6 +336,6 @@ is available [here](https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/
 This overview just touches on the basics of using MongoDB from C++. There
 are many more capabilities. For further exploration:
 
- - See the language-independent [MongoDB Manual](http://docs.mongodb.org/manual/)
- - Experiment with the [mongo shell](http://docs.mongodb.org/manual/mongo/)
+ - See the language-independent [MongoDB Manual](https://docs.mongodb.com/master/)
+ - Experiment with the [mongo shell](https://docs.mongodb.com/master/mongo/)
  - Review the [API docs](http://mongodb.github.io/api/1.0.2)
