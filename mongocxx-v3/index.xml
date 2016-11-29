@@ -148,8 +148,8 @@ Update 1 or later&lt;/li&gt;
 
 &lt;ul&gt;
 &lt;li&gt;For mongocxx-3.0.x, we recommend the latest stable version of libmongoc
-(currently version 1.4.2 at the time this page was written).&lt;/li&gt;
-&lt;li&gt;For mongocxx-3.1.0-beta0 or later, libmongoc 1.5.0-rc6 or later is
+(currently version 1.5.0 at the time this page was written).&lt;/li&gt;
+&lt;li&gt;For mongocxx-3.1.0 release candidates, libmongoc 1.5.0 or later is
 required.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1096,6 +1096,25 @@ if (store_ele) {
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;This feature is shown in more detail in &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/getting_values.cpp&#34;&gt;this example&lt;/a&gt; and &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/view_and_value.cpp&#34;&gt;this example&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;bson-types&#34;&gt;BSON Types&lt;/h3&gt;
+
+&lt;p&gt;The &lt;a href=&#34;http://bsonspec.org/spec.html&#34;&gt;BSON specification&lt;/a&gt; provides a list
+of supported types.  These are represented in C++ using the
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/current/classes.html#letter_B&#34;&gt;b_xxx&lt;/a&gt;
+type wrappers.&lt;/p&gt;
+
+&lt;p&gt;Some BSON types don&amp;rsquo;t necessarily have a native representation to wrap and
+are implemented via special classes.&lt;/p&gt;
+
+&lt;h4 id=&#34;decimal128&#34;&gt;Decimal128&lt;/h4&gt;
+
+&lt;p&gt;The &lt;code&gt;bsoncxx::decimal128&lt;/code&gt; class represents a 128-bit IEEE 754-2008 decimal
+floating point value.  We expect users to convert these to and from
+strings, but provide access to the low and high 64-bit values if users need
+to convert to a native decimal128 type.&lt;/p&gt;
+
+&lt;p&gt;You can see how to work with &lt;code&gt;bsoncxx::decimal128&lt;/code&gt; in &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/decimal128.cpp&#34;&gt;this example&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
     

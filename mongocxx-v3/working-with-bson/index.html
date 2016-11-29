@@ -1394,6 +1394,25 @@ if (store_ele) {
 
 <p>This feature is shown in more detail in <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/getting_values.cpp">this example</a> and <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/view_and_value.cpp">this example</a>.</p>
 
+<h3 id="bson-types">BSON Types</h3>
+
+<p>The <a href="http://bsonspec.org/spec.html">BSON specification</a> provides a list
+of supported types.  These are represented in C++ using the
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/current/classes.html#letter_B">b_xxx</a>
+type wrappers.</p>
+
+<p>Some BSON types don&rsquo;t necessarily have a native representation to wrap and
+are implemented via special classes.</p>
+
+<h4 id="decimal128">Decimal128</h4>
+
+<p>The <code>bsoncxx::decimal128</code> class represents a 128-bit IEEE 754-2008 decimal
+floating point value.  We expect users to convert these to and from
+strings, but provide access to the low and high 64-bit values if users need
+to convert to a native decimal128 type.</p>
+
+<p>You can see how to work with <code>bsoncxx::decimal128</code> in <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/decimal128.cpp">this example</a>.</p>
+
 
 
 
@@ -1436,6 +1455,10 @@ if (store_ele) {
 <li><a href="#a-name-lifetime-bson-document-lifetime-a"><a name="lifetime">BSON Document Lifetime</a></a></li>
 <li><a href="#a-name-print-printing-bson-documents-a"><a name="print">Printing BSON Documents</a></a></li>
 <li><a href="#a-name-fields-getting-fields-out-of-bson-documents-a"><a name="fields">Getting Fields out of BSON Documents</a></a></li>
+<li><a href="#bson-types">BSON Types</a>
+<ul>
+<li><a href="#decimal128">Decimal128</a></li>
+</ul></li>
 </ul></li>
 </ul></li>
 </ul>
