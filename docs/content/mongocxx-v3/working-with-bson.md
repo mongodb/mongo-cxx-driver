@@ -223,3 +223,22 @@ if (store_ele) {
 ```
 
 This feature is shown in more detail in [this example](https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/getting_values.cpp) and [this example](https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/view_and_value.cpp).
+
+### BSON Types
+
+The [BSON specification](http://bsonspec.org/spec.html) provides a list
+of supported types.  These are represented in C++ using the
+[b_xxx](https://mongodb.github.io/mongo-cxx-driver/api/current/classes.html#letter_B)
+type wrappers.
+
+Some BSON types don't necessarily have a native representation to wrap and
+are implemented via special classes.
+
+#### Decimal128
+
+The `bsoncxx::decimal128` class represents a 128-bit IEEE 754-2008 decimal
+floating point value.  We expect users to convert these to and from
+strings, but provide access to the low and high 64-bit values if users need
+to convert to a native decimal128 type.
+
+You can see how to work with `bsoncxx::decimal128` in [this example](https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/decimal128.cpp).

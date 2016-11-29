@@ -54,6 +54,28 @@ class MONGOCXX_API update_one {
     const bsoncxx::document::view_or_value& update() const;
 
     ///
+    /// Sets the collation for this update operation.
+    ///
+    /// @param collation
+    ///   The new collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    update_one& collation(bsoncxx::document::view_or_value collation);
+
+    ///
+    /// Gets the collation option for this update operation.
+    ///
+    /// @return
+    ///   The optional value of the collation option.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+
+    ///
     /// Sets the upsert option.
     ///
     /// When upsert is @c false, if no document matches the filter, update does nothing.
@@ -76,11 +98,10 @@ class MONGOCXX_API update_one {
     const stdx::optional<bool>& upsert() const;
 
    private:
-    // Required
     bsoncxx::document::view_or_value _filter;
     bsoncxx::document::view_or_value _update;
 
-    // Optional
+    stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bool> _upsert;
 };
 

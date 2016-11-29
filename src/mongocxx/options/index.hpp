@@ -132,6 +132,28 @@ class MONGOCXX_API index {
     const stdx::optional<bsoncxx::string::view_or_value>& name() const;
 
     ///
+    /// Sets the collation for this index.
+    ///
+    /// @param collation
+    ///   The new collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    index& collation(bsoncxx::document::view collation);
+
+    ///
+    /// Retrieves the current collation for this index.
+    ///
+    /// @return
+    ///   The current collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    const stdx::optional<bsoncxx::document::view>& collation() const;
+
+    ///
     /// Whether or not to create a sparse index. Sparse indexes only reference documents with the
     /// indexed fields.
     ///
@@ -344,6 +366,7 @@ class MONGOCXX_API index {
     stdx::optional<bool> _background;
     stdx::optional<bool> _unique;
     stdx::optional<bsoncxx::string::view_or_value> _name;
+    stdx::optional<bsoncxx::document::view> _collation;
     stdx::optional<bool> _sparse;
     std::unique_ptr<base_storage_options> _storage_options;
     stdx::optional<std::chrono::seconds> _expire_after;

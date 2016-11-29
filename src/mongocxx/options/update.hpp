@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/write_concern.hpp>
@@ -30,6 +30,48 @@ namespace options {
 ///
 class MONGOCXX_API update {
    public:
+    ///
+    /// Sets the bypass_document_validation option.
+    /// If true, allows the write to opt-out of document level validation.
+    ///
+    /// @note
+    ///   On servers >= 3.2, the server applies validation by default. On servers < 3.2, this option
+    ///   is ignored.
+    ///
+    /// @param bypass_document_validation
+    ///   Whether or not to bypass document validation
+    ///
+    update& bypass_document_validation(bool bypass_document_validation);
+
+    ///
+    /// Gets the current value of the bypass_document_validation option.
+    ///
+    /// @return The optional value of the bypass_document_validation option.
+    ///
+    const stdx::optional<bool>& bypass_document_validation() const;
+
+    ///
+    /// Sets the collation for this operation.
+    ///
+    /// @param collation
+    ///   The new collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    update& collation(bsoncxx::document::view_or_value collation);
+
+    ///
+    /// Retrieves the current collation for this operation.
+    ///
+    /// @return
+    ///   The current collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+
     ///
     /// Sets the upsert option.
     ///
@@ -52,26 +94,6 @@ class MONGOCXX_API update {
     const stdx::optional<bool>& upsert() const;
 
     ///
-    /// Sets the bypass_document_validation option.
-    /// If true, allows the write to opt-out of document level validation.
-    ///
-    /// @note
-    ///   On servers >= 3.2, the server applies validation by default. On servers < 3.2, this option
-    ///   is ignored.
-    ///
-    /// @param bypass_document_validation
-    ///   Whether or not to bypass document validation
-    ///
-    update& bypass_document_validation(bool bypass_document_validation);
-
-    ///
-    /// Gets the current value of the bypass_document_validation option.
-    ///
-    /// @return The optional value of the bypass_document_validation option.
-    ///
-    const stdx::optional<bool>& bypass_document_validation() const;
-
-    ///
     /// Sets the write_concern for this operation.
     ///
     /// @param wc
@@ -92,8 +114,9 @@ class MONGOCXX_API update {
     const stdx::optional<class write_concern>& write_concern() const;
 
    private:
-    stdx::optional<bool> _upsert;
     stdx::optional<bool> _bypass_document_validation;
+    stdx::optional<bsoncxx::document::view_or_value> _collation;
+    stdx::optional<bool> _upsert;
     stdx::optional<class write_concern> _write_concern;
 };
 

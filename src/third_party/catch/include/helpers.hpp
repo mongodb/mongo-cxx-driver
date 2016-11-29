@@ -48,7 +48,7 @@
     auto client_pool_try_pop = libmongoc::client_pool_try_pop.create_instance();               \
     client_pool_try_pop->interpose([](::mongoc_client_pool_t*) { return nullptr; }).forever();
 
-#if defined(MONGOC_ENABLE_SSL)
+#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
 #define MOCK_POOL                                                                          \
     MOCK_POOL_NOSSL                                                                        \
     auto client_pool_set_ssl_opts = libmongoc::client_pool_set_ssl_opts.create_instance(); \
@@ -120,7 +120,7 @@
     auto collection_count = libmongoc::collection_count.create_instance();                        \
     auto collection_count_with_opts = libmongoc::collection_count_with_opts.create_instance();    \
     auto collection_create_index = libmongoc::collection_create_index.create_instance();          \
-    auto collection_find = libmongoc::collection_find.create_instance();                          \
+    auto collection_find_with_opts = libmongoc::collection_find_with_opts.create_instance();      \
     auto collection_aggregate = libmongoc::collection_aggregate.create_instance();                \
     auto collection_get_name = libmongoc::collection_get_name.create_instance();                  \
     collection_get_name->interpose([](mongoc_collection_t*) { return "dummy_collection"; });      \
@@ -186,11 +186,16 @@
 #define MOCK_BULK                                                                                \
     auto bulk_operation_new = libmongoc::bulk_operation_new.create_instance();                   \
     auto bulk_operation_insert = libmongoc::bulk_operation_insert.create_instance();             \
-    auto bulk_operation_remove_one = libmongoc::bulk_operation_remove_one.create_instance();     \
-    auto bulk_operation_update_one = libmongoc::bulk_operation_update_one.create_instance();     \
-    auto bulk_operation_replace_one = libmongoc::bulk_operation_replace_one.create_instance();   \
-    auto bulk_operation_update = libmongoc::bulk_operation_update.create_instance();             \
-    auto bulk_operation_remove = libmongoc::bulk_operation_remove.create_instance();             \
+    auto bulk_operation_remove_one_with_opts =                                                   \
+        libmongoc::bulk_operation_remove_one_with_opts.create_instance();                        \
+    auto bulk_operation_update_one_with_opts =                                                   \
+        libmongoc::bulk_operation_update_one_with_opts.create_instance();                        \
+    auto bulk_operation_replace_one_with_opts =                                                  \
+        libmongoc::bulk_operation_replace_one_with_opts.create_instance();                       \
+    auto bulk_operation_update_many_with_opts =                                                  \
+        libmongoc::bulk_operation_update_many_with_opts.create_instance();                       \
+    auto bulk_operation_remove_many_with_opts =                                                  \
+        libmongoc::bulk_operation_remove_many_with_opts.create_instance();                       \
     auto bulk_operation_set_bypass_document_validation =                                         \
         libmongoc::bulk_operation_set_bypass_document_validation.create_instance();              \
     auto bulk_operation_set_client = libmongoc::bulk_operation_set_client.create_instance();     \
@@ -214,3 +219,13 @@
 #define MOCK_CONCERN                                                     \
     auto concern_copy = libmongoc::write_concern_copy.create_instance(); \
     concern_copy->interpose([](const mongoc_write_concern_t*) { return nullptr; }).forever();
+
+#define MOCK_READ_PREFERENCE                                                     \
+    auto read_prefs_get_max_staleness_seconds =                                  \
+        libmongoc::read_prefs_get_max_staleness_seconds.create_instance();       \
+    auto read_prefs_get_mode = libmongoc::read_prefs_get_mode.create_instance(); \
+    auto read_prefs_get_tags = libmongoc::read_prefs_get_tags.create_instance(); \
+    auto read_prefs_set_max_staleness_seconds =                                  \
+        libmongoc::read_prefs_set_max_staleness_seconds.create_instance();       \
+    auto read_prefs_set_mode = libmongoc::read_prefs_set_mode.create_instance(); \
+    auto read_prefs_set_tags = libmongoc::read_prefs_set_tags.create_instance();

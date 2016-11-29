@@ -26,6 +26,11 @@ find_one_and_update& find_one_and_update::bypass_document_validation(
     return *this;
 }
 
+find_one_and_update& find_one_and_update::collation(bsoncxx::document::view_or_value collation) {
+    _collation = std::move(collation);
+    return *this;
+}
+
 find_one_and_update& find_one_and_update::max_time(std::chrono::milliseconds max_time) {
     _max_time = std::move(max_time);
     return *this;
@@ -54,6 +59,10 @@ find_one_and_update& find_one_and_update::upsert(bool upsert) {
 
 const stdx::optional<bool>& find_one_and_update::bypass_document_validation() const {
     return _bypass_document_validation;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& find_one_and_update::collation() const {
+    return _collation;
 }
 
 const stdx::optional<std::chrono::milliseconds>& find_one_and_update::max_time() const {

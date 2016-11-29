@@ -26,9 +26,18 @@ set(mongocxx_test_sources
     collection_mocked.cpp
     database.cpp
     hint.cpp
+    model/delete_many.cpp
+    model/delete_one.cpp
+    model/insert_one.cpp
+    model/replace_one.cpp
     model/update_many.cpp
+    model/update_one.cpp
     options/aggregate.cpp
+    options/count.cpp
     options/create_collection.cpp
+    options/create_view.cpp
+    options/delete.cpp
+    options/distinct.cpp
     options/find.cpp
     options/find_one_and_delete.cpp
     options/find_one_and_replace.cpp
@@ -36,6 +45,8 @@ set(mongocxx_test_sources
     options/index.cpp
     options/insert.cpp
     options/modify_collection.cpp
+    options/pool.cpp
+    options/private/rewriter.cpp
     options/update.cpp
     pool.cpp
     private/scoped_bson_t.cpp
@@ -52,6 +63,7 @@ set(mongocxx_test_sources
 )
 
 add_executable(test_driver
+    ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     ${mongocxx_test_sources}
 )

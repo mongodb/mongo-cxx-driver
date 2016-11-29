@@ -39,8 +39,7 @@ before_install:
     - sudo apt-get update -qq
 
     # Mongo C Driver
-    # TODO switch master (branch for current 1.3 dev) to r1.3 when released
-    - git clone -b '1.3.4' --single-branch https://github.com/mongodb/mongo-c-driver.git
+    - git clone https://github.com/mongodb/mongo-c-driver.git
 
 install:
     # GCC
@@ -59,7 +58,14 @@ install:
     - sudo apt-get install cmake
 
     # Install Mongo C Driver
-    - pushd mongo-c-driver; ./autogen.sh --enable-tests=no --enable-examples=no --with-libbson=bundled; make; sudo make install; popd;
+    - pushd mongo-c-driver
+
+    # TODO: Update this to our real minimum for the C++11 driver 3.1 release, once known.
+    - git checkout 1.5.0
+
+    - ./autogen.sh --enable-tests=no --enable-examples=no --with-libbson=bundled; make; sudo make install
+
+    - popd
 
 before_script:
     - $CC --version

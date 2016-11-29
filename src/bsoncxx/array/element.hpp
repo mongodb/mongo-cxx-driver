@@ -61,6 +61,7 @@ class BSONCXX_API element : private document::element {
     using document::element::get_int32;
     using document::element::get_timestamp;
     using document::element::get_int64;
+    using document::element::get_decimal128;
     using document::element::get_minkey;
     using document::element::get_maxkey;
 

@@ -18,7 +18,7 @@
 #include <cstdint>
 #include <string>
 
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/read_preference.hpp>
@@ -35,6 +35,28 @@ namespace options {
 ///
 class MONGOCXX_API count {
    public:
+    ///
+    /// Sets the collation for this operation.
+    ///
+    /// @param collation
+    ///   The new collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    count& collation(bsoncxx::document::view_or_value collation);
+
+    ///
+    /// Retrieves the current collation for this operation.
+    ///
+    /// @return
+    ///   The current collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+
     ///
     /// Sets the index to use for this operation.
     ///
@@ -123,6 +145,7 @@ class MONGOCXX_API count {
     const stdx::optional<class read_preference>& read_preference() const;
 
    private:
+    stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<class hint> _hint;
     stdx::optional<std::int64_t> _limit;
     stdx::optional<std::chrono::milliseconds> _max_time;

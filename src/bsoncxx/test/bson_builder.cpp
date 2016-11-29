@@ -372,6 +372,42 @@ TEST_CASE("builder appends int64", "[bsoncxx::builder::stream]") {
     bson_destroy(&expected);
 }
 
+TEST_CASE("builder appends decimal128", "[bsoncxx::builder::stream]") {
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_decimal128_t d128;
+    bson_decimal128_from_string("-1234E+999", &d128);
+    bson_append_decimal128(&expected, "foo", -1, &d128);
+
+    builder::stream::document b;
+
+    SECTION("b_decimal128 works") {
+        b << "foo" << types::b_decimal128{"-1234E+999"};
+
+        bson_eq_stream(&expected, b);
+    }
+
+    SECTION("raw bsoncxx::decimal128 works") {
+        b << "foo" << bsoncxx::decimal128{"-1234E+999"};
+
+        bson_eq_stream(&expected, b);
+    }
+
+    SECTION("bsoncxx::types::value with decimal128 works") {
+        auto d = types::b_decimal128{"-1234E+999"};
+        auto v = types::value{d};
+
+        REQUIRE(v.get_decimal128() == d);
+
+        b << "foo" << v;
+
+        bson_eq_stream(&expected, b);
+    }
+
+    bson_destroy(&expected);
+}
+
 TEST_CASE("builder appends minkey", "[bsoncxx::builder::stream]") {
     bson_t expected;
     bson_init(&expected);

@@ -14,21 +14,23 @@
 
 project(MONGOCXX)
 
-set(LIBBSON_REQUIRED_VERSION 1.3.4)
+set(LIBBSON_REQUIRED_VERSION 1.5.0)
 set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
 find_package(LibBSON ${LIBBSON_REQUIRED_VERSION} REQUIRED)
 
-set(LIBMONGOC_REQUIRED_VERSION 1.3.4)
+set(LIBMONGOC_REQUIRED_VERSION 1.5.0)
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 find_package(LibMongoC ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
 
 # Update these as needed.
 # TODO: read from file
 set(MONGOCXX_VERSION_MAJOR 3)
-set(MONGOCXX_VERSION_MINOR 0)
-set(MONGOCXX_VERSION_PATCH 4)
-set(MONGOCXX_VERSION_EXTRA "-pre")
+set(MONGOCXX_VERSION_MINOR 1)
+set(MONGOCXX_VERSION_PATCH 0)
+set(MONGOCXX_VERSION_EXTRA "-rc0-pre")
 set(MONGOCXX_ABI_VERSION _noabi)
+
+option(MONGOCXX_ENABLE_SSL "Enable SSL - if the underlying C driver offers it" ON)
 
 set(MONGOCXX_VERSION ${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR}.${MONGOCXX_VERSION_PATCH}${MONGOCXX_VERSION_EXTRA})
 set(MONGOCXX_INLINE_NAMESPACE "v${MONGOCXX_ABI_VERSION}")
@@ -61,6 +63,7 @@ set(mongocxx_sources
     options/client.cpp
     options/count.cpp
     options/create_collection.cpp
+    options/create_view.cpp
     options/delete.cpp
     options/distinct.cpp
     options/find.cpp
@@ -70,6 +73,8 @@ set(mongocxx_sources
     options/index.cpp
     options/insert.cpp
     options/modify_collection.cpp
+    options/pool.cpp
+    options/private/rewriter.cpp
     options/ssl.cpp
     options/update.cpp
     pipeline.cpp
@@ -174,12 +179,14 @@ install(FILES
     COMPONENT dev
 )
 
-install(TARGETS
-    mongocxx
-    RUNTIME DESTINATION bin COMPONENT runtime
-    LIBRARY DESTINATION lib COMPONENT runtime
-    ARCHIVE DESTINATION lib COMPONENT dev
-)
+if (BUILD_SHARED_LIBS)
+    install(TARGETS
+        mongocxx
+        RUNTIME DESTINATION bin COMPONENT runtime
+        LIBRARY DESTINATION lib COMPONENT runtime
+        ARCHIVE DESTINATION lib COMPONENT dev
+    )
+endif()
 
 install(TARGETS
     mongocxx_static

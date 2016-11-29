@@ -30,6 +30,10 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB collMod command.
 ///
+/// @deprecated
+///   This class is deprecated.  See the database::modify_collection() method comment for more
+///   information.
+///
 class MONGOCXX_API modify_collection {
    public:
     ///

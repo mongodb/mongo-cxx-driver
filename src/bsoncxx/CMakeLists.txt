@@ -17,9 +17,9 @@ project(BSONCXX)
 # Update these as needed.
 # TODO: read from file
 set(BSONCXX_VERSION_MAJOR 3)
-set(BSONCXX_VERSION_MINOR 0)
-set(BSONCXX_VERSION_PATCH 4)
-set(BSONCXX_VERSION_EXTRA "-pre")
+set(BSONCXX_VERSION_MINOR 1)
+set(BSONCXX_VERSION_PATCH 0)
+set(BSONCXX_VERSION_EXTRA "-rc0-pre")
 set(BSONCXX_ABI_VERSION _noabi)
 
 set(BSONCXX_POLY_USE_MNMLSTC_DEFAULT ON)
@@ -62,7 +62,7 @@ set(BSONCXX_VERSION ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.${BSONCXX_
 set(BSONCXX_INLINE_NAMESPACE "v${BSONCXX_ABI_VERSION}")
 set(BSONCXX_HEADER_INSTALL_DIR "include/bsoncxx/${BSONCXX_INLINE_NAMESPACE}" CACHE INTERNAL "")
 
-set(LIBBSON_REQUIRED_VERSION 1.3.4)
+set(LIBBSON_REQUIRED_VERSION 1.5.0)
 set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
 find_package(LibBSON ${LIBBSON_REQUIRED_VERSION} REQUIRED)
 
@@ -74,6 +74,7 @@ set(bsoncxx_sources
     array/value.cpp
     array/view.cpp
     builder/core.cpp
+    decimal128.cpp
     document/element.cpp
     document/value.cpp
     document/view.cpp
@@ -167,12 +168,14 @@ install(FILES
     COMPONENT dev
 )
 
-install(TARGETS
-    bsoncxx
-    RUNTIME DESTINATION bin COMPONENT runtime
-    LIBRARY DESTINATION lib COMPONENT runtime
-    ARCHIVE DESTINATION lib COMPONENT dev
-)
+if (BUILD_SHARED_LIBS)
+    install(TARGETS
+        bsoncxx
+        RUNTIME DESTINATION bin COMPONENT runtime
+        LIBRARY DESTINATION lib COMPONENT runtime
+        ARCHIVE DESTINATION lib COMPONENT dev
+    )
+endif()
 
 install(TARGETS
     bsoncxx_static

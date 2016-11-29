@@ -33,6 +33,27 @@ namespace options {
 ///
 class MONGOCXX_API find_one_and_update {
    public:
+    /// Sets the collation for this operation.
+    ///
+    /// @param collation
+    ///   The new collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    find_one_and_update& collation(bsoncxx::document::view_or_value collation);
+
+    ///
+    /// Retrieves the current collation for this operation.
+    ///
+    /// @return
+    ///   The current collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+
     ///
     /// Whether or not to bypass document validation for this operation.
     ///
@@ -159,6 +180,7 @@ class MONGOCXX_API find_one_and_update {
 
    private:
     stdx::optional<bool> _bypass_document_validation;
+    stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<bsoncxx::document::view_or_value> _projection;
     stdx::optional<mongocxx::options::return_document> _return_document;

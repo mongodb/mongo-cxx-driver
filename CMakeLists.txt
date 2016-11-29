@@ -61,6 +61,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(GenerateExportHeader)
 include(InstallRequiredSystemLibraries)
 
+# Allow the user to decie whether to install the shared libaries.  Note that we always build them,
+# since otherwise it makes the CMake logic very complex, but setting BUILD_SHARED_LIBS=Off will at
+# least disable installing them.
+option(BUILD_SHARED_LIBS "Install shared libraries" ON)
+
 # If the user did not customize the install prefix,
 # set it to live under build so we don't inadverently pollute /usr/local
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)

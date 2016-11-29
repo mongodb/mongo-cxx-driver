@@ -126,6 +126,12 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/aggregate/
     ///
+    /// @note
+    ///   In order to pass a read or write concern to this, you must use the
+    ///   collection level set read or write concern -
+    ///   collection::write_concern(wc) and collection::read_concern(rc).
+    ///   (Write concern supported only for MongoDB 3.4+)
+    ///
     cursor aggregate(const pipeline& pipeline,
                      const options::aggregate& options = options::aggregate());
 
@@ -141,7 +147,9 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see options::bulk_write.
     ///
-    /// @return The optional result of the bulk operation execution, a result::bulk_write.
+    /// @return The optional result of the bulk operation execution.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     //
     /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
     ///
@@ -223,6 +231,11 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
     ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the collection
+    ///   level set write concern - collection::write_concern(wc). (MongoDB
+    ///   3.4+)
+    ///
     bsoncxx::document::value create_index(bsoncxx::document::view_or_value keys,
                                           const options::index& options = options::index());
 
@@ -234,7 +247,9 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see mongocxx::options::delete_options.
     ///
-    /// @return The optional result of performing the deletion, a result::delete_result.
+    /// @return The optional result of performing the deletion.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     ///
     /// @throws mongocxx::bulk_write_exception if the delete fails.
     ///
@@ -252,7 +267,9 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see mongocxx::options::delete_options.
     ///
-    /// @return The optional result of performing the deletion, a result::delete_result.
+    /// @return The optional result of performing the deletion.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     ///
     /// @throws mongocxx::bulk_write_exception if the delete fails.
     ///
@@ -287,6 +304,11 @@ class MONGOCXX_API collection {
     ///
     /// @see http://docs.mongodb.org/manual/reference/method/db.collection.drop/
     ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the collection
+    ///   level set write concern - collection::write_concern(wc). (MongoDB
+    ///   3.4+)
+    ///
     void drop();
 
     ///
@@ -301,7 +323,8 @@ class MONGOCXX_API collection {
     /// the cursor throws mongocxx::query_exception when the returned cursor
     /// is iterated.
     ///
-    /// @throws mongocxx::logic_error if the options are invalid.
+    /// @throws mongocxx::logic_error if the options are invalid, or if the unsupported option
+    /// modifiers "$query" or "$explain" are used.
     ///
     /// @see http://docs.mongodb.org/manual/core/read-operations-introduction/
     ///
@@ -336,6 +359,10 @@ class MONGOCXX_API collection {
     /// @return The document that was deleted.
     ///
     /// @throws mongocxx::write_exception if the operation fails.
+    ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the collection
+    ///   level set write concern - collection::write_concern(wc).
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_delete(
         bsoncxx::document::view_or_value filter,
@@ -396,7 +423,9 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see options::insert.
     ///
-    /// @return The result of attempting to perform the insert.
+    /// @return The optional result of attempting to perform the insert.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     ///
     /// @throws mongocxx::bulk_write_exception if the operation fails.
     ///
@@ -421,7 +450,9 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see options::insert.
     ///
-    /// @return The result of attempting to performing the insert.
+    /// @return The optional result of attempting to performing the insert.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     ///
     /// @throws mongocxx::bulk_write_exception when the operation fails.
     ///
@@ -487,6 +518,11 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.org/manual/reference/command/renameCollection/
     ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the collection
+    ///   level set write concern - collection::write_concern(wc). (MongoDB
+    ///   3.4+)
+    ///
     void rename(bsoncxx::string::view_or_value new_name, bool drop_target_before_rename = false);
 
     ///
@@ -540,9 +576,13 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see options::update.
     ///
-    /// @return The result of attempting to replace a document.
+    /// @return The optional result of attempting to replace a document.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     ///
-    /// @throws mongocxx::bulk_write_exception if the operation fails.
+    /// @throws
+    ///   mongocxx::logic_error if the replacement is invalid, or mongocxx::bulk_write_exception if
+    ///   the operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
@@ -560,9 +600,13 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see options::update.
     ///
-    /// @return The result of attempting to update multiple documents.
+    /// @return The optional result of attempting to update multiple documents.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     ///
-    /// @throws mongocxx::bulk_write_exception if the update operation fails.
+    /// @throws
+    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
+    ///   operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///
@@ -580,9 +624,13 @@ class MONGOCXX_API collection {
     /// @param options
     ///   Optional arguments, see options::update.
     ///
-    /// @return The result of attempting to update a document.
+    /// @return The optional result of attempting to update a document.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
     ///
-    /// @throws mongocxx::bulk_write_exception if the update operation fails.
+    /// @throws
+    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
+    ///   operation fails.
     ///
     /// @see http://docs.mongodb.org/manual/reference/command/update/
     ///

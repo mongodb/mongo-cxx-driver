@@ -18,6 +18,7 @@
 #include <cstring>
 
 #include <bsoncxx/array/view.hpp>
+#include <bsoncxx/decimal128.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -595,6 +596,37 @@ struct BSONCXX_API b_int64 {
 /// @relatesalso b_int64
 ///
 BSONCXX_INLINE bool operator==(const b_int64& lhs, const b_int64& rhs) {
+    return lhs.value == rhs.value;
+}
+
+///
+/// A BSON Decimal128 value.
+///
+struct BSONCXX_API b_decimal128 {
+    static constexpr auto type_id = type::k_decimal128;
+
+    decimal128 value;
+
+    ///
+    /// Constructor for b_decimal128.
+    ///
+    /// @param value
+    ///   The value to wrap.
+    ///
+    template <typename T,
+              typename std::enable_if<
+                  !std::is_same<b_decimal128, typename std::decay<T>::type>::value, int>::type = 0>
+    BSONCXX_INLINE explicit b_decimal128(T&& t)
+        : value(std::forward<T>(t)) {
+    }
+};
+
+///
+/// free function comparator for b_decimal128
+///
+/// @relatesalso b_decimal128
+///
+BSONCXX_INLINE bool operator==(const b_decimal128& lhs, const b_decimal128& rhs) {
     return lhs.value == rhs.value;
 }
 

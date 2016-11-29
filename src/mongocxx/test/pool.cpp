@@ -58,7 +58,7 @@ TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
     REQUIRE(destroy_called);
 }
 
-#if defined(MONGOC_ENABLE_SSL)
+#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
 TEST_CASE(
     "If we pass an engaged SSL options struct to the pool class, we will use it to configure the "
     "underlying mongoc pool",
@@ -91,7 +91,8 @@ TEST_CASE(
             interposed = *opts;
         });
 
-    pool p{uri{"mongodb://mongodb.example.com:9999?ssl=true"}, std::move(ssl_opts)};
+    pool p{uri{"mongodb://mongodb.example.com:9999?ssl=true"},
+           options::client().ssl_opts(ssl_opts)};
 
     REQUIRE(set_ssl_opts_called);
     REQUIRE(interposed.pem_file == pem_file);

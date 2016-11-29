@@ -83,6 +83,8 @@ class MONGOCXX_API bulk_write {
     ///     - model::update_many
     ///     - model::update_one
     ///
+    /// @throws mongocxx::logic_error if the given operation is invalid.
+    ///
     void append(const model::write& operation);
 
    private:

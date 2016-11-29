@@ -31,15 +31,28 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 class MONGOCXX_API validation_criteria {
    public:
     ///
-    /// Set a validation rule for this validation object.
+    /// Sets a validation rule for this validation object.
     ///
     /// @param rule
     ///   Document representing a validation rule.
     ///
-    void rule(bsoncxx::document::view_or_value rule);
+    validation_criteria& rule(bsoncxx::document::view_or_value rule);
+
+    ///
+    /// Gets the validation rule for this validation object.
+    ///
+    /// @return
+    ///   Document representing a validation rule.
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& rule() const;
 
     ///
     /// A class to represent the different validation level options.
+    ///
+    /// - k_off: Disable validation entirely.
+    /// - k_moderate: Apply validation rules to inserts, and apply validation rules to updates only
+    ///   if the document to be updated already fulfills the validation criteria.
+    /// - k_strict: Apply validation rules to all inserts and updates.
     ///
     enum class validation_level {
         k_off,
@@ -48,17 +61,27 @@ class MONGOCXX_API validation_criteria {
     };
 
     ///
-    /// Set a validation level.
+    /// Sets a validation level.
     ///
     /// @param level
-    ///   A validation level, "off," "strict," or "moderate."
+    ///   An enumerated validation level.
     ///
-    void level(validation_level level);
+    validation_criteria& level(validation_level level);
+
+    ///
+    /// Gets the validation level.
+    ///
+    /// @return
+    ///   The enumerated validation level.
+    ///
+    const stdx::optional<validation_level>& level() const;
 
     ///
     /// A class to represent the different validation action options.
     ///
-    /// @todo document enum values
+    /// - k_error: Reject any insertion or update that violates the validation criteria.
+    /// - k_warn: Log any violations of the validation criteria, but allow the insertion or update
+    ///   to proceed.
     ///
     enum class validation_action {
         k_error,
@@ -66,23 +89,37 @@ class MONGOCXX_API validation_criteria {
     };
 
     ///
-    /// Set a validation action to run when documents failing validation
-    /// are inserted or modified.
+    /// Sets a validation action to run when documents failing validation are inserted or modified.
     ///
     /// @param action
-    ///   A validation action, either "error" or "warn."
+    ///   An enumerated validation action.
     ///
-    void action(validation_action action);
+    validation_criteria& action(validation_action action);
 
     ///
-    /// Return a bson document representing this set of validation criteria.
+    /// Gets the validation action to run when documents failing validation are inserted or
+    /// modified.
+    ///
+    /// @return
+    ///   The enumerated validation action.
+    ///
+    const stdx::optional<validation_action>& action() const;
+
+    ///
+    /// Returns a bson document representing this set of validation criteria.
+    ///
+    /// @deprecated
+    ///   This method is deprecated. To determine which options are set on this object, use the
+    ///   provided accessors instead.
     ///
     /// @return Validation criteria, as a document.
     ///
     bsoncxx::document::value to_document() const;
 
     ///
-    /// @todo document this method
+    /// @deprecated
+    ///   This method is deprecated. To determine which options are set on this object, use the
+    ///   provided accessors instead.
     ///
     MONGOCXX_INLINE operator bsoncxx::document::value() const;
 

@@ -25,6 +25,8 @@
 #undef MONGOCXX_INLINE_NAMESPACE_END
 
 // src/mongocxx/config/version.hpp.in
+#pragma push_macro("MONGOCXX_VERSION_STRING")
+#undef MONGOCXX_VERSION_STRING
 #pragma push_macro("MONGOCXX_VERSION_EXTRA")
 #undef MONGOCXX_VERSION_EXTRA
 #pragma push_macro("MONGOCXX_VERSION_MAJOR")

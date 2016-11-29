@@ -27,6 +27,15 @@ const bsoncxx::document::view_or_value& delete_one::filter() const {
     return _filter;
 }
 
+delete_one& delete_one::collation(bsoncxx::document::view_or_value collation) {
+    _collation = collation;
+    return *this;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& delete_one::collation() const {
+    return _collation;
+}
+
 }  // namespace model
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

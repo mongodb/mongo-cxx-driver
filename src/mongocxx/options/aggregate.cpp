@@ -27,6 +27,11 @@ aggregate& aggregate::allow_disk_use(bool allow_disk_use) {
     return *this;
 }
 
+aggregate& aggregate::collation(bsoncxx::document::view_or_value collation) {
+    _collation = std::move(collation);
+    return *this;
+}
+
 aggregate& aggregate::batch_size(std::int32_t batch_size) {
     _batch_size = batch_size;
     return *this;
@@ -55,8 +60,13 @@ aggregate& aggregate::bypass_document_validation(bool bypass_document_validation
 const stdx::optional<bool>& aggregate::allow_disk_use() const {
     return _allow_disk_use;
 }
+
 const stdx::optional<std::int32_t>& aggregate::batch_size() const {
     return _batch_size;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& aggregate::collation() const {
+    return _collation;
 }
 
 const stdx::optional<std::chrono::milliseconds>& aggregate::max_time() const {
@@ -66,9 +76,11 @@ const stdx::optional<std::chrono::milliseconds>& aggregate::max_time() const {
 const stdx::optional<bool>& aggregate::use_cursor() const {
     return _use_cursor;
 }
+
 const stdx::optional<class read_preference>& aggregate::read_preference() const {
     return _read_preference;
 }
+
 const stdx::optional<bool>& aggregate::bypass_document_validation() const {
     return _bypass_document_validation;
 }

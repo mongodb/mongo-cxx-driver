@@ -29,6 +29,13 @@ class pipeline::impl {
         return _builder;
     }
 
+    bsoncxx::array::view view_array() {
+        return _builder.view();
+    }
+
+    ///
+    /// view() is deprecated. Use view_array() instead.
+    ///
     bsoncxx::document::view view() {
         return _builder.view();
     }

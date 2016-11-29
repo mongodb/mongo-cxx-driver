@@ -18,6 +18,7 @@
 #include <string>
 #include <memory>
 
+#include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 
@@ -56,26 +57,128 @@ class MONGOCXX_API pipeline {
     ~pipeline();
 
     ///
+    /// Adds new fields to documents.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/addFields/
+    ///
+    /// @param fields_to_add
+    ///   A document specifying the fields to add.  For each field specified in this parameter, a
+    ///   corresponding field will be added to the documents, where the value of the added field is
+    ///   the result of evaluating the specified expression.
+    ///
+    pipeline& add_fields(bsoncxx::document::view_or_value fields_to_add);
+
+    ///
+    /// Categorizes documents into groups, called buckets, based on a specified expression and
+    /// bucket boundaries.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/bucket/
+    ///
+    /// @param bucket_args
+    ///   The specification for the bucket operation.  The required fields `groupBy` and
+    ///   `boundaries` must be included.
+    ///
+    pipeline& bucket(bsoncxx::document::view_or_value bucket_args);
+
+    ///
+    /// Categorizes documents into a specific number of groups, called buckets, based on a
+    /// specified expression.  Bucket boundaries are automatically determined in an attempt to
+    /// evenly distribute the documents into the specified number of buckets.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/bucketAuto/
+    ///
+    /// @param bucket_auto_args
+    ///   The specification for the bucket_auto operation.  This required fields `groupBy` and
+    ///   `buckets` must be included.
+    ///
+    pipeline& bucket_auto(bsoncxx::document::view_or_value bucket_auto_args);
+
+    ///
+    /// Returns statistics regarding a collection or view.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/collStats/
+    ///
+    /// @param coll_stats_args
+    ///   The specification for the coll_stats operation.  See link above for a list of valid
+    ///   options.
+    ///
+    pipeline& coll_stats(
+        bsoncxx::document::view_or_value coll_stats_args = bsoncxx::document::view{});
+
+    ///
+    /// Returns a document containing a count of the number of documents input to the stage.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/count/
+    ///
+    /// @param field
+    ///   Name of the field for the count to be written to.
+    ///
+    pipeline& count(std::string field);
+
+    ///
+    /// Processes multiple aggregation pipelines within a single stage on the same set of input
+    /// documents.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/facet/
+    ///
+    /// @param facet_args
+    ///   The specification for the facet operation.  Each field in the the provided document should
+    ///   specify an aggregation pipeline, as an array.
+    ///
+    pipeline& facet(bsoncxx::document::view_or_value facet_args);
+
+    ///
+    /// Outputs documents in order of nearest to farthest from a specified point.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/geoNear/
+    ///
+    /// @param geo_near_args
+    ///   The specification for the geo_near operation.  The required fields `near` and
+    ///   `distanceField` must be included.
+    ///
+    pipeline& geo_near(bsoncxx::document::view_or_value geo_near_args);
+
+    ///
+    /// Performs a recursive search on a collection.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/graphLookup/
+    ///
+    /// @param graph_lookup_args
+    ///   The specification for the graph_lookup operation.  The required fields `from`,
+    ///   `connectFromField`, `startWith`, `connectToField`, and `as` must be included.
+    ///
+    pipeline& graph_lookup(bsoncxx::document::view_or_value graph_lookup_args);
+
+    ///
     /// Groups documents by some specified expression and outputs to the next stage a
-    /// document for each distinct grouping. The output documents contain an @c _id field
+    /// document for each distinct grouping. The output documents contain an `_id` field
     /// which contains the the distinct key for that group. The output documents can also
     /// contain computed fields that hold the values of some accumulator expression grouped
-    /// by the group's @c _id field.
+    /// by the group's `_id` field.
     ///
     /// @note group does not order output documents.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group
+    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/group/
     ///
-    /// @param group the group expression, as a document.
+    /// @param group_args
+    ///   The specification for the group operation.  The required field `_id` must be included.
     ///
-    pipeline& group(bsoncxx::document::view_or_value group);
+    pipeline& group(bsoncxx::document::view_or_value group_args);
+
+    ///
+    /// Returns statistics regarding the use of each index for the collection.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/indexStats/
+    ///
+    pipeline& index_stats();
 
     ///
     /// Limits the number of documents passed to the next stage in the pipeline.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/limit/#pipe._S_limit
+    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/limit/
     ///
-    /// @param limit the number of documents to which output should be limited.
+    /// @param limit
+    ///   The number of documents to which output should be limited.
     ///
     pipeline& limit(std::int32_t limit);
 
@@ -85,21 +188,20 @@ class MONGOCXX_API pipeline {
     ///
     /// @see https://docs.mongodb.org/manual/reference/operator/aggregation/lookup/
     ///
-    /// @param lookup the lookup expression, as a document with the following fields:
-    ///   from: <collection to join>
-    ///   localField: <field from the input documents>
-    ///   foreignField: <field from the documents of the "from" collection>
-    ///   as: <output array field>
+    /// @param lookup_args
+    ///   The specification for the lookup operation.  The required fields `from`, `localField`,
+    ///   `foreignField`, and `as` must be included.
     ///
-    pipeline& lookup(bsoncxx::document::view_or_value lookup);
+    pipeline& lookup(bsoncxx::document::view_or_value lookup_args);
 
     ///
     /// Filters the documents. Only the documents that match the condition(s) specified by the
-    /// @c filter will continue to the next pipeline stage.
+    /// `filter` will continue to the next pipeline stage.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/match/#pipe._S_match
+    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/match/
     ///
-    /// @param filter the filter.
+    /// @param filter
+    ///   The filter.
     ///
     pipeline& match(bsoncxx::document::view_or_value filter);
 
@@ -108,18 +210,20 @@ class MONGOCXX_API pipeline {
     /// collection. This stage must be the last stage in the pipeline. The out operator lets the
     /// aggregation framework return result sets of any size.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/out/#pipe._S_out
+    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/out/
     ///
-    /// @param collection_name the name of the collection where the output documents should go
+    /// @param collection_name
+    ///   The name of the collection where the output documents should go.
     ///
     pipeline& out(std::string collection_name);
 
     ///
     /// Projects a subset of the fields in the documents to the next stage of the pipeline.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/project/#pipe._S_project
+    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/project/
     ///
-    /// @param projection projection specification.
+    /// @param projection
+    ///   The projection specification.
     ///
     pipeline& project(bsoncxx::document::view_or_value projection);
 
@@ -127,19 +231,32 @@ class MONGOCXX_API pipeline {
     /// Restricts the contents of the documents based on information stored in the documents
     /// themselves.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/redact/#pipe._S_redact
+    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/redact/
     ///
-    /// @param restrictions the document restrictions.
+    /// @param restrictions
+    ///   The document restrictions.
     ///
     pipeline& redact(bsoncxx::document::view_or_value restrictions);
+
+    ///
+    /// Promotes a specified document to the top level and replaces all other fields.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/replaceRoot/
+    ///
+    /// @param replace_root_args
+    ///   The specification for the replace_root operation.  The required field `newRoot` must be
+    ///   included.
+    ///
+    pipeline& replace_root(bsoncxx::document::view_or_value replace_root_args);
 
     ///
     /// Randomly selects the specified number of documents that pass into the stage and passes the
     /// remaining documents to the next stage in the pipeline.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/sample/#pipe._S_sample
+    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/sample/
     ///
-    /// @param size the number of input documents to select.
+    /// @param size
+    ///   The number of input documents to select.
     ///
     pipeline& sample(std::int32_t size);
 
@@ -147,36 +264,97 @@ class MONGOCXX_API pipeline {
     /// Skips over the specified number of documents that pass into the stage and passes the
     /// remaining documents to the next stage in the pipeline.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/skip/#pipe._S_skip
+    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/skip/
     ///
-    /// @param skip the number of input documents to skip.
+    /// @param docs_to_skip
+    ///   The number of input documents to skip.
     ///
-    pipeline& skip(std::int32_t skip);
+    pipeline& skip(std::int32_t docs_to_skip);
 
     ///
     /// Sorts all input documents and returns them to the pipeline in sorted order.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/sort/#pipe._S_sort
+    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/sort/
     ///
-    /// @param ordering document specifying the ordering by which the documents are sorted.
+    /// @param ordering
+    ///   Document specifying the ordering by which the documents are sorted.
     ///
     pipeline& sort(bsoncxx::document::view_or_value ordering);
+
+    ///
+    /// Groups incoming documents based on the value of a specified expression, then computes the
+    /// count of documents in each distinct group.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/sortByCount/
+    ///
+    /// @param field_expression
+    ///   The expression to group by, as an object.  The expression can not evaluate to an object.
+    ///
+    /// @note
+    ///   This overload of sort_by_count() is intended to be used when the desired sort is over a
+    ///   grouping of the result of a complex expression computed from the input documents.
+    ///
+    pipeline& sort_by_count(bsoncxx::document::view_or_value field_expression);
+
+    ///
+    /// Groups incoming documents based on the value of a specified expression, then computes the
+    /// count of documents in each distinct group.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/operator/aggregation/sortByCount/
+    ///
+    /// @param field_expression
+    ///   The expression to group by, as a string.  To specify a field path, prefix the field path
+    ///   with a dollar sign (`$`).
+    ///
+    /// @note
+    ///   This overload of sort_by_count() is intended to be used when the desired sort is over a
+    ///   grouping of the value of a particular element in the input documents.
+    ///
+    pipeline& sort_by_count(std::string field_expression);
 
     ///
     /// Deconstructs an array field from the input documents to output a document for each element.
     /// Each output document is an input document with the value of its array field replaced by
     /// an element from the unwound array.
     ///
-    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/unwind/#pipe._S_unwind
+    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/unwind/
     ///
-    /// @param field_name the name of the field to unwind.
+    /// @param unwind_args
+    ///   The specification for the unwind operation.  The required field @path must be included.
+    ///
+    /// @note
+    ///   This overload of unwind() is intended to be used when additional options other than the
+    ///   field name need to be specified.
+    ///
+    pipeline& unwind(bsoncxx::document::view_or_value unwind_args);
+
+    ///
+    /// Deconstructs an array field from the input documents to output a document for each element.
+    /// Each output document is an input document with the value of its array field replaced by
+    /// an element from the unwound array.
+    ///
+    /// @see http://docs.mongodb.org/manual/reference/operator/aggregation/unwind/
+    ///
+    /// @param field_name
+    ///   The name of the field to unwind.
+    ///
+    /// @note
+    ///   This overload of unwind() is intended to be used when no options other than the field name
+    ///   need to be specified.
     ///
     pipeline& unwind(std::string field_name);
 
     ///
+    /// @return A view of the underlying BSON array this pipeline represents.
+    ///
+    bsoncxx::array::view view_array() const;
+
+    ///
     /// @return A view of the underlying BSON document this pipeline represents.
     ///
-    bsoncxx::document::view view() const;
+    /// @deprecated The view_array() method should be used instead of this method.
+    ///
+    MONGOCXX_DEPRECATED bsoncxx::document::view view() const;
 
    private:
     friend class collection;

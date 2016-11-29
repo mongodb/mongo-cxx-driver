@@ -17,7 +17,7 @@
 #include <chrono>
 #include <cstdint>
 
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/stdx.hpp>
@@ -63,6 +63,28 @@ class MONGOCXX_API aggregate {
     /// @return The current batch size.
     ///
     const stdx::optional<std::int32_t>& batch_size() const;
+
+    ///
+    /// Sets the collation for this operation.
+    ///
+    /// @param collation
+    ///   The new collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    aggregate& collation(bsoncxx::document::view_or_value collation);
+
+    ///
+    /// Retrieves the current collation for this operation.
+    ///
+    /// @return
+    ///   The current collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run server-side in milliseconds.
@@ -139,6 +161,7 @@ class MONGOCXX_API aggregate {
    private:
     stdx::optional<bool> _allow_disk_use;
     stdx::optional<std::int32_t> _batch_size;
+    stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<bool> _use_cursor;
     stdx::optional<class read_preference> _read_preference;

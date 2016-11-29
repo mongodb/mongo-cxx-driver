@@ -39,20 +39,21 @@ void pool::_release(client* client) {
 
 pool::~pool() = default;
 
-pool::pool(const uri& uri, stdx::optional<options::ssl> ssl_options)
+pool::pool(const uri& uri, const options::pool& options)
     : _impl{stdx::make_unique<impl>(libmongoc::client_pool_new(uri._impl->uri_t))} {
-#if !defined(MONGOC_ENABLE_SSL)
-    if (uri.ssl() || ssl_options) throw exception{error_code::k_ssl_not_supported};
-#else
-    if (ssl_options) {
+#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
+    if (options.client_opts().ssl_opts()) {
         if (!uri.ssl())
             throw exception{error_code::k_invalid_parameter,
                             "cannot set SSL options if 'ssl=true' not in URI"};
 
-        auto mongoc_opts = options::make_ssl_opts(*ssl_options);
+        auto mongoc_opts = options::make_ssl_opts(*options.client_opts().ssl_opts());
         _impl->ssl_options = std::move(mongoc_opts.second);
         libmongoc::client_pool_set_ssl_opts(_impl->client_pool_t, &mongoc_opts.first);
     }
+#else
+    if (uri.ssl() || options.client_opts().ssl_opts())
+        throw exception{error_code::k_ssl_not_supported};
 #endif
 }
 

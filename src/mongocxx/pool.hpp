@@ -18,7 +18,7 @@
 #include <memory>
 
 #include <bsoncxx/stdx/optional.hpp>
-#include <mongocxx/options/ssl.hpp>
+#include <mongocxx/options/pool.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 
@@ -53,14 +53,13 @@ class MONGOCXX_API pool {
     ///
     /// @param mongodb_uri
     ///  A MongoDB URI representing the connection parameters
-    /// @param ssl_options
-    ///  Optional SSL options to use when connecting to the MongoDB deployment.
+    /// @param options
+    ///  Options to use when connecting to the MongoDB deployment.
     ///
-    /// @throws mongocxx::exception if SSL is enabled and ssl_options are
-    /// invalid, or if SSL is not enabled and ssl_options is engaged.
-    ///
-    pool(const uri& mongodb_uri = mongocxx::uri(),
-         stdx::optional<options::ssl> ssl_options = stdx::nullopt);
+    /// @throws mongocxx::exception if invalid options are provided (whether from the URI or
+    ///  provided client options).
+    explicit pool(const uri& mongodb_uri = mongocxx::uri(),
+                  const options::pool& options = options::pool());
 
     ///
     /// Destroys a pool.

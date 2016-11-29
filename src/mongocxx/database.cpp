@@ -113,17 +113,110 @@ bsoncxx::document::value database::modify_collection(stdx::string_view name,
 
 class collection database::create_collection(bsoncxx::string::view_or_value name,
                                              const options::create_collection& options) {
-    bson_error_t error;
+    document options_builder{};
 
-    libbson::scoped_bson_t opts_bson{options.to_document()};
+    if (options.auto_index_id()) {
+        options_builder << "autoIndexId" << *options.auto_index_id();
+    }
+
+    if (options.capped()) {
+        options_builder << "capped" << *options.capped();
+    }
+
+    if (options.collation()) {
+        options_builder << "collation" << *options.collation();
+    }
+
+    if (options.max()) {
+        options_builder << "max" << *options.max();
+    }
+
+    if (options.no_padding()) {
+        options_builder << "flags" << (*options.no_padding() ? 0x10 : 0x00);
+    }
+
+    if (options.size()) {
+        options_builder << "size" << *options.size();
+    }
+
+    if (options.storage_engine()) {
+        options_builder << "storageEngine" << *options.storage_engine();
+    }
+
+    if (options.validation_criteria()) {
+        auto validation_level_to_string = [](validation_criteria::validation_level level) {
+            switch (level) {
+                case validation_criteria::validation_level::k_off:
+                    return "off";
+                case validation_criteria::validation_level::k_moderate:
+                    return "moderate";
+                case validation_criteria::validation_level::k_strict:
+                    return "strict";
+            }
+            MONGOCXX_UNREACHABLE;
+        };
+
+        auto validation_action_to_string = [](validation_criteria::validation_action action) {
+            switch (action) {
+                case validation_criteria::validation_action::k_warn:
+                    return "warn";
+                case validation_criteria::validation_action::k_error:
+                    return "error";
+            }
+            MONGOCXX_UNREACHABLE;
+        };
+
+        auto validation_criteria = *options.validation_criteria();
+
+        if (validation_criteria.rule()) {
+            options_builder << "validator" << *validation_criteria.rule();
+        }
+
+        if (validation_criteria.level()) {
+            options_builder << "validationLevel"
+                            << validation_level_to_string(*validation_criteria.level());
+        }
+
+        if (validation_criteria.action()) {
+            options_builder << "validationAction"
+                            << validation_action_to_string(*validation_criteria.action());
+        }
+    }
+
+    bson_error_t error;
+    libbson::scoped_bson_t opts_bson{options_builder.view()};
     auto result = libmongoc::database_create_collection(
         _get_impl().database_t, name.terminated().data(), opts_bson.bson(), &error);
-
     if (!result) {
         throw_exception<operation_exception>(error);
     }
 
-    return mongocxx::collection(*this, static_cast<void*>(result));
+    return mongocxx::collection(*this, result);
+}
+
+class collection database::create_view(bsoncxx::string::view_or_value name,
+                                       bsoncxx::string::view_or_value view_on,
+                                       const options::create_view& options) {
+    document options_builder{};
+    options_builder << "viewOn" << view_on;
+
+    if (options.collation()) {
+        options_builder << "collation" << *options.collation();
+    }
+
+    if (options.pipeline()) {
+        options_builder << "pipeline" << options.pipeline()->view_array();
+    }
+
+    libbson::scoped_bson_t opts_bson{options_builder.view()};
+    bson_error_t error;
+    auto result = libmongoc::database_create_collection(
+        _get_impl().database_t, name.terminated().data(), opts_bson.bson(), &error);
+    if (!result) {
+        throw_exception<operation_exception>(error);
+    }
+
+    return mongocxx::collection(*this, result);
 }
 
 void database::drop() {

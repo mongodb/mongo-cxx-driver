@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/write_concern.hpp>
 
@@ -29,6 +29,28 @@ namespace options {
 ///
 class MONGOCXX_API delete_options {
    public:
+    ///
+    /// Sets the collation for this operation.
+    ///
+    /// @param collation
+    ///   The new collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    delete_options& collation(bsoncxx::document::view_or_value collation);
+
+    ///
+    /// Retrieves the current collation for this operation.
+    ///
+    /// @return
+    ///   The current collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+
     ///
     /// Sets the write_concern for this operation.
     ///
@@ -51,6 +73,7 @@ class MONGOCXX_API delete_options {
     const stdx::optional<class write_concern>& write_concern() const;
 
    private:
+    stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<class write_concern> _write_concern;
 };
 

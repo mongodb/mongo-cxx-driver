@@ -55,6 +55,28 @@ class MONGOCXX_API replace_one {
     const bsoncxx::document::view_or_value& replacement() const;
 
     ///
+    /// Sets the collation for this replacement operation.
+    ///
+    /// @param collation
+    ///   The new collation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    replace_one& collation(bsoncxx::document::view_or_value collation);
+
+    ///
+    /// Gets the collation option for this replacement operation.
+    ///
+    /// @return
+    ///   The optional value of the collation option.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/collation/
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+
+    ///
     /// Sets the upsert option.
     ///
     /// When upsert is @c true, this operation will insert the replacement document as a new
@@ -77,11 +99,10 @@ class MONGOCXX_API replace_one {
     const stdx::optional<bool>& upsert() const;
 
    private:
-    // Required
     bsoncxx::document::view_or_value _filter;
     bsoncxx::document::view_or_value _replacement;
 
-    // Optional
+    stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bool> _upsert;
 };
 

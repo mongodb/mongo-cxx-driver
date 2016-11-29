@@ -92,6 +92,7 @@ class instance::impl {
         } else {
             libmongoc::log_set_handler(null_log_handler, nullptr);
         }
+        libmongoc::handshake_data_append("mongocxx", MONGOCXX_VERSION_STRING, NULL);
     }
 
     ~impl() {

@@ -22,6 +22,7 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/options/modify_collection.hpp>
 #include <mongocxx/options/create_collection.hpp>
+#include <mongocxx/options/create_view.hpp>
 #include <mongocxx/write_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 
@@ -102,12 +103,44 @@ class MONGOCXX_API database {
     ///
     /// @throws mongocxx::operation_exception if the operation fails.
     ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the database
+    ///   level set write concern - database::write_concern(wc). (MongoDB
+    ///   3.4+)
+    ///
     class collection create_collection(
         bsoncxx::string::view_or_value name,
         const options::create_collection& options = options::create_collection());
 
     ///
+    /// Creates a non-materialized view in this database with the specified options.
+    /// Non-materialized views are represented by the @c collection objects, and support many of the
+    /// same read-only operations that regular collections do.
+    ///
+    /// @see https://docs.mongodb.com/master/core/views/
+    ///
+    /// @param name the name of the view to be created.
+    /// @param view_on
+    ///   the name of the source view or collection in this database from which to create the view.
+    /// @param options the options for the new view.
+    ///
+    /// @throws mongocxx::operation_exception if the operation fails.
+    ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the database
+    ///   level set write concern - database::write_concern(wc). (MongoDB
+    ///   3.4+)
+    ///
+    class collection create_view(bsoncxx::string::view_or_value name,
+                                 bsoncxx::string::view_or_value view_on,
+                                 const options::create_view& options = options::create_view());
+
+    ///
     /// Modify an existing collection.
+    ///
+    /// @deprecated
+    ///   This method is deprecated.  To modify an existing collection, invoke the "collMod" command
+    ///   with database::run_command().
     ///
     /// @see https://docs.mongodb.org/manual/reference/command/collMod/
     ///
@@ -126,6 +159,11 @@ class MONGOCXX_API database {
     /// @throws mongocxx::operation_exception if the operation fails.
     //
     /// @see http://docs.mongodb.org/manual/reference/method/db.dropDatabase/
+    ///
+    /// @note
+    ///   In order to pass a write concern to this, you must use the database
+    ///   level set write concern - database::write_concern(wc). (MongoDB
+    ///   3.4+)
     ///
     void drop();
 

@@ -25,6 +25,23 @@ update_many::update_many(bsoncxx::document::view_or_value filter,
     : _filter(std::move(filter)), _update(std::move(update)) {
 }
 
+const bsoncxx::document::view_or_value& update_many::filter() const {
+    return _filter;
+}
+
+const bsoncxx::document::view_or_value& update_many::update() const {
+    return _update;
+}
+
+update_many& update_many::collation(bsoncxx::document::view_or_value collation) {
+    _collation = collation;
+    return *this;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& update_many::collation() const {
+    return _collation;
+}
+
 update_many& update_many::upsert(bool upsert) {
     _upsert = upsert;
     return *this;
@@ -32,14 +49,6 @@ update_many& update_many::upsert(bool upsert) {
 
 const stdx::optional<bool>& update_many::upsert() const {
     return _upsert;
-}
-
-const bsoncxx::document::view_or_value& update_many::filter() const {
-    return _filter;
-}
-
-const bsoncxx::document::view_or_value& update_many::update() const {
-    return _update;
 }
 
 }  // namespace model

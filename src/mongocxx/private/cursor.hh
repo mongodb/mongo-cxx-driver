@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <bsoncxx/document/view.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
@@ -24,14 +25,38 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class cursor::impl {
    public:
-    impl(mongoc_cursor_t* cursor) : cursor_t(cursor) {
+    // States represent a one-way, ordered lifecycle of a cursor. k_started
+    // means that libmongoc::cursor_next has been called at least once.
+    enum class state { k_pending = 0, k_started = 1, k_dead = 2 };
+
+    impl(mongoc_cursor_t* cursor)
+        : cursor_t(cursor), status{cursor ? state::k_pending : state::k_dead} {
     }
 
     ~impl() {
         libmongoc::cursor_destroy(cursor_t);
     }
 
+    bool has_started() const {
+        return status >= state::k_started;
+    }
+
+    bool is_dead() const {
+        return status == state::k_dead;
+    }
+
+    void mark_started() {
+        status = state::k_started;
+    }
+
+    void mark_dead() {
+        doc = bsoncxx::document::view{};
+        status = state::k_dead;
+    }
+
     mongoc_cursor_t* cursor_t;
+    bsoncxx::document::view doc;
+    state status;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

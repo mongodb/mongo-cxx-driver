@@ -40,6 +40,11 @@ index& index::name(bsoncxx::string::view_or_value name) {
     return *this;
 }
 
+index& index::collation(bsoncxx::document::view collation) {
+    _collation = collation;
+    return *this;
+}
+
 index& index::sparse(bool sparse) {
     _sparse = sparse;
     return *this;
@@ -121,6 +126,10 @@ const stdx::optional<bool>& index::unique() const {
 
 const stdx::optional<bsoncxx::string::view_or_value>& index::name() const {
     return _name;
+}
+
+const stdx::optional<bsoncxx::document::view>& index::collation() const {
+    return _collation;
 }
 
 const stdx::optional<bool>& index::sparse() const {

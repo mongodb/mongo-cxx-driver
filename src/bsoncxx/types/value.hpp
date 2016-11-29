@@ -127,6 +127,11 @@ class BSONCXX_API value {
     explicit value(b_int64) noexcept;
 
     ///
+    /// Construct a value from a BSON Decimal128.
+    ///
+    explicit value(b_decimal128) noexcept;
+
+    ///
     /// Construct a value from a BSON min-key.
     ///
     explicit value(b_minkey) noexcept;
@@ -322,6 +327,15 @@ class BSONCXX_API value {
     const b_int64& get_int64() const;
 
     ///
+    /// @return The underlying BSON Decimal128 value.
+    ///
+    /// @warning
+    ///   It is undefined behavior to call the wrong get_<type> method. Check
+    ///   the underlying type() first.
+    ///
+    const b_decimal128& get_decimal128() const;
+
+    ///
     /// @return The underlying BSON min-key value.
     ///
     /// @warning
@@ -362,6 +376,7 @@ class BSONCXX_API value {
         struct b_int32 _b_int32;
         struct b_timestamp _b_timestamp;
         struct b_int64 _b_int64;
+        struct b_decimal128 _b_decimal128;
         struct b_minkey _b_minkey;
         struct b_maxkey _b_maxkey;
     };

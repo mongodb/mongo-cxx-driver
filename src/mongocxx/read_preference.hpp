@@ -14,9 +14,10 @@
 
 #pragma once
 
+#include <chrono>
 #include <cstdint>
-#include <string>
 #include <memory>
+#include <string>
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -44,6 +45,8 @@ class uri;
 /// Read preference can be broadly specified by setting a mode. It is also possible to
 /// set tags in the read preference for more granular control, and to target specific members of a
 /// replica set via attributes other than their current state as a primary or secondary node.
+/// Furthermore, it is also possible to set a staleness threshold, such that the read is limited to
+/// targeting secondaries whose staleness is less than or equal to the given threshold.
 ///
 /// Read preferences are ignored for direct connections to a single mongod instance. However,
 /// in order to perform read operations on a direct connection to a secondary member of a replica
@@ -157,6 +160,8 @@ class MONGOCXX_API read_preference {
     /// @param tags
     ///   Document representing the tags.
     ///
+    /// @see http://docs.mongodb.org/manual/core/read-preference/#tag-sets
+    ///
     void tags(bsoncxx::document::view_or_value tags);
 
     ///
@@ -164,7 +169,44 @@ class MONGOCXX_API read_preference {
     ///
     /// @return The optionally set current tags.
     ///
+    /// @see http://docs.mongodb.org/manual/core/read-preference/#tag-sets
+    ///
     stdx::optional<bsoncxx::document::view> tags() const;
+
+    ///
+    /// Sets the max staleness setting for this read_preference.  Secondary
+    /// servers with an estimated lag greater than this value will be excluded
+    /// from selection under modes that allow secondaries.
+    ///
+    /// Max staleness must be at least 90 seconds, and also at least
+    /// the sum (in seconds) of the client's heartbeatFrequencyMS and the
+    /// server's idle write period, which is 10 seconds.  For general use,
+    /// 90 seconds is the effective minimum.  If less, an exception will be
+    /// thrown when an operation is attempted.
+    ///
+    /// Max staleness may only be used with MongoDB version 3.4 or later.
+    /// If used with an earlier version, an exception will be thrown when an
+    /// operation is attempted.
+    ///
+    /// @note
+    ///     The max-staleness feature is designed to prevent badly-lagging
+    ///     servers from being selected.  The staleness estimate is
+    ///     imprecise and shouldn't be used to try to select "up-to-date"
+    ///     secondaries.
+    ///
+    /// @param max_staleness
+    ///    The new max staleness setting.  It must be positive.
+    ///
+    /// @throws mongocxx::logic_error if the argument is invalid.
+    ///
+    void max_staleness(std::chrono::seconds max_staleness);
+
+    ///
+    /// Returns the current max staleness setting for this read_preference.
+    ///
+    /// @return The optionally current max staleness setting.
+    ///
+    stdx::optional<std::chrono::seconds> max_staleness() const;
 
    private:
     friend client;

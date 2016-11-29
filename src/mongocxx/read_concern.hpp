@@ -41,6 +41,12 @@ class uri;
 /// been written to a majority of nodes and thus cannot be rolled back. By default, MongoDB uses a
 /// readConcern of "local" which does not guarantee that the read data would not be rolled back.
 ///
+/// MongoDB 3.4 introduces a read concern level of "linearizable" to read data that has been written
+/// to a majority of nodes (i.e. cannot be rolled back) @b and is not stale. Linearizable read
+/// concern is available for all MongoDB supported storage engines and applies to read operations on
+/// a single document. Note that writes must be made with majority write concern in order for reads
+/// to be linearizable.
+///
 /// @see https://docs.mongodb.org/manual/reference/read-concern/
 ///
 class MONGOCXX_API read_concern {
@@ -53,6 +59,7 @@ class MONGOCXX_API read_concern {
     enum class level {
         k_local,
         k_majority,
+        k_linearizable,
         k_server_default,
         k_unknown,
     };
@@ -95,9 +102,11 @@ class MONGOCXX_API read_concern {
     /// Sets the read concern level.
     ///
     /// @param rc_level
-    ///   Either k_local, k_majority, or k_server_default.
+    ///   Either k_local, k_majority, k_linearizable, or k_server_default.
     ///
-    /// @throws std::invalid_argument if rc_level is not k_local, k_majority, or k_server_default.
+    /// @throws
+    ///   std::invalid_argument if rc_level is not k_local, k_majority, k_linearizable, or
+    ///   k_server_default.
     ///
     void acknowledge_level(level rc_level);
 
@@ -105,7 +114,7 @@ class MONGOCXX_API read_concern {
     /// Gets the current read concern level.
     ///
     /// If this was set with acknowledge_string to anything other than "local", "majority",
-    /// or an empty string, this will return k_unknown.
+    /// "linearizable", or an empty string, this will return k_unknown.
     ///
     /// @return The read concern level.
     ///
@@ -114,7 +123,7 @@ class MONGOCXX_API read_concern {
     ///
     /// Sets the read concern string.
     ///
-    /// One of "local", "majority", or "".
+    /// One of "local", "majority", "linearizable", or "".
     ///
     /// @param rc_string
     ///   The read concern string.
@@ -125,7 +134,7 @@ class MONGOCXX_API read_concern {
     /// Gets the current read concern string.
     ///
     /// If the read concern level was set with acknowledge_level, this will return either "local",
-    /// "majority", or an empty string for k_server_default.
+    /// "majority", "linearizable", or an empty string for k_server_default.
     ///
     /// @return The read concern string.
     ///

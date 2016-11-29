@@ -189,7 +189,7 @@ tasks:
       commands:
         - func: "install_c_driver"
           vars:
-              MONGOC_VERSION: 1.4.2
+              MONGOC_VERSION: 1.5.0
         - func: "compile"
         - func: "test"
 
@@ -327,22 +327,21 @@ buildvariants:
           - name: compile_and_test_with_mongoc_current
           - name: compile_and_test_with_mongoc_master
 
-# Doesn't have cmake BUILD-2154
-#    - name: ubuntu1604-zseries
-#      display_name: "s390x Ubuntu 16.04"
-#      batchtime: 1440 # 1 day
-#      expansions:
-#          build_type: "Release"
-#          source: *ubuntu_s390x_source
-#          tar_options: *linux_tar_options
-#          compile_concurrency: *linux_compile_concurrency
-#          cdriver_configure_flags: *linux_cdriver_configure_flags
-#          cmake_path: *ubuntu_zap_cmake_path
-#      run_on:
-#          - ubuntu1604-zseries-small
-#      tasks:
-#          - name: compile_and_test_with_mongoc_current
-#          - name: compile_and_test_with_mongoc_master
+    - name: ubuntu1604-zseries
+      display_name: "s390x Ubuntu 16.04"
+      batchtime: 1440 # 1 day
+      expansions:
+          build_type: "Release"
+          source: *ubuntu_s390x_source
+          tar_options: *linux_tar_options
+          compile_concurrency: *linux_compile_concurrency
+          cdriver_configure_flags: *linux_cdriver_configure_flags
+          cmake_path: *ubuntu_zap_cmake_path
+      run_on:
+          - ubuntu1604-zseries-small
+      tasks:
+          - name: compile_and_test_with_mongoc_current
+          - name: compile_and_test_with_mongoc_master
 
     - name: power8-ubuntu1604
       display_name: "ppc64le Ubuntu 16.04"
