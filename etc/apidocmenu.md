@@ -16,11 +16,11 @@ Currently, no drivers guarantee API or ABI stability.
 
 | mongocxx                             | legacy
 | -------------------------------------| --------------------------------
-| [mongocxx-3.0.3](../mongocxx-3.0.3/) | [legacy-1.1.2](../legacy-1.1.2/)
-| [mongocxx-3.0.2](../mongocxx-3.0.2/) | [legacy-1.1.1](../legacy-1.1.1/)
-| [mongocxx-3.0.1](../mongocxx-3.0.1/) | [legacy-1.1.0](../legacy-1.1.0/)
-| [mongocxx-3.0.0](../mongocxx-3.0.0/) | [legacy-1.0.7](../legacy-1.0.7/)
-|                                      | [legacy-1.0.6](../legacy-1.0.6/)
+| [mongocxx-3.1.0-rc0](../mongocxx-3.1.0-rc0/) | [legacy-1.1.2](../legacy-1.1.2/)
+| [mongocxx-3.0.3](../mongocxx-3.0.3/) | [legacy-1.1.1](../legacy-1.1.1/)
+| [mongocxx-3.0.2](../mongocxx-3.0.2/) | [legacy-1.1.0](../legacy-1.1.0/)
+| [mongocxx-3.0.1](../mongocxx-3.0.1/) | [legacy-1.0.7](../legacy-1.0.7/)
+| [mongocxx-3.0.0](../mongocxx-3.0.0/) | [legacy-1.0.6](../legacy-1.0.6/)
 |                                      | [legacy-1.0.5](../legacy-1.0.5/)
 |                                      | [legacy-1.0.4](../legacy-1.0.4/)
 |                                      | [legacy-1.0.3](../legacy-1.0.3/)
@@ -34,12 +34,13 @@ The following compatibility table specifies the driver version(s)
 recommended for different versions of MongoDB.  The 3.0.x series
 is recommended for all new development.
 
-| Family/version | MongoDB 2.4 | MongoDB 2.6 | MongoDB 3.0 | MongoDB 3.2 |
-| ---------------| ------------| ------------| ------------| ------------|
-| mongocxx 3.0.x | ✓           | ✓           | ✓           | ✓           |
-| legacy   1.1.x | ✓           | ✓           | ✓           | ✓           |
-| legacy   1.0.x | ✓           | ✓           | ✓           |             |
-| 26compat (all) |             | ✓           |             |             |
+| Family/version | MongoDB 2.4 | MongoDB 2.6 | MongoDB 3.0 | MongoDB 3.2 | MongoDB 3.4 |
+| ---------------| ------------| ------------| ------------| ------------|-------------|
+| mongocxx 3.1.x | ✓           | ✓           | ✓           | ✓           | ✓           |
+| mongocxx 3.0.x | ✓           | ✓           | ✓           | ✓           |             |
+| legacy   1.1.x | ✓           | ✓           | ✓           | ✓           |             |
+| legacy   1.0.x | ✓           | ✓           | ✓           |             |             |
+| 26compat (all) |             | ✓           |             |             |             |
 
 ## Resources
 
