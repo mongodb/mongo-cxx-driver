@@ -1192,7 +1192,7 @@ To do this, we change the query statement from:&lt;/p&gt;
 following update in the mongo shell:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;&amp;gt; use tutorial
-&amp;gt; db.persons.update( 
+&amp;gt; db.persons.update(
     { name : &#39;Joe&#39;, age : 33 },
     { $inc : { visits : 1 } }
 )

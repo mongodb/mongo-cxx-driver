@@ -1598,7 +1598,7 @@ To do this, we change the query statement from:</p>
 following update in the mongo shell:</p>
 
 <pre><code class="language-js">&gt; use tutorial
-&gt; db.persons.update( 
+&gt; db.persons.update(
     { name : 'Joe', age : 33 },
     { $inc : { visits : 1 } }
 )

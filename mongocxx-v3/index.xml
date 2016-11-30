@@ -421,16 +421,16 @@ auto threadfunc = [](mongocxx::client&amp;amp; client, stdx::string_view dbname)
     client[dbname][&amp;quot;col&amp;quot;].insert({});
 }
 // don&#39;t even bother sharing clients. Just give each thread its own,
-std::thread([]() { 
-    mongocxx::client c{}; 
-    threadfunc(c, &amp;quot;db1&amp;quot;); 
-    threadfunc(c, &amp;quot;db2&amp;quot;); 
+std::thread([]() {
+    mongocxx::client c{};
+    threadfunc(c, &amp;quot;db1&amp;quot;);
+    threadfunc(c, &amp;quot;db2&amp;quot;);
 });
 
-std::thread([]() { 
-    mongocxx::client c{}; 
+std::thread([]() {
+    mongocxx::client c{};
     threadfunc(c, &amp;quot;db2&amp;quot;);
-    threadfunc(c, &amp;quot;db1&amp;quot;); 
+    threadfunc(c, &amp;quot;db1&amp;quot;);
 });
 &lt;/code&gt;&lt;/pre&gt;
 
