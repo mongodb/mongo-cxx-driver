@@ -68,6 +68,7 @@ class core::impl {
         _has_user_key = false;
     }
 
+    // Throws bsoncxx::exception if the top-level BSON datum is an array.
     bsoncxx::document::value steal_document() {
         if (_root_is_array) {
             throw bsoncxx::exception{error_code::k_cannot_perform_document_operation_on_array};
@@ -80,6 +81,7 @@ class core::impl {
         return bsoncxx::document::value{buf_ptr, buf_len, bson_free_deleter};
     }
 
+    // Throws bsoncxx::exception if the top-level BSON datum is a document.
     bsoncxx::array::value steal_array() {
         if (!_root_is_array) {
             throw bsoncxx::exception{error_code::k_cannot_perform_array_operation_on_document};
@@ -115,6 +117,8 @@ class core::impl {
         _stack.pop_back();
     }
 
+    // Throws bsoncxx::exception if the current BSON datum is a document that is waiting for a key
+    // to be appended to start a new key/value pair.
     stdx::string_view next_key() {
         if (is_array()) {
             _itoa_key = _stack.empty() ? _n++ : _stack.back().n++;
@@ -139,6 +143,7 @@ class core::impl {
         _has_user_key = true;
     }
 
+    // Throws bsoncxx::exception if the top-level BSON datum is an array.
     bson_t* root_document() {
         if (_root_is_array) {
             throw bsoncxx::exception{error_code::k_cannot_perform_document_operation_on_array};
@@ -147,6 +152,7 @@ class core::impl {
         return &_root;
     }
 
+    // Throws bsoncxx::exception if the top-level BSON datum is a document.
     bson_t* root_array() {
         if (!_root_is_array) {
             throw bsoncxx::exception{error_code::k_cannot_perform_array_operation_on_document};

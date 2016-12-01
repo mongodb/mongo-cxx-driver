@@ -69,6 +69,8 @@ class BSONCXX_API core {
     /// @param key
     ///   A null-terminated array of characters.
     ///
+    /// @throws bsoncxx::exception if the current BSON datum is an array.
+    ///
     void key_view(stdx::string_view key);
 
     ///
@@ -77,30 +79,48 @@ class BSONCXX_API core {
     /// @param key
     ///   A string key.
     ///
+    /// @throws bsoncxx::exception if the current BSON datum is an array.
+    ///
     void key_owned(std::string key);
 
     ///
     /// Opens a sub-document within this BSON datum.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void open_document();
 
     ///
     /// Opens a sub-array within this BSON datum.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void open_array();
 
     ///
     /// Closes the current sub-document within this BSON datum.
+    ///
+    /// @throws bsoncxx::exception if the current BSON datum is not an open sub-document.
     ///
     void close_document();
 
     ///
     /// Closes the current sub-array within this BSON datum.
     ///
+    /// @throws bsoncxx::exception if the current BSON datum is not an open sub-array.
+    ///
     void close_array();
 
     ///
     /// Appends the keys from a BSON document into this BSON datum.
+    ///
+    /// @note
+    ///   If this BSON datum is a document, the original keys from `view` are kept.  Otherwise (if
+    ///   this BSON datum is an array), the original keys from `view` are discarded.
     ///
     /// @note
     ///   This can be used with an array::view as well by converting it to a document::view first.
@@ -110,120 +130,216 @@ class BSONCXX_API core {
     ///
     /// Appends a BSON double.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(const types::b_double& value);
 
     ///
     /// Append a BSON UTF-8 string.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(const types::b_utf8& value);
 
     ///
     /// Appends a BSON document.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(const types::b_document& value);
 
     ///
     /// Appends a BSON array.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(const types::b_array& value);
 
     ///
     /// Appends a BSON binary datum.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(const types::b_binary& value);
 
     ///
     /// Appends a BSON undefined.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(const types::b_undefined& value);
 
     ///
     /// Appends a BSON ObjectId.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(const types::b_oid& value);
 
     ///
     /// Appends a BSON boolean.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(const types::b_bool& value);
 
     ///
     /// Appends a BSON date.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(const types::b_date& value);
 
     ///
     /// Appends a BSON null.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(const types::b_null& value);
 
     ///
     /// Appends a BSON regex.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(const types::b_regex& value);
 
     ///
     /// Appends a BSON DBPointer.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(const types::b_dbpointer& value);
 
     ///
     /// Appends a BSON JavaScript code.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(const types::b_code& value);
 
     ///
     /// Appends a BSON symbol.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(const types::b_symbol& value);
 
     ///
     /// Appends a BSON JavaScript code with scope.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(const types::b_codewscope& value);
 
     ///
     /// Appends a BSON 32-bit signed integer.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(const types::b_int32& value);
 
     ///
     /// Appends a BSON replication timestamp.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(const types::b_timestamp& value);
 
     ///
     /// Appends a BSON 64-bit signed integer.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(const types::b_int64& value);
 
     ///
     /// Appends a BSON Decimal128.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(const types::b_decimal128& value);
 
     ///
     /// Appends a BSON min-key.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(const types::b_minkey& value);
 
     ///
     /// Appends a BSON max-key.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(const types::b_maxkey& value);
 
     ///
     /// Appends a BSON variant value.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(const types::value& value);
 
     ///
     /// Appends an STL string as a BSON UTF-8 string.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(std::string str);
 
     ///
     /// Appends a string view as a BSON UTF-8 string.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(stdx::string_view str);
 
@@ -231,6 +347,10 @@ class BSONCXX_API core {
     /// Appends a char* or const char*.
     ///
     /// We disable all other pointer types to prevent the surprising implicit conversion to bool.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     template <typename T>
     BSONCXX_INLINE void append(T* v) {
@@ -242,40 +362,72 @@ class BSONCXX_API core {
     ///
     /// Appends a native boolean as a BSON boolean.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(bool value);
 
     ///
     /// Appends a native double as a BSON double.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(double value);
 
     ///
     /// Appends a native int32_t as a BSON 32-bit signed integer.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(std::int32_t value);
 
     ///
     /// Appends a native int64_t as a BSON 64-bit signed integer.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(std::int64_t value);
 
     ///
     /// Appends an oid as a BSON ObjectId.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(const oid& value);
 
     ///
     /// Appends a decimal128 object as a BSON Decimal128.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(decimal128 value);
 
     ///
     /// Appends the given document view.
     ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
+    ///
     void append(document::view view);
 
     ///
     /// Appends the given array view.
+    ///
+    /// @throws
+    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
+    ///   appended to start a new key/value pair.
     ///
     void append(array::view view);
 
@@ -284,6 +436,13 @@ class BSONCXX_API core {
     ///
     /// @return A document::view of the internal BSON.
     ///
+    /// @pre
+    ///    The top-level BSON datum should be a document that is not waiting for a key to be
+    ///    appended to start a new key/value pair, and does contain any open sub-documents or open
+    ///    sub-arrays.
+    ///
+    /// @throws bsoncxx::exception if the precondition is violated.
+    ///
     document::view view_document() const;
 
     ///
@@ -291,9 +450,11 @@ class BSONCXX_API core {
     ///
     /// @return An array::view of the internal BSON.
     ///
-    /// @warning
-    ///   It is undefined behavior to call this method if the underlying BSON
-    ///   datum is not a BSON array.
+    /// @pre
+    ///    The top-level BSON datum should be an array that does not contain any open sub-documents
+    ///    or open sub-arrays.
+    ///
+    /// @throws bsoncxx::exception if the precondition is violated.
     ///
     array::view view_array() const;
 
@@ -301,6 +462,13 @@ class BSONCXX_API core {
     /// Transfers ownership of the underlying document to the caller.
     ///
     /// @return A document::value with ownership of the document.
+    ///
+    /// @pre
+    ///    The top-level BSON datum should be a document that is not waiting for a key to be
+    ///    appended to start a new key/value pair, and does not contain any open sub-documents or
+    ///    open sub-arrays.
+    ///
+    /// @throws bsoncxx::exception if the precondition is violated.
     ///
     /// @warning
     ///   After calling extract_document() it is illegal to call any methods on this class, unless
@@ -313,9 +481,11 @@ class BSONCXX_API core {
     ///
     /// @return A document::value with ownership of the document.
     ///
-    /// @warning
-    ///   It is undefined behavior to call this method if the underlying BSON
-    ///   datum is not a BSON array.
+    /// @pre
+    ///    The top-level BSON datum should be an array that does not contain any open sub-documents
+    ///    or open sub-arrays.
+    ///
+    /// @throws bsoncxx::exception if the precondition is violated.
     ///
     /// @warning
     ///   After calling extract_array() it is illegal to call any methods on this class, unless it
