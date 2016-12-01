@@ -139,7 +139,19 @@ class core::impl {
         _has_user_key = true;
     }
 
-    bson_t* root() {
+    bson_t* root_document() {
+        if (_root_is_array) {
+            throw bsoncxx::exception{error_code::k_cannot_perform_document_operation_on_array};
+        }
+
+        return &_root;
+    }
+
+    bson_t* root_array() {
+        if (!_root_is_array) {
+            throw bsoncxx::exception{error_code::k_cannot_perform_array_operation_on_document};
+        }
+
         return &_root;
     }
 
@@ -475,7 +487,8 @@ bsoncxx::document::view core::view_document() const {
         throw bsoncxx::exception{error_code::k_unmatched_key_in_builder};
     }
 
-    return bsoncxx::document::view(bson_get_data(_impl->root()), _impl->root()->len);
+    return bsoncxx::document::view(bson_get_data(_impl->root_document()),
+                                   _impl->root_document()->len);
 }
 
 bsoncxx::document::value core::extract_document() {
@@ -491,7 +504,7 @@ bsoncxx::array::view core::view_array() const {
         throw bsoncxx::exception{error_code::k_unmatched_key_in_builder};
     }
 
-    return bsoncxx::array::view(bson_get_data(_impl->root()), _impl->root()->len);
+    return bsoncxx::array::view(bson_get_data(_impl->root_array()), _impl->root_array()->len);
 }
 
 bsoncxx::array::value core::extract_array() {

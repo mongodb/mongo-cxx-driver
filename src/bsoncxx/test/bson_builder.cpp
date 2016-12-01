@@ -738,6 +738,32 @@ TEST_CASE("core builder open/close works", "[bsoncxx::builder::core]") {
     }
 }
 
+TEST_CASE("core view/extract methods throw when called with wrong top-level type",
+          "[bsoncxx::builder::core]") {
+    builder::core core_array(true);
+    builder::core core_document(false);
+
+    SECTION("view_array only throws when called on document") {
+        REQUIRE_NOTHROW(core_array.view_array());
+        REQUIRE_THROWS(core_document.view_array());
+    }
+
+    SECTION("extract_array only throws when called on document") {
+        REQUIRE_NOTHROW(core_array.extract_array());
+        REQUIRE_THROWS(core_document.extract_array());
+    }
+
+    SECTION("view_document only throws when called on array") {
+        REQUIRE_THROWS(core_array.view_document());
+        REQUIRE_NOTHROW(core_document.view_document());
+    }
+
+    SECTION("extract_document only throws when called on array") {
+        REQUIRE_THROWS(core_array.extract_document());
+        REQUIRE_NOTHROW(core_document.extract_document());
+    }
+}
+
 TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
     builder::stream::document stream;
     builder::basic::document basic;
