@@ -35,9 +35,9 @@ namespace builder {
 /// A low-level interface for constructing BSON documents and arrays.
 ///
 /// @remark
-///   Generally it is recommended to use the classes in builder::basic or
-///   builder::stream instead of using this class directly. However, developers
-///   who wish to write their own abstractions may find this class useful.
+///   Generally it is recommended to use the classes in builder::basic or builder::stream instead of
+///   using this class directly. However, developers who wish to write their own abstractions may
+///   find this class useful.
 ///
 class BSONCXX_API core {
    public:
@@ -47,7 +47,7 @@ class BSONCXX_API core {
     /// Constructs an empty BSON datum.
     ///
     /// @param is_array
-    ///   true if the top-level BSON datum should be an array.
+    ///   True if the top-level BSON datum should be an array.
     ///
     explicit core(bool is_array);
 
@@ -63,8 +63,8 @@ class BSONCXX_API core {
     ///   Use key_owned() unless you know what you are doing.
     ///
     /// @warning
-    ///   The caller must ensure that the lifetime of the backing
-    ///   string extends until the next value is appended.
+    ///   The caller must ensure that the lifetime of the backing string extends until the next
+    ///   value is appended.
     ///
     /// @param key
     ///   A null-terminated array of characters.
@@ -72,8 +72,7 @@ class BSONCXX_API core {
     void key_view(stdx::string_view key);
 
     ///
-    /// Appends a key passed as a STL string.
-    /// Transfers ownership of the key to this class.
+    /// Appends a key passed as an STL string.  Transfers ownership of the key to this class.
     ///
     /// @param key
     ///   A string key.
@@ -104,13 +103,12 @@ class BSONCXX_API core {
     /// Appends the keys from a BSON document into this BSON datum.
     ///
     /// @note
-    ///   This can be used with an array::view as well by converting
-    ///   it to a document::view first.
+    ///   This can be used with an array::view as well by converting it to a document::view first.
     ///
     void concatenate(const document::view& view);
 
     ///
-    /// Append a BSON double.
+    /// Appends a BSON double.
     ///
     void append(const types::b_double& value);
 
@@ -120,120 +118,119 @@ class BSONCXX_API core {
     void append(const types::b_utf8& value);
 
     ///
-    /// Append a BSON document.
+    /// Appends a BSON document.
     ///
     void append(const types::b_document& value);
 
     ///
-    /// Append a BSON array.
+    /// Appends a BSON array.
     ///
     void append(const types::b_array& value);
 
     ///
-    /// Append a BSON binary datum.
+    /// Appends a BSON binary datum.
     ///
     void append(const types::b_binary& value);
 
     ///
-    /// Append a BSON undefined.
+    /// Appends a BSON undefined.
     ///
     void append(const types::b_undefined& value);
 
     ///
-    /// Append a BSON ObjectId.
+    /// Appends a BSON ObjectId.
     ///
     void append(const types::b_oid& value);
 
     ///
-    /// Append a BSON boolean.
+    /// Appends a BSON boolean.
     ///
     void append(const types::b_bool& value);
 
     ///
-    /// Append a BSON date.
+    /// Appends a BSON date.
     ///
     void append(const types::b_date& value);
 
     ///
-    /// Append a BSON null.
+    /// Appends a BSON null.
     ///
     void append(const types::b_null& value);
 
     ///
-    /// Append a BSON regex.
+    /// Appends a BSON regex.
     ///
     void append(const types::b_regex& value);
 
     ///
-    /// Append a BSON DBPointer.
+    /// Appends a BSON DBPointer.
     ///
     void append(const types::b_dbpointer& value);
 
     ///
-    /// Append a BSON JavaScript code.
+    /// Appends a BSON JavaScript code.
     ///
     void append(const types::b_code& value);
 
     ///
-    /// Append a BSON symbol.
+    /// Appends a BSON symbol.
     ///
     void append(const types::b_symbol& value);
 
     ///
-    /// Append a BSON JavaScript code with scope.
+    /// Appends a BSON JavaScript code with scope.
     ///
     void append(const types::b_codewscope& value);
 
     ///
-    /// Append a BSON 32-bit signed integer.
+    /// Appends a BSON 32-bit signed integer.
     ///
     void append(const types::b_int32& value);
 
     ///
-    /// Append a BSON replication timestamp.
+    /// Appends a BSON replication timestamp.
     ///
     void append(const types::b_timestamp& value);
 
     ///
-    /// Append a BSON 64-bit signed integer.
+    /// Appends a BSON 64-bit signed integer.
     ///
     void append(const types::b_int64& value);
 
     ///
-    /// Append a BSON Decimal128.
+    /// Appends a BSON Decimal128.
     ///
     void append(const types::b_decimal128& value);
 
     ///
-    /// Append a BSON min-key.
+    /// Appends a BSON min-key.
     ///
     void append(const types::b_minkey& value);
 
     ///
-    /// Append a BSON max-key.
+    /// Appends a BSON max-key.
     ///
     void append(const types::b_maxkey& value);
 
     ///
-    /// Append a BSON variant value.
+    /// Appends a BSON variant value.
     ///
     void append(const types::value& value);
 
     ///
-    /// Append a STL string as a BSON UTF-8 string.
+    /// Appends an STL string as a BSON UTF-8 string.
     ///
     void append(std::string str);
 
     ///
-    /// Append a string view as a BSON UTF-8 string.
+    /// Appends a string view as a BSON UTF-8 string.
     ///
     void append(stdx::string_view str);
 
     ///
-    /// Append a char* or const char*
+    /// Appends a char* or const char*.
     ///
-    /// We disable all other pointer types to prevent the surprising implicit
-    /// conversion to bool.
+    /// We disable all other pointer types to prevent the surprising implicit conversion to bool.
     ///
     template <typename T>
     BSONCXX_INLINE void append(T* v) {
@@ -243,54 +240,54 @@ class BSONCXX_API core {
     }
 
     ///
-    /// Append a native boolean as a BSON boolean.
+    /// Appends a native boolean as a BSON boolean.
     ///
     void append(bool value);
 
     ///
-    /// Append a native double as a BSON double.
+    /// Appends a native double as a BSON double.
     ///
     void append(double value);
 
     ///
-    /// Append a native int32_t as a BSON 32-bit signed integer.
+    /// Appends a native int32_t as a BSON 32-bit signed integer.
     ///
     void append(std::int32_t value);
 
     ///
-    /// Append a native int64_t as a BSON 64-bit signed integer.
+    /// Appends a native int64_t as a BSON 64-bit signed integer.
     ///
     void append(std::int64_t value);
 
     ///
-    /// Append an oid as a BSON ObjectId.
+    /// Appends an oid as a BSON ObjectId.
     ///
     void append(const oid& value);
 
     ///
-    /// Append a decimal128 object as a BSON Decimal128.
+    /// Appends a decimal128 object as a BSON Decimal128.
     ///
     void append(decimal128 value);
 
     ///
-    /// Append the given document view.
+    /// Appends the given document view.
     ///
     void append(document::view view);
 
     ///
-    /// Append the given array view.
+    /// Appends the given array view.
     ///
     void append(array::view view);
 
     ///
-    /// Get a view over the document.
+    /// Gets a view over the document.
     ///
     /// @return A document::view of the internal BSON.
     ///
     document::view view_document() const;
 
     ///
-    /// Get a view over the array.
+    /// Gets a view over the array.
     ///
     /// @return An array::view of the internal BSON.
     ///
@@ -301,18 +298,18 @@ class BSONCXX_API core {
     array::view view_array() const;
 
     ///
-    /// Transfer ownership of the underlying document to the caller.
+    /// Transfers ownership of the underlying document to the caller.
     ///
     /// @return A document::value with ownership of the document.
     ///
     /// @warning
-    ///  After calling extract_document() it is illegal to call any methods
-    ///  on this class, unless it is subsequenly moved into.
+    ///   After calling extract_document() it is illegal to call any methods on this class, unless
+    ///   it is subsequenly moved into.
     ///
     document::value extract_document();
 
     ///
-    /// Transfer ownership of the underlying document to the caller.
+    /// Transfers ownership of the underlying document to the caller.
     ///
     /// @return A document::value with ownership of the document.
     ///
@@ -321,14 +318,14 @@ class BSONCXX_API core {
     ///   datum is not a BSON array.
     ///
     /// @warning
-    ///  After calling extract_array() it is illegal to call any methods
-    ///  on this class, unless it is subsequenly moved into.
+    ///   After calling extract_array() it is illegal to call any methods on this class, unless it
+    ///   is subsequenly moved into.
     ///
     array::value extract_array();
 
     ///
-    /// Delete the contents of the underlying BSON datum. After calling clear the
-    /// state of this class will be the same as it was immediately after construction.
+    /// Deletes the contents of the underlying BSON datum. After calling clear(), the state of this
+    /// class will be the same as it was immediately after construction.
     ///
     void clear();
 
