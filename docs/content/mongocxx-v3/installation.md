@@ -131,6 +131,20 @@ cmake -DCMAKE_BUILD_TYPE=Release -DBSONCXX_POLY_USE_BOOST=1 \
     -DCMAKE_INSTALL_PREFIX=/usr/local ..
 ```
 
+On Windows, here's an example of how to configure for MSVC (assuming
+libmongoc and libbson are in `c:\mongo-c-driver` as given in the
+[mongoc Windows installation
+instructions](http://mongoc.org/libmongoc/current/installing.html#building-windows)
+and boost is in `c:\local\boost_1_59_0`:
+
+```sh
+'C:\Program Files (x86)\CMake\bin\cmake.exe' -G "Visual Studio 14 Win64"
+    -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
+    -DLIBBSON_DIR=c:\mongo-c-driver
+    -DBOOST_ROOT=c:\local\boost_1_59_0
+    -DLIBMONGOC_DIR=c:\mongo-c-driver
+```
+
 ### Step 5: Build and install the driver
 
 If you are using the default MNMLSTC polyfill and are installing to a
@@ -148,6 +162,13 @@ build and install the driver:
 
 ```sh
 make && sudo make install
+```
+
+On Windows, build and install from the command line like this:
+
+```sh
+msbuild.exe ALL_BUILD.vcxproj
+msbuild.exe INSTALL.vcxproj
 ```
 
 ### Step 6: Test your installation
@@ -210,4 +231,35 @@ c++ --std=c++11 test.cpp -o test \
   -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 \
   -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 \
   -L/usr/local/lib -lmongocxx -lbsoncxx
+```
+
+#### Compiling with MSVC
+
+To compile on MSVC, you will need to setup your project to include all the
+necessary include paths, library paths, preprocessor defines, and link
+libraries. To do this, you can set these values either by the UI or by
+editing the XML `.vcxproj` file directly. To confirm you have everything
+setup correctly, here are the `PropertyGroup` and `ItemDefinitionGroup`
+settings for a Debug x64 build as an example:
+
+```xml
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>c:\local\boost_1_59_0\;C:\mongo-cxx-driver\include\mongocxx\v_noabi;C:\mongo-cxx-driver\include\bsoncxx\v_noabi;C:\mongo-c-driver\include\libmongoc-1.0;C:\mongo-c-driver\include\libbson-1.0;$(IncludePath)</IncludePath>
+    <LibraryPath>c:\mongo-c-driver\lib\;c:\mongo-cxx-driver\lib\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>MONGOCXX_STATIC;BSONCXX_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>libmongocxx.lib;libbsoncxx.lib;mongoc-static-1.0.lib;bson-1.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
 ```
