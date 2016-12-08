@@ -82,4 +82,20 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 add_test(driver test_driver)
+
 add_test(instance test_instance)
+
+add_executable(test_specs
+    ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
+    ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
+    crud_spec.cpp
+)
+
+target_link_libraries(test_specs bsoncxx mongocxx)
+
+add_test(specs test_specs)
+
+set_tests_properties(specs PROPERTIES
+    ENVIRONMENT "CRUD_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/crud")
+
+

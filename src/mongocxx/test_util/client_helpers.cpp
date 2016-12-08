@@ -14,7 +14,15 @@
 
 #include <mongocxx/test_util/client_helpers.hh>
 
+#include <algorithm>
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/document/value.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -24,6 +32,35 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace test_util {
+
+namespace {
+std::vector<std::int32_t> parse_version(std::string version) {
+    std::vector<std::int32_t> elements;
+    std::stringstream ss{version};
+    std::string element;
+
+    while (std::getline(ss, element, '.')) {
+        elements.push_back(std::stoi(element));
+    }
+
+    return elements;
+}
+}
+
+std::int32_t compare_versions(std::string version1, std::string version2) {
+    std::vector<std::int32_t> v1 = parse_version(version1);
+    std::vector<std::int32_t> v2 = parse_version(version2);
+
+    for (std::size_t i = 0; i < std::min(v1.size(), v2.size()); ++i) {
+        std::int32_t difference = v1[i] - v2[i];
+
+        if (difference != 0) {
+            return difference;
+        }
+    }
+
+    return 0;
+}
 
 std::int32_t get_max_wire_version(const client& client) {
     auto reply = client["admin"].run_command(
@@ -38,6 +75,14 @@ std::int32_t get_max_wire_version(const client& client) {
         throw operation_exception{error_code::k_server_response_malformed};
     }
     return max_wire_version.get_int32().value;
+}
+
+std::string get_server_version(const client& client) {
+    bsoncxx::builder::basic::document server_status{};
+    server_status.append(bsoncxx::builder::basic::kvp("serverStatus", 1));
+    bsoncxx::document::value output = client["test"].run_command(server_status.extract());
+
+    return output.view()["version"].get_utf8().value.to_string();
 }
 
 bool supports_collation(const client& client) {
