@@ -216,5 +216,9 @@ mailing list.  Bug reports should be filed against the
 [CXX](https://jira.mongodb.org/browse/CXX) project in the MongoDB JIRA.
 Your feedback on the C++11 driver is greatly appreciated.
 
+## File a DOCS ticket
+
+If there is any change to the driver-server compatibility matrix or language compatibility matrix file a [DOCS ticket](https://jira.mongodb.org/browse/DOCS/).
+
 Thank you,<br/>
 The C++ Driver Team
