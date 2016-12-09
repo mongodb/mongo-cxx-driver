@@ -148,7 +148,7 @@ unneeded targets have been removed.&lt;/p&gt;
 &lt;li&gt;The driver will not function correctly unless &lt;code&gt;mongo::client::initialize&lt;/code&gt; is invoked before using the driver APIs. The mongo::client::shutdown method should also be called at application termination (if options.callShutdownAtExit() is not set) so the driver can cleanly terminate. As a convenience, we have added &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h#L69&#34;&gt;&lt;code&gt;mongo::GlobalInstance&lt;/code&gt;&lt;/a&gt; as an RAII wrapper to automatically call these methods.&lt;/li&gt;
 &lt;li&gt;options.callShutdownAtExit() is a no-op on non-static builds on Windows due to issues around sudden thread termination.&lt;/li&gt;
 &lt;li&gt;The driver no longer logs any output by default. You may configure and inject a logger to re-enable logging. See &lt;code&gt;src/mongo/client/examples/clientTest.cpp&lt;/code&gt; for an example of how to enable logging.&lt;/li&gt;
-&lt;li&gt;Writes are now &amp;ldquo;&lt;a href=&#34;http://docs.mongodb.org/manual/core/write-concern/#write-concern-acknowledged&#34;&gt;acknowledged&lt;/a&gt;&amp;rdquo; by default. In all previous releases the default write concern was “&lt;a href=&#34;http://docs.mongodb.org/manual/core/write-concern/#unacknowledged&#34;&gt;unacknowledged&lt;/a&gt;”. This change may have performance and behavior implications for existing applications that did not confirm writes. You can read more about the change &lt;a href=&#34;http://docs.mongodb.org/manual/release-notes/drivers-write-concern/#driver-write-concern-change&#34;&gt;here&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Writes are now &amp;ldquo;&lt;a href=&#34;https://docs.mongodb.com/master/core/write-concern/#write-concern-acknowledged&#34;&gt;acknowledged&lt;/a&gt;&amp;rdquo; by default. In all previous releases the default write concern was “&lt;a href=&#34;https://docs.mongodb.com/master/core/write-concern/#unacknowledged&#34;&gt;unacknowledged&lt;/a&gt;”. This change may have performance and behavior implications for existing applications that did not confirm writes. You can read more about the change &lt;a href=&#34;https://docs.mongodb.com/master/release-notes/drivers-write-concern/#driver-write-concern-change&#34;&gt;here&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;The driver now throws a mongo::OperationException when write concern is greater than Acknowledged for errors that occur when running operations against a MongoDB database.&lt;/li&gt;
 &lt;li&gt;The default shutdown grace period is now zero which means the driver may block forever until a successful shutdown occurs.&lt;/li&gt;
 &lt;/ul&gt;
@@ -325,7 +325,7 @@ supported by the crypto library currently in use.&lt;/li&gt;
 &lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
 &lt;code&gt;Options::kSSLRequired&lt;/code&gt;. If set, it specifies a file containing the
-certificate authority file to use. See the &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
+certificate authority file to use. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
 documentation&lt;/a&gt;
 for additional information on the CA file.&lt;/li&gt;
 &lt;/ul&gt;
@@ -337,7 +337,7 @@ for additional information on the CA file.&lt;/li&gt;
 &lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
 &lt;code&gt;Options::kSSLRequired&lt;/code&gt;. If set, it specifies a file containing the SSL
-PEM key file to use. See the &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
+PEM key file to use. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
 documentation&lt;/a&gt;
 for additional information on the PEM key file.&lt;/li&gt;
 &lt;/ul&gt;
@@ -351,7 +351,7 @@ for additional information on the PEM key file.&lt;/li&gt;
 &lt;code&gt;Options::kSSLRequired&lt;/code&gt;, and is only meaningful if a PEM key file has
 been set with &lt;code&gt;Options::setSSLPEMKeyFile&lt;/code&gt;. If set, it specifies the
 password to be used to decrypt the SSL PEM key file specified with
-&lt;code&gt;Options::setSSLPEMKeyFile&lt;/code&gt;. See the &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
+&lt;code&gt;Options::setSSLPEMKeyFile&lt;/code&gt;. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
 documentation&lt;/a&gt;
 for additional information on the PEM key file password.&lt;/li&gt;
 &lt;/ul&gt;
@@ -363,7 +363,7 @@ for additional information on the PEM key file password.&lt;/li&gt;
 &lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
 &lt;code&gt;Options::kSSLRequired&lt;/code&gt;. If set, it specifies the file to use as the SSL
-certificate revocation list. See the &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
+certificate revocation list. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
 documentation&lt;/a&gt;
 for additional information on the certificate revocation list file.&lt;/li&gt;
 &lt;/ul&gt;
@@ -652,7 +652,7 @@ have linked against libstdc++.&lt;/p&gt;
 &lt;h5 id=&#34;client-feature-options&#34;&gt;Client Feature Options&lt;/h5&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;--ssl&lt;/code&gt; Enables SSL support. You will need a compatible version of the SSL libraries available.The default authorization mechanism since MongoDB version 3.0 is &lt;a href=&#34;http://docs.mongodb.org/manual/reference/program/mongo/&#34;&gt;SCRAM-SHA-1&lt;/a&gt;. If you want to use standard MongoDB authentication, you should compile with &amp;ndash;ssl option for SCRAM-SHA-1 mechanism support.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--ssl&lt;/code&gt; Enables SSL support. You will need a compatible version of the SSL libraries available.The default authorization mechanism since MongoDB version 3.0 is &lt;a href=&#34;https://docs.mongodb.com/master/reference/program/mongo/&#34;&gt;SCRAM-SHA-1&lt;/a&gt;. If you want to use standard MongoDB authentication, you should compile with &amp;ndash;ssl option for SCRAM-SHA-1 mechanism support.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;--use-sasl-client&lt;/code&gt; Enables SASL, which MongoDB uses for the Kerberos authentication available on MongoDB Enterprise. You will need a compatible version of the SASL implementation libraries available. The Cyrus SASL libraries are what we test with, and are recommended.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;--sharedclient&lt;/code&gt; Builds a shared library version of the client driver alongside the static library. If applicable for your application, prefer using the shared client.&lt;/li&gt;
 &lt;/ul&gt;
@@ -916,12 +916,12 @@ in hard to diagnose warnings or errors.&lt;/p&gt;
 &lt;p&gt;NOTE: this tutorial is for the legacy and 26compat versions of the C++ driver.&lt;/p&gt;
 
 &lt;p&gt;First, install MongoDB – see the
-&lt;a href=&#34;http://docs.mongodb.org/manual/installation/&#34;&gt;installation&lt;/a&gt; page for
+&lt;a href=&#34;https://docs.mongodb.com/master/installation/&#34;&gt;installation&lt;/a&gt; page for
 details.&lt;/p&gt;
 
-&lt;p&gt;Next, you may wish to take a look at the &lt;a href=&#34;http://docs.mongodb.org/manual/&#34;&gt;MongoDB
+&lt;p&gt;Next, you may wish to take a look at the &lt;a href=&#34;https://docs.mongodb.com/master/&#34;&gt;MongoDB
 Manual&lt;/a&gt; for a language independent look at
-how to use MongoDB. Also, we suggest some basic familiarity with the &lt;a href=&#34;http://docs.mongodb.org/manual/mongo/&#34;&gt;mongo
+how to use MongoDB. Also, we suggest some basic familiarity with the &lt;a href=&#34;https://docs.mongodb.com/master/mongo/&#34;&gt;mongo
 shell&lt;/a&gt; – the shell is the primary
 database administration tool and is useful for manually inspecting the
 contents of a database after your C++ program runs.&lt;/p&gt;
@@ -1084,7 +1084,7 @@ add an _id automatically if it is not included explicitly.&lt;/p&gt;
 
 &lt;p&gt;For an example, see &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/simple_client_demo.cpp&#34;&gt;this demo&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;For additional background information on getLastError see the &lt;a href=&#34;http://docs.mongodb.org/manual/core/write-operations/#write-concern&#34;&gt;write
+&lt;p&gt;For additional background information on getLastError see the &lt;a href=&#34;https://docs.mongodb.com/master/core/write-operations/#write-concern&#34;&gt;write
 operations documentation&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h3 id=&#34;count&#34;&gt;Count&lt;/h3&gt;
@@ -1168,7 +1168,7 @@ creation on the server, it will cause an extra network round-trip and
 server operation for each call. It&amp;rsquo;s best practice to use this method
 sparingly, for example once at the beginning of your code, or perhaps in an
 external setup script that configures the database for your application.
-For more information about indexing, see the &lt;a href=&#34;http://docs.mongodb.org/manual/indexes/&#34;&gt;MongoDB Indexing
+For more information about indexing, see the &lt;a href=&#34;https://docs.mongodb.com/master/indexes/&#34;&gt;MongoDB Indexing
 docs&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h3 id=&#34;sorting&#34;&gt;Sorting&lt;/h3&gt;
@@ -1208,7 +1208,7 @@ following update in the mongo shell:&lt;/p&gt;
 
 &lt;p&gt;The &lt;code&gt;update()&lt;/code&gt; method can be used to modify specific fields, replace the
 entire existing document, insert new documents or update multiple
-documents.  In the MongoDB Manual, examples are provided in the &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/modify-documents/&#34;&gt;Modify
+documents.  In the MongoDB Manual, examples are provided in the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/modify-documents/&#34;&gt;Modify
 Documents Tutorial&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h3 id=&#34;arrays&#34;&gt;Arrays&lt;/h3&gt;
@@ -1222,8 +1222,8 @@ is available &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/le
 are many more capabilities. For further exploration:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;See the language-independent &lt;a href=&#34;http://docs.mongodb.org/manual/&#34;&gt;MongoDB Manual&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Experiment with the &lt;a href=&#34;http://docs.mongodb.org/manual/mongo/&#34;&gt;mongo shell&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;See the language-independent &lt;a href=&#34;https://docs.mongodb.com/master/&#34;&gt;MongoDB Manual&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Experiment with the &lt;a href=&#34;https://docs.mongodb.com/master/mongo/&#34;&gt;mongo shell&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;Review the &lt;a href=&#34;http://mongodb.github.io/api/1.0.2&#34;&gt;API docs&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>

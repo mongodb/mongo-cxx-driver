@@ -82,7 +82,7 @@ version of the library installed.&lt;/p&gt;
 
 &lt;h1 id=&#34;configuring-the-driver&#34;&gt;Configuring the Driver&lt;/h1&gt;
 
-&lt;p&gt;In the mongocxx driver, most configuration is done via the &lt;a href=&#34;https://docs.mongodb.com/manual/reference/connection-string/&#34;&gt;connection
+&lt;p&gt;In the mongocxx driver, most configuration is done via the &lt;a href=&#34;https://docs.mongodb.com/master/reference/connection-string/&#34;&gt;connection
 URI&lt;/a&gt;.  Some
 additional connection options are possible via the
 &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1client.html
@@ -454,7 +454,7 @@ with each client - but in a real program this is the best solution.&lt;/p&gt;
 &lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;A &lt;a href=&#34;https://docs.mongodb.com/manual/reference/program/mongod/&#34;&gt;mongod&lt;/a&gt;
+&lt;li&gt;&lt;p&gt;A &lt;a href=&#34;https://docs.mongodb.com/master/reference/program/mongod/&#34;&gt;mongod&lt;/a&gt;
 instance running on localhost on port 27017.&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;The mongocxx Driver. See &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/&#34;&gt;Installation for mongocxx&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
@@ -510,7 +510,7 @@ class.&lt;/p&gt;
 &lt;p&gt;You must specify the host to connect to using a
 &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1uri.html
 &#34;&gt;&lt;code&gt;mongocxx::uri&lt;/code&gt;&lt;/a&gt; instance containing a
-&lt;a href=&#34;https://docs.mongodb.com/manual/reference/connection-string/&#34;&gt;MongoDB URI&lt;/a&gt;,
+&lt;a href=&#34;https://docs.mongodb.com/master/reference/connection-string/&#34;&gt;MongoDB URI&lt;/a&gt;,
 and pass that into the &lt;code&gt;mongocxx::client&lt;/code&gt; constructor.&lt;/p&gt;
 
 &lt;p&gt;The default &lt;code&gt;mongocxx::uri&lt;/code&gt; constructor will connect to a
@@ -862,7 +862,7 @@ if(result) {
 
 &lt;h3 id=&#34;create-indexes&#34;&gt;Create Indexes&lt;/h3&gt;
 
-&lt;p&gt;To create an &lt;a href=&#34;https://docs.mongodb.com/manual/indexes/&#34;&gt;index&lt;/a&gt; on a
+&lt;p&gt;To create an &lt;a href=&#34;https://docs.mongodb.com/master/indexes/&#34;&gt;index&lt;/a&gt; on a
 field or set of fields, pass an index specification document to the
 &lt;code&gt;create_index()&lt;/code&gt; method of a
 &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
