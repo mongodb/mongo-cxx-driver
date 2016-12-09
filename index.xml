@@ -1304,6 +1304,19 @@ the following:&lt;/p&gt;
     -DCMAKE_INSTALL_PREFIX=/usr/local ..
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;p&gt;On Windows, here&amp;rsquo;s an example of how to configure for MSVC (assuming
+libmongoc and libbson are in &lt;code&gt;c:\mongo-c-driver&lt;/code&gt; as given in the
+&lt;a href=&#34;http://mongoc.org/libmongoc/current/installing.html#building-windows&#34;&gt;mongoc Windows installation
+instructions&lt;/a&gt;
+and boost is in &lt;code&gt;c:\local\boost_1_59_0&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;&#39;C:\Program Files (x86)\CMake\bin\cmake.exe&#39; -G &amp;quot;Visual Studio 14 Win64&amp;quot;
+    -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
+    -DLIBBSON_DIR=c:\mongo-c-driver
+    -DBOOST_ROOT=c:\local\boost_1_59_0
+    -DLIBMONGOC_DIR=c:\mongo-c-driver
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;h3 id=&#34;step-5-build-and-install-the-driver&#34;&gt;Step 5: Build and install the driver&lt;/h3&gt;
 
 &lt;p&gt;If you are using the default MNMLSTC polyfill and are installing to a
@@ -1319,6 +1332,12 @@ sudo make EP_mnmlstc_core
 build and install the driver:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;make &amp;amp;&amp;amp; sudo make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On Windows, build and install from the command line like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;msbuild.exe ALL_BUILD.vcxproj
+msbuild.exe INSTALL.vcxproj
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;step-6-test-your-installation&#34;&gt;Step 6: Test your installation&lt;/h3&gt;
@@ -1377,6 +1396,36 @@ the compilation line in the section above expands to this:&lt;/p&gt;
   -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 \
   -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 \
   -L/usr/local/lib -lmongocxx -lbsoncxx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;compiling-with-msvc&#34;&gt;Compiling with MSVC&lt;/h4&gt;
+
+&lt;p&gt;To compile on MSVC, you will need to setup your project to include all the
+necessary include paths, library paths, preprocessor defines, and link
+libraries. To do this, you can set these values either by the UI or by
+editing the XML &lt;code&gt;.vcxproj&lt;/code&gt; file directly. To confirm you have everything
+setup correctly, here are the &lt;code&gt;PropertyGroup&lt;/code&gt; and &lt;code&gt;ItemDefinitionGroup&lt;/code&gt;
+settings for a Debug x64 build as an example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;  &amp;lt;PropertyGroup Condition=&amp;quot;&#39;$(Configuration)|$(Platform)&#39;==&#39;Debug|x64&#39;&amp;quot;&amp;gt;
+    &amp;lt;LinkIncremental&amp;gt;true&amp;lt;/LinkIncremental&amp;gt;
+    &amp;lt;IncludePath&amp;gt;c:\local\boost_1_59_0\;C:\mongo-cxx-driver\include\mongocxx\v_noabi;C:\mongo-cxx-driver\include\bsoncxx\v_noabi;C:\mongo-c-driver\include\libmongoc-1.0;C:\mongo-c-driver\include\libbson-1.0;$(IncludePath)&amp;lt;/IncludePath&amp;gt;
+    &amp;lt;LibraryPath&amp;gt;c:\mongo-c-driver\lib\;c:\mongo-cxx-driver\lib\;$(LibraryPath)&amp;lt;/LibraryPath&amp;gt;
+  &amp;lt;/PropertyGroup&amp;gt;
+  &amp;lt;ItemDefinitionGroup Condition=&amp;quot;&#39;$(Configuration)|$(Platform)&#39;==&#39;Debug|x64&#39;&amp;quot;&amp;gt;
+    &amp;lt;ClCompile&amp;gt;
+      &amp;lt;PrecompiledHeader&amp;gt;Use&amp;lt;/PrecompiledHeader&amp;gt;
+      &amp;lt;WarningLevel&amp;gt;Level3&amp;lt;/WarningLevel&amp;gt;
+      &amp;lt;Optimization&amp;gt;Disabled&amp;lt;/Optimization&amp;gt;
+      &amp;lt;PreprocessorDefinitions&amp;gt;MONGOCXX_STATIC;BSONCXX_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)&amp;lt;/PreprocessorDefinitions&amp;gt;
+      &amp;lt;SDLCheck&amp;gt;true&amp;lt;/SDLCheck&amp;gt;
+    &amp;lt;/ClCompile&amp;gt;
+    &amp;lt;Link&amp;gt;
+      &amp;lt;SubSystem&amp;gt;Console&amp;lt;/SubSystem&amp;gt;
+      &amp;lt;GenerateDebugInformation&amp;gt;true&amp;lt;/GenerateDebugInformation&amp;gt;
+      &amp;lt;AdditionalDependencies&amp;gt;libmongocxx.lib;libbsoncxx.lib;mongoc-static-1.0.lib;bson-1.0.lib;%(AdditionalDependencies)&amp;lt;/AdditionalDependencies&amp;gt;
+    &amp;lt;/Link&amp;gt;
+  &amp;lt;/ItemDefinitionGroup&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
