@@ -2287,6 +2287,10 @@ the latest release branch.&lt;/li&gt;
 git push origin master
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;h2 id=&#34;file-a-docs-ticket&#34;&gt;File a DOCS ticket&lt;/h2&gt;
+
+&lt;p&gt;If there is any change to the driver-server compatibility matrix or language compatibility matrix file a &lt;a href=&#34;https://jira.mongodb.org/browse/DOCS/&#34;&gt;DOCS ticket&lt;/a&gt;.&lt;/p&gt;
+
 &lt;h2 id=&#34;email-google-groups&#34;&gt;Email Google Groups&lt;/h2&gt;
 
 &lt;ul&gt;
@@ -2351,10 +2355,6 @@ across patch releases.&lt;/p&gt;
 mailing list.  Bug reports should be filed against the
 &lt;a href=&#34;https://jira.mongodb.org/browse/CXX&#34;&gt;CXX&lt;/a&gt; project in the MongoDB JIRA.
 Your feedback on the C++11 driver is greatly appreciated.&lt;/p&gt;
-
-&lt;h2 id=&#34;file-a-docs-ticket&#34;&gt;File a DOCS ticket&lt;/h2&gt;
-
-&lt;p&gt;If there is any change to the driver-server compatibility matrix or language compatibility matrix file a &lt;a href=&#34;https://jira.mongodb.org/browse/DOCS/&#34;&gt;DOCS ticket&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Thank you,&lt;br/&gt;
 The C++ Driver Team&lt;/p&gt;
