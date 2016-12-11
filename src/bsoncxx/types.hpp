@@ -90,7 +90,7 @@ struct BSONCXX_API b_double {
     ///
     /// Conversion operator unwrapping a double
     ///
-    BSONCXX_INLINE operator double() {
+    BSONCXX_INLINE operator double() const {
         return value;
     }
 };
@@ -128,7 +128,7 @@ struct BSONCXX_API b_utf8 {
     ///
     /// Conversion operator unwrapping a string_view
     ///
-    BSONCXX_INLINE operator stdx::string_view() {
+    BSONCXX_INLINE operator stdx::string_view() const {
         return value;
     }
 };
@@ -153,7 +153,7 @@ struct BSONCXX_API b_document {
     ///
     /// Conversion operator unwrapping a document::view
     ///
-    BSONCXX_INLINE operator document::view() {
+    BSONCXX_INLINE operator document::view() const {
         return value;
     }
 
@@ -185,7 +185,7 @@ struct BSONCXX_API b_array {
     ///
     /// Conversion operator unwrapping an array::view
     ///
-    BSONCXX_INLINE operator array::view() {
+    BSONCXX_INLINE operator array::view() const {
         return value;
     }
 };
@@ -268,7 +268,7 @@ struct BSONCXX_API b_bool {
     ///
     /// Conversion operator unwrapping a bool
     ///
-    BSONCXX_INLINE operator bool() {
+    BSONCXX_INLINE operator bool() const {
         return value;
     }
 };
@@ -314,7 +314,7 @@ struct BSONCXX_API b_date {
     ///
     /// Conversion operator unwrapping a int64_t
     ///
-    BSONCXX_INLINE operator int64_t() {
+    BSONCXX_INLINE operator int64_t() const {
         return value.count();
     }
 
@@ -328,7 +328,7 @@ struct BSONCXX_API b_date {
     ///
     /// Conversion operator unwrapping a time_point
     ///
-    BSONCXX_INLINE operator std::chrono::system_clock::time_point() {
+    BSONCXX_INLINE operator std::chrono::system_clock::time_point() const {
         return std::chrono::system_clock::time_point(
             std::chrono::duration_cast<std::chrono::system_clock::duration>(value));
     }
@@ -438,7 +438,7 @@ struct BSONCXX_API b_code {
     ///
     /// Conversion operator unwrapping a string_view
     ///
-    BSONCXX_INLINE operator stdx::string_view() {
+    BSONCXX_INLINE operator stdx::string_view() const {
         return code;
     }
 };
@@ -479,7 +479,7 @@ struct BSONCXX_API b_symbol {
     ///
     /// Conversion operator unwrapping a string_view
     ///
-    BSONCXX_INLINE operator stdx::string_view() {
+    BSONCXX_INLINE operator stdx::string_view() const {
         return symbol;
     }
 };
@@ -537,7 +537,7 @@ struct BSONCXX_API b_int32 {
     ///
     /// Conversion operator unwrapping a int32_t
     ///
-    BSONCXX_INLINE operator int32_t() {
+    BSONCXX_INLINE operator int32_t() const {
         return value;
     }
 };
@@ -585,7 +585,7 @@ struct BSONCXX_API b_int64 {
     ///
     /// Conversion operator unwrapping a int64_t
     ///
-    BSONCXX_INLINE operator int64_t() {
+    BSONCXX_INLINE operator int64_t() const {
         return value;
     }
 };
