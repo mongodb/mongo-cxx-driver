@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Mongocxx-V3s on MongoDB C&#43;&#43; Driver Manual</title>
+    <title>Mongocxx-v3s on MongoDB C&#43;&#43; Driver Manual</title>
     <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</link>
-    <description>Recent content in Mongocxx-V3s on MongoDB C&#43;&#43; Driver Manual</description>
+    <description>Recent content in Mongocxx-v3s on MongoDB C&#43;&#43; Driver Manual</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate>
