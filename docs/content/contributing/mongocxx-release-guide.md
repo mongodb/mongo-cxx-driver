@@ -108,7 +108,8 @@ and pushed.
 
 `git commit -am "Prepare to generate r3.0.2 release documentation"`
 
-* Ensure you have `doxygen` and `hugo` installed and up to date.
+* Ensure you have `doxygen` and `hugo` installed and up to date.  `hugo`
+  must be at least version v0.16.
 
 * Change to the repo top directory and run `git clean -dxf` to clear out
   all extraneous files.
