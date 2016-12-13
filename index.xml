@@ -10,65 +10,963 @@
     <atom:link href="https://mongodb.github.io/mongo-cxx-driver/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>API and ABI versioning</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/api-abi-versioning/</link>
+      <title>Contribution Guidelines</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
-      <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/api-abi-versioning/</guid>
+      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/</guid>
       <description>
 
-&lt;h2 id=&#34;api-versioning&#34;&gt;API Versioning&lt;/h2&gt;
+&lt;h2 id=&#34;contribution-guidelines&#34;&gt;Contribution Guidelines&lt;/h2&gt;
+
+&lt;h3 id=&#34;commit-messages&#34;&gt;Commit Messages&lt;/h3&gt;
+
+&lt;p&gt;If a pull-request addresses a JIRA ticket, for a single-commit PR, prefix
+the subject line with the ticket ID.  (For a multi-commit PR, we will add
+the ID later when we squash or merge it.)&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;CXX-883 Add commit message conventions to CONTRIBUTING.md&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Capitalize subject lines and don&amp;rsquo;t use a trailing period.  Keep the subject
+at most 70 characters long.  Use active voice!  Imagine this preamble to get
+your phrasing right:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;If applied, this commit will&amp;hellip;&lt;/em&gt; [your subject line]&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;See Chris Beams&amp;rsquo;
+&lt;a href=&#34;http://chris.beams.io/posts/git-commit/&#34;&gt;How to write a git commit message&lt;/a&gt;
+for more good guidelines to follow.&lt;/p&gt;
+
+&lt;h3 id=&#34;lifecycle-methods&#34;&gt;Lifecycle Methods&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;We use &lt;a href=&#34;http://semver.org/&#34;&gt;semantic versioning&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;bsoncxx and mongocxx both define corresponding CMake variables for MAJOR, MINOR, and PATCH.&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;default-or-argument-bearing &amp;lsquo;user&amp;rsquo; constructors&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;declaration-or-deletion-of-copy-contructor&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;declaration-or-deletetion-of-move-constructor&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;declaration-or-deletion-of-copy-assignment-operator&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;declaration-or-deletion-of-move-assignment-operator&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;declaration-of-dtor&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;abi-versioning&#34;&gt;ABI Versioning&lt;/h2&gt;
+&lt;h3 id=&#34;headers&#34;&gt;Headers&lt;/h3&gt;
+
+&lt;p&gt;Public headers must have a &amp;ldquo;.hpp&amp;rdquo; suffix. Private headers must have a &amp;ldquo;.hh&amp;rdquo;
+suffix.&lt;/p&gt;
+
+&lt;p&gt;General structure:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Both bsoncxx and mongocxx both have a single scalar ABI version.&lt;/li&gt;
-&lt;li&gt;Only bump ABI version on &lt;strong&gt;incompatible&lt;/strong&gt; ABI change (not for ABI additions).&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;We stay on ABI version _noabi (without bumping for incompatible changes) until ABI is stable.&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;License&lt;/li&gt;
+&lt;li&gt;Include Guard (&lt;code&gt;#pragma once&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Header Prelude&lt;/li&gt;
+&lt;li&gt;System Headers &lt;code&gt;&amp;lt;vector&amp;gt;&lt;/code&gt; (alphabetical order)&lt;/li&gt;
+&lt;li&gt;Driver Headers &lt;code&gt;&amp;lt;path/to/header.hpp&amp;gt;&lt;/code&gt; (alphabetical order)&lt;/li&gt;
+&lt;li&gt;Open Namespace mongocxx&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;MONGOCXX_INLINE_NAMESPACE_BEGIN&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Code&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;MONGOCXX_INLINE_NAMESPACE_END&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Close Namespace mongocxx&lt;/li&gt;
+&lt;li&gt;Header Postlude&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;parallel-header-installation&#34;&gt;Parallel Header Installation&lt;/h2&gt;
+&lt;p&gt;Example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;// Copyright 2014 MongoDB Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the &amp;quot;License&amp;quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &amp;quot;AS IS&amp;quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#pragma once
+
+#include &amp;lt;driver/config/prelude.hpp&amp;gt;
+
+#include &amp;lt;vector&amp;gt;
+
+#include &amp;lt;driver/blah.hpp&amp;gt;
+
+namespace mongocxx {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
+
+// Declarations
+
+// Inline Implementations
+
+MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace mongocxx
+
+#include &amp;lt;driver/config/postlude.hpp&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;class-declarations&#34;&gt;Class Declarations&lt;/h3&gt;
+
+&lt;p&gt;Guidelines:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;For mongocxx, install all headers to &lt;code&gt;$PREFIX/mongocxx/v$ABI/&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;For bsoncxx, install all headers to &lt;code&gt;$PREFIX/bsoncxx/v$ABI/&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;We install a pkg-config file to shield consumers from this complexity.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;sonames-and-symlinks&#34;&gt;Sonames and symlinks&lt;/h2&gt;
-
-&lt;p&gt;&lt;em&gt;Note that below examples are given for libmongocxx, but also apply to libbsoncxx&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;DSO = Dynamic Shared Object, to use Ulrich Drepper&amp;rsquo;s terminology&lt;/em&gt;&lt;/p&gt;
+&lt;li&gt;Blank line at beginning and end of class declaration&lt;/li&gt;
+&lt;li&gt;Public section up top / private at bottom&lt;/li&gt;
+&lt;li&gt;Lifecycle methods first (see rules above)&lt;/li&gt;
+&lt;li&gt;Private Member Ordering
 
 &lt;ul&gt;
-&lt;li&gt;Physical filename for a DSO is &lt;code&gt;libmongocxx.so.$MAJOR.$MINOR.$PATCH&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Friendships&lt;/li&gt;
+&lt;li&gt;Private Constructors&lt;/li&gt;
+&lt;li&gt;Private Methods&lt;/li&gt;
+&lt;li&gt;Private Variables&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Note that the physical filename is disconnected from ABI version/soname.
-This looks a bit strange, but allows multiple versions of the library with
-the same ABI version to be installed on the same system.&lt;/p&gt;
+&lt;p&gt;Example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class foo {
+
+    public:
+      foo();
+
+      foo(foo&amp;amp;&amp;amp; other) noexcept;
+      foo&amp;amp; operator=(foo&amp;amp;&amp;amp; other) noexcept;
+
+      ~foo();
+
+    private:
+      friend baz;
+
+      class MONGOCXX_PRIVATE impl;
+      std::unique_ptr&amp;lt;impl&amp;gt; _impl;
+
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;inlines&#34;&gt;Inlines&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;soname for a DSO is &lt;code&gt;libmongocxx.$ABI&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Define outside of class declaration&lt;/li&gt;
+&lt;li&gt;Specify inline keyword in declaration and definition (for clarity)&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;We provide a soname symlink that links to the physical DSO.  We also
-provide a dev symlink that links to the soname symlink of the highest ABI
-version of the library installed.&lt;/p&gt;
-
-&lt;h2 id=&#34;inline-namespaces&#34;&gt;Inline namespaces&lt;/h2&gt;
+&lt;h3 id=&#34;relational-operators&#34;&gt;Relational Operators&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;We provide inline namespace macros for both mongocxx and bsoncxx.&lt;/li&gt;
-&lt;li&gt;This allows multiple, ABI incompatible versions of the library to be linked into the same application.&lt;/li&gt;
-&lt;li&gt;The name of the namespace is &lt;code&gt;v$ABI&lt;/code&gt;. We create them from ABI version to maintain forwards compatibibility.&lt;/li&gt;
+&lt;li&gt;Prefer to use free functions&lt;/li&gt;
 &lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Testing the legacy driver</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-legacy/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-legacy/</guid>
+      <description>
+
+&lt;h2 id=&#34;testing-the-legacy-c-driver&#34;&gt;Testing the Legacy C++ Driver&lt;/h2&gt;
+
+&lt;p&gt;If you contribute to the C++ driver, you&amp;rsquo;ll need to test your changes.  The
+driver comes with a number of tests to ensure its functionality and
+performance.  There are a few different kinds of tests within the driver&amp;rsquo;s
+codebase.&lt;/p&gt;
+
+&lt;p&gt;Note: if you are running OS X Mavericks or above, you may need to include the &lt;code&gt;--osx-version-min=10.9&lt;/code&gt; flag to the commands below.&lt;/p&gt;
+
+&lt;p&gt;Note: The 26compat branch differs from the instructions below as follows:
+* MongoOrchestration is not required.
+* The target to run unit tests is &amp;lsquo;smokeCppUnittests&amp;rsquo; (or &amp;lsquo;test&amp;rsquo;, or &amp;lsquo;smoke&amp;rsquo;), not &amp;lsquo;unit&amp;rsquo;
+* The build-[test] aliases are not supported (the run- aliases are supported, however)
+* There are no integration tests
+* The target to run the examples is &amp;lsquo;smokeClient&amp;rsquo;, not &amp;lsquo;examples&amp;rsquo;
+* You must have a mongod running on port 27999 to run the examples.
+* The &amp;lsquo;test&amp;rsquo; target does not run all tests, only the unit tests (see above).&lt;/p&gt;
+
+&lt;h3 id=&#34;unit-tests&#34;&gt;Unit tests&lt;/h3&gt;
+
+&lt;p&gt;Unit tests do not require a running mongod or mongo-orchestration. These
+tests are designed to test individual components of the driver in
+isolation, and the test files are found in the same directory as the things
+they test (so, &lt;code&gt;bson_validate.cpp&lt;/code&gt; and &lt;code&gt;bson_validate_test.cpp&lt;/code&gt; are
+both found in &lt;code&gt;src/mongo/bson&lt;/code&gt;).  The different unit tests are listed
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/mongo/SConscript#L49&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Build all the unit tests with scons:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-unit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build and run all the unit tests:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons unit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build an individual unit test:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-full/test/name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build and run an individual unit test:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons run-full/test/name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;integration-tests&#34;&gt;Integration Tests&lt;/h3&gt;
+
+&lt;p&gt;Integration tests must run against &lt;a href=&#34;https://github.com/10gen/mongo-orchestration&#34;&gt;Mongo
+Orchestration&lt;/a&gt;.  Install and
+setup Mongo Orchestration as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; git clone https://github.com/10gen/mongo-orchestration.git
+&amp;gt; cd mongo-orchestration
+&amp;gt; python setup.py install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To run Mongo Orchestration, you&amp;rsquo;ll need to alter the provided config file
+to fit your system.  Open &lt;code&gt;mongo-orchestration.config&lt;/code&gt; and replace the
+paths there with paths to your MongoDB binaries.  It is only required to
+have one MongoDB version defined as well as a last_updated field with a
+date, so feel free to keep one of the &lt;code&gt;&amp;quot;releases&amp;quot;&lt;/code&gt; and delete the other
+entries. Mongo orchestration is &lt;strong&gt;very&lt;/strong&gt; strict about JSON so no trailing
+commas please.&lt;/p&gt;
+
+&lt;p&gt;Start up Mongo Orchestration and leave it running in the background while
+you run the integration test suite:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; mongo-orchestration -f mongo-orchestration.config -e &amp;lt;release_name&amp;gt; start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The integration tests are located in &lt;code&gt;src/mongo/integration&lt;/code&gt;.
+Additionally, some tests require the parameter &lt;code&gt;enableTestCommands&lt;/code&gt; to
+be set. There is a list of the different integration tests
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/mongo/SConscript#L114&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;To build all the integration tests:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-integration
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build and run all the integration tests:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons integration
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Individual integration tests can be run in the same way as individual unit tests, shown above.&lt;/p&gt;
+
+&lt;p&gt;Note: to run the SASL integration tests, you should build with the &lt;code&gt;--use-sasl-client&lt;/code&gt; flag.&lt;/p&gt;
+
+&lt;h3 id=&#34;client-example-programs&#34;&gt;Client Example Programs&lt;/h3&gt;
+
+&lt;p&gt;The driver includes a number of example programs of its use.  The examples
+are listed
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/SConscript.client#L189&#34;&gt;here&lt;/a&gt;,
+and the source files are found in &lt;code&gt;src/mongo/client/examples&lt;/code&gt;.  The
+examples expect a mongod to be running locally on port 27999.&lt;/p&gt;
+
+&lt;p&gt;Build the examples with scons:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-examples
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build and run the examples:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons examples
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;run-all-tests&#34;&gt;Run all tests&lt;/h3&gt;
+
+&lt;p&gt;Run the unit tests, integration tests, and examples with scons:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons test
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Releasing the mongocxx driver</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/mongocxx-release-guide/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/mongocxx-release-guide/</guid>
+      <description>
+
+&lt;h2 id=&#34;releasing-the-mongocxx-driver&#34;&gt;Releasing the mongocxx driver&lt;/h2&gt;
+
+&lt;h2 id=&#34;update-fixversion-status-in-jira-tickets&#34;&gt;Update fixVersion Status in Jira tickets&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Ensure that all tickets under the version to be released are in
+&amp;lsquo;Closed&amp;rsquo; status on the C++ Driver &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel&#34;&gt;roadmap
+page&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Bulk change &lt;strong&gt;Closed&lt;/strong&gt; tickets going into the release to include a &lt;code&gt;fixVersion&lt;/code&gt;
+corresponding to the release (create it if necessary):
+
+&lt;ul&gt;
+&lt;li&gt;For pre-release candidates, &lt;strong&gt;add&lt;/strong&gt; the &lt;code&gt;fixVersion&lt;/code&gt; to any existing
+scheduling &lt;code&gt;fixVersion&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;For a final release, &lt;strong&gt;replace&lt;/strong&gt; all existing &lt;code&gt;fixVersion&lt;/code&gt; entries (rc or
+scheduling) with the release version.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;audit-jira-ticket-titles-and-types-for-use-in-release-notes&#34;&gt;Audit Jira ticket titles and types for use in release notes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;From the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel&#34;&gt;roadmap page&lt;/a&gt;
+click the &amp;ldquo;Release Notes&amp;rdquo; link to see a summary of tickets to be included
+in release notes.&lt;/li&gt;
+&lt;li&gt;Update the ticket type and title as appropriate.  User-facing issues
+should generally be either &amp;ldquo;Bug&amp;rdquo; or &amp;ldquo;New Feature&amp;rdquo;.  Non-user facing
+issues should generally be &amp;ldquo;Task&amp;rdquo; tickets (and will be omitted later, so
+you can ignore them here).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;create-a-bump-commit&#34;&gt;Create a BUMP commit&lt;/h2&gt;
+
+&lt;p&gt;This commit essentially removes the -pre (e.g. 1.0.0-rc79-pre -&amp;gt;
+1.0.0-rc79) and creates what is considered the final commit in the release.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If you haven&amp;rsquo;t already, clone the mongodb-cxx-driver repository&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone git@github.com:mongodb/mongo-cxx-driver.git
+cd mongo-cxx-driver
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Otherwise, pull the latest code down from the origin with &lt;code&gt;git pull&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Update the following files (changing version numbers to remove the &amp;ldquo;-pre&amp;rdquo;
+for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/CMakeLists.txt#L30&#34;&gt;&lt;code&gt;src/mongocxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/CMakeLists.txt#L22&#34;&gt;&lt;code&gt;src/bsoncxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Commit with message &amp;ldquo;BUMP rx.y.z[-rcq]&amp;ldquo;, e.g.:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;git commit -am &amp;quot;BUMP r3.0.1&amp;quot;
+git push origin master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Pushing the BUMP commit to the origin will kick off builds in Evergreen,
+Travis CI and AppVeyor (which handles Windows builds). Wait for all three
+builds to finish and pass, re-running any timeout/spot failures.&lt;/p&gt;
+
+&lt;h2 id=&#34;tag-the-release&#34;&gt;Tag the Release&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Create an tag for the commit that will serve as the release (or release candidate), eg:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;git tag r3.0.1
+git push origin r3.0.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;draft-publish-github-release-notes&#34;&gt;Draft &amp;amp; Publish GitHub Release Notes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Go to the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases&#34;&gt;GitHub releases page&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Copy the previous announcement text for reuse.&lt;/li&gt;
+&lt;li&gt;Click &amp;ldquo;Draft a New Release&amp;rdquo; and set the title and tag.  Check the
+&amp;ldquo;This is a pre-release&amp;rdquo; checkbox if appropriate.&lt;/li&gt;
+&lt;li&gt;Paste the previous announcement and modify with release-specific information
+
+&lt;ul&gt;
+&lt;li&gt;Go back to the &amp;ldquo;Release Notes&amp;rdquo; page in Jira; copy the HTML and paste it into
+the GitHub Release Notes markdown.  Delete the &amp;ldquo;Task&amp;rdquo; section and any
+other information that doesn&amp;rsquo;t need to be in the release notes.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Preview the release text and proofread it.&lt;/li&gt;
+&lt;li&gt;Publish the release.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;release-the-version-in-jira&#34;&gt;Release the Version in Jira&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Go
+&lt;a href=&#34;https://jira.mongodb.org/plugins/servlet/project-config/CXX/versions&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Click the cog next to the version you are about to release and select &amp;ldquo;Release&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Follow the dialogs/wizards and whatnot, setting the release date to the current date&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;generate-and-publish-documentation&#34;&gt;Generate and Publish Documentation&lt;/h2&gt;
+
+&lt;p&gt;Documentation generation must be run after the release tag has been made
+and pushed.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Edit &lt;code&gt;etc/apidocmenu.md&lt;/code&gt; and add the released version in the &amp;lsquo;mongocxx&amp;rsquo;
+column following the established pattern.  If this is a major release,
+revise the entire document as needed.  If revised substantially, also
+edit &lt;code&gt;docs/content/index.md&lt;/code&gt; to match.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Edit &lt;code&gt;etc/generate-all-apidocs.pl&lt;/code&gt; and add the new release version to
+the &lt;code&gt;@DOC_TAGS&lt;/code&gt; array, following the established pattern.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Edit &lt;code&gt;docs/content/mongocxx-v3/installation.md&lt;/code&gt; and update &lt;code&gt;Step 3&lt;/code&gt; to
+reflect the latest version to download.  (Generally, search for the last
+version number and update it.)&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Commit these changes.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;git commit -am &amp;quot;Prepare to generate r3.0.2 release documentation&amp;quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Ensure you have &lt;code&gt;doxygen&lt;/code&gt; and &lt;code&gt;hugo&lt;/code&gt; installed and up to date.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Change to the repo top directory and run &lt;code&gt;git clean -dxf&lt;/code&gt; to clear out
+all extraneous files.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Change to the &lt;code&gt;build&lt;/code&gt; directory and run cmake as you usually would.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;To test documentation generation without deploying, run the &lt;code&gt;docs&lt;/code&gt; build
+target.  E.g. &lt;code&gt;ninja docs&lt;/code&gt;.  If this works, your documentation tools are
+correctly installed.  Note that this only generates hugo docs and a
+single set of doxygen docs for the current repo.  To test generation of
+all docs for all tags, use the &lt;code&gt;doxygen-all&lt;/code&gt; target and be prepared to
+wait a while.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;To generate and deploy documentation to GitHub Pages, execute both the
+&lt;code&gt;hugo-deploy&lt;/code&gt; and &lt;code&gt;doxygen-deploy&lt;/code&gt; targets.  The doxygen build will take
+a long time.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;If the release was &lt;em&gt;not&lt;/em&gt; a release-candidate, update symlinks&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Check out the &amp;ldquo;gh-pages&amp;rdquo; branch and &lt;code&gt;git pull&lt;/code&gt; the deployed docs.&lt;/li&gt;
+&lt;li&gt;If the release was &lt;em&gt;not&lt;/em&gt; a release-candidate, update the
+api/mongocxx-v3 symlink to point to the newly released version.  If a
+major version bump has occurred, revise the symlink structure as
+needed.  Make sure &amp;lsquo;current&amp;rsquo; always points to a &lt;em&gt;symlink&lt;/em&gt; tracking
+the latest release branch.&lt;/li&gt;
+&lt;li&gt;Commit and push the symlink change.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;git commit -am &amp;quot;Update symlink for r3.0.3&amp;quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Wait a minute and verify the docs site has been updated.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Return to the original branch.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;create-the-next-version-commit&#34;&gt;Create the Next Version commit&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Update the following files (changing version numbers to bump to the next version number and add the &amp;ldquo;-pre&amp;rdquo; suffix for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/CMakeLists.txt#L30&#34;&gt;&lt;code&gt;src/mongocxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/CMakeLists.txt#L22&#34;&gt;&lt;code&gt;src/bsoncxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Commit with message &amp;ldquo;post rx.y.z[-rcq]&amp;ldquo;, e.g.:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;git commit -am &amp;quot;post r3.0.1&amp;quot;
+git push origin master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;file-a-docs-ticket&#34;&gt;File a DOCS ticket&lt;/h2&gt;
+
+&lt;p&gt;If there is any change to the driver-server compatibility matrix or language compatibility matrix file a &lt;a href=&#34;https://jira.mongodb.org/browse/DOCS/&#34;&gt;DOCS ticket&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;email-google-groups&#34;&gt;Email Google Groups&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Send it to mongodb-announce@googlegroups.com AND mongodb-user@googlegroups.com&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;release-candidate-template&#34;&gt;Release Candidate Template:&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Subject: MongoDB C++11 Driver 3.1.0-rc0 Released&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The MongoDB C++ Driver Team is pleased to announce the availability of
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases/tag/r3.1.0-rc0&#34;&gt;mongocxx-3.1.0-rc0&lt;/a&gt;,
+the first release candidate in the 3.1.x series of the MongoDB C++11
+Driver.  This release candidate has been published for testing and is not
+recommended for production.&lt;/p&gt;
+
+&lt;p&gt;This release provides support for new features in MongoDB 3.4.&lt;/p&gt;
+
+&lt;p&gt;Please note that this version of mongocxx requires the &lt;a href=&#34;https://github.com/mongodb/mongo-c-driver/releases/tag/1.5.0&#34;&gt;MongoDB C driver
+1.5.0&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;See the &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/&#34;&gt;MongoDB C++ Driver
+Manual&lt;/a&gt; and the &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/&#34;&gt;Driver
+Installation
+Instructions&lt;/a&gt;
+for more details on downloading, installing, and using this driver.&lt;/p&gt;
+
+&lt;p&gt;NOTE: The mongocxx 3.1.x series does not promise API or ABI stability
+across patch releases.&lt;/p&gt;
+
+&lt;p&gt;Please feel free to post any questions to the
+&lt;a href=&#34;https://groups.google.com/forum/#!forum/mongodb-user&#34;&gt;mongodb-user&lt;/a&gt;
+mailing list.  Bug reports should be filed against the
+&lt;a href=&#34;https://jira.mongodb.org/browse/CXX&#34;&gt;CXX&lt;/a&gt; project in the MongoDB JIRA.
+Your feedback on the C++11 driver is greatly appreciated.&lt;/p&gt;
+
+&lt;p&gt;Thank you,&lt;br/&gt;
+The C++ Driver Team&lt;/p&gt;
+
+&lt;h3 id=&#34;ga-release-template&#34;&gt;GA Release Template:&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Subject: MongoDB C++11 Driver 3.1.0 Released&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The MongoDB C++ Driver Team is pleased to announce the availability of
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases/tag/r3.1.0&#34;&gt;mongocxx-3.1.0&lt;/a&gt;.
+This release provides support for new features in MongoDB 3.4.&lt;/p&gt;
+
+&lt;p&gt;Please note that this version of mongocxx requires the &lt;a href=&#34;https://github.com/mongodb/mongo-c-driver/releases/tag/1.5.0&#34;&gt;MongoDB C driver
+1.5.0&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;See the &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/&#34;&gt;MongoDB C++ Driver
+Manual&lt;/a&gt; and the &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/&#34;&gt;Driver
+Installation
+Instructions&lt;/a&gt;
+for more details on downloading, installing, and using this driver.&lt;/p&gt;
+
+&lt;p&gt;NOTE: The mongocxx 3.1.x series does not promise API or ABI stability
+across patch releases.&lt;/p&gt;
+
+&lt;p&gt;Please feel free to post any questions to the
+&lt;a href=&#34;https://groups.google.com/forum/#!forum/mongodb-user&#34;&gt;mongodb-user&lt;/a&gt;
+mailing list.  Bug reports should be filed against the
+&lt;a href=&#34;https://jira.mongodb.org/browse/CXX&#34;&gt;CXX&lt;/a&gt; project in the MongoDB JIRA.
+Your feedback on the C++11 driver is greatly appreciated.&lt;/p&gt;
+
+&lt;p&gt;Thank you,&lt;br/&gt;
+The C++ Driver Team&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Releasing the legacy driver</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/legacy-release-guide/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/legacy-release-guide/</guid>
+      <description>
+
+&lt;p&gt;If you&amp;rsquo;re reading this, chances are you&amp;rsquo;re about to issue a release for a
+new version of the legacy C++ driver.  Congratulations!&lt;/p&gt;
+
+&lt;h2 id=&#34;before-getting-started&#34;&gt;Before Getting Started&lt;/h2&gt;
+
+&lt;p&gt;To perform the release process, you will need the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;git&lt;/code&gt;, &lt;code&gt;python&lt;/code&gt;, &lt;code&gt;doxygen&lt;/code&gt; installed on your local machine.&lt;/li&gt;
+&lt;li&gt;Push access to the &lt;code&gt;mongodb/mongo-cxx-driver&lt;/code&gt; repository on GitHub.&lt;/li&gt;
+&lt;li&gt;Push access to the &lt;code&gt;10gen/apidocs&lt;/code&gt; repository on GitHub.&lt;/li&gt;
+&lt;li&gt;Administrative access on the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX&#34;&gt;C++ Driver JIRA project&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This guide assumes that you have a local clone of the &lt;code&gt;mongo-cxx-driver&lt;/code&gt;
+and &lt;code&gt;apidocs&lt;/code&gt; repositories, and that your GitHub remote is configured with
+remote name &lt;code&gt;origin&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In addition, this guide assumes that you are about to issue a production
+release named &lt;code&gt;legacy-x.y.z&lt;/code&gt;.  The process for issuing a release candidate
+is nearly identical, with two exceptions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The new version string will be in format &lt;code&gt;legacy-x.y.z-rcw&lt;/code&gt;, instead of
+&lt;code&gt;legacy-x.y.z&lt;/code&gt;.  In this guide, replace all instances of the latter with
+the former.&lt;/li&gt;
+&lt;li&gt;The copy for the release notes and announcement will need to indicate
+that the release is not for production use.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Lastly, this guide also assumes that the following release is is named
+&lt;code&gt;legacy-x.y.(z+1)&lt;/code&gt;.  The name of the following release may differ from
+this.&lt;/p&gt;
+
+&lt;h2 id=&#34;confirm-all-outstanding-issues-resolved-in-jira&#34;&gt;Confirm All Outstanding Issues Resolved in JIRA&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;On the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel&#34;&gt;project roadmap
+panel&lt;/a&gt;
+in JIRA, ensure that all tickets marked for &lt;code&gt;legacy-x.y.z&lt;/code&gt; are resolved.
+Assuming there are 10 issues in the release, you should see the text &amp;ldquo;10
+of 10 issues have been resolved&amp;rdquo; on this page.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;create-and-push-the-bump-commit&#34;&gt;Create and Push the BUMP Commit&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Change directories to your local clone of &lt;code&gt;mongo-cxx-driver&lt;/code&gt;, and use
+&lt;code&gt;git status&lt;/code&gt; to confirm a clean working tree, and that you have the
+&lt;code&gt;legacy&lt;/code&gt; branch checked out.&lt;/li&gt;
+&lt;li&gt;Make edits to the following files.  You will be changing the development
+version string (&lt;code&gt;legacy-x.y.z-rcw-pre&lt;/code&gt;) in these files to the release
+version string (&lt;code&gt;legacy-x.y.z&lt;/code&gt;):
+    * &lt;code&gt;SConstruct&lt;/code&gt;: update value of &lt;code&gt;mongoclientVersion&lt;/code&gt;.
+    * &lt;code&gt;etc/doxygen/config&lt;/code&gt;: update value of &lt;code&gt;PROJECT_NUMBER&lt;/code&gt;.&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Commit and push the bump commit, as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git add SConstruct etc/doxygen/config
+git commit -m &amp;quot;BUMP legacy-x.y.z&amp;quot;
+git push origin legacy
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Pushing the BUMP commit to the origin will kick off builds in Evergreen,
+Travis CI and AppVeyor. Wait for all three builds to finish and pass.&lt;/p&gt;
+
+&lt;h2 id=&#34;tag-the-release&#34;&gt;Tag the Release&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;From the same directory, create and push a tag for the commit that will serve as the release.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git tag legacy-x.y.z
+git push origin legacy-x.y.z
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;generate-and-publish-documentation&#34;&gt;Generate and Publish Documentation&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Warning: this section is obsolete&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;In your local clone of the &lt;code&gt;apidocs&lt;/code&gt; repo, build and publish the release
+documentation as follows.  The &lt;code&gt;build.py&lt;/code&gt; script will modify existing
+files, and also create files in a new directory named &lt;code&gt;cxx/legacy-x.y.z&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;python build.py cxx
+git add cxx/
+git add -u
+git commit -m &amp;quot;Documentation for C++ driver release legacy-x.y.z&amp;quot;
+git push origin master
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Within an hour, a regularly scheduled task will automatically deploy the
+new documentation at the &lt;a href=&#34;http://api.mongodb.com/cxx/&#34;&gt;legacy C++ driver API documentation
+page&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;bulk-transition-all-tickets-targeted-for-release-to-closed&#34;&gt;Bulk Transition All Tickets Targeted for Release to &amp;ldquo;Closed&amp;rdquo;&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Re-visit the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel&#34;&gt;project roadmap
+panel&lt;/a&gt;
+in JIRA.&lt;/li&gt;
+&lt;li&gt;Under the legacy-x.y.z version, click the link &amp;ldquo;X issues&amp;rdquo; on the left-hand side.  This will bring you to the search page that displays all tickets targeted for the version about to be released.&lt;/li&gt;
+&lt;li&gt;Select &amp;ldquo;Tools =&amp;gt; Bulk Change&amp;rdquo; from the upper-right hand corner of the search page.&lt;/li&gt;
+&lt;li&gt;In the &amp;ldquo;Choose Issues&amp;rdquo; dialog, select all issues.&lt;/li&gt;
+&lt;li&gt;In the &amp;ldquo;Choose Operation&amp;rdquo; dialog, select &amp;ldquo;Transition Issues&amp;rdquo;.&lt;/li&gt;
+&lt;li&gt;In the &amp;ldquo;Edit Fields&amp;rdquo; dialog, click &amp;ldquo;Next&amp;rdquo; without modifying any fields.&lt;/li&gt;
+&lt;li&gt;Confirm the change.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;release-the-version-in-jira&#34;&gt;Release the Version in JIRA&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Visit the &lt;a href=&#34;https://jira.mongodb.org/plugins/servlet/project-config/CXX/versions&#34;&gt;versions administrative
+panel&lt;/a&gt;
+in JIRA.&lt;/li&gt;
+&lt;li&gt;Hover over the version to be released.  A cog icon will appear on the right-hand side of the page.&lt;/li&gt;
+&lt;li&gt;Click the cog icon, and select &amp;ldquo;Release&amp;rdquo; from the drop-down.  A pop-up will appear, and it should contain no warnings about unresolved issues.&lt;/li&gt;
+&lt;li&gt;Set &amp;ldquo;Release date&amp;rdquo; to the current date.&lt;/li&gt;
+&lt;li&gt;Confirm the release.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;create-the-next-version-in-jira&#34;&gt;Create the Next Version in JIRA&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;From the &lt;a href=&#34;https://jira.mongodb.org/plugins/servlet/project-config/CXX/versions&#34;&gt;versions administrative
+panel&lt;/a&gt;,
+determine whether or not the version corresponding to the next release
+already exists.&lt;/li&gt;
+&lt;li&gt;If the version already exists, continue to the next step.&lt;/li&gt;
+&lt;li&gt;If the version does not exist, enter the new version&amp;rsquo;s Name and Description at the prompt towards the top of the page.  Select the current date as the next version&amp;rsquo;s start date, and pick a release date.  Typically, the legacy C++ driver is released only a small handful of times each year, so the release date for the new version should likely be at least a couple of months out (barring extraordinary circumstances).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;draft-publish-github-release-notes&#34;&gt;Draft &amp;amp; Publish GitHub Release Notes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Visit the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases&#34;&gt;GitHub releases
+page&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Click &amp;ldquo;Draft a New Release&amp;rdquo;.&lt;/li&gt;
+&lt;li&gt;Select &lt;code&gt;legacy-x.y.z&lt;/code&gt; as the tag.  The page should indicate that this tag is recognized.&lt;/li&gt;
+&lt;li&gt;Enter &amp;ldquo;MongoDB Legacy C++ Driver x.y.z&amp;rdquo; as the release title.&lt;/li&gt;
+&lt;li&gt;Draft the release notes.  Typically, release notes have two sections:
+
+&lt;ul&gt;
+&lt;li&gt;In the first section, describe in a few sentences what this release is all about.  Mention whether this is a major release or a minor patch release, and call out any notable tickets resolved and anything else that users may want to know about.&lt;/li&gt;
+&lt;li&gt;In the second section, paste in a formatted list of tickets that were resolved in this release.  You can copy-paste this formatted list straight from JIRA&amp;rsquo;s automatically-generated release notes, which you can find by clicking on the &amp;ldquo;Release Notes&amp;rdquo; link under the release version at the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel&#34;&gt;project roadmap panel&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Select &amp;ldquo;Publish release&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;send-announcement-email&#34;&gt;Send Announcement Email&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Draft an email to mongodb-announce@googlegroups.com announcing the
+release, with subject &amp;ldquo;Legacy C++ driver legacy-x.y.z released.&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Use the below text as a template, and feel free to include any extra information that seems appropriate for an announcement email:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;The C++ Driver Team is excited to announce the availability of the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases/tag/legacy-x.y.z&#34;&gt;legacy-x.y.z&lt;/a&gt; release of the Legacy C++ Driver.&lt;/p&gt;
+
+&lt;p&gt;This is a stable release.  Please review the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases/tag/legacy-x.y.z&#34;&gt;release notes&lt;/a&gt; for details on what has changed in this release. The legacy-x.y.z release is a recommended upgrade for all users of the LAST_RELEASE and older drivers.&lt;/p&gt;
+
+&lt;p&gt;You can obtain the driver source from GitHub, either under the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/tree/legacy-x.y.z&#34;&gt;legacy-x.y.z&lt;/a&gt; tag or from the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases&#34;&gt;releases page&lt;/a&gt;. The legacy C++ driver is a source level distribution and does not offer a stable ABI across releases.&lt;/p&gt;
+
+&lt;p&gt;Please feel free to post any questions to the &lt;a href=&#34;https://groups.google.com/forum/#!forum/mongodb-user&#34;&gt;mongodb-user&lt;/a&gt; mailing list. Bug reports should be filed against the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX&#34;&gt;CXX&lt;/a&gt; project in the MongoDB JIRA.&lt;/p&gt;
+
+&lt;p&gt;Thank you,&lt;/p&gt;
+
+&lt;p&gt;The C++ Driver Team&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;create-and-push-the-next-version-commit&#34;&gt;Create and Push the Next Version Commit&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Change directories back to your clone of &lt;code&gt;mongo-cxx-driver&lt;/code&gt;.  Edit the following files:
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;SConstruct&lt;/code&gt;: change value of &lt;code&gt;mongoclientVersion&lt;/code&gt; from &lt;code&gt;legacy-x.y.z&lt;/code&gt; to &lt;code&gt;legacy-x.y.(z+1)-rc0-pre&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;etc/doxygen/config&lt;/code&gt;: change value of &lt;code&gt;PROJECT_NUMBER&lt;/code&gt; from &lt;code&gt;legacy-x.y.z&lt;/code&gt; to &lt;code&gt;legacy-x.y.(z+1)-rc0-pre&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;README.md&lt;/code&gt;: change both the link text and link address to refer to &lt;code&gt;legacy-x.y.z&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Commit and push the next version commit, as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git add SConstruct etc/doxygen/config README.md
+git commit -m &amp;quot;post legacy-x.y.z&amp;quot;
+git push origin legacy
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;relax&#34;&gt;Relax&lt;/h2&gt;
+
+&lt;p&gt;You&amp;rsquo;re done!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Testing the mongocxx driver</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-mongocxx/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-mongocxx/</guid>
+      <description>
+
+&lt;h2 id=&#34;testing-the-mongocxx-driver&#34;&gt;Testing the mongocxx driver&lt;/h2&gt;
+
+&lt;p&gt;Tests for the C++11 driver use
+&lt;a href=&#34;https://github.com/philsquared/Catch&#34;&gt;Catch&lt;/a&gt;, a testing framework for C++.&lt;/p&gt;
+
+&lt;p&gt;Each class in the driver has a corresponding file in &lt;code&gt;src/mongocxx/test&lt;/code&gt;.
+Because the new driver wraps
+&lt;a href=&#34;https://github.com/mongodb/mongo-c-driver&#34;&gt;libmongoc&lt;/a&gt;, we prefer to mock
+and test the behavior of individual classes rather than test end-to-end
+behavior of operations against a running mongod.  In other words, these are
+unit tests rather than integration tests.&lt;/p&gt;
+
+&lt;p&gt;We also have integration tests for this driver in &lt;code&gt;test/collection.cpp&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;running-the-existing-tests&#34;&gt;Running the existing tests&lt;/h2&gt;
+
+&lt;p&gt;Build the tests with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;make
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will generate test binaries.  You can either run all the tests with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;make test
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;or, for more detailed output with Catch, run the generated binary:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./build/src/mongocxx/test/test_driver
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;writing-new-tests&#34;&gt;Writing new tests&lt;/h2&gt;
+
+&lt;p&gt;If you&amp;rsquo;d like to add a feature to the driver, please write a test for it as
+well.  Additions to existing classes should have new sections added to the
+existing test cases:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;TEST_CASE(&amp;quot;existing_class&amp;quot;, &amp;quot;[existing_class]&amp;quot;) {
+   SECTION(&amp;quot;Can do some new thing&amp;quot;) {
+      ...
+      REQUIRE(new_thing_works);
+   }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you are adding a new class, please add a new test file for it to the
+&lt;code&gt;test&lt;/code&gt; directory.  The test file&amp;rsquo;s name should match the new class&amp;rsquo;s file&amp;rsquo;s
+name.  You will need to add your file as a source for the driver&amp;rsquo;s test
+target, in &lt;code&gt;src/mongocxx/test/CMakeLists.txt&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;set(mongocxx_test_sources
+   ...
+   some_new_class.cpp
+   ...
+)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>MongoDB C&#43;&#43; Driver Manual</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/</guid>
+      <description>
+
+&lt;h1 id=&#34;mongodb-c-driver&#34;&gt;MongoDB C++ Driver&lt;/h1&gt;
+
+&lt;p&gt;Welcome to the MongoDB C++ driver.  On this site, you&amp;rsquo;ll find documentation
+to help you get the most from MongoDB and C++.  If you&amp;rsquo;re just starting
+out, take a look at these pages first:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/&#34;&gt;Installing mongocxx&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/tutorial/&#34;&gt;Quick-start tutorial&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;driver-status-by-family-and-version&#34;&gt;Driver status by family and version&lt;/h2&gt;
+
+&lt;p&gt;Stability indicates whether this driver is recommended for production use.
+Currently, no drivers guarantee API or ABI stability.&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Family/version&lt;/th&gt;
+&lt;th&gt;Stability&lt;/th&gt;
+&lt;th&gt;Development&lt;/th&gt;
+&lt;th&gt;Purpose&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;mongocxx 3.1.x&lt;/td&gt;
+&lt;td&gt;Unstable&lt;/td&gt;
+&lt;td&gt;Active development&lt;/td&gt;
+&lt;td&gt;Unstable C++ driver development, requires C++11&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;mongocxx 3.0.x&lt;/td&gt;
+&lt;td&gt;Stable&lt;/td&gt;
+&lt;td&gt;Bug fixes only&lt;/td&gt;
+&lt;td&gt;Primary stable C++ driver release, requires C++11&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;legacy   (all)&lt;/td&gt;
+&lt;td&gt;Stable&lt;/td&gt;
+&lt;td&gt;Critical fixes only&lt;/td&gt;
+&lt;td&gt;Former stable C++ driver release&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;26compat (all)&lt;/td&gt;
+&lt;td&gt;Deprecated&lt;/td&gt;
+&lt;td&gt;Critical fixes only&lt;/td&gt;
+&lt;td&gt;Drop in replacement for users of existing 2.6 era C++ driver&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;mongodb-compatibility&#34;&gt;MongoDB compatibility&lt;/h2&gt;
+
+&lt;p&gt;The following compatibility table specifies the driver version(s)
+recommended for different versions of MongoDB.  The 3.0.x series
+is recommended for all new development.&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Family/version&lt;/th&gt;
+&lt;th&gt;MongoDB 2.4&lt;/th&gt;
+&lt;th&gt;MongoDB 2.6&lt;/th&gt;
+&lt;th&gt;MongoDB 3.0&lt;/th&gt;
+&lt;th&gt;MongoDB 3.2&lt;/th&gt;
+&lt;th&gt;MongoDB 3.4&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;mongocxx 3.1.x&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;mongocxx 3.0.x&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;legacy   1.1.x&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;legacy   1.0.x&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;26compat (all)&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;✓&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;license&#34;&gt;License&lt;/h2&gt;
+
+&lt;p&gt;MongoDB C++ drivers are available under the terms of the Apache License, version 2.0.&lt;/p&gt;
 </description>
     </item>
     
@@ -226,486 +1124,350 @@ release.&lt;/p&gt;
     </item>
     
     <item>
-      <title>Configuring the legacy driver</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/configuration/</link>
+      <title>Overview</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
-      <guid>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/configuration/</guid>
+      <guid>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/</guid>
+      <description>&lt;p&gt;The legacy C++ driver builds on x86 and x86-64 architectures for Linux, Mac
+OS X, Windows, FreeBSD and Solaris.&lt;/p&gt;
+
+&lt;p&gt;The legacy C++ driver library includes a bson package that
+implements the BSON specification (see &lt;a href=&#34;http://www.bsonspec.org&#34;&gt;http://www.bsonspec.org&lt;/a&gt;). This
+library can be used standalone for object serialization and deserialization
+even when one is not using MongoDB at all.&lt;/p&gt;
+
+&lt;p&gt;Releases of legacy drivers have version numbers like v0.x.y and v1.x.y.&lt;/p&gt;
+
+&lt;p&gt;(Note: version numbers like v0.0-26compat-2.x.y refer to a different,
+deprecated C++ driver branch.)&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Legacy driver tutorial</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/tutorial/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/tutorial/</guid>
       <description>
 
-&lt;p&gt;In the legacy-0.9 development cycle, the mechanism by which the driver is
-configured was refactored. Note that these changes &lt;em&gt;do not apply to
-releases on the 26compat branch, or releases pre-dating legacy-0.9.0&lt;/em&gt;.This
-page describes the new configuration mechanism and documents the various
-configuration options that may be used.&lt;/p&gt;
+&lt;h3 id=&#34;getting-started-with-the-legacy-c-driver&#34;&gt;Getting started with the Legacy C++ Driver&lt;/h3&gt;
 
-&lt;h1 id=&#34;configuring-the-driver&#34;&gt;Configuring the Driver&lt;/h1&gt;
+&lt;p&gt;This is an introduction to usage of the MongoDB database from a C++ program.&lt;/p&gt;
 
-&lt;h2 id=&#34;the-mongo-client-initialize-function&#34;&gt;The &lt;code&gt;mongo::client::initialize&lt;/code&gt; function&lt;/h2&gt;
+&lt;p&gt;NOTE: this tutorial is for the legacy and 26compat versions of the C++ driver.&lt;/p&gt;
 
-&lt;p&gt;The &lt;code&gt;mongo::client::initialize&lt;/code&gt; function, found in file
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h&#34;&gt;&lt;code&gt;src/mongo/client/init.h&lt;/code&gt;&lt;/a&gt;
-configures the driver and starts background threads critical to the
-functioning of the driver. The function has a single parameter receiving a
-&lt;code&gt;mongo::client::Options&lt;/code&gt; object. If no value is provided, a default
-constructed &lt;code&gt;mongo::client::Options&lt;/code&gt; object is used.&lt;/p&gt;
+&lt;p&gt;First, install MongoDB – see the
+&lt;a href=&#34;https://docs.mongodb.com/master/installation/&#34;&gt;installation&lt;/a&gt; page for
+details.&lt;/p&gt;
 
-&lt;p&gt;To configure the driver to use non-default parameters, construct a new
-&lt;code&gt;mongo::client::Options&lt;/code&gt; object and use its setter methods to configure the
-parameters of interest, and pass this object to
-&lt;code&gt;mongo::client::initialize&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Next, you may wish to take a look at the &lt;a href=&#34;https://docs.mongodb.com/master/&#34;&gt;MongoDB
+Manual&lt;/a&gt; for a language independent look at
+how to use MongoDB. Also, we suggest some basic familiarity with the &lt;a href=&#34;https://docs.mongodb.com/master/mongo/&#34;&gt;mongo
+shell&lt;/a&gt; – the shell is the primary
+database administration tool and is useful for manually inspecting the
+contents of a database after your C++ program runs.&lt;/p&gt;
 
-&lt;p&gt;This method must be called exactly once by your application. Invoke
-&lt;code&gt;mongo::client::initialize&lt;/code&gt; as early as possible in your application
-startup phase, before any additional threads have been created. You must
-examine the return value of &lt;code&gt;mongo::client::initialize&lt;/code&gt; and deal with any
-returned error appropriately.&lt;/p&gt;
+&lt;h3 id=&#34;installing-the-driver-library-and-headers&#34;&gt;Installing the Driver Library and Headers&lt;/h3&gt;
 
-&lt;h2 id=&#34;the-mongo-client-terminate-function&#34;&gt;The &lt;code&gt;mongo::client::terminate&lt;/code&gt; function&lt;/h2&gt;
+&lt;p&gt;Please see &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/legacy-v1/installation/&#34;&gt;Installation&lt;/a&gt; for
+instructions on how to download, build, and install the C++ client driver.&lt;/p&gt;
 
-&lt;p&gt;When it is time to stop using the client driver, you must terminate its
-background tasks and release resources by invoking the
-&lt;code&gt;mongo::client::terminate&lt;/code&gt; function, found in file
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h&#34;&gt;&lt;code&gt;src/mongo/client/init.h&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;initializing-the-driver-library&#34;&gt;Initializing the Driver Library&lt;/h3&gt;
 
-&lt;p&gt;The &lt;code&gt;mongo::client::terminate&lt;/code&gt; function honors a grace period, specified in
-milliseconds, and defaulting to &amp;lsquo;forever&amp;rsquo;. The shutdown routine will give
-background tasks the selected grace period to terminate cleanly. If they do
-not do so, &lt;code&gt;mongo::client::terminate&lt;/code&gt; will return an error status. If the
-returned error status is &lt;code&gt;ExceededTimeLimit&lt;/code&gt; it is safe to retry the call
-to &lt;code&gt;mongo::client::terminate&lt;/code&gt;. Otherwise, a non-OK return status from
-&lt;code&gt;mongo::client::terminate&lt;/code&gt; represents a permanent failure to shut down the
-driver cleanly. Please see the documentation for &lt;code&gt;mongo::client::terminate&lt;/code&gt;
-for additional details. The value of the shutdown grace period may be
-changed from its default at driver initialization time by using an
-appropriately configured &lt;code&gt;mongo::client::Options&lt;/code&gt; object.&lt;/p&gt;
+&lt;p&gt;Please see &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/legacy-v1/configuration/&#34;&gt;Configuration&lt;/a&gt; for
+instructions on how to properly initialize and terminate the driver:&lt;/p&gt;
 
-&lt;p&gt;On some platforms, you may be able to arrange for
-&lt;code&gt;mongo::client::terminate&lt;/code&gt; to be called via an atexit handler. To request
-this behavior, see the &lt;code&gt;setCallShutdownAtExit&lt;/code&gt; option, documented below.&lt;/p&gt;
+&lt;h3 id=&#34;connecting&#34;&gt;Connecting&lt;/h3&gt;
 
-&lt;p&gt;Alternatively, you may use the &lt;code&gt;mongo::client::GlobalInstance&lt;/code&gt; class, found
-in
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h&#34;&gt;&lt;code&gt;src/mongo/client/init.h&lt;/code&gt;&lt;/a&gt;,
-to instantiate an RAII type that will automatically initialize and
-terminate the driver.&lt;/p&gt;
+&lt;h4 id=&#34;dbclientconnection&#34;&gt;DBClientConnection&lt;/h4&gt;
 
-&lt;h2 id=&#34;the-mongo-client-options-class&#34;&gt;The &lt;code&gt;mongo::client::Options&lt;/code&gt; class&lt;/h2&gt;
+&lt;p&gt;The C++ driver includes several classes for managing collections under the parent class &lt;code&gt;DBClientInterface&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id=&#34;where-to-find-it&#34;&gt;Where to find it&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;DBClientConnection&lt;/code&gt; is the connection class for connecting to a single MongoDB database server (or mongos)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;DBClientReplicaSet&lt;/code&gt; is the connection class for connecting to a replica set.&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;Configuration of the driver is managed through a new class, added in the
-&lt;code&gt;legacy-0.9.0&lt;/code&gt; release, called &lt;code&gt;Options&lt;/code&gt;. This class is hosted in the
-&lt;code&gt;mongo::client&lt;/code&gt; namespace, and is defined in the header
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/options.h&#34;&gt;&lt;code&gt;mongo/client/options.h&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;See the &lt;a href=&#34;http://mongodb.github.io/api/1.0.2/&#34;&gt;API documentation&lt;/a&gt; for
+details on each of the above classes.&lt;/p&gt;
 
-&lt;h3 id=&#34;passing-options-to-mongo-client-initialize&#34;&gt;Passing options to &lt;code&gt;mongo::client::initialize&lt;/code&gt;&lt;/h3&gt;
+&lt;h4 id=&#34;a-simple-program-that-connects-to-the-database&#34;&gt;A simple program that connects to the database&lt;/h4&gt;
 
-&lt;p&gt;By default, calling &lt;code&gt;mongo::client::initialize()&lt;/code&gt; with no parameters is
-equivalent to calling &lt;code&gt;mongo::client::initialize(mongo::client::Options())&lt;/code&gt;
-passing a default constructed &lt;code&gt;mongo::client::Options&lt;/code&gt; object.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;cstdlib&amp;gt;
+#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;mongo/client/dbclient.h&amp;quot; // for the driver
 
-&lt;p&gt;Because the &lt;code&gt;mongo::client::Options&lt;/code&gt; class has setters returning a
-&lt;code&gt;mongo::client::Options&amp;amp;&lt;/code&gt; you can chain together options to easily
-configure them at the call site:&lt;/p&gt;
+void run() {
+  mongo::DBClientConnection c;
+  c.connect(&amp;quot;localhost&amp;quot;);
+}
 
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;using mongo::client::initialize;
-using mongo::client::Options;
-
-// Configure the mongo C++ client driver, enabling SSL and setting
-// the SSL Certificate Authority file to &amp;quot;mycafile&amp;quot;.
-Status status = initialize(
-    Options().setSSLMode(Options::kSSLRequired).setSSLCAFile(&amp;quot;mycafile&amp;quot;)
-);
-
-if (!status.isOK()) {
-    // deal with errors
-} else {
-    // Driver is up in SSL mode.
+int main() {
+    mongo::client::initialize();
+    try {
+        run();
+        std::cout &amp;lt;&amp;lt; &amp;quot;connected ok&amp;quot; &amp;lt;&amp;lt; std::endl;
+    } catch( const mongo::DBException &amp;amp;e ) {
+        std::cout &amp;lt;&amp;lt; &amp;quot;caught &amp;quot; &amp;lt;&amp;lt; e.what() &amp;lt;&amp;lt; std::endl;
+    }
+    return EXIT_SUCCESS;
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;available-options&#34;&gt;Available Options&lt;/h3&gt;
+&lt;p&gt;(Note that in a production environment, the return value of &lt;code&gt;mongo::client::initialize()&lt;/code&gt; must be checked)&lt;/p&gt;
 
-&lt;h4 id=&#34;options-callshutdownatexit-and-options-setcallshutdownatexit&#34;&gt;&lt;code&gt;Options::callShutdownAtExit&lt;/code&gt; and &lt;code&gt;Options::setCallShutdownAtExit&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;If you are using gcc on Linux, you would compile with something like this, depending on location of your include files and libraries:&lt;/p&gt;
 
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: If this option is &amp;lsquo;true&amp;rsquo;, then a successful call to
-&lt;code&gt;mongo::client::initialize&lt;/code&gt; will schedule a call to
-&lt;code&gt;mongo::client::terminate&lt;/code&gt; with &lt;code&gt;atexit&lt;/code&gt;. The call to
-&lt;code&gt;mongo::client::terminate&lt;/code&gt; will be made with the value of
-&lt;code&gt;mongo::client::Options::current::autoShutdownGracePeriodMillis&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-autoshutdowngraceperiodmillis-and-options-setautoshutdowngraceperiodmillis&#34;&gt;&lt;code&gt;Options::autoShutdownGracePeriodMillis&lt;/code&gt; and &lt;code&gt;Options::setAutoShutdownGracePeriodMillis&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;int&lt;/code&gt;, interpreted as milliseconds&lt;/li&gt;
-&lt;li&gt;Default: 0 (wait forever)&lt;/li&gt;
-&lt;li&gt;Semantics: If &lt;code&gt;mongo::client::initialize&lt;/code&gt; scheduled a call to
-&lt;code&gt;mongo::client::terminate&lt;/code&gt; with &lt;code&gt;atexit&lt;/code&gt;, then that call to
-&lt;code&gt;mongo::client::terminate&lt;/code&gt; will use the value
-&lt;code&gt;Options::autoShutdownGracePeriodMillis&lt;/code&gt; when calling
-&lt;code&gt;mongo::client::terminate&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setdefaultlocalthresholdmillis-and-options-defaultlocalthresholdmillis&#34;&gt;&lt;code&gt;Options::setDefaultLocalThresholdMillis&lt;/code&gt; and &lt;code&gt;Options::defaultLocalThresholdMillis&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;int&lt;/code&gt;, interpreted as milliseconds&lt;/li&gt;
-&lt;li&gt;Default: 15&lt;/li&gt;
-&lt;li&gt;Semantics: TODO&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setsslmode-and-options-sslmode&#34;&gt;&lt;code&gt;Options::setSSLMode&lt;/code&gt; and &lt;code&gt;Options::SSLMode&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: [&lt;code&gt;Options::kSSLEnabled&lt;/code&gt;|&lt;code&gt;Options:kSSLDisabled&lt;/code&gt;]&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;Options::kSSLDisabled&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: If set to &lt;code&gt;Options:kSSLEnabled&lt;/code&gt; the driver will require SSL
-connections to all mongo servers. If disabled, it will not request SSL.
-Note that if the servers you are connected to are in SSL required mode,
-you may not be able to connect. This value is an enumeration so that we
-may later extend it with a &lt;code&gt;kSSLPreferred&lt;/code&gt; option, but that is not
-currently implemented.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setfipsmode-and-options-fipsmode&#34;&gt;&lt;code&gt;Options::setFIPSMode&lt;/code&gt; and &lt;code&gt;Options::FIPSMode&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: If true, will attempt to use FIPS-140 validated crypto if
-supported by the crypto library currently in use.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setsslcafile-and-options-sslcafile&#34;&gt;&lt;code&gt;Options::setSSLCAFile&lt;/code&gt; and &lt;code&gt;Options::SSLCAFile&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
-&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. If set, it specifies a file containing the
-certificate authority file to use. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
-documentation&lt;/a&gt;
-for additional information on the CA file.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setsslpemkeyfile-and-options-sslpemkeyfile&#34;&gt;&lt;code&gt;Options::setSSLPemKeyFile&lt;/code&gt; and &lt;code&gt;Options::SSLPEMKeyFile&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
-&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. If set, it specifies a file containing the SSL
-PEM key file to use. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
-documentation&lt;/a&gt;
-for additional information on the PEM key file.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setsslpemkeypassword-and-options-sslpemkeypassword&#34;&gt;&lt;code&gt;Options::setSSLPemKeyPassword&lt;/code&gt; and &lt;code&gt;Options::SSLPEMKeyPassword&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
-&lt;code&gt;Options::kSSLRequired&lt;/code&gt;, and is only meaningful if a PEM key file has
-been set with &lt;code&gt;Options::setSSLPEMKeyFile&lt;/code&gt;. If set, it specifies the
-password to be used to decrypt the SSL PEM key file specified with
-&lt;code&gt;Options::setSSLPEMKeyFile&lt;/code&gt;. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
-documentation&lt;/a&gt;
-for additional information on the PEM key file password.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setsslcrlfile-and-options-sslcrlfile&#34;&gt;&lt;code&gt;Options::setSSLCRLFile&lt;/code&gt; and &lt;code&gt;Options::SSLCRLFile&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
-&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. If set, it specifies the file to use as the SSL
-certificate revocation list. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
-documentation&lt;/a&gt;
-for additional information on the certificate revocation list file.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setssallowinvalidcertificates-and-options-sslallowinvalidcertificates&#34;&gt;&lt;code&gt;Options::setSSAllowInvalidCertificates&lt;/code&gt; and &lt;code&gt;Options::SSLAllowInvalidCertificates&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
-&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. Setting this option to &lt;code&gt;true&lt;/code&gt; suppresses
-validation of certificates. In other words, invalid certificates will be
-accepted.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setlogappenderfactory-and-options-logappenderfactory&#34;&gt;&lt;code&gt;Options::setLogAppenderFactory&lt;/code&gt; and &lt;code&gt;Options::logAppenderFactory&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;Options::LogAppenderFactory&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: none&lt;/li&gt;
-&lt;li&gt;Semantics: Use &lt;code&gt;setLogAppenderFactory&lt;/code&gt; if you want to configure a custom
-appender to listen to the driver&amp;rsquo;s internally logged messages. Setting
-such a factory will enable logging and relay logged messages to whatever
-appender you provide a factory method for. An example of how to do this
-can be found
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/loggingTest.cpp&#34;&gt;here&lt;/a&gt;.
-You may only configure one appender through startup options.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setminloggedseverity-and-options-minloggedseverity&#34;&gt;&lt;code&gt;Options::setMinLoggedSeverity&lt;/code&gt; and `Options::minLoggedSeverity&amp;rsquo;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;logger::LogSeverity&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;LogSeverity::Log()&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: When providing a custom log appender (see above) use this to
-set the minimum severity level of logged messages. Messages that are of
-less importance than the level you provide will not be logged.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setvalidateobjects-and-options-validateobjects&#34;&gt;&lt;code&gt;Options::setValidateObjects&lt;/code&gt; and &lt;code&gt;Options::validateObjects&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: If enabled, the client library will run BSON validation on
-data returned from the server to ensure that the returned data is valid
-BSON. Note that there is a performance cost to doing so.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;caveats&#34;&gt;Caveats&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;You must call &lt;code&gt;mongo::client::initialize&lt;/code&gt; before using the driver. You
-may only call &lt;code&gt;mongo::client::initialize&lt;/code&gt; once.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Configuration of the driver is global. You may access a &lt;code&gt;const&lt;/code&gt; reference
-to the current global configuration state of the driver by calling
-&lt;code&gt;mongo::client::Options::current&lt;/code&gt;. If called before entering &lt;code&gt;main&lt;/code&gt;, the
-values returned by accessors of the &lt;code&gt;Options&lt;/code&gt; object returned by
-&lt;code&gt;Options::current&lt;/code&gt; are indeterminate. If called after &lt;code&gt;main&lt;/code&gt; but before
-calling &lt;code&gt;mongo::client::initialize&lt;/code&gt;, a default constructed instance of
-the &lt;code&gt;Options&lt;/code&gt; class will be returned. If called after
-&lt;code&gt;mongo::client::initialize&lt;/code&gt;, the value returned by &lt;code&gt;Options::current&lt;/code&gt;
-will reflect any customized &lt;code&gt;Options&lt;/code&gt; instance passed to
-&lt;code&gt;mongo::client::initialize&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Configuration of the driver is not synchronized, and you may only invoke
-&lt;code&gt;mongo::client::initialize&lt;/code&gt; once. We strongly recommend that you call
-&lt;code&gt;mongo::client::initialize&lt;/code&gt; as early as possible in &lt;code&gt;main&lt;/code&gt; or your
-application startup code, preferably before creating any additional
-threads.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Configuring the mongocxx driver</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/configuration/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/configuration/</guid>
-      <description>
-
-&lt;h1 id=&#34;configuring-the-driver&#34;&gt;Configuring the Driver&lt;/h1&gt;
-
-&lt;p&gt;In the mongocxx driver, most configuration is done via the &lt;a href=&#34;https://docs.mongodb.com/master/reference/connection-string/&#34;&gt;connection
-URI&lt;/a&gt;.  Some
-additional connection options are possible via the
-&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1client.html
-&#34;&gt;mongocxx::options::client&lt;/a&gt; class.&lt;/p&gt;
-
-&lt;h2 id=&#34;configuring-tls-ssl&#34;&gt;Configuring TLS/SSL&lt;/h2&gt;
-
-&lt;p&gt;To enable TLS (SSL), set &lt;code&gt;ssl=true&lt;/code&gt; in the URI:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-nohighlight&#34;&gt;mongodb://mongodb.example.com/?ssl=true
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ g++ tutorial.cpp -pthread -lmongoclient -lboost_thread-mt -lboost_system -lboost_regex -o tutorial
+$ ./tutorial
+connected ok
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;By default, mongocxx will verify server certificates against the local
-system CA list.  You can override that by creating a
-&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1ssl.html
-&#34;&gt;mongocxx::options::ssl&lt;/a&gt;
-object and passing it to &lt;code&gt;ssl_opts&lt;/code&gt; on mongocxx::options::client.&lt;/p&gt;
-
-&lt;p&gt;For example, to use a custom CA or to disable certificate validation,
-uncomment the corresponding line in the following example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;mongocxx::options::client client_options;
-mongocxx::options::ssl ssl_options;
-
-// If the server certificate is not signed by a well-known CA,
-// you can set a custom CA file with the `ca_file` option.
-// ssl_options.ca_file(&amp;quot;/path/to/custom/cert.pem&amp;quot;);
-
-// If you want to disable certificate verification, you
-// can set the `allow_invalid_certificates` option.
-// ssl_options.allow_invalid_certificates(true);
-
-client_options.ssl_opts(ssl_options);
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Contribution Guidelines</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/</guid>
-      <description>
-
-&lt;h2 id=&#34;contribution-guidelines&#34;&gt;Contribution Guidelines&lt;/h2&gt;
-
-&lt;h3 id=&#34;commit-messages&#34;&gt;Commit Messages&lt;/h3&gt;
-
-&lt;p&gt;If a pull-request addresses a JIRA ticket, for a single-commit PR, prefix
-the subject line with the ticket ID.  (For a multi-commit PR, we will add
-the ID later when we squash or merge it.)&lt;/p&gt;
 
 &lt;blockquote&gt;
-&lt;p&gt;CXX-883 Add commit message conventions to CONTRIBUTING.md&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Warning&lt;/strong&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;Capitalize subject lines and don&amp;rsquo;t use a trailing period.  Keep the subject
-at most 70 characters long.  Use active voice!  Imagine this preamble to get
-your phrasing right:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;&lt;em&gt;If applied, this commit will&amp;hellip;&lt;/em&gt; [your subject line]&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;See Chris Beams&amp;rsquo;
-&lt;a href=&#34;http://chris.beams.io/posts/git-commit/&#34;&gt;How to write a git commit message&lt;/a&gt;
-for more good guidelines to follow.&lt;/p&gt;
-
-&lt;h3 id=&#34;lifecycle-methods&#34;&gt;Lifecycle Methods&lt;/h3&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;default-or-argument-bearing &amp;lsquo;user&amp;rsquo; constructors&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;declaration-or-deletion-of-copy-contructor&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;declaration-or-deletetion-of-move-constructor&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;declaration-or-deletion-of-copy-assignment-operator&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;declaration-or-deletion-of-move-assignment-operator&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;declaration-of-dtor&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;Since the tutorial program attempts to connect to a MongoDB database server, you must start it by running mongod before running the tutorial.&lt;/li&gt;
+&lt;li&gt;You may need to append -mt to boost_filesystem and boost_program_options. If using a recent boost, -mt is not needed anymore.&lt;/li&gt;
+&lt;li&gt;You may need to use -I and -L to specify the locations of your mongo and boost headers and libraries.&lt;/li&gt;
+&lt;li&gt;If using the 26compat branch you need to additionally specify &lt;code&gt;-lboost_filesystem&lt;/code&gt; and &lt;code&gt;-lboost_program_options&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;headers&#34;&gt;Headers&lt;/h3&gt;
+&lt;h3 id=&#34;bson&#34;&gt;BSON&lt;/h3&gt;
 
-&lt;p&gt;Public headers must have a &amp;ldquo;.hpp&amp;rdquo; suffix. Private headers must have a &amp;ldquo;.hh&amp;rdquo;
-suffix.&lt;/p&gt;
+&lt;p&gt;The MongoDB database stores data in BSON format. BSON is a binary object
+format that is JSON-like in terms of the data which can be stored (some
+extensions exist, for example, a Date datatype).&lt;/p&gt;
 
-&lt;p&gt;General structure:&lt;/p&gt;
+&lt;p&gt;To save data in the database we must create objects of class BSONObj. The
+components of a BSONObj are represented as BSONElement objects. We use
+BSONObjBuilder to make BSON objects, and BSONObjIterator to enumerate BSON
+objects.&lt;/p&gt;
 
-&lt;ul&gt;
-&lt;li&gt;License&lt;/li&gt;
-&lt;li&gt;Include Guard (&lt;code&gt;#pragma once&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;Header Prelude&lt;/li&gt;
-&lt;li&gt;System Headers &lt;code&gt;&amp;lt;vector&amp;gt;&lt;/code&gt; (alphabetical order)&lt;/li&gt;
-&lt;li&gt;Driver Headers &lt;code&gt;&amp;lt;path/to/header.hpp&amp;gt;&lt;/code&gt; (alphabetical order)&lt;/li&gt;
-&lt;li&gt;Open Namespace mongocxx&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;MONGOCXX_INLINE_NAMESPACE_BEGIN&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Code&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;MONGOCXX_INLINE_NAMESPACE_END&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Close Namespace mongocxx&lt;/li&gt;
-&lt;li&gt;Header Postlude&lt;/li&gt;
-&lt;/ul&gt;
+&lt;h4 id=&#34;the-c-bson-library&#34;&gt;The C++ BSON Library&lt;/h4&gt;
 
-&lt;p&gt;Example:&lt;/p&gt;
+&lt;p&gt;Include bson/bson.h in your application. See
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/bson/bsondemo/bsondemo.cpp&#34;&gt;bsondemo&lt;/a&gt;
+for example usage.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;// Copyright 2014 MongoDB Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the &amp;quot;License&amp;quot;);
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an &amp;quot;AS IS&amp;quot; BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+&lt;h5 id=&#34;key-classes&#34;&gt;Key classes&lt;/h5&gt;
 
-#pragma once
-
-#include &amp;lt;driver/config/prelude.hpp&amp;gt;
-
-#include &amp;lt;vector&amp;gt;
-
-#include &amp;lt;driver/blah.hpp&amp;gt;
-
-namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
-// Declarations
-
-// Inline Implementations
-
-MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace mongocxx
-
-#include &amp;lt;driver/config/postlude.hpp&amp;gt;
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;mongo::BSONObj: a BSON object
+mongo::BSONElement: a single element in a BSON object. This is a key and a value.
+mongo::BSONObjBuilder: used to make BSON objects
+mongo::BSONObjIterator: used to enumerate BSON objects
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;class-declarations&#34;&gt;Class Declarations&lt;/h3&gt;
+&lt;h5 id=&#34;working-with-bson&#34;&gt;Working with BSON&lt;/h5&gt;
 
-&lt;p&gt;Guidelines:&lt;/p&gt;
+&lt;p&gt;Let’s now create a BSON “person” object which contains name and age. We might invoke:&lt;/p&gt;
 
-&lt;ul&gt;
-&lt;li&gt;Blank line at beginning and end of class declaration&lt;/li&gt;
-&lt;li&gt;Public section up top / private at bottom&lt;/li&gt;
-&lt;li&gt;Lifecycle methods first (see rules above)&lt;/li&gt;
-&lt;li&gt;Private Member Ordering
-
-&lt;ul&gt;
-&lt;li&gt;Friendships&lt;/li&gt;
-&lt;li&gt;Private Constructors&lt;/li&gt;
-&lt;li&gt;Private Methods&lt;/li&gt;
-&lt;li&gt;Private Variables&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class foo {
-
-    public:
-      foo();
-
-      foo(foo&amp;amp;&amp;amp; other) noexcept;
-      foo&amp;amp; operator=(foo&amp;amp;&amp;amp; other) noexcept;
-
-      ~foo();
-
-    private:
-      friend baz;
-
-      class MONGOCXX_PRIVATE impl;
-      std::unique_ptr&amp;lt;impl&amp;gt; _impl;
-
-};
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObjBuilder b;
+b.append(&amp;quot;name&amp;quot;, &amp;quot;Joe&amp;quot;);
+b.append(&amp;quot;age&amp;quot;, 33);
+BSONObj p = b.obj();
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;inlines&#34;&gt;Inlines&lt;/h3&gt;
+&lt;p&gt;Or more concisely:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj p = BSONObjBuilder().append(&amp;quot;name&amp;quot;, &amp;quot;Joe&amp;quot;).append(&amp;quot;age&amp;quot;, 33).obj();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can also create BSON objects using the stream oriented syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObjBuilder b;
+b &amp;lt;&amp;lt; &amp;quot;name&amp;quot; &amp;lt;&amp;lt; &amp;quot;Joe&amp;quot; &amp;lt;&amp;lt; &amp;quot;age&amp;quot; &amp;lt;&amp;lt; 33;
+BSONObj p = b.obj();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The BSON Macro lets us be even more compact:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj p = BSON( &amp;quot;name&amp;quot; &amp;lt;&amp;lt; &amp;quot;Joe&amp;quot; &amp;lt;&amp;lt; &amp;quot;age&amp;quot; &amp;lt;&amp;lt; 33 );
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Use the GENOID helper to add an object id to your object. The server will
+add an _id automatically if it is not included explicitly.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj p = BSON( GENOID &amp;lt;&amp;lt; &amp;quot;name&amp;quot; &amp;lt;&amp;lt; &amp;quot;Joe&amp;quot; &amp;lt;&amp;lt; &amp;quot;age&amp;quot; &amp;lt;&amp;lt; 33 );
+// result is: { _id : ..., name : &amp;quot;Joe&amp;quot;, age : 33 }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;GENOID should be at the beginning of the generated object. We can do something similar with the non-stream builder syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj p = BSONObjBuilder().genOID().append(&amp;quot;name&amp;quot;,&amp;quot;Joe&amp;quot;).append(&amp;quot;age&amp;quot;,33).obj();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Other helpers are listed in &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/legacy-v1/working-with-bson/&#34;&gt;Working with BSON&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;inserting&#34;&gt;Inserting&lt;/h3&gt;
+
+&lt;p&gt;We now save our person object in a persons collection in the database:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;c.insert(&amp;quot;tutorial.persons&amp;quot;, p);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first parameter to insert is the namespace. tutorial is the database and persons is the collection name.&lt;/p&gt;
+
+&lt;h4 id=&#34;getlasterror&#34;&gt;getLastError&lt;/h4&gt;
+
+&lt;p&gt;In order to ensure the write succeeded we need to call getLastError.&lt;/p&gt;
+
+&lt;p&gt;Get error result from the last operation on this connection:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;string mongo::DBClientWithCommands::getLastError(); // Empty string if no error
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Get the full last error object:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj DBClientWithCommands::getLastErrorDetailed();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For an example, see &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/simple_client_demo.cpp&#34;&gt;this demo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;For additional background information on getLastError see the &lt;a href=&#34;https://docs.mongodb.com/master/core/write-operations/#write-concern&#34;&gt;write
+operations documentation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;count&#34;&gt;Count&lt;/h3&gt;
+
+&lt;p&gt;Let’s now fetch all objects from the persons collection, and display them. We’ll also show here how to use count().&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;cout &amp;lt;&amp;lt; &amp;quot;count:&amp;quot; &amp;lt;&amp;lt; c.count(&amp;quot;tutorial.persons&amp;quot;) &amp;lt;&amp;lt; endl;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;query&#34;&gt;Query&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;auto_ptr&amp;lt;DBClientCursor&amp;gt; cursor = c.query(&amp;quot;tutorial.persons&amp;quot;, BSONObj());
+
+while (cursor-&amp;gt;more())
+   cout &amp;lt;&amp;lt; cursor-&amp;gt;next().toString() &amp;lt;&amp;lt; endl;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;BSONObj()&lt;/code&gt; is an empty BSON object – it represents &lt;code&gt;{}&lt;/code&gt; which indicates an
+empty query pattern (an empty query is a query for all objects).&lt;/p&gt;
+
+&lt;p&gt;We use &lt;code&gt;BSONObj::toString()&lt;/code&gt; above to print out information about each
+object retrieved. &lt;code&gt;BSONObj::toString&lt;/code&gt; is a diagnostic function which prints
+an abbreviated JSON string representation of the object. For full JSON
+output, use &lt;code&gt;BSONObj::jsonString&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Let’s now write a function which prints out the name (only) of all persons
+in the collection whose age is a given value:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;void printIfAge(DBClientConnection&amp;amp; c, int age) {
+    auto_ptr&amp;lt;DBClientCursor&amp;gt; cursor =
+        c.query(&amp;quot;tutorial.persons&amp;quot;, MONGO_QUERY(&amp;quot;age&amp;quot; &amp;lt;&amp;lt; age));
+    while (cursor-&amp;gt;more()) {
+        BSONObj p = cursor-&amp;gt;next();
+        cout &amp;lt;&amp;lt; p.getStringField(&amp;quot;name&amp;quot;) &amp;lt;&amp;lt; endl;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;getStringField()&lt;/code&gt; is a helper that assumes the name field is of type
+string. To manipulate an element in a more generic fashion we can retrieve
+the particular BSONElement from the enclosing object:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONElement name = p[&amp;quot;name&amp;quot;];
+// or:
+BSONElement name = p.getField(&amp;quot;name&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;See the api docs, and jsobj.h, for more information.&lt;/p&gt;
+
+&lt;p&gt;Our query above, written as JSON, is of the form&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;{ age : &amp;lt;agevalue&amp;gt; }&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Queries are BSON objects of a particular format – in fact, we could have
+used the BSON() macro above instead of MONGO_QUERY(). See class Query in
+dbclient.h for more information on Query objects, and the Sorting section
+below.&lt;/p&gt;
+
+&lt;p&gt;In the mongo shell (which uses javascript), we could invoke:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;use tutorial;
+db.persons.find({age : 33});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;indexing&#34;&gt;Indexing&lt;/h3&gt;
+
+&lt;p&gt;Let’s suppose we want to have an index on age so that our queries are fast. We would use:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;c.createIndex(&amp;quot;tutorial.persons&amp;quot;, fromjson(&amp;quot;{age:1}&amp;quot;));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the above example we use a new function, fromjson. fromjson converts a
+JSON string to a BSONObj. This is sometimes a convenient way to specify
+BSON. Alternatively, we could have written:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;c.createIndex(&amp;quot;tutorial.persons&amp;quot;, BSON( &amp;quot;age&amp;quot; &amp;lt;&amp;lt; 1 ));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;While calling createIndex multiple times won&amp;rsquo;t result in duplicate index
+creation on the server, it will cause an extra network round-trip and
+server operation for each call. It&amp;rsquo;s best practice to use this method
+sparingly, for example once at the beginning of your code, or perhaps in an
+external setup script that configures the database for your application.
+For more information about indexing, see the &lt;a href=&#34;https://docs.mongodb.com/master/indexes/&#34;&gt;MongoDB Indexing
+docs&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;sorting&#34;&gt;Sorting&lt;/h3&gt;
+
+&lt;p&gt;Let’s now make the results from printIfAge sorted alphabetically by name.
+To do this, we change the query statement from:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;auto_ptr&amp;lt;DBClientCursor&amp;gt; cursor = c.query(&amp;quot;tutorial.persons&amp;quot;, MONGO_QUERY(&amp;quot;age&amp;quot; &amp;lt;&amp;lt; age));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;to&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;auto_ptr&amp;lt;DBClientCursor&amp;gt; cursor = c.query(&amp;quot;tutorial.persons&amp;quot;, MONGO_QUERY(&amp;quot;age&amp;quot; &amp;lt;&amp;lt; age ).sort(&amp;quot;name&amp;quot;));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here we have used &lt;code&gt;Query::sort()&lt;/code&gt; to add a modifier to our query expression for sorting.&lt;/p&gt;
+
+&lt;h3 id=&#34;updating&#34;&gt;Updating&lt;/h3&gt;
+
+&lt;p&gt;Use the &lt;code&gt;update()&lt;/code&gt; method to perform a database update. For example the
+following update in the mongo shell:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;&amp;gt; use tutorial
+&amp;gt; db.persons.update(
+    { name : &#39;Joe&#39;, age : 33 },
+    { $inc : { visits : 1 } }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;is equivalent to the following C++ code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;db.update(&amp;quot;tutorial.persons&amp;quot;,
+    BSON(&amp;quot;name&amp;quot; &amp;lt;&amp;lt; &amp;quot;Joe&amp;quot; &amp;lt;&amp;lt; &amp;quot;age&amp;quot; &amp;lt;&amp;lt; 33),
+    BSON(&amp;quot;$inc&amp;quot; &amp;lt;&amp;lt; BSON( &amp;quot;visits&amp;quot; &amp;lt;&amp;lt; 1))
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;update()&lt;/code&gt; method can be used to modify specific fields, replace the
+entire existing document, insert new documents or update multiple
+documents.  In the MongoDB Manual, examples are provided in the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/modify-documents/&#34;&gt;Modify
+Documents Tutorial&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;arrays&#34;&gt;Arrays&lt;/h3&gt;
+
+&lt;p&gt;A simple example illustrating usage of BSON arrays and the &lt;code&gt;$nin&lt;/code&gt; operator
+is available &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/arrayExample.cpp&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;further-reading&#34;&gt;Further Reading&lt;/h3&gt;
+
+&lt;p&gt;This overview just touches on the basics of using MongoDB from C++. There
+are many more capabilities. For further exploration:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Define outside of class declaration&lt;/li&gt;
-&lt;li&gt;Specify inline keyword in declaration and definition (for clarity)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;relational-operators&#34;&gt;Relational Operators&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Prefer to use free functions&lt;/li&gt;
+&lt;li&gt;See the language-independent &lt;a href=&#34;https://docs.mongodb.com/master/&#34;&gt;MongoDB Manual&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Experiment with the &lt;a href=&#34;https://docs.mongodb.com/master/mongo/&#34;&gt;mongo shell&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Review the &lt;a href=&#34;http://mongodb.github.io/api/1.0.2&#34;&gt;API docs&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
@@ -1173,6 +1935,419 @@ in hard to diagnose warnings or errors.&lt;/p&gt;
     </item>
     
     <item>
+      <title>Working with BSON</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/working-with-bson/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/working-with-bson/</guid>
+      <description>
+
+&lt;h3 id=&#34;bson-helper-functions&#34;&gt;BSON Helper Functions&lt;/h3&gt;
+
+&lt;p&gt;This is a non-exhaustive list of helper functions for use in the C++ stream
+syntax. An exhaustive list is here:
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/bson/bsonmisc.h&#34;&gt;bsonmisc.h&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Typical example of stream syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj p = BSON( &amp;quot;name&amp;quot; &amp;lt;&amp;lt; &amp;quot;Joe&amp;quot; &amp;lt;&amp;lt; &amp;quot;age&amp;quot; &amp;lt;&amp;lt; 33 );
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;genoid&#34;&gt;GENOID&lt;/h4&gt;
+
+&lt;p&gt;The server will add an &lt;code&gt;_id&lt;/code&gt; automatically if it is not included explicitly.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj p = BSON( GENOID &amp;lt;&amp;lt; &amp;quot;name&amp;quot; &amp;lt;&amp;lt; &amp;quot;Joe&amp;quot; &amp;lt;&amp;lt; &amp;quot;age&amp;quot; &amp;lt;&amp;lt; 33 );
+// result is: { _id : ..., name : &amp;quot;Joe&amp;quot;, age : 33 }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;lt-gt-lte-gte-ne&#34;&gt;LT, GT, LTE, GTE, NE&lt;/h4&gt;
+
+&lt;p&gt;less than, greater than, etc.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj p = BSON( &amp;quot;age&amp;quot; &amp;lt;&amp;lt; GT &amp;lt;&amp;lt; 21 );
+// result is:  { age : { $gt : 21 } }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;datenow&#34;&gt;DATENOW&lt;/h4&gt;
+
+&lt;p&gt;Translates to current date&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj p = BSON( &amp;quot;created&amp;quot; &amp;lt;&amp;lt; DATENOW );
+// result is: { created : &amp;quot;2009-10-09 11:41:42&amp;quot; }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;minkey-maxkey&#34;&gt;MINKEY, MAXKEY&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj p = BSON( &amp;quot;a&amp;quot; &amp;lt;&amp;lt; MINKEY);
+// result is: { &amp;quot;a&amp;quot; : { &amp;quot;$minKey&amp;quot; : 1 } }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;or&#34;&gt;OR&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;OR(BSON(&amp;quot;x&amp;quot; &amp;lt;&amp;lt; GT &amp;lt;&amp;lt; 7), BSON(&amp;quot;y&amp;quot; &amp;lt;&amp;lt; LT &amp;lt;&amp;lt; 6))
+// result is: {$or: [{x: {$gt: 7}}, {y: {$lt: 6}}]}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;bsonnull&#34;&gt;BSONNULL&lt;/h4&gt;
+
+&lt;p&gt;Translates to &lt;code&gt;null&lt;/code&gt; value (will appear in MongoDB 2.1)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj p = BSON( &amp;quot;name&amp;quot; &amp;lt;&amp;lt; &amp;quot;Methuselah&amp;quot; &amp;lt;&amp;lt; &amp;quot;age&amp;quot; &amp;lt;&amp;lt; BSONNULL );
+// result is: { name : &amp;quot;Methuselah&amp;quot;, age : null }
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Configuring the mongocxx driver</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/configuration/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/configuration/</guid>
+      <description>
+
+&lt;h1 id=&#34;configuring-the-driver&#34;&gt;Configuring the Driver&lt;/h1&gt;
+
+&lt;p&gt;In the mongocxx driver, most configuration is done via the &lt;a href=&#34;https://docs.mongodb.com/master/reference/connection-string/&#34;&gt;connection
+URI&lt;/a&gt;.  Some
+additional connection options are possible via the
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1client.html
+&#34;&gt;mongocxx::options::client&lt;/a&gt; class.&lt;/p&gt;
+
+&lt;h2 id=&#34;configuring-tls-ssl&#34;&gt;Configuring TLS/SSL&lt;/h2&gt;
+
+&lt;p&gt;To enable TLS (SSL), set &lt;code&gt;ssl=true&lt;/code&gt; in the URI:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-nohighlight&#34;&gt;mongodb://mongodb.example.com/?ssl=true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;By default, mongocxx will verify server certificates against the local
+system CA list.  You can override that by creating a
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1ssl.html
+&#34;&gt;mongocxx::options::ssl&lt;/a&gt;
+object and passing it to &lt;code&gt;ssl_opts&lt;/code&gt; on mongocxx::options::client.&lt;/p&gt;
+
+&lt;p&gt;For example, to use a custom CA or to disable certificate validation,
+uncomment the corresponding line in the following example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;mongocxx::options::client client_options;
+mongocxx::options::ssl ssl_options;
+
+// If the server certificate is not signed by a well-known CA,
+// you can set a custom CA file with the `ca_file` option.
+// ssl_options.ca_file(&amp;quot;/path/to/custom/cert.pem&amp;quot;);
+
+// If you want to disable certificate verification, you
+// can set the `allow_invalid_certificates` option.
+// ssl_options.allow_invalid_certificates(true);
+
+client_options.ssl_opts(ssl_options);
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Configuring the legacy driver</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/configuration/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/configuration/</guid>
+      <description>
+
+&lt;p&gt;In the legacy-0.9 development cycle, the mechanism by which the driver is
+configured was refactored. Note that these changes &lt;em&gt;do not apply to
+releases on the 26compat branch, or releases pre-dating legacy-0.9.0&lt;/em&gt;.This
+page describes the new configuration mechanism and documents the various
+configuration options that may be used.&lt;/p&gt;
+
+&lt;h1 id=&#34;configuring-the-driver&#34;&gt;Configuring the Driver&lt;/h1&gt;
+
+&lt;h2 id=&#34;the-mongo-client-initialize-function&#34;&gt;The &lt;code&gt;mongo::client::initialize&lt;/code&gt; function&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;mongo::client::initialize&lt;/code&gt; function, found in file
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h&#34;&gt;&lt;code&gt;src/mongo/client/init.h&lt;/code&gt;&lt;/a&gt;
+configures the driver and starts background threads critical to the
+functioning of the driver. The function has a single parameter receiving a
+&lt;code&gt;mongo::client::Options&lt;/code&gt; object. If no value is provided, a default
+constructed &lt;code&gt;mongo::client::Options&lt;/code&gt; object is used.&lt;/p&gt;
+
+&lt;p&gt;To configure the driver to use non-default parameters, construct a new
+&lt;code&gt;mongo::client::Options&lt;/code&gt; object and use its setter methods to configure the
+parameters of interest, and pass this object to
+&lt;code&gt;mongo::client::initialize&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This method must be called exactly once by your application. Invoke
+&lt;code&gt;mongo::client::initialize&lt;/code&gt; as early as possible in your application
+startup phase, before any additional threads have been created. You must
+examine the return value of &lt;code&gt;mongo::client::initialize&lt;/code&gt; and deal with any
+returned error appropriately.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-mongo-client-terminate-function&#34;&gt;The &lt;code&gt;mongo::client::terminate&lt;/code&gt; function&lt;/h2&gt;
+
+&lt;p&gt;When it is time to stop using the client driver, you must terminate its
+background tasks and release resources by invoking the
+&lt;code&gt;mongo::client::terminate&lt;/code&gt; function, found in file
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h&#34;&gt;&lt;code&gt;src/mongo/client/init.h&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;mongo::client::terminate&lt;/code&gt; function honors a grace period, specified in
+milliseconds, and defaulting to &amp;lsquo;forever&amp;rsquo;. The shutdown routine will give
+background tasks the selected grace period to terminate cleanly. If they do
+not do so, &lt;code&gt;mongo::client::terminate&lt;/code&gt; will return an error status. If the
+returned error status is &lt;code&gt;ExceededTimeLimit&lt;/code&gt; it is safe to retry the call
+to &lt;code&gt;mongo::client::terminate&lt;/code&gt;. Otherwise, a non-OK return status from
+&lt;code&gt;mongo::client::terminate&lt;/code&gt; represents a permanent failure to shut down the
+driver cleanly. Please see the documentation for &lt;code&gt;mongo::client::terminate&lt;/code&gt;
+for additional details. The value of the shutdown grace period may be
+changed from its default at driver initialization time by using an
+appropriately configured &lt;code&gt;mongo::client::Options&lt;/code&gt; object.&lt;/p&gt;
+
+&lt;p&gt;On some platforms, you may be able to arrange for
+&lt;code&gt;mongo::client::terminate&lt;/code&gt; to be called via an atexit handler. To request
+this behavior, see the &lt;code&gt;setCallShutdownAtExit&lt;/code&gt; option, documented below.&lt;/p&gt;
+
+&lt;p&gt;Alternatively, you may use the &lt;code&gt;mongo::client::GlobalInstance&lt;/code&gt; class, found
+in
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h&#34;&gt;&lt;code&gt;src/mongo/client/init.h&lt;/code&gt;&lt;/a&gt;,
+to instantiate an RAII type that will automatically initialize and
+terminate the driver.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-mongo-client-options-class&#34;&gt;The &lt;code&gt;mongo::client::Options&lt;/code&gt; class&lt;/h2&gt;
+
+&lt;h3 id=&#34;where-to-find-it&#34;&gt;Where to find it&lt;/h3&gt;
+
+&lt;p&gt;Configuration of the driver is managed through a new class, added in the
+&lt;code&gt;legacy-0.9.0&lt;/code&gt; release, called &lt;code&gt;Options&lt;/code&gt;. This class is hosted in the
+&lt;code&gt;mongo::client&lt;/code&gt; namespace, and is defined in the header
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/options.h&#34;&gt;&lt;code&gt;mongo/client/options.h&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;passing-options-to-mongo-client-initialize&#34;&gt;Passing options to &lt;code&gt;mongo::client::initialize&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;By default, calling &lt;code&gt;mongo::client::initialize()&lt;/code&gt; with no parameters is
+equivalent to calling &lt;code&gt;mongo::client::initialize(mongo::client::Options())&lt;/code&gt;
+passing a default constructed &lt;code&gt;mongo::client::Options&lt;/code&gt; object.&lt;/p&gt;
+
+&lt;p&gt;Because the &lt;code&gt;mongo::client::Options&lt;/code&gt; class has setters returning a
+&lt;code&gt;mongo::client::Options&amp;amp;&lt;/code&gt; you can chain together options to easily
+configure them at the call site:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;using mongo::client::initialize;
+using mongo::client::Options;
+
+// Configure the mongo C++ client driver, enabling SSL and setting
+// the SSL Certificate Authority file to &amp;quot;mycafile&amp;quot;.
+Status status = initialize(
+    Options().setSSLMode(Options::kSSLRequired).setSSLCAFile(&amp;quot;mycafile&amp;quot;)
+);
+
+if (!status.isOK()) {
+    // deal with errors
+} else {
+    // Driver is up in SSL mode.
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;available-options&#34;&gt;Available Options&lt;/h3&gt;
+
+&lt;h4 id=&#34;options-callshutdownatexit-and-options-setcallshutdownatexit&#34;&gt;&lt;code&gt;Options::callShutdownAtExit&lt;/code&gt; and &lt;code&gt;Options::setCallShutdownAtExit&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: If this option is &amp;lsquo;true&amp;rsquo;, then a successful call to
+&lt;code&gt;mongo::client::initialize&lt;/code&gt; will schedule a call to
+&lt;code&gt;mongo::client::terminate&lt;/code&gt; with &lt;code&gt;atexit&lt;/code&gt;. The call to
+&lt;code&gt;mongo::client::terminate&lt;/code&gt; will be made with the value of
+&lt;code&gt;mongo::client::Options::current::autoShutdownGracePeriodMillis&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-autoshutdowngraceperiodmillis-and-options-setautoshutdowngraceperiodmillis&#34;&gt;&lt;code&gt;Options::autoShutdownGracePeriodMillis&lt;/code&gt; and &lt;code&gt;Options::setAutoShutdownGracePeriodMillis&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;int&lt;/code&gt;, interpreted as milliseconds&lt;/li&gt;
+&lt;li&gt;Default: 0 (wait forever)&lt;/li&gt;
+&lt;li&gt;Semantics: If &lt;code&gt;mongo::client::initialize&lt;/code&gt; scheduled a call to
+&lt;code&gt;mongo::client::terminate&lt;/code&gt; with &lt;code&gt;atexit&lt;/code&gt;, then that call to
+&lt;code&gt;mongo::client::terminate&lt;/code&gt; will use the value
+&lt;code&gt;Options::autoShutdownGracePeriodMillis&lt;/code&gt; when calling
+&lt;code&gt;mongo::client::terminate&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setdefaultlocalthresholdmillis-and-options-defaultlocalthresholdmillis&#34;&gt;&lt;code&gt;Options::setDefaultLocalThresholdMillis&lt;/code&gt; and &lt;code&gt;Options::defaultLocalThresholdMillis&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;int&lt;/code&gt;, interpreted as milliseconds&lt;/li&gt;
+&lt;li&gt;Default: 15&lt;/li&gt;
+&lt;li&gt;Semantics: TODO&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setsslmode-and-options-sslmode&#34;&gt;&lt;code&gt;Options::setSSLMode&lt;/code&gt; and &lt;code&gt;Options::SSLMode&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: [&lt;code&gt;Options::kSSLEnabled&lt;/code&gt;|&lt;code&gt;Options:kSSLDisabled&lt;/code&gt;]&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;Options::kSSLDisabled&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: If set to &lt;code&gt;Options:kSSLEnabled&lt;/code&gt; the driver will require SSL
+connections to all mongo servers. If disabled, it will not request SSL.
+Note that if the servers you are connected to are in SSL required mode,
+you may not be able to connect. This value is an enumeration so that we
+may later extend it with a &lt;code&gt;kSSLPreferred&lt;/code&gt; option, but that is not
+currently implemented.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setfipsmode-and-options-fipsmode&#34;&gt;&lt;code&gt;Options::setFIPSMode&lt;/code&gt; and &lt;code&gt;Options::FIPSMode&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: If true, will attempt to use FIPS-140 validated crypto if
+supported by the crypto library currently in use.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setsslcafile-and-options-sslcafile&#34;&gt;&lt;code&gt;Options::setSSLCAFile&lt;/code&gt; and &lt;code&gt;Options::SSLCAFile&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
+&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. If set, it specifies a file containing the
+certificate authority file to use. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
+documentation&lt;/a&gt;
+for additional information on the CA file.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setsslpemkeyfile-and-options-sslpemkeyfile&#34;&gt;&lt;code&gt;Options::setSSLPemKeyFile&lt;/code&gt; and &lt;code&gt;Options::SSLPEMKeyFile&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
+&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. If set, it specifies a file containing the SSL
+PEM key file to use. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
+documentation&lt;/a&gt;
+for additional information on the PEM key file.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setsslpemkeypassword-and-options-sslpemkeypassword&#34;&gt;&lt;code&gt;Options::setSSLPemKeyPassword&lt;/code&gt; and &lt;code&gt;Options::SSLPEMKeyPassword&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
+&lt;code&gt;Options::kSSLRequired&lt;/code&gt;, and is only meaningful if a PEM key file has
+been set with &lt;code&gt;Options::setSSLPEMKeyFile&lt;/code&gt;. If set, it specifies the
+password to be used to decrypt the SSL PEM key file specified with
+&lt;code&gt;Options::setSSLPEMKeyFile&lt;/code&gt;. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
+documentation&lt;/a&gt;
+for additional information on the PEM key file password.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setsslcrlfile-and-options-sslcrlfile&#34;&gt;&lt;code&gt;Options::setSSLCRLFile&lt;/code&gt; and &lt;code&gt;Options::SSLCRLFile&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
+&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. If set, it specifies the file to use as the SSL
+certificate revocation list. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
+documentation&lt;/a&gt;
+for additional information on the certificate revocation list file.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setssallowinvalidcertificates-and-options-sslallowinvalidcertificates&#34;&gt;&lt;code&gt;Options::setSSAllowInvalidCertificates&lt;/code&gt; and &lt;code&gt;Options::SSLAllowInvalidCertificates&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
+&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. Setting this option to &lt;code&gt;true&lt;/code&gt; suppresses
+validation of certificates. In other words, invalid certificates will be
+accepted.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setlogappenderfactory-and-options-logappenderfactory&#34;&gt;&lt;code&gt;Options::setLogAppenderFactory&lt;/code&gt; and &lt;code&gt;Options::logAppenderFactory&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;Options::LogAppenderFactory&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: none&lt;/li&gt;
+&lt;li&gt;Semantics: Use &lt;code&gt;setLogAppenderFactory&lt;/code&gt; if you want to configure a custom
+appender to listen to the driver&amp;rsquo;s internally logged messages. Setting
+such a factory will enable logging and relay logged messages to whatever
+appender you provide a factory method for. An example of how to do this
+can be found
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/loggingTest.cpp&#34;&gt;here&lt;/a&gt;.
+You may only configure one appender through startup options.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setminloggedseverity-and-options-minloggedseverity&#34;&gt;&lt;code&gt;Options::setMinLoggedSeverity&lt;/code&gt; and `Options::minLoggedSeverity&amp;rsquo;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;logger::LogSeverity&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;LogSeverity::Log()&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: When providing a custom log appender (see above) use this to
+set the minimum severity level of logged messages. Messages that are of
+less importance than the level you provide will not be logged.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setvalidateobjects-and-options-validateobjects&#34;&gt;&lt;code&gt;Options::setValidateObjects&lt;/code&gt; and &lt;code&gt;Options::validateObjects&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: If enabled, the client library will run BSON validation on
+data returned from the server to ensure that the returned data is valid
+BSON. Note that there is a performance cost to doing so.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;caveats&#34;&gt;Caveats&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;You must call &lt;code&gt;mongo::client::initialize&lt;/code&gt; before using the driver. You
+may only call &lt;code&gt;mongo::client::initialize&lt;/code&gt; once.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Configuration of the driver is global. You may access a &lt;code&gt;const&lt;/code&gt; reference
+to the current global configuration state of the driver by calling
+&lt;code&gt;mongo::client::Options::current&lt;/code&gt;. If called before entering &lt;code&gt;main&lt;/code&gt;, the
+values returned by accessors of the &lt;code&gt;Options&lt;/code&gt; object returned by
+&lt;code&gt;Options::current&lt;/code&gt; are indeterminate. If called after &lt;code&gt;main&lt;/code&gt; but before
+calling &lt;code&gt;mongo::client::initialize&lt;/code&gt;, a default constructed instance of
+the &lt;code&gt;Options&lt;/code&gt; class will be returned. If called after
+&lt;code&gt;mongo::client::initialize&lt;/code&gt;, the value returned by &lt;code&gt;Options::current&lt;/code&gt;
+will reflect any customized &lt;code&gt;Options&lt;/code&gt; instance passed to
+&lt;code&gt;mongo::client::initialize&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Configuration of the driver is not synchronized, and you may only invoke
+&lt;code&gt;mongo::client::initialize&lt;/code&gt; once. We strongly recommend that you call
+&lt;code&gt;mongo::client::initialize&lt;/code&gt; as early as possible in &lt;code&gt;main&lt;/code&gt; or your
+application startup code, preferably before creating any additional
+threads.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Overview</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</guid>
+      <description>&lt;p&gt;The mongocxx is a ground-up rewrite of a C++ driver for MongoDB based on
+&lt;a href=&#34;http://mongoc.org/&#34;&gt;libmongoc&lt;/a&gt;.  It requires a C++11 compiler.  It it
+known to build on x86 and x86-64 architectures for Linux, Mac OS X,
+Windows, FreeBSD and Solaris.&lt;/p&gt;
+
+&lt;p&gt;The mongocxx driver library includes a matching bson package, bsoncxx, that
+implements the BSON specification (see &lt;a href=&#34;http://www.bsonspec.org&#34;&gt;http://www.bsonspec.org&lt;/a&gt;). This
+library can be used standalone for object serialization and deserialization
+even when one is not using MongoDB at all.&lt;/p&gt;
+
+&lt;p&gt;Releases of the mongocxx driver have version numbers like v3.x.y.&lt;/p&gt;
+
+&lt;p&gt;(Note: there were no v2.x.y C++ drivers to avoid confusion with the
+deprecated legacy-0.0-26compat-2.x.y drivers.)&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Installing the mongocxx driver</title>
       <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
@@ -1264,11 +2439,11 @@ cd mongo-cxx-driver/build
 &lt;p&gt;If you prefer to download a tarball, look on the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases&#34;&gt;mongocxx
 releases&lt;/a&gt; page for a
 link to the release tarball for the version you wish you install.  For
-example, to download version 3.0.3:&lt;/p&gt;
+example, to download version 3.1.0:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.0.3.tar.gz
-tar -xzf r3.0.3.tar.gz
-cd mongo-cxx-driver-r3.0.3/build
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.1.0.tar.gz
+tar -xzf r3.1.0.tar.gz
+cd mongo-cxx-driver-r3.1.0/build
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Make sure you change to the &lt;code&gt;build&lt;/code&gt; directory of whatever source tree you
@@ -1426,1142 +2601,6 @@ settings for a Debug x64 build as an example:&lt;/p&gt;
       &amp;lt;AdditionalDependencies&amp;gt;libmongocxx.lib;libbsoncxx.lib;mongoc-static-1.0.lib;bson-1.0.lib;%(AdditionalDependencies)&amp;lt;/AdditionalDependencies&amp;gt;
     &amp;lt;/Link&amp;gt;
   &amp;lt;/ItemDefinitionGroup&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Legacy driver tutorial</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/tutorial/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/tutorial/</guid>
-      <description>
-
-&lt;h3 id=&#34;getting-started-with-the-legacy-c-driver&#34;&gt;Getting started with the Legacy C++ Driver&lt;/h3&gt;
-
-&lt;p&gt;This is an introduction to usage of the MongoDB database from a C++ program.&lt;/p&gt;
-
-&lt;p&gt;NOTE: this tutorial is for the legacy and 26compat versions of the C++ driver.&lt;/p&gt;
-
-&lt;p&gt;First, install MongoDB – see the
-&lt;a href=&#34;https://docs.mongodb.com/master/installation/&#34;&gt;installation&lt;/a&gt; page for
-details.&lt;/p&gt;
-
-&lt;p&gt;Next, you may wish to take a look at the &lt;a href=&#34;https://docs.mongodb.com/master/&#34;&gt;MongoDB
-Manual&lt;/a&gt; for a language independent look at
-how to use MongoDB. Also, we suggest some basic familiarity with the &lt;a href=&#34;https://docs.mongodb.com/master/mongo/&#34;&gt;mongo
-shell&lt;/a&gt; – the shell is the primary
-database administration tool and is useful for manually inspecting the
-contents of a database after your C++ program runs.&lt;/p&gt;
-
-&lt;h3 id=&#34;installing-the-driver-library-and-headers&#34;&gt;Installing the Driver Library and Headers&lt;/h3&gt;
-
-&lt;p&gt;Please see &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/legacy-v1/installation/&#34;&gt;Installation&lt;/a&gt; for
-instructions on how to download, build, and install the C++ client driver.&lt;/p&gt;
-
-&lt;h3 id=&#34;initializing-the-driver-library&#34;&gt;Initializing the Driver Library&lt;/h3&gt;
-
-&lt;p&gt;Please see &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/legacy-v1/configuration/&#34;&gt;Configuration&lt;/a&gt; for
-instructions on how to properly initialize and terminate the driver:&lt;/p&gt;
-
-&lt;h3 id=&#34;connecting&#34;&gt;Connecting&lt;/h3&gt;
-
-&lt;h4 id=&#34;dbclientconnection&#34;&gt;DBClientConnection&lt;/h4&gt;
-
-&lt;p&gt;The C++ driver includes several classes for managing collections under the parent class &lt;code&gt;DBClientInterface&lt;/code&gt;.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;DBClientConnection&lt;/code&gt; is the connection class for connecting to a single MongoDB database server (or mongos)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;DBClientReplicaSet&lt;/code&gt; is the connection class for connecting to a replica set.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;See the &lt;a href=&#34;http://mongodb.github.io/api/1.0.2/&#34;&gt;API documentation&lt;/a&gt; for
-details on each of the above classes.&lt;/p&gt;
-
-&lt;h4 id=&#34;a-simple-program-that-connects-to-the-database&#34;&gt;A simple program that connects to the database&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;cstdlib&amp;gt;
-#include &amp;lt;iostream&amp;gt;
-#include &amp;quot;mongo/client/dbclient.h&amp;quot; // for the driver
-
-void run() {
-  mongo::DBClientConnection c;
-  c.connect(&amp;quot;localhost&amp;quot;);
-}
-
-int main() {
-    mongo::client::initialize();
-    try {
-        run();
-        std::cout &amp;lt;&amp;lt; &amp;quot;connected ok&amp;quot; &amp;lt;&amp;lt; std::endl;
-    } catch( const mongo::DBException &amp;amp;e ) {
-        std::cout &amp;lt;&amp;lt; &amp;quot;caught &amp;quot; &amp;lt;&amp;lt; e.what() &amp;lt;&amp;lt; std::endl;
-    }
-    return EXIT_SUCCESS;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;(Note that in a production environment, the return value of &lt;code&gt;mongo::client::initialize()&lt;/code&gt; must be checked)&lt;/p&gt;
-
-&lt;p&gt;If you are using gcc on Linux, you would compile with something like this, depending on location of your include files and libraries:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ g++ tutorial.cpp -pthread -lmongoclient -lboost_thread-mt -lboost_system -lboost_regex -o tutorial
-$ ./tutorial
-connected ok
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;Warning&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Since the tutorial program attempts to connect to a MongoDB database server, you must start it by running mongod before running the tutorial.&lt;/li&gt;
-&lt;li&gt;You may need to append -mt to boost_filesystem and boost_program_options. If using a recent boost, -mt is not needed anymore.&lt;/li&gt;
-&lt;li&gt;You may need to use -I and -L to specify the locations of your mongo and boost headers and libraries.&lt;/li&gt;
-&lt;li&gt;If using the 26compat branch you need to additionally specify &lt;code&gt;-lboost_filesystem&lt;/code&gt; and &lt;code&gt;-lboost_program_options&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;bson&#34;&gt;BSON&lt;/h3&gt;
-
-&lt;p&gt;The MongoDB database stores data in BSON format. BSON is a binary object
-format that is JSON-like in terms of the data which can be stored (some
-extensions exist, for example, a Date datatype).&lt;/p&gt;
-
-&lt;p&gt;To save data in the database we must create objects of class BSONObj. The
-components of a BSONObj are represented as BSONElement objects. We use
-BSONObjBuilder to make BSON objects, and BSONObjIterator to enumerate BSON
-objects.&lt;/p&gt;
-
-&lt;h4 id=&#34;the-c-bson-library&#34;&gt;The C++ BSON Library&lt;/h4&gt;
-
-&lt;p&gt;Include bson/bson.h in your application. See
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/bson/bsondemo/bsondemo.cpp&#34;&gt;bsondemo&lt;/a&gt;
-for example usage.&lt;/p&gt;
-
-&lt;h5 id=&#34;key-classes&#34;&gt;Key classes&lt;/h5&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;mongo::BSONObj: a BSON object
-mongo::BSONElement: a single element in a BSON object. This is a key and a value.
-mongo::BSONObjBuilder: used to make BSON objects
-mongo::BSONObjIterator: used to enumerate BSON objects
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h5 id=&#34;working-with-bson&#34;&gt;Working with BSON&lt;/h5&gt;
-
-&lt;p&gt;Let’s now create a BSON “person” object which contains name and age. We might invoke:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObjBuilder b;
-b.append(&amp;quot;name&amp;quot;, &amp;quot;Joe&amp;quot;);
-b.append(&amp;quot;age&amp;quot;, 33);
-BSONObj p = b.obj();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or more concisely:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj p = BSONObjBuilder().append(&amp;quot;name&amp;quot;, &amp;quot;Joe&amp;quot;).append(&amp;quot;age&amp;quot;, 33).obj();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We can also create BSON objects using the stream oriented syntax:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObjBuilder b;
-b &amp;lt;&amp;lt; &amp;quot;name&amp;quot; &amp;lt;&amp;lt; &amp;quot;Joe&amp;quot; &amp;lt;&amp;lt; &amp;quot;age&amp;quot; &amp;lt;&amp;lt; 33;
-BSONObj p = b.obj();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The BSON Macro lets us be even more compact:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj p = BSON( &amp;quot;name&amp;quot; &amp;lt;&amp;lt; &amp;quot;Joe&amp;quot; &amp;lt;&amp;lt; &amp;quot;age&amp;quot; &amp;lt;&amp;lt; 33 );
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Use the GENOID helper to add an object id to your object. The server will
-add an _id automatically if it is not included explicitly.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj p = BSON( GENOID &amp;lt;&amp;lt; &amp;quot;name&amp;quot; &amp;lt;&amp;lt; &amp;quot;Joe&amp;quot; &amp;lt;&amp;lt; &amp;quot;age&amp;quot; &amp;lt;&amp;lt; 33 );
-// result is: { _id : ..., name : &amp;quot;Joe&amp;quot;, age : 33 }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;GENOID should be at the beginning of the generated object. We can do something similar with the non-stream builder syntax:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj p = BSONObjBuilder().genOID().append(&amp;quot;name&amp;quot;,&amp;quot;Joe&amp;quot;).append(&amp;quot;age&amp;quot;,33).obj();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Other helpers are listed in &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/legacy-v1/working-with-bson/&#34;&gt;Working with BSON&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;inserting&#34;&gt;Inserting&lt;/h3&gt;
-
-&lt;p&gt;We now save our person object in a persons collection in the database:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;c.insert(&amp;quot;tutorial.persons&amp;quot;, p);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The first parameter to insert is the namespace. tutorial is the database and persons is the collection name.&lt;/p&gt;
-
-&lt;h4 id=&#34;getlasterror&#34;&gt;getLastError&lt;/h4&gt;
-
-&lt;p&gt;In order to ensure the write succeeded we need to call getLastError.&lt;/p&gt;
-
-&lt;p&gt;Get error result from the last operation on this connection:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;string mongo::DBClientWithCommands::getLastError(); // Empty string if no error
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Get the full last error object:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONObj DBClientWithCommands::getLastErrorDetailed();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For an example, see &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/simple_client_demo.cpp&#34;&gt;this demo&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;For additional background information on getLastError see the &lt;a href=&#34;https://docs.mongodb.com/master/core/write-operations/#write-concern&#34;&gt;write
-operations documentation&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;count&#34;&gt;Count&lt;/h3&gt;
-
-&lt;p&gt;Let’s now fetch all objects from the persons collection, and display them. We’ll also show here how to use count().&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;cout &amp;lt;&amp;lt; &amp;quot;count:&amp;quot; &amp;lt;&amp;lt; c.count(&amp;quot;tutorial.persons&amp;quot;) &amp;lt;&amp;lt; endl;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;query&#34;&gt;Query&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;auto_ptr&amp;lt;DBClientCursor&amp;gt; cursor = c.query(&amp;quot;tutorial.persons&amp;quot;, BSONObj());
-
-while (cursor-&amp;gt;more())
-   cout &amp;lt;&amp;lt; cursor-&amp;gt;next().toString() &amp;lt;&amp;lt; endl;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;BSONObj()&lt;/code&gt; is an empty BSON object – it represents &lt;code&gt;{}&lt;/code&gt; which indicates an
-empty query pattern (an empty query is a query for all objects).&lt;/p&gt;
-
-&lt;p&gt;We use &lt;code&gt;BSONObj::toString()&lt;/code&gt; above to print out information about each
-object retrieved. &lt;code&gt;BSONObj::toString&lt;/code&gt; is a diagnostic function which prints
-an abbreviated JSON string representation of the object. For full JSON
-output, use &lt;code&gt;BSONObj::jsonString&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Let’s now write a function which prints out the name (only) of all persons
-in the collection whose age is a given value:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;void printIfAge(DBClientConnection&amp;amp; c, int age) {
-    auto_ptr&amp;lt;DBClientCursor&amp;gt; cursor =
-        c.query(&amp;quot;tutorial.persons&amp;quot;, MONGO_QUERY(&amp;quot;age&amp;quot; &amp;lt;&amp;lt; age));
-    while (cursor-&amp;gt;more()) {
-        BSONObj p = cursor-&amp;gt;next();
-        cout &amp;lt;&amp;lt; p.getStringField(&amp;quot;name&amp;quot;) &amp;lt;&amp;lt; endl;
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;getStringField()&lt;/code&gt; is a helper that assumes the name field is of type
-string. To manipulate an element in a more generic fashion we can retrieve
-the particular BSONElement from the enclosing object:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;BSONElement name = p[&amp;quot;name&amp;quot;];
-// or:
-BSONElement name = p.getField(&amp;quot;name&amp;quot;);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;See the api docs, and jsobj.h, for more information.&lt;/p&gt;
-
-&lt;p&gt;Our query above, written as JSON, is of the form&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;{ age : &amp;lt;agevalue&amp;gt; }&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Queries are BSON objects of a particular format – in fact, we could have
-used the BSON() macro above instead of MONGO_QUERY(). See class Query in
-dbclient.h for more information on Query objects, and the Sorting section
-below.&lt;/p&gt;
-
-&lt;p&gt;In the mongo shell (which uses javascript), we could invoke:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;use tutorial;
-db.persons.find({age : 33});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;indexing&#34;&gt;Indexing&lt;/h3&gt;
-
-&lt;p&gt;Let’s suppose we want to have an index on age so that our queries are fast. We would use:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;c.createIndex(&amp;quot;tutorial.persons&amp;quot;, fromjson(&amp;quot;{age:1}&amp;quot;));
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;In the above example we use a new function, fromjson. fromjson converts a
-JSON string to a BSONObj. This is sometimes a convenient way to specify
-BSON. Alternatively, we could have written:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;c.createIndex(&amp;quot;tutorial.persons&amp;quot;, BSON( &amp;quot;age&amp;quot; &amp;lt;&amp;lt; 1 ));
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;While calling createIndex multiple times won&amp;rsquo;t result in duplicate index
-creation on the server, it will cause an extra network round-trip and
-server operation for each call. It&amp;rsquo;s best practice to use this method
-sparingly, for example once at the beginning of your code, or perhaps in an
-external setup script that configures the database for your application.
-For more information about indexing, see the &lt;a href=&#34;https://docs.mongodb.com/master/indexes/&#34;&gt;MongoDB Indexing
-docs&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;sorting&#34;&gt;Sorting&lt;/h3&gt;
-
-&lt;p&gt;Let’s now make the results from printIfAge sorted alphabetically by name.
-To do this, we change the query statement from:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;auto_ptr&amp;lt;DBClientCursor&amp;gt; cursor = c.query(&amp;quot;tutorial.persons&amp;quot;, MONGO_QUERY(&amp;quot;age&amp;quot; &amp;lt;&amp;lt; age));
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;to&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;auto_ptr&amp;lt;DBClientCursor&amp;gt; cursor = c.query(&amp;quot;tutorial.persons&amp;quot;, MONGO_QUERY(&amp;quot;age&amp;quot; &amp;lt;&amp;lt; age ).sort(&amp;quot;name&amp;quot;));
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here we have used &lt;code&gt;Query::sort()&lt;/code&gt; to add a modifier to our query expression for sorting.&lt;/p&gt;
-
-&lt;h3 id=&#34;updating&#34;&gt;Updating&lt;/h3&gt;
-
-&lt;p&gt;Use the &lt;code&gt;update()&lt;/code&gt; method to perform a database update. For example the
-following update in the mongo shell:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;&amp;gt; use tutorial
-&amp;gt; db.persons.update(
-    { name : &#39;Joe&#39;, age : 33 },
-    { $inc : { visits : 1 } }
-)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;is equivalent to the following C++ code:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;db.update(&amp;quot;tutorial.persons&amp;quot;,
-    BSON(&amp;quot;name&amp;quot; &amp;lt;&amp;lt; &amp;quot;Joe&amp;quot; &amp;lt;&amp;lt; &amp;quot;age&amp;quot; &amp;lt;&amp;lt; 33),
-    BSON(&amp;quot;$inc&amp;quot; &amp;lt;&amp;lt; BSON( &amp;quot;visits&amp;quot; &amp;lt;&amp;lt; 1))
-);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The &lt;code&gt;update()&lt;/code&gt; method can be used to modify specific fields, replace the
-entire existing document, insert new documents or update multiple
-documents.  In the MongoDB Manual, examples are provided in the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/modify-documents/&#34;&gt;Modify
-Documents Tutorial&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;arrays&#34;&gt;Arrays&lt;/h3&gt;
-
-&lt;p&gt;A simple example illustrating usage of BSON arrays and the &lt;code&gt;$nin&lt;/code&gt; operator
-is available &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/arrayExample.cpp&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;further-reading&#34;&gt;Further Reading&lt;/h3&gt;
-
-&lt;p&gt;This overview just touches on the basics of using MongoDB from C++. There
-are many more capabilities. For further exploration:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;See the language-independent &lt;a href=&#34;https://docs.mongodb.com/master/&#34;&gt;MongoDB Manual&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Experiment with the &lt;a href=&#34;https://docs.mongodb.com/master/mongo/&#34;&gt;mongo shell&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Review the &lt;a href=&#34;http://mongodb.github.io/api/1.0.2&#34;&gt;API docs&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>MongoDB C&#43;&#43; Driver Manual</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/</guid>
-      <description>
-
-&lt;h1 id=&#34;mongodb-c-driver&#34;&gt;MongoDB C++ Driver&lt;/h1&gt;
-
-&lt;p&gt;Welcome to the MongoDB C++ driver.  On this site, you&amp;rsquo;ll find documentation
-to help you get the most from MongoDB and C++.  If you&amp;rsquo;re just starting
-out, take a look at these pages first:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/&#34;&gt;Installing mongocxx&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/tutorial/&#34;&gt;Quick-start tutorial&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;driver-status-by-family-and-version&#34;&gt;Driver status by family and version&lt;/h2&gt;
-
-&lt;p&gt;Stability indicates whether this driver is recommended for production use.
-Currently, no drivers guarantee API or ABI stability.&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Family/version&lt;/th&gt;
-&lt;th&gt;Stability&lt;/th&gt;
-&lt;th&gt;Development&lt;/th&gt;
-&lt;th&gt;Purpose&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;mongocxx 3.1.x&lt;/td&gt;
-&lt;td&gt;Unstable&lt;/td&gt;
-&lt;td&gt;Active development&lt;/td&gt;
-&lt;td&gt;Unstable C++ driver development, requires C++11&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;mongocxx 3.0.x&lt;/td&gt;
-&lt;td&gt;Stable&lt;/td&gt;
-&lt;td&gt;Bug fixes only&lt;/td&gt;
-&lt;td&gt;Primary stable C++ driver release, requires C++11&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;legacy   (all)&lt;/td&gt;
-&lt;td&gt;Stable&lt;/td&gt;
-&lt;td&gt;Critical fixes only&lt;/td&gt;
-&lt;td&gt;Former stable C++ driver release&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;26compat (all)&lt;/td&gt;
-&lt;td&gt;Deprecated&lt;/td&gt;
-&lt;td&gt;Critical fixes only&lt;/td&gt;
-&lt;td&gt;Drop in replacement for users of existing 2.6 era C++ driver&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&#34;mongodb-compatibility&#34;&gt;MongoDB compatibility&lt;/h2&gt;
-
-&lt;p&gt;The following compatibility table specifies the driver version(s)
-recommended for different versions of MongoDB.  The 3.0.x series
-is recommended for all new development.&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Family/version&lt;/th&gt;
-&lt;th&gt;MongoDB 2.4&lt;/th&gt;
-&lt;th&gt;MongoDB 2.6&lt;/th&gt;
-&lt;th&gt;MongoDB 3.0&lt;/th&gt;
-&lt;th&gt;MongoDB 3.2&lt;/th&gt;
-&lt;th&gt;MongoDB 3.4&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;mongocxx 3.1.x&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;mongocxx 3.0.x&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;legacy   1.1.x&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;legacy   1.0.x&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;26compat (all)&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&#34;license&#34;&gt;License&lt;/h2&gt;
-
-&lt;p&gt;MongoDB C++ drivers are available under the terms of the Apache License, version 2.0.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Overview</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/</guid>
-      <description>&lt;p&gt;The legacy C++ driver builds on x86 and x86-64 architectures for Linux, Mac
-OS X, Windows, FreeBSD and Solaris.&lt;/p&gt;
-
-&lt;p&gt;The legacy C++ driver library includes a bson package that
-implements the BSON specification (see &lt;a href=&#34;http://www.bsonspec.org&#34;&gt;http://www.bsonspec.org&lt;/a&gt;). This
-library can be used standalone for object serialization and deserialization
-even when one is not using MongoDB at all.&lt;/p&gt;
-
-&lt;p&gt;Releases of legacy drivers have version numbers like v0.x.y and v1.x.y.&lt;/p&gt;
-
-&lt;p&gt;(Note: version numbers like v0.0-26compat-2.x.y refer to a different,
-deprecated C++ driver branch.)&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Overview</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</guid>
-      <description>&lt;p&gt;The mongocxx is a ground-up rewrite of a C++ driver for MongoDB based on
-&lt;a href=&#34;http://mongoc.org/&#34;&gt;libmongoc&lt;/a&gt;.  It requires a C++11 compiler.  It it
-known to build on x86 and x86-64 architectures for Linux, Mac OS X,
-Windows, FreeBSD and Solaris.&lt;/p&gt;
-
-&lt;p&gt;The mongocxx driver library includes a matching bson package, bsoncxx, that
-implements the BSON specification (see &lt;a href=&#34;http://www.bsonspec.org&#34;&gt;http://www.bsonspec.org&lt;/a&gt;). This
-library can be used standalone for object serialization and deserialization
-even when one is not using MongoDB at all.&lt;/p&gt;
-
-&lt;p&gt;Releases of the mongocxx driver have version numbers like v3.x.y.&lt;/p&gt;
-
-&lt;p&gt;(Note: there were no v2.x.y C++ drivers to avoid confusion with the
-deprecated legacy-0.0-26compat-2.x.y drivers.)&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Releasing the legacy driver</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/legacy-release-guide/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/legacy-release-guide/</guid>
-      <description>
-
-&lt;p&gt;If you&amp;rsquo;re reading this, chances are you&amp;rsquo;re about to issue a release for a
-new version of the legacy C++ driver.  Congratulations!&lt;/p&gt;
-
-&lt;h2 id=&#34;before-getting-started&#34;&gt;Before Getting Started&lt;/h2&gt;
-
-&lt;p&gt;To perform the release process, you will need the following:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;git&lt;/code&gt;, &lt;code&gt;python&lt;/code&gt;, &lt;code&gt;doxygen&lt;/code&gt; installed on your local machine.&lt;/li&gt;
-&lt;li&gt;Push access to the &lt;code&gt;mongodb/mongo-cxx-driver&lt;/code&gt; repository on GitHub.&lt;/li&gt;
-&lt;li&gt;Push access to the &lt;code&gt;10gen/apidocs&lt;/code&gt; repository on GitHub.&lt;/li&gt;
-&lt;li&gt;Administrative access on the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX&#34;&gt;C++ Driver JIRA project&lt;/a&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;This guide assumes that you have a local clone of the &lt;code&gt;mongo-cxx-driver&lt;/code&gt;
-and &lt;code&gt;apidocs&lt;/code&gt; repositories, and that your GitHub remote is configured with
-remote name &lt;code&gt;origin&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;In addition, this guide assumes that you are about to issue a production
-release named &lt;code&gt;legacy-x.y.z&lt;/code&gt;.  The process for issuing a release candidate
-is nearly identical, with two exceptions:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The new version string will be in format &lt;code&gt;legacy-x.y.z-rcw&lt;/code&gt;, instead of
-&lt;code&gt;legacy-x.y.z&lt;/code&gt;.  In this guide, replace all instances of the latter with
-the former.&lt;/li&gt;
-&lt;li&gt;The copy for the release notes and announcement will need to indicate
-that the release is not for production use.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Lastly, this guide also assumes that the following release is is named
-&lt;code&gt;legacy-x.y.(z+1)&lt;/code&gt;.  The name of the following release may differ from
-this.&lt;/p&gt;
-
-&lt;h2 id=&#34;confirm-all-outstanding-issues-resolved-in-jira&#34;&gt;Confirm All Outstanding Issues Resolved in JIRA&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;On the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel&#34;&gt;project roadmap
-panel&lt;/a&gt;
-in JIRA, ensure that all tickets marked for &lt;code&gt;legacy-x.y.z&lt;/code&gt; are resolved.
-Assuming there are 10 issues in the release, you should see the text &amp;ldquo;10
-of 10 issues have been resolved&amp;rdquo; on this page.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;create-and-push-the-bump-commit&#34;&gt;Create and Push the BUMP Commit&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Change directories to your local clone of &lt;code&gt;mongo-cxx-driver&lt;/code&gt;, and use
-&lt;code&gt;git status&lt;/code&gt; to confirm a clean working tree, and that you have the
-&lt;code&gt;legacy&lt;/code&gt; branch checked out.&lt;/li&gt;
-&lt;li&gt;Make edits to the following files.  You will be changing the development
-version string (&lt;code&gt;legacy-x.y.z-rcw-pre&lt;/code&gt;) in these files to the release
-version string (&lt;code&gt;legacy-x.y.z&lt;/code&gt;):
-    * &lt;code&gt;SConstruct&lt;/code&gt;: update value of &lt;code&gt;mongoclientVersion&lt;/code&gt;.
-    * &lt;code&gt;etc/doxygen/config&lt;/code&gt;: update value of &lt;code&gt;PROJECT_NUMBER&lt;/code&gt;.&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Commit and push the bump commit, as follows:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git add SConstruct etc/doxygen/config
-git commit -m &amp;quot;BUMP legacy-x.y.z&amp;quot;
-git push origin legacy
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Pushing the BUMP commit to the origin will kick off builds in Evergreen,
-Travis CI and AppVeyor. Wait for all three builds to finish and pass.&lt;/p&gt;
-
-&lt;h2 id=&#34;tag-the-release&#34;&gt;Tag the Release&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;From the same directory, create and push a tag for the commit that will serve as the release.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git tag legacy-x.y.z
-git push origin legacy-x.y.z
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;generate-and-publish-documentation&#34;&gt;Generate and Publish Documentation&lt;/h2&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;Warning: this section is obsolete&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;In your local clone of the &lt;code&gt;apidocs&lt;/code&gt; repo, build and publish the release
-documentation as follows.  The &lt;code&gt;build.py&lt;/code&gt; script will modify existing
-files, and also create files in a new directory named &lt;code&gt;cxx/legacy-x.y.z&lt;/code&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;python build.py cxx
-git add cxx/
-git add -u
-git commit -m &amp;quot;Documentation for C++ driver release legacy-x.y.z&amp;quot;
-git push origin master
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Within an hour, a regularly scheduled task will automatically deploy the
-new documentation at the &lt;a href=&#34;http://api.mongodb.com/cxx/&#34;&gt;legacy C++ driver API documentation
-page&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;bulk-transition-all-tickets-targeted-for-release-to-closed&#34;&gt;Bulk Transition All Tickets Targeted for Release to &amp;ldquo;Closed&amp;rdquo;&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Re-visit the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel&#34;&gt;project roadmap
-panel&lt;/a&gt;
-in JIRA.&lt;/li&gt;
-&lt;li&gt;Under the legacy-x.y.z version, click the link &amp;ldquo;X issues&amp;rdquo; on the left-hand side.  This will bring you to the search page that displays all tickets targeted for the version about to be released.&lt;/li&gt;
-&lt;li&gt;Select &amp;ldquo;Tools =&amp;gt; Bulk Change&amp;rdquo; from the upper-right hand corner of the search page.&lt;/li&gt;
-&lt;li&gt;In the &amp;ldquo;Choose Issues&amp;rdquo; dialog, select all issues.&lt;/li&gt;
-&lt;li&gt;In the &amp;ldquo;Choose Operation&amp;rdquo; dialog, select &amp;ldquo;Transition Issues&amp;rdquo;.&lt;/li&gt;
-&lt;li&gt;In the &amp;ldquo;Edit Fields&amp;rdquo; dialog, click &amp;ldquo;Next&amp;rdquo; without modifying any fields.&lt;/li&gt;
-&lt;li&gt;Confirm the change.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;release-the-version-in-jira&#34;&gt;Release the Version in JIRA&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Visit the &lt;a href=&#34;https://jira.mongodb.org/plugins/servlet/project-config/CXX/versions&#34;&gt;versions administrative
-panel&lt;/a&gt;
-in JIRA.&lt;/li&gt;
-&lt;li&gt;Hover over the version to be released.  A cog icon will appear on the right-hand side of the page.&lt;/li&gt;
-&lt;li&gt;Click the cog icon, and select &amp;ldquo;Release&amp;rdquo; from the drop-down.  A pop-up will appear, and it should contain no warnings about unresolved issues.&lt;/li&gt;
-&lt;li&gt;Set &amp;ldquo;Release date&amp;rdquo; to the current date.&lt;/li&gt;
-&lt;li&gt;Confirm the release.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;create-the-next-version-in-jira&#34;&gt;Create the Next Version in JIRA&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;From the &lt;a href=&#34;https://jira.mongodb.org/plugins/servlet/project-config/CXX/versions&#34;&gt;versions administrative
-panel&lt;/a&gt;,
-determine whether or not the version corresponding to the next release
-already exists.&lt;/li&gt;
-&lt;li&gt;If the version already exists, continue to the next step.&lt;/li&gt;
-&lt;li&gt;If the version does not exist, enter the new version&amp;rsquo;s Name and Description at the prompt towards the top of the page.  Select the current date as the next version&amp;rsquo;s start date, and pick a release date.  Typically, the legacy C++ driver is released only a small handful of times each year, so the release date for the new version should likely be at least a couple of months out (barring extraordinary circumstances).&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;draft-publish-github-release-notes&#34;&gt;Draft &amp;amp; Publish GitHub Release Notes&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Visit the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases&#34;&gt;GitHub releases
-page&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Click &amp;ldquo;Draft a New Release&amp;rdquo;.&lt;/li&gt;
-&lt;li&gt;Select &lt;code&gt;legacy-x.y.z&lt;/code&gt; as the tag.  The page should indicate that this tag is recognized.&lt;/li&gt;
-&lt;li&gt;Enter &amp;ldquo;MongoDB Legacy C++ Driver x.y.z&amp;rdquo; as the release title.&lt;/li&gt;
-&lt;li&gt;Draft the release notes.  Typically, release notes have two sections:
-
-&lt;ul&gt;
-&lt;li&gt;In the first section, describe in a few sentences what this release is all about.  Mention whether this is a major release or a minor patch release, and call out any notable tickets resolved and anything else that users may want to know about.&lt;/li&gt;
-&lt;li&gt;In the second section, paste in a formatted list of tickets that were resolved in this release.  You can copy-paste this formatted list straight from JIRA&amp;rsquo;s automatically-generated release notes, which you can find by clicking on the &amp;ldquo;Release Notes&amp;rdquo; link under the release version at the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel&#34;&gt;project roadmap panel&lt;/a&gt;.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Select &amp;ldquo;Publish release&amp;rdquo;.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;send-announcement-email&#34;&gt;Send Announcement Email&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Draft an email to mongodb-announce@googlegroups.com announcing the
-release, with subject &amp;ldquo;Legacy C++ driver legacy-x.y.z released.&amp;rdquo;&lt;/li&gt;
-&lt;li&gt;Use the below text as a template, and feel free to include any extra information that seems appropriate for an announcement email:&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;The C++ Driver Team is excited to announce the availability of the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases/tag/legacy-x.y.z&#34;&gt;legacy-x.y.z&lt;/a&gt; release of the Legacy C++ Driver.&lt;/p&gt;
-
-&lt;p&gt;This is a stable release.  Please review the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases/tag/legacy-x.y.z&#34;&gt;release notes&lt;/a&gt; for details on what has changed in this release. The legacy-x.y.z release is a recommended upgrade for all users of the LAST_RELEASE and older drivers.&lt;/p&gt;
-
-&lt;p&gt;You can obtain the driver source from GitHub, either under the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/tree/legacy-x.y.z&#34;&gt;legacy-x.y.z&lt;/a&gt; tag or from the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases&#34;&gt;releases page&lt;/a&gt;. The legacy C++ driver is a source level distribution and does not offer a stable ABI across releases.&lt;/p&gt;
-
-&lt;p&gt;Please feel free to post any questions to the &lt;a href=&#34;https://groups.google.com/forum/#!forum/mongodb-user&#34;&gt;mongodb-user&lt;/a&gt; mailing list. Bug reports should be filed against the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX&#34;&gt;CXX&lt;/a&gt; project in the MongoDB JIRA.&lt;/p&gt;
-
-&lt;p&gt;Thank you,&lt;/p&gt;
-
-&lt;p&gt;The C++ Driver Team&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&#34;create-and-push-the-next-version-commit&#34;&gt;Create and Push the Next Version Commit&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Change directories back to your clone of &lt;code&gt;mongo-cxx-driver&lt;/code&gt;.  Edit the following files:
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;SConstruct&lt;/code&gt;: change value of &lt;code&gt;mongoclientVersion&lt;/code&gt; from &lt;code&gt;legacy-x.y.z&lt;/code&gt; to &lt;code&gt;legacy-x.y.(z+1)-rc0-pre&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;etc/doxygen/config&lt;/code&gt;: change value of &lt;code&gt;PROJECT_NUMBER&lt;/code&gt; from &lt;code&gt;legacy-x.y.z&lt;/code&gt; to &lt;code&gt;legacy-x.y.(z+1)-rc0-pre&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;README.md&lt;/code&gt;: change both the link text and link address to refer to &lt;code&gt;legacy-x.y.z&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Commit and push the next version commit, as follows:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git add SConstruct etc/doxygen/config README.md
-git commit -m &amp;quot;post legacy-x.y.z&amp;quot;
-git push origin legacy
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;relax&#34;&gt;Relax&lt;/h2&gt;
-
-&lt;p&gt;You&amp;rsquo;re done!&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Releasing the mongocxx driver</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/mongocxx-release-guide/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/mongocxx-release-guide/</guid>
-      <description>
-
-&lt;h2 id=&#34;releasing-the-mongocxx-driver&#34;&gt;Releasing the mongocxx driver&lt;/h2&gt;
-
-&lt;h2 id=&#34;update-fixversion-status-in-jira-tickets&#34;&gt;Update fixVersion Status in Jira tickets&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Ensure that all tickets under the version to be released are in
-&amp;lsquo;Closed&amp;rsquo; status on the C++ Driver &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel&#34;&gt;roadmap
-page&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Bulk change &lt;strong&gt;Closed&lt;/strong&gt; tickets going into the release to include a &lt;code&gt;fixVersion&lt;/code&gt;
-corresponding to the release (create it if necessary):
-
-&lt;ul&gt;
-&lt;li&gt;For pre-release candidates, &lt;strong&gt;add&lt;/strong&gt; the &lt;code&gt;fixVersion&lt;/code&gt; to any existing
-scheduling &lt;code&gt;fixVersion&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;For a final release, &lt;strong&gt;replace&lt;/strong&gt; all existing &lt;code&gt;fixVersion&lt;/code&gt; entries (rc or
-scheduling) with the release version.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;audit-jira-ticket-titles-and-types-for-use-in-release-notes&#34;&gt;Audit Jira ticket titles and types for use in release notes&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;From the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel&#34;&gt;roadmap page&lt;/a&gt;
-click the &amp;ldquo;Release Notes&amp;rdquo; link to see a summary of tickets to be included
-in release notes.&lt;/li&gt;
-&lt;li&gt;Update the ticket type and title as appropriate.  User-facing issues
-should generally be either &amp;ldquo;Bug&amp;rdquo; or &amp;ldquo;New Feature&amp;rdquo;.  Non-user facing
-issues should generally be &amp;ldquo;Task&amp;rdquo; tickets (and will be omitted later, so
-you can ignore them here).&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;create-a-bump-commit&#34;&gt;Create a BUMP commit&lt;/h2&gt;
-
-&lt;p&gt;This commit essentially removes the -pre (e.g. 1.0.0-rc79-pre -&amp;gt;
-1.0.0-rc79) and creates what is considered the final commit in the release.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;If you haven&amp;rsquo;t already, clone the mongodb-cxx-driver repository&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code&gt;git clone git@github.com:mongodb/mongo-cxx-driver.git
-cd mongo-cxx-driver
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Otherwise, pull the latest code down from the origin with &lt;code&gt;git pull&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Update the following files (changing version numbers to remove the &amp;ldquo;-pre&amp;rdquo;
-for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/CMakeLists.txt#L30&#34;&gt;&lt;code&gt;src/mongocxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/CMakeLists.txt#L22&#34;&gt;&lt;code&gt;src/bsoncxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Commit with message &amp;ldquo;BUMP rx.y.z[-rcq]&amp;ldquo;, e.g.:&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code&gt;git commit -am &amp;quot;BUMP r3.0.1&amp;quot;
-git push origin master
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Pushing the BUMP commit to the origin will kick off builds in Evergreen,
-Travis CI and AppVeyor (which handles Windows builds). Wait for all three
-builds to finish and pass, re-running any timeout/spot failures.&lt;/p&gt;
-
-&lt;h2 id=&#34;tag-the-release&#34;&gt;Tag the Release&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Create an tag for the commit that will serve as the release (or release candidate), eg:&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code&gt;git tag r3.0.1
-git push origin r3.0.1
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;draft-publish-github-release-notes&#34;&gt;Draft &amp;amp; Publish GitHub Release Notes&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Go to the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases&#34;&gt;GitHub releases page&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Copy the previous announcement text for reuse.&lt;/li&gt;
-&lt;li&gt;Click &amp;ldquo;Draft a New Release&amp;rdquo; and set the title and tag.  Check the
-&amp;ldquo;This is a pre-release&amp;rdquo; checkbox if appropriate.&lt;/li&gt;
-&lt;li&gt;Paste the previous announcement and modify with release-specific information
-
-&lt;ul&gt;
-&lt;li&gt;Go back to the &amp;ldquo;Release Notes&amp;rdquo; page in Jira; copy the HTML and paste it into
-the GitHub Release Notes markdown.  Delete the &amp;ldquo;Task&amp;rdquo; section and any
-other information that doesn&amp;rsquo;t need to be in the release notes.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Preview the release text and proofread it.&lt;/li&gt;
-&lt;li&gt;Publish the release.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;release-the-version-in-jira&#34;&gt;Release the Version in Jira&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Go
-&lt;a href=&#34;https://jira.mongodb.org/plugins/servlet/project-config/CXX/versions&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Click the cog next to the version you are about to release and select &amp;ldquo;Release&amp;rdquo;&lt;/li&gt;
-&lt;li&gt;Follow the dialogs/wizards and whatnot, setting the release date to the current date&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;generate-and-publish-documentation&#34;&gt;Generate and Publish Documentation&lt;/h2&gt;
-
-&lt;p&gt;Documentation generation must be run after the release tag has been made
-and pushed.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Edit &lt;code&gt;etc/apidocmenu.md&lt;/code&gt; and add the released version in the &amp;lsquo;mongocxx&amp;rsquo;
-column following the established pattern.  If this is a major release,
-revise the entire document as needed.  If revised substantially, also
-edit &lt;code&gt;docs/content/index.md&lt;/code&gt; to match.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Edit &lt;code&gt;etc/generate-all-apidocs.pl&lt;/code&gt; and add the new release version to
-the &lt;code&gt;@DOC_TAGS&lt;/code&gt; array, following the established pattern.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Edit &lt;code&gt;docs/content/mongocxx-v3/installation.md&lt;/code&gt; and update &lt;code&gt;Step 3&lt;/code&gt; to
-reflect the latest version to download.  (Generally, search for the last
-version number and update it.)&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Commit these changes.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code&gt;git commit -am &amp;quot;Prepare to generate r3.0.2 release documentation&amp;quot;&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Ensure you have &lt;code&gt;doxygen&lt;/code&gt; and &lt;code&gt;hugo&lt;/code&gt; installed and up to date.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Change to the repo top directory and run &lt;code&gt;git clean -dxf&lt;/code&gt; to clear out
-all extraneous files.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Change to the &lt;code&gt;build&lt;/code&gt; directory and run cmake as you usually would.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;To test documentation generation without deploying, run the &lt;code&gt;docs&lt;/code&gt; build
-target.  E.g. &lt;code&gt;ninja docs&lt;/code&gt;.  If this works, your documentation tools are
-correctly installed.  Note that this only generates hugo docs and a
-single set of doxygen docs for the current repo.  To test generation of
-all docs for all tags, use the &lt;code&gt;doxygen-all&lt;/code&gt; target and be prepared to
-wait a while.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;To generate and deploy documentation to GitHub Pages, execute both the
-&lt;code&gt;hugo-deploy&lt;/code&gt; and &lt;code&gt;doxygen-deploy&lt;/code&gt; targets.  The doxygen build will take
-a long time.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;If the release was &lt;em&gt;not&lt;/em&gt; a release-candidate, update symlinks&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Check out the &amp;ldquo;gh-pages&amp;rdquo; branch and &lt;code&gt;git pull&lt;/code&gt; the deployed docs.&lt;/li&gt;
-&lt;li&gt;If the release was &lt;em&gt;not&lt;/em&gt; a release-candidate, update the
-api/mongocxx-v3 symlink to point to the newly released version.  If a
-major version bump has occurred, revise the symlink structure as
-needed.  Make sure &amp;lsquo;current&amp;rsquo; always points to a &lt;em&gt;symlink&lt;/em&gt; tracking
-the latest release branch.&lt;/li&gt;
-&lt;li&gt;Commit and push the symlink change.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code&gt;git commit -am &amp;quot;Update symlink for r3.0.3&amp;quot;&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Wait a minute and verify the docs site has been updated.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Return to the original branch.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;create-the-next-version-commit&#34;&gt;Create the Next Version commit&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Update the following files (changing version numbers to bump to the next version number and add the &amp;ldquo;-pre&amp;rdquo; suffix for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/CMakeLists.txt#L30&#34;&gt;&lt;code&gt;src/mongocxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/CMakeLists.txt#L22&#34;&gt;&lt;code&gt;src/bsoncxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Commit with message &amp;ldquo;post rx.y.z[-rcq]&amp;ldquo;, e.g.:&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code&gt;git commit -am &amp;quot;post r3.0.1&amp;quot;
-git push origin master
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;file-a-docs-ticket&#34;&gt;File a DOCS ticket&lt;/h2&gt;
-
-&lt;p&gt;If there is any change to the driver-server compatibility matrix or language compatibility matrix file a &lt;a href=&#34;https://jira.mongodb.org/browse/DOCS/&#34;&gt;DOCS ticket&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;email-google-groups&#34;&gt;Email Google Groups&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Send it to mongodb-announce@googlegroups.com AND mongodb-user@googlegroups.com&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;release-candidate-template&#34;&gt;Release Candidate Template:&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;&lt;em&gt;Subject: MongoDB C++11 Driver 3.1.0-rc0 Released&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;The MongoDB C++ Driver Team is pleased to announce the availability of
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases/tag/r3.1.0-rc0&#34;&gt;mongocxx-3.1.0-rc0&lt;/a&gt;,
-the first release candidate in the 3.1.x series of the MongoDB C++11
-Driver.  This release candidate has been published for testing and is not
-recommended for production.&lt;/p&gt;
-
-&lt;p&gt;This release provides support for new features in MongoDB 3.4.&lt;/p&gt;
-
-&lt;p&gt;Please note that this version of mongocxx requires the &lt;a href=&#34;https://github.com/mongodb/mongo-c-driver/releases/tag/1.5.0&#34;&gt;MongoDB C driver
-1.5.0&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;See the &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/&#34;&gt;MongoDB C++ Driver
-Manual&lt;/a&gt; and the &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/&#34;&gt;Driver
-Installation
-Instructions&lt;/a&gt;
-for more details on downloading, installing, and using this driver.&lt;/p&gt;
-
-&lt;p&gt;NOTE: The mongocxx 3.1.x series does not promise API or ABI stability
-across patch releases.&lt;/p&gt;
-
-&lt;p&gt;Please feel free to post any questions to the
-&lt;a href=&#34;https://groups.google.com/forum/#!forum/mongodb-user&#34;&gt;mongodb-user&lt;/a&gt;
-mailing list.  Bug reports should be filed against the
-&lt;a href=&#34;https://jira.mongodb.org/browse/CXX&#34;&gt;CXX&lt;/a&gt; project in the MongoDB JIRA.
-Your feedback on the C++11 driver is greatly appreciated.&lt;/p&gt;
-
-&lt;p&gt;Thank you,&lt;br/&gt;
-The C++ Driver Team&lt;/p&gt;
-
-&lt;h3 id=&#34;ga-release-template&#34;&gt;GA Release Template:&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;&lt;em&gt;Subject: MongoDB C++11 Driver 3.1.0 Released&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;The MongoDB C++ Driver Team is pleased to announce the availability of
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases/tag/r3.1.0&#34;&gt;mongocxx-3.1.0&lt;/a&gt;.
-This release provides support for new features in MongoDB 3.4.&lt;/p&gt;
-
-&lt;p&gt;Please note that this version of mongocxx requires the &lt;a href=&#34;https://github.com/mongodb/mongo-c-driver/releases/tag/1.5.0&#34;&gt;MongoDB C driver
-1.5.0&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;See the &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/&#34;&gt;MongoDB C++ Driver
-Manual&lt;/a&gt; and the &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/&#34;&gt;Driver
-Installation
-Instructions&lt;/a&gt;
-for more details on downloading, installing, and using this driver.&lt;/p&gt;
-
-&lt;p&gt;NOTE: The mongocxx 3.1.x series does not promise API or ABI stability
-across patch releases.&lt;/p&gt;
-
-&lt;p&gt;Please feel free to post any questions to the
-&lt;a href=&#34;https://groups.google.com/forum/#!forum/mongodb-user&#34;&gt;mongodb-user&lt;/a&gt;
-mailing list.  Bug reports should be filed against the
-&lt;a href=&#34;https://jira.mongodb.org/browse/CXX&#34;&gt;CXX&lt;/a&gt; project in the MongoDB JIRA.
-Your feedback on the C++11 driver is greatly appreciated.&lt;/p&gt;
-
-&lt;p&gt;Thank you,&lt;br/&gt;
-The C++ Driver Team&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Reporting Bugs</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/reporting-bugs/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/reporting-bugs/</guid>
-      <description>
-
-&lt;h2 id=&#34;reporting-bugs&#34;&gt;Reporting Bugs&lt;/h2&gt;
-
-&lt;p&gt;If you think you have found a bug or want to see a new feature in the
-C++ driver, please open an issue in &lt;a href=&#34;https://jira.mongodb.org/&#34;&gt;JIRA&lt;/a&gt;:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://jira.mongodb.org/&#34;&gt;Create a Jira account and login&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Navigate to the &lt;a href=&#34;https://jira.mongodb.org/browse/CXX&#34;&gt;CXX project&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Click &lt;strong&gt;Create Issue&lt;/strong&gt;. Provide as much information as possible about
-the issue and the steps to reproduce it.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Be aware that bug reports in JIRA for the C++ driver are public.&lt;/p&gt;
-
-&lt;p&gt;If you identify a security vulnerability in a driver or any other
-MongoDB project, please report it according to the instructions found in
-&lt;a href=&#34;https://docs.mongodb.com/master/tutorial/create-a-vulnerability-report&#34;&gt;Create a Vulnerability Report&lt;/a&gt;.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Testing the legacy driver</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-legacy/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-legacy/</guid>
-      <description>
-
-&lt;h2 id=&#34;testing-the-legacy-c-driver&#34;&gt;Testing the Legacy C++ Driver&lt;/h2&gt;
-
-&lt;p&gt;If you contribute to the C++ driver, you&amp;rsquo;ll need to test your changes.  The
-driver comes with a number of tests to ensure its functionality and
-performance.  There are a few different kinds of tests within the driver&amp;rsquo;s
-codebase.&lt;/p&gt;
-
-&lt;p&gt;Note: if you are running OS X Mavericks or above, you may need to include the &lt;code&gt;--osx-version-min=10.9&lt;/code&gt; flag to the commands below.&lt;/p&gt;
-
-&lt;p&gt;Note: The 26compat branch differs from the instructions below as follows:
-* MongoOrchestration is not required.
-* The target to run unit tests is &amp;lsquo;smokeCppUnittests&amp;rsquo; (or &amp;lsquo;test&amp;rsquo;, or &amp;lsquo;smoke&amp;rsquo;), not &amp;lsquo;unit&amp;rsquo;
-* The build-[test] aliases are not supported (the run- aliases are supported, however)
-* There are no integration tests
-* The target to run the examples is &amp;lsquo;smokeClient&amp;rsquo;, not &amp;lsquo;examples&amp;rsquo;
-* You must have a mongod running on port 27999 to run the examples.
-* The &amp;lsquo;test&amp;rsquo; target does not run all tests, only the unit tests (see above).&lt;/p&gt;
-
-&lt;h3 id=&#34;unit-tests&#34;&gt;Unit tests&lt;/h3&gt;
-
-&lt;p&gt;Unit tests do not require a running mongod or mongo-orchestration. These
-tests are designed to test individual components of the driver in
-isolation, and the test files are found in the same directory as the things
-they test (so, &lt;code&gt;bson_validate.cpp&lt;/code&gt; and &lt;code&gt;bson_validate_test.cpp&lt;/code&gt; are
-both found in &lt;code&gt;src/mongo/bson&lt;/code&gt;).  The different unit tests are listed
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/mongo/SConscript#L49&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Build all the unit tests with scons:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-unit
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Build and run all the unit tests:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons unit
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Build an individual unit test:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-full/test/name
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Build and run an individual unit test:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons run-full/test/name
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;integration-tests&#34;&gt;Integration Tests&lt;/h3&gt;
-
-&lt;p&gt;Integration tests must run against &lt;a href=&#34;https://github.com/10gen/mongo-orchestration&#34;&gt;Mongo
-Orchestration&lt;/a&gt;.  Install and
-setup Mongo Orchestration as follows:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; git clone https://github.com/10gen/mongo-orchestration.git
-&amp;gt; cd mongo-orchestration
-&amp;gt; python setup.py install
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;To run Mongo Orchestration, you&amp;rsquo;ll need to alter the provided config file
-to fit your system.  Open &lt;code&gt;mongo-orchestration.config&lt;/code&gt; and replace the
-paths there with paths to your MongoDB binaries.  It is only required to
-have one MongoDB version defined as well as a last_updated field with a
-date, so feel free to keep one of the &lt;code&gt;&amp;quot;releases&amp;quot;&lt;/code&gt; and delete the other
-entries. Mongo orchestration is &lt;strong&gt;very&lt;/strong&gt; strict about JSON so no trailing
-commas please.&lt;/p&gt;
-
-&lt;p&gt;Start up Mongo Orchestration and leave it running in the background while
-you run the integration test suite:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; mongo-orchestration -f mongo-orchestration.config -e &amp;lt;release_name&amp;gt; start
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The integration tests are located in &lt;code&gt;src/mongo/integration&lt;/code&gt;.
-Additionally, some tests require the parameter &lt;code&gt;enableTestCommands&lt;/code&gt; to
-be set. There is a list of the different integration tests
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/mongo/SConscript#L114&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;To build all the integration tests:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-integration
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Build and run all the integration tests:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons integration
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Individual integration tests can be run in the same way as individual unit tests, shown above.&lt;/p&gt;
-
-&lt;p&gt;Note: to run the SASL integration tests, you should build with the &lt;code&gt;--use-sasl-client&lt;/code&gt; flag.&lt;/p&gt;
-
-&lt;h3 id=&#34;client-example-programs&#34;&gt;Client Example Programs&lt;/h3&gt;
-
-&lt;p&gt;The driver includes a number of example programs of its use.  The examples
-are listed
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/SConscript.client#L189&#34;&gt;here&lt;/a&gt;,
-and the source files are found in &lt;code&gt;src/mongo/client/examples&lt;/code&gt;.  The
-examples expect a mongod to be running locally on port 27999.&lt;/p&gt;
-
-&lt;p&gt;Build the examples with scons:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-examples
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Build and run the examples:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons examples
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;run-all-tests&#34;&gt;Run all tests&lt;/h3&gt;
-
-&lt;p&gt;Run the unit tests, integration tests, and examples with scons:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons test
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Mongocxx-v3s on MongoDB C&#43;&#43; Driver Manual</title>
+    <title>Mongocxx-V3s on MongoDB C&#43;&#43; Driver Manual</title>
     <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</link>
-    <description>Recent content in Mongocxx-v3s on MongoDB C&#43;&#43; Driver Manual</description>
+    <description>Recent content in Mongocxx-V3s on MongoDB C&#43;&#43; Driver Manual</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate>
@@ -212,11 +212,11 @@ cd mongo-cxx-driver/build
 &lt;p&gt;If you prefer to download a tarball, look on the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases&#34;&gt;mongocxx
 releases&lt;/a&gt; page for a
 link to the release tarball for the version you wish you install.  For
-example, to download version 3.0.3:&lt;/p&gt;
+example, to download version 3.1.0:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.0.3.tar.gz
-tar -xzf r3.0.3.tar.gz
-cd mongo-cxx-driver-r3.0.3/build
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.1.0.tar.gz
+tar -xzf r3.1.0.tar.gz
+cd mongo-cxx-driver-r3.1.0/build
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Make sure you change to the &lt;code&gt;build&lt;/code&gt; directory of whatever source tree you
