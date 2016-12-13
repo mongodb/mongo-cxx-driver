@@ -603,7 +603,9 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
         flags |= ::MONGOC_FIND_AND_MODIFY_RETURN_NEW;
     }
 
-    // TODO: use options.max_time() when available in the C driver
+    if (options.max_time()) {
+        libmongoc::find_and_modify_opts_set_max_time_ms(opts, options.max_time()->count());
+    }
 
     libmongoc::find_and_modify_opts_set_flags(opts,
                                               static_cast<::mongoc_find_and_modify_flags_t>(flags));
@@ -648,7 +650,9 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
         flags |= ::MONGOC_FIND_AND_MODIFY_RETURN_NEW;
     }
 
-    // TODO: use options.max_time() when available in the C driver
+    if (options.max_time()) {
+        libmongoc::find_and_modify_opts_set_max_time_ms(opts, options.max_time()->count());
+    }
 
     libmongoc::find_and_modify_opts_set_flags(opts,
                                               static_cast<::mongoc_find_and_modify_flags_t>(flags));
@@ -678,7 +682,9 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
                                                    scoped_bson_t{*options.projection()}.bson());
     }
 
-    // TODO: use options.max_time() when available in the C driver
+    if (options.max_time()) {
+        libmongoc::find_and_modify_opts_set_max_time_ms(opts, options.max_time()->count());
+    }
 
     libmongoc::find_and_modify_opts_set_flags(opts, flags);
 
