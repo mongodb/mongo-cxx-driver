@@ -9,7 +9,7 @@ var searchData=
   ['get',['get',['../classmongo_1_1ReplicaSetMonitor.html#a6a8b6e89e75622725e1311bf98bd4237',1,'mongo::ReplicaSetMonitor::get()'],['../classmongo_1_1Ordering.html#a70062c86474d814a9553c6c92de30dd3',1,'mongo::Ordering::get()']]],
   ['getalltrackedsets',['getAllTrackedSets',['../classmongo_1_1ReplicaSetMonitor.html#adb3c92b8fe018dca69e16497fa4eedf9',1,'mongo::ReplicaSetMonitor']]],
   ['getboolfield',['getBoolField',['../classmongo_1_1BSONObj.html#ad5feec6fd487ca96b45438baff78bdee',1,'mongo::BSONObj']]],
-  ['getbulkindex',['getBulkIndex',['../classmongo_1_1WriteOperation.html#af4124dfe2915ca58399e8ff9b302fb59',1,'mongo::WriteOperation::getBulkIndex()'],['../classmongo_1_1WriteOperationBase.html#ab48a4bcaa0be6e518092a80e3f36e8ef',1,'mongo::WriteOperationBase::getBulkIndex()']]],
+  ['getbulkindex',['getBulkIndex',['../classmongo_1_1WriteOperation.html#ae66b6fcb871362f4c1f95e5bc9fec605',1,'mongo::WriteOperation::getBulkIndex()'],['../classmongo_1_1WriteOperationBase.html#ab48a4bcaa0be6e518092a80e3f36e8ef',1,'mongo::WriteOperationBase::getBulkIndex()']]],
   ['getcollectioninfos',['getCollectionInfos',['../classmongo_1_1DBClientWithCommands.html#a46dceb37713f153f6711b59245a8be02',1,'mongo::DBClientWithCommands']]],
   ['getcollectionnames',['getCollectionNames',['../classmongo_1_1DBClientWithCommands.html#a2ba1a8fa24f1a340a8157f6e2a2fe6df',1,'mongo::DBClientWithCommands']]],
   ['getconsecutivefailedscans',['getConsecutiveFailedScans',['../classmongo_1_1ReplicaSetMonitor.html#a03e64dd980c40a7c58afe1035eb82a7e',1,'mongo::ReplicaSetMonitor']]],
