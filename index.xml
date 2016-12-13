@@ -10,292 +10,6 @@
     <atom:link href="https://mongodb.github.io/mongo-cxx-driver/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Contribution Guidelines</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/</guid>
-      <description>
-
-&lt;h2 id=&#34;contribution-guidelines&#34;&gt;Contribution Guidelines&lt;/h2&gt;
-
-&lt;h3 id=&#34;commit-messages&#34;&gt;Commit Messages&lt;/h3&gt;
-
-&lt;p&gt;If a pull-request addresses a JIRA ticket, for a single-commit PR, prefix
-the subject line with the ticket ID.  (For a multi-commit PR, we will add
-the ID later when we squash or merge it.)&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;CXX-883 Add commit message conventions to CONTRIBUTING.md&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Capitalize subject lines and don&amp;rsquo;t use a trailing period.  Keep the subject
-at most 70 characters long.  Use active voice!  Imagine this preamble to get
-your phrasing right:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;&lt;em&gt;If applied, this commit will&amp;hellip;&lt;/em&gt; [your subject line]&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;See Chris Beams&amp;rsquo;
-&lt;a href=&#34;http://chris.beams.io/posts/git-commit/&#34;&gt;How to write a git commit message&lt;/a&gt;
-for more good guidelines to follow.&lt;/p&gt;
-
-&lt;h3 id=&#34;lifecycle-methods&#34;&gt;Lifecycle Methods&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;default-or-argument-bearing &amp;lsquo;user&amp;rsquo; constructors&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;declaration-or-deletion-of-copy-contructor&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;declaration-or-deletetion-of-move-constructor&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;declaration-or-deletion-of-copy-assignment-operator&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;declaration-or-deletion-of-move-assignment-operator&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;declaration-of-dtor&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;headers&#34;&gt;Headers&lt;/h3&gt;
-
-&lt;p&gt;Public headers must have a &amp;ldquo;.hpp&amp;rdquo; suffix. Private headers must have a &amp;ldquo;.hh&amp;rdquo;
-suffix.&lt;/p&gt;
-
-&lt;p&gt;General structure:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;License&lt;/li&gt;
-&lt;li&gt;Include Guard (&lt;code&gt;#pragma once&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;Header Prelude&lt;/li&gt;
-&lt;li&gt;System Headers &lt;code&gt;&amp;lt;vector&amp;gt;&lt;/code&gt; (alphabetical order)&lt;/li&gt;
-&lt;li&gt;Driver Headers &lt;code&gt;&amp;lt;path/to/header.hpp&amp;gt;&lt;/code&gt; (alphabetical order)&lt;/li&gt;
-&lt;li&gt;Open Namespace mongocxx&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;MONGOCXX_INLINE_NAMESPACE_BEGIN&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Code&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;MONGOCXX_INLINE_NAMESPACE_END&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Close Namespace mongocxx&lt;/li&gt;
-&lt;li&gt;Header Postlude&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;// Copyright 2014 MongoDB Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the &amp;quot;License&amp;quot;);
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an &amp;quot;AS IS&amp;quot; BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-#pragma once
-
-#include &amp;lt;driver/config/prelude.hpp&amp;gt;
-
-#include &amp;lt;vector&amp;gt;
-
-#include &amp;lt;driver/blah.hpp&amp;gt;
-
-namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
-// Declarations
-
-// Inline Implementations
-
-MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace mongocxx
-
-#include &amp;lt;driver/config/postlude.hpp&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;class-declarations&#34;&gt;Class Declarations&lt;/h3&gt;
-
-&lt;p&gt;Guidelines:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Blank line at beginning and end of class declaration&lt;/li&gt;
-&lt;li&gt;Public section up top / private at bottom&lt;/li&gt;
-&lt;li&gt;Lifecycle methods first (see rules above)&lt;/li&gt;
-&lt;li&gt;Private Member Ordering
-
-&lt;ul&gt;
-&lt;li&gt;Friendships&lt;/li&gt;
-&lt;li&gt;Private Constructors&lt;/li&gt;
-&lt;li&gt;Private Methods&lt;/li&gt;
-&lt;li&gt;Private Variables&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class foo {
-
-    public:
-      foo();
-
-      foo(foo&amp;amp;&amp;amp; other) noexcept;
-      foo&amp;amp; operator=(foo&amp;amp;&amp;amp; other) noexcept;
-
-      ~foo();
-
-    private:
-      friend baz;
-
-      class MONGOCXX_PRIVATE impl;
-      std::unique_ptr&amp;lt;impl&amp;gt; _impl;
-
-};
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;inlines&#34;&gt;Inlines&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Define outside of class declaration&lt;/li&gt;
-&lt;li&gt;Specify inline keyword in declaration and definition (for clarity)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;relational-operators&#34;&gt;Relational Operators&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Prefer to use free functions&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Testing the legacy driver</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-legacy/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-legacy/</guid>
-      <description>
-
-&lt;h2 id=&#34;testing-the-legacy-c-driver&#34;&gt;Testing the Legacy C++ Driver&lt;/h2&gt;
-
-&lt;p&gt;If you contribute to the C++ driver, you&amp;rsquo;ll need to test your changes.  The
-driver comes with a number of tests to ensure its functionality and
-performance.  There are a few different kinds of tests within the driver&amp;rsquo;s
-codebase.&lt;/p&gt;
-
-&lt;p&gt;Note: if you are running OS X Mavericks or above, you may need to include the &lt;code&gt;--osx-version-min=10.9&lt;/code&gt; flag to the commands below.&lt;/p&gt;
-
-&lt;p&gt;Note: The 26compat branch differs from the instructions below as follows:
-* MongoOrchestration is not required.
-* The target to run unit tests is &amp;lsquo;smokeCppUnittests&amp;rsquo; (or &amp;lsquo;test&amp;rsquo;, or &amp;lsquo;smoke&amp;rsquo;), not &amp;lsquo;unit&amp;rsquo;
-* The build-[test] aliases are not supported (the run- aliases are supported, however)
-* There are no integration tests
-* The target to run the examples is &amp;lsquo;smokeClient&amp;rsquo;, not &amp;lsquo;examples&amp;rsquo;
-* You must have a mongod running on port 27999 to run the examples.
-* The &amp;lsquo;test&amp;rsquo; target does not run all tests, only the unit tests (see above).&lt;/p&gt;
-
-&lt;h3 id=&#34;unit-tests&#34;&gt;Unit tests&lt;/h3&gt;
-
-&lt;p&gt;Unit tests do not require a running mongod or mongo-orchestration. These
-tests are designed to test individual components of the driver in
-isolation, and the test files are found in the same directory as the things
-they test (so, &lt;code&gt;bson_validate.cpp&lt;/code&gt; and &lt;code&gt;bson_validate_test.cpp&lt;/code&gt; are
-both found in &lt;code&gt;src/mongo/bson&lt;/code&gt;).  The different unit tests are listed
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/mongo/SConscript#L49&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Build all the unit tests with scons:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-unit
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Build and run all the unit tests:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons unit
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Build an individual unit test:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-full/test/name
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Build and run an individual unit test:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons run-full/test/name
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;integration-tests&#34;&gt;Integration Tests&lt;/h3&gt;
-
-&lt;p&gt;Integration tests must run against &lt;a href=&#34;https://github.com/10gen/mongo-orchestration&#34;&gt;Mongo
-Orchestration&lt;/a&gt;.  Install and
-setup Mongo Orchestration as follows:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; git clone https://github.com/10gen/mongo-orchestration.git
-&amp;gt; cd mongo-orchestration
-&amp;gt; python setup.py install
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;To run Mongo Orchestration, you&amp;rsquo;ll need to alter the provided config file
-to fit your system.  Open &lt;code&gt;mongo-orchestration.config&lt;/code&gt; and replace the
-paths there with paths to your MongoDB binaries.  It is only required to
-have one MongoDB version defined as well as a last_updated field with a
-date, so feel free to keep one of the &lt;code&gt;&amp;quot;releases&amp;quot;&lt;/code&gt; and delete the other
-entries. Mongo orchestration is &lt;strong&gt;very&lt;/strong&gt; strict about JSON so no trailing
-commas please.&lt;/p&gt;
-
-&lt;p&gt;Start up Mongo Orchestration and leave it running in the background while
-you run the integration test suite:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; mongo-orchestration -f mongo-orchestration.config -e &amp;lt;release_name&amp;gt; start
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The integration tests are located in &lt;code&gt;src/mongo/integration&lt;/code&gt;.
-Additionally, some tests require the parameter &lt;code&gt;enableTestCommands&lt;/code&gt; to
-be set. There is a list of the different integration tests
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/mongo/SConscript#L114&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;To build all the integration tests:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-integration
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Build and run all the integration tests:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons integration
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Individual integration tests can be run in the same way as individual unit tests, shown above.&lt;/p&gt;
-
-&lt;p&gt;Note: to run the SASL integration tests, you should build with the &lt;code&gt;--use-sasl-client&lt;/code&gt; flag.&lt;/p&gt;
-
-&lt;h3 id=&#34;client-example-programs&#34;&gt;Client Example Programs&lt;/h3&gt;
-
-&lt;p&gt;The driver includes a number of example programs of its use.  The examples
-are listed
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/SConscript.client#L189&#34;&gt;here&lt;/a&gt;,
-and the source files are found in &lt;code&gt;src/mongo/client/examples&lt;/code&gt;.  The
-examples expect a mongod to be running locally on port 27999.&lt;/p&gt;
-
-&lt;p&gt;Build the examples with scons:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-examples
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Build and run the examples:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons examples
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;run-all-tests&#34;&gt;Run all tests&lt;/h3&gt;
-
-&lt;p&gt;Run the unit tests, integration tests, and examples with scons:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt; scons test
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Releasing the mongocxx driver</title>
       <link>https://mongodb.github.io/mongo-cxx-driver/contributing/mongocxx-release-guide/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
@@ -558,6 +272,166 @@ The C++ Driver Team&lt;/p&gt;
     </item>
     
     <item>
+      <title>Contribution Guidelines</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/</guid>
+      <description>
+
+&lt;h2 id=&#34;contribution-guidelines&#34;&gt;Contribution Guidelines&lt;/h2&gt;
+
+&lt;h3 id=&#34;commit-messages&#34;&gt;Commit Messages&lt;/h3&gt;
+
+&lt;p&gt;If a pull-request addresses a JIRA ticket, for a single-commit PR, prefix
+the subject line with the ticket ID.  (For a multi-commit PR, we will add
+the ID later when we squash or merge it.)&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;CXX-883 Add commit message conventions to CONTRIBUTING.md&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Capitalize subject lines and don&amp;rsquo;t use a trailing period.  Keep the subject
+at most 70 characters long.  Use active voice!  Imagine this preamble to get
+your phrasing right:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;If applied, this commit will&amp;hellip;&lt;/em&gt; [your subject line]&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;See Chris Beams&amp;rsquo;
+&lt;a href=&#34;http://chris.beams.io/posts/git-commit/&#34;&gt;How to write a git commit message&lt;/a&gt;
+for more good guidelines to follow.&lt;/p&gt;
+
+&lt;h3 id=&#34;lifecycle-methods&#34;&gt;Lifecycle Methods&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;default-or-argument-bearing &amp;lsquo;user&amp;rsquo; constructors&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;declaration-or-deletion-of-copy-contructor&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;declaration-or-deletetion-of-move-constructor&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;declaration-or-deletion-of-copy-assignment-operator&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;declaration-or-deletion-of-move-assignment-operator&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;declaration-of-dtor&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;headers&#34;&gt;Headers&lt;/h3&gt;
+
+&lt;p&gt;Public headers must have a &amp;ldquo;.hpp&amp;rdquo; suffix. Private headers must have a &amp;ldquo;.hh&amp;rdquo;
+suffix.&lt;/p&gt;
+
+&lt;p&gt;General structure:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;License&lt;/li&gt;
+&lt;li&gt;Include Guard (&lt;code&gt;#pragma once&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Header Prelude&lt;/li&gt;
+&lt;li&gt;System Headers &lt;code&gt;&amp;lt;vector&amp;gt;&lt;/code&gt; (alphabetical order)&lt;/li&gt;
+&lt;li&gt;Driver Headers &lt;code&gt;&amp;lt;path/to/header.hpp&amp;gt;&lt;/code&gt; (alphabetical order)&lt;/li&gt;
+&lt;li&gt;Open Namespace mongocxx&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;MONGOCXX_INLINE_NAMESPACE_BEGIN&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Code&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;MONGOCXX_INLINE_NAMESPACE_END&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Close Namespace mongocxx&lt;/li&gt;
+&lt;li&gt;Header Postlude&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;// Copyright 2014 MongoDB Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the &amp;quot;License&amp;quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &amp;quot;AS IS&amp;quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#pragma once
+
+#include &amp;lt;driver/config/prelude.hpp&amp;gt;
+
+#include &amp;lt;vector&amp;gt;
+
+#include &amp;lt;driver/blah.hpp&amp;gt;
+
+namespace mongocxx {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
+
+// Declarations
+
+// Inline Implementations
+
+MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace mongocxx
+
+#include &amp;lt;driver/config/postlude.hpp&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;class-declarations&#34;&gt;Class Declarations&lt;/h3&gt;
+
+&lt;p&gt;Guidelines:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Blank line at beginning and end of class declaration&lt;/li&gt;
+&lt;li&gt;Public section up top / private at bottom&lt;/li&gt;
+&lt;li&gt;Lifecycle methods first (see rules above)&lt;/li&gt;
+&lt;li&gt;Private Member Ordering
+
+&lt;ul&gt;
+&lt;li&gt;Friendships&lt;/li&gt;
+&lt;li&gt;Private Constructors&lt;/li&gt;
+&lt;li&gt;Private Methods&lt;/li&gt;
+&lt;li&gt;Private Variables&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class foo {
+
+    public:
+      foo();
+
+      foo(foo&amp;amp;&amp;amp; other) noexcept;
+      foo&amp;amp; operator=(foo&amp;amp;&amp;amp; other) noexcept;
+
+      ~foo();
+
+    private:
+      friend baz;
+
+      class MONGOCXX_PRIVATE impl;
+      std::unique_ptr&amp;lt;impl&amp;gt; _impl;
+
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;inlines&#34;&gt;Inlines&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Define outside of class declaration&lt;/li&gt;
+&lt;li&gt;Specify inline keyword in declaration and definition (for clarity)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;relational-operators&#34;&gt;Relational Operators&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Prefer to use free functions&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Releasing the legacy driver</title>
       <link>https://mongodb.github.io/mongo-cxx-driver/contributing/legacy-release-guide/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
@@ -767,6 +641,132 @@ git push origin legacy
     </item>
     
     <item>
+      <title>Testing the legacy driver</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-legacy/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-legacy/</guid>
+      <description>
+
+&lt;h2 id=&#34;testing-the-legacy-c-driver&#34;&gt;Testing the Legacy C++ Driver&lt;/h2&gt;
+
+&lt;p&gt;If you contribute to the C++ driver, you&amp;rsquo;ll need to test your changes.  The
+driver comes with a number of tests to ensure its functionality and
+performance.  There are a few different kinds of tests within the driver&amp;rsquo;s
+codebase.&lt;/p&gt;
+
+&lt;p&gt;Note: if you are running OS X Mavericks or above, you may need to include the &lt;code&gt;--osx-version-min=10.9&lt;/code&gt; flag to the commands below.&lt;/p&gt;
+
+&lt;p&gt;Note: The 26compat branch differs from the instructions below as follows:
+* MongoOrchestration is not required.
+* The target to run unit tests is &amp;lsquo;smokeCppUnittests&amp;rsquo; (or &amp;lsquo;test&amp;rsquo;, or &amp;lsquo;smoke&amp;rsquo;), not &amp;lsquo;unit&amp;rsquo;
+* The build-[test] aliases are not supported (the run- aliases are supported, however)
+* There are no integration tests
+* The target to run the examples is &amp;lsquo;smokeClient&amp;rsquo;, not &amp;lsquo;examples&amp;rsquo;
+* You must have a mongod running on port 27999 to run the examples.
+* The &amp;lsquo;test&amp;rsquo; target does not run all tests, only the unit tests (see above).&lt;/p&gt;
+
+&lt;h3 id=&#34;unit-tests&#34;&gt;Unit tests&lt;/h3&gt;
+
+&lt;p&gt;Unit tests do not require a running mongod or mongo-orchestration. These
+tests are designed to test individual components of the driver in
+isolation, and the test files are found in the same directory as the things
+they test (so, &lt;code&gt;bson_validate.cpp&lt;/code&gt; and &lt;code&gt;bson_validate_test.cpp&lt;/code&gt; are
+both found in &lt;code&gt;src/mongo/bson&lt;/code&gt;).  The different unit tests are listed
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/mongo/SConscript#L49&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Build all the unit tests with scons:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-unit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build and run all the unit tests:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons unit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build an individual unit test:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-full/test/name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build and run an individual unit test:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons run-full/test/name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;integration-tests&#34;&gt;Integration Tests&lt;/h3&gt;
+
+&lt;p&gt;Integration tests must run against &lt;a href=&#34;https://github.com/10gen/mongo-orchestration&#34;&gt;Mongo
+Orchestration&lt;/a&gt;.  Install and
+setup Mongo Orchestration as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; git clone https://github.com/10gen/mongo-orchestration.git
+&amp;gt; cd mongo-orchestration
+&amp;gt; python setup.py install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To run Mongo Orchestration, you&amp;rsquo;ll need to alter the provided config file
+to fit your system.  Open &lt;code&gt;mongo-orchestration.config&lt;/code&gt; and replace the
+paths there with paths to your MongoDB binaries.  It is only required to
+have one MongoDB version defined as well as a last_updated field with a
+date, so feel free to keep one of the &lt;code&gt;&amp;quot;releases&amp;quot;&lt;/code&gt; and delete the other
+entries. Mongo orchestration is &lt;strong&gt;very&lt;/strong&gt; strict about JSON so no trailing
+commas please.&lt;/p&gt;
+
+&lt;p&gt;Start up Mongo Orchestration and leave it running in the background while
+you run the integration test suite:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; mongo-orchestration -f mongo-orchestration.config -e &amp;lt;release_name&amp;gt; start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The integration tests are located in &lt;code&gt;src/mongo/integration&lt;/code&gt;.
+Additionally, some tests require the parameter &lt;code&gt;enableTestCommands&lt;/code&gt; to
+be set. There is a list of the different integration tests
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/mongo/SConscript#L114&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;To build all the integration tests:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-integration
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build and run all the integration tests:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons integration
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Individual integration tests can be run in the same way as individual unit tests, shown above.&lt;/p&gt;
+
+&lt;p&gt;Note: to run the SASL integration tests, you should build with the &lt;code&gt;--use-sasl-client&lt;/code&gt; flag.&lt;/p&gt;
+
+&lt;h3 id=&#34;client-example-programs&#34;&gt;Client Example Programs&lt;/h3&gt;
+
+&lt;p&gt;The driver includes a number of example programs of its use.  The examples
+are listed
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/SConscript.client#L189&#34;&gt;here&lt;/a&gt;,
+and the source files are found in &lt;code&gt;src/mongo/client/examples&lt;/code&gt;.  The
+examples expect a mongod to be running locally on port 27999.&lt;/p&gt;
+
+&lt;p&gt;Build the examples with scons:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons build-examples
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build and run the examples:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons examples
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;run-all-tests&#34;&gt;Run all tests&lt;/h3&gt;
+
+&lt;p&gt;Run the unit tests, integration tests, and examples with scons:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; scons test
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Testing the mongocxx driver</title>
       <link>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-mongocxx/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
@@ -971,6 +971,27 @@ is recommended for all new development.&lt;/p&gt;
     </item>
     
     <item>
+      <title>Overview</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/</guid>
+      <description>&lt;p&gt;The legacy C++ driver builds on x86 and x86-64 architectures for Linux, Mac
+OS X, Windows, FreeBSD and Solaris.&lt;/p&gt;
+
+&lt;p&gt;The legacy C++ driver library includes a bson package that
+implements the BSON specification (see &lt;a href=&#34;http://www.bsonspec.org&#34;&gt;http://www.bsonspec.org&lt;/a&gt;). This
+library can be used standalone for object serialization and deserialization
+even when one is not using MongoDB at all.&lt;/p&gt;
+
+&lt;p&gt;Releases of legacy drivers have version numbers like v0.x.y and v1.x.y.&lt;/p&gt;
+
+&lt;p&gt;(Note: version numbers like v0.0-26compat-2.x.y refer to a different,
+deprecated C++ driver branch.)&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Breaking changes from 26compat</title>
       <link>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/breaking-changes/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
@@ -1124,23 +1145,279 @@ release.&lt;/p&gt;
     </item>
     
     <item>
-      <title>Overview</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/</link>
+      <title>Configuring the legacy driver</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/configuration/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
-      <guid>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/</guid>
-      <description>&lt;p&gt;The legacy C++ driver builds on x86 and x86-64 architectures for Linux, Mac
-OS X, Windows, FreeBSD and Solaris.&lt;/p&gt;
+      <guid>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/configuration/</guid>
+      <description>
 
-&lt;p&gt;The legacy C++ driver library includes a bson package that
-implements the BSON specification (see &lt;a href=&#34;http://www.bsonspec.org&#34;&gt;http://www.bsonspec.org&lt;/a&gt;). This
-library can be used standalone for object serialization and deserialization
-even when one is not using MongoDB at all.&lt;/p&gt;
+&lt;p&gt;In the legacy-0.9 development cycle, the mechanism by which the driver is
+configured was refactored. Note that these changes &lt;em&gt;do not apply to
+releases on the 26compat branch, or releases pre-dating legacy-0.9.0&lt;/em&gt;.This
+page describes the new configuration mechanism and documents the various
+configuration options that may be used.&lt;/p&gt;
 
-&lt;p&gt;Releases of legacy drivers have version numbers like v0.x.y and v1.x.y.&lt;/p&gt;
+&lt;h1 id=&#34;configuring-the-driver&#34;&gt;Configuring the Driver&lt;/h1&gt;
 
-&lt;p&gt;(Note: version numbers like v0.0-26compat-2.x.y refer to a different,
-deprecated C++ driver branch.)&lt;/p&gt;
+&lt;h2 id=&#34;the-mongo-client-initialize-function&#34;&gt;The &lt;code&gt;mongo::client::initialize&lt;/code&gt; function&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;mongo::client::initialize&lt;/code&gt; function, found in file
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h&#34;&gt;&lt;code&gt;src/mongo/client/init.h&lt;/code&gt;&lt;/a&gt;
+configures the driver and starts background threads critical to the
+functioning of the driver. The function has a single parameter receiving a
+&lt;code&gt;mongo::client::Options&lt;/code&gt; object. If no value is provided, a default
+constructed &lt;code&gt;mongo::client::Options&lt;/code&gt; object is used.&lt;/p&gt;
+
+&lt;p&gt;To configure the driver to use non-default parameters, construct a new
+&lt;code&gt;mongo::client::Options&lt;/code&gt; object and use its setter methods to configure the
+parameters of interest, and pass this object to
+&lt;code&gt;mongo::client::initialize&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This method must be called exactly once by your application. Invoke
+&lt;code&gt;mongo::client::initialize&lt;/code&gt; as early as possible in your application
+startup phase, before any additional threads have been created. You must
+examine the return value of &lt;code&gt;mongo::client::initialize&lt;/code&gt; and deal with any
+returned error appropriately.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-mongo-client-terminate-function&#34;&gt;The &lt;code&gt;mongo::client::terminate&lt;/code&gt; function&lt;/h2&gt;
+
+&lt;p&gt;When it is time to stop using the client driver, you must terminate its
+background tasks and release resources by invoking the
+&lt;code&gt;mongo::client::terminate&lt;/code&gt; function, found in file
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h&#34;&gt;&lt;code&gt;src/mongo/client/init.h&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;mongo::client::terminate&lt;/code&gt; function honors a grace period, specified in
+milliseconds, and defaulting to &amp;lsquo;forever&amp;rsquo;. The shutdown routine will give
+background tasks the selected grace period to terminate cleanly. If they do
+not do so, &lt;code&gt;mongo::client::terminate&lt;/code&gt; will return an error status. If the
+returned error status is &lt;code&gt;ExceededTimeLimit&lt;/code&gt; it is safe to retry the call
+to &lt;code&gt;mongo::client::terminate&lt;/code&gt;. Otherwise, a non-OK return status from
+&lt;code&gt;mongo::client::terminate&lt;/code&gt; represents a permanent failure to shut down the
+driver cleanly. Please see the documentation for &lt;code&gt;mongo::client::terminate&lt;/code&gt;
+for additional details. The value of the shutdown grace period may be
+changed from its default at driver initialization time by using an
+appropriately configured &lt;code&gt;mongo::client::Options&lt;/code&gt; object.&lt;/p&gt;
+
+&lt;p&gt;On some platforms, you may be able to arrange for
+&lt;code&gt;mongo::client::terminate&lt;/code&gt; to be called via an atexit handler. To request
+this behavior, see the &lt;code&gt;setCallShutdownAtExit&lt;/code&gt; option, documented below.&lt;/p&gt;
+
+&lt;p&gt;Alternatively, you may use the &lt;code&gt;mongo::client::GlobalInstance&lt;/code&gt; class, found
+in
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h&#34;&gt;&lt;code&gt;src/mongo/client/init.h&lt;/code&gt;&lt;/a&gt;,
+to instantiate an RAII type that will automatically initialize and
+terminate the driver.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-mongo-client-options-class&#34;&gt;The &lt;code&gt;mongo::client::Options&lt;/code&gt; class&lt;/h2&gt;
+
+&lt;h3 id=&#34;where-to-find-it&#34;&gt;Where to find it&lt;/h3&gt;
+
+&lt;p&gt;Configuration of the driver is managed through a new class, added in the
+&lt;code&gt;legacy-0.9.0&lt;/code&gt; release, called &lt;code&gt;Options&lt;/code&gt;. This class is hosted in the
+&lt;code&gt;mongo::client&lt;/code&gt; namespace, and is defined in the header
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/options.h&#34;&gt;&lt;code&gt;mongo/client/options.h&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;passing-options-to-mongo-client-initialize&#34;&gt;Passing options to &lt;code&gt;mongo::client::initialize&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;By default, calling &lt;code&gt;mongo::client::initialize()&lt;/code&gt; with no parameters is
+equivalent to calling &lt;code&gt;mongo::client::initialize(mongo::client::Options())&lt;/code&gt;
+passing a default constructed &lt;code&gt;mongo::client::Options&lt;/code&gt; object.&lt;/p&gt;
+
+&lt;p&gt;Because the &lt;code&gt;mongo::client::Options&lt;/code&gt; class has setters returning a
+&lt;code&gt;mongo::client::Options&amp;amp;&lt;/code&gt; you can chain together options to easily
+configure them at the call site:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;using mongo::client::initialize;
+using mongo::client::Options;
+
+// Configure the mongo C++ client driver, enabling SSL and setting
+// the SSL Certificate Authority file to &amp;quot;mycafile&amp;quot;.
+Status status = initialize(
+    Options().setSSLMode(Options::kSSLRequired).setSSLCAFile(&amp;quot;mycafile&amp;quot;)
+);
+
+if (!status.isOK()) {
+    // deal with errors
+} else {
+    // Driver is up in SSL mode.
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;available-options&#34;&gt;Available Options&lt;/h3&gt;
+
+&lt;h4 id=&#34;options-callshutdownatexit-and-options-setcallshutdownatexit&#34;&gt;&lt;code&gt;Options::callShutdownAtExit&lt;/code&gt; and &lt;code&gt;Options::setCallShutdownAtExit&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: If this option is &amp;lsquo;true&amp;rsquo;, then a successful call to
+&lt;code&gt;mongo::client::initialize&lt;/code&gt; will schedule a call to
+&lt;code&gt;mongo::client::terminate&lt;/code&gt; with &lt;code&gt;atexit&lt;/code&gt;. The call to
+&lt;code&gt;mongo::client::terminate&lt;/code&gt; will be made with the value of
+&lt;code&gt;mongo::client::Options::current::autoShutdownGracePeriodMillis&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-autoshutdowngraceperiodmillis-and-options-setautoshutdowngraceperiodmillis&#34;&gt;&lt;code&gt;Options::autoShutdownGracePeriodMillis&lt;/code&gt; and &lt;code&gt;Options::setAutoShutdownGracePeriodMillis&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;int&lt;/code&gt;, interpreted as milliseconds&lt;/li&gt;
+&lt;li&gt;Default: 0 (wait forever)&lt;/li&gt;
+&lt;li&gt;Semantics: If &lt;code&gt;mongo::client::initialize&lt;/code&gt; scheduled a call to
+&lt;code&gt;mongo::client::terminate&lt;/code&gt; with &lt;code&gt;atexit&lt;/code&gt;, then that call to
+&lt;code&gt;mongo::client::terminate&lt;/code&gt; will use the value
+&lt;code&gt;Options::autoShutdownGracePeriodMillis&lt;/code&gt; when calling
+&lt;code&gt;mongo::client::terminate&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setdefaultlocalthresholdmillis-and-options-defaultlocalthresholdmillis&#34;&gt;&lt;code&gt;Options::setDefaultLocalThresholdMillis&lt;/code&gt; and &lt;code&gt;Options::defaultLocalThresholdMillis&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;int&lt;/code&gt;, interpreted as milliseconds&lt;/li&gt;
+&lt;li&gt;Default: 15&lt;/li&gt;
+&lt;li&gt;Semantics: TODO&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setsslmode-and-options-sslmode&#34;&gt;&lt;code&gt;Options::setSSLMode&lt;/code&gt; and &lt;code&gt;Options::SSLMode&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: [&lt;code&gt;Options::kSSLEnabled&lt;/code&gt;|&lt;code&gt;Options:kSSLDisabled&lt;/code&gt;]&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;Options::kSSLDisabled&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: If set to &lt;code&gt;Options:kSSLEnabled&lt;/code&gt; the driver will require SSL
+connections to all mongo servers. If disabled, it will not request SSL.
+Note that if the servers you are connected to are in SSL required mode,
+you may not be able to connect. This value is an enumeration so that we
+may later extend it with a &lt;code&gt;kSSLPreferred&lt;/code&gt; option, but that is not
+currently implemented.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setfipsmode-and-options-fipsmode&#34;&gt;&lt;code&gt;Options::setFIPSMode&lt;/code&gt; and &lt;code&gt;Options::FIPSMode&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: If true, will attempt to use FIPS-140 validated crypto if
+supported by the crypto library currently in use.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setsslcafile-and-options-sslcafile&#34;&gt;&lt;code&gt;Options::setSSLCAFile&lt;/code&gt; and &lt;code&gt;Options::SSLCAFile&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
+&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. If set, it specifies a file containing the
+certificate authority file to use. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
+documentation&lt;/a&gt;
+for additional information on the CA file.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setsslpemkeyfile-and-options-sslpemkeyfile&#34;&gt;&lt;code&gt;Options::setSSLPemKeyFile&lt;/code&gt; and &lt;code&gt;Options::SSLPEMKeyFile&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
+&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. If set, it specifies a file containing the SSL
+PEM key file to use. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
+documentation&lt;/a&gt;
+for additional information on the PEM key file.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setsslpemkeypassword-and-options-sslpemkeypassword&#34;&gt;&lt;code&gt;Options::setSSLPemKeyPassword&lt;/code&gt; and &lt;code&gt;Options::SSLPEMKeyPassword&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
+&lt;code&gt;Options::kSSLRequired&lt;/code&gt;, and is only meaningful if a PEM key file has
+been set with &lt;code&gt;Options::setSSLPEMKeyFile&lt;/code&gt;. If set, it specifies the
+password to be used to decrypt the SSL PEM key file specified with
+&lt;code&gt;Options::setSSLPEMKeyFile&lt;/code&gt;. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
+documentation&lt;/a&gt;
+for additional information on the PEM key file password.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setsslcrlfile-and-options-sslcrlfile&#34;&gt;&lt;code&gt;Options::setSSLCRLFile&lt;/code&gt; and &lt;code&gt;Options::SSLCRLFile&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
+&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. If set, it specifies the file to use as the SSL
+certificate revocation list. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
+documentation&lt;/a&gt;
+for additional information on the certificate revocation list file.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setssallowinvalidcertificates-and-options-sslallowinvalidcertificates&#34;&gt;&lt;code&gt;Options::setSSAllowInvalidCertificates&lt;/code&gt; and &lt;code&gt;Options::SSLAllowInvalidCertificates&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
+&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. Setting this option to &lt;code&gt;true&lt;/code&gt; suppresses
+validation of certificates. In other words, invalid certificates will be
+accepted.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setlogappenderfactory-and-options-logappenderfactory&#34;&gt;&lt;code&gt;Options::setLogAppenderFactory&lt;/code&gt; and &lt;code&gt;Options::logAppenderFactory&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;Options::LogAppenderFactory&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: none&lt;/li&gt;
+&lt;li&gt;Semantics: Use &lt;code&gt;setLogAppenderFactory&lt;/code&gt; if you want to configure a custom
+appender to listen to the driver&amp;rsquo;s internally logged messages. Setting
+such a factory will enable logging and relay logged messages to whatever
+appender you provide a factory method for. An example of how to do this
+can be found
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/loggingTest.cpp&#34;&gt;here&lt;/a&gt;.
+You may only configure one appender through startup options.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setminloggedseverity-and-options-minloggedseverity&#34;&gt;&lt;code&gt;Options::setMinLoggedSeverity&lt;/code&gt; and `Options::minLoggedSeverity&amp;rsquo;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;logger::LogSeverity&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;LogSeverity::Log()&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: When providing a custom log appender (see above) use this to
+set the minimum severity level of logged messages. Messages that are of
+less importance than the level you provide will not be logged.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;options-setvalidateobjects-and-options-validateobjects&#34;&gt;&lt;code&gt;Options::setValidateObjects&lt;/code&gt; and &lt;code&gt;Options::validateObjects&lt;/code&gt;&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Semantics: If enabled, the client library will run BSON validation on
+data returned from the server to ensure that the returned data is valid
+BSON. Note that there is a performance cost to doing so.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;caveats&#34;&gt;Caveats&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;You must call &lt;code&gt;mongo::client::initialize&lt;/code&gt; before using the driver. You
+may only call &lt;code&gt;mongo::client::initialize&lt;/code&gt; once.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Configuration of the driver is global. You may access a &lt;code&gt;const&lt;/code&gt; reference
+to the current global configuration state of the driver by calling
+&lt;code&gt;mongo::client::Options::current&lt;/code&gt;. If called before entering &lt;code&gt;main&lt;/code&gt;, the
+values returned by accessors of the &lt;code&gt;Options&lt;/code&gt; object returned by
+&lt;code&gt;Options::current&lt;/code&gt; are indeterminate. If called after &lt;code&gt;main&lt;/code&gt; but before
+calling &lt;code&gt;mongo::client::initialize&lt;/code&gt;, a default constructed instance of
+the &lt;code&gt;Options&lt;/code&gt; class will be returned. If called after
+&lt;code&gt;mongo::client::initialize&lt;/code&gt;, the value returned by &lt;code&gt;Options::current&lt;/code&gt;
+will reflect any customized &lt;code&gt;Options&lt;/code&gt; instance passed to
+&lt;code&gt;mongo::client::initialize&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Configuration of the driver is not synchronized, and you may only invoke
+&lt;code&gt;mongo::client::initialize&lt;/code&gt; once. We strongly recommend that you call
+&lt;code&gt;mongo::client::initialize&lt;/code&gt; as early as possible in &lt;code&gt;main&lt;/code&gt; or your
+application startup code, preferably before creating any additional
+threads.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
@@ -1935,6 +2212,69 @@ in hard to diagnose warnings or errors.&lt;/p&gt;
     </item>
     
     <item>
+      <title>API and ABI versioning</title>
+      <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/api-abi-versioning/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/api-abi-versioning/</guid>
+      <description>
+
+&lt;h2 id=&#34;api-versioning&#34;&gt;API Versioning&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;We use &lt;a href=&#34;http://semver.org/&#34;&gt;semantic versioning&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;bsoncxx and mongocxx both define corresponding CMake variables for MAJOR, MINOR, and PATCH.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;abi-versioning&#34;&gt;ABI Versioning&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Both bsoncxx and mongocxx both have a single scalar ABI version.&lt;/li&gt;
+&lt;li&gt;Only bump ABI version on &lt;strong&gt;incompatible&lt;/strong&gt; ABI change (not for ABI additions).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;We stay on ABI version _noabi (without bumping for incompatible changes) until ABI is stable.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;parallel-header-installation&#34;&gt;Parallel Header Installation&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;For mongocxx, install all headers to &lt;code&gt;$PREFIX/mongocxx/v$ABI/&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;For bsoncxx, install all headers to &lt;code&gt;$PREFIX/bsoncxx/v$ABI/&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;We install a pkg-config file to shield consumers from this complexity.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;sonames-and-symlinks&#34;&gt;Sonames and symlinks&lt;/h2&gt;
+
+&lt;p&gt;&lt;em&gt;Note that below examples are given for libmongocxx, but also apply to libbsoncxx&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;DSO = Dynamic Shared Object, to use Ulrich Drepper&amp;rsquo;s terminology&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Physical filename for a DSO is &lt;code&gt;libmongocxx.so.$MAJOR.$MINOR.$PATCH&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Note that the physical filename is disconnected from ABI version/soname.
+This looks a bit strange, but allows multiple versions of the library with
+the same ABI version to be installed on the same system.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;soname for a DSO is &lt;code&gt;libmongocxx.$ABI&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We provide a soname symlink that links to the physical DSO.  We also
+provide a dev symlink that links to the soname symlink of the highest ABI
+version of the library installed.&lt;/p&gt;
+
+&lt;h2 id=&#34;inline-namespaces&#34;&gt;Inline namespaces&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;We provide inline namespace macros for both mongocxx and bsoncxx.&lt;/li&gt;
+&lt;li&gt;This allows multiple, ABI incompatible versions of the library to be linked into the same application.&lt;/li&gt;
+&lt;li&gt;The name of the namespace is &lt;code&gt;v$ABI&lt;/code&gt;. We create them from ABI version to maintain forwards compatibibility.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Working with BSON</title>
       <link>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/working-with-bson/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
@@ -2044,306 +2384,6 @@ mongocxx::options::ssl ssl_options;
 
 client_options.ssl_opts(ssl_options);
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Configuring the legacy driver</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/configuration/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/configuration/</guid>
-      <description>
-
-&lt;p&gt;In the legacy-0.9 development cycle, the mechanism by which the driver is
-configured was refactored. Note that these changes &lt;em&gt;do not apply to
-releases on the 26compat branch, or releases pre-dating legacy-0.9.0&lt;/em&gt;.This
-page describes the new configuration mechanism and documents the various
-configuration options that may be used.&lt;/p&gt;
-
-&lt;h1 id=&#34;configuring-the-driver&#34;&gt;Configuring the Driver&lt;/h1&gt;
-
-&lt;h2 id=&#34;the-mongo-client-initialize-function&#34;&gt;The &lt;code&gt;mongo::client::initialize&lt;/code&gt; function&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code&gt;mongo::client::initialize&lt;/code&gt; function, found in file
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h&#34;&gt;&lt;code&gt;src/mongo/client/init.h&lt;/code&gt;&lt;/a&gt;
-configures the driver and starts background threads critical to the
-functioning of the driver. The function has a single parameter receiving a
-&lt;code&gt;mongo::client::Options&lt;/code&gt; object. If no value is provided, a default
-constructed &lt;code&gt;mongo::client::Options&lt;/code&gt; object is used.&lt;/p&gt;
-
-&lt;p&gt;To configure the driver to use non-default parameters, construct a new
-&lt;code&gt;mongo::client::Options&lt;/code&gt; object and use its setter methods to configure the
-parameters of interest, and pass this object to
-&lt;code&gt;mongo::client::initialize&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;This method must be called exactly once by your application. Invoke
-&lt;code&gt;mongo::client::initialize&lt;/code&gt; as early as possible in your application
-startup phase, before any additional threads have been created. You must
-examine the return value of &lt;code&gt;mongo::client::initialize&lt;/code&gt; and deal with any
-returned error appropriately.&lt;/p&gt;
-
-&lt;h2 id=&#34;the-mongo-client-terminate-function&#34;&gt;The &lt;code&gt;mongo::client::terminate&lt;/code&gt; function&lt;/h2&gt;
-
-&lt;p&gt;When it is time to stop using the client driver, you must terminate its
-background tasks and release resources by invoking the
-&lt;code&gt;mongo::client::terminate&lt;/code&gt; function, found in file
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h&#34;&gt;&lt;code&gt;src/mongo/client/init.h&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The &lt;code&gt;mongo::client::terminate&lt;/code&gt; function honors a grace period, specified in
-milliseconds, and defaulting to &amp;lsquo;forever&amp;rsquo;. The shutdown routine will give
-background tasks the selected grace period to terminate cleanly. If they do
-not do so, &lt;code&gt;mongo::client::terminate&lt;/code&gt; will return an error status. If the
-returned error status is &lt;code&gt;ExceededTimeLimit&lt;/code&gt; it is safe to retry the call
-to &lt;code&gt;mongo::client::terminate&lt;/code&gt;. Otherwise, a non-OK return status from
-&lt;code&gt;mongo::client::terminate&lt;/code&gt; represents a permanent failure to shut down the
-driver cleanly. Please see the documentation for &lt;code&gt;mongo::client::terminate&lt;/code&gt;
-for additional details. The value of the shutdown grace period may be
-changed from its default at driver initialization time by using an
-appropriately configured &lt;code&gt;mongo::client::Options&lt;/code&gt; object.&lt;/p&gt;
-
-&lt;p&gt;On some platforms, you may be able to arrange for
-&lt;code&gt;mongo::client::terminate&lt;/code&gt; to be called via an atexit handler. To request
-this behavior, see the &lt;code&gt;setCallShutdownAtExit&lt;/code&gt; option, documented below.&lt;/p&gt;
-
-&lt;p&gt;Alternatively, you may use the &lt;code&gt;mongo::client::GlobalInstance&lt;/code&gt; class, found
-in
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h&#34;&gt;&lt;code&gt;src/mongo/client/init.h&lt;/code&gt;&lt;/a&gt;,
-to instantiate an RAII type that will automatically initialize and
-terminate the driver.&lt;/p&gt;
-
-&lt;h2 id=&#34;the-mongo-client-options-class&#34;&gt;The &lt;code&gt;mongo::client::Options&lt;/code&gt; class&lt;/h2&gt;
-
-&lt;h3 id=&#34;where-to-find-it&#34;&gt;Where to find it&lt;/h3&gt;
-
-&lt;p&gt;Configuration of the driver is managed through a new class, added in the
-&lt;code&gt;legacy-0.9.0&lt;/code&gt; release, called &lt;code&gt;Options&lt;/code&gt;. This class is hosted in the
-&lt;code&gt;mongo::client&lt;/code&gt; namespace, and is defined in the header
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/options.h&#34;&gt;&lt;code&gt;mongo/client/options.h&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;passing-options-to-mongo-client-initialize&#34;&gt;Passing options to &lt;code&gt;mongo::client::initialize&lt;/code&gt;&lt;/h3&gt;
-
-&lt;p&gt;By default, calling &lt;code&gt;mongo::client::initialize()&lt;/code&gt; with no parameters is
-equivalent to calling &lt;code&gt;mongo::client::initialize(mongo::client::Options())&lt;/code&gt;
-passing a default constructed &lt;code&gt;mongo::client::Options&lt;/code&gt; object.&lt;/p&gt;
-
-&lt;p&gt;Because the &lt;code&gt;mongo::client::Options&lt;/code&gt; class has setters returning a
-&lt;code&gt;mongo::client::Options&amp;amp;&lt;/code&gt; you can chain together options to easily
-configure them at the call site:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;using mongo::client::initialize;
-using mongo::client::Options;
-
-// Configure the mongo C++ client driver, enabling SSL and setting
-// the SSL Certificate Authority file to &amp;quot;mycafile&amp;quot;.
-Status status = initialize(
-    Options().setSSLMode(Options::kSSLRequired).setSSLCAFile(&amp;quot;mycafile&amp;quot;)
-);
-
-if (!status.isOK()) {
-    // deal with errors
-} else {
-    // Driver is up in SSL mode.
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;available-options&#34;&gt;Available Options&lt;/h3&gt;
-
-&lt;h4 id=&#34;options-callshutdownatexit-and-options-setcallshutdownatexit&#34;&gt;&lt;code&gt;Options::callShutdownAtExit&lt;/code&gt; and &lt;code&gt;Options::setCallShutdownAtExit&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: If this option is &amp;lsquo;true&amp;rsquo;, then a successful call to
-&lt;code&gt;mongo::client::initialize&lt;/code&gt; will schedule a call to
-&lt;code&gt;mongo::client::terminate&lt;/code&gt; with &lt;code&gt;atexit&lt;/code&gt;. The call to
-&lt;code&gt;mongo::client::terminate&lt;/code&gt; will be made with the value of
-&lt;code&gt;mongo::client::Options::current::autoShutdownGracePeriodMillis&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-autoshutdowngraceperiodmillis-and-options-setautoshutdowngraceperiodmillis&#34;&gt;&lt;code&gt;Options::autoShutdownGracePeriodMillis&lt;/code&gt; and &lt;code&gt;Options::setAutoShutdownGracePeriodMillis&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;int&lt;/code&gt;, interpreted as milliseconds&lt;/li&gt;
-&lt;li&gt;Default: 0 (wait forever)&lt;/li&gt;
-&lt;li&gt;Semantics: If &lt;code&gt;mongo::client::initialize&lt;/code&gt; scheduled a call to
-&lt;code&gt;mongo::client::terminate&lt;/code&gt; with &lt;code&gt;atexit&lt;/code&gt;, then that call to
-&lt;code&gt;mongo::client::terminate&lt;/code&gt; will use the value
-&lt;code&gt;Options::autoShutdownGracePeriodMillis&lt;/code&gt; when calling
-&lt;code&gt;mongo::client::terminate&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setdefaultlocalthresholdmillis-and-options-defaultlocalthresholdmillis&#34;&gt;&lt;code&gt;Options::setDefaultLocalThresholdMillis&lt;/code&gt; and &lt;code&gt;Options::defaultLocalThresholdMillis&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;int&lt;/code&gt;, interpreted as milliseconds&lt;/li&gt;
-&lt;li&gt;Default: 15&lt;/li&gt;
-&lt;li&gt;Semantics: TODO&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setsslmode-and-options-sslmode&#34;&gt;&lt;code&gt;Options::setSSLMode&lt;/code&gt; and &lt;code&gt;Options::SSLMode&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: [&lt;code&gt;Options::kSSLEnabled&lt;/code&gt;|&lt;code&gt;Options:kSSLDisabled&lt;/code&gt;]&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;Options::kSSLDisabled&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: If set to &lt;code&gt;Options:kSSLEnabled&lt;/code&gt; the driver will require SSL
-connections to all mongo servers. If disabled, it will not request SSL.
-Note that if the servers you are connected to are in SSL required mode,
-you may not be able to connect. This value is an enumeration so that we
-may later extend it with a &lt;code&gt;kSSLPreferred&lt;/code&gt; option, but that is not
-currently implemented.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setfipsmode-and-options-fipsmode&#34;&gt;&lt;code&gt;Options::setFIPSMode&lt;/code&gt; and &lt;code&gt;Options::FIPSMode&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: If true, will attempt to use FIPS-140 validated crypto if
-supported by the crypto library currently in use.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setsslcafile-and-options-sslcafile&#34;&gt;&lt;code&gt;Options::setSSLCAFile&lt;/code&gt; and &lt;code&gt;Options::SSLCAFile&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
-&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. If set, it specifies a file containing the
-certificate authority file to use. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
-documentation&lt;/a&gt;
-for additional information on the CA file.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setsslpemkeyfile-and-options-sslpemkeyfile&#34;&gt;&lt;code&gt;Options::setSSLPemKeyFile&lt;/code&gt; and &lt;code&gt;Options::SSLPEMKeyFile&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
-&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. If set, it specifies a file containing the SSL
-PEM key file to use. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
-documentation&lt;/a&gt;
-for additional information on the PEM key file.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setsslpemkeypassword-and-options-sslpemkeypassword&#34;&gt;&lt;code&gt;Options::setSSLPemKeyPassword&lt;/code&gt; and &lt;code&gt;Options::SSLPEMKeyPassword&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
-&lt;code&gt;Options::kSSLRequired&lt;/code&gt;, and is only meaningful if a PEM key file has
-been set with &lt;code&gt;Options::setSSLPEMKeyFile&lt;/code&gt;. If set, it specifies the
-password to be used to decrypt the SSL PEM key file specified with
-&lt;code&gt;Options::setSSLPEMKeyFile&lt;/code&gt;. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
-documentation&lt;/a&gt;
-for additional information on the PEM key file password.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setsslcrlfile-and-options-sslcrlfile&#34;&gt;&lt;code&gt;Options::setSSLCRLFile&lt;/code&gt; and &lt;code&gt;Options::SSLCRLFile&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;std::string&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
-&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. If set, it specifies the file to use as the SSL
-certificate revocation list. See the &lt;a href=&#34;https://docs.mongodb.com/master/tutorial/configure-ssl/#set-up-mongod-and-mongos-with-ssl-certificate-and-key&#34;&gt;MongoDB SSL
-documentation&lt;/a&gt;
-for additional information on the certificate revocation list file.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setssallowinvalidcertificates-and-options-sslallowinvalidcertificates&#34;&gt;&lt;code&gt;Options::setSSAllowInvalidCertificates&lt;/code&gt; and &lt;code&gt;Options::SSLAllowInvalidCertificates&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: This flag only has an effect if &lt;code&gt;Options::current::SSLMode&lt;/code&gt; is
-&lt;code&gt;Options::kSSLRequired&lt;/code&gt;. Setting this option to &lt;code&gt;true&lt;/code&gt; suppresses
-validation of certificates. In other words, invalid certificates will be
-accepted.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setlogappenderfactory-and-options-logappenderfactory&#34;&gt;&lt;code&gt;Options::setLogAppenderFactory&lt;/code&gt; and &lt;code&gt;Options::logAppenderFactory&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;Options::LogAppenderFactory&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: none&lt;/li&gt;
-&lt;li&gt;Semantics: Use &lt;code&gt;setLogAppenderFactory&lt;/code&gt; if you want to configure a custom
-appender to listen to the driver&amp;rsquo;s internally logged messages. Setting
-such a factory will enable logging and relay logged messages to whatever
-appender you provide a factory method for. An example of how to do this
-can be found
-&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/loggingTest.cpp&#34;&gt;here&lt;/a&gt;.
-You may only configure one appender through startup options.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setminloggedseverity-and-options-minloggedseverity&#34;&gt;&lt;code&gt;Options::setMinLoggedSeverity&lt;/code&gt; and `Options::minLoggedSeverity&amp;rsquo;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;logger::LogSeverity&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;LogSeverity::Log()&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: When providing a custom log appender (see above) use this to
-set the minimum severity level of logged messages. Messages that are of
-less importance than the level you provide will not be logged.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;options-setvalidateobjects-and-options-validateobjects&#34;&gt;&lt;code&gt;Options::setValidateObjects&lt;/code&gt; and &lt;code&gt;Options::validateObjects&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Default: &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Semantics: If enabled, the client library will run BSON validation on
-data returned from the server to ensure that the returned data is valid
-BSON. Note that there is a performance cost to doing so.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;caveats&#34;&gt;Caveats&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;You must call &lt;code&gt;mongo::client::initialize&lt;/code&gt; before using the driver. You
-may only call &lt;code&gt;mongo::client::initialize&lt;/code&gt; once.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Configuration of the driver is global. You may access a &lt;code&gt;const&lt;/code&gt; reference
-to the current global configuration state of the driver by calling
-&lt;code&gt;mongo::client::Options::current&lt;/code&gt;. If called before entering &lt;code&gt;main&lt;/code&gt;, the
-values returned by accessors of the &lt;code&gt;Options&lt;/code&gt; object returned by
-&lt;code&gt;Options::current&lt;/code&gt; are indeterminate. If called after &lt;code&gt;main&lt;/code&gt; but before
-calling &lt;code&gt;mongo::client::initialize&lt;/code&gt;, a default constructed instance of
-the &lt;code&gt;Options&lt;/code&gt; class will be returned. If called after
-&lt;code&gt;mongo::client::initialize&lt;/code&gt;, the value returned by &lt;code&gt;Options::current&lt;/code&gt;
-will reflect any customized &lt;code&gt;Options&lt;/code&gt; instance passed to
-&lt;code&gt;mongo::client::initialize&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Configuration of the driver is not synchronized, and you may only invoke
-&lt;code&gt;mongo::client::initialize&lt;/code&gt; once. We strongly recommend that you call
-&lt;code&gt;mongo::client::initialize&lt;/code&gt; as early as possible in &lt;code&gt;main&lt;/code&gt; or your
-application startup code, preferably before creating any additional
-threads.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Overview</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</guid>
-      <description>&lt;p&gt;The mongocxx is a ground-up rewrite of a C++ driver for MongoDB based on
-&lt;a href=&#34;http://mongoc.org/&#34;&gt;libmongoc&lt;/a&gt;.  It requires a C++11 compiler.  It it
-known to build on x86 and x86-64 architectures for Linux, Mac OS X,
-Windows, FreeBSD and Solaris.&lt;/p&gt;
-
-&lt;p&gt;The mongocxx driver library includes a matching bson package, bsoncxx, that
-implements the BSON specification (see &lt;a href=&#34;http://www.bsonspec.org&#34;&gt;http://www.bsonspec.org&lt;/a&gt;). This
-library can be used standalone for object serialization and deserialization
-even when one is not using MongoDB at all.&lt;/p&gt;
-
-&lt;p&gt;Releases of the mongocxx driver have version numbers like v3.x.y.&lt;/p&gt;
-
-&lt;p&gt;(Note: there were no v2.x.y C++ drivers to avoid confusion with the
-deprecated legacy-0.0-26compat-2.x.y drivers.)&lt;/p&gt;
 </description>
     </item>
     
