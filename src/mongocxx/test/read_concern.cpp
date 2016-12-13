@@ -27,8 +27,8 @@ TEST_CASE("valid read concern settings", "[read_concern]") {
 
     read_concern rc{};
 
-    read_concern::level level_setting;
-    stdx::string_view string_setting;
+    read_concern::level level_setting = read_concern::level::k_server_default;
+    stdx::string_view string_setting{""};
 
     SECTION("default-constructed read_concern") {
         level_setting = read_concern::level::k_server_default;
