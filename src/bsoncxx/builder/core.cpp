@@ -47,17 +47,12 @@ class core::impl {
     }
 
     ~impl() {
-        while (!_stack.empty()) {
-            _stack.pop_back();
-        }
-
+        _stack.clear();
         bson_destroy(&_root);
     }
 
     void reinit() {
-        while (!_stack.empty()) {
-            _stack.pop_back();
-        }
+        _stack.clear();
 
         bson_reinit(&_root);
 

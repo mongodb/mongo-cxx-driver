@@ -30,13 +30,17 @@ class stack {
     }
 
     ~stack() {
-        while (!empty()) {
-            pop_back();
-        }
+        clear();
 
         while (!_buckets.empty()) {
             operator delete(_buckets.back());
             _buckets.pop_back();
+        }
+    }
+
+    void clear() {
+        while (!empty()) {
+            pop_back();
         }
     }
 
