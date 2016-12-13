@@ -2281,7 +2281,8 @@ version number and update it.)&lt;/p&gt;&lt;/li&gt;
 &lt;p&gt;&lt;code&gt;git commit -am &amp;quot;Prepare to generate r3.0.2 release documentation&amp;quot;&lt;/code&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Ensure you have &lt;code&gt;doxygen&lt;/code&gt; and &lt;code&gt;hugo&lt;/code&gt; installed and up to date.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Ensure you have &lt;code&gt;doxygen&lt;/code&gt; and &lt;code&gt;hugo&lt;/code&gt; installed and up to date.  &lt;code&gt;hugo&lt;/code&gt;
+must be at least version v0.16.&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;Change to the repo top directory and run &lt;code&gt;git clean -dxf&lt;/code&gt; to clear out
 all extraneous files.&lt;/p&gt;&lt;/li&gt;
