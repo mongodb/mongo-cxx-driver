@@ -92,7 +92,7 @@ class MONGOCXX_API insert {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/reference/method/db.collection.insert/
+    /// @see https://docs.mongodb.com/master/reference/command/insert/
     ///
     insert& ordered(bool ordered);
 
@@ -101,7 +101,7 @@ class MONGOCXX_API insert {
     ///
     /// @return The current ordered value.
     ///
-    /// @see https://docs.mongodb.com/master/reference/method/db.collection.insert/
+    /// @see https://docs.mongodb.com/master/reference/command/insert/
     ///
     const stdx::optional<bool>& ordered() const;
 

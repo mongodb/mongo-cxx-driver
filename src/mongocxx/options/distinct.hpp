@@ -43,8 +43,7 @@ class MONGOCXX_API distinct {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see
-    ///   https://docs.mongodb.com/master/reference/collation/
+    /// @see https://docs.mongodb.com/master/reference/command/distinct/
     ///
     distinct& collation(bsoncxx::document::view_or_value collation);
 
@@ -54,8 +53,7 @@ class MONGOCXX_API distinct {
     /// @return
     ///   The current collation.
     ///
-    /// @see
-    ///   https://docs.mongodb.com/master/reference/collation/
+    /// @see https://docs.mongodb.com/master/reference/command/distinct/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 
@@ -69,7 +67,7 @@ class MONGOCXX_API distinct {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
+    /// @see https://docs.mongodb.com/master/reference/command/distinct/
     ///
     distinct& max_time(std::chrono::milliseconds max_time);
 
@@ -78,7 +76,7 @@ class MONGOCXX_API distinct {
     ///
     /// @return The current max time (in milliseconds).
     ///
-    /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
+    /// @see https://docs.mongodb.com/master/reference/command/distinct/
     ///
     const stdx::optional<std::chrono::milliseconds>& max_time() const;
 
@@ -92,7 +90,7 @@ class MONGOCXX_API distinct {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/core/read-preference/
+    /// @see https://docs.mongodb.com/master/reference/command/distinct/
     ///
     distinct& read_preference(class read_preference rp);
 
@@ -101,7 +99,7 @@ class MONGOCXX_API distinct {
     ///
     /// @return the current read_preference.
     ///
-    /// @see https://docs.mongodb.com/master/core/read-preference/
+    /// @see https://docs.mongodb.com/master/reference/command/distinct/
     ///
     const stdx::optional<class read_preference>& read_preference() const;
 

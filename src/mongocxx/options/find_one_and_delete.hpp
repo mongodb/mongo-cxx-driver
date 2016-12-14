@@ -41,8 +41,7 @@ class MONGOCXX_API find_one_and_delete {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see
-    ///   https://docs.mongodb.com/master/reference/collation/
+    /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     ///
     find_one_and_delete& collation(bsoncxx::document::view_or_value collation);
 
@@ -52,8 +51,7 @@ class MONGOCXX_API find_one_and_delete {
     /// @return
     ///   The current collation.
     ///
-    /// @see
-    ///   https://docs.mongodb.com/master/reference/collation/
+    /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 
@@ -67,7 +65,7 @@ class MONGOCXX_API find_one_and_delete {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
+    /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     ///
     find_one_and_delete& max_time(std::chrono::milliseconds max_time);
 
@@ -76,7 +74,7 @@ class MONGOCXX_API find_one_and_delete {
     ///
     /// @return the current max time (in milliseconds).
     ///
-    /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
+    /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     ///
     const stdx::optional<std::chrono::milliseconds>& max_time() const;
 
@@ -90,7 +88,7 @@ class MONGOCXX_API find_one_and_delete {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/tutorial/project-fields-from-query-results/
+    /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     ///
     find_one_and_delete& projection(bsoncxx::document::view_or_value projection);
 
@@ -99,7 +97,7 @@ class MONGOCXX_API find_one_and_delete {
     ///
     /// @return The current projection.
     ///
-    /// @see https://docs.mongodb.com/master/tutorial/project-fields-from-query-results/
+    /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& projection() const;
 
@@ -116,7 +114,7 @@ class MONGOCXX_API find_one_and_delete {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/reference/method/db.collection.findAndModify/
+    /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     ///
     find_one_and_delete& sort(bsoncxx::document::view_or_value ordering);
 
@@ -125,7 +123,7 @@ class MONGOCXX_API find_one_and_delete {
     ///
     /// @return The current sort ordering.
     ///
-    /// @see https://docs.mongodb.com/master/reference/method/db.collection.findAndModify/
+    /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& sort() const;
 

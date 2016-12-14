@@ -229,7 +229,7 @@ class MONGOCXX_API collection {
     /// @throws mongocxx::logic_error if the options are invalid.
     /// @throws mongocxx::operation_exception if index creation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/method/db.collection.createIndex/
+    /// @see https://docs.mongodb.com/master/reference/command/createIndexes/
     ///
     /// @note
     ///   In order to pass a write concern to this, you must use the collection
@@ -302,7 +302,7 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::operation_exception if the operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/method/db.collection.drop/
+    /// @see https://docs.mongodb.com/master/reference/command/drop/
     ///
     /// @note
     ///   In order to pass a write concern to this, you must use the collection

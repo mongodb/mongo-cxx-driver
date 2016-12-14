@@ -45,8 +45,7 @@ class MONGOCXX_API count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see
-    ///   https://docs.mongodb.com/master/reference/collation/
+    /// @see https://docs.mongodb.com/master/reference/command/count/
     ///
     count& collation(bsoncxx::document::view_or_value collation);
 
@@ -56,8 +55,7 @@ class MONGOCXX_API count {
     /// @return
     ///   The current collation.
     ///
-    /// @see
-    ///   https://docs.mongodb.com/master/reference/collation/
+    /// @see https://docs.mongodb.com/master/reference/command/count/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 
@@ -71,12 +69,16 @@ class MONGOCXX_API count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
+    /// @see https://docs.mongodb.com/master/reference/command/count/
+    ///
     count& hint(class hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/count/
     ///
     const stdx::optional<class hint>& hint() const;
 
@@ -90,12 +92,16 @@ class MONGOCXX_API count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
+    /// @see https://docs.mongodb.com/master/reference/command/count/
+    ///
     count& limit(std::int64_t limit);
 
     ///
     /// Gets the current limit.
     ///
     /// @return The current limit.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/count/
     ///
     const stdx::optional<std::int64_t>& limit() const;
 
@@ -109,7 +115,7 @@ class MONGOCXX_API count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
+    /// @see https://docs.mongodb.com/master/reference/command/count/
     ///
     count& max_time(std::chrono::milliseconds max_time);
 
@@ -118,7 +124,7 @@ class MONGOCXX_API count {
     ///
     /// @return The current max time (in milliseconds).
     ///
-    /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
+    /// @see https://docs.mongodb.com/master/reference/command/count/
     ///
     const stdx::optional<std::chrono::milliseconds>& max_time() const;
 
@@ -132,7 +138,7 @@ class MONGOCXX_API count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/reference/method/cursor.skip/
+    /// @see https://docs.mongodb.com/master/reference/command/count/
     ///
     count& skip(std::int64_t skip);
 
@@ -141,7 +147,7 @@ class MONGOCXX_API count {
     ///
     /// @return The number of documents to skip.
     ///
-    /// @see https://docs.mongodb.com/master/reference/method/cursor.skip/
+    /// @see https://docs.mongodb.com/master/reference/command/count/
     ///
     const stdx::optional<std::int64_t>& skip() const;
 
@@ -155,7 +161,7 @@ class MONGOCXX_API count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/core/read-preference/
+    /// @see https://docs.mongodb.com/master/reference/command/count/
     ///
     count& read_preference(class read_preference rp);
 
@@ -164,7 +170,7 @@ class MONGOCXX_API count {
     ///
     /// @return the current read_preference
     ///
-    /// @see https://docs.mongodb.com/master/core/read-preference/
+    /// @see https://docs.mongodb.com/master/reference/command/count/
     ///
     const stdx::optional<class read_preference>& read_preference() const;
 

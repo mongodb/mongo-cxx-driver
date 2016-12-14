@@ -96,7 +96,7 @@ class MONGOCXX_API database {
     ///
     /// Explicitly creates a collection in this database with the specified options.
     ///
-    /// @see https://docs.mongodb.com/master/reference/method/db.createCollection/
+    /// @see https://docs.mongodb.com/master/reference/command/create/
     ///
     /// @param name the new collection's name.
     /// @param options the options for the new collection.
@@ -158,7 +158,7 @@ class MONGOCXX_API database {
     ///
     /// @throws mongocxx::operation_exception if the operation fails.
     //
-    /// @see https://docs.mongodb.com/master/reference/method/db.dropDatabase/
+    /// @see https://docs.mongodb.com/manual/reference/command/dropDatabase/
     ///
     /// @note
     ///   In order to pass a write concern to this, you must use the database

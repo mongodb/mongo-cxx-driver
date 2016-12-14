@@ -132,7 +132,7 @@ class MONGOCXX_API create_collection {
     ///
     /// When true, disables the power of 2 sizes allocation for the collection.
     ///
-    /// @see https://docs.mongodb.com/master/reference/method/db.createCollection/
+    /// @see https://docs.mongodb.com/master/reference/command/create/
     ///
     /// @param no_padding
     ///   When true, disables power of 2 sizing for this collection.
@@ -146,7 +146,7 @@ class MONGOCXX_API create_collection {
     ///
     /// Gets the current value of the "no padding" option for the collection.
     ///
-    /// @see https://docs.mongodb.com/master/reference/method/db.createCollection/
+    /// @see https://docs.mongodb.com/master/reference/command/create/
     ///
     /// @return
     ///   When true, power of 2 sizing is disabled for this collection.

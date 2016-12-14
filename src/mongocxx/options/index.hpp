@@ -34,7 +34,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB create index operation.
 ///
-/// @see https://docs.mongodb.com/master/reference/method/db.collection.createIndex/#options
+/// @see https://docs.mongodb.com/master/reference/command/createIndexes
 ///
 class MONGOCXX_API index {
    public:
