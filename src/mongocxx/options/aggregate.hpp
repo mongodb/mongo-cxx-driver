@@ -40,6 +40,10 @@ class MONGOCXX_API aggregate {
     /// @param allow_disk_use
     ///   Whether or not to allow disk use.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     aggregate& allow_disk_use(bool allow_disk_use);
 
     ///
@@ -55,6 +59,10 @@ class MONGOCXX_API aggregate {
     /// @param batch_size
     ///   The size of the batches to request.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     aggregate& batch_size(std::int32_t batch_size);
 
     ///
@@ -69,6 +77,10 @@ class MONGOCXX_API aggregate {
     ///
     /// @param collation
     ///   The new collation.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see
     ///   https://docs.mongodb.com/master/reference/collation/
@@ -91,6 +103,10 @@ class MONGOCXX_API aggregate {
     ///
     /// @param max_time
     ///   The max amount of time (in milliseconds).
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
@@ -117,6 +133,10 @@ class MONGOCXX_API aggregate {
     ///
     /// @param use_cursor whether or not to use a cursor
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     aggregate& use_cursor(bool use_cursor);
 
     ///
@@ -130,6 +150,10 @@ class MONGOCXX_API aggregate {
     /// Sets the read_preference for this operation.
     ///
     /// @param rp the new read_preference
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/core/read-preference/
     ///
@@ -148,6 +172,10 @@ class MONGOCXX_API aggregate {
     /// Sets whether the $out stage should bypass document validation.
     ///
     /// @param bypass_document_validation whether or not to bypass validation.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     aggregate& bypass_document_validation(bool bypass_document_validation);
 

@@ -41,6 +41,10 @@ class MONGOCXX_API count {
     /// @param collation
     ///   The new collation.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see
     ///   https://docs.mongodb.com/master/reference/collation/
     ///
@@ -63,6 +67,10 @@ class MONGOCXX_API count {
     /// @param index_hint
     ///   Object representing the index to use.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     count& hint(class hint index_hint);
 
     ///
@@ -78,6 +86,10 @@ class MONGOCXX_API count {
     /// @param limit
     ///  The max number of documents to count.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     count& limit(std::int64_t limit);
 
     ///
@@ -92,6 +104,10 @@ class MONGOCXX_API count {
     ///
     /// @param max_time
     ///   The max amount of time (in milliseconds).
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
@@ -112,6 +128,10 @@ class MONGOCXX_API count {
     /// @param skip
     ///   The number of documents to skip.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/reference/method/cursor.skip/
     ///
     count& skip(std::int64_t skip);
@@ -130,6 +150,10 @@ class MONGOCXX_API count {
     ///
     /// @param rp
     ///   The new read_preference.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/core/read-preference/
     ///

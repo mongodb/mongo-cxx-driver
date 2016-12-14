@@ -38,6 +38,10 @@ class MONGOCXX_API ssl {
     /// @param pem_file
     ///   The path to the .pem file.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     ssl& pem_file(bsoncxx::string::view_or_value pem_file);
 
     ///
@@ -52,6 +56,10 @@ class MONGOCXX_API ssl {
     ///
     /// @param pem_password
     ///   The pass phrase.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     ssl& pem_password(bsoncxx::string::view_or_value pem_password);
 
@@ -69,6 +77,10 @@ class MONGOCXX_API ssl {
     /// @param ca_file
     ///   The path to the CA file.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     ssl& ca_file(bsoncxx::string::view_or_value ca_file);
 
     ///
@@ -83,6 +95,10 @@ class MONGOCXX_API ssl {
     ///
     /// @param ca_dir
     ///   The path to the CA directory.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     ssl& ca_dir(bsoncxx::string::view_or_value ca_dir);
 
@@ -99,6 +115,10 @@ class MONGOCXX_API ssl {
     /// @param crl_file
     ///   The path to the PEM file.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     ssl& crl_file(bsoncxx::string::view_or_value crl_file);
 
     ///
@@ -113,6 +133,10 @@ class MONGOCXX_API ssl {
     ///
     /// @param allow_invalid_certificates
     ///   Whether or not to check the server's CA file.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     ssl& allow_invalid_certificates(bool allow_invalid_certificates);
 

@@ -37,6 +37,10 @@ class MONGOCXX_API find_one_and_delete {
     /// @param collation
     ///   The new collation.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see
     ///   https://docs.mongodb.com/master/reference/collation/
     ///
@@ -59,6 +63,10 @@ class MONGOCXX_API find_one_and_delete {
     /// @param max_time
     ///   The max amount of running time (in milliseconds).
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
     find_one_and_delete& max_time(std::chrono::milliseconds max_time);
@@ -77,6 +85,10 @@ class MONGOCXX_API find_one_and_delete {
     ///
     /// @param projection
     ///   The projection document.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/tutorial/project-fields-from-query-results/
     ///
@@ -99,6 +111,10 @@ class MONGOCXX_API find_one_and_delete {
     ///
     /// @param ordering
     ///   Document describing the order of the documents to be returned.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/reference/method/db.collection.findAndModify/
     ///

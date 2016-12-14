@@ -42,6 +42,10 @@ class MONGOCXX_API find {
     /// @param allow_partial
     ///   Whether to allow partial results from mongos.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
     ///
     find& allow_partial_results(bool allow_partial);
@@ -61,6 +65,10 @@ class MONGOCXX_API find {
     /// @param batch_size
     ///   The size of the batches to request.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/reference/method/cursor.batchSize/
     ///
     find& batch_size(std::int32_t batch_size);
@@ -79,6 +87,10 @@ class MONGOCXX_API find {
     ///
     /// @param collation
     ///   The new collation.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see
     ///   https://docs.mongodb.com/master/reference/collation/
@@ -103,6 +115,10 @@ class MONGOCXX_API find {
     /// @param comment
     ///   The comment to attach to this query.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/reference/operator/meta/comment/
     ///
     find& comment(bsoncxx::string::view_or_value comment);
@@ -121,6 +137,10 @@ class MONGOCXX_API find {
     ///
     /// @param cursor_type
     ///   The cursor type to set.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
     ///
@@ -146,6 +166,10 @@ class MONGOCXX_API find {
     /// @param index_hint
     ///   Object representing the index to use.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     find& hint(class hint index_hint);
 
     ///
@@ -161,6 +185,10 @@ class MONGOCXX_API find {
     /// @param limit
     ///   The maximum number of documents to return.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     find& limit(std::int32_t limit);
 
     ///
@@ -175,6 +203,10 @@ class MONGOCXX_API find {
     ///
     /// @param max
     ///   The exclusive upper bound for a specific index.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/reference/method/cursor.max/
     ///
@@ -200,6 +232,10 @@ class MONGOCXX_API find {
     /// @param max_await_time
     ///   The max amount of time (in milliseconds) to wait for new documents.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
     find& max_await_time(std::chrono::milliseconds max_await_time);
@@ -217,6 +253,10 @@ class MONGOCXX_API find {
     ///
     /// @param max
     ///   The maximum number of documents or index keys to scan.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/reference/method/cursor.maxScan/
     ///
@@ -238,6 +278,10 @@ class MONGOCXX_API find {
     /// @param max_time
     ///   The max amount of time (in milliseconds).
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
     find& max_time(std::chrono::milliseconds max_time);
@@ -257,6 +301,10 @@ class MONGOCXX_API find {
     /// @param min
     ///   The inclusive lower bound for a specific index.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/reference/method/cursor.min/
     ///
     find& min(bsoncxx::document::view_or_value min);
@@ -275,6 +323,10 @@ class MONGOCXX_API find {
     ///
     /// @param modifiers
     ///   The query modifiers.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @deprecated
     ///   The modifiers option has been deprecated, and has been replaced by new top-level options
@@ -304,6 +356,10 @@ class MONGOCXX_API find {
     /// @param no_cursor_timeout
     ///   When true prevents the cursor from timing out.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
     ///
     find& no_cursor_timeout(bool no_cursor_timeout);
@@ -323,6 +379,10 @@ class MONGOCXX_API find {
     /// @param projection
     ///   The projection document.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/tutorial/project-fields-from-query-results/
     ///
     find& projection(bsoncxx::document::view_or_value projection);
@@ -341,6 +401,10 @@ class MONGOCXX_API find {
     ///
     /// @param rp
     ///   The new read_preference.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/core/read-preference/
     ///
@@ -364,6 +428,10 @@ class MONGOCXX_API find {
     ///   Whether to return the index keys associated with the query results, instead of the actual
     ///   query results themselves.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/reference/method/cursor.returnKey/
     ///
     find& return_key(bool return_key);
@@ -386,6 +454,10 @@ class MONGOCXX_API find {
     /// @param show_record_id
     ///   Whether to include the record identifier.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/reference/method/cursor.showRecordId/
     ///
     find& show_record_id(bool show_record_id);
@@ -407,6 +479,10 @@ class MONGOCXX_API find {
     /// @param skip
     ///   The number of documents to skip.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/reference/method/cursor.skip/
     ///
     find& skip(std::int32_t skip);
@@ -425,6 +501,10 @@ class MONGOCXX_API find {
     ///
     /// @param snapshot
     ///   Whether to enable snapshot mode.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/reference/method/cursor.snapshot/
     ///
@@ -445,6 +525,10 @@ class MONGOCXX_API find {
     ///
     /// @param ordering
     ///   Document describing the order of the documents to be returned.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/reference/method/cursor.sort/
     ///

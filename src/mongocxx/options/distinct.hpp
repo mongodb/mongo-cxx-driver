@@ -39,6 +39,10 @@ class MONGOCXX_API distinct {
     /// @param collation
     ///   The new collation.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see
     ///   https://docs.mongodb.com/master/reference/collation/
     ///
@@ -61,6 +65,10 @@ class MONGOCXX_API distinct {
     /// @param max_time
     ///   The max amount of time (in milliseconds).
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
     distinct& max_time(std::chrono::milliseconds max_time);
@@ -79,6 +87,10 @@ class MONGOCXX_API distinct {
     ///
     /// @param rp
     ///   The new read_preference.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/core/read-preference/
     ///

@@ -66,6 +66,10 @@ class MONGOCXX_API pipeline {
     ///   corresponding field will be added to the documents, where the value of the added field is
     ///   the result of evaluating the specified expression.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     pipeline& add_fields(bsoncxx::document::view_or_value fields_to_add);
 
     ///
@@ -77,6 +81,10 @@ class MONGOCXX_API pipeline {
     /// @param bucket_args
     ///   The specification for the bucket operation.  The required fields `groupBy` and
     ///   `boundaries` must be included.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     pipeline& bucket(bsoncxx::document::view_or_value bucket_args);
 
@@ -91,6 +99,10 @@ class MONGOCXX_API pipeline {
     ///   The specification for the bucket_auto operation.  This required fields `groupBy` and
     ///   `buckets` must be included.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     pipeline& bucket_auto(bsoncxx::document::view_or_value bucket_auto_args);
 
     ///
@@ -102,6 +114,10 @@ class MONGOCXX_API pipeline {
     ///   The specification for the coll_stats operation.  See link above for a list of valid
     ///   options.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     pipeline& coll_stats(
         bsoncxx::document::view_or_value coll_stats_args = bsoncxx::document::view{});
 
@@ -112,6 +128,10 @@ class MONGOCXX_API pipeline {
     ///
     /// @param field
     ///   Name of the field for the count to be written to.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     pipeline& count(std::string field);
 
@@ -125,6 +145,10 @@ class MONGOCXX_API pipeline {
     ///   The specification for the facet operation.  Each field in the the provided document should
     ///   specify an aggregation pipeline, as an array.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     pipeline& facet(bsoncxx::document::view_or_value facet_args);
 
     ///
@@ -136,6 +160,10 @@ class MONGOCXX_API pipeline {
     ///   The specification for the geo_near operation.  The required fields `near` and
     ///   `distanceField` must be included.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     pipeline& geo_near(bsoncxx::document::view_or_value geo_near_args);
 
     ///
@@ -146,6 +174,10 @@ class MONGOCXX_API pipeline {
     /// @param graph_lookup_args
     ///   The specification for the graph_lookup operation.  The required fields `from`,
     ///   `connectFromField`, `startWith`, `connectToField`, and `as` must be included.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     pipeline& graph_lookup(bsoncxx::document::view_or_value graph_lookup_args);
 
@@ -163,10 +195,18 @@ class MONGOCXX_API pipeline {
     /// @param group_args
     ///   The specification for the group operation.  The required field `_id` must be included.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     pipeline& group(bsoncxx::document::view_or_value group_args);
 
     ///
     /// Returns statistics regarding the use of each index for the collection.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/reference/operator/aggregation/indexStats/
     ///
@@ -180,6 +220,10 @@ class MONGOCXX_API pipeline {
     /// @param limit
     ///   The number of documents to which output should be limited.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     pipeline& limit(std::int32_t limit);
 
     ///
@@ -192,6 +236,10 @@ class MONGOCXX_API pipeline {
     ///   The specification for the lookup operation.  The required fields `from`, `localField`,
     ///   `foreignField`, and `as` must be included.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     pipeline& lookup(bsoncxx::document::view_or_value lookup_args);
 
     ///
@@ -202,6 +250,10 @@ class MONGOCXX_API pipeline {
     ///
     /// @param filter
     ///   The filter.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     pipeline& match(bsoncxx::document::view_or_value filter);
 
@@ -215,6 +267,10 @@ class MONGOCXX_API pipeline {
     /// @param collection_name
     ///   The name of the collection where the output documents should go.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     pipeline& out(std::string collection_name);
 
     ///
@@ -224,6 +280,10 @@ class MONGOCXX_API pipeline {
     ///
     /// @param projection
     ///   The projection specification.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     pipeline& project(bsoncxx::document::view_or_value projection);
 
@@ -236,6 +296,10 @@ class MONGOCXX_API pipeline {
     /// @param restrictions
     ///   The document restrictions.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     pipeline& redact(bsoncxx::document::view_or_value restrictions);
 
     ///
@@ -246,6 +310,10 @@ class MONGOCXX_API pipeline {
     /// @param replace_root_args
     ///   The specification for the replace_root operation.  The required field `newRoot` must be
     ///   included.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     pipeline& replace_root(bsoncxx::document::view_or_value replace_root_args);
 
@@ -258,6 +326,10 @@ class MONGOCXX_API pipeline {
     /// @param size
     ///   The number of input documents to select.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     pipeline& sample(std::int32_t size);
 
     ///
@@ -269,6 +341,10 @@ class MONGOCXX_API pipeline {
     /// @param docs_to_skip
     ///   The number of input documents to skip.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     pipeline& skip(std::int32_t docs_to_skip);
 
     ///
@@ -278,6 +354,10 @@ class MONGOCXX_API pipeline {
     ///
     /// @param ordering
     ///   Document specifying the ordering by which the documents are sorted.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     pipeline& sort(bsoncxx::document::view_or_value ordering);
 
@@ -289,6 +369,10 @@ class MONGOCXX_API pipeline {
     ///
     /// @param field_expression
     ///   The expression to group by, as an object.  The expression can not evaluate to an object.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @note
     ///   This overload of sort_by_count() is intended to be used when the desired sort is over a
@@ -306,6 +390,10 @@ class MONGOCXX_API pipeline {
     ///   The expression to group by, as a string.  To specify a field path, prefix the field path
     ///   with a dollar sign (`$`).
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @note
     ///   This overload of sort_by_count() is intended to be used when the desired sort is over a
     ///   grouping of the value of a particular element in the input documents.
@@ -322,6 +410,10 @@ class MONGOCXX_API pipeline {
     /// @param unwind_args
     ///   The specification for the unwind operation.  The required field @path must be included.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @note
     ///   This overload of unwind() is intended to be used when additional options other than the
     ///   field name need to be specified.
@@ -337,6 +429,10 @@ class MONGOCXX_API pipeline {
     ///
     /// @param field_name
     ///   The name of the field to unwind.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @note
     ///   This overload of unwind() is intended to be used when no options other than the field name

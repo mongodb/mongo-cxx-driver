@@ -44,6 +44,10 @@ class MONGOCXX_API create_view {
     /// @param collation
     ///   The default collation for the view.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see
     ///   https://docs.mongodb.com/master/reference/collation/
     ///
@@ -65,6 +69,10 @@ class MONGOCXX_API create_view {
     ///
     /// @param pipeline
     ///   Pipeline that will be used to compute the view.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     create_view& pipeline(pipeline pipeline);
 

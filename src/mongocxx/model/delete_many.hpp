@@ -50,6 +50,10 @@ class MONGOCXX_API delete_many {
     /// @param collation
     ///   The new collation.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see
     ///   https://docs.mongodb.com/master/reference/collation/
     ///

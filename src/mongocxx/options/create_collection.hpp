@@ -38,6 +38,10 @@ class MONGOCXX_API create_collection {
     /// @param auto_index_id
     ///   Whether or not this collection will automatically generate an index on _id.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     create_collection& auto_index_id(bool auto_index_id);
 
     ///
@@ -55,6 +59,10 @@ class MONGOCXX_API create_collection {
     ///
     /// @param capped
     ///   Whether or not this collection will be capped.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/reference/glossary/#term-capped-collection
     ///
@@ -75,6 +83,10 @@ class MONGOCXX_API create_collection {
     ///
     /// @param collation
     ///   The default collation for the collection.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see
     ///   https://docs.mongodb.com/master/reference/collation/
@@ -102,6 +114,10 @@ class MONGOCXX_API create_collection {
     /// @param max_documents
     ///   Maximum number of documents allowed in the collection (if capped).
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     create_collection& max(int max_documents);
 
     ///
@@ -120,6 +136,10 @@ class MONGOCXX_API create_collection {
     ///
     /// @param no_padding
     ///   When true, disables power of 2 sizing for this collection.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     create_collection& no_padding(bool no_padding);
 
@@ -144,6 +164,10 @@ class MONGOCXX_API create_collection {
     /// @param max_size
     ///   Maximum size, in bytes, of this collection (if capped).
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     create_collection& size(int max_size);
 
     ///
@@ -162,6 +186,10 @@ class MONGOCXX_API create_collection {
     /// @param storage_engine_options
     ///   Configuration options specific to the storage engine.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     create_collection& storage_engine(bsoncxx::document::view_or_value storage_engine_opts);
 
     ///
@@ -177,6 +205,10 @@ class MONGOCXX_API create_collection {
     ///
     /// @param validation
     ///   Validation criteria for this collection.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/core/document-validation/
     ///

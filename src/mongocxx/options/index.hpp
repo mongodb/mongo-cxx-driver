@@ -87,6 +87,10 @@ class MONGOCXX_API index {
     /// @param background
     ///   Whether or not to build the index in the background.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/tutorial/build-indexes-in-the-background/
     ///
     index& background(bool background);
@@ -105,6 +109,10 @@ class MONGOCXX_API index {
     /// @param unique
     ///   Whether or not to create a unique index.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/core/index-unique/
     ///
     index& unique(bool unique);
@@ -122,6 +130,10 @@ class MONGOCXX_API index {
     /// @param name
     ///   The name of the index.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     index& name(bsoncxx::string::view_or_value name);
 
     ///
@@ -136,6 +148,10 @@ class MONGOCXX_API index {
     ///
     /// @param collation
     ///   The new collation.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see
     ///   https://docs.mongodb.com/master/reference/collation/
@@ -160,6 +176,10 @@ class MONGOCXX_API index {
     /// @param sparse
     ///   Whether or not to create a sparse index.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/core/index-sparse/
     ///
     index& sparse(bool sparse);
@@ -178,6 +198,10 @@ class MONGOCXX_API index {
     /// @param storage_options
     ///   The storage engine options for the index.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     index& storage_options(std::unique_ptr<base_storage_options> storage_options);
 
     ///
@@ -191,6 +215,10 @@ class MONGOCXX_API index {
     ///
     /// @param seconds
     ///   The amount of time, in seconds, to retain documents.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/core/index-ttl/
     ///
@@ -209,6 +237,10 @@ class MONGOCXX_API index {
     /// @param version
     ///   The index version.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     index& version(std::int32_t v);
 
     ///
@@ -224,6 +256,10 @@ class MONGOCXX_API index {
     ///
     /// @param weights
     ///   The weight document for text indexes.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     index& weights(bsoncxx::document::view weights);
 
@@ -241,6 +277,10 @@ class MONGOCXX_API index {
     /// @param default_language
     ///   The default language used when creating text indexes.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     index& default_language(bsoncxx::string::view_or_value default_language);
 
     ///
@@ -257,6 +297,10 @@ class MONGOCXX_API index {
     /// @param language_override
     ///   The name of the field that contains the override language for text indexes.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     index& language_override(bsoncxx::string::view_or_value language_override);
 
     ///
@@ -271,6 +315,10 @@ class MONGOCXX_API index {
     ///
     /// @param partial_filter_expression
     ///   The partial filter expression document.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     index& partial_filter_expression(bsoncxx::document::view partial_filter_expression);
 
@@ -287,6 +335,10 @@ class MONGOCXX_API index {
     /// @param twod_sphere_version
     ///   The 2dsphere index version number.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     index& twod_sphere_version(std::uint8_t twod_sphere_version);
 
     ///
@@ -301,6 +353,10 @@ class MONGOCXX_API index {
     ///
     /// @param twod_bits_precision
     ///   The precision of the stored geohash value.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     index& twod_bits_precision(std::uint8_t twod_bits_precision);
 
@@ -317,6 +373,10 @@ class MONGOCXX_API index {
     /// @param twod_location_min
     ///   The lower inclusive boundary.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     index& twod_location_min(double twod_location_min);
 
     ///
@@ -331,6 +391,10 @@ class MONGOCXX_API index {
     ///
     /// @param twod_location_max
     ///   The upper inclusive boundary.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     index& twod_location_max(double twod_location_max);
 
@@ -350,6 +414,10 @@ class MONGOCXX_API index {
     ///
     /// @param haystack_bucket_size
     ///   The geoHaystack bucket size.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     index& haystack_bucket_size(double haystack_bucket_size);
 

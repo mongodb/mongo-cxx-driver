@@ -38,6 +38,10 @@ class MONGOCXX_API find_one_and_update {
     /// @param collation
     ///   The new collation.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see
     ///   https://docs.mongodb.com/master/reference/collation/
     ///
@@ -64,6 +68,10 @@ class MONGOCXX_API find_one_and_update {
     /// @param bypass_document_validation
     ///   Whether or not to bypass document validation.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/core/document-validation/#bypass-document-validation
     ///
     find_one_and_update& bypass_document_validation(bool bypass_document_validation);
@@ -80,6 +88,10 @@ class MONGOCXX_API find_one_and_update {
     ///
     /// @param max_time
     ///   The max amount of time (in milliseconds).
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/reference/operator/meta/maxTimeMS
     ///
@@ -100,6 +112,10 @@ class MONGOCXX_API find_one_and_update {
     /// @param projection
     ///   The projection document.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/tutorial/project-fields-from-query-results/
     ///
     find_one_and_update& projection(bsoncxx::document::view_or_value projection);
@@ -119,6 +135,10 @@ class MONGOCXX_API find_one_and_update {
     ///
     /// @param return_document
     ///   Version of document to return, either original or updated.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     /// @see mongocxx::options::return_document
@@ -144,6 +164,10 @@ class MONGOCXX_API find_one_and_update {
     /// @param ordering
     ///   Document describing the order of the documents to be returned.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     ///
     find_one_and_update& sort(bsoncxx::document::view_or_value ordering);
@@ -164,6 +188,10 @@ class MONGOCXX_API find_one_and_update {
     ///
     /// @param upsert
     ///   Whether or not to perform an upsert.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/reference/command/findAndModify/
     ///

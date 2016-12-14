@@ -36,6 +36,10 @@ class MONGOCXX_API validation_criteria {
     /// @param rule
     ///   Document representing a validation rule.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     validation_criteria& rule(bsoncxx::document::view_or_value rule);
 
     ///
@@ -66,6 +70,10 @@ class MONGOCXX_API validation_criteria {
     /// @param level
     ///   An enumerated validation level.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     validation_criteria& level(validation_level level);
 
     ///
@@ -93,6 +101,10 @@ class MONGOCXX_API validation_criteria {
     ///
     /// @param action
     ///   An enumerated validation action.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     validation_criteria& action(validation_action action);
 

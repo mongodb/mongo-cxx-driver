@@ -35,6 +35,10 @@ class MONGOCXX_API delete_options {
     /// @param collation
     ///   The new collation.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @see
     ///   https://docs.mongodb.com/master/reference/collation/
     ///
@@ -56,6 +60,10 @@ class MONGOCXX_API delete_options {
     ///
     /// @param wc
     ///   The new write_concern.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/core/write-concern/
     ///

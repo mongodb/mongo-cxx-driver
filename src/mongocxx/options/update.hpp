@@ -41,6 +41,10 @@ class MONGOCXX_API update {
     /// @param bypass_document_validation
     ///   Whether or not to bypass document validation
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     update& bypass_document_validation(bool bypass_document_validation);
 
     ///
@@ -55,6 +59,10 @@ class MONGOCXX_API update {
     ///
     /// @param collation
     ///   The new collation.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see
     ///   https://docs.mongodb.com/master/reference/collation/
@@ -84,6 +92,10 @@ class MONGOCXX_API update {
     ///   The server-side default is @c false, which does not insert a new document if a match
     ///   is not found.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     update& upsert(bool upsert);
 
     ///
@@ -98,6 +110,10 @@ class MONGOCXX_API update {
     ///
     /// @param wc
     ///   The new write_concern
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
     ///
     /// @see https://docs.mongodb.com/master/core/write-concern/
     ///
