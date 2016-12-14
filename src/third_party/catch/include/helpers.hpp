@@ -15,6 +15,7 @@
 #pragma once
 
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 #define CHECK_OPTIONAL_ARGUMENT(OBJECT, NAME, VALUE) \
     SECTION("has NAME disengaged") {                 \
@@ -229,3 +230,5 @@
         libmongoc::read_prefs_set_max_staleness_seconds.create_instance();       \
     auto read_prefs_set_mode = libmongoc::read_prefs_set_mode.create_instance(); \
     auto read_prefs_set_tags = libmongoc::read_prefs_set_tags.create_instance();
+
+#include <mongocxx/config/private/postlude.hh>
