@@ -16,8 +16,8 @@
 
 #include <string>
 
-#include <mongocxx/options/ssl.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/options/ssl.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 

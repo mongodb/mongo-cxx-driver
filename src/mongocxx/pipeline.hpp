@@ -15,8 +15,8 @@
 #pragma once
 
 #include <cstdint>
-#include <string>
 #include <memory>
+#include <string>
 
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/view.hpp>
