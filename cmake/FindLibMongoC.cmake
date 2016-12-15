@@ -34,6 +34,17 @@ elseif (PKG_CONFIG_FOUND)
   # We don't reiterate the version information here because we assume that
   # pkg_check_modules has honored our request.
   find_package_handle_standard_args(LIBMONGOC DEFAULT_MSG LIBMONGOC_FOUND)
+  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND LIBMONGOC_LDFLAGS_OTHER)
+      # pkg_check_modules strips framework libraries and puts them in the
+      # LIBMONGOC_LDFLAGS_OTHER variable.  We need to append them
+      # back to LIBMONGOC_LIBRARIES, but need to change from
+      # "-framework;Security;-framework;CoreFoundation" to
+      # "-framework Security;-framework CoreFoundation"
+      string(REPLACE "-framework;" "-framework " LIBMONGOC_FRAMEWORKS "${LIBMONGOC_LDFLAGS_OTHER}")
+      list(APPEND LIBMONGOC_LIBRARIES ${LIBMONGOC_FRAMEWORKS})
+      # publish updated value back to the cache
+      set(LIBMONGOC_LIBRARIES ${LIBMONGOC_LIBRARIES} CACHE INTERNAL "")
+  endif()
 else()
     message(FATAL_ERROR "Don't know how to find libmongoc; please set LIBMONGOC_DIR to the prefix directory with which libbson was configured.")
 endif()
