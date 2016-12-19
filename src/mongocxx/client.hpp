@@ -27,6 +27,9 @@
 
 #include <mongocxx/config/prelude.hpp>
 
+///
+/// Top level namespace for the MongoDB C++ driver.
+///
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
