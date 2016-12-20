@@ -6,19 +6,23 @@ title = "Releasing the mongocxx driver"
   parent="contributing"
 +++
 
-## Releasing the mongocxx driver
+# Releasing the mongocxx driver
+
+**NOTE**: To follow these instructions, be very careful which branch you're
+working on:
+
+* Version bump/tag/post-bump commits go on the branch corresponding to the release.
+* Documentation updates go on the `master` branch.
+
+The instructions below will remind you about branches.
 
 ## Update fixVersion Status in Jira tickets
 
 * Ensure that all tickets under the version to be released are in
   'Closed' status on the C++ Driver [roadmap
   page](https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel)
-* Bulk change **Closed** tickets going into the release to include a `fixVersion`
-  corresponding to the release (create it if necessary):
-    * For pre-release candidates, **add** the `fixVersion` to any existing
-      scheduling `fixVersion`.
-    * For a final release, **replace** all existing `fixVersion` entries (rc or
-      scheduling) with the release version.
+* If not, bulk change **Open** tickets that will **NOT** be in the release to a new
+  version (create it if necessary):
 
 ## Audit Jira ticket titles and types for use in release notes
 
@@ -43,6 +47,7 @@ cd mongo-cxx-driver
 ```
 
 * Otherwise, pull the latest code down from the origin with `git pull`
+* Checkout the branch corresponding to the release
 * Update the following files (changing version numbers to remove the "-pre"
   for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
     * [`src/mongocxx/CMakeLists.txt`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/CMakeLists.txt#L30)
@@ -51,12 +56,14 @@ cd mongo-cxx-driver
 
 ```
 git commit -am "BUMP r3.0.1"
-git push origin master
+git push origin <release-branch>
 ```
 
 Pushing the BUMP commit to the origin will kick off builds in Evergreen,
 Travis CI and AppVeyor (which handles Windows builds). Wait for all three
 builds to finish and pass, re-running any timeout/spot failures.
+
+Meanwhile, test the branch locally.
 
 ## Tag the Release
 
@@ -86,16 +93,52 @@ git push origin r3.0.1
   [here](https://jira.mongodb.org/plugins/servlet/project-config/CXX/versions)
 * Click the cog next to the version you are about to release and select "Release"
 * Follow the dialogs/wizards and whatnot, setting the release date to the current date
+* If the next version does not exist, create it.  E.g.:
+    * If releasing 3.1.1, create 3.2.2.
+    * If releasing 3.4.0-rc0, create 3.4.0-rc1.
+    * If releasing 3.4.0, create 3.4.1 **and** 3.5.0-rc0.
+
+## Create the Next Version commit
+
+* Make sure you're on the branch corresponding to the release.
+* Update the following files (changing version numbers to bump to the next version number and add the "-pre" suffix for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
+    * [`src/mongocxx/CMakeLists.txt`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/CMakeLists.txt#L30)
+    * [`src/bsoncxx/CMakeLists.txt`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/CMakeLists.txt#L22)
+* Commit with message "post rx.y.z[-rcq]", e.g.:
+
+```
+git commit -am "post r3.0.1"
+git push origin <release-branch>
+```
+
+## Possibly update the releases/stable branch
+
+We use the `releases/stable` branch to track the best 'stable' release for
+users who install from the git repository.
+
+After any stable release (i.e. not an alpha, beta, RC, etc. release), check
+out the `releases/stable` branch, reset it to the new release tag, and
+force push it to the repo. E.g.:
+
+```
+git checkout releases/stable
+git reset --hard r3.0.1
+git push -f origin releases/stable
+```
 
 ## Generate and Publish Documentation
 
 Documentation generation must be run after the release tag has been made
 and pushed.
 
+Documentation updates always go on the **master** branch.
+
+* Checkout the master branch.
+
 * Edit `etc/apidocmenu.md` and add the released version in the 'mongocxx'
-  column following the established pattern.  If this is a major release,
-  revise the entire document as needed.  If revised substantially, also
-  edit `docs/content/index.md` to match.
+  column following the established pattern.  If this is a major release
+  (x.y.0), revise the entire document as needed.
+    * If revised substantially, also edit `docs/content/index.md` and `README.md` to match.
 
 * Edit `etc/generate-all-apidocs.pl` and add the new release version to
   the `@DOC_TAGS` array, following the established pattern.
@@ -134,44 +177,18 @@ and pushed.
       major version bump has occurred, revise the symlink structure as
       needed.  Make sure 'current' always points to a *symlink* tracking
       the latest release branch.
-    * Commit and push the symlink change.
-
-`git commit -am "Update symlink for r3.0.3"`
+    * Commit and push the symlink change:  `git commit -am "Update symlink for r3.0.3"`
 
 * Wait a minute and verify the docs site has been updated.
 
 * Return to the original branch.
 
-## Create the Next Version commit
-
-* Update the following files (changing version numbers to bump to the next version number and add the "-pre" suffix for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
-    * [`src/mongocxx/CMakeLists.txt`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/CMakeLists.txt#L30)
-    * [`src/bsoncxx/CMakeLists.txt`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/CMakeLists.txt#L22)
-* Commit with message "post rx.y.z[-rcq]", e.g.:
-
-```
-git commit -am "post r3.0.1"
-git push origin master
-```
-
-## Possibly update the releases/stable branch
-
-We use the `releases/stable` branch to track the best 'stable' release for
-users who install from the git repository.
-
-After any stable release (i.e. not an alpha, beta, RC, etc. release), check
-out the `releases/stable` branch, reset it to the new release tag, and
-force push it to the repo. E.g.:
-
-```
-git checkout releases/stable
-git reset --hard r3.0.1
-git push -f origin releases/stable
-```
-
 ## File a DOCS ticket
 
-If there is any change to the driver-server compatibility matrix or language compatibility matrix file a [DOCS ticket](https://jira.mongodb.org/browse/DOCS/).
+If there is any change to the driver-server compatibility matrix or
+language compatibility matrix file a [DOCS
+ticket](https://jira.mongodb.org/browse/DOCS/).  This generally will only
+apply to an x.y.0 release.
 
 ## Email Google Groups
 
