@@ -205,7 +205,11 @@ class MONGOCXX_API index {
     index& storage_options(std::unique_ptr<base_storage_options> storage_options);
 
     ///
-    /// @todo document this method
+    /// Optionally used only in MongoDB 3.0.0 and higher. Specifies the WiredTiger-specific storage
+    /// engine options for the index.
+    ///
+    /// @param storage_options
+    ///   The storage engine options for the index.
     ///
     index& storage_options(std::unique_ptr<wiredtiger_storage_options> storage_options);
 

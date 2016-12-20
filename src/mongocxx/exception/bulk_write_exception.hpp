@@ -23,7 +23,9 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
-/// @todo document this class
+/// Class representing an exception during a bulk write operation.
+///
+/// @see mongocxx::operation_exception
 ///
 class MONGOCXX_API bulk_write_exception : public operation_exception {
    public:

@@ -35,9 +35,7 @@ class MONGOCXX_API bulk_write {
    public:
     using id_map = std::map<std::size_t, bsoncxx::document::element>;
 
-    ///
-    /// @todo documment this method
-    ///
+    // This constructor is public for testing purposes only
     explicit bulk_write(bsoncxx::document::value raw_response);
 
     ///

@@ -20,14 +20,25 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
-/// @todo document this enumeration and the each value
+/// Enum representing the the types of write operations that can be performed.
 ///
 enum class write_type {
+    /// Inserting a single document into a collection.
     k_insert_one,
+
+    /// Deleting a single document from a collection.
     k_delete_one,
+
+    /// Delete one or more documents from a collection.
     k_delete_many,
+
+    /// Update a single document in a collection.
     k_update_one,
+
+    /// Update one or more documents in a collection.
     k_update_many,
+
+    /// Replace a single document in a collection with a new one.
     k_replace_one,
 };
 

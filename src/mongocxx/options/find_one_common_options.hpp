@@ -21,10 +21,13 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 ///
-/// @todo documemt this enum
+/// Enum representing whether to return the old or new version of a document modified by a
+/// `findOneAndModify` operation.
 ///
 enum class return_document {
+    /// Return the version of the document before the modification takes place.
     k_before,
+    /// Return the version of the document after the modification takes place.
     k_after,
 };
 

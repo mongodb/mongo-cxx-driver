@@ -25,7 +25,10 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
-/// @todo document this class
+/// Class representing an exception received from a MongoDB server.  It includes the server-provided
+/// error code, if one was available.
+///
+/// @see mongocxx::exception
 ///
 class MONGOCXX_API operation_exception : public exception {
    public:

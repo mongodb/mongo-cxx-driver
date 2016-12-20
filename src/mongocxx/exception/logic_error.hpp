@@ -22,7 +22,9 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
-/// @todo document this class
+/// Class representing an exception caused by using the mongocxx API improperly.
+///
+/// @see mongocxx::exception
 ///
 class MONGOCXX_API logic_error : public exception {
    public:

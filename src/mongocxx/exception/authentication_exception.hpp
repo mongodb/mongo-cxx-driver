@@ -23,7 +23,9 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
-/// @todo document this class
+/// Class representing an exception during authentication.
+///
+/// @see mongocxx::operation_exception
 ///
 class MONGOCXX_API authentication_exception : public operation_exception {
    public:

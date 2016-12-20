@@ -23,27 +23,56 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
 ///
-/// @todo document this enum - including the values
+/// Enum representing the various error types that can occur while operating on BSON values.
 ///
 enum class error_code : std::int32_t {
+    /// A new key was appended while building a subarray.
     k_cannot_append_key_in_sub_array = 1,
+
+    /// A subarray was closed while building a subdocument.
     k_cannot_close_array_in_sub_document,
+
+    /// A subdocument was closed while building a subarray.
     k_cannot_close_document_in_sub_array,
+
+    /// An array operation was performed while building a document.
     k_cannot_perform_array_operation_on_document,
+
+    /// A document operation was performed while building an array.
     k_cannot_perform_document_operation_on_array,
 #define BSONCXX_ENUM(name, value) k_need_element_type_k_##name,
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
+    /// No key was provided when one was needed.
     k_need_key,
+
+    /// An array was closed while no array was open.
     k_no_array_to_close,
+
+    /// A document was closed while no document was open.
     k_no_document_to_close,
+
+    // Attempted to view or extract a document when a key was still awaiting a matching value.
     k_unmatched_key_in_builder,
+
+    /// An empty element was accessed.
     k_unset_element,
+
+    /// A JSON document failed to parse.
     k_json_parse_failure,
+
+    /// An Object ID string failed to parse.
     k_invalid_oid,
+
+    // This type is unused and deprecated.
     k_failed_converting_bson_to_json,
+
+    /// A Decimal128 string failed to parse.
     k_invalid_decimal128,
+
+    /// BSON data could not be processed, but no specific reason was available.
     k_internal_error,
+
     // Add new constant string message to error_code.cpp as well!
 };
 

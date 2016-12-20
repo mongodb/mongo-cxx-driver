@@ -87,12 +87,13 @@ class MONGOCXX_API hint {
     bsoncxx::document::value to_document() const;
 
     ///
-    /// @todo document this method
+    /// Returns a types::value representing this hint.
+    ///
+    /// @return Hint, as a types::value. The caller must ensure that the returned object not outlive
+    /// the hint object that it was created from.
     ///
     MONGOCXX_INLINE operator bsoncxx::types::value() const;
 
-    ///
-    /// @todo document this method
     ///
     /// @deprecated
     ///   This method has been deprecated in favor of operator bsoncxx::types::value().

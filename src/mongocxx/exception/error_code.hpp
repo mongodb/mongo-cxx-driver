@@ -22,19 +22,39 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
-/// @todo document this enum and the values
+/// Enum representing the various error types that can occur during driver usage.
 ///
 enum class error_code : std::int32_t {
+    /// More than one mongocxx::instance has been created.
     k_instance_already_exists = 1,
+
+    /// A default-constructed or moved-from mongocxx::client object has been used.
     k_invalid_client_object,
+
+    /// A default-constructed or moved-from mongocxx::collection object has been used.
     k_invalid_collection_object,
+
+    /// A default-constructed or moved-from mongocxx::database object has been used.
     k_invalid_database_object,
+
+    /// An invalid or out-of-bounds parameter was provided.
     k_invalid_parameter,
+
+    /// An SSL operation was used without SSL support being built.
     k_ssl_not_supported,
+
+    /// An unknown read concern level was set.
     k_unknown_read_concern,
+
+    /// An unknown write concern level was set.
     k_unknown_write_concern,
+
+    /// The server returned a malformed response.
     k_server_response_malformed,
+
+    /// An invalid MongoDB URI was provided.
     k_invalid_uri,
+
     // Add new constant string message to error_code.cpp as well!
 };
 
