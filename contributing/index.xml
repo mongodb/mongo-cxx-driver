@@ -567,6 +567,20 @@ the latest release branch.&lt;/li&gt;
 git push origin master
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;h2 id=&#34;possibly-update-the-releases-stable-branch&#34;&gt;Possibly update the releases/stable branch&lt;/h2&gt;
+
+&lt;p&gt;We use the &lt;code&gt;releases/stable&lt;/code&gt; branch to track the best &amp;lsquo;stable&amp;rsquo; release for
+users who install from the git repository.&lt;/p&gt;
+
+&lt;p&gt;After any stable release (i.e. not an alpha, beta, RC, etc. release), check
+out the &lt;code&gt;releases/stable&lt;/code&gt; branch, reset it to the new release tag, and
+force push it to the repo. E.g.:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout releases/stable
+git reset --hard r3.0.1
+git push -f origin releases/stable
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;h2 id=&#34;file-a-docs-ticket&#34;&gt;File a DOCS ticket&lt;/h2&gt;
 
 &lt;p&gt;If there is any change to the driver-server compatibility matrix or language compatibility matrix file a &lt;a href=&#34;https://jira.mongodb.org/browse/DOCS/&#34;&gt;DOCS ticket&lt;/a&gt;.&lt;/p&gt;

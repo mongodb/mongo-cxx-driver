@@ -1397,6 +1397,7 @@
     </div>
   </div>
   
+
 </aside>
 
 
@@ -1618,6 +1619,20 @@ the latest release branch.</li>
 git push origin master
 </code></pre>
 
+<h2 id="possibly-update-the-releases-stable-branch">Possibly update the releases/stable branch</h2>
+
+<p>We use the <code>releases/stable</code> branch to track the best &lsquo;stable&rsquo; release for
+users who install from the git repository.</p>
+
+<p>After any stable release (i.e. not an alpha, beta, RC, etc. release), check
+out the <code>releases/stable</code> branch, reset it to the new release tag, and
+force push it to the repo. E.g.:</p>
+
+<pre><code>git checkout releases/stable
+git reset --hard r3.0.1
+git push -f origin releases/stable
+</code></pre>
+
 <h2 id="file-a-docs-ticket">File a DOCS ticket</h2>
 
 <p>If there is any change to the driver-server compatibility matrix or language compatibility matrix file a <a href="https://jira.mongodb.org/browse/DOCS/">DOCS ticket</a>.</p>
@@ -1732,6 +1747,7 @@ The C++ Driver Team</p>
 <li><a href="#release-the-version-in-jira">Release the Version in Jira</a></li>
 <li><a href="#generate-and-publish-documentation">Generate and Publish Documentation</a></li>
 <li><a href="#create-the-next-version-commit">Create the Next Version commit</a></li>
+<li><a href="#possibly-update-the-releases-stable-branch">Possibly update the releases/stable branch</a></li>
 <li><a href="#file-a-docs-ticket">File a DOCS ticket</a></li>
 <li><a href="#email-google-groups">Email Google Groups</a>
 <ul>
