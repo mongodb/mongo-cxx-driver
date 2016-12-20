@@ -2,7 +2,7 @@ var searchData=
 [
   ['background',['background',['../classmongo_1_1IndexSpec.html#a60dca3977299a95ea8aeb82fe428a446',1,'mongo::IndexSpec']]],
   ['backgroundjob',['BackgroundJob',['../classmongo_1_1BackgroundJob.html#ab7dc04f254a80eddf8d0fe3f2810a125',1,'mongo::BackgroundJob']]],
-  ['batchname',['batchName',['../classmongo_1_1DeleteWriteOperation.html#aa18b8b68455730a6977caa95563f8e12',1,'mongo::DeleteWriteOperation::batchName()'],['../classmongo_1_1InsertWriteOperation.html#aed4549446ed13372fcb2b2782ea7ec25',1,'mongo::InsertWriteOperation::batchName()'],['../classmongo_1_1UpdateWriteOperation.html#a682c4093190bad67a214fcb206b333c6',1,'mongo::UpdateWriteOperation::batchName()'],['../classmongo_1_1WriteOperation.html#a8746b2aa28d7f992c618730a00288fa6',1,'mongo::WriteOperation::batchName()']]],
+  ['batchname',['batchName',['../classmongo_1_1DeleteWriteOperation.html#aa18b8b68455730a6977caa95563f8e12',1,'mongo::DeleteWriteOperation::batchName()'],['../classmongo_1_1InsertWriteOperation.html#aed4549446ed13372fcb2b2782ea7ec25',1,'mongo::InsertWriteOperation::batchName()'],['../classmongo_1_1UpdateWriteOperation.html#a682c4093190bad67a214fcb206b333c6',1,'mongo::UpdateWriteOperation::batchName()'],['../classmongo_1_1WriteOperation.html#a8e676723bb8d05a4438a1fde7f28304d',1,'mongo::WriteOperation::batchName()']]],
   ['begin',['begin',['../classmongo_1_1BSONObj.html#a6e1ed30e5436856b3bf7ea0884c90a53',1,'mongo::BSONObj']]],
   ['binaryequal',['binaryEqual',['../classmongo_1_1BSONObj.html#a13b58dc6eb4da330058c611d7d91d93a',1,'mongo::BSONObj']]],
   ['bindata',['binData',['../classmongo_1_1BSONElement.html#a8f4902eacf15f5069f4bb752bfd0aef4',1,'mongo::BSONElement']]],

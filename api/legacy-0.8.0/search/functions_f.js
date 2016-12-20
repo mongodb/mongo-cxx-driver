@@ -6,7 +6,7 @@ var searchData=
   ['objsleftinbatch',['objsLeftInBatch',['../classmongo_1_1DBClientCursor.html#ab3f03dfc0e7ce3c7f127cd25c03f088a',1,'mongo::DBClientCursor']]],
   ['offset',['offset',['../classmongo_1_1BufReader.html#a3be683deb00147605c7b12c11b2f4ecf',1,'mongo::BufReader']]],
   ['oid',['OID',['../classmongo_1_1OID.html#abd18f81de9db0ef0921654c3b6867d4c',1,'mongo::OID::OID(const std::string &amp;s)'],['../classmongo_1_1OID.html#aedb3756888dece9bf20d9477d25228a7',1,'mongo::OID::OID(const unsigned char(&amp;arr)[kOIDSize])']]],
-  ['ok',['ok',['../classmongo_1_1AScopedConnection.html#a8ba844279bba07b31da8d17f9a0fce18',1,'mongo::AScopedConnection::ok()'],['../classmongo_1_1ScopedDbConnection.html#a87687ae5cd5ba63052d568b9210056f7',1,'mongo::ScopedDbConnection::ok()'],['../classmongo_1_1BSONElement.html#a7b1b896e4d616fad45eb4dc74dff37d4',1,'mongo::BSONElement::ok()']]],
+  ['ok',['ok',['../classmongo_1_1AScopedConnection.html#aa7f6377f76c1498284b94a674edc6580',1,'mongo::AScopedConnection::ok()'],['../classmongo_1_1ScopedDbConnection.html#a87687ae5cd5ba63052d568b9210056f7',1,'mongo::ScopedDbConnection::ok()'],['../classmongo_1_1BSONElement.html#a7b1b896e4d616fad45eb4dc74dff37d4',1,'mongo::BSONElement::ok()']]],
   ['okforstorage',['okForStorage',['../classmongo_1_1BSONObj.html#aebe2fc1ea5c6e5544673e733ca9e2790',1,'mongo::BSONObj']]],
   ['okforstorageasroot',['okForStorageAsRoot',['../classmongo_1_1BSONObj.html#a377faa94827476be1f64bb9775bf3831',1,'mongo::BSONObj']]],
   ['operator_21_3d',['operator!=',['../classmongo_1_1BSONElement.html#ac06d35583d07808bcb5104d4f6fae7b6',1,'mongo::BSONElement']]],

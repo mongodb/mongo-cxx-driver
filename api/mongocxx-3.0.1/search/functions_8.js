@@ -9,5 +9,5 @@ var searchData=
   ['inserted_5fid',['inserted_id',['../classmongocxx_1_1result_1_1insert__one.html#a303618f5c790c39e7ab6cdc071c228a4',1,'mongocxx::result::insert_one']]],
   ['inserted_5fids',['inserted_ids',['../classmongocxx_1_1result_1_1insert__many.html#a51f0a39483a96857f2f895161fa8eb92',1,'mongocxx::result::insert_many']]],
   ['instance',['instance',['../classmongocxx_1_1instance.html#a5e13ff4c229a95828127bfe5b1072525',1,'mongocxx::instance::instance()'],['../classmongocxx_1_1instance.html#a785015ce94487d486237d97da3b5dfa6',1,'mongocxx::instance::instance(std::unique_ptr&lt; logger &gt; logger)'],['../classmongocxx_1_1instance.html#a88ef2933c835e6f1f4f86c8b45d927dd',1,'mongocxx::instance::instance(instance &amp;&amp;) noexcept']]],
-  ['is_5fowning',['is_owning',['../classbsoncxx_1_1view__or__value.html#abaa2e9186dc0456ad027257fc41e6a09',1,'bsoncxx::view_or_value']]]
+  ['is_5fowning',['is_owning',['../classbsoncxx_1_1view__or__value.html#acf243e3450ef6696193994c9b8f817ef',1,'bsoncxx::view_or_value']]]
 ];
