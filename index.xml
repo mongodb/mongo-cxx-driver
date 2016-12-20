@@ -1199,10 +1199,8 @@ Update 1 or later&lt;/li&gt;
 &lt;p&gt;The mongocxx driver builds on top of the MongoDB C driver.&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;For mongocxx-3.0.x, we recommend the latest stable version of libmongoc
-(currently version 1.5.0 at the time this page was written).&lt;/li&gt;
-&lt;li&gt;For mongocxx-3.1.0 release candidates, libmongoc 1.5.0 or later is
-required.&lt;/li&gt;
+&lt;li&gt;For mongocxx-3.1.x, libmongoc 1.5.0 or later is required.&lt;/li&gt;
+&lt;li&gt;For mongocxx-3.0.x, we recommend the last 1.4.x version of libmongoc&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Unless you know that your package manager offers a high-enough version, you
@@ -1264,11 +1262,11 @@ cd mongo-cxx-driver/build
 &lt;p&gt;If you prefer to download a tarball, look on the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases&#34;&gt;mongocxx
 releases&lt;/a&gt; page for a
 link to the release tarball for the version you wish you install.  For
-example, to download version 3.1.0:&lt;/p&gt;
+example, to download version 3.1.1:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.1.0.tar.gz
-tar -xzf r3.1.0.tar.gz
-cd mongo-cxx-driver-r3.1.0/build
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.1.1.tar.gz
+tar -xzf r3.1.1.tar.gz
+cd mongo-cxx-driver-r3.1.1/build
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Make sure you change to the &lt;code&gt;build&lt;/code&gt; directory of whatever source tree you
@@ -1794,31 +1792,31 @@ Currently, no drivers guarantee API or ABI stability.&lt;/p&gt;
 
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;mongocxx 3.1.x&lt;/td&gt;
+&lt;td&gt;(repo master branch)&lt;/td&gt;
 &lt;td&gt;Unstable&lt;/td&gt;
 &lt;td&gt;Active development&lt;/td&gt;
-&lt;td&gt;Unstable C++ driver development, requires C++11&lt;/td&gt;
+&lt;td&gt;New feature development&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;mongocxx 3.1.x&lt;/td&gt;
+&lt;td&gt;Stable&lt;/td&gt;
+&lt;td&gt;Bug fixes only&lt;/td&gt;
+&lt;td&gt;Current stable C++ driver release, requires C++11&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;mongocxx 3.0.x&lt;/td&gt;
 &lt;td&gt;Stable&lt;/td&gt;
-&lt;td&gt;Bug fixes only&lt;/td&gt;
-&lt;td&gt;Primary stable C++ driver release, requires C++11&lt;/td&gt;
+&lt;td&gt;Critical fixes only&lt;/td&gt;
+&lt;td&gt;Previous stable C++ driver release, requires C++11&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;legacy   (all)&lt;/td&gt;
 &lt;td&gt;Stable&lt;/td&gt;
 &lt;td&gt;Critical fixes only&lt;/td&gt;
-&lt;td&gt;Former stable C++ driver release&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;26compat (all)&lt;/td&gt;
-&lt;td&gt;Deprecated&lt;/td&gt;
-&lt;td&gt;Critical fixes only&lt;/td&gt;
-&lt;td&gt;Drop in replacement for users of existing 2.6 era C++ driver&lt;/td&gt;
+&lt;td&gt;Legacy API stable C++ driver release, no longer recommended&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -1826,7 +1824,7 @@ Currently, no drivers guarantee API or ABI stability.&lt;/p&gt;
 &lt;h2 id=&#34;mongodb-compatibility&#34;&gt;MongoDB compatibility&lt;/h2&gt;
 
 &lt;p&gt;The following compatibility table specifies the driver version(s)
-recommended for different versions of MongoDB.  The 3.0.x series
+recommended for different versions of MongoDB.  The mongocxx series
 is recommended for all new development.&lt;/p&gt;
 
 &lt;table&gt;
@@ -1874,15 +1872,6 @@ is recommended for all new development.&lt;/p&gt;
 &lt;td&gt;✓&lt;/td&gt;
 &lt;td&gt;✓&lt;/td&gt;
 &lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;26compat (all)&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;✓&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
