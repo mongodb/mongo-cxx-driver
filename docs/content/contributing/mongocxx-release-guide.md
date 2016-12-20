@@ -154,6 +154,21 @@ git commit -am "post r3.0.1"
 git push origin master
 ```
 
+## Possibly update the releases/stable branch
+
+We use the `releases/stable` branch to track the best 'stable' release for
+users who install from the git repository.
+
+After any stable release (i.e. not an alpha, beta, RC, etc. release), check
+out the `releases/stable` branch, reset it to the new release tag, and
+force push it to the repo. E.g.:
+
+```
+git checkout releases/stable
+git reset --hard r3.0.1
+git push -f origin releases/stable
+```
+
 ## File a DOCS ticket
 
 If there is any change to the driver-server compatibility matrix or language compatibility matrix file a [DOCS ticket](https://jira.mongodb.org/browse/DOCS/).
