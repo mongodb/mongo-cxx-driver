@@ -1438,7 +1438,17 @@
 
 
 
-<h2 id="releasing-the-mongocxx-driver">Releasing the mongocxx driver</h2>
+<h1 id="releasing-the-mongocxx-driver">Releasing the mongocxx driver</h1>
+
+<p><strong>NOTE</strong>: To follow these instructions, be very careful which branch you&rsquo;re
+working on:</p>
+
+<ul>
+<li>Version bump/tag/post-bump commits go on the branch corresponding to the release.</li>
+<li>Documentation updates go on the <code>master</code> branch.</li>
+</ul>
+
+<p>The instructions below will remind you about branches.</p>
 
 <h2 id="update-fixversion-status-in-jira-tickets">Update fixVersion Status in Jira tickets</h2>
 
@@ -1446,15 +1456,8 @@
 <li>Ensure that all tickets under the version to be released are in
 &lsquo;Closed&rsquo; status on the C++ Driver <a href="https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel">roadmap
 page</a></li>
-<li>Bulk change <strong>Closed</strong> tickets going into the release to include a <code>fixVersion</code>
-corresponding to the release (create it if necessary):
-
-<ul>
-<li>For pre-release candidates, <strong>add</strong> the <code>fixVersion</code> to any existing
-scheduling <code>fixVersion</code>.</li>
-<li>For a final release, <strong>replace</strong> all existing <code>fixVersion</code> entries (rc or
-scheduling) with the release version.</li>
-</ul></li>
+<li>If not, bulk change <strong>Open</strong> tickets that will <strong>NOT</strong> be in the release to a new
+version (create it if necessary):</li>
 </ul>
 
 <h2 id="audit-jira-ticket-titles-and-types-for-use-in-release-notes">Audit Jira ticket titles and types for use in release notes</h2>
@@ -1484,6 +1487,7 @@ cd mongo-cxx-driver
 
 <ul>
 <li>Otherwise, pull the latest code down from the origin with <code>git pull</code></li>
+<li>Checkout the branch corresponding to the release</li>
 <li>Update the following files (changing version numbers to remove the &ldquo;-pre&rdquo;
 for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
 
@@ -1495,12 +1499,14 @@ for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
 </ul>
 
 <pre><code>git commit -am &quot;BUMP r3.0.1&quot;
-git push origin master
+git push origin &lt;release-branch&gt;
 </code></pre>
 
 <p>Pushing the BUMP commit to the origin will kick off builds in Evergreen,
 Travis CI and AppVeyor (which handles Windows builds). Wait for all three
 builds to finish and pass, re-running any timeout/spot failures.</p>
+
+<p>Meanwhile, test the branch locally.</p>
 
 <h2 id="tag-the-release">Tag the Release</h2>
 
@@ -1537,18 +1543,63 @@ other information that doesn&rsquo;t need to be in the release notes.</li>
 <a href="https://jira.mongodb.org/plugins/servlet/project-config/CXX/versions">here</a></li>
 <li>Click the cog next to the version you are about to release and select &ldquo;Release&rdquo;</li>
 <li>Follow the dialogs/wizards and whatnot, setting the release date to the current date</li>
+<li>If the next version does not exist, create it.  E.g.:
+
+<ul>
+<li>If releasing 3.1.1, create 3.2.2.</li>
+<li>If releasing 3.4.0-rc0, create 3.4.0-rc1.</li>
+<li>If releasing 3.4.0, create 3.4.1 <strong>and</strong> 3.5.0-rc0.</li>
+</ul></li>
 </ul>
+
+<h2 id="create-the-next-version-commit">Create the Next Version commit</h2>
+
+<ul>
+<li>Make sure you&rsquo;re on the branch corresponding to the release.</li>
+<li>Update the following files (changing version numbers to bump to the next version number and add the &ldquo;-pre&rdquo; suffix for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
+
+<ul>
+<li><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/CMakeLists.txt#L30"><code>src/mongocxx/CMakeLists.txt</code></a></li>
+<li><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/CMakeLists.txt#L22"><code>src/bsoncxx/CMakeLists.txt</code></a></li>
+</ul></li>
+<li>Commit with message &ldquo;post rx.y.z[-rcq]&ldquo;, e.g.:</li>
+</ul>
+
+<pre><code>git commit -am &quot;post r3.0.1&quot;
+git push origin &lt;release-branch&gt;
+</code></pre>
+
+<h2 id="possibly-update-the-releases-stable-branch">Possibly update the releases/stable branch</h2>
+
+<p>We use the <code>releases/stable</code> branch to track the best &lsquo;stable&rsquo; release for
+users who install from the git repository.</p>
+
+<p>After any stable release (i.e. not an alpha, beta, RC, etc. release), check
+out the <code>releases/stable</code> branch, reset it to the new release tag, and
+force push it to the repo. E.g.:</p>
+
+<pre><code>git checkout releases/stable
+git reset --hard r3.0.1
+git push -f origin releases/stable
+</code></pre>
 
 <h2 id="generate-and-publish-documentation">Generate and Publish Documentation</h2>
 
 <p>Documentation generation must be run after the release tag has been made
 and pushed.</p>
 
+<p>Documentation updates always go on the <strong>master</strong> branch.</p>
+
 <ul>
+<li><p>Checkout the master branch.</p></li>
+
 <li><p>Edit <code>etc/apidocmenu.md</code> and add the released version in the &lsquo;mongocxx&rsquo;
-column following the established pattern.  If this is a major release,
-revise the entire document as needed.  If revised substantially, also
-edit <code>docs/content/index.md</code> to match.</p></li>
+column following the established pattern.  If this is a major release
+(x.y.0), revise the entire document as needed.</p>
+
+<ul>
+<li>If revised substantially, also edit <code>docs/content/index.md</code> and <code>README.md</code> to match.</li>
+</ul></li>
 
 <li><p>Edit <code>etc/generate-all-apidocs.pl</code> and add the new release version to
 the <code>@DOC_TAGS</code> array, following the established pattern.</p></li>
@@ -1591,51 +1642,20 @@ api/mongocxx-v3 symlink to point to the newly released version.  If a
 major version bump has occurred, revise the symlink structure as
 needed.  Make sure &lsquo;current&rsquo; always points to a <em>symlink</em> tracking
 the latest release branch.</li>
-<li>Commit and push the symlink change.</li>
+<li>Commit and push the symlink change:  <code>git commit -am &quot;Update symlink for r3.0.3&quot;</code></li>
 </ul></li>
-</ul>
 
-<p><code>git commit -am &quot;Update symlink for r3.0.3&quot;</code></p>
-
-<ul>
 <li><p>Wait a minute and verify the docs site has been updated.</p></li>
 
 <li><p>Return to the original branch.</p></li>
 </ul>
 
-<h2 id="create-the-next-version-commit">Create the Next Version commit</h2>
-
-<ul>
-<li>Update the following files (changing version numbers to bump to the next version number and add the &ldquo;-pre&rdquo; suffix for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
-
-<ul>
-<li><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/CMakeLists.txt#L30"><code>src/mongocxx/CMakeLists.txt</code></a></li>
-<li><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/CMakeLists.txt#L22"><code>src/bsoncxx/CMakeLists.txt</code></a></li>
-</ul></li>
-<li>Commit with message &ldquo;post rx.y.z[-rcq]&ldquo;, e.g.:</li>
-</ul>
-
-<pre><code>git commit -am &quot;post r3.0.1&quot;
-git push origin master
-</code></pre>
-
-<h2 id="possibly-update-the-releases-stable-branch">Possibly update the releases/stable branch</h2>
-
-<p>We use the <code>releases/stable</code> branch to track the best &lsquo;stable&rsquo; release for
-users who install from the git repository.</p>
-
-<p>After any stable release (i.e. not an alpha, beta, RC, etc. release), check
-out the <code>releases/stable</code> branch, reset it to the new release tag, and
-force push it to the repo. E.g.:</p>
-
-<pre><code>git checkout releases/stable
-git reset --hard r3.0.1
-git push -f origin releases/stable
-</code></pre>
-
 <h2 id="file-a-docs-ticket">File a DOCS ticket</h2>
 
-<p>If there is any change to the driver-server compatibility matrix or language compatibility matrix file a <a href="https://jira.mongodb.org/browse/DOCS/">DOCS ticket</a>.</p>
+<p>If there is any change to the driver-server compatibility matrix or
+language compatibility matrix file a <a href="https://jira.mongodb.org/browse/DOCS/">DOCS
+ticket</a>.  This generally will only
+apply to an x.y.0 release.</p>
 
 <h2 id="email-google-groups">Email Google Groups</h2>
 
@@ -1736,18 +1756,17 @@ The C++ Driver Team</p>
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
 <ul>
-<li>
+<li><a href="#releasing-the-mongocxx-driver">Releasing the mongocxx driver</a>
 <ul>
-<li><a href="#releasing-the-mongocxx-driver">Releasing the mongocxx driver</a></li>
 <li><a href="#update-fixversion-status-in-jira-tickets">Update fixVersion Status in Jira tickets</a></li>
 <li><a href="#audit-jira-ticket-titles-and-types-for-use-in-release-notes">Audit Jira ticket titles and types for use in release notes</a></li>
 <li><a href="#create-a-bump-commit">Create a BUMP commit</a></li>
 <li><a href="#tag-the-release">Tag the Release</a></li>
 <li><a href="#draft-publish-github-release-notes">Draft &amp; Publish GitHub Release Notes</a></li>
 <li><a href="#release-the-version-in-jira">Release the Version in Jira</a></li>
-<li><a href="#generate-and-publish-documentation">Generate and Publish Documentation</a></li>
 <li><a href="#create-the-next-version-commit">Create the Next Version commit</a></li>
 <li><a href="#possibly-update-the-releases-stable-branch">Possibly update the releases/stable branch</a></li>
+<li><a href="#generate-and-publish-documentation">Generate and Publish Documentation</a></li>
 <li><a href="#file-a-docs-ticket">File a DOCS ticket</a></li>
 <li><a href="#email-google-groups">Email Google Groups</a>
 <ul>

@@ -2145,7 +2145,17 @@ git push origin legacy
       <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/mongocxx-release-guide/</guid>
       <description>
 
-&lt;h2 id=&#34;releasing-the-mongocxx-driver&#34;&gt;Releasing the mongocxx driver&lt;/h2&gt;
+&lt;h1 id=&#34;releasing-the-mongocxx-driver&#34;&gt;Releasing the mongocxx driver&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;: To follow these instructions, be very careful which branch you&amp;rsquo;re
+working on:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Version bump/tag/post-bump commits go on the branch corresponding to the release.&lt;/li&gt;
+&lt;li&gt;Documentation updates go on the &lt;code&gt;master&lt;/code&gt; branch.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The instructions below will remind you about branches.&lt;/p&gt;
 
 &lt;h2 id=&#34;update-fixversion-status-in-jira-tickets&#34;&gt;Update fixVersion Status in Jira tickets&lt;/h2&gt;
 
@@ -2153,15 +2163,8 @@ git push origin legacy
 &lt;li&gt;Ensure that all tickets under the version to be released are in
 &amp;lsquo;Closed&amp;rsquo; status on the C++ Driver &lt;a href=&#34;https://jira.mongodb.org/browse/CXX/?selectedTab=com.atlassian.jira.jira-projects-plugin:roadmap-panel&#34;&gt;roadmap
 page&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Bulk change &lt;strong&gt;Closed&lt;/strong&gt; tickets going into the release to include a &lt;code&gt;fixVersion&lt;/code&gt;
-corresponding to the release (create it if necessary):
-
-&lt;ul&gt;
-&lt;li&gt;For pre-release candidates, &lt;strong&gt;add&lt;/strong&gt; the &lt;code&gt;fixVersion&lt;/code&gt; to any existing
-scheduling &lt;code&gt;fixVersion&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;For a final release, &lt;strong&gt;replace&lt;/strong&gt; all existing &lt;code&gt;fixVersion&lt;/code&gt; entries (rc or
-scheduling) with the release version.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;If not, bulk change &lt;strong&gt;Open&lt;/strong&gt; tickets that will &lt;strong&gt;NOT&lt;/strong&gt; be in the release to a new
+version (create it if necessary):&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&#34;audit-jira-ticket-titles-and-types-for-use-in-release-notes&#34;&gt;Audit Jira ticket titles and types for use in release notes&lt;/h2&gt;
@@ -2191,6 +2194,7 @@ cd mongo-cxx-driver
 
 &lt;ul&gt;
 &lt;li&gt;Otherwise, pull the latest code down from the origin with &lt;code&gt;git pull&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Checkout the branch corresponding to the release&lt;/li&gt;
 &lt;li&gt;Update the following files (changing version numbers to remove the &amp;ldquo;-pre&amp;rdquo;
 for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
 
@@ -2202,12 +2206,14 @@ for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
 &lt;/ul&gt;
 
 &lt;pre&gt;&lt;code&gt;git commit -am &amp;quot;BUMP r3.0.1&amp;quot;
-git push origin master
+git push origin &amp;lt;release-branch&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Pushing the BUMP commit to the origin will kick off builds in Evergreen,
 Travis CI and AppVeyor (which handles Windows builds). Wait for all three
 builds to finish and pass, re-running any timeout/spot failures.&lt;/p&gt;
+
+&lt;p&gt;Meanwhile, test the branch locally.&lt;/p&gt;
 
 &lt;h2 id=&#34;tag-the-release&#34;&gt;Tag the Release&lt;/h2&gt;
 
@@ -2244,18 +2250,63 @@ other information that doesn&amp;rsquo;t need to be in the release notes.&lt;/li
 &lt;a href=&#34;https://jira.mongodb.org/plugins/servlet/project-config/CXX/versions&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;Click the cog next to the version you are about to release and select &amp;ldquo;Release&amp;rdquo;&lt;/li&gt;
 &lt;li&gt;Follow the dialogs/wizards and whatnot, setting the release date to the current date&lt;/li&gt;
+&lt;li&gt;If the next version does not exist, create it.  E.g.:
+
+&lt;ul&gt;
+&lt;li&gt;If releasing 3.1.1, create 3.2.2.&lt;/li&gt;
+&lt;li&gt;If releasing 3.4.0-rc0, create 3.4.0-rc1.&lt;/li&gt;
+&lt;li&gt;If releasing 3.4.0, create 3.4.1 &lt;strong&gt;and&lt;/strong&gt; 3.5.0-rc0.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h2 id=&#34;create-the-next-version-commit&#34;&gt;Create the Next Version commit&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Make sure you&amp;rsquo;re on the branch corresponding to the release.&lt;/li&gt;
+&lt;li&gt;Update the following files (changing version numbers to bump to the next version number and add the &amp;ldquo;-pre&amp;rdquo; suffix for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/CMakeLists.txt#L30&#34;&gt;&lt;code&gt;src/mongocxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/CMakeLists.txt#L22&#34;&gt;&lt;code&gt;src/bsoncxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Commit with message &amp;ldquo;post rx.y.z[-rcq]&amp;ldquo;, e.g.:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;git commit -am &amp;quot;post r3.0.1&amp;quot;
+git push origin &amp;lt;release-branch&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;possibly-update-the-releases-stable-branch&#34;&gt;Possibly update the releases/stable branch&lt;/h2&gt;
+
+&lt;p&gt;We use the &lt;code&gt;releases/stable&lt;/code&gt; branch to track the best &amp;lsquo;stable&amp;rsquo; release for
+users who install from the git repository.&lt;/p&gt;
+
+&lt;p&gt;After any stable release (i.e. not an alpha, beta, RC, etc. release), check
+out the &lt;code&gt;releases/stable&lt;/code&gt; branch, reset it to the new release tag, and
+force push it to the repo. E.g.:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout releases/stable
+git reset --hard r3.0.1
+git push -f origin releases/stable
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;generate-and-publish-documentation&#34;&gt;Generate and Publish Documentation&lt;/h2&gt;
 
 &lt;p&gt;Documentation generation must be run after the release tag has been made
 and pushed.&lt;/p&gt;
 
+&lt;p&gt;Documentation updates always go on the &lt;strong&gt;master&lt;/strong&gt; branch.&lt;/p&gt;
+
 &lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Checkout the master branch.&lt;/p&gt;&lt;/li&gt;
+
 &lt;li&gt;&lt;p&gt;Edit &lt;code&gt;etc/apidocmenu.md&lt;/code&gt; and add the released version in the &amp;lsquo;mongocxx&amp;rsquo;
-column following the established pattern.  If this is a major release,
-revise the entire document as needed.  If revised substantially, also
-edit &lt;code&gt;docs/content/index.md&lt;/code&gt; to match.&lt;/p&gt;&lt;/li&gt;
+column following the established pattern.  If this is a major release
+(x.y.0), revise the entire document as needed.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If revised substantially, also edit &lt;code&gt;docs/content/index.md&lt;/code&gt; and &lt;code&gt;README.md&lt;/code&gt; to match.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;Edit &lt;code&gt;etc/generate-all-apidocs.pl&lt;/code&gt; and add the new release version to
 the &lt;code&gt;@DOC_TAGS&lt;/code&gt; array, following the established pattern.&lt;/p&gt;&lt;/li&gt;
@@ -2298,51 +2349,20 @@ api/mongocxx-v3 symlink to point to the newly released version.  If a
 major version bump has occurred, revise the symlink structure as
 needed.  Make sure &amp;lsquo;current&amp;rsquo; always points to a &lt;em&gt;symlink&lt;/em&gt; tracking
 the latest release branch.&lt;/li&gt;
-&lt;li&gt;Commit and push the symlink change.&lt;/li&gt;
+&lt;li&gt;Commit and push the symlink change:  &lt;code&gt;git commit -am &amp;quot;Update symlink for r3.0.3&amp;quot;&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
 
-&lt;p&gt;&lt;code&gt;git commit -am &amp;quot;Update symlink for r3.0.3&amp;quot;&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
 &lt;li&gt;&lt;p&gt;Wait a minute and verify the docs site has been updated.&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;Return to the original branch.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;create-the-next-version-commit&#34;&gt;Create the Next Version commit&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Update the following files (changing version numbers to bump to the next version number and add the &amp;ldquo;-pre&amp;rdquo; suffix for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/CMakeLists.txt#L30&#34;&gt;&lt;code&gt;src/mongocxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/CMakeLists.txt#L22&#34;&gt;&lt;code&gt;src/bsoncxx/CMakeLists.txt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Commit with message &amp;ldquo;post rx.y.z[-rcq]&amp;ldquo;, e.g.:&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code&gt;git commit -am &amp;quot;post r3.0.1&amp;quot;
-git push origin master
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;possibly-update-the-releases-stable-branch&#34;&gt;Possibly update the releases/stable branch&lt;/h2&gt;
-
-&lt;p&gt;We use the &lt;code&gt;releases/stable&lt;/code&gt; branch to track the best &amp;lsquo;stable&amp;rsquo; release for
-users who install from the git repository.&lt;/p&gt;
-
-&lt;p&gt;After any stable release (i.e. not an alpha, beta, RC, etc. release), check
-out the &lt;code&gt;releases/stable&lt;/code&gt; branch, reset it to the new release tag, and
-force push it to the repo. E.g.:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout releases/stable
-git reset --hard r3.0.1
-git push -f origin releases/stable
-&lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;file-a-docs-ticket&#34;&gt;File a DOCS ticket&lt;/h2&gt;
 
-&lt;p&gt;If there is any change to the driver-server compatibility matrix or language compatibility matrix file a &lt;a href=&#34;https://jira.mongodb.org/browse/DOCS/&#34;&gt;DOCS ticket&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If there is any change to the driver-server compatibility matrix or
+language compatibility matrix file a &lt;a href=&#34;https://jira.mongodb.org/browse/DOCS/&#34;&gt;DOCS
+ticket&lt;/a&gt;.  This generally will only
+apply to an x.y.0 release.&lt;/p&gt;
 
 &lt;h2 id=&#34;email-google-groups&#34;&gt;Email Google Groups&lt;/h2&gt;
 
