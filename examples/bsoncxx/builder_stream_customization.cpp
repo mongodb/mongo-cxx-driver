@@ -15,8 +15,8 @@
 #include <map>
 #include <vector>
 
-#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/array.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
 
 using namespace bsoncxx;

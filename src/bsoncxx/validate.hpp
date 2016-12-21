@@ -41,8 +41,8 @@ class validator;
 ///   An engaged optional containing a view if the document is valid, or
 ///   an unengaged optional if the document is invalid.
 ///
-BSONCXX_API stdx::optional<document::view> BSONCXX_CALL
-validate(const std::uint8_t* data, std::size_t length);
+BSONCXX_API stdx::optional<document::view> BSONCXX_CALL validate(const std::uint8_t* data,
+                                                                 std::size_t length);
 
 ///
 /// Validates a BSON document. This overload provides additional control over the

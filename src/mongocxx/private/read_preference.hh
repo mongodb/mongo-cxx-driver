@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include <mongocxx/read_preference.hpp>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/read_preference.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 

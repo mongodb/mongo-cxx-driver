@@ -15,8 +15,8 @@
 #include <iostream>
 
 #include <bsoncxx/builder/stream/document.hpp>
-#include <mongocxx/instance.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/instance.hpp>
 
 using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::close_array;

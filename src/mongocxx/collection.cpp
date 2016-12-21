@@ -586,9 +586,9 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
     }
 
     if (options.collation()) {
-        scoped_bson_t bson_collation{bsoncxx::builder::stream::document{}
-                                     << "collation" << *options.collation()
-                                     << bsoncxx::builder::stream::finalize};
+        scoped_bson_t bson_collation{
+            bsoncxx::builder::stream::document{} << "collation" << *options.collation()
+                                                 << bsoncxx::builder::stream::finalize};
         libmongoc::find_and_modify_opts_append(opts, bson_collation.bson());
     }
 
@@ -633,9 +633,9 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
     }
 
     if (options.collation()) {
-        scoped_bson_t bson_collation{bsoncxx::builder::stream::document{}
-                                     << "collation" << *options.collation()
-                                     << bsoncxx::builder::stream::finalize};
+        scoped_bson_t bson_collation{
+            bsoncxx::builder::stream::document{} << "collation" << *options.collation()
+                                                 << bsoncxx::builder::stream::finalize};
         libmongoc::find_and_modify_opts_append(opts, bson_collation.bson());
     }
 
@@ -673,9 +673,9 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
     auto flags = ::MONGOC_FIND_AND_MODIFY_REMOVE;
 
     if (options.collation()) {
-        scoped_bson_t bson_collation{bsoncxx::builder::stream::document{}
-                                     << "collation" << *options.collation()
-                                     << bsoncxx::builder::stream::finalize};
+        scoped_bson_t bson_collation{
+            bsoncxx::builder::stream::document{} << "collation" << *options.collation()
+                                                 << bsoncxx::builder::stream::finalize};
         libmongoc::find_and_modify_opts_append(opts, bson_collation.bson());
     }
 

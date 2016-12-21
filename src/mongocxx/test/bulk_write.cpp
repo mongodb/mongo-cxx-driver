@@ -17,9 +17,9 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/types.hpp>
+#include <mongocxx/bulk_write.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/bulk_write.hpp>
 #include <mongocxx/write_concern.hpp>
 
 using namespace mongocxx;

@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include <bsoncxx/document/value.hpp>
-#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/builder/stream/key_context.hpp>
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/types/value.hpp>
@@ -62,8 +62,8 @@ class MONGOCXX_API hint {
     ///
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const hint& index_hint, std::string index);
 
-    friend MONGOCXX_API bool MONGOCXX_CALL
-    operator==(const hint& index_hint, bsoncxx::document::view index);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const hint& index_hint,
+                                                      bsoncxx::document::view index);
     ///
     /// @}
     ///

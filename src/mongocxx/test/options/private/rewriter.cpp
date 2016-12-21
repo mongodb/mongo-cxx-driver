@@ -32,7 +32,8 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $comment", "[find][o
     SECTION("$comment with k_utf8 type is translated") {
         auto find_opts = options::rewriter::rewrite_find_modifiers(
             options::find{}.modifiers(document{} << "$comment"
-                                                 << "test" << finalize));
+                                                 << "test"
+                                                 << finalize));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.comment());
         REQUIRE(*find_opts.comment() == stdx::string_view("test"));
@@ -62,7 +63,8 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $hint", "[find][opti
     SECTION("$hint with k_utf8 type is translated") {
         find_opts = options::rewriter::rewrite_find_modifiers(
             options::find{}.modifiers(document{} << "$hint"
-                                                 << "index" << finalize));
+                                                 << "index"
+                                                 << finalize));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.hint());
         REQUIRE(*find_opts.hint() == "index");
@@ -132,7 +134,8 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $maxScan", "[find][o
     SECTION("$maxScan with other types is rejected") {
         REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(
                               options::find{}.modifiers(document{} << "$maxScan"
-                                                                   << "foo" << finalize)),
+                                                                   << "foo"
+                                                                   << finalize)),
                           logic_error);
     }
 }
@@ -168,7 +171,8 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $maxTimeMS", "[find]
     SECTION("$maxTimeMS with other types is rejected") {
         REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(
                               options::find{}.modifiers(document{} << "$maxTimeMS"
-                                                                   << "foo" << finalize)),
+                                                                   << "foo"
+                                                                   << finalize)),
                           logic_error);
     }
 }

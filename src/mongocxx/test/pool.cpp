@@ -18,11 +18,11 @@
 #include <cstddef>
 #include <string>
 
-#include <mongocxx/instance.hpp>
-#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/client.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/options/ssl.hpp>
 #include <mongocxx/pool.hpp>
+#include <mongocxx/private/libmongoc.hh>
 
 using namespace mongocxx;
 

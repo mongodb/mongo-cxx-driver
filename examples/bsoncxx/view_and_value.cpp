@@ -39,13 +39,10 @@ int main(int, char**) {
     using builder::basic::sub_array;
 
     auto doc = builder::basic::document{};
-    doc.append(kvp("team", "platforms"),
-               kvp("id", types::b_oid{oid()}),
-               kvp("members",
-                   [](sub_array sa) {
-                       sa.append(
-                           "tyler", "jason", "drew", "sam", "ernie", "john", "mark", "crystal");
-                   }));
+    doc.append(
+        kvp("team", "platforms"), kvp("id", types::b_oid{oid()}), kvp("members", [](sub_array sa) {
+            sa.append("tyler", "jason", "drew", "sam", "ernie", "john", "mark", "crystal");
+        }));
 
     // document::value is an owning bson document conceptually similar to string.
     document::value value{doc.extract()};
@@ -115,13 +112,10 @@ int main(int, char**) {
 
     // i.e. if we want a vector of all the keys in a document, we can use std::transform
     std::vector<std::string> doc_keys;
-    std::transform(begin(view),
-                   end(view),
-                   std::back_inserter(doc_keys),
-                   [](document::element ele) {
-                       // note that key() returns a string_view
-                       return ele.key().to_string();
-                   });
+    std::transform(begin(view), end(view), std::back_inserter(doc_keys), [](document::element ele) {
+        // note that key() returns a string_view
+        return ele.key().to_string();
+    });
 
     std::cout << "document keys are: " << std::endl;
     for (auto key : doc_keys) {

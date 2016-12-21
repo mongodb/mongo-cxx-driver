@@ -54,10 +54,10 @@
 #pragma push_macro("MONGOCXX_NO_DEPRECATED")
 #undef MONGOCXX_NO_DEPRECATED
 
-#include <mongocxx/config/config.hpp>
-#include <mongocxx/config/version.hpp>
-#include <mongocxx/config/export.hpp>
 #include <mongocxx/config/compiler.hpp>
+#include <mongocxx/config/config.hpp>
+#include <mongocxx/config/export.hpp>
+#include <mongocxx/config/version.hpp>
 
 // TODO: Find a way to DRY this with BSONCXX_UNREACHABLE
 #pragma push_macro("MONGOCXX_UNREACHABLE")

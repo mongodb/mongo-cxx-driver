@@ -87,7 +87,7 @@ class view_or_value {
     ///
 
     /// TODO CXX-800: Create a noexcept expression to check the conditions that must be met.
-    BSONCXX_INLINE view_or_value(view_or_value&& other) noexcept
+    BSONCXX_INLINE view_or_value(view_or_value &&other) noexcept
         : _value{std::move(other._value)},
           _view(_value ? *_value : std::move(other._view)) {
         other._view = View();

@@ -179,7 +179,8 @@ TEST_CASE("Collection", "[collection]") {
         });
 
         pipe.match(builder::stream::document{} << "foo"
-                                               << "bar" << builder::stream::finalize);
+                                               << "bar"
+                                               << builder::stream::finalize);
         pipe.sort(builder::stream::document{} << "foo" << 1 << builder::stream::finalize);
 
         SECTION("With default options") {}

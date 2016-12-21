@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include <mongocxx/options/bulk_write.hpp>
 #include <mongocxx/model/write.hpp>
+#include <mongocxx/options/bulk_write.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 

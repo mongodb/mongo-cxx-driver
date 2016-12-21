@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include <mongocxx/uri.hpp>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/uri.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 

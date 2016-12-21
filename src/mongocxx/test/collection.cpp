@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "catch.hpp"
 #include <mongocxx/test_util/client_helpers.hh>
+#include "catch.hpp"
 
 #include <vector>
 
@@ -1026,7 +1026,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             pipeline.bucket(document{} << "groupBy"
                                        << "$x"
-                                       << "boundaries" << open_array << 0 << 2 << 6 << close_array
+                                       << "boundaries"
+                                       << open_array
+                                       << 0
+                                       << 2
+                                       << 6
+                                       << close_array
                                        << finalize);
             auto cursor = coll.aggregate(pipeline);
 
@@ -1053,7 +1058,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             pipeline.bucket_auto(document{} << "groupBy"
                                             << "$x"
-                                            << "buckets" << 2 << finalize);
+                                            << "buckets"
+                                            << 2
+                                            << finalize);
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 5) {
@@ -1116,7 +1123,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(document{} << "x" << 3 << finalize);
 
             pipeline.facet(document{} << "foo" << open_array << open_document << "$limit" << 2
-                                      << close_document << close_array << finalize);
+                                      << close_document
+                                      << close_array
+                                      << finalize);
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 5) {
@@ -1137,11 +1146,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(document{} << "_id" << 1 << "x" << open_array << 1 << 1 << close_array
                                        << finalize);
             coll.create_index(document{} << "x"
-                                         << "2d" << finalize);
+                                         << "2d"
+                                         << finalize);
 
             pipeline.geo_near(document{} << "near" << open_array << 0 << 0 << close_array
                                          << "distanceField"
-                                         << "d" << finalize);
+                                         << "d"
+                                         << finalize);
             auto cursor = coll.aggregate(pipeline);
 
             auto results = get_results(std::move(cursor));
@@ -1154,11 +1165,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         SECTION("graph_lookup") {
             coll.insert_one(document{} << "x"
-                                       << "bar" << finalize);
+                                       << "bar"
+                                       << finalize);
             coll.insert_one(document{} << "x"
                                        << "foo"
                                        << "y"
-                                       << "bar" << finalize);
+                                       << "bar"
+                                       << finalize);
 
             pipeline.graph_lookup(document{} << "from" << coll.name() << "startWith"
                                              << "$y"
@@ -1167,7 +1180,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                                              << "connectToField"
                                              << "x"
                                              << "as"
-                                             << "z" << finalize);
+                                             << "z"
+                                             << finalize);
             // Add a sort to the pipeline, so below tests can make assumptions about result order.
             pipeline.sort(document{} << "x" << 1 << finalize);
             auto cursor = coll.aggregate(pipeline);
@@ -1190,7 +1204,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(document{} << "x" << 2 << finalize);
 
             pipeline.group(document{} << "_id"
-                                      << "$x" << finalize);
+                                      << "$x"
+                                      << finalize);
             // Add a sort to the pipeline, so below tests can make assumptions about result order.
             pipeline.sort(document{} << "_id" << 1 << finalize);
             auto cursor = coll.aggregate(pipeline);
@@ -1244,7 +1259,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                                        << "foreignField"
                                        << "y"
                                        << "as"
-                                       << "z" << finalize);
+                                       << "z"
+                                       << finalize);
             // Add a sort to the pipeline, so below tests can make assumptions about result order.
             pipeline.sort(document{} << "x" << 1 << finalize);
             auto cursor = coll.aggregate(pipeline);
@@ -1308,15 +1324,22 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("redact") {
-            coll.insert_one(document{} << "x" << open_document << "secret" << 1 << close_document
-                                       << "y" << 1 << finalize);
+            coll.insert_one(
+                document{} << "x" << open_document << "secret" << 1 << close_document << "y" << 1
+                           << finalize);
 
             pipeline.redact(document{} << "$cond" << open_document << "if" << open_document << "$eq"
-                                       << open_array << "$secret" << 1 << close_array
-                                       << close_document << "then"
+                                       << open_array
+                                       << "$secret"
+                                       << 1
+                                       << close_array
+                                       << close_document
+                                       << "then"
                                        << "$$PRUNE"
                                        << "else"
-                                       << "$$DESCEND" << close_document << finalize);
+                                       << "$$DESCEND"
+                                       << close_document
+                                       << finalize);
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 1) {
@@ -1336,7 +1359,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                                        << finalize);
 
             pipeline.replace_root(document{} << "newRoot"
-                                             << "$x" << finalize);
+                                             << "$x"
+                                             << finalize);
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 5) {
@@ -1422,8 +1446,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             }
 
             SECTION("with document") {
-                pipeline.sort_by_count(document{} << "$mod" << open_array << "$x" << 2
-                                                  << close_array << finalize);
+                pipeline.sort_by_count(
+                    document{} << "$mod" << open_array << "$x" << 2 << close_array << finalize);
                 auto cursor = coll.aggregate(pipeline);
 
                 if (test_util::get_max_wire_version(mongodb_client) >= 5) {
@@ -1453,7 +1477,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             SECTION("with document") {
                 pipeline.unwind(document{} << "path"
-                                           << "$x" << finalize);
+                                           << "$x"
+                                           << finalize);
                 auto cursor = coll.aggregate(pipeline);
 
                 if (test_util::get_max_wire_version(mongodb_client) >= 4) {

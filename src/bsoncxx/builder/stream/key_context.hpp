@@ -64,7 +64,7 @@ class key_context {
     ///   The key to append
     ///
     template <std::size_t n>
-    BSONCXX_INLINE value_context<key_context> operator<<(const char(&v)[n]) {
+    BSONCXX_INLINE value_context<key_context> operator<<(const char (&v)[n]) {
         _core->key_view(stdx::string_view{v, n - 1});
         return value_context<key_context>(_core);
     }

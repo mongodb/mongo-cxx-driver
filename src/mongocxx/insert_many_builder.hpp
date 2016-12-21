@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/builder/basic/array.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/options/insert.hpp>
 #include <mongocxx/result/insert_many.hpp>

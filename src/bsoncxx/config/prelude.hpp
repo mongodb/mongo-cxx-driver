@@ -64,10 +64,10 @@
 #pragma push_macro("BSONCXX_NO_DEPRECATED")
 #undef BSONCXX_NO_DEPRECATED
 
-#include <bsoncxx/config/config.hpp>
-#include <bsoncxx/config/version.hpp>
-#include <bsoncxx/config/export.hpp>
 #include <bsoncxx/config/compiler.hpp>
+#include <bsoncxx/config/config.hpp>
+#include <bsoncxx/config/export.hpp>
+#include <bsoncxx/config/version.hpp>
 
 #pragma push_macro("BSONCXX_UNREACHABLE")
 #undef BSONCXX_UNREACHABLE

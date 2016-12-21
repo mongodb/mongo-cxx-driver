@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/test_util/client_helpers.hh>
 #include "catch.hpp"
 #include "helpers.hpp"
-#include <mongocxx/test_util/client_helpers.hh>
 
 #include <mongocxx/database.hpp>
 
@@ -24,8 +24,8 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/modify_collection.hpp>
-#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/validation_criteria.hpp>
 
 using namespace mongocxx;
@@ -199,9 +199,9 @@ TEST_CASE("A database", "[database]") {
                 static_cast<mongoc_read_mode_t>(read_preference::read_mode::k_secondary_preferred));
         });
 
-        database_get_preference->interpose([&](const mongoc_database_t*) {
-            return saved_preference.get();
-        }).forever();
+        database_get_preference
+            ->interpose([&](const mongoc_database_t*) { return saved_preference.get(); })
+            .forever();
 
         mongo_database.read_preference(std::move(preference));
         REQUIRE(called);
@@ -323,9 +323,11 @@ TEST_CASE("Database integration tests", "[database]") {
             if (test_util::supports_collation(mongo_client)) {
                 collection obtained_collection = database.create_collection(collection_name, opts);
                 REQUIRE(obtained_collection.insert_one(document{} << "x"
-                                                                  << "foo" << finalize));
+                                                                  << "foo"
+                                                                  << finalize));
                 REQUIRE(obtained_collection.find_one(document{} << "x"
-                                                                << "FOO" << finalize));
+                                                                << "FOO"
+                                                                << finalize));
             } else {
                 // The server doesn't support collation.
                 REQUIRE_THROWS_AS(database.create_collection(collection_name, opts),
@@ -435,9 +437,11 @@ TEST_CASE("Database integration tests", "[database]") {
         database[view_name].drop();
 
         database[collection_name].insert_one(document{} << "x"
-                                                        << "foo" << finalize);
+                                                        << "foo"
+                                                        << finalize);
         database[collection_name].insert_one(document{} << "x"
-                                                        << "bar" << finalize);
+                                                        << "bar"
+                                                        << finalize);
 
         SECTION("View creation with a pipeline") {
             collection view = database.create_view(
@@ -462,7 +466,8 @@ TEST_CASE("Database integration tests", "[database]") {
             if (test_util::supports_collation(mongo_client)) {
                 collection obtained_view = database.create_view(view_name, collection_name, opts);
                 REQUIRE(obtained_view.find_one(document{} << "x"
-                                                          << "FOO" << finalize));
+                                                          << "FOO"
+                                                          << finalize));
             } else {
                 // The server doesn't support collation.
                 REQUIRE_THROWS_AS(database.create_view(view_name, collection_name, opts),

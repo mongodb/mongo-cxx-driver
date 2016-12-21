@@ -16,8 +16,8 @@
 
 #include <cstdint>
 
-#include <bsoncxx/types.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types.hpp>
 #include <mongocxx/result/bulk_write.hpp>
 #include <mongocxx/stdx.hpp>
 

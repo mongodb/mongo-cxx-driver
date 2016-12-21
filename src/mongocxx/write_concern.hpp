@@ -16,8 +16,8 @@
 
 #include <chrono>
 #include <cstdint>
-#include <stdexcept>
 #include <memory>
+#include <stdexcept>
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>

@@ -18,8 +18,8 @@
 #include <cstdint>
 #include <iterator>
 
-#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/array/element.hpp>
+#include <bsoncxx/document/view.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 

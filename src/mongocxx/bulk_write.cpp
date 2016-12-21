@@ -18,8 +18,8 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/bulk_write.hh>
+#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/write_concern.hh>
 

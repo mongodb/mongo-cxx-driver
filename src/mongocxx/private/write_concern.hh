@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include <mongocxx/write_concern.hpp>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 

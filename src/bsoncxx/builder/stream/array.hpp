@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include <bsoncxx/array/view.hpp>
 #include <bsoncxx/array/value.hpp>
+#include <bsoncxx/array/view.hpp>
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/builder/stream/array_context.hpp>
 #include <bsoncxx/builder/stream/key_context.hpp>

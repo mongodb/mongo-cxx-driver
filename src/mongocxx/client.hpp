@@ -218,7 +218,7 @@ class MONGOCXX_API client {
     std::unique_ptr<impl> _impl;
 };
 
-MONGOCXX_INLINE database client::operator[](bsoncxx::string::view_or_value name) const & {
+MONGOCXX_INLINE database client::operator[](bsoncxx::string::view_or_value name) const& {
     return database(name);
 }
 

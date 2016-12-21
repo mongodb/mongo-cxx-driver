@@ -18,8 +18,8 @@
 #include "helpers.hpp"
 
 #include <bsoncxx/builder/stream/document.hpp>
-#include <mongocxx/options/find_one_and_update.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/options/find_one_and_update.hpp>
 
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;

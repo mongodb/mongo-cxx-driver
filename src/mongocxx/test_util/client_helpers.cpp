@@ -26,9 +26,9 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace test_util {
 
 std::int32_t get_max_wire_version(const client& client) {
-    auto reply =
-        client["admin"].run_command(bsoncxx::builder::stream::document{}
-                                    << "isMaster" << 1 << bsoncxx::builder::stream::finalize);
+    auto reply = client["admin"].run_command(
+        bsoncxx::builder::stream::document{} << "isMaster" << 1
+                                             << bsoncxx::builder::stream::finalize);
     auto max_wire_version = reply.view()["maxWireVersion"];
     if (!max_wire_version) {
         // If wire version is not available (i.e. server version too old), it is assumed to be zero.

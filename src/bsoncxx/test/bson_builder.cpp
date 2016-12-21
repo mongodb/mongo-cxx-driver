@@ -628,8 +628,8 @@ TEST_CASE("builder appends lambdas", "[bsoncxx::builder::stream]") {
                   << "value1"
                   << "key2"
                   << "value2";
-            } << close_document << "c" << open_array << [](array_context<> a) { a << 1 << 2 << 3; }
-               << close_array;
+            } << close_document
+               << "c" << open_array << [](array_context<> a) { a << 1 << 2 << 3; } << close_array;
     }
 
     viewable_eq_viewable(expected, stream);
