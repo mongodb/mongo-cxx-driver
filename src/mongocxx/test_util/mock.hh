@@ -119,8 +119,7 @@ class mock<R (*)(Args...)> {
         }
 
        private:
-        instance(mock* parent) : _parent(parent) {
-        }
+        instance(mock* parent) : _parent(parent) {}
 
         mock* _parent;
         std::stack<rule> _callbacks;
@@ -128,8 +127,7 @@ class mock<R (*)(Args...)> {
 
     friend class instance;
 
-    mock(underlying_ptr func) : _func(std::move(func)) {
-    }
+    mock(underlying_ptr func) : _func(std::move(func)) {}
     mock(mock&&) = delete;
     mock(const mock&) = delete;
     mock& operator=(const mock&) = delete;

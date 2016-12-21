@@ -37,8 +37,7 @@ class array : public sub_array {
     ///
     /// Default constructor
     ///
-    BSONCXX_INLINE array() : sub_array(&_core), _core(true) {
-    }
+    BSONCXX_INLINE array() : sub_array(&_core), _core(true) {}
 
     ///
     /// @return A view of the BSON array.

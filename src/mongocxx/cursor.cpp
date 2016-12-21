@@ -34,8 +34,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 cursor::cursor(void* cursor_ptr)
-    : _impl(stdx::make_unique<impl>(static_cast<mongoc_cursor_t*>(cursor_ptr))) {
-}
+    : _impl(stdx::make_unique<impl>(static_cast<mongoc_cursor_t*>(cursor_ptr))) {}
 
 cursor::cursor(cursor&&) noexcept = default;
 cursor& cursor::operator=(cursor&&) noexcept = default;

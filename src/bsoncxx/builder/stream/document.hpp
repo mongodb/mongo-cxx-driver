@@ -36,8 +36,7 @@ class document : public key_context<> {
     ///
     /// Default constructor.
     ///
-    BSONCXX_INLINE document() : key_context<>(&_core), _core(false) {
-    }
+    BSONCXX_INLINE document() : key_context<>(&_core), _core(false) {}
 
     ///
     /// @return A view of the BSON document.

@@ -26,8 +26,7 @@ insert_one::insert_one(result::bulk_write result, bsoncxx::types::value inserted
     : _result(std::move(result)),
       _inserted_id_owned(bsoncxx::builder::stream::array{} << inserted_id
                                                            << bsoncxx::builder::stream::finalize),
-      _inserted_id(_inserted_id_owned.view()[0].get_value()) {
-}
+      _inserted_id(_inserted_id_owned.view()[0].get_value()) {}
 
 const result::bulk_write& insert_one::result() const {
     return _result;

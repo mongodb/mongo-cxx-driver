@@ -54,8 +54,7 @@ class key_context {
     /// @param core
     ///   The core builder to orchestrate
     ///
-    key_context(core* core) : _core(core) {
-    }
+    key_context(core* core) : _core(core) {}
 
     ///
     /// << operator for accepting a literal key and appending it to the core

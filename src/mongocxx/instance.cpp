@@ -57,20 +57,22 @@ log_level convert_log_level(::mongoc_log_level_t mongoc_log_level) {
     }
 }
 
-void null_log_handler(::mongoc_log_level_t, const char *, const char *, void *) {
-}
+void null_log_handler(::mongoc_log_level_t, const char*, const char*, void*) {}
 
-void user_log_handler(::mongoc_log_level_t mongoc_log_level, const char *log_domain,
-                      const char *message, void *user_data) {
-    (*static_cast<logger *>(user_data))(convert_log_level(mongoc_log_level),
-                                        stdx::string_view{log_domain}, stdx::string_view{message});
+void user_log_handler(::mongoc_log_level_t mongoc_log_level,
+                      const char* log_domain,
+                      const char* message,
+                      void* user_data) {
+    (*static_cast<logger*>(user_data))(convert_log_level(mongoc_log_level),
+                                       stdx::string_view{log_domain},
+                                       stdx::string_view{message});
 }
 
 // A region of memory that acts as a sentintel value indicating that an instance object is being
 // destroyed. We only care about the address of this object, never its contents.
 typename std::aligned_storage<sizeof(instance), alignof(instance)>::type sentinel;
 
-std::atomic<instance *> current_instance{nullptr};
+std::atomic<instance*> current_instance{nullptr};
 static_assert(std::is_standard_layout<decltype(current_instance)>::value,
               "Must be standard layout");
 #if (!defined(__GNUC__) || (defined(__clang__) && !defined(__GLIBCXX__))) || (__GNUC__ >= 5)
@@ -115,30 +117,30 @@ class instance::impl {
     const std::unique_ptr<logger> _user_logger;
 };
 
-instance::instance() : instance(nullptr) {
-}
+instance::instance() : instance(nullptr) {}
 
 instance::instance(std::unique_ptr<logger> logger) {
     while (true) {
-        instance *expected = nullptr;
-        if (current_instance.compare_exchange_strong(expected, this)) break;
-        if (expected != reinterpret_cast<instance *>(&sentinel))
+        instance* expected = nullptr;
+        if (current_instance.compare_exchange_strong(expected, this))
+            break;
+        if (expected != reinterpret_cast<instance*>(&sentinel))
             throw logic_error{error_code::k_instance_already_exists};
     }
 
     _impl = stdx::make_unique<impl>(std::move(logger));
 }
 
-instance::instance(instance &&) noexcept = default;
-instance &instance::operator=(instance &&) noexcept = default;
+instance::instance(instance&&) noexcept = default;
+instance& instance::operator=(instance&&) noexcept = default;
 
 instance::~instance() {
-    current_instance.store(reinterpret_cast<instance *>(&sentinel));
+    current_instance.store(reinterpret_cast<instance*>(&sentinel));
     _impl.reset();
     current_instance.store(nullptr);
 }
 
-instance &instance::current() {
+instance& instance::current() {
     if (!current_instance.load()) {
         static instance the_instance;
     }

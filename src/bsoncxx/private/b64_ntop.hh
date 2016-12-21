@@ -52,7 +52,8 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace b64 {
 
 #define BSONCXX_B64_ASSERT(Cond) \
-    if (!(Cond)) std::abort()
+    if (!(Cond))                 \
+    std::abort()
 
 const char Base64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 const char Pad64 = '=';
@@ -119,7 +120,9 @@ const char Pad64 = '=';
  *    characters followed by one "=" padding character.
  */
 
-BSONCXX_INLINE int ntop(std::uint8_t const *src, std::size_t srclength, char *target,
+BSONCXX_INLINE int ntop(std::uint8_t const* src,
+                        std::size_t srclength,
+                        char* target,
                         std::size_t targsize) {
     std::size_t datalength = 0;
     std::uint8_t input[3];

@@ -66,8 +66,7 @@ TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_wr
 class insert_functor {
    public:
     insert_functor(bool* called, bsoncxx::document::view document)
-        : _called{called}, _document{document} {
-    }
+        : _called{called}, _document{document} {}
 
     void operator()(mongoc_bulk_operation_t*, const bson_t* document) {
         *_called = true;
@@ -82,11 +81,13 @@ class insert_functor {
 class update_functor {
    public:
     update_functor(bool* called, bsoncxx::document::view filter, bsoncxx::document::view update)
-        : _called{called}, _filter{filter}, _update{update} {
-    }
+        : _called{called}, _filter{filter}, _update{update} {}
 
-    void operator()(mongoc_bulk_operation_t*, const bson_t* filter, const bson_t* update,
-                    const bson_t* options, bson_error_t*) {
+    void operator()(mongoc_bulk_operation_t*,
+                    const bson_t* filter,
+                    const bson_t* update,
+                    const bson_t* options,
+                    bson_error_t*) {
         *_called = true;
         REQUIRE(bson_get_data(filter) == _filter.data());
         REQUIRE(bson_get_data(update) == _update.data());
@@ -131,10 +132,11 @@ class update_functor {
 class delete_functor {
    public:
     delete_functor(bool* called, bsoncxx::document::view filter)
-        : _called{called}, _filter{filter} {
-    }
+        : _called{called}, _filter{filter} {}
 
-    void operator()(mongoc_bulk_operation_t*, const bson_t* filter, const bson_t* options,
+    void operator()(mongoc_bulk_operation_t*,
+                    const bson_t* filter,
+                    const bson_t* options,
                     bson_error_t*) {
         *_called = true;
         REQUIRE(bson_get_data(filter) == _filter.data());

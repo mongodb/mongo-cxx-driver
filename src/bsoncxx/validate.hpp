@@ -65,7 +65,9 @@ validate(const std::uint8_t* data, std::size_t length);
 ///   an unengaged optional if the document is invalid.
 ///
 BSONCXX_API stdx::optional<document::view> BSONCXX_CALL
-validate(const std::uint8_t* data, std::size_t length, const validator& validator,
+validate(const std::uint8_t* data,
+         std::size_t length,
+         const validator& validator,
          std::size_t* invalid_offset = nullptr);
 ///
 /// A validator is used to enable or disable specific checks that can be

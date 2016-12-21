@@ -34,8 +34,7 @@ oid::oid() {
 
 const oid::init_tag_t oid::init_tag{};
 
-oid::oid(init_tag_t) : oid::oid() {
-}
+oid::oid(init_tag_t) : oid::oid() {}
 
 oid::oid(const bsoncxx::stdx::string_view& str) {
     if (!bson_oid_is_valid(str.data(), str.size())) {

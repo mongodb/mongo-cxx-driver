@@ -184,7 +184,8 @@ class MONGOCXX_API collection {
     ///
     template <typename write_model_iterator_type>
     MONGOCXX_INLINE stdx::optional<result::bulk_write> bulk_write(
-        write_model_iterator_type begin, write_model_iterator_type end,
+        write_model_iterator_type begin,
+        write_model_iterator_type end,
         const options::bulk_write& options = options::bulk_write());
 
     ///
@@ -295,7 +296,8 @@ class MONGOCXX_API collection {
 
     /// @see https://docs.mongodb.com/master/reference/command/distinct/
     ///
-    cursor distinct(bsoncxx::string::view_or_value name, bsoncxx::document::view_or_value filter,
+    cursor distinct(bsoncxx::string::view_or_value name,
+                    bsoncxx::document::view_or_value filter,
                     const options::distinct& options = options::distinct());
 
     /// Drops this collection and all its contained documents from the database.
@@ -388,7 +390,8 @@ class MONGOCXX_API collection {
     ///   level set write concern - collection::write_concern(wc).
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_replace(
-        bsoncxx::document::view_or_value filter, bsoncxx::document::view_or_value replacement,
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value replacement,
         const options::find_one_and_replace& options = options::find_one_and_replace());
 
     ///
@@ -411,7 +414,8 @@ class MONGOCXX_API collection {
     ///   level set write concern - collection::write_concern(wc).
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_update(
-        bsoncxx::document::view_or_value filter, bsoncxx::document::view_or_value update,
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value update,
         const options::find_one_and_update& options = options::find_one_and_update());
 
     ///
@@ -486,7 +490,8 @@ class MONGOCXX_API collection {
     /// TODO: document DocumentViewIterator concept or static assert
     template <typename document_view_iterator_type>
     MONGOCXX_INLINE stdx::optional<result::insert_many> insert_many(
-        document_view_iterator_type begin, document_view_iterator_type end,
+        document_view_iterator_type begin,
+        document_view_iterator_type end,
         const options::insert& options = options::insert());
 
     ///
@@ -587,7 +592,8 @@ class MONGOCXX_API collection {
     /// @see https://docs.mongodb.com/master/reference/command/update/
     ///
     stdx::optional<result::replace_one> replace_one(
-        bsoncxx::document::view_or_value filter, bsoncxx::document::view_or_value replacement,
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value replacement,
         const options::update& options = options::update());
 
     ///
@@ -678,7 +684,8 @@ MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
 
 template <typename write_model_iterator_type>
 MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
-    write_model_iterator_type begin, write_model_iterator_type end,
+    write_model_iterator_type begin,
+    write_model_iterator_type end,
     const options::bulk_write& options) {
     class bulk_write writes(options);
 
@@ -695,7 +702,8 @@ MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
 
 template <typename document_view_iterator_type>
 MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
-    document_view_iterator_type begin, document_view_iterator_type end,
+    document_view_iterator_type begin,
+    document_view_iterator_type end,
     const options::insert& options) {
     auto op = std::for_each(begin, end, insert_many_builder{options});
 

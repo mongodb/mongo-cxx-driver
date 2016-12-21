@@ -25,8 +25,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 operation_exception::operation_exception(std::error_code ec,
                                          bsoncxx::document::value&& raw_server_error,
                                          std::string what_arg)
-    : exception(ec, what_arg), _raw_server_error{std::move(raw_server_error)} {
-}
+    : exception(ec, what_arg), _raw_server_error{std::move(raw_server_error)} {}
 
 const stdx::optional<bsoncxx::document::value>& operation_exception::raw_server_error() const {
     return _raw_server_error;

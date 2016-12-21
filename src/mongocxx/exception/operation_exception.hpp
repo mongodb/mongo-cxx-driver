@@ -44,7 +44,8 @@ class MONGOCXX_API operation_exception : public exception {
     /// @param what_arg
     ///   An optional message to be returned by `what`.
     ///
-    operation_exception(std::error_code ec, bsoncxx::document::value&& raw_server_error,
+    operation_exception(std::error_code ec,
+                        bsoncxx::document::value&& raw_server_error,
                         std::string what_arg = "");
 
     ///

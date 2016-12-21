@@ -120,8 +120,7 @@ struct BSONCXX_API b_utf8 {
               typename std::enable_if<!std::is_same<b_utf8, typename std::decay<T>::type>::value,
                                       int>::type = 0>
     BSONCXX_INLINE explicit b_utf8(T&& t)
-        : value(std::forward<T>(t)) {
-    }
+        : value(std::forward<T>(t)) {}
 
     stdx::string_view value;
 
@@ -295,8 +294,7 @@ struct BSONCXX_API b_date {
     ///   Milliseconds since the system_clock epoch.
     ///
     BSONCXX_INLINE
-    explicit b_date(std::chrono::milliseconds value) : value(value) {
-    }
+    explicit b_date(std::chrono::milliseconds value) : value(value) {}
 
     ///
     /// Constructor for b_date
@@ -306,8 +304,7 @@ struct BSONCXX_API b_date {
     ///
     BSONCXX_INLINE
     explicit b_date(const std::chrono::system_clock::time_point& tp)
-        : value(std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch())) {
-    }
+        : value(std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch())) {}
 
     std::chrono::milliseconds value;
 
@@ -376,8 +373,7 @@ struct BSONCXX_API b_regex {
     ///
     template <typename T, typename U>
     BSONCXX_INLINE explicit b_regex(T&& regex, U&& options)
-        : regex(std::forward<T>(regex)), options(std::forward<U>(options)) {
-    }
+        : regex(std::forward<T>(regex)), options(std::forward<U>(options)) {}
 
     stdx::string_view regex;
     stdx::string_view options;
@@ -430,8 +426,7 @@ struct BSONCXX_API b_code {
               typename std::enable_if<!std::is_same<b_code, typename std::decay<T>::type>::value,
                                       int>::type = 0>
     BSONCXX_INLINE explicit b_code(T&& t)
-        : code(std::forward<T>(t)) {
-    }
+        : code(std::forward<T>(t)) {}
 
     stdx::string_view code;
 
@@ -471,8 +466,7 @@ struct BSONCXX_API b_symbol {
               typename std::enable_if<!std::is_same<b_symbol, typename std::decay<T>::type>::value,
                                       int>::type = 0>
     BSONCXX_INLINE explicit b_symbol(T&& t)
-        : symbol(std::forward<T>(t)) {
-    }
+        : symbol(std::forward<T>(t)) {}
 
     stdx::string_view symbol;
 
@@ -510,8 +504,7 @@ struct BSONCXX_API b_codewscope {
     ///
     template <typename T, typename U>
     BSONCXX_INLINE explicit b_codewscope(T&& code, U&& scope)
-        : code(std::forward<T>(code)), scope(std::forward<U>(scope)) {
-    }
+        : code(std::forward<T>(code)), scope(std::forward<U>(scope)) {}
 
     stdx::string_view code;
     document::view scope;
@@ -613,12 +606,12 @@ struct BSONCXX_API b_decimal128 {
     /// @param value
     ///   The value to wrap.
     ///
-    template <typename T,
-              typename std::enable_if<
-                  !std::is_same<b_decimal128, typename std::decay<T>::type>::value, int>::type = 0>
+    template <
+        typename T,
+        typename std::enable_if<!std::is_same<b_decimal128, typename std::decay<T>::type>::value,
+                                int>::type = 0>
     BSONCXX_INLINE explicit b_decimal128(T&& t)
-        : value(std::forward<T>(t)) {
-    }
+        : value(std::forward<T>(t)) {}
 };
 
 ///

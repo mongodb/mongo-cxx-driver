@@ -32,8 +32,7 @@ namespace stream {
 /// the stream api.
 ///
 struct closed_context {
-    closed_context(core*) {
-    }
+    closed_context(core*) {}
 };
 
 }  // namespace stream

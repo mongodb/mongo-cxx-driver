@@ -50,8 +50,8 @@ database::~database() = default;
 database::database(const class client& client, bsoncxx::string::view_or_value name)
     : _impl(stdx::make_unique<impl>(
           libmongoc::client_get_database(client._get_impl().client_t, name.terminated().data()),
-          &client._get_impl(), name.terminated().data())) {
-}
+          &client._get_impl(),
+          name.terminated().data())) {}
 
 database::database(const database& d) {
     if (d) {
@@ -94,8 +94,8 @@ bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value 
     bson_error_t error;
 
     reply_bson.flag_init();
-    auto result = libmongoc::database_command_simple(_get_impl().database_t, command_bson.bson(),
-                                                     NULL, reply_bson.bson(), &error);
+    auto result = libmongoc::database_command_simple(
+        _get_impl().database_t, command_bson.bson(), NULL, reply_bson.bson(), &error);
 
     if (!result) {
         throw_exception<operation_exception>(reply_bson.steal(), error);
@@ -241,8 +241,8 @@ void database::read_preference(class read_preference rp) {
 
 bool database::has_collection(bsoncxx::string::view_or_value name) const {
     bson_error_t error;
-    auto result = libmongoc::database_has_collection(_get_impl().database_t,
-                                                     name.terminated().data(), &error);
+    auto result = libmongoc::database_has_collection(
+        _get_impl().database_t, name.terminated().data(), &error);
     if (error.domain != 0) {
         throw_exception<operation_exception>(error);
     }

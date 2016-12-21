@@ -47,13 +47,13 @@ client::client(const class uri& uri, const options::client& options)
         libmongoc::client_set_ssl_opts(_get_impl().client_t, &mongoc_opts.first);
     }
 #else
-    if (uri.ssl() || options.ssl_opts()) throw exception{error_code::k_ssl_not_supported};
+    if (uri.ssl() || options.ssl_opts())
+        throw exception{error_code::k_ssl_not_supported};
 #endif
 }
 
 client::client(void* implementation)
-    : _impl{stdx::make_unique<impl>(static_cast<::mongoc_client_t*>(implementation))} {
-}
+    : _impl{stdx::make_unique<impl>(static_cast<::mongoc_client_t*>(implementation))} {}
 
 client::client(client&&) noexcept = default;
 client& client::operator=(client&&) noexcept = default;

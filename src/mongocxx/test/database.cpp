@@ -118,7 +118,9 @@ TEST_CASE("A database", "[database]") {
 
     SECTION("throws an exception when dropping causes an error") {
         database_drop->interpose([&](mongoc_database_t*, bson_error_t* error) {
-            bson_set_error(error, MONGOC_ERROR_COMMAND, MONGOC_ERROR_COMMAND_INVALID_ARG,
+            bson_set_error(error,
+                           MONGOC_ERROR_COMMAND,
+                           MONGOC_ERROR_COMMAND_INVALID_ARG,
                            "expected error from mock");
             return false;
         });
@@ -130,7 +132,9 @@ TEST_CASE("A database", "[database]") {
     SECTION("throws an exception when has_collection causes an error") {
         database_has_collection->interpose(
             [](mongoc_database_t*, const char*, bson_error_t* error) {
-                bson_set_error(error, MONGOC_ERROR_COMMAND, MONGOC_ERROR_COMMAND_INVALID_ARG,
+                bson_set_error(error,
+                               MONGOC_ERROR_COMMAND,
+                               MONGOC_ERROR_COMMAND_INVALID_ARG,
                                "expected error from mock");
                 return false;
             });
@@ -262,8 +266,10 @@ TEST_CASE("A database", "[database]") {
                                        << "foo" << 5 << bsoncxx::builder::stream::finalize;
         libbson::scoped_bson_t bson_doc{doc.view()};
 
-        database_command_simple->interpose([&](mongoc_database_t*, const bson_t*,
-                                               const mongoc_read_prefs_t*, bson_t* reply,
+        database_command_simple->interpose([&](mongoc_database_t*,
+                                               const bson_t*,
+                                               const mongoc_read_prefs_t*,
+                                               bson_t* reply,
                                                bson_error_t*) {
             called = true;
             ::bson_copy_to(bson_doc.bson(), reply);
@@ -435,7 +441,8 @@ TEST_CASE("Database integration tests", "[database]") {
 
         SECTION("View creation with a pipeline") {
             collection view = database.create_view(
-                view_name, collection_name,
+                view_name,
+                collection_name,
                 options::create_view().pipeline(std::move(pipeline({}).limit(1))));
 
             if (test_util::get_max_wire_version(mongo_client) >= 5) {

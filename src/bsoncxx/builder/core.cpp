@@ -214,8 +214,7 @@ class core::impl {
     bool _has_user_key;
 };
 
-core::core(bool is_array) : _impl(new impl(is_array)) {
-}
+core::core(bool is_array) : _impl(new impl(is_array)) {}
 core::core(core&&) noexcept = default;
 core& core::operator=(core&&) noexcept = default;
 core::~core() = default;
@@ -243,8 +242,8 @@ void core::append(const types::b_double& value) {
 void core::append(const types::b_utf8& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_utf8(_impl->back(), key.data(), key.length(), value.value.data(),
-                     value.value.length());
+    bson_append_utf8(
+        _impl->back(), key.data(), key.length(), value.value.data(), value.value.length());
 }
 
 void core::append(const types::b_document& value) {
@@ -266,8 +265,12 @@ void core::append(const types::b_array& value) {
 void core::append(const types::b_binary& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_binary(_impl->back(), key.data(), key.length(),
-                       static_cast<bson_subtype_t>(value.sub_type), value.bytes, value.size);
+    bson_append_binary(_impl->back(),
+                       key.data(),
+                       key.length(),
+                       static_cast<bson_subtype_t>(value.sub_type),
+                       value.bytes,
+                       value.size);
 }
 
 void core::append(const types::b_undefined&) {
@@ -305,7 +308,10 @@ void core::append(const types::b_null&) {
 void core::append(const types::b_regex& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_regex(_impl->back(), key.data(), key.length(), value.regex.to_string().data(),
+    bson_append_regex(_impl->back(),
+                      key.data(),
+                      key.length(),
+                      value.regex.to_string().data(),
                       value.options.to_string().data());
 }
 
@@ -315,8 +321,8 @@ void core::append(const types::b_dbpointer& value) {
     bson_oid_t oid;
     std::memcpy(&oid.bytes, value.value.bytes(), sizeof(oid.bytes));
 
-    bson_append_dbpointer(_impl->back(), key.data(), key.length(),
-                          value.collection.to_string().data(), &oid);
+    bson_append_dbpointer(
+        _impl->back(), key.data(), key.length(), value.collection.to_string().data(), &oid);
 }
 
 void core::append(const types::b_code& value) {
@@ -328,8 +334,8 @@ void core::append(const types::b_code& value) {
 void core::append(const types::b_symbol& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_symbol(_impl->back(), key.data(), key.length(), value.symbol.data(),
-                       value.symbol.length());
+    bson_append_symbol(
+        _impl->back(), key.data(), key.length(), value.symbol.data(), value.symbol.length());
 }
 
 void core::append(const types::b_codewscope& value) {
@@ -338,8 +344,8 @@ void core::append(const types::b_codewscope& value) {
     bson_t bson;
     bson_init_static(&bson, value.scope.data(), value.scope.length());
 
-    bson_append_code_with_scope(_impl->back(), key.data(), key.length(),
-                                value.code.to_string().data(), &bson);
+    bson_append_code_with_scope(
+        _impl->back(), key.data(), key.length(), value.code.to_string().data(), &bson);
 }
 
 void core::append(const types::b_int32& value) {
@@ -351,8 +357,8 @@ void core::append(const types::b_int32& value) {
 void core::append(const types::b_timestamp& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_timestamp(_impl->back(), key.data(), key.length(), value.increment,
-                          value.timestamp);
+    bson_append_timestamp(
+        _impl->back(), key.data(), key.length(), value.increment, value.timestamp);
 }
 
 void core::append(const types::b_int64& value) {

@@ -67,7 +67,8 @@ using bsoncxx::builder::stream::concatenate;
 namespace {
 
 mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
-    ::mongoc_collection_t* collection, view_or_value filter,
+    ::mongoc_collection_t* collection,
+    view_or_value filter,
     const ::mongoc_find_and_modify_opts_t* opts) {
     mongocxx::libbson::scoped_bson_t bson_filter{filter};
     mongocxx::libbson::scoped_bson_t reply;
@@ -100,8 +101,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
 template <typename T>
 class guard {
    public:
-    guard(T&& t) : _t{std::move(t)} {
-    }
+    guard(T&& t) : _t{std::move(t)} {}
 
     ~guard() {
         _t();
@@ -139,9 +139,11 @@ stdx::string_view collection::name() const {
 void collection::rename(bsoncxx::string::view_or_value new_name, bool drop_target_before_rename) {
     bson_error_t error;
 
-    auto result = libmongoc::collection_rename(
-        _get_impl().collection_t, _get_impl().database_name.c_str(), new_name.terminated().data(),
-        drop_target_before_rename, &error);
+    auto result = libmongoc::collection_rename(_get_impl().collection_t,
+                                               _get_impl().database_name.c_str(),
+                                               new_name.terminated().data(),
+                                               drop_target_before_rename,
+                                               &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
@@ -152,13 +154,13 @@ collection::collection(const database& database, bsoncxx::string::view_or_value 
     : _impl(stdx::make_unique<impl>(
           libmongoc::database_get_collection(database._get_impl().database_t,
                                              collection_name.terminated().data()),
-          database.name(), database._get_impl().client_impl)) {
-}
+          database.name(),
+          database._get_impl().client_impl)) {}
 
 collection::collection(const database& database, void* collection)
-    : _impl(stdx::make_unique<impl>(static_cast<mongoc_collection_t*>(collection), database.name(),
-                                    database._get_impl().client_impl)) {
-}
+    : _impl(stdx::make_unique<impl>(static_cast<mongoc_collection_t*>(collection),
+                                    database.name(),
+                                    database._get_impl().client_impl)) {}
 
 collection::collection(const collection& c) {
     if (c) {
@@ -374,7 +376,9 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
 
     return cursor(libmongoc::collection_aggregate(_get_impl().collection_t,
                                                   static_cast<::mongoc_query_flags_t>(0),
-                                                  stages.bson(), options_bson.bson(), rp_ptr));
+                                                  stages.bson(),
+                                                  options_bson.bson(),
+                                                  rp_ptr));
 }
 
 stdx::optional<result::insert_one> collection::insert_one(view_or_value document,
@@ -452,7 +456,8 @@ stdx::optional<result::replace_one> collection::replace_one(view_or_value filter
     return stdx::optional<result::replace_one>(result::replace_one(std::move(result.value())));
 };
 
-stdx::optional<result::update> collection::update_many(view_or_value filter, view_or_value update,
+stdx::optional<result::update> collection::update_many(view_or_value filter,
+                                                       view_or_value update,
                                                        const options::update& options) {
     options::bulk_write bulk_opts;
     bulk_opts.ordered(false);
@@ -509,7 +514,8 @@ stdx::optional<result::delete_result> collection::delete_many(
     return stdx::optional<result::delete_result>(result::delete_result(std::move(result.value())));
 }
 
-stdx::optional<result::update> collection::update_one(view_or_value filter, view_or_value update,
+stdx::optional<result::update> collection::update_one(view_or_value filter,
+                                                      view_or_value update,
                                                       const options::update& options) {
     options::bulk_write bulk_opts;
     bulk_opts.ordered(false);
@@ -718,10 +724,14 @@ std::int64_t collection::count(view_or_value filter, const options::count& optio
 
     scoped_bson_t cmd_opts_bson{cmd_opts_builder.view()};
 
-    auto result = libmongoc::collection_count_with_opts(
-        _get_impl().collection_t, static_cast<mongoc_query_flags_t>(0), bson_filter.bson(),
-        options.skip().value_or(0), options.limit().value_or(0), cmd_opts_bson.bson(), rp_ptr,
-        &error);
+    auto result = libmongoc::collection_count_with_opts(_get_impl().collection_t,
+                                                        static_cast<mongoc_query_flags_t>(0),
+                                                        bson_filter.bson(),
+                                                        options.skip().value_or(0),
+                                                        options.limit().value_or(0),
+                                                        cmd_opts_bson.bson(),
+                                                        rp_ptr,
+                                                        &error);
 
     if (result < 0) {
         throw_exception<query_exception>(error);
@@ -844,8 +854,8 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
         opt.geo_options = &geo_opt;
     }
 
-    auto result = libmongoc::collection_create_index(_get_impl().collection_t, bson_keys.bson(),
-                                                     &opt, &error);
+    auto result = libmongoc::collection_create_index(
+        _get_impl().collection_t, bson_keys.bson(), &opt, &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
@@ -864,7 +874,8 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
     }
 }
 
-cursor collection::distinct(bsoncxx::string::view_or_value field_name, view_or_value query,
+cursor collection::distinct(bsoncxx::string::view_or_value field_name,
+                            view_or_value query,
                             const options::distinct& options) {
     //
     // Construct the distinct command and options.
@@ -896,9 +907,12 @@ cursor collection::distinct(bsoncxx::string::view_or_value field_name, view_or_v
     scoped_bson_t command_bson{command_builder.extract()};
     scoped_bson_t opts_bson{opts_builder.extract()};
 
-    auto result = libmongoc::collection_read_command_with_opts(
-        _get_impl().collection_t, command_bson.bson(), rp_ptr, opts_bson.bson(), reply.bson(),
-        &error);
+    auto result = libmongoc::collection_read_command_with_opts(_get_impl().collection_t,
+                                                               command_bson.bson(),
+                                                               rp_ptr,
+                                                               opts_bson.bson(),
+                                                               reply.bson(),
+                                                               &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);

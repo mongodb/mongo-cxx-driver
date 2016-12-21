@@ -31,10 +31,10 @@ class test_log_handler : public logger {
    public:
     using event = std::tuple<log_level, std::string, std::string>;
 
-    test_log_handler(std::vector<event>* events) : _events(events) {
-    }
+    test_log_handler(std::vector<event>* events) : _events(events) {}
 
-    void operator()(log_level level, stdx::string_view domain,
+    void operator()(log_level level,
+                    stdx::string_view domain,
                     stdx::string_view message) noexcept final {
         if (level == log_level::k_error)
             _events->emplace_back(level, std::string(domain), std::string(message));

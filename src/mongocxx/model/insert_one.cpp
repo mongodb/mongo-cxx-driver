@@ -20,8 +20,8 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
-insert_one::insert_one(bsoncxx::document::view_or_value document) : _document(std::move(document)) {
-}
+insert_one::insert_one(bsoncxx::document::view_or_value document)
+    : _document(std::move(document)) {}
 
 const bsoncxx::document::view_or_value& insert_one::document() const {
     return _document;

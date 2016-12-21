@@ -38,8 +38,7 @@ class array : public array_context<> {
     ///
     /// Default constructor.
     ///
-    BSONCXX_INLINE array() : array_context<>(&_core), _core(true) {
-    }
+    BSONCXX_INLINE array() : array_context<>(&_core), _core(true) {}
 
     ///
     /// @return A view of the BSON array.

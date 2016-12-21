@@ -53,8 +53,7 @@ class BSONCXX_API view_or_value : public bsoncxx::view_or_value<stdx::string_vie
     /// @param str A null-terminated string
     ///
     BSONCXX_INLINE view_or_value(const char* str)
-        : bsoncxx::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {
-    }
+        : bsoncxx::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {}
 
     ///
     /// Allow construction with an l-value reference to a std::string. The resulting
@@ -67,8 +66,7 @@ class BSONCXX_API view_or_value : public bsoncxx::view_or_value<stdx::string_vie
     /// @param str A std::string l-value reference.
     ///
     BSONCXX_INLINE view_or_value(const std::string& str)
-        : bsoncxx::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {
-    }
+        : bsoncxx::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {}
 
     ///
     /// Return a string_view_or_value that is guaranteed to hold a null-terminated

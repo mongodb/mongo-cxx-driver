@@ -64,7 +64,8 @@ pool::entry pool::acquire() {
 
 stdx::optional<pool::entry> pool::try_acquire() {
     auto cli = libmongoc::client_pool_try_pop(_impl->client_pool_t);
-    if (!cli) return stdx::nullopt;
+    if (!cli)
+        return stdx::nullopt;
 
     return pool::entry{new client(cli), [this](client* client) { _release(client); }};
 }

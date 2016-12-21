@@ -22,8 +22,7 @@ namespace model {
 
 replace_one::replace_one(bsoncxx::document::view_or_value filter,
                          bsoncxx::document::view_or_value replacement)
-    : _filter(std::move(filter)), _replacement(std::move(replacement)) {
-}
+    : _filter(std::move(filter)), _replacement(std::move(replacement)) {}
 
 const bsoncxx::document::view_or_value& replace_one::filter() const {
     return _filter;

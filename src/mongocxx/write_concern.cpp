@@ -32,8 +32,7 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-write_concern::write_concern() : _impl{stdx::make_unique<impl>(libmongoc::write_concern_new())} {
-}
+write_concern::write_concern() : _impl{stdx::make_unique<impl>(libmongoc::write_concern_new())} {}
 
 write_concern::write_concern(std::unique_ptr<impl>&& implementation) {
     _impl.reset(implementation.release());
@@ -43,8 +42,7 @@ write_concern::write_concern(write_concern&&) noexcept = default;
 write_concern& write_concern::operator=(write_concern&&) noexcept = default;
 
 write_concern::write_concern(const write_concern& other)
-    : _impl(stdx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))) {
-}
+    : _impl(stdx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))) {}
 
 write_concern& write_concern::operator=(const write_concern& other) {
     _impl.reset(stdx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))
@@ -116,7 +114,8 @@ stdx::optional<std::int32_t> write_concern::nodes() const {
 stdx::optional<write_concern::level> write_concern::acknowledge_level() const {
     stdx::optional<write_concern::level> ack_level;
     std::int32_t w = libmongoc::write_concern_get_w(_impl->write_concern_t);
-    if (w >= 1) return stdx::nullopt;
+    if (w >= 1)
+        return stdx::nullopt;
     switch (w) {
         case MONGOC_WRITE_CONCERN_W_UNACKNOWLEDGED:
             return write_concern::level::k_unacknowledged;

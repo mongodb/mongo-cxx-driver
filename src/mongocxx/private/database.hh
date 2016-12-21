@@ -28,14 +28,12 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 class database::impl {
    public:
     impl(mongoc_database_t* db, const class client::impl* client, std::string name)
-        : database_t(db), client_impl(client), name(std::move(name)) {
-    }
+        : database_t(db), client_impl(client), name(std::move(name)) {}
 
     impl(const impl& i)
         : database_t{libmongoc::database_copy(i.database_t)},
           client_impl{i.client_impl},
-          name{i.name} {
-    }
+          name{i.name} {}
 
     // This method is deleted because we only use the copy constructor.
     impl& operator=(const impl& i) = delete;

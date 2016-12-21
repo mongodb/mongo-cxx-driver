@@ -27,8 +27,7 @@ namespace stream {
 using bsoncxx::builder::concatenate;
 
 struct BSONCXX_API open_document_type {
-    constexpr open_document_type() {
-    }
+    constexpr open_document_type() {}
 };
 
 ///
@@ -37,8 +36,7 @@ struct BSONCXX_API open_document_type {
 constexpr open_document_type open_document;
 
 struct BSONCXX_API close_document_type {
-    constexpr close_document_type() {
-    }
+    constexpr close_document_type() {}
 };
 
 ///
@@ -47,8 +45,7 @@ struct BSONCXX_API close_document_type {
 constexpr close_document_type close_document;
 
 struct BSONCXX_API open_array_type {
-    constexpr open_array_type() {
-    }
+    constexpr open_array_type() {}
 };
 
 ///
@@ -57,8 +54,7 @@ struct BSONCXX_API open_array_type {
 constexpr open_array_type open_array;
 
 struct BSONCXX_API close_array_type {
-    constexpr close_array_type() {
-    }
+    constexpr close_array_type() {}
 };
 
 ///
@@ -67,8 +63,7 @@ struct BSONCXX_API close_array_type {
 constexpr close_array_type close_array;
 
 struct BSONCXX_API finalize_type {
-    constexpr finalize_type() {
-    }
+    constexpr finalize_type() {}
 };
 
 ///

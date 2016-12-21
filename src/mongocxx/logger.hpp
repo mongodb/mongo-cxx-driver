@@ -64,7 +64,8 @@ class MONGOCXX_API logger {
     ///   The domain of the current log message, such as 'client'
     /// @param message
     ///   The text of the current log message.
-    virtual void operator()(log_level level, stdx::string_view domain,
+    virtual void operator()(log_level level,
+                            stdx::string_view domain,
                             stdx::string_view message) noexcept = 0;
 
    protected:

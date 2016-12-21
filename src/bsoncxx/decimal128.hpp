@@ -42,8 +42,7 @@ class BSONCXX_API decimal128 {
     /// @param low
     ///     The low 64-bits.
     ///
-    decimal128(uint64_t high, uint64_t low) noexcept : _high(high), _low(low) {
-    }
+    decimal128(uint64_t high, uint64_t low) noexcept : _high(high), _low(low) {}
 
     ///
     /// Constructs a BSON Decimal128 from a string.

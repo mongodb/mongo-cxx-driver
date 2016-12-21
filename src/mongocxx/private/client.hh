@@ -27,8 +27,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class client::impl {
    public:
-    impl(mongoc_client_t* client) : client_t(client) {
-    }
+    impl(mongoc_client_t* client) : client_t(client) {}
 
     ~impl() {
         libmongoc::client_destroy(client_t);

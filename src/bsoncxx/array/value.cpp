@@ -24,11 +24,9 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace array {
 
 value::value(std::uint8_t* data, std::size_t length, deleter_type dtor)
-    : _data(data, dtor), _length(length) {
-}
+    : _data(data, dtor), _length(length) {}
 
-value::value(unique_ptr_type ptr, std::size_t length) : _data(std::move(ptr)), _length(length) {
-}
+value::value(unique_ptr_type ptr, std::size_t length) : _data(std::move(ptr)), _length(length) {}
 
 namespace {
 
@@ -44,8 +42,7 @@ value::value(array::view view)
     std::copy(view.data(), view.data() + view.length(), _data.get());
 }
 
-value::value(const value& rhs) : value(rhs.view()) {
-}
+value::value(const value& rhs) : value(rhs.view()) {}
 
 value& value::operator=(const value& rhs) {
     *this = value{rhs.view()};

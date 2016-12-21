@@ -813,9 +813,10 @@ TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
         {
             using namespace builder::basic;
 
-            basic.append(kvp("hello", "world"), kvp("foo", 35), kvp("bar", [](sub_document sd) {
-                sd.append(kvp("que", "qux"));
-            }), kvp("baz", [](sub_array sa) { sa.append(1, 2, 3); }));
+            basic.append(kvp("hello", "world"),
+                         kvp("foo", 35),
+                         kvp("bar", [](sub_document sd) { sd.append(kvp("que", "qux")); }),
+                         kvp("baz", [](sub_array sa) { sa.append(1, 2, 3); }));
         }
 
         viewable_eq_viewable(stream, basic);

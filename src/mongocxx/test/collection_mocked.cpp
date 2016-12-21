@@ -91,13 +91,16 @@ TEST_CASE("Collection", "[collection]") {
         std::string expected_rename;
         bool expected_drop;
 
-        collection_rename->interpose([&expected_rename, &expected_drop](
-            ::mongoc_collection_t*, const char*, const char* new_name,
-            bool drop_target_before_rename, ::bson_error_t*) {
-            REQUIRE(expected_rename == std::string{new_name});
-            REQUIRE(expected_drop == drop_target_before_rename);
-            return true;
-        });
+        collection_rename->interpose(
+            [&expected_rename, &expected_drop](::mongoc_collection_t*,
+                                               const char*,
+                                               const char* new_name,
+                                               bool drop_target_before_rename,
+                                               ::bson_error_t*) {
+                REQUIRE(expected_rename == std::string{new_name});
+                REQUIRE(expected_drop == drop_target_before_rename);
+                return true;
+            });
 
         SECTION("with drop_target_before_rename false") {
             expected_rename = "the_best_collection";
@@ -128,8 +131,10 @@ TEST_CASE("Collection", "[collection]") {
         pipeline pipe;
         options::aggregate opts;
 
-        collection_aggregate->interpose([&](mongoc_collection_t*, mongoc_query_flags_t flags,
-                                            const bson_t* pipeline, const bson_t* options,
+        collection_aggregate->interpose([&](mongoc_collection_t*,
+                                            mongoc_query_flags_t flags,
+                                            const bson_t* pipeline,
+                                            const bson_t* options,
                                             const mongoc_read_prefs_t*) -> mongoc_cursor_t* {
             collection_aggregate_called = true;
             REQUIRE(flags == MONGOC_QUERY_NONE);
@@ -155,7 +160,8 @@ TEST_CASE("Collection", "[collection]") {
             else
                 REQUIRE(o.find("maxTimeMS") == o.end());
 
-            if (opts.use_cursor()) REQUIRE(o.find("cursor") != o.end());
+            if (opts.use_cursor())
+                REQUIRE(o.find("cursor") != o.end());
 
             if (opts.batch_size()) {
                 REQUIRE(o.find("cursor") != o.end());
@@ -176,8 +182,7 @@ TEST_CASE("Collection", "[collection]") {
                                                << "bar" << builder::stream::finalize);
         pipe.sort(builder::stream::document{} << "foo" << 1 << builder::stream::finalize);
 
-        SECTION("With default options") {
-        }
+        SECTION("With default options") {}
 
         SECTION("With some options") {
             opts.allow_disk_use(expected_allow_disk_use);
@@ -200,10 +205,14 @@ TEST_CASE("Collection", "[collection]") {
 
         const bson_t* expected_opts = nullptr;
 
-        collection_count_with_opts->interpose([&](mongoc_collection_t*, mongoc_query_flags_t flags,
-                                                  const bson_t* query, int64_t skip, int64_t limit,
+        collection_count_with_opts->interpose([&](mongoc_collection_t*,
+                                                  mongoc_query_flags_t flags,
+                                                  const bson_t* query,
+                                                  int64_t skip,
+                                                  int64_t limit,
                                                   const bson_t* cmd_opts,
-                                                  const mongoc_read_prefs_t*, bson_error_t* error) {
+                                                  const mongoc_read_prefs_t*,
+                                                  bson_error_t* error) {
             collection_count_called = true;
             REQUIRE(flags == MONGOC_QUERY_NONE);
             REQUIRE(bson_get_data(query) == filter_doc.view().data());
@@ -213,12 +222,15 @@ TEST_CASE("Collection", "[collection]") {
                 REQUIRE(bson_equal(cmd_opts, expected_opts));
             }
 
-            if (success) return 123;
+            if (success)
+                return 123;
 
             // The caller expects the bson_error_t to have been
             // initialized by the call to count in the event of an
             // error.
-            bson_set_error(error, MONGOC_ERROR_COMMAND, MONGOC_ERROR_COMMAND_INVALID_ARG,
+            bson_set_error(error,
+                           MONGOC_ERROR_COMMAND,
+                           MONGOC_ERROR_COMMAND_INVALID_ARG,
                            "expected error from mock");
 
             return -1;
@@ -280,8 +292,10 @@ TEST_CASE("Collection", "[collection]") {
                                                       << "foo"
                                                       << "bar" << builder::stream::finalize;
 
-        collection_create_index->interpose([&](mongoc_collection_t*, const bson_t*,
-                                               const mongoc_index_opt_t* opt, bson_error_t* error) {
+        collection_create_index->interpose([&](mongoc_collection_t*,
+                                               const bson_t*,
+                                               const mongoc_index_opt_t* opt,
+                                               bson_error_t* error) {
             collection_create_index_called = true;
             if (options.unique()) {
                 REQUIRE(opt->unique == expected_unique);
@@ -295,7 +309,9 @@ TEST_CASE("Collection", "[collection]") {
             }
 
             if (!success)
-                bson_set_error(error, MONGOC_ERROR_COMMAND, MONGOC_ERROR_COMMAND_INVALID_ARG,
+                bson_set_error(error,
+                               MONGOC_ERROR_COMMAND,
+                               MONGOC_ERROR_COMMAND_INVALID_ARG,
                                "expected error from mock");
 
             return success;
@@ -355,7 +371,9 @@ TEST_CASE("Collection", "[collection]") {
             collection_drop_called = true;
 
             if (!success)
-                bson_set_error(error, MONGOC_ERROR_COMMAND, MONGOC_ERROR_COMMAND_INVALID_ARG,
+                bson_set_error(error,
+                               MONGOC_ERROR_COMMAND,
+                               MONGOC_ERROR_COMMAND_INVALID_ARG,
                                "expected error from mock");
 
             return success;
@@ -385,7 +403,8 @@ TEST_CASE("Collection", "[collection]") {
         mongocxx::stdx::optional<bool> expected_no_cursor_timeout;
         mongocxx::stdx::optional<bsoncxx::document::view> expected_sort{};
 
-        collection_find_with_opts->interpose([&](mongoc_collection_t*, const bson_t* filter,
+        collection_find_with_opts->interpose([&](mongoc_collection_t*,
+                                                 const bson_t* filter,
                                                  const bson_t* opts,
                                                  const mongoc_read_prefs_t* read_prefs) {
             collection_find_called = true;
@@ -575,36 +594,37 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Update One", "[collection::update_one]") {
             bool upsert_option = false;
 
-            bulk_operation_update_one_with_opts->interpose(
-                [&](mongoc_bulk_operation_t*, const bson_t* query, const bson_t* update,
-                    const bson_t* options, bson_error_t*) {
-                    bulk_operation_op_called = true;
-                    REQUIRE(bson_get_data(query) == filter_doc.view().data());
-                    REQUIRE(bson_get_data(update) == modification_doc.view().data());
+            bulk_operation_update_one_with_opts->interpose([&](mongoc_bulk_operation_t*,
+                                                               const bson_t* query,
+                                                               const bson_t* update,
+                                                               const bson_t* options,
+                                                               bson_error_t*) {
+                bulk_operation_op_called = true;
+                REQUIRE(bson_get_data(query) == filter_doc.view().data());
+                REQUIRE(bson_get_data(update) == modification_doc.view().data());
 
-                    bsoncxx::document::view options_view{bson_get_data(options), options->len};
+                bsoncxx::document::view options_view{bson_get_data(options), options->len};
 
-                    bsoncxx::document::element upsert = options_view["upsert"];
-                    if (upsert_option) {
+                bsoncxx::document::element upsert = options_view["upsert"];
+                if (upsert_option) {
+                    REQUIRE(upsert);
+                    REQUIRE(upsert.type() == bsoncxx::type::k_bool);
+                    REQUIRE(upsert.get_bool().value);
+                } else {
+                    // Allow either no "upsert" option, or an "upsert" option set to false.
+                    if (upsert) {
                         REQUIRE(upsert);
                         REQUIRE(upsert.type() == bsoncxx::type::k_bool);
-                        REQUIRE(upsert.get_bool().value);
-                    } else {
-                        // Allow either no "upsert" option, or an "upsert" option set to false.
-                        if (upsert) {
-                            REQUIRE(upsert);
-                            REQUIRE(upsert.type() == bsoncxx::type::k_bool);
-                            REQUIRE(!upsert.get_bool().value);
-                        }
+                        REQUIRE(!upsert.get_bool().value);
                     }
+                }
 
-                    return true;
-                });
+                return true;
+            });
 
             options::update options;
 
-            SECTION("Default Options") {
-            }
+            SECTION("Default Options") {}
 
             SECTION("Upsert true") {
                 upsert_option = true;
@@ -633,31 +653,33 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Update Many", "[collection::update_many]") {
             bool upsert_option;
 
-            bulk_operation_update_many_with_opts->interpose(
-                [&](mongoc_bulk_operation_t*, const bson_t* query, const bson_t* update,
-                    const bson_t* options, bson_error_t*) {
-                    bulk_operation_op_called = true;
-                    REQUIRE(bson_get_data(query) == filter_doc.view().data());
-                    REQUIRE(bson_get_data(update) == modification_doc.view().data());
+            bulk_operation_update_many_with_opts->interpose([&](mongoc_bulk_operation_t*,
+                                                                const bson_t* query,
+                                                                const bson_t* update,
+                                                                const bson_t* options,
+                                                                bson_error_t*) {
+                bulk_operation_op_called = true;
+                REQUIRE(bson_get_data(query) == filter_doc.view().data());
+                REQUIRE(bson_get_data(update) == modification_doc.view().data());
 
-                    bsoncxx::document::view options_view{bson_get_data(options), options->len};
+                bsoncxx::document::view options_view{bson_get_data(options), options->len};
 
-                    bsoncxx::document::element upsert = options_view["upsert"];
-                    if (upsert_option) {
+                bsoncxx::document::element upsert = options_view["upsert"];
+                if (upsert_option) {
+                    REQUIRE(upsert);
+                    REQUIRE(upsert.type() == bsoncxx::type::k_bool);
+                    REQUIRE(upsert.get_bool().value);
+                } else {
+                    // Allow either no "upsert" option, or an "upsert" option set to false.
+                    if (upsert) {
                         REQUIRE(upsert);
                         REQUIRE(upsert.type() == bsoncxx::type::k_bool);
-                        REQUIRE(upsert.get_bool().value);
-                    } else {
-                        // Allow either no "upsert" option, or an "upsert" option set to false.
-                        if (upsert) {
-                            REQUIRE(upsert);
-                            REQUIRE(upsert.type() == bsoncxx::type::k_bool);
-                            REQUIRE(!upsert.get_bool().value);
-                        }
+                        REQUIRE(!upsert.get_bool().value);
                     }
+                }
 
-                    return true;
-                });
+                return true;
+            });
 
             options::update options;
 
@@ -681,31 +703,33 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Replace One", "[collection::replace_one]") {
             bool upsert_option;
 
-            bulk_operation_replace_one_with_opts->interpose(
-                [&](mongoc_bulk_operation_t*, const bson_t* query, const bson_t* update,
-                    const bson_t* options, bson_error_t*) {
-                    bulk_operation_op_called = true;
-                    REQUIRE(bson_get_data(query) == filter_doc.view().data());
-                    REQUIRE(bson_get_data(update) == modification_doc.view().data());
+            bulk_operation_replace_one_with_opts->interpose([&](mongoc_bulk_operation_t*,
+                                                                const bson_t* query,
+                                                                const bson_t* update,
+                                                                const bson_t* options,
+                                                                bson_error_t*) {
+                bulk_operation_op_called = true;
+                REQUIRE(bson_get_data(query) == filter_doc.view().data());
+                REQUIRE(bson_get_data(update) == modification_doc.view().data());
 
-                    bsoncxx::document::view options_view{bson_get_data(options), options->len};
+                bsoncxx::document::view options_view{bson_get_data(options), options->len};
 
-                    bsoncxx::document::element upsert = options_view["upsert"];
-                    if (upsert_option) {
+                bsoncxx::document::element upsert = options_view["upsert"];
+                if (upsert_option) {
+                    REQUIRE(upsert);
+                    REQUIRE(upsert.type() == bsoncxx::type::k_bool);
+                    REQUIRE(upsert.get_bool().value);
+                } else {
+                    // Allow either no "upsert" option, or an "upsert" option set to false.
+                    if (upsert) {
                         REQUIRE(upsert);
                         REQUIRE(upsert.type() == bsoncxx::type::k_bool);
-                        REQUIRE(upsert.get_bool().value);
-                    } else {
-                        // Allow either no "upsert" option, or an "upsert" option set to false.
-                        if (upsert) {
-                            REQUIRE(upsert);
-                            REQUIRE(upsert.type() == bsoncxx::type::k_bool);
-                            REQUIRE(!upsert.get_bool().value);
-                        }
+                        REQUIRE(!upsert.get_bool().value);
                     }
+                }
 
-                    return true;
-                });
+                return true;
+            });
 
             options::update options;
 
@@ -771,15 +795,17 @@ TEST_CASE("Collection", "[collection]") {
         libbson::scoped_bson_t return_bson{return_doc.view()};
         bsoncxx::stdx::optional<bsoncxx::document::value> fam_result;
 
-        collection_find_and_modify_with_opts->interpose(
-            [&](::mongoc_collection_t*, const ::bson_t* filter,
-                const ::mongoc_find_and_modify_opts_t*, ::bson_t* reply, ::bson_error_t*) {
-                fam_called = true;
-                document::view filter_view{bson_get_data(filter), filter->len};
-                REQUIRE(expected_filter == filter_view);
-                ::bson_copy_to(return_bson.bson(), reply);
-                return true;
-            });
+        collection_find_and_modify_with_opts->interpose([&](::mongoc_collection_t*,
+                                                            const ::bson_t* filter,
+                                                            const ::mongoc_find_and_modify_opts_t*,
+                                                            ::bson_t* reply,
+                                                            ::bson_error_t*) {
+            fam_called = true;
+            document::view filter_view{bson_get_data(filter), filter->len};
+            REQUIRE(expected_filter == filter_view);
+            ::bson_copy_to(return_bson.bson(), reply);
+            return true;
+        });
 
         SECTION("Delete", "[collection::find_one_and_delete]") {
             options::find_one_and_delete opts{};
@@ -841,8 +867,8 @@ TEST_CASE("Collection", "[collection]") {
             opts.upsert(true);
             opts.return_document(options::return_document::k_after);
 
-            fam_result = mongo_coll.find_one_and_update(expected_filter,
-                                                        expected_find_and_modify_opts_update, opts);
+            fam_result = mongo_coll.find_one_and_update(
+                expected_filter, expected_find_and_modify_opts_update, opts);
         }
 
         REQUIRE(fam_called);

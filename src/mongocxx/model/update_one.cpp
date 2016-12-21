@@ -22,8 +22,7 @@ namespace model {
 
 update_one::update_one(bsoncxx::document::view_or_value filter,
                        bsoncxx::document::view_or_value update)
-    : _filter(std::move(filter)), _update(std::move(update)) {
-}
+    : _filter(std::move(filter)), _update(std::move(update)) {}
 
 const bsoncxx::document::view_or_value& update_one::filter() const {
     return _filter;

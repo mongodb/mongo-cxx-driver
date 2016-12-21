@@ -41,8 +41,7 @@ class sub_array {
     ///
     /// Default constructor
     ///
-    BSONCXX_INLINE sub_array(core* core) : _core(core) {
-    }
+    BSONCXX_INLINE sub_array(core* core) : _core(core) {}
 
     ///
     /// Appends multiple BSON values.
@@ -57,8 +56,7 @@ class sub_array {
     /// Inductive base-case for the variadic append(...)
     ///
     BSONCXX_INLINE
-    void append() {
-    }
+    void append() {}
 
    private:
     //

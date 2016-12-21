@@ -57,8 +57,7 @@ class array_context {
     /// @param core
     ///   The core builder to orchestrate
     ///
-    BSONCXX_INLINE array_context(core* core) : _core(core) {
-    }
+    BSONCXX_INLINE array_context(core* core) : _core(core) {}
 
     ///
     /// << operator for accepting a real value and appending it to the core

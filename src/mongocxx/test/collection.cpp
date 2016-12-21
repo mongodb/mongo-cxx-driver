@@ -860,13 +860,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                                << "FOO";
 
             if (test_util::supports_collation(mongodb_client)) {
-                auto doc = coll.find_one_and_replace(collation_criteria.view(), replacement.view(),
-                                                     options);
+                auto doc = coll.find_one_and_replace(
+                    collation_criteria.view(), replacement.view(), options);
                 REQUIRE(doc);
                 REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
             } else {
-                REQUIRE_THROWS_AS(coll.find_one_and_replace(collation_criteria.view(),
-                                                            replacement.view(), options),
+                REQUIRE_THROWS_AS(coll.find_one_and_replace(
+                                      collation_criteria.view(), replacement.view(), options),
                                   write_exception);
             }
         }
@@ -995,7 +995,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto get_results = [](cursor&& cursor) {
             std::vector<bsoncxx::document::value> results;
-            std::transform(cursor.begin(), cursor.end(), std::back_inserter(results),
+            std::transform(cursor.begin(),
+                           cursor.end(),
+                           std::back_inserter(results),
                            [](bsoncxx::document::view v) { return bsoncxx::document::value{v}; });
             return results;
         };

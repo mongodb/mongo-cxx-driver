@@ -27,8 +27,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class pool::impl {
    public:
-    impl(mongoc_client_pool_t* pool) : client_pool_t(pool) {
-    }
+    impl(mongoc_client_pool_t* pool) : client_pool_t(pool) {}
 
     ~impl() {
         libmongoc::client_pool_destroy(client_pool_t);

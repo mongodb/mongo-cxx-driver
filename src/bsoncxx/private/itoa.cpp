@@ -1054,11 +1054,9 @@ void itoa::init() {
     }
 }
 
-itoa::itoa() : itoa(0) {
-}
+itoa::itoa() : itoa(0) {}
 
-itoa::itoa(const itoa& rhs) : itoa(rhs._val) {
-}
+itoa::itoa(const itoa& rhs) : itoa(rhs._val) {}
 
 itoa& itoa::operator=(const itoa& rhs) {
     _val = rhs._val;

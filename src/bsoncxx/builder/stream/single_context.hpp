@@ -41,8 +41,7 @@ class single_context {
     /// @param core
     ///   The core builder to orchestrate
     ///
-    BSONCXX_INLINE single_context(core* core) : _core(core) {
-    }
+    BSONCXX_INLINE single_context(core* core) : _core(core) {}
 
     ///
     /// << operator for opening a new subdocument in the core builder.

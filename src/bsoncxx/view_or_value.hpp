@@ -57,8 +57,7 @@ class view_or_value {
     /// @param view
     ///   A non-owning View.
     ///
-    BSONCXX_INLINE view_or_value(View view) : _view{view} {
-    }
+    BSONCXX_INLINE view_or_value(View view) : _view{view} {}
 
     ///
     /// Constructs a view_or_value from a Value type. This object owns the passed-in Value.
@@ -66,15 +65,13 @@ class view_or_value {
     /// @param value
     ///   A Value type.
     ///
-    BSONCXX_INLINE view_or_value(Value&& value) : _value(std::move(value)), _view(*_value) {
-    }
+    BSONCXX_INLINE view_or_value(Value&& value) : _value(std::move(value)), _view(*_value) {}
 
     ///
     /// Construct a view_or_value from a copied view_or_value.
     ///
     BSONCXX_INLINE view_or_value(const view_or_value& other)
-        : _value(other._value), _view(_value ? *_value : other._view) {
-    }
+        : _value(other._value), _view(_value ? *_value : other._view) {}
 
     ///
     /// Assign to this view_or_value from a copied view_or_value.

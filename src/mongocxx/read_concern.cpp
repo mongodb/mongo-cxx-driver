@@ -25,19 +25,16 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-read_concern::read_concern() : _impl{stdx::make_unique<impl>(libmongoc::read_concern_new())} {
-}
+read_concern::read_concern() : _impl{stdx::make_unique<impl>(libmongoc::read_concern_new())} {}
 
 read_concern::read_concern(std::unique_ptr<impl>&& implementation)
-    : _impl{std::move(implementation)} {
-}
+    : _impl{std::move(implementation)} {}
 
 read_concern::read_concern(read_concern&&) noexcept = default;
 read_concern& read_concern::operator=(read_concern&&) noexcept = default;
 
 read_concern::read_concern(const read_concern& other)
-    : _impl(stdx::make_unique<impl>(libmongoc::read_concern_copy(other._impl->read_concern_t))) {
-}
+    : _impl(stdx::make_unique<impl>(libmongoc::read_concern_copy(other._impl->read_concern_t))) {}
 
 read_concern& read_concern::operator=(const read_concern& other) {
     _impl = stdx::make_unique<impl>(libmongoc::read_concern_copy(other._impl->read_concern_t));

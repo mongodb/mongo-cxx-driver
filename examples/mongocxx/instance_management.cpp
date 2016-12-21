@@ -73,9 +73,9 @@ class mongo_access {
 void configure(mongocxx::uri uri) {
     class noop_logger : public mongocxx::logger {
        public:
-        virtual void operator()(mongocxx::log_level, mongocxx::stdx::string_view,
-                                mongocxx::stdx::string_view) noexcept {
-        }
+        virtual void operator()(mongocxx::log_level,
+                                mongocxx::stdx::string_view,
+                                mongocxx::stdx::string_view) noexcept {}
     };
 
     auto instance =
@@ -87,7 +87,8 @@ void configure(mongocxx::uri uri) {
 
 bool do_work() {
     auto connection = mongo_access::instance().get_connection();
-    if (!connection) return false;
+    if (!connection)
+        return false;
     return true;
 }
 

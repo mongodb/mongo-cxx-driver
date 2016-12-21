@@ -38,11 +38,9 @@ bson_iter_t to_bson_iter_t(element e) {
 }
 }  // namespace
 
-view::const_iterator::const_iterator() {
-}
+view::const_iterator::const_iterator() {}
 
-view::const_iterator::const_iterator(const element& element) : _element(element) {
-}
+view::const_iterator::const_iterator(const element& element) : _element(element) {}
 
 view::const_iterator::reference view::const_iterator::operator*() {
     return _element;
@@ -138,15 +136,13 @@ element view::operator[](stdx::string_view key) const {
     return *(this->find(key));
 }
 
-view::view(const std::uint8_t* data, std::size_t length) : _data(data), _length(length) {
-}
+view::view(const std::uint8_t* data, std::size_t length) : _data(data), _length(length) {}
 
 namespace {
 const uint8_t k_default_view[5] = {5, 0, 0, 0, 0};
 }
 
-view::view() : _data(k_default_view), _length(sizeof(k_default_view)) {
-}
+view::view() : _data(k_default_view), _length(sizeof(k_default_view)) {}
 
 const std::uint8_t* view::data() const {
     return _data;

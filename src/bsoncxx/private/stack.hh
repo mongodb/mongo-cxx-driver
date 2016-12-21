@@ -26,8 +26,7 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 template <typename T, std::size_t size>
 class stack {
    public:
-    stack() : _bucket_index(0), _bucket_size(size), _is_empty(true) {
-    }
+    stack() : _bucket_index(0), _bucket_size(size), _is_empty(true) {}
 
     ~stack() {
         while (!empty()) {
@@ -44,12 +43,12 @@ class stack {
         return _is_empty;
     }
 
-    T &back() {
+    T& back() {
         return *(_get_ptr());
     }
 
     template <typename... Args>
-    void emplace_back(Args &&... args) {
+    void emplace_back(Args&&... args) {
         if (_is_empty) {
             _is_empty = false;
         } else {
@@ -74,17 +73,17 @@ class stack {
    private:
     typename std::aligned_storage<sizeof(T), alignof(T)>::type _object_memory[size];
 
-    std::list<T *> _buckets;
+    std::list<T*> _buckets;
 
-    typename std::list<T *>::iterator _bucket_iter;
+    typename std::list<T*>::iterator _bucket_iter;
 
     int _bucket_index;
     int _bucket_size;
     bool _is_empty;
 
-    T *_get_ptr() {
+    T* _get_ptr() {
         if (_bucket_size == size) {
-            return reinterpret_cast<T *>(_object_memory) + _bucket_index;
+            return reinterpret_cast<T*>(_object_memory) + _bucket_index;
         } else {
             return *(_bucket_iter) + _bucket_index;
         }
@@ -97,8 +96,7 @@ class stack {
 
             if (_buckets.empty()) {
                 // first pass at needing dynamic memory
-                _buckets.emplace_back(
-                    reinterpret_cast<T *>(operator new(sizeof(T) * _bucket_size)));
+                _buckets.emplace_back(reinterpret_cast<T*>(operator new(sizeof(T) * _bucket_size)));
 
                 _bucket_iter = _buckets.begin();
             } else if (_bucket_size != size * 2) {
@@ -107,7 +105,7 @@ class stack {
 
                 if (++tmp_iter == _buckets.end()) {
                     _buckets.emplace_back(
-                        reinterpret_cast<T *>(operator new(sizeof(T) * _bucket_size)));
+                        reinterpret_cast<T*>(operator new(sizeof(T) * _bucket_size)));
                 }
                 ++_bucket_iter;
             }

@@ -25,8 +25,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 using namespace bsoncxx::builder::stream;
 
-pipeline::pipeline() : _impl(stdx::make_unique<impl>()) {
-}
+pipeline::pipeline() : _impl(stdx::make_unique<impl>()) {}
 
 pipeline::pipeline(pipeline&&) noexcept = default;
 pipeline& pipeline::operator=(pipeline&&) noexcept = default;

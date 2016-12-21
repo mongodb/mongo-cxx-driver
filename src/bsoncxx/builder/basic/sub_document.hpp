@@ -37,8 +37,7 @@ void value_append(core* core, T&& t);
 ///
 class sub_document {
    public:
-    BSONCXX_INLINE sub_document(core* core) : _core(core) {
-    }
+    BSONCXX_INLINE sub_document(core* core) : _core(core) {}
 
     ///
     /// Appends multiple basic::kvp key-value pairs.
@@ -53,8 +52,7 @@ class sub_document {
     /// Inductive base-case for the variadic append(...)
     ///
     BSONCXX_INLINE
-    void append() {
-    }
+    void append() {}
 
    private:
     //

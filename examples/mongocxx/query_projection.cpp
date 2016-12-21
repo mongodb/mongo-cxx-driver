@@ -13,7 +13,7 @@ using bsoncxx::builder::stream::open_document;
 using bsoncxx::builder::stream::close_document;
 using bsoncxx::builder::stream::finalize;
 
-int main(int, char **) {
+int main(int, char**) {
     mongocxx::instance inst{};
     mongocxx::client conn{mongocxx::uri{}};
 
@@ -36,7 +36,7 @@ int main(int, char **) {
 
     // Execute find with options
     auto cursor = coll.find(filter.view(), opts);
-    for (auto &&doc : cursor) {
+    for (auto&& doc : cursor) {
         std::cout << bsoncxx::to_json(doc) << std::endl;
     }
 

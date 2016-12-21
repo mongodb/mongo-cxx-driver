@@ -24,8 +24,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class write_concern::impl {
    public:
-    impl(mongoc_write_concern_t* write_concern) : write_concern_t(write_concern) {
-    }
+    impl(mongoc_write_concern_t* write_concern) : write_concern_t(write_concern) {}
 
     ~impl() {
         libmongoc::write_concern_destroy(write_concern_t);

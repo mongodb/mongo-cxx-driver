@@ -30,8 +30,7 @@ struct validator::impl {
     bool _check_dot_keys{false};
 };
 
-validator::validator() : _impl{stdx::make_unique<impl>()} {
-}
+validator::validator() : _impl{stdx::make_unique<impl>()} {}
 
 validator::~validator() = default;
 
@@ -72,8 +71,10 @@ stdx::optional<document::view> validate(const std::uint8_t* data, std::size_t le
     return validate(data, length, vtor);
 }
 
-stdx::optional<document::view> validate(const std::uint8_t* data, std::size_t length,
-                                        const validator& validator, std::size_t* invalid_offset) {
+stdx::optional<document::view> validate(const std::uint8_t* data,
+                                        std::size_t length,
+                                        const validator& validator,
+                                        std::size_t* invalid_offset) {
     ::bson_validate_flags_t flags = BSON_VALIDATE_NONE;
 
     const auto flip_if = [&flags](bool cond, ::bson_validate_flags_t flag) {
@@ -94,7 +95,8 @@ stdx::optional<document::view> validate(const std::uint8_t* data, std::size_t le
     ::bson_t bson;
     if (!::bson_init_static(&bson, data, length)) {
         // if we can't even initialize a bson_t we just say the error is at offset 0.
-        if (invalid_offset) *invalid_offset = 0u;
+        if (invalid_offset)
+            *invalid_offset = 0u;
         return {};
     }
 

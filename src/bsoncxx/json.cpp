@@ -50,7 +50,8 @@ std::string to_json(document::view view) {
 
     size_t size;
     auto result = bson_as_json(&bson, &size);
-    if (!result) throw exception(error_code::k_failed_converting_bson_to_json);
+    if (!result)
+        throw exception(error_code::k_failed_converting_bson_to_json);
 
     const auto deleter = [](char* result) { bson_free(result); };
     const std::unique_ptr<char[], decltype(deleter)> cleanup(result, deleter);
@@ -63,7 +64,8 @@ document::value from_json(stdx::string_view json) {
     bson_t* result =
         bson_new_from_json(reinterpret_cast<const uint8_t*>(json.data()), json.size(), &error);
 
-    if (!result) throw exception(error_code::k_json_parse_failure, error.message);
+    if (!result)
+        throw exception(error_code::k_json_parse_failure, error.message);
 
     std::uint32_t length;
     std::uint8_t* buf = bson_destroy_with_steal(result, true, &length);

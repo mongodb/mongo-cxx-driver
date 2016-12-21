@@ -20,8 +20,8 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
-bulk_write::bulk_write(bsoncxx::document::value raw_response) : _response(std::move(raw_response)) {
-}
+bulk_write::bulk_write(bsoncxx::document::value raw_response)
+    : _response(std::move(raw_response)) {}
 
 std::int32_t bulk_write::inserted_count() const {
     return view()["nInserted"].get_int32();

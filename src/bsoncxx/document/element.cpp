@@ -45,12 +45,10 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
-element::element() : _raw(nullptr), _length(0), _offset(0) {
-}
+element::element() : _raw(nullptr), _length(0), _offset(0) {}
 
 element::element(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset)
-    : _raw(raw), _length(length), _offset(offset) {
-}
+    : _raw(raw), _length(length), _offset(offset) {}
 
 const std::uint8_t* element::raw() const {
     return _raw;
@@ -286,13 +284,15 @@ types::value element::get_value() const {
 }
 
 element element::operator[](stdx::string_view key) const {
-    if (_raw == nullptr || type() != bsoncxx::type::k_document) return element();
+    if (_raw == nullptr || type() != bsoncxx::type::k_document)
+        return element();
     document::view doc = get_document();
     return doc[key];
 }
 
 array::element element::operator[](std::uint32_t i) const {
-    if (_raw == nullptr || type() != bsoncxx::type::k_array) return array::element();
+    if (_raw == nullptr || type() != bsoncxx::type::k_array)
+        return array::element();
     array::view arr = get_array();
     return arr[i];
 }

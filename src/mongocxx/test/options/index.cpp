@@ -51,7 +51,7 @@ TEST_CASE("index", "[index][option]") {
     CHECK_OPTIONAL_ARGUMENT(idx, twod_location_max, 90.0);
     CHECK_OPTIONAL_ARGUMENT(idx, haystack_bucket_size, 90.0);
     CHECK_OPTIONAL_ARGUMENT_WITHOUT_EQUALITY(idx, weights, weights.view());
-    CHECK_OPTIONAL_ARGUMENT_WITHOUT_EQUALITY(idx, partial_filter_expression,
-                                             partial_filter_expression.view());
+    CHECK_OPTIONAL_ARGUMENT_WITHOUT_EQUALITY(
+        idx, partial_filter_expression, partial_filter_expression.view());
     REQUIRE_NOTHROW(idx.storage_options(std::move(storage)));
 }

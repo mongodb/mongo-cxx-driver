@@ -25,8 +25,7 @@ using namespace bsoncxx;
 template <typename begin_t, typename end_t>
 class range_array_appender {
    public:
-    range_array_appender(begin_t begin, end_t end) : _begin(begin), _end(end) {
-    }
+    range_array_appender(begin_t begin, end_t end) : _begin(begin), _end(end) {}
 
     void operator()(bsoncxx::builder::stream::array_context<> ac) const {
         for (auto iter = _begin; iter != _end; ++iter) {
@@ -49,8 +48,7 @@ range_array_appender<begin_t, end_t> make_range_array_appender(begin_t&& begin, 
 template <typename begin_t, typename end_t>
 class range_kvp_appender {
    public:
-    range_kvp_appender(begin_t begin, end_t end) : _begin(begin), _end(end) {
-    }
+    range_kvp_appender(begin_t begin, end_t end) : _begin(begin), _end(end) {}
 
     void operator()(bsoncxx::builder::stream::key_context<> ac) const {
         for (auto iter = _begin; iter != _end; ++iter) {

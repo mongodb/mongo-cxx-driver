@@ -39,8 +39,7 @@ options::bulk_write make_bulk_write_options(const options::insert& insert_option
 }  // namespace
 
 insert_many_builder::insert_many_builder(const options::insert& options)
-    : _writes{make_bulk_write_options(options)}, _inserted_ids{} {
-}
+    : _writes{make_bulk_write_options(options)}, _inserted_ids{} {}
 
 void insert_many_builder::operator()(const bsoncxx::document::view& doc) {
     bsoncxx::builder::stream::document id_doc;

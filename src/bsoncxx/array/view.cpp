@@ -39,11 +39,9 @@ bson_iter_t to_bson_iter_t(element e) {
 }
 }  // namespace
 
-view::const_iterator::const_iterator() {
-}
+view::const_iterator::const_iterator() {}
 
-view::const_iterator::const_iterator(const element& element) : _element(element) {
-}
+view::const_iterator::const_iterator(const element& element) : _element(element) {}
 
 view::const_iterator::reference view::const_iterator::operator*() {
     return _element;
@@ -141,11 +139,9 @@ element view::operator[](std::uint32_t i) const {
     return *(this->find(i));
 }
 
-view::view(const std::uint8_t* data, std::size_t length) : _view(data, length) {
-}
+view::view(const std::uint8_t* data, std::size_t length) : _view(data, length) {}
 
-view::view() : _view() {
-}
+view::view() : _view() {}
 
 const std::uint8_t* view::data() const {
     return _view.data();

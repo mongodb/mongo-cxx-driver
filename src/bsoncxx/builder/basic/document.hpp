@@ -36,8 +36,7 @@ class array;
 ///
 class document : public sub_document {
    public:
-    BSONCXX_INLINE document() : sub_document(&_core), _core(false) {
-    }
+    BSONCXX_INLINE document() : sub_document(&_core), _core(false) {}
 
     ///
     /// @return A view of the BSON document.

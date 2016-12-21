@@ -20,8 +20,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
-update::update(result::bulk_write result) : _result(std::move(result)) {
-}
+update::update(result::bulk_write result) : _result(std::move(result)) {}
 
 const result::bulk_write& update::result() const {
     return _result;

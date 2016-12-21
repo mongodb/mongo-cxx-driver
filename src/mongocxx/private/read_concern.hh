@@ -24,8 +24,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class read_concern::impl {
    public:
-    impl(::mongoc_read_concern_t* read_concern) : read_concern_t{read_concern} {
-    }
+    impl(::mongoc_read_concern_t* read_concern) : read_concern_t{read_concern} {}
 
     ~impl() {
         libmongoc::read_concern_destroy(read_concern_t);

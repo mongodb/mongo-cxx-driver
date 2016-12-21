@@ -30,8 +30,7 @@ class cursor::impl {
     enum class state { k_pending = 0, k_started = 1, k_dead = 2 };
 
     impl(mongoc_cursor_t* cursor)
-        : cursor_t(cursor), status{cursor ? state::k_pending : state::k_dead} {
-    }
+        : cursor_t(cursor), status{cursor ? state::k_pending : state::k_dead} {}
 
     ~impl() {
         libmongoc::cursor_destroy(cursor_t);

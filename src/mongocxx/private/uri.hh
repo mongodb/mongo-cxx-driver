@@ -24,8 +24,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class uri::impl {
    public:
-    impl(mongoc_uri_t* uri) : uri_t(uri) {
-    }
+    impl(mongoc_uri_t* uri) : uri_t(uri) {}
     ~impl() {
         libmongoc::uri_destroy(uri_t);
     }
