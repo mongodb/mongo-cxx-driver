@@ -45,4 +45,120 @@ mongocxx::options::ssl ssl_options;
 client_options.ssl_opts(ssl_options);
 ```
 
+## Configuring authentication
 
+### Default authentication mechanism
+
+MongoDB 3.0 changed the default authentication mechanism from MONGODB-CR
+to SCRAM-SHA-1. To create a credential that will authenticate properly
+regardless of server version, use a connection string with the user and
+password directly in the URI and with a parameter specifying the database
+to authenticate from:
+
+```cpp
+#include <mongocxx/client.hpp>
+#include <mongocxx/uri.hpp>
+
+auto client = mongocxx::client{uri{"mongodb://user1:pwd1@host1/?authSource=db1"}};
+```
+
+### SCRAM-SHA-1
+
+To explicitly create a credential of type SCRAM-SHA-1 use a connection
+string as above but with a parameter specifying the authentication
+mechanism as "SCRAM-SHA-1":
+
+```cpp
+#include <mongocxx/client.hpp>
+#include <mongocxx/uri.hpp>
+
+auto client = mongocxx::client{
+    uri{"mongodb://user1:pwd1@host1/?authSource=db1&authMechanism=SCRAM-SHA-1"}};
+```
+
+### MONGODB-CR
+
+To explicitly create a credential of type MONGODB-CR use a connection
+string as above but with a parameter specifying the authentication mechanism
+as "MONGODB-CR":
+
+```cpp
+#include <mongocxx/client.hpp>
+#include <mongocxx/uri.hpp>
+
+auto client = mongocxx::client{
+    uri{"mongodb://user1:pwd1@host1/?authSource=db1&authMechanism=MONGODB-CR"}};
+```
+
+Note that this is not recommended as a credential created in this way will
+fail to authenticate after an authentication schema upgrade from
+MONGODB-CR to SCRAM-SHA-1.
+
+### X.509
+
+The [X.509](https://www.mongodb.org/dochub/core/x509)
+mechanism authenticates a user whose name is derived from the distinguished
+subject name of the X.509 certificate presented by the driver during SSL
+negotiation. This authentication method requires the use of SSL
+connections with certificate validation and is available in MongoDB 2.6
+and newer. To create a credential of this type, first create a set of
+client options specifying the path to the PEM file containing the client
+private key and certificate, and then use a connection string with a
+parameter specifying the authentication mechanism as "MONGODB-X509" and
+with SSL enabled:
+
+```cpp
+#include <mongocxx/client.hpp>
+#include <mongocxx/uri.hpp>
+#include <mongocxx/options/client.hpp>
+#include <mongocxx/options/ssl.hpp>
+
+mongocxx::options::ssl ssl_opts{};
+ssl_opts.pem_file("client.pem");
+
+mongocxx::options::client client_opts{};
+client_opts.ssl_opts(ssl_opts);
+
+auto client = mongocxx::client{
+    uri{"mongodb://host1/?authMechanism=MONGODB-X509&ssl=true"}, client_opts};
+```
+
+See the MongoDB server
+[X.509 tutorial](https://www.mongodb.org/dochub/core/x509-subject-name)
+for more information about determining the subject name from the
+certificate.
+
+### Kerberos (GSSAPI)
+
+[MongoDB Enterprise](https://www.mongodb.com/products/mongodb-enterprise)
+supports proxy authentication through Kerberos service. To create a
+credential of type [Kerberos (GSSAPI)](https://www.mongodb.org/dochub/core/kerberos)
+use a connection string with the username and realm in the URI as well as
+a parameter specifying the authentication mechanism as "GSSAPI":
+
+```cpp
+#include <mongocxx/client.hpp>
+#include <mongocxx/uri.hpp>
+
+auto client = mongocxx::client{
+    uri{"mongodb://username%40REALM.COM@host1/?authMechanism=GSSAPI"}};
+```
+
+Note that the "@" symbol in the URI must be escaped to "%40" as shown in the example above.
+
+### LDAP
+
+[MongoDB Enterprise](http://www.mongodb.com/products/mongodb-enterprise)
+supports proxy authentication through a Lightweight Directory Access
+Protocol (LDAP) service. To create a credential of type LDAP use a
+connection string specifying the user as well as parameters specifying
+the authentication source as "$external" and the authentication mechanishm
+as "PLAIN":
+
+```cpp
+#include <mongocxx/client.hpp>
+#include <mongocxx/uri.hpp>
+
+auto client = mongocxx::client{
+    uri{"mongodb://user1:pwd1@host1/?authSource=$external&authMechanism=PLAIN"}};
+```
