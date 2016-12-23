@@ -267,7 +267,10 @@ class ClangFormat(object):
     def _validate_version(self):
         """Validate clang-format is the expected version
         """
-        cf_version = callo([self.path, "--version"])
+        try:
+            cf_version = callo([self.path, "--version"])
+        except CalledProcessError:
+            cf_version = "clang-format call failed."
 
         if CLANG_FORMAT_VERSION in cf_version:
             return True
