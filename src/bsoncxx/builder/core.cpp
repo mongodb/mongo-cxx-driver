@@ -38,28 +38,45 @@ void bson_free_deleter(std::uint8_t* ptr) {
     bson_free(ptr);
 }
 
+//
+// Class providing RAII semantics for bson_t.
+//
+class managed_bson_t {
+   public:
+    managed_bson_t() {
+        bson_init(&bson);
+    }
+
+    managed_bson_t(managed_bson_t&&) = delete;
+    managed_bson_t& operator=(managed_bson_t&&) = delete;
+
+    managed_bson_t(const managed_bson_t&) = delete;
+    managed_bson_t& operator=(const managed_bson_t&) = delete;
+
+    ~managed_bson_t() {
+        bson_destroy(&bson);
+    }
+
+    bson_t* get() {
+        return &bson;
+    }
+
+   private:
+    bson_t bson;
+};
+
 }  // namespace
 
 class core::impl {
    public:
-    impl(bool is_array) : _depth(0), _root_is_array(is_array), _n(0), _has_user_key(false) {
-        bson_init(&_root);
-    }
-
-    ~impl() {
-        while (!_stack.empty()) {
-            _stack.pop_back();
-        }
-
-        bson_destroy(&_root);
-    }
+    impl(bool is_array) : _depth(0), _root_is_array(is_array), _n(0), _has_user_key(false) {}
 
     void reinit() {
         while (!_stack.empty()) {
             _stack.pop_back();
         }
 
-        bson_reinit(&_root);
+        bson_reinit(_root.get());
 
         _depth = 0;
 
@@ -75,8 +92,8 @@ class core::impl {
         }
 
         uint32_t buf_len;
-        uint8_t* buf_ptr = bson_destroy_with_steal(&_root, true, &buf_len);
-        bson_init(&_root);
+        uint8_t* buf_ptr = bson_destroy_with_steal(_root.get(), true, &buf_len);
+        bson_init(_root.get());
 
         return bsoncxx::document::value{buf_ptr, buf_len, bson_free_deleter};
     }
@@ -88,15 +105,15 @@ class core::impl {
         }
 
         uint32_t buf_len;
-        uint8_t* buf_ptr = bson_destroy_with_steal(&_root, true, &buf_len);
-        bson_init(&_root);
+        uint8_t* buf_ptr = bson_destroy_with_steal(_root.get(), true, &buf_len);
+        bson_init(_root.get());
 
         return bsoncxx::array::value{buf_ptr, buf_len, bson_free_deleter};
     }
 
     bson_t* back() {
         if (_stack.empty()) {
-            return &_root;
+            return _root.get();
         } else {
             return &_stack.back().bson;
         }
@@ -157,7 +174,7 @@ class core::impl {
             throw bsoncxx::exception{error_code::k_cannot_perform_document_operation_on_array};
         }
 
-        return &_root;
+        return _root.get();
     }
 
     // Throws bsoncxx::exception if the top-level BSON datum is a document.
@@ -166,7 +183,7 @@ class core::impl {
             throw bsoncxx::exception{error_code::k_cannot_perform_array_operation_on_document};
         }
 
-        return &_root;
+        return _root.get();
     }
 
     bool is_array() {
@@ -206,13 +223,14 @@ class core::impl {
         bson_t* parent;
     };
 
-    stack<frame, 4> _stack;
-
     std::size_t _depth;
 
     bool _root_is_array;
     std::size_t _n;
-    bson_t _root;
+    managed_bson_t _root;
+
+    // The bottom frame of _stack has _root as its parent.
+    stack<frame, 4> _stack;
 
     itoa _itoa_key;
 
