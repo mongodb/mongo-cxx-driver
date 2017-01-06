@@ -117,6 +117,118 @@ mongocxx::options::ssl ssl_options;
 
 client_options.ssl_opts(ssl_options);
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;configuring-authentication&#34;&gt;Configuring authentication&lt;/h2&gt;
+
+&lt;h3 id=&#34;default-authentication-mechanism&#34;&gt;Default authentication mechanism&lt;/h3&gt;
+
+&lt;p&gt;MongoDB 3.0 changed the default authentication mechanism from MONGODB-CR
+to SCRAM-SHA-1. To create a credential that will authenticate properly
+regardless of server version, use a connection string with the user and
+password directly in the URI and with a parameter specifying the database
+to authenticate from:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;mongocxx/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/uri.hpp&amp;gt;
+
+auto client = mongocxx::client{uri{&amp;quot;mongodb://user1:pwd1@host1/?authSource=db1&amp;quot;}};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;scram-sha-1&#34;&gt;SCRAM-SHA-1&lt;/h3&gt;
+
+&lt;p&gt;To explicitly create a credential of type SCRAM-SHA-1 use a connection
+string as above but with a parameter specifying the authentication
+mechanism as &amp;ldquo;SCRAM-SHA-1&amp;rdquo;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;mongocxx/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/uri.hpp&amp;gt;
+
+auto client = mongocxx::client{
+    uri{&amp;quot;mongodb://user1:pwd1@host1/?authSource=db1&amp;amp;authMechanism=SCRAM-SHA-1&amp;quot;}};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;mongodb-cr&#34;&gt;MONGODB-CR&lt;/h3&gt;
+
+&lt;p&gt;To explicitly create a credential of type MONGODB-CR use a connection
+string as above but with a parameter specifying the authentication mechanism
+as &amp;ldquo;MONGODB-CR&amp;rdquo;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;mongocxx/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/uri.hpp&amp;gt;
+
+auto client = mongocxx::client{
+    uri{&amp;quot;mongodb://user1:pwd1@host1/?authSource=db1&amp;amp;authMechanism=MONGODB-CR&amp;quot;}};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that this is not recommended as a credential created in this way will
+fail to authenticate after an authentication schema upgrade from
+MONGODB-CR to SCRAM-SHA-1.&lt;/p&gt;
+
+&lt;h3 id=&#34;x-509&#34;&gt;X.509&lt;/h3&gt;
+
+&lt;p&gt;The &lt;a href=&#34;https://www.mongodb.org/dochub/core/x509&#34;&gt;X.509&lt;/a&gt;
+mechanism authenticates a user whose name is derived from the distinguished
+subject name of the X.509 certificate presented by the driver during SSL
+negotiation. This authentication method requires the use of SSL
+connections with certificate validation and is available in MongoDB 2.6
+and newer. To create a credential of this type, first create a set of
+client options specifying the path to the PEM file containing the client
+private key and certificate, and then use a connection string with a
+parameter specifying the authentication mechanism as &amp;ldquo;MONGODB-X509&amp;rdquo; and
+with SSL enabled:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;mongocxx/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/uri.hpp&amp;gt;
+#include &amp;lt;mongocxx/options/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/options/ssl.hpp&amp;gt;
+
+mongocxx::options::ssl ssl_opts{};
+ssl_opts.pem_file(&amp;quot;client.pem&amp;quot;);
+
+mongocxx::options::client client_opts{};
+client_opts.ssl_opts(ssl_opts);
+
+auto client = mongocxx::client{
+    uri{&amp;quot;mongodb://host1/?authMechanism=MONGODB-X509&amp;amp;ssl=true&amp;quot;}, client_opts};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;See the MongoDB server
+&lt;a href=&#34;https://www.mongodb.org/dochub/core/x509-subject-name&#34;&gt;X.509 tutorial&lt;/a&gt;
+for more information about determining the subject name from the
+certificate.&lt;/p&gt;
+
+&lt;h3 id=&#34;kerberos-gssapi&#34;&gt;Kerberos (GSSAPI)&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.mongodb.com/products/mongodb-enterprise&#34;&gt;MongoDB Enterprise&lt;/a&gt;
+supports proxy authentication through Kerberos service. To create a
+credential of type &lt;a href=&#34;https://www.mongodb.org/dochub/core/kerberos&#34;&gt;Kerberos (GSSAPI)&lt;/a&gt;
+use a connection string with the username and realm in the URI as well as
+a parameter specifying the authentication mechanism as &amp;ldquo;GSSAPI&amp;rdquo;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;mongocxx/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/uri.hpp&amp;gt;
+
+auto client = mongocxx::client{
+    uri{&amp;quot;mongodb://username%40REALM.COM@host1/?authMechanism=GSSAPI&amp;quot;}};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that the &amp;ldquo;@&amp;rdquo; symbol in the URI must be escaped to &amp;ldquo;%40&amp;rdquo; as shown in the example above.&lt;/p&gt;
+
+&lt;h3 id=&#34;ldap&#34;&gt;LDAP&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.mongodb.com/products/mongodb-enterprise&#34;&gt;MongoDB Enterprise&lt;/a&gt;
+supports proxy authentication through a Lightweight Directory Access
+Protocol (LDAP) service. To create a credential of type LDAP use a
+connection string specifying the user as well as parameters specifying
+the authentication source as &amp;ldquo;$external&amp;rdquo; and the authentication mechanishm
+as &amp;ldquo;PLAIN&amp;rdquo;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;mongocxx/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/uri.hpp&amp;gt;
+
+auto client = mongocxx::client{
+    uri{&amp;quot;mongodb://user1:pwd1@host1/?authSource=$external&amp;amp;authMechanism=PLAIN&amp;quot;}};
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
