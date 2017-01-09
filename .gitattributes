@@ -1,1 +1,2 @@
 .evergreen/install.sh eol=lf
+.evergreen/compile.sh eol=lf
