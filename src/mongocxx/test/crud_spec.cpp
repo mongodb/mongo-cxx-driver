@@ -75,8 +75,11 @@ pipeline build_pipeline(array::view pipeline_docs) {
     return pipeline;
 }
 
-document::value run_aggregate_test(collection* coll, document::view operation,
+document::value run_aggregate_test(collection* coll,
+                                   document::view operation,
                                    std::string server_version) {
+    static_cast<void>(server_version);  // Unused
+
     document::view arguments = operation["arguments"].get_document().value;
     pipeline pipeline = build_pipeline(arguments["pipeline"].get_array().value);
     options::aggregate options{};
@@ -101,8 +104,11 @@ document::value run_aggregate_test(collection* coll, document::view operation,
     return result.extract();
 }
 
-document::value run_count_test(collection* coll, document::view operation,
+document::value run_count_test(collection* coll,
+                               document::view operation,
                                std::string server_version) {
+    static_cast<void>(server_version);  // Unused
+
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::count options{};
@@ -130,8 +136,11 @@ document::value run_count_test(collection* coll, document::view operation,
     return result.extract();
 }
 
-document::value run_distinct_test(collection* coll, document::view operation,
+document::value run_distinct_test(collection* coll,
+                                  document::view operation,
                                   std::string server_version) {
+    static_cast<void>(server_version);  // Unused
+
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter{};
 
@@ -161,8 +170,11 @@ document::value run_distinct_test(collection* coll, document::view operation,
     return result.extract();
 }
 
-document::value run_find_test(collection* coll, document::view operation,
+document::value run_find_test(collection* coll,
+                              document::view operation,
                               std::string server_version) {
+    static_cast<void>(server_version);  // Unused
+
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::find options{};
@@ -199,8 +211,11 @@ document::value run_find_test(collection* coll, document::view operation,
     return result.extract();
 }
 
-document::value run_delete_many_test(collection* coll, document::view operation,
+document::value run_delete_many_test(collection* coll,
+                                     document::view operation,
                                      std::string server_version) {
+    static_cast<void>(server_version);  // Unused
+
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::delete_options options{};
@@ -225,8 +240,11 @@ document::value run_delete_many_test(collection* coll, document::view operation,
     return result.extract();
 }
 
-document::value run_delete_one_test(collection* coll, document::view operation,
+document::value run_delete_one_test(collection* coll,
+                                    document::view operation,
                                     std::string server_version) {
+    static_cast<void>(server_version);  // Unused
+
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::delete_options options{};
@@ -251,8 +269,11 @@ document::value run_delete_one_test(collection* coll, document::view operation,
     return result.extract();
 }
 
-document::value run_find_one_and_delete_test(collection* coll, document::view operation,
+document::value run_find_one_and_delete_test(collection* coll,
+                                             document::view operation,
                                              std::string server_version) {
+    static_cast<void>(server_version);  // Unused
+
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::find_one_and_delete options{};
@@ -283,8 +304,11 @@ document::value run_find_one_and_delete_test(collection* coll, document::view op
     return result.extract();
 }
 
-document::value run_find_one_and_replace_test(collection* coll, document::view operation,
+document::value run_find_one_and_replace_test(collection* coll,
+                                              document::view operation,
                                               std::string server_version) {
+    static_cast<void>(server_version);  // Unused
+
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view replacement = arguments["replacement"].get_document().value;
@@ -332,8 +356,11 @@ document::value run_find_one_and_replace_test(collection* coll, document::view o
     return result.extract();
 }
 
-document::value run_find_one_and_update_test(collection* coll, document::view operation,
+document::value run_find_one_and_update_test(collection* coll,
+                                             document::view operation,
                                              std::string server_version) {
+    static_cast<void>(server_version);  // Unused
+
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view update = arguments["update"].get_document().value;
@@ -381,8 +408,11 @@ document::value run_find_one_and_update_test(collection* coll, document::view op
     return result.extract();
 }
 
-document::value run_insert_many_test(collection* coll, document::view operation,
+document::value run_insert_many_test(collection* coll,
+                                     document::view operation,
                                      std::string server_version) {
+    static_cast<void>(server_version);  // Unused
+
     document::view arguments = operation["arguments"].get_document().value;
     array::view documents = arguments["documents"].get_array().value;
     std::vector<document::view> documents_to_insert{};
@@ -413,8 +443,11 @@ document::value run_insert_many_test(collection* coll, document::view operation,
     return result.extract();
 }
 
-document::value run_insert_one_test(collection* coll, document::view operation,
+document::value run_insert_one_test(collection* coll,
+                                    document::view operation,
                                     std::string server_version) {
+    static_cast<void>(server_version);  // Unused
+
     document::view arguments = operation["arguments"].get_document().value;
     document::view document = arguments["document"].get_document().value;
     auto result = builder::basic::document{};
@@ -433,7 +466,8 @@ document::value run_insert_one_test(collection* coll, document::view operation,
     return result.extract();
 }
 
-document::value run_replace_one_test(collection* coll, document::view operation,
+document::value run_replace_one_test(collection* coll,
+                                     document::view operation,
                                      std::string server_version) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
@@ -472,8 +506,9 @@ document::value run_replace_one_test(collection* coll, document::view operation,
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp(
-        "result", [server_version, replacement, matched_count, modified_count, upserted_count,
-                   upserted_id](builder::basic::sub_document subdoc) {
+        "result",
+        [server_version, replacement, matched_count, modified_count, upserted_count, upserted_id](
+            builder::basic::sub_document subdoc) {
             subdoc.append(builder::basic::kvp("matchedCount", matched_count));
 
             if (modified_count) {
@@ -490,8 +525,11 @@ document::value run_replace_one_test(collection* coll, document::view operation,
     return result.extract();
 }
 
-document::value run_update_many_test(collection* coll, document::view operation,
+document::value run_update_many_test(collection* coll,
+                                     document::view operation,
                                      std::string server_version) {
+    static_cast<void>(server_version);  // Unused
+
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view update = arguments["update"].get_document().value;
@@ -528,26 +566,31 @@ document::value run_update_many_test(collection* coll, document::view operation,
     }
 
     auto result = builder::basic::document{};
-    result.append(builder::basic::kvp("result", [matched_count, modified_count, upserted_count,
-                                                 upserted_id](builder::basic::sub_document subdoc) {
-        subdoc.append(builder::basic::kvp("matchedCount", matched_count));
+    result.append(builder::basic::kvp(
+        "result",
+        [matched_count, modified_count, upserted_count, upserted_id](
+            builder::basic::sub_document subdoc) {
+            subdoc.append(builder::basic::kvp("matchedCount", matched_count));
 
-        if (modified_count) {
-            subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
-        }
+            if (modified_count) {
+                subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
+            }
 
-        subdoc.append(builder::basic::kvp("upsertedCount", upserted_count));
+            subdoc.append(builder::basic::kvp("upsertedCount", upserted_count));
 
-        if (upserted_id) {
-            subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
-        }
-    }));
+            if (upserted_id) {
+                subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
+            }
+        }));
 
     return result.extract();
 }
 
-document::value run_update_one_test(collection* coll, document::view operation,
+document::value run_update_one_test(collection* coll,
+                                    document::view operation,
                                     std::string server_version) {
+    static_cast<void>(server_version);  // Unused
+
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view update = arguments["update"].get_document().value;
@@ -584,20 +627,22 @@ document::value run_update_one_test(collection* coll, document::view operation,
     }
 
     auto result = builder::basic::document{};
-    result.append(builder::basic::kvp("result", [matched_count, modified_count, upserted_count,
-                                                 upserted_id](builder::basic::sub_document subdoc) {
-        subdoc.append(builder::basic::kvp("matchedCount", matched_count));
+    result.append(builder::basic::kvp(
+        "result",
+        [matched_count, modified_count, upserted_count, upserted_id](
+            builder::basic::sub_document subdoc) {
+            subdoc.append(builder::basic::kvp("matchedCount", matched_count));
 
-        if (modified_count) {
-            subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
-        }
+            if (modified_count) {
+                subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
+            }
 
-        subdoc.append(builder::basic::kvp("upsertedCount", upserted_count));
+            subdoc.append(builder::basic::kvp("upsertedCount", upserted_count));
 
-        if (upserted_id) {
-            subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
-        }
-    }));
+            if (upserted_id) {
+                subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
+            }
+        }));
 
     return result.extract();
 }
