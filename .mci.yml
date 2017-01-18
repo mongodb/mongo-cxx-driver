@@ -35,10 +35,8 @@ variables:
     tar_options:
         linux_tar_options: &linux_tar_options --wildcards --no-anchored
 
-    ## concurrency for make
-    compile_concurrency:
-        linux_compile_concurrency: &linux_compile_concurrency -j$(grep -c ^processor /proc/cpuinfo)
-        osx_compile_concurrency: &osx_compile_concurrency -j$(sysctl -n hw.logicalcpu)
+    build_tool_path:
+        unix_build_tool_path: &unix_build_tool_path make
 
     ## cdriver configure flags
     cdriver_configure_flags:
@@ -47,11 +45,11 @@ variables:
 
     ## cmake flag variables
     cmake_flags:
-        linux_cmake_flags: &linux_cmake_flags -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -Wno-error=missing-field-initializers"
-        rhel55_cmake_flags: &rhel55_cmake_flags -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror"
-        osx_cmake_flags: &osx_cmake_flags -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Werror" -DBSONCXX_POLY_USE_BOOST=ON
-        asan_cmake_flags: &asan_cmake_flags -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
-        ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/../etc/ubsan.blacklist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
+        linux_cmake_flags: &linux_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -Wno-error=missing-field-initializers"
+        rhel55_cmake_flags: &rhel55_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror"
+        osx_cmake_flags: &osx_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Werror" -DBSONCXX_POLY_USE_BOOST=ON
+        asan_cmake_flags: &asan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
+        ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.blacklist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
 
     ## test parameters
     test_params:
@@ -111,8 +109,8 @@ functions:
             working_dir: "mongo-cxx-driver"
             script: |
                     export PREFIX=$(pwd)/../mongoc/
-                    sh ./.evergreen/install.sh libbson ${MONGOC_VERSION|master}
-                    sh ./.evergreen/install.sh mongoc ${MONGOC_VERSION|master}
+                    sh .evergreen/install.sh libbson ${MONGOC_VERSION|master}
+                    sh .evergreen/install.sh mongoc ${MONGOC_VERSION|master}
 
     "lint":
         - command: shell.exec
@@ -126,28 +124,28 @@ functions:
     "compile":
         - command: shell.exec
           params:
-              working_dir: "mongo-cxx-driver/build"
+              working_dir: "mongo-cxx-driver"
               script: |
                   set -o errexit
                   set -o xtrace
-                  export PREFIX=$(pwd)/../../mongoc/
                   if [ "${cxx_path|default}" != "default" ]; then
                         export CXX="${cxx_path}"
                   fi
                   if [ "${cc_path|default}" != "default" ]; then
                         export CC="${cc_path}"
                   fi
-                  PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig" ${cmake_path} ${cmake_flags} -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" ..
-                  make ${compile_concurrency} all
-                  make install
-                  make ${compile_concurrency} examples
+                  export PATH_TO_CMAKE="${cmake_path}"
+                  export PATH_TO_BUILD_TOOL="${build_tool_path}"
+                  export PKG_CONFIG_PATH="$(pwd)/../mongoc/lib/pkgconfig"
+                  sh .evergreen/compile.sh ${cmake_flags} -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=install ..
     "test":
         - command: shell.exec
           params:
-              working_dir: "mongo-cxx-driver/build"
+              working_dir: "mongo-cxx-driver"
               script: |
                   set -o errexit
                   set -o xtrace
+                  cd build
                   export PREFIX=$(pwd)/../../mongoc/
                   export LD_LIBRARY_PATH=.:$PREFIX/lib/
                   export DYLD_LIBRARY_PATH=.:$PREFIX/lib/
@@ -216,7 +214,7 @@ buildvariants:
           build_type: "Release"
           source: *linux_64_source
           tar_options: *linux_tar_options
-          compile_concurrency: *linux_compile_concurrency
+          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *linux_cmake_path
           cmake_flags: *linux_cmake_flags
@@ -233,7 +231,7 @@ buildvariants:
           build_type: "Debug"
           source: *linux_64_source
           tar_options: *linux_tar_options
-          compile_concurrency: *linux_compile_concurrency
+          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *linux_cmake_path
           cmake_flags: *linux_cmake_flags
@@ -249,7 +247,7 @@ buildvariants:
           build_type: "Debug"
           source: *rhel55_source
           tar_options: *linux_tar_options
-          compile_concurrency: *linux_compile_concurrency
+          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *linux_cmake_path
           cmake_flags: *rhel55_cmake_flags
@@ -266,7 +264,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           source: *osx_source
-          compile_concurrency: *osx_compile_concurrency
+          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *osx_cdriver_configure_flags
           cmake_path: *osx_cmake_path
           cmake_flags: *osx_cmake_flags
@@ -282,7 +280,7 @@ buildvariants:
           build_type: "Debug"
           source: *linux_64_source
           tar_options: *linux_tar_options
-          compile_concurrency: *linux_compile_concurrency
+          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *linux_cmake_path
           cmake_flags: *linux_cmake_flags
@@ -299,7 +297,7 @@ buildvariants:
           build_type: "Debug"
           source: *linux_64_source
           tar_options: *linux_tar_options
-          compile_concurrency: *linux_compile_concurrency
+          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *linux_cmake_path
           cmake_flags: *asan_cmake_flags
@@ -316,7 +314,7 @@ buildvariants:
           build_type: "Debug"
           source: *linux_64_source
           tar_options: *linux_tar_options
-          compile_concurrency: *linux_compile_concurrency
+          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *linux_cmake_path
           cmake_flags: *ubsan_cmake_flags
@@ -334,7 +332,7 @@ buildvariants:
           build_type: "Release"
           source: *ubuntu_s390x_source
           tar_options: *linux_tar_options
-          compile_concurrency: *linux_compile_concurrency
+          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *ubuntu_zap_cmake_path
       run_on:
@@ -350,7 +348,7 @@ buildvariants:
           build_type: "Release"
           source: *ubuntu_ppc64le_source
           tar_options: *linux_tar_options
-          compile_concurrency: *linux_compile_concurrency
+          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *ubuntu_zap_cmake_path
       run_on:
@@ -366,7 +364,7 @@ buildvariants:
           build_type: "Release"
           source: *ubuntu_arm64_source
           tar_options: *linux_tar_options
-          compile_concurrency: *linux_compile_concurrency
+          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *ubuntu_zap_cmake_path
       run_on:

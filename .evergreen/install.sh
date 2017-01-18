@@ -15,12 +15,22 @@ usage() {
 }
 [ $# -lt 1 ] && { usage; exit 2; }
 
-CONFIGURE_ARGS_MONGOC="--disable-automatic-init-and-cleanup --disable-shm-counters --with-libbson=system"
-CONFIGURE_ARGS_BSON="--disable-extra-align"
-CONFIGURE_ARGS_EXTRA="--enable-tests=no --enable-examples=no --enable-debug --enable-optimizations --disable-static --disable-dependency-tracking --with-pic"
 VERSION=${2:-master}
 PREFIX=${PREFIX:-$(pwd)"/deps-install"}
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+
+case "$OS" in
+    darwin|linux)
+        CONFIGURE_ARGS_MONGOC="--disable-automatic-init-and-cleanup --disable-shm-counters --with-libbson=system"
+        CONFIGURE_ARGS_BSON="--disable-extra-align"
+        CONFIGURE_ARGS_EXTRA="--enable-tests=no --enable-examples=no --enable-debug --enable-optimizations --disable-static --disable-dependency-tracking --with-pic --prefix=$PREFIX"
+        ;;
+
+    *)
+        echo "$0: unsupported platform '$OS'" >&2
+        exit 2
+        ;;
+esac
 
 case "$1" in
     libbson)
@@ -55,19 +65,25 @@ else
     tar --extract --file $LIB.tgz
 fi
 
+cd $DIR
+
 case "$OS" in
     darwin)
         MAKEFLAGS="-j"$(sysctl -n hw.logicalcpu)
+        PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig" ./configure $CONFIGURE_ARGS
+        make
+        make install
         ;;
 
     linux)
         MAKEFLAGS="-j"$(grep -c ^processor /proc/cpuinfo)
+        PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig" ./configure $CONFIGURE_ARGS
+        make
+        make install
+        ;;
+
+    *)
+        echo "$0: unsupported platform '$OS'" >&2
+        exit 2
         ;;
 esac
-
-cd $DIR
-
-PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig" ./configure $CONFIGURE_ARGS --prefix="$PREFIX"
-make
-make install
-
