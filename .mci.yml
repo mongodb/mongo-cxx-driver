@@ -18,6 +18,7 @@ variables:
         ubuntu_s390x_source: &ubuntu_s390x_source http://downloads.10gen.com/linux/mongodb-linux-s390x-enterprise-ubuntu1604-latest.tgz
         ubuntu_ppc64le_source: &ubuntu_ppc64le_source http://downloads.10gen.com/linux/mongodb-linux-ppc64le-enterprise-ubuntu1604-latest.tgz
         ubuntu_arm64_source: &ubuntu_arm64_source http://downloads.10gen.com/linux/mongodb-linux-arm64-enterprise-ubuntu1604-latest.tgz
+        windows_source: &windows_source http://downloads.mongodb.org/win32/mongodb-win32-x86_64-2008plus-ssl-latest.zip
 
 
     ## Use newer compiler path variables
@@ -30,6 +31,7 @@ variables:
         linux_cmake_path: &linux_cmake_path /opt/cmake/bin/cmake
         ubuntu_zap_cmake_path: &ubuntu_zap_cmake_path /usr/bin/cmake
         osx_cmake_path: &osx_cmake_path /Applications/Cmake.app/Contents/bin/cmake
+        windows_cmake_path: &windows_cmake_path /cygdrive/c/cmake/bin/cmake
 
     ## tar options variables
     tar_options:
@@ -37,6 +39,7 @@ variables:
 
     build_tool_path:
         unix_build_tool_path: &unix_build_tool_path make
+        windows_build_tool_path: &windows_build_tool_path "/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe"
 
     ## cdriver configure flags
     cdriver_configure_flags:
@@ -50,6 +53,7 @@ variables:
         osx_cmake_flags: &osx_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Werror" -DBSONCXX_POLY_USE_BOOST=ON
         asan_cmake_flags: &asan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
         ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.blacklist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
+        windows_cmake_flags: &windows_cmake_flags -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT=c:/local/boost_1_60_0 -DLIBBSON_DIR=$(cygpath -m "$(pwd)/../mongoc") -DLIBMONGOC_DIR=$(cygpath -m "$(pwd)/../mongoc")
 
     ## test parameters
     test_params:
@@ -170,7 +174,6 @@ pre:
         rm -fr mongod
   - func: "fetch_source"
   - func: "getdata"
-  - func: "start_mongod"
 
 post:
   - func: "stop_mongod"
@@ -183,8 +186,16 @@ tasks:
       commands:
         - func: "lint"
 
+    - name: compile_with_mongoc_current
+      commands:
+        - func: "install_c_driver"
+          vars:
+              MONGOC_VERSION: 1.5.0
+        - func: "compile"
+
     - name: compile_and_test_with_mongoc_current
       commands:
+        - func: "start_mongod"
         - func: "install_c_driver"
           vars:
               MONGOC_VERSION: 1.5.0
@@ -193,6 +204,7 @@ tasks:
 
     - name: compile_and_test_with_mongoc_master
       commands:
+        - func: "start_mongod"
         - func: "install_c_driver"
           vars:
               MONGOC_VERSION: master
@@ -373,3 +385,17 @@ buildvariants:
           - name: compile_and_test_with_mongoc_current
           - name: compile_and_test_with_mongoc_master
 
+    - name: windows-2k8-debug
+      display_name: "Windows 2008R2 Debug"
+      batchtime: 1440 # 1 day
+      expansions:
+          build_type: "Debug"
+          source: *windows_source
+          tar_options: *linux_tar_options
+          build_tool_path: *windows_build_tool_path
+          cmake_path: *windows_cmake_path
+          cmake_flags: *windows_cmake_flags
+      run_on:
+          - windows-64-vs2015-compile
+      tasks:
+          - name: compile_with_mongoc_current

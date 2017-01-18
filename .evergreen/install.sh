@@ -26,6 +26,12 @@ case "$OS" in
         CONFIGURE_ARGS_EXTRA="--enable-tests=no --enable-examples=no --enable-debug --enable-optimizations --disable-static --disable-dependency-tracking --with-pic --prefix=$PREFIX"
         ;;
 
+    cygwin*)
+        CONFIGURE_ARGS_MONGOC=
+        CONFIGURE_ARGS_BSON=
+        CONFIGURE_ARGS_EXTRA="-DCMAKE_INSTALL_PREFIX=$(cygpath -m "$PREFIX")"
+        ;;
+
     *)
         echo "$0: unsupported platform '$OS'" >&2
         exit 2
@@ -78,6 +84,11 @@ case "$OS" in
         PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig" ./configure $CONFIGURE_ARGS
         make "-j$(grep -c ^processor /proc/cpuinfo)"
         make install
+        ;;
+
+    cygwin*)
+        /cygdrive/c/cmake/bin/cmake -G "Visual Studio 14 2015 Win64" $CONFIGURE_ARGS
+        "/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe" /m INSTALL.vcxproj
         ;;
 
     *)

@@ -34,6 +34,12 @@ case "$OS" in
         "$PATH_TO_BUILD_TOOL" install
         "$PATH_TO_BUILD_TOOL" "-j$CONCURRENCY" examples
         ;;
+    cygwin*)
+        PATH_TO_BUILD_TOOL="${PATH_TO_BUILD_TOOL:-msbuild.exe}"
+        "$PATH_TO_BUILD_TOOL" /m ALL_BUILD.vcxproj
+        "$PATH_TO_BUILD_TOOL" INSTALL.vcxproj
+        "$PATH_TO_BUILD_TOOL" /m examples/examples.vcxproj
+        ;;
     *)
         echo "$0: unsupported platform '$OS'" >&2
         exit 1
