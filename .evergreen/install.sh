@@ -69,16 +69,14 @@ cd $DIR
 
 case "$OS" in
     darwin)
-        MAKEFLAGS="-j"$(sysctl -n hw.logicalcpu)
         PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig" ./configure $CONFIGURE_ARGS
-        make
+        make "-j$(sysctl -n hw.logicalcpu)"
         make install
         ;;
 
     linux)
-        MAKEFLAGS="-j"$(grep -c ^processor /proc/cpuinfo)
         PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig" ./configure $CONFIGURE_ARGS
-        make
+        make "-j$(grep -c ^processor /proc/cpuinfo)"
         make install
         ;;
 
