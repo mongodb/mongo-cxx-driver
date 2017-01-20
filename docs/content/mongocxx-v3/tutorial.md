@@ -212,7 +212,8 @@ To insert a single document into the collection, use a
 instance's `insert_one()` method:
 
 ```c++
-mongocxx::result::insert_one result = restaurants.insert_one(doc);
+mongocxx::stdx::optional<mongocxx::result::insert_one> result =
+ restaurants.insert_one(doc);
 ```
 
 If you do not specify a top-level `_id` field in the document,
