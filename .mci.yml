@@ -155,6 +155,7 @@ functions:
                   export DYLD_LIBRARY_PATH=.:$PREFIX/lib/
                   ${test_params} ./src/bsoncxx/test/test_bson
                   ${test_params} ./src/mongocxx/test/test_driver
+                  CRUD_TESTS_PATH="$(pwd)/../data/crud" ${test_params} ./src/mongocxx/test/test_specs
                   ${test_params} ./src/mongocxx/test/test_instance
 
                   # The break -1 is a hack to cause us to have a bad
