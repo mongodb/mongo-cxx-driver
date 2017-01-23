@@ -62,8 +62,8 @@ this.
 	git push origin legacy
 	```
 
-Pushing the BUMP commit to the origin will kick off builds in Evergreen,
-Travis CI and AppVeyor. Wait for all three builds to finish and pass.
+Pushing the BUMP commit to the origin will kick off builds in Evergreen
+and Travis CI. Wait for both builds to finish and pass.
 
 ## Tag the Release
 

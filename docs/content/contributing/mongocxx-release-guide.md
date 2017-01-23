@@ -59,9 +59,9 @@ git commit -am "BUMP r3.0.1"
 git push origin <release-branch>
 ```
 
-Pushing the BUMP commit to the origin will kick off builds in Evergreen,
-Travis CI and AppVeyor (which handles Windows builds). Wait for all three
-builds to finish and pass, re-running any timeout/spot failures.
+Pushing the BUMP commit to the origin will kick off builds in Evergreen
+and Travis CI. Wait for both builds to finish and pass, re-running any
+timeout/spot failures.
 
 Meanwhile, test the branch locally.
 
