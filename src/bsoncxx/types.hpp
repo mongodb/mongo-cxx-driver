@@ -314,7 +314,7 @@ struct BSONCXX_API b_date {
     ///
     /// Conversion operator unwrapping a int64_t
     ///
-    BSONCXX_INLINE operator int64_t() {
+    BSONCXX_INLINE operator int64_t() const {
         return value.count();
     }
 
