@@ -1,4 +1,4 @@
-# MongoDB C++ Driver [![Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=master)](https://travis-ci.org/mongodb/mongo-cxx-driver)
+# MongoDB C++ Driver [![Evergreen Build Status](https://evergreen.mongodb.com/static/img/favicon.ico)](https://evergreen.mongodb.com/waterfall/cxx-driver)[![Travis Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=master)](https://travis-ci.org/mongodb/mongo-cxx-driver)
 
 Welcome to the MongoDB C++ Driver!
 
