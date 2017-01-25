@@ -7,19 +7,9 @@
 #######################################
 variables:
 
-    ## source variables
-    source:
-        linux_64_source: &linux_64_source https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-latest.tgz
-        # Versions 3.4+ of the server no longer run RHEL 5.5, so we pin to v3.2-latest instead. In
-        # addition, the download tools on the RHEL 5 hosts don't support SNI, so we must use an
-        # http:// link.
-        rhel55_source: &rhel55_source http://downloads.mongodb.org/linux/mongodb-linux-x86_64-rhel55-v3.2-latest.tgz
-        osx_source: &osx_source https://fastdl.mongodb.org/osx/mongodb-osx-x86_64-latest.tgz
-        ubuntu_s390x_source: &ubuntu_s390x_source http://downloads.10gen.com/linux/mongodb-linux-s390x-enterprise-ubuntu1604-latest.tgz
-        ubuntu_ppc64le_source: &ubuntu_ppc64le_source http://downloads.10gen.com/linux/mongodb-linux-ppc64le-enterprise-ubuntu1604-latest.tgz
-        ubuntu_arm64_source: &ubuntu_arm64_source http://downloads.10gen.com/linux/mongodb-linux-arm64-enterprise-ubuntu1604-latest.tgz
-        windows_source: &windows_source http://downloads.mongodb.org/win32/mongodb-win32-x86_64-2008plus-ssl-latest.zip
-
+    mongodb_version:
+        version_latest: &version_latest latest
+        version_32: &version_32 3.2
 
     ## Use newer compiler path variables
     compiler_path:
@@ -93,19 +83,35 @@ functions:
             script: |
                 set -o errexit
                 set -o xtrace
-                export PREFIX=$(pwd)/mongodb/
-                curl -o mongodb.tgz ${source}
-                tar --extract --file mongodb.tgz --strip-components=2 ${tar_options} "*/bin/mongod"
-                mkdir -p $PREFIX/db
-                ./mongod --fork --logpath=$PREFIX/mongod.log --dbpath=$PREFIX/db --pidfilepath=$PREFIX/mongod.pid
+                git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git
+                cd drivers-evergreen-tools
+                # Convert shell script line endings.  TODO: Remove this when
+                # <https://github.com/mongodb-labs/drivers-evergreen-tools/pull/6> is merged.
+                for i in .evergreen/*.sh; do dos2unix "$i" || true; done
+                export DRIVERS_TOOLS=$(pwd)
+                if [ "Windows_NT" == "$OS" ]; then
+                    export DRIVERS_TOOLS=$(cygpath -m $DRIVERS_TOOLS)
+                fi
+                export MONGODB_BINARIES=$DRIVERS_TOOLS/mongodb/bin
+                export MONGO_ORCHESTRATION_HOME=$DRIVERS_TOOLS/.evergreen/orchestration
+                export MONGODB_VERSION=${mongodb_version}
+                echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
+                sh .evergreen/run-orchestration.sh
 
     "stop_mongod":
         command: shell.exec
         params:
-            working_dir: "mongod"
-            script:
-                kill -TERM $(cat mongod.pid)
-
+            working_dir: "."
+            script: |
+                set -o errexit
+                set -o xtrace
+                cd drivers-evergreen-tools/.evergreen/orchestration
+                if [ -f venv/bin/activate ]; then
+                    . venv/bin/activate
+                elif [ -f venv/Scripts/activate ]; then
+                    . venv/Scripts/activate
+                fi
+                mongo-orchestration stop
 
     "install_c_driver":
         command: shell.exec
@@ -142,6 +148,7 @@ functions:
                   export PATH_TO_BUILD_TOOL="${build_tool_path}"
                   export PKG_CONFIG_PATH="$(pwd)/../mongoc/lib/pkgconfig"
                   sh .evergreen/compile.sh ${cmake_flags} -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=install ..
+
     "test":
         - command: shell.exec
           params:
@@ -225,12 +232,12 @@ buildvariants:
       display_name: "Ubuntu 14.04 Release"
       expansions:
           build_type: "Release"
-          source: *linux_64_source
           tar_options: *linux_tar_options
           build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *linux_cmake_path
           cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_latest
       run_on:
           - ubuntu1404-test
       tasks:
@@ -242,12 +249,12 @@ buildvariants:
       display_name: "Ubuntu 14.04 Debug"
       expansions:
           build_type: "Debug"
-          source: *linux_64_source
           tar_options: *linux_tar_options
           build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *linux_cmake_path
           cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_latest
       run_on:
           - ubuntu1404-test
       tasks:
@@ -258,7 +265,6 @@ buildvariants:
       display_name: "RHEL 5.5 Debug"
       expansions:
           build_type: "Debug"
-          source: *rhel55_source
           tar_options: *linux_tar_options
           build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
@@ -266,6 +272,8 @@ buildvariants:
           cmake_flags: *rhel55_cmake_flags
           cc_path: *rhel55_cc_path
           cxx_path: *rhel55_cxx_path
+          # Versions 3.4+ of the server no longer run RHEL 5.5, so we pin to 3.2 instead.
+          mongodb_version: *version_32
       run_on:
           - rhel55-test
       tasks:
@@ -276,11 +284,11 @@ buildvariants:
       display_name: "OS X 10.10 Release"
       expansions:
           build_type: "Release"
-          source: *osx_source
           build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *osx_cdriver_configure_flags
           cmake_path: *osx_cmake_path
           cmake_flags: *osx_cmake_flags
+          mongodb_version: *version_latest
       run_on:
           - osx-1010
       tasks:
@@ -291,13 +299,13 @@ buildvariants:
       display_name: "Valgrind Ubuntu 16.04 Debug"
       expansions:
           build_type: "Debug"
-          source: *linux_64_source
           tar_options: *linux_tar_options
           build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *linux_cmake_path
           cmake_flags: *linux_cmake_flags
           test_params: *valgrind_test_params
+          mongodb_version: *version_latest
       run_on:
           - ubuntu1604-build
       tasks:
@@ -308,13 +316,13 @@ buildvariants:
       display_name: "ASAN Ubuntu 16.04 Debug"
       expansions:
           build_type: "Debug"
-          source: *linux_64_source
           tar_options: *linux_tar_options
           build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *linux_cmake_path
           cmake_flags: *asan_cmake_flags
           test_params: *asan_test_params
+          mongodb_version: *version_latest
       run_on:
           - ubuntu1604-build
       tasks:
@@ -325,13 +333,13 @@ buildvariants:
       display_name: "UBSAN Ubuntu 16.04 Debug"
       expansions:
           build_type: "Debug"
-          source: *linux_64_source
           tar_options: *linux_tar_options
           build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *linux_cmake_path
           cmake_flags: *ubsan_cmake_flags
           test_params: *ubsan_test_params
+          mongodb_version: *version_latest
       run_on:
           - ubuntu1604-build
       tasks:
@@ -343,11 +351,11 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          source: *ubuntu_s390x_source
           tar_options: *linux_tar_options
           build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *ubuntu_zap_cmake_path
+          mongodb_version: *version_latest
       run_on:
           - ubuntu1604-zseries-small
       tasks:
@@ -359,11 +367,11 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          source: *ubuntu_ppc64le_source
           tar_options: *linux_tar_options
           build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *ubuntu_zap_cmake_path
+          mongodb_version: *version_latest
       run_on:
           - ubuntu1604-power8-build
       tasks:
@@ -375,11 +383,11 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          source: *ubuntu_arm64_source
           tar_options: *linux_tar_options
           build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *ubuntu_zap_cmake_path
+          mongodb_version: *version_latest
       run_on:
           - ubuntu1604-arm64-small
       tasks:
@@ -391,11 +399,11 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Debug"
-          source: *windows_source
           tar_options: *linux_tar_options
           build_tool_path: *windows_build_tool_path
           cmake_path: *windows_cmake_path
           cmake_flags: *windows_cmake_flags
+          mongodb_version: *version_latest
       run_on:
           - windows-64-vs2015-compile
       tasks:
