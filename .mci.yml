@@ -165,10 +165,7 @@ functions:
                   CRUD_TESTS_PATH="$(pwd)/../data/crud" ${test_params} ./src/mongocxx/test/test_specs
                   ${test_params} ./src/mongocxx/test/test_instance
 
-                  # The break -1 is a hack to cause us to have a bad
-                  # exit status if any test exits with a bad exit
-                  # status.
-                  for test in $(find examples -type f -perm /u+x | sort) ; do ${test_params} $test || break -1 ; done
+                  for test in $(find examples -type f -perm /u+x | sort); do ${test_params} $test; done
 #######################################
 #              Pre Task               #
 #######################################
