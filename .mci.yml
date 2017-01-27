@@ -157,15 +157,36 @@ functions:
                   set -o errexit
                   set -o xtrace
                   cd build
-                  export PREFIX=$(pwd)/../../mongoc/
+                  export PREFIX=$(pwd)/../../mongoc
+
+                  # Use PATH / LD_LIBRARY_PATH / DYLD_LIBRARY_PATH to inform the tests where to find
+                  # mongoc library dependencies on Linux / Mac OS / Windows, respectively.
+                  # Additionally, on Windows, we also need to inform the tests where to find
+                  # mongocxx library dependencies.
                   export LD_LIBRARY_PATH=.:$PREFIX/lib/
                   export DYLD_LIBRARY_PATH=.:$PREFIX/lib/
-                  ${test_params} ./src/bsoncxx/test/test_bson
-                  ${test_params} ./src/mongocxx/test/test_driver
-                  CRUD_TESTS_PATH="$(pwd)/../data/crud" ${test_params} ./src/mongocxx/test/test_specs
-                  ${test_params} ./src/mongocxx/test/test_instance
+                  export PATH=$PREFIX/bin:$(pwd)/install/bin:$PATH
 
-                  for test in $(find examples -type f -perm /u+x | sort); do ${test_params} $test; done
+                  # CRUD_TESTS_PATH is required to be set by the `test_specs` test binary.
+                  export CRUD_TESTS_PATH="$(pwd)/../data/crud"
+                  if [ "Windows_NT" == "$OS" ]; then
+                      CRUD_TESTS_PATH=$(cygpath -m $CRUD_TESTS_PATH)
+                      "${build_tool_path}" RUN_TESTS.vcxproj
+                      "${build_tool_path}" examples/run-examples.vcxproj
+                  else
+                      # Running the tests and examples here one-by-one here with "test_params" is
+                      # necessary due to the fact that we don't yet have explicit CMake integration
+                      # with valgrind.  When CXX-1083 is resolved, we can replace the below with
+                      # `make test && make run-examples` (or the valgrind equivalents, if we make
+                      # separate build targets for valgrind).
+                      ${test_params} ./src/bsoncxx/test/test_bson
+                      ${test_params} ./src/mongocxx/test/test_driver
+                      ${test_params} ./src/mongocxx/test/test_specs
+                      ${test_params} ./src/mongocxx/test/test_instance
+
+                      for test in $(find examples -type f -perm /u+x | sort); do ${test_params} $test; done
+                  fi
+
 #######################################
 #              Pre Task               #
 #######################################
@@ -190,13 +211,6 @@ tasks:
     - name: lint
       commands:
         - func: "lint"
-
-    - name: compile_with_mongoc_current
-      commands:
-        - func: "install_c_driver"
-          vars:
-              MONGOC_VERSION: 1.5.0
-        - func: "compile"
 
     - name: compile_and_test_with_mongoc_current
       commands:
@@ -404,4 +418,5 @@ buildvariants:
       run_on:
           - windows-64-vs2015-compile
       tasks:
-          - name: compile_with_mongoc_current
+          - name: compile_and_test_with_mongoc_current
+          - name: compile_and_test_with_mongoc_master

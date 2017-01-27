@@ -35,6 +35,15 @@ add_custom_target(run-examples DEPENDS examples)
 
 # Run all mongocxx examples on `make run-examples`.
 foreach(EXAMPLE ${MONGOCXX_EXAMPLE_EXECUTABLES})
+    # Skip the "exception" example when running with Visual Studio, which currently fails due to the
+    # following CMake/MSBuild issue:
+    # <https://cmake.org/pipermail/cmake-developers/2015-October/026775.html>.  The "exception"
+    # example prints "error:" to standard out, which MSBuild interprets as a command failure due to
+    # its default behavior of detecting "standard error format" messages from commands.
+    if ((${EXAMPLE} STREQUAL "exception") AND (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC"))
+        continue()
+    endif()
+
     add_custom_command(TARGET run-examples POST_BUILD COMMAND ${EXAMPLE})
 endforeach(EXAMPLE)
 
