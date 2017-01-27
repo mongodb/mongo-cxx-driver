@@ -19,6 +19,7 @@ VERSION=${2:-master}
 PREFIX=${PREFIX:-$(pwd)"/deps-install"}
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 
+# TODO CXX-1204: improve/tweak the flags below.
 case "$OS" in
     darwin|linux)
         CONFIGURE_ARGS_MONGOC="--disable-automatic-init-and-cleanup --disable-shm-counters --with-libbson=system"
