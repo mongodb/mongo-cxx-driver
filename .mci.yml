@@ -428,6 +428,22 @@ buildvariants:
           - name: compile_and_test_with_mongoc_current
           - name: compile_and_test_with_mongoc_master
 
+    - name: windows-2k8-release
+      display_name: "Windows 2008R2 Release"
+      batchtime: 1440 # 1 day
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          build_tool_path: *windows_build_tool_path
+          cmake_path: *windows_cmake_path
+          cmake_flags: *windows_cmake_flags
+          mongodb_version: *version_latest
+      run_on:
+          - windows-64-vs2015-compile
+      tasks:
+          - name: compile_and_test_with_mongoc_current
+          - name: compile_and_test_with_mongoc_master
+
     - name: windows-2k8-debug
       display_name: "Windows 2008R2 Debug"
       batchtime: 1440 # 1 day
