@@ -35,12 +35,10 @@ add_custom_target(run-examples DEPENDS examples)
 
 # Run all mongocxx examples on `make run-examples`.
 foreach(EXAMPLE ${MONGOCXX_EXAMPLE_EXECUTABLES})
-    get_filename_component(EXAMPLE_EXECUTABLE "${CMAKE_BINARY_DIR}/examples/mongocxx/${EXAMPLE}" ABSOLUTE)
-    add_custom_command(TARGET run-examples POST_BUILD COMMAND ${EXAMPLE_EXECUTABLE})
+    add_custom_command(TARGET run-examples POST_BUILD COMMAND ${EXAMPLE})
 endforeach(EXAMPLE)
 
 # Run all bsoncxx examples on `make run-examples`.
 foreach(EXAMPLE ${BSONCXX_EXAMPLE_EXECUTABLES})
-    get_filename_component(EXAMPLE_EXECUTABLE "${CMAKE_BINARY_DIR}/examples/bsoncxx/${EXAMPLE}" ABSOLUTE)
-    add_custom_command(TARGET run-examples POST_BUILD COMMAND ${EXAMPLE_EXECUTABLE})
+    add_custom_command(TARGET run-examples POST_BUILD COMMAND ${EXAMPLE})
 endforeach(EXAMPLE)
