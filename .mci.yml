@@ -151,7 +151,8 @@ functions:
                   export PATH_TO_CMAKE="${cmake_path}"
                   export PATH_TO_BUILD_TOOL="${build_tool_path}"
                   export PKG_CONFIG_PATH="$(pwd)/../mongoc/lib/pkgconfig"
-                  sh .evergreen/compile.sh ${cmake_flags} ${poly_flags} -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=install ..
+                  export BUILD_TYPE=${build_type}
+                  sh .evergreen/compile.sh ${cmake_flags} ${poly_flags} -DCMAKE_INSTALL_PREFIX=install
 
     "test":
         - command: shell.exec
@@ -175,8 +176,8 @@ functions:
                   export CRUD_TESTS_PATH="$(pwd)/../data/crud"
                   if [ "Windows_NT" == "$OS" ]; then
                       CRUD_TESTS_PATH=$(cygpath -m $CRUD_TESTS_PATH)
-                      "${build_tool_path}" RUN_TESTS.vcxproj
-                      "${build_tool_path}" examples/run-examples.vcxproj
+                      "${build_tool_path}" /p:Configuration=${build_type} RUN_TESTS.vcxproj
+                      "${build_tool_path}" /p:Configuration=${build_type} examples/run-examples.vcxproj
                   else
                       # Running the tests and examples here one-by-one here with "test_params" is
                       # necessary due to the fact that we don't yet have explicit CMake integration

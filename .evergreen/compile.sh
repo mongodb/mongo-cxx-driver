@@ -6,18 +6,24 @@
 # This script should be run from the root of the repository.  This script will run the build from
 # the default build directory './build'.  The following environment variables will change the
 # behavior of this script:
+# - BUILD_TYPE: must be set to "Release" or "Debug"
 # - PATH_TO_CMAKE: full path to cmake (defaults to searching $PATH)
 # - PATH_TO_BUILD_TOOL: full path to make / msbuild.exe (defaults to searching $PATH)
 
 set -o xtrace
 set -o errexit
 
+if [ "$BUILD_TYPE" != "Debug" -a "$BUILD_TYPE" != "Release" ]; then
+    echo "$0: expected BUILD_TYPE environment variable to be set to 'Debug' or 'Release'" >&2
+    exit 1
+fi
+
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 
 PATH_TO_CMAKE="${PATH_TO_CMAKE:-cmake}"
 
 cd build
-"$PATH_TO_CMAKE" "$@" ..
+"$PATH_TO_CMAKE" "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "$@" ..
 
 case "$OS" in
     darwin|linux)
@@ -36,9 +42,9 @@ case "$OS" in
         ;;
     cygwin*)
         PATH_TO_BUILD_TOOL="${PATH_TO_BUILD_TOOL:-msbuild.exe}"
-        "$PATH_TO_BUILD_TOOL" /m ALL_BUILD.vcxproj
-        "$PATH_TO_BUILD_TOOL" INSTALL.vcxproj
-        "$PATH_TO_BUILD_TOOL" /m examples/examples.vcxproj
+        "$PATH_TO_BUILD_TOOL" /p:Configuration=${BUILD_TYPE} /m ALL_BUILD.vcxproj
+        "$PATH_TO_BUILD_TOOL" /p:Configuration=${BUILD_TYPE} INSTALL.vcxproj
+        "$PATH_TO_BUILD_TOOL" /p:Configuration=${BUILD_TYPE} /m examples/examples.vcxproj
         ;;
     *)
         echo "$0: unsupported platform '$OS'" >&2
