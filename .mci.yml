@@ -40,10 +40,15 @@ variables:
     cmake_flags:
         linux_cmake_flags: &linux_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -Wno-error=missing-field-initializers"
         rhel55_cmake_flags: &rhel55_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror"
-        osx_cmake_flags: &osx_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Werror" -DBSONCXX_POLY_USE_BOOST=ON
+        osx_cmake_flags: &osx_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Werror"
         asan_cmake_flags: &asan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
         ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.blacklist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
         windows_cmake_flags: &windows_cmake_flags -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT=c:/local/boost_1_60_0 -DLIBBSON_DIR=$(cygpath -m "$(pwd)/../mongoc") -DLIBMONGOC_DIR=$(cygpath -m "$(pwd)/../mongoc")
+
+    poly_flags:
+        poly_boost_flags: &poly_boost_flags -DBSONCXX_POLY_USE_BOOST=ON
+        poly_std_experimental_flags: &poly_std_experimental_flags -DBSONCXX_POLY_USE_STD_EXPERIMENTAL=ON -DCMAKE_CXX_STANDARD=14
+        poly_mnmlstc: &poly_mnmlstc -DBSONCXX_POLY_USE_MNMLSTC=ON
 
     ## test parameters
     test_params:
@@ -147,7 +152,7 @@ functions:
                   export PATH_TO_CMAKE="${cmake_path}"
                   export PATH_TO_BUILD_TOOL="${build_tool_path}"
                   export PKG_CONFIG_PATH="$(pwd)/../mongoc/lib/pkgconfig"
-                  sh .evergreen/compile.sh ${cmake_flags} -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=install ..
+                  sh .evergreen/compile.sh ${cmake_flags} ${poly_flags} -DCMAKE_BUILD_TYPE=${build_type} -DCMAKE_INSTALL_PREFIX=install ..
 
     "test":
         - command: shell.exec
@@ -292,16 +297,34 @@ buildvariants:
           - name: compile_and_test_with_mongoc_master
 
     - name: osx-1010
-      display_name: "OS X 10.10 Release"
+      display_name: "OS X 10.10 Release (Boost)"
       expansions:
           build_type: "Release"
           build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *osx_cdriver_configure_flags
           cmake_path: *osx_cmake_path
           cmake_flags: *osx_cmake_flags
+          poly_flags: *poly_boost_flags
           mongodb_version: *version_latest
       run_on:
           - osx-1010
+      tasks:
+          - name: compile_and_test_with_mongoc_current
+          - name: compile_and_test_with_mongoc_master
+
+    - name: ubuntu1604-debug-std-experimental
+      display_name: "Ubuntu 16.04 Debug (std::experimental)"
+      expansions:
+          build_type: "Debug"
+          tar_options: *linux_tar_options
+          build_tool_path: *unix_build_tool_path
+          cdriver_configure_flags: *linux_cdriver_configure_flags
+          cmake_path: *linux_cmake_path
+          cmake_flags: *linux_cmake_flags
+          poly_flags: *poly_std_experimental_flags
+          mongodb_version: *version_latest
+      run_on:
+          - ubuntu1604-build
       tasks:
           - name: compile_and_test_with_mongoc_current
           - name: compile_and_test_with_mongoc_master
