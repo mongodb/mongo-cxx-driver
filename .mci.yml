@@ -11,7 +11,9 @@ cxx_driver_variables:
     - name: "compile"
     - name: "unit-test"
     - name: "integration-test-latest"
-    - name: "integration-test-latest-with-auth"
+    # The auth integration tests are temporary disabled. TODO CXX-1213: Uncomment the below line
+    # once the mongo-orchestration issue in CXX-1213 has been resolved.
+    # - name: "integration-test-latest-with-auth"
     - name: "client-test-latest"
 
   ## The latest test list, temporarily trimmed down on Windows.  TODO CXX-1210: Replace this with
@@ -31,7 +33,9 @@ cxx_driver_variables:
     - name: "compile"
     - name: "unit-test"
     - name: "integration-test-latest-with-MMAPv1"
-    - name: "integration-test-latest-with-auth-and-MMAPv1"
+    # The auth integration tests are temporary disabled. TODO CXX-1213: Uncomment the below line
+    # once the mongo-orchestration issue in CXX-1213 has been resolved.
+    # - name: "integration-test-latest-with-auth-and-MMAPv1"
     - name: "client-test-latest-with-MMAPv1"
 
   ## Note that the in 3.0, the default storage engine is MMAPv1 and
