@@ -20,6 +20,12 @@ cxx_driver_variables:
     - name: "compile"
     - name: "unit-test"
 
+  ## The latest test list, temporarily trimmed down on OS X.  TODO CXX-1211: Replace this with
+  ## 'latest_test_list' once the mongo-orchestration issue in CXX-1211 has been resolved.
+  osx_latest_test_list: &osx_latest_tests
+    - name: "compile"
+    - name: "unit-test"
+
   ## Same as above, but with the MMAPv1 storage engine.
   latest_test_with_mmapv1_list: &latest_tests_with_mmapv1
     - name: "compile"
@@ -702,7 +708,7 @@ buildvariants:
     <<: *mongo_orchestration_osx
   run_on:
   - osx-1010
-  tasks: *latest_tests
+  tasks: *osx_latest_tests
 
 #######################################
 #        Windows Buildvariants        #
