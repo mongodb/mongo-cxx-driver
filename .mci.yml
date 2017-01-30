@@ -6,13 +6,19 @@
 
 cxx_driver_variables:
 
-## The basic set of tests to run on most buildvariants
+  ## The basic set of tests to run on most buildvariants.
   latest_test_list: &latest_tests
     - name: "compile"
     - name: "unit-test"
     - name: "integration-test-latest"
     - name: "integration-test-latest-with-auth"
     - name: "client-test-latest"
+
+  ## The latest test list, temporarily trimmed down on Windows.  TODO CXX-1210: Replace this with
+  ## 'latest_test_list' once the taskkill.exe issue in CXX-1210 has been resolved.
+  windows_latest_test_list: &windows_latest_tests
+    - name: "compile"
+    - name: "unit-test"
 
   ## Same as above, but with the MMAPv1 storage engine.
   latest_test_with_mmapv1_list: &latest_tests_with_mmapv1
@@ -733,7 +739,7 @@ buildvariants:
     <<: *with_msvc2010
   run_on:
   - windows-64-vs2010-compile
-  tasks: *latest_tests
+  tasks: *windows_latest_tests
 
 ## Windows 64-bit DEBUG DYNAMIC (msvc2010)
 ## dynamic client and RT
@@ -749,7 +755,7 @@ buildvariants:
     <<: *with_msvc2010
   run_on:
   - windows-64-vs2010-compile
-  tasks: *latest_tests
+  tasks: *windows_latest_tests
 
 ## Windows 64-bit DYNAMIC (msvc2013)
 ## dynamic client and RT
@@ -764,7 +770,7 @@ buildvariants:
     <<: *with_msvc2013
   run_on:
   - windows-64-vs2013-compile
-  tasks: *latest_tests
+  tasks: *windows_latest_tests
 
 ## Windows 64-bit (msvc2013) DYNAMIC-RT
 ## static client, dynamic RT
@@ -779,7 +785,7 @@ buildvariants:
     <<: *with_msvc2013
   run_on:
   - windows-64-vs2013-compile
-  tasks: *latest_tests
+  tasks: *windows_latest_tests
 
 ## Windows 64-bit DYNAMIC (msvc2015)
 ## dynamic client and RT
@@ -794,4 +800,4 @@ buildvariants:
     <<: *with_msvc2015
   run_on:
   - windows-64-vs2015-compile
-  tasks: *latest_tests
+  tasks: *windows_latest_tests
