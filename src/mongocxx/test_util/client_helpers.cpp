@@ -15,17 +15,24 @@
 #include <mongocxx/test_util/client_helpers.hh>
 
 #include <algorithm>
+#include <functional>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -44,6 +51,40 @@ std::vector<std::int32_t> parse_version(std::string version) {
     }
 
     return elements;
+}
+
+bsoncxx::array::value transform_array(bsoncxx::array::view view, xformer_t fcn) {
+    bsoncxx::builder::basic::array builder;
+
+    for (auto&& element : view) {
+        // Array elements are passed with disengaged key.
+        auto transformed = fcn({stdx::nullopt, element.get_value()});
+
+        // Omit element if transformed is disengaged.
+        if (!transformed) {
+            continue;
+        }
+
+        auto v = transformed->second;
+
+        // For documents and arrays, append with recursive transform.
+        // Otherwise, append the transformed value.
+        switch (v.type()) {
+            case bsoncxx::type::k_document:
+                builder.append(transform_document(v.get_document().value, fcn));
+                break;
+
+            case bsoncxx::type::k_array:
+                builder.append(transform_array(v.get_array().value, fcn));
+                break;
+
+            default:
+                builder.append(v);
+                break;
+        }
+    }
+
+    return builder.extract();
 }
 }
 
@@ -87,6 +128,45 @@ std::string get_server_version(const client& client) {
 
 bool supports_collation(const client& client) {
     return get_max_wire_version(client) >= 5;
+}
+
+bsoncxx::document::value transform_document(bsoncxx::document::view view, const xformer_t& fcn) {
+    bsoncxx::builder::basic::document builder;
+
+    for (auto&& element : view) {
+        auto transformed = fcn({element.key(), element.get_value()});
+
+        // Omit element if transformed is disengaged.
+        if (!transformed) {
+            continue;
+        }
+
+        // For document elements, it's an error if key is not returned.
+        assert(transformed->first);
+
+        auto k = *(transformed->first);
+        auto v = transformed->second;
+
+        // For documents and arrays, append with transformed key and recursive
+        // transform.  Otherwise, append the transformed key and value.
+        switch (v.type()) {
+            case bsoncxx::type::k_document:
+                builder.append(bsoncxx::builder::basic::kvp(
+                    k, transform_document(v.get_document().value, fcn)));
+                break;
+
+            case bsoncxx::type::k_array:
+                builder.append(
+                    bsoncxx::builder::basic::kvp(k, transform_array(v.get_array().value, fcn)));
+                break;
+
+            default:
+                builder.append(bsoncxx::builder::basic::kvp(k, v));
+                break;
+        }
+    }
+
+    return builder.extract();
 }
 
 }  // namespace test_util

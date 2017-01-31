@@ -15,7 +15,14 @@
 #pragma once
 
 #include <cstdint>
+#include <functional>
 #include <string>
+#include <utility>
+
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
+#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -59,6 +66,39 @@ std::string get_server_version(const client& client);
 //
 bool supports_collation(const client& client);
 
+// item_t -- document items have keys, array items don't
+using item_t = std::pair<stdx::optional<stdx::string_view>, bsoncxx::types::value>;
+
+// xformer_t -- if return value disengaged, item should be omitted from
+// container, otherwise, transformed item should be used in place of the
+// original.  To use as-is, return the argument (i.e. like an identity
+// function).
+using xformer_t = std::function<stdx::optional<item_t>(item_t)>;
+
+//
+// Transforms a document and returns a copy of it.
+//
+// @param view
+//   The document to transform.
+//
+// @param fcn
+//   The function to apply to each element of the document.
+//
+//   For document elements, the element's key and value will be passed into the function. If
+//   nothing is returned, the element will be removed from the document. Otherwise, the key and
+//   value pair returned will be added to the document. To leave the element as-is, simply return
+//   the same key and value passed into the function. If no key is returned, an exception will be
+//   thrown.
+//
+//   For array elements, only the value will be passed in (since there is no key). If nothing is
+//   returned, the element will be removed from the array. Otherwise, the value returned will be
+//   added to the array. To leave the element as-is, simply return the value passed into the
+//   function.
+//
+// @return The new document that was built.
+//
+// @throws if fcn returns no key when a key is passed in.
+bsoncxx::document::value transform_document(bsoncxx::document::view view, const xformer_t& fcn);
 }  // namespace test_util
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
