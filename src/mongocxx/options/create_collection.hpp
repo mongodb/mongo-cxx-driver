@@ -33,6 +33,10 @@ class MONGOCXX_API create_collection {
     ///
     /// Specify false to disable the automatic creation of an index on the _id field.
     ///
+    /// @deprecated
+    ///   This method is deprecated. Server versions 3.4 and above no longer support the
+    ///   "autoIndexId" option.
+    ///
     /// @note For replica sets, all collections must have autoIndexId set to true.
     ///
     /// @param auto_index_id
