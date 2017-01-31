@@ -95,12 +95,19 @@ class MONGOCXX_API read_preference {
     };
 
     ///
+    /// Constructs a new read_preference with read_mode set to k_primary.
+    ///
+    read_preference();
+
+    ///
     /// Constructs a new read_preference.
     ///
     /// @param mode
-    ///   Optional parameter to specify the read_mode, defaults to k_primary.
+    ///   Sspecifies the read_mode.
     ///
-    explicit read_preference(read_mode mode = read_mode::k_primary);
+    /// @deprecated The constructor with no arguments and the method mode() should be used.
+    ///
+    read_preference(read_mode mode);
 
     ///
     /// Constructs a new read_preference with tags.
@@ -111,6 +118,8 @@ class MONGOCXX_API read_preference {
     ///   A document representing tags to use for the read_preference.
     ///
     /// @see https://docs.mongodb.com/master/core/read-preference/#tag-sets
+    ///
+    /// @deprecated The tags() method should be used instead.
     ///
     read_preference(read_mode mode, bsoncxx::document::view_or_value tags);
 
@@ -145,7 +154,11 @@ class MONGOCXX_API read_preference {
     /// @param mode
     ///   The new read preference mode.
     ///
-    void mode(read_mode mode);
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    read_preference& mode(read_mode mode);
 
     ///
     /// Returns the current read_mode for this read_preference.
@@ -162,7 +175,11 @@ class MONGOCXX_API read_preference {
     ///
     /// @see https://docs.mongodb.com/master/core/read-preference/#tag-sets
     ///
-    void tags(bsoncxx::document::view_or_value tags);
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    read_preference& tags(bsoncxx::document::view_or_value tags);
 
     ///
     /// Returns the current tags for this read_preference.
@@ -197,9 +214,13 @@ class MONGOCXX_API read_preference {
     /// @param max_staleness
     ///    The new max staleness setting.  It must be positive.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws mongocxx::logic_error if the argument is invalid.
     ///
-    void max_staleness(std::chrono::seconds max_staleness);
+    read_preference& max_staleness(std::chrono::seconds max_staleness);
 
     ///
     /// Returns the current max staleness setting for this read_preference.

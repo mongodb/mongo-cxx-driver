@@ -42,6 +42,10 @@ read_preference::read_preference(std::unique_ptr<impl>&& implementation) {
     _impl.reset(implementation.release());
 }
 
+read_preference::read_preference()
+    : _impl(stdx::make_unique<impl>(
+          libmongoc::read_prefs_new(static_cast<mongoc_read_mode_t>(read_mode::k_primary)))) {}
+
 read_preference::read_preference(read_mode mode)
     : _impl(stdx::make_unique<impl>(
           libmongoc::read_prefs_new(static_cast<mongoc_read_mode_t>(mode)))) {}
@@ -53,13 +57,17 @@ read_preference::read_preference(read_mode mode, bsoncxx::document::view_or_valu
 
 read_preference::~read_preference() = default;
 
-void read_preference::mode(read_mode mode) {
+read_preference& read_preference::mode(read_mode mode) {
     libmongoc::read_prefs_set_mode(_impl->read_preference_t, static_cast<mongoc_read_mode_t>(mode));
+
+    return *this;
 }
 
-void read_preference::tags(bsoncxx::document::view_or_value tags) {
+read_preference& read_preference::tags(bsoncxx::document::view_or_value tags) {
     libbson::scoped_bson_t scoped_bson_tags(std::move(tags));
     libmongoc::read_prefs_set_tags(_impl->read_preference_t, scoped_bson_tags.bson());
+
+    return *this;
 }
 
 read_preference::read_mode read_preference::mode() const {
@@ -75,12 +83,14 @@ stdx::optional<bsoncxx::document::view> read_preference::tags() const {
     return stdx::optional<bsoncxx::document::view>{};
 }
 
-void read_preference::max_staleness(std::chrono::seconds max_staleness) {
+read_preference& read_preference::max_staleness(std::chrono::seconds max_staleness) {
     auto max_staleness_sec = max_staleness.count();
     if (max_staleness_sec <= 0) {
         throw logic_error{error_code::k_invalid_parameter};
     }
     libmongoc::read_prefs_set_max_staleness_seconds(_impl->read_preference_t, max_staleness_sec);
+
+    return *this;
 }
 
 stdx::optional<std::chrono::seconds> read_preference::max_staleness() const {
