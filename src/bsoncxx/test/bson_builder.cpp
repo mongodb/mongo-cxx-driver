@@ -257,8 +257,12 @@ TEST_CASE("builder appends regex", "[bsoncxx::builder::stream]") {
     builder::stream::document b;
 
     bson_append_regex(&expected, "foo", -1, "^foo|bar$", "i");
+    bson_append_regex(&expected, "boo", -1, "^boo|far$", "");
+    bson_append_regex(&expected, "bar", -1, "^bar|foo$", "");
 
     b << "foo" << types::b_regex{"^foo|bar$", "i"};
+    b << "boo" << types::b_regex{"^boo|far$", ""};
+    b << "bar" << types::b_regex{"^bar|foo$"};
 
     bson_eq_stream(&expected, b);
 

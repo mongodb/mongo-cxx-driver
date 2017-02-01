@@ -370,8 +370,8 @@ struct BSONCXX_API b_regex {
     /// @param options
     ///   The regex options
     ///
-    template <typename T, typename U>
-    BSONCXX_INLINE explicit b_regex(T&& regex, U&& options)
+    template <typename T, typename U = stdx::string_view>
+    BSONCXX_INLINE explicit b_regex(T&& regex, U&& options = U{})
         : regex(std::forward<T>(regex)), options(std::forward<U>(options)) {}
 
     stdx::string_view regex;
