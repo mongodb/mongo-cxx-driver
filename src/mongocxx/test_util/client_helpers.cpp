@@ -26,11 +26,14 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -53,7 +56,7 @@ std::vector<std::int32_t> parse_version(std::string version) {
     return elements;
 }
 
-bsoncxx::array::value transform_array(bsoncxx::array::view view, xformer_t fcn) {
+bsoncxx::array::value transform_array(bsoncxx::array::view view, const xformer_t& fcn) {
     bsoncxx::builder::basic::array builder;
 
     for (auto&& element : view) {
@@ -142,7 +145,9 @@ bsoncxx::document::value transform_document(bsoncxx::document::view view, const 
         }
 
         // For document elements, it's an error if key is not returned.
-        assert(transformed->first);
+        if (!transformed->first) {
+            throw logic_error{error_code::k_invalid_parameter};
+        }
 
         auto k = *(transformed->first);
         auto v = transformed->second;

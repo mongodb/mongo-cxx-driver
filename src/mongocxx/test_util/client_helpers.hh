@@ -20,6 +20,7 @@
 #include <utility>
 
 #include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <mongocxx/stdx.hpp>
@@ -66,13 +67,7 @@ std::string get_server_version(const client& client);
 //
 bool supports_collation(const client& client);
 
-// item_t -- document items have keys, array items don't
 using item_t = std::pair<stdx::optional<stdx::string_view>, bsoncxx::types::value>;
-
-// xformer_t -- if return value disengaged, item should be omitted from
-// container, otherwise, transformed item should be used in place of the
-// original.  To use as-is, return the argument (i.e. like an identity
-// function).
 using xformer_t = std::function<stdx::optional<item_t>(item_t)>;
 
 //
@@ -97,9 +92,12 @@ using xformer_t = std::function<stdx::optional<item_t>(item_t)>;
 //
 // @return The new document that was built.
 //
-// @throws if fcn returns no key when a key is passed in.
+// @throws a logic_error{error_code::k_invalid_parameter} if fcn returns no key when a key is passed
+// in.
+//
 bsoncxx::document::value transform_document(bsoncxx::document::view view, const xformer_t& fcn);
 }  // namespace test_util
+
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
