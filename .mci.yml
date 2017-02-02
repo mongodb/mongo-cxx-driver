@@ -124,8 +124,7 @@ functions:
             working_dir: "mongo-cxx-driver"
             script: |
                     export PREFIX=$(pwd)/../mongoc/
-                    sh .evergreen/install.sh libbson ${MONGOC_VERSION|master}
-                    sh .evergreen/install.sh mongoc ${MONGOC_VERSION|master}
+                    sh .evergreen/install.sh ${MONGOC_VERSION|master}
 
     "lint":
         - command: shell.exec
