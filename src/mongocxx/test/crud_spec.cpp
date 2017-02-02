@@ -18,6 +18,7 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <set>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -75,11 +76,7 @@ pipeline build_pipeline(array::view pipeline_docs) {
     return pipeline;
 }
 
-document::value run_aggregate_test(collection* coll,
-                                   document::view operation,
-                                   std::string server_version) {
-    static_cast<void>(server_version);  // Unused
-
+document::value run_aggregate_test(collection* coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     pipeline pipeline = build_pipeline(arguments["pipeline"].get_array().value);
     options::aggregate options{};
@@ -104,11 +101,7 @@ document::value run_aggregate_test(collection* coll,
     return result.extract();
 }
 
-document::value run_count_test(collection* coll,
-                               document::view operation,
-                               std::string server_version) {
-    static_cast<void>(server_version);  // Unused
-
+document::value run_count_test(collection* coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::count options{};
@@ -136,11 +129,7 @@ document::value run_count_test(collection* coll,
     return result.extract();
 }
 
-document::value run_distinct_test(collection* coll,
-                                  document::view operation,
-                                  std::string server_version) {
-    static_cast<void>(server_version);  // Unused
-
+document::value run_distinct_test(collection* coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter{};
 
@@ -170,11 +159,7 @@ document::value run_distinct_test(collection* coll,
     return result.extract();
 }
 
-document::value run_find_test(collection* coll,
-                              document::view operation,
-                              std::string server_version) {
-    static_cast<void>(server_version);  // Unused
-
+document::value run_find_test(collection* coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::find options{};
@@ -211,11 +196,7 @@ document::value run_find_test(collection* coll,
     return result.extract();
 }
 
-document::value run_delete_many_test(collection* coll,
-                                     document::view operation,
-                                     std::string server_version) {
-    static_cast<void>(server_version);  // Unused
-
+document::value run_delete_many_test(collection* coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::delete_options options{};
@@ -240,11 +221,7 @@ document::value run_delete_many_test(collection* coll,
     return result.extract();
 }
 
-document::value run_delete_one_test(collection* coll,
-                                    document::view operation,
-                                    std::string server_version) {
-    static_cast<void>(server_version);  // Unused
-
+document::value run_delete_one_test(collection* coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::delete_options options{};
@@ -269,11 +246,7 @@ document::value run_delete_one_test(collection* coll,
     return result.extract();
 }
 
-document::value run_find_one_and_delete_test(collection* coll,
-                                             document::view operation,
-                                             std::string server_version) {
-    static_cast<void>(server_version);  // Unused
-
+document::value run_find_one_and_delete_test(collection* coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::find_one_and_delete options{};
@@ -304,11 +277,7 @@ document::value run_find_one_and_delete_test(collection* coll,
     return result.extract();
 }
 
-document::value run_find_one_and_replace_test(collection* coll,
-                                              document::view operation,
-                                              std::string server_version) {
-    static_cast<void>(server_version);  // Unused
-
+document::value run_find_one_and_replace_test(collection* coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view replacement = arguments["replacement"].get_document().value;
@@ -356,11 +325,7 @@ document::value run_find_one_and_replace_test(collection* coll,
     return result.extract();
 }
 
-document::value run_find_one_and_update_test(collection* coll,
-                                             document::view operation,
-                                             std::string server_version) {
-    static_cast<void>(server_version);  // Unused
-
+document::value run_find_one_and_update_test(collection* coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view update = arguments["update"].get_document().value;
@@ -408,11 +373,7 @@ document::value run_find_one_and_update_test(collection* coll,
     return result.extract();
 }
 
-document::value run_insert_many_test(collection* coll,
-                                     document::view operation,
-                                     std::string server_version) {
-    static_cast<void>(server_version);  // Unused
-
+document::value run_insert_many_test(collection* coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     array::view documents = arguments["documents"].get_array().value;
     std::vector<document::view> documents_to_insert{};
@@ -443,11 +404,7 @@ document::value run_insert_many_test(collection* coll,
     return result.extract();
 }
 
-document::value run_insert_one_test(collection* coll,
-                                    document::view operation,
-                                    std::string server_version) {
-    static_cast<void>(server_version);  // Unused
-
+document::value run_insert_one_test(collection* coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view document = arguments["document"].get_document().value;
     auto result = builder::basic::document{};
@@ -466,9 +423,7 @@ document::value run_insert_one_test(collection* coll,
     return result.extract();
 }
 
-document::value run_replace_one_test(collection* coll,
-                                     document::view operation,
-                                     std::string server_version) {
+document::value run_replace_one_test(collection* coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view replacement = arguments["replacement"].get_document().value;
@@ -507,7 +462,7 @@ document::value run_replace_one_test(collection* coll,
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp(
         "result",
-        [server_version, replacement, matched_count, modified_count, upserted_count, upserted_id](
+        [replacement, matched_count, modified_count, upserted_count, upserted_id](
             builder::basic::sub_document subdoc) {
             subdoc.append(builder::basic::kvp("matchedCount", matched_count));
 
@@ -517,7 +472,7 @@ document::value run_replace_one_test(collection* coll,
 
             subdoc.append(builder::basic::kvp("upsertedCount", upserted_count));
 
-            if (upserted_id && (replacement["_id"] || server_version >= "2.6")) {
+            if (upserted_id) {
                 subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
             }
         }));
@@ -525,11 +480,7 @@ document::value run_replace_one_test(collection* coll,
     return result.extract();
 }
 
-document::value run_update_many_test(collection* coll,
-                                     document::view operation,
-                                     std::string server_version) {
-    static_cast<void>(server_version);  // Unused
-
+document::value run_update_many_test(collection* coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view update = arguments["update"].get_document().value;
@@ -586,11 +537,7 @@ document::value run_update_many_test(collection* coll,
     return result.extract();
 }
 
-document::value run_update_one_test(collection* coll,
-                                    document::view operation,
-                                    std::string server_version) {
-    static_cast<void>(server_version);  // Unused
-
+document::value run_update_one_test(collection* coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view update = arguments["update"].get_document().value;
@@ -647,21 +594,21 @@ document::value run_update_one_test(collection* coll,
     return result.extract();
 }
 
-std::map<std::string, std::function<document::value(collection*, document::view, std::string)>>
-    test_runners = {{"aggregate", run_aggregate_test},
-                    {"count", run_count_test},
-                    {"distinct", run_distinct_test},
-                    {"find", run_find_test},
-                    {"deleteMany", run_delete_many_test},
-                    {"deleteOne", run_delete_one_test},
-                    {"findOneAndDelete", run_find_one_and_delete_test},
-                    {"findOneAndReplace", run_find_one_and_replace_test},
-                    {"findOneAndUpdate", run_find_one_and_update_test},
-                    {"insertMany", run_insert_many_test},
-                    {"insertOne", run_insert_one_test},
-                    {"replaceOne", run_replace_one_test},
-                    {"updateMany", run_update_many_test},
-                    {"updateOne", run_update_one_test}};
+std::map<std::string, std::function<document::value(collection*, document::view)>> test_runners = {
+    {"aggregate", run_aggregate_test},
+    {"count", run_count_test},
+    {"distinct", run_distinct_test},
+    {"find", run_find_test},
+    {"deleteMany", run_delete_many_test},
+    {"deleteOne", run_delete_one_test},
+    {"findOneAndDelete", run_find_one_and_delete_test},
+    {"findOneAndReplace", run_find_one_and_replace_test},
+    {"findOneAndUpdate", run_find_one_and_update_test},
+    {"insertMany", run_insert_many_test},
+    {"insertOne", run_insert_one_test},
+    {"replaceOne", run_replace_one_test},
+    {"updateMany", run_update_many_test},
+    {"updateOne", run_update_one_test}};
 
 // Parses a JSON file at a given path and return it as a BSON document value.
 document::value parse_test_file(std::string path) {
@@ -737,7 +684,7 @@ void run_tests_in_file(std::string test_path, client* client) {
         std::string operation_name = operation["name"].get_utf8().value.to_string();
 
         auto run_test = test_runners[operation_name];
-        document::value actual_result = run_test(&coll, operation, server_version);
+        document::value actual_result = run_test(&coll, operation);
 
         if (outcome["collection"]) {
             collection out_coll = db["test"];
@@ -778,6 +725,30 @@ void run_tests_in_file(std::string test_path, client* client) {
         auto builder = builder::basic::document{};
         builder.append(builder::basic::kvp("result", result));
         document::value expected_result = builder.extract();
+
+        // The spec tests intentionally omit fields from the 'result' document for which the values
+        // of those fields are unspecified.  As such, we strip out fields from 'actual_result' that
+        // aren't also present in 'expected_result'.
+        auto actual_result_ele = actual_result.view()["result"];
+        auto expected_result_ele = expected_result.view()["result"];
+        if (actual_result_ele.type() == bsoncxx::type::k_document &&
+            expected_result_ele.type() == bsoncxx::type::k_document) {
+            builder::basic::document actual_result_builder{};
+
+            actual_result_builder.append(
+                builder::basic::kvp("result", [&](builder::basic::sub_document subdoc) {
+                    for (auto&& expected_ele : expected_result_ele.get_document().value) {
+                        document::element actual_ele =
+                            actual_result_ele.get_document().value[expected_ele.key()];
+                        if (actual_ele) {
+                            subdoc.append(
+                                builder::basic::kvp(actual_ele.key(), actual_ele.get_value()));
+                        }
+                    }
+                }));
+
+            actual_result = actual_result_builder.extract();
+        }
 
         REQUIRE(to_json(expected_result.view()) == to_json(actual_result.view()));
     }
