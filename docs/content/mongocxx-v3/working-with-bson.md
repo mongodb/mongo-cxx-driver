@@ -66,6 +66,83 @@ The code above, for either interface, produces builder documents, which are
 not yet BSON documents.  The builder documents will need to be converted to
 fully-fledged BSON documents to be used.
 
+**Building arrays in loops**
+
+Sometimes it's necessary to build an array using a loop. With the basic 
+builder, a top-level array can be built by simply calling `append` inside
+a loop:
+
+```
+// [ 1, 2, 3 ]
+
+const auto elements = {1, 2, 3};
+auto array_builder = bsoncxx::builder::basic::array{};
+
+for (const auto& element : elements) {
+    array_builder.append(element);
+}
+```
+
+To build a subarray in a loop, pass a lambda to `append` (or as the second 
+argument of `kvp` if the subarray is contained by a document rather than 
+an array):
+
+```
+// { "foo" : [ 1, 2, 3 ] }
+
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::sub_array;
+
+const auto elements = {1, 2, 3};
+auto doc = bsoncxx::builder::basic::document{};
+doc.append(kvp("foo", [&elements](sub_array child) {
+    for (const auto& element : elements) {
+        child.append(element);
+    }
+}));
+```
+
+When building an array with the stream builder, it's important to be aware
+that the return type of using the `<<` operator on a stream builder is not 
+uniform. To build an array in a loop properly, intermediate values 
+returned by the stream builder should be stored in variables when the type
+changes. One attempt to build an array from a stream builder using a loop
+might look like the following:
+
+```
+// { "subdocs" : [ { "key" : 1 }, { "key" : 2 }, { "key" : 3 } ], "another_key" : 42 }
+using namespace bsoncxx;
+
+builder::stream::document builder{};
+
+auto in_array = builder << "subdocs" << builder::stream::open_array;
+for (auto&& e : {1, 2, 3}) {
+    in_array = in_array << builder::stream::open_document << "key" << e
+                        << builder::stream::close_document;
+}
+auto after_array = in_array << builder::stream::close_array;
+
+after_array << "another_key" << 42;
+
+document::value doc = after_array << builder::stream::finalize;
+
+std::cout << to_json(doc) << std::endl;
+```
+
+Note that the result of any stream operation should be captured, so if you want
+to split the single statement within the for loop above into multiple
+statements, you must capture each intermediate result. Additionally, the last
+statement within the loop body should assign its result back to the in_array
+object, so that the loop restarts in a consistent state:
+
+```
+for (auto && e : {1, 2, 3}) {
+    auto open_state = in_array << builder::stream::open_document;
+    auto temp_state = open_state << "key" << e;
+    in_array = temp_state << builder::stream::close_document;
+}
+```
+
 ### <a name="value">Owning BSON Documents (values)</a>
 
 [`bsoncxx::document::value`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/document/value.hpp)

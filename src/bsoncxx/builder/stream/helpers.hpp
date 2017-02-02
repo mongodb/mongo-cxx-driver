@@ -51,6 +51,9 @@ struct BSONCXX_API open_array_type {
 ///
 /// A stream manipulator to open a subarray.
 ///
+/// @see https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/working-with-bson/#builders for help
+/// building arrays in loops.
+///
 constexpr open_array_type open_array;
 
 struct BSONCXX_API close_array_type {
