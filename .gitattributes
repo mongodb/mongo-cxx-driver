@@ -1,2 +1,9 @@
 .evergreen/install.sh eol=lf
 .evergreen/compile.sh eol=lf
+
+/.* export-ignore
+/appveyor.yml export-ignore
+/docs export-ignore
+/etc export-ignore
+/TODO.md export-ignore
+/Doxyfile export-ignore
