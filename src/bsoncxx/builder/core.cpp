@@ -133,11 +133,19 @@ class core::impl {
     }
 
     void push_key(stdx::string_view str) {
+        if (_has_user_key) {
+            throw bsoncxx::exception{error_code::k_unmatched_key_in_builder};
+        }
+
         _user_key_view = std::move(str);
         _has_user_key = true;
     }
 
     void push_key(std::string str) {
+        if (_has_user_key) {
+            throw bsoncxx::exception{error_code::k_unmatched_key_in_builder};
+        }
+
         _user_key_owned = std::move(str);
         _user_key_view = _user_key_owned;
         _has_user_key = true;

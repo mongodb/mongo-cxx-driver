@@ -69,7 +69,8 @@ class BSONCXX_API core {
     /// @param key
     ///   A null-terminated array of characters.
     ///
-    /// @throws bsoncxx::exception if the current BSON datum is an array.
+    /// @throws bsoncxx::exception if the current BSON datum is an array or if the previous value
+    /// appended to the builder was also a key.
     ///
     void key_view(stdx::string_view key);
 
@@ -79,7 +80,8 @@ class BSONCXX_API core {
     /// @param key
     ///   A string key.
     ///
-    /// @throws bsoncxx::exception if the current BSON datum is an array.
+    /// @throws bsoncxx::exception if the current BSON datum is an array or if the previous value
+    /// appended to the builder was a key.
     ///
     void key_owned(std::string key);
 

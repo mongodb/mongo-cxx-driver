@@ -22,6 +22,7 @@
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/builder/stream/array.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
@@ -768,6 +769,34 @@ TEST_CASE("core view/extract methods throw when called with wrong top-level type
     }
 }
 
+TEST_CASE("core builder throws on consecutive keys", "[bsoncxx::builder::core]") {
+    using namespace bsoncxx;
+
+    SECTION("appending key_view twice") {
+        builder::core builder{false};
+        REQUIRE_NOTHROW(builder.key_view("foo"));
+        REQUIRE_THROWS_AS(builder.key_view("bar"), bsoncxx::exception);
+    }
+
+    SECTION("appending key_view then key_owned") {
+        builder::core builder{false};
+        REQUIRE_NOTHROW(builder.key_view("foo"));
+        REQUIRE_THROWS_AS(builder.key_owned("bar"), bsoncxx::exception);
+    }
+
+    SECTION("appending key_owned then key_view") {
+        builder::core builder{false};
+        REQUIRE_NOTHROW(builder.key_owned("foo"));
+        REQUIRE_THROWS_AS(builder.key_view("bar"), bsoncxx::exception);
+    }
+
+    SECTION("appending key_owned twice") {
+        builder::core builder{false};
+        REQUIRE_NOTHROW(builder.key_owned("foo"));
+        REQUIRE_THROWS_AS(builder.key_owned("bar"), bsoncxx::exception);
+    }
+}
+
 TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
     builder::stream::document stream;
     builder::basic::document basic;
@@ -959,4 +988,14 @@ TEST_CASE("stream in an array::view works", "[bsoncxx::bulder::stream]") {
     REQUIRE(full_doc.view()["a"].type() == bsoncxx::types::b_array::type_id);
     REQUIRE(full_doc.view()["a"][1].type() == bsoncxx::types::b_int32::type_id);
     REQUIRE(full_doc.view()["a"][1].get_int32().value == 2);
+}
+
+TEST_CASE("builder::stream::document throws on consecutive keys", "[bsoncxx::builder::core]") {
+    using namespace bsoncxx;
+
+    builder::stream::document doc;
+    REQUIRE_NOTHROW(doc << "foo"
+                        << "bar");
+    REQUIRE_NOTHROW(doc << "far");
+    REQUIRE_THROWS_AS(doc << "boo", bsoncxx::exception);
 }
