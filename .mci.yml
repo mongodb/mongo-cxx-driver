@@ -74,7 +74,6 @@ functions:
                g++ --version || true
                clang --version || true
                cmake --version || true
-               find /opt -name gcc -exec {} --version\;
 
     "fetch_source":
         command: git.get_project
