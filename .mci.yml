@@ -62,23 +62,27 @@ variables:
 #######################################
 
 functions:
-    "getdata":
-        command: shell.exec
-        params:
-            working_dir: "."
-            script: |
-               set -o xtrace
-               cc --version || true
-               c++ --version || true
-               gcc --version || true
-               g++ --version || true
-               clang --version || true
-               cmake --version || true
-
-    "fetch_source":
-        command: git.get_project
-        params:
-            directory: "mongo-cxx-driver"
+    "setup":
+        - command: shell.exec
+          params:
+              script: |
+                 rm -rf "mongo-cxx-driver"
+                 rm -fr "mongo-c-driver"
+                 rm -fr mongod
+        - command: git.get_project
+          params:
+              directory: "mongo-cxx-driver"
+        - command: shell.exec
+          params:
+              working_dir: "."
+              script: |
+                 set -o xtrace
+                 cc --version || true
+                 c++ --version || true
+                 gcc --version || true
+                 g++ --version || true
+                 clang --version || true
+                 cmake --version || true
 
     "start_mongod":
         command: shell.exec
@@ -195,16 +199,6 @@ functions:
 #              Pre Task               #
 #######################################
 
-pre:
-  - command: shell.exec
-    params:
-      script: |
-        rm -rf "mongo-cxx-driver"
-        rm -fr "mongo-c-driver"
-        rm -fr mongod
-  - func: "fetch_source"
-  - func: "getdata"
-
 post:
   - func: "stop_mongod"
 #######################################
@@ -214,10 +208,12 @@ post:
 tasks:
     - name: lint
       commands:
+        - func: "setup"
         - func: "lint"
 
     - name: compile_and_test_with_mongoc_current
       commands:
+        - func: "setup"
         - func: "start_mongod"
         - func: "install_c_driver"
           vars:
@@ -227,6 +223,7 @@ tasks:
 
     - name: compile_and_test_with_mongoc_master
       commands:
+        - func: "setup"
         - func: "start_mongod"
         - func: "install_c_driver"
           vars:
