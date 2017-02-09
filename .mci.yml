@@ -176,8 +176,8 @@ functions:
                   export CRUD_TESTS_PATH="$(pwd)/../data/crud"
                   if [ "Windows_NT" == "$OS" ]; then
                       CRUD_TESTS_PATH=$(cygpath -m $CRUD_TESTS_PATH)
-                      "${build_tool_path}" /p:Configuration=${build_type} RUN_TESTS.vcxproj
-                      "${build_tool_path}" /p:Configuration=${build_type} examples/run-examples.vcxproj
+                      CTEST_OUTPUT_ON_FAILURE=1 "${build_tool_path}" /p:Configuration=${build_type} RUN_TESTS.vcxproj
+                      CTEST_OUTPUT_ON_FAILURE=1 "${build_tool_path}" /p:Configuration=${build_type} examples/run-examples.vcxproj
                   else
                       # Running the tests and examples here one-by-one here with "test_params" is
                       # necessary due to the fact that we don't yet have explicit CMake integration
