@@ -28,6 +28,19 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+namespace {
+
+// Some of the 'uri_get_*' string accessors may return nullptr.
+// Check for this case and convert to the empty string.
+std::string to_string_null_safe(const char* str) {
+    if (str == nullptr) {
+        return std::string{};
+    }
+    return str;
+}
+
+} // namespace
+
 const std::string uri::k_default_uri = "mongodb://localhost:27017";
 
 uri::uri(std::unique_ptr<impl>&& implementation) {
@@ -47,7 +60,7 @@ uri& uri::operator=(uri&&) noexcept = default;
 uri::~uri() = default;
 
 std::string uri::auth_mechanism() const {
-    return libmongoc::uri_get_auth_mechanism(_impl->uri_t);
+    return to_string_null_safe(libmongoc::uri_get_auth_mechanism(_impl->uri_t));
 }
 
 std::string uri::auth_source() const {
@@ -55,7 +68,7 @@ std::string uri::auth_source() const {
 }
 
 std::string uri::database() const {
-    return libmongoc::uri_get_database(_impl->uri_t);
+    return to_string_null_safe(libmongoc::uri_get_database(_impl->uri_t));
 }
 
 std::vector<uri::host> uri::hosts() const {
@@ -75,7 +88,7 @@ bsoncxx::document::view uri::options() const {
 }
 
 std::string uri::password() const {
-    return libmongoc::uri_get_password(_impl->uri_t);
+    return to_string_null_safe(libmongoc::uri_get_password(_impl->uri_t));
 }
 
 class read_concern uri::read_concern() const {
@@ -91,7 +104,7 @@ class read_preference uri::read_preference() const {
 }
 
 std::string uri::replica_set() const {
-    return libmongoc::uri_get_replica_set(_impl->uri_t);
+    return to_string_null_safe(libmongoc::uri_get_replica_set(_impl->uri_t));
 }
 
 std::string uri::to_string() const {
@@ -103,7 +116,7 @@ bool uri::ssl() const {
 }
 
 std::string uri::username() const {
-    return libmongoc::uri_get_username(_impl->uri_t);
+    return to_string_null_safe(libmongoc::uri_get_username(_impl->uri_t));
 }
 
 class write_concern uri::write_concern() const {
