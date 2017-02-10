@@ -67,7 +67,7 @@ TEST_CASE("URI", "[uri]") {
         REQUIRE(u.hosts().size() == 1);        
         REQUIRE(u.hosts()[0].name == "localhost");
         REQUIRE(u.hosts()[0].port == 27017);
-        REQUIRE(u.hosts()[0].family == 0);
+        // Don't check 'u.hosts()[0].family'.  Value is platform-dependent.
         REQUIRE(u.to_string() == "mongodb://localhost:27017");
         REQUIRE(u.write_concern().journal() == false);
         REQUIRE(u.write_concern().majority() == false);
