@@ -234,8 +234,21 @@ class MONGOCXX_API read_preference {
     friend collection;
     friend database;
     friend uri;
+
+    ///
+    /// @{
+    ///
+    /// Compares two read_preference objects for (in)-equality.
+    ///
+    /// @relates: read_preference
+    ///
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const read_preference&,
                                                       const read_preference&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const read_preference&,
+                                                      const read_preference&);
+    ///
+    /// @}
+    ///
 
     class MONGOCXX_PRIVATE impl;
 

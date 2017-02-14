@@ -77,12 +77,15 @@ TEST_CASE("Read preference can be constructed with a read_mode and tags", "[read
     REQUIRE(rp.tags().value() == tags);
 }
 
-TEST_CASE("Read preference comparison works", "[read_preference]") {
+TEST_CASE("Read preference equality operator works", "[read_preference]") {
     instance::current();
 
     read_preference rp_a;
     read_preference rp_b;
-    REQUIRE(rp_a == rp_b);
+
+    SECTION("default-constructed read_preference objects are equal") {
+        REQUIRE(rp_a == rp_b);
+    }
 
     SECTION("mode is compared") {
         rp_a.mode(read_preference::read_mode::k_nearest);
@@ -107,6 +110,17 @@ TEST_CASE("Read preference comparison works", "[read_preference]") {
         rp_b.max_staleness(max_staleness);
         REQUIRE(rp_a == rp_b);
     }
+}
+
+TEST_CASE("Read preference inequality operator works", "[read_preference]") {
+    instance::current();
+
+    read_preference rp_a;
+    read_preference rp_b;
+
+    REQUIRE_FALSE(rp_a != rp_b);
+    rp_a.mode(read_preference::read_mode::k_nearest);
+    REQUIRE(rp_a != rp_b);
 }
 
 TEST_CASE("Read preference methods call underlying mongoc methods", "[read_preference]") {

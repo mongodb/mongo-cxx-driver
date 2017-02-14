@@ -109,5 +109,9 @@ bool operator==(const read_preference& lhs, const read_preference& rhs) {
            (lhs.max_staleness() == rhs.max_staleness());
 }
 
+bool operator!=(const read_preference& lhs, const read_preference& rhs) {
+    return !(lhs == rhs);
+}
+
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
