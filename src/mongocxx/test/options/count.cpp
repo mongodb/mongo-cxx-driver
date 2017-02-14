@@ -37,6 +37,6 @@ TEST_CASE("count", "[count][option]") {
     CHECK_OPTIONAL_ARGUMENT(cnt, hint, hint);
     CHECK_OPTIONAL_ARGUMENT(cnt, limit, 3);
     CHECK_OPTIONAL_ARGUMENT(cnt, max_time, std::chrono::milliseconds{1000});
-    CHECK_OPTIONAL_ARGUMENT_WITHOUT_EQUALITY(cnt, read_preference, read_preference{});
+    CHECK_OPTIONAL_ARGUMENT(cnt, read_preference, read_preference{});
     CHECK_OPTIONAL_ARGUMENT(cnt, skip, 3);
 }

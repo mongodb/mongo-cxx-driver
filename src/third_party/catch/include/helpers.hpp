@@ -27,16 +27,6 @@
         REQUIRE(OBJECT.NAME().value() == VALUE);     \
     }
 
-#define CHECK_OPTIONAL_ARGUMENT_WITHOUT_EQUALITY(OBJECT, NAME, VALUE) \
-    SECTION("has NAME disengaged") {                                  \
-        REQUIRE(!OBJECT.NAME());                                      \
-    }                                                                 \
-                                                                      \
-    SECTION("has a method to set the upsert") {                       \
-        OBJECT.NAME(VALUE);                                           \
-        REQUIRE(OBJECT.NAME());                                       \
-    }
-
 #define MOCK_POOL_NOSSL                                                                        \
     auto client_pool_new = libmongoc::client_pool_new.create_instance();                       \
     client_pool_new->interpose([](const mongoc_uri_t*) { return nullptr; }).forever();         \

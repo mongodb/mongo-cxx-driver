@@ -33,5 +33,5 @@ TEST_CASE("delete_options", "[delete][option]") {
                                 << "en_US" << finalize;
 
     CHECK_OPTIONAL_ARGUMENT(del, collation, collation.view());
-    CHECK_OPTIONAL_ARGUMENT_WITHOUT_EQUALITY(del, write_concern, write_concern{});
+    CHECK_OPTIONAL_ARGUMENT(del, write_concern, write_concern{});
 }
