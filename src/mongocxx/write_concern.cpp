@@ -143,5 +143,23 @@ std::chrono::milliseconds write_concern::timeout() const {
     return std::chrono::milliseconds(libmongoc::write_concern_get_wtimeout(_impl->write_concern_t));
 }
 
+bool operator==(const write_concern& lhs, const write_concern& rhs) {
+    return std::forward_as_tuple(lhs.journal(),
+                                 lhs.nodes(),
+                                 lhs.acknowledge_level(),
+                                 lhs.tag(),
+                                 lhs.majority(),
+                                 lhs.timeout()) == std::forward_as_tuple(rhs.journal(),
+                                                                         rhs.nodes(),
+                                                                         rhs.acknowledge_level(),
+                                                                         rhs.tag(),
+                                                                         rhs.majority(),
+                                                                         rhs.timeout());
+}
+
+bool operator!=(const write_concern& lhs, const write_concern& rhs) {
+    return !(lhs == rhs);
+}
+
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

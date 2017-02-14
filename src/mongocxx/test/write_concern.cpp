@@ -153,3 +153,67 @@ TEST_CASE("confirmation from tags, a repl-member count, and majority are mutuall
         REQUIRE(!wc.tag());
     }
 }
+
+TEST_CASE("write_concern equality operator works", "[write_concern]") {
+    instance::current();
+
+    write_concern wc_a{};
+    write_concern wc_b{};
+
+    SECTION("default-constructed write_concern objects are equal") {
+        REQUIRE(wc_a == wc_b);
+    }
+
+    SECTION("journal is compared") {
+        wc_a.journal(true);
+        REQUIRE_FALSE(wc_a == wc_b);
+        wc_b.journal(true);
+        REQUIRE(wc_a == wc_b);
+    }
+
+    SECTION("nodes is compared") {
+        wc_a.nodes(1);
+        REQUIRE_FALSE(wc_a == wc_b);
+        wc_b.nodes(1);
+        REQUIRE(wc_a == wc_b);
+    }
+
+    SECTION("acknowledge_level is compared") {
+        wc_a.acknowledge_level(write_concern::level::k_majority);
+        REQUIRE_FALSE(wc_a == wc_b);
+        wc_b.acknowledge_level(write_concern::level::k_majority);
+        REQUIRE(wc_a == wc_b);
+    }
+
+    SECTION("tag is compared") {
+        wc_a.tag("foo");
+        REQUIRE_FALSE(wc_a == wc_b);
+        wc_b.tag("foo");
+        REQUIRE(wc_a == wc_b);
+    }
+
+    SECTION("majority is compared") {
+        wc_a.majority(std::chrono::milliseconds{5});
+        REQUIRE_FALSE(wc_a == wc_b);
+        wc_b.majority(std::chrono::milliseconds{5});
+        REQUIRE(wc_a == wc_b);
+    }
+
+    SECTION("timeout is compared") {
+        wc_a.timeout(std::chrono::milliseconds{5});
+        REQUIRE_FALSE(wc_a == wc_b);
+        wc_b.timeout(std::chrono::milliseconds{5});
+        REQUIRE(wc_a == wc_b);
+    }
+}
+
+TEST_CASE("write_concern inequality operator works", "[write_concern]") {
+    instance::current();
+
+    write_concern wc_a{};
+    write_concern wc_b{};
+
+    REQUIRE_FALSE(wc_a != wc_b);
+    wc_a.journal(true);
+    REQUIRE(wc_a != wc_b);
+}

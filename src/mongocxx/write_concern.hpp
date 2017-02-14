@@ -229,6 +229,19 @@ class MONGOCXX_API write_concern {
     friend database;
     friend uri;
 
+    ///
+    /// @{
+    ///
+    /// Compares two write_concern objects for (in)-equality.
+    ///
+    /// @relates: write_concern
+    ///
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const write_concern&, const write_concern&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const write_concern&, const write_concern&);
+    ///
+    /// @}
+    ///
+
     class MONGOCXX_PRIVATE impl;
 
     MONGOCXX_PRIVATE write_concern(std::unique_ptr<impl>&& implementation);
