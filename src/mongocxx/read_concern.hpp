@@ -146,6 +146,19 @@ class MONGOCXX_API read_concern {
     friend database;
     friend uri;
 
+    ///
+    /// @{
+    ///
+    /// Compares two read_concern objects for (in)-equality.
+    ///
+    /// @relates: read_concern
+    ///
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const read_concern&, const read_concern&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const read_concern&, const read_concern&);
+    ///
+    /// @}
+    ///
+
     class MONGOCXX_PRIVATE impl;
 
     MONGOCXX_PRIVATE read_concern(std::unique_ptr<impl>&& implementation);

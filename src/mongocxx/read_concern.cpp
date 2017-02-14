@@ -96,5 +96,13 @@ stdx::string_view read_concern::acknowledge_string() const {
     return {stdx::string_view{level}};
 }
 
+bool operator==(const read_concern& lhs, const read_concern& rhs) {
+    return lhs.acknowledge_level() == rhs.acknowledge_level();
+}
+
+bool operator!=(const read_concern& lhs, const read_concern& rhs) {
+    return !(lhs == rhs);
+}
+
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

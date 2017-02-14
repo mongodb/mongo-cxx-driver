@@ -103,3 +103,41 @@ TEST_CASE("read_concern throws when trying to set level to k_unknown", "[read_co
 
     REQUIRE_THROWS(rc.acknowledge_level(read_concern::level::k_unknown));
 }
+
+TEST_CASE("read_concern equality operator works", "[read_concern]") {
+    instance::current();
+
+    read_concern rc_a{};
+    read_concern rc_b{};
+
+    SECTION("default-constructed read_concern objects are equal") {
+        REQUIRE(rc_a == rc_b);
+    }
+
+    SECTION("acknowledge_level is compared") {
+        SECTION("with known level") {
+            rc_a.acknowledge_level(read_concern::level::k_local);
+            REQUIRE_FALSE(rc_a == rc_b);
+            rc_b.acknowledge_level(read_concern::level::k_local);
+            REQUIRE(rc_a == rc_b);
+        }
+
+        SECTION("with unknown level") {
+            rc_a.acknowledge_string("foo");
+            REQUIRE_FALSE(rc_a == rc_b);
+            rc_b.acknowledge_string("bar");
+            REQUIRE(rc_a == rc_b);
+        }
+    }
+}
+
+TEST_CASE("read_concern inequality operator works", "[read_concern]") {
+    instance::current();
+
+    read_concern rc_a{};
+    read_concern rc_b{};
+
+    REQUIRE_FALSE(rc_a != rc_b);
+    rc_a.acknowledge_level(read_concern::level::k_local);
+    REQUIRE(rc_a != rc_b);
+}
