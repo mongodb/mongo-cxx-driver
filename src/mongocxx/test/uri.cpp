@@ -26,6 +26,34 @@ TEST_CASE("URI", "[uri]") {
         REQUIRE_NOTHROW(mongocxx::uri{mongocxx::uri::k_default_uri});
         REQUIRE(mongocxx::uri{}.to_string() ==
                 mongocxx::uri{mongocxx::uri::k_default_uri}.to_string());
+
+        mongocxx::uri u{};
+
+        // Values that should be empty with a blank URI.
+        REQUIRE(u.auth_mechanism() == "");
+        REQUIRE(u.auth_source() == "admin");
+        REQUIRE(u.database() == "");
+        REQUIRE(u.hosts().size() == 1);
+        REQUIRE(u.hosts()[0].name == "localhost");
+        // Don't check 'u.hosts()[0].family'.  Value is platform-dependent.
+        REQUIRE(u.hosts()[0].port == 27017);
+        REQUIRE(u.options().empty());
+        REQUIRE(u.password() == "");
+        REQUIRE(u.read_concern().acknowledge_level() == mongocxx::read_concern::level::k_server_default);
+        REQUIRE(u.read_concern().acknowledge_string().empty());
+        REQUIRE(u.read_preference().mode() == mongocxx::read_preference::read_mode::k_primary);
+        REQUIRE(!u.read_preference().tags());
+        REQUIRE(!u.read_preference().max_staleness());
+        REQUIRE(u.replica_set() == "");
+        REQUIRE(u.ssl() == false);
+        REQUIRE(u.to_string() == mongocxx::uri::k_default_uri);
+        REQUIRE(u.username() == "");
+        REQUIRE(u.write_concern().journal() == false);
+        REQUIRE(u.write_concern().majority() == false);
+        REQUIRE(!u.write_concern().nodes());
+        REQUIRE(u.write_concern().timeout() == std::chrono::milliseconds{0});
+        REQUIRE(u.write_concern().acknowledge_level());
+        REQUIRE(*u.write_concern().acknowledge_level() == mongocxx::write_concern::level::k_default);
     }
 
     SECTION("Valid URI") {
