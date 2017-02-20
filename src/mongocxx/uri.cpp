@@ -26,20 +26,20 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 namespace {
 
-std::string to_string_null_safe(const char* str)
-{
+// Some of the 'uri_get_*' string accessors may return nullptr.
+// Check for this case and convert to the empty string.
+std::string to_string_null_safe(const char* str) {
     if (str == nullptr) {
-        return std::string();
+        return std::string{};
     }
     return str;
 }
 
-}
-
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+} // namespace
 
 const std::string uri::k_default_uri = "mongodb://localhost:27017";
 
@@ -64,7 +64,7 @@ std::string uri::auth_mechanism() const {
 }
 
 std::string uri::auth_source() const {
-    return to_string_null_safe(libmongoc::uri_get_auth_source(_impl->uri_t));
+    return libmongoc::uri_get_auth_source(_impl->uri_t);
 }
 
 std::string uri::database() const {
