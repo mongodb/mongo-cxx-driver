@@ -30,8 +30,8 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 namespace {
 
-// Some of the 'uri_get_*' string accessors may return nullptr.
-// Check for this case and convert to the empty string.
+// Some of the 'uri_get_*' string accessors may return nullptr.  Check for this case and convert to
+// the empty string.
 std::string to_string_null_safe(const char* str) {
     if (str == nullptr) {
         return std::string{};
@@ -39,7 +39,7 @@ std::string to_string_null_safe(const char* str) {
     return str;
 }
 
-} // namespace
+}  // namespace
 
 const std::string uri::k_default_uri = "mongodb://localhost:27017";
 
