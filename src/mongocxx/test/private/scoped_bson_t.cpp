@@ -12,16 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "catch.hpp"
-
-#include <mongocxx/private/libmongoc.hh>
-
-#include <mongocxx/private/libbson.hh>
-
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/test_util/catch.hh>
+#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/libmongoc.hh>
 
 using namespace bsoncxx;
 using namespace mongocxx;

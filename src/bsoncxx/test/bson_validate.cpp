@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "catch.hpp"
-
-#include <bsoncxx/validate.hpp>
-
 #include <array>
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/validate.hpp>
 
 using namespace bsoncxx;
 

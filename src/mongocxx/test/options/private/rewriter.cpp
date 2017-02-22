@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <chrono>
-
-#include "catch.hpp"
 #include "helpers.hpp"
+
+#include <chrono>
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/private/rewriter.hh>

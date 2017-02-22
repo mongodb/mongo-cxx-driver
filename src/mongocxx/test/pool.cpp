@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "catch.hpp"
 #include "helpers.hpp"
 
 #include <cstddef>
 #include <string>
 
+#include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/ssl.hpp>

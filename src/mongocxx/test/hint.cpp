@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "catch.hpp"
-
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/instance.hpp>
 

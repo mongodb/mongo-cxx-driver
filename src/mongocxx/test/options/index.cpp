@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "catch.hpp"
 #include "helpers.hpp"
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/stdx.hpp>

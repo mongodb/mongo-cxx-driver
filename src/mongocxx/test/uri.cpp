@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "catch.hpp"
-
 #include <string>
 
+#include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/uri.hpp>

@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "catch.hpp"
-
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/document/value.hpp>
@@ -21,6 +19,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
+#include <bsoncxx/test_util/catch.hh>
 
 using namespace bsoncxx;
 

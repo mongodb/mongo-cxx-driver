@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "catch.hpp"
-
-#include <bsoncxx/types.hpp>
 #include <chrono>
+
+#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/types.hpp>
 
 TEST_CASE("time_point is converted to b_date and back", "[bsoncxx::types::b_date]") {
     using bsoncxx::types::b_date;

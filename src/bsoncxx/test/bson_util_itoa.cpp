@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "catch.hpp"
-
 #include <bsoncxx/private/itoa.hh>
+#include <bsoncxx/test_util/catch.hh>
 
 TEST_CASE("util::itoa is equivalent to to_string(int)", "[bsoncxx::util::itoa]") {
 // Cygwin doesn't have std::to_string, see:

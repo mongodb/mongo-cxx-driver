@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/test_util/client_helpers.hh>
-#include "catch.hpp"
-
 #include <vector>
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
@@ -33,6 +31,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/read_concern.hpp>
+#include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
 
 using namespace bsoncxx::builder::stream;

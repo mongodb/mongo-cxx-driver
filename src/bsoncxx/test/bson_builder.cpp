@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "catch.hpp"
-
 #include <cstring>
 
 #include <bson.h>
@@ -24,6 +22,7 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
 

@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "catch.hpp"
-
 #include <fstream>
 #include <functional>
 #include <map>
@@ -29,6 +27,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/cursor.hpp>

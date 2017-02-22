@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/test_util/client_helpers.hh>
-#include "catch.hpp"
 #include "helpers.hpp"
 
-#include <mongocxx/database.hpp>
-
 #include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
+#include <mongocxx/database.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/modify_collection.hpp>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/validation_criteria.hpp>
 
 using namespace mongocxx;
