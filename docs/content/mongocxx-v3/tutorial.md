@@ -62,7 +62,7 @@ c++ --std=c++11 <input>.cpp
 ### Make a Connection
 
 **IMPORTANT**: Before making any connections, you need to create one and only
-one instance of [`mongocxx::instance`]({{< api3red classmongocxx_1_1instance >}}).
+one instance of [`mongocxx::instance`]({{< api3ref classmongocxx_1_1instance >}}).
 This instance must exist for the entirety of your program.
 
 To connect to a running MongoDB instance, use the
