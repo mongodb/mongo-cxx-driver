@@ -661,6 +661,11 @@ line in above expands to this:&lt;/p&gt;
 
 &lt;h3 id=&#34;make-a-connection&#34;&gt;Make a Connection&lt;/h3&gt;
 
+&lt;p&gt;&lt;strong&gt;IMPORTANT&lt;/strong&gt;: Before making any connections, you need to create one and only
+one instance of &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1instance.html
+&#34;&gt;&lt;code&gt;mongocxx::instance&lt;/code&gt;&lt;/a&gt;.
+This instance must exist for the entirety of your program.&lt;/p&gt;
+
 &lt;p&gt;To connect to a running MongoDB instance, use the
 &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1client.html
 &#34;&gt;&lt;code&gt;mongocxx::client&lt;/code&gt;&lt;/a&gt;
@@ -675,12 +680,14 @@ and pass that into the &lt;code&gt;mongocxx::client&lt;/code&gt; constructor.&lt
 &lt;p&gt;The default &lt;code&gt;mongocxx::uri&lt;/code&gt; constructor will connect to a
 server running on localhost on port &lt;code&gt;27017&lt;/code&gt;:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::client client{mongocxx::uri{}};
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::instance instance{}; // This should be done only once.
+mongocxx::client client{mongocxx::uri{}};
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;This is equivalent to the following:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::uri uri(&amp;quot;mongodb://localhost:27017&amp;quot;);
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::instance instance{}; // This should be done only once.
+mongocxx::uri uri(&amp;quot;mongodb://localhost:27017&amp;quot;);
 mongocxx::client client(uri);
 &lt;/code&gt;&lt;/pre&gt;
 

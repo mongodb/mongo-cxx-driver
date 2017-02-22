@@ -1197,6 +1197,11 @@ line in above expands to this:</p>
 
 <h3 id="make-a-connection">Make a Connection</h3>
 
+<p><strong>IMPORTANT</strong>: Before making any connections, you need to create one and only
+one instance of <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1instance.html
+"><code>mongocxx::instance</code></a>.
+This instance must exist for the entirety of your program.</p>
+
 <p>To connect to a running MongoDB instance, use the
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1client.html
 "><code>mongocxx::client</code></a>
@@ -1211,12 +1216,14 @@ and pass that into the <code>mongocxx::client</code> constructor.</p>
 <p>The default <code>mongocxx::uri</code> constructor will connect to a
 server running on localhost on port <code>27017</code>:</p>
 
-<pre><code class="language-c++">mongocxx::client client{mongocxx::uri{}};
+<pre><code class="language-c++">mongocxx::instance instance{}; // This should be done only once.
+mongocxx::client client{mongocxx::uri{}};
 </code></pre>
 
 <p>This is equivalent to the following:</p>
 
-<pre><code class="language-c++">mongocxx::uri uri(&quot;mongodb://localhost:27017&quot;);
+<pre><code class="language-c++">mongocxx::instance instance{}; // This should be done only once.
+mongocxx::uri uri(&quot;mongodb://localhost:27017&quot;);
 mongocxx::client client(uri);
 </code></pre>
 
