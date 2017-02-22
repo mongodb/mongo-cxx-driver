@@ -61,6 +61,10 @@ c++ --std=c++11 <input>.cpp
 
 ### Make a Connection
 
+**IMPORTANT**: Before making any connections, you need to create one and only
+one instance of [`mongocxx::instance`]({{< api3red classmongocxx_1_1instance >}}).
+This instance must exist for the entirety of your program.
+
 To connect to a running MongoDB instance, use the
 [`mongocxx::client`]({{< api3ref classmongocxx_1_1client >}})
 class.
@@ -74,12 +78,14 @@ The default `mongocxx::uri` constructor will connect to a
 server running on localhost on port `27017`:
 
 ```c++
+mongocxx::instance instance{}; // This should be done only once.
 mongocxx::client client{mongocxx::uri{}};
 ```
 
 This is equivalent to the following:
 
 ```c++
+mongocxx::instance instance{}; // This should be done only once.
 mongocxx::uri uri("mongodb://localhost:27017");
 mongocxx::client client(uri);
 ```
