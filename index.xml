@@ -2112,8 +2112,8 @@ git push origin legacy
 &lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Pushing the BUMP commit to the origin will kick off builds in Evergreen,
-Travis CI and AppVeyor. Wait for all three builds to finish and pass.&lt;/p&gt;
+&lt;p&gt;Pushing the BUMP commit to the origin will kick off builds in Evergreen
+and Travis CI. Wait for both builds to finish and pass.&lt;/p&gt;
 
 &lt;h2 id=&#34;tag-the-release&#34;&gt;Tag the Release&lt;/h2&gt;
 
@@ -2321,9 +2321,9 @@ for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
 git push origin &amp;lt;release-branch&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Pushing the BUMP commit to the origin will kick off builds in Evergreen,
-Travis CI and AppVeyor (which handles Windows builds). Wait for all three
-builds to finish and pass, re-running any timeout/spot failures.&lt;/p&gt;
+&lt;p&gt;Pushing the BUMP commit to the origin will kick off builds in Evergreen
+and Travis CI. Wait for both builds to finish and pass, re-running any
+timeout/spot failures.&lt;/p&gt;
 
 &lt;p&gt;Meanwhile, test the branch locally.&lt;/p&gt;
 

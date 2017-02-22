@@ -1350,7 +1350,8 @@ throw an instance of
 "><code>mongocxx::collection</code></a>
 instance&rsquo;s <code>insert_one()</code> method:</p>
 
-<pre><code class="language-c++">mongocxx::result::insert_one result = restaurants.insert_one(doc);
+<pre><code class="language-c++">mongocxx::stdx::optional&lt;mongocxx::result::insert_one&gt; result =
+ restaurants.insert_one(doc);
 </code></pre>
 
 <p>If you do not specify a top-level <code>_id</code> field in the document,

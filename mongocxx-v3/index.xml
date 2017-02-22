@@ -814,7 +814,8 @@ throw an instance of
 &#34;&gt;&lt;code&gt;mongocxx::collection&lt;/code&gt;&lt;/a&gt;
 instance&amp;rsquo;s &lt;code&gt;insert_one()&lt;/code&gt; method:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::result::insert_one result = restaurants.insert_one(doc);
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::stdx::optional&amp;lt;mongocxx::result::insert_one&amp;gt; result =
+ restaurants.insert_one(doc);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;If you do not specify a top-level &lt;code&gt;_id&lt;/code&gt; field in the document,

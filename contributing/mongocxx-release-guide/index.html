@@ -1502,9 +1502,9 @@ for the MONGOCXX_VERSION_EXTRA and BSONCXX_VERSION_EXTRA variables):
 git push origin &lt;release-branch&gt;
 </code></pre>
 
-<p>Pushing the BUMP commit to the origin will kick off builds in Evergreen,
-Travis CI and AppVeyor (which handles Windows builds). Wait for all three
-builds to finish and pass, re-running any timeout/spot failures.</p>
+<p>Pushing the BUMP commit to the origin will kick off builds in Evergreen
+and Travis CI. Wait for both builds to finish and pass, re-running any
+timeout/spot failures.</p>
 
 <p>Meanwhile, test the branch locally.</p>
 
