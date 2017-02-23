@@ -25,11 +25,12 @@ using namespace bsoncxx;
 template <typename begin_t, typename end_t>
 class range_array_appender {
    public:
-    range_array_appender(begin_t begin, end_t end) : _begin(begin), _end(end) {}
+    range_array_appender(begin_t begin, end_t end)
+        : _begin(std::move(begin)), _end(std::move(end)) {}
 
     void operator()(bsoncxx::builder::stream::array_context<> ac) const {
         for (auto iter = _begin; iter != _end; ++iter) {
-            ac << *iter;
+            ac = ac << *iter;
         }
     }
 
@@ -48,11 +49,11 @@ range_array_appender<begin_t, end_t> make_range_array_appender(begin_t&& begin, 
 template <typename begin_t, typename end_t>
 class range_kvp_appender {
    public:
-    range_kvp_appender(begin_t begin, end_t end) : _begin(begin), _end(end) {}
+    range_kvp_appender(begin_t begin, end_t end) : _begin(std::move(begin)), _end(std::move(end)) {}
 
     void operator()(bsoncxx::builder::stream::key_context<> ac) const {
         for (auto iter = _begin; iter != _end; ++iter) {
-            ac << iter->first << iter->second;
+            ac = ac << iter->first << iter->second;
         }
     }
 
@@ -68,35 +69,32 @@ range_kvp_appender<begin_t, end_t> make_range_kvp_appender(begin_t&& begin, end_
 }
 
 int main(int, char**) {
-    using builder::stream::document;
     using builder::stream::array;
+    using builder::stream::document;
+    using builder::stream::finalize;
 
     // bsoncxx::builder::stream presents an iostream like interface for succinctly
     // constructing complex BSON objects.  It also allows for interesting
     // primitives by writing your own callables with interesting signatures.
 
-    // stream::document builds a BSON document
-    auto doc = document{};
-
-    // stream::array builds a BSON array
-    auto arr = array{};
-
     // Some key value pairs we'd like to append
     std::map<std::string, int> some_kvps = {{"a", 1}, {"b", 2}, {"c", 3}};
 
-    // Some values we'd like to append;
-    std::vector<int> some_numbers = {1, 2, 3};
-
     // Adapt our kvps
-    doc << make_range_kvp_appender(some_kvps.begin(), some_kvps.end());
+    auto doc = document() << make_range_kvp_appender(some_kvps.begin(), some_kvps.end())
+                          << finalize;
     // Now doc = {
     //     "a" : 1,
     //     "b" : 2,
     //     "c" : 3
     // }
 
+    // Some values we'd like to append;
+    std::vector<int> some_numbers = {1, 2, 3};
+
     // Adapt our values
-    arr << make_range_array_appender(some_numbers.begin(), some_numbers.end());
+    auto arr = array() << make_range_array_appender(some_numbers.begin(), some_numbers.end())
+                       << finalize;
     // Now arr = {
     //     "0" : 1,
     //     "1" : 2,

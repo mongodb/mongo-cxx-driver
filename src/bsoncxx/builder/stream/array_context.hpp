@@ -89,7 +89,7 @@ class array_context {
     BSONCXX_INLINE typename std::enable_if<(util::is_functor<Func, void(array_context<>)>::value ||
                                             util::is_functor<Func, void(single_context)>::value),
                                            array_context>::type&
-    operator<<(Func func) {
+    operator<<(Func&& func) {
         func(*this);
         return *this;
     }
