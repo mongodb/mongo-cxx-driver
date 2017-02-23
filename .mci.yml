@@ -38,11 +38,13 @@ variables:
 
     ## cmake flag variables
     cmake_flags:
-        linux_cmake_flags: &linux_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -Wno-error=missing-field-initializers"
-        rhel55_cmake_flags: &rhel55_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror"
-        osx_cmake_flags: &osx_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Werror"
-        asan_cmake_flags: &asan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
-        ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.blacklist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
+        # TODO CXX-1056: remove "-Wno-error=deprecated-declarations" from CMAKE_C_FLAGS and
+        # CMAKE_CXX_FLAGS.
+        linux_cmake_flags: &linux_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers -Wno-error=deprecated-declarations" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -Wno-error=missing-field-initializers -Wno-error=deprecated-declarations"
+        rhel55_cmake_flags: &rhel55_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers -Wno-error=deprecated-declarations" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -Wno-error=deprecated-declarations"
+        osx_cmake_flags: &osx_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers -Wno-error=deprecated-declarations" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Werror -Wno-error=deprecated-declarations"
+        asan_cmake_flags: &asan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers -Wno-error=deprecated-declarations" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -Wno-error=deprecated-declarations"
+        ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers -Wno-error=deprecated-declarations" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.blacklist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -Wno-error=deprecated-declarations"
         windows_cmake_flags: &windows_cmake_flags -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT=c:/local/boost_1_60_0 -DLIBBSON_DIR=$(cygpath -m "$(pwd)/../mongoc") -DLIBMONGOC_DIR=$(cygpath -m "$(pwd)/../mongoc")
 
     poly_flags:
