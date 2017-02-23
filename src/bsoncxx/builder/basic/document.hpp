@@ -79,6 +79,24 @@ class document : public sub_document {
     core _core;
 };
 
+///
+/// Creates a document from a list of key-value pairs.
+///
+/// @param args
+///   A variadiac list of key-value pairs. The types of the keys and values can be anything that
+///   builder::basic::sub_document::append accepts.
+///
+/// @return
+///   A bsoncxx::document::value containing the elements.
+///
+template <typename... Args>
+bsoncxx::document::value make_document(Args&&... args) {
+    basic::document document;
+    document.append(std::forward<Args>(args)...);
+
+    return document.extract();
+}
+
 }  // namespace basic
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END

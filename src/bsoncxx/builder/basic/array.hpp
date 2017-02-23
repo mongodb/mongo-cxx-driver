@@ -80,6 +80,24 @@ class array : public sub_array {
     core _core;
 };
 
+///
+/// Creates an array from a list of elements.
+///
+/// @param args
+///   A variadiac list of elements. The types of the elements can be anything that
+///   builder::basic::sub_array::append accepts.
+///
+/// @return
+///   A bsoncxx::array::value containing the elements.
+///
+template <typename... Args>
+bsoncxx::array::value make_array(Args&&... args) {
+    basic::array array;
+    array.append(std::forward<Args>(args)...);
+
+    return array.extract();
+}
+
 }  // namespace basic
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END

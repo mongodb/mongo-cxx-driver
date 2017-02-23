@@ -69,10 +69,14 @@ class BSONCXX_API core {
     /// @param key
     ///   A null-terminated array of characters.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws bsoncxx::exception if the current BSON datum is an array or if the previous value
     /// appended to the builder was also a key.
     ///
-    void key_view(stdx::string_view key);
+    core& key_view(stdx::string_view key);
 
     ///
     /// Appends a key passed as an STL string.  Transfers ownership of the key to this class.
@@ -80,42 +84,62 @@ class BSONCXX_API core {
     /// @param key
     ///   A string key.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws bsoncxx::exception if the current BSON datum is an array or if the previous value
     /// appended to the builder was a key.
     ///
-    void key_owned(std::string key);
+    core& key_owned(std::string key);
 
     ///
     /// Opens a sub-document within this BSON datum.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void open_document();
+    core& open_document();
 
     ///
     /// Opens a sub-array within this BSON datum.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void open_array();
+    core& open_array();
 
     ///
     /// Closes the current sub-document within this BSON datum.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws bsoncxx::exception if the current BSON datum is not an open sub-document.
     ///
-    void close_document();
+    core& close_document();
 
     ///
     /// Closes the current sub-array within this BSON datum.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws bsoncxx::exception if the current BSON datum is not an open sub-array.
     ///
-    void close_array();
+    core& close_array();
 
     ///
     /// Appends the keys from a BSON document into this BSON datum.
@@ -127,311 +151,449 @@ class BSONCXX_API core {
     /// @note
     ///   This can be used with an array::view as well by converting it to a document::view first.
     ///
-    void concatenate(const document::view& view);
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    core& concatenate(const document::view& view);
 
     ///
     /// Appends a BSON double.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_double& value);
+    core& append(const types::b_double& value);
 
     ///
     /// Append a BSON UTF-8 string.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_utf8& value);
+    core& append(const types::b_utf8& value);
 
     ///
     /// Appends a BSON document.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_document& value);
+    core& append(const types::b_document& value);
 
     ///
     /// Appends a BSON array.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_array& value);
+    core& append(const types::b_array& value);
 
     ///
     /// Appends a BSON binary datum.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_binary& value);
+    core& append(const types::b_binary& value);
 
     ///
     /// Appends a BSON undefined.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_undefined& value);
+    core& append(const types::b_undefined& value);
 
     ///
     /// Appends a BSON ObjectId.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_oid& value);
+    core& append(const types::b_oid& value);
 
     ///
     /// Appends a BSON boolean.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_bool& value);
+    core& append(const types::b_bool& value);
 
     ///
     /// Appends a BSON date.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_date& value);
+    core& append(const types::b_date& value);
 
     ///
     /// Appends a BSON null.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_null& value);
+    core& append(const types::b_null& value);
 
     ///
     /// Appends a BSON regex.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_regex& value);
+    core& append(const types::b_regex& value);
 
     ///
     /// Appends a BSON DBPointer.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_dbpointer& value);
+    core& append(const types::b_dbpointer& value);
 
     ///
     /// Appends a BSON JavaScript code.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_code& value);
+    core& append(const types::b_code& value);
 
     ///
     /// Appends a BSON symbol.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_symbol& value);
+    core& append(const types::b_symbol& value);
 
     ///
     /// Appends a BSON JavaScript code with scope.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_codewscope& value);
+    core& append(const types::b_codewscope& value);
 
     ///
     /// Appends a BSON 32-bit signed integer.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_int32& value);
+    core& append(const types::b_int32& value);
 
     ///
     /// Appends a BSON replication timestamp.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_timestamp& value);
+    core& append(const types::b_timestamp& value);
 
     ///
     /// Appends a BSON 64-bit signed integer.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_int64& value);
+    core& append(const types::b_int64& value);
 
     ///
     /// Appends a BSON Decimal128.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_decimal128& value);
+    core& append(const types::b_decimal128& value);
 
     ///
     /// Appends a BSON min-key.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_minkey& value);
+    core& append(const types::b_minkey& value);
 
     ///
     /// Appends a BSON max-key.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::b_maxkey& value);
+    core& append(const types::b_maxkey& value);
 
     ///
     /// Appends a BSON variant value.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const types::value& value);
+    core& append(const types::value& value);
 
     ///
     /// Appends an STL string as a BSON UTF-8 string.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(std::string str);
+    core& append(std::string str);
 
     ///
     /// Appends a string view as a BSON UTF-8 string.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(stdx::string_view str);
+    core& append(stdx::string_view str);
 
     ///
     /// Appends a char* or const char*.
     ///
     /// We disable all other pointer types to prevent the surprising implicit conversion to bool.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
     template <typename T>
-    BSONCXX_INLINE void append(T* v) {
+    BSONCXX_INLINE core& append(T* v) {
         static_assert(std::is_same<typename std::remove_const<T>::type, char>::value,
                       "append is disabled for non-char pointer types");
         append(types::b_utf8{v});
+
+        return *this;
     }
 
     ///
     /// Appends a native boolean as a BSON boolean.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(bool value);
+    core& append(bool value);
 
     ///
     /// Appends a native double as a BSON double.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(double value);
+    core& append(double value);
 
     ///
     /// Appends a native int32_t as a BSON 32-bit signed integer.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(std::int32_t value);
+    core& append(std::int32_t value);
 
     ///
     /// Appends a native int64_t as a BSON 64-bit signed integer.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(std::int64_t value);
+    core& append(std::int64_t value);
 
     ///
     /// Appends an oid as a BSON ObjectId.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(const oid& value);
+    core& append(const oid& value);
 
     ///
     /// Appends a decimal128 object as a BSON Decimal128.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(decimal128 value);
+    core& append(decimal128 value);
 
     ///
     /// Appends the given document view.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(document::view view);
+    core& append(document::view view);
 
     ///
     /// Appends the given array view.
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    void append(array::view view);
+    core& append(array::view view);
 
     ///
     /// Gets a view over the document.

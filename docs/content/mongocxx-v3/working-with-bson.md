@@ -68,7 +68,7 @@ fully-fledged BSON documents to be used.
 
 **Building arrays in loops**
 
-Sometimes it's necessary to build an array using a loop. With the basic 
+Sometimes it's necessary to build an array using a loop. With the basic
 builder, a top-level array can be built by simply calling `append` inside
 a loop:
 
@@ -83,8 +83,8 @@ for (const auto& element : elements) {
 }
 ```
 
-To build a subarray in a loop, pass a lambda to `append` (or as the second 
-argument of `kvp` if the subarray is contained by a document rather than 
+To build a subarray in a loop, pass a lambda to `append` (or as the second
+argument of `kvp` if the subarray is contained by a document rather than
 an array):
 
 ```
@@ -103,8 +103,8 @@ doc.append(kvp("foo", [&elements](sub_array child) {
 ```
 
 When building an array with the stream builder, it's important to be aware
-that the return type of using the `<<` operator on a stream builder is not 
-uniform. To build an array in a loop properly, intermediate values 
+that the return type of using the `<<` operator on a stream builder is not
+uniform. To build an array in a loop properly, intermediate values
 returned by the stream builder should be stored in variables when the type
 changes. One attempt to build an array from a stream builder using a loop
 might look like the following:
@@ -141,6 +141,23 @@ for (auto && e : {1, 2, 3}) {
     auto temp_state = open_state << "key" << e;
     in_array = temp_state << builder::stream::close_document;
 }
+```
+
+**"One-off" builder functions**
+
+In addition to the basic builder and the stream builder, there are helper
+functions to create documents and arrays in a single call. These can be
+used when no additional logic (such as conditionals or loops) need to be
+used to create the object:
+
+```c++
+using bsoncxx::builder::basic::kvp;
+
+// { "hello": "world" }
+auto document = bsoncxx::builder::basic::make_document(kvp("hello", "world"));
+
+// [2.0, true, "hello world"]
+auto array = bsoncxx::builder::basic::make_array(2.0, true, "hello world");
 ```
 
 ### <a name="value">Owning BSON Documents (values)</a>
