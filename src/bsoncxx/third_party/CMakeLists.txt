@@ -33,7 +33,8 @@ if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
         EP_mnmlstc_core
         fix-includes
         WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/${BSONCXX_HEADER_INSTALL_DIR}/bsoncxx/third_party/mnmlstc
-        COMMAND find . -type f | xargs perl -pi -e "s|#include <core|#include <bsoncxx/third_party/mnmlstc/core|g"
+        COMMAND find . -type f | xargs perl -pi.bak -e "s|#include <core|#include <bsoncxx/third_party/mnmlstc/core|g"
+        COMMAND find . -name *.bak | xargs rm
         DEPENDEES install
     )
 
