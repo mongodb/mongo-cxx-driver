@@ -2,6 +2,17 @@
 
 Welcome to the MongoDB C++ Driver!
 
+## Branches - `releases/stable` versus `master`
+
+The default checkout branch of this repository is `releases/stable`. 
+This will always contain the latest stable release of the driver. The
+ `master` branch is used for active development. `master` should 
+**only** be used when making contributions back to the driver, as it 
+is not stable for use in production.
+
+See [Driver Status by family and version](#driver-status-by-family-and-version)
+for more details about the various versions of the driver.
+
 ## Resources
 
 * [MongoDB C++ Driver Quickstart](https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/tutorial/)
