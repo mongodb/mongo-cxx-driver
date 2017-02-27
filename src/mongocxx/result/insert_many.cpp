@@ -38,7 +38,7 @@ std::int32_t insert_many::inserted_count() const {
     return _result.inserted_count();
 }
 
-insert_many::id_map insert_many::inserted_ids() {
+insert_many::id_map insert_many::inserted_ids() const {
     return _inserted_ids;
 }
 

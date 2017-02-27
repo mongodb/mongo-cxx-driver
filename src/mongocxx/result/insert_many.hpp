@@ -60,7 +60,7 @@ class MONGOCXX_API insert_many {
     /// destroyed.
     /// @return Map of the index of the operation to the _id of the inserted document.
     ///
-    id_map inserted_ids();
+    id_map inserted_ids() const;
 
    private:
     friend collection;
