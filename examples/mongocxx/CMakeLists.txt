@@ -24,8 +24,8 @@ link_directories(
 set(MONGOCXX_EXAMPLES
     aggregate.cpp
     bulk_write.cpp
-    create.cpp
     connect.cpp
+    create.cpp
     document_validation.cpp
     exception.cpp
     get_values_from_documents.cpp
