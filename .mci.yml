@@ -177,8 +177,10 @@ functions:
                   export DYLD_LIBRARY_PATH=.:$PREFIX/lib/
                   export PATH=$PREFIX/bin:$(pwd)/install/bin:$PATH
 
-                  # CRUD_TESTS_PATH is required to be set by the `test_specs` test binary.
+                  # CRUD_TESTS_PATH and GRIDFS_TESTS_PATH are required to be set by the
+                  # `test_crud_specs` and `test_gridfs_specs` test binaries, respectively.
                   export CRUD_TESTS_PATH="$(pwd)/../data/crud"
+                  export GRIDFS_TESTS_PATH="$(pwd)/../data/gridfs"
                   if [ "Windows_NT" == "$OS" ]; then
                       CRUD_TESTS_PATH=$(cygpath -m $CRUD_TESTS_PATH)
                       CTEST_OUTPUT_ON_FAILURE=1 "${build_tool_path}" /p:Configuration=${build_type} RUN_TESTS.vcxproj
@@ -191,7 +193,8 @@ functions:
                       # separate build targets for valgrind).
                       ${test_params} ./src/bsoncxx/test/test_bson
                       ${test_params} ./src/mongocxx/test/test_driver
-                      ${test_params} ./src/mongocxx/test/test_specs
+                      ${test_params} ./src/mongocxx/test/test_crud_specs
+                      ${test_params} ./src/mongocxx/test/test_gridfs_specs
                       ${test_params} ./src/mongocxx/test/test_instance
 
                       for test in $(find examples -type f -perm /u+x | sort); do ${test_params} $test; done

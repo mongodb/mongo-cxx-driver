@@ -45,8 +45,11 @@ set(mongocxx_sources
     cursor.cpp
     database.cpp
     exception/error_code.cpp
-    exception/server_error_code.cpp
     exception/operation_exception.cpp
+    exception/server_error_code.cpp
+    gridfs/bucket.cpp
+    gridfs/downloader.cpp
+    gridfs/uploader.cpp
     hint.cpp
     insert_many_builder.cpp
     instance.cpp
@@ -66,10 +69,12 @@ set(mongocxx_sources
     options/create_view.cpp
     options/delete.cpp
     options/distinct.cpp
-    options/find.cpp
     options/find_one_and_delete.cpp
     options/find_one_and_replace.cpp
     options/find_one_and_update.cpp
+    options/find.cpp
+    options/gridfs/bucket.cpp
+    options/gridfs/upload.cpp
     options/index.cpp
     options/insert.cpp
     options/modify_collection.cpp
@@ -85,10 +90,12 @@ set(mongocxx_sources
     read_preference.cpp
     result/bulk_write.cpp
     result/delete.cpp
+    result/gridfs/upload.cpp
     result/insert_many.cpp
     result/insert_one.cpp
     result/replace_one.cpp
     result/update.cpp
+    third_party/md5.cpp
     uri.cpp
     validation_criteria.cpp
     write_concern.cpp

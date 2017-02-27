@@ -25,6 +25,7 @@ set(mongocxx_test_sources
     collection.cpp
     collection_mocked.cpp
     database.cpp
+    gridfs/uploader.cpp
     hint.cpp
     model/delete_many.cpp
     model/delete_one.cpp
@@ -85,17 +86,27 @@ add_test(driver test_driver)
 
 add_test(instance test_instance)
 
-add_executable(test_specs
+add_executable(test_crud_specs
     ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    crud_spec.cpp
+    spec/crud.cpp
 )
 
-target_link_libraries(test_specs bsoncxx mongocxx)
+add_executable(test_gridfs_specs
+    ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
+    ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
+    spec/gridfs.cpp
+)
 
-add_test(specs test_specs)
+target_link_libraries(test_crud_specs bsoncxx mongocxx)
+target_link_libraries(test_gridfs_specs bsoncxx mongocxx)
 
-set_tests_properties(specs PROPERTIES
+add_test(crud_specs test_crud_specs)
+add_test(gridfs_specs test_gridfs_specs)
+
+
+set_tests_properties(crud_specs PROPERTIES
     ENVIRONMENT "CRUD_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/crud")
 
-
+set_tests_properties(gridfs_specs PROPERTIES
+    ENVIRONMENT "GRIDFS_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/gridfs")

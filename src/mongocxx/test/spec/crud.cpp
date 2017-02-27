@@ -593,33 +593,21 @@ document::value run_update_one_test(collection* coll, document::view operation) 
     return result.extract();
 }
 
-std::map<std::string, std::function<document::value(collection*, document::view)>> test_runners = {
-    {"aggregate", run_aggregate_test},
-    {"count", run_count_test},
-    {"distinct", run_distinct_test},
-    {"find", run_find_test},
-    {"deleteMany", run_delete_many_test},
-    {"deleteOne", run_delete_one_test},
-    {"findOneAndDelete", run_find_one_and_delete_test},
-    {"findOneAndReplace", run_find_one_and_replace_test},
-    {"findOneAndUpdate", run_find_one_and_update_test},
-    {"insertMany", run_insert_many_test},
-    {"insertOne", run_insert_one_test},
-    {"replaceOne", run_replace_one_test},
-    {"updateMany", run_update_many_test},
-    {"updateOne", run_update_one_test}};
-
-// Parses a JSON file at a given path and return it as a BSON document value.
-document::value parse_test_file(std::string path) {
-    std::stringstream stream;
-    std::ifstream test_file{path};
-
-    REQUIRE(test_file.good());
-
-    stream << test_file.rdbuf();
-
-    return from_json(stream.str());
-}
+std::map<std::string, std::function<document::value(collection*, document::view)>>
+    crud_test_runners = {{"aggregate", run_aggregate_test},
+                         {"count", run_count_test},
+                         {"distinct", run_distinct_test},
+                         {"find", run_find_test},
+                         {"deleteMany", run_delete_many_test},
+                         {"deleteOne", run_delete_one_test},
+                         {"findOneAndDelete", run_find_one_and_delete_test},
+                         {"findOneAndReplace", run_find_one_and_replace_test},
+                         {"findOneAndUpdate", run_find_one_and_update_test},
+                         {"insertMany", run_insert_many_test},
+                         {"insertOne", run_insert_one_test},
+                         {"replaceOne", run_replace_one_test},
+                         {"updateMany", run_update_many_test},
+                         {"updateOne", run_update_one_test}};
 
 // Clears the collection and initialize it as the spec describes.
 void initialize_collection(collection* coll, array::view initial_data) {
@@ -636,10 +624,12 @@ void initialize_collection(collection* coll, array::view initial_data) {
     coll->insert_many(documents_to_insert);
 }
 
-void run_tests_in_file(std::string test_path, client* client) {
+void run_crud_tests_in_file(std::string test_path, client* client) {
     INFO("Test path: " << test_path);
-    document::value test_spec = parse_test_file(test_path);
-    document::view test_spec_view = test_spec.view();
+    mongocxx::stdx::optional<document::value> test_spec = test_util::parse_test_file(test_path);
+    REQUIRE(test_spec);
+
+    document::view test_spec_view = test_spec->view();
 
     std::string server_version = test_util::get_server_version(*client);
 
@@ -682,7 +672,7 @@ void run_tests_in_file(std::string test_path, client* client) {
         document::view operation = test["operation"].get_document().value;
         std::string operation_name = operation["name"].get_utf8().value.to_string();
 
-        auto run_test = test_runners[operation_name];
+        auto run_test = crud_test_runners[operation_name];
         document::value actual_result = run_test(&coll, operation);
 
         if (outcome["collection"]) {
@@ -773,6 +763,6 @@ TEST_CASE("CRUD spec automated tests", "[crud_spec]") {
     std::string test_file;
 
     while (std::getline(test_files, test_file)) {
-        run_tests_in_file(path + "/" + test_file, &client);
+        run_crud_tests_in_file(path + "/" + test_file, &client);
     }
 }

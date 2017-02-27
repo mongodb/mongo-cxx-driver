@@ -19,6 +19,8 @@
 #include <string>
 #include <utility>
 
+#include <bsoncxx/builder/basic/array.hpp>
+#include <bsoncxx/document/element.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -47,6 +49,14 @@ namespace test_util {
 std::int32_t compare_versions(std::string version1, std::string version2);
 
 //
+// Converts a hexadecimal string to an string of bytes.
+//
+// This function assumes that `hex` has an even length and that all characters in the string are
+// valid hexadecimal digits.
+//
+std::basic_string<std::uint8_t> convert_hex_string_to_bytes(bsoncxx::stdx::string_view hex);
+
+//
 // Determines the max wire version associated with the given client, by running the "isMaster"
 // command.
 //
@@ -59,6 +69,13 @@ std::int32_t get_max_wire_version(const client& client);
 ///
 std::string get_server_version(const client& client);
 
+///
+/// Parses a JSON file at a given path and return it as a BSON document value.
+///
+/// Returns none if the path is not found.
+///
+stdx::optional<bsoncxx::document::value> parse_test_file(std::string path);
+
 //
 // Determines whether or not the given client supports the collation feature, by running the
 // "isMaster" command.
@@ -68,7 +85,7 @@ std::string get_server_version(const client& client);
 bool supports_collation(const client& client);
 
 using item_t = std::pair<stdx::optional<stdx::string_view>, bsoncxx::types::value>;
-using xformer_t = std::function<stdx::optional<item_t>(item_t)>;
+using xformer_t = std::function<stdx::optional<item_t>(item_t, bsoncxx::builder::basic::array*)>;
 
 //
 // Transforms a document and returns a copy of it.
@@ -90,12 +107,18 @@ using xformer_t = std::function<stdx::optional<item_t>(item_t)>;
 //   added to the array. To leave the element as-is, simply return the value passed into the
 //   function.
 //
+//   The bsoncxx::builder::basic::array* argument of fcn is used for storing non-owned values that
+//   would no longer be alive when fcn returns. Any non-owned values returned from fcn should be
+//   appended to the builder argument so that it remains alive for the duration of the
+//   transform_document call.
+//
 // @return The new document that was built.
 //
-// @throws a logic_error{error_code::k_invalid_parameter} if fcn returns no key when a key is passed
-// in.
+// @throws a logic_error{error_code::k_invalid_parameter} if fcn returns no key when a key is
+// passed in.
 //
 bsoncxx::document::value transform_document(bsoncxx::document::view view, const xformer_t& fcn);
+
 }  // namespace test_util
 
 MONGOCXX_INLINE_NAMESPACE_END
