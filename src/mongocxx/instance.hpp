@@ -26,7 +26,55 @@ class logger;
 ///
 /// Class representing an instance of the MongoDB driver.
 ///
-/// Life cycle: A unique instance of the driver *MUST* be kept around.
+/// The constructor and destructor initialize and shut down the driver, respectively. Therefore, an
+/// instance must be created before using the driver and must remain alive until all other mongocxx
+/// objects are destroyed. After the instance destructor runs, the driver may not be used.
+///
+/// Exactly one instance must be created in a given program. Not constructing an instance or
+/// constructing more than one instance in a program are errors, even if the multiple instances have
+/// non-overlapping lifetimes.
+///
+/// The following is a correct example of using an instance in a program, as the instance is kept
+/// alive for as long as the driver is in use:
+///
+/// \code
+///
+/// #include <mongocxx/client.hpp>
+/// #include <mongocxx/instance.hpp>
+/// #include <mongocxx/uri.hpp>
+///
+/// int main() {
+///     mongocxx::instance inst{};
+///     mongocxx::client conn{mongocxx::uri{}};
+///     ...
+/// }
+///
+/// \endcode
+///
+/// An example of using instance incorrectly might look as follows:
+///
+/// \code
+///
+/// #include <mongocxx/client.hpp>
+/// #include <mongocxx/instance.hpp>
+/// #include <mongocxx/uri.hpp>
+///
+/// client get_client() {
+///     mongocxx::instance inst{};
+///     mongocxx::client conn{mongocxx::uri{}};
+///
+///     return client;
+/// } // ERROR! The instance is no longer alive after this function returns.
+///
+/// int main() {
+///     mongocxx::client conn = get_client();
+///     ...
+/// }
+///
+/// \endcode
+///
+/// For examples of more advanced usage of instance, see
+/// `examples/mongocxx/instance_management.cpp`.
 ///
 class MONGOCXX_API instance {
    public:

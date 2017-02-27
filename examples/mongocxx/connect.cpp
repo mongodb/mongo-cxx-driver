@@ -49,6 +49,9 @@ class logger final : public mongocxx::logger {
 int main(int argc, char* argv[]) {
     using bsoncxx::builder::stream::document;
 
+    // The mongocxx::instance constructor and destructor initialize and shut down the driver,
+    // respectively. Therefore, a mongocxx::instance must be created before using the driver and
+    // must remain alive for as long as the driver is in use.
     mongocxx::instance inst{bsoncxx::stdx::make_unique<logger>(&std::cout)};
 
     try {

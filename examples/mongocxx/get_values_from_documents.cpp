@@ -120,6 +120,9 @@ void iterate_documents(mongocxx::collection& coll) {
 }
 
 int main() {
+    // The mongocxx::instance constructor and destructor initialize and shut down the driver,
+    // respectively. Therefore, a mongocxx::instance must be created before using the driver and
+    // must remain alive for as long as the driver is in use.
     mongocxx::instance inst{};
     mongocxx::client client{mongocxx::uri{}};
     mongocxx::collection coll = client["test"]["events"];

@@ -27,6 +27,10 @@
 
 namespace {
 
+// The mongocxx::instance constructor and destructor initialize and shut down the driver,
+// respectively. Therefore, a mongocxx::instance must be created before using the driver and
+// must remain alive for as long as the driver is in use.
+//
 // This example demonstrates how one might keep a heap allocated mongocxx::instance and
 // mongocxx::pool object associated in a way that allows dynamic configuration. Most of the examples
 // simply create a stack allocated mongocxx::instance object, which is fine for small examples, but
