@@ -429,7 +429,6 @@ buildvariants:
 
     - name: windows-2k8-release
       display_name: "Windows 2008R2 Release"
-      batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
           tar_options: *linux_tar_options
