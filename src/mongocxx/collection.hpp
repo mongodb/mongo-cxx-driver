@@ -75,7 +75,7 @@ class MONGOCXX_API collection {
    public:
     ///
     /// Default constructs a collection object. The collection is
-    /// equivalent to the state of a moved from colletion. The only
+    /// equivalent to the state of a moved from collection. The only
     /// valid actions to take with a default constructed collection
     /// are to assign to it, or destroy it.
     ///
