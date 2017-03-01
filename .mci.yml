@@ -444,7 +444,6 @@ buildvariants:
 
     - name: windows-2k8-debug
       display_name: "Windows 2008R2 Debug"
-      batchtime: 1440 # 1 day
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
