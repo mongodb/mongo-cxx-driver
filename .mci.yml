@@ -8,8 +8,7 @@
 variables:
 
     mongodb_version:
-        # TODO CXX-1037: Define "version_latest" to "latest", not "3.4".
-        version_latest: &version_latest 3.4
+        version_latest: &version_latest latest
         version_32: &version_32 3.2
 
     ## Use newer compiler path variables
