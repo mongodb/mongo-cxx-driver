@@ -91,7 +91,7 @@ class array : public sub_array {
 ///   A bsoncxx::array::value containing the elements.
 ///
 template <typename... Args>
-bsoncxx::array::value make_array(Args&&... args) {
+bsoncxx::array::value BSONCXX_CALL make_array(Args&&... args) {
     basic::array array;
     array.append(std::forward<Args>(args)...);
 
