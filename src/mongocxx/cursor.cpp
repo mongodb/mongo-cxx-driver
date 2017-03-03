@@ -89,11 +89,11 @@ const bsoncxx::document::view* cursor::iterator::operator->() const {
     return &_cursor->_impl->doc;
 }
 
-bool operator==(const cursor::iterator& lhs, const cursor::iterator& rhs) {
+bool MONGOCXX_CALL operator==(const cursor::iterator& lhs, const cursor::iterator& rhs) {
     return lhs._cursor == rhs._cursor;
 }
 
-bool operator!=(const cursor::iterator& lhs, const cursor::iterator& rhs) {
+bool MONGOCXX_CALL operator!=(const cursor::iterator& lhs, const cursor::iterator& rhs) {
     return !(lhs == rhs);
 }
 

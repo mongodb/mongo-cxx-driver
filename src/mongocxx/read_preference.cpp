@@ -104,12 +104,12 @@ stdx::optional<std::chrono::seconds> read_preference::max_staleness() const {
     return std::chrono::seconds{staleness};
 }
 
-bool operator==(const read_preference& lhs, const read_preference& rhs) {
+bool MONGOCXX_CALL operator==(const read_preference& lhs, const read_preference& rhs) {
     return (lhs.mode() == rhs.mode()) && (lhs.tags() == rhs.tags()) &&
            (lhs.max_staleness() == rhs.max_staleness());
 }
 
-bool operator!=(const read_preference& lhs, const read_preference& rhs) {
+bool MONGOCXX_CALL operator!=(const read_preference& lhs, const read_preference& rhs) {
     return !(lhs == rhs);
 }
 

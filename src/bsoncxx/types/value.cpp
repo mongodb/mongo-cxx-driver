@@ -96,7 +96,7 @@ bsoncxx::type value::type() const {
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
-bool operator==(const value& lhs, const value& rhs) {
+bool BSONCXX_CALL operator==(const value& lhs, const value& rhs) {
     if (lhs.type() != rhs.type()) {
         return false;
     }
@@ -113,7 +113,7 @@ bool operator==(const value& lhs, const value& rhs) {
     BSONCXX_UNREACHABLE;
 }
 
-bool operator!=(const value& lhs, const value& rhs) {
+bool BSONCXX_CALL operator!=(const value& lhs, const value& rhs) {
     return !(lhs == rhs);
 }
 

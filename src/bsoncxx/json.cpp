@@ -44,7 +44,7 @@ void bson_free_deleter(std::uint8_t* ptr) {
 
 }  // namespace
 
-std::string to_json(document::view view) {
+std::string BSONCXX_CALL to_json(document::view view) {
     bson_t bson;
     bson_init_static(&bson, view.data(), view.length());
 
@@ -59,7 +59,7 @@ std::string to_json(document::view view) {
     return {result, size};
 }
 
-document::value from_json(stdx::string_view json) {
+document::value BSONCXX_CALL from_json(stdx::string_view json) {
     bson_error_t error;
     bson_t* result =
         bson_new_from_json(reinterpret_cast<const uint8_t*>(json.data()), json.size(), &error);
