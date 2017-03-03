@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>MongoDB C&#43;&#43; Driver Manual</title>
-    <link>https://mongodb.github.io/mongo-cxx-driver/index.xml</link>
+    <link>https://mongodb.github.io/mongo-cxx-driver/</link>
     <description>Recent content on MongoDB C&#43;&#43; Driver Manual</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>

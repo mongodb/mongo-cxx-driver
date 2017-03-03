@@ -1323,6 +1323,22 @@ object, so that the loop restarts in a consistent state:</p>
 }
 </code></pre>
 
+<p><strong>&ldquo;One-off&rdquo; builder functions</strong></p>
+
+<p>In addition to the basic builder and the stream builder, there are helper
+functions to create documents and arrays in a single call. These can be
+used when no additional logic (such as conditionals or loops) need to be
+used to create the object:</p>
+
+<pre><code class="language-c++">using bsoncxx::builder::basic::kvp;
+
+// { &quot;hello&quot;: &quot;world&quot; }
+auto document = bsoncxx::builder::basic::make_document(kvp(&quot;hello&quot;, &quot;world&quot;));
+
+// [2.0, true, &quot;hello world&quot;]
+auto array = bsoncxx::builder::basic::make_array(2.0, true, &quot;hello world&quot;);
+</code></pre>
+
 <h3 id="a-name-value-owning-bson-documents-values-a"><a name="value">Owning BSON Documents (values)</a></h3>
 
 <p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/document/value.hpp"><code>bsoncxx::document::value</code></a></p>

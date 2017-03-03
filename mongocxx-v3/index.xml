@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Mongocxx-v3s on MongoDB C&#43;&#43; Driver Manual</title>
-    <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/index.xml</link>
+    <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</link>
     <description>Recent content in Mongocxx-v3s on MongoDB C&#43;&#43; Driver Manual</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
@@ -1190,6 +1190,22 @@ object, so that the loop restarts in a consistent state:&lt;/p&gt;
     auto temp_state = open_state &amp;lt;&amp;lt; &amp;quot;key&amp;quot; &amp;lt;&amp;lt; e;
     in_array = temp_state &amp;lt;&amp;lt; builder::stream::close_document;
 }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;&amp;ldquo;One-off&amp;rdquo; builder functions&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;In addition to the basic builder and the stream builder, there are helper
+functions to create documents and arrays in a single call. These can be
+used when no additional logic (such as conditionals or loops) need to be
+used to create the object:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;using bsoncxx::builder::basic::kvp;
+
+// { &amp;quot;hello&amp;quot;: &amp;quot;world&amp;quot; }
+auto document = bsoncxx::builder::basic::make_document(kvp(&amp;quot;hello&amp;quot;, &amp;quot;world&amp;quot;));
+
+// [2.0, true, &amp;quot;hello world&amp;quot;]
+auto array = bsoncxx::builder::basic::make_array(2.0, true, &amp;quot;hello world&amp;quot;);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;a-name-value-owning-bson-documents-values-a&#34;&gt;&lt;a name=&#34;value&#34;&gt;Owning BSON Documents (values)&lt;/a&gt;&lt;/h3&gt;

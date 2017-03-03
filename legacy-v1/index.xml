@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Legacy-v1s on MongoDB C&#43;&#43; Driver Manual</title>
-    <link>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/index.xml</link>
+    <link>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/</link>
     <description>Recent content in Legacy-v1s on MongoDB C&#43;&#43; Driver Manual</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
