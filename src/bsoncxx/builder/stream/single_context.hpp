@@ -49,7 +49,7 @@ class single_context {
     /// @param _
     ///   An open_document_type token
     ///
-    BSONCXX_INLINE key_context<single_context> operator<<(open_document_type) {
+    BSONCXX_INLINE key_context<> operator<<(open_document_type) {
         _core->open_document();
 
         return wrap_document();
@@ -61,7 +61,7 @@ class single_context {
     /// @param _
     ///   An open_array_type token
     ///
-    BSONCXX_INLINE array_context<single_context> operator<<(open_array_type) {
+    BSONCXX_INLINE array_context<> operator<<(open_array_type) {
         _core->open_array();
 
         return wrap_array();
@@ -80,12 +80,12 @@ class single_context {
     }
 
    private:
-    BSONCXX_INLINE array_context<single_context> wrap_array() {
-        return array_context<single_context>(_core);
+    BSONCXX_INLINE array_context<> wrap_array() {
+        return array_context<>(_core);
     }
 
-    BSONCXX_INLINE key_context<single_context> wrap_document() {
-        return key_context<single_context>(_core);
+    BSONCXX_INLINE key_context<> wrap_document() {
+        return key_context<>(_core);
     }
 
     core* _core;
