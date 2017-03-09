@@ -92,6 +92,7 @@ void downloader::close() {
         throw new std::exception{};
     }
 
+    _chunks = {};
     _closed = true;
 }
 
