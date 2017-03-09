@@ -90,7 +90,7 @@ class document : public sub_document {
 ///   A bsoncxx::document::value containing the elements.
 ///
 template <typename... Args>
-BSONCXX_API bsoncxx::document::value BSONCXX_CALL make_document(Args&&... args) {
+bsoncxx::document::value make_document(Args&&... args) {
     basic::document document;
     document.append(std::forward<Args>(args)...);
 

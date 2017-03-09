@@ -143,7 +143,7 @@ std::chrono::milliseconds write_concern::timeout() const {
     return std::chrono::milliseconds(libmongoc::write_concern_get_wtimeout(_impl->write_concern_t));
 }
 
-bool MONGOCXX_CALL operator==(const write_concern& lhs, const write_concern& rhs) {
+bool operator==(const write_concern& lhs, const write_concern& rhs) {
     return std::forward_as_tuple(lhs.journal(),
                                  lhs.nodes(),
                                  lhs.acknowledge_level(),
@@ -157,7 +157,7 @@ bool MONGOCXX_CALL operator==(const write_concern& lhs, const write_concern& rhs
                                                                          rhs.timeout());
 }
 
-bool MONGOCXX_CALL operator!=(const write_concern& lhs, const write_concern& rhs) {
+bool operator!=(const write_concern& lhs, const write_concern& rhs) {
     return !(lhs == rhs);
 }
 
