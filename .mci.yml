@@ -226,7 +226,17 @@ tasks:
         - func: "compile"
         - func: "test"
 
-    - name: compile_and_test_with_mongoc_master
+    - name: compile_and_test_with_mongoc_stable_branch
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+        - func: "install_c_driver"
+          vars:
+              MONGOC_VERSION: r1.6
+        - func: "compile"
+        - func: "test"
+
+    - name: compile_and_test_with_mongoc_master_branch
       commands:
         - func: "setup"
         - func: "start_mongod"
@@ -260,7 +270,8 @@ buildvariants:
       tasks:
           - name: lint
           - name: compile_and_test_with_mongoc_current
-          - name: compile_and_test_with_mongoc_master
+          - name: compile_and_test_with_mongoc_stable_branch
+          - name: compile_and_test_with_mongoc_master_branch
 
     - name: ubuntu1404-debug
       display_name: "Ubuntu 14.04 Debug"
@@ -276,7 +287,8 @@ buildvariants:
           - ubuntu1404-test
       tasks:
           - name: compile_and_test_with_mongoc_current
-          - name: compile_and_test_with_mongoc_master
+          - name: compile_and_test_with_mongoc_stable_branch
+          - name: compile_and_test_with_mongoc_master_branch
 
     - name: rhel55-debug
       display_name: "RHEL 5.5 Debug"
@@ -295,7 +307,8 @@ buildvariants:
           - rhel55-test
       tasks:
           - name: compile_and_test_with_mongoc_current
-          - name: compile_and_test_with_mongoc_master
+          - name: compile_and_test_with_mongoc_stable_branch
+          - name: compile_and_test_with_mongoc_master_branch
 
     - name: osx-1010
       display_name: "OS X 10.10 Release (Boost)"
@@ -311,7 +324,8 @@ buildvariants:
           - osx-1010
       tasks:
           - name: compile_and_test_with_mongoc_current
-          - name: compile_and_test_with_mongoc_master
+          - name: compile_and_test_with_mongoc_stable_branch
+          - name: compile_and_test_with_mongoc_master_branch
 
     - name: ubuntu1604-debug-std-experimental
       display_name: "Ubuntu 16.04 Debug (std::experimental)"
@@ -328,7 +342,8 @@ buildvariants:
           - ubuntu1604-build
       tasks:
           - name: compile_and_test_with_mongoc_current
-          - name: compile_and_test_with_mongoc_master
+          - name: compile_and_test_with_mongoc_stable_branch
+          - name: compile_and_test_with_mongoc_master_branch
 
     - name: ubuntu1604-debug-valgrind
       display_name: "Valgrind Ubuntu 16.04 Debug"
@@ -345,7 +360,8 @@ buildvariants:
           - ubuntu1604-build
       tasks:
           - name: compile_and_test_with_mongoc_current
-          - name: compile_and_test_with_mongoc_master
+          - name: compile_and_test_with_mongoc_stable_branch
+          - name: compile_and_test_with_mongoc_master_branch
 
     - name: ubuntu1604-debug-asan
       display_name: "ASAN Ubuntu 16.04 Debug"
@@ -362,7 +378,8 @@ buildvariants:
           - ubuntu1604-build
       tasks:
           - name: compile_and_test_with_mongoc_current
-          - name: compile_and_test_with_mongoc_master
+          - name: compile_and_test_with_mongoc_stable_branch
+          - name: compile_and_test_with_mongoc_master_branch
 
     - name: ubuntu1604-debug-ubsan
       display_name: "UBSAN Ubuntu 16.04 Debug"
@@ -379,7 +396,8 @@ buildvariants:
           - ubuntu1604-build
       tasks:
           - name: compile_and_test_with_mongoc_current
-          - name: compile_and_test_with_mongoc_master
+          - name: compile_and_test_with_mongoc_stable_branch
+          - name: compile_and_test_with_mongoc_master_branch
 
     - name: ubuntu1604-zseries
       display_name: "s390x Ubuntu 16.04"
@@ -395,7 +413,8 @@ buildvariants:
           - ubuntu1604-zseries-small
       tasks:
           - name: compile_and_test_with_mongoc_current
-          - name: compile_and_test_with_mongoc_master
+          - name: compile_and_test_with_mongoc_stable_branch
+          - name: compile_and_test_with_mongoc_master_branch
 
     - name: power8-ubuntu1604
       display_name: "ppc64le Ubuntu 16.04"
@@ -411,7 +430,8 @@ buildvariants:
           - ubuntu1604-power8-build
       tasks:
           - name: compile_and_test_with_mongoc_current
-          - name: compile_and_test_with_mongoc_master
+          - name: compile_and_test_with_mongoc_stable_branch
+          - name: compile_and_test_with_mongoc_master_branch
 
     - name: arm-ubuntu1604
       display_name: "arm64 Ubuntu 16.04"
@@ -427,7 +447,8 @@ buildvariants:
           - ubuntu1604-arm64-small
       tasks:
           - name: compile_and_test_with_mongoc_current
-          - name: compile_and_test_with_mongoc_master
+          - name: compile_and_test_with_mongoc_stable_branch
+          - name: compile_and_test_with_mongoc_master_branch
 
     - name: windows-2k8-release
       display_name: "Windows 2008R2 Release"
@@ -442,7 +463,8 @@ buildvariants:
           - windows-64-vs2015-compile
       tasks:
           - name: compile_and_test_with_mongoc_current
-          - name: compile_and_test_with_mongoc_master
+          - name: compile_and_test_with_mongoc_stable_branch
+          - name: compile_and_test_with_mongoc_master_branch
 
     - name: windows-2k8-debug
       display_name: "Windows 2008R2 Debug"
@@ -457,4 +479,5 @@ buildvariants:
           - windows-64-vs2015-compile
       tasks:
           - name: compile_and_test_with_mongoc_current
-          - name: compile_and_test_with_mongoc_master
+          - name: compile_and_test_with_mongoc_stable_branch
+          - name: compile_and_test_with_mongoc_master_branch

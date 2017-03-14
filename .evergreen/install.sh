@@ -40,10 +40,10 @@ esac
 echo "About to install C driver ($VERSION) into $PREFIX"
 
 LIB=mongo-c-driver
-if [ "${VERSION}" = "master" ]; then
+if [ -n "$(echo "${VERSION}" | grep '^[a-z]' )" ]; then
     rm -rf $LIB
     # Must be http as rhel55 has https issues
-    curl -o $LIB.tgz -L http://s3.amazonaws.com/mciuploads/$LIB/$LIB-latest.tar.gz
+    curl -o $LIB.tgz -L http://s3.amazonaws.com/mciuploads/$LIB/$VERSION/$LIB-latest.tar.gz
     tar --extract --file $LIB.tgz
     rm -rf $LIB
     DIR=$(echo $LIB-*)
