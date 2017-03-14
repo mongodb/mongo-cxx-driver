@@ -17,6 +17,7 @@
 #include <memory>
 
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -53,6 +54,7 @@ class MONGOCXX_API cursor {
     ///
     ~cursor();
 
+    ///
     /// A cursor::iterator that points to the beginning of any available
     /// results.  If begin() is called more than once, the cursor::iterator
     /// returned points to the next remaining result, not the result of
@@ -64,7 +66,11 @@ class MONGOCXX_API cursor {
     ///
     iterator begin();
 
-    /// A cursor::iterator that points to the end of the results.
+    ///
+    /// A cursor::iterator that points to the end of the results.  In the
+    /// case of a tailable cursor, this iterator will compare equal to an
+    /// exhausted tailable cursor iterator, even if more results are available
+    /// the next time the cursor is iterated.
     ///
     /// @return the cursor::iterator
     ///
@@ -75,7 +81,8 @@ class MONGOCXX_API cursor {
     friend class client;
     friend class database;
 
-    MONGOCXX_PRIVATE cursor(void* cursor_ptr);
+    MONGOCXX_PRIVATE cursor(void* cursor_ptr,
+                            bsoncxx::stdx::optional<type> cursor_type = bsoncxx::stdx::nullopt);
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;

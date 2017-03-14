@@ -14,6 +14,7 @@
 
 #include <vector>
 
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/json.hpp>
@@ -34,6 +35,8 @@
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
 
+using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::basic::kvp;
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
@@ -1716,6 +1719,59 @@ TEST_CASE("create_index tests", "[collection]") {
             REQUIRE_THROWS_AS(coll.create_index(index.view(), options), operation_exception);
         }
     }
+}
+
+TEST_CASE("Tailable cursors", "[collection][tailable]") {
+    instance::current();
+    client mongodb_client{uri{}};
+    database db = mongodb_client["test"];
+
+    // Drop and (re)create a capped collection.
+    db["tailcheck"].drop();
+    auto create_opts = options::create_collection{}.capped(true).size(1024 * 1024);
+    db.create_collection("tailcheck", create_opts);
+
+    // Create tailable await cursor.
+    options::find opts;
+
+    SECTION("k_tailable") {
+        opts.cursor_type(cursor::type::k_tailable);
+    }
+
+    SECTION("k_tailable_await") {
+        opts.cursor_type(cursor::type::k_tailable_await);
+    }
+
+    INFO(std::string{opts.cursor_type() == cursor::type::k_tailable ? "k_tailable"
+                                                                    : "k_tailable_await"})
+
+    auto coll = db["tailcheck"];
+    auto cursor = coll.find({}, opts);
+
+    // Insert 3 documents.
+    for (int32_t n : {1, 2, 3}) {
+        coll.insert_one(make_document(kvp("x", n)));
+    }
+
+    // Check that cursor finds three documents.
+    auto expected = 0;
+
+    for (auto&& doc : cursor) {
+        REQUIRE(doc["x"].get_int32() == ++expected);
+    }
+
+    // Insert 3 more documents.
+    for (int32_t n : {4, 5, 6}) {
+        coll.insert_one(make_document(kvp("x", n)));
+    }
+
+    // Check that cursor finds next three documents.
+    for (auto&& doc : cursor) {
+        REQUIRE(doc["x"].get_int32() == ++expected);
+    }
+
+    // Check that cursor found all documents
+    REQUIRE(expected == 6);
 }
 
 TEST_CASE("regressions", "CXX-986") {

@@ -33,8 +33,8 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-cursor::cursor(void* cursor_ptr)
-    : _impl(stdx::make_unique<impl>(static_cast<mongoc_cursor_t*>(cursor_ptr))) {}
+cursor::cursor(void* cursor_ptr, bsoncxx::stdx::optional<cursor::type> cursor_type)
+    : _impl(stdx::make_unique<impl>(static_cast<mongoc_cursor_t*>(cursor_ptr), cursor_type)) {}
 
 cursor::cursor(cursor&&) noexcept = default;
 cursor& cursor::operator=(cursor&&) noexcept = default;
@@ -55,7 +55,7 @@ cursor::iterator& cursor::iterator::operator++() {
         _cursor->_impl->mark_dead();
         throw_exception<query_exception>(error);
     } else {
-        _cursor->_impl->mark_dead();
+        _cursor->_impl->mark_nothing_left();
         _cursor = nullptr;  // Set iterator equal to end().
     }
     return *this;
