@@ -15,6 +15,7 @@
 #pragma once
 
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
@@ -25,12 +26,16 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class cursor::impl {
    public:
-    // States represent a one-way, ordered lifecycle of a cursor. k_started
-    // means that libmongoc::cursor_next has been called at least once.
+    // States represent a one-way, ordered lifecycle of a cursor. k_started means that
+    // libmongoc::cursor_next has been called at least once.  However, for a tailable
+    // cursor, the cursor resets to k_pending on exhaustion so that it can resume later.
     enum class state { k_pending = 0, k_started = 1, k_dead = 2 };
 
-    impl(mongoc_cursor_t* cursor)
-        : cursor_t(cursor), status{cursor ? state::k_pending : state::k_dead} {
+    impl(mongoc_cursor_t* cursor, bsoncxx::stdx::optional<cursor::type> cursor_type)
+        : cursor_t(cursor),
+          status{cursor ? state::k_pending : state::k_dead},
+          tailable{cursor && cursor_type && (*cursor_type == cursor::type::k_tailable ||
+                                             *cursor_type == cursor::type::k_tailable_await)} {
     }
 
     ~impl() {
@@ -45,18 +50,28 @@ class cursor::impl {
         return status == state::k_dead;
     }
 
-    void mark_started() {
-        status = state::k_started;
+    bool is_tailable() const {
+        return tailable;
     }
 
     void mark_dead() {
-        doc = bsoncxx::document::view{};
+        mark_nothing_left();
         status = state::k_dead;
+    }
+
+    void mark_nothing_left() {
+        doc = bsoncxx::document::view{};
+        status = tailable ? state::k_pending : state::k_dead;
+    }
+
+    void mark_started() {
+        status = state::k_started;
     }
 
     mongoc_cursor_t* cursor_t;
     bsoncxx::document::view doc;
     state status;
+    bool tailable;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

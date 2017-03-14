@@ -316,7 +316,7 @@ cursor collection::find(view_or_value filter, const options::find& options) {
         libmongoc::cursor_set_max_await_time_ms(mongoc_cursor, static_cast<std::uint32_t>(count));
     }
 
-    return cursor{mongoc_cursor};
+    return cursor{mongoc_cursor, options_converted.cursor_type()};
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one(view_or_value filter,
@@ -921,7 +921,7 @@ cursor collection::distinct(bsoncxx::string::view_or_value field_name, view_or_v
         throw_exception<operation_exception>(error);
     }
 
-    return {fake_cursor};
+    return cursor{fake_cursor};
 }
 
 cursor collection::list_indexes() const {
