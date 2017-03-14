@@ -34,7 +34,7 @@ int main() {
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.
     mongocxx::instance inst{};
-    mongocxx::uri uri{"mongodb://localhost:27017?minPoolSize=3&maxPoolSize=3"};
+    mongocxx::uri uri{"mongodb://localhost:27017/?minPoolSize=3&maxPoolSize=3"};
 
     mongocxx::pool pool{uri};
 
