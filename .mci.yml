@@ -197,7 +197,7 @@ functions:
                       ${test_params} ./src/mongocxx/test/test_gridfs_specs
                       ${test_params} ./src/mongocxx/test/test_instance
 
-                      for test in $(find examples -type f -perm /u+x | sort); do ${test_params} $test; done
+                      for test in $(find examples -type f -perm +0100 | sort); do ${test_params} $test; done
                   fi
 
 #######################################
