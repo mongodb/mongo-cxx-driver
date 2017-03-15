@@ -55,7 +55,8 @@ class MONGOCXX_API bucket {
     const stdx::optional<std::string>& bucket_name() const;
 
     ///
-    /// Sets the size of the chunks in the bucket. Defaults to 255KB (255 * 1024).
+    /// Sets the size of the chunks in the bucket. This will be used as the chunk size for files
+    /// uploaded through the bucket without a custom size specified. Defaults to 255KB (255 * 1024).
     ///
     /// @param chunk_size_bytes
     ///   The size of the chunks in bytes.
@@ -64,7 +65,7 @@ class MONGOCXX_API bucket {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    bucket& chunk_size_bytes(std::size_t chunk_size_bytes);
+    bucket& chunk_size_bytes(std::int32_t chunk_size_bytes);
 
     ///
     /// Gets the size of the chunks in the bucket.
@@ -72,7 +73,7 @@ class MONGOCXX_API bucket {
     /// @return
     ///   The size of the chunks in the bucket in bytes.
     ///
-    const stdx::optional<std::size_t>& chunk_size_bytes() const;
+    const stdx::optional<std::int32_t>& chunk_size_bytes() const;
 
     ///
     /// Sets the read concern to be used when reading from the bucket. Defaults to the read
@@ -145,7 +146,7 @@ class MONGOCXX_API bucket {
 
    private:
     stdx::optional<std::string> _bucket_name;
-    stdx::optional<std::size_t> _chunk_size_bytes;
+    stdx::optional<std::int32_t> _chunk_size_bytes;
     stdx::optional<class read_concern> _read_concern;
     stdx::optional<class read_preference> _read_preference;
     stdx::optional<class write_concern> _write_concern;

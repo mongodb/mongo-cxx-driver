@@ -246,7 +246,7 @@ class MONGOCXX_API bucket {
     std::string _bucket_name;
 
     // The default size of the chunks.
-    std::size_t _default_chunk_size_bytes;
+    std::int32_t _default_chunk_size_bytes;
 
     // The collection holding the chunks.
     collection _chunks;

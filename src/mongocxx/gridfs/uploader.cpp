@@ -20,6 +20,7 @@
 #include <exception>
 #include <iomanip>
 #include <ios>
+#include <limits>
 #include <sstream>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -51,7 +52,7 @@ uploader::uploader(bsoncxx::types::value id,
                    stdx::string_view filename,
                    collection files,
                    collection chunks,
-                   std::size_t chunk_size,
+                   std::int32_t chunk_size,
                    stdx::optional<bsoncxx::document::view_or_value> metadata)
     : _buffer(stdx::make_unique<std::uint8_t[]>(chunk_size)),
       _buffer_off(0),
@@ -77,7 +78,7 @@ void uploader::write(std::size_t length, const std::uint8_t* bytes) {
     }
 
     while (length > 0) {
-        std::size_t buffer_free_space = _chunk_size - _buffer_off;
+        std::size_t buffer_free_space = static_cast<std::size_t>(_chunk_size) - _buffer_off;
 
         if (buffer_free_space == 0) {
             finish_chunk();
@@ -102,7 +103,8 @@ result::gridfs::upload uploader::close() {
 
     bsoncxx::builder::basic::document file;
 
-    std::int64_t bytes_uploaded = _chunks_written * _chunk_size;
+    std::int64_t bytes_uploaded =
+        static_cast<std::int64_t>(_chunks_written) * static_cast<std::int64_t>(_chunk_size);
     std::int64_t leftover = _buffer_off;
 
     finish_chunk();
@@ -164,7 +166,11 @@ void uploader::finish_chunk() {
     std::size_t bytes_in_chunk = _buffer_off;
 
     chunk.append(kvp("files_id", _result.id()));
-    chunk.append(kvp("n", static_cast<std::int32_t>(_chunks_written)));
+    chunk.append(kvp("n", _chunks_written));
+
+    if (_chunks_written == std::numeric_limits<std::int32_t>::max()) {
+        throw std::exception{};
+    }
 
     ++_chunks_written;
 

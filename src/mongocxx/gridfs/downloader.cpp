@@ -27,6 +27,34 @@
 
 #include <mongocxx/config/private/prelude.hh>
 
+namespace {
+std::int64_t read_length_from_files_document(bsoncxx::document::view files_doc) {
+    if (files_doc["length"].type() == bsoncxx::type::k_int64) {
+        return files_doc["length"].get_int64().value;
+    }
+
+    return files_doc["length"].get_int32().value;
+}
+
+std::int32_t read_chunk_size_from_files_document(bsoncxx::document::view files_doc) {
+    const std::int64_t k_max_document_size = 16 * 1024 * 1024;
+    std::int64_t chunk_size;
+
+    if (files_doc["chunkSize"].type() == bsoncxx::type::k_int64) {
+        chunk_size = files_doc["chunkSize"].get_int64().value;
+    } else {
+        chunk_size = files_doc["chunkSize"].get_int32().value;
+    }
+
+    // Each chunk needs to be able to fit in a single document.
+    if (chunk_size > k_max_document_size) {
+        throw std::exception{};
+    }
+
+    return static_cast<std::int32_t>(chunk_size);
+}
+}  // namespace
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace gridfs {
@@ -40,14 +68,17 @@ downloader::downloader(stdx::optional<cursor> chunks, bsoncxx::document::value f
                            : stdx::nullopt),
       _chunks_end(_chunks ? stdx::make_optional<cursor::iterator>(_chunks->end()) : stdx::nullopt),
       _chunks_seen(0),
-      _chunk_size(files_doc.view()["chunkSize"].get_int32().value),
+      _chunk_size(read_chunk_size_from_files_document(files_doc.view())),
       _closed(false),
       _file_chunk_count(0),
-      _file_len(files_doc.view()["length"].type() == bsoncxx::type::k_int64
-                    ? files_doc.view()["length"].get_int64().value
-                    : files_doc.view()["length"].get_int32().value) {
+      _file_len(read_length_from_files_document(files_doc.view())) {
     if (_chunk_size) {
-        std::ldiv_t result = std::ldiv(_file_len, _chunk_size);
+        std::lldiv_t result = std::lldiv(_file_len, _chunk_size);
+
+        if (result.quot >= std::numeric_limits<std::int32_t>::max()) {
+            throw std::exception{};
+        }
+
         _file_chunk_count = result.quot;
 
         if (result.rem) {
@@ -119,6 +150,10 @@ void downloader::fetch_chunk() {
         throw std::exception{};
     }
 
+    if (_chunks_seen == std::numeric_limits<std::int32_t>::max()) {
+        throw std::exception{};
+    }
+
     ++_chunks_seen;
 
     auto binary_data = chunk_doc["data"].get_binary();
@@ -128,13 +163,13 @@ void downloader::fetch_chunk() {
             throw std::exception{};
         }
     } else {
-        auto expected_size = _file_len % _chunk_size;
+        auto expected_size = _file_len % static_cast<std::int64_t>(_chunk_size);
 
         if (expected_size == 0) {
-            expected_size = _chunk_size;
+            expected_size = static_cast<std::int64_t>(_chunk_size);
         }
 
-        if (binary_data.size != expected_size) {
+        if (binary_data.size != static_cast<std::uint32_t>(expected_size)) {
             throw std::exception{};
         }
     }

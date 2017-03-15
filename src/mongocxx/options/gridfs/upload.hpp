@@ -41,7 +41,7 @@ class MONGOCXX_API upload {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    upload& chunk_size_bytes(std::size_t chunk_size_bytes);
+    upload& chunk_size_bytes(std::int32_t chunk_size_bytes);
 
     ///
     /// Gets the chunk size of the GridFS file being uploaded.
@@ -49,7 +49,7 @@ class MONGOCXX_API upload {
     /// @return
     ///   The chunk size of the GridFS file being uploaded in bytes.
     ///
-    const stdx::optional<std::size_t>& chunk_size_bytes() const;
+    const stdx::optional<std::int32_t>& chunk_size_bytes() const;
 
     ///
     /// Sets the metadata field of the GridFS file being uploaded. A GridFS file can store arbitrary
@@ -73,7 +73,7 @@ class MONGOCXX_API upload {
     const stdx::optional<bsoncxx::document::view_or_value>& metadata() const;
 
    private:
-    stdx::optional<std::size_t> _chunk_size_bytes;
+    stdx::optional<std::int32_t> _chunk_size_bytes;
     stdx::optional<bsoncxx::document::view_or_value> _metadata;
 };
 

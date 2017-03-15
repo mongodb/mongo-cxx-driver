@@ -24,12 +24,12 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 namespace gridfs {
 
-upload& upload::chunk_size_bytes(std::size_t chunk_size_bytes) {
+upload& upload::chunk_size_bytes(std::int32_t chunk_size_bytes) {
     _chunk_size_bytes = chunk_size_bytes;
     return *this;
 }
 
-const stdx::optional<std::size_t>& upload::chunk_size_bytes() const {
+const stdx::optional<std::int32_t>& upload::chunk_size_bytes() const {
     return _chunk_size_bytes;
 }
 

@@ -116,7 +116,7 @@ class MONGOCXX_API uploader {
                               stdx::string_view filename,
                               collection files,
                               collection chunks,
-                              std::size_t chunk_size,
+                              std::int32_t chunk_size,
                               stdx::optional<bsoncxx::document::view_or_value> metadata = {});
 
     MONGOCXX_PRIVATE void finish_chunk();
@@ -138,7 +138,7 @@ class MONGOCXX_API uploader {
     std::int32_t _chunk_size;
 
     // The number of chunks fully written so far.
-    std::size_t _chunks_written;
+    std::int32_t _chunks_written;
 
     // Whether or not the uploader has already been closed.
     bool _closed;
