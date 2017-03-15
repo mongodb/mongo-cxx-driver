@@ -43,6 +43,8 @@ set(mongocxx_test_sources
     options/find_one_and_delete.cpp
     options/find_one_and_replace.cpp
     options/find_one_and_update.cpp
+    options/gridfs/bucket.cpp
+    options/gridfs/upload.cpp
     options/index.cpp
     options/insert.cpp
     options/modify_collection.cpp
@@ -55,6 +57,7 @@ set(mongocxx_test_sources
     read_concern.cpp
     read_preference.cpp
     result/delete.cpp
+    result/gridfs/upload.cpp
     result/insert_one.cpp
     result/replace_one.cpp
     result/update.cpp
