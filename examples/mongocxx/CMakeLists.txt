@@ -29,6 +29,7 @@ set(MONGOCXX_EXAMPLES
     document_validation.cpp
     exception.cpp
     get_values_from_documents.cpp
+    gridfs.cpp
     index.cpp
     inserted_id.cpp
     instance_management.cpp
