@@ -34,6 +34,7 @@ class cursor::impl {
     impl(mongoc_cursor_t* cursor, bsoncxx::stdx::optional<cursor::type> cursor_type)
         : cursor_t(cursor),
           status{cursor ? state::k_pending : state::k_dead},
+          exhausted(!cursor),
           tailable{cursor && cursor_type && (*cursor_type == cursor::type::k_tailable ||
                                              *cursor_type == cursor::type::k_tailable_await)} {}
 
@@ -49,6 +50,10 @@ class cursor::impl {
         return status == state::k_dead;
     }
 
+    bool is_exhausted() const {
+        return exhausted;
+    }
+
     bool is_tailable() const {
         return tailable;
     }
@@ -60,16 +65,19 @@ class cursor::impl {
 
     void mark_nothing_left() {
         doc = bsoncxx::document::view{};
+        exhausted = true;
         status = tailable ? state::k_pending : state::k_dead;
     }
 
     void mark_started() {
         status = state::k_started;
+        exhausted = false;
     }
 
     mongoc_cursor_t* cursor_t;
     bsoncxx::document::view doc;
     state status;
+    bool exhausted;
     bool tailable;
 };
 
