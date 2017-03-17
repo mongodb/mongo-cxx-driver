@@ -35,6 +35,7 @@ set(MONGOCXX_EXAMPLES
     query.cpp
     query_projection.cpp
     remove.cpp
+    tailable_cursor.cpp
     update.cpp
     view_or_value_variant.cpp
 )
