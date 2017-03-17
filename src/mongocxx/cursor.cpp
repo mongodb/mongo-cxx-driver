@@ -57,7 +57,6 @@ cursor::iterator& cursor::iterator::operator++() {
         throw_exception<query_exception>(error);
     } else {
         _cursor->_impl->mark_nothing_left();
-        _cursor = nullptr;  // Set iterator equal to end().
     }
     return *this;
 }
@@ -82,6 +81,14 @@ cursor::iterator::iterator(cursor* cursor) : _cursor(cursor) {
     operator++();
 }
 
+//
+// An iterator is exhausted if it is the end-iterator (_cursor == nullptr)
+// or if the underlying _cursor is marked exhausted.
+//
+bool cursor::iterator::is_exhausted() const {
+    return !_cursor || _cursor->_impl->is_exhausted();
+}
+
 const bsoncxx::document::view& cursor::iterator::operator*() const {
     return _cursor->_impl->doc;
 }
@@ -90,8 +97,13 @@ const bsoncxx::document::view* cursor::iterator::operator->() const {
     return &_cursor->_impl->doc;
 }
 
+//
+// Iterators are equal if they point to the same underlying _cursor or if they
+// both are "at the end".  We check for exhaustion first because the most
+// common check is `iter != cursor.end()`.
+//
 bool operator==(const cursor::iterator& lhs, const cursor::iterator& rhs) {
-    return lhs._cursor == rhs._cursor;
+    return ((rhs.is_exhausted() && lhs.is_exhausted()) || (lhs._cursor == rhs._cursor));
 }
 
 bool operator!=(const cursor::iterator& lhs, const cursor::iterator& rhs) {
