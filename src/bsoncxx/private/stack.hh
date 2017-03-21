@@ -29,13 +29,17 @@ class stack {
     stack() : _bucket_index(0), _bucket_size(size), _is_empty(true) {}
 
     ~stack() {
-        while (!empty()) {
-            pop_back();
-        }
+        clear();
 
         while (!_buckets.empty()) {
             operator delete(_buckets.back());
             _buckets.pop_back();
+        }
+    }
+
+    void clear() {
+        while (!empty()) {
+            pop_back();
         }
     }
 

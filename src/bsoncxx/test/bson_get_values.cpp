@@ -176,7 +176,7 @@ TEST_CASE("[] can reach into mixed nested arrays and documents", "[bsoncxx]") {
 TEST_CASE("[] with large nesting levels", "[bsoncxx]") {
     using namespace builder::stream;
 
-    std::int32_t nesting_level;
+    std::int32_t nesting_level = 0;
 
     SECTION("no nesting") {
         nesting_level = 0;
