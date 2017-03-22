@@ -506,9 +506,10 @@ class MONGOCXX_API collection {
     cursor list_indexes() const;
 
     ///
-    /// Returns the name of this collection as a view of a null-terminated string.
+    /// Returns the name of this collection.
     ///
-    /// @return The name of the collection.
+    /// @return The name of the collection.  The return value of this method is invalidated by any
+    /// subsequent call to collection::rename() on this collection object.
     ///
     stdx::string_view name() const;
 

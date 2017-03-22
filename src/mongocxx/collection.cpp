@@ -66,6 +66,10 @@ using bsoncxx::builder::stream::concatenate;
 
 namespace {
 
+const char* get_collection_name(mongoc_collection_t* collection) {
+    return mongocxx::libmongoc::collection_get_name(collection);
+}
+
 mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
     ::mongoc_collection_t* collection,
     view_or_value filter,
@@ -133,7 +137,7 @@ collection::operator bool() const noexcept {
 }
 
 stdx::string_view collection::name() const {
-    return {libmongoc::collection_get_name(_get_impl().collection_t)};
+    return {get_collection_name(_get_impl().collection_t)};
 }
 
 void collection::rename(bsoncxx::string::view_or_value new_name, bool drop_target_before_rename) {
@@ -179,10 +183,7 @@ stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write
     mongoc_bulk_operation_t* b = bulk_write._impl->operation_t;
     libmongoc::bulk_operation_set_client(b, _get_impl().client_impl->client_t);
     libmongoc::bulk_operation_set_database(b, _get_impl().database_name.c_str());
-
-    // collection::name() is guaranteed to return a null-terminated string, so it
-    // is safe to use .data() here.
-    libmongoc::bulk_operation_set_collection(b, name().data());
+    libmongoc::bulk_operation_set_collection(b, get_collection_name(_get_impl().collection_t));
 
     scoped_bson_t reply;
     reply.flag_init();
