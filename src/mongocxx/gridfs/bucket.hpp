@@ -15,12 +15,12 @@
 #pragma once
 
 #include <istream>
+#include <memory>
 #include <ostream>
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types/value.hpp>
-#include <mongocxx/collection.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/gridfs/downloader.hpp>
@@ -72,9 +72,7 @@ class MONGOCXX_API bucket {
     ///
     /// Move assigns a bucket.
     ///
-    /// TODO: CXX-1235 Add noexcept specifier.
-    ///
-    bucket& operator=(bucket&&);
+    bucket& operator=(bucket&&) noexcept;
 
     ///
     /// Copy constructs a bucket.
@@ -85,6 +83,11 @@ class MONGOCXX_API bucket {
     /// Copy assigns a bucket.
     ///
     bucket& operator=(const bucket&);
+
+    ///
+    /// Destroys a bucket.
+    ///
+    ~bucket();
 
     ///
     /// Opens a gridfs::uploader to create a new GridFS file. The id of the file will be
@@ -242,20 +245,12 @@ class MONGOCXX_API bucket {
    private:
     MONGOCXX_PRIVATE void create_indexes_if_nonexistent();
 
-    // The name of the bucket.
-    std::string _bucket_name;
+    class MONGOCXX_PRIVATE impl;
 
-    // The default size of the chunks.
-    std::int32_t _default_chunk_size_bytes;
+    MONGOCXX_PRIVATE impl& _get_impl();
+    MONGOCXX_PRIVATE const impl& _get_impl() const;
 
-    // The collection holding the chunks.
-    collection _chunks;
-
-    // The collection holding the files.
-    collection _files;
-
-    // Whether the required indexes have been created.
-    bool _indexes_created;
+    std::unique_ptr<impl> _impl;
 };
 
 }  // namespace gridfs

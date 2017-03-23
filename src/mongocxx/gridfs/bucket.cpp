@@ -24,9 +24,9 @@
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-#include <mongocxx/collection.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/gridfs/private/bucket.hh>
 #include <mongocxx/options/delete.hpp>
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/stdx.hpp>
@@ -38,47 +38,62 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace gridfs {
 
 bucket::bucket(const database& db, const options::gridfs::bucket& options) {
-    if (auto chunk_size_bytes = options.chunk_size_bytes()) {
-        _default_chunk_size_bytes = *chunk_size_bytes;
-    } else {
-        _default_chunk_size_bytes = 255 * 1024;
-    }
-
+    std::string bucket_name = "fs";
     if (auto name = options.bucket_name()) {
-        _bucket_name = *name;
-    } else {
-        _bucket_name = "fs";
+        bucket_name = *name;
     }
 
-    if (_bucket_name.empty()) {
+    if (bucket_name.empty()) {
         throw std::exception{};
     }
 
-    _files = db[_bucket_name + ".files"];
-    _chunks = db[_bucket_name + ".chunks"];
+    std::int32_t default_chunk_size_bytes = 255 * 1024;
+    if (auto chunk_size_bytes = options.chunk_size_bytes()) {
+        default_chunk_size_bytes = *chunk_size_bytes;
+    }
+
+    collection chunks = db[bucket_name + ".chunks"];
+    collection files = db[bucket_name + ".files"];
+
+    _impl = stdx::make_unique<impl>(
+        std::move(bucket_name), default_chunk_size_bytes, std::move(chunks), std::move(files));
 
     if (auto read_concern = options.read_concern()) {
-        _files.read_concern(*read_concern);
-        _chunks.read_concern(*read_concern);
+        _get_impl().files.read_concern(*read_concern);
+        _get_impl().chunks.read_concern(*read_concern);
     }
 
     if (auto read_preference = options.read_preference()) {
-        _files.read_preference(*read_preference);
-        _chunks.read_preference(*read_preference);
+        _get_impl().files.read_preference(*read_preference);
+        _get_impl().chunks.read_preference(*read_preference);
     }
 
     if (auto write_concern = options.write_concern()) {
-        _files.write_concern(*write_concern);
-        _chunks.write_concern(*write_concern);
+        _get_impl().files.write_concern(*write_concern);
+        _get_impl().chunks.write_concern(*write_concern);
     }
-
-    _indexes_created = false;
 }
 
 bucket::bucket(bucket&&) noexcept = default;
-bucket& bucket::operator=(bucket&&) = default;
-bucket::bucket(const bucket&) = default;
-bucket& bucket::operator=(const bucket&) = default;
+bucket& bucket::operator=(bucket&&) noexcept = default;
+bucket::~bucket() = default;
+
+bucket::bucket(const bucket& b) {
+    if (b._impl) {
+        _impl = stdx::make_unique<impl>(b._get_impl());
+    }
+}
+
+bucket& bucket::operator=(const bucket& b) {
+    if (!b._impl) {
+        _impl.reset();
+    } else if (!_impl) {
+        _impl = stdx::make_unique<impl>(b._get_impl());
+    } else {
+        *_impl = b._get_impl();
+    }
+    return *this;
+}
 
 uploader bucket::open_upload_stream(stdx::string_view filename,
                                     const options::gridfs::upload& options) {
@@ -89,7 +104,7 @@ uploader bucket::open_upload_stream(stdx::string_view filename,
 uploader bucket::open_upload_stream_with_id(bsoncxx::types::value id,
                                             stdx::string_view filename,
                                             const options::gridfs::upload& options) {
-    std::int32_t chunk_size_bytes = _default_chunk_size_bytes;
+    std::int32_t chunk_size_bytes = _get_impl().default_chunk_size_bytes;
 
     if (auto chunk_size = options.chunk_size_bytes()) {
         chunk_size_bytes = *chunk_size;
@@ -97,7 +112,12 @@ uploader bucket::open_upload_stream_with_id(bsoncxx::types::value id,
 
     create_indexes_if_nonexistent();
 
-    return uploader{id, filename, _files, _chunks, chunk_size_bytes, std::move(options.metadata())};
+    return uploader{id,
+                    filename,
+                    _get_impl().files,
+                    _get_impl().chunks,
+                    chunk_size_bytes,
+                    std::move(options.metadata())};
 };
 
 result::gridfs::upload bucket::upload_from_stream(stdx::string_view filename,
@@ -131,7 +151,7 @@ downloader bucket::open_download_stream(bsoncxx::types::value id) {
     builder::basic::document files_filter;
     files_filter.append(builder::basic::kvp("_id", id));
 
-    auto files_doc = _files.find_one(files_filter.extract());
+    auto files_doc = _get_impl().files.find_one(files_filter.extract());
 
     if (!files_doc) {
         // TODO CXX-1234: Replace generic exceptions in GridFS with appropriate specific ones
@@ -162,7 +182,7 @@ downloader bucket::open_download_stream(bsoncxx::types::value id) {
     options::find chunks_options;
     chunks_options.sort(chunks_sort.extract());
 
-    auto cursor = _chunks.find(chunks_filter.extract(), chunks_options);
+    auto cursor = _get_impl().chunks.find(chunks_filter.extract(), chunks_options);
 
     return downloader{std::move(cursor), *files_doc};
 }
@@ -188,7 +208,7 @@ void bucket::delete_file(bsoncxx::types::value id) {
     files_builder.append(builder::basic::kvp("_id", id));
 
     try {
-        if (auto result = _files.delete_one(files_builder.extract())) {
+        if (auto result = _get_impl().files.delete_one(files_builder.extract())) {
             if (result->deleted_count() == 0) {
                 // TODO CXX-1234: Replace generic exceptions in GridFS with appropriate specific
                 // ones
@@ -200,7 +220,7 @@ void bucket::delete_file(bsoncxx::types::value id) {
         chunks_builder.append(builder::basic::kvp("files_id", id));
         document::value chunks_filter = chunks_builder.extract();
 
-        _chunks.delete_many(chunks_filter.view());
+        _get_impl().chunks.delete_many(chunks_filter.view());
     } catch (const std::exception& e) {
         // TODO CXX-1234: Replace generic exceptions in GridFS with appropriate specific ones
         throw std::exception{};
@@ -208,11 +228,11 @@ void bucket::delete_file(bsoncxx::types::value id) {
 }
 
 cursor bucket::find(bsoncxx::document::view_or_value filter, const options::find& options) {
-    return _files.find(filter, options);
+    return _get_impl().files.find(filter, options);
 }
 
 stdx::string_view bucket::bucket_name() const {
-    return _bucket_name;
+    return _get_impl().bucket_name;
 }
 
 void bucket::create_indexes_if_nonexistent() {
@@ -222,7 +242,7 @@ void bucket::create_indexes_if_nonexistent() {
     auto find_options =
         options::find{}.projection(filter.view()).read_preference(read_preference{});
 
-    if (_indexes_created || _files.find_one({}, find_options)) {
+    if (_get_impl().indexes_created || _get_impl().files.find_one({}, find_options)) {
         return;
     }
 
@@ -230,7 +250,7 @@ void bucket::create_indexes_if_nonexistent() {
     files_index.append(bsoncxx::builder::basic::kvp("filename", 1));
     files_index.append(bsoncxx::builder::basic::kvp("uploadDate", 1));
 
-    _files.create_index(files_index.extract());
+    _get_impl().files.create_index(files_index.extract());
 
     bsoncxx::builder::basic::document chunks_index;
     chunks_index.append(bsoncxx::builder::basic::kvp("files_id", 1));
@@ -239,9 +259,21 @@ void bucket::create_indexes_if_nonexistent() {
     options::index chunks_index_options;
     chunks_index_options.unique(true);
 
-    _chunks.create_index(chunks_index.extract(), chunks_index_options);
+    _get_impl().chunks.create_index(chunks_index.extract(), chunks_index_options);
 
-    _indexes_created = true;
+    _get_impl().indexes_created = true;
+}
+
+const bucket::impl& bucket::_get_impl() const {
+    if (!_impl) {
+        throw logic_error{error_code::k_invalid_gridfs_bucket_object};
+    }
+    return *_impl;
+}
+
+bucket::impl& bucket::_get_impl() {
+    auto cthis = const_cast<const bucket*>(this);
+    return const_cast<bucket::impl&>(cthis->_get_impl());
 }
 
 }  // namespace gridfs
