@@ -21,6 +21,7 @@
 #include <bsoncxx/types/value.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/gridfs/upload.hpp>
@@ -28,6 +29,14 @@
 #include <mongocxx/uri.hpp>
 
 using namespace mongocxx;
+
+TEST_CASE("mongocxx::gridfs::uploader default constructor makes invalid uploader",
+          "[gridfs::uploader]") {
+    gridfs::uploader uploader;
+    REQUIRE(!uploader);
+    std::uint8_t c = 0x0;
+    REQUIRE_THROWS_AS(uploader.write(1, &c), logic_error);
+}
 
 TEST_CASE("mongocxx::gridfs::uploader::abort works", "[gridfs::uploader]") {
     instance::current();

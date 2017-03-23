@@ -59,9 +59,14 @@ uploader::uploader(bsoncxx::types::value id,
                                                    bsoncxx::document::value{metadata->view()})
                                              : stdx::nullopt)} {}
 
+uploader::uploader() noexcept = default;
 uploader::uploader(uploader&&) noexcept = default;
 uploader& uploader::operator=(uploader&&) noexcept = default;
 uploader::~uploader() = default;
+
+uploader::operator bool() const noexcept {
+    return static_cast<bool>(_impl);
+}
 
 void uploader::write(std::size_t length, const std::uint8_t* bytes) {
     if (_get_impl().closed) {

@@ -39,6 +39,13 @@ namespace gridfs {
 class MONGOCXX_API uploader {
    public:
     ///
+    /// Default constructs an uploader object. The uploader is equivalent to the state of a moved
+    /// from uploader. The only valid actions to take with a default constructed uploader are to
+    /// assign to it, or destroy it.
+    ///
+    uploader() noexcept;
+
+    ///
     /// Move constructs an uploader.
     ///
     uploader(uploader&&) noexcept;
@@ -56,6 +63,11 @@ class MONGOCXX_API uploader {
     /// Destroys an uploader.
     ///
     ~uploader();
+
+    ///
+    /// Returns true if the uploader is valid, meaning it was not default constructed or moved from.
+    ///
+    explicit operator bool() const noexcept;
 
     ///
     /// Writes a specified number of bytes to a GridFS file.
