@@ -25,6 +25,7 @@ set(mongocxx_test_sources
     collection.cpp
     collection_mocked.cpp
     database.cpp
+    gridfs/bucket.cpp
     gridfs/uploader.cpp
     hint.cpp
     model/delete_many.cpp
