@@ -43,7 +43,7 @@ TEST_CASE("mongocxx::gridfs::uploader::abort works", "[gridfs::uploader]") {
 
     client client{uri{}};
     database db = client["gridfs_upload_abort_test"];
-    gridfs::bucket bucket{db};
+    gridfs::bucket bucket = db.gridfs_bucket();
 
     bsoncxx::types::b_oid id = {bsoncxx::oid{}};
     gridfs::uploader uploader =

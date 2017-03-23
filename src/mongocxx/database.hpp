@@ -20,8 +20,10 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/collection.hpp>
+#include <mongocxx/gridfs/bucket.hpp>
 #include <mongocxx/options/create_collection.hpp>
 #include <mongocxx/options/create_view.hpp>
+#include <mongocxx/options/gridfs/bucket.hpp>
 #include <mongocxx/options/modify_collection.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/write_concern.hpp>
@@ -281,6 +283,23 @@ class MONGOCXX_API database {
     /// @return the collection.
     ///
     MONGOCXX_INLINE class collection operator[](bsoncxx::string::view_or_value name) const;
+
+    ///
+    /// Access a GridFS bucket within this database.
+    ///
+    /// @param options
+    ///   The options for the bucket.
+    ///
+    /// @return
+    ///   The GridFS bucket.
+    ///
+    /// @note
+    ///   See the class comment for `gridfs::bucket` for more information about GridFS.
+    ///
+    /// TODO CXX-1234: Document exceptions thrown.
+    ///
+    class gridfs::bucket gridfs_bucket(
+        const options::gridfs::bucket& options = options::gridfs::bucket()) const;
 
    private:
     friend class client;

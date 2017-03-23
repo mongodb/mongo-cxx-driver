@@ -22,7 +22,6 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types/value.hpp>
 #include <mongocxx/cursor.hpp>
-#include <mongocxx/database.hpp>
 #include <mongocxx/gridfs/downloader.hpp>
 #include <mongocxx/gridfs/uploader.hpp>
 #include <mongocxx/options/find.hpp>
@@ -35,6 +34,9 @@
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
+
+class database;
+
 namespace gridfs {
 
 ///
@@ -47,6 +49,14 @@ namespace gridfs {
 /// in the `<bucketname>.files` collection containing the information about the file. Users should
 /// not modify these collections directly.
 ///
+/// Example of how obtain the default GridFS bucket for a given database:
+/// @code
+///   mongocxx::client mongo_client{mongocxx::uri{}};
+///   auto gridfs_bucket = mongo_client["database"].gridfs_bucket();
+/// @endcode
+///
+/// See also the method documentation for `mongocxx::database::gridfs_bucket()`.
+///
 /// @see http://www.mongodb.org/display/DOCS/GridFS
 ///
 class MONGOCXX_API bucket {
@@ -57,19 +67,6 @@ class MONGOCXX_API bucket {
     /// it, or destroy it.
     ///
     bucket() noexcept;
-
-    ///
-    /// Constructs a new GridFS bucket.
-    ///
-    /// @param db
-    ///   The database that will hold the GridFS bucket collections.
-    ///
-    /// @param options
-    ///   Optional arguments; see options::gridfs::bucket.
-    ///
-    /// @throws if options are invalid.
-    ///
-    bucket(const database& db, const options::gridfs::bucket& options = {});
 
     ///
     /// Move constructs a bucket.
@@ -255,6 +252,11 @@ class MONGOCXX_API bucket {
     stdx::string_view bucket_name() const;
 
    private:
+    friend class mongocxx::database;
+
+    // Constructs a new GridFS bucket.  Throws if options are invalid.
+    MONGOCXX_PRIVATE bucket(const database& db, const options::gridfs::bucket& options);
+
     MONGOCXX_PRIVATE void create_indexes_if_nonexistent();
 
     class MONGOCXX_PRIVATE impl;

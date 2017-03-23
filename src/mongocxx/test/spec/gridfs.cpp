@@ -466,7 +466,7 @@ void run_gridfs_tests_in_file(std::string test_path, client* client) {
     array::view tests = test_spec_view["tests"].get_array().value;
 
     database db = (*client)["gridfs_tests"];
-    gridfs::bucket bucket(db);
+    gridfs::bucket bucket = db.gridfs_bucket();
 
     for (auto&& test : tests) {
         std::string description = test["description"].get_utf8().value.to_string();

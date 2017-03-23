@@ -34,8 +34,7 @@ int main() {
     mongocxx::instance inst{};
     mongocxx::client conn{mongocxx::uri{}};
     auto db = conn["test"];
-
-    gridfs::bucket bucket{db};
+    auto bucket = db.gridfs_bucket();
 
     // "sample_gridfs_file" is the name of the GridFS file stored on the server. GridFS filenames
     // are not unique.

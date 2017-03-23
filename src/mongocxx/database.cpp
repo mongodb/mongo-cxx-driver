@@ -270,6 +270,10 @@ collection database::collection(bsoncxx::string::view_or_value name) const {
     return mongocxx::collection(*this, std::move(name));
 }
 
+gridfs::bucket database::gridfs_bucket(const options::gridfs::bucket& options) const {
+    return gridfs::bucket{*this, options};
+}
+
 const database::impl& database::_get_impl() const {
     if (!_impl) {
         throw logic_error{error_code::k_invalid_database_object};

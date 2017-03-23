@@ -35,10 +35,10 @@ TEST_CASE("mongocxx::gridfs::bucket copy constructor", "[gridfs::bucket]") {
     database db = client["gridfs_bucket_copy_constructor"];
 
     SECTION("constructing from valid") {
-        gridfs::bucket bucket_a{db, options::gridfs::bucket{}.bucket_name("foo")};
+        gridfs::bucket bucket_a = db.gridfs_bucket(options::gridfs::bucket{}.bucket_name("a"));
         gridfs::bucket bucket_b{bucket_a};
         REQUIRE(bucket_b);
-        REQUIRE(bucket_b.bucket_name() == stdx::string_view{"foo"});
+        REQUIRE(bucket_b.bucket_name() == stdx::string_view{"a"});
     }
 
     SECTION("constructing from invalid") {
@@ -55,26 +55,26 @@ TEST_CASE("mongocxx::gridfs::bucket copy assignment operator", "[gridfs::bucket]
     database db = client["gridfs_bucket_copy_assignment"];
 
     SECTION("assigning valid to valid") {
-        gridfs::bucket bucket_a{db, options::gridfs::bucket{}.bucket_name("foo")};
-        gridfs::bucket bucket_b{db, options::gridfs::bucket{}.bucket_name("bar")};
+        gridfs::bucket bucket_a = db.gridfs_bucket(options::gridfs::bucket{}.bucket_name("a"));
+        gridfs::bucket bucket_b = db.gridfs_bucket(options::gridfs::bucket{}.bucket_name("b"));
         bucket_b = bucket_a;
         REQUIRE(bucket_b);
-        REQUIRE(bucket_b.bucket_name() == stdx::string_view{"foo"});
+        REQUIRE(bucket_b.bucket_name() == stdx::string_view{"a"});
     }
 
     SECTION("assigning invalid to valid") {
         gridfs::bucket bucket_a;
-        gridfs::bucket bucket_b{db, options::gridfs::bucket{}.bucket_name("foo")};
+        gridfs::bucket bucket_b = db.gridfs_bucket(options::gridfs::bucket{}.bucket_name("b"));
         bucket_b = bucket_a;
         REQUIRE(!bucket_b);
     }
 
     SECTION("assigning valid to invalid") {
-        gridfs::bucket bucket_a{db, options::gridfs::bucket{}.bucket_name("foo")};
+        gridfs::bucket bucket_a = db.gridfs_bucket(options::gridfs::bucket{}.bucket_name("a"));
         gridfs::bucket bucket_b;
         bucket_b = bucket_a;
         REQUIRE(bucket_b);
-        REQUIRE(bucket_b.bucket_name() == stdx::string_view{"foo"});
+        REQUIRE(bucket_b.bucket_name() == stdx::string_view{"a"});
     }
 
     SECTION("assigning invalid to invalid") {
