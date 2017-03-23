@@ -61,6 +61,9 @@ class error_category final : public std::error_category {
             case error_code::k_invalid_gridfs_uploader_object:
                 return "invalid use of default constructed or moved-from "
                        "mongocxx::gridfs::uploader object";
+            case error_code::k_invalid_gridfs_downloader_object:
+                return "invalid use of default constructed or moved-from "
+                       "mongocxx::gridfs::downloader object";
             default:
                 return "unknown mongocxx error";
         }

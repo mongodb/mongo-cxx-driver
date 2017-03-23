@@ -16,6 +16,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
@@ -43,13 +44,16 @@ class MONGOCXX_API downloader {
     ///
     /// Move assigns a downloader.
     ///
-    /// TODO: CXX-1235 Add noexcept specifier.
-    ///
-    downloader& operator=(downloader&&);
+    downloader& operator=(downloader&&) noexcept;
 
     downloader(const downloader&) = delete;
 
     downloader& operator=(const downloader&) = delete;
+
+    ///
+    /// Destroys a downloader.
+    ///
+    ~downloader();
 
     ///
     /// Reads a specified number of bytes from the GridFS file being downloaded.
@@ -109,44 +113,12 @@ class MONGOCXX_API downloader {
 
     MONGOCXX_PRIVATE void fetch_chunk();
 
-    // The files document for the file being downloaded.
-    bsoncxx::document::value _files_doc;
+    class MONGOCXX_PRIVATE impl;
 
-    // The number of bytes in the current chunk.
-    std::size_t _chunk_buffer_len;
+    MONGOCXX_PRIVATE impl& _get_impl();
+    MONGOCXX_PRIVATE const impl& _get_impl() const;
 
-    // The offset from _buffer_ptr to the next byte to be read.
-    std::size_t _chunk_buffer_offset;
-
-    // A pointer to the current chunk being read.
-    const uint8_t* _chunk_buffer_ptr;
-
-    // A cursor iterating over the chunks documents being read. In the case of a zero-length file,
-    // this member does not have a value.
-    stdx::optional<cursor> _chunks;
-
-    // An iterator to the current chunk document. In the case of a zero-length file, this member
-    // does not have a value.
-    stdx::optional<cursor::iterator> _chunks_curr;
-
-    // An iterator to the end of _chunks. In the case of a zero-length file, this member does not
-    // have a value.
-    stdx::optional<cursor::iterator> _chunks_end;
-
-    // The number of chunks already downloaded from the server.
-    std::int32_t _chunks_seen;
-
-    // The size of a chunk in bytes.
-    std::int32_t _chunk_size;
-
-    // Whether or not the downloader has already been closed.
-    bool _closed;
-
-    // The total number of chunks in the file.
-    std::int32_t _file_chunk_count;
-
-    // The total length of the file in bytes.
-    std::int64_t _file_len;
+    std::unique_ptr<impl> _impl;
 };
 
 }  // namespace gridfs
