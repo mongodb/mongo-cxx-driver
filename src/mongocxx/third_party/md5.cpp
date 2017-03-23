@@ -58,7 +58,7 @@
   1999-05-03 lpd Original version.
  */
 
-#include "md5.hpp"
+#include "md5.h"
 #include <string.h>
 
 namespace mongocxx {
