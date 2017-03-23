@@ -14,11 +14,14 @@
 
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>
 
 #include <bsoncxx/document/value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types/value.hpp>
 #include <bsoncxx/view_or_value.hpp>

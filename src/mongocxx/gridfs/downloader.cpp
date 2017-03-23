@@ -18,9 +18,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <exception>
-#include <iterator>
 
-#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>

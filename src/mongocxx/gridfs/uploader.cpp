@@ -25,14 +25,10 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types.hpp>
-#include <bsoncxx/view_or_value.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/result/gridfs/upload.hpp>
-#include <mongocxx/third_party/md5.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
