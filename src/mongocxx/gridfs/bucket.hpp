@@ -52,6 +52,13 @@ namespace gridfs {
 class MONGOCXX_API bucket {
    public:
     ///
+    /// Default constructs a bucket object. The bucket is equivalent to the state of a moved from
+    /// bucket. The only valid actions to take with a default constructed bucket are to assign to
+    /// it, or destroy it.
+    ///
+    bucket() noexcept;
+
+    ///
     /// Constructs a new GridFS bucket.
     ///
     /// @param db
@@ -88,6 +95,11 @@ class MONGOCXX_API bucket {
     /// Destroys a bucket.
     ///
     ~bucket();
+
+    ///
+    /// Returns true if the bucket is valid, meaning it was not default constructed or moved from.
+    ///
+    explicit operator bool() const noexcept;
 
     ///
     /// Opens a gridfs::uploader to create a new GridFS file. The id of the file will be

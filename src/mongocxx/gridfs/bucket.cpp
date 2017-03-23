@@ -74,20 +74,25 @@ bucket::bucket(const database& db, const options::gridfs::bucket& options) {
     }
 }
 
+bucket::bucket() noexcept = default;
 bucket::bucket(bucket&&) noexcept = default;
 bucket& bucket::operator=(bucket&&) noexcept = default;
 bucket::~bucket() = default;
 
+bucket::operator bool() const noexcept {
+    return static_cast<bool>(_impl);
+}
+
 bucket::bucket(const bucket& b) {
-    if (b._impl) {
+    if (b) {
         _impl = stdx::make_unique<impl>(b._get_impl());
     }
 }
 
 bucket& bucket::operator=(const bucket& b) {
-    if (!b._impl) {
+    if (!b) {
         _impl.reset();
-    } else if (!_impl) {
+    } else if (!*this) {
         _impl = stdx::make_unique<impl>(b._get_impl());
     } else {
         *_impl = b._get_impl();
