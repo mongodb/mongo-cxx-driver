@@ -17,30 +17,18 @@
 #include <mongocxx/gridfs/bucket.hpp>
 
 #include <exception>
-#include <istream>
-#include <memory>
-#include <ostream>
 #include <string>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/stdx/string_view.hpp>
-#include <bsoncxx/types/value.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/gridfs/downloader.hpp>
-#include <mongocxx/gridfs/uploader.hpp>
 #include <mongocxx/options/delete.hpp>
-#include <mongocxx/options/find.hpp>
-#include <mongocxx/options/gridfs/bucket.hpp>
-#include <mongocxx/options/gridfs/upload.hpp>
 #include <mongocxx/options/index.hpp>
-#include <mongocxx/result/gridfs/upload.hpp>
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
