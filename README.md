@@ -23,7 +23,6 @@ Currently, no drivers guarantee API or ABI stability.
 | mongocxx 3.1.x | Unstable    | Active development  | Unstable C++ driver development, requires C++11              |
 | mongocxx 3.0.x | Stable      | Bug fixes only      | Primary stable C++ driver release, requires C++11            |
 | legacy   (all) | Stable      | Critical fixes only | Former stable C++ driver release                             |
-| 26compat (all) | Deprecated  | Critical fixes only | Drop in replacement for users of existing 2.6 era C++ driver |
 
 ## MongoDB compatibility
 
@@ -36,7 +35,6 @@ is recommended for all new development.
 | mongocxx 3.0.x | ✓           | ✓           | ✓           | ✓           |
 | legacy   1.1.x | ✓           | ✓           | ✓           | ✓           |
 | legacy   1.0.x | ✓           | ✓           | ✓           |             |
-| 26compat (all) |             | ✓           |             |             |
 
 ## Bugs and issues
 
