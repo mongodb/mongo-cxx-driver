@@ -17,8 +17,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <string>
-#include <vector>
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -28,7 +26,6 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/result/gridfs/upload.hpp>
 #include <mongocxx/stdx.hpp>
-#include <mongocxx/third_party/md5.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -49,13 +46,16 @@ class MONGOCXX_API uploader {
     ///
     /// Move assigns an uploader.
     ///
-    /// TODO: CXX-1235 Add noexcept specifier.
-    ///
-    uploader& operator=(uploader&&);
+    uploader& operator=(uploader&&) noexcept;
 
     uploader(const uploader&) = delete;
 
     uploader& operator=(const uploader&) = delete;
+
+    ///
+    /// Destroys an uploader.
+    ///
+    ~uploader();
 
     ///
     /// Writes a specified number of bytes to a GridFS file.
@@ -125,41 +125,12 @@ class MONGOCXX_API uploader {
     MONGOCXX_PRIVATE void finish_chunk();
     MONGOCXX_PRIVATE void flush_chunks();
 
-    // Bytes that have been written for the current chunk.
-    std::unique_ptr<std::uint8_t[]> _buffer;
+    class MONGOCXX_PRIVATE impl;
 
-    // The offset from _buffer to the next byte to be written.
-    std::size_t _buffer_off;
+    MONGOCXX_PRIVATE impl& _get_impl();
+    MONGOCXX_PRIVATE const impl& _get_impl() const;
 
-    // The collection to which the chunks will be written.
-    collection _chunks;
-
-    // Chunks that have been fully written but not yet uploaded to the server.
-    std::vector<bsoncxx::document::value> _chunks_collection_documents;
-
-    // The size of a chunk in bytes.
-    std::int32_t _chunk_size;
-
-    // The number of chunks fully written so far.
-    std::int32_t _chunks_written;
-
-    // Whether or not the uploader has already been closed.
-    bool _closed;
-
-    // The name of the file to be written.
-    std::string _filename;
-
-    // The collection to which the files document will be written.
-    collection _files;
-
-    // Keeps track of the md5 hash of the file.
-    md5_state_t _md5;
-
-    // User-specified metadata for the file.
-    stdx::optional<bsoncxx::document::value> _metadata;
-
-    // Contains the id of the file being written.
-    result::gridfs::upload _result;
+    std::unique_ptr<impl> _impl;
 };
 
 }  // namespace gridfs

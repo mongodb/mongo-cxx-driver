@@ -58,6 +58,9 @@ enum class error_code : std::int32_t {
     /// A default-constructed or moved-from mongocxx::gridfs::bucket object has been used.
     k_invalid_gridfs_bucket_object,
 
+    /// A default-constructed or moved-from mongocxx::gridfs::uploader object has been used.
+    k_invalid_gridfs_uploader_object,
+
     // Add new constant string message to error_code.cpp as well!
 };
 
