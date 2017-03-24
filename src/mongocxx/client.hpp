@@ -45,8 +45,8 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 ///
 /// Example:
 /// @code
-///   mongocxx::client mongo_client;
-///   mongocxx::client mongo_client("mongodb://localhost:27017");
+///   mongocxx::client mongo_client{mongocxx::uri{}};
+///   mongocxx::client mongo_client{mongocxx::uri{"mongodb://localhost:27017"}};
 /// @endcode
 ///
 class MONGOCXX_API client {

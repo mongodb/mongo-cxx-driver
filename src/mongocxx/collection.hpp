@@ -66,8 +66,8 @@ class pipeline;
 ///
 /// Example:
 /// @code
-///   // Connect and get a collection
-///   mongocxx::client mongo_client;
+///   // Connect and get a collection.
+///   mongocxx::client mongo_client{mongocxx::uri{}};
 ///   auto coll = mongo_client["database"]["collection"];
 /// @endcode
 ///
