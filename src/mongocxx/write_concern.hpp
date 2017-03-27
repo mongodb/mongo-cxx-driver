@@ -140,11 +140,11 @@ class MONGOCXX_API write_concern {
 
     ///
     /// Requires that a majority of the nodes in a replica set acknowledge a write operation before
-    /// it is considered a success. A timeout is required when setting this write concern.
+    /// it is considered a success.
     ///
     /// @param timeout
     ///   The amount of time to wait before the write operation times out if it cannot reach
-    ///   the majority of nodes in the replica set.
+    ///   the majority of nodes in the replica set. If the value is zero, then no timeout is set.
     ///
     /// @throws mongocxx::logic_error for an invalid timeout value.
     //
@@ -166,7 +166,8 @@ class MONGOCXX_API write_concern {
     /// concern cannot be satisfied within the timeout, the operation is considered a failure.
     ///
     /// @param timeout
-    ///   The timeout (in milliseconds) for this write concern.
+    ///   The timeout (in milliseconds) for this write concern. If the value is zero, then no
+    ///   timeout is set.
     ///
     /// @throws mongocxx::logic_error for an invalid timeout value.
     ///
