@@ -293,7 +293,7 @@ TEST_CASE("mongocxx::gridfs::uploader::write with arbitrary sizes", "[gridfs::up
     auto upload_options = options::gridfs::upload{}.chunk_size_bytes(chunk_size);
     auto uploader = bucket.open_upload_stream("test_file", upload_options);
 
-    while (bytes_written < static_cast<std::size_t>(file_length)) {
+    while (static_cast<std::int64_t>(bytes_written) < file_length) {
         std::size_t actual_write_size = static_cast<std::size_t>(
             std::min(static_cast<std::int64_t>(write_size),
                      file_length - static_cast<std::int64_t>(bytes_written)));
@@ -306,7 +306,8 @@ TEST_CASE("mongocxx::gridfs::uploader::write with arbitrary sizes", "[gridfs::up
     auto file_doc = files_coll.find_one(make_document(kvp("_id", result.id())));
     REQUIRE(file_doc);
 
-    REQUIRE(file_doc->view()["length"].get_int64().value == bytes_written);
+    REQUIRE(file_doc->view()["length"].get_int64().value ==
+            static_cast<std::int64_t>(bytes_written));
     REQUIRE(file_doc->view()["chunkSize"].get_int32().value == chunk_size);
 
     auto chunks = chunks_coll.find(make_document(kvp("files_id", result.id())));
@@ -328,7 +329,7 @@ TEST_CASE("mongocxx::gridfs::uploader::write with arbitrary sizes", "[gridfs::up
         ++chunk_count;
     }
 
-    REQUIRE(bytes_read == file_length);
+    REQUIRE(static_cast<std::int64_t>(bytes_read) == file_length);
     REQUIRE(chunk_count == 12);
 }
 
