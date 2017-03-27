@@ -41,7 +41,7 @@ class uploader::impl {
           chunk_size{chunk_size},
           chunks_written{0},
           closed{false},
-          filename{filename},
+          filename{filename.to_string()},
           files{std::move(files)},
           metadata{std::move(metadata)},
           result{std::move(result)} {
