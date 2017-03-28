@@ -372,7 +372,7 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
     const ::mongoc_read_prefs_t* rp_ptr = NULL;
 
     if (options.read_preference()) {
-        rp_ptr = read_preference()._impl->read_preference_t;
+        rp_ptr = options.read_preference()->_impl->read_preference_t;
     }
 
     return cursor(libmongoc::collection_aggregate(_get_impl().collection_t,
