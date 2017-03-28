@@ -56,7 +56,7 @@ int main() {
     bsoncxx::types::value id = result.id();
 
     auto downloader = bucket.open_download_stream(id);
-    auto file_length = downloader.files_document()["length"].get_int64().value;
+    auto file_length = downloader.file_length();
     auto bytes_counter = 0;
 
     auto buffer_size = std::min(file_length, static_cast<std::int64_t>(downloader.chunk_size()));

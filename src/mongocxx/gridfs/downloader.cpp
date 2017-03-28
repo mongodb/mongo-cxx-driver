@@ -85,6 +85,10 @@ std::int32_t downloader::chunk_size() const {
     return _get_impl().chunk_size;
 }
 
+std::int64_t downloader::file_length() const {
+    return _get_impl().file_len;
+}
+
 bsoncxx::document::view downloader::files_document() const {
     return _get_impl().files_doc.view();
 }

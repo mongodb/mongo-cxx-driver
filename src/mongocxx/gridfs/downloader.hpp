@@ -102,6 +102,14 @@ class MONGOCXX_API downloader {
     std::int32_t chunk_size() const;
 
     ///
+    /// Gets the length of the file being downloaded.
+    ///
+    /// @return
+    ///   The length in bytes.
+    ///
+    std::int64_t file_length() const;
+
+    ///
     /// Gets the files collection document of the file being downloaded.
     ///
     /// @return
