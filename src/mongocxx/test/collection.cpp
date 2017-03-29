@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <chrono>
 #include <vector>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -247,6 +248,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // collection from other sections.
             db.run_command(document{} << "getLastError" << 1 << finalize);
         }
+    }
+
+    SECTION("find does not leak on error", "[collection]") {
+        auto find_opts = options::find{}.max_await_time(std::chrono::milliseconds{-1});
+
+        REQUIRE_THROWS_AS(coll.find({}, find_opts), logic_error);
     }
 
     SECTION("find with collation", "[collection]") {

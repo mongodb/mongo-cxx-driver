@@ -44,6 +44,7 @@
 #include <mongocxx/private/bulk_write.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/collection.hh>
+#include <mongocxx/private/cursor.hh>
 #include <mongocxx/private/database.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
@@ -308,18 +309,21 @@ cursor collection::find(view_or_value filter, const options::find& options) {
         rp_ptr = options_converted.read_preference()->_impl->read_preference_t;
     }
 
-    auto mongoc_cursor = libmongoc::collection_find_with_opts(
-        _get_impl().collection_t, filter_bson.bson(), options_bson.bson(), rp_ptr);
+    cursor query_cursor{
+        libmongoc::collection_find_with_opts(
+            _get_impl().collection_t, filter_bson.bson(), options_bson.bson(), rp_ptr),
+        options_converted.cursor_type()};
 
     if (options_converted.max_await_time()) {
         const auto count = options_converted.max_await_time()->count();
         if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max())) {
             throw logic_error{error_code::k_invalid_parameter};
         }
-        libmongoc::cursor_set_max_await_time_ms(mongoc_cursor, static_cast<std::uint32_t>(count));
+        libmongoc::cursor_set_max_await_time_ms(query_cursor._impl->cursor_t,
+                                                static_cast<std::uint32_t>(count));
     }
 
-    return cursor{mongoc_cursor, options_converted.cursor_type()};
+    return query_cursor;
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one(view_or_value filter,
@@ -936,13 +940,13 @@ cursor collection::distinct(bsoncxx::string::view_or_value field_name,
         throw bsoncxx::exception{bsoncxx::error_code::k_internal_error};
     }
 
-    mongoc_cursor_t* fake_cursor =
-        libmongoc::cursor_new_from_command_reply(_get_impl().client_impl->client_t, reply_bson, 0);
-    if (libmongoc::cursor_error(fake_cursor, &error)) {
+    cursor fake_cursor{
+        libmongoc::cursor_new_from_command_reply(_get_impl().client_impl->client_t, reply_bson, 0)};
+    if (libmongoc::cursor_error(fake_cursor._impl->cursor_t, &error)) {
         throw_exception<operation_exception>(error);
     }
 
-    return cursor{fake_cursor};
+    return fake_cursor;
 }
 
 cursor collection::list_indexes() const {
