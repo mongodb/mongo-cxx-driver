@@ -33,12 +33,13 @@ set(MONGOCXX_EXAMPLES
     index.cpp
     inserted_id.cpp
     instance_management.cpp
-    query.cpp
+    mongodb.com/documentation_examples.cpp
+    mongodb.com/usage_overview.cpp
     query_projection.cpp
+    query.cpp
     remove.cpp
     tailable_cursor.cpp
     update.cpp
-    usage_overview.cpp
     view_or_value_variant.cpp
 )
 
