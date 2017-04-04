@@ -64,6 +64,14 @@ enum class error_code : std::int32_t {
     /// A default-constructed or moved-from mongocxx::gridfs::downloader object has been used.
     k_invalid_gridfs_downloader_object,
 
+    /// A mongocxx::gridfs::uploader object was not open for writing, or a
+    /// mongocxx::gridfs::downloader object was not open for reading.
+    k_gridfs_stream_not_open,
+
+    /// A mongocxx::gridfs::uploader object has exceeded the maximum number of allowable GridFS
+    /// chunks when attempting to upload the requested file.
+    k_gridfs_upload_requires_too_many_chunks,
+
     // Add new constant string message to error_code.cpp as well!
 };
 

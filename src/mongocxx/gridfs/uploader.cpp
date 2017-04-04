@@ -17,7 +17,6 @@
 #include <algorithm>
 #include <chrono>
 #include <cstring>
-#include <exception>
 #include <iomanip>
 #include <ios>
 #include <limits>
@@ -27,6 +26,7 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/private/uploader.hh>
 
@@ -70,7 +70,7 @@ uploader::operator bool() const noexcept {
 
 void uploader::write(std::size_t length, const std::uint8_t* bytes) {
     if (_get_impl().closed) {
-        throw std::exception{};
+        throw logic_error{error_code::k_gridfs_stream_not_open};
     }
 
     while (length > 0) {
@@ -93,7 +93,7 @@ result::gridfs::upload uploader::close() {
     using bsoncxx::builder::basic::kvp;
 
     if (_get_impl().closed) {
-        throw std::exception{};
+        throw logic_error{error_code::k_gridfs_stream_not_open};
     }
 
     _get_impl().closed = true;
@@ -136,7 +136,7 @@ result::gridfs::upload uploader::close() {
 
 void uploader::abort() {
     if (_get_impl().closed) {
-        throw std::exception{};
+        throw logic_error{error_code::k_gridfs_stream_not_open};
     }
 
     _get_impl().closed = true;
@@ -166,7 +166,7 @@ void uploader::finish_chunk() {
     chunk.append(kvp("n", _get_impl().chunks_written));
 
     if (_get_impl().chunks_written == std::numeric_limits<std::int32_t>::max()) {
-        throw std::exception{};
+        throw gridfs_exception{error_code::k_gridfs_upload_requires_too_many_chunks};
     }
 
     ++_get_impl().chunks_written;

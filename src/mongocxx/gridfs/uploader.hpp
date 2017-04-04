@@ -78,23 +78,38 @@ class MONGOCXX_API uploader {
     /// @param bytes
     ///   A pointer to the bytes to write.
     ///
-    /// @throws an exception if the upload stream was already closed or `bytes` is null or if an
-    /// error occurs when writing data to the database.
+    /// @throws mongocxx::logic_error if the upload stream was already closed.
+    ///
+    /// @throws mongocxx::bulk_write_exception
+    ///   if an error occurs when writing chunk data to the database.
+    ///
+    /// @throws mongocxx::gridfs_exception
+    ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
+    ///   size.
     ///
     void write(std::size_t length, const std::uint8_t* bytes);
 
     ///
     /// Closes the uploader stream.
     ///
-    /// @throws if the uploader stream was already closed or if an error occurs when writing data to
-    /// the database.
+    /// @throws mongocxx::logic_error if the upload stream was already closed.
+    ///
+    /// @throws mongocxx::bulk_write_exception
+    ///   if an error occurs when writing chunk data or file metadata to the database.
+    ///
+    /// @throws mongocxx::gridfs_exception
+    ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
+    ///   size.
     ///
     result::gridfs::upload close();
 
     ///
     /// Aborts uploading the file.
     ///
-    /// @throws if the uploader is unable to be aborted.
+    /// @throws mongocxx::logic_error if the upload stream was already closed.
+    ///
+    /// @throws mongocxx::bulk_write_exception
+    ///   if an error occurs when removing chunk data from the database.
     ///
     void abort();
 

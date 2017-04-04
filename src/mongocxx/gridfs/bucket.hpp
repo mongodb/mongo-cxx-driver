@@ -112,7 +112,14 @@ class MONGOCXX_API bucket {
     /// @return
     ///   A stream for writing to the GridFS file.
     ///
-    /// @throws if opening the stream fails.
+    /// @note
+    ///   If this GridFS bucket does not already exist in the database, it will be implicitly
+    ///   created and initialized with GridFS indexes.
+    ///
+    /// @throws mongocxx::query_exception
+    ///   if an error occurs when reading from the files collection for this bucket.
+    ///
+    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
     ///
     uploader open_upload_stream(stdx::string_view filename,
                                 const options::gridfs::upload& options = {});
@@ -133,7 +140,14 @@ class MONGOCXX_API bucket {
     /// @return
     ///   The gridfs::uploader to which the GridFS file should be written.
     ///
-    /// @throws if opening the stream fails.
+    /// @note
+    ///   If this GridFS bucket does not already exist in the database, it will be implicitly
+    ///   created and initialized with GridFS indexes.
+    ///
+    /// @throws mongocxx::query_exception
+    ///   if an error occurs when reading from the files collection for this bucket.
+    ///
+    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
     ///
     uploader open_upload_stream_with_id(bsoncxx::types::value id,
                                         stdx::string_view filename,
@@ -156,7 +170,25 @@ class MONGOCXX_API bucket {
     /// @return
     ///   The id of the uploaded file.
     ///
-    /// @throws if reading from `source` throws an exception or if writing to the database fails.
+    /// @note
+    ///   If this GridFS bucket does not already exist in the database, it will be implicitly
+    ///   created and initialized with GridFS indexes.
+    ///
+    /// @throws mongocxx::bulk_write_exception
+    ///   if an error occurs when writing chunk data or file metadata to the database.
+    ///
+    /// @throws std::ios_base::failure
+    ///   if reading from `source` fails.  In addition, if `source::exceptions()` is set for
+    ///   `badbit`, any exception thrown during execution of `source::read()` will be re-thrown.
+    ///
+    /// @throws mongocxx::gridfs_exception
+    ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
+    ///   size.
+    ///
+    /// @throws mongocxx::query_exception
+    ///   if an error occurs when reading from the files collection for this bucket.
+    ///
+    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
     ///
     result::gridfs::upload upload_from_stream(stdx::string_view filename,
                                               std::istream* source,
@@ -179,7 +211,26 @@ class MONGOCXX_API bucket {
     /// @param options
     ///   Optional arguments; see options::gridfs::upload.
     ///
-    /// @throws if reading from `source` throws an exception of if writing to the database fails.
+    /// @note
+    ///   If this GridFS bucket does not already exist in the database, it will be implicitly
+    ///   created and initialized with GridFS indexes.
+    ///
+    /// @throws mongocxx::bulk_write_exception
+    ///   if an error occurs when writing chunk data or file metadata to the database.
+    ///
+    /// @throws std::ios_base::failure
+    ///   if reading from `source` fails.  In addition, if `source::exceptions()` is set for for
+    ///   `badbit`, any exception thrown during execution of `std::istream::read()` will be
+    ///   re-thrown.
+    ///
+    /// @throws mongocxx::gridfs_exception
+    ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
+    ///   size.
+    ///
+    /// @throws mongocxx::query_exception
+    ///   if an error occurs when reading from the files collection for this bucket.
+    ///
+    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
     ///
     void upload_from_stream_with_id(bsoncxx::types::value id,
                                     stdx::string_view filename,

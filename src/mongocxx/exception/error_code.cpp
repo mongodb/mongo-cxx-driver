@@ -64,6 +64,14 @@ class error_category final : public std::error_category {
             case error_code::k_invalid_gridfs_downloader_object:
                 return "invalid use of default constructed or moved-from "
                        "mongocxx::gridfs::downloader object";
+            case error_code::k_gridfs_stream_not_open:
+                return "a mongocxx::gridfs::uploader object was not open for writing, or a "
+                       "mongocxx::gridfs::downloader object was not open for "
+                       "reading";
+            case error_code::k_gridfs_upload_requires_too_many_chunks:
+                return "a mongocxx::gridfs::uploader object has exceeded the maximum number "
+                       "of allowable GridFS chunks when attempting to upload the requested "
+                       "file";
             default:
                 return "unknown mongocxx error";
         }
