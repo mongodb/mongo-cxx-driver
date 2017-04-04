@@ -16,7 +16,8 @@
 #include <iostream>
 #include <string>
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 
@@ -47,7 +48,8 @@ class logger final : public mongocxx::logger {
 }  // namespace
 
 int main(int argc, char* argv[]) {
-    using bsoncxx::builder::stream::document;
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
 
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
@@ -76,10 +78,7 @@ int main(int argc, char* argv[]) {
 
         auto admin = client["admin"];
 
-        document ismaster;
-        ismaster << "isMaster" << 1;
-
-        auto result = admin.run_command(ismaster.view());
+        auto result = admin.run_command(make_document(kvp("isMaster", 1)));
 
         std::cout << bsoncxx::to_json(result) << "\n";
 

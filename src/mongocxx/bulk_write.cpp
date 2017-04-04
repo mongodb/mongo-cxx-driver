@@ -14,7 +14,8 @@
 
 #include <mongocxx/bulk_write.hpp>
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
@@ -29,6 +30,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 using namespace libbson;
+using bsoncxx::builder::basic::kvp;
 
 bulk_write::bulk_write(bulk_write&&) noexcept = default;
 bulk_write& bulk_write::operator=(bulk_write&&) noexcept = default;
@@ -59,14 +61,14 @@ void bulk_write::append(const model::write& operation) {
             scoped_bson_t filter(operation.get_update_one().filter());
             scoped_bson_t update(operation.get_update_one().update());
 
-            bsoncxx::builder::stream::document options_builder;
+            bsoncxx::builder::basic::document options_builder;
             if (operation.get_update_one().collation()) {
-                options_builder << "collation" << *operation.get_update_one().collation();
+                options_builder.append(kvp("collation", *operation.get_update_one().collation()));
             }
             if (operation.get_update_one().upsert()) {
-                options_builder << "upsert" << *operation.get_update_one().upsert();
+                options_builder.append(kvp("upsert", *operation.get_update_one().upsert()));
             }
-            scoped_bson_t options(options_builder << bsoncxx::builder::stream::finalize);
+            scoped_bson_t options(options_builder.extract());
 
             bson_error_t error;
             auto result = libmongoc::bulk_operation_update_one_with_opts(
@@ -80,14 +82,14 @@ void bulk_write::append(const model::write& operation) {
             scoped_bson_t filter(operation.get_update_many().filter());
             scoped_bson_t update(operation.get_update_many().update());
 
-            bsoncxx::builder::stream::document options_builder;
+            bsoncxx::builder::basic::document options_builder;
             if (operation.get_update_many().collation()) {
-                options_builder << "collation" << *operation.get_update_many().collation();
+                options_builder.append(kvp("collation", *operation.get_update_many().collation()));
             }
             if (operation.get_update_many().upsert()) {
-                options_builder << "upsert" << *operation.get_update_many().upsert();
+                options_builder.append(kvp("upsert", *operation.get_update_many().upsert()));
             }
-            scoped_bson_t options(options_builder << bsoncxx::builder::stream::finalize);
+            scoped_bson_t options(options_builder.extract());
 
             bson_error_t error;
             auto result = libmongoc::bulk_operation_update_many_with_opts(
@@ -100,11 +102,11 @@ void bulk_write::append(const model::write& operation) {
         case write_type::k_delete_one: {
             scoped_bson_t filter(operation.get_delete_one().filter());
 
-            bsoncxx::builder::stream::document options_builder;
+            bsoncxx::builder::basic::document options_builder;
             if (operation.get_delete_one().collation()) {
-                options_builder << "collation" << *operation.get_delete_one().collation();
+                options_builder.append(kvp("collation", *operation.get_delete_one().collation()));
             }
-            scoped_bson_t options(options_builder << bsoncxx::builder::stream::finalize);
+            scoped_bson_t options(options_builder.extract());
 
             bson_error_t error;
             auto result = libmongoc::bulk_operation_remove_one_with_opts(
@@ -117,11 +119,11 @@ void bulk_write::append(const model::write& operation) {
         case write_type::k_delete_many: {
             scoped_bson_t filter(operation.get_delete_many().filter());
 
-            bsoncxx::builder::stream::document options_builder;
+            bsoncxx::builder::basic::document options_builder;
             if (operation.get_delete_many().collation()) {
-                options_builder << "collation" << *operation.get_delete_many().collation();
+                options_builder.append(kvp("collation", *operation.get_delete_many().collation()));
             }
-            scoped_bson_t options(options_builder << bsoncxx::builder::stream::finalize);
+            scoped_bson_t options(options_builder.extract());
 
             bson_error_t error;
             auto result = libmongoc::bulk_operation_remove_many_with_opts(
@@ -135,14 +137,14 @@ void bulk_write::append(const model::write& operation) {
             scoped_bson_t filter(operation.get_replace_one().filter());
             scoped_bson_t replace(operation.get_replace_one().replacement());
 
-            bsoncxx::builder::stream::document options_builder;
+            bsoncxx::builder::basic::document options_builder;
             if (operation.get_replace_one().collation()) {
-                options_builder << "collation" << *operation.get_replace_one().collation();
+                options_builder.append(kvp("collation", *operation.get_replace_one().collation()));
             }
             if (operation.get_replace_one().upsert()) {
-                options_builder << "upsert" << *operation.get_replace_one().upsert();
+                options_builder.append(kvp("upsert", *operation.get_replace_one().upsert()));
             }
-            scoped_bson_t options(options_builder << bsoncxx::builder::stream::finalize);
+            scoped_bson_t options(options_builder.extract());
 
             bson_error_t error;
             auto result = libmongoc::bulk_operation_replace_one_with_opts(

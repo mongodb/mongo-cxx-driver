@@ -14,9 +14,6 @@
 
 #pragma once
 
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
-#include <bsoncxx/builder/stream/key_context.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>

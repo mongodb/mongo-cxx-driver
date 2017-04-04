@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/client.hpp>
@@ -20,11 +22,9 @@
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::open_document;
-using bsoncxx::builder::stream::close_document;
-using bsoncxx::builder::stream::close_array;
-using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::basic::array;
 
 int main(int, char**) {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
@@ -41,7 +41,7 @@ int main(int, char**) {
     // Document::views can be passed in directly:
     {
         // @begin: pass-view-to-view-or-value
-        bsoncxx::document::value command = document{} << "ping" << 1 << finalize;
+        bsoncxx::document::value command = make_document(kvp("ping", 1));
         bsoncxx::document::view command_view = command.view();
         auto res = db.run_command(command_view);
         // @end: pass-view-to-view-or-value
@@ -52,7 +52,7 @@ int main(int, char**) {
     // 1. Pass a view of the document::value
     {
         // @begin: pass-viewed-value-to-view-or-value
-        bsoncxx::document::value command = document{} << "ping" << 1 << finalize;
+        bsoncxx::document::value command = make_document(kvp("ping", 1));
         auto res = db.run_command(command.view());
         // @end: pass-viewed-value-to-view-or-value
     }
@@ -60,7 +60,7 @@ int main(int, char**) {
     // 2. Pass ownership of the document::value into the method
     {
         // @begin: pass-owned-value-to-view-or-value
-        bsoncxx::document::value command = document{} << "ping" << 1 << finalize;
+        bsoncxx::document::value command = make_document(kvp("ping", 1));
         auto res = db.run_command(std::move(command));
         // @end: pass-owned-value-to-view-or-value
     }
@@ -68,12 +68,12 @@ int main(int, char**) {
     // Temporary document::values are captured and owned by the view_or_value type
     {
         // @begin: pass-temporary-values-to-view-or-value
-        auto res = db.run_command(document{} << "ping" << 1 << finalize);
+        auto res = db.run_command(make_document(kvp("ping", 1)));
 
         // NOTE: there is no need to call .view() on a temporary document::value in
         // a call like this, and doing so could result in a use-after-free error.
         // BAD:
-        // auto res = db.run_command((document{} << "ping" << 1 << finalize).view());
+        // auto res = db.run_command(make_document(kvp("ping", 1)).view());
 
         // @end: pass-temporary-values-to-view-or-value
     }

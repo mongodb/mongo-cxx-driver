@@ -16,7 +16,9 @@
 
 #include <utility>
 
-#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
@@ -33,9 +35,9 @@
 
 #include <mongocxx/config/private/prelude.hh>
 
-using bsoncxx::builder::stream::concatenate;
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::concatenate;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -106,41 +108,41 @@ bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value 
 
 bsoncxx::document::value database::modify_collection(stdx::string_view name,
                                                      const options::modify_collection& options) {
-    auto doc = document{} << "collMod" << name << concatenate(options.to_document()) << finalize;
+    auto doc = make_document(kvp("collMod", name), concatenate(options.to_document()));
 
     return run_command(doc.view());
 }
 
 class collection database::create_collection(bsoncxx::string::view_or_value name,
                                              const options::create_collection& options) {
-    document options_builder{};
+    bsoncxx::builder::basic::document options_builder;
 
     if (options.auto_index_id()) {
-        options_builder << "autoIndexId" << *options.auto_index_id();
+        options_builder.append(kvp("autoIndexId", *options.auto_index_id()));
     }
 
     if (options.capped()) {
-        options_builder << "capped" << *options.capped();
+        options_builder.append(kvp("capped", *options.capped()));
     }
 
     if (options.collation()) {
-        options_builder << "collation" << *options.collation();
+        options_builder.append(kvp("collation", *options.collation()));
     }
 
     if (options.max()) {
-        options_builder << "max" << *options.max();
+        options_builder.append(kvp("max", *options.max()));
     }
 
     if (options.no_padding()) {
-        options_builder << "flags" << (*options.no_padding() ? 0x10 : 0x00);
+        options_builder.append(kvp("flags", (*options.no_padding() ? 0x10 : 0x00)));
     }
 
     if (options.size()) {
-        options_builder << "size" << *options.size();
+        options_builder.append(kvp("size", *options.size()));
     }
 
     if (options.storage_engine()) {
-        options_builder << "storageEngine" << *options.storage_engine();
+        options_builder.append(kvp("storageEngine", *options.storage_engine()));
     }
 
     if (options.validation_criteria()) {
@@ -169,17 +171,17 @@ class collection database::create_collection(bsoncxx::string::view_or_value name
         auto validation_criteria = *options.validation_criteria();
 
         if (validation_criteria.rule()) {
-            options_builder << "validator" << *validation_criteria.rule();
+            options_builder.append(kvp("validator", *validation_criteria.rule()));
         }
 
         if (validation_criteria.level()) {
-            options_builder << "validationLevel"
-                            << validation_level_to_string(*validation_criteria.level());
+            options_builder.append(
+                kvp("validationLevel", validation_level_to_string(*validation_criteria.level())));
         }
 
         if (validation_criteria.action()) {
-            options_builder << "validationAction"
-                            << validation_action_to_string(*validation_criteria.action());
+            options_builder.append(kvp("validationAction",
+                                       validation_action_to_string(*validation_criteria.action())));
         }
     }
 
@@ -197,15 +199,15 @@ class collection database::create_collection(bsoncxx::string::view_or_value name
 class collection database::create_view(bsoncxx::string::view_or_value name,
                                        bsoncxx::string::view_or_value view_on,
                                        const options::create_view& options) {
-    document options_builder{};
-    options_builder << "viewOn" << view_on;
+    bsoncxx::builder::basic::document options_builder;
+    options_builder.append(kvp("viewOn", view_on));
 
     if (options.collation()) {
-        options_builder << "collation" << *options.collation();
+        options_builder.append(kvp("collation", *options.collation()));
     }
 
     if (options.pipeline()) {
-        options_builder << "pipeline" << options.pipeline()->view_array();
+        options_builder.append(kvp("pipeline", options.pipeline()->view_array()));
     }
 
     libbson::scoped_bson_t opts_bson{options_builder.view()};

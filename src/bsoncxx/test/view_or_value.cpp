@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
@@ -24,11 +24,12 @@
 using namespace bsoncxx;
 
 using bsoncxx::to_json;
-using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::basic::kvp;
 
 TEST_CASE("document::view_or_value", "[bsoncxx::document::view_or_value]") {
-    auto empty = builder::stream::document{} << finalize;
-    auto doc = builder::stream::document{} << "a" << 1 << finalize;
+    auto empty = make_document();
+    auto doc = make_document(kvp("a", 1));
     auto json = to_json(doc.view());
 
     SECTION("can be default-constructed") {
@@ -127,8 +128,8 @@ TEST_CASE("document::view_or_value", "[bsoncxx::document::view_or_value]") {
         }
 
         SECTION("Compares inequal with different views") {
-            auto temp_a = builder::stream::document{} << "a" << 1 << finalize;
-            auto temp_b = builder::stream::document{} << "b" << 1 << finalize;
+            auto temp_a = make_document(kvp("a", 1));
+            auto temp_b = make_document(kvp("b", 1));
             document::view_or_value a{std::move(temp_a)};
             document::view_or_value b{std::move(temp_b)};
 
@@ -137,7 +138,7 @@ TEST_CASE("document::view_or_value", "[bsoncxx::document::view_or_value]") {
     }
 
     SECTION("Can be compared to a plain View") {
-        auto bad_doc = builder::stream::document{} << "blah" << 1 << finalize;
+        auto bad_doc = make_document(kvp("blah", 1));
         document::view_or_value variant(doc.view());
         REQUIRE(variant == doc.view());
         REQUIRE(doc.view() == variant);
@@ -146,7 +147,7 @@ TEST_CASE("document::view_or_value", "[bsoncxx::document::view_or_value]") {
     }
 
     SECTION("Can be compared to a plain Value") {
-        auto bad_doc = builder::stream::document{} << "blah" << 1 << finalize;
+        auto bad_doc = make_document(kvp("blah", 1));
         document::view_or_value variant(doc.view());
         REQUIRE(variant == doc);
         REQUIRE(doc == variant);

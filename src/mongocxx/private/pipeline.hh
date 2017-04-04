@@ -14,8 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/builder/stream/array.hpp>
-#include <bsoncxx/builder/stream/single_context.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <mongocxx/pipeline.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -25,7 +24,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class pipeline::impl {
    public:
-    bsoncxx::builder::stream::single_context sink() {
+    bsoncxx::builder::basic::array& sink() {
         return _builder;
     }
 
@@ -41,7 +40,7 @@ class pipeline::impl {
     }
 
    private:
-    bsoncxx::builder::stream::array _builder;
+    bsoncxx::builder::basic::array _builder;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

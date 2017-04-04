@@ -12,10 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/basic/sub_array.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/test_util/catch.hh>
+
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_array;
+using bsoncxx::builder::basic::make_document;
 
 namespace {
 constexpr auto k_invalid_json = R"({])";
@@ -35,8 +42,7 @@ TEST_CASE("valid json does not throw") {
 TEST_CASE("valid json is converted to equivalent BSON") {
     using namespace bsoncxx;
 
-    const auto expected = builder::stream::document{} << "a" << 1 << "b" << 2.0
-                                                      << builder::stream::finalize;
+    const auto expected = make_document(kvp("a", 1), kvp("b", 2.0));
     const auto expected_view = expected.view();
 
     const auto actual_doc = from_json(k_valid_json);
@@ -48,23 +54,20 @@ TEST_CASE("valid json is converted to equivalent BSON") {
 
 TEST_CASE("empty document is converted correctly to json string") {
     using namespace bsoncxx;
-    REQUIRE(0 == to_json(builder::stream::document{}.view()).compare("{ }"));
+    REQUIRE(0 == to_json(make_document().view()).compare("{ }"));
 }
 
 TEST_CASE("empty array is converted correctly to json string") {
     using bsoncxx::to_json;
-    using namespace bsoncxx::builder::stream;
-    auto doc = document{};
-    doc << "array" << open_array << close_array;
+
+    auto doc = make_document(kvp("array", make_array()));
     REQUIRE(0 == to_json(doc.view()).compare(R"({ "array" : [  ] })"));
 }
 
 TEST_CASE("CXX-941 is resolved") {
-    using namespace bsoncxx::builder::stream;
-    document docu{};
     std::string obj_value = R"({"id1":"val1", "id2":"val2"})";
-    docu << "obj_name" << obj_value;
-    std::string output = bsoncxx::to_json(docu.view());
+    auto doc = make_document(kvp("obj_name", obj_value));
+    std::string output = bsoncxx::to_json(doc.view());
     REQUIRE(output ==
             "{ \"obj_name\" : \"{\\\"id1\\\":\\\"val1\\\", \\\"id2\\\":\\\"val2\\\"}\" }");
 }

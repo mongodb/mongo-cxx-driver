@@ -15,16 +15,15 @@
 #include <cstdlib>
 #include <iostream>
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/json.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
 
-using bsoncxx::builder::stream::close_document;
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::finalize;
-using bsoncxx::builder::stream::open_document;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 int main(int, char**) {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
@@ -36,8 +35,8 @@ int main(int, char**) {
     coll.drop();
 
     // @begin: cpp-bulk-write
-    auto doc1 = document{} << "a" << 1 << finalize;
-    auto doc2 = document{} << "$set" << open_document << "a" << 2 << close_document << finalize;
+    auto doc1 = make_document(kvp("a", 1));
+    auto doc2 = make_document(kvp("$set", make_document(kvp("a", 2))));
 
     // Create a model for an insert_one operation.
     mongocxx::model::insert_one insert_op{doc1.view()};

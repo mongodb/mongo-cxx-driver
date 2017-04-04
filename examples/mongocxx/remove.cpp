@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
 
-using bsoncxx::builder::stream::open_document;
-using bsoncxx::builder::stream::close_document;
-using bsoncxx::builder::stream::close_array;
-using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 int main(int, char**) {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
@@ -35,22 +34,14 @@ int main(int, char**) {
     // Remove all documents that match a condition.
     {
         // @begin: cpp-remove-matching-documents
-        bsoncxx::builder::stream::document filter_builder;
-        filter_builder << "borough"
-                       << "Manhattan";
-
-        db["restaurants"].delete_many(filter_builder.view());
+        db["restaurants"].delete_many(make_document(kvp("borough", "Manhattan")));
         // @end: cpp-remove-matching-documents
     }
 
     // Remove one document that matches a condition.
     {
         // @begin: cpp-remove-justone
-        bsoncxx::builder::stream::document filter_builder;
-        filter_builder << "borough"
-                       << "Queens";
-
-        db["restaurants"].delete_one(filter_builder.view());
+        db["restaurants"].delete_one(make_document(kvp("borough", "Queens")));
         // @end: cpp-remove-justone
     }
 

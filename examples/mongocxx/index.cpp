@@ -12,18 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/stream/document.hpp>
-
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 
-using bsoncxx::builder::stream::open_document;
-using bsoncxx::builder::stream::close_document;
-using bsoncxx::builder::stream::close_array;
-using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 int main(int, char**) {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
@@ -42,9 +40,7 @@ int main(int, char**) {
     // Create a single field index.
     {
         // @begin: cpp-single-field-index
-        bsoncxx::builder::stream::document index_builder;
-        index_builder << "cuisine" << 1;
-        db["restaurants"].create_index(index_builder.view(), {});
+        db["restaurants"].create_index(make_document(kvp("cusine", 1)), {});
         // @end: cpp-single-field-index
     }
 
@@ -52,9 +48,8 @@ int main(int, char**) {
     {
         db["restaurants"].drop();
         // @begin: cpp-create-compound-index
-        bsoncxx::builder::stream::document index_builder;
-        index_builder << "cuisine" << 1 << "address.zipcode" << -1;
-        db["restaurants"].create_index(index_builder.view(), {});
+        db["restaurants"].create_index(make_document(kvp("cuisine", 1), kvp("address.zipcode", -1)),
+                                       {});
         // @end: cpp-create-compound-index
     }
 
@@ -62,11 +57,9 @@ int main(int, char**) {
     {
         db["restaurants"].drop();
         // @begin: cpp-create-unique-index
-        bsoncxx::builder::stream::document index_builder;
         mongocxx::options::index index_options{};
-        index_builder << "website" << 1;
         index_options.unique(true);
-        db["restaurants"].create_index(index_builder.view(), index_options);
+        db["restaurants"].create_index(make_document(kvp("website", 1)), index_options);
         // @end: cpp-create-unique-index
     }
 
@@ -74,14 +67,12 @@ int main(int, char**) {
     {
         db["restaurants"].drop();
         // @begin: cpp-create-wt-options-index
-        bsoncxx::builder::stream::document index_builder;
         mongocxx::options::index index_options{};
         std::unique_ptr<mongocxx::options::index::wiredtiger_storage_options> wt_options =
             mongocxx::stdx::make_unique<mongocxx::options::index::wiredtiger_storage_options>();
-        index_builder << "cuisine" << 1;
         wt_options->config_string("block_allocation=first");
         index_options.storage_options(std::move(wt_options));
-        db["restaurants"].create_index(index_builder.view(), index_options);
+        db["restaurants"].create_index(make_document(kvp("cuisine", 1)), index_options);
         // @begin: cpp-create-wt-options-index
     }
 }

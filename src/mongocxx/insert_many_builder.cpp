@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/concatenate.hpp>
 #include <mongocxx/insert_many_builder.hpp>
 
-#include <bsoncxx/builder/stream/document.hpp>
 #include <mongocxx/collection.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -42,16 +44,17 @@ insert_many_builder::insert_many_builder(const options::insert& options)
     : _writes{make_bulk_write_options(options)}, _inserted_ids{} {}
 
 void insert_many_builder::operator()(const bsoncxx::document::view& doc) {
-    bsoncxx::builder::stream::document id_doc;
-    if (!doc["_id"]) {
-        id_doc << "_id" << bsoncxx::oid{};
+    using bsoncxx::builder::basic::concatenate;
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
 
-        bsoncxx::builder::stream::document new_document;
-        new_document << bsoncxx::builder::stream::concatenate(id_doc.view())
-                     << bsoncxx::builder::stream::concatenate(doc);
-        _writes.append(model::insert_one{new_document.view()});
+    bsoncxx::builder::basic::document id_doc;
+    if (!doc["_id"]) {
+        id_doc.append(kvp("_id", bsoncxx::oid{}));
+        _writes.append(
+            model::insert_one{make_document(concatenate(id_doc.view()), concatenate(doc))});
     } else {
-        id_doc << "_id" << doc["_id"].get_value();
+        id_doc.append(kvp("_id", doc["_id"].get_value()));
 
         _writes.append(model::insert_one{doc});
     }

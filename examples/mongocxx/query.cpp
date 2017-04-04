@@ -14,7 +14,9 @@
 
 #include <iostream>
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/json.hpp>
 
 #include <mongocxx/client.hpp>
@@ -22,12 +24,9 @@
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/uri.hpp>
 
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::open_document;
-using bsoncxx::builder::stream::close_document;
-using bsoncxx::builder::stream::open_array;
-using bsoncxx::builder::stream::close_array;
-using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_array;
+using bsoncxx::builder::basic::make_document;
 
 int main(int, char**) {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
@@ -51,9 +50,7 @@ int main(int, char**) {
     // Query for equality on a top level field.
     {
         // @begin: cpp-query-top-level-field
-        auto cursor = db["restaurants"].find(document{} << "borough"
-                                                        << "Manhattan"
-                                                        << finalize);
+        auto cursor = db["restaurants"].find(make_document(kvp("borough", "Manhattan")));
 
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
@@ -64,11 +61,7 @@ int main(int, char**) {
     // Query by a field in an embedded document.
     {
         // @begin: cpp-query-embedded-document
-        bsoncxx::builder::stream::document filter_builder;
-        filter_builder << "address.zipcode"
-                       << "10075";
-
-        auto cursor = db["restaurants"].find(filter_builder.view());
+        auto cursor = db["restaurants"].find(make_document(kvp("address.zipcode", "10075")));
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
@@ -78,11 +71,7 @@ int main(int, char**) {
     // Query by a field in an array.
     {
         // @begin: cpp-query-field-in-array
-        bsoncxx::builder::stream::document filter_builder;
-        filter_builder << "grades.grade"
-                       << "B";
-
-        auto cursor = db["restaurants"].find(filter_builder.view());
+        auto cursor = db["restaurants"].find(make_document(kvp("grades.grade", "B")));
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
@@ -92,10 +81,8 @@ int main(int, char**) {
     // Query with the greater-than operator ($gt).
     {
         // @begin: cpp-query-greater-than
-        bsoncxx::builder::stream::document filter_builder;
-        filter_builder << "grades.score" << open_document << "$gt" << 30 << close_document;
-
-        auto cursor = db["restaurants"].find(filter_builder.view());
+        auto cursor = db["restaurants"].find(
+            make_document(kvp("grade.score", make_document(kvp("$gt", 30)))));
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
@@ -105,10 +92,8 @@ int main(int, char**) {
     // Query with the less-than operator ($lt).
     {
         // @begin: cpp-query-less-than
-        bsoncxx::builder::stream::document filter_builder;
-        filter_builder << "grades.score" << open_document << "$lt" << 10 << close_document;
-
-        auto cursor = db["restaurants"].find(filter_builder.view());
+        auto cursor = db["restaurants"].find(
+            make_document(kvp("grades.score", make_document(kvp("$lt", 10)))));
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
@@ -118,13 +103,8 @@ int main(int, char**) {
     // Query with a logical conjunction (AND) of query conditions.
     {
         // @begin: cpp-query-logical-and
-        bsoncxx::builder::stream::document filter_builder;
-        filter_builder << "cuisine"
-                       << "Italian"
-                       << "address.zipcode"
-                       << "10075";
-
-        auto cursor = db["restaurants"].find(filter_builder.view());
+        auto cursor = db["restaurants"].find(
+            make_document(kvp("cuisine", "Italian"), kvp("address.zipcode", "10075")));
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
@@ -134,12 +114,10 @@ int main(int, char**) {
     // Query with a logical disjunction (OR) of query conditions.
     {
         // @begin: cpp-query-logical-or
-        bsoncxx::builder::stream::document filter_builder;
-        filter_builder << "$or" << open_array << open_document << "cuisine"
-                       << "Italian" << close_document << open_document << "address.zipcode"
-                       << "10075" << close_document << close_array;
-
-        auto cursor = db["restaurants"].find(filter_builder.view());
+        auto cursor = db["restaurants"].find(
+            make_document(kvp("$or",
+                              make_array(make_document(kvp("cuisine", "Italian")),
+                                         make_document(kvp("address.zipcode", "10075"))))));
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
@@ -150,9 +128,7 @@ int main(int, char**) {
     {
         // @begin: cpp-query-sort
         mongocxx::options::find opts;
-        bsoncxx::builder::stream::document order_builder;
-        order_builder << "borough" << 1 << "address.zipcode" << -1;
-        opts.sort(order_builder.view());
+        opts.sort(make_document(kvp("borough", 1), kvp("address.zipcode", -1)));
 
         auto cursor = db["restaurants"].find({}, opts);
         for (auto&& doc : cursor) {

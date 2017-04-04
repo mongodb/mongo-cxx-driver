@@ -14,19 +14,20 @@
 
 #include <mongocxx/options/modify_collection.hpp>
 
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::concatenate;
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
-
-using bsoncxx::builder::stream::concatenate;
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::finalize;
 
 modify_collection& modify_collection::no_padding(bool no_padding) {
     _no_padding = no_padding;
@@ -35,10 +36,9 @@ modify_collection& modify_collection::no_padding(bool no_padding) {
 
 modify_collection& modify_collection::index(bsoncxx::document::view_or_value index_spec,
                                             std::chrono::seconds seconds) {
-    _index.emplace(document{} << "keyPattern" << bsoncxx::types::b_document{std::move(index_spec)}
-                              << "expireAfterSeconds"
-                              << bsoncxx::types::b_int64{seconds.count()}
-                              << finalize);
+    _index.emplace(
+        make_document(kvp("keyPattern", bsoncxx::types::b_document{std::move(index_spec)}),
+                      kvp("expireAfterSeconds", bsoncxx::types::b_int64{seconds.count()})));
     return *this;
 }
 
@@ -48,18 +48,18 @@ modify_collection& modify_collection::validation_criteria(class validation_crite
 }
 
 bsoncxx::document::value modify_collection::to_document() const {
-    auto doc = document{};
+    bsoncxx::builder::basic::document doc;
 
     if (_index) {
-        doc << "index" << bsoncxx::types::b_document{_index->view()};
+        doc.append(kvp("index", bsoncxx::types::b_document{_index->view()}));
     }
 
     if (_no_padding) {
-        doc << "noPadding" << *_no_padding;
+        doc.append(kvp("noPadding", *_no_padding));
     }
 
     if (_validation) {
-        doc << concatenate(_validation->to_document());
+        doc.append(concatenate(_validation->to_document()));
     }
 
     return doc.extract();

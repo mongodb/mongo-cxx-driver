@@ -14,6 +14,7 @@
 
 #include "helpers.hpp"
 
+#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>

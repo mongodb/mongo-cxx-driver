@@ -22,8 +22,11 @@
 
 #include <bson.h>
 
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/basic/sub_array.hpp>
+#include <bsoncxx/builder/basic/sub_document.hpp>
+#include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/private/helpers.hh>
@@ -62,8 +65,12 @@
 
 #include <mongocxx/config/private/prelude.hh>
 
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::basic::sub_array;
+using bsoncxx::builder::basic::sub_document;
+using bsoncxx::builder::concatenate;
 using bsoncxx::document::view_or_value;
-using bsoncxx::builder::stream::concatenate;
 
 namespace {
 
@@ -97,9 +104,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
         return mongocxx::stdx::optional<bsoncxx::document::value>{};
     }
 
-    bsoncxx::builder::stream::document b{};
-    b << concatenate(result["value"].get_document().view());
-    return b.extract();
+    return bsoncxx::document::value{result["value"].get_document().view()};
 }
 
 // TODO move these to a private header
@@ -208,30 +213,30 @@ stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write
 namespace {
 
 bsoncxx::document::value build_find_options_document(const options::find& options) {
-    bsoncxx::builder::stream::document options_builder;
+    bsoncxx::builder::basic::document options_builder;
 
     if (options.allow_partial_results()) {
-        options_builder << "allowPartialResults" << *options.allow_partial_results();
+        options_builder.append(kvp("allowPartialResults", *options.allow_partial_results()));
     }
 
     if (options.batch_size()) {
-        options_builder << "batchSize" << *options.batch_size();
+        options_builder.append(kvp("batchSize", *options.batch_size()));
     }
 
     if (options.collation()) {
-        options_builder << "collation" << *options.collation();
+        options_builder.append(kvp("collation", *options.collation()));
     }
 
     if (options.comment()) {
-        options_builder << "comment" << *options.comment();
+        options_builder.append(kvp("comment", *options.comment()));
     }
 
     if (options.cursor_type()) {
         if (*options.cursor_type() == cursor::type::k_tailable) {
-            options_builder << "tailable" << bsoncxx::types::b_bool{true};
+            options_builder.append(kvp("tailable", bsoncxx::types::b_bool{true}));
         } else if (*options.cursor_type() == cursor::type::k_tailable_await) {
-            options_builder << "tailable" << bsoncxx::types::b_bool{true};
-            options_builder << "awaitData" << bsoncxx::types::b_bool{true};
+            options_builder.append(kvp("tailable", bsoncxx::types::b_bool{true}));
+            options_builder.append(kvp("awaitData", bsoncxx::types::b_bool{true}));
         } else if (*options.cursor_type() == cursor::type::k_non_tailable) {
         } else {
             throw logic_error{error_code::k_invalid_parameter};
@@ -239,55 +244,57 @@ bsoncxx::document::value build_find_options_document(const options::find& option
     }
 
     if (options.hint()) {
-        options_builder << "hint" << options.hint()->to_value();
+        options_builder.append(kvp("hint", options.hint()->to_value()));
     }
 
     if (options.limit()) {
-        options_builder << "limit" << *options.limit();
+        options_builder.append(kvp("limit", *options.limit()));
     }
 
     if (options.max()) {
-        options_builder << "max" << *options.max();
+        options_builder.append(kvp("max", *options.max()));
     }
 
     if (options.max_scan()) {
-        options_builder << "maxScan" << *options.max_scan();
+        options_builder.append(kvp("maxScan", *options.max_scan()));
     }
 
     if (options.max_time()) {
-        options_builder << "maxTimeMS" << bsoncxx::types::b_int64{options.max_time()->count()};
+        options_builder.append(
+            kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
     }
 
     if (options.min()) {
-        options_builder << "min" << *options.min();
+        options_builder.append(kvp("min", *options.min()));
     }
 
     if (options.no_cursor_timeout()) {
-        options_builder << "noCursorTimeout" << *options.no_cursor_timeout();
+        options_builder.append(kvp("noCursorTimeout", *options.no_cursor_timeout()));
     }
 
     if (options.projection()) {
-        options_builder << "projection" << bsoncxx::types::b_document{*options.projection()};
+        options_builder.append(
+            kvp("projection", bsoncxx::types::b_document{*options.projection()}));
     }
 
     if (options.return_key()) {
-        options_builder << "returnKey" << *options.return_key();
+        options_builder.append(kvp("returnKey", *options.return_key()));
     }
 
     if (options.show_record_id()) {
-        options_builder << "showRecordId" << *options.show_record_id();
+        options_builder.append(kvp("showRecordId", *options.show_record_id()));
     }
 
     if (options.skip()) {
-        options_builder << "skip" << *options.skip();
+        options_builder.append(kvp("skip", *options.skip()));
     }
 
     if (options.snapshot()) {
-        options_builder << "snapshot" << *options.snapshot();
+        options_builder.append(kvp("snapshot", *options.snapshot()));
     }
 
     if (options.sort()) {
-        options_builder << "sort" << bsoncxx::types::b_document{*options.sort()};
+        options_builder.append(kvp("sort", bsoncxx::types::b_document{*options.sort()}));
     }
 
     return options_builder.extract();
@@ -339,36 +346,32 @@ stdx::optional<bsoncxx::document::value> collection::find_one(view_or_value filt
 }
 
 cursor collection::aggregate(const pipeline& pipeline, const options::aggregate& options) {
-    using namespace bsoncxx::builder::stream;
-
     scoped_bson_t stages(bsoncxx::document::view(pipeline._impl->view_array()));
 
-    bsoncxx::builder::stream::document b;
+    bsoncxx::builder::basic::document b;
 
     if (options.allow_disk_use()) {
-        b << "allowDiskUse" << *options.allow_disk_use();
+        b.append(kvp("allowDiskUse", *options.allow_disk_use()));
     }
 
     if (options.collation()) {
-        b << "collation" << *options.collation();
+        b.append(kvp("collation", *options.collation()));
     }
 
     if (options.use_cursor()) {
-        auto inner = b << "cursor" << open_document;
-
-        if (options.batch_size()) {
-            inner << "batchSize" << *options.batch_size();
-        }
-
-        inner << close_document;
+        b.append(kvp("cursor", [&options](sub_document sub_doc) {
+            if (options.batch_size()) {
+                sub_doc.append(kvp("batchSize", *options.batch_size()));
+            }
+        }));
     }
 
     if (options.max_time()) {
-        b << "maxTimeMS" << bsoncxx::types::b_int64{options.max_time()->count()};
+        b.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
     }
 
     if (options.bypass_document_validation()) {
-        b << "bypassDocumentValidation" << *options.bypass_document_validation();
+        b.append(kvp("bypassDocumentValidation", *options.bypass_document_validation()));
     }
 
     scoped_bson_t options_bson(b.view());
@@ -408,10 +411,10 @@ stdx::optional<result::insert_one> collection::insert_one(view_or_value document
     class bulk_write bulk_op(bulk_opts);
     bsoncxx::document::element oid{};
 
-    bsoncxx::builder::stream::document new_document;
+    bsoncxx::builder::basic::document new_document;
     if (!document.view()["_id"]) {
-        new_document << "_id" << bsoncxx::oid();
-        new_document << concatenate(document);
+        new_document.append(kvp("_id", bsoncxx::oid()));
+        new_document.append(concatenate(document));
         bulk_op.append(model::insert_one(new_document.view()));
         oid = new_document.view()["_id"];
     } else {
@@ -591,9 +594,7 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
     }
 
     if (options.collation()) {
-        scoped_bson_t bson_collation{
-            bsoncxx::builder::stream::document{} << "collation" << *options.collation()
-                                                 << bsoncxx::builder::stream::finalize};
+        scoped_bson_t bson_collation{make_document(kvp("collation", *options.collation()))};
         libmongoc::find_and_modify_opts_append(opts, bson_collation.bson());
     }
 
@@ -638,9 +639,7 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
     }
 
     if (options.collation()) {
-        scoped_bson_t bson_collation{
-            bsoncxx::builder::stream::document{} << "collation" << *options.collation()
-                                                 << bsoncxx::builder::stream::finalize};
+        scoped_bson_t bson_collation{make_document(kvp("collation", *options.collation()))};
         libmongoc::find_and_modify_opts_append(opts, bson_collation.bson());
     }
 
@@ -678,9 +677,7 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
     auto flags = ::MONGOC_FIND_AND_MODIFY_REMOVE;
 
     if (options.collation()) {
-        scoped_bson_t bson_collation{
-            bsoncxx::builder::stream::document{} << "collation" << *options.collation()
-                                                 << bsoncxx::builder::stream::finalize};
+        scoped_bson_t bson_collation{make_document(kvp("collation", *options.collation()))};
         libmongoc::find_and_modify_opts_append(opts, bson_collation.bson());
     }
 
@@ -713,18 +710,19 @@ std::int64_t collection::count(view_or_value filter, const options::count& optio
     }
 
     // Some options must be added via the options struct
-    bsoncxx::builder::stream::document cmd_opts_builder{};
+    bsoncxx::builder::basic::document cmd_opts_builder;
 
     if (options.collation()) {
-        cmd_opts_builder << "collation" << *options.collation();
+        cmd_opts_builder.append(kvp("collation", *options.collation()));
     }
 
     if (options.max_time()) {
-        cmd_opts_builder << "maxTimeMS" << bsoncxx::types::b_int64{options.max_time()->count()};
+        cmd_opts_builder.append(
+            kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
     }
 
     if (options.hint()) {
-        cmd_opts_builder << "hint" << options.hint()->to_value();
+        cmd_opts_builder.append(kvp("hint", options.hint()->to_value()));
     }
 
     scoped_bson_t cmd_opts_bson{cmd_opts_builder.view()};
@@ -867,15 +865,13 @@ bsoncxx::document::value collection::create_index(view_or_value keys,
     }
 
     if (options.name()) {
-        return bsoncxx::builder::stream::document{} << "name" << *options.name()
-                                                    << bsoncxx::builder::stream::finalize;
+        return make_document(kvp("name", *options.name()));
     } else {
         const auto keys = libmongoc::collection_keys_to_index_string(bson_keys.bson());
 
         const auto clean_keys = make_guard([&] { bson_free(keys); });
 
-        return bsoncxx::builder::stream::document{} << "name" << keys
-                                                    << bsoncxx::builder::stream::finalize;
+        return make_document(kvp("name", keys));
     }
 }
 
@@ -885,17 +881,19 @@ cursor collection::distinct(bsoncxx::string::view_or_value field_name,
     //
     // Construct the distinct command and options.
     //
-    bsoncxx::builder::stream::document command_builder{};
-    command_builder << "distinct" << name() << "key" << field_name.view() << "query"
-                    << bsoncxx::types::b_document{query};
+    bsoncxx::builder::basic::document command_builder;
+    command_builder.append(kvp("distinct", name()),
+                           kvp("key", field_name.view()),
+                           kvp("query", bsoncxx::types::b_document{query}));
 
     if (options.max_time()) {
-        command_builder << "maxTimeMS" << bsoncxx::types::b_int64{options.max_time()->count()};
+        command_builder.append(
+            kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
     }
 
-    bsoncxx::builder::stream::document opts_builder{};
+    bsoncxx::builder::basic::document opts_builder{};
     if (options.collation()) {
-        opts_builder << "collation" << *options.collation();
+        opts_builder.append(kvp("collation", *options.collation()));
     }
 
     const mongoc_read_prefs_t* rp_ptr = NULL;
@@ -926,13 +924,13 @@ cursor collection::distinct(bsoncxx::string::view_or_value field_name,
     //
     // Fake a cursor with the reply document as a single result.
     //
-    auto fake_db_reply = bsoncxx::builder::stream::document{}
-                         << "ok" << 1 << "cursor" << bsoncxx::builder::stream::open_document << "ns"
-                         << ""
-                         << "id" << 0 << "firstBatch" << bsoncxx::builder::stream::open_array
-                         << reply.view() << bsoncxx::builder::stream::close_array
-                         << bsoncxx::builder::stream::close_document
-                         << bsoncxx::builder::stream::finalize;
+    auto fake_db_reply = make_document(
+        kvp("ok", 1), kvp("cursor", [&reply](sub_document sub_doc) {
+            sub_doc.append(
+                kvp("ns", ""), kvp("id", 0), kvp("firstBatch", [&reply](sub_array sub_arr) {
+                    sub_arr.append(reply.view());
+                }));
+        }));
 
     bson_t* reply_bson =
         bson_new_from_data(fake_db_reply.view().data(), fake_db_reply.view().length());

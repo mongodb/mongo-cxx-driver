@@ -14,7 +14,8 @@
 
 #include <iostream>
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
 #include <mongocxx/client.hpp>
@@ -23,9 +24,8 @@
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::open_document;
-using bsoncxx::builder::stream::close_document;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 using mongocxx::stdx::string_view;
 using mongocxx::collection;
 using mongocxx::validation_criteria;
@@ -47,9 +47,7 @@ int main(int, char**) {
         validation.action(validation_criteria::validation_action::k_error);
 
         // Add a validation rule: all zombies need to eat some brains.
-        document rule;
-        rule << "brains" << open_document << "$gt" << 0 << close_document;
-        validation.rule(rule.extract());
+        validation.rule(make_document(kvp("brains", make_document(kvp("$gt", 0)))));
 
         mongocxx::options::create_collection opts;
         opts.validation_criteria(validation);
@@ -63,22 +61,14 @@ int main(int, char**) {
 
         try {
             // Insert a document passing validation
-            document betty;
-            betty << "name"
-                  << "Bloody Betty"
-                  << "brains" << 3;
-            auto res = zombies.insert_one(betty.extract());
+            auto res =
+                zombies.insert_one(make_document(kvp("name", "Bloody Betty"), kvp("brains", 3)));
 
             std::cout << "Bloody Betty passed document validation!" << std::endl;
 
-            // Insert a document failing validation
-            document fred;
-            fred << "name"
-                 << "Undead Fred"
-                 << "brains" << 0;
-
-            // Inserting a failing document should throw
-            auto res2 = zombies.insert_one(fred.extract());
+            // Insert a document failing validation, which should throw.
+            auto res2 =
+                zombies.insert_one(make_document(kvp("name", "Undead Fred"), kvp("brains", 0)));
 
             std::cout << "ERROR: server does not support document validation." << std::endl;
 

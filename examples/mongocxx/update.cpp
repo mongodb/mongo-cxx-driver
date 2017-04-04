@@ -12,17 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/stream/document.hpp>
-
+#include <bsoncxx/builder/basic/array.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
 
-using bsoncxx::builder::stream::open_document;
-using bsoncxx::builder::stream::close_document;
-using bsoncxx::builder::stream::open_array;
-using bsoncxx::builder::stream::close_array;
-using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_array;
+using bsoncxx::builder::basic::make_document;
 
 int main(int, char**) {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
@@ -36,63 +35,43 @@ int main(int, char**) {
     // Update top-level fields in a single document.
     {
         // @begin: cpp-update-top-level-fields
-        bsoncxx::builder::stream::document filter_builder, update_builder;
-        filter_builder << "name"
-                       << "Juni";
-        update_builder << "$set" << open_document << "cuisine"
-                       << "American (New)" << close_document << "$currentDate" << open_document
-                       << "lastModified" << true << close_document;
-
-        db["restaurants"].update_one(filter_builder.view(), update_builder.view());
+        db["restaurants"].update_one(
+            make_document(kvp("name", "Juni")),
+            make_document(kvp("$set", make_document(kvp("cuisine", "American (New)"))),
+                          kvp("$currentDate", make_document(kvp("lastModified", true)))));
         // @end: cpp-update-top-level-fields
     }
 
     // Update an embedded document in a single document.
     {
         // @begin: cpp-update-embedded-field
-        bsoncxx::builder::stream::document filter_builder, update_builder;
-        filter_builder << "restaurant_id"
-                       << "41156888";
-        update_builder << "$set" << open_document << "address.street"
-                       << "East 31st Street" << close_document;
-
-        db["restaurants"].update_one(filter_builder.view(), update_builder.view());
+        db["restaurants"].update_one(
+            make_document(kvp("restaurant_id", "41156888")),
+            make_document(kvp("$set", make_document(kvp("address.street", "East 31st Street")))));
         // @end: cpp-update-embedded-field
     }
 
     // Update multiple documents.
     {
         // @begin: cpp-update-multiple-documents
-        bsoncxx::builder::stream::document filter_builder, update_builder;
-        filter_builder << "address.zipcode"
-                       << "10016"
-                       << "cuisine"
-                       << "Other";
-        update_builder << "$set" << open_document << "cuisine"
-                       << "Category To Be Determined" << close_document << "$currentDate"
-                       << open_document << "lastModified" << true << close_document;
-
-        db["restaurants"].update_many(filter_builder.view(), update_builder.view());
+        db["restaurants"].update_many(
+            make_document(kvp("address.zipcode", "10016"), kvp("cuisine", "Other")),
+            make_document(kvp("$set", make_document(kvp("cuisine", "Category to be determined"))),
+                          kvp("$currentDate", make_document(kvp("lastModified", true)))));
         // @end: cpp-update-multiple-documents
     }
 
     // Replace the contents of a single document.
     {
         // @begin: cpp-replace-document
-        bsoncxx::builder::stream::document filter_builder, replace_builder;
-        filter_builder << "restaurant_id"
-                       << "41704620";
-        replace_builder << "name"
-                        << "Vella 2"
-                        << "address" << open_document << "coord" << open_array << -73.9557413
-                        << 40.7720266 << close_array << "building"
-                        << "1480"
-                        << "street"
-                        << "2 Avenue"
-                        << "zipcode"
-                        << "10075" << close_document;
-
-        db["restaurants"].replace_one(filter_builder.view(), replace_builder.view());
+        db["restaurants"].replace_one(
+            make_document(kvp("restaurant_id", "41704620")),
+            make_document(kvp("name", "Vella 2"),
+                          kvp("address",
+                              make_document(kvp("coord", make_array(-73.9557413, 40.7720266)),
+                                            kvp("building", "1480"),
+                                            kvp("street", "2 Avenue"),
+                                            kvp("zipcode", "10075")))));
         // @end: cpp-replace-document
     }
 }

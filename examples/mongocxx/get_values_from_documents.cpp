@@ -14,14 +14,15 @@
 
 #include <iostream>
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::close_array;
-using bsoncxx::builder::stream::finalize;
-using bsoncxx::builder::stream::open_array;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_array;
+using bsoncxx::builder::basic::make_document;
 using bsoncxx::type;
 
 // Document model, showing array with nested documents:
@@ -40,21 +41,19 @@ using bsoncxx::type;
 
 // Construct a document in the format of 'messagelist'.
 bsoncxx::document::value new_message(int64_t uid, int32_t status, std::string msg) {
-    document doc;
-    return doc << "uid" << uid << "status" << status << "msg" << msg << finalize;
+    return make_document(kvp("uid", uid), kvp("status", status), kvp("msg", msg));
 }
 
 // Insert a document into the database.
 void insert_test_data(mongocxx::collection& coll) {
-    document builder{};
-    builder << "messagelist" << open_array << new_message(413098706, 3, "Lorem ipsum...")
-            << new_message(413098707, 2, "Lorem ipsum...")
-            << new_message(413098708, 1, "Lorem ipsum...") << close_array;
-
-    bsoncxx::document::value doc = builder << finalize;
+    bsoncxx::document::value doc =
+        make_document(kvp("messagelist",
+                          make_array(new_message(413098706, 3, "Lorem ipsum..."),
+                                     new_message(413098707, 2, "Lorem ipsum..."),
+                                     new_message(413098708, 1, "Lorem ipsum..."))));
 
     // Normally, one should check the return value for success.
-    coll.insert_one(doc.view());
+    coll.insert_one(std::move(doc));
 }
 
 // Iterate over contents of messagelist.

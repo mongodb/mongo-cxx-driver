@@ -14,10 +14,13 @@
 
 #include <mongocxx/options/create_view.hpp>
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
+
+using bsoncxx::builder::basic::kvp;
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -42,14 +45,14 @@ const stdx::optional<pipeline>& create_view::pipeline() const {
 }
 
 bsoncxx::document::value create_view::to_document() const {
-    auto doc = bsoncxx::builder::stream::document{};
+    auto doc = bsoncxx::builder::basic::document{};
 
     if (_collation) {
-        doc << "collation" << bsoncxx::types::b_document{*_collation};
+        doc.append(kvp("collation", bsoncxx::types::b_document{*_collation}));
     }
 
     if (_pipeline) {
-        doc << "pipeline" << _pipeline->view_array();
+        doc.append(kvp("pipeline", _pipeline->view_array()));
     }
 
     return doc.extract();

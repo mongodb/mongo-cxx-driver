@@ -14,10 +14,15 @@
 
 #include <iostream>
 
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
+
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 int main(int, char**) {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
@@ -26,13 +31,10 @@ int main(int, char**) {
     mongocxx::instance inst{};
     mongocxx::client conn{mongocxx::uri{}};
 
-    bsoncxx::builder::stream::document document{};
-
     auto collection = conn["test"]["col"];
-    document << "test" << 1;
 
     try {
-        auto result = collection.insert_one(document.view());
+        auto result = collection.insert_one(make_document(kvp("test", 1)));
 
         // Currently, result will always be true (or an exception will be
         // thrown).  Eventually, unacknowledged writes will give a false

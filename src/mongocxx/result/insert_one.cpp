@@ -14,7 +14,7 @@
 
 #include <mongocxx/result/insert_one.hpp>
 
-#include <bsoncxx/builder/stream/array.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -24,8 +24,7 @@ namespace result {
 
 insert_one::insert_one(result::bulk_write result, bsoncxx::types::value inserted_id)
     : _result(std::move(result)),
-      _inserted_id_owned(bsoncxx::builder::stream::array{} << inserted_id
-                                                           << bsoncxx::builder::stream::finalize),
+      _inserted_id_owned(bsoncxx::builder::basic::make_array(inserted_id)),
       _inserted_id(_inserted_id_owned.view()[0].get_value()) {}
 
 const result::bulk_write& insert_one::result() const {

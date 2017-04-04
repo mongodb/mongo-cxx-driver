@@ -14,19 +14,16 @@
 
 #include <iostream>
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/json.hpp>
-
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/uri.hpp>
 
-using bsoncxx::builder::stream::open_document;
-using bsoncxx::builder::stream::close_document;
-using bsoncxx::builder::stream::open_array;
-using bsoncxx::builder::stream::close_array;
-using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 int main(int, char**) {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
@@ -41,13 +38,9 @@ int main(int, char**) {
     {
         // @begin: cpp-group-documents-by-a-field-and-calculate-count
         mongocxx::pipeline stages;
-        bsoncxx::builder::stream::document group_stage;
 
-        group_stage << "_id"
-                    << "$borough"
-                    << "count" << open_document << "$sum" << 1 << close_document;
-
-        stages.group(group_stage.view());
+        stages.group(
+            make_document(kvp("_id", "$borough"), kvp("count", make_document(kvp("$sum", 1)))));
 
         auto cursor = db["restaurants"].aggregate(stages);
 
@@ -61,18 +54,10 @@ int main(int, char**) {
     {
         // @begin: cpp-filter-and-group-documents
         mongocxx::pipeline stages;
-        bsoncxx::builder::stream::document match_stage, group_stage;
 
-        match_stage << "borough"
-                    << "Queens"
-                    << "cuisine"
-                    << "Brazilian";
-
-        group_stage << "_id"
-                    << "$address.zipcode"
-                    << "count" << open_document << "$sum" << 1 << close_document;
-
-        stages.match(match_stage.view()).group(group_stage.view());
+        stages.match(make_document(kvp("borough", "queens"), kvp("cuisine", "Brazilian")))
+            .group(make_document(kvp("_id", "$address.zipcode"),
+                                 kvp("count", make_document(kvp("$sum", 1)))));
 
         auto cursor = db["restaurants"].aggregate(stages);
 

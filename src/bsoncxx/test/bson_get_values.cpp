@@ -12,24 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/stream/array.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
+#include <utility>
+
+#include <bsoncxx/builder/basic/array.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/sub_array.hpp>
+#include <bsoncxx/builder/basic/sub_document.hpp>
+#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/test_util/catch.hh>
 
 using namespace bsoncxx;
 
-TEST_CASE("[] can reach into nested arrays", "[bsoncxx]") {
-    using namespace builder::stream;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_array;
+using bsoncxx::builder::basic::make_document;
 
-    builder::stream::document build_doc;
+TEST_CASE("[] can reach into nested arrays", "[bsoncxx]") {
     // {
     //     "ints": [ 1, 3, [ 5 ] ],
     //     "bools": [ true, false ]
     // }
-    build_doc << "ints" << open_array << 1 << 3 << open_array << 5 << close_array << close_array
-              << "bools" << open_array << true << false << close_array;
-
+    auto build_doc = make_document(kvp("ints", make_array(1, 3, make_array(5))),
+                                   kvp("bools", make_array(true, false)));
     auto doc = build_doc.view();
 
     SECTION("works with one level") {
@@ -68,9 +72,6 @@ TEST_CASE("[] can reach into nested arrays", "[bsoncxx]") {
 }
 
 TEST_CASE("[] can reach into nested documents", "[bsoncxx]") {
-    using namespace builder::stream;
-
-    builder::stream::document build_doc;
     // {
     //     "ints": {
     //         "x": 1,
@@ -84,9 +85,10 @@ TEST_CASE("[] can reach into nested documents", "[bsoncxx]") {
     //         "f": false,
     //     }
     // }
-    build_doc << "ints" << open_document << "x" << 1 << "y" << 3 << "more" << open_document << "z"
-              << 5 << close_document << close_document << "bools" << open_document << "t" << true
-              << "f" << false << close_document;
+    auto build_doc = make_document(
+        kvp("ints",
+            make_document(kvp("x", 1), kvp("y", 3), kvp("more", make_document(kvp("z", 5))))),
+        kvp("bools", make_document(kvp("t", true), kvp("f", false))));
 
     auto doc = build_doc.view();
 
@@ -126,9 +128,6 @@ TEST_CASE("[] can reach into nested documents", "[bsoncxx]") {
 }
 
 TEST_CASE("[] can reach into mixed nested arrays and documents", "[bsoncxx]") {
-    using namespace builder::stream;
-
-    builder::stream::document build_doc;
     // {
     //     "ints": {
     //         "x": 1,
@@ -148,11 +147,16 @@ TEST_CASE("[] can reach into mixed nested arrays and documents", "[bsoncxx]") {
     //         "arr": [ false, true ]
     //     }
     // }
-    build_doc << "ints" << open_document << "x" << 1 << "y" << 3 << "arr" << open_array << 5 << 7
-              << open_document << "z" << 9 << "even_more" << open_array << 11 << close_array
-              << close_document << close_array << close_document << "bools" << open_document << "t"
-              << true << "f" << false << "arr" << open_array << false << true << close_array
-              << close_document;
+    auto build_doc = make_document(
+        kvp("ints",
+            make_document(
+                kvp("x", 1),
+                kvp("y", 3),
+                kvp("arr",
+                    make_array(
+                        5, 7, make_document(kvp("z", 9), kvp("even_more", make_array(11))))))),
+        kvp("bools",
+            make_document(kvp("t", true), kvp("f", false), kvp("arr", make_array(false, true)))));
 
     auto doc = build_doc.view();
 
@@ -174,9 +178,7 @@ TEST_CASE("[] can reach into mixed nested arrays and documents", "[bsoncxx]") {
 }
 
 TEST_CASE("[] with large nesting levels", "[bsoncxx]") {
-    using namespace builder::stream;
-
-    std::int32_t nesting_level = 0;
+    std::int32_t nesting_level;
 
     SECTION("no nesting") {
         nesting_level = 0;
@@ -198,20 +200,15 @@ TEST_CASE("[] with large nesting levels", "[bsoncxx]") {
         nesting_level = 2000;
     }
 
-    builder::stream::document build_doc;
+    document::value nest = make_document(kvp("x", nesting_level));
 
-    for (int i = 0; i < nesting_level; ++i) {
-        build_doc << "x" << open_document;
+    for (int i = 0; i < nesting_level; i++) {
+        auto temp = make_document(kvp("x", nest));
+        nest = std::move(temp);
     }
 
-    build_doc << "x" << nesting_level;
-
-    for (int i = 0; i < nesting_level; ++i) {
-        build_doc << close_document;
-    }
-
-    auto x = build_doc.view()["x"];
-    for (int i = 0; i < nesting_level; ++i) {
+    auto x = nest.view()["x"];
+    for (std::int32_t i = 0; i < nesting_level; ++i) {
         REQUIRE(x["x"]);
         x = x["x"];
     }
@@ -219,9 +216,7 @@ TEST_CASE("[] with large nesting levels", "[bsoncxx]") {
 }
 
 TEST_CASE("empty document view has working iterators", "[bsoncxx]") {
-    using namespace builder::stream;
-
-    auto value = builder::stream::document{} << finalize;
+    auto value = make_document();
     auto doc = value.view();
 
     REQUIRE(doc.begin() == doc.end());
@@ -229,7 +224,7 @@ TEST_CASE("empty document view has working iterators", "[bsoncxx]") {
 }
 
 TEST_CASE("document view begin/end/find give expected types", "[bsoncxx]") {
-    auto value = builder::stream::document{} << "a" << 1 << builder::stream::finalize;
+    auto value = make_document(kvp("a", 1));
 
     SECTION("const document::view gives const_iterator") {
         const document::view const_doc = value.view();
@@ -272,9 +267,7 @@ TEST_CASE("document view begin/end/find give expected types", "[bsoncxx]") {
 }
 
 TEST_CASE("empty array view has working iterators", "[bsoncxx]") {
-    using namespace builder::stream;
-
-    auto value = builder::stream::array{} << finalize;
+    auto value = make_document();
     auto ary = value.view();
 
     REQUIRE(ary.begin() == ary.end());
@@ -282,7 +275,7 @@ TEST_CASE("empty array view has working iterators", "[bsoncxx]") {
 }
 
 TEST_CASE("array view begin/end/find give expected types", "[bsoncxx]") {
-    auto value = builder::stream::array{} << "a" << builder::stream::finalize;
+    auto value = make_array("a");
 
     SECTION("const array::view gives const_iterator") {
         const array::view const_ary = value.view();

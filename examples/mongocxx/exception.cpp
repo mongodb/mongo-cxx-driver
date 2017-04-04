@@ -15,7 +15,8 @@
 #include <cstdlib>
 #include <iostream>
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/json.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
@@ -26,10 +27,8 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
 
-using bsoncxx::builder::stream::close_document;
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::finalize;
-using bsoncxx::builder::stream::open_document;
+using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::basic::kvp;
 
 int main(int, char**) {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
@@ -117,10 +116,10 @@ int main(int, char**) {
     // Adding a document whose "_id" is already present throws a mongocxx::bulk_write_exception.
     // A mongocxx::bulk_write_exception is-a mongocxx::operation_exception is-a mongocxx::exception
     // is-a std::system_error.
-    auto doc1 = document{} << "_id" << 1 << finalize;
-    coll.insert_one(doc1.view());
+    auto doc = make_document(kvp("_id", 1));
+    coll.insert_one(doc.view());
     try {
-        coll.insert_one(doc1.view());
+        coll.insert_one(doc.view());
     } catch (const mongocxx::bulk_write_exception& e) {
         std::cout << "Adding a document whose _id is already present throws:" << std::endl;
 

@@ -14,12 +14,19 @@
 
 #include <array>
 
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/basic/sub_array.hpp>
+#include <bsoncxx/builder/basic/sub_document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/validate.hpp>
 
 using namespace bsoncxx;
+
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_array;
+using bsoncxx::builder::basic::make_document;
 
 // These are basic sanity tests to make sure the API works.
 // Libbson has a much more complete suite of tests that covers various corrupt BSON
@@ -39,9 +46,7 @@ bool is_disengaged(const stdx::optional<T>& opt) {
 }  // namespace
 
 TEST_CASE("validate accepts bson we produce", "[bsoncxx::validate]") {
-    builder::stream::document doc{};
-    doc << "hello"
-        << "world";
+    auto doc = make_document(kvp("hello", "world"));
     auto view = doc.view();
     // option has explicit bool conversion operator
     REQUIRE(is_engaged(validate(view.data(), view.length())));
@@ -53,7 +58,7 @@ TEST_CASE("validate doesn't accept random bytes", "[bsoncxx::validate]") {
 }
 
 TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
-    builder::stream::document doc{};
+    builder::basic::document doc;
     validator vtor{};
 
     SECTION("we can check for valid utf8") {
@@ -61,7 +66,7 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
 
         // an invalid 3 octet sequence - thanks stackoverflow!
         std::string invalid_utf8("\0xF0\0x28\0x8C\0x28", 3);
-        doc << "bar" << invalid_utf8;
+        doc.append(kvp("bar", invalid_utf8));
         auto view = doc.view();
         REQUIRE(is_disengaged(validate(view.data(), view.length(), vtor)));
     }
@@ -69,7 +74,7 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
     SECTION("we can check for valid utf8, but allow null bytes") {
         vtor.check_utf8_allow_null(true);
         std::string valid_utf8_with_null("foo\0\0bar", 8);
-        doc << "bar" << valid_utf8_with_null;
+        doc.append(kvp("bar", valid_utf8_with_null));
         auto view = doc.view();
         REQUIRE(is_engaged(validate(view.data(), view.length(), vtor)));
     }
@@ -78,17 +83,15 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
         vtor.check_dollar_keys(true);
 
         SECTION("at top level") {
-            doc << "$foo"
-                << "bar";
+            doc.append(kvp("$foo", "bar"));
             auto view = doc.view();
             REQUIRE(is_disengaged(validate(view.data(), view.length(), vtor)));
         }
 
         SECTION("and in nested documents") {
-            using namespace bsoncxx::builder::stream;
-            doc << "foo" << open_array << open_document << "garply" << open_array << open_document
-                << "$bar"
-                << "baz" << close_document << close_array << close_document << close_array;
+            doc.append(kvp("foo",
+                           make_array(make_document(
+                               kvp("garply", make_array(make_document(kvp("$bar", "baz"))))))));
 
             auto view = doc.view();
             REQUIRE(is_disengaged(validate(view.data(), view.length(), vtor)));
@@ -99,17 +102,15 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
         vtor.check_dot_keys(true);
 
         SECTION("at top level") {
-            doc << "foo.noooo"
-                << "bar";
+            doc.append(kvp("foo.noooo", "bar"));
             auto view = doc.view();
             REQUIRE(is_disengaged(validate(view.data(), view.length(), vtor)));
         }
 
         SECTION("and in nested documents") {
-            using namespace bsoncxx::builder::stream;
-            doc << "foo" << open_array << open_document << "garply" << open_array << open_document
-                << "bad.dot"
-                << "baz" << close_document << close_array << close_document << close_array;
+            doc.append(kvp("foo",
+                           make_array(make_document(
+                               kvp("garply", make_array(make_document(kvp("bad.dot", "baz"))))))));
 
             auto view = doc.view();
             REQUIRE(is_disengaged(validate(view.data(), view.length(), vtor)));
@@ -117,10 +118,7 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
     }
 
     SECTION("we can get the invalid offset") {
-        doc << "foo"
-            << "bar"
-            << "baz"
-            << "garply";
+        doc.append(kvp("foo", "bar"), kvp("baz", "garply"));
         auto view = doc.view();
 
         // write a null byte at offset 9

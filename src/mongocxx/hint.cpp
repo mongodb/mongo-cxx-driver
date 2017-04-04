@@ -14,9 +14,17 @@
 
 #include <mongocxx/hint.hpp>
 
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/basic/sub_document.hpp>
+#include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
+
+using bsoncxx::builder::concatenate;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::sub_document;
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -34,14 +42,12 @@ bsoncxx::types::value hint::to_value() const {
 }
 
 bsoncxx::document::value hint::to_document() const {
-    auto doc = bsoncxx::builder::stream::document{};
+    auto doc = bsoncxx::builder::basic::document{};
 
     if (_index_doc) {
-        doc << "$hint" << bsoncxx::builder::stream::open_document
-            << bsoncxx::builder::stream::concatenate(*_index_doc)
-            << bsoncxx::builder::stream::close_document;
+        doc.append(kvp("$hint", *_index_doc));
     } else {
-        doc << "$hint" << *_index_string;
+        doc.append(kvp("$hint", *_index_string));
     }
 
     return doc.extract();

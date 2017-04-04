@@ -19,7 +19,6 @@
 #include <memory>
 #include <string>
 
-#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>

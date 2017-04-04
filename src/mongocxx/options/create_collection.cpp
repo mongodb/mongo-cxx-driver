@@ -14,11 +14,15 @@
 
 #include <mongocxx/options/create_collection.hpp>
 
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
+
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::concatenate;
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -98,38 +102,38 @@ const stdx::optional<class validation_criteria>& create_collection::validation_c
 }
 
 bsoncxx::document::value create_collection::to_document() const {
-    auto doc = bsoncxx::builder::stream::document{};
+    auto doc = bsoncxx::builder::basic::document{};
 
     if (_auto_index_id) {
-        doc << "autoIndexId" << *_auto_index_id;
+        doc.append(kvp("autoIndexId", *_auto_index_id));
     }
 
     if (_capped) {
-        doc << "capped" << *_capped;
+        doc.append(kvp("capped", *_capped));
     }
 
     if (_collation) {
-        doc << "collation" << bsoncxx::types::b_document{*_collation};
+        doc.append(kvp("collation", bsoncxx::types::b_document{*_collation}));
     }
 
     if (_max_documents) {
-        doc << "max" << *_max_documents;
+        doc.append(kvp("max", *_max_documents));
     }
 
     if (_max_size) {
-        doc << "size" << *_max_size;
+        doc.append(kvp("size", *_max_size));
     }
 
     if (_no_padding) {
-        doc << "flags" << (*_no_padding ? 0x10 : 0x00);
+        doc.append(kvp("flags", (*_no_padding ? 0x10 : 0x00)));
     }
 
     if (_storage_engine_opts) {
-        doc << "storageEngine" << bsoncxx::types::b_document{*_storage_engine_opts};
+        doc.append(kvp("storageEngine", bsoncxx::types::b_document{*_storage_engine_opts}));
     }
 
     if (_validation) {
-        doc << bsoncxx::builder::stream::concatenate(_validation->to_document());
+        doc.append(concatenate(_validation->to_document()));
     }
 
     return doc.extract();

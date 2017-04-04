@@ -14,7 +14,7 @@
 
 #include <mongocxx/result/gridfs/upload.hpp>
 
-#include <bsoncxx/builder/stream/array.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -24,8 +24,7 @@ namespace result {
 namespace gridfs {
 
 upload::upload(bsoncxx::types::value id)
-    : _id_owned(bsoncxx::builder::stream::array{} << id << bsoncxx::builder::stream::finalize),
-      _id(_id_owned.view()[0].get_value()) {}
+    : _id_owned(bsoncxx::builder::basic::make_array(id)), _id(_id_owned.view()[0].get_value()) {}
 
 const bsoncxx::types::value& upload::id() const {
     return _id;
