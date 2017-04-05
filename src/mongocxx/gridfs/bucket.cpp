@@ -12,11 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// TODO CXX-1234: Replace generic exceptions in GridFS with appropriate specific ones
-
 #include <mongocxx/gridfs/bucket.hpp>
 
-#include <exception>
 #include <string>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -46,7 +43,7 @@ bucket::bucket(const database& db, const options::gridfs::bucket& options) {
     }
 
     if (bucket_name.empty()) {
-        throw std::exception{};
+        throw logic_error{error_code::k_invalid_parameter, "non-empty bucket name required"};
     }
 
     std::int32_t default_chunk_size_bytes = 255 * 1024;
@@ -214,24 +211,17 @@ void bucket::delete_file(bsoncxx::types::value id) {
     builder::basic::document files_builder;
     files_builder.append(builder::basic::kvp("_id", id));
 
-    try {
-        if (auto result = _get_impl().files.delete_one(files_builder.extract())) {
-            if (result->deleted_count() == 0) {
-                // TODO CXX-1234: Replace generic exceptions in GridFS with appropriate specific
-                // ones
-                throw std::exception{};
-            }
+    if (auto result = _get_impl().files.delete_one(files_builder.extract())) {
+        if (result->deleted_count() == 0) {
+            throw gridfs_exception{error_code::k_gridfs_file_not_found};
         }
-
-        builder::basic::document chunks_builder;
-        chunks_builder.append(builder::basic::kvp("files_id", id));
-        document::value chunks_filter = chunks_builder.extract();
-
-        _get_impl().chunks.delete_many(chunks_filter.view());
-    } catch (const std::exception& e) {
-        // TODO CXX-1234: Replace generic exceptions in GridFS with appropriate specific ones
-        throw std::exception{};
     }
+
+    builder::basic::document chunks_builder;
+    chunks_builder.append(builder::basic::kvp("files_id", id));
+    document::value chunks_filter = chunks_builder.extract();
+
+    _get_impl().chunks.delete_many(chunks_filter.view());
 }
 
 cursor bucket::find(bsoncxx::document::view_or_value filter, const options::find& options) {

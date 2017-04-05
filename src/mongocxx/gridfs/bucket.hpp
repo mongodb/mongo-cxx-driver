@@ -282,7 +282,10 @@ class MONGOCXX_API bucket {
     /// @param id
     ///   The id of the file to be deleted.
     ///
-    /// @throws if no file with the given id exists or if the delete operation throws an exception.
+    /// @throws mongocxx::gridfs_exception if the requested file does not exist.
+    ///
+    /// @throws mongocxx::bulk_write_exception
+    ///   if an error occurs when removing file data or chunk data from the database.
     ///
     void delete_file(bsoncxx::types::value id);
 

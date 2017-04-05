@@ -296,7 +296,7 @@ class MONGOCXX_API database {
     /// @note
     ///   See the class comment for `gridfs::bucket` for more information about GridFS.
     ///
-    /// TODO CXX-1234: Document exceptions thrown.
+    /// @throws mongocxx::logic_error if `options` are invalid.
     ///
     class gridfs::bucket gridfs_bucket(
         const options::gridfs::bucket& options = options::gridfs::bucket()) const;
