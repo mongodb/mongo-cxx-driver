@@ -72,6 +72,10 @@ class error_category final : public std::error_category {
                 return "a mongocxx::gridfs::uploader object has exceeded the maximum number "
                        "of allowable GridFS chunks when attempting to upload the requested "
                        "file";
+            case error_code::k_gridfs_file_not_found:
+                return "the requested GridFS file was not found";
+            case error_code::k_gridfs_file_corrupted:
+                return "a GridFS file being operated on was discovered to be corrupted";
             default:
                 return "unknown mongocxx error";
         }

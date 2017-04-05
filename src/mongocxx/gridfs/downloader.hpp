@@ -81,15 +81,19 @@ class MONGOCXX_API downloader {
     ///   The number of bytes actually read. If zero, the downloader has reached the end of the
     ///   file.
     ///
-    /// @throws an exception if an invalid chunk is downloaded, if the file ends unexpectedly, or if
-    /// the stream has been closed.
+    /// @throws mongocxx::logic_error if the download stream was already closed.
+    ///
+    /// @throws mongocxx::gridfs_exception if the requested file has been corrupted.
+    ///
+    /// @throws mongocxx::query_exception
+    ///   if an error occurs when reading chunk data from the database for the requested file.
     ///
     std::size_t read(std::size_t length, std::uint8_t* buffer);
 
     ///
     /// Closes the downloader stream.
     ///
-    /// @throws if the downloader stream was already closed.
+    /// @throws mongocxx::logic_error if the download stream was already closed.
     ///
     void close();
 

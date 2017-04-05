@@ -72,6 +72,12 @@ enum class error_code : std::int32_t {
     /// chunks when attempting to upload the requested file.
     k_gridfs_upload_requires_too_many_chunks,
 
+    /// The requested GridFS file was not found.
+    k_gridfs_file_not_found,
+
+    /// A GridFS file being operated on was discovered to be corrupted.
+    k_gridfs_file_corrupted,
+
     // Add new constant string message to error_code.cpp as well!
 };
 

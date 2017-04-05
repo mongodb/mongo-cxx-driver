@@ -16,7 +16,7 @@
 
 #include <algorithm>
 #include <cstring>
-#include <exception>
+#include <sstream>
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types.hpp>
@@ -44,7 +44,7 @@ downloader::operator bool() const noexcept {
 
 std::size_t downloader::read(std::size_t length_requested, std::uint8_t* buffer) {
     if (_get_impl().closed) {
-        throw std::exception{};
+        throw logic_error{error_code::k_gridfs_stream_not_open};
     }
 
     if (_get_impl().file_len == 0) {
@@ -74,7 +74,7 @@ std::size_t downloader::read(std::size_t length_requested, std::uint8_t* buffer)
 
 void downloader::close() {
     if (_get_impl().closed) {
-        throw new std::exception{};
+        throw logic_error{error_code::k_gridfs_stream_not_open};
     }
 
     _get_impl().chunks = {};
@@ -95,7 +95,11 @@ bsoncxx::document::view downloader::files_document() const {
 
 void downloader::fetch_chunk() {
     if (_get_impl().chunks_curr == _get_impl().chunks_end) {
-        throw std::exception{};
+        std::ostringstream err;
+        err << "expected file to have " << _get_impl().file_chunk_count
+            << " chunk(s), but query to chunks collection only returned " << _get_impl().chunks_seen
+            << " chunk(s)";
+        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
     }
 
     if (_get_impl().chunks_seen) {
@@ -104,21 +108,36 @@ void downloader::fetch_chunk() {
 
     bsoncxx::document::view chunk_doc = **_get_impl().chunks_curr;
 
-    if (chunk_doc["n"].get_int32().value != _get_impl().chunks_seen) {
-        throw std::exception{};
+    auto chunk_n_ele = chunk_doc["n"];
+    if (!chunk_n_ele || chunk_n_ele.type() != bsoncxx::type::k_int32 ||
+        chunk_n_ele.get_int32().value != _get_impl().chunks_seen) {
+        std::ostringstream err;
+        err << "chunk #" << _get_impl().chunks_seen
+            << ": expected to find field \"n\" with k_int32 type";
+        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
     }
 
     if (_get_impl().chunks_seen == std::numeric_limits<std::int32_t>::max()) {
-        throw std::exception{};
+        throw gridfs_exception{error_code::k_gridfs_file_corrupted, "file has too many chunks"};
     }
 
-    ++_get_impl().chunks_seen;
+    auto chunk_data_ele = chunk_doc["data"];
+    if (!chunk_data_ele || chunk_data_ele.type() != bsoncxx::type::k_binary) {
+        std::ostringstream err;
+        err << "chunk #" << _get_impl().chunks_seen
+            << ": expected to find field \"data\" with k_binary type";
+        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
+    }
 
-    auto binary_data = chunk_doc["data"].get_binary();
+    auto binary_data = chunk_data_ele.get_binary();
 
-    if (_get_impl().chunks_seen != _get_impl().file_chunk_count) {
+    if (_get_impl().chunks_seen != _get_impl().file_chunk_count - 1) {
         if (binary_data.size != static_cast<std::uint32_t>(_get_impl().chunk_size)) {
-            throw std::exception{};
+            std::ostringstream err;
+            err << "chunk #" << _get_impl().chunks_seen << ": expected size of chunk to be "
+                << _get_impl().chunk_size << " bytes, but actual size of chunk is "
+                << binary_data.size << " bytes";
+            throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
         }
     } else {
         auto expected_size =
@@ -129,9 +148,15 @@ void downloader::fetch_chunk() {
         }
 
         if (binary_data.size != static_cast<std::uint32_t>(expected_size)) {
-            throw std::exception{};
+            std::ostringstream err;
+            err << "chunk #" << _get_impl().chunks_seen << ": expected size of chunk to be "
+                << expected_size << " bytes, but actual size of chunk is " << binary_data.size
+                << " bytes";
+            throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
         }
     }
+
+    ++_get_impl().chunks_seen;
 
     _get_impl().chunk_buffer_ptr = binary_data.bytes;
     _get_impl().chunk_buffer_len = binary_data.size;

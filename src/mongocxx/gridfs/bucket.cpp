@@ -26,6 +26,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/private/bucket.hh>
 #include <mongocxx/options/delete.hpp>
@@ -160,16 +161,16 @@ downloader bucket::open_download_stream(bsoncxx::types::value id) {
     auto files_doc = _get_impl().files.find_one(files_filter.extract());
 
     if (!files_doc) {
-        // TODO CXX-1234: Replace generic exceptions in GridFS with appropriate specific ones
-        throw std::exception{};
+        throw gridfs_exception{error_code::k_gridfs_file_not_found};
     }
 
     auto files_doc_view = files_doc->view();
 
     if (!files_doc_view["length"] || (files_doc_view["length"].type() != type::k_int64 &&
                                       files_doc_view["length"].type() != type::k_int32)) {
-        // TODO CXX-1234: Replace generic exceptions in GridFS with appropriate specific ones
-        throw std::exception{};
+        throw gridfs_exception{error_code::k_gridfs_file_corrupted,
+                               "expected files document to contain field \"length\" with type "
+                               "k_int32 or k_int64"};
     }
 
     auto length = files_doc_view["length"];

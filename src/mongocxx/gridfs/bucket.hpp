@@ -246,7 +246,11 @@ class MONGOCXX_API bucket {
     /// @return
     ///   The gridfs::downloader from which the GridFS file should be read.
     ///
-    /// @throws if the file does not exist or is malformed.
+    /// @throws mongocxx::gridfs_exception
+    ///   if the requested file does not exist, or if the requested file has been corrupted.
+    ///
+    /// @throws mongocxx::query_exception
+    ///   if an error occurs when reading from the files collection for this bucket.
     ///
     downloader open_download_stream(bsoncxx::types::value id);
 
@@ -259,8 +263,16 @@ class MONGOCXX_API bucket {
     /// @param destination
     ///   The non-null stream to which the GridFS file should be written.
     ///
-    /// @throws if writing to `destination` throws an exception or if reading from the database
-    /// fails.
+    /// @throws mongocxx::gridfs_exception
+    ///   if the requested file does not exist, or if the requested file has been corrupted.
+    ///
+    /// @throws mongocxx::query_exception
+    ///   if an error occurs when reading from the files or chunks collections for this bucket.
+    ///
+    /// @throws std::ios_base::failure
+    ///   if writing to `destination` fails.  In addition, if `destination::exceptions()` is set for
+    ///   `badbit`, any exception thrown during execution of `destination::write()` will be
+    ///   re-thrown.
     ///
     void download_to_stream(bsoncxx::types::value id, std::ostream* destination);
 
