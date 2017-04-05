@@ -41,8 +41,15 @@ class collection::impl {
           database_name{i.database_name},
           client_impl{i.client_impl} {}
 
-    // This method is deleted because we only use the copy constructor.
-    impl& operator=(const impl& i) = delete;
+    impl& operator=(const impl& i) {
+        libmongoc::collection_destroy(collection_t);
+        collection_t = libmongoc::collection_copy(i.collection_t);
+
+        database_name = i.database_name;
+        client_impl = i.client_impl;
+
+        return *this;
+    }
 
     ~impl() {
         libmongoc::collection_destroy(collection_t);

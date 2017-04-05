@@ -48,22 +48,61 @@ TEST_CASE("A default constructed collection cannot perform operations", "[collec
     REQUIRE_THROWS_AS(c.name(), mongocxx::logic_error);
 }
 
-TEST_CASE("collection copy", "[collection]") {
+TEST_CASE("mongocxx::collection copy constructor", "[collection]") {
     instance::current();
 
-    client mongodb_client{uri{}};
-    database db = mongodb_client["test"];
+    client client{uri{}};
+    database db = client["collection_copy_constructor"];
 
-    std::string collname{"foo"};
-    std::string collname2{"bar"};
-    collection coll = db[collname];
+    SECTION("constructing from valid") {
+        collection collection_a = db["a"];
+        collection collection_b{collection_a};
+        REQUIRE(collection_b);
+        REQUIRE(collection_b.name() == stdx::string_view{"a"});
+    }
 
-    collection coll2{coll};
-    collection coll3 = db[collname2];
-    coll3 = coll;
+    SECTION("constructing from invalid") {
+        collection collection_a;
+        collection collection_b{collection_a};
+        REQUIRE(!collection_b);
+    }
+}
 
-    REQUIRE(coll2.name() == stdx::string_view{collname});
-    REQUIRE(coll3.name() == stdx::string_view{collname});
+TEST_CASE("mongocxx::collection copy assignment operator", "[collection]") {
+    instance::current();
+
+    client client{uri{}};
+    database db = client["collection_copy_assignment"];
+
+    SECTION("assigning valid to valid") {
+        collection collection_a = db["a"];
+        collection collection_b = db["b"];
+        collection_b = collection_a;
+        REQUIRE(collection_b);
+        REQUIRE(collection_b.name() == stdx::string_view{"a"});
+    }
+
+    SECTION("assigning invalid to valid") {
+        collection collection_a;
+        collection collection_b = db["b"];
+        collection_b = collection_a;
+        REQUIRE(!collection_b);
+    }
+
+    SECTION("assigning valid to invalid") {
+        collection collection_a = db["a"];
+        collection collection_b;
+        collection_b = collection_a;
+        REQUIRE(collection_b);
+        REQUIRE(collection_b.name() == stdx::string_view{"a"});
+    }
+
+    SECTION("assigning invalid to invalid") {
+        collection collection_a;
+        collection collection_b;
+        collection_b = collection_a;
+        REQUIRE(!collection_b);
+    }
 }
 
 TEST_CASE("collection renaming", "[collection]") {

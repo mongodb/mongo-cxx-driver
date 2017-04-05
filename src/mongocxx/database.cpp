@@ -62,9 +62,14 @@ database::database(const database& d) {
 }
 
 database& database::operator=(const database& d) {
-    if (d) {
+    if (!d) {
+        _impl.reset();
+    } else if (!*this) {
         _impl = stdx::make_unique<impl>(d._get_impl());
+    } else {
+        *_impl = d._get_impl();
     }
+
     return *this;
 }
 

@@ -49,21 +49,59 @@ TEST_CASE("A default constructed database cannot perform operations", "[database
     REQUIRE_THROWS_AS(d.name(), mongocxx::logic_error);
 }
 
-TEST_CASE("database copy", "[database]") {
+TEST_CASE("mongocxx::database copy constructor", "[database]") {
     instance::current();
 
-    client mongodb_client{uri{}};
+    client client{uri{}};
 
-    std::string dbname{"foo"};
-    std::string dbname2{"bar"};
-    database db = mongodb_client[dbname];
+    SECTION("constructing from valid") {
+        database database_a = client["a"];
+        database database_b{database_a};
+        REQUIRE(database_b);
+        REQUIRE(database_b.name() == stdx::string_view{"a"});
+    }
 
-    database db2{db};
-    database db3 = mongodb_client[dbname2];
-    db3 = db;
+    SECTION("constructing from invalid") {
+        database database_a;
+        database database_b{database_a};
+        REQUIRE(!database_b);
+    }
+}
 
-    REQUIRE(db2.name() == stdx::string_view{dbname});
-    REQUIRE(db3.name() == stdx::string_view{dbname});
+TEST_CASE("mongocxx::database copy assignment operator", "[database]") {
+    instance::current();
+
+    client client{uri{}};
+
+    SECTION("assigning valid to valid") {
+        database database_a = client["a"];
+        database database_b = client["b"];
+        database_b = database_a;
+        REQUIRE(database_b);
+        REQUIRE(database_b.name() == stdx::string_view{"a"});
+    }
+
+    SECTION("assigning invalid to valid") {
+        database database_a;
+        database database_b = client["b"];
+        database_b = database_a;
+        REQUIRE(!database_b);
+    }
+
+    SECTION("assigning valid to invalid") {
+        database database_a = client["a"];
+        database database_b;
+        database_b = database_a;
+        REQUIRE(database_b);
+        REQUIRE(database_b.name() == stdx::string_view{"a"});
+    }
+
+    SECTION("assigning invalid to invalid") {
+        database database_a;
+        database database_b;
+        database_b = database_a;
+        REQUIRE(!database_b);
+    }
 }
 
 TEST_CASE("A database", "[database]") {

@@ -179,9 +179,14 @@ collection::collection(const collection& c) {
 }
 
 collection& collection::operator=(const collection& c) {
-    if (c) {
+    if (!c) {
+        _impl.reset();
+    } else if (!*this) {
         _impl = stdx::make_unique<impl>(c._get_impl());
+    } else {
+        *_impl = c._get_impl();
     }
+
     return *this;
 }
 
