@@ -20,10 +20,10 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/error_category.hh>
 #include <mongocxx/exception/private/mongoc_error.hh>
+#include <mongocxx/options/private/ssl.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
-#include <mongocxx/private/ssl.hh>
 #include <mongocxx/private/uri.hh>
 #include <mongocxx/private/write_concern.hh>
 

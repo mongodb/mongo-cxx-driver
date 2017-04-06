@@ -20,9 +20,9 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
+#include <mongocxx/options/private/ssl.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/pool.hh>
-#include <mongocxx/private/ssl.hh>
 #include <mongocxx/private/uri.hh>
 
 #include <mongocxx/config/private/prelude.hh>
