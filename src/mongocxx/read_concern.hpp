@@ -105,7 +105,7 @@ class MONGOCXX_API read_concern {
     ///   Either k_local, k_majority, k_linearizable, or k_server_default.
     ///
     /// @throws
-    ///   std::invalid_argument if rc_level is not k_local, k_majority, k_linearizable, or
+    ///   mongocxx::exception if rc_level is not k_local, k_majority, k_linearizable, or
     ///   k_server_default.
     ///
     void acknowledge_level(level rc_level);
