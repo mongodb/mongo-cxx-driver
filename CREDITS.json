@@ -71,6 +71,14 @@
                 "rassi@mongodb.com"
             ],
             "description": "MongoDB 3.4 feature support, ongoing development/maintenance."
+        },
+        {
+            "name": "Sam Rossi",
+            "email": [
+                "sam.rossi@mongodb.com"
+            ],
+            "description": "GridFS API, ongoing development/maintenance."
         }
+
     ]
 }
