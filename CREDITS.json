@@ -64,6 +64,13 @@
                 "david@mongodb.com"
             ],
             "description": "Drivers team Staff Engineer responsible for ongoing development and maintenance of the C++ driver."
+        },
+        {
+            "name": "J. Rassi",
+            "email": [
+                "rassi@mongodb.com"
+            ],
+            "description": "MongoDB 3.4 feature support, ongoing development/maintenance."
         }
     ]
 }
