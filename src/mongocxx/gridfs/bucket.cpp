@@ -51,6 +51,11 @@ bucket::bucket(const database& db, const options::gridfs::bucket& options) {
         default_chunk_size_bytes = *chunk_size_bytes;
     }
 
+    if (default_chunk_size_bytes <= 0) {
+        throw logic_error{error_code::k_invalid_parameter,
+                          "positive value for chunk_size_bytes required"};
+    }
+
     collection chunks = db[bucket_name + ".chunks"];
     collection files = db[bucket_name + ".files"];
 
@@ -111,6 +116,12 @@ uploader bucket::open_upload_stream_with_id(bsoncxx::types::value id,
     std::int32_t chunk_size_bytes = _get_impl().default_chunk_size_bytes;
 
     if (auto chunk_size = options.chunk_size_bytes()) {
+        if (*chunk_size <= 0) {
+            throw logic_error{
+                error_code::k_invalid_parameter,
+                "positive value required for options::gridfs::upload::chunk_size_bytes()"};
+        }
+
         chunk_size_bytes = *chunk_size;
     }
 

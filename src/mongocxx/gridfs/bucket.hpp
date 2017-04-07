@@ -116,6 +116,8 @@ class MONGOCXX_API bucket {
     ///   If this GridFS bucket does not already exist in the database, it will be implicitly
     ///   created and initialized with GridFS indexes.
     ///
+    /// @throws mongocxx::logic_error if `options` are invalid.
+    ///
     /// @throws mongocxx::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
@@ -143,6 +145,8 @@ class MONGOCXX_API bucket {
     /// @note
     ///   If this GridFS bucket does not already exist in the database, it will be implicitly
     ///   created and initialized with GridFS indexes.
+    ///
+    /// @throws mongocxx::logic_error if `options` are invalid.
     ///
     /// @throws mongocxx::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
@@ -173,6 +177,8 @@ class MONGOCXX_API bucket {
     /// @note
     ///   If this GridFS bucket does not already exist in the database, it will be implicitly
     ///   created and initialized with GridFS indexes.
+    ///
+    /// @throws mongocxx::logic_error if `options` are invalid.
     ///
     /// @throws mongocxx::bulk_write_exception
     ///   if an error occurs when writing chunk data or file metadata to the database.
@@ -214,6 +220,8 @@ class MONGOCXX_API bucket {
     /// @note
     ///   If this GridFS bucket does not already exist in the database, it will be implicitly
     ///   created and initialized with GridFS indexes.
+    ///
+    /// @throws mongocxx::logic_error if `options` are invalid.
     ///
     /// @throws mongocxx::bulk_write_exception
     ///   if an error occurs when writing chunk data or file metadata to the database.

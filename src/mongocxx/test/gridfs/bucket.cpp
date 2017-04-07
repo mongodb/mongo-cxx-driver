@@ -26,6 +26,7 @@
 #include <bsoncxx/types/value.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
+#include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
 #include <mongocxx/instance.hpp>
@@ -100,6 +101,217 @@ TEST_CASE("mongocxx::gridfs::bucket copy assignment operator", "[gridfs::bucket]
         gridfs::bucket bucket_b;
         bucket_b = bucket_a;
         REQUIRE(!bucket_b);
+    }
+}
+
+TEST_CASE("database::gridfs_bucket() throws error when options are invalid", "[gridfs::bucket]") {
+    instance::current();
+
+    client client{uri{}};
+    database db = client["gridfs_bucket_error_invalid_options"];
+
+    options::gridfs::bucket bucket_options;
+
+    SECTION("empty bucket name") {
+        bucket_options.bucket_name("");
+    }
+    SECTION("zero chunk size") {
+        bucket_options.chunk_size_bytes(0);
+    }
+    SECTION("negative chunk size") {
+        bucket_options.chunk_size_bytes(-1);
+    }
+
+    REQUIRE_THROWS_AS(db.gridfs_bucket(bucket_options), logic_error);
+}
+
+TEST_CASE("uploading throws error when options are invalid", "[gridfs::bucket]") {
+    instance::current();
+
+    client client{uri{}};
+    database db = client["gridfs_upload_error_invalid_options"];
+    gridfs::bucket bucket = db.gridfs_bucket();
+
+    options::gridfs::upload upload_options;
+
+    SECTION("zero chunk size") {
+        upload_options.chunk_size_bytes(0);
+    }
+    SECTION("negative chunk size") {
+        upload_options.chunk_size_bytes(-1);
+    }
+
+    REQUIRE_THROWS_AS(bucket.open_upload_stream("filename", upload_options), logic_error);
+    REQUIRE_THROWS_AS(
+        bucket.open_upload_stream_with_id(
+            bsoncxx::types::value{bsoncxx::types::b_int32{0}}, "filename", upload_options),
+        logic_error);
+
+    std::istringstream iss{"foo"};
+    REQUIRE_THROWS_AS(bucket.upload_from_stream("filename", &iss, upload_options), logic_error);
+    REQUIRE_THROWS_AS(
+        bucket.upload_from_stream_with_id(
+            bsoncxx::types::value{bsoncxx::types::b_int32{0}}, "filename", &iss, upload_options),
+        logic_error);
+}
+
+TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::bucket]") {
+    instance::current();
+
+    client client{uri{}};
+    database db = client["gridfs_files_doc_corrupt"];
+    gridfs::bucket bucket = db.gridfs_bucket();
+
+    db["fs.files"].drop();
+
+    const std::int32_t k_expected_chunk_size_bytes = 255 * 1024;  // Default chunk size.
+    const std::int64_t k_expected_file_length = 1024 * 1024;
+    stdx::optional<bsoncxx::types::value> chunk_size{
+        bsoncxx::types::value{bsoncxx::types::b_int32{k_expected_chunk_size_bytes}}};
+    stdx::optional<bsoncxx::types::value> length{
+        bsoncxx::types::value{bsoncxx::types::b_int64{k_expected_file_length}}};
+    bool expect_success = false;
+
+    // Tests for invalid chunk size.
+    SECTION("zero chunk size") {
+        chunk_size = bsoncxx::types::value{bsoncxx::types::b_int32{0}};
+    }
+    SECTION("negative chunk size") {
+        chunk_size = bsoncxx::types::value{bsoncxx::types::b_int32{-1}};
+    }
+    SECTION("chunk size too large") {
+        const std::int32_t k_max_document_size = 16 * 1024 * 1024;
+        chunk_size = bsoncxx::types::value{bsoncxx::types::b_int32{k_max_document_size + 1}};
+    }
+    SECTION("chunk size of wrong type") {
+        chunk_size = bsoncxx::types::value{bsoncxx::types::b_utf8{"invalid"}};
+    }
+    SECTION("missing chunk size") {
+        chunk_size = stdx::nullopt;
+    }
+
+    // Tests for invalid length.
+    SECTION("negative length") {
+        length = bsoncxx::types::value{bsoncxx::types::b_int64{-1}};
+    }
+    SECTION("invalid length") {
+        length = bsoncxx::types::value{bsoncxx::types::b_utf8{"invalid"}};
+    }
+    SECTION("missing length") {
+        length = stdx::nullopt;
+    }
+
+    // Test for too many chunks.
+    SECTION("too many chunks") {
+        chunk_size = bsoncxx::types::value{bsoncxx::types::b_int32{1}};
+        length = bsoncxx::types::value{bsoncxx::types::b_int64{
+            static_cast<std::int64_t>(std::numeric_limits<std::int32_t>::max()) + 1}};
+    }
+
+    // Test for valid length and chunk size.
+    SECTION("valid length and chunk size") {
+        expect_success = true;
+    }
+
+    {
+        bsoncxx::builder::basic::document files_doc;
+        files_doc.append(kvp("_id", 0));
+        if (length) {
+            files_doc.append(kvp("length", *length));
+        }
+        if (chunk_size) {
+            files_doc.append(kvp("chunkSize", *chunk_size));
+        }
+
+        db["fs.files"].insert_one(files_doc.extract());
+    }
+
+    auto open_download_stream = [&bucket]() {
+        return bucket.open_download_stream(bsoncxx::types::value{bsoncxx::types::b_int32{0}});
+    };
+
+    if (expect_success) {
+        gridfs::downloader downloader = open_download_stream();
+        REQUIRE(downloader.chunk_size() == k_expected_chunk_size_bytes);
+        REQUIRE(downloader.file_length() == k_expected_file_length);
+    } else {
+        REQUIRE_THROWS_AS(open_download_stream(), gridfs_exception);
+    }
+}
+
+TEST_CASE("downloading throws error when chunks document is corrupt", "[gridfs::bucket]") {
+    instance::current();
+
+    client client{uri{}};
+    database db = client["gridfs_chunk_doc_corrupt"];
+    gridfs::bucket bucket = db.gridfs_bucket();
+
+    db["fs.files"].drop();
+    db["fs.chunks"].drop();
+
+    const std::uint8_t k_expected_data_byte = 'd';
+
+    stdx::optional<bsoncxx::types::value> n{bsoncxx::types::value{bsoncxx::types::b_int32{0}}};
+    stdx::optional<bsoncxx::types::value> data{bsoncxx::types::value{
+        bsoncxx::types::b_binary{bsoncxx::binary_sub_type::k_binary, 1, &k_expected_data_byte}}};
+    bool expect_success = false;
+
+    // Tests for invalid n.
+    SECTION("missing n") {
+        n = stdx::nullopt;
+    }
+    SECTION("wrong type for n") {
+        n = bsoncxx::types::value{bsoncxx::types::b_int64{0}};
+    }
+
+    // Tests for invalid data.
+    SECTION("missing data") {
+        data = stdx::nullopt;
+    }
+    SECTION("wrong type for data") {
+        data = bsoncxx::types::value{bsoncxx::types::b_bool{true}};
+    }
+
+    // Test for valid n and data.
+    SECTION("valid n and data") {
+        expect_success = true;
+    }
+
+    {
+        bsoncxx::builder::basic::document chunk_doc;
+        chunk_doc.append(kvp("files_id", 0));
+        if (n) {
+            chunk_doc.append(kvp("n", *n));
+        }
+        if (data) {
+            chunk_doc.append(kvp("data", *data));
+        }
+
+        db["fs.chunks"].insert_one(chunk_doc.extract());
+        db["fs.files"].insert_one(
+            make_document(kvp("_id", 0), kvp("length", 1), kvp("chunkSize", 1)));
+    }
+
+    gridfs::downloader downloader =
+        bucket.open_download_stream(bsoncxx::types::value{bsoncxx::types::b_int32{0}});
+    auto downloader_read_one = [&downloader]() {
+        stdx::optional<std::uint8_t> result;
+        std::uint8_t byte;
+        std::size_t bytes_downloaded = downloader.read(1, &byte);
+        if (bytes_downloaded > 0) {
+            result = byte;
+        }
+        return result;
+    };
+
+    if (expect_success) {
+        stdx::optional<std::uint8_t> result = downloader_read_one();
+        REQUIRE(result);
+        REQUIRE(*result == k_expected_data_byte);
+        result = downloader_read_one();
+        REQUIRE(!result);
+    } else {
+        REQUIRE_THROWS_AS(downloader_read_one(), gridfs_exception);
     }
 }
 
