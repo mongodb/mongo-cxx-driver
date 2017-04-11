@@ -22,6 +22,7 @@ title = "Installing the mongocxx driver"
 
 The mongocxx driver builds on top of the MongoDB C driver.
 
+* For mongocxx-3.2.x, libmongoc 1.7.0 or later is required.
 * For mongocxx-3.1.x, libmongoc 1.5.0 or later is required.
 * For mongocxx-3.0.x, we recommend the last 1.4.x version of libmongoc
 
