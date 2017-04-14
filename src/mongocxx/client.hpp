@@ -99,6 +99,10 @@ class MONGOCXX_API client {
     /// created by this client but do affect new ones as databases inherit the @c read_concern
     /// settings of their parent upon instantiation.
     ///
+    /// @deprecated
+    ///   This method is deprecated. Read concerns should be set either in the URI or directly on
+    ///   database or collection objects.
+    ///
     /// @param rc
     ///   The new @c read_concern
     ///
@@ -119,6 +123,10 @@ class MONGOCXX_API client {
     /// Modifications at this level do not affect existing database instances that have been
     /// created by this client but do affect new ones as databases inherit the @c read_preference
     /// settings of their parent upon instantiation.
+    ///
+    /// @deprecated
+    ///   This method is deprecated. Read preferences should be set either in the URI or directly on
+    ///   database or collection objects.
     ///
     /// @param rp
     ///   The new @c read_preference
@@ -149,6 +157,10 @@ class MONGOCXX_API client {
     /// @note Modifications at this level do not affect existing databases or collection instances
     /// that have come from this client but do affect new ones as databases will receive a copy of
     /// this client's @c write_concern upon instantiation.
+    ///
+    /// @deprecated
+    ///   This method is deprecated. Write concerns should be set either in the URI or directly on
+    ///   database or collection objects.
     ///
     /// @param wc
     ///   The new write concern
