@@ -57,7 +57,10 @@ implementations for these features:
      Select with `-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=1`. If your
      toolchain's standard library provides `optional` and
      `string_view` in the namespace `std::experimental`, you can use
-     this option.
+     this option. Be aware that your standard library's 
+     `std::experimental` implementation may change over time,
+     breaking binary compatibility in unexpected ways. Note that this
+     polyfill is *not* recommended and is unsupported.
 
 Most users should be fine sticking with the default. However, if you
 have an existing application which makes heavy use of one of the
@@ -66,9 +69,6 @@ against the same library.
 
 **DO NOT** change your project's polyfill if you need to create a
 stable binary interface.
-
-Be aware that your standard library's `std::experimental` implementation
-may change over time, breaking binary compatibility in unexpected ways.
 
 ### Step 3: Download the latest version of the mongocxx driver.
 
