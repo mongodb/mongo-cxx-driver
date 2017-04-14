@@ -223,7 +223,7 @@ void test_download(database db,
 
         // Otherwise, an error should occur when reading from the stream.
         gridfs::downloader downloader = bucket.open_download_stream(id);
-        REQUIRE_THROWS_AS(downloader.read(length, actual.get()), std::exception);
+        REQUIRE_THROWS_AS(downloader.read(actual.get(), length), std::exception);
 
         return;
     }
@@ -233,7 +233,7 @@ void test_download(database db,
 
     gridfs::downloader downloader = bucket.open_download_stream(id);
 
-    std::int64_t actual_size = downloader.read(length, actual.get());
+    std::int64_t actual_size = downloader.read(actual.get(), length);
     REQUIRE(actual_size == length);
 
     // The GridFS spec specifies the expected binary data in the form of { $hex: "<hexadecimal
@@ -283,7 +283,7 @@ void test_upload(database db,
     std::string hex = source["$hex"].get_utf8().value.to_string();
     std::basic_string<std::uint8_t> source_bytes = test_util::convert_hex_string_to_bytes(hex);
 
-    uploader.write(source_bytes.size(), source_bytes.data());
+    uploader.write(source_bytes.data(), source_bytes.size());
     result::gridfs::upload upload_result = uploader.close();
     auto id = upload_result.id();
 

@@ -68,7 +68,7 @@ uploader::operator bool() const noexcept {
     return static_cast<bool>(_impl);
 }
 
-void uploader::write(std::size_t length, const std::uint8_t* bytes) {
+void uploader::write(const std::uint8_t* bytes, std::size_t length) {
     if (_get_impl().closed) {
         throw logic_error{error_code::k_gridfs_stream_not_open};
     }

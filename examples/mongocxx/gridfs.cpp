@@ -45,7 +45,7 @@ int main() {
 
     // Write 50 bytes to the file.
     for (auto i = 0; i < 5; ++i) {
-        uploader.write(10, bytes);
+        uploader.write(bytes, 10);
     }
 
     auto result = uploader.close();
@@ -62,7 +62,7 @@ int main() {
     auto buffer_size = std::min(file_length, static_cast<std::int64_t>(downloader.chunk_size()));
     auto buffer = make_unique<std::uint8_t[]>(buffer_size);
 
-    while (auto length_read = downloader.read(buffer_size, buffer.get())) {
+    while (auto length_read = downloader.read(buffer.get(), buffer_size)) {
         bytes_counter += length_read;
 
         // Do something with the contents of buffer.

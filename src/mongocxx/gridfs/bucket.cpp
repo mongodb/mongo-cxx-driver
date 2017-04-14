@@ -154,7 +154,7 @@ void bucket::upload_from_stream_with_id(bsoncxx::types::value id,
 
     while (!source->eof()) {
         source->read(reinterpret_cast<char*>(buffer.get()), static_cast<std::size_t>(chunk_size));
-        upload_stream.write(source->gcount(), buffer.get());
+        upload_stream.write(buffer.get(), source->gcount());
     }
 
     upload_stream.close();
@@ -209,7 +209,7 @@ void bucket::download_to_stream(bsoncxx::types::value id, std::ostream* destinat
     std::size_t bytes_read;
 
     while ((bytes_read =
-                download_stream.read(static_cast<std::size_t>(chunk_size), buffer.get())) != 0) {
+                download_stream.read(buffer.get(), static_cast<std::size_t>(chunk_size))) != 0) {
         destination->write(reinterpret_cast<char*>(buffer.get()), bytes_read);
     }
 

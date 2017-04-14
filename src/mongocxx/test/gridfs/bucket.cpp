@@ -297,7 +297,7 @@ TEST_CASE("downloading throws error when chunks document is corrupt", "[gridfs::
     auto downloader_read_one = [&downloader]() {
         stdx::optional<std::uint8_t> result;
         std::uint8_t byte;
-        std::size_t bytes_downloaded = downloader.read(1, &byte);
+        std::size_t bytes_downloaded = downloader.read(&byte, 1);
         if (bytes_downloaded > 0) {
             result = byte;
         }
@@ -407,7 +407,7 @@ TEST_CASE("mongocxx::gridfs::downloader::read with arbitrary sizes", "[gridfs::d
     std::size_t total_bytes_read = 0;
     auto downloader = bucket.open_download_stream(bsoncxx::types::value{id});
 
-    while (std::size_t bytes_read = downloader.read(read_size, buffer.data())) {
+    while (std::size_t bytes_read = downloader.read(buffer.data(), read_size)) {
         std::vector<std::uint8_t> expected_bytes{expected.data() + total_bytes_read,
                                                  expected.data() + total_bytes_read + bytes_read};
         std::vector<std::uint8_t> actual_bytes{buffer.data(), buffer.data() + bytes_read};
@@ -510,7 +510,7 @@ TEST_CASE("mongocxx::gridfs::uploader::write with arbitrary sizes", "[gridfs::up
             std::min(static_cast<std::int64_t>(write_size),
                      file_length - static_cast<std::int64_t>(bytes_written)));
 
-        uploader.write(actual_write_size, bytes.data() + bytes_written);
+        uploader.write(bytes.data() + bytes_written, actual_write_size);
         bytes_written += actual_write_size;
     }
 
@@ -565,15 +565,15 @@ TEST_CASE("gridfs upload/download round trip", "[gridfs::uploader] [gridfs::down
     std::array<std::uint8_t, 100> downloaded_bytes;
 
     auto uploader = bucket.open_upload_stream("file");
-    uploader.write(100, uploaded_bytes.data());
+    uploader.write(uploaded_bytes.data(), 100);
     auto result = uploader.close();
 
     auto downloader = bucket.open_download_stream(result.id());
-    auto bytes_read = downloader.read(100, downloaded_bytes.data());
+    auto bytes_read = downloader.read(downloaded_bytes.data(), 100);
     REQUIRE(bytes_read == 100);
 
     std::uint8_t c;
-    REQUIRE(downloader.read(1, &c) == 0);
+    REQUIRE(downloader.read(&c, 1) == 0);
 
     REQUIRE(uploaded_bytes == downloaded_bytes);
 }

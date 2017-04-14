@@ -71,11 +71,11 @@ class MONGOCXX_API downloader {
     ///
     /// Reads a specified number of bytes from the GridFS file being downloaded.
     ///
-    /// @param length
-    ///   The number of bytes to read from the file.
-    ///
     /// @param buffer
     ///   A pointer to a buffer to store the bytes read from the file.
+    ///
+    /// @param length
+    ///   The number of bytes to read from the file.
     ///
     /// @return
     ///   The number of bytes actually read. If zero, the downloader has reached the end of the
@@ -88,7 +88,7 @@ class MONGOCXX_API downloader {
     /// @throws mongocxx::query_exception
     ///   if an error occurs when reading chunk data from the database for the requested file.
     ///
-    std::size_t read(std::size_t length, std::uint8_t* buffer);
+    std::size_t read(std::uint8_t* buffer, std::size_t length);
 
     ///
     /// Closes the downloader stream.

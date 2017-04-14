@@ -72,11 +72,11 @@ class MONGOCXX_API uploader {
     ///
     /// Writes a specified number of bytes to a GridFS file.
     ///
-    /// @param length
-    ///   The number of bytes to write.
-    ///
     /// @param bytes
     ///   A pointer to the bytes to write.
+    ///
+    /// @param length
+    ///   The number of bytes to write.
     ///
     /// @throws mongocxx::logic_error if the upload stream was already closed.
     ///
@@ -87,7 +87,7 @@ class MONGOCXX_API uploader {
     ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
     ///   size.
     ///
-    void write(std::size_t length, const std::uint8_t* bytes);
+    void write(const std::uint8_t* bytes, std::size_t length);
 
     ///
     /// Closes the uploader stream.

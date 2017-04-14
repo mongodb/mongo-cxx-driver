@@ -42,7 +42,7 @@ downloader::operator bool() const noexcept {
     return static_cast<bool>(_impl);
 }
 
-std::size_t downloader::read(std::size_t length_requested, std::uint8_t* buffer) {
+std::size_t downloader::read(std::uint8_t* buffer, std::size_t length_requested) {
     if (_get_impl().closed) {
         throw logic_error{error_code::k_gridfs_stream_not_open};
     }
