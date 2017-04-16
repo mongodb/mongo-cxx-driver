@@ -11,7 +11,7 @@ import time
 import urllib
 
 Import('env has_option get_option')
-Import('nix linux darwin windows')
+Import('nix linux darwin windows solaris')
 
 buildShared = False
 if has_option("sharedclient"):
@@ -412,6 +412,16 @@ if buildShared:
                 mongoClientSharedLibPrefixInstall[0]
             ))
     mongoClientPrefixInstalls.append(mongoClientSharedLibPrefixInstall)
+
+    if solaris:
+        # On solaris SCONS adds -KPIC via SHCCFLAGS and SHCXXFLAGS, which are unsupported on gcc.
+        # the simplest way to work around this is to just substitute CCFLAGS and CXXFLAGS in for
+        # SHCCFLAGS and SHCXXFLAGS.
+        #
+        # Note: if we ever add support for sun studio as a toolchain, we will need to conditionally
+        # disable this.
+        sharedLibEnv.Replace(SHCCFLAGS="$CCFLAGS")
+        sharedLibEnv.Replace(SHCXXFLAGS="$CXXFLAGS")
 
 inst = libEnv.InstallAs(['$INSTALL_DIR/include/' + x for x in clientHeaders], clientHeaders)
 libEnv.AddPostAction(inst, Chmod('$TARGET', 0644))
