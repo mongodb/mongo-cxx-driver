@@ -389,6 +389,12 @@ namespace mongo {
         Query& hint(BSONObj keyPattern);
         Query& hint(const string &jsonKeyPatt);
 
+        /**
+         * Specifies a cumulative time limit in milliseconds for processing an operation.
+         * MongoDB will interrupt the operation at the earliest following interrupt point.
+         */
+        Query& maxTimeMs(int millis);
+
         /** Provide min and/or max index limits for the query.
             min <= x < max
          */
@@ -450,11 +456,13 @@ namespace mongo {
         BSONObj getSort() const;
         BSONObj getHint() const;
         bool isExplain() const;
+        int getMaxTimeMs() const;
 
         /**
          * @return true if the query object contains a read preference specification object.
          */
         static bool hasReadPreference(const BSONObj& queryObj);
+        bool hasMaxTimeMs() const;
 
         string toString() const;
         operator string() const { return toString(); }
