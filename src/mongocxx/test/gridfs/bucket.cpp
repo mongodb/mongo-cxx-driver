@@ -16,6 +16,8 @@
 #include <cstdint>
 #include <cstdlib>
 #include <fstream>
+#include <ios>
+#include <istream>
 #include <vector>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -597,4 +599,30 @@ TEST_CASE("gridfs::bucket::upload_from_stream doesn't infinite loop when passed 
         bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
         REQUIRE_THROWS(bucket.upload_from_stream_with_id(id, "file", &stream));
     }
+}
+
+TEST_CASE("gridfs upload_from_stream aborts on failure", "[gridfs::bucket]") {
+    instance::current();
+
+    client client{uri{}};
+    database db = client["gridfs_upload_from_stream_abort_on_failure"];
+    gridfs::bucket bucket = db.gridfs_bucket();
+
+    db["fs.files"].delete_many({});
+    db["fs.chunks"].delete_many({});
+
+    // Normally, an ifstream pointing to a non-existent file will throw an exception as soon as
+    // `failbit` and `badbit` are set in the exceptions mask, which means `upload_from_stream` will
+    // not trigger an abort. Wrapping it in a separate `istream` delays the exception from being
+    // thrown until the first call to `istream::read`, which should then trigger a call to `abort`.
+    std::ifstream in{"file_that_does_not_exist.txt"};
+    std::istream is{in.rdbuf()};
+
+    auto id = bsoncxx::types::value{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+
+    // Aborting the upload should clear all chunks with the given file id.
+    db["fs.chunks"].insert_one(make_document(kvp("files_id", id)));
+
+    REQUIRE_THROWS(bucket.upload_from_stream_with_id(id, "file", &is, {}));
+    REQUIRE(!db["fs.chunks"].find_one({}));
 }

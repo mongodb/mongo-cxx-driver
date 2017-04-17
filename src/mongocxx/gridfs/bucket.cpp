@@ -159,7 +159,14 @@ void bucket::upload_from_stream_with_id(bsoncxx::types::value id,
     std::unique_ptr<std::uint8_t[]> buffer = stdx::make_unique<std::uint8_t[]>(chunk_size);
 
     while (!source->eof()) {
-        source->read(reinterpret_cast<char*>(buffer.get()), static_cast<std::size_t>(chunk_size));
+        try {
+            source->read(reinterpret_cast<char*>(buffer.get()),
+                         static_cast<std::size_t>(chunk_size));
+        } catch (...) {
+            upload_stream.abort();
+            throw;
+        }
+
         upload_stream.write(buffer.get(), source->gcount());
     }
 
