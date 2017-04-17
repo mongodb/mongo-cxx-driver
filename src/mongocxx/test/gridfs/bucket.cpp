@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstdlib>
+#include <fstream>
 #include <vector>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -576,4 +577,24 @@ TEST_CASE("gridfs upload/download round trip", "[gridfs::uploader] [gridfs::down
     REQUIRE(downloader.read(&c, 1) == 0);
 
     REQUIRE(uploaded_bytes == downloaded_bytes);
+}
+
+TEST_CASE("gridfs::bucket::upload_from_stream doesn't infinite loop when passed bad ifstream",
+          "[gridfs::bucket]") {
+    instance::current();
+
+    client client{uri{}};
+    database db = client["gridfs_upload_from_stream_no_infinite_loop_ifstream"];
+    gridfs::bucket bucket = db.gridfs_bucket();
+
+    std::ifstream stream{"file_that_does_not_exist.txt"};
+
+    SECTION("upload_from_stream") {
+        REQUIRE_THROWS(bucket.upload_from_stream("file", &stream));
+    }
+
+    SECTION("upload_from_stream_with_id") {
+        bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+        REQUIRE_THROWS(bucket.upload_from_stream_with_id(id, "file", &stream));
+    }
 }

@@ -166,7 +166,8 @@ class MONGOCXX_API bucket {
     ///   name.
     ///
     /// @param source
-    ///    The non-null stream from which the GridFS file should be read.
+    ///    The non-null stream from which the GridFS file should be read. The exception mask on
+    ///    `source` will be cleared of `eofbit` and set for `failbit` and `badbit`.
     ///
     /// @param options
     ///   Optional arguments; see options::gridfs::upload.
@@ -184,8 +185,8 @@ class MONGOCXX_API bucket {
     ///   if an error occurs when writing chunk data or file metadata to the database.
     ///
     /// @throws std::ios_base::failure
-    ///   if reading from `source` fails.  In addition, if `source::exceptions()` is set for
-    ///   `badbit`, any exception thrown during execution of `source::read()` will be re-thrown.
+    ///   if reading from `source` fails. Any exception thrown during the execution of
+    ///   `source::read()` will be re-thrown.
     ///
     /// @throws mongocxx::gridfs_exception
     ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
@@ -212,7 +213,8 @@ class MONGOCXX_API bucket {
     ///   name.
     ///
     /// @param source
-    ///    The non-null stream from which the GridFS file should be read.
+    ///    The non-null stream from which the GridFS file should be read. The exception mask on
+    ///    `source` will be cleared of `eofbit` and set for `failbit` and `badbit`.
     ///
     /// @param options
     ///   Optional arguments; see options::gridfs::upload.
@@ -227,9 +229,8 @@ class MONGOCXX_API bucket {
     ///   if an error occurs when writing chunk data or file metadata to the database.
     ///
     /// @throws std::ios_base::failure
-    ///   if reading from `source` fails.  In addition, if `source::exceptions()` is set for for
-    ///   `badbit`, any exception thrown during execution of `std::istream::read()` will be
-    ///   re-thrown.
+    ///   if reading from `source` fails. Any exception thrown during the execution of
+    ///   `source::read()` will be re-thrown.
     ///
     /// @throws mongocxx::gridfs_exception
     ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
