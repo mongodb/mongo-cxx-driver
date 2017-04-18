@@ -18,9 +18,7 @@ additional connection options are possible via the
 
 To enable TLS (SSL), set `ssl=true` in the URI:
 
-```nohighlight
-mongodb://mongodb.example.com/?ssl=true
-```
+> `mongodb://mongodb.example.com/?ssl=true`
 
 By default, mongocxx will verify server certificates against the local
 system CA list.  You can override that by creating a
