@@ -147,33 +147,6 @@
 
 
   
-
-
-        
-          
-        
-      
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
   
   
   
@@ -196,6 +169,12 @@
       
       
         
+      
+    
+      
+      
+    
+      
       
     
       
@@ -395,35 +374,6 @@
 
 
     <li class="toctree-l2">
-    <a href="/mongo-cxx-driver/mongocxx-v3/">
-        
-        Overview
-    </a>
-  </li>
-
-
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
     <a href="/mongo-cxx-driver/mongocxx-v3/installation/">
         
         Installing the mongocxx driver
@@ -515,7 +465,36 @@
     <li class="toctree-l2">
     <a href="/mongo-cxx-driver/mongocxx-v3/thread-safety/">
         
-        Thread safety
+        Thread and fork safety
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/connection-pools/">
+        
+        Connection pools
     </a>
   </li>
 
@@ -580,6 +559,35 @@
 
         
         
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/index/">
+        
+        Overview
+    </a>
+  </li>
+
+
+        
+        
     </ul>
   </li>
 
@@ -610,35 +618,6 @@
       <span class="menu-arrow fa fa-angle-right"></span>
   </a>
     <ul >
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/mongo-cxx-driver/legacy-v1/">
-        
-        Overview
-    </a>
-  </li>
-
-
-        
         
         
         
@@ -779,6 +758,35 @@
     <a href="/mongo-cxx-driver/legacy-v1/breaking-changes/">
         
         Breaking changes from 26compat
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/index/">
+        
+        Overview
     </a>
   </li>
 
@@ -944,35 +952,6 @@
 
 
     <li class="toctree-l2">
-    <a href="/mongo-cxx-driver/contributing/">
-        
-        Contribution Guidelines
-    </a>
-  </li>
-
-
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
     <a href="/mongo-cxx-driver/contributing/testing-mongocxx/">
         
         Testing the mongocxx driver
@@ -1069,6 +1048,35 @@
 
         
         
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/index/">
+        
+        Contribution Guidelines
+    </a>
+  </li>
+
+
+        
+        
     </ul>
   </li>
 
@@ -1132,8 +1140,9 @@ additional connection options are possible via the
 
 <p>To enable TLS (SSL), set <code>ssl=true</code> in the URI:</p>
 
-<pre><code class="language-nohighlight">mongodb://mongodb.example.com/?ssl=true
-</code></pre>
+<blockquote>
+<p><code>mongodb://mongodb.example.com/?ssl=true</code></p>
+</blockquote>
 
 <p>By default, mongocxx will verify server certificates against the local
 system CA list.  You can override that by creating a
@@ -1270,6 +1279,29 @@ auto client = mongocxx::client{
     uri{&quot;mongodb://user1:pwd1@host1/?authSource=$external&amp;authMechanism=PLAIN&quot;}};
 </code></pre>
 
+<h2 id="configuring-a-connection-pool">Configuring a connection pool</h2>
+
+<p>To configure a connection pool, first create a <code>mongocxx::pool</code>, passing
+the URI as an argument. The size of the pool can be configured in the URI.
+Then, call <code>mongocxx::pool::acquire</code> to receive a client from the pool.
+The client will automatically be returned to the pool when it goes out of
+scope.</p>
+
+<pre><code class="language-cpp">#include &lt;mongocxx/pool.hpp&gt;
+#include &lt;mongocxx/uri.hpp&gt;
+
+auto pool = mongocxx::pool{uri{&quot;mongodb://host1/?minPoolSize=3&amp;maxPoolSize=5&quot;}};
+
+{
+    // To get a client from the pool, call `acquire()`.
+    auto client = pool.acquire();
+
+    // The client is returned to the pool when it goes out of scope.
+}
+</code></pre>
+
+<p>See <a href="../connection-pools">connection pool documentation</a> for more details.</p>
+
 
 
 
@@ -1313,6 +1345,7 @@ auto client = mongocxx::client{
 <li><a href="#kerberos-gssapi">Kerberos (GSSAPI)</a></li>
 <li><a href="#ldap">LDAP</a></li>
 </ul></li>
+<li><a href="#configuring-a-connection-pool">Configuring a connection pool</a></li>
 </ul></li>
 </ul>
 </nav>

@@ -9,7 +9,7 @@
 
     <link rel="shortcut icon" href="https://mongodb.github.io/mongo-cxx-driver/img/favicon.png">
 
-    <title>Thread safety</title>
+    <title>Thread and fork safety</title>
 
     <link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
@@ -201,33 +201,6 @@
 
 
   
-
-
-        
-          
-        
-      
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
   
   
   
@@ -250,6 +223,12 @@
       
       
         
+      
+    
+      
+      
+    
+      
       
     
       
@@ -443,35 +422,6 @@
 
 
     <li class="toctree-l2">
-    <a href="/mongo-cxx-driver/mongocxx-v3/">
-        
-        Overview
-    </a>
-  </li>
-
-
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
     <a href="/mongo-cxx-driver/mongocxx-v3/installation/">
         
         Installing the mongocxx driver
@@ -563,7 +513,36 @@
     <li class="toctree-l2">
     <a href="/mongo-cxx-driver/mongocxx-v3/thread-safety/">
         
-        Thread safety
+        Thread and fork safety
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/connection-pools/">
+        
+        Connection pools
     </a>
   </li>
 
@@ -628,6 +607,35 @@
 
         
         
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/index/">
+        
+        Overview
+    </a>
+  </li>
+
+
+        
+        
     </ul>
   </li>
 
@@ -658,35 +666,6 @@
       <span class="menu-arrow fa fa-angle-right"></span>
   </a>
     <ul >
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/mongo-cxx-driver/legacy-v1/">
-        
-        Overview
-    </a>
-  </li>
-
-
-        
         
         
         
@@ -827,6 +806,35 @@
     <a href="/mongo-cxx-driver/legacy-v1/breaking-changes/">
         
         Breaking changes from 26compat
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/index/">
+        
+        Overview
     </a>
   </li>
 
@@ -992,35 +1000,6 @@
 
 
     <li class="toctree-l2">
-    <a href="/mongo-cxx-driver/contributing/">
-        
-        Contribution Guidelines
-    </a>
-  </li>
-
-
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
     <a href="/mongo-cxx-driver/contributing/testing-mongocxx/">
         
         Testing the mongocxx driver
@@ -1117,6 +1096,35 @@
 
         
         
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/index/">
+        
+        Contribution Guidelines
+    </a>
+  </li>
+
+
+        
+        
     </ul>
   </li>
 
@@ -1161,7 +1169,7 @@
   
   
   <li><a href="/mongo-cxx-driver/mongocxx-v3/">mongocxx (v3)</a> <i class="fa fa-angle-right"></i></li>
-  <li>Thread safety</li>
+  <li>Thread and fork safety</li>
 </ul>
 </div>
 
@@ -1171,7 +1179,8 @@
 <p>TLDR: <strong>Always give each thread its own <code>mongocxx::client</code></strong>.</p>
 
 <p>In general each <code>mongocxx::client</code> object AND all of its child objects
-<strong>should be used by a single thread at a time</strong>.</p>
+<strong>should be used by a single thread at a time</strong>. This is true even for
+clients acquired from a <code>mongocxx::pool</code>.</p>
 
 <p>Even if you create multiple child objects from a single <code>client</code>, and
 synchronize them individually, that is unsafe as they will concurrently
@@ -1247,6 +1256,12 @@ more performant) to make one per-thread. Obviously in this contrived
 example, there&rsquo;s quite a bit of overhead because we&rsquo;re doing so little work
 with each client - but in a real program this is the best solution.</p>
 
+<h2 id="fork-safety">Fork safety</h2>
+
+<p>Neither a <code>mongocxx::client</code> or a <code>mongocxx::pool</code> can be safely copied
+when forking. Because of this, any client or pool must be created <em>after</em>
+forking, not before.</p>
+
 
 
 
@@ -1262,8 +1277,8 @@ with each client - but in a real program this is the best solution.</p>
   
   
   <div class="pull-right">
-  <a class="navigation next" href="/mongo-cxx-driver/mongocxx-v3/working-with-bson/">
-    Working with BSON <i class="fa fa-long-arrow-right"> </i>
+  <a class="navigation next" href="/mongo-cxx-driver/mongocxx-v3/connection-pools/">
+    Connection pools <i class="fa fa-long-arrow-right"> </i>
   </a>
   
 </div>
@@ -1283,6 +1298,7 @@ with each client - but in a real program this is the best solution.</p>
 <li><a href="#never-do-this">Never do this</a></li>
 <li><a href="#a-better-version">A better version</a></li>
 <li><a href="#the-best-version">The best version</a></li>
+<li><a href="#fork-safety">Fork safety</a></li>
 </ul></li>
 </ul>
 </nav>

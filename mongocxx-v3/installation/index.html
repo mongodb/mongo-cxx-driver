@@ -120,33 +120,6 @@
 
 
   
-
-
-        
-          
-        
-      
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
   
   
   
@@ -169,6 +142,12 @@
       
       
         
+      
+    
+      
+      
+    
+      
       
     
       
@@ -367,35 +346,6 @@
 
 
 
-
-
-
-    <li class="toctree-l2">
-    <a href="/mongo-cxx-driver/mongocxx-v3/">
-        
-        Overview
-    </a>
-  </li>
-
-
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
   
 
 
@@ -491,7 +441,36 @@
     <li class="toctree-l2">
     <a href="/mongo-cxx-driver/mongocxx-v3/thread-safety/">
         
-        Thread safety
+        Thread and fork safety
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/connection-pools/">
+        
+        Connection pools
     </a>
   </li>
 
@@ -556,6 +535,35 @@
 
         
         
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/index/">
+        
+        Overview
+    </a>
+  </li>
+
+
+        
+        
     </ul>
   </li>
 
@@ -586,35 +594,6 @@
       <span class="menu-arrow fa fa-angle-right"></span>
   </a>
     <ul >
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/mongo-cxx-driver/legacy-v1/">
-        
-        Overview
-    </a>
-  </li>
-
-
-        
         
         
         
@@ -755,6 +734,35 @@
     <a href="/mongo-cxx-driver/legacy-v1/breaking-changes/">
         
         Breaking changes from 26compat
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/index/">
+        
+        Overview
     </a>
   </li>
 
@@ -920,35 +928,6 @@
 
 
     <li class="toctree-l2">
-    <a href="/mongo-cxx-driver/contributing/">
-        
-        Contribution Guidelines
-    </a>
-  </li>
-
-
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
     <a href="/mongo-cxx-driver/contributing/testing-mongocxx/">
         
         Testing the mongocxx driver
@@ -1039,6 +1018,35 @@
     <a href="/mongo-cxx-driver/contributing/legacy-release-guide/">
         
         Releasing the legacy driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/index/">
+        
+        Contribution Guidelines
     </a>
   </li>
 
@@ -1151,7 +1159,10 @@ implementations for these features:</p>
      Select with <code>-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=1</code>. If your
      toolchain&rsquo;s standard library provides <code>optional</code> and
      <code>string_view</code> in the namespace <code>std::experimental</code>, you can use
-     this option.</p>
+     this option. Be aware that your standard library&rsquo;s
+     <code>std::experimental</code> implementation may change over time,
+     breaking binary compatibility in unexpected ways. Note that this
+     polyfill is <em>not</em> recommended and is unsupported.</p>
 
 <p>Most users should be fine sticking with the default. However, if you
 have an existing application which makes heavy use of one of the
@@ -1160,9 +1171,6 @@ against the same library.</p>
 
 <p><strong>DO NOT</strong> change your project&rsquo;s polyfill if you need to create a
 stable binary interface.</p>
-
-<p>Be aware that your standard library&rsquo;s <code>std::experimental</code> implementation
-may change over time, breaking binary compatibility in unexpected ways.</p>
 
 <h3 id="step-3-download-the-latest-version-of-the-mongocxx-driver">Step 3: Download the latest version of the mongocxx driver.</h3>
 
@@ -1348,12 +1356,6 @@ settings for a Debug x64 build as an example:</p>
 
 
 <div id="btnv">
-  
-  <div class="pull-left">
-  <a class="navigation prev" href="/mongo-cxx-driver/mongocxx-v3/">
-      <i class="fa fa-long-arrow-left"> </i> Overview
-  </a>
-  </div>
   
   
   <div class="pull-right">

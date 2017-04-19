@@ -9,7 +9,7 @@
 
     <link rel="shortcut icon" href="https://mongodb.github.io/mongo-cxx-driver/img/favicon.png">
 
-    <title>Overview</title>
+    <title>Mongocxx-v3s</title>
 
     <link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
@@ -98,28 +98,6 @@
 
 
   
-    
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
   
   
   
@@ -128,38 +106,6 @@
   
   
 
-  
-    
-    
-    
-  
-  
-
-
-        
-      
-    
-      
-      
-        
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
   
 
 
@@ -343,37 +289,6 @@
 
 
 
-  
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/mongo-cxx-driver/mongocxx-v3/">
-        
-        Overview
-    </a>
-  </li>
-
-
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -467,7 +382,36 @@
     <li class="toctree-l2">
     <a href="/mongo-cxx-driver/mongocxx-v3/thread-safety/">
         
-        Thread safety
+        Thread and fork safety
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/connection-pools/">
+        
+        Connection pools
     </a>
   </li>
 
@@ -532,6 +476,35 @@
 
         
         
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/index/">
+        
+        Overview
+    </a>
+  </li>
+
+
+        
+        
     </ul>
   </li>
 
@@ -562,35 +535,6 @@
       <span class="menu-arrow fa fa-angle-right"></span>
   </a>
     <ul >
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/mongo-cxx-driver/legacy-v1/">
-        
-        Overview
-    </a>
-  </li>
-
-
-        
         
         
         
@@ -731,6 +675,35 @@
     <a href="/mongo-cxx-driver/legacy-v1/breaking-changes/">
         
         Breaking changes from 26compat
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/index/">
+        
+        Overview
     </a>
   </li>
 
@@ -896,35 +869,6 @@
 
 
     <li class="toctree-l2">
-    <a href="/mongo-cxx-driver/contributing/">
-        
-        Contribution Guidelines
-    </a>
-  </li>
-
-
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
     <a href="/mongo-cxx-driver/contributing/testing-mongocxx/">
         
         Testing the mongocxx driver
@@ -1021,6 +965,35 @@
 
         
         
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/index/">
+        
+        Contribution Guidelines
+    </a>
+  </li>
+
+
+        
+        
     </ul>
   </li>
 
@@ -1044,72 +1017,107 @@
                 <div class="bodywrapper">
                   <div class="body">
 
-
-   
-<a class="edit-link" href="https://github.com/mongodb/mongo-cxx-driver/blob/master/docs/content/mongocxx-v3/index.md" target="_blank" title="Edit mongocxx-v3/index.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
-
-
-
-
-
-
-
-
-
-
-<div class="bc">
-<ul>
-  
-  
-  
-  
-  
-  <li><a href="/mongo-cxx-driver/mongocxx-v3/">mongocxx (v3)</a> <i class="fa fa-angle-right"></i></li>
-  <li>Overview</li>
-</ul>
+<section id="main">
+  <div>
+   <h1 id="title">Mongocxx-v3s</h1>
+        <ul id="list">
+            
+                <li class="category">
+<div>
+  <article>
+    <div>
+      <h2><a href='https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/connection-pools/'>Connection pools</a></h2>
+    </div>
+  </article>
 </div>
+</li>
 
-
-<p>The mongocxx is a ground-up rewrite of a C++ driver for MongoDB based on
-<a href="http://mongoc.org/">libmongoc</a>.  It requires a C++11 compiler.  It it
-known to build on x86 and x86-64 architectures for Linux, Mac OS X,
-Windows, FreeBSD and Solaris.</p>
-
-<p>The mongocxx driver library includes a matching bson package, bsoncxx, that
-implements the BSON specification (see <a href="http://www.bsonspec.org">http://www.bsonspec.org</a>). This
-library can be used standalone for object serialization and deserialization
-even when one is not using MongoDB at all.</p>
-
-<p>Releases of the mongocxx driver have version numbers like v3.x.y.</p>
-
-<p>(Note: there were no v2.x.y C++ drivers to avoid confusion with the
-deprecated legacy-0.0-26compat-2.x.y drivers.)</p>
-
-
-
-
-
-
-<div id="btnv">
-  
-  
-  <div class="pull-right">
-  <a class="navigation next" href="/mongo-cxx-driver/mongocxx-v3/installation/">
-    Installing the mongocxx driver <i class="fa fa-long-arrow-right"> </i>
-  </a>
-  
+            
+                <li class="category">
+<div>
+  <article>
+    <div>
+      <h2><a href='https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/api-abi-versioning/'>API and ABI versioning</a></h2>
+    </div>
+  </article>
 </div>
+</li>
+
+            
+                <li class="category">
+<div>
+  <article>
+    <div>
+      <h2><a href='https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/configuration/'>Configuring the mongocxx driver</a></h2>
+    </div>
+  </article>
 </div>
+</li>
+
+            
+                <li class="category">
+<div>
+  <article>
+    <div>
+      <h2><a href='https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/'>Installing the mongocxx driver</a></h2>
+    </div>
+  </article>
+</div>
+</li>
+
+            
+                <li class="category">
+<div>
+  <article>
+    <div>
+      <h2><a href='https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/index/'>Overview</a></h2>
+    </div>
+  </article>
+</div>
+</li>
+
+            
+                <li class="category">
+<div>
+  <article>
+    <div>
+      <h2><a href='https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/thread-safety/'>Thread and fork safety</a></h2>
+    </div>
+  </article>
+</div>
+</li>
+
+            
+                <li class="category">
+<div>
+  <article>
+    <div>
+      <h2><a href='https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/tutorial/'>Tutorial for mongocxx</a></h2>
+    </div>
+  </article>
+</div>
+</li>
+
+            
+                <li class="category">
+<div>
+  <article>
+    <div>
+      <h2><a href='https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/working-with-bson/'>Working with BSON</a></h2>
+    </div>
+  </article>
+</div>
+</li>
+
+            
+        </ul>
+  </div>
+</section>
 
 
 </div>
 <div class="right-column">
 <div class="wrapper">
-  
-  <div class="toc">
-    <span class="toc-header">On this page</span>
-    
-  </div>
   
 </div>
 </div>

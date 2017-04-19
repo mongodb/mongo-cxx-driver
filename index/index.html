@@ -9,7 +9,7 @@
 
     <link rel="shortcut icon" href="https://mongodb.github.io/mongo-cxx-driver/img/favicon.png">
 
-    <title>Working with BSON</title>
+    <title>MongoDB C&#43;&#43; Driver Manual</title>
 
     <link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="https://mongodb.github.io/mongo-cxx-driver/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
@@ -438,35 +438,69 @@
 
 
   
-  
-  
-  
-  
-  
-  
-  
-
-  
-    
-    
-    
-      
-    
-  
-  
 
 
+        
+          
         
       
     
       
       
         
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
       
     
       
       
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
     
+    
+      
     
   
 
@@ -548,25 +582,155 @@
     
       
       
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
     
       
       
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
     
       
       
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
     
       
       
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
     
       
       
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
     
+    
+      
     
   
 
 
           
 
+          
+          
+          
+          
+          
+          
+          
+          
           
 
           
@@ -848,18 +1012,16 @@
 
 
 
-  
 
 
 
-
-<li class="toctree-l1  current">
+<li class="toctree-l1 ">
   <a href="/mongo-cxx-driver/legacy-v1/" class="">
       <i class='fa fa-arrow-right'></i>
       <span>legacy (v1)</span>
-      <span class="menu-arrow fa fa-angle-down"></span>
+      <span class="menu-arrow fa fa-angle-right"></span>
   </a>
-    <ul  class="current">
+    <ul >
         
         
         
@@ -963,8 +1125,6 @@
 
 
 
-
-  
 
 
 
@@ -1346,7 +1506,7 @@
 
 
    
-<a class="edit-link" href="https://github.com/mongodb/mongo-cxx-driver/blob/master/docs/content/legacy-v1/working-with-bson.md" target="_blank" title="Edit legacy-v1/working-with-bson.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
+<a class="edit-link" href="https://github.com/mongodb/mongo-cxx-driver/blob/master/docs/content/index.md" target="_blank" title="Edit index.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
 
 
 
@@ -1357,75 +1517,126 @@
 
 
 
-<div class="bc">
+
+
+
+<h1 id="mongodb-c-driver">MongoDB C++ Driver</h1>
+
+<p>Welcome to the MongoDB C++ driver.  On this site, you&rsquo;ll find documentation
+to help you get the most from MongoDB and C++.  If you&rsquo;re just starting
+out, take a look at these pages first:</p>
+
 <ul>
-  
-  
-  
-  
-  
-  <li><a href="/mongo-cxx-driver/legacy-v1/">legacy (v1)</a> <i class="fa fa-angle-right"></i></li>
-  <li>Working with BSON</li>
+<li><a href="https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/">Installing mongocxx</a></li>
+<li><a href="https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/tutorial/">Quick-start tutorial</a></li>
 </ul>
-</div>
 
+<h2 id="driver-status-by-family-and-version">Driver status by family and version</h2>
 
+<p>Stability indicates whether this driver is recommended for production use.
+Currently, no drivers guarantee API or ABI stability.</p>
 
+<table>
+<thead>
+<tr>
+<th>Family/version</th>
+<th>Stability</th>
+<th>Development</th>
+<th>Purpose</th>
+</tr>
+</thead>
 
-<h3 id="bson-helper-functions">BSON Helper Functions</h3>
+<tbody>
+<tr>
+<td>(repo master branch)</td>
+<td>Unstable</td>
+<td>Active development</td>
+<td>New feature development</td>
+</tr>
 
-<p>This is a non-exhaustive list of helper functions for use in the C++ stream
-syntax. An exhaustive list is here:
-<a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/bson/bsonmisc.h">bsonmisc.h</a></p>
+<tr>
+<td>mongocxx 3.1.x</td>
+<td>Stable</td>
+<td>Bug fixes only</td>
+<td>Current stable C++ driver release, requires C++11</td>
+</tr>
 
-<p>Typical example of stream syntax:</p>
+<tr>
+<td>mongocxx 3.0.x</td>
+<td>Stable</td>
+<td>Critical fixes only</td>
+<td>Previous stable C++ driver release, requires C++11</td>
+</tr>
 
-<pre><code class="language-cpp">BSONObj p = BSON( &quot;name&quot; &lt;&lt; &quot;Joe&quot; &lt;&lt; &quot;age&quot; &lt;&lt; 33 );
-</code></pre>
+<tr>
+<td>legacy   (all)</td>
+<td>Stable</td>
+<td>Critical fixes only</td>
+<td>Legacy API stable C++ driver release, no longer recommended</td>
+</tr>
+</tbody>
+</table>
 
-<h4 id="genoid">GENOID</h4>
+<h2 id="mongodb-compatibility">MongoDB compatibility</h2>
 
-<p>The server will add an <code>_id</code> automatically if it is not included explicitly.</p>
+<p>The following compatibility table specifies the driver version(s)
+recommended for different versions of MongoDB.  The mongocxx series
+is recommended for all new development.</p>
 
-<pre><code class="language-cpp">BSONObj p = BSON( GENOID &lt;&lt; &quot;name&quot; &lt;&lt; &quot;Joe&quot; &lt;&lt; &quot;age&quot; &lt;&lt; 33 );
-// result is: { _id : ..., name : &quot;Joe&quot;, age : 33 }
-</code></pre>
+<table>
+<thead>
+<tr>
+<th>Family/version</th>
+<th>MongoDB 2.4</th>
+<th>MongoDB 2.6</th>
+<th>MongoDB 3.0</th>
+<th>MongoDB 3.2</th>
+<th>MongoDB 3.4</th>
+</tr>
+</thead>
 
-<h4 id="lt-gt-lte-gte-ne">LT, GT, LTE, GTE, NE</h4>
+<tbody>
+<tr>
+<td>mongocxx 3.1.x</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
 
-<p>less than, greater than, etc.</p>
+<tr>
+<td>mongocxx 3.0.x</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td></td>
+</tr>
 
-<pre><code class="language-cpp">BSONObj p = BSON( &quot;age&quot; &lt;&lt; GT &lt;&lt; 21 );
-// result is:  { age : { $gt : 21 } }
-</code></pre>
+<tr>
+<td>legacy   1.1.x</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td></td>
+</tr>
 
-<h4 id="datenow">DATENOW</h4>
+<tr>
+<td>legacy   1.0.x</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 
-<p>Translates to current date</p>
+<h2 id="license">License</h2>
 
-<pre><code class="language-cpp">BSONObj p = BSON( &quot;created&quot; &lt;&lt; DATENOW );
-// result is: { created : &quot;2009-10-09 11:41:42&quot; }
-</code></pre>
-
-<h4 id="minkey-maxkey">MINKEY, MAXKEY</h4>
-
-<pre><code class="language-cpp">BSONObj p = BSON( &quot;a&quot; &lt;&lt; MINKEY);
-// result is: { &quot;a&quot; : { &quot;$minKey&quot; : 1 } }
-</code></pre>
-
-<h4 id="or">OR</h4>
-
-<pre><code class="language-cpp">OR(BSON(&quot;x&quot; &lt;&lt; GT &lt;&lt; 7), BSON(&quot;y&quot; &lt;&lt; LT &lt;&lt; 6))
-// result is: {$or: [{x: {$gt: 7}}, {y: {$lt: 6}}]}
-</code></pre>
-
-<h4 id="bsonnull">BSONNULL</h4>
-
-<p>Translates to <code>null</code> value (will appear in MongoDB 2.1)</p>
-
-<pre><code class="language-cpp">BSONObj p = BSON( &quot;name&quot; &lt;&lt; &quot;Methuselah&quot; &lt;&lt; &quot;age&quot; &lt;&lt; BSONNULL );
-// result is: { name : &quot;Methuselah&quot;, age : null }
-</code></pre>
+<p>MongoDB C++ drivers are available under the terms of the Apache License, version 2.0.</p>
 
 
 
@@ -1434,17 +1645,6 @@ syntax. An exhaustive list is here:
 
 <div id="btnv">
   
-  <div class="pull-left">
-  <a class="navigation prev" href="/mongo-cxx-driver/legacy-v1/tutorial/">
-      <i class="fa fa-long-arrow-left"> </i> Legacy driver tutorial
-  </a>
-  </div>
-  
-  
-  <div class="pull-right">
-  <a class="navigation next" href="/mongo-cxx-driver/legacy-v1/breaking-changes/">
-    Breaking changes from 26compat <i class="fa fa-long-arrow-right"> </i>
-  </a>
   
 </div>
 </div>
@@ -1458,20 +1658,11 @@ syntax. An exhaustive list is here:
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
 <ul>
-<li>
+<li><a href="#mongodb-c-driver">MongoDB C++ Driver</a>
 <ul>
-<li>
-<ul>
-<li><a href="#bson-helper-functions">BSON Helper Functions</a>
-<ul>
-<li><a href="#genoid">GENOID</a></li>
-<li><a href="#lt-gt-lte-gte-ne">LT, GT, LTE, GTE, NE</a></li>
-<li><a href="#datenow">DATENOW</a></li>
-<li><a href="#minkey-maxkey">MINKEY, MAXKEY</a></li>
-<li><a href="#or">OR</a></li>
-<li><a href="#bsonnull">BSONNULL</a></li>
-</ul></li>
-</ul></li>
+<li><a href="#driver-status-by-family-and-version">Driver status by family and version</a></li>
+<li><a href="#mongodb-compatibility">MongoDB compatibility</a></li>
+<li><a href="#license">License</a></li>
 </ul></li>
 </ul>
 </nav>
