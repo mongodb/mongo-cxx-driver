@@ -111,6 +111,11 @@ struct BSONCXX_API b_utf8 {
     static constexpr auto type_id = type::k_utf8;
 
     ///
+    /// Default constructor for b_utf8.
+    ///
+    BSONCXX_INLINE b_utf8() = default;
+
+    ///
     /// Constructor for b_utf8.
     ///
     /// @param value
@@ -287,6 +292,12 @@ struct BSONCXX_API b_date {
     static constexpr auto type_id = type::k_date;
 
     ///
+    /// Default constructor for b_date.
+    ///
+    BSONCXX_INLINE b_date() : value(0) {
+    }
+
+    ///
     /// Constructor for b_date
     ///
     /// @param value
@@ -362,6 +373,11 @@ struct BSONCXX_API b_regex {
     static constexpr auto type_id = type::k_regex;
 
     ///
+    /// Default constructor for b_regex.
+    ///
+    BSONCXX_INLINE b_regex() = default;
+
+    ///
     /// Constructor for b_regex
     ///
     /// @param regex
@@ -416,6 +432,11 @@ struct BSONCXX_API b_code {
     static constexpr auto type_id = type::k_code;
 
     ///
+    /// Default constructor for b_code.
+    ///
+    BSONCXX_INLINE b_code() = default;
+
+    ///
     /// Constructor for b_code.
     ///
     /// @param code
@@ -453,6 +474,11 @@ BSONCXX_INLINE bool operator==(const b_code& lhs, const b_code& rhs) {
 ///
 struct BSONCXX_API b_symbol {
     static constexpr auto type_id = type::k_symbol;
+
+    ///
+    /// Default constructor for b_symbol.
+    ///
+    BSONCXX_INLINE b_symbol() = default;
 
     ///
     /// Constructor for b_symbol.
@@ -502,6 +528,11 @@ struct BSONCXX_API b_codewscope {
     template <typename T, typename U>
     BSONCXX_INLINE explicit b_codewscope(T&& code, U&& scope)
         : code(std::forward<T>(code)), scope(std::forward<U>(scope)) {}
+
+    ///
+    /// Default constructor for b_codewscope.
+    ///
+    BSONCXX_INLINE b_codewscope() = default;
 
     stdx::string_view code;
     document::view scope;
