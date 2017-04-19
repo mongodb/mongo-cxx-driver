@@ -49,6 +49,8 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 ///   mongocxx::client mongo_client{mongocxx::uri{"mongodb://localhost:27017"}};
 /// @endcode
 ///
+/// Note that client is not thread-safe. See
+/// https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/thread-safety/ for more details.
 class MONGOCXX_API client {
    public:
     ///

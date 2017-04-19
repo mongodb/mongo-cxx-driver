@@ -1,15 +1,16 @@
 +++
 date = "2016-08-15T16:11:58+05:30"
-title = "Thread safety"
+title = "Thread and fork safety"
 [menu.main]
-  weight = 15
+  weight = 14
   parent="mongocxx3"
 +++
 
 TLDR: **Always give each thread its own `mongocxx::client`**.
 
 In general each `mongocxx::client` object AND all of its child objects
-**should be used by a single thread at a time**.
+**should be used by a single thread at a time**. This is true even for
+clients acquired from a `mongocxx::pool`.
 
 Even if you create multiple child objects from a single `client`, and
 synchronize them individually, that is unsafe as they will concurrently
@@ -88,3 +89,8 @@ more performant) to make one per-thread. Obviously in this contrived
 example, there's quite a bit of overhead because we're doing so little work
 with each client - but in a real program this is the best solution.
 
+## Fork safety
+
+Neither a `mongocxx::client` or a `mongocxx::pool` can be safely copied
+when forking. Because of this, any client or pool must be created *after*
+forking, not before.

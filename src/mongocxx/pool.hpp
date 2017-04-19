@@ -38,13 +38,11 @@ class client;
 /// @see https://docs.mongodb.com/master/reference/connection-string/#connection-string-options
 ///
 /// @remark When connecting to a replica set, it is @b much more efficient to use a pool as opposed
-/// to manually constructing @c client objects. The pool will use a single background thread used
-/// to monitor the topology of the replica set that is shared between all the client objects it
-/// creates. Each standalone client, however, will start its own background thread, leading to many
-/// redundant threads and network operations.
-///
-/// As a @c client is @b not thread safe, the @c pool should be preferred in multithreaded
-/// programs as it can safely be shared across threads.
+/// to manually constructing @c client objects. The pool will use a single background thread per
+/// server to monitor the topology of the replica set, all of which are shared between the client
+/// objects created by the pool. A standalone client will instead "stop the world" every 60 seconds
+/// to check the status of the cluster. Because of this, if multiple threads are available, a
+/// connection pool should be used even if the application itself is single-threaded.
 ///
 class MONGOCXX_API pool {
    public:

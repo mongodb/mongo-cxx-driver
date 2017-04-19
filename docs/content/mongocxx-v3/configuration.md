@@ -160,3 +160,27 @@ as "PLAIN":
 auto client = mongocxx::client{
     uri{"mongodb://user1:pwd1@host1/?authSource=$external&authMechanism=PLAIN"}};
 ```
+
+## Configuring a connection pool
+
+To configure a connection pool, first create a `mongocxx::pool`, passing
+the URI as an argument. The size of the pool can be configured in the URI.
+Then, call `mongocxx::pool::acquire` to receive a client from the pool.
+The client will automatically be returned to the pool when it goes out of
+scope.
+
+```cpp
+#include <mongocxx/pool.hpp>
+#include <mongocxx/uri.hpp>
+
+auto pool = mongocxx::pool{uri{"mongodb://host1/?minPoolSize=3&maxPoolSize=5"}};
+
+{
+    // To get a client from the pool, call `acquire()`.
+    auto client = pool.acquire();
+
+    // The client is returned to the pool when it goes out of scope.
+}
+```
+ 
+See [connection pool documentation](../connection-pools) for more details.
