@@ -31,6 +31,10 @@ namespace stream {
 /// A streaming interface for constructing
 /// a BSON document.
 ///
+/// @note Use of the stream builder is discouraged. See
+/// http://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/working-with-bson/#stream-builder for more
+/// details.
+///
 class document : public key_context<> {
    public:
     ///

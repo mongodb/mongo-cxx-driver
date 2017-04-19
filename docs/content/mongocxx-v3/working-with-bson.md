@@ -23,16 +23,29 @@ use each.  For more information and example code, see our
 
 ### <a name="builders">Document Builders</a>
 
-The bsoncxx library offers two different interfaces for building BSON, a
-basic builder and a stream-based builder.
+The bsoncxx library offers three interfaces for building BSON: one-off
+functions, a basic builder and a stream-based builder.
 
 [`bsoncxx::builder::basic::document`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/builder/basic/document.hpp)<br/>
 [`bsoncxx::builder::stream::document`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/builder/stream/document.hpp)
 
-Both equivalent builder document
-types are helper objects for building up BSON from scratch.  Either
-interface will provide the same results, the choice of which to use is
-entirely aesthetic.
+The various methods of creating BSON documents and arrays are all
+equivalent. All interfaces will provide the same results, the choice of
+which to use is entirely aesthetic.
+
+#### "One-off" builder functions {#one-off}
+
+The simplest way to create a BSON document or array is to use the one-off
+builder functions, which create documents and arrays in a single call.
+These can be used when no additional logic (such as conditionals or loops)
+needs to be used to create the object:
+
+```c++
+using bsoncxx::builder::basic::kvp;
+
+// { "hello": "world" }
+bsoncxx::document::value document = bsoncxx::builder::basic::make_document(kvp("hello", "world"));
+```
 
 **Basic builder**
 
@@ -42,29 +55,34 @@ using bsoncxx::builder::basic::kvp;
 // { "hello" : "world" }
 bsoncxx::builder::basic::document basic_builder{};
 basic_builder.append(kvp("hello", "world"));
+bsoncxx::document::value document = basic_builder.extract();
 ```
 
 More advanced uses of the basic builder are shown in [this
 example](https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/builder_basic.cpp).
 
-**Stream builder**
+#### Stream builder {#stream-builder}
 
 ```
 // { "hello" : "world" }
-// Option 1 - build over multiple lines
-bsoncxx::builder::stream::document stream_builder{};
-stream_builder << "hello" << "world";
 
-// Option 2 - build in a single line
-auto stream_builder = bsoncxx::builder::stream::document{} << "hello" << "world";
+using bsoncxx::builder::stream;
+bsoncxx::document::value document = stream::document{} << "hello" << "world" << stream::finalize;
 ```
 
 More advanced uses of the stream builder are shown in [this
 example](https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/builder_stream.cpp).
 
-The code above, for either interface, produces builder documents, which are
-not yet BSON documents.  The builder documents will need to be converted to
-fully-fledged BSON documents to be used.
+**NOTE**: In order to properly append each new value, a stream builder
+needs to keep track of the state of the current document, including the
+nesting level and the type of the most recent value appended to the
+builder. The initial stream builder must *not* be reused after this state
+changes, which means that intermediate values must be stored in new
+variables if a document is being built with the stream builder across
+multiple statements. Because doing this properly is difficult and the
+compiler error messages can be confusing, using the stream builder is
+discouraged. We recommend instead using the basic builder or the
+[one-off builder functions](#one-off).
 
 **Building arrays in loops**
 
@@ -141,23 +159,6 @@ for (auto && e : {1, 2, 3}) {
     auto temp_state = open_state << "key" << e;
     in_array = temp_state << builder::stream::close_document;
 }
-```
-
-**"One-off" builder functions**
-
-In addition to the basic builder and the stream builder, there are helper
-functions to create documents and arrays in a single call. These can be
-used when no additional logic (such as conditionals or loops) need to be
-used to create the object:
-
-```c++
-using bsoncxx::builder::basic::kvp;
-
-// { "hello": "world" }
-auto document = bsoncxx::builder::basic::make_document(kvp("hello", "world"));
-
-// [2.0, true, "hello world"]
-auto array = bsoncxx::builder::basic::make_array(2.0, true, "hello world");
 ```
 
 ### <a name="value">Owning BSON Documents (values)</a>
