@@ -149,25 +149,20 @@ void bucket::upload_from_stream_with_id(bsoncxx::types::value id,
                                         stdx::string_view filename,
                                         std::istream* source,
                                         const options::gridfs::upload& options) {
-    // std::istream::read only throws exceptions if the bits corresponding to the error type are set
-    // in the exceptions mask. We set these bits in order to have an exception thrown if an error
-    // occurs rather than continuing to try to read from the stream.
-    source->exceptions(std::ios::failbit | std::ios::badbit);
-
     uploader upload_stream = open_upload_stream_with_id(id, filename, options);
     std::int32_t chunk_size = upload_stream.chunk_size();
     std::unique_ptr<std::uint8_t[]> buffer = stdx::make_unique<std::uint8_t[]>(chunk_size);
 
-    while (!source->eof()) {
-        try {
-            source->read(reinterpret_cast<char*>(buffer.get()),
-                         static_cast<std::size_t>(chunk_size));
-        } catch (...) {
-            upload_stream.abort();
-            throw;
-        }
-
+    do {
+        source->read(reinterpret_cast<char*>(buffer.get()), static_cast<std::size_t>(chunk_size));
         upload_stream.write(buffer.get(), source->gcount());
+    } while (*source);
+
+    // `(source->fail() && !source->eof())` is our check for EOF, which we don't treat as an error.
+    if (source->bad() || (source->fail() && !source->eof())) {
+        upload_stream.abort();
+        source->exceptions(std::ios::failbit | std::ios::badbit);
+        MONGOCXX_UNREACHABLE;
     }
 
     upload_stream.close();

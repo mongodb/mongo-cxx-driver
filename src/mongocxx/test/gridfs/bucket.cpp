@@ -33,6 +33,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/options/find.hpp>
 #include <mongocxx/options/gridfs/upload.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
@@ -41,6 +42,60 @@ using namespace mongocxx;
 
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
+
+// Downloads the file `id` from the gridfs collections in `db` specified by `bucket_name` and
+// verifies that it has file_name `expected_file_name`, contents `expected_contents`, and chunk size
+// `expected_chunk_size`.
+void validate_gridfs_file(database db,
+                          std::string bucket_name,
+                          bsoncxx::types::value id,
+                          std::string expected_file_name,
+                          std::vector<std::uint8_t> expected_contents,
+                          std::int32_t expected_chunk_size) {
+    auto files_doc = db[bucket_name + ".files"].find_one(make_document(kvp("_id", id)));
+    REQUIRE(files_doc);
+
+    // TODO CXX-1325: Remove the extra parentheses around the following REQUIRE statement.
+    REQUIRE((files_doc->view()["_id"].get_value() == id));
+    REQUIRE(static_cast<std::size_t>(files_doc->view()["length"].get_int64().value) ==
+            expected_contents.size());
+    REQUIRE(files_doc->view()["chunkSize"].get_int32().value == expected_chunk_size);
+    REQUIRE(files_doc->view()["filename"].get_utf8().value ==
+            stdx::string_view{expected_file_name});
+
+    std::int32_t index = 0;
+
+    for (auto&& chunks_doc :
+         db[bucket_name + ".chunks"].find(make_document(kvp("files_id", id)),
+                                          options::find{}.sort(make_document(kvp("n", 1))))) {
+        REQUIRE(chunks_doc["n"].get_int32().value == index);
+
+        auto data = chunks_doc["data"].get_binary();
+        REQUIRE(data.sub_type == bsoncxx::binary_sub_type::k_binary);
+        REQUIRE(static_cast<std::size_t>(data.size) ==
+                std::min(static_cast<std::size_t>(expected_chunk_size),
+                         expected_contents.size() -
+                             static_cast<std::size_t>(expected_chunk_size * index)));
+
+        std::vector<std::uint8_t> expected_bytes_slice{
+            expected_contents.data() + index * expected_chunk_size,
+            expected_contents.data() + index * expected_chunk_size + data.size};
+        std::vector<std::uint8_t> actual_bytes{data.bytes, data.bytes + data.size};
+
+        REQUIRE(expected_bytes_slice == actual_bytes);
+        ++index;
+    }
+
+    auto num_chunks_div =
+        std::lldiv(expected_contents.size(), static_cast<std::size_t>(expected_chunk_size));
+
+    if (num_chunks_div.rem) {
+        ++num_chunks_div.quot;
+    }
+
+    REQUIRE(num_chunks_div.quot <= std::numeric_limits<std::int32_t>::max());
+    REQUIRE(index == static_cast<std::int32_t>(num_chunks_div.quot));
+}
 
 TEST_CASE("mongocxx::gridfs::bucket default constructor makes invalid bucket", "[gridfs::bucket]") {
     instance::current();
@@ -518,34 +573,8 @@ TEST_CASE("mongocxx::gridfs::uploader::write with arbitrary sizes", "[gridfs::up
     }
 
     auto result = uploader.close();
-    auto file_doc = files_coll.find_one(make_document(kvp("_id", result.id())));
-    REQUIRE(file_doc);
 
-    REQUIRE(file_doc->view()["length"].get_int64().value ==
-            static_cast<std::int64_t>(bytes_written));
-    REQUIRE(file_doc->view()["chunkSize"].get_int32().value == chunk_size);
-
-    auto chunks = chunks_coll.find(make_document(kvp("files_id", result.id())));
-
-    std::int32_t chunk_count = 0;
-    std::size_t bytes_read = 0;
-
-    for (auto chunk_doc : chunks) {
-        REQUIRE(chunk_count == chunk_doc["n"].get_int32().value);
-        auto data = chunk_doc["data"].get_binary();
-
-        std::vector<std::uint8_t> expected_bytes{bytes.data() + bytes_read,
-                                                 bytes.data() + bytes_read + data.size};
-        std::vector<std::uint8_t> actual_bytes{data.bytes, data.bytes + data.size};
-
-        REQUIRE(expected_bytes == actual_bytes);
-
-        bytes_read += data.size;
-        ++chunk_count;
-    }
-
-    REQUIRE(static_cast<std::int64_t>(bytes_read) == file_length);
-    REQUIRE(chunk_count == 12);
+    validate_gridfs_file(db, "fs", result.id(), "test_file", bytes, chunk_size);
 }
 
 TEST_CASE("gridfs upload/download round trip", "[gridfs::uploader] [gridfs::downloader]") {
@@ -581,6 +610,42 @@ TEST_CASE("gridfs upload/download round trip", "[gridfs::uploader] [gridfs::down
     REQUIRE(uploaded_bytes == downloaded_bytes);
 }
 
+TEST_CASE("gridfs::bucket::upload_from_stream works", "[gridfs::bucket]") {
+    instance::current();
+
+    client client{uri{}};
+    auto db = client["gridfs_bucket_upload_from_stream_works"];
+    gridfs::bucket bucket = db.gridfs_bucket();
+
+    db["fs.files"].delete_many({});
+    db["fs.chunks"].delete_many({});
+
+    std::string numbers = "0123456789";
+
+    std::istringstream ss{numbers};
+
+    std::int32_t chunk_size = 4;
+    options::gridfs::upload opts;
+    opts.chunk_size_bytes(chunk_size);
+
+    bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+
+    SECTION("upload_from_stream") {
+        id = bucket.upload_from_stream("file", &ss, opts).id();
+    }
+
+    SECTION("upload_from_stream_with_id") {
+        bucket.upload_from_stream_with_id(id, "file", &ss, opts);
+    }
+
+    validate_gridfs_file(db,
+                         "fs",
+                         id,
+                         "file",
+                         std::vector<std::uint8_t>{numbers.begin(), numbers.end()},
+                         chunk_size);
+}
+
 TEST_CASE("gridfs::bucket::upload_from_stream doesn't infinite loop when passed bad ifstream",
           "[gridfs::bucket]") {
     instance::current();
@@ -611,18 +676,13 @@ TEST_CASE("gridfs upload_from_stream aborts on failure", "[gridfs::bucket]") {
     db["fs.files"].delete_many({});
     db["fs.chunks"].delete_many({});
 
-    // Normally, an ifstream pointing to a non-existent file will throw an exception as soon as
-    // `failbit` and `badbit` are set in the exceptions mask, which means `upload_from_stream` will
-    // not trigger an abort. Wrapping it in a separate `istream` delays the exception from being
-    // thrown until the first call to `istream::read`, which should then trigger a call to `abort`.
     std::ifstream in{"file_that_does_not_exist.txt"};
-    std::istream is{in.rdbuf()};
 
     auto id = bsoncxx::types::value{bsoncxx::types::b_oid{bsoncxx::oid{}}};
 
     // Aborting the upload should clear all chunks with the given file id.
     db["fs.chunks"].insert_one(make_document(kvp("files_id", id)));
 
-    REQUIRE_THROWS(bucket.upload_from_stream_with_id(id, "file", &is, {}));
+    REQUIRE_THROWS(bucket.upload_from_stream_with_id(id, "file", &in, {}));
     REQUIRE(!db["fs.chunks"].find_one({}));
 }
