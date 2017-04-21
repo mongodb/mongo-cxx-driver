@@ -65,7 +65,11 @@ functions:
     "setup":
         - command: shell.exec
           params:
+              shell: bash
               script: |
+                 set -o errexit
+                 set -o xtrace
+                 set -o pipefail
                  rm -rf "mongo-cxx-driver"
                  rm -fr "mongo-c-driver"
                  rm -fr mongod
@@ -74,9 +78,12 @@ functions:
               directory: "mongo-cxx-driver"
         - command: shell.exec
           params:
+              shell: bash
               working_dir: "."
               script: |
+                 set -o errexit
                  set -o xtrace
+                 set -o pipefail
                  cc --version || true
                  c++ --version || true
                  gcc --version || true
@@ -87,10 +94,12 @@ functions:
     "start_mongod":
         command: shell.exec
         params:
+            shell: bash
             working_dir: "."
             script: |
                 set -o errexit
                 set -o xtrace
+                set -o pipefail
                 git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git
                 cd drivers-evergreen-tools
                 # Convert shell script line endings.  TODO: Remove this when
@@ -104,15 +113,17 @@ functions:
                 export MONGO_ORCHESTRATION_HOME=$DRIVERS_TOOLS/.evergreen/orchestration
                 export MONGODB_VERSION=${mongodb_version}
                 echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
-                sh .evergreen/run-orchestration.sh
+                ./.evergreen/run-orchestration.sh
 
     "stop_mongod":
         command: shell.exec
         params:
+            shell: bash
             working_dir: "."
             script: |
                 set -o errexit
                 set -o xtrace
+                set -o pipefail
                 cd drivers-evergreen-tools/.evergreen/orchestration
                 if [ -f venv/bin/activate ]; then
                     . venv/bin/activate
@@ -124,27 +135,35 @@ functions:
     "install_c_driver":
         command: shell.exec
         params:
+            shell: bash
             working_dir: "mongo-cxx-driver"
             script: |
+                    set -o errexit
+                    set -o xtrace
+                    set -o pipefail
                     export PREFIX=$(pwd)/../mongoc/
-                    sh .evergreen/install.sh ${MONGOC_VERSION|master}
+                    ./.evergreen/install.sh ${MONGOC_VERSION|master}
 
     "lint":
         - command: shell.exec
           params:
+              shell: bash
               working_dir: "mongo-cxx-driver"
               script: |
                   set -o errexit
                   set -o xtrace
+                  set -o pipefail
                   python etc/clang_format.py lint
 
     "compile":
         - command: shell.exec
           params:
+              shell: bash
               working_dir: "mongo-cxx-driver"
               script: |
                   set -o errexit
                   set -o xtrace
+                  set -o pipefail
                   if [ "${cxx_path|default}" != "default" ]; then
                         export CXX="${cxx_path}"
                   fi
@@ -155,15 +174,17 @@ functions:
                   export PATH_TO_BUILD_TOOL="${build_tool_path}"
                   export PKG_CONFIG_PATH="$(pwd)/../mongoc/lib/pkgconfig"
                   export BUILD_TYPE=${build_type}
-                  sh .evergreen/compile.sh ${cmake_flags} ${poly_flags} -DCMAKE_INSTALL_PREFIX=install
+                  ./.evergreen/compile.sh ${cmake_flags} ${poly_flags} -DCMAKE_INSTALL_PREFIX=install
 
     "test":
         - command: shell.exec
           params:
+              shell: bash
               working_dir: "mongo-cxx-driver"
               script: |
                   set -o errexit
                   set -o xtrace
+                  set -o pipefail
                   cd build
                   export PREFIX=$(pwd)/../../mongoc
 

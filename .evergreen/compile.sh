@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Runs cmake and compiles the standard build targets (all, install, examples).  Any arguments passed
 # to this script will be forwarded on as flags passed to cmake.
@@ -12,6 +12,7 @@
 
 set -o xtrace
 set -o errexit
+set -o pipefail
 
 if [ "$BUILD_TYPE" != "Debug" -a "$BUILD_TYPE" != "Release" ]; then
     echo "$0: expected BUILD_TYPE environment variable to be set to 'Debug' or 'Release'" >&2

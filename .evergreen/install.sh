@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Usage examples:
 # ./install.sh master
 # ./install.sh 1.3.5
@@ -6,6 +6,7 @@
 
 set -o errexit
 set -o xtrace
+set -o pipefail
 
 usage() {
     echo "Please say which version"
