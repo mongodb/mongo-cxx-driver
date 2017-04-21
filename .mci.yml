@@ -195,7 +195,11 @@ functions:
                       ${test_params} ./src/mongocxx/test/test_gridfs_specs
                       ${test_params} ./src/mongocxx/test/test_instance
 
-                      for test in $(find examples -type f -perm +0100 | sort); do ${test_params} $test; done
+                      # Some platforms like OS X don't support the /mode syntax to the -perm option
+                      # of find(1), and some platforms like Ubuntu 16.04 don't support the +mode
+                      # syntax, so we use Perl to help us find executable files.
+                      EXAMPLES=$(find examples -type f | sort | perl -nlwe 'print if -x')
+                      for test in $EXAMPLES; do ${test_params} $test; done
                   fi
 
 #######################################
