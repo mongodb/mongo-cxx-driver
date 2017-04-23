@@ -124,7 +124,7 @@ mongocxx::collection coll = db["test"];
 
 ### Create a Document
 
-To create a :term:`document` using the C++ driver, use one of the two
+To create a `document` using the C++ driver, use one of the two
 available builder interfaces:
 
 Stream builder: `bsoncxx::builder::stream`
