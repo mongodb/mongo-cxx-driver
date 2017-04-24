@@ -130,7 +130,7 @@ mongocxx::collection coll = db["test"];
 
 ### Create a Document
 
-To create a :term:`document` using the C++ driver, use one of the two
+To create a `document` using the C++ driver, use one of the two
 available builder interfaces:
 
 Stream builder: `bsoncxx::builder::stream`
@@ -443,8 +443,8 @@ index type for each field:
 { "index1": "<type>", "index2": <type> }
 ```
 
-- For an ascending index type, specify 1 for <type>.
-- For a descending index type, specify -1 for <type>.
+- For an ascending index type, specify 1 for `<type>`.
+- For a descending index type, specify -1 for `<type>`.
 
 The following example creates an ascending index on the `i` field:
 
