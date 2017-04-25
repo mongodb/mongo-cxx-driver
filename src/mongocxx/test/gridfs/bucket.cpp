@@ -97,6 +97,45 @@ void validate_gridfs_file(database db,
     REQUIRE(index == static_cast<std::int32_t>(num_chunks_div.quot));
 }
 
+// Add an arbitrary GridFS file with a specified length, chunk size, and id to a database's default
+// GridFS bucket (i.e. the "fs.files" and "fs.chunks" collections).
+//
+// Returns a vector of the bytes stored in the GridFS chunks.
+std::vector<std::uint8_t> manual_gridfs_initialize(database db,
+                                                   std::int64_t length,
+                                                   std::int32_t chunk_size,
+                                                   bsoncxx::types::value id) {
+    std::vector<std::uint8_t> bytes;
+
+    // Populate the vector with arbitrary values.
+    for (std::int64_t i = 0; i < length; ++i) {
+        bytes.push_back((i + 200) % 256);
+    }
+
+    std::vector<bsoncxx::document::value> chunks;
+    std::int64_t bytes_written = 0;
+
+    for (std::int32_t i = 0; bytes_written < length; ++i) {
+        // The last chunk should be truncated to fit specified file length.
+        std::int32_t current_chunk_size = static_cast<std::int32_t>(
+            std::min(static_cast<std::int64_t>(chunk_size), length - bytes_written));
+
+        bsoncxx::types::b_binary data = {bsoncxx::binary_sub_type::k_binary,
+                                         static_cast<std::uint32_t>(current_chunk_size),
+                                         bytes.data() + bytes_written};
+
+        chunks.push_back(make_document(kvp("files_id", id), kvp("n", i), kvp("data", data)));
+        bytes_written += current_chunk_size;
+    }
+
+    db["fs.chunks"].insert_many(chunks);
+    db["fs.files"].insert_one(make_document(kvp("_id", id),
+                                            kvp("length", length),
+                                            kvp("chunkSize", bsoncxx::types::b_int32{chunk_size})));
+
+    return bytes;
+}
+
 TEST_CASE("mongocxx::gridfs::bucket default constructor makes invalid bucket", "[gridfs::bucket]") {
     instance::current();
 
@@ -373,45 +412,6 @@ TEST_CASE("downloading throws error when chunks document is corrupt", "[gridfs::
     }
 }
 
-// Add an arbitrary GridFS file with a specified length, chunk size, and id to a database's default
-// GridFS bucket (i.e. the "fs.files" and "fs.chunks" collections).
-//
-// Returns a vector of the bytes stored in the GridFS chunks.
-std::vector<std::uint8_t> manual_gridfs_initialize(database db,
-                                                   std::int64_t length,
-                                                   std::int32_t chunk_size,
-                                                   bsoncxx::types::value id) {
-    std::vector<std::uint8_t> bytes;
-
-    // Populate the vector with arbitrary values.
-    for (std::int64_t i = 0; i < length; ++i) {
-        bytes.push_back((i + 200) % 256);
-    }
-
-    std::vector<bsoncxx::document::value> chunks;
-    std::int64_t bytes_written = 0;
-
-    for (std::int32_t i = 0; bytes_written < length; ++i) {
-        // The last chunk should be truncated to fit specified file length.
-        std::int32_t current_chunk_size = static_cast<std::int32_t>(
-            std::min(static_cast<std::int64_t>(chunk_size), length - bytes_written));
-
-        bsoncxx::types::b_binary data = {bsoncxx::binary_sub_type::k_binary,
-                                         static_cast<std::uint32_t>(current_chunk_size),
-                                         bytes.data() + bytes_written};
-
-        chunks.push_back(make_document(kvp("files_id", id), kvp("n", i), kvp("data", data)));
-        bytes_written += current_chunk_size;
-    }
-
-    db["fs.chunks"].insert_many(chunks);
-    db["fs.files"].insert_one(make_document(kvp("_id", id),
-                                            kvp("length", length),
-                                            kvp("chunkSize", bsoncxx::types::b_int32{chunk_size})));
-
-    return bytes;
-}
-
 TEST_CASE("mongocxx::gridfs::downloader::read with arbitrary sizes", "[gridfs::downloader]") {
     instance::current();
 
@@ -454,9 +454,8 @@ TEST_CASE("mongocxx::gridfs::downloader::read with arbitrary sizes", "[gridfs::d
         read_size = file_length + 1;
     }
 
-    bsoncxx::types::b_oid id = {bsoncxx::oid{}};
-    std::vector<std::uint8_t> expected =
-        manual_gridfs_initialize(db, file_length, chunk_size, bsoncxx::types::value{id});
+    bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+    std::vector<std::uint8_t> expected = manual_gridfs_initialize(db, file_length, chunk_size, id);
 
     // Allocate a buffer large enough to fit the data read from the downloader.
     std::vector<std::uint8_t> buffer;
@@ -610,6 +609,31 @@ TEST_CASE("gridfs upload/download round trip", "[gridfs::uploader] [gridfs::down
     REQUIRE(uploaded_bytes == downloaded_bytes);
 }
 
+TEST_CASE("gridfs::bucket::open_upload_stream_with_id works", "[gridfs::bucket]") {
+    instance::current();
+
+    client client{uri{}};
+    auto db = client["gridfs_bucket_open_upload_stream_with_id"];
+    gridfs::bucket bucket = db.gridfs_bucket();
+
+    db["fs.files"].drop();
+    db["fs.chunks"].drop();
+
+    std::size_t chunk_size = 4;
+    std::vector<std::uint8_t> bytes = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+    auto uploader = bucket.open_upload_stream_with_id(
+        id, "file", options::gridfs::upload{}.chunk_size_bytes(chunk_size));
+
+    for (std::size_t i = 0; i < bytes.size(); i += chunk_size) {
+        uploader.write(bytes.data() + i, std::min(chunk_size, bytes.size() - i));
+    }
+
+    uploader.close();
+
+    validate_gridfs_file(db, "fs", id, "file", bytes, static_cast<std::int32_t>(chunk_size));
+}
+
 TEST_CASE("gridfs::bucket::upload_from_stream works", "[gridfs::bucket]") {
     instance::current();
 
@@ -685,4 +709,89 @@ TEST_CASE("gridfs upload_from_stream aborts on failure", "[gridfs::bucket]") {
 
     REQUIRE_THROWS(bucket.upload_from_stream_with_id(id, "file", &in, {}));
     REQUIRE(!db["fs.chunks"].find_one({}));
+}
+
+TEST_CASE("gridfs::bucket::download_to_stream works", "[gridfs::bucket]") {
+    instance::current();
+
+    client client{uri{}};
+    database db = client["gridfs_download_to_stream_works"];
+    gridfs::bucket bucket = db.gridfs_bucket();
+
+    db["fs.files"].drop();
+    db["fs.chunks"].drop();
+
+    std::int64_t length = 10;
+    std::int32_t chunk_size = 4;
+    bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+    auto expected_bytes = manual_gridfs_initialize(db, length, chunk_size, id);
+
+    std::ostringstream os;
+    bucket.download_to_stream(id, &os);
+
+    auto str = os.str();
+    std::vector<std::uint8_t> actual_bytes{str.begin(), str.end()};
+
+    REQUIRE(expected_bytes == actual_bytes);
+}
+
+TEST_CASE("gridfs::bucket::delete_file works", "[gridfs::bucket]") {
+    instance::current();
+
+    client client{uri{}};
+    database db = client["gridfs_delete_file_works"];
+    gridfs::bucket bucket = db.gridfs_bucket();
+
+    db["fs.files"].drop();
+    db["fs.chunks"].drop();
+
+    std::int64_t length = 10;
+    std::int32_t chunk_size = 4;
+    bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+    manual_gridfs_initialize(db, length, chunk_size, id);
+
+    bucket.delete_file(id);
+
+    REQUIRE(!db["fs.files"].find_one({}));
+    REQUIRE(!db["fs.chunks"].find_one({}));
+}
+
+TEST_CASE("gridfs::bucket::find works", "[gridfs::bucket]") {
+    instance::current();
+
+    client client{uri{}};
+    database db = client["gridfs_find_works"];
+    gridfs::bucket bucket = db.gridfs_bucket();
+
+    db["fs.files"].drop();
+    db["fs.chunks"].drop();
+
+    std::int64_t length = 10;
+    std::int32_t chunk_size = 4;
+    bsoncxx::types::value id1{bsoncxx::types::b_int32{1}};
+    bsoncxx::types::value id2{bsoncxx::types::b_int32{2}};
+
+    manual_gridfs_initialize(db, length, chunk_size, id1);
+    manual_gridfs_initialize(db, length, chunk_size, id2);
+
+    SECTION("find all files") {
+        auto cursor = bucket.find({});
+        REQUIRE(std::distance(cursor.begin(), cursor.end()) == 2);
+    }
+
+    SECTION("find id = 1") {
+        auto cursor = bucket.find(make_document(kvp("_id", id1)));
+        REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
+    }
+
+    SECTION("find id = 2") {
+        auto cursor = bucket.find(make_document(kvp("_id", id2)));
+        REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
+    }
+
+    SECTION("find returning nothing") {
+        bsoncxx::types::value id3{bsoncxx::types::b_int32{3}};
+        auto cursor = bucket.find(make_document(kvp("_id", id3)));
+        REQUIRE(std::distance(cursor.begin(), cursor.end()) == 0);
+    }
 }
