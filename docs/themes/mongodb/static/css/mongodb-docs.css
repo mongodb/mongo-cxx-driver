@@ -90,6 +90,7 @@ div.body h1, div.body h2, div.body h3, div.body h4, div.body h5, div.body h6 {
     line-height: 24px;
     color: #313030;
     margin: 0;
+    margin-bottom: .5em;
     padding: 0;
 }
 
@@ -104,25 +105,23 @@ div.body h1 {
     padding: 0;
 }
 div.body h2 {
-    font-size: 24px;
+    font-size: 28px;
 }
 div.body h3 {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 0;
+    font-size: 24px;
 }
 
 div.body h4 {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
-    margin-bottom: 0;
 }
 div.body h5 {
     font-size: 16px;
+    font-weight: bold;
 }
 div.body h6 {
-    font-size: 16px;
-    font-weight: 300;
+    font-size: 12px;
+    font-weight: bold;
  }
 
 div.body h1 + p,  div.body h2 + p, div.body h3 + p, div.body h4 + p,

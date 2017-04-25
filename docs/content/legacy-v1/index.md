@@ -8,6 +8,8 @@ slug = "index"
   parent="legacy"
 +++
 
+# The legacy C++ driver
+
 The legacy C++ driver builds on x86 and x86-64 architectures for Linux, Mac
 OS X, Windows, FreeBSD and Solaris.
 

@@ -8,6 +8,8 @@ slug = "index"
   parent="mongocxx3"
 +++
 
+# The mongocxx (v3) driver
+
 The mongocxx is a ground-up rewrite of a C++ driver for MongoDB based on
 [libmongoc](http://mongoc.org/).  It requires a C++11 compiler.  It it
 known to build on x86 and x86-64 architectures for Linux, Mac OS X,

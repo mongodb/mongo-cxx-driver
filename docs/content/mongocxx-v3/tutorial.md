@@ -7,9 +7,9 @@ title = "Tutorial for mongocxx"
   parent="mongocxx3"
 +++
 
-## Quick Start
+# Tutorial for mongocxx
 
-### Prerequisites
+## Prerequisites
 
 - A [mongod](https://docs.mongodb.com/master/reference/program/mongod/)
   instance running on localhost on port 27017.
@@ -35,7 +35,7 @@ using bsoncxx::builder::stream::open_array;
 using bsoncxx::builder::stream::open_document;
 ```
 
-### Compiling
+## Compiling
 
 The mongocxx driver's installation process will install a
 `libmongocxx.pc` file for use
@@ -59,7 +59,7 @@ c++ --std=c++11 <input>.cpp
   -L/usr/local/lib -lmongocxx -lbsoncxx
 ```
 
-### Make a Connection
+## Make a Connection
 
 **IMPORTANT**: Before making any connections, you need to create one and only
 one instance of [`mongocxx::instance`]({{< api3ref classmongocxx_1_1instance >}}).
@@ -90,9 +90,7 @@ mongocxx::uri uri("mongodb://localhost:27017");
 mongocxx::client client(uri);
 ```
 
-### Access a Database and a Collection
-
-#### Access a Database
+## Access a Database
 
 Once you have a [`mongocxx::client`]({{< api3ref classmongocxx_1_1client >}})
 instance connected to a MongoDB deployment, use either the
@@ -109,7 +107,7 @@ The following example accesses the `mydb` database:
 mongocxx::database db = client["mydb"];
 ```
 
-#### Access a Collection
+## Access a Collection
 
 Once you have a
 [`mongocxx::database`]({{< api3ref classmongocxx_1_1database >}})
@@ -128,7 +126,7 @@ the following statement accesses the collection named `test` in the
 mongocxx::collection coll = db["test"];
 ```
 
-### Create a Document
+## Create a Document
 
 To create a `document` using the C++ driver, use one of the two
 available builder interfaces:
@@ -209,9 +207,9 @@ include a type guard as seen in the preceding example, this code will
 throw an instance of
 [`bsoncxx::exception`]({{< api3ref classbsoncxx_1_1exception >}}).
 
-### Insert Documents
+## Insert Documents
 
-#### Insert One Document
+### Insert One Document
 
 To insert a single document into the collection, use a
 [`mongocxx::collection`]({{< api3ref classmongocxx_1_1collection >}})
@@ -230,7 +228,7 @@ returned
 [`mongocxx::result::insert_one`]({{< api3ref classmongocxx_1_1result_1_1insert__one >}})
 instance.
 
-#### Insert Multiple Documents
+### Insert Multiple Documents
 
 To insert multiple documents to the collection, use a
 [`mongocxx::collection`]({{< api3ref classmongocxx_1_1collection >}}) instance's
@@ -267,7 +265,7 @@ returned
 [`mongocxx::result::insert_many`]({{< api3ref classmongocxx_1_1result_1_1insert__many >}})
 instance.
 
-### Query the Collection
+## Query the Collection
 
 To query the collection, use the collection’s `find()` and
 `find_one` methods.
@@ -281,7 +279,7 @@ You can call either method without any arguments to query all documents
 in a collection, or pass a filter to query for documents that match the
 filter criteria.
 
-#### Find a Single Document in a Collection
+### Find a Single Document in a Collection
 
 To return a single document in the collection, use the `find_one()`
 method without any parameters.
@@ -294,7 +292,7 @@ if(maybe_result) {
 }
 ```
 
-#### Find All Documents in a Collection
+### Find All Documents in a Collection
 
 ```c++
 mongocxx::cursor cursor = collection.find(document{} << finalize);
@@ -303,9 +301,9 @@ for(auto doc : cursor) {
 }
 ```
 
-#### Specify a Query Filter
+### Specify a Query Filter
 
-##### Get A Single Document That Matches a Filter
+#### Get A Single Document That Matches a Filter
 
 To find the first document where the field `i` has the value `71`,
 pass the document `{"i": 71}` to specify the equality condition:
@@ -329,7 +327,7 @@ document and your value will differ from that shown. MongoDB reserves
 field names that start with an underscore (`_`) and the dollar sign
 (`$`) for internal use.
 
-##### Get All Documents That Match a Filter
+#### Get All Documents That Match a Filter
 
 The following example returns and prints all documents where
 `50 < "i" <= 100`:
@@ -345,7 +343,7 @@ for(auto doc : cursor) {
 }
 ```
 
-### Update Documents
+## Update Documents
 
 To update documents in a collection, you can use the collection’s
 `update_one()` and `update_many()` methods.
@@ -355,7 +353,7 @@ The update methods return an instance of
 which provides information about the operation including the number of
 documents modified by the update.
 
-#### Update a Single Document
+### Update a Single Document
 
 To update at most one document, use the `update_one()` method.
 
@@ -369,7 +367,7 @@ collection.update_one(document{} << "i" << 10 << finalize,
 ```
 
 
-#### Update Multiple Documents
+### Update Multiple Documents
 
 To update all documents matching a filter, use the `update_many()`
 method.
@@ -390,7 +388,7 @@ if(result) {
 }
 ```
 
-### Delete Documents
+## Delete Documents
 
 To delete documents from a collection, you can use a collection’s
 `delete_one()` and `delete_many()` methods.
@@ -399,7 +397,7 @@ The delete methods return an instance of
 `std::optional<`[`mongocxx::result::delete`]({{< api3ref classmongocxx_1_1result_1_1delete__result >}})`>`,
 which contains the number of documents deleted.
 
-#### Delete a Single Document
+### Delete a Single Document
 
 To delete at most a single document that matches a filter, use the
 `delete_one()` method.
@@ -411,7 +409,7 @@ For example, to delete a document that matches the filter
 collection.delete_one(document{} << "i" << 110 << finalize);
 ```
 
-#### Delete All Documents That Match a Filter
+### Delete All Documents That Match a Filter
 
 To delete all documents matching a filter, use a collection's
 `delete_many()` method.
@@ -430,7 +428,7 @@ if(result) {
 }
 ```
 
-### Create Indexes
+## Create Indexes
 
 To create an [index](https://docs.mongodb.com/master/indexes/) on a
 field or set of fields, pass an index specification document to the

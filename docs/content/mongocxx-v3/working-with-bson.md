@@ -7,6 +7,8 @@ title = "Working with BSON"
   parent="mongocxx3"
 +++
 
+# Working with BSON #
+
 The mongocxx driver ships with a new library, bsoncxx.  This article will
 go over some of the different types in this library, and how and when to
 use each.  For more information and example code, see our
@@ -20,8 +22,7 @@ use each.  For more information and example code, see our
 6. [Printing BSON Documents](#print)<br/>
 7. [Getting Fields out of BSON Documents](#fields)<br/>
 
-
-### <a name="builders">Document Builders</a>
+## Document Builders {#builders}
 
 The bsoncxx library offers three interfaces for building BSON: one-off
 functions, a basic builder and a stream-based builder.
@@ -33,7 +34,7 @@ The various methods of creating BSON documents and arrays are all
 equivalent. All interfaces will provide the same results, the choice of
 which to use is entirely aesthetic.
 
-#### "One-off" builder functions {#one-off}
+## "One-off" builder functions {#one-off}
 
 The simplest way to create a BSON document or array is to use the one-off
 builder functions, which create documents and arrays in a single call.
@@ -47,7 +48,7 @@ using bsoncxx::builder::basic::kvp;
 bsoncxx::document::value document = bsoncxx::builder::basic::make_document(kvp("hello", "world"));
 ```
 
-**Basic builder**
+## Basic builder
 
 ```
 using bsoncxx::builder::basic::kvp;
@@ -61,7 +62,7 @@ bsoncxx::document::value document = basic_builder.extract();
 More advanced uses of the basic builder are shown in [this
 example](https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/builder_basic.cpp).
 
-#### Stream builder {#stream-builder}
+## Stream builder {#stream-builder}
 
 ```
 // { "hello" : "world" }

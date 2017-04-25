@@ -6,7 +6,7 @@ title = "Configuring the mongocxx driver"
   parent="mongocxx3"
 +++
 
-# Configuring the Driver
+# Configuring the driver
 
 In the mongocxx driver, most configuration is done via the [connection
 URI](https://docs.mongodb.com/master/reference/connection-string/).  Some
