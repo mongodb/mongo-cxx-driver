@@ -7,9 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 18 Apr 2017 13:39:39 -0400</lastBuildDate>
-    
-	<atom:link href="https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/index.xml" rel="self" type="application/rss+xml" />
-    
+    <atom:link href="https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Connection pools</title>
@@ -17,7 +15,71 @@
       <pubDate>Tue, 18 Apr 2017 13:39:39 -0400</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/connection-pools/</guid>
-      <description>mongocxx::client vs mongocxx::pool A standalone mongocxx::client uses a single-threaded algorithm to monitor the state of the cluster it&amp;rsquo;s connected to. When connected to a replica set, the thread &amp;ldquo;stops the world&amp;rdquo; every 60 seconds to check the status of the cluster. A mongocxx::pool, on the other hand, uses a separate background thread for each server in the cluster, each of which checks the status of the server it monitors every 10 seconds.</description>
+      <description>
+
+&lt;h1 id=&#34;connection-pools&#34;&gt;Connection pools&lt;/h1&gt;
+
+&lt;h2 id=&#34;mongocxx-client-vs-mongocxx-pool&#34;&gt;&lt;code&gt;mongocxx::client&lt;/code&gt; vs &lt;code&gt;mongocxx::pool&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;A standalone &lt;code&gt;mongocxx::client&lt;/code&gt; uses a single-threaded algorithm to
+monitor the state of the cluster it&amp;rsquo;s connected to. When connected to a
+replica set, the thread &amp;ldquo;stops the world&amp;rdquo; every 60 seconds to check the
+status of the cluster. A &lt;code&gt;mongocxx::pool&lt;/code&gt;, on the other hand, uses a
+separate background thread for each server in the cluster, each of which
+checks the status of the server it monitors every 10 seconds. Because of
+the performance advantages of monitoring the cluster in the background
+rather than &amp;ldquo;stopping the world&amp;rdquo;, it&amp;rsquo;s highly recommended to use a
+&lt;code&gt;mongocxx::pool&lt;/code&gt; rather than a set of standalone clients if your
+application has access to multiple threads, even if your application only
+uses one thread.&lt;/p&gt;
+
+&lt;h2 id=&#34;connection-pools-and-thread-safety&#34;&gt;Connection pools and thread safety&lt;/h2&gt;
+
+&lt;p&gt;A &lt;code&gt;mongocxx::pool&lt;/code&gt; can be shared across multiple threads and used to create
+clients. However, each &lt;code&gt;mongocxx::client&lt;/code&gt; can only be used in a single
+thread. See the &lt;a href=&#34;../thread-safety/&#34;&gt;thread safety documentation&lt;/a&gt; for
+details on how to use a &lt;code&gt;mongocxx::client&lt;/code&gt; in a thread-safe manner.&lt;/p&gt;
+
+&lt;h2 id=&#34;configuring-a-connection-pool&#34;&gt;Configuring a connection pool&lt;/h2&gt;
+
+&lt;p&gt;The number of clients in a connection pool is determined by the URI
+parameters &lt;code&gt;minPoolSize&lt;/code&gt; and &lt;code&gt;maxPoolSize&lt;/code&gt;. The &lt;code&gt;minPoolSize&lt;/code&gt; and
+&lt;code&gt;maxPoolSize&lt;/code&gt; options set resource usage targets for when the driver is
+idle or fully-utilized.  When fully utilized, up to maxPoolSize clients
+are available. When clients are returned to the pool, they are destroyed
+until the pool has shrunk again to the minPoolSize.&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;‌‌&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;maxPoolSize&lt;/td&gt;
+&lt;td&gt;The maximum number of clients created by a mongocxx::pool (both in the pool and checked out). The default value is 100. Once it is reached, mongocxx::pool::acquire blocks until another thread returns a client to the pool.&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;minPoolSize&lt;/td&gt;
+&lt;td&gt;Sets a target size for the pool when idle.  Once this many clients have been created, there will never be fewer than this many clients in the pool. If additional clients above minPoolSize are created, they will be destroyed when returned to the pool. The default value is &amp;ldquo;0&amp;rdquo;, which disables this feature. When disabled, clients are never destroyed.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;using-a-connection-pool&#34;&gt;Using a connection pool&lt;/h2&gt;
+
+&lt;p&gt;To use a connection pool, first create a &lt;code&gt;mongocxx::pool&lt;/code&gt;, passing the URI
+as an argument. Then, call &lt;code&gt;mongocxx::pool::acquire&lt;/code&gt; to receive a client
+from the pool. The client will automatically be returned to the pool when
+it goes out of scope.&lt;/p&gt;
+
+&lt;p&gt;See the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/mongocxx/pool.cpp&#34;&gt;connection pool example&lt;/a&gt;
+for more details.&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -26,7 +88,63 @@
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/api-abi-versioning/</guid>
-      <description>API Versioning  We use semantic versioning. bsoncxx and mongocxx both define corresponding CMake variables for MAJOR, MINOR, and PATCH.  ABI Versioning  Both bsoncxx and mongocxx both have a single scalar ABI version. Only bump ABI version on incompatible ABI change (not for ABI additions). We stay on ABI version _noabi (without bumping for incompatible changes) until ABI is stable.  Parallel Header Installation  For mongocxx, install all headers to $PREFIX/mongocxx/v$ABI/.</description>
+      <description>
+
+&lt;h1 id=&#34;versioning&#34;&gt;Versioning&lt;/h1&gt;
+
+&lt;h2 id=&#34;api-versioning&#34;&gt;API Versioning&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;We use &lt;a href=&#34;http://semver.org/&#34;&gt;semantic versioning&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;bsoncxx and mongocxx both define corresponding CMake variables for MAJOR, MINOR, and PATCH.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;abi-versioning&#34;&gt;ABI Versioning&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Both bsoncxx and mongocxx both have a single scalar ABI version.&lt;/li&gt;
+&lt;li&gt;Only bump ABI version on &lt;strong&gt;incompatible&lt;/strong&gt; ABI change (not for ABI additions).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;We stay on ABI version _noabi (without bumping for incompatible changes) until ABI is stable.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;parallel-header-installation&#34;&gt;Parallel Header Installation&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;For mongocxx, install all headers to &lt;code&gt;$PREFIX/mongocxx/v$ABI/&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;For bsoncxx, install all headers to &lt;code&gt;$PREFIX/bsoncxx/v$ABI/&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;We install a pkg-config file to shield consumers from this complexity.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;sonames-and-symlinks&#34;&gt;Sonames and symlinks&lt;/h2&gt;
+
+&lt;p&gt;&lt;em&gt;Note that below examples are given for libmongocxx, but also apply to libbsoncxx&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;DSO = Dynamic Shared Object, to use Ulrich Drepper&amp;rsquo;s terminology&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Physical filename for a DSO is &lt;code&gt;libmongocxx.so.$MAJOR.$MINOR.$PATCH&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Note that the physical filename is disconnected from ABI version/soname.
+This looks a bit strange, but allows multiple versions of the library with
+the same ABI version to be installed on the same system.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;soname for a DSO is &lt;code&gt;libmongocxx.$ABI&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We provide a soname symlink that links to the physical DSO.  We also
+provide a dev symlink that links to the soname symlink of the highest ABI
+version of the library installed.&lt;/p&gt;
+
+&lt;h2 id=&#34;inline-namespaces&#34;&gt;Inline namespaces&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;We provide inline namespace macros for both mongocxx and bsoncxx.&lt;/li&gt;
+&lt;li&gt;This allows multiple, ABI incompatible versions of the library to be linked into the same application.&lt;/li&gt;
+&lt;li&gt;The name of the namespace is &lt;code&gt;v$ABI&lt;/code&gt;. We create them from ABI version to maintain forwards compatibibility.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -35,11 +153,182 @@
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/configuration/</guid>
-      <description>Configuring the Driver In the mongocxx driver, most configuration is done via the connection URI. Some additional connection options are possible via the mongocxx::options::client class.
-Configuring TLS/SSL To enable TLS (SSL), set ssl=true in the URI:
- mongodb://mongodb.example.com/?ssl=true
- By default, mongocxx will verify server certificates against the local system CA list. You can override that by creating a mongocxx::options::ssl object and passing it to ssl_opts on mongocxx::options::client.
-For example, to use a custom CA or to disable certificate validation, uncomment the corresponding line in the following example:</description>
+      <description>
+
+&lt;h1 id=&#34;configuring-the-driver&#34;&gt;Configuring the driver&lt;/h1&gt;
+
+&lt;p&gt;In the mongocxx driver, most configuration is done via the &lt;a href=&#34;https://docs.mongodb.com/master/reference/connection-string/&#34;&gt;connection
+URI&lt;/a&gt;.  Some
+additional connection options are possible via the
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1client.html
+&#34;&gt;mongocxx::options::client&lt;/a&gt; class.&lt;/p&gt;
+
+&lt;h2 id=&#34;configuring-tls-ssl&#34;&gt;Configuring TLS/SSL&lt;/h2&gt;
+
+&lt;p&gt;To enable TLS (SSL), set &lt;code&gt;ssl=true&lt;/code&gt; in the URI:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;mongodb://mongodb.example.com/?ssl=true&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;By default, mongocxx will verify server certificates against the local
+system CA list.  You can override that by creating a
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1ssl.html
+&#34;&gt;mongocxx::options::ssl&lt;/a&gt;
+object and passing it to &lt;code&gt;ssl_opts&lt;/code&gt; on mongocxx::options::client.&lt;/p&gt;
+
+&lt;p&gt;For example, to use a custom CA or to disable certificate validation,
+uncomment the corresponding line in the following example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;mongocxx::options::client client_options;
+mongocxx::options::ssl ssl_options;
+
+// If the server certificate is not signed by a well-known CA,
+// you can set a custom CA file with the `ca_file` option.
+// ssl_options.ca_file(&amp;quot;/path/to/custom/cert.pem&amp;quot;);
+
+// If you want to disable certificate verification, you
+// can set the `allow_invalid_certificates` option.
+// ssl_options.allow_invalid_certificates(true);
+
+client_options.ssl_opts(ssl_options);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;configuring-authentication&#34;&gt;Configuring authentication&lt;/h2&gt;
+
+&lt;h3 id=&#34;default-authentication-mechanism&#34;&gt;Default authentication mechanism&lt;/h3&gt;
+
+&lt;p&gt;MongoDB 3.0 changed the default authentication mechanism from MONGODB-CR
+to SCRAM-SHA-1. To create a credential that will authenticate properly
+regardless of server version, use a connection string with the user and
+password directly in the URI and with a parameter specifying the database
+to authenticate from:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;mongocxx/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/uri.hpp&amp;gt;
+
+auto client = mongocxx::client{uri{&amp;quot;mongodb://user1:pwd1@host1/?authSource=db1&amp;quot;}};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;scram-sha-1&#34;&gt;SCRAM-SHA-1&lt;/h3&gt;
+
+&lt;p&gt;To explicitly create a credential of type SCRAM-SHA-1 use a connection
+string as above but with a parameter specifying the authentication
+mechanism as &amp;ldquo;SCRAM-SHA-1&amp;rdquo;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;mongocxx/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/uri.hpp&amp;gt;
+
+auto client = mongocxx::client{
+    uri{&amp;quot;mongodb://user1:pwd1@host1/?authSource=db1&amp;amp;authMechanism=SCRAM-SHA-1&amp;quot;}};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;mongodb-cr&#34;&gt;MONGODB-CR&lt;/h3&gt;
+
+&lt;p&gt;To explicitly create a credential of type MONGODB-CR use a connection
+string as above but with a parameter specifying the authentication mechanism
+as &amp;ldquo;MONGODB-CR&amp;rdquo;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;mongocxx/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/uri.hpp&amp;gt;
+
+auto client = mongocxx::client{
+    uri{&amp;quot;mongodb://user1:pwd1@host1/?authSource=db1&amp;amp;authMechanism=MONGODB-CR&amp;quot;}};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that this is not recommended as a credential created in this way will
+fail to authenticate after an authentication schema upgrade from
+MONGODB-CR to SCRAM-SHA-1.&lt;/p&gt;
+
+&lt;h3 id=&#34;x-509&#34;&gt;X.509&lt;/h3&gt;
+
+&lt;p&gt;The &lt;a href=&#34;https://www.mongodb.org/dochub/core/x509&#34;&gt;X.509&lt;/a&gt;
+mechanism authenticates a user whose name is derived from the distinguished
+subject name of the X.509 certificate presented by the driver during SSL
+negotiation. This authentication method requires the use of SSL
+connections with certificate validation and is available in MongoDB 2.6
+and newer. To create a credential of this type, first create a set of
+client options specifying the path to the PEM file containing the client
+private key and certificate, and then use a connection string with a
+parameter specifying the authentication mechanism as &amp;ldquo;MONGODB-X509&amp;rdquo; and
+with SSL enabled:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;mongocxx/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/uri.hpp&amp;gt;
+#include &amp;lt;mongocxx/options/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/options/ssl.hpp&amp;gt;
+
+mongocxx::options::ssl ssl_opts{};
+ssl_opts.pem_file(&amp;quot;client.pem&amp;quot;);
+
+mongocxx::options::client client_opts{};
+client_opts.ssl_opts(ssl_opts);
+
+auto client = mongocxx::client{
+    uri{&amp;quot;mongodb://host1/?authMechanism=MONGODB-X509&amp;amp;ssl=true&amp;quot;}, client_opts};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;See the MongoDB server
+&lt;a href=&#34;https://www.mongodb.org/dochub/core/x509-subject-name&#34;&gt;X.509 tutorial&lt;/a&gt;
+for more information about determining the subject name from the
+certificate.&lt;/p&gt;
+
+&lt;h3 id=&#34;kerberos-gssapi&#34;&gt;Kerberos (GSSAPI)&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.mongodb.com/products/mongodb-enterprise&#34;&gt;MongoDB Enterprise&lt;/a&gt;
+supports proxy authentication through Kerberos service. To create a
+credential of type &lt;a href=&#34;https://www.mongodb.org/dochub/core/kerberos&#34;&gt;Kerberos (GSSAPI)&lt;/a&gt;
+use a connection string with the username and realm in the URI as well as
+a parameter specifying the authentication mechanism as &amp;ldquo;GSSAPI&amp;rdquo;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;mongocxx/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/uri.hpp&amp;gt;
+
+auto client = mongocxx::client{
+    uri{&amp;quot;mongodb://username%40REALM.COM@host1/?authMechanism=GSSAPI&amp;quot;}};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that the &amp;ldquo;@&amp;rdquo; symbol in the URI must be escaped to &amp;ldquo;%40&amp;rdquo; as shown in the example above.&lt;/p&gt;
+
+&lt;h3 id=&#34;ldap&#34;&gt;LDAP&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.mongodb.com/products/mongodb-enterprise&#34;&gt;MongoDB Enterprise&lt;/a&gt;
+supports proxy authentication through a Lightweight Directory Access
+Protocol (LDAP) service. To create a credential of type LDAP use a
+connection string specifying the user as well as parameters specifying
+the authentication source as &amp;ldquo;$external&amp;rdquo; and the authentication mechanishm
+as &amp;ldquo;PLAIN&amp;rdquo;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;mongocxx/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/uri.hpp&amp;gt;
+
+auto client = mongocxx::client{
+    uri{&amp;quot;mongodb://user1:pwd1@host1/?authSource=$external&amp;amp;authMechanism=PLAIN&amp;quot;}};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;configuring-a-connection-pool&#34;&gt;Configuring a connection pool&lt;/h2&gt;
+
+&lt;p&gt;To configure a connection pool, first create a &lt;code&gt;mongocxx::pool&lt;/code&gt;, passing
+the URI as an argument. The size of the pool can be configured in the URI.
+Then, call &lt;code&gt;mongocxx::pool::acquire&lt;/code&gt; to receive a client from the pool.
+The client will automatically be returned to the pool when it goes out of
+scope.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;mongocxx/pool.hpp&amp;gt;
+#include &amp;lt;mongocxx/uri.hpp&amp;gt;
+
+auto pool = mongocxx::pool{uri{&amp;quot;mongodb://host1/?minPoolSize=3&amp;amp;maxPoolSize=5&amp;quot;}};
+
+{
+    // To get a client from the pool, call `acquire()`.
+    auto client = pool.acquire();
+
+    // The client is returned to the pool when it goes out of scope.
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;See &lt;a href=&#34;../connection-pools&#34;&gt;connection pool documentation&lt;/a&gt; for more details.&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -48,18 +337,281 @@ For example, to use a custom CA or to disable certificate validation, uncomment 
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/</guid>
-      <description>Installing the mongocxx driver Prerequisites  Any standard Unix platform, or Windows 7 SP1+ GCC 4.8.2+, Clang 3.5+, Apple Clang 5.1+, or Visual Studio C++ 2015 Update 1 or later CMake 3.2 or later On Windows, boost 1.56 or later  Installation Step 1: Install the latest version of the MongoDB C driver. The mongocxx driver builds on top of the MongoDB C driver.
- For mongocxx-3.1.x, libmongoc 1.5.0 or later is required.</description>
+      <description>
+
+&lt;h1 id=&#34;installing-the-mongocxx-driver&#34;&gt;Installing the mongocxx driver&lt;/h1&gt;
+
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Any standard Unix platform, or Windows 7 SP1+&lt;/li&gt;
+&lt;li&gt;GCC 4.8.2+, Clang 3.5+, Apple Clang 5.1+, or Visual Studio C++ 2015
+Update 1 or later&lt;/li&gt;
+&lt;li&gt;CMake 3.2 or later&lt;/li&gt;
+&lt;li&gt;On Windows, boost 1.56 or later&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
+
+&lt;h3 id=&#34;step-1-install-the-latest-version-of-the-mongodb-c-driver&#34;&gt;Step 1: Install the latest version of the MongoDB C driver.&lt;/h3&gt;
+
+&lt;p&gt;The mongocxx driver builds on top of the MongoDB C driver.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;For mongocxx-3.1.x, libmongoc 1.5.0 or later is required.&lt;/li&gt;
+&lt;li&gt;For mongocxx-3.0.x, we recommend the last 1.4.x version of libmongoc&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Unless you know that your package manager offers a high-enough version, you
+will need to download and build from the source code. Get a tarball from
+the &lt;a href=&#34;https://github.com/mongodb/mongo-c-driver/releases&#34;&gt;C Driver releases&lt;/a&gt;
+page.&lt;/p&gt;
+
+&lt;p&gt;Follow the instructions for building from a tarball at
+&lt;a href=&#34;http://mongoc.org/libmongoc/current/installing.html&#34;&gt;Installing libmongoc&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you need static libraries, be sure to use the &lt;code&gt;--enable-static&lt;/code&gt;
+configure option when building libmongoc.&lt;/p&gt;
+
+&lt;h3 id=&#34;step-2-choose-a-c-17-polyfill&#34;&gt;Step 2: Choose a C++17 polyfill&lt;/h3&gt;
+
+&lt;p&gt;The mongocxx driver uses the experimental C++17 features
+&lt;code&gt;std::optional&lt;/code&gt; and &lt;code&gt;std::string_view&lt;/code&gt;. To compile
+the mongocxx driver, you must choose one of the following
+implementations for these features:&lt;/p&gt;
+
+&lt;p&gt;MNMLSTC/core (&lt;em&gt;default for non-Windows platforms&lt;/em&gt;)
+     Select with &lt;code&gt;-DBSONCXX_POLY_USE_MNMLSTC=1&lt;/code&gt;. This option vendors a
+     header-only installation of MNMLSTC/core into the bsoncxx library
+     installation.  &lt;strong&gt;NOTE&lt;/strong&gt;: this will download MLNMLSTC from
+     GitHub during the build process.&lt;/p&gt;
+
+&lt;p&gt;Boost (&lt;em&gt;default for Windows platforms&lt;/em&gt;)
+     Select with &lt;code&gt;-DBSONCXX_POLY_USE_BOOST=1&lt;/code&gt;. This is currently the
+     only option if you are using MSVC.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;std::experimental&lt;/code&gt;
+     Select with &lt;code&gt;-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=1&lt;/code&gt;. If your
+     toolchain&amp;rsquo;s standard library provides &lt;code&gt;optional&lt;/code&gt; and
+     &lt;code&gt;string_view&lt;/code&gt; in the namespace &lt;code&gt;std::experimental&lt;/code&gt;, you can use
+     this option. Be aware that your standard library&amp;rsquo;s
+     &lt;code&gt;std::experimental&lt;/code&gt; implementation may change over time,
+     breaking binary compatibility in unexpected ways. Note that this
+     polyfill is &lt;em&gt;not&lt;/em&gt; recommended and is unsupported.&lt;/p&gt;
+
+&lt;p&gt;Most users should be fine sticking with the default. However, if you
+have an existing application which makes heavy use of one of the
+available libraries, you may prefer to build the mongocxx driver
+against the same library.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;DO NOT&lt;/strong&gt; change your project&amp;rsquo;s polyfill if you need to create a
+stable binary interface.&lt;/p&gt;
+
+&lt;h3 id=&#34;step-3-download-the-latest-version-of-the-mongocxx-driver&#34;&gt;Step 3: Download the latest version of the mongocxx driver.&lt;/h3&gt;
+
+&lt;p&gt;To get the source via git, the &lt;code&gt;releases/stable&lt;/code&gt; branch will track the most
+recent stable release. For example, to work from a shallow checkout of the
+stable release branch:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;git clone https://github.com/mongodb/mongo-cxx-driver.git \
+    --branch releases/stable --depth 1
+cd mongo-cxx-driver/build
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you prefer to download a tarball, look on the &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/releases&#34;&gt;mongocxx
+releases&lt;/a&gt; page for a
+link to the release tarball for the version you wish you install.  For
+example, to download version 3.1.1:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.1.1.tar.gz
+tar -xzf r3.1.1.tar.gz
+cd mongo-cxx-driver-r3.1.1/build
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Make sure you change to the &lt;code&gt;build&lt;/code&gt; directory of whatever source tree you
+obtain.&lt;/p&gt;
+
+&lt;h3 id=&#34;step-4-configure-the-driver&#34;&gt;Step 4: Configure the driver&lt;/h3&gt;
+
+&lt;p&gt;By default, &lt;code&gt;libmongoc&lt;/code&gt; installs into &lt;code&gt;/usr/local&lt;/code&gt;.  To configure
+mongocxx for installation into &lt;code&gt;/usr/local&lt;/code&gt; as well, use the following
+&lt;code&gt;cmake&lt;/code&gt; command:&lt;/p&gt;
+
+&lt;p&gt;(&lt;strong&gt;&lt;em&gt;NOTE&lt;/em&gt;&lt;/strong&gt;: The trailing &lt;code&gt;..&lt;/code&gt; below is important!  Don&amp;rsquo;t omit it.)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you did not install the &lt;code&gt;libmongoc&lt;/code&gt; into the default prefix,
+substitute the &lt;code&gt;cmake&lt;/code&gt; line above with the following lines (replace
+&lt;code&gt;MY_INSTALL_PREFIX&lt;/code&gt; with the prefix used for installing the C driver:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# MY_INSTALL_PREFIX=&amp;quot;/your/cdriver/prefix&amp;quot;
+
+PKG_CONFIG_PATH=&amp;quot;$MY_INSTALL_PREFIX/lib/pkgconfig&amp;quot; \
+  cmake -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=&amp;quot;$MY_INSTALL_PREFIX&amp;quot; ..
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Remember: to select a polyfill, pass the option to &lt;code&gt;cmake&lt;/code&gt;. For example,
+to select the Boost polyfill, substitute the &lt;code&gt;cmake&lt;/code&gt; line with
+the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;cmake -DCMAKE_BUILD_TYPE=Release -DBSONCXX_POLY_USE_BOOST=1 \
+    -DCMAKE_INSTALL_PREFIX=/usr/local ..
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On Windows, here&amp;rsquo;s an example of how to configure for MSVC (assuming
+libmongoc and libbson are in &lt;code&gt;c:\mongo-c-driver&lt;/code&gt; as given in the
+&lt;a href=&#34;http://mongoc.org/libmongoc/current/installing.html#building-windows&#34;&gt;mongoc Windows installation
+instructions&lt;/a&gt;
+and boost is in &lt;code&gt;c:\local\boost_1_59_0&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;&#39;C:\Program Files (x86)\CMake\bin\cmake.exe&#39; -G &amp;quot;Visual Studio 14 Win64&amp;quot;
+    -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
+    -DLIBBSON_DIR=c:\mongo-c-driver
+    -DBOOST_ROOT=c:\local\boost_1_59_0
+    -DLIBMONGOC_DIR=c:\mongo-c-driver
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;step-5-build-and-install-the-driver&#34;&gt;Step 5: Build and install the driver&lt;/h3&gt;
+
+&lt;p&gt;If you are using the default MNMLSTC polyfill and are installing to a
+directory requiring root permissions, you should install the polyfill with
+&lt;code&gt;sudo&lt;/code&gt; before running &lt;code&gt;make&lt;/code&gt; so you don&amp;rsquo;t have to run all of &lt;code&gt;make&lt;/code&gt; with
+&lt;code&gt;sudo&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# Only for MNMLSTC polyfill
+sudo make EP_mnmlstc_core
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once MNMLSTC is installed, or if you are using a different polyfill,
+build and install the driver:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;make &amp;amp;&amp;amp; sudo make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On Windows, build and install from the command line like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;msbuild.exe ALL_BUILD.vcxproj
+msbuild.exe INSTALL.vcxproj
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;step-6-test-your-installation&#34;&gt;Step 6: Test your installation&lt;/h3&gt;
+
+&lt;p&gt;Save the following source file with the filename &lt;code&gt;test.cpp&lt;/code&gt;
+underneath any directory:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+#include &amp;lt;bsoncxx/builder/stream/document.hpp&amp;gt;
+#include &amp;lt;bsoncxx/json.hpp&amp;gt;
+
+#include &amp;lt;mongocxx/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/instance.hpp&amp;gt;
+
+int main(int, char**) {
+    mongocxx::instance inst{};
+    mongocxx::client conn{mongocxx::uri{}};
+
+    bsoncxx::builder::stream::document document{};
+
+    auto collection = conn[&amp;quot;testdb&amp;quot;][&amp;quot;testcollection&amp;quot;];
+    document &amp;lt;&amp;lt; &amp;quot;hello&amp;quot; &amp;lt;&amp;lt; &amp;quot;world&amp;quot;;
+
+    collection.insert_one(document.view());
+    auto cursor = collection.find({});
+
+    for (auto&amp;amp;&amp;amp; doc : cursor) {
+        std::cout &amp;lt;&amp;lt; bsoncxx::to_json(doc) &amp;lt;&amp;lt; std::endl;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;compiling-with-the-help-of-pkg-config&#34;&gt;Compiling with the help of pkg-config&lt;/h4&gt;
+
+&lt;p&gt;Compile the test program with the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;c++ --std=c++11 test.cpp -o test $(pkg-config --cflags --libs libmongocxx)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you installed to somewhere not in your pkg-config search path, remember
+to set the &lt;code&gt;PKG_CONFIG_PATH&lt;/code&gt; environment variable first:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export PKG_CONFIG_PATH=&amp;quot;$MY_INSTALL_PREFIX/lib/pkgconfig&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;compiling-without-pkg-config&#34;&gt;Compiling without pkg-config&lt;/h4&gt;
+
+&lt;p&gt;If you don&amp;rsquo;t have pkg-config available, you will need to set include and
+library flags manually on the command line or in your IDE.&lt;/p&gt;
+
+&lt;p&gt;For example, if libmongoc and mongocxx are installed in &lt;code&gt;/usr/local&lt;/code&gt;, then
+the compilation line in the section above expands to this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;c++ --std=c++11 test.cpp -o test \
+  -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 \
+  -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 \
+  -L/usr/local/lib -lmongocxx -lbsoncxx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;compiling-with-msvc&#34;&gt;Compiling with MSVC&lt;/h4&gt;
+
+&lt;p&gt;To compile on MSVC, you will need to setup your project to include all the
+necessary include paths, library paths, preprocessor defines, and link
+libraries. To do this, you can set these values either by the UI or by
+editing the XML &lt;code&gt;.vcxproj&lt;/code&gt; file directly. To confirm you have everything
+setup correctly, here are the &lt;code&gt;PropertyGroup&lt;/code&gt; and &lt;code&gt;ItemDefinitionGroup&lt;/code&gt;
+settings for a Debug x64 build as an example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;  &amp;lt;PropertyGroup Condition=&amp;quot;&#39;$(Configuration)|$(Platform)&#39;==&#39;Debug|x64&#39;&amp;quot;&amp;gt;
+    &amp;lt;LinkIncremental&amp;gt;true&amp;lt;/LinkIncremental&amp;gt;
+    &amp;lt;IncludePath&amp;gt;c:\local\boost_1_59_0\;C:\mongo-cxx-driver\include\mongocxx\v_noabi;C:\mongo-cxx-driver\include\bsoncxx\v_noabi;C:\mongo-c-driver\include\libmongoc-1.0;C:\mongo-c-driver\include\libbson-1.0;$(IncludePath)&amp;lt;/IncludePath&amp;gt;
+    &amp;lt;LibraryPath&amp;gt;c:\mongo-c-driver\lib\;c:\mongo-cxx-driver\lib\;$(LibraryPath)&amp;lt;/LibraryPath&amp;gt;
+  &amp;lt;/PropertyGroup&amp;gt;
+  &amp;lt;ItemDefinitionGroup Condition=&amp;quot;&#39;$(Configuration)|$(Platform)&#39;==&#39;Debug|x64&#39;&amp;quot;&amp;gt;
+    &amp;lt;ClCompile&amp;gt;
+      &amp;lt;PrecompiledHeader&amp;gt;Use&amp;lt;/PrecompiledHeader&amp;gt;
+      &amp;lt;WarningLevel&amp;gt;Level3&amp;lt;/WarningLevel&amp;gt;
+      &amp;lt;Optimization&amp;gt;Disabled&amp;lt;/Optimization&amp;gt;
+      &amp;lt;PreprocessorDefinitions&amp;gt;MONGOCXX_STATIC;BSONCXX_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)&amp;lt;/PreprocessorDefinitions&amp;gt;
+      &amp;lt;SDLCheck&amp;gt;true&amp;lt;/SDLCheck&amp;gt;
+    &amp;lt;/ClCompile&amp;gt;
+    &amp;lt;Link&amp;gt;
+      &amp;lt;SubSystem&amp;gt;Console&amp;lt;/SubSystem&amp;gt;
+      &amp;lt;GenerateDebugInformation&amp;gt;true&amp;lt;/GenerateDebugInformation&amp;gt;
+      &amp;lt;AdditionalDependencies&amp;gt;libmongocxx.lib;libbsoncxx.lib;mongoc-static-1.0.lib;bson-1.0.lib;%(AdditionalDependencies)&amp;lt;/AdditionalDependencies&amp;gt;
+    &amp;lt;/Link&amp;gt;
+  &amp;lt;/ItemDefinitionGroup&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
     </item>
     
     <item>
       <title>Overview</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/index/</link>
+      <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
-      <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/index/</guid>
-      <description>The mongocxx is a ground-up rewrite of a C++ driver for MongoDB based on libmongoc. It requires a C++11 compiler. It it known to build on x86 and x86-64 architectures for Linux, Mac OS X, Windows, FreeBSD and Solaris.
-The mongocxx driver library includes a matching bson package, bsoncxx, that implements the BSON specification (see http://www.bsonspec.org). This library can be used standalone for object serialization and deserialization even when one is not using MongoDB at all.</description>
+      <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</guid>
+      <description>
+
+&lt;h1 id=&#34;the-mongocxx-v3-driver&#34;&gt;The mongocxx (v3) driver&lt;/h1&gt;
+
+&lt;p&gt;The mongocxx is a ground-up rewrite of a C++ driver for MongoDB based on
+&lt;a href=&#34;http://mongoc.org/&#34;&gt;libmongoc&lt;/a&gt;.  It requires a C++11 compiler.  It it
+known to build on x86 and x86-64 architectures for Linux, Mac OS X,
+Windows, FreeBSD and Solaris.&lt;/p&gt;
+
+&lt;p&gt;The mongocxx driver library includes a matching bson package, bsoncxx, that
+implements the BSON specification (see &lt;a href=&#34;http://www.bsonspec.org&#34;&gt;http://www.bsonspec.org&lt;/a&gt;). This
+library can be used standalone for object serialization and deserialization
+even when one is not using MongoDB at all.&lt;/p&gt;
+
+&lt;p&gt;Releases of the mongocxx driver have version numbers like v3.x.y.&lt;/p&gt;
+
+&lt;p&gt;(Note: there were no v2.x.y C++ drivers to avoid confusion with the
+deprecated legacy-0.0-26compat-2.x.y drivers.)&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -68,9 +620,96 @@ The mongocxx driver library includes a matching bson package, bsoncxx, that impl
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/thread-safety/</guid>
-      <description>TLDR: Always give each thread its own mongocxx::client.
-In general each mongocxx::client object AND all of its child objects should be used by a single thread at a time. This is true even for clients acquired from a mongocxx::pool.
-Even if you create multiple child objects from a single client, and synchronize them individually, that is unsafe as they will concurrently modify internal structures of the client. The same is true if you copy a child object.</description>
+      <description>
+
+&lt;h1 id=&#34;thread-and-fork-safety-with-mongocxx&#34;&gt;Thread and fork safety with mongocxx&lt;/h1&gt;
+
+&lt;p&gt;TLDR: &lt;strong&gt;Always give each thread its own &lt;code&gt;mongocxx::client&lt;/code&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;In general each &lt;code&gt;mongocxx::client&lt;/code&gt; object AND all of its child objects
+&lt;strong&gt;should be used by a single thread at a time&lt;/strong&gt;. This is true even for
+clients acquired from a &lt;code&gt;mongocxx::pool&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Even if you create multiple child objects from a single &lt;code&gt;client&lt;/code&gt;, and
+synchronize them individually, that is unsafe as they will concurrently
+modify internal structures of the &lt;code&gt;client&lt;/code&gt;. The same is true if you copy a
+child object.&lt;/p&gt;
+
+&lt;h2 id=&#34;never-do-this&#34;&gt;Never do this&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::instance instance{};
+mongocxx::client c{};
+auto db1 = c[&amp;quot;db1&amp;quot;];
+auto db2 = c[&amp;quot;db2&amp;quot;];
+std::mutex db1_mtx{};
+std::mutex db2_mtx{};
+
+auto threadfunc = [](mongocxx::database&amp;amp; db, std::mutex&amp;amp; mtx) {
+    std::scoped_lock&amp;lt;std::mutex&amp;gt;(mtx);
+    db[&amp;quot;col&amp;quot;].insert({});
+}
+
+// BAD! these two databases are individually synchronized, but they are derived from the same
+// client, so they can only be accessed by one thread at a time
+std::thread([]() { threadfunc(db1, db1_mtx); threadfunc(db2, db2_mtx); });
+std::thread([]() { threadfunc(db2, db2_mtx); threadfunc(db1, db1_mtx); });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the above example, even though the two databases are individually
+synchronized, they are derived from the same client. There is shared state
+inside the library that is now being modified without synchronization. The
+same problem occurs if &lt;code&gt;db2&lt;/code&gt; is a copy of &lt;code&gt;db1&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;a-better-version&#34;&gt;A better version&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::instance instance{};
+mongocxx::client c1{};
+mongocxx::client c2{}
+std::mutex c1_mtx{};
+std::mutex c2_mtx{};
+
+auto threadfunc = [](stdx::string_view dbname, mongocxx::client&amp;amp; client, std::mutex&amp;amp; mtx) {
+    std::scoped_lock&amp;lt;std::mutex&amp;gt;(mtx);
+    client[dbname][&amp;quot;col&amp;quot;].insert({});
+}
+
+// Good! these two clients are individually synchronized, so it is safe to share them between
+// threads.
+std::thread([]() { threadfunc(&amp;quot;db1&amp;quot;, c1, c1_mtx); threadfunc(&amp;quot;db2&amp;quot;, c2, c2_mtx); });
+std::thread([]() { threadfunc(&amp;quot;db2&amp;quot;, c2, c2_mtx); threadfunc(&amp;quot;db1&amp;quot;, c1, c1_mtx); });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;the-best-version&#34;&gt;The best version&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::instance instance{};
+auto threadfunc = [](mongocxx::client&amp;amp; client, stdx::string_view dbname) {
+    client[dbname][&amp;quot;col&amp;quot;].insert({});
+}
+// don&#39;t even bother sharing clients. Just give each thread its own,
+std::thread([]() {
+    mongocxx::client c{};
+    threadfunc(c, &amp;quot;db1&amp;quot;);
+    threadfunc(c, &amp;quot;db2&amp;quot;);
+});
+
+std::thread([]() {
+    mongocxx::client c{};
+    threadfunc(c, &amp;quot;db2&amp;quot;);
+    threadfunc(c, &amp;quot;db1&amp;quot;);
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In most programs, clients will be long lived - so its less of a hassle (and
+more performant) to make one per-thread. Obviously in this contrived
+example, there&amp;rsquo;s quite a bit of overhead because we&amp;rsquo;re doing so little work
+with each client - but in a real program this is the best solution.&lt;/p&gt;
+
+&lt;h2 id=&#34;fork-safety&#34;&gt;Fork safety&lt;/h2&gt;
+
+&lt;p&gt;Neither a &lt;code&gt;mongocxx::client&lt;/code&gt; or a &lt;code&gt;mongocxx::pool&lt;/code&gt; can be safely copied
+when forking. Because of this, any client or pool must be created &lt;em&gt;after&lt;/em&gt;
+forking, not before.&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -79,10 +718,449 @@ Even if you create multiple child objects from a single client, and synchronize 
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/tutorial/</guid>
-      <description>Quick Start Prerequisites  A mongod instance running on localhost on port 27017.
- The mongocxx Driver. See Installation for mongocxx.
- The following statements at the top of your source file:
-  #include &amp;lt;cstdint&amp;gt; #include &amp;lt;iostream&amp;gt; #include &amp;lt;vector&amp;gt; #include &amp;lt;bsoncxx/json.hpp&amp;gt; #include &amp;lt;mongocxx/client.hpp&amp;gt; #include &amp;lt;mongocxx/stdx.hpp&amp;gt; #include &amp;lt;mongocxx/uri.hpp&amp;gt; using bsoncxx::builder::stream::close_array; using bsoncxx::builder::stream::close_document; using bsoncxx::builder::stream::document; using bsoncxx::builder::stream::finalize; using bsoncxx::builder::stream::open_array; using bsoncxx::builder::stream::open_document;  Compiling The mongocxx driver&amp;rsquo;s installation process will install a libmongocxx.</description>
+      <description>
+
+&lt;h1 id=&#34;tutorial-for-mongocxx&#34;&gt;Tutorial for mongocxx&lt;/h1&gt;
+
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;A &lt;a href=&#34;https://docs.mongodb.com/master/reference/program/mongod/&#34;&gt;mongod&lt;/a&gt;
+instance running on localhost on port 27017.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The mongocxx Driver. See &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/&#34;&gt;Installation for mongocxx&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The following statements at the top of your source file:&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;#include &amp;lt;cstdint&amp;gt;
+#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;vector&amp;gt;
+#include &amp;lt;bsoncxx/json.hpp&amp;gt;
+#include &amp;lt;mongocxx/client.hpp&amp;gt;
+#include &amp;lt;mongocxx/stdx.hpp&amp;gt;
+#include &amp;lt;mongocxx/uri.hpp&amp;gt;
+
+using bsoncxx::builder::stream::close_array;
+using bsoncxx::builder::stream::close_document;
+using bsoncxx::builder::stream::document;
+using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::stream::open_array;
+using bsoncxx::builder::stream::open_document;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;compiling&#34;&gt;Compiling&lt;/h2&gt;
+
+&lt;p&gt;The mongocxx driver&amp;rsquo;s installation process will install a
+&lt;code&gt;libmongocxx.pc&lt;/code&gt; file for use
+with &lt;a href=&#34;https://www.freedesktop.org/wiki/Software/pkg-config/&#34;&gt;pkg-config&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;To compile a program, run the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;c++ --std=c++11 &amp;lt;input&amp;gt;.cpp $(pkg-config --cflags --libs libmongocxx)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you don&amp;rsquo;t have pkg-config available, you will need to set include and
+library flags manually on the command line or in your IDE.  For example, if
+libmongoc and mongocxx are installed in &lt;code&gt;/usr/local&lt;/code&gt;, then the compilation
+line in above expands to this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;c++ --std=c++11 &amp;lt;input&amp;gt;.cpp
+  -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 \
+  -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 \
+  -L/usr/local/lib -lmongocxx -lbsoncxx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;make-a-connection&#34;&gt;Make a Connection&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;IMPORTANT&lt;/strong&gt;: Before making any connections, you need to create one and only
+one instance of &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1instance.html
+&#34;&gt;&lt;code&gt;mongocxx::instance&lt;/code&gt;&lt;/a&gt;.
+This instance must exist for the entirety of your program.&lt;/p&gt;
+
+&lt;p&gt;To connect to a running MongoDB instance, use the
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1client.html
+&#34;&gt;&lt;code&gt;mongocxx::client&lt;/code&gt;&lt;/a&gt;
+class.&lt;/p&gt;
+
+&lt;p&gt;You must specify the host to connect to using a
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1uri.html
+&#34;&gt;&lt;code&gt;mongocxx::uri&lt;/code&gt;&lt;/a&gt; instance containing a
+&lt;a href=&#34;https://docs.mongodb.com/master/reference/connection-string/&#34;&gt;MongoDB URI&lt;/a&gt;,
+and pass that into the &lt;code&gt;mongocxx::client&lt;/code&gt; constructor.&lt;/p&gt;
+
+&lt;p&gt;The default &lt;code&gt;mongocxx::uri&lt;/code&gt; constructor will connect to a
+server running on localhost on port &lt;code&gt;27017&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::instance instance{}; // This should be done only once.
+mongocxx::client client{mongocxx::uri{}};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is equivalent to the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::instance instance{}; // This should be done only once.
+mongocxx::uri uri(&amp;quot;mongodb://localhost:27017&amp;quot;);
+mongocxx::client client(uri);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;access-a-database&#34;&gt;Access a Database&lt;/h2&gt;
+
+&lt;p&gt;Once you have a &lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1client.html
+&#34;&gt;&lt;code&gt;mongocxx::client&lt;/code&gt;&lt;/a&gt;
+instance connected to a MongoDB deployment, use either the
+&lt;code&gt;database()&lt;/code&gt; method or &lt;code&gt;operator[]&lt;/code&gt; to obtain a
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1database.html
+&#34;&gt;&lt;code&gt;mongocxx::database&lt;/code&gt;&lt;/a&gt;
+instance.&lt;/p&gt;
+
+&lt;p&gt;If the database you request does not exist, MongoDB creates it when you
+first store data.&lt;/p&gt;
+
+&lt;p&gt;The following example accesses the &lt;code&gt;mydb&lt;/code&gt; database:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::database db = client[&amp;quot;mydb&amp;quot;];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;access-a-collection&#34;&gt;Access a Collection&lt;/h2&gt;
+
+&lt;p&gt;Once you have a
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1database.html
+&#34;&gt;&lt;code&gt;mongocxx::database&lt;/code&gt;&lt;/a&gt;
+instance, use either the &lt;code&gt;collection()&lt;/code&gt; method or &lt;code&gt;operator[]&lt;/code&gt; to obtain a
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
+&#34;&gt;&lt;code&gt;mongocxx::collection&lt;/code&gt;&lt;/a&gt;
+instance.&lt;/p&gt;
+
+&lt;p&gt;If the collection you request does not exist, MongoDB creates it when
+you first store data.&lt;/p&gt;
+
+&lt;p&gt;For example, using the &lt;code&gt;db&lt;/code&gt; instance created in the previous section,
+the following statement accesses the collection named &lt;code&gt;test&lt;/code&gt; in the
+&lt;code&gt;mydb&lt;/code&gt; database:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::collection coll = db[&amp;quot;test&amp;quot;];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;create-a-document&#34;&gt;Create a Document&lt;/h2&gt;
+
+&lt;p&gt;To create a &lt;code&gt;document&lt;/code&gt; using the C++ driver, use one of the two
+available builder interfaces:&lt;/p&gt;
+
+&lt;p&gt;Stream builder: &lt;code&gt;bsoncxx::builder::stream&lt;/code&gt;
+  A document builder using the streaming operators that works well for
+  literal document construction.&lt;/p&gt;
+
+&lt;p&gt;Basic builder: &lt;code&gt;bsoncxx::builder::basic&lt;/code&gt;
+  A more conventional document builder that involves calling methods on
+  a builder instance.&lt;/p&gt;
+
+&lt;p&gt;This guide only briefly describes the stream builder.&lt;/p&gt;
+
+&lt;p&gt;For example, consider the following JSON document:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+   &amp;quot;name&amp;quot; : &amp;quot;MongoDB&amp;quot;,
+   &amp;quot;type&amp;quot; : &amp;quot;database&amp;quot;,
+   &amp;quot;count&amp;quot; : 1,
+   &amp;quot;versions&amp;quot;: [ &amp;quot;v3.2&amp;quot;, &amp;quot;v3.0&amp;quot;, &amp;quot;v2.6&amp;quot; ],
+   &amp;quot;info&amp;quot; : {
+               &amp;quot;x&amp;quot; : 203,
+               &amp;quot;y&amp;quot; : 102
+            }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using the stream builder interface, you can construct this document
+as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;auto builder = bsoncxx::builder::stream::document{};
+bsoncxx::document::value doc_value = builder
+  &amp;lt;&amp;lt; &amp;quot;name&amp;quot; &amp;lt;&amp;lt; &amp;quot;MongoDB&amp;quot;
+  &amp;lt;&amp;lt; &amp;quot;type&amp;quot; &amp;lt;&amp;lt; &amp;quot;database&amp;quot;
+  &amp;lt;&amp;lt; &amp;quot;count&amp;quot; &amp;lt;&amp;lt; 1
+  &amp;lt;&amp;lt; &amp;quot;versions&amp;quot; &amp;lt;&amp;lt; bsoncxx::builder::stream::open_array
+    &amp;lt;&amp;lt; &amp;quot;v3.2&amp;quot; &amp;lt;&amp;lt; &amp;quot;v3.0&amp;quot; &amp;lt;&amp;lt; &amp;quot;v2.6&amp;quot;
+  &amp;lt;&amp;lt; close_array
+  &amp;lt;&amp;lt; &amp;quot;info&amp;quot; &amp;lt;&amp;lt; bsoncxx::builder::stream::open_document
+    &amp;lt;&amp;lt; &amp;quot;x&amp;quot; &amp;lt;&amp;lt; 203
+    &amp;lt;&amp;lt; &amp;quot;y&amp;quot; &amp;lt;&amp;lt; 102
+  &amp;lt;&amp;lt; bsoncxx::builder::stream::close_document
+  &amp;lt;&amp;lt; bsoncxx::builder::stream::finalize;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Use &lt;code&gt;bsoncxx::builder::stream::finalize&lt;/code&gt; to obtain a
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1value.html
+&#34;&gt;&lt;code&gt;bsoncxx::document::value&lt;/code&gt;&lt;/a&gt;
+instance.&lt;/p&gt;
+
+&lt;p&gt;This &lt;code&gt;bsoncxx::document::value&lt;/code&gt; type is a read-only object owning
+its own memory. To use it, you must obtain a
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1view.html
+&#34;&gt;&lt;code&gt;bsoncxx::document::view&lt;/code&gt;&lt;/a&gt; using
+the &lt;code&gt;view()&lt;/code&gt; method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;bsoncxx::document::view view = doc_value.view();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can access fields within this document view using &lt;code&gt;operator[]&lt;/code&gt;,
+which will return a
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1element.html
+&#34;&gt;&lt;code&gt;bsoncxx::document::element&lt;/code&gt;&lt;/a&gt;
+instance. For example, the following will extract the &lt;code&gt;name&lt;/code&gt; field whose
+value is a string:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;bsoncxx::document::element element = view[&amp;quot;name&amp;quot;];
+if(element.type() != bsoncxx::type::k_utf8) {
+  // Error
+}
+std::string name = element.get_utf8().value.to_string();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If the value in the &lt;code&gt;name&lt;/code&gt; field is not a string and you do not
+include a type guard as seen in the preceding example, this code will
+throw an instance of
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1exception.html
+&#34;&gt;&lt;code&gt;bsoncxx::exception&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;insert-documents&#34;&gt;Insert Documents&lt;/h2&gt;
+
+&lt;h3 id=&#34;insert-one-document&#34;&gt;Insert One Document&lt;/h3&gt;
+
+&lt;p&gt;To insert a single document into the collection, use a
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
+&#34;&gt;&lt;code&gt;mongocxx::collection&lt;/code&gt;&lt;/a&gt;
+instance&amp;rsquo;s &lt;code&gt;insert_one()&lt;/code&gt; method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::stdx::optional&amp;lt;mongocxx::result::insert_one&amp;gt; result =
+ restaurants.insert_one(doc);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you do not specify a top-level &lt;code&gt;_id&lt;/code&gt; field in the document,
+MongoDB automatically adds an &lt;code&gt;_id&lt;/code&gt; field to the inserted document.&lt;/p&gt;
+
+&lt;p&gt;You can obtain this value using the &lt;code&gt;inserted_id()&lt;/code&gt; method of the
+returned
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1insert__one.html
+&#34;&gt;&lt;code&gt;mongocxx::result::insert_one&lt;/code&gt;&lt;/a&gt;
+instance.&lt;/p&gt;
+
+&lt;h3 id=&#34;insert-multiple-documents&#34;&gt;Insert Multiple Documents&lt;/h3&gt;
+
+&lt;p&gt;To insert multiple documents to the collection, use a
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
+&#34;&gt;&lt;code&gt;mongocxx::collection&lt;/code&gt;&lt;/a&gt; instance&amp;rsquo;s
+&lt;code&gt;insert_many()&lt;/code&gt; method, which takes a list of documents to insert.&lt;/p&gt;
+
+&lt;p&gt;The following example will add multiple documents of the form:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{ &amp;quot;i&amp;quot; : value }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Create the documents in a loop and add to the documents list:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;std::vector&amp;lt;bsoncxx::document::value&amp;gt; documents;
+for(int i = 0; i &amp;lt; 100; i++) {
+    documents.push_back(
+      bsoncxx::builder::stream::document{} &amp;lt;&amp;lt; &amp;quot;i&amp;quot; &amp;lt;&amp;lt; i &amp;lt;&amp;lt; finalize);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To insert these documents to the collection, pass the list of documents
+to the &lt;code&gt;insert_many()&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;collection.insert_many(documents);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you do not specify a top-level &lt;code&gt;_id&lt;/code&gt; field in each document,
+MongoDB automatically adds a &lt;code&gt;_id&lt;/code&gt; field to the inserted documents.&lt;/p&gt;
+
+&lt;p&gt;You can obtain this value using the &lt;code&gt;inserted_ids()&lt;/code&gt; method of the
+returned
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1insert__many.html
+&#34;&gt;&lt;code&gt;mongocxx::result::insert_many&lt;/code&gt;&lt;/a&gt;
+instance.&lt;/p&gt;
+
+&lt;h2 id=&#34;query-the-collection&#34;&gt;Query the Collection&lt;/h2&gt;
+
+&lt;p&gt;To query the collection, use the collection’s &lt;code&gt;find()&lt;/code&gt; and
+&lt;code&gt;find_one&lt;/code&gt; methods.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;find()&lt;/code&gt; will return an instance of
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1cursor.html
+&#34;&gt;&lt;code&gt;mongocxx::cursor&lt;/code&gt;&lt;/a&gt;,
+while &lt;code&gt;find_one()&lt;/code&gt; will return an instance of
+&lt;code&gt;std::optional&amp;lt;&lt;/code&gt;&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1value.html
+&#34;&gt;&lt;code&gt;bsoncxx::document::value&lt;/code&gt;&lt;/a&gt;&lt;code&gt;&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;You can call either method without any arguments to query all documents
+in a collection, or pass a filter to query for documents that match the
+filter criteria.&lt;/p&gt;
+
+&lt;h3 id=&#34;find-a-single-document-in-a-collection&#34;&gt;Find a Single Document in a Collection&lt;/h3&gt;
+
+&lt;p&gt;To return a single document in the collection, use the &lt;code&gt;find_one()&lt;/code&gt;
+method without any parameters.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::stdx::optional&amp;lt;bsoncxx::document::value&amp;gt; maybe_result =
+  collection.find_one(document{} &amp;lt;&amp;lt; finalize);
+if(maybe_result) {
+  // Do something with *maybe_result;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;find-all-documents-in-a-collection&#34;&gt;Find All Documents in a Collection&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::cursor cursor = collection.find(document{} &amp;lt;&amp;lt; finalize);
+for(auto doc : cursor) {
+  std::cout &amp;lt;&amp;lt; bsoncxx::to_json(doc) &amp;lt;&amp;lt; &amp;quot;\n&amp;quot;;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;specify-a-query-filter&#34;&gt;Specify a Query Filter&lt;/h3&gt;
+
+&lt;h4 id=&#34;get-a-single-document-that-matches-a-filter&#34;&gt;Get A Single Document That Matches a Filter&lt;/h4&gt;
+
+&lt;p&gt;To find the first document where the field &lt;code&gt;i&lt;/code&gt; has the value &lt;code&gt;71&lt;/code&gt;,
+pass the document &lt;code&gt;{&amp;quot;i&amp;quot;: 71}&lt;/code&gt; to specify the equality condition:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::stdx::optional&amp;lt;bsoncxx::document::value&amp;gt; maybe_result =
+  collection.find_one(document{} &amp;lt;&amp;lt; &amp;quot;i&amp;quot; &amp;lt;&amp;lt; 71 &amp;lt;&amp;lt; finalize);
+if(maybe_result) {
+  std::cout &amp;lt;&amp;lt; bsoncxx::to_json(*maybe_result) &amp;lt;&amp;lt; &amp;quot;\n&amp;quot;;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The example prints one document:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{ &amp;quot;_id&amp;quot; : { &amp;quot;$oid&amp;quot; : &amp;quot;5755e19b38c96f1fb25667a8&amp;quot; },  &amp;quot;i&amp;quot; : 71 }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;_id&lt;/code&gt; element has been added automatically by MongoDB to your
+document and your value will differ from that shown. MongoDB reserves
+field names that start with an underscore (&lt;code&gt;_&lt;/code&gt;) and the dollar sign
+(&lt;code&gt;$&lt;/code&gt;) for internal use.&lt;/p&gt;
+
+&lt;h4 id=&#34;get-all-documents-that-match-a-filter&#34;&gt;Get All Documents That Match a Filter&lt;/h4&gt;
+
+&lt;p&gt;The following example returns and prints all documents where
+&lt;code&gt;50 &amp;lt; &amp;quot;i&amp;quot; &amp;lt;= 100&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::cursor cursor = collection.find(
+  document{} &amp;lt;&amp;lt; &amp;quot;i&amp;quot; &amp;lt;&amp;lt; open_document &amp;lt;&amp;lt;
+    &amp;quot;$gt&amp;quot; &amp;lt;&amp;lt; 50 &amp;lt;&amp;lt;
+    &amp;quot;$lte&amp;quot; &amp;lt;&amp;lt; 100
+  &amp;lt;&amp;lt; close_document &amp;lt;&amp;lt; finalize);
+for(auto doc : cursor) {
+  std::cout &amp;lt;&amp;lt; bsoncxx::to_json(doc) &amp;lt;&amp;lt; &amp;quot;\n&amp;quot;;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;update-documents&#34;&gt;Update Documents&lt;/h2&gt;
+
+&lt;p&gt;To update documents in a collection, you can use the collection’s
+&lt;code&gt;update_one()&lt;/code&gt; and &lt;code&gt;update_many()&lt;/code&gt; methods.&lt;/p&gt;
+
+&lt;p&gt;The update methods return an instance of
+&lt;code&gt;std::optional&amp;lt;&lt;/code&gt;&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1update.html
+&#34;&gt;&lt;code&gt;mongocxx::result::update&lt;/code&gt;&lt;/a&gt;&lt;code&gt;&amp;gt;&lt;/code&gt;,
+which provides information about the operation including the number of
+documents modified by the update.&lt;/p&gt;
+
+&lt;h3 id=&#34;update-a-single-document&#34;&gt;Update a Single Document&lt;/h3&gt;
+
+&lt;p&gt;To update at most one document, use the &lt;code&gt;update_one()&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;p&gt;The following example updates the first document that matches the filter
+&lt;code&gt;{ &amp;quot;i&amp;quot;: 10 }&lt;/code&gt; and sets the value of &lt;code&gt;i&lt;/code&gt; to &lt;code&gt;110&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;collection.update_one(document{} &amp;lt;&amp;lt; &amp;quot;i&amp;quot; &amp;lt;&amp;lt; 10 &amp;lt;&amp;lt; finalize,
+                      document{} &amp;lt;&amp;lt; &amp;quot;$set&amp;quot; &amp;lt;&amp;lt; open_document &amp;lt;&amp;lt;
+                        &amp;quot;i&amp;quot; &amp;lt;&amp;lt; 110 &amp;lt;&amp;lt; close_document &amp;lt;&amp;lt; finalize);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;update-multiple-documents&#34;&gt;Update Multiple Documents&lt;/h3&gt;
+
+&lt;p&gt;To update all documents matching a filter, use the &lt;code&gt;update_many()&lt;/code&gt;
+method.&lt;/p&gt;
+
+&lt;p&gt;The following example increments the value of &lt;code&gt;i&lt;/code&gt; by &lt;code&gt;100&lt;/code&gt; where
+&lt;code&gt;i&lt;/code&gt; is less than &lt;code&gt;100&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::stdx::optional&amp;lt;mongocxx::result::update&amp;gt; result =
+ collection.update_many(
+  document{} &amp;lt;&amp;lt; &amp;quot;i&amp;quot; &amp;lt;&amp;lt; open_document &amp;lt;&amp;lt;
+    &amp;quot;$lt&amp;quot; &amp;lt;&amp;lt; 100 &amp;lt;&amp;lt; close_document &amp;lt;&amp;lt; finalize,
+  document{} &amp;lt;&amp;lt; &amp;quot;$inc&amp;quot; &amp;lt;&amp;lt; open_document &amp;lt;&amp;lt;
+    &amp;quot;i&amp;quot; &amp;lt;&amp;lt; 100 &amp;lt;&amp;lt; close_document &amp;lt;&amp;lt; finalize);
+
+if(result) {
+  std::cout &amp;lt;&amp;lt; result-&amp;gt;modified_count() &amp;lt;&amp;lt; &amp;quot;\n&amp;quot;;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;delete-documents&#34;&gt;Delete Documents&lt;/h2&gt;
+
+&lt;p&gt;To delete documents from a collection, you can use a collection’s
+&lt;code&gt;delete_one()&lt;/code&gt; and &lt;code&gt;delete_many()&lt;/code&gt; methods.&lt;/p&gt;
+
+&lt;p&gt;The delete methods return an instance of
+&lt;code&gt;std::optional&amp;lt;&lt;/code&gt;&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1delete__result.html
+&#34;&gt;&lt;code&gt;mongocxx::result::delete&lt;/code&gt;&lt;/a&gt;&lt;code&gt;&amp;gt;&lt;/code&gt;,
+which contains the number of documents deleted.&lt;/p&gt;
+
+&lt;h3 id=&#34;delete-a-single-document&#34;&gt;Delete a Single Document&lt;/h3&gt;
+
+&lt;p&gt;To delete at most a single document that matches a filter, use the
+&lt;code&gt;delete_one()&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;p&gt;For example, to delete a document that matches the filter
+&lt;code&gt;{ &amp;quot;i&amp;quot;: 110 }&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;collection.delete_one(document{} &amp;lt;&amp;lt; &amp;quot;i&amp;quot; &amp;lt;&amp;lt; 110 &amp;lt;&amp;lt; finalize);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;delete-all-documents-that-match-a-filter&#34;&gt;Delete All Documents That Match a Filter&lt;/h3&gt;
+
+&lt;p&gt;To delete all documents matching a filter, use a collection&amp;rsquo;s
+&lt;code&gt;delete_many()&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;p&gt;The following example deletes all documents where &lt;code&gt;i&lt;/code&gt; is greater or
+equal to &lt;code&gt;100&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;mongocxx::stdx::optional&amp;lt;mongocxx::result::delete_result&amp;gt; result =
+ collection.delete_many(
+  document{} &amp;lt;&amp;lt; &amp;quot;i&amp;quot; &amp;lt;&amp;lt; open_document &amp;lt;&amp;lt;
+    &amp;quot;$gte&amp;quot; &amp;lt;&amp;lt; 100 &amp;lt;&amp;lt; close_document &amp;lt;&amp;lt; finalize);
+
+if(result) {
+  std::cout &amp;lt;&amp;lt; result-&amp;gt;deleted_count() &amp;lt;&amp;lt; &amp;quot;\n&amp;quot;;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;create-indexes&#34;&gt;Create Indexes&lt;/h2&gt;
+
+&lt;p&gt;To create an &lt;a href=&#34;https://docs.mongodb.com/master/indexes/&#34;&gt;index&lt;/a&gt; on a
+field or set of fields, pass an index specification document to the
+&lt;code&gt;create_index()&lt;/code&gt; method of a
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
+&#34;&gt;&lt;code&gt;mongocxx::collection&lt;/code&gt;&lt;/a&gt; instance. An
+index key specification document contains the fields to index and the
+index type for each field:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{ &amp;quot;index1&amp;quot;: &amp;quot;&amp;lt;type&amp;gt;&amp;quot;, &amp;quot;index2&amp;quot;: &amp;lt;type&amp;gt; }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;For an ascending index type, specify 1 for &lt;code&gt;&amp;lt;type&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;For a descending index type, specify -1 for &lt;code&gt;&amp;lt;type&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The following example creates an ascending index on the &lt;code&gt;i&lt;/code&gt; field:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;auto index_specification = document{} &amp;lt;&amp;lt; &amp;quot;i&amp;quot; &amp;lt;&amp;lt; 1 &amp;lt;&amp;lt; finalize;
+collection.create_index(std::move(index_specification));
+&lt;/code&gt;&lt;/pre&gt;
+</description>
     </item>
     
     <item>
@@ -91,8 +1169,322 @@ Even if you create multiple child objects from a single client, and synchronize 
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/working-with-bson/</guid>
-      <description>The mongocxx driver ships with a new library, bsoncxx. This article will go over some of the different types in this library, and how and when to use each. For more information and example code, see our examples.
- Document Builders Owning BSON Documents (values) Non-owning BSON Documents (views) Optionally-owning BSON Documents(view_or_value) BSON Document Lifetime Printing BSON Documents Getting Fields out of BSON Documents  Document Builders The bsoncxx library offers two different interfaces for building BSON, a basic builder and a stream-based builder.</description>
+      <description>
+
+&lt;h1 id=&#34;working-with-bson&#34;&gt;Working with BSON&lt;/h1&gt;
+
+&lt;p&gt;The mongocxx driver ships with a new library, bsoncxx.  This article will
+go over some of the different types in this library, and how and when to
+use each.  For more information and example code, see our
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/tree/master/examples/bsoncxx&#34;&gt;examples&lt;/a&gt;.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;#builders&#34;&gt;Document Builders&lt;/a&gt;&lt;br/&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#value&#34;&gt;Owning BSON Documents (values)&lt;/a&gt;&lt;br/&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#view&#34;&gt;Non-owning BSON Documents (views)&lt;/a&gt;&lt;br/&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#view_or_value&#34;&gt;Optionally-owning BSON Documents(view_or_value)&lt;/a&gt;&lt;br/&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#lifetime&#34;&gt;BSON Document Lifetime&lt;/a&gt;&lt;br/&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#print&#34;&gt;Printing BSON Documents&lt;/a&gt;&lt;br/&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#fields&#34;&gt;Getting Fields out of BSON Documents&lt;/a&gt;&lt;br/&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;builders&#34;&gt;Document Builders&lt;/h2&gt;
+
+&lt;p&gt;The bsoncxx library offers three interfaces for building BSON: one-off
+functions, a basic builder and a stream-based builder.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/builder/basic/document.hpp&#34;&gt;&lt;code&gt;bsoncxx::builder::basic::document&lt;/code&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/builder/stream/document.hpp&#34;&gt;&lt;code&gt;bsoncxx::builder::stream::document&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The various methods of creating BSON documents and arrays are all
+equivalent. All interfaces will provide the same results, the choice of
+which to use is entirely aesthetic.&lt;/p&gt;
+
+&lt;h2 id=&#34;one-off&#34;&gt;&amp;ldquo;One-off&amp;rdquo; builder functions&lt;/h2&gt;
+
+&lt;p&gt;The simplest way to create a BSON document or array is to use the one-off
+builder functions, which create documents and arrays in a single call.
+These can be used when no additional logic (such as conditionals or loops)
+needs to be used to create the object:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;using bsoncxx::builder::basic::kvp;
+
+// { &amp;quot;hello&amp;quot;: &amp;quot;world&amp;quot; }
+bsoncxx::document::value document = bsoncxx::builder::basic::make_document(kvp(&amp;quot;hello&amp;quot;, &amp;quot;world&amp;quot;));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;basic-builder&#34;&gt;Basic builder&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;using bsoncxx::builder::basic::kvp;
+
+// { &amp;quot;hello&amp;quot; : &amp;quot;world&amp;quot; }
+bsoncxx::builder::basic::document basic_builder{};
+basic_builder.append(kvp(&amp;quot;hello&amp;quot;, &amp;quot;world&amp;quot;));
+bsoncxx::document::value document = basic_builder.extract();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;More advanced uses of the basic builder are shown in &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/builder_basic.cpp&#34;&gt;this
+example&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;stream-builder&#34;&gt;Stream builder&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;// { &amp;quot;hello&amp;quot; : &amp;quot;world&amp;quot; }
+
+using bsoncxx::builder::stream;
+bsoncxx::document::value document = stream::document{} &amp;lt;&amp;lt; &amp;quot;hello&amp;quot; &amp;lt;&amp;lt; &amp;quot;world&amp;quot; &amp;lt;&amp;lt; stream::finalize;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;More advanced uses of the stream builder are shown in &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/builder_stream.cpp&#34;&gt;this
+example&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;: In order to properly append each new value, a stream builder
+needs to keep track of the state of the current document, including the
+nesting level and the type of the most recent value appended to the
+builder. The initial stream builder must &lt;em&gt;not&lt;/em&gt; be reused after this state
+changes, which means that intermediate values must be stored in new
+variables if a document is being built with the stream builder across
+multiple statements. Because doing this properly is difficult and the
+compiler error messages can be confusing, using the stream builder is
+discouraged. We recommend instead using the basic builder or the
+&lt;a href=&#34;#one-off&#34;&gt;one-off builder functions&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Building arrays in loops&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Sometimes it&amp;rsquo;s necessary to build an array using a loop. With the basic
+builder, a top-level array can be built by simply calling &lt;code&gt;append&lt;/code&gt; inside
+a loop:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// [ 1, 2, 3 ]
+
+const auto elements = {1, 2, 3};
+auto array_builder = bsoncxx::builder::basic::array{};
+
+for (const auto&amp;amp; element : elements) {
+    array_builder.append(element);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To build a subarray in a loop, pass a lambda to &lt;code&gt;append&lt;/code&gt; (or as the second
+argument of &lt;code&gt;kvp&lt;/code&gt; if the subarray is contained by a document rather than
+an array):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// { &amp;quot;foo&amp;quot; : [ 1, 2, 3 ] }
+
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::sub_array;
+
+const auto elements = {1, 2, 3};
+auto doc = bsoncxx::builder::basic::document{};
+doc.append(kvp(&amp;quot;foo&amp;quot;, [&amp;amp;elements](sub_array child) {
+    for (const auto&amp;amp; element : elements) {
+        child.append(element);
+    }
+}));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;When building an array with the stream builder, it&amp;rsquo;s important to be aware
+that the return type of using the &lt;code&gt;&amp;lt;&amp;lt;&lt;/code&gt; operator on a stream builder is not
+uniform. To build an array in a loop properly, intermediate values
+returned by the stream builder should be stored in variables when the type
+changes. One attempt to build an array from a stream builder using a loop
+might look like the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// { &amp;quot;subdocs&amp;quot; : [ { &amp;quot;key&amp;quot; : 1 }, { &amp;quot;key&amp;quot; : 2 }, { &amp;quot;key&amp;quot; : 3 } ], &amp;quot;another_key&amp;quot; : 42 }
+using namespace bsoncxx;
+
+builder::stream::document builder{};
+
+auto in_array = builder &amp;lt;&amp;lt; &amp;quot;subdocs&amp;quot; &amp;lt;&amp;lt; builder::stream::open_array;
+for (auto&amp;amp;&amp;amp; e : {1, 2, 3}) {
+    in_array = in_array &amp;lt;&amp;lt; builder::stream::open_document &amp;lt;&amp;lt; &amp;quot;key&amp;quot; &amp;lt;&amp;lt; e
+                        &amp;lt;&amp;lt; builder::stream::close_document;
+}
+auto after_array = in_array &amp;lt;&amp;lt; builder::stream::close_array;
+
+after_array &amp;lt;&amp;lt; &amp;quot;another_key&amp;quot; &amp;lt;&amp;lt; 42;
+
+document::value doc = after_array &amp;lt;&amp;lt; builder::stream::finalize;
+
+std::cout &amp;lt;&amp;lt; to_json(doc) &amp;lt;&amp;lt; std::endl;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that the result of any stream operation should be captured, so if you want
+to split the single statement within the for loop above into multiple
+statements, you must capture each intermediate result. Additionally, the last
+statement within the loop body should assign its result back to the in_array
+object, so that the loop restarts in a consistent state:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;for (auto &amp;amp;&amp;amp; e : {1, 2, 3}) {
+    auto open_state = in_array &amp;lt;&amp;lt; builder::stream::open_document;
+    auto temp_state = open_state &amp;lt;&amp;lt; &amp;quot;key&amp;quot; &amp;lt;&amp;lt; e;
+    in_array = temp_state &amp;lt;&amp;lt; builder::stream::close_document;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;a-name-value-owning-bson-documents-values-a&#34;&gt;&lt;a name=&#34;value&#34;&gt;Owning BSON Documents (values)&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/document/value.hpp&#34;&gt;&lt;code&gt;bsoncxx::document::value&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;This type represents an actual BSON document, one that owns its buffer of
+data.  These documents can be constructed from a builder by calling
+&lt;code&gt;extract()&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bsoncxx::document::value basic_doc{basic_builder.extract()};
+bsoncxx::document::value stream_doc{stream_builder.extract()};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that after calling &lt;code&gt;extract()&lt;/code&gt; the builder is in a moved-from state,
+and should not be used.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s possible to create a &lt;code&gt;bsoncxx::document::value&lt;/code&gt; in a single line using
+the stream builder interface and the &lt;code&gt;finalize&lt;/code&gt; token. &lt;code&gt;finalize&lt;/code&gt; returns a
+&lt;code&gt;document::value&lt;/code&gt; from a temporary stream builder:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// { &amp;quot;finalize&amp;quot; : &amp;quot;is nifty&amp;quot; }
+bsoncxx::document::value one_line = bsoncxx::builder::stream::document{} &amp;lt;&amp;lt; &amp;quot;finalize&amp;quot; &amp;lt;&amp;lt; &amp;quot;is nifty&amp;quot; &amp;lt;&amp;lt; bsoncxx::builder::stream::finalize;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;a-name-view-non-owning-bson-documents-views-a&#34;&gt;&lt;a name=&#34;view&#34;&gt;Non-owning BSON Documents (views)&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/document/view.hpp&#34;&gt;&lt;code&gt;bsoncxx::document::view&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;This type is a view into an owning &lt;code&gt;bsoncxx::document::value&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bsoncxx::document::view document_view{document_value.view()};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A &lt;code&gt;document::value&lt;/code&gt; also implicitly converts to a &lt;code&gt;document::view&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bsoncxx::document::view document_view{document_value};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In performance-critical code, passing views around is preferable to using
+values because we can avoid excess copying. Also, passing a view of a
+document allows us to use the document multiple times:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// { &amp;quot;copies&amp;quot; : { &amp;quot;$gt&amp;quot; : 100 } }
+auto query_value = document{} &amp;lt;&amp;lt; &amp;quot;copies&amp;quot; &amp;lt;&amp;lt; open_document &amp;lt;&amp;lt; &amp;quot;$gt&amp;quot; &amp;lt;&amp;lt; 100 &amp;lt;&amp;lt; close_document &amp;lt;&amp;lt; finalize;
+
+// Run the same query across different collections
+auto collection1 = db[&amp;quot;science_fiction&amp;quot;];
+auto cursor1 = collection1.find(query_value.view());
+
+auto collection2 = db[&amp;quot;cookbooks&amp;quot;];
+auto cursor2 = collection2.find(query_value.view());
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;a-name-view-or-value-optionally-owning-bson-documents-view-or-value-a&#34;&gt;&lt;a name=&#34;view_or_value&#34;&gt;Optionally-owning BSON Documents (view_or_value)&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;Many driver methods take a document::view_or_value parameter, for example, &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/database.hpp#L83-L92&#34;&gt;&lt;code&gt;run_command&lt;/code&gt;&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bsoncxx::document::value run_command(bsoncxx::document::view_or_value command);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Such methods can take either a &lt;code&gt;document::view&lt;/code&gt; or a &lt;code&gt;document::value&lt;/code&gt;. If
+a &lt;code&gt;document::view&lt;/code&gt; is passed in, it must be passed by r-value reference, so
+ownership of the document is transferred to the method.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;document::value ismaster = document{} &amp;lt;&amp;lt; &amp;quot;ismaster&amp;quot; &amp;lt;&amp;lt; 1 &amp;lt;&amp;lt; finalize;
+
+// You can pass a document::view into run_command()
+db.run_command(ismaster.view());
+
+// Or you can move in a document::value
+db.run_command(std::move(ismaster));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You shouldn&amp;rsquo;t need to create view_or_value types directly in order to use
+the driver.  They are offered as a convenience method to allow driver
+methods to take documents in either an owning or non-owning way.  The
+&lt;code&gt;view_or_value&lt;/code&gt; type also helps mitigate some of the lifetime issues
+discussed in the next section.&lt;/p&gt;
+
+&lt;h3 id=&#34;a-name-lifetime-bson-document-lifetime-a&#34;&gt;&lt;a name=&#34;lifetime&#34;&gt;BSON Document Lifetime&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;It is imperative that &lt;code&gt;document::value&lt;/code&gt;s outlive any &lt;code&gt;document::view&lt;/code&gt;s that
+use them. If the underlying value gets cleaned up, the view will be left
+with a dangling pointer.  Consider a method that returns a view of a
+newly-created document:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bsoncxx::document::view make_a_dangling_view() {
+   bsoncxx::builder::basic::document builder{};
+   builder.append(kvp(&amp;quot;hello&amp;quot;, &amp;quot;world&amp;quot;));
+
+   // This creates a document::value on the stack that will disappear when we return.
+   bsoncxx::document::value stack_value{builder.extract()};
+
+   // We&#39;re returning a view of the local value
+   return stack_value.view(); // Bad!!
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This method returns a dangling view that should not be used:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// This view contains a dangling pointer
+bsoncxx::document::view dangling_view = make_a_dangling_view(); // Warning!!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Attempting to create a view off of a builder will similarly create a
+dangerous view object, because the temporary value returned from
+&lt;code&gt;extract()&lt;/code&gt; isn&amp;rsquo;t captured:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bsoncxx::builder::stream::document temp_builder{};
+temp_builder &amp;lt;&amp;lt; &amp;quot;oh&amp;quot; &amp;lt;&amp;lt; &amp;quot;no&amp;quot;;
+bsoncxx::document::view dangling_view = temp_builder.extract().view(); // Bad!!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;a-name-print-printing-bson-documents-a&#34;&gt;&lt;a name=&#34;print&#34;&gt;Printing BSON Documents&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/json.hpp#L28-L36&#34;&gt;&lt;code&gt;bsoncxx::to_json()&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The bsoncxx library comes with a convenience method to convert BSON
+documents to strings for easy inspection:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bsoncxx::document::value = document{} &amp;lt;&amp;lt; &amp;quot;I am&amp;quot; &amp;lt;&amp;lt; &amp;quot;a BSON document&amp;quot; &amp;lt;&amp;lt; finalize;
+std::cout &amp;lt;&amp;lt; bsoncxx::to_json(doc.view()) &amp;lt;&amp;lt; std::endl;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There is an analogous method, &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/json.hpp#L60-L68&#34;&gt;from_json()&lt;/a&gt;, to build document::values out of existing JSON strings.&lt;/p&gt;
+
+&lt;h3 id=&#34;a-name-fields-getting-fields-out-of-bson-documents-a&#34;&gt;&lt;a name=&#34;fields&#34;&gt;Getting Fields out of BSON Documents&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;The [ ] operator reaches into a BSON document to retrieve values:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// doc_view = { &amp;quot;store&amp;quot; : &amp;quot;Key Foods&amp;quot;, &amp;quot;fruits&amp;quot; : [ &amp;quot;apple&amp;quot;, &amp;quot;banana&amp;quot; ] }
+auto store = doc_view[&amp;quot;store&amp;quot;];
+auto first_fruit = doc_view[&amp;quot;fruits&amp;quot;][0];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This returns a &lt;code&gt;bsoncxx::document::element&lt;/code&gt;, which holds the actual desired value:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;document::element store_ele{doc_view[&amp;quot;store&amp;quot;]};
+if (store_ele) {
+    // this block will only execute if &amp;quot;store&amp;quot; was found in the document
+    std::cout &amp;lt;&amp;lt; &amp;quot;Examining inventory at &amp;quot; &amp;lt;&amp;lt; to_json(store_ele.get_value()) &amp;lt;&amp;lt; std::endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This feature is shown in more detail in &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/getting_values.cpp&#34;&gt;this example&lt;/a&gt; and &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/view_and_value.cpp&#34;&gt;this example&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;bson-types&#34;&gt;BSON Types&lt;/h3&gt;
+
+&lt;p&gt;The &lt;a href=&#34;http://bsonspec.org/spec.html&#34;&gt;BSON specification&lt;/a&gt; provides a list
+of supported types.  These are represented in C++ using the
+&lt;a href=&#34;https://mongodb.github.io/mongo-cxx-driver/api/current/classes.html#letter_B&#34;&gt;b_xxx&lt;/a&gt;
+type wrappers.&lt;/p&gt;
+
+&lt;p&gt;Some BSON types don&amp;rsquo;t necessarily have a native representation to wrap and
+are implemented via special classes.&lt;/p&gt;
+
+&lt;h4 id=&#34;decimal128&#34;&gt;Decimal128&lt;/h4&gt;
+
+&lt;p&gt;The &lt;code&gt;bsoncxx::decimal128&lt;/code&gt; class represents a 128-bit IEEE 754-2008 decimal
+floating point value.  We expect users to convert these to and from
+strings, but provide access to the low and high 64-bit values if users need
+to convert to a native decimal128 type.&lt;/p&gt;
+
+&lt;p&gt;You can see how to work with &lt;code&gt;bsoncxx::decimal128&lt;/code&gt; in &lt;a href=&#34;https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/decimal128.cpp&#34;&gt;this example&lt;/a&gt;.&lt;/p&gt;
+</description>
     </item>
     
   </channel>
