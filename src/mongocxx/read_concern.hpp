@@ -121,9 +121,10 @@ class MONGOCXX_API read_concern {
     level acknowledge_level() const;
 
     ///
-    /// Sets the read concern string.
-    ///
-    /// One of "local", "majority", "linearizable", or "".
+    /// Sets the read concern string. Any valid read concern string (e.g. "local",
+    /// "majority", "linearizable", "") may be passed in.  For forward-compatibility
+    /// with read concern levels introduced in the future, no validation is performed on
+    /// this string.
     ///
     /// @param rc_string
     ///   The read concern string.
