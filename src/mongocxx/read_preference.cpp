@@ -17,6 +17,7 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/read_preference.hh>
@@ -43,12 +44,12 @@ read_preference::read_preference(std::unique_ptr<impl>&& implementation) {
 }
 
 read_preference::read_preference()
-    : _impl(stdx::make_unique<impl>(
-          libmongoc::read_prefs_new(static_cast<mongoc_read_mode_t>(read_mode::k_primary)))) {}
+    : _impl(stdx::make_unique<impl>(libmongoc::read_prefs_new(
+          libmongoc::conversions::read_mode_t_from_read_mode(read_mode::k_primary)))) {}
 
 read_preference::read_preference(read_mode mode)
     : _impl(stdx::make_unique<impl>(
-          libmongoc::read_prefs_new(static_cast<mongoc_read_mode_t>(mode)))) {}
+          libmongoc::read_prefs_new(libmongoc::conversions::read_mode_t_from_read_mode(mode)))) {}
 
 read_preference::read_preference(read_mode mode, bsoncxx::document::view_or_value tags)
     : read_preference(mode) {
@@ -58,7 +59,8 @@ read_preference::read_preference(read_mode mode, bsoncxx::document::view_or_valu
 read_preference::~read_preference() = default;
 
 read_preference& read_preference::mode(read_mode mode) {
-    libmongoc::read_prefs_set_mode(_impl->read_preference_t, static_cast<mongoc_read_mode_t>(mode));
+    libmongoc::read_prefs_set_mode(_impl->read_preference_t,
+                                   libmongoc::conversions::read_mode_t_from_read_mode(mode));
 
     return *this;
 }
@@ -71,7 +73,8 @@ read_preference& read_preference::tags(bsoncxx::document::view_or_value tags) {
 }
 
 read_preference::read_mode read_preference::mode() const {
-    return static_cast<read_mode>(libmongoc::read_prefs_get_mode(_impl->read_preference_t));
+    return libmongoc::conversions::read_mode_from_read_mode_t(
+        libmongoc::read_prefs_get_mode(_impl->read_preference_t));
 }
 
 stdx::optional<bsoncxx::document::view> read_preference::tags() const {

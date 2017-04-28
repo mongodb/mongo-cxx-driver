@@ -22,6 +22,7 @@ set(test_driver_sources
     client.cpp
     collection.cpp
     collection_mocked.cpp
+    conversions.cpp
     database.cpp
     gridfs/bucket.cpp
     gridfs/downloader.cpp

@@ -71,27 +71,27 @@ class MONGOCXX_API read_preference {
         ///
         /// Only read from a primary node.
         ///
-        k_primary = 0x01,
+        k_primary,
 
         ///
         /// Prefer to read from a primary node.
         ///
-        k_primary_preferred = 0x05,
+        k_primary_preferred,
 
         ///
         /// Only read from secondary nodes.
         ///
-        k_secondary = 0x02,
+        k_secondary,
 
         ///
         /// Prefer to read from secondary nodes.
         ///
-        k_secondary_preferred = 0x06,
+        k_secondary_preferred,
 
         ///
         /// Read from the node with the lowest latency irrespective of state.
         ///
-        k_nearest = 0x0A
+        k_nearest
     };
 
     ///

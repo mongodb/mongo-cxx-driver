@@ -36,6 +36,7 @@
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/options/update.hpp>
 #include <mongocxx/pipeline.hpp>
+#include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/read_preference.hpp>
@@ -185,7 +186,8 @@ TEST_CASE("Collection", "[collection]") {
                             static_cast<int>(opts.read_preference()->mode()));
                 else
                     REQUIRE(mongoc_read_prefs_get_mode(read_preference) ==
-                            static_cast<int>(mongo_coll.read_preference().mode()));
+                            libmongoc::conversions::read_mode_t_from_read_mode(
+                                mongo_coll.read_preference().mode()));
 
                 return NULL;
             });
@@ -470,7 +472,8 @@ TEST_CASE("Collection", "[collection]") {
                         static_cast<int>(expected_read_preference->mode()));
             else
                 REQUIRE(mongoc_read_prefs_get_mode(read_prefs) ==
-                        static_cast<int>(mongo_coll.read_preference().mode()));
+                        libmongoc::conversions::read_mode_t_from_read_mode(
+                            mongo_coll.read_preference().mode()));
 
             mongoc_cursor_t* cursor = NULL;
             return cursor;

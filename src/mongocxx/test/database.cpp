@@ -23,6 +23,7 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/modify_collection.hpp>
+#include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/test_util/client_helpers.hh>
@@ -228,14 +229,14 @@ TEST_CASE("A database", "[database]") {
         std::unique_ptr<mongoc_read_prefs_t, decltype(deleter)> saved_preference(nullptr, deleter);
 
         bool called = false;
-        database_set_preference->interpose([&](mongoc_database_t*,
-                                               const mongoc_read_prefs_t* read_prefs) {
-            called = true;
-            saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
-            REQUIRE(
-                mongoc_read_prefs_get_mode(read_prefs) ==
-                static_cast<mongoc_read_mode_t>(read_preference::read_mode::k_secondary_preferred));
-        });
+        database_set_preference->interpose(
+            [&](mongoc_database_t*, const mongoc_read_prefs_t* read_prefs) {
+                called = true;
+                saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
+                REQUIRE(mongoc_read_prefs_get_mode(read_prefs) ==
+                        libmongoc::conversions::read_mode_t_from_read_mode(
+                            read_preference::read_mode::k_secondary_preferred));
+            });
 
         database_get_preference
             ->interpose([&](const mongoc_database_t*) { return saved_preference.get(); })

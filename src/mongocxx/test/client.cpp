@@ -18,6 +18,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/uri.hpp>
 
@@ -146,7 +147,8 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
         called_set = true;
         saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
         REQUIRE(mongoc_read_prefs_get_mode(read_prefs) ==
-                static_cast<mongoc_read_mode_t>(read_preference::read_mode::k_secondary_preferred));
+                libmongoc::conversions::read_mode_t_from_read_mode(
+                    read_preference::read_mode::k_secondary_preferred));
     });
 
     client_get_preference->interpose([&](const mongoc_client_t*) { return saved_preference.get(); })
