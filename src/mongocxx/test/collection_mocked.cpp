@@ -416,6 +416,7 @@ TEST_CASE("Collection", "[collection]") {
         mongocxx::stdx::optional<bsoncxx::types::value> expected_hint{};
         mongocxx::stdx::optional<bool> expected_no_cursor_timeout;
         mongocxx::stdx::optional<bsoncxx::document::view> expected_sort{};
+        mongocxx::stdx::optional<read_preference> expected_read_preference{};
 
         collection_find_with_opts->interpose([&](mongoc_collection_t*,
                                                  const bson_t* filter,
@@ -464,7 +465,12 @@ TEST_CASE("Collection", "[collection]") {
                 REQUIRE(opts_view["sort"].get_document() == *expected_sort);
             }
 
-            REQUIRE(read_prefs == NULL);
+            if (expected_read_preference)
+                REQUIRE(mongoc_read_prefs_get_mode(read_prefs) ==
+                        static_cast<int>(expected_read_preference->mode()));
+            else
+                REQUIRE(mongoc_read_prefs_get_mode(read_prefs) ==
+                        static_cast<int>(mongo_coll.read_preference().mode()));
 
             mongoc_cursor_t* cursor = NULL;
             return cursor;
@@ -520,6 +526,15 @@ TEST_CASE("Collection", "[collection]") {
             auto sort_doc = builder::stream::document{} << "x" << -1 << builder::stream::finalize;
             expected_sort = sort_doc.view();
             opts.sort(*expected_sort);
+            REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
+        }
+
+        SECTION("Succeeds with read preference") {
+            options::find opts{};
+            expected_read_preference.emplace();
+            expected_read_preference->mode(read_preference::read_mode::k_secondary);
+            opts.read_preference(*expected_read_preference);
+
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
         }
 
