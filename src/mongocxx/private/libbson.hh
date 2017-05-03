@@ -21,6 +21,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
+#include <mongocxx/test_util/export_for_testing.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -46,7 +47,7 @@ namespace libbson {
 // not call init itself (expecting an already initialized bson_t) then init() could be called
 // instead.
 //
-class scoped_bson_t {
+class MONGOCXX_TEST_API scoped_bson_t {
    public:
     //
     // Constructs a new scoped_bson_t having a non-initialized internal bson_t.

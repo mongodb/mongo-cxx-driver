@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2017 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,37 +14,17 @@
 
 #pragma once
 
-#include <cstddef>
-#include <cstdint>
-
-#include <bsoncxx/test_util/export_for_testing.hh>
-
 #include <bsoncxx/config/private/prelude.hh>
 
-namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+// The BSONCXX_TEST_API macro is intended to be used for exporting symbols for testing which are not
+// normally exported as part of the bsoncxx library.  We currently use this workaround in lieu of
+// linking standalone unit tests, in order to expose private symbols for unit testing when we build
+// the shared library.
 
-class BSONCXX_TEST_API itoa {
-   public:
-    itoa();
-    itoa(uint32_t i);
-    itoa(const itoa& rhs);
-    itoa& operator=(const itoa& rhs);
-    itoa& operator=(uint32_t i);
-
-    const char* c_str() const;
-    std::size_t length() const;
-
-   private:
-    BSONCXX_PRIVATE void init();
-
-    uint32_t _val;
-    const char* _str;
-    uint8_t _len;
-    char _buf[11];
-};
-
-BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bsoncxx
+#ifdef BSONCXX_TESTING
+#define BSONCXX_TEST_API BSONCXX_API
+#else
+#define BSONCXX_TEST_API
+#endif
 
 #include <bsoncxx/config/private/postlude.hh>

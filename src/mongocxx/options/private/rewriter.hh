@@ -15,6 +15,7 @@
 #pragma once
 
 #include <mongocxx/options/find.hpp>
+#include <mongocxx/test_util/export_for_testing.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -22,7 +23,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-class rewriter {
+class MONGOCXX_TEST_API rewriter {
    public:
     ///
     /// Converts all modifiers from the given options::find object into their respective top-level
