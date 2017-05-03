@@ -13,7 +13,7 @@
 # limitations under the License.
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/src/third_party/catch/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/catch/include
 )
 
 add_executable(test_bson
