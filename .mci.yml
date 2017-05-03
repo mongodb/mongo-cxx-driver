@@ -11,11 +11,6 @@ variables:
         version_latest: &version_latest latest
         version_32: &version_32 3.2
 
-    ## Use newer compiler path variables
-    compiler_path:
-        rhel55_cc_path: &rhel55_cc_path /opt/mongodbtoolchain/v2/bin/gcc
-        rhel55_cxx_path: &rhel55_cxx_path /opt/mongodbtoolchain/v2/bin/g++
-
     ## cmake path variables
     cmake_path:
         linux_cmake_path: &linux_cmake_path /opt/cmake/bin/cmake
@@ -39,7 +34,6 @@ variables:
     ## cmake flag variables
     cmake_flags:
         linux_cmake_flags: &linux_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -Wno-error=missing-field-initializers"
-        rhel55_cmake_flags: &rhel55_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror"
         osx_cmake_flags: &osx_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Werror"
         asan_cmake_flags: &asan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
         ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.blacklist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
@@ -310,25 +304,6 @@ buildvariants:
           mongodb_version: *version_latest
       run_on:
           - ubuntu1404-test
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_static_libs
-
-    - name: rhel55-debug
-      display_name: "RHEL 5.5 Debug"
-      expansions:
-          build_type: "Debug"
-          tar_options: *linux_tar_options
-          build_tool_path: *unix_build_tool_path
-          cdriver_configure_flags: *linux_cdriver_configure_flags
-          cmake_path: *linux_cmake_path
-          cmake_flags: *rhel55_cmake_flags
-          cc_path: *rhel55_cc_path
-          cxx_path: *rhel55_cxx_path
-          # Versions 3.4+ of the server no longer run RHEL 5.5, so we pin to 3.2 instead.
-          mongodb_version: *version_32
-      run_on:
-          - rhel55-test
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
