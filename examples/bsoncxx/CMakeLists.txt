@@ -16,10 +16,6 @@ include_directories(
     ${CMAKE_INSTALL_PREFIX}/${BSONCXX_HEADER_INSTALL_DIR}
 )
 
-link_directories(
-    ${CMAKE_INSTALL_PREFIX}/lib
-)
-
 set(BSONCXX_EXAMPLES
     builder_core.cpp
     builder_basic.cpp

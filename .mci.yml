@@ -43,7 +43,7 @@ variables:
         osx_cmake_flags: &osx_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Werror"
         asan_cmake_flags: &asan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
         ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.blacklist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
-        windows_cmake_flags: &windows_cmake_flags -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT=c:/local/boost_1_60_0 -DLIBBSON_DIR=$(cygpath -m "$(pwd)/../mongoc") -DLIBMONGOC_DIR=$(cygpath -m "$(pwd)/../mongoc")
+        windows_cmake_flags: &windows_cmake_flags -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT=c:/local/boost_1_60_0
 
     poly_flags:
         poly_boost_flags: &poly_boost_flags -DBSONCXX_POLY_USE_BOOST=ON
@@ -172,9 +172,18 @@ functions:
                   fi
                   export PATH_TO_CMAKE="${cmake_path}"
                   export PATH_TO_BUILD_TOOL="${build_tool_path}"
-                  export PKG_CONFIG_PATH="$(pwd)/../mongoc/lib/pkgconfig"
                   export BUILD_TYPE=${build_type}
-                  ./.evergreen/compile.sh ${cmake_flags} ${poly_flags} -DCMAKE_INSTALL_PREFIX=install
+
+                  ADDL_OPTS=
+                  if [ "${USE_STATIC_LIBS}" ]; then
+                      ADDL_OPTS="-DBUILD_SHARED_LIBS=OFF"
+                  fi
+
+                  MONGOC_PREFIX="$(pwd)/../mongoc"
+                  if [ "Windows_NT" == "$OS" ]; then
+                      MONGOC_PREFIX=$(cygpath -m "$MONGOC_PREFIX")
+                  fi
+                  .evergreen/compile.sh -DCMAKE_PREFIX_PATH="$MONGOC_PREFIX" ${cmake_flags} ${poly_flags} $ADDL_OPTS -DCMAKE_INSTALL_PREFIX=install
 
     "test":
         - command: shell.exec
@@ -189,12 +198,12 @@ functions:
                   export PREFIX=$(pwd)/../../mongoc
 
                   # Use PATH / LD_LIBRARY_PATH / DYLD_LIBRARY_PATH to inform the tests where to find
-                  # mongoc library dependencies on Linux / Mac OS / Windows, respectively.
+                  # mongoc library dependencies on Windows / Linux / Mac OS, respectively.
                   # Additionally, on Windows, we also need to inform the tests where to find
                   # mongocxx library dependencies.
                   export LD_LIBRARY_PATH=.:$PREFIX/lib/
                   export DYLD_LIBRARY_PATH=.:$PREFIX/lib/
-                  export PATH=$PREFIX/bin:$(pwd)/install/bin:$PATH
+                  export PATH=$(pwd)/src/bsoncxx/${build_type}:$(pwd)/src/mongocxx/${build_type}:$PREFIX/bin:$(pwd)/install/bin:$PATH
 
                   # CRUD_TESTS_PATH and GRIDFS_TESTS_PATH are required to be set by the
                   # `test_crud_specs` and `test_gridfs_specs` test binaries, respectively.
@@ -239,7 +248,7 @@ tasks:
         - func: "setup"
         - func: "lint"
 
-    - name: compile_and_test_with_mongoc_master_branch
+    - name: compile_and_test_with_shared_libs
       commands:
         - func: "setup"
         - func: "start_mongod"
@@ -248,6 +257,20 @@ tasks:
               MONGOC_VERSION: master
         - func: "compile"
         - func: "test"
+
+    - name: compile_and_test_with_static_libs
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+        - func: "install_c_driver"
+          vars:
+              MONGOC_VERSION: master
+        - func: "compile"
+          vars:
+              USE_STATIC_LIBS: 1
+        - func: "test"
+          vars:
+              USE_STATIC_LIBS: 1
 
 #######################################
 #           Buildvariants             #
@@ -272,7 +295,8 @@ buildvariants:
           - ubuntu1404-test
       tasks:
           - name: lint
-          - name: compile_and_test_with_mongoc_master_branch
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_static_libs
 
     - name: ubuntu1404-debug
       display_name: "Ubuntu 14.04 Debug"
@@ -287,7 +311,8 @@ buildvariants:
       run_on:
           - ubuntu1404-test
       tasks:
-          - name: compile_and_test_with_mongoc_master_branch
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_static_libs
 
     - name: rhel55-debug
       display_name: "RHEL 5.5 Debug"
@@ -305,7 +330,8 @@ buildvariants:
       run_on:
           - rhel55-test
       tasks:
-          - name: compile_and_test_with_mongoc_master_branch
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_static_libs
 
     - name: osx-1010
       display_name: "OS X 10.10 Release (Boost)"
@@ -320,7 +346,8 @@ buildvariants:
       run_on:
           - osx-1010
       tasks:
-          - name: compile_and_test_with_mongoc_master_branch
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_static_libs
 
     - name: ubuntu1604-debug-std-experimental
       display_name: "Ubuntu 16.04 Debug (std::experimental)"
@@ -336,7 +363,8 @@ buildvariants:
       run_on:
           - ubuntu1604-build
       tasks:
-          - name: compile_and_test_with_mongoc_master_branch
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_static_libs
 
     - name: ubuntu1604-debug-valgrind
       display_name: "Valgrind Ubuntu 16.04 Debug"
@@ -352,7 +380,8 @@ buildvariants:
       run_on:
           - ubuntu1604-build
       tasks:
-          - name: compile_and_test_with_mongoc_master_branch
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_static_libs
 
     - name: ubuntu1604-debug-asan
       display_name: "ASAN Ubuntu 16.04 Debug"
@@ -368,7 +397,8 @@ buildvariants:
       run_on:
           - ubuntu1604-build
       tasks:
-          - name: compile_and_test_with_mongoc_master_branch
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_static_libs
 
     - name: ubuntu1604-debug-ubsan
       display_name: "UBSAN Ubuntu 16.04 Debug"
@@ -384,7 +414,11 @@ buildvariants:
       run_on:
           - ubuntu1604-build
       tasks:
-          - name: compile_and_test_with_mongoc_master_branch
+          # We currently don't run UBSAN on the shared library due to issues with UBSAN reporting
+          # numerous false positive instances of undefined behavior in the mock tests, when the
+          # driver invokes mock callback functions that have libmongoc types in the callback
+          # signature.
+          - name: compile_and_test_with_static_libs
 
     - name: ubuntu1604-zseries
       display_name: "s390x Ubuntu 16.04"
@@ -395,11 +429,13 @@ buildvariants:
           build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *ubuntu_zap_cmake_path
+          cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
       run_on:
           - ubuntu1604-zseries-small
       tasks:
-          - name: compile_and_test_with_mongoc_master_branch
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_static_libs
 
     - name: power8-ubuntu1604
       display_name: "ppc64le Ubuntu 16.04"
@@ -410,11 +446,13 @@ buildvariants:
           build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *ubuntu_zap_cmake_path
+          cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
       run_on:
           - ubuntu1604-power8-build
       tasks:
-          - name: compile_and_test_with_mongoc_master_branch
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_static_libs
 
     - name: arm-ubuntu1604
       display_name: "arm64 Ubuntu 16.04"
@@ -425,11 +463,13 @@ buildvariants:
           build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_path: *ubuntu_zap_cmake_path
+          cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
       run_on:
           - ubuntu1604-arm64-small
       tasks:
-          - name: compile_and_test_with_mongoc_master_branch
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_static_libs
 
     - name: windows-2k8-release
       display_name: "Windows 2008R2 Release"
@@ -443,7 +483,8 @@ buildvariants:
       run_on:
           - windows-64-vs2015-compile
       tasks:
-          - name: compile_and_test_with_mongoc_master_branch
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_static_libs
 
     - name: windows-2k8-debug
       display_name: "Windows 2008R2 Debug"
@@ -457,4 +498,5 @@ buildvariants:
       run_on:
           - windows-64-vs2015-compile
       tasks:
-          - name: compile_and_test_with_mongoc_master_branch
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_static_libs

@@ -16,9 +16,7 @@ include_directories(
     ${THIRD_PARTY_SOURCE_DIR}/catch/include
 )
 
-link_directories(${LIBMONGOC_LIBRARY_DIRS} ${LIBBSON_LIBRARY_DIRS})
-
-set(mongocxx_test_sources
+set(test_driver_sources
     CMakeLists.txt
     bulk_write.cpp
     client.cpp
@@ -71,25 +69,13 @@ set(mongocxx_test_sources
 add_executable(test_driver
     ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    ${mongocxx_test_sources}
+    ${test_driver_sources}
 )
-
-target_link_libraries(test_driver mongocxx_mocked)
 
 add_executable(test_instance
   ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
   instance.cpp
 )
-
-target_link_libraries(test_instance mongocxx_mocked)
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    target_compile_options(test_driver PRIVATE /bigobj)
-endif()
-
-add_test(driver test_driver)
-
-add_test(instance test_instance)
 
 add_executable(test_crud_specs
     ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
@@ -103,12 +89,25 @@ add_executable(test_gridfs_specs
     spec/gridfs.cpp
 )
 
-target_link_libraries(test_crud_specs bsoncxx mongocxx)
-target_link_libraries(test_gridfs_specs bsoncxx mongocxx)
+target_link_libraries(test_driver mongocxx_mocked ${libmongoc_libraries})
+target_link_libraries(test_instance mongocxx_mocked ${libmongoc_libraries})
+target_link_libraries(test_crud_specs mongocxx_mocked ${libmongoc_libraries})
+target_link_libraries(test_gridfs_specs mongocxx_mocked ${libmongoc_libraries})
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_compile_options(test_driver PRIVATE /bigobj)
+endif()
+
+target_include_directories(test_driver PRIVATE ${libmongoc_include_directories})
+target_include_directories(test_instance PRIVATE ${libmongoc_include_directories})
+
+target_compile_definitions(test_driver PRIVATE ${libmongoc_definitions})
+target_compile_definitions(test_instance PRIVATE ${libmongoc_definitions})
+
+add_test(driver test_driver)
+add_test(instance test_instance)
 add_test(crud_specs test_crud_specs)
 add_test(gridfs_specs test_gridfs_specs)
-
 
 set_tests_properties(crud_specs PROPERTIES
     ENVIRONMENT "CRUD_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/crud")

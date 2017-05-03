@@ -1,4 +1,4 @@
-# Copyright 2016 MongoDB Inc.
+# Copyright 2017 MongoDB Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,9 +16,10 @@ prefix=@CMAKE_INSTALL_PREFIX@
 includedir=${prefix}/include
 libdir=${prefix}/lib
 
-Name: libbsoncxx
+Name: libbsoncxx-static
 Description: The MongoDB C++11 BSON Library
 URL: http://github.com/mongodb/mongo-cxx-driver
 Version: @BSONCXX_VERSION@
-Cflags: -I${includedir}/bsoncxx/@BSONCXX_INLINE_NAMESPACE@
-Libs: -L${libdir} -lbsoncxx
+Requires: libbson-static-@LIBBSON_REQUIRED_ABI_VERSION@ >= @LIBBSON_REQUIRED_VERSION@
+Cflags: -I${includedir}/bsoncxx/@BSONCXX_INLINE_NAMESPACE@ -DBSONCXX_STATIC
+Libs: -L${libdir} -lbsoncxx-static

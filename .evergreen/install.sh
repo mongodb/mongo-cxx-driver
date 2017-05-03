@@ -23,7 +23,7 @@ case "$OS" in
     darwin|linux)
         CONFIGURE_ARGS_MONGOC="--disable-automatic-init-and-cleanup --disable-shm-counters --with-libbson=system"
         CONFIGURE_ARGS_BSON="--disable-extra-align"
-        CONFIGURE_ARGS_EXTRA="--enable-tests=no --enable-examples=no --enable-debug --enable-optimizations --disable-static --disable-dependency-tracking --with-pic --prefix=$PREFIX"
+        CONFIGURE_ARGS_EXTRA="--enable-tests=no --enable-examples=no --enable-debug --enable-optimizations --enable-static --disable-dependency-tracking --with-pic --prefix=$PREFIX"
         ;;
 
     cygwin*)

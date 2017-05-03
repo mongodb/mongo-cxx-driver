@@ -58,13 +58,25 @@ if (BSONCXX_POLY_USE_STD_EXPERIMENTAL AND CMAKE_CXX_STANDARD LESS 14)
   message(FATAL_ERROR "Can only use BSONCXX_POLY_USE_STD_EXPERIMENTAL if CMAKE_CXX_STANDARD is 14 or higher")
 endif()
 
-set(BSONCXX_VERSION ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.${BSONCXX_VERSION_PATCH}${BSONCXX_VERSION_EXTRA})
+set(BSONCXX_VERSION_NO_EXTRA ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.${BSONCXX_VERSION_PATCH})
+set(BSONCXX_VERSION ${BSONCXX_VERSION_NO_EXTRA}${BSONCXX_VERSION_EXTRA})
 set(BSONCXX_INLINE_NAMESPACE "v${BSONCXX_ABI_VERSION}")
 set(BSONCXX_HEADER_INSTALL_DIR "include/bsoncxx/${BSONCXX_INLINE_NAMESPACE}" CACHE INTERNAL "")
 
 set(LIBBSON_REQUIRED_VERSION 1.7.0)
 set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
-find_package(LibBSON ${LIBBSON_REQUIRED_VERSION} REQUIRED)
+
+if (BUILD_SHARED_LIBS)
+    find_package(libbson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
+    set(libbson_libraries ${BSON_LIBRARIES})
+    set(libbson_include_directories ${BSON_INCLUDE_DIRS})
+    set(libbson_definitions ${BSON_DEFINITIONS})
+else()
+    find_package(libbson-static-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
+    set(libbson_libraries ${BSON_STATIC_LIBRARIES})
+    set(libbson_include_directories ${BSON_STATIC_INCLUDE_DIRS})
+    set(libbson_definitions ${BSON_STATIC_DEFINITIONS})
+endif()
 
 add_subdirectory(third_party)
 add_subdirectory(config)
@@ -89,49 +101,52 @@ set(bsoncxx_sources
 )
 
 include_directories(
-    ${LIBBSON_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_BINARY_DIR}/src
 )
-
-link_directories(${LIBBSON_LIBRARY_DIRS})
 
 if (BSONCXX_POLY_USE_BOOST)
     find_package(Boost 1.56.0 REQUIRED)
 endif()
 
-add_library(bsoncxx_static STATIC
+# We define two libraries: the normal library and the testing-only library.  The testing-only
+# library does not get installed, but the tests link against it instead of the normal library.  The
+# only difference between the two libraries is that BSONCXX_TESTING is defined in the testing-only
+# library (this define enables special testing-only behavior).
+add_library(bsoncxx
     ${bsoncxx_sources}
 )
+add_library(bsoncxx_testing
+    ${bsoncxx_sources}
+)
+target_compile_definitions(bsoncxx_testing PUBLIC BSONCXX_TESTING)
 
-target_compile_definitions(bsoncxx_static PUBLIC BSONCXX_STATIC)
-
-set_target_properties(bsoncxx_static PROPERTIES
-    OUTPUT_NAME bsoncxx
+set_target_properties(bsoncxx_testing PROPERTIES
+    OUTPUT_NAME bsoncxx-testing
 )
 
-# Follow the boost convention to disambiguate the dll and static
-# library names
-if (WIN32)
-    set_target_properties(bsoncxx_static PROPERTIES
-        PREFIX lib
+if (BUILD_SHARED_LIBS)
+    set_target_properties(bsoncxx PROPERTIES
+        OUTPUT_NAME bsoncxx
+    )
+
+    foreach (TARGET bsoncxx bsoncxx_testing)
+        set_target_properties(${TARGET} PROPERTIES
+            VERSION ${BSONCXX_VERSION}
+            DEFINE_SYMBOL BSONCXX_EXPORT
+            CXX_VISIBILITY_PRESET hidden
+            VISIBILITY_INLINES_HIDDEN ON
+            SOVERSION ${BSONCXX_ABI_VERSION}
+        )
+    endforeach(TARGET)
+else()
+    target_compile_definitions(bsoncxx PUBLIC BSONCXX_STATIC)
+    target_compile_definitions(bsoncxx_testing PUBLIC BSONCXX_STATIC)
+
+    set_target_properties(bsoncxx PROPERTIES
+        OUTPUT_NAME bsoncxx-static
     )
 endif()
-
-add_library(bsoncxx SHARED
-    ${bsoncxx_sources}
-)
-
-set(bsoncxx_libs ${LIBBSON_LIBRARIES})
-
-set_target_properties(bsoncxx PROPERTIES
-    OUTPUT_NAME bsoncxx
-    VERSION ${BSONCXX_VERSION}
-    DEFINE_SYMBOL BSONCXX_EXPORT
-    CXX_VISIBILITY_PRESET hidden
-    VISIBILITY_INLINES_HIDDEN ON
-    SOVERSION ${BSONCXX_ABI_VERSION}
-)
 
 generate_export_header(bsoncxx
     BASE_NAME BSONCXX
@@ -141,19 +156,38 @@ generate_export_header(bsoncxx
     STATIC_DEFINE BSONCXX_STATIC
 )
 
+generate_export_header(bsoncxx_testing
+    BASE_NAME BSONCXX
+    EXPORT_MACRO_NAME BSONCXX_API
+    NO_EXPORT_MACRO_NAME BSONCXX_PRIVATE
+    EXPORT_FILE_NAME config/export.hpp
+    STATIC_DEFINE BSONCXX_STATIC
+)
+
 if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
-    add_dependencies(bsoncxx_static EP_mnmlstc_core)
     add_dependencies(bsoncxx EP_mnmlstc_core)
+    add_dependencies(bsoncxx_testing EP_mnmlstc_core)
     ExternalProject_Get_Property(EP_mnmlstc_core source_dir)
-    target_include_directories(bsoncxx_static PUBLIC ${source_dir}/include)
     target_include_directories(bsoncxx PUBLIC ${source_dir}/include)
+    target_include_directories(bsoncxx_testing PUBLIC ${source_dir}/include)
 elseif (BSONCXX_POLY_USE_BOOST)
-    target_include_directories(bsoncxx_static PUBLIC ${Boost_INCLUDE_DIRS})
     target_include_directories(bsoncxx PUBLIC ${Boost_INCLUDE_DIRS})
+    target_include_directories(bsoncxx_testing PUBLIC ${Boost_INCLUDE_DIRS})
 endif()
 
-target_link_libraries(bsoncxx_static ${bsoncxx_libs})
-target_link_libraries(bsoncxx PRIVATE ${bsoncxx_libs})
+target_include_directories(bsoncxx PRIVATE ${libbson_include_directories})
+target_include_directories(bsoncxx_testing PRIVATE ${libbson_include_directories})
+
+target_compile_definitions(bsoncxx PRIVATE ${libbson_definitions})
+target_compile_definitions(bsoncxx_testing PRIVATE ${libbson_definitions})
+
+if (BUILD_SHARED_LIBS)
+    target_link_libraries(bsoncxx PRIVATE ${libbson_libraries})
+    target_link_libraries(bsoncxx_testing PRIVATE ${libbson_libraries})
+else()
+    target_link_libraries(bsoncxx ${libbson_libraries})
+    target_link_libraries(bsoncxx_testing ${libbson_libraries})
+endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     DESTINATION ${BSONCXX_HEADER_INSTALL_DIR}
@@ -168,17 +202,10 @@ install(FILES
     COMPONENT dev
 )
 
-if (BUILD_SHARED_LIBS)
-    install(TARGETS
-        bsoncxx
-        RUNTIME DESTINATION bin COMPONENT runtime
-        LIBRARY DESTINATION lib COMPONENT runtime
-        ARCHIVE DESTINATION lib COMPONENT dev
-    )
-endif()
-
 install(TARGETS
-    bsoncxx_static
+    bsoncxx
+    RUNTIME DESTINATION bin COMPONENT runtime
+    LIBRARY DESTINATION lib COMPONENT runtime
     ARCHIVE DESTINATION lib COMPONENT dev
 )
 
@@ -188,21 +215,27 @@ set(PACKAGE_LIBRARIES bsoncxx)
 
 include(CMakePackageConfigHelpers)
 
+if (BUILD_SHARED_LIBS)
+    set(PKG "libbsoncxx")
+else()
+    set(PKG "libbsoncxx-static")
+endif()
+
 configure_package_config_file(
-  cmake/libbsoncxx-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx-config.cmake
-  INSTALL_DESTINATION lib/cmake/libbsoncxx-${BSONCXX_VERSION}
+  cmake/${PKG}-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config.cmake
+  INSTALL_DESTINATION lib/cmake/${PKG}-${BSONCXX_VERSION}
   PATH_VARS PACKAGE_INCLUDE_INSTALL_DIRS PACKAGE_LIBRARY_INSTALL_DIRS
 )
 
 write_basic_package_version_file(
-  ${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx-config-version.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config-version.cmake
   VERSION ${BSONCXX_VERSION}
   COMPATIBILITY SameMajorVersion
 )
 
 install(
-  FILES ${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx-config-version.cmake
-  DESTINATION lib/cmake/libbsoncxx-${BSONCXX_VERSION}
+  FILES ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config-version.cmake
+  DESTINATION lib/cmake/${PKG}-${BSONCXX_VERSION}
 )
 
 add_subdirectory(test)

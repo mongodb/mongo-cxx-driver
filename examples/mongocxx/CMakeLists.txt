@@ -17,10 +17,6 @@ include_directories(
     ${CMAKE_INSTALL_PREFIX}/${MONGOCXX_HEADER_INSTALL_DIR}
 )
 
-link_directories(
-    ${CMAKE_INSTALL_PREFIX}/lib
-)
-
 set(MONGOCXX_EXAMPLES
     aggregate.cpp
     bulk_write.cpp

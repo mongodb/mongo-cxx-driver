@@ -34,14 +34,28 @@ install(FILES
     COMPONENT dev
 )
 
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/libmongocxx.pc.in
-    ${CMAKE_CURRENT_BINARY_DIR}/libmongocxx.pc
-    @ONLY
-)
+if (BUILD_SHARED_LIBS)
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/libmongocxx.pc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/libmongocxx.pc
+        @ONLY
+    )
 
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/libmongocxx.pc"
-    DESTINATION lib/pkgconfig
-    COMPONENT dev
-)
+    install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/libmongocxx.pc"
+        DESTINATION lib/pkgconfig
+        COMPONENT dev
+    )
+else()
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/libmongocxx-static.pc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/libmongocxx-static.pc
+        @ONLY
+    )
+
+    install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/libmongocxx-static.pc"
+        DESTINATION lib/pkgconfig
+        COMPONENT dev
+    )
+endif()
