@@ -216,6 +216,8 @@ functions:
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} RUN_TESTS.vcxproj
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} examples/run-examples.vcxproj
                   else
+                      # ENABLE_SLOW_TESTS is required to run the slow tests that are disabled by default.
+                      export MONGOCXX_ENABLE_SLOW_TESTS=1
                       # Running the tests and examples here one-by-one here with "test_params" is
                       # necessary due to the fact that we don't yet have explicit CMake integration
                       # with valgrind.  When CXX-1083 is resolved, we can replace the below with

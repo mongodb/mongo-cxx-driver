@@ -114,3 +114,8 @@ set_tests_properties(crud_specs PROPERTIES
 
 set_tests_properties(gridfs_specs PROPERTIES
     ENVIRONMENT "GRIDFS_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/gridfs")
+
+if (MONGOCXX_ENABLE_SLOW_TESTS)
+  set_tests_properties(driver PROPERTIES
+    ENVIRONMENT "MONGOCXX_ENABLE_SLOW_TESTS=1")
+endif()
