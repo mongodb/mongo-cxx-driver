@@ -12,19 +12,14 @@ variables:
         version_32: &version_32 3.2
 
     ## cmake path variables
-    cmake_path:
-        linux_cmake_path: &linux_cmake_path /opt/cmake/bin/cmake
-        ubuntu_zap_cmake_path: &ubuntu_zap_cmake_path /usr/bin/cmake
-        osx_cmake_path: &osx_cmake_path /Applications/Cmake.app/Contents/bin/cmake
-        windows_cmake_path: &windows_cmake_path /cygdrive/c/cmake/bin/cmake
+    extra_path:
+        linux_extra_path: &linux_extra_path /opt/cmake/bin
+        osx_extra_path: &osx_extra_path /Applications/Cmake.app/Contents/bin
+        windows_extra_path: &windows_extra_path "/cygdrive/c/cmake/bin:/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin"
 
     ## tar options variables
     tar_options:
         linux_tar_options: &linux_tar_options --wildcards --no-anchored
-
-    build_tool_path:
-        unix_build_tool_path: &unix_build_tool_path make
-        windows_build_tool_path: &windows_build_tool_path "/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe"
 
     ## cdriver configure flags
     cdriver_configure_flags:
@@ -158,15 +153,8 @@ functions:
                   set -o errexit
                   set -o xtrace
                   set -o pipefail
-                  if [ "${cxx_path|default}" != "default" ]; then
-                        export CXX="${cxx_path}"
-                  fi
-                  if [ "${cc_path|default}" != "default" ]; then
-                        export CC="${cc_path}"
-                  fi
-                  export PATH_TO_CMAKE="${cmake_path}"
-                  export PATH_TO_BUILD_TOOL="${build_tool_path}"
                   export BUILD_TYPE=${build_type}
+                  export PATH="${extra_path}:$PATH"
 
                   ADDL_OPTS=
                   if [ "${USE_STATIC_LIBS}" ]; then
@@ -188,6 +176,7 @@ functions:
                   set -o errexit
                   set -o xtrace
                   set -o pipefail
+                  export PATH="${extra_path}:$PATH"
                   cd build
                   export PREFIX=$(pwd)/../../mongoc
 
@@ -205,8 +194,8 @@ functions:
                   export GRIDFS_TESTS_PATH="$(pwd)/../data/gridfs"
                   if [ "Windows_NT" == "$OS" ]; then
                       CRUD_TESTS_PATH=$(cygpath -m $CRUD_TESTS_PATH)
-                      CTEST_OUTPUT_ON_FAILURE=1 "${build_tool_path}" /p:Configuration=${build_type} RUN_TESTS.vcxproj
-                      CTEST_OUTPUT_ON_FAILURE=1 "${build_tool_path}" /p:Configuration=${build_type} examples/run-examples.vcxproj
+                      CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} RUN_TESTS.vcxproj
+                      CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} examples/run-examples.vcxproj
                   else
                       # Running the tests and examples here one-by-one here with "test_params" is
                       # necessary due to the fact that we don't yet have explicit CMake integration
@@ -280,9 +269,8 @@ buildvariants:
       expansions:
           build_type: "Release"
           tar_options: *linux_tar_options
-          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
-          cmake_path: *linux_cmake_path
+          extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
       run_on:
@@ -297,9 +285,8 @@ buildvariants:
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
-          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
-          cmake_path: *linux_cmake_path
+          extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
       run_on:
@@ -312,9 +299,8 @@ buildvariants:
       display_name: "OS X 10.10 Release (Boost)"
       expansions:
           build_type: "Release"
-          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *osx_cdriver_configure_flags
-          cmake_path: *osx_cmake_path
+          extra_path: *osx_extra_path
           cmake_flags: *osx_cmake_flags
           poly_flags: *poly_boost_flags
           mongodb_version: *version_latest
@@ -329,9 +315,8 @@ buildvariants:
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
-          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
-          cmake_path: *linux_cmake_path
+          extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           poly_flags: *poly_std_experimental_flags
           mongodb_version: *version_latest
@@ -346,9 +331,8 @@ buildvariants:
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
-          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
-          cmake_path: *linux_cmake_path
+          extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           test_params: *valgrind_test_params
           mongodb_version: *version_latest
@@ -363,9 +347,8 @@ buildvariants:
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
-          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
-          cmake_path: *linux_cmake_path
+          extra_path: *linux_extra_path
           cmake_flags: *asan_cmake_flags
           test_params: *asan_test_params
           mongodb_version: *version_latest
@@ -380,9 +363,8 @@ buildvariants:
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
-          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
-          cmake_path: *linux_cmake_path
+          extra_path: *linux_extra_path
           cmake_flags: *ubsan_cmake_flags
           test_params: *ubsan_test_params
           mongodb_version: *version_latest
@@ -401,9 +383,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           tar_options: *linux_tar_options
-          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
-          cmake_path: *ubuntu_zap_cmake_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
       run_on:
@@ -418,9 +398,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           tar_options: *linux_tar_options
-          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
-          cmake_path: *ubuntu_zap_cmake_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
       run_on:
@@ -435,9 +413,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           tar_options: *linux_tar_options
-          build_tool_path: *unix_build_tool_path
           cdriver_configure_flags: *linux_cdriver_configure_flags
-          cmake_path: *ubuntu_zap_cmake_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
       run_on:
@@ -451,8 +427,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           tar_options: *linux_tar_options
-          build_tool_path: *windows_build_tool_path
-          cmake_path: *windows_cmake_path
+          extra_path: *windows_extra_path
           cmake_flags: *windows_cmake_flags
           mongodb_version: *version_latest
       run_on:
@@ -466,8 +441,7 @@ buildvariants:
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
-          build_tool_path: *windows_build_tool_path
-          cmake_path: *windows_cmake_path
+          extra_path: *windows_extra_path
           cmake_flags: *windows_cmake_flags
           mongodb_version: *version_latest
       run_on:
