@@ -34,6 +34,25 @@ variables:
         ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.blacklist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Werror"
         windows_cmake_flags: &windows_cmake_flags -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT=c:/local/boost_1_60_0
 
+    example_projects_cc:
+        asan_cc_path: &asan_cc_path /usr/bin/clang
+        ubsan_cc_path: &ubsan_cc_path /usr/bin/clang
+
+    example_projects_cxx:
+        asan_cxx_path: &asan_cxx_path /usr/bin/clang++
+        ubsan_cxx_path: &ubsan_cxx_path /usr/bin/clang++
+
+    example_projects_cxxflags:
+        asan_cxxflags: &asan_cxxflags -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+        ubsan_cxxflags: &ubsan_cxxflags -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+
+    example_projects_ldflags:
+        asan_ldflags: &asan_ldflags -fsanitize=address
+        ubsan_ldflags: &ubsan_ldflags -fsanitize=undefined -fno-sanitize-recover=undefined
+
+    example_projects_cxx_standard:
+        std_experimental_cxx_standard: &std_experimental_cxx_standard 14
+
     poly_flags:
         poly_boost_flags: &poly_boost_flags -DBSONCXX_POLY_USE_BOOST=ON
         poly_std_experimental_flags: &poly_std_experimental_flags -DBSONCXX_POLY_USE_STD_EXPERIMENTAL=ON -DCMAKE_CXX_STANDARD=14
@@ -215,6 +234,27 @@ functions:
                       for test in $EXAMPLES; do ${test_params} $test; done
                   fi
 
+                  cd ..
+                  export CMAKE_PREFIX_PATH=$PREFIX:$(pwd)/build/install
+                  export USE_STATIC_LIBS="${USE_STATIC_LIBS}"
+                  export BUILD_TYPE="${build_type}"
+
+                  export CXXFLAGS="${example_projects_cxxflags}"
+                  export LDFLAGS="${example_projects_ldflags}"
+                  export CC="${example_projects_cc}"
+                  export CXX="${example_projects_cxx}"
+                  export CXX_STANDARD="${example_projects_cxx_standard}"
+                  if [ "Windows_NT" == "$OS" ]; then
+                      export MSVC=1
+                  elif [ "$(uname -s | tr '[:upper:]' '[:lower:]')" == "darwin" ]; then
+                      export DYLD_LIBRARY_PATH="$(pwd)/build/install/lib:$DYLD_LIBRARY_PATH"
+                  else
+                      export LD_LIBRARY_PATH="$(pwd)/build/install/lib:$LD_LIBRARY_PATH"
+                  fi
+                  # The example projects never run under valgrind, since we haven't added execution
+                  # logic to handle ${test_params}.
+                  .evergreen/build_example_projects.sh
+
 #######################################
 #              Pre Task               #
 #######################################
@@ -320,6 +360,7 @@ buildvariants:
           cmake_flags: *linux_cmake_flags
           poly_flags: *poly_std_experimental_flags
           mongodb_version: *version_latest
+          example_projects_cxx_standard: *std_experimental_cxx_standard
       run_on:
           - ubuntu1604-build
       tasks:
@@ -352,6 +393,10 @@ buildvariants:
           cmake_flags: *asan_cmake_flags
           test_params: *asan_test_params
           mongodb_version: *version_latest
+          example_projects_cc: *asan_cc_path
+          example_projects_cxx: *asan_cxx_path
+          example_projects_cxxflags: *asan_cxxflags
+          example_projects_ldflags: *asan_ldflags
       run_on:
           - ubuntu1604-build
       tasks:
@@ -368,6 +413,10 @@ buildvariants:
           cmake_flags: *ubsan_cmake_flags
           test_params: *ubsan_test_params
           mongodb_version: *version_latest
+          example_projects_cc: *ubsan_cc_path
+          example_projects_cxx: *ubsan_cxx_path
+          example_projects_cxxflags: *ubsan_cxxflags
+          example_projects_ldflags: *ubsan_ldflags
       run_on:
           - ubuntu1604-build
       tasks:

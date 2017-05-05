@@ -13,12 +13,9 @@
 5. Start up `mongod` running on the default port (i.e. 27017)
 6. Run an example file (e.g. `./aggregate`)
 
-## Building cmake examples
+## Building project examples
 
 1. Install `libmongoc` and `mongocxx` following the [installation
    instructions](https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/)
-2. Change to a `build` directory in one of the cmake examples, e.g.
-   `examples/cmake/find_package/build`
-3. Run `cmake -DCMAKE_BUILD_TYPE=Release ..`
-4. Run `make`
-5. Run `./hello_mongocxx`
+2. Change to one of the project example directories, e.g. `examples/projects/cmake/mongocxx/shared`
+3. Run `./build.sh`
