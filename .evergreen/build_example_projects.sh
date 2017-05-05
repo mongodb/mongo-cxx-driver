@@ -15,5 +15,8 @@ for project in bsoncxx mongocxx; do
 (
     cd $project
     ( cd cmake/$DIR && ./build.sh )
+    if [ "Windows_NT" != "$OS" ]; then
+        ( cd pkg-config/$DIR && ./build.sh )
+    fi
 )
 done

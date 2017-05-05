@@ -236,6 +236,7 @@ functions:
 
                   cd ..
                   export CMAKE_PREFIX_PATH=$PREFIX:$(pwd)/build/install
+                  export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig:$(pwd)/build/install/lib/pkgconfig
                   export USE_STATIC_LIBS="${USE_STATIC_LIBS}"
                   export BUILD_TYPE="${build_type}"
 
