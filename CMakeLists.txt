@@ -46,10 +46,6 @@ set (CMAKE_INSTALL_RPATH_USE_LINK_PATH true)
 # Ensure that RPATH is used on OSX
 set(CMAKE_MACOSX_RPATH 1)
 
-# Add in our modules, we write FindX modules for libbson and libmongoc
-# since they don't currently install them.
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
-
 # Enforce the C++ standard, and disable extensions
 if(NOT DEFINED CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 11)
@@ -61,10 +57,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(GenerateExportHeader)
 include(InstallRequiredSystemLibraries)
 
-# Allow the user to decie whether to install the shared libaries.  Note that we always build them,
-# since otherwise it makes the CMake logic very complex, but setting BUILD_SHARED_LIBS=Off will at
-# least disable installing them.
-option(BUILD_SHARED_LIBS "Install shared libraries" ON)
+# Allow the user to decide whether to build the shared libaries or the static libraries.
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
 # If the user did not customize the install prefix,
 # set it to live under build so we don't inadverently pollute /usr/local
