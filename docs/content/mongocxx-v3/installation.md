@@ -34,8 +34,9 @@ page.
 Follow the instructions for building from a tarball at
 [Installing libmongoc](http://mongoc.org/libmongoc/current/installing.html).
 
-If you need static libraries, be sure to use the `--enable-static`
-configure option when building libmongoc.
+If you need static C++ driver libraries and you are configuring the C
+driver with the `./configure` script, you must pass the `--enable-static`
+configure option when building libbson/libmongoc.
 
 ### Step 2: Choose a C++17 polyfill
 
@@ -99,9 +100,9 @@ obtain.
 
 ### Step 4: Configure the driver
 
-By default, `libmongoc` installs into `/usr/local`.  To configure
-mongocxx for installation into `/usr/local` as well, use the following
-`cmake` command:
+On Unix systems, `libmongoc` installs into `/usr/local` by default.  To
+configure `mongocxx` for installation into `/usr/local` as well, use the
+following `cmake` command:
 
 (***NOTE***: The trailing `..` below is important!  Don't omit it.)
 
@@ -109,16 +110,37 @@ mongocxx for installation into `/usr/local` as well, use the following
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
 ```
 
-If you did not install the `libmongoc` into the default prefix,
-substitute the `cmake` line above with the following lines (replace
-`MY_INSTALL_PREFIX` with the prefix used for installing the C driver:
+`/usr/local` may be replaced with the directory that `libmongoc` was
+installed to.
+
+If you need to install `mongocxx` into a different directory than the
+directory where `libmongoc` is installed, you must instruct `cmake` on
+how to find the `libmongoc` installation directory.  The procedure for
+doing so varies between mongocxx versions:
+
+- Users building `mongocxx` versions 3.2.x or newer should use
+  `CMAKE_PREFIX_PATH` to specify the `libmongoc` installation directory.
+  For example (make sure to replace `/your/cdriver/prefix` and
+  `/your/cxxdriver/prefix` with the prefix used for installing the C
+  driver and the desired installation prefix, respectively):
 
 ```sh
-# MY_INSTALL_PREFIX="/your/cdriver/prefix"
+cmake -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/your/cxxdriver/prefix \
+    -DCMAKE_PREFIX_PATH=/your/cdriver/prefix ..
+```
 
-PKG_CONFIG_PATH="$MY_INSTALL_PREFIX/lib/pkgconfig" \
-  cmake -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX="$MY_INSTALL_PREFIX" ..
+- Users building `mongocxx` versions 3.1.x and 3.0.x should specify the
+  `libmongoc` installation directory by using the `-DLIBMONGOC_DIR` and
+  `-DLIBBSON_DIR` options to `cmake`.  See the following example, which
+  assumes that both `libmongoc` and `libbson` are installed into
+  `/your/cdriver/prefix`:
+
+```sh
+cmake -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/your/cxxdriver/prefix
+    -DLIBMONGOC_DIR=/your/cdriver/prefix
+    -DLIBBSON_DIR=/your/cdriver/prefix ..
 ```
 
 Remember: to select a polyfill, pass the option to `cmake`. For example,
@@ -142,6 +164,17 @@ and boost is in `c:\local\boost_1_59_0`:
     -DCMAKE_PREFIX_PATH=c:\mongo-c-driver
     -DBOOST_ROOT=c:\local\boost_1_59_0
 ```
+
+`mongocxx` builds shared libraries by default.  This is the recommended
+build setting for novice users.
+
+- Note for users of mongocxx 3.2.x and newer: advanced users may build
+  static libraries, if desired, by specifying `-DBUILD_SHARED_LIBS=OFF` to
+  CMake. Specifying this option will introduce a dependency on the
+  `libmongoc` static libraries (see step 1 above for details on how to
+  ensure that these are installed).  Linking an application against both
+  shared `libmongoc` and static `mongocxx` is not supported, nor is
+  linking against both static `libmongoc` and shared `mongocxx`.
 
 ### Step 5: Build and install the driver
 
@@ -201,13 +234,34 @@ int main(int, char**) {
 }
 ```
 
+#### Compiling with the help of CMake
+
+If you are using CMake for your project, you can use the find_package()
+directive to enable compiling and linking against `mongocxx`.  The
+find_package() directive will set variables in the current environment
+(e.g. `LIBMONGOCXX_INCLUDE_DIRS`, `LIBMONGOCXX_LIBRARIES`, etc.) that need
+to be propagated to your build targets.  If you have installed `mongocxx`
+or `libmongoc` to a non-standard location on your system, you will need to
+set `CMAKE_PREFIX_PATH` to the library installation prefix (specified at
+build time with `CMAKE_INSTALL_PREFIX`) when running `cmake`.
+
+In the `mongocxx` source repository (versions 3.2.x or newer only), see
+the directory `examples/projects/mongocxx/cmake` for an example CMake
+application which uses the shared library (the default option), and an
+example CMake application which uses the static library (advanced users
+only).
+
 #### Compiling with the help of pkg-config
 
-Compile the test program with the following command:
+Compile the test program above with the following command:
 
 ```sh
 c++ --std=c++11 test.cpp -o test $(pkg-config --cflags --libs libmongocxx)
 ```
+
+Advanced users who are using the static library must replace the
+`libmongocxx` argument to `pkg-config` above with `libmongocxx-static`
+(this requires mongocxx 3.2.x or newer).
 
 If you installed to somewhere not in your pkg-config search path, remember
 to set the `PKG_CONFIG_PATH` environment variable first:
@@ -216,19 +270,37 @@ to set the `PKG_CONFIG_PATH` environment variable first:
 export PKG_CONFIG_PATH="$MY_INSTALL_PREFIX/lib/pkgconfig"
 ```
 
-#### Compiling without pkg-config
+#### Compiling without pkg-config or CMake
 
-If you don't have pkg-config available, you will need to set include and
-library flags manually on the command line or in your IDE.
+If you aren't using CMake for your project and you don't have pkg-config
+available, you will need to set include and library flags manually on the
+command line or in your IDE.
 
-For example, if libmongoc and mongocxx are installed in `/usr/local`, then
-the compilation line in the section above expands to this:
+Here's an example expansion of the compilation line above, on a system
+where mongocxx and libmongoc are installed in `/usr/local`:
 
 ```sh
 c++ --std=c++11 test.cpp -o test \
-  -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 \
-  -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 \
-  -L/usr/local/lib -lmongocxx -lbsoncxx
+    -I/usr/local/include/mongocxx/v_noabi \
+    -I/usr/local/include/bsoncxx/v_noabi \
+    -L/usr/local/lib -lmongocxx -lbsoncxx
+```
+
+Advanced users only: here is an example expansion on the same system of
+the compilation line above when static libraries are being used.  Note
+that the preprocessor defines `MONGOCXX_STATIC` and `BSONCXX_STATIC` must
+be defined in all source files that include mongocxx headers; failure to
+do so will result in difficult-to-diagnose linker errors.
+
+```sh
+c++ --std=c++11 test.cpp -o test \
+    -DMONGOCXX_STATIC -DBSONCXX_STATIC -DMONGOC_STATIC -DBSON_STATIC \
+    -I/usr/local/include/libmongoc-1.0 \
+    -I/usr/local/include/libbson-1.0 \
+    -I/usr/local/include/mongocxx/v_noabi \
+    -I/usr/local/include/bsoncxx/v_noabi \
+    -L/usr/local/lib -lmongocxx-static -lbsoncxx-static
+    -lmongoc-static-1.0 -lsasl2 -lssl -lcrypto -lbson-static-1.0 -lm -lpthread
 ```
 
 #### Compiling with MSVC
