@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Mongocxx-v3s on MongoDB C&#43;&#43; Driver Manual</title>
+    <title>Mongocxx-V3s on MongoDB C&#43;&#43; Driver Manual</title>
     <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</link>
-    <description>Recent content in Mongocxx-v3s on MongoDB C&#43;&#43; Driver Manual</description>
+    <description>Recent content in Mongocxx-V3s on MongoDB C&#43;&#43; Driver Manual</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 18 Apr 2017 13:39:39 -0400</lastBuildDate>
@@ -358,6 +358,7 @@ Update 1 or later&lt;/li&gt;
 &lt;p&gt;The mongocxx driver builds on top of the MongoDB C driver.&lt;/p&gt;
 
 &lt;ul&gt;
+&lt;li&gt;For mongocxx-3.2.x, libmongoc 1.7.0 or later is required.&lt;/li&gt;
 &lt;li&gt;For mongocxx-3.1.x, libmongoc 1.5.0 or later is required.&lt;/li&gt;
 &lt;li&gt;For mongocxx-3.0.x, we recommend the last 1.4.x version of libmongoc&lt;/li&gt;
 &lt;/ul&gt;
@@ -370,8 +371,9 @@ page.&lt;/p&gt;
 &lt;p&gt;Follow the instructions for building from a tarball at
 &lt;a href=&#34;http://mongoc.org/libmongoc/current/installing.html&#34;&gt;Installing libmongoc&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;If you need static libraries, be sure to use the &lt;code&gt;--enable-static&lt;/code&gt;
-configure option when building libmongoc.&lt;/p&gt;
+&lt;p&gt;If you need static C++ driver libraries and you are configuring the C
+driver with the &lt;code&gt;./configure&lt;/code&gt; script, you must pass the &lt;code&gt;--enable-static&lt;/code&gt;
+configure option when building libbson/libmongoc.&lt;/p&gt;
 
 &lt;h3 id=&#34;step-2-choose-a-c-17-polyfill&#34;&gt;Step 2: Choose a C++17 polyfill&lt;/h3&gt;
 
@@ -433,24 +435,48 @@ obtain.&lt;/p&gt;
 
 &lt;h3 id=&#34;step-4-configure-the-driver&#34;&gt;Step 4: Configure the driver&lt;/h3&gt;
 
-&lt;p&gt;By default, &lt;code&gt;libmongoc&lt;/code&gt; installs into &lt;code&gt;/usr/local&lt;/code&gt;.  To configure
-mongocxx for installation into &lt;code&gt;/usr/local&lt;/code&gt; as well, use the following
-&lt;code&gt;cmake&lt;/code&gt; command:&lt;/p&gt;
+&lt;p&gt;On Unix systems, &lt;code&gt;libmongoc&lt;/code&gt; installs into &lt;code&gt;/usr/local&lt;/code&gt; by default.  To
+configure &lt;code&gt;mongocxx&lt;/code&gt; for installation into &lt;code&gt;/usr/local&lt;/code&gt; as well, use the
+following &lt;code&gt;cmake&lt;/code&gt; command:&lt;/p&gt;
 
 &lt;p&gt;(&lt;strong&gt;&lt;em&gt;NOTE&lt;/em&gt;&lt;/strong&gt;: The trailing &lt;code&gt;..&lt;/code&gt; below is important!  Don&amp;rsquo;t omit it.)&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;If you did not install the &lt;code&gt;libmongoc&lt;/code&gt; into the default prefix,
-substitute the &lt;code&gt;cmake&lt;/code&gt; line above with the following lines (replace
-&lt;code&gt;MY_INSTALL_PREFIX&lt;/code&gt; with the prefix used for installing the C driver:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;/usr/local&lt;/code&gt; may be replaced with the directory that &lt;code&gt;libmongoc&lt;/code&gt; was
+installed to.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# MY_INSTALL_PREFIX=&amp;quot;/your/cdriver/prefix&amp;quot;
+&lt;p&gt;If you need to install &lt;code&gt;mongocxx&lt;/code&gt; into a different directory than the
+directory where &lt;code&gt;libmongoc&lt;/code&gt; is installed, you must instruct &lt;code&gt;cmake&lt;/code&gt; on
+how to find the &lt;code&gt;libmongoc&lt;/code&gt; installation directory.  The procedure for
+doing so varies between mongocxx versions:&lt;/p&gt;
 
-PKG_CONFIG_PATH=&amp;quot;$MY_INSTALL_PREFIX/lib/pkgconfig&amp;quot; \
-  cmake -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=&amp;quot;$MY_INSTALL_PREFIX&amp;quot; ..
+&lt;ul&gt;
+&lt;li&gt;Users building &lt;code&gt;mongocxx&lt;/code&gt; versions 3.2.x or newer should use
+&lt;code&gt;CMAKE_PREFIX_PATH&lt;/code&gt; to specify the &lt;code&gt;libmongoc&lt;/code&gt; installation directory.
+For example (make sure to replace &lt;code&gt;/your/cdriver/prefix&lt;/code&gt; and
+&lt;code&gt;/your/cxxdriver/prefix&lt;/code&gt; with the prefix used for installing the C
+driver and the desired installation prefix, respectively):&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;cmake -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/your/cxxdriver/prefix \
+    -DCMAKE_PREFIX_PATH=/your/cdriver/prefix ..
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Users building &lt;code&gt;mongocxx&lt;/code&gt; versions 3.1.x and 3.0.x should specify the
+&lt;code&gt;libmongoc&lt;/code&gt; installation directory by using the &lt;code&gt;-DLIBMONGOC_DIR&lt;/code&gt; and
+&lt;code&gt;-DLIBBSON_DIR&lt;/code&gt; options to &lt;code&gt;cmake&lt;/code&gt;.  See the following example, which
+assumes that both &lt;code&gt;libmongoc&lt;/code&gt; and &lt;code&gt;libbson&lt;/code&gt; are installed into
+&lt;code&gt;/your/cdriver/prefix&lt;/code&gt;:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;cmake -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/your/cxxdriver/prefix
+    -DLIBMONGOC_DIR=/your/cdriver/prefix
+    -DLIBBSON_DIR=/your/cdriver/prefix ..
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Remember: to select a polyfill, pass the option to &lt;code&gt;cmake&lt;/code&gt;. For example,
@@ -469,10 +495,22 @@ and boost is in &lt;code&gt;c:\local\boost_1_59_0&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;&#39;C:\Program Files (x86)\CMake\bin\cmake.exe&#39; -G &amp;quot;Visual Studio 14 Win64&amp;quot;
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
-    -DLIBBSON_DIR=c:\mongo-c-driver
+    -DCMAKE_PREFIX_PATH=c:\mongo-c-driver
     -DBOOST_ROOT=c:\local\boost_1_59_0
-    -DLIBMONGOC_DIR=c:\mongo-c-driver
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;mongocxx&lt;/code&gt; builds shared libraries by default.  This is the recommended
+build setting for novice users.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Note for users of mongocxx 3.2.x and newer: advanced users may build
+static libraries, if desired, by specifying &lt;code&gt;-DBUILD_SHARED_LIBS=OFF&lt;/code&gt; to
+CMake. Specifying this option will introduce a dependency on the
+&lt;code&gt;libmongoc&lt;/code&gt; static libraries (see step 1 above for details on how to
+ensure that these are installed).  Linking an application against both
+shared &lt;code&gt;libmongoc&lt;/code&gt; and static &lt;code&gt;mongocxx&lt;/code&gt; is not supported, nor is
+linking against both static &lt;code&gt;libmongoc&lt;/code&gt; and shared &lt;code&gt;mongocxx&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h3 id=&#34;step-5-build-and-install-the-driver&#34;&gt;Step 5: Build and install the driver&lt;/h3&gt;
 
@@ -528,12 +566,33 @@ int main(int, char**) {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;h4 id=&#34;compiling-with-the-help-of-cmake&#34;&gt;Compiling with the help of CMake&lt;/h4&gt;
+
+&lt;p&gt;If you are using CMake for your project, you can use the find_package()
+directive to enable compiling and linking against &lt;code&gt;mongocxx&lt;/code&gt;.  The
+find_package() directive will set variables in the current environment
+(e.g. &lt;code&gt;LIBMONGOCXX_INCLUDE_DIRS&lt;/code&gt;, &lt;code&gt;LIBMONGOCXX_LIBRARIES&lt;/code&gt;, etc.) that need
+to be propagated to your build targets.  If you have installed &lt;code&gt;mongocxx&lt;/code&gt;
+or &lt;code&gt;libmongoc&lt;/code&gt; to a non-standard location on your system, you will need to
+set &lt;code&gt;CMAKE_PREFIX_PATH&lt;/code&gt; to the library installation prefix (specified at
+build time with &lt;code&gt;CMAKE_INSTALL_PREFIX&lt;/code&gt;) when running &lt;code&gt;cmake&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In the &lt;code&gt;mongocxx&lt;/code&gt; source repository (versions 3.2.x or newer only), see
+the directory &lt;code&gt;examples/projects/mongocxx/cmake&lt;/code&gt; for an example CMake
+application which uses the shared library (the default option), and an
+example CMake application which uses the static library (advanced users
+only).&lt;/p&gt;
+
 &lt;h4 id=&#34;compiling-with-the-help-of-pkg-config&#34;&gt;Compiling with the help of pkg-config&lt;/h4&gt;
 
-&lt;p&gt;Compile the test program with the following command:&lt;/p&gt;
+&lt;p&gt;Compile the test program above with the following command:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;c++ --std=c++11 test.cpp -o test $(pkg-config --cflags --libs libmongocxx)
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Advanced users who are using the static library must replace the
+&lt;code&gt;libmongocxx&lt;/code&gt; argument to &lt;code&gt;pkg-config&lt;/code&gt; above with &lt;code&gt;libmongocxx-static&lt;/code&gt;
+(this requires mongocxx 3.2.x or newer).&lt;/p&gt;
 
 &lt;p&gt;If you installed to somewhere not in your pkg-config search path, remember
 to set the &lt;code&gt;PKG_CONFIG_PATH&lt;/code&gt; environment variable first:&lt;/p&gt;
@@ -541,18 +600,35 @@ to set the &lt;code&gt;PKG_CONFIG_PATH&lt;/code&gt; environment variable first:&
 &lt;pre&gt;&lt;code&gt;export PKG_CONFIG_PATH=&amp;quot;$MY_INSTALL_PREFIX/lib/pkgconfig&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;compiling-without-pkg-config&#34;&gt;Compiling without pkg-config&lt;/h4&gt;
+&lt;h4 id=&#34;compiling-without-pkg-config-or-cmake&#34;&gt;Compiling without pkg-config or CMake&lt;/h4&gt;
 
-&lt;p&gt;If you don&amp;rsquo;t have pkg-config available, you will need to set include and
-library flags manually on the command line or in your IDE.&lt;/p&gt;
+&lt;p&gt;If you aren&amp;rsquo;t using CMake for your project and you don&amp;rsquo;t have pkg-config
+available, you will need to set include and library flags manually on the
+command line or in your IDE.&lt;/p&gt;
 
-&lt;p&gt;For example, if libmongoc and mongocxx are installed in &lt;code&gt;/usr/local&lt;/code&gt;, then
-the compilation line in the section above expands to this:&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s an example expansion of the compilation line above, on a system
+where mongocxx and libmongoc are installed in &lt;code&gt;/usr/local&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;c++ --std=c++11 test.cpp -o test \
-  -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 \
-  -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 \
-  -L/usr/local/lib -lmongocxx -lbsoncxx
+    -I/usr/local/include/mongocxx/v_noabi \
+    -I/usr/local/include/bsoncxx/v_noabi \
+    -L/usr/local/lib -lmongocxx -lbsoncxx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Advanced users only: here is an example expansion on the same system of
+the compilation line above when static libraries are being used.  Note
+that the preprocessor defines &lt;code&gt;MONGOCXX_STATIC&lt;/code&gt; and &lt;code&gt;BSONCXX_STATIC&lt;/code&gt; must
+be defined in all source files that include mongocxx headers; failure to
+do so will result in difficult-to-diagnose linker errors.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;c++ --std=c++11 test.cpp -o test \
+    -DMONGOCXX_STATIC -DBSONCXX_STATIC -DMONGOC_STATIC -DBSON_STATIC \
+    -I/usr/local/include/libmongoc-1.0 \
+    -I/usr/local/include/libbson-1.0 \
+    -I/usr/local/include/mongocxx/v_noabi \
+    -I/usr/local/include/bsoncxx/v_noabi \
+    -L/usr/local/lib -lmongocxx-static -lbsoncxx-static
+    -lmongoc-static-1.0 -lsasl2 -lssl -lcrypto -lbson-static-1.0 -lm -lpthread
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h4 id=&#34;compiling-with-msvc&#34;&gt;Compiling with MSVC&lt;/h4&gt;
