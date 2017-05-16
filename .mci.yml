@@ -216,8 +216,11 @@ functions:
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} RUN_TESTS.vcxproj
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} examples/run-examples.vcxproj
                   else
-                      # ENABLE_SLOW_TESTS is required to run the slow tests that are disabled by default.
-                      export MONGOCXX_ENABLE_SLOW_TESTS=1
+                      # ENABLE_SLOW_TESTS is required to run the slow tests that are disabled by default. The slow tests should not be run if explicitly disabled.
+                      if [ -z "${disable_slow_tests}" ]; then
+                          export MONGOCXX_ENABLE_SLOW_TESTS=1
+                      fi
+                      
                       # Running the tests and examples here one-by-one here with "test_params" is
                       # necessary due to the fact that we don't yet have explicit CMake integration
                       # with valgrind.  When CXX-1083 is resolved, we can replace the below with
@@ -380,6 +383,7 @@ buildvariants:
           cmake_flags: *linux_cmake_flags
           test_params: *valgrind_test_params
           mongodb_version: *version_latest
+          disable_slow_tests: 1
       run_on:
           - ubuntu1604-build
       tasks:
