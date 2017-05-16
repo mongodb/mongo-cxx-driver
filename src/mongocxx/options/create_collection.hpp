@@ -122,7 +122,7 @@ class MONGOCXX_API create_collection {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    create_collection& max(int max_documents);
+    create_collection& max(std::int64_t max_documents);
 
     ///
     /// Gets the current setting for the maximum number of documents allowed in the capped
@@ -131,7 +131,7 @@ class MONGOCXX_API create_collection {
     /// @return
     ///   Maximum number of documents allowed in the collection (if capped).
     ///
-    const stdx::optional<int>& max() const;
+    const stdx::optional<std::int64_t>& max() const;
 
     ///
     /// When true, disables the power of 2 sizes allocation for the collection.
@@ -172,7 +172,7 @@ class MONGOCXX_API create_collection {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    create_collection& size(int max_size);
+    create_collection& size(std::int64_t max_size);
 
     ///
     /// Gets the current size setting, for a capped collection.
@@ -180,7 +180,7 @@ class MONGOCXX_API create_collection {
     /// @return
     ///   Maximum size, in bytes, of this collection (if capped).
     ///
-    const stdx::optional<int>& size() const;
+    const stdx::optional<std::int64_t>& size() const;
 
     ///
     /// Specify configuration to the storage on a per-collection basis.
@@ -250,8 +250,8 @@ class MONGOCXX_API create_collection {
     stdx::optional<bool> _auto_index_id;
     stdx::optional<bool> _capped;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
-    stdx::optional<int> _max_documents;
-    stdx::optional<int> _max_size;
+    stdx::optional<std::int64_t> _max_documents;
+    stdx::optional<std::int64_t> _max_size;
     stdx::optional<bool> _no_padding;
     stdx::optional<bsoncxx::document::view_or_value> _storage_engine_opts;
     stdx::optional<class validation_criteria> _validation;

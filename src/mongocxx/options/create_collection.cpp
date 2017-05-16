@@ -43,7 +43,7 @@ create_collection& create_collection::collation(bsoncxx::document::view_or_value
     return *this;
 }
 
-create_collection& create_collection::max(int max_documents) {
+create_collection& create_collection::max(std::int64_t max_documents) {
     _max_documents = max_documents;
     return *this;
 }
@@ -53,7 +53,7 @@ create_collection& create_collection::no_padding(bool no_padding) {
     return *this;
 }
 
-create_collection& create_collection::size(int max_size) {
+create_collection& create_collection::size(std::int64_t max_size) {
     _max_size = max_size;
     return *this;
 }
@@ -81,7 +81,7 @@ const stdx::optional<bsoncxx::document::view_or_value>& create_collection::colla
     return _collation;
 }
 
-const stdx::optional<int>& create_collection::max() const {
+const stdx::optional<std::int64_t>& create_collection::max() const {
     return _max_documents;
 }
 
@@ -89,7 +89,7 @@ const stdx::optional<bool>& create_collection::no_padding() const {
     return _no_padding;
 }
 
-const stdx::optional<int>& create_collection::size() const {
+const stdx::optional<std::int64_t>& create_collection::size() const {
     return _max_size;
 }
 
