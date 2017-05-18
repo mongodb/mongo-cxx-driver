@@ -103,14 +103,14 @@ TEST_CASE("create_collection can be exported to a document", "[create_collection
     // size should be set
     document::element size{doc_view["size"]};
     REQUIRE(size);
-    REQUIRE(size.type() == type::k_int32);
-    REQUIRE(size.get_int32() == 256);
+    REQUIRE(size.type() == type::k_int64);
+    REQUIRE(size.get_int64() == 256);
 
     // max should be set
     document::element max{doc_view["max"]};
     REQUIRE(max);
-    REQUIRE(max.type() == type::k_int32);
-    REQUIRE(max.get_int32() == 100);
+    REQUIRE(max.type() == type::k_int64);
+    REQUIRE(max.get_int64() == 100);
 
     // collation should be set
     document::element collation{doc_view["collation"]};
