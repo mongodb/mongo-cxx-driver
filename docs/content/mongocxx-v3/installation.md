@@ -11,10 +11,25 @@ title = "Installing the mongocxx driver"
 ## Prerequisites
 
 - Any standard Unix platform, or Windows 7 SP1+
-- GCC 4.8.2+, Clang 3.5+, Apple Clang 5.1+, or Visual Studio C++ 2015
-  Update 1 or later
+- A compiler that suports C++11 (gcc, clang, or Visual Studio)
 - CMake 3.2 or later
-- On Windows, boost 1.56 or later
+- boost (optional)
+
+We currently test the driver with the following configurations:
+
+&nbsp; |   Linux  |    OS X     |      Windows
+-------|----------|-------------|-------------------
+ clang |   3.8    | 7.0 (Apple) |        - 
+ gcc   | 4.8, 5.4 |     -       |        -
+ VS    |   n/a    |    n/a      | 14 (2015) Update 3
+ boost |    -     |   1.5.3     |      1.6.0
+
+With the exception of Visual Studio (for which mongocxx supports version 14
+update 1 and newer), versions older the the ones listed may not work and are not
+supported; use them at your own risk.
+
+Versions newer than the ones listed above should work; if you
+have problems, please file a bug report or JIRA ticket.
 
 ## Installation
 
