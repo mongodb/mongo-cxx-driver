@@ -111,6 +111,8 @@ add_library(mongocxx_static STATIC
 )
 
 target_compile_definitions(mongocxx_static PUBLIC MONGOCXX_STATIC)
+target_compile_definitions(mongocxx_static PUBLIC BSON_STATIC)
+target_compile_definitions(mongocxx_static PUBLIC MONGOC_STATIC)
 
 set_target_properties(mongocxx_static PROPERTIES
     OUTPUT_NAME mongocxx

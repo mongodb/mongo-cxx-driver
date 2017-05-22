@@ -105,6 +105,7 @@ add_library(bsoncxx_static STATIC
 )
 
 target_compile_definitions(bsoncxx_static PUBLIC BSONCXX_STATIC)
+target_compile_definitions(bsoncxx_static PUBLIC BSON_STATIC)
 
 set_target_properties(bsoncxx_static PROPERTIES
     OUTPUT_NAME bsoncxx
