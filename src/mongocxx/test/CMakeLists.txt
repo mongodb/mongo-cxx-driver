@@ -73,6 +73,11 @@ add_executable(test_driver
     ${test_driver_sources}
 )
 
+add_executable(test_logging
+  ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
+  logging.cpp
+)
+
 add_executable(test_instance
   ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
   instance.cpp
@@ -91,6 +96,7 @@ add_executable(test_gridfs_specs
 )
 
 target_link_libraries(test_driver mongocxx_mocked ${libmongoc_libraries})
+target_link_libraries(test_logging mongocxx_mocked ${libmongoc_libraries})
 target_link_libraries(test_instance mongocxx_mocked ${libmongoc_libraries})
 target_link_libraries(test_crud_specs mongocxx_mocked ${libmongoc_libraries})
 target_link_libraries(test_gridfs_specs mongocxx_mocked ${libmongoc_libraries})
@@ -100,12 +106,15 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 target_include_directories(test_driver PRIVATE ${libmongoc_include_directories})
+target_include_directories(test_logging PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_instance PRIVATE ${libmongoc_include_directories})
 
 target_compile_definitions(test_driver PRIVATE ${libmongoc_definitions})
+target_compile_definitions(test_logging PRIVATE ${libmongoc_definitions})
 target_compile_definitions(test_instance PRIVATE ${libmongoc_definitions})
 
 add_test(driver test_driver)
+add_test(logging test_logging)
 add_test(instance test_instance)
 add_test(crud_specs test_crud_specs)
 add_test(gridfs_specs test_gridfs_specs)

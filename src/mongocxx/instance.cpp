@@ -122,12 +122,10 @@ class instance::impl {
 instance::instance() : instance(nullptr) {}
 
 instance::instance(std::unique_ptr<logger> logger) {
-    while (true) {
-        instance* expected = nullptr;
-        if (current_instance.compare_exchange_strong(expected, this))
-            break;
-        if (expected != reinterpret_cast<instance*>(&sentinel))
-            throw logic_error{error_code::k_instance_already_exists};
+    instance* expected = nullptr;
+
+    if (!current_instance.compare_exchange_strong(expected, this)) {
+        throw logic_error{error_code::k_cannot_recreate_instance};
     }
 
     _impl = stdx::make_unique<impl>(std::move(logger));
@@ -139,14 +137,20 @@ instance& instance::operator=(instance&&) noexcept = default;
 instance::~instance() {
     current_instance.store(reinterpret_cast<instance*>(&sentinel));
     _impl.reset();
-    current_instance.store(nullptr);
 }
 
 instance& instance::current() {
     if (!current_instance.load()) {
         static instance the_instance;
     }
-    return *current_instance.load();
+
+    instance* curr = current_instance.load();
+
+    if (curr == reinterpret_cast<instance*>(&sentinel)) {
+        throw logic_error{error_code::k_instance_destroyed};
+    }
+
+    return *curr;
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

@@ -49,8 +49,8 @@ class error_category final : public std::error_category {
                 return "invalid attempt to set an unknown read concern level";
             case error_code::k_unknown_write_concern:
                 return "invalid attempt to set an unknown write concern level";
-            case error_code::k_instance_already_exists:
-                return "cannot create more than one mongocxx::instance object";
+            case error_code::k_cannot_recreate_instance:
+                return "cannot create a mongocxx::instance object if one has already been created";
             case error_code::k_server_response_malformed:
                 return "the response from the server was malformed";
             case error_code::k_invalid_uri:
@@ -76,6 +76,8 @@ class error_category final : public std::error_category {
                 return "the requested GridFS file was not found";
             case error_code::k_gridfs_file_corrupted:
                 return "a GridFS file being operated on was discovered to be corrupted";
+            case error_code::k_instance_destroyed:
+                return "the mongocxx instance has been destroyed";
             default:
                 return "unknown mongocxx error";
         }

@@ -26,7 +26,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 ///
 enum class error_code : std::int32_t {
     /// More than one mongocxx::instance has been created.
-    k_instance_already_exists = 1,
+    k_cannot_recreate_instance = 1,
 
     /// A default-constructed or moved-from mongocxx::client object has been used.
     k_invalid_client_object,
@@ -77,6 +77,9 @@ enum class error_code : std::int32_t {
 
     /// A GridFS file being operated on was discovered to be corrupted.
     k_gridfs_file_corrupted,
+
+    /// The mongocxx::instance has been destroyed.
+    k_instance_destroyed,
 
     // Add new constant string message to error_code.cpp as well!
 };
