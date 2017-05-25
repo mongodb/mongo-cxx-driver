@@ -107,7 +107,7 @@ class MONGOCXX_API read_preference {
     ///
     /// @deprecated The constructor with no arguments and the method mode() should be used.
     ///
-    read_preference(read_mode mode);
+    MONGOCXX_DEPRECATED read_preference(read_mode mode);
 
     ///
     /// Constructs a new read_preference with tags.
@@ -121,7 +121,7 @@ class MONGOCXX_API read_preference {
     ///
     /// @deprecated The tags() method should be used instead.
     ///
-    read_preference(read_mode mode, bsoncxx::document::view_or_value tags);
+    MONGOCXX_DEPRECATED read_preference(read_mode mode, bsoncxx::document::view_or_value tags);
 
     ///
     /// Copy constructs a read_preference.

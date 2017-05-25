@@ -17,6 +17,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/instance.hpp>
@@ -53,10 +54,12 @@ TEST_CASE("Hint", "[hint]") {
         }
 
         SECTION("Test for deprecated method to_document()") {
+            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
             document::value filter = builder::stream::document{}
                                      << "a" << 15
                                      << builder::stream::concatenate(index_hint.to_document())
                                      << builder::stream::finalize;
+            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
             document::view view{filter.view()};
             document::element ele{view["$hint"]};
             REQUIRE(ele);
@@ -98,10 +101,12 @@ TEST_CASE("Hint", "[hint]") {
         }
 
         SECTION("Test for deprecated method to_document()") {
+            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
             document::value filter = builder::stream::document{}
                                      << "a" << 12
                                      << builder::stream::concatenate(index_hint.to_document())
                                      << builder::stream::finalize;
+            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
             document::view view{filter.view()};
             document::element ele{view["$hint"]};
             REQUIRE(ele);

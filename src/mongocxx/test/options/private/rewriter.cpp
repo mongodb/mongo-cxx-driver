@@ -18,6 +18,7 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
@@ -25,6 +26,8 @@
 
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
+
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
 
 TEST_CASE("options::rewriter::rewrite_find_modifiers() with $comment", "[find][option]") {
     instance::current();
@@ -277,3 +280,5 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $snapshot", "[find][
                           logic_error);
     }
 }
+
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;

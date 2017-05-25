@@ -14,6 +14,7 @@
 
 #include <mongocxx/options/private/rewriter.hh>
 
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 
@@ -159,6 +160,8 @@ void convert_snapshot_modifier(find* options, bsoncxx::document::element ele) {
 
 }  // namespace
 
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
+
 find rewriter::rewrite_find_modifiers(const find& options) {
     if (!options.modifiers()) {
         return options;
@@ -202,6 +205,8 @@ find rewriter::rewrite_find_modifiers(const find& options) {
 
     return converted_options;
 }
+
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END

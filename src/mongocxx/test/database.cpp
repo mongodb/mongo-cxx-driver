@@ -16,6 +16,7 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
@@ -223,7 +224,8 @@ TEST_CASE("A database", "[database]") {
         database_destroy->interpose([&](mongoc_database_t*) { destroy_called = true; });
 
         database mongo_database(mongo_client["database"]);
-        read_preference preference{read_preference::read_mode::k_secondary_preferred};
+        read_preference preference{};
+        preference.mode(read_preference::read_mode::k_secondary_preferred);
 
         auto deleter = [](mongoc_read_prefs_t* var) { mongoc_read_prefs_destroy(var); };
         std::unique_ptr<mongoc_read_prefs_t, decltype(deleter)> saved_preference(nullptr, deleter);
@@ -394,7 +396,9 @@ TEST_CASE("Database integration tests", "[database]") {
             options::modify_collection opts;
             opts.index(key_pattern.view(), std::chrono::seconds{2});
 
+            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
             database.modify_collection(collection_name, opts);
+            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
 
             auto cursor = database[collection_name].list_indexes();
             for (auto&& index : cursor) {
@@ -422,7 +426,9 @@ TEST_CASE("Database integration tests", "[database]") {
 
             if (test_util::get_max_wire_version(mongo_client) >= 4) {
                 // The server supports document validation.
+                BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
                 REQUIRE_NOTHROW(database.modify_collection(collection_name, opts));
+                BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
 
                 auto cursor = database.list_collections();
                 for (auto&& coll : cursor) {
@@ -432,8 +438,10 @@ TEST_CASE("Database integration tests", "[database]") {
                 }
             } else {
                 // The server does not support document validation.
+                BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
                 REQUIRE_THROWS_AS(database.modify_collection(collection_name, opts),
                                   operation_exception);
+                BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
             }
         }
     }
@@ -453,7 +461,9 @@ TEST_CASE("Database integration tests", "[database]") {
 
         read_concern rc{};
         rc.acknowledge_level(majority);
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
         mongo_client.read_concern(rc);
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
 
         mongocxx::database rc_db = mongo_client[database_name];
 

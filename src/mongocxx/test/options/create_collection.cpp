@@ -18,6 +18,7 @@
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
@@ -45,7 +46,9 @@ TEST_CASE("create_collection accessors/mutators", "[create_collection]") {
         validation_criteria{}.rule(builder::stream::document{} << "a" << 1 << finalize);
 
     CHECK_OPTIONAL_ARGUMENT(cc, capped, true);
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
     CHECK_OPTIONAL_ARGUMENT(cc, auto_index_id, false);
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
     CHECK_OPTIONAL_ARGUMENT(cc, size, 5);
     CHECK_OPTIONAL_ARGUMENT(cc, max, 2);
     CHECK_OPTIONAL_ARGUMENT(cc, collation, collation.view());
@@ -87,7 +90,9 @@ TEST_CASE("create_collection can be exported to a document", "[create_collection
     cc.collation(collation_en_US.view());
     cc.no_padding(true);
 
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
     auto doc = cc.to_document();
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
     document::view doc_view{doc.view()};
 
     // capped field is set to true

@@ -17,6 +17,7 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
@@ -58,7 +59,9 @@ TEST_CASE("create_view can be exported to a document", "[create_view]") {
     cv.collation(collation_en_US.view());
     cv.pipeline(std::move(pipeline{}.limit(1)));
 
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
     auto doc = cv.to_document();
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
     document::view doc_view{doc.view()};
 
     // "collation" field is set correctly.

@@ -151,7 +151,7 @@ class MONGOCXX_API database {
     ///
     /// @return the result of executing the command.
     ///
-    bsoncxx::document::value modify_collection(
+    MONGOCXX_DEPRECATED bsoncxx::document::value modify_collection(
         stdx::string_view name,
         const options::modify_collection& options = options::modify_collection());
 

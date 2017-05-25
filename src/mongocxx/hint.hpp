@@ -81,7 +81,7 @@ class MONGOCXX_API hint {
     ///
     /// @return Hint, as a document.
     ///
-    bsoncxx::document::value to_document() const;
+    MONGOCXX_DEPRECATED bsoncxx::document::value to_document() const;
 
     ///
     /// Returns a types::value representing this hint.
@@ -95,7 +95,7 @@ class MONGOCXX_API hint {
     /// @deprecated
     ///   This method has been deprecated in favor of operator bsoncxx::types::value().
     ///
-    MONGOCXX_INLINE operator bsoncxx::document::value() const;
+    MONGOCXX_DEPRECATED MONGOCXX_INLINE operator bsoncxx::document::value() const;
 
    private:
     stdx::optional<bsoncxx::document::view_or_value> _index_doc;

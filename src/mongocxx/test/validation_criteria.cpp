@@ -16,6 +16,7 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/element.hpp>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/validation_criteria.hpp>
@@ -52,7 +53,9 @@ TEST_CASE("validation_criteria can be exported to a document", "[validation_crit
     criteria.action(validation_criteria::validation_action::k_warn);
     criteria.rule(doc.view());
 
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
     auto criteria_doc = criteria.to_document();
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
     auto criteria_view = criteria_doc.view();
 
     document::element ele;

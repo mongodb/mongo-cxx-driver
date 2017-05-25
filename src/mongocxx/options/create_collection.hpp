@@ -46,7 +46,7 @@ class MONGOCXX_API create_collection {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    create_collection& auto_index_id(bool auto_index_id);
+    MONGOCXX_DEPRECATED create_collection& auto_index_id(bool auto_index_id);
 
     ///
     /// Gets the current auto_index_id setting.
@@ -237,14 +237,14 @@ class MONGOCXX_API create_collection {
     ///
     /// @return Options, as a document.
     ///
-    bsoncxx::document::value to_document() const;
+    MONGOCXX_DEPRECATED bsoncxx::document::value to_document() const;
 
     ///
     /// @deprecated
     ///   This method is deprecated. To determine which options are set on this object, use the
     ///   provided accessors instead.
     ///
-    MONGOCXX_INLINE operator bsoncxx::document::value() const;
+    MONGOCXX_DEPRECATED MONGOCXX_INLINE operator bsoncxx::document::value() const;
 
    private:
     stdx::optional<bool> _auto_index_id;

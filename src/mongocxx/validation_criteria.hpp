@@ -126,14 +126,14 @@ class MONGOCXX_API validation_criteria {
     ///
     /// @return Validation criteria, as a document.
     ///
-    bsoncxx::document::value to_document() const;
+    MONGOCXX_DEPRECATED bsoncxx::document::value to_document() const;
 
     ///
     /// @deprecated
     ///   This method is deprecated. To determine which options are set on this object, use the
     ///   provided accessors instead.
     ///
-    MONGOCXX_INLINE operator bsoncxx::document::value() const;
+    MONGOCXX_DEPRECATED MONGOCXX_INLINE operator bsoncxx::document::value() const;
 
    private:
     stdx::optional<bsoncxx::document::view_or_value> _rule;

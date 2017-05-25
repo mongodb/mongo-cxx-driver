@@ -17,6 +17,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/concatenate.hpp>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -59,7 +60,9 @@ bsoncxx::document::value modify_collection::to_document() const {
     }
 
     if (_validation) {
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
         doc.append(concatenate(_validation->to_document()));
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
     }
 
     return doc.extract();
