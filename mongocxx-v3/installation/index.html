@@ -120,33 +120,6 @@
 
 
   
-
-
-        
-          
-        
-      
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
   
   
   
@@ -169,6 +142,9 @@
       
       
         
+      
+    
+      
       
     
       
@@ -353,35 +329,6 @@
       <span class="menu-arrow fa fa-angle-down"></span>
   </a>
     <ul  class="current">
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/mongo-cxx-driver/mongocxx-v3/">
-        
-        Overview
-    </a>
-  </li>
-
-
-        
         
         
         
@@ -588,6 +535,35 @@
 
         
         
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/mongocxx-v3/">
+        
+        Overview
+    </a>
+  </li>
+
+
+        
+        
     </ul>
   </li>
 
@@ -618,35 +594,6 @@
       <span class="menu-arrow fa fa-angle-right"></span>
   </a>
     <ul >
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/mongo-cxx-driver/legacy-v1/">
-        
-        Overview
-    </a>
-  </li>
-
-
-        
         
         
         
@@ -787,6 +734,35 @@
     <a href="/mongo-cxx-driver/legacy-v1/breaking-changes/">
         
         Breaking changes from 26compat
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/legacy-v1/">
+        
+        Overview
     </a>
   </li>
 
@@ -952,35 +928,6 @@
 
 
     <li class="toctree-l2">
-    <a href="/mongo-cxx-driver/contributing/">
-        
-        Contribution Guidelines
-    </a>
-  </li>
-
-
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
     <a href="/mongo-cxx-driver/contributing/testing-mongocxx/">
         
         Testing the mongocxx driver
@@ -1077,6 +1024,35 @@
 
         
         
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-cxx-driver/contributing/">
+        
+        Contribution Guidelines
+    </a>
+  </li>
+
+
+        
+        
     </ul>
   </li>
 
@@ -1134,11 +1110,60 @@
 
 <ul>
 <li>Any standard Unix platform, or Windows 7 SP1+</li>
-<li>GCC 4.8.2+, Clang 3.5+, Apple Clang 5.1+, or Visual Studio C++ 2015
-Update 1 or later</li>
+<li>A compiler that suports C++11 (gcc, clang, or Visual Studio)</li>
 <li>CMake 3.2 or later</li>
-<li>On Windows, boost 1.56 or later</li>
+<li>boost (optional)</li>
 </ul>
+
+<p>We currently test the driver with the following configurations:</p>
+
+<table>
+<thead>
+<tr>
+<th>&nbsp;</th>
+<th>Linux</th>
+<th>OS X</th>
+<th>Windows</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>clang</td>
+<td>3.8</td>
+<td>7.0 (Apple)</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td>gcc</td>
+<td>4.8, 5.4</td>
+<td>-</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td>VS</td>
+<td>n/a</td>
+<td>n/a</td>
+<td>14 (2015) Update 3</td>
+</tr>
+
+<tr>
+<td>boost</td>
+<td>-</td>
+<td>1.5.3</td>
+<td>1.6.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>Versions older the the ones listed may not work and are not
+supported; use them at your own risk.</p>
+
+<p>Versions newer than the ones listed above should work; if you
+have problems, please file a bug report via
+<a href="https://jira.mongodb.org/browse/CXX/">JIRA</a>.</p>
 
 <h2 id="installation">Installation</h2>
 
@@ -1456,12 +1481,6 @@ settings for a Debug x64 build as an example:</p>
 
 
 <div id="btnv">
-  
-  <div class="pull-left">
-  <a class="navigation prev" href="/mongo-cxx-driver/mongocxx-v3/">
-      <i class="fa fa-long-arrow-left"> </i> Overview
-  </a>
-  </div>
   
   
   <div class="pull-right">
