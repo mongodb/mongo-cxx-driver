@@ -145,6 +145,9 @@ cmake -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_PREFIX_PATH=/your/cdriver/prefix ..
 ```
 
+- *Note*: If you need multiple paths in `CMAKE_PREFIX_PATH`, separate them with
+  a semicolon like this: `-DCMAKE_PREFIX_PATH="/your/cdriver/prefix;/some/other/path"`
+
 - Users building `mongocxx` versions 3.1.x and 3.0.x should specify the
   `libmongoc` installation directory by using the `-DLIBMONGOC_DIR` and
   `-DLIBBSON_DIR` options to `cmake`.  See the following example, which
