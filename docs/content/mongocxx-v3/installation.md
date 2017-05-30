@@ -19,17 +19,17 @@ We currently test the driver with the following configurations:
 
 &nbsp; |   Linux  |    OS X     |      Windows
 -------|----------|-------------|-------------------
- clang |   3.8    | 7.0 (Apple) |        - 
+ clang |   3.8    | 7.0 (Apple) |        -
  gcc   | 4.8, 5.4 |     -       |        -
  VS    |   n/a    |    n/a      | 14 (2015) Update 3
  boost |    -     |   1.5.3     |      1.6.0
 
-With the exception of Visual Studio (for which mongocxx supports version 14
-update 1 and newer), versions older the the ones listed may not work and are not
+Versions older the the ones listed may not work and are not
 supported; use them at your own risk.
 
 Versions newer than the ones listed above should work; if you
-have problems, please file a bug report or JIRA ticket.
+have problems, please file a bug report via
+[JIRA](https://jira.mongodb.org/browse/CXX/).
 
 ## Installation
 
