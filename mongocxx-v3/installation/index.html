@@ -1280,11 +1280,14 @@ driver and the desired installation prefix, respectively):</li>
 </code></pre>
 
 <ul>
-<li>Users building <code>mongocxx</code> versions 3.1.x and 3.0.x should specify the
+<li><p><em>Note</em>: If you need multiple paths in <code>CMAKE_PREFIX_PATH</code>, separate them with
+a semicolon like this: <code>-DCMAKE_PREFIX_PATH=&quot;/your/cdriver/prefix;/some/other/path&quot;</code></p></li>
+
+<li><p>Users building <code>mongocxx</code> versions 3.1.x and 3.0.x should specify the
 <code>libmongoc</code> installation directory by using the <code>-DLIBMONGOC_DIR</code> and
 <code>-DLIBBSON_DIR</code> options to <code>cmake</code>.  See the following example, which
 assumes that both <code>libmongoc</code> and <code>libbson</code> are installed into
-<code>/your/cdriver/prefix</code>:</li>
+<code>/your/cdriver/prefix</code>:</p></li>
 </ul>
 
 <pre><code class="language-sh">cmake -DCMAKE_BUILD_TYPE=Release \
