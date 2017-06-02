@@ -125,11 +125,18 @@ view::const_iterator view::find(stdx::string_view key) const {
         return cend();
     }
 
-    if (!bson_iter_init_find(&iter, &b, key.to_string().data())) {
+    if (key.empty()) {
         return cend();
     }
 
-    return const_iterator(element(iter.raw, iter.len, iter.off));
+    while (bson_iter_next(&iter)) {
+        const char* ikey = bson_iter_key(&iter);
+        if (0 == strncmp(key.data(), ikey, key.size())) {
+            return const_iterator(element(iter.raw, iter.len, iter.off));
+        }
+    }
+
+    return cend();
 }
 
 element view::operator[](stdx::string_view key) const {
