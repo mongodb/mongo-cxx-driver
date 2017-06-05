@@ -135,6 +135,29 @@ class MONGOCXX_API collection {
                      const options::aggregate& options = options::aggregate());
 
     ///
+    /// Sends a write to the server as a bulk write operation.
+    ///
+    /// @param write
+    ///   A model::write.
+    /// @param options
+    ///   Optional arguments, see options::bulk_write.
+    ///
+    /// @return
+    ///   The optional result of the bulk operation execution.
+    ///   If the write concern is unacknowledged, the optional will be
+    ///   disengaged.
+    //
+    /// @exception
+    ///   mongocxx::bulk_write_exception when there are errors processing
+    ///   the writes.
+    ///
+    /// @see mongocxx::bulk_write
+    /// @see https://docs.mongodb.com/master/core/bulk-write-operations/
+    ///
+    MONGOCXX_INLINE stdx::optional<result::bulk_write> write(
+        const model::write& write, const options::bulk_write& options = options::bulk_write());
+
+    ///
     /// Sends a container of writes to the server as a bulk write operation.
     ///
     /// @tparam containter_type
@@ -675,6 +698,16 @@ class MONGOCXX_API collection {
 
     std::unique_ptr<impl> _impl;
 };
+
+MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::write(
+    const model::write& write, const options::bulk_write& options) {
+    class bulk_write writes {
+        options
+    };
+    writes.append(write);
+
+    return bulk_write(writes);
+}
 
 template <typename container_type>
 MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(

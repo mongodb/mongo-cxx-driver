@@ -1596,6 +1596,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // collection from other sections.
             db.run_command(document{} << "getLastError" << 1 << finalize);
         }
+
+        SECTION("write wrapper returns correct result") {
+            auto doc3 = make_document(kvp("foo", 3));
+            auto result = coll.write(model::insert_one{std::move(doc3)});
+            REQUIRE(result);
+            REQUIRE(result->inserted_count() == 1);
+        }
     }
 
     SECTION("distinct works", "[collection]") {
