@@ -379,6 +379,10 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
         b.append(kvp("bypassDocumentValidation", *options.bypass_document_validation()));
     }
 
+    if (options.hint()) {
+        b.append(kvp("hint", options.hint()->to_value()));
+    }
+
     scoped_bson_t options_bson(b.view());
 
     const ::mongoc_read_prefs_t* rp_ptr = NULL;

@@ -19,6 +19,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/hint.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -196,6 +197,31 @@ class MONGOCXX_API aggregate {
     ///
     const stdx::optional<bool>& bypass_document_validation() const;
 
+    ///
+    /// Sets the index to use for this operation.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
+    ///
+    /// @note if the server already has a cached shape for this query, it may
+    /// ignore a hint.
+    ///
+    /// @param index_hint
+    ///   Object representing the index to use.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    aggregate& hint(class hint index_hint);
+
+    ///
+    /// Gets the current hint.
+    ///
+    /// @return The current hint, if one is set.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
+    const stdx::optional<class hint>& hint() const;
+
    private:
     stdx::optional<bool> _allow_disk_use;
     stdx::optional<std::int32_t> _batch_size;
@@ -204,6 +230,7 @@ class MONGOCXX_API aggregate {
     stdx::optional<bool> _use_cursor;
     stdx::optional<class read_preference> _read_preference;
     stdx::optional<bool> _bypass_document_validation;
+    stdx::optional<class hint> _hint;
 };
 
 }  // namespace options

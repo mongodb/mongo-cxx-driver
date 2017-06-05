@@ -16,6 +16,8 @@
 
 #include <chrono>
 
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
@@ -23,6 +25,9 @@
 
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
+
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("aggregate", "[aggregate][option]") {
     instance::current();
@@ -32,6 +37,8 @@ TEST_CASE("aggregate", "[aggregate][option]") {
     auto collation = document{} << "locale"
                                 << "en_US" << finalize;
 
+    bsoncxx::document::view_or_value hint{make_document(kvp("_id", 1))};
+
     CHECK_OPTIONAL_ARGUMENT(agg, allow_disk_use, true);
     CHECK_OPTIONAL_ARGUMENT(agg, batch_size, 500);
     CHECK_OPTIONAL_ARGUMENT(agg, bypass_document_validation, true);
@@ -39,4 +46,5 @@ TEST_CASE("aggregate", "[aggregate][option]") {
     CHECK_OPTIONAL_ARGUMENT(agg, max_time, std::chrono::milliseconds{1000});
     CHECK_OPTIONAL_ARGUMENT(agg, read_preference, read_preference{});
     CHECK_OPTIONAL_ARGUMENT(agg, use_cursor, true);
+    CHECK_OPTIONAL_ARGUMENT(agg, hint, hint);
 }
