@@ -886,6 +886,197 @@ TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
     }
 }
 
+TEST_CASE("basic document builder move semantics work", "[bsoncxx::builder::basic::document]") {
+    using builder::basic::kvp;
+
+    builder::basic::document doc_base;
+    doc_base.append(kvp("a", "A"));
+    doc_base.append(kvp("b", "B"));
+    doc_base.append(kvp("bool", true));
+
+    SECTION("move constructor from the same scope") {
+        builder::basic::document doc;
+        doc.append(kvp("a", "A"));
+        doc.append(kvp("b", "B"));
+        doc.append(kvp("bool", true));
+
+        builder::basic::document doc_same_scope(std::move(doc));
+        viewable_eq_viewable(doc_same_scope, doc_base);
+
+        doc_same_scope.append(kvp("after", true));
+        doc_base.append(kvp("after", true));
+        viewable_eq_viewable(doc_same_scope, doc_base);
+    }
+
+    SECTION("move constructor from outer scope") {
+        builder::basic::document doc;
+        doc.append(kvp("a", "A"));
+        doc.append(kvp("b", "B"));
+        doc.append(kvp("bool", true));
+
+        {
+            builder::basic::document doc_different_scope(std::move(doc));
+            viewable_eq_viewable(doc_different_scope, doc_base);
+
+            doc_different_scope.append(kvp("ds", 12));
+            doc_base.append(kvp("ds", 12));
+            viewable_eq_viewable(doc_different_scope, doc_base);
+        }
+    }
+
+    SECTION("move assignment operator from the same scope") {
+        builder::basic::document doc;
+        doc.append(kvp("a", "A"));
+        doc.append(kvp("b", "B"));
+        doc.append(kvp("bool", true));
+        builder::basic::document doc_from_same_scope = std::move(doc);
+
+        viewable_eq_viewable(doc_from_same_scope, doc_base);
+
+        doc_from_same_scope.append(kvp("next", 12));
+        doc_base.append(kvp("next", 12));
+        viewable_eq_viewable(doc_from_same_scope, doc_base);
+    }
+
+    SECTION("move assignment operator from inner scope") {
+        builder::basic::document doc_from_inner_scope;
+
+        {
+            builder::basic::document doc;
+            doc.append(kvp("a", "A"));
+            doc.append(kvp("b", "B"));
+            doc.append(kvp("bool", true));
+            doc_from_inner_scope = std::move(doc);
+        }
+
+        viewable_eq_viewable(doc_from_inner_scope, doc_base);
+
+        doc_from_inner_scope.append(kvp("next", 12));
+        doc_base.append(kvp("next", 12));
+        viewable_eq_viewable(doc_from_inner_scope, doc_base);
+    }
+
+    SECTION("move assignment operator from outer scope") {
+        builder::basic::document doc;
+        doc.append(kvp("a", "A"));
+        doc.append(kvp("b", "B"));
+        doc.append(kvp("bool", true));
+
+        {
+            builder::basic::document doc_from_outer_scope = std::move(doc);
+            viewable_eq_viewable(doc_from_outer_scope, doc_base);
+
+            doc_from_outer_scope.append(kvp("after", true));
+            doc_base.append(kvp("after", true));
+            viewable_eq_viewable(doc_from_outer_scope, doc_base);
+        }
+    }
+
+    SECTION("move assignment operator repeated calls") {
+        builder::basic::document doc_chain1;
+        doc_chain1.append(kvp("a", "A"));
+        doc_chain1.append(kvp("b", "B"));
+        doc_chain1.append(kvp("bool", true));
+
+        builder::basic::document doc_chain2 = std::move(doc_chain1);
+        builder::basic::document doc_chain3 = std::move(doc_chain2);
+        viewable_eq_viewable(doc_chain3, doc_base);
+    }
+}
+
+TEST_CASE("basic array builder move semantics work", "[bsoncxx::builder::basic::array]") {
+    builder::basic::array arr_base;
+    arr_base.append("a");
+    arr_base.append(false);
+
+    SECTION("move constructor from same scope") {
+        builder::basic::array arr;
+        arr.append("a");
+        arr.append(false);
+
+        builder::basic::array arr_from_same_scope(std::move(arr));
+        viewable_eq_viewable(arr_from_same_scope, arr_base);
+
+        arr_base.append(12);
+        arr_from_same_scope.append(12);
+        viewable_eq_viewable(arr_from_same_scope, arr_base);
+    }
+
+    SECTION("move constructor from outer scope") {
+        builder::basic::array arr;
+        arr.append("a");
+        arr.append(false);
+
+        {
+            builder::basic::array arr_from_outer_scope(std::move(arr));
+            viewable_eq_viewable(arr_from_outer_scope, arr_base);
+
+            arr_from_outer_scope.append("after");
+            arr_base.append("after");
+            viewable_eq_viewable(arr_from_outer_scope, arr_base);
+        }
+    }
+
+    SECTION("move assignment operator from same scope") {
+        builder::basic::array arr;
+        arr.append("a");
+        arr.append(false);
+
+        builder::basic::array arr_from_same_scope = std::move(arr);
+        viewable_eq_viewable(arr_from_same_scope, arr_base);
+
+        arr_base.append(12);
+        arr_from_same_scope.append(12);
+        viewable_eq_viewable(arr_from_same_scope, arr_base);
+    }
+
+    SECTION("move assignment operator from inner scope") {
+        builder::basic::array arr_from_inner_scope;
+
+        {
+            builder::basic::array arr;
+            arr.append("a");
+            arr.append(false);
+            arr_from_inner_scope = std::move(arr);
+        }
+
+        viewable_eq_viewable(arr_from_inner_scope, arr_base);
+
+        arr_from_inner_scope.append(12);
+        arr_base.append(12);
+        viewable_eq_viewable(arr_from_inner_scope, arr_base);
+    }
+
+    SECTION("move assignment operator from outer scope") {
+        builder::basic::array arr;
+        arr.append("a");
+        arr.append(false);
+
+        {
+            builder::basic::array arr_from_outer_scope = std::move(arr);
+            viewable_eq_viewable(arr_from_outer_scope, arr_base);
+
+            arr_from_outer_scope.append("after");
+            arr_base.append("after");
+            viewable_eq_viewable(arr_from_outer_scope, arr_base);
+        }
+    }
+
+    SECTION("move assignment operator repeated calls") {
+        builder::basic::array arr;
+        arr.append("a");
+        arr.append(false);
+
+        builder::basic::array arr_chain_1 = std::move(arr);
+        builder::basic::array arr_chain_2 = std::move(arr_chain_1);
+        viewable_eq_viewable(arr_chain_2, arr_base);
+
+        arr_chain_2.append(12);
+        arr_base.append(12);
+        viewable_eq_viewable(arr_chain_2, arr_base);
+    }
+}
+
 TEST_CASE("basic array builder works", "[bsoncxx::builder::basic]") {
     using namespace builder::basic;
 

@@ -40,6 +40,19 @@ class array : public sub_array {
     BSONCXX_INLINE array() : sub_array(&_core), _core(true) {}
 
     ///
+    /// Move constructor
+    ///
+    BSONCXX_INLINE array(array&& arr) : sub_array(&_core), _core(std::move(arr._core)) {}
+
+    ///
+    /// Move assignment operator
+    ///
+    BSONCXX_INLINE array& operator=(array&& arr) {
+        _core = std::move(arr._core);
+        return *this;
+    }
+
+    ///
     /// @return A view of the BSON array.
     ///
     BSONCXX_INLINE bsoncxx::array::view view() const {

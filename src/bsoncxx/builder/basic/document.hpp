@@ -36,7 +36,23 @@ class array;
 ///
 class document : public sub_document {
    public:
+    ///
+    /// Default constructor
+    ///
     BSONCXX_INLINE document() : sub_document(&_core), _core(false) {}
+
+    ///
+    /// Move constructor
+    ///
+    BSONCXX_INLINE document(document&& doc) : sub_document(&_core), _core(std::move(doc._core)) {}
+
+    ///
+    /// Move assignment operator
+    ///
+    BSONCXX_INLINE document& operator=(document&& doc) {
+        _core = std::move(doc._core);
+        return *this;
+    }
 
     ///
     /// @return A view of the BSON document.
