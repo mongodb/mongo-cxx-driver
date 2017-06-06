@@ -1038,19 +1038,19 @@ void itoa::init() {
         _str = kIndexTable + (2 * 10) + (3 * 90) + (4 * (_val - 100));
         _len = 3;
     } else {
-        int size = sizeof(_buf) - 1;
+        int size = static_cast<std::int32_t>(sizeof(_buf) - 1);
         int i = size;
 
         _buf[i] = '\0';
 
         while (_val > 0) {
             i--;
-            _buf[i] = (_val % 10) + '0';
+            _buf[i] = static_cast<std::int8_t>((_val % 10) + '0');
             _val = _val / 10;
         }
 
         _str = _buf + i;
-        _len = size - i;
+        _len = static_cast<std::uint8_t>(size - i);
     }
 }
 

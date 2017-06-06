@@ -29,7 +29,7 @@ inline std::error_code make_error_code(int code, int) {
 }
 
 inline std::error_code make_error_code(const ::bson_error_t& error) {
-    return make_error_code(error.code, error.domain);
+    return make_error_code(static_cast<int>(error.code), static_cast<int>(error.domain));
 }
 
 template <typename exception_type>

@@ -60,10 +60,11 @@ int main() {
     auto bytes_counter = 0;
 
     auto buffer_size = std::min(file_length, static_cast<std::int64_t>(downloader.chunk_size()));
-    auto buffer = make_unique<std::uint8_t[]>(buffer_size);
+    auto buffer = make_unique<std::uint8_t[]>(static_cast<std::size_t>(buffer_size));
 
-    while (auto length_read = downloader.read(buffer.get(), buffer_size)) {
-        bytes_counter += length_read;
+    while (auto length_read =
+               downloader.read(buffer.get(), static_cast<std::size_t>(buffer_size))) {
+        bytes_counter += static_cast<std::int32_t>(length_read);
 
         // Do something with the contents of buffer.
     }

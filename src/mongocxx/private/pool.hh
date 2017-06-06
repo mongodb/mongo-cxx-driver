@@ -38,6 +38,6 @@ class pool::impl {
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
-};  // namespace mongocxx
+}  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

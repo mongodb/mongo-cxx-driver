@@ -35,7 +35,7 @@ class uploader::impl {
          collection chunks,
          std::int32_t chunk_size,
          stdx::optional<bsoncxx::document::value> metadata)
-        : buffer{stdx::make_unique<std::uint8_t[]>(chunk_size)},
+        : buffer{stdx::make_unique<std::uint8_t[]>(static_cast<size_t>(chunk_size))},
           buffer_off{0},
           chunks{std::move(chunks)},
           chunk_size{chunk_size},

@@ -122,7 +122,7 @@ class guard {
 template <typename T>
 guard<T> make_guard(T&& t) {
     return guard<T>{std::forward<T>(t)};
-};
+}
 
 }  // namespace
 
@@ -468,7 +468,7 @@ stdx::optional<result::replace_one> collection::replace_one(view_or_value filter
     }
 
     return stdx::optional<result::replace_one>(result::replace_one(std::move(result.value())));
-};
+}
 
 stdx::optional<result::update> collection::update_many(view_or_value filter,
                                                        view_or_value update,
@@ -622,7 +622,8 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
     }
 
     if (options.max_time()) {
-        libmongoc::find_and_modify_opts_set_max_time_ms(opts, options.max_time()->count());
+        libmongoc::find_and_modify_opts_set_max_time_ms(
+            opts, static_cast<std::uint32_t>(options.max_time()->count()));
     }
 
     libmongoc::find_and_modify_opts_set_flags(opts,
@@ -667,7 +668,8 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
     }
 
     if (options.max_time()) {
-        libmongoc::find_and_modify_opts_set_max_time_ms(opts, options.max_time()->count());
+        libmongoc::find_and_modify_opts_set_max_time_ms(
+            opts, static_cast<std::uint32_t>(options.max_time()->count()));
     }
 
     libmongoc::find_and_modify_opts_set_flags(opts,
@@ -697,7 +699,8 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
     }
 
     if (options.max_time()) {
-        libmongoc::find_and_modify_opts_set_max_time_ms(opts, options.max_time()->count());
+        libmongoc::find_and_modify_opts_set_max_time_ms(
+            opts, static_cast<std::uint32_t>(options.max_time()->count()));
     }
 
     libmongoc::find_and_modify_opts_set_flags(opts, flags);

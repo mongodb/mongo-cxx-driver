@@ -134,7 +134,7 @@ uploader bucket::open_upload_stream_with_id(bsoncxx::types::value id,
                     _get_impl().chunks,
                     chunk_size_bytes,
                     std::move(options.metadata())};
-};
+}
 
 result::gridfs::upload bucket::upload_from_stream(stdx::string_view filename,
                                                   std::istream* source,
@@ -151,11 +151,13 @@ void bucket::upload_from_stream_with_id(bsoncxx::types::value id,
                                         const options::gridfs::upload& options) {
     uploader upload_stream = open_upload_stream_with_id(id, filename, options);
     std::int32_t chunk_size = upload_stream.chunk_size();
-    std::unique_ptr<std::uint8_t[]> buffer = stdx::make_unique<std::uint8_t[]>(chunk_size);
+    std::unique_ptr<std::uint8_t[]> buffer =
+        stdx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
 
     do {
-        source->read(reinterpret_cast<char*>(buffer.get()), static_cast<std::size_t>(chunk_size));
-        upload_stream.write(buffer.get(), source->gcount());
+        source->read(reinterpret_cast<char*>(buffer.get()),
+                     static_cast<std::streamsize>(chunk_size));
+        upload_stream.write(buffer.get(), static_cast<std::size_t>(source->gcount()));
     } while (*source);
 
     // `(source->fail() && !source->eof())` is our check for EOF, which we don't treat as an error.
@@ -213,12 +215,14 @@ downloader bucket::open_download_stream(bsoncxx::types::value id) {
 void bucket::download_to_stream(bsoncxx::types::value id, std::ostream* destination) {
     downloader download_stream = open_download_stream(id);
     std::int32_t chunk_size = download_stream.chunk_size();
-    std::unique_ptr<std::uint8_t[]> buffer = stdx::make_unique<std::uint8_t[]>(chunk_size);
+    std::unique_ptr<std::uint8_t[]> buffer =
+        stdx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
     std::size_t bytes_read;
 
     while ((bytes_read =
                 download_stream.read(buffer.get(), static_cast<std::size_t>(chunk_size))) != 0) {
-        destination->write(reinterpret_cast<char*>(buffer.get()), bytes_read);
+        destination->write(reinterpret_cast<char*>(buffer.get()),
+                           static_cast<std::streamsize>(bytes_read));
     }
 
     download_stream.close();

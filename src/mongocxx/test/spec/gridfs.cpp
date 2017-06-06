@@ -103,7 +103,7 @@ bsoncxx::stdx::optional<test_util::item_t> transform_hex(test_util::item_t pair,
     auto length = std::distance(view.cbegin(), view.cend());
 
     return make_optional(std::make_pair(bsoncxx::stdx::optional<bsoncxx::stdx::string_view>("data"),
-                                        view[length - 1].get_value()));
+                                        view[static_cast<std::uint32_t>(length - 1)].get_value()));
 }
 
 // The GridFS spec specifies the expected binary data in the form of { $hex: "<hexadecimal string>"
@@ -214,7 +214,7 @@ void test_download(database db,
     std::unique_ptr<std::uint8_t[]> actual(nullptr);
 
     if (length > 0) {
-        actual = bsoncxx::stdx::make_unique<std::uint8_t[]>(length);
+        actual = bsoncxx::stdx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(length));
     }
 
     if (assert_doc["error"]) {
@@ -229,7 +229,8 @@ void test_download(database db,
 
         // Otherwise, an error should occur when reading from the stream.
         gridfs::downloader downloader = bucket.open_download_stream(id);
-        REQUIRE_THROWS_AS(downloader.read(actual.get(), length), std::exception);
+        REQUIRE_THROWS_AS(downloader.read(actual.get(), static_cast<std::size_t>(length)),
+                          std::exception);
 
         return;
     }
@@ -239,8 +240,8 @@ void test_download(database db,
 
     gridfs::downloader downloader = bucket.open_download_stream(id);
 
-    std::int64_t actual_size = downloader.read(actual.get(), length);
-    REQUIRE(actual_size == length);
+    std::size_t actual_size = downloader.read(actual.get(), static_cast<std::size_t>(length));
+    REQUIRE(static_cast<std::int64_t>(actual_size) == length);
 
     // The GridFS spec specifies the expected binary data in the form of { $hex: "<hexadecimal
     // string>" }, which needs to be converted to an array of bytes.
@@ -248,9 +249,9 @@ void test_download(database db,
     std::string hex = result["$hex"].get_utf8().value.to_string();
     std::basic_string<std::uint8_t> expected = test_util::convert_hex_string_to_bytes(hex);
 
-    REQUIRE(actual_size == static_cast<std::int64_t>(expected.size()));
+    REQUIRE(actual_size == expected.size());
 
-    for (std::int64_t i = 0; i < actual_size; i++) {
+    for (std::size_t i = 0; i < actual_size; i++) {
         REQUIRE(actual.get()[i] == expected[i]);
     }
 }
@@ -269,8 +270,7 @@ void test_upload(database db,
     options::gridfs::upload upload_options;
 
     if (options["chunkSizeBytes"]) {
-        upload_options.chunk_size_bytes(
-            static_cast<std::size_t>(options["chunkSizeBytes"].get_int32().value));
+        upload_options.chunk_size_bytes(options["chunkSizeBytes"].get_int32().value);
     }
 
     if (options["metadata"]) {

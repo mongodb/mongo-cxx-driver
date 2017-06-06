@@ -135,9 +135,9 @@ BSONCXX_INLINE int ntop(std::uint8_t const* src,
         input[2] = *src++;
         srclength -= 3;
 
-        output[0] = input[0] >> 2;
-        output[1] = ((input[0] & 0x03) << 4) + (input[1] >> 4);
-        output[2] = ((input[1] & 0x0f) << 2) + (input[2] >> 6);
+        output[0] = static_cast<std::uint8_t>(input[0] >> 2);
+        output[1] = static_cast<std::uint8_t>(((input[0] & 0x03) << 4) + (input[1] >> 4));
+        output[2] = static_cast<std::uint8_t>(((input[1] & 0x0f) << 2) + (input[2] >> 6));
         output[3] = input[2] & 0x3f;
         BSONCXX_B64_ASSERT(output[0] < 64);
         BSONCXX_B64_ASSERT(output[1] < 64);
@@ -161,9 +161,9 @@ BSONCXX_INLINE int ntop(std::uint8_t const* src,
         for (i = 0; i < srclength; i++) {
             input[i] = *src++;
         }
-        output[0] = input[0] >> 2;
-        output[1] = ((input[0] & 0x03) << 4) + (input[1] >> 4);
-        output[2] = ((input[1] & 0x0f) << 2) + (input[2] >> 6);
+        output[0] = static_cast<std::uint8_t>(input[0] >> 2);
+        output[1] = static_cast<std::uint8_t>(((input[0] & 0x03) << 4) + (input[1] >> 4));
+        output[2] = static_cast<std::uint8_t>(((input[1] & 0x0f) << 2) + (input[2] >> 6));
         BSONCXX_B64_ASSERT(output[0] < 64);
         BSONCXX_B64_ASSERT(output[1] < 64);
         BSONCXX_B64_ASSERT(output[2] < 64);

@@ -119,12 +119,12 @@ class core::impl {
         }
     }
 
-    void push_back_document(const char* key, std::size_t len) {
+    void push_back_document(const char* key, std::int32_t len) {
         _depth++;
         _stack.emplace_back(back(), key, len, false);
     }
 
-    void push_back_array(const char* key, std::size_t len) {
+    void push_back_array(const char* key, std::int32_t len) {
         _depth++;
         _stack.emplace_back(back(), key, len, true);
     }
@@ -138,7 +138,8 @@ class core::impl {
     // to be appended to start a new key/value pair.
     stdx::string_view next_key() {
         if (is_array()) {
-            _itoa_key = _stack.empty() ? _n++ : _stack.back().n++;
+            _itoa_key = _stack.empty() ? static_cast<std::uint32_t>(_n++)
+                                       : static_cast<std::uint32_t>(_stack.back().n++);
             _user_key_view = stdx::string_view{_itoa_key.c_str(), _itoa_key.length()};
         } else if (!_has_user_key) {
             throw bsoncxx::exception{error_code::k_need_key};
@@ -200,7 +201,7 @@ class core::impl {
 
    private:
     struct frame {
-        frame(bson_t* parent, const char* key, std::size_t len, bool is_array)
+        frame(bson_t* parent, const char* key, std::int32_t len, bool is_array)
             : n(0), is_array(is_array), parent(parent) {
             if (is_array) {
                 bson_append_array_begin(parent, key, len, &bson);
@@ -269,7 +270,8 @@ core& core::key_owned(std::string key) {
 core& core::append(const types::b_double& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_double(_impl->back(), key.data(), key.length(), value.value);
+    bson_append_double(
+        _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.value);
 
     return *this;
 }
@@ -277,8 +279,11 @@ core& core::append(const types::b_double& value) {
 core& core::append(const types::b_utf8& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_utf8(
-        _impl->back(), key.data(), key.length(), value.value.data(), value.value.length());
+    bson_append_utf8(_impl->back(),
+                     key.data(),
+                     static_cast<std::int32_t>(key.length()),
+                     value.value.data(),
+                     static_cast<std::int32_t>(value.value.length()));
 
     return *this;
 }
@@ -288,7 +293,7 @@ core& core::append(const types::b_document& value) {
     bson_t bson;
     bson_init_static(&bson, value.value.data(), value.value.length());
 
-    bson_append_document(_impl->back(), key.data(), key.length(), &bson);
+    bson_append_document(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()), &bson);
 
     return *this;
 }
@@ -298,7 +303,7 @@ core& core::append(const types::b_array& value) {
     bson_t bson;
     bson_init_static(&bson, value.value.data(), value.value.length());
 
-    bson_append_array(_impl->back(), key.data(), key.length(), &bson);
+    bson_append_array(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()), &bson);
 
     return *this;
 }
@@ -308,7 +313,7 @@ core& core::append(const types::b_binary& value) {
 
     bson_append_binary(_impl->back(),
                        key.data(),
-                       key.length(),
+                       static_cast<std::int32_t>(key.length()),
                        static_cast<bson_subtype_t>(value.sub_type),
                        value.bytes,
                        value.size);
@@ -319,7 +324,7 @@ core& core::append(const types::b_binary& value) {
 core& core::append(const types::b_undefined&) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_undefined(_impl->back(), key.data(), key.length());
+    bson_append_undefined(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()));
 
     return *this;
 }
@@ -329,7 +334,7 @@ core& core::append(const types::b_oid& value) {
     bson_oid_t oid;
     std::memcpy(&oid.bytes, value.value.bytes(), sizeof(oid.bytes));
 
-    bson_append_oid(_impl->back(), key.data(), key.length(), &oid);
+    bson_append_oid(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()), &oid);
 
     return *this;
 }
@@ -337,7 +342,8 @@ core& core::append(const types::b_oid& value) {
 core& core::append(const types::b_bool& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_bool(_impl->back(), key.data(), key.length(), value.value);
+    bson_append_bool(
+        _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.value);
 
     return *this;
 }
@@ -345,7 +351,8 @@ core& core::append(const types::b_bool& value) {
 core& core::append(const types::b_date& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_date_time(_impl->back(), key.data(), key.length(), value.to_int64());
+    bson_append_date_time(
+        _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.to_int64());
 
     return *this;
 }
@@ -353,7 +360,7 @@ core& core::append(const types::b_date& value) {
 core& core::append(const types::b_null&) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_null(_impl->back(), key.data(), key.length());
+    bson_append_null(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()));
 
     return *this;
 }
@@ -363,7 +370,7 @@ core& core::append(const types::b_regex& value) {
 
     bson_append_regex(_impl->back(),
                       key.data(),
-                      key.length(),
+                      static_cast<std::int32_t>(key.length()),
                       value.regex.to_string().data(),
                       value.options.to_string().data());
 
@@ -376,8 +383,11 @@ core& core::append(const types::b_dbpointer& value) {
     bson_oid_t oid;
     std::memcpy(&oid.bytes, value.value.bytes(), sizeof(oid.bytes));
 
-    bson_append_dbpointer(
-        _impl->back(), key.data(), key.length(), value.collection.to_string().data(), &oid);
+    bson_append_dbpointer(_impl->back(),
+                          key.data(),
+                          static_cast<std::int32_t>(key.length()),
+                          value.collection.to_string().data(),
+                          &oid);
 
     return *this;
 }
@@ -385,7 +395,10 @@ core& core::append(const types::b_dbpointer& value) {
 core& core::append(const types::b_code& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_code(_impl->back(), key.data(), key.length(), value.code.to_string().data());
+    bson_append_code(_impl->back(),
+                     key.data(),
+                     static_cast<std::int32_t>(key.length()),
+                     value.code.to_string().data());
 
     return *this;
 }
@@ -393,8 +406,11 @@ core& core::append(const types::b_code& value) {
 core& core::append(const types::b_symbol& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_symbol(
-        _impl->back(), key.data(), key.length(), value.symbol.data(), value.symbol.length());
+    bson_append_symbol(_impl->back(),
+                       key.data(),
+                       static_cast<std::int32_t>(key.length()),
+                       value.symbol.data(),
+                       static_cast<std::int32_t>(value.symbol.length()));
 
     return *this;
 }
@@ -405,8 +421,11 @@ core& core::append(const types::b_codewscope& value) {
     bson_t bson;
     bson_init_static(&bson, value.scope.data(), value.scope.length());
 
-    bson_append_code_with_scope(
-        _impl->back(), key.data(), key.length(), value.code.to_string().data(), &bson);
+    bson_append_code_with_scope(_impl->back(),
+                                key.data(),
+                                static_cast<std::int32_t>(key.length()),
+                                value.code.to_string().data(),
+                                &bson);
 
     return *this;
 }
@@ -414,7 +433,8 @@ core& core::append(const types::b_codewscope& value) {
 core& core::append(const types::b_int32& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_int32(_impl->back(), key.data(), key.length(), value.value);
+    bson_append_int32(
+        _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.value);
 
     return *this;
 }
@@ -422,8 +442,11 @@ core& core::append(const types::b_int32& value) {
 core& core::append(const types::b_timestamp& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_timestamp(
-        _impl->back(), key.data(), key.length(), value.increment, value.timestamp);
+    bson_append_timestamp(_impl->back(),
+                          key.data(),
+                          static_cast<std::int32_t>(key.length()),
+                          value.increment,
+                          value.timestamp);
 
     return *this;
 }
@@ -431,7 +454,8 @@ core& core::append(const types::b_timestamp& value) {
 core& core::append(const types::b_int64& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_int64(_impl->back(), key.data(), key.length(), value.value);
+    bson_append_int64(
+        _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.value);
 
     return *this;
 }
@@ -442,7 +466,8 @@ core& core::append(const types::b_decimal128& value) {
     d128.high = value.value.high();
     d128.low = value.value.low();
 
-    bson_append_decimal128(_impl->back(), key.data(), key.length(), &d128);
+    bson_append_decimal128(
+        _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), &d128);
 
     return *this;
 }
@@ -450,7 +475,7 @@ core& core::append(const types::b_decimal128& value) {
 core& core::append(const types::b_minkey&) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_minkey(_impl->back(), key.data(), key.length());
+    bson_append_minkey(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()));
 
     return *this;
 }
@@ -458,7 +483,7 @@ core& core::append(const types::b_minkey&) {
 core& core::append(const types::b_maxkey&) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_maxkey(_impl->back(), key.data(), key.length());
+    bson_append_maxkey(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()));
 
     return *this;
 }
@@ -526,7 +551,7 @@ core& core::append(bool value) {
 core& core::open_document() {
     stdx::string_view key = _impl->next_key();
 
-    _impl->push_back_document(key.data(), key.length());
+    _impl->push_back_document(key.data(), static_cast<std::int32_t>(key.length()));
 
     return *this;
 }
@@ -534,7 +559,7 @@ core& core::open_document() {
 core& core::open_array() {
     stdx::string_view key = _impl->next_key();
 
-    _impl->push_back_array(key.data(), key.length());
+    _impl->push_back_array(key.data(), static_cast<std::int32_t>(key.length()));
 
     return *this;
 }
@@ -550,7 +575,8 @@ core& core::concatenate(const bsoncxx::document::view& view) {
         while (bson_iter_next(&iter)) {
             stdx::string_view key = _impl->next_key();
 
-            bson_append_iter(_impl->back(), key.data(), key.length(), &iter);
+            bson_append_iter(
+                _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), &iter);
         }
 
     } else {

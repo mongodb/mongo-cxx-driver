@@ -654,7 +654,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto cursor = coll.find({});
 
-        unsigned seen = 0;
+        std::int32_t seen = 0;
         for (auto&& x : cursor) {
             seen |= x["x"].get_int32();
         }
@@ -754,7 +754,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto cursor = coll.find({});
 
-        unsigned seen = 0;
+        std::int32_t seen = 0;
         for (auto&& x : cursor) {
             seen |= x["x"].get_int32();
         }

@@ -28,7 +28,7 @@ namespace {
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
-BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 
 TEST_CASE("options::rewriter::rewrite_find_modifiers() with $comment", "[find][option]") {
     instance::current();
@@ -282,6 +282,6 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $snapshot", "[find][
     }
 }
 
-BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
 }  // namespace

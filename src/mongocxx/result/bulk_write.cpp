@@ -33,7 +33,7 @@ std::int32_t bulk_write::matched_count() const {
 
 std::int32_t bulk_write::modified_count() const {
     return view()["nModified"].get_int32();
-};
+}
 
 std::int32_t bulk_write::deleted_count() const {
     return view()["nRemoved"].get_int32();

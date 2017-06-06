@@ -59,7 +59,7 @@ void insert_many_builder::operator()(const bsoncxx::document::view& doc) {
         _writes.append(model::insert_one{doc});
     }
     _inserted_ids.append(id_doc.view());
-};
+}
 
 stdx::optional<result::insert_many> insert_many_builder::insert(collection* col) const {
     auto result = col->bulk_write(_writes);
@@ -68,7 +68,7 @@ stdx::optional<result::insert_many> insert_many_builder::insert(collection* col)
     }
     return stdx::optional<result::insert_many>{
         result::insert_many{std::move(result.value()), _inserted_ids.view()}};
-};
+}
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

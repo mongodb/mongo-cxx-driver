@@ -102,7 +102,7 @@ result::gridfs::upload uploader::close() {
 
     std::int64_t bytes_uploaded = static_cast<std::int64_t>(_get_impl().chunks_written) *
                                   static_cast<std::int64_t>(_get_impl().chunk_size);
-    std::int64_t leftover = _get_impl().buffer_off;
+    std::int64_t leftover = static_cast<std::int64_t>(_get_impl().buffer_off);
 
     finish_chunk();
     flush_chunks();
@@ -175,7 +175,8 @@ void uploader::finish_chunk() {
                                   static_cast<std::uint32_t>(bytes_in_chunk),
                                   _get_impl().buffer.get()};
 
-    md5_append(&_get_impl().md5, _get_impl().buffer.get(), bytes_in_chunk);
+    md5_append(
+        &_get_impl().md5, _get_impl().buffer.get(), static_cast<std::int32_t>(bytes_in_chunk));
 
     chunk.append(kvp("data", data));
     _get_impl().chunks_collection_documents.push_back(chunk.extract());
@@ -183,7 +184,7 @@ void uploader::finish_chunk() {
     // To reduce the number of calls to the server, chunks are sent in batches rather than each one
     // being sent immediately upon being written.
     if (_get_impl().chunks_collection_documents.size() >=
-        chunks_collection_documents_max_length(_get_impl().chunk_size)) {
+        chunks_collection_documents_max_length(static_cast<std::size_t>(_get_impl().chunk_size))) {
         flush_chunks();
     }
 

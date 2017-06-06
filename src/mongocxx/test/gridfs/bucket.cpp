@@ -90,7 +90,7 @@ void validate_gridfs_file(database db,
     }
 
     auto num_chunks_div =
-        std::lldiv(expected_contents.size(), static_cast<std::size_t>(expected_chunk_size));
+        std::lldiv(static_cast<std::int64_t>(expected_contents.size()), expected_chunk_size);
 
     if (num_chunks_div.rem) {
         ++num_chunks_div.quot;
@@ -156,7 +156,7 @@ std::vector<std::uint8_t> manual_gridfs_initialize(database db,
 
     // Populate the vector with arbitrary values.
     for (std::int64_t i = 0; i < length; ++i) {
-        bytes.push_back((i + 200) % 256);
+        bytes.push_back(static_cast<std::uint8_t>((i + 200) % 256));
     }
 
     std::vector<bsoncxx::document::value> chunks;
@@ -527,11 +527,11 @@ TEST_CASE("mongocxx::gridfs::downloader::read with arbitrary sizes", "[gridfs::d
     }
 
     SECTION("read_size = file_length") {
-        read_size = file_length;
+        read_size = static_cast<std::int32_t>(file_length);
     }
 
     SECTION("read_size > file_length") {
-        read_size = file_length + 1;
+        read_size = static_cast<std::int32_t>(file_length + 1);
     }
 
     bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
@@ -539,12 +539,13 @@ TEST_CASE("mongocxx::gridfs::downloader::read with arbitrary sizes", "[gridfs::d
 
     // Allocate a buffer large enough to fit the data read from the downloader.
     std::vector<std::uint8_t> buffer;
-    buffer.reserve(read_size);
+    buffer.reserve(static_cast<std::size_t>(read_size));
 
     std::size_t total_bytes_read = 0;
     auto downloader = bucket.open_download_stream(bsoncxx::types::value{id});
 
-    while (std::size_t bytes_read = downloader.read(buffer.data(), read_size)) {
+    while (std::size_t bytes_read =
+               downloader.read(buffer.data(), static_cast<std::size_t>(read_size))) {
         std::vector<std::uint8_t> expected_bytes{expected.data() + total_bytes_read,
                                                  expected.data() + total_bytes_read + bytes_read};
         std::vector<std::uint8_t> actual_bytes{buffer.data(), buffer.data() + bytes_read};
@@ -628,14 +629,14 @@ TEST_CASE("mongocxx::gridfs::uploader::write with arbitrary sizes", "[gridfs::up
     }
 
     SECTION("write_size = file_length") {
-        write_size = file_length;
+        write_size = static_cast<std::int32_t>(file_length);
     }
 
     std::vector<std::uint8_t> bytes;
 
     // Populate the vector with arbitrary values.
     for (std::size_t i = 0; i < static_cast<std::size_t>(file_length); ++i) {
-        bytes.push_back((i + 200) % 256);
+        bytes.push_back(static_cast<std::uint8_t>((i + 200) % 256));
     }
 
     std::size_t bytes_written = 0;
@@ -670,7 +671,7 @@ TEST_CASE("gridfs upload/download round trip", "[gridfs::uploader] [gridfs::down
 
     // Initialize array with arbitrary values.
     for (std::uint8_t i = 0; i < 100; ++i) {
-        uploaded_bytes[i] = 200 - i;
+        uploaded_bytes[i] = static_cast<std::uint8_t>(200 - i);
     }
 
     std::array<std::uint8_t, 100> downloaded_bytes;
@@ -703,7 +704,9 @@ TEST_CASE("gridfs::bucket::open_upload_stream_with_id works", "[gridfs::bucket]"
     std::vector<std::uint8_t> bytes = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
     auto uploader = bucket.open_upload_stream_with_id(
-        id, "file", options::gridfs::upload{}.chunk_size_bytes(chunk_size));
+        id,
+        "file",
+        options::gridfs::upload{}.chunk_size_bytes(static_cast<std::int32_t>(chunk_size)));
 
     for (std::size_t i = 0; i < bytes.size(); i += chunk_size) {
         uploader.write(bytes.data() + i, std::min(chunk_size, bytes.size() - i));
@@ -953,30 +956,33 @@ TEST_CASE("gridfs download large file", "[gridfs::bucket]") {
     std::int64_t length = static_cast<std::size_t>(std::numeric_limits<std::uint32_t>::max()) + 2;
 
     auto num_chunks_div = std::lldiv(length, chunk_size);
-    std::int32_t num_chunks = num_chunks_div.quot;
+    std::int32_t num_chunks = static_cast<std::int32_t>(num_chunks_div.quot);
 
     if (num_chunks_div.rem) {
         ++num_chunks;
     }
 
     bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
-    manual_gridfs_initialize(db,
-                             num_chunks,
-                             static_cast<std::int32_t>(chunk_size),
-                             id,
-                             [chunk_size, num_chunks, length](std::int32_t chunk_num) {
-                                 std::int32_t current_chunk_size = chunk_size;
+    manual_gridfs_initialize(
+        db,
+        num_chunks,
+        static_cast<std::int32_t>(chunk_size),
+        id,
+        [chunk_size, num_chunks, length](std::int32_t chunk_num) {
+            std::int32_t current_chunk_size = static_cast<std::int32_t>(chunk_size);
 
-                                 if (chunk_num == num_chunks - 1) {
-                                     current_chunk_size = length - chunk_num * chunk_size;
-                                 }
+            if (chunk_num == num_chunks - 1) {
+                current_chunk_size =
+                    static_cast<std::int32_t>(static_cast<std::uint64_t>(length) -
+                                              static_cast<std::uint32_t>(chunk_num) * chunk_size);
+            }
 
-                                 std::vector<std::uint8_t> bytes;
-                                 bytes.assign(current_chunk_size,
-                                              static_cast<std::uint8_t>(chunk_num % 200));
+            std::vector<std::uint8_t> bytes;
+            bytes.assign(static_cast<std::size_t>(current_chunk_size),
+                         static_cast<std::uint8_t>(chunk_num % 200));
 
-                                 return bytes;
-                             });
+            return bytes;
+        });
 
     auto downloader = bucket.open_download_stream(id);
 
