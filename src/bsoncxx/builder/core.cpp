@@ -22,6 +22,7 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/private/itoa.hh>
 #include <bsoncxx/private/stack.hh>
+#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
@@ -240,7 +241,10 @@ class core::impl {
     bool _has_user_key;
 };
 
-core::core(bool is_array) : _impl(new impl(is_array)) {}
+core::core(bool is_array) {
+    _impl = stdx::make_unique<impl>(is_array);
+}
+
 core::core(core&&) noexcept = default;
 core& core::operator=(core&&) noexcept = default;
 core::~core() = default;

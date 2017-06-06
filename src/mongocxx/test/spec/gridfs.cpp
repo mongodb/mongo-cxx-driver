@@ -27,6 +27,7 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/oid.hpp>
+#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types/value.hpp>
@@ -209,7 +210,11 @@ void test_download(database db,
 
     // Allocate the space needed to store the result.
     std::int64_t length = get_length_of_gridfs_file(bucket, id);
-    std::unique_ptr<std::uint8_t[]> actual(length < 0 ? nullptr : new uint8_t[length]);
+    std::unique_ptr<std::uint8_t[]> actual(nullptr);
+
+    if (length > 0) {
+        actual = bsoncxx::stdx::make_unique<std::uint8_t[]>(length);
+    }
 
     if (assert_doc["error"]) {
         bsoncxx::stdx::string_view error = assert_doc["error"].get_utf8().value;
