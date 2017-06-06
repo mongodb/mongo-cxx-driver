@@ -35,8 +35,8 @@ namespace libbson {
 // driver. It is an RAII style class that will destroy an initialized bson_t when destructed.
 //
 // Libmongoc's bson_destroy will not be called on the bson_t upon destruction unless either
-// init(), flag_init(), or init_from_static() are called during a scoped_bson_t's lifetime
-// after which the internal bson_t is considered initialized.
+// init(), flag_init(), init_from_static(), or bson_for_init() are called during a scoped_bson_t's
+// lifetime after which the internal bson_t is considered initialized.
 //
 // Initialization of a scoped bson_t depends on how it is expected to be used.
 //
@@ -114,6 +114,11 @@ class MONGOCXX_TEST_API scoped_bson_t {
     // first.
     //
     bson_t* bson();
+
+    //
+    // First calls flag_init() then returns a pointer to the wrapped internal bson_t structure.
+    //
+    bson_t* bson_for_init();
 
     bsoncxx::document::view view();
     bsoncxx::document::value steal();

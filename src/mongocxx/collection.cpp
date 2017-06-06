@@ -84,12 +84,11 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
     const ::mongoc_find_and_modify_opts_t* opts) {
     mongocxx::libbson::scoped_bson_t bson_filter{filter};
     mongocxx::libbson::scoped_bson_t reply;
-    reply.flag_init();
 
     ::bson_error_t error;
 
     bool r = mongocxx::libmongoc::collection_find_and_modify_with_opts(
-        collection, bson_filter.bson(), opts, reply.bson(), &error);
+        collection, bson_filter.bson(), opts, reply.bson_for_init(), &error);
 
     if (!r) {
         if (!reply.view().empty()) {
@@ -197,11 +196,10 @@ stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write
     libmongoc::bulk_operation_set_collection(b, get_collection_name(_get_impl().collection_t));
 
     scoped_bson_t reply;
-    reply.flag_init();
 
     bson_error_t error;
 
-    if (!libmongoc::bulk_operation_execute(b, reply.bson(), &error)) {
+    if (!libmongoc::bulk_operation_execute(b, reply.bson_for_init(), &error)) {
         throw_exception<bulk_write_exception>(reply.steal(), error);
     }
 
@@ -914,7 +912,6 @@ cursor collection::distinct(bsoncxx::string::view_or_value field_name,
     // Send the command and validate the reply.
     //
     scoped_bson_t reply;
-    reply.flag_init();
     bson_error_t error;
     scoped_bson_t command_bson{command_builder.extract()};
     scoped_bson_t opts_bson{opts_builder.extract()};
@@ -923,7 +920,7 @@ cursor collection::distinct(bsoncxx::string::view_or_value field_name,
                                                                command_bson.bson(),
                                                                rp_ptr,
                                                                opts_bson.bson(),
-                                                               reply.bson(),
+                                                               reply.bson_for_init(),
                                                                &error);
 
     if (!result) {

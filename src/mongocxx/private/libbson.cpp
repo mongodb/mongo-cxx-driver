@@ -81,6 +81,11 @@ bson_t* scoped_bson_t::bson() {
     return _is_initialized ? &_bson : nullptr;
 }
 
+bson_t* scoped_bson_t::bson_for_init() {
+    flag_init();
+    return &_bson;
+}
+
 bsoncxx::document::view scoped_bson_t::view() {
     // if we were initialized with a view_or_value just use that view
     if (_doc) {

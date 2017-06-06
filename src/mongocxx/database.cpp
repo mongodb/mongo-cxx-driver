@@ -100,9 +100,8 @@ bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value 
     libbson::scoped_bson_t reply_bson;
     bson_error_t error;
 
-    reply_bson.flag_init();
     auto result = libmongoc::database_command_simple(
-        _get_impl().database_t, command_bson.bson(), NULL, reply_bson.bson(), &error);
+        _get_impl().database_t, command_bson.bson(), NULL, reply_bson.bson_for_init(), &error);
 
     if (!result) {
         throw_exception<operation_exception>(reply_bson.steal(), error);
