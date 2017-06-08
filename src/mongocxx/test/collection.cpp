@@ -19,6 +19,7 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
@@ -1713,7 +1714,30 @@ TEST_CASE("read_concern is inherited from parent", "[collection]") {
     }
 }
 
+void find_index_and_validate(collection& coll,
+                             stdx::string_view index_name,
+                             const std::function<void(bsoncxx::document::view)>& validate =
+                                 [](bsoncxx::document::view) {}) {
+    auto cursor = coll.list_indexes();
+
+    for (auto&& index : cursor) {
+        auto name_ele = index["name"];
+        REQUIRE(name_ele);
+        REQUIRE(name_ele.type() == bsoncxx::type::k_utf8);
+
+        if (name_ele.get_utf8().value != index_name) {
+            continue;
+        }
+
+        validate(index);
+        return;
+    }
+    REQUIRE(false);  // index of given name not found
+}
+
 TEST_CASE("create_index tests", "[collection]") {
+    using namespace bsoncxx;
+
     instance::current();
 
     client mongodb_client{uri{}};
@@ -1723,55 +1747,125 @@ TEST_CASE("create_index tests", "[collection]") {
     coll.insert_one({});  // Ensure that the collection exists.
 
     SECTION("returns index name") {
-        bsoncxx::document::value index = bsoncxx::builder::stream::document{}
-                                         << "a" << 1 << bsoncxx::builder::stream::finalize;
+        bsoncxx::document::value index = make_document(kvp("a", 1));
 
         std::string indexName{"myName"};
         options::index options{};
         options.name(indexName);
 
         auto response = coll.create_index(index.view(), options);
-        REQUIRE(response.view()["name"].get_utf8().value == stdx::string_view{indexName});
+        REQUIRE(response.view()["name"].get_utf8().value == mongocxx::stdx::string_view{indexName});
 
-        bsoncxx::document::value index2 = bsoncxx::builder::stream::document{}
-                                          << "b" << 1 << "c" << -1
-                                          << bsoncxx::builder::stream::finalize;
+        find_index_and_validate(coll, indexName);
+
+        bsoncxx::document::value index2 = make_document(kvp("b", 1), kvp("c", -1));
 
         auto response2 = coll.create_index(index2.view(), options::index{});
-        REQUIRE(response2.view()["name"].get_utf8().value == stdx::string_view{"b_1_c_-1"});
+        REQUIRE(response2.view()["name"].get_utf8().value ==
+                mongocxx::stdx::string_view{"b_1_c_-1"});
+
+        find_index_and_validate(coll, "b_1_c_-1");
     }
 
     SECTION("with collation") {
-        bsoncxx::document::value index = bsoncxx::builder::stream::document{}
-                                         << "a" << 1 << bsoncxx::builder::stream::finalize;
+        bsoncxx::document::value keys = make_document(kvp("a", 1));
+        auto collation = make_document(kvp("locale", "en_US"));
 
-        auto collation = document{} << "locale"
-                                    << "en_US" << finalize;
         options::index options{};
         options.collation(collation.view());
 
         if (test_util::supports_collation(mongodb_client)) {
-            coll.create_index(index.view(), options);
+            coll.create_index(keys.view(), options);
 
-            auto cursor = coll.list_indexes();
-            bool found = false;
-            for (auto&& doc : cursor) {
-                auto name_ele = doc["name"];
-                REQUIRE(name_ele);
-                REQUIRE(name_ele.type() == bsoncxx::type::k_utf8);
-                if (name_ele.get_utf8().value != stdx::string_view{"a_1"}) {
-                    continue;
-                }
-                found = true;
-                auto locale_ele = doc["collation"]["locale"];
+            auto validate = [](bsoncxx::document::view index) {
+                bsoncxx::types::value locale{types::b_utf8{"en_US"}};
+                auto locale_ele = index["collation"]["locale"];
                 REQUIRE(locale_ele);
-                REQUIRE(locale_ele.type() == bsoncxx::type::k_utf8);
-                REQUIRE(locale_ele.get_utf8() == collation.view()["locale"].get_utf8());
-            }
-            REQUIRE(found);
+                REQUIRE(locale_ele.type() == type::k_utf8);
+                REQUIRE((locale_ele.get_utf8() == locale));
+            };
+
+            find_index_and_validate(coll, "a_1", validate);
         } else {
-            REQUIRE_THROWS_AS(coll.create_index(index.view(), options), operation_exception);
+            REQUIRE_THROWS_AS(coll.create_index(keys.view(), options), operation_exception);
         }
+    }
+
+    SECTION("fails") {
+        bsoncxx::document::value keys1 = make_document(kvp("a", 1));
+        bsoncxx::document::value keys2 = make_document(kvp("a", -1));
+
+        options::index options{};
+        options.name("a");
+
+        REQUIRE_NOTHROW(coll.create_index(keys1.view(), options));
+        REQUIRE_THROWS_AS(coll.create_index(keys2.view(), options), operation_exception);
+    }
+
+    SECTION("succeeds with options") {
+        mongocxx::stdx::string_view index_name{"succeeds_with_options"};
+
+        bsoncxx::document::value keys = make_document(kvp("cccc", 1));
+
+        options::index options{};
+        options.unique(true);
+        options.expire_after(std::chrono::seconds(500));
+        options.name(index_name);
+
+        REQUIRE_NOTHROW(coll.create_index(keys.view(), options));
+
+        bool unique = options.unique().value();
+        auto validate = [unique](bsoncxx::document::view index) {
+            auto expire_after = index["expireAfter"];
+            REQUIRE(expire_after);
+            REQUIRE(expire_after.type() == type::k_int32);
+            REQUIRE(expire_after.get_int32().value == 500);
+
+            auto unique_ele = index["unique"];
+            REQUIRE(unique_ele);
+            REQUIRE(unique_ele.type() == type::k_bool);
+            REQUIRE(unique_ele.get_bool() == unique);
+        };
+
+        find_index_and_validate(coll, index_name, validate);
+    }
+
+    SECTION("fails with options") {
+        bsoncxx::document::value keys = make_document(kvp("c", 1));
+        options::index options{};
+
+        auto expire_after =
+            std::chrono::seconds(static_cast<int64_t>(std::numeric_limits<int32_t>::max()) + 1);
+        options.expire_after(expire_after);
+        REQUIRE_THROWS_AS(coll.create_index(keys.view(), options), logic_error);
+
+        expire_after = std::chrono::seconds(-1);
+        options.expire_after(expire_after);
+        REQUIRE_THROWS_AS(coll.create_index(keys.view(), options), logic_error);
+    }
+
+    SECTION("succeeds with storage engine options") {
+        mongocxx::stdx::string_view index_name{"storage_options_test"};
+        bsoncxx::document::value keys = make_document(kvp("c", 1));
+
+        options::index options{};
+        options.name(index_name);
+
+        std::unique_ptr<options::index::wiredtiger_storage_options> wt_options =
+            bsoncxx::stdx::make_unique<options::index::wiredtiger_storage_options>();
+        wt_options->config_string("block_allocation=first");
+
+        REQUIRE_NOTHROW(options.storage_options(std::move(wt_options)));
+        REQUIRE_NOTHROW(coll.create_index(keys.view(), options));
+
+        auto validate = [](bsoncxx::document::view index) {
+            auto config_string_ele = index["storageEngine"]["wiredTiger"]["configString"];
+            REQUIRE(config_string_ele);
+            REQUIRE(config_string_ele.type() == type::k_utf8);
+            REQUIRE(config_string_ele.get_utf8() == types::b_utf8{"block_allocation=first"});
+        };
+
+        find_index_and_validate(coll, index_name, validate);
     }
 }
 
