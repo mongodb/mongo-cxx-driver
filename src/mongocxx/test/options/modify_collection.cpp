@@ -23,6 +23,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/modify_collection.hpp>
 
+namespace {
 using namespace bsoncxx;
 using namespace mongocxx;
 
@@ -88,3 +89,4 @@ TEST_CASE("modify_collection", "[modify_collection]") {
         REQUIRE(ttl_seconds.get_int64() == 10);
     }
 }
+}  // namespace

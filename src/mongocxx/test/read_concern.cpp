@@ -20,6 +20,7 @@
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/stdx.hpp>
 
+namespace {
 using namespace mongocxx;
 
 TEST_CASE("valid read concern settings", "[read_concern]") {
@@ -141,3 +142,4 @@ TEST_CASE("read_concern inequality operator works", "[read_concern]") {
     rc_a.acknowledge_level(read_concern::level::k_local);
     REQUIRE(rc_a != rc_b);
 }
+}  // namespace

@@ -22,6 +22,7 @@
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/validate.hpp>
 
+namespace {
 using namespace bsoncxx;
 
 using bsoncxx::builder::basic::kvp;
@@ -32,7 +33,6 @@ using bsoncxx::builder::basic::make_document;
 // Libbson has a much more complete suite of tests that covers various corrupt BSON
 // inputs.
 
-namespace {
 // polymorphic lambdas would be nice here.
 template <typename T>
 bool is_engaged(const stdx::optional<T>& opt) {
@@ -43,7 +43,6 @@ template <typename T>
 bool is_disengaged(const stdx::optional<T>& opt) {
     return opt == stdx::nullopt;
 }
-}  // namespace
 
 TEST_CASE("validate accepts bson we produce", "[bsoncxx::validate]") {
     auto doc = make_document(kvp("hello", "world"));
@@ -131,3 +130,4 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
         REQUIRE(invalid_offset == std::size_t{9});
     }
 }
+}  // namespace

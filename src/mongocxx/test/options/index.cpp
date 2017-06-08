@@ -21,6 +21,7 @@
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/stdx.hpp>
 
+namespace {
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
@@ -54,3 +55,4 @@ TEST_CASE("index", "[index][option]") {
     CHECK_OPTIONAL_ARGUMENT(idx, partial_filter_expression, partial_filter_expression.view());
     REQUIRE_NOTHROW(idx.storage_options(std::move(storage)));
 }
+}  // namespace

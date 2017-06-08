@@ -19,6 +19,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/model/delete_one.hpp>
 
+namespace {
 using namespace bsoncxx::builder::stream;
 
 TEST_CASE("delete_one model tests", "[delete_one][model]") {
@@ -36,3 +37,4 @@ TEST_CASE("delete_one model tests", "[delete_one][model]") {
 
     CHECK_OPTIONAL_ARGUMENT(del_one, collation, collation.view());
 }
+}  // namespace

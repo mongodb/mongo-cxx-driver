@@ -20,6 +20,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/result/insert_one.hpp>
 
+namespace {
 TEST_CASE("insert_one", "[insert_one][result]") {
     using namespace bsoncxx;
 
@@ -37,3 +38,4 @@ TEST_CASE("insert_one", "[insert_one][result]") {
         REQUIRE(insert_one.inserted_id() == oid);
     }
 }
+}  // namespace

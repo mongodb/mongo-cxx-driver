@@ -20,6 +20,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/result/delete.hpp>
 
+namespace {
 TEST_CASE("delete", "[delete][result]") {
     mongocxx::instance::current();
 
@@ -34,3 +35,4 @@ TEST_CASE("delete", "[delete][result]") {
         REQUIRE(delete_result.deleted_count() == 1);
     }
 }
+}  // namespace

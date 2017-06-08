@@ -42,6 +42,7 @@
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/stdx.hpp>
 
+namespace {
 using namespace mongocxx;
 using namespace bsoncxx;
 
@@ -908,3 +909,4 @@ TEST_CASE("Collection", "[collection]") {
         REQUIRE(fam_result->view() == return_doc.view()["value"].get_document());
     }
 }
+}  // namespace

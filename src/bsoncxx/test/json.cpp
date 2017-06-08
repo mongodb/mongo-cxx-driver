@@ -20,14 +20,13 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/test_util/catch.hh>
 
+namespace {
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 
-namespace {
 constexpr auto k_invalid_json = R"({])";
 constexpr auto k_valid_json = R"({ "a" : 1, "b" : 2.0 })";
-}
 
 TEST_CASE("invalid json throws") {
     using namespace bsoncxx;
@@ -71,3 +70,4 @@ TEST_CASE("CXX-941 is resolved") {
     REQUIRE(output ==
             "{ \"obj_name\" : \"{\\\"id1\\\":\\\"val1\\\", \\\"id2\\\":\\\"val2\\\"}\" }");
 }
+}  // namespace

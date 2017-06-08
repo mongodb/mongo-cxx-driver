@@ -17,6 +17,7 @@
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
 
+namespace {
 TEST_CASE("time_point is converted to b_date and back", "[bsoncxx::types::b_date]") {
     using bsoncxx::types::b_date;
     using std::chrono::system_clock;
@@ -44,3 +45,4 @@ TEST_CASE("time_point is converted to b_date consistently", "[bsoncxx::types::b_
 
     REQUIRE(d1.value == d2.value);
 }
+}  // namespace

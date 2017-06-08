@@ -30,6 +30,7 @@
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/validation_criteria.hpp>
 
+namespace {
 using namespace mongocxx;
 
 using bsoncxx::builder::stream::close_document;
@@ -525,3 +526,4 @@ TEST_CASE("Database integration tests", "[database]") {
         }
     }
 }
+}  // namespace

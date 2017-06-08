@@ -23,6 +23,7 @@
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/read_preference.hpp>
 
+namespace {
 using namespace bsoncxx;
 using namespace mongocxx;
 
@@ -168,3 +169,4 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
 
     REQUIRE(called);
 }
+}  // namespace

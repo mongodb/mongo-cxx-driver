@@ -22,6 +22,7 @@
 #include <mongocxx/hint.hpp>
 #include <mongocxx/instance.hpp>
 
+namespace {
 using namespace mongocxx;
 using namespace bsoncxx;
 
@@ -127,3 +128,4 @@ TEST_CASE("Hint", "[hint]") {
         }
     }
 }
+}  // namespace

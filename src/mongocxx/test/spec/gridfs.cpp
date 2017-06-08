@@ -42,6 +42,7 @@
 #include <mongocxx/result/gridfs/upload.hpp>
 #include <mongocxx/test_util/client_helpers.hh>
 
+namespace {
 using namespace bsoncxx;
 using namespace mongocxx;
 
@@ -525,3 +526,4 @@ TEST_CASE("GridFS spec automated tests", "[gridfs_spec]") {
         run_gridfs_tests_in_file(path + "/" + test_file, &client);
     }
 }
+}  // namespace

@@ -26,9 +26,11 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
 
-void bson_eq_stream(const bson_t* bson, const bsoncxx::builder::stream::document& builder) {
-    using namespace bsoncxx;
+namespace {
 
+using namespace bsoncxx;
+
+void bson_eq_stream(const bson_t* bson, const bsoncxx::builder::stream::document& builder) {
     bsoncxx::document::view expected(bson_get_data(bson), bson->len);
     bsoncxx::document::view test(builder.view());
 
@@ -40,8 +42,6 @@ void bson_eq_stream(const bson_t* bson, const bsoncxx::builder::stream::document
 
 template <typename T, typename U>
 void viewable_eq_viewable(const T& stream, const U& basic) {
-    using namespace bsoncxx;
-
     bsoncxx::document::view expected(stream.view());
     bsoncxx::document::view test(basic.view());
 
@@ -50,8 +50,6 @@ void viewable_eq_viewable(const T& stream, const U& basic) {
     REQUIRE(expected.length() == test.length());
     REQUIRE(std::memcmp(expected.data(), test.data(), expected.length()) == 0);
 }
-
-using namespace bsoncxx;
 
 TEST_CASE("builder appends utf8", "[bsoncxx::builder::stream]") {
     bson_t expected;
@@ -769,8 +767,6 @@ TEST_CASE("core view/extract methods throw when called with wrong top-level type
 }
 
 TEST_CASE("core builder throws on consecutive keys", "[bsoncxx::builder::core]") {
-    using namespace bsoncxx;
-
     SECTION("appending key_view twice") {
         builder::core builder{false};
         REQUIRE_NOTHROW(builder.key_view("foo"));
@@ -797,8 +793,6 @@ TEST_CASE("core builder throws on consecutive keys", "[bsoncxx::builder::core]")
 }
 
 TEST_CASE("core method chaining to build document works", "[bsoncxx::builder::core]") {
-    using namespace bsoncxx;
-
     auto full_doc = builder::core{false}
                         .key_owned("foo")
                         .append(1)
@@ -813,8 +807,6 @@ TEST_CASE("core method chaining to build document works", "[bsoncxx::builder::co
 }
 
 TEST_CASE("core method chaining to build array works", "[bsoncxx::builder::core]") {
-    using namespace bsoncxx;
-
     auto array = builder::core{true}.append("foo").append(1).append(true).extract_array();
     auto array_view = array.view();
 
@@ -1190,8 +1182,6 @@ TEST_CASE("array::view works", "[bsoncxx::builder::array]") {
 }
 
 TEST_CASE("builder::basic::make_document works", "[bsoncxx::builder::basic::make_document]") {
-    using namespace bsoncxx;
-
     auto full_doc = builder::basic::make_document(builder::basic::kvp("foo", 1),
                                                   builder::basic::kvp("bar", true));
 
@@ -1202,8 +1192,6 @@ TEST_CASE("builder::basic::make_document works", "[bsoncxx::builder::basic::make
 }
 
 TEST_CASE("builder::basic::make_array works", "[bsoncxx::builder::basic::make_array]") {
-    using namespace bsoncxx;
-
     auto array = builder::basic::make_array("foo", 1, true);
     auto array_view = array.view();
 
@@ -1239,11 +1227,10 @@ TEST_CASE("stream in an array::view works", "[bsoncxx::builder::stream]") {
 }
 
 TEST_CASE("builder::stream::document throws on consecutive keys", "[bsoncxx::builder::core]") {
-    using namespace bsoncxx;
-
     builder::stream::document doc;
     REQUIRE_NOTHROW(doc << "foo"
                         << "bar");
     REQUIRE_NOTHROW(doc << "far");
     REQUIRE_THROWS_AS(doc << "boo", bsoncxx::exception);
 }
+}  // namespace

@@ -52,6 +52,7 @@
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/test_util/client_helpers.hh>
 
+namespace {
 using namespace bsoncxx;
 using namespace mongocxx;
 
@@ -766,3 +767,4 @@ TEST_CASE("CRUD spec automated tests", "[crud_spec]") {
         run_crud_tests_in_file(path + "/" + test_file, &client);
     }
 }
+}  // namespace

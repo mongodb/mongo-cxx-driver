@@ -20,6 +20,7 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
+namespace {
 using namespace bsoncxx;
 using namespace mongocxx;
 using namespace mongocxx::libbson;
@@ -115,3 +116,4 @@ TEST_CASE("scoped_bson_t", "[private]") {
         }
     }
 }
+}  // namespace

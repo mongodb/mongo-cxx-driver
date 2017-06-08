@@ -24,6 +24,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
 
+namespace {
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
@@ -66,3 +67,4 @@ TEST_CASE("find", "[find][option]") {
     CHECK_OPTIONAL_ARGUMENT(find_opts, snapshot, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, sort, sort.view());
 }
+}  // namespace

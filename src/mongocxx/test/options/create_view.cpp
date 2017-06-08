@@ -24,6 +24,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/create_view.hpp>
 
+namespace {
 using namespace bsoncxx;
 using namespace mongocxx;
 
@@ -76,3 +77,4 @@ TEST_CASE("create_view can be exported to a document", "[create_view]") {
     REQUIRE(pipeline_ele.type() == type::k_array);
     REQUIRE(pipeline_ele.get_array().value == pipeline{}.limit(1).view_array());
 }
+}  // namespace

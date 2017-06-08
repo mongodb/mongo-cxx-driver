@@ -17,6 +17,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/write_concern.hpp>
 
+namespace {
 using namespace mongocxx;
 
 TEST_CASE("a default write_concern", "[write_concern]") {
@@ -217,3 +218,4 @@ TEST_CASE("write_concern inequality operator works", "[write_concern]") {
     wc_a.journal(true);
     REQUIRE(wc_a != wc_b);
 }
+}  // namespace

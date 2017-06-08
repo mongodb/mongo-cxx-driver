@@ -23,6 +23,7 @@
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/uri.hpp>
 
+namespace {
 using namespace mongocxx;
 
 TEST_CASE("A default constructed client is false-ish", "[client]") {
@@ -232,3 +233,4 @@ TEST_CASE("A client can create a named database object", "[client]") {
     database obtained_database = mongo_client[name];
     REQUIRE(obtained_database.name() == name);
 }
+}  // namespace

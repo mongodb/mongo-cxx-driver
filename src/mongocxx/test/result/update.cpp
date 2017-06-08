@@ -19,6 +19,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/result/update.hpp>
 
+namespace {
 TEST_CASE("update", "[update][result]") {
     mongocxx::instance::current();
 
@@ -35,3 +36,4 @@ TEST_CASE("update", "[update][result]") {
         REQUIRE(update.modified_count() == 1);
     }
 }
+}  // namespace

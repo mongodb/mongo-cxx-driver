@@ -18,6 +18,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/pool.hpp>
 
+namespace {
 using namespace mongocxx;
 
 TEST_CASE("pool", "[pool][option]") {
@@ -33,3 +34,4 @@ TEST_CASE("pool", "[pool][option]") {
         REQUIRE(pool_opts.client_opts().ssl_opts());
     }
 }
+}  // namespace

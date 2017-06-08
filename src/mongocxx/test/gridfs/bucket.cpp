@@ -40,6 +40,7 @@
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 
+namespace {
 using namespace mongocxx;
 
 using bsoncxx::builder::basic::kvp;
@@ -999,3 +1000,4 @@ TEST_CASE("gridfs download large file", "[gridfs::bucket]") {
 
     REQUIRE(total_bytes_read == length);
 }
+}  // namespace

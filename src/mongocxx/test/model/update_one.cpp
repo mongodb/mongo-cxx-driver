@@ -19,6 +19,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/model/update_one.hpp>
 
+namespace {
 using namespace bsoncxx::builder::stream;
 
 TEST_CASE("update_one model tests", "[update_one][model]") {
@@ -39,3 +40,4 @@ TEST_CASE("update_one model tests", "[update_one][model]") {
     CHECK_OPTIONAL_ARGUMENT(uo, upsert, true);
     CHECK_OPTIONAL_ARGUMENT(uo, collation, collation.view());
 }
+}  // namespace

@@ -22,6 +22,7 @@
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/write_concern.hpp>
 
+namespace {
 using namespace mongocxx;
 
 TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
@@ -50,7 +51,6 @@ TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
         REQUIRE(!ordered_value);
     }
 }
-
 TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_write]") {
     instance::current();
 
@@ -62,7 +62,6 @@ TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_wr
     { bulk_write bw; }
     REQUIRE(destruct_called);
 }
-
 class insert_functor {
    public:
     insert_functor(bool* called, bsoncxx::document::view document)
@@ -339,3 +338,4 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
         REQUIRE(called);
     }
 }
+}  // namespace

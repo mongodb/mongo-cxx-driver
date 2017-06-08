@@ -19,6 +19,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/model/replace_one.hpp>
 
+namespace {
 using namespace bsoncxx::builder::stream;
 
 TEST_CASE("replace_one model tests", "[replace_one][model]") {
@@ -39,3 +40,4 @@ TEST_CASE("replace_one model tests", "[replace_one][model]") {
     CHECK_OPTIONAL_ARGUMENT(ro, upsert, true);
     CHECK_OPTIONAL_ARGUMENT(ro, collation, collation.view());
 }
+}  // namespace

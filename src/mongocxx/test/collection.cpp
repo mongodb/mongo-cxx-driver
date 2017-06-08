@@ -36,6 +36,7 @@
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
 
+namespace {
 using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
 using namespace bsoncxx::builder::stream;
@@ -1903,3 +1904,4 @@ TEST_CASE("regressions", "CXX-986") {
     REQUIRE_THROWS(client.database("irrelevant")["irrelevant"].find_one_and_update(
         document{} << "irrelevant" << 1 << finalize, document{} << "irrelevant" << 2 << finalize));
 }
+}  // namespace

@@ -16,6 +16,7 @@
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/read_preference.hpp>
 
+namespace {
 using namespace mongocxx;
 
 TEST_CASE("libmongoc::conversions::read_mode_t_from_read_mode works", "[libmongoc::conversions]") {
@@ -44,3 +45,4 @@ TEST_CASE("libmongoc::conversions::read_mode_from_read_mode_t works", "[libmongo
     REQUIRE(libmongoc::conversions::read_mode_from_read_mode_t(MONGOC_READ_NEAREST) ==
             read_preference::read_mode::k_nearest);
 }
+}  // namespace

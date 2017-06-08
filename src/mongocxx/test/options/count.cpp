@@ -21,6 +21,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/count.hpp>
 
+namespace {
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
@@ -40,3 +41,4 @@ TEST_CASE("count", "[count][option]") {
     CHECK_OPTIONAL_ARGUMENT(cnt, read_preference, read_preference{});
     CHECK_OPTIONAL_ARGUMENT(cnt, skip, 3);
 }
+}  // namespace

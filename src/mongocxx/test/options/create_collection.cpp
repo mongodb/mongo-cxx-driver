@@ -25,6 +25,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/create_collection.hpp>
 
+namespace {
 using namespace bsoncxx;
 using namespace mongocxx;
 
@@ -147,3 +148,4 @@ TEST_CASE("create_collection can be exported to a document", "[create_collection
     document::element validationAction{doc_view["validationAction"]};
     REQUIRE(!validationAction);
 }
+}  // namespace

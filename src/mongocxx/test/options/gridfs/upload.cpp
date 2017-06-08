@@ -23,6 +23,7 @@
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/write_concern.hpp>
 
+namespace {
 using namespace bsoncxx;
 using namespace mongocxx;
 
@@ -38,3 +39,4 @@ TEST_CASE("options::gridfs::upload accessors/mutators", "[options::gridfs::uploa
     CHECK_OPTIONAL_ARGUMENT(upload_options, chunk_size_bytes, 100);
     CHECK_OPTIONAL_ARGUMENT(upload_options, metadata, document.view());
 }
+}  // namespace

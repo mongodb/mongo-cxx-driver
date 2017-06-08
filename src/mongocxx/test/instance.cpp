@@ -16,6 +16,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 
+namespace {
 using namespace mongocxx;
 
 instance* inst;
@@ -40,3 +41,4 @@ TEST_CASE("an instance cannot be created after one has been destroyed") {
 TEST_CASE("instance::current throws if an instance has already been destroyed") {
     REQUIRE_THROWS_AS(instance::current(), logic_error);
 }
+}  // namespace

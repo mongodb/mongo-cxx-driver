@@ -21,6 +21,7 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/test_util/catch.hh>
 
+namespace {
 using namespace bsoncxx;
 
 using bsoncxx::builder::basic::kvp;
@@ -316,3 +317,4 @@ TEST_CASE("array view begin/end/find give expected types", "[bsoncxx]") {
         REQUIRE(iter == ary.begin());
     }
 }
+}  // namespace

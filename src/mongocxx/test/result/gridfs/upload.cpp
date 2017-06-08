@@ -22,6 +22,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/result/gridfs/upload.hpp>
 
+namespace {
 using namespace bsoncxx;
 using namespace mongocxx;
 
@@ -58,3 +59,4 @@ TEST_CASE("result::gridfs::upload owns id", "[result::gridfs::upload]") {
     // value for the id.
     REQUIRE(res.id().get_utf8().value == stdx::string_view{bar});
 }
+}  // namespace

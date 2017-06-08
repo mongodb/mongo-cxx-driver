@@ -21,6 +21,7 @@
 #include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/test_util/catch.hh>
 
+namespace {
 using namespace bsoncxx;
 
 using bsoncxx::to_json;
@@ -261,3 +262,4 @@ TEST_CASE("string::document::view_or_value", "[bsoncxx::string::view_or_value]")
         }
     }
 }
+}  // namespace

@@ -24,6 +24,7 @@
 #include <mongocxx/pool.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
+namespace {
 using namespace mongocxx;
 
 TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
@@ -183,3 +184,4 @@ TEST_CASE(
         REQUIRE(!client);
     }
 }
+}  // namespace

@@ -21,6 +21,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find_one_and_replace.hpp>
 
+namespace {
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
@@ -43,3 +44,4 @@ TEST_CASE("find_one_and_replace", "[find_one_and_replace][option]") {
     CHECK_OPTIONAL_ARGUMENT(opts, sort, sort.view());
     CHECK_OPTIONAL_ARGUMENT(opts, upsert, true);
 }
+}  // namespace

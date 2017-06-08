@@ -23,6 +23,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/aggregate.hpp>
 
+namespace {
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
@@ -48,3 +49,4 @@ TEST_CASE("aggregate", "[aggregate][option]") {
     CHECK_OPTIONAL_ARGUMENT(agg, use_cursor, true);
     CHECK_OPTIONAL_ARGUMENT(agg, hint, hint);
 }
+}  // namespace

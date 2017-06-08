@@ -19,6 +19,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/uri.hpp>
 
+namespace {
 TEST_CASE("URI", "[uri]") {
     SECTION("Default URI") {
         REQUIRE_NOTHROW(mongocxx::uri{});
@@ -71,3 +72,4 @@ TEST_CASE("URI", "[uri]") {
         }
     }
 }
+}  // namespace

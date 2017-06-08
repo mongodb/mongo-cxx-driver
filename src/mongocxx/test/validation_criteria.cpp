@@ -21,6 +21,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/validation_criteria.hpp>
 
+namespace {
 using namespace mongocxx;
 using namespace bsoncxx;
 
@@ -75,3 +76,4 @@ TEST_CASE("validation_criteria can be exported to a document", "[validation_crit
     REQUIRE(ele.type() == type::k_document);
     REQUIRE(ele.get_document().value == doc);
 }
+}  // namespace

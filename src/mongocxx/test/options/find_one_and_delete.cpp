@@ -21,6 +21,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find_one_and_delete.hpp>
 
+namespace {
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
@@ -40,3 +41,4 @@ TEST_CASE("find_one_and_delete", "[find_one_and_delete][option]") {
     CHECK_OPTIONAL_ARGUMENT(opts, projection, projection.view());
     CHECK_OPTIONAL_ARGUMENT(opts, sort, sort.view());
 }
+}  // namespace

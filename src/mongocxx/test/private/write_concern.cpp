@@ -18,6 +18,7 @@
 #include <mongocxx/private/write_concern.hh>
 #include <mongocxx/write_concern.hpp>
 
+namespace {
 using namespace mongocxx;
 
 TEST_CASE("creation of write_concern passes universal parameters to c-driver's methods",
@@ -151,3 +152,4 @@ TEST_CASE("write_concern is called with a tag", "[write_concern][base][c-driver]
         REQUIRE(wtag_value == expected_wtag);
     }
 }
+}  // namespace

@@ -19,6 +19,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/model/insert_one.hpp>
 
+namespace {
 using namespace bsoncxx::builder::stream;
 
 TEST_CASE("insert_one model tests", "[insert_one][model]") {
@@ -32,3 +33,4 @@ TEST_CASE("insert_one model tests", "[insert_one][model]") {
         REQUIRE(io.document().view() == doc.view());
     }
 }
+}  // namespace

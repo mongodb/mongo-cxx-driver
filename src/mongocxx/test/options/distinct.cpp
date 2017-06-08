@@ -21,6 +21,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/distinct.hpp>
 
+namespace {
 using namespace bsoncxx::builder::stream;
 using namespace mongocxx;
 
@@ -36,3 +37,4 @@ TEST_CASE("distinct", "[distinct][option]") {
     CHECK_OPTIONAL_ARGUMENT(dist, max_time, std::chrono::milliseconds{1000});
     CHECK_OPTIONAL_ARGUMENT(dist, read_preference, read_preference{});
 }
+}  // namespace

@@ -19,6 +19,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/result/replace_one.hpp>
 
+namespace {
 TEST_CASE("replace_one", "[replace_one][result]") {
     mongocxx::instance::current();
 
@@ -35,3 +36,4 @@ TEST_CASE("replace_one", "[replace_one][result]") {
         REQUIRE(replace_one.modified_count() == 1);
     }
 }
+}  // namespace
