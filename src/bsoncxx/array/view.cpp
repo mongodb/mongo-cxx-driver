@@ -18,9 +18,8 @@
 #include <cstring>
 #include <tuple>
 
-#include <bson.h>
-
 #include <bsoncxx/private/itoa.hh>
+#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>

@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/exception/error_code.hpp>
-#include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/oid.hpp>
 
 #include <cstring>
 
-#include <bson.h>
+#include <bsoncxx/exception/error_code.hpp>
+#include <bsoncxx/exception/exception.hpp>
+#include <bsoncxx/private/libbson.hh>
 
 #include <bsoncxx/config/private/prelude.hh>
 

@@ -19,8 +19,7 @@
 #include <string>
 #include <tuple>
 
-#include <bson.h>
-
+#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/exception/private/error_category.hh>
 #include <mongocxx/exception/private/mongoc_error.hh>

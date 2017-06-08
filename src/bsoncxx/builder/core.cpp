@@ -16,11 +16,10 @@
 
 #include <cstring>
 
-#include <bson.h>
-
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/private/itoa.hh>
+#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/private/stack.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>

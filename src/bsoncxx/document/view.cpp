@@ -17,9 +17,8 @@
 #include <cstdlib>
 #include <cstring>
 
-#include <bson.h>
-
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>

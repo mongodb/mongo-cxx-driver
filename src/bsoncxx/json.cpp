@@ -20,12 +20,11 @@
 #include <sstream>
 #include <vector>
 
-#include <bson.h>
-
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/private/b64_ntop.hh>
+#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>

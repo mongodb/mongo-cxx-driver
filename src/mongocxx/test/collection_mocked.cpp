@@ -17,13 +17,12 @@
 #include <chrono>
 #include <string>
 
-#include <bson.h>
-
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/helpers.hh>
+#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/test_util/catch.hh>

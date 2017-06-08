@@ -14,10 +14,9 @@
 
 #pragma once
 
-#include <bson.h>
-
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/private/libbson.hh>
 
 #include <bsoncxx/config/private/prelude.hh>
 
