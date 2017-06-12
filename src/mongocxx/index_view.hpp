@@ -57,7 +57,7 @@ class MONGOCXX_API index_view {
     ///   type of index_model.
     ///
     template <typename container_type>
-    index_names::iterator create_many(const container_type& indexes);
+    index_names create_many(const container_type& indexes);
 
     ///
     /// Drops a single index by name.

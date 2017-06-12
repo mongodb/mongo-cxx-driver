@@ -35,7 +35,7 @@ std::string index_view::create_one(const index_model& index) {
 }
 
 template <typename container_type>
-index_names::iterator index_view::create_many(const container_type& indexes) {
+index_names index_view::create_many(const container_type& indexes) {
     index_names created_names;
     return created_names.begin();
 }
