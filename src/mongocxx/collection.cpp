@@ -65,6 +65,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::sub_array;
 using bsoncxx::builder::basic::sub_document;
@@ -752,136 +753,43 @@ std::int64_t collection::count(view_or_value filter, const options::count& optio
     return result;
 }
 
-bsoncxx::document::value collection::create_index(view_or_value keys,
-                                                  const options::index& options) {
-    scoped_bson_t bson_keys{keys};
+bsoncxx::document::value collection::create_index(bsoncxx::document::view_or_value keys,
+                                                  bsoncxx::document::view_or_value opts) {
+    using namespace bsoncxx;
+
+    builder::basic::document index;
+    document::view opts_view = opts.view();
+
+    if (!opts_view["name"]) {
+        scoped_bson_t keys_bson{keys};
+
+        const auto name_from_keys = libmongoc::collection_keys_to_index_string(keys_bson.bson());
+        const auto cleanup_name_from_keys = make_guard([&] { bson_free(name_from_keys); });
+
+        index.append(kvp("name", name_from_keys));
+    }
+
+    index.append(builder::basic::concatenate(make_document(kvp("key", keys))),
+                 builder::basic::concatenate(opts));
+
+    array::view_or_value index_array = make_array(index.view());
+    document::view_or_value command =
+        make_document(kvp("createIndexes", name()), kvp("indexes", index_array.view()));
+
+    scoped_bson_t reply;
     bson_error_t error;
-    ::mongoc_index_opt_geo_t geo_opt{};
-    ::mongoc_index_opt_t opt{};
-    ::mongoc_index_opt_wt_t wt_opt{};
-    libmongoc::index_opt_init(&opt);
 
-    // keep our safe copies alive
-    bsoncxx::string::view_or_value name_copy{};
-    bsoncxx::string::view_or_value wt_config_copy{};
-    bsoncxx::string::view_or_value default_language_copy{};
-    bsoncxx::string::view_or_value language_override_copy{};
+    scoped_bson_t command_bson{command};
+    scoped_bson_t opts_bson{make_document()};
 
-    if (options.background()) {
-        opt.background = *options.background();
-    }
-
-    if (options.unique()) {
-        opt.unique = *options.unique();
-    }
-
-    if (options.name()) {
-        name_copy = options.name()->terminated();
-        opt.name = name_copy.data();
-    }
-
-    if (options.sparse()) {
-        opt.sparse = *options.sparse();
-    }
-
-    if (options.storage_options()) {
-        const options::index::wiredtiger_storage_options* wt_options;
-        libmongoc::index_opt_wt_init(&wt_opt);
-
-        if (options.storage_options()->type() ==
-            ::mongoc_index_storage_opt_type_t::MONGOC_INDEX_STORAGE_OPT_WIREDTIGER) {
-            wt_options = static_cast<const options::index::wiredtiger_storage_options*>(
-                options.storage_options().get());
-
-            if (wt_options->config_string()) {
-                wt_config_copy = wt_options->config_string()->terminated();
-                wt_opt.config_str = wt_config_copy.data();
-            }
-            opt.storage_options = reinterpret_cast<mongoc_index_opt_storage_t*>(&wt_opt);
-        }
-    }
-
-    if (options.expire_after()) {
-        const auto count = options.expire_after()->count();
-        if ((count < 0) || (count > std::numeric_limits<int32_t>::max())) {
-            throw logic_error{error_code::k_invalid_parameter};
-        }
-        opt.expire_after_seconds = static_cast<std::int32_t>(count);
-    }
-
-    if (options.version()) {
-        opt.v = *options.version();
-    }
-
-    if (options.weights()) {
-        scoped_bson_t weights{*options.weights()};
-        opt.weights = weights.bson();
-    }
-
-    if (options.default_language()) {
-        default_language_copy = options.default_language()->terminated();
-        opt.default_language = default_language_copy.data();
-    }
-
-    if (options.language_override()) {
-        language_override_copy = options.language_override()->terminated();
-        opt.language_override = language_override_copy.data();
-    }
-
-    if (options.collation()) {
-        scoped_bson_t collation{*options.collation()};
-        opt.collation = collation.bson();
-    }
-
-    if (options.partial_filter_expression()) {
-        scoped_bson_t partial_filter_expression{*options.partial_filter_expression()};
-        opt.partial_filter_expression = partial_filter_expression.bson();
-    }
-
-    if (options.twod_sphere_version() || options.twod_bits_precision() ||
-        options.twod_location_min() || options.twod_location_max() ||
-        options.haystack_bucket_size()) {
-        libmongoc::index_opt_geo_init(&geo_opt);
-
-        if (options.twod_sphere_version()) {
-            geo_opt.twod_sphere_version = *options.twod_sphere_version();
-        }
-
-        if (options.twod_bits_precision()) {
-            geo_opt.twod_bits_precision = *options.twod_bits_precision();
-        }
-
-        if (options.twod_location_min()) {
-            geo_opt.twod_location_min = *options.twod_location_min();
-        }
-
-        if (options.twod_location_max()) {
-            geo_opt.twod_location_max = *options.twod_location_max();
-        }
-
-        if (options.haystack_bucket_size()) {
-            geo_opt.haystack_bucket_size = *options.haystack_bucket_size();
-        }
-
-        opt.geo_options = &geo_opt;
-    }
-
-    auto result = libmongoc::collection_create_index(
-        _get_impl().collection_t, bson_keys.bson(), &opt, &error);
+    auto result = libmongoc::collection_command_simple(
+        _get_impl().collection_t, command_bson.bson(), NULL, reply.bson_for_init(), &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
     }
 
-    if (options.name()) {
-        return make_document(kvp("name", *options.name()));
-    } else {
-        const auto keys = libmongoc::collection_keys_to_index_string(bson_keys.bson());
-
-        const auto clean_keys = make_guard([&] { bson_free(keys); });
-
-        return make_document(kvp("name", keys));
-    }
+    return make_document(kvp("name", index.view()["name"].get_utf8().value));
 }
 
 cursor collection::distinct(bsoncxx::string::view_or_value field_name,

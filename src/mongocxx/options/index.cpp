@@ -17,7 +17,10 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
+#include <bsoncxx/builder/basic/document.hpp>
 #include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -182,6 +185,100 @@ const stdx::optional<double>& index::twod_location_max() const {
 
 const stdx::optional<double>& index::haystack_bucket_size() const {
     return _haystack_bucket_size;
+}
+
+index::operator bsoncxx::document::view_or_value() {
+    using namespace bsoncxx;
+    using builder::basic::kvp;
+    using builder::basic::make_document;
+
+    builder::basic::document root;
+
+    if (_name) {
+        root.append(kvp("name", *_name));
+    }
+
+    if (_background) {
+        root.append(kvp("background", *_background));
+    }
+
+    if (_unique) {
+        root.append(kvp("unique", *_unique));
+    }
+
+    if (_partial_filter_expression) {
+        root.append(kvp("partialFilterExpression", *_partial_filter_expression));
+    }
+
+    if (_sparse) {
+        root.append(kvp("sparse", *_sparse));
+    }
+
+    if (_expire_after) {
+        const auto count = _expire_after->count();
+        if ((count < 0) || (count > std::numeric_limits<std::int32_t>::max())) {
+            throw logic_error{error_code::k_invalid_parameter};
+        }
+
+        root.append(kvp("expireAfterSeconds", types::b_int32{static_cast<std::int32_t>(count)}));
+    }
+
+    if (_weights) {
+        root.append(kvp("weights", *_weights));
+    }
+
+    if (_default_language) {
+        root.append(kvp("default_language", types::b_utf8{*_default_language}));
+    }
+
+    if (_language_override) {
+        root.append(kvp("language_override", types::b_utf8{*_language_override}));
+    }
+
+    if (_twod_sphere_version) {
+        root.append(kvp("2dsphereIndexVersion", types::b_int32{*_twod_sphere_version}));
+    }
+
+    if (_twod_bits_precision) {
+        root.append(kvp("bits", types::b_int32{*_twod_bits_precision}));
+    }
+
+    if (_twod_location_min) {
+        root.append(kvp("min", types::b_double{*_twod_location_min}));
+    }
+
+    if (_twod_location_max) {
+        root.append(kvp("max", types::b_double{*_twod_location_max}));
+    }
+
+    if (_haystack_bucket_size) {
+        root.append(kvp("bucketSize", types::b_double{*_haystack_bucket_size}));
+    }
+
+    if (_collation) {
+        root.append(kvp("collation", *_collation));
+    }
+
+    if (_storage_options) {
+        if (_storage_options->type() == MONGOC_INDEX_STORAGE_OPT_WIREDTIGER) {
+            const options::index::wiredtiger_storage_options* wt_options =
+                static_cast<const options::index::wiredtiger_storage_options*>(
+                    _storage_options.get());
+
+            bsoncxx::document::view_or_value storage_doc;
+            if (wt_options->config_string()) {
+                storage_doc = make_document(
+                    kvp("wiredTiger",
+                        make_document(kvp("configString", *wt_options->config_string()))));
+            } else {
+                storage_doc = make_document(
+                    kvp("wiredTiger", make_document(kvp("configString", types::b_null{}))));
+            }
+
+            root.append(kvp("storageEngine", storage_doc));
+        }
+    }
+    return root.extract();
 }
 
 index::base_storage_options::~base_storage_options() = default;

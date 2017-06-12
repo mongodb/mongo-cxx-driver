@@ -247,9 +247,8 @@ class MONGOCXX_API collection {
     /// @param keys
     ///   The keys for the index: @c {a: 1, b: -1}
     /// @param options
-    ///   Optional arguments, see mongocxx::options::index.
+    ///   A document containing optional arguments.
     ///
-    /// @throws mongocxx::logic_error if the options are invalid.
     /// @throws mongocxx::operation_exception if index creation fails.
     ///
     /// @see https://docs.mongodb.com/master/reference/command/createIndexes/
@@ -260,7 +259,7 @@ class MONGOCXX_API collection {
     ///   3.4+)
     ///
     bsoncxx::document::value create_index(bsoncxx::document::view_or_value keys,
-                                          const options::index& options = options::index());
+                                          bsoncxx::document::view_or_value opts = {});
 
     ///
     /// Deletes all matching documents from the collection.

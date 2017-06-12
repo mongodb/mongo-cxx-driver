@@ -22,6 +22,8 @@
 #include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/stdx.hpp>
 
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -46,7 +48,7 @@ class MONGOCXX_API index {
         virtual ~base_storage_options();
 
        private:
-        friend collection;
+        friend class options::index;
         MONGOCXX_PRIVATE virtual int type() const = 0;
     };
 
@@ -431,6 +433,15 @@ class MONGOCXX_API index {
     /// @return The current haystack_bucket_size.
     ///
     const stdx::optional<double>& haystack_bucket_size() const;
+
+    ///
+    /// Conversion operator that provides a view of the options in document form.
+    ///
+    /// @exception mongocxx::logic_error if an invalid expireAfterSeconds field is provided.
+    ///
+    /// @return A view of the current builder contents.
+    ///
+    operator bsoncxx::document::view_or_value();
 
    private:
     friend collection;
