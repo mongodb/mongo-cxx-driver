@@ -24,6 +24,7 @@
 #include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/cursor.hpp>
+#include <mongocxx/index_view.hpp>
 #include <mongocxx/insert_many_builder.hpp>
 #include <mongocxx/options/aggregate.hpp>
 #include <mongocxx/options/bulk_write.hpp>
@@ -681,6 +682,10 @@ class MONGOCXX_API collection {
     /// @return The current write_concern.
     ///
     class write_concern write_concern() const;
+
+    ///
+    /// Gets an index_view to the collection.
+    class index_view indexes();
 
    private:
     friend class database;

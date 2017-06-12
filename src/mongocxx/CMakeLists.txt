@@ -60,6 +60,8 @@ set(mongocxx_sources
     gridfs/downloader.cpp
     gridfs/uploader.cpp
     hint.cpp
+    index_model.cpp
+    index_view.cpp
     insert_many_builder.cpp
     instance.cpp
     logger.cpp

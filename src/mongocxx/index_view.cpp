@@ -19,9 +19,9 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-index_view::index_view() {}
+index_view::index_view(mongoc_collection_t* coll) : _coll(coll) {}
 
-cursor index_view::iterator() {
+cursor index_view::list() {
     return cursor{nullptr};
 }
 
@@ -32,12 +32,6 @@ std::string index_view::create_one(const bsoncxx::document::view_or_value& keys,
 
 std::string index_view::create_one(const index_model& index) {
     return "foo";
-}
-
-template <typename container_type>
-index_names index_view::create_many(const container_type& indexes) {
-    index_names created_names;
-    return created_names.begin();
 }
 
 void index_view::drop_one(stdx::string_view name) {}

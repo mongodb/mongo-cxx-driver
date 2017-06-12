@@ -28,6 +28,7 @@ set(test_driver_sources
     gridfs/downloader.cpp
     gridfs/uploader.cpp
     hint.cpp
+    index_view.cpp
     model/delete_many.cpp
     model/delete_one.cpp
     model/insert_one.cpp
@@ -108,6 +109,8 @@ endif()
 target_include_directories(test_driver PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_logging PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_instance PRIVATE ${libmongoc_include_directories})
+target_include_directories(test_crud_specs PRIVATE ${libmongoc_include_directories})
+target_include_directories(test_gridfs_specs PRIVATE ${libmongoc_include_directories})
 
 target_compile_definitions(test_driver PRIVATE ${libmongoc_definitions})
 target_compile_definitions(test_logging PRIVATE ${libmongoc_definitions})

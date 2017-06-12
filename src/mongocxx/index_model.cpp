@@ -27,7 +27,7 @@ index_model::index_model(index_model&&) noexcept = default;
 
 index_model& index_model::operator=(index_model&&) noexcept = default;
 
-index_model::index_model(index_model&) = default;
+index_model::index_model(const index_model&) = default;
 
 index_model::~index_model() = default;
 

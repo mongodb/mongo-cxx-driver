@@ -918,6 +918,10 @@ class write_concern collection::write_concern() const {
     return wc;
 }
 
+class index_view collection::indexes() {
+    return index_view{_get_impl().collection_t};
+}
+
 const collection::impl& collection::_get_impl() const {
     if (!_impl) {
         throw logic_error{error_code::k_invalid_collection_object};
