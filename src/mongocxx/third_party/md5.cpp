@@ -26,6 +26,7 @@
 
   1. All contents of this file have been moved within the 'mongocxx' namespace and the
      extern "C" block has been removed.
+  2. Pragmas to disable warnings in the file have been added.
 */
 
 /* $Id: md5.c,v 1.6 2002/04/13 19:20:28 lpd Exp $ */
@@ -60,6 +61,16 @@
 
 #include "md5.h"
 #include <string.h>
+
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wconversion"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#elif (_MSC_VER)
+// TODO: CXX-1366 Disable MSVC warnings for libmongoc
+#endif
 
 namespace mongocxx {
 
@@ -377,3 +388,11 @@ void md5_finish(md5_state_t* pms, md5_byte_t digest[16]) {
 }
 
 }  // namespace mongocxx
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif (_MSC_VER)
+// TODO: CXX-1366 Disable MSVC warnings for libmongoc
+#endif
