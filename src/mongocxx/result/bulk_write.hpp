@@ -87,6 +87,9 @@ class MONGOCXX_API bulk_write {
     MONGOCXX_PRIVATE bsoncxx::document::view view() const;
 
     bsoncxx::document::value _response;
+
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const bulk_write&, const bulk_write&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const bulk_write&, const bulk_write&);
 };
 
 }  // namespace result

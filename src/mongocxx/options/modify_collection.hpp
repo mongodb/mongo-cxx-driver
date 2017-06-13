@@ -87,6 +87,11 @@ class MONGOCXX_API modify_collection {
     stdx::optional<bsoncxx::document::view_or_value> _index;
     stdx::optional<bool> _no_padding;
     stdx::optional<class validation_criteria> _validation;
+
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const modify_collection&,
+                                                      const modify_collection&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const modify_collection&,
+                                                      const modify_collection&);
 };
 
 }  // namespace options

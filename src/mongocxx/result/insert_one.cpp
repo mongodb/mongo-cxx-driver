@@ -35,6 +35,13 @@ const bsoncxx::types::value& insert_one::inserted_id() const {
     return _inserted_id;
 }
 
+bool MONGOCXX_CALL operator==(const insert_one& lhs, const insert_one& rhs) {
+    return ((lhs.result() == rhs.result()) && (lhs.inserted_id() == rhs.inserted_id()));
+}
+bool MONGOCXX_CALL operator!=(const insert_one& lhs, const insert_one& rhs) {
+    return !(lhs == rhs);
+}
+
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

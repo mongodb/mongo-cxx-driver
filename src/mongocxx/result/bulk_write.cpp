@@ -60,6 +60,13 @@ bsoncxx::document::view bulk_write::view() const {
     return _response.view();
 }
 
+bool MONGOCXX_CALL operator==(const bulk_write& lhs, const bulk_write& rhs) {
+    return lhs.view() == rhs.view();
+}
+bool MONGOCXX_CALL operator!=(const bulk_write& lhs, const bulk_write& rhs) {
+    return !(lhs == rhs);
+}
+
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

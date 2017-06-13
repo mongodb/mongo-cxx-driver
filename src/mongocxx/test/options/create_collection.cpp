@@ -70,6 +70,25 @@ TEST_CASE("create_collection accessors/mutators", "[create_collection]") {
     }
 }
 
+TEST_CASE("create_collection equals", "[create_collection]") {
+    instance::current();
+
+    options::create_collection cc1{};
+    options::create_collection cc2{};
+
+    REQUIRE(cc1 == cc2);
+}
+
+TEST_CASE("create_collection inequals", "[create_collection]") {
+    instance::current();
+
+    options::create_collection cc1{};
+    cc1.no_padding(false);
+    options::create_collection cc2{};
+
+    REQUIRE(cc1 != cc2);
+}
+
 TEST_CASE("create_collection can be exported to a document", "[create_collection]") {
     instance::current();
 

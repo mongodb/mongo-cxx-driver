@@ -30,6 +30,13 @@ const bsoncxx::types::value& upload::id() const {
     return _id;
 }
 
+bool MONGOCXX_CALL operator==(const upload& lhs, const upload& rhs) {
+    return lhs.id() == rhs.id();
+}
+bool MONGOCXX_CALL operator!=(const upload& lhs, const upload& rhs) {
+    return !(lhs == rhs);
+}
+
 }  // namespace gridfs
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END

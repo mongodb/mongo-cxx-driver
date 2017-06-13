@@ -97,5 +97,15 @@ bsoncxx::document::value validation_criteria::to_document() const {
     return doc.extract();
 }
 
+MONGOCXX_API bool MONGOCXX_CALL operator==(const validation_criteria& lhs,
+                                           const validation_criteria& rhs) {
+    return ((lhs.rule() == rhs.rule()) && (lhs.level() == rhs.level()) &&
+            (lhs.action() == rhs.action()));
+}
+MONGOCXX_API bool MONGOCXX_CALL operator!=(const validation_criteria& lhs,
+                                           const validation_criteria& rhs) {
+    return !(lhs == rhs);
+}
+
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

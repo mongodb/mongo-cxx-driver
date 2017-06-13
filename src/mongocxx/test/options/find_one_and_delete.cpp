@@ -41,4 +41,23 @@ TEST_CASE("find_one_and_delete", "[find_one_and_delete][option]") {
     CHECK_OPTIONAL_ARGUMENT(opts, projection, projection.view());
     CHECK_OPTIONAL_ARGUMENT(opts, sort, sort.view());
 }
+
+TEST_CASE("find_one_and_delete equals", "[find_one_and_delete][options]") {
+    instance::current();
+
+    options::find_one_and_delete opts1{};
+    options::find_one_and_delete opts2{};
+
+    REQUIRE(opts1 == opts2);
+}
+
+TEST_CASE("find_one_and_delete inequals", "[find_one_and_delete][options]") {
+    instance::current();
+
+    options::find_one_and_delete opts1{};
+    opts1.max_time(std::chrono::milliseconds{500});
+    options::find_one_and_delete opts2{};
+
+    REQUIRE(opts1 != opts2);
+}
 }  // namespace

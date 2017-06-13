@@ -181,6 +181,9 @@ class MONGOCXX_API count {
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<std::int64_t> _skip;
     stdx::optional<class read_preference> _read_preference;
+
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const count&, const count&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const count&, const count&);
 };
 
 }  // namespace options

@@ -53,6 +53,9 @@ class MONGOCXX_API insert_one {
 
     // Points into _inserted_id_owned.
     bsoncxx::types::value _inserted_id;
+
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const insert_one&, const insert_one&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const insert_one&, const insert_one&);
 };
 
 }  // namespace result

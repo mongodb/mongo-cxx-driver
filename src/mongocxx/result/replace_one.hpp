@@ -63,6 +63,9 @@ class MONGOCXX_API replace_one {
 
    private:
     result::bulk_write _result;
+
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const replace_one&, const replace_one&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const replace_one&, const replace_one&);
 };
 
 }  // namespace result

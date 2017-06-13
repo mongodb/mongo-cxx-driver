@@ -44,4 +44,23 @@ TEST_CASE("find_one_and_update", "[find_one_and_update][option]") {
     CHECK_OPTIONAL_ARGUMENT(opts, sort, sort.view());
     CHECK_OPTIONAL_ARGUMENT(opts, upsert, true);
 }
+
+TEST_CASE("find_one_and_update equals", "[find_one_and_update][options]") {
+    instance::current();
+
+    options::find_one_and_update opts1{};
+    options::find_one_and_update opts2{};
+
+    REQUIRE(opts1 == opts2);
+}
+
+TEST_CASE("find_one_and_update inequals", "[find_one_and_update][options]") {
+    instance::current();
+
+    options::find_one_and_update opts1{};
+    opts1.max_time(std::chrono::milliseconds{500});
+    options::find_one_and_update opts2{};
+
+    REQUIRE(opts1 != opts2);
+}
 }  // namespace

@@ -36,4 +36,24 @@ TEST_CASE("update opts", "[update][option]") {
     CHECK_OPTIONAL_ARGUMENT(updt, upsert, true);
     CHECK_OPTIONAL_ARGUMENT(updt, write_concern, write_concern{});
 }
+
+TEST_CASE("update options equals", "[update][option]") {
+    instance::current();
+
+    options::update update1{};
+    options::update update2{};
+
+    REQUIRE(update1 == update2);
+}
+
+TEST_CASE("update options inequals", "[update][option]") {
+    instance::current();
+
+    options::update update1{};
+    update1.upsert(false);
+    options::update update2{};
+
+    REQUIRE(update1 != update2);
+}
+
 }  // namespace

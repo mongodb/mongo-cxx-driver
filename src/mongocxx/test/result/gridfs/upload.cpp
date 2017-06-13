@@ -59,4 +59,23 @@ TEST_CASE("result::gridfs::upload owns id", "[result::gridfs::upload]") {
     // value for the id.
     REQUIRE(res.id().get_utf8().value == stdx::string_view{bar});
 }
+
+TEST_CASE("result::gridfs::upload equals", "[result::gridfs::upload]") {
+    instance::current();
+
+    auto oid = types::b_oid{bsoncxx::oid{}};
+    result::gridfs::upload upload_result1{types::value{oid}};
+    result::gridfs::upload upload_result2{types::value{oid}};
+
+    REQUIRE(upload_result1 == upload_result2);
+}
+
+TEST_CASE("result::gridfs::upload inequals", "[result::gridfs::upload]") {
+    instance::current();
+
+    result::gridfs::upload upload_result1{types::value{types::b_oid{bsoncxx::oid{}}}};
+    result::gridfs::upload upload_result2{types::value{types::b_utf8{"baz"}}};
+
+    REQUIRE(upload_result1 != upload_result2);
+}
 }  // namespace

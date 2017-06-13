@@ -41,6 +41,13 @@ stdx::optional<bsoncxx::document::element> replace_one::upserted_id() const {
     return _result.upserted_ids()[0];
 }
 
+bool MONGOCXX_CALL operator==(const replace_one& lhs, const replace_one& rhs) {
+    return lhs.result() == rhs.result();
+}
+bool MONGOCXX_CALL operator!=(const replace_one& lhs, const replace_one& rhs) {
+    return !(lhs == rhs);
+}
+
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

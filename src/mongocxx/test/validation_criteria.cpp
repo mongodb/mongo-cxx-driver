@@ -14,6 +14,7 @@
 
 #include "helpers.hpp"
 
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
@@ -28,6 +29,8 @@ using namespace bsoncxx;
 using builder::stream::open_document;
 using builder::stream::close_document;
 using builder::stream::finalize;
+using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::basic::kvp;
 
 TEST_CASE("validation_criteria accessors/mutators", "[validation_criteria]") {
     instance::current();
@@ -40,6 +43,25 @@ TEST_CASE("validation_criteria accessors/mutators", "[validation_criteria]") {
     CHECK_OPTIONAL_ARGUMENT(criteria, rule, doc.view());
     CHECK_OPTIONAL_ARGUMENT(criteria, level, validation_criteria::validation_level::k_off);
     CHECK_OPTIONAL_ARGUMENT(criteria, action, validation_criteria::validation_action::k_warn);
+}
+
+TEST_CASE("validation_criteria equals", "[validation_criteria]") {
+    instance::current();
+
+    validation_criteria criteria1;
+    validation_criteria criteria2;
+
+    REQUIRE(criteria1 == criteria2);
+}
+
+TEST_CASE("validation_criteria inequals", "[validation_criteria]") {
+    instance::current();
+
+    validation_criteria criteria1;
+    criteria1.level(validation_criteria::validation_level::k_strict);
+    validation_criteria criteria2;
+
+    REQUIRE(criteria1 != criteria2);
 }
 
 TEST_CASE("validation_criteria can be exported to a document", "[validation_criteria]") {

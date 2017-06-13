@@ -14,12 +14,16 @@
 
 #include "helpers.hpp"
 
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/result/update.hpp>
 
 namespace {
+using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::basic::kvp;
+
 TEST_CASE("update", "[update][result]") {
     mongocxx::instance::current();
 
@@ -27,13 +31,46 @@ TEST_CASE("update", "[update][result]") {
     build << "_id" << bsoncxx::oid{} << "nMatched" << bsoncxx::types::b_int32{2} << "nModified"
           << bsoncxx::types::b_int32{1};
 
-    mongocxx::result::bulk_write b(bsoncxx::document::value(build.view()));
+    mongocxx::result::bulk_write b{bsoncxx::document::value(build.view())};
 
-    mongocxx::result::update update(std::move(b));
+    mongocxx::result::update update{std::move(b)};
 
     SECTION("returns correct matched and modified count") {
         REQUIRE(update.matched_count() == 2);
         REQUIRE(update.modified_count() == 1);
     }
 }
+
+TEST_CASE("update result equals", "[update][result]") {
+    mongocxx::instance::current();
+
+    auto doc = make_document(kvp("_id", bsoncxx::oid{}),
+                             kvp("nMatched", bsoncxx::types::b_int32{2}),
+                             kvp("nModified", bsoncxx::types::b_int32{1}));
+
+    mongocxx::result::bulk_write a{doc};
+    mongocxx::result::bulk_write b{doc};
+
+    mongocxx::result::update update1{std::move(a)};
+    mongocxx::result::update update2{std::move(b)};
+
+    REQUIRE(update1 == update2);
+}
+
+TEST_CASE("update result inequals", "[update][result]") {
+    mongocxx::instance::current();
+
+    mongocxx::result::bulk_write a{make_document(kvp("_id", bsoncxx::oid{}),
+                                                 kvp("nMatched", bsoncxx::types::b_int32{2}),
+                                                 kvp("nModified", bsoncxx::types::b_int32{1}))};
+    mongocxx::result::bulk_write b{make_document(kvp("_id", bsoncxx::oid{}),
+                                                 kvp("nMatched", bsoncxx::types::b_int32{3}),
+                                                 kvp("nModified", bsoncxx::types::b_int32{1}))};
+
+    mongocxx::result::update update1{std::move(a)};
+    mongocxx::result::update update2{std::move(b)};
+
+    REQUIRE(update1 != update2);
+}
+
 }  // namespace

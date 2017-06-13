@@ -141,6 +141,11 @@ class MONGOCXX_API validation_criteria {
     stdx::optional<validation_action> _action;
 };
 
+MONGOCXX_API bool MONGOCXX_CALL operator==(const validation_criteria& lhs,
+                                           const validation_criteria& rhs);
+MONGOCXX_API bool MONGOCXX_CALL operator!=(const validation_criteria& lhs,
+                                           const validation_criteria& rhs);
+
 MONGOCXX_INLINE validation_criteria::operator bsoncxx::document::value() const {
     return to_document();
 }

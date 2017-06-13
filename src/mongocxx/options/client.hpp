@@ -53,6 +53,9 @@ class MONGOCXX_API client {
 
    private:
     stdx::optional<ssl> _ssl_opts;
+
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const client&, const client&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const client&, const client&);
 };
 
 }  // namespace options

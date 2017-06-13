@@ -87,6 +87,17 @@ const stdx::optional<bool>& find_one_and_replace::upsert() const {
     return _upsert;
 }
 
+bool MONGOCXX_CALL operator==(const find_one_and_replace& lhs, const find_one_and_replace& rhs) {
+    return ((lhs.bypass_document_validation() == rhs.bypass_document_validation()) &&
+            (lhs.collation() == rhs.collation()) && (lhs.max_time() == rhs.max_time()) &&
+            (lhs.projection() == rhs.projection()) &&
+            (lhs.return_document() == rhs.return_document()) && (lhs.sort() == lhs.sort()) &&
+            (lhs.upsert() == rhs.upsert()));
+}
+bool MONGOCXX_CALL operator!=(const find_one_and_replace& lhs, const find_one_and_replace& rhs) {
+    return !(lhs == rhs);
+}
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

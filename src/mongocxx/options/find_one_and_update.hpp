@@ -214,6 +214,11 @@ class MONGOCXX_API find_one_and_update {
     stdx::optional<mongocxx::options::return_document> _return_document;
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
     stdx::optional<bool> _upsert;
+
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const find_one_and_update&,
+                                                      const find_one_and_update&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const find_one_and_update&,
+                                                      const find_one_and_update&);
 };
 
 }  // namespace options

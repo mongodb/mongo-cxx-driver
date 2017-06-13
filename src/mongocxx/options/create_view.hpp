@@ -105,6 +105,9 @@ class MONGOCXX_API create_view {
    private:
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<class pipeline> _pipeline;
+
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const create_view&, const create_view&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const create_view&, const create_view&);
 };
 
 MONGOCXX_INLINE create_view::operator bsoncxx::document::value() const {

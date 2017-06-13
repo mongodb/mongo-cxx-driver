@@ -76,6 +76,9 @@ class MONGOCXX_API insert_many {
 
     // Points into _inserted_ids_owned.
     id_map _inserted_ids;
+
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const insert_many&, const insert_many&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const insert_many&, const insert_many&);
 };
 
 }  // namespace result

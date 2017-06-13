@@ -14,6 +14,7 @@
 
 #include "helpers.hpp"
 
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types/value.hpp>
@@ -21,21 +22,54 @@
 #include <mongocxx/result/insert_one.hpp>
 
 namespace {
-TEST_CASE("insert_one", "[insert_one][result]") {
-    using namespace bsoncxx;
+using namespace bsoncxx;
 
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
+
+TEST_CASE("insert_one", "[insert_one][result]") {
     mongocxx::instance::current();
 
     builder::stream::document build;
     auto oid = types::b_oid{bsoncxx::oid{}};
     build << "_id" << oid << "x" << 1;
 
-    mongocxx::result::bulk_write b(document::value(build.view()));
+    mongocxx::result::bulk_write b{document::value(build.view())};
 
-    mongocxx::result::insert_one insert_one(std::move(b), types::value{oid});
+    mongocxx::result::insert_one insert_one{std::move(b), types::value{oid}};
 
     SECTION("returns correct response") {
         REQUIRE(insert_one.inserted_id() == oid);
     }
 }
+
+TEST_CASE("insert_one equals", "[insert_one][result]") {
+    mongocxx::instance::current();
+
+    auto oid = types::b_oid{bsoncxx::oid{}};
+    auto build = make_document(kvp("_id", oid), kvp("x", 1));
+
+    mongocxx::result::bulk_write a{build};
+    mongocxx::result::bulk_write b{build};
+
+    mongocxx::result::insert_one insert_one1{std::move(a), types::value{oid}};
+    mongocxx::result::insert_one insert_one2{std::move(b), types::value{oid}};
+
+    REQUIRE(insert_one1 == insert_one2);
+}
+
+TEST_CASE("insert_one inequals", "[insert_one][result]") {
+    mongocxx::instance::current();
+
+    auto oid = types::b_oid{bsoncxx::oid{}};
+
+    mongocxx::result::bulk_write a{make_document(kvp("_id", oid), kvp("x", 1))};
+    mongocxx::result::bulk_write b{make_document(kvp("_id", oid), kvp("x", 2))};
+
+    mongocxx::result::insert_one insert_one1{std::move(a), types::value{oid}};
+    mongocxx::result::insert_one insert_one2{std::move(b), types::value{oid}};
+
+    REQUIRE(insert_one1 != insert_one2);
+}
+
 }  // namespace

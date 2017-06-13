@@ -49,4 +49,24 @@ TEST_CASE("aggregate", "[aggregate][option]") {
     CHECK_OPTIONAL_ARGUMENT(agg, use_cursor, true);
     CHECK_OPTIONAL_ARGUMENT(agg, hint, hint);
 }
+
+TEST_CASE("aggregate equals", "[aggregate][option]") {
+    instance::current();
+
+    options::aggregate agg1{};
+    options::aggregate agg2{};
+
+    REQUIRE(agg1 == agg2);
+}
+
+TEST_CASE("aggregate inequals", "[aggregate][option]") {
+    instance::current();
+
+    options::aggregate agg1{};
+    agg1.allow_disk_use(false);
+    options::aggregate agg2{};
+
+    REQUIRE(agg1 != agg2);
+}
+
 }  // namespace

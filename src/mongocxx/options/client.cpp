@@ -29,6 +29,12 @@ const stdx::optional<ssl>& client::ssl_opts() const {
     return _ssl_opts;
 }
 
+bool MONGOCXX_CALL operator==(const client& lhs, const client& rhs) {
+    return lhs.ssl_opts() == rhs.ssl_opts();
+}
+bool MONGOCXX_CALL operator!=(const client& lhs, const client& rhs) {
+    return !(lhs == rhs);
+}
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

@@ -39,4 +39,23 @@ TEST_CASE("options::gridfs::upload accessors/mutators", "[options::gridfs::uploa
     CHECK_OPTIONAL_ARGUMENT(upload_options, chunk_size_bytes, 100);
     CHECK_OPTIONAL_ARGUMENT(upload_options, metadata, document.view());
 }
+
+TEST_CASE("options::gridfs::upload equals", "[options::gridfs::upload]") {
+    instance::current();
+
+    options::gridfs::upload upload_options1{};
+    options::gridfs::upload upload_options2{};
+
+    REQUIRE(upload_options1 == upload_options2);
+}
+
+TEST_CASE("options::gridfs::upload inequals", "[options::gridfs::upload]") {
+    instance::current();
+
+    options::gridfs::upload upload_options1{};
+    upload_options1.chunk_size_bytes(150);
+    options::gridfs::upload upload_options2{};
+
+    REQUIRE(upload_options1 != upload_options2);
+}
 }  // namespace

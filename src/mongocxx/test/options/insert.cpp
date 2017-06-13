@@ -29,4 +29,23 @@ TEST_CASE("insert opts", "[insert][option]") {
     CHECK_OPTIONAL_ARGUMENT(ins, bypass_document_validation, true);
     CHECK_OPTIONAL_ARGUMENT(ins, write_concern, write_concern{});
 }
+
+TEST_CASE("insert equals", "[insert][option]") {
+    instance::current();
+
+    options::insert ins1{};
+    options::insert ins2{};
+
+    REQUIRE(ins1 == ins2);
+}
+
+TEST_CASE("insert inequals", "[insert][option]") {
+    instance::current();
+
+    options::insert ins1{};
+    ins1.bypass_document_validation(false);
+    options::insert ins2{};
+
+    REQUIRE(ins1 != ins2);
+}
 }  // namespace

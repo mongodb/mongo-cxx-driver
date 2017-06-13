@@ -48,6 +48,9 @@ class MONGOCXX_API delete_result {
 
    private:
     result::bulk_write _result;
+
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const delete_result&, const delete_result&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const delete_result&, const delete_result&);
 };
 
 }  // namespace result

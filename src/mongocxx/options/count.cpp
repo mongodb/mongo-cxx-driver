@@ -76,6 +76,21 @@ const stdx::optional<read_preference>& count::read_preference() const {
     return _read_preference;
 }
 
+bool MONGOCXX_CALL operator==(const count& lhs, const count& rhs) {
+    if (lhs.hint() && rhs.hint()) {
+        if (lhs.hint()->to_value() != rhs.hint()->to_value()) {
+            return false;
+        }
+    } else if (lhs.hint() || rhs.hint()) {
+        return false;
+    }
+    return ((lhs.collation() == rhs.collation()) && (lhs.limit() == rhs.limit()) &&
+            (lhs.max_time() == rhs.max_time()) && (lhs.skip() == rhs.skip()) &&
+            (lhs.read_preference() == rhs.read_preference()));
+}
+bool MONGOCXX_CALL operator!=(const count& lhs, const count& rhs) {
+    return !(lhs == rhs);
+}
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

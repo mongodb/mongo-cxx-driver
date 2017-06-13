@@ -42,6 +42,25 @@ insert_many::id_map insert_many::inserted_ids() const {
     return _inserted_ids;
 }
 
+bool MONGOCXX_CALL operator==(const insert_many& lhs, const insert_many& rhs) {
+    if (lhs.result() != rhs.result()) {
+        return false;
+    } else if (lhs.inserted_ids().size() != rhs.inserted_ids().size()) {
+        return false;
+    }
+    insert_many::id_map::const_iterator litr = lhs._inserted_ids.begin();
+    insert_many::id_map::const_iterator ritr = rhs._inserted_ids.begin();
+    for (; litr != lhs._inserted_ids.end(); litr++, ritr++) {
+        if (litr->first != ritr->first || litr->second.get_oid() != ritr->second.get_oid()) {
+            return false;
+        }
+    }
+    return true;
+}
+bool MONGOCXX_CALL operator!=(const insert_many& lhs, const insert_many& rhs) {
+    return !(lhs == rhs);
+}
+
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

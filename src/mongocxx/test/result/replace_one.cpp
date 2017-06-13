@@ -14,12 +14,16 @@
 
 #include "helpers.hpp"
 
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/result/replace_one.hpp>
 
 namespace {
+using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::basic::kvp;
+
 TEST_CASE("replace_one", "[replace_one][result]") {
     mongocxx::instance::current();
 
@@ -27,13 +31,45 @@ TEST_CASE("replace_one", "[replace_one][result]") {
     build << "_id" << bsoncxx::oid{} << "nMatched" << bsoncxx::types::b_int32{2} << "nModified"
           << bsoncxx::types::b_int32{1};
 
-    mongocxx::result::bulk_write b(bsoncxx::document::value(build.view()));
+    mongocxx::result::bulk_write b{bsoncxx::document::value(build.view())};
 
-    mongocxx::result::replace_one replace_one(std::move(b));
+    mongocxx::result::replace_one replace_one{std::move(b)};
 
     SECTION("returns correct matched and modified count") {
         REQUIRE(replace_one.matched_count() == 2);
         REQUIRE(replace_one.modified_count() == 1);
     }
+}
+
+TEST_CASE("replace_one equals", "[replace_one][result]") {
+    mongocxx::instance::current();
+
+    auto doc = make_document(kvp("_id", bsoncxx::oid{}),
+                             kvp("nMatched", bsoncxx::types::b_int32{2}),
+                             kvp("nModified", bsoncxx::types::b_int32{1}));
+
+    mongocxx::result::bulk_write a{doc};
+    mongocxx::result::bulk_write b{doc};
+
+    mongocxx::result::replace_one replace_one1{std::move(a)};
+    mongocxx::result::replace_one replace_one2{std::move(b)};
+
+    REQUIRE(replace_one1 == replace_one2);
+}
+
+TEST_CASE("replace_one inequals", "[replace_one][result]") {
+    mongocxx::instance::current();
+
+    mongocxx::result::bulk_write a{make_document(kvp("_id", bsoncxx::oid{}),
+                                                 kvp("nMatched", bsoncxx::types::b_int32{2}),
+                                                 kvp("nModified", bsoncxx::types::b_int32{1}))};
+    mongocxx::result::bulk_write b{make_document(kvp("_id", bsoncxx::oid{}),
+                                                 kvp("nMatched", bsoncxx::types::b_int32{1}),
+                                                 kvp("nModified", bsoncxx::types::b_int32{1}))};
+
+    mongocxx::result::replace_one replace_one1{std::move(a)};
+    mongocxx::result::replace_one replace_one2{std::move(b)};
+
+    REQUIRE(replace_one1 != replace_one2);
 }
 }  // namespace

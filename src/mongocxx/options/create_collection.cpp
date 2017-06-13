@@ -139,6 +139,17 @@ bsoncxx::document::value create_collection::to_document() const {
     return doc.extract();
 }
 
+bool MONGOCXX_CALL operator==(const create_collection& lhs, const create_collection& rhs) {
+    return ((lhs.auto_index_id() == rhs.auto_index_id()) && (lhs.capped() == rhs.capped()) &&
+            (lhs.collation() == rhs.collation()) && (lhs.max() == rhs.max()) &&
+            (lhs.size() == rhs.size()) && (lhs.no_padding() == rhs.no_padding()) &&
+            (lhs.storage_engine() == rhs.storage_engine()) &&
+            (lhs.validation_criteria() == rhs.validation_criteria()));
+}
+bool MONGOCXX_CALL operator!=(const create_collection& lhs, const create_collection& rhs) {
+    return !(lhs == rhs);
+}
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

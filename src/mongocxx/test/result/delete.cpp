@@ -14,6 +14,7 @@
 
 #include "helpers.hpp"
 
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/test_util/catch.hh>
@@ -21,18 +22,51 @@
 #include <mongocxx/result/delete.hpp>
 
 namespace {
+using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::basic::kvp;
+
 TEST_CASE("delete", "[delete][result]") {
     mongocxx::instance::current();
 
     bsoncxx::builder::stream::document build;
     build << "_id" << bsoncxx::oid{} << "nRemoved" << bsoncxx::types::b_int32{1};
 
-    mongocxx::result::bulk_write b(bsoncxx::document::value(build.view()));
+    mongocxx::result::bulk_write b{bsoncxx::document::value(build.view())};
 
-    mongocxx::result::delete_result delete_result(std::move(b));
+    mongocxx::result::delete_result delete_result{std::move(b)};
 
     SECTION("returns correct removed count") {
         REQUIRE(delete_result.deleted_count() == 1);
     }
 }
+
+TEST_CASE("delete equals", "[delete][result]") {
+    mongocxx::instance::current();
+
+    auto doc =
+        make_document(kvp("_id", bsoncxx::oid{}), kvp("nRemoved", bsoncxx::types::b_int32{1}));
+
+    mongocxx::result::bulk_write a{doc};
+    mongocxx::result::bulk_write b{doc};
+
+    mongocxx::result::delete_result delete_result1{std::move(a)};
+    mongocxx::result::delete_result delete_result2{std::move(b)};
+
+    REQUIRE(delete_result1 == delete_result2);
+}
+
+TEST_CASE("delete inequals", "[delete][result]") {
+    mongocxx::instance::current();
+
+    mongocxx::result::bulk_write a{
+        make_document(kvp("_id", bsoncxx::oid{}), kvp("nRemoved", bsoncxx::types::b_int32{1}))};
+    mongocxx::result::bulk_write b{
+        make_document(kvp("_id", bsoncxx::oid{}), kvp("nRemoved", bsoncxx::types::b_int32{2}))};
+
+    mongocxx::result::delete_result delete_result1{std::move(a)};
+    mongocxx::result::delete_result delete_result2{std::move(b)};
+
+    REQUIRE(delete_result1 != delete_result2);
+}
+
 }  // namespace

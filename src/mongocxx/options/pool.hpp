@@ -46,6 +46,9 @@ class MONGOCXX_API pool {
 
    private:
     client _client_opts;
+
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const pool&, const pool&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const pool&, const pool&);
 };
 
 }  // namespace options

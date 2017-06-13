@@ -109,6 +109,9 @@ class MONGOCXX_API insert {
     stdx::optional<class write_concern> _write_concern;
     stdx::optional<bool> _ordered;
     stdx::optional<bool> _bypass_document_validation;
+
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const insert&, const insert&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const insert&, const insert&);
 };
 
 }  // namespace options

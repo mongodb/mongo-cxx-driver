@@ -68,6 +68,31 @@ bsoncxx::document::value modify_collection::to_document() const {
     return doc.extract();
 }
 
+bool MONGOCXX_CALL operator==(const modify_collection& lhs, const modify_collection& rhs) {
+    if (lhs._index && rhs._index) {
+        if (lhs._index.value() != rhs._index.value()) {
+            return false;
+        }
+    } else if (lhs._index || rhs._index) {
+        return false;
+    }
+
+    if (lhs._no_padding != rhs._no_padding) {
+        return false;
+    }
+
+    if (lhs._validation && rhs._validation) {
+        return lhs._validation.value() == rhs._validation.value();
+    } else if (lhs._validation || rhs._validation) {
+        return false;
+    }
+
+    return true;
+}
+bool MONGOCXX_CALL operator!=(const modify_collection& lhs, const modify_collection& rhs) {
+    return !(lhs == rhs);
+}
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

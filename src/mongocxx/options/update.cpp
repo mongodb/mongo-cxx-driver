@@ -56,6 +56,16 @@ const stdx::optional<class write_concern>& update::write_concern() const {
     return _write_concern;
 }
 
+bool MONGOCXX_CALL operator==(const update& lhs, const update& rhs) {
+    return ((lhs.bypass_document_validation() == rhs.bypass_document_validation()) &&
+            (lhs.collation() == rhs.collation()) && (lhs.upsert() == rhs.upsert()) &&
+            (lhs.write_concern() == rhs.write_concern()));
+}
+
+bool MONGOCXX_CALL operator!=(const update& lhs, const update& rhs) {
+    return !(lhs == rhs);
+}
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

@@ -575,6 +575,9 @@ class MONGOCXX_API find {
     stdx::optional<std::int64_t> _skip;
     stdx::optional<bool> _snapshot;
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
+
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const find&, const find&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const find&, const find&);
 };
 
 }  // namespace options

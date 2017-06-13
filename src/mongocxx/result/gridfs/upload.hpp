@@ -43,6 +43,9 @@ class MONGOCXX_API upload {
 
     // Points into _id_owned.
     bsoncxx::types::value _id;
+
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const upload&, const upload&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const upload&, const upload&);
 };
 
 }  // namespace gridfs

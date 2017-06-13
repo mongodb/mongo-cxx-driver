@@ -30,6 +30,13 @@ std::int32_t delete_result::deleted_count() const {
     return _result.deleted_count();
 }
 
+bool MONGOCXX_CALL operator==(const delete_result& lhs, const delete_result& rhs) {
+    return lhs.result() == rhs.result();
+}
+bool MONGOCXX_CALL operator!=(const delete_result& lhs, const delete_result& rhs) {
+    return !(lhs == rhs);
+}
+
 }  // namespace result
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

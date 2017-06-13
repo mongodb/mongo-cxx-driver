@@ -14,6 +14,7 @@
 
 #include "helpers.hpp"
 
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
@@ -47,6 +48,27 @@ TEST_CASE("create_view accessors/mutators", "[create_view]") {
         cv.pipeline(std::move(pipeline{}.limit(1)));
         REQUIRE(cv.pipeline()->view_array() == pipeline{}.limit(1).view_array());
     }
+}
+
+TEST_CASE("create_view equals", "[create_view]") {
+    instance::current();
+
+    options::create_view cv1{};
+    options::create_view cv2{};
+
+    REQUIRE(cv1 == cv2);
+}
+
+TEST_CASE("create_view inequals", "[creat_view]") {
+    using bsoncxx::builder::basic::make_document;
+    using bsoncxx::builder::basic::kvp;
+    instance::current();
+
+    options::create_view cv1{};
+    cv1.collation(make_document(kvp("locale", "simple")).view());
+    options::create_view cv2{};
+
+    REQUIRE(cv1 != cv2);
 }
 
 TEST_CASE("create_view can be exported to a document", "[create_view]") {

@@ -41,4 +41,24 @@ TEST_CASE("count", "[count][option]") {
     CHECK_OPTIONAL_ARGUMENT(cnt, read_preference, read_preference{});
     CHECK_OPTIONAL_ARGUMENT(cnt, skip, 3);
 }
+
+TEST_CASE("count equals", "[count][option]") {
+    instance::current();
+
+    options::count cnt1{};
+    options::count cnt2{};
+
+    REQUIRE(cnt1 == cnt2);
+}
+
+TEST_CASE("count inequals", "[count][option]") {
+    instance::current();
+
+    options::count cnt1{};
+    cnt1.limit(4);
+    options::count cnt2{};
+
+    REQUIRE(cnt1 != cnt2);
+}
+
 }  // namespace
