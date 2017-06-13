@@ -445,8 +445,8 @@ core& core::append(const types::b_timestamp& value) {
     bson_append_timestamp(_impl->back(),
                           key.data(),
                           static_cast<std::int32_t>(key.length()),
-                          value.increment,
-                          value.timestamp);
+                          value.timestamp,
+                          value.increment);
 
     return *this;
 }
