@@ -52,7 +52,7 @@ find& find::hint(class hint index_hint) {
     return *this;
 }
 
-find& find::limit(std::int32_t limit) {
+find& find::limit(std::int64_t limit) {
     _limit = limit;
     return *this;
 }
@@ -67,7 +67,7 @@ find& find::max_await_time(std::chrono::milliseconds max_await_time) {
     return *this;
 }
 
-find& find::max_scan(std::int32_t max_scan) {
+find& find::max_scan(std::int64_t max_scan) {
     _max_scan = max_scan;
     return *this;
 }
@@ -112,7 +112,7 @@ find& find::show_record_id(bool show_record_id) {
     return *this;
 }
 
-find& find::skip(std::int32_t skip) {
+find& find::skip(std::int64_t skip) {
     _skip = skip;
     return *this;
 }
@@ -156,7 +156,7 @@ const stdx::optional<class hint>& find::hint() const {
     return _hint;
 }
 
-const stdx::optional<std::int32_t>& find::limit() const {
+const stdx::optional<std::int64_t>& find::limit() const {
     return _limit;
 }
 
@@ -168,7 +168,7 @@ const stdx::optional<std::chrono::milliseconds>& find::max_await_time() const {
     return _max_await_time;
 }
 
-const stdx::optional<std::int32_t>& find::max_scan() const {
+const stdx::optional<std::int64_t>& find::max_scan() const {
     return _max_scan;
 }
 
@@ -200,7 +200,7 @@ const stdx::optional<bool>& find::show_record_id() const {
     return _show_record_id;
 }
 
-const stdx::optional<std::int32_t>& find::skip() const {
+const stdx::optional<std::int64_t>& find::skip() const {
     return _skip;
 }
 

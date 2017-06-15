@@ -190,7 +190,7 @@ class MONGOCXX_API find {
     ///   method chaining.
     /// @see https://docs.mongodb.com/master/reference/command/find/
     ///
-    find& limit(std::int32_t limit);
+    find& limit(std::int64_t limit);
 
     ///
     /// Gets the current limit.
@@ -199,7 +199,7 @@ class MONGOCXX_API find {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/find/
     ///
-    const stdx::optional<std::int32_t>& limit() const;
+    const stdx::optional<std::int64_t>& limit() const;
 
     ///
     /// Gets the current exclusive upper bound for a specific index.
@@ -265,7 +265,7 @@ class MONGOCXX_API find {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/find/
     ///
-    find& max_scan(std::int32_t max);
+    find& max_scan(std::int64_t max);
 
     ///
     /// Gets the current setting for the maximum number of documents to scan when executing the
@@ -275,7 +275,7 @@ class MONGOCXX_API find {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/find/
     ///
-    const stdx::optional<std::int32_t>& max_scan() const;
+    const stdx::optional<std::int64_t>& max_scan() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -490,7 +490,7 @@ class MONGOCXX_API find {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/find/
     ///
-    find& skip(std::int32_t skip);
+    find& skip(std::int64_t skip);
 
     ///
     /// Gets the current number of documents to skip.
@@ -499,7 +499,7 @@ class MONGOCXX_API find {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/find/
     ///
-    const stdx::optional<std::int32_t>& skip() const;
+    const stdx::optional<std::int64_t>& skip() const;
 
     ///
     /// Sets whether snapshot mode should be used.
@@ -560,10 +560,10 @@ class MONGOCXX_API find {
     stdx::optional<bsoncxx::string::view_or_value> _comment;
     stdx::optional<cursor::type> _cursor_type;
     stdx::optional<class hint> _hint;
-    stdx::optional<std::int32_t> _limit;
+    stdx::optional<std::int64_t> _limit;
     stdx::optional<bsoncxx::document::view_or_value> _max;
     stdx::optional<std::chrono::milliseconds> _max_await_time;
-    stdx::optional<std::int32_t> _max_scan;
+    stdx::optional<std::int64_t> _max_scan;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<bsoncxx::document::view_or_value> _min;
     stdx::optional<bsoncxx::document::view_or_value> _modifiers;
@@ -572,7 +572,7 @@ class MONGOCXX_API find {
     stdx::optional<class read_preference> _read_preference;
     stdx::optional<bool> _return_key;
     stdx::optional<bool> _show_record_id;
-    stdx::optional<std::int32_t> _skip;
+    stdx::optional<std::int64_t> _skip;
     stdx::optional<bool> _snapshot;
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
 };
