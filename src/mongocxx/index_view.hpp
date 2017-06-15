@@ -17,22 +17,33 @@
 #include <string>
 #include <vector>
 
+#include <bsoncxx/builder/basic/array.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/document/element.hpp>
 #include <bsoncxx/document/value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/value.hpp>
 #include <mongocxx/collection.hpp>
-#include <mongocxx/config/prelude.hpp>
 #include <mongocxx/cursor.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/index_model.hpp>
-#include <mongocxx/private/libmongoc.hh>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class MONGOCXX_API index_view {
    public:
-    ///
-    /// Create an index_view object.
-    ///
-    index_view(mongoc_collection_t* coll);
+    index_view() = delete;
+
+    index_view(const index_view&) = delete;
+
+    ~index_view();
+
+    index_view(index_view&&);
 
     ///
     /// Returns a cursor over all the indexes.
@@ -42,46 +53,99 @@ class MONGOCXX_API index_view {
     ///
     /// Creates an index. A convenience method that calls create_many.
     ///
-    std::string create_one(const bsoncxx::document::view_or_value& keys,
-                           const bsoncxx::document::view_or_value& options = {});
+    /// @param keys
+    ///    A document containing the index keys and their corresponding index types.
+    /// @param options
+    ///    A document containing set of options that controls the creation of the index. See
+    ///    https://docs.mongodb.com/manual/reference/method/db.collection.createIndex/.
+    ///
+    /// @return
+    ///    An optional containing the name of the created index. If and index with the same keys
+    ///    already exists, an empty optional is returned.
+    ///
+    /// @exception
+    ///    Throws operation_exception for any errors encountered by the server.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/method/db.collection.createIndex/
+    ///
+    stdx::optional<std::string> create_one(const bsoncxx::document::view_or_value& keys,
+                                           const bsoncxx::document::view_or_value& options = {});
 
     ///
     /// Creates an index. A convenience method that calls create_many.
     ///
-    std::string create_one(const index_model& index);
+    /// @param index
+    ///    Index_model describing the index being created.
+    ///
+    /// @return
+    ///    An optional containing the name of the created index. If and index with the same keys
+    ///    already exists, an empty optional is returned.
+    ///
+    /// @exception
+    ///    Throws operation_exception for any errors encountered by the server.
+    ///
+    stdx::optional<std::string> create_one(const index_model& index);
 
     ///
     /// Adds a container of indexes to the collection.
     ///
-    /// @tparam container_type
-    ///   The container type. Must meet the requirements for the container concept with a value
-    ///   type of index_model.
+    /// @param indexes
+    ///   std::vector containing index models describing the indexes being created.
     ///
-    template <typename container_type>
-    MONGOCXX_INLINE std::vector<std::string> create_many(const container_type& indexes);
+    /// @return
+    ///    The result document sent back by the server as if the createIndexes command was run from
+    ///    the shell.
+    ///
+    /// @exception
+    ///     Throws operation_exception for any errors encountered by the server.
+    ///
+    bsoncxx::document::value create_many(const std::vector<index_model>& indexes);
 
     ///
     /// Drops a single index by name.
     ///
-    /// @exception:
-    ///   should throw something
+    /// @param name
+    ///    The name of the index being dropped.
+    ///
+    /// @exception
+    ///   Throws operation_exception for any errors encountered by the server
+    /// @exception
+    ///   Throws logic_error if "*" is passed in for the index name
     ///
     void drop_one(stdx::string_view name);
 
     ///
     /// Attempts to drop a single index from the collection given the keys and options.
     ///
-    /// @exception:
-    ///   should throw something
+    /// @param keys
+    ///    A document containing the index keys and their corresponding index types. If no name
+    ///    option is present in the options, a name based on the keys will be used.
+    /// @param options (optional)
+    ///    A document containing set of options used to create the index. Only the name field will
+    ///    be used from here, and if it is not included, a name based on they keys will be used.
+    ///
+    /// @exception
+    ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
+    /// @exception
+    ///   Throws operation_exception for any errors encountered by the server.
+    /// @exception
+    ///   Throws logic_error if "*" is passed in for the index name
     ///
     void drop_one(const bsoncxx::document::view_or_value& keys,
                   const bsoncxx::document::view_or_value& options = {});
 
     ///
-    /// Attempts to drop a single index from the collection given an index.
+    /// Attempts to drop a single index from the collection given an index model.
     ///
-    /// @exception:
-    ///   should throw something
+    /// @param index
+    ///    An index model describing the index being dropped.
+    ///
+    /// @exception
+    ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
+    /// @exception
+    ///   Throws operation_exception for any errors encountered by the server
+    /// @exception
+    ///   Throws logic_error if "*" is passed in for the index name
     ///
     void drop_one(const index_model& index);
 
@@ -91,15 +155,16 @@ class MONGOCXX_API index_view {
     void drop_all();
 
    private:
-    mongoc_collection_t* _coll;
+    friend class collection;
+    class MONGOCXX_PRIVATE impl;
+
+    MONGOCXX_PRIVATE index_view(void* coll);
+
+    MONGOCXX_PRIVATE impl& _get_impl();
+
+   private:
+    std::unique_ptr<impl> _impl;
 };
-
-template <typename container_type>
-
-MONGOCXX_INLINE std::vector<std::string> index_view::create_many(const container_type& indexes) {
-    std::vector<std::string> created_names;
-    return created_names;
-}
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

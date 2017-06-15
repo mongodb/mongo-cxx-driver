@@ -19,6 +19,7 @@
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/index_view.hpp>
 #include <mongocxx/instance.hpp>
@@ -41,37 +42,44 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("works with document and options") {
         auto key = make_document(kvp("a", 1));
         auto options = make_document(kvp("name", "myIndex"));
-        std::string result = indexes.create_one(key.view(), options.view());
-        REQUIRE(result == "myIndex");
+        stdx::optional<std::string> result = indexes.create_one(key.view(), options.view());
+
+        REQUIRE(result);
+        REQUIRE(*result == "myIndex");
     }
 
     SECTION("works with document and no options") {
         auto key = make_document(kvp("a", 1), kvp("b", -1));
-        std::string result = indexes.create_one(key.view());
-        REQUIRE(result == "a_1_b_-1");
+        stdx::optional<std::string> result = indexes.create_one(key.view());
+
+        REQUIRE(result);
+        REQUIRE(*result == "a_1_b_-1");
     }
 
     SECTION("with index_model and options") {
         auto key = make_document(kvp("a", 1));
         auto options = make_document(kvp("name", "myIndex"));
         index_model model(key.view(), options.view());
-        std::string result = indexes.create_one(model);
-        REQUIRE(result == "myIndex");
+        stdx::optional<std::string> result = indexes.create_one(model);
+
+        REQUIRE(result);
+        REQUIRE(*result == "myIndex");
     }
 
     SECTION("with index_model and no options") {
         auto key = make_document(kvp("a", 1), kvp("b", -1));
         index_model model(key.view());
-        std::string result = indexes.create_one(model);
-        REQUIRE(result == "a_1_b_-1");
+        stdx::optional<std::string> result = indexes.create_one(model);
+
+        REQUIRE(result);
+        REQUIRE(*result == "a_1_b_-1");
     }
 
     SECTION("fails for same keys and options") {
-        auto keys1 = make_document(kvp("a", 1));
-        auto keys2 = make_document(kvp("a", 1));
+        auto keys = make_document(kvp("a", 1));
 
-        REQUIRE_NOTHROW(indexes.create_one(keys1.view()));
-        REQUIRE_THROWS_AS(indexes.create_one(keys2.view()), operation_exception);
+        REQUIRE(indexes.create_one(keys.view()));
+        REQUIRE(!indexes.create_one(keys.view()));
     }
 
     SECTION("fails for same name") {
@@ -99,10 +107,24 @@ TEST_CASE("create_many", "[index_view]") {
 
     index_view indexes = coll.indexes();
 
-    std::vector<std::string> names = indexes.create_many(models);
+    bsoncxx::document::value result = indexes.create_many(models);
+    bsoncxx::document::view result_view = result.view();
+    REQUIRE((result_view["numIndexesAfter"].get_int32() -
+             result_view["numIndexesBefore"].get_int32()) == 3);
 
     std::vector<std::string> expected_names{"a_1", "b_1_c_-1", "c_-1"};
-    REQUIRE(names == expected_names);
+    std::int8_t found = 0;
+
+    for (auto&& index : indexes.list()) {
+        auto name = index["name"].get_utf8();
+
+        for (auto expected : expected_names) {
+            if (stdx::string_view{expected} == name.value) {
+                found++;
+            }
+        }
+    }
+    REQUIRE(found == 3);
 }
 
 TEST_CASE("drop_one", "[index_view]") {
@@ -120,22 +142,24 @@ TEST_CASE("drop_one", "[index_view]") {
 
     SECTION("drops index by name") {
         auto key = make_document(kvp("a", 1));
-        std::string result = indexes.create_one(key.view());
+        stdx::optional<std::string> result = indexes.create_one(key.view());
 
         auto cursor1 = indexes.list();
         REQUIRE(std::distance(cursor1.begin(), cursor1.end()) == 2);
+        REQUIRE(result);
 
-        indexes.drop_one(stdx::string_view{result});
+        indexes.drop_one(*result);
         auto cursor2 = indexes.list();
         REQUIRE(std::distance(cursor2.begin(), cursor2.end()) == 1);
     }
 
     SECTION("drops index by key and options") {
         auto key = make_document(kvp("a", 1));
-        std::string result = indexes.create_one(key.view());
+        stdx::optional<std::string> result = indexes.create_one(key.view());
 
         auto cursor1 = indexes.list();
         REQUIRE(std::distance(cursor1.begin(), cursor1.end()) == 2);
+        REQUIRE(result);
 
         indexes.drop_one(key.view());
         auto cursor2 = indexes.list();
@@ -145,10 +169,11 @@ TEST_CASE("drop_one", "[index_view]") {
     SECTION("drops index by index_model") {
         auto key = make_document(kvp("a", 1));
         index_model model(key.view());
-        std::string result = indexes.create_one(key.view());
+        stdx::optional<std::string> result = indexes.create_one(key.view());
 
         auto cursor1 = indexes.list();
         REQUIRE(std::distance(cursor1.begin(), cursor1.end()) == 2);
+        REQUIRE(result);
 
         indexes.drop_one(model);
         auto cursor2 = indexes.list();
@@ -156,7 +181,7 @@ TEST_CASE("drop_one", "[index_view]") {
     }
 
     SECTION("fails for drop_one on *") {
-        REQUIRE_THROWS_AS(indexes.drop_one("*"), operation_exception);
+        REQUIRE_THROWS_AS(indexes.drop_one("*"), logic_error);
     }
 
     SECTION("fails for index that doesn't exist") {
@@ -179,9 +204,13 @@ TEST_CASE("drop_all", "[index_view]") {
 
     index_view indexes = coll.indexes();
 
-    std::vector<std::string> names = indexes.create_many(models);
+    bsoncxx::document::value result = indexes.create_many(models);
+    bsoncxx::document::view result_view = result.view();
+
     auto cursor1 = indexes.list();
     REQUIRE(std::distance(cursor1.begin(), cursor1.end()) == 4);
+    REQUIRE((result_view["numIndexesAfter"].get_int32() -
+             result_view["numIndexesBefore"].get_int32()) == 3);
 
     indexes.drop_all();
     auto cursor2 = indexes.list();
