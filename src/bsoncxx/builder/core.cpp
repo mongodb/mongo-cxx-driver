@@ -333,8 +333,8 @@ void core::append(const types::b_int32& value) {
 void core::append(const types::b_timestamp& value) {
     stdx::string_view key = _impl->next_key();
 
-    bson_append_timestamp(_impl->back(), key.data(), key.length(), value.increment,
-                          value.timestamp);
+    bson_append_timestamp(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()),
+                          value.timestamp, value.increment);
 }
 
 void core::append(const types::b_int64& value) {

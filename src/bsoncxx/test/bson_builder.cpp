@@ -337,13 +337,13 @@ TEST_CASE("builder appends int32", "[bsoncxx::builder::stream]") {
 }
 
 TEST_CASE("builder appends timestamp", "[bsoncxx::builder::stream]") {
+    builder::stream::document b;
+    types::b_timestamp foo{100, 1000};
+    b << "foo" << foo;
+
     bson_t expected;
     bson_init(&expected);
-    builder::stream::document b;
-
-    bson_append_timestamp(&expected, "foo", -1, 100, 1000);
-
-    b << "foo" << types::b_timestamp{100, 1000};
+    bson_append_timestamp(&expected, "foo", -1, foo.timestamp, foo.increment);
 
     bson_eq_stream(&expected, b);
 
