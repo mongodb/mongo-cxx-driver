@@ -73,6 +73,22 @@ enum class error_code : std::int32_t {
     /// BSON data could not be processed, but no specific reason was available.
     k_internal_error,
 
+    /// Failed to begin appending an array to a BSON document or array.
+    k_cannot_begin_appending_array,
+
+    /// Failed to begin appending a BSON document to a BSON document or array.
+    k_cannot_begin_appending_document,
+
+    /// Failed to complete appending an array to a BSON document or array.
+    k_cannot_end_appending_array,
+
+    /// Failed to complete appending a BSON document to a BSON document or array.
+    k_cannot_end_appending_document,
+
+/// A value failed to append.
+#define BSONCXX_ENUM(name, value) k_cannot_append_##name,
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
     // Add new constant string message to error_code.cpp as well!
 };
 

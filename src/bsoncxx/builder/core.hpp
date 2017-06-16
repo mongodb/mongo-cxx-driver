@@ -155,6 +155,9 @@ class BSONCXX_API core {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
+    /// @throws
+    ///   bsoncxx::exception if one of the keys fails to append.
+    ///
     core& concatenate(const document::view& view);
 
     ///
@@ -167,6 +170,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the double fails to append.
     ///
     core& append(const types::b_double& value);
 
@@ -180,6 +184,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the utf8 fails to append.
     ///
     core& append(const types::b_utf8& value);
 
@@ -193,6 +198,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the document fails to append.
     ///
     core& append(const types::b_document& value);
 
@@ -206,6 +212,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the array fails to append.
     ///
     core& append(const types::b_array& value);
 
@@ -219,6 +226,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the binary fails to append.
     ///
     core& append(const types::b_binary& value);
 
@@ -232,6 +240,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if undefined fails to append.
     ///
     core& append(const types::b_undefined& value);
 
@@ -245,6 +254,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the ObjectId fails to append.
     ///
     core& append(const types::b_oid& value);
 
@@ -258,6 +268,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the boolean fails to append.
     ///
     core& append(const types::b_bool& value);
 
@@ -271,6 +282,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the date fails to append.
     ///
     core& append(const types::b_date& value);
 
@@ -284,6 +296,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if null fails to append.
     ///
     core& append(const types::b_null& value);
 
@@ -297,6 +310,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the regex fails to append.
     ///
     core& append(const types::b_regex& value);
 
@@ -310,6 +324,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the DBPointer fails to append.
     ///
     core& append(const types::b_dbpointer& value);
 
@@ -323,6 +338,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the JavaScript code fails to append.
     ///
     core& append(const types::b_code& value);
 
@@ -336,6 +352,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the symbol fails to append.
     ///
     core& append(const types::b_symbol& value);
 
@@ -349,6 +366,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the JavaScript code with scope fails to append.
     ///
     core& append(const types::b_codewscope& value);
 
@@ -362,6 +380,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the 32-bit signed integer fails to append.
     ///
     core& append(const types::b_int32& value);
 
@@ -375,6 +394,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the timestamp fails to append.
     ///
     core& append(const types::b_timestamp& value);
 
@@ -388,6 +408,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the 64-bit signed integer fails to append.
     ///
     core& append(const types::b_int64& value);
 
@@ -401,6 +422,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the Decimal128 fails to append.
     ///
     core& append(const types::b_decimal128& value);
 
@@ -414,6 +436,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the min-key fails to append.
     ///
     core& append(const types::b_minkey& value);
 
@@ -427,6 +450,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
+    ///   bsoncxx::exception if the max-key fails to append.
     ///
     core& append(const types::b_maxkey& value);
 

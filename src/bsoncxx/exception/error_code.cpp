@@ -64,6 +64,19 @@ class error_category_impl final : public std::error_category {
                 return "could not parse Decimal128 string";
             case error_code::k_internal_error:
                 return "could not process bson data";
+            case error_code::k_cannot_begin_appending_array:
+                return "unable to begin appending an array";
+            case error_code::k_cannot_begin_appending_document:
+                return "unable to begin appending a document";
+            case error_code::k_cannot_end_appending_array:
+                return "tried to complete appending an array, but overflowed";
+            case error_code::k_cannot_end_appending_document:
+                return "tried to complete appending an document, but overflowed";
+#define BSONCXX_ENUM(name, value)            \
+    case error_code::k_cannot_append_##name: \
+        return {"unable to append " #name};
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
             default:
                 return "unknown bsoncxx error code";
         }
