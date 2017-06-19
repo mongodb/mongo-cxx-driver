@@ -259,8 +259,10 @@ class MONGOCXX_API collection {
     ///   level set write concern - collection::write_concern(wc). (MongoDB
     ///   3.4+)
     ///
-    bsoncxx::document::value create_index(bsoncxx::document::view_or_value keys,
-                                          bsoncxx::document::view_or_value opts = {});
+    bsoncxx::document::value create_index(
+        bsoncxx::document::view_or_value keys,
+        bsoncxx::document::view_or_value opts = {},
+        bsoncxx::stdx::optional<std::int64_t> max_time_ms = bsoncxx::stdx::nullopt);
 
     ///
     /// Deletes all matching documents from the collection.

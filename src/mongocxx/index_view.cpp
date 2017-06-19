@@ -35,39 +35,46 @@ cursor index_view::list() {
 }
 
 bsoncxx::stdx::optional<std::string> index_view::create_one(
-    const bsoncxx::document::view_or_value& keys, const bsoncxx::document::view_or_value& options) {
-    return create_one(index_model{keys, options});
+    const bsoncxx::document::view_or_value& keys,
+    const bsoncxx::document::view_or_value& options,
+    bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
+    return create_one(index_model{keys, options}, max_time_ms);
 }
 
-bsoncxx::stdx::optional<std::string> index_view::create_one(const index_model& model) {
-    return _get_impl().create_one(model);
+bsoncxx::stdx::optional<std::string> index_view::create_one(
+    const index_model& model, bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
+    return _get_impl().create_one(model, max_time_ms);
 }
 
-bsoncxx::document::value index_view::create_many(const std::vector<index_model>& indexes) {
-    return _get_impl().create_many(indexes);
+bsoncxx::document::value index_view::create_many(
+    const std::vector<index_model>& indexes, bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
+    return _get_impl().create_many(indexes, max_time_ms);
 }
 
-void index_view::drop_one(bsoncxx::stdx::string_view name) {
-    return _get_impl().drop_one(name);
+void index_view::drop_one(bsoncxx::stdx::string_view name,
+                          bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
+    return _get_impl().drop_one(name, max_time_ms);
 }
 
 void index_view::drop_one(const bsoncxx::document::view_or_value& keys,
-                          const bsoncxx::document::view_or_value& options) {
+                          const bsoncxx::document::view_or_value& options,
+                          bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
     bsoncxx::document::view opts_view = options.view();
 
     if (opts_view["name"]) {
-        drop_one(opts_view["name"].get_utf8().value.to_string());
+        drop_one(opts_view["name"].get_utf8().value.to_string(), max_time_ms);
     } else {
-        drop_one(_get_impl().get_index_name_from_keys(keys));
+        drop_one(_get_impl().get_index_name_from_keys(keys), max_time_ms);
     }
 }
 
-void index_view::drop_one(const index_model& model) {
-    drop_one(model.keys(), model.options());
+void index_view::drop_one(const index_model& model,
+                          bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
+    drop_one(model.keys(), model.options(), max_time_ms);
 }
 
-void index_view::drop_all() {
-    _get_impl().drop_all();
+void index_view::drop_all(bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
+    _get_impl().drop_all(max_time_ms);
 }
 
 index_view::impl& index_view::_get_impl() {

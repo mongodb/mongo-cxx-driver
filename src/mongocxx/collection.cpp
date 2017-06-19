@@ -753,43 +753,19 @@ std::int64_t collection::count(view_or_value filter, const options::count& optio
     return result;
 }
 
-bsoncxx::document::value collection::create_index(bsoncxx::document::view_or_value keys,
-                                                  bsoncxx::document::view_or_value opts) {
+bsoncxx::document::value collection::create_index(
+    bsoncxx::document::view_or_value keys,
+    bsoncxx::document::view_or_value opts,
+    bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
     using namespace bsoncxx;
 
-    builder::basic::document index;
-    document::view opts_view = opts.view();
+    auto name = indexes().create_one(keys, opts, max_time_ms);
 
-    if (!opts_view["name"]) {
-        scoped_bson_t keys_bson{keys};
-
-        const auto name_from_keys = libmongoc::collection_keys_to_index_string(keys_bson.bson());
-        const auto cleanup_name_from_keys = make_guard([&] { bson_free(name_from_keys); });
-
-        index.append(kvp("name", name_from_keys));
+    if (name) {
+        return make_document(kvp("name", *name));
+    } else {
+        return make_document();
     }
-
-    index.append(builder::basic::concatenate(make_document(kvp("key", keys))),
-                 builder::basic::concatenate(opts));
-
-    array::view_or_value index_array = make_array(index.view());
-    document::view_or_value command =
-        make_document(kvp("createIndexes", name()), kvp("indexes", index_array.view()));
-
-    scoped_bson_t reply;
-    bson_error_t error;
-
-    scoped_bson_t command_bson{command};
-    scoped_bson_t opts_bson{make_document()};
-
-    auto result = libmongoc::collection_command_simple(
-        _get_impl().collection_t, command_bson.bson(), NULL, reply.bson_for_init(), &error);
-
-    if (!result) {
-        throw_exception<operation_exception>(error);
-    }
-
-    return make_document(kvp("name", index.view()["name"].get_utf8().value));
 }
 
 cursor collection::distinct(bsoncxx::string::view_or_value field_name,

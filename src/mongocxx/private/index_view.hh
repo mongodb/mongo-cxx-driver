@@ -62,8 +62,9 @@ class index_view::impl {
         return cursor{result};
     }
 
-    bsoncxx::stdx::optional<std::string> create_one(const index_model& model) {
-        bsoncxx::document::value result = create_many(std::vector<index_model>{model});
+    bsoncxx::stdx::optional<std::string> create_one(
+        const index_model& model, bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
+        bsoncxx::document::value result = create_many(std::vector<index_model>{model}, max_time_ms);
         bsoncxx::document::view result_view = result.view();
 
         if (result_view["numIndexesAfter"].get_value() ==
@@ -78,7 +79,8 @@ class index_view::impl {
         return bsoncxx::stdx::make_optional(get_index_name_from_keys(model.keys()));
     }
 
-    bsoncxx::document::value create_many(const std::vector<index_model>& indexes) {
+    bsoncxx::document::value create_many(const std::vector<index_model>& indexes,
+                                         bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
         using namespace bsoncxx;
         using builder::basic::concatenate;
 
@@ -104,11 +106,16 @@ class index_view::impl {
         libbson::scoped_bson_t reply;
         bson_error_t error;
 
-        libbson::scoped_bson_t command_bson{command};
-        libbson::scoped_bson_t opts_bson{make_document()};
+        builder::basic::document opts_doc;
+        if (max_time_ms) {
+            opts_doc.append(kvp("maxTimeMS", types::b_int64{*max_time_ms}));
+        }
 
-        auto result = libmongoc::collection_command_simple(
-            _coll, command_bson.bson(), NULL, reply.bson_for_init(), &error);
+        libbson::scoped_bson_t command_bson{command};
+        libbson::scoped_bson_t opts_bson{opts_doc.view()};
+
+        auto result = libmongoc::collection_write_command_with_opts(
+            _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
         if (!result) {
             throw_exception<operation_exception>(error);
@@ -117,20 +124,34 @@ class index_view::impl {
         return reply.steal();
     }
 
-    void drop_one(bsoncxx::stdx::string_view name) {
+    void drop_one(bsoncxx::stdx::string_view name,
+                  bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
         if (name == bsoncxx::stdx::string_view{"*"}) {
             throw logic_error(error_code::k_invalid_parameter);
         }
 
+        bsoncxx::builder::basic::document opts;
+        if (max_time_ms) {
+            opts.append(kvp("maxTimeMS", bsoncxx::types::b_int64{*max_time_ms}));
+        }
+
+        bsoncxx::document::value command = make_document(
+            kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", name));
+
+        libbson::scoped_bson_t reply;
+        libbson::scoped_bson_t command_bson{command.view()};
+        libbson::scoped_bson_t opts_bson{opts.view()};
         bson_error_t error;
-        bool result = libmongoc::collection_drop_index(_coll, name.data(), &error);
+
+        bool result = libmongoc::collection_write_command_with_opts(
+            _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
         if (!result) {
             throw_exception<operation_exception>(error);
         }
     }
 
-    MONGOCXX_INLINE void drop_all() {
+    MONGOCXX_INLINE void drop_all(bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
         bsoncxx::document::value command = make_document(
             kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", "*"));
 
@@ -138,10 +159,16 @@ class index_view::impl {
         bson_error_t error;
 
         libbson::scoped_bson_t command_bson{command.view()};
-        libbson::scoped_bson_t opts_bson{make_document().view()};
 
-        auto result = libmongoc::collection_command_simple(
-            _coll, command_bson.bson(), NULL, reply.bson_for_init(), &error);
+        bsoncxx::builder::basic::document opts_doc;
+        if (max_time_ms) {
+            opts_doc.append(kvp("maxTimeMS", *max_time_ms));
+        }
+
+        libbson::scoped_bson_t opts_bson{opts_doc.view()};
+
+        bool result = libmongoc::collection_write_command_with_opts(
+            _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
         if (!result) {
             throw_exception<operation_exception>(error);

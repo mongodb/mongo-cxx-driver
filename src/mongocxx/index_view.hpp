@@ -58,61 +58,90 @@ class MONGOCXX_API index_view {
     /// @param options
     ///    A document containing set of options that controls the creation of the index. See
     ///    https://docs.mongodb.com/manual/reference/method/db.collection.createIndex/.
+    /// @param max_time_ms (optional)
+    ///    The cumulative time limit in milliseconds for processing operations.
+    ///    MongoDB aborts the operation at the earliest following interrupt point.
     ///
     /// @return
     ///    An optional containing the name of the created index. If and index with the same keys
     ///    already exists, an empty optional is returned.
     ///
     /// @exception
-    ///    Throws operation_exception for any errors encountered by the server.
+    ///    Throws operation_exception for any errors encountered by the server or if max_time_ms
+    ///    option is present and the operation exceeds the time limit.
     ///
     /// @see https://docs.mongodb.com/manual/reference/method/db.collection.createIndex/
     ///
-    stdx::optional<std::string> create_one(const bsoncxx::document::view_or_value& keys,
-                                           const bsoncxx::document::view_or_value& options = {});
+    stdx::optional<std::string> create_one(
+        const bsoncxx::document::view_or_value& keys,
+        const bsoncxx::document::view_or_value& options = {},
+        bsoncxx::stdx::optional<std::int64_t> max_time_ms = bsoncxx::stdx::nullopt);
 
     ///
     /// Creates an index. A convenience method that calls create_many.
     ///
     /// @param index
     ///    Index_model describing the index being created.
+    /// @param max_time_ms (optional)
+    ///    The cumulative time limit in milliseconds for processing operations.
+    ///    MongoDB aborts the operation at the earliest following interrupt point.
     ///
     /// @return
     ///    An optional containing the name of the created index. If and index with the same keys
     ///    already exists, an empty optional is returned.
     ///
     /// @exception
-    ///    Throws operation_exception for any errors encountered by the server.
+    ///    Throws operation_exception for any errors encountered by the server or if max_time_ms
+    ///    option is present and the operation exceeds the time limit.
     ///
-    stdx::optional<std::string> create_one(const index_model& index);
+    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    ///
+    stdx::optional<std::string> create_one(
+        const index_model& index,
+        bsoncxx::stdx::optional<std::int64_t> max_time_ms = bsoncxx::stdx::nullopt);
 
     ///
     /// Adds a container of indexes to the collection.
     ///
     /// @param indexes
     ///   std::vector containing index models describing the indexes being created.
+    /// @param max_time_ms (optional)
+    ///    The cumulative time limit in milliseconds for processing operations.
+    ///    MongoDB aborts the operation at the earliest following interrupt point.
     ///
     /// @return
     ///    The result document sent back by the server as if the createIndexes command was run from
     ///    the shell.
     ///
     /// @exception
-    ///     Throws operation_exception for any errors encountered by the server.
+    ///     Throws operation_exception for any errors encountered by the server or if max_time_ms
+    ///     option is present and the operation exceeds the time limit.
     ///
-    bsoncxx::document::value create_many(const std::vector<index_model>& indexes);
+    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    ///
+    bsoncxx::document::value create_many(
+        const std::vector<index_model>& indexes,
+        bsoncxx::stdx::optional<std::int64_t> max_time_ms = bsoncxx::stdx::nullopt);
 
     ///
     /// Drops a single index by name.
     ///
     /// @param name
     ///    The name of the index being dropped.
+    /// @param max_time_ms (optional)
+    ///    The cumulative time limit in milliseconds for processing operations.
+    ///    MongoDB aborts the operation at the earliest following interrupt point.
     ///
     /// @exception
-    ///   Throws operation_exception for any errors encountered by the server
+    ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
+    ///   option is present and the operation exceeds the time limit.
     /// @exception
     ///   Throws logic_error if "*" is passed in for the index name
     ///
-    void drop_one(stdx::string_view name);
+    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    ///
+    void drop_one(stdx::string_view name,
+                  bsoncxx::stdx::optional<std::int64_t> max_time_ms = bsoncxx::stdx::nullopt);
 
     ///
     /// Attempts to drop a single index from the collection given the keys and options.
@@ -123,36 +152,60 @@ class MONGOCXX_API index_view {
     /// @param options (optional)
     ///    A document containing set of options used to create the index. Only the name field will
     ///    be used from here, and if it is not included, a name based on they keys will be used.
+    /// @param max_time_ms (optional)
+    ///    The cumulative time limit in milliseconds for processing operations.
+    ///    MongoDB aborts the operation at the earliest following interrupt point.
     ///
     /// @exception
     ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
     /// @exception
-    ///   Throws operation_exception for any errors encountered by the server.
+    ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
+    ///   option is present and the operation exceeds the time limit.
     /// @exception
     ///   Throws logic_error if "*" is passed in for the index name
     ///
+    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    ///
     void drop_one(const bsoncxx::document::view_or_value& keys,
-                  const bsoncxx::document::view_or_value& options = {});
+                  const bsoncxx::document::view_or_value& options = {},
+                  bsoncxx::stdx::optional<std::int64_t> = bsoncxx::stdx::nullopt);
 
     ///
     /// Attempts to drop a single index from the collection given an index model.
     ///
     /// @param index
     ///    An index model describing the index being dropped.
+    /// @param max_time_ms (optional)
+    ///    The cumulative time limit in milliseconds for processing operations.
+    ///    MongoDB aborts the operation at the earliest following interrupt point.
     ///
     /// @exception
     ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
     /// @exception
-    ///   Throws operation_exception for any errors encountered by the server
+    ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
+    ///   option is present and the operation exceeds the time limit.
     /// @exception
     ///   Throws logic_error if "*" is passed in for the index name
     ///
-    void drop_one(const index_model& index);
+    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    ///
+    void drop_one(const index_model& index,
+                  bsoncxx::stdx::optional<std::int64_t> max_time_ms = bsoncxx::stdx::nullopt);
 
     ///
     /// Drops all indexes in the collection.
     ///
-    void drop_all();
+    /// @param max_time_ms (optional)
+    ///    The cumulative time limit in milliseconds for processing operations.
+    ///    MongoDB aborts the operation at the earliest following interrupt point.
+    ///
+    /// @exception
+    ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
+    ///   option is present and the operation exceeds the time limit.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    ///
+    void drop_all(bsoncxx::stdx::optional<std::int64_t> max_time_ms = bsoncxx::stdx::nullopt);
 
    private:
     friend class collection;

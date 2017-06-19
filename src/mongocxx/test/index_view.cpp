@@ -75,6 +75,12 @@ TEST_CASE("create_one", "[index_view]") {
         REQUIRE(*result == "a_1_b_-1");
     }
 
+    SECTION("tests maxTimeMS option works") {
+        auto key = make_document(kvp("aaa", 1));
+        index_model model(key.view());
+        REQUIRE_THROWS_AS(indexes.create_one(model, 1), operation_exception);
+    }
+
     SECTION("fails for same keys and options") {
         auto keys = make_document(kvp("a", 1));
 
@@ -107,24 +113,30 @@ TEST_CASE("create_many", "[index_view]") {
 
     index_view indexes = coll.indexes();
 
-    bsoncxx::document::value result = indexes.create_many(models);
-    bsoncxx::document::view result_view = result.view();
-    REQUIRE((result_view["numIndexesAfter"].get_int32() -
-             result_view["numIndexesBefore"].get_int32()) == 3);
+    SECTION("test maxTimeMS option") {
+        REQUIRE_THROWS_AS(indexes.create_many(models, 1), operation_exception);
+    }
 
-    std::vector<std::string> expected_names{"a_1", "b_1_c_-1", "c_-1"};
-    std::int8_t found = 0;
+    SECTION("create three") {
+        bsoncxx::document::value result = indexes.create_many(models);
+        bsoncxx::document::view result_view = result.view();
+        REQUIRE((result_view["numIndexesAfter"].get_int32() -
+                 result_view["numIndexesBefore"].get_int32()) == 3);
 
-    for (auto&& index : indexes.list()) {
-        auto name = index["name"].get_utf8();
+        std::vector<std::string> expected_names{"a_1", "b_1_c_-1", "c_-1"};
+        std::int8_t found = 0;
 
-        for (auto expected : expected_names) {
-            if (stdx::string_view{expected} == name.value) {
-                found++;
+        for (auto&& index : indexes.list()) {
+            auto name = index["name"].get_utf8();
+
+            for (auto expected : expected_names) {
+                if (stdx::string_view{expected} == name.value) {
+                    found++;
+                }
             }
         }
+        REQUIRE(found == 3);
     }
-    REQUIRE(found == 3);
 }
 
 TEST_CASE("drop_one", "[index_view]") {
@@ -198,9 +210,9 @@ TEST_CASE("drop_all", "[index_view]") {
     coll.drop();
     coll.insert_one({});  // Ensure that the collection exists.
 
-    std::vector<index_model> models{index_model(make_document(kvp("a", 1))),
-                                    index_model(make_document(kvp("b", 1), kvp("c", -1))),
-                                    index_model(make_document(kvp("c", -1)))};
+    std::vector<index_model> models{index_model{make_document(kvp("a", 1))},
+                                    index_model{make_document(kvp("b", 1), kvp("c", -1))},
+                                    index_model{make_document(kvp("c", -1))}};
 
     index_view indexes = coll.indexes();
 
@@ -208,13 +220,18 @@ TEST_CASE("drop_all", "[index_view]") {
     bsoncxx::document::view result_view = result.view();
 
     auto cursor1 = indexes.list();
-    REQUIRE(std::distance(cursor1.begin(), cursor1.end()) == 4);
+    REQUIRE(std::distance(cursor1.begin(), cursor1.end()) == models.size() + 1);
     REQUIRE((result_view["numIndexesAfter"].get_int32() -
-             result_view["numIndexesBefore"].get_int32()) == 3);
+             result_view["numIndexesBefore"].get_int32()) == models.size());
 
-    indexes.drop_all();
-    auto cursor2 = indexes.list();
+    SECTION("drop normally") {
+        indexes.drop_all();
+        auto cursor2 = indexes.list();
 
-    REQUIRE(std::distance(cursor2.begin(), cursor2.end()) == 1);
+        REQUIRE(std::distance(cursor2.begin(), cursor2.end()) == 1);
+    }
+
+    // Testing for the maxTimeMS option would go here, but the dropIndexes command is so fast that
+    // we could not generate a timeout failure.
 }
 }
