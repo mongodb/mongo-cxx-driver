@@ -58,8 +58,7 @@ void validate_gridfs_file(database db,
     auto files_doc = db[bucket_name + ".files"].find_one(make_document(kvp("_id", id)));
     REQUIRE(files_doc);
 
-    // TODO CXX-1325: Remove the extra parentheses around the following REQUIRE statement.
-    REQUIRE((files_doc->view()["_id"].get_value() == id));
+    REQUIRE(files_doc->view()["_id"].get_value() == id);
     REQUIRE(static_cast<std::size_t>(files_doc->view()["length"].get_int64().value) ==
             expected_contents.size());
     REQUIRE(files_doc->view()["chunkSize"].get_int32().value == expected_chunk_size);
@@ -114,8 +113,7 @@ void validate_gridfs_file(
     auto files_doc = db[bucket_name + ".files"].find_one(make_document(kvp("_id", id)));
     REQUIRE(files_doc);
 
-    // TODO CXX-1325: Remove the extra parentheses around the following REQUIRE statement.
-    REQUIRE((files_doc->view()["_id"].get_oid() == id.get_oid()));
+    REQUIRE(files_doc->view()["_id"].get_oid() == id.get_oid());
     REQUIRE(files_doc->view()["length"].get_int64().value == expected_length);
     REQUIRE(static_cast<std::size_t>(files_doc->view()["chunkSize"].get_int32().value) ==
             expected_chunk_size);

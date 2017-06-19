@@ -385,9 +385,10 @@ class BSONCXX_API value {
 // sfinae in the bool return to avoid competing with the value == value
 // operators
 template <typename T>
-using not_value =
-    typename std::enable_if<!std::is_same<typename std::remove_reference<T>::type, value>::value,
-                            bool>::type;
+using not_value = typename std::enable_if<
+    std::is_constructible<value, T>::value &&
+        !std::is_same<typename std::remove_reference<T>::type, value>::value,
+    bool>::type;
 
 // these all return bool
 template <typename T>
