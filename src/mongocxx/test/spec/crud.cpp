@@ -49,7 +49,6 @@
 #include <mongocxx/result/insert_one.hpp>
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
-#include <mongocxx/stdx.hpp>
 #include <mongocxx/test_util/client_helpers.hh>
 
 namespace {
@@ -137,7 +136,7 @@ document::value run_distinct_test(collection* coll, document::view operation) {
         filter = arguments["filter"].get_document().value;
     }
 
-    mongocxx::stdx::string_view field_name = arguments["fieldName"].get_utf8().value;
+    bsoncxx::stdx::string_view field_name = arguments["fieldName"].get_utf8().value;
 
     options::distinct options{};
 
@@ -438,10 +437,10 @@ document::value run_replace_one_test(collection* coll, document::view operation)
     }
 
     std::int32_t matched_count = 0;
-    mongocxx::stdx::optional<std::int32_t> modified_count;
+    bsoncxx::stdx::optional<std::int32_t> modified_count;
     std::int32_t upserted_count = 0;
     auto update_result = coll->replace_one(filter, replacement, options);
-    mongocxx::stdx::optional<types::value> upserted_id{};
+    bsoncxx::stdx::optional<types::value> upserted_id{};
 
     if (update_result) {
         matched_count = update_result->matched_count();
@@ -495,10 +494,10 @@ document::value run_update_many_test(collection* coll, document::view operation)
     }
 
     std::int32_t matched_count = 0;
-    mongocxx::stdx::optional<std::int32_t> modified_count;
+    bsoncxx::stdx::optional<std::int32_t> modified_count;
     std::int32_t upserted_count = 0;
     auto update_result = coll->update_many(filter, update, options);
-    mongocxx::stdx::optional<types::value> upserted_id{};
+    bsoncxx::stdx::optional<types::value> upserted_id{};
 
     if (update_result) {
         matched_count = update_result->matched_count();
@@ -552,10 +551,10 @@ document::value run_update_one_test(collection* coll, document::view operation) 
     }
 
     std::int32_t matched_count = 0;
-    mongocxx::stdx::optional<std::int32_t> modified_count;
+    bsoncxx::stdx::optional<std::int32_t> modified_count;
     std::int32_t upserted_count = 0;
     auto update_result = coll->update_one(filter, update, options);
-    mongocxx::stdx::optional<types::value> upserted_id{};
+    bsoncxx::stdx::optional<types::value> upserted_id{};
 
     if (update_result) {
         matched_count = update_result->matched_count();
@@ -627,7 +626,7 @@ void initialize_collection(collection* coll, array::view initial_data) {
 
 void run_crud_tests_in_file(std::string test_path, client* client) {
     INFO("Test path: " << test_path);
-    mongocxx::stdx::optional<document::value> test_spec = test_util::parse_test_file(test_path);
+    bsoncxx::stdx::optional<document::value> test_spec = test_util::parse_test_file(test_path);
     REQUIRE(test_spec);
 
     document::view test_spec_view = test_spec->view();
@@ -705,7 +704,7 @@ void run_crud_tests_in_file(std::string test_path, client* client) {
 
             // The C++ driver does not implement the optional returning of results for
             // aggregations with $out.
-            if (operation["name"].get_utf8().value == mongocxx::stdx::string_view{"aggregate"}) {
+            if (operation["name"].get_utf8().value == bsoncxx::stdx::string_view{"aggregate"}) {
                 continue;
             }
         }

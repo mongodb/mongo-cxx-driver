@@ -68,7 +68,7 @@ int main(int, char**) {
     // Update {"a": 1} to {"a": 2}.
     bulk.append(upsert_op);
 
-    mongocxx::stdx::optional<mongocxx::result::bulk_write> result = coll.bulk_write(bulk);
+    bsoncxx::stdx::optional<mongocxx::result::bulk_write> result = coll.bulk_write(bulk);
 
     if (!result) {
         return EXIT_FAILURE;

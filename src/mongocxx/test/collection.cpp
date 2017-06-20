@@ -1754,7 +1754,7 @@ TEST_CASE("create_index tests", "[collection]") {
         options.name(indexName);
 
         auto response = coll.create_index(index.view(), options);
-        REQUIRE(response.view()["name"].get_utf8().value == mongocxx::stdx::string_view{indexName});
+        REQUIRE(response.view()["name"].get_utf8().value == bsoncxx::stdx::string_view{indexName});
 
         find_index_and_validate(coll, indexName);
 
@@ -1762,7 +1762,7 @@ TEST_CASE("create_index tests", "[collection]") {
 
         auto response2 = coll.create_index(index2.view(), options::index{});
         REQUIRE(response2.view()["name"].get_utf8().value ==
-                mongocxx::stdx::string_view{"b_1_c_-1"});
+                bsoncxx::stdx::string_view{"b_1_c_-1"});
 
         find_index_and_validate(coll, "b_1_c_-1");
     }
@@ -1845,7 +1845,7 @@ TEST_CASE("create_index tests", "[collection]") {
     }
 
     SECTION("succeeds with storage engine options") {
-        mongocxx::stdx::string_view index_name{"storage_options_test"};
+        bsoncxx::stdx::string_view index_name{"storage_options_test"};
         bsoncxx::document::value keys = make_document(kvp("c", 1));
 
         options::index options{};

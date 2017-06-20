@@ -463,7 +463,7 @@ void arrange(database db, array::view data) {
 
 void run_gridfs_tests_in_file(std::string test_path, client* client) {
     INFO("Test path: " << test_path);
-    mongocxx::stdx::optional<document::value> test_spec = test_util::parse_test_file(test_path);
+    bsoncxx::stdx::optional<document::value> test_spec = test_util::parse_test_file(test_path);
 
     REQUIRE(test_spec);
 

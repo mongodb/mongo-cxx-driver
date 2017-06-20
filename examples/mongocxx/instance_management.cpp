@@ -22,7 +22,6 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
 #include <mongocxx/pool.hpp>
-#include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 
 namespace {
@@ -58,7 +57,7 @@ class mongo_access {
         return _pool->acquire();
     }
 
-    mongocxx::stdx::optional<connection> try_get_connection() {
+    bsoncxx::stdx::optional<connection> try_get_connection() {
         return _pool->try_acquire();
     }
 
@@ -78,15 +77,15 @@ void configure(mongocxx::uri uri) {
     class noop_logger : public mongocxx::logger {
        public:
         virtual void operator()(mongocxx::log_level,
-                                mongocxx::stdx::string_view,
-                                mongocxx::stdx::string_view) noexcept {}
+                                bsoncxx::stdx::string_view,
+                                bsoncxx::stdx::string_view) noexcept {}
     };
 
     auto instance =
-        mongocxx::stdx::make_unique<mongocxx::instance>(mongocxx::stdx::make_unique<noop_logger>());
+        bsoncxx::stdx::make_unique<mongocxx::instance>(bsoncxx::stdx::make_unique<noop_logger>());
 
     mongo_access::instance().configure(std::move(instance),
-                                       mongocxx::stdx::make_unique<mongocxx::pool>(std::move(uri)));
+                                       bsoncxx::stdx::make_unique<mongocxx::pool>(std::move(uri)));
 }
 
 bool do_work() {

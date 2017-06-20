@@ -21,12 +21,11 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
-#include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
-using mongocxx::stdx::string_view;
+using bsoncxx::stdx::string_view;
 using mongocxx::collection;
 using mongocxx::validation_criteria;
 

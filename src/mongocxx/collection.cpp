@@ -78,7 +78,7 @@ const char* get_collection_name(mongoc_collection_t* collection) {
     return mongocxx::libmongoc::collection_get_name(collection);
 }
 
-mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
+bsoncxx::stdx::optional<bsoncxx::document::value> find_and_modify(
     ::mongoc_collection_t* collection,
     view_or_value filter,
     const ::mongoc_find_and_modify_opts_t* opts) {
@@ -100,7 +100,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
     bsoncxx::document::view result = reply.view();
 
     if (result["value"].type() == bsoncxx::type::k_null) {
-        return mongocxx::stdx::optional<bsoncxx::document::value>{};
+        return bsoncxx::stdx::optional<bsoncxx::document::value>{};
     }
 
     return bsoncxx::document::value{result["value"].get_document().view()};

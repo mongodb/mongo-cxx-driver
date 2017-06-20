@@ -216,7 +216,7 @@ To insert a single document into the collection, use a
 instance's `insert_one()` method:
 
 ```c++
-mongocxx::stdx::optional<mongocxx::result::insert_one> result =
+bsoncxx::stdx::optional<mongocxx::result::insert_one> result =
  restaurants.insert_one(doc);
 ```
 
@@ -285,7 +285,7 @@ To return a single document in the collection, use the `find_one()`
 method without any parameters.
 
 ```c++
-mongocxx::stdx::optional<bsoncxx::document::value> maybe_result =
+bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
   collection.find_one(document{} << finalize);
 if(maybe_result) {
   // Do something with *maybe_result;
@@ -309,7 +309,7 @@ To find the first document where the field `i` has the value `71`,
 pass the document `{"i": 71}` to specify the equality condition:
 
 ```c++
-mongocxx::stdx::optional<bsoncxx::document::value> maybe_result =
+bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
   collection.find_one(document{} << "i" << 71 << finalize);
 if(maybe_result) {
   std::cout << bsoncxx::to_json(*maybe_result) << "\n";
@@ -376,7 +376,7 @@ The following example increments the value of `i` by `100` where
 `i` is less than `100`:
 
 ```c++
-mongocxx::stdx::optional<mongocxx::result::update> result =
+bsoncxx::stdx::optional<mongocxx::result::update> result =
  collection.update_many(
   document{} << "i" << open_document <<
     "$lt" << 100 << close_document << finalize,
@@ -418,7 +418,7 @@ The following example deletes all documents where `i` is greater or
 equal to `100`:
 
 ```c++
-mongocxx::stdx::optional<mongocxx::result::delete_result> result =
+bsoncxx::stdx::optional<mongocxx::result::delete_result> result =
  collection.delete_many(
   document{} << "i" << open_document <<
     "$gte" << 100 << close_document << finalize);

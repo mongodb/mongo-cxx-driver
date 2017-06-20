@@ -17,7 +17,6 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
-#include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 
 using bsoncxx::builder::basic::kvp;
@@ -69,7 +68,7 @@ int main(int, char**) {
         // @begin: cpp-create-wt-options-index
         mongocxx::options::index index_options{};
         std::unique_ptr<mongocxx::options::index::wiredtiger_storage_options> wt_options =
-            mongocxx::stdx::make_unique<mongocxx::options::index::wiredtiger_storage_options>();
+            bsoncxx::stdx::make_unique<mongocxx::options::index::wiredtiger_storage_options>();
         wt_options->config_string("block_allocation=first");
         index_options.storage_options(std::move(wt_options));
         db["restaurants"].create_index(make_document(kvp("cuisine", 1)), index_options);

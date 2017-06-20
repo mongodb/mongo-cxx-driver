@@ -39,7 +39,6 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/read_preference.hpp>
-#include <mongocxx/stdx.hpp>
 
 namespace {
 using namespace mongocxx;
@@ -148,12 +147,12 @@ TEST_CASE("Collection", "[collection]") {
                 bsoncxx::array::view p(bson_get_data(pipeline), pipeline->len);
                 bsoncxx::document::view o(bson_get_data(options), options->len);
 
-                mongocxx::stdx::string_view bar(
+                bsoncxx::stdx::string_view bar(
                     p[0].get_document().value["$match"].get_document().value["foo"].get_utf8());
                 std::int32_t one(
                     p[1].get_document().value["$sort"].get_document().value["foo"].get_int32());
 
-                REQUIRE(bar == mongocxx::stdx::string_view("bar"));
+                REQUIRE(bar == bsoncxx::stdx::string_view("bar"));
                 REQUIRE(one == 1);
 
                 if (opts.allow_disk_use())
