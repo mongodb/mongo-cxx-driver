@@ -57,9 +57,14 @@ TEST_CASE("Read preference", "[read_preference]") {
         REQUIRE(rp.max_staleness().value() == max_staleness);
     }
 
+    SECTION("Max staleness of -1 returns nullopt") {
+        rp.max_staleness(std::chrono::seconds{-1});
+        REQUIRE(!rp.max_staleness());
+    }
+
     SECTION("Rejects invalid max_staleness") {
         REQUIRE_THROWS_AS(rp.max_staleness(std::chrono::seconds{0}), logic_error);
-        REQUIRE_THROWS_AS(rp.max_staleness(std::chrono::seconds{-1}), logic_error);
+        REQUIRE_THROWS_AS(rp.max_staleness(std::chrono::seconds{-2}), logic_error);
     }
 }
 

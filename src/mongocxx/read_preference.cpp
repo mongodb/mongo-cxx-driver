@@ -88,7 +88,7 @@ stdx::optional<bsoncxx::document::view> read_preference::tags() const {
 
 read_preference& read_preference::max_staleness(std::chrono::seconds max_staleness) {
     auto max_staleness_sec = max_staleness.count();
-    if (max_staleness_sec <= 0) {
+    if (max_staleness_sec < -1 || max_staleness_sec == 0) {
         throw logic_error{error_code::k_invalid_parameter};
     }
     libmongoc::read_prefs_set_max_staleness_seconds(_impl->read_preference_t, max_staleness_sec);
