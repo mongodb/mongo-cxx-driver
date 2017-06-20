@@ -82,14 +82,9 @@ bool BSONCXX_CALL operator!=(const view::const_iterator& lhs, const view::const_
 }
 
 view::const_iterator view::cbegin() const {
-    bson_t b;
     bson_iter_t iter;
 
-    if (!bson_init_static(&b, _data, _length)) {
-        return cend();
-    }
-
-    if (!bson_iter_init(&iter, &b)) {
+    if (!bson_iter_init_from_data(&iter, data(), length())) {
         return cend();
     }
 

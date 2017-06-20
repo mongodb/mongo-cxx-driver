@@ -619,12 +619,9 @@ core& core::open_array() {
 }
 
 core& core::concatenate(const bsoncxx::document::view& view) {
-    bson_t other;
-    bson_init_static(&other, view.data(), view.length());
-
     if (_impl->is_array()) {
         bson_iter_t iter;
-        bson_iter_init(&iter, &other);
+        bson_iter_init_from_data(&iter, view.data(), view.length());
 
         while (bson_iter_next(&iter)) {
             stdx::string_view key = _impl->next_key();
@@ -636,6 +633,8 @@ core& core::concatenate(const bsoncxx::document::view& view) {
         }
 
     } else {
+        bson_t other;
+        bson_init_static(&other, view.data(), view.length());
         bson_concat(_impl->back(), &other);
     }
 
