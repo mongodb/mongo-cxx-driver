@@ -87,6 +87,7 @@ set(mongocxx_sources
     options/gridfs/bucket.cpp
     options/gridfs/upload.cpp
     options/index.cpp
+    options/index_view.cpp
     options/insert.cpp
     options/modify_collection.cpp
     options/pool.cpp

@@ -19,6 +19,7 @@
 #include <memory>
 #include <stdexcept>
 
+#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <mongocxx/stdx.hpp>
@@ -222,6 +223,14 @@ class MONGOCXX_API write_concern {
     /// @return Current timeout in milliseconds.
     ///
     std::chrono::milliseconds timeout() const;
+
+    ///
+    /// Gets the document form of this write_concern.
+    ///
+    /// @return
+    ///   Document representation of this write_concern.
+    ///
+    bsoncxx::document::value to_document() const;
 
    private:
     friend bulk_write;

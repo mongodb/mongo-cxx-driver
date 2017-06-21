@@ -117,39 +117,45 @@ bsoncxx::document::value database::modify_collection(stdx::string_view name,
     return run_command(doc.view());
 }
 
-class collection database::create_collection(bsoncxx::string::view_or_value name,
-                                             const options::create_collection& options) {
+class collection database::create_collection(
+    bsoncxx::string::view_or_value name,
+    const options::create_collection& collection_options,
+    const stdx::optional<class write_concern>& write_concern) {
     bsoncxx::builder::basic::document options_builder;
 
-    if (options.auto_index_id()) {
-        options_builder.append(kvp("autoIndexId", *options.auto_index_id()));
+    if (write_concern) {
+        options_builder.append(kvp("writeConcern", write_concern->to_document()));
     }
 
-    if (options.capped()) {
-        options_builder.append(kvp("capped", *options.capped()));
+    if (collection_options.auto_index_id()) {
+        options_builder.append(kvp("autoIndexId", *collection_options.auto_index_id()));
     }
 
-    if (options.collation()) {
-        options_builder.append(kvp("collation", *options.collation()));
+    if (collection_options.capped()) {
+        options_builder.append(kvp("capped", *collection_options.capped()));
     }
 
-    if (options.max()) {
-        options_builder.append(kvp("max", *options.max()));
+    if (collection_options.collation()) {
+        options_builder.append(kvp("collation", *collection_options.collation()));
     }
 
-    if (options.no_padding()) {
-        options_builder.append(kvp("flags", (*options.no_padding() ? 0x10 : 0x00)));
+    if (collection_options.max()) {
+        options_builder.append(kvp("max", *collection_options.max()));
     }
 
-    if (options.size()) {
-        options_builder.append(kvp("size", *options.size()));
+    if (collection_options.no_padding()) {
+        options_builder.append(kvp("flags", (*collection_options.no_padding() ? 0x10 : 0x00)));
     }
 
-    if (options.storage_engine()) {
-        options_builder.append(kvp("storageEngine", *options.storage_engine()));
+    if (collection_options.size()) {
+        options_builder.append(kvp("size", *collection_options.size()));
     }
 
-    if (options.validation_criteria()) {
+    if (collection_options.storage_engine()) {
+        options_builder.append(kvp("storageEngine", *collection_options.storage_engine()));
+    }
+
+    if (collection_options.validation_criteria()) {
         auto validation_level_to_string = [](validation_criteria::validation_level level) {
             switch (level) {
                 case validation_criteria::validation_level::k_off:
@@ -172,7 +178,7 @@ class collection database::create_collection(bsoncxx::string::view_or_value name
             MONGOCXX_UNREACHABLE;
         };
 
-        auto validation_criteria = *options.validation_criteria();
+        auto validation_criteria = *collection_options.validation_criteria();
 
         if (validation_criteria.rule()) {
             options_builder.append(kvp("validator", *validation_criteria.rule()));
@@ -214,6 +220,10 @@ class collection database::create_view(bsoncxx::string::view_or_value name,
         options_builder.append(kvp("pipeline", options.pipeline()->view_array()));
     }
 
+    if (options.write_concern()) {
+        options_builder.append(kvp("writeConcern", options.write_concern()->to_document()));
+    }
+
     libbson::scoped_bson_t opts_bson{options_builder.view()};
     bson_error_t error;
     auto result = libmongoc::database_create_collection(
@@ -225,9 +235,17 @@ class collection database::create_view(bsoncxx::string::view_or_value name,
     return mongocxx::collection(*this, result);
 }
 
-void database::drop() {
+void database::drop(const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern) {
     bson_error_t error;
-    if (!libmongoc::database_drop(_get_impl().database_t, &error)) {
+
+    bsoncxx::builder::basic::document opts_doc;
+    if (write_concern) {
+        opts_doc.append(kvp("writeConcern", write_concern->to_document()));
+    }
+
+    libbson::scoped_bson_t opts_bson{opts_doc.view()};
+
+    if (!libmongoc::database_drop_with_opts(_get_impl().database_t, opts_bson.bson(), &error)) {
         throw_exception<operation_exception>(error);
     }
 }

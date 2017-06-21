@@ -16,6 +16,7 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
+#include <mongocxx/options/index_view.hpp>
 #include <mongocxx/private/index_view.hh>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -36,45 +37,43 @@ cursor index_view::list() {
 
 bsoncxx::stdx::optional<std::string> index_view::create_one(
     const bsoncxx::document::view_or_value& keys,
-    const bsoncxx::document::view_or_value& options,
-    bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
-    return create_one(index_model{keys, options}, max_time_ms);
+    const bsoncxx::document::view_or_value& index_options,
+    const options::index_view& options) {
+    return create_one(index_model{keys, index_options}, options);
 }
 
-bsoncxx::stdx::optional<std::string> index_view::create_one(
-    const index_model& model, bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
-    return _get_impl().create_one(model, max_time_ms);
+bsoncxx::stdx::optional<std::string> index_view::create_one(const index_model& model,
+                                                            const options::index_view& options) {
+    return _get_impl().create_one(model, options);
 }
 
-bsoncxx::document::value index_view::create_many(
-    const std::vector<index_model>& indexes, bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
-    return _get_impl().create_many(indexes, max_time_ms);
+bsoncxx::document::value index_view::create_many(const std::vector<index_model>& indexes,
+                                                 const options::index_view& options) {
+    return _get_impl().create_many(indexes, options);
 }
 
-void index_view::drop_one(bsoncxx::stdx::string_view name,
-                          bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
-    return _get_impl().drop_one(name, max_time_ms);
+void index_view::drop_one(bsoncxx::stdx::string_view name, const options::index_view& options) {
+    return _get_impl().drop_one(name, options);
 }
 
 void index_view::drop_one(const bsoncxx::document::view_or_value& keys,
-                          const bsoncxx::document::view_or_value& options,
-                          bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
-    bsoncxx::document::view opts_view = options.view();
+                          const bsoncxx::document::view_or_value& index_options,
+                          const options::index_view& options) {
+    bsoncxx::document::view opts_view = index_options.view();
 
     if (opts_view["name"]) {
-        drop_one(opts_view["name"].get_utf8().value.to_string(), max_time_ms);
+        drop_one(opts_view["name"].get_utf8().value.to_string(), options);
     } else {
-        drop_one(_get_impl().get_index_name_from_keys(keys), max_time_ms);
+        drop_one(_get_impl().get_index_name_from_keys(keys), options);
     }
 }
 
-void index_view::drop_one(const index_model& model,
-                          bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
-    drop_one(model.keys(), model.options(), max_time_ms);
+void index_view::drop_one(const index_model& model, const options::index_view& options) {
+    drop_one(model.keys(), model.options(), options);
 }
 
-void index_view::drop_all(bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
-    _get_impl().drop_all(max_time_ms);
+void index_view::drop_all(const options::index_view& options) {
+    _get_impl().drop_all(options);
 }
 
 index_view::impl& index_view::_get_impl() {

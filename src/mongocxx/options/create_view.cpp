@@ -36,12 +36,21 @@ create_view& create_view::pipeline(class pipeline pipeline) {
     return *this;
 }
 
+create_view& create_view::write_concern(mongocxx::write_concern write_concern) {
+    _write_concern = std::move(write_concern);
+    return *this;
+}
+
 const stdx::optional<bsoncxx::document::view_or_value>& create_view::collation() const {
     return _collation;
 }
 
 const stdx::optional<pipeline>& create_view::pipeline() const {
     return _pipeline;
+}
+
+const stdx::optional<class write_concern>& create_view::write_concern() const {
+    return _write_concern;
 }
 
 bsoncxx::document::value create_view::to_document() const {

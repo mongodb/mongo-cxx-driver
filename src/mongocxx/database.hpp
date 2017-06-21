@@ -98,21 +98,24 @@ class MONGOCXX_API database {
     ///
     /// Explicitly creates a collection in this database with the specified options.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/create/
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/create/
     ///
-    /// @param name the new collection's name.
-    /// @param options the options for the new collection.
+    /// @param name
+    ///   the new collection's name.
+    /// @param collection_options
+    ///   the options for the new collection.
+    /// @param write_concern
+    ///   the write concern to use for this operation. Will default to database
+    ///   set write concern if none passed here.
     ///
-    /// @throws mongocxx::operation_exception if the operation fails.
-    ///
-    /// @note
-    ///   In order to pass a write concern to this, you must use the database
-    ///   level set write concern - database::write_concern(wc). (MongoDB
-    ///   3.4+)
+    /// @exception
+    ///   mongocxx::operation_exception if the operation fails.
     ///
     class collection create_collection(
         bsoncxx::string::view_or_value name,
-        const options::create_collection& options = options::create_collection());
+        const options::create_collection& collection_options = options::create_collection{},
+        const stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Creates a non-materialized view in this database with the specified options.
@@ -127,11 +130,6 @@ class MONGOCXX_API database {
     /// @param options the options for the new view.
     ///
     /// @throws mongocxx::operation_exception if the operation fails.
-    ///
-    /// @note
-    ///   In order to pass a write concern to this, you must use the database
-    ///   level set write concern - database::write_concern(wc). (MongoDB
-    ///   3.4+)
     ///
     class collection create_view(bsoncxx::string::view_or_value name,
                                  bsoncxx::string::view_or_value view_on,
@@ -158,16 +156,17 @@ class MONGOCXX_API database {
     ///
     /// Drops the database and all its collections.
     ///
-    /// @throws mongocxx::operation_exception if the operation fails.
-    //
-    /// @see https://docs.mongodb.com/manual/reference/command/dropDatabase/
+    /// @param write_concern (optional)
+    ///   The write concern to be used for this operation. If not passed here, the write concern
+    ///   set on the database will be used.
     ///
-    /// @note
-    ///   In order to pass a write concern to this, you must use the database
-    ///   level set write concern - database::write_concern(wc). (MongoDB
-    ///   3.4+)
+    /// @exception
+    ///   mongocxx::operation_exception if the operation fails.
     ///
-    void drop();
+    /// @see
+    ///   https://docs.mongodb.com/manual/reference/command/dropDatabase/
+    ///
+    void drop(const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {});
 
     ///
     /// Checks whether this database contains a collection having the given name.

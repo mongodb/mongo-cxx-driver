@@ -18,6 +18,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/stdx.hpp>
+#include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -85,6 +86,26 @@ class MONGOCXX_API create_view {
     const stdx::optional<class pipeline>& pipeline() const;
 
     ///
+    /// Sets the write concern that will be used when computing this view.
+    ///
+    /// @param write_concern
+    ///   Write concern that will be used when computing the view.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    create_view& write_concern(mongocxx::write_concern write_concern);
+
+    ///
+    /// Gets the write concern that will be used when computing this view.
+    ///
+    /// @return
+    ///   Write concern that will be used when computing the view.
+    ///
+    const stdx::optional<class mongocxx::write_concern>& write_concern() const;
+
+    ///
     /// Return a bson document representing the options set on this object.
     ///
     /// @deprecated
@@ -105,6 +126,7 @@ class MONGOCXX_API create_view {
    private:
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<class pipeline> _pipeline;
+    stdx::optional<class write_concern> _write_concern;
 
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const create_view&, const create_view&);
     friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const create_view&, const create_view&);

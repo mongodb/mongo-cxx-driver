@@ -62,6 +62,11 @@ aggregate& aggregate::hint(class hint index_hint) {
     return *this;
 }
 
+aggregate& aggregate::write_concern(class write_concern write_concern) {
+    _write_concern = std::move(write_concern);
+    return *this;
+}
+
 const stdx::optional<bool>& aggregate::allow_disk_use() const {
     return _allow_disk_use;
 }
@@ -92,6 +97,10 @@ const stdx::optional<bool>& aggregate::bypass_document_validation() const {
 
 const stdx::optional<class hint>& aggregate::hint() const {
     return _hint;
+}
+
+const stdx::optional<class write_concern>& aggregate::write_concern() const {
+    return _write_concern;
 }
 
 bool MONGOCXX_CALL operator==(const aggregate& lhs, const aggregate& rhs) {

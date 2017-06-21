@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <iostream>
+#include <chrono>
 #include <vector>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -23,6 +23,7 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/index_view.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/options/index_view.hpp>
 
 namespace {
 using bsoncxx::builder::basic::make_document;
@@ -78,7 +79,10 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("tests maxTimeMS option works") {
         auto key = make_document(kvp("aaa", 1));
         index_model model(key.view());
-        REQUIRE_THROWS_AS(indexes.create_one(model, 1), operation_exception);
+        options::index_view options;
+        options.max_time(std::chrono::milliseconds(1));
+
+        REQUIRE_THROWS_AS(indexes.create_one(model, options), operation_exception);
     }
 
     SECTION("fails for same keys and options") {
@@ -114,7 +118,9 @@ TEST_CASE("create_many", "[index_view]") {
     index_view indexes = coll.indexes();
 
     SECTION("test maxTimeMS option") {
-        REQUIRE_THROWS_AS(indexes.create_many(models, 1), operation_exception);
+        options::index_view options;
+        options.max_time(std::chrono::milliseconds(1));
+        REQUIRE_THROWS_AS(indexes.create_many(models, options), operation_exception);
     }
 
     SECTION("create three") {

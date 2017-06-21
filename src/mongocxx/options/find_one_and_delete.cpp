@@ -40,6 +40,11 @@ find_one_and_delete& find_one_and_delete::sort(bsoncxx::document::view_or_value 
     return *this;
 }
 
+find_one_and_delete& find_one_and_delete::write_concern(mongocxx::write_concern write_concern) {
+    _write_concern = std::move(write_concern);
+    return *this;
+}
+
 const stdx::optional<bsoncxx::document::view_or_value>& find_one_and_delete::collation() const {
     return _collation;
 }
@@ -56,13 +61,19 @@ const stdx::optional<std::chrono::milliseconds>& find_one_and_delete::max_time()
     return _max_time;
 }
 
+const stdx::optional<mongocxx::write_concern>& find_one_and_delete::write_concern() const {
+    return _write_concern;
+}
+
 bool MONGOCXX_CALL operator==(const find_one_and_delete& lhs, const find_one_and_delete& rhs) {
     return ((lhs.collation() == rhs.collation()) && (lhs.max_time() == rhs.max_time()) &&
             (lhs.projection() == rhs.projection()) && (lhs.sort() == rhs.sort()));
 }
+
 bool MONGOCXX_CALL operator!=(const find_one_and_delete& lhs, const find_one_and_delete& rhs) {
     return !(lhs == rhs);
 }
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

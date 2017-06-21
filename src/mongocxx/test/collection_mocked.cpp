@@ -89,34 +89,6 @@ TEST_CASE("Collection", "[collection]") {
         REQUIRE(collection_set_rc_called);
     }
 
-    SECTION("Collection Rename", "[collection]") {
-        std::string expected_rename;
-        bool expected_drop;
-
-        collection_rename->interpose(
-            [&expected_rename, &expected_drop](::mongoc_collection_t*,
-                                               const char*,
-                                               const char* new_name,
-                                               bool drop_target_before_rename,
-                                               ::bson_error_t*) {
-                REQUIRE(expected_rename == std::string{new_name});
-                REQUIRE(expected_drop == drop_target_before_rename);
-                return true;
-            });
-
-        SECTION("with drop_target_before_rename false") {
-            expected_rename = "the_best_collection";
-            expected_drop = false;
-            mongo_coll.rename(expected_rename, expected_drop);
-        }
-
-        SECTION("with drop_target_before_rename true") {
-            expected_rename = "brand_new_name";
-            expected_drop = true;
-            mongo_coll.rename(expected_rename, expected_drop);
-        }
-    }
-
     auto filter_doc = builder::stream::document{} << "_id"
                                                   << "wow"
                                                   << "foo"
@@ -291,37 +263,6 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         REQUIRE(collection_count_called);
-    }
-
-    SECTION(
-        "Drop"
-        "[collection::drop]") {
-        auto collection_drop_called = false;
-        bool success;
-
-        collection_drop->interpose([&](mongoc_collection_t*, bson_error_t* error) {
-            collection_drop_called = true;
-
-            if (!success)
-                bson_set_error(error,
-                               MONGOC_ERROR_COMMAND,
-                               MONGOC_ERROR_COMMAND_INVALID_ARG,
-                               "expected error from mock");
-
-            return success;
-        });
-
-        SECTION("Succeeds") {
-            success = true;
-            REQUIRE_NOTHROW(mongo_coll.drop());
-        }
-
-        SECTION("Fails") {
-            success = false;
-            REQUIRE_THROWS_AS(mongo_coll.drop(), operation_exception);
-        }
-
-        REQUIRE(collection_drop_called);
     }
 
     SECTION("Find", "[collection::find]") {
@@ -730,98 +671,6 @@ TEST_CASE("Collection", "[collection]") {
         REQUIRE(bulk_operation_set_collection_called);
         REQUIRE(bulk_operation_execute_called);
         REQUIRE(bulk_operation_destroy_called);
-    }
-
-    SECTION("Find and Modify") {
-        using builder::stream::close_document;
-        using builder::stream::finalize;
-        using builder::stream::open_document;
-        document::view expected_filter;
-        auto fam_called = false;
-        auto return_doc = builder::stream::document{} << "value" << open_document << "key"
-                                                      << "val" << close_document << finalize;
-        libbson::scoped_bson_t return_bson{return_doc.view()};
-        bsoncxx::stdx::optional<bsoncxx::document::value> fam_result;
-
-        collection_find_and_modify_with_opts->interpose([&](::mongoc_collection_t*,
-                                                            const ::bson_t* filter,
-                                                            const ::mongoc_find_and_modify_opts_t*,
-                                                            ::bson_t* reply,
-                                                            ::bson_error_t*) {
-            fam_called = true;
-            document::view filter_view{bson_get_data(filter), filter->len};
-            REQUIRE(expected_filter == filter_view);
-            ::bson_copy_to(return_bson.bson(), reply);
-            return true;
-        });
-
-        SECTION("Delete", "[collection::find_one_and_delete]") {
-            options::find_one_and_delete opts{};
-            builder::stream::document filter{};
-            filter << "x" << 1;
-            expected_filter = filter.view();
-            expected_find_and_modify_opts_flags = ::MONGOC_FIND_AND_MODIFY_REMOVE;
-
-            builder::stream::document sort{};
-            sort << "name.last" << 1 << "name.first" << 1;
-            expected_find_and_modify_opts_sort = sort.view();
-            opts.sort(expected_find_and_modify_opts_sort);
-
-            fam_result = mongo_coll.find_one_and_delete(expected_filter, opts);
-        }
-
-        SECTION("Replace", "[collection::find_one_and_replace]") {
-            options::find_one_and_replace opts{};
-            builder::stream::document filter{};
-            filter << "y" << 2;
-            expected_filter = filter.view();
-
-            builder::stream::document replace{};
-            replace << "newdoc" << true;
-            expected_find_and_modify_opts_update = replace.view();
-
-            builder::stream::document projection{};
-            projection << "_id" << false << "oldval" << true;
-            expected_find_and_modify_opts_fields = projection.view();
-            opts.projection(expected_find_and_modify_opts_fields);
-
-            expected_find_and_modify_opts_flags = ::MONGOC_FIND_AND_MODIFY_NONE;
-
-            expected_find_and_modify_opts_bypass_document_validation = false;
-            opts.bypass_document_validation(
-                expected_find_and_modify_opts_bypass_document_validation);
-
-            fam_result = mongo_coll.find_one_and_replace(
-                expected_filter, expected_find_and_modify_opts_update, opts);
-        }
-
-        SECTION("Update", "[collection::find_one_and_update]") {
-            options::find_one_and_update opts{};
-            builder::stream::document filter{};
-            filter << "z" << 3;
-            expected_filter = filter.view();
-
-            builder::stream::document update{};
-            update << "newdoc" << true;
-            expected_find_and_modify_opts_update = update.view();
-
-            expected_find_and_modify_opts_flags = static_cast<::mongoc_find_and_modify_flags_t>(
-                ::MONGOC_FIND_AND_MODIFY_UPSERT | ::MONGOC_FIND_AND_MODIFY_RETURN_NEW);
-
-            expected_find_and_modify_opts_bypass_document_validation = true;
-            opts.bypass_document_validation(
-                expected_find_and_modify_opts_bypass_document_validation);
-
-            opts.upsert(true);
-            opts.return_document(options::return_document::k_after);
-
-            fam_result = mongo_coll.find_one_and_update(
-                expected_filter, expected_find_and_modify_opts_update, opts);
-        }
-
-        REQUIRE(fam_called);
-        REQUIRE(fam_result);
-        REQUIRE(fam_result->view() == return_doc.view()["value"].get_document());
     }
 }
 }  // namespace

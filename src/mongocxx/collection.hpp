@@ -36,6 +36,7 @@
 #include <mongocxx/options/find_one_and_replace.hpp>
 #include <mongocxx/options/find_one_and_update.hpp>
 #include <mongocxx/options/index.hpp>
+#include <mongocxx/options/index_view.hpp>
 #include <mongocxx/options/insert.hpp>
 #include <mongocxx/options/update.hpp>
 #include <mongocxx/read_concern.hpp>
@@ -127,10 +128,9 @@ class MONGOCXX_API collection {
     /// @see https://docs.mongodb.com/master/reference/command/aggregate/
     ///
     /// @note
-    ///   In order to pass a read or write concern to this, you must use the
-    ///   collection level set read or write concern -
-    ///   collection::write_concern(wc) and collection::read_concern(rc).
-    ///   (Write concern supported only for MongoDB 3.4+)
+    ///   In order to pass a read concern to this, you must use the
+    ///   collection level set read concern - collection::read_concern(rc).
+    ///   (Write concern supported only for MongoDB 3.4+).
     ///
     cursor aggregate(const pipeline& pipeline,
                      const options::aggregate& options = options::aggregate());
@@ -247,22 +247,24 @@ class MONGOCXX_API collection {
     ///
     /// @param keys
     ///   The keys for the index: @c {a: 1, b: -1}
-    /// @param options
-    ///   A document containing optional arguments.
+    /// @param index_options
+    ///   A document containing optional arguments for creating the index.
+    /// @param operation_options
+    ///   Optional arguments for the overall operation, see mongocxx::options::index_view.
     ///
-    /// @throws mongocxx::operation_exception if index creation fails.
+    /// @exception
+    ///   mongocxx::operation_exception if index creation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/createIndexes/
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/createIndexes/
     ///
     /// @note
-    ///   In order to pass a write concern to this, you must use the collection
-    ///   level set write concern - collection::write_concern(wc). (MongoDB
-    ///   3.4+)
+    ///   Write concern supported only for MongoDB 3.4+.
     ///
     bsoncxx::document::value create_index(
         bsoncxx::document::view_or_value keys,
-        bsoncxx::document::view_or_value opts = {},
-        bsoncxx::stdx::optional<std::int64_t> max_time_ms = bsoncxx::stdx::nullopt);
+        bsoncxx::document::view_or_value index_options = {},
+        options::index_view operation_options = options::index_view{});
 
     ///
     /// Deletes all matching documents from the collection.
@@ -326,16 +328,20 @@ class MONGOCXX_API collection {
 
     /// Drops this collection and all its contained documents from the database.
     ///
-    /// @throws mongocxx::operation_exception if the operation fails.
+    /// @param write_concern (optional)
+    ///   The write concern to use for this operation. Defaults to the collection wide write
+    ///   concern if none is provided.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/drop/
+    /// @exception
+    ///   mongocxx::operation_exception if the operation fails.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/drop/
     ///
     /// @note
-    ///   In order to pass a write concern to this, you must use the collection
-    ///   level set write concern - collection::write_concern(wc). (MongoDB
-    ///   3.4+)
+    ///   Write concern supported only for MongoDB 3.4+.
     ///
-    void drop();
+    void drop(const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {});
 
     ///
     /// Finds the documents in this collection which match the provided filter.
@@ -386,10 +392,6 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::write_exception if the operation fails.
     ///
-    /// @note
-    ///   In order to pass a write concern to this, you must use the collection
-    ///   level set write concern - collection::write_concern(wc).
-    ///
     stdx::optional<bsoncxx::document::value> find_one_and_delete(
         bsoncxx::document::view_or_value filter,
         const options::find_one_and_delete& options = options::find_one_and_delete());
@@ -408,10 +410,6 @@ class MONGOCXX_API collection {
     /// @return The original or replaced document.
     ///
     /// @throws mongocxx::write_exception if the operation fails.
-    ///
-    /// @note
-    ///   In order to pass a write concern to this, you must use the collection
-    ///   level set write concern - collection::write_concern(wc).
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_replace(
         bsoncxx::document::view_or_value filter,
@@ -544,16 +542,18 @@ class MONGOCXX_API collection {
     /// @param drop_target_before_rename Whether to overwrite any
     ///   existing collections called new_name. The default is false.
     ///
-    /// @throws mongocxx::operation_exception if the operation fails.
+    /// @exception
+    ///   mongocxx::operation_exception if the operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/renameCollection/
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/renameCollection/
     ///
     /// @note
-    ///   In order to pass a write concern to this, you must use the collection
-    ///   level set write concern - collection::write_concern(wc). (MongoDB
-    ///   3.4+)
+    ///   Write concern supported only for MongoDB 3.4+.
     ///
-    void rename(bsoncxx::string::view_or_value new_name, bool drop_target_before_rename = false);
+    void rename(bsoncxx::string::view_or_value new_name,
+                bool drop_target_before_rename = false,
+                const bsoncxx::stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Sets the read_concern for this collection. Changes will not have any effect on existing

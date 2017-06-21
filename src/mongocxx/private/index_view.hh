@@ -18,6 +18,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
+#include <mongocxx/options/index_view.hpp>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
@@ -62,9 +63,9 @@ class index_view::impl {
         return cursor{result};
     }
 
-    bsoncxx::stdx::optional<std::string> create_one(
-        const index_model& model, bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
-        bsoncxx::document::value result = create_many(std::vector<index_model>{model}, max_time_ms);
+    bsoncxx::stdx::optional<std::string> create_one(const index_model& model,
+                                                    const options::index_view& options) {
+        bsoncxx::document::value result = create_many(std::vector<index_model>{model}, options);
         bsoncxx::document::view result_view = result.view();
 
         if (result_view["numIndexesAfter"].get_value() ==
@@ -80,7 +81,7 @@ class index_view::impl {
     }
 
     bsoncxx::document::value create_many(const std::vector<index_model>& indexes,
-                                         bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
+                                         const options::index_view& options) {
         using namespace bsoncxx;
         using builder::basic::concatenate;
 
@@ -107,8 +108,13 @@ class index_view::impl {
         bson_error_t error;
 
         builder::basic::document opts_doc;
-        if (max_time_ms) {
-            opts_doc.append(kvp("maxTimeMS", types::b_int64{*max_time_ms}));
+
+        if (options.max_time()) {
+            opts_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+        }
+
+        if (options.write_concern()) {
+            opts_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
         }
 
         libbson::scoped_bson_t command_bson{command};
@@ -124,15 +130,19 @@ class index_view::impl {
         return reply.steal();
     }
 
-    void drop_one(bsoncxx::stdx::string_view name,
-                  bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
+    void drop_one(bsoncxx::stdx::string_view name, const options::index_view& options) {
         if (name == bsoncxx::stdx::string_view{"*"}) {
             throw logic_error(error_code::k_invalid_parameter);
         }
 
-        bsoncxx::builder::basic::document opts;
-        if (max_time_ms) {
-            opts.append(kvp("maxTimeMS", bsoncxx::types::b_int64{*max_time_ms}));
+        bsoncxx::builder::basic::document opts_doc;
+
+        if (options.max_time()) {
+            opts_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+        }
+
+        if (options.write_concern()) {
+            opts_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
         }
 
         bsoncxx::document::value command = make_document(
@@ -140,7 +150,7 @@ class index_view::impl {
 
         libbson::scoped_bson_t reply;
         libbson::scoped_bson_t command_bson{command.view()};
-        libbson::scoped_bson_t opts_bson{opts.view()};
+        libbson::scoped_bson_t opts_bson{opts_doc.view()};
         bson_error_t error;
 
         bool result = libmongoc::collection_write_command_with_opts(
@@ -151,7 +161,7 @@ class index_view::impl {
         }
     }
 
-    MONGOCXX_INLINE void drop_all(bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
+    MONGOCXX_INLINE void drop_all(const options::index_view& options) {
         bsoncxx::document::value command = make_document(
             kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", "*"));
 
@@ -161,8 +171,13 @@ class index_view::impl {
         libbson::scoped_bson_t command_bson{command.view()};
 
         bsoncxx::builder::basic::document opts_doc;
-        if (max_time_ms) {
-            opts_doc.append(kvp("maxTimeMS", *max_time_ms));
+
+        if (options.max_time()) {
+            opts_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+        }
+
+        if (options.write_concern()) {
+            opts_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
         }
 
         libbson::scoped_bson_t opts_bson{opts_doc.view()};

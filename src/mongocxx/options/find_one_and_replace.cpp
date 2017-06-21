@@ -58,6 +58,11 @@ find_one_and_replace& find_one_and_replace::upsert(bool upsert) {
     return *this;
 }
 
+find_one_and_replace& find_one_and_replace::write_concern(mongocxx::write_concern write_concern) {
+    _write_concern = std::move(write_concern);
+    return *this;
+}
+
 const stdx::optional<bool>& find_one_and_replace::bypass_document_validation() const {
     return _bypass_document_validation;
 }
@@ -87,6 +92,10 @@ const stdx::optional<bool>& find_one_and_replace::upsert() const {
     return _upsert;
 }
 
+const stdx::optional<mongocxx::write_concern>& find_one_and_replace::write_concern() const {
+    return _write_concern;
+}
+
 bool MONGOCXX_CALL operator==(const find_one_and_replace& lhs, const find_one_and_replace& rhs) {
     return ((lhs.bypass_document_validation() == rhs.bypass_document_validation()) &&
             (lhs.collation() == rhs.collation()) && (lhs.max_time() == rhs.max_time()) &&
@@ -94,6 +103,7 @@ bool MONGOCXX_CALL operator==(const find_one_and_replace& lhs, const find_one_an
             (lhs.return_document() == rhs.return_document()) && (lhs.sort() == lhs.sort()) &&
             (lhs.upsert() == rhs.upsert()));
 }
+
 bool MONGOCXX_CALL operator!=(const find_one_and_replace& lhs, const find_one_and_replace& rhs) {
     return !(lhs == rhs);
 }

@@ -22,6 +22,7 @@
 #include <mongocxx/hint.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/stdx.hpp>
+#include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -220,7 +221,35 @@ class MONGOCXX_API aggregate {
     /// @return The current hint, if one is set.
     ///
     /// @see https://docs.mongodb.com/master/reference/command/aggregate/
+    ///
     const stdx::optional<class hint>& hint() const;
+
+    ///
+    /// Sets the write concern to use for this operation. Only has an effect if $out is a part of
+    /// the pipeline.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/aggregate/
+    ///
+    /// @param write_concern
+    ///   Object representing the write_concern.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    aggregate& write_concern(class write_concern write_concern);
+
+    ///
+    /// Gets the current write concern.
+    ///
+    /// @return
+    ///   The current write concern, if it is set.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/aggregate/
+    ///
+    const stdx::optional<class write_concern>& write_concern() const;
 
    private:
     stdx::optional<bool> _allow_disk_use;
@@ -231,6 +260,7 @@ class MONGOCXX_API aggregate {
     stdx::optional<class read_preference> _read_preference;
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<class hint> _hint;
+    stdx::optional<class write_concern> _write_concern;
 
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const aggregate&, const aggregate&);
     friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const aggregate&, const aggregate&);

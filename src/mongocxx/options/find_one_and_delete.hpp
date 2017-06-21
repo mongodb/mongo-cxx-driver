@@ -127,11 +127,38 @@ class MONGOCXX_API find_one_and_delete {
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& sort() const;
 
+    ///
+    /// Sets the write concern for this operation.
+    ///
+    /// @param write_concern
+    ///   Object representing the write concern.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/findAndModify/
+    ///
+    find_one_and_delete& write_concern(mongocxx::write_concern write_concern);
+
+    ///
+    /// Gets the current write concern.
+    ///
+    /// @return
+    ///   The current write concern.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/findAndModify/
+    ///
+    const stdx::optional<mongocxx::write_concern>& write_concern() const;
+
    private:
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<bsoncxx::document::view_or_value> _projection;
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
+    stdx::optional<mongocxx::write_concern> _write_concern;
 
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const find_one_and_delete&,
                                                       const find_one_and_delete&);

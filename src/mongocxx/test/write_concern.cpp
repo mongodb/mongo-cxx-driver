@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
@@ -218,4 +220,118 @@ TEST_CASE("write_concern inequality operator works", "[write_concern]") {
     wc_a.journal(true);
     REQUIRE(wc_a != wc_b);
 }
+
+using namespace bsoncxx;
+using builder::basic::kvp;
+using builder::basic::make_document;
+
+TEST_CASE("write_concern to_document works") {
+    write_concern wc;
+
+    bsoncxx::document::value expected_doc = make_document();
+
+    SECTION("default") {
+        INFO("default");
+
+        expected_doc =
+            make_document(kvp("w", 1), kvp("j", false), kvp("wtimeout", types::b_int64{0}));
+    }
+
+    SECTION("majority") {
+        INFO("majority");
+
+        expected_doc = make_document(
+            kvp("w", "majority"), kvp("j", false), kvp("wtimeout", types::b_int64{100}));
+        wc.majority(std::chrono::milliseconds{100});
+    }
+
+    SECTION("nodes") {
+        INFO("nodes");
+
+        expected_doc =
+            make_document(kvp("w", 5), kvp("j", false), kvp("wtimeout", types::b_int64{10}));
+        wc.nodes(5);
+        wc.timeout(std::chrono::milliseconds{10});
+    }
+
+    SECTION("unacknowledged") {
+        INFO("unacknowledged");
+
+        expected_doc =
+            make_document(kvp("w", 0), kvp("j", false), kvp("wtimeout", types::b_int64{0}));
+        wc.acknowledge_level(write_concern::level::k_unacknowledged);
+        wc.timeout(std::chrono::milliseconds{0});
+    }
+
+    SECTION("tag") {
+        INFO("tag");
+
+        expected_doc =
+            make_document(kvp("w", "myTag"), kvp("j", false), kvp("wtimeout", types::b_int64{25}));
+        wc.tag("myTag");
+        wc.timeout(std::chrono::milliseconds{25});
+    }
+
+    SECTION("journal true") {
+        INFO("journal true");
+
+        expected_doc =
+            make_document(kvp("w", 1), kvp("j", true), kvp("wtimeout", types::b_int64{0}));
+        wc.journal(true);
+    }
+
+    SECTION("journal false") {
+        INFO("journal false");
+
+        expected_doc =
+            make_document(kvp("w", 1), kvp("j", false), kvp("wtimeout", types::b_int64{0}));
+        wc.journal(false);
+    }
+
+    SECTION("majority and journal") {
+        INFO("majority and journal");
+
+        expected_doc = make_document(
+            kvp("w", "majority"), kvp("j", true), kvp("wtimeout", types::b_int64{10}));
+        wc.journal(true);
+        wc.majority(std::chrono::milliseconds{10});
+    }
+
+    SECTION("unacknowledged and journal") {
+        INFO("unacknowledged and journal");
+
+        expected_doc =
+            make_document(kvp("w", 0), kvp("j", true), kvp("wtimeout", types::b_int64{0}));
+        wc.acknowledge_level(write_concern::level::k_unacknowledged);
+        wc.timeout(std::chrono::milliseconds{0});
+        wc.journal(true);
+    }
+
+    auto generated_doc = wc.to_document();
+    REQUIRE(generated_doc.view() == expected_doc.view());
+}
+
+TEST_CASE("write_concern changes reflected in to_document") {
+    write_concern wc;
+
+    auto majority =
+        make_document(kvp("w", "majority"), kvp("j", false), kvp("wtimeout", types::b_int64{100}));
+    wc.majority(std::chrono::milliseconds{100});
+    auto generated_majority = wc.to_document();
+    REQUIRE(generated_majority.view() == majority.view());
+
+    auto tag =
+        make_document(kvp("w", "myTag"), kvp("j", false), kvp("wtimeout", types::b_int64{25}));
+    wc.tag("myTag");
+    wc.timeout(std::chrono::milliseconds{25});
+    auto generated_tag = wc.to_document();
+    REQUIRE(generated_tag.view() == tag.view());
+
+    auto nodes = make_document(kvp("w", 5), kvp("j", false), kvp("wtimeout", types::b_int64{10}));
+    wc.nodes(5);
+    wc.timeout(std::chrono::milliseconds{10});
+    auto generated_nodes = wc.to_document();
+    REQUIRE(generated_nodes.view() == nodes.view());
+}
+
 }  // namespace

@@ -21,6 +21,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/options/find_one_common_options.hpp>
 #include <mongocxx/stdx.hpp>
+#include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -206,6 +207,32 @@ class MONGOCXX_API find_one_and_replace {
     ///
     const stdx::optional<bool>& upsert() const;
 
+    ///
+    /// Sets the write concern for this operation.
+    ///
+    /// @param write_concern
+    ///   Object representing the write concern.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/findAndModify/
+    ///
+    find_one_and_replace& write_concern(mongocxx::write_concern write_concern);
+
+    ///
+    /// Gets the current write concern.
+    ///
+    /// @return
+    ///   The current write concern.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/findAndModify/
+    ///
+    const stdx::optional<mongocxx::write_concern>& write_concern() const;
+
    private:
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
@@ -214,6 +241,7 @@ class MONGOCXX_API find_one_and_replace {
     stdx::optional<mongocxx::options::return_document> _return_document;
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
     stdx::optional<bool> _upsert;
+    stdx::optional<mongocxx::write_concern> _write_concern;
 
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const find_one_and_replace&,
                                                       const find_one_and_replace&);

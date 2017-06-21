@@ -143,33 +143,6 @@ TEST_CASE("A database", "[database]") {
         REQUIRE(destroy_called);
     }
 
-    SECTION("is dropped") {
-        bool drop_called = false;
-
-        database_drop->interpose([&](mongoc_database_t*, bson_error_t*) {
-            drop_called = true;
-            return true;
-        });
-
-        database database = mongo_client["database"];
-        REQUIRE(!drop_called);
-        database.drop();
-        REQUIRE(drop_called);
-    }
-
-    SECTION("throws an exception when dropping causes an error") {
-        database_drop->interpose([&](mongoc_database_t*, bson_error_t* error) {
-            bson_set_error(error,
-                           MONGOC_ERROR_COMMAND,
-                           MONGOC_ERROR_COMMAND_INVALID_ARG,
-                           "expected error from mock");
-            return false;
-        });
-
-        database database = mongo_client["database"];
-        REQUIRE_THROWS(database.drop());
-    }
-
     SECTION("throws an exception when has_collection causes an error") {
         database_has_collection->interpose(
             [](mongoc_database_t*, const char*, bson_error_t* error) {

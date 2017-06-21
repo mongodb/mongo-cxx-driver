@@ -78,32 +78,32 @@ const char* get_collection_name(mongoc_collection_t* collection) {
     return mongocxx::libmongoc::collection_get_name(collection);
 }
 
-bsoncxx::stdx::optional<bsoncxx::document::value> find_and_modify(
-    ::mongoc_collection_t* collection,
-    view_or_value filter,
-    const ::mongoc_find_and_modify_opts_t* opts) {
-    mongocxx::libbson::scoped_bson_t bson_filter{filter};
+mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(mongoc_collection_t* collection,
+                                                                   bsoncxx::document::view command,
+                                                                   bsoncxx::document::view opts) {
+    mongocxx::libbson::scoped_bson_t command_bson{command};
+    mongocxx::libbson::scoped_bson_t opts_bson{opts};
     mongocxx::libbson::scoped_bson_t reply;
 
     ::bson_error_t error;
 
-    bool r = mongocxx::libmongoc::collection_find_and_modify_with_opts(
-        collection, bson_filter.bson(), opts, reply.bson_for_init(), &error);
+    bool result = mongocxx::libmongoc::collection_write_command_with_opts(
+        collection, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
-    if (!r) {
+    if (!result) {
         if (!reply.view().empty()) {
             mongocxx::throw_exception<mongocxx::write_exception>(reply.steal(), error);
         }
         mongocxx::throw_exception<mongocxx::write_exception>(error);
     }
 
-    bsoncxx::document::view result = reply.view();
+    bsoncxx::document::view reply_view = reply.view();
 
-    if (result["value"].type() == bsoncxx::type::k_null) {
-        return bsoncxx::stdx::optional<bsoncxx::document::value>{};
+    if (reply_view["value"].type() == bsoncxx::type::k_null) {
+        return mongocxx::stdx::optional<bsoncxx::document::value>{};
     }
 
-    return bsoncxx::document::value{result["value"].get_document().view()};
+    return bsoncxx::document::value{reply_view["value"].get_document().view()};
 }
 
 // TODO move these to a private header
@@ -145,14 +145,24 @@ stdx::string_view collection::name() const {
     return {get_collection_name(_get_impl().collection_t)};
 }
 
-void collection::rename(bsoncxx::string::view_or_value new_name, bool drop_target_before_rename) {
+void collection::rename(bsoncxx::string::view_or_value new_name,
+                        bool drop_target_before_rename,
+                        const bsoncxx::stdx::optional<mongocxx::write_concern>& wc) {
     bson_error_t error;
 
-    auto result = libmongoc::collection_rename(_get_impl().collection_t,
-                                               _get_impl().database_name.c_str(),
-                                               new_name.terminated().data(),
-                                               drop_target_before_rename,
-                                               &error);
+    bsoncxx::builder::basic::document opts_doc;
+    if (wc) {
+        opts_doc.append(kvp("writeConcern", wc->to_document()));
+    }
+
+    scoped_bson_t opts_bson{opts_doc.view()};
+
+    bool result = libmongoc::collection_rename_with_opts(_get_impl().collection_t,
+                                                         _get_impl().database_name.c_str(),
+                                                         new_name.terminated().data(),
+                                                         drop_target_before_rename,
+                                                         opts_bson.bson(),
+                                                         &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
@@ -381,6 +391,10 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
         b.append(kvp("hint", options.hint()->to_value()));
     }
 
+    if (options.write_concern()) {
+        b.append(kvp("writeConcern", options.write_concern()->to_document()));
+    }
+
     scoped_bson_t options_bson(b.view());
 
     const ::mongoc_read_prefs_t* rp_ptr = NULL;
@@ -589,124 +603,127 @@ stdx::optional<result::delete_result> collection::delete_one(
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
     view_or_value filter, view_or_value replacement, const options::find_one_and_replace& options) {
-    auto opts = libmongoc::find_and_modify_opts_new();
-    auto opts_cleanup = make_guard([&opts] { libmongoc::find_and_modify_opts_destroy(opts); });
-    int flags = ::MONGOC_FIND_AND_MODIFY_NONE;
+    bsoncxx::builder::basic::document command_doc;
+    bsoncxx::builder::basic::document options_doc;
 
-    libmongoc::find_and_modify_opts_set_update(opts, scoped_bson_t{replacement}.bson());
+    command_doc.append(
+        kvp("findAndModify", libmongoc::collection_get_name(_get_impl().collection_t)));
+
+    options_doc.append(kvp("query", filter));
+
+    options_doc.append(kvp("update", replacement.view()));
+
+    if (options.sort()) {
+        options_doc.append(kvp("sort", *options.sort()));
+    }
 
     if (options.bypass_document_validation()) {
-        libmongoc::find_and_modify_opts_set_bypass_document_validation(
-            opts, *options.bypass_document_validation());
+        options_doc.append(kvp("bypassDocumentValidation", *options.bypass_document_validation()));
     }
 
     if (options.collation()) {
-        scoped_bson_t bson_collation{make_document(kvp("collation", *options.collation()))};
-        libmongoc::find_and_modify_opts_append(opts, bson_collation.bson());
-    }
-
-    if (options.sort()) {
-        libmongoc::find_and_modify_opts_set_sort(opts, scoped_bson_t{*options.sort()}.bson());
+        options_doc.append(kvp("collation", *options.collation()));
     }
 
     if (options.projection()) {
-        libmongoc::find_and_modify_opts_set_fields(opts,
-                                                   scoped_bson_t{*options.projection()}.bson());
+        options_doc.append(kvp("fields", *options.projection()));
     }
 
     if (options.upsert().value_or(false)) {
-        flags |= ::MONGOC_FIND_AND_MODIFY_UPSERT;
+        options_doc.append(kvp("upsert", *options.upsert()));
     }
 
     if (options.return_document() == options::return_document::k_after) {
-        flags |= ::MONGOC_FIND_AND_MODIFY_RETURN_NEW;
+        options_doc.append(kvp("new", true));
     }
 
     if (options.max_time()) {
-        libmongoc::find_and_modify_opts_set_max_time_ms(
-            opts, static_cast<std::uint32_t>(options.max_time()->count()));
+        options_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
     }
 
-    libmongoc::find_and_modify_opts_set_flags(opts,
-                                              static_cast<::mongoc_find_and_modify_flags_t>(flags));
+    if (options.write_concern()) {
+        options_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
+    }
 
-    return find_and_modify(_get_impl().collection_t, filter, opts);
+    return find_and_modify(_get_impl().collection_t, command_doc.view(), options_doc.view());
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
     view_or_value filter, view_or_value update, const options::find_one_and_update& options) {
-    auto opts = libmongoc::find_and_modify_opts_new();
-    auto opts_cleanup = make_guard([&opts] { libmongoc::find_and_modify_opts_destroy(opts); });
-    int flags = ::MONGOC_FIND_AND_MODIFY_NONE;
+    bsoncxx::builder::basic::document command_doc;
+    bsoncxx::builder::basic::document options_doc;
 
-    libmongoc::find_and_modify_opts_set_update(opts, scoped_bson_t{update}.bson());
+    command_doc.append(
+        kvp("findAndModify", libmongoc::collection_get_name(_get_impl().collection_t)));
 
-    if (options.bypass_document_validation()) {
-        libmongoc::find_and_modify_opts_set_bypass_document_validation(
-            opts, *options.bypass_document_validation());
-    }
+    options_doc.append(kvp("query", filter));
 
-    if (options.collation()) {
-        scoped_bson_t bson_collation{make_document(kvp("collation", *options.collation()))};
-        libmongoc::find_and_modify_opts_append(opts, bson_collation.bson());
-    }
+    options_doc.append(kvp("update", update));
 
     if (options.sort()) {
-        libmongoc::find_and_modify_opts_set_sort(opts, scoped_bson_t{*options.sort()}.bson());
-    }
-
-    if (options.projection()) {
-        libmongoc::find_and_modify_opts_set_fields(opts,
-                                                   scoped_bson_t{*options.projection()}.bson());
-    }
-
-    if (options.upsert().value_or(false)) {
-        flags |= ::MONGOC_FIND_AND_MODIFY_UPSERT;
+        options_doc.append(kvp("sort", *options.sort()));
     }
 
     if (options.return_document() == options::return_document::k_after) {
-        flags |= ::MONGOC_FIND_AND_MODIFY_RETURN_NEW;
+        options_doc.append(kvp("new", true));
+    }
+
+    if (options.bypass_document_validation()) {
+        options_doc.append(kvp("bypassDocumentValidation", *options.bypass_document_validation()));
+    }
+
+    if (options.collation()) {
+        options_doc.append(kvp("collation", *options.collation()));
+    }
+
+    if (options.projection()) {
+        options_doc.append(kvp("fields", *options.projection()));
+    }
+
+    if (options.upsert().value_or(false)) {
+        options_doc.append(kvp("upsert", *options.upsert()));
     }
 
     if (options.max_time()) {
-        libmongoc::find_and_modify_opts_set_max_time_ms(
-            opts, static_cast<std::uint32_t>(options.max_time()->count()));
+        options_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
     }
 
-    libmongoc::find_and_modify_opts_set_flags(opts,
-                                              static_cast<::mongoc_find_and_modify_flags_t>(flags));
-
-    return find_and_modify(_get_impl().collection_t, filter, opts);
+    return find_and_modify(_get_impl().collection_t, command_doc.view(), options_doc.view());
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
     view_or_value filter, const options::find_one_and_delete& options) {
-    auto opts = libmongoc::find_and_modify_opts_new();
-    auto opts_cleanup = make_guard([&opts] { libmongoc::find_and_modify_opts_destroy(opts); });
-    auto flags = ::MONGOC_FIND_AND_MODIFY_REMOVE;
+    bsoncxx::builder::basic::document command_doc;
+    bsoncxx::builder::basic::document options_doc;
 
-    if (options.collation()) {
-        scoped_bson_t bson_collation{make_document(kvp("collation", *options.collation()))};
-        libmongoc::find_and_modify_opts_append(opts, bson_collation.bson());
-    }
+    command_doc.append(
+        kvp("findAndModify", libmongoc::collection_get_name(_get_impl().collection_t)));
+
+    options_doc.append(kvp("query", filter));
+
+    options_doc.append(kvp("remove", true));
 
     if (options.sort()) {
-        libmongoc::find_and_modify_opts_set_sort(opts, scoped_bson_t{*options.sort()}.bson());
+        options_doc.append(kvp("sort", *options.sort()));
+    }
+
+    if (options.collation()) {
+        options_doc.append(kvp("collation", *options.collation()));
     }
 
     if (options.projection()) {
-        libmongoc::find_and_modify_opts_set_fields(opts,
-                                                   scoped_bson_t{*options.projection()}.bson());
+        options_doc.append(kvp("fields", *options.projection()));
     }
 
     if (options.max_time()) {
-        libmongoc::find_and_modify_opts_set_max_time_ms(
-            opts, static_cast<std::uint32_t>(options.max_time()->count()));
+        options_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
     }
 
-    libmongoc::find_and_modify_opts_set_flags(opts, flags);
+    if (options.write_concern()) {
+        options_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
+    }
 
-    return find_and_modify(_get_impl().collection_t, filter, opts);
+    return find_and_modify(_get_impl().collection_t, command_doc.view(), options_doc.view());
 }
 
 std::int64_t collection::count(view_or_value filter, const options::count& options) {
@@ -753,13 +770,12 @@ std::int64_t collection::count(view_or_value filter, const options::count& optio
     return result;
 }
 
-bsoncxx::document::value collection::create_index(
-    bsoncxx::document::view_or_value keys,
-    bsoncxx::document::view_or_value opts,
-    bsoncxx::stdx::optional<std::int64_t> max_time_ms) {
+bsoncxx::document::value collection::create_index(bsoncxx::document::view_or_value keys,
+                                                  bsoncxx::document::view_or_value index_opts,
+                                                  options::index_view operation_options) {
     using namespace bsoncxx;
 
-    auto name = indexes().create_one(keys, opts, max_time_ms);
+    auto name = indexes().create_one(keys, index_opts, operation_options);
 
     if (name) {
         return make_document(kvp("name", *name));
@@ -850,10 +866,17 @@ cursor collection::list_indexes() const {
     return cursor(result);
 }
 
-void collection::drop() {
+void collection::drop(const stdx::optional<mongocxx::write_concern>& wc) {
     bson_error_t error;
 
-    auto result = libmongoc::collection_drop(_get_impl().collection_t, &error);
+    bsoncxx::builder::basic::document opts_doc;
+    if (wc) {
+        opts_doc.append(kvp("writeConcern", wc->to_document()));
+    }
+
+    scoped_bson_t opts_bson{opts_doc.view()};
+    auto result =
+        libmongoc::collection_drop_with_opts(_get_impl().collection_t, opts_bson.bson(), &error);
 
     // Throw an exception if the command failed, unless the failure was due to a non-existent
     // collection. We check for this failure using 'code', but we fall back to checking 'message'

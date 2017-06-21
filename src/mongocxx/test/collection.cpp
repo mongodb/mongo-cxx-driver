@@ -113,16 +113,44 @@ TEST_CASE("collection renaming", "[collection]") {
     client mongodb_client{uri{}};
     database db = mongodb_client["test"];
 
+    auto filter = make_document(kvp("key--------unique", "value"));
+
     std::string collname{"mongo_cxx_driver"};
+    std::string other_collname{"mongo_cxx_again"};
+
     collection coll = db[collname];
-    coll.insert_one({});  // Ensure that the collection exists.
+    collection other_coll = db[other_collname];
+
+    coll.insert_one(filter.view());  // Ensure that the collection exists.
+    other_coll.insert_one({});
 
     REQUIRE(coll.name() == stdx::string_view{collname});
 
     std::string new_name{"mongo_cxx_newname"};
-    coll.rename(new_name, true);
+    coll.rename(new_name, false);
 
     REQUIRE(coll.name() == stdx::string_view{new_name});
+
+    REQUIRE(coll.find_one(filter.view(), {}));
+
+    coll.rename(other_collname, true);
+    REQUIRE(coll.name() == stdx::string_view{other_collname});
+    REQUIRE(coll.find_one(filter.view(), {}));
+
+    coll.drop();
+}
+
+TEST_CASE("collection dropping") {
+    instance::current();
+
+    client mongodb_client{uri{}};
+    database db = mongodb_client["test"];
+
+    std::string collname{"mongo_cxx_driver"};
+    collection coll = db[collname];
+    coll.insert_one({});  // Ensure that the collection exists.
+
+    REQUIRE_NOTHROW(coll.drop());
 }
 
 TEST_CASE("CRUD functionality", "[driver::collection]") {

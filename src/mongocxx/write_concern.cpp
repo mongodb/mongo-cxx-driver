@@ -27,6 +27,9 @@
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/stdx.hpp>
 
+#include <bsoncxx/array/value.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/document/value.hpp>
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
@@ -141,6 +144,40 @@ bool write_concern::majority() const {
 
 std::chrono::milliseconds write_concern::timeout() const {
     return std::chrono::milliseconds(libmongoc::write_concern_get_wtimeout(_impl->write_concern_t));
+}
+
+bsoncxx::document::value write_concern::to_document() const {
+    using bsoncxx::builder::basic::make_document;
+    using bsoncxx::builder::basic::kvp;
+
+    bsoncxx::builder::basic::document doc;
+
+    if (auto ns = nodes()) {
+        doc.append(kvp("w", *ns));
+    } else if (auto level = acknowledge_level()) {
+        switch (*level) {
+            case write_concern::level::k_unacknowledged:
+                doc.append(kvp("w", 0));
+                break;
+            case write_concern::level::k_default:
+                doc.append(kvp("w", 1));
+                break;
+            case write_concern::level::k_majority:
+                doc.append(kvp("w", "majority"));
+                break;
+            case write_concern::level::k_tag:
+                if (auto t = tag()) {
+                    doc.append(kvp("w", *t));
+                }
+            default:
+                break;
+        }
+    }
+
+    doc.append(kvp("j", journal()));
+    doc.append(kvp("wtimeout", bsoncxx::types::b_int64{timeout().count()}));
+
+    return doc.extract();
 }
 
 bool MONGOCXX_CALL operator==(const write_concern& lhs, const write_concern& rhs) {
