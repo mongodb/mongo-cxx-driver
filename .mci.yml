@@ -14,7 +14,7 @@ variables:
     ## cmake path variables
     extra_path:
         linux_extra_path: &linux_extra_path /opt/cmake/bin
-        osx_extra_path: &osx_extra_path /Applications/Cmake.app/Contents/bin
+        macos_extra_path: &macos_extra_path /Applications/Cmake.app/Contents/bin
         windows_extra_path: &windows_extra_path "/cygdrive/c/cmake/bin:/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin"
 
     ## tar options variables
@@ -24,12 +24,12 @@ variables:
     ## cdriver configure flags
     cdriver_configure_flags:
         linux_cdriver_configure_flags: &linux_cdriver_configure_flags --enable-ssl --enable-sasl --with-gnu-ld CFLAGS=-fno-omit-frame-pointer
-        osx_cdriver_configure_flags: &osx_cdriver_configure_flags --enable-ssl --enable-sasl
+        macos_cdriver_configure_flags: &macos_cdriver_configure_flags --enable-ssl --enable-sasl
 
     ## cmake flag variables
     cmake_flags:
         linux_cmake_flags: &linux_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wconversion -Wnarrowing -Wno-expansion-to-defined -pedantic -Werror -Wno-missing-field-initializers"
-        osx_cmake_flags: &osx_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror"
+        macos_cmake_flags: &macos_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror"
         asan_cmake_flags: &asan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror"
         ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.blacklist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror"
         windows_cmake_flags: &windows_cmake_flags -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT=c:/local/boost_1_60_0
@@ -341,17 +341,17 @@ buildvariants:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
 
-    - name: osx-1010
-      display_name: "OS X 10.10 Release (Boost)"
+    - name: macos-1012
+      display_name: "MacOS 10.12 Release (Boost)"
       expansions:
           build_type: "Release"
-          cdriver_configure_flags: *osx_cdriver_configure_flags
-          extra_path: *osx_extra_path
-          cmake_flags: *osx_cmake_flags
+          cdriver_configure_flags: *macos_cdriver_configure_flags
+          extra_path: *macos_extra_path
+          cmake_flags: *macos_cmake_flags
           poly_flags: *poly_boost_flags
           mongodb_version: *version_latest
       run_on:
-          - osx-1010
+          - macos-1012
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
