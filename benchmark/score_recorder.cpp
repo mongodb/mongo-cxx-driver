@@ -19,7 +19,7 @@ namespace benchmark {
 score_recorder::score_recorder(std::int64_t task_size)
     : _execution_time{0}, _sorted{false}, _task_size{task_size} {}
 
-const std::chrono::milliseconds& score_recorder::get_execution_time() {
+const std::chrono::milliseconds& score_recorder::get_execution_time() const {
     return _execution_time;
 }
 

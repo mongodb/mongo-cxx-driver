@@ -44,7 +44,7 @@ class score_recorder {
     // @return
     //  cumulative execution time.
     //
-    const std::chrono::milliseconds& get_execution_time();
+    const std::chrono::milliseconds& get_execution_time() const;
 
     //
     // Gets the nth percentile sample runtime.
