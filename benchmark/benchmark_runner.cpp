@@ -15,7 +15,7 @@
 #include <chrono>
 
 #include <mongocxx/instance.hpp>
-#include "bson_encoding.hpp"
+#include "bson/bson_encoding.hpp"
 #include "find_one_by_id.hpp"
 #include "microbench.hpp"
 
@@ -52,6 +52,7 @@ int main() {
     run_microbench(&deep_bson_encode, "DEEP_BSON.json");
     bson_encoding full_bson_encode;
     run_microbench(&full_bson_encode, "FULL_BSON.json");
+    // TODO CXX-1241: Add bson_decoding equivalents.
 
     find_one_by_id find_one_by_id_bench;
     run_microbench(&find_one_by_id_bench, "TWEET.json");
