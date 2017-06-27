@@ -17,6 +17,10 @@
 #include <mongocxx/instance.hpp>
 #include "bson/bson_encoding.hpp"
 #include "microbench.hpp"
+#include "multi_doc/bulk_insert.hpp"
+#include "multi_doc/find_many.hpp"
+#include "multi_doc/gridfs_download.hpp"
+#include "multi_doc/gridfs_upload.hpp"
 #include "single_doc/find_one_by_id.hpp"
 #include "single_doc/insert_one.hpp"
 #include "single_doc/run_command.hpp"
@@ -64,6 +68,17 @@ int main() {
     run_microbench(&small_doc_insert_one, "SMALL_DOC.json");
     insert_one large_doc_insert_one(10);
     run_microbench(&large_doc_insert_one, "LARGE_DOC.json");
+
+    find_many find_many_bench;
+    run_microbench(&find_many_bench, "TWEET.json");
+    bulk_insert small_doc_bulk_insert{10000};
+    run_microbench(&small_doc_bulk_insert, "SMALL_DOC.json");
+    bulk_insert large_doc_bulk_insert{10};
+    run_microbench(&large_doc_bulk_insert, "LARGE_DOC.json");
+    gridfs_upload gridfs_upload_bench;
+    run_microbench(&gridfs_upload_bench, "GRIDFS_LARGE.bin");
+    gridfs_download gridfs_download_bench;
+    run_microbench(&gridfs_download_bench, "GRIDFS_LARGE.bin");
 
     // get results from the microbenches...
 }
