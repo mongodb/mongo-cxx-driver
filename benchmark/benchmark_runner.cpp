@@ -16,8 +16,10 @@
 
 #include <mongocxx/instance.hpp>
 #include "bson/bson_encoding.hpp"
-#include "find_one_by_id.hpp"
 #include "microbench.hpp"
+#include "single_doc/find_one_by_id.hpp"
+#include "single_doc/insert_one.hpp"
+#include "single_doc/run_command.hpp"
 
 namespace benchmark {
 const std::chrono::duration<int, std::milli> mintime{60000};
@@ -54,8 +56,14 @@ int main() {
     run_microbench(&full_bson_encode, "FULL_BSON.json");
     // TODO CXX-1241: Add bson_decoding equivalents.
 
+    run_command run_command_bench;
+    run_microbench(&run_command_bench);
     find_one_by_id find_one_by_id_bench;
     run_microbench(&find_one_by_id_bench, "TWEET.json");
+    insert_one small_doc_insert_one(10000);
+    run_microbench(&small_doc_insert_one, "SMALL_DOC.json");
+    insert_one large_doc_insert_one(10);
+    run_microbench(&large_doc_insert_one, "LARGE_DOC.json");
 
     // get results from the microbenches...
 }

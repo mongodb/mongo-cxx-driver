@@ -30,7 +30,7 @@ class microbench {
    public:
     microbench() : _score{0} {}
 
-    microbench(int a) : _score{a} {}
+    microbench(std::int32_t a) : _score{a} {}
 
     virtual void setup(const bsoncxx::stdx::string_view) {}
 
