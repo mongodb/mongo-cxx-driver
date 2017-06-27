@@ -16,81 +16,70 @@
 
 #include "score_recorder.hpp"
 
-#include <fstream>
-#include <string>
+#include <algorithm>
+#include <set>
 #include <vector>
 
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/document/view.hpp>
-#include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
 namespace benchmark {
+
+enum class benchmark_type {
+    bson_bench,
+    single_bench,
+    multi_bench,
+    parallel_bench,
+    read_bench,
+    write_bench,
+    driver_bench,
+    all_benchmarks
+};
+
+const std::chrono::milliseconds mintime{60000};
+const std::chrono::milliseconds maxtime{300000};
+
 class microbench {
    public:
     microbench() : _score{0} {}
 
-    microbench(std::int32_t a) : _score{a} {}
+    microbench(double a, std::string name = "un-named")
+        : _score{a}, _name{name + std::to_string(a)} {}
 
-    virtual void setup(const bsoncxx::stdx::string_view) {}
+    void run();
+
+    std::string get_name() {
+        return _name;
+    }
+
+    benchmark::score_recorder& get_results() {
+        return _score;
+    }
+
+    bool has_tag(benchmark_type tag) {
+        return _tags.find(tag) != _tags.end();
+    }
+
+   protected:
+    virtual void setup() {}
 
     virtual void before_task() {}
 
-    void do_task();
+    virtual void task() {}
 
     virtual void after_task() {}
 
     virtual void teardown() {}
 
-    const benchmark::score_recorder& get_results() const {
-        return _score;
-    }
-
-    const std::chrono::milliseconds& get_execution_time() const {
-        return _score.get_execution_time();
-    }
-
-   protected:
-    virtual void task() {}
-
     benchmark::score_recorder _score;
+    std::set<benchmark_type> _tags;
+    std::string _name;
 };
 
-void microbench::do_task() {
-    _score.start_sample();
-    task();
-    _score.end_sample();
-}
-
-std::vector<std::string> parse_json_file_to_strings(bsoncxx::stdx::string_view json_file) {
-    std::vector<std::string> jsons;
-    std::ifstream stream{json_file.to_string()};
-    while (!stream.eof()) {
-        std::string s;
-        std::getline(stream, s);
-        jsons.push_back(s);
-    }
-    return jsons;
-}
+std::vector<std::string> parse_json_file_to_strings(bsoncxx::stdx::string_view json_file);
 
 std::vector<bsoncxx::document::value> parse_json_file_to_documents(
-    bsoncxx::stdx::string_view json_file) {
-    std::vector<bsoncxx::document::value> docs;
-    std::ifstream stream{json_file.to_string()};
-    while (!stream.eof()) {
-        std::string s;
-        std::getline(stream, s);
-        docs.push_back(bsoncxx::from_json(bsoncxx::stdx::string_view{s}));
-    }
-    return docs;
-}
+    bsoncxx::stdx::string_view json_file);
 
-std::vector<std::string> parse_documents_to_bson(
-    const std::vector<bsoncxx::document::value>& docs) {
-    std::vector<std::string> bsons;
-    for (std::uint32_t i = 0; i < docs.size(); i++) {
-        bsons.push_back(bsoncxx::to_json(docs[i]));
-    }
-    return bsons;
-}
+std::vector<std::string> parse_documents_to_bson(const std::vector<bsoncxx::document::value>& docs);
 }

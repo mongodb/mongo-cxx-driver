@@ -23,7 +23,7 @@ class score_recorder {
    public:
     score_recorder() = delete;
 
-    score_recorder(std::int64_t task_size);
+    score_recorder(double task_size);
 
     //
     // Starts the timer for a single iteration (sample) of the benchmark.
@@ -64,7 +64,7 @@ class score_recorder {
     // Gets the score for this benchmark.
     //
     // @return
-    //  the score for this benchmark.
+    //  the score for this benchmark in MB/s.
     //
     // @exception
     //   A runtime error is thrown if this method is called before any samples have been recorded.
@@ -81,7 +81,7 @@ class score_recorder {
 
     bool _sorted;
 
-    std::int64_t _task_size;
+    double _task_size;
 
     std::vector<std::chrono::milliseconds> _samples;
 };

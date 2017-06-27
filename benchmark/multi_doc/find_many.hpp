@@ -30,9 +30,16 @@ using bsoncxx::builder::basic::concatenate;
 
 class find_many : public microbench {
    public:
-    find_many() : microbench{1}, _conn{mongocxx::uri{}} {}
+    // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
+    find_many(bsoncxx::stdx::string_view json_file)
+        : microbench{16.22, "find_many"},
+          _conn{mongocxx::uri{}},
+          _json_file{json_file.to_string()} {
+        _tags.insert(benchmark_type::multi_bench);
+        _tags.insert(benchmark_type::read_bench);
+    }
 
-    void setup(bsoncxx::stdx::string_view);
+    void setup();
 
     void teardown();
 
@@ -41,10 +48,11 @@ class find_many : public microbench {
 
    private:
     mongocxx::client _conn;
+    std::string _json_file;
 };
 
-void find_many::setup(bsoncxx::stdx::string_view json_file) {
-    auto doc = parse_json_file_to_documents(json_file)[0];
+void find_many::setup() {
+    auto doc = parse_json_file_to_documents(_json_file)[0];
     mongocxx::database db = _conn["perftest"];
     db.drop();
     auto coll = db["corpus"];
@@ -54,8 +62,7 @@ void find_many::setup(bsoncxx::stdx::string_view json_file) {
 }
 
 void find_many::teardown() {
-    mongocxx::database db = _conn["perftest"];
-    db.drop();
+    _conn["perftest"].drop();
 }
 
 void find_many::task() {

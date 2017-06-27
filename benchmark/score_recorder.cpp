@@ -16,7 +16,7 @@
 
 namespace benchmark {
 
-score_recorder::score_recorder(std::int64_t task_size)
+score_recorder::score_recorder(double task_size)
     : _execution_time{0}, _sorted{false}, _task_size{task_size} {}
 
 const std::chrono::milliseconds& score_recorder::get_execution_time() const {
@@ -52,6 +52,6 @@ const std::chrono::milliseconds& score_recorder::get_percentile(unsigned long n)
 }
 
 double score_recorder::get_score() {
-    return static_cast<double>(_task_size) / static_cast<double>(get_percentile(50).count());
+    return _task_size / (static_cast<double>(get_percentile(50).count()) * .001);
 }
 }  // namespace benchmark

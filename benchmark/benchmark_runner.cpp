@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <chrono>
+#include "benchmark_runner.hpp"
 
-#include <mongocxx/instance.hpp>
 #include "bson/bson_encoding.hpp"
-#include "microbench.hpp"
 #include "multi_doc/bulk_insert.hpp"
 #include "multi_doc/find_many.hpp"
 #include "multi_doc/gridfs_download.hpp"
@@ -26,60 +24,86 @@
 #include "single_doc/run_command.hpp"
 
 namespace benchmark {
-const std::chrono::duration<int, std::milli> mintime{60000};
-const std::chrono::duration<int, std::milli> maxtime{300000};
 
-bool finished_running(const std::chrono::duration<int, std::milli>& curr_time, std::uint32_t iter) {
-    return (curr_time > maxtime || (curr_time > mintime && iter > 100));
-}
+// The task sizes and iteration numbers come from the Driver Perfomance Benchmarking Reference Doc.
+benchmark_runner::benchmark_runner() {
+    using bsoncxx::stdx::make_unique;
 
-void run_microbench(microbench* bench,
-                    bsoncxx::stdx::string_view input_json_filename = bsoncxx::stdx::string_view()) {
-    bench->setup(input_json_filename);
-
-    for (std::uint32_t iteration = 0; !finished_running(bench->get_execution_time(), iteration);
-         iteration++) {
-        bench->before_task();
-
-        bench->do_task();
-
-        bench->after_task();
-    }
-    bench->teardown();
-}
-
-// this would run the benchmarks and collect the data.
-int main() {
-    mongocxx::instance instance{};
-
-    bson_encoding flat_bson_encode;
-    run_microbench(&flat_bson_encode, "FLAT_BSON.json");
-    bson_encoding deep_bson_encode;
-    run_microbench(&deep_bson_encode, "DEEP_BSON.json");
-    bson_encoding full_bson_encode;
-    run_microbench(&full_bson_encode, "FULL_BSON.json");
+    // Bson microbenchmarks
+    _microbenches.push_back(make_unique<bson_encoding>(75.31, "extended_bson/flat_bson.json"));
+    _microbenches.push_back(make_unique<bson_encoding>(19.64, "extended_bson/deep_bson.json"));
+    _microbenches.push_back(make_unique<bson_encoding>(57.34, "extended_bson/full_bson.json"));
     // TODO CXX-1241: Add bson_decoding equivalents.
 
-    run_command run_command_bench;
-    run_microbench(&run_command_bench);
-    find_one_by_id find_one_by_id_bench;
-    run_microbench(&find_one_by_id_bench, "TWEET.json");
-    insert_one small_doc_insert_one(10000);
-    run_microbench(&small_doc_insert_one, "SMALL_DOC.json");
-    insert_one large_doc_insert_one(10);
-    run_microbench(&large_doc_insert_one, "LARGE_DOC.json");
+    // Single doc microbenchmarks
+    _microbenches.push_back(make_unique<run_command>());
+    _microbenches.push_back(make_unique<find_one_by_id>("single_and_multi_document/tweet.json"));
+    _microbenches.push_back(
+        make_unique<insert_one>(2.75, 10000, "single_and_multi_document/small_doc.json"));
+    _microbenches.push_back(
+        make_unique<insert_one>(27.31, 10, "single_and_multi_document/large_doc.json"));
 
-    find_many find_many_bench;
-    run_microbench(&find_many_bench, "TWEET.json");
-    bulk_insert small_doc_bulk_insert{10000};
-    run_microbench(&small_doc_bulk_insert, "SMALL_DOC.json");
-    bulk_insert large_doc_bulk_insert{10};
-    run_microbench(&large_doc_bulk_insert, "LARGE_DOC.json");
-    gridfs_upload gridfs_upload_bench;
-    run_microbench(&gridfs_upload_bench, "GRIDFS_LARGE.bin");
-    gridfs_download gridfs_download_bench;
-    run_microbench(&gridfs_download_bench, "GRIDFS_LARGE.bin");
+    // Multi doc microbenchmarks
+    _microbenches.push_back(make_unique<find_many>("single_and_multi_document/tweet.json"));
+    _microbenches.push_back(
+        make_unique<bulk_insert>(2.75, 10000, "single_and_multi_document/small_doc.json"));
+    _microbenches.push_back(
+        make_unique<bulk_insert>(27.31, 10, "single_and_multi_document/large_doc.json"));
+    _microbenches.push_back(
+        make_unique<gridfs_upload>("single_and_multi_document/gridfs_large.bin"));
+    _microbenches.push_back(
+        make_unique<gridfs_download>("single_and_multi_document/gridfs_large.bin"));
 
-    // get results from the microbenches...
+    // TODO CXX-1378: add parallel microbenchmarks
+}
+
+void benchmark_runner::run_microbenches(benchmark_type tag) {
+    mongocxx::instance instance{};
+
+    for (std::unique_ptr<microbench>& bench : _microbenches) {
+        if (tag == benchmark::benchmark_type::all_benchmarks || bench->has_tag(tag)) {
+            bench->run();
+        }
+    }
+}
+
+double benchmark_runner::calculate_average(benchmark_type tag) {
+    std::uint32_t count = 0;
+    double total = 0.0;
+    for (std::unique_ptr<microbench>& bench : _microbenches) {
+        if (bench->has_tag(tag)) {
+            count++;
+            total += bench->get_results().get_score();
+        }
+    }
+    return total / static_cast<double>(count);
+}
+
+double benchmark_runner::calculate_bson_bench_score() {
+    return calculate_average(benchmark_type::bson_bench);
+}
+
+double benchmark_runner::calculate_single_bench_score() {
+    return calculate_average(benchmark_type::single_bench);
+}
+
+double benchmark_runner::calculate_multi_bench_score() {
+    return calculate_average(benchmark_type::multi_bench);
+}
+
+double benchmark_runner::calculate_parallel_bench_score() {
+    return calculate_average(benchmark_type::parallel_bench);
+}
+
+double benchmark_runner::calculate_read_bench_score() {
+    return calculate_average(benchmark_type::read_bench);
+}
+
+double benchmark_runner::calculate_write_bench_score() {
+    return calculate_average(benchmark_type::write_bench);
+}
+
+double benchmark_runner::calculate_driver_bench_score() {
+    return (calculate_read_bench_score() + calculate_write_bench_score()) / 2.0;
 }
 }

@@ -17,6 +17,7 @@
 #include "../microbench.hpp"
 
 #include <algorithm>
+#include <fstream>
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -33,9 +34,16 @@ using bsoncxx::stdx::make_unique;
 
 class gridfs_download : public microbench {
    public:
-    gridfs_download() : microbench{1}, _conn{mongocxx::uri{}} {}
+    // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
+    gridfs_download(bsoncxx::stdx::string_view file_name)
+        : microbench{52.43, "gridfs_download"},
+          _conn{mongocxx::uri{}},
+          _file_name{file_name.to_string()} {
+        _tags.insert(benchmark_type::multi_bench);
+        _tags.insert(benchmark_type::read_bench);
+    }
 
-    void setup(bsoncxx::stdx::string_view);
+    void setup();
 
     void teardown();
 
@@ -46,20 +54,20 @@ class gridfs_download : public microbench {
     mongocxx::client _conn;
     mongocxx::gridfs::bucket _bucket;
     bsoncxx::stdx::optional<bsoncxx::types::value> _id;
+    std::string _file_name;
 };
 
-void gridfs_download::setup(bsoncxx::stdx::string_view file_name) {
+void gridfs_download::setup() {
     mongocxx::database db = _conn["perftest"];
     db.drop();
-    std::ifstream stream{file_name.to_string()};
+    std::ifstream stream{_file_name};
     _bucket = db.gridfs_bucket();
-    auto result = _bucket.upload_from_stream(file_name, &stream);
+    auto result = _bucket.upload_from_stream(_file_name, &stream);
     _id = result.id();
 }
 
 void gridfs_download::teardown() {
-    mongocxx::database db = _conn["perftest"];
-    db.drop();
+    _conn["perftest"].drop();
 }
 
 void gridfs_download::task() {

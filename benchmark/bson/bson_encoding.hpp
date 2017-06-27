@@ -15,6 +15,9 @@
 #pragma once
 
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/types.hpp>
+
+#include <iostream>
 #include "../microbench.hpp"
 
 namespace benchmark {
@@ -22,24 +25,42 @@ namespace benchmark {
 class bson_encoding : public microbench {
    public:
     // TODO: need to wait for scoring object to be finished to implement constructor
-    bson_encoding() : microbench{10000} {}
+    bson_encoding() = delete;
 
-    void setup(bsoncxx::stdx::string_view);
+    bson_encoding(double task_size, bsoncxx::stdx::string_view json_file)
+        : microbench{task_size, "bson_encoding"},
+          _json{parse_json_file_to_strings(json_file)[0]},
+          _doc{bsoncxx::from_json(bsoncxx::stdx::string_view{_json})} {
+        _tags.insert(benchmark_type::bson_bench);
+    }
 
    protected:
     void task();
+    void teardown();
 
    private:
+    std::int64_t _x;
+    std::string _s;
     std::string _json;
+    bsoncxx::document::value _doc;
 };
 
-void bson_encoding::setup(bsoncxx::stdx::string_view json_file) {
-    _json = parse_json_file_to_strings(json_file)[0];
+void bson_encoding::task() {
+    // bsoncxx::stdx::string_view json_view{_json};
+    // for (std::uint32_t i = 0; i < 10000; i++) {
+    //    bsoncxx::from_json(bsoncxx::stdx::string_view{_json});
+    //}
+    _x = 0;
+    for (auto&& it : _doc.view()) {
+        if (it.type() == bsoncxx::type::k_utf8) {
+            _s = it.get_utf8().value.to_string();
+        }
+    }
+
+    // std::cout << _x << std::endl;
 }
 
-void bson_encoding::task() {
-    for (std::uint32_t i = 0; i < 10000; i++) {
-        bsoncxx::document::value doc = bsoncxx::from_json(bsoncxx::stdx::string_view{_json});
-    }
+void bson_encoding::teardown() {
+    std::cout << _x << std::endl;
 }
 }

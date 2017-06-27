@@ -30,22 +30,29 @@ using bsoncxx::builder::basic::concatenate;
 
 class find_one_by_id : public microbench {
    public:
-    // TODO: need to wait for scoring object to be finished to finish constructor
-    find_one_by_id() : microbench{10000}, _conn{mongocxx::uri{}} {}
+    // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
+    find_one_by_id(bsoncxx::stdx::string_view json_file)
+        : microbench{16.22, "find_one_by_id"},
+          _conn{mongocxx::uri{}},
+          _json_file{json_file.to_string()} {
+        _tags.insert(benchmark_type::single_bench);
+        _tags.insert(benchmark_type::read_bench);
+    }
 
-    void setup(bsoncxx::stdx::string_view);
+   protected:
+    void setup();
 
     void teardown();
 
-   protected:
     void task();
 
    private:
     mongocxx::client _conn;
+    std::string _json_file;
 };
 
-void find_one_by_id::setup(bsoncxx::stdx::string_view json_file) {
-    auto doc = parse_json_file_to_documents(json_file)[0];
+void find_one_by_id::setup() {
+    auto doc = parse_json_file_to_documents(_json_file)[0];
     mongocxx::database db = _conn["perftest"];
     db.drop();
     auto coll = db["corpus"];
@@ -54,11 +61,6 @@ void find_one_by_id::setup(bsoncxx::stdx::string_view json_file) {
             make_document(kvp("_id", bsoncxx::types::b_int32{i}), concatenate(doc.view()));
         coll.insert_one(insert.view());
     }
-}
-
-void find_one_by_id::teardown() {
-    mongocxx::database db = _conn["perftest"];
-    db.drop();
 }
 
 void find_one_by_id::task() {
@@ -70,5 +72,9 @@ void find_one_by_id::task() {
         for (auto&& doc : cursor) {
         }
     }
+}
+
+void find_one_by_id::teardown() {
+    _conn["perftest"].drop();
 }
 }

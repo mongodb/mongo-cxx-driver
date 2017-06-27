@@ -32,16 +32,21 @@ class insert_one : public microbench {
    public:
     insert_one() = delete;
 
-    insert_one(std::int32_t iter) : microbench{iter}, _conn{mongocxx::uri{}}, _iter{iter} {}
+    insert_one(double task_size, std::int32_t iter, bsoncxx::stdx::string_view json_file)
+        : microbench{task_size, "insert_one"}, _conn{mongocxx::uri{}}, _iter{iter} {
+        _tags.insert(benchmark_type::single_bench);
+        _tags.insert(benchmark_type::write_bench);
+        _doc = parse_json_file_to_documents(json_file)[0];
+    }
 
-    void setup(bsoncxx::stdx::string_view);
+   protected:
+    void setup();
 
     void before_task();
 
-    void teardown();
-
-   protected:
     void task();
+
+    void teardown();
 
    private:
     mongocxx::client _conn;
@@ -50,8 +55,7 @@ class insert_one : public microbench {
     mongocxx::collection _coll;
 };
 
-void insert_one::setup(bsoncxx::stdx::string_view json_file) {
-    _doc = parse_json_file_to_documents(json_file)[0];
+void insert_one::setup() {
     mongocxx::database db = _conn["perftest"];
     db.drop();
 }
@@ -63,14 +67,13 @@ void insert_one::before_task() {
     _coll = _conn["perftest"]["corpus"];
 }
 
-void insert_one::teardown() {
-    mongocxx::database db = _conn["perftest"];
-    db.drop();
-}
-
 void insert_one::task() {
     for (std::int32_t i = 0; i < _iter; i++) {
         _coll.insert_one(_doc->view());
     }
+}
+
+void insert_one::teardown() {
+    _conn["perftest"].drop();
 }
 }

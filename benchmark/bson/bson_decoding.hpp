@@ -20,19 +20,19 @@ namespace benchmark {
 
 class bson_decoding : public microbench {
    public:
-    bson_decoding() : microbench{10000} {}
+    bson_decoding() = delete;
 
-    void setup(bsoncxx::stdx::string_view);
+    bson_decoding(double task_size, bsoncxx::stdx::string_view json_file)
+        : microbench{task_size, "bson_decoding"} {
+        _tags.insert(benchmark_type::bson_bench);
+        _json = parse_json_file_to_strings(json_file)[0];
+    }
 
    protected:
     void task();
 
    private:
     std::string _json;
-}
-
-void bson_decoding::setup(bsoncxx::stdx::string_view json_file){
-    _json = parse_json_file_to_strings(json_file)[0];
 }
 
 void bson_decoding::task() {

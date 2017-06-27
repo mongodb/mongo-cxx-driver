@@ -34,9 +34,17 @@ class bulk_insert : public microbench {
    public:
     bulk_insert() = delete;
 
-    bulk_insert(std::int32_t doc_num) : microbench{1}, _conn{mongocxx::uri{}}, _doc_num{doc_num} {}
+    bulk_insert(double task_size, std::int32_t doc_num, bsoncxx::stdx::string_view json_file)
+        : microbench{task_size, "bulk_insert"}, _conn{mongocxx::uri{}}, _doc_num{doc_num} {
+        _tags.insert(benchmark_type::multi_bench);
+        _tags.insert(benchmark_type::write_bench);
+        auto doc = parse_json_file_to_documents(json_file)[0];
+        for (std::int32_t i = 0; i < _doc_num; i++) {
+            _docs.push_back(doc);
+        }
+    }
 
-    void setup(bsoncxx::stdx::string_view);
+    void setup();
 
     void before_task();
 
@@ -52,11 +60,7 @@ class bulk_insert : public microbench {
     mongocxx::collection _coll;
 };
 
-void bulk_insert::setup(bsoncxx::stdx::string_view json_file) {
-    auto doc = parse_json_file_to_documents(json_file)[0];
-    for (std::int32_t i = 0; i < _doc_num; i++) {
-        _docs.push_back(doc);
-    }
+void bulk_insert::setup() {
     mongocxx::database db = _conn["perftest"];
     db.drop();
 }
