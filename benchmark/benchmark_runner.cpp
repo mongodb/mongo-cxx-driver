@@ -14,11 +14,20 @@
 
 #include "benchmark_runner.hpp"
 
+#include <bsoncxx/stdx/make_unique.hpp>
+
 #include "bson/bson_encoding.hpp"
+
 #include "multi_doc/bulk_insert.hpp"
 #include "multi_doc/find_many.hpp"
 #include "multi_doc/gridfs_download.hpp"
 #include "multi_doc/gridfs_upload.hpp"
+
+#include "parallel/gridfs_multi_export.hpp"
+#include "parallel/gridfs_multi_import.hpp"
+#include "parallel/json_multi_export.hpp"
+#include "parallel/json_multi_import.hpp"
+
 #include "single_doc/find_one_by_id.hpp"
 #include "single_doc/insert_one.hpp"
 #include "single_doc/run_command.hpp"
@@ -27,41 +36,49 @@ namespace benchmark {
 
 // The task sizes and iteration numbers come from the Driver Perfomance Benchmarking Reference Doc.
 benchmark_runner::benchmark_runner() {
-    using bsoncxx::stdx::make_unique;
+    using namespace bsoncxx;
 
     // Bson microbenchmarks
-    _microbenches.push_back(make_unique<bson_encoding>(75.31, "extended_bson/flat_bson.json"));
-    _microbenches.push_back(make_unique<bson_encoding>(19.64, "extended_bson/deep_bson.json"));
-    _microbenches.push_back(make_unique<bson_encoding>(57.34, "extended_bson/full_bson.json"));
+    _microbenches.push_back(
+        stdx::make_unique<bson_encoding>(75.31, "extended_bson/flat_bson.json"));
+    _microbenches.push_back(
+        stdx::make_unique<bson_encoding>(19.64, "extended_bson/deep_bson.json"));
+    _microbenches.push_back(
+        stdx::make_unique<bson_encoding>(57.34, "extended_bson/full_bson.json"));
     // TODO CXX-1241: Add bson_decoding equivalents.
 
     // Single doc microbenchmarks
-    _microbenches.push_back(make_unique<run_command>());
-    _microbenches.push_back(make_unique<find_one_by_id>("single_and_multi_document/tweet.json"));
+    _microbenches.push_back(stdx::make_unique<run_command>());
     _microbenches.push_back(
-        make_unique<insert_one>(2.75, 10000, "single_and_multi_document/small_doc.json"));
+        stdx::make_unique<find_one_by_id>("single_and_multi_document/tweet.json"));
     _microbenches.push_back(
-        make_unique<insert_one>(27.31, 10, "single_and_multi_document/large_doc.json"));
+        stdx::make_unique<insert_one>(2.75, 10000, "single_and_multi_document/small_doc.json"));
+    _microbenches.push_back(
+        stdx::make_unique<insert_one>(27.31, 10, "single_and_multi_document/large_doc.json"));
 
     // Multi doc microbenchmarks
-    _microbenches.push_back(make_unique<find_many>("single_and_multi_document/tweet.json"));
+    _microbenches.push_back(stdx::make_unique<find_many>("single_and_multi_document/tweet.json"));
     _microbenches.push_back(
-        make_unique<bulk_insert>(2.75, 10000, "single_and_multi_document/small_doc.json"));
+        stdx::make_unique<bulk_insert>(2.75, 10000, "single_and_multi_document/small_doc.json"));
     _microbenches.push_back(
-        make_unique<bulk_insert>(27.31, 10, "single_and_multi_document/large_doc.json"));
+        stdx::make_unique<bulk_insert>(27.31, 10, "single_and_multi_document/large_doc.json"));
     _microbenches.push_back(
-        make_unique<gridfs_upload>("single_and_multi_document/gridfs_large.bin"));
+        stdx::make_unique<gridfs_upload>("single_and_multi_document/gridfs_large.bin"));
     _microbenches.push_back(
-        make_unique<gridfs_download>("single_and_multi_document/gridfs_large.bin"));
+        stdx::make_unique<gridfs_download>("single_and_multi_document/gridfs_large.bin"));
 
-    // TODO CXX-1378: add parallel microbenchmarks
+    // Parallel microbenchmarks
+    _microbenches.push_back(stdx::make_unique<json_multi_import>("parallel/ldjson_multi"));
+    _microbenches.push_back(stdx::make_unique<json_multi_export>("parallel/ldjson_multi"));
+    _microbenches.push_back(stdx::make_unique<gridfs_multi_import>("parallel/gridfs_multi"));
+    _microbenches.push_back(stdx::make_unique<gridfs_multi_export>("parallel/gridfs_multi"));
 }
 
 void benchmark_runner::run_microbenches(benchmark_type tag) {
     mongocxx::instance instance{};
 
     for (std::unique_ptr<microbench>& bench : _microbenches) {
-        if (tag == benchmark::benchmark_type::all_benchmarks || bench->has_tag(tag)) {
+        if (tag == benchmark_type::all_benchmarks || bench->has_tag(tag)) {
             bench->run();
         }
     }

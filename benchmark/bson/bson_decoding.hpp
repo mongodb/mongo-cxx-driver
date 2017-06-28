@@ -23,10 +23,10 @@ class bson_decoding : public microbench {
     bson_decoding() = delete;
 
     bson_decoding(double task_size, bsoncxx::stdx::string_view json_file)
-        : microbench{task_size, "bson_decoding"} {
-        _tags.insert(benchmark_type::bson_bench);
-        _json = parse_json_file_to_strings(json_file)[0];
-    }
+        : microbench{task_size,
+                     "bson_decoding",
+                     std::set<benchmark_type>{benchmark_type::bson_bench}},
+          _json{parse_json_file_to_strings(json_file)[0]} {}
 
    protected:
     void task();

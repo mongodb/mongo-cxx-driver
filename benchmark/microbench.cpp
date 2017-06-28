@@ -31,7 +31,6 @@ bool finished_running(const std::chrono::duration<std::uint32_t, std::milli>& cu
 void microbench::run() {
     setup();
 
-    double count = 0;
     std::uint32_t iteration = 0;
     for (iteration = 0; !finished_running(_score.get_execution_time(), iteration); iteration++) {
         before_task();

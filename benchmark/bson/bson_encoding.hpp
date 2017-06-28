@@ -28,11 +28,11 @@ class bson_encoding : public microbench {
     bson_encoding() = delete;
 
     bson_encoding(double task_size, bsoncxx::stdx::string_view json_file)
-        : microbench{task_size, "bson_encoding"},
+        : microbench{task_size,
+                     "bson_encoding",
+                     std::set<benchmark_type>{benchmark_type::bson_bench}},
           _json{parse_json_file_to_strings(json_file)[0]},
-          _doc{bsoncxx::from_json(bsoncxx::stdx::string_view{_json})} {
-        _tags.insert(benchmark_type::bson_bench);
-    }
+          _doc{bsoncxx::from_json(bsoncxx::stdx::string_view{_json})} {}
 
    protected:
     void task();

@@ -35,9 +35,12 @@ class bulk_insert : public microbench {
     bulk_insert() = delete;
 
     bulk_insert(double task_size, std::int32_t doc_num, bsoncxx::stdx::string_view json_file)
-        : microbench{task_size, "bulk_insert"}, _conn{mongocxx::uri{}}, _doc_num{doc_num} {
-        _tags.insert(benchmark_type::multi_bench);
-        _tags.insert(benchmark_type::write_bench);
+        : microbench{task_size,
+                     "bulk_insert",
+                     std::set<benchmark_type>{benchmark_type::multi_bench,
+                                              benchmark_type::write_bench}},
+          _conn{mongocxx::uri{}},
+          _doc_num{doc_num} {
         auto doc = parse_json_file_to_documents(json_file)[0];
         for (std::int32_t i = 0; i < _doc_num; i++) {
             _docs.push_back(doc);
