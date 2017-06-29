@@ -24,11 +24,41 @@
 #include <mongocxx/index_view.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/index_view.hpp>
+#include <mongocxx/test_util/client_helpers.hh>
 
 namespace {
 using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
 using namespace mongocxx;
+
+bool test_commands_enabled(const client& conn) {
+    auto result = conn["admin"].run_command(
+        make_document(kvp("getParameter", 1), kvp("enableTestCommands", 1)));
+    auto result_view = result.view();
+
+    if (!result_view["enableTestCommands"]) {
+        return false;
+    }
+
+    auto server_version = test_util::get_server_version(conn);
+
+    if (test_util::compare_versions(server_version, "3.2") >= 0) {
+        return result_view["enableTestCommands"].get_bool();
+    }
+
+    return result_view["enableTestCommands"].get_int32() == 1;
+}
+
+bool fail_with_max_timeout(const client& conn) {
+    if (!test_commands_enabled(conn)) {
+        return false;
+    }
+
+    conn["admin"].run_command(
+        make_document(kvp("configureFailPoint", "maxTimeAlwaysTimeOut"), kvp("mode", "alwaysOn")));
+
+    return true;
+}
 
 TEST_CASE("create_one", "[index_view]") {
     instance::current();
@@ -82,7 +112,9 @@ TEST_CASE("create_one", "[index_view]") {
         options::index_view options;
         options.max_time(std::chrono::milliseconds(1));
 
-        REQUIRE_THROWS_AS(indexes.create_one(model, options), operation_exception);
+        if (fail_with_max_timeout(mongodb_client)) {
+            REQUIRE_THROWS_AS(indexes.create_one(model, options), operation_exception);
+        }
     }
 
     SECTION("fails for same keys and options") {
@@ -120,7 +152,10 @@ TEST_CASE("create_many", "[index_view]") {
     SECTION("test maxTimeMS option") {
         options::index_view options;
         options.max_time(std::chrono::milliseconds(1));
-        REQUIRE_THROWS_AS(indexes.create_many(models, options), operation_exception);
+
+        if (fail_with_max_timeout(mongodb_client)) {
+            REQUIRE_THROWS_AS(indexes.create_many(models, options), operation_exception);
+        }
     }
 
     SECTION("create three") {
@@ -237,7 +272,13 @@ TEST_CASE("drop_all", "[index_view]") {
         REQUIRE(std::distance(cursor2.begin(), cursor2.end()) == 1);
     }
 
-    // Testing for the maxTimeMS option would go here, but the dropIndexes command is so fast that
-    // we could not generate a timeout failure.
+    SECTION("test maxTimeMS option") {
+        options::index_view options;
+        options.max_time(std::chrono::milliseconds(1));
+
+        if (fail_with_max_timeout(mongodb_client)) {
+            REQUIRE_THROWS_AS(indexes.drop_all(options), operation_exception);
+        }
+    }
 }
 }

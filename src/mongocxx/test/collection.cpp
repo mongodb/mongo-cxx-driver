@@ -121,6 +121,9 @@ TEST_CASE("collection renaming", "[collection]") {
     collection coll = db[collname];
     collection other_coll = db[other_collname];
 
+    coll.drop();
+    other_coll.drop();
+
     coll.insert_one(filter.view());  // Ensure that the collection exists.
     other_coll.insert_one({});
 
@@ -1802,21 +1805,17 @@ TEST_CASE("create_index tests", "[collection]") {
         options::index options{};
         options.collation(collation.view());
 
-        if (test_util::supports_collation(mongodb_client)) {
-            coll.create_index(keys.view(), options);
+        coll.create_index(keys.view(), options);
 
-            auto validate = [](bsoncxx::document::view index) {
-                bsoncxx::types::value locale{types::b_utf8{"en_US"}};
-                auto locale_ele = index["collation"]["locale"];
-                REQUIRE(locale_ele);
-                REQUIRE(locale_ele.type() == type::k_utf8);
-                REQUIRE((locale_ele.get_utf8() == locale));
-            };
+        auto validate = [](bsoncxx::document::view index) {
+            bsoncxx::types::value locale{types::b_utf8{"en_US"}};
+            auto locale_ele = index["collation"]["locale"];
+            REQUIRE(locale_ele);
+            REQUIRE(locale_ele.type() == type::k_utf8);
+            REQUIRE((locale_ele.get_utf8() == locale));
+        };
 
-            find_index_and_validate(coll, "a_1", validate);
-        } else {
-            REQUIRE_THROWS_AS(coll.create_index(keys.view(), options), operation_exception);
-        }
+        find_index_and_validate(coll, "a_1", validate);
     }
 
     SECTION("fails") {
