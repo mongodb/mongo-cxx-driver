@@ -1363,7 +1363,7 @@ throw an instance of
 "><code>mongocxx::collection</code></a>
 instance&rsquo;s <code>insert_one()</code> method:</p>
 
-<pre><code class="language-c++">mongocxx::stdx::optional&lt;mongocxx::result::insert_one&gt; result =
+<pre><code class="language-c++">bsoncxx::stdx::optional&lt;mongocxx::result::insert_one&gt; result =
  restaurants.insert_one(doc);
 </code></pre>
 
@@ -1433,7 +1433,7 @@ filter criteria.</p>
 <p>To return a single document in the collection, use the <code>find_one()</code>
 method without any parameters.</p>
 
-<pre><code class="language-c++">mongocxx::stdx::optional&lt;bsoncxx::document::value&gt; maybe_result =
+<pre><code class="language-c++">bsoncxx::stdx::optional&lt;bsoncxx::document::value&gt; maybe_result =
   collection.find_one(document{} &lt;&lt; finalize);
 if(maybe_result) {
   // Do something with *maybe_result;
@@ -1455,7 +1455,7 @@ for(auto doc : cursor) {
 <p>To find the first document where the field <code>i</code> has the value <code>71</code>,
 pass the document <code>{&quot;i&quot;: 71}</code> to specify the equality condition:</p>
 
-<pre><code class="language-c++">mongocxx::stdx::optional&lt;bsoncxx::document::value&gt; maybe_result =
+<pre><code class="language-c++">bsoncxx::stdx::optional&lt;bsoncxx::document::value&gt; maybe_result =
   collection.find_one(document{} &lt;&lt; &quot;i&quot; &lt;&lt; 71 &lt;&lt; finalize);
 if(maybe_result) {
   std::cout &lt;&lt; bsoncxx::to_json(*maybe_result) &lt;&lt; &quot;\n&quot;;
@@ -1518,7 +1518,7 @@ method.</p>
 <p>The following example increments the value of <code>i</code> by <code>100</code> where
 <code>i</code> is less than <code>100</code>:</p>
 
-<pre><code class="language-c++">mongocxx::stdx::optional&lt;mongocxx::result::update&gt; result =
+<pre><code class="language-c++">bsoncxx::stdx::optional&lt;mongocxx::result::update&gt; result =
  collection.update_many(
   document{} &lt;&lt; &quot;i&quot; &lt;&lt; open_document &lt;&lt;
     &quot;$lt&quot; &lt;&lt; 100 &lt;&lt; close_document &lt;&lt; finalize,
@@ -1559,7 +1559,7 @@ which contains the number of documents deleted.</p>
 <p>The following example deletes all documents where <code>i</code> is greater or
 equal to <code>100</code>:</p>
 
-<pre><code class="language-c++">mongocxx::stdx::optional&lt;mongocxx::result::delete_result&gt; result =
+<pre><code class="language-c++">bsoncxx::stdx::optional&lt;mongocxx::result::delete_result&gt; result =
  collection.delete_many(
   document{} &lt;&lt; &quot;i&quot; &lt;&lt; open_document &lt;&lt;
     &quot;$gte&quot; &lt;&lt; 100 &lt;&lt; close_document &lt;&lt; finalize);
@@ -1691,14 +1691,14 @@ collection.create_index(std::move(index_specification));
 <script type="text/javascript" src="https://mongodb.github.io/mongo-cxx-driver/js/scripts.js"></script>
 
 
-<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K75Z5Q"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-JQHP"
+                 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
-{'gtm.start': new Date().getTime(),event:'gtm.js'}
+  {'gtm.start': new Date().getTime(),event:'gtm.js'}
 );var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-K75Z5Q');</script>
+})(window,document,'script','dataLayer','GTM-JQHP');</script>
 
 
 <script type="text/javascript">
