@@ -111,7 +111,7 @@ TEST_CASE("collection renaming", "[collection]") {
     instance::current();
 
     client mongodb_client{uri{}};
-    database db = mongodb_client["test"];
+    database db = mongodb_client["collection_renaming"];
 
     auto filter = make_document(kvp("key--------unique", "value"));
 
@@ -147,7 +147,7 @@ TEST_CASE("collection dropping") {
     instance::current();
 
     client mongodb_client{uri{}};
-    database db = mongodb_client["test"];
+    database db = mongodb_client["collection_dropping"];
 
     std::string collname{"mongo_cxx_driver"};
     collection coll = db[collname];
@@ -160,7 +160,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     instance::current();
 
     client mongodb_client{uri{}};
-    database db = mongodb_client["test"];
+    database db = mongodb_client["collection_crud_functionality"];
     collection coll = db["mongo_cxx_driver"];
 
     auto case_insensitive_collation = document{} << "locale"
@@ -1721,7 +1721,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
 TEST_CASE("read_concern is inherited from parent", "[collection]") {
     client mongo_client{uri{}};
-    database db = mongo_client["test"];
+    database db = mongo_client["collection_read_concern_inheritance"];
 
     read_concern::level majority = read_concern::level::k_majority;
     read_concern::level local = read_concern::level::k_local;
@@ -1772,7 +1772,7 @@ TEST_CASE("create_index tests", "[collection]") {
     instance::current();
 
     client mongodb_client{uri{}};
-    database db = mongodb_client["test"];
+    database db = mongodb_client["collection_create_index"];
     collection coll = db["collection"];
     coll.drop();
     coll.insert_one({});  // Ensure that the collection exists.
@@ -1901,7 +1901,7 @@ TEST_CASE("create_index tests", "[collection]") {
 TEST_CASE("Cursor iteration", "[collection][cursor]") {
     instance::current();
     client mongodb_client{uri{}};
-    database db = mongodb_client["test"];
+    database db = mongodb_client["collection_cursor_iteration"];
 
     auto capped_name = std::string("mongo_cxx_driver_capped");
     collection coll = db[capped_name];

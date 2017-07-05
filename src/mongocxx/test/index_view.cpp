@@ -64,7 +64,7 @@ TEST_CASE("create_one", "[index_view]") {
     instance::current();
 
     client mongodb_client{uri{}};
-    database db = mongodb_client["test"];
+    database db = mongodb_client["index_view_create_one"];
     collection coll = db["index_view_create_one"];
     coll.drop();
     coll.insert_one({});  // Ensure that the collection exists.
@@ -138,7 +138,7 @@ TEST_CASE("create_many", "[index_view]") {
     instance::current();
 
     client mongodb_client{uri{}};
-    database db = mongodb_client["test"];
+    database db = mongodb_client["index_view_create_many"];
     collection coll = db["index_view_create_many"];
     coll.drop();
     coll.insert_one({});  // Ensure that the collection exists.
@@ -184,7 +184,7 @@ TEST_CASE("drop_one", "[index_view]") {
     instance::current();
 
     client mongodb_client{uri{}};
-    database db = mongodb_client["test"];
+    database db = mongodb_client["index_view_drop_one"];
     collection coll = db["index_view_drop_one"];
     coll.drop();
     coll.insert_one({});  // Ensure that the collection exists.
@@ -246,7 +246,7 @@ TEST_CASE("drop_all", "[index_view]") {
     instance::current();
 
     client mongodb_client{uri{}};
-    database db = mongodb_client["test"];
+    database db = mongodb_client["index_view_drop_all"];
     collection coll = db["index_view_drop_all"];
     coll.drop();
     coll.insert_one({});  // Ensure that the collection exists.

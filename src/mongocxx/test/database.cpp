@@ -77,26 +77,26 @@ TEST_CASE("mongocxx::database copy assignment operator", "[database]") {
     client client{uri{}};
 
     SECTION("assigning valid to valid") {
-        database database_a = client["a"];
-        database database_b = client["b"];
+        database database_a = client["a1"];
+        database database_b = client["b1"];
         database_b = database_a;
         REQUIRE(database_b);
-        REQUIRE(database_b.name() == stdx::string_view{"a"});
+        REQUIRE(database_b.name() == stdx::string_view{"a1"});
     }
 
     SECTION("assigning invalid to valid") {
         database database_a;
-        database database_b = client["b"];
+        database database_b = client["b2"];
         database_b = database_a;
         REQUIRE(!database_b);
     }
 
     SECTION("assigning valid to invalid") {
-        database database_a = client["a"];
+        database database_a = client["a3"];
         database database_b;
         database_b = database_a;
         REQUIRE(database_b);
-        REQUIRE(database_b.name() == stdx::string_view{"a"});
+        REQUIRE(database_b.name() == stdx::string_view{"a3"});
     }
 
     SECTION("assigning invalid to invalid") {

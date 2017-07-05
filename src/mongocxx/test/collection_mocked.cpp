@@ -56,7 +56,7 @@ TEST_CASE("Collection", "[collection]") {
 
     // dummy_collection is the name the mocked collection_get_name returns
     const std::string collection_name("dummy_collection");
-    const std::string database_name("test");
+    const std::string database_name("mocked_collection");
 
     MOCK_CLIENT
     MOCK_DATABASE
