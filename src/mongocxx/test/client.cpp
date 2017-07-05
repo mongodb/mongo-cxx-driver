@@ -109,7 +109,7 @@ TEST_CASE("A client supports move operations", "[client]") {
     REQUIRE(!called);
 }
 
-TEST_CASE("A client has a settable Read Concern", "[collection]") {
+TEST_CASE("A client has a settable Read Concern", "[client]") {
     MOCK_CLIENT
 
     instance::current();

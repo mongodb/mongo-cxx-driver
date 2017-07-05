@@ -306,21 +306,24 @@ TEST_CASE("Database integration tests", "[database]") {
     client mongo_client{uri{}};
     stdx::string_view database_name{"database"};
     database database = mongo_client[database_name];
-    stdx::string_view collection_name{"collection"};
 
     auto case_insensitive_collation = document{} << "locale"
                                                  << "en_US"
                                                  << "strength" << 2 << finalize;
 
     SECTION("A database may create a collection via create_collection") {
-        database[collection_name].drop();
-
         SECTION("without any options") {
+            stdx::string_view collection_name{"collection_create_no_opts"};
+            database[collection_name].drop();
+
             collection obtained_collection = database.create_collection(collection_name);
             REQUIRE(obtained_collection.name() == collection_name);
         }
 
         SECTION("with options") {
+            stdx::string_view collection_name{"collection_create_with_opts"};
+            database[collection_name].drop();
+
             options::create_collection opts;
             opts.capped(true);
             opts.size(256);
@@ -332,6 +335,9 @@ TEST_CASE("Database integration tests", "[database]") {
         }
 
         SECTION("with collation") {
+            stdx::string_view collection_name{"collection_create_with_collation"};
+            database[collection_name].drop();
+
             options::create_collection opts;
             opts.collation(case_insensitive_collation.view());
 
@@ -351,6 +357,9 @@ TEST_CASE("Database integration tests", "[database]") {
         }
 
         SECTION("but raises exception when collection already exists") {
+            stdx::string_view collection_name{"collection_create_existing"};
+            database[collection_name].drop();
+
             database.create_collection(collection_name);
 
             REQUIRE_THROWS(database.create_collection(collection_name));
@@ -358,10 +367,11 @@ TEST_CASE("Database integration tests", "[database]") {
     }
 
     SECTION("A collection may be modified via modify_collection") {
-        database[collection_name].drop();
-        database.create_collection(collection_name);
-
         SECTION("index can be modified") {
+            stdx::string_view collection_name{"collection_modify_index"};
+            database[collection_name].drop();
+            database.create_collection(collection_name);
+
             auto key_pattern = document{} << "a" << 1 << finalize;
 
             database[collection_name].create_index(
@@ -389,6 +399,10 @@ TEST_CASE("Database integration tests", "[database]") {
         }
 
         SECTION("validation_criteria can be modified") {
+            stdx::string_view collection_name{"collection_modify_validation"};
+            database[collection_name].drop();
+            database.create_collection(collection_name);
+
             auto rule = document{} << "email" << open_document << "$exists"
                                    << "true" << close_document << finalize;
 
@@ -421,6 +435,7 @@ TEST_CASE("Database integration tests", "[database]") {
     }
 
     SECTION("A database may be dropped") {
+        stdx::string_view collection_name{"collection_drop"};
         database[collection_name].drop();
 
         database.create_collection(collection_name);
@@ -430,6 +445,8 @@ TEST_CASE("Database integration tests", "[database]") {
     }
 
     SECTION("read_concern is inherited from parent", "[database]") {
+        stdx::string_view collection_name{"collection_read_concern"};
+
         read_concern::level majority = read_concern::level::k_majority;
         read_concern::level local = read_concern::level::k_local;
 
@@ -455,18 +472,19 @@ TEST_CASE("Database integration tests", "[database]") {
     }
 
     SECTION("A database may create a view via create_view") {
-        stdx::string_view view_name{"view"};
-        database[collection_name].drop();
-        database[view_name].drop();
-
-        database[collection_name].insert_one(document{} << "x"
-                                                        << "foo"
-                                                        << finalize);
-        database[collection_name].insert_one(document{} << "x"
-                                                        << "bar"
-                                                        << finalize);
-
         SECTION("View creation with a pipeline") {
+            stdx::string_view collection_name{"collection_view_with_pipeline"};
+            stdx::string_view view_name{"view"};
+            database[collection_name].drop();
+            database[view_name].drop();
+
+            database[collection_name].insert_one(document{} << "x"
+                                                            << "foo"
+                                                            << finalize);
+            database[collection_name].insert_one(document{} << "x"
+                                                            << "bar"
+                                                            << finalize);
+
             collection view = database.create_view(
                 view_name,
                 collection_name,
@@ -483,6 +501,18 @@ TEST_CASE("Database integration tests", "[database]") {
         }
 
         SECTION("View creation with collation") {
+            stdx::string_view collection_name{"collection_view_with_collation"};
+            stdx::string_view view_name{"view"};
+            database[collection_name].drop();
+            database[view_name].drop();
+
+            database[collection_name].insert_one(document{} << "x"
+                                                            << "foo"
+                                                            << finalize);
+            database[collection_name].insert_one(document{} << "x"
+                                                            << "bar"
+                                                            << finalize);
+
             options::create_view opts;
             opts.collation(case_insensitive_collation.view());
 

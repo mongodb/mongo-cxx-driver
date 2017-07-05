@@ -65,12 +65,13 @@ TEST_CASE("create_one", "[index_view]") {
 
     client mongodb_client{uri{}};
     database db = mongodb_client["index_view_create_one"];
-    collection coll = db["index_view_create_one"];
-    coll.drop();
-    coll.insert_one({});  // Ensure that the collection exists.
-    index_view indexes = coll.indexes();
 
     SECTION("works with document and options") {
+        collection coll = db["index_view_create_one_doc_and_opts"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+        index_view indexes = coll.indexes();
+
         auto key = make_document(kvp("a", 1));
         auto options = make_document(kvp("name", "myIndex"));
         stdx::optional<std::string> result = indexes.create_one(key.view(), options.view());
@@ -80,6 +81,11 @@ TEST_CASE("create_one", "[index_view]") {
     }
 
     SECTION("works with document and no options") {
+        collection coll = db["index_view_create_one_doc"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+        index_view indexes = coll.indexes();
+
         auto key = make_document(kvp("a", 1), kvp("b", -1));
         stdx::optional<std::string> result = indexes.create_one(key.view());
 
@@ -88,6 +94,11 @@ TEST_CASE("create_one", "[index_view]") {
     }
 
     SECTION("with index_model and options") {
+        collection coll = db["index_view_create_one_index_model_opts"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+        index_view indexes = coll.indexes();
+
         auto key = make_document(kvp("a", 1));
         auto options = make_document(kvp("name", "myIndex"));
         index_model model(key.view(), options.view());
@@ -98,6 +109,11 @@ TEST_CASE("create_one", "[index_view]") {
     }
 
     SECTION("with index_model and no options") {
+        collection coll = db["index_view_create_one_index_model"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+        index_view indexes = coll.indexes();
+
         auto key = make_document(kvp("a", 1), kvp("b", -1));
         index_model model(key.view());
         stdx::optional<std::string> result = indexes.create_one(model);
@@ -107,6 +123,11 @@ TEST_CASE("create_one", "[index_view]") {
     }
 
     SECTION("tests maxTimeMS option works") {
+        collection coll = db["index_view_create_one_maxTimeMS"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+        index_view indexes = coll.indexes();
+
         auto key = make_document(kvp("aaa", 1));
         index_model model(key.view());
         options::index_view options;
@@ -118,6 +139,11 @@ TEST_CASE("create_one", "[index_view]") {
     }
 
     SECTION("fails for same keys and options") {
+        collection coll = db["index_view_create_one_exists_fail"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+        index_view indexes = coll.indexes();
+
         auto keys = make_document(kvp("a", 1));
 
         REQUIRE(indexes.create_one(keys.view()));
@@ -125,6 +151,11 @@ TEST_CASE("create_one", "[index_view]") {
     }
 
     SECTION("fails for same name") {
+        collection coll = db["index_view_create_one_same_name_fail"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+        index_view indexes = coll.indexes();
+
         auto keys1 = make_document(kvp("a", 1));
         auto keys2 = make_document(kvp("a", -1));
         auto options = make_document(kvp("name", "myIndex"));
@@ -139,17 +170,18 @@ TEST_CASE("create_many", "[index_view]") {
 
     client mongodb_client{uri{}};
     database db = mongodb_client["index_view_create_many"];
-    collection coll = db["index_view_create_many"];
-    coll.drop();
-    coll.insert_one({});  // Ensure that the collection exists.
 
     std::vector<index_model> models{index_model(make_document(kvp("a", 1))),
                                     index_model(make_document(kvp("b", 1), kvp("c", -1))),
                                     index_model(make_document(kvp("c", -1)))};
 
-    index_view indexes = coll.indexes();
-
     SECTION("test maxTimeMS option") {
+        collection coll = db["index_view_create_many_maxTimeMS"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+
+        index_view indexes = coll.indexes();
+
         options::index_view options;
         options.max_time(std::chrono::milliseconds(1));
 
@@ -159,6 +191,12 @@ TEST_CASE("create_many", "[index_view]") {
     }
 
     SECTION("create three") {
+        collection coll = db["index_view_create_many"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+
+        index_view indexes = coll.indexes();
+
         bsoncxx::document::value result = indexes.create_many(models);
         bsoncxx::document::view result_view = result.view();
         REQUIRE((result_view["numIndexesAfter"].get_int32() -
@@ -185,15 +223,16 @@ TEST_CASE("drop_one", "[index_view]") {
 
     client mongodb_client{uri{}};
     database db = mongodb_client["index_view_drop_one"];
-    collection coll = db["index_view_drop_one"];
-    coll.drop();
-    coll.insert_one({});  // Ensure that the collection exists.
-
-    index_view indexes = coll.indexes();
-    auto cursor = indexes.list();
-    REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
 
     SECTION("drops index by name") {
+        collection coll = db["index_view_drop_one_by_name"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+
+        index_view indexes = coll.indexes();
+        auto cursor = indexes.list();
+        REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
+
         auto key = make_document(kvp("a", 1));
         stdx::optional<std::string> result = indexes.create_one(key.view());
 
@@ -207,6 +246,14 @@ TEST_CASE("drop_one", "[index_view]") {
     }
 
     SECTION("drops index by key and options") {
+        collection coll = db["index_view_drop_one_by_key_and_opts"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+
+        index_view indexes = coll.indexes();
+        auto cursor = indexes.list();
+        REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
+
         auto key = make_document(kvp("a", 1));
         stdx::optional<std::string> result = indexes.create_one(key.view());
 
@@ -220,6 +267,14 @@ TEST_CASE("drop_one", "[index_view]") {
     }
 
     SECTION("drops index by index_model") {
+        collection coll = db["index_view_drop_one_by_index_model"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+
+        index_view indexes = coll.indexes();
+        auto cursor = indexes.list();
+        REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
+
         auto key = make_document(kvp("a", 1));
         index_model model(key.view());
         stdx::optional<std::string> result = indexes.create_one(key.view());
@@ -234,10 +289,26 @@ TEST_CASE("drop_one", "[index_view]") {
     }
 
     SECTION("fails for drop_one on *") {
+        collection coll = db["index_view_drop_one_*_fail"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+
+        index_view indexes = coll.indexes();
+        auto cursor = indexes.list();
+        REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
+
         REQUIRE_THROWS_AS(indexes.drop_one("*"), logic_error);
     }
 
     SECTION("fails for index that doesn't exist") {
+        collection coll = db["index_view_drop_one_nonexistant_fail"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+
+        index_view indexes = coll.indexes();
+        auto cursor = indexes.list();
+        REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
+
         REQUIRE_THROWS_AS(indexes.drop_one("foo"), operation_exception);
     }
 }
@@ -247,25 +318,26 @@ TEST_CASE("drop_all", "[index_view]") {
 
     client mongodb_client{uri{}};
     database db = mongodb_client["index_view_drop_all"];
-    collection coll = db["index_view_drop_all"];
-    coll.drop();
-    coll.insert_one({});  // Ensure that the collection exists.
 
     std::vector<index_model> models{index_model{make_document(kvp("a", 1))},
                                     index_model{make_document(kvp("b", 1), kvp("c", -1))},
                                     index_model{make_document(kvp("c", -1))}};
 
-    index_view indexes = coll.indexes();
-
-    bsoncxx::document::value result = indexes.create_many(models);
-    bsoncxx::document::view result_view = result.view();
-
-    auto cursor1 = indexes.list();
-    REQUIRE(std::distance(cursor1.begin(), cursor1.end()) == models.size() + 1);
-    REQUIRE((result_view["numIndexesAfter"].get_int32() -
-             result_view["numIndexesBefore"].get_int32()) == models.size());
-
     SECTION("drop normally") {
+        collection coll = db["index_view_drop_all"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+
+        index_view indexes = coll.indexes();
+
+        bsoncxx::document::value result = indexes.create_many(models);
+        bsoncxx::document::view result_view = result.view();
+
+        auto cursor1 = indexes.list();
+        REQUIRE(std::distance(cursor1.begin(), cursor1.end()) == models.size() + 1);
+        REQUIRE((result_view["numIndexesAfter"].get_int32() -
+                 result_view["numIndexesBefore"].get_int32()) == models.size());
+
         indexes.drop_all();
         auto cursor2 = indexes.list();
 
@@ -273,6 +345,20 @@ TEST_CASE("drop_all", "[index_view]") {
     }
 
     SECTION("test maxTimeMS option") {
+        collection coll = db["index_view_drop_all_maxTimeMS"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+
+        index_view indexes = coll.indexes();
+
+        bsoncxx::document::value result = indexes.create_many(models);
+        bsoncxx::document::view result_view = result.view();
+
+        auto cursor1 = indexes.list();
+        REQUIRE(std::distance(cursor1.begin(), cursor1.end()) == models.size() + 1);
+        REQUIRE((result_view["numIndexesAfter"].get_int32() -
+                 result_view["numIndexesBefore"].get_int32()) == models.size());
+
         options::index_view options;
         options.max_time(std::chrono::milliseconds(1));
 

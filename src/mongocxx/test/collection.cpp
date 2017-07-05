@@ -77,26 +77,26 @@ TEST_CASE("mongocxx::collection copy assignment operator", "[collection]") {
     database db = client["collection_copy_assignment"];
 
     SECTION("assigning valid to valid") {
-        collection collection_a = db["a"];
-        collection collection_b = db["b"];
+        collection collection_a = db["a1"];
+        collection collection_b = db["b1"];
         collection_b = collection_a;
         REQUIRE(collection_b);
-        REQUIRE(collection_b.name() == stdx::string_view{"a"});
+        REQUIRE(collection_b.name() == stdx::string_view{"a1"});
     }
 
     SECTION("assigning invalid to valid") {
         collection collection_a;
-        collection collection_b = db["b"];
+        collection collection_b = db["b2"];
         collection_b = collection_a;
         REQUIRE(!collection_b);
     }
 
     SECTION("assigning valid to invalid") {
-        collection collection_a = db["a"];
+        collection collection_a = db["a3"];
         collection collection_b;
         collection_b = collection_a;
         REQUIRE(collection_b);
-        REQUIRE(collection_b.name() == stdx::string_view{"a"});
+        REQUIRE(collection_b.name() == stdx::string_view{"a3"});
     }
 
     SECTION("assigning invalid to invalid") {
@@ -161,7 +161,6 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
     client mongodb_client{uri{}};
     database db = mongodb_client["collection_crud_functionality"];
-    collection coll = db["mongo_cxx_driver"];
 
     auto case_insensitive_collation = document{} << "locale"
                                                  << "en_US"
@@ -170,9 +169,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     auto noack = write_concern{};
     noack.acknowledge_level(write_concern::level::k_unacknowledged);
 
-    coll.drop();
-
     SECTION("insert and read single document", "[collection]") {
+        collection coll = db["insert_and_read_one"];
+        coll.drop();
         auto b = document{} << "_id" << bsoncxx::oid{} << "x" << 1 << finalize;
 
         REQUIRE(coll.insert_one(b.view()));
@@ -197,6 +196,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto doc = document{} << "_id" << expected_id << finalize;
 
         SECTION("default write concern returns result") {
+            collection coll = db["insert_one_default_write"];
+            coll.drop();
             auto result = coll.insert_one(doc.view());
             REQUIRE(result);
             REQUIRE(result->result().inserted_count() == 1);
@@ -205,6 +206,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("unacknowledged write concern returns disengaged optional", "[collection]") {
+            collection coll = db["insert_one_unack_write"];
+            coll.drop();
             options::insert opts{};
             opts.write_concern(noack);
 
@@ -222,6 +225,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("insert and read multiple documents", "[collection]") {
+        collection coll = db["insert_and_read_multi"];
+        coll.drop();
         document b1;
         document b2;
         document b3;
@@ -285,6 +290,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         docs.push_back(b2.view());
 
         SECTION("default write concern returns result") {
+            collection coll = db["insert_many_default_write"];
+            coll.drop();
             auto result = coll.insert_many(docs);
 
             REQUIRE(result);
@@ -309,6 +316,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("unacknowledged write concern returns disengaged optional") {
+            collection coll = db["insert_many_unack_write"];
+            coll.drop();
             options::insert opts{};
             opts.write_concern(noack);
 
@@ -323,12 +332,16 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("find does not leak on error", "[collection]") {
+        collection coll = db["find_error_no_leak"];
+        coll.drop();
         auto find_opts = options::find{}.max_await_time(std::chrono::milliseconds{-1});
 
         REQUIRE_THROWS_AS(coll.find({}, find_opts), logic_error);
     }
 
     SECTION("find with collation", "[collection]") {
+        collection coll = db["find_with_collation"];
+        coll.drop();
         auto b = document{} << "x"
                             << "foo" << finalize;
         REQUIRE(coll.insert_one(b.view()));
@@ -345,6 +358,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("find_one with collation", "[collection]") {
+        collection coll = db["find_one_with_collation"];
+        coll.drop();
         auto b = document{} << "x"
                             << "foo" << finalize;
         REQUIRE(coll.insert_one(b.view()));
@@ -360,6 +375,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("insert and update single document", "[collection]") {
+        collection coll = db["insert_and_update_one"];
+        coll.drop();
         auto b1 = document{} << "_id" << 1 << finalize;
 
         coll.insert_one(b1.view());
@@ -381,18 +398,25 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("update_one returns correct result object", "[collection]") {
         auto b1 = document{} << "_id" << 1 << finalize;
 
-        coll.insert_one(b1.view());
-
         document update_doc;
         update_doc << "$set" << open_document << "changed" << true << close_document;
 
         SECTION("default write concern returns result") {
+            collection coll = db["update_one_default_write"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+
             auto result = coll.update_one(b1.view(), update_doc.view());
             REQUIRE(result);
             REQUIRE(result->result().matched_count() == 1);
         }
 
         SECTION("unacknowledged write concern returns disengaged optional") {
+            collection coll = db["update_one_unack_write"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
             options::update opts{};
             opts.write_concern(noack);
 
@@ -407,6 +431,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("update_one with collation", "[collection]") {
+        collection coll = db["update_one_with_collation"];
+        coll.drop();
         auto b = document{} << "x"
                             << "foo" << finalize;
         REQUIRE(coll.insert_one(b.view()));
@@ -429,6 +455,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("insert and update multiple documents", "[collection]") {
+        collection coll = db["insert_and_update_multi"];
+        coll.drop();
         auto b1 = document{} << "x" << 1 << finalize;
 
         coll.insert_one(b1.view());
@@ -454,9 +482,6 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("update_many returns correct result object", "[collection]") {
         auto b1 = document{} << "x" << 1 << finalize;
 
-        coll.insert_one(b1.view());
-        coll.insert_one(b1.view());
-
         document bchanged;
         bchanged << "changed" << true;
 
@@ -464,12 +489,23 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         update_doc << "$set" << bsoncxx::types::b_document{bchanged};
 
         SECTION("default write concern returns result") {
+            collection coll = db["update_many_default_write"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
+
             auto result = coll.update_many(b1.view(), update_doc.view());
             REQUIRE(result);
             REQUIRE(result->result().matched_count() == 2);
         }
 
         SECTION("unacknowledged write concern returns disengaged optional") {
+            collection coll = db["update_many_unack_write"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
             options::update opts{};
             opts.write_concern(noack);
 
@@ -484,6 +520,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("update_many with collation", "[collection]") {
+        collection coll = db["update_many_with_collation"];
+        coll.drop();
         auto b = document{} << "x"
                             << "foo" << finalize;
         REQUIRE(coll.insert_one(b.view()));
@@ -506,6 +544,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("replace document replaces only one document", "[collection]") {
+        collection coll = db["replace_one_only_one"];
+        coll.drop();
         document doc;
         doc << "x" << 1;
 
@@ -523,6 +563,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("non-matching upsert creates document", "[collection]") {
+        collection coll = db["non_match_upsert_creates_doc"];
+        coll.drop();
         document b1;
         b1 << "_id" << 1;
 
@@ -543,6 +585,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("matching upsert updates document", "[collection]") {
+        collection coll = db["match_upsert_updates_doc"];
+        coll.drop();
         document b1;
         b1 << "_id" << 1;
 
@@ -565,6 +609,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("test using an insert_many_builder on this collection", "[collection]") {
+        collection coll = db["insert_many_builder_test"];
+        coll.drop();
         auto doc_value = document{} << "x" << 1 << finalize;
         auto doc_view = doc_value.view();
 
@@ -582,6 +628,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("count with hint", "[collection]") {
+        collection coll = db["count_with_hint"];
+        coll.drop();
         options::count count_opts;
         count_opts.hint(hint{"index_doesnt_exist"});
 
@@ -597,6 +645,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("count with collation", "[collection]") {
+        collection coll = db["count_with_collation"];
+        coll.drop();
         auto doc = document{} << "x"
                               << "foo" << finalize;
         REQUIRE(coll.insert_one(doc.view()));
@@ -614,18 +664,26 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("replace_one returns correct result object", "[collection]") {
         document b1;
         b1 << "x" << 1;
-        coll.insert_one(b1.view());
 
         document b2;
         b2 << "x" << 2;
 
         SECTION("default write concern returns result") {
+            collection coll = db["replace_one_default_write"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+
             auto result = coll.replace_one(b1.view(), b2.view());
             REQUIRE(result);
             REQUIRE(result->result().matched_count() == 1);
         }
 
         SECTION("unacknowledged write concern returns disengaged optional") {
+            collection coll = db["replace_one_unack_write"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
             options::update opts{};
             opts.write_concern(noack);
 
@@ -640,6 +698,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("replace_one with collation", "[collection]") {
+        collection coll = db["replace_one_with_collation"];
+        coll.drop();
         document doc;
         doc << "x"
             << "foo";
@@ -666,6 +726,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("filtered document delete one works", "[collection]") {
+        collection coll = db["filtered_doc_delete_one"];
+        coll.drop();
         document b1;
         b1 << "x" << 1;
 
@@ -723,15 +785,22 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         document b1;
         b1 << "x" << 1;
 
-        coll.insert_one(b1.view());
-
         SECTION("default write concern returns result") {
+            collection coll = db["delete_one_default_write"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+
             auto result = coll.delete_one(b1.view());
             REQUIRE(result);
             REQUIRE(result->result().deleted_count() == 1);
         }
 
         SECTION("unacknowledged write concern returns disengaged optional") {
+            collection coll = db["delete_one_unack_write"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
             options::delete_options opts{};
             opts.write_concern(noack);
 
@@ -746,6 +815,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("delete_one with collation", "[collection]") {
+        collection coll = db["delete_one_with_collation"];
+        coll.drop();
         document b1;
         b1 << "x"
            << "foo";
@@ -766,6 +837,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("delete many works", "[collection]") {
+        collection coll = db["delete_many"];
+        coll.drop();
         document b1;
         b1 << "x" << 1;
 
@@ -810,17 +883,26 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         document b1;
         b1 << "x" << 1;
 
-        coll.insert_one(b1.view());
-        coll.insert_one(b1.view());
-        coll.insert_one(b1.view());
-
         SECTION("default write concern returns result") {
+            collection coll = db["delete_many_default_write"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
+
             auto result = coll.delete_many(b1.view());
             REQUIRE(result);
             REQUIRE(result->result().deleted_count() > 1);
         }
 
         SECTION("unacknowledged write concern returns disengaged optional") {
+            collection coll = db["delete_many_unack_write"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
             options::delete_options opts{};
             opts.write_concern(noack);
 
@@ -835,6 +917,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("delete_many with collation", "[collection]") {
+        collection coll = db["delete_many_with_collation"];
+        coll.drop();
         document b1;
         b1 << "x"
            << "foo";
@@ -856,6 +940,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("find works with sort", "[collection]") {
+        collection coll = db["find_with_sort"];
+        coll.drop();
         document b1;
         b1 << "x" << 1;
 
@@ -905,11 +991,6 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         b1 << "x"
            << "foo";
 
-        coll.insert_one(b1.view());
-        coll.insert_one(b1.view());
-
-        REQUIRE(coll.count({}) == 2);
-
         document criteria;
         document replacement;
 
@@ -919,12 +1000,28 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                     << "bar";
 
         SECTION("without return replacement returns original") {
+            collection coll = db["find_one_and_replace_no_return"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
+
+            REQUIRE(coll.count({}) == 2);
+
             auto doc = coll.find_one_and_replace(criteria.view(), replacement.view());
             REQUIRE(doc);
             REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
         }
 
         SECTION("with return replacement returns new") {
+            collection coll = db["find_one_and_replace_return"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
+
+            REQUIRE(coll.count({}) == 2);
+
             options::find_one_and_replace options;
             options.return_document(options::return_document::k_after);
             auto doc = coll.find_one_and_replace(criteria.view(), replacement.view(), options);
@@ -933,6 +1030,14 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("with collation") {
+            collection coll = db["find_one_and_replace_with_collation"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
+
+            REQUIRE(coll.count({}) == 2);
+
             options::find_one_and_replace options;
             options.collation(case_insensitive_collation.view());
 
@@ -953,6 +1058,14 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("bad criteria returns negative optional") {
+            collection coll = db["find_one_and_replace_bad_criteria"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
+
+            REQUIRE(coll.count({}) == 2);
+
             document bad_criteria;
             bad_criteria << "x"
                          << "baz";
@@ -968,11 +1081,6 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         b1 << "x"
            << "foo";
 
-        coll.insert_one(b1.view());
-        coll.insert_one(b1.view());
-
-        REQUIRE(coll.count({}) == 2);
-
         document criteria;
         document update;
 
@@ -982,6 +1090,14 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                << "bar" << close_document;
 
         SECTION("without return update returns original") {
+            collection coll = db["find_one_and_update_no_return"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
+
+            REQUIRE(coll.count({}) == 2);
+
             auto doc = coll.find_one_and_update(criteria.view(), update.view());
 
             REQUIRE(doc);
@@ -990,6 +1106,14 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("with return update returns new") {
+            collection coll = db["find_one_and_update_return"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
+
+            REQUIRE(coll.count({}) == 2);
+
             options::find_one_and_update options;
             options.return_document(options::return_document::k_after);
             auto doc = coll.find_one_and_update(criteria.view(), update.view(), options);
@@ -998,6 +1122,14 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("with collation") {
+            collection coll = db["find_one_and_update_with collation"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
+
+            REQUIRE(coll.count({}) == 2);
+
             options::find_one_and_update options;
             options.collation(case_insensitive_collation.view());
 
@@ -1018,6 +1150,14 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("bad criteria returns negative optional") {
+            collection coll = db["find_one_and_update_bad_criteria"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
+
+            REQUIRE(coll.count({}) == 2);
+
             document bad_criteria;
             bad_criteria << "x"
                          << "baz";
@@ -1033,17 +1173,20 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         b1 << "x"
            << "foo";
 
-        coll.insert_one(b1.view());
-        coll.insert_one(b1.view());
-
-        REQUIRE(coll.count({}) == 2);
-
         document criteria;
 
         criteria << "x"
                  << "foo";
 
         SECTION("delete one deletes one and returns it") {
+            collection coll = db["find_one_and_delete_one"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
+
+            REQUIRE(coll.count({}) == 2);
+
             auto doc = coll.find_one_and_delete(criteria.view());
 
             REQUIRE(doc);
@@ -1053,6 +1196,14 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("with collation") {
+            collection coll = db["find_one_and_delete_with_collation"];
+            coll.drop();
+
+            coll.insert_one(b1.view());
+            coll.insert_one(b1.view());
+
+            REQUIRE(coll.count({}) == 2);
+
             options::find_one_and_delete options;
             options.collation(case_insensitive_collation.view());
 
@@ -1084,6 +1235,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         };
 
         SECTION("add_fields") {
+            collection coll = db["aggregation_add_fields"];
+            coll.drop();
+
             coll.insert_one({});
 
             pipeline.add_fields(document{} << "x" << 1 << finalize);
@@ -1101,6 +1255,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("bucket") {
+            collection coll = db["aggregation_bucket"];
+            coll.drop();
+
             coll.insert_one(document{} << "x" << 1 << finalize);
             coll.insert_one(document{} << "x" << 3 << finalize);
             coll.insert_one(document{} << "x" << 5 << finalize);
@@ -1133,6 +1290,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("bucket_auto") {
+            collection coll = db["aggregation_bucket_auto"];
+            coll.drop();
+
             coll.insert_one(document{} << "x" << 1 << finalize);
             coll.insert_one(document{} << "x" << 2 << finalize);
             coll.insert_one(document{} << "x" << 3 << finalize);
@@ -1161,6 +1321,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("coll_stats") {
+            collection coll = db["aggregation_coll_stats"];
+            coll.drop();
+
             coll.insert_one(document{} << "x" << 1 << finalize);
 
             pipeline.coll_stats(document{} << "latencyStats" << open_document << close_document
@@ -1180,6 +1343,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("count") {
+            collection coll = db["aggregation_count"];
+            coll.drop();
+
             coll.insert_one({});
             coll.insert_one({});
             coll.insert_one({});
@@ -1199,6 +1365,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("facet") {
+            collection coll = db["aggregation_facet"];
+            coll.drop();
+
             coll.insert_one(document{} << "x" << 1 << finalize);
             coll.insert_one(document{} << "x" << 2 << finalize);
             coll.insert_one(document{} << "x" << 3 << finalize);
@@ -1222,6 +1391,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("geo_near") {
+            collection coll = db["aggregation_geo_near"];
+            coll.drop();
+
             coll.insert_one(document{} << "_id" << 0 << "x" << open_array << 0 << 0 << close_array
                                        << finalize);
             coll.insert_one(document{} << "_id" << 1 << "x" << open_array << 1 << 1 << close_array
@@ -1245,6 +1417,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("graph_lookup") {
+            collection coll = db["aggregation_graph_lookup"];
+            coll.drop();
+
             coll.insert_one(document{} << "x"
                                        << "bar"
                                        << finalize);
@@ -1280,6 +1455,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("group") {
+            collection coll = db["aggregation_group"];
+            coll.drop();
+
             coll.insert_one(document{} << "x" << 1 << finalize);
             coll.insert_one(document{} << "x" << 1 << finalize);
             coll.insert_one(document{} << "x" << 2 << finalize);
@@ -1298,6 +1476,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("index_stats") {
+            collection coll = db["aggregation_index_stats"];
+            coll.drop();
+
             coll.create_index(document{} << "a" << 1 << finalize);
             coll.create_index(document{} << "b" << 1 << finalize);
             coll.create_index(document{} << "c" << 1 << finalize);
@@ -1316,6 +1497,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("limit") {
+            collection coll = db["aggregation_limit"];
+            coll.drop();
+
             coll.insert_one(document{} << "x" << 1 << finalize);
             coll.insert_one(document{} << "x" << 2 << finalize);
             coll.insert_one(document{} << "x" << 3 << finalize);
@@ -1332,6 +1516,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("lookup") {
+            collection coll = db["aggregation_lookup"];
+            coll.drop();
+
             coll.insert_one(document{} << "x" << 0 << finalize);
             coll.insert_one(document{} << "x" << 1 << "y" << 0 << finalize);
 
@@ -1359,6 +1546,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("match") {
+            collection coll = db["aggregation_match"];
+            coll.drop();
+
             coll.insert_one(document{} << "x" << 1 << finalize);
             coll.insert_one(document{} << "x" << 1 << finalize);
             coll.insert_one(document{} << "x" << 2 << finalize);
@@ -1371,6 +1561,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("out") {
+            collection coll = db["aggregation_out"];
+            coll.drop();
+
             coll.insert_one(document{} << "x" << 1 << "y" << 1 << finalize);
 
             pipeline.project(document{} << "x" << 1 << finalize);
@@ -1393,6 +1586,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("project") {
+            collection coll = db["aggregation_project"];
+            coll.drop();
+
             coll.insert_one(document{} << "x" << 1 << "y" << 1 << finalize);
 
             pipeline.project(document{} << "x" << 1 << finalize);
@@ -1405,6 +1601,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("redact") {
+            collection coll = db["aggregation_redact"];
+            coll.drop();
+
             coll.insert_one(
                 document{} << "x" << open_document << "secret" << 1 << close_document << "y" << 1
                            << finalize);
@@ -1436,6 +1635,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("replace_root") {
+            collection coll = db["aggregation_replace_root"];
+            coll.drop();
+
             coll.insert_one(document{} << "x" << open_document << "y" << 1 << close_document
                                        << finalize);
 
@@ -1456,6 +1658,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("sample") {
+            collection coll = db["aggregation_sample"];
+            coll.drop();
+
             coll.insert_one({});
             coll.insert_one({});
             coll.insert_one({});
@@ -1475,6 +1680,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("skip") {
+            collection coll = db["aggregation_skip"];
+            coll.drop();
+
             coll.insert_one(document{} << "x" << 1 << finalize);
             coll.insert_one(document{} << "x" << 2 << finalize);
             coll.insert_one(document{} << "x" << 3 << finalize);
@@ -1491,6 +1699,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("sort") {
+            collection coll = db["aggregation_sort"];
+            coll.drop();
+
             coll.insert_one(document{} << "x" << 1 << finalize);
             coll.insert_one(document{} << "x" << 2 << finalize);
             coll.insert_one(document{} << "x" << 3 << finalize);
@@ -1506,11 +1717,17 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("sort_by_count") {
-            coll.insert_one(document{} << "x" << 1 << finalize);
-            coll.insert_one(document{} << "x" << 2 << finalize);
-            coll.insert_one(document{} << "x" << 2 << finalize);
+            insert_many_builder insert_many{options::insert()};
+            insert_many(make_document(kvp("x", 1)));
+            insert_many(make_document(kvp("x", 2)));
+            insert_many(make_document(kvp("x", 2)));
 
             SECTION("with string") {
+                collection coll = db["aggregation_sort_by_count_with_string"];
+                coll.drop();
+
+                insert_many.insert(&coll);
+
                 pipeline.sort_by_count("$x");
                 auto cursor = coll.aggregate(pipeline);
 
@@ -1527,6 +1744,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             }
 
             SECTION("with document") {
+                collection coll = db["aggregation_sort_by_count_with_document"];
+                coll.drop();
+
+                insert_many.insert(&coll);
+
                 pipeline.sort_by_count(
                     document{} << "$mod" << open_array << "$x" << 2 << close_array << finalize);
                 auto cursor = coll.aggregate(pipeline);
@@ -1544,37 +1766,46 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             }
         }
 
-        SECTION("unwind") {
+        SECTION("unwind with string") {
+            collection coll = db["aggregation_unwind_with_string"];
+            coll.drop();
+
+            coll.insert_one(document{} << "x" << open_array << 1 << 2 << 3 << 4 << 5 << close_array
+                                       << finalize);
+            pipeline.unwind("$x");
+            auto cursor = coll.aggregate(pipeline);
+
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 5);
+        }
+
+        SECTION("unwind with document") {
+            collection coll = db["aggregation_unwind_with_doc"];
+            coll.drop();
+
             coll.insert_one(document{} << "x" << open_array << 1 << 2 << 3 << 4 << 5 << close_array
                                        << finalize);
 
-            SECTION("with string") {
-                pipeline.unwind("$x");
-                auto cursor = coll.aggregate(pipeline);
+            pipeline.unwind(document{} << "path"
+                                       << "$x"
+                                       << finalize);
+            auto cursor = coll.aggregate(pipeline);
 
+            if (test_util::get_max_wire_version(mongodb_client) >= 4) {
+                // The server supports unwind() with a document.
                 auto results = get_results(std::move(cursor));
                 REQUIRE(results.size() == 5);
-            }
-
-            SECTION("with document") {
-                pipeline.unwind(document{} << "path"
-                                           << "$x"
-                                           << finalize);
-                auto cursor = coll.aggregate(pipeline);
-
-                if (test_util::get_max_wire_version(mongodb_client) >= 4) {
-                    // The server supports unwind() with a document.
-                    auto results = get_results(std::move(cursor));
-                    REQUIRE(results.size() == 5);
-                } else {
-                    // The server does not support unwind() with a document.
-                    REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-                }
+            } else {
+                // The server does not support unwind() with a document.
+                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
             }
         }
     }
 
     SECTION("aggregation with collation", "[collection]") {
+        collection coll = db["aggregation_with_collation"];
+        coll.drop();
+
         document b1;
         b1 << "x"
            << "foo";
@@ -1606,6 +1837,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         bulk_opts.ordered(false);
 
         SECTION("default write concern returns result") {
+            collection coll = db["bulk_write_default_write"];
+            coll.drop();
+
             bulk_write abulk{bulk_opts};
             abulk.append(model::insert_one{std::move(doc1)});
             abulk.append(model::insert_one{std::move(doc2)});
@@ -1616,6 +1850,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("unacknowledged write concern returns disengaged optional", "[collection]") {
+            collection coll = db["bulk_write_unack_write"];
+            coll.drop();
+
             bulk_opts.write_concern(noack);
             bulk_write bbulk{bulk_opts};
             bbulk.append(model::insert_one{std::move(doc1)});
@@ -1631,6 +1868,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("write wrapper returns correct result") {
+            collection coll = db["bulk_write_write_wrapper"];
+            coll.drop();
+
             auto doc3 = make_document(kvp("foo", 3));
             auto result = coll.write(model::insert_one{std::move(doc3)});
             REQUIRE(result);
@@ -1639,6 +1879,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("distinct works", "[collection]") {
+        collection coll = db["distinct"];
+        coll.drop();
         auto doc1 = document{} << "foo"
                                << "baz"
                                << "garply" << 1 << finalize;
@@ -1693,6 +1935,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("distinct with collation", "[collection]") {
+        collection coll = db["distinct_with_collation"];
+        coll.drop();
         auto doc = document{} << "x"
                               << "foo" << finalize;
 
@@ -1730,13 +1974,13 @@ TEST_CASE("read_concern is inherited from parent", "[collection]") {
     rc.acknowledge_level(majority);
     db.read_concern(rc);
 
-    collection coll = db["rc"];
-
     SECTION("when parent is a database") {
+        collection coll = db["database_parent"];
         REQUIRE(coll.read_concern().acknowledge_level() == read_concern::level::k_majority);
     }
 
     SECTION("except when read_concern is explicitly set") {
+        collection coll = db["explicitly_set"];
         read_concern set_rc{};
         set_rc.acknowledge_level(read_concern::level::k_local);
         coll.read_concern(set_rc);
@@ -1773,11 +2017,12 @@ TEST_CASE("create_index tests", "[collection]") {
 
     client mongodb_client{uri{}};
     database db = mongodb_client["collection_create_index"];
-    collection coll = db["collection"];
-    coll.drop();
-    coll.insert_one({});  // Ensure that the collection exists.
 
     SECTION("returns index name") {
+        collection coll = db["create_index_return_name"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+
         bsoncxx::document::value index = make_document(kvp("a", 1));
 
         std::string indexName{"myName"};
@@ -1799,6 +2044,10 @@ TEST_CASE("create_index tests", "[collection]") {
     }
 
     SECTION("with collation") {
+        collection coll = db["create_index_with_collation"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+
         bsoncxx::document::value keys = make_document(kvp("a", 1));
         auto collation = make_document(kvp("locale", "en_US"));
 
@@ -1819,6 +2068,10 @@ TEST_CASE("create_index tests", "[collection]") {
     }
 
     SECTION("fails") {
+        collection coll = db["create_index_fails"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+
         bsoncxx::document::value keys1 = make_document(kvp("a", 1));
         bsoncxx::document::value keys2 = make_document(kvp("a", -1));
 
@@ -1830,6 +2083,10 @@ TEST_CASE("create_index tests", "[collection]") {
     }
 
     SECTION("succeeds with options") {
+        collection coll = db["create_index_with_options"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+
         mongocxx::stdx::string_view index_name{"succeeds_with_options"};
 
         bsoncxx::document::value keys = make_document(kvp("cccc", 1));
@@ -1858,6 +2115,10 @@ TEST_CASE("create_index tests", "[collection]") {
     }
 
     SECTION("fails with options") {
+        collection coll = db["create_index_fails_with_options"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+
         bsoncxx::document::value keys = make_document(kvp("c", 1));
         options::index options{};
 
@@ -1872,6 +2133,10 @@ TEST_CASE("create_index tests", "[collection]") {
     }
 
     SECTION("succeeds with storage engine options") {
+        collection coll = db["create_index_succeeds_with_storage_options"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+
         bsoncxx::stdx::string_view index_name{"storage_options_test"};
         bsoncxx::document::value keys = make_document(kvp("c", 1));
 
