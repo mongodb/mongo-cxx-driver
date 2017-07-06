@@ -1585,6 +1585,18 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             }
         }
 
+        SECTION("out fails when not last") {
+            collection coll = db["aggregation_out_fails"];
+            coll.insert_one(make_document(kvp("x", 1)));
+
+            pipeline.project(make_document(kvp("x", 1)));
+            pipeline.out("aggregation_out_fails");
+            pipeline.sample(1);
+
+            auto cursor = coll.aggregate(pipeline);
+            REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
+        }
+
         SECTION("project") {
             collection coll = db["aggregation_project"];
             coll.drop();
