@@ -175,7 +175,8 @@ bsoncxx::document::value write_concern::to_document() const {
     }
 
     doc.append(kvp("j", journal()));
-    doc.append(kvp("wtimeout", bsoncxx::types::b_int64{timeout().count()}));
+    doc.append(
+        kvp("wtimeout", bsoncxx::types::b_int32{static_cast<std::int32_t>(timeout().count())}));
 
     return doc.extract();
 }

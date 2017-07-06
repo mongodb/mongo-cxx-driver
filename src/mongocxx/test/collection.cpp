@@ -169,6 +169,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     auto noack = write_concern{};
     noack.acknowledge_level(write_concern::level::k_unacknowledged);
 
+    write_concern default_wc;
+    default_wc.acknowledge_level(write_concern::level::k_default);
+
     SECTION("insert and read single document", "[collection]") {
         collection coll = db["insert_and_read_one"];
         coll.drop();
@@ -445,6 +448,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto update_opts = options::update{}.collation(case_insensitive_collation.view());
         if (test_util::supports_collation(mongodb_client)) {
+            INFO("unacknowledged write concern fails");
+            update_opts.write_concern(noack);
+            REQUIRE_THROWS_AS(coll.update_one(predicate.view(), update_doc.view(), update_opts),
+                              operation_exception);
+
+            INFO("default write concern succeeds");
+            update_opts.write_concern(default_wc);
             auto result = coll.update_one(predicate.view(), update_doc.view(), update_opts);
             REQUIRE(result);
             REQUIRE(result->modified_count() == 1);
@@ -534,9 +544,17 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto update_opts = options::update{}.collation(case_insensitive_collation.view());
         if (test_util::supports_collation(mongodb_client)) {
+            INFO("unacknowledged write concern fails");
+            update_opts.write_concern(noack);
+            REQUIRE_THROWS_AS(coll.update_many(predicate.view(), update_doc.view(), update_opts),
+                              operation_exception);
+
+            INFO("default write concern succeeds");
+            update_opts.write_concern(default_wc);
             auto result = coll.update_many(predicate.view(), update_doc.view(), update_opts);
             REQUIRE(result);
             REQUIRE(result->modified_count() == 1);
+
         } else {
             REQUIRE_THROWS_AS(coll.update_many(predicate.view(), update_doc.view(), update_opts),
                               bulk_write_exception);
@@ -715,9 +733,18 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto update_opts = options::update{}.collation(case_insensitive_collation.view());
         if (test_util::supports_collation(mongodb_client)) {
+            INFO("unacknowledged write concern fails");
+            update_opts.write_concern(noack);
+            REQUIRE_THROWS_AS(
+                coll.replace_one(predicate.view(), replacement_doc.view(), update_opts),
+                operation_exception);
+
+            INFO("default write concern succeeds");
+            update_opts.write_concern(default_wc);
             auto result = coll.replace_one(predicate.view(), replacement_doc.view(), update_opts);
             REQUIRE(result);
             REQUIRE(result->modified_count() == 1);
+
         } else {
             REQUIRE_THROWS_AS(
                 coll.replace_one(predicate.view(), replacement_doc.view(), update_opts),
@@ -828,6 +855,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto delete_opts = options::delete_options{}.collation(case_insensitive_collation.view());
         if (test_util::supports_collation(mongodb_client)) {
+            INFO("unacknowledged write concern fails");
+            delete_opts.write_concern(noack);
+            REQUIRE_THROWS_AS(coll.delete_one(predicate.view(), delete_opts), operation_exception);
+
+            INFO("default write concern succeeds");
+            delete_opts.write_concern(default_wc);
             auto result = coll.delete_one(predicate.view(), delete_opts);
             REQUIRE(result);
             REQUIRE(result->deleted_count() == 1);
@@ -930,6 +963,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto delete_opts = options::delete_options{}.collation(case_insensitive_collation.view());
         if (test_util::supports_collation(mongodb_client)) {
+            INFO("unacknowledged write concern fails");
+            delete_opts.write_concern(noack);
+            REQUIRE_THROWS_AS(coll.delete_many(predicate.view(), delete_opts), operation_exception);
+
+            INFO("default write concern succeeds");
+            delete_opts.write_concern(default_wc);
             auto result = coll.delete_many(predicate.view(), delete_opts);
             REQUIRE(result);
             REQUIRE(result->deleted_count() == 1);
@@ -1046,6 +1085,14 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                                << "FOO";
 
             if (test_util::supports_collation(mongodb_client)) {
+                INFO("unacknowledged write concern fails");
+                options.write_concern(noack);
+                REQUIRE_THROWS_AS(coll.find_one_and_replace(
+                                      collation_criteria.view(), replacement.view(), options),
+                                  logic_error);
+
+                INFO("default write concern succeeds");
+                options.write_concern(default_wc);
                 auto doc = coll.find_one_and_replace(
                     collation_criteria.view(), replacement.view(), options);
                 REQUIRE(doc);
@@ -1138,10 +1185,19 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                                << "FOO";
 
             if (test_util::supports_collation(mongodb_client)) {
+                INFO("unacknowledged write concern fails");
+                options.write_concern(noack);
+                REQUIRE_THROWS_AS(
+                    coll.find_one_and_update(collation_criteria.view(), update.view(), options),
+                    logic_error);
+
+                INFO("default write concern succeeds");
+                options.write_concern(default_wc);
                 auto doc =
                     coll.find_one_and_update(collation_criteria.view(), update.view(), options);
                 REQUIRE(doc);
                 REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
+
             } else {
                 REQUIRE_THROWS_AS(
                     coll.find_one_and_update(collation_criteria.view(), update.view(), options),
@@ -1212,9 +1268,17 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                                << "FOO";
 
             if (test_util::supports_collation(mongodb_client)) {
+                INFO("unacknowledged write concern fails");
+                options.write_concern(noack);
+                REQUIRE_THROWS_AS(coll.find_one_and_delete(collation_criteria.view(), options),
+                                  logic_error);
+
+                INFO("default write concern succeeds");
+                options.write_concern(default_wc);
                 auto doc = coll.find_one_and_delete(collation_criteria.view(), options);
                 REQUIRE(doc);
                 REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
+
             } else {
                 REQUIRE_THROWS_AS(coll.find_one_and_delete(collation_criteria.view(), options),
                                   write_exception);
@@ -1887,6 +1951,20 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             auto result = coll.write(model::insert_one{std::move(doc3)});
             REQUIRE(result);
             REQUIRE(result->inserted_count() == 1);
+        }
+
+        SECTION("fail if server has maxWireVersion < 5 and write has collation") {
+            if (test_util::get_max_wire_version(mongodb_client) < 5) {
+                collection coll = db["bulk_write_collation"];
+                coll.drop();
+
+                bulk_opts.write_concern(noack);
+                bulk_write bulk{bulk_opts};
+                bulk.append(model::insert_one{std::move(doc1)});
+                bulk.append(model::insert_one{std::move(doc2)});
+
+                REQUIRE_THROWS_AS(coll.bulk_write(bulk), operation_exception);
+            }
         }
     }
 

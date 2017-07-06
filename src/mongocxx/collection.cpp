@@ -81,6 +81,16 @@ const char* get_collection_name(mongoc_collection_t* collection) {
 mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(mongoc_collection_t* collection,
                                                                    bsoncxx::document::view command,
                                                                    bsoncxx::document::view opts) {
+    if (opts["writeConcern"] && opts["collation"]) {
+        auto wc = opts["writeConcern"].get_document();
+        auto wc_view = wc.view();
+        if (wc_view["w"].type() == bsoncxx::type::k_int32) {
+            if (wc_view["w"].get_int32() == 0) {
+                throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
+            }
+        }
+    }
+
     mongocxx::libbson::scoped_bson_t command_bson{command};
     mongocxx::libbson::scoped_bson_t opts_bson{opts};
     mongocxx::libbson::scoped_bson_t reply;
@@ -686,6 +696,10 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
 
     if (options.max_time()) {
         options_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+    }
+
+    if (options.write_concern()) {
+        options_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
     }
 
     return find_and_modify(_get_impl().collection_t, command_doc.view(), options_doc.view());

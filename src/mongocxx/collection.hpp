@@ -390,7 +390,12 @@ class MONGOCXX_API collection {
     ///
     /// @return The document that was deleted.
     ///
-    /// @throws mongocxx::write_exception if the operation fails.
+    /// @exception
+    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
+    ///   write concern is used.
+    ///
+    /// @exception
+    ///   Throws mongocxx::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_delete(
         bsoncxx::document::view_or_value filter,
@@ -409,7 +414,12 @@ class MONGOCXX_API collection {
     ///
     /// @return The original or replaced document.
     ///
-    /// @throws mongocxx::write_exception if the operation fails.
+    /// @exception
+    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
+    ///   write concern is used.
+    ///
+    /// @exception
+    ///   Throws mongocxx::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_replace(
         bsoncxx::document::view_or_value filter,
@@ -429,11 +439,12 @@ class MONGOCXX_API collection {
     ///
     /// @return The original or updated document.
     ///
-    /// @throws mongocxx::write_exception when the operation fails.
+    /// @exception
+    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
+    ///   write concern is used.
     ///
-    /// @note
-    ///   In order to pass a write concern to this, you must use the collection
-    ///   level set write concern - collection::write_concern(wc).
+    /// @exception
+    ///   Throws mongocxx::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_update(
         bsoncxx::document::view_or_value filter,

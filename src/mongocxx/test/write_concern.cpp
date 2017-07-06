@@ -234,14 +234,14 @@ TEST_CASE("write_concern to_document works") {
         INFO("default");
 
         expected_doc =
-            make_document(kvp("w", 1), kvp("j", false), kvp("wtimeout", types::b_int64{0}));
+            make_document(kvp("w", 1), kvp("j", false), kvp("wtimeout", types::b_int32{0}));
     }
 
     SECTION("majority") {
         INFO("majority");
 
         expected_doc = make_document(
-            kvp("w", "majority"), kvp("j", false), kvp("wtimeout", types::b_int64{100}));
+            kvp("w", "majority"), kvp("j", false), kvp("wtimeout", types::b_int32{100}));
         wc.majority(std::chrono::milliseconds{100});
     }
 
@@ -249,7 +249,7 @@ TEST_CASE("write_concern to_document works") {
         INFO("nodes");
 
         expected_doc =
-            make_document(kvp("w", 5), kvp("j", false), kvp("wtimeout", types::b_int64{10}));
+            make_document(kvp("w", 5), kvp("j", false), kvp("wtimeout", types::b_int32{10}));
         wc.nodes(5);
         wc.timeout(std::chrono::milliseconds{10});
     }
@@ -258,7 +258,7 @@ TEST_CASE("write_concern to_document works") {
         INFO("unacknowledged");
 
         expected_doc =
-            make_document(kvp("w", 0), kvp("j", false), kvp("wtimeout", types::b_int64{0}));
+            make_document(kvp("w", 0), kvp("j", false), kvp("wtimeout", types::b_int32{0}));
         wc.acknowledge_level(write_concern::level::k_unacknowledged);
         wc.timeout(std::chrono::milliseconds{0});
     }
@@ -267,7 +267,7 @@ TEST_CASE("write_concern to_document works") {
         INFO("tag");
 
         expected_doc =
-            make_document(kvp("w", "myTag"), kvp("j", false), kvp("wtimeout", types::b_int64{25}));
+            make_document(kvp("w", "myTag"), kvp("j", false), kvp("wtimeout", types::b_int32{25}));
         wc.tag("myTag");
         wc.timeout(std::chrono::milliseconds{25});
     }
@@ -276,7 +276,7 @@ TEST_CASE("write_concern to_document works") {
         INFO("journal true");
 
         expected_doc =
-            make_document(kvp("w", 1), kvp("j", true), kvp("wtimeout", types::b_int64{0}));
+            make_document(kvp("w", 1), kvp("j", true), kvp("wtimeout", types::b_int32{0}));
         wc.journal(true);
     }
 
@@ -284,7 +284,7 @@ TEST_CASE("write_concern to_document works") {
         INFO("journal false");
 
         expected_doc =
-            make_document(kvp("w", 1), kvp("j", false), kvp("wtimeout", types::b_int64{0}));
+            make_document(kvp("w", 1), kvp("j", false), kvp("wtimeout", types::b_int32{0}));
         wc.journal(false);
     }
 
@@ -292,7 +292,7 @@ TEST_CASE("write_concern to_document works") {
         INFO("majority and journal");
 
         expected_doc = make_document(
-            kvp("w", "majority"), kvp("j", true), kvp("wtimeout", types::b_int64{10}));
+            kvp("w", "majority"), kvp("j", true), kvp("wtimeout", types::b_int32{10}));
         wc.journal(true);
         wc.majority(std::chrono::milliseconds{10});
     }
@@ -301,7 +301,7 @@ TEST_CASE("write_concern to_document works") {
         INFO("unacknowledged and journal");
 
         expected_doc =
-            make_document(kvp("w", 0), kvp("j", true), kvp("wtimeout", types::b_int64{0}));
+            make_document(kvp("w", 0), kvp("j", true), kvp("wtimeout", types::b_int32{0}));
         wc.acknowledge_level(write_concern::level::k_unacknowledged);
         wc.timeout(std::chrono::milliseconds{0});
         wc.journal(true);
@@ -315,19 +315,19 @@ TEST_CASE("write_concern changes reflected in to_document") {
     write_concern wc;
 
     auto majority =
-        make_document(kvp("w", "majority"), kvp("j", false), kvp("wtimeout", types::b_int64{100}));
+        make_document(kvp("w", "majority"), kvp("j", false), kvp("wtimeout", types::b_int32{100}));
     wc.majority(std::chrono::milliseconds{100});
     auto generated_majority = wc.to_document();
     REQUIRE(generated_majority.view() == majority.view());
 
     auto tag =
-        make_document(kvp("w", "myTag"), kvp("j", false), kvp("wtimeout", types::b_int64{25}));
+        make_document(kvp("w", "myTag"), kvp("j", false), kvp("wtimeout", types::b_int32{25}));
     wc.tag("myTag");
     wc.timeout(std::chrono::milliseconds{25});
     auto generated_tag = wc.to_document();
     REQUIRE(generated_tag.view() == tag.view());
 
-    auto nodes = make_document(kvp("w", 5), kvp("j", false), kvp("wtimeout", types::b_int64{10}));
+    auto nodes = make_document(kvp("w", 5), kvp("j", false), kvp("wtimeout", types::b_int32{10}));
     wc.nodes(5);
     wc.timeout(std::chrono::milliseconds{10});
     auto generated_nodes = wc.to_document();
