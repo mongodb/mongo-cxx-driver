@@ -14,6 +14,8 @@
 
 #include "helpers.hpp"
 
+#include <set>
+
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
@@ -22,7 +24,9 @@
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/index_view.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/options/index_view.hpp>
 #include <mongocxx/options/modify_collection.hpp>
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/libbson.hh>
@@ -33,10 +37,23 @@
 namespace {
 using namespace mongocxx;
 
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::stream::close_document;
 using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::finalize;
 using bsoncxx::builder::stream::open_document;
+
+bool check_for_collections(cursor cursor, std::set<std::string> expected_colls) {
+    for (auto&& coll : cursor) {
+        auto iter = expected_colls.find(coll["name"].get_utf8().value.to_string());
+        if (iter == expected_colls.end()) {
+            return false;
+        }
+        expected_colls.erase(iter);
+    }
+    return expected_colls.empty();
+}
 
 TEST_CASE("A default constructed database is false-ish", "[database]") {
     instance::current();
@@ -527,6 +544,36 @@ TEST_CASE("Database integration tests", "[database]") {
                                   operation_exception);
             }
         }
+    }
+
+    SECTION("list_collections returns a correct result") {
+        class database db = mongo_client["list_collections"];
+        db.drop();
+
+        options::create_collection opts;
+        opts.capped(true);
+        opts.size(256);
+
+        collection default_collection = db.create_collection("list_collections_default");
+        collection capped_collection = db.create_collection("list_collections_capped", opts);
+
+        index_view default_index = default_collection.indexes();
+        index_view capped_index = capped_collection.indexes();
+
+        default_index.create_one(make_document(kvp("a", 1)));
+        capped_index.create_one(make_document(kvp("a", 1)));
+
+        default_collection.insert_one(make_document(kvp("a", 5)));
+        capped_collection.insert_one(make_document(kvp("a", 5)));
+
+        auto cursor1 = db.list_collections();
+        std::set<std::string> expected_colls1{"list_collections_default",
+                                              "list_collections_capped"};
+        REQUIRE(check_for_collections(std::move(cursor1), expected_colls1));
+
+        auto cursor2 = db.list_collections(make_document(kvp("options.capped", true)));
+        std::set<std::string> expected_colls2{"list_collections_capped"};
+        REQUIRE(check_for_collections(std::move(cursor2), expected_colls2));
     }
 }
 }  // namespace
