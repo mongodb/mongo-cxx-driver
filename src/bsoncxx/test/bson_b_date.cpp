@@ -44,5 +44,16 @@ TEST_CASE("time_point is converted to b_date consistently", "[bsoncxx::types::b_
     b_date d2{now};
 
     REQUIRE(d1.value == d2.value);
+    REQUIRE(d1 == d2);
+}
+
+TEST_CASE("time_point is converted to int64 consistently", "[bsoncxx::types::b_date]") {
+    using bsoncxx::types::b_date;
+    using std::chrono::system_clock;
+
+    b_date d{system_clock::now()};
+    std::int64_t unwrapped = d.to_int64();
+
+    REQUIRE(d.to_int64() == d);
 }
 }  // namespace
