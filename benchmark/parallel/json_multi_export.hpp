@@ -31,9 +31,9 @@
 
 namespace benchmark {
 
-using bsoncxx::builder::basic::make_document;
-using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::concatenate;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 class json_multi_export : public microbench {
    public:
@@ -43,13 +43,13 @@ class json_multi_export : public microbench {
     json_multi_export() = delete;
 
     // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
-    json_multi_export(bsoncxx::stdx::string_view dir,
+    json_multi_export(std::string dir,
                       std::uint32_t thread_num = std::thread::hardware_concurrency())
-        : microbench{565,
-                     "json_multi_export",
+        : microbench{"TestJsonMultiExport",
+                     565,
                      std::set<benchmark_type>{benchmark_type::parallel_bench,
                                               benchmark_type::read_bench}},
-          _directory{dir.to_string()},
+          _directory{std::move(dir)},
           _pool{mongocxx::uri{}},
           _thread_num{thread_num} {}
 
@@ -78,10 +78,12 @@ void json_multi_export::setup() {
     for (std::uint32_t i = 0; i < TOTAL_FILES; i++) {
         std::stringstream ss;
         ss << _directory << "/ldjson" << std::setfill('0') << std::setw(3) << i << ".txt";
-        std::vector<bsoncxx::document::value> docs =
-            parse_json_file_to_documents(bsoncxx::stdx::string_view{ss.str()});
+
+        std::vector<bsoncxx::document::value> docs = parse_json_file_to_documents(ss.str());
+
         mongocxx::options::insert ins_opts;
         ins_opts.ordered(false);
+
         for (std::uint32_t j = 0; j < docs.size(); j++) {
             bsoncxx::document::value insert =
                 make_document(kvp("file", bsoncxx::types::b_int32{static_cast<std::int32_t>(j)}),
@@ -141,4 +143,4 @@ void json_multi_export::concurrency_task(std::uint32_t start_file, std::uint32_t
         }
     }
 }
-}
+}  // namespace benchmark

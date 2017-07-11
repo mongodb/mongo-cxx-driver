@@ -22,17 +22,23 @@ class bson_decoding : public microbench {
    public:
     bson_decoding() = delete;
 
-    bson_decoding(double task_size, bsoncxx::stdx::string_view json_file)
-        : microbench{task_size,
-                     "bson_decoding",
+    bson_decoding(std::string name, double task_size, std::string json_file)
+        : microbench{std::move(name),
+                     task_size,
                      std::set<benchmark_type>{benchmark_type::bson_bench}},
-          _json{parse_json_file_to_strings(json_file)[0]} {}
+          _file_name{std::move(json_file)} {}
 
    protected:
     void task();
+    void setup();
 
    private:
+    std::string _file_name;
     std::string _json;
+};
+
+void bson_decoding::setup() {
+    _json = parse_json_file_to_strings(_file_name)[0];
 }
 
 void bson_decoding::task() {
@@ -40,4 +46,4 @@ void bson_decoding::task() {
         // TODO CXX-1241: call bson_as_extended json on _json.
     }
 }
-}
+}  // namespace benchmark

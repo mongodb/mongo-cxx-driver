@@ -14,53 +14,54 @@
 
 #pragma once
 
+#include <iostream>
+
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 
-#include <iostream>
 #include "../microbench.hpp"
 
 namespace benchmark {
 
 class bson_encoding : public microbench {
    public:
-    // TODO: need to wait for scoring object to be finished to implement constructor
     bson_encoding() = delete;
 
-    bson_encoding(double task_size, bsoncxx::stdx::string_view json_file)
-        : microbench{task_size,
-                     "bson_encoding",
+    bson_encoding(std::string name, double task_size, std::string json_file)
+        : microbench{std::move(name),
+                     task_size,
                      std::set<benchmark_type>{benchmark_type::bson_bench}},
-          _json{parse_json_file_to_strings(json_file)[0]},
-          _doc{bsoncxx::from_json(bsoncxx::stdx::string_view{_json})} {}
+          _json_file{std::move(json_file)} {}
 
    protected:
+    void setup();
     void task();
     void teardown();
 
    private:
-    std::int64_t _x;
-    std::string _s;
-    std::string _json;
-    bsoncxx::document::value _doc;
+    std::string _json_file;
+    bsoncxx::stdx::optional<bsoncxx::document::value> _doc;
 };
 
-void bson_encoding::task() {
-    // bsoncxx::stdx::string_view json_view{_json};
-    // for (std::uint32_t i = 0; i < 10000; i++) {
-    //    bsoncxx::from_json(bsoncxx::stdx::string_view{_json});
-    //}
-    _x = 0;
-    for (auto&& it : _doc.view()) {
-        if (it.type() == bsoncxx::type::k_utf8) {
-            _s = it.get_utf8().value.to_string();
+void bson_encoding::setup() {
+    _doc = parse_json_file_to_documents(_json_file)[0];
+}
+
+void visit_document(bsoncxx::document::view doc) {
+    for (auto&& it : doc) {
+        if (it.type() == bsoncxx::type::k_document) {
+            auto sub_doc = it.get_document();
+            visit_document(sub_doc.view());
         }
     }
-
-    // std::cout << _x << std::endl;
 }
 
-void bson_encoding::teardown() {
-    std::cout << _x << std::endl;
+// Mirroring mongo-c-driver's interpretation of the spec.
+void bson_encoding::task() {
+    for (std::uint32_t i = 0; i < 10000; i++) {
+        visit_document(_doc->view());
+    }
 }
-}
+
+void bson_encoding::teardown() {}
+}  // namespace benchmark

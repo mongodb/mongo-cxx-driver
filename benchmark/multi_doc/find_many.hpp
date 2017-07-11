@@ -24,20 +24,20 @@
 
 namespace benchmark {
 
-using bsoncxx::builder::basic::make_document;
-using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::concatenate;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 class find_many : public microbench {
    public:
     // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
-    find_many(bsoncxx::stdx::string_view json_file)
-        : microbench{16.22,
-                     "find_many",
+    find_many(std::string json_file)
+        : microbench{"TestFindManyAndEmptyCursor",
+                     16.22,
                      std::set<benchmark_type>{benchmark_type::multi_bench,
                                               benchmark_type::read_bench}},
           _conn{mongocxx::uri{}},
-          _json_file{json_file.to_string()} {}
+          _json_file{std::move(json_file)} {}
 
     void setup();
 
@@ -73,4 +73,4 @@ void find_many::task() {
     for (auto&& doc : cursor) {
     }
 }
-}
+}  // namespace benchmark

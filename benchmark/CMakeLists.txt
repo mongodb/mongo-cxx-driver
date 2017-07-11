@@ -32,6 +32,19 @@ include_directories(
 )
 
 set(BENCHMARK_LIBRARY
+    bson/bson_decoding.hpp
+    bson/bson_encoding.hpp
+    multi_doc/find_many.hpp
+    multi_doc/gridfs_download.hpp
+    multi_doc/gridfs_upload.hpp
+    multi_doc/bulk_insert.hpp
+    parallel/gridfs_multi_export.hpp
+    parallel/gridfs_multi_import.hpp
+    parallel/json_multi_import.hpp
+    parallel/json_multi_export.hpp
+    single_doc/find_one_by_id.hpp
+    single_doc/insert_one.hpp
+    single_doc/run_command.hpp
     benchmark_runner.cpp
     main.cpp
     microbench.cpp

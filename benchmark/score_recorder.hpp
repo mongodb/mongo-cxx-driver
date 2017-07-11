@@ -42,7 +42,7 @@ class score_recorder {
     // Returns the cumulative wall clock execution time of all samples that have been run.
     //
     // @return
-    //  cumulative execution time.
+    //  The cumulative execution time.
     //
     const std::chrono::milliseconds& get_execution_time() const;
 
@@ -50,7 +50,7 @@ class score_recorder {
     // Gets the nth percentile sample runtime.
     //
     // @return
-    //   nth percentile recorded sample time.
+    //   The "nth" percentile recorded sample time.
     //
     // @exception
     //   A runtime error is thrown if this method is called before any samples have been recorded.
@@ -64,7 +64,7 @@ class score_recorder {
     // Gets the score for this benchmark.
     //
     // @return
-    //  the score for this benchmark in MB/s.
+    //  The score for this benchmark in MB/s.
     //
     // @exception
     //   A runtime error is thrown if this method is called before any samples have been recorded.

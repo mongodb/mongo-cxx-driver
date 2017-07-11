@@ -25,21 +25,21 @@
 
 namespace benchmark {
 
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 class insert_one : public microbench {
    public:
     insert_one() = delete;
 
-    insert_one(double task_size, std::int32_t iter, bsoncxx::stdx::string_view json_file)
-        : microbench{task_size,
-                     "insert_one",
+    insert_one(std::string name, double task_size, std::int32_t iter, std::string json_file)
+        : microbench{std::move(name),
+                     task_size,
                      std::set<benchmark_type>{benchmark_type::single_bench,
                                               benchmark_type::write_bench}},
           _conn{mongocxx::uri{}},
           _iter{iter},
-          _doc{parse_json_file_to_documents(json_file)[0]} {}
+          _file_name{std::move(json_file)} {}
 
    protected:
     void setup();
@@ -55,9 +55,11 @@ class insert_one : public microbench {
     std::int32_t _iter;
     bsoncxx::stdx::optional<bsoncxx::document::value> _doc;
     mongocxx::collection _coll;
+    std::string _file_name;
 };
 
 void insert_one::setup() {
+    _doc = parse_json_file_to_documents(_file_name)[0];
     mongocxx::database db = _conn["perftest"];
     db.drop();
 }
@@ -78,4 +80,4 @@ void insert_one::task() {
 void insert_one::teardown() {
     _conn["perftest"].drop();
 }
-}
+}  // namespace benchmark

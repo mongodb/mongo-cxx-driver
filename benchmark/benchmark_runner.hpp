@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/instance.hpp>
 
 #include "microbench.hpp"
@@ -21,14 +22,12 @@
 namespace benchmark {
 
 class benchmark_runner {
-    // this would run the benchmarks and collect the data.
-
    public:
-    // Initialize microbenchmarks with the size in MB of their tasks and, if necessary, number of
-    // iterations if multiple microbenchmarks use a subclass.
-    benchmark_runner();
+    benchmark_runner(std::set<benchmark_type> types = {});
 
-    void run_microbenches(benchmark_type type = benchmark_type::all_benchmarks);
+    void run_microbenches();
+
+    void print_scores();
 
     double calculate_bson_bench_score();
 
@@ -48,5 +47,6 @@ class benchmark_runner {
     double calculate_average(benchmark_type);
 
     std::vector<std::unique_ptr<microbench>> _microbenches;
+    std::set<benchmark_type> _types;
 };
-}
+}  // namespace benchmark

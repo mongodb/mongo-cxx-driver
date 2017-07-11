@@ -18,6 +18,7 @@
 
 #include <algorithm>
 #include <set>
+#include <unordered_map>
 #include <vector>
 
 #include <bsoncxx/document/value.hpp>
@@ -25,26 +26,44 @@
 
 namespace benchmark {
 
-enum class benchmark_type {
+enum benchmark_type {
     bson_bench,
     single_bench,
     multi_bench,
     parallel_bench,
     read_bench,
     write_bench,
-    driver_bench,
-    all_benchmarks
+    run_command_bench,
 };
+
+const std::string type_names[] = {"BSONBench",
+                                  "SingleBench",
+                                  "MultiBench",
+                                  "ParallelBench",
+                                  "ReadBench",
+                                  "WriteBench",
+                                  "RunCommandBench"};
+
+const std::unordered_map<std::string, benchmark_type> names_types = {
+    {"BSONBench", bson_bench},
+    {"SingleBench", single_bench},
+    {"MultiBench", multi_bench},
+    {"ParallelBench", parallel_bench},
+    {"ReadBench", read_bench},
+    {"WriteBench", write_bench},
+    {"RunCommandBench", run_command_bench}};
 
 const std::chrono::milliseconds mintime{60000};
 const std::chrono::milliseconds maxtime{300000};
+
+const std::int32_t MAX_ITER = 100;
 
 class microbench {
    public:
     microbench() : _score{0} {}
 
-    microbench(double a, std::string name = "un-named", std::set<benchmark_type> tags = {})
-        : _score{a}, _tags{tags}, _name{name + std::to_string(a)} {}
+    microbench(std::string&& name, double task_size, std::set<benchmark_type> tags = {})
+        : _score{task_size}, _tags{tags}, _name{std::move(name)} {}
 
     void run();
 
@@ -56,6 +75,10 @@ class microbench {
         return _score;
     }
 
+    const std::set<benchmark_type>& get_tags() {
+        return _tags;
+    }
+
     bool has_tag(benchmark_type tag) {
         return _tags.find(tag) != _tags.end();
     }
@@ -65,7 +88,7 @@ class microbench {
 
     virtual void before_task() {}
 
-    virtual void task() {}
+    virtual void task() = 0;
 
     virtual void after_task() {}
 
@@ -76,10 +99,9 @@ class microbench {
     std::string _name;
 };
 
-std::vector<std::string> parse_json_file_to_strings(bsoncxx::stdx::string_view json_file);
+std::vector<std::string> parse_json_file_to_strings(const std::string& json_file);
 
-std::vector<bsoncxx::document::value> parse_json_file_to_documents(
-    bsoncxx::stdx::string_view json_file);
+std::vector<bsoncxx::document::value> parse_json_file_to_documents(const std::string& json_file);
 
 std::vector<std::string> parse_documents_to_bson(const std::vector<bsoncxx::document::value>& docs);
-}
+}  // namespace benchmark

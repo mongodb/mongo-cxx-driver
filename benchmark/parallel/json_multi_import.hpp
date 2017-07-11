@@ -32,8 +32,8 @@
 
 namespace benchmark {
 
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 class json_multi_import : public microbench {
    public:
@@ -42,13 +42,13 @@ class json_multi_import : public microbench {
     json_multi_import() = delete;
 
     // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
-    json_multi_import(bsoncxx::stdx::string_view dir,
+    json_multi_import(std::string dir,
                       std::uint32_t thread_num = std::thread::hardware_concurrency() * 2)
-        : microbench{565,
-                     "json_multi_import",
+        : microbench{"TestJsonMultiImport",
+                     565,
                      std::set<benchmark_type>{benchmark_type::parallel_bench,
                                               benchmark_type::write_bench}},
-          _directory{dir.to_string()},
+          _directory{std::move(dir)},
           _pool{mongocxx::uri{}},
           _thread_num{thread_num} {}
 
@@ -110,9 +110,10 @@ void json_multi_import::concurrency_task(std::uint32_t start_file, std::uint32_t
     for (std::uint32_t i = start_file; i < start_file + num_files; i++) {
         std::stringstream ss;
         ss << _directory << "/ldjson" << std::setfill('0') << std::setw(3) << i << ".txt";
-        std::vector<bsoncxx::document::value> docs =
-            parse_json_file_to_documents(bsoncxx::stdx::string_view{ss.str()});
+
+        std::vector<bsoncxx::document::value> docs = parse_json_file_to_documents(ss.str());
+
         (*client)["perftest"]["corpus"].insert_many(docs, ins_opts);
     }
 }
-}
+}  // namespace benchmark

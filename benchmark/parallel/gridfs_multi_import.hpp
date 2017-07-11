@@ -28,8 +28,8 @@
 
 namespace benchmark {
 
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 class gridfs_multi_import : public microbench {
    public:
@@ -38,13 +38,13 @@ class gridfs_multi_import : public microbench {
     gridfs_multi_import() = delete;
 
     // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
-    gridfs_multi_import(bsoncxx::stdx::string_view dir,
+    gridfs_multi_import(std::string dir,
                         std::uint32_t thread_num = std::thread::hardware_concurrency() * 2)
-        : microbench{262.144,
-                     "gridfs_multi_import",
+        : microbench{"TestGridFsMultiImport",
+                     262.144,
                      std::set<benchmark_type>{benchmark_type::parallel_bench,
                                               benchmark_type::write_bench}},
-          _directory{dir.to_string()},
+          _directory{std::move(dir)},
           _pool{mongocxx::uri{}},
           _thread_num{thread_num} {}
 
@@ -118,4 +118,4 @@ void gridfs_multi_import::concurrency_task(std::uint32_t start_file, std::uint32
         auto uploader = bucket.upload_from_stream(file_name, &stream);
     }
 }
-}
+}  // namespace benchmark

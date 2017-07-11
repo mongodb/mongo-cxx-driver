@@ -27,25 +27,21 @@
 
 namespace benchmark {
 
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 class bulk_insert : public microbench {
    public:
     bulk_insert() = delete;
 
-    bulk_insert(double task_size, std::int32_t doc_num, bsoncxx::stdx::string_view json_file)
-        : microbench{task_size,
-                     "bulk_insert",
+    bulk_insert(std::string name, double task_size, std::int32_t doc_num, std::string json_file)
+        : microbench{std::move(name),
+                     task_size,
                      std::set<benchmark_type>{benchmark_type::multi_bench,
                                               benchmark_type::write_bench}},
           _conn{mongocxx::uri{}},
-          _doc_num{doc_num} {
-        auto doc = parse_json_file_to_documents(json_file)[0];
-        for (std::int32_t i = 0; i < _doc_num; i++) {
-            _docs.push_back(doc);
-        }
-    }
+          _doc_num{doc_num},
+          _file_name{std::move(json_file)} {}
 
     void setup();
 
@@ -61,9 +57,15 @@ class bulk_insert : public microbench {
     std::int32_t _doc_num;
     std::vector<bsoncxx::document::value> _docs;
     mongocxx::collection _coll;
+    std::string _file_name;
 };
 
 void bulk_insert::setup() {
+    auto doc = parse_json_file_to_documents(_file_name)[0];
+    for (std::int32_t i = 0; i < _doc_num; i++) {
+        _docs.push_back(doc);
+    }
+
     mongocxx::database db = _conn["perftest"];
     db.drop();
 }
@@ -82,4 +84,4 @@ void bulk_insert::teardown() {
 void bulk_insert::task() {
     _coll.insert_many(_docs);
 }
-}
+}  // namespace benchmark

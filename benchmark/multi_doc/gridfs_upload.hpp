@@ -25,23 +25,19 @@
 
 namespace benchmark {
 
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 class gridfs_upload : public microbench {
    public:
     // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
-    gridfs_upload(bsoncxx::stdx::string_view file_name)
-        : microbench{52.43,
-                     "gridfs_upload",
+    gridfs_upload(std::string file_name)
+        : microbench{"TestGridFsUpload",
+                     52.43,
                      std::set<benchmark_type>{benchmark_type::multi_bench,
                                               benchmark_type::write_bench}},
-          _conn{mongocxx::uri{}} {
-        std::ifstream stream{file_name.to_string()};
-        stream >> std::noskipws;
-        _gridfs_file = std::vector<std::uint8_t>{(std::istream_iterator<unsigned char>{stream}),
-                                                 (std::istream_iterator<unsigned char>{})};
-    }
+          _conn{mongocxx::uri{}},
+          _file_name{file_name} {}
 
     void setup();
 
@@ -56,9 +52,15 @@ class gridfs_upload : public microbench {
     mongocxx::client _conn;
     mongocxx::gridfs::bucket _bucket;
     std::vector<std::uint8_t> _gridfs_file;
+    std::string _file_name;
 };
 
 void gridfs_upload::setup() {
+    std::ifstream stream{_file_name};
+    stream >> std::noskipws;
+    _gridfs_file = std::vector<std::uint8_t>{(std::istream_iterator<unsigned char>{stream}),
+                                             (std::istream_iterator<unsigned char>{})};
+
     mongocxx::database db = _conn["perftest"];
     db.drop();
 }
@@ -83,4 +85,4 @@ void gridfs_upload::task() {
     uploader.write(_gridfs_file.data(), _gridfs_file.size());
     uploader.close();
 }
-}
+}  // namespace benchmark

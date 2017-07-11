@@ -48,6 +48,10 @@ const std::chrono::milliseconds& score_recorder::get_percentile(unsigned long n)
         _sorted = true;
     }
 
+    if (_samples.size() == 1) {
+        return _samples[0];
+    }
+
     return _samples[(_samples.size() * n / 100) - 1];
 }
 

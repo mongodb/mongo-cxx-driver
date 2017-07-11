@@ -18,16 +18,28 @@
 
 using namespace benchmark;
 
-int main() {
-    benchmark_runner runner;
-    runner.run_microbenches();
+int main(int argc, char* argv[]) {
+    std::set<benchmark_type> types;
 
-    std::cout << "BSONBench: " << runner.calculate_bson_bench_score() << " MB/s" << std::endl;
-    std::cout << "SingleBench: " << runner.calculate_single_bench_score() << " MB/s" << std::endl;
-    std::cout << "MultiBench: " << runner.calculate_multi_bench_score() << "MB/s" << std::endl;
-    std::cout << "ParallelBench: " << runner.calculate_parallel_bench_score() << "MB/s"
-              << std::endl;
-    std::cout << "ReadBench: " << runner.calculate_read_bench_score() << "MB/s" << std::endl;
-    std::cout << "WriteBench: " << runner.calculate_write_bench_score() << "MB/s" << std::endl;
-    std::cout << "DriverBench: " << runner.calculate_driver_bench_score() << "MB/s" << std::endl;
+    if (argc > 1) {
+        for (int x = 1; x < argc; ++x) {
+            std::string type{argv[x]};
+            auto it = names_types.find(type);
+
+            if (it != names_types.end()) {
+                types.insert(it->second);
+            } else {
+                std::cerr << "Invalid benchmark: " << type << std::endl;
+            }
+        }
+
+        if (types.empty()) {
+            std::cerr << "No valid benchmarks specified. Exiting." << std::endl;
+            return 1;
+        }
+    }
+
+    benchmark_runner runner{types};
+    runner.run_microbenches();
+    runner.print_scores();
 }

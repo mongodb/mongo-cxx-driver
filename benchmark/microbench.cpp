@@ -15,17 +15,15 @@
 #include "microbench.hpp"
 
 #include <fstream>
-#include <string>
-
-#include <bsoncxx/document/view.hpp>
-#include <bsoncxx/json.hpp>
 #include <iostream>
+
+#include <bsoncxx/json.hpp>
 
 namespace benchmark {
 
 bool finished_running(const std::chrono::duration<std::uint32_t, std::milli>& curr_time,
                       std::uint32_t iter) {
-    return (curr_time > maxtime || (curr_time > mintime && iter > 100));
+    return (curr_time > maxtime || (curr_time > mintime && iter > MAX_ITER));
 }
 
 void microbench::run() {
@@ -42,15 +40,17 @@ void microbench::run() {
         after_task();
     }
     teardown();
-
-    std::cout << iteration << " iterations" << std::endl;
-    std::cout << _name << ": " << _score.get_score() << "MB/s" << std::endl;
 }
 
-std::vector<std::string> parse_json_file_to_strings(bsoncxx::stdx::string_view json_file) {
+std::vector<std::string> parse_json_file_to_strings(const std::string& json_file) {
     std::vector<std::string> jsons;
-    std::ifstream stream{json_file.to_string()};
-    while (!stream.eof()) {
+    std::ifstream stream{"data/benchmark/" + json_file};
+
+    if (!stream) {
+        throw std::runtime_error("Failed to open " + json_file);
+    }
+
+    while (stream.is_open() && !stream.eof()) {
         std::string s;
         std::getline(stream, s);
         jsons.push_back(s);
@@ -58,10 +58,14 @@ std::vector<std::string> parse_json_file_to_strings(bsoncxx::stdx::string_view j
     return jsons;
 }
 
-std::vector<bsoncxx::document::value> parse_json_file_to_documents(
-    bsoncxx::stdx::string_view json_file) {
+std::vector<bsoncxx::document::value> parse_json_file_to_documents(const std::string& json_file) {
     std::vector<bsoncxx::document::value> docs;
-    std::ifstream stream{json_file.to_string()};
+    std::ifstream stream{"data/benchmark/" + json_file};
+
+    if (!stream) {
+        throw std::runtime_error("Failed to open " + json_file);
+    }
+
     while (stream.is_open() && !stream.eof()) {
         std::string s;
         std::getline(stream, s);
@@ -81,4 +85,4 @@ std::vector<std::string> parse_documents_to_bson(
     }
     return bsons;
 }
-}
+}  // namespace benchmark

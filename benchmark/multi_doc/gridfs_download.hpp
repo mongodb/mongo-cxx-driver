@@ -28,20 +28,20 @@
 
 namespace benchmark {
 
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 using bsoncxx::stdx::make_unique;
 
 class gridfs_download : public microbench {
    public:
     // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
-    gridfs_download(bsoncxx::stdx::string_view file_name)
-        : microbench{52.43,
-                     "gridfs_download",
+    gridfs_download(std::string file_name)
+        : microbench{"TestGridFsDownload",
+                     52.43,
                      std::set<benchmark_type>{benchmark_type::multi_bench,
                                               benchmark_type::read_bench}},
           _conn{mongocxx::uri{}},
-          _file_name{file_name.to_string()} {}
+          _file_name{std::move(file_name)} {}
 
     void setup();
 
@@ -81,4 +81,4 @@ void gridfs_download::task() {
                downloader.read(buffer.get(), static_cast<std::size_t>(buffer_size))) {
     }
 }
-}
+}  // namespace benchmark
