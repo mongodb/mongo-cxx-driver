@@ -6,7 +6,6 @@ var searchData=
   ['connectionhook',['ConnectionHook',['../classmongo_1_1ConnectionString_1_1ConnectionHook.html',1,'mongo::ConnectionString']]],
   ['connectionstring',['ConnectionString',['../classmongo_1_1ConnectionString.html',1,'mongo']]],
   ['const_5fiterator',['const_iterator',['../classmongo_1_1UnorderedFastKeyTable_1_1const__iterator.html',1,'mongo::UnorderedFastKeyTable']]],
-  ['constview',['ConstView',['../classmongo_1_1MsgData_1_1ConstView.html',1,'mongo::MsgData']]],
-  ['constview',['ConstView',['../classmongo_1_1MSGHEADER_1_1ConstView.html',1,'mongo::MSGHEADER']]],
+  ['constview',['ConstView',['../classmongo_1_1MSGHEADER_1_1ConstView.html',1,'mongo::MSGHEADER::ConstView'],['../classmongo_1_1MsgData_1_1ConstView.html',1,'mongo::MsgData::ConstView']]],
   ['cyrussaslclientsession',['CyrusSaslClientSession',['../classmongo_1_1CyrusSaslClientSession.html',1,'mongo']]]
 ];

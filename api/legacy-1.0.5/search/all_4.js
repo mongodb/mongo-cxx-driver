@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['date',['date',['../classmongo_1_1BSONElement.html#a4cbba75b839f27a9e6cb3cdf077692ac',1,'mongo::BSONElement::date()'],['../namespacemongo.html#ab5a28c40b1f7e531a9d1a04daa0aa5d6af04cac7baf0679bc4b83ec44b34f3516',1,'mongo::Date()']]],
+  ['date',['date',['../classmongo_1_1BSONElement.html#af0041d1c076c08d4079f1e2345545f1c',1,'mongo::BSONElement::date()'],['../namespacemongo.html#ab5a28c40b1f7e531a9d1a04daa0aa5d6af04cac7baf0679bc4b83ec44b34f3516',1,'mongo::Date()']]],
   ['date_5ft',['Date_t',['../structmongo_1_1Date__t.html',1,'mongo']]],
   ['datefromisostring',['dateFromISOString',['../namespacemongo.html#ab7a67d6f031ca2de31135aaac8662f3b',1,'mongo']]],
   ['datenowlabeler',['DateNowLabeler',['../structmongo_1_1DateNowLabeler.html',1,'mongo']]],
@@ -10,8 +10,7 @@ var searchData=
   ['dbclient_2eh',['dbclient.h',['../dbclient_8h.html',1,'']]],
   ['dbclient_5frs_2eh',['dbclient_rs.h',['../dbclient__rs_8h.html',1,'']]],
   ['dbclientbase',['DBClientBase',['../classmongo_1_1DBClientBase.html',1,'mongo']]],
-  ['dbclientconnection',['DBClientConnection',['../classmongo_1_1DBClientConnection.html',1,'mongo']]],
-  ['dbclientconnection',['DBClientConnection',['../classmongo_1_1DBClientConnection.html#a6a1a348024dd302572504b7bfb6e74a2',1,'mongo::DBClientConnection']]],
+  ['dbclientconnection',['DBClientConnection',['../classmongo_1_1DBClientConnection.html',1,'mongo::DBClientConnection'],['../classmongo_1_1DBClientConnection.html#a6a1a348024dd302572504b7bfb6e74a2',1,'mongo::DBClientConnection::DBClientConnection()']]],
   ['dbclientcursor',['DBClientCursor',['../classmongo_1_1DBClientCursor.html',1,'mongo']]],
   ['dbclientcursorbatchiterator',['DBClientCursorBatchIterator',['../classmongo_1_1DBClientCursorBatchIterator.html',1,'mongo']]],
   ['dbclientcursorinterface',['DBClientCursorInterface',['../classmongo_1_1DBClientCursorInterface.html',1,'mongo']]],
@@ -22,8 +21,7 @@ var searchData=
   ['dbclientinterface',['DBClientInterface',['../classmongo_1_1DBClientInterface.html',1,'mongo']]],
   ['dbclientinterface_2eh',['dbclientinterface.h',['../dbclientinterface_8h.html',1,'']]],
   ['dbclientmockcursor',['DBClientMockCursor',['../classmongo_1_1DBClientMockCursor.html',1,'mongo']]],
-  ['dbclientreplicaset',['DBClientReplicaSet',['../classmongo_1_1DBClientReplicaSet.html#a21993bdf6cb273f0b7911384e1dc34fd',1,'mongo::DBClientReplicaSet']]],
-  ['dbclientreplicaset',['DBClientReplicaSet',['../classmongo_1_1DBClientReplicaSet.html',1,'mongo']]],
+  ['dbclientreplicaset',['DBClientReplicaSet',['../classmongo_1_1DBClientReplicaSet.html',1,'mongo::DBClientReplicaSet'],['../classmongo_1_1DBClientReplicaSet.html#a21993bdf6cb273f0b7911384e1dc34fd',1,'mongo::DBClientReplicaSet::DBClientReplicaSet()']]],
   ['dbclientwithcommands',['DBClientWithCommands',['../classmongo_1_1DBClientWithCommands.html',1,'mongo']]],
   ['dbclientwriter',['DBClientWriter',['../classmongo_1_1DBClientWriter.html',1,'mongo']]],
   ['dbconnector',['DBConnector',['../classmongo_1_1DBConnector.html',1,'mongo']]],

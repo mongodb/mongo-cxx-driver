@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['date',['date',['../classmongo_1_1BSONElement.html#a4cbba75b839f27a9e6cb3cdf077692ac',1,'mongo::BSONElement']]],
+  ['date',['date',['../classmongo_1_1BSONElement.html#af0041d1c076c08d4079f1e2345545f1c',1,'mongo::BSONElement']]],
   ['datefromisostring',['dateFromISOString',['../namespacemongo.html#ab7a67d6f031ca2de31135aaac8662f3b',1,'mongo']]],
   ['datetoctimestring',['dateToCtimeString',['../namespacemongo.html#a430e26dc6e653c5da7f458b5009d9ded',1,'mongo']]],
   ['datetoisostringlocal',['dateToISOStringLocal',['../namespacemongo.html#a47fa9663392fcfb2f09bb760382b4557',1,'mongo']]],

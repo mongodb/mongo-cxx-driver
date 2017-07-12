@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['maxnslenvalue',['MaxNsLenValue',['../classmongo_1_1NamespaceString.html#a738dadf07d45a2c56d177d03272bd952',1,'mongo::NamespaceString']]]
+  ['jsonstringformat',['JsonStringFormat',['../namespacemongo.html#a2767df491e3691937fa3b671ad3248a8',1,'mongo']]]
 ];
