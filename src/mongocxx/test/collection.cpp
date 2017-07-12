@@ -360,6 +360,48 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
     }
 
+    SECTION("find with return_key", "[collection]") {
+        collection coll = db["find_with_return_key"];
+        coll.drop();
+        auto doc = make_document(kvp("a", 3));
+        REQUIRE(coll.insert_one(doc.view()));
+
+        index_view indexes = coll.indexes();
+
+        auto key = make_document(kvp("a", 1));
+        stdx::optional<std::string> result = indexes.create_one(key.view());
+
+        auto find_opts = options::find{}.return_key(true);
+        auto cursor = coll.find(doc.view(), find_opts);
+
+        std::size_t i = 0;
+        for (auto&& x : cursor) {
+            REQUIRE(!x["_id"]);
+            REQUIRE(x["a"].get_int32().value == 3);
+            i++;
+        }
+
+        REQUIRE(i == 1);
+    }
+
+    SECTION("find with show_record_id", "[collection") {
+        collection coll = db["find_with_show_record_id"];
+        coll.drop();
+        auto doc = make_document(kvp("a", 3));
+        REQUIRE(coll.insert_one(doc.view()));
+
+        auto find_opts = options::find{}.show_record_id(true);
+        auto cursor = coll.find(doc.view(), find_opts);
+
+        std::size_t i = 0;
+        for (auto&& x : cursor) {
+            REQUIRE(x.find("$recordId") != x.end());
+            i++;
+        }
+
+        REQUIRE(i == 1);
+    }
+
     SECTION("find_one with collation", "[collection]") {
         collection coll = db["find_one_with_collation"];
         coll.drop();
