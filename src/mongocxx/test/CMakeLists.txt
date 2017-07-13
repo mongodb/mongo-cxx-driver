@@ -36,6 +36,7 @@ set(test_driver_sources
     model/update_many.cpp
     model/update_one.cpp
     options/aggregate.cpp
+    options/bulk_write.cpp
     options/count.cpp
     options/create_collection.cpp
     options/create_view.cpp
@@ -58,6 +59,7 @@ set(test_driver_sources
     private/write_concern.cpp
     read_concern.cpp
     read_preference.cpp
+    result/bulk_write.cpp
     result/delete.cpp
     result/gridfs/upload.cpp
     result/insert_one.cpp
