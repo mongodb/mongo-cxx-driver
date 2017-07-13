@@ -225,6 +225,29 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             auto count = coll.count({});
             REQUIRE(count == 1);
         }
+
+        SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
+            std::string collname = "insert_one_bypass_document_validation";
+            db[collname].drop();
+            validation_criteria validation;
+            validation.level(validation_criteria::validation_level::k_strict);
+            validation.action(validation_criteria::validation_action::k_error);
+            validation.rule(make_document(kvp("_id", make_document(kvp("$eq", "baz")))));
+            mongocxx::options::create_collection opts;
+            opts.validation_criteria(validation);
+
+            collection coll = db.create_collection(collname, opts);
+
+            options::insert options;
+            options.bypass_document_validation(true);
+
+            stdx::optional<result::insert_one> result;
+            REQUIRE_NOTHROW(result = coll.insert_one(doc.view(), options));
+            REQUIRE(result);
+            REQUIRE(result->result().inserted_count() == 1);
+            REQUIRE(result->inserted_id().type() == bsoncxx::type::k_utf8);
+            REQUIRE(result->inserted_id().get_utf8().value == expected_id);
+        }
     }
 
     SECTION("insert and read multiple documents", "[collection]") {
@@ -331,6 +354,45 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // this unacknowledged write from racing with writes to this
             // collection from other sections.
             db.run_command(document{} << "getLastError" << 1 << finalize);
+        }
+
+        SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
+            std::string collname = "insert_many_bypass_document_validation";
+            db[collname].drop();
+            validation_criteria validation;
+            validation.level(validation_criteria::validation_level::k_strict);
+            validation.action(validation_criteria::validation_action::k_error);
+            validation.rule(make_document(kvp("x", make_document(kvp("$eq", "1")))));
+            mongocxx::options::create_collection opts;
+            opts.validation_criteria(validation);
+
+            collection coll = db.create_collection(collname, opts);
+
+            options::insert options;
+            options.bypass_document_validation(true);
+
+            stdx::optional<result::insert_many> result;
+            REQUIRE_NOTHROW(result = coll.insert_many(docs, options));
+
+            REQUIRE(result);
+
+            // Verify result->result() is correct:
+            REQUIRE(result->result().inserted_count() == 2);
+
+            // Verify result->inserted_count() is correct:
+            REQUIRE(result->inserted_count() == 2);
+
+            // Verify result->inserted_ids() is correct:
+            auto id_map = result->inserted_ids();
+            REQUIRE(id_map[0].type() == bsoncxx::type::k_utf8);
+            REQUIRE(id_map[0].get_utf8().value == stdx::string_view{"foo"});
+            REQUIRE(id_map[1].type() == bsoncxx::type::k_oid);
+            auto second_inserted_doc = coll.find_one(make_document(kvp("x", 2)));
+            REQUIRE(second_inserted_doc);
+            REQUIRE(second_inserted_doc->view()["_id"]);
+            REQUIRE(second_inserted_doc->view()["_id"].type() == bsoncxx::type::k_oid);
+            REQUIRE(id_map[1].get_oid().value ==
+                    second_inserted_doc->view()["_id"].get_oid().value);
         }
     }
 
@@ -473,6 +535,32 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // collection from other sections.
             db.run_command(document{} << "getLastError" << 1 << finalize);
         }
+
+        SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
+            std::string collname = "update_one_bypass_document_validation";
+            db[collname].drop();
+            validation_criteria validation;
+            validation.level(validation_criteria::validation_level::k_strict);
+            validation.action(validation_criteria::validation_action::k_error);
+            validation.rule(make_document(kvp("changed", make_document(kvp("$eq", false)))));
+            mongocxx::options::create_collection opts;
+            opts.validation_criteria(validation);
+
+            collection coll = db.create_collection(collname, opts);
+
+            options::update options;
+            options.bypass_document_validation(true);
+
+            auto doc = make_document(kvp("_id", 1), kvp("changed", false));
+
+            coll.insert_one(doc.view());
+
+            stdx::optional<result::update> result;
+            REQUIRE_NOTHROW(result = coll.update_one(doc.view(), update_doc.view(), options));
+
+            REQUIRE(result);
+            REQUIRE(result->result().matched_count() == 1);
+        }
     }
 
     SECTION("update_one with collation", "[collection]") {
@@ -568,6 +656,33 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // this unacknowledged write from racing with writes to this
             // collection from other sections.
             db.run_command(document{} << "getLastError" << 1 << finalize);
+        }
+
+        SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
+            std::string collname = "update_many_bypass_document_validation";
+            db[collname].drop();
+            validation_criteria validation;
+            validation.level(validation_criteria::validation_level::k_strict);
+            validation.action(validation_criteria::validation_action::k_error);
+            validation.rule(make_document(kvp("changed", make_document(kvp("$eq", false)))));
+            mongocxx::options::create_collection opts;
+            opts.validation_criteria(validation);
+
+            collection coll = db.create_collection(collname, opts);
+
+            options::update options;
+            options.bypass_document_validation(true);
+
+            auto doc = make_document(kvp("x", 1), kvp("changed", false));
+
+            coll.insert_one(doc.view());
+            coll.insert_one(doc.view());
+
+            stdx::optional<result::update> result;
+            REQUIRE_NOTHROW(result = coll.update_many(doc.view(), update_doc.view(), options));
+
+            REQUIRE(result);
+            REQUIRE(result->result().matched_count() == 2);
         }
     }
 
@@ -687,6 +802,32 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         REQUIRE(coll.count({}) == 4);
     }
 
+    SECTION("insert_many_builder with bypass_document_validation", "[collection]") {
+        std::string collname = "insert_many_builder_bypass_document_validation";
+        db[collname].drop();
+        validation_criteria validation;
+        validation.level(validation_criteria::validation_level::k_strict);
+        validation.action(validation_criteria::validation_action::k_error);
+        validation.rule(make_document(kvp("x", make_document(kvp("$eq", 0)))));
+        mongocxx::options::create_collection opts;
+        opts.validation_criteria(validation);
+
+        collection coll = db.create_collection(collname, opts);
+
+        options::insert options;
+        options.bypass_document_validation(true);
+
+        auto doc = make_document(kvp("x", 1));
+        insert_many_builder insert_many{options};
+        insert_many(doc.view());
+        insert_many(doc.view());
+        insert_many(doc.view());
+
+        REQUIRE_NOTHROW(insert_many.insert(&coll));
+
+        REQUIRE(coll.count(doc.view()) == 3);
+    }
+
     SECTION("count with hint", "[collection]") {
         collection coll = db["count_with_hint"];
         coll.drop();
@@ -754,6 +895,29 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // this unacknowledged write from racing with writes to this
             // collection from other sections.
             db.run_command(document{} << "getLastError" << 1 << finalize);
+        }
+
+        SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
+            std::string collname = "replace_one_bypass_document_validation";
+            db[collname].drop();
+            validation_criteria validation;
+            validation.level(validation_criteria::validation_level::k_strict);
+            validation.action(validation_criteria::validation_action::k_error);
+            validation.rule(make_document(kvp("x", make_document(kvp("$eq", 1)))));
+            mongocxx::options::create_collection opts;
+            opts.validation_criteria(validation);
+
+            collection coll = db.create_collection(collname, opts);
+
+            options::update options;
+            options.bypass_document_validation(true);
+
+            coll.insert_one(b1.view());
+
+            stdx::optional<result::replace_one> result;
+            REQUIRE_NOTHROW(result = coll.replace_one(b1.view(), b2.view(), options));
+            REQUIRE(result);
+            REQUIRE(result->result().matched_count() == 1);
         }
     }
 
@@ -1163,6 +1327,31 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             REQUIRE(!doc);
         }
+
+        SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
+            std::string collname = "find_one_and_replace_bypass_document_validation";
+            db[collname].drop();
+            validation_criteria validation;
+            validation.level(validation_criteria::validation_level::k_strict);
+            validation.action(validation_criteria::validation_action::k_error);
+            validation.rule(make_document(kvp("x", make_document(kvp("$eq", "foo")))));
+            mongocxx::options::create_collection opts;
+            opts.validation_criteria(validation);
+
+            collection coll = db.create_collection(collname, opts);
+
+            coll.insert_one(b1.view());
+
+            options::find_one_and_replace options;
+            options.return_document(options::return_document::k_after);
+            options.bypass_document_validation(true);
+
+            stdx::optional<bsoncxx::document::value> doc;
+            REQUIRE_NOTHROW(
+                doc = coll.find_one_and_replace(criteria.view(), replacement.view(), options));
+            REQUIRE(doc);
+            REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"bar"});
+        }
     }
 
     SECTION("find_one_and_update works", "[collection]") {
@@ -1263,6 +1452,31 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             auto doc = coll.find_one_and_update(bad_criteria.view(), update.view());
 
             REQUIRE(!doc);
+        }
+
+        SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
+            std::string collname = "find_one_and_update_bypass_document_validation";
+            db[collname].drop();
+            validation_criteria validation;
+            validation.level(validation_criteria::validation_level::k_strict);
+            validation.action(validation_criteria::validation_action::k_error);
+            validation.rule(make_document(kvp("x", make_document(kvp("$eq", "foo")))));
+            mongocxx::options::create_collection opts;
+            opts.validation_criteria(validation);
+
+            collection coll = db.create_collection(collname, opts);
+
+            coll.insert_one(b1.view());
+
+            options::find_one_and_update options;
+            options.return_document(options::return_document::k_after);
+            options.bypass_document_validation(true);
+
+            stdx::optional<bsoncxx::document::value> doc;
+            REQUIRE_NOTHROW(doc =
+                                coll.find_one_and_update(criteria.view(), update.view(), options));
+            REQUIRE(doc);
+            REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"bar"});
         }
     }
 
@@ -1691,6 +1905,46 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             }
         }
 
+        SECTION("out with bypass_document_validation", "[collection]") {
+            collection coll_in = db["aggregation_out_bypass_document_validation_in"];
+            coll_in.drop();
+            coll_in.insert_one(make_document(kvp("x", 1), kvp("y", 1)));
+
+            std::string collname = "aggregation_out_bypass_document_validation_out";
+            db[collname].drop();
+            validation_criteria validation;
+            validation.level(validation_criteria::validation_level::k_strict);
+            validation.action(validation_criteria::validation_action::k_error);
+            validation.rule(make_document(kvp("x", make_document(kvp("$eq", 2)))));
+            mongocxx::options::create_collection opts;
+            opts.validation_criteria(validation);
+
+            collection coll_out = db.create_collection(collname, opts);
+
+            options::aggregate options;
+            options.bypass_document_validation(true);
+
+            pipeline.project(make_document(kvp("x", 1)));
+            pipeline.out(coll_out.name().to_string());
+            stdx::optional<cursor> cursor;
+            REQUIRE_NOTHROW(cursor = coll_in.aggregate(pipeline, options));
+
+            if (test_util::get_max_wire_version(mongodb_client) >= 1) {
+                // The server supports out().
+                REQUIRE(cursor);
+                auto results = get_results(std::move(*cursor));
+                REQUIRE(results.empty());
+
+                auto collection_contents = get_results(coll_out.find({}));
+                REQUIRE(collection_contents.size() == 1);
+                REQUIRE(collection_contents[0].view()["x"].get_int32() == 1);
+                REQUIRE(!collection_contents[0].view()["y"]);
+            } else {
+                // The server does not support out().
+                REQUIRE_THROWS_AS(get_results(std::move(*cursor)), operation_exception);
+            }
+        }
+
         SECTION("out fails when not last") {
             collection coll = db["aggregation_out_fails"];
             coll.insert_one(make_document(kvp("x", 1)));
@@ -2007,6 +2261,30 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
                 REQUIRE_THROWS_AS(coll.bulk_write(bulk), operation_exception);
             }
+        }
+
+        SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
+            std::string collname = "bulk_write_bypass_document_validation";
+            db[collname].drop();
+            validation_criteria validation;
+            validation.level(validation_criteria::validation_level::k_strict);
+            validation.action(validation_criteria::validation_action::k_error);
+            validation.rule(make_document(kvp("foo", make_document(kvp("$eq", 1)))));
+            mongocxx::options::create_collection opts;
+            opts.validation_criteria(validation);
+
+            collection coll = db.create_collection(collname, opts);
+
+            bulk_opts.bypass_document_validation(true);
+            bulk_write cbulk{bulk_opts};
+            cbulk.append(model::insert_one{std::move(doc1)});
+            cbulk.append(model::insert_one{std::move(doc2)});
+
+            stdx::optional<result::bulk_write> result;
+            REQUIRE_NOTHROW(result = coll.bulk_write(cbulk));
+
+            REQUIRE(result);
+            REQUIRE(result->inserted_count() == 2);
         }
     }
 
@@ -2326,7 +2604,8 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
         opts.cursor_type(cursor::type::k_tailable_await);
         type_str = "k_tailable_await";
 
-        // Improve execution time by reducing the amount of time the server waits for new results
+        // Improve execution time by reducing the amount of time the server waits for new
+        // results
         // for this cursor.
         opts.max_await_time(std::chrono::milliseconds{1});
     }
