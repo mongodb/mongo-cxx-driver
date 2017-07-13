@@ -14,18 +14,18 @@
 
 #include "helpers.hpp"
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/model/insert_one.hpp>
 
 namespace {
-using namespace bsoncxx::builder::stream;
+using namespace bsoncxx::builder::basic;
 
 TEST_CASE("insert_one model tests", "[insert_one][model]") {
     mongocxx::instance::current();
 
-    auto doc = document{} << "a" << 1 << finalize;
+    auto doc = make_document(kvp("a", 1));
 
     mongocxx::model::insert_one io(doc.view());
 

@@ -16,7 +16,7 @@
 
 #include <chrono>
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/test_util/catch.hh>
@@ -25,7 +25,7 @@
 #include <mongocxx/options/find.hpp>
 
 namespace {
-using namespace bsoncxx::builder::stream;
+using namespace bsoncxx::builder::basic;
 using namespace mongocxx;
 
 TEST_CASE("find", "[find][option]") {
@@ -33,15 +33,13 @@ TEST_CASE("find", "[find][option]") {
 
     options::find find_opts{};
 
-    auto collation = document{} << "locale"
-                                << "en_US" << finalize;
-    auto hint = bsoncxx::document::view_or_value{document{} << "_id" << 1 << finalize};
-    auto max = document{} << "a" << 6 << finalize;
-    auto min = document{} << "a" << 3 << finalize;
-    auto modifiers = document{} << "$comment"
-                                << "comment" << finalize;
-    auto projection = document{} << "_id" << false << finalize;
-    auto sort = document{} << "x" << -1 << finalize;
+    auto collation = make_document(kvp("locale", "en_US"));
+    auto hint = bsoncxx::document::view_or_value{make_document(kvp("_id", 1))};
+    auto max = make_document(kvp("a", 6));
+    auto min = make_document(kvp("a", 3));
+    auto modifiers = make_document(kvp("$comment", "comment"));
+    auto projection = make_document(kvp("_id", false));
+    auto sort = make_document(kvp("x", -1));
 
     CHECK_OPTIONAL_ARGUMENT(find_opts, allow_partial_results, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, batch_size, 3);

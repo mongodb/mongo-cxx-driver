@@ -14,7 +14,7 @@
 
 #include "helpers.hpp"
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/bulk_write.hpp>
@@ -24,6 +24,9 @@
 
 namespace {
 using namespace mongocxx;
+
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
     instance::current();
@@ -166,14 +169,12 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
     instance::current();
 
     bulk_write bw;
-    bsoncxx::builder::stream::document filter_builder, doc_builder, update_doc_builder,
+    bsoncxx::builder::basic::document filter_builder, doc_builder, update_doc_builder,
         collation_builder;
-    filter_builder << "_id" << 1;
-    doc_builder << "_id" << 2;
-    update_doc_builder << "$set" << bsoncxx::builder::stream::open_document << "_id" << 2
-                       << bsoncxx::builder::stream::close_document;
-    collation_builder << "locale"
-                      << "en_US";
+    filter_builder.append(kvp("_id", 1));
+    doc_builder.append(kvp("_id", 2));
+    update_doc_builder.append(kvp("$set", make_document(kvp("_id", 2))));
+    collation_builder.append(kvp("locale", "en_US"));
 
     bsoncxx::document::view filter = filter_builder.view();
     bsoncxx::document::view doc = doc_builder.view();

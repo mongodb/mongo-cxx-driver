@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
@@ -25,6 +26,10 @@
 namespace {
 using namespace mongocxx;
 using namespace bsoncxx;
+
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::concatenate;
 
 TEST_CASE("Hint", "[hint]") {
     instance::current();
@@ -50,16 +55,14 @@ TEST_CASE("Hint", "[hint]") {
         }
 
         SECTION("Does not equal index document") {
-            auto index_doc = builder::stream::document{} << "a" << 1 << builder::stream::finalize;
+            auto index_doc = make_document(kvp("a", 1));
             REQUIRE(index_hint != index_doc);
         }
 
         SECTION("Test for deprecated method to_document()") {
             BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-            document::value filter = builder::stream::document{}
-                                     << "a" << 15
-                                     << builder::stream::concatenate(index_hint.to_document())
-                                     << builder::stream::finalize;
+            document::value filter =
+                make_document(kvp("a", 15), concatenate(index_hint.to_document()));
             BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
             document::view view{filter.view()};
             document::element ele{view["$hint"]};
@@ -71,7 +74,7 @@ TEST_CASE("Hint", "[hint]") {
     }
 
     SECTION("Can be constructed with index document value") {
-        auto index_doc = builder::stream::document{} << "a" << 1 << builder::stream::finalize;
+        auto index_doc = make_document(kvp("a", 1));
         document::value index_copy{index_doc};
 
         hint index_hint{std::move(index_doc)};
@@ -90,8 +93,7 @@ TEST_CASE("Hint", "[hint]") {
         }
 
         SECTION("Does not equal non-matching index doc") {
-            auto bad_doc = builder::stream::document{} << "totoro" << 1
-                                                       << builder::stream::finalize;
+            auto bad_doc = make_document(kvp("totoro", 1));
             REQUIRE(index_hint != bad_doc);
             REQUIRE(bad_doc != index_hint);
         }
@@ -103,10 +105,8 @@ TEST_CASE("Hint", "[hint]") {
 
         SECTION("Test for deprecated method to_document()") {
             BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-            document::value filter = builder::stream::document{}
-                                     << "a" << 12
-                                     << builder::stream::concatenate(index_hint.to_document())
-                                     << builder::stream::finalize;
+            document::value filter =
+                make_document(kvp("a", 12), concatenate(index_hint.to_document()));
             BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
             document::view view{filter.view()};
             document::element ele{view["$hint"]};
@@ -117,7 +117,7 @@ TEST_CASE("Hint", "[hint]") {
     }
 
     SECTION("Can be constructed with index document view") {
-        auto index_doc = builder::stream::document{} << "a" << 1 << builder::stream::finalize;
+        auto index_doc = make_document(kvp("a", 1));
         hint index_hint{index_doc.view()};
 
         SECTION("Compares equal to matching index doc view or value") {

@@ -16,13 +16,13 @@
 
 #include <chrono>
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/count.hpp>
 
 namespace {
-using namespace bsoncxx::builder::stream;
+using namespace bsoncxx::builder::basic;
 using namespace mongocxx;
 
 TEST_CASE("count", "[count][option]") {
@@ -30,9 +30,8 @@ TEST_CASE("count", "[count][option]") {
 
     options::count cnt;
 
-    auto collation = document{} << "locale"
-                                << "en_US" << finalize;
-    auto hint = bsoncxx::document::view_or_value{document{} << "_id" << 1 << finalize};
+    auto collation = make_document(kvp("locale", "en_US"));
+    auto hint = bsoncxx::document::view_or_value{make_document(kvp("_id", 1))};
 
     CHECK_OPTIONAL_ARGUMENT(cnt, collation, collation.view());
     CHECK_OPTIONAL_ARGUMENT(cnt, hint, hint);

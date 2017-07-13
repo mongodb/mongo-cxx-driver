@@ -16,8 +16,7 @@
 
 #include <set>
 
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
@@ -40,10 +39,6 @@ using namespace mongocxx;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
-using bsoncxx::builder::stream::close_document;
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::finalize;
-using bsoncxx::builder::stream::open_document;
 
 bool check_for_collections(cursor cursor, std::set<std::string> expected_colls) {
     for (auto&& coll : cursor) {
@@ -295,8 +290,7 @@ TEST_CASE("A database", "[database]") {
     SECTION("supports run_command") {
         bool called = false;
 
-        bsoncxx::document::value doc = bsoncxx::builder::stream::document{}
-                                       << "foo" << 5 << bsoncxx::builder::stream::finalize;
+        bsoncxx::document::value doc = make_document(kvp("foo", 5));
         libbson::scoped_bson_t bson_doc{doc.view()};
 
         database_command_simple->interpose([&](mongoc_database_t*,
@@ -310,8 +304,7 @@ TEST_CASE("A database", "[database]") {
         });
 
         database database = mongo_client[database_name];
-        bsoncxx::document::value command = bsoncxx::builder::stream::document{}
-                                           << "command" << 1 << bsoncxx::builder::stream::finalize;
+        bsoncxx::document::value command = make_document(kvp("command", 1));
         auto response = database.run_command(command.view());
         REQUIRE(called);
         REQUIRE(response.view()["foo"].get_int32() == 5);
@@ -325,9 +318,7 @@ TEST_CASE("Database integration tests", "[database]") {
     stdx::string_view database_name{"database"};
     database database = mongo_client[database_name];
 
-    auto case_insensitive_collation = document{} << "locale"
-                                                 << "en_US"
-                                                 << "strength" << 2 << finalize;
+    auto case_insensitive_collation = make_document(kvp("locale", "en_US"), kvp("strength", 2));
 
     SECTION("A database may create a collection via create_collection") {
         SECTION("without any options") {
@@ -361,12 +352,8 @@ TEST_CASE("Database integration tests", "[database]") {
 
             if (test_util::supports_collation(mongo_client)) {
                 collection obtained_collection = database.create_collection(collection_name, opts);
-                REQUIRE(obtained_collection.insert_one(document{} << "x"
-                                                                  << "foo"
-                                                                  << finalize));
-                REQUIRE(obtained_collection.find_one(document{} << "x"
-                                                                << "FOO"
-                                                                << finalize));
+                REQUIRE(obtained_collection.insert_one(make_document(kvp("x", "foo"))));
+                REQUIRE(obtained_collection.find_one(make_document(kvp("x", "FOO"))));
             } else {
                 // The server doesn't support collation.
                 REQUIRE_THROWS_AS(database.create_collection(collection_name, opts),
@@ -390,7 +377,7 @@ TEST_CASE("Database integration tests", "[database]") {
             database[collection_name].drop();
             database.create_collection(collection_name);
 
-            auto key_pattern = document{} << "a" << 1 << finalize;
+            auto key_pattern = make_document(kvp("a", 1));
 
             database[collection_name].create_index(
                 key_pattern.view(), options::index{}.expire_after(std::chrono::seconds{1}));
@@ -421,8 +408,7 @@ TEST_CASE("Database integration tests", "[database]") {
             database[collection_name].drop();
             database.create_collection(collection_name);
 
-            auto rule = document{} << "email" << open_document << "$exists"
-                                   << "true" << close_document << finalize;
+            auto rule = make_document(kvp("email", make_document(kvp("$exists", "true"))));
 
             validation_criteria criteria;
             criteria.rule(rule.view());
@@ -496,12 +482,8 @@ TEST_CASE("Database integration tests", "[database]") {
             database[collection_name].drop();
             database[view_name].drop();
 
-            database[collection_name].insert_one(document{} << "x"
-                                                            << "foo"
-                                                            << finalize);
-            database[collection_name].insert_one(document{} << "x"
-                                                            << "bar"
-                                                            << finalize);
+            database[collection_name].insert_one(make_document(kvp("x", "foo")));
+            database[collection_name].insert_one(make_document(kvp("x", "bar")));
 
             collection view = database.create_view(
                 view_name,
@@ -524,21 +506,15 @@ TEST_CASE("Database integration tests", "[database]") {
             database[collection_name].drop();
             database[view_name].drop();
 
-            database[collection_name].insert_one(document{} << "x"
-                                                            << "foo"
-                                                            << finalize);
-            database[collection_name].insert_one(document{} << "x"
-                                                            << "bar"
-                                                            << finalize);
+            database[collection_name].insert_one(make_document(kvp("x", "foo")));
+            database[collection_name].insert_one(make_document(kvp("x", "bar")));
 
             options::create_view opts;
             opts.collation(case_insensitive_collation.view());
 
             if (test_util::supports_collation(mongo_client)) {
                 collection obtained_view = database.create_view(view_name, collection_name, opts);
-                REQUIRE(obtained_view.find_one(document{} << "x"
-                                                          << "FOO"
-                                                          << finalize));
+                REQUIRE(obtained_view.find_one(make_document(kvp("x", "FOO"))));
             } else {
                 // The server doesn't support collation.
                 REQUIRE_THROWS_AS(database.create_view(view_name, collection_name, opts),

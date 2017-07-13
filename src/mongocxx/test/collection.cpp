@@ -16,8 +16,6 @@
 #include <vector>
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -38,9 +36,12 @@
 #include <mongocxx/write_concern.hpp>
 
 namespace {
-using bsoncxx::builder::basic::make_document;
+
+using bsoncxx::builder::basic::document;
 using bsoncxx::builder::basic::kvp;
-using namespace bsoncxx::builder::stream;
+using bsoncxx::builder::basic::make_array;
+using bsoncxx::builder::basic::make_document;
+
 using namespace mongocxx;
 
 TEST_CASE("A default constructed collection cannot perform operations", "[collection]") {
@@ -162,9 +163,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     client mongodb_client{uri{}};
     database db = mongodb_client["collection_crud_functionality"];
 
-    auto case_insensitive_collation = document{} << "locale"
-                                                 << "en_US"
-                                                 << "strength" << 2 << finalize;
+    auto case_insensitive_collation = make_document(kvp("locale", "en_US"), kvp("strength", 2));
 
     auto noack = write_concern{};
     noack.acknowledge_level(write_concern::level::k_unacknowledged);
@@ -175,11 +174,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("insert and read single document", "[collection]") {
         collection coll = db["insert_and_read_one"];
         coll.drop();
-        auto b = document{} << "_id" << bsoncxx::oid{} << "x" << 1 << finalize;
+
+        auto b = make_document(kvp("_id", bsoncxx::oid{}), kvp("x", 1));
 
         REQUIRE(coll.insert_one(b.view()));
 
-        auto c = document{} << "x" << 1 << finalize;
+        auto c = make_document(kvp("x", 1));
         REQUIRE(coll.insert_one(c.view()));
 
         auto cursor = coll.find(b.view());
@@ -196,7 +196,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("insert_one returns correct result object", "[collection]") {
         stdx::string_view expected_id{"foo"};
 
-        auto doc = document{} << "_id" << expected_id << finalize;
+        auto doc = make_document(kvp("_id", expected_id));
 
         SECTION("default write concern returns result") {
             collection coll = db["insert_one_default_write"];
@@ -220,7 +220,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // Block until server has received the write request, to prevent
             // this unacknowledged write from racing with writes to this
             // collection from other sections.
-            db.run_command(document{} << "getLastError" << 1 << finalize);
+            db.run_command(make_document(kvp("getLastError", 1)));
 
             auto count = coll.count({});
             REQUIRE(count == 1);
@@ -253,15 +253,15 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("insert and read multiple documents", "[collection]") {
         collection coll = db["insert_and_read_multi"];
         coll.drop();
-        document b1;
-        document b2;
-        document b3;
-        document b4;
+        bsoncxx::builder::basic::document b1;
+        bsoncxx::builder::basic::document b2;
+        bsoncxx::builder::basic::document b3;
+        bsoncxx::builder::basic::document b4;
 
-        b1 << "_id" << bsoncxx::oid{} << "x" << 1;
-        b2 << "x" << 2;
-        b3 << "x" << 3;
-        b4 << "_id" << bsoncxx::oid{} << "x" << 4;
+        b1.append(kvp("_id", bsoncxx::oid{}), kvp("x", 1));
+        b2.append(kvp("x", 2));
+        b3.append(kvp("x", 3));
+        b4.append(kvp("_id", bsoncxx::oid{}), kvp("x", 4));
 
         std::vector<bsoncxx::document::view> docs{};
         docs.push_back(b1.view());
@@ -303,13 +303,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("insert_many returns correct result object", "[collection]") {
-        document b1;
-        document b2;
+        bsoncxx::builder::basic::document b1;
+        bsoncxx::builder::basic::document b2;
 
-        b1 << "_id"
-           << "foo"
-           << "x" << 1;
-        b2 << "x" << 2;
+        b1.append(kvp("_id", "foo"), kvp("x", 1));
+        b2.append(kvp("x", 2));
 
         std::vector<bsoncxx::document::view> docs{};
         docs.push_back(b1.view());
@@ -333,7 +331,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE(id_map[0].type() == bsoncxx::type::k_utf8);
             REQUIRE(id_map[0].get_utf8().value == stdx::string_view{"foo"});
             REQUIRE(id_map[1].type() == bsoncxx::type::k_oid);
-            auto second_inserted_doc = coll.find_one(document{} << "x" << 2 << finalize);
+            auto second_inserted_doc = coll.find_one(make_document(kvp("x", 2)));
             REQUIRE(second_inserted_doc);
             REQUIRE(second_inserted_doc->view()["_id"]);
             REQUIRE(second_inserted_doc->view()["_id"].type() == bsoncxx::type::k_oid);
@@ -353,7 +351,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // Block until server has received the write request, to prevent
             // this unacknowledged write from racing with writes to this
             // collection from other sections.
-            db.run_command(document{} << "getLastError" << 1 << finalize);
+            db.run_command(make_document(kvp("getLastError", 1)));
         }
 
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
@@ -407,12 +405,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("find with collation", "[collection]") {
         collection coll = db["find_with_collation"];
         coll.drop();
-        auto b = document{} << "x"
-                            << "foo" << finalize;
+        auto b = make_document(kvp("x", "foo"));
         REQUIRE(coll.insert_one(b.view()));
 
-        auto predicate = document{} << "x"
-                                    << "FOO" << finalize;
+        auto predicate = make_document(kvp("x", "FOO"));
         auto find_opts = options::find{}.collation(case_insensitive_collation.view());
         auto cursor = coll.find(predicate.view(), find_opts);
         if (test_util::supports_collation(mongodb_client)) {
@@ -467,12 +463,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("find_one with collation", "[collection]") {
         collection coll = db["find_one_with_collation"];
         coll.drop();
-        auto b = document{} << "x"
-                            << "foo" << finalize;
+        auto b = make_document(kvp("x", "foo"));
         REQUIRE(coll.insert_one(b.view()));
 
-        auto predicate = document{} << "x"
-                                    << "FOO" << finalize;
+        auto predicate = make_document(kvp("x", "FOO"));
         auto find_opts = options::find{}.collation(case_insensitive_collation.view());
         if (test_util::supports_collation(mongodb_client)) {
             REQUIRE(coll.find_one(predicate.view(), find_opts));
@@ -484,7 +478,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("insert and update single document", "[collection]") {
         collection coll = db["insert_and_update_one"];
         coll.drop();
-        auto b1 = document{} << "_id" << 1 << finalize;
+        auto b1 = make_document(kvp("_id", 1));
 
         coll.insert_one(b1.view());
 
@@ -492,8 +486,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         REQUIRE(doc);
         REQUIRE(doc->view()["_id"].get_int32() == 1);
 
-        document update_doc;
-        update_doc << "$set" << open_document << "changed" << true << close_document;
+        bsoncxx::builder::basic::document update_doc;
+        update_doc.append(kvp("$set", make_document(kvp("changed", true))));
 
         coll.update_one(b1.view(), update_doc.view());
 
@@ -503,10 +497,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("update_one returns correct result object", "[collection]") {
-        auto b1 = document{} << "_id" << 1 << finalize;
+        auto b1 = make_document(kvp("_id", 1));
 
-        document update_doc;
-        update_doc << "$set" << open_document << "changed" << true << close_document;
+        bsoncxx::builder::basic::document update_doc;
+        update_doc.append(kvp("$set", make_document(kvp("changed", true))));
 
         SECTION("default write concern returns result") {
             collection coll = db["update_one_default_write"];
@@ -533,7 +527,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // Block until server has received the write request, to prevent
             // this unacknowledged write from racing with writes to this
             // collection from other sections.
-            db.run_command(document{} << "getLastError" << 1 << finalize);
+            db.run_command(make_document(kvp("getLastError", 1)));
         }
 
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
@@ -566,15 +560,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("update_one with collation", "[collection]") {
         collection coll = db["update_one_with_collation"];
         coll.drop();
-        auto b = document{} << "x"
-                            << "foo" << finalize;
+        auto b = make_document(kvp("x", "foo"));
         REQUIRE(coll.insert_one(b.view()));
 
-        auto predicate = document{} << "x"
-                                    << "FOO" << finalize;
+        auto predicate = make_document(kvp("x", "FOO"));
 
-        document update_doc;
-        update_doc << "$set" << open_document << "changed" << true << close_document;
+        bsoncxx::builder::basic::document update_doc;
+        update_doc.append(kvp("$set", make_document(kvp("changed", true))));
 
         auto update_opts = options::update{}.collation(case_insensitive_collation.view());
         if (test_util::supports_collation(mongodb_client)) {
@@ -597,22 +589,21 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("insert and update multiple documents", "[collection]") {
         collection coll = db["insert_and_update_multi"];
         coll.drop();
-        auto b1 = document{} << "x" << 1 << finalize;
+        auto b1 = make_document(kvp("x", 1));
 
         coll.insert_one(b1.view());
         coll.insert_one(b1.view());
 
-        auto b2 = document{} << "x" << 2 << finalize;
+        auto b2 = make_document(kvp("x", 2));
 
         coll.insert_one(b2.view());
 
         REQUIRE(coll.count(b1.view()) == 2);
 
-        document bchanged;
-        bchanged << "changed" << true;
+        auto bchanged = make_document(kvp("changed", true));
 
-        document update_doc;
-        update_doc << "$set" << bsoncxx::types::b_document{bchanged};
+        bsoncxx::builder::basic::document update_doc;
+        update_doc.append(kvp("$set", bchanged.view()));
 
         coll.update_many(b1.view(), update_doc.view());
 
@@ -620,13 +611,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("update_many returns correct result object", "[collection]") {
-        auto b1 = document{} << "x" << 1 << finalize;
+        auto b1 = make_document(kvp("x", 1));
 
-        document bchanged;
-        bchanged << "changed" << true;
+        auto bchanged = make_document(kvp("changed", true));
 
-        document update_doc;
-        update_doc << "$set" << bsoncxx::types::b_document{bchanged};
+        bsoncxx::builder::basic::document update_doc;
+        update_doc.append(kvp("$set", bchanged.view()));
 
         SECTION("default write concern returns result") {
             collection coll = db["update_many_default_write"];
@@ -655,7 +645,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // Block until server has received the write request, to prevent
             // this unacknowledged write from racing with writes to this
             // collection from other sections.
-            db.run_command(document{} << "getLastError" << 1 << finalize);
+            db.run_command(make_document(kvp("getLastError", 1)));
         }
 
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
@@ -689,15 +679,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("update_many with collation", "[collection]") {
         collection coll = db["update_many_with_collation"];
         coll.drop();
-        auto b = document{} << "x"
-                            << "foo" << finalize;
+        auto b = make_document(kvp("x", "foo"));
         REQUIRE(coll.insert_one(b.view()));
 
-        auto predicate = document{} << "x"
-                                    << "FOO" << finalize;
+        auto predicate = make_document(kvp("x", "FOO"));
 
-        document update_doc;
-        update_doc << "$set" << open_document << "changed" << true << close_document;
+        bsoncxx::builder::basic::document update_doc;
+        update_doc.append(kvp("$set", make_document(kvp("changed", true))));
 
         auto update_opts = options::update{}.collation(case_insensitive_collation.view());
         if (test_util::supports_collation(mongodb_client)) {
@@ -721,16 +709,15 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("replace document replaces only one document", "[collection]") {
         collection coll = db["replace_one_only_one"];
         coll.drop();
-        document doc;
-        doc << "x" << 1;
+
+        auto doc = make_document(kvp("x", 1));
 
         coll.insert_one(doc.view());
         coll.insert_one(doc.view());
 
         REQUIRE(coll.count(doc.view()) == 2);
 
-        document replacement;
-        replacement << "x" << 2;
+        auto replacement = make_document(kvp("x", 2));
 
         coll.replace_one(doc.view(), replacement.view());
         REQUIRE(coll.count(doc.view()) == 1);
@@ -741,10 +728,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         collection coll = db["non_match_upsert_creates_doc"];
         coll.drop();
         document b1;
-        b1 << "_id" << 1;
+        b1.append(kvp("_id", 1));
 
-        document update_doc;
-        update_doc << "$set" << open_document << "changed" << true << close_document;
+        bsoncxx::builder::basic::document update_doc;
+        update_doc.append(kvp("$set", make_document(kvp("changed", true))));
 
         options::update options;
         options.upsert(true);
@@ -762,13 +749,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("matching upsert updates document", "[collection]") {
         collection coll = db["match_upsert_updates_doc"];
         coll.drop();
-        document b1;
-        b1 << "_id" << 1;
+
+        auto b1 = make_document(kvp("_id", 1));
 
         coll.insert_one(b1.view());
 
-        document update_doc;
-        update_doc << "$set" << open_document << "changed" << true << close_document;
+        bsoncxx::builder::basic::document update_doc;
+        update_doc.append(kvp("$set", make_document(kvp("changed", true))));
 
         options::update options;
         options.upsert(true);
@@ -786,7 +773,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("test using an insert_many_builder on this collection", "[collection]") {
         collection coll = db["insert_many_builder_test"];
         coll.drop();
-        auto doc_value = document{} << "x" << 1 << finalize;
+        auto doc_value = make_document(kvp("x", 1));
         auto doc_view = doc_value.view();
 
         insert_many_builder insert_many{options::insert()};
@@ -796,7 +783,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         insert_many.insert(&coll);
 
-        coll.insert_one(document{} << "b" << 1 << finalize);
+        coll.insert_one(make_document(kvp("b", 1)));
 
         REQUIRE(coll.count(doc_view) == 3);
         REQUIRE(coll.count({}) == 4);
@@ -834,7 +821,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         options::count count_opts;
         count_opts.hint(hint{"index_doesnt_exist"});
 
-        auto doc = document{} << "x" << 1 << finalize;
+        auto doc = make_document(kvp("x", 1));
         coll.insert_one(doc.view());
 
         if (test_util::get_max_wire_version(mongodb_client) >= 2) {
@@ -848,12 +835,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("count with collation", "[collection]") {
         collection coll = db["count_with_collation"];
         coll.drop();
-        auto doc = document{} << "x"
-                              << "foo" << finalize;
+        auto doc = make_document(kvp("x", "foo"));
         REQUIRE(coll.insert_one(doc.view()));
 
-        auto predicate = document{} << "x"
-                                    << "FOO" << finalize;
+        auto predicate = make_document(kvp("x", "FOO"));
         auto count_opts = options::count{}.collation(case_insensitive_collation.view());
         if (test_util::supports_collation(mongodb_client)) {
             REQUIRE(coll.count(predicate.view(), count_opts) == 1);
@@ -863,11 +848,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("replace_one returns correct result object", "[collection]") {
-        document b1;
-        b1 << "x" << 1;
-
-        document b2;
-        b2 << "x" << 2;
+        auto b1 = make_document(kvp("x", 1));
+        auto b2 = make_document(kvp("x", 2));
 
         SECTION("default write concern returns result") {
             collection coll = db["replace_one_default_write"];
@@ -894,7 +876,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // Block until server has received the write request, to prevent
             // this unacknowledged write from racing with writes to this
             // collection from other sections.
-            db.run_command(document{} << "getLastError" << 1 << finalize);
+            db.run_command(make_document(kvp("getLastError", 1)));
         }
 
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
@@ -925,17 +907,14 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         collection coll = db["replace_one_with_collation"];
         coll.drop();
         document doc;
-        doc << "x"
-            << "foo";
+        doc.append(kvp("x", "foo"));
         REQUIRE(coll.insert_one(doc.view()));
 
         document predicate;
-        predicate << "x"
-                  << "FOO";
+        predicate.append(kvp("x", "FOO"));
 
         document replacement_doc;
-        replacement_doc << "x"
-                        << "bar";
+        replacement_doc.append(kvp("x", "bar"));
 
         auto update_opts = options::update{}.collation(case_insensitive_collation.view());
         if (test_util::supports_collation(mongodb_client)) {
@@ -961,13 +940,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("filtered document delete one works", "[collection]") {
         collection coll = db["filtered_doc_delete_one"];
         coll.drop();
-        document b1;
-        b1 << "x" << 1;
+
+        auto b1 = make_document(kvp("x", 1));
 
         coll.insert_one(b1.view());
 
-        document b2;
-        b2 << "x" << 2;
+        auto b2 = make_document(kvp("x", 2));
 
         coll.insert_one(b2.view());
         coll.insert_one(b2.view());
@@ -1015,8 +993,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("delete_one returns correct result object", "[collection]") {
-        document b1;
-        b1 << "x" << 1;
+        auto b1 = make_document(kvp("x", 1));
 
         SECTION("default write concern returns result") {
             collection coll = db["delete_one_default_write"];
@@ -1043,21 +1020,18 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // Block until server has received the write request, to prevent
             // this unacknowledged write from racing with writes to this
             // collection from other sections.
-            db.run_command(document{} << "getLastError" << 1 << finalize);
+            db.run_command(make_document(kvp("getLastError", 1)));
         }
     }
 
     SECTION("delete_one with collation", "[collection]") {
         collection coll = db["delete_one_with_collation"];
         coll.drop();
-        document b1;
-        b1 << "x"
-           << "foo";
+        auto b1 = make_document(kvp("x", "foo"));
 
         REQUIRE(coll.insert_one(b1.view()));
 
-        auto predicate = document{} << "x"
-                                    << "FOO" << finalize;
+        auto predicate = make_document(kvp("x", "FOO"));
 
         auto delete_opts = options::delete_options{}.collation(case_insensitive_collation.view());
         if (test_util::supports_collation(mongodb_client)) {
@@ -1078,13 +1052,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("delete many works", "[collection]") {
         collection coll = db["delete_many"];
         coll.drop();
-        document b1;
-        b1 << "x" << 1;
+
+        auto b1 = make_document(kvp("x", 1));
 
         coll.insert_one(b1.view());
 
-        document b2;
-        b2 << "x" << 2;
+        auto b2 = make_document(kvp("x", 2));
 
         coll.insert_one(b2.view());
         coll.insert_one(b2.view());
@@ -1119,8 +1092,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("delete_many returns correct result object", "[collection]") {
-        document b1;
-        b1 << "x" << 1;
+        auto b1 = make_document(kvp("x", 1));
 
         SECTION("default write concern returns result") {
             collection coll = db["delete_many_default_write"];
@@ -1151,21 +1123,18 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // Block until server has received the write request, to prevent
             // this unacknowledged write from racing with writes to this
             // collection from other sections.
-            db.run_command(document{} << "getLastError" << 1 << finalize);
+            db.run_command(make_document(kvp("getLastError", 1)));
         }
     }
 
     SECTION("delete_many with collation", "[collection]") {
         collection coll = db["delete_many_with_collation"];
         coll.drop();
-        document b1;
-        b1 << "x"
-           << "foo";
+        auto b1 = make_document(kvp("x", "foo"));
 
         REQUIRE(coll.insert_one(b1.view()));
 
-        auto predicate = document{} << "x"
-                                    << "FOO" << finalize;
+        auto predicate = make_document(kvp("x", "FOO"));
 
         auto delete_opts = options::delete_options{}.collation(case_insensitive_collation.view());
         if (test_util::supports_collation(mongodb_client)) {
@@ -1187,22 +1156,17 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("find works with sort", "[collection]") {
         collection coll = db["find_with_sort"];
         coll.drop();
-        document b1;
-        b1 << "x" << 1;
 
-        document b2;
-        b2 << "x" << 2;
-
-        document b3;
-        b3 << "x" << 3;
+        auto b1 = make_document(kvp("x", 1));
+        auto b2 = make_document(kvp("x", 2));
+        auto b3 = make_document(kvp("x", 3));
 
         coll.insert_one(b1.view());
         coll.insert_one(b3.view());
         coll.insert_one(b2.view());
 
         SECTION("sort ascending") {
-            document sort;
-            sort << "x" << 1;
+            auto sort = make_document(kvp("x", 1));
             options::find opts{};
             opts.sort(sort.view());
 
@@ -1216,8 +1180,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("sort descending") {
-            document sort;
-            sort << "x" << -1;
+            auto sort = make_document(kvp("x", -1));
             options::find opts{};
             opts.sort(sort.view());
 
@@ -1232,17 +1195,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("find_one_and_replace works", "[collection]") {
-        document b1;
-        b1 << "x"
-           << "foo";
+        auto b1 = make_document(kvp("x", "foo"));
 
-        document criteria;
-        document replacement;
-
-        criteria << "x"
-                 << "foo";
-        replacement << "x"
-                    << "bar";
+        auto criteria = make_document(kvp("x", "foo"));
+        auto replacement = make_document(kvp("x", "bar"));
 
         SECTION("without return replacement returns original") {
             collection coll = db["find_one_and_replace_no_return"];
@@ -1286,9 +1242,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options::find_one_and_replace options;
             options.collation(case_insensitive_collation.view());
 
-            document collation_criteria;
-            collation_criteria << "x"
-                               << "FOO";
+            auto collation_criteria = make_document(kvp("x", "FOO"));
 
             if (test_util::supports_collation(mongodb_client)) {
                 INFO("unacknowledged write concern fails");
@@ -1319,9 +1273,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             REQUIRE(coll.count({}) == 2);
 
-            document bad_criteria;
-            bad_criteria << "x"
-                         << "baz";
+            auto bad_criteria = make_document(kvp("x", "baz"));
 
             auto doc = coll.find_one_and_replace(bad_criteria.view(), replacement.view());
 
@@ -1355,17 +1307,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("find_one_and_update works", "[collection]") {
-        document b1;
-        b1 << "x"
-           << "foo";
-
-        document criteria;
-        document update;
-
-        criteria << "x"
-                 << "foo";
-        update << "$set" << open_document << "x"
-               << "bar" << close_document;
+        auto b1 = make_document(kvp("x", "foo"));
+        auto criteria = make_document(kvp("x", "foo"));
+        auto update = make_document(kvp("$set", make_document(kvp("x", "bar"))));
 
         SECTION("without return update returns original") {
             collection coll = db["find_one_and_update_no_return"];
@@ -1411,9 +1355,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options::find_one_and_update options;
             options.collation(case_insensitive_collation.view());
 
-            document collation_criteria;
-            collation_criteria << "x"
-                               << "FOO";
+            auto collation_criteria = make_document(kvp("x", "FOO"));
 
             if (test_util::supports_collation(mongodb_client)) {
                 INFO("unacknowledged write concern fails");
@@ -1445,9 +1387,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             REQUIRE(coll.count({}) == 2);
 
-            document bad_criteria;
-            bad_criteria << "x"
-                         << "baz";
+            auto bad_criteria = make_document(kvp("x", "baz"));
 
             auto doc = coll.find_one_and_update(bad_criteria.view(), update.view());
 
@@ -1481,14 +1421,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("find_one_and_delete works", "[collection]") {
-        document b1;
-        b1 << "x"
-           << "foo";
-
-        document criteria;
-
-        criteria << "x"
-                 << "foo";
+        auto b1 = make_document(kvp("x", "foo"));
+        auto criteria = make_document(kvp("x", "foo"));
 
         SECTION("delete one deletes one and returns it") {
             collection coll = db["find_one_and_delete_one"];
@@ -1519,9 +1453,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options::find_one_and_delete options;
             options.collation(case_insensitive_collation.view());
 
-            document collation_criteria;
-            collation_criteria << "x"
-                               << "FOO";
+            auto collation_criteria = make_document(kvp("x", "FOO"));
 
             if (test_util::supports_collation(mongodb_client)) {
                 INFO("unacknowledged write concern fails");
@@ -1560,7 +1492,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             coll.insert_one({});
 
-            pipeline.add_fields(document{} << "x" << 1 << finalize);
+            pipeline.add_fields(make_document(kvp("x", 1)));
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 5) {
@@ -1578,19 +1510,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_bucket"];
             coll.drop();
 
-            coll.insert_one(document{} << "x" << 1 << finalize);
-            coll.insert_one(document{} << "x" << 3 << finalize);
-            coll.insert_one(document{} << "x" << 5 << finalize);
+            coll.insert_one(make_document(kvp("x", 1)));
+            coll.insert_one(make_document(kvp("x", 3)));
+            coll.insert_one(make_document(kvp("x", 5)));
 
-            pipeline.bucket(document{} << "groupBy"
-                                       << "$x"
-                                       << "boundaries"
-                                       << open_array
-                                       << 0
-                                       << 2
-                                       << 6
-                                       << close_array
-                                       << finalize);
+            pipeline.bucket(
+                make_document(kvp("groupBy", "$x"), kvp("boundaries", make_array(0, 2, 6))));
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 5) {
@@ -1613,15 +1538,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_bucket_auto"];
             coll.drop();
 
-            coll.insert_one(document{} << "x" << 1 << finalize);
-            coll.insert_one(document{} << "x" << 2 << finalize);
-            coll.insert_one(document{} << "x" << 3 << finalize);
+            coll.insert_one(make_document(kvp("x", 1)));
+            coll.insert_one(make_document(kvp("x", 3)));
+            coll.insert_one(make_document(kvp("x", 5)));
 
-            pipeline.bucket_auto(document{} << "groupBy"
-                                            << "$x"
-                                            << "buckets"
-                                            << 2
-                                            << finalize);
+            pipeline.bucket_auto(make_document(kvp("groupBy", "$x"), kvp("buckets", 2)));
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 5) {
@@ -1644,10 +1565,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_coll_stats"];
             coll.drop();
 
-            coll.insert_one(document{} << "x" << 1 << finalize);
+            coll.insert_one(make_document(kvp("x", 1)));
 
-            pipeline.coll_stats(document{} << "latencyStats" << open_document << close_document
-                                           << finalize);
+            pipeline.coll_stats(make_document(kvp("latencyStats", make_document())));
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 5) {
@@ -1688,14 +1608,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_facet"];
             coll.drop();
 
-            coll.insert_one(document{} << "x" << 1 << finalize);
-            coll.insert_one(document{} << "x" << 2 << finalize);
-            coll.insert_one(document{} << "x" << 3 << finalize);
+            coll.insert_one(make_document(kvp("x", 1)));
+            coll.insert_one(make_document(kvp("x", 2)));
+            coll.insert_one(make_document(kvp("x", 3)));
 
-            pipeline.facet(document{} << "foo" << open_array << open_document << "$limit" << 2
-                                      << close_document
-                                      << close_array
-                                      << finalize);
+            pipeline.facet(make_document(kvp("foo", make_array(make_document(kvp("$limit", 2))))));
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 5) {
@@ -1714,18 +1631,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_geo_near"];
             coll.drop();
 
-            coll.insert_one(document{} << "_id" << 0 << "x" << open_array << 0 << 0 << close_array
-                                       << finalize);
-            coll.insert_one(document{} << "_id" << 1 << "x" << open_array << 1 << 1 << close_array
-                                       << finalize);
-            coll.create_index(document{} << "x"
-                                         << "2d"
-                                         << finalize);
+            coll.insert_one(make_document(kvp("_id", 0), kvp("x", make_array(0, 0))));
+            coll.insert_one(make_document(kvp("_id", 1), kvp("x", make_array(1, 1))));
+            coll.create_index(make_document(kvp("x", "2d")));
 
-            pipeline.geo_near(document{} << "near" << open_array << 0 << 0 << close_array
-                                         << "distanceField"
-                                         << "d"
-                                         << finalize);
+            pipeline.geo_near(
+                make_document(kvp("near", make_array(0, 0)), kvp("distanceField", "d")));
             auto cursor = coll.aggregate(pipeline);
 
             auto results = get_results(std::move(cursor));
@@ -1740,26 +1651,16 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_graph_lookup"];
             coll.drop();
 
-            coll.insert_one(document{} << "x"
-                                       << "bar"
-                                       << finalize);
-            coll.insert_one(document{} << "x"
-                                       << "foo"
-                                       << "y"
-                                       << "bar"
-                                       << finalize);
+            coll.insert_one(make_document(kvp("x", "bar")));
+            coll.insert_one(make_document(kvp("x", "foo"), kvp("y", "bar")));
 
-            pipeline.graph_lookup(document{} << "from" << coll.name() << "startWith"
-                                             << "$y"
-                                             << "connectFromField"
-                                             << "y"
-                                             << "connectToField"
-                                             << "x"
-                                             << "as"
-                                             << "z"
-                                             << finalize);
+            pipeline.graph_lookup(make_document(kvp("from", coll.name()),
+                                                kvp("startWith", "$y"),
+                                                kvp("connectFromField", "y"),
+                                                kvp("connectToField", "x"),
+                                                kvp("as", "z")));
             // Add a sort to the pipeline, so below tests can make assumptions about result order.
-            pipeline.sort(document{} << "x" << 1 << finalize);
+            pipeline.sort(make_document(kvp("x", 1)));
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 5) {
@@ -1778,15 +1679,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_group"];
             coll.drop();
 
-            coll.insert_one(document{} << "x" << 1 << finalize);
-            coll.insert_one(document{} << "x" << 1 << finalize);
-            coll.insert_one(document{} << "x" << 2 << finalize);
+            coll.insert_one(make_document(kvp("x", 1)));
+            coll.insert_one(make_document(kvp("x", 1)));
+            coll.insert_one(make_document(kvp("x", 2)));
 
-            pipeline.group(document{} << "_id"
-                                      << "$x"
-                                      << finalize);
+            pipeline.group(make_document(kvp("_id", "$x")));
             // Add a sort to the pipeline, so below tests can make assumptions about result order.
-            pipeline.sort(document{} << "_id" << 1 << finalize);
+            pipeline.sort(make_document(kvp("_id", 1)));
             auto cursor = coll.aggregate(pipeline);
 
             auto results = get_results(std::move(cursor));
@@ -1799,9 +1698,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_index_stats"];
             coll.drop();
 
-            coll.create_index(document{} << "a" << 1 << finalize);
-            coll.create_index(document{} << "b" << 1 << finalize);
-            coll.create_index(document{} << "c" << 1 << finalize);
+            coll.create_index(make_document(kvp("a", 1)));
+            coll.create_index(make_document(kvp("b", 1)));
+            coll.create_index(make_document(kvp("c", 1)));
 
             pipeline.index_stats();
             auto cursor = coll.aggregate(pipeline);
@@ -1820,12 +1719,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_limit"];
             coll.drop();
 
-            coll.insert_one(document{} << "x" << 1 << finalize);
-            coll.insert_one(document{} << "x" << 2 << finalize);
-            coll.insert_one(document{} << "x" << 3 << finalize);
+            coll.insert_one(make_document(kvp("x", 1)));
+            coll.insert_one(make_document(kvp("x", 2)));
+            coll.insert_one(make_document(kvp("x", 3)));
 
             // Add a sort to the pipeline, so below tests can make assumptions about result order.
-            pipeline.sort(document{} << "x" << 1 << finalize);
+            pipeline.sort(make_document(kvp("x", 1)));
             pipeline.limit(2);
             auto cursor = coll.aggregate(pipeline);
 
@@ -1839,18 +1738,15 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_lookup"];
             coll.drop();
 
-            coll.insert_one(document{} << "x" << 0 << finalize);
-            coll.insert_one(document{} << "x" << 1 << "y" << 0 << finalize);
+            coll.insert_one(make_document(kvp("x", 0)));
+            coll.insert_one(make_document(kvp("x", 1), kvp("y", 0)));
 
-            pipeline.lookup(document{} << "from" << coll.name() << "localField"
-                                       << "x"
-                                       << "foreignField"
-                                       << "y"
-                                       << "as"
-                                       << "z"
-                                       << finalize);
+            pipeline.lookup(make_document(kvp("from", coll.name()),
+                                          kvp("localField", "x"),
+                                          kvp("foreignField", "y"),
+                                          kvp("as", "z")));
             // Add a sort to the pipeline, so below tests can make assumptions about result order.
-            pipeline.sort(document{} << "x" << 1 << finalize);
+            pipeline.sort(make_document(kvp("x", 1)));
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 4) {
@@ -1869,11 +1765,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_match"];
             coll.drop();
 
-            coll.insert_one(document{} << "x" << 1 << finalize);
-            coll.insert_one(document{} << "x" << 1 << finalize);
-            coll.insert_one(document{} << "x" << 2 << finalize);
+            coll.insert_one(make_document(kvp("x", 1)));
+            coll.insert_one(make_document(kvp("x", 1)));
+            coll.insert_one(make_document(kvp("x", 2)));
 
-            pipeline.match(document{} << "x" << 1 << finalize);
+            pipeline.match(make_document(kvp("x", 1)));
             auto cursor = coll.aggregate(pipeline);
 
             auto results = get_results(std::move(cursor));
@@ -1884,9 +1780,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_out"];
             coll.drop();
 
-            coll.insert_one(document{} << "x" << 1 << "y" << 1 << finalize);
+            coll.insert_one(make_document(kvp("x", 1), kvp("y", 1)));
 
-            pipeline.project(document{} << "x" << 1 << finalize);
+            pipeline.project(make_document(kvp("x", 1)));
             pipeline.out(coll.name().to_string());
             auto cursor = coll.aggregate(pipeline);
 
@@ -1961,9 +1857,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_project"];
             coll.drop();
 
-            coll.insert_one(document{} << "x" << 1 << "y" << 1 << finalize);
+            coll.insert_one(make_document(kvp("x", 1), kvp("y", 1)));
 
-            pipeline.project(document{} << "x" << 1 << finalize);
+            pipeline.project(make_document(kvp("x", 1)));
             auto cursor = coll.aggregate(pipeline);
 
             auto results = get_results(std::move(cursor));
@@ -1976,22 +1872,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_redact"];
             coll.drop();
 
-            coll.insert_one(
-                document{} << "x" << open_document << "secret" << 1 << close_document << "y" << 1
-                           << finalize);
+            coll.insert_one(make_document(kvp("x", make_document(kvp("secret", 1))), kvp("y", 1)));
 
-            pipeline.redact(document{} << "$cond" << open_document << "if" << open_document << "$eq"
-                                       << open_array
-                                       << "$secret"
-                                       << 1
-                                       << close_array
-                                       << close_document
-                                       << "then"
-                                       << "$$PRUNE"
-                                       << "else"
-                                       << "$$DESCEND"
-                                       << close_document
-                                       << finalize);
+            pipeline.redact(make_document(
+                kvp("$cond",
+                    make_document(kvp("if", make_document(kvp("$eq", make_array("$secret", 1)))),
+                                  kvp("then", "$$PRUNE"),
+                                  kvp("else", "$$DESCEND")))));
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 1) {
@@ -2010,12 +1897,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_replace_root"];
             coll.drop();
 
-            coll.insert_one(document{} << "x" << open_document << "y" << 1 << close_document
-                                       << finalize);
+            coll.insert_one(make_document(kvp("x", make_document(kvp("y", 1)))));
 
-            pipeline.replace_root(document{} << "newRoot"
-                                             << "$x"
-                                             << finalize);
+            pipeline.replace_root(make_document(kvp("newRoot", "$x")));
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 5) {
@@ -2055,12 +1939,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_skip"];
             coll.drop();
 
-            coll.insert_one(document{} << "x" << 1 << finalize);
-            coll.insert_one(document{} << "x" << 2 << finalize);
-            coll.insert_one(document{} << "x" << 3 << finalize);
+            coll.insert_one(make_document(kvp("x", 1)));
+            coll.insert_one(make_document(kvp("x", 2)));
+            coll.insert_one(make_document(kvp("x", 3)));
 
             // Add a sort to the pipeline, so below tests can make assumptions about result order.
-            pipeline.sort(document{} << "x" << 1 << finalize);
+            pipeline.sort(make_document(kvp("x", 1)));
             pipeline.skip(1);
             auto cursor = coll.aggregate(pipeline);
 
@@ -2074,11 +1958,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_sort"];
             coll.drop();
 
-            coll.insert_one(document{} << "x" << 1 << finalize);
-            coll.insert_one(document{} << "x" << 2 << finalize);
-            coll.insert_one(document{} << "x" << 3 << finalize);
+            coll.insert_one(make_document(kvp("x", 1)));
+            coll.insert_one(make_document(kvp("x", 2)));
+            coll.insert_one(make_document(kvp("x", 3)));
 
-            pipeline.sort(document{} << "x" << -1 << finalize);
+            pipeline.sort(make_document(kvp("x", -1)));
             auto cursor = coll.aggregate(pipeline);
 
             auto results = get_results(std::move(cursor));
@@ -2121,8 +2005,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
                 insert_many.insert(&coll);
 
-                pipeline.sort_by_count(
-                    document{} << "$mod" << open_array << "$x" << 2 << close_array << finalize);
+                pipeline.sort_by_count(make_document(kvp("$mod", make_array("$x", 2))));
                 auto cursor = coll.aggregate(pipeline);
 
                 if (test_util::get_max_wire_version(mongodb_client) >= 5) {
@@ -2142,8 +2025,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_unwind_with_string"];
             coll.drop();
 
-            coll.insert_one(document{} << "x" << open_array << 1 << 2 << 3 << 4 << 5 << close_array
-                                       << finalize);
+            coll.insert_one(make_document(kvp("x", make_array(1, 2, 3, 4, 5))));
             pipeline.unwind("$x");
             auto cursor = coll.aggregate(pipeline);
 
@@ -2155,12 +2037,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["aggregation_unwind_with_doc"];
             coll.drop();
 
-            coll.insert_one(document{} << "x" << open_array << 1 << 2 << 3 << 4 << 5 << close_array
-                                       << finalize);
+            coll.insert_one(make_document(kvp("x", make_array(1, 2, 3, 4, 5))));
 
-            pipeline.unwind(document{} << "path"
-                                       << "$x"
-                                       << finalize);
+            pipeline.unwind(make_document(kvp("path", "$x")));
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 4) {
@@ -2178,14 +2057,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         collection coll = db["aggregation_with_collation"];
         coll.drop();
 
-        document b1;
-        b1 << "x"
-           << "foo";
+        auto b1 = make_document(kvp("x", "foo"));
 
         coll.insert_one(b1.view());
 
-        auto predicate = document{} << "x"
-                                    << "FOO" << finalize;
+        auto predicate = make_document(kvp("x", "FOO"));
 
         pipeline p;
         p.match(predicate.view());
@@ -2202,8 +2078,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("bulk_write returns correct result object") {
-        auto doc1 = document{} << "foo" << 1 << finalize;
-        auto doc2 = document{} << "foo" << 2 << finalize;
+        auto doc1 = make_document(kvp("foo", 1));
+        auto doc2 = make_document(kvp("foo", 2));
 
         options::bulk_write bulk_opts;
         bulk_opts.ordered(false);
@@ -2236,7 +2112,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // Block until server has received the write request, to prevent
             // this unacknowledged write from racing with writes to this
             // collection from other sections.
-            db.run_command(document{} << "getLastError" << 1 << finalize);
+            db.run_command(make_document(kvp("getLastError", 1)));
         }
 
         SECTION("write wrapper returns correct result") {
@@ -2298,18 +2174,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("distinct works", "[collection]") {
         collection coll = db["distinct"];
         coll.drop();
-        auto doc1 = document{} << "foo"
-                               << "baz"
-                               << "garply" << 1 << finalize;
-        auto doc2 = document{} << "foo"
-                               << "bar"
-                               << "garply" << 2 << finalize;
-        auto doc3 = document{} << "foo"
-                               << "baz"
-                               << "garply" << 2 << finalize;
-        auto doc4 = document{} << "foo"
-                               << "quux"
-                               << "garply" << 9 << finalize;
+        auto doc1 = make_document(kvp("foo", "baz"), kvp("garply", 1));
+        auto doc2 = make_document(kvp("foo", "bar"), kvp("garply", 2));
+        auto doc3 = make_document(kvp("foo", "baz"), kvp("garply", 2));
+        auto doc4 = make_document(kvp("foo", "quux"), kvp("garply", 9));
 
         options::bulk_write bulk_opts;
         bulk_opts.ordered(false);
@@ -2354,13 +2222,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     SECTION("distinct with collation", "[collection]") {
         collection coll = db["distinct_with_collation"];
         coll.drop();
-        auto doc = document{} << "x"
-                              << "foo" << finalize;
+        auto doc = make_document(kvp("x", "foo"));
 
         coll.insert_one(doc.view());
 
-        auto predicate = document{} << "x"
-                                    << "FOO" << finalize;
+        auto predicate = make_document(kvp("x", "FOO"));
 
         auto distinct_opts = options::distinct{}.collation(case_insensitive_collation.view());
 
@@ -2745,6 +2611,6 @@ TEST_CASE("regressions", "CXX-986") {
     mongocxx::uri mongo_uri{"mongodb://non-existent-host.invalid/"};
     mongocxx::client client{mongo_uri};
     REQUIRE_THROWS(client.database("irrelevant")["irrelevant"].find_one_and_update(
-        document{} << "irrelevant" << 1 << finalize, document{} << "irrelevant" << 2 << finalize));
+        make_document(kvp("irrelevant", 1)), make_document(kvp("irrelevant", 2))));
 }
 }  // namespace

@@ -14,20 +14,19 @@
 
 #include "helpers.hpp"
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/model/delete_many.hpp>
 
 namespace {
-using namespace bsoncxx::builder::stream;
+using namespace bsoncxx::builder::basic;
 
 TEST_CASE("delete_many model tests", "[delete_many][model]") {
     mongocxx::instance::current();
 
-    auto filter = document{} << "a" << 1 << finalize;
-    auto collation = document{} << "locale"
-                                << "en_US" << finalize;
+    auto filter = make_document(kvp("a", 1));
+    auto collation = make_document(kvp("locale", "en_US"));
 
     mongocxx::model::delete_many dm(filter.view());
 

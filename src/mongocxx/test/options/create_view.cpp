@@ -15,7 +15,7 @@
 #include "helpers.hpp"
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
@@ -29,13 +29,15 @@ namespace {
 using namespace bsoncxx;
 using namespace mongocxx;
 
+using builder::basic::kvp;
+using builder::basic::make_document;
+
 TEST_CASE("create_view accessors/mutators", "[create_view]") {
     instance::current();
 
     options::create_view cv;
 
-    auto collation = builder::stream::document{} << "locale"
-                                                 << "en_US" << builder::stream::finalize;
+    auto collation = make_document(kvp("locale", "en_US"));
 
     CHECK_OPTIONAL_ARGUMENT(cv, collation, collation.view());
 
@@ -76,8 +78,7 @@ TEST_CASE("create_view can be exported to a document", "[create_view]") {
 
     options::create_view cv;
 
-    auto collation_en_US = builder::stream::document{} << "locale"
-                                                       << "en_US" << builder::stream::finalize;
+    auto collation_en_US = make_document(kvp("locale", "en_US"));
 
     cv.collation(collation_en_US.view());
     cv.pipeline(std::move(pipeline{}.limit(1)));

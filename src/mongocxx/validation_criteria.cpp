@@ -14,12 +14,13 @@
 
 #include <mongocxx/validation_criteria.hpp>
 
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
 namespace {
+
+using bsoncxx::builder::basic::kvp;
 
 // Convert validation levels to strings.
 std::string validation_level_to_string(mongocxx::validation_criteria::validation_level level) {
@@ -80,18 +81,18 @@ const stdx::optional<validation_criteria::validation_action>& validation_criteri
 }
 
 bsoncxx::document::value validation_criteria::to_document() const {
-    auto doc = bsoncxx::builder::stream::document{};
+    bsoncxx::builder::basic::document doc;
 
     if (_rule) {
-        doc << "validator" << bsoncxx::types::b_document{*_rule};
+        doc.append(kvp("validator", bsoncxx::types::b_document{*_rule}));
     }
 
     if (_level) {
-        doc << "validationLevel" << validation_level_to_string(*_level);
+        doc.append(kvp("validationLevel", validation_level_to_string(*_level)));
     }
 
     if (_action) {
-        doc << "validationAction" << validation_action_to_string(*_action);
+        doc.append(kvp("validationAction", validation_action_to_string(*_action)));
     }
 
     return doc.extract();

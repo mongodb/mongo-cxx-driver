@@ -16,13 +16,13 @@
 
 #include <chrono>
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find_one_and_delete.hpp>
 
 namespace {
-using namespace bsoncxx::builder::stream;
+using namespace bsoncxx::builder::basic;
 using namespace mongocxx;
 
 TEST_CASE("find_one_and_delete", "[find_one_and_delete][option]") {
@@ -30,11 +30,10 @@ TEST_CASE("find_one_and_delete", "[find_one_and_delete][option]") {
 
     options::find_one_and_delete opts{};
 
-    auto collation = document{} << "locale"
-                                << "en_US" << finalize;
+    auto collation = make_document(kvp("locale", "en_US"));
     std::chrono::milliseconds ms{400};
-    auto projection = document{} << "_id" << false << finalize;
-    auto sort = document{} << "x" << -1 << finalize;
+    auto projection = make_document(kvp("_id", false));
+    auto sort = make_document(kvp("x", -1));
 
     CHECK_OPTIONAL_ARGUMENT(opts, collation, collation.view());
     CHECK_OPTIONAL_ARGUMENT(opts, max_time, ms);

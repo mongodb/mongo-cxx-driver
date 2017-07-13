@@ -24,8 +24,8 @@
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/json.hpp>
@@ -45,6 +45,10 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace test_util {
 
 namespace {
+
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
+
 std::vector<std::int32_t> parse_version(std::string version) {
     std::vector<std::int32_t> elements;
     std::stringstream ss{version};
@@ -169,9 +173,7 @@ std::basic_string<std::uint8_t> convert_hex_string_to_bytes(stdx::string_view he
 }
 
 std::int32_t get_max_wire_version(const client& client) {
-    auto reply = client["admin"].run_command(
-        bsoncxx::builder::stream::document{} << "isMaster" << 1
-                                             << bsoncxx::builder::stream::finalize);
+    auto reply = client["admin"].run_command(make_document(kvp("isMaster", 1)));
     auto max_wire_version = reply.view()["maxWireVersion"];
     if (!max_wire_version) {
         // If wire version is not available (i.e. server version too old), it is assumed to be

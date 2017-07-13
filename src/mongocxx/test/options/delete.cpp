@@ -17,13 +17,13 @@
 #include <chrono>
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/delete.hpp>
 
 namespace {
-using namespace bsoncxx::builder::stream;
+using namespace bsoncxx::builder::basic;
 using namespace mongocxx;
 
 TEST_CASE("delete_options", "[delete][option]") {
@@ -31,8 +31,7 @@ TEST_CASE("delete_options", "[delete][option]") {
 
     options::delete_options del;
 
-    auto collation = document{} << "locale"
-                                << "en_US" << finalize;
+    auto collation = make_document(kvp("locale", "en_US"));
 
     CHECK_OPTIONAL_ARGUMENT(del, collation, collation.view());
     CHECK_OPTIONAL_ARGUMENT(del, write_concern, write_concern{});

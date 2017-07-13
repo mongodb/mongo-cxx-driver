@@ -15,7 +15,6 @@
 #include "helpers.hpp"
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/test_util/catch.hh>
@@ -26,19 +25,15 @@ namespace {
 using namespace mongocxx;
 using namespace bsoncxx;
 
-using builder::stream::open_document;
-using builder::stream::close_document;
-using builder::stream::finalize;
-using bsoncxx::builder::basic::make_document;
-using bsoncxx::builder::basic::kvp;
+using builder::basic::kvp;
+using builder::basic::make_document;
 
 TEST_CASE("validation_criteria accessors/mutators", "[validation_criteria]") {
     instance::current();
 
     validation_criteria criteria;
 
-    auto doc = builder::stream::document{} << "email" << open_document << "$exists" << true
-                                           << close_document << finalize;
+    auto doc = make_document(kvp("email", make_document(kvp("$exists", true))));
 
     CHECK_OPTIONAL_ARGUMENT(criteria, rule, doc.view());
     CHECK_OPTIONAL_ARGUMENT(criteria, level, validation_criteria::validation_level::k_off);
@@ -69,8 +64,7 @@ TEST_CASE("validation_criteria can be exported to a document", "[validation_crit
 
     validation_criteria criteria;
 
-    auto doc = builder::stream::document{} << "email" << open_document << "$exists" << true
-                                           << close_document << finalize;
+    auto doc = make_document(kvp("email", make_document(kvp("$exists", true))));
 
     criteria.level(validation_criteria::validation_level::k_strict);
     criteria.action(validation_criteria::validation_action::k_warn);

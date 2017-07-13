@@ -17,14 +17,14 @@
 #include <chrono>
 
 #include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/aggregate.hpp>
 
 namespace {
-using namespace bsoncxx::builder::stream;
+using namespace bsoncxx::builder::basic;
 using namespace mongocxx;
 
 using bsoncxx::builder::basic::kvp;
@@ -35,8 +35,7 @@ TEST_CASE("aggregate", "[aggregate][option]") {
 
     options::aggregate agg;
 
-    auto collation = document{} << "locale"
-                                << "en_US" << finalize;
+    auto collation = make_document(kvp("locale", "en_US"));
 
     bsoncxx::document::view_or_value hint{make_document(kvp("_id", 1))};
 

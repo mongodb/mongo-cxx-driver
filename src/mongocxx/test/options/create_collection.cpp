@@ -14,8 +14,7 @@
 
 #include "helpers.hpp"
 
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
@@ -29,22 +28,18 @@ namespace {
 using namespace bsoncxx;
 using namespace mongocxx;
 
-using builder::stream::close_document;
-using builder::stream::finalize;
-using builder::stream::open_document;
+using builder::basic::kvp;
+using builder::basic::make_document;
 
 TEST_CASE("create_collection accessors/mutators", "[create_collection]") {
     instance::current();
 
     options::create_collection cc;
 
-    auto collation = builder::stream::document{} << "locale"
-                                                 << "en_US" << finalize;
-    auto storage_engine = builder::stream::document{}
-                          << "wiredTiger" << open_document << "configString"
-                          << "block_compressor=zlib" << close_document << finalize;
-    auto validation =
-        validation_criteria{}.rule(builder::stream::document{} << "a" << 1 << finalize);
+    auto collation = make_document(kvp("locale", "en_US"));
+    auto storage_engine = make_document(
+        kvp("wiredTiger", make_document(kvp("configString", "block_compressor=zlib"))));
+    auto validation = validation_criteria{}.rule(make_document(kvp("a", 1)));
 
     CHECK_OPTIONAL_ARGUMENT(cc, capped, true);
     BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
@@ -94,10 +89,8 @@ TEST_CASE("create_collection can be exported to a document", "[create_collection
 
     options::create_collection cc;
 
-    auto collation_en_US = builder::stream::document{} << "locale"
-                                                       << "en_US" << finalize;
-    auto rule = builder::stream::document{} << "brain" << open_document << "$exists" << true
-                                            << close_document << finalize;
+    auto collation_en_US = make_document(kvp("locale", "en_US"));
+    auto rule = make_document(kvp("brain", make_document(kvp("$exists", true))));
 
     validation_criteria validation;
     validation.rule(rule.view());

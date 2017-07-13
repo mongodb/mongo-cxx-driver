@@ -14,21 +14,20 @@
 
 #include "helpers.hpp"
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/model/update_one.hpp>
 
 namespace {
-using namespace bsoncxx::builder::stream;
+using namespace bsoncxx::builder::basic;
 
 TEST_CASE("update_one model tests", "[update_one][model]") {
     mongocxx::instance::current();
 
-    auto filter = document{} << "a" << 1 << finalize;
-    auto update = document{} << "$set" << open_document << "b" << 1 << close_document << finalize;
-    auto collation = document{} << "locale"
-                                << "en_US" << finalize;
+    auto filter = make_document(kvp("a", 1));
+    auto update = make_document(kvp("$set", make_document(kvp("b", 1))));
+    auto collation = make_document(kvp("locale", "en_US"));
 
     mongocxx::model::update_one uo(filter.view(), update.view());
 

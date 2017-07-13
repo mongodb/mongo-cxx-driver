@@ -16,13 +16,13 @@
 
 #include <chrono>
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/distinct.hpp>
 
 namespace {
-using namespace bsoncxx::builder::stream;
+using namespace bsoncxx::builder::basic;
 using namespace mongocxx;
 
 TEST_CASE("distinct", "[distinct][option]") {
@@ -30,8 +30,7 @@ TEST_CASE("distinct", "[distinct][option]") {
 
     options::distinct dist;
 
-    auto collation = document{} << "locale"
-                                << "en_US" << finalize;
+    auto collation = make_document(kvp("locale", "en_US"));
 
     CHECK_OPTIONAL_ARGUMENT(dist, collation, collation.view());
     CHECK_OPTIONAL_ARGUMENT(dist, max_time, std::chrono::milliseconds{1000});

@@ -14,7 +14,7 @@
 
 #include "helpers.hpp"
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/test_util/catch.hh>
@@ -26,6 +26,9 @@
 namespace {
 using namespace bsoncxx;
 using namespace mongocxx;
+
+using builder::basic::kvp;
+using builder::basic::make_document;
 
 TEST_CASE("Read preference", "[read_preference]") {
     instance::current();
@@ -45,8 +48,7 @@ TEST_CASE("Read preference", "[read_preference]") {
     }
 
     SECTION("Can have tags changed") {
-        auto tags = builder::stream::document{} << "tag_key"
-                                                << "tag_value" << builder::stream::finalize;
+        auto tags = make_document(kvp("tag_key", "tag_value"));
         rp.tags(tags.view());
         REQUIRE(rp.tags().value() == tags);
     }
@@ -80,8 +82,7 @@ TEST_CASE("Read preference can be constructed with another read_mode", "[read_pr
 
 TEST_CASE("Read preference can be constructed with a read_mode and tags", "[read_preference]") {
     instance::current();
-    auto tags = builder::stream::document{} << "tag_key"
-                                            << "tag_value" << builder::stream::finalize;
+    auto tags = make_document(kvp("tag_key", "tag_value"));
 
     BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
     read_preference rp(read_preference::read_mode::k_secondary, tags.view());
@@ -108,8 +109,7 @@ TEST_CASE("Read preference equality operator works", "[read_preference]") {
     }
 
     SECTION("tags are compared") {
-        auto tags = builder::stream::document{} << "tag_key"
-                                                << "tag_value" << builder::stream::finalize;
+        auto tags = make_document(kvp("tag_key", "tag_value"));
         rp_a.tags(tags.view());
         REQUIRE_FALSE(rp_a == rp_b);
         rp_b.tags(tags.view());
@@ -153,8 +153,7 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
     }
 
     SECTION("tags() calls mongoc_read_prefs_set_tags()") {
-        auto expected_tags = builder::stream::document{} << "foo"
-                                                         << "bar" << builder::stream::finalize;
+        auto expected_tags = make_document(kvp("foo", "bar"));
         read_prefs_set_tags->interpose([&](mongoc_read_prefs_t*, const bson_t* tags) {
             called = true;
             REQUIRE(bson_get_data(tags) == expected_tags.view().data());

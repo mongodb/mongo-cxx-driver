@@ -16,7 +16,7 @@
 
 #include <chrono>
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/test_util/catch.hh>
@@ -25,7 +25,7 @@
 #include <mongocxx/options/private/rewriter.hh>
 
 namespace {
-using namespace bsoncxx::builder::stream;
+using namespace bsoncxx::builder::basic;
 using namespace mongocxx;
 
 BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
@@ -35,9 +35,7 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $comment", "[find][o
 
     SECTION("$comment with k_utf8 type is translated") {
         auto find_opts = options::rewriter::rewrite_find_modifiers(
-            options::find{}.modifiers(document{} << "$comment"
-                                                 << "test"
-                                                 << finalize));
+            options::find{}.modifiers(make_document(kvp("$comment", "test"))));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.comment());
         REQUIRE(*find_opts.comment() == stdx::string_view("test"));
@@ -45,7 +43,7 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $comment", "[find][o
 
     SECTION("$comment with other types is rejected") {
         REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(
-                              options::find{}.modifiers(document{} << "$comment" << 1 << finalize)),
+                              options::find{}.modifiers(make_document(kvp("$comment", 1)))),
                           logic_error);
     }
 }
@@ -54,8 +52,8 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $explain", "[find][o
     instance::current();
 
     SECTION("$explain isn't supported") {
-        REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(options::find{}.modifiers(
-                              document{} << "$explain" << true << finalize)),
+        REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(
+                              options::find{}.modifiers(make_document(kvp("$explain", true)))),
                           logic_error);
     }
 }
@@ -66,25 +64,23 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $hint", "[find][opti
 
     SECTION("$hint with k_utf8 type is translated") {
         find_opts = options::rewriter::rewrite_find_modifiers(
-            options::find{}.modifiers(document{} << "$hint"
-                                                 << "index"
-                                                 << finalize));
+            options::find{}.modifiers(make_document(kvp("$hint", "index"))));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.hint());
         REQUIRE(*find_opts.hint() == "index");
     }
 
     SECTION("$hint with k_document is translated") {
-        find_opts = options::rewriter::rewrite_find_modifiers(options::find{}.modifiers(
-            document{} << "$hint" << open_document << "a" << 1 << close_document << finalize));
+        find_opts = options::rewriter::rewrite_find_modifiers(
+            options::find{}.modifiers(make_document(kvp("$hint", make_document(kvp("a", 1))))));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.hint());
-        REQUIRE(*find_opts.hint() == document{} << "a" << 1 << finalize);
+        REQUIRE(*find_opts.hint() == make_document(kvp("a", 1)));
     }
 
     SECTION("$hint with other types is rejected") {
         REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(
-                              options::find{}.modifiers(document{} << "$hint" << 1 << finalize)),
+                              options::find{}.modifiers(make_document(kvp("$hint", 1)))),
                           logic_error);
     }
 }
@@ -93,16 +89,16 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $max", "[find][optio
     instance::current();
 
     SECTION("$max with k_document type is translated") {
-        auto find_opts = options::rewriter::rewrite_find_modifiers(options::find{}.modifiers(
-            document{} << "$max" << open_document << "a" << 1 << close_document << finalize));
+        auto find_opts = options::rewriter::rewrite_find_modifiers(
+            options::find{}.modifiers(make_document(kvp("$max", make_document(kvp("a", 1))))));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.max());
-        REQUIRE(*find_opts.max() == document{} << "a" << 1 << finalize);
+        REQUIRE(*find_opts.max() == make_document(kvp("a", 1)));
     }
 
     SECTION("$max with other types is rejected") {
         REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(
-                              options::find{}.modifiers(document{} << "$max" << 1 << finalize)),
+                              options::find{}.modifiers(make_document(kvp("$max", 1)))),
                           logic_error);
     }
 }
@@ -113,7 +109,7 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $maxScan", "[find][o
 
     SECTION("$maxScan with k_int32 type is translated") {
         find_opts = options::rewriter::rewrite_find_modifiers(
-            options::find{}.modifiers(document{} << "$maxScan" << 1 << finalize));
+            options::find{}.modifiers(make_document(kvp("$maxScan", 1))));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.max_scan());
         REQUIRE(*find_opts.max_scan() == 1);
@@ -121,7 +117,7 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $maxScan", "[find][o
 
     SECTION("$maxScan with k_int64 type is translated") {
         find_opts = options::rewriter::rewrite_find_modifiers(
-            options::find{}.modifiers(document{} << "$maxScan" << std::int64_t{1} << finalize));
+            options::find{}.modifiers(make_document(kvp("$maxScan", std::int64_t{1}))));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.max_scan());
         REQUIRE(*find_opts.max_scan() == 1);
@@ -129,7 +125,7 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $maxScan", "[find][o
 
     SECTION("$maxScan with k_double type is translated") {
         find_opts = options::rewriter::rewrite_find_modifiers(
-            options::find{}.modifiers(document{} << "$maxScan" << 1.0 << finalize));
+            options::find{}.modifiers(make_document(kvp("$maxScan", 1.0))));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.max_scan());
         REQUIRE(*find_opts.max_scan() == 1);
@@ -137,9 +133,7 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $maxScan", "[find][o
 
     SECTION("$maxScan with other types is rejected") {
         REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(
-                              options::find{}.modifiers(document{} << "$maxScan"
-                                                                   << "foo"
-                                                                   << finalize)),
+                              options::find{}.modifiers(make_document(kvp("$maxScan", "foo")))),
                           logic_error);
     }
 }
@@ -150,7 +144,7 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $maxTimeMS", "[find]
 
     SECTION("$maxTimeMS with k_int32 type is translated") {
         find_opts = options::rewriter::rewrite_find_modifiers(
-            options::find{}.modifiers(document{} << "$maxTimeMS" << 1 << finalize));
+            options::find{}.modifiers(make_document(kvp("$maxTimeMS", 1))));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.max_time());
         REQUIRE(find_opts.max_time()->count() == 1);
@@ -158,7 +152,7 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $maxTimeMS", "[find]
 
     SECTION("$maxTimeMS with k_int64 type is translated") {
         find_opts = options::rewriter::rewrite_find_modifiers(
-            options::find{}.modifiers(document{} << "$maxTimeMS" << std::int64_t{1} << finalize));
+            options::find{}.modifiers(make_document(kvp("$maxTimeMS", std::int64_t{1}))));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.max_time());
         REQUIRE(find_opts.max_time()->count() == 1);
@@ -166,7 +160,7 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $maxTimeMS", "[find]
 
     SECTION("$maxTimeMS with k_double type is translated") {
         find_opts = options::rewriter::rewrite_find_modifiers(
-            options::find{}.modifiers(document{} << "$maxTimeMS" << 1.0 << finalize));
+            options::find{}.modifiers(make_document(kvp("$maxTimeMS", 1.0))));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.max_time());
         REQUIRE(find_opts.max_time()->count() == 1);
@@ -174,9 +168,7 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $maxTimeMS", "[find]
 
     SECTION("$maxTimeMS with other types is rejected") {
         REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(
-                              options::find{}.modifiers(document{} << "$maxTimeMS"
-                                                                   << "foo"
-                                                                   << finalize)),
+                              options::find{}.modifiers(make_document(kvp("$maxTimeMS", "foo")))),
                           logic_error);
     }
 }
@@ -185,16 +177,16 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $min", "[find][optio
     instance::current();
 
     SECTION("$min with k_document type is translated") {
-        auto find_opts = options::rewriter::rewrite_find_modifiers(options::find{}.modifiers(
-            document{} << "$min" << open_document << "a" << 1 << close_document << finalize));
+        auto find_opts = options::rewriter::rewrite_find_modifiers(
+            options::find{}.modifiers(make_document(kvp("$min", make_document(kvp("a", 1))))));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.min());
-        REQUIRE(*find_opts.min() == document{} << "a" << 1 << finalize);
+        REQUIRE(*find_opts.min() == make_document(kvp("a", 1)));
     }
 
     SECTION("$min with other types is rejected") {
         REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(
-                              options::find{}.modifiers(document{} << "$min" << 1 << finalize)),
+                              options::find{}.modifiers(make_document(kvp("$min", 1)))),
                           logic_error);
     }
 }
@@ -203,16 +195,16 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $orderby", "[find][o
     instance::current();
 
     SECTION("$orderby with k_document type is translated") {
-        auto find_opts = options::rewriter::rewrite_find_modifiers(options::find{}.modifiers(
-            document{} << "$orderby" << open_document << "a" << 1 << close_document << finalize));
+        auto find_opts = options::rewriter::rewrite_find_modifiers(
+            options::find{}.modifiers(make_document(kvp("$orderby", make_document(kvp("a", 1))))));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.sort());
-        REQUIRE(*find_opts.sort() == document{} << "a" << 1 << finalize);
+        REQUIRE(*find_opts.sort() == make_document(kvp("a", 1)));
     }
 
     SECTION("$orderby with other types is rejected") {
         REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(
-                              options::find{}.modifiers(document{} << "$orderby" << 1 << finalize)),
+                              options::find{}.modifiers(make_document(kvp("$orderby", 1)))),
                           logic_error);
     }
 }
@@ -221,10 +213,9 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $query", "[find][opt
     instance::current();
 
     SECTION("$query isn't supported") {
-        REQUIRE_THROWS_AS(
-            options::rewriter::rewrite_find_modifiers(options::find{}.modifiers(
-                document{} << "$query" << open_document << "a" << 1 << close_document << finalize)),
-            logic_error);
+        REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(options::find{}.modifiers(
+                              make_document(kvp("$query", make_document(kvp("a", 1)))))),
+                          logic_error);
     }
 }
 
@@ -233,15 +224,15 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $returnKey", "[find]
 
     SECTION("$returnKey with k_bool type is translated") {
         auto find_opts = options::rewriter::rewrite_find_modifiers(
-            options::find{}.modifiers(document{} << "$returnKey" << true << finalize));
+            options::find{}.modifiers(make_document(kvp("$returnKey", true))));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.return_key());
         REQUIRE(*find_opts.return_key() == true);
     }
 
     SECTION("$returnKey with other types is rejected") {
-        REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(options::find{}.modifiers(
-                              document{} << "$returnKey" << 1 << finalize)),
+        REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(
+                              options::find{}.modifiers(make_document(kvp("$returnKey", 1)))),
                           logic_error);
     }
 }
@@ -251,15 +242,15 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $showDiskLoc", "[fin
 
     SECTION("$showDiskLoc with k_bool type is translated") {
         auto find_opts = options::rewriter::rewrite_find_modifiers(
-            options::find{}.modifiers(document{} << "$showDiskLoc" << true << finalize));
+            options::find{}.modifiers(make_document(kvp("$showDiskLoc", true))));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.show_record_id());
         REQUIRE(*find_opts.show_record_id() == true);
     }
 
     SECTION("$showDiskLoc with other types is rejected") {
-        REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(options::find{}.modifiers(
-                              document{} << "$showDiskLoc" << 1 << finalize)),
+        REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(
+                              options::find{}.modifiers(make_document(kvp("$showDiskLoc", 1)))),
                           logic_error);
     }
 }
@@ -269,15 +260,15 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $snapshot", "[find][
 
     SECTION("$snapshot with k_bool type is translated") {
         auto find_opts = options::rewriter::rewrite_find_modifiers(
-            options::find{}.modifiers(document{} << "$snapshot" << true << finalize));
+            options::find{}.modifiers(make_document(kvp("$snapshot", true))));
         REQUIRE(!find_opts.modifiers());
         REQUIRE(find_opts.snapshot());
         REQUIRE(*find_opts.snapshot() == true);
     }
 
     SECTION("$snapshot with other types is rejected") {
-        REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(options::find{}.modifiers(
-                              document{} << "$snapshot" << 1 << finalize)),
+        REQUIRE_THROWS_AS(options::rewriter::rewrite_find_modifiers(
+                              options::find{}.modifiers(make_document(kvp("$snapshot", 1)))),
                           logic_error);
     }
 }

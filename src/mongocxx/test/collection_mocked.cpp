@@ -17,8 +17,7 @@
 #include <chrono>
 #include <string>
 
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/helpers.hh>
@@ -43,6 +42,9 @@
 namespace {
 using namespace mongocxx;
 using namespace bsoncxx;
+
+using builder::basic::kvp;
+using builder::basic::make_document;
 
 TEST_CASE("A default constructed collection is false-ish", "[collection]") {
     instance::current();
@@ -89,10 +91,7 @@ TEST_CASE("Collection", "[collection]") {
         REQUIRE(collection_set_rc_called);
     }
 
-    auto filter_doc = builder::stream::document{} << "_id"
-                                                  << "wow"
-                                                  << "foo"
-                                                  << "bar" << builder::stream::finalize;
+    auto filter_doc = make_document(kvp("_id", "wow"), kvp("foo", "bar"));
 
     SECTION("Aggregate", "[Collection::aggregate]") {
         auto collection_aggregate_called = false;
@@ -163,10 +162,8 @@ TEST_CASE("Collection", "[collection]") {
                 return NULL;
             });
 
-        pipe.match(builder::stream::document{} << "foo"
-                                               << "bar"
-                                               << builder::stream::finalize);
-        pipe.sort(builder::stream::document{} << "foo" << 1 << builder::stream::finalize);
+        pipe.match(make_document(kvp("foo", "bar")));
+        pipe.sort(make_document(kvp("foo", 1)));
 
         SECTION("With default options") {}
 
@@ -240,9 +237,7 @@ TEST_CASE("Collection", "[collection]") {
             opts.hint(index_hint);
 
             // set our expected_opts so we check against that
-            bsoncxx::document::value doc = bsoncxx::builder::stream::document{}
-                                           << "hint" << index_hint.to_value()
-                                           << bsoncxx::builder::stream::finalize;
+            bsoncxx::document::value doc = make_document(kvp("hint", index_hint.to_value()));
             libbson::scoped_bson_t cmd_opts{std::move(doc)};
             expected_opts = cmd_opts.bson();
 
@@ -267,7 +262,7 @@ TEST_CASE("Collection", "[collection]") {
 
     SECTION("Find", "[collection::find]") {
         auto collection_find_called = false;
-        auto find_doc = builder::stream::document{} << "a" << 1 << builder::stream::finalize;
+        auto find_doc = make_document(kvp("a", 1));
         auto doc = find_doc.view();
         mongocxx::stdx::optional<bool> expected_allow_partial_results;
         mongocxx::stdx::optional<bsoncxx::stdx::string_view> expected_comment{};
@@ -383,7 +378,7 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Succeeds with sort") {
             options::find opts{};
-            auto sort_doc = builder::stream::document{} << "x" << -1 << builder::stream::finalize;
+            auto sort_doc = make_document(kvp("x", -1));
             expected_sort = sort_doc.view();
             opts.sort(*expected_sort);
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
@@ -407,10 +402,7 @@ TEST_CASE("Collection", "[collection]") {
         auto expect_set_bypass_document_validation_called = false;
         auto expected_bypass_document_validation = false;
 
-        auto modification_doc = builder::stream::document{} << "cool"
-                                                            << "wow"
-                                                            << "foo"
-                                                            << "bar" << builder::stream::finalize;
+        auto modification_doc = make_document(kvp("cool", "wow"), kvp("foo", "bar"));
 
         bulk_operation_new->interpose([&](bool ordered) -> mongoc_bulk_operation_t* {
             bulk_operation_new_called = true;

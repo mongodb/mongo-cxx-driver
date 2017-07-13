@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/json.hpp>
@@ -27,9 +26,8 @@ namespace {
 using namespace bsoncxx;
 using namespace mongocxx;
 
-using builder::stream::close_document;
-using builder::stream::finalize;
-using builder::stream::open_document;
+using builder::basic::kvp;
+using builder::basic::make_document;
 
 TEST_CASE("modify_collection", "[modify_collection]") {
     instance::current();
@@ -37,14 +35,13 @@ TEST_CASE("modify_collection", "[modify_collection]") {
     options::modify_collection cm;
 
     SECTION("Can be exported to a document") {
-        auto rule = builder::stream::document{} << "brain" << open_document << "$exists" << true
-                                                << close_document << finalize;
+        auto rule = make_document(kvp("brain", make_document(kvp("$exists", true))));
 
         validation_criteria validation;
         validation.rule(rule.view());
         validation.level(validation_criteria::validation_level::k_strict);
 
-        auto index = builder::stream::document{} << "a" << 1 << finalize;
+        auto index = make_document(kvp("a", 1));
 
         cm.index(index.view(), std::chrono::seconds(10));
         cm.validation_criteria(validation);

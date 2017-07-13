@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/test_util/catch.hh>
@@ -25,9 +24,12 @@ using namespace bsoncxx;
 using namespace mongocxx;
 using namespace mongocxx::libbson;
 
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
+
 TEST_CASE("scoped_bson_t", "[private]") {
     SECTION("Can be constructed") {
-        document::value val = builder::stream::document{} << "a" << 1 << builder::stream::finalize;
+        document::value val = make_document(kvp("a", 1));
         document::view view = val.view();
         document::view empty_view;
 
@@ -43,8 +45,7 @@ TEST_CASE("scoped_bson_t", "[private]") {
         }
 
         SECTION("from a temporary value") {
-            scoped_bson_t bson{builder::stream::document{} << "a" << 1
-                                                           << builder::stream::finalize};
+            scoped_bson_t bson{make_document(kvp("a", 1))};
             REQUIRE(bson.view() == view);
         }
 
@@ -69,7 +70,7 @@ TEST_CASE("scoped_bson_t", "[private]") {
     }
 
     SECTION("Can be initialized") {
-        auto val = builder::stream::document{} << "a" << 1 << builder::stream::finalize;
+        auto val = make_document(kvp("a", 1));
         auto view = val.view();
         document::view empty_view;
 
@@ -88,8 +89,7 @@ TEST_CASE("scoped_bson_t", "[private]") {
 
         SECTION("from a temporary value") {
             scoped_bson_t bson;
-            bson.init_from_static(builder::stream::document{} << "a" << 1
-                                                              << builder::stream::finalize);
+            bson.init_from_static(make_document(kvp("a", 1)));
             REQUIRE(bson.view() == view);
         }
 

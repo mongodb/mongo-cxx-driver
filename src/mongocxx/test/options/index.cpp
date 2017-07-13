@@ -15,7 +15,6 @@
 #include "helpers.hpp"
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
@@ -24,7 +23,7 @@
 #include <mongocxx/stdx.hpp>
 
 namespace {
-using namespace bsoncxx::builder::stream;
+using namespace bsoncxx::builder::basic;
 using namespace mongocxx;
 
 TEST_CASE("index", "[index][option]") {
@@ -37,10 +36,9 @@ TEST_CASE("index", "[index][option]") {
     std::unique_ptr<options::index::wiredtiger_storage_options> storage =
         stdx::make_unique<options::index::wiredtiger_storage_options>();
 
-    auto collation = document{} << "locale"
-                                << "en_US" << finalize;
-    auto partial_filter_expression = document{} << "x" << true << finalize;
-    auto weights = document{} << "a" << 100 << finalize;
+    auto collation = make_document(kvp("locale", "en_US"));
+    auto partial_filter_expression = make_document(kvp("x", true));
+    auto weights = make_document(kvp("a", 100));
 
     SECTION("check options applied") {
         CHECK_OPTIONAL_ARGUMENT(idx, background, true);

@@ -14,13 +14,13 @@
 
 #include "helpers.hpp"
 
-#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/update.hpp>
 
 namespace {
-using namespace bsoncxx::builder::stream;
+using namespace bsoncxx::builder::basic;
 using namespace mongocxx;
 
 TEST_CASE("update opts", "[update][option]") {
@@ -28,8 +28,7 @@ TEST_CASE("update opts", "[update][option]") {
 
     options::update updt;
 
-    auto collation = document{} << "locale"
-                                << "en_US" << finalize;
+    auto collation = make_document(kvp("locale", "en_US"));
 
     CHECK_OPTIONAL_ARGUMENT(updt, bypass_document_validation, true);
     CHECK_OPTIONAL_ARGUMENT(updt, collation, collation.view());

@@ -15,7 +15,6 @@
 #include "helpers.hpp"
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types/value.hpp>
 #include <mongocxx/instance.hpp>
@@ -30,9 +29,9 @@ using bsoncxx::builder::basic::make_document;
 TEST_CASE("insert_one", "[insert_one][result]") {
     mongocxx::instance::current();
 
-    builder::stream::document build;
+    bsoncxx::builder::basic::document build;
     auto oid = types::b_oid{bsoncxx::oid{}};
-    build << "_id" << oid << "x" << 1;
+    build.append(kvp("_id", oid), kvp("x", 1));
 
     mongocxx::result::bulk_write b{document::value(build.view())};
 

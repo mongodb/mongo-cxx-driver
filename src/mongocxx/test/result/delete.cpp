@@ -15,21 +15,21 @@
 #include "helpers.hpp"
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/result/delete.hpp>
 
 namespace {
+
 using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
 
 TEST_CASE("delete", "[delete][result]") {
     mongocxx::instance::current();
 
-    bsoncxx::builder::stream::document build;
-    build << "_id" << bsoncxx::oid{} << "nRemoved" << bsoncxx::types::b_int32{1};
+    bsoncxx::builder::basic::document build;
+    build.append(kvp("_id", bsoncxx::oid{}), kvp("nRemoved", bsoncxx::types::b_int32{1}));
 
     mongocxx::result::bulk_write b{bsoncxx::document::value(build.view())};
 
