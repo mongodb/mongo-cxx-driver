@@ -79,23 +79,24 @@ const char* get_collection_name(mongoc_collection_t* collection) {
     return mongocxx::libmongoc::collection_get_name(collection);
 }
 
-mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(mongoc_collection_t* collection,
-                                                                   bsoncxx::document::view command,
-                                                                   bsoncxx::document::view opts) {
-    if (opts["writeConcern"] && opts["collation"]) {
-        auto wc = opts["writeConcern"].get_document();
-        auto wc_view = wc.view();
-        if (wc_view["w"].type() == bsoncxx::type::k_int32) {
-            if (wc_view["w"].get_int32() == 0) {
-                throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
-            }
+mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
+    mongoc_collection_t* collection,
+    bsoncxx::document::view command,
+    bsoncxx::document::view opts,
+    const bsoncxx::stdx::optional<mongocxx::write_concern>& wc) {
+    bsoncxx::builder::basic::document opts_builder;
+    opts_builder.append(concatenate(opts));
+
+    if (wc) {
+        if (!wc->is_acknowledged() && opts["collation"]) {
+            throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
         }
+        opts_builder.append(concatenate(wc->to_document()));
     }
 
     mongocxx::libbson::scoped_bson_t command_bson{command};
-    mongocxx::libbson::scoped_bson_t opts_bson{opts};
+    mongocxx::libbson::scoped_bson_t opts_bson{opts_builder.extract()};
     mongocxx::libbson::scoped_bson_t reply;
-
     ::bson_error_t error;
 
     bool result = mongocxx::libmongoc::collection_write_command_with_opts(
@@ -670,11 +671,8 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
         options_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
     }
 
-    if (options.write_concern()) {
-        options_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
-    }
-
-    return find_and_modify(_get_impl().collection_t, command_doc.view(), options_doc.view());
+    return find_and_modify(
+        _get_impl().collection_t, command_doc.view(), options_doc.view(), options.write_concern());
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
@@ -717,11 +715,8 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
         options_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
     }
 
-    if (options.write_concern()) {
-        options_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
-    }
-
-    return find_and_modify(_get_impl().collection_t, command_doc.view(), options_doc.view());
+    return find_and_modify(
+        _get_impl().collection_t, command_doc.view(), options_doc.view(), options.write_concern());
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
@@ -756,7 +751,8 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
         options_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
     }
 
-    return find_and_modify(_get_impl().collection_t, command_doc.view(), options_doc.view());
+    return find_and_modify(
+        _get_impl().collection_t, command_doc.view(), options_doc.view(), options.write_concern());
 }
 
 std::int64_t collection::count(view_or_value filter, const options::count& options) {

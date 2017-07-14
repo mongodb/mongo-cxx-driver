@@ -58,13 +58,7 @@ class MONGOCXX_API write_concern {
     /// A class to represent the special case values for write_concern::nodes.
     /// @see https://docs.mongodb.com/master/reference/write-concern/#w-option
     ///
-    enum class level {
-        k_default,
-        k_majority,
-        k_tag,
-        k_unacknowledged,
-        k_unknown,
-    };
+    enum class level { k_default, k_majority, k_tag, k_unacknowledged, k_acknowledged };
 
     ///
     /// Constructs a new write_concern.
@@ -128,14 +122,18 @@ class MONGOCXX_API write_concern {
     /// @see https://docs.mongodb.com/master/reference/write-concern/#w-option
     ///
     /// @param confirm_level
-    ///   Either level::k_unacknowledged, level::k_default, or level::k_majority.
+    ///   Either level::k_unacknowledged, level::k_acknowledged, level::k_default, or
+    ///   level::k_majority.
     ///
-    /// @note the acknowledge level of level::k_tag is set automatically when a tag is set.
+    /// @note
+    ///   the acknowledge level of level::k_tag is set automatically when a tag is set.
     ///
-    /// @warning Setting this to level::k_unacknowledged disables write acknowledgment and all other
-    /// write concern options.
+    /// @warning
+    ///   Setting this to level::k_unacknowledged disables write acknowledgment and all other
+    ///   write concern options.
     ///
-    /// @throws mongocxx::exception for an unknown confirm_level.
+    /// @exception
+    ///   Throws mongocxx::exception for setting a tag acknowledge level. Use tag() instead.
     ///
     void acknowledge_level(level confirm_level);
 
@@ -148,7 +146,7 @@ class MONGOCXX_API write_concern {
     ///   the majority of nodes in the replica set. If the value is zero, then no timeout is set.
     ///
     /// @throws mongocxx::logic_error for an invalid timeout value.
-    //
+    ///
     void majority(std::chrono::milliseconds timeout);
 
     ///
@@ -183,7 +181,8 @@ class MONGOCXX_API write_concern {
 
     ///
     /// Gets the current number of nodes that this write_concern requires operations to reach.
-    /// This value will be unset iff the acknowledge_level is set instead.
+    /// This value will be unset if the acknowledge_level is set to majority, default, or tag.
+    ///
     /// This is unset by default.
     ///
     /// @see https://docs.mongodb.com/master/reference/write-concern/#w-option
@@ -194,14 +193,12 @@ class MONGOCXX_API write_concern {
 
     ///
     /// Gets the current acknowledgment level.
-    /// This value will be unset iff the nodes value is set instead.
-    /// This is set by default.
     ///
     /// @see https://docs.mongodb.com/master/reference/write-concern/#w-option
     ///
     /// @return The acknowledgment level.
     ///
-    stdx::optional<level> acknowledge_level() const;
+    level acknowledge_level() const;
 
     ///
     /// Gets the current getLastErrorMode that is required by this write_concern.
@@ -223,6 +220,13 @@ class MONGOCXX_API write_concern {
     /// @return Current timeout in milliseconds.
     ///
     std::chrono::milliseconds timeout() const;
+
+    ///
+    /// Gets whether this write_concern requires an acknowledged write.
+    ///
+    /// @return Whether this write concern requires an acknowledged write.
+    ///
+    bool is_acknowledged() const;
 
     ///
     /// Gets the document form of this write_concern.

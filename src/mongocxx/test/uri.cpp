@@ -53,9 +53,7 @@ TEST_CASE("URI", "[uri]") {
         REQUIRE(u.write_concern().majority() == false);
         REQUIRE(!u.write_concern().nodes());
         REQUIRE(u.write_concern().timeout() == std::chrono::milliseconds{0});
-        REQUIRE(u.write_concern().acknowledge_level());
-        REQUIRE(*u.write_concern().acknowledge_level() ==
-                mongocxx::write_concern::level::k_default);
+        REQUIRE(u.write_concern().acknowledge_level() == mongocxx::write_concern::level::k_default);
     }
 
     SECTION("Valid URI") {

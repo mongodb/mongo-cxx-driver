@@ -14,22 +14,15 @@
 
 #include <mongocxx/write_concern.hpp>
 
-#include <limits>
-
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/private/error_category.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/write_concern.hh>
-#include <mongocxx/stdx.hpp>
-#include <mongocxx/stdx.hpp>
 
-#include <bsoncxx/array/value.hpp>
-#include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/document/value.hpp>
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
@@ -60,11 +53,14 @@ void write_concern::journal(bool journal) {
 }
 
 void write_concern::nodes(std::int32_t confirm_from) {
+    if (confirm_from < 0) {
+        throw mongocxx::logic_error{error_code::k_invalid_parameter};
+    }
     libmongoc::write_concern_set_w(_impl->write_concern_t, confirm_from);
 }
 
 void write_concern::acknowledge_level(write_concern::level confirm_level) {
-    std::int32_t w;
+    std::int32_t w = 0;
     switch (confirm_level) {
         case write_concern::level::k_default:
             w = MONGOC_WRITE_CONCERN_W_DEFAULT;
@@ -75,13 +71,17 @@ void write_concern::acknowledge_level(write_concern::level confirm_level) {
         case write_concern::level::k_unacknowledged:
             w = MONGOC_WRITE_CONCERN_W_UNACKNOWLEDGED;
             break;
+        case write_concern::level::k_acknowledged:
+            w = 1;
+            break;
         case write_concern::level::k_tag:
             // no exception for setting tag if it's set
-            if (libmongoc::write_concern_get_w(_impl->write_concern_t) ==
-                MONGOC_WRITE_CONCERN_W_TAG)
+            if (libmongoc::write_concern_get_w(_impl->write_concern_t) !=
+                MONGOC_WRITE_CONCERN_W_TAG) {
+                throw exception{error_code::k_unknown_write_concern};
+            } else {
                 return;
-        default:
-            throw exception{error_code::k_unknown_write_concern};
+            }
     }
     libmongoc::write_concern_set_w(_impl->write_concern_t, w);
 }
@@ -94,6 +94,7 @@ void write_concern::majority(std::chrono::milliseconds timeout) {
     const auto count = timeout.count();
     if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
         throw logic_error{error_code::k_invalid_parameter};
+
     libmongoc::write_concern_set_wmajority(_impl->write_concern_t,
                                            static_cast<std::int32_t>(count));
 }
@@ -102,6 +103,7 @@ void write_concern::timeout(std::chrono::milliseconds timeout) {
     const auto count = timeout.count();
     if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
         throw logic_error{error_code::k_invalid_parameter};
+
     libmongoc::write_concern_set_wtimeout(_impl->write_concern_t, static_cast<std::int32_t>(count));
 }
 
@@ -111,14 +113,14 @@ bool write_concern::journal() const {
 
 stdx::optional<std::int32_t> write_concern::nodes() const {
     std::int32_t w = libmongoc::write_concern_get_w(_impl->write_concern_t);
-    return w >= 1 ? stdx::optional<std::int32_t>{w} : stdx::nullopt;
+    return w >= 0 ? stdx::optional<std::int32_t>{w} : stdx::nullopt;
 }
 
-stdx::optional<write_concern::level> write_concern::acknowledge_level() const {
+write_concern::level write_concern::acknowledge_level() const {
     stdx::optional<write_concern::level> ack_level;
     std::int32_t w = libmongoc::write_concern_get_w(_impl->write_concern_t);
     if (w >= 1)
-        return stdx::nullopt;
+        return write_concern::level::k_acknowledged;
     switch (w) {
         case MONGOC_WRITE_CONCERN_W_UNACKNOWLEDGED:
             return write_concern::level::k_unacknowledged;
@@ -129,7 +131,7 @@ stdx::optional<write_concern::level> write_concern::acknowledge_level() const {
         case MONGOC_WRITE_CONCERN_W_TAG:
             return write_concern::level::k_tag;
         default:
-            return write_concern::level::k_unknown;
+            MONGOCXX_UNREACHABLE;
     }
 }
 
@@ -146,6 +148,10 @@ std::chrono::milliseconds write_concern::timeout() const {
     return std::chrono::milliseconds(libmongoc::write_concern_get_wtimeout(_impl->write_concern_t));
 }
 
+bool write_concern::is_acknowledged() const {
+    return libmongoc::write_concern_is_acknowledged(_impl->write_concern_t);
+}
+
 bsoncxx::document::value write_concern::to_document() const {
     using bsoncxx::builder::basic::make_document;
     using bsoncxx::builder::basic::kvp;
@@ -154,13 +160,14 @@ bsoncxx::document::value write_concern::to_document() const {
 
     if (auto ns = nodes()) {
         doc.append(kvp("w", *ns));
-    } else if (auto level = acknowledge_level()) {
-        switch (*level) {
+    } else {
+        switch (acknowledge_level()) {
             case write_concern::level::k_unacknowledged:
                 doc.append(kvp("w", 0));
                 break;
             case write_concern::level::k_default:
-                doc.append(kvp("w", 1));
+                // "Commands supporting a write concern MUST NOT send the default write concern to
+                // the server." See Spec 135.
                 break;
             case write_concern::level::k_majority:
                 doc.append(kvp("w", "majority"));
@@ -174,9 +181,14 @@ bsoncxx::document::value write_concern::to_document() const {
         }
     }
 
-    doc.append(kvp("j", journal()));
-    doc.append(
-        kvp("wtimeout", bsoncxx::types::b_int32{static_cast<std::int32_t>(timeout().count())}));
+    if (libmongoc::write_concern_journal_is_set(_impl->write_concern_t)) {
+        doc.append(kvp("j", journal()));
+    }
+
+    std::int32_t count;
+    if ((count = static_cast<std::int32_t>(timeout().count())) > 0) {
+        doc.append(kvp("wtimeout", bsoncxx::types::b_int32{count}));
+    }
 
     return doc.extract();
 }
