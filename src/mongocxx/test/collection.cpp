@@ -2571,6 +2571,45 @@ TEST_CASE("create_index tests", "[collection]") {
     }
 }
 
+TEST_CASE("list_indexes", "[collection]") {
+    instance::current();
+
+    client mongodb_client{uri{}};
+    database db = mongodb_client["collection_list_indexes"];
+
+    collection coll = db["list_indexes_works"];
+    coll.drop();
+    coll.insert_one({});  // Ensure that the collection exists.
+
+    options::index options{};
+    options.unique(true);
+
+    coll.create_index(make_document(kvp("a", 1)), options);
+    coll.create_index(make_document(kvp("b", 1), kvp("c", -1)));
+    coll.create_index(make_document(kvp("c", -1)));
+
+    auto cursor = coll.list_indexes();
+
+    std::vector<std::string> expected_names{"a_1", "b_1_c_-1", "c_-1"};
+    std::int8_t found = 0;
+
+    for (auto&& index : cursor) {
+        auto name = index["name"].get_utf8();
+
+        for (auto&& expected : expected_names) {
+            if (bsoncxx::stdx::string_view{expected} == name.value) {
+                found++;
+                if (expected == "a_1") {
+                    REQUIRE(index["unique"]);
+                } else {
+                    REQUIRE(!index["unique"]);
+                }
+            }
+        }
+    }
+    REQUIRE(found == 3);
+}
+
 // We use a capped collection for this test case so we can
 // use it with all three cursor types.
 TEST_CASE("Cursor iteration", "[collection][cursor]") {
