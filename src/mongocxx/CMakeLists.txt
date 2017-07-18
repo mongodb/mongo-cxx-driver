@@ -62,7 +62,6 @@ set(mongocxx_sources
     hint.cpp
     index_model.cpp
     index_view.cpp
-    insert_many_builder.cpp
     instance.cpp
     logger.cpp
     model/delete_many.cpp

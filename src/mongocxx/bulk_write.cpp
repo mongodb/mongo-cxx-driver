@@ -17,9 +17,11 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/collection.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/private/bulk_write.hh>
+#include <mongocxx/private/collection.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/write_concern.hh>
@@ -38,7 +40,8 @@ bulk_write& bulk_write::operator=(bulk_write&&) noexcept = default;
 bulk_write::~bulk_write() = default;
 
 bulk_write::bulk_write(options::bulk_write options)
-    : _impl(stdx::make_unique<impl>(libmongoc::bulk_operation_new(options.ordered()))) {
+    : _created_from_collection(false),
+      _impl(stdx::make_unique<impl>(libmongoc::bulk_operation_new(options.ordered()))) {
     auto options_wc = options.write_concern();
     if (options_wc)
         libmongoc::bulk_operation_set_write_concern(_impl->operation_t,
@@ -154,6 +157,17 @@ void bulk_write::append(const model::write& operation) {
             }
             break;
         }
+    }
+}
+
+bulk_write::bulk_write(const collection& coll, const options::bulk_write& options)
+    : _created_from_collection{true},
+      _impl{stdx::make_unique<bulk_write::impl>(libmongoc::collection_create_bulk_operation(
+          coll._get_impl().collection_t,
+          options.ordered(),
+          options.write_concern() ? options.write_concern()->_impl->write_concern_t : nullptr))} {
+    if (auto validation = options.bypass_document_validation()) {
+        libmongoc::bulk_operation_set_bypass_document_validation(_impl->operation_t, *validation);
     }
 }
 

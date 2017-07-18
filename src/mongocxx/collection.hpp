@@ -19,13 +19,17 @@
 #include <memory>
 #include <string>
 
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/index_view.hpp>
-#include <mongocxx/insert_many_builder.hpp>
+#include <mongocxx/model/insert_one.hpp>
 #include <mongocxx/options/aggregate.hpp>
 #include <mongocxx/options/bulk_write.hpp>
 #include <mongocxx/options/count.hpp>
@@ -53,6 +57,10 @@
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
+
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::concatenate;
 
 class client;
 class database;
@@ -134,6 +142,17 @@ class MONGOCXX_API collection {
     ///
     cursor aggregate(const pipeline& pipeline,
                      const options::aggregate& options = options::aggregate());
+
+    ///
+    /// Creates a new bulk operation to be executed against this collection.
+    ///
+    /// @param options
+    ///   Optional arguments; see mongocxx::options::bulk_write.
+    ///
+    /// @return
+    ///    The newly-created bulk write.
+    ///
+    class bulk_write create_bulk_write(const options::bulk_write& options = {});
 
     ///
     /// Sends a write to the server as a bulk write operation.
@@ -701,6 +720,7 @@ class MONGOCXX_API collection {
     class index_view indexes();
 
    private:
+    friend class bulk_write;
     friend class database;
 
     MONGOCXX_PRIVATE collection(const database& database,
@@ -718,9 +738,7 @@ class MONGOCXX_API collection {
 
 MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::write(
     const model::write& write, const options::bulk_write& options) {
-    class bulk_write writes {
-        options
-    };
+    auto writes = create_bulk_write(options);
     writes.append(write);
 
     return bulk_write(writes);
@@ -737,7 +755,7 @@ MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
     write_model_iterator_type begin,
     write_model_iterator_type end,
     const options::bulk_write& options) {
-    class bulk_write writes(options);
+    auto writes = create_bulk_write(options);
 
     std::for_each(begin, end, [&](const model::write& current) { writes.append(current); });
 
@@ -755,9 +773,40 @@ MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
     document_view_iterator_type begin,
     document_view_iterator_type end,
     const options::insert& options) {
-    auto op = std::for_each(begin, end, insert_many_builder{options});
+    options::bulk_write bulk_write_options;
+    bulk_write_options.ordered(options.ordered().value_or(true));
+    if (options.write_concern()) {
+        bulk_write_options.write_concern(*options.write_concern());
+    }
+    if (options.bypass_document_validation()) {
+        bulk_write_options.bypass_document_validation(*options.bypass_document_validation());
+    }
 
-    return op.insert(this);
+    auto writes = create_bulk_write(bulk_write_options);
+    bsoncxx::builder::basic::array inserted_ids;
+
+    std::for_each(begin, end, [&inserted_ids, &writes](const bsoncxx::document::view& doc) {
+        bsoncxx::builder::basic::document id_doc;
+
+        if (!doc["_id"]) {
+            id_doc.append(kvp("_id", bsoncxx::oid{}));
+            writes.append(
+                model::insert_one{make_document(concatenate(id_doc.view()), concatenate(doc))});
+        } else {
+            id_doc.append(kvp("_id", doc["_id"].get_value()));
+            writes.append(model::insert_one{doc});
+        }
+
+        inserted_ids.append(id_doc.view());
+    });
+
+    auto result = bulk_write(writes);
+    if (!result) {
+        return stdx::nullopt;
+    }
+
+    return stdx::optional<result::insert_many>{
+        result::insert_many{std::move(result.value()), inserted_ids.view()}};
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

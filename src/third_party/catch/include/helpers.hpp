@@ -15,6 +15,7 @@
 #pragma once
 
 #include <mongocxx/private/libmongoc.hh>
+
 #include <mongocxx/config/private/prelude.hh>
 
 #define CHECK_OPTIONAL_ARGUMENT(OBJECT, NAME, VALUE) \
@@ -90,9 +91,13 @@
     auto database_has_collection = libmongoc::database_has_collection.create_instance();         \
     auto database_command = libmongoc::database_command.create_instance();                       \
     auto database_command_simple = libmongoc::database_command_simple.create_instance();         \
-    database_command_simple->interpose([](mongoc_database_t*, const bson_t*,                     \
-                                          const mongoc_read_prefs_t*, bson_t*,                   \
-                                          bson_error_t*) { return true; }).forever();
+    database_command_simple                                                                      \
+        ->interpose([](mongoc_database_t*,                                                       \
+                       const bson_t*,                                                            \
+                       const mongoc_read_prefs_t*,                                               \
+                       bson_t*,                                                                  \
+                       bson_error_t*) { return true; })                                          \
+        .forever();
 
 #define MOCK_COLLECTION                                                                           \
     auto collection_set_preference = libmongoc::collection_set_read_prefs.create_instance();      \
@@ -130,9 +135,9 @@
     find_and_modify_opts_set_bypass_document_validation->interpose(                                \
         [&expected_find_and_modify_opts_bypass_document_validation](                               \
             mongoc_find_and_modify_opts_t*, bool bypass_document_validation) {                     \
-        REQUIRE(bypass_document_validation ==                                                      \
-                expected_find_and_modify_opts_bypass_document_validation);                         \
-        return true;                                                                               \
+            REQUIRE(bypass_document_validation ==                                                  \
+                    expected_find_and_modify_opts_bypass_document_validation);                     \
+            return true;                                                                           \
         });                                                                                        \
     bsoncxx::document::view expected_find_and_modify_opts_fields;                                  \
     auto find_and_modify_opts_set_fields =                                                         \
@@ -174,38 +179,29 @@
     auto cursor_destroy = libmongoc::cursor_destroy.create_instance(); \
     cursor_destroy->interpose([&](mongoc_cursor_t*) {});
 
-#define MOCK_BULK                                                                                \
-    auto bulk_operation_new = libmongoc::bulk_operation_new.create_instance();                   \
-    auto bulk_operation_insert = libmongoc::bulk_operation_insert.create_instance();             \
-    auto bulk_operation_remove_one_with_opts =                                                   \
-        libmongoc::bulk_operation_remove_one_with_opts.create_instance();                        \
-    auto bulk_operation_update_one_with_opts =                                                   \
-        libmongoc::bulk_operation_update_one_with_opts.create_instance();                        \
-    auto bulk_operation_replace_one_with_opts =                                                  \
-        libmongoc::bulk_operation_replace_one_with_opts.create_instance();                       \
-    auto bulk_operation_update_many_with_opts =                                                  \
-        libmongoc::bulk_operation_update_many_with_opts.create_instance();                       \
-    auto bulk_operation_remove_many_with_opts =                                                  \
-        libmongoc::bulk_operation_remove_many_with_opts.create_instance();                       \
-    auto bulk_operation_set_bypass_document_validation =                                         \
-        libmongoc::bulk_operation_set_bypass_document_validation.create_instance();              \
-    auto bulk_operation_set_client = libmongoc::bulk_operation_set_client.create_instance();     \
-    auto bulk_operation_set_database = libmongoc::bulk_operation_set_database.create_instance(); \
-    auto bulk_operation_set_collection =                                                         \
-        libmongoc::bulk_operation_set_collection.create_instance();                              \
-    auto bulk_operation_set_write_concern =                                                      \
-        libmongoc::bulk_operation_set_write_concern.create_instance();                           \
-    auto bulk_operation_execute = libmongoc::bulk_operation_execute.create_instance();           \
-    auto bulk_operation_destroy = libmongoc::bulk_operation_destroy.create_instance();           \
-    bool bulk_operation_new_called = false;                                                      \
-    bool bulk_operation_op_called = false;                                                       \
-    bool bulk_operation_set_bypass_document_validation_called = false;                           \
-    bool bulk_operation_set_client_called = false;                                               \
-    bool bulk_operation_set_database_called = false;                                             \
-    bool bulk_operation_set_collection_called = false;                                           \
-    bool bulk_operation_set_write_concern_called = false;                                        \
-    bool bulk_operation_execute_called = false;                                                  \
-    bool bulk_operation_destroy_called = false;
+#define MOCK_BULK                                                                      \
+    auto bulk_operation_insert = libmongoc::bulk_operation_insert.create_instance();   \
+    auto bulk_operation_remove_one_with_opts =                                         \
+        libmongoc::bulk_operation_remove_one_with_opts.create_instance();              \
+    auto bulk_operation_update_one_with_opts =                                         \
+        libmongoc::bulk_operation_update_one_with_opts.create_instance();              \
+    auto bulk_operation_replace_one_with_opts =                                        \
+        libmongoc::bulk_operation_replace_one_with_opts.create_instance();             \
+    auto bulk_operation_update_many_with_opts =                                        \
+        libmongoc::bulk_operation_update_many_with_opts.create_instance();             \
+    auto bulk_operation_remove_many_with_opts =                                        \
+        libmongoc::bulk_operation_remove_many_with_opts.create_instance();             \
+    auto bulk_operation_set_bypass_document_validation =                               \
+        libmongoc::bulk_operation_set_bypass_document_validation.create_instance();    \
+    auto bulk_operation_execute = libmongoc::bulk_operation_execute.create_instance(); \
+    auto bulk_operation_destroy = libmongoc::bulk_operation_destroy.create_instance(); \
+    auto collection_create_bulk_operation =                                            \
+        libmongoc::collection_create_bulk_operation.create_instance();                 \
+    bool bulk_operation_op_called = false;                                             \
+    bool bulk_operation_set_bypass_document_validation_called = false;                 \
+    bool bulk_operation_execute_called = false;                                        \
+    bool bulk_operation_destroy_called = false;                                        \
+    bool collection_create_bulk_operation_called = false;
 
 #define MOCK_CONCERN                                                     \
     auto concern_copy = libmongoc::write_concern_copy.create_instance(); \

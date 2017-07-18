@@ -28,7 +28,6 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/exception/write_exception.hpp>
-#include <mongocxx/insert_many_builder.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/read_concern.hpp>
@@ -768,51 +767,6 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         REQUIRE(updated);
         REQUIRE(updated->view()["changed"].get_bool() == true);
         REQUIRE(coll.count({}) == 1);
-    }
-
-    SECTION("test using an insert_many_builder on this collection", "[collection]") {
-        collection coll = db["insert_many_builder_test"];
-        coll.drop();
-        auto doc_value = make_document(kvp("x", 1));
-        auto doc_view = doc_value.view();
-
-        insert_many_builder insert_many{options::insert()};
-        insert_many(doc_view);
-        insert_many(doc_view);
-        insert_many(doc_view);
-
-        insert_many.insert(&coll);
-
-        coll.insert_one(make_document(kvp("b", 1)));
-
-        REQUIRE(coll.count(doc_view) == 3);
-        REQUIRE(coll.count({}) == 4);
-    }
-
-    SECTION("insert_many_builder with bypass_document_validation", "[collection]") {
-        std::string collname = "insert_many_builder_bypass_document_validation";
-        db[collname].drop();
-        validation_criteria validation;
-        validation.level(validation_criteria::validation_level::k_strict);
-        validation.action(validation_criteria::validation_action::k_error);
-        validation.rule(make_document(kvp("x", make_document(kvp("$eq", 0)))));
-        mongocxx::options::create_collection opts;
-        opts.validation_criteria(validation);
-
-        collection coll = db.create_collection(collname, opts);
-
-        options::insert options;
-        options.bypass_document_validation(true);
-
-        auto doc = make_document(kvp("x", 1));
-        insert_many_builder insert_many{options};
-        insert_many(doc.view());
-        insert_many(doc.view());
-        insert_many(doc.view());
-
-        REQUIRE_NOTHROW(insert_many.insert(&coll));
-
-        REQUIRE(coll.count(doc.view()) == 3);
     }
 
     SECTION("count with hint", "[collection]") {
@@ -1973,16 +1927,14 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("sort_by_count") {
-            insert_many_builder insert_many{options::insert()};
-            insert_many(make_document(kvp("x", 1)));
-            insert_many(make_document(kvp("x", 2)));
-            insert_many(make_document(kvp("x", 2)));
+            std::vector<bsoncxx::document::value> inserts{
+                make_document(kvp("x", 1)), make_document(kvp("x", 2)), make_document(kvp("x", 2))};
 
             SECTION("with string") {
                 collection coll = db["aggregation_sort_by_count_with_string"];
                 coll.drop();
 
-                insert_many.insert(&coll);
+                coll.insert_many(inserts, options::insert{});
 
                 pipeline.sort_by_count("$x");
                 auto cursor = coll.aggregate(pipeline);
@@ -2003,7 +1955,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                 collection coll = db["aggregation_sort_by_count_with_document"];
                 coll.drop();
 
-                insert_many.insert(&coll);
+                coll.insert_many(inserts, options::insert{});
 
                 pipeline.sort_by_count(make_document(kvp("$mod", make_array("$x", 2))));
                 auto cursor = coll.aggregate(pipeline);
@@ -2088,7 +2040,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db["bulk_write_default_write"];
             coll.drop();
 
-            bulk_write abulk{bulk_opts};
+            auto abulk = coll.create_bulk_write(bulk_opts);
             abulk.append(model::insert_one{std::move(doc1)});
             abulk.append(model::insert_one{std::move(doc2)});
             auto result = coll.bulk_write(abulk);
@@ -2102,7 +2054,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.drop();
 
             bulk_opts.write_concern(noack);
-            bulk_write bbulk{bulk_opts};
+            auto bbulk = coll.create_bulk_write(bulk_opts);
             bbulk.append(model::insert_one{std::move(doc1)});
             bbulk.append(model::insert_one{std::move(doc2)});
             auto result = coll.bulk_write(bbulk);
@@ -2138,7 +2090,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
                 second.collation(collation.view());
 
-                bulk_write bulk{bulk_opts};
+                auto bulk = coll.create_bulk_write(bulk_opts);
                 bulk.append(first);
                 bulk.append(second);
 
@@ -2181,7 +2133,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         options::bulk_write bulk_opts;
         bulk_opts.ordered(false);
-        bulk_write bulk{bulk_opts};
+        auto bulk = coll.create_bulk_write(bulk_opts);
 
         bulk.append(model::insert_one{std::move(doc1)});
         bulk.append(model::insert_one{std::move(doc2)});

@@ -43,12 +43,13 @@ class MONGOCXX_API bulk_write {
     ///
     /// Initializes a new bulk operation to be executed against a mongocxx::collection.
     ///
-    /// @param ordered
-    ///   If @c true all write operations will be executed serially in the order they were appended
-    ///   and the entire bulk operation will abort on the first error. If @c false operations will
-    ///   be executed in an arbitrary order (possibly in parallel on the server) and any errors will
-    ///   be reported after attempting all operations. Unordered bulk writes may be more efficient
-    ///   than ordered bulk writes.
+    /// @param options
+    ///   Optional arguments; see mongocxx::options::bulk_write.
+    ///
+    /// @deprecated
+    ///   Bulk writes created with this constructor will not inherit write concerns from the
+    ///   collection, database, or client. mongocxx::collection::create_bulk_operation should be
+    ///   used instead.
     ///
     explicit bulk_write(options::bulk_write options = {});
 
@@ -91,6 +92,10 @@ class MONGOCXX_API bulk_write {
     friend class collection;
 
     class MONGOCXX_PRIVATE impl;
+
+    MONGOCXX_PRIVATE bulk_write(const collection& coll, const options::bulk_write& options);
+
+    bool _created_from_collection;
     std::unique_ptr<impl> _impl;
 };
 

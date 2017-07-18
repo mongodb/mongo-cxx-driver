@@ -398,41 +398,24 @@ TEST_CASE("Collection", "[collection]") {
 
     SECTION("Writes", "[collection::writes]") {
         auto expected_order_setting = false;
-        auto expect_set_write_concern_called = false;
         auto expect_set_bypass_document_validation_called = false;
         auto expected_bypass_document_validation = false;
 
         auto modification_doc = make_document(kvp("cool", "wow"), kvp("foo", "bar"));
 
-        bulk_operation_new->interpose([&](bool ordered) -> mongoc_bulk_operation_t* {
-            bulk_operation_new_called = true;
-            REQUIRE(ordered == expected_order_setting);
-            return nullptr;
-        });
+        collection_create_bulk_operation->interpose(
+            [&](mongoc_collection_t*,
+                bool ordered,
+                const mongoc_write_concern_t*) -> mongoc_bulk_operation_t* {
+                collection_create_bulk_operation_called = true;
+                REQUIRE(ordered == expected_order_setting);
+                return nullptr;
+            });
 
         bulk_operation_set_bypass_document_validation->interpose(
             [&](mongoc_bulk_operation_t*, bool bypass) {
                 bulk_operation_set_bypass_document_validation_called = true;
                 REQUIRE(expected_bypass_document_validation == bypass);
-            });
-
-        bulk_operation_set_client->interpose(
-            [&](mongoc_bulk_operation_t*, void*) { bulk_operation_set_client_called = true; });
-
-        bulk_operation_set_database->interpose([&](mongoc_bulk_operation_t*, const char* db) {
-            bulk_operation_set_database_called = true;
-            REQUIRE(database_name == db);
-        });
-
-        bulk_operation_set_collection->interpose([&](mongoc_bulk_operation_t*, const char* coll) {
-            bulk_operation_set_collection_called = true;
-            REQUIRE(collection_name == coll);
-        });
-
-        bulk_operation_set_write_concern->interpose(
-            [&](mongoc_bulk_operation_t*, const mongoc_write_concern_t*) {
-                bulk_operation_set_write_concern_called = true;
-                // TODO: actually test the write concern setting is correct or default
             });
 
         bulk_operation_execute->interpose(
@@ -525,7 +508,6 @@ TEST_CASE("Collection", "[collection]") {
 
             SECTION("Write Concern provided") {
                 options.write_concern(concern);
-                expect_set_write_concern_called = true;
             }
 
             mongo_coll.update_one(filter_doc.view(), modification_doc.view(), options);
@@ -653,14 +635,10 @@ TEST_CASE("Collection", "[collection]") {
             mongo_coll.delete_many(filter_doc.view());
         }
 
-        REQUIRE(bulk_operation_new_called);
-        REQUIRE(expect_set_write_concern_called == bulk_operation_set_write_concern_called);
+        REQUIRE(collection_create_bulk_operation_called);
         REQUIRE(expect_set_bypass_document_validation_called ==
                 bulk_operation_set_bypass_document_validation_called);
         REQUIRE(bulk_operation_op_called);
-        REQUIRE(bulk_operation_set_client_called);
-        REQUIRE(bulk_operation_set_database_called);
-        REQUIRE(bulk_operation_set_collection_called);
         REQUIRE(bulk_operation_execute_called);
         REQUIRE(bulk_operation_destroy_called);
     }
