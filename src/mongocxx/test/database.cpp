@@ -576,18 +576,5 @@ TEST_CASE("Database integration tests", "[database]") {
         std::set<std::string> expected_colls2{"list_collections_capped"};
         REQUIRE(check_for_collections(std::move(cursor2), expected_colls2));
     }
-
-    SECTION("run command succeeds when the command specifies a collation and maxWireVersion < 5") {
-        auto c = database["run_command_collation"];
-        c.insert_one(make_document());
-
-        bsoncxx::document::value command =
-            make_document(kvp("find", "run_command_collation"),
-                          kvp("filter", make_document()),
-                          kvp("collation", make_document(kvp("locale", "en_US"))));
-
-        REQUIRE_NOTHROW(database.run_command(command.view()));
-        c.drop();
-    }
 }
 }  // namespace

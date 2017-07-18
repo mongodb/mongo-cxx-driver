@@ -2254,10 +2254,17 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                 collection coll = db["bulk_write_collation"];
                 coll.drop();
 
-                bulk_opts.write_concern(noack);
+                auto collation =
+                    make_document(kvp("collation", make_document(kvp("locale", "en_US"))));
+
+                model::delete_one first{std::move(doc1)};
+                model::delete_one second{std::move(doc2)};
+
+                second.collation(collation.view());
+
                 bulk_write bulk{bulk_opts};
-                bulk.append(model::insert_one{std::move(doc1)});
-                bulk.append(model::insert_one{std::move(doc2)});
+                bulk.append(first);
+                bulk.append(second);
 
                 REQUIRE_THROWS_AS(coll.bulk_write(bulk), operation_exception);
             }

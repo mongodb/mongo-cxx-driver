@@ -68,8 +68,8 @@ class index_view::impl {
         bsoncxx::document::value result = create_many(std::vector<index_model>{model}, options);
         bsoncxx::document::view result_view = result.view();
 
-        if (result_view["numIndexesAfter"].get_value() ==
-            result_view["numIndexesBefore"].get_value()) {
+        if (result_view["note"] &&
+            result_view["note"].get_utf8().value.to_string() == "all indexes already exist") {
             return bsoncxx::stdx::nullopt;
         }
 
