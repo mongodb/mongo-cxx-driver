@@ -19,8 +19,10 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/pool.hpp>
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/uri.hpp>
 
 namespace {
@@ -232,5 +234,71 @@ TEST_CASE("A client can create a named database object", "[client]") {
     client mongo_client{uri{}};
     database obtained_database = mongo_client[name];
     REQUIRE(obtained_database.name() == name);
+}
+
+TEST_CASE("integration tests for client metadata handshake feature") {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    std::string app_name{"xyz"};
+    uri uri{"mongodb://localhost/?appName=" + app_name};
+    instance::current();
+
+    auto run_test = [app_name](const client& client) {
+        mongocxx::database db = client["admin"];
+        auto current_op = db.run_command(make_document(kvp("currentOp", 1)));
+        auto current_op_view = current_op.view();
+
+        auto in_prog = current_op_view["inprog"].get_array().value;
+        bool found_op = false;
+
+        for (auto&& it : in_prog) {
+            auto op_view = it.get_document().view();
+
+            if (!op_view["appName"] ||
+                op_view["appName"].get_utf8().value != stdx::string_view{app_name}) {
+                continue;
+            }
+
+            found_op = true;
+
+            std::string server_version = test_util::get_server_version(client);
+
+            // clientMetadata not returned until 3.5.8.
+            if (test_util::compare_versions(server_version, "3.5.8") >= 0) {
+                REQUIRE(op_view["clientMetadata"]);
+                auto metadata = op_view["clientMetadata"].get_document();
+                auto metadata_view = metadata.view();
+
+                REQUIRE(metadata_view["application"]);
+                auto application = metadata_view["application"].get_document();
+                REQUIRE(application.view()["name"].get_utf8().value == stdx::string_view{app_name});
+
+                REQUIRE(metadata_view["driver"]);
+                auto driver = metadata_view["driver"].get_document();
+                auto driver_view = driver.view();
+                REQUIRE(driver_view["name"].get_utf8().value ==
+                        stdx::string_view{"mongoc / mongocxx"});
+                auto version = driver_view["version"].get_utf8().value.to_string();
+                REQUIRE(version.find(MONGOCXX_VERSION_STRING) != std::string::npos);
+
+                REQUIRE(metadata_view["os"]);
+                REQUIRE(metadata_view["os"].get_document().view()["type"]);
+            }
+
+            break;
+        }
+        REQUIRE(found_op);
+    };
+
+    SECTION("with client") {
+        mongocxx::client client{uri};
+        run_test(client);
+    }
+
+    SECTION("with pool") {
+        mongocxx::pool pool{uri};
+        run_test(*pool.acquire());
+    }
 }
 }  // namespace
