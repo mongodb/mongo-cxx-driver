@@ -40,6 +40,41 @@ or, for more detailed output with Catch, run the generated binary:
 ./build/src/mongocxx/test/test_driver
 ```
 
+or you can run the ctest command and make use of ctest's various flags. 
+For example:
+
+```
+ctest -V
+```
+
+can be used to run the tests with verbose output, or 
+
+```
+ctest -R bson
+```
+
+could be used to run only the bson tests.
+
+### Running integration tests
+
+Some of the tests require a running mongod instance.  For this, first download
+the [mongodb server](https://www.mongodb.com/download-center).
+
+Then deploy a mongod on the default port with the command:
+
+```
+mongod
+```
+
+if it is installed, otherwise navigate to the directory holding the mongod
+executable, and run:
+
+```
+./mongod
+```
+
+following either command with any flags you wish to use, excluding
+`--port`.  While the mongod is running, run the tests as normal.
 
 ## Writing new tests
 
