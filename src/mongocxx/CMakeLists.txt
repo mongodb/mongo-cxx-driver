@@ -91,6 +91,7 @@ set(mongocxx_sources
     options/modify_collection.cpp
     options/pool.cpp
     options/private/rewriter.cpp
+    options/session.cpp
     options/ssl.cpp
     options/update.cpp
     pipeline.cpp
@@ -107,6 +108,7 @@ set(mongocxx_sources
     result/insert_one.cpp
     result/replace_one.cpp
     result/update.cpp
+    session.cpp
     uri.cpp
     validation_criteria.cpp
     write_concern.cpp
