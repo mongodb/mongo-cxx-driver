@@ -228,7 +228,7 @@ bsoncxx::document::value run_command(bsoncxx::document::view_or_value command);
 ```
 
 Such methods can take either a `document::view` or a `document::value`. If
-a `document::view` is passed in, it must be passed by r-value reference, so
+a `document::value` is passed in, it must be passed by r-value reference, so
 ownership of the document is transferred to the method.
 
 ```
