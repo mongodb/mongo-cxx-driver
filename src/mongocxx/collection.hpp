@@ -27,11 +27,13 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/bulk_write.hpp>
+#include <mongocxx/change_stream.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/index_view.hpp>
 #include <mongocxx/model/insert_one.hpp>
 #include <mongocxx/options/aggregate.hpp>
 #include <mongocxx/options/bulk_write.hpp>
+#include <mongocxx/options/change_stream.hpp>
 #include <mongocxx/options/count.hpp>
 #include <mongocxx/options/delete.hpp>
 #include <mongocxx/options/distinct.hpp>
@@ -43,6 +45,7 @@
 #include <mongocxx/options/index_view.hpp>
 #include <mongocxx/options/insert.hpp>
 #include <mongocxx/options/update.hpp>
+#include <mongocxx/pipeline.hpp>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/result/bulk_write.hpp>
@@ -718,6 +721,30 @@ class MONGOCXX_API collection {
     ///
     /// Gets an index_view to the collection.
     class index_view indexes();
+
+    ///
+    /// Gets a change stream on this collection with an empty pipeline.
+    ///
+    /// @param options
+    ///   The options to use when creating the change stream.
+    ///
+    /// @return
+    ///  A change stream on this collection.
+    ///
+    class change_stream watch(const options::change_stream& options = {});
+
+    ///
+    /// Gets a change stream on this collection.
+    ///
+    /// @param pipe
+    ///   The aggregation pipeline to be used on the change notifications.
+    /// @param options
+    ///   The options to use when creating the change stream.
+    ///
+    /// @return
+    ///  A change stream on this collection.
+    ///
+    class change_stream watch(const pipeline& pipe, const options::change_stream& options = {});
 
    private:
     friend class bulk_write;
