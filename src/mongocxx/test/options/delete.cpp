@@ -17,7 +17,6 @@
 #include <chrono>
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/delete.hpp>
