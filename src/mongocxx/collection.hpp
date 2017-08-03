@@ -748,6 +748,7 @@ class MONGOCXX_API collection {
 
    private:
     friend class bulk_write;
+    friend class change_stream;
     friend class database;
 
     MONGOCXX_PRIVATE collection(const database& database,

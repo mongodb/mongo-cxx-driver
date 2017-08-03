@@ -28,6 +28,8 @@ namespace options {
 
 class MONGOCXX_API change_stream {
    public:
+    change_stream() = default;
+
     ///
     /// Sets the fullDocument stage for the $changeStream.
     ///
@@ -45,7 +47,7 @@ class MONGOCXX_API change_stream {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    change_stream& full_document(std::string full_doc);
+    change_stream& full_document(bsoncxx::string::view_or_value full_doc);
 
     ///
     /// Gets the current fullDocument setting.

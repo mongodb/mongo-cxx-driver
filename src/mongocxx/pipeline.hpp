@@ -21,6 +21,7 @@
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -439,6 +440,27 @@ class MONGOCXX_API pipeline {
     ///   need to be specified.
     ///
     pipeline& unwind(std::string field_name);
+
+    ///
+    /// Adds the $changeStream stage to the pipeline. If this is the first stage in the pipeline,
+    /// the aggregation that uses it will return a tailable await cursor that streams change
+    /// notifications from the collection aggregated against.
+    ///
+    /// @param full_document
+    ///   Can either be "lookup" or "none". When set to ‘lookup’, the change stream will include
+    ///   both a delta describing the changes to the document, as well as a copy of the entire
+    ///   document that was changed from some time after the change occurred. This will be stored in
+    ///   the "fullDocument" field of the notification.
+    ///
+    /// @note
+    ///   Only use manual aggregation for change streams if resumability is explicitly undesired.
+    ///   Otherwise, use collection::watch().
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    pipeline& change_stream(bsoncxx::string::view_or_value full_document = {});
 
     ///
     /// @return A view of the underlying BSON array this pipeline represents.

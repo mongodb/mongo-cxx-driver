@@ -26,6 +26,17 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 class MONGOCXX_API change_stream {
    public:
     class MONGOCXX_API iterator;
+
+    change_stream(change_stream&& other);
+
+    change_stream& operator=(change_stream&& other);
+
+    change_stream(const change_stream& other) = delete;
+
+    change_stream& operator=(const change_stream& other) = delete;
+
+    ~change_stream();
+
     ///
     /// A change_stream::iterator that points to the beginning of any available notifications. If
     /// begin() is called more than once, the change_stream::iterator returned points to the next
@@ -52,9 +63,18 @@ class MONGOCXX_API change_stream {
     iterator end();
 
    private:
+    friend collection;
+
     MONGOCXX_PRIVATE change_stream(const collection& coll,
                                    const pipeline& pipe,
                                    const options::change_stream& options = {});
+
+    class MONGOCXX_PRIVATE impl;
+
+    MONGOCXX_PRIVATE impl& _get_impl();
+    MONGOCXX_PRIVATE const impl& _get_impl() const;
+
+    std::unique_ptr<impl> _impl;
 };
 
 class MONGOCXX_API change_stream::iterator

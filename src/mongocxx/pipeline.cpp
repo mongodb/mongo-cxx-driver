@@ -14,6 +14,7 @@
 
 #include <mongocxx/pipeline.hpp>
 
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/basic/sub_document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
@@ -215,6 +216,19 @@ bsoncxx::document::view pipeline::view() const {
 
 bsoncxx::array::view pipeline::view_array() const {
     return _impl->view_array();
+}
+
+pipeline& pipeline::change_stream(bsoncxx::string::view_or_value full_document) {
+    _impl->sink().append([full_document](sub_document sub_doc) {
+        bsoncxx::builder::basic::document change_doc;
+        if (!full_document.view().empty()) {
+            change_doc.append(kvp("fullDocument", full_document.terminated().view()));
+        }
+
+        sub_doc.append(kvp("$changeStream", change_doc.view()));
+    });
+
+    return *this;
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
