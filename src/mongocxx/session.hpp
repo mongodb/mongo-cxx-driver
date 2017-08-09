@@ -22,6 +22,20 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+///
+/// Class representing a session from a client connection to MongoDB.
+///
+/// Acts as a logical gateway for working with databases contained within a MongoDB server.
+///
+/// Databases that are created via this session inherit the @c read_concern, @c read_preference, and
+/// @c write_concern settings of this session when they are created. The lifetimes of objects
+/// created via a session object (databases, collections, cursors, etc...) @b must be a subset of
+/// the lifetime of the session that created them.
+///
+/// Note that session is not thread-safe. See
+/// https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/thread-safety/ for more details.
+///
+
 class MONGOCXX_API session {
    public:
     ///
