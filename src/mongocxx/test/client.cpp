@@ -45,8 +45,6 @@ TEST_CASE("A default constructed client cannot perform operations", "[client]") 
 }
 
 TEST_CASE("A client constructed with a URI is truthy", "[client]") {
-    MOCK_CLIENT
-
     instance::current();
 
     client a{uri{}};
@@ -54,25 +52,14 @@ TEST_CASE("A client constructed with a URI is truthy", "[client]") {
 }
 
 TEST_CASE("A client connects to a provided mongodb uri", "[client]") {
-    MOCK_CLIENT
-
     instance::current();
 
-    std::string expected_url("mongodb://mongodb.example.com:9999");
+    std::string expected_url("mongodb://localhost");
     uri mongodb_uri(expected_url);
-    std::string actual_url{};
-    bool called = false;
+    client client{mongodb_uri};
 
-    client_new->interpose([&](const mongoc_uri_t* url) {
-        called = true;
-        actual_url = std::string(mongoc_uri_get_string(url));
-        return nullptr;
-    });
-
-    client{mongodb_uri};
-
-    REQUIRE(called);
-    REQUIRE(expected_url == actual_url);
+    REQUIRE(client.uri().to_string() == expected_url);
+    REQUIRE_NOTHROW(client["client_connects_uri"].run_command(make_document(kvp("isMaster", 1))));
 }
 
 TEST_CASE("A client cleans up its underlying mongoc client on destruction", "[client]") {
@@ -81,7 +68,10 @@ TEST_CASE("A client cleans up its underlying mongoc client on destruction", "[cl
     instance::current();
 
     bool destroy_called = false;
-    client_destroy->interpose([&](mongoc_client_t*) { destroy_called = true; });
+    client_destroy->interpose([&](mongoc_client_t* client) {
+        destroy_called = true;
+        libmongoc::client_destroy(client);
+    });
 
     {
         client object{uri{}};

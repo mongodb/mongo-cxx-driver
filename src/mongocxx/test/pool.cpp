@@ -28,35 +28,14 @@ namespace {
 using namespace mongocxx;
 
 TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
-    MOCK_POOL
-
     instance::current();
 
-    bool destroy_called = false;
-    client_pool_destroy->interpose([&](::mongoc_client_pool_t*) { destroy_called = true; });
-
-    std::string expected_uri("mongodb://mongodb.example.com:9999");
+    std::string expected_uri("mongodb://localhost/");
     uri mongodb_uri{expected_uri};
 
-    std::string actual_uri{};
-    bool new_called = false;
+    pool pool{mongodb_uri};
 
-    client_pool_new->interpose([&](const mongoc_uri_t* uri) {
-        new_called = true;
-        actual_uri = mongoc_uri_get_string(uri);
-        return nullptr;
-    });
-
-    {
-        pool p{mongodb_uri};
-
-        REQUIRE(new_called);
-        REQUIRE(expected_uri == actual_uri);
-
-        REQUIRE(!destroy_called);
-    }
-
-    REQUIRE(destroy_called);
+    REQUIRE(pool.acquire()->uri().to_string() == expected_uri);
 }
 
 #if defined(MONGOC_ENABLE_SSL)
@@ -114,14 +93,16 @@ TEST_CASE(
     instance::current();
 
     bool pop_called = false;
-    client_pool_pop->interpose([&](::mongoc_client_pool_t*) {
+    client_pool_pop->interpose([&](::mongoc_client_pool_t* pool) {
         pop_called = true;
-        return nullptr;
+        return libmongoc::client_pool_pop(pool);
     });
 
     bool push_called = false;
-    client_pool_push->interpose(
-        [&](::mongoc_client_pool_t*, ::mongoc_client_t*) { push_called = true; });
+    client_pool_push->interpose([&](::mongoc_client_pool_t* pool, ::mongoc_client_t* client) {
+        push_called = true;
+        libmongoc::client_pool_push(pool, client);
+    });
 
     {
         pool p{};
@@ -138,34 +119,12 @@ TEST_CASE(
     "try_acquire returns an engaged stdx::optional<entry> if mongoc_client_pool_try_pop "
     "returns a non-null pointer",
     "[pool]") {
-    MOCK_POOL
-
     instance::current();
 
-    // libstdc++ before GCC 4.9 places max_align_t in the wrong
-    // namespace. Use a limited scope 'using namespace std' to name it
-    // in a way that always works.
-    auto dummy_address = []() {
-        using namespace std;
-        return max_align_t{};
-    }();
+    pool p{uri{}};
+    auto client = p.try_acquire();
 
-    bool try_pop_called = false;
-
-    mongoc_client_t* fake = reinterpret_cast<mongoc_client_t*>(&dummy_address);
-
-    client_pool_try_pop->interpose([&](::mongoc_client_pool_t*) {
-        try_pop_called = true;
-        return fake;
-    });
-
-    {
-        pool p{};
-        auto client = p.try_acquire();
-
-        REQUIRE(!!client);
-        REQUIRE(try_pop_called);
-    }
+    REQUIRE(!!client);
 }
 
 TEST_CASE(

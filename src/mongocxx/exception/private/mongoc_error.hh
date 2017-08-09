@@ -15,6 +15,7 @@
 #pragma once
 
 #include <bsoncxx/document/value.hpp>
+#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/server_error_code.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
@@ -23,9 +24,13 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-inline std::error_code make_error_code(int code, int) {
-    // Domain is ignored. We simply issue the code.
-    return {code, server_error_category()};
+inline std::error_code make_error_code(int code, int domain) {
+    // libmongoc passes server errors in both SERVER and WRITE_CONCERN domains.
+    if (domain == MONGOC_ERROR_SERVER || domain == MONGOC_ERROR_WRITE_CONCERN) {
+        return {code, server_error_category()};
+    } else {
+        return {code, error_category()};
+    }
 }
 
 inline std::error_code make_error_code(const ::bson_error_t& error) {
