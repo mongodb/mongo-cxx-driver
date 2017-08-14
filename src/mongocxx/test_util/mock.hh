@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <cassert>
 #include <array>
 #include <functional>
 #include <iostream>
