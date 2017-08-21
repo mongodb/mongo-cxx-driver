@@ -18,11 +18,11 @@
 #include <cstddef>
 #include <string>
 
-#include <mongocxx/instance.hpp>
-#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/client.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/options/ssl.hpp>
 #include <mongocxx/pool.hpp>
+#include <mongocxx/private/libmongoc.hh>
 
 using namespace mongocxx;
 
@@ -91,7 +91,7 @@ TEST_CASE(
             interposed = *opts;
         });
 
-    pool p{uri{"mongodb://mongodb.example.com:9999?ssl=true"},
+    pool p{uri{"mongodb://mongodb.example.com:9999/?ssl=true"},
            options::client().ssl_opts(ssl_opts)};
 
     REQUIRE(set_ssl_opts_called);
