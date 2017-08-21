@@ -1477,6 +1477,38 @@ unit tests rather than integration tests.</p>
 <pre><code>./build/src/mongocxx/test/test_driver
 </code></pre>
 
+<p>or you can run the ctest command and make use of ctest&rsquo;s various flags.
+For example:</p>
+
+<pre><code>ctest -V
+</code></pre>
+
+<p>can be used to run the tests with verbose output, or</p>
+
+<pre><code>ctest -R bson
+</code></pre>
+
+<p>could be used to run only the bson tests.</p>
+
+<h3 id="running-integration-tests">Running integration tests</h3>
+
+<p>Some of the tests require a running mongod instance.  For this, first download
+the <a href="https://www.mongodb.com/download-center">mongodb server</a>.</p>
+
+<p>Then deploy a mongod on the default port with the command:</p>
+
+<pre><code>mongod
+</code></pre>
+
+<p>if it is installed, otherwise navigate to the directory holding the mongod
+executable, and run:</p>
+
+<pre><code>./mongod
+</code></pre>
+
+<p>following either command with any flags you wish to use, excluding
+<code>--port</code>.  While the mongod is running, run the tests as normal.</p>
+
 <h2 id="writing-new-tests">Writing new tests</h2>
 
 <p>If you&rsquo;d like to add a feature to the driver, please write a test for it as
@@ -1531,7 +1563,10 @@ target, in <code>src/mongocxx/test/CMakeLists.txt</code>:</p>
 <li>
 <ul>
 <li><a href="#testing-the-mongocxx-driver">Testing the mongocxx driver</a></li>
-<li><a href="#running-the-existing-tests">Running the existing tests</a></li>
+<li><a href="#running-the-existing-tests">Running the existing tests</a>
+<ul>
+<li><a href="#running-integration-tests">Running integration tests</a></li>
+</ul></li>
 <li><a href="#writing-new-tests">Writing new tests</a></li>
 </ul></li>
 </ul>

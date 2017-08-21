@@ -48,7 +48,7 @@ For example, to use a custom CA or to disable certificate validation, uncomment 
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/</guid>
-      <description>Installing the mongocxx driver Prerequisites  Any standard Unix platform, or Windows 7 SP1+ A compiler that suports C++11 (gcc, clang, or Visual Studio) CMake 3.2 or later boost (optional)  We currently test the driver with the following configurations:
+      <description>Installing the mongocxx driver Prerequisites  Any standard Unix platform, or Windows 7 SP1+ A compiler that suports C++11 (gcc, clang, or Visual Studio) CMake 3.2 or later boost headers (optional)  We currently test the driver with the following configurations:
    &amp;nbsp; Linux OS X Windows     clang 3.8 7.0 (Apple) -   gcc 4.8, 5.4 - -   VS n/a n/a 14 (2015) Update 3   boost - 1.</description>
     </item>
     

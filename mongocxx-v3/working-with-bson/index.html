@@ -1434,7 +1434,7 @@ auto cursor2 = collection2.find(query_value.view());
 </code></pre>
 
 <p>Such methods can take either a <code>document::view</code> or a <code>document::value</code>. If
-a <code>document::view</code> is passed in, it must be passed by r-value reference, so
+a <code>document::value</code> is passed in, it must be passed by r-value reference, so
 ownership of the document is transferred to the method.</p>
 
 <pre><code>document::value ismaster = document{} &lt;&lt; &quot;ismaster&quot; &lt;&lt; 1 &lt;&lt; finalize;
