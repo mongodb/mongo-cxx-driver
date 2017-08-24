@@ -1527,9 +1527,11 @@ auto_ptr<DBClientCursor> DBClientWithCommands::_legacyCollectionInfo(const strin
     auto_ptr<DBClientCursor> simple =
         query(namespaces_ns, fallbackFilter.obj(), 0, 0, 0, QueryOption_SlaveOk, batchSize);
 
-    simple->shim.reset(new DBClientCursorShimTransform(*simple, transformLegacyCollectionInfos));
-    simple->nToReturn = 0;
-    simple->setBatchSize(batchSize);
+    if (simple.get()) {
+        simple->shim.reset(new DBClientCursorShimTransform(*simple, transformLegacyCollectionInfos));
+        simple->nToReturn = 0;
+        simple->setBatchSize(batchSize);
+    }
 
     return simple;
 }
@@ -1925,8 +1927,10 @@ std::auto_ptr<DBClientCursor> DBClientBase::aggregate(const std::string& ns,
                                                               queryOptions,
                                                               0);
 
-                simple->shim.reset(new DBClientCursorShimArray(*simple, "result"));
-                simple->nToReturn = 0;
+                if (simple.get()) {
+                    simple->shim.reset(new DBClientCursorShimArray(*simple, "result"));
+                    simple->nToReturn = 0;
+                }
 
                 return simple;
             }
