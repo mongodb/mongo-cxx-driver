@@ -41,14 +41,13 @@ void bson_free_deleter(std::uint8_t* ptr) {
     bson_free(ptr);
 }
 
-}  // namespace
-
-std::string BSONCXX_CALL to_json(document::view view) {
+std::string to_json_helper(document::view view, decltype(bson_as_json) converter) {
     bson_t bson;
     bson_init_static(&bson, view.data(), view.length());
 
     size_t size;
-    auto result = bson_as_json(&bson, &size);
+    auto result = converter(&bson, &size);
+
     if (!result)
         throw exception(error_code::k_failed_converting_bson_to_json);
 
@@ -56,6 +55,21 @@ std::string BSONCXX_CALL to_json(document::view view) {
     const std::unique_ptr<char[], decltype(deleter)> cleanup(result, deleter);
 
     return {result, size};
+}
+
+}  // namespace
+
+std::string BSONCXX_CALL to_json(document::view view, ExtendedJsonMode mode) {
+    switch (mode) {
+        case ExtendedJsonMode::k_legacy:
+            return to_json_helper(view, bson_as_json);
+
+        case ExtendedJsonMode::k_relaxed:
+            return to_json_helper(view, bson_as_relaxed_extended_json);
+
+        case ExtendedJsonMode::k_canonical:
+            return to_json_helper(view, bson_as_canonical_extended_json);
+    }
 }
 
 document::value BSONCXX_CALL from_json(stdx::string_view json) {
