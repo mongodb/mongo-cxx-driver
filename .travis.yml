@@ -1,8 +1,35 @@
 language: cpp
+sudo: false
+
+services: mongodb
+
+addons:
+  apt:
+    packages: &common_packages
+      - gdb
 
 compiler:
-    - gcc
-    - clang
+  - gcc
+  - clang
+
+matrix:
+  fast_finish: true
+  include:
+    - compiler: gcc
+      env: CONFIG=Debug
+      addons: &common_addons
+        apt:
+          sources: [ mongodb-3.4-precise ]
+          packages: [ mongodb-org, *common_packages ]
+    - compiler: gcc
+      env: CONFIG=Release
+      addons: *common_addons
+    - compiler: clang
+      env: CONFIG=Debug
+      addons: *common_addons
+    - compiler: clang
+      env: CONFIG=Release
+      addons: *common_addons
 
 env:
     global:
@@ -17,27 +44,7 @@ env:
         - CONFIG=Release
         - CONFIG=Debug
 
-# Setup required repositories before installation
 before_install:
-    # Add the modern toolchain repositories (llvm repo depends on ubunut-toolchain-r + gcc)
-    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-    - sudo add-apt-repository -y 'deb http://llvm.org/apt/precise/ llvm-toolchain-precise-3.6 main'
-    - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
-
-    # Get the latest CMake
-    - curl -O https://cmake.org/files/v3.2/${CMAKE_VERSION}.tar.gz
-
-    # MongoDB Enterprise Edition, latest stable version
-    - sudo apt-key adv --keyserver ${KEY_SERVER} --recv 7F0CEB10
-    - sudo apt-key adv --keyserver ${KEY_SERVER} --recv D68FA50FEA312927
-    - echo "deb ${MONGO_REPO} ${REPO_TYPE}" | sudo tee ${SOURCES_LOC}
-
-    # CMake
-    #- sudo add-apt-repository --yes ppa:kalakris/cmake
-
-    # Update all the repositories
-    - sudo apt-get update -qq
-
     # Mongo C Driver
     - git clone https://github.com/mongodb/mongo-c-driver.git
 
@@ -48,20 +55,12 @@ install:
     # Clang
     - if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq clang-3.6; export CXX="clang++-3.6"; export CC="clang-3.6"; fi
 
-    # CMake
-    - tar -zxvf ${CMAKE_VERSION}.tar.gz -C build
-
-    # Install MongoDB Enterprise
-    - sudo apt-get install mongodb-enterprise-server
-
-    # Install CMake (Versions lower than 2.8.8 do not support object libraries)
-    - sudo apt-get install cmake
-
     # Install Mongo C Driver
     - pushd mongo-c-driver
 
-    # TODO: Update this to our real minimum for the C++11 driver 3.2 release, once known.
-    - git checkout master
+    - git checkout 1.7.0
+
+    - git submodule update --init --recursive
 
     - ./autogen.sh --enable-tests=no --enable-examples=no --with-libbson=bundled; make; sudo make install
 
@@ -73,7 +72,7 @@ before_script:
 
     # Build the driver and the tests
     - cd build
-    - ${CMAKE_BINARY} -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" ..
+    - cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" ..
 
 script:
     - make format-lint
