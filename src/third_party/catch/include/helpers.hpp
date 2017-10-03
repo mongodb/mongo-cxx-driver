@@ -115,7 +115,6 @@
     auto collection_drop = libmongoc::collection_drop.create_instance();                          \
     auto collection_count = libmongoc::collection_count.create_instance();                        \
     auto collection_count_with_opts = libmongoc::collection_count_with_opts.create_instance();    \
-    auto collection_create_index = libmongoc::collection_create_index.create_instance();          \
     auto collection_find_with_opts = libmongoc::collection_find_with_opts.create_instance();      \
     auto collection_aggregate = libmongoc::collection_aggregate.create_instance();                \
     auto collection_get_name = libmongoc::collection_get_name.create_instance();                  \
