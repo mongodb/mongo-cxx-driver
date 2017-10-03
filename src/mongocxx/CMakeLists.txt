@@ -17,9 +17,9 @@ project(MONGOCXX)
 # Update these as needed.
 # TODO: read from file
 set(MONGOCXX_VERSION_MAJOR 3)
-set(MONGOCXX_VERSION_MINOR 2)
+set(MONGOCXX_VERSION_MINOR 3)
 set(MONGOCXX_VERSION_PATCH 0)
-set(MONGOCXX_VERSION_EXTRA "-rc0")
+set(MONGOCXX_VERSION_EXTRA "-rc0-pre")
 set(MONGOCXX_ABI_VERSION _noabi)
 
 option(MONGOCXX_ENABLE_SSL "Enable SSL - if the underlying C driver offers it" ON)
