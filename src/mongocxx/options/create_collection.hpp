@@ -260,11 +260,9 @@ class MONGOCXX_API create_collection {
                                                       const create_collection&);
     friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const create_collection&,
                                                       const create_collection&);
-};
 
-MONGOCXX_INLINE create_collection::operator bsoncxx::document::value() const {
-    return to_document();
-}
+    bsoncxx::document::value create_document() const;
+};
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END

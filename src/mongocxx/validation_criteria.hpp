@@ -139,16 +139,14 @@ class MONGOCXX_API validation_criteria {
     stdx::optional<bsoncxx::document::view_or_value> _rule;
     stdx::optional<validation_level> _level;
     stdx::optional<validation_action> _action;
+
+    bsoncxx::document::value create_document() const;
 };
 
 MONGOCXX_API bool MONGOCXX_CALL operator==(const validation_criteria& lhs,
                                            const validation_criteria& rhs);
 MONGOCXX_API bool MONGOCXX_CALL operator!=(const validation_criteria& lhs,
                                            const validation_criteria& rhs);
-
-MONGOCXX_INLINE validation_criteria::operator bsoncxx::document::value() const {
-    return to_document();
-}
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

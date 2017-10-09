@@ -214,7 +214,7 @@ class core::impl {
             }
         }
 
-        ~frame() {
+        ~frame() noexcept(false) {
             if (is_array) {
                 if (!bson_append_array_end(parent, &bson)) {
                     throw bsoncxx::exception{error_code::k_cannot_end_appending_array};

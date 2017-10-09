@@ -80,7 +80,7 @@ const stdx::optional<validation_criteria::validation_action>& validation_criteri
     return _action;
 }
 
-bsoncxx::document::value validation_criteria::to_document() const {
+bsoncxx::document::value validation_criteria::create_document() const {
     bsoncxx::builder::basic::document doc;
 
     if (_rule) {
@@ -96,6 +96,14 @@ bsoncxx::document::value validation_criteria::to_document() const {
     }
 
     return doc.extract();
+}
+
+bsoncxx::document::value validation_criteria::to_document() const {
+    return create_document();
+}
+
+validation_criteria::operator bsoncxx::document::value() const {
+    return create_document();
 }
 
 MONGOCXX_API bool MONGOCXX_CALL operator==(const validation_criteria& lhs,

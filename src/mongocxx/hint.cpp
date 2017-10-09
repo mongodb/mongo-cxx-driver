@@ -41,7 +41,7 @@ bsoncxx::types::value hint::to_value() const {
     return bsoncxx::types::value{bsoncxx::types::b_utf8{*_index_string}};
 }
 
-bsoncxx::document::value hint::to_document() const {
+bsoncxx::document::value hint::create_document() const {
     auto doc = bsoncxx::builder::basic::document{};
 
     if (_index_doc) {
@@ -51,6 +51,14 @@ bsoncxx::document::value hint::to_document() const {
     }
 
     return doc.extract();
+}
+
+bsoncxx::document::value hint::to_document() const {
+    return create_document();
+}
+
+hint::operator bsoncxx::document::value() const {
+    return create_document();
 }
 
 bool MONGOCXX_CALL operator==(const hint& index_hint, std::string index) {

@@ -51,8 +51,9 @@ read_preference::read_preference(read_mode mode)
     : _impl(stdx::make_unique<impl>(
           libmongoc::read_prefs_new(libmongoc::conversions::read_mode_t_from_read_mode(mode)))) {}
 
-read_preference::read_preference(read_mode mode, bsoncxx::document::view_or_value tags)
-    : read_preference(mode) {
+read_preference::read_preference(read_mode rp_mode, bsoncxx::document::view_or_value tags)
+    : read_preference() {
+    mode(rp_mode);
     read_preference::tags(std::move(tags));
 }
 

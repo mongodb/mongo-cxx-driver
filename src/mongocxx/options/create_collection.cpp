@@ -17,6 +17,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/concatenate.hpp>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -101,7 +102,7 @@ const stdx::optional<class validation_criteria>& create_collection::validation_c
     return _validation;
 }
 
-bsoncxx::document::value create_collection::to_document() const {
+bsoncxx::document::value create_collection::create_document() const {
     auto doc = bsoncxx::builder::basic::document{};
 
     if (_auto_index_id) {
@@ -133,10 +134,20 @@ bsoncxx::document::value create_collection::to_document() const {
     }
 
     if (_validation) {
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
         doc.append(concatenate(_validation->to_document()));
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
     }
 
     return doc.extract();
+}
+
+bsoncxx::document::value create_collection::to_document() const {
+    return create_document();
+}
+
+create_collection::operator bsoncxx::document::value() const {
+    return create_document();
 }
 
 bool MONGOCXX_CALL operator==(const create_collection& lhs, const create_collection& rhs) {

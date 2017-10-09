@@ -100,6 +100,8 @@ class MONGOCXX_API hint {
    private:
     stdx::optional<bsoncxx::document::view_or_value> _index_doc;
     stdx::optional<bsoncxx::string::view_or_value> _index_string;
+
+    bsoncxx::document::value create_document() const;
 };
 
 ///
@@ -153,10 +155,6 @@ MONGOCXX_API bool MONGOCXX_CALL operator!=(bsoncxx::document::view index, const 
 
 MONGOCXX_INLINE hint::operator bsoncxx::types::value() const {
     return to_value();
-}
-
-MONGOCXX_INLINE hint::operator bsoncxx::document::value() const {
-    return to_document();
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
