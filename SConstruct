@@ -511,12 +511,12 @@ env = Environment(variables=env_vars, **envDict)
 del envDict
 
 def fatal_error(env, msg, *args):
-    print msg.format(*args)
+    print (msg.format(*args))
     Exit(1)
 
 def conf_error(env, msg, *args):
-    print msg.format(*args)
-    print "See {0} for details".format(env['CONFIGURELOG'].abspath)
+    print (msg.format(*args))
+    print ("See {0} for details".format(env['CONFIGURELOG'].abspath))
 
     Exit(1)
 
@@ -524,7 +524,7 @@ env.AddMethod(fatal_error, 'FatalError')
 env.AddMethod(conf_error, 'ConfError')
 
 if has_option('variables-help'):
-    print env_vars.GenerateHelpText(env)
+    print (env_vars.GenerateHelpText(env))
     Exit(0)
 
 unknown_vars = env_vars.UnknownVariables()
