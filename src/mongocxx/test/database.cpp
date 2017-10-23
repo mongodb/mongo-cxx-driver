@@ -42,6 +42,12 @@ using bsoncxx::builder::basic::make_document;
 
 bool check_for_collections(cursor cursor, std::set<std::string> expected_colls) {
     for (auto&& coll : cursor) {
+        // Skip system collections
+        auto pos = coll["name"].get_utf8().value.to_string().find("system.");
+        if (pos != std::string::npos && pos == 0) {
+            continue;
+        }
+
         auto iter = expected_colls.find(coll["name"].get_utf8().value.to_string());
         if (iter == expected_colls.end()) {
             return false;
