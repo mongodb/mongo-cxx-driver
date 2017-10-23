@@ -42,7 +42,15 @@ using bsoncxx::builder::basic::make_document;
 
 bool check_for_collections(cursor cursor, std::set<std::string> expected_colls) {
     for (auto&& coll : cursor) {
-        auto iter = expected_colls.find(coll["name"].get_utf8().value.to_string());
+        // Skip system collections which the MMAPv1 storage engine returns,
+        // while WiredTiger does not.
+        auto name_string = coll["name"].get_utf8().value.to_string();
+        auto pos = name_string.find("system.");
+        if (pos != std::string::npos && pos == 0) {
+            continue;
+        }
+
+        auto iter = expected_colls.find(name_string);
         if (iter == expected_colls.end()) {
             return false;
         }
