@@ -74,10 +74,10 @@ script:
     - ./src/mongocxx/test/test_instance
 
     # Install headers and libs for the examples
-    #- make install
+    - make install
 
     # Make the examples
-    #- make examples
+    - make examples
 
     # Run the examples
-    #- make run-examples
+    - make run-examples
