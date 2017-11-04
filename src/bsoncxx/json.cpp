@@ -70,6 +70,8 @@ std::string BSONCXX_CALL to_json(document::view view, ExtendedJsonMode mode) {
         case ExtendedJsonMode::k_canonical:
             return to_json_helper(view, bson_as_canonical_extended_json);
     }
+
+    BSONCXX_UNREACHABLE;
 }
 
 document::value BSONCXX_CALL from_json(stdx::string_view json) {
