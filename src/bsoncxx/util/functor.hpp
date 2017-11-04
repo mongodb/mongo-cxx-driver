@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <functional>
 #include <type_traits>
 
 #include <bsoncxx/config/prelude.hpp>
