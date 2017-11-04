@@ -43,10 +43,26 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace libmongoc {
 
 #ifdef MONGOCXX_TESTING
+
+#if defined(__GNUC__) && (__GNUC__ >= 6) && !defined(__clang__)
+// See https://jira.mongodb.org/browse/CXX-1453 and
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81605 The basic issue
+// is that GCC sees the visibility attributes on the mongoc functions,
+// and considers them part of the type, and then emits a silly
+// diagnostic stating that the attribute was ignored.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wignored-attributes"
+#endif
+
 #define MONGOCXX_LIBMONGOC_SYMBOL(name) \
     extern MONGOCXX_API mongocxx::test_util::mock<decltype(&mongoc_##name)>& name;
 #include "libmongoc_symbols.hh"
 #undef MONGOCXX_LIBMONGOC_SYMBOL
+
+#if defined(__GNUC__) && (__GNUC__ >= 6) && !defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
+
 #else
 #define MONGOCXX_LIBMONGOC_SYMBOL(name) constexpr auto name = mongoc_##name;
 #include "libmongoc_symbols.hh"
