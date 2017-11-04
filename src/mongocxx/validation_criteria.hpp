@@ -127,6 +127,7 @@ class MONGOCXX_API validation_criteria {
     /// @return Validation criteria, as a document.
     ///
     MONGOCXX_DEPRECATED bsoncxx::document::value to_document() const;
+    bsoncxx::document::value to_document_deprecated() const;
 
     ///
     /// @deprecated
@@ -147,7 +148,7 @@ MONGOCXX_API bool MONGOCXX_CALL operator!=(const validation_criteria& lhs,
                                            const validation_criteria& rhs);
 
 MONGOCXX_INLINE validation_criteria::operator bsoncxx::document::value() const {
-    return to_document();
+    return to_document_deprecated();
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

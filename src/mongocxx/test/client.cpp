@@ -131,9 +131,7 @@ TEST_CASE("A client has a settable Read Concern", "[client]") {
             client_set_rc_called = true;
         });
 
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-    mongo_client.read_concern(rc);
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+    mongo_client.read_concern_deprecated(rc);
     REQUIRE(client_set_rc_called);
 }
 
@@ -161,9 +159,7 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
     client_get_preference->interpose([&](const mongoc_client_t*) { return saved_preference.get(); })
         .forever();
 
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-    mongo_client.read_preference(std::move(preference));
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+    mongo_client.read_preference_deprecated(std::move(preference));
     REQUIRE(called_set);
 
     REQUIRE(read_preference::read_mode::k_secondary_preferred ==
@@ -193,9 +189,7 @@ TEST_CASE("A client's write concern may be set and obtained", "[client]") {
         return underlying_wc;
     });
 
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-    mongo_client.write_concern(concern);
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+    mongo_client.write_concern_deprecated(concern);
     REQUIRE(set_called);
 
     MOCK_CONCERN

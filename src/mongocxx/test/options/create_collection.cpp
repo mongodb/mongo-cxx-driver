@@ -103,9 +103,7 @@ TEST_CASE("create_collection can be exported to a document", "[create_collection
     cc.collation(collation_en_US.view());
     cc.no_padding(true);
 
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-    auto doc = cc.to_document();
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+    auto doc = cc.to_document_deprecated();
     document::view doc_view{doc.view()};
 
     // capped field is set to true

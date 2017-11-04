@@ -110,11 +110,16 @@ bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value 
     return reply_bson.steal();
 }
 
-bsoncxx::document::value database::modify_collection(stdx::string_view name,
-                                                     const options::modify_collection& options) {
+bsoncxx::document::value database::modify_collection_deprecated(stdx::string_view name,
+                                                                const options::modify_collection& options) {
     auto doc = make_document(kvp("collMod", name), concatenate(options.to_document()));
 
     return run_command(doc.view());
+}
+
+bsoncxx::document::value database::modify_collection(stdx::string_view name,
+                                                     const options::modify_collection& options) {
+    return modify_collection_deprecated(name, options);
 }
 
 class collection database::create_collection(

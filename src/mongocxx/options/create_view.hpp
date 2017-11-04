@@ -115,6 +115,7 @@ class MONGOCXX_API create_view {
     /// @return Options, as a document.
     ///
     MONGOCXX_DEPRECATED bsoncxx::document::value to_document() const;
+    bsoncxx::document::value to_document_deprecated() const;
 
     ///
     /// @deprecated
@@ -133,7 +134,7 @@ class MONGOCXX_API create_view {
 };
 
 MONGOCXX_INLINE create_view::operator bsoncxx::document::value() const {
-    return to_document();
+    return to_document_deprecated();
 }
 
 }  // namespace options

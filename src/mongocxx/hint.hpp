@@ -82,6 +82,7 @@ class MONGOCXX_API hint {
     /// @return Hint, as a document.
     ///
     MONGOCXX_DEPRECATED bsoncxx::document::value to_document() const;
+    bsoncxx::document::value to_document_deprecated() const;
 
     ///
     /// Returns a types::value representing this hint.
@@ -156,7 +157,7 @@ MONGOCXX_INLINE hint::operator bsoncxx::types::value() const {
 }
 
 MONGOCXX_INLINE hint::operator bsoncxx::document::value() const {
-    return to_document();
+    return to_document_deprecated();
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

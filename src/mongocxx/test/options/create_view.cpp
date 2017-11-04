@@ -82,9 +82,7 @@ TEST_CASE("create_view can be exported to a document", "[create_view]") {
     cv.collation(collation_en_US.view());
     cv.pipeline(std::move(pipeline{}.limit(1)));
 
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-    auto doc = cv.to_document();
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+    auto doc = cv.to_document_deprecated();
     document::view doc_view{doc.view()};
 
     // "collation" field is set correctly.

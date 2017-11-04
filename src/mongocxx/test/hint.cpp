@@ -60,10 +60,8 @@ TEST_CASE("Hint", "[hint]") {
         }
 
         SECTION("Test for deprecated method to_document()") {
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
             document::value filter =
-                make_document(kvp("a", 15), concatenate(index_hint.to_document()));
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+                make_document(kvp("a", 15), concatenate(index_hint.to_document_deprecated()));
             document::view view{filter.view()};
             document::element ele{view["$hint"]};
             REQUIRE(ele);
@@ -104,10 +102,8 @@ TEST_CASE("Hint", "[hint]") {
         }
 
         SECTION("Test for deprecated method to_document()") {
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
             document::value filter =
-                make_document(kvp("a", 12), concatenate(index_hint.to_document()));
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+                make_document(kvp("a", 12), concatenate(index_hint.to_document_deprecated()));
             document::view view{filter.view()};
             document::element ele{view["$hint"]};
             REQUIRE(ele);

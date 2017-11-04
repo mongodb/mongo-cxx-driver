@@ -60,9 +60,7 @@ bsoncxx::document::value modify_collection::to_document() const {
     }
 
     if (_validation) {
-        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-        doc.append(concatenate(_validation->to_document()));
-        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+        doc.append(concatenate(_validation->to_document_deprecated()));
     }
 
     return doc.extract();

@@ -70,9 +70,7 @@ TEST_CASE("validation_criteria can be exported to a document", "[validation_crit
     criteria.action(validation_criteria::validation_action::k_warn);
     criteria.rule(doc.view());
 
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-    auto criteria_doc = criteria.to_document();
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+    auto criteria_doc = criteria.to_document_deprecated();
     auto criteria_view = criteria_doc.view();
 
     document::element ele;

@@ -111,6 +111,7 @@ class MONGOCXX_API client {
     /// @see https://docs.mongodb.com/master/reference/read-concern/
     ///
     MONGOCXX_DEPRECATED void read_concern(class read_concern rc);
+    void read_concern_deprecated(class read_concern rc);
 
     ///
     /// Returns the current read concern for this client.
@@ -136,6 +137,7 @@ class MONGOCXX_API client {
     /// @see https://docs.mongodb.com/master/core/read-preference/
     ///
     MONGOCXX_DEPRECATED void read_preference(class read_preference rp);
+    void read_preference_deprecated(class read_preference rp);
 
     ///
     /// Returns the current read preference for this client.
@@ -168,6 +170,7 @@ class MONGOCXX_API client {
     ///   The new write concern
     ///
     MONGOCXX_DEPRECATED void write_concern(class write_concern wc);
+    void write_concern_deprecated(class write_concern wc);
 
     ///
     /// Returns the current write concern for this client.

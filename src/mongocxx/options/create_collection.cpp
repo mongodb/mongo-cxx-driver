@@ -28,9 +28,13 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-create_collection& create_collection::auto_index_id(bool auto_index_id) {
+create_collection& create_collection::auto_index_id_deprecated(bool auto_index_id) {
     _auto_index_id = auto_index_id;
     return *this;
+}
+
+create_collection& create_collection::auto_index_id(bool auto_index_id) {
+    return auto_index_id_deprecated(auto_index_id);
 }
 
 create_collection& create_collection::capped(bool capped) {
@@ -101,7 +105,7 @@ const stdx::optional<class validation_criteria>& create_collection::validation_c
     return _validation;
 }
 
-bsoncxx::document::value create_collection::to_document() const {
+bsoncxx::document::value create_collection::to_document_deprecated() const {
     auto doc = bsoncxx::builder::basic::document{};
 
     if (_auto_index_id) {
@@ -133,10 +137,14 @@ bsoncxx::document::value create_collection::to_document() const {
     }
 
     if (_validation) {
-        doc.append(concatenate(_validation->to_document()));
+        doc.append(concatenate(_validation->to_document_deprecated()));
     }
 
     return doc.extract();
+}
+
+bsoncxx::document::value create_collection::to_document() const {
+    return to_document_deprecated();
 }
 
 bool MONGOCXX_CALL operator==(const create_collection& lhs, const create_collection& rhs) {

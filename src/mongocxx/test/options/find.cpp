@@ -53,9 +53,7 @@ TEST_CASE("find", "[find][option]") {
     CHECK_OPTIONAL_ARGUMENT(find_opts, max_scan, 3);
     CHECK_OPTIONAL_ARGUMENT(find_opts, max_time, std::chrono::milliseconds{300});
     CHECK_OPTIONAL_ARGUMENT(find_opts, min, min.view());
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-    CHECK_OPTIONAL_ARGUMENT(find_opts, modifiers, modifiers.view());
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+    CHECK_OPTIONAL_ARGUMENT(find_opts, modifiers_deprecated, modifiers.view());
     CHECK_OPTIONAL_ARGUMENT(find_opts, no_cursor_timeout, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, projection, projection.view());
     CHECK_OPTIONAL_ARGUMENT(find_opts, read_preference, read_preference{});

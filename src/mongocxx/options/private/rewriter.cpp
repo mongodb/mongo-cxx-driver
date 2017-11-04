@@ -160,16 +160,14 @@ void convert_snapshot_modifier(find* options, bsoncxx::document::element ele) {
 
 }  // namespace
 
-BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
-
 find rewriter::rewrite_find_modifiers(const find& options) {
-    if (!options.modifiers()) {
+    if (!options.modifiers_deprecated()) {
         return options;
     }
 
     find converted_options{options};
 
-    for (auto&& ele : converted_options.modifiers()->view()) {
+    for (auto&& ele : converted_options.modifiers_deprecated()->view()) {
         if (ele.key() == stdx::string_view("$comment")) {
             convert_comment_modifier(&converted_options, ele);
         } else if (ele.key() == stdx::string_view("$explain")) {
@@ -205,8 +203,6 @@ find rewriter::rewrite_find_modifiers(const find& options) {
 
     return converted_options;
 }
-
-BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END

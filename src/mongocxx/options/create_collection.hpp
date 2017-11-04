@@ -47,6 +47,7 @@ class MONGOCXX_API create_collection {
     ///   method chaining.
     ///
     MONGOCXX_DEPRECATED create_collection& auto_index_id(bool auto_index_id);
+    create_collection& auto_index_id_deprecated(bool auto_index_id);
 
     ///
     /// Gets the current auto_index_id setting.
@@ -238,6 +239,7 @@ class MONGOCXX_API create_collection {
     /// @return Options, as a document.
     ///
     MONGOCXX_DEPRECATED bsoncxx::document::value to_document() const;
+    bsoncxx::document::value to_document_deprecated() const;
 
     ///
     /// @deprecated
@@ -263,7 +265,7 @@ class MONGOCXX_API create_collection {
 };
 
 MONGOCXX_INLINE create_collection::operator bsoncxx::document::value() const {
-    return to_document();
+    return to_document_deprecated();
 }
 
 }  // namespace options
