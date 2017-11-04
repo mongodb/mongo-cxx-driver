@@ -370,7 +370,7 @@ struct BSONCXX_API b_regex {
     /// @param options
     ///   The regex options
     ///
-    template <typename T, typename U = stdx::string_view>
+    template <typename T, typename U = stdx::string_view, typename std::enable_if<!std::is_same<b_regex, typename std::decay<T>::type>::value, int>::type = 0>
     BSONCXX_INLINE explicit b_regex(T&& regex, U&& options = U{})
         : regex(std::forward<T>(regex)), options(std::forward<U>(options)) {}
 
@@ -499,7 +499,7 @@ struct BSONCXX_API b_codewscope {
     /// @param scope
     ///   A bson document view holding the scope environment.
     ///
-    template <typename T, typename U>
+    template <typename T, typename U, typename std::enable_if<!std::is_same<b_codewscope, typename std::decay<T>::type>::value, int>::type = 0>
     BSONCXX_INLINE explicit b_codewscope(T&& code, U&& scope)
         : code(std::forward<T>(code)), scope(std::forward<U>(scope)) {}
 
