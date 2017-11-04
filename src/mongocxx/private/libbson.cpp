@@ -40,14 +40,14 @@ scoped_bson_t::scoped_bson_t(bsoncxx::document::view_or_value doc)
 scoped_bson_t::scoped_bson_t(bsoncxx::stdx::optional<bsoncxx::document::view_or_value> doc)
     : _is_initialized{doc} {
     if (doc) {
-        _doc = doc;
+        _doc = std::move(doc);
         doc_to_bson_t(*_doc, &_bson);
     }
 }
 
 void scoped_bson_t::init_from_static(bsoncxx::document::view_or_value doc) {
     _is_initialized = true;
-    _doc = doc;
+    _doc = std::move(doc);
     doc_to_bson_t(*_doc, &_bson);
 }
 
@@ -55,7 +55,7 @@ void scoped_bson_t::init_from_static(
     bsoncxx::stdx::optional<bsoncxx::document::view_or_value> doc) {
     if (doc) {
         _is_initialized = true;
-        _doc = doc;
+        _doc = std::move(doc);
         doc_to_bson_t(*_doc, &_bson);
     }
 }
