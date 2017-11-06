@@ -73,7 +73,8 @@ TEST_CASE("CXX-941 is resolved") {
 
 TEST_CASE("CXX-1246: Legacy Extended JSON (Implicit)") {
     using namespace bsoncxx;
-    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    types::b_binary bin_val{
+        binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = bsoncxx::to_json(doc.view());
     REQUIRE(output ==
@@ -82,7 +83,8 @@ TEST_CASE("CXX-1246: Legacy Extended JSON (Implicit)") {
 
 TEST_CASE("CXX-1246: Legacy Extended JSON (Explicit)") {
     using namespace bsoncxx;
-    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    types::b_binary bin_val{
+        binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = to_json(doc.view(), ExtendedJsonMode::k_legacy);
     REQUIRE(output ==
@@ -91,16 +93,19 @@ TEST_CASE("CXX-1246: Legacy Extended JSON (Explicit)") {
 
 TEST_CASE("CXX-1246: Relaxed Extended JSON") {
     using namespace bsoncxx;
-    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    types::b_binary bin_val{
+        binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = to_json(doc.view(), ExtendedJsonMode::k_relaxed);
-    REQUIRE(output ==
-            R"({ "number" : 42, "bin" : { "$binary" : { "base64": "ZGVhZGJlZWY=", "subType" : "04" } } })");
+    REQUIRE(
+        output ==
+        R"({ "number" : 42, "bin" : { "$binary" : { "base64": "ZGVhZGJlZWY=", "subType" : "04" } } })");
 }
 
 TEST_CASE("CXX-1246: Canonical Extended JSON") {
     using namespace bsoncxx;
-    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    types::b_binary bin_val{
+        binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = to_json(doc.view(), ExtendedJsonMode::k_canonical);
     REQUIRE(
