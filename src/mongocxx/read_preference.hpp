@@ -99,7 +99,7 @@ class MONGOCXX_API read_preference {
     ///
     read_preference();
 
-    struct deprecated_tag{};
+    struct deprecated_tag {};
 
     ///
     /// Constructs a new read_preference.
