@@ -1,4 +1,4 @@
-# MongoDB C++ Driver [![Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=3.1-dev)](https://travis-ci.org/mongodb/mongo-cxx-driver)[![Windows Build Status](https://ci.appveyor.com/api/projects/status/w95xuowdjpr0img1/branch/3.1-dev?svg=true)](https://ci.appveyor.com/project/markbenvenuto/mongo-cxx-driver)
+# MongoDB C++ Driver [![Evergreen Build Status](https://evergreen.mongodb.com/static/img/favicon.ico)](https://evergreen.mongodb.com/waterfall/cxx-driver-stable)[![Travis Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=releases%2Fv3.1)](https://travis-ci.org/mongodb/mongo-cxx-driver)
 
 Welcome to the MongoDB C++ Driver!
 
