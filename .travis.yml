@@ -57,7 +57,7 @@ install:
     - pushd mongo-c-driver
 
     # TODO: Update this to our real minimum for the C++11 driver 3.2 release, once known.
-    - git checkout master
+    - git checkout 1.8.1
 
     - ./autogen.sh --enable-tests=no --enable-examples=no --with-libbson=bundled; make; sudo make install
 
