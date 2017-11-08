@@ -2,8 +2,16 @@
 
 Welcome to the MongoDB C++ Driver!
 
-This branch contains `mongocxx`, the new C++11 driver, and is the recommended
-branch for all users.
+## Branches - `releases/stable` versus `master`
+
+The default checkout branch of this repository is `releases/stable`. 
+This will always contain the latest stable release of the driver. The
+ `master` branch is used for active development. `master` should 
+**only** be used when making contributions back to the driver, as it 
+is not stable for use in production.
+
+See [Driver Status by family and version](#driver-status-by-family-and-version)
+for more details about the various versions of the driver.
 
 ## Resources
 
@@ -18,25 +26,25 @@ branch for all users.
 Stability indicates whether this driver is recommended for production use.
 Currently, no drivers guarantee API or ABI stability.
 
-| Family/version | Stability   | Development         | Purpose                                                      |
-| ---------------| ------------| ------------------- | ------------------------------------------------------------ |
-| mongocxx 3.1.x | Unstable    | Active development  | Unstable C++ driver development, requires C++11              |
-| mongocxx 3.0.x | Stable      | Bug fixes only      | Primary stable C++ driver release, requires C++11            |
-| legacy   (all) | Stable      | Critical fixes only | Former stable C++ driver release                             |
-| 26compat (all) | Deprecated  | Critical fixes only | Drop in replacement for users of existing 2.6 era C++ driver |
+| Family/version       | Stability   | Development         | Purpose                                                      |
+| -------------------- | ----------- | ------------------- | ------------------------------------------------------------ |
+| (repo master branch) | Unstable    | Active development  | New feature development                                      |
+| mongocxx 3.1.x       | Stable      | Bug fixes only      | Current stable C++ driver release, requires C++11            |
+| mongocxx 3.0.x       | Stable      | Critical fixes only | Previous stable C++ driver release, requires C++11           |
+| legacy   (all)       | Stable      | Critical fixes only | Legacy API stable C++ driver release, no longer recommended  |
 
 ## MongoDB compatibility
 
 The following compatibility table specifies the driver version(s)
-recommended for different versions of MongoDB.  The 3.0.x series
+recommended for different versions of MongoDB.  The mongocxx series
 is recommended for all new development.
 
-| Family/version | MongoDB 2.4 | MongoDB 2.6 | MongoDB 3.0 | MongoDB 3.2 |
-| ---------------| ------------| ------------| ------------| ------------|
-| mongocxx 3.0.x | ✓           | ✓           | ✓           | ✓           |
-| legacy   1.1.x | ✓           | ✓           | ✓           | ✓           |
-| legacy   1.0.x | ✓           | ✓           | ✓           |             |
-| 26compat (all) |             | ✓           |             |             |
+| Family/version | MongoDB 2.4 | MongoDB 2.6 | MongoDB 3.0 | MongoDB 3.2 | MongoDB 3.4 |
+| -------------- | ----------- | ----------- | ----------- | ----------- | ----------- |
+| mongocxx 3.1.x | ✓           | ✓           | ✓           | ✓           | ✓           |
+| mongocxx 3.0.x | ✓           | ✓           | ✓           | ✓           |             |
+| legacy   1.1.x | ✓           | ✓           | ✓           | ✓           |             |
+| legacy   1.0.x | ✓           | ✓           | ✓           |             |             |
 
 ## Bugs and issues
 
