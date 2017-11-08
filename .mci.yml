@@ -48,10 +48,15 @@ cxx_driver_variables:
     - name: "integration-test-3.0-with-WiredTiger"
     - name: "integration-test-3.2"
     - name: "integration-test-3.2-with-MMAPv1"
+    - name: "integration-test-3.4"
+    - name: "integration-test-3.4-with-MMAPv1"
     - name: "client-test-3.0"
     - name: "client-test-3.0-with-WiredTiger"
     - name: "client-test-3.2"
     - name: "client-test-3.2-with-MMAPv1"
+    - name: "client-test-3.4"
+    - name: "client-test-3.4-with-MMAPv1"
+
 
   version_test_list: &version_tests
     - name: "compile"
@@ -62,12 +67,14 @@ cxx_driver_variables:
     - name: "integration-test-2.6"
     - name: "integration-test-3.0"
     - name: "integration-test-3.2"
+    - name: "integration-test-3.4"
     - name: "integration-test-latest"
     - name: "client-test-2.2"
     - name: "client-test-2.4"
     - name: "client-test-2.6"
     - name: "client-test-3.0"
     - name: "client-test-3.2"
+    - name: "client-test-3.4"
     - name: "client-test-latest"
 
 ## Common download urls (merge in as hashes)
@@ -482,6 +489,25 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
+    - name: "integration-test-3.4"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.4"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
+    - name: "integration-test-3.4-with-MMAPv1"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.4"
+        - func: "use MMAPv1 storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
     - name: "integration-test-latest"
       depends_on:
         - name: "compile"
@@ -572,7 +598,7 @@ tasks:
       depends_on:
         - name: "compile"
       commands:
-        - func: "set version 3.0"
+        - func: "set version 3.2"
         - func: "fetch artifacts"
         - func: "fetch mongodb"
         - func: "run client tests"
@@ -581,7 +607,26 @@ tasks:
       depends_on:
         - name: "compile"
       commands:
-        - func: "set version 3.0"
+        - func: "set version 3.2"
+        - func: "use MMAPv1 storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
+    - name: "client-test-3.4"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.4"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
+    - name: "client-test-3.4-with-MMAPv1"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.4"
         - func: "use MMAPv1 storage"
         - func: "fetch artifacts"
         - func: "fetch mongodb"
@@ -630,7 +675,7 @@ buildvariants:
     <<: *mongo_orchestration_linux
   run_on:
   - rhel55-test
-  tasks: *version_tests
+  tasks: *latest_tests
 
 ## RHEL 5.5 32-bit
 
@@ -674,7 +719,7 @@ buildvariants:
     <<: *mongo_orchestration_linux
   run_on:
   - ubuntu1404-test
-  tasks: *latest_tests
+  tasks: *version_tests
 
 ## Ubuntu 1404 C++11
 
