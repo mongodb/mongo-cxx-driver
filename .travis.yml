@@ -64,7 +64,7 @@ install:
     - popd
 
     # Start up the server. We don't care to terminate it, since we are in an ephemeral VM.
-    - sudo service mongodb start
+    - sudo service mongod start
 
 before_script:
     - $CC --version
