@@ -50,6 +50,10 @@ install:
     # CMake
     - tar -zxvf ${CMAKE_VERSION}.tar.gz -C build
 
+    # Blow away any prior mongodb state so we don't have prior db state that
+    # that doesn't have the right featureCompatibilityVersion
+    - sudo dpkg --purge mongod-org
+
     # Install MongoDB Enterprise
     - sudo apt-get install mongodb-enterprise-server
 
