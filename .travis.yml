@@ -53,6 +53,7 @@ install:
     # Blow away any prior mongodb state so we don't have prior db state that
     # that doesn't have the right featureCompatibilityVersion
     - sudo dpkg --purge mongodb-org
+    - sudo rm -rf /var/lib/mongodb
 
     # Install MongoDB Enterprise
     - sudo apt-get install mongodb-enterprise-server
