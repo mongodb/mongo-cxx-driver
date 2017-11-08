@@ -334,13 +334,6 @@ functions:
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} examples
 
 pre:
-  - command: expansions.fetch
-    params:
-      keys:
-        - local_key: "aws_key"
-          remote_key: "project_aws_key"
-        - local_key: "aws_secret"
-          remote_key: "project_aws_secret"
   - command: shell.exec
     params:
       script: |
