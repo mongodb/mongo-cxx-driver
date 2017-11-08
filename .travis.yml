@@ -32,12 +32,6 @@ before_install:
     - sudo apt-key adv --keyserver ${KEY_SERVER} --recv D68FA50FEA312927
     - echo "deb ${MONGO_REPO} ${REPO_TYPE}" | sudo tee ${SOURCES_LOC}
 
-    # CMake
-    - sudo add-apt-repository --yes ppa:adrozdoff/cmake
-
-    # Update all the repositories
-    - sudo apt-get update -qq
-
     # Mongo C Driver
     - git clone https://github.com/mongodb/mongo-c-driver.git
 
@@ -53,9 +47,6 @@ install:
 
     # Install MongoDB Enterprise
     - sudo apt-get install mongodb-enterprise-server
-
-    # Install CMake (Versions lower than 2.8.8 do not support object libraries)
-    - sudo apt-get install cmake
 
     # Install Mongo C Driver
     - pushd mongo-c-driver
