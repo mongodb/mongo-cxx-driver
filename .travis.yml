@@ -33,7 +33,7 @@ before_install:
     - echo "deb ${MONGO_REPO} ${REPO_TYPE}" | sudo tee ${SOURCES_LOC}
 
     # CMake
-    - sudo add-apt-repository --yes ppa:kalakris/cmake
+    - sudo add-apt-repository --yes ppa:adrozdoff/cmake
 
     # Update all the repositories
     - sudo apt-get update -qq
