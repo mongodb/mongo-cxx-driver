@@ -16,6 +16,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -87,7 +88,8 @@ void write_concern::acknowledge_level(write_concern::level confirm_level) {
 }
 
 void write_concern::tag(stdx::string_view confirm_from) {
-    libmongoc::write_concern_set_wtag(_impl->write_concern_t, confirm_from.to_string().data());
+    libmongoc::write_concern_set_wtag(_impl->write_concern_t,
+                                      bsoncxx::string::to_string(confirm_from).data());
 }
 
 void write_concern::majority(std::chrono::milliseconds timeout) {

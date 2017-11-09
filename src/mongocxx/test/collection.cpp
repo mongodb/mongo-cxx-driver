@@ -19,6 +19,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
@@ -1737,7 +1738,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(make_document(kvp("x", 1), kvp("y", 1)));
 
             pipeline.project(make_document(kvp("x", 1)));
-            pipeline.out(coll.name().to_string());
+            pipeline.out(bsoncxx::string::to_string(coll.name()));
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 1) {
@@ -1775,7 +1776,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options.bypass_document_validation(true);
 
             pipeline.project(make_document(kvp("x", 1)));
-            pipeline.out(coll_out.name().to_string());
+            pipeline.out(bsoncxx::string::to_string(coll_out.name()));
             stdx::optional<cursor> cursor;
             REQUIRE_NOTHROW(cursor = coll_in.aggregate(pipeline, options));
 

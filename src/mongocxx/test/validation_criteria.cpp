@@ -17,6 +17,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/validation_criteria.hpp>
@@ -78,12 +79,12 @@ TEST_CASE("validation_criteria can be exported to a document", "[validation_crit
     ele = criteria_view["validationLevel"];
     REQUIRE(ele);
     REQUIRE(ele.type() == type::k_utf8);
-    REQUIRE(ele.get_utf8().value.to_string() == "strict");
+    REQUIRE(bsoncxx::string::to_string(ele.get_utf8().value) == "strict");
 
     ele = criteria_view["validationAction"];
     REQUIRE(ele);
     REQUIRE(ele.type() == type::k_utf8);
-    REQUIRE(ele.get_utf8().value.to_string() == "warn");
+    REQUIRE(bsoncxx::string::to_string(ele.get_utf8().value) == "warn");
 
     ele = criteria_view["validator"];
     REQUIRE(ele);

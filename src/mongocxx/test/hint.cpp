@@ -19,6 +19,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/instance.hpp>
@@ -41,7 +42,7 @@ TEST_CASE("Hint", "[hint]") {
         SECTION("Returns correct value from to_value") {
             types::value val = index_hint.to_value();
             REQUIRE(val.type() == type::k_utf8);
-            REQUIRE(val.get_utf8().value.to_string() == index_name);
+            REQUIRE(bsoncxx::string::to_string(val.get_utf8().value) == index_name);
         }
 
         SECTION("Compares equal to matching index name") {
@@ -67,7 +68,7 @@ TEST_CASE("Hint", "[hint]") {
             REQUIRE(ele);
             REQUIRE(ele.type() == type::k_utf8);
 
-            REQUIRE(ele.get_utf8().value.to_string() == index_name);
+            REQUIRE(bsoncxx::string::to_string(ele.get_utf8().value) == index_name);
         }
     }
 

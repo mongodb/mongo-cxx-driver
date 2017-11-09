@@ -18,6 +18,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
@@ -44,7 +45,7 @@ bool check_for_collections(cursor cursor, std::set<std::string> expected_colls) 
     for (auto&& coll : cursor) {
         // Skip system collections which the MMAPv1 storage engine returns,
         // while WiredTiger does not.
-        auto name_string = coll["name"].get_utf8().value.to_string();
+        auto name_string = bsoncxx::string::to_string(coll["name"].get_utf8().value);
         auto pos = name_string.find("system.");
         if (pos != std::string::npos && pos == 0) {
             continue;

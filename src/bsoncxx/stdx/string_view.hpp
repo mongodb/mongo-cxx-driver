@@ -28,6 +28,7 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace stdx {
 
+using ::core::basic_string_view;
 using ::core::string_view;
 
 }  // namespace stdx
@@ -36,17 +37,40 @@ BSONCXX_INLINE_NAMESPACE_END
 
 #elif defined(BSONCXX_POLY_USE_BOOST)
 
-#include <boost/utility/string_ref.hpp>
+#include <boost/version.hpp>
+
+#if BOOST_VERSION >= 106100
+
+#include <boost/utility/string_view.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace stdx {
 
+using ::boost::basic_string_view;
+using ::boost::string_view;
+
+}  // namespace stdx
+BSONCXX_INLINE_NAMESPACE_END
+}  // namespace bsoncxx
+
+#else
+
+#include <boost/utility/string_view.hpp>
+
+namespace bsoncxx {
+BSONCXX_INLINE_NAMESPACE_BEGIN
+namespace stdx {
+
+template <typename charT, typename traits = std::char_traits<charT>>
+using basic_string_view = ::boost::basic_string_ref<charT, traits>;
 using string_view = ::boost::string_ref;
 
 }  // namespace stdx
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
+
+#endif
 
 #elif defined(BSONCXX_POLY_USE_STD_EXPERIMENTAL)
 
@@ -56,7 +80,23 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace stdx {
 
+using ::std::experimental::basic_string_view;
 using ::std::experimental::string_view;
+
+}  // namespace stdx
+BSONCXX_INLINE_NAMESPACE_END
+}  // namespace bsoncxx
+
+#elif defined(BSONCXX_POLY_USE_STD)
+
+#include <string_view>
+
+namespace bsoncxx {
+BSONCXX_INLINE_NAMESPACE_BEGIN
+namespace stdx {
+
+using ::std::basic_string_view;
+using ::std::string_view;
 
 }  // namespace stdx
 BSONCXX_INLINE_NAMESPACE_END

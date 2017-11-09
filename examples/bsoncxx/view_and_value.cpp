@@ -26,6 +26,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
 
@@ -79,7 +80,8 @@ int main(int, char**) {
                 // if we have a subarray, we can access it by getting a view of it.
                 array::view subarr{ele.get_array().value};
                 for (array::element ele : subarr) {
-                    std::cout << "array element: " << ele.get_utf8().value.to_string() << std::endl;
+                    std::cout << "array element: "
+                              << bsoncxx::string::to_string(ele.get_utf8().value) << std::endl;
                 }
                 break;
             }
@@ -114,7 +116,7 @@ int main(int, char**) {
     std::vector<std::string> doc_keys;
     std::transform(begin(view), end(view), std::back_inserter(doc_keys), [](document::element ele) {
         // note that key() returns a string_view
-        return ele.key().to_string();
+        return bsoncxx::string::to_string(ele.key());
     });
 
     std::cout << "document keys are: " << std::endl;

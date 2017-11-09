@@ -27,6 +27,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
@@ -64,7 +65,7 @@ pipeline build_pipeline(array::view pipeline_docs) {
         if (document["$match"]) {
             pipeline.match(document["$match"].get_document().value);
         } else if (document["$out"]) {
-            pipeline.out(document["$out"].get_utf8().value.to_string());
+            pipeline.out(bsoncxx::string::to_string(document["$out"].get_utf8().value));
         } else if (document["$sort"]) {
             pipeline.sort(document["$sort"].get_document().value);
         } else {
@@ -291,7 +292,8 @@ document::value run_find_one_and_replace_test(collection* coll, document::view o
     }
 
     if (arguments["returnDocument"]) {
-        std::string return_document = arguments["returnDocument"].get_utf8().value.to_string();
+        std::string return_document =
+            bsoncxx::string::to_string(arguments["returnDocument"].get_utf8().value);
 
         if (return_document == "After") {
             options.return_document(options::return_document::k_after);
@@ -339,7 +341,8 @@ document::value run_find_one_and_update_test(collection* coll, document::view op
     }
 
     if (arguments["returnDocument"]) {
-        std::string return_document = arguments["returnDocument"].get_utf8().value.to_string();
+        std::string return_document =
+            bsoncxx::string::to_string(arguments["returnDocument"].get_utf8().value);
 
         if (return_document == "After") {
             options.return_document(options::return_document::k_after);
@@ -635,7 +638,7 @@ void run_crud_tests_in_file(std::string test_path, client* client) {
 
     if (test_spec_view["minServerVersion"]) {
         std::string min_server_version =
-            test_spec_view["minServerVersion"].get_utf8().value.to_string();
+            bsoncxx::string::to_string(test_spec_view["minServerVersion"].get_utf8().value);
 
         if (test_util::compare_versions(server_version, min_server_version) < 0) {
             return;
@@ -644,7 +647,7 @@ void run_crud_tests_in_file(std::string test_path, client* client) {
 
     if (test_spec_view["maxServerVersion"]) {
         std::string max_server_version =
-            test_spec_view["maxServerVersion"].get_utf8().value.to_string();
+            bsoncxx::string::to_string(test_spec_view["maxServerVersion"].get_utf8().value);
 
         if (test_util::compare_versions(server_version, max_server_version) > 0) {
             return;
@@ -657,20 +660,20 @@ void run_crud_tests_in_file(std::string test_path, client* client) {
     collection coll = db["test"];
 
     for (auto&& test : tests) {
-        std::string description = test["description"].get_utf8().value.to_string();
+        std::string description = bsoncxx::string::to_string(test["description"].get_utf8().value);
         INFO("Test description: " << description);
         initialize_collection(&coll, test_spec_view["data"].get_array().value);
         document::view outcome = test["outcome"].get_document().value;
 
         if (outcome["collection"] && outcome["collection"].get_document().value["name"]) {
-            std::string out_coll_name =
-                outcome["collection"].get_document().value["name"].get_utf8().value.to_string();
+            std::string out_coll_name = bsoncxx::string::to_string(
+                outcome["collection"].get_document().value["name"].get_utf8().value);
             collection out_coll = db[out_coll_name];
             out_coll.delete_many({});
         }
 
         document::view operation = test["operation"].get_document().value;
-        std::string operation_name = operation["name"].get_utf8().value.to_string();
+        std::string operation_name = bsoncxx::string::to_string(operation["name"].get_utf8().value);
 
         auto run_test = crud_test_runners[operation_name];
         document::value actual_result = run_test(&coll, operation);
@@ -680,7 +683,8 @@ void run_crud_tests_in_file(std::string test_path, client* client) {
 
             document::view out_collection_doc = outcome["collection"].get_document().value;
             if (out_collection_doc["name"]) {
-                auto out_coll_name = out_collection_doc["name"].get_utf8().value.to_string();
+                auto out_coll_name =
+                    bsoncxx::string::to_string(out_collection_doc["name"].get_utf8().value);
                 out_coll = db[out_coll_name];
             }
 

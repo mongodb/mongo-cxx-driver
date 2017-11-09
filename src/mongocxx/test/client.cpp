@@ -15,6 +15,7 @@
 #include "helpers.hpp"
 
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -273,7 +274,7 @@ TEST_CASE("integration tests for client metadata handshake feature") {
                 auto driver_view = driver.view();
                 REQUIRE(driver_view["name"].get_utf8().value ==
                         stdx::string_view{"mongoc / mongocxx"});
-                auto version = driver_view["version"].get_utf8().value.to_string();
+                auto version = bsoncxx::string::to_string(driver_view["version"].get_utf8().value);
                 REQUIRE(version.find(MONGOCXX_VERSION_STRING) != std::string::npos);
 
                 REQUIRE(metadata_view["os"]);

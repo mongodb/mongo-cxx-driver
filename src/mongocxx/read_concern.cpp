@@ -15,6 +15,7 @@
 #include <mongocxx/read_concern.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/private/libmongoc.hh>
@@ -68,8 +69,9 @@ void read_concern::acknowledge_level(read_concern::level rc_level) {
 
 void read_concern::acknowledge_string(stdx::string_view rc_string) {
     // libmongoc uses a NULL level to mean "use the server's default read_concern."
-    libmongoc::read_concern_set_level(_impl->read_concern_t,
-                                      rc_string.empty() ? NULL : rc_string.to_string().data());
+    libmongoc::read_concern_set_level(
+        _impl->read_concern_t,
+        rc_string.empty() ? NULL : bsoncxx::string::to_string(rc_string).data());
 }
 
 read_concern::level read_concern::acknowledge_level() const {

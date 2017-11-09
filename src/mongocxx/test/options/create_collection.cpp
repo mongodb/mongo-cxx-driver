@@ -18,6 +18,7 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
@@ -153,7 +154,7 @@ TEST_CASE("create_collection can be exported to a document", "[create_collection
     document::element validationLevel{doc_view["validationLevel"]};
     REQUIRE(validationLevel);
     REQUIRE(validationLevel.type() == type::k_utf8);
-    REQUIRE(validationLevel.get_utf8().value.to_string() == "strict");
+    REQUIRE(bsoncxx::string::to_string(validationLevel.get_utf8().value) == "strict");
 
     document::element validationAction{doc_view["validationAction"]};
     REQUIRE(!validationAction);

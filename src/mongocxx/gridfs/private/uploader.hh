@@ -19,6 +19,7 @@
 
 #include <mongocxx/third_party/md5.h>
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/gridfs/uploader.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -41,7 +42,7 @@ class uploader::impl {
           chunk_size{chunk_size},
           chunks_written{0},
           closed{false},
-          filename{filename.to_string()},
+          filename{bsoncxx::string::to_string(filename)},
           files{std::move(files)},
           metadata{std::move(metadata)},
           result{std::move(result)} {

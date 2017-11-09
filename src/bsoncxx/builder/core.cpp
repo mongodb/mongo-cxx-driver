@@ -23,6 +23,7 @@
 #include <bsoncxx/private/stack.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
 
@@ -403,8 +404,8 @@ core& core::append(const types::b_regex& value) {
     if (!bson_append_regex(_impl->back(),
                            key.data(),
                            static_cast<std::int32_t>(key.length()),
-                           value.regex.to_string().data(),
-                           value.options.to_string().data())) {
+                           string::to_string(value.regex).data(),
+                           string::to_string(value.options).data())) {
         throw bsoncxx::exception{error_code::k_cannot_append_regex};
     }
 
@@ -420,7 +421,7 @@ core& core::append(const types::b_dbpointer& value) {
     if (!bson_append_dbpointer(_impl->back(),
                                key.data(),
                                static_cast<std::int32_t>(key.length()),
-                               value.collection.to_string().data(),
+                               string::to_string(value.collection).data(),
                                &oid)) {
         throw bsoncxx::exception{error_code::k_cannot_append_dbpointer};
     }
@@ -434,7 +435,7 @@ core& core::append(const types::b_code& value) {
     if (!bson_append_code(_impl->back(),
                           key.data(),
                           static_cast<std::int32_t>(key.length()),
-                          value.code.to_string().data())) {
+                          string::to_string(value.code).data())) {
         throw bsoncxx::exception{error_code::k_cannot_append_code};
     }
 
@@ -464,7 +465,7 @@ core& core::append(const types::b_codewscope& value) {
     if (!bson_append_code_with_scope(_impl->back(),
                                      key.data(),
                                      static_cast<std::int32_t>(key.length()),
-                                     value.code.to_string().data(),
+                                     string::to_string(value.code).data(),
                                      &bson)) {
         throw bsoncxx::exception{error_code::k_cannot_append_codewscope};
     }

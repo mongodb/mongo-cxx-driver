@@ -30,6 +30,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
@@ -165,7 +166,8 @@ std::basic_string<std::uint8_t> convert_hex_string_to_bytes(stdx::string_view he
     // Convert each pair of hexadecimal digits into a number and store it in the array.
     for (std::size_t i = 0; i < hex.size(); i += 2) {
         stdx::string_view sub = hex.substr(i, 2);
-        bytes.push_back(static_cast<std::uint8_t>(std::stoi(sub.to_string(), NULL, 16)));
+        bytes.push_back(
+            static_cast<std::uint8_t>(std::stoi(bsoncxx::string::to_string(sub), nullptr, 16)));
     }
 
     return bytes;
@@ -190,7 +192,7 @@ std::string get_server_version(const client& client) {
     server_status.append(bsoncxx::builder::basic::kvp("serverStatus", 1));
     bsoncxx::document::value output = client["test"].run_command(server_status.extract());
 
-    return output.view()["version"].get_utf8().value.to_string();
+    return bsoncxx::string::to_string(output.view()["version"].get_utf8().value);
 }
 
 stdx::optional<bsoncxx::document::value> parse_test_file(std::string path) {

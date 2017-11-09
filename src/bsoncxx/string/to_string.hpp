@@ -12,31 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/string/view_or_value.hpp>
+#pragma once
 
-#include <bsoncxx/string/to_string.hpp>
+#include <string>
+#include <utility>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/stdx/string_view.hpp>
+
+#include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace string {
 
-view_or_value view_or_value::terminated() const {
-    // If we do not own our string, we cannot guarantee that it is null-terminated,
-    // so make an owned copy.
-    if (!is_owning()) {
-        return {string::to_string(view())};
-    }
-
-    // If we are owning, return a view_or_value viewing our string
-    return {view()};
-}
-
-const char* view_or_value::data() const {
-    return view().data();
+template <class CharT,
+          class Traits = std::char_traits<CharT>,
+          class Allocator = std::allocator<CharT>>
+BSONCXX_INLINE std::basic_string<CharT, Traits, Allocator> to_string(
+    stdx::basic_string_view<CharT, Traits> value, const Allocator& alloc = Allocator()) {
+    return std::basic_string<CharT, Traits, Allocator>{value.data(), value.length(), alloc};
 }
 
 }  // namespace string
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
+
+#include <bsoncxx/config/postlude.hpp>

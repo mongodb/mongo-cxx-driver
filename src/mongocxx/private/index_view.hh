@@ -18,6 +18,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/options/index_view.hpp>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
@@ -69,12 +70,14 @@ class index_view::impl {
         bsoncxx::document::view result_view = result.view();
 
         if (result_view["note"] &&
-            result_view["note"].get_utf8().value.to_string() == "all indexes already exist") {
+            bsoncxx::string::to_string(result_view["note"].get_utf8().value) ==
+                "all indexes already exist") {
             return bsoncxx::stdx::nullopt;
         }
 
         if (auto name = model.options()["name"]) {
-            return bsoncxx::stdx::make_optional(name.get_value().get_utf8().value.to_string());
+            return bsoncxx::stdx::make_optional(
+                bsoncxx::string::to_string(name.get_value().get_utf8().value));
         }
 
         return bsoncxx::stdx::make_optional(get_index_name_from_keys(model.keys()));
