@@ -23,6 +23,8 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
+// Note: This stack is only intended for use with the 'frame' type in
+// builder core.cpp.
 template <typename T, std::size_t size>
 class stack {
    public:
@@ -30,7 +32,22 @@ class stack {
 
     ~stack() {
         while (!empty()) {
-            pop_back();
+            // If you are using a stack<core::impl::frame> inside a
+            // builder::core object, then either one of two things is
+            // true:
+            //
+            // 1) core::impl::is_viewable is true, so the stack is
+            // empty, we aren't going to get here.
+            //
+            //  OR
+            //
+            // 2) The stack isn't empty, so the builder wasn't in a
+            // viewable state when we were destroying its internal
+            // stack. We have a partially constructed but
+            // un-observable BSON document. We don't need to call
+            // close, which might fail. Just call _dec to properly
+            // invoke the non-failing frame destructor.
+            _dec();
         }
 
         while (!_buckets.empty()) {
@@ -59,6 +76,7 @@ class stack {
     }
 
     void pop_back() {
+        _get_ptr()->close();
         _dec();
     }
 
