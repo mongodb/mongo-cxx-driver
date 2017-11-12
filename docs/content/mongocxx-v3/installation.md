@@ -56,16 +56,17 @@ configure option when building libbson/libmongoc.
 
 ### Step 2: Choose a C++17 polyfill
 
-The mongocxx driver uses the experimental C++17 features
-`std::optional` and `std::string_view`. To compile
-the mongocxx driver, you must choose one of the following
-implementations for these features:
+The mongocxx driver uses the C++17 features `std::optional` and
+`std::string_view`. To compile the mongocxx driver for pre-C++17, you
+must choose one of the following implementations for these features:
 
    MNMLSTC/core (*default for non-Windows platforms*)
-     Select with `-DBSONCXX_POLY_USE_MNMLSTC=1`. This option vendors a
-     header-only installation of MNMLSTC/core into the bsoncxx library
-     installation.  **NOTE**: this will download MLNMLSTC from
-     GitHub during the build process.
+     Select with `-DBSONCXX_POLY_USE_MNMLSTC=1`.  **NOTE**: This option
+     vendors a header-only installation of MNMLSTC/core into the bsoncxx
+     library installation and will therefore download MLNMLSTC from GitHub
+     during the build process. If you already have an available version of
+     MNMLSTC on your system, you can avoid the download step by using
+     `-DBSONCXX_POLY_USE_SYSTEM_MNMLSTC`.
 
    Boost (*default for Windows platforms*)
      Select with `-DBSONCXX_POLY_USE_BOOST=1`. This is currently the
