@@ -18,6 +18,7 @@
 
 #include <vector>
 
+#include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
 #include <mongocxx/instance.hpp>
@@ -68,8 +69,8 @@ void gridfs_upload::setup() {
 void gridfs_upload::before_task() {
     auto db = _conn["perftest"];
     _bucket = db.gridfs_bucket();
-    db[_bucket.bucket_name().to_string() + ".chunks"].drop();
-    db[_bucket.bucket_name().to_string() + ".files"].drop();
+    db[bsoncxx::string::to_string(_bucket.bucket_name()) + ".chunks"].drop();
+    db[bsoncxx::string::to_string(_bucket.bucket_name()) + ".files"].drop();
     auto uploader = _bucket.open_upload_stream("one_byte_gridfs_file");
     std::uint8_t byte[1] = {72};
     uploader.write(byte, 1);
