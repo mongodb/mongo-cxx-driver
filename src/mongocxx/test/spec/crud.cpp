@@ -464,7 +464,7 @@ document::value run_replace_one_test(collection* coll, document::view operation)
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp(
         "result",
-        [replacement, matched_count, modified_count, upserted_count, upserted_id](
+        [matched_count, modified_count, upserted_count, upserted_id](
             builder::basic::sub_document subdoc) {
             subdoc.append(builder::basic::kvp("matchedCount", matched_count));
 
