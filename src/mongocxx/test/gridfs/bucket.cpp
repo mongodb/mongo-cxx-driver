@@ -63,7 +63,7 @@ void validate_gridfs_file(database db,
             expected_contents.size());
     REQUIRE(files_doc->view()["chunkSize"].get_int32().value == expected_chunk_size);
     REQUIRE(files_doc->view()["filename"].get_utf8().value ==
-            stdx::string_view{expected_file_name});
+            stdx::string_view(expected_file_name));
 
     std::int32_t index = 0;
 
@@ -118,7 +118,7 @@ void validate_gridfs_file(
     REQUIRE(static_cast<std::size_t>(files_doc->view()["chunkSize"].get_int32().value) ==
             expected_chunk_size);
     REQUIRE(files_doc->view()["filename"].get_utf8().value ==
-            stdx::string_view{expected_file_name});
+            stdx::string_view(expected_file_name));
 
     std::size_t i = 0;
 

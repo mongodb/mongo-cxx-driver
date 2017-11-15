@@ -210,7 +210,7 @@ TEST_CASE("create_many", "[index_view]") {
             auto name = index["name"].get_utf8();
 
             for (auto expected : expected_names) {
-                if (stdx::string_view{expected} == name.value) {
+                if (stdx::string_view(expected) == name.value) {
                     found++;
                 }
             }

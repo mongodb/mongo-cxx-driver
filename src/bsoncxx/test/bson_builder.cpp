@@ -677,7 +677,7 @@ TEST_CASE("document core builder ownership", "[bsoncxx::builder::core]") {
 
     SECTION("when passing a stdx::string_view, ownership handled by caller") {
         std::string key{"sabich"};
-        stdx::string_view key_view{key};
+        stdx::string_view key_view(key);
         b.key_view(key_view);
         b.append(1);
     }

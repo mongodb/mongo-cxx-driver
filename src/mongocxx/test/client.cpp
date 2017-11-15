@@ -251,7 +251,7 @@ TEST_CASE("integration tests for client metadata handshake feature") {
             auto op_view = it.get_document().view();
 
             if (!op_view["appName"] ||
-                op_view["appName"].get_utf8().value != stdx::string_view{app_name}) {
+                op_view["appName"].get_utf8().value != stdx::string_view(app_name)) {
                 continue;
             }
 
@@ -267,7 +267,7 @@ TEST_CASE("integration tests for client metadata handshake feature") {
 
                 REQUIRE(metadata_view["application"]);
                 auto application = metadata_view["application"].get_document();
-                REQUIRE(application.view()["name"].get_utf8().value == stdx::string_view{app_name});
+                REQUIRE(application.view()["name"].get_utf8().value == stdx::string_view(app_name));
 
                 REQUIRE(metadata_view["driver"]);
                 auto driver = metadata_view["driver"].get_document();

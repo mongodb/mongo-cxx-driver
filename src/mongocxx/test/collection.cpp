@@ -128,17 +128,17 @@ TEST_CASE("collection renaming", "[collection]") {
     coll.insert_one(filter.view());  // Ensure that the collection exists.
     other_coll.insert_one({});
 
-    REQUIRE(coll.name() == stdx::string_view{collname});
+    REQUIRE(coll.name() == stdx::string_view(collname));
 
     std::string new_name{"mongo_cxx_newname"};
     coll.rename(new_name, false);
 
-    REQUIRE(coll.name() == stdx::string_view{new_name});
+    REQUIRE(coll.name() == stdx::string_view(new_name));
 
     REQUIRE(coll.find_one(filter.view(), {}));
 
     coll.rename(other_collname, true);
-    REQUIRE(coll.name() == stdx::string_view{other_collname});
+    REQUIRE(coll.name() == stdx::string_view(other_collname));
     REQUIRE(coll.find_one(filter.view(), {}));
 
     coll.drop();
@@ -2266,7 +2266,7 @@ TEST_CASE("create_index tests", "[collection]") {
         options.name(indexName);
 
         auto response = coll.create_index(index.view(), options);
-        REQUIRE(response.view()["name"].get_utf8().value == bsoncxx::stdx::string_view{indexName});
+        REQUIRE(response.view()["name"].get_utf8().value == bsoncxx::stdx::string_view(indexName));
 
         find_index_and_validate(coll, indexName);
 
@@ -2423,7 +2423,7 @@ TEST_CASE("list_indexes", "[collection]") {
         auto name = index["name"].get_utf8();
 
         for (auto&& expected : expected_names) {
-            if (bsoncxx::stdx::string_view{expected} == name.value) {
+            if (bsoncxx::stdx::string_view(expected) == name.value) {
                 found++;
                 if (expected == "a_1") {
                     REQUIRE(index["unique"]);
