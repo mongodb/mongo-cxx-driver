@@ -48,7 +48,11 @@ endif()
 # that we end up not being able to turn deprecation warnings into
 # errors. Instead, since we know all our platforms offer the feature,
 # just hard enable it here.
-set (COMPILER_HAS_DEPRECATED_ATTR true)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  set(COMPILER_HAS_DEPRECATED true)
+else()
+  set(COMPILER_HAS_DEPRECATED_ATTR true)
+endif()
 
 set (CMAKE_SKIP_BUILD_RPATH false)
 set (CMAKE_BUILD_WITH_INSTALL_RPATH false)
