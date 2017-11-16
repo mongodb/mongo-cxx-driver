@@ -56,7 +56,7 @@ BSONCXX_INLINE_NAMESPACE_END
 
 #else
 
-#include <boost/utility/string_view.hpp>
+#include <boost/utility/string_ref.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
