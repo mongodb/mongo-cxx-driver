@@ -125,7 +125,7 @@ view::const_iterator view::find(stdx::string_view key) const {
 
     while (bson_iter_next(&iter)) {
         const char* ikey = bson_iter_key(&iter);
-        if (0 == strncmp(key.data(), ikey, key.size())) {
+        if (0 == strncmp(key.data(), ikey, key.size()) && strlen(ikey) == key.size()) {
             return const_iterator(element(iter.raw, iter.len, iter.off));
         }
     }
