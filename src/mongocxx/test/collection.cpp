@@ -2336,7 +2336,7 @@ TEST_CASE("create_index tests", "[collection]") {
 
         bool unique = options.unique().value();
         auto validate = [unique](bsoncxx::document::view index) {
-            auto expire_after = index["expireAfter"];
+            auto expire_after = index["expireAfterSeconds"];
             REQUIRE(expire_after);
             REQUIRE(expire_after.type() == type::k_int32);
             REQUIRE(expire_after.get_int32().value == 500);
