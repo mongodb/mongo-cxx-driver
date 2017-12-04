@@ -109,23 +109,41 @@ view::const_iterator view::end() const {
 
 view::const_iterator view::find(stdx::string_view key) const {
     bson_t b;
-    bson_iter_t iter;
-
     if (!bson_init_static(&b, _data, _length)) {
         return cend();
     }
 
+    bson_iter_t iter;
     if (!bson_iter_init(&iter, &b)) {
         return cend();
     }
 
-    if (key.empty()) {
-        return cend();
-    }
+    // See CDRIVER-2414: If we had a bson_iter_find_init that accepted
+    // the key length, then we could call it without needing to make a
+    // temporary std::string from the 'key', obviating the need for
+    // most of the rest of this method.
+
+    // Logically, a default constructed string_view represents the
+    // empty string just as does string_view(""), but they have,
+    // potentially, different represntations, the former having .data
+    // returning nullptr though the latter probably does not. But the
+    // C functions like strncmp below can't be called with nullptr. If
+    // we were called with a string_data such that its .data() member
+    // returns nullptr, then, barring undefined behavior, its length
+    // is known to be zero, and it is equivalent to the empty string,
+    // an instance of which we reset it to.
+    if (key.data() == nullptr)
+        key = "";
 
     while (bson_iter_next(&iter)) {
-        const char* ikey = bson_iter_key(&iter);
-        if (0 == strncmp(key.data(), ikey, key.size()) && strlen(ikey) == key.size()) {
+        // See CDRIVER-2414: If bson_iter_key returned the length, we
+        // could avoid the strlen, or, better still, not use strncmp
+        // by using an O(1) promotion to stdx::string view, and then
+        // using the relops for that class on both sides.
+        const auto ikey = bson_iter_key(&iter);
+        if ((0 == strncmp(key.data(), ikey, key.size())) && (strlen(ikey) == key.size())) {
+            // NOTE: Technically, we are here accessing internals of bson_iter_t, which
+            // we should not do.
             return const_iterator(element(iter.raw, iter.len, iter.off));
         }
     }
