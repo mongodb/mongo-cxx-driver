@@ -33,6 +33,7 @@ is recommended for all new development.
 
 | Family/version | MongoDB 2.4 | MongoDB 2.6 | MongoDB 3.0 | MongoDB 3.2 | MongoDB 3.4 |
 | -------------- | ----------- | ----------- | ----------- | ----------- | ----------- |
+| mongocxx 3.2.x | ✓           | ✓           | ✓           | ✓           | ✓           |
 | mongocxx 3.1.x | ✓           | ✓           | ✓           | ✓           | ✓           |
 | mongocxx 3.0.x | ✓           | ✓           | ✓           | ✓           |             |
 | legacy   1.1.x | ✓           | ✓           | ✓           | ✓           |             |
