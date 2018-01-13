@@ -55,11 +55,6 @@ class collection::impl {
         libmongoc::collection_destroy(collection_t);
     }
 
-    bsoncxx::document::value gle() {
-        auto gle = libmongoc::collection_get_last_error(collection_t);
-        return bsoncxx::helpers::value_from_bson_t(gle);
-    }
-
     mongoc_collection_t* collection_t;
     std::string database_name;
     const class client::impl* client_impl;
