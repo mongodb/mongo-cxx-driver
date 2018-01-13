@@ -81,8 +81,18 @@ cursor database::list_collections(bsoncxx::document::view_or_value filter) {
     libbson::scoped_bson_t filter_bson{filter};
     bson_error_t error;
 
+// GCC 4 doesn't seem to understand that calling through a function
+// pointer to a deprecated thing shouldn't generated a deprecation warning.
+#if defined(__GNUC__) && (__GNUC__ == 4)
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+#endif
+
     auto result =
         libmongoc::database_find_collections(_get_impl().database_t, filter_bson.bson(), &error);
+
+#if defined(__GNUC__) && (__GNUC__ == 4)
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+#endif
 
     if (!result) {
         throw_exception<operation_exception>(error);

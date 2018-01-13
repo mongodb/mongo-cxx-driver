@@ -160,6 +160,12 @@ void bulk_write::append(const model::write& operation) {
     }
 }
 
+// GCC 4 doesn't seem to understand that calling through a function
+// pointer to a deprecated thing shouldn't generated a deprecation warning.
+#if defined(__GNUC__) && (__GNUC__ == 4)
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+#endif
+
 bulk_write::bulk_write(const collection& coll, const options::bulk_write& options)
     : _created_from_collection{true},
       _impl{stdx::make_unique<bulk_write::impl>(libmongoc::collection_create_bulk_operation(
@@ -170,6 +176,10 @@ bulk_write::bulk_write(const collection& coll, const options::bulk_write& option
         libmongoc::bulk_operation_set_bypass_document_validation(_impl->operation_t, *validation);
     }
 }
+
+#if defined(__GNUC__) && (__GNUC__ == 4)
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
+#endif
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

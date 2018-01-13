@@ -118,7 +118,18 @@ class database client::database(bsoncxx::string::view_or_value name) const& {
 
 cursor client::list_databases() const {
     bson_error_t error;
+
+// GCC 4 doesn't seem to understand that calling through a function
+// pointer to a deprecated thing shouldn't generated a deprecation warning.
+#if defined(__GNUC__) && (__GNUC__ == 4)
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+#endif
+
     auto result = libmongoc::client_find_databases(_get_impl().client_t, &error);
+
+#if defined(__GNUC__) && (__GNUC__ == 4)
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
+#endif
 
     if (!result) {
         throw_exception<operation_exception>(error);
