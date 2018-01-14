@@ -40,6 +40,12 @@ class MONGOCXX_API insert_many {
 
     insert_many(result::bulk_write result, bsoncxx::array::view inserted_ids);
 
+    insert_many(const insert_many&);
+    insert_many(insert_many&&) = default;
+
+    insert_many& operator=(const insert_many&);
+    insert_many& operator=(insert_many&&) = default;
+
     ///
     /// Returns the bulk write result for this insert many operation.
     ///
@@ -65,6 +71,9 @@ class MONGOCXX_API insert_many {
 
    private:
     friend collection;
+
+    // Construct _inserted_ids from _inserted_ids_owned
+    MONGOCXX_PRIVATE void _buildInsertedIds();
 
     result::bulk_write _result;
 

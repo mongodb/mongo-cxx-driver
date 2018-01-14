@@ -354,6 +354,50 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             db.run_command(make_document(kvp("getLastError", 1)));
         }
 
+        SECTION("result::insert_many copy ctor/assign reuses id references", "[collection]") {
+            // Verify that two id->value maps have the same underlying content,
+            // but are not pointing at the same memory.
+            using id_map = mongocxx::result::insert_many::id_map;
+            const auto verifyEquivalentNotIdentical = [](const id_map& lhs, const id_map& rhs) {
+                REQUIRE(lhs.size() == rhs.size());
+                for (const auto& lhsIdVal : lhs) {
+                    const auto& rhsIdVal = rhs.find(lhsIdVal.first);
+
+                    // copyIds[idx] doesn't exist, but ids[idx] does.
+                    REQUIRE(rhsIdVal != rhs.end());
+
+                    const auto &lhsVal = lhsIdVal.second;
+                    const auto &rhsVal = rhsIdVal->second;
+
+                    // The element wasn't duplicated.
+                    REQUIRE(lhsVal.raw() != rhsVal.raw());
+
+                    // Contents should match.
+                    REQUIRE(lhsVal.length() == rhsVal.length());
+                    REQUIRE(memcmp(lhsVal.raw(), rhsVal.raw(), lhsVal.length()) == 0);
+                }
+            };
+
+            std::string collname("result_insert_many_stale_references");
+            db[collname].drop();
+            auto coll = db.create_collection(collname);
+            const auto result = coll.insert_many(docs);
+            REQUIRE(result);
+
+            const auto& ids = result->inserted_ids();
+            REQUIRE(!ids.empty());
+
+            mongocxx::result::insert_many resultCopy(*result);
+            const auto& copyIds = resultCopy.inserted_ids();
+            verifyEquivalentNotIdentical(ids, copyIds);
+
+            auto resultAssign = *result;
+            const auto& assignIds = resultAssign.inserted_ids();
+            verifyEquivalentNotIdentical(ids, assignIds);
+
+            verifyEquivalentNotIdentical(copyIds, assignIds);
+        }
+
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
             std::string collname = "insert_many_bypass_document_validation";
             db[collname].drop();
