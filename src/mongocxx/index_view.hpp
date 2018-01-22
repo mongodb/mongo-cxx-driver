@@ -17,17 +17,9 @@
 #include <string>
 #include <vector>
 
-#include <bsoncxx/builder/basic/array.hpp>
-#include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/document/element.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/types/value.hpp>
-#include <mongocxx/collection.hpp>
 #include <mongocxx/cursor.hpp>
-#include <mongocxx/exception/error_code.hpp>
-#include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/index_model.hpp>
 #include <mongocxx/options/index_view.hpp>
 
@@ -38,13 +30,10 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class MONGOCXX_API index_view {
    public:
-    index_view() = delete;
-
-    index_view(const index_view&) = delete;
+    index_view(index_view&&) noexcept;
+    index_view& operator=(index_view&&) noexcept;
 
     ~index_view();
-
-    index_view(index_view&&);
 
     ///
     /// Returns a cursor over all the indexes.
