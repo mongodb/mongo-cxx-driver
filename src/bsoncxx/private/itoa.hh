@@ -26,23 +26,37 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 
 class BSONCXX_TEST_API itoa {
    public:
-    itoa();
-    itoa(uint32_t i);
-    itoa(const itoa& rhs);
-    itoa& operator=(const itoa& rhs);
-    itoa& operator=(uint32_t i);
+    explicit itoa(uint32_t i = 0);
 
+    itoa(const itoa& rhs) = delete;
+    itoa& operator=(const itoa&) = delete;
+
+    itoa& operator=(uint32_t new_value);
+
+    uint32_t val() const;
     const char* c_str() const;
     std::size_t length() const;
 
    private:
-    BSONCXX_PRIVATE void init();
+    BSONCXX_PRIVATE void _init();
 
     uint32_t _val;
     const char* _str;
     uint8_t _len;
     char _buf[11];
 };
+
+inline uint32_t itoa::val() const {
+    return _val;
+}
+
+inline const char* itoa::c_str() const {
+    return _str;
+}
+
+inline std::size_t itoa::length() const {
+    return _len;
+}
 
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
