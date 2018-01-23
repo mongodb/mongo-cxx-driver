@@ -622,7 +622,9 @@ core& core::open_array() {
 core& core::concatenate(const bsoncxx::document::view& view) {
     if (_impl->is_array()) {
         bson_iter_t iter;
-        bson_iter_init_from_data(&iter, view.data(), view.length());
+        if (!bson_iter_init_from_data(&iter, view.data(), view.length())) {
+            throw bsoncxx::exception{error_code::k_cannot_append_document};
+        }
 
         while (bson_iter_next(&iter)) {
             stdx::string_view key = _impl->next_key();
