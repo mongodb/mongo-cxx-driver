@@ -44,7 +44,7 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
-element::element() : _raw(nullptr), _length(0), _offset(0) {}
+element::element() : element(nullptr, 0, 0) {}
 
 element::element(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset)
     : _raw(raw), _length(length), _offset(offset) {}
@@ -52,22 +52,12 @@ element::element(const std::uint8_t* raw, std::uint32_t length, std::uint32_t of
 const std::uint8_t* element::raw() const {
     return _raw;
 }
-void element::raw(const std::uint8_t* raw) {
-    _raw = raw;
-}
 
 std::uint32_t element::length() const {
     return _length;
 }
-void element::length(std::uint32_t length) {
-    _length = length;
-}
-
 std::uint32_t element::offset() const {
     return _offset;
-}
-void element::offset(std::uint32_t offset) {
-    _offset = offset;
 }
 
 bsoncxx::type element::type() const {

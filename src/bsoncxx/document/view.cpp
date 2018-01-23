@@ -58,7 +58,7 @@ view::const_iterator& view::const_iterator::operator++() {
     bson_iter_next(&i);
 
     if (!bson_iter_next(&i)) {
-        _element = element{nullptr, 0, 0};
+        _element = element{};
     } else {
         _element = element{i.raw, i.len, i.off};
     }
