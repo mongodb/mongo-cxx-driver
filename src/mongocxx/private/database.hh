@@ -36,10 +36,12 @@ class database::impl {
           name{i.name} {}
 
     impl& operator=(const impl& i) {
-        libmongoc::database_destroy(database_t);
-        database_t = libmongoc::database_copy(i.database_t);
-        client_impl = i.client_impl;
-        name = i.name;
+        if (this != &i) {
+            libmongoc::database_destroy(database_t);
+            database_t = libmongoc::database_copy(i.database_t);
+            client_impl = i.client_impl;
+            name = i.name;
+        }
 
         return *this;
     }
