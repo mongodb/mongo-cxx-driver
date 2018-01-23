@@ -29,7 +29,7 @@ namespace document {
 
 namespace {
 bson_iter_t to_bson_iter_t(element e) {
-    bson_iter_t i;
+    bson_iter_t i{};
     i.raw = e.raw();
     i.len = e.length();
     i.next_off = e.offset();
