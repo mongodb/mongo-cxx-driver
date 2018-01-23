@@ -502,7 +502,7 @@ TEST_CASE("mongocxx::gridfs::downloader::read with arbitrary sizes", "[gridfs::d
 
     std::int64_t file_length = 100;
     std::int32_t chunk_size = 9;
-    std::int32_t read_size;
+    std::int32_t read_size = 0;
 
     SECTION("read_size = 1") {
         read_size = 1;
@@ -531,6 +531,8 @@ TEST_CASE("mongocxx::gridfs::downloader::read with arbitrary sizes", "[gridfs::d
     SECTION("read_size > file_length") {
         read_size = static_cast<std::int32_t>(file_length + 1);
     }
+
+    REQUIRE(read_size != 0);
 
     bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
     std::vector<std::uint8_t> expected = manual_gridfs_initialize(db, file_length, chunk_size, id);
