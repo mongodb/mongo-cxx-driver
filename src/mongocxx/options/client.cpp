@@ -21,7 +21,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 client& client::ssl_opts(ssl ssl_opts) {
-    _ssl_opts = ssl_opts;
+    _ssl_opts = std::move(ssl_opts);
     return *this;
 }
 
