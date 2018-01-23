@@ -366,8 +366,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                     // copyIds[idx] doesn't exist, but ids[idx] does.
                     REQUIRE(rhsIdVal != rhs.end());
 
-                    const auto &lhsVal = lhsIdVal.second;
-                    const auto &rhsVal = rhsIdVal->second;
+                    const auto& lhsVal = lhsIdVal.second;
+                    const auto& rhsVal = rhsIdVal->second;
 
                     // The element wasn't duplicated.
                     REQUIRE(lhsVal.raw() != rhsVal.raw());
