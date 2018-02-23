@@ -17,7 +17,6 @@
 #include <string>
 #include <vector>
 
-#include <mongocxx/third_party/md5.h>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/gridfs/uploader.hpp>
@@ -45,9 +44,7 @@ class uploader::impl {
           filename{bsoncxx::string::to_string(filename)},
           files{std::move(files)},
           metadata{std::move(metadata)},
-          result{std::move(result)} {
-        md5_init(&md5);
-    }
+          result{std::move(result)} {}
 
     // Bytes that have been written for the current chunk.
     std::unique_ptr<std::uint8_t[]> buffer;
@@ -75,9 +72,6 @@ class uploader::impl {
 
     // The collection to which the files document will be written.
     collection files;
-
-    // Keeps track of the md5 hash of the file.
-    md5_state_t md5;
 
     // User-specified metadata for the file.
     stdx::optional<bsoncxx::document::value> metadata;

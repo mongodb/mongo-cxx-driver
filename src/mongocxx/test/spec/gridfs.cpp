@@ -160,10 +160,6 @@ void compare_collections(database db) {
         REQUIRE(actual["chunkSize"]);
         REQUIRE(expected["chunkSize"].get_int32().value == actual["chunkSize"].get_int32().value);
 
-        REQUIRE(expected["md5"]);
-        REQUIRE(actual["md5"]);
-        REQUIRE(expected["md5"].get_utf8().value == actual["md5"].get_utf8().value);
-
         REQUIRE(expected["filename"]);
         REQUIRE(actual["filename"]);
         REQUIRE(expected["filename"].get_utf8().value == actual["filename"].get_utf8().value);

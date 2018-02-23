@@ -111,18 +111,6 @@ result::gridfs::upload uploader::close() {
     file.append(kvp("length", bytes_uploaded + leftover));
     file.append(kvp("chunkSize", _get_impl().chunk_size));
     file.append(kvp("uploadDate", bsoncxx::types::b_date{std::chrono::system_clock::now()}));
-
-    md5_byte_t md5_hash_array[16];
-    md5_finish(&_get_impl().md5, md5_hash_array);
-
-    std::stringstream md5_hash;
-
-    for (auto i = 0; i < 16; ++i) {
-        md5_hash << std::setfill('0') << std::setw(2) << std::hex
-                 << static_cast<int>(md5_hash_array[i]);
-    }
-
-    file.append(kvp("md5", md5_hash.str()));
     file.append(kvp("filename", _get_impl().filename));
 
     if (_get_impl().metadata) {
@@ -174,9 +162,6 @@ void uploader::finish_chunk() {
     bsoncxx::types::b_binary data{bsoncxx::binary_sub_type::k_binary,
                                   static_cast<std::uint32_t>(bytes_in_chunk),
                                   _get_impl().buffer.get()};
-
-    md5_append(
-        &_get_impl().md5, _get_impl().buffer.get(), static_cast<std::int32_t>(bytes_in_chunk));
 
     chunk.append(kvp("data", data));
     _get_impl().chunks_collection_documents.push_back(chunk.extract());

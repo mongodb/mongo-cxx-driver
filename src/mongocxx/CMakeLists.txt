@@ -107,7 +107,6 @@ set(mongocxx_sources
     result/insert_one.cpp
     result/replace_one.cpp
     result/update.cpp
-    third_party/md5.cpp
     uri.cpp
     validation_criteria.cpp
     write_concern.cpp
