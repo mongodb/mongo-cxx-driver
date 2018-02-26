@@ -62,18 +62,24 @@ TEST_CASE("A client connects to a provided mongodb uri", "[client]") {
     std::string expected_url("mongodb://mongodb.example.com:9999");
     uri mongodb_uri(expected_url);
     std::string actual_url{};
-    bool called = false;
 
-    client_new->interpose([&](const mongoc_uri_t* url) {
-        called = true;
-        actual_url = std::string(mongoc_uri_get_string(url));
-        return nullptr;
-    });
+    client_new->visit(
+        [&](const mongoc_uri_t* url) { actual_url = std::string(mongoc_uri_get_string(url)); });
 
-    client{mongodb_uri};
+    client a{mongodb_uri};
 
-    REQUIRE(called);
+    REQUIRE(a);
     REQUIRE(expected_url == actual_url);
+}
+
+TEST_CASE("A client throws if its underlying mongoc client is NULL", "[client]") {
+    MOCK_CLIENT
+
+    instance::current();
+
+    client_new->interpose([](const mongoc_uri_t*) { return (mongoc_client_t*)nullptr; });
+
+    REQUIRE_THROWS_AS(client{uri{}}, mongocxx::exception);
 }
 
 TEST_CASE("A client cleans up its underlying mongoc client on destruction", "[client]") {
@@ -82,7 +88,7 @@ TEST_CASE("A client cleans up its underlying mongoc client on destruction", "[cl
     instance::current();
 
     bool destroy_called = false;
-    client_destroy->interpose([&](mongoc_client_t*) { destroy_called = true; });
+    client_destroy->visit([&](mongoc_client_t*) { destroy_called = true; });
 
     {
         client object{uri{}};
@@ -100,10 +106,7 @@ TEST_CASE("A client supports move operations", "[client]") {
     client a{uri{}};
 
     bool called = false;
-    client_new->interpose([&](const mongoc_uri_t*) {
-        called = true;
-        return nullptr;
-    });
+    client_new->visit([&](const mongoc_uri_t*) { called = true; });
 
     client b{std::move(a)};
     REQUIRE(!called);

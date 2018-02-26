@@ -34,8 +34,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 client::client() noexcept = default;
 
-client::client(const class uri& uri, const options::client& options)
-    : _impl(stdx::make_unique<impl>(libmongoc::client_new_from_uri(uri._impl->uri_t))) {
+client::client(const class uri& uri, const options::client& options) {
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
     if (options.ssl_opts()) {
         if (!uri.ssl())
@@ -50,6 +49,13 @@ client::client(const class uri& uri, const options::client& options)
     if (uri.ssl() || options.ssl_opts())
         throw exception{error_code::k_ssl_not_supported};
 #endif
+    auto new_client = libmongoc::client_new_from_uri(uri._impl->uri_t);
+    if (!new_client) {
+        // Shouldn't happen after checks above, but future libmongoc's may change behavior.
+        throw exception{error_code::k_invalid_parameter, "could not construct client from URI"};
+    }
+
+    _impl = stdx::make_unique<impl>(std::move(new_client));
 }
 
 client::client(void* implementation)

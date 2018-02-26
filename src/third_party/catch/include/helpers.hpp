@@ -51,9 +51,7 @@
 
 #define MOCK_CLIENT                                                                             \
     auto client_new = libmongoc::client_new_from_uri.create_instance();                         \
-    client_new->interpose([](const mongoc_uri_t*) { return nullptr; }).forever();               \
     auto client_destroy = libmongoc::client_destroy.create_instance();                          \
-    client_destroy->interpose([](mongoc_client_t*) {}).forever();                               \
     auto client_set_read_concern = libmongoc::client_set_read_concern.create_instance();        \
     auto client_set_preference = libmongoc::client_set_read_prefs.create_instance();            \
     client_set_preference->interpose([](mongoc_client_t*, const mongoc_read_prefs_t*) {})       \
