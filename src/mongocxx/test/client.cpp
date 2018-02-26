@@ -295,7 +295,8 @@ TEST_CASE("integration tests for client metadata handshake feature") {
 
     SECTION("with pool") {
         mongocxx::pool pool{uri};
-        run_test(*pool.acquire());
+        auto client = pool.acquire();
+        run_test(*client);
     }
 }
 }  // namespace

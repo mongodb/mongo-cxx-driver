@@ -105,10 +105,7 @@ TEST_CASE(
 }
 #endif
 
-TEST_CASE(
-    "calling acquire on a pool returns a entry that is released when it goes out of "
-    "scope",
-    "[pool]") {
+TEST_CASE("calling acquire on a pool returns an entry that manages its client", "[pool]") {
     MOCK_POOL
 
     instance::current();
@@ -123,15 +120,27 @@ TEST_CASE(
     client_pool_push->interpose(
         [&](::mongoc_client_pool_t*, ::mongoc_client_t*) { push_called = true; });
 
-    {
+    SECTION("entry releases its client at end of scope") {
+        {
+            pool p{};
+            auto client = p.acquire();
+
+            REQUIRE(pop_called);
+            REQUIRE(!push_called);
+        }
+
+        REQUIRE(push_called);
+    }
+
+    SECTION("entry releases its client when set to nullptr") {
         pool p{};
         auto client = p.acquire();
 
         REQUIRE(pop_called);
         REQUIRE(!push_called);
+        client = nullptr;
+        REQUIRE(push_called);
     }
-
-    REQUIRE(push_called);
 }
 
 TEST_CASE(
