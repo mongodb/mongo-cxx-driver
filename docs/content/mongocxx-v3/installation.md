@@ -104,12 +104,12 @@ cd mongo-cxx-driver/build
 If you prefer to download a tarball, look on the [mongocxx
 releases](https://github.com/mongodb/mongo-cxx-driver/releases) page for a
 link to the release tarball for the version you wish you install.  For
-example, to download version 3.1.2:
+example, to download version 3.1.4:
 
 ```sh
-curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.1.2.tar.gz
-tar -xzf r3.1.2.tar.gz
-cd mongo-cxx-driver-r3.1.2/build
+curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.1.4.tar.gz
+tar -xzf r3.1.4.tar.gz
+cd mongo-cxx-driver-r3.1.4/build
 ```
 
 Make sure you change to the `build` directory of whatever source tree you
