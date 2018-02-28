@@ -32,13 +32,13 @@ The following compatibility table specifies the driver version(s)
 recommended for different versions of MongoDB.  The mongocxx series
 is recommended for all new development.
 
-| Family/version | MongoDB 2.4 | MongoDB 2.6 | MongoDB 3.0 | MongoDB 3.2 | MongoDB 3.4 | MongoDB 3.6 |
-| -------------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
-| mongocxx 3.2.x | ✓           | ✓           | ✓           | ✓           | ✓           | Partial     |
-| mongocxx 3.1.x | ✓           | ✓           | ✓           | ✓           | ✓           |             |
-| mongocxx 3.0.x | ✓           | ✓           | ✓           | ✓           |             |             |
-| legacy   1.1.x | ✓           | ✓           | ✓           | ✓           |             |             |
-| legacy   1.0.x | ✓           | ✓           | ✓           |             |             |             |
+| Family/version | MongoDB 3.0 | MongoDB 3.2 | MongoDB 3.4 | MongoDB 3.6 |
+| -------------- | ----------- | ----------- | ----------- | ----------- |
+| mongocxx 3.2.x | ✓           | ✓           | ✓           | Partial     |
+| mongocxx 3.1.x | ✓           | ✓           | ✓           |             |
+| mongocxx 3.0.x | ✓           | ✓           |             |             |
+| legacy   1.1.x | ✓           | ✓           |             |             |
+| legacy   1.0.x | ✓           |             |             |             |
 
 ## License
 
