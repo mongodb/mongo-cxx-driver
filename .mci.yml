@@ -189,7 +189,7 @@ tasks:
       commands:
         - func: "install_c_driver"
           vars:
-              MONGOC_VERSION: 1.5.0
+              MONGOC_VERSION: 1.7.0
         - func: "compile"
         - func: "test"
 
