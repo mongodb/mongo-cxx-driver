@@ -44,7 +44,8 @@ echo "About to install $LIB ($VERSION) into $PREFIX configured with '$CONFIGURE_
 if [ "${VERSION}" = "master" ]; then
 	rm -rf $LIB
 	# Must be http as rhel55 has https issues
-	curl -o $LIB.tgz -L http://s3.amazonaws.com/mciuploads/$LIB/$LIB-latest.tar.gz
+	curl -o $LIB.tgz -L http://s3.amazonaws.com/mciuploads/$LIB/$VERSION/$LIB-latest.tar.gz
+
 	tar --extract --file $LIB.tgz
 	rm -rf $LIB
 	DIR=$(echo $LIB-*)
