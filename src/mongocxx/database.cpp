@@ -42,6 +42,8 @@ using bsoncxx::builder::basic::make_document;
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+using namespace libbson;
+
 database::database() noexcept = default;
 
 database::database(database&&) noexcept = default;
@@ -78,27 +80,12 @@ database::operator bool() const noexcept {
 }
 
 cursor database::list_collections(bsoncxx::document::view_or_value filter) {
-    libbson::scoped_bson_t filter_bson{filter};
-    bson_error_t error;
+    bsoncxx::builder::basic::document options_builder;
+    options_builder.append(kvp("filter", filter));
+    scoped_bson_t options_bson(options_builder.extract());
 
-// GCC 4 doesn't seem to understand that calling through a function
-// pointer to a deprecated thing shouldn't generated a deprecation warning.
-#if defined(__GNUC__) && (__GNUC__ == 4)
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
-#endif
-
-    auto result =
-        libmongoc::database_find_collections(_get_impl().database_t, filter_bson.bson(), &error);
-
-#if defined(__GNUC__) && (__GNUC__ == 4)
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
-#endif
-
-    if (!result) {
-        throw_exception<operation_exception>(error);
-    }
-
-    return cursor(result);
+    return libmongoc::database_find_collections_with_opts(_get_impl().database_t,
+                                                          options_bson.bson());
 }
 
 stdx::string_view database::name() const {

@@ -14,7 +14,6 @@
 
 #include "helpers.hpp"
 
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>

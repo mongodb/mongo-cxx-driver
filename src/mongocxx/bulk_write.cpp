@@ -160,26 +160,25 @@ void bulk_write::append(const model::write& operation) {
     }
 }
 
-// GCC 4 doesn't seem to understand that calling through a function
-// pointer to a deprecated thing shouldn't generated a deprecation warning.
-#if defined(__GNUC__) && (__GNUC__ == 4)
-BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
-#endif
-
 bulk_write::bulk_write(const collection& coll, const options::bulk_write& options)
-    : _created_from_collection{true},
-      _impl{stdx::make_unique<bulk_write::impl>(libmongoc::collection_create_bulk_operation(
-          coll._get_impl().collection_t,
-          options.ordered(),
-          options.write_concern() ? options.write_concern()->_impl->write_concern_t : nullptr))} {
+    : _created_from_collection{true} {
+    bsoncxx::builder::basic::document options_builder;
+    if (!options.ordered()) {
+        options_builder.append(kvp("ordered", false));
+    }
+    if (options.write_concern()) {
+        options_builder.append(kvp("writeConcern", options.write_concern()->to_document()));
+    }
+
+    scoped_bson_t bson_options(options_builder.extract());
+    _impl =
+        stdx::make_unique<bulk_write::impl>(libmongoc::collection_create_bulk_operation_with_opts(
+            coll._get_impl().collection_t, bson_options.bson()));
+
     if (auto validation = options.bypass_document_validation()) {
         libmongoc::bulk_operation_set_bypass_document_validation(_impl->operation_t, *validation);
     }
 }
-
-#if defined(__GNUC__) && (__GNUC__ == 4)
-BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
-#endif
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

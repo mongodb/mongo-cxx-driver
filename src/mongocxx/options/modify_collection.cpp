@@ -17,7 +17,6 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/concatenate.hpp>
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

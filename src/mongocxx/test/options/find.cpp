@@ -18,7 +18,6 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view.hpp>
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>

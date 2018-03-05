@@ -14,7 +14,6 @@
 
 #include <mongocxx/options/private/rewriter.hh>
 
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>

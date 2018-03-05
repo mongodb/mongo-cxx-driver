@@ -17,7 +17,6 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
