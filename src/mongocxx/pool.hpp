@@ -71,7 +71,7 @@ class MONGOCXX_API pool {
     /// @note The lifetime of any entry object must be a subset of the pool object
     ///  from which it was acquired.
     ///
-    class entry {
+    class MONGOCXX_API entry {
        public:
         /// Access a member of the client instance.
         client* operator->() const& noexcept;
