@@ -16,9 +16,9 @@
 
 #include <memory>
 
-#include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/options/client.hpp>
+#include <mongocxx/options/session.hpp>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/session.hpp>
@@ -33,6 +33,8 @@
 ///
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
+
+class session;
 
 ///
 /// Class representing a client connection to MongoDB.

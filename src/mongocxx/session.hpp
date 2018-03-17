@@ -14,7 +14,6 @@
 
 #pragma once
 
-#include <bsoncxx/document/view.hpp>
 #include <mongocxx/options/session.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -78,9 +77,9 @@ class MONGOCXX_API session {
     bsoncxx::document::view cluster_time() const noexcept;
 
     ///
-    /// Get the session's clusterTime, as a BSON timestamp. This is an opaque value suitable for
-    /// passing to advance_operation_time(). The timestamp is zero if the session has
-    /// not been used for any operation and you have not called advance_cluster_time().
+    /// Get the session's operationTime, as a BSON timestamp. This is an opaque value suitable for
+    /// passing to advance_operation_time(). The timestamp is zero if the session has not been used
+    /// for any operation and you have not called advance_operation_time().
     ///
     bsoncxx::types::b_timestamp operation_time() const noexcept;
 

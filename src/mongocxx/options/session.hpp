@@ -65,6 +65,20 @@ class MONGOCXX_API session {
     friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const session&, const session&);
 };
 
+///
+/// Compare session options for equality.
+///
+/// @relates session
+///
+MONGOCXX_API bool MONGOCXX_CALL operator==(const session&, const session&);
+
+///
+/// Compare session options for inequality.
+///
+/// @relates session
+///
+MONGOCXX_API bool MONGOCXX_CALL operator!=(const session&, const session&);
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
