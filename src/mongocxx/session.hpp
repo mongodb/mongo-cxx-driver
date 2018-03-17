@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2017-present MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/string/view_or_value.hpp>
+#include <bsoncxx/document/view.hpp>
 #include <mongocxx/options/session.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -22,36 +22,19 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+class client;
+
 ///
-/// Class representing a session from a client connection to MongoDB.
-///
-/// Acts as a logical gateway for working with databases contained within a MongoDB server.
-///
-/// Databases that are created via this session inherit the @c read_concern, @c read_preference, and
-/// @c write_concern settings of this session when they are created. The lifetimes of objects
-/// created via a session object (databases, collections, cursors, etc...) @b must be a subset of
-/// the lifetime of the session that created them.
+/// Use a session for a sequence of operations, optionally with causal consistency.
 ///
 /// Note that session is not thread-safe. See
 /// https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/thread-safety/ for more details.
 ///
+/// @see http://dochub.mongodb.org/core/causal-consistency
+///
 
 class MONGOCXX_API session {
    public:
-    ///
-    /// Creates a new session.
-    ///
-    /// @param client
-    ///   The client that created this session.
-    /// @param options
-    ///   Additional options for configuring the session.
-    ///
-    session(const client& client, const options::session& options = {});
-
-    session(const session&) = delete;
-
-    session& operator=(const session&) = delete;
-
     ///
     /// Move constructs a session.
     ///
@@ -62,96 +45,70 @@ class MONGOCXX_API session {
     ///
     session& operator=(session&&) noexcept;
 
+    session(const session&) = delete;
+    session& operator=(const session&) = delete;
+
     ///
     /// Ends and destroys the session.
     ///
-    ~session();
+    ~session() noexcept;
 
     ///
     /// Gets the client that started this session.
     ///
-    /// @return
-    ///   The client that started this session.
-    ///
-    const mongocxx::client& client();
+    const class client& client() const noexcept;
 
     ///
-    /// Gets the current write concern for this session.
+    /// Gets the options this session was created with.
     ///
-    /// @return
-    ///   The current @c write_concern.
-    ///
-    class write_concern write_concern() const;
+    const options::session& options() const noexcept;
 
     ///
-    /// Gets the current read concern for this session.
+    /// Get the server-side "logical session ID" associated with this session, as a BSON document.
+    /// This view is invalid after the session is destroyed.
     ///
-    /// @return
-    ///   The current @c read_concern.
-    ///
-    class read_concern read_concern() const;
+    bsoncxx::document::view id() const noexcept;
 
     ///
-    /// Returns the current read preference for this session.
+    /// Get the session's clusterTime, as a BSON document. This is an opaque value suitable for
+    /// passing to advance_cluster_time(). The document is empty if the session has
+    /// not been used for any operation and you have not called advance_cluster_time().
+    /// This view is invalid after the session is destroyed.
     ///
-    /// @return
-    ///   The current @c read_preference.
-    ///
-    /// @see
-    ///   https://docs.mongodb.com/master/core/read-preference/
-    ///
-    class read_preference read_preference() const;
+    bsoncxx::document::view cluster_time() const noexcept;
 
     ///
-    /// Returns whether the driver session has ended. A driver session has ended when endSession has
-    /// been called.
+    /// Get the session's clusterTime, as a BSON timestamp. This is an opaque value suitable for
+    /// passing to advance_operation_time(). The timestamp is zero if the session has
+    /// not been used for any operation and you have not called advance_cluster_time().
     ///
-    /// @return
-    ///   whether the driver session as ended.
-    ///
-    bool has_ended() const;
+    bsoncxx::types::b_timestamp operation_time() const noexcept;
 
     ///
-    /// Ends this driver session.
+    /// Advance the cluster time for a session. Has an effect only if the new cluster time is
+    /// greater than the session's current cluster time.
     ///
-    /// @note
-    ///   This does not have to be explicitly called unless the user wants to manually end the
-    ///   session before it gets destroyed.
-    /// @note
-    ///   If session has already ended, this method is a no-op.
+    /// Use advance_operation_time() and advance_cluster_time() to copy the operationTime and
+    /// clusterTime from another session, ensuring subsequent operations in this session are
+    /// causally consistent with the last operation in the other session.
     ///
-    void end_session();
+    void advance_cluster_time(const bsoncxx::document::view& cluster_time);
 
     ///
-    /// Obtains a database that represents a logical grouping of collections on a MongoDB server.
+    /// Advance the session's operation time, expressed as a BSON timestamp. Has an effect only if
+    /// the new operation time is greater than the session's current operation time.
     ///
-    /// @note
-    ///   A database cannot be obtained from a temporary session object.
+    /// Use advance_operation_time() and advance_cluster_time() to copy the operationTime and
+    /// clusterTime from another session, ensuring subsequent operations in this session are
+    /// causally consistent with the last operation in the other session.
     ///
-    /// @param name
-    ///   The name of the database to get.
-    ///
-    /// @return
-    ///   The database.
-    ///
-    class database database(bsoncxx::string::view_or_value name) const&;
-    class database database(bsoncxx::string::view_or_value name) const&& = delete;
+    void advance_operation_time(const bsoncxx::types::b_timestamp& operation_time);
 
-    ///
-    /// Allows the syntax @c session["db_name"] as a convenient shorthand for the
-    /// session::database() method by implementing the array subscript operator.
-    ///
-    /// @note
-    ///   A database cannot be obtained from a temporary session object.
-    ///
-    /// @param name
-    ///   The name of the database.
-    ///
-    /// @return
-    ///   Client side representation of a server side database.
-    ///
-    class database operator[](bsoncxx::string::view_or_value name) const&;
-    class database operator[](bsoncxx::string::view_or_value name) const&& = delete;
+   private:
+    friend class client;
+
+    // "class client" distinguishes from client() method above.
+    MONGOCXX_PRIVATE session(const class client* client, const options::session& options);
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2017-present MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,97 +14,55 @@
 
 #pragma once
 
-#include <mongocxx/read_concern.hpp>
-#include <mongocxx/read_preference.hpp>
-#include <mongocxx/write_concern.hpp>
-
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+///
+/// Class representing the optional arguments to mongocxx::client::start_session.
+///
 class MONGOCXX_API session {
    public:
     ///
-    /// Sets the write concern for this session.
+    /// Sets the causal_consistency option.
     ///
-    /// @param write_concern
-    ///   Object representing the write concern.
+    /// If true (the default), each operation in the session will be causally ordered after the
+    /// previous read or write operation. Set to false to disable causal consistency.
+    ///
+    /// Unacknowledged writes are not causally consistent. If you execute a write operation with an
+    /// unacknowledged write concern (a mongocxx::write_concern with
+    /// mongocxx::write_concern::acknowledge_level of @c k_unacknowledged), the write does not
+    /// participate in causal consistency.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
     /// @see
-    ///   https://docs.mongodb.com/master/reference/write-concern/
+    /// https://docs.mongodb.com/manual/core/read-isolation-consistency-recency/#causal-consistency
     ///
-    session& write_concern(mongocxx::write_concern write_concern);
+    session& causal_consistency(bool causal_consistency) noexcept;
 
     ///
-    /// Gets the current write concern.
+    /// Gets the current value of the causal_consistency option.
     ///
-    /// @return
-    ///   The current write concern.
-    ///
-    const stdx::optional<mongocxx::write_concern>& write_concern() const;
+    bool causal_consistency() const noexcept;
 
     ///
-    /// Sets the read concern for this session.
+    /// Compare session options for equality.
     ///
-    /// @param read_concern
-    ///   The new @c read_concern.
+    /// @relates session
     ///
-    /// @see
-    ///   https://docs.mongodb.com/master/reference/read-concern/
-    ///
-    /// @return
-    ///   A reference to the object on which this member function is being called. This facilitates
-    ///   method chaining.
-    ///
-    session& read_concern(class read_concern rc);
-
-    ///
-    /// Returns the current read concern.
-    ///
-    /// @return
-    ///   The current @c read_concern.
-    ///
-    const stdx::optional<class read_concern>& read_concern() const;
-
-    ///
-    /// Sets the read_preference for this session.
-    ///
-    /// @param read_preference
-    ///   The read_preference to set.
-    ///
-    /// @see
-    ///   https://docs.mongodb.com/master/core/read-preference/
-    ///
-    /// @return
-    ///   A reference to the object on which this member function is being called. This facilitates
-    ///   method chaining.
-    ///
-    session& read_preference(class read_preference rp);
-
-    ///
-    /// Gets the read_preference.
-    ///
-    /// @return
-    ///   The current read_preference.
-    ///
-    /// @see
-    ///   https://docs.mongodb.com/master/core/read-preference/
-    ///
-    const stdx::optional<class read_preference>& read_preference() const;
-
-   private:
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const session&, const session&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const session&, const session&);
 
-    stdx::optional<class read_preference> _read_pref;
-    stdx::optional<class write_concern> _write_concern;
-    stdx::optional<class read_concern> _read_concern;
+    ///
+    /// Compare session options for inequality.
+    ///
+    /// @relates session
+    ///
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const session&, const session&);
 };
 
 }  // namespace options
