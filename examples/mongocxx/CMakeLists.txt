@@ -30,6 +30,8 @@ set(MONGOCXX_EXAMPLES
     inserted_id.cpp
     instance_management.cpp
     mongodb.com/aggregation_examples.cpp
+    mongodb.com/runcommand_examples.cpp
+    mongodb.com/index_examples.cpp
     mongodb.com/documentation_examples.cpp
     mongodb.com/usage_overview.cpp
     query_projection.cpp
