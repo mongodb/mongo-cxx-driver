@@ -26,9 +26,6 @@ class read_preference::impl {
    public:
     impl(mongoc_read_prefs_t* read_pref) : read_preference_t(read_pref) {}
 
-    impl(const impl& other)
-        : read_preference_t{libmongoc::read_prefs_copy(other.read_preference_t)} {}
-
     ~impl() {
         libmongoc::read_prefs_destroy(read_preference_t);
     }
