@@ -238,7 +238,6 @@ class MONGOCXX_API read_preference {
     friend collection;
     friend database;
     friend uri;
-    friend class change_stream;
 
     ///
     /// @{
