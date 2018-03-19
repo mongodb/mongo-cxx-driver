@@ -49,7 +49,6 @@ add_subdirectory(config)
 
 set(mongocxx_sources
     bulk_write.cpp
-    change_stream.cpp
     client.cpp
     collection.cpp
     cursor.cpp
