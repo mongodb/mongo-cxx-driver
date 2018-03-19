@@ -34,43 +34,8 @@ class error_category final : public std::error_category {
 
     std::string message(int code) const noexcept override {
         switch (static_cast<error_code>(code)) {
-            case error_code::k_stream_name_resolution:
-                return "DNS failure";
-            case error_code::k_stream_socket:
-                return "timeout communicating with server, or connection closed";
-            case error_code::k_stream_connect:
-                return "failed to connect to server";
-            case error_code::k_client_too_big:
-                return "attempted to send a message larger than the server's max message size";
-            case error_code::k_client_authenticate:
-                return "wrong credentials, or failure sending or receiving authentication messages";
-            case error_code::k_client_no_acceptable_peer:
-                return "an SSL connection was attempted, but the driver was not built with SSL";
-            case error_code::k_client_in_exhaust:
-                return "iterating an exhaust cursor began, then another operation with the same "
-                       "client was attempted";
-            case error_code::k_protocol_invalid_reply:
-                return "corrupt response from the server";
-            case error_code::k_protocol_bad_wire_version:
-                return "server version too old or too new to communicate with the driver";
-            case error_code::k_cursor_invalid_cursor:
-                return "usage of invalid cursor, or cursor timed out on server";
-            case error_code::k_namespace_invalid:
-                return "tried to create a collection with an invalid name";
-            case error_code::k_command_invalid_arg:
-                return "passed bad parameters to a command";
-            case error_code::k_collection_insert_failed:
-            case error_code::k_collection_update_failed:
-            case error_code::k_collection_delete_failed:
-                return "passed invalid or empty input to collection helper";
-            case error_code::k_scram_protocol_error:
-                return "failure in SCRAM-SHA-1 authentication";
-            case error_code::k_server_selection_failure:
-                return "no replica set members or mongos available, or none matches provided read "
-                       "preference";
             case error_code::k_invalid_client_object:
-                return "invalid use of default constructed or moved-from mongocxx::client "
-                       "object";
+                return "invalid use of default constructed or moved-from mongocxx::client object";
             case error_code::k_invalid_collection_object:
                 return "invalid use of default constructed or moved-from mongocxx::collection "
                        "object";
@@ -114,7 +79,7 @@ class error_category final : public std::error_category {
             case error_code::k_instance_destroyed:
                 return "the mongocxx instance has been destroyed";
             default:
-                return "generic mongocxx error";
+                return "unknown mongocxx error";
         }
     }
 };

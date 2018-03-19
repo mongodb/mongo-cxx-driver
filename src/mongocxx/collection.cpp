@@ -433,20 +433,11 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
         rp_ptr = options.read_preference()->_impl->read_preference_t;
     }
 
-    stdx::optional<cursor::type> type;
-    int query_flags = 0;
-
-    if (stages.view()["0"] && stages.view()["0"].key() == stdx::string_view{"$changeStream"}) {
-        type = cursor::type::k_tailable_await;
-        query_flags = MONGOC_QUERY_TAILABLE_CURSOR | MONGOC_QUERY_AWAIT_DATA;
-    }
-
     return cursor(libmongoc::collection_aggregate(_get_impl().collection_t,
-                                                  static_cast<::mongoc_query_flags_t>(query_flags),
+                                                  static_cast<::mongoc_query_flags_t>(0),
                                                   stages.bson(),
                                                   options_bson.bson(),
-                                                  rp_ptr),
-                  type);
+                                                  rp_ptr));
 }
 
 stdx::optional<result::insert_one> collection::insert_one(view_or_value document,
@@ -962,14 +953,6 @@ const collection::impl& collection::_get_impl() const {
 collection::impl& collection::_get_impl() {
     auto cthis = const_cast<const collection*>(this);
     return const_cast<collection::impl&>(cthis->_get_impl());
-}
-
-change_stream collection::watch(const pipeline& pipe, const options::change_stream& options) {
-    return change_stream{*this, pipe, options};
-}
-
-change_stream collection::watch(const options::change_stream& options) {
-    return change_stream{*this, {}, options};
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

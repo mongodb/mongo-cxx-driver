@@ -28,14 +28,35 @@ namespace {
 using namespace mongocxx;
 
 TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
+    MOCK_POOL
+
     instance::current();
 
-    std::string expected_uri("mongodb://localhost/");
+    bool destroy_called = false;
+    client_pool_destroy->interpose([&](::mongoc_client_pool_t*) { destroy_called = true; });
+
+    std::string expected_uri("mongodb://mongodb.example.com:9999");
     uri mongodb_uri{expected_uri};
 
-    pool pool{mongodb_uri};
+    std::string actual_uri{};
+    bool new_called = false;
 
-    REQUIRE(pool.acquire()->uri().to_string() == expected_uri);
+    client_pool_new->interpose([&](const mongoc_uri_t* uri) {
+        new_called = true;
+        actual_uri = mongoc_uri_get_string(uri);
+        return nullptr;
+    });
+
+    {
+        pool p{mongodb_uri};
+
+        REQUIRE(new_called);
+        REQUIRE(expected_uri == actual_uri);
+
+        REQUIRE(!destroy_called);
+    }
+
+    REQUIRE(destroy_called);
 }
 
 #if defined(MONGOC_ENABLE_SSL)
@@ -90,16 +111,14 @@ TEST_CASE("calling acquire on a pool returns an entry that manages its client", 
     instance::current();
 
     bool pop_called = false;
-    client_pool_pop->interpose([&](::mongoc_client_pool_t* pool) {
+    client_pool_pop->interpose([&](::mongoc_client_pool_t*) {
         pop_called = true;
-        return libmongoc::client_pool_pop(pool);
+        return nullptr;
     });
 
     bool push_called = false;
-    client_pool_push->interpose([&](::mongoc_client_pool_t* pool, ::mongoc_client_t* client) {
-        push_called = true;
-        libmongoc::client_pool_push(pool, client);
-    });
+    client_pool_push->interpose(
+        [&](::mongoc_client_pool_t*, ::mongoc_client_t*) { push_called = true; });
 
     SECTION("entry releases its client at end of scope") {
         {
@@ -128,12 +147,34 @@ TEST_CASE(
     "try_acquire returns an engaged stdx::optional<entry> if mongoc_client_pool_try_pop "
     "returns a non-null pointer",
     "[pool]") {
+    MOCK_POOL
+
     instance::current();
 
-    pool p{uri{}};
-    auto client = p.try_acquire();
+    // libstdc++ before GCC 4.9 places max_align_t in the wrong
+    // namespace. Use a limited scope 'using namespace std' to name it
+    // in a way that always works.
+    auto dummy_address = []() {
+        using namespace std;
+        return max_align_t{};
+    }();
 
-    REQUIRE(!!client);
+    bool try_pop_called = false;
+
+    mongoc_client_t* fake = reinterpret_cast<mongoc_client_t*>(&dummy_address);
+
+    client_pool_try_pop->interpose([&](::mongoc_client_pool_t*) {
+        try_pop_called = true;
+        return fake;
+    });
+
+    {
+        pool p{};
+        auto client = p.try_acquire();
+
+        REQUIRE(!!client);
+        REQUIRE(try_pop_called);
+    }
 }
 
 TEST_CASE(

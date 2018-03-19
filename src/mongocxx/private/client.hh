@@ -27,9 +27,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class client::impl {
    public:
-    impl(mongoc_client_t* client) : client_t(client) {
-        libmongoc::client_set_error_api(client, MONGOC_ERROR_API_VERSION_2);
-    }
+    impl(mongoc_client_t* client) : client_t(client) {}
 
     ~impl() {
         libmongoc::client_destroy(client_t);

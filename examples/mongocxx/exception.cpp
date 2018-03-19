@@ -51,6 +51,11 @@ int main(int, char**) {
         // object. This is to be distinguished from the mongocxx
         // 'server_error_category' object, which tracks errors
         // returned by the server.
+        //
+        // NOTE: At this time, the server_error_category has no
+        // associated symbolic errors. You must use numeric codes to
+        // understand the errors returned in this category. See below
+        // for more discussion.
         if (e.code().category() != mongocxx::error_category()) {
             return EXIT_FAILURE;
         }
@@ -79,10 +84,23 @@ int main(int, char**) {
             return EXIT_FAILURE;
         }
 
-        // We can compare the error_code to a known mongocxx::server_error_code. Please see
+        // We can compare the error_code to a known server side error
+        // code number. Please see
         // https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.err
-        // for details on the sort of error codes the server might return.
-        if (e.code() != mongocxx::server_error_code::k_namespace_not_found) {
+        // for details on the sort of error codes the server might
+        // return. In this case, 26 means 'NamespaceNotFound'.
+        //
+        // NOTE: Due to a design flaw in the C driver which currently
+        // is the underlying implementation of the C++11 driver, it is
+        // not possible to reliably distinguish between error codes
+        // generated locally by libmongoc, or error codes generated
+        // remotely by the server. Clients of libmongocxx are
+        // therefore required to interpret the code numerically and
+        // contextually.  When the C driver fixes its error handling
+        // strategy, we will add symbolic codes for server errors, and
+        // report local library errors from libmongoc in the
+        // mongocxx::error_code enumeration.
+        if (e.code().value() != 26) {
             return EXIT_FAILURE;
         }
 
@@ -110,8 +128,8 @@ int main(int, char**) {
             return EXIT_FAILURE;
         }
 
-        // We can compare the error_code to a known mongocxx::server_error_code.
-        if (e.code() != mongocxx::server_error_code::k_duplicate_key) {
+        // We can compare the error_code to a known server side error code number
+        if (e.code().value() != 11000) {
             return EXIT_FAILURE;
         }
 
