@@ -34,7 +34,11 @@ oid::oid() {
 
 const oid::init_tag_t oid::init_tag{};
 
-oid::oid(init_tag_t) : oid::oid() {}
+oid::oid(init_tag_t) : oid::oid(init_tag_deprecated) {}
+
+const oid::init_tag_t_deprecated oid::init_tag_deprecated{};
+
+oid::oid(init_tag_t_deprecated) : oid::oid() {}
 
 oid::oid(const bsoncxx::stdx::string_view& str) {
     if (!bson_oid_is_valid(str.data(), str.size())) {
@@ -63,6 +67,10 @@ std::string oid::to_string() const {
 }
 
 oid::operator bool() const {
+    return operator_bool_deprecated();
+}
+
+bool oid::operator_bool_deprecated() const {
     return true;
 }
 

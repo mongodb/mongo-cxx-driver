@@ -210,8 +210,12 @@ pipeline& pipeline::unwind(std::string field_name) {
     return *this;
 }
 
-bsoncxx::document::view pipeline::view() const {
+bsoncxx::document::view pipeline::view_deprecated() const {
     return _impl->view();
+}
+
+bsoncxx::document::view pipeline::view() const {
+    return view_deprecated();
 }
 
 bsoncxx::array::view pipeline::view_array() const {

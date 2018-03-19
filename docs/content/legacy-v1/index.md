@@ -8,6 +8,8 @@ slug = "index"
   parent="legacy"
 +++
 
+## NOTE: The Legacy C++ driver has reached End-Of-Life. Please upgrade to the mongocxx driver.
+
 # The legacy C++ driver
 
 The legacy C++ driver builds on x86 and x86-64 architectures for Linux, Mac

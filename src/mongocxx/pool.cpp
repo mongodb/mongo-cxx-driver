@@ -57,9 +57,29 @@ pool::pool(const uri& uri, const options::pool& options)
 #endif
 }
 
+client* pool::entry::operator->() const& noexcept {
+    return _client.get();
+}
+
+client& pool::entry::operator*() const& noexcept {
+    return *_client;
+}
+
+pool::entry& pool::entry::operator=(std::nullptr_t) noexcept {
+    _client = nullptr;
+    return *this;
+}
+
+pool::entry::operator bool() const noexcept {
+    return static_cast<bool>(_client);
+}
+
+// construct a pool entry from a pointer to a client
+pool::entry::entry(pool::entry::unique_client p) : _client(std::move(p)) {}
+
 pool::entry pool::acquire() {
-    return entry(new client(libmongoc::client_pool_pop(_impl->client_pool_t)),
-                 [this](client* client) { _release(client); });
+    return entry(entry::unique_client(new client(libmongoc::client_pool_pop(_impl->client_pool_t)),
+                                      [this](client* client) { _release(client); }));
 }
 
 stdx::optional<pool::entry> pool::try_acquire() {
@@ -67,7 +87,8 @@ stdx::optional<pool::entry> pool::try_acquire() {
     if (!cli)
         return stdx::nullopt;
 
-    return pool::entry{new client(cli), [this](client* client) { _release(client); }};
+    return entry(
+        entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

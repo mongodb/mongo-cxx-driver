@@ -108,7 +108,6 @@
     auto collection_drop = libmongoc::collection_drop.create_instance();                          \
     auto collection_count = libmongoc::collection_count.create_instance();                        \
     auto collection_count_with_opts = libmongoc::collection_count_with_opts.create_instance();    \
-    auto collection_create_index = libmongoc::collection_create_index.create_instance();          \
     auto collection_find_with_opts = libmongoc::collection_find_with_opts.create_instance();      \
     auto collection_aggregate = libmongoc::collection_aggregate.create_instance();                \
     auto collection_get_name = libmongoc::collection_get_name.create_instance();                  \
@@ -188,8 +187,8 @@
         libmongoc::bulk_operation_set_bypass_document_validation.create_instance();    \
     auto bulk_operation_execute = libmongoc::bulk_operation_execute.create_instance(); \
     auto bulk_operation_destroy = libmongoc::bulk_operation_destroy.create_instance(); \
-    auto collection_create_bulk_operation =                                            \
-        libmongoc::collection_create_bulk_operation.create_instance();                 \
+    auto collection_create_bulk_operation_with_opts =                                  \
+        libmongoc::collection_create_bulk_operation_with_opts.create_instance();       \
     bool bulk_operation_op_called = false;                                             \
     bool bulk_operation_set_bypass_document_validation_called = false;                 \
     bool bulk_operation_execute_called = false;                                        \

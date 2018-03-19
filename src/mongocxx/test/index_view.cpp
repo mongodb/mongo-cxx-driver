@@ -16,6 +16,7 @@
 #include <vector>
 
 #include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
@@ -209,7 +210,7 @@ TEST_CASE("create_many", "[index_view]") {
             auto name = index["name"].get_utf8();
 
             for (auto expected : expected_names) {
-                if (stdx::string_view{expected} == name.value) {
+                if (stdx::string_view(expected) == name.value) {
                     found++;
                 }
             }
@@ -407,7 +408,7 @@ TEST_CASE("index creation and deletion with different collation") {
         ++index_it;
         bsoncxx::document::view index = *index_it;
 
-        REQUIRE(index["name"].get_utf8().value.to_string() == "custom_index_name");
+        REQUIRE(bsoncxx::string::to_string(index["name"].get_utf8().value) == "custom_index_name");
 
         coll.drop();
         db.drop();

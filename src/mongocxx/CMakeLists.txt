@@ -17,9 +17,9 @@ project(MONGOCXX)
 # Update these as needed.
 # TODO: read from file
 set(MONGOCXX_VERSION_MAJOR 3)
-set(MONGOCXX_VERSION_MINOR 1)
-set(MONGOCXX_VERSION_PATCH 1)
-set(MONGOCXX_VERSION_EXTRA "-pre")
+set(MONGOCXX_VERSION_MINOR 3)
+set(MONGOCXX_VERSION_PATCH 0)
+set(MONGOCXX_VERSION_EXTRA "rc0-pre")
 set(MONGOCXX_ABI_VERSION _noabi)
 
 option(MONGOCXX_ENABLE_SSL "Enable SSL - if the underlying C driver offers it" ON)
@@ -30,7 +30,7 @@ set(MONGOCXX_VERSION ${MONGOCXX_VERSION_NO_EXTRA}${MONGOCXX_VERSION_EXTRA})
 set(MONGOCXX_INLINE_NAMESPACE "v${MONGOCXX_ABI_VERSION}")
 set(MONGOCXX_HEADER_INSTALL_DIR "include/mongocxx/${MONGOCXX_INLINE_NAMESPACE}" CACHE INTERNAL "")
 
-set(LIBMONGOC_REQUIRED_VERSION 1.7.0)
+set(LIBMONGOC_REQUIRED_VERSION 1.9.2)
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 
 if (BUILD_SHARED_LIBS)
@@ -109,7 +109,6 @@ set(mongocxx_sources
     result/insert_one.cpp
     result/replace_one.cpp
     result/update.cpp
-    third_party/md5.cpp
     uri.cpp
     validation_criteria.cpp
     write_concern.cpp

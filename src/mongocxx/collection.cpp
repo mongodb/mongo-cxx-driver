@@ -894,14 +894,7 @@ cursor collection::distinct(bsoncxx::string::view_or_value field_name,
 }
 
 cursor collection::list_indexes() const {
-    bson_error_t error;
-    auto result = libmongoc::collection_find_indexes(_get_impl().collection_t, &error);
-
-    if (!result) {
-        throw_exception<operation_exception>(error);
-    }
-
-    return cursor(result);
+    return libmongoc::collection_find_indexes_with_opts(_get_impl().collection_t, nullptr);
 }
 
 void collection::drop(const stdx::optional<mongocxx::write_concern>& wc) {

@@ -63,7 +63,11 @@ void validate_gridfs_file(database db,
             expected_contents.size());
     REQUIRE(files_doc->view()["chunkSize"].get_int32().value == expected_chunk_size);
     REQUIRE(files_doc->view()["filename"].get_utf8().value ==
-            stdx::string_view{expected_file_name});
+            stdx::string_view(expected_file_name));
+
+    // md5 is deprecated in GridFS, we don't include it:
+    // https://github.com/mongodb/specifications/blob/master/source/gridfs/gridfs-spec.rst
+    REQUIRE(!files_doc->view()["md5"]);
 
     std::int32_t index = 0;
 
@@ -118,7 +122,7 @@ void validate_gridfs_file(
     REQUIRE(static_cast<std::size_t>(files_doc->view()["chunkSize"].get_int32().value) ==
             expected_chunk_size);
     REQUIRE(files_doc->view()["filename"].get_utf8().value ==
-            stdx::string_view{expected_file_name});
+            stdx::string_view(expected_file_name));
 
     std::size_t i = 0;
 
@@ -502,7 +506,7 @@ TEST_CASE("mongocxx::gridfs::downloader::read with arbitrary sizes", "[gridfs::d
 
     std::int64_t file_length = 100;
     std::int32_t chunk_size = 9;
-    std::int32_t read_size;
+    std::int32_t read_size = 0;
 
     SECTION("read_size = 1") {
         read_size = 1;
@@ -531,6 +535,8 @@ TEST_CASE("mongocxx::gridfs::downloader::read with arbitrary sizes", "[gridfs::d
     SECTION("read_size > file_length") {
         read_size = static_cast<std::int32_t>(file_length + 1);
     }
+
+    REQUIRE(read_size != 0);
 
     bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
     std::vector<std::uint8_t> expected = manual_gridfs_initialize(db, file_length, chunk_size, id);

@@ -6,6 +6,8 @@ title = "Configuring the legacy driver"
   parent="legacy"
 +++
 
+## NOTE: The Legacy C++ driver has reached End-Of-Life. Please upgrade to the mongocxx driver.
+
 In the legacy-0.9 development cycle, the mechanism by which the driver is
 configured was refactored. Note that these changes *do not apply to
 releases on the 26compat branch, or releases pre-dating legacy-0.9.0*.This

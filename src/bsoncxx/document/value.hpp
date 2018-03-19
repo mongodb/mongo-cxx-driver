@@ -101,7 +101,7 @@ class BSONCXX_API value {
 
    private:
     unique_ptr_type _data;
-    std::size_t _length;
+    std::size_t _length{0};
 };
 
 BSONCXX_INLINE document::view value::view() const noexcept {

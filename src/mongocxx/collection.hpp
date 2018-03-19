@@ -19,6 +19,7 @@
 #include <memory>
 #include <string>
 
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/concatenate.hpp>
@@ -720,7 +721,7 @@ class MONGOCXX_API collection {
 
     ///
     /// Gets an index_view to the collection.
-    class index_view indexes();
+    index_view indexes();
 
     ///
     /// Gets a change stream on this collection with an empty pipeline.

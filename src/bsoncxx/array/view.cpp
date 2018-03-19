@@ -30,7 +30,7 @@ namespace array {
 
 namespace {
 bson_iter_t to_bson_iter_t(element e) {
-    bson_iter_t i;
+    bson_iter_t i{};
     i.raw = e.raw();
     i.len = e.length();
     i.next_off = e.offset();
@@ -59,7 +59,7 @@ view::const_iterator& view::const_iterator::operator++() {
     bson_iter_next(&i);
 
     if (!bson_iter_next(&i)) {
-        _element = element{nullptr, 0, 0};
+        _element = element{};
     } else {
         _element = element{i.raw, i.len, i.off};
     }

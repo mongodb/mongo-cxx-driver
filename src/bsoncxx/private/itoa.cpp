@@ -20,7 +20,7 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace {
 
-const char* kIndexTable =
+constexpr char kIndexTable[] =
     "0\0"
     "1\0"
     "2\0"
@@ -1024,10 +1024,16 @@ const char* kIndexTable =
 }  // namespace
 
 itoa::itoa(uint32_t val) : _val(val) {
-    init();
+    _init();
 }
 
-void itoa::init() {
+itoa& itoa::operator=(uint32_t new_val) {
+    _val = new_val;
+    _init();
+    return *this;
+}
+
+void itoa::_init() {
     if (_val < 10) {
         _str = kIndexTable + (2 * _val);
         _len = 1;
@@ -1052,30 +1058,6 @@ void itoa::init() {
         _str = _buf + i;
         _len = static_cast<std::uint8_t>(size - i);
     }
-}
-
-itoa::itoa() : itoa(0) {}
-
-itoa::itoa(const itoa& rhs) : itoa(rhs._val) {}
-
-itoa& itoa::operator=(const itoa& rhs) {
-    _val = rhs._val;
-    init();
-    return *this;
-}
-
-itoa& itoa::operator=(uint32_t i) {
-    _val = i;
-    init();
-    return *this;
-}
-
-const char* itoa::c_str() const {
-    return _str;
-}
-
-std::size_t itoa::length() const {
-    return _len;
 }
 
 BSONCXX_INLINE_NAMESPACE_END

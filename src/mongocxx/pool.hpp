@@ -65,12 +65,37 @@ class MONGOCXX_API pool {
     ~pool();
 
     ///
-    /// An entry is a handle on a @c client object acquired via the pool.
+    /// An entry is a handle on a @c client object acquired via the pool. Similar to
+    /// std::unique_ptr.
     ///
     /// @note The lifetime of any entry object must be a subset of the pool object
     ///  from which it was acquired.
     ///
-    using entry = std::unique_ptr<client, std::function<void MONGOCXX_CALL(client*)>>;
+    class MONGOCXX_API entry {
+       public:
+        /// Access a member of the client instance.
+        client* operator->() const& noexcept;
+        client* operator->() && = delete;
+
+        /// Retrieve a reference to the client.
+        client& operator*() const& noexcept;
+        client& operator*() && = delete;
+
+        /// Assign nullptr to this entry to release its client to the pool.
+        entry& operator=(std::nullptr_t) noexcept;
+
+        /// Return true if this entry has a client acquired from the pool.
+        explicit operator bool() const noexcept;
+
+       private:
+        friend class pool;
+
+        using unique_client = std::unique_ptr<client, std::function<void MONGOCXX_CALL(client*)>>;
+
+        MONGOCXX_PRIVATE explicit entry(unique_client);
+
+        unique_client _client;
+    };
 
     ///
     /// Acquires a client from the pool. The calling thread will block until a connection is

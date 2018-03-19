@@ -153,6 +153,10 @@ class MONGOCXX_API database {
         stdx::string_view name,
         const options::modify_collection& options = options::modify_collection());
 
+    bsoncxx::document::value modify_collection_deprecated(
+        stdx::string_view name,
+        const options::modify_collection& options = options::modify_collection());
+
     ///
     /// Drops the database and all its collections.
     ///

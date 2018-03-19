@@ -42,6 +42,8 @@ using bsoncxx::builder::basic::make_document;
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+using namespace libbson;
+
 database::database() noexcept = default;
 
 database::database(database&&) noexcept = default;
@@ -78,17 +80,12 @@ database::operator bool() const noexcept {
 }
 
 cursor database::list_collections(bsoncxx::document::view_or_value filter) {
-    libbson::scoped_bson_t filter_bson{filter};
-    bson_error_t error;
+    bsoncxx::builder::basic::document options_builder;
+    options_builder.append(kvp("filter", filter));
+    scoped_bson_t options_bson(options_builder.extract());
 
-    auto result =
-        libmongoc::database_find_collections(_get_impl().database_t, filter_bson.bson(), &error);
-
-    if (!result) {
-        throw_exception<operation_exception>(error);
-    }
-
-    return cursor(result);
+    return libmongoc::database_find_collections_with_opts(_get_impl().database_t,
+                                                          options_bson.bson());
 }
 
 stdx::string_view database::name() const {
@@ -110,11 +107,16 @@ bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value 
     return reply_bson.steal();
 }
 
-bsoncxx::document::value database::modify_collection(stdx::string_view name,
-                                                     const options::modify_collection& options) {
+bsoncxx::document::value database::modify_collection_deprecated(
+    stdx::string_view name, const options::modify_collection& options) {
     auto doc = make_document(kvp("collMod", name), concatenate(options.to_document()));
 
     return run_command(doc.view());
+}
+
+bsoncxx::document::value database::modify_collection(stdx::string_view name,
+                                                     const options::modify_collection& options) {
+    return modify_collection_deprecated(name, options);
 }
 
 class collection database::create_collection(

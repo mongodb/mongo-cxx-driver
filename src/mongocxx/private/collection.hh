@@ -42,22 +42,19 @@ class collection::impl {
           client_impl{i.client_impl} {}
 
     impl& operator=(const impl& i) {
-        libmongoc::collection_destroy(collection_t);
-        collection_t = libmongoc::collection_copy(i.collection_t);
+        if (this != &i) {
+            libmongoc::collection_destroy(collection_t);
+            collection_t = libmongoc::collection_copy(i.collection_t);
 
-        database_name = i.database_name;
-        client_impl = i.client_impl;
+            database_name = i.database_name;
+            client_impl = i.client_impl;
+        }
 
         return *this;
     }
 
     ~impl() {
         libmongoc::collection_destroy(collection_t);
-    }
-
-    bsoncxx::document::value gle() {
-        auto gle = libmongoc::collection_get_last_error(collection_t);
-        return bsoncxx::helpers::value_from_bson_t(gle);
     }
 
     mongoc_collection_t* collection_t;

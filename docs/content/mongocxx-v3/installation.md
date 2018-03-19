@@ -37,8 +37,9 @@ have problems, please file a bug report via
 
 The mongocxx driver builds on top of the MongoDB C driver.
 
-* For mongocxx-3.2.x, libmongoc 1.7.0 or later is required.
-* For mongocxx-3.1.x, libmongoc 1.5.0 or later is required.
+* For mongocxx-3.2.x, libmongoc 1.9.2 or later is required.
+* For mongocxx-3.1.[0-3], libmongoc 1.5.0 or later is required.
+* For mongocxx-3.1.4+, libmongoc 1.7.0 or later is required.
 * For mongocxx-3.0.x, we recommend the last 1.4.x version of libmongoc
 
 Unless you know that your package manager offers a high-enough version, you
@@ -55,16 +56,17 @@ configure option when building libbson/libmongoc.
 
 ### Step 2: Choose a C++17 polyfill
 
-The mongocxx driver uses the experimental C++17 features
-`std::optional` and `std::string_view`. To compile
-the mongocxx driver, you must choose one of the following
-implementations for these features:
+The mongocxx driver uses the C++17 features `std::optional` and
+`std::string_view`. To compile the mongocxx driver for pre-C++17, you
+must choose one of the following implementations for these features:
 
    MNMLSTC/core (*default for non-Windows platforms*)
-     Select with `-DBSONCXX_POLY_USE_MNMLSTC=1`. This option vendors a
-     header-only installation of MNMLSTC/core into the bsoncxx library
-     installation.  **NOTE**: this will download MLNMLSTC from
-     GitHub during the build process.
+     Select with `-DBSONCXX_POLY_USE_MNMLSTC=1`.  **NOTE**: This option
+     vendors a header-only installation of MNMLSTC/core into the bsoncxx
+     library installation and will therefore download MLNMLSTC from GitHub
+     during the build process. If you already have an available version of
+     MNMLSTC on your system, you can avoid the download step by using
+     `-DBSONCXX_POLY_USE_SYSTEM_MNMLSTC`.
 
    Boost (*default for Windows platforms*)
      Select with `-DBSONCXX_POLY_USE_BOOST=1`. This is currently the
@@ -102,12 +104,12 @@ cd mongo-cxx-driver/build
 If you prefer to download a tarball, look on the [mongocxx
 releases](https://github.com/mongodb/mongo-cxx-driver/releases) page for a
 link to the release tarball for the version you wish you install.  For
-example, to download version 3.1.2:
+example, to download version 3.2.0:
 
 ```sh
-curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.1.2.tar.gz
-tar -xzf r3.1.2.tar.gz
-cd mongo-cxx-driver-r3.1.2/build
+curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.2.0.tar.gz
+tar -xzf r3.2.0.tar.gz
+cd mongo-cxx-driver-r3.2.0/build
 ```
 
 Make sure you change to the `build` directory of whatever source tree you

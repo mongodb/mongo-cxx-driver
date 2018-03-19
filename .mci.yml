@@ -283,7 +283,7 @@ tasks:
         - func: "start_mongod"
         - func: "install_c_driver"
           vars:
-              MONGOC_VERSION: master
+              MONGOC_VERSION: 1.9.2
         - func: "compile"
         - func: "test"
 
@@ -293,7 +293,7 @@ tasks:
         - func: "start_mongod"
         - func: "install_c_driver"
           vars:
-              MONGOC_VERSION: master
+              MONGOC_VERSION: 1.9.2
         - func: "compile"
           vars:
               USE_STATIC_LIBS: 1

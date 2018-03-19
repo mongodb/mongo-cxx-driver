@@ -14,7 +14,7 @@
 
 #include <mongocxx/options/private/rewriter.hh>
 
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
+#include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 
@@ -56,7 +56,7 @@ void convert_comment_modifier(find* options, bsoncxx::document::element ele) {
         throw logic_error{error_code::k_invalid_parameter, "string type required for $comment"};
     }
     if (!options->comment()) {
-        options->comment(std::string{ele.get_utf8().value.to_string()});
+        options->comment(bsoncxx::string::to_string(ele.get_utf8().value));
     }
 }
 
@@ -68,7 +68,7 @@ void convert_hint_modifier(find* options, bsoncxx::document::element ele) {
             break;
         }
         case bsoncxx::type::k_utf8: {
-            hint = mongocxx::hint{std::string{ele.get_utf8().value.to_string()}};
+            hint = mongocxx::hint{bsoncxx::string::to_string(ele.get_utf8().value)};
             break;
         }
         default: {
@@ -160,16 +160,14 @@ void convert_snapshot_modifier(find* options, bsoncxx::document::element ele) {
 
 }  // namespace
 
-BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
-
 find rewriter::rewrite_find_modifiers(const find& options) {
-    if (!options.modifiers()) {
+    if (!options.modifiers_deprecated()) {
         return options;
     }
 
     find converted_options{options};
 
-    for (auto&& ele : converted_options.modifiers()->view()) {
+    for (auto&& ele : converted_options.modifiers_deprecated()->view()) {
         if (ele.key() == stdx::string_view("$comment")) {
             convert_comment_modifier(&converted_options, ele);
         } else if (ele.key() == stdx::string_view("$explain")) {
@@ -195,9 +193,9 @@ find rewriter::rewrite_find_modifiers(const find& options) {
         } else if (ele.key() == stdx::string_view("$snapshot")) {
             convert_snapshot_modifier(&converted_options, ele);
         } else {
-            throw logic_error{
-                error_code::k_invalid_parameter,
-                std::string{"unrecognized key in modifiers: "} + ele.key().to_string()};
+            throw logic_error{error_code::k_invalid_parameter,
+                              std::string{"unrecognized key in modifiers: "} +
+                                  bsoncxx::string::to_string(ele.key())};
         }
     }
 
@@ -205,8 +203,6 @@ find rewriter::rewrite_find_modifiers(const find& options) {
 
     return converted_options;
 }
-
-BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END

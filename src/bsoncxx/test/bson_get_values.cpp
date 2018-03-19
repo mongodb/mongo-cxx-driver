@@ -317,4 +317,20 @@ TEST_CASE("array view begin/end/find give expected types", "[bsoncxx]") {
         REQUIRE(iter == ary.begin());
     }
 }
+
+TEST_CASE("CXX-1476: CXX-992 regression fixes", "[bsoncxx]") {
+    SECTION("request for field 'o' does not return field 'op'") {
+        constexpr auto k_json = R"({ "op" : 1, "o" : 2 })";
+        const auto bson = from_json(k_json);
+        REQUIRE(bson.view()["o"].key() == stdx::string_view("o"));
+    }
+
+    SECTION("empty key is not ignored") {
+        constexpr auto k_json = R"({ "" : 1 })";
+        const auto bson = from_json(k_json);
+        REQUIRE(bson.view().find("") != bson.view().cend());
+        REQUIRE(bson.view().find(stdx::string_view()) != bson.view().cend());
+    }
+}
+
 }  // namespace

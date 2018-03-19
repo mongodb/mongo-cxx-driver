@@ -53,6 +53,9 @@ class MONGOCXX_TEST_API scoped_bson_t {
     //
     scoped_bson_t();
 
+// In C++17 mode, we don't need these overloads - they end up being ambiguous. The C++17 optional
+// can deal with out it.
+#if !defined(BSONCXX_POLY_USE_STD)
     //
     // Constructs a new scoped_bson_t from a document view_or_value.
     //
@@ -61,18 +64,19 @@ class MONGOCXX_TEST_API scoped_bson_t {
     explicit scoped_bson_t(bsoncxx::document::view_or_value doc);
 
     //
-    // Constructs a new scoped_bson_t from an optional document view_or_value.
-    //
-    // The internal bson_t is initialized if the optional is populated.
-    //
-    scoped_bson_t(bsoncxx::stdx::optional<bsoncxx::document::view_or_value> doc);
-
-    //
     // Initializes a bson_t from the provided document.
     //
     // The internal bson_t is considered initialized.
     //
     void init_from_static(bsoncxx::document::view_or_value doc);
+#endif
+
+    //
+    // Constructs a new scoped_bson_t from an optional document view_or_value.
+    //
+    // The internal bson_t is initialized if the optional is populated.
+    //
+    explicit scoped_bson_t(bsoncxx::stdx::optional<bsoncxx::document::view_or_value> doc);
 
     //
     // Initializes a bson_t from the provided optional document.

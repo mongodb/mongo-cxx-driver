@@ -29,6 +29,7 @@
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types/value.hpp>
 #include <mongocxx/client.hpp>
@@ -82,7 +83,7 @@ bsoncxx::stdx::optional<test_util::item_t> transform_hex(test_util::item_t pair,
     auto key = *(pair.first);
     auto value = pair.second;
 
-    if (key.to_string() != "data" || value.type() != type::k_document) {
+    if (bsoncxx::string::to_string(key) != "data" || value.type() != type::k_document) {
         return make_optional(pair);
     }
 
@@ -122,7 +123,7 @@ bsoncxx::stdx::optional<test_util::item_t> convert_length_to_int64(test_util::it
     auto key = *(pair.first);
     auto value = pair.second;
 
-    if (key.to_string() != "length" || value.type() != type::k_int32) {
+    if (bsoncxx::string::to_string(key) != "length" || value.type() != type::k_int32) {
         return make_optional(pair);
     }
 
@@ -158,10 +159,6 @@ void compare_collections(database db) {
         REQUIRE(expected["chunkSize"]);
         REQUIRE(actual["chunkSize"]);
         REQUIRE(expected["chunkSize"].get_int32().value == actual["chunkSize"].get_int32().value);
-
-        REQUIRE(expected["md5"]);
-        REQUIRE(actual["md5"]);
-        REQUIRE(expected["md5"].get_utf8().value == actual["md5"].get_utf8().value);
 
         REQUIRE(expected["filename"]);
         REQUIRE(actual["filename"]);
@@ -222,7 +219,7 @@ void test_download(database db,
 
         // If the GridFS file is not found, an error should be thrown when the download stream is
         // opened.
-        if (error.to_string() == "FileNotFound") {
+        if (bsoncxx::string::to_string(error) == "FileNotFound") {
             REQUIRE_THROWS_AS(bucket.open_download_stream(id), std::exception);
             return;
         }
@@ -246,7 +243,7 @@ void test_download(database db,
     // The GridFS spec specifies the expected binary data in the form of { $hex: "<hexadecimal
     // string>" }, which needs to be converted to an array of bytes.
     REQUIRE(result["$hex"]);
-    std::string hex = result["$hex"].get_utf8().value.to_string();
+    std::string hex = bsoncxx::string::to_string(result["$hex"].get_utf8().value);
     std::basic_string<std::uint8_t> expected = test_util::convert_hex_string_to_bytes(hex);
 
     REQUIRE(actual_size == expected.size());
@@ -286,7 +283,7 @@ void test_upload(database db,
     document::view source = arguments["source"].get_document().value;
 
     REQUIRE(source["$hex"]);
-    std::string hex = source["$hex"].get_utf8().value.to_string();
+    std::string hex = bsoncxx::string::to_string(source["$hex"].get_utf8().value);
     std::basic_string<std::uint8_t> source_bytes = test_util::convert_hex_string_to_bytes(hex);
 
     uploader.write(source_bytes.data(), source_bytes.size());
@@ -311,7 +308,7 @@ void test_upload(database db,
                 auto key = *(pair.first);
                 auto value = pair.second;
 
-                std::string key_string = key.to_string();
+                std::string key_string = bsoncxx::string::to_string(key);
 
                 if ((key_string != "_id" && key_string != "files_id") ||
                     value.type() != type::k_utf8) {
@@ -328,7 +325,7 @@ void test_upload(database db,
                     return convert_length_to_int64(pair, context);
                 }
 
-                std::string id_str = value.get_utf8().value.to_string();
+                std::string id_str = bsoncxx::string::to_string(value.get_utf8().value);
 
                 if (id_str == "*actual") {
                     return bsoncxx::stdx::optional<test_util::item_t>{};
@@ -475,7 +472,7 @@ void run_gridfs_tests_in_file(std::string test_path, client* client) {
     gridfs::bucket bucket = db.gridfs_bucket();
 
     for (auto&& test : tests) {
-        std::string description = test["description"].get_utf8().value.to_string();
+        std::string description = bsoncxx::string::to_string(test["description"].get_utf8().value);
         INFO("Test description: " << description);
         initialize_collections(db, test_spec_view["data"].get_document().value);
 
@@ -491,7 +488,8 @@ void run_gridfs_tests_in_file(std::string test_path, client* client) {
         document::view assert_doc = test["assert"].get_document().value;
 
         REQUIRE(act["operation"]);
-        auto test_runner = gridfs_test_runners[act["operation"].get_utf8().value.to_string()];
+        auto test_runner =
+            gridfs_test_runners[bsoncxx::string::to_string(act["operation"].get_utf8().value)];
         test_runner(db, bucket, act, assert_doc);
     }
 }

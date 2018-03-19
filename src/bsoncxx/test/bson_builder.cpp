@@ -22,6 +22,7 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/value.hpp>
@@ -676,7 +677,7 @@ TEST_CASE("document core builder ownership", "[bsoncxx::builder::core]") {
 
     SECTION("when passing a stdx::string_view, ownership handled by caller") {
         std::string key{"sabich"};
-        stdx::string_view key_view{key};
+        stdx::string_view key_view(key);
         b.key_view(key_view);
         b.append(1);
     }
@@ -812,7 +813,7 @@ TEST_CASE("core method chaining to build array works", "[bsoncxx::builder::core]
 
     REQUIRE(std::distance(array_view.begin(), array_view.end()) == 3);
     REQUIRE(array_view[0].type() == type::k_utf8);
-    REQUIRE(array_view[0].get_utf8().value.to_string() == "foo");
+    REQUIRE(string::to_string(array_view[0].get_utf8().value) == "foo");
     REQUIRE(array_view[1].type() == type::k_int32);
     REQUIRE(array_view[1].get_int32().value == 1);
     REQUIRE(array_view[2].type() == type::k_bool);
@@ -1197,7 +1198,7 @@ TEST_CASE("builder::basic::make_array works", "[bsoncxx::builder::basic::make_ar
 
     REQUIRE(std::distance(array_view.begin(), array_view.end()) == 3);
     REQUIRE(array_view[0].type() == type::k_utf8);
-    REQUIRE(array_view[0].get_utf8().value.to_string() == "foo");
+    REQUIRE(string::to_string(array_view[0].get_utf8().value) == "foo");
     REQUIRE(array_view[1].type() == type::k_int32);
     REQUIRE(array_view[1].get_int32().value == 1);
     REQUIRE(array_view[2].type() == type::k_bool);

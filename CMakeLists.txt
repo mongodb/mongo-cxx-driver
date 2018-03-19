@@ -40,6 +40,20 @@ else()
   message(WARNING "Unknown compiler... recklessly proceeding without a version check")
 endif()
 
+# All of our target compilers support the deprecated
+# attribute. Normally, we would just let the GenerateExportHeader
+# subsystem do this via configure check, but there appears to be a
+# CMake bug where if -Werror is set on the command line, it breaks the
+# configure check, and we end up not configuring the macro. That means
+# that we end up not being able to turn deprecation warnings into
+# errors. Instead, since we know all our platforms offer the feature,
+# just hard enable it here.
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  set(COMPILER_HAS_DEPRECATED true)
+else()
+  set(COMPILER_HAS_DEPRECATED_ATTR true)
+endif()
+
 set (CMAKE_SKIP_BUILD_RPATH false)
 set (CMAKE_BUILD_WITH_INSTALL_RPATH false)
 set (CMAKE_INSTALL_RPATH_USE_LINK_PATH true)

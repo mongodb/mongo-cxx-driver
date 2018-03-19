@@ -82,9 +82,13 @@ find& find::min(bsoncxx::document::view_or_value min) {
     return *this;
 }
 
-find& find::modifiers(bsoncxx::document::view_or_value modifiers) {
+find& find::modifiers_deprecated(bsoncxx::document::view_or_value modifiers) {
     _modifiers = std::move(modifiers);
     return *this;
+}
+
+find& find::modifiers(bsoncxx::document::view_or_value modifiers) {
+    return modifiers_deprecated(std::move(modifiers));
 }
 
 find& find::no_cursor_timeout(bool no_cursor_timeout) {
@@ -180,8 +184,12 @@ const stdx::optional<bsoncxx::document::view_or_value>& find::min() const {
     return _min;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& find::modifiers() const {
+const stdx::optional<bsoncxx::document::view_or_value>& find::modifiers_deprecated() const {
     return _modifiers;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& find::modifiers() const {
+    return modifiers_deprecated();
 }
 
 const stdx::optional<bool>& find::no_cursor_timeout() const {

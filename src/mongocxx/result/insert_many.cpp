@@ -24,6 +24,22 @@ namespace result {
 
 insert_many::insert_many(result::bulk_write result, bsoncxx::array::view inserted_ids)
     : _result(std::move(result)), _inserted_ids_owned(inserted_ids) {
+    _buildInsertedIds();
+}
+
+insert_many::insert_many(const insert_many& src)
+    : _result(src._result), _inserted_ids_owned(src._inserted_ids_owned) {
+    _buildInsertedIds();
+}
+
+insert_many& insert_many::operator=(const insert_many& src) {
+    insert_many tmp(src);
+    *this = std::move(tmp);
+    return *this;
+}
+
+void insert_many::_buildInsertedIds() {
+    _inserted_ids.clear();
     std::size_t index = 0;
     for (auto&& ele : _inserted_ids_owned.view()) {
         _inserted_ids.emplace(index++, ele.get_document().value["_id"]);

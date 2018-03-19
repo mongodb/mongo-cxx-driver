@@ -16,7 +16,6 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view.hpp>
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
@@ -73,9 +72,7 @@ TEST_CASE("Read preference", "[read_preference]") {
 TEST_CASE("Read preference can be constructed with another read_mode", "[read_preference]") {
     instance::current();
 
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-    read_preference rp(read_preference::read_mode::k_secondary);
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+    read_preference rp(read_preference::read_mode::k_secondary, read_preference::deprecated_tag{});
     REQUIRE(rp.mode() == read_preference::read_mode::k_secondary);
     REQUIRE_FALSE(rp.tags());
 }
@@ -84,9 +81,8 @@ TEST_CASE("Read preference can be constructed with a read_mode and tags", "[read
     instance::current();
     auto tags = make_document(kvp("tag_key", "tag_value"));
 
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-    read_preference rp(read_preference::read_mode::k_secondary, tags.view());
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+    read_preference rp(
+        read_preference::read_mode::k_secondary, tags.view(), read_preference::deprecated_tag{});
     REQUIRE(rp.mode() == read_preference::read_mode::k_secondary);
     REQUIRE(rp.tags().value() == tags);
 }

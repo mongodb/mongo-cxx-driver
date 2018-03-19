@@ -34,16 +34,25 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 extern const bool k_silence_doxygen;
 
 ///
-/// Converts a BSON document to a JSON string.
+/// An enumeration of the types of Extended JSON that the to_json function accepts
+enum class ExtendedJsonMode : std::uint8_t {
+    k_legacy,     ///< to produce Legacy Extended JSON
+    k_canonical,  ///< to produce Canonical Extended JSON
+    k_relaxed,    ///< to produce Relaxed Extended JSON
+};
+
+///
+/// Converts a BSON document to a JSON string, in extended format.
 ///
 /// @param view
 ///   A valid BSON document.
 ///
 /// @throws bsoncxx::exception with error details if the conversion failed.
 ///
-/// @returns A JSON string.
+/// @returns An extended JSON string.
 ///
-BSONCXX_API std::string BSONCXX_CALL to_json(document::view view);
+BSONCXX_API std::string BSONCXX_CALL to_json(document::view view,
+                                             ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
 
 ///
 /// Constructs a new document::value from the provided JSON text

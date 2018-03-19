@@ -15,6 +15,7 @@
 #include <mongocxx/index_view.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/index_view.hpp>
 #include <mongocxx/private/index_view.hh>
@@ -27,9 +28,9 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 index_view::index_view(void* coll)
     : _impl{stdx::make_unique<impl>(static_cast<mongoc_collection_t*>(coll))} {}
 
+index_view::index_view(index_view&&) noexcept = default;
+index_view& index_view::operator=(index_view&&) noexcept = default;
 index_view::~index_view() = default;
-
-index_view::index_view(index_view&&) = default;
 
 cursor index_view::list() {
     return _get_impl().list();
@@ -62,7 +63,7 @@ void index_view::drop_one(const bsoncxx::document::view_or_value& keys,
     bsoncxx::document::view opts_view = index_options.view();
 
     if (opts_view["name"]) {
-        drop_one(opts_view["name"].get_utf8().value.to_string(), options);
+        drop_one(bsoncxx::string::to_string(opts_view["name"].get_utf8().value), options);
     } else {
         drop_one(_get_impl().get_index_name_from_keys(keys), options);
     }

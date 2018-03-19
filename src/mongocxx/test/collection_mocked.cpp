@@ -403,12 +403,17 @@ TEST_CASE("Collection", "[collection]") {
 
         auto modification_doc = make_document(kvp("cool", "wow"), kvp("foo", "bar"));
 
-        collection_create_bulk_operation->interpose(
-            [&](mongoc_collection_t*,
-                bool ordered,
-                const mongoc_write_concern_t*) -> mongoc_bulk_operation_t* {
+        collection_create_bulk_operation_with_opts->interpose(
+            [&](mongoc_collection_t*, const bson_t* opts) -> mongoc_bulk_operation_t* {
+                bson_iter_t iter;
+                if (bson_iter_init_find(&iter, opts, "ordered")) {
+                    REQUIRE(BSON_ITER_HOLDS_BOOL(&iter));
+                    REQUIRE(bson_iter_bool(&iter) == expected_order_setting);
+                } else {
+                    // No "ordered" in opts, default of true must equal the expected setting.
+                    REQUIRE(expected_order_setting);
+                }
                 collection_create_bulk_operation_called = true;
-                REQUIRE(ordered == expected_order_setting);
                 return nullptr;
             });
 
@@ -453,6 +458,26 @@ TEST_CASE("Collection", "[collection]") {
             options::insert opts{};
             opts.bypass_document_validation(expected_bypass_document_validation);
             mongo_coll.insert_one(filter_doc.view(), opts);
+        }
+
+        SECTION("Insert Many Ordered", "[collection::insert_many]") {
+            bulk_operation_insert->interpose([&](mongoc_bulk_operation_t*, const bson_t* doc) {
+                bulk_operation_op_called = true;
+                REQUIRE(bson_get_data(doc) == filter_doc.view().data());
+            });
+
+            // The interposed collection_create_bulk_operation_with_opts validates this setting.
+            SECTION("...set to false") {
+                expected_order_setting = false;
+            }
+            SECTION("...set to true") {
+                expected_order_setting = true;
+            }
+            options::insert opts{};
+            opts.ordered(expected_order_setting);
+            std::vector<bsoncxx::document::view> docs{};
+            docs.push_back(filter_doc.view());
+            mongo_coll.insert_many(docs, opts);
         }
 
         SECTION("Update One", "[collection::update_one]") {

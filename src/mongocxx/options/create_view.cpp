@@ -53,7 +53,7 @@ const stdx::optional<class write_concern>& create_view::write_concern() const {
     return _write_concern;
 }
 
-bsoncxx::document::value create_view::to_document() const {
+bsoncxx::document::value create_view::to_document_deprecated() const {
     auto doc = bsoncxx::builder::basic::document{};
 
     if (_collation) {
@@ -65,6 +65,10 @@ bsoncxx::document::value create_view::to_document() const {
     }
 
     return doc.extract();
+}
+
+bsoncxx::document::value create_view::to_document() const {
+    return to_document_deprecated();
 }
 
 bool MONGOCXX_CALL operator==(const create_view& lhs, const create_view& rhs) {

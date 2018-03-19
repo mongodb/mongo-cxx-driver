@@ -19,6 +19,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
@@ -127,17 +128,17 @@ TEST_CASE("collection renaming", "[collection]") {
     coll.insert_one(filter.view());  // Ensure that the collection exists.
     other_coll.insert_one({});
 
-    REQUIRE(coll.name() == stdx::string_view{collname});
+    REQUIRE(coll.name() == stdx::string_view(collname));
 
     std::string new_name{"mongo_cxx_newname"};
     coll.rename(new_name, false);
 
-    REQUIRE(coll.name() == stdx::string_view{new_name});
+    REQUIRE(coll.name() == stdx::string_view(new_name));
 
     REQUIRE(coll.find_one(filter.view(), {}));
 
     coll.rename(other_collname, true);
-    REQUIRE(coll.name() == stdx::string_view{other_collname});
+    REQUIRE(coll.name() == stdx::string_view(other_collname));
     REQUIRE(coll.find_one(filter.view(), {}));
 
     coll.drop();
@@ -351,6 +352,50 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // this unacknowledged write from racing with writes to this
             // collection from other sections.
             db.run_command(make_document(kvp("getLastError", 1)));
+        }
+
+        SECTION("result::insert_many copy ctor/assign reuses id references", "[collection]") {
+            // Verify that two id->value maps have the same underlying content,
+            // but are not pointing at the same memory.
+            using id_map = mongocxx::result::insert_many::id_map;
+            const auto verifyEquivalentNotIdentical = [](const id_map& lhs, const id_map& rhs) {
+                REQUIRE(lhs.size() == rhs.size());
+                for (const auto& lhsIdVal : lhs) {
+                    const auto& rhsIdVal = rhs.find(lhsIdVal.first);
+
+                    // copyIds[idx] doesn't exist, but ids[idx] does.
+                    REQUIRE(rhsIdVal != rhs.end());
+
+                    const auto& lhsVal = lhsIdVal.second;
+                    const auto& rhsVal = rhsIdVal->second;
+
+                    // The element wasn't duplicated.
+                    REQUIRE(lhsVal.raw() != rhsVal.raw());
+
+                    // Contents should match.
+                    REQUIRE(lhsVal.length() == rhsVal.length());
+                    REQUIRE(memcmp(lhsVal.raw(), rhsVal.raw(), lhsVal.length()) == 0);
+                }
+            };
+
+            std::string collname("result_insert_many_stale_references");
+            db[collname].drop();
+            auto coll = db.create_collection(collname);
+            const auto result = coll.insert_many(docs);
+            REQUIRE(result);
+
+            const auto& ids = result->inserted_ids();
+            REQUIRE(!ids.empty());
+
+            mongocxx::result::insert_many resultCopy(*result);
+            const auto& copyIds = resultCopy.inserted_ids();
+            verifyEquivalentNotIdentical(ids, copyIds);
+
+            auto resultAssign = *result;
+            const auto& assignIds = resultAssign.inserted_ids();
+            verifyEquivalentNotIdentical(ids, assignIds);
+
+            verifyEquivalentNotIdentical(copyIds, assignIds);
         }
 
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
@@ -1737,7 +1782,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(make_document(kvp("x", 1), kvp("y", 1)));
 
             pipeline.project(make_document(kvp("x", 1)));
-            pipeline.out(coll.name().to_string());
+            pipeline.out(bsoncxx::string::to_string(coll.name()));
             auto cursor = coll.aggregate(pipeline);
 
             if (test_util::get_max_wire_version(mongodb_client) >= 1) {
@@ -1775,7 +1820,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options.bypass_document_validation(true);
 
             pipeline.project(make_document(kvp("x", 1)));
-            pipeline.out(coll_out.name().to_string());
+            pipeline.out(bsoncxx::string::to_string(coll_out.name()));
             stdx::optional<cursor> cursor;
             REQUIRE_NOTHROW(cursor = coll_in.aggregate(pipeline, options));
 
@@ -2265,7 +2310,7 @@ TEST_CASE("create_index tests", "[collection]") {
         options.name(indexName);
 
         auto response = coll.create_index(index.view(), options);
-        REQUIRE(response.view()["name"].get_utf8().value == bsoncxx::stdx::string_view{indexName});
+        REQUIRE(response.view()["name"].get_utf8().value == bsoncxx::stdx::string_view(indexName));
 
         find_index_and_validate(coll, indexName);
 
@@ -2335,7 +2380,7 @@ TEST_CASE("create_index tests", "[collection]") {
 
         bool unique = options.unique().value();
         auto validate = [unique](bsoncxx::document::view index) {
-            auto expire_after = index["expireAfter"];
+            auto expire_after = index["expireAfterSeconds"];
             REQUIRE(expire_after);
             REQUIRE(expire_after.type() == type::k_int32);
             REQUIRE(expire_after.get_int32().value == 500);
@@ -2422,7 +2467,7 @@ TEST_CASE("list_indexes", "[collection]") {
         auto name = index["name"].get_utf8();
 
         for (auto&& expected : expected_names) {
-            if (bsoncxx::stdx::string_view{expected} == name.value) {
+            if (bsoncxx::stdx::string_view(expected) == name.value) {
                 found++;
                 if (expected == "a_1") {
                     REQUIRE(index["unique"]);

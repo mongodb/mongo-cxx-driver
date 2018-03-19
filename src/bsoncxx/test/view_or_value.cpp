@@ -187,7 +187,7 @@ TEST_CASE("string::document::view_or_value", "[bsoncxx::string::view_or_value]")
 
     SECTION("can be constructed with a stdx::string_view") {
         std::string name{"Mike"};
-        stdx::string_view name_view{name};
+        stdx::string_view name_view(name);
         string::view_or_value mike{name_view};
 
         SECTION("is non-owning") {

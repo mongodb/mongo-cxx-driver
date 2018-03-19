@@ -34,8 +34,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 client::client() noexcept = default;
 
-client::client(const class uri& uri, const options::client& options)
-    : _impl(stdx::make_unique<impl>(libmongoc::client_new_from_uri(uri._impl->uri_t))) {
+client::client(const class uri& uri, const options::client& options) {
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
     if (options.ssl_opts()) {
         if (!uri.ssl())
@@ -50,6 +49,13 @@ client::client(const class uri& uri, const options::client& options)
     if (uri.ssl() || options.ssl_opts())
         throw exception{error_code::k_ssl_not_supported};
 #endif
+    auto new_client = libmongoc::client_new_from_uri(uri._impl->uri_t);
+    if (!new_client) {
+        // Shouldn't happen after checks above, but future libmongoc's may change behavior.
+        throw exception{error_code::k_invalid_parameter, "could not construct client from URI"};
+    }
+
+    _impl = stdx::make_unique<impl>(std::move(new_client));
 }
 
 client::client(void* implementation)
@@ -64,9 +70,13 @@ client::operator bool() const noexcept {
     return static_cast<bool>(_impl);
 }
 
-void client::read_concern(class read_concern rc) {
+void client::read_concern_deprecated(class read_concern rc) {
     auto client_t = _get_impl().client_t;
     libmongoc::client_set_read_concern(client_t, rc._impl->read_concern_t);
+}
+
+void client::read_concern(class read_concern rc) {
+    return read_concern_deprecated(std::move(rc));
 }
 
 class read_concern client::read_concern() const {
@@ -74,8 +84,12 @@ class read_concern client::read_concern() const {
     return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
-void client::read_preference(class read_preference rp) {
+void client::read_preference_deprecated(class read_preference rp) {
     libmongoc::client_set_read_prefs(_get_impl().client_t, rp._impl->read_preference_t);
+}
+
+void client::read_preference(class read_preference rp) {
+    return read_preference_deprecated(std::move(rp));
 }
 
 class read_preference client::read_preference() const {
@@ -90,8 +104,12 @@ class uri client::uri() const {
     return connection_string;
 }
 
-void client::write_concern(class write_concern wc) {
+void client::write_concern_deprecated(class write_concern wc) {
     libmongoc::client_set_write_concern(_get_impl().client_t, wc._impl->write_concern_t);
+}
+
+void client::write_concern(class write_concern wc) {
+    return write_concern_deprecated(std::move(wc));
 }
 
 class write_concern client::write_concern() const {
@@ -105,14 +123,7 @@ class database client::database(bsoncxx::string::view_or_value name) const& {
 }
 
 cursor client::list_databases() const {
-    bson_error_t error;
-    auto result = libmongoc::client_find_databases(_get_impl().client_t, &error);
-
-    if (!result) {
-        throw_exception<operation_exception>(error);
-    }
-
-    return cursor(result);
+    return libmongoc::client_find_databases_with_opts(_get_impl().client_t, nullptr);
 }
 
 const client::impl& client::_get_impl() const {

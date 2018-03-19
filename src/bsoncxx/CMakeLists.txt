@@ -17,40 +17,51 @@ project(BSONCXX)
 # Update these as needed.
 # TODO: read from file
 set(BSONCXX_VERSION_MAJOR 3)
-set(BSONCXX_VERSION_MINOR 1)
-set(BSONCXX_VERSION_PATCH 1)
-set(BSONCXX_VERSION_EXTRA "-pre")
+set(BSONCXX_VERSION_MINOR 3)
+set(BSONCXX_VERSION_PATCH 0)
+set(BSONCXX_VERSION_EXTRA "rc0-pre")
 set(BSONCXX_ABI_VERSION _noabi)
 
-set(BSONCXX_POLY_USE_MNMLSTC_DEFAULT ON)
-set(BSONCXX_POLY_USE_BOOST_DEFAULT OFF)
-
-# MSVC can't handle mnmlstc yet, default to boost on that platform
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-  set(BSONCXX_POLY_USE_MNMLSTC_DEFAULT OFF)
-  set(BSONCXX_POLY_USE_BOOST_DEFAULT ON)
-endif()
-
-option(BSONCXX_POLY_USE_MNMLSTC "Use MNMLSTC/core for stdx polyfills" ${BSONCXX_POLY_USE_MNMLSTC_DEFAULT})
+option(BSONCXX_POLY_USE_MNMLSTC "Use MNMLSTC/core for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_STD_EXPERIMENTAL "Use std::experimental for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_SYSTEM_MNMLSTC "Obtain mnmlstc/core from system" OFF)
-option(BSONCXX_POLY_USE_BOOST "Use boost for stdx polyfills" ${BSONCXX_POLY_USE_BOOST_DEFAULT})
+option(BSONCXX_POLY_USE_BOOST "Use boost for stdx polyfills" OFF)
+option(BSONCXX_POLY_USE_STD "Use C++17 std library for stdx polyfills" OFF)
 
-# If the user explicitly selected boost or std::experimental
-# turn off mnmlstc
-if (BSONCXX_POLY_USE_BOOST OR BSONCXX_POLY_USE_STD_EXPERIMENTAL)
-  set(BSONCXX_POLY_USE_MNMLSTC OFF)
+# Count how many polyfill options are true-ish
+set(BSONCXX_POLY_OPTIONS_SET 0)
+foreach (BSONCXX_POLY_OPTION  ${BSONCXX_POLY_USE_MNMLSTC} ${BSONCXX_POLY_USE_STD_EXPERIMENTAL} ${BSONCXX_POLY_USE_BOOST} ${BSONCXX_POLY_USE_STD})
+  if (${BSONCXX_POLY_OPTION})
+    MATH(EXPR BSONCXX_POLY_OPTIONS_SET "${BSONCXX_POLY_OPTIONS_SET}+1")
+  endif()
+endforeach()
+
+if (BSONCXX_POLY_OPTIONS_SET GREATER 1)
+  # You can't ask for more than one polyfill
+  message(FATAL_ERROR "Cannnot specify more than one bsoncxx polyfill choice")
+elseif (BSONCXX_POLY_OPTIONS_SET EQUAL 0)
+  # You can just not say, in which case we endeavor to pick a sane default:
+
+  if (NOT CMAKE_CXX_STANDARD LESS 17)
+    # If we are in C++17 mode, use the C++17 versions
+    set(BSONCXX_POLY_USE_STD ON)
+    message(STATUS "Auto-configuring bsoncxx to use C++17 std library polyfills since C++17 is active and user didn't specify otherwise")
+  elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    # Otherwise, since MSVC can't handle MNMLSTC, default to boost
+    set(BSONCXX_POLY_USE_BOOST ON)
+    message(STATUS "Auto-configuring bsoncxx to use boost std library polyfills since C++17 is inactive and compiler is MSVC")
+  else()
+    # Otherwise, we are on a platform that can handle MNMLSTC
+    set(BSONCXX_POLY_USE_MNMLSTC ON)
+    message(STATUS "Auto-configuring bsoncxx to use MNMLSTC for polyfills since C++17 is inactive")
+  endif()
+
 endif()
 
 # It doesn't make sense to say we aren't using MNMLSTC but then
 # request the system version of it.
 if (NOT BSONCXX_POLY_USE_MNMLSTC AND BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
-  MESSAGE(FATAL_ERROR "Can't specify system mnmlstc when using boost or std::experimental for bsoncxx polyfills")
-endif()
-
-# It doesn't make sense to request both other sources of polyfills
-if (BSONCXX_POLY_USE_BOOST AND BSONCXX_POLY_USE_STD_EXPERIMENTAL)
-  message(FATAL_ERROR "Can't choose both boost and std::experimental for bsoncx polyfills")
+  MESSAGE(FATAL_ERROR "Can't specify system mnmlstc when not using mnmlstc")
 endif()
 
 # Can only use STD_EXPERIMENTAL in C++14 mode
@@ -63,7 +74,7 @@ set(BSONCXX_VERSION ${BSONCXX_VERSION_NO_EXTRA}${BSONCXX_VERSION_EXTRA})
 set(BSONCXX_INLINE_NAMESPACE "v${BSONCXX_ABI_VERSION}")
 set(BSONCXX_HEADER_INSTALL_DIR "include/bsoncxx/${BSONCXX_INLINE_NAMESPACE}" CACHE INTERNAL "")
 
-set(LIBBSON_REQUIRED_VERSION 1.7.0)
+set(LIBBSON_REQUIRED_VERSION 1.9.2)
 set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
 
 if (BUILD_SHARED_LIBS)

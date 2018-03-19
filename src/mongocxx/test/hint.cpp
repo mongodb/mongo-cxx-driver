@@ -18,7 +18,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/instance.hpp>
@@ -41,7 +41,7 @@ TEST_CASE("Hint", "[hint]") {
         SECTION("Returns correct value from to_value") {
             types::value val = index_hint.to_value();
             REQUIRE(val.type() == type::k_utf8);
-            REQUIRE(val.get_utf8().value.to_string() == index_name);
+            REQUIRE(bsoncxx::string::to_string(val.get_utf8().value) == index_name);
         }
 
         SECTION("Compares equal to matching index name") {
@@ -60,16 +60,14 @@ TEST_CASE("Hint", "[hint]") {
         }
 
         SECTION("Test for deprecated method to_document()") {
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
             document::value filter =
-                make_document(kvp("a", 15), concatenate(index_hint.to_document()));
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+                make_document(kvp("a", 15), concatenate(index_hint.to_document_deprecated()));
             document::view view{filter.view()};
             document::element ele{view["$hint"]};
             REQUIRE(ele);
             REQUIRE(ele.type() == type::k_utf8);
 
-            REQUIRE(ele.get_utf8().value.to_string() == index_name);
+            REQUIRE(bsoncxx::string::to_string(ele.get_utf8().value) == index_name);
         }
     }
 
@@ -104,10 +102,8 @@ TEST_CASE("Hint", "[hint]") {
         }
 
         SECTION("Test for deprecated method to_document()") {
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
             document::value filter =
-                make_document(kvp("a", 12), concatenate(index_hint.to_document()));
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+                make_document(kvp("a", 12), concatenate(index_hint.to_document_deprecated()));
             document::view view{filter.view()};
             document::element ele{view["$hint"]};
             REQUIRE(ele);

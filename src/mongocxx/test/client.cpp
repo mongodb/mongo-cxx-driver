@@ -14,7 +14,7 @@
 
 #include "helpers.hpp"
 
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -62,6 +62,16 @@ TEST_CASE("A client connects to a provided mongodb uri", "[client]") {
     REQUIRE_NOTHROW(client["client_connects_uri"].run_command(make_document(kvp("isMaster", 1))));
 }
 
+TEST_CASE("A client throws if its underlying mongoc client is NULL", "[client]") {
+    MOCK_CLIENT
+
+    instance::current();
+
+    client_new->interpose([](const mongoc_uri_t*) { return (mongoc_client_t*)nullptr; });
+
+    REQUIRE_THROWS_AS(client{uri{}}, mongocxx::exception);
+}
+
 TEST_CASE("A client cleans up its underlying mongoc client on destruction", "[client]") {
     MOCK_CLIENT
 
@@ -89,10 +99,7 @@ TEST_CASE("A client supports move operations", "[client]") {
     client a{uri{}};
 
     bool called = false;
-    client_new->interpose([&](const mongoc_uri_t*) {
-        called = true;
-        return nullptr;
-    });
+    client_new->visit([&](const mongoc_uri_t*) { called = true; });
 
     client b{std::move(a)};
     REQUIRE(!called);
@@ -121,9 +128,7 @@ TEST_CASE("A client has a settable Read Concern", "[client]") {
             client_set_rc_called = true;
         });
 
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-    mongo_client.read_concern(rc);
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+    mongo_client.read_concern_deprecated(rc);
     REQUIRE(client_set_rc_called);
 }
 
@@ -151,9 +156,7 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
     client_get_preference->interpose([&](const mongoc_client_t*) { return saved_preference.get(); })
         .forever();
 
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-    mongo_client.read_preference(std::move(preference));
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+    mongo_client.read_preference_deprecated(std::move(preference));
     REQUIRE(called_set);
 
     REQUIRE(read_preference::read_mode::k_secondary_preferred ==
@@ -183,9 +186,7 @@ TEST_CASE("A client's write concern may be set and obtained", "[client]") {
         return underlying_wc;
     });
 
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-    mongo_client.write_concern(concern);
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+    mongo_client.write_concern_deprecated(concern);
     REQUIRE(set_called);
 
     MOCK_CONCERN
@@ -246,7 +247,7 @@ TEST_CASE("integration tests for client metadata handshake feature") {
             auto op_view = it.get_document().view();
 
             if (!op_view["appName"] ||
-                op_view["appName"].get_utf8().value != stdx::string_view{app_name}) {
+                op_view["appName"].get_utf8().value != stdx::string_view(app_name)) {
                 continue;
             }
 
@@ -262,14 +263,14 @@ TEST_CASE("integration tests for client metadata handshake feature") {
 
                 REQUIRE(metadata_view["application"]);
                 auto application = metadata_view["application"].get_document();
-                REQUIRE(application.view()["name"].get_utf8().value == stdx::string_view{app_name});
+                REQUIRE(application.view()["name"].get_utf8().value == stdx::string_view(app_name));
 
                 REQUIRE(metadata_view["driver"]);
                 auto driver = metadata_view["driver"].get_document();
                 auto driver_view = driver.view();
                 REQUIRE(driver_view["name"].get_utf8().value ==
                         stdx::string_view{"mongoc / mongocxx"});
-                auto version = driver_view["version"].get_utf8().value.to_string();
+                auto version = bsoncxx::string::to_string(driver_view["version"].get_utf8().value);
                 REQUIRE(version.find(MONGOCXX_VERSION_STRING) != std::string::npos);
 
                 REQUIRE(metadata_view["os"]);
@@ -288,7 +289,8 @@ TEST_CASE("integration tests for client metadata handshake feature") {
 
     SECTION("with pool") {
         mongocxx::pool pool{uri};
-        run_test(*pool.acquire());
+        auto client = pool.acquire();
+        run_test(*client);
     }
 }
 }  // namespace

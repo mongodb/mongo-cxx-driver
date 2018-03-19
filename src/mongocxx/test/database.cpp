@@ -17,7 +17,7 @@
 #include <set>
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
@@ -42,7 +42,15 @@ using bsoncxx::builder::basic::make_document;
 
 bool check_for_collections(cursor cursor, std::set<std::string> expected_colls) {
     for (auto&& coll : cursor) {
-        auto iter = expected_colls.find(coll["name"].get_utf8().value.to_string());
+        // Skip system collections which the MMAPv1 storage engine returns,
+        // while WiredTiger does not.
+        auto name_string = bsoncxx::string::to_string(coll["name"].get_utf8().value);
+        auto pos = name_string.find("system.");
+        if (pos != std::string::npos && pos == 0) {
+            continue;
+        }
+
+        auto iter = expected_colls.find(name_string);
         if (iter == expected_colls.end()) {
             return false;
         }
@@ -385,9 +393,7 @@ TEST_CASE("Database integration tests", "[database]") {
             options::modify_collection opts;
             opts.index(key_pattern.view(), std::chrono::seconds{2});
 
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-            database.modify_collection(collection_name, opts);
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+            database.modify_collection_deprecated(collection_name, opts);
 
             auto cursor = database[collection_name].list_indexes();
             for (auto&& index : cursor) {
@@ -418,9 +424,7 @@ TEST_CASE("Database integration tests", "[database]") {
 
             if (test_util::get_max_wire_version(mongo_client) >= 4) {
                 // The server supports document validation.
-                BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-                REQUIRE_NOTHROW(database.modify_collection(collection_name, opts));
-                BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+                REQUIRE_NOTHROW(database.modify_collection_deprecated(collection_name, opts));
 
                 auto cursor = database.list_collections();
                 for (auto&& coll : cursor) {
@@ -430,10 +434,8 @@ TEST_CASE("Database integration tests", "[database]") {
                 }
             } else {
                 // The server does not support document validation.
-                BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-                REQUIRE_THROWS_AS(database.modify_collection(collection_name, opts),
+                REQUIRE_THROWS_AS(database.modify_collection_deprecated(collection_name, opts),
                                   operation_exception);
-                BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
             }
         }
     }
@@ -456,9 +458,7 @@ TEST_CASE("Database integration tests", "[database]") {
 
         read_concern rc{};
         rc.acknowledge_level(majority);
-        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-        mongo_client.read_concern(rc);
-        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
+        mongo_client.read_concern_deprecated(rc);
 
         mongocxx::database rc_db = mongo_client[database_name];
 

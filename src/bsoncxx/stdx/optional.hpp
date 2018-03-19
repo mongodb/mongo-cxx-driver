@@ -72,6 +72,22 @@ using ::std::experimental::make_optional;
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
+#elif defined(BSONCXX_POLY_USE_STD)
+
+#include <optional>
+
+namespace bsoncxx {
+BSONCXX_INLINE_NAMESPACE_BEGIN
+namespace stdx {
+
+using ::std::optional;
+using ::std::nullopt;
+using ::std::make_optional;
+
+}  // namespace stdx
+BSONCXX_INLINE_NAMESPACE_END
+}  // namespace bsoncxx
+
 #else
 #error "Cannot find a valid polyfill for optional"
 #endif

@@ -50,11 +50,8 @@ value& value::operator=(const value& rhs) {
 }
 
 value::unique_ptr_type value::release() {
-    auto x = std::move(_data);
-
-    _data.release();
-
-    return x;
+    _length = 0;
+    return std::move(_data);
 }
 
 }  // namespace array
