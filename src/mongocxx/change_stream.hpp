@@ -50,7 +50,13 @@ class MONGOCXX_API change_stream {
     ///
     /// @exception
     ///   Throws mongocxx::query_exception if the query failed.
-    ///
+
+    /// \return
+    // just wrap change_stream_t
+    // collection watch in c driver isn't lazy - should this be lazy?
+    // either this can be lazy or that can be deferred to operator*()
+    // maybe look at what Patrick had
+    // undefined if more than one iterator out at a given time
     iterator begin();
 
     ///
@@ -69,15 +75,19 @@ class MONGOCXX_API change_stream {
                                    const pipeline& pipe,
                                    const options::change_stream& options = {});
 
+    // maintain PiMPL
     class MONGOCXX_PRIVATE impl;
 
     MONGOCXX_PRIVATE impl& _get_impl();
     MONGOCXX_PRIVATE const impl& _get_impl() const;
 
     std::unique_ptr<impl> _impl;
+
+    // impl has a mongoc_change_stream_t field
 };
 
 class MONGOCXX_API change_stream::iterator
+// does input_iterator_tag indicate mean that we can't do std::distance(being(), end())
     : public std::iterator<std::input_iterator_tag, bsoncxx::document::view> {
    public:
     ///
@@ -122,6 +132,10 @@ class MONGOCXX_API change_stream::iterator
     /// @}
     ///
 
+    // why do we have to declare private methods in headers?
+    // maybe not necessary..probably delete it
+    // whenever iterator returns null, have a return value indicating we're at end
+    // when c driver returns null we're done
     MONGOCXX_PRIVATE bool is_exhausted() const;
 
     MONGOCXX_PRIVATE explicit iterator(change_stream* change_stream);
