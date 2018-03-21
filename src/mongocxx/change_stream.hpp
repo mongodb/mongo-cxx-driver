@@ -51,7 +51,6 @@ class MONGOCXX_API change_stream {
     /// @exception
     ///   Throws mongocxx::query_exception if the query failed.
 
-    /// \return
     // just wrap change_stream_t
     // collection watch in c driver isn't lazy - should this be lazy?
     // either this can be lazy or that can be deferred to operator*()
