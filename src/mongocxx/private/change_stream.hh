@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2014 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,11 +14,10 @@
 
 #pragma once
 
-#include <list>
-
-#include <mongocxx/client.hpp>
+#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/change_stream.hpp>
 #include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/private/write_concern.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -27,15 +26,60 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class change_stream::impl {
    public:
-    impl(mongoc_change_stream_t* change_stream) : change_stream_t(change_stream) {}
+    // States represent a one-way, ordered lifecycle of a change_stream. k_started means that
+    // libmongoc::change_stream_next has been called at least once.  However, for a tailable
+    // change_stream, the change_stream resets to k_pending on exhaustion so that it can resume later.
+    enum class state { k_pending = 0, k_started = 1, k_dead = 2 };
+
+    impl(mongoc_change_stream_t* change_stream, bsoncxx::stdx::optional<change_stream::type> change_stream_type)
+        : change_stream_t(change_stream),
+          status{change_stream ? state::k_pending : state::k_dead},
+          exhausted(!change_stream),
+          tailable{change_stream && change_stream_type && (*change_stream_type == change_stream::type::k_tailable ||
+                                             *change_stream_type == change_stream::type::k_tailable_await)} {}
 
     ~impl() {
         libmongoc::change_stream_destroy(change_stream_t);
     }
 
+    bool has_started() const {
+        return status >= state::k_started;
+    }
+
+    bool is_dead() const {
+        return status == state::k_dead;
+    }
+
+    bool is_exhausted() const {
+        return exhausted;
+    }
+
+    bool is_tailable() const {
+        return tailable;
+    }
+
+    void mark_dead() {
+        mark_nothing_left();
+        status = state::k_dead;
+    }
+
+    void mark_nothing_left() {
+        doc = bsoncxx::document::view{};
+        exhausted = true;
+        // change streams always tailable
+        status = tailable ? state::k_pending : state::k_dead;
+    }
+
+    void mark_started() {
+        status = state::k_started;
+        exhausted = false;
+    }
+
     mongoc_change_stream_t* change_stream_t;
     bsoncxx::document::view doc;
+    state status;
     bool exhausted;
+    bool tailable;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

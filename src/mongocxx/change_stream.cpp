@@ -32,8 +32,8 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-change_stream::change_stream(void* change_stream_ptr)
-    : _impl(stdx::make_unique<impl>(static_cast<mongoc_change_stream_t*>(change_stream_ptr)) {}
+change_stream::change_stream(void* change_stream_ptr, bsoncxx::stdx::optional<change_stream::type> change_stream_type)
+    : _impl(stdx::make_unique<impl>(static_cast<mongoc_change_stream_t*>(change_stream_ptr), change_stream_type)) {}
 
 change_stream::change_stream(change_stream&&) noexcept = default;
 change_stream& change_stream::operator=(change_stream&&) noexcept = default;
@@ -46,11 +46,11 @@ void change_stream::iterator::operator++(int) {
 
 change_stream::iterator& change_stream::iterator::operator++() {
     const bson_t* out;
-    bson_error_t error{};
+    bson_error_t error;
 
     if (libmongoc::change_stream_next(_change_stream->_impl->change_stream_t, &out)) {
         _change_stream->_impl->doc = bsoncxx::document::view{bson_get_data(out), out->len};
-    } else if (libmongoc::change_stream_error_document(_change_stream->_impl->change_stream_t, &error, &out)) {
+    } else if (libmongoc::change_stream_error_document(_change_stream->_impl->change_stream_t, &error)) {
         _change_stream->_impl->mark_dead();
         throw_exception<query_exception>(error);
     } else {
@@ -101,8 +101,7 @@ const bsoncxx::document::view* change_stream::iterator::operator->() const {
 // common check is `iter != change_stream.end()`.
 //
 bool MONGOCXX_CALL operator==(const change_stream::iterator& lhs, const change_stream::iterator& rhs) {
-    return ((rhs.is_exhausted() && lhs.is_exhausted()) ||
-            (lhs._change_stream == rhs._change_stream));
+    return ((rhs.is_exhausted() && lhs.is_exhausted()) || (lhs._change_stream == rhs._change_stream));
 }
 
 bool MONGOCXX_CALL operator!=(const change_stream::iterator& lhs, const change_stream::iterator& rhs) {
