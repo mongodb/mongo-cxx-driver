@@ -66,6 +66,7 @@ class cursor::impl {
     void mark_nothing_left() {
         doc = bsoncxx::document::view{};
         exhausted = true;
+        // change streams always tailable
         status = tailable ? state::k_pending : state::k_dead;
     }
 

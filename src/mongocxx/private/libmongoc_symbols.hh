@@ -78,7 +78,9 @@ MONGOCXX_LIBMONGOC_SYMBOL(cursor_destroy)
 MONGOCXX_LIBMONGOC_SYMBOL(cursor_error)
 MONGOCXX_LIBMONGOC_SYMBOL(cursor_new_from_command_reply)
 MONGOCXX_LIBMONGOC_SYMBOL(cursor_next)
-MONGOCXX_LIBMONGOC_SYMBOL(cursor_set_max_await_time_ms)
+// TODO: add c driver stream symbols here - this also generates mocks for testing
+// tests need to connect to a replset - do existing tests connect to replset
+    MONGOCXX_LIBMONGOC_SYMBOL(cursor_set_max_await_time_ms)
 MONGOCXX_LIBMONGOC_SYMBOL(database_command)
 MONGOCXX_LIBMONGOC_SYMBOL(database_command_simple)
 MONGOCXX_LIBMONGOC_SYMBOL(database_copy)
