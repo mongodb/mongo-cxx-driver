@@ -31,12 +31,10 @@ class change_stream::impl {
     // change_stream, the change_stream resets to k_pending on exhaustion so that it can resume later.
     enum class state { k_pending = 0, k_started = 1, k_dead = 2 };
 
-    impl(mongoc_change_stream_t* change_stream, bsoncxx::stdx::optional<change_stream::type> change_stream_type)
+    impl(mongoc_change_stream_t* change_stream)
         : change_stream_t(change_stream),
           status{change_stream ? state::k_pending : state::k_dead},
-          exhausted(!change_stream),
-          tailable{change_stream && change_stream_type && (*change_stream_type == change_stream::type::k_tailable ||
-                                             *change_stream_type == change_stream::type::k_tailable_await)} {}
+          exhausted(!change_stream) {}
 
     ~impl() {
         libmongoc::change_stream_destroy(change_stream_t);
@@ -54,10 +52,6 @@ class change_stream::impl {
         return exhausted;
     }
 
-    bool is_tailable() const {
-        return tailable;
-    }
-
     void mark_dead() {
         mark_nothing_left();
         status = state::k_dead;
@@ -66,8 +60,7 @@ class change_stream::impl {
     void mark_nothing_left() {
         doc = bsoncxx::document::view{};
         exhausted = true;
-        // change streams always tailable
-        status = tailable ? state::k_pending : state::k_dead;
+        status = state::k_pending;
     }
 
     void mark_started() {
@@ -79,7 +72,6 @@ class change_stream::impl {
     bsoncxx::document::view doc;
     state status;
     bool exhausted;
-    bool tailable;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

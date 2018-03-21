@@ -35,8 +35,6 @@ class collection;
 ///
 class MONGOCXX_API change_stream {
    public:
-    enum class type { k_non_tailable, k_tailable, k_tailable_await };
-
     class MONGOCXX_API iterator;
 
     ///
@@ -86,8 +84,7 @@ class MONGOCXX_API change_stream {
     friend class change_stream;
     friend class change_stream::iterator;
 
-    MONGOCXX_PRIVATE change_stream(void* change_stream_ptr,
-                            bsoncxx::stdx::optional<type> change_stream_type = bsoncxx::stdx::nullopt);
+    MONGOCXX_PRIVATE change_stream(void* change_stream_ptr);
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
