@@ -69,8 +69,6 @@ class MONGOCXX_API change_stream {
     iterator end();
 
    private:
-    friend collection;
-
     MONGOCXX_PRIVATE change_stream(const collection& coll,
                                    const pipeline& pipe,
                                    const options::change_stream& options = {});
