@@ -84,7 +84,7 @@ class MONGOCXX_API change_stream {
 };
 
 class MONGOCXX_API change_stream::iterator
-// does input_iterator_tag indicate mean that we can't do std::distance(being(), end())
+    // does input_iterator_tag indicate mean that we can't do std::distance(being(), end())
     : public std::iterator<std::input_iterator_tag, bsoncxx::document::view> {
    public:
     ///

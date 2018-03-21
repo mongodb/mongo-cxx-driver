@@ -36,7 +36,8 @@ class MONGOCXX_API change_stream {
     /// The allowed values are: ‘default’, ‘updateLookup’.
     /// If none set, defaults to ‘default’.
     ///
-    /// When set to ‘updateLookup’, the change stream will include both a delta describing the changes to
+    /// When set to ‘updateLookup’, the change stream will include both a delta describing the
+    /// changes to
     /// the document, as well as a copy of the entire document that was changed from some time after
     /// the change occurred. This will be stored in the "fullDocument" field of the notification.
     ///

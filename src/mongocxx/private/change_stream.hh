@@ -26,16 +26,16 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class change_stream::impl {
-    public:
-        impl(mongoc_change_stream_t* change_stream) : change_stream_t(change_stream) {}
+   public:
+    impl(mongoc_change_stream_t* change_stream) : change_stream_t(change_stream) {}
 
-        ~impl() {
-            libmongoc::change_stream_destroy(change_stream_t);
-        }
+    ~impl() {
+        libmongoc::change_stream_destroy(change_stream_t);
+    }
 
-        mongoc_change_stream_t* change_stream_t;
-        bsoncxx::document::view doc;
-        bool exhausted;
+    mongoc_change_stream_t* change_stream_t;
+    bsoncxx::document::view doc;
+    bool exhausted;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
