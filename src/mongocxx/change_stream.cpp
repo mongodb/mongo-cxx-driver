@@ -48,15 +48,17 @@ change_stream::iterator& change_stream::iterator::operator++() {
     const bson_t* out;
     bson_error_t error{};
 
-    if (libmongoc::change_stream_next(_change_stream->_impl->change_stream_t, &out)) {
-        _change_stream->_impl->doc = bsoncxx::document::view{bson_get_data(out), out->len};
-    } else if (libmongoc::change_stream_error_document(_change_stream->_impl->change_stream_t, &error, &out)) {
-        // TODO: do we care about modifying out in error scenarios?
-        _change_stream->_impl->mark_dead();
-        throw_exception<query_exception>(error);
-    } else {
-        _change_stream->_impl->mark_nothing_left();
-    }
+    const _bson_t** sent = &out;
+
+//    if (libmongoc::change_stream_next(_change_stream->_impl->change_stream_t, sent)) {
+//        _change_stream->_impl->doc = bsoncxx::document::view{bson_get_data(out), out->len};
+//    } else if (libmongoc::change_stream_error_document(_change_stream->_impl->change_stream_t, &error, &out)) {
+//        // TODO: do we care about modifying out in error scenarios?
+//        _change_stream->_impl->mark_dead();
+//        throw_exception<query_exception>(error);
+//    } else {
+//        _change_stream->_impl->mark_nothing_left();
+//    }
     return *this;
 }
 

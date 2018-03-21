@@ -34,6 +34,7 @@
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
+#include <iostream>
 
 namespace {
 

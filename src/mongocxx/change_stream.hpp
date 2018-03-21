@@ -81,7 +81,6 @@ class MONGOCXX_API change_stream {
     friend class client;
     friend class database;
     friend class index_view;
-    friend class change_stream;
     friend class change_stream::iterator;
 
     MONGOCXX_PRIVATE change_stream(void* change_stream_ptr);
@@ -136,6 +135,7 @@ class MONGOCXX_API change_stream::iterator
     void operator++(int);
 
    private:
+    friend class change_stream;
 
     ///
     /// @{
