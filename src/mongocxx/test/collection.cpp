@@ -158,6 +158,24 @@ TEST_CASE("collection dropping") {
     REQUIRE_NOTHROW(coll.drop());
 }
 
+
+//    template<typename T>
+//    class TD;
+
+    // TODO: remove just sandbox-testing
+    TEST_CASE("Change Streams") {
+        instance::current();
+
+        client mongodb_client{uri{}};
+        database db = mongodb_client["streams"];
+        collection events = db["events"];
+
+        change_stream stream = events.watch();
+        for(auto&& event : stream) {
+            std::cout << bsoncxx::to_json(event) << std::endl;
+        }
+    }
+
 TEST_CASE("CRUD functionality", "[driver::collection]") {
     instance::current();
 
