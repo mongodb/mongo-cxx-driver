@@ -109,6 +109,9 @@ class MONGOCXX_API session {
 
     // "class client" distinguishes from client() method above.
     MONGOCXX_PRIVATE session(const class client* client, const options::session& options);
+
+    class MONGOCXX_PRIVATE impl;
+    std::unique_ptr<impl> _impl;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

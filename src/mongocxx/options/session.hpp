@@ -63,6 +63,9 @@ class MONGOCXX_API session {
     /// @relates session
     ///
     friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const session&, const session&);
+
+   private:
+    bool _causal_consistency = true;
 };
 
 ///

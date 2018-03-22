@@ -18,6 +18,17 @@
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
-namespace options {}  // namespace options
+namespace options {
+
+session& session::causal_consistency(bool causal_consistency) noexcept {
+    _causal_consistency = causal_consistency;
+    return *this;
+}
+
+bool session::causal_consistency() const noexcept {
+    return _causal_consistency;
+}
+
+}  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

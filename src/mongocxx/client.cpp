@@ -24,6 +24,7 @@
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
+#include <mongocxx/private/session.hh>
 #include <mongocxx/private/uri.hh>
 #include <mongocxx/private/write_concern.hh>
 
@@ -124,6 +125,10 @@ class database client::database(bsoncxx::string::view_or_value name) const& {
 
 cursor client::list_databases() const {
     return libmongoc::client_find_databases_with_opts(_get_impl().client_t, nullptr);
+}
+
+class session client::start_session(const mongocxx::options::session& options) {
+    return session(this, options);
 }
 
 const client::impl& client::_get_impl() const {

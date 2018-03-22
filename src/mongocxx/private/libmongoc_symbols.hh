@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2014-present MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,9 +42,13 @@ MONGOCXX_LIBMONGOC_SYMBOL(client_pool_new)
 MONGOCXX_LIBMONGOC_SYMBOL(client_pool_pop)
 MONGOCXX_LIBMONGOC_SYMBOL(client_pool_push)
 MONGOCXX_LIBMONGOC_SYMBOL(client_pool_try_pop)
+MONGOCXX_LIBMONGOC_SYMBOL(client_session_destroy)
+MONGOCXX_LIBMONGOC_SYMBOL(client_session_get_lsid)
+MONGOCXX_LIBMONGOC_SYMBOL(client_session_get_opts)
 MONGOCXX_LIBMONGOC_SYMBOL(client_set_read_concern)
 MONGOCXX_LIBMONGOC_SYMBOL(client_set_read_prefs)
 MONGOCXX_LIBMONGOC_SYMBOL(client_set_write_concern)
+MONGOCXX_LIBMONGOC_SYMBOL(client_start_session)
 MONGOCXX_LIBMONGOC_SYMBOL(collection_aggregate)
 MONGOCXX_LIBMONGOC_SYMBOL(collection_command_simple)
 MONGOCXX_LIBMONGOC_SYMBOL(collection_copy)
@@ -120,6 +124,10 @@ MONGOCXX_LIBMONGOC_SYMBOL(read_prefs_new)
 MONGOCXX_LIBMONGOC_SYMBOL(read_prefs_set_max_staleness_seconds)
 MONGOCXX_LIBMONGOC_SYMBOL(read_prefs_set_mode)
 MONGOCXX_LIBMONGOC_SYMBOL(read_prefs_set_tags)
+MONGOCXX_LIBMONGOC_SYMBOL(session_opts_destroy)
+MONGOCXX_LIBMONGOC_SYMBOL(session_opts_get_causal_consistency)
+MONGOCXX_LIBMONGOC_SYMBOL(session_opts_new)
+MONGOCXX_LIBMONGOC_SYMBOL(session_opts_set_causal_consistency)
 MONGOCXX_LIBMONGOC_SYMBOL(uri_copy)
 MONGOCXX_LIBMONGOC_SYMBOL(uri_destroy)
 MONGOCXX_LIBMONGOC_SYMBOL(uri_get_auth_mechanism)

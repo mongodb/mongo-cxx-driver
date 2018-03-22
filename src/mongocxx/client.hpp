@@ -238,6 +238,7 @@ class MONGOCXX_API client {
     friend class collection;
     friend class database;
     friend class pool;
+    friend class session;
 
     MONGOCXX_PRIVATE explicit client(void* implementation);
 

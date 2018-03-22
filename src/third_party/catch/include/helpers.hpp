@@ -62,7 +62,8 @@
     client_set_concern->interpose([](mongoc_client_t*, const mongoc_write_concern_t*) {})       \
         .forever();                                                                             \
     auto client_get_concern = libmongoc::client_get_write_concern.create_instance();            \
-    client_get_concern->interpose([](const mongoc_client_t*) { return nullptr; }).forever();
+    client_get_concern->interpose([](const mongoc_client_t*) { return nullptr; }).forever();    \
+    auto client_start_session = libmongoc::client_start_session.create_instance();
 
 #define MOCK_DATABASE                                                                            \
     auto get_database = libmongoc::client_get_database.create_instance();                        \
