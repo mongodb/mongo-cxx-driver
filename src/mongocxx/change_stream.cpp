@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2018-present MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+// TODO: why use a void* here?
 change_stream::change_stream(void* change_stream_ptr)
     : _impl(stdx::make_unique<impl>(static_cast<mongoc_change_stream_t*>(change_stream_ptr))) {}
 
@@ -48,21 +49,17 @@ change_stream::iterator& change_stream::iterator::operator++() {
     const bson_t* out;
     bson_error_t error{};
 
-    const _bson_t** sent = &out;
+    // TODO: why does change_stream_next ask for a bson_t** instead of just a bson_t* ?
+    const bson_t** sent = &out;
 
     if (libmongoc::change_stream_next(_change_stream->_impl->change_stream_t, sent)) {
         _change_stream->_impl->doc = bsoncxx::document::view{bson_get_data(out), out->len};
-        std::cout << "Got next" << std::endl;
-        std::cout.flush();
     } else if (libmongoc::change_stream_error_document(_change_stream->_impl->change_stream_t, &error, &out)) {
+        // TODO: better error-handling?
         // TODO: do we care about modifying out in error scenarios?
         _change_stream->_impl->mark_dead();
-        std::cout << "Got error" << std::endl;
-        std::cout.flush();
         throw_exception<query_exception>(error);
     } else {
-        std::cout << "Got nothing left" << std::endl;
-        std::cout.flush();
         _change_stream->_impl->mark_nothing_left();
     }
     return *this;
@@ -72,7 +69,6 @@ change_stream::iterator change_stream::begin() {
     if (_impl->is_dead()) {
         return end();
     }
-    std::cout << "begin()" << std::endl;
     return iterator(this);
 }
 
@@ -85,9 +81,7 @@ change_stream::iterator::iterator(change_stream* change_stream) : _change_stream
         return;
     }
 
-    std::cout << "change_stream::iterator::iterator() before mark_started" << std::endl;
     _change_stream->_impl->mark_started();
-    std::cout << "after mark_started()" << std::endl;
     operator++();
 }
 

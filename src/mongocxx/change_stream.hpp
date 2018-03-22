@@ -26,13 +26,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class collection;
 
-///
-/// Class representing a pointer to the result set of a query on a MongoDB server.
-///
-/// Clients can iterate through a change_stream::iterator to retrieve results.
-///
-/// @note By default, change_streams timeout after 10 minutes of inactivity.
-///
+/// TODO: doc
 class MONGOCXX_API change_stream {
    public:
     class MONGOCXX_API iterator;
@@ -52,35 +46,14 @@ class MONGOCXX_API change_stream {
     ///
     ~change_stream();
 
-    ///
-    /// A change_stream::iterator that points to the beginning of any available
-    /// results.  If begin() is called more than once, the change_stream::iterator
-    /// returned points to the next remaining result, not the result of
-    /// the original call to begin().
-    ///
-    /// For a tailable change_stream, when change_stream.begin() == change_stream.end(), no
-    /// documents are available.  Each call to change_stream.begin() checks again
-    /// for newly-available documents.
-    ///
-    /// @return the change_stream::iterator
-    ///
-    /// @throws mongocxx::query_exception if the query failed
-    ///
+    /// TODO: doc
     iterator begin();
 
-    ///
-    /// A change_stream::iterator indicating change_stream exhaustion, meaning that
-    /// no documents are available from the change_stream.
-    ///
-    /// @return the change_stream::iterator
-    ///
+    /// TODO: doc
     iterator end();
 
    private:
     friend class collection;
-    friend class client;
-    friend class database;
-    friend class index_view;
     friend class change_stream::iterator;
 
     MONGOCXX_PRIVATE change_stream(void* change_stream_ptr);
@@ -89,24 +62,7 @@ class MONGOCXX_API change_stream {
     std::unique_ptr<impl> _impl;
 };
 
-///
-/// Class representing an input iterator of documents in a MongoDB change_stream
-/// result set.
-///
-/// All non-end iterators derived from the same mongocxx::change_stream move in
-/// lock-step.  Dereferencing any non-end() iterator always gives the first
-/// remaining document in the change_stream.  Incrementing one non-end iterator is
-/// equivalent to incrementing them all.
-///
-/// An iterator is 'exhausted' when no documents are available. An
-/// end-iterator is always exhausted. A non-end iterator is exhausted when the
-/// originating mongocxx::change_stream has no more documents.  When an iterator is
-/// exhausted, it must not be dereferenced or incremented.
-///
-/// For iterators of a tailable change_stream, calling change_stream.begin() may revive an
-/// exhausted iterator so that it no longer compares equal to the
-/// end-iterator.
-///
+/// TODO: doc
 class MONGOCXX_API change_stream::iterator
     : public std::iterator<std::input_iterator_tag, bsoncxx::document::view> {
    public:
@@ -155,6 +111,7 @@ class MONGOCXX_API change_stream::iterator
 
     MONGOCXX_PRIVATE explicit iterator(change_stream* change_stream);
 
+    // TODO: do we need this?
     // If this pointer is null, the iterator is considered "past-the-end".
     change_stream* _change_stream;
 };

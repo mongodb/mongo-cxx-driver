@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2018-present MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,17 +26,21 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class change_stream::impl {
    public:
-    // States represent a one-way, ordered lifecycle of a change_stream. k_started means that
-    // libmongoc::change_stream_next has been called at least once.  However, for a tailable
-    // change_stream, the change_stream resets to k_pending on exhaustion so that it can resume later.
+    // lifecycle of the cursor
+    // k_started means that libmongoc::change_stream_next has been called at least once.
+    // k_pending means it hasn't
+    // k_dead means that an error was indicated by a call to next
+    // TODO: how to handle error cases?
     enum class state { k_pending = 0, k_started = 1, k_dead = 2 };
 
+    // TODO: should we support change_stream being null? not sure what that would indicate
     impl(mongoc_change_stream_t* change_stream)
         : change_stream_t(change_stream),
           status{change_stream ? state::k_pending : state::k_dead},
           exhausted(!change_stream) {}
 
     ~impl() {
+        // TODO: do we leak this->doc here?
         libmongoc::change_stream_destroy(change_stream_t);
     }
 

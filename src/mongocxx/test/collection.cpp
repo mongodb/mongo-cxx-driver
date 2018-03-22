@@ -159,25 +159,32 @@ TEST_CASE("collection dropping") {
 }
 
 
-//    template<typename T>
-//    class TD;
-
-    // TODO: remove just sandbox-testing
+    // TODO: move to different file (?)
+    // this is just sandbox/exploratory-testing for now
+    /*
+     * Test-cases:
+     *      mal-formed pipeline
+     *      no pipeline
+     *      copy-construct
+     *      move-construct
+     *      no more data
+     *      error response
+     *      multiple calls to begin()
+     *      .end() == .end()
+     *      call .begin() to resume
+     */
     TEST_CASE("Change Streams") {
         instance::current();
 
-        std::cout << "have instance" << std::endl;
         client mongodb_client{uri{}};
         database db = mongodb_client["streams"];
         collection events = db["events"];
 
-        std::cout << "before events.watch()" << std::endl;
-        std::cout.flush();
         change_stream stream = events.watch(pipeline{}, options::change_stream{});
-        std::cout.flush();
-        std::cout << "after events.watch()" << std::endl;
-        std::cout.flush();
+
+        // just a single doc for now
         auto it = stream.begin();
+
         std::cout << "after stream.begin()" << std::endl;
         std::cout << bsoncxx::to_json(*it) << std::endl;
 

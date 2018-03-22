@@ -939,14 +939,13 @@ class write_concern collection::write_concern() const {
     return wc;
 }
 
-    template<typename T>
-    class TD; // no impl
-
+// TODO: other overload method
 class change_stream collection::watch(const pipeline& pipe, const options::change_stream &options) {
+    // TODO: construct bson_t from options::change_steram
+    // TODO: is scoped_bson_t correct here? I'm not sure of who should own all these things
+    scoped_bson_t bson_options {make_document(kvp("maxAwaitTimeMS", bsoncxx::types::b_int64{50000})).view()};
 
-    auto fake_opts = make_document(kvp("maxAwaitTimeMS", bsoncxx::types::b_int64{50000}));
     // TODO: how to call `operator document::view()` on the pipe.view()?
-    scoped_bson_t bson_options {fake_opts.view()};
     scoped_bson_t pipeline_bson {pipe.view()};
 
     change_stream out {libmongoc::collection_watch(
