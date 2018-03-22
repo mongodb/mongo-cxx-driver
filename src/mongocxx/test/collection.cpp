@@ -166,14 +166,25 @@ TEST_CASE("collection dropping") {
     TEST_CASE("Change Streams") {
         instance::current();
 
+        std::cout << "have instance" << std::endl;
         client mongodb_client{uri{}};
         database db = mongodb_client["streams"];
         collection events = db["events"];
 
-        change_stream stream = events.watch();
-        for(auto&& event : stream) {
-            std::cout << bsoncxx::to_json(event) << std::endl;
-        }
+        std::cout << "before events.watch()" << std::endl;
+        std::cout.flush();
+        change_stream stream = events.watch(pipeline{}, options::change_stream{});
+        std::cout.flush();
+        std::cout << "after events.watch()" << std::endl;
+        std::cout.flush();
+        auto it = stream.begin();
+        std::cout << "after stream.begin()" << std::endl;
+        std::cout << bsoncxx::to_json(*it) << std::endl;
+
+//        for(auto it = stream.begin(); it != stream.end(); ++it) {
+//            std::cout << bsoncxx::to_json(*it) << std::endl;
+//        }
+        REQUIRE(events);
     }
 
 TEST_CASE("CRUD functionality", "[driver::collection]") {

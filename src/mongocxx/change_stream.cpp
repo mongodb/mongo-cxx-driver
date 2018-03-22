@@ -50,15 +50,21 @@ change_stream::iterator& change_stream::iterator::operator++() {
 
     const _bson_t** sent = &out;
 
-//    if (libmongoc::change_stream_next(_change_stream->_impl->change_stream_t, sent)) {
-//        _change_stream->_impl->doc = bsoncxx::document::view{bson_get_data(out), out->len};
-//    } else if (libmongoc::change_stream_error_document(_change_stream->_impl->change_stream_t, &error, &out)) {
-//        // TODO: do we care about modifying out in error scenarios?
-//        _change_stream->_impl->mark_dead();
-//        throw_exception<query_exception>(error);
-//    } else {
-//        _change_stream->_impl->mark_nothing_left();
-//    }
+    if (libmongoc::change_stream_next(_change_stream->_impl->change_stream_t, sent)) {
+        _change_stream->_impl->doc = bsoncxx::document::view{bson_get_data(out), out->len};
+        std::cout << "Got next" << std::endl;
+        std::cout.flush();
+    } else if (libmongoc::change_stream_error_document(_change_stream->_impl->change_stream_t, &error, &out)) {
+        // TODO: do we care about modifying out in error scenarios?
+        _change_stream->_impl->mark_dead();
+        std::cout << "Got error" << std::endl;
+        std::cout.flush();
+        throw_exception<query_exception>(error);
+    } else {
+        std::cout << "Got nothing left" << std::endl;
+        std::cout.flush();
+        _change_stream->_impl->mark_nothing_left();
+    }
     return *this;
 }
 
@@ -66,6 +72,7 @@ change_stream::iterator change_stream::begin() {
     if (_impl->is_dead()) {
         return end();
     }
+    std::cout << "begin()" << std::endl;
     return iterator(this);
 }
 
@@ -78,7 +85,9 @@ change_stream::iterator::iterator(change_stream* change_stream) : _change_stream
         return;
     }
 
+    std::cout << "change_stream::iterator::iterator() before mark_started" << std::endl;
     _change_stream->_impl->mark_started();
+    std::cout << "after mark_started()" << std::endl;
     operator++();
 }
 
@@ -87,7 +96,9 @@ change_stream::iterator::iterator(change_stream* change_stream) : _change_stream
 // or if the underlying _change_stream is marked exhausted.
 //
 bool change_stream::iterator::is_exhausted() const {
-    return !_change_stream || _change_stream->_impl->is_exhausted();
+    auto out = !_change_stream || _change_stream->_impl->is_exhausted();
+    std::cout << "is_exhausted: " << out << std::endl;
+    return out;
 }
 
 const bsoncxx::document::view& change_stream::iterator::operator*() const {

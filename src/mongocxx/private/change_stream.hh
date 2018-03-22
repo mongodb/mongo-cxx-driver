@@ -37,7 +37,7 @@ class change_stream::impl {
           exhausted(!change_stream) {}
 
     ~impl() {
-//        libmongoc::change_stream_destroy(change_stream_t);
+        libmongoc::change_stream_destroy(change_stream_t);
     }
 
     bool has_started() const {

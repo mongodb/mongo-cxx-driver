@@ -939,6 +939,25 @@ class write_concern collection::write_concern() const {
     return wc;
 }
 
+    template<typename T>
+    class TD; // no impl
+
+class change_stream collection::watch(const pipeline& pipe, const options::change_stream &options) {
+
+    auto fake_opts = make_document(kvp("maxAwaitTimeMS", bsoncxx::types::b_int64{50000}));
+    // TODO: how to call `operator document::view()` on the pipe.view()?
+    scoped_bson_t bson_options {fake_opts.view()};
+    scoped_bson_t pipeline_bson {pipe.view()};
+
+    change_stream out {libmongoc::collection_watch(
+        _get_impl().collection_t,
+        pipeline_bson.bson(),
+        bson_options.bson()
+    )};
+    std::cout << "Constructed change_stream" << std::endl;
+    return out;
+}
+
 class index_view collection::indexes() {
     return index_view{_get_impl().collection_t};
 }
