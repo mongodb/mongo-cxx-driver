@@ -33,14 +33,12 @@ class change_stream::impl {
     // TODO: how to handle error cases?
     enum class state { k_pending = 0, k_started = 1, k_dead = 2 };
 
-    // TODO: should we support change_stream being null? not sure what that would indicate
     impl(mongoc_change_stream_t* change_stream)
         : change_stream_t(change_stream),
-          status{change_stream ? state::k_pending : state::k_dead},
+          status{state::k_pending},
           exhausted(!change_stream) {}
 
     ~impl() {
-        // TODO: do we leak this->doc here?
         libmongoc::change_stream_destroy(change_stream_t);
     }
 
