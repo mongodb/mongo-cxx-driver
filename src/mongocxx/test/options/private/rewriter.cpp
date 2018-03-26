@@ -283,6 +283,4 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $snapshot", "[find][
     }
 }
 
-BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
-
 }  // namespace
