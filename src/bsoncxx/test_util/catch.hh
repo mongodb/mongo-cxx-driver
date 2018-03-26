@@ -16,19 +16,33 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/stdx/optional.hpp>
+
+#include "catch.hpp"
 
 #include <bsoncxx/config/private/prelude.hh>
 
-// In order to have catch pretty-print documents used in REQUIRE macros, we need to overload
-// Catch::toString for document::view. Due to how overload resolution works, this needs to be done
-// before the inclusion of catch.hpp. To that end, this file should be included in place of
-// catch.hpp.
 namespace Catch {
-inline std::string toString(bsoncxx::document::view document) {
-    return bsoncxx::to_json(document);
-}
+using namespace bsoncxx;
+
+// Catch2 must be able to stringify documents, optionals, etc. if they're used in Catch2 macros.
+template <>
+struct StringMaker<bsoncxx::document::view> {
+    static std::string convert(const bsoncxx::document::view& value) {
+        return bsoncxx::to_json(value, ExtendedJsonMode::k_relaxed);
+    }
+};
+
+template <typename T>
+struct StringMaker<stdx::optional<T>> {
+    static std::string convert(const bsoncxx::stdx::optional<T>& value) {
+        if (value) {
+            return StringMaker::convert(value);
+        }
+
+        return "{nullopt}";
+    }
+};
 }  // namespace Catch
 
 #include <bsoncxx/config/private/postlude.hh>
-
-#include "catch.hpp"

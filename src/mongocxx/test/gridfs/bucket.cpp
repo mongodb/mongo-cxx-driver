@@ -18,7 +18,7 @@
 #include <fstream>
 #include <functional>
 #include <ios>
-#include <istream>
+#include <sstream>
 #include <vector>
 
 #include <bsoncxx/builder/basic/document.hpp>
