@@ -140,7 +140,6 @@ class MONGOCXX_API cursor::iterator
 
    private:
     friend class cursor;
-    friend class change_stream;
 
     ///
     /// @{
