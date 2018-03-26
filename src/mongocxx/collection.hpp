@@ -46,7 +46,6 @@
 #include <mongocxx/options/index_view.hpp>
 #include <mongocxx/options/insert.hpp>
 #include <mongocxx/options/update.hpp>
-#include <mongocxx/pipeline.hpp>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/result/bulk_write.hpp>
@@ -732,7 +731,7 @@ class MONGOCXX_API collection {
     /// @return
     ///  A change stream on this collection.
     // TODO: impl
-    class change_stream watch(const options::change_stream& options = {});
+    change_stream watch(const options::change_stream& options = {});
 
     ///
     /// Gets a change stream on this collection.
@@ -745,7 +744,7 @@ class MONGOCXX_API collection {
     /// @return
     ///  A change stream on this collection.
     ///
-    class change_stream watch(const pipeline& pipe, const options::change_stream& options = {});
+    change_stream watch(const pipeline& pipe, const options::change_stream& options = {});
 
    private:
     friend class bulk_write;
