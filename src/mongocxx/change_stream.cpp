@@ -41,10 +41,6 @@ change_stream& change_stream::operator=(change_stream&&) noexcept = default;
 
 change_stream::~change_stream() = default;
 
-void change_stream::iterator::operator++(int) {
-    operator++();
-}
-
 change_stream::iterator& change_stream::iterator::operator++() {
     const bson_t* out;
     bson_error_t error{};
@@ -95,11 +91,11 @@ bool change_stream::iterator::is_exhausted() const {
     return out;
 }
 
-const bsoncxx::document::view& change_stream::iterator::operator*() const {
+const bsoncxx::document::view& change_stream::iterator::operator*() const noexcept {
     return _change_stream->_impl->doc;
 }
 
-const bsoncxx::document::view* change_stream::iterator::operator->() const {
+const bsoncxx::document::view* change_stream::iterator::operator->() const noexcept {
     return &_change_stream->_impl->doc;
 }
 

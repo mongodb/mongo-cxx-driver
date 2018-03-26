@@ -63,18 +63,17 @@ class MONGOCXX_API change_stream {
 };
 
 /// TODO: doc
-class MONGOCXX_API change_stream::iterator
-    : public std::iterator<std::input_iterator_tag, bsoncxx::document::view> {
+class MONGOCXX_API change_stream::iterator {
    public:
     ///
     /// Dereferences the view for the document currently being pointed to.
     ///
-    const bsoncxx::document::view& operator*() const;
+    const bsoncxx::document::view& operator*() const noexcept;
 
     ///
     /// Accesses a member of the dereferenced document currently being pointed to.
     ///
-    const bsoncxx::document::view* operator->() const;
+    const bsoncxx::document::view* operator->() const noexcept;
 
     ///
     /// Pre-increments the iterator to move to the next document.
@@ -83,15 +82,18 @@ class MONGOCXX_API change_stream::iterator
     ///
     iterator& operator++();
 
-    ///
-    /// Post-increments the iterator to move to the next document.
-    ///
-    /// @throws mongocxx::query_exception if the query failed
-    ///
-    void operator++(int);
+    // TODO: do we need all these? what should be the values?
+    // https://stackoverflow.com/questions/37031805/preparation-for-stditerator-being-deprecated/38103394
+    using difference_type = long;
+    using value_type = bsoncxx::document::view;
+    using pointer = const bsoncxx::document::view*;
+    using reference = const bsoncxx::document::view&;
+    using iterator_category = std::input_iterator_tag;
 
    private:
     friend class change_stream;
+
+    MONGOCXX_PRIVATE explicit iterator(change_stream* change_stream);
 
     ///
     /// @{
@@ -108,8 +110,6 @@ class MONGOCXX_API change_stream::iterator
     ///
 
     MONGOCXX_PRIVATE bool is_exhausted() const;
-
-    MONGOCXX_PRIVATE explicit iterator(change_stream* change_stream);
 
     // TODO: do we need this?
     // If this pointer is null, the iterator is considered "past-the-end".
