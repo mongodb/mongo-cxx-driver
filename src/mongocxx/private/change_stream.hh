@@ -72,6 +72,25 @@ class change_stream::impl {
         exhausted = false;
     }
 
+    void advance_iterator() {
+        bson_error_t error{};
+
+        const bson_t* out;
+        if (libmongoc::change_stream_next(this->change_stream_t, &out)) {
+            this->doc = bsoncxx::document::view{bson_get_data(out), out->len};
+        } else if (libmongoc::change_stream_error_document(this->change_stream_t, &error, &out)) {
+            // TODO: better error-handling?
+            // TODO: do we care about modifying out in error scenarios?
+            this->mark_dead();
+            // TODO: test case of this - that after error we don't hold onto last doc
+            // TODO: test accessing the documenting with operator* and operator-> after an error shouldn't crash.
+            this->doc = bsoncxx::document::view{};
+            throw_exception<query_exception>(error);
+        } else {
+            this->mark_nothing_left();
+        }
+    }
+
     mongoc_change_stream_t* change_stream_t;
     bsoncxx::document::view doc;
     state status;

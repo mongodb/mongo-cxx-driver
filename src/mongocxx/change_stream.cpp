@@ -32,7 +32,7 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-// TODO: why use a void* here?
+// void* since we don't leak C driver defs into C++ driver
 change_stream::change_stream(void* change_stream_ptr)
     : _impl(stdx::make_unique<impl>(static_cast<mongoc_change_stream_t*>(change_stream_ptr))) {}
 
@@ -42,22 +42,7 @@ change_stream& change_stream::operator=(change_stream&&) noexcept = default;
 change_stream::~change_stream() = default;
 
 change_stream::iterator& change_stream::iterator::operator++() {
-    const bson_t* out;
-    bson_error_t error{};
-
-    // TODO: why does change_stream_next ask for a bson_t** instead of just a bson_t* ?
-    const bson_t** sent = &out;
-
-    if (libmongoc::change_stream_next(_change_stream->_impl->change_stream_t, sent)) {
-        _change_stream->_impl->doc = bsoncxx::document::view{bson_get_data(out), out->len};
-    } else if (libmongoc::change_stream_error_document(_change_stream->_impl->change_stream_t, &error, &out)) {
-        // TODO: better error-handling?
-        // TODO: do we care about modifying out in error scenarios?
-        _change_stream->_impl->mark_dead();
-        throw_exception<query_exception>(error);
-    } else {
-        _change_stream->_impl->mark_nothing_left();
-    }
+    _change_stream->_impl->advance_iterator();
     return *this;
 }
 
