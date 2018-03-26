@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
+
+#include "example_assert.hh"
 
 // NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
 // corresponding page on docs.mongodb.com. See CXX-1514, CXX-1249, and DRIVERS-356 for more info.
@@ -29,7 +29,7 @@ void runcommand_examples(mongocxx::database& db) {
         auto buildInfo = db.run_command(make_document(kvp("buildInfo", 1)));
         // End runCommand Example 1
 
-        assert(buildInfo.view()["ok"].get_double() == double{1});
+        MONGOCXX_EXAMPLE_ASSERT(buildInfo.view()["ok"].get_double() == double{1});
     }
 
     {
@@ -43,7 +43,7 @@ void runcommand_examples(mongocxx::database& db) {
         auto buildInfo = db.run_command(make_document(kvp("collStats", "restaurants")));
         // End runCommand Example 1
 
-        assert(buildInfo.view()["ok"].get_double() == double{1});
+        MONGOCXX_EXAMPLE_ASSERT(buildInfo.view()["ok"].get_double() == double{1});
     }
 }
 

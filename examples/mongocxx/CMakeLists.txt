@@ -45,6 +45,7 @@ set(MONGOCXX_EXAMPLES
 foreach(EXAMPLE_SRC ${MONGOCXX_EXAMPLES})
     get_filename_component(EXAMPLE_TARGET ${EXAMPLE_SRC} NAME_WE)
     add_executable(${EXAMPLE_TARGET} ${EXAMPLE_SRC})
+    target_include_directories(${EXAMPLE_TARGET} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
     target_link_libraries(${EXAMPLE_TARGET} mongocxx)
     set(MONGOCXX_EXAMPLE_EXECUTABLES ${MONGOCXX_EXAMPLE_EXECUTABLES} ${EXAMPLE_TARGET})
 endforeach(EXAMPLE_SRC)

@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
 #include <list>
 #include <numeric>
 #include <vector>
@@ -21,6 +20,8 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
+
+#include "example_assert.hh"
 
 // NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
 // corresponding page on docs.mongodb.com. See CXX-1514, CXX-1249, and DRIVERS-356 for more info.
@@ -38,7 +39,7 @@ void aggregation_examples(const mongocxx::database& db) {
         // End Aggregation Example 1
 
         auto count = std::distance(cursor.begin(), cursor.end());
-        assert(count == 0L);
+        MONGOCXX_EXAMPLE_ASSERT(count == 0L);
     }
 
     {
@@ -59,7 +60,7 @@ void aggregation_examples(const mongocxx::database& db) {
         // End Aggregation Example 2
 
         auto count = std::distance(cursor.begin(), cursor.end());
-        assert(count == 0L);
+        MONGOCXX_EXAMPLE_ASSERT(count == 0L);
     }
 
     {
@@ -91,7 +92,7 @@ void aggregation_examples(const mongocxx::database& db) {
         // End Aggregation Example 3
 
         auto count = std::distance(cursor.begin(), cursor.end());
-        assert(count == 0L);
+        MONGOCXX_EXAMPLE_ASSERT(count == 0L);
     }
 
     {
@@ -125,7 +126,7 @@ void aggregation_examples(const mongocxx::database& db) {
         // End Aggregation Example 4
 
         auto count = std::distance(cursor.begin(), cursor.end());
-        assert(count == 0L);
+        MONGOCXX_EXAMPLE_ASSERT(count == 0L);
     }
 }
 

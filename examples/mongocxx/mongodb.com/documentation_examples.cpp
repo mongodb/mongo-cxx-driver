@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
 #include <vector>
 
 #include <bsoncxx/builder/basic/array.hpp>
@@ -25,6 +24,8 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/uri.hpp>
+
+#include "example_assert.hh"
 
 // NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
 // corresponding page on docs.mongodb.com. See CXX-1249 and DRIVERS-356 for more info.
@@ -45,7 +46,7 @@ void insert_examples(mongocxx::database db) {
             kvp("size", make_document(kvp("h", 28), kvp("w", 35.5), kvp("uom", "cm")))));
         // End Example 1
 
-        assert(db["inventory"].count({}) == 1);
+        MONGOCXX_EXAMPLE_ASSERT(db["inventory"].count({}) == 1);
     }
 
     {
@@ -56,7 +57,7 @@ void insert_examples(mongocxx::database db) {
         auto cursor = db["inventory"].find(make_document(kvp("item", "canvas")));
         // End Example 2
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 1);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 1);
     }
 
     {
@@ -85,7 +86,7 @@ void insert_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 3
 
-        assert(db["inventory"].count({}) == 4);
+        MONGOCXX_EXAMPLE_ASSERT(db["inventory"].count({}) == 4);
     }
 }
 
@@ -125,7 +126,7 @@ void query_top_level_fields_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 6
 
-        assert(db["inventory"].count({}) == 5);
+        MONGOCXX_EXAMPLE_ASSERT(db["inventory"].count({}) == 5);
     }
 
     {
@@ -133,7 +134,7 @@ void query_top_level_fields_examples(mongocxx::database db) {
         auto cursor = db["inventory"].find({});
         // End Example 7
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 5);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 5);
     }
 
     {
@@ -144,7 +145,7 @@ void query_top_level_fields_examples(mongocxx::database db) {
         auto cursor = db["inventory"].find(make_document(kvp("status", "D")));
         // End Example 9
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 2);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 2);
     }
 
     {
@@ -157,7 +158,7 @@ void query_top_level_fields_examples(mongocxx::database db) {
             make_document(kvp("status", make_document(kvp("$in", make_array("A", "D"))))));
         // End Example 10
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 5);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 5);
     }
 
     {
@@ -169,7 +170,7 @@ void query_top_level_fields_examples(mongocxx::database db) {
             make_document(kvp("status", "A"), kvp("qty", make_document(kvp("$lt", 30)))));
         // End Example 11
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 1);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 1);
     }
 
     {
@@ -184,7 +185,7 @@ void query_top_level_fields_examples(mongocxx::database db) {
                            make_document(kvp("qty", make_document(kvp("$lt", 30))))))));
         // End Example 12
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 3);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 3);
     }
 
     {
@@ -200,7 +201,7 @@ void query_top_level_fields_examples(mongocxx::database db) {
                            make_document(kvp("item", bsoncxx::types::b_regex{"^p"}))))));
         // End Example 13
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 2);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 2);
     }
 }
 
@@ -240,7 +241,7 @@ void query_embedded_documents_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 14
 
-        assert(db["inventory"].count({}) == 5);
+        MONGOCXX_EXAMPLE_ASSERT(db["inventory"].count({}) == 5);
     }
 
     {
@@ -252,7 +253,7 @@ void query_embedded_documents_examples(mongocxx::database db) {
             kvp("size", make_document(kvp("h", 14), kvp("w", 21), kvp("uom", "cm")))));
         // End Example 15
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 1);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 1);
     }
 
     {
@@ -264,7 +265,7 @@ void query_embedded_documents_examples(mongocxx::database db) {
             kvp("size", make_document(kvp("w", 21), kvp("h", 14), kvp("uom", "cm")))));
         // End Example 16
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 0);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 0);
     }
 
     {
@@ -275,7 +276,7 @@ void query_embedded_documents_examples(mongocxx::database db) {
         auto cursor = db["inventory"].find(make_document(kvp("size.uom", "in")));
         // End Example 17
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 2);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 2);
     }
 
     {
@@ -287,7 +288,7 @@ void query_embedded_documents_examples(mongocxx::database db) {
             db["inventory"].find(make_document(kvp("size.h", make_document(kvp("$lt", 15)))));
         // End Example 18
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 4);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 4);
     }
 
     {
@@ -301,7 +302,7 @@ void query_embedded_documents_examples(mongocxx::database db) {
                                                kvp("status", "D")));
         // End Example 19
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 1);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 1);
     }
 }
 
@@ -340,7 +341,7 @@ void query_arrays_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 20
 
-        assert(db["inventory"].count({}) == 5);
+        MONGOCXX_EXAMPLE_ASSERT(db["inventory"].count({}) == 5);
     }
 
     {
@@ -352,7 +353,7 @@ void query_arrays_examples(mongocxx::database db) {
         auto cursor = db["inventory"].find(make_document(kvp("tags", make_array("red", "blank"))));
         // End Example 21
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 1);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 1);
     }
 
     {
@@ -365,7 +366,7 @@ void query_arrays_examples(mongocxx::database db) {
             make_document(kvp("tags", make_document(kvp("$all", make_array("red", "blank"))))));
         // End Example 22
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 4);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 4);
     }
 
     {
@@ -376,7 +377,7 @@ void query_arrays_examples(mongocxx::database db) {
         auto cursor = db["inventory"].find(make_document(kvp("tags", "red")));
         // End Example 23
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 4);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 4);
     }
 
     {
@@ -388,7 +389,7 @@ void query_arrays_examples(mongocxx::database db) {
             db["inventory"].find(make_document(kvp("dim_cm", make_document(kvp("$gt", 25)))));
         // End Example 24
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 1);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 1);
     }
 
     {
@@ -400,7 +401,7 @@ void query_arrays_examples(mongocxx::database db) {
             make_document(kvp("dim_cm", make_document(kvp("$gt", 15), kvp("$lt", 20)))));
         // End Example 25
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 4);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 4);
     }
 
     {
@@ -413,7 +414,7 @@ void query_arrays_examples(mongocxx::database db) {
                 make_document(kvp("$elemMatch", make_document(kvp("$gt", 22), kvp("$lt", 30)))))));
         // End Example 26
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 1);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 1);
     }
 
     {
@@ -425,7 +426,7 @@ void query_arrays_examples(mongocxx::database db) {
             db["inventory"].find(make_document(kvp("dim_cm.1", make_document(kvp("$gt", 25)))));
         // End Example 27
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 1);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 1);
     }
 
     {
@@ -437,7 +438,7 @@ void query_arrays_examples(mongocxx::database db) {
             db["inventory"].find(make_document(kvp("tags", make_document(kvp("$size", 3)))));
         // End Example 28
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 1);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 1);
     }
 }
 
@@ -475,7 +476,7 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 29
 
-        assert(db["inventory"].count({}) == 5);
+        MONGOCXX_EXAMPLE_ASSERT(db["inventory"].count({}) == 5);
     }
 
     {
@@ -487,7 +488,7 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
             make_document(kvp("instock", make_document(kvp("warehouse", "A"), kvp("qty", 5)))));
         // End Example 30
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 1);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 1);
     }
 
     {
@@ -499,7 +500,7 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
             make_document(kvp("instock", make_document(kvp("qty", 5), kvp("warehouse", "A")))));
         // End Example 31
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 0);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 0);
     }
 
     {
@@ -511,7 +512,7 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
             make_document(kvp("instock.0.qty", make_document(kvp("$lte", 20)))));
         // End Example 32
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 3);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 3);
     }
 
     {
@@ -523,7 +524,7 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
             db["inventory"].find(make_document(kvp("instock.qty", make_document(kvp("$lte", 20)))));
         // End Example 33
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 5);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 5);
     }
 
     {
@@ -537,7 +538,7 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
                     kvp("$elemMatch", make_document(kvp("qty", 5), kvp("warehouse", "A")))))));
         // End Example 34
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 1);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 1);
     }
 
     {
@@ -552,7 +553,7 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
                     make_document(kvp("qty", make_document(kvp("$gt", 10), kvp("$lte", 20)))))))));
         // End Example 35
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 3);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 3);
     }
 
     {
@@ -564,7 +565,7 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
             make_document(kvp("instock.qty", make_document(kvp("$gt", 10), kvp("$lte", 20)))));
         // End Example 36
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 4);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 4);
     }
 
     {
@@ -576,7 +577,7 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
             make_document(kvp("instock.qty", 5), kvp("instock.warehouse", "A")));
         // End Example 37
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 2);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 2);
     }
 }
 
@@ -596,7 +597,7 @@ void query_null_missing_fields_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 38
 
-        assert(db["inventory"].count({}) == 2);
+        MONGOCXX_EXAMPLE_ASSERT(db["inventory"].count({}) == 2);
     }
 
     {
@@ -607,7 +608,7 @@ void query_null_missing_fields_examples(mongocxx::database db) {
         auto cursor = db["inventory"].find(make_document(kvp("item", bsoncxx::types::b_null{})));
         // End Example 39
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 2);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 2);
     }
 
     {
@@ -619,7 +620,7 @@ void query_null_missing_fields_examples(mongocxx::database db) {
             db["inventory"].find(make_document(kvp("item", make_document(kvp("$type", 10)))));
         // End Example 40
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 1);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 1);
     }
 
     {
@@ -631,7 +632,7 @@ void query_null_missing_fields_examples(mongocxx::database db) {
             db["inventory"].find(make_document(kvp("item", make_document(kvp("$exists", false)))));
         // End Example 41
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 1);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 1);
     }
 }
 
@@ -677,7 +678,7 @@ void projection_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 42
 
-        assert(db["inventory"].count({}) == 5);
+        MONGOCXX_EXAMPLE_ASSERT(db["inventory"].count({}) == 5);
     }
 
     {
@@ -688,7 +689,7 @@ void projection_examples(mongocxx::database db) {
         auto cursor = db["inventory"].find(make_document(kvp("status", "A")));
         // End Example 43
 
-        assert(std::distance(cursor.begin(), cursor.end()) == 3);
+        MONGOCXX_EXAMPLE_ASSERT(std::distance(cursor.begin(), cursor.end()) == 3);
     }
 
     {
@@ -706,11 +707,11 @@ void projection_examples(mongocxx::database db) {
             // necessary to suppress the unused variable warning.
             static_cast<void>(document);
 
-            assert(document["_id"]);
-            assert(document["item"]);
-            assert(document["status"]);
-            assert(!document["size"]);
-            assert(!document["instock"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["_id"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["item"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["status"]);
+            MONGOCXX_EXAMPLE_ASSERT(!document["size"]);
+            MONGOCXX_EXAMPLE_ASSERT(!document["instock"]);
         }
     }
 
@@ -729,11 +730,11 @@ void projection_examples(mongocxx::database db) {
             // necessary to suppress the unused variable warning.
             static_cast<void>(document);
 
-            assert(!document["_id"]);
-            assert(document["item"]);
-            assert(document["status"]);
-            assert(!document["size"]);
-            assert(!document["instock"]);
+            MONGOCXX_EXAMPLE_ASSERT(!document["_id"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["item"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["status"]);
+            MONGOCXX_EXAMPLE_ASSERT(!document["size"]);
+            MONGOCXX_EXAMPLE_ASSERT(!document["instock"]);
         }
     }
 
@@ -752,11 +753,11 @@ void projection_examples(mongocxx::database db) {
             // necessary to suppress the unused variable warning.
             static_cast<void>(document);
 
-            assert(document["_id"]);
-            assert(document["item"]);
-            assert(!document["status"]);
-            assert(document["size"]);
-            assert(!document["instock"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["_id"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["item"]);
+            MONGOCXX_EXAMPLE_ASSERT(!document["status"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["size"]);
+            MONGOCXX_EXAMPLE_ASSERT(!document["instock"]);
         }
     }
 
@@ -772,11 +773,11 @@ void projection_examples(mongocxx::database db) {
         // End Example 47
 
         for (auto&& document : cursor) {
-            assert(document["_id"]);
-            assert(document["item"]);
-            assert(document["status"]);
-            assert(document["size"]);
-            assert(!document["instock"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["_id"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["item"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["status"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["size"]);
+            MONGOCXX_EXAMPLE_ASSERT(!document["instock"]);
 
             auto size = document["size"].get_document().value;
 
@@ -784,9 +785,9 @@ void projection_examples(mongocxx::database db) {
             // necessary to suppress the unused variable warning.
             static_cast<void>(size);
 
-            assert(size["uom"]);
-            assert(!size["h"]);
-            assert(!size["w"]);
+            MONGOCXX_EXAMPLE_ASSERT(size["uom"]);
+            MONGOCXX_EXAMPLE_ASSERT(!size["h"]);
+            MONGOCXX_EXAMPLE_ASSERT(!size["w"]);
         }
     }
 
@@ -801,11 +802,11 @@ void projection_examples(mongocxx::database db) {
         // End Example 48
 
         for (auto&& document : cursor) {
-            assert(document["_id"]);
-            assert(document["item"]);
-            assert(document["status"]);
-            assert(document["size"]);
-            assert(document["instock"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["_id"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["item"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["status"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["size"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["instock"]);
 
             auto size = document["size"].get_document().value;
 
@@ -813,9 +814,9 @@ void projection_examples(mongocxx::database db) {
             // necessary to suppress the unused variable warning.
             static_cast<void>(size);
 
-            assert(!size["uom"]);
-            assert(size["h"]);
-            assert(size["w"]);
+            MONGOCXX_EXAMPLE_ASSERT(!size["uom"]);
+            MONGOCXX_EXAMPLE_ASSERT(size["h"]);
+            MONGOCXX_EXAMPLE_ASSERT(size["w"]);
         }
     }
 
@@ -831,11 +832,11 @@ void projection_examples(mongocxx::database db) {
         // End Example 49
 
         for (auto&& document : cursor) {
-            assert(document["_id"]);
-            assert(document["item"]);
-            assert(document["status"]);
-            assert(!document["size"]);
-            assert(document["instock"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["_id"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["item"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["status"]);
+            MONGOCXX_EXAMPLE_ASSERT(!document["size"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["instock"]);
 
             auto instock = document["instock"].get_array().value;
 
@@ -844,8 +845,8 @@ void projection_examples(mongocxx::database db) {
                 // this is necessary to suppress the unused variable warning.
                 static_cast<void>(sub_document);
 
-                assert(!sub_document["warehouse"]);
-                assert(sub_document["qty"]);
+                MONGOCXX_EXAMPLE_ASSERT(!sub_document["warehouse"]);
+                MONGOCXX_EXAMPLE_ASSERT(sub_document["qty"]);
             }
         }
     }
@@ -863,11 +864,11 @@ void projection_examples(mongocxx::database db) {
         // End Example 50
 
         for (auto&& document : cursor) {
-            assert(document["_id"]);
-            assert(document["item"]);
-            assert(document["status"]);
-            assert(!document["size"]);
-            assert(document["instock"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["_id"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["item"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["status"]);
+            MONGOCXX_EXAMPLE_ASSERT(!document["size"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["instock"]);
 
             auto instock = document["instock"].get_array().value;
 
@@ -875,7 +876,7 @@ void projection_examples(mongocxx::database db) {
             // necessary to suppress the unused variable warning.
             static_cast<void>(instock);
 
-            assert(std::distance(instock.begin(), instock.end()) == 1);
+            MONGOCXX_EXAMPLE_ASSERT(std::distance(instock.begin(), instock.end()) == 1);
         }
     }
 }
@@ -940,7 +941,7 @@ void update_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 51
 
-        assert(db["inventory"].count({}) == 10);
+        MONGOCXX_EXAMPLE_ASSERT(db["inventory"].count({}) == 10);
     }
 
     {
@@ -959,10 +960,11 @@ void update_examples(mongocxx::database db) {
             // necessary to suppress the unused variable warning.
             static_cast<void>(document);
 
-            assert(document["size"].get_document().value["uom"].get_utf8().value ==
-                   bsoncxx::stdx::string_view{"cm"});
-            assert(document["status"].get_utf8().value == bsoncxx::stdx::string_view{"P"});
-            assert(document["lastModified"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["size"].get_document().value["uom"].get_utf8().value ==
+                                    bsoncxx::stdx::string_view{"cm"});
+            MONGOCXX_EXAMPLE_ASSERT(document["status"].get_utf8().value ==
+                                    bsoncxx::stdx::string_view{"P"});
+            MONGOCXX_EXAMPLE_ASSERT(document["lastModified"]);
         }
     }
 
@@ -983,10 +985,11 @@ void update_examples(mongocxx::database db) {
             // necessary to suppress the unused variable warning.
             static_cast<void>(document);
 
-            assert(document["size"].get_document().value["uom"].get_utf8().value ==
-                   bsoncxx::stdx::string_view{"in"});
-            assert(document["status"].get_utf8().value == bsoncxx::stdx::string_view{"P"});
-            assert(document["lastModified"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["size"].get_document().value["uom"].get_utf8().value ==
+                                    bsoncxx::stdx::string_view{"in"});
+            MONGOCXX_EXAMPLE_ASSERT(document["status"].get_utf8().value ==
+                                    bsoncxx::stdx::string_view{"P"});
+            MONGOCXX_EXAMPLE_ASSERT(document["lastModified"]);
         }
     }
 
@@ -1005,10 +1008,10 @@ void update_examples(mongocxx::database db) {
         // End Example 54
 
         for (auto&& document : db["inventory"].find(make_document(kvp("item", "paper")))) {
-            assert(std::distance(document.begin(), document.end()) == 3);
-            assert(document["_id"]);
-            assert(document["item"]);
-            assert(document["instock"]);
+            MONGOCXX_EXAMPLE_ASSERT(std::distance(document.begin(), document.end()) == 3);
+            MONGOCXX_EXAMPLE_ASSERT(document["_id"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["item"]);
+            MONGOCXX_EXAMPLE_ASSERT(document["instock"]);
 
             auto instock = document["instock"].get_array().value;
 
@@ -1016,7 +1019,7 @@ void update_examples(mongocxx::database db) {
             // necessary to suppress the unused variable warning.
             static_cast<void>(instock);
 
-            assert(std::distance(instock.begin(), instock.end()) == 2);
+            MONGOCXX_EXAMPLE_ASSERT(std::distance(instock.begin(), instock.end()) == 2);
         }
     }
 }
@@ -1057,7 +1060,7 @@ void delete_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 55
 
-        assert(db["inventory"].count({}) == 5);
+        MONGOCXX_EXAMPLE_ASSERT(db["inventory"].count({}) == 5);
     }
 
     {
@@ -1068,7 +1071,7 @@ void delete_examples(mongocxx::database db) {
         db["inventory"].delete_many(make_document(kvp("status", "A")));
         // End Example 57
 
-        assert(db["inventory"].count({}) == 3);
+        MONGOCXX_EXAMPLE_ASSERT(db["inventory"].count({}) == 3);
     }
 
     {
@@ -1079,7 +1082,7 @@ void delete_examples(mongocxx::database db) {
         db["inventory"].delete_one(make_document(kvp("status", "D")));
         // End Example 58
 
-        assert(db["inventory"].count({}) == 2);
+        MONGOCXX_EXAMPLE_ASSERT(db["inventory"].count({}) == 2);
     }
 
     {
@@ -1087,7 +1090,7 @@ void delete_examples(mongocxx::database db) {
         db["inventory"].delete_many({});
         // End Example 56
 
-        assert(db["inventory"].count({}) == 0);
+        MONGOCXX_EXAMPLE_ASSERT(db["inventory"].count({}) == 0);
     }
 }
 
