@@ -180,17 +180,21 @@ TEST_CASE("collection dropping") {
         database db = mongodb_client["streams"];
         collection events = db["events"];
 
-//        options::change_stream options{};
-//        options.max_await_time(std::chrono::milliseconds{50000});
-//
-//        change_stream stream = events.watch(pipeline{}, options);
+        options::change_stream options{};
+        options.max_await_time(std::chrono::milliseconds{50000});
 
-        change_stream stream = events.watch();
+        change_stream stream = events.watch(options);
+
+        for(auto&& it : stream) {
+            printf("Got:  %s\n", bsoncxx::to_json(it).c_str());
+            std::cout << bsoncxx::to_json(it) << std::endl;
+        }
 
         for(auto it = stream.begin(); it != stream.end(); ++it) {
             printf("Got:  %s\n", bsoncxx::to_json(*it).c_str());
             std::cout << bsoncxx::to_json(*it) << std::endl;
         }
+
         REQUIRE(events);
     }
 
