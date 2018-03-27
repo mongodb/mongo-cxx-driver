@@ -940,7 +940,7 @@ class write_concern collection::write_concern() const {
 }
 
 template<typename T>
-constexpr inline void append_if(bsoncxx::builder::basic::document& doc, const std::string& key, const std::optional<T>& opt) {
+inline void append_if(bsoncxx::builder::basic::document& doc, const std::string& key, const std::optional<T>& opt) {
     if (opt) {
         doc.append(bsoncxx::builder::basic::kvp(key, opt.value()));
     }
@@ -966,7 +966,10 @@ bsoncxx::document::value as_bson(const options::change_stream& cs) {
 }
 
 
-// TODO: other overload method
+class change_stream collection::watch(const options::change_stream& options) {
+    return watch(pipeline{}, options);
+}
+
 
 class change_stream collection::watch(const pipeline& pipe, const options::change_stream &options) {
     // TODO: is scoped_bson_t correct here?
