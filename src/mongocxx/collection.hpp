@@ -730,7 +730,6 @@ class MONGOCXX_API collection {
     ///
     /// @return
     ///  A change stream on this collection.
-    // TODO: impl
     change_stream watch(const options::change_stream& options = {});
 
     ///

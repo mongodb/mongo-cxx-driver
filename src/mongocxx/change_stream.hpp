@@ -26,7 +26,6 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class collection;
 
-/// TODO: doc
 class MONGOCXX_API change_stream {
    public:
     class MONGOCXX_API iterator;
@@ -46,10 +45,34 @@ class MONGOCXX_API change_stream {
     ///
     ~change_stream();
 
-    /// TODO: doc
+    ///
+    /// A change_stream::iterator points to the beginning of any
+    /// available notifications. Each call to begin() advances to the next
+    /// available notification. The state of all iterators is tracked by the
+    /// change_stream itself, so advancing one iterator advances all iterators.
+    ///
+    /// change_stream::begin() and change_stream::iterator::operator++() are blocking operations.
+    /// They will not return until a notification is available, the max_await_time (from
+    /// the options::change_stream) miliseconds have elapsed, or a server
+    /// error is encountered.
+    ///
+    /// When change_stream.begin() == change_stream.end(), no notifications
+    /// are available. Each call to change_stream.begin() checks again for
+    /// newly-available notifications.
+    ///
+    /// @return
+    ///   The change_stream::iterator
+    /// @exception
+    ///   Throws mongocxx::query_exception if the query failed.
+    ///
     iterator begin();
 
-    /// TODO: doc
+    ///
+    /// A change_stream::iterator indicating stream exhaustion, meaning that
+    /// no notifications are available from the stream.
+    ///
+    /// @return
+    ///   The change_steram::iterator indicating exhaustion
     iterator end();
 
    private:
@@ -62,7 +85,6 @@ class MONGOCXX_API change_stream {
     std::unique_ptr<impl> _impl;
 };
 
-/// TODO: doc
 class MONGOCXX_API change_stream::iterator {
    public:
     ///
@@ -78,12 +100,16 @@ class MONGOCXX_API change_stream::iterator {
     ///
     /// Pre-increments the iterator to move to the next document.
     ///
+    /// change_stream::begin() and change_stream::iterator::operator++() are blocking operations.
+    /// They will not return until a notification is available, the max_await_time (from
+    /// the options::change_stream) miliseconds have elapsed, or a server
+    /// error is encountered.
+    ///
     /// @throws mongocxx::query_exception if the query failed
     ///
     iterator& operator++();
 
-    // TODO: do we need all these? what should be the values?
-    // https://stackoverflow.com/questions/37031805/preparation-for-stditerator-being-deprecated/38103394
+    // Support input-iterator
     using difference_type = long;
     using value_type = bsoncxx::document::view;
     using pointer = const bsoncxx::document::view*;
