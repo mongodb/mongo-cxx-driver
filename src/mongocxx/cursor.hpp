@@ -83,7 +83,6 @@ class MONGOCXX_API cursor {
     friend class client;
     friend class database;
     friend class index_view;
-    friend class change_stream;
     friend class cursor::iterator;
 
     MONGOCXX_PRIVATE cursor(void* cursor_ptr,
