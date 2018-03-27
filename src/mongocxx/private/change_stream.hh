@@ -36,7 +36,8 @@ class change_stream::impl {
     impl(mongoc_change_stream_t* change_stream)
         : change_stream_t(change_stream),
           status{state::k_pending},
-          exhausted(!change_stream) {}
+          exhausted{true}
+        {}
 
     ~impl() {
         libmongoc::change_stream_destroy(change_stream_t);
@@ -77,8 +78,6 @@ class change_stream::impl {
         if (libmongoc::change_stream_next(this->change_stream_t, &out)) {
             this->doc = bsoncxx::document::view{bson_get_data(out), out->len};
         } else if (libmongoc::change_stream_error_document(this->change_stream_t, &error, &out)) {
-            // TODO: better error-handling?
-            // TODO: do we care about modifying out in error scenarios?
             this->mark_dead();
             // TODO: test case of this - that after error we don't hold onto last doc
             // TODO: test accessing the documenting with operator* and operator-> after an error shouldn't crash.

@@ -103,16 +103,14 @@ class MONGOCXX_API change_stream::iterator {
     ///
     /// @relates iterator
     ///
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const iterator&, const iterator&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const iterator&, const iterator&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const change_stream::iterator&, const change_stream::iterator&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const change_stream::iterator&, const change_stream::iterator&);
     ///
     /// @}
     ///
 
     MONGOCXX_PRIVATE bool is_exhausted() const;
 
-    // TODO: do we need this?
-    // If this pointer is null, the iterator is considered "past-the-end".
     change_stream* _change_stream;
 };
 

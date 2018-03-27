@@ -66,14 +66,10 @@ change_stream::iterator::iterator(change_stream* change_stream) : _change_stream
     operator++();
 }
 
-//
-// An iterator is exhausted if it is the end-iterator (_change_stream == nullptr)
-// or if the underlying _change_stream is marked exhausted.
-//
 bool change_stream::iterator::is_exhausted() const {
-    auto out = !_change_stream || _change_stream->_impl->is_exhausted();
-    std::cout << "is_exhausted: " << out << std::endl;
-    return out;
+    // An iterator is exhausted if it is the end-iterator (_change_stream == nullptr)
+    // or if the underlying _change_stream is marked exhausted.
+    return _change_stream == nullptr || _change_stream->_impl->is_exhausted();
 }
 
 const bsoncxx::document::view& change_stream::iterator::operator*() const noexcept {

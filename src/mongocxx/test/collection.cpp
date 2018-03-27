@@ -182,15 +182,10 @@ TEST_CASE("collection dropping") {
 
         change_stream stream = events.watch(pipeline{}, options::change_stream{});
 
-        // just a single doc for now
-        auto it = stream.begin();
-
-        std::cout << "after stream.begin()" << std::endl;
-        std::cout << bsoncxx::to_json(*it) << std::endl;
-
-//        for(auto it = stream.begin(); it != stream.end(); ++it) {
-//            std::cout << bsoncxx::to_json(*it) << std::endl;
-//        }
+        for(auto it = stream.begin(); it != stream.end(); ++it) {
+            printf("Got:  %s\n", bsoncxx::to_json(*it).c_str());
+            std::cout << bsoncxx::to_json(*it) << std::endl;
+        }
         REQUIRE(events);
     }
 
