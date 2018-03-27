@@ -68,6 +68,8 @@ const stdx::optional<std::chrono::milliseconds>& change_stream::max_await_time()
     return _max_await_time;
 }
 
+change_stream::change_stream() = default;
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
