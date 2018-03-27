@@ -36,34 +36,35 @@ class change_stream::impl {
     impl(mongoc_change_stream_t* change_stream)
         : change_stream_t(change_stream), status{state::k_pending}, exhausted{true} {}
 
+    // TODO: mongoc_change_stream_destroy also destroys the collection
     ~impl() {
         libmongoc::change_stream_destroy(change_stream_t);
     }
 
-    bool has_started() const {
+    inline bool has_started() const {
         return status >= state::k_started;
     }
 
-    bool is_dead() const {
+    inline bool is_dead() const {
         return status == state::k_dead;
     }
 
-    bool is_exhausted() const {
+    inline bool is_exhausted() const {
         return exhausted;
     }
 
-    void mark_dead() {
+    inline void mark_dead() {
         mark_nothing_left();
         status = state::k_dead;
     }
 
-    void mark_nothing_left() {
+    inline void mark_nothing_left() {
         doc = bsoncxx::document::view{};
         exhausted = true;
         status = state::k_pending;
     }
 
-    void mark_started() {
+    inline void mark_started() {
         status = state::k_started;
         exhausted = false;
     }
