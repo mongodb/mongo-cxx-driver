@@ -103,8 +103,10 @@ class MONGOCXX_API change_stream::iterator {
     ///
     /// @relates iterator
     ///
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const change_stream::iterator&, const change_stream::iterator&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const change_stream::iterator&, const change_stream::iterator&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const change_stream::iterator&,
+                                                      const change_stream::iterator&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const change_stream::iterator&,
+                                                      const change_stream::iterator&);
     ///
     /// @}
     ///

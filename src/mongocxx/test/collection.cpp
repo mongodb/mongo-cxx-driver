@@ -22,6 +22,7 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
+#include <iostream>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
@@ -34,7 +35,6 @@
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
-#include <iostream>
 
 namespace {
 
@@ -158,45 +158,44 @@ TEST_CASE("collection dropping") {
     REQUIRE_NOTHROW(coll.drop());
 }
 
+// TODO: move to different file (?)
+// this is just sandbox/exploratory-testing for now
+/*
+ * Test-cases:
+ *      mal-formed pipeline
+ *      no pipeline
+ *      copy-construct
+ *      move-construct
+ *      no more data
+ *      error response
+ *      multiple calls to begin()
+ *      .end() == .end()
+ *      call .begin() to resume
+ */
+TEST_CASE("Change Streams") {
+    instance::current();
 
-    // TODO: move to different file (?)
-    // this is just sandbox/exploratory-testing for now
-    /*
-     * Test-cases:
-     *      mal-formed pipeline
-     *      no pipeline
-     *      copy-construct
-     *      move-construct
-     *      no more data
-     *      error response
-     *      multiple calls to begin()
-     *      .end() == .end()
-     *      call .begin() to resume
-     */
-    TEST_CASE("Change Streams") {
-        instance::current();
+    client mongodb_client{uri{}};
+    database db = mongodb_client["streams"];
+    collection events = db["events"];
 
-        client mongodb_client{uri{}};
-        database db = mongodb_client["streams"];
-        collection events = db["events"];
+    options::change_stream options{};
+    options.max_await_time(std::chrono::milliseconds{50000});
 
-        options::change_stream options{};
-        options.max_await_time(std::chrono::milliseconds{50000});
+    change_stream stream = events.watch(options);
 
-        change_stream stream = events.watch(options);
-
-        for(auto&& it : stream) {
-            printf("Got:  %s\n", bsoncxx::to_json(it).c_str());
-            std::cout << bsoncxx::to_json(it) << std::endl;
-        }
-
-        for(auto it = stream.begin(); it != stream.end(); ++it) {
-            printf("Got:  %s\n", bsoncxx::to_json(*it).c_str());
-            std::cout << bsoncxx::to_json(*it) << std::endl;
-        }
-
-        REQUIRE(events);
+    for (auto&& it : stream) {
+        printf("Got:  %s\n", bsoncxx::to_json(it).c_str());
+        std::cout << bsoncxx::to_json(it) << std::endl;
     }
+
+    for (auto it = stream.begin(); it != stream.end(); ++it) {
+        printf("Got:  %s\n", bsoncxx::to_json(*it).c_str());
+        std::cout << bsoncxx::to_json(*it) << std::endl;
+    }
+
+    REQUIRE(events);
+}
 
 TEST_CASE("CRUD functionality", "[driver::collection]") {
     instance::current();

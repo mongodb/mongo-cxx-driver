@@ -85,11 +85,14 @@ const bsoncxx::document::view* change_stream::iterator::operator->() const noexc
 // both are "at the end".  We check for exhaustion first because the most
 // common check is `iter != change_stream.end()`.
 //
-bool MONGOCXX_CALL operator==(const change_stream::iterator& lhs, const change_stream::iterator& rhs) {
-    return ((rhs.is_exhausted() && lhs.is_exhausted()) || (lhs._change_stream == rhs._change_stream));
+bool MONGOCXX_CALL operator==(const change_stream::iterator& lhs,
+                              const change_stream::iterator& rhs) {
+    return ((rhs.is_exhausted() && lhs.is_exhausted()) ||
+            (lhs._change_stream == rhs._change_stream));
 }
 
-bool MONGOCXX_CALL operator!=(const change_stream::iterator& lhs, const change_stream::iterator& rhs) {
+bool MONGOCXX_CALL operator!=(const change_stream::iterator& lhs,
+                              const change_stream::iterator& rhs) {
     return !(lhs == rhs);
 }
 

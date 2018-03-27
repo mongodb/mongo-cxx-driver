@@ -939,8 +939,10 @@ class write_concern collection::write_concern() const {
     return wc;
 }
 
-template<typename T>
-inline void append_if(bsoncxx::builder::basic::document& doc, const std::string& key, const std::optional<T>& opt) {
+template <typename T>
+inline void append_if(bsoncxx::builder::basic::document& doc,
+                      const std::string& key,
+                      const std::optional<T>& opt) {
     if (opt) {
         doc.append(bsoncxx::builder::basic::kvp(key, opt.value()));
     }
@@ -965,13 +967,11 @@ bsoncxx::document::value as_bson(const options::change_stream& cs) {
     return std::move(out.extract());
 }
 
-
 class change_stream collection::watch(const options::change_stream& options) {
     return watch(pipeline{}, options);
 }
 
-
-class change_stream collection::watch(const pipeline& pipe, const options::change_stream &options) {
+class change_stream collection::watch(const pipeline& pipe, const options::change_stream& options) {
     // TODO: is scoped_bson_t correct here?
 
     // TODO: how to call `operator document::view()` on the pipe.view()?
@@ -981,11 +981,8 @@ class change_stream collection::watch(const pipeline& pipe, const options::chang
     scoped_bson_t options_bson{};
     options_bson.init_from_static(as_bson(options));
 
-    return change_stream {libmongoc::collection_watch(
-        _get_impl().collection_t,
-        pipeline_bson.bson(),
-        options_bson.bson()
-    )};
+    return change_stream{libmongoc::collection_watch(
+        _get_impl().collection_t, pipeline_bson.bson(), options_bson.bson())};
 }
 
 class index_view collection::indexes() {

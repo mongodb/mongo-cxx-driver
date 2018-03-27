@@ -34,10 +34,7 @@ class change_stream::impl {
     enum class state { k_pending = 0, k_started = 1, k_dead = 2 };
 
     impl(mongoc_change_stream_t* change_stream)
-        : change_stream_t(change_stream),
-          status{state::k_pending},
-          exhausted{true}
-        {}
+        : change_stream_t(change_stream), status{state::k_pending}, exhausted{true} {}
 
     ~impl() {
         libmongoc::change_stream_destroy(change_stream_t);
@@ -80,7 +77,8 @@ class change_stream::impl {
         } else if (libmongoc::change_stream_error_document(this->change_stream_t, &error, &out)) {
             this->mark_dead();
             // TODO: test case of this - that after error we don't hold onto last doc
-            // TODO: test accessing the documenting with operator* and operator-> after an error shouldn't crash.
+            // TODO: test accessing the documenting with operator* and operator-> after an error
+            // shouldn't crash.
             this->doc = bsoncxx::document::view{};
             throw_exception<query_exception>(error);
         } else {
