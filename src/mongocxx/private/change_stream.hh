@@ -70,12 +70,11 @@ class change_stream::impl {
     }
 
     void advance_iterator() {
-        bson_error_t error{};
-
         const bson_t* out;
         if (libmongoc::change_stream_next(this->change_stream_t, &out)) {
             this->doc = bsoncxx::document::view{bson_get_data(out), out->len};
-        } else if (libmongoc::change_stream_error_document(this->change_stream_t, &error, &out)) {
+        } else if (bson_error_t error{};
+                   libmongoc::change_stream_error_document(this->change_stream_t, &error, &out)) {
             this->mark_dead();
             // TODO: test case of this - that after error we don't hold onto last doc
             // TODO: test accessing the documenting with operator* and operator-> after an error
