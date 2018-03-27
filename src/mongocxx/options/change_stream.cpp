@@ -13,8 +13,11 @@
 // limitations under the License.
 
 #include <mongocxx/options/change_stream.hpp>
+#include <bsoncxx/builder/core.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -64,6 +67,9 @@ change_stream& change_stream::max_await_time(std::chrono::milliseconds max_time)
 const stdx::optional<std::chrono::milliseconds>& change_stream::max_await_time() const {
     return _max_await_time;
 }
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
+
+#include <mongocxx/config/private/postlude.hh>

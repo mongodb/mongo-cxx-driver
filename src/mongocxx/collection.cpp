@@ -939,22 +939,50 @@ class write_concern collection::write_concern() const {
     return wc;
 }
 
+template<typename T>
+constexpr inline void append_if(bsoncxx::builder::basic::document& doc, const std::string& key, const std::optional<T>& opt) {
+    if (opt) {
+        doc.append(bsoncxx::builder::basic::kvp(key, opt.value()));
+    }
+}
+
+bsoncxx::document::value as_bson(const options::change_stream& cs) {
+    // construct new one each time since values may change after this is called
+    bsoncxx::builder::basic::document out{};
+
+    append_if(out, "fullDocument", cs.full_document());
+    append_if(out, "resumeAfter", cs.resume_after());
+    append_if(out, "batchSize", cs.batch_size());
+
+    if (cs.max_await_time()) {
+        auto count = cs.max_await_time().value().count();
+        if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max())) {
+            throw logic_error{error_code::k_invalid_parameter};
+        }
+        out.append(bsoncxx::builder::basic::kvp("maxAwaitTimeMS", count));
+    }
+
+    return std::move(out.extract());
+}
+
+
 // TODO: other overload method
+
 class change_stream collection::watch(const pipeline& pipe, const options::change_stream &options) {
-    // TODO: construct bson_t from options::change_steram
-    // TODO: is scoped_bson_t correct here? I'm not sure of who should own all these things
-    scoped_bson_t bson_options {make_document(kvp("maxAwaitTimeMS", bsoncxx::types::b_int64{50000})).view()};
+    // TODO: is scoped_bson_t correct here?
 
     // TODO: how to call `operator document::view()` on the pipe.view()?
-    scoped_bson_t pipeline_bson {pipe.view()};
+    scoped_bson_t pipeline_bson{};
+    pipeline_bson.init_from_static(pipe.view());
 
-    change_stream out {libmongoc::collection_watch(
+    scoped_bson_t options_bson{};
+    options_bson.init_from_static(as_bson(options));
+
+    return change_stream {libmongoc::collection_watch(
         _get_impl().collection_t,
         pipeline_bson.bson(),
-        bson_options.bson()
+        options_bson.bson()
     )};
-    std::cout << "Constructed change_stream" << std::endl;
-    return out;
 }
 
 class index_view collection::indexes() {
