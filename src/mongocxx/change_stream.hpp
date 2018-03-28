@@ -51,9 +51,9 @@ class MONGOCXX_API change_stream {
     /// available notification. The state of all iterators is tracked by the
     /// change_stream itself, so advancing one iterator advances all iterators.
     ///
-    /// change_stream::begin() and change_stream::iterator::operator++() are blocking operations.
+    /// change_stream::begin() and the increment operators are blocking operations.
     /// They will not return until a notification is available, the max_await_time (from
-    /// the options::change_stream) miliseconds have elapsed, or a server
+    /// the options::change_stream) milliseconds have elapsed, or a server
     /// error is encountered.
     ///
     /// When change_stream.begin() == change_stream.end(), no notifications
@@ -108,7 +108,7 @@ class MONGOCXX_API change_stream::iterator {
     ///
     /// Pre-increments the iterator to move to the next document.
     ///
-    /// change_stream::begin() and change_stream::iterator::operator++() are blocking operations.
+    /// change_stream::begin() and increment operators are blocking operations.
     /// They will not return until a notification is available, the max_await_time (from
     /// the options::change_stream) miliseconds have elapsed, or a server
     /// error is encountered.
@@ -116,6 +116,18 @@ class MONGOCXX_API change_stream::iterator {
     /// @throws mongocxx::query_exception if the query failed
     ///
     iterator& operator++();
+
+    ///
+    /// Post-increments the iterator to move to the next document.
+    ///
+    /// change_stream::begin() and increment operators are blocking operations.
+    /// They will not return until a notification is available, the max_await_time (from
+    /// the options::change_stream) miliseconds have elapsed, or a server
+    /// error is encountered.
+    ///
+    /// @throws mongocxx::query_exception if the query failed
+    ///
+    void operator++(int);
 
     // Support input-iterator
     using difference_type = long;

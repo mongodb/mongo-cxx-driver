@@ -41,6 +41,10 @@ change_stream& change_stream::operator=(change_stream&&) noexcept = default;
 
 change_stream::~change_stream() = default;
 
+void change_stream::iterator::operator++(int) {
+    operator++();
+}
+
 change_stream::iterator& change_stream::iterator::operator++() {
     _change_stream->_impl->advance_iterator();
     return *this;
