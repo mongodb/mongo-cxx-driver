@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <bsoncxx/document/view.hpp>
 #include <mongocxx/options/session.hpp>
 
 #include <mongocxx/config/prelude.hpp>
