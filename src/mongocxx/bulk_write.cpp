@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2014-present MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@
 #include <mongocxx/private/collection.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/session.hh>
 #include <mongocxx/private/write_concern.hh>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -160,7 +161,9 @@ void bulk_write::append(const model::write& operation) {
     }
 }
 
-bulk_write::bulk_write(const collection& coll, const options::bulk_write& options)
+bulk_write::bulk_write(const collection& coll,
+                       const options::bulk_write& options,
+                       const session* session)
     : _created_from_collection{true} {
     bsoncxx::builder::basic::document options_builder;
     if (!options.ordered()) {
@@ -168,6 +171,10 @@ bulk_write::bulk_write(const collection& coll, const options::bulk_write& option
     }
     if (options.write_concern()) {
         options_builder.append(kvp("writeConcern", options.write_concern()->to_document()));
+    }
+    if (session) {
+        options_builder.append(
+            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     scoped_bson_t bson_options(options_builder.extract());

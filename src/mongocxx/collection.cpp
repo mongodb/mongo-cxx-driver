@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2014-present MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -54,6 +54,7 @@
 #include <mongocxx/private/pipeline.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
+#include <mongocxx/private/session.hh>
 #include <mongocxx/private/write_concern.hh>
 #include <mongocxx/result/bulk_write.hpp>
 #include <mongocxx/result/delete.hpp>
@@ -214,6 +215,15 @@ collection& collection::operator=(const collection& c) {
 bulk_write collection::create_bulk_write(const options::bulk_write& options) {
     class bulk_write writes {
         *this, options
+    };
+
+    return writes;
+}
+
+bulk_write collection::create_bulk_write(const session& session,
+                                         const options::bulk_write& options) {
+    class bulk_write writes {
+        *this, options, &session
     };
 
     return writes;
@@ -440,8 +450,9 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
                                                   rp_ptr));
 }
 
-stdx::optional<result::insert_one> collection::insert_one(view_or_value document,
-                                                          const options::insert& options) {
+stdx::optional<result::insert_one> collection::_insert_one(view_or_value document,
+                                                           const options::insert& options,
+                                                           const session* session) {
     // TODO: We should consider making it possible to convert from an options::insert into
     // an options::bulk_write at the type level, removing the need to re-iterate this code
     // many times here and below.
@@ -459,10 +470,12 @@ stdx::optional<result::insert_one> collection::insert_one(view_or_value document
         bulk_opts.bypass_document_validation(*options.bypass_document_validation());
     }
 
-    auto bulk_op = create_bulk_write(bulk_opts);
+    class bulk_write bulk_op {
+        *this, bulk_opts, session
+    };
     bsoncxx::document::element oid{};
-
     bsoncxx::builder::basic::document new_document;
+
     if (!document.view()["_id"]) {
         new_document.append(kvp("_id", bsoncxx::oid()));
         new_document.append(concatenate(document));
@@ -480,6 +493,17 @@ stdx::optional<result::insert_one> collection::insert_one(view_or_value document
 
     return stdx::optional<result::insert_one>(
         result::insert_one(std::move(result.value()), std::move(oid.get_value())));
+}
+
+stdx::optional<result::insert_one> collection::insert_one(view_or_value document,
+                                                          const options::insert& options) {
+    return _insert_one(document, options);
+}
+
+stdx::optional<result::insert_one> collection::insert_one(view_or_value document,
+                                                          const session& session,
+                                                          const options::insert& options) {
+    return _insert_one(document, options, &session);
 }
 
 stdx::optional<result::replace_one> collection::replace_one(view_or_value filter,

@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2014-present MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,6 +52,7 @@
 #include <mongocxx/result/insert_one.hpp>
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
+#include <mongocxx/session.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -145,6 +146,8 @@ class MONGOCXX_API collection {
                      const options::aggregate& options = options::aggregate());
 
     ///
+    /// @{
+    ///
     /// Creates a new bulk operation to be executed against this collection.
     ///
     /// @param options
@@ -154,6 +157,23 @@ class MONGOCXX_API collection {
     ///    The newly-created bulk write.
     ///
     class bulk_write create_bulk_write(const options::bulk_write& options = {});
+
+    ///
+    /// Creates a new bulk operation to be executed against this collection.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the bulk operation.
+    /// @param options
+    ///   Optional arguments; see mongocxx::options::bulk_write.
+    ///
+    /// @return
+    ///    The newly-created bulk write.
+    ///
+    class bulk_write create_bulk_write(const session& session,
+                                       const options::bulk_write& options = {});
+    ///
+    /// @}
+    ///
 
     ///
     /// Sends a write to the server as a bulk write operation.
@@ -167,7 +187,7 @@ class MONGOCXX_API collection {
     ///   The optional result of the bulk operation execution.
     ///   If the write concern is unacknowledged, the optional will be
     ///   disengaged.
-    //
+    ///
     /// @exception
     ///   mongocxx::bulk_write_exception when there are errors processing
     ///   the writes.
@@ -193,7 +213,7 @@ class MONGOCXX_API collection {
     /// @return The optional result of the bulk operation execution.
     /// If the write concern is unacknowledged, the optional will be
     /// disengaged.
-    //
+    ///
     /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
     ///
     /// @see mongocxx::bulk_write
@@ -472,6 +492,8 @@ class MONGOCXX_API collection {
         const options::find_one_and_update& options = options::find_one_and_update());
 
     ///
+    /// @{
+    ///
     /// Inserts a single document into the collection. If the document is missing an identifier
     /// (@c _id field) one will be generated for it.
     ///
@@ -485,10 +507,30 @@ class MONGOCXX_API collection {
     /// disengaged.
     ///
     /// @throws mongocxx::bulk_write_exception if the operation fails.
+    stdx::optional<result::insert_one> insert_one(bsoncxx::document::view_or_value document,
+                                                  const options::insert& options = {});
     ///
-    stdx::optional<result::insert_one> insert_one(
-        bsoncxx::document::view_or_value document,
-        const options::insert& options = options::insert());
+    /// Inserts a single document into the collection. If the document is missing an identifier
+    /// (@c _id field) one will be generated for it.
+    ///
+    /// @param document
+    ///   The document to insert.
+    /// @param session
+    ///   The mongocxx::session with which to perform the insert.
+    /// @param options
+    ///   Optional arguments, see options::insert.
+    ///
+    /// @return The optional result of attempting to perform the insert.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws mongocxx::bulk_write_exception if the operation fails.
+    stdx::optional<result::insert_one> insert_one(bsoncxx::document::view_or_value document,
+                                                  const session& session,
+                                                  const options::insert& options = {});
+    ///
+    /// @}
+    ///
 
     ///
     /// Inserts multiple documents into the collection. If any of the documents are missing
@@ -497,7 +539,7 @@ class MONGOCXX_API collection {
     /// @warning This method uses the bulk insert command to execute the insertion as opposed to
     /// the legacy OP_INSERT wire protocol message. As a result, using this method to insert many
     /// documents on MongoDB < 2.6 will be slow.
-    //
+    ///
     /// @tparam containter_type
     ///   The container type. Must meet the requirements for the container concept with a value
     ///   type of model::write.
@@ -728,6 +770,11 @@ class MONGOCXX_API collection {
                                 bsoncxx::string::view_or_value collection_name);
 
     MONGOCXX_PRIVATE collection(const database& database, void* collection);
+
+    MONGOCXX_PRIVATE stdx::optional<result::insert_one> _insert_one(
+        bsoncxx::document::view_or_value document,
+        const options::insert& options,
+        const session* session = nullptr);
 
     class MONGOCXX_PRIVATE impl;
 

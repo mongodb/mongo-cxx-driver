@@ -23,44 +23,53 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+// Private constructors.
 session::session(const class client* client, const mongocxx::options::session& options)
     : _impl(stdx::make_unique<impl>(client, options)) {}
 
-session::~session() = default;
+session::session(session&&) noexcept = default;
+
+session& session::operator=(session&&) noexcept = default;
+
+session::~session() noexcept = default;
 
 const mongocxx::client& session::client() const noexcept {
-    return *_impl->client;
+    return _impl->client();
 }
 
 const mongocxx::options::session& session::options() const noexcept {
-    return _impl->options;
+    return _impl->options();
 }
 
-stdx::optional<bsoncxx::document::view> session::id() const noexcept {
+bsoncxx::document::view session::id() const noexcept {
     return _impl->id();
 }
 
-stdx::optional<bsoncxx::document::view> session::cluster_time() const {
-    /* TODO */
-    return {};
+bsoncxx::document::view session::cluster_time() const noexcept {
+    return _impl->cluster_time();
 }
 
-stdx::optional<bsoncxx::types::value> session::operation_time() const {
-    /* TODO */
-    return {};
+bsoncxx::types::b_timestamp session::operation_time() const noexcept {
+    return _impl->operation_time();
 }
 
-bool session::has_ended() const noexcept {
-    return _impl->has_ended();
+void session::advance_cluster_time(const bsoncxx::document::view& cluster_time) {
+    _impl->advance_cluster_time(cluster_time);
 }
 
-void session::end_session() {
-    _impl->end_session();
+void session::advance_operation_time(const bsoncxx::types::b_timestamp& operation_time) {
+    _impl->advance_operation_time(operation_time);
 }
 
-void session::advance_cluster_time(const bsoncxx::document::view& cluster_time) {}
+const session::impl& session::_get_impl() const {
+    // Never null.
+    return *_impl;
+}
 
-void session::advance_operation_time(const bsoncxx::document::value& operation_time) {}
+session::impl& session::_get_impl() {
+    auto cthis = const_cast<const session*>(this);
+    return const_cast<session::impl&>(cthis->_get_impl());
+}
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

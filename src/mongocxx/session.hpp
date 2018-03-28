@@ -32,7 +32,6 @@ class client;
 ///
 /// @see http://dochub.mongodb.org/core/causal-consistency
 ///
-
 class MONGOCXX_API session {
    public:
     ///
@@ -105,12 +104,18 @@ class MONGOCXX_API session {
     void advance_operation_time(const bsoncxx::types::b_timestamp& operation_time);
 
    private:
+    friend class bulk_write;
     friend class client;
+    friend class collection;
+
+    class MONGOCXX_PRIVATE impl;
 
     // "class client" distinguishes from client() method above.
     MONGOCXX_PRIVATE session(const class client* client, const options::session& options);
 
-    class MONGOCXX_PRIVATE impl;
+    MONGOCXX_PRIVATE impl& _get_impl();
+    MONGOCXX_PRIVATE const impl& _get_impl() const;
+
     std::unique_ptr<impl> _impl;
 };
 

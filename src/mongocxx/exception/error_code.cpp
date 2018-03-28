@@ -78,6 +78,10 @@ class error_category final : public std::error_category {
                 return "a GridFS file being operated on was discovered to be corrupted";
             case error_code::k_instance_destroyed:
                 return "the mongocxx instance has been destroyed";
+            case error_code::k_cannot_create_session:
+                return "failed to create a client session";
+            case error_code::k_invalid_session:
+                return "an invalid session was provided";
             default:
                 return "unknown mongocxx error";
         }
