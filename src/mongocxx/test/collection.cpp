@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <chrono>
+#include <iostream>
 #include <vector>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -22,7 +23,6 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
-#include <iostream>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
@@ -193,6 +193,10 @@ TEST_CASE("Change Streams") {
     options.max_await_time(std::chrono::milliseconds{50000});
 
     change_stream stream = events.watch(options);
+
+    change_stream::iterator it = stream.begin();
+    change_stream::iterator it2 = it;
+    change_stream::iterator it3 = {std::move(it2)};
 
     for (auto&& it : stream) {
         printf("Got:  %s\n", bsoncxx::to_json(it).c_str());

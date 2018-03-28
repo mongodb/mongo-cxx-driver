@@ -64,7 +64,7 @@ class change_stream::impl {
     }
 
     inline void mark_nothing_left() {
-        doc = bsoncxx::document::view{};
+        doc_ = bsoncxx::document::view{};
         exhausted = true;
         status = state::k_pending;
     }
@@ -77,22 +77,27 @@ class change_stream::impl {
     void advance_iterator() {
         const bson_t* out;
         if (libmongoc::change_stream_next(this->change_stream_t, &out)) {
-            this->doc = bsoncxx::document::view{bson_get_data(out), out->len};
+            this->doc_ = bsoncxx::document::view{bson_get_data(out), out->len};
         } else if (bson_error_t error{};
                    libmongoc::change_stream_error_document(this->change_stream_t, &error, &out)) {
             this->mark_dead();
             // TODO: test case of this - that after error we don't hold onto last doc
             // TODO: test accessing the documenting with operator* and operator-> after an error
             // shouldn't crash.
-            this->doc = bsoncxx::document::view{};
+            this->doc_ = bsoncxx::document::view{};
             throw_exception<query_exception>(error);
         } else {
             this->mark_nothing_left();
         }
     }
 
+    inline bsoncxx::document::view& doc() {
+        return this->doc_;
+    }
+
+   private:
     mongoc_change_stream_t* const change_stream_t;
-    bsoncxx::document::view doc;
+    bsoncxx::document::view doc_;
     state status;
     bool exhausted;
 };

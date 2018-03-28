@@ -77,11 +77,11 @@ bool change_stream::iterator::is_exhausted() const {
 }
 
 const bsoncxx::document::view& change_stream::iterator::operator*() const noexcept {
-    return _change_stream->_impl->doc;
+    return _change_stream->_impl->doc();
 }
 
 const bsoncxx::document::view* change_stream::iterator::operator->() const noexcept {
-    return &_change_stream->_impl->doc;
+    return &_change_stream->_impl->doc();
 }
 
 //
