@@ -18,13 +18,16 @@
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
+#include <iostream>
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/exception.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
-
-#include "example_assert.hh"
 
 // NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
 // corresponding page on docs.mongodb.com. See CXX-1514, CXX-1249, and DRIVERS-356 for more info.
+
+using namespace mongocxx;
 
 void aggregation_examples(const mongocxx::database& db) {
     {
@@ -39,7 +42,9 @@ void aggregation_examples(const mongocxx::database& db) {
         // End Aggregation Example 1
 
         auto count = std::distance(cursor.begin(), cursor.end());
-        MONGOCXX_EXAMPLE_ASSERT(count == 0L);
+        if (count != 0L) {
+            throw std::logic_error("wrong count in example 1");
+        }
     }
 
     {
@@ -60,7 +65,9 @@ void aggregation_examples(const mongocxx::database& db) {
         // End Aggregation Example 2
 
         auto count = std::distance(cursor.begin(), cursor.end());
-        MONGOCXX_EXAMPLE_ASSERT(count == 0L);
+        if (count != 0L) {
+            throw std::logic_error("wrong count in example 2");
+        }
     }
 
     {
@@ -92,7 +99,9 @@ void aggregation_examples(const mongocxx::database& db) {
         // End Aggregation Example 3
 
         auto count = std::distance(cursor.begin(), cursor.end());
-        MONGOCXX_EXAMPLE_ASSERT(count == 0L);
+        if (count != 0L) {
+            throw std::logic_error("wrong count in example 3");
+        }
     }
 
     {
@@ -126,7 +135,9 @@ void aggregation_examples(const mongocxx::database& db) {
         // End Aggregation Example 4
 
         auto count = std::distance(cursor.begin(), cursor.end());
-        MONGOCXX_EXAMPLE_ASSERT(count == 0L);
+        if (count != 0L) {
+            throw std::logic_error("wrong count in example 4");
+        }
     }
 }
 
@@ -138,7 +149,13 @@ int main() {
 
     const mongocxx::client conn{mongocxx::uri{}};
     auto const db = conn["documentation_examples"];
-    aggregation_examples(db);
+
+    try {
+        aggregation_examples(db);
+    } catch (const std::logic_error& e) {
+        std::cerr << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
 
     return EXIT_SUCCESS;
 }
