@@ -171,6 +171,16 @@ TEST_CASE("collection dropping") {
  *      multiple calls to begin()
  *      .end() == .end()
  *      call .begin() to resume
+ *      calling .begin() after error doesn't crash
+ *      user-constructed iterator == .end()
+ *      tests that iterator meets criteria specified here:
+ *          The requirements for iterator equality tests are very weak for input iterators.
+ *          http://en.cppreference.com/w/cpp/concept/Iterator
+ *          http://en.cppreference.com/w/cpp/concept/InputIterator
+ *     And follow the links to things like:
+ *      http://en.cppreference.com/w/cpp/concept/EqualityComparable
+ *      http://en.cppreference.com/w/cpp/concept/CopyAssignable
+*     It would be great to do that for cursor::iterator too.
  */
 TEST_CASE("Change Streams") {
     instance::current();

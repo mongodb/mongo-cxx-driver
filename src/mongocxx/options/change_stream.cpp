@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/core.hpp>
 #include <mongocxx/options/change_stream.hpp>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/core.hpp>
+
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
+
+change_stream::change_stream() = default;
+
 change_stream& change_stream::full_document(bsoncxx::string::view_or_value full_doc) {
     _full_document = std::move(full_doc);
     return *this;
@@ -68,10 +72,6 @@ const stdx::optional<std::chrono::milliseconds>& change_stream::max_await_time()
     return _max_await_time;
 }
 
-change_stream::change_stream() = default;
-
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
-
-#include <mongocxx/config/private/postlude.hh>

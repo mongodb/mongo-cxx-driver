@@ -949,7 +949,7 @@ inline void append_if(bsoncxx::builder::basic::document& doc,
 }
 
 bsoncxx::document::value as_bson(const options::change_stream& cs) {
-    // construct new one each time since values may change after this is called
+    // Construct new bson rep each time since values may change after this is called.
     bsoncxx::builder::basic::document out{};
 
     append_if(out, "fullDocument", cs.full_document());

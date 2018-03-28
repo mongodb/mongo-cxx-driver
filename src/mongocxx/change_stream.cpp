@@ -57,6 +57,10 @@ change_stream::iterator change_stream::end() {
     return iterator(nullptr);
 }
 
+// C++11 delegate constructor
+change_stream::iterator::iterator()
+: change_stream::iterator::iterator{nullptr} {}
+
 change_stream::iterator::iterator(change_stream* change_stream) : _change_stream(change_stream) {
     if (_change_stream == nullptr || _change_stream->_impl->has_started()) {
         return;

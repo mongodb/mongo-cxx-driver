@@ -33,12 +33,12 @@ class MONGOCXX_API change_stream {
     ///
     /// Move constructs a change_stream.
     ///
-    change_stream(change_stream&&) noexcept;
+    change_stream(change_stream&& other) noexcept;
 
     ///
     /// Move assigns a change_stream.
     ///
-    change_stream& operator=(change_stream&&) noexcept;
+    change_stream& operator=(change_stream&& other) noexcept;
 
     ///
     /// Destroys a change_stream.
@@ -72,7 +72,8 @@ class MONGOCXX_API change_stream {
     /// no notifications are available from the stream.
     ///
     /// @return
-    ///   The change_steram::iterator indicating exhaustion
+    ///   The change_stream::iterator indicating exhaustion
+    ///
     iterator end();
 
    private:
@@ -87,6 +88,13 @@ class MONGOCXX_API change_stream {
 
 class MONGOCXX_API change_stream::iterator {
    public:
+
+    ///
+    /// Default-construct an iterator.
+    /// This is equivalent to change_stream::end()
+    ///
+    iterator();
+
     ///
     /// Dereferences the view for the document currently being pointed to.
     ///
@@ -131,6 +139,7 @@ class MONGOCXX_API change_stream::iterator {
     ///
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const change_stream::iterator&,
                                                       const change_stream::iterator&);
+
     friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const change_stream::iterator&,
                                                       const change_stream::iterator&);
     ///

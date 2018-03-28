@@ -25,6 +25,12 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class change_stream::impl {
+
+    // no copy or move
+    impl(impl&) = delete;
+    impl(impl&&) = delete;
+    impl& operator=(const impl&) = delete;
+
    public:
     // lifecycle of the cursor
     // k_started means that libmongoc::change_stream_next has been called at least once.
@@ -32,8 +38,8 @@ class change_stream::impl {
     // k_dead means that an error was indicated by a call to next
     enum class state { k_pending = 0, k_started = 1, k_dead = 2 };
 
-    impl(mongoc_change_stream_t* change_stream)
-        : change_stream_t(change_stream), status{state::k_pending}, exhausted{true} {}
+    explicit impl(mongoc_change_stream_t* change_stream)
+        : change_stream_t{change_stream}, status{state::k_pending}, exhausted{true} {}
 
     // TODO: mongoc_change_stream_destroy also destroys the collection
     ~impl() {
@@ -85,7 +91,7 @@ class change_stream::impl {
         }
     }
 
-    mongoc_change_stream_t* change_stream_t;
+    mongoc_change_stream_t* const change_stream_t;
     bsoncxx::document::view doc;
     state status;
     bool exhausted;
