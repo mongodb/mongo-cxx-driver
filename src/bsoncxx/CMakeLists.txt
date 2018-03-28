@@ -216,12 +216,12 @@ install(FILES
 install(TARGETS
     bsoncxx
     RUNTIME DESTINATION bin COMPONENT runtime
-    LIBRARY DESTINATION lib COMPONENT runtime
-    ARCHIVE DESTINATION lib COMPONENT dev
+    LIBRARY DESTINATION lib${LIB_SUFFIX} COMPONENT runtime
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT dev
 )
 
 set(PACKAGE_INCLUDE_INSTALL_DIRS ${BSONCXX_HEADER_INSTALL_DIR})
-set(PACKAGE_LIBRARY_INSTALL_DIRS lib)
+set(PACKAGE_LIBRARY_INSTALL_DIRS lib${LIB_SUFFIX})
 set(PACKAGE_LIBRARIES bsoncxx)
 
 include(CMakePackageConfigHelpers)
@@ -234,7 +234,7 @@ endif()
 
 configure_package_config_file(
   cmake/${PKG}-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config.cmake
-  INSTALL_DESTINATION lib/cmake/${PKG}-${BSONCXX_VERSION}
+  INSTALL_DESTINATION lib${LIB_SUFFIX}/cmake/${PKG}-${BSONCXX_VERSION}
   PATH_VARS PACKAGE_INCLUDE_INSTALL_DIRS PACKAGE_LIBRARY_INSTALL_DIRS
 )
 
@@ -246,7 +246,7 @@ write_basic_package_version_file(
 
 install(
   FILES ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config-version.cmake
-  DESTINATION lib/cmake/${PKG}-${BSONCXX_VERSION}
+  DESTINATION lib${LIB_SUFFIX}/cmake/${PKG}-${BSONCXX_VERSION}
 )
 
 add_subdirectory(test)
