@@ -32,6 +32,23 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+// Requirements for concept Iterator:
+// http://en.cppreference.com/w/cpp/concept/Iterator
+static_assert(std::is_copy_constructible<change_stream::iterator>::value);
+static_assert(std::is_copy_assignable<change_stream::iterator>::value);
+static_assert(std::is_destructible<change_stream::iterator>::value);
+static_assert(std::is_swappable<change_stream::iterator::value_type>::value);
+
+// Below basically assert that we have the traits on change_stream::iterator
+// so they can't be accidentally removed.
+static_assert(std::is_integral<change_stream::iterator::difference_type >::value);
+static_assert(std::is_class<change_stream::iterator::value_type>::value);
+static_assert(std::is_pointer<change_stream::iterator::pointer>::value);
+static_assert(std::is_reference<change_stream::iterator::reference>::value);
+// Not sure how to assert change_stream::iterator::iterator_category == std::input_iterator_tag
+// http://en.cppreference.com/w/cpp/concept/InputIterator
+// Can't directly assert equality-comparable (https://stackoverflow.com/questions/16399346/)
+
 // void* since we don't leak C driver defs into C++ driver
 change_stream::change_stream(void* change_stream_ptr)
     : _impl(stdx::make_unique<impl>(static_cast<mongoc_change_stream_t*>(change_stream_ptr))) {}
