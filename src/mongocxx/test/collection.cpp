@@ -171,7 +171,9 @@ TEST_CASE("collection dropping") {
  *      multiple calls to begin()
  *      .end() == .end()
  *      call .begin() to resume
+ *      after error we don't hold onto last doc
  *      calling .begin() after error doesn't crash
+ *      accessing the documenting with operator* and operator-> after an error doesn't crash
  *      user-constructed iterator == .end()
  *      tests that iterator meets criteria specified here:
  *          The requirements for iterator equality tests are very weak for input iterators.
