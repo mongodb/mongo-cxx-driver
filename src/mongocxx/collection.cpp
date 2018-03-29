@@ -972,15 +972,12 @@ class change_stream collection::watch(const options::change_stream& options) {
 }
 
 class change_stream collection::watch(const pipeline& pipe, const options::change_stream& options) {
-    // TODO: is scoped_bson_t correct here?
-
-    // TODO: how to call `operator document::view()` on the pipe.view()?
-    scoped_bson_t pipeline_bson{};
-    pipeline_bson.init_from_static(pipe.view());
+    scoped_bson_t pipeline_bson{bsoncxx::document::view(pipe._impl->view_array())};
 
     scoped_bson_t options_bson{};
     options_bson.init_from_static(as_bson(options));
 
+    // NB: collection_watch copies what it needs so we're safe to destroy our copies.
     return change_stream{libmongoc::collection_watch(
         _get_impl().collection_t, pipeline_bson.bson(), options_bson.bson())};
 }

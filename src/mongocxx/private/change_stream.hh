@@ -25,7 +25,6 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class change_stream::impl {
-
     // no copy or move
     impl(impl&) = delete;
     impl(impl&&) = delete;

@@ -88,7 +88,6 @@ class MONGOCXX_API change_stream {
 
 class MONGOCXX_API change_stream::iterator {
    public:
-
     ///
     /// Default-construct an iterator.
     /// This is equivalent to change_stream::end()
