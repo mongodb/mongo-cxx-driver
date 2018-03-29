@@ -114,12 +114,44 @@ SCENARIO("A collection is watched") {
 
     GIVEN("We have a single event") {
         change_stream x = events.watch();
-        auto result = events.insert_one(doc("a","b"));
-        REQUIRE(result);
+        REQUIRE(events.insert_one(doc("a","b")));
 
         THEN("We can receive an event") {
             auto it = *(x.begin());
             REQUIRE(it["fullDocument"]["a"].get_utf8().value == "b");
+        }
+
+        THEN("We can deref iterator with value multiple times") {
+            auto it = x.begin();
+            auto a = *it;
+            auto b = *it;
+            REQUIRE(a["fullDocument"]["a"].get_utf8().value == "b");
+            REQUIRE(b["fullDocument"]["a"].get_utf8().value == "b");
+        }
+
+        THEN("Calling .begin multiple times doesn't advance state") {
+            auto a = *(x.begin());
+            auto b = *(x.begin());
+            REQUIRE( a == b );
+        }
+
+        THEN("We have no more events after the first one") {
+            auto it = x.begin();
+            it++;
+            REQUIRE(it == x.end());
+            REQUIRE(x.begin() == x.end());
+        }
+
+        THEN("Past end is empty document") {
+            auto it = x.begin();
+            it++;
+            REQUIRE(*it == bsoncxx::builder::basic::document{});
+        }
+
+        THEN("Can dereference end()") {
+            auto it = x.begin();
+            it++;
+            REQUIRE(*it == *it);
         }
     }
 
