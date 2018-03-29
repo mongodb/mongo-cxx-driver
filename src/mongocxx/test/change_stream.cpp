@@ -37,6 +37,9 @@
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
+#include <mongocxx/private/libbson.hh>
+#include <bson.h>
+#include <mongocxx/private/libbson.hh>
 
 namespace {
 
@@ -53,10 +56,10 @@ using namespace mongocxx;
  *      mal-formed pipeline (can't)
  *      no pipeline (done)
  *      copy-construct (done)
- *      move-construct
- *      no more data
+ *      move-construct (done)
+ *      no more data (done)
  *      error response -  with self.coll.watch([{'$project': {'_id': 0}}]) as change_stream
- *      multiple calls to begin()
+ *      multiple calls to begin() (done)
  *      .end() == .end() (done)
  *      call .begin() to resume
  *      after error we don't hold onto last doc
@@ -83,6 +86,48 @@ bsoncxx::document::value doc(std::string key, T val) {
 std::ostream& operator<<(std::ostream&out, const bsoncxx::document::view_or_value& document) {
     out << bsoncxx::to_json(document);
     return out;
+}
+
+SCENARIO("We project data") {
+
+    instance::current();
+    client mongodb_client{uri{}};
+    options::change_stream options{};
+
+    database db = mongodb_client["streams"];
+    collection events = db["events"];
+
+    using namespace std;
+
+    GIVEN("We don't project the ID") {
+        WHEN("We try to create a change stream") {
+            auto pipe = pipeline{};
+            // TODO: why does the server not barf on this?
+            // TODO: how to simulate an error?
+//            pipe.unwind(doc("invalid","[]"));
+//            options.full_document(bsoncxx::string::view_or_value{"default"});
+            pipe.project(doc("_id", 0));
+            auto stream = events.watch(pipe, options);
+            REQUIRE(events.insert_one(doc("a","b")));
+//            REQUIRE(events.insert_one(doc("a","b")));
+//            REQUIRE(events.insert_one(doc("a","b")));
+
+            THEN("We get an error") {
+                auto it = stream.begin();
+                auto val = *it;
+                CAPTURE(val);
+                auto operationType = val.operator[]("_id").get_utf8().value;
+                CAPTURE(operationType);
+//                std::cout << "operationType=" << operationType.get_utf8().value << std::endl;
+//                INFO("We got value " << *it << endl); it++;
+//                INFO("We got value " << *it << endl); it++;
+//                INFO("We got value " << *it << endl); it++;
+//                INFO("We got value " << *it << endl); it++;
+                CHECK(false);
+            }
+
+        }
+    }
 }
 
 SCENARIO("A collection is watched") {
@@ -116,6 +161,7 @@ SCENARIO("A collection is watched") {
             REQUIRE(x.end() == change_stream::iterator{});
         }
     }
+
 
     GIVEN("We have a single event") {
         change_stream x = events.watch();
