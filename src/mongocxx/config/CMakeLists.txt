@@ -43,7 +43,7 @@ if (BUILD_SHARED_LIBS)
 
     install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/libmongocxx.pc"
-        DESTINATION lib/pkgconfig
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
         COMPONENT dev
     )
 else()
@@ -55,7 +55,7 @@ else()
 
     install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/libmongocxx-static.pc"
-        DESTINATION lib/pkgconfig
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
         COMPONENT dev
     )
 endif()

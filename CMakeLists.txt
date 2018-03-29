@@ -80,6 +80,8 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "default install path" FORCE)
 endif()
 
+include(GNUInstallDirs)
+
 if(NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type selected, default is Release")
     set(CMAKE_BUILD_TYPE "Release")

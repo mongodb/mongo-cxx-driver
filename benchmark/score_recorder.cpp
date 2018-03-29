@@ -14,6 +14,9 @@
 
 #include "score_recorder.hpp"
 
+#include <algorithm>
+#include <stdexcept>
+
 namespace benchmark {
 
 score_recorder::score_recorder(double task_size)
