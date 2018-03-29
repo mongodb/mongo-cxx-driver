@@ -55,7 +55,7 @@ using namespace mongocxx;
  *      copy-construct (done)
  *      move-construct
  *      no more data
- *      error response
+ *      error response -  with self.coll.watch([{'$project': {'_id': 0}}]) as change_stream
  *      multiple calls to begin()
  *      .end() == .end() (done)
  *      call .begin() to resume
@@ -110,6 +110,11 @@ SCENARIO("A collection is watched") {
             change_stream x = events.watch();
             REQUIRE(x.begin() == x.end());
         }
+        THEN("Empty iterator is equivalent to user-constructed iterator") {
+            change_stream x = events.watch();
+            REQUIRE(x.begin() == change_stream::iterator{});
+            REQUIRE(x.end() == change_stream::iterator{});
+        }
     }
 
     GIVEN("We have a single event") {
@@ -154,6 +159,7 @@ SCENARIO("A collection is watched") {
             REQUIRE(*it == *it);
         }
     }
+
 
 }
 
