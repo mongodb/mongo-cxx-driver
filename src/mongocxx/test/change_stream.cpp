@@ -49,32 +49,33 @@ using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 
 using namespace mongocxx;
-// TODO: move to different file (?)
-// this is just sandbox/exploratory-testing for now
 /*
  * Test-cases:
- *      mal-formed pipeline (can't)
- *      no pipeline (done)
- *      copy-construct (done)
- *      move-construct (done)
- *      no more data (done)
- *      error response -  with self.coll.watch([{'$project': {'_id': 0}}]) as change_stream
- *      multiple calls to begin() (done)
- *      .end() == .end() (done)
- *      call .begin() to resume
- *      after error we don't hold onto last doc
- *      calling .begin() after error doesn't crash
- *      accessing the documenting with operator* and operator-> after an error doesn't crash
- *      user-constructed iterator == .end()
- *      tests that iterator meets criteria specified here:
- *          The requirements for iterator equality tests are very weak for input iterators.
- *          http://en.cppreference.com/w/cpp/concept/Iterator
- *          http://en.cppreference.com/w/cpp/concept/InputIterator
- *     And follow the links to things like:
- *      http://en.cppreference.com/w/cpp/concept/EqualityComparable
- *      http://en.cppreference.com/w/cpp/concept/CopyAssignable
- *     It would be great to do that for cursor::iterator too.
- */
+
+TODO Remaining:
+    call .begin() to resume
+    add range-based for usage
+    should we be using cbegin etc?
+    assert behavior of http://en.cppreference.com/w/cpp/concept/Iterator (mostly done?)
+    assert behavior of http://en.cppreference.com/w/cpp/concept/InputIterator
+    Do ^^ for cursor::iterator too or cut a CXX ticket for the same
+
+Done:
+    no pipeline
+    copy-construct
+    move-construct
+    no more data
+    multiple calls to begin()
+    .end() == .end()
+    user-constructed iterator == .end()
+
+error cases (TODO need help simulating error)
+    mal-formed pipeline (can't)
+    error response -  with self.coll.watch([{'$project': {'_id': 0}}]) as change_stream
+    after error we don't hold onto last doc
+    calling .begin() after error doesn't crash
+    accessing the documenting with operator* and operator-> after an error doesn't crash
+*/
 
 template<typename T>
 bsoncxx::document::value doc(std::string key, T val) {
