@@ -18,6 +18,7 @@
 #include <thread>
 #include <vector>
 
+#include <bson.h>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
@@ -34,12 +35,11 @@
 #include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pipeline.hpp>
+#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/libbson.hh>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
-#include <mongocxx/private/libbson.hh>
-#include <bson.h>
-#include <mongocxx/private/libbson.hh>
 
 namespace {
 
@@ -69,7 +69,7 @@ Done:
     .end() == .end()
     user-constructed iterator == .end()
 
-error cases (TODO need help simulating error)
+error cases (TODO how to simulate error?)
     mal-formed pipeline (can't)
     error response -  with self.coll.watch([{'$project': {'_id': 0}}]) as change_stream
     after error we don't hold onto last doc
@@ -77,20 +77,23 @@ error cases (TODO need help simulating error)
     accessing the documenting with operator* and operator-> after an error doesn't crash
 */
 
-template<typename T>
-bsoncxx::document::value doc(std::string key, T val) {
-    bsoncxx::builder::basic::document out {};
+///
+/// Create a single-item document
+/// E.g. doc("foo", 123) creates {"foo":123}
+///
+template <typename T>
+inline bsoncxx::document::value doc(std::string key, T val) {
+    bsoncxx::builder::basic::document out{};
     out.append(kvp(key, val));
     return std::move(out.extract());
 }
 
-std::ostream& operator<<(std::ostream&out, const bsoncxx::document::view_or_value& document) {
+std::ostream& operator<<(std::ostream& out, const bsoncxx::document::view_or_value& document) {
     out << bsoncxx::to_json(document);
     return out;
 }
 
 SCENARIO("We project data") {
-
     instance::current();
     client mongodb_client{uri{}};
     options::change_stream options{};
@@ -103,30 +106,17 @@ SCENARIO("We project data") {
     GIVEN("We don't project the ID") {
         WHEN("We try to create a change stream") {
             auto pipe = pipeline{};
-            // TODO: why does the server not barf on this?
-            // TODO: how to simulate an error?
-//            pipe.unwind(doc("invalid","[]"));
-//            options.full_document(bsoncxx::string::view_or_value{"default"});
+            //            TODO: why does the server not barf on this?
+            //            pipe.unwind(doc("invalid","[]"));
+            //            options.full_document(bsoncxx::string::view_or_value{"default"});
             pipe.project(doc("_id", 0));
             auto stream = events.watch(pipe, options);
-            REQUIRE(events.insert_one(doc("a","b")));
-//            REQUIRE(events.insert_one(doc("a","b")));
-//            REQUIRE(events.insert_one(doc("a","b")));
+            REQUIRE(events.insert_one(doc("a", "b")));
 
             THEN("We get an error") {
-                auto it = stream.begin();
-                auto val = *it;
-                CAPTURE(val);
-                auto operationType = val.operator[]("_id").get_utf8().value;
-                CAPTURE(operationType);
-//                std::cout << "operationType=" << operationType.get_utf8().value << std::endl;
-//                INFO("We got value " << *it << endl); it++;
-//                INFO("We got value " << *it << endl); it++;
-//                INFO("We got value " << *it << endl); it++;
-//                INFO("We got value " << *it << endl); it++;
-                CHECK(false);
+                // TODO: doesn't actually throw ....
+                REQUIRE_THROWS(stream.begin());
             }
-
         }
     }
 }
@@ -163,10 +153,9 @@ SCENARIO("A collection is watched") {
         }
     }
 
-
     GIVEN("We have a single event") {
         change_stream x = events.watch();
-        REQUIRE(events.insert_one(doc("a","b")));
+        REQUIRE(events.insert_one(doc("a", "b")));
 
         THEN("We can receive an event") {
             auto it = *(x.begin());
@@ -184,7 +173,7 @@ SCENARIO("A collection is watched") {
         THEN("Calling .begin multiple times doesn't advance state") {
             auto a = *(x.begin());
             auto b = *(x.begin());
-            REQUIRE( a == b );
+            REQUIRE(a == b);
         }
 
         THEN("We have no more events after the first one") {
@@ -206,8 +195,6 @@ SCENARIO("A collection is watched") {
             REQUIRE(*it == *it);
         }
     }
-
-
 }
 
 TEST_CASE("Change Streams") {
@@ -239,4 +226,4 @@ TEST_CASE("Change Streams") {
     REQUIRE(events);
 }
 
-} // namepsace
+}  // namepsace

@@ -41,7 +41,7 @@ static_assert(std::is_swappable<change_stream::iterator::value_type>::value);
 
 // Below basically assert that we have the traits on change_stream::iterator
 // so they can't be accidentally removed.
-static_assert(std::is_integral<change_stream::iterator::difference_type >::value);
+static_assert(std::is_integral<change_stream::iterator::difference_type>::value);
 static_assert(std::is_class<change_stream::iterator::value_type>::value);
 static_assert(std::is_pointer<change_stream::iterator::pointer>::value);
 static_assert(std::is_reference<change_stream::iterator::reference>::value);
