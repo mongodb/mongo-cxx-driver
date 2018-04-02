@@ -40,6 +40,7 @@
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
+#include <third_party/catch/include/helpers.hpp>
 
 namespace {
 
@@ -91,6 +92,100 @@ inline bsoncxx::document::value doc(std::string key, T val) {
 std::ostream& operator<<(std::ostream& out, const bsoncxx::document::view_or_value& document) {
     out << bsoncxx::to_json(document);
     return out;
+}
+
+struct response {
+    // TODO
+};
+
+struct mock_stream_state {
+    explicit mock_stream_state() : mock_stream_state{{}} {}
+    explicit mock_stream_state(std::vector<response>&& resp) : responses{std::move(resp)} {}
+
+    template <typename F>  // uref
+    void next_op(F&& f) {
+        f->interpose([&](mongoc_change_stream_t* stream, const bson_t** bson) -> bool {
+            return this->next(stream, bson);
+        });
+    }
+
+    template <typename F>
+    void watch_op(F&& f) {
+        // way to DRY this up?
+        f->interpose([&](const mongoc_collection_t* coll,
+                         const bson_t* pipeline,
+                         const bson_t* opts) -> mongoc_change_stream_t* {
+            return this->watch(coll, pipeline, opts);
+        });
+    }
+
+    template <typename F>
+    void destroy_op(F&& f) {
+        f->interpose([&](mongoc_change_stream_t* stream) -> void { return this->destroy(stream); });
+    }
+
+    template <typename F>
+    void error_op(F&& f) {
+        f->interpose([&](const mongoc_change_stream_t* stream,
+                         bson_error_t* err,
+                         const bson_t** bson) -> bool { return this->error(stream, err, bson); });
+    }
+
+    bool next(mongoc_change_stream_t* stream, const bson_t** bson) {
+        return false;
+    }
+
+    bool error(const mongoc_change_stream_t* stream, bson_error_t* err, const bson_t** bson) {
+        return false;
+    }
+
+    void destroy(mongoc_change_stream_t* stream) {
+        destroyed = true;
+    }
+
+    mongoc_change_stream_t* watch(const mongoc_collection_t* coll,
+                                  const bson_t* pipeline,
+                                  const bson_t* opts) {
+        return nullptr;
+    }
+
+    std::vector<response> responses;
+    bool destroyed = false;
+};
+
+template <typename T>
+class TD;
+
+SCENARIO("We have errors") {
+    MOCK_CHANGE_STREAM
+
+    instance::current();
+    client mongodb_client{uri{}};
+    options::change_stream options{};
+
+    database db = mongodb_client["streams"];
+    collection events = db["events"];
+
+    using namespace std;
+
+    // Setup mocks
+    bool destroyed = false;
+
+    mock_stream_state state;
+
+    state.watch_op(collection_watch);
+    state.destroy_op(change_stream_destroy);
+    state.next_op(change_stream_next);
+    state.error_op(change_stream_error_document);
+
+    WHEN("We watch") {
+        THEN("There is an error") {
+            CAPTURE("BEFORE EVENTS.WATCH");
+            auto stream = events.watch();
+            CAPTURE("Have stream");
+            stream.begin();
+        }
+    }
 }
 
 SCENARIO("We project data") {
