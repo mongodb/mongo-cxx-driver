@@ -35,7 +35,7 @@ class change_stream::impl {
     // k_started means that libmongoc::change_stream_next has been called at least once.
     // k_pending means it hasn't
     // k_dead means that an error was indicated by a call to next
-    enum class state { k_pending = 0, k_started = 1, k_dead = 2 };
+    enum class state { k_pending, k_started, k_dead };
 
     explicit impl(mongoc_change_stream_t* change_stream)
         : change_stream_{change_stream}, status_{state::k_pending}, exhausted_{true} {}
