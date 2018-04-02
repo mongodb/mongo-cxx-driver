@@ -38,49 +38,49 @@ class change_stream::impl {
     enum class state { k_pending = 0, k_started = 1, k_dead = 2 };
 
     explicit impl(mongoc_change_stream_t* change_stream)
-        : change_stream_t{change_stream}, status{state::k_pending}, exhausted{true} {}
+        : change_stream_{change_stream}, status_{state::k_pending}, exhausted_{true} {}
 
     ~impl() {
-        libmongoc::change_stream_destroy(change_stream_t);
+        libmongoc::change_stream_destroy(this->change_stream_);
     }
 
     inline bool has_started() const {
-        return status >= state::k_started;
+        return status_ >= state::k_started;
     }
 
     inline bool is_dead() const {
-        return status == state::k_dead;
+        return status_ == state::k_dead;
     }
 
     inline bool is_exhausted() const {
-        return exhausted;
+        return exhausted_;
     }
 
     inline void mark_dead() {
         mark_nothing_left();
-        status = state::k_dead;
+        status_ = state::k_dead;
     }
 
     inline void mark_nothing_left() {
         doc_ = bsoncxx::document::view{};
-        exhausted = true;
-        status = state::k_pending;
+        exhausted_ = true;
+        status_ = state::k_pending;
     }
 
     inline void mark_started() {
-        status = state::k_started;
-        exhausted = false;
+        status_ = state::k_started;
+        exhausted_ = false;
     }
 
     void advance_iterator() {
         const bson_t* out;
-        if (libmongoc::change_stream_next(this->change_stream_t, &out)) {
+        if (libmongoc::change_stream_next(this->change_stream_, &out)) {
             this->doc_ = bsoncxx::document::view{bson_get_data(out), out->len};
         } else {
             // Separate if/else branch to avoid stack-allocating bson_error_t in happy case
             // change_stream_next succeeding.
             bson_error_t error;
-            if (libmongoc::change_stream_error_document(this->change_stream_t, &error, &out)) {
+            if (libmongoc::change_stream_error_document(this->change_stream_, &error, &out)) {
                 this->mark_dead();
                 this->doc_ = bsoncxx::document::view{};
                 throw_exception<query_exception>(error);
@@ -95,10 +95,10 @@ class change_stream::impl {
     }
 
    private:
-    mongoc_change_stream_t* const change_stream_t;
+    mongoc_change_stream_t* const change_stream_;
     bsoncxx::document::view doc_;
-    state status;
-    bool exhausted;
+    state status_;
+    bool exhausted_;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
