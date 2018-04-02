@@ -76,13 +76,17 @@ class change_stream::impl {
         const bson_t* out;
         if (libmongoc::change_stream_next(this->change_stream_t, &out)) {
             this->doc_ = bsoncxx::document::view{bson_get_data(out), out->len};
-        } else if (bson_error_t error{};
-                   libmongoc::change_stream_error_document(this->change_stream_t, &error, &out)) {
-            this->mark_dead();
-            this->doc_ = bsoncxx::document::view{};
-            throw_exception<query_exception>(error);
         } else {
-            this->mark_nothing_left();
+            // Separate if/else branch to avoid stack-allocating bson_error_t in happy case
+            // change_stream_next succeeding.
+            bson_error_t error;
+            if (libmongoc::change_stream_error_document(this->change_stream_t, &error, &out)) {
+                this->mark_dead();
+                this->doc_ = bsoncxx::document::view{};
+                throw_exception<query_exception>(error);
+            } else {
+                this->mark_nothing_left();
+            }
         }
     }
 
