@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <chrono>
-#include <iostream>
 #include <vector>
 
 #include <bsoncxx/builder/basic/document.hpp>
