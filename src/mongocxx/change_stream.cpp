@@ -34,17 +34,18 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 // Requirements for concept Iterator:
 // http://en.cppreference.com/w/cpp/concept/Iterator
-static_assert(std::is_copy_constructible<change_stream::iterator>::value);
-static_assert(std::is_copy_assignable<change_stream::iterator>::value);
-static_assert(std::is_destructible<change_stream::iterator>::value);
-static_assert(std::is_swappable<change_stream::iterator::value_type>::value);
+static_assert(std::is_copy_constructible<change_stream::iterator>::value, "");
+static_assert(std::is_copy_assignable<change_stream::iterator>::value, "");
+static_assert(std::is_destructible<change_stream::iterator>::value, "");
+static_assert(std::is_swappable<change_stream::iterator::value_type>::value, "");
 
 // Below basically assert that we have the traits on change_stream::iterator
 // so they can't be accidentally removed.
-static_assert(std::is_integral<change_stream::iterator::difference_type>::value);
-static_assert(std::is_class<change_stream::iterator::value_type>::value);
-static_assert(std::is_pointer<change_stream::iterator::pointer>::value);
-static_assert(std::is_reference<change_stream::iterator::reference>::value);
+static_assert(std::is_integral<change_stream::iterator::difference_type>::value, "");
+static_assert(std::is_class<change_stream::iterator::value_type>::value, "");
+static_assert(std::is_pointer<change_stream::iterator::pointer>::value, "");
+static_assert(std::is_reference<change_stream::iterator::reference>::value, "");
+
 // Not sure how to assert change_stream::iterator::iterator_category == std::input_iterator_tag
 // http://en.cppreference.com/w/cpp/concept/InputIterator
 // Can't directly assert equality-comparable (https://stackoverflow.com/questions/16399346/)
@@ -78,7 +79,6 @@ change_stream::iterator change_stream::end() {
     return iterator(nullptr);
 }
 
-// C++11 delegate constructor
 change_stream::iterator::iterator() : change_stream::iterator::iterator{nullptr} {}
 
 change_stream::iterator::iterator(change_stream* change_stream) : _change_stream(change_stream) {
