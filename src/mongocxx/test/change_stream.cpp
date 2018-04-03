@@ -106,18 +106,15 @@ public:
     using deleter = decltype(delbson);
     using ptr = std::unique_ptr<bson_t, deleter>;
 
-    template<class... Args>
-    static ptr as_doc(Args&&...args) {
-        bsoncxx::document::value&& val = make_document(std::forward<Args>(args)...);
+    static ptr as_doc(bsoncxx::document::view_or_value&& doc) {
         return std::move(ptr {
-            bson_new_from_data(val.view().data(), val.view().length()),
+            bson_new_from_data(doc.view().data(), doc.view().length()),
             delbson
         });
     }
 
-    template<class... Args>
-    response(bool next, bool error, Args&&...args)
-    : next_{next}, error_{error}, doc_{as_doc<std::tuple>(args...)}
+    response(bool next, bool error, bsoncxx::document::view_or_value&& doc)
+    : next_{next}, error_{error}, doc_{std::move(as_doc(std::move(doc)))}
     {}
 
     response(response&& other)
@@ -145,14 +142,25 @@ struct mock_stream_state {
 
     bool destroyed = false;
 
-    mock_stream_state(const std::initializer_list<response>& args)
-    : mock_stream_state{std::move(std::vector<response>{args})} {}
+//    mock_stream_state(std::initializer_list<response> args)
+//    : position{0}, responses{args} {}
+//    : mock_stream_state{std::move(std::vector<response>{args})} {}
 
-    explicit mock_stream_state(std::vector<response>&& resp)
-    : responses{std::move(resp)}, position{0} {}
+    mock_stream_state()
+    : position{0}, responses{} {}
 
-    explicit mock_stream_state()
-    : mock_stream_state{{}} {}
+    template<typename... Args>
+    mock_stream_state& then(Args&&... args) {
+        responses.emplace_back(std::forward<Args>(args)...);
+        return *this;
+    }
+
+//    template<typename... Args>
+//    explicit mock_stream_state(Args&&... args)
+//    : responses{std::forward<Args>(args)...}, position{0} {}
+
+//    explicit mock_stream_state()
+//    : mock_stream_state{{}} {}
 
     template <typename F>  // uref
     void next_op(F&& f) {
@@ -224,12 +232,10 @@ SCENARIO("We have errors") {
 
     using namespace std;
 
-    // Setup mocks
-    mock_stream_state state {
-        {true, false, kvp("a","b")},
-        {true, false, kvp("b","c")},
-        {true, false, kvp("d","e")},
-    };
+    mock_stream_state state;
+    state.then(true, false, make_document(kvp("a","b")));
+    state.then(true, false, make_document(kvp("b","c")));
+    state.then(true, false, make_document(kvp("d","e")));
 
     state.watch_op(collection_watch);
     state.destroy_op(change_stream_destroy);
