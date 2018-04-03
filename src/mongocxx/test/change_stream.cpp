@@ -15,9 +15,11 @@
 #include <atomic>
 #include <chrono>
 #include <iostream>
+#include <debug/list>
 #include <thread>
-#include <vector>
+#include <debug/vector>
 
+#include <mongocxx/private/libbson.hh>
 #include <bson.h>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
@@ -41,6 +43,7 @@
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
 #include <third_party/catch/include/helpers.hpp>
+#include <queue>
 
 namespace {
 
@@ -94,13 +97,62 @@ std::ostream& operator<<(std::ostream& out, const bsoncxx::document::view_or_val
     return out;
 }
 
-struct response {
-    // TODO
+auto delbson = [](bson_t* bson) {
+    bson_destroy(bson);
+};
+
+class response {
+public:
+    using deleter = decltype(delbson);
+    using ptr = std::unique_ptr<bson_t, deleter>;
+
+    template<class... Args>
+    static ptr as_doc(Args&&...args) {
+        bsoncxx::document::value&& val = make_document(std::forward<Args>(args)...);
+        return std::move(ptr {
+            bson_new_from_data(val.view().data(), val.view().length()),
+            delbson
+        });
+    }
+
+    template<class... Args>
+    response(bool next, bool error, Args&&...args)
+    : next_{next}, error_{error}, doc_{as_doc<std::tuple>(args...)}
+    {}
+
+    response(response&& other)
+    : next_{other.next_}, error_{other.error_}, doc_{std::move(other.doc_)}
+    {}
+
+    response(const response& other) = delete;
+
+    bool error() const {
+        return error_;
+    }
+    bson_t* bson() {
+        return doc_.get();
+    }
+
+private:
+    const bool next_;
+    const bool error_;
+    ptr doc_;
 };
 
 struct mock_stream_state {
-    explicit mock_stream_state() : mock_stream_state{{}} {}
-    explicit mock_stream_state(std::vector<response>&& resp) : responses{std::move(resp)} {}
+    std::vector<response> responses;
+    unsigned long position;
+
+    bool destroyed = false;
+
+    mock_stream_state(const std::initializer_list<response>& args)
+    : mock_stream_state{std::move(std::vector<response>{args})} {}
+
+    explicit mock_stream_state(std::vector<response>&& resp)
+    : responses{std::move(resp)}, position{0} {}
+
+    explicit mock_stream_state()
+    : mock_stream_state{{}} {}
 
     template <typename F>  // uref
     void next_op(F&& f) {
@@ -116,23 +168,30 @@ struct mock_stream_state {
                          const bson_t* pipeline,
                          const bson_t* opts) -> mongoc_change_stream_t* {
             return this->watch(coll, pipeline, opts);
-        });
+        }).forever();
     }
 
     template <typename F>
     void destroy_op(F&& f) {
-        f->interpose([&](mongoc_change_stream_t* stream) -> void { return this->destroy(stream); });
+        f->interpose([&](mongoc_change_stream_t* stream) -> void {
+            return this->destroy(stream);
+        }).forever();
     }
 
     template <typename F>
     void error_op(F&& f) {
         f->interpose([&](const mongoc_change_stream_t* stream,
                          bson_error_t* err,
-                         const bson_t** bson) -> bool { return this->error(stream, err, bson); });
+                         const bson_t** bson) -> bool {
+            return this->error(stream, err, bson);
+        }).forever();
     }
 
     bool next(mongoc_change_stream_t* stream, const bson_t** bson) {
-        return false;
+        response& current = responses.at(position);
+
+        *bson = current.bson();
+        return true;
     }
 
     bool error(const mongoc_change_stream_t* stream, bson_error_t* err, const bson_t** bson) {
@@ -148,9 +207,6 @@ struct mock_stream_state {
                                   const bson_t* opts) {
         return nullptr;
     }
-
-    std::vector<response> responses;
-    bool destroyed = false;
 };
 
 template <typename T>
@@ -169,23 +225,33 @@ SCENARIO("We have errors") {
     using namespace std;
 
     // Setup mocks
-    bool destroyed = false;
-
-    mock_stream_state state;
+    mock_stream_state state {
+        {true, false, kvp("a","b")},
+        {true, false, kvp("b","c")},
+        {true, false, kvp("d","e")},
+    };
 
     state.watch_op(collection_watch);
     state.destroy_op(change_stream_destroy);
     state.next_op(change_stream_next);
     state.error_op(change_stream_error_document);
 
-    WHEN("We watch") {
-        THEN("There is an error") {
-            CAPTURE("BEFORE EVENTS.WATCH");
-            auto stream = events.watch();
-            CAPTURE("Have stream");
-            stream.begin();
-        }
-    }
+    mongoc_change_stream_t* t = libmongoc::collection_watch(nullptr, nullptr, nullptr);
+    const bson_t *bson;
+    bool nxt = libmongoc::change_stream_next(t, &bson);
+
+    char* doc = bson_as_canonical_extended_json(bson, NULL);
+    cout << doc << endl;
+    free(doc);
+
+//    WHEN("We watch") {
+//        THEN("There is an error") {
+//            CAPTURE("BEFORE EVENTS.WATCH");
+//            auto stream = events.watch();
+//            CAPTURE("Have stream");
+//            stream.begin();
+//        }
+//    }
 }
 
 SCENARIO("We project data") {
