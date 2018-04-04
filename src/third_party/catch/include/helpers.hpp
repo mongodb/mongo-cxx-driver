@@ -121,6 +121,12 @@
     auto collection_find_and_modify_with_opts =                                                   \
         libmongoc::collection_find_and_modify_with_opts.create_instance();
 
+#define MOCK_CHANGE_STREAM                                                                          \
+    auto collection_watch = libmongoc::collection_watch.create_instance();                          \
+    auto change_stream_destroy = libmongoc::change_stream_destroy.create_instance();                \
+    auto change_stream_next = libmongoc::change_stream_next.create_instance();                      \
+    auto change_stream_error_document = libmongoc::change_stream_error_document.create_instance();
+
 #define MOCK_FAM                                                                                   \
     auto find_and_modify_opts_destroy = libmongoc::find_and_modify_opts_destroy.create_instance(); \
     find_and_modify_opts_destroy->interpose([](mongoc_find_and_modify_opts_t*) {}).forever();      \
