@@ -13,6 +13,5 @@
 # limitations under the License.
 
 add_definitions(-DMONGO_CXX_DRIVER_COMPILING)
-add_definitions(-D_GLIBCXX_DEBUG)
 add_subdirectory(bsoncxx)
 add_subdirectory(mongocxx)

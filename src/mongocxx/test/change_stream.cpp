@@ -15,9 +15,9 @@
 #include <atomic>
 #include <chrono>
 #include <iostream>
-#include <debug/list>
+#include <list>
 #include <thread>
-#include <debug/vector>
+#include <vector>
 
 #include <mongocxx/private/libbson.hh>
 #include <bson.h>
@@ -92,17 +92,11 @@ inline bsoncxx::document::value doc(std::string key, T val) {
     return std::move(out.extract());
 }
 
-std::ostream& operator<<(std::ostream& out, const bsoncxx::document::view_or_value& document) {
-    out << bsoncxx::to_json(document);
-    return out;
-}
-
-auto delbson = [](bson_t* bson) {
-    bson_destroy(bson);
-};
-
 class response {
 public:
+    static auto constexpr delbson = [](bson_t* bson) {
+        bson_destroy(bson);
+    };
     using deleter = decltype(delbson);
     using ptr = std::unique_ptr<bson_t, deleter>;
 
@@ -197,8 +191,8 @@ struct mock_stream_state {
 
     bool next(mongoc_change_stream_t* stream, const bson_t** bson) {
         response& current = responses.at(position);
-
         *bson = current.bson();
+        ++position;
         return true;
     }
 
@@ -242,22 +236,27 @@ SCENARIO("We have errors") {
     state.next_op(change_stream_next);
     state.error_op(change_stream_error_document);
 
-    mongoc_change_stream_t* t = libmongoc::collection_watch(nullptr, nullptr, nullptr);
-    const bson_t *bson;
-    bool nxt = libmongoc::change_stream_next(t, &bson);
+    WHEN("We watch") {
+        THEN("There is an error") {
+            auto stream = events.watch();
+            change_stream::iterator it = stream.begin();
 
-    char* doc = bson_as_canonical_extended_json(bson, NULL);
-    cout << doc << endl;
-    free(doc);
+            string json = bsoncxx::to_json(*it);
+            CAPTURE(json);
+            REQUIRE(it != stream.end());
 
-//    WHEN("We watch") {
-//        THEN("There is an error") {
-//            CAPTURE("BEFORE EVENTS.WATCH");
-//            auto stream = events.watch();
-//            CAPTURE("Have stream");
-//            stream.begin();
-//        }
-//    }
+            change_stream::iterator it2 = stream.begin();
+            string json2 = bsoncxx::to_json(*it);
+            CAPTURE(json2);
+
+            it++;
+
+            CAPTURE(bsoncxx::to_json(*it));
+            CAPTURE(bsoncxx::to_json(*it2));
+
+            REQUIRE(false);
+        }
+    }
 }
 
 SCENARIO("We project data") {
