@@ -94,16 +94,12 @@ inline bsoncxx::document::value doc(std::string key, T val) {
 
 class response {
 public:
-    static auto constexpr delbson = [](bson_t* bson) {
-        bson_destroy(bson);
-    };
-    using deleter = decltype(delbson);
-    using ptr = std::unique_ptr<bson_t, deleter>;
+    using ptr = std::unique_ptr<bson_t, void(*)(bson_t*)>;
 
     static ptr as_doc(bsoncxx::document::view_or_value&& doc) {
         return std::move(ptr {
             bson_new_from_data(doc.view().data(), doc.view().length()),
-            delbson
+            bson_destroy
         });
     }
 
@@ -160,7 +156,7 @@ struct mock_stream_state {
     void next_op(F&& f) {
         f->interpose([&](mongoc_change_stream_t* stream, const bson_t** bson) -> bool {
             return this->next(stream, bson);
-        });
+        }).forever();
     }
 
     template <typename F>
@@ -325,15 +321,15 @@ SCENARIO("A collection is watched") {
 
         THEN("We can receive an event") {
             auto it = *(x.begin());
-            REQUIRE(it["fullDocument"]["a"].get_utf8().value == "b");
+            REQUIRE(it["fullDocument"]["a"].get_utf8().value == stdx::string_view("b"));
         }
 
         THEN("We can deref iterator with value multiple times") {
             auto it = x.begin();
             auto a = *it;
             auto b = *it;
-            REQUIRE(a["fullDocument"]["a"].get_utf8().value == "b");
-            REQUIRE(b["fullDocument"]["a"].get_utf8().value == "b");
+            REQUIRE(a["fullDocument"]["a"].get_utf8().value == stdx::string_view("b"));
+            REQUIRE(b["fullDocument"]["a"].get_utf8().value == stdx::string_view("b"));
         }
 
         THEN("Calling .begin multiple times doesn't advance state") {
@@ -379,7 +375,7 @@ TEST_CASE("Change Streams") {
     change_stream::iterator it2 = it;
     change_stream::iterator it3 = {std::move(it2)};
 
-    for (auto&& it : stream) {
+    for (const auto& it : stream) {
         printf("Got:  %s\n", bsoncxx::to_json(it).c_str());
         std::cout << bsoncxx::to_json(it) << std::endl;
     }

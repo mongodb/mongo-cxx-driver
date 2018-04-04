@@ -37,7 +37,9 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 static_assert(std::is_copy_constructible<change_stream::iterator>::value, "");
 static_assert(std::is_copy_assignable<change_stream::iterator>::value, "");
 static_assert(std::is_destructible<change_stream::iterator>::value, "");
-static_assert(std::is_swappable<change_stream::iterator::value_type>::value, "");
+
+// c++17 concept:
+// static_assert(std::is_swappable<change_stream::iterator::value_type>::value, "");
 
 // Below basically assert that we have the traits on change_stream::iterator
 // so they can't be accidentally removed.

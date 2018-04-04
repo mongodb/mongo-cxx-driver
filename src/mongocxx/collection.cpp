@@ -140,7 +140,7 @@ guard<T> make_guard(T&& t) {
 template <typename T>
 inline void append_if(bsoncxx::builder::basic::document& doc,
                       const std::string& key,
-                      const std::optional<T>& opt) {
+                      const mongocxx::stdx::optional<T>& opt) {
     if (opt) {
         doc.append(bsoncxx::builder::basic::kvp(key, opt.value()));
     }
