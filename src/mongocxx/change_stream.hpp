@@ -88,6 +88,14 @@ class MONGOCXX_API change_stream {
 
 class MONGOCXX_API change_stream::iterator {
    public:
+
+    // Support input-iterator (caveat of post-increment returning void)
+    using difference_type = long;
+    using value_type = const bsoncxx::document::view;
+    using pointer = std::add_pointer<value_type>::type;
+    using reference = std::add_lvalue_reference<value_type>::type;
+    using iterator_category = std::input_iterator_tag;
+
     ///
     /// Default-construct an iterator.
     /// This is equivalent to change_stream::end()
@@ -127,13 +135,6 @@ class MONGOCXX_API change_stream::iterator {
     /// @throws mongocxx::query_exception if the query failed
     ///
     void operator++(int);
-
-    // Support input-iterator
-    using difference_type = long;
-    using value_type = bsoncxx::document::view;
-    using pointer = const bsoncxx::document::view*;
-    using reference = const bsoncxx::document::view&;
-    using iterator_category = std::input_iterator_tag;
 
    private:
     friend class change_stream;

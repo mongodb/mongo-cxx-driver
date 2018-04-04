@@ -74,11 +74,11 @@ change_stream::iterator change_stream::begin() {
     if (_impl->is_dead()) {
         return end();
     }
-    return iterator(this);
+    return iterator{this};
 }
 
 change_stream::iterator change_stream::end() {
-    return iterator(nullptr);
+    return iterator{};
 }
 
 change_stream::iterator::iterator() : change_stream::iterator::iterator{nullptr} {}
