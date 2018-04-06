@@ -144,8 +144,11 @@ void aggregation_examples(const mongocxx::client& client, const mongocxx::databa
         auto cursor = db["air_alliances"].aggregate(p, mongocxx::options::aggregate{});
         // End Aggregation Example 4
 
-        // Bit of a hack for now since CI tooling runs an older version of mongo
-        // than this example requires.
+        // TODO: Remove version-check (CXX-1547)
+        // This example uses syntax added in mongo version 3.6. Our CI
+        // tooling runs tests with mongo version 3.4, so this example
+        // fails with a query exception. CXX-1547 tracks removing this
+        // version check once CI tooling uses a later version of the server.
         if (get_server_version(client) >= "3.6" ) {
             auto count = std::distance(cursor.begin(), cursor.end());
             if (count != 0L) {
