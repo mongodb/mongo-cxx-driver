@@ -53,7 +53,7 @@ bulk_write::bulk_write(options::bulk_write options)
         libmongoc::bulk_operation_set_bypass_document_validation(_impl->operation_t, *options_bdv);
 }
 
-void bulk_write::append(const model::write& operation) {
+bulk_write& bulk_write::append(const model::write& operation) {
     switch (operation.type()) {
         case write_type::k_insert_one: {
             scoped_bson_t doc(operation.get_insert_one().document());
@@ -159,6 +159,8 @@ void bulk_write::append(const model::write& operation) {
             break;
         }
     }
+
+    return *this;
 }
 
 bulk_write::bulk_write(const collection& coll,

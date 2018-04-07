@@ -85,9 +85,13 @@ class MONGOCXX_API bulk_write {
     ///     - model::update_many
     ///     - model::update_one
     ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
     /// @throws mongocxx::logic_error if the given operation is invalid.
     ///
-    void append(const model::write& operation);
+    bulk_write& append(const model::write& operation);
 
    private:
     friend class collection;

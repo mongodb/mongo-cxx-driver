@@ -240,6 +240,11 @@ class MONGOCXX_API client {
     friend class pool;
     friend class session;
 
+#ifdef MONGOCXX_TESTING
+    // TODO: Port to C++ Driver's APM once it's implemented, CXX-1562.
+    friend MONGOCXX_API void* MONGOCXX_CALL client_t_from_client(client& client);
+#endif
+
     MONGOCXX_PRIVATE explicit client(void* implementation);
 
     class MONGOCXX_PRIVATE impl;

@@ -143,5 +143,11 @@ client::impl& client::_get_impl() {
     return const_cast<client::impl&>(cthis->_get_impl());
 }
 
+#ifdef MONGOCXX_TESTING
+void* client_t_from_client(client& client) {
+    return client._get_impl().client_t;
+}
+#endif
+
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

@@ -178,6 +178,8 @@ class MONGOCXX_API collection {
     ///
 
     ///
+    /// @{
+    ///
     /// Sends a write to the server as a bulk write operation.
     ///
     /// @param write
@@ -201,9 +203,41 @@ class MONGOCXX_API collection {
         const model::write& write, const options::bulk_write& options = options::bulk_write());
 
     ///
+    /// Sends a write to the server as a bulk write operation.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the bulk operation.
+    /// @param write
+    ///   A model::write.
+    /// @param options
+    ///   Optional arguments, see options::bulk_write.
+    ///
+    /// @return
+    ///   The optional result of the bulk operation execution.
+    ///   If the write concern is unacknowledged, the optional will be
+    ///   disengaged.
+    ///
+    /// @exception
+    ///   mongocxx::bulk_write_exception when there are errors processing
+    ///   the writes.
+    ///
+    /// @see mongocxx::bulk_write
+    /// @see https://docs.mongodb.com/master/core/bulk-write-operations/
+    ///
+    MONGOCXX_INLINE stdx::optional<result::bulk_write> write(
+        const session& session,
+        const model::write& write,
+        const options::bulk_write& options = options::bulk_write());
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
+    ///
     /// Sends a container of writes to the server as a bulk write operation.
     ///
-    /// @tparam containter_type
+    /// @tparam container_type
     ///   The container type. Must meet the requirements for the container concept with a value
     ///   type of model::write.
     ///
@@ -225,6 +259,40 @@ class MONGOCXX_API collection {
     MONGOCXX_INLINE stdx::optional<result::bulk_write> bulk_write(
         const container_type& writes, const options::bulk_write& options = options::bulk_write());
 
+    ///
+    /// Sends a container of writes to the server as a bulk write operation.
+    ///
+    /// @tparam container_type
+    ///   The container type. Must meet the requirements for the container concept with a value
+    ///   type of model::write.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the bulk operation.
+    /// @param writes
+    ///   A container of model::write.
+    /// @param options
+    ///   Optional arguments, see options::bulk_write.
+    ///
+    /// @return The optional result of the bulk operation execution.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
+    ///
+    /// @see mongocxx::bulk_write
+    /// @see https://docs.mongodb.com/master/core/bulk-write-operations/
+    ///
+    template <typename container_type>
+    MONGOCXX_INLINE stdx::optional<result::bulk_write> bulk_write(
+        const session& session,
+        const container_type& writes,
+        const options::bulk_write& options = options::bulk_write());
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
     ///
     /// Sends writes starting at @c begin and ending at @c end to the server as a bulk write
     /// operation.
@@ -252,6 +320,40 @@ class MONGOCXX_API collection {
         write_model_iterator_type begin,
         write_model_iterator_type end,
         const options::bulk_write& options = options::bulk_write());
+
+    ///
+    /// Sends writes starting at @c begin and ending at @c end to the server as a bulk write
+    /// operation.
+    ///
+    /// @tparam write_model_iterator_type
+    ///   The container type. Must meet the requirements for the input iterator concept with a value
+    ///   type of model::write.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the bulk operation.
+    /// @param begin
+    ///   Iterator pointing to the first model::write to send.
+    /// @param end
+    ///   Iterator pointing to the end of the writes to send.
+    /// @param options
+    ///   Optional arguments, see options::bulk_write.
+    ///
+    /// @return The optional result of the bulk operation execution, a result::bulk_write.
+    ///
+    /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
+    ///
+    /// @see mongocxx::bulk_write
+    /// @see https://docs.mongodb.com/master/core/bulk-write-operations/
+    ///
+    template <typename write_model_iterator_type>
+    MONGOCXX_INLINE stdx::optional<result::bulk_write> bulk_write(
+        const session& session,
+        write_model_iterator_type begin,
+        write_model_iterator_type end,
+        const options::bulk_write& options = options::bulk_write());
+    ///
+    /// @}
+    ///
 
     ///
     /// Sends a batch of writes represented by the bulk_write to the server.
@@ -515,10 +617,10 @@ class MONGOCXX_API collection {
     /// Inserts a single document into the collection. If the document is missing an identifier
     /// (@c _id field) one will be generated for it.
     ///
-    /// @param document
-    ///   The document to insert.
     /// @param session
     ///   The mongocxx::session with which to perform the insert.
+    /// @param document
+    ///   The document to insert.
     /// @param options
     ///   Optional arguments, see options::insert.
     ///
@@ -527,13 +629,15 @@ class MONGOCXX_API collection {
     /// disengaged.
     ///
     /// @throws mongocxx::bulk_write_exception if the operation fails.
-    stdx::optional<result::insert_one> insert_one(bsoncxx::document::view_or_value document,
-                                                  const session& session,
+    stdx::optional<result::insert_one> insert_one(const session& session,
+                                                  bsoncxx::document::view_or_value document,
                                                   const options::insert& options = {});
     ///
     /// @}
     ///
 
+    ///
+    /// @{
     ///
     /// Inserts multiple documents into the collection. If any of the documents are missing
     /// identifiers the driver will generate them.
@@ -542,7 +646,7 @@ class MONGOCXX_API collection {
     /// the legacy OP_INSERT wire protocol message. As a result, using this method to insert many
     /// documents on MongoDB < 2.6 will be slow.
     ///
-    /// @tparam containter_type
+    /// @tparam container_type
     ///   The container type. Must meet the requirements for the container concept with a value
     ///   type of model::write.
     ///
@@ -561,6 +665,35 @@ class MONGOCXX_API collection {
     MONGOCXX_INLINE stdx::optional<result::insert_many> insert_many(
         const container_type& container, const options::insert& options = options::insert());
 
+    ///
+    /// Inserts multiple documents into the collection. If any of the documents are missing
+    /// identifiers the driver will generate them.
+    ///
+    /// @tparam container_type
+    ///   The container type. Must meet the requirements for the container concept with a value
+    ///   type of model::write.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the inserts.
+    /// @param container
+    ///   Container of a documents to insert.
+    /// @param options
+    ///   Optional arguments, see options::insert.
+    ///
+    /// @return The optional result of attempting to performing the insert.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws mongocxx::bulk_write_exception when the operation fails.
+    ///
+    template <typename container_type>
+    MONGOCXX_INLINE stdx::optional<result::insert_many> insert_many(
+        const session& session,
+        const container_type& container,
+        const options::insert& options = options::insert());
+
+    ///
+    /// @{
     ///
     /// Inserts multiple documents into the collection. If any of the documents are missing
     /// identifiers the driver will generate them.
@@ -584,12 +717,42 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::bulk_write_exception if the operation fails.
     ///
-    /// TODO: document DocumentViewIterator concept or static assert
     template <typename document_view_iterator_type>
     MONGOCXX_INLINE stdx::optional<result::insert_many> insert_many(
         document_view_iterator_type begin,
         document_view_iterator_type end,
         const options::insert& options = options::insert());
+
+    ///
+    /// Inserts multiple documents into the collection. If any of the documents are missing
+    /// identifiers the driver will generate them.
+    ///
+    /// @tparam document_view_iterator_type
+    ///   The iterator type. Must meet the requirements for the input iterator concept with a value
+    ///   type of bsoncxx::document::view.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the inserts.
+    /// @param begin
+    ///   Iterator pointing to the first document to be inserted.
+    /// @param end
+    ///   Iterator pointing to the end of the documents to be inserted.
+    /// @param options
+    ///   Optional arguments, see options::insert.
+    ///
+    /// @return The result of attempting to performing the insert.
+    ///
+    /// @throws mongocxx::bulk_write_exception if the operation fails.
+    ///
+    template <typename document_view_iterator_type>
+    MONGOCXX_INLINE stdx::optional<result::insert_many> insert_many(
+        const session& session,
+        document_view_iterator_type begin,
+        document_view_iterator_type end,
+        const options::insert& options = options::insert());
+    ///
+    /// @}
+    ///
 
     ///
     /// Returns a list of the indexes currently on this collection.
@@ -802,6 +965,23 @@ class MONGOCXX_API collection {
         const options::insert& options,
         const session* session = nullptr);
 
+    // Helpers for the insert_many method templates.
+    class bulk_write _init_insert_many(const options::insert& options, const session* session);
+
+    void _insert_many_doc_handler(class bulk_write& writes,
+                                  bsoncxx::builder::basic::array& inserted_ids,
+                                  bsoncxx::document::view doc) const;
+
+    stdx::optional<result::insert_many> _exec_insert_many(
+        class bulk_write& writes, bsoncxx::builder::basic::array& inserted_ids);
+
+    template <typename document_view_iterator_type>
+    MONGOCXX_PRIVATE stdx::optional<result::insert_many> _insert_many(
+        document_view_iterator_type begin,
+        document_view_iterator_type end,
+        const options::insert& options = options::insert(),
+        const session* session = nullptr);
+
     class MONGOCXX_PRIVATE impl;
 
     MONGOCXX_PRIVATE impl& _get_impl();
@@ -812,10 +992,12 @@ class MONGOCXX_API collection {
 
 MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::write(
     const model::write& write, const options::bulk_write& options) {
-    auto writes = create_bulk_write(options);
-    writes.append(write);
+    return bulk_write(create_bulk_write(options).append(write));
+}
 
-    return bulk_write(writes);
+MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::write(
+    const session& session, const model::write& write, const options::bulk_write& options) {
+    return bulk_write(create_bulk_write(session, options).append(write));
 }
 
 template <typename container_type>
@@ -824,15 +1006,30 @@ MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
     return bulk_write(requests.begin(), requests.end(), options);
 }
 
+template <typename container_type>
+MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
+    const session& session, const container_type& requests, const options::bulk_write& options) {
+    return bulk_write(session, requests.begin(), requests.end(), options);
+}
+
 template <typename write_model_iterator_type>
 MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
     write_model_iterator_type begin,
     write_model_iterator_type end,
     const options::bulk_write& options) {
     auto writes = create_bulk_write(options);
-
     std::for_each(begin, end, [&](const model::write& current) { writes.append(current); });
+    return bulk_write(writes);
+}
 
+template <typename write_model_iterator_type>
+MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
+    const session& session,
+    write_model_iterator_type begin,
+    write_model_iterator_type end,
+    const options::bulk_write& options) {
+    auto writes = create_bulk_write(session, options);
+    std::for_each(begin, end, [&](const model::write& current) { writes.append(current); });
     return bulk_write(writes);
 }
 
@@ -842,45 +1039,41 @@ MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
     return insert_many(container.begin(), container.end(), options);
 }
 
+template <typename container_type>
+MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
+    const session& session, const container_type& container, const options::insert& options) {
+    return insert_many(session, container.begin(), container.end(), options);
+}
+
+template <typename document_view_iterator_type>
+MONGOCXX_INLINE stdx::optional<result::insert_many> collection::_insert_many(
+    document_view_iterator_type begin,
+    document_view_iterator_type end,
+    const options::insert& options,
+    const session* session) {
+    bsoncxx::builder::basic::array inserted_ids;
+    auto writes = _init_insert_many(options, session);
+    std::for_each(begin, end, [&inserted_ids, &writes, this](bsoncxx::document::view doc) {
+        _insert_many_doc_handler(writes, inserted_ids, doc);
+    });
+    return _exec_insert_many(writes, inserted_ids);
+}
+
 template <typename document_view_iterator_type>
 MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
     document_view_iterator_type begin,
     document_view_iterator_type end,
     const options::insert& options) {
-    options::bulk_write bulk_write_options;
-    bulk_write_options.ordered(options.ordered().value_or(true));
-    if (options.write_concern()) {
-        bulk_write_options.write_concern(*options.write_concern());
-    }
-    if (options.bypass_document_validation()) {
-        bulk_write_options.bypass_document_validation(*options.bypass_document_validation());
-    }
+    return _insert_many(begin, end, options);
+}
 
-    auto writes = create_bulk_write(bulk_write_options);
-    bsoncxx::builder::basic::array inserted_ids;
-
-    std::for_each(begin, end, [&inserted_ids, &writes](const bsoncxx::document::view& doc) {
-        bsoncxx::builder::basic::document id_doc;
-
-        if (!doc["_id"]) {
-            id_doc.append(kvp("_id", bsoncxx::oid{}));
-            writes.append(
-                model::insert_one{make_document(concatenate(id_doc.view()), concatenate(doc))});
-        } else {
-            id_doc.append(kvp("_id", doc["_id"].get_value()));
-            writes.append(model::insert_one{doc});
-        }
-
-        inserted_ids.append(id_doc.view());
-    });
-
-    auto result = bulk_write(writes);
-    if (!result) {
-        return stdx::nullopt;
-    }
-
-    return stdx::optional<result::insert_many>{
-        result::insert_many{std::move(result.value()), inserted_ids.view()}};
+template <typename document_view_iterator_type>
+MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
+    const session& session,
+    document_view_iterator_type begin,
+    document_view_iterator_type end,
+    const options::insert& options) {
+    return _insert_many(begin, end, options, &session);
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

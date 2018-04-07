@@ -2610,4 +2610,22 @@ TEST_CASE("regressions", "CXX-986") {
     REQUIRE_THROWS(client.database("irrelevant")["irrelevant"].find_one_and_update(
         make_document(kvp("irrelevant", 1)), make_document(kvp("irrelevant", 2))));
 }
+
+TEST_CASE("bulk_write with container", "[collection]") {
+    instance::current();
+    mongocxx::client client{uri{}};
+
+    std::vector<model::write> vec;
+    for (int32_t i = 0; i != 10; ++i) {
+        vec.emplace_back(model::insert_one{make_document(kvp("_id", i))});
+    }
+
+    auto collection = client["bulk_write_container"]["collection"];
+    collection.drop();
+    auto result = collection.bulk_write(vec);
+    // The optional result is engaged.
+    REQUIRE(static_cast<bool>(result));
+    REQUIRE(result->inserted_count() == 10);
+    REQUIRE(collection.count({}) == 10);
+}
 }  // namespace

@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <iostream>
-
 #include <helpers.hpp>
 
+#include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/private/libmongoc.hh>
 
 namespace {
 using bsoncxx::from_json;
@@ -32,7 +32,7 @@ using bsoncxx::types::b_timestamp;
 
 using namespace mongocxx;
 
-static bool server_has_sessions(const client& conn) {
+bool server_has_sessions(const client& conn) {
     auto result = conn["admin"].run_command(make_document(kvp("isMaster", 1)));
     auto result_view = result.view();
 
@@ -71,6 +71,8 @@ TEST_CASE("session options", "[session]") {
 }
 
 TEST_CASE("start_session failure", "[session]") {
+    using namespace mongocxx::test_util;
+
     MOCK_CLIENT
 
     instance::current();
@@ -84,12 +86,13 @@ TEST_CASE("start_session failure", "[session]") {
 
     client c{uri{}};
 
-    // TODO: Once we've upgraded Catch2 (CXX-1537) use REQUIRE_THROWS_MATCHES.
-    REQUIRE_THROWS_WITH(c.start_session(), Catch::Contains("foo"));
-    REQUIRE_THROWS_AS(c.start_session(), mongocxx::exception);
+    REQUIRE_THROWS_MATCHES(
+        c.start_session(), mongocxx::exception, mongocxx_exception_matcher{"foo"});
 }
 
 TEST_CASE("session", "[session]") {
+    using namespace mongocxx::test_util;
+
     instance::current();
 
     client c{uri{}};
@@ -149,10 +152,177 @@ TEST_CASE("session", "[session]") {
         // "Session argument is for the right client" test from Driver Sessions Spec.
         client c2{uri{}};
 
-        // TODO: Once we've upgraded Catch2 (CXX-1537) use REQUIRE_THROWS_MATCHES.
-        REQUIRE_THROWS_WITH(c2["db"]["collection"].insert_one({}, s),
-                            Contains("Invalid sessionId"));
-        REQUIRE_THROWS_AS(c2["db"]["collection"].insert_one({}, s), bulk_write_exception);
+        REQUIRE_THROWS_MATCHES(c2["db"]["collection"].insert_one(s, {}),
+                               bulk_write_exception,
+                               mongocxx_exception_matcher{"Invalid sessionId"});
+    }
+}
+
+// Receive command-started events from libmongoc's APM to test session ids.
+// TODO: Port to C++ Driver's APM once it's implemented, CXX-1562.
+void command_started(const mongoc_apm_command_started_t* event);
+
+class session_test {
+   public:
+    session_test() : client{uri{}} {
+        auto client_t = static_cast<mongoc_client_t*>(client_t_from_client(client));
+        auto callbacks = mongoc_apm_callbacks_new();
+        mongoc_apm_set_command_started_cb(callbacks, command_started);
+        mongoc_client_set_apm_callbacks(client_t, callbacks, this);
+        mongoc_apm_callbacks_destroy(callbacks);
+    }
+
+    void test_method_with_session(std::string method_name,
+                                  const std::function<void(bool)>& f,
+                                  const session& s) {
+        using std::string;
+
+        events.clear();
+
+        // A method with an explicit session must send its logical session id or "lsid".
+        f(true);
+        if (events.size() == 0) {
+            throw std::logic_error{"no events after calling command with explicit session"};
+        }
+
+        for (auto& event : events) {
+            if (!event.command["lsid"]) {
+                throw std::logic_error{method_name + " sent no lsid with " + event.command_name +
+                                       " and explicit session"};
+            }
+            if (event.command["lsid"].get_document().view() != s.id()) {
+                throw std::logic_error{method_name + " sent wrong lsid with " + event.command_name +
+                                       " and explicit session"};
+            }
+        }
+
+        events.clear();
+
+        // A method called with no session must send an implicit session id with the command.
+        f(false);
+        if (events.size() == 0) {
+            throw std::logic_error{"no events after calling command with implicit session"};
+        }
+
+        for (auto& event : events) {
+            if (!event.command["lsid"]) {
+                throw std::logic_error{method_name + " sent no lsid with " + event.command_name +
+                                       " and implicit session"};
+            }
+            if (event.command["lsid"].get_document().view() == s.id()) {
+                throw std::logic_error{method_name + " sent wrong lsid with " + event.command_name +
+                                       " and implicit session"};
+            }
+        }
+    }
+
+    class apm_event {
+       public:
+        apm_event(const std::string& command_name_, const bsoncxx::document::value& document_)
+            : command_name(command_name_), value(document_), command(value.view()) {}
+
+        std::string command_name;
+        bsoncxx::document::value value;
+        bsoncxx::document::view command;
+    };
+
+    std::vector<apm_event> events;
+    mongocxx::client client;
+};
+
+void command_started(const mongoc_apm_command_started_t* event) {
+    using namespace bsoncxx::helpers;
+
+    std::string command_name{mongoc_apm_command_started_get_command_name(event)};
+
+    // Ignore auth commands like "saslStart", and handshakes with "isMaster".
+    std::string sasl{"sasl"};
+    if (command_name.substr(0, sasl.size()) == sasl || command_name == "isMaster") {
+        return;
+    }
+
+    auto& listener =
+        *(reinterpret_cast<session_test*>(mongoc_apm_command_started_get_context(event)));
+    auto document = value_from_bson_t(mongoc_apm_command_started_get_command(event));
+
+    listener.events.emplace_back("command_started_event", document);
+}
+
+TEST_CASE("lsid", "[session]") {
+    instance::current();
+
+    session_test test;
+
+    if (!server_has_sessions(test.client)) {
+        return;
+    }
+
+    auto s = test.client.start_session();
+    auto collection = test.client["lsid"]["collection"];
+
+    SECTION("create_bulk_write") {
+        auto f = [&s, &collection](bool use_session) {
+            auto bulk =
+                use_session ? collection.create_bulk_write(s) : collection.create_bulk_write();
+
+            bulk.append(model::insert_one{{}});
+            collection.bulk_write(bulk);
+        };
+
+        test.test_method_with_session("create_bulk_write", f, s);
+    }
+
+    SECTION("bulk_write") {
+        std::vector<model::write> vec;
+        vec.emplace_back(model::insert_one{{}});
+
+        auto bulk_write_vector = [&s, &collection, &vec](bool use_session) {
+            use_session ? collection.bulk_write(s, vec) : collection.bulk_write(vec);
+        };
+
+        test.test_method_with_session("vector bulk_write", bulk_write_vector, s);
+
+        auto bulk_write_iterator = [&s, &collection, &vec](bool use_session) {
+            use_session ? collection.bulk_write(s, vec.begin(), vec.end())
+                        : collection.bulk_write(vec.begin(), vec.end());
+        };
+
+        test.test_method_with_session("iterator bulk_write", bulk_write_iterator, s);
+    }
+
+    SECTION("write") {
+        auto f = [&s, &collection](bool use_session) {
+            auto insert_op = model::insert_one{{}};
+            use_session ? collection.write(s, insert_op) : collection.write(insert_op);
+        };
+
+        test.test_method_with_session("write", f, s);
+    }
+
+    SECTION("insert_one") {
+        auto f = [&s, &collection](bool use_session) {
+            use_session ? collection.insert_one(s, {}) : collection.insert_one({});
+        };
+
+        test.test_method_with_session("insert_one", f, s);
+    }
+
+    SECTION("insert_many") {
+        bsoncxx::document::value doc({});
+        std::vector<bsoncxx::document::view> docs{doc.view()};
+
+        auto insert_vector = [&s, &collection, &docs](bool use_session) {
+            return use_session ? collection.insert_many(s, docs) : collection.insert_many(docs);
+        };
+
+        test.test_method_with_session("vector insert_many", insert_vector, s);
+
+        auto insert_iter = [&s, &collection, &docs](bool use_session) {
+            use_session ? collection.insert_many(s, docs.begin(), docs.end())
+                        : collection.insert_many(docs.begin(), docs.end());
+        };
+
+        test.test_method_with_session("iterator insert_many", insert_iter, s);
     }
 }
 }  // namespace

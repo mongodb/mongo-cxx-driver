@@ -38,7 +38,7 @@ class MONGOCXX_API insert_many {
    public:
     using id_map = std::map<std::size_t, bsoncxx::document::element>;
 
-    insert_many(result::bulk_write result, bsoncxx::array::view inserted_ids);
+    insert_many(result::bulk_write result, bsoncxx::array::value inserted_ids);
 
     insert_many(const insert_many&);
     insert_many(insert_many&&) = default;

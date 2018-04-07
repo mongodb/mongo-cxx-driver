@@ -22,8 +22,8 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
-insert_many::insert_many(result::bulk_write result, bsoncxx::array::view inserted_ids)
-    : _result(std::move(result)), _inserted_ids_owned(inserted_ids) {
+insert_many::insert_many(result::bulk_write result, bsoncxx::array::value inserted_ids)
+    : _result(std::move(result)), _inserted_ids_owned(std::move(inserted_ids)) {
     _buildInsertedIds();
 }
 

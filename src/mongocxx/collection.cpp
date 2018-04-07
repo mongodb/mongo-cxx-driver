@@ -529,8 +529,8 @@ stdx::optional<result::insert_one> collection::insert_one(view_or_value document
     return _insert_one(document, options);
 }
 
-stdx::optional<result::insert_one> collection::insert_one(view_or_value document,
-                                                          const session& session,
+stdx::optional<result::insert_one> collection::insert_one(const session& session,
+                                                          view_or_value document,
                                                           const options::insert& options) {
     return _insert_one(document, options, &session);
 }
@@ -1009,6 +1009,50 @@ class change_stream collection::watch(const pipeline& pipe, const options::chang
 
 class index_view collection::indexes() {
     return index_view{_get_impl().collection_t};
+}
+
+class bulk_write collection::_init_insert_many(const options::insert& options,
+                                               const session* session) {
+    options::bulk_write bulk_write_options;
+    bulk_write_options.ordered(options.ordered().value_or(true));
+    if (options.write_concern()) {
+        bulk_write_options.write_concern(*options.write_concern());
+    }
+    if (options.bypass_document_validation()) {
+        bulk_write_options.bypass_document_validation(*options.bypass_document_validation());
+    }
+    if (session) {
+        return create_bulk_write(*session, bulk_write_options);
+    }
+
+    return create_bulk_write(bulk_write_options);
+}
+
+void collection::_insert_many_doc_handler(class bulk_write& writes,
+                                          bsoncxx::builder::basic::array& inserted_ids,
+                                          bsoncxx::document::view doc) const {
+    bsoncxx::builder::basic::document id_doc;
+
+    if (!doc["_id"]) {
+        id_doc.append(kvp("_id", bsoncxx::oid{}));
+        writes.append(
+            model::insert_one{make_document(concatenate(id_doc.view()), concatenate(doc))});
+    } else {
+        id_doc.append(kvp("_id", doc["_id"].get_value()));
+        writes.append(model::insert_one{doc});
+    }
+
+    inserted_ids.append(id_doc.view());
+}
+
+stdx::optional<result::insert_many> collection::_exec_insert_many(
+    class bulk_write& writes, bsoncxx::builder::basic::array& inserted_ids) {
+    auto result = bulk_write(writes);
+    if (!result) {
+        return stdx::nullopt;
+    }
+
+    return result::insert_many{std::move(result.value()), inserted_ids.extract()};
 }
 
 const collection::impl& collection::_get_impl() const {
