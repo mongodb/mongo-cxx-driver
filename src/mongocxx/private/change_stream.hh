@@ -46,30 +46,30 @@ class change_stream::impl {
         libmongoc::change_stream_destroy(s);
     }
 
-    inline bool has_started() const {
+    bool has_started() const {
         return status_ >= state::k_started;
     }
 
-    inline bool is_dead() const {
+    bool is_dead() const {
         return status_ == state::k_dead;
     }
 
-    inline bool is_exhausted() const {
+    bool is_exhausted() const {
         return exhausted_;
     }
 
-    inline void mark_dead() {
+    void mark_dead() {
         mark_nothing_left();
         status_ = state::k_dead;
     }
 
-    inline void mark_nothing_left() {
+    void mark_nothing_left() {
         doc_ = bsoncxx::document::view{};
         exhausted_ = true;
         status_ = state::k_pending;
     }
 
-    inline void mark_started() {
+    void mark_started() {
         status_ = state::k_started;
         exhausted_ = false;
     }
@@ -95,7 +95,7 @@ class change_stream::impl {
         this->mark_nothing_left();
     }
 
-    inline bsoncxx::document::view& doc() {
+    bsoncxx::document::view& doc() {
         return this->doc_;
     }
 

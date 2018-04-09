@@ -65,7 +65,7 @@ class MONGOCXX_API change_stream {
     /// @exception
     ///   Throws mongocxx::query_exception if the query failed.
     ///
-    iterator begin();
+    iterator begin() const;
 
     ///
     /// A change_stream::iterator indicating stream exhaustion, meaning that
@@ -74,7 +74,7 @@ class MONGOCXX_API change_stream {
     /// @return
     ///   The change_stream::iterator indicating exhaustion
     ///
-    iterator end();
+    iterator end() const;
 
    private:
     friend class collection;
@@ -89,7 +89,7 @@ class MONGOCXX_API change_stream {
 class MONGOCXX_API change_stream::iterator {
    public:
     // Support input-iterator (caveat of post-increment returning void)
-    using difference_type = long;
+    using difference_type = std::int64_t;
     using value_type = const bsoncxx::document::view;
     using pointer = std::add_pointer<value_type>::type;
     using reference = std::add_lvalue_reference<value_type>::type;
@@ -104,12 +104,12 @@ class MONGOCXX_API change_stream::iterator {
     ///
     /// Dereferences the view for the document currently being pointed to.
     ///
-    const bsoncxx::document::view& operator*() const noexcept;
+    const bsoncxx::document::view& operator*() const;
 
     ///
     /// Accesses a member of the dereferenced document currently being pointed to.
     ///
-    const bsoncxx::document::view* operator->() const noexcept;
+    const bsoncxx::document::view* operator->() const;
 
     ///
     /// Pre-increments the iterator to move to the next document.
@@ -138,7 +138,7 @@ class MONGOCXX_API change_stream::iterator {
    private:
     friend class change_stream;
 
-    MONGOCXX_PRIVATE explicit iterator(change_stream* change_stream);
+    MONGOCXX_PRIVATE explicit iterator(const change_stream* change_stream);
 
     ///
     /// @{
@@ -159,7 +159,7 @@ class MONGOCXX_API change_stream::iterator {
 
     MONGOCXX_PRIVATE bool is_exhausted() const;
 
-    change_stream* _change_stream;
+    const change_stream* _change_stream;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

@@ -51,14 +51,14 @@ change_stream& change_stream::operator=(change_stream&&) noexcept = default;
 
 change_stream::~change_stream() = default;
 
-change_stream::iterator change_stream::begin() {
+change_stream::iterator change_stream::begin() const {
     if (_impl->is_dead()) {
         return end();
     }
     return iterator{this};
 }
 
-change_stream::iterator change_stream::end() {
+change_stream::iterator change_stream::end() const {
     return iterator{};
 }
 
@@ -68,12 +68,12 @@ change_stream::change_stream(void* change_stream_ptr)
 
 change_stream::iterator::iterator() : change_stream::iterator::iterator{nullptr} {}
 
-const bsoncxx::document::view& change_stream::iterator::operator*() const noexcept {
+const bsoncxx::document::view& change_stream::iterator::operator*() const {
     return _change_stream->_impl->doc();
 }
 
-const bsoncxx::document::view* change_stream::iterator::operator->() const noexcept {
-    return &_change_stream->_impl->doc();
+const bsoncxx::document::view* change_stream::iterator::operator->() const {
+    return std::addressof(_change_stream->_impl->doc());
 }
 
 change_stream::iterator& change_stream::iterator::operator++() {
@@ -85,7 +85,7 @@ void change_stream::iterator::operator++(int) {
     operator++();
 }
 
-change_stream::iterator::iterator(change_stream* change_stream) : _change_stream(change_stream) {
+change_stream::iterator::iterator(const change_stream* change_stream) : _change_stream(change_stream) {
     if (!_change_stream || _change_stream->_impl->has_started()) {
         return;
     }
