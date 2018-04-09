@@ -138,6 +138,35 @@ guard<T> make_guard(T&& t) {
     return guard<T>{std::forward<T>(t)};
 }
 
+// TODO: Consider extending the builders to directly accept optional values.
+template <typename T>
+inline void append_if(bsoncxx::builder::basic::document& doc,
+                      const std::string& key,
+                      const mongocxx::stdx::optional<T>& opt) {
+    if (opt) {
+        doc.append(bsoncxx::builder::basic::kvp(key, opt.value()));
+    }
+}
+
+bsoncxx::document::value as_bson(const mongocxx::options::change_stream& cs) {
+    // Construct new bson rep each time since values may change after this is called.
+    bsoncxx::builder::basic::document out{};
+
+    append_if(out, "fullDocument", cs.full_document());
+    append_if(out, "resumeAfter", cs.resume_after());
+    append_if(out, "batchSize", cs.batch_size());
+
+    if (cs.max_await_time()) {
+        auto count = cs.max_await_time().value().count();
+        if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max())) {
+            throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
+        }
+        out.append(bsoncxx::builder::basic::kvp("maxAwaitTimeMS", count));
+    }
+
+    return out.extract();
+}
+
 }  // namespace
 
 namespace mongocxx {
@@ -961,6 +990,21 @@ class write_concern collection::write_concern() const {
     class write_concern wc(stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
         libmongoc::collection_get_write_concern(_get_impl().collection_t))));
     return wc;
+}
+
+class change_stream collection::watch(const options::change_stream& options) {
+    return watch(pipeline{}, options);
+}
+
+class change_stream collection::watch(const pipeline& pipe, const options::change_stream& options) {
+    scoped_bson_t pipeline_bson{bsoncxx::document::view(pipe._impl->view_array())};
+
+    scoped_bson_t options_bson;
+    options_bson.init_from_static(as_bson(options));
+
+    // NOTE: collection_watch copies what it needs so we're safe to destroy our copies.
+    return change_stream{libmongoc::collection_watch(
+        _get_impl().collection_t, pipeline_bson.bson(), options_bson.bson())};
 }
 
 class index_view collection::indexes() {

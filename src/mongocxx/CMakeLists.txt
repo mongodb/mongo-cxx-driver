@@ -50,6 +50,7 @@ add_subdirectory(config)
 set(mongocxx_sources
     bulk_write.cpp
     client.cpp
+    change_stream.cpp
     collection.cpp
     cursor.cpp
     database.cpp
@@ -73,6 +74,7 @@ set(mongocxx_sources
     model/write.cpp
     options/aggregate.cpp
     options/bulk_write.cpp
+    options/change_stream.cpp
     options/client.cpp
     options/count.cpp
     options/create_collection.cpp
