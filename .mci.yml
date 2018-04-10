@@ -150,6 +150,9 @@ functions:
                     set -o xtrace
                     set -o pipefail
                     export PREFIX=$(pwd)/../mongoc/
+                    if [ "Windows_NT" == "$OS" ]; then
+                        PREFIX=$(cygpath -m "$PREFIX")
+                    fi
                     ./.evergreen/install.sh ${MONGOC_VERSION|master}
 
     "lint":
@@ -181,6 +184,11 @@ functions:
                   fi
 
                   MONGOC_PREFIX="$(pwd)/../mongoc"
+                  echo "MONGOC_PREFIX=$MONGOC_PREFIX"
+                  ls -l ..
+                  ls -l $MONGOC_PREFIX
+                  find $MONGOC_PREFIX
+
                   if [ "Windows_NT" == "$OS" ]; then
                       MONGOC_PREFIX=$(cygpath -m "$MONGOC_PREFIX")
                   fi
@@ -283,7 +291,7 @@ tasks:
         - func: "start_mongod"
         - func: "install_c_driver"
           vars:
-              MONGOC_VERSION: 1.9.2
+              MONGOC_VERSION: master
         - func: "compile"
         - func: "test"
 
@@ -293,7 +301,7 @@ tasks:
         - func: "start_mongod"
         - func: "install_c_driver"
           vars:
-              MONGOC_VERSION: 1.9.2
+              MONGOC_VERSION: master
         - func: "compile"
           vars:
               USE_STATIC_LIBS: 1
