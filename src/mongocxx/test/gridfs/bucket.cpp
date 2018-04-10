@@ -924,7 +924,7 @@ TEST_CASE("gridfs upload large file", "[gridfs::bucket]") {
         "fs",
         id,
         "large_file",
-        [length, chunk_size](const bsoncxx::types::b_binary& data, std::size_t i) {
+        [&, length](const bsoncxx::types::b_binary& data, std::size_t i) {
             REQUIRE(data.sub_type == bsoncxx::binary_sub_type::k_binary);
             REQUIRE(static_cast<std::int64_t>(data.size) ==
                     std::min(static_cast<std::int64_t>(chunk_size),
@@ -972,7 +972,7 @@ TEST_CASE("gridfs download large file", "[gridfs::bucket]") {
         num_chunks,
         static_cast<std::int32_t>(chunk_size),
         id,
-        [chunk_size, num_chunks, length](std::int32_t chunk_num) {
+        [&, num_chunks, length](std::int32_t chunk_num) {
             std::int32_t current_chunk_size = static_cast<std::int32_t>(chunk_size);
 
             if (chunk_num == num_chunks - 1) {
