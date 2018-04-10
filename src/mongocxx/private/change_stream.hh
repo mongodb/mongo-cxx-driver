@@ -33,7 +33,7 @@ class change_stream::impl {
     enum class state { k_pending, k_started, k_dead };
 
     explicit impl(mongoc_change_stream_t& change_stream)
-        : change_stream_{change_stream}, status_{state::k_pending}, exhausted_{true} {}
+        : change_stream_(change_stream), status_{state::k_pending}, exhausted_{true} {}
 
     // no copy or move
     impl(impl&) = delete;
