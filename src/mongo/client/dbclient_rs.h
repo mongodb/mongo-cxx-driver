@@ -203,6 +203,14 @@ public:
      */
     static void setAuthPooledSecondaryConn(bool setting);
 
+    virtual int getMaxWireVersion() {
+        return checkMaster()->getMaxWireVersion();
+    }
+
+    virtual int getMinWireVersion() {
+        return checkMaster()->getMinWireVersion();
+    }
+
 protected:
     /** Authorize.  Authorizes all nodes as needed
     */

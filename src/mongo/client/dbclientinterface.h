@@ -1134,42 +1134,6 @@ public:
      */
     BSONObj distinct(const StringData& ns, const StringData& field, const Query& query = Query());
 
-    /**
-     * Modifies and returns a single document.
-     *
-     * @note By default, the returned document does not include modifications made on update.
-     *
-     * @param ns Namespace on which to perform this findAndModify.
-     * @param update Update document to be applied.
-     * @param query Filter for the update.
-     * @param upsert Insert if object does not exist.
-     * @param sort Sort for the filter.
-     * @param new Return the updated rather than original object.
-     * @param fields Fields to return. Specifies inclusion with 1, "{<field1>: 1, ...}"
-     */
-    BSONObj findAndModify(const StringData& ns,
-                          const BSONObj& query,
-                          const BSONObj& update,
-                          bool upsert = false,
-                          bool returnNew = false,
-                          const BSONObj& sort = BSONObj(),
-                          const BSONObj& fields = BSONObj());
-
-    /**
-     * Removes and returns a single document.
-     *
-     * @note By default, the returned document does not include modifications made on update.
-     *
-     * @param ns Namespace on which to perform this findAndModify.
-     * @param query Filter for the update.
-     * @param sort Sort for the filter.
-     * @param fields Fields to return. Specifies inclusion with 1, "{<field1>: 1, ...}"
-     */
-    BSONObj findAndRemove(const StringData& ns,
-                          const BSONObj& query,
-                          const BSONObj& sort = BSONObj(),
-                          const BSONObj& fields = BSONObj());
-
     /** Run javascript code on the database server.
        dbname    database SavedContext in which the code runs. The javascript variable 'db' will be
                  assigned to this database when the function is invoked.
@@ -1444,15 +1408,6 @@ private:
                    const Query& query,
                    std::vector<BSONObj>* output);
 
-    void _findAndModify(const StringData& ns,
-                        const BSONObj& query,
-                        const BSONObj& update,
-                        const BSONObj& sort,
-                        bool returnNew,
-                        bool upsert,
-                        const BSONObj& fields,
-                        BSONObjBuilder* out);
-
     std::auto_ptr<DBClientCursor> _legacyCollectionInfo(const std::string& db,
                                                         const BSONObj& filter,
                                                         int batchSize);
@@ -1479,6 +1434,7 @@ protected:
     void _write(const std::string& ns,
                 const std::vector<WriteOperation*>& writes,
                 bool ordered,
+                bool bypassDocumentValidation,
                 const WriteConcern* writeConcern,
                 WriteResult* writeResult);
 
@@ -1507,10 +1463,10 @@ public:
         _maxWireVersion = maxWireVersion;
     }
 
-    int getMinWireVersion() {
+    virtual int getMinWireVersion() {
         return _minWireVersion;
     }
-    int getMaxWireVersion() {
+    virtual int getMaxWireVersion() {
         return _maxWireVersion;
     }
     int getMaxBsonObjectSize() {
@@ -1637,7 +1593,48 @@ public:
         const std::string& ns, Query query, BSONObj obj, int flags, const WriteConcern* wc = NULL);
 
     /**
-     * Initializes an ordered bulk operation by returning an object that can be
+     * Modifies and returns a single document.
+     *
+     * @note By default, the returned document does not include modifications made on update.
+     *
+     * @param ns Namespace on which to perform this findAndModify.
+     * @param update Update document to be applied.
+     * @param query Filter for the update.
+     * @param upsert Insert if object does not exist.
+     * @param sort Sort for the filter.
+     * @param new Return the updated rather than original object.
+     * @param fields Fields to return. Specifies inclusion with 1, "{<field1>: 1, ...}"
+     * @param wc The write concern for this operation.
+     */
+    BSONObj findAndModify(const StringData& ns,
+                          const BSONObj& query,
+                          const BSONObj& update,
+                          bool upsert = false,
+                          bool returnNew = false,
+                          const BSONObj& sort = BSONObj(),
+                          const BSONObj& fields = BSONObj(),
+                          const WriteConcern* wc = NULL,
+                          bool bypassDocumentValidation = false);
+
+    /**
+     * Removes and returns a single document.
+     *
+     * @note By default, the returned document does not include modifications made on update.
+     *
+     * @param ns Namespace on which to perform this findAndModify.
+     * @param query Filter for the update.
+     * @param sort Sort for the filter.
+     * @param fields Fields to return. Specifies inclusion with 1, "{<field1>: 1, ...}"
+     * @param wc The write concern for this operation.
+     */
+    BSONObj findAndRemove(const StringData& ns,
+                          const BSONObj& query,
+                          const BSONObj& sort = BSONObj(),
+                          const BSONObj& fields = BSONObj(),
+                          const WriteConcern* wc = NULL);
+
+    /**
+     * Initializes an unordered bulk operation by returning an object that can be
      * used to enqueue multiple operations for batch execution.
      *
      * @param ns Namespace on which to apply the operations.
@@ -1646,7 +1643,7 @@ public:
     virtual BulkOperationBuilder initializeUnorderedBulkOp(const std::string& ns);
 
     /**
-     * Initializes an unordered bulk operation by returning an object that can be
+     * Initializes an ordered bulk operation by returning an object that can be
      * used to enqueue multiple operations for batch execution.
      *
      * @param ns Namespace on which to apply the operations.
@@ -1690,6 +1687,18 @@ public:
     }
 
     virtual void reset() {}
+
+private:
+    void _findAndModify(const StringData& ns,
+                        const BSONObj& query,
+                        const BSONObj& update,
+                        const BSONObj& sort,
+                        bool returnNew,
+                        bool upsert,
+                        const BSONObj& fields,
+                        const WriteConcern* wc,
+                        bool bypassDocumentValidation,
+                        BSONObjBuilder* out);
 
 };  // DBClientBase
 

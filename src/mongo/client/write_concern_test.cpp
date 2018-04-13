@@ -92,6 +92,12 @@ TEST(WriteConcern, NeedsGLE) {
 TEST(WriteConcern, Unacknowledged) {
     ASSERT_FALSE(WriteConcern::unacknowledged.requiresConfirmation());
     ASSERT_EQUALS(WriteConcern::unacknowledged.nodes(), 0);
+
+    ASSERT_FALSE(WriteConcern().nodes(0).requiresConfirmation());
+
+    ASSERT_FALSE(WriteConcern().nodes(0).journal(false).requiresConfirmation());
+
+    ASSERT_FALSE(WriteConcern().nodes(0).timeout(100).requiresConfirmation());
 }
 
 TEST(WriteConcern, Acknowledged) {

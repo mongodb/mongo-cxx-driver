@@ -73,6 +73,7 @@ using std::vector;
 AtomicInt64 DBClientBase::ConnectionIdSequence;
 
 const char* const saslCommandUserSourceFieldName = "userSource";
+const char kBypassDocumentValidationKey[] = "bypassDocumentValidation";
 
 const int defaultMaxBsonObjectSize = 16 * 1024 * 1024;
 const int defaultMaxMessageSizeBytes = defaultMaxBsonObjectSize * 2;
@@ -1336,14 +1337,16 @@ BSONObj DBClientWithCommands::distinct(const StringData& ns,
     return result.getField("values").Obj().getOwned();
 }
 
-void DBClientWithCommands::_findAndModify(const StringData& ns,
-                                          const BSONObj& query,
-                                          const BSONObj& update,
-                                          const BSONObj& sort,
-                                          bool returnNew,
-                                          bool upsert,
-                                          const BSONObj& fields,
-                                          BSONObjBuilder* out) {
+void DBClientBase::_findAndModify(const StringData& ns,
+                                  const BSONObj& query,
+                                  const BSONObj& update,
+                                  const BSONObj& sort,
+                                  bool returnNew,
+                                  bool upsert,
+                                  const BSONObj& fields,
+                                  const WriteConcern* writeConcern,
+                                  bool bypassDocumentValidation,
+                                  BSONObjBuilder* out) {
     BSONObjBuilder commandBuilder;
 
     commandBuilder.append("findAndModify", nsGetCollection(ns.toString()));
@@ -1365,33 +1368,61 @@ void DBClientWithCommands::_findAndModify(const StringData& ns,
     commandBuilder.append("new", returnNew);
     commandBuilder.append("upsert", upsert);
 
+    if (getMaxWireVersion() >= 4) {
+        const WriteConcern* operationWriteConcern =
+            writeConcern ? writeConcern : &getWriteConcern();
+
+        commandBuilder.append("writeConcern", operationWriteConcern->obj());
+    } else {
+        uassert(0,
+                "WriteConcern is not supported for findAndModify with this server version.",
+                writeConcern == NULL);
+    }
+
+    if (bypassDocumentValidation) {
+        uassert(
+            0,
+            "bypassDocumentValidation is not supported for findAndModify with this server version.",
+            getMaxWireVersion() >= 4);
+        commandBuilder.append(kBypassDocumentValidationKey, true);
+    }
+
     BSONObj result;
     bool ok = runCommand(nsGetDB(ns.toString()), commandBuilder.obj(), result);
 
     if (!ok)
         throw OperationException(result);
 
+    // Check for any write concern errors
+    WriteResult writeResult;
+    writeResult._mergeWriteConcern(result);
+    writeResult._check(true);
+
     out->appendElements(result.getObjectField("value"));
 }
 
-BSONObj DBClientWithCommands::findAndModify(const StringData& ns,
-                                            const BSONObj& query,
-                                            const BSONObj& update,
-                                            bool upsert,
-                                            bool returnNew,
-                                            const BSONObj& sort,
-                                            const BSONObj& fields) {
+BSONObj DBClientBase::findAndModify(const StringData& ns,
+                                    const BSONObj& query,
+                                    const BSONObj& update,
+                                    bool upsert,
+                                    bool returnNew,
+                                    const BSONObj& sort,
+                                    const BSONObj& fields,
+                                    const WriteConcern* wc,
+                                    bool bypassDocumentValidation) {
     BSONObjBuilder result;
-    _findAndModify(ns, query, update, sort, returnNew, upsert, fields, &result);
+    _findAndModify(
+        ns, query, update, sort, returnNew, upsert, fields, wc, bypassDocumentValidation, &result);
     return result.obj();
 }
 
-BSONObj DBClientWithCommands::findAndRemove(const StringData& ns,
-                                            const BSONObj& query,
-                                            const BSONObj& sort,
-                                            const BSONObj& fields) {
+BSONObj DBClientBase::findAndRemove(const StringData& ns,
+                                    const BSONObj& query,
+                                    const BSONObj& sort,
+                                    const BSONObj& fields,
+                                    const WriteConcern* wc) {
     BSONObjBuilder result;
-    _findAndModify(ns, query, BSONObj(), sort, false, false, fields, &result);
+    _findAndModify(ns, query, BSONObj(), sort, false, false, fields, wc, false, &result);
     return result.obj();
 }
 
@@ -1440,6 +1471,7 @@ list<string> DBClientWithCommands::getDatabaseNames() {
 
 list<string> DBClientWithCommands::getCollectionNames(const string& db, const BSONObj& filter) {
     auto_ptr<DBClientCursor> infos = enumerateCollections(db, filter);
+    uassert(0, "failed to read server response from socket when listing collections", infos.get());
     list<string> names;
 
     while (infos->more()) {
@@ -1451,6 +1483,9 @@ list<string> DBClientWithCommands::getCollectionNames(const string& db, const BS
 
 list<BSONObj> DBClientWithCommands::getCollectionInfos(const string& db, const BSONObj& filter) {
     auto_ptr<DBClientCursor> info_cursor = enumerateCollections(db, filter);
+    uassert(0,
+            "failed to read server response from socket when listing collections",
+            info_cursor.get());
     list<BSONObj> infos;
 
     while (info_cursor->more()) {
@@ -1492,9 +1527,12 @@ auto_ptr<DBClientCursor> DBClientWithCommands::_legacyCollectionInfo(const strin
     auto_ptr<DBClientCursor> simple =
         query(namespaces_ns, fallbackFilter.obj(), 0, 0, 0, QueryOption_SlaveOk, batchSize);
 
-    simple->shim.reset(new DBClientCursorShimTransform(*simple, transformLegacyCollectionInfos));
-    simple->nToReturn = 0;
-    simple->setBatchSize(batchSize);
+    if (simple.get()) {
+        simple->shim.reset(
+            new DBClientCursorShimTransform(*simple, transformLegacyCollectionInfos));
+        simple->nToReturn = 0;
+        simple->setBatchSize(batchSize);
+    }
 
     return simple;
 }
@@ -1554,6 +1592,8 @@ auto_ptr<DBClientCursor> DBClientWithCommands::enumerateCollections(const string
 bool DBClientWithCommands::exists(const string& ns) {
     BSONObj filter = BSON("name" << nsToCollectionSubstring(ns));
     auto_ptr<DBClientCursor> results = enumerateCollections(nsToDatabase(ns), filter);
+    uassert(
+        0, "failed to read server response from socket when listing collections", results.get());
     return results->more();
 }
 
@@ -1888,8 +1928,10 @@ std::auto_ptr<DBClientCursor> DBClientBase::aggregate(const std::string& ns,
                                                               queryOptions,
                                                               0);
 
-                simple->shim.reset(new DBClientCursorShimArray(*simple, "result"));
-                simple->nToReturn = 0;
+                if (simple.get()) {
+                    simple->shim.reset(new DBClientCursorShimArray(*simple, "result"));
+                    simple->nToReturn = 0;
+                }
 
                 return simple;
             }
@@ -2009,14 +2051,17 @@ unsigned long long DBClientConnection::query(stdx::function<void(DBClientCursorB
 void DBClientBase::_write(const string& ns,
                           const vector<WriteOperation*>& writes,
                           bool ordered,
+                          bool bypassDocumentValidation,
                           const WriteConcern* writeConcern,
                           WriteResult* writeResult) {
     const WriteConcern* operationWriteConcern = writeConcern ? writeConcern : &getWriteConcern();
 
     if (getMaxWireVersion() >= 2 && operationWriteConcern->requiresConfirmation())
-        _commandWriter->write(ns, writes, ordered, operationWriteConcern, writeResult);
+        _commandWriter->write(
+            ns, writes, ordered, bypassDocumentValidation, operationWriteConcern, writeResult);
     else
-        _wireProtocolWriter->write(ns, writes, ordered, operationWriteConcern, writeResult);
+        _wireProtocolWriter->write(
+            ns, writes, ordered, bypassDocumentValidation, operationWriteConcern, writeResult);
 }
 
 namespace {
@@ -2056,9 +2101,10 @@ void DBClientBase::insert(const string& ns,
     }
 
     bool ordered = !(flags & InsertOption_ContinueOnError);
+    bool bypassDocumentValidation = flags & InsertOption_BypassDocumentValidation;
 
     WriteResult writeResult;
-    _write(ns, inserts.ops, ordered, wc, &writeResult);
+    _write(ns, inserts.ops, ordered, bypassDocumentValidation, wc, &writeResult);
 }
 
 void DBClientBase::remove(const string& ns, Query obj, bool justOne, const WriteConcern* wc) {
@@ -2073,7 +2119,7 @@ void DBClientBase::remove(const string& ns, Query obj, int flags, const WriteCon
     deletes.enqueue(new DeleteWriteOperation(obj.obj, flags));
 
     WriteResult writeResult;
-    _write(ns, deletes.ops, true, wc, &writeResult);
+    _write(ns, deletes.ops, true, false, wc, &writeResult);
 }
 
 void DBClientBase::update(
@@ -2096,16 +2142,18 @@ void DBClientBase::update(
         0, "update document exceeds maxBsonObjectSize", obj.objsize() <= getMaxBsonObjectSize());
     updates.enqueue(new UpdateWriteOperation(query.obj, obj, flags));
 
+    bool bypassDocumentValidation = flags & UpdateOption_BypassDocumentValidation;
+
     WriteResult writeResult;
-    _write(ns, updates.ops, true, wc, &writeResult);
+    _write(ns, updates.ops, true, bypassDocumentValidation, wc, &writeResult);
 }
 
 BulkOperationBuilder DBClientBase::initializeOrderedBulkOp(const std::string& ns) {
-    return BulkOperationBuilder(this, ns, true);
+    return BulkOperationBuilder(this, ns, true, false);
 }
 
 BulkOperationBuilder DBClientBase::initializeUnorderedBulkOp(const std::string& ns) {
-    return BulkOperationBuilder(this, ns, false);
+    return BulkOperationBuilder(this, ns, false, false);
 }
 
 list<BSONObj> DBClientWithCommands::getIndexSpecs(const string& ns, int options) {

@@ -68,8 +68,12 @@ public:
      * @param client The connection to use.
      * @param ns The namespace to apply the operations to.
      * @param ordered Whether or not ordering matters for these operations.
+     * param bypassDocumentValidation Whether to bypass document validation for these operations,
      */
-    BulkOperationBuilder(DBClientBase* const client, const std::string& ns, bool ordered);
+    BulkOperationBuilder(DBClientBase* const client,
+                         const std::string& ns,
+                         bool ordered,
+                         bool bypassDocumentValidation = false);
 
     /* Deletes all of the WriteOperations that were created during the Builder's lifetime */
     ~BulkOperationBuilder();
@@ -105,6 +109,7 @@ private:
     DBClientBase* const _client;
     const std::string _ns;
     const bool _ordered;
+    const bool _bypassDocumentValidation;
     bool _executed;
     size_t _currentIndex;
     std::vector<WriteOperation*> _write_operations;

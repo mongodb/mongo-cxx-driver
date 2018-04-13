@@ -14,10 +14,12 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+#define MONGO_LOG_DEFAULT_COMPONENT ::mongo::logger::LogComponent::kDefault
+
+#include "mongo/platform/basic.h"
 
 #include "mongo/platform/random.h"
 
-#include <stdio.h>
 #include <string.h>
 
 #ifndef _WIN32
@@ -26,10 +28,10 @@
 
 #define _CRT_RAND_S
 #include <cstdlib>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
-#include "mongo/platform/basic.h"
+#include <mongo/util/log.h>
 
 namespace mongo {
 
@@ -101,15 +103,16 @@ SecureRandom* SecureRandom::create() {
     return new WinSecureRandom();
 }
 
-#elif defined(__linux__) || defined(__sunos__) || defined(__APPLE__) || defined(__freebsd__)
+#elif defined(__linux__) || defined(__sunos__) || defined(__APPLE__) || defined(__FreeBSD__) || \
+    defined(__FreeBSD_kernel__) || defined(__gnu_hurd__)
 
 class InputStreamSecureRandom : public SecureRandom {
 public:
     InputStreamSecureRandom(const char* fn) {
         _in = new std::ifstream(fn, std::ios::binary | std::ios::in);
         if (!_in->is_open()) {
-            std::cerr << "can't open " << fn << " " << strerror(errno) << std::endl;
-            abort();
+            error() << "cannot open " << fn << " " << strerror(errno);
+            fassertFailed(28839);
         }
     }
 
@@ -121,7 +124,8 @@ public:
         int64_t r;
         _in->read(reinterpret_cast<char*>(&r), sizeof(r));
         if (_in->fail()) {
-            abort();
+            error() << "InputStreamSecureRandom failed to generate random bytes";
+            fassertFailed(28840);
         }
         return r;
     }

@@ -43,6 +43,18 @@ public:
     std::auto_ptr<DBClientReplicaSet> conn;
 };
 
+bool serverGTE(DBClientBase* c, int major, int minor) {
+    BSONObj result;
+    c->runCommand("admin", BSON("buildinfo" << true), result);
+
+    std::vector<BSONElement> version = result.getField("versionArray").Array();
+    int serverMajor = version[0].Int();
+    int serverMinor = version[1].Int();
+
+    // std::pair uses lexicographic ordering
+    return std::make_pair(serverMajor, serverMinor) >= std::make_pair(major, minor);
+}
+
 TEST_F(RSBasicTest, InsertRecoversFromPrimaryFailure) {
     WriteConcern wcAll = WriteConcern().nodes(2).timeout(60000);
     conn->insert(TEST_NS, BSON("x" << 1), 0, &wcAll);
@@ -85,4 +97,24 @@ TEST_F(RSBasicTest, SecondaryQueryIsNotInteruptedByPrimaryFailure) {
     conn->findOne(TEST_NS, Query().readPref(ReadPreference_SecondaryOnly, BSONArray()));
     primary.start();
 }
+
+TEST_F(RSBasicTest, FindAndModifyFailure) {
+    if (serverGTE(conn.get(), 3, 1)) {
+        WriteConcern wcAll = WriteConcern().nodes(5).journal(true);
+        conn->insert(TEST_NS, BSON("_id" << 1 << "i" << 1));
+
+        // findAndModify is expected to throw since we want 5 nodes, and the replica set set only
+        // has 3 nodes
+        ASSERT_THROWS(conn->findAndModify(TEST_NS,
+                                          BSON("i" << 1),
+                                          BSON("$inc" << BSON("i" << 1)),
+                                          false,
+                                          false,
+                                          BSONObj(),
+                                          BSONObj(),
+                                          &wcAll),
+                      OperationException);
+    }
+}
+
 }  // namespace

@@ -6,27 +6,57 @@
 
 cxx_driver_variables:
 
-## The basic set of tests to run on most buildvariants
+  ## The basic set of tests to run on most buildvariants.
   latest_test_list: &latest_tests
     - name: "compile"
     - name: "unit-test"
     - name: "integration-test-latest"
+    # The auth integration tests are temporary disabled. TODO CXX-1213: Uncomment the below line
+    # once the mongo-orchestration issue in CXX-1213 has been resolved.
+    # - name: "integration-test-latest-with-auth"
     - name: "client-test-latest"
 
+  ## The latest test list, temporarily trimmed down on Windows.  TODO CXX-1210: Replace this with
+  ## 'latest_test_list' once the taskkill.exe issue in CXX-1210 has been resolved.
+  windows_latest_test_list: &windows_latest_tests
+    - name: "compile"
+    - name: "unit-test"
+
+  ## The latest test list, temporarily trimmed down on OS X.  TODO CXX-1211: Replace this with
+  ## 'latest_test_list' once the mongo-orchestration issue in CXX-1211 has been resolved.
+  osx_latest_test_list: &osx_latest_tests
+    - name: "compile"
+    - name: "unit-test"
+
+  ## Same as above, but with the MMAPv1 storage engine.
+  latest_test_with_mmapv1_list: &latest_tests_with_mmapv1
+    - name: "compile"
+    - name: "unit-test"
+    - name: "integration-test-latest-with-MMAPv1"
+    # The auth integration tests are temporary disabled. TODO CXX-1213: Uncomment the below line
+    # once the mongo-orchestration issue in CXX-1213 has been resolved.
+    # - name: "integration-test-latest-with-auth-and-MMAPv1"
+    - name: "client-test-latest-with-MMAPv1"
+
   ## Note that the in 3.0, the default storage engine is MMAPv1 and
-  ## WiredTiger is opt-in, but in latest as of MongoDB 3.1.4, the
+  ## WiredTiger is opt-in, but as of MongoDB 3.1.4, the
   ## default is WiredTiger and MMAPv1 is opt-in.
   storage_engine_test_list: &storage_engine_tests
     - name: "compile"
     - name: "unit-test"
     - name: "integration-test-3.0"
     - name: "integration-test-3.0-with-WiredTiger"
-    - name: "integration-test-latest"
-    - name: "integration-test-latest-with-MMAPv1"
+    - name: "integration-test-3.2"
+    - name: "integration-test-3.2-with-MMAPv1"
+    - name: "integration-test-3.4"
+    - name: "integration-test-3.4-with-MMAPv1"
     - name: "client-test-3.0"
     - name: "client-test-3.0-with-WiredTiger"
-    - name: "client-test-latest"
-    - name: "client-test-latest-with-MMAPv1"
+    - name: "client-test-3.2"
+    - name: "client-test-3.2-with-MMAPv1"
+    - name: "client-test-3.4"
+    - name: "client-test-3.4-with-MMAPv1"
+
 
   version_test_list: &version_tests
     - name: "compile"
@@ -36,12 +66,15 @@ cxx_driver_variables:
     - name: "integration-test-2.4"
     - name: "integration-test-2.6"
     - name: "integration-test-3.0"
-    - name: "integration-test-3.0-with-auth"
+    - name: "integration-test-3.2"
+    - name: "integration-test-3.4"
     - name: "integration-test-latest"
     - name: "client-test-2.2"
     - name: "client-test-2.4"
     - name: "client-test-2.6"
     - name: "client-test-3.0"
+    - name: "client-test-3.2"
+    - name: "client-test-3.4"
     - name: "client-test-latest"
 
 ## Common download urls (merge in as hashes)
@@ -62,7 +95,7 @@ cxx_driver_variables:
       mongo_url_prefix: "http://downloads.mongodb.org/linux/mongodb-linux-i686-"
       mongo_url_enterprise_keyword: ""
       mongo_url_subscription_keyword: ""
-    osx-108: &mongo_url_osx_108
+    osx-1010: &mongo_url_osx_1010
       mongo_url_prefix: "http://downloads.mongodb.org/osx/mongodb-osx-x86_64-"
       mongo_url_enterprise_keyword: ""
 
@@ -74,8 +107,8 @@ cxx_driver_variables:
       scons_flags: "--32 --ssl --use-sasl-client --sharedclient"
     ubuntu_c++11: &scons_flags_cpp11
       scons_flags: "--64 --c++11 --ssl --use-sasl-client --sharedclient"
-    osx_108: &scons_flags_osx_108
-      scons_flags: "--64 --ssl --use-sasl-client --sharedclient --osx-version-min=10.6"
+    osx_1010: &scons_flags_osx_1010
+      scons_flags: "--64 --ssl --use-sasl-client --sharedclient --osx-version-min=10.7 --libc++"
     ## test all plausible combinations of static/dynamic mongo client and windows runtime:
     static_windows: &scons_flags_64_windows_static
       scons_flags: "--64 --ssl --use-sasl-client"
@@ -133,9 +166,9 @@ cxx_driver_variables:
     ## msvc2010
     msvc2010: &with_msvc2010
       toolchain_flags: --msvc-version=10.0
-      libpath: --libpath="c:\local\boost_1_55_0\lib64-msvc-10.0"
-      cpppath: --cpppath="c:\local\boost_1_55_0"
-      dllpath: --runtime-library-search-path="c:\local\boost_1_55_0\lib64-msvc-10.0,c:\openssl\bin,c:\sasl\bin,c:\curl\dlls"
+      libpath: --libpath="c:\local\boost_1_57_0\lib64-msvc-10.0"
+      cpppath: --cpppath="c:\local\boost_1_57_0"
+      dllpath: --runtime-library-search-path="c:\local\boost_1_57_0\lib64-msvc-10.0,c:\openssl\bin,c:\sasl\bin,c:\curl\dlls"
       extrapath: --extrapath="c:\openssl,c:\sasl,c:\curl"
     ## msvc2013, 32-bit boost headers
     msvc2013-32: &with_msvc2010_32bit
@@ -150,6 +183,12 @@ cxx_driver_variables:
       cpppath: --cpppath="c:\local\boost_1_56_0"
       dllpath: --runtime-library-search-path="c:\local\boost_1_56_0\lib64-msvc-12.0,c:\openssl\bin,c:\sasl\bin,c:\curl\dlls"
       extrapath: --extrapath="c:\openssl,c:\sasl,c:\curl"
+    msvc2015: &with_msvc2015
+      toolchain_flags: --msvc-version=14.0
+      libpath: --libpath="c:\local\boost_1_60_0\lib64-msvc-14.0"
+      cpppath: --cpppath="c:\local\boost_1_60_0"
+      dllpath: --runtime-library-search-path="c:\local\boost_1_60_0\lib64-msvc-14.0,c:\openssl\bin,c:\sasl\bin,c:\curl\dlls"
+      extrapath: --extrapath="c:\openssl,c:\sasl,c:\curl"
 
   ## all windows buildvariants have these attributes in common
   windows_common: &windows_common
@@ -162,8 +201,8 @@ cxx_driver_variables:
 ## Paths for OS X builds
   osx_fixups:
     scons:
-      boost_headers: &extrapath_osx_108
-        extrapath: --extrapath="/opt/local"
+      boost_headers: &extrapath_osx_1010
+        extrapath: --extrapath="/usr/local"
 
 ## Paths and flags for RHEL 5.5 builds
   rhel55_fixups:
@@ -216,13 +255,6 @@ functions:
       bucket: mciuploads
       extract_to: mongo-cxx-driver
 
-  "set version latest" :
-    command: expansions.update
-    params:
-      updates:
-        - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform|}latest.${mongo_url_extension|tgz}
-
   "use WiredTiger storage" :
     command: expansions.update
     params:
@@ -246,19 +278,12 @@ functions:
           # Requires mongo-orchestration 0.4.2
           value: "--mongo-orchestration-preset=auth.json"
 
-  "set version 3.0" :
+  "set version 2.2" :
     command: expansions.update
     params:
       updates:
         - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise-}${mongo_url_platform|}3.0.6.${mongo_url_extension|tgz}
-
-  "set version 2.6" :
-    command: expansions.update
-    params:
-      updates:
-        - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise-}${mongo_url_platform|}2.6.11.${mongo_url_extension|tgz}
+          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|subscription-}${mongo_url_platform|}2.2.7.${mongo_url_extension|tgz}
 
   "set version 2.4" :
     command: expansions.update
@@ -267,18 +292,48 @@ functions:
         - key: "mongo_url"
           value: ${mongo_url_prefix}${mongo_url_subscription_keyword|subscription-}${mongo_url_platform|}2.4.14.${mongo_url_extension|tgz}
 
-  "set version 2.2" :
+  "set version 2.6" :
     command: expansions.update
     params:
       updates:
         - key: "mongo_url"
-          value: ${mongo_url_prefix}${mongo_url_subscription_keyword|subscription-}${mongo_url_platform|}2.2.7.${mongo_url_extension|tgz}
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise-}${mongo_url_platform|}2.6.12.${mongo_url_extension|tgz}
+
+  "set version 3.0" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "mongo_url"
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise-}${mongo_url_platform|}3.0.15.${mongo_url_extension|tgz}
+
+  "set version 3.2" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "mongo_url"
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise-}${mongo_url_platform|}3.2.17.${mongo_url_extension|tgz}
+
+  "set version 3.4" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "mongo_url"
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|enterprise-}${mongo_url_platform|}3.4.10.${mongo_url_extension|tgz}
+
+  "set version latest" :
+    command: expansions.update
+    params:
+      updates:
+        - key: "mongo_url"
+          value: ${mongo_url_prefix}${mongo_url_enterprise_keyword|"enterprise-"}${mongo_url_platform|}latest.${mongo_url_extension|tgz}
 
   "run integration tests" :
     command: shell.exec
     params:
       working_dir: "mongo-cxx-driver"
       script: |
+        set -o verbose
+        set -o errexit
         ${start_mongo_orchestration}
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} integration
 
@@ -287,20 +342,17 @@ functions:
     params:
       working_dir: "mongo-cxx-driver"
       script: |
+        set -o verbose
+        set -o errexit
         ${start_mongo_orchestration}
         ${scons|scons} ${scons_flags} ${warning_flags} ${compile_flags} ${toolchain_flags} ${extrapath} ${dllpath} ${cpppath} ${libpath} ${orchestration_preset} examples
 
 pre:
-  - command: expansions.fetch
-    params:
-      keys:
-        - local_key: "aws_key"
-          remote_key: "project_aws_key"
-        - local_key: "aws_secret"
-          remote_key: "project_aws_secret"
   - command: shell.exec
     params:
       script: |
+        set -o verbose
+        set -o errexit
         rm -rf "mongo-cxx-driver"
         if [ ! -e /data/db ]; then
             mkdir /data/db
@@ -313,6 +365,8 @@ post:
   - command: shell.exec
     params:
       script: |
+        set -o verbose
+        set -o errexit
         cd mongo-cxx-driver && mongo-orchestration stop
         ${killall_mci|pkill -9 mongo-orchestration; pkill -9 mongod; pkill -9 mongos;}
 
@@ -413,22 +467,50 @@ tasks:
         - func: "fetch mongodb"
         - func: "run integration tests"
 
-    - name: "integration-test-3.0-with-auth"
-      depends_on:
-        - name: "compile"
-      commands:
-        - func: "set version 3.0"
-        - func: "fetch artifacts"
-        - func: "use auth"
-        - func: "fetch mongodb"
-        - func: "run integration tests"
-
     - name: "integration-test-3.0-with-WiredTiger"
       depends_on:
         - name: "compile"
       commands:
         - func: "set version 3.0"
         - func: "use WiredTiger storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
+    - name: "integration-test-3.2"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.2"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
+    - name: "integration-test-3.2-with-MMAPv1"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.2"
+        - func: "use MMAPv1 storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
+    - name: "integration-test-3.4"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.4"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
+    - name: "integration-test-3.4-with-MMAPv1"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.4"
+        - func: "use MMAPv1 storage"
         - func: "fetch artifacts"
         - func: "fetch mongodb"
         - func: "run integration tests"
@@ -449,6 +531,27 @@ tasks:
         - func: "set version latest"
         - func: "use MMAPv1 storage"
         - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
+    - name: "integration-test-latest-with-auth"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version latest"
+        - func: "fetch artifacts"
+        - func: "use auth"
+        - func: "fetch mongodb"
+        - func: "run integration tests"
+
+    - name: "integration-test-latest-with-auth-and-MMAPv1"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version latest"
+        - func: "use MMAPv1 storage"
+        - func: "fetch artifacts"
+        - func: "use auth"
         - func: "fetch mongodb"
         - func: "run integration tests"
 
@@ -498,6 +601,44 @@ tasks:
         - func: "fetch mongodb"
         - func: "run client tests"
 
+    - name: "client-test-3.2"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.2"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
+    - name: "client-test-3.2-with-MMAPv1"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.2"
+        - func: "use MMAPv1 storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
+    - name: "client-test-3.4"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.4"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
+    - name: "client-test-3.4-with-MMAPv1"
+      depends_on:
+        - name: "compile"
+      commands:
+        - func: "set version 3.4"
+        - func: "use MMAPv1 storage"
+        - func: "fetch artifacts"
+        - func: "fetch mongodb"
+        - func: "run client tests"
+
     - name: "client-test-latest"
       depends_on:
         - name: "compile"
@@ -516,7 +657,6 @@ tasks:
         - func: "fetch artifacts"
         - func: "fetch mongodb"
         - func: "run client tests"
-
 
 #######################################
 #           Buildvariants             #
@@ -542,7 +682,7 @@ buildvariants:
     <<: *mongo_orchestration_linux
   run_on:
   - rhel55-test
-  tasks: *version_tests
+  tasks: *latest_tests
 
 ## RHEL 5.5 32-bit
 
@@ -558,7 +698,8 @@ buildvariants:
     <<: *mongo_orchestration_linux
   run_on:
   - rhel55-test
-  tasks: *latest_tests
+  # Need to test with mmapv1, as default storage engine (WiredTiger) doesn't have 32-bit support.
+  tasks: *latest_tests_with_mmapv1
 
 ## Ubuntu 1404
 
@@ -585,7 +726,7 @@ buildvariants:
     <<: *mongo_orchestration_linux
   run_on:
   - ubuntu1404-test
-  tasks: *latest_tests
+  tasks: *version_tests
 
 ## Ubuntu 1404 C++11
 
@@ -606,17 +747,17 @@ buildvariants:
 
 ## OS X 10.8
 
-- name: os-x-108
-  display_name: "OS X 10.8"
+- name: os-x-107
+  display_name: "OS X 10.7"
   expansions:
-    <<: *mongo_url_osx_108
-    <<: *scons_flags_osx_108
+    <<: *mongo_url_osx_1010
+    <<: *scons_flags_osx_1010
     <<: *parallel_compile_flags_sysctl
-    <<: *extrapath_osx_108
+    <<: *extrapath_osx_1010
     <<: *mongo_orchestration_osx
   run_on:
-  - osx-108
-  tasks: *latest_tests
+  - osx-1010
+  tasks: *osx_latest_tests
 
 #######################################
 #        Windows Buildvariants        #
@@ -653,7 +794,7 @@ buildvariants:
     <<: *with_msvc2010
   run_on:
   - windows-64-vs2010-compile
-  tasks: *latest_tests
+  tasks: *windows_latest_tests
 
 ## Windows 64-bit DEBUG DYNAMIC (msvc2010)
 ## dynamic client and RT
@@ -669,7 +810,7 @@ buildvariants:
     <<: *with_msvc2010
   run_on:
   - windows-64-vs2010-compile
-  tasks: *latest_tests
+  tasks: *windows_latest_tests
 
 ## Windows 64-bit DYNAMIC (msvc2013)
 ## dynamic client and RT
@@ -684,7 +825,7 @@ buildvariants:
     <<: *with_msvc2013
   run_on:
   - windows-64-vs2013-compile
-  tasks: *latest_tests
+  tasks: *windows_latest_tests
 
 ## Windows 64-bit (msvc2013) DYNAMIC-RT
 ## static client, dynamic RT
@@ -699,4 +840,19 @@ buildvariants:
     <<: *with_msvc2013
   run_on:
   - windows-64-vs2013-compile
-  tasks: *latest_tests
+  tasks: *windows_latest_tests
+
+## Windows 64-bit DYNAMIC (msvc2015)
+## dynamic client and RT
+
+- name: windows-64-msvc2015-dyn-dyn
+  display_name: "Win64(2015) dyn-dyn"
+  expansions:
+    <<: *windows_common
+    <<: *parallel_compile_flags_proc
+    <<: *scons_flags_64_windows_dynamic
+    <<: *mongo_url_windows64
+    <<: *with_msvc2015
+  run_on:
+  - windows-64-vs2015-compile
+  tasks: *windows_latest_tests

@@ -90,7 +90,8 @@ private:
     Value _value;
 };
 
-std::ostream& operator<<(std::ostream& os, LogComponent component);
+MONGO_CLIENT_API std::ostream& MONGO_CLIENT_FUNC
+operator<<(std::ostream& os, LogComponent component);
 
 }  // namespace logger
 }  // namespace mongo

@@ -125,6 +125,10 @@ void WriteResult::_mergeCommandResult(const std::vector<WriteOperation*>& ops,
             _createWriteError(arrayIterator.next().Obj(), ops);
     }
 
+    _mergeWriteConcern(result);
+}
+
+void WriteResult::_mergeWriteConcern(const BSONObj& result) {
     // Handle Write Concern Errors
     if (result.hasField("writeConcernError")) {
         BSONObj writeConcernError = result.getObjectField("writeConcernError");

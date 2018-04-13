@@ -1,0 +1,223 @@
+MongoDB uses third-party libraries or other resources that may
+be distributed under licenses different than the MongoDB software.
+
+In the event that we accidentally failed to list a required notice,
+please bring it to our attention through any of the ways detailed here:
+
+    https://jira.mongodb.org/browse/CXX
+
+The attached notices are provided for information only.
+
+For any licenses that require disclosure of source, sources are available at
+https://github.com/mongodb/mongo-cxx-driver.
+
+1) License Notice for The Loki Library
+--------------------------------------
+
+Copyright (c) 2000 Andrei Alexandrescu
+Copyright (c) 2000 Petru Marginean
+Copyright (c) 2005 Joshua Lehrer
+
+Permission to use, copy, modify, distribute and sell this software for any
+purpose is hereby granted without fee, provided that the above copyright
+notice appear in all copies and that both that copyright notice and this
+permission notice appear in supporting documentation.
+
+The author makes no representations about the suitability of this software
+for any purpose. It is provided "as is" without express or implied
+warranty.
+
+2) License Notice for MurmurHash
+--------------------------------
+
+Copyright (c) 2010-2012 Austin Appleby
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+3) License Notice for The Google C++ Testing Framework (Google Test)
+--------------------------------------------------------------------
+
+Copyright 2005, Google Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+* Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer in
+the documentation and/or other materials provided with the distribution.
+
+* Neither the name of Google Inc. nor the names of its
+contributors may be used to endorse or promote products derived from this
+software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+4) License Notice for JsonCpp
+-----------------------------
+
+The JsonCpp library's source code, including accompanying documentation,
+tests and demonstration applications, are licensed under the following
+conditions...
+
+The author (Baptiste Lepilleur) explicitly disclaims copyright in all
+jurisdictions which recognize such a disclaimer. In such jurisdictions,
+this software is released into the Public Domain.
+
+In jurisdictions which do not recognize Public Domain property (e.g.
+Germany as of 2010), this software is Copyright (c) 2007-2010 by Baptiste
+Lepilleur, and is released under the terms of the MIT License (see below).
+
+In jurisdictions which recognize Public Domain property, the user of this
+software may choose to accept it either as 1) Public Domain, 2) under the
+conditions of the MIT License (see below), or 3) under the terms of dual
+Public Domain/MIT License conditions described here, as they choose.
+
+The MIT License is about as close to Public Domain as a license can get, and is
+described in clear, concise terms at:
+
+   http://en.wikipedia.org/wiki/MIT_License
+
+The full text of the MIT License follows:
+
+    ========================================================================
+    Copyright (c) 2007-2010 Baptiste Lepilleur
+
+    Permission is hereby granted, free of charge, to any person
+    obtaining a copy of this software and associated documentation
+    files (the "Software"), to deal in the Software without
+    restriction, including without limitation the rights to use, copy,
+    modify, merge, publish, distribute, sublicense, and/or sell copies
+    of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+    BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+    ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+    ========================================================================
+    (END LICENSE TEXT)
+
+The MIT license is compatible with both the GPL and commercial
+software, affording one all of the rights of Public Domain with the
+minor nuisance of being required to keep the above copyright notice
+and license text in the source code. Note also that by accepting the
+Public Domain "license" you can re-license your copy using whatever
+license you like.
+
+5) License Notice for RestClient
+--------------------------------
+
+Copyright (c) 2010 Daniel Schauenberg
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+6) License Notice for the TZ Database
+-------------------------------------
+
+The tzcode library is published as part of the TZ Database by IANA at
+https://www.iana.org/time-zones
+
+Ownership is described in https://www.rfc-editor.org/bcp/bcp175.txt:
+
+    The TZ database itself is not an IETF Contribution or an IETF document.
+    Rather it is a pre-existing and regularly updated work that is in the
+    public domain, and is intended to remain in the public domain.
+    Therefore, BCPs 78 [RFC5378] and 79 [RFC3979] do not apply to the TZ
+    Database or contributions that individuals make to it.  Should any
+    claims be made and substantiated against the TZ Database, the
+    organization that is providing the IANA Considerations defined in this
+    RFC, under the memorandum of understanding with the IETF, currently
+    ICANN, may act in accordance with all competent court orders.  No
+    ownership claims will be made by ICANN or the IETF Trust on the
+    database or the code.  Any person making a contribution to the database
+    or code waives all rights to future claims in that contribution or in
+    the TZ Database.
+
+7) License Notice for Independent implementation of MD5 by Aladdin Enterprises
+------------------------------------------------------------------------------
+
+Copyright (C) 1999, 2002 Aladdin Enterprises.  All rights reserved.
+
+This software is provided 'as-is', without any express or implied
+warranty.  In no event will the authors be held liable for any damages
+arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+1. The origin of this software must not be misrepresented; you must not
+claim that you wrote the original software. If you use this software in a
+product, an acknowledgment in the product documentation would be
+appreciated but is not required.
+
+2. Altered source versions must be plainly marked as such, and must not be
+misrepresented as being the original software.
+
+3. This notice may not be removed or altered from any source distribution.
+
+L. Peter Deutsch
+ghost@aladdin.com
+
+NOTE: Per restriction 2 above, this file has been altered by MongoDB as
+follows:
+
+1. The functions md5_init, md5_append, and md5_finish have been moved into
+the 'mongo' namespace and given C++ linkage, so that static archives of
+this library may be combined with other libraries that expose functions of
+the same name.

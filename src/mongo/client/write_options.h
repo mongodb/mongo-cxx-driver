@@ -26,7 +26,11 @@ enum UpdateOptions {
     UpdateOption_Multi = 1 << 1,
 
     /** flag from mongo saying this update went everywhere */
-    UpdateOption_Broadcast = 1 << 2
+    UpdateOption_Broadcast = 1 << 2,
+
+    // TODO: upsert, and multi are per item in a batch, this is for the whole batch
+    /** Disables document validation for this operation. */
+    UpdateOption_BypassDocumentValidation = 1 << 3
 };
 
 enum RemoveOptions {
@@ -42,7 +46,11 @@ enum RemoveOptions {
  */
 enum InsertOptions {
     /** With muli-insert keep processing inserts if one fails */
-    InsertOption_ContinueOnError = 1 << 0
+    InsertOption_ContinueOnError = 1 << 0,
+
+    /** Disables document validation for this operation. */
+    InsertOption_BypassDocumentValidation = 1 << 1
+
 };
 
 }  // namespace mongo
