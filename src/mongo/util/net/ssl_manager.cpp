@@ -628,7 +628,12 @@ bool SSLManager::_initSSLContext(SSL_CTX** context, const Params& params) {
 
 bool SSLManager::_setSubjectName(const std::string& keyFile, std::string& subjectName) {
     // Read the certificate subject name and store it
-    BIO* in = BIO_new(BIO_s_file_internal());
+    BIO* in;
+    #if OPENSSL_VERSION_NUMBER < 0x10100000L
+    in = BIO_new(BIO_s_file_internal());
+    #else
+    in = BIO_new(BIO_s_file());
+    #endif
     if (NULL == in) {
         error() << "failed to allocate BIO object: " << getSSLErrorMessage(ERR_get_error()) << endl;
         return false;
