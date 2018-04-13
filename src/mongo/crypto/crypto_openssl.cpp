@@ -34,19 +34,27 @@ namespace crypto {
  * Computes a SHA-1 hash of 'input'.
  */
 bool sha1(const unsigned char* input, const size_t inputLen, unsigned char* output) {
-    EVP_MD_CTX digestCtx;
-    EVP_MD_CTX_init(&digestCtx);
-    ON_BLOCK_EXIT(EVP_MD_CTX_cleanup, &digestCtx);
-
-    if (1 != EVP_DigestInit_ex(&digestCtx, EVP_sha1(), NULL)) {
+    EVP_MD_CTX *digestCtx = EVP_MD_CTX_create();
+    if (!digestCtx) {
         return false;
     }
 
-    if (1 != EVP_DigestUpdate(&digestCtx, input, inputLen)) {
+    EVP_MD_CTX_init(digestCtx);
+    #if OPENSSL_VERSION_NUMBER < 0x10100000L
+    ON_BLOCK_EXIT(EVP_MD_CTX_destroy, digestCtx);
+    #else
+    ON_BLOCK_EXIT(EVP_MD_CTX_free, digestCtx);
+    #endif
+
+    if (1 != EVP_DigestInit_ex(digestCtx, EVP_sha1(), NULL)) {
         return false;
     }
 
-    return (1 == EVP_DigestFinal_ex(&digestCtx, output, NULL));
+    if (1 != EVP_DigestUpdate(digestCtx, input, inputLen)) {
+        return false;
+    }
+
+    return (1 == EVP_DigestFinal_ex(digestCtx, output, NULL));
 }
 
 /*
