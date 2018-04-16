@@ -224,7 +224,7 @@ types::b_timestamp element::get_timestamp() const {
     uint32_t increment;
     bson_iter_timestamp(&iter, &timestamp, &increment);
 
-    return types::b_timestamp{timestamp, increment};
+    return types::b_timestamp{increment, timestamp};
 }
 
 types::b_minkey element::get_minkey() const {
