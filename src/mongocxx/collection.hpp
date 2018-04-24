@@ -126,6 +126,8 @@ class MONGOCXX_API collection {
     explicit operator bool() const noexcept;
 
     ///
+    /// @{
+    ///
     /// Runs an aggregation framework pipeline against this collection.
     ///
     /// @param pipeline
@@ -146,6 +148,34 @@ class MONGOCXX_API collection {
     ///
     cursor aggregate(const pipeline& pipeline,
                      const options::aggregate& options = options::aggregate());
+
+    ///
+    /// Runs an aggregation framework pipeline against this collection.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the aggregation.
+    /// @param pipeline
+    ///   The pipeline of aggregation operations to perform.
+    /// @param options
+    ///   Optional arguments, see mongocxx::options::aggregate.
+    ///
+    /// @return A mongocxx::cursor with the results.  If the query fails,
+    /// the cursor throws mongocxx::query_exception when the returned cursor
+    /// is iterated.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
+    ///
+    /// @note
+    ///   In order to pass a read concern to this, you must use the
+    ///   collection level set read concern - collection::read_concern(rc).
+    ///   (Write concern supported only for MongoDB 3.4+).
+    ///
+    cursor aggregate(const session& session,
+                     const pipeline& pipeline,
+                     const options::aggregate& options = options::aggregate());
+    ///
+    /// @}
+    ///
 
     ///
     /// @{
@@ -370,6 +400,8 @@ class MONGOCXX_API collection {
     stdx::optional<result::bulk_write> bulk_write(const class bulk_write& bulk_write);
 
     ///
+    /// @{
+    ///
     /// Counts the number of documents matching the provided filter.
     ///
     /// @param filter
@@ -386,6 +418,32 @@ class MONGOCXX_API collection {
     std::int64_t count(bsoncxx::document::view_or_value filter,
                        const options::count& options = options::count());
 
+    ///
+    /// Counts the number of documents matching the provided filter.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the count.
+    /// @param filter
+    ///   The filter that documents must match in order to be counted.
+    /// @param options
+    ///   Optional arguments, see mongocxx::options::count.
+    ///
+    /// @return The count of the documents that matched the filter.
+    ///
+    /// @throws mongocxx::query_exception if the count operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/count/
+    ///
+    std::int64_t count(const session& session,
+                       bsoncxx::document::view_or_value filter,
+                       const options::count& options = options::count());
+
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
     ///
     /// Creates an index over the collection for the provided keys with the provided options.
     ///
@@ -411,6 +469,39 @@ class MONGOCXX_API collection {
         options::index_view operation_options = options::index_view{});
 
     ///
+    /// Creates an index over the collection for the provided keys with the provided options.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the index creation.
+    /// @param keys
+    ///   The keys for the index: @c {a: 1, b: -1}
+    /// @param index_options
+    ///   A document containing optional arguments for creating the index.
+    /// @param operation_options
+    ///   Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///
+    /// @exception
+    ///   mongocxx::operation_exception if index creation fails.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/createIndexes/
+    ///
+    /// @note
+    ///   Write concern supported only for MongoDB 3.4+.
+    ///
+    bsoncxx::document::value create_index(
+        const session& session,
+        bsoncxx::document::view_or_value keys,
+        bsoncxx::document::view_or_value index_options = {},
+        options::index_view operation_options = options::index_view{});
+
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
+    ///
     /// Deletes all matching documents from the collection.
     ///
     /// @param filter
@@ -430,6 +521,35 @@ class MONGOCXX_API collection {
         bsoncxx::document::view_or_value filter,
         const options::delete_options& options = options::delete_options());
 
+    ///
+    /// Deletes all matching documents from the collection.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the deletion.
+    /// @param filter
+    ///   Document view representing the data to be deleted.
+    /// @param options
+    ///   Optional arguments, see mongocxx::options::delete_options.
+    ///
+    /// @return The optional result of performing the deletion.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws mongocxx::bulk_write_exception if the delete fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/delete/
+    ///
+    stdx::optional<result::delete_result> delete_many(
+        const session& session,
+        bsoncxx::document::view_or_value filter,
+        const options::delete_options& options = options::delete_options());
+
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
     ///
     /// Deletes a single matching document from the collection.
     ///
@@ -451,7 +571,36 @@ class MONGOCXX_API collection {
         const options::delete_options& options = options::delete_options());
 
     ///
-    /// Finds the distinct values for a specified field accross the collection.
+    /// Deletes a single matching document from the collection.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the deletion.
+    /// @param filter
+    ///   Document view representing the data to be deleted.
+    /// @param options
+    ///   Optional arguments, see mongocxx::options::delete_options.
+    ///
+    /// @return The optional result of performing the deletion.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws mongocxx::bulk_write_exception if the delete fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/delete/
+    ///
+    stdx::optional<result::delete_result> delete_one(
+        const session& session,
+        bsoncxx::document::view_or_value filter,
+        const options::delete_options& options = options::delete_options());
+
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
+    ///
+    /// Finds the distinct values for a specified field across the collection.
     ///
     /// @param field_name
     ///   The field for which the distinct values will be found.
@@ -470,6 +619,36 @@ class MONGOCXX_API collection {
                     bsoncxx::document::view_or_value filter,
                     const options::distinct& options = options::distinct());
 
+    ///
+    /// Finds the distinct values for a specified field across the collection.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the operation.
+    /// @param field_name
+    ///   The field for which the distinct values will be found.
+    /// @param filter
+    ///   Document view representing the documents for which the distinct operation will apply.
+    /// @param options
+    ///   Optional arguments, see options::distinct.
+
+    /// @return mongocxx::cursor having the distinct values for the specified
+    /// field.  If the operation fails, the cursor throws
+    /// mongocxx::query_exception when the returned cursor is iterated.
+
+    /// @see https://docs.mongodb.com/master/reference/command/distinct/
+    ///
+    cursor distinct(const session& session,
+                    bsoncxx::string::view_or_value name,
+                    bsoncxx::document::view_or_value filter,
+                    const options::distinct& options = options::distinct());
+
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
+    ///
     /// Drops this collection and all its contained documents from the database.
     ///
     /// @param write_concern (optional)
@@ -487,6 +666,33 @@ class MONGOCXX_API collection {
     ///
     void drop(const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {});
 
+    ///
+    /// Drops this collection and all its contained documents from the database.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the drop.
+    /// @param write_concern (optional)
+    ///   The write concern to use for this operation. Defaults to the collection wide write
+    ///   concern if none is provided.
+    ///
+    /// @exception
+    ///   mongocxx::operation_exception if the operation fails.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/drop/
+    ///
+    /// @note
+    ///   Write concern supported only for MongoDB 3.4+.
+    ///
+    void drop(const session& session,
+              const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {});
+
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
     ///
     /// Finds the documents in this collection which match the provided filter.
     ///
@@ -508,6 +714,31 @@ class MONGOCXX_API collection {
                 const options::find& options = options::find());
 
     ///
+    /// Finds the documents in this collection which match the provided filter.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the query.
+    /// @param filter
+    ///   Document view representing a document that should match the query.
+    /// @param options
+    ///   Optional arguments, see options::find
+    ///
+    /// @return A mongocxx::cursor with the results.  If the query fails,
+    /// the cursor throws mongocxx::query_exception when the returned cursor
+    /// is iterated.
+    ///
+    /// @throws mongocxx::logic_error if the options are invalid, or if the unsupported option
+    /// modifiers "$query" or "$explain" are used.
+    ///
+    /// @see https://docs.mongodb.com/master/core/read-operations-introduction/
+    ///
+    cursor find(const session& session,
+                bsoncxx::document::view_or_value filter,
+                const options::find& options = options::find());
+
+    ///
+    /// @{
+    ///
     /// Finds a single document in this collection that match the provided filter.
     ///
     /// @param filter
@@ -524,6 +755,33 @@ class MONGOCXX_API collection {
     stdx::optional<bsoncxx::document::value> find_one(
         bsoncxx::document::view_or_value filter, const options::find& options = options::find());
 
+    ///
+    /// Finds a single document in this collection that match the provided filter.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the query.
+    /// @param filter
+    ///   Document view representing a document that should match the query.
+    /// @param options
+    ///   Optional arguments, see options::find
+    ///
+    /// @return An optional document that matched the filter.
+    ///
+    /// @throws mongocxx::query_exception if the operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/core/read-operations-introduction/
+    ///
+    stdx::optional<bsoncxx::document::value> find_one(
+        const session& session,
+        bsoncxx::document::view_or_value filter,
+        const options::find& options = options::find());
+
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
     ///
     /// Finds a single document matching the filter, deletes it, and returns the original.
     ///
@@ -545,6 +803,36 @@ class MONGOCXX_API collection {
         bsoncxx::document::view_or_value filter,
         const options::find_one_and_delete& options = options::find_one_and_delete());
 
+    ///
+    /// Finds a single document matching the filter, deletes it, and returns the original.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the operation.
+    /// @param filter
+    ///   Document view representing a document that should be deleted.
+    /// @param options
+    ///   Optional arguments, see options::find_one_and_delete
+    ///
+    /// @return The document that was deleted.
+    ///
+    /// @exception
+    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
+    ///   write concern is used.
+    ///
+    /// @exception
+    ///   Throws mongocxx::write_exception if the operation fails.
+    ///
+    stdx::optional<bsoncxx::document::value> find_one_and_delete(
+        const session& session,
+        bsoncxx::document::view_or_value filter,
+        const options::find_one_and_delete& options = options::find_one_and_delete());
+
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
     ///
     /// Finds a single document matching the filter, replaces it, and returns either the original
     /// or the replacement document.
@@ -571,6 +859,40 @@ class MONGOCXX_API collection {
         const options::find_one_and_replace& options = options::find_one_and_replace());
 
     ///
+    /// Finds a single document matching the filter, replaces it, and returns either the original
+    /// or the replacement document.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the operation.
+    /// @param filter
+    ///   Document view representing a document that should be replaced.
+    /// @param replacement
+    ///   Document view representing the replacement for a matching document.
+    /// @param options
+    ///   Optional arguments, see options::find_one_and_replace.
+    ///
+    /// @return The original or replaced document.
+    ///
+    /// @exception
+    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
+    ///   write concern is used.
+    ///
+    /// @exception
+    ///   Throws mongocxx::write_exception if the operation fails.
+    ///
+    stdx::optional<bsoncxx::document::value> find_one_and_replace(
+        const session& session,
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value replacement,
+        const options::find_one_and_replace& options = options::find_one_and_replace());
+
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
+    ///
     /// Finds a single document matching the filter, updates it, and returns either the original
     /// or the newly-updated document.
     ///
@@ -594,6 +916,38 @@ class MONGOCXX_API collection {
         bsoncxx::document::view_or_value filter,
         bsoncxx::document::view_or_value update,
         const options::find_one_and_update& options = options::find_one_and_update());
+
+    ///
+    /// Finds a single document matching the filter, updates it, and returns either the original
+    /// or the newly-updated document.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the operation.
+    /// @param filter
+    ///   Document view representing a document that should be updated.
+    /// @param update
+    ///   Document view representing the update to apply to a matching document.
+    /// @param options
+    ///   Optional arguments, see options::find_one_and_update.
+    ///
+    /// @return The original or updated document.
+    ///
+    /// @exception
+    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
+    ///   write concern is used.
+    ///
+    /// @exception
+    ///   Throws mongocxx::write_exception if the operation fails.
+    ///
+    stdx::optional<bsoncxx::document::value> find_one_and_update(
+        const session& session,
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value update,
+        const options::find_one_and_update& options = options::find_one_and_update());
+
+    ///
+    /// @}
+    ///
 
     ///
     /// @{
@@ -755,6 +1109,8 @@ class MONGOCXX_API collection {
     ///
 
     ///
+    /// @{
+    ///
     /// Returns a list of the indexes currently on this collection.
     ///
     /// @return Cursor yielding the index specifications.
@@ -764,6 +1120,24 @@ class MONGOCXX_API collection {
     /// @see https://docs.mongodb.com/master/reference/command/listIndexes/
     ///
     cursor list_indexes() const;
+
+    ///
+    /// Returns a list of the indexes currently on this collection.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the operation.
+    ///
+    /// @return Cursor yielding the index specifications.
+    ///
+    /// @throws mongocxx::operation_exception if the operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/listIndexes/
+    ///
+    cursor list_indexes(const session& session) const;
+
+    ///
+    /// @}
+    ///
 
     ///
     /// Returns the name of this collection.
@@ -792,6 +1166,33 @@ class MONGOCXX_API collection {
     void rename(bsoncxx::string::view_or_value new_name,
                 bool drop_target_before_rename = false,
                 const bsoncxx::stdx::optional<write_concern>& write_concern = {});
+
+    ///
+    /// Rename this collection.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the rename.
+    /// @param new_name The new name to assign to the collection.
+    /// @param drop_target_before_rename Whether to overwrite any
+    ///   existing collections called new_name. The default is false.
+    ///
+    /// @exception
+    ///   mongocxx::operation_exception if the operation fails.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/renameCollection/
+    ///
+    /// @note
+    ///   Write concern supported only for MongoDB 3.4+.
+    ///
+    void rename(const session& session,
+                bsoncxx::string::view_or_value new_name,
+                bool drop_target_before_rename = false,
+                const bsoncxx::stdx::optional<write_concern>& write_concern = {});
+
+    ///
+    /// @}
+    ///
 
     ///
     /// Sets the read_concern for this collection. Changes will not have any effect on existing
@@ -835,6 +1236,8 @@ class MONGOCXX_API collection {
     class read_preference read_preference() const;
 
     ///
+    /// @{
+    ///
     /// Replaces a single document matching the provided filter in this collection.
     ///
     /// @param filter
@@ -860,6 +1263,40 @@ class MONGOCXX_API collection {
         const options::update& options = options::update());
 
     ///
+    /// Replaces a single document matching the provided filter in this collection.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the replace.
+    /// @param filter
+    ///   Document representing the match criteria.
+    /// @param replacement
+    ///   The replacement document.
+    /// @param options
+    ///   Optional arguments, see options::update.
+    ///
+    /// @return The optional result of attempting to replace a document.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws
+    ///   mongocxx::logic_error if the replacement is invalid, or mongocxx::bulk_write_exception if
+    ///   the operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/update/
+    ///
+    stdx::optional<result::replace_one> replace_one(
+        const session& session,
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value replacement,
+        const options::update& options = options::update());
+
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
+    ///
     /// Updates multiple documents matching the provided filter in this collection.
     ///
     /// @param filter
@@ -883,6 +1320,39 @@ class MONGOCXX_API collection {
                                                bsoncxx::document::view_or_value update,
                                                const options::update& options = options::update());
 
+    ///
+    /// Updates multiple documents matching the provided filter in this collection.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the update.
+    /// @param filter
+    ///   Document representing the match criteria.
+    /// @param update
+    ///   Document representing the update to be applied to matching documents.
+    /// @param options
+    ///   Optional arguments, see options::update.
+    ///
+    /// @return The optional result of attempting to update multiple documents.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws
+    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
+    ///   operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/update/
+    ///
+    stdx::optional<result::update> update_many(const session& session,
+                                               bsoncxx::document::view_or_value filter,
+                                               bsoncxx::document::view_or_value update,
+                                               const options::update& options = options::update());
+
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
     ///
     /// Updates a single document matching the provided filter in this collection.
     ///
@@ -908,6 +1378,37 @@ class MONGOCXX_API collection {
                                               const options::update& options = options::update());
 
     ///
+    /// Updates a single document matching the provided filter in this collection.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the update.
+    /// @param filter
+    ///   Document representing the match criteria.
+    /// @param update
+    ///   Document representing the update to be applied to a matching document.
+    /// @param options
+    ///   Optional arguments, see options::update.
+    ///
+    /// @return The optional result of attempting to update a document.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws
+    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
+    ///   operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/update/
+    ///
+    stdx::optional<result::update> update_one(const session& session,
+                                              bsoncxx::document::view_or_value filter,
+                                              bsoncxx::document::view_or_value update,
+                                              const options::update& options = options::update());
+
+    ///
+    /// @}
+    ///
+
+    ///
     /// Sets the write_concern for this collection. Changes will not have any effect on existing
     /// write operations.
     ///
@@ -928,6 +1429,8 @@ class MONGOCXX_API collection {
     index_view indexes();
 
     ///
+    /// @{
+    ///
     /// Gets a change stream on this collection with an empty pipeline.
     /// Change streams are only supported with a "majority" read concern or no read concern.
     ///
@@ -937,7 +1440,22 @@ class MONGOCXX_API collection {
     /// @return
     ///  A change stream on this collection.
     ///
+    /// @see https://docs.mongodb.com/manual/changeStreams/
+    ///
     change_stream watch(const options::change_stream& options = {});
+
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the watch operation.
+    /// @param options
+    ///   The options to use when creating the change stream.
+    ///
+    /// @return
+    ///  A change stream on this collection.
+    ///
+    /// @see https://docs.mongodb.com/manual/changeStreams/
+    ///
+    change_stream watch(const session& session, const options::change_stream& options = {});
 
     ///
     /// Gets a change stream on this collection.
@@ -957,6 +1475,29 @@ class MONGOCXX_API collection {
     ///
     change_stream watch(const pipeline& pipe, const options::change_stream& options = {});
 
+    ///
+    /// Gets a change stream on this collection.
+    ///
+    /// @param session
+    ///   The mongocxx::session with which to perform the watch operation.
+    /// @param pipe
+    ///   The aggregation pipeline to be used on the change notifications.
+    /// @param options
+    ///   The options to use when creating the change stream.
+    ///
+    /// @return
+    ///  A change stream on this collection.
+    ///
+    /// @see https://docs.mongodb.com/manual/changeStreams/
+    ///
+    change_stream watch(const session& session,
+                        const pipeline& pipe,
+                        const options::change_stream& options = {});
+
+    ///
+    /// @}
+    ///
+
    private:
     friend class bulk_write;
     friend class database;
@@ -966,10 +1507,97 @@ class MONGOCXX_API collection {
 
     MONGOCXX_PRIVATE collection(const database& database, void* collection);
 
+    MONGOCXX_PRIVATE cursor _aggregate(const session* session,
+                                       const pipeline& pipeline,
+                                       const options::aggregate& options);
+
+    MONGOCXX_PRIVATE std::int64_t _count(const session* session,
+                                         bsoncxx::document::view_or_value filter,
+                                         const options::count& options);
+
+    MONGOCXX_PRIVATE bsoncxx::document::value _create_index(
+        const session* session,
+        bsoncxx::document::view_or_value keys,
+        bsoncxx::document::view_or_value index_options,
+        options::index_view operation_options);
+
+    MONGOCXX_PRIVATE stdx::optional<result::delete_result> _delete_many(
+        const session* session,
+        bsoncxx::document::view_or_value filter,
+        const options::delete_options& options);
+
+    MONGOCXX_PRIVATE stdx::optional<result::delete_result> _delete_one(
+        const session* session,
+        bsoncxx::document::view_or_value filter,
+        const options::delete_options& options);
+
+    MONGOCXX_PRIVATE cursor _distinct(const session* session,
+                                      bsoncxx::string::view_or_value name,
+                                      bsoncxx::document::view_or_value filter,
+                                      const options::distinct& options);
+
+    MONGOCXX_PRIVATE void _drop(
+        const session* session,
+        const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern);
+
+    MONGOCXX_PRIVATE cursor _find(const session* session,
+                                  bsoncxx::document::view_or_value filter,
+                                  const options::find& options);
+
+    MONGOCXX_PRIVATE stdx::optional<bsoncxx::document::value> _find_one(
+        const session* session,
+        bsoncxx::document::view_or_value filter,
+        const options::find& options);
+
+    MONGOCXX_PRIVATE stdx::optional<bsoncxx::document::value> _find_one_and_delete(
+        const session* session,
+        bsoncxx::document::view_or_value filter,
+        const options::find_one_and_delete& options);
+
+    MONGOCXX_PRIVATE stdx::optional<bsoncxx::document::value> _find_one_and_replace(
+        const session* session,
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value replacement,
+        const options::find_one_and_replace& options);
+
+    MONGOCXX_PRIVATE stdx::optional<bsoncxx::document::value> _find_one_and_update(
+        const session* session,
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value update,
+        const options::find_one_and_update& options);
+
     MONGOCXX_PRIVATE stdx::optional<result::insert_one> _insert_one(
+        const session* session,
         bsoncxx::document::view_or_value document,
-        const options::insert& options,
-        const session* session = nullptr);
+        const options::insert& options);
+
+    MONGOCXX_PRIVATE void _rename(
+        const session* session,
+        bsoncxx::string::view_or_value new_name,
+        bool drop_target_before_rename,
+        const bsoncxx::stdx::optional<class write_concern>& write_concern);
+
+    MONGOCXX_PRIVATE stdx::optional<result::replace_one> _replace_one(
+        const session* session,
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value replacement,
+        const options::update& options);
+
+    MONGOCXX_PRIVATE stdx::optional<result::update> _update_one(
+        const session* session,
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value update,
+        const options::update& options);
+
+    MONGOCXX_PRIVATE stdx::optional<result::update> _update_many(
+        const session* session,
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value update,
+        const options::update& options);
+
+    MONGOCXX_PRIVATE change_stream _watch(const session* session,
+                                          const pipeline& pipe,
+                                          const options::change_stream& options);
 
     // Helpers for the insert_many method templates.
     class bulk_write _init_insert_many(const options::insert& options, const session* session);
@@ -983,10 +1611,10 @@ class MONGOCXX_API collection {
 
     template <typename document_view_iterator_type>
     MONGOCXX_PRIVATE stdx::optional<result::insert_many> _insert_many(
+        const session* session,
         document_view_iterator_type begin,
         document_view_iterator_type end,
-        const options::insert& options = options::insert(),
-        const session* session = nullptr);
+        const options::insert& options);
 
     class MONGOCXX_PRIVATE impl;
 
@@ -1053,10 +1681,11 @@ MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
 
 template <typename document_view_iterator_type>
 MONGOCXX_INLINE stdx::optional<result::insert_many> collection::_insert_many(
+
+    const session* session,
     document_view_iterator_type begin,
     document_view_iterator_type end,
-    const options::insert& options,
-    const session* session) {
+    const options::insert& options) {
     bsoncxx::builder::basic::array inserted_ids;
     auto writes = _init_insert_many(options, session);
     std::for_each(begin, end, [&inserted_ids, &writes, this](bsoncxx::document::view doc) {
@@ -1070,7 +1699,7 @@ MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
     document_view_iterator_type begin,
     document_view_iterator_type end,
     const options::insert& options) {
-    return _insert_many(begin, end, options);
+    return _insert_many(nullptr, begin, end, options);
 }
 
 template <typename document_view_iterator_type>
@@ -1079,7 +1708,7 @@ MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
     document_view_iterator_type begin,
     document_view_iterator_type end,
     const options::insert& options) {
-    return _insert_many(begin, end, options, &session);
+    return _insert_many(&session, begin, end, options);
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

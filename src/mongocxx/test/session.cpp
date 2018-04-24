@@ -22,6 +22,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/test_util/client_helpers.hh>
 
 namespace {
 using bsoncxx::from_json;
@@ -172,9 +173,7 @@ class session_test {
         mongoc_apm_callbacks_destroy(callbacks);
     }
 
-    void test_method_with_session(std::string method_name,
-                                  const std::function<void(bool)>& f,
-                                  const session& s) {
+    void test_method_with_session(const std::function<void(bool)>& f, const session& s) {
         using std::string;
 
         events.clear();
@@ -187,12 +186,12 @@ class session_test {
 
         for (auto& event : events) {
             if (!event.command["lsid"]) {
-                throw std::logic_error{method_name + " sent no lsid with " + event.command_name +
-                                       " and explicit session"};
+                throw std::logic_error{"no lsid in " + event.command_name +
+                                       " with explicit session"};
             }
             if (event.command["lsid"].get_document().view() != s.id()) {
-                throw std::logic_error{method_name + " sent wrong lsid with " + event.command_name +
-                                       " and explicit session"};
+                throw std::logic_error{"wrong lsid in " + event.command_name +
+                                       " with explicit session"};
             }
         }
 
@@ -206,12 +205,12 @@ class session_test {
 
         for (auto& event : events) {
             if (!event.command["lsid"]) {
-                throw std::logic_error{method_name + " sent no lsid with " + event.command_name +
-                                       " and implicit session"};
+                throw std::logic_error{"no lsid in " + event.command_name +
+                                       " with implicit session"};
             }
             if (event.command["lsid"].get_document().view() == s.id()) {
-                throw std::logic_error{method_name + " sent wrong lsid with " + event.command_name +
-                                       " and implicit session"};
+                throw std::logic_error{"wrong lsid in " + event.command_name +
+                                       " with implicit session"};
             }
         }
     }
@@ -245,7 +244,7 @@ void command_started(const mongoc_apm_command_started_t* event) {
         *(reinterpret_cast<session_test*>(mongoc_apm_command_started_get_context(event)));
     auto document = value_from_bson_t(mongoc_apm_command_started_get_command(event));
 
-    listener.events.emplace_back("command_started_event", document);
+    listener.events.emplace_back(command_name, document);
 }
 
 TEST_CASE("lsid", "[session]") {
@@ -259,8 +258,56 @@ TEST_CASE("lsid", "[session]") {
 
     auto s = test.client.start_session();
     auto collection = test.client["lsid"]["collection"];
+    auto indexes = collection.indexes();
+    collection.drop();
 
-    SECTION("create_bulk_write") {
+    // Ensure some data for aggregate() and find().
+    for (int i = 0; i != 10; ++i) {
+        collection.insert_one({});
+    }
+
+    SECTION("collection::aggregate") {
+        auto f = [&s, &collection](bool use_session) {
+            int total = 0;
+            auto cursor = use_session ? collection.aggregate(s, {}) : collection.aggregate({});
+            for (auto&& doc : cursor) {
+                ++total;
+            }
+
+            REQUIRE(total == 10);
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::bulk_write") {
+        std::vector<model::write> vec;
+        vec.emplace_back(model::insert_one{{}});
+
+        auto bulk_write_vector = [&s, &collection, &vec](bool use_session) {
+            use_session ? collection.bulk_write(s, vec) : collection.bulk_write(vec);
+        };
+
+        test.test_method_with_session(bulk_write_vector, s);
+
+        auto bulk_write_iterator = [&s, &collection, &vec](bool use_session) {
+            use_session ? collection.bulk_write(s, vec.begin(), vec.end())
+                        : collection.bulk_write(vec.begin(), vec.end());
+        };
+
+        test.test_method_with_session(bulk_write_iterator, s);
+    }
+
+    SECTION("collection::count") {
+        auto f = [&s, &collection](bool use_session) {
+            auto total = use_session ? collection.count(s, {}) : collection.count({});
+            REQUIRE(total == 10);
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::create_bulk_write") {
         auto f = [&s, &collection](bool use_session) {
             auto bulk =
                 use_session ? collection.create_bulk_write(s) : collection.create_bulk_write();
@@ -269,45 +316,110 @@ TEST_CASE("lsid", "[session]") {
             collection.bulk_write(bulk);
         };
 
-        test.test_method_with_session("create_bulk_write", f, s);
+        test.test_method_with_session(f, s);
     }
 
-    SECTION("bulk_write") {
-        std::vector<model::write> vec;
-        vec.emplace_back(model::insert_one{{}});
-
-        auto bulk_write_vector = [&s, &collection, &vec](bool use_session) {
-            use_session ? collection.bulk_write(s, vec) : collection.bulk_write(vec);
-        };
-
-        test.test_method_with_session("vector bulk_write", bulk_write_vector, s);
-
-        auto bulk_write_iterator = [&s, &collection, &vec](bool use_session) {
-            use_session ? collection.bulk_write(s, vec.begin(), vec.end())
-                        : collection.bulk_write(vec.begin(), vec.end());
-        };
-
-        test.test_method_with_session("iterator bulk_write", bulk_write_iterator, s);
-    }
-
-    SECTION("write") {
+    SECTION("collection::create_index") {
         auto f = [&s, &collection](bool use_session) {
-            auto insert_op = model::insert_one{{}};
-            use_session ? collection.write(s, insert_op) : collection.write(insert_op);
+            if (use_session) {
+                collection.drop(s);
+                collection.create_index(s, make_document(kvp("a", 1)));
+            } else {
+                collection.drop();
+                collection.create_index(make_document(kvp("a", 1)));
+            }
         };
 
-        test.test_method_with_session("write", f, s);
+        test.test_method_with_session(f, s);
     }
 
-    SECTION("insert_one") {
+    SECTION("collection::delete_many") {
         auto f = [&s, &collection](bool use_session) {
-            use_session ? collection.insert_one(s, {}) : collection.insert_one({});
+            use_session ? collection.delete_many(s, {}) : collection.delete_many({});
         };
 
-        test.test_method_with_session("insert_one", f, s);
+        test.test_method_with_session(f, s);
     }
 
-    SECTION("insert_many") {
+    SECTION("collection::delete_one") {
+        auto f = [&s, &collection](bool use_session) {
+            use_session ? collection.delete_one(s, {}) : collection.delete_one({});
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::distinct") {
+        auto f = [&s, &collection](bool use_session) {
+            use_session ? collection.distinct(s, "a", {}) : collection.distinct("a", {});
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::drop") {
+        auto f = [&s, &collection](bool use_session) {
+            use_session ? collection.drop(s) : collection.drop();
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::find") {
+        auto f = [&s, &collection](bool use_session) {
+            options::find opts;
+            opts.batch_size(2);
+            int total = 0;
+            auto cursor = use_session ? collection.find(s, {}, opts) : collection.find({}, opts);
+
+            for (auto&& doc : cursor) {
+                ++total;
+            }
+
+            REQUIRE(total == 10);
+        };
+
+        test.test_method_with_session(f, s);
+        // A find and a getMore.
+        REQUIRE(test.events.size() >= 2);
+    }
+
+    SECTION("collection::find_one") {
+        auto f = [&s, &collection](bool use_session) {
+            use_session ? collection.find_one(s, {}) : collection.find_one({});
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::find_one_and_delete") {
+        auto f = [&s, &collection](bool use_session) {
+            use_session ? collection.find_one_and_delete(s, {})
+                        : collection.find_one_and_delete({});
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::find_one_and_replace") {
+        auto f = [&s, &collection](bool use_session) {
+            use_session ? collection.find_one_and_replace(s, {}, {})
+                        : collection.find_one_and_replace({}, {});
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::find_one_and_update") {
+        auto f = [&s, &collection](bool use_session) {
+            use_session ? collection.find_one_and_update(s, {}, {})
+                        : collection.find_one_and_update({}, {});
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::insert_many") {
         bsoncxx::document::value doc({});
         std::vector<bsoncxx::document::view> docs{doc.view()};
 
@@ -315,14 +427,171 @@ TEST_CASE("lsid", "[session]") {
             return use_session ? collection.insert_many(s, docs) : collection.insert_many(docs);
         };
 
-        test.test_method_with_session("vector insert_many", insert_vector, s);
+        test.test_method_with_session(insert_vector, s);
 
         auto insert_iter = [&s, &collection, &docs](bool use_session) {
             use_session ? collection.insert_many(s, docs.begin(), docs.end())
                         : collection.insert_many(docs.begin(), docs.end());
         };
 
-        test.test_method_with_session("iterator insert_many", insert_iter, s);
+        test.test_method_with_session(insert_iter, s);
+    }
+
+    SECTION("collection::insert_one") {
+        auto f = [&s, &collection](bool use_session) {
+            use_session ? collection.insert_one(s, {}) : collection.insert_one({});
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::list_indexes") {
+        auto f = [&s, &collection](bool use_session) {
+            use_session ? collection.list_indexes(s) : collection.list_indexes();
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::rename") {
+        auto f = [&s, &collection](bool use_session) {
+            if (use_session) {
+                collection.insert_one(s, {});
+                auto c2 = collection;
+                c2.rename(s, "collection2", true);
+            } else {
+                collection.insert_one({});
+                auto c2 = collection;
+                c2.rename("collection2", true);
+            }
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::replace_one") {
+        auto f = [&s, &collection](bool use_session) {
+            use_session ? collection.replace_one(s, {}, {}) : collection.replace_one({}, {});
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::update_many") {
+        auto f = [&s, &collection](bool use_session) {
+            auto u = make_document(kvp("$set", make_document(kvp("a", 1))));
+            use_session ? collection.update_many(s, {}, u.view())
+                        : collection.update_many({}, u.view());
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::update_one") {
+        auto f = [&s, &collection](bool use_session) {
+            auto u = make_document(kvp("$set", make_document(kvp("a", 1))));
+            use_session ? collection.update_one(s, {}, u.view())
+                        : collection.update_one({}, u.view());
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::watch") {
+        if (!test_util::is_replica_set(test.client)) {
+            WARN("skip: watch() requires replica set");
+            return;
+        }
+
+        auto f = [&s, &collection](bool use_session) {
+            auto stream = use_session ? collection.watch(s) : collection.watch();
+            for (auto&& event : stream) {
+            }
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("collection::write") {
+        auto f = [&s, &collection](bool use_session) {
+            auto insert_op = model::insert_one{{}};
+            use_session ? collection.write(s, insert_op) : collection.write(insert_op);
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("index_view::list") {
+        auto f = [&s, &indexes](bool use_session) {
+            auto cursor = use_session ? indexes.list(s) : indexes.list();
+            for (auto&& i : cursor) {
+            }
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("index_view::create_one") {
+        auto create_with_keys = [&s, &indexes](bool use_session) {
+            auto keys = make_document(kvp("a", 1));
+            use_session ? indexes.create_one(s, keys.view()) : indexes.create_one(keys.view());
+        };
+
+        test.test_method_with_session(create_with_keys, s);
+
+        auto create_with_model = [&s, &indexes](bool use_session) {
+            auto model = index_model{make_document(kvp("a", 1))};
+            use_session ? indexes.create_one(s, model) : indexes.create_one(model);
+        };
+
+        test.test_method_with_session(create_with_model, s);
+    }
+
+    SECTION("index_view::create_many") {
+        auto f = [&s, &indexes](bool use_session) {
+            auto models = std::vector<index_model>{index_model{make_document(kvp("a", 1))},
+                                                   index_model{make_document(kvp("b", 1))}};
+
+            use_session ? indexes.create_many(s, models) : indexes.create_many(models);
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("index_view::drop_one") {
+        auto drop_by_name = [&s, &indexes](bool use_session) {
+            auto keys = make_document(kvp("a", 1));
+            auto name =
+                use_session ? indexes.create_one(s, keys.view()) : indexes.create_one(keys.view());
+            use_session ? indexes.drop_one(s, name.value()) : indexes.drop_one(name.value());
+        };
+
+        test.test_method_with_session(drop_by_name, s);
+
+        auto drop_by_keys = [&s, &indexes](bool use_session) {
+            auto keys = make_document(kvp("a", 1));
+            use_session ? indexes.create_one(s, keys.view()) : indexes.create_one(keys.view());
+            use_session ? indexes.drop_one(s, keys.view()) : indexes.drop_one(keys.view());
+        };
+
+        test.test_method_with_session(drop_by_keys, s);
+
+        auto drop_by_model = [&s, &indexes](bool use_session) {
+            auto keys = make_document(kvp("a", 1));
+            use_session ? indexes.create_one(s, keys.view()) : indexes.create_one(keys.view());
+            auto model = index_model{keys.view()};
+            use_session ? indexes.drop_one(s, model) : indexes.drop_one(model);
+        };
+
+        test.test_method_with_session(drop_by_model, s);
+    }
+
+    SECTION("index_view::drop_all") {
+        auto f = [&s, &indexes](bool use_session) {
+            use_session ? indexes.drop_all(s) : indexes.drop_all();
+        };
+
+        test.test_method_with_session(f, s);
     }
 }
 }  // namespace

@@ -187,14 +187,19 @@ stdx::string_view collection::name() const {
     return {get_collection_name(_get_impl().collection_t)};
 }
 
-void collection::rename(bsoncxx::string::view_or_value new_name,
-                        bool drop_target_before_rename,
-                        const bsoncxx::stdx::optional<mongocxx::write_concern>& wc) {
+void collection::_rename(const session* session,
+                         bsoncxx::string::view_or_value new_name,
+                         bool drop_target_before_rename,
+                         const bsoncxx::stdx::optional<mongocxx::write_concern>& wc) {
     bson_error_t error;
 
     bsoncxx::builder::basic::document opts_doc;
     if (wc) {
         opts_doc.append(kvp("writeConcern", wc->to_document()));
+    }
+
+    if (session) {
+        opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     scoped_bson_t opts_bson{opts_doc.view()};
@@ -209,6 +214,19 @@ void collection::rename(bsoncxx::string::view_or_value new_name,
     if (!result) {
         throw_exception<operation_exception>(error);
     }
+}
+
+void collection::rename(bsoncxx::string::view_or_value new_name,
+                        bool drop_target_before_rename,
+                        const bsoncxx::stdx::optional<mongocxx::write_concern>& wc) {
+    return _rename(nullptr, new_name, drop_target_before_rename, wc);
+}
+
+void collection::rename(const session& session,
+                        bsoncxx::string::view_or_value new_name,
+                        bool drop_target_before_rename,
+                        const bsoncxx::stdx::optional<mongocxx::write_concern>& wc) {
+    return _rename(&session, new_name, drop_target_before_rename, wc);
 }
 
 collection::collection(const database& database, bsoncxx::string::view_or_value collection_name)
@@ -294,7 +312,7 @@ stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write
 
 namespace {
 
-bsoncxx::document::value build_find_options_document(const options::find& options) {
+bsoncxx::builder::basic::document build_find_options_document(const options::find& options) {
     bsoncxx::builder::basic::document options_builder;
 
     if (options.allow_partial_results()) {
@@ -379,24 +397,34 @@ bsoncxx::document::value build_find_options_document(const options::find& option
         options_builder.append(kvp("sort", bsoncxx::types::b_document{*options.sort()}));
     }
 
-    return options_builder.extract();
+    return options_builder;
 }
 
 }  // namespace
 
-cursor collection::find(view_or_value filter, const options::find& options) {
+cursor collection::_find(const session* session,
+                         view_or_value filter,
+                         const options::find& options) {
     // libmongoc::collection_find_with_opts does not support the legacy "modifiers" options, so we
     // must copy the options struct and convert all of the modifiers options to their modern
     // equivalents.
     auto options_converted = options::rewriter::rewrite_find_modifiers(options);
 
     scoped_bson_t filter_bson{std::move(filter)};
-    scoped_bson_t options_bson{build_find_options_document(options_converted)};
 
     const mongoc_read_prefs_t* rp_ptr = NULL;
     if (options_converted.read_preference()) {
         rp_ptr = options_converted.read_preference()->_impl->read_preference_t;
     }
+
+    bsoncxx::builder::basic::document options_builder{
+        build_find_options_document(options_converted)};
+    if (session) {
+        options_builder.append(
+            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
+    scoped_bson_t options_bson{options_builder.extract()};
 
     cursor query_cursor{
         libmongoc::collection_find_with_opts(
@@ -415,11 +443,22 @@ cursor collection::find(view_or_value filter, const options::find& options) {
     return query_cursor;
 }
 
-stdx::optional<bsoncxx::document::value> collection::find_one(view_or_value filter,
-                                                              const options::find& options) {
+cursor collection::find(view_or_value filter, const options::find& options) {
+    return _find(nullptr, filter, options);
+}
+
+cursor collection::find(const session& session,
+                        view_or_value filter,
+                        const options::find& options) {
+    return _find(&session, filter, options);
+}
+
+stdx::optional<bsoncxx::document::value> collection::_find_one(const session* session,
+                                                               view_or_value filter,
+                                                               const options::find& options) {
     options::find copy(options);
     copy.limit(1);
-    cursor cursor = find(filter, copy);
+    cursor cursor = session ? find(*session, filter, copy) : find(filter, copy);
     cursor::iterator it = cursor.begin();
     if (it == cursor.end()) {
         return stdx::nullopt;
@@ -427,7 +466,20 @@ stdx::optional<bsoncxx::document::value> collection::find_one(view_or_value filt
     return stdx::optional<bsoncxx::document::value>(bsoncxx::document::value{*it});
 }
 
-cursor collection::aggregate(const pipeline& pipeline, const options::aggregate& options) {
+stdx::optional<bsoncxx::document::value> collection::find_one(view_or_value filter,
+                                                              const options::find& options) {
+    return _find_one(nullptr, filter, options);
+}
+
+stdx::optional<bsoncxx::document::value> collection::find_one(const session& session,
+                                                              view_or_value filter,
+                                                              const options::find& options) {
+    return _find_one(&session, filter, options);
+}
+
+cursor collection::_aggregate(const session* session,
+                              const pipeline& pipeline,
+                              const options::aggregate& options) {
     scoped_bson_t stages(bsoncxx::document::view(pipeline._impl->view_array()));
 
     bsoncxx::builder::basic::document b;
@@ -464,6 +516,10 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
         b.append(kvp("writeConcern", options.write_concern()->to_document()));
     }
 
+    if (session) {
+        b.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
     scoped_bson_t options_bson(b.view());
 
     const ::mongoc_read_prefs_t* rp_ptr = NULL;
@@ -479,9 +535,19 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
                                                   rp_ptr));
 }
 
-stdx::optional<result::insert_one> collection::_insert_one(view_or_value document,
-                                                           const options::insert& options,
-                                                           const session* session) {
+cursor collection::aggregate(const pipeline& pipeline, const options::aggregate& options) {
+    return _aggregate(nullptr, pipeline, options);
+}
+
+cursor collection::aggregate(const session& session,
+                             const pipeline& pipeline,
+                             const options::aggregate& options) {
+    return _aggregate(&session, pipeline, options);
+}
+
+stdx::optional<result::insert_one> collection::_insert_one(const session* session,
+                                                           view_or_value document,
+                                                           const options::insert& options) {
     // TODO: We should consider making it possible to convert from an options::insert into
     // an options::bulk_write at the type level, removing the need to re-iterate this code
     // many times here and below.
@@ -526,18 +592,19 @@ stdx::optional<result::insert_one> collection::_insert_one(view_or_value documen
 
 stdx::optional<result::insert_one> collection::insert_one(view_or_value document,
                                                           const options::insert& options) {
-    return _insert_one(document, options);
+    return _insert_one(nullptr, document, options);
 }
 
 stdx::optional<result::insert_one> collection::insert_one(const session& session,
                                                           view_or_value document,
                                                           const options::insert& options) {
-    return _insert_one(document, options, &session);
+    return _insert_one(&session, document, options);
 }
 
-stdx::optional<result::replace_one> collection::replace_one(view_or_value filter,
-                                                            view_or_value replacement,
-                                                            const options::update& options) {
+stdx::optional<result::replace_one> collection::_replace_one(const session* session,
+                                                             view_or_value filter,
+                                                             view_or_value replacement,
+                                                             const options::update& options) {
     options::bulk_write bulk_opts;
     bulk_opts.ordered(false);
 
@@ -548,7 +615,7 @@ stdx::optional<result::replace_one> collection::replace_one(view_or_value filter
         bulk_opts.write_concern(*options.write_concern());
     }
 
-    auto bulk_op = create_bulk_write(bulk_opts);
+    auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
     model::replace_one replace_op(filter, replacement);
     if (options.collation()) {
@@ -568,9 +635,23 @@ stdx::optional<result::replace_one> collection::replace_one(view_or_value filter
     return stdx::optional<result::replace_one>(result::replace_one(std::move(result.value())));
 }
 
-stdx::optional<result::update> collection::update_many(view_or_value filter,
-                                                       view_or_value update,
-                                                       const options::update& options) {
+stdx::optional<result::replace_one> collection::replace_one(view_or_value filter,
+                                                            view_or_value replacement,
+                                                            const options::update& options) {
+    return _replace_one(nullptr, filter, replacement, options);
+}
+
+stdx::optional<result::replace_one> collection::replace_one(const session& session,
+                                                            view_or_value filter,
+                                                            view_or_value replacement,
+                                                            const options::update& options) {
+    return _replace_one(&session, filter, replacement, options);
+}
+
+stdx::optional<result::update> collection::_update_many(const session* session,
+                                                        view_or_value filter,
+                                                        view_or_value update,
+                                                        const options::update& options) {
     options::bulk_write bulk_opts;
     bulk_opts.ordered(false);
 
@@ -581,7 +662,7 @@ stdx::optional<result::update> collection::update_many(view_or_value filter,
         bulk_opts.write_concern(*options.write_concern());
     }
 
-    auto bulk_op = create_bulk_write(bulk_opts);
+    auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
     model::update_many update_op(filter, update);
     if (options.collation()) {
@@ -601,34 +682,23 @@ stdx::optional<result::update> collection::update_many(view_or_value filter,
     return stdx::optional<result::update>(result::update(std::move(result.value())));
 }
 
-stdx::optional<result::delete_result> collection::delete_many(
-    view_or_value filter, const options::delete_options& options) {
-    options::bulk_write bulk_opts;
-    bulk_opts.ordered(false);
-
-    if (options.write_concern()) {
-        bulk_opts.write_concern(*options.write_concern());
-    }
-
-    auto bulk_op = create_bulk_write(bulk_opts);
-
-    model::delete_many delete_op(filter);
-    if (options.collation()) {
-        delete_op.collation(*options.collation());
-    }
-    bulk_op.append(delete_op);
-
-    auto result = bulk_write(bulk_op);
-    if (!result) {
-        return stdx::nullopt;
-    }
-
-    return stdx::optional<result::delete_result>(result::delete_result(std::move(result.value())));
+stdx::optional<result::update> collection::update_many(view_or_value filter,
+                                                       view_or_value update,
+                                                       const options::update& options) {
+    return _update_many(nullptr, filter, update, options);
 }
 
-stdx::optional<result::update> collection::update_one(view_or_value filter,
-                                                      view_or_value update,
-                                                      const options::update& options) {
+stdx::optional<result::update> collection::update_many(const session& session,
+                                                       view_or_value filter,
+                                                       view_or_value update,
+                                                       const options::update& options) {
+    return _update_many(&session, filter, update, options);
+}
+
+stdx::optional<result::update> collection::_update_one(const session* session,
+                                                       view_or_value filter,
+                                                       view_or_value update,
+                                                       const options::update& options) {
     options::bulk_write bulk_opts;
     bulk_opts.ordered(false);
 
@@ -639,7 +709,7 @@ stdx::optional<result::update> collection::update_one(view_or_value filter,
         bulk_opts.write_concern(*options.write_concern());
     }
 
-    auto bulk_op = create_bulk_write(bulk_opts);
+    auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
     model::update_one update_op(filter, update);
     if (options.collation()) {
@@ -659,8 +729,21 @@ stdx::optional<result::update> collection::update_one(view_or_value filter,
     return stdx::optional<result::update>(result::update(std::move(result.value())));
 }
 
-stdx::optional<result::delete_result> collection::delete_one(
-    view_or_value filter, const options::delete_options& options) {
+stdx::optional<result::update> collection::update_one(view_or_value filter,
+                                                      view_or_value update,
+                                                      const options::update& options) {
+    return _update_one(nullptr, filter, update, options);
+}
+
+stdx::optional<result::update> collection::update_one(const session& session,
+                                                      view_or_value filter,
+                                                      view_or_value update,
+                                                      const options::update& options) {
+    return _update_one(&session, filter, update, options);
+}
+
+stdx::optional<result::delete_result> collection::_delete_many(
+    const session* session, view_or_value filter, const options::delete_options& options) {
     options::bulk_write bulk_opts;
     bulk_opts.ordered(false);
 
@@ -668,7 +751,42 @@ stdx::optional<result::delete_result> collection::delete_one(
         bulk_opts.write_concern(*options.write_concern());
     }
 
-    auto bulk_op = create_bulk_write(bulk_opts);
+    auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
+
+    model::delete_many delete_op(filter);
+    if (options.collation()) {
+        delete_op.collation(*options.collation());
+    }
+    bulk_op.append(delete_op);
+
+    auto result = bulk_write(bulk_op);
+    if (!result) {
+        return stdx::nullopt;
+    }
+
+    return stdx::optional<result::delete_result>(result::delete_result(std::move(result.value())));
+}
+
+stdx::optional<result::delete_result> collection::delete_many(
+    view_or_value filter, const options::delete_options& options) {
+    return _delete_many(nullptr, filter, options);
+}
+
+stdx::optional<result::delete_result> collection::delete_many(
+    const session& session, view_or_value filter, const options::delete_options& options) {
+    return _delete_many(&session, filter, options);
+}
+
+stdx::optional<result::delete_result> collection::_delete_one(
+    const session* session, view_or_value filter, const options::delete_options& options) {
+    options::bulk_write bulk_opts;
+    bulk_opts.ordered(false);
+
+    if (options.write_concern()) {
+        bulk_opts.write_concern(*options.write_concern());
+    }
+
+    auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
     model::delete_one delete_op(filter);
     if (options.collation()) {
@@ -684,8 +802,21 @@ stdx::optional<result::delete_result> collection::delete_one(
     return stdx::optional<result::delete_result>(result::delete_result(std::move(result.value())));
 }
 
-stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
-    view_or_value filter, view_or_value replacement, const options::find_one_and_replace& options) {
+stdx::optional<result::delete_result> collection::delete_one(
+    view_or_value filter, const options::delete_options& options) {
+    return _delete_one(nullptr, filter, options);
+}
+
+stdx::optional<result::delete_result> collection::delete_one(
+    const session& session, view_or_value filter, const options::delete_options& options) {
+    return _delete_one(&session, filter, options);
+}
+
+stdx::optional<bsoncxx::document::value> collection::_find_one_and_replace(
+    const session* session,
+    view_or_value filter,
+    view_or_value replacement,
+    const options::find_one_and_replace& options) {
     bsoncxx::builder::basic::document command_doc;
     bsoncxx::builder::basic::document options_doc;
 
@@ -724,12 +855,32 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
         options_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
     }
 
+    if (session) {
+        options_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
     return find_and_modify(
         _get_impl().collection_t, command_doc.view(), options_doc.view(), options.write_concern());
 }
 
-stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
-    view_or_value filter, view_or_value update, const options::find_one_and_update& options) {
+stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
+    view_or_value filter, view_or_value replacement, const options::find_one_and_replace& options) {
+    return _find_one_and_replace(nullptr, filter, replacement, options);
+}
+
+stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
+    const session& session,
+    view_or_value filter,
+    view_or_value replacement,
+    const options::find_one_and_replace& options) {
+    return _find_one_and_replace(&session, filter, replacement, options);
+}
+
+stdx::optional<bsoncxx::document::value> collection::_find_one_and_update(
+    const session* session,
+    view_or_value filter,
+    view_or_value update,
+    const options::find_one_and_update& options) {
     bsoncxx::builder::basic::document command_doc;
     bsoncxx::builder::basic::document options_doc;
 
@@ -768,12 +919,29 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
         options_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
     }
 
+    if (session) {
+        options_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
     return find_and_modify(
         _get_impl().collection_t, command_doc.view(), options_doc.view(), options.write_concern());
 }
 
-stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
-    view_or_value filter, const options::find_one_and_delete& options) {
+stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
+    view_or_value filter, view_or_value update, const options::find_one_and_update& options) {
+    return _find_one_and_update(nullptr, filter, update, options);
+}
+
+stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
+    const session& session,
+    view_or_value filter,
+    view_or_value update,
+    const options::find_one_and_update& options) {
+    return _find_one_and_update(&session, filter, update, options);
+}
+
+stdx::optional<bsoncxx::document::value> collection::_find_one_and_delete(
+    const session* session, view_or_value filter, const options::find_one_and_delete& options) {
     bsoncxx::builder::basic::document command_doc;
     bsoncxx::builder::basic::document options_doc;
 
@@ -804,11 +972,27 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
         options_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
     }
 
+    if (session) {
+        options_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
     return find_and_modify(
         _get_impl().collection_t, command_doc.view(), options_doc.view(), options.write_concern());
 }
 
-std::int64_t collection::count(view_or_value filter, const options::count& options) {
+stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
+    view_or_value filter, const options::find_one_and_delete& options) {
+    return _find_one_and_delete(nullptr, filter, options);
+}
+
+stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
+    const session& session, view_or_value filter, const options::find_one_and_delete& options) {
+    return _find_one_and_delete(&session, filter, options);
+}
+
+std::int64_t collection::_count(const session* session,
+                                view_or_value filter,
+                                const options::count& options) {
     scoped_bson_t bson_filter{filter};
     bson_error_t error;
 
@@ -834,6 +1018,11 @@ std::int64_t collection::count(view_or_value filter, const options::count& optio
         cmd_opts_builder.append(kvp("hint", options.hint()->to_value()));
     }
 
+    if (session) {
+        cmd_opts_builder.append(
+            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
     scoped_bson_t cmd_opts_bson{cmd_opts_builder.view()};
 
     auto result = libmongoc::collection_count_with_opts(_get_impl().collection_t,
@@ -852,12 +1041,24 @@ std::int64_t collection::count(view_or_value filter, const options::count& optio
     return result;
 }
 
-bsoncxx::document::value collection::create_index(bsoncxx::document::view_or_value keys,
-                                                  bsoncxx::document::view_or_value index_opts,
-                                                  options::index_view operation_options) {
+std::int64_t collection::count(view_or_value filter, const options::count& options) {
+    return _count(nullptr, filter, options);
+}
+
+std::int64_t collection::count(const session& session,
+                               view_or_value filter,
+                               const options::count& options) {
+    return _count(&session, filter, options);
+}
+
+bsoncxx::document::value collection::_create_index(const session* session,
+                                                   bsoncxx::document::view_or_value keys,
+                                                   bsoncxx::document::view_or_value index_opts,
+                                                   options::index_view operation_options) {
     using namespace bsoncxx;
 
-    auto name = indexes().create_one(keys, index_opts, operation_options);
+    auto name = session ? indexes().create_one(*session, keys, index_opts, operation_options)
+                        : indexes().create_one(keys, index_opts, operation_options);
 
     if (name) {
         return make_document(kvp("name", *name));
@@ -866,9 +1067,23 @@ bsoncxx::document::value collection::create_index(bsoncxx::document::view_or_val
     }
 }
 
-cursor collection::distinct(bsoncxx::string::view_or_value field_name,
-                            view_or_value query,
-                            const options::distinct& options) {
+bsoncxx::document::value collection::create_index(bsoncxx::document::view_or_value keys,
+                                                  bsoncxx::document::view_or_value index_opts,
+                                                  options::index_view operation_options) {
+    return _create_index(nullptr, keys, index_opts, operation_options);
+}
+
+bsoncxx::document::value collection::create_index(const session& session,
+                                                  bsoncxx::document::view_or_value keys,
+                                                  bsoncxx::document::view_or_value index_opts,
+                                                  options::index_view operation_options) {
+    return _create_index(&session, keys, index_opts, operation_options);
+}
+
+cursor collection::_distinct(const session* session,
+                             bsoncxx::string::view_or_value field_name,
+                             view_or_value query,
+                             const options::distinct& options) {
     //
     // Construct the distinct command and options.
     //
@@ -885,6 +1100,10 @@ cursor collection::distinct(bsoncxx::string::view_or_value field_name,
     bsoncxx::builder::basic::document opts_builder{};
     if (options.collation()) {
         opts_builder.append(kvp("collation", *options.collation()));
+    }
+
+    if (session) {
+        opts_builder.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     const mongoc_read_prefs_t* rp_ptr = NULL;
@@ -937,16 +1156,41 @@ cursor collection::distinct(bsoncxx::string::view_or_value field_name,
     return fake_cursor;
 }
 
+cursor collection::distinct(bsoncxx::string::view_or_value field_name,
+                            view_or_value query,
+                            const options::distinct& options) {
+    return _distinct(nullptr, field_name, query, options);
+}
+
+cursor collection::distinct(const session& session,
+                            bsoncxx::string::view_or_value field_name,
+                            view_or_value query,
+                            const options::distinct& options) {
+    return _distinct(&session, field_name, query, options);
+}
+
 cursor collection::list_indexes() const {
     return libmongoc::collection_find_indexes_with_opts(_get_impl().collection_t, nullptr);
 }
 
-void collection::drop(const stdx::optional<mongocxx::write_concern>& wc) {
+cursor collection::list_indexes(const session& session) const {
+    bsoncxx::builder::basic::document options_builder;
+    options_builder.append(bsoncxx::builder::concatenate_doc{session._get_impl().to_document()});
+    libbson::scoped_bson_t options_bson{options_builder.extract()};
+    return libmongoc::collection_find_indexes_with_opts(_get_impl().collection_t,
+                                                        options_bson.bson());
+}
+
+void collection::_drop(const session* session, const stdx::optional<mongocxx::write_concern>& wc) {
     bson_error_t error;
 
     bsoncxx::builder::basic::document opts_doc;
     if (wc) {
         opts_doc.append(kvp("writeConcern", wc->to_document()));
+    }
+
+    if (session) {
+        opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     scoped_bson_t opts_bson{opts_doc.view()};
@@ -961,6 +1205,14 @@ void collection::drop(const stdx::optional<mongocxx::write_concern>& wc) {
           stdx::string_view{error.message} == stdx::string_view{"ns not found"})) {
         throw_exception<operation_exception>(error);
     }
+}
+
+void collection::drop(const stdx::optional<mongocxx::write_concern>& wc) {
+    return _drop(nullptr, wc);
+}
+
+void collection::drop(const session& session, const stdx::optional<mongocxx::write_concern>& wc) {
+    return _drop(&session, wc);
 }
 
 void collection::read_concern(class read_concern rc) {
@@ -996,13 +1248,36 @@ class change_stream collection::watch(const options::change_stream& options) {
     return watch(pipeline{}, options);
 }
 
+class change_stream collection::watch(const session& session,
+                                      const options::change_stream& options) {
+    return _watch(&session, pipeline{}, options);
+}
+
 class change_stream collection::watch(const pipeline& pipe, const options::change_stream& options) {
+    return _watch(nullptr, pipe, options);
+}
+
+class change_stream collection::watch(const session& session,
+                                      const pipeline& pipe,
+                                      const options::change_stream& options) {
+    return _watch(&session, pipe, options);
+}
+
+class change_stream collection::_watch(const session* session,
+                                       const pipeline& pipe,
+                                       const options::change_stream& options) {
     bsoncxx::builder::basic::document container;
     container.append(kvp("pipeline", pipe._impl->view_array()));
     scoped_bson_t pipeline_bson{container.view()};
 
-    scoped_bson_t options_bson;
-    options_bson.init_from_static(as_bson(options));
+    bsoncxx::builder::basic::document options_builder;
+    options_builder.append(bsoncxx::builder::concatenate_doc{as_bson(options)});
+    if (session) {
+        options_builder.append(
+                bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
+    scoped_bson_t options_bson{options_builder.extract()};
 
     // NOTE: collection_watch copies what it needs so we're safe to destroy our copies.
     return change_stream{libmongoc::collection_watch(

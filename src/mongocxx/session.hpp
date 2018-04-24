@@ -107,6 +107,7 @@ class MONGOCXX_API session {
     friend class bulk_write;
     friend class client;
     friend class collection;
+    friend class index_view;
 
     class MONGOCXX_PRIVATE impl;
 

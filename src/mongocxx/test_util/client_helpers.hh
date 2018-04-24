@@ -70,6 +70,11 @@ std::int32_t get_max_wire_version(const client& client);
 std::string get_server_version(const client& client);
 
 ///
+/// Determines if the server is a replica set member.
+///
+bool is_replica_set(const client& client);
+
+///
 /// Parses a JSON file at a given path and return it as a BSON document value.
 ///
 /// Returns none if the path is not found.

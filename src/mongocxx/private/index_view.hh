@@ -27,6 +27,7 @@
 #include <mongocxx/options/index_view.hpp>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/session.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -58,13 +59,23 @@ class index_view::impl {
         return result;
     }
 
-    cursor list() {
+    cursor list(const session* session) {
+        if (session) {
+            bsoncxx::builder::basic::document options_builder;
+            options_builder.append(
+                bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+            libbson::scoped_bson_t bson_options(options_builder.extract());
+            return libmongoc::collection_find_indexes_with_opts(_coll, bson_options.bson());
+        }
+
         return libmongoc::collection_find_indexes_with_opts(_coll, nullptr);
     }
 
-    bsoncxx::stdx::optional<std::string> create_one(const index_model& model,
+    bsoncxx::stdx::optional<std::string> create_one(const session* session,
+                                                    const index_model& model,
                                                     const options::index_view& options) {
-        bsoncxx::document::value result = create_many(std::vector<index_model>{model}, options);
+        bsoncxx::document::value result =
+            create_many(session, std::vector<index_model>{model}, options);
         bsoncxx::document::view result_view = result.view();
 
         if (result_view["note"] &&
@@ -81,7 +92,8 @@ class index_view::impl {
         return bsoncxx::stdx::make_optional(get_index_name_from_keys(model.keys()));
     }
 
-    bsoncxx::document::value create_many(const std::vector<index_model>& indexes,
+    bsoncxx::document::value create_many(const session* session,
+                                         const std::vector<index_model>& indexes,
                                          const options::index_view& options) {
         using namespace bsoncxx;
         using builder::basic::concatenate;
@@ -118,6 +130,10 @@ class index_view::impl {
             opts_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
         }
 
+        if (session) {
+            opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+        }
+
         libbson::scoped_bson_t command_bson{command};
         libbson::scoped_bson_t opts_bson{opts_doc.view()};
 
@@ -131,7 +147,9 @@ class index_view::impl {
         return reply.steal();
     }
 
-    void drop_one(bsoncxx::stdx::string_view name, const options::index_view& options) {
+    void drop_one(const session* session,
+                  bsoncxx::stdx::string_view name,
+                  const options::index_view& options) {
         if (name == bsoncxx::stdx::string_view{"*"}) {
             throw logic_error(error_code::k_invalid_parameter);
         }
@@ -144,6 +162,10 @@ class index_view::impl {
 
         if (options.write_concern()) {
             opts_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
+        }
+
+        if (session) {
+            opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
         bsoncxx::document::value command = make_document(
@@ -162,7 +184,7 @@ class index_view::impl {
         }
     }
 
-    MONGOCXX_INLINE void drop_all(const options::index_view& options) {
+    MONGOCXX_INLINE void drop_all(const session* session, const options::index_view& options) {
         bsoncxx::document::value command = make_document(
             kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", "*"));
 
@@ -179,6 +201,10 @@ class index_view::impl {
 
         if (options.write_concern()) {
             opts_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
+        }
+
+        if (session) {
+            opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
         libbson::scoped_bson_t opts_bson{opts_doc.view()};

@@ -195,6 +195,11 @@ std::string get_server_version(const client& client) {
     return bsoncxx::string::to_string(output.view()["version"].get_utf8().value);
 }
 
+bool is_replica_set(const client& client) {
+    auto reply = client["admin"].run_command(make_document(kvp("isMaster", 1)));
+    return static_cast<bool>(reply.view()["setName"]);
+}
+
 stdx::optional<bsoncxx::document::value> parse_test_file(std::string path) {
     std::stringstream stream;
     std::ifstream test_file{path};

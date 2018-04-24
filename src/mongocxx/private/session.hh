@@ -18,6 +18,7 @@
 #include <bsoncxx/private/libbson.hh>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/private/client.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/session.hpp>
 
