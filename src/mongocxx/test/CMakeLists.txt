@@ -19,6 +19,7 @@ include_directories(
 set(test_driver_sources
     CMakeLists.txt
     bulk_write.cpp
+    change_streams.cpp
     client.cpp
     collection.cpp
     collection_mocked.cpp

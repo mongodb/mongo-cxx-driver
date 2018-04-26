@@ -997,7 +997,9 @@ class change_stream collection::watch(const options::change_stream& options) {
 }
 
 class change_stream collection::watch(const pipeline& pipe, const options::change_stream& options) {
-    scoped_bson_t pipeline_bson{bsoncxx::document::view(pipe._impl->view_array())};
+    bsoncxx::builder::basic::document container;
+    container.append(kvp("pipeline", pipe._impl->view_array()));
+    scoped_bson_t pipeline_bson{container.view()};
 
     scoped_bson_t options_bson;
     options_bson.init_from_static(as_bson(options));

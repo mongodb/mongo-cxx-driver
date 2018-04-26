@@ -20,6 +20,7 @@ include_directories(
 set(MONGOCXX_EXAMPLES
     aggregate.cpp
     bulk_write.cpp
+    change_streams.cpp
     connect.cpp
     create.cpp
     document_validation.cpp

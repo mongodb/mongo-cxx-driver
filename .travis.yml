@@ -87,7 +87,8 @@ script:
     - ./src/bsoncxx/test/test_bson
 
     # Run mongocxx tests with catch
-    - ./src/mongocxx/test/test_driver
+    # TODO(CXX-1548) Remove filter once Travis runs mongo >= 3.6.
+    - ./src/mongocxx/test/test_driver '~[min36]'
 
     # Run mongocxx instance tests with catch
     - ./src/mongocxx/test/test_instance

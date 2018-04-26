@@ -97,7 +97,8 @@ class MONGOCXX_API change_stream::iterator {
 
     ///
     /// Default-construct an iterator.
-    /// This is equivalent to change_stream::end()
+    /// Default-constucted iterators can be compared (all default-constructed
+    /// iterators are ==), assigned, and copied.
     ///
     iterator();
 
@@ -137,8 +138,9 @@ class MONGOCXX_API change_stream::iterator {
 
    private:
     friend class change_stream;
+    enum class iter_type { k_tracking, k_default_constructed, k_end };
 
-    MONGOCXX_PRIVATE explicit iterator(const change_stream* change_stream);
+    MONGOCXX_PRIVATE explicit iterator(iter_type type, const change_stream* change_stream);
 
     ///
     /// @{
@@ -159,6 +161,8 @@ class MONGOCXX_API change_stream::iterator {
 
     MONGOCXX_PRIVATE bool is_exhausted() const;
 
+    // iter_type==k_default_constructed is equivalent to _change_stream==nullptr
+    iter_type _type;
     const change_stream* _change_stream;
 };
 
