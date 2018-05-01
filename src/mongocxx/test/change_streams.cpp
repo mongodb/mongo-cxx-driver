@@ -40,7 +40,7 @@ template <typename T>
 bsoncxx::document::value doc(std::string key, T val) {
     bsoncxx::builder::basic::document out{};
     out.append(kvp(key, val));
-    return std::move(out.extract());
+    return out.extract();
 }
 
 // Generates lambda/interpose for change_stream_next
