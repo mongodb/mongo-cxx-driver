@@ -14,8 +14,8 @@
 
 #include <iostream>
 
-#include <bson.h>
 #include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
