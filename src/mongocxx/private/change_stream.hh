@@ -32,7 +32,7 @@ class change_stream::impl {
     // k_dead means that an error was indicated by a call to next
     enum class state { k_pending, k_started, k_dead };
 
-    explicit impl(mongoc_change_stream_t& change_stream)
+    explicit impl(mongoc_change_stream_t* change_stream)
         : change_stream_(change_stream), status_{state::k_pending}, exhausted_{true} {}
 
     // no copy or move
@@ -42,8 +42,7 @@ class change_stream::impl {
     void operator=(impl&&) = delete;
 
     ~impl() {
-        mongoc_change_stream_t* s = &this->change_stream_;
-        libmongoc::change_stream_destroy(s);
+        libmongoc::change_stream_destroy(this->change_stream_);
     }
 
     bool has_started() const {
@@ -78,14 +77,14 @@ class change_stream::impl {
         const bson_t* out;
 
         // Happy-case.
-        if (libmongoc::change_stream_next(&this->change_stream_, &out)) {
+        if (libmongoc::change_stream_next(this->change_stream_, &out)) {
             this->doc_ = bsoncxx::document::view{bson_get_data(out), out->len};
             return;
         }
 
         // Check for errors or just nothing left.
         bson_error_t error;
-        if (libmongoc::change_stream_error_document(&this->change_stream_, &error, &out)) {
+        if (libmongoc::change_stream_error_document(this->change_stream_, &error, &out)) {
             this->mark_dead();
             this->doc_ = bsoncxx::document::view{};
             throw_exception<query_exception>(error);
@@ -100,7 +99,7 @@ class change_stream::impl {
     }
 
    private:
-    mongoc_change_stream_t& change_stream_;
+    mongoc_change_stream_t* const change_stream_;
     bsoncxx::document::view doc_;
     state status_;
     bool exhausted_;

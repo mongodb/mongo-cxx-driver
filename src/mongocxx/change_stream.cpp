@@ -64,7 +64,7 @@ change_stream::iterator change_stream::end() const {
 
 // void* since we don't leak C driver defs into C++ driver
 change_stream::change_stream(void* change_stream_ptr)
-    : _impl(stdx::make_unique<impl>(*static_cast<mongoc_change_stream_t*>(change_stream_ptr))) {}
+    : _impl(stdx::make_unique<impl>(static_cast<mongoc_change_stream_t*>(change_stream_ptr))) {}
 
 change_stream::iterator::iterator()
     : change_stream::iterator::iterator{iter_type::k_default_constructed, nullptr} {}
