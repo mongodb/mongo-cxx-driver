@@ -104,7 +104,7 @@ TEST_CASE("Mock streams and error-handling") {
         REQUIRE(it1 == it2);
         REQUIRE(it2 == it1);
 
-        change_stream::iterator it2copy {it2};
+        change_stream::iterator it2copy{it2};
         REQUIRE(it1 == it2copy);
         REQUIRE(it2 == it2copy);
 
@@ -427,7 +427,6 @@ TEST_CASE("Watch a Collection", "[min36]") {
         SECTION("end != begin") {
             REQUIRE(x.end() != x.begin());
         }
-
 
         SECTION("Can receive it") {
             auto it = *(x.begin());

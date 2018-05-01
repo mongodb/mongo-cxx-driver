@@ -1274,7 +1274,7 @@ class change_stream collection::_watch(const session* session,
     options_builder.append(bsoncxx::builder::concatenate_doc{as_bson(options)});
     if (session) {
         options_builder.append(
-                bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     scoped_bson_t options_bson{options_builder.extract()};
