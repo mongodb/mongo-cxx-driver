@@ -39,6 +39,7 @@ set(test_driver_sources
     model/update_one.cpp
     options/aggregate.cpp
     options/bulk_write.cpp
+    options/client_session.cpp
     options/count.cpp
     options/create_collection.cpp
     options/create_view.cpp
