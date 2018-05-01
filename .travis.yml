@@ -77,7 +77,6 @@ before_script:
     - $CXX --version
 
     # Build the driver and the tests
-    - mkdir build
     - cd build
     - ${CMAKE_BINARY} -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" ..
 
