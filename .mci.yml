@@ -120,6 +120,7 @@ functions:
                 export MONGODB_BINARIES=$DRIVERS_TOOLS/mongodb/bin
                 export MONGO_ORCHESTRATION_HOME=$DRIVERS_TOOLS/.evergreen/orchestration
                 export MONGODB_VERSION=${mongodb_version}
+                export TOPOLOGY=replica_set
                 echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
                 ./.evergreen/run-orchestration.sh
 
