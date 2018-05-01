@@ -42,10 +42,10 @@ before_install:
 
 install:
     # GCC
-    - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.9; export CXX="g++-4.9"; export CC="gcc-4.9"; fi
+    - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq cmake g++-4.9; export CXX="g++-4.9"; export CC="gcc-4.9"; fi
 
     # Clang
-    - if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq clang-3.6; export CXX="clang++-3.6"; export CC="clang-3.6"; fi
+    - if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq cmake clang-3.6; export CXX="clang++-3.6"; export CC="clang-3.6"; fi
 
     # CMake
     - tar -zxvf ${CMAKE_VERSION}.tar.gz -C build
@@ -63,7 +63,9 @@ install:
 
     - git checkout master
 
-    - ./autogen.sh --enable-tests=no --enable-examples=no --with-libbson=bundled; make; sudo make install
+    - cmake -DENABLE_TESTS=OFF -DENABLE_EXAMPLES=OFF -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
+    - make
+    - sudo make install
 
     - popd
 
