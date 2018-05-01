@@ -37,7 +37,18 @@ template <typename T>
 struct StringMaker<stdx::optional<T>> {
     static std::string convert(const bsoncxx::stdx::optional<T>& value) {
         if (value) {
-            return StringMaker::convert(value);
+            StringMaker<T>::convert(value.value());
+        }
+
+        return "{nullopt}";
+    }
+};
+
+template <>
+struct StringMaker<stdx::optional<bsoncxx::document::view>> {
+    static std::string convert(const bsoncxx::stdx::optional<bsoncxx::document::view>& value) {
+        if (value) {
+            return StringMaker::convert(value.value());
         }
 
         return "{nullopt}";
