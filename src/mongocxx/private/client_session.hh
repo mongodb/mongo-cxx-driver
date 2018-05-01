@@ -16,20 +16,20 @@
 
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/libbson.hh>
+#include <mongocxx/client_session.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/session.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-class session::impl {
+class client_session::impl {
    public:
-    impl(const class client* client, const options::session& session_options)
+    impl(const class client* client, const options::client_session& session_options)
         : _client(client), _options(session_options), _session_t(nullptr, nullptr) {
         // Create a mongoc_session_opts_t from session_options.
         std::unique_ptr<mongoc_session_opt_t, decltype(libmongoc::session_opts_destroy)> opt_t{
@@ -52,7 +52,7 @@ class session::impl {
         return *_client;
     }
 
-    const options::session& options() const noexcept {
+    const options::client_session& options() const noexcept {
         return _options;
     }
 
@@ -106,7 +106,7 @@ class session::impl {
 
    private:
     const class client* _client;
-    options::session _options;
+    options::client_session _options;
 
     using unique_session =
         std::unique_ptr<mongoc_client_session_t,

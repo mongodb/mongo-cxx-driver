@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/session.hpp>
+#include <mongocxx/options/client_session.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -20,12 +20,12 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-session& session::causal_consistency(bool causal_consistency) noexcept {
+client_session& client_session::causal_consistency(bool causal_consistency) noexcept {
     _causal_consistency = causal_consistency;
     return *this;
 }
 
-bool session::causal_consistency() const noexcept {
+bool client_session::causal_consistency() const noexcept {
     return _causal_consistency;
 }
 

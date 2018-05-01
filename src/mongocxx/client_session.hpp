@@ -14,8 +14,11 @@
 
 #pragma once
 
+#include <memory>
+
 #include <bsoncxx/document/view.hpp>
-#include <mongocxx/options/session.hpp>
+#include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/options/client_session.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -27,30 +30,30 @@ class client;
 ///
 /// Use a session for a sequence of operations, optionally with causal consistency.
 ///
-/// Note that session is not thread-safe. See
+/// Note that client_session is not thread-safe. See
 /// https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/thread-safety/ for more details.
 ///
 /// @see http://dochub.mongodb.org/core/causal-consistency
 ///
-class MONGOCXX_API session {
+class MONGOCXX_API client_session {
    public:
     ///
     /// Move constructs a session.
     ///
-    session(session&&) noexcept;
+    client_session(client_session&&) noexcept;
 
     ///
     /// Move assigns a session.
     ///
-    session& operator=(session&&) noexcept;
+    client_session& operator=(client_session&&) noexcept;
 
-    session(const session&) = delete;
-    session& operator=(const session&) = delete;
+    client_session(const client_session&) = delete;
+    client_session& operator=(const client_session&) = delete;
 
     ///
     /// Ends and destroys the session.
     ///
-    ~session() noexcept;
+    ~client_session() noexcept;
 
     ///
     /// Gets the client that started this session.
@@ -60,7 +63,7 @@ class MONGOCXX_API session {
     ///
     /// Gets the options this session was created with.
     ///
-    const options::session& options() const noexcept;
+    const options::client_session& options() const noexcept;
 
     ///
     /// Get the server-side "logical session ID" associated with this session, as a BSON document.
@@ -112,7 +115,8 @@ class MONGOCXX_API session {
     class MONGOCXX_PRIVATE impl;
 
     // "class client" distinguishes from client() method above.
-    MONGOCXX_PRIVATE session(const class client* client, const options::session& options);
+    MONGOCXX_PRIVATE client_session(const class client* client,
+                                    const options::client_session& options);
 
     MONGOCXX_PRIVATE impl& _get_impl();
     MONGOCXX_PRIVATE const impl& _get_impl() const;

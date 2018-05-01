@@ -21,6 +21,7 @@ set(test_driver_sources
     bulk_write.cpp
     change_streams.cpp
     client.cpp
+    client_session.cpp
     collection.cpp
     collection_mocked.cpp
     conversions.cpp
@@ -66,7 +67,6 @@ set(test_driver_sources
     result/insert_one.cpp
     result/replace_one.cpp
     result/update.cpp
-    session.cpp
     uri.cpp
     validation_criteria.cpp
     write_concern.cpp

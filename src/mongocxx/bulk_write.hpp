@@ -14,9 +14,9 @@
 
 #pragma once
 
+#include <mongocxx/client_session.hpp>
 #include <mongocxx/model/write.hpp>
 #include <mongocxx/options/bulk_write.hpp>
-#include <mongocxx/session.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -100,7 +100,7 @@ class MONGOCXX_API bulk_write {
 
     MONGOCXX_PRIVATE bulk_write(const collection& coll,
                                 const options::bulk_write& options,
-                                const session* session = nullptr);
+                                const client_session* session = nullptr);
 
     bool _created_from_collection;
     std::unique_ptr<impl> _impl;

@@ -29,6 +29,7 @@
 #include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/change_stream.hpp>
+#include <mongocxx/client_session.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/index_view.hpp>
 #include <mongocxx/model/insert_one.hpp>
@@ -54,7 +55,6 @@
 #include <mongocxx/result/insert_one.hpp>
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
-#include <mongocxx/session.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -153,7 +153,7 @@ class MONGOCXX_API collection {
     /// Runs an aggregation framework pipeline against this collection.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the aggregation.
+    ///   The mongocxx::client_session with which to perform the aggregation.
     /// @param pipeline
     ///   The pipeline of aggregation operations to perform.
     /// @param options
@@ -170,7 +170,7 @@ class MONGOCXX_API collection {
     ///   collection level set read concern - collection::read_concern(rc).
     ///   (Write concern supported only for MongoDB 3.4+).
     ///
-    cursor aggregate(const session& session,
+    cursor aggregate(const client_session& session,
                      const pipeline& pipeline,
                      const options::aggregate& options = options::aggregate());
     ///
@@ -194,14 +194,14 @@ class MONGOCXX_API collection {
     /// Creates a new bulk operation to be executed against this collection.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the bulk operation.
+    ///   The mongocxx::client_session with which to perform the bulk operation.
     /// @param options
     ///   Optional arguments; see mongocxx::options::bulk_write.
     ///
     /// @return
     ///    The newly-created bulk write.
     ///
-    class bulk_write create_bulk_write(const session& session,
+    class bulk_write create_bulk_write(const client_session& session,
                                        const options::bulk_write& options = {});
     ///
     /// @}
@@ -236,7 +236,7 @@ class MONGOCXX_API collection {
     /// Sends a write to the server as a bulk write operation.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the bulk operation.
+    ///   The mongocxx::client_session with which to perform the bulk operation.
     /// @param write
     ///   A model::write.
     /// @param options
@@ -255,7 +255,7 @@ class MONGOCXX_API collection {
     /// @see https://docs.mongodb.com/master/core/bulk-write-operations/
     ///
     MONGOCXX_INLINE stdx::optional<result::bulk_write> write(
-        const session& session,
+        const client_session& session,
         const model::write& write,
         const options::bulk_write& options = options::bulk_write());
     ///
@@ -297,7 +297,7 @@ class MONGOCXX_API collection {
     ///   type of model::write.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the bulk operation.
+    ///   The mongocxx::client_session with which to perform the bulk operation.
     /// @param writes
     ///   A container of model::write.
     /// @param options
@@ -314,7 +314,7 @@ class MONGOCXX_API collection {
     ///
     template <typename container_type>
     MONGOCXX_INLINE stdx::optional<result::bulk_write> bulk_write(
-        const session& session,
+        const client_session& session,
         const container_type& writes,
         const options::bulk_write& options = options::bulk_write());
     ///
@@ -360,7 +360,7 @@ class MONGOCXX_API collection {
     ///   type of model::write.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the bulk operation.
+    ///   The mongocxx::client_session with which to perform the bulk operation.
     /// @param begin
     ///   Iterator pointing to the first model::write to send.
     /// @param end
@@ -377,7 +377,7 @@ class MONGOCXX_API collection {
     ///
     template <typename write_model_iterator_type>
     MONGOCXX_INLINE stdx::optional<result::bulk_write> bulk_write(
-        const session& session,
+        const client_session& session,
         write_model_iterator_type begin,
         write_model_iterator_type end,
         const options::bulk_write& options = options::bulk_write());
@@ -422,7 +422,7 @@ class MONGOCXX_API collection {
     /// Counts the number of documents matching the provided filter.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the count.
+    ///   The mongocxx::client_session with which to perform the count.
     /// @param filter
     ///   The filter that documents must match in order to be counted.
     /// @param options
@@ -434,7 +434,7 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/count/
     ///
-    std::int64_t count(const session& session,
+    std::int64_t count(const client_session& session,
                        bsoncxx::document::view_or_value filter,
                        const options::count& options = options::count());
 
@@ -472,7 +472,7 @@ class MONGOCXX_API collection {
     /// Creates an index over the collection for the provided keys with the provided options.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the index creation.
+    ///   The mongocxx::client_session with which to perform the index creation.
     /// @param keys
     ///   The keys for the index: @c {a: 1, b: -1}
     /// @param index_options
@@ -490,7 +490,7 @@ class MONGOCXX_API collection {
     ///   Write concern supported only for MongoDB 3.4+.
     ///
     bsoncxx::document::value create_index(
-        const session& session,
+        const client_session& session,
         bsoncxx::document::view_or_value keys,
         bsoncxx::document::view_or_value index_options = {},
         options::index_view operation_options = options::index_view{});
@@ -525,7 +525,7 @@ class MONGOCXX_API collection {
     /// Deletes all matching documents from the collection.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the deletion.
+    ///   The mongocxx::client_session with which to perform the deletion.
     /// @param filter
     ///   Document view representing the data to be deleted.
     /// @param options
@@ -540,7 +540,7 @@ class MONGOCXX_API collection {
     /// @see https://docs.mongodb.com/master/reference/command/delete/
     ///
     stdx::optional<result::delete_result> delete_many(
-        const session& session,
+        const client_session& session,
         bsoncxx::document::view_or_value filter,
         const options::delete_options& options = options::delete_options());
 
@@ -574,7 +574,7 @@ class MONGOCXX_API collection {
     /// Deletes a single matching document from the collection.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the deletion.
+    ///   The mongocxx::client_session with which to perform the deletion.
     /// @param filter
     ///   Document view representing the data to be deleted.
     /// @param options
@@ -589,7 +589,7 @@ class MONGOCXX_API collection {
     /// @see https://docs.mongodb.com/master/reference/command/delete/
     ///
     stdx::optional<result::delete_result> delete_one(
-        const session& session,
+        const client_session& session,
         bsoncxx::document::view_or_value filter,
         const options::delete_options& options = options::delete_options());
 
@@ -623,7 +623,7 @@ class MONGOCXX_API collection {
     /// Finds the distinct values for a specified field across the collection.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the operation.
+    ///   The mongocxx::client_session with which to perform the operation.
     /// @param field_name
     ///   The field for which the distinct values will be found.
     /// @param filter
@@ -637,7 +637,7 @@ class MONGOCXX_API collection {
 
     /// @see https://docs.mongodb.com/master/reference/command/distinct/
     ///
-    cursor distinct(const session& session,
+    cursor distinct(const client_session& session,
                     bsoncxx::string::view_or_value name,
                     bsoncxx::document::view_or_value filter,
                     const options::distinct& options = options::distinct());
@@ -670,7 +670,7 @@ class MONGOCXX_API collection {
     /// Drops this collection and all its contained documents from the database.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the drop.
+    ///   The mongocxx::client_session with which to perform the drop.
     /// @param write_concern (optional)
     ///   The write concern to use for this operation. Defaults to the collection wide write
     ///   concern if none is provided.
@@ -684,7 +684,7 @@ class MONGOCXX_API collection {
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
     ///
-    void drop(const session& session,
+    void drop(const client_session& session,
               const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {});
 
     ///
@@ -717,7 +717,7 @@ class MONGOCXX_API collection {
     /// Finds the documents in this collection which match the provided filter.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the query.
+    ///   The mongocxx::client_session with which to perform the query.
     /// @param filter
     ///   Document view representing a document that should match the query.
     /// @param options
@@ -732,7 +732,7 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.com/master/core/read-operations-introduction/
     ///
-    cursor find(const session& session,
+    cursor find(const client_session& session,
                 bsoncxx::document::view_or_value filter,
                 const options::find& options = options::find());
 
@@ -759,7 +759,7 @@ class MONGOCXX_API collection {
     /// Finds a single document in this collection that match the provided filter.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the query.
+    ///   The mongocxx::client_session with which to perform the query.
     /// @param filter
     ///   Document view representing a document that should match the query.
     /// @param options
@@ -772,7 +772,7 @@ class MONGOCXX_API collection {
     /// @see https://docs.mongodb.com/master/core/read-operations-introduction/
     ///
     stdx::optional<bsoncxx::document::value> find_one(
-        const session& session,
+        const client_session& session,
         bsoncxx::document::view_or_value filter,
         const options::find& options = options::find());
 
@@ -807,7 +807,7 @@ class MONGOCXX_API collection {
     /// Finds a single document matching the filter, deletes it, and returns the original.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the operation.
+    ///   The mongocxx::client_session with which to perform the operation.
     /// @param filter
     ///   Document view representing a document that should be deleted.
     /// @param options
@@ -823,7 +823,7 @@ class MONGOCXX_API collection {
     ///   Throws mongocxx::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_delete(
-        const session& session,
+        const client_session& session,
         bsoncxx::document::view_or_value filter,
         const options::find_one_and_delete& options = options::find_one_and_delete());
 
@@ -863,7 +863,7 @@ class MONGOCXX_API collection {
     /// or the replacement document.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the operation.
+    ///   The mongocxx::client_session with which to perform the operation.
     /// @param filter
     ///   Document view representing a document that should be replaced.
     /// @param replacement
@@ -881,7 +881,7 @@ class MONGOCXX_API collection {
     ///   Throws mongocxx::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_replace(
-        const session& session,
+        const client_session& session,
         bsoncxx::document::view_or_value filter,
         bsoncxx::document::view_or_value replacement,
         const options::find_one_and_replace& options = options::find_one_and_replace());
@@ -922,7 +922,7 @@ class MONGOCXX_API collection {
     /// or the newly-updated document.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the operation.
+    ///   The mongocxx::client_session with which to perform the operation.
     /// @param filter
     ///   Document view representing a document that should be updated.
     /// @param update
@@ -940,7 +940,7 @@ class MONGOCXX_API collection {
     ///   Throws mongocxx::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_update(
-        const session& session,
+        const client_session& session,
         bsoncxx::document::view_or_value filter,
         bsoncxx::document::view_or_value update,
         const options::find_one_and_update& options = options::find_one_and_update());
@@ -972,7 +972,7 @@ class MONGOCXX_API collection {
     /// (@c _id field) one will be generated for it.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the insert.
+    ///   The mongocxx::client_session with which to perform the insert.
     /// @param document
     ///   The document to insert.
     /// @param options
@@ -983,7 +983,7 @@ class MONGOCXX_API collection {
     /// disengaged.
     ///
     /// @throws mongocxx::bulk_write_exception if the operation fails.
-    stdx::optional<result::insert_one> insert_one(const session& session,
+    stdx::optional<result::insert_one> insert_one(const client_session& session,
                                                   bsoncxx::document::view_or_value document,
                                                   const options::insert& options = {});
     ///
@@ -1028,7 +1028,7 @@ class MONGOCXX_API collection {
     ///   type of model::write.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the inserts.
+    ///   The mongocxx::client_session with which to perform the inserts.
     /// @param container
     ///   Container of a documents to insert.
     /// @param options
@@ -1042,7 +1042,7 @@ class MONGOCXX_API collection {
     ///
     template <typename container_type>
     MONGOCXX_INLINE stdx::optional<result::insert_many> insert_many(
-        const session& session,
+        const client_session& session,
         const container_type& container,
         const options::insert& options = options::insert());
 
@@ -1086,7 +1086,7 @@ class MONGOCXX_API collection {
     ///   type of bsoncxx::document::view.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the inserts.
+    ///   The mongocxx::client_session with which to perform the inserts.
     /// @param begin
     ///   Iterator pointing to the first document to be inserted.
     /// @param end
@@ -1100,7 +1100,7 @@ class MONGOCXX_API collection {
     ///
     template <typename document_view_iterator_type>
     MONGOCXX_INLINE stdx::optional<result::insert_many> insert_many(
-        const session& session,
+        const client_session& session,
         document_view_iterator_type begin,
         document_view_iterator_type end,
         const options::insert& options = options::insert());
@@ -1125,7 +1125,7 @@ class MONGOCXX_API collection {
     /// Returns a list of the indexes currently on this collection.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the operation.
+    ///   The mongocxx::client_session with which to perform the operation.
     ///
     /// @return Cursor yielding the index specifications.
     ///
@@ -1133,7 +1133,7 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/listIndexes/
     ///
-    cursor list_indexes(const session& session) const;
+    cursor list_indexes(const client_session& session) const;
 
     ///
     /// @}
@@ -1171,7 +1171,7 @@ class MONGOCXX_API collection {
     /// Rename this collection.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the rename.
+    ///   The mongocxx::client_session with which to perform the rename.
     /// @param new_name The new name to assign to the collection.
     /// @param drop_target_before_rename Whether to overwrite any
     ///   existing collections called new_name. The default is false.
@@ -1185,7 +1185,7 @@ class MONGOCXX_API collection {
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
     ///
-    void rename(const session& session,
+    void rename(const client_session& session,
                 bsoncxx::string::view_or_value new_name,
                 bool drop_target_before_rename = false,
                 const bsoncxx::stdx::optional<write_concern>& write_concern = {});
@@ -1266,7 +1266,7 @@ class MONGOCXX_API collection {
     /// Replaces a single document matching the provided filter in this collection.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the replace.
+    ///   The mongocxx::client_session with which to perform the replace.
     /// @param filter
     ///   Document representing the match criteria.
     /// @param replacement
@@ -1285,7 +1285,7 @@ class MONGOCXX_API collection {
     /// @see https://docs.mongodb.com/master/reference/command/update/
     ///
     stdx::optional<result::replace_one> replace_one(
-        const session& session,
+        const client_session& session,
         bsoncxx::document::view_or_value filter,
         bsoncxx::document::view_or_value replacement,
         const options::update& options = options::update());
@@ -1324,7 +1324,7 @@ class MONGOCXX_API collection {
     /// Updates multiple documents matching the provided filter in this collection.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the update.
+    ///   The mongocxx::client_session with which to perform the update.
     /// @param filter
     ///   Document representing the match criteria.
     /// @param update
@@ -1342,7 +1342,7 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/update/
     ///
-    stdx::optional<result::update> update_many(const session& session,
+    stdx::optional<result::update> update_many(const client_session& session,
                                                bsoncxx::document::view_or_value filter,
                                                bsoncxx::document::view_or_value update,
                                                const options::update& options = options::update());
@@ -1381,7 +1381,7 @@ class MONGOCXX_API collection {
     /// Updates a single document matching the provided filter in this collection.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the update.
+    ///   The mongocxx::client_session with which to perform the update.
     /// @param filter
     ///   Document representing the match criteria.
     /// @param update
@@ -1399,7 +1399,7 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/update/
     ///
-    stdx::optional<result::update> update_one(const session& session,
+    stdx::optional<result::update> update_one(const client_session& session,
                                               bsoncxx::document::view_or_value filter,
                                               bsoncxx::document::view_or_value update,
                                               const options::update& options = options::update());
@@ -1446,7 +1446,7 @@ class MONGOCXX_API collection {
 
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the watch operation.
+    ///   The mongocxx::client_session with which to perform the watch operation.
     /// @param options
     ///   The options to use when creating the change stream.
     ///
@@ -1455,7 +1455,7 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.com/manual/changeStreams/
     ///
-    change_stream watch(const session& session, const options::change_stream& options = {});
+    change_stream watch(const client_session& session, const options::change_stream& options = {});
 
     ///
     /// Gets a change stream on this collection.
@@ -1479,7 +1479,7 @@ class MONGOCXX_API collection {
     /// Gets a change stream on this collection.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the watch operation.
+    ///   The mongocxx::client_session with which to perform the watch operation.
     /// @param pipe
     ///   The aggregation pipeline to be used on the change notifications.
     /// @param options
@@ -1490,7 +1490,7 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.com/manual/changeStreams/
     ///
-    change_stream watch(const session& session,
+    change_stream watch(const client_session& session,
                         const pipeline& pipe,
                         const options::change_stream& options = {});
 
@@ -1507,100 +1507,101 @@ class MONGOCXX_API collection {
 
     MONGOCXX_PRIVATE collection(const database& database, void* collection);
 
-    MONGOCXX_PRIVATE cursor _aggregate(const session* session,
+    MONGOCXX_PRIVATE cursor _aggregate(const client_session* session,
                                        const pipeline& pipeline,
                                        const options::aggregate& options);
 
-    MONGOCXX_PRIVATE std::int64_t _count(const session* session,
+    MONGOCXX_PRIVATE std::int64_t _count(const client_session* session,
                                          bsoncxx::document::view_or_value filter,
                                          const options::count& options);
 
     MONGOCXX_PRIVATE bsoncxx::document::value _create_index(
-        const session* session,
+        const client_session* session,
         bsoncxx::document::view_or_value keys,
         bsoncxx::document::view_or_value index_options,
         options::index_view operation_options);
 
     MONGOCXX_PRIVATE stdx::optional<result::delete_result> _delete_many(
-        const session* session,
+        const client_session* session,
         bsoncxx::document::view_or_value filter,
         const options::delete_options& options);
 
     MONGOCXX_PRIVATE stdx::optional<result::delete_result> _delete_one(
-        const session* session,
+        const client_session* session,
         bsoncxx::document::view_or_value filter,
         const options::delete_options& options);
 
-    MONGOCXX_PRIVATE cursor _distinct(const session* session,
+    MONGOCXX_PRIVATE cursor _distinct(const client_session* session,
                                       bsoncxx::string::view_or_value name,
                                       bsoncxx::document::view_or_value filter,
                                       const options::distinct& options);
 
     MONGOCXX_PRIVATE void _drop(
-        const session* session,
+        const client_session* session,
         const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern);
 
-    MONGOCXX_PRIVATE cursor _find(const session* session,
+    MONGOCXX_PRIVATE cursor _find(const client_session* session,
                                   bsoncxx::document::view_or_value filter,
                                   const options::find& options);
 
     MONGOCXX_PRIVATE stdx::optional<bsoncxx::document::value> _find_one(
-        const session* session,
+        const client_session* session,
         bsoncxx::document::view_or_value filter,
         const options::find& options);
 
     MONGOCXX_PRIVATE stdx::optional<bsoncxx::document::value> _find_one_and_delete(
-        const session* session,
+        const client_session* session,
         bsoncxx::document::view_or_value filter,
         const options::find_one_and_delete& options);
 
     MONGOCXX_PRIVATE stdx::optional<bsoncxx::document::value> _find_one_and_replace(
-        const session* session,
+        const client_session* session,
         bsoncxx::document::view_or_value filter,
         bsoncxx::document::view_or_value replacement,
         const options::find_one_and_replace& options);
 
     MONGOCXX_PRIVATE stdx::optional<bsoncxx::document::value> _find_one_and_update(
-        const session* session,
+        const client_session* session,
         bsoncxx::document::view_or_value filter,
         bsoncxx::document::view_or_value update,
         const options::find_one_and_update& options);
 
     MONGOCXX_PRIVATE stdx::optional<result::insert_one> _insert_one(
-        const session* session,
+        const client_session* session,
         bsoncxx::document::view_or_value document,
         const options::insert& options);
 
     MONGOCXX_PRIVATE void _rename(
-        const session* session,
+        const client_session* session,
         bsoncxx::string::view_or_value new_name,
         bool drop_target_before_rename,
         const bsoncxx::stdx::optional<class write_concern>& write_concern);
 
     MONGOCXX_PRIVATE stdx::optional<result::replace_one> _replace_one(
-        const session* session,
+        const client_session* session,
         bsoncxx::document::view_or_value filter,
         bsoncxx::document::view_or_value replacement,
         const options::update& options);
 
     MONGOCXX_PRIVATE stdx::optional<result::update> _update_one(
-        const session* session,
+        const client_session* session,
         bsoncxx::document::view_or_value filter,
         bsoncxx::document::view_or_value update,
         const options::update& options);
 
     MONGOCXX_PRIVATE stdx::optional<result::update> _update_many(
-        const session* session,
+        const client_session* session,
         bsoncxx::document::view_or_value filter,
         bsoncxx::document::view_or_value update,
         const options::update& options);
 
-    MONGOCXX_PRIVATE change_stream _watch(const session* session,
+    MONGOCXX_PRIVATE change_stream _watch(const client_session* session,
                                           const pipeline& pipe,
                                           const options::change_stream& options);
 
     // Helpers for the insert_many method templates.
-    class bulk_write _init_insert_many(const options::insert& options, const session* session);
+    class bulk_write _init_insert_many(const options::insert& options,
+                                       const client_session* session);
 
     void _insert_many_doc_handler(class bulk_write& writes,
                                   bsoncxx::builder::basic::array& inserted_ids,
@@ -1611,7 +1612,7 @@ class MONGOCXX_API collection {
 
     template <typename document_view_iterator_type>
     MONGOCXX_PRIVATE stdx::optional<result::insert_many> _insert_many(
-        const session* session,
+        const client_session* session,
         document_view_iterator_type begin,
         document_view_iterator_type end,
         const options::insert& options);
@@ -1630,7 +1631,7 @@ MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::write(
 }
 
 MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::write(
-    const session& session, const model::write& write, const options::bulk_write& options) {
+    const client_session& session, const model::write& write, const options::bulk_write& options) {
     return bulk_write(create_bulk_write(session, options).append(write));
 }
 
@@ -1642,7 +1643,9 @@ MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
 
 template <typename container_type>
 MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
-    const session& session, const container_type& requests, const options::bulk_write& options) {
+    const client_session& session,
+    const container_type& requests,
+    const options::bulk_write& options) {
     return bulk_write(session, requests.begin(), requests.end(), options);
 }
 
@@ -1658,7 +1661,7 @@ MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
 
 template <typename write_model_iterator_type>
 MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
-    const session& session,
+    const client_session& session,
     write_model_iterator_type begin,
     write_model_iterator_type end,
     const options::bulk_write& options) {
@@ -1675,14 +1678,16 @@ MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
 
 template <typename container_type>
 MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
-    const session& session, const container_type& container, const options::insert& options) {
+    const client_session& session,
+    const container_type& container,
+    const options::insert& options) {
     return insert_many(session, container.begin(), container.end(), options);
 }
 
 template <typename document_view_iterator_type>
 MONGOCXX_INLINE stdx::optional<result::insert_many> collection::_insert_many(
 
-    const session* session,
+    const client_session* session,
     document_view_iterator_type begin,
     document_view_iterator_type end,
     const options::insert& options) {
@@ -1704,7 +1709,7 @@ MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
 
 template <typename document_view_iterator_type>
 MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
-    const session& session,
+    const client_session& session,
     document_view_iterator_type begin,
     document_view_iterator_type end,
     const options::insert& options) {

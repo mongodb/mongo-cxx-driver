@@ -61,7 +61,7 @@ TEST_CASE("session options", "[session]") {
     }
 
     SECTION("set causal consistency") {
-        options::session opts;
+        options::client_session opts;
         REQUIRE(opts.causal_consistency());
         opts.causal_consistency(false);
         REQUIRE(!opts.causal_consistency());
@@ -132,8 +132,8 @@ TEST_CASE("session", "[session]") {
 
     SECTION("pool") {
         // "Pool is LIFO" test from Driver Sessions Spec.
-        auto session_a = stdx::make_unique<session>(c.start_session());
-        auto session_b = stdx::make_unique<session>(c.start_session());
+        auto session_a = stdx::make_unique<client_session>(c.start_session());
+        auto session_b = stdx::make_unique<client_session>(c.start_session());
         auto a_id = value(session_a->id());
         auto b_id = value(session_b->id());
 
@@ -141,9 +141,9 @@ TEST_CASE("session", "[session]") {
         session_a = nullptr;
         session_b = nullptr;
 
-        auto session_c = stdx::make_unique<session>(c.start_session());
+        auto session_c = stdx::make_unique<client_session>(c.start_session());
         REQUIRE(session_c->id() == b_id);
-        auto session_d = stdx::make_unique<session>(c.start_session());
+        auto session_d = stdx::make_unique<client_session>(c.start_session());
         REQUIRE(session_d->id() == a_id);
     }
 
@@ -173,12 +173,13 @@ class session_test {
         mongoc_apm_callbacks_destroy(callbacks);
     }
 
-    void test_method_with_session(const std::function<void(bool)>& f, const session& s) {
+    void test_method_with_session(const std::function<void(bool)>& f, const client_session& s) {
         using std::string;
 
         events.clear();
 
-        // A method with an explicit session must send its logical session id or "lsid".
+        // A method with an explicit session must send its logical session id or
+        // "lsid".
         f(true);
         if (events.size() == 0) {
             throw std::logic_error{"no events after calling command with explicit session"};
@@ -197,7 +198,8 @@ class session_test {
 
         events.clear();
 
-        // A method called with no session must send an implicit session id with the command.
+        // A method called with no session must send an implicit session id with the
+        // command.
         f(false);
         if (events.size() == 0) {
             throw std::logic_error{"no events after calling command with implicit session"};

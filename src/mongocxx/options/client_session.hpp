@@ -23,7 +23,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to mongocxx::client::start_session.
 ///
-class MONGOCXX_API session {
+class MONGOCXX_API client_session {
    public:
     ///
     /// Sets the causal_consistency option.
@@ -43,7 +43,7 @@ class MONGOCXX_API session {
     /// @see
     /// https://docs.mongodb.com/manual/core/read-isolation-consistency-recency/#causal-consistency
     ///
-    session& causal_consistency(bool causal_consistency) noexcept;
+    client_session& causal_consistency(bool causal_consistency) noexcept;
 
     ///
     /// Gets the current value of the causal_consistency option.
@@ -53,16 +53,16 @@ class MONGOCXX_API session {
     ///
     /// Compare session options for equality.
     ///
-    /// @relates session
+    /// @relates client_session
     ///
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const session&, const session&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const client_session&, const client_session&);
 
     ///
     /// Compare session options for inequality.
     ///
-    /// @relates session
+    /// @relates client_session
     ///
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const session&, const session&);
+    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const client_session&, const client_session&);
 
    private:
     bool _causal_consistency = true;
@@ -71,16 +71,16 @@ class MONGOCXX_API session {
 ///
 /// Compare session options for equality.
 ///
-/// @relates session
+/// @relates client_session
 ///
-MONGOCXX_API bool MONGOCXX_CALL operator==(const session&, const session&);
+MONGOCXX_API bool MONGOCXX_CALL operator==(const client_session&, const client_session&);
 
 ///
 /// Compare session options for inequality.
 ///
-/// @relates session
+/// @relates client_session
 ///
-MONGOCXX_API bool MONGOCXX_CALL operator!=(const session&, const session&);
+MONGOCXX_API bool MONGOCXX_CALL operator!=(const client_session&, const client_session&);
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END

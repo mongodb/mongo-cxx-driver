@@ -22,9 +22,9 @@
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/private/ssl.hh>
 #include <mongocxx/private/client.hh>
+#include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
-#include <mongocxx/private/session.hh>
 #include <mongocxx/private/uri.hh>
 #include <mongocxx/private/write_concern.hh>
 
@@ -127,8 +127,8 @@ cursor client::list_databases() const {
     return libmongoc::client_find_databases_with_opts(_get_impl().client_t, nullptr);
 }
 
-class session client::start_session(const mongocxx::options::session& options) {
-    return session(this, options);
+class client_session client::start_session(const mongocxx::options::client_session& options) {
+    return client_session(this, options);
 }
 
 const client::impl& client::_get_impl() const {

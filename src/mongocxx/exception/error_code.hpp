@@ -81,10 +81,10 @@ enum class error_code : std::int32_t {
     /// The mongocxx::instance has been destroyed.
     k_instance_destroyed,
 
-    /// mongocxx::client.create_session failed to create a mongocxx::session.
+    /// mongocxx::client.create_session failed to create a mongocxx::client_session.
     k_cannot_create_session,
 
-    /// A failure attempting to pass a mongocxx::session to a method.
+    /// A failure attempting to pass a mongocxx::client_session to a method.
     k_invalid_session,
 
     // Add new constant string message to error_code.cpp as well!

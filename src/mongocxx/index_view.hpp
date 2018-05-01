@@ -19,10 +19,10 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/client_session.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/index_model.hpp>
 #include <mongocxx/options/index_view.hpp>
-#include <mongocxx/session.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -47,9 +47,9 @@ class MONGOCXX_API index_view {
     /// Returns a cursor over all the indexes.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the list operation.
+    ///   The mongocxx::client_session with which to perform the list operation.
     ///
-    cursor list(const session& session);
+    cursor list(const client_session& session);
 
     ///
     /// @}
@@ -87,7 +87,7 @@ class MONGOCXX_API index_view {
     /// Creates an index. A convenience method that calls create_many.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the operation.
+    ///   The mongocxx::client_session with which to perform the operation.
     /// @param keys
     ///    A document containing the index keys and their corresponding index types.
     /// @param index_options
@@ -107,7 +107,7 @@ class MONGOCXX_API index_view {
     /// @see https://docs.mongodb.com/manual/reference/method/db.collection.createIndex/
     ///
     stdx::optional<std::string> create_one(
-        const session& session,
+        const client_session& session,
         const bsoncxx::document::view_or_value& keys,
         const bsoncxx::document::view_or_value& index_options = {},
         const options::index_view& options = options::index_view{});
@@ -143,7 +143,7 @@ class MONGOCXX_API index_view {
     /// Creates an index. A convenience method that calls create_many.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the operation.
+    ///   The mongocxx::client_session with which to perform the operation.
     /// @param index
     ///    Index_model describing the index being created.
     /// @param options
@@ -160,7 +160,7 @@ class MONGOCXX_API index_view {
     /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
     ///
     stdx::optional<std::string> create_one(
-        const session& session,
+        const client_session& session,
         const index_model& index,
         const options::index_view& options = options::index_view{});
 
@@ -196,7 +196,7 @@ class MONGOCXX_API index_view {
     /// Adds a container of indexes to the collection.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the operation.
+    ///   The mongocxx::client_session with which to perform the operation.
     /// @param indexes
     ///   std::vector containing index models describing the indexes being created.
     /// @param options
@@ -213,7 +213,7 @@ class MONGOCXX_API index_view {
     /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
     ///
     bsoncxx::document::value create_many(
-        const session& session,
+        const client_session& session,
         const std::vector<index_model>& indexes,
         const options::index_view& options = options::index_view{});
 
@@ -246,7 +246,7 @@ class MONGOCXX_API index_view {
     /// Drops a single index by name.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the drop.
+    ///   The mongocxx::client_session with which to perform the drop.
     /// @param name
     ///    The name of the index being dropped.
     /// @param options
@@ -260,7 +260,7 @@ class MONGOCXX_API index_view {
     ///
     /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
     ///
-    void drop_one(const session& session,
+    void drop_one(const client_session& session,
                   stdx::string_view name,
                   const options::index_view& options = options::index_view{});
 
@@ -300,7 +300,7 @@ class MONGOCXX_API index_view {
     /// Attempts to drop a single index from the collection given the keys and options.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the drop.
+    ///   The mongocxx::client_session with which to perform the drop.
     /// @param keys
     ///    A document containing the index keys and their corresponding index types. If no name
     ///    option is present in the options, a name based on the keys will be used.
@@ -320,7 +320,7 @@ class MONGOCXX_API index_view {
     ///
     /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
     ///
-    void drop_one(const session& session,
+    void drop_one(const client_session& session,
                   const bsoncxx::document::view_or_value& keys,
                   const bsoncxx::document::view_or_value& index_options = {},
                   const options::index_view& options = options::index_view{});
@@ -356,7 +356,7 @@ class MONGOCXX_API index_view {
     /// Attempts to drop a single index from the collection given an index model.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the drop.
+    ///   The mongocxx::client_session with which to perform the drop.
     /// @param index
     ///    An index model describing the index being dropped.
     /// @param options
@@ -372,7 +372,7 @@ class MONGOCXX_API index_view {
     ///
     /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
     ///
-    void drop_one(const session& session,
+    void drop_one(const client_session& session,
                   const index_model& index,
                   const options::index_view& options = options::index_view{});
 
@@ -400,7 +400,7 @@ class MONGOCXX_API index_view {
     /// Drops all indexes in the collection.
     ///
     /// @param session
-    ///   The mongocxx::session with which to perform the drop.
+    ///   The mongocxx::client_session with which to perform the drop.
     /// @param options
     ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
     ///
@@ -410,7 +410,7 @@ class MONGOCXX_API index_view {
     ///
     /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
     ///
-    void drop_all(const session& session,
+    void drop_all(const client_session& session,
                   const options::index_view& options = options::index_view{});
 
     ///

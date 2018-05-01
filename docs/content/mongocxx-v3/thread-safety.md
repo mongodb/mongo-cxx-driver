@@ -11,7 +11,7 @@ title = "Thread and fork safety"
 TLDR: **Always give each thread its own `mongocxx::client`**.
 
 In general each `mongocxx::client` object AND all of its child objects,
-including `mongocxx::session`, `mongocxx::database`, `mongocxx::collection`,
+including `mongocxx::client_session`, `mongocxx::database`, `mongocxx::collection`,
 and `mongocxx::cursor`, **should be used by a single thread at a time**. This
 is true even for clients acquired from a `mongocxx::pool`.
 

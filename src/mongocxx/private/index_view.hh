@@ -25,9 +25,9 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/options/index_view.hpp>
+#include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/private/session.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -59,7 +59,7 @@ class index_view::impl {
         return result;
     }
 
-    cursor list(const session* session) {
+    cursor list(const client_session* session) {
         if (session) {
             bsoncxx::builder::basic::document options_builder;
             options_builder.append(
@@ -71,7 +71,7 @@ class index_view::impl {
         return libmongoc::collection_find_indexes_with_opts(_coll, nullptr);
     }
 
-    bsoncxx::stdx::optional<std::string> create_one(const session* session,
+    bsoncxx::stdx::optional<std::string> create_one(const client_session* session,
                                                     const index_model& model,
                                                     const options::index_view& options) {
         bsoncxx::document::value result =
@@ -92,7 +92,7 @@ class index_view::impl {
         return bsoncxx::stdx::make_optional(get_index_name_from_keys(model.keys()));
     }
 
-    bsoncxx::document::value create_many(const session* session,
+    bsoncxx::document::value create_many(const client_session* session,
                                          const std::vector<index_model>& indexes,
                                          const options::index_view& options) {
         using namespace bsoncxx;
@@ -147,7 +147,7 @@ class index_view::impl {
         return reply.steal();
     }
 
-    void drop_one(const session* session,
+    void drop_one(const client_session* session,
                   bsoncxx::stdx::string_view name,
                   const options::index_view& options) {
         if (name == bsoncxx::stdx::string_view{"*"}) {
@@ -184,7 +184,8 @@ class index_view::impl {
         }
     }
 
-    MONGOCXX_INLINE void drop_all(const session* session, const options::index_view& options) {
+    MONGOCXX_INLINE void drop_all(const client_session* session,
+                                  const options::index_view& options) {
         bsoncxx::document::value command = make_document(
             kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", "*"));
 

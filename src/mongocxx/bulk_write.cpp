@@ -21,10 +21,10 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/private/bulk_write.hh>
+#include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/collection.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/private/session.hh>
 #include <mongocxx/private/write_concern.hh>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -165,7 +165,7 @@ bulk_write& bulk_write::append(const model::write& operation) {
 
 bulk_write::bulk_write(const collection& coll,
                        const options::bulk_write& options,
-                       const session* session)
+                       const client_session* session)
     : _created_from_collection{true} {
     bsoncxx::builder::basic::document options_builder;
     if (!options.ordered()) {

@@ -81,7 +81,7 @@ class error_category final : public std::error_category {
             case error_code::k_cannot_create_session:
                 return "failed to create a client session";
             case error_code::k_invalid_session:
-                return "an invalid session was provided";
+                return "an invalid client session was provided";
             default:
                 return "unknown mongocxx error";
         }
