@@ -194,23 +194,6 @@ TEST_CASE("Mock streams and error-handling") {
     }
 }
 
-TEST_CASE("Watch a non-existent collection", "[min36]") {
-    instance::current();
-    client mongodb_client{uri{}};
-    if (!test_util::is_replica_set(mongodb_client)) {
-        WARN("skip: change streams require replica set");
-        return;
-    }
-
-    options::change_stream options{};
-
-    database db = mongodb_client["does_not_exist"];
-    collection dne = db["does_not_exist"];
-
-    change_stream stream = dne.watch();
-    REQUIRE_THROWS(stream.begin());
-}
-
 // Put this before other tests which assume the collections already exists.
 TEST_CASE("Create streams.events and assert we can read a single event", "[min36]") {
     instance::current();
