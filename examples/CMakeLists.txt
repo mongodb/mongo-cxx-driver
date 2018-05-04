@@ -44,6 +44,11 @@ foreach(EXAMPLE ${MONGOCXX_EXAMPLE_EXECUTABLES})
         continue()
     endif()
 
+    # TODO CXX-1201, enable for servers that support change streams.
+    if (${EXAMPLE} STREQUAL "change_streams")
+        continue()
+    endif()
+
     add_custom_command(TARGET run-examples POST_BUILD COMMAND ${EXAMPLE})
 endforeach(EXAMPLE)
 

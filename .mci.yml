@@ -120,7 +120,6 @@ functions:
                 export MONGODB_BINARIES=$DRIVERS_TOOLS/mongodb/bin
                 export MONGO_ORCHESTRATION_HOME=$DRIVERS_TOOLS/.evergreen/orchestration
                 export MONGODB_VERSION=${mongodb_version}
-                export TOPOLOGY=replica_set
                 echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
                 ./.evergreen/run-orchestration.sh
 
@@ -245,7 +244,16 @@ functions:
                       # of find(1), and some platforms like Ubuntu 16.04 don't support the +mode
                       # syntax, so we use Perl to help us find executable files.
                       EXAMPLES=$(find examples -type f | sort | perl -nlwe 'print if -x')
-                      for test in $EXAMPLES; do ${test_params} $test; done
+                      for test in $EXAMPLES; do
+                        case "$test" in
+                          *change_stream*)
+                            echo "TODO CXX-1201, enable for servers that support change streams"
+                            ;;
+                          *)
+                            ${test_params} $test
+                            ;;
+                        esac
+                      done
                   fi
 
                   cd ..
