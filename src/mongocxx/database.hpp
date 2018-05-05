@@ -19,6 +19,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
+#include <mongocxx/client_session.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
 #include <mongocxx/options/create_collection.hpp>
@@ -84,6 +85,8 @@ class MONGOCXX_API database {
     explicit operator bool() const noexcept;
 
     ///
+    /// @{
+    ///
     /// Runs a command against this database.
     ///
     /// @see https://docs.mongodb.com/master/reference/method/db.runCommand/
@@ -95,6 +98,25 @@ class MONGOCXX_API database {
     ///
     bsoncxx::document::value run_command(bsoncxx::document::view_or_value command);
 
+    ///
+    /// Runs a command against this database.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/method/db.runCommand/
+    ///
+    /// @param session The mongocxx::client_session with which to run the command.
+    /// @param command document representing the command to be run.
+    /// @return the result of executing the command.
+    ///
+    /// @throws mongocxx::operation_exception if the operation fails.
+    ///
+    bsoncxx::document::value run_command(const client_session& session,
+                                         bsoncxx::document::view_or_value command);
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
     ///
     /// Explicitly creates a collection in this database with the specified options.
     ///
@@ -118,6 +140,33 @@ class MONGOCXX_API database {
         const stdx::optional<write_concern>& write_concern = {});
 
     ///
+    /// Explicitly creates a collection in this database with the specified options.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/create/
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the create operation.
+    /// @param name
+    ///   the new collection's name.
+    /// @param collection_options
+    ///   the options for the new collection.
+    /// @param write_concern
+    ///   the write concern to use for this operation. Will default to database
+    ///   set write concern if none passed here.
+    ///
+    /// @exception
+    ///   mongocxx::operation_exception if the operation fails.
+    ///
+    class collection create_collection(
+        const client_session& session,
+        bsoncxx::string::view_or_value name,
+        const options::create_collection& collection_options = options::create_collection{},
+        const stdx::optional<write_concern>& write_concern = {});
+    ///
+    /// @}
+    ///
+
     /// Creates a non-materialized view in this database with the specified options.
     /// Non-materialized views are represented by the @c collection objects, and support many of the
     /// same read-only operations that regular collections do.
@@ -158,6 +207,8 @@ class MONGOCXX_API database {
         const options::modify_collection& options = options::modify_collection());
 
     ///
+    /// @{
+    ///
     /// Drops the database and all its collections.
     ///
     /// @param write_concern (optional)
@@ -173,6 +224,27 @@ class MONGOCXX_API database {
     void drop(const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {});
 
     ///
+    /// Drops the database and all its collections.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the aggregation.
+    /// @param write_concern (optional)
+    ///   The write concern to be used for this operation. If not passed here, the write concern
+    ///   set on the database will be used.
+    ///
+    /// @exception
+    ///   mongocxx::operation_exception if the operation fails.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/manual/reference/command/dropDatabase/
+    ///
+    void drop(const client_session& session,
+              const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {});
+    ///
+    /// @}
+    ///
+
+    ///
     /// Checks whether this database contains a collection having the given name.
     ///
     /// @param name the name of the collection.
@@ -184,6 +256,8 @@ class MONGOCXX_API database {
     ///
     bool has_collection(bsoncxx::string::view_or_value name) const;
 
+    ///
+    /// @{
     ///
     /// Enumerates the collections in this database.
     ///
@@ -198,6 +272,27 @@ class MONGOCXX_API database {
     /// @see https://docs.mongodb.com/master/reference/command/listCollections/
     ///
     cursor list_collections(bsoncxx::document::view_or_value filter = {});
+
+    ///
+    /// Enumerates the collections in this database.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the aggregation.
+    /// @param filter
+    ///   An optional query expression to filter the returned collections.
+    ///
+    /// @return mongocxx::cursor containing the collection information.
+    ///
+    /// @throws mongocxx::operation_exception if the underlying 'listCollections'
+    /// command fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/listCollections/
+    ///
+    cursor list_collections(const client_session& session,
+                            bsoncxx::document::view_or_value filter = {});
+    ///
+    /// @}
+    ///
 
     ///
     /// Get the name of this database.
@@ -309,6 +404,22 @@ class MONGOCXX_API database {
     friend class collection;
 
     MONGOCXX_PRIVATE database(const class client& client, bsoncxx::string::view_or_value name);
+
+    MONGOCXX_PRIVATE bsoncxx::document::value _run_command(
+        const client_session* session, bsoncxx::document::view_or_value command);
+
+    MONGOCXX_PRIVATE class collection _create_collection(
+        const client_session* session,
+        bsoncxx::string::view_or_value name,
+        const options::create_collection& collection_options,
+        const stdx::optional<class write_concern>& write_concern);
+
+    MONGOCXX_PRIVATE cursor _list_collections(const client_session* session,
+                                              bsoncxx::document::view_or_value filter);
+
+    MONGOCXX_PRIVATE void _drop(
+        const client_session* session,
+        const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern);
 
     class MONGOCXX_PRIVATE impl;
 

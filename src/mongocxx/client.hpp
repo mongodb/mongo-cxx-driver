@@ -209,6 +209,8 @@ class MONGOCXX_API client {
     MONGOCXX_INLINE class database operator[](bsoncxx::string::view_or_value name) const&& = delete;
 
     ///
+    /// @{
+    ///
     /// Enumerates the databases in the client.
     ///
     /// @return A mongocxx::cursor containing a BSON document for each
@@ -222,6 +224,28 @@ class MONGOCXX_API client {
     /// @see https://docs.mongodb.com/master/reference/command/listDatabases
     ///
     cursor list_databases() const;
+
+    ///
+    /// Enumerates the databases in the client.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the aggregation.
+    ///
+    /// @return A mongocxx::cursor containing a BSON document for each
+    ///   database. Each document contains a name field with the database
+    ///   name, a sizeOnDisk field with the total size of the database file on
+    ///   disk in bytes, and an empty field specifying whether the database
+    ///   has any data.
+    ///
+    /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/listDatabases
+    ///
+    cursor list_databases(const client_session& session) const;
+
+    ///
+    /// @}
+    ///
 
     ///
     /// Create a client session for a sequence of operations.

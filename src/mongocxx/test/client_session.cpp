@@ -259,13 +259,29 @@ TEST_CASE("lsid", "[session]") {
     }
 
     auto s = test.client.start_session();
-    auto collection = test.client["lsid"]["collection"];
+    auto db = test.client["lsid"];
+    auto collection = db["collection"];
     auto indexes = collection.indexes();
     collection.drop();
 
     // Ensure some data for aggregate() and find().
     for (int i = 0; i != 10; ++i) {
         collection.insert_one({});
+    }
+
+    SECTION("client::list_databases") {
+        auto f = [&s, &test](bool use_session) {
+            int total = 0;
+            auto cursor =
+                use_session ? test.client.list_databases(s) : test.client.list_databases();
+            for (auto&& result : cursor) {
+                ++total;
+            }
+
+            REQUIRE(total > 0);
+        };
+
+        test.test_method_with_session(f, s);
     }
 
     SECTION("collection::aggregate") {
@@ -354,14 +370,6 @@ TEST_CASE("lsid", "[session]") {
     SECTION("collection::distinct") {
         auto f = [&s, &collection](bool use_session) {
             use_session ? collection.distinct(s, "a", {}) : collection.distinct("a", {});
-        };
-
-        test.test_method_with_session(f, s);
-    }
-
-    SECTION("collection::drop") {
-        auto f = [&s, &collection](bool use_session) {
-            use_session ? collection.drop(s) : collection.drop();
         };
 
         test.test_method_with_session(f, s);
@@ -518,6 +526,40 @@ TEST_CASE("lsid", "[session]") {
         auto f = [&s, &collection](bool use_session) {
             auto insert_op = model::insert_one{{}};
             use_session ? collection.write(s, insert_op) : collection.write(insert_op);
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("create and drop collection") {
+        auto f = [&s, &db](bool use_session) {
+            use_session ? db.create_collection(s, "foo") : db.create_collection("foo");
+            use_session ? db["foo"].drop(s) : db["foo"].drop();
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("database::drop") {
+        auto f = [&s, &db](bool use_session) { use_session ? db.drop(s) : db.drop(); };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("database::list_collections") {
+        auto f = [&s, &db](bool use_session) {
+            auto cursor = use_session ? db.list_collections(s) : db.list_collections();
+            for (auto&& result : cursor) {
+            }
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
+    SECTION("database::run_command") {
+        auto f = [&s, &db](bool use_session) {
+            auto cmd = make_document(kvp("ping", 1));
+            use_session ? db.run_command(s, cmd.view()) : db.run_command(cmd.view());
         };
 
         test.test_method_with_session(f, s);

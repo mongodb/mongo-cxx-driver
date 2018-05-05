@@ -23,6 +23,7 @@
 #include <mongocxx/options/private/ssl.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
+#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/uri.hh>
@@ -32,6 +33,8 @@
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
+
+using namespace libbson;
 
 client::client() noexcept = default;
 
@@ -125,6 +128,13 @@ class database client::database(bsoncxx::string::view_or_value name) const& {
 
 cursor client::list_databases() const {
     return libmongoc::client_find_databases_with_opts(_get_impl().client_t, nullptr);
+}
+
+cursor client::list_databases(const client_session& session) const {
+    bsoncxx::builder::basic::document options_doc;
+    options_doc.append(bsoncxx::builder::concatenate_doc{session._get_impl().to_document()});
+    scoped_bson_t options_bson(options_doc.extract());
+    return libmongoc::client_find_databases_with_opts(_get_impl().client_t, options_bson.bson());
 }
 
 class client_session client::start_session(const mongocxx::options::client_session& options) {

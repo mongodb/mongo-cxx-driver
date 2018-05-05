@@ -301,11 +301,12 @@ TEST_CASE("A database", "[database]") {
         bsoncxx::document::value doc = make_document(kvp("foo", 5));
         libbson::scoped_bson_t bson_doc{doc.view()};
 
-        database_command_simple->interpose([&](mongoc_database_t*,
-                                               const bson_t*,
-                                               const mongoc_read_prefs_t*,
-                                               bson_t* reply,
-                                               bson_error_t*) {
+        database_command_with_opts->interpose([&](mongoc_database_t*,
+                                                  const bson_t*,
+                                                  const mongoc_read_prefs_t*,
+                                                  const bson_t*,
+                                                  bson_t* reply,
+                                                  bson_error_t*) {
             called = true;
             ::bson_copy_to(bson_doc.bson(), reply);
             return true;

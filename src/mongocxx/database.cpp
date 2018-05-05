@@ -27,6 +27,7 @@
 #include <mongocxx/exception/private/error_category.hh>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/private/client.hh>
+#include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/database.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
@@ -79,32 +80,69 @@ database::operator bool() const noexcept {
     return static_cast<bool>(_impl);
 }
 
-cursor database::list_collections(bsoncxx::document::view_or_value filter) {
+cursor database::_list_collections(const client_session* session,
+                                   bsoncxx::document::view_or_value filter) {
     bsoncxx::builder::basic::document options_builder;
     options_builder.append(kvp("filter", filter));
+
+    if (session) {
+        options_builder.append(
+            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
     scoped_bson_t options_bson(options_builder.extract());
 
     return libmongoc::database_find_collections_with_opts(_get_impl().database_t,
                                                           options_bson.bson());
 }
 
+cursor database::list_collections(bsoncxx::document::view_or_value filter) {
+    return _list_collections(nullptr, filter);
+}
+
+cursor database::list_collections(const client_session& session,
+                                  bsoncxx::document::view_or_value filter) {
+    return _list_collections(&session, filter);
+}
+
 stdx::string_view database::name() const {
     return _get_impl().name;
 }
 
-bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value command) {
+bsoncxx::document::value database::_run_command(const client_session* session,
+                                                bsoncxx::document::view_or_value command) {
     libbson::scoped_bson_t command_bson{command};
     libbson::scoped_bson_t reply_bson;
     bson_error_t error;
 
-    auto result = libmongoc::database_command_simple(
-        _get_impl().database_t, command_bson.bson(), NULL, reply_bson.bson_for_init(), &error);
+    bsoncxx::builder::basic::document options_builder;
+    if (session) {
+        options_builder.append(
+            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
+    scoped_bson_t options_bson(options_builder.extract());
+    auto result = libmongoc::database_command_with_opts(_get_impl().database_t,
+                                                        command_bson.bson(),
+                                                        NULL,
+                                                        options_bson.bson(),
+                                                        reply_bson.bson_for_init(),
+                                                        &error);
 
     if (!result) {
         throw_exception<operation_exception>(reply_bson.steal(), error);
     }
 
     return reply_bson.steal();
+}
+
+bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value command) {
+    return _run_command(nullptr, command);
+}
+
+bsoncxx::document::value database::run_command(const client_session& session,
+                                               bsoncxx::document::view_or_value command) {
+    return _run_command(&session, command);
 }
 
 bsoncxx::document::value database::modify_collection_deprecated(
@@ -119,10 +157,10 @@ bsoncxx::document::value database::modify_collection(stdx::string_view name,
     return modify_collection_deprecated(name, options);
 }
 
-class collection database::create_collection(
-    bsoncxx::string::view_or_value name,
-    const options::create_collection& collection_options,
-    const stdx::optional<class write_concern>& write_concern) {
+collection database::_create_collection(const client_session* session,
+                                        bsoncxx::string::view_or_value name,
+                                        const options::create_collection& collection_options,
+                                        const stdx::optional<class write_concern>& write_concern) {
     bsoncxx::builder::basic::document options_builder;
 
     if (write_concern) {
@@ -197,6 +235,11 @@ class collection database::create_collection(
         }
     }
 
+    if (session) {
+        options_builder.append(
+            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
     bson_error_t error;
     libbson::scoped_bson_t opts_bson{options_builder.view()};
     auto result = libmongoc::database_create_collection(
@@ -206,6 +249,21 @@ class collection database::create_collection(
     }
 
     return mongocxx::collection(*this, result);
+}
+
+class collection database::create_collection(
+    bsoncxx::string::view_or_value name,
+    const options::create_collection& collection_options,
+    const stdx::optional<class write_concern>& write_concern) {
+    return _create_collection(nullptr, name, collection_options, write_concern);
+}
+
+class collection database::create_collection(
+    const client_session& session,
+    bsoncxx::string::view_or_value name,
+    const options::create_collection& collection_options,
+    const stdx::optional<class write_concern>& write_concern) {
+    return _create_collection(&session, name, collection_options, write_concern);
 }
 
 class collection database::create_view(bsoncxx::string::view_or_value name,
@@ -237,7 +295,8 @@ class collection database::create_view(bsoncxx::string::view_or_value name,
     return mongocxx::collection(*this, result);
 }
 
-void database::drop(const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern) {
+void database::_drop(const client_session* session,
+                     const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern) {
     bson_error_t error;
 
     bsoncxx::builder::basic::document opts_doc;
@@ -245,11 +304,24 @@ void database::drop(const bsoncxx::stdx::optional<mongocxx::write_concern>& writ
         opts_doc.append(kvp("writeConcern", write_concern->to_document()));
     }
 
+    if (session) {
+        opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
     libbson::scoped_bson_t opts_bson{opts_doc.view()};
 
     if (!libmongoc::database_drop_with_opts(_get_impl().database_t, opts_bson.bson(), &error)) {
         throw_exception<operation_exception>(error);
     }
+}
+
+void database::drop(const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern) {
+    return _drop(nullptr, write_concern);
+}
+
+void database::drop(const client_session& session,
+                    const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern) {
+    return _drop(&session, write_concern);
 }
 
 void database::read_concern(class read_concern rc) {
