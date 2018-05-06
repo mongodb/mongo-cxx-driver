@@ -229,11 +229,7 @@ functions:
                           export MONGOCXX_ENABLE_SLOW_TESTS=1
                       fi
                       
-                      # Running the tests and examples here one-by-one here with "test_params" is
-                      # necessary due to the fact that we don't yet have explicit CMake integration
-                      # with valgrind.  When CXX-1083 is resolved, we can replace the below with
-                      # `make test && make run-examples` (or the valgrind equivalents, if we make
-                      # separate build targets for valgrind).
+                      # Run tests and examples 1-by-1 with "test_params" so we can run them with valgrind.
                       ${test_params} ./src/bsoncxx/test/test_bson
                       ${test_params} ./src/mongocxx/test/test_driver
                       ${test_params} ./src/mongocxx/test/test_crud_specs
