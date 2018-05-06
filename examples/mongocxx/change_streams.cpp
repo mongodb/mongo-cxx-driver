@@ -57,8 +57,7 @@ void watch_until(const mongocxx::client& client,
 
 int main() {
     mongocxx::instance inst{};
-    mongocxx::uri uri{"mongodb://localhost:27017/?minPoolSize=3&maxPoolSize=3"};
-    mongocxx::pool pool{uri};
+    mongocxx::pool pool{mongocxx::uri{}};
 
     try {
         auto entry = pool.acquire();
