@@ -23,8 +23,8 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types/value.hpp>
 #include <bsoncxx/view_or_value.hpp>
-#include <mongocxx/collection.hpp>
 #include <mongocxx/client_session.hpp>
+#include <mongocxx/collection.hpp>
 #include <mongocxx/result/gridfs/upload.hpp>
 #include <mongocxx/stdx.hpp>
 
