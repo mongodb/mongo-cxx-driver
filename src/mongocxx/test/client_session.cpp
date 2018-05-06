@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <sstream>
+
 #include <helpers.hpp>
 
 #include <bsoncxx/private/helpers.hh>
@@ -260,6 +262,7 @@ TEST_CASE("lsid", "[session]") {
 
     auto s = test.client.start_session();
     auto db = test.client["lsid"];
+    auto bucket = db.gridfs_bucket();
     auto collection = db["collection"];
     auto indexes = collection.indexes();
     collection.drop();
@@ -267,6 +270,59 @@ TEST_CASE("lsid", "[session]") {
     // Ensure some data for aggregate() and find().
     for (int i = 0; i != 10; ++i) {
         collection.insert_one({});
+    }
+
+    SECTION("bucket") {
+        auto f = [&s, &bucket, &db](bool use_session) {
+            // Start clean.
+            use_session ? db["fs.files"].drop(s) : db["fs.files"].drop();
+            use_session ? db["fs.chunks"].drop(s) : db["fs.chunks"].drop();
+
+            auto one = bsoncxx::types::value{bsoncxx::types::b_int32{1}};
+            auto two = bsoncxx::types::value{bsoncxx::types::b_int32{2}};
+            auto data = (uint8_t*)"foo";
+            size_t len = 4;
+            // Ensure multiple chunks.
+            options::gridfs::upload opts;
+            opts.chunk_size_bytes(1);
+
+            auto up = use_session ? bucket.open_upload_stream(s, "file", opts)
+                                  : bucket.open_upload_stream("file", opts);
+            up.write(data, len);
+            up.close();
+
+            up = use_session ? bucket.open_upload_stream_with_id(s, one, "file", opts)
+                             : bucket.open_upload_stream_with_id(one, "file", opts);
+            up.write(data, len);
+            up.close();
+
+            up = use_session ? bucket.open_upload_stream_with_id(s, one, "file", opts)
+                             : bucket.open_upload_stream_with_id(one, "file", opts);
+            up.write(data, len);
+            up.abort();
+
+            std::stringstream stream("foo");
+            use_session ? bucket.upload_from_stream(s, "file", &stream, opts)
+                        : bucket.upload_from_stream("file", &stream, opts);
+            use_session ? bucket.upload_from_stream_with_id(s, two, "file", &stream, opts)
+                        : bucket.upload_from_stream_with_id(two, "file", &stream, opts);
+
+            auto down = use_session ? bucket.open_download_stream(s, two)
+                                    : bucket.open_download_stream(two);
+            use_session ? bucket.download_to_stream(s, two, &stream)
+                        : bucket.download_to_stream(two, &stream);
+
+            int total = 0;
+            auto cursor = use_session ? bucket.find(s, {}) : bucket.find({});
+            for (auto&& result : cursor) {
+                ++total;
+            }
+
+            REQUIRE(total == 4);
+            use_session ? bucket.delete_file(s, one) : bucket.delete_file(one);
+        };
+
+        test.test_method_with_session(f, s);
     }
 
     SECTION("client::list_databases") {

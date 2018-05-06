@@ -24,6 +24,7 @@
 #include <bsoncxx/types/value.hpp>
 #include <bsoncxx/view_or_value.hpp>
 #include <mongocxx/collection.hpp>
+#include <mongocxx/client_session.hpp>
 #include <mongocxx/result/gridfs/upload.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -127,6 +128,9 @@ class MONGOCXX_API uploader {
     //
     // Constructs a new uploader stream.
     //
+    // @param session
+    //   The client session to use for upload operations.
+    //
     // @param id
     //   The id of the GridFS file being uploaded.
     //
@@ -142,7 +146,8 @@ class MONGOCXX_API uploader {
     // @param metadata
     //   Optional metadata field of the files collection document.
     //
-    MONGOCXX_PRIVATE uploader(bsoncxx::types::value id,
+    MONGOCXX_PRIVATE uploader(const client_session* session,
+                              bsoncxx::types::value id,
                               stdx::string_view filename,
                               collection files,
                               collection chunks,

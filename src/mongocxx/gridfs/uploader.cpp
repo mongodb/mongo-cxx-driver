@@ -44,13 +44,15 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace gridfs {
 
-uploader::uploader(bsoncxx::types::value id,
+uploader::uploader(const client_session* session,
+                   bsoncxx::types::value id,
                    stdx::string_view filename,
                    collection files,
                    collection chunks,
                    std::int32_t chunk_size,
                    stdx::optional<bsoncxx::document::view_or_value> metadata)
-    : _impl{stdx::make_unique<impl>(id,
+    : _impl{stdx::make_unique<impl>(session,
+                                    id,
                                     filename,
                                     files,
                                     chunks,
@@ -117,7 +119,11 @@ result::gridfs::upload uploader::close() {
         file.append(kvp("metadata", *_get_impl().metadata));
     }
 
-    _get_impl().files.insert_one(file.extract());
+    if (_get_impl().session) {
+        _get_impl().files.insert_one(*_get_impl().session, file.extract());
+    } else {
+        _get_impl().files.insert_one(file.extract());
+    }
 
     return _get_impl().result;
 }
@@ -132,7 +138,11 @@ void uploader::abort() {
     bsoncxx::builder::basic::document filter;
     filter.append(bsoncxx::builder::basic::kvp("files_id", _get_impl().result.id()));
 
-    _get_impl().chunks.delete_many(filter.extract());
+    if (_get_impl().session) {
+        _get_impl().chunks.delete_many(*_get_impl().session, filter.extract());
+    } else {
+        _get_impl().chunks.delete_many(filter.extract());
+    }
 }
 
 std::int32_t uploader::chunk_size() const {
@@ -181,7 +191,13 @@ void uploader::flush_chunks() {
         return;
     }
 
-    _get_impl().chunks.insert_many(_get_impl().chunks_collection_documents);
+    if (_get_impl().session) {
+        _get_impl().chunks.insert_many(*_get_impl().session,
+                                       _get_impl().chunks_collection_documents);
+    } else {
+        _get_impl().chunks.insert_many(_get_impl().chunks_collection_documents);
+    }
+
     _get_impl().chunks_collection_documents.clear();
 }
 

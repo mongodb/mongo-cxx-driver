@@ -99,6 +99,8 @@ class MONGOCXX_API bucket {
     explicit operator bool() const noexcept;
 
     ///
+    /// @{
+    ///
     /// Opens a gridfs::uploader to create a new GridFS file. The id of the file will be
     /// automatically generated as an ObjectId.
     ///
@@ -126,6 +128,44 @@ class MONGOCXX_API bucket {
     uploader open_upload_stream(stdx::string_view filename,
                                 const options::gridfs::upload& options = {});
 
+    ///
+    /// Opens a gridfs::uploader to create a new GridFS file. The id of the file will be
+    /// automatically generated as an ObjectId.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the upload. The client session must
+    ///   remain valid for the lifetime of the uploader.
+    ///
+    /// @param filename
+    ///   The name of the file to be uploaded. A bucket can contain multiple files with the same
+    ///   name.
+    ///
+    /// @param options
+    ///   Optional arguments; see options::gridfs::upload.
+    ///
+    /// @return
+    ///   A stream for writing to the GridFS file.
+    ///
+    /// @note
+    ///   If this GridFS bucket does not already exist in the database, it will be implicitly
+    ///   created and initialized with GridFS indexes.
+    ///
+    /// @throws mongocxx::logic_error if `options` are invalid.
+    ///
+    /// @throws mongocxx::query_exception
+    ///   if an error occurs when reading from the files collection for this bucket.
+    ///
+    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
+    ///
+    uploader open_upload_stream(const client_session& session,
+                                stdx::string_view filename,
+                                const options::gridfs::upload& options = {});
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
     ///
     /// Opens a gridfs::uploader to create a new GridFS file.
     ///
@@ -157,6 +197,47 @@ class MONGOCXX_API bucket {
                                         stdx::string_view filename,
                                         const options::gridfs::upload& options = {});
 
+    ///
+    /// Opens a gridfs::uploader to create a new GridFS file.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the upload. The client session must
+    ///   remain valid for the lifetime of the uploader.
+    ///
+    /// @param id
+    ///   The unique id of the file being uploaded.
+    ///
+    /// @param filename
+    ///   The name of the file to be uploaded. A bucket can contain multiple files with the same
+    ///   name.
+    ///
+    /// @param options
+    ///   Optional arguments; see options::gridfs::upload.
+    ///
+    /// @return
+    ///   The gridfs::uploader to which the GridFS file should be written.
+    ///
+    /// @note
+    ///   If this GridFS bucket does not already exist in the database, it will be implicitly
+    ///   created and initialized with GridFS indexes.
+    ///
+    /// @throws mongocxx::logic_error if `options` are invalid.
+    ///
+    /// @throws mongocxx::query_exception
+    ///   if an error occurs when reading from the files collection for this bucket.
+    ///
+    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
+    ///
+    uploader open_upload_stream_with_id(const client_session& session,
+                                        bsoncxx::types::value id,
+                                        stdx::string_view filename,
+                                        const options::gridfs::upload& options = {});
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
     ///
     /// Creates a new GridFS file by uploading bytes from an input stream. The id of the file will
     /// be automatically generated as an ObjectId.
@@ -201,6 +282,59 @@ class MONGOCXX_API bucket {
                                               std::istream* source,
                                               const options::gridfs::upload& options = {});
 
+    ///
+    /// Creates a new GridFS file by uploading bytes from an input stream. The id of the file will
+    /// be automatically generated as an ObjectId.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the upload.
+    ///
+    /// @param filename
+    ///   The name of the file to be uploaded. A bucket can contain multiple files with the same
+    ///   name.
+    ///
+    /// @param source
+    ///    The non-null stream from which the GridFS file should be read. The exception mask on
+    ///    `source` will be cleared of `eofbit` and set for `failbit` and `badbit`.
+    ///
+    /// @param options
+    ///   Optional arguments; see options::gridfs::upload.
+    ///
+    /// @return
+    ///   The id of the uploaded file.
+    ///
+    /// @note
+    ///   If this GridFS bucket does not already exist in the database, it will be implicitly
+    ///   created and initialized with GridFS indexes.
+    ///
+    /// @throws mongocxx::logic_error if `options` are invalid.
+    ///
+    /// @throws mongocxx::bulk_write_exception
+    ///   if an error occurs when writing chunk data or file metadata to the database.
+    ///
+    /// @throws std::ios_base::failure
+    ///   if reading from `source` fails. Any exception thrown during the execution of
+    ///   `source::read()` will be re-thrown.
+    ///
+    /// @throws mongocxx::gridfs_exception
+    ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
+    ///   size.
+    ///
+    /// @throws mongocxx::query_exception
+    ///   if an error occurs when reading from the files collection for this bucket.
+    ///
+    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
+    ///
+    result::gridfs::upload upload_from_stream(const client_session& session,
+                                              stdx::string_view filename,
+                                              std::istream* source,
+                                              const options::gridfs::upload& options = {});
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
     ///
     /// Creates a new GridFS file with a user-supplied unique id by uploading bytes from an input
     /// stream.
@@ -247,6 +381,60 @@ class MONGOCXX_API bucket {
                                     const options::gridfs::upload& options = {});
 
     ///
+    /// Creates a new GridFS file with a user-supplied unique id by uploading bytes from an input
+    /// stream.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the upload.
+    ///
+    /// @param id
+    ///   A unique id for the file being uploaded.
+    ///
+    /// @param filename
+    ///   The name of the file to be uploaded. A bucket can contain multiple files with the same
+    ///   name.
+    ///
+    /// @param source
+    ///    The non-null stream from which the GridFS file should be read. The exception mask on
+    ///    `source` will be cleared of `eofbit` and set for `failbit` and `badbit`.
+    ///
+    /// @param options
+    ///   Optional arguments; see options::gridfs::upload.
+    ///
+    /// @note
+    ///   If this GridFS bucket does not already exist in the database, it will be implicitly
+    ///   created and initialized with GridFS indexes.
+    ///
+    /// @throws mongocxx::logic_error if `options` are invalid.
+    ///
+    /// @throws mongocxx::bulk_write_exception
+    ///   if an error occurs when writing chunk data or file metadata to the database.
+    ///
+    /// @throws std::ios_base::failure
+    ///   if reading from `source` fails. Any exception thrown during the execution of
+    ///   `source::read()` will be re-thrown.
+    ///
+    /// @throws mongocxx::gridfs_exception
+    ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
+    ///   size.
+    ///
+    /// @throws mongocxx::query_exception
+    ///   if an error occurs when reading from the files collection for this bucket.
+    ///
+    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
+    ///
+    void upload_from_stream_with_id(const client_session& session,
+                                    bsoncxx::types::value id,
+                                    stdx::string_view filename,
+                                    std::istream* source,
+                                    const options::gridfs::upload& options = {});
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
+    ///
     /// Opens a gridfs::downloader to read a GridFS file.
     ///
     /// @param id
@@ -263,6 +451,32 @@ class MONGOCXX_API bucket {
     ///
     downloader open_download_stream(bsoncxx::types::value id);
 
+    ///
+    /// Opens a gridfs::downloader to read a GridFS file.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the download. The client session must
+    ///   remain valid for the lifetime of the downloader.
+    ///
+    /// @param id
+    ///   The id of the file to read.
+    ///
+    /// @return
+    ///   The gridfs::downloader from which the GridFS file should be read.
+    ///
+    /// @throws mongocxx::gridfs_exception
+    ///   if the requested file does not exist, or if the requested file has been corrupted.
+    ///
+    /// @throws mongocxx::query_exception
+    ///   if an error occurs when reading from the files collection for this bucket.
+    ///
+    downloader open_download_stream(const client_session& session, bsoncxx::types::value id);
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
     ///
     /// Downloads the contents of a stored GridFS file from the bucket and writes it to a stream.
     ///
@@ -286,6 +500,38 @@ class MONGOCXX_API bucket {
     void download_to_stream(bsoncxx::types::value id, std::ostream* destination);
 
     ///
+    /// Downloads the contents of a stored GridFS file from the bucket and writes it to a stream.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the download.
+    ///
+    /// @param id
+    ///   The id of the file to read.
+    ///
+    /// @param destination
+    ///   The non-null stream to which the GridFS file should be written.
+    ///
+    /// @throws mongocxx::gridfs_exception
+    ///   if the requested file does not exist, or if the requested file has been corrupted.
+    ///
+    /// @throws mongocxx::query_exception
+    ///   if an error occurs when reading from the files or chunks collections for this bucket.
+    ///
+    /// @throws std::ios_base::failure
+    ///   if writing to `destination` fails.  In addition, if `destination::exceptions()` is set for
+    ///   `badbit`, any exception thrown during execution of `destination::write()` will be
+    ///   re-thrown.
+    ///
+    void download_to_stream(const client_session& session,
+                            bsoncxx::types::value id,
+                            std::ostream* destination);
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
+    ///
     /// Deletes a GridFS file from the bucket.
     ///
     /// @param id
@@ -298,6 +544,27 @@ class MONGOCXX_API bucket {
     ///
     void delete_file(bsoncxx::types::value id);
 
+    ///
+    /// Deletes a GridFS file from the bucket.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the delete.
+    ///
+    /// @param id
+    ///   The id of the file to be deleted.
+    ///
+    /// @throws mongocxx::gridfs_exception if the requested file does not exist.
+    ///
+    /// @throws mongocxx::bulk_write_exception
+    ///   if an error occurs when removing file data or chunk data from the database.
+    ///
+    void delete_file(const client_session& session, bsoncxx::types::value id);
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
     ///
     /// Finds the documents in the files collection of the bucket which match the provided filter.
     ///
@@ -319,6 +586,35 @@ class MONGOCXX_API bucket {
     cursor find(bsoncxx::document::view_or_value filter, const options::find& options = {});
 
     ///
+    /// Finds the documents in the files collection of the bucket which match the provided filter.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the query. The client session must
+    ///   remain valid for the lifetime of the cursor.
+    ///
+    /// @param filter
+    ///   Document view representing a document that should match the query.
+    ///
+    /// @param options
+    ///   Optional arguments; see options::find.
+    ///
+    /// @return
+    ///   A mongocxx::cursor with the results. If the query fails, the cursor throws
+    ///   mongocxx::query_exception when the returned cursor is iterated.
+    ///
+    /// @throws mongocxx::logic_error if the options are invalid, or if the unsupported option
+    /// modifiers "$query" or "$explain" are used.
+    ///
+    /// @see mongocxx::collection::find.
+    ///
+    cursor find(const client_session& session,
+                bsoncxx::document::view_or_value filter,
+                const options::find& options = {});
+    ///
+    /// @}
+    ///
+
+    ///
     /// Gets the name of the GridFS bucket.
     ///
     /// @return
@@ -332,7 +628,27 @@ class MONGOCXX_API bucket {
     // Constructs a new GridFS bucket.  Throws if options are invalid.
     MONGOCXX_PRIVATE bucket(const database& db, const options::gridfs::bucket& options);
 
-    MONGOCXX_PRIVATE void create_indexes_if_nonexistent();
+    MONGOCXX_PRIVATE void create_indexes_if_nonexistent(const client_session* session);
+
+    MONGOCXX_PRIVATE uploader _open_upload_stream_with_id(const client_session* session,
+                                                          bsoncxx::types::value id,
+                                                          stdx::string_view filename,
+                                                          const options::gridfs::upload& options);
+
+    MONGOCXX_PRIVATE void _upload_from_stream_with_id(const client_session* session,
+                                                      bsoncxx::types::value id,
+                                                      stdx::string_view filename,
+                                                      std::istream* source,
+                                                      const options::gridfs::upload& options);
+
+    MONGOCXX_PRIVATE downloader _open_download_stream(const client_session* session,
+                                                      bsoncxx::types::value id);
+
+    MONGOCXX_PRIVATE void _download_to_stream(const client_session* session,
+                                              bsoncxx::types::value id,
+                                              std::ostream* destination);
+
+    MONGOCXX_PRIVATE void _delete_file(const client_session* session, bsoncxx::types::value id);
 
     class MONGOCXX_PRIVATE impl;
 

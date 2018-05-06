@@ -111,9 +111,17 @@ uploader bucket::open_upload_stream(stdx::string_view filename,
     return open_upload_stream_with_id(id, filename, options);
 }
 
-uploader bucket::open_upload_stream_with_id(bsoncxx::types::value id,
-                                            stdx::string_view filename,
-                                            const options::gridfs::upload& options) {
+uploader bucket::open_upload_stream(const client_session& session,
+                                    stdx::string_view filename,
+                                    const options::gridfs::upload& options) {
+    auto id = bsoncxx::types::value{bsoncxx::types::b_oid{}};
+    return open_upload_stream_with_id(session, id, filename, options);
+}
+
+uploader bucket::_open_upload_stream_with_id(const client_session* session,
+                                             bsoncxx::types::value id,
+                                             stdx::string_view filename,
+                                             const options::gridfs::upload& options) {
     std::int32_t chunk_size_bytes = _get_impl().default_chunk_size_bytes;
 
     if (auto chunk_size = options.chunk_size_bytes()) {
@@ -126,9 +134,10 @@ uploader bucket::open_upload_stream_with_id(bsoncxx::types::value id,
         chunk_size_bytes = *chunk_size;
     }
 
-    create_indexes_if_nonexistent();
+    create_indexes_if_nonexistent(session);
 
-    return uploader{id,
+    return uploader{session,
+                    id,
                     filename,
                     _get_impl().files,
                     _get_impl().chunks,
@@ -136,20 +145,42 @@ uploader bucket::open_upload_stream_with_id(bsoncxx::types::value id,
                     std::move(options.metadata())};
 }
 
+uploader bucket::open_upload_stream_with_id(bsoncxx::types::value id,
+                                            stdx::string_view filename,
+                                            const options::gridfs::upload& options) {
+    return _open_upload_stream_with_id(nullptr, id, filename, options);
+}
+
+uploader bucket::open_upload_stream_with_id(const client_session& session,
+                                            bsoncxx::types::value id,
+                                            stdx::string_view filename,
+                                            const options::gridfs::upload& options) {
+    return _open_upload_stream_with_id(&session, id, filename, options);
+}
+
 result::gridfs::upload bucket::upload_from_stream(stdx::string_view filename,
                                                   std::istream* source,
                                                   const options::gridfs::upload& options) {
     auto id = bsoncxx::types::value{bsoncxx::types::b_oid{}};
     upload_from_stream_with_id(id, filename, source, options);
-
     return id;
 }
 
-void bucket::upload_from_stream_with_id(bsoncxx::types::value id,
-                                        stdx::string_view filename,
-                                        std::istream* source,
-                                        const options::gridfs::upload& options) {
-    uploader upload_stream = open_upload_stream_with_id(id, filename, options);
+result::gridfs::upload bucket::upload_from_stream(const client_session& session,
+                                                  stdx::string_view filename,
+                                                  std::istream* source,
+                                                  const options::gridfs::upload& options) {
+    auto id = bsoncxx::types::value{bsoncxx::types::b_oid{}};
+    upload_from_stream_with_id(session, id, filename, source, options);
+    return id;
+}
+
+void bucket::_upload_from_stream_with_id(const client_session* session,
+                                         bsoncxx::types::value id,
+                                         stdx::string_view filename,
+                                         std::istream* source,
+                                         const options::gridfs::upload& options) {
+    uploader upload_stream = _open_upload_stream_with_id(session, id, filename, options);
     std::int32_t chunk_size = upload_stream.chunk_size();
     std::unique_ptr<std::uint8_t[]> buffer =
         stdx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
@@ -170,13 +201,29 @@ void bucket::upload_from_stream_with_id(bsoncxx::types::value id,
     upload_stream.close();
 }
 
-downloader bucket::open_download_stream(bsoncxx::types::value id) {
+void bucket::upload_from_stream_with_id(bsoncxx::types::value id,
+                                        stdx::string_view filename,
+                                        std::istream* source,
+                                        const options::gridfs::upload& options) {
+    return _upload_from_stream_with_id(nullptr, id, filename, source, options);
+}
+
+void bucket::upload_from_stream_with_id(const client_session& session,
+                                        bsoncxx::types::value id,
+                                        stdx::string_view filename,
+                                        std::istream* source,
+                                        const options::gridfs::upload& options) {
+    return _upload_from_stream_with_id(&session, id, filename, source, options);
+}
+
+downloader bucket::_open_download_stream(const client_session* session, bsoncxx::types::value id) {
     using namespace bsoncxx;
 
     builder::basic::document files_filter;
     files_filter.append(builder::basic::kvp("_id", id));
 
-    auto files_doc = _get_impl().files.find_one(files_filter.extract());
+    auto files_doc = session ? _get_impl().files.find_one(*session, files_filter.extract())
+                             : _get_impl().files.find_one(files_filter.extract());
 
     if (!files_doc) {
         throw gridfs_exception{error_code::k_gridfs_file_not_found};
@@ -207,13 +254,25 @@ downloader bucket::open_download_stream(bsoncxx::types::value id) {
     options::find chunks_options;
     chunks_options.sort(chunks_sort.extract());
 
-    auto cursor = _get_impl().chunks.find(chunks_filter.extract(), chunks_options);
+    auto cursor = session
+                      ? _get_impl().chunks.find(*session, chunks_filter.extract(), chunks_options)
+                      : _get_impl().chunks.find(chunks_filter.extract(), chunks_options);
 
     return downloader{std::move(cursor), *files_doc};
 }
 
-void bucket::download_to_stream(bsoncxx::types::value id, std::ostream* destination) {
-    downloader download_stream = open_download_stream(id);
+downloader bucket::open_download_stream(bsoncxx::types::value id) {
+    return _open_download_stream(nullptr, id);
+}
+
+downloader bucket::open_download_stream(const client_session& session, bsoncxx::types::value id) {
+    return _open_download_stream(&session, id);
+}
+
+void bucket::_download_to_stream(const client_session* session,
+                                 bsoncxx::types::value id,
+                                 std::ostream* destination) {
+    downloader download_stream = _open_download_stream(session, id);
     std::int32_t chunk_size = download_stream.chunk_size();
     std::unique_ptr<std::uint8_t[]> buffer =
         stdx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
@@ -228,13 +287,25 @@ void bucket::download_to_stream(bsoncxx::types::value id, std::ostream* destinat
     download_stream.close();
 }
 
-void bucket::delete_file(bsoncxx::types::value id) {
+void bucket::download_to_stream(bsoncxx::types::value id, std::ostream* destination) {
+    _download_to_stream(nullptr, id, destination);
+}
+
+void bucket::download_to_stream(const client_session& session,
+                                bsoncxx::types::value id,
+                                std::ostream* destination) {
+    _download_to_stream(&session, id, destination);
+}
+
+void bucket::_delete_file(const client_session* session, bsoncxx::types::value id) {
     using namespace bsoncxx;
 
     builder::basic::document files_builder;
     files_builder.append(builder::basic::kvp("_id", id));
 
-    if (auto result = _get_impl().files.delete_one(files_builder.extract())) {
+    auto result = session ? _get_impl().files.delete_one(*session, files_builder.extract())
+                          : _get_impl().files.delete_one(files_builder.extract());
+    if (result) {
         if (result->deleted_count() == 0) {
             throw gridfs_exception{error_code::k_gridfs_file_not_found};
         }
@@ -244,25 +315,51 @@ void bucket::delete_file(bsoncxx::types::value id) {
     chunks_builder.append(builder::basic::kvp("files_id", id));
     document::value chunks_filter = chunks_builder.extract();
 
-    _get_impl().chunks.delete_many(chunks_filter.view());
+    if (session) {
+        _get_impl().chunks.delete_many(*session, chunks_filter.view());
+    } else {
+        _get_impl().chunks.delete_many(chunks_filter.view());
+    }
+}
+
+void bucket::delete_file(bsoncxx::types::value id) {
+    _delete_file(nullptr, id);
+}
+
+void bucket::delete_file(const client_session& session, bsoncxx::types::value id) {
+    _delete_file(&session, id);
 }
 
 cursor bucket::find(bsoncxx::document::view_or_value filter, const options::find& options) {
     return _get_impl().files.find(filter, options);
 }
 
+cursor bucket::find(const client_session& session,
+                    bsoncxx::document::view_or_value filter,
+                    const options::find& options) {
+    return _get_impl().files.find(session, filter, options);
+}
+
 stdx::string_view bucket::bucket_name() const {
     return _get_impl().bucket_name;
 }
 
-void bucket::create_indexes_if_nonexistent() {
+void bucket::create_indexes_if_nonexistent(const client_session* session) {
+    if (_get_impl().indexes_created) {
+        return;
+    }
+
     bsoncxx::builder::basic::document filter;
     filter.append(bsoncxx::builder::basic::kvp("_id", 1));
 
     auto find_options =
         options::find{}.projection(filter.view()).read_preference(read_preference{});
 
-    if (_get_impl().indexes_created || _get_impl().files.find_one({}, find_options)) {
+    if (session) {
+        if (_get_impl().files.find_one(*session, {}, find_options)) {
+            return;
+        }
+    } else if (_get_impl().files.find_one({}, find_options)) {
         return;
     }
 
@@ -270,7 +367,11 @@ void bucket::create_indexes_if_nonexistent() {
     files_index.append(bsoncxx::builder::basic::kvp("filename", 1));
     files_index.append(bsoncxx::builder::basic::kvp("uploadDate", 1));
 
-    _get_impl().files.create_index(files_index.extract());
+    if (session) {
+        _get_impl().files.create_index(*session, files_index.extract());
+    } else {
+        _get_impl().files.create_index(files_index.extract());
+    }
 
     bsoncxx::builder::basic::document chunks_index;
     chunks_index.append(bsoncxx::builder::basic::kvp("files_id", 1));
@@ -279,7 +380,11 @@ void bucket::create_indexes_if_nonexistent() {
     options::index chunks_index_options;
     chunks_index_options.unique(true);
 
-    _get_impl().chunks.create_index(chunks_index.extract(), chunks_index_options);
+    if (session) {
+        _get_impl().chunks.create_index(*session, chunks_index.extract(), chunks_index_options);
+    } else {
+        _get_impl().chunks.create_index(chunks_index.extract(), chunks_index_options);
+    }
 
     _get_impl().indexes_created = true;
 }

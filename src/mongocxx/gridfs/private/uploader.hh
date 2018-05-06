@@ -29,13 +29,15 @@ namespace gridfs {
 
 class uploader::impl {
    public:
-    impl(result::gridfs::upload result,
+    impl(const client_session* session,
+         result::gridfs::upload result,
          stdx::string_view filename,
          collection files,
          collection chunks,
          std::int32_t chunk_size,
          stdx::optional<bsoncxx::document::value> metadata)
-        : buffer{stdx::make_unique<std::uint8_t[]>(static_cast<size_t>(chunk_size))},
+        : session{session},
+          buffer{stdx::make_unique<std::uint8_t[]>(static_cast<size_t>(chunk_size))},
           buffer_off{0},
           chunks{std::move(chunks)},
           chunk_size{chunk_size},
@@ -45,6 +47,9 @@ class uploader::impl {
           files{std::move(files)},
           metadata{std::move(metadata)},
           result{std::move(result)} {}
+
+    // Client session to use for upload operations.
+    const client_session* session;
 
     // Bytes that have been written for the current chunk.
     std::unique_ptr<std::uint8_t[]> buffer;
