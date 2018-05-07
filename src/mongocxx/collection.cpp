@@ -492,14 +492,6 @@ cursor collection::_aggregate(const client_session* session,
         b.append(kvp("collation", *options.collation()));
     }
 
-    if (options.use_cursor()) {
-        b.append(kvp("cursor", [&options](sub_document sub_doc) {
-            if (options.batch_size()) {
-                sub_doc.append(kvp("batchSize", *options.batch_size()));
-            }
-        }));
-    }
-
     if (options.max_time()) {
         b.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
     }

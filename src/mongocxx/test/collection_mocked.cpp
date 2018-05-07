@@ -98,7 +98,6 @@ TEST_CASE("Collection", "[collection]") {
         auto expected_allow_disk_use = true;
         auto expected_max_time_ms = 1234;
         auto expected_batch_size = 5678;
-        auto expected_use_cursor = true;
         auto expected_bypass_document_validation = true;
         auto expected_read_preference =
             read_preference{}.mode(read_preference::read_mode::k_secondary);
@@ -136,15 +135,6 @@ TEST_CASE("Collection", "[collection]") {
                 else
                     REQUIRE(o.find("maxTimeMS") == o.end());
 
-                if (opts.use_cursor())
-                    REQUIRE(o.find("cursor") != o.end());
-
-                if (opts.batch_size()) {
-                    REQUIRE(o.find("cursor") != o.end());
-                    REQUIRE(o["cursor"].get_document().value["batchSize"].get_int32() ==
-                            expected_batch_size);
-                }
-
                 if (opts.bypass_document_validation())
                     REQUIRE(o["bypassDocumentValidation"].get_bool().value ==
                             expected_bypass_document_validation);
@@ -172,7 +162,6 @@ TEST_CASE("Collection", "[collection]") {
             opts.max_time(std::chrono::milliseconds{expected_max_time_ms});
             opts.batch_size(expected_batch_size);
             opts.bypass_document_validation(expected_bypass_document_validation);
-            opts.use_cursor(expected_use_cursor);
             opts.read_preference(expected_read_preference);
         }
 

@@ -133,11 +133,10 @@ class MONGOCXX_API aggregate {
     ///
     /// Sets whether the results of this aggregation should be returned via a cursor.
     ///
-    /// @note The default for this value depends on the version of the server:
-    ///   - Servers >= 2.6 will use a server-side default of true.
-    ///   - Servers < 2.6 will use a server-side default of false.
-    ///
-    /// If this optional setting is not engaged client-side, the server default will be used.
+    /// @deprecated
+    ///   This setting has no effect. Support for aggregations without a cursor was deprecated in
+    ///   MongoDB 3.4 and removed in 3.6; the driver always uses a cursor for aggregations with all
+    ///   MongoDB versions.
     ///
     /// @see https://docs.mongodb.com/master/reference/command/aggregate/
     ///
@@ -145,16 +144,23 @@ class MONGOCXX_API aggregate {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    aggregate& use_cursor(bool use_cursor);
+    MONGOCXX_DEPRECATED aggregate& use_cursor(bool use_cursor);
+    aggregate& use_cursor_deprecated(bool use_cursor);
 
     ///
     /// The current use_cursor setting.
+    ///
+    /// @deprecated
+    ///   This setting has no effect. Support for aggregations without a cursor was deprecated in
+    ///   MongoDB 3.4 and removed in 3.6; the driver always uses a cursor for aggregations with all
+    ///   MongoDB versions.
     ///
     /// @return the current use_cursor setting
     ///
     /// @see https://docs.mongodb.com/master/reference/command/aggregate/
     ///
-    const stdx::optional<bool>& use_cursor() const;
+    MONGOCXX_DEPRECATED const stdx::optional<bool>& use_cursor() const;
+    const stdx::optional<bool>& use_cursor_deprecated() const;
 
     ///
     /// Sets the read_preference for this operation.

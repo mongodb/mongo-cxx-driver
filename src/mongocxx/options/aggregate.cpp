@@ -42,9 +42,13 @@ aggregate& aggregate::max_time(std::chrono::milliseconds max_time) {
     return *this;
 }
 
-aggregate& aggregate::use_cursor(bool use_cursor) {
+aggregate& aggregate::use_cursor_deprecated(bool use_cursor) {
     _use_cursor = use_cursor;
     return *this;
+}
+
+aggregate& aggregate::use_cursor(bool use_cursor) {
+    return use_cursor_deprecated(use_cursor);
 }
 
 aggregate& aggregate::read_preference(class read_preference rp) {
@@ -83,8 +87,12 @@ const stdx::optional<std::chrono::milliseconds>& aggregate::max_time() const {
     return _max_time;
 }
 
-const stdx::optional<bool>& aggregate::use_cursor() const {
+const stdx::optional<bool>& aggregate::use_cursor_deprecated() const {
     return _use_cursor;
+}
+
+const stdx::optional<bool>& aggregate::use_cursor() const {
+    return use_cursor_deprecated();
 }
 
 const stdx::optional<class read_preference>& aggregate::read_preference() const {
@@ -113,7 +121,8 @@ bool MONGOCXX_CALL operator==(const aggregate& lhs, const aggregate& rhs) {
     }
     return ((lhs.allow_disk_use() == rhs.allow_disk_use()) &&
             (lhs.batch_size() == rhs.batch_size()) && (lhs.collation() == rhs.collation()) &&
-            (lhs.max_time() == rhs.max_time()) && (lhs.use_cursor() == rhs.use_cursor()) &&
+            (lhs.max_time() == rhs.max_time()) &&
+            (lhs.use_cursor_deprecated() == rhs.use_cursor_deprecated()) &&
             (lhs.read_preference() == rhs.read_preference()) &&
             (lhs.bypass_document_validation() == rhs.bypass_document_validation()));
 }
