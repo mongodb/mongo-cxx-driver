@@ -44,8 +44,8 @@ foreach(EXAMPLE ${MONGOCXX_EXAMPLE_EXECUTABLES})
         continue()
     endif()
 
-    # TODO CXX-1201, enable for servers that support change streams.
-    if (${EXAMPLE} STREQUAL "change_streams")
+    # TODO CXX-1201, enable some examples only for replica sets.
+    if (${EXAMPLE} MATCHES "change_streams|client_session")
         continue()
     endif()
 
