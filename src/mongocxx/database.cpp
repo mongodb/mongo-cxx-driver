@@ -167,8 +167,8 @@ collection database::_create_collection(const client_session* session,
         options_builder.append(kvp("writeConcern", write_concern->to_document()));
     }
 
-    if (collection_options.auto_index_id()) {
-        options_builder.append(kvp("autoIndexId", *collection_options.auto_index_id()));
+    if (collection_options.auto_index_id_deprecated()) {
+        options_builder.append(kvp("autoIndexId", *collection_options.auto_index_id_deprecated()));
     }
 
     if (collection_options.capped()) {

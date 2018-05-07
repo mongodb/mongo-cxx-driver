@@ -73,8 +73,12 @@ create_collection& create_collection::validation_criteria(class validation_crite
     return *this;
 }
 
-const stdx::optional<bool>& create_collection::auto_index_id() const {
+const stdx::optional<bool>& create_collection::auto_index_id_deprecated() const {
     return _auto_index_id;
+}
+
+const stdx::optional<bool>& create_collection::auto_index_id() const {
+    return auto_index_id_deprecated();
 }
 
 const stdx::optional<bool>& create_collection::capped() const {
@@ -148,9 +152,10 @@ bsoncxx::document::value create_collection::to_document() const {
 }
 
 bool MONGOCXX_CALL operator==(const create_collection& lhs, const create_collection& rhs) {
-    return ((lhs.auto_index_id() == rhs.auto_index_id()) && (lhs.capped() == rhs.capped()) &&
-            (lhs.collation() == rhs.collation()) && (lhs.max() == rhs.max()) &&
-            (lhs.size() == rhs.size()) && (lhs.no_padding() == rhs.no_padding()) &&
+    return ((lhs.auto_index_id_deprecated() == rhs.auto_index_id_deprecated()) &&
+            (lhs.capped() == rhs.capped()) && (lhs.collation() == rhs.collation()) &&
+            (lhs.max() == rhs.max()) && (lhs.size() == rhs.size()) &&
+            (lhs.no_padding() == rhs.no_padding()) &&
             (lhs.storage_engine() == rhs.storage_engine()) &&
             (lhs.validation_criteria() == rhs.validation_criteria()));
 }

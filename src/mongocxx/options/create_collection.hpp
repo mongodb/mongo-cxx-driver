@@ -37,8 +37,6 @@ class MONGOCXX_API create_collection {
     ///   This method is deprecated. Server versions 3.4 and above no longer support the
     ///   "autoIndexId" option.
     ///
-    /// @note For replica sets, all collections must have autoIndexId set to true.
-    ///
     /// @param auto_index_id
     ///   Whether or not this collection will automatically generate an index on _id.
     ///
@@ -52,10 +50,15 @@ class MONGOCXX_API create_collection {
     ///
     /// Gets the current auto_index_id setting.
     ///
+    /// @deprecated
+    ///   This method is deprecated. Server versions 3.4 and above no longer support the
+    ///   "autoIndexId" option.
+    ///
     /// @return
     ///   Whether or not this collection will automatically generate an index on _id.
     ///
-    const stdx::optional<bool>& auto_index_id() const;
+    MONGOCXX_DEPRECATED const stdx::optional<bool>& auto_index_id() const;
+    const stdx::optional<bool>& auto_index_id_deprecated() const;
 
     ///
     /// To create a capped collection, specify true.
