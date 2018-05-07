@@ -129,3 +129,8 @@ MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @example examples/mongocxx/client_session.cpp
+/// Use a mongocxx::client_session for a sequence of operations with causal consistency.
+///

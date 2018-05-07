@@ -21,6 +21,7 @@ set(MONGOCXX_EXAMPLES
     aggregate.cpp
     bulk_write.cpp
     change_streams.cpp
+    client_session.cpp
     connect.cpp
     create.cpp
     document_validation.cpp
