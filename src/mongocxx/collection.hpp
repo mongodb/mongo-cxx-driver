@@ -602,7 +602,7 @@ class MONGOCXX_API collection {
     ///
     /// Finds the distinct values for a specified field across the collection.
     ///
-    /// @param field_name
+    /// @param name
     ///   The field for which the distinct values will be found.
     /// @param filter
     ///   Document view representing the documents for which the distinct operation will apply.
@@ -624,7 +624,7 @@ class MONGOCXX_API collection {
     ///
     /// @param session
     ///   The mongocxx::client_session with which to perform the operation.
-    /// @param field_name
+    /// @param name
     ///   The field for which the distinct values will be found.
     /// @param filter
     ///   Document view representing the documents for which the distinct operation will apply.
@@ -1153,6 +1153,9 @@ class MONGOCXX_API collection {
     /// @param new_name The new name to assign to the collection.
     /// @param drop_target_before_rename Whether to overwrite any
     ///   existing collections called new_name. The default is false.
+    /// @param write_concern (optional)
+    ///   The write concern to use for this operation. Defaults to the collection wide write
+    ///   concern if none is provided.
     ///
     /// @exception
     ///   mongocxx::operation_exception if the operation fails.
@@ -1175,6 +1178,9 @@ class MONGOCXX_API collection {
     /// @param new_name The new name to assign to the collection.
     /// @param drop_target_before_rename Whether to overwrite any
     ///   existing collections called new_name. The default is false.
+    /// @param write_concern (optional)
+    ///   The write concern to use for this operation. Defaults to the collection wide write
+    ///   concern if none is provided.
     ///
     /// @exception
     ///   mongocxx::operation_exception if the operation fails.
