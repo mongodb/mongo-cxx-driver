@@ -181,6 +181,7 @@ class MONGOCXX_API collection {
     /// @{
     ///
     /// Creates a new bulk operation to be executed against this collection.
+    /// The lifetime of the bulk_write is independent of the collection.
     ///
     /// @param options
     ///   Optional arguments; see mongocxx::options::bulk_write.
@@ -192,6 +193,7 @@ class MONGOCXX_API collection {
 
     ///
     /// Creates a new bulk operation to be executed against this collection.
+    /// The lifetime of the bulk_write is independent of the collection.
     ///
     /// @param session
     ///   The mongocxx::client_session with which to perform the bulk operation.

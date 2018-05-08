@@ -2156,7 +2156,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             collection coll = db.create_collection(collname, opts);
 
             bulk_opts.bypass_document_validation(true);
-            bulk_write cbulk{bulk_opts};
+            auto cbulk = coll.create_bulk_write(bulk_opts);
             cbulk.append(model::insert_one{std::move(doc1)});
             cbulk.append(model::insert_one{std::move(doc2)});
 

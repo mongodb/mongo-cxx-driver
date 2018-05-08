@@ -51,7 +51,7 @@ int main(int, char**) {
     upsert_op.upsert(true);
 
     // Create a bulk_write operation. By default, its operations are executed in order.
-    mongocxx::bulk_write bulk{};
+    auto bulk = coll.create_bulk_write();
 
     // Insert {"a": 1}.
     bulk.append(insert_op);
@@ -68,7 +68,7 @@ int main(int, char**) {
     // Update {"a": 1} to {"a": 2}.
     bulk.append(upsert_op);
 
-    bsoncxx::stdx::optional<mongocxx::result::bulk_write> result = coll.bulk_write(bulk);
+    auto result = coll.bulk_write(bulk);
 
     if (!result) {
         return EXIT_FAILURE;

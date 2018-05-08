@@ -41,6 +41,8 @@ bulk_write& bulk_write::operator=(bulk_write&&) noexcept = default;
 bulk_write::~bulk_write() = default;
 
 bulk_write::bulk_write(options::bulk_write options)
+    : bulk_write::bulk_write(deprecated_tag{}, std::move(options)) {}
+bulk_write::bulk_write(deprecated_tag, options::bulk_write options)
     : _created_from_collection(false),
       _impl(stdx::make_unique<impl>(libmongoc::bulk_operation_new(options.ordered()))) {
     auto options_wc = options.write_concern();

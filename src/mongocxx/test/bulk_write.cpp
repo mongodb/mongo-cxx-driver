@@ -18,6 +18,7 @@
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/bulk_write.hpp>
+#include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/write_concern.hpp>
@@ -30,18 +31,28 @@ using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
     instance::current();
-
-    auto construct = libmongoc::bulk_operation_new.create_instance();
+    mongocxx::client client{mongocxx::uri{}};
+    mongocxx::collection coll = client["db"]["coll"];
+    auto construct = libmongoc::collection_create_bulk_operation_with_opts.create_instance();
     bool construct_called = false;
     bool ordered_value = false;
 
-    construct->visit([&](bool ordered) {
+    construct->visit([&](mongoc_collection_t*, const bson_t* opts) {
         construct_called = true;
-        ordered_value = ordered;
+        bson_iter_t iter;
+        bson_iter_init(&iter, opts);
+        if (bson_iter_find(&iter, "ordered")) {
+            REQUIRE(BSON_ITER_HOLDS_BOOL(&iter));
+            ordered_value = bson_iter_bool(&iter);
+        } else {
+            /* if no "ordered" field is passed, libmongoc defaults to true. */
+            ordered_value = true;
+        }
+
     });
 
     SECTION("with an ordered bulk write") {
-        { bulk_write bw; }
+        { auto bw = coll.create_bulk_write(); }
         REQUIRE(construct_called);
         REQUIRE(ordered_value);
     }
@@ -49,20 +60,21 @@ TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
     SECTION("with an unordered bulk write") {
         options::bulk_write bw_opts;
         bw_opts.ordered(false);
-        { bulk_write bw(bw_opts); }
+        { auto bw = coll.create_bulk_write(bw_opts); }
         REQUIRE(construct_called);
         REQUIRE(!ordered_value);
     }
 }
 TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_write]") {
     instance::current();
-
+    mongocxx::client client{mongocxx::uri{}};
+    mongocxx::collection coll = client["db"]["coll"];
     auto destruct = libmongoc::bulk_operation_destroy.create_instance();
     bool destruct_called = false;
 
     destruct->visit([&destruct_called](mongoc_bulk_operation_t*) { destruct_called = true; });
 
-    { bulk_write bw; }
+    { auto bw = coll.create_bulk_write(); }
     REQUIRE(destruct_called);
 }
 class insert_functor {
@@ -167,8 +179,8 @@ class delete_functor {
 
 TEST_CASE("passing write operations to append calls corresponding C function", "[bulk_write]") {
     instance::current();
-
-    bulk_write bw;
+    mongocxx::client client{mongocxx::uri{}};
+    auto bw = client["db"]["coll"].create_bulk_write();
     bsoncxx::builder::basic::document filter_builder, doc_builder, update_doc_builder,
         collation_builder;
     filter_builder.append(kvp("_id", 1));
