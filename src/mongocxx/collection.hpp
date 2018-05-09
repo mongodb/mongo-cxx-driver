@@ -390,6 +390,8 @@ class MONGOCXX_API collection {
     ///
     /// Sends a batch of writes represented by the bulk_write to the server.
     ///
+    /// @deprecated Use mongocxx::bulk_write::execute instead.
+    ///
     /// @param bulk_write
     ///   A bulk write which contains multiple write operations.
     ///
@@ -399,7 +401,9 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.com/master/core/bulk-write-operations/
     ///
-    stdx::optional<result::bulk_write> bulk_write(const class bulk_write& bulk_write);
+    MONGOCXX_DEPRECATED stdx::optional<result::bulk_write> bulk_write(
+        const class bulk_write& bulk_write);
+    stdx::optional<result::bulk_write> bulk_write_deprecated(const class bulk_write& bulk_write);
 
     ///
     /// @{
@@ -1635,12 +1639,12 @@ class MONGOCXX_API collection {
 
 MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::write(
     const model::write& write, const options::bulk_write& options) {
-    return bulk_write(create_bulk_write(options).append(write));
+    return create_bulk_write(options).append(write).execute();
 }
 
 MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::write(
     const client_session& session, const model::write& write, const options::bulk_write& options) {
-    return bulk_write(create_bulk_write(session, options).append(write));
+    return create_bulk_write(session, options).append(write).execute();
 }
 
 template <typename container_type>
@@ -1664,7 +1668,7 @@ MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
     const options::bulk_write& options) {
     auto writes = create_bulk_write(options);
     std::for_each(begin, end, [&](const model::write& current) { writes.append(current); });
-    return bulk_write(writes);
+    return writes.execute();
 }
 
 template <typename write_model_iterator_type>
@@ -1675,7 +1679,7 @@ MONGOCXX_INLINE stdx::optional<result::bulk_write> collection::bulk_write(
     const options::bulk_write& options) {
     auto writes = create_bulk_write(session, options);
     std::for_each(begin, end, [&](const model::write& current) { writes.append(current); });
-    return bulk_write(writes);
+    return writes.execute();
 }
 
 template <typename container_type>

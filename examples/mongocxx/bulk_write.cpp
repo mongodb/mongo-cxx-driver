@@ -68,7 +68,7 @@ int main(int, char**) {
     // Update {"a": 1} to {"a": 2}.
     bulk.append(upsert_op);
 
-    auto result = coll.bulk_write(bulk);
+    auto result = bulk.execute();
 
     if (!result) {
         return EXIT_FAILURE;

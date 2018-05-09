@@ -28,6 +28,7 @@
 #include <mongocxx/private/write_concern.hh>
 
 #include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/exception/bulk_write_exception.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -163,6 +164,25 @@ bulk_write& bulk_write::append(const model::write& operation) {
     }
 
     return *this;
+}
+
+stdx::optional<result::bulk_write> bulk_write::execute() const {
+    mongoc_bulk_operation_t* b = _impl->operation_t;
+    scoped_bson_t reply;
+    bson_error_t error;
+
+    if (!libmongoc::bulk_operation_execute(b, reply.bson_for_init(), &error)) {
+        throw_exception<bulk_write_exception>(reply.steal(), error);
+    }
+
+    // Reply is empty for unacknowledged writes, so return disengaged optional.
+    if (reply.view().empty()) {
+        return stdx::nullopt;
+    }
+
+    result::bulk_write result(reply.steal());
+
+    return stdx::optional<result::bulk_write>(std::move(result));
 }
 
 bulk_write::bulk_write(const collection& coll,

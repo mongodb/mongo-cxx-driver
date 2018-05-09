@@ -17,6 +17,7 @@
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/model/write.hpp>
 #include <mongocxx/options/bulk_write.hpp>
+#include <mongocxx/result/bulk_write.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -32,7 +33,7 @@ class collection;
 /// part of a bulk_write in order to avoid unnecessary network-level round trips between the driver
 /// and the server.
 ///
-/// Bulk writes affect a single collection only and are executed via the collection::bulk_write()
+/// Bulk writes affect a single collection only and are executed via the bulk_write::execute()
 /// method. Options that you would typically specify for individual write operations (such as write
 /// concern) are instead specified for the aggregate operation.
 ///
@@ -94,6 +95,17 @@ class MONGOCXX_API bulk_write {
     /// @throws mongocxx::logic_error if the given operation is invalid.
     ///
     bulk_write& append(const model::write& operation);
+
+    ///
+    /// Executes a bulk write.
+    ///
+    /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
+    ///
+    /// @return The optional result of the bulk operation execution, a result::bulk_write.
+    ///
+    /// @see https://docs.mongodb.com/master/core/bulk-write-operations/
+    ///
+    stdx::optional<result::bulk_write> execute() const;
 
    private:
     friend class collection;

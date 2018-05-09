@@ -277,8 +277,12 @@ bulk_write collection::create_bulk_write(const client_session& session,
 }
 
 stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write& bulk_write) {
-    mongoc_bulk_operation_t* b = bulk_write._impl->operation_t;
+    return this->bulk_write_deprecated(bulk_write);
+}
 
+stdx::optional<result::bulk_write> collection::bulk_write_deprecated(
+    const class bulk_write& bulk_write) {
+    mongoc_bulk_operation_t* b = bulk_write._impl->operation_t;
     // Before collection::create_bulk_write was added, bulk_writes were created from their
     // constructor without a reference to a collection, and the collection was set on the bulk_write
     // object here. However, since libmongoc::bulk_operation_set_collection takes the name of a
@@ -291,23 +295,7 @@ stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write
         libmongoc::bulk_operation_set_database(b, _get_impl().database_name.c_str());
         libmongoc::bulk_operation_set_collection(b, get_collection_name(_get_impl().collection_t));
     }
-
-    scoped_bson_t reply;
-
-    bson_error_t error;
-
-    if (!libmongoc::bulk_operation_execute(b, reply.bson_for_init(), &error)) {
-        throw_exception<bulk_write_exception>(reply.steal(), error);
-    }
-
-    // Reply is empty for unacknowledged writes, so return disengaged optional.
-    if (reply.view().empty()) {
-        return stdx::nullopt;
-    }
-
-    result::bulk_write result(reply.steal());
-
-    return stdx::optional<result::bulk_write>(std::move(result));
+    return bulk_write.execute();
 }
 
 namespace {
@@ -573,7 +561,7 @@ stdx::optional<result::insert_one> collection::_insert_one(const client_session*
         oid = document.view()["_id"];
     }
 
-    auto result = bulk_write(bulk_op);
+    auto result = bulk_op.execute();
     if (!result) {
         return stdx::nullopt;
     }
@@ -619,7 +607,7 @@ stdx::optional<result::replace_one> collection::_replace_one(const client_sessio
 
     bulk_op.append(replace_op);
 
-    auto result = bulk_write(bulk_op);
+    auto result = bulk_op.execute();
     if (!result) {
         return stdx::nullopt;
     }
@@ -666,7 +654,7 @@ stdx::optional<result::update> collection::_update_many(const client_session* se
 
     bulk_op.append(update_op);
 
-    auto result = bulk_write(bulk_op);
+    auto result = bulk_op.execute();
     if (!result) {
         return stdx::nullopt;
     }
@@ -713,7 +701,7 @@ stdx::optional<result::update> collection::_update_one(const client_session* ses
 
     bulk_op.append(update_op);
 
-    auto result = bulk_write(bulk_op);
+    auto result = bulk_op.execute();
     if (!result) {
         return stdx::nullopt;
     }
@@ -751,7 +739,7 @@ stdx::optional<result::delete_result> collection::_delete_many(
     }
     bulk_op.append(delete_op);
 
-    auto result = bulk_write(bulk_op);
+    auto result = bulk_op.execute();
     if (!result) {
         return stdx::nullopt;
     }
@@ -786,7 +774,7 @@ stdx::optional<result::delete_result> collection::_delete_one(
     }
     bulk_op.append(delete_op);
 
-    auto result = bulk_write(bulk_op);
+    auto result = bulk_op.execute();
     if (!result) {
         return stdx::nullopt;
     }
@@ -1322,7 +1310,7 @@ void collection::_insert_many_doc_handler(class bulk_write& writes,
 
 stdx::optional<result::insert_many> collection::_exec_insert_many(
     class bulk_write& writes, bsoncxx::builder::basic::array& inserted_ids) {
-    auto result = bulk_write(writes);
+    auto result = writes.execute();
     if (!result) {
         return stdx::nullopt;
     }

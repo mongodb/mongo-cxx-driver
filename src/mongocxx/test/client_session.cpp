@@ -387,7 +387,7 @@ TEST_CASE("lsid", "[session]") {
                 use_session ? collection.create_bulk_write(s) : collection.create_bulk_write();
 
             bulk.append(model::insert_one{{}});
-            collection.bulk_write(bulk);
+            bulk.execute();
         };
 
         test.test_method_with_session(f, s);

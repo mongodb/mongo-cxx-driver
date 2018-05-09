@@ -2088,7 +2088,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             auto abulk = coll.create_bulk_write(bulk_opts);
             abulk.append(model::insert_one{std::move(doc1)});
             abulk.append(model::insert_one{std::move(doc2)});
-            auto result = coll.bulk_write(abulk);
+            auto result = abulk.execute();
 
             REQUIRE(result);
             REQUIRE(result->inserted_count() == 2);
@@ -2102,7 +2102,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             auto bbulk = coll.create_bulk_write(bulk_opts);
             bbulk.append(model::insert_one{std::move(doc1)});
             bbulk.append(model::insert_one{std::move(doc2)});
-            auto result = coll.bulk_write(bbulk);
+            auto result = bbulk.execute();
 
             REQUIRE(!result);
 
@@ -2139,7 +2139,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                 bulk.append(first);
                 bulk.append(second);
 
-                REQUIRE_THROWS_AS(coll.bulk_write(bulk), operation_exception);
+                REQUIRE_THROWS_AS(bulk.execute(), operation_exception);
             }
         }
 
@@ -2161,7 +2161,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             cbulk.append(model::insert_one{std::move(doc2)});
 
             stdx::optional<result::bulk_write> result;
-            REQUIRE_NOTHROW(result = coll.bulk_write(cbulk));
+            REQUIRE_NOTHROW(result = cbulk.execute());
 
             REQUIRE(result);
             REQUIRE(result->inserted_count() == 2);
@@ -2185,7 +2185,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         bulk.append(model::insert_one{std::move(doc3)});
         bulk.append(model::insert_one{std::move(doc4)});
 
-        coll.bulk_write(bulk);
+        bulk.execute();
 
         REQUIRE(coll.count({}) == 4);
 
