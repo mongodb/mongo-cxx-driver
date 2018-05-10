@@ -275,7 +275,7 @@ To query the collection, use the collection’s `find()` and
 while `find_one()` will return an instance of
 `std::optional<`[`bsoncxx::document::value`]({{< api3ref classbsoncxx_1_1document_1_1value >}})`>`
 
-You can call either method without any arguments to query all documents
+You can call either method with an empty document to query all documents
 in a collection, or pass a filter to query for documents that match the
 filter criteria.
 
@@ -286,7 +286,7 @@ method without any parameters.
 
 ```c++
 bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
-  collection.find_one(document{} << finalize);
+  collection.find_one({});
 if(maybe_result) {
   // Do something with *maybe_result;
 }
@@ -295,7 +295,7 @@ if(maybe_result) {
 ### Find All Documents in a Collection
 
 ```c++
-mongocxx::cursor cursor = collection.find(document{} << finalize);
+mongocxx::cursor cursor = collection.find({});
 for(auto doc : cursor) {
   std::cout << bsoncxx::to_json(doc) << "\n";
 }
