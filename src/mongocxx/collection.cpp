@@ -496,6 +496,10 @@ cursor collection::_aggregate(const client_session* session,
         b.append(kvp("writeConcern", options.write_concern()->to_document()));
     }
 
+    if (options.batch_size()) {
+        b.append(kvp("batchSize", *options.batch_size()));
+    }
+
     if (session) {
         b.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
     }

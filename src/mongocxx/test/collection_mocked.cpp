@@ -149,6 +149,11 @@ TEST_CASE("Collection", "[collection]") {
                             libmongoc::conversions::read_mode_t_from_read_mode(
                                 mongo_coll.read_preference().mode()));
 
+                if (opts.batch_size())
+                    REQUIRE(o["batchSize"].get_int32().value == expected_batch_size);
+                else
+                    REQUIRE(o.find("batchSize") == o.end());
+
                 return NULL;
             });
 

@@ -342,8 +342,11 @@ TEST_CASE("lsid", "[session]") {
 
     SECTION("collection::aggregate") {
         auto f = [&s, &collection](bool use_session) {
+            options::aggregate opts;
+            opts.batch_size(2);
             int total = 0;
-            auto cursor = use_session ? collection.aggregate(s, {}) : collection.aggregate({});
+            auto cursor =
+                use_session ? collection.aggregate(s, {}, opts) : collection.aggregate({}, opts);
             for (auto&& doc : cursor) {
                 ++total;
             }
@@ -352,6 +355,7 @@ TEST_CASE("lsid", "[session]") {
         };
 
         test.test_method_with_session(f, s);
+        REQUIRE(test.events.size() >= 2);
     }
 
     SECTION("collection::bulk_write") {
