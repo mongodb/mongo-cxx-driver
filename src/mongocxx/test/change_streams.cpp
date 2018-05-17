@@ -260,22 +260,27 @@ TEST_CASE("Documentation Examples", "[min36]") {
     collection inventory = events;  // doc examples use this name
 
     SECTION("Example 1") {
+        // Start Changestream Example 1
         change_stream stream = inventory.watch();
         for (auto& event : stream) {
             std::cout << bsoncxx::to_json(event) << std::endl;
         }
+        // End Changestream Example 1
     }
 
     SECTION("Example 2") {
+        // Start Changestream Example 2
         options::change_stream options;
         options.full_document(bsoncxx::string::view_or_value{"updateLookup"});
         change_stream stream = inventory.watch(options);
         for (auto& event : stream) {
             std::cout << bsoncxx::to_json(event) << std::endl;
         }
+        // End Changestream Example 2
     }
 
     SECTION("Example 3") {
+        // Start Changestream Example 3
         stdx::optional<bsoncxx::document::view_or_value> resume_token;
         change_stream stream = inventory.watch();
         for (auto& event : stream) {
@@ -290,6 +295,7 @@ TEST_CASE("Documentation Examples", "[min36]") {
                 std::cout << bsoncxx::to_json(event) << std::endl;
             }
         }
+        // End Changestream Example 3
     }
 }
 
