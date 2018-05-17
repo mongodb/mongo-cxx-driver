@@ -76,32 +76,95 @@ using bsoncxx::document::view_or_value;
 
 namespace {
 
+using bsoncxx::stdx::make_unique;
+using mongocxx::libbson::scoped_bson_t;
+
 const char* get_collection_name(mongoc_collection_t* collection) {
     return mongocxx::libmongoc::collection_get_name(collection);
 }
 
+void destroy_fam_opts(mongoc_find_and_modify_opts_t* opts) {
+    mongocxx::libmongoc::find_and_modify_opts_destroy(opts);
+}
+
+template <typename T>
 mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
-    mongoc_collection_t* collection,
-    bsoncxx::document::view command,
-    bsoncxx::document::view opts,
-    const bsoncxx::stdx::optional<mongocxx::write_concern>& wc) {
-    bsoncxx::builder::basic::document opts_builder;
-    opts_builder.append(concatenate(opts));
+    mongoc_collection_t* collection_t,
+    const mongoc_client_session_t* session_t,
+    view_or_value filter,
+    view_or_value* update,
+    mongoc_find_and_modify_flags_t flags,
+    bool bypass,
+    const T& options) {
+    using unique_opts =
+        std::unique_ptr<mongoc_find_and_modify_opts_t,
+                        std::function<void MONGOCXX_CALL(mongoc_find_and_modify_opts_t*)>>;
 
-    if (wc) {
-        if (!wc->is_acknowledged() && opts["collation"]) {
-            throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
-        }
-        opts_builder.append(concatenate(wc->to_document()));
-    }
+    auto opts = unique_opts(mongocxx::libmongoc::find_and_modify_opts_new(), destroy_fam_opts);
 
-    mongocxx::libbson::scoped_bson_t command_bson{command};
-    mongocxx::libbson::scoped_bson_t opts_bson{opts_builder.extract()};
-    mongocxx::libbson::scoped_bson_t reply;
+    bsoncxx::builder::basic::document extra;
     ::bson_error_t error;
 
-    bool result = mongocxx::libmongoc::collection_write_command_with_opts(
-        collection, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
+    // Write concern, collation, and session are passed in "extra".
+    if (options.write_concern()) {
+        if (!options.write_concern()->is_acknowledged() && options.collation()) {
+            throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
+        }
+        extra.append(concatenate(options.write_concern()->to_document()));
+    }
+
+    if (session_t) {
+        bson_t bson = BSON_INITIALIZER;
+        if (!mongocxx::libmongoc::client_session_append(session_t, &bson, &error)) {
+            bson_destroy(&bson);
+            throw mongocxx::logic_error{mongocxx::error_code::k_invalid_session, error.message};
+        }
+
+        // document::value takes ownership of the bson buffer.
+        bsoncxx::document::value session_id{bsoncxx::helpers::value_from_bson_t(&bson)};
+        extra.append(concatenate(session_id.view()));
+    }
+
+    if (options.collation()) {
+        extra.append(kvp("collation", *options.collation()));
+    }
+
+    scoped_bson_t extra_bson{extra.view()};
+    mongocxx::libmongoc::find_and_modify_opts_append(opts.get(), extra_bson.bson());
+
+    if (update) {
+        scoped_bson_t update_bson{update->view()};
+        mongocxx::libmongoc::find_and_modify_opts_set_update(opts.get(), update_bson.bson());
+    }
+
+    if (bypass) {
+        mongocxx::libmongoc::find_and_modify_opts_set_bypass_document_validation(opts.get(), true);
+    }
+
+    if (options.sort()) {
+        scoped_bson_t sort_bson{*options.sort()};
+        mongocxx::libmongoc::find_and_modify_opts_set_sort(opts.get(), sort_bson.bson());
+    }
+
+    if (options.projection()) {
+        scoped_bson_t projection_bson{*options.projection()};
+        mongocxx::libmongoc::find_and_modify_opts_set_fields(opts.get(), projection_bson.bson());
+    }
+
+    if (options.max_time()) {
+        mongocxx::libmongoc::find_and_modify_opts_set_max_time_ms(
+            opts.get(), static_cast<uint32_t>(options.max_time()->count()));
+    }
+
+    // Upsert, remove, and new are passed in flags.
+    mongocxx::libmongoc::find_and_modify_opts_set_flags(opts.get(), flags);
+
+    // Call mongoc_collection_find_and_modify_with_opts.
+    scoped_bson_t filter_bson{filter.view()};
+    mongocxx::libbson::scoped_bson_t reply;
+
+    bool result = mongocxx::libmongoc::collection_find_and_modify_with_opts(
+        collection_t, filter_bson.bson(), opts.get(), reply.bson_for_init(), &error);
 
     if (!result) {
         if (!reply.view().empty()) {
@@ -801,50 +864,22 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_replace(
     view_or_value filter,
     view_or_value replacement,
     const options::find_one_and_replace& options) {
-    bsoncxx::builder::basic::document command_doc;
-    bsoncxx::builder::basic::document options_doc;
-
-    command_doc.append(
-        kvp("findAndModify", libmongoc::collection_get_name(_get_impl().collection_t)));
-
-    options_doc.append(kvp("query", filter));
-
-    options_doc.append(kvp("update", replacement.view()));
-
-    if (options.sort()) {
-        options_doc.append(kvp("sort", *options.sort()));
-    }
-
-    if (options.bypass_document_validation()) {
-        options_doc.append(kvp("bypassDocumentValidation", *options.bypass_document_validation()));
-    }
-
-    if (options.collation()) {
-        options_doc.append(kvp("collation", *options.collation()));
-    }
-
-    if (options.projection()) {
-        options_doc.append(kvp("fields", *options.projection()));
-    }
-
+    mongoc_find_and_modify_flags_t flags = MONGOC_FIND_AND_MODIFY_NONE;
     if (options.upsert().value_or(false)) {
-        options_doc.append(kvp("upsert", *options.upsert()));
+        flags = (mongoc_find_and_modify_flags_t)(flags | MONGOC_FIND_AND_MODIFY_UPSERT);
     }
 
     if (options.return_document() == options::return_document::k_after) {
-        options_doc.append(kvp("new", true));
+        flags = (mongoc_find_and_modify_flags_t)(flags | MONGOC_FIND_AND_MODIFY_RETURN_NEW);
     }
 
-    if (options.max_time()) {
-        options_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
-    }
-
-    if (session) {
-        options_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
-    }
-
-    return find_and_modify(
-        _get_impl().collection_t, command_doc.view(), options_doc.view(), options.write_concern());
+    return find_and_modify(_get_impl().collection_t,
+                           session ? session->_get_impl().get_session_t() : nullptr,
+                           filter,
+                           &replacement,
+                           flags,
+                           options.bypass_document_validation().value_or(false),
+                           options);
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
@@ -865,50 +900,22 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_update(
     view_or_value filter,
     view_or_value update,
     const options::find_one_and_update& options) {
-    bsoncxx::builder::basic::document command_doc;
-    bsoncxx::builder::basic::document options_doc;
-
-    command_doc.append(
-        kvp("findAndModify", libmongoc::collection_get_name(_get_impl().collection_t)));
-
-    options_doc.append(kvp("query", filter));
-
-    options_doc.append(kvp("update", update));
-
-    if (options.sort()) {
-        options_doc.append(kvp("sort", *options.sort()));
+    mongoc_find_and_modify_flags_t flags = MONGOC_FIND_AND_MODIFY_NONE;
+    if (options.upsert().value_or(false)) {
+        flags = (mongoc_find_and_modify_flags_t)(flags | MONGOC_FIND_AND_MODIFY_UPSERT);
     }
 
     if (options.return_document() == options::return_document::k_after) {
-        options_doc.append(kvp("new", true));
+        flags = (mongoc_find_and_modify_flags_t)(flags | MONGOC_FIND_AND_MODIFY_RETURN_NEW);
     }
 
-    if (options.bypass_document_validation()) {
-        options_doc.append(kvp("bypassDocumentValidation", *options.bypass_document_validation()));
-    }
-
-    if (options.collation()) {
-        options_doc.append(kvp("collation", *options.collation()));
-    }
-
-    if (options.projection()) {
-        options_doc.append(kvp("fields", *options.projection()));
-    }
-
-    if (options.upsert().value_or(false)) {
-        options_doc.append(kvp("upsert", *options.upsert()));
-    }
-
-    if (options.max_time()) {
-        options_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
-    }
-
-    if (session) {
-        options_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
-    }
-
-    return find_and_modify(
-        _get_impl().collection_t, command_doc.view(), options_doc.view(), options.write_concern());
+    return find_and_modify(_get_impl().collection_t,
+                           session ? session->_get_impl().get_session_t() : nullptr,
+                           filter,
+                           &update,
+                           flags,
+                           options.bypass_document_validation().value_or(false),
+                           options);
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
@@ -928,42 +935,13 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_delete(
     const client_session* session,
     view_or_value filter,
     const options::find_one_and_delete& options) {
-    bsoncxx::builder::basic::document command_doc;
-    bsoncxx::builder::basic::document options_doc;
-
-    command_doc.append(
-        kvp("findAndModify", libmongoc::collection_get_name(_get_impl().collection_t)));
-
-    options_doc.append(kvp("query", filter));
-
-    options_doc.append(kvp("remove", true));
-
-    if (options.sort()) {
-        options_doc.append(kvp("sort", *options.sort()));
-    }
-
-    if (options.collation()) {
-        options_doc.append(kvp("collation", *options.collation()));
-    }
-
-    if (options.projection()) {
-        options_doc.append(kvp("fields", *options.projection()));
-    }
-
-    if (options.max_time()) {
-        options_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
-    }
-
-    if (options.write_concern()) {
-        options_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
-    }
-
-    if (session) {
-        options_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
-    }
-
-    return find_and_modify(
-        _get_impl().collection_t, command_doc.view(), options_doc.view(), options.write_concern());
+    return find_and_modify(_get_impl().collection_t,
+                           session ? session->_get_impl().get_session_t() : nullptr,
+                           filter,
+                           nullptr,
+                           MONGOC_FIND_AND_MODIFY_REMOVE,
+                           false,
+                           options);
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
