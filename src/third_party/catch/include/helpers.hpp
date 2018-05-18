@@ -211,7 +211,8 @@ MONGOCXX_INLINE_NAMESPACE_END
     cursor_destroy->interpose([&](mongoc_cursor_t*) {});
 
 #define MOCK_BULK                                                                      \
-    auto bulk_operation_insert = libmongoc::bulk_operation_insert.create_instance();   \
+    auto bulk_operation_insert_with_opts =                                             \
+        libmongoc::bulk_operation_insert_with_opts.create_instance();                  \
     auto bulk_operation_remove_one_with_opts =                                         \
         libmongoc::bulk_operation_remove_one_with_opts.create_instance();              \
     auto bulk_operation_update_one_with_opts =                                         \

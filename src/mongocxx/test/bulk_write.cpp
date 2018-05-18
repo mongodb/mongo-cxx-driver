@@ -82,7 +82,10 @@ class insert_functor {
     insert_functor(bool* called, bsoncxx::document::view document)
         : _called{called}, _document{document} {}
 
-    void operator()(mongoc_bulk_operation_t*, const bson_t* document) {
+    void operator()(mongoc_bulk_operation_t*,
+                    const bson_t* document,
+                    const bson_t*,
+                    bson_error_t*) {
         *_called = true;
         REQUIRE(bson_get_data(document) == _document.data());
     }
@@ -199,8 +202,8 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
     update_functor replace_func(&called, filter, doc);
     delete_functor delete_func(&called, doc);
 
-    SECTION("insert_one invokes mongoc_bulk_operation_insert") {
-        auto bulk_insert = libmongoc::bulk_operation_insert.create_instance();
+    SECTION("insert_one invokes mongoc_bulk_operation_insert_with_opts") {
+        auto bulk_insert = libmongoc::bulk_operation_insert_with_opts.create_instance();
         bulk_insert->visit(insert_func);
 
         bw.append(model::insert_one(doc));

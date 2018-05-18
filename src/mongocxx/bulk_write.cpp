@@ -60,8 +60,12 @@ bulk_write& bulk_write::append(const model::write& operation) {
     switch (operation.type()) {
         case write_type::k_insert_one: {
             scoped_bson_t doc(operation.get_insert_one().document());
-
-            libmongoc::bulk_operation_insert(_impl->operation_t, doc.bson());
+            bson_error_t error;
+            auto result = libmongoc::bulk_operation_insert_with_opts(
+                _impl->operation_t, doc.bson(), nullptr, &error);
+            if (!result) {
+                throw_exception<logic_error>(error);
+            }
             break;
         }
         case write_type::k_update_one: {

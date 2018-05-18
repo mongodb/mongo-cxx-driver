@@ -156,7 +156,7 @@ TEST_CASE("session", "[session]") {
         client c2{uri{}};
 
         REQUIRE_THROWS_MATCHES(c2["db"]["collection"].insert_one(s, {}),
-                               bulk_write_exception,
+                               logic_error,
                                mongocxx_exception_matcher{"Invalid sessionId"});
     }
 }

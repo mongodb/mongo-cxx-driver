@@ -428,19 +428,24 @@ TEST_CASE("Collection", "[collection]") {
             [&](mongoc_bulk_operation_t*) { bulk_operation_destroy_called = true; });
 
         SECTION("Insert One", "[collection::insert_one]") {
-            bulk_operation_insert->interpose([&](mongoc_bulk_operation_t*, const bson_t* doc) {
-                bulk_operation_op_called = true;
-                REQUIRE(bson_get_data(doc) == filter_doc.view().data());
-            });
+            bulk_operation_insert_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, const bson_t* doc, const bson_t*, bson_error_t*) {
+                    bulk_operation_op_called = true;
+                    REQUIRE(bson_get_data(doc) == filter_doc.view().data());
+                    return true;
+                });
 
             mongo_coll.insert_one(filter_doc.view());
+            REQUIRE(bulk_operation_execute_called);
         }
 
         SECTION("Insert One Bypassing Validation", "[collection::insert_one]") {
-            bulk_operation_insert->interpose([&](mongoc_bulk_operation_t*, const bson_t* doc) {
-                bulk_operation_op_called = true;
-                REQUIRE(bson_get_data(doc) == filter_doc.view().data());
-            });
+            bulk_operation_insert_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, const bson_t* doc, const bson_t*, bson_error_t*) {
+                    bulk_operation_op_called = true;
+                    REQUIRE(bson_get_data(doc) == filter_doc.view().data());
+                    return true;
+                });
 
             expect_set_bypass_document_validation_called = true;
             SECTION("...set to false") {
@@ -452,13 +457,16 @@ TEST_CASE("Collection", "[collection]") {
             options::insert opts{};
             opts.bypass_document_validation(expected_bypass_document_validation);
             mongo_coll.insert_one(filter_doc.view(), opts);
+            REQUIRE(bulk_operation_execute_called);
         }
 
         SECTION("Insert Many Ordered", "[collection::insert_many]") {
-            bulk_operation_insert->interpose([&](mongoc_bulk_operation_t*, const bson_t* doc) {
-                bulk_operation_op_called = true;
-                REQUIRE(bson_get_data(doc) == filter_doc.view().data());
-            });
+            bulk_operation_insert_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, const bson_t* doc, const bson_t*, bson_error_t*) {
+                    bulk_operation_op_called = true;
+                    REQUIRE(bson_get_data(doc) == filter_doc.view().data());
+                    return true;
+                });
 
             // The interposed collection_create_bulk_operation_with_opts validates this setting.
             SECTION("...set to false") {
@@ -472,6 +480,7 @@ TEST_CASE("Collection", "[collection]") {
             std::vector<bsoncxx::document::view> docs{};
             docs.push_back(filter_doc.view());
             mongo_coll.insert_many(docs, opts);
+            REQUIRE(bulk_operation_execute_called);
         }
 
         SECTION("Update One", "[collection::update_one]") {
@@ -530,6 +539,50 @@ TEST_CASE("Collection", "[collection]") {
             }
 
             mongo_coll.update_one(filter_doc.view(), modification_doc.view(), options);
+            REQUIRE(bulk_operation_execute_called);
+        }
+
+        SECTION("Insert One Error", "[collection::insert_one]") {
+            bulk_operation_insert_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, const bson_t*, const bson_t*, bson_error_t* err) {
+                    bulk_operation_op_called = true;
+                    bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
+                    return false;
+                });
+
+            REQUIRE_THROWS_AS(mongo_coll.insert_one(filter_doc.view()), mongocxx::logic_error);
+            REQUIRE(!bulk_operation_execute_called);
+        }
+
+        SECTION("Insert Many Error", "[collection::insert_many]") {
+            bulk_operation_insert_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, const bson_t*, const bson_t*, bson_error_t* err) {
+                    bulk_operation_op_called = true;
+                    bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
+                    return false;
+                });
+
+            std::vector<bsoncxx::document::view> docs{};
+            docs.push_back(filter_doc.view());
+            expected_order_setting = true;
+            REQUIRE_THROWS_AS(mongo_coll.insert_many(docs), mongocxx::logic_error);
+            REQUIRE(!bulk_operation_execute_called);
+        }
+
+        SECTION("Update One Error", "[collection::update_one]") {
+            bulk_operation_update_one_with_opts->interpose([&](mongoc_bulk_operation_t*,
+                                                               const bson_t*,
+                                                               const bson_t*,
+                                                               const bson_t*,
+                                                               bson_error_t* err) {
+                bulk_operation_op_called = true;
+                bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
+                return false;
+            });
+
+            REQUIRE_THROWS_AS(mongo_coll.update_one(filter_doc.view(), modification_doc.view()),
+                              mongocxx::logic_error);
+            REQUIRE(!bulk_operation_execute_called);
         }
 
         SECTION("Update Many", "[collection::update_many]") {
@@ -580,6 +633,23 @@ TEST_CASE("Collection", "[collection]") {
             }
 
             mongo_coll.update_many(filter_doc.view(), modification_doc.view(), options);
+            REQUIRE(bulk_operation_execute_called);
+        }
+
+        SECTION("Update Many Error", "[collection::update_many]") {
+            bulk_operation_update_many_with_opts->interpose([&](mongoc_bulk_operation_t*,
+                                                                const bson_t*,
+                                                                const bson_t*,
+                                                                const bson_t*,
+                                                                bson_error_t* err) {
+                bulk_operation_op_called = true;
+                bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
+                return false;
+            });
+
+            REQUIRE_THROWS_AS(mongo_coll.update_many(filter_doc.view(), modification_doc.view()),
+                              mongocxx::logic_error);
+            REQUIRE(!bulk_operation_execute_called);
         }
 
         SECTION("Replace One", "[collection::replace_one]") {
@@ -630,6 +700,23 @@ TEST_CASE("Collection", "[collection]") {
             }
 
             mongo_coll.replace_one(filter_doc.view(), modification_doc.view(), options);
+            REQUIRE(bulk_operation_execute_called);
+        }
+
+        SECTION("Replace One Error", "[collection::update_one]") {
+            bulk_operation_replace_one_with_opts->interpose([&](mongoc_bulk_operation_t*,
+                                                                const bson_t*,
+                                                                const bson_t*,
+                                                                const bson_t*,
+                                                                bson_error_t* err) {
+                bulk_operation_op_called = true;
+                bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
+                return false;
+            });
+
+            REQUIRE_THROWS_AS(mongo_coll.replace_one(filter_doc.view(), modification_doc.view()),
+                              mongocxx::logic_error);
+            REQUIRE(!bulk_operation_execute_called);
         }
 
         SECTION("Delete One", "[collection::delete_one]") {
@@ -641,6 +728,19 @@ TEST_CASE("Collection", "[collection]") {
                 });
 
             mongo_coll.delete_one(filter_doc.view());
+            REQUIRE(bulk_operation_execute_called);
+        }
+
+        SECTION("Delete One Error", "[collection::delete_one]") {
+            bulk_operation_remove_one_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, const bson_t*, const bson_t*, bson_error_t* err) {
+                    bulk_operation_op_called = true;
+                    bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
+                    return false;
+                });
+
+            REQUIRE_THROWS_AS(mongo_coll.delete_one(filter_doc.view()), mongocxx::logic_error);
+            REQUIRE(!bulk_operation_execute_called);
         }
 
         SECTION("Delete Many", "[collection::delete_many]") {
@@ -652,13 +752,25 @@ TEST_CASE("Collection", "[collection]") {
                 });
 
             mongo_coll.delete_many(filter_doc.view());
+            REQUIRE(bulk_operation_execute_called);
+        }
+
+        SECTION("Delete Many Error", "[collection::delete_one]") {
+            bulk_operation_remove_many_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, const bson_t*, const bson_t*, bson_error_t* err) {
+                    bulk_operation_op_called = true;
+                    bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
+                    return false;
+                });
+
+            REQUIRE_THROWS_AS(mongo_coll.delete_many(filter_doc.view()), mongocxx::logic_error);
+            REQUIRE(!bulk_operation_execute_called);
         }
 
         REQUIRE(collection_create_bulk_operation_called);
         REQUIRE(expect_set_bypass_document_validation_called ==
                 bulk_operation_set_bypass_document_validation_called);
         REQUIRE(bulk_operation_op_called);
-        REQUIRE(bulk_operation_execute_called);
         REQUIRE(bulk_operation_destroy_called);
     }
 }
