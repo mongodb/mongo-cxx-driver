@@ -153,11 +153,77 @@ TEST_CASE("session", "[session]") {
         using Catch::Matchers::Contains;
 
         // "Session argument is for the right client" test from Driver Sessions Spec.
+        // Passing a session from client "c" should fail with client "c2" and related objects.
         client c2{uri{}};
+        auto db2 = c2["db"];
+        auto collection2 = db2["collection"];
 
-        REQUIRE_THROWS_MATCHES(c2["db"]["collection"].insert_one(s, {}),
-                               logic_error,
-                               mongocxx_exception_matcher{"Invalid sessionId"});
+#define REQUIRE_THROWS_INVALID_SESSION(_expr) \
+        REQUIRE_THROWS_MATCHES((_expr), \
+                               mongocxx::exception, \
+                               mongocxx_exception_matcher{"Invalid sessionId"})
+
+        REQUIRE_THROWS_INVALID_SESSION(collection2.count(s, {}));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.create_index(s, make_document(kvp("a", 1))));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.distinct(s, "a", {}));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.drop(s));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.find_one(s, {}));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.rename(s, "foo", true));
+        REQUIRE_THROWS_INVALID_SESSION(db2.create_collection(s, "foo"));
+        REQUIRE_THROWS_INVALID_SESSION(db2.run_command(s, {}));
+
+        // Test iterators.
+        auto cursor = c2.list_databases(s);
+        REQUIRE_THROWS_INVALID_SESSION(cursor.begin());
+        cursor = collection2.aggregate(s, {});
+        REQUIRE_THROWS_INVALID_SESSION(cursor.begin());
+        cursor = collection2.list_indexes(s);
+        REQUIRE_THROWS_INVALID_SESSION(cursor.begin());
+        cursor = db2.list_collections(s);
+        REQUIRE_THROWS_INVALID_SESSION(cursor.begin());
+        cursor = collection2.find(s, {});
+        REQUIRE_THROWS_INVALID_SESSION(cursor.begin());
+        auto stream = collection2.watch(s);
+        REQUIRE_THROWS_INVALID_SESSION(stream.begin());
+        auto indexes2 = collection2.indexes();
+        cursor = indexes2.list(s);
+        REQUIRE_THROWS_INVALID_SESSION(cursor.begin());
+
+        // Test CRUD member functions.
+        std::vector<model::write> writes;
+        std::vector<bsoncxx::document::view> docs;
+        auto bulk = collection2.create_bulk_write(s);
+
+        REQUIRE_THROWS_INVALID_SESSION(bulk.execute());
+        REQUIRE_THROWS_INVALID_SESSION(collection2.bulk_write(s, writes));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.delete_many(s, {}));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.delete_one(s, {}));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.find_one_and_delete(s, {}));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.find_one_and_replace(s, {}, {}));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.find_one_and_update(s, {}, {}));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.insert_many(s, docs));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.insert_one(s, {}));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.replace_one(s, {}, {}));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.update_many(s, {}, {}));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.update_one(s, {}, {}));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.write(s, model::insert_one{{}}));
+
+        // Test index_view member functions.
+        std::vector<index_model> models;
+
+        REQUIRE_THROWS_INVALID_SESSION(indexes2.create_one(s, make_document(kvp("a", 1))));
+        REQUIRE_THROWS_INVALID_SESSION(indexes2.create_many(s, models));
+        REQUIRE_THROWS_INVALID_SESSION(indexes2.drop_one(s, "foo"));
+        REQUIRE_THROWS_INVALID_SESSION(indexes2.drop_all(s));
+
+        // Test gridfs::bucket.
+        auto bucket2 = db2.gridfs_bucket();
+        auto one = bsoncxx::types::value{bsoncxx::types::b_int32{1}};
+
+        REQUIRE_THROWS_INVALID_SESSION(bucket2.open_upload_stream(s, "file"));
+        REQUIRE_THROWS_INVALID_SESSION(bucket2.open_download_stream(s, one));
+
+#undef REQUIRE_THROWS_INVALID_SESSION
     }
 }
 
@@ -574,7 +640,9 @@ TEST_CASE("lsid", "[session]") {
         }
 
         auto f = [&s, &collection](bool use_session) {
-            auto stream = use_session ? collection.watch(s) : collection.watch();
+            options::change_stream opts;
+            opts.max_await_time(std::chrono::milliseconds(1));
+            auto stream = use_session ? collection.watch(s, opts) : collection.watch(opts);
             for (auto&& event : stream) {
             }
         };
