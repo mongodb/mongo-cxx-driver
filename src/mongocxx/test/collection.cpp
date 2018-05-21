@@ -823,12 +823,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto doc = make_document(kvp("x", 1));
         coll.insert_one(doc.view());
 
-        if (test_util::get_max_wire_version(mongodb_client) >= 2) {
-            REQUIRE_THROWS_AS(coll.count(doc.view(), count_opts), operation_exception);
-        } else {
-            // Old server versions ignore hint sent with count.
-            REQUIRE(1 == coll.count(doc.view(), count_opts));
-        }
+        REQUIRE_THROWS_AS(coll.count(doc.view(), count_opts), operation_exception);
     }
 
     SECTION("count with collation", "[collection]") {
@@ -1785,19 +1780,14 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             pipeline.out(bsoncxx::string::to_string(coll.name()));
             auto cursor = coll.aggregate(pipeline);
 
-            if (test_util::get_max_wire_version(mongodb_client) >= 1) {
-                // The server supports out().
-                auto results = get_results(std::move(cursor));
-                REQUIRE(results.empty());
+            // The server supports out().
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.empty());
 
-                auto collection_contents = get_results(coll.find({}));
-                REQUIRE(collection_contents.size() == 1);
-                REQUIRE(collection_contents[0].view()["x"].get_int32() == 1);
-                REQUIRE(!collection_contents[0].view()["y"]);
-            } else {
-                // The server does not support out().
-                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-            }
+            auto collection_contents = get_results(coll.find({}));
+            REQUIRE(collection_contents.size() == 1);
+            REQUIRE(collection_contents[0].view()["x"].get_int32() == 1);
+            REQUIRE(!collection_contents[0].view()["y"]);
         }
 
         SECTION("out with bypass_document_validation", "[collection]") {
@@ -1880,16 +1870,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                                   kvp("else", "$$DESCEND")))));
             auto cursor = coll.aggregate(pipeline);
 
-            if (test_util::get_max_wire_version(mongodb_client) >= 1) {
-                // The server supports redact().
-                auto results = get_results(std::move(cursor));
-                REQUIRE(results.size() == 1);
-                REQUIRE(!results[0].view()["x"]);
-                REQUIRE(results[0].view()["y"].get_int32() == 1);
-            } else {
-                // The server does not support redact().
-                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-            }
+            // The server supports redact().
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 1);
+            REQUIRE(!results[0].view()["x"]);
+            REQUIRE(results[0].view()["y"].get_int32() == 1);
         }
 
         SECTION("replace_root") {
