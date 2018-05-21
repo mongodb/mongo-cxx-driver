@@ -78,6 +78,20 @@
                 "sam.rossi@mongodb.com"
             ],
             "description": "GridFS API, ongoing development/maintenance."
+        },
+        {
+            "name": "A. Jesse Jiryu Davis",
+            "email": [
+                "jesse@mongodb.com"
+            ],
+            "description": "Ongoing development/maintenance."
+        },
+        {
+            "name": "Kevin Albertson",
+            "email": [
+                "kevin.albertson@mongodb.com"
+            ],
+            "description": "Ongoing development/maintenance."
         }
 
     ]
