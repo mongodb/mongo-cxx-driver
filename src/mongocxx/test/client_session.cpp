@@ -159,9 +159,8 @@ TEST_CASE("session", "[session]") {
         auto collection2 = db2["collection"];
 
 #define REQUIRE_THROWS_INVALID_SESSION(_expr) \
-        REQUIRE_THROWS_MATCHES((_expr), \
-                               mongocxx::exception, \
-                               mongocxx_exception_matcher{"Invalid sessionId"})
+    REQUIRE_THROWS_MATCHES(                   \
+        (_expr), mongocxx::exception, mongocxx_exception_matcher{"Invalid sessionId"})
 
         REQUIRE_THROWS_INVALID_SESSION(collection2.count(s, {}));
         REQUIRE_THROWS_INVALID_SESSION(collection2.create_index(s, make_document(kvp("a", 1))));
