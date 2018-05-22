@@ -765,4 +765,31 @@ TEST_CASE("lsid", "[session]") {
         test.test_method_with_session(f, s);
     }
 }
+
+TEST_CASE("unacknowledged write in session", "[session]") {
+    using namespace mongocxx::test_util;
+
+    instance::current();
+
+    session_test test;
+
+    if (!server_has_sessions(test.client)) {
+        return;
+    }
+
+    auto s = test.client.start_session();
+    auto db = test.client["lsid"];
+    auto collection = db["collection"];
+    auto noack = write_concern{};
+    noack.acknowledge_level(write_concern::level::k_unacknowledged);
+
+    SECTION("insert_one") {
+        options::insert insert;
+        insert.write_concern(noack);
+        REQUIRE_THROWS_MATCHES(
+            collection.insert_one(s, {}, insert),
+            mongocxx::exception,
+            mongocxx_exception_matcher{"Cannot use client session with unacknowledged writes"});
+    }
+}
 }  // namespace
