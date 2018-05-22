@@ -340,6 +340,10 @@ document::value run_find_one_and_update_test(collection* coll, document::view op
         options.projection(arguments["projection"].get_document().value);
     }
 
+    if (arguments["arrayFilters"]) {
+        options.array_filters(arguments["arrayFilters"].get_array().value);
+    }
+
     if (arguments["returnDocument"]) {
         std::string return_document =
             bsoncxx::string::to_string(arguments["returnDocument"].get_utf8().value);
@@ -376,6 +380,8 @@ document::value run_find_one_and_update_test(collection* coll, document::view op
 }
 
 document::value run_insert_many_test(collection* coll, document::view operation) {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
     document::view arguments = operation["arguments"].get_document().value;
     array::view documents = arguments["documents"].get_array().value;
     std::vector<document::view> documents_to_insert{};
@@ -392,17 +398,13 @@ document::value run_insert_many_test(collection* coll, document::view operation)
     }
 
     auto result = builder::basic::document{};
+    bsoncxx::builder::basic::document inserted_ids_builder;
 
-    result.append(
-        builder::basic::kvp("result", [&inserted_ids](builder::basic::sub_document subdoc) {
-            subdoc.append(builder::basic::kvp("insertedIds",
-                                              [&inserted_ids](builder::basic::sub_array subarr) {
-                                                  for (auto&& id_pair : inserted_ids) {
-                                                      subarr.append(id_pair.second.get_value());
-                                                  }
-                                              }));
-        }));
+    for (auto&& id_pair : inserted_ids) {
+        inserted_ids_builder.append(kvp(std::to_string(id_pair.first), id_pair.second.get_value()));
+    }
 
+    result.append(kvp("result", make_document(kvp("insertedIds", inserted_ids_builder.extract()))));
     return result.extract();
 }
 
@@ -496,6 +498,10 @@ document::value run_update_many_test(collection* coll, document::view operation)
         options.upsert(arguments["upsert"].get_bool().value);
     }
 
+    if (arguments["arrayFilters"]) {
+        options.array_filters(arguments["arrayFilters"].get_array().value);
+    }
+
     std::int32_t matched_count = 0;
     bsoncxx::stdx::optional<std::int32_t> modified_count;
     std::int32_t upserted_count = 0;
@@ -553,6 +559,10 @@ document::value run_update_one_test(collection* coll, document::view operation) 
         options.upsert(arguments["upsert"].get_bool().value);
     }
 
+    if (arguments["arrayFilters"]) {
+        options.array_filters(arguments["arrayFilters"].get_array().value);
+    }
+
     std::int32_t matched_count = 0;
     bsoncxx::stdx::optional<std::int32_t> modified_count;
     std::int32_t upserted_count = 0;
@@ -596,6 +606,135 @@ document::value run_update_one_test(collection* coll, document::view operation) 
     return result.extract();
 }
 
+document::value run_bulk_write_test(collection* coll, document::view operation) {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    options::bulk_write options;
+    std::vector<model::write> writes;
+    auto arguments = operation["arguments"].get_document().value;
+    if (arguments["ordered"]) {
+        options.ordered(arguments["ordered"].get_bool().value);
+    }
+    auto requests = arguments["requests"].get_array().value;
+    for (auto&& request_element : requests) {
+        auto request = request_element.get_document().value;
+        auto request_arguments = request["arguments"].get_document().value;
+        auto operation_name = request["name"].get_utf8().value;
+        if (operation_name.compare("updateOne") == 0) {
+            document::view filter = request_arguments["filter"].get_document().value;
+            document::view update = request_arguments["update"].get_document().value;
+            model::update_one update_one(filter, update);
+
+            if (request_arguments["collation"]) {
+                update_one.collation(request_arguments["collation"].get_document().value);
+            }
+
+            if (request_arguments["upsert"]) {
+                update_one.upsert(request_arguments["upsert"].get_bool().value);
+            }
+
+            if (request_arguments["arrayFilters"]) {
+                update_one.array_filters(request_arguments["arrayFilters"].get_array().value);
+            }
+
+            writes.emplace_back(update_one);
+        } else if (operation_name.compare("updateMany") == 0) {
+            document::view filter = request_arguments["filter"].get_document().value;
+            document::view update = request_arguments["update"].get_document().value;
+            model::update_many update_many(filter, update);
+
+            if (request_arguments["collation"]) {
+                update_many.collation(request_arguments["collation"].get_document().value);
+            }
+
+            if (request_arguments["upsert"]) {
+                update_many.upsert(request_arguments["upsert"].get_bool().value);
+            }
+
+            if (request_arguments["arrayFilters"]) {
+                update_many.array_filters(request_arguments["arrayFilters"].get_array().value);
+            }
+
+            writes.emplace_back(update_many);
+        } else if (operation_name.compare("replaceOne") == 0) {
+            document::view filter = request_arguments["filter"].get_document().value;
+            document::view replacement = request_arguments["replacement"].get_document().value;
+            model::replace_one replace_one(filter, replacement);
+            if (request_arguments["collation"]) {
+                replace_one.collation(arguments["collation"].get_document().value);
+            }
+
+            if (request_arguments["upsert"]) {
+                replace_one.upsert(arguments["upsert"].get_bool().value);
+            }
+
+            writes.emplace_back(replace_one);
+        } else if (operation_name.compare("insertOne") == 0) {
+            document::view document = request_arguments["document"].get_document().value;
+            model::insert_one insert_one(document);
+            writes.emplace_back(insert_one);
+        } else if (operation_name.compare("deleteOne") == 0) {
+            document::view filter = request_arguments["filter"].get_document().value;
+            model::delete_one delete_one(filter);
+            if (request_arguments["collation"]) {
+                delete_one.collation(arguments["collation"].get_document().value);
+            }
+
+            writes.emplace_back(delete_one);
+        } else if (operation_name.compare("deleteMany") == 0) {
+            document::view filter = request_arguments["filter"].get_document().value;
+            model::delete_many delete_many(filter);
+            if (request_arguments["collation"]) {
+                delete_many.collation(arguments["collation"].get_document().value);
+            }
+
+            writes.emplace_back(delete_many);
+        } else {
+            /* should not happen. */
+            REQUIRE(false);
+        }
+    }
+
+    std::int32_t deleted_count = 0;
+    std::int32_t matched_count = 0;
+    std::int32_t modified_count = 0;
+    std::int32_t upserted_count = 0;
+    result::bulk_write::id_map upserted_ids;
+    std::int32_t inserted_count = 0;
+    auto bulk_write_result = coll->bulk_write(writes);
+    if (bulk_write_result) {
+        matched_count = bulk_write_result->matched_count();
+        modified_count = bulk_write_result->modified_count();
+        upserted_count = bulk_write_result->upserted_count();
+        upserted_ids = bulk_write_result->upserted_ids();
+        inserted_count = bulk_write_result->inserted_count();
+        deleted_count = bulk_write_result->deleted_count();
+    }
+    bsoncxx::builder::basic::document upserted_ids_builder;
+    for (auto&& index_and_id : upserted_ids) {
+        upserted_ids_builder.append(
+            kvp(std::to_string(index_and_id.first), index_and_id.second.get_document().value));
+    }
+    auto upserted_ids_doc = upserted_ids_builder.extract();
+    auto result = bsoncxx::builder::basic::document{};
+    // Construct the result document.
+    // Note: insertedIds is currently hard coded as an empty document, because result::bulk_write
+    // provides no way to see inserted ids. This is compliant with the CRUD spec, as insertedIds
+    // are: "NOT REQUIRED: Drivers may choose to not provide this property." So just add an empty
+    // document for insertedIds. There are no current bulk write tests testing insert operations.
+    // The insertedIds field in current bulk write spec tests is always an empty document.
+    result.append(kvp("result",
+                      make_document(kvp("matchedCount", matched_count),
+                                    kvp("modifiedCount", modified_count),
+                                    kvp("upsertedCount", upserted_count),
+                                    kvp("deletedCount", deleted_count),
+                                    kvp("insertedCount", inserted_count),
+                                    kvp("insertedIds", make_document()),
+                                    kvp("upsertedIds", upserted_ids_doc))));
+    return result.extract();
+}
+
 std::map<std::string, std::function<document::value(collection*, document::view)>>
     crud_test_runners = {{"aggregate", run_aggregate_test},
                          {"count", run_count_test},
@@ -610,7 +749,8 @@ std::map<std::string, std::function<document::value(collection*, document::view)
                          {"insertOne", run_insert_one_test},
                          {"replaceOne", run_replace_one_test},
                          {"updateMany", run_update_many_test},
-                         {"updateOne", run_update_one_test}};
+                         {"updateOne", run_update_one_test},
+                         {"bulkWrite", run_bulk_write_test}};
 
 // Clears the collection and initialize it as the spec describes.
 void initialize_collection(collection* coll, array::view initial_data) {

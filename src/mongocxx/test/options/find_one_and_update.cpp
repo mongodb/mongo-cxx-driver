@@ -16,6 +16,7 @@
 
 #include <chrono>
 
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
@@ -34,6 +35,7 @@ TEST_CASE("find_one_and_update", "[find_one_and_update][option]") {
     std::chrono::milliseconds ms{400};
     auto projection = make_document(kvp("_id", false));
     auto sort = make_document(kvp("x", -1));
+    auto array_filters = make_array("a", "b");
 
     CHECK_OPTIONAL_ARGUMENT(opts, bypass_document_validation, true);
     CHECK_OPTIONAL_ARGUMENT(opts, collation, collation.view());
@@ -42,6 +44,7 @@ TEST_CASE("find_one_and_update", "[find_one_and_update][option]") {
     CHECK_OPTIONAL_ARGUMENT(opts, return_document, options::return_document::k_before);
     CHECK_OPTIONAL_ARGUMENT(opts, sort, sort.view());
     CHECK_OPTIONAL_ARGUMENT(opts, upsert, true);
+    CHECK_OPTIONAL_ARGUMENT(opts, array_filters, array_filters.view());
 }
 
 TEST_CASE("find_one_and_update equals", "[find_one_and_update][options]") {

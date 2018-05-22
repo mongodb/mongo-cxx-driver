@@ -14,6 +14,7 @@
 
 #include "helpers.hpp"
 
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
@@ -28,6 +29,7 @@ TEST_CASE("update_many model tests", "[update_many][model]") {
     auto filter = make_document(kvp("a", 1));
     auto update = make_document(kvp("$set", make_document(kvp("b", 1))));
     auto collation = make_document(kvp("locale", "en_US"));
+    auto array_filters = make_array("a", "b");
 
     mongocxx::model::update_many um(filter.view(), update.view());
 
@@ -38,5 +40,6 @@ TEST_CASE("update_many model tests", "[update_many][model]") {
 
     CHECK_OPTIONAL_ARGUMENT(um, upsert, true);
     CHECK_OPTIONAL_ARGUMENT(um, collation, collation.view());
+    CHECK_OPTIONAL_ARGUMENT(um, array_filters, array_filters.view());
 }
 }  // namespace

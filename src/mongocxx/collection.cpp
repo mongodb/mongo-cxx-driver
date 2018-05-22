@@ -62,6 +62,7 @@
 #include <mongocxx/result/insert_one.hpp>
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
+#include <mongocxx/stdx.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -95,6 +96,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
     view_or_value* update,
     mongoc_find_and_modify_flags_t flags,
     bool bypass,
+    mongocxx::stdx::optional<bsoncxx::array::view_or_value> array_filters,
     const T& options) {
     using unique_opts =
         std::unique_ptr<mongoc_find_and_modify_opts_t,
@@ -127,6 +129,10 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
 
     if (options.collation()) {
         extra.append(kvp("collation", *options.collation()));
+    }
+
+    if (array_filters) {
+        extra.append(kvp("arrayFilters", *array_filters));
     }
 
     scoped_bson_t extra_bson{extra.view()};
@@ -718,6 +724,9 @@ stdx::optional<result::update> collection::_update_many(const client_session* se
     if (options.upsert()) {
         update_op.upsert(*options.upsert());
     }
+    if (options.array_filters()) {
+        update_op.array_filters(*options.array_filters());
+    }
 
     bulk_op.append(update_op);
 
@@ -764,6 +773,9 @@ stdx::optional<result::update> collection::_update_one(const client_session* ses
     }
     if (options.upsert()) {
         update_op.upsert(*options.upsert());
+    }
+    if (options.array_filters()) {
+        update_op.array_filters(*options.array_filters());
     }
 
     bulk_op.append(update_op);
@@ -879,6 +891,7 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_replace(
                            &replacement,
                            flags,
                            options.bypass_document_validation().value_or(false),
+                           stdx::nullopt,
                            options);
 }
 
@@ -915,6 +928,7 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_update(
                            &update,
                            flags,
                            options.bypass_document_validation().value_or(false),
+                           options.array_filters(),
                            options);
 }
 
@@ -941,6 +955,7 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_delete(
                            nullptr,
                            MONGOC_FIND_AND_MODIFY_REMOVE,
                            false,
+                           stdx::nullopt,
                            options);
 }
 

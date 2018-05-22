@@ -7,6 +7,7 @@
 ./read/distinct.json
 ./read/find-collation.json
 ./read/find.json
+./write/bulkWrite-arrayFilters.json
 ./write/deleteMany-collation.json
 ./write/deleteMany.json
 ./write/deleteOne-collation.json
@@ -17,6 +18,7 @@
 ./write/findOneAndReplace-upsert.json
 ./write/findOneAndReplace-upsert_pre_2.6.json
 ./write/findOneAndReplace.json
+./write/findOneAndUpdate-arrayFilters.json
 ./write/findOneAndUpdate-collation.json
 ./write/findOneAndUpdate.json
 ./write/insertMany.json
@@ -24,9 +26,11 @@
 ./write/replaceOne-collation.json
 ./write/replaceOne-pre_2.6.json
 ./write/replaceOne.json
+./write/updateMany-arrayFilters.json
 ./write/updateMany-collation.json
 ./write/updateMany-pre_2.6.json
 ./write/updateMany.json
+./write/updateOne-arrayFilters.json
 ./write/updateOne-collation.json
 ./write/updateOne-pre_2.6.json
 ./write/updateOne.json

@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
@@ -97,11 +98,32 @@ class MONGOCXX_API update_many {
     ///
     const stdx::optional<bool>& upsert() const;
 
+    ///
+    /// Set array filters for this update operation.
+    ///
+    /// @param array_filters
+    ///   Array representing filters determining which array elements to modify.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
+    ///
+    update_many& array_filters(bsoncxx::array::view_or_value array_filters);
+
+    ///
+    /// Get array filters for this operation.
+    ///
+    /// @return
+    ///   The current array filters.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
+    ///
+    const stdx::optional<bsoncxx::array::view_or_value>& array_filters() const;
+
    private:
     bsoncxx::document::view_or_value _filter;
     bsoncxx::document::view_or_value _update;
 
     stdx::optional<bsoncxx::document::view_or_value> _collation;
+    stdx::optional<bsoncxx::array::view_or_value> _array_filters;
     stdx::optional<bool> _upsert;
 };
 

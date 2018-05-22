@@ -17,6 +17,7 @@
 #include <chrono>
 #include <cstdint>
 
+#include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/options/find_one_common_options.hpp>
@@ -233,6 +234,30 @@ class MONGOCXX_API find_one_and_update {
     ///
     const stdx::optional<mongocxx::write_concern>& write_concern() const;
 
+    ///
+    /// Set array filters for this operation.
+    ///
+    /// @param array_filters
+    ///   Array representing filters determining which array elements to modify.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/findAndModify/
+    ///
+    find_one_and_update& array_filters(bsoncxx::array::view_or_value array_filters);
+
+    ///
+    /// Get array filters for this operation.
+    ///
+    /// @return
+    ///   The current array filters.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/findAndModify/
+    ///
+    const stdx::optional<bsoncxx::array::view_or_value>& array_filters() const;
+
    private:
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
@@ -242,6 +267,7 @@ class MONGOCXX_API find_one_and_update {
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
     stdx::optional<bool> _upsert;
     stdx::optional<mongocxx::write_concern> _write_concern;
+    stdx::optional<bsoncxx::array::view_or_value> _array_filters;
 
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const find_one_and_update&,
                                                       const find_one_and_update&);

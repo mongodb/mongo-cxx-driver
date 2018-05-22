@@ -14,6 +14,7 @@
 
 #include <mongocxx/model/update_many.hpp>
 
+#include <bsoncxx/array/view_or_value.hpp>
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
@@ -48,6 +49,15 @@ update_many& update_many::upsert(bool upsert) {
 
 const stdx::optional<bool>& update_many::upsert() const {
     return _upsert;
+}
+
+update_many& update_many::array_filters(bsoncxx::array::view_or_value array_filters) {
+    _array_filters = std::move(array_filters);
+    return *this;
+}
+
+const stdx::optional<bsoncxx::array::view_or_value>& update_many::array_filters() const {
+    return _array_filters;
 }
 
 }  // namespace model

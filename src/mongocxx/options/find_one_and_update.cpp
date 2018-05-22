@@ -14,6 +14,7 @@
 
 #include <mongocxx/options/find_one_and_update.hpp>
 
+#include <bsoncxx/array/view_or_value.hpp>
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
@@ -92,6 +93,16 @@ const stdx::optional<bool>& find_one_and_update::upsert() const {
 
 const stdx::optional<mongocxx::write_concern>& find_one_and_update::write_concern() const {
     return _write_concern;
+}
+
+find_one_and_update& find_one_and_update::array_filters(
+    bsoncxx::array::view_or_value array_filters) {
+    _array_filters = std::move(array_filters);
+    return *this;
+}
+
+const stdx::optional<bsoncxx::array::view_or_value>& find_one_and_update::array_filters() const {
+    return _array_filters;
 }
 
 bool MONGOCXX_CALL operator==(const find_one_and_update& lhs, const find_one_and_update& rhs) {
