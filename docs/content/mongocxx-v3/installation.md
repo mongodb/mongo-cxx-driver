@@ -56,10 +56,6 @@ or newer. The MongoDB C Driver supports TLS 1.1 on Linux if OpenSSL is
 at least version 1.0.1. On OS X and Windows, the C Driver uses native
 TLS implementations that support TLS 1.1.
 
-If you need static C++ driver libraries and you are configuring the C
-driver with the `./configure` script, you must pass the `--enable-static`
-configure option when building libbson/libmongoc.
-
 ### Step 2: Choose a C++17 polyfill
 
 The mongocxx driver uses the C++17 features `std::optional` and
@@ -197,8 +193,7 @@ build setting for novice users.
 - Note for users of mongocxx 3.2.x and newer: advanced users may build
   static libraries, if desired, by specifying `-DBUILD_SHARED_LIBS=OFF` to
   CMake. Specifying this option will introduce a dependency on the
-  `libmongoc` static libraries (see step 1 above for details on how to
-  ensure that these are installed).  Linking an application against both
+  `libmongoc` static libraries. Linking an application against both
   shared `libmongoc` and static `mongocxx` is not supported, nor is
   linking against both static `libmongoc` and shared `mongocxx`.
 
