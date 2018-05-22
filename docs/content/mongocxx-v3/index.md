@@ -13,7 +13,7 @@ slug = "index"
 The mongocxx is a ground-up rewrite of a C++ driver for MongoDB based on
 [libmongoc](http://mongoc.org/).  It requires a C++11 compiler.  It it
 known to build on x86 and x86-64 architectures for Linux, macOS,
-Windows, FreeBSD and Solaris.
+Windows, and FreeBSD.
 
 The mongocxx driver library includes a matching bson package, bsoncxx, that
 implements the BSON specification (see http://www.bsonspec.org). This
