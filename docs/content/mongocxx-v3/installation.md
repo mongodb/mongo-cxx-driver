@@ -51,6 +51,11 @@ page.
 Follow the instructions for building from a tarball at
 [Installing libmongoc](http://mongoc.org/libmongoc/current/installing.html).
 
+Industry best practices and some regulations require the use of TLS 1.1
+or newer. The MongoDB C Driver supports TLS 1.1 on Linux if OpenSSL is
+at least version 1.0.1. On OS X and Windows, the C Driver uses native
+TLS implementations that support TLS 1.1.
+
 If you need static C++ driver libraries and you are configuring the C
 driver with the `./configure` script, you must pass the `--enable-static`
 configure option when building libbson/libmongoc.
