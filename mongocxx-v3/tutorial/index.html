@@ -1424,7 +1424,7 @@ while <code>find_one()</code> will return an instance of
 <code>std::optional&lt;</code><a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1value.html
 "><code>bsoncxx::document::value</code></a><code>&gt;</code></p>
 
-<p>You can call either method without any arguments to query all documents
+<p>You can call either method with an empty document to query all documents
 in a collection, or pass a filter to query for documents that match the
 filter criteria.</p>
 
@@ -1434,7 +1434,7 @@ filter criteria.</p>
 method without any parameters.</p>
 
 <pre><code class="language-c++">bsoncxx::stdx::optional&lt;bsoncxx::document::value&gt; maybe_result =
-  collection.find_one(document{} &lt;&lt; finalize);
+  collection.find_one({});
 if(maybe_result) {
   // Do something with *maybe_result;
 }
@@ -1442,7 +1442,7 @@ if(maybe_result) {
 
 <h3 id="find-all-documents-in-a-collection">Find All Documents in a Collection</h3>
 
-<pre><code class="language-c++">mongocxx::cursor cursor = collection.find(document{} &lt;&lt; finalize);
+<pre><code class="language-c++">mongocxx::cursor cursor = collection.find({});
 for(auto doc : cursor) {
   std::cout &lt;&lt; bsoncxx::to_json(doc) &lt;&lt; &quot;\n&quot;;
 }

@@ -1122,7 +1122,7 @@
 <tr>
 <th>&nbsp;</th>
 <th>Linux</th>
-<th>OS X</th>
+<th>macOS</th>
 <th>Windows</th>
 </tr>
 </thead>
@@ -1172,8 +1172,10 @@ have problems, please file a bug report via
 <p>The mongocxx driver builds on top of the MongoDB C driver.</p>
 
 <ul>
-<li>For mongocxx-3.2.x, libmongoc 1.8.2 or later is required.</li>
-<li>For mongocxx-3.1.x, libmongoc 1.5.0 or later is required.</li>
+<li>For mongocxx-3.3.x, libmongoc 1.10.0 or later is required.</li>
+<li>For mongocxx-3.2.x, libmongoc 1.9.2 or later is required.</li>
+<li>For mongocxx-3.1.[0-3], libmongoc 1.5.0 or later is required.</li>
+<li>For mongocxx-3.1.4+, libmongoc 1.7.0 or later is required.</li>
 <li>For mongocxx-3.0.x, we recommend the last 1.4.x version of libmongoc</li>
 </ul>
 
@@ -1185,9 +1187,10 @@ page.</p>
 <p>Follow the instructions for building from a tarball at
 <a href="http://mongoc.org/libmongoc/current/installing.html">Installing libmongoc</a>.</p>
 
-<p>If you need static C++ driver libraries and you are configuring the C
-driver with the <code>./configure</code> script, you must pass the <code>--enable-static</code>
-configure option when building libbson/libmongoc.</p>
+<p>Industry best practices and some regulations require the use of TLS 1.1
+or newer. The MongoDB C Driver supports TLS 1.1 on Linux if OpenSSL is
+at least version 1.0.1. On macOS and Windows, the C Driver uses native
+TLS implementations that support TLS 1.1.</p>
 
 <h3 id="step-2-choose-a-c-17-polyfill">Step 2: Choose a C++17 polyfill</h3>
 
@@ -1238,11 +1241,11 @@ cd mongo-cxx-driver/build
 <p>If you prefer to download a tarball, look on the <a href="https://github.com/mongodb/mongo-cxx-driver/releases">mongocxx
 releases</a> page for a
 link to the release tarball for the version you wish you install.  For
-example, to download version 3.1.2:</p>
+example, to download version 3.2.0:</p>
 
-<pre><code class="language-sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.1.2.tar.gz
-tar -xzf r3.1.2.tar.gz
-cd mongo-cxx-driver-r3.1.2/build
+<pre><code class="language-sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.2.0.tar.gz
+tar -xzf r3.2.0.tar.gz
+cd mongo-cxx-driver-r3.2.0/build
 </code></pre>
 
 <p>Make sure you change to the <code>build</code> directory of whatever source tree you
@@ -1314,7 +1317,7 @@ and boost is in <code>c:\local\boost_1_59_0</code>:</p>
 <pre><code class="language-sh">'C:\Program Files (x86)\CMake\bin\cmake.exe' -G &quot;Visual Studio 14 Win64&quot;
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
     -DCMAKE_PREFIX_PATH=c:\mongo-c-driver
-    -DBOOST_ROOT=c:\local\boost_1_59_0
+    -DBOOST_ROOT=c:\local\boost_1_59_0 ..
 </code></pre>
 
 <p><code>mongocxx</code> builds shared libraries by default.  This is the recommended
@@ -1324,8 +1327,7 @@ build setting for novice users.</p>
 <li>Note for users of mongocxx 3.2.x and newer: advanced users may build
 static libraries, if desired, by specifying <code>-DBUILD_SHARED_LIBS=OFF</code> to
 CMake. Specifying this option will introduce a dependency on the
-<code>libmongoc</code> static libraries (see step 1 above for details on how to
-ensure that these are installed).  Linking an application against both
+<code>libmongoc</code> static libraries. Linking an application against both
 shared <code>libmongoc</code> and static <code>mongocxx</code> is not supported, nor is
 linking against both static <code>libmongoc</code> and shared <code>mongocxx</code>.</li>
 </ul>

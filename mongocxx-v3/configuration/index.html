@@ -1198,20 +1198,8 @@ auto client = mongocxx::client{
 
 <h3 id="mongodb-cr">MONGODB-CR</h3>
 
-<p>To explicitly create a credential of type MONGODB-CR use a connection
-string as above but with a parameter specifying the authentication mechanism
-as &ldquo;MONGODB-CR&rdquo;:</p>
-
-<pre><code class="language-cpp">#include &lt;mongocxx/client.hpp&gt;
-#include &lt;mongocxx/uri.hpp&gt;
-
-auto client = mongocxx::client{
-    uri{&quot;mongodb://user1:pwd1@host1/?authSource=db1&amp;authMechanism=MONGODB-CR&quot;}};
-</code></pre>
-
-<p>Note that this is not recommended as a credential created in this way will
-fail to authenticate after an authentication schema upgrade from
-MONGODB-CR to SCRAM-SHA-1.</p>
+<p>The MONGODB-CR authMechanism is deprecated and will no longer function in MongoDB 4.0. Instead, specify no authMechanism and the driver
+will use an authentication mechanism compatible with your server.</p>
 
 <h3 id="x-509">X.509</h3>
 

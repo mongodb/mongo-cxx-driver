@@ -49,7 +49,7 @@ For example, to use a custom CA or to disable certificate validation, uncomment 
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/</guid>
       <description>Installing the mongocxx driver Prerequisites  Any standard Unix platform, or Windows 7 SP1+ A compiler that suports C++11 (gcc, clang, or Visual Studio) CMake 3.2 or later boost headers (optional)  We currently test the driver with the following configurations:
-   &amp;nbsp; Linux OS X Windows     clang 3.8 7.0 (Apple) -   gcc 4.8, 5.4 - -   VS n/a n/a 14 (2015) Update 3   boost - 1.</description>
+   &amp;nbsp; Linux macOS Windows     clang 3.8 7.0 (Apple) -   gcc 4.8, 5.4 - -   VS n/a n/a 14 (2015) Update 3   boost - 1.</description>
     </item>
     
     <item>
@@ -58,7 +58,7 @@ For example, to use a custom CA or to disable certificate validation, uncomment 
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</guid>
-      <description>The mongocxx (v3) driver The mongocxx is a ground-up rewrite of a C++ driver for MongoDB based on libmongoc. It requires a C++11 compiler. It it known to build on x86 and x86-64 architectures for Linux, Mac OS X, Windows, FreeBSD and Solaris.
+      <description>The mongocxx (v3) driver The mongocxx is a ground-up rewrite of a C++ driver for MongoDB based on libmongoc. It requires a C++11 compiler. It is known to build on x86 and x86-64 architectures for Linux, macOS, Windows, and FreeBSD.
 The mongocxx driver library includes a matching bson package, bsoncxx, that implements the BSON specification (see http://www.bsonspec.org). This library can be used standalone for object serialization and deserialization even when one is not using MongoDB at all.</description>
     </item>
     
@@ -69,7 +69,7 @@ The mongocxx driver library includes a matching bson package, bsoncxx, that impl
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/thread-safety/</guid>
       <description>Thread and fork safety with mongocxx TLDR: Always give each thread its own mongocxx::client.
-In general each mongocxx::client object AND all of its child objects should be used by a single thread at a time. This is true even for clients acquired from a mongocxx::pool.
+In general each mongocxx::client object AND all of its child objects, including mongocxx::client_session, mongocxx::database, mongocxx::collection, and mongocxx::cursor, should be used by a single thread at a time. This is true even for clients acquired from a mongocxx::pool.
 Even if you create multiple child objects from a single client, and synchronize them individually, that is unsafe as they will concurrently modify internal structures of the client.</description>
     </item>
     
