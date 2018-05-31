@@ -10,24 +10,21 @@ Currently, no drivers guarantee API or ABI stability.
 | (repo master branch) | Unstable    | Active development  | New feature development                                      |
 | mongocxx 3.1.x       | Stable      | Bug fixes only      | Current stable C++ driver release, requires C++11            |
 | mongocxx 3.0.x       | Stable      | Critical fixes only | Previous stable C++ driver release, requires C++11           |
-| legacy   (all)       | Stable      | Critical fixes only | Legacy API stable C++ driver release, no longer recommended  |
 
 ## Documentation versions available
 
-| mongocxx                             | legacy                           |
-| ------------------------------------ | -------------------------------- |
-| [mongocxx-3.2.0](../mongocxx-3.2.0)  | [legacy-1.1.2](../legacy-1.1.2/) |
-| [mongocxx-3.1.4](../mongocxx-3.1.4/) | [legacy-1.1.1](../legacy-1.1.1/) |
-| [mongocxx-3.1.3](../mongocxx-3.1.3/) | [legacy-1.1.0](../legacy-1.1.0/) |
-| [mongocxx-3.1.2](../mongocxx-3.1.2/) | [legacy-1.0.7](../legacy-1.0.7/) |
-| [mongocxx-3.1.1](../mongocxx-3.1.1/) | [legacy-1.0.6](../legacy-1.0.6/) |
-| [mongocxx-3.1.0](../mongocxx-3.1.0/) | [legacy-1.0.5](../legacy-1.0.5/) |
-| [mongocxx-3.0.3](../mongocxx-3.0.3/) | [legacy-1.0.4](../legacy-1.0.4/) |
-| [mongocxx-3.0.2](../mongocxx-3.0.2/) | [legacy-1.0.3](../legacy-1.0.3/) |
-| [mongocxx-3.0.1](../mongocxx-3.0.1/) | [legacy-1.0.2](../legacy-1.0.2/) |
-| [mongocxx-3.0.0](../mongocxx-3.0.0/) | [legacy-1.0.1](../legacy-1.0.1/) |
-|                                      | [legacy-1.0.0](../legacy-1.0.0/) |
-
+| mongocxx                             |
+| ------------------------------------ |
+| [mongocxx-3.2.0](../mongocxx-3.2.0)  |
+| [mongocxx-3.1.4](../mongocxx-3.1.4/) |
+| [mongocxx-3.1.3](../mongocxx-3.1.3/) |
+| [mongocxx-3.1.2](../mongocxx-3.1.2/) |
+| [mongocxx-3.1.1](../mongocxx-3.1.1/) |
+| [mongocxx-3.1.0](../mongocxx-3.1.0/) |
+| [mongocxx-3.0.3](../mongocxx-3.0.3/) |
+| [mongocxx-3.0.2](../mongocxx-3.0.2/) |
+| [mongocxx-3.0.1](../mongocxx-3.0.1/) |
+| [mongocxx-3.0.0](../mongocxx-3.0.0/) |
 
 ## MongoDB compatibility
 
@@ -40,8 +37,6 @@ is recommended for all new development.
 | mongocxx 3.2.x | ✓           | ✓           | ✓           | ✓           | ✓           |
 | mongocxx 3.1.x | ✓           | ✓           | ✓           | ✓           | ✓           |
 | mongocxx 3.0.x | ✓           | ✓           | ✓           | ✓           |             |
-| legacy   1.1.x | ✓           | ✓           | ✓           | ✓           |             |
-| legacy   1.0.x | ✓           | ✓           | ✓           |             |             |
 
 ## Resources
 

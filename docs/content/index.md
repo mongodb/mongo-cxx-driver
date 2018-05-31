@@ -37,8 +37,6 @@ is recommended for all new development.
 | mongocxx 3.2.x | ✓           | ✓           | ✓           | Partial     |
 | mongocxx 3.1.x | ✓           | ✓           | ✓           |             |
 | mongocxx 3.0.x | ✓           | ✓           |             |             |
-| legacy   1.1.x | ✓           | ✓           |             |             |
-| legacy   1.0.x | ✓           |             |             |             |
 
 ## License
 
