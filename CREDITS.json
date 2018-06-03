@@ -92,7 +92,13 @@
                 "kevin.albertson@mongodb.com"
             ],
             "description": "Ongoing development/maintenance."
+        },
+        {
+            "name": "Ryan Timmons",
+            "email": [
+                "ryan.timmons@mongodb.com"
+            ],
+            "description": "Change streams, example code for complex aggregations."
         }
-
     ]
 }
