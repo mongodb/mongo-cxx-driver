@@ -5,11 +5,12 @@
 Stability indicates whether this driver is recommended for production use.
 Currently, no drivers guarantee API or ABI stability.
 
-| Family/version       | Stability   | Development         | Purpose                                                      |
-| -------------------- | ----------- | ------------------- | ------------------------------------------------------------ |
-| (repo master branch) | Unstable    | Active development  | New feature development                                      |
-| mongocxx 3.1.x       | Stable      | Bug fixes only      | Current stable C++ driver release, requires C++11            |
-| mongocxx 3.0.x       | Stable      | Critical fixes only | Previous stable C++ driver release, requires C++11           |
+| Family/version       | Stability   | Development         | Purpose                             |
+| -------------------- | ----------- | ------------------- | -------------------------------------
+| (repo master branch) | Unstable    | Active development  | New feature development              |
+| mongocxx 3.2.x       | Stable      | Bug fixes only      | Current stable C++ driver release
+| mongocxx 3.1.x       | Stable      | Bug fixes only      | Previous stable C++ driver release
+| mongocxx 3.0.x       | Stable      | Critical fixes only | Previous stable C++ driver release
 
 ## Documentation versions available
 
