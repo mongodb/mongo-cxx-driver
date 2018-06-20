@@ -62,12 +62,6 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-using bsoncxx::builder::basic::kvp;
-using bsoncxx::builder::basic::make_document;
-using bsoncxx::builder::concatenate;
-
-class client;
-class database;
 class pipeline;
 
 ///
