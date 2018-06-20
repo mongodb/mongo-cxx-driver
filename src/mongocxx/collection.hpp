@@ -56,19 +56,15 @@
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
 #include <mongocxx/write_concern.hpp>
+#include <mongocxx/pipeline.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-using bsoncxx::builder::basic::kvp;
-using bsoncxx::builder::basic::make_document;
-using bsoncxx::builder::concatenate;
-
 class client;
 class database;
-class pipeline;
 
 ///
 /// Class representing server side document groupings within a MongoDB database.
