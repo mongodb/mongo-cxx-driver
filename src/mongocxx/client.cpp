@@ -137,6 +137,11 @@ cursor client::list_databases(const client_session& session) const {
     return libmongoc::client_find_databases_with_opts(_get_impl().client_t, options_bson.bson());
 }
 
+cursor client::list_databases(const bsoncxx::document::view_or_value filter) const {
+    scoped_bson_t filter_bson{filter.view()};
+    return libmongoc::client_find_databases_with_opts(_get_impl().client_t, filter_bson.bson());
+}
+
 class client_session client::start_session(const mongocxx::options::client_session& options) {
     return client_session(this, options);
 }

@@ -244,6 +244,24 @@ class MONGOCXX_API client {
     cursor list_databases(const client_session& session) const;
 
     ///
+    /// Enumerates the databases in the client.
+    ///
+    /// @param filter
+    ///   The filter that documents must match in order to be listed.
+    ///
+    /// @return A mongocxx::cursor containing a BSON document for each
+    ///   database. Each document contains a name field with the database
+    ///   name, a sizeOnDisk field with the total size of the database file on
+    ///   disk in bytes, and an empty field specifying whether the database
+    ///   has any data.
+    ///
+    /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/listDatabases
+    ///
+    cursor list_databases(const bsoncxx::document::view_or_value filter) const;
+
+    ///
     /// @}
     ///
 

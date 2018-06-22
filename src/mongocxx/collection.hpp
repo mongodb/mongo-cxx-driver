@@ -47,6 +47,7 @@
 #include <mongocxx/options/index_view.hpp>
 #include <mongocxx/options/insert.hpp>
 #include <mongocxx/options/update.hpp>
+#include <mongocxx/pipeline.hpp>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/result/bulk_write.hpp>
@@ -56,7 +57,6 @@
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
 #include <mongocxx/write_concern.hpp>
-#include <mongocxx/pipeline.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 

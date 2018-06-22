@@ -44,6 +44,33 @@ TEST_CASE("A default constructed client cannot perform operations", "[client]") 
     REQUIRE_THROWS_AS(a.list_databases(), mongocxx::logic_error);
 }
 
+TEST_CASE("A client lists its databases with a filter applied", "[client]") {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    MOCK_CLIENT
+    instance::current();
+
+    auto client_list_databases_called = false;
+    auto filter_doc = make_document(kvp("filter", make_document(kvp("name", "admin"))));
+    auto filter_view = filter_doc.view();
+
+    auto client_list_databases = libmongoc::client_find_databases_with_opts.create_instance();
+    client_list_databases
+        ->interpose([&](mongoc_client_t*, const bson_t* opts) {
+            REQUIRE(opts);
+            bsoncxx::document::view opts_view{bson_get_data(opts), opts->len};
+            REQUIRE(filter_view == opts_view);
+            client_list_databases_called = true;
+            return nullptr;
+        })
+        .forever();
+
+    client mongo_client{uri{}};
+    mongo_client.list_databases(filter_view);
+    REQUIRE(client_list_databases_called);
+}
+
 TEST_CASE("A client constructed with a URI is truthy", "[client]") {
     MOCK_CLIENT
 
