@@ -29,6 +29,7 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
@@ -1006,6 +1007,8 @@ std::int64_t collection::_count(const client_session* session,
 
     scoped_bson_t cmd_opts_bson{cmd_opts_builder.view()};
 
+    // Remove these suppressions when CXX-1594 is done.
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
     auto result = libmongoc::collection_count_with_opts(_get_impl().collection_t,
                                                         static_cast<mongoc_query_flags_t>(0),
                                                         bson_filter.bson(),
@@ -1015,6 +1018,7 @@ std::int64_t collection::_count(const client_session* session,
                                                         rp_ptr,
                                                         &error);
 
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
     if (result < 0) {
         throw_exception<query_exception>(error);
     }
@@ -1128,8 +1132,8 @@ cursor collection::_distinct(const client_session* session,
         throw bsoncxx::exception{bsoncxx::error_code::k_internal_error};
     }
 
-    cursor fake_cursor{
-        libmongoc::cursor_new_from_command_reply(_get_impl().client_impl->client_t, reply_bson, 0)};
+    cursor fake_cursor{libmongoc::cursor_new_from_command_reply_with_opts(
+        _get_impl().client_impl->client_t, reply_bson, nullptr)};
     if (libmongoc::cursor_error(fake_cursor._impl->cursor_t, &error)) {
         throw_exception<operation_exception>(error);
     }

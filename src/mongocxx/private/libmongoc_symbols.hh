@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
+
 MONGOCXX_LIBMONGOC_SYMBOL(bulk_operation_destroy)
 MONGOCXX_LIBMONGOC_SYMBOL(bulk_operation_execute)
 MONGOCXX_LIBMONGOC_SYMBOL(bulk_operation_get_write_concern)
@@ -61,8 +63,13 @@ MONGOCXX_LIBMONGOC_SYMBOL(client_start_session)
 MONGOCXX_LIBMONGOC_SYMBOL(collection_aggregate)
 MONGOCXX_LIBMONGOC_SYMBOL(collection_command_simple)
 MONGOCXX_LIBMONGOC_SYMBOL(collection_copy)
+
+// Remove these suppressions when CXX-1594 is done.
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 MONGOCXX_LIBMONGOC_SYMBOL(collection_count)
 MONGOCXX_LIBMONGOC_SYMBOL(collection_count_with_opts)
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
+
 MONGOCXX_LIBMONGOC_SYMBOL(collection_create_bulk_operation_with_opts)
 MONGOCXX_LIBMONGOC_SYMBOL(collection_destroy)
 MONGOCXX_LIBMONGOC_SYMBOL(collection_drop)
@@ -86,7 +93,7 @@ MONGOCXX_LIBMONGOC_SYMBOL(collection_watch)
 MONGOCXX_LIBMONGOC_SYMBOL(collection_write_command_with_opts)
 MONGOCXX_LIBMONGOC_SYMBOL(cursor_destroy)
 MONGOCXX_LIBMONGOC_SYMBOL(cursor_error)
-MONGOCXX_LIBMONGOC_SYMBOL(cursor_new_from_command_reply)
+MONGOCXX_LIBMONGOC_SYMBOL(cursor_new_from_command_reply_with_opts)
 MONGOCXX_LIBMONGOC_SYMBOL(cursor_next)
 MONGOCXX_LIBMONGOC_SYMBOL(cursor_set_max_await_time_ms)
 MONGOCXX_LIBMONGOC_SYMBOL(database_command_with_opts)
