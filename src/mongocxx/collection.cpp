@@ -346,28 +346,6 @@ bulk_write collection::create_bulk_write(const client_session& session,
     return writes;
 }
 
-stdx::optional<result::bulk_write> collection::bulk_write(const class bulk_write& bulk_write) {
-    return this->bulk_write_deprecated(bulk_write);
-}
-
-stdx::optional<result::bulk_write> collection::bulk_write_deprecated(
-    const class bulk_write& bulk_write) {
-    mongoc_bulk_operation_t* b = bulk_write._impl->operation_t;
-    // Before collection::create_bulk_write was added, bulk_writes were created from their
-    // constructor without a reference to a collection, and the collection was set on the bulk_write
-    // object here. However, since libmongoc::bulk_operation_set_collection takes the name of a
-    // collection rather than a reference to the collection itself, it doesn't inherit any write
-    // concern that may be set on the collection. The legacy bulk_write constructor is deprecated
-    // but remains for backwards compatibility, so we need to set the client, database, and
-    // collection here for bulk writes created from that constructor.
-    if (!bulk_write._created_from_collection) {
-        libmongoc::bulk_operation_set_client(b, _get_impl().client_impl->client_t);
-        libmongoc::bulk_operation_set_database(b, _get_impl().database_name.c_str());
-        libmongoc::bulk_operation_set_collection(b, get_collection_name(_get_impl().collection_t));
-    }
-    return bulk_write.execute();
-}
-
 namespace {
 
 bsoncxx::builder::basic::document build_find_options_document(const options::find& options) {

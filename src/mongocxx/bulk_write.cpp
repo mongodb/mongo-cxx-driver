@@ -41,21 +41,6 @@ bulk_write& bulk_write::operator=(bulk_write&&) noexcept = default;
 
 bulk_write::~bulk_write() = default;
 
-bulk_write::bulk_write(options::bulk_write options)
-    : bulk_write::bulk_write(deprecated_tag{}, std::move(options)) {}
-bulk_write::bulk_write(deprecated_tag, options::bulk_write options)
-    : _created_from_collection(false),
-      _impl(stdx::make_unique<impl>(libmongoc::bulk_operation_new(options.ordered()))) {
-    auto options_wc = options.write_concern();
-    if (options_wc)
-        libmongoc::bulk_operation_set_write_concern(_impl->operation_t,
-                                                    options_wc->_impl->write_concern_t);
-
-    auto options_bdv = options.bypass_document_validation();
-    if (options_bdv)
-        libmongoc::bulk_operation_set_bypass_document_validation(_impl->operation_t, *options_bdv);
-}
-
 bulk_write& bulk_write::append(const model::write& operation) {
     switch (operation.type()) {
         case write_type::k_insert_one: {

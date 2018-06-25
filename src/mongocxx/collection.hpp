@@ -384,24 +384,6 @@ class MONGOCXX_API collection {
     ///
 
     ///
-    /// Sends a batch of writes represented by the bulk_write to the server.
-    ///
-    /// @deprecated Use mongocxx::bulk_write::execute instead.
-    ///
-    /// @param bulk_write
-    ///   A bulk write which contains multiple write operations.
-    ///
-    /// @return The optional result of the bulk operation execution, a result::bulk_write.
-    ///
-    /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
-    ///
-    /// @see https://docs.mongodb.com/master/core/bulk-write-operations/
-    ///
-    MONGOCXX_DEPRECATED stdx::optional<result::bulk_write> bulk_write(
-        const class bulk_write& bulk_write);
-    stdx::optional<result::bulk_write> bulk_write_deprecated(const class bulk_write& bulk_write);
-
-    ///
     /// @{
     ///
     /// Counts the number of documents matching the provided filter.
