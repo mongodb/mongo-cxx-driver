@@ -683,6 +683,16 @@ TEST_CASE("lsid", "[session]") {
         test.test_method_with_session(f, s);
     }
 
+    SECTION("database::list_collection_names") {
+        auto f = [&s, &db](bool use_session) {
+            auto vector = use_session ? db.list_collection_names(s) : db.list_collection_names();
+            for (auto const& value : vector) {
+            }
+        };
+
+        test.test_method_with_session(f, s);
+    }
+
     SECTION("database::run_command") {
         auto f = [&s, &db](bool use_session) {
             auto cmd = make_document(kvp("ping", 1));

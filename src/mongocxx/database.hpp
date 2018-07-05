@@ -266,9 +266,6 @@ class MONGOCXX_API database {
     ///
     /// @return mongocxx::cursor containing the collection information.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listCollections'
-    /// command fails.
-    ///
     /// @see https://docs.mongodb.com/master/reference/command/listCollections/
     ///
     cursor list_collections(bsoncxx::document::view_or_value filter = {});
@@ -283,13 +280,44 @@ class MONGOCXX_API database {
     ///
     /// @return mongocxx::cursor containing the collection information.
     ///
+    /// @see https://docs.mongodb.com/master/reference/command/listCollections/
+    ///
+    cursor list_collections(const client_session& session,
+                            bsoncxx::document::view_or_value filter = {});
+
+    ///
+    /// Enumerates the collection names in this database.
+    ///
+    /// @param filter
+    ///   An optional query expression to filter the returned collection names.
+    ///
+    /// @return std::vector<std::string> containing the collection names.
+    ///
     /// @throws mongocxx::operation_exception if the underlying 'listCollections'
     /// command fails.
     ///
     /// @see https://docs.mongodb.com/master/reference/command/listCollections/
     ///
-    cursor list_collections(const client_session& session,
-                            bsoncxx::document::view_or_value filter = {});
+    std::vector<std::string> list_collection_names(bsoncxx::document::view_or_value filter = {});
+
+    ///
+    /// Enumerates the collection names in this database.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the aggregation.
+    /// @param filter
+    ///   An optional query expression to filter the returned collection names.
+    ///
+    /// @return std::vector<std::string> containing the collection names.
+    ///
+    /// @throws mongocxx::operation_exception if the underlying 'listCollections'
+    /// command fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/listCollections/
+    ///
+    std::vector<std::string> list_collection_names(const client_session& session,
+                                                   bsoncxx::document::view_or_value filter = {});
+
     ///
     /// @}
     ///
@@ -416,6 +444,9 @@ class MONGOCXX_API database {
 
     MONGOCXX_PRIVATE cursor _list_collections(const client_session* session,
                                               bsoncxx::document::view_or_value filter);
+
+    MONGOCXX_PRIVATE std::vector<std::string> _list_collection_names(
+        const client_session* session, bsoncxx::document::view_or_value filter);
 
     MONGOCXX_PRIVATE void _drop(
         const client_session* session,

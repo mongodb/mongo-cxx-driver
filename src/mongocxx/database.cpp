@@ -43,6 +43,30 @@ using bsoncxx::builder::basic::make_document;
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+namespace {
+class collection_names {
+   public:
+    explicit collection_names(char** names) {
+        _names = names;
+    };
+
+    ~collection_names() {
+        bson_strfreev(_names);
+    }
+
+    const char* operator[](const std::size_t i) const {
+        return _names[i];
+    };
+
+    bool operator!() const {
+        return _names == nullptr;
+    }
+
+   private:
+    char** _names;
+};
+}  // namespace
+
 using namespace libbson;
 
 database::database() noexcept = default;
@@ -103,6 +127,43 @@ cursor database::list_collections(bsoncxx::document::view_or_value filter) {
 cursor database::list_collections(const client_session& session,
                                   bsoncxx::document::view_or_value filter) {
     return _list_collections(&session, filter);
+}
+
+std::vector<std::string> database::_list_collection_names(const client_session* session,
+                                                          bsoncxx::document::view_or_value filter) {
+    bsoncxx::builder::basic::document options_builder;
+    options_builder.append(kvp("filter", filter));
+
+    if (session) {
+        options_builder.append(
+            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
+    scoped_bson_t options_bson(options_builder.extract());
+
+    bson_error_t error;
+    collection_names names(libmongoc::database_get_collection_names_with_opts(
+        _get_impl().database_t, options_bson.bson(), &error));
+
+    if (!names) {
+        throw_exception<operation_exception>(error);
+    }
+
+    std::vector<std::string> _names;
+    for (std::size_t i = 0; names[i]; ++i) {
+        _names.emplace_back(names[i]);
+    }
+
+    return _names;
+}
+
+std::vector<std::string> database::list_collection_names(bsoncxx::document::view_or_value filter) {
+    return _list_collection_names(nullptr, filter);
+}
+
+std::vector<std::string> database::list_collection_names(const client_session& session,
+                                                         bsoncxx::document::view_or_value filter) {
+    return _list_collection_names(&session, filter);
 }
 
 stdx::string_view database::name() const {

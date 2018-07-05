@@ -553,5 +553,24 @@ TEST_CASE("Database integration tests", "[database]") {
         std::set<std::string> expected_colls2{"list_collections_capped"};
         REQUIRE(check_for_collections(std::move(cursor2), expected_colls2));
     }
+
+    SECTION("list_collection_names returns a correct result") {
+        class database db = mongo_client["list_collection_names"];
+        db.drop();
+
+        std::set<std::string> expected_colls;
+        for (std::size_t i = 0; i < 10; ++i) {
+            std::string coll_str = "list_collection_names_coll" + std::to_string(i);
+            db.create_collection(coll_str);
+            expected_colls.insert(coll_str);
+        }
+
+        auto names = db.list_collection_names();
+        for (auto const& name : names) {
+            REQUIRE(expected_colls.erase(name) == 1);
+        }
+
+        REQUIRE(expected_colls.size() == 0);
+    }
 }
 }  // namespace
