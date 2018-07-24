@@ -31,30 +31,4 @@ TEST_CASE("session option", "[session][option]") {
     opts.causal_consistency(false);
     REQUIRE(!opts.causal_consistency());
 }
-
-TEST_CASE("session option equals", "[session][option]") {
-    instance::current();
-
-    options::client_session opts1{};
-    options::client_session opts2{};
-    REQUIRE(opts1 == opts2);
-    REQUIRE(opts2 == opts1);
-
-    opts1.causal_consistency(false);
-    opts2.causal_consistency(false);
-    REQUIRE(opts1 == opts2);
-    REQUIRE(opts2 == opts1);
-}
-
-TEST_CASE("session option inequals", "[session][option]") {
-    instance::current();
-
-    options::client_session opts1{};
-    options::client_session opts2{};
-
-    opts1.causal_consistency(false);
-    REQUIRE(opts1 != opts2);
-    REQUIRE(opts2 != opts1);
-}
-
 }  // namespace

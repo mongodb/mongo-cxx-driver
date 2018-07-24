@@ -28,13 +28,6 @@ const client& pool::client_opts() const {
     return _client_opts;
 }
 
-bool MONGOCXX_CALL operator==(const pool& lhs, const pool& rhs) {
-    return lhs.client_opts() == rhs.client_opts();
-}
-bool MONGOCXX_CALL operator!=(const pool& lhs, const pool& rhs) {
-    return !(lhs == rhs);
-}
-
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

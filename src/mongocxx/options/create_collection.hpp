@@ -260,11 +260,6 @@ class MONGOCXX_API create_collection {
     stdx::optional<bool> _no_padding;
     stdx::optional<bsoncxx::document::view_or_value> _storage_engine_opts;
     stdx::optional<class validation_criteria> _validation;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const create_collection&,
-                                                      const create_collection&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const create_collection&,
-                                                      const create_collection&);
 };
 
 MONGOCXX_INLINE create_collection::operator bsoncxx::document::value() const {

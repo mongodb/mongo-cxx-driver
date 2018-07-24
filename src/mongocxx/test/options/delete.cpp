@@ -35,25 +35,4 @@ TEST_CASE("delete_options", "[delete][option]") {
     CHECK_OPTIONAL_ARGUMENT(del, collation, collation.view());
     CHECK_OPTIONAL_ARGUMENT(del, write_concern, write_concern{});
 }
-
-TEST_CASE("delete_options equals", "[delete][option]") {
-    instance::current();
-
-    options::delete_options del1;
-    options::delete_options del2;
-
-    REQUIRE(del1 == del2);
-}
-
-TEST_CASE("delete_options inequals", "[delete][option]") {
-    using bsoncxx::builder::basic::make_document;
-    using bsoncxx::builder::basic::kvp;
-    instance::current();
-
-    options::delete_options del1;
-    del1.collation(make_document(kvp("locale", "simple")).view());
-    options::delete_options del2;
-
-    REQUIRE(del1 != del2);
-}
 }  // namespace

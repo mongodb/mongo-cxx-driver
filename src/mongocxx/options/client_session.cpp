@@ -29,14 +29,6 @@ bool client_session::causal_consistency() const noexcept {
     return _causal_consistency;
 }
 
-bool MONGOCXX_CALL operator==(const client_session& lhs, const client_session& rhs) {
-    return lhs.causal_consistency() == rhs.causal_consistency();
-}
-
-bool MONGOCXX_CALL operator!=(const client_session& lhs, const client_session& rhs) {
-    return !(lhs == rhs);
-}
-
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

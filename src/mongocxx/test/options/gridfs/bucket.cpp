@@ -44,23 +44,4 @@ TEST_CASE("options::gridfs::bucket accessors/mutators", "[options::gridfs::bucke
     CHECK_OPTIONAL_ARGUMENT(bucket_options, read_preference, rp);
     CHECK_OPTIONAL_ARGUMENT(bucket_options, write_concern, wc);
 }
-
-TEST_CASE("options::gridfs::bucket equals", "[options::gridfs::bucket]") {
-    instance::current();
-
-    options::gridfs::bucket bucket_options1{};
-    options::gridfs::bucket bucket_options2{};
-
-    REQUIRE(bucket_options1 == bucket_options2);
-}
-
-TEST_CASE("options::gridfs::bucket inequals", "[options::gridfs::bucket]") {
-    instance::current();
-
-    options::gridfs::bucket bucket_options1{};
-    bucket_options1.bucket_name("a");
-    options::gridfs::bucket bucket_options2{};
-
-    REQUIRE(bucket_options1 != bucket_options2);
-}
 }  // namespace

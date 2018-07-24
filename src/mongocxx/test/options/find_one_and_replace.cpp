@@ -43,24 +43,4 @@ TEST_CASE("find_one_and_replace", "[find_one_and_replace][option]") {
     CHECK_OPTIONAL_ARGUMENT(opts, sort, sort.view());
     CHECK_OPTIONAL_ARGUMENT(opts, upsert, true);
 }
-
-TEST_CASE("find_one_and_replace equals", "[find_one_and_replace][options]") {
-    instance::current();
-
-    options::find_one_and_replace opts1{};
-    options::find_one_and_replace opts2{};
-
-    REQUIRE(opts1 == opts2);
-}
-
-TEST_CASE("find_one_and_replace inequals", "[find_one_and_replace][options]") {
-    instance::current();
-
-    options::find_one_and_replace opts1{};
-    opts1.max_time(std::chrono::milliseconds{500});
-    options::find_one_and_replace opts2{};
-
-    REQUIRE(opts1 != opts2);
-}
-
 }  // namespace

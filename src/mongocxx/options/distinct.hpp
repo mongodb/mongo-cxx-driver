@@ -107,9 +107,6 @@ class MONGOCXX_API distinct {
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<class read_preference> _read_preference;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const distinct&, const distinct&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const distinct&, const distinct&);
 };
 
 }  // namespace options

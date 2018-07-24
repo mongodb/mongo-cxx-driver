@@ -42,14 +42,6 @@ const stdx::optional<bsoncxx::document::view_or_value>& upload::metadata() const
     return _metadata;
 }
 
-bool MONGOCXX_CALL operator==(const upload& lhs, const upload& rhs) {
-    return ((lhs.metadata() == rhs.metadata()) &&
-            (lhs.chunk_size_bytes() == rhs.chunk_size_bytes()));
-}
-bool MONGOCXX_CALL operator!=(const upload& lhs, const upload& rhs) {
-    return !(lhs == rhs);
-}
-
 }  // namespace gridfs
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END

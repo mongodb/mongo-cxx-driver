@@ -267,9 +267,6 @@ class MONGOCXX_API aggregate {
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<class hint> _hint;
     stdx::optional<class write_concern> _write_concern;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const aggregate&, const aggregate&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const aggregate&, const aggregate&);
 };
 
 }  // namespace options

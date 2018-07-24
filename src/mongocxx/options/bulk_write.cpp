@@ -49,15 +49,6 @@ const stdx::optional<bool> bulk_write::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
-bool MONGOCXX_CALL operator==(const bulk_write& lhs, const bulk_write& rhs) {
-    return ((lhs.ordered() == rhs.ordered()) && (lhs.write_concern() == rhs.write_concern()) &&
-            (lhs.bypass_document_validation() == rhs.bypass_document_validation()));
-}
-
-bool MONGOCXX_CALL operator!=(const bulk_write& lhs, const bulk_write& rhs) {
-    return !(lhs == rhs);
-}
-
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

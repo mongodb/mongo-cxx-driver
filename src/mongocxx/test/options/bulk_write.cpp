@@ -28,23 +28,4 @@ TEST_CASE("bulk_write opts", "[bulk_write][options]") {
     CHECK_OPTIONAL_ARGUMENT(bulk_write_opts, write_concern, write_concern{});
     CHECK_OPTIONAL_ARGUMENT(bulk_write_opts, bypass_document_validation, true);
 }
-
-TEST_CASE("bulk_write options equals", "[bulk_write][option]") {
-    instance::current();
-
-    options::bulk_write bw1{};
-    options::bulk_write bw2{};
-
-    REQUIRE(bw1 == bw2);
-}
-
-TEST_CASE("bulk_write options inequals", "[bulk_write][option]") {
-    instance::current();
-
-    options::bulk_write bw1{};
-    bw1.bypass_document_validation(false);
-    options::bulk_write bw2{};
-
-    REQUIRE(bw1 != bw2);
-}
-}
+}  // namespace

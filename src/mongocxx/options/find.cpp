@@ -224,32 +224,6 @@ const stdx::optional<class read_preference>& find::read_preference() const {
     return _read_preference;
 }
 
-bool MONGOCXX_CALL operator==(const find& lhs, const find& rhs) {
-    if (lhs.hint() && rhs.hint()) {
-        if (lhs.hint()->to_value() != rhs.hint()->to_value()) {
-            return false;
-        }
-    } else if (lhs.hint() || rhs.hint()) {
-        return false;
-    }
-    return ((lhs.allow_partial_results() == rhs.allow_partial_results()) &&
-            (lhs.batch_size() == rhs.batch_size()) && (lhs.collation() == rhs.collation()) &&
-            (lhs.comment() == rhs.comment()) && (lhs.cursor_type() == rhs.cursor_type()) &&
-            (lhs.limit() == rhs.limit()) && (lhs.max() == rhs.max()) &&
-            (lhs.max_await_time() == rhs.max_await_time()) && (lhs.max_scan() == rhs.max_scan()) &&
-            (lhs.max_time() == rhs.max_time()) && (lhs.min() == rhs.min()) &&
-            (lhs.no_cursor_timeout() == rhs.no_cursor_timeout()) &&
-            (lhs.projection() == rhs.projection()) &&
-            (lhs.read_preference() == rhs.read_preference()) &&
-            (lhs.return_key() == rhs.return_key()) &&
-            (lhs.show_record_id() == rhs.show_record_id()) && (lhs.skip() == rhs.skip()) &&
-            (lhs.snapshot() == rhs.snapshot()) && (lhs.sort() == rhs.sort()));
-}
-
-bool MONGOCXX_CALL operator!=(const find& lhs, const find& rhs) {
-    return !(lhs == rhs);
-}
-
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

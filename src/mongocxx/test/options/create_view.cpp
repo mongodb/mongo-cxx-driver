@@ -50,27 +50,6 @@ TEST_CASE("create_view accessors/mutators", "[create_view]") {
     }
 }
 
-TEST_CASE("create_view equals", "[create_view]") {
-    instance::current();
-
-    options::create_view cv1{};
-    options::create_view cv2{};
-
-    REQUIRE(cv1 == cv2);
-}
-
-TEST_CASE("create_view inequals", "[creat_view]") {
-    using bsoncxx::builder::basic::make_document;
-    using bsoncxx::builder::basic::kvp;
-    instance::current();
-
-    options::create_view cv1{};
-    cv1.collation(make_document(kvp("locale", "simple")).view());
-    options::create_view cv2{};
-
-    REQUIRE(cv1 != cv2);
-}
-
 TEST_CASE("create_view can be exported to a document", "[create_view]") {
     instance::current();
 

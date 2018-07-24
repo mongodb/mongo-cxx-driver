@@ -50,37 +50,9 @@ class MONGOCXX_API client_session {
     ///
     bool causal_consistency() const noexcept;
 
-    ///
-    /// Compare session options for equality.
-    ///
-    /// @relates client_session
-    ///
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const client_session&, const client_session&);
-
-    ///
-    /// Compare session options for inequality.
-    ///
-    /// @relates client_session
-    ///
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const client_session&, const client_session&);
-
    private:
     bool _causal_consistency = true;
 };
-
-///
-/// Compare session options for equality.
-///
-/// @relates client_session
-///
-MONGOCXX_API bool MONGOCXX_CALL operator==(const client_session&, const client_session&);
-
-///
-/// Compare session options for inequality.
-///
-/// @relates client_session
-///
-MONGOCXX_API bool MONGOCXX_CALL operator!=(const client_session&, const client_session&);
 
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END

@@ -49,14 +49,6 @@ const stdx::optional<class read_preference>& distinct::read_preference() const {
     return _read_preference;
 }
 
-bool MONGOCXX_CALL operator==(const distinct& lhs, const distinct& rhs) {
-    return ((lhs.collation() == rhs.collation()) && (lhs.max_time() == rhs.max_time()) &&
-            (lhs.read_preference() == rhs.read_preference()));
-}
-bool MONGOCXX_CALL operator!=(const distinct& lhs, const distinct& rhs) {
-    return !(lhs == rhs);
-}
-
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

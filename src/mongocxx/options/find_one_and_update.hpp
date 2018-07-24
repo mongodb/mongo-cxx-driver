@@ -268,11 +268,6 @@ class MONGOCXX_API find_one_and_update {
     stdx::optional<bool> _upsert;
     stdx::optional<mongocxx::write_concern> _write_concern;
     stdx::optional<bsoncxx::array::view_or_value> _array_filters;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const find_one_and_update&,
-                                                      const find_one_and_update&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const find_one_and_update&,
-                                                      const find_one_and_update&);
 };
 
 }  // namespace options

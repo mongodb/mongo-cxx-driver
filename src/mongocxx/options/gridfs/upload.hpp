@@ -75,9 +75,6 @@ class MONGOCXX_API upload {
    private:
     stdx::optional<std::int32_t> _chunk_size_bytes;
     stdx::optional<bsoncxx::document::view_or_value> _metadata;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const upload&, const upload&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const upload&, const upload&);
 };
 
 }  // namespace gridfs

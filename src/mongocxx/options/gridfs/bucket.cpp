@@ -72,17 +72,6 @@ const stdx::optional<class write_concern>& bucket::write_concern() const {
     return _write_concern;
 }
 
-bool MONGOCXX_CALL operator==(const bucket& lhs, const bucket& rhs) {
-    return ((lhs.bucket_name() == rhs.bucket_name()) &&
-            (lhs.chunk_size_bytes() == rhs.chunk_size_bytes()) &&
-            (lhs.read_concern() == rhs.read_concern()) &&
-            (lhs.read_preference() == rhs.read_preference()) &&
-            (lhs.write_concern() == rhs.write_concern()));
-}
-bool MONGOCXX_CALL operator!=(const bucket& lhs, const bucket& rhs) {
-    return !(lhs == rhs);
-}
-
 }  // namespace gridfs
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END

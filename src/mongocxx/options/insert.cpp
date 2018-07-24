@@ -47,13 +47,6 @@ const stdx::optional<bool>& insert::ordered() const {
     return _ordered;
 }
 
-bool MONGOCXX_CALL operator==(const insert& lhs, const insert& rhs) {
-    return ((lhs.write_concern() == rhs.write_concern()) && (lhs.ordered() == rhs.ordered()) &&
-            (lhs.bypass_document_validation() == (rhs.bypass_document_validation())));
-}
-bool MONGOCXX_CALL operator!=(const insert& lhs, const insert& rhs) {
-    return !(lhs == rhs);
-}
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

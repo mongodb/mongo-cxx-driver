@@ -87,24 +87,4 @@ TEST_CASE("modify_collection", "[modify_collection]") {
         REQUIRE(ttl_seconds.get_int64() == 10);
     }
 }
-
-TEST_CASE("modify_collection equals", "[modify_collection]") {
-    instance::current();
-
-    options::modify_collection cm1{};
-    options::modify_collection cm2{};
-
-    REQUIRE(cm1 == cm2);
-}
-
-TEST_CASE("modify_collection inequals", "[modify_collection]") {
-    instance::current();
-
-    options::modify_collection cm1{};
-    cm1.no_padding(true);
-    options::modify_collection cm2{};
-
-    REQUIRE(cm1 != cm2);
-}
-
 }  // namespace

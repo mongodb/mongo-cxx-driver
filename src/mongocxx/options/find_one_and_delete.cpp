@@ -65,15 +65,6 @@ const stdx::optional<mongocxx::write_concern>& find_one_and_delete::write_concer
     return _write_concern;
 }
 
-bool MONGOCXX_CALL operator==(const find_one_and_delete& lhs, const find_one_and_delete& rhs) {
-    return ((lhs.collation() == rhs.collation()) && (lhs.max_time() == rhs.max_time()) &&
-            (lhs.projection() == rhs.projection()) && (lhs.sort() == rhs.sort()));
-}
-
-bool MONGOCXX_CALL operator!=(const find_one_and_delete& lhs, const find_one_and_delete& rhs) {
-    return !(lhs == rhs);
-}
-
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

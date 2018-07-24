@@ -71,25 +71,6 @@ bsoncxx::document::value create_view::to_document() const {
     return to_document_deprecated();
 }
 
-bool MONGOCXX_CALL operator==(const create_view& lhs, const create_view& rhs) {
-    // Collations must be the same.
-    if (lhs.collation() != rhs.collation()) {
-        return false;
-    }
-
-    // If both pipelines exist, they must be the same.
-    if (lhs.pipeline() && rhs.pipeline()) {
-        return lhs.pipeline()->view_array() == rhs.pipeline()->view_array();
-    }
-
-    // If only one pipeline exists, return false.
-    return !lhs.pipeline() && !rhs.pipeline();
-}
-
-bool MONGOCXX_CALL operator!=(const create_view& lhs, const create_view& rhs) {
-    return !(lhs == rhs);
-}
-
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

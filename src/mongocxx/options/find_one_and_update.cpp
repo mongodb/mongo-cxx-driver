@@ -105,18 +105,6 @@ const stdx::optional<bsoncxx::array::view_or_value>& find_one_and_update::array_
     return _array_filters;
 }
 
-bool MONGOCXX_CALL operator==(const find_one_and_update& lhs, const find_one_and_update& rhs) {
-    return ((lhs.bypass_document_validation() == rhs.bypass_document_validation()) &&
-            (lhs.collation() == rhs.collation()) && (lhs.max_time() == rhs.max_time()) &&
-            (lhs.projection() == rhs.projection()) &&
-            (lhs.return_document() == rhs.return_document()) && (lhs.sort() == rhs.sort()) &&
-            (lhs.upsert() == rhs.upsert()));
-}
-
-bool MONGOCXX_CALL operator!=(const find_one_and_update& lhs, const find_one_and_update& rhs) {
-    return !(lhs == rhs);
-}
-
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

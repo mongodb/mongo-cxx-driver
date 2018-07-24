@@ -62,23 +62,4 @@ TEST_CASE("find", "[find][option]") {
     CHECK_OPTIONAL_ARGUMENT(find_opts, snapshot, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, sort, sort.view());
 }
-
-TEST_CASE("find equals", "[find][options]") {
-    instance::current();
-
-    options::find find_opts1{};
-    options::find find_opts2{};
-
-    REQUIRE(find_opts1 == find_opts2);
-}
-
-TEST_CASE("find inequals", "[find][options]") {
-    instance::current();
-
-    options::find find_opts1{};
-    find_opts1.limit(4);
-    options::find find_opts2{};
-
-    REQUIRE(find_opts1 != find_opts2);
-}
 }  // namespace

@@ -107,9 +107,6 @@ class MONGOCXX_API bulk_write {
     bool _ordered;
     stdx::optional<class write_concern> _write_concern;
     stdx::optional<bool> _bypass_document_validation;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const bulk_write&, const bulk_write&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const bulk_write&, const bulk_write&);
 };
 
 }  // namespace options

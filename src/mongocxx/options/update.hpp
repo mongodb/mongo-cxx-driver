@@ -160,9 +160,6 @@ class MONGOCXX_API update {
     stdx::optional<bool> _upsert;
     stdx::optional<class write_concern> _write_concern;
     stdx::optional<bsoncxx::array::view_or_value> _array_filters;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const update&, const update&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const update&, const update&);
 };
 
 }  // namespace options

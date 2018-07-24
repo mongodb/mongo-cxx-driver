@@ -74,15 +74,6 @@ const stdx::optional<bool>& ssl::allow_invalid_certificates() const {
     return _allow_invalid_certificates;
 }
 
-bool MONGOCXX_CALL operator==(const ssl& lhs, const ssl& rhs) {
-    return ((lhs.pem_file() == rhs.pem_file()) && (lhs.pem_password() == rhs.pem_password()) &&
-            (lhs.ca_file() == rhs.ca_file()) && (lhs.ca_dir() == rhs.ca_dir()) &&
-            (lhs.crl_file() == rhs.crl_file()));
-}
-bool MONGOCXX_CALL operator!=(const ssl& lhs, const ssl& rhs) {
-    return !(lhs == rhs);
-}
-
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

@@ -151,18 +151,6 @@ bsoncxx::document::value create_collection::to_document() const {
     return to_document_deprecated();
 }
 
-bool MONGOCXX_CALL operator==(const create_collection& lhs, const create_collection& rhs) {
-    return ((lhs.auto_index_id_deprecated() == rhs.auto_index_id_deprecated()) &&
-            (lhs.capped() == rhs.capped()) && (lhs.collation() == rhs.collation()) &&
-            (lhs.max() == rhs.max()) && (lhs.size() == rhs.size()) &&
-            (lhs.no_padding() == rhs.no_padding()) &&
-            (lhs.storage_engine() == rhs.storage_engine()) &&
-            (lhs.validation_criteria() == rhs.validation_criteria()));
-}
-bool MONGOCXX_CALL operator!=(const create_collection& lhs, const create_collection& rhs) {
-    return !(lhs == rhs);
-}
-
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

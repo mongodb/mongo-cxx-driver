@@ -111,26 +111,6 @@ const stdx::optional<class write_concern>& aggregate::write_concern() const {
     return _write_concern;
 }
 
-bool MONGOCXX_CALL operator==(const aggregate& lhs, const aggregate& rhs) {
-    if (lhs.hint() && rhs.hint()) {
-        if (lhs.hint()->to_value() != rhs.hint()->to_value()) {
-            return false;
-        }
-    } else if (lhs.hint() || rhs.hint()) {
-        return false;
-    }
-    return ((lhs.allow_disk_use() == rhs.allow_disk_use()) &&
-            (lhs.batch_size() == rhs.batch_size()) && (lhs.collation() == rhs.collation()) &&
-            (lhs.max_time() == rhs.max_time()) &&
-            (lhs.use_cursor_deprecated() == rhs.use_cursor_deprecated()) &&
-            (lhs.read_preference() == rhs.read_preference()) &&
-            (lhs.bypass_document_validation() == rhs.bypass_document_validation()));
-}
-
-bool MONGOCXX_CALL operator!=(const aggregate& lhs, const aggregate& rhs) {
-    return !(lhs == rhs);
-}
-
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

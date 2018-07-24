@@ -242,11 +242,6 @@ class MONGOCXX_API find_one_and_replace {
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
     stdx::optional<bool> _upsert;
     stdx::optional<mongocxx::write_concern> _write_concern;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const find_one_and_replace&,
-                                                      const find_one_and_replace&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const find_one_and_replace&,
-                                                      const find_one_and_replace&);
 };
 
 }  // namespace options

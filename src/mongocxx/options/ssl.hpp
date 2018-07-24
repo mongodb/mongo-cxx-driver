@@ -154,9 +154,6 @@ class MONGOCXX_API ssl {
     stdx::optional<bsoncxx::string::view_or_value> _ca_dir;
     stdx::optional<bsoncxx::string::view_or_value> _crl_file;
     stdx::optional<bool> _allow_invalid_certificates;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const ssl&, const ssl&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const ssl&, const ssl&);
 };
 
 }  // namespace options

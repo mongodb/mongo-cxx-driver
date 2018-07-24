@@ -159,11 +159,6 @@ class MONGOCXX_API find_one_and_delete {
     stdx::optional<bsoncxx::document::view_or_value> _projection;
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
     stdx::optional<mongocxx::write_concern> _write_concern;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const find_one_and_delete&,
-                                                      const find_one_and_delete&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const find_one_and_delete&,
-                                                      const find_one_and_delete&);
 };
 
 }  // namespace options

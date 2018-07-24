@@ -83,9 +83,6 @@ class MONGOCXX_API delete_options {
    private:
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<class write_concern> _write_concern;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const delete_options&, const delete_options&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const delete_options&, const delete_options&);
 };
 
 }  // namespace options

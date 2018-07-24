@@ -38,13 +38,6 @@ const stdx::optional<class write_concern>& delete_options::write_concern() const
     return _write_concern;
 }
 
-bool MONGOCXX_CALL operator==(const delete_options& lhs, const delete_options& rhs) {
-    return ((lhs.collation() == rhs.collation()) && (lhs.write_concern() == rhs.write_concern()));
-}
-bool MONGOCXX_CALL operator!=(const delete_options& lhs, const delete_options& rhs) {
-    return !(lhs == rhs);
-}
-
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

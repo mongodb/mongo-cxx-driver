@@ -150,9 +150,6 @@ class MONGOCXX_API bucket {
     stdx::optional<class read_concern> _read_concern;
     stdx::optional<class read_preference> _read_preference;
     stdx::optional<class write_concern> _write_concern;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const bucket&, const bucket&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const bucket&, const bucket&);
 };
 
 }  // namespace gridfs
