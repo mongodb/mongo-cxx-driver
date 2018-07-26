@@ -76,7 +76,7 @@ MONGOCXX_INLINE_NAMESPACE_END
 #define MOCK_POOL MOCK_POOL_NOSSL
 #endif
 
-#define MOCK_CLIENT                                                                             \
+#define MOCK_CLIENT_NOSSL                                                                       \
     auto client_new = libmongoc::client_new_from_uri.create_instance();                         \
     auto client_destroy = libmongoc::client_destroy.create_instance();                          \
     auto client_set_read_concern = libmongoc::client_set_read_concern.create_instance();        \
@@ -91,6 +91,15 @@ MONGOCXX_INLINE_NAMESPACE_END
     auto client_get_concern = libmongoc::client_get_write_concern.create_instance();            \
     client_get_concern->interpose([](const mongoc_client_t*) { return nullptr; }).forever();    \
     auto client_start_session = libmongoc::client_start_session.create_instance();
+
+#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
+#define MOCK_CLIENT                                                              \
+    MOCK_CLIENT_NOSSL                                                            \
+    auto client_set_ssl_opts = libmongoc::client_set_ssl_opts.create_instance(); \
+    client_set_ssl_opts->interpose([](::mongoc_client_t*, const ::mongoc_ssl_opt_t*) {});
+#else
+#define MOCK_CLIENT MOCK_CLIENT_NOSSL
+#endif
 
 #define MOCK_DATABASE                                                                            \
     auto get_database = libmongoc::client_get_database.create_instance();                        \
