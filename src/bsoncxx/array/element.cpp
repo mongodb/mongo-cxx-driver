@@ -26,8 +26,11 @@ namespace array {
 
 element::element() : document::element() {}
 
-element::element(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset)
-    : document::element(raw, length, offset) {}
+element::element(const std::uint8_t* raw,
+                 std::uint32_t length,
+                 std::uint32_t offset,
+                 std::uint32_t keylen)
+    : document::element(raw, length, offset, keylen) {}
 
 }  // namespace document
 BSONCXX_INLINE_NAMESPACE_END

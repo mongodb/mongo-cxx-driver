@@ -30,11 +30,9 @@ namespace array {
 
 namespace {
 bson_iter_t to_bson_iter_t(element e) {
-    bson_iter_t i{};
-    i.raw = e.raw();
-    i.len = e.length();
-    i.next_off = e.offset();
-    return i;
+    bson_iter_t iter{};
+    bson_iter_init_from_data_at_offset(&iter, e.raw(), e.length(), e.offset(), e.keylen());
+    return iter;
 }
 }  // namespace
 
@@ -55,13 +53,16 @@ view::const_iterator& view::const_iterator::operator++() {
         return *this;
     }
 
-    bson_iter_t i = to_bson_iter_t(_element);
-    bson_iter_next(&i);
+    // the bson_t pointer and length remain unchanged while iterating.
+    auto raw = _element.raw();
+    auto len = _element.length();
 
-    if (!bson_iter_next(&i)) {
+    bson_iter_t iter = to_bson_iter_t(_element);
+
+    if (!bson_iter_next(&iter)) {
         _element = element{};
     } else {
-        _element = element{i.raw, i.len, i.off};
+        _element = element{raw, len, bson_iter_offset(&iter), bson_iter_key_len(&iter)};
     }
 
     return *this;
@@ -93,7 +94,10 @@ view::const_iterator view::cbegin() const {
         return cend();
     }
 
-    return const_iterator{element{iter.raw, iter.len, iter.off}};
+    return const_iterator{element{data(),
+                                  static_cast<uint32_t>(length()),
+                                  bson_iter_offset(&iter),
+                                  bson_iter_key_len(&iter)}};
 }
 
 view::const_iterator view::cend() const {
@@ -126,7 +130,10 @@ view::const_iterator view::find(std::uint32_t i) const {
         return cend();
     }
 
-    return const_iterator(element(iter.raw, iter.len, iter.off));
+    return const_iterator(element(data(),
+                                  static_cast<uint32_t>(length()),
+                                  bson_iter_offset(&iter),
+                                  bson_iter_key_len(&iter)));
 }
 
 element view::operator[](std::uint32_t i) const {

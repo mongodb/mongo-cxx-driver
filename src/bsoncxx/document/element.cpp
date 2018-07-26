@@ -26,12 +26,9 @@
 
 #include <bsoncxx/config/private/prelude.hh>
 
-#define BSONCXX_CITER        \
-    bson_iter_t iter;        \
-    iter.raw = _raw;         \
-    iter.len = _length;      \
-    iter.next_off = _offset; \
-    bson_iter_next(&iter)
+#define BSONCXX_CITER \
+    bson_iter_t iter; \
+    bson_iter_init_from_data_at_offset(&iter, _raw, _length, _offset, _keylen);
 
 #define BSONCXX_TYPE_CHECK(name)                                              \
     do {                                                                      \
@@ -44,10 +41,13 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace document {
 
-element::element() : element(nullptr, 0, 0) {}
+element::element() : element(nullptr, 0, 0, 0) {}
 
-element::element(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset)
-    : _raw(raw), _length(length), _offset(offset) {}
+element::element(const std::uint8_t* raw,
+                 std::uint32_t length,
+                 std::uint32_t offset,
+                 std::uint32_t keylen)
+    : _raw(raw), _length(length), _offset(offset), _keylen(keylen) {}
 
 const std::uint8_t* element::raw() const {
     return _raw;
@@ -58,6 +58,10 @@ std::uint32_t element::length() const {
 }
 std::uint32_t element::offset() const {
     return _offset;
+}
+
+std::uint32_t element::keylen() const {
+    return _keylen;
 }
 
 bsoncxx::type element::type() const {

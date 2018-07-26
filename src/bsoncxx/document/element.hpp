@@ -123,6 +123,13 @@ class BSONCXX_API element {
     stdx::string_view key() const;
 
     ///
+    /// Getter for the element's key length.
+    ///
+    /// @return the element's key length.
+    ///
+    std::uint32_t keylen() const;
+
+    ///
     /// Getter for elements of the b_double type.
     ///
     /// @throws bsoncxx::exception if this element is not a b_double.
@@ -366,7 +373,8 @@ class BSONCXX_API element {
     ///
     BSONCXX_PRIVATE explicit element(const std::uint8_t* raw,
                                      std::uint32_t length,
-                                     std::uint32_t offset);
+                                     std::uint32_t offset,
+                                     std::uint32_t keylen);
 
     friend class view;
     friend class array::element;
@@ -374,6 +382,7 @@ class BSONCXX_API element {
     const std::uint8_t* _raw;
     std::uint32_t _length;
     std::uint32_t _offset;
+    std::uint32_t _keylen;
 };
 
 }  // namespace document
