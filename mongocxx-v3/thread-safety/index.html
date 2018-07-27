@@ -1193,21 +1193,26 @@ child object.</p>
 <h2 id="never-do-this">Never do this</h2>
 
 <pre><code class="language-c++">mongocxx::instance instance{};
-mongocxx::client c{};
+mongocxx::uri uri{};
+mongocxx::client c{uri};
 auto db1 = c[&quot;db1&quot;];
 auto db2 = c[&quot;db2&quot;];
 std::mutex db1_mtx{};
 std::mutex db2_mtx{};
 
 auto threadfunc = [](mongocxx::database&amp; db, std::mutex&amp; mtx) {
-    std::scoped_lock&lt;std::mutex&gt;(mtx);
-    db[&quot;col&quot;].insert({});
-}
+  mtx.lock();
+  db[&quot;col&quot;].insert_one({});
+  mtx.unlock();
+};
 
-// BAD! these two databases are individually synchronized, but they are derived from the same
+// BAD! These two databases are individually synchronized, but they are derived from the same
 // client, so they can only be accessed by one thread at a time
-std::thread([]() { threadfunc(db1, db1_mtx); threadfunc(db2, db2_mtx); });
-std::thread([]() { threadfunc(db2, db2_mtx); threadfunc(db1, db1_mtx); });
+std::thread t1([&amp;]() { threadfunc(db1, db1_mtx); threadfunc(db2, db2_mtx); });
+std::thread t2([&amp;]() { threadfunc(db2, db2_mtx); threadfunc(db1, db1_mtx); });
+
+t1.join();
+t2.join();
 </code></pre>
 
 <p>In the above example, even though the two databases are individually
@@ -1218,40 +1223,52 @@ same problem occurs if <code>db2</code> is a copy of <code>db1</code>.</p>
 <h2 id="a-better-version">A better version</h2>
 
 <pre><code class="language-c++">mongocxx::instance instance{};
-mongocxx::client c1{};
-mongocxx::client c2{}
+mongocxx::uri uri{};
+mongocxx::client c1{uri};
+mongocxx::client c2{uri};
 std::mutex c1_mtx{};
 std::mutex c2_mtx{};
 
-auto threadfunc = [](stdx::string_view dbname, mongocxx::client&amp; client, std::mutex&amp; mtx) {
-    std::scoped_lock&lt;std::mutex&gt;(mtx);
-    client[dbname][&quot;col&quot;].insert({});
-}
+auto threadfunc = [](std::string dbname, mongocxx::client&amp; client, std::mutex&amp; mtx) {
+  mtx.lock();
+  client[dbname][&quot;col&quot;].insert_one({});
+  mtx.unlock();
+};
 
-// Good! these two clients are individually synchronized, so it is safe to share them between
+// These two clients are individually synchronized, so it is safe to share them between
 // threads.
-std::thread([]() { threadfunc(&quot;db1&quot;, c1, c1_mtx); threadfunc(&quot;db2&quot;, c2, c2_mtx); });
-std::thread([]() { threadfunc(&quot;db2&quot;, c2, c2_mtx); threadfunc(&quot;db1&quot;, c1, c1_mtx); });
+std::thread t1([&amp;]() { threadfunc(&quot;db1&quot;, c1, c1_mtx); threadfunc(&quot;db2&quot;, c2, c2_mtx); });
+std::thread t2([&amp;]() { threadfunc(&quot;db2&quot;, c2, c2_mtx); threadfunc(&quot;db1&quot;, c1, c1_mtx); });
+
+t1.join();
+t2.join();
 </code></pre>
 
 <h2 id="the-best-version">The best version</h2>
 
 <pre><code class="language-c++">mongocxx::instance instance{};
-auto threadfunc = [](mongocxx::client&amp; client, stdx::string_view dbname) {
-    client[dbname][&quot;col&quot;].insert({});
-}
-// don't even bother sharing clients. Just give each thread its own.
-std::thread([]() {
-    mongocxx::client c{};
-    threadfunc(c, &quot;db1&quot;);
-    threadfunc(c, &quot;db2&quot;);
+mongocxx::pool pool{mongocxx::uri{}};
+
+auto threadfunc = [](mongocxx::client&amp; client, std::string dbname) {
+  auto col = client[dbname][&quot;col&quot;].insert_one({});
+};
+
+// Great! Using the pool allows the clients to be synchronized while sharing only one
+// background monitoring thread.
+std::thread t1 ([&amp;]() {
+  auto c = pool.acquire();
+  threadfunc(*c, &quot;db1&quot;);
+  threadfunc(*c, &quot;db2&quot;);
 });
 
-std::thread([]() {
-    mongocxx::client c{};
-    threadfunc(c, &quot;db2&quot;);
-    threadfunc(c, &quot;db1&quot;);
+std::thread t2 ([&amp;]() {
+  auto c = pool.acquire();
+  threadfunc(*c, &quot;db2&quot;);
+  threadfunc(*c, &quot;db1&quot;);
 });
+
+t1.join();
+t2.join();
 </code></pre>
 
 <p>In most programs, clients will be long lived - so it is less of a hassle (and
