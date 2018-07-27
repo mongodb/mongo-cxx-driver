@@ -17,6 +17,8 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/core.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -70,6 +72,46 @@ change_stream& change_stream::max_await_time(std::chrono::milliseconds max_time)
 
 const stdx::optional<std::chrono::milliseconds>& change_stream::max_await_time() const {
     return _max_await_time;
+}
+
+change_stream& change_stream::start_at_operation_time(bsoncxx::types::b_timestamp timestamp) {
+    _start_at_operation_time = timestamp;
+    _start_at_operation_time_set = true;
+    return *this;
+}
+
+namespace {
+template <typename T>
+inline void append_if(bsoncxx::builder::basic::document& doc,
+                      const std::string& key,
+                      const mongocxx::stdx::optional<T>& opt) {
+    if (opt) {
+        doc.append(bsoncxx::builder::basic::kvp(key, opt.value()));
+    }
+}
+}  // namespace
+
+bsoncxx::document::value change_stream::as_bson() const {
+    // Construct new bson rep each time since values may change after this is called.
+    bsoncxx::builder::basic::document out{};
+
+    append_if(out, "fullDocument", full_document());
+    append_if(out, "resumeAfter", resume_after());
+    append_if(out, "batchSize", batch_size());
+    append_if(out, "collation", collation());
+    if (_start_at_operation_time_set) {
+        out.append(bsoncxx::builder::basic::kvp("startAtOperationTime", _start_at_operation_time));
+    }
+
+    if (max_await_time()) {
+        auto count = max_await_time().value().count();
+        if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max())) {
+            throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
+        }
+        out.append(bsoncxx::builder::basic::kvp("maxAwaitTimeMS", count));
+    }
+
+    return out.extract();
 }
 
 }  // namespace options

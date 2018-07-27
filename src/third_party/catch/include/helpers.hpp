@@ -160,6 +160,8 @@ MONGOCXX_INLINE_NAMESPACE_END
 
 #define MOCK_CHANGE_STREAM                                                                          \
     auto collection_watch = libmongoc::collection_watch.create_instance();                          \
+    auto database_watch = libmongoc::database_watch.create_instance();                              \
+    auto client_watch = libmongoc::client_watch.create_instance();                                  \
     auto change_stream_destroy = libmongoc::change_stream_destroy.create_instance();                \
     auto change_stream_next = libmongoc::change_stream_next.create_instance();                      \
     auto change_stream_error_document = libmongoc::change_stream_error_document.create_instance();

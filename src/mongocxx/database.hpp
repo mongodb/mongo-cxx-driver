@@ -427,6 +427,76 @@ class MONGOCXX_API database {
     class gridfs::bucket gridfs_bucket(
         const options::gridfs::bucket& options = options::gridfs::bucket()) const;
 
+    ///
+    /// @{
+    ///
+    /// Gets a change stream on this database with an empty pipeline.
+    /// Change streams are only supported with a "majority" read concern or no read concern.
+    ///
+    /// @param options
+    ///   The options to use when creating the change stream.
+    ///
+    /// @return
+    ///  A change stream on this database.
+    ///
+    /// @see https://docs.mongodb.com/manual/changeStreams/
+    ///
+    change_stream watch(const options::change_stream& options = {});
+
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the watch operation.
+    /// @param options
+    ///   The options to use when creating the change stream.
+    ///
+    /// @return
+    ///  A change stream on this database.
+    ///
+    /// @see https://docs.mongodb.com/manual/changeStreams/
+    ///
+    change_stream watch(const client_session& session, const options::change_stream& options = {});
+
+    ///
+    /// Gets a change stream on this database.
+    /// Change streams are only supported with a "majority" read concern or no read concern.
+    ///
+    /// @param pipe
+    ///   The aggregation pipeline to be used on the change notifications.
+    ///   Only a subset of pipeline operations are supported for change streams. For more
+    ///   information see the change streams documentation.
+    /// @param options
+    ///   The options to use when creating the change stream.
+    ///
+    /// @return
+    ///  A change stream on this database.
+    ///
+    /// @see https://docs.mongodb.com/manual/changeStreams/
+    ///
+    change_stream watch(const pipeline& pipe, const options::change_stream& options = {});
+
+    ///
+    /// Gets a change stream on this database.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the watch operation.
+    /// @param pipe
+    ///   The aggregation pipeline to be used on the change notifications.
+    /// @param options
+    ///   The options to use when creating the change stream.
+    ///
+    /// @return
+    ///  A change stream on this database.
+    ///
+    /// @see https://docs.mongodb.com/manual/changeStreams/
+    ///
+    change_stream watch(const client_session& session,
+                        const pipeline& pipe,
+                        const options::change_stream& options = {});
+
+    ///
+    /// @}
+    ///
+
    private:
     friend class client;
     friend class collection;
@@ -451,6 +521,10 @@ class MONGOCXX_API database {
     MONGOCXX_PRIVATE void _drop(
         const client_session* session,
         const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern);
+
+    MONGOCXX_PRIVATE change_stream _watch(const client_session* session,
+                                          const pipeline& pipe,
+                                          const options::change_stream& options);
 
     class MONGOCXX_PRIVATE impl;
 

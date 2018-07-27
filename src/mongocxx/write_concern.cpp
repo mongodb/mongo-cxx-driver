@@ -119,7 +119,6 @@ stdx::optional<std::int32_t> write_concern::nodes() const {
 }
 
 write_concern::level write_concern::acknowledge_level() const {
-    stdx::optional<write_concern::level> ack_level;
     std::int32_t w = libmongoc::write_concern_get_w(_impl->write_concern_t);
     if (w >= 1)
         return write_concern::level::k_acknowledged;

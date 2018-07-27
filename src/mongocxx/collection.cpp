@@ -203,40 +203,6 @@ class guard {
     T _t;
 };
 
-template <typename T>
-guard<T> make_guard(T&& t) {
-    return guard<T>{std::forward<T>(t)};
-}
-
-// TODO: Consider extending the builders to directly accept optional values.
-template <typename T>
-inline void append_if(bsoncxx::builder::basic::document& doc,
-                      const std::string& key,
-                      const mongocxx::stdx::optional<T>& opt) {
-    if (opt) {
-        doc.append(bsoncxx::builder::basic::kvp(key, opt.value()));
-    }
-}
-
-bsoncxx::document::value as_bson(const mongocxx::options::change_stream& cs) {
-    // Construct new bson rep each time since values may change after this is called.
-    bsoncxx::builder::basic::document out{};
-
-    append_if(out, "fullDocument", cs.full_document());
-    append_if(out, "resumeAfter", cs.resume_after());
-    append_if(out, "batchSize", cs.batch_size());
-
-    if (cs.max_await_time()) {
-        auto count = cs.max_await_time().value().count();
-        if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max())) {
-            throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
-        }
-        out.append(bsoncxx::builder::basic::kvp("maxAwaitTimeMS", count));
-    }
-
-    return out.extract();
-}
-
 }  // namespace
 
 namespace mongocxx {
@@ -1236,7 +1202,7 @@ class change_stream collection::_watch(const client_session* session,
     scoped_bson_t pipeline_bson{container.view()};
 
     bsoncxx::builder::basic::document options_builder;
-    options_builder.append(bsoncxx::builder::concatenate_doc{as_bson(options)});
+    options_builder.append(bsoncxx::builder::concatenate(options.as_bson()));
     if (session) {
         options_builder.append(
             bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});

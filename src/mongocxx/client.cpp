@@ -14,6 +14,7 @@
 
 #include <mongocxx/client.hpp>
 
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -24,6 +25,7 @@
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/pipeline.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/uri.hh>
@@ -149,6 +151,45 @@ cursor client::list_databases(const bsoncxx::document::view_or_value filter) con
 
 class client_session client::start_session(const mongocxx::options::client_session& options) {
     return client_session(this, options);
+}
+
+class change_stream client::watch(const options::change_stream& options) {
+    return watch(pipeline{}, options);
+}
+
+class change_stream client::watch(const client_session& session,
+                                  const options::change_stream& options) {
+    return _watch(&session, pipeline{}, options);
+}
+
+class change_stream client::watch(const pipeline& pipe, const options::change_stream& options) {
+    return _watch(nullptr, pipe, options);
+}
+
+class change_stream client::watch(const client_session& session,
+                                  const pipeline& pipe,
+                                  const options::change_stream& options) {
+    return _watch(&session, pipe, options);
+}
+
+class change_stream client::_watch(const client_session* session,
+                                   const pipeline& pipe,
+                                   const options::change_stream& options) {
+    bsoncxx::builder::basic::document container;
+    container.append(bsoncxx::builder::basic::kvp("pipeline", pipe._impl->view_array()));
+    scoped_bson_t pipeline_bson{container.view()};
+
+    bsoncxx::builder::basic::document options_builder;
+    options_builder.append(bsoncxx::builder::concatenate(options.as_bson()));
+    if (session) {
+        options_builder.append(
+            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
+    scoped_bson_t options_bson{options_builder.extract()};
+
+    return change_stream{
+        libmongoc::client_watch(_get_impl().client_t, pipeline_bson.bson(), options_bson.bson())};
 }
 
 const client::impl& client::_get_impl() const {

@@ -27,7 +27,9 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+class client;
 class collection;
+class database;
 
 ///
 /// Class representing a MongoDB aggregation pipeline.
@@ -454,7 +456,9 @@ class MONGOCXX_API pipeline {
     bsoncxx::document::view view_deprecated() const;
 
    private:
+    friend class client;
     friend class collection;
+    friend class database;
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;

@@ -24,7 +24,9 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+class client;
 class collection;
+class database;
 
 class MONGOCXX_API change_stream {
    public:
@@ -77,7 +79,9 @@ class MONGOCXX_API change_stream {
     iterator end() const;
 
    private:
+    friend class client;
     friend class collection;
+    friend class database;
     friend class change_stream::iterator;
 
     MONGOCXX_PRIVATE change_stream(void* change_stream_ptr);

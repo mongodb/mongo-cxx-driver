@@ -192,6 +192,79 @@ TEST_CASE("Mock streams and error-handling") {
             }
         }
     }
+
+    SECTION("Pipeline and opts are passed for all watch helpers") {
+        bsoncxx::types::b_timestamp ts{1, 2};
+        std::int32_t batch_size = 3;
+        std::chrono::milliseconds max_await_time_ms{4};
+        bool collection_watch_called = false;
+        bool database_watch_called = false;
+        bool client_watch_called = true;
+        bsoncxx::document::value collation = make_document(kvp("locale", "en"));
+        std::string full_document = "updateLookup";
+        bsoncxx::document::value resume_after = make_document(kvp("resume", "token"));
+        mongocxx::pipeline cs_pipeline;
+        cs_pipeline.match(make_document(kvp("x", 1)));
+
+        options::change_stream cs_opts;
+        cs_opts.batch_size(batch_size);
+        cs_opts.start_at_operation_time(ts);
+        cs_opts.max_await_time(max_await_time_ms);
+        cs_opts.collation(collation.view());
+        cs_opts.full_document(full_document);
+        cs_opts.resume_after(resume_after.view());
+
+        auto check_pipeline_and_opts = [&](const bson_t* passed_pipeline,
+                                           const bson_t* passed_opts) {
+            bsoncxx::document::view pipeline(bson_get_data(passed_pipeline), passed_pipeline->len);
+            bsoncxx::array::value expected =
+                make_array(make_document(kvp("$match", make_document(kvp("x", 1)))));
+            REQUIRE(pipeline["pipeline"].get_array().value == expected);
+            bsoncxx::document::view opts(bson_get_data(passed_opts), passed_opts->len);
+            REQUIRE(opts["startAtOperationTime"].get_timestamp() == ts);
+            REQUIRE(opts["batchSize"].get_int32() == batch_size);
+            REQUIRE(opts["maxAwaitTimeMS"].get_int64() == 4);
+            REQUIRE(opts["collation"].get_document().view() == collation);
+            REQUIRE(opts["fullDocument"].get_utf8().value ==
+                    bsoncxx::stdx::string_view{full_document});
+            REQUIRE(opts["resumeAfter"].get_document().view() == resume_after);
+        };
+
+        collection_watch->interpose([&](
+            const mongoc_collection_t* coll, const bson_t* pipeline, const bson_t* opts) {
+            std::string name = mongoc_collection_get_name(const_cast<mongoc_collection_t*>(coll));
+            REQUIRE(name == "collection");
+            check_pipeline_and_opts(pipeline, opts);
+            collection_watch_called = true;
+            return nullptr;
+        });
+
+        database_watch->interpose(
+            [&](const mongoc_database_t* db, const bson_t* pipeline, const bson_t* opts) {
+                std::string name = mongoc_database_get_name(const_cast<mongoc_database_t*>(db));
+                REQUIRE(name == "db");
+                check_pipeline_and_opts(pipeline, opts);
+                database_watch_called = true;
+                return nullptr;
+            });
+
+        client_watch->interpose(
+            [&](const mongoc_client_t* client, const bson_t* pipeline, const bson_t* opts) {
+                (void)client;
+                check_pipeline_and_opts(pipeline, opts);
+                client_watch_called = true;
+                return nullptr;
+            });
+
+        mongodb_client["db"]["collection"].watch(cs_pipeline, cs_opts);
+        mongodb_client["db"].watch(cs_pipeline, cs_opts);
+        mongodb_client.watch(cs_pipeline, cs_opts);
+
+        // Ensure the interpose was called.
+        REQUIRE(collection_watch_called);
+        REQUIRE(database_watch_called);
+        REQUIRE(client_watch_called);
+    }
 }
 
 // Put this before other tests which assume the collections already exists.
