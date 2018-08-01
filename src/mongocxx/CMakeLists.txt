@@ -100,6 +100,7 @@ set(mongocxx_sources
     options/pool.cpp
     options/private/rewriter.cpp
     options/ssl.cpp
+    options/transaction.cpp
     options/update.cpp
     pipeline.cpp
     pool.cpp

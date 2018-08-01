@@ -29,6 +29,15 @@ bool client_session::causal_consistency() const noexcept {
     return _causal_consistency;
 }
 
+client_session& client_session::default_transaction_opts(transaction default_transaction_opts) {
+    _default_transaction_opts = std::move(default_transaction_opts);
+    return *this;
+}
+
+const stdx::optional<transaction>& client_session::default_transaction_opts() const {
+    return _default_transaction_opts;
+}
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

@@ -87,6 +87,9 @@ enum class error_code : std::int32_t {
     /// A failure attempting to pass a mongocxx::client_session to a method.
     k_invalid_session,
 
+    /// A moved-from mongocxx::options::transaction object has been used.
+    k_invalid_transaction_options_object,
+
     // Add new constant string message to error_code.cpp as well!
 };
 

@@ -19,7 +19,11 @@
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/exception/private/mongoc_error.hh>
+#include <mongocxx/options/private/transaction.hh>
 #include <mongocxx/private/client.hh>
+#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -36,6 +40,12 @@ class client_session::impl {
             libmongoc::session_opts_new(), libmongoc::session_opts_destroy};
 
         libmongoc::session_opts_set_causal_consistency(opt_t.get(), _options.causal_consistency());
+
+        if (session_options.default_transaction_opts()) {
+            libmongoc::session_opts_set_default_transaction_opts(
+                opt_t.get(),
+                (session_options.default_transaction_opts())->_get_impl().get_transaction_opt_t());
+        }
 
         bson_error_t error;
         auto s =
@@ -87,6 +97,36 @@ class client_session::impl {
     void advance_operation_time(const bsoncxx::types::b_timestamp& operation_time) noexcept {
         libmongoc::client_session_advance_operation_time(
             _session_t.get(), operation_time.timestamp, operation_time.increment);
+    }
+
+    void start_transaction(const stdx::optional<options::transaction>& transaction_opts) {
+        bson_error_t error;
+        mongoc_transaction_opt_t* transaction_opt_t = nullptr;
+
+        if (transaction_opts) {
+            transaction_opt_t = transaction_opts->_get_impl().get_transaction_opt_t();
+        }
+
+        if (!libmongoc::client_session_start_transaction(
+                _session_t.get(), transaction_opt_t, &error)) {
+            throw_exception<operation_exception>(error);
+        }
+    }
+
+    void commit_transaction() {
+        libbson::scoped_bson_t reply;
+        bson_error_t error;
+        if (!libmongoc::client_session_commit_transaction(
+                _session_t.get(), reply.bson_for_init(), &error)) {
+            throw_exception<operation_exception>(reply.steal(), error);
+        }
+    }
+
+    void abort_transaction() {
+        bson_error_t error;
+        if (!libmongoc::client_session_abort_transaction(_session_t.get(), &error)) {
+            throw_exception<operation_exception>(error);
+        }
     }
 
     bsoncxx::document::value to_document() const {

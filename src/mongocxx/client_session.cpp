@@ -62,6 +62,19 @@ void client_session::advance_operation_time(const bsoncxx::types::b_timestamp& o
     _impl->advance_operation_time(operation_time);
 }
 
+void client_session::start_transaction(
+    const stdx::optional<options::transaction>& transaction_opts) {
+    _impl->start_transaction(transaction_opts);
+}
+
+void client_session::commit_transaction() {
+    _impl->commit_transaction();
+}
+
+void client_session::abort_transaction() {
+    _impl->abort_transaction();
+}
+
 const client_session::impl& client_session::_get_impl() const {
     // Never null.
     return *_impl;

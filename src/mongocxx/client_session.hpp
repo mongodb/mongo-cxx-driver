@@ -106,6 +106,35 @@ class MONGOCXX_API client_session {
     ///
     void advance_operation_time(const bsoncxx::types::b_timestamp& operation_time);
 
+    ///
+    /// Starts a transaction on the current client session.
+    ///
+    /// @param transaction_opts (optional)
+    ///    The options to use in the transaction.
+    ///
+    /// @throws mongocxx::operation_exception if the options are misconfigured, if there are network
+    /// or other transient failures, or if there are other errors such as a session with a
+    /// transaction already in progress.
+    ///
+    void start_transaction(const stdx::optional<options::transaction>& transaction_opts = {});
+
+    ///
+    /// Commits a transaction on the current client session.
+    ///
+    /// @throws mongocxx::operation_exception if the options are misconfigured, if there are network
+    /// or other transient failures, or if there are other errors such as a session with no
+    /// transaction in progress.
+    ///
+    void commit_transaction();
+
+    ///
+    /// Aborts a transaction on the current client session.
+    ///
+    /// @throws mongocxx::operation_exception if the options are misconfigured or if there are
+    /// other errors such as a session with no transaction in progress.
+    ///
+    void abort_transaction();
+
    private:
     friend class bulk_write;
     friend class client;

@@ -14,6 +14,10 @@
 
 #pragma once
 
+#include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/options/transaction.hpp>
+#include <mongocxx/stdx.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -50,8 +54,28 @@ class MONGOCXX_API client_session {
     ///
     bool causal_consistency() const noexcept;
 
+    ///
+    /// Sets the default transaction options.
+    ///
+    /// @param default_transaction_opts
+    ///   The default transaction options.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    client_session& default_transaction_opts(transaction default_transaction_opts);
+
+    ///
+    /// Gets the current default transaction options.
+    ///
+    /// @return The default transaction options.
+    ///
+    const stdx::optional<transaction>& default_transaction_opts() const;
+
    private:
     bool _causal_consistency = true;
+    stdx::optional<transaction> _default_transaction_opts;
 };
 
 }  // namespace options

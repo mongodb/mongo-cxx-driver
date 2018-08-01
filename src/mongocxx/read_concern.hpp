@@ -18,6 +18,7 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+#include <mongocxx/options/transaction.hpp>
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -145,6 +146,7 @@ class MONGOCXX_API read_concern {
     friend client;
     friend collection;
     friend database;
+    friend options::transaction;
     friend uri;
 
     ///

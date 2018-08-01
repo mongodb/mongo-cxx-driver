@@ -17,6 +17,10 @@
 #include <string>
 #include <utility>
 
+#include <bsoncxx/string/to_string.hpp>
+#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/libmongoc.hh>
+
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
@@ -33,6 +37,15 @@ const stdx::optional<bsoncxx::document::value>& operation_exception::raw_server_
 
 stdx::optional<bsoncxx::document::value>& operation_exception::raw_server_error() {
     return _raw_server_error;
+}
+
+bool operation_exception::has_error_label(stdx::string_view label) const {
+    if (!_raw_server_error) {
+        return false;
+    }
+
+    libbson::scoped_bson_t error(_raw_server_error->view());
+    return libmongoc::error_has_label(error.bson(), label.to_string().c_str());
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
