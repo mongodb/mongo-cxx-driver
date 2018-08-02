@@ -188,6 +188,7 @@ bulk_write::bulk_write(const collection& coll,
     : _created_from_collection{true} {
     bsoncxx::builder::basic::document options_builder;
     if (!options.ordered()) {
+        // ordered is true by default. Only append it if set to false.
         options_builder.append(kvp("ordered", false));
     }
     if (options.write_concern()) {

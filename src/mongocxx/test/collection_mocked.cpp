@@ -400,12 +400,14 @@ TEST_CASE("Collection", "[collection]") {
         collection_create_bulk_operation_with_opts->interpose(
             [&](mongoc_collection_t*, const bson_t* opts) -> mongoc_bulk_operation_t* {
                 bson_iter_t iter;
-                if (bson_iter_init_find(&iter, opts, "ordered")) {
-                    REQUIRE(BSON_ITER_HOLDS_BOOL(&iter));
-                    REQUIRE(bson_iter_bool(&iter) == expected_order_setting);
+                if (expected_order_setting) {
+                    // If the write operation is expected to set "ordered": true, then it
+                    // should *not* be included in the bulk operations, since that is the default.
+                    REQUIRE(!bson_iter_init_find(&iter, opts, "ordered"));
                 } else {
-                    // No "ordered" in opts, default of true must equal the expected setting.
-                    REQUIRE(expected_order_setting);
+                    REQUIRE(bson_iter_init_find(&iter, opts, "ordered"));
+                    REQUIRE(BSON_ITER_HOLDS_BOOL(&iter));
+                    REQUIRE(!bson_iter_bool(&iter));
                 }
                 collection_create_bulk_operation_called = true;
                 return nullptr;
@@ -428,6 +430,7 @@ TEST_CASE("Collection", "[collection]") {
             [&](mongoc_bulk_operation_t*) { bulk_operation_destroy_called = true; });
 
         SECTION("Insert One", "[collection::insert_one]") {
+            expected_order_setting = true;
             bulk_operation_insert_with_opts->interpose(
                 [&](mongoc_bulk_operation_t*, const bson_t* doc, const bson_t*, bson_error_t*) {
                     bulk_operation_op_called = true;
@@ -440,6 +443,7 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Insert One Bypassing Validation", "[collection::insert_one]") {
+            expected_order_setting = true;
             bulk_operation_insert_with_opts->interpose(
                 [&](mongoc_bulk_operation_t*, const bson_t* doc, const bson_t*, bson_error_t*) {
                     bulk_operation_op_called = true;
@@ -485,6 +489,7 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Update One", "[collection::update_one]") {
             bool upsert_option = false;
+            expected_order_setting = true;
 
             bulk_operation_update_one_with_opts->interpose([&](mongoc_bulk_operation_t*,
                                                                const bson_t* query,
@@ -520,17 +525,20 @@ TEST_CASE("Collection", "[collection]") {
 
             SECTION("Upsert true") {
                 upsert_option = true;
+                expected_order_setting = true;
                 options.upsert(upsert_option);
             }
 
             SECTION("Upsert false") {
                 upsert_option = false;
+                expected_order_setting = true;
                 options.upsert(upsert_option);
             }
 
             SECTION("With bypass_document_validation") {
                 expect_set_bypass_document_validation_called = true;
                 expected_bypass_document_validation = true;
+                expected_order_setting = true;
                 options.bypass_document_validation(expected_bypass_document_validation);
             }
 
@@ -543,6 +551,7 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Insert One Error", "[collection::insert_one]") {
+            expected_order_setting = true;
             bulk_operation_insert_with_opts->interpose(
                 [&](mongoc_bulk_operation_t*, const bson_t*, const bson_t*, bson_error_t* err) {
                     bulk_operation_op_called = true;
@@ -555,6 +564,7 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Insert Many Error", "[collection::insert_many]") {
+            expected_order_setting = true;
             bulk_operation_insert_with_opts->interpose(
                 [&](mongoc_bulk_operation_t*, const bson_t*, const bson_t*, bson_error_t* err) {
                     bulk_operation_op_called = true;
@@ -570,6 +580,7 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Update One Error", "[collection::update_one]") {
+            expected_order_setting = true;
             bulk_operation_update_one_with_opts->interpose([&](mongoc_bulk_operation_t*,
                                                                const bson_t*,
                                                                const bson_t*,
@@ -587,6 +598,7 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Update Many", "[collection::update_many]") {
             bool upsert_option;
+            expected_order_setting = true;
 
             bulk_operation_update_many_with_opts->interpose([&](mongoc_bulk_operation_t*,
                                                                 const bson_t* query,
@@ -637,6 +649,7 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Update Many Error", "[collection::update_many]") {
+            expected_order_setting = true;
             bulk_operation_update_many_with_opts->interpose([&](mongoc_bulk_operation_t*,
                                                                 const bson_t*,
                                                                 const bson_t*,
@@ -654,6 +667,7 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Replace One", "[collection::replace_one]") {
             bool upsert_option;
+            expected_order_setting = true;
 
             bulk_operation_replace_one_with_opts->interpose([&](mongoc_bulk_operation_t*,
                                                                 const bson_t* query,
@@ -704,6 +718,7 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Replace One Error", "[collection::update_one]") {
+            expected_order_setting = true;
             bulk_operation_replace_one_with_opts->interpose([&](mongoc_bulk_operation_t*,
                                                                 const bson_t*,
                                                                 const bson_t*,
@@ -720,6 +735,7 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Delete One", "[collection::delete_one]") {
+            expected_order_setting = true;
             bulk_operation_remove_one_with_opts->interpose(
                 [&](mongoc_bulk_operation_t*, const bson_t* doc, const bson_t*, bson_error_t*) {
                     bulk_operation_op_called = true;
@@ -732,6 +748,7 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Delete One Error", "[collection::delete_one]") {
+            expected_order_setting = true;
             bulk_operation_remove_one_with_opts->interpose(
                 [&](mongoc_bulk_operation_t*, const bson_t*, const bson_t*, bson_error_t* err) {
                     bulk_operation_op_called = true;
@@ -744,6 +761,7 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Delete Many", "[collection::delete_many]") {
+            expected_order_setting = true;
             bulk_operation_remove_many_with_opts->interpose(
                 [&](mongoc_bulk_operation_t*, const bson_t* doc, const bson_t*, bson_error_t*) {
                     bulk_operation_op_called = true;
@@ -756,6 +774,7 @@ TEST_CASE("Collection", "[collection]") {
         }
 
         SECTION("Delete Many Error", "[collection::delete_one]") {
+            expected_order_setting = true;
             bulk_operation_remove_many_with_opts->interpose(
                 [&](mongoc_bulk_operation_t*, const bson_t*, const bson_t*, bson_error_t* err) {
                     bulk_operation_op_called = true;

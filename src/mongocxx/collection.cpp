@@ -189,20 +189,6 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
     return bsoncxx::document::value{reply_view["value"].get_document().view()};
 }
 
-// TODO move these to a private header
-template <typename T>
-class guard {
-   public:
-    guard(T&& t) : _t{std::move(t)} {}
-
-    ~guard() {
-        _t();
-    }
-
-   private:
-    T _t;
-};
-
 }  // namespace
 
 namespace mongocxx {
@@ -553,7 +539,6 @@ stdx::optional<result::insert_one> collection::_insert_one(const client_session*
     // See comments in: https://github.com/mongodb/mongo-cxx-driver/pull/409
 
     options::bulk_write bulk_opts;
-    bulk_opts.ordered(false);
 
     if (options.write_concern()) {
         bulk_opts.write_concern(*options.write_concern());
@@ -604,7 +589,6 @@ stdx::optional<result::replace_one> collection::_replace_one(const client_sessio
                                                              view_or_value replacement,
                                                              const options::update& options) {
     options::bulk_write bulk_opts;
-    bulk_opts.ordered(false);
 
     if (options.bypass_document_validation()) {
         bulk_opts.bypass_document_validation(*options.bypass_document_validation());
@@ -651,7 +635,6 @@ stdx::optional<result::update> collection::_update_many(const client_session* se
                                                         view_or_value update,
                                                         const options::update& options) {
     options::bulk_write bulk_opts;
-    bulk_opts.ordered(false);
 
     if (options.bypass_document_validation()) {
         bulk_opts.bypass_document_validation(*options.bypass_document_validation());
@@ -701,7 +684,6 @@ stdx::optional<result::update> collection::_update_one(const client_session* ses
                                                        view_or_value update,
                                                        const options::update& options) {
     options::bulk_write bulk_opts;
-    bulk_opts.ordered(false);
 
     if (options.bypass_document_validation()) {
         bulk_opts.bypass_document_validation(*options.bypass_document_validation());
@@ -749,7 +731,6 @@ stdx::optional<result::update> collection::update_one(const client_session& sess
 stdx::optional<result::delete_result> collection::_delete_many(
     const client_session* session, view_or_value filter, const options::delete_options& options) {
     options::bulk_write bulk_opts;
-    bulk_opts.ordered(false);
 
     if (options.write_concern()) {
         bulk_opts.write_concern(*options.write_concern());
@@ -784,7 +765,6 @@ stdx::optional<result::delete_result> collection::delete_many(
 stdx::optional<result::delete_result> collection::_delete_one(
     const client_session* session, view_or_value filter, const options::delete_options& options) {
     options::bulk_write bulk_opts;
-    bulk_opts.ordered(false);
 
     if (options.write_concern()) {
         bulk_opts.write_concern(*options.write_concern());
