@@ -46,6 +46,8 @@ namespace test_util {
 
 namespace {
 
+using namespace mongocxx;
+using namespace bsoncxx;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
@@ -200,6 +202,18 @@ bool is_replica_set(const client& client) {
     return static_cast<bool>(reply.view()["setName"]);
 }
 
+std::string get_topology(const client& client) {
+    auto reply = client["admin"].run_command(make_document(kvp("isMaster", 1)));
+    if (reply.view()["setName"]) {
+        return "replicaset";
+    } else if (reply.view()["msg"] &&
+               std::string(reply.view()["msg"].get_utf8().value) == "isdbgrid") {
+        return "sharded";
+    } else {
+        return "single";
+    }
+}
+
 stdx::optional<bsoncxx::document::value> parse_test_file(std::string path) {
     std::stringstream stream;
     std::ifstream test_file{path};
@@ -220,6 +234,74 @@ bsoncxx::document::value transform_document(bsoncxx::document::view view, const 
     bsoncxx::builder::basic::array context;
 
     return transform_document_recursive(view, fcn, &context);
+}
+
+double as_double(bsoncxx::types::value value) {
+    if (value.type() == type::k_int32) {
+        return static_cast<double>(value.get_int32());
+    }
+    if (value.type() == type::k_int64) {
+        return static_cast<double>(value.get_int64());
+    }
+    if (value.type() == type::k_double) {
+        return static_cast<double>(value.get_double());
+    }
+
+    throw std::logic_error{"could not convert type " + bsoncxx::to_string(value.type()) +
+                           " to double"};
+}
+
+bool is_numeric(types::value value) {
+    return value.type() == type::k_int32 || value.type() == type::k_int64 ||
+           value.type() == type::k_double;
+}
+
+bool matches(types::value main, types::value pattern) {
+    if (is_numeric(pattern) && as_double(pattern) == 42) {
+        return true;
+    }
+
+    // Different numeric types are considered equal.
+    if (is_numeric(main) && is_numeric(pattern) && as_double(main) == as_double(pattern)) {
+        return true;
+    }
+
+    if (main.type() == type::k_document) {
+        document::view main_view = main.get_document().value;
+        for (auto&& el : pattern.get_document().value) {
+            if (main_view.find(el.key()) == main_view.end()) {
+                return false;
+            }
+            if (!matches(main_view[el.key()].get_value(), el.get_value())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    if (main.type() == type::k_array) {
+        array::view main_array = main.get_array().value;
+        array::view pattern_array = pattern.get_array().value;
+
+        if (main_array.length() < pattern_array.length()) {
+            return false;
+        }
+
+        auto main_iter = main_array.begin();
+        for (auto&& el : pattern_array) {
+            if (!matches((*main_iter).get_value(), el.get_value())) {
+                return false;
+            }
+            main_iter++;
+        }
+        return true;
+    }
+
+    return main == pattern;
+}
+
+bool matches(document::view doc, document::view pattern) {
+    return matches(types::value{types::b_document{doc}}, types::value{types::b_document{pattern}});
 }
 
 }  // namespace test_util

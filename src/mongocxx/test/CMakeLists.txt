@@ -73,6 +73,11 @@ set(test_driver_sources
     write_concern.cpp
 )
 
+set(spec_test_common
+    spec/operation.cpp
+    spec/monitoring.cpp
+    spec/util.cpp)
+
 add_executable(test_driver
     ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
@@ -93,12 +98,21 @@ add_executable(test_crud_specs
     ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/crud.cpp
+    ${spec_test_common}
+)
+
+add_executable(test_change_stream_specs
+    ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
+    ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
+    spec/change_stream.cpp
+    ${spec_test_common}
 )
 
 add_executable(test_gridfs_specs
     ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/gridfs.cpp
+    ${spec_test_common}
 )
 
 add_executable(test_command_monitoring_specs
@@ -113,6 +127,7 @@ target_link_libraries(test_instance mongocxx_mocked ${libmongoc_libraries})
 target_link_libraries(test_crud_specs mongocxx_mocked ${libmongoc_libraries})
 target_link_libraries(test_gridfs_specs mongocxx_mocked ${libmongoc_libraries})
 target_link_libraries(test_command_monitoring_specs mongocxx_mocked ${libmongoc_libraries})
+target_link_libraries(test_change_stream_specs mongocxx_mocked ${libmongoc_libraries})
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(test_driver PRIVATE /bigobj)
@@ -124,6 +139,7 @@ target_include_directories(test_instance PRIVATE ${libmongoc_include_directories
 target_include_directories(test_crud_specs PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_gridfs_specs PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_command_monitoring_specs PRIVATE ${libmongoc_include_directories})
+target_include_directories(test_change_stream_specs PRIVATE ${libmongoc_include_directories})
 
 target_compile_definitions(test_driver PRIVATE ${libmongoc_definitions})
 target_compile_definitions(test_logging PRIVATE ${libmongoc_definitions})
@@ -135,6 +151,7 @@ add_test(instance test_instance)
 add_test(crud_specs test_crud_specs)
 add_test(gridfs_specs test_gridfs_specs)
 add_test(command_monitoring_specs test_command_monitoring_specs)
+add_test(change_stream_specs test_change_stream_specs)
 
 set_tests_properties(crud_specs PROPERTIES
     ENVIRONMENT "CRUD_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/crud")
@@ -143,7 +160,10 @@ set_tests_properties(gridfs_specs PROPERTIES
     ENVIRONMENT "GRIDFS_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/gridfs")
 
 set_tests_properties(command_monitoring_specs PROPERTIES
-        ENVIRONMENT "COMMAND_MONITORING_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/command-monitoring")
+    ENVIRONMENT "COMMAND_MONITORING_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/command-monitoring")
+
+set_tests_properties(change_stream_specs PROPERTIES
+    ENVIRONMENT "CHANGE_STREAM_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/change_stream")
 
 if (MONGOCXX_ENABLE_SLOW_TESTS)
   set_tests_properties(driver PROPERTIES

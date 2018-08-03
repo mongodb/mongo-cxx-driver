@@ -58,14 +58,20 @@ const auto gen_next = [](bool has_next) {
     };
 };
 
+bson_t err_doc;
+
 // Generates lambda/interpose for change_stream_error_document.
 const auto gen_error = [](bool has_error) {
+    bson_init(&err_doc);  // Will fit on stack.
+    bson_append_int32(&err_doc, "ok", -1, 0);
     return [=](const mongoc_change_stream_t*, bson_error_t* err, const bson_t** bson) -> bool {
         if (has_error) {
             bson_set_error(err,
                            MONGOC_ERROR_CURSOR,
                            MONGOC_ERROR_CHANGE_STREAM_NO_RESUME_TOKEN,
                            "expected error");
+            *bson = &err_doc;
+        } else {
             *bson = NULL;
         }
         return has_error;

@@ -25,6 +25,8 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/types.hpp>
+#include <bsoncxx/types/value.hpp>
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -35,7 +37,6 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 class client;
 
 namespace test_util {
-
 //
 // Compares to version number strings (i.e. positive integers separated by periods). Comparisons are
 // done to the lesser precision of the two versions. For example, 3.2 is considered equal to 3.2.11,
@@ -73,6 +74,11 @@ std::string get_server_version(const client& client);
 /// Determines if the server is a replica set member.
 ///
 bool is_replica_set(const client& client);
+
+///
+/// Returns "standalone", "replicaset", or "sharded".
+///
+std::string get_topology(const client& client);
 
 ///
 /// Parses a JSON file at a given path and return it as a BSON document value.
@@ -123,6 +129,14 @@ using xformer_t = std::function<stdx::optional<item_t>(item_t, bsoncxx::builder:
 // passed in.
 //
 bsoncxx::document::value transform_document(bsoncxx::document::view view, const xformer_t& fcn);
+
+double as_double(bsoncxx::types::value value);
+
+bool is_numeric(bsoncxx::types::value value);
+
+bool matches(bsoncxx::types::value main, bsoncxx::types::value pattern);
+
+bool matches(bsoncxx::document::view doc, bsoncxx::document::view pattern);
 
 }  // namespace test_util
 

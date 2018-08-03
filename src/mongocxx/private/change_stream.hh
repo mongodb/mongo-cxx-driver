@@ -17,6 +17,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/change_stream.hpp>
+#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -87,7 +88,9 @@ class change_stream::impl {
         if (libmongoc::change_stream_error_document(this->change_stream_, &error, &out)) {
             this->mark_dead();
             this->doc_ = bsoncxx::document::view{};
-            throw_exception<query_exception>(error);
+            mongocxx::libbson::scoped_bson_t scoped_error_reply{};
+            bson_copy_to(out, scoped_error_reply.bson_for_init());
+            throw_exception<query_exception>(scoped_error_reply.steal(), error);
         }
 
         // Just nothing left.

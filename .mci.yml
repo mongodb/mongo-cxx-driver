@@ -121,7 +121,7 @@ functions:
                 export MONGO_ORCHESTRATION_HOME=$DRIVERS_TOOLS/.evergreen/orchestration
                 export MONGODB_VERSION=${mongodb_version}
                 export AUTH=${AUTH}
-                export TOPOLOGY=${topology|-server}
+                export TOPOLOGY=${topology|server}
                 echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
                 ./.evergreen/run-orchestration.sh
 
@@ -364,6 +364,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
+          vars:
               TOPOLOGY: "replica_set"
         - func: "install_c_driver"
           vars:
