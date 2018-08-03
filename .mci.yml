@@ -121,6 +121,7 @@ functions:
                 export MONGO_ORCHESTRATION_HOME=$DRIVERS_TOOLS/.evergreen/orchestration
                 export MONGODB_VERSION=${mongodb_version}
                 export AUTH=${AUTH}
+                export TOPOLOGY=${topology|-server}
                 echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
                 ./.evergreen/run-orchestration.sh
 
@@ -359,6 +360,17 @@ tasks:
           vars:
               USE_STATIC_LIBS: 1
 
+    - name: compile_and_test_with_shared_libs_replica_set
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+              TOPOLOGY: "replica_set"
+        - func: "install_c_driver"
+          vars:
+              MONGOC_VERSION: master
+        - func: "compile"
+        - func: "test"
+
 #######################################
 #           MongoDB Version Matrix    #
 #######################################
@@ -438,6 +450,7 @@ buildvariants:
           - name: lint
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_shared_libs_replica_set
 
     - name: ubuntu1404-debug
       display_name: "Ubuntu 14.04 Debug Static"
