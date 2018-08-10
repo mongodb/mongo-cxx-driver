@@ -376,6 +376,24 @@ TEST_CASE("Documentation Examples", "[min36]") {
         }
         // End Changestream Example 3
     }
+
+    SECTION("Example 4") {
+        // Create a pipeline with
+        //  [{"$match": {"$or": [{"fullDocument.username": "alice"}, {"operationType": "delete"}]}}]
+
+        // Start Changestream Example 4
+        mongocxx::pipeline cs_pipeline;
+        cs_pipeline.match(
+            make_document(kvp("$or",
+                              make_array(make_document(kvp("fullDocument.username", "alice")),
+                                         make_document(kvp("operationType", "delete"))))));
+
+        change_stream stream = inventory.watch(cs_pipeline);
+        for (auto& event : stream) {
+            std::cout << bsoncxx::to_json(event) << std::endl;
+        }
+        // End Changestream Example 4
+    }
 }
 
 TEST_CASE("Watch 2 collections", "[min36]") {
