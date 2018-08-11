@@ -839,7 +839,7 @@ TEST_CASE("Collection", "[collection]") {
                 return true;
             });
 
-            options::update options;
+            options::replace options;
 
             SECTION("Default Options") {
                 upsert_option = false;

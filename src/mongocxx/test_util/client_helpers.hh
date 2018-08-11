@@ -138,6 +138,16 @@ bool matches(bsoncxx::types::value main, bsoncxx::types::value pattern);
 
 bool matches(bsoncxx::document::view doc, bsoncxx::document::view pattern);
 
+//
+// Require a topology that supports sessions (a post-3.6 replica set or cluster of them).
+//
+// @param client
+//   A connected client.
+//
+// @return Whether sessions are supported by the client's topology.
+//
+bool server_has_sessions(const client& conn);
+
 }  // namespace test_util
 
 MONGOCXX_INLINE_NAMESPACE_END

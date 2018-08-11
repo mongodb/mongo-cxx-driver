@@ -39,11 +39,6 @@
 #include <mongocxx/options/delete.hpp>
 #include <mongocxx/options/distinct.hpp>
 #include <mongocxx/options/find.hpp>
-#include <mongocxx/options/find_one_and_delete.hpp>
-#include <mongocxx/options/find_one_and_replace.hpp>
-#include <mongocxx/options/find_one_and_update.hpp>
-#include <mongocxx/options/find_one_common_options.hpp>
-#include <mongocxx/options/update.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/result/delete.hpp>
 #include <mongocxx/result/insert_many.hpp>

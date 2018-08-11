@@ -585,6 +585,44 @@ stdx::optional<result::insert_one> collection::insert_one(const client_session& 
 }
 
 stdx::optional<result::replace_one> collection::_replace_one(const client_session* session,
+                                                             const options::bulk_write& bulk_opts,
+                                                             const model::replace_one& replace_op) {
+    auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
+    bulk_op.append(replace_op);
+
+    auto result = bulk_op.execute();
+    if (!result) {
+        return stdx::nullopt;
+    }
+
+    return stdx::optional<result::replace_one>(result::replace_one(std::move(result.value())));
+}
+
+stdx::optional<result::replace_one> collection::_replace_one(const client_session* session,
+                                                             view_or_value filter,
+                                                             view_or_value replacement,
+                                                             const options::replace& options) {
+    options::bulk_write bulk_opts;
+
+    if (options.bypass_document_validation()) {
+        bulk_opts.bypass_document_validation(*options.bypass_document_validation());
+    }
+    if (options.write_concern()) {
+        bulk_opts.write_concern(*options.write_concern());
+    }
+
+    model::replace_one replace_op(filter, replacement);
+    if (options.collation()) {
+        replace_op.collation(*options.collation());
+    }
+    if (options.upsert()) {
+        replace_op.upsert(*options.upsert());
+    }
+
+    return _replace_one(session, bulk_opts, replace_op);
+}
+
+stdx::optional<result::replace_one> collection::_replace_one(const client_session* session,
                                                              view_or_value filter,
                                                              view_or_value replacement,
                                                              const options::update& options) {
@@ -609,24 +647,32 @@ stdx::optional<result::replace_one> collection::_replace_one(const client_sessio
 
     bulk_op.append(replace_op);
 
-    auto result = bulk_op.execute();
-    if (!result) {
-        return stdx::nullopt;
-    }
-
-    return stdx::optional<result::replace_one>(result::replace_one(std::move(result.value())));
+    return _replace_one(session, bulk_opts, replace_op);
 }
 
 stdx::optional<result::replace_one> collection::replace_one(view_or_value filter,
                                                             view_or_value replacement,
-                                                            const options::update& options) {
+                                                            const options::replace& options) {
     return _replace_one(nullptr, filter, replacement, options);
 }
 
 stdx::optional<result::replace_one> collection::replace_one(const client_session& session,
                                                             view_or_value filter,
                                                             view_or_value replacement,
-                                                            const options::update& options) {
+                                                            const options::replace& options) {
+    return _replace_one(&session, filter, replacement, options);
+}
+
+stdx::optional<result::replace_one> collection::replace_one_deprecated(
+    view_or_value filter, view_or_value replacement, const options::update& options) {
+    return _replace_one(nullptr, filter, replacement, options);
+}
+
+stdx::optional<result::replace_one> collection::replace_one_deprecated(
+    const client_session& session,
+    view_or_value filter,
+    view_or_value replacement,
+    const options::update& options) {
     return _replace_one(&session, filter, replacement, options);
 }
 

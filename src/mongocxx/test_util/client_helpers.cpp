@@ -37,6 +37,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/stdx.hpp>
+#include <third_party/catch/include/catch.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -309,6 +310,18 @@ bool matches(types::value main, types::value pattern) {
 
 bool matches(document::view doc, document::view pattern) {
     return matches(types::value{types::b_document{doc}}, types::value{types::b_document{pattern}});
+}
+
+bool server_has_sessions(const client& conn) {
+    auto result = conn["admin"].run_command(make_document(kvp("isMaster", 1)));
+    auto result_view = result.view();
+
+    if (result_view["logicalSessionTimeoutMinutes"]) {
+        return true;
+    }
+
+    WARN("skip: server does not support sessions");
+    return false;
 }
 
 }  // namespace test_util

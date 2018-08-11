@@ -56,6 +56,7 @@ set(test_driver_sources
     options/modify_collection.cpp
     options/pool.cpp
     options/private/rewriter.cpp
+    options/replace.cpp
     options/update.cpp
     pool.cpp
     private/scoped_bson_t.cpp

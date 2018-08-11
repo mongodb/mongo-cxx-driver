@@ -39,6 +39,7 @@
 #include <mongocxx/options/find_one_and_replace.hpp>
 #include <mongocxx/options/find_one_and_update.hpp>
 #include <mongocxx/options/find_one_common_options.hpp>
+#include <mongocxx/options/replace.hpp>
 #include <mongocxx/options/update.hpp>
 #include <mongocxx/result/delete.hpp>
 #include <mongocxx/result/insert_many.hpp>
@@ -482,7 +483,7 @@ document::value run_replace_one_test(collection* coll, document::view operation)
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view replacement = arguments["replacement"].get_document().value;
-    options::update options{};
+    options::replace options{};
 
     if (arguments["collation"]) {
         options.collation(arguments["collation"].get_document().value);

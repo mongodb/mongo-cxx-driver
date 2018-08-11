@@ -47,6 +47,7 @@
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/options/index_view.hpp>
 #include <mongocxx/options/insert.hpp>
+#include <mongocxx/options/replace.hpp>
 #include <mongocxx/options/update.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/read_concern.hpp>
@@ -1348,7 +1349,7 @@ class MONGOCXX_API collection {
     /// @param replacement
     ///   The replacement document.
     /// @param options
-    ///   Optional arguments, see options::update.
+    ///   Optional arguments, see options::replace.
     ///
     /// @return The optional result of attempting to replace a document.
     /// If the write concern is unacknowledged, the optional will be
@@ -1363,10 +1364,79 @@ class MONGOCXX_API collection {
     stdx::optional<result::replace_one> replace_one(
         bsoncxx::document::view_or_value filter,
         bsoncxx::document::view_or_value replacement,
-        const options::update& options = options::update());
+        const options::replace& options = options::replace{});
 
     ///
     /// Replaces a single document matching the provided filter in this collection.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the replace.
+    /// @param filter
+    ///   Document representing the match criteria.
+    /// @param replacement
+    ///   The replacement document.
+    /// @param options
+    ///   Optional arguments, see options::replace.
+    ///
+    /// @return The optional result of attempting to replace a document.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws
+    ///   mongocxx::logic_error if the replacement is invalid, or mongocxx::bulk_write_exception if
+    ///   the operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/update/
+    ///
+    stdx::optional<result::replace_one> replace_one(
+        const client_session& session,
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value replacement,
+        const options::replace& options = options::replace{});
+
+    ///
+    /// Replaces a single document matching the provided filter in this collection.
+    ///
+    /// @deprecated
+    ///   This overload takes an options::update instance, which includes the array_filters option
+    ///   which is irrelevant to replace_one. Use the overload that takes options::replace instead.
+    ///
+    /// @param filter
+    ///   Document representing the match criteria.
+    /// @param replacement
+    ///   The replacement document.
+    /// @param options
+    ///   Optional arguments, see options::update.
+    ///
+    /// @return The optional result of attempting to replace a document.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws
+    ///   mongocxx::logic_error if the replacement is invalid, or mongocxx::bulk_write_exception if
+    ///   the operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/update/
+    ///
+    template <typename T, typename = std::enable_if<std::is_same<T, options::update>::value>>
+    MONGOCXX_DEPRECATED stdx::optional<result::replace_one> replace_one(
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value replacement,
+        const T& options) {
+        return replace_one_deprecated(filter, replacement, options);
+    }
+
+    stdx::optional<result::replace_one> replace_one_deprecated(
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value replacement,
+        const options::update& options);
+
+    ///
+    /// Replaces a single document matching the provided filter in this collection.
+    ///
+    /// @deprecated
+    ///   This overload takes an options::update instance, which includes the array_filters option
+    ///   which is irrelevant to replace_one. Use the overload that takes options::replace instead.
     ///
     /// @param session
     ///   The mongocxx::client_session with which to perform the replace.
@@ -1387,11 +1457,20 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/update/
     ///
-    stdx::optional<result::replace_one> replace_one(
+    template <typename T, typename = std::enable_if<std::is_same<T, options::update>::value>>
+    MONGOCXX_DEPRECATED stdx::optional<result::replace_one> replace_one(
         const client_session& session,
         bsoncxx::document::view_or_value filter,
         bsoncxx::document::view_or_value replacement,
-        const options::update& options = options::update());
+        const T& options) {
+        return replace_one_deprecated(session, filter, replacement, options);
+    }
+
+    stdx::optional<result::replace_one> replace_one_deprecated(
+        const client_session& session,
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value replacement,
+        const options::update& options);
 
     ///
     /// @}
@@ -1683,6 +1762,17 @@ class MONGOCXX_API collection {
         bsoncxx::string::view_or_value new_name,
         bool drop_target_before_rename,
         const bsoncxx::stdx::optional<class write_concern>& write_concern);
+
+    MONGOCXX_PRIVATE stdx::optional<result::replace_one> _replace_one(
+        const client_session* session,
+        const options::bulk_write& bulk_opts,
+        const model::replace_one& replace_op);
+
+    MONGOCXX_PRIVATE stdx::optional<result::replace_one> _replace_one(
+        const client_session* session,
+        bsoncxx::document::view_or_value filter,
+        bsoncxx::document::view_or_value replacement,
+        const options::replace& options);
 
     MONGOCXX_PRIVATE stdx::optional<result::replace_one> _replace_one(
         const client_session* session,

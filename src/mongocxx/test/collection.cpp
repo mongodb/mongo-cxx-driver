@@ -17,6 +17,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
@@ -43,6 +44,7 @@ using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 
 using namespace mongocxx;
+using test_util::server_has_sessions;
 
 TEST_CASE("A default constructed collection cannot perform operations", "[collection]") {
     instance::current();
@@ -861,7 +863,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.drop();
 
             coll.insert_one(b1.view());
-            options::update opts{};
+            options::replace opts{};
             opts.write_concern(noack);
 
             auto result = coll.replace_one(b1.view(), b2.view(), opts);
@@ -885,7 +887,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             collection coll = db.create_collection(collname, opts);
 
-            options::update options;
+            options::replace options;
             options.bypass_document_validation(true);
 
             coll.insert_one(b1.view());
@@ -910,25 +912,65 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         document replacement_doc;
         replacement_doc.append(kvp("x", "bar"));
 
-        auto update_opts = options::update{}.collation(case_insensitive_collation.view());
+        auto replace_opts = options::replace{}.collation(case_insensitive_collation.view());
         if (test_util::supports_collation(mongodb_client)) {
             INFO("unacknowledged write concern fails");
-            update_opts.write_concern(noack);
+            replace_opts.write_concern(noack);
             REQUIRE_THROWS_AS(
-                coll.replace_one(predicate.view(), replacement_doc.view(), update_opts),
+                coll.replace_one(predicate.view(), replacement_doc.view(), replace_opts),
                 operation_exception);
 
             INFO("default write concern succeeds");
-            update_opts.write_concern(default_wc);
-            auto result = coll.replace_one(predicate.view(), replacement_doc.view(), update_opts);
+            replace_opts.write_concern(default_wc);
+            auto result = coll.replace_one(predicate.view(), replacement_doc.view(), replace_opts);
             REQUIRE(result);
             REQUIRE(result->modified_count() == 1);
 
         } else {
             REQUIRE_THROWS_AS(
-                coll.replace_one(predicate.view(), replacement_doc.view(), update_opts),
+                coll.replace_one(predicate.view(), replacement_doc.view(), replace_opts),
                 bulk_write_exception);
         }
+    }
+
+    SECTION("replace_one overload resolution", "[collection]") {
+        if (!server_has_sessions(mongodb_client)) {
+            return;
+        }
+
+        auto cs = mongodb_client.start_session();
+        auto coll = db["replace_one_overload_resolution"];
+        document d;
+        auto v = d.view();
+
+        // Ensure the following usages all compile.
+        // With three empty braced initializers, use modern replace_one with options::replace.
+        coll.replace_one({}, {}, {});
+        coll.replace_one(cs, {}, {}, {});
+
+        // With two empty braced initializers, use modern replace_one with options::replace.
+        coll.replace_one(v, {}, {});
+        coll.replace_one(cs, v, {}, {});
+
+        // With one empty braced initializer, use modern replace_one with options::replace.
+        coll.replace_one(v, v, {});
+        coll.replace_one(cs, v, v, {});
+
+        // Explicit.
+        coll.replace_one(v, v, options::replace{});
+        coll.replace_one(cs, v, v, options::replace{});
+
+        // Deprecated, but compiles.
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+        coll.replace_one({}, {}, options::update{});
+        coll.replace_one(cs, {}, {}, options::update{});
+
+        coll.replace_one(v, {}, options::update{});
+        coll.replace_one(cs, v, {}, options::update{});
+
+        coll.replace_one(v, v, options::update{});
+        coll.replace_one(cs, v, v, options::update{});
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
     }
 
     SECTION("filtered document delete one works", "[collection]") {

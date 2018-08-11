@@ -34,18 +34,7 @@ using bsoncxx::builder::basic::make_document;
 using bsoncxx::types::b_timestamp;
 
 using namespace mongocxx;
-
-bool server_has_sessions(const client& conn) {
-    auto result = conn["admin"].run_command(make_document(kvp("isMaster", 1)));
-    auto result_view = result.view();
-
-    if (result_view["logicalSessionTimeoutMinutes"]) {
-        return true;
-    }
-
-    WARN("skip: server does not support sessions");
-    return false;
-}
+using test_util::server_has_sessions;
 
 TEST_CASE("session options", "[session]") {
     instance::current();
