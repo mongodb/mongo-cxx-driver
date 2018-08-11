@@ -42,8 +42,6 @@ class client;
 /// Acts as a gateway for accessing collections that are contained within a database. It inherits
 /// all of its default settings from the client that creates it.
 ///
-/// @todo Add auth functions (add_user, remove_all_users, remove_user)
-///
 class MONGOCXX_API database {
    public:
     ///
