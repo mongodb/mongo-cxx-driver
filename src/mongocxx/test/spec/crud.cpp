@@ -453,7 +453,7 @@ document::value run_replace_one_test(collection* coll, document::view operation)
         // Server versions below 2.4 do not return an `nModified` count.
         try {
             modified_count = update_result->modified_count();
-        } catch (const std::exception& e) {
+        } catch (const std::exception&) {
         }
 
         upserted_count = update_result->result().upserted_count();
@@ -514,7 +514,7 @@ document::value run_update_many_test(collection* coll, document::view operation)
         // Server versions below 2.4 do not return an `nModified` count.
         try {
             modified_count = update_result->modified_count();
-        } catch (const std::exception& e) {
+        } catch (const std::exception&) {
         }
 
         upserted_count = update_result->result().upserted_count();
@@ -575,7 +575,7 @@ document::value run_update_one_test(collection* coll, document::view operation) 
         // Server versions below 2.4 do not return an `nModified` count.
         try {
             modified_count = update_result->modified_count();
-        } catch (const std::exception& e) {
+        } catch (const std::exception&) {
         }
 
         upserted_count = update_result->result().upserted_count();
