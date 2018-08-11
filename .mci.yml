@@ -9,7 +9,7 @@ variables:
 
     mongodb_version:
         version_latest: &version_latest latest
-        version_32: &version_32 3.2
+        version_40: &version_40 4.0
 
     ## cmake path variables
     extra_path:
@@ -320,10 +320,59 @@ tasks:
               USE_STATIC_LIBS: 1
 
 #######################################
+#           MongoDB Version Matrix    #
+#######################################
+
+axes:
+    - id: os
+      display_name: "OS"
+      values:
+          - id: "ubuntu-1404"
+            display_name: "Ubuntu 14.04 Debug"
+            variables:
+                cdriver_configure_flags: *linux_cdriver_configure_flags
+                extra_path: *linux_extra_path
+                cmake_flags: *linux_cmake_flags
+                build_type: "Debug"
+                tar_options: *linux_tar_options
+            run_on:
+                - ubuntu1404-test
+          - id: "windows-2k8"
+            display_name: "Windows 2008R2 Debug"
+            variables:
+                extra_path: *windows_extra_path
+                cmake_flags: *windows_cmake_flags
+                build_type: "Debug"
+                tar_options: *linux_tar_options # Same for Windows and Linux
+            run_on:
+                - windows-64-vs2015-compile
+
+    - id: mongodb_version
+      display_name: "MongoDB Version"
+      values:
+          - id: "latest"
+            display_name: "Latest"
+            variables:
+                mongodb_version: *version_latest
+          - id: "4.0"
+            display_name: "4.0"
+            variables:
+                mongodb_version: *version_40
+
+
+#######################################
 #           Buildvariants             #
 #######################################
 
 buildvariants:
+    #######################################
+    #  Standard MongoDB Integration Tests #
+    #######################################
+    - matrix_name: "integration"
+      matrix_spec: {os: "*", mongodb_version: "*"}
+      display_name: "${os} ${mongodb_version}"
+      tasks:
+          - name: compile_and_test_with_shared_libs
 
     #######################################
     #         Linux Buildvariants         #
@@ -345,7 +394,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
 
     - name: ubuntu1404-debug
-      display_name: "Ubuntu 14.04 Debug"
+      display_name: "Ubuntu 14.04 Debug Static"
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
@@ -356,22 +405,7 @@ buildvariants:
       run_on:
           - ubuntu1404-test
       tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_static_libs
-
-    - name: macos-1012
-      display_name: "MacOS 10.12 Release (Boost)"
-      expansions:
-          build_type: "Release"
-          cdriver_configure_flags: *macos_cdriver_configure_flags
-          extra_path: *macos_extra_path
-          cmake_flags: *macos_cmake_flags
-          poly_flags: *poly_boost_flags
-          mongodb_version: *version_latest
-      run_on:
-          - macos-1012
-      tasks:
-          - name: compile_and_test_with_shared_libs
+          # The debug shared lib is tested in the "integration tests" matrix
           - name: compile_and_test_with_static_libs
 
     - name: ubuntu1604-debug-std-experimental
@@ -497,6 +531,24 @@ buildvariants:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
 
+    #######################################
+    #         Mac and Windows             #
+    #######################################
+    - name: macos-1012
+      display_name: "MacOS 10.12 Release (Boost)"
+      expansions:
+          build_type: "Release"
+          cdriver_configure_flags: *macos_cdriver_configure_flags
+          extra_path: *macos_extra_path
+          cmake_flags: *macos_cmake_flags
+          poly_flags: *poly_boost_flags
+          mongodb_version: *version_latest
+      run_on:
+          - macos-1012
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_static_libs
+
     - name: windows-2k8-release
       display_name: "Windows 2008R2 Release"
       expansions:
@@ -512,7 +564,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
 
     - name: windows-2k8-debug
-      display_name: "Windows 2008R2 Debug"
+      display_name: "Windows 2008R2 Debug Static"
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
@@ -522,5 +574,5 @@ buildvariants:
       run_on:
           - windows-64-vs2015-compile
       tasks:
-          - name: compile_and_test_with_shared_libs
+          # The debug shared lib is tested in the "integration tests" matrix
           - name: compile_and_test_with_static_libs
