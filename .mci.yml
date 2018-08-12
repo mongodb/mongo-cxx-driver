@@ -120,6 +120,7 @@ functions:
                 export MONGODB_BINARIES=$DRIVERS_TOOLS/mongodb/bin
                 export MONGO_ORCHESTRATION_HOME=$DRIVERS_TOOLS/.evergreen/orchestration
                 export MONGODB_VERSION=${mongodb_version}
+                export AUTH=${AUTH}
                 echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
                 ./.evergreen/run-orchestration.sh
 
@@ -185,9 +186,7 @@ functions:
 
                   MONGOC_PREFIX="$(pwd)/../mongoc"
                   echo "MONGOC_PREFIX=$MONGOC_PREFIX"
-                  ls -l ..
                   ls -l $MONGOC_PREFIX
-                  find $MONGOC_PREFIX
 
                   if [ "Windows_NT" == "$OS" ]; then
                       MONGOC_PREFIX=$(cygpath -m "$MONGOC_PREFIX")
@@ -279,6 +278,35 @@ functions:
                   # logic to handle ${test_params}.
                   .evergreen/build_example_projects.sh
 
+    "test auth":
+        - command: shell.exec
+          params:
+              shell: bash
+              working_dir: "mongo-cxx-driver"
+              script: |
+                  set -o errexit
+                  set -o xtrace
+                  set -o pipefail
+                  export PATH="${extra_path}:$PATH"
+                  cd build
+                  export PREFIX=$(pwd)/../../mongoc
+
+                  # Use PATH / LD_LIBRARY_PATH / DYLD_LIBRARY_PATH to inform the tests where to find
+                  # mongoc library dependencies on Windows / Linux / Mac OS, respectively.
+                  # Additionally, on Windows, we also need to inform the tests where to find
+                  # mongocxx library dependencies.
+                  export LD_LIBRARY_PATH=.:$PREFIX/lib/
+                  export DYLD_LIBRARY_PATH=.:$PREFIX/lib/
+                  export PATH=$(pwd)/src/bsoncxx/${build_type}:$(pwd)/src/mongocxx/${build_type}:$PREFIX/bin:$(pwd)/install/bin:$PATH
+
+                  URI="mongodb://bob:pwd123@localhost"
+
+                  if [ "Windows_NT" == "$OS" ]; then
+                      ./examples/mongocxx/${build_type}/connect.exe "$URI"
+                  else
+                      ./examples/mongocxx/connect "$URI"
+                  fi
+
 #######################################
 #              Pre Task               #
 #######################################
@@ -304,6 +332,18 @@ tasks:
               MONGOC_VERSION: master
         - func: "compile"
         - func: "test"
+
+    - name: compile_and_test_auth_with_shared_libs
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+          vars:
+              AUTH: auth
+        - func: "install_c_driver"
+          vars:
+              MONGOC_VERSION: master
+        - func: "compile"
+        - func: "test auth"
 
     - name: compile_and_test_with_static_libs
       commands:
@@ -373,6 +413,12 @@ buildvariants:
       display_name: "${os} ${mongodb_version}"
       tasks:
           - name: compile_and_test_with_shared_libs
+
+    - matrix_name: "auth"
+      matrix_spec: {os: "*", mongodb_version: "latest"}
+      display_name: "${os} ${mongodb_version} Auth"
+      tasks:
+          - name: compile_and_test_auth_with_shared_libs
 
     #######################################
     #         Linux Buildvariants         #
