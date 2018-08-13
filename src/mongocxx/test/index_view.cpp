@@ -61,6 +61,13 @@ bool fail_with_max_timeout(const client& conn) {
     return true;
 }
 
+void disable_fail_point(const client& conn) {
+    if (test_commands_enabled(conn)) {
+        conn["admin"].run_command(
+            make_document(kvp("configureFailPoint", "maxTimeAlwaysTimeOut"), kvp("mode", "off")));
+    }
+}
+
 TEST_CASE("create_one", "[index_view]") {
     instance::current();
 
@@ -137,6 +144,7 @@ TEST_CASE("create_one", "[index_view]") {
         if (fail_with_max_timeout(mongodb_client)) {
             REQUIRE_THROWS_AS(indexes.create_one(model, options), operation_exception);
         }
+        disable_fail_point(mongodb_client);
     }
 
     SECTION("fails for same keys and options") {
@@ -189,6 +197,7 @@ TEST_CASE("create_many", "[index_view]") {
         if (fail_with_max_timeout(mongodb_client)) {
             REQUIRE_THROWS_AS(indexes.create_many(models, options), operation_exception);
         }
+        disable_fail_point(mongodb_client);
     }
 
     SECTION("create three") {
@@ -366,6 +375,7 @@ TEST_CASE("drop_all", "[index_view]") {
         if (fail_with_max_timeout(mongodb_client)) {
             REQUIRE_THROWS_AS(indexes.drop_all(options), operation_exception);
         }
+        disable_fail_point(mongodb_client);
     }
 }
 
