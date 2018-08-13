@@ -67,6 +67,12 @@ endif()
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Force MS compiler to report correct version in __cplusplus define
+# to be able to compile without boost polyfill
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
+endif()
+
 # Include the required modules
 include(GenerateExportHeader)
 include(InstallRequiredSystemLibraries)
