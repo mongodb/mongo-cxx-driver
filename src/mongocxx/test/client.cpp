@@ -196,6 +196,58 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
             mongo_client.read_preference().mode());
 }
 
+TEST_CASE("A client may not change apm callbacks after they are set", "[client]") {
+    instance::current();
+
+    bool triggered = false;
+
+    options::apm apm_opts;
+    apm_opts.on_command_started([&](const events::command_started_event& event) {
+        INFO(event.command_name());
+        triggered = true;
+    });
+
+    options::client client_opts;
+    client_opts.apm_opts(apm_opts);
+    client mongo_client(uri{}, client_opts);
+
+    apm_opts.on_command_started([&](const events::command_started_event& event) {
+        INFO(event.command_name());
+        // do nothing
+    });
+
+    client_opts.apm_opts(apm_opts);
+
+    mongo_client["test"]["test_apm"].insert_one(
+        bsoncxx::builder::basic::make_document(bsoncxx::builder::basic::kvp("x", 1)));
+
+    REQUIRE(triggered);
+}
+
+TEST_CASE("A client can delete apm options and the callbacks will still work properly",
+          "[client]") {
+    instance::current();
+
+    bool triggered = false;
+
+    options::client client_opts;
+    {
+        options::apm apm_opts;
+        apm_opts.on_command_started([&](const events::command_started_event& event) {
+            INFO(event.command_name());
+            triggered = true;
+        });
+        client_opts.apm_opts(apm_opts);
+    }  // destructor for apm_opts is called
+
+    client mongo_client(uri{}, client_opts);
+
+    mongo_client["test"]["test_apm"].insert_one(
+        bsoncxx::builder::basic::make_document(bsoncxx::builder::basic::kvp("x", 2)));
+
+    REQUIRE(triggered);
+}
+
 TEST_CASE("A client's write concern may be set and obtained", "[client]") {
     MOCK_CLIENT
 
