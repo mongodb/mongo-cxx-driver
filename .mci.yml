@@ -219,6 +219,7 @@ functions:
                   # `test_crud_specs` and `test_gridfs_specs` test binaries, respectively.
                   export CRUD_TESTS_PATH="$(pwd)/../data/crud"
                   export GRIDFS_TESTS_PATH="$(pwd)/../data/gridfs"
+                  export COMMAND_MONITORING_TESTS_PATH="$(pwd)/../data/command-monitoring"
                   if [ "Windows_NT" == "$OS" ]; then
                       CRUD_TESTS_PATH=$(cygpath -m $CRUD_TESTS_PATH)
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} RUN_TESTS.vcxproj
@@ -234,6 +235,7 @@ functions:
                       ${test_params} ./src/mongocxx/test/test_driver
                       ${test_params} ./src/mongocxx/test/test_crud_specs
                       ${test_params} ./src/mongocxx/test/test_gridfs_specs
+                      ${test_params} ./src/mongocxx/test/test_command_monitoring_specs
                       ${test_params} ./src/mongocxx/test/test_instance
 
                       # Some platforms like OS X don't support the /mode syntax to the -perm option
