@@ -35,6 +35,7 @@ class pool::impl {
 
     mongoc_client_pool_t* client_pool_t;
     std::list<bsoncxx::string::view_or_value> ssl_options;
+    options::apm listeners;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

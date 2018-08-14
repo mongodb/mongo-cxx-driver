@@ -29,6 +29,15 @@ const stdx::optional<ssl>& client::ssl_opts() const {
     return _ssl_opts;
 }
 
+client& client::apm_opts(apm apm_opts) {
+    _apm_opts = std::move(apm_opts);
+    return *this;
+}
+
+const stdx::optional<apm>& client::apm_opts() const {
+    return _apm_opts;
+}
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
