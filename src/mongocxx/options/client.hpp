@@ -17,6 +17,7 @@
 #include <string>
 
 #include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/options/apm.hpp>
 #include <mongocxx/options/ssl.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -36,7 +37,7 @@ class MONGOCXX_API client {
     /// Sets the SSL-related options.
     ///
     /// @param ssl_opts
-    ///   The SSL related options.
+    ///   The SSL-related options.
     ///
     /// @return
     ///   A reference to the object on which this member function is being called.  This facilitates
@@ -51,8 +52,28 @@ class MONGOCXX_API client {
     ///
     const stdx::optional<ssl>& ssl_opts() const;
 
+    ///
+    /// Sets the APM-related options.
+    ///
+    /// @param apm_opts
+    ///   The APM-related options.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    client& apm_opts(apm apm_opts);
+
+    ///
+    /// The current APM-related options.
+    ///
+    /// @return The APM-related options.
+    ///
+    const stdx::optional<apm>& apm_opts() const;
+
    private:
     stdx::optional<ssl> _ssl_opts;
+    stdx::optional<apm> _apm_opts;
 };
 
 }  // namespace options

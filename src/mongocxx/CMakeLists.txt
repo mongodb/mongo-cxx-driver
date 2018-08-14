@@ -55,6 +55,9 @@ set(mongocxx_sources
     collection.cpp
     cursor.cpp
     database.cpp
+    events/command_failed_event.cpp
+    events/command_started_event.cpp
+    events/command_succeeded_event.cpp
     exception/error_code.cpp
     exception/operation_exception.cpp
     exception/server_error_code.cpp
@@ -74,6 +77,7 @@ set(mongocxx_sources
     model/update_one.cpp
     model/write.cpp
     options/aggregate.cpp
+    options/apm.cpp
     options/bulk_write.cpp
     options/change_stream.cpp
     options/client.cpp
