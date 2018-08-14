@@ -226,18 +226,26 @@ TEST_CASE("session", "[session]") {
     }
 }
 
-// Receive command-started events from libmongoc's APM to test session ids.
-// TODO: Port to C++ Driver's APM once it's implemented, CXX-1562.
-void command_started(const mongoc_apm_command_started_t* event);
-
 class session_test {
    public:
-    session_test() : client{uri{}} {
-        auto client_t = static_cast<mongoc_client_t*>(client_t_from_client(client));
-        auto callbacks = mongoc_apm_callbacks_new();
-        mongoc_apm_set_command_started_cb(callbacks, command_started);
-        mongoc_client_set_apm_callbacks(client_t, callbacks, this);
-        mongoc_apm_callbacks_destroy(callbacks);
+    session_test() {
+        options::client client_opts;
+        options::apm apm_opts;
+
+        apm_opts.on_command_started([&](const events::command_started_event& event) {
+            // Ignore auth commands like "saslStart", and handshakes with "isMaster".
+            std::string sasl{"sasl"};
+            if (event.command_name().substr(0, sasl.size()).compare(sasl) == 0 ||
+                event.command_name().to_string().compare("isMaster") == 0) {
+                return;
+            }
+
+            events.emplace_back(event.command_name().to_string(),
+                                bsoncxx::document::value(event.command()));
+        });
+
+        client_opts.apm_opts(apm_opts);
+        client = mongocxx::client(uri{}, client_opts);
     }
 
     void test_method_with_session(const std::function<void(bool)>& f, const client_session& s) {
@@ -297,24 +305,6 @@ class session_test {
     std::vector<apm_event> events;
     mongocxx::client client;
 };
-
-void command_started(const mongoc_apm_command_started_t* event) {
-    using namespace bsoncxx::helpers;
-
-    std::string command_name{mongoc_apm_command_started_get_command_name(event)};
-
-    // Ignore auth commands like "saslStart", and handshakes with "isMaster".
-    std::string sasl{"sasl"};
-    if (command_name.substr(0, sasl.size()) == sasl || command_name == "isMaster") {
-        return;
-    }
-
-    auto& listener =
-        *(reinterpret_cast<session_test*>(mongoc_apm_command_started_get_context(event)));
-    auto document = value_from_bson_t(mongoc_apm_command_started_get_command(event));
-
-    listener.events.emplace_back(command_name, document);
-}
 
 TEST_CASE("lsid", "[session]") {
     instance::current();
