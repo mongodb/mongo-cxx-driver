@@ -343,8 +343,8 @@ bsoncxx::builder::basic::document build_find_options_document(const options::fin
         options_builder.append(kvp("max", *options.max()));
     }
 
-    if (options.max_scan()) {
-        options_builder.append(kvp("maxScan", *options.max_scan()));
+    if (options.max_scan_deprecated()) {
+        options_builder.append(kvp("maxScan", *options.max_scan_deprecated()));
     }
 
     if (options.max_time()) {
@@ -377,8 +377,8 @@ bsoncxx::builder::basic::document build_find_options_document(const options::fin
         options_builder.append(kvp("skip", *options.skip()));
     }
 
-    if (options.snapshot()) {
-        options_builder.append(kvp("snapshot", *options.snapshot()));
+    if (options.snapshot_deprecated()) {
+        options_builder.append(kvp("snapshot", *options.snapshot_deprecated()));
     }
 
     if (options.sort()) {

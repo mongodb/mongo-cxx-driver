@@ -256,6 +256,9 @@ class MONGOCXX_API find {
     ///
     /// Sets the maximum number of documents or index keys to scan when executing the query.
     ///
+    /// @deprecated
+    ///   This method is deprecated.
+    ///
     /// @param max
     ///   The maximum number of documents or index keys to scan.
     ///
@@ -265,17 +268,22 @@ class MONGOCXX_API find {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/find/
     ///
-    find& max_scan(std::int64_t max);
+    MONGOCXX_DEPRECATED find& max_scan(std::int64_t max);
+    find& max_scan_deprecated(std::int64_t max);
 
     ///
     /// Gets the current setting for the maximum number of documents to scan when executing the
     /// query.
     ///
+    /// @deprecated
+    ///    This method is deprecated.
+    ///
     /// @return The current setting for the maximum number of documents or index keys to scan.
     ///
     /// @see https://docs.mongodb.com/master/reference/command/find/
     ///
-    const stdx::optional<std::int64_t>& max_scan() const;
+    MONGOCXX_DEPRECATED const stdx::optional<std::int64_t>& max_scan() const;
+    const stdx::optional<std::int64_t>& max_scan_deprecated() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -506,6 +514,9 @@ class MONGOCXX_API find {
     ///
     /// Sets whether snapshot mode should be used.
     ///
+    /// @deprecated
+    ///    This method is deprecated.
+    ///
     /// @param snapshot
     ///   Whether to enable snapshot mode.
     ///
@@ -515,16 +526,21 @@ class MONGOCXX_API find {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/find/
     ///
-    find& snapshot(bool snapshot);
+    MONGOCXX_DEPRECATED find& snapshot(bool snapshot);
+    find& snapshot_deprecated(bool snapshot);
 
     ///
     /// Gets the current setting for whether snapshot mode is being used.
+    ///
+    /// @deprecated
+    ///    This method is deprecated.
     ///
     /// @return Whether snapshot mode is being used.
     ///
     /// @see https://docs.mongodb.com/master/reference/command/find/
     ///
-    const stdx::optional<bool>& snapshot() const;
+    MONGOCXX_DEPRECATED const stdx::optional<bool>& snapshot() const;
+    const stdx::optional<bool>& snapshot_deprecated() const;
 
     ///
     /// The order in which to return matching documents. If $orderby also exists in the modifiers

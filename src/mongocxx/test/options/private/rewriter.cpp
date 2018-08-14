@@ -112,24 +112,24 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $maxScan", "[find][o
         find_opts = options::rewriter::rewrite_find_modifiers(
             options::find{}.modifiers_deprecated(make_document(kvp("$maxScan", 1))));
         REQUIRE(!find_opts.modifiers_deprecated());
-        REQUIRE(find_opts.max_scan());
-        REQUIRE(*find_opts.max_scan() == 1);
+        REQUIRE(find_opts.max_scan_deprecated());
+        REQUIRE(*find_opts.max_scan_deprecated() == 1);
     }
 
     SECTION("$maxScan with k_int64 type is translated") {
         find_opts = options::rewriter::rewrite_find_modifiers(
             options::find{}.modifiers_deprecated(make_document(kvp("$maxScan", std::int64_t{1}))));
         REQUIRE(!find_opts.modifiers_deprecated());
-        REQUIRE(find_opts.max_scan());
-        REQUIRE(*find_opts.max_scan() == 1);
+        REQUIRE(find_opts.max_scan_deprecated());
+        REQUIRE(*find_opts.max_scan_deprecated() == 1);
     }
 
     SECTION("$maxScan with k_double type is translated") {
         find_opts = options::rewriter::rewrite_find_modifiers(
             options::find{}.modifiers_deprecated(make_document(kvp("$maxScan", 1.0))));
         REQUIRE(!find_opts.modifiers_deprecated());
-        REQUIRE(find_opts.max_scan());
-        REQUIRE(*find_opts.max_scan() == 1);
+        REQUIRE(find_opts.max_scan_deprecated());
+        REQUIRE(*find_opts.max_scan_deprecated() == 1);
     }
 
     SECTION("$maxScan with other types is rejected") {
@@ -271,8 +271,8 @@ TEST_CASE("options::rewriter::rewrite_find_modifiers() with $snapshot", "[find][
         auto find_opts = options::rewriter::rewrite_find_modifiers(
             options::find{}.modifiers_deprecated(make_document(kvp("$snapshot", true))));
         REQUIRE(!find_opts.modifiers_deprecated());
-        REQUIRE(find_opts.snapshot());
-        REQUIRE(*find_opts.snapshot() == true);
+        REQUIRE(find_opts.snapshot_deprecated());
+        REQUIRE(*find_opts.snapshot_deprecated() == true);
     }
 
     SECTION("$snapshot with other types is rejected") {

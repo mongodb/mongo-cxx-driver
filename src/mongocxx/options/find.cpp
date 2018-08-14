@@ -68,6 +68,10 @@ find& find::max_await_time(std::chrono::milliseconds max_await_time) {
 }
 
 find& find::max_scan(std::int64_t max_scan) {
+    return max_scan_deprecated(max_scan);
+}
+
+find& find::max_scan_deprecated(std::int64_t max_scan) {
     _max_scan = max_scan;
     return *this;
 }
@@ -122,6 +126,10 @@ find& find::skip(std::int64_t skip) {
 }
 
 find& find::snapshot(bool snapshot) {
+    return snapshot_deprecated(snapshot);
+}
+
+find& find::snapshot_deprecated(bool snapshot) {
     _snapshot = snapshot;
     return *this;
 }
@@ -173,6 +181,10 @@ const stdx::optional<std::chrono::milliseconds>& find::max_await_time() const {
 }
 
 const stdx::optional<std::int64_t>& find::max_scan() const {
+    return max_scan_deprecated();
+}
+
+const stdx::optional<std::int64_t>& find::max_scan_deprecated() const {
     return _max_scan;
 }
 
@@ -213,6 +225,10 @@ const stdx::optional<std::int64_t>& find::skip() const {
 }
 
 const stdx::optional<bool>& find::snapshot() const {
+    return snapshot_deprecated();
+}
+
+const stdx::optional<bool>& find::snapshot_deprecated() const {
     return _snapshot;
 }
 

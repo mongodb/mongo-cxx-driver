@@ -96,8 +96,8 @@ void convert_max_scan_modifier(find* options, bsoncxx::document::element ele) {
         throw logic_error{error_code::k_invalid_parameter,
                           "value for $maxScan must be numeric and fit in a signed 32-bit integer"};
     }
-    if (!options->max_scan()) {
-        options->max_scan(*max_scan);
+    if (!options->max_scan_deprecated()) {
+        options->max_scan_deprecated(*max_scan);
     }
 }
 
@@ -153,8 +153,8 @@ void convert_snapshot_modifier(find* options, bsoncxx::document::element ele) {
     if (ele.type() != bsoncxx::type::k_bool) {
         throw logic_error{error_code::k_invalid_parameter, "bool type required for $snapshot"};
     }
-    if (!options->snapshot()) {
-        options->snapshot(ele.get_bool().value);
+    if (!options->snapshot_deprecated()) {
+        options->snapshot_deprecated(ele.get_bool().value);
     }
 }
 

@@ -49,7 +49,7 @@ TEST_CASE("find", "[find][option]") {
     CHECK_OPTIONAL_ARGUMENT(find_opts, limit, 3);
     CHECK_OPTIONAL_ARGUMENT(find_opts, max, max.view());
     CHECK_OPTIONAL_ARGUMENT(find_opts, max_await_time, std::chrono::milliseconds{300});
-    CHECK_OPTIONAL_ARGUMENT(find_opts, max_scan, 3);
+    CHECK_OPTIONAL_ARGUMENT(find_opts, max_scan_deprecated, 3);
     CHECK_OPTIONAL_ARGUMENT(find_opts, max_time, std::chrono::milliseconds{300});
     CHECK_OPTIONAL_ARGUMENT(find_opts, min, min.view());
     CHECK_OPTIONAL_ARGUMENT(find_opts, modifiers_deprecated, modifiers.view());
@@ -59,7 +59,7 @@ TEST_CASE("find", "[find][option]") {
     CHECK_OPTIONAL_ARGUMENT(find_opts, return_key, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, show_record_id, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, skip, 3);
-    CHECK_OPTIONAL_ARGUMENT(find_opts, snapshot, true);
+    CHECK_OPTIONAL_ARGUMENT(find_opts, snapshot_deprecated, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, sort, sort.view());
 }
 }  // namespace
