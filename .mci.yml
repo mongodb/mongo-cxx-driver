@@ -220,6 +220,7 @@ functions:
                   export CRUD_TESTS_PATH="$(pwd)/../data/crud"
                   export GRIDFS_TESTS_PATH="$(pwd)/../data/gridfs"
                   export COMMAND_MONITORING_TESTS_PATH="$(pwd)/../data/command-monitoring"
+                  export TRANSACTIONS_TESTS_PATH="$(pwd)/../data/transactions"
                   if [ "Windows_NT" == "$OS" ]; then
                       CRUD_TESTS_PATH=$(cygpath -m $CRUD_TESTS_PATH)
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} RUN_TESTS.vcxproj
@@ -237,6 +238,7 @@ functions:
                       ${test_params} ./src/mongocxx/test/test_gridfs_specs
                       ${test_params} ./src/mongocxx/test/test_command_monitoring_specs
                       ${test_params} ./src/mongocxx/test/test_instance
+                      ${test_params} ./src/mongocxx/test/transactions
 
                       # Some platforms like OS X don't support the /mode syntax to the -perm option
                       # of find(1), and some platforms like Ubuntu 16.04 don't support the +mode
