@@ -83,6 +83,7 @@ set(mongocxx_sources
     options/client.cpp
     options/client_session.cpp
     options/count.cpp
+    options/estimated_document_count.cpp
     options/create_collection.cpp
     options/create_view.cpp
     options/delete.cpp

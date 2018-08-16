@@ -493,11 +493,11 @@ TEST_CASE("Database integration tests", "[database]") {
 
             if (test_util::get_max_wire_version(mongo_client) >= 5) {
                 // The server supports views.
-                REQUIRE(view.count(bsoncxx::document::view{}) == 1);
+                REQUIRE(view.count_documents(bsoncxx::document::view{}) == 1);
             } else {
                 // The server doesn't support views. On these versions of the server, view creation
                 // requests are treated as ordinary collection creation requests.
-                REQUIRE(view.count(bsoncxx::document::view{}) == 0);
+                REQUIRE(view.count_documents(bsoncxx::document::view{}) == 0);
             }
         }
 
@@ -626,9 +626,9 @@ TEST_CASE("Transaction tests", "[database]") {
         }
 
         // Document with key should_be_two should have a value of 2
-        REQUIRE(coll.count(make_document(kvp("should_be_two", 2))) == 1);
+        REQUIRE(coll.count_documents(make_document(kvp("should_be_two", 2))) == 1);
         // Document {x:1} should have also been inserted
-        REQUIRE(coll.count(make_document(kvp("x", 1))) == 1);
+        REQUIRE(coll.count_documents(make_document(kvp("x", 1))) == 1);
 
         // Cleanup
         coll.find_one_and_delete(make_document(kvp("should_be_two", 2)));
@@ -755,9 +755,9 @@ TEST_CASE("Transaction tests", "[database]") {
         REQUIRE(has_transient_error_no_null_str);
 
         // Document {should_be_one:2} should NOT exist
-        REQUIRE(coll.count(make_document(kvp("should_be_one", 2))) == 0);
+        REQUIRE(coll.count_documents(make_document(kvp("should_be_one", 2))) == 0);
         // Document {x:1} should NOT have been inserted
-        REQUIRE(coll.count(make_document(kvp("x", 1))) == 0);
+        REQUIRE(coll.count_documents(make_document(kvp("x", 1))) == 0);
 
         // Cleanup
         coll.find_one_and_delete(make_document(kvp("should_be_one", 1)));

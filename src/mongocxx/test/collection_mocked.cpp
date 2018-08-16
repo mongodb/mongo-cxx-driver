@@ -215,14 +215,14 @@ TEST_CASE("Collection", "[collection]") {
         });
 
         SECTION("Succeeds with defaults") {
-            REQUIRE_NOTHROW(mongo_coll.count(filter_doc.view()));
+            REQUIRE_NOTHROW(mongo_coll.count_deprecated(filter_doc.view()));
         }
 
         SECTION("Succeeds with options") {
             options::count opts;
             opts.skip(expected_skip);
             opts.limit(expected_limit);
-            REQUIRE_NOTHROW(mongo_coll.count(filter_doc.view(), opts));
+            REQUIRE_NOTHROW(mongo_coll.count_deprecated(filter_doc.view(), opts));
         }
 
         SECTION("Succeeds with hint") {
@@ -235,7 +235,7 @@ TEST_CASE("Collection", "[collection]") {
             libbson::scoped_bson_t cmd_opts{std::move(doc)};
             expected_opts = cmd_opts.bson();
 
-            REQUIRE_NOTHROW(mongo_coll.count(filter_doc.view(), opts));
+            REQUIRE_NOTHROW(mongo_coll.count_deprecated(filter_doc.view(), opts));
         }
 
         SECTION("Succeeds with read_prefs") {
@@ -243,15 +243,157 @@ TEST_CASE("Collection", "[collection]") {
             read_preference rp;
             rp.mode(read_preference::read_mode::k_secondary);
             opts.read_preference(rp);
-            REQUIRE_NOTHROW(mongo_coll.count(filter_doc.view(), opts));
+            REQUIRE_NOTHROW(mongo_coll.count_deprecated(filter_doc.view(), opts));
         }
 
         SECTION("Fails") {
             success = false;
-            REQUIRE_THROWS_AS(mongo_coll.count(filter_doc.view()), operation_exception);
+            REQUIRE_THROWS_AS(mongo_coll.count_deprecated(filter_doc.view()), operation_exception);
         }
 
         REQUIRE(collection_count_called);
+    }
+
+    SECTION("Count Documents", "[collection::count_documents]") {
+        auto collection_count_called = false;
+        bool success = true;
+        std::int64_t expected_skip = 0;
+        std::int64_t expected_limit = 0;
+        const bson_t* expected_opts = nullptr;
+
+        collection_count_documents->interpose([&](mongoc_collection_t*,
+                                                  const bson_t* filter,
+                                                  const bson_t* opts,
+                                                  const mongoc_read_prefs_t*,
+                                                  bson_t* reply,
+                                                  bson_error_t* error) {
+            collection_count_called = true;
+            bson_init(reply);
+            REQUIRE(bson_get_data(filter) == filter_doc.view().data());
+            bson_iter_t iter;
+            if (expected_skip) {
+                REQUIRE(bson_iter_init_find(&iter, opts, "skip"));
+                REQUIRE(bson_iter_int64(&iter) == expected_skip);
+            }
+            if (expected_limit) {
+                REQUIRE(bson_iter_init_find(&iter, opts, "limit"));
+                REQUIRE(bson_iter_int64(&iter) == expected_limit);
+            }
+            if (expected_opts) {
+                bson_t opts_without_skip_or_limit = BSON_INITIALIZER;
+                bson_copy_to_excluding_noinit(
+                    opts, &opts_without_skip_or_limit, "skip", "limit", NULL);
+                REQUIRE(bson_equal(&opts_without_skip_or_limit, expected_opts));
+                bson_destroy(&opts_without_skip_or_limit);
+            }
+
+            if (success)
+                return 123;
+
+            // The caller expects the bson_error_t to have been
+            // initialized by the call to count in the event of an
+            // error.
+            bson_set_error(error,
+                           MONGOC_ERROR_COMMAND,
+                           MONGOC_ERROR_COMMAND_INVALID_ARG,
+                           "expected error from mock");
+
+            return -1;
+        });
+
+        SECTION("Succeeds with defaults") {
+            REQUIRE_NOTHROW(mongo_coll.count_documents(filter_doc.view()));
+        }
+
+        SECTION("Succeeds with options") {
+            options::count opts;
+            opts.skip(expected_skip);
+            opts.limit(expected_limit);
+            REQUIRE_NOTHROW(mongo_coll.count_documents(filter_doc.view(), opts));
+        }
+
+        SECTION("Succeeds with hint") {
+            options::count opts;
+            hint index_hint("a_1");
+            opts.hint(index_hint);
+
+            // set our expected_opts so we check against that
+            bsoncxx::document::value doc = make_document(kvp("hint", index_hint.to_value()));
+            libbson::scoped_bson_t cmd_opts{std::move(doc)};
+            expected_opts = cmd_opts.bson();
+
+            REQUIRE_NOTHROW(mongo_coll.count_documents(filter_doc.view(), opts));
+        }
+
+        SECTION("Succeeds with read_prefs") {
+            options::count opts;
+            read_preference rp;
+            rp.mode(read_preference::read_mode::k_secondary);
+            opts.read_preference(rp);
+            REQUIRE_NOTHROW(mongo_coll.count_documents(filter_doc.view(), opts));
+        }
+
+        SECTION("Fails") {
+            success = false;
+            REQUIRE_THROWS_AS(mongo_coll.count_documents(filter_doc.view()), operation_exception);
+        }
+
+        REQUIRE(collection_count_called);
+    }
+
+    SECTION("Estimated Document Count", "[collection::estimated_document_count]") {
+        auto collection_estimated_document_count_called = false;
+        bool success = true;
+        const bson_t* expected_opts = nullptr;
+
+        collection_estimated_document_count->interpose([&](mongoc_collection_t*,
+                                                           const bson_t* opts,
+                                                           const mongoc_read_prefs_t*,
+                                                           bson_t* reply,
+                                                           bson_error_t* error) {
+            collection_estimated_document_count_called = true;
+            bson_init(reply);
+            if (expected_opts) {
+                REQUIRE(bson_equal(opts, expected_opts));
+            }
+
+            if (success)
+                return 123;
+
+            // The caller expects the bson_error_t to have been
+            // initialized by the call to count in the event of an
+            // error.
+            bson_set_error(error,
+                           MONGOC_ERROR_COMMAND,
+                           MONGOC_ERROR_COMMAND_INVALID_ARG,
+                           "expected error from mock");
+
+            return -1;
+        });
+
+        SECTION("Succeeds with defaults") {
+            REQUIRE_NOTHROW(mongo_coll.estimated_document_count());
+        }
+
+        SECTION("Succeeds with options") {
+            options::estimated_document_count opts;
+            REQUIRE_NOTHROW(mongo_coll.estimated_document_count(opts));
+        }
+
+        SECTION("Succeeds with read_prefs") {
+            options::estimated_document_count opts;
+            read_preference rp;
+            rp.mode(read_preference::read_mode::k_secondary);
+            opts.read_preference(rp);
+            REQUIRE_NOTHROW(mongo_coll.estimated_document_count(opts));
+        }
+
+        SECTION("Fails") {
+            success = false;
+            REQUIRE_THROWS_AS(mongo_coll.estimated_document_count(), operation_exception);
+        }
+
+        REQUIRE(collection_estimated_document_count_called);
     }
 
     SECTION("Find", "[collection::find]") {

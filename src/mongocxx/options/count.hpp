@@ -31,7 +31,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB count command
+/// Class representing the optional arguments to mongocxx::collection::count_documents
 ///
 class MONGOCXX_API count {
    public:
@@ -45,7 +45,7 @@ class MONGOCXX_API count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
     ///
     count& collation(bsoncxx::document::view_or_value collation);
 
@@ -55,7 +55,7 @@ class MONGOCXX_API count {
     /// @return
     ///   The current collation.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 
@@ -69,7 +69,7 @@ class MONGOCXX_API count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
     ///
     count& hint(class hint index_hint);
 
@@ -78,7 +78,7 @@ class MONGOCXX_API count {
     ///
     /// @return The current hint, if one is set.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
     ///
     const stdx::optional<class hint>& hint() const;
 
@@ -92,7 +92,7 @@ class MONGOCXX_API count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
     ///
     count& limit(std::int64_t limit);
 
@@ -101,7 +101,7 @@ class MONGOCXX_API count {
     ///
     /// @return The current limit.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
     ///
     const stdx::optional<std::int64_t>& limit() const;
 
@@ -115,7 +115,7 @@ class MONGOCXX_API count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
     ///
     count& max_time(std::chrono::milliseconds max_time);
 
@@ -124,7 +124,7 @@ class MONGOCXX_API count {
     ///
     /// @return The current max time (in milliseconds).
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
     ///
     const stdx::optional<std::chrono::milliseconds>& max_time() const;
 
@@ -138,7 +138,7 @@ class MONGOCXX_API count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
     ///
     count& skip(std::int64_t skip);
 
@@ -147,7 +147,7 @@ class MONGOCXX_API count {
     ///
     /// @return The number of documents to skip.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
     ///
     const stdx::optional<std::int64_t>& skip() const;
 
@@ -161,7 +161,7 @@ class MONGOCXX_API count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
     ///
     count& read_preference(class read_preference rp);
 
@@ -170,7 +170,7 @@ class MONGOCXX_API count {
     ///
     /// @return the current read_preference
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
     ///
     const stdx::optional<class read_preference>& read_preference() const;
 

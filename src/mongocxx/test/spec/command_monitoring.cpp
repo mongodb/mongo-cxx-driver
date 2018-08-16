@@ -55,7 +55,7 @@ document::value run_count_test(collection* coll, document::view operation) {
         options.skip(arguments["skip"].get_int32().value);
     }
 
-    int64_t count = coll->count(filter, options);
+    int64_t count = coll->count_documents(filter, options);
 
     auto result = builder::basic::document{};
 

@@ -70,7 +70,7 @@ void insert_examples(mongocxx::database db) {
             kvp("size", make_document(kvp("h", 28), kvp("w", 35.5), kvp("uom", "cm")))));
         // End Example 1
 
-        if (db["inventory"].count({}) != 1) {
+        if (db["inventory"].count_documents({}) != 1) {
             throw std::logic_error("wrong count in example 1");
         }
     }
@@ -114,7 +114,7 @@ void insert_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 3
 
-        if (db["inventory"].count({}) != 4) {
+        if (db["inventory"].count_documents({}) != 4) {
             throw std::logic_error("wrong count in example 3");
         }
     }
@@ -156,7 +156,7 @@ void query_top_level_fields_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 6
 
-        if (db["inventory"].count({}) != 5) {
+        if (db["inventory"].count_documents({}) != 5) {
             throw std::logic_error("wrong count in example 6");
         }
     }
@@ -285,7 +285,7 @@ void query_embedded_documents_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 14
 
-        if (db["inventory"].count({}) != 5) {
+        if (db["inventory"].count_documents({}) != 5) {
             throw std::logic_error("wrong count in example 14");
         }
     }
@@ -397,7 +397,7 @@ void query_arrays_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 20
 
-        if (db["inventory"].count({}) != 5) {
+        if (db["inventory"].count_documents({}) != 5) {
             throw std::logic_error("wrong count in example 20");
         }
     }
@@ -550,7 +550,7 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 29
 
-        if (db["inventory"].count({}) != 5) {
+        if (db["inventory"].count_documents({}) != 5) {
             throw std::logic_error("wrong count in example 29");
         }
     }
@@ -689,7 +689,7 @@ void query_null_missing_fields_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 38
 
-        if (db["inventory"].count({}) != 2) {
+        if (db["inventory"].count_documents({}) != 2) {
             throw std::logic_error("wrong count in example 38");
         }
     }
@@ -778,7 +778,7 @@ void projection_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 42
 
-        if (db["inventory"].count({}) != 5) {
+        if (db["inventory"].count_documents({}) != 5) {
             throw std::logic_error("wrong count in example 42");
         }
     }
@@ -1019,7 +1019,7 @@ void update_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 51
 
-        if (db["inventory"].count({}) != 10) {
+        if (db["inventory"].count_documents({}) != 10) {
             throw std::logic_error("wrong count in example 51");
         }
     }
@@ -1138,7 +1138,7 @@ void delete_examples(mongocxx::database db) {
         db["inventory"].insert_many(docs);
         // End Example 55
 
-        if (db["inventory"].count({}) != 5) {
+        if (db["inventory"].count_documents({}) != 5) {
             throw std::logic_error("wrong count in example 55");
         }
     }
@@ -1151,7 +1151,7 @@ void delete_examples(mongocxx::database db) {
         db["inventory"].delete_many(make_document(kvp("status", "A")));
         // End Example 57
 
-        if (db["inventory"].count({}) != 3) {
+        if (db["inventory"].count_documents({}) != 3) {
             throw std::logic_error("wrong count in example 57");
         }
     }
@@ -1164,7 +1164,7 @@ void delete_examples(mongocxx::database db) {
         db["inventory"].delete_one(make_document(kvp("status", "D")));
         // End Example 58
 
-        if (db["inventory"].count({}) != 2) {
+        if (db["inventory"].count_documents({}) != 2) {
             throw std::logic_error("wrong count in example 58");
         }
     }
@@ -1174,7 +1174,7 @@ void delete_examples(mongocxx::database db) {
         db["inventory"].delete_many({});
         // End Example 56
 
-        if (db["inventory"].count({}) != 0) {
+        if (db["inventory"].count_documents({}) != 0) {
             throw std::logic_error("wrong count in example 56");
         }
     }

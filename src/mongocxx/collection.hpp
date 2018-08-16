@@ -39,6 +39,7 @@
 #include <mongocxx/options/count.hpp>
 #include <mongocxx/options/delete.hpp>
 #include <mongocxx/options/distinct.hpp>
+#include <mongocxx/options/estimated_document_count.hpp>
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/options/find_one_and_delete.hpp>
 #include <mongocxx/options/find_one_and_replace.hpp>
@@ -388,6 +389,10 @@ class MONGOCXX_API collection {
     ///
     /// Counts the number of documents matching the provided filter.
     ///
+    /// @deprecated
+    ///   This method has been deprecated in favor of count_documents() and
+    ///   estimated_document_count().
+    ///
     /// @param filter
     ///   The filter that documents must match in order to be counted.
     /// @param options
@@ -399,8 +404,59 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/count/
     ///
-    std::int64_t count(bsoncxx::document::view_or_value filter,
-                       const options::count& options = options::count());
+    MONGOCXX_DEPRECATED std::int64_t count(bsoncxx::document::view_or_value filter,
+                                           const options::count& options = options::count());
+
+    std::int64_t count_deprecated(bsoncxx::document::view_or_value filter,
+                                  const options::count& options = options::count());
+
+    ///
+    /// Counts the number of documents matching the provided filter.
+    ///
+    /// @deprecated
+    ///   This method has been deprecated in favor of count_documents() and
+    ///   estimated_document_count().
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the count.
+    /// @param filter
+    ///   The filter that documents must match in order to be counted.
+    /// @param options
+    ///   Optional arguments, see mongocxx::options::count.
+    ///
+    /// @return The count of the documents that matched the filter.
+    ///
+    /// @throws mongocxx::query_exception if the count operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/count/
+    ///
+    MONGOCXX_DEPRECATED std::int64_t count(const client_session& session,
+                                           bsoncxx::document::view_or_value filter,
+                                           const options::count& options = options::count());
+
+    std::int64_t count_deprecated(const client_session& session,
+                                  bsoncxx::document::view_or_value filter,
+                                  const options::count& options = options::count());
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
+    ///
+    /// Counts the number of documents matching the provided filter.
+    ///
+    /// @param filter
+    ///   The filter that documents must match in order to be counted.
+    /// @param options
+    ///   Optional arguments, see mongocxx::options::count.
+    ///
+    /// @return The count of the documents that matched the filter.
+    ///
+    /// @throws mongocxx::query_exception if the count operation fails.
+    ///
+    std::int64_t count_documents(bsoncxx::document::view_or_value filter,
+                                 const options::count& options = options::count());
 
     ///
     /// Counts the number of documents matching the provided filter.
@@ -416,12 +472,27 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::query_exception if the count operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    std::int64_t count_documents(const client_session& session,
+                                 bsoncxx::document::view_or_value filter,
+                                 const options::count& options = options::count());
     ///
-    std::int64_t count(const client_session& session,
-                       bsoncxx::document::view_or_value filter,
-                       const options::count& options = options::count());
+    /// @}
+    ///
 
+    ///
+    /// @{
+    ///
+    /// Returns an estimate of the number of documents in the collection.
+    ///
+    /// @param options
+    ///   Optional arguments, see mongocxx::options::count.
+    ///
+    /// @return The count of the documents that matched the filter.
+    ///
+    /// @throws mongocxx::query_exception if the count operation fails.
+    ///
+    std::int64_t estimated_document_count(
+        const options::estimated_document_count& options = options::estimated_document_count());
     ///
     /// @}
     ///
@@ -1504,6 +1575,10 @@ class MONGOCXX_API collection {
     MONGOCXX_PRIVATE std::int64_t _count(const client_session* session,
                                          bsoncxx::document::view_or_value filter,
                                          const options::count& options);
+
+    MONGOCXX_PRIVATE std::int64_t _count_documents(const client_session* session,
+                                                   bsoncxx::document::view_or_value filter,
+                                                   const options::count& options);
 
     MONGOCXX_PRIVATE bsoncxx::document::value _create_index(
         const client_session* session,

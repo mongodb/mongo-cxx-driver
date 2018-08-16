@@ -931,7 +931,6 @@ std::int64_t collection::_count(const client_session* session,
 
     scoped_bson_t cmd_opts_bson{cmd_opts_builder.view()};
 
-    // Remove these suppressions when CXX-1594 is done.
     BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
     auto result = libmongoc::collection_count_with_opts(_get_impl().collection_t,
                                                         static_cast<mongoc_query_flags_t>(0),
@@ -950,14 +949,111 @@ std::int64_t collection::_count(const client_session* session,
     return result;
 }
 
+std::int64_t collection::_count_documents(const client_session* session,
+                                          view_or_value filter,
+                                          const options::count& options) {
+    scoped_bson_t bson_filter{filter};
+    scoped_bson_t reply;
+    bson_error_t error;
+    const mongoc_read_prefs_t* read_prefs = NULL;
+
+    if (options.read_preference()) {
+        read_prefs = options.read_preference()->_impl->read_preference_t;
+    }
+
+    bsoncxx::builder::basic::document opts_builder;
+
+    if (options.collation()) {
+        opts_builder.append(kvp("collation", *options.collation()));
+    }
+
+    if (options.max_time()) {
+        opts_builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+    }
+
+    if (options.hint()) {
+        opts_builder.append(kvp("hint", options.hint()->to_value()));
+    }
+
+    if (session) {
+        opts_builder.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
+    if (options.skip()) {
+        opts_builder.append(kvp("skip", *options.skip()));
+    }
+
+    if (options.limit()) {
+        opts_builder.append(kvp("limit", *options.limit()));
+    }
+
+    scoped_bson_t opts_bson{opts_builder.view()};
+    auto result = libmongoc::collection_count_documents(_get_impl().collection_t,
+                                                        bson_filter.bson(),
+                                                        opts_bson.bson(),
+                                                        read_prefs,
+                                                        reply.bson_for_init(),
+                                                        &error);
+    if (result < 0) {
+        throw_exception<query_exception>(reply.steal(), error);
+    }
+    return result;
+}
+
 std::int64_t collection::count(view_or_value filter, const options::count& options) {
+    return count_deprecated(filter, options);
+}
+
+std::int64_t collection::count_deprecated(view_or_value filter, const options::count& options) {
     return _count(nullptr, filter, options);
 }
 
 std::int64_t collection::count(const client_session& session,
                                view_or_value filter,
                                const options::count& options) {
+    return count_deprecated(session, filter, options);
+}
+
+std::int64_t collection::count_deprecated(const client_session& session,
+                                          view_or_value filter,
+                                          const options::count& options) {
     return _count(&session, filter, options);
+}
+
+std::int64_t collection::count_documents(view_or_value filter, const options::count& options) {
+    return _count_documents(nullptr, filter, options);
+}
+
+std::int64_t collection::count_documents(const client_session& session,
+                                         view_or_value filter,
+                                         const options::count& options) {
+    return _count_documents(&session, filter, options);
+}
+
+std::int64_t collection::estimated_document_count(
+    const options::estimated_document_count& options) {
+    scoped_bson_t reply;
+    bson_error_t error;
+
+    const mongoc_read_prefs_t* read_prefs = NULL;
+
+    if (options.read_preference()) {
+        read_prefs = options.read_preference()->_impl->read_preference_t;
+    }
+
+    bsoncxx::builder::basic::document opts_builder;
+
+    if (options.max_time()) {
+        opts_builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+    }
+
+    scoped_bson_t opts_bson{opts_builder.view()};
+    auto result = libmongoc::collection_estimated_document_count(
+        _get_impl().collection_t, opts_bson.bson(), read_prefs, reply.bson_for_init(), &error);
+    if (result < 0) {
+        throw_exception<query_exception>(reply.steal(), error);
+    }
+    return result;
 }
 
 bsoncxx::document::value collection::_create_index(const client_session* session,

@@ -2,6 +2,7 @@
 ./read/aggregate-out.json
 ./read/aggregate.json
 ./read/count-collation.json
+./read/count-empty.json
 ./read/count.json
 ./read/distinct-collation.json
 ./read/distinct.json

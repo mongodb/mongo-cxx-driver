@@ -222,7 +222,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // collection from other sections.
             db.run_command(make_document(kvp("getLastError", 1)));
 
-            auto count = coll.count({});
+            auto count = coll.count_documents({});
             REQUIRE(count == 1);
         }
 
@@ -642,7 +642,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         coll.insert_one(b2.view());
 
-        REQUIRE(coll.count(b1.view()) == 2);
+        REQUIRE(coll.count_documents(b1.view()) == 2);
 
         auto bchanged = make_document(kvp("changed", true));
 
@@ -651,7 +651,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         coll.update_many(b1.view(), update_doc.view());
 
-        REQUIRE(coll.count(bchanged.view()) == 2);
+        REQUIRE(coll.count_documents(bchanged.view()) == 2);
     }
 
     SECTION("update_many returns correct result object", "[collection]") {
@@ -759,13 +759,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         coll.insert_one(doc.view());
         coll.insert_one(doc.view());
 
-        REQUIRE(coll.count(doc.view()) == 2);
+        REQUIRE(coll.count_documents(doc.view()) == 2);
 
         auto replacement = make_document(kvp("x", 2));
 
         coll.replace_one(doc.view(), replacement.view());
-        REQUIRE(coll.count(doc.view()) == 1);
-        REQUIRE(coll.count(replacement.view()) == 1);
+        REQUIRE(coll.count_documents(doc.view()) == 1);
+        REQUIRE(coll.count_documents(replacement.view()) == 1);
     }
 
     SECTION("non-matching upsert creates document", "[collection]") {
@@ -787,7 +787,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         REQUIRE(updated);
         REQUIRE(updated->view()["changed"].get_bool() == true);
-        REQUIRE(coll.count({}) == (std::int64_t)1);
+        REQUIRE(coll.count_documents({}) == (std::int64_t)1);
     }
 
     SECTION("matching upsert updates document", "[collection]") {
@@ -811,7 +811,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         REQUIRE(updated);
         REQUIRE(updated->view()["changed"].get_bool() == true);
-        REQUIRE(coll.count({}) == 1);
+        REQUIRE(coll.count_documents({}) == 1);
     }
 
     SECTION("count with hint", "[collection]") {
@@ -823,7 +823,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto doc = make_document(kvp("x", 1));
         coll.insert_one(doc.view());
 
-        REQUIRE_THROWS_AS(coll.count(doc.view(), count_opts), operation_exception);
+        REQUIRE_THROWS_AS(coll.count_documents(doc.view(), count_opts), operation_exception);
     }
 
     SECTION("count with collation", "[collection]") {
@@ -835,9 +835,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto predicate = make_document(kvp("x", "FOO"));
         auto count_opts = options::count{}.collation(case_insensitive_collation.view());
         if (test_util::supports_collation(mongodb_client)) {
-            REQUIRE(coll.count(predicate.view(), count_opts) == 1);
+            REQUIRE(coll.count_documents(predicate.view(), count_opts) == 1);
         } else {
-            REQUIRE_THROWS_AS(coll.count(predicate.view(), count_opts), query_exception);
+            REQUIRE_THROWS_AS(coll.count_documents(predicate.view(), count_opts), query_exception);
         }
     }
 
@@ -944,11 +944,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         coll.insert_one(b2.view());
         coll.insert_one(b2.view());
 
-        REQUIRE(coll.count({}) == 3);
+        REQUIRE(coll.count_documents({}) == 3);
 
         coll.delete_one(b2.view());
 
-        REQUIRE(coll.count({}) == (std::int64_t)2);
+        REQUIRE(coll.count_documents({}) == (std::int64_t)2);
 
         auto cursor = coll.find({});
 
@@ -961,7 +961,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         coll.delete_one(b2.view());
 
-        REQUIRE(coll.count({}) == 1);
+        REQUIRE(coll.count_documents({}) == 1);
 
         cursor = coll.find({});
 
@@ -974,7 +974,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         coll.delete_one(b2.view());
 
-        REQUIRE(coll.count({}) == 1);
+        REQUIRE(coll.count_documents({}) == 1);
 
         cursor = coll.find({});
 
@@ -1056,11 +1056,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         coll.insert_one(b2.view());
         coll.insert_one(b2.view());
 
-        REQUIRE(coll.count({}) == 3);
+        REQUIRE(coll.count_documents({}) == 3);
 
         coll.delete_many(b2.view());
 
-        REQUIRE(coll.count({}) == 1);
+        REQUIRE(coll.count_documents({}) == 1);
 
         auto cursor = coll.find({});
 
@@ -1073,7 +1073,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         coll.delete_many(b2.view());
 
-        REQUIRE(coll.count({}) == 1);
+        REQUIRE(coll.count_documents({}) == 1);
 
         cursor = coll.find({});
 
@@ -1201,7 +1201,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(b1.view());
             coll.insert_one(b1.view());
 
-            REQUIRE(coll.count({}) == 2);
+            REQUIRE(coll.count_documents({}) == 2);
 
             auto doc = coll.find_one_and_replace(criteria.view(), replacement.view());
             REQUIRE(doc);
@@ -1215,7 +1215,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(b1.view());
             coll.insert_one(b1.view());
 
-            REQUIRE(coll.count({}) == 2);
+            REQUIRE(coll.count_documents({}) == 2);
 
             options::find_one_and_replace options;
             options.return_document(options::return_document::k_after);
@@ -1231,7 +1231,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(b1.view());
             coll.insert_one(b1.view());
 
-            REQUIRE(coll.count({}) == 2);
+            REQUIRE(coll.count_documents({}) == 2);
 
             options::find_one_and_replace options;
             options.collation(case_insensitive_collation.view());
@@ -1265,7 +1265,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(b1.view());
             coll.insert_one(b1.view());
 
-            REQUIRE(coll.count({}) == 2);
+            REQUIRE(coll.count_documents({}) == 2);
 
             auto bad_criteria = make_document(kvp("x", "baz"));
 
@@ -1312,7 +1312,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(b1.view());
             coll.insert_one(b1.view());
 
-            REQUIRE(coll.count({}) == 2);
+            REQUIRE(coll.count_documents({}) == 2);
 
             auto doc = coll.find_one_and_update(criteria.view(), update.view());
 
@@ -1328,7 +1328,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(b1.view());
             coll.insert_one(b1.view());
 
-            REQUIRE(coll.count({}) == 2);
+            REQUIRE(coll.count_documents({}) == 2);
 
             options::find_one_and_update options;
             options.return_document(options::return_document::k_after);
@@ -1344,7 +1344,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(b1.view());
             coll.insert_one(b1.view());
 
-            REQUIRE(coll.count({}) == 2);
+            REQUIRE(coll.count_documents({}) == 2);
 
             options::find_one_and_update options;
             options.collation(case_insensitive_collation.view());
@@ -1379,7 +1379,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(b1.view());
             coll.insert_one(b1.view());
 
-            REQUIRE(coll.count({}) == 2);
+            REQUIRE(coll.count_documents({}) == 2);
 
             auto bad_criteria = make_document(kvp("x", "baz"));
 
@@ -1425,14 +1425,14 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(b1.view());
             coll.insert_one(b1.view());
 
-            REQUIRE(coll.count({}) == 2);
+            REQUIRE(coll.count_documents({}) == 2);
 
             auto doc = coll.find_one_and_delete(criteria.view());
 
             REQUIRE(doc);
 
             REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
-            REQUIRE(coll.count({}) == 1);
+            REQUIRE(coll.count_documents({}) == 1);
         }
 
         SECTION("with collation") {
@@ -1442,7 +1442,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(b1.view());
             coll.insert_one(b1.view());
 
-            REQUIRE(coll.count({}) == 2);
+            REQUIRE(coll.count_documents({}) == 2);
 
             options::find_one_and_delete options;
             options.collation(case_insensitive_collation.view());
@@ -2172,7 +2172,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         bulk.execute();
 
-        REQUIRE(coll.count({}) == 4);
+        REQUIRE(coll.count_documents({}) == 4);
 
         auto distinct_results = coll.distinct("foo", {});
 
@@ -2611,6 +2611,6 @@ TEST_CASE("bulk_write with container", "[collection]") {
     // The optional result is engaged.
     REQUIRE(static_cast<bool>(result));
     REQUIRE(result->inserted_count() == 10);
-    REQUIRE(collection.count({}) == 10);
+    REQUIRE(collection.count_documents({}) == 10);
 }
 }  // namespace

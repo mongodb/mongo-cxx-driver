@@ -27,6 +27,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
@@ -118,7 +119,49 @@ document::value run_count_test(collection* coll, document::view operation) {
         options.skip(arguments["skip"].get_int32().value);
     }
 
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
     int64_t count = coll->count(filter, options);
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
+
+    auto result = builder::basic::document{};
+
+    // The JSON parser reads the counts as int32, so the document will not be equal to the expected
+    // result without casting.
+    result.append(builder::basic::kvp("result", static_cast<std::int32_t>(count)));
+
+    return result.extract();
+}
+
+document::value run_count_documents_test(collection* coll, document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::view filter = arguments["filter"].get_document().value;
+    options::count options{};
+
+    if (arguments["collation"]) {
+        options.collation(arguments["collation"].get_document().value);
+    }
+
+    if (arguments["limit"]) {
+        options.limit(arguments["limit"].get_int32().value);
+    }
+
+    if (arguments["skip"]) {
+        options.skip(arguments["skip"].get_int32().value);
+    }
+
+    int64_t count = coll->count_documents(filter, options);
+
+    auto result = builder::basic::document{};
+
+    // The JSON parser reads the counts as int32, so the document will not be equal to the expected
+    // result without casting.
+    result.append(builder::basic::kvp("result", static_cast<std::int32_t>(count)));
+
+    return result.extract();
+}
+
+document::value run_estimated_document_count_test(collection* coll, document::view) {
+    int64_t count = coll->estimated_document_count();
 
     auto result = builder::basic::document{};
 
@@ -738,6 +781,8 @@ document::value run_bulk_write_test(collection* coll, document::view operation) 
 std::map<std::string, std::function<document::value(collection*, document::view)>>
     crud_test_runners = {{"aggregate", run_aggregate_test},
                          {"count", run_count_test},
+                         {"countDocuments", run_count_documents_test},
+                         {"estimatedDocumentCount", run_estimated_document_count_test},
                          {"distinct", run_distinct_test},
                          {"find", run_find_test},
                          {"deleteMany", run_delete_many_test},
@@ -764,7 +809,9 @@ void initialize_collection(collection* coll, array::view initial_data) {
         documents_to_insert.push_back(document.get_document().value);
     }
 
-    coll->insert_many(documents_to_insert);
+    if (documents_to_insert.size() > 0) {
+        coll->insert_many(documents_to_insert);
+    }
 }
 
 void run_crud_tests_in_file(std::string test_path, client* client) {

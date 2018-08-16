@@ -162,7 +162,7 @@ TEST_CASE("session", "[session]") {
     REQUIRE_THROWS_MATCHES(                   \
         (_expr), mongocxx::exception, mongocxx_exception_matcher{"Invalid sessionId"})
 
-        REQUIRE_THROWS_INVALID_SESSION(collection2.count(s, {}));
+        REQUIRE_THROWS_INVALID_SESSION(collection2.count_documents(s, {}));
         REQUIRE_THROWS_INVALID_SESSION(collection2.create_index(s, make_document(kvp("a", 1))));
         REQUIRE_THROWS_INVALID_SESSION(collection2.distinct(s, "a", {}));
         REQUIRE_THROWS_INVALID_SESSION(collection2.drop(s));
@@ -433,7 +433,8 @@ TEST_CASE("lsid", "[session]") {
 
     SECTION("collection::count") {
         auto f = [&s, &collection](bool use_session) {
-            auto total = use_session ? collection.count(s, {}) : collection.count({});
+            auto total =
+                use_session ? collection.count_documents(s, {}) : collection.count_documents({});
             REQUIRE(total == 10);
         };
 
