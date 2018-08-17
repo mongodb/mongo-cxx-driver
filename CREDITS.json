@@ -99,6 +99,20 @@
                 "ryan.timmons@mongodb.com"
             ],
             "description": "Change streams, example code for complex aggregations."
+        },
+        {
+            "name": "Spencer McKenney",
+            "email": [
+                "spencermck@me.com"
+            ],
+            "description": "Command Monitoring API, Transactions API, various features and bug fixes."
+        },
+        {
+            "name": "Evgeni Dobranov",
+            "email": [
+                "evobranov@gmail.com"
+            ],
+            "description": "Command Monitoring API, Transactions API, various features and bug fixes."
         }
     ]
 }
