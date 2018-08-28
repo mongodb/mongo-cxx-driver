@@ -393,6 +393,21 @@ class MONGOCXX_API collection {
     ///   This method has been deprecated in favor of count_documents() and
     ///   estimated_document_count().
     ///
+    ///   When migrating to count_documents() the following query operators must be replaced:
+    ///
+    ///   [$expr]: https://docs.mongodb.com/manual/reference/operator/query/expr/ "$expr"
+    ///   [$geoWithin]: https://docs.mongodb.com/manual/reference/operator/query/geoWithin/ "$geoWithin"
+    ///   [$center]: https://docs.mongodb.com/manual/reference/operator/query/center/#op._S_center "$center"
+    ///   [$centerSphere]: https://docs.mongodb.com/manual/reference/operator/query/centerSphere/#op._S_cent "$centerSphere"
+    ///
+    ///    Operator    | Replacement
+    ///   -------------|----------------------------------
+    ///    $where      | [$expr]
+    ///    $near       | [$geoWithin] with [$center]
+    ///    $nearSphere | [$geoWithin] with [$centerSphere]
+    ///
+    ///   $expr requires MongoDB 3.6+
+    ///
     /// @param filter
     ///   The filter that documents must match in order to be counted.
     /// @param options
@@ -416,6 +431,21 @@ class MONGOCXX_API collection {
     /// @deprecated
     ///   This method has been deprecated in favor of count_documents() and
     ///   estimated_document_count().
+    ///
+    ///   When migrating to count_documents() the following query operators must be replaced:
+    ///
+    ///   [$expr]: https://docs.mongodb.com/manual/reference/operator/query/expr/ "$expr"
+    ///   [$geoWithin]: https://docs.mongodb.com/manual/reference/operator/query/geoWithin/ "$geoWithin"
+    ///   [$center]: https://docs.mongodb.com/manual/reference/operator/query/center/#op._S_center "$center"
+    ///   [$centerSphere]: https://docs.mongodb.com/manual/reference/operator/query/centerSphere/#op._S_cent "$centerSphere"
+    ///
+    ///    Operator    | Replacement
+    ///   -------------|----------------------------------
+    ///    $where      | [$expr]
+    ///    $near       | [$geoWithin] with [$center]
+    ///    $nearSphere | [$geoWithin] with [$centerSphere]
+    ///
+    ///   $expr requires MongoDB 3.6+
     ///
     /// @param session
     ///   The mongocxx::client_session with which to perform the count.
