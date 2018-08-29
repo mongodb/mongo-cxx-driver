@@ -233,15 +233,16 @@ class session_test {
         options::apm apm_opts;
 
         apm_opts.on_command_started([&](const events::command_started_event& event) {
+            std::string command_name{event.command_name()};
+
             // Ignore auth commands like "saslStart", and handshakes with "isMaster".
             std::string sasl{"sasl"};
             if (event.command_name().substr(0, sasl.size()).compare(sasl) == 0 ||
-                event.command_name().to_string().compare("isMaster") == 0) {
+                command_name.compare("isMaster") == 0) {
                 return;
             }
 
-            events.emplace_back(event.command_name().to_string(),
-                                bsoncxx::document::value(event.command()));
+            events.emplace_back(command_name, bsoncxx::document::value(event.command()));
         });
 
         client_opts.apm_opts(apm_opts);

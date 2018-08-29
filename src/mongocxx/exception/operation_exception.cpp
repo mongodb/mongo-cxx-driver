@@ -45,7 +45,8 @@ bool operation_exception::has_error_label(stdx::string_view label) const {
     }
 
     libbson::scoped_bson_t error(_raw_server_error->view());
-    return libmongoc::error_has_label(error.bson(), label.to_string().c_str());
+    std::string label_str(label);
+    return libmongoc::error_has_label(error.bson(), label_str.c_str());
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
