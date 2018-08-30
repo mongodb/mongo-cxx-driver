@@ -18,6 +18,7 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/collection.hpp>
+#include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/private/bulk_write.hh>
@@ -28,7 +29,6 @@
 #include <mongocxx/private/write_concern.hh>
 
 #include <mongocxx/config/private/prelude.hh>
-#include <mongocxx/exception/bulk_write_exception.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
