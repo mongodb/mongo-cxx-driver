@@ -53,6 +53,105 @@ apm::command_succeeded() const {
     return _command_succeeded;
 }
 
+apm& apm::on_server_opening(
+    std::function<void(const mongocxx::events::server_opening_event&)> server_opening) {
+    _server_opening = server_opening;
+    return *this;
+}
+
+const std::function<void(const mongocxx::events::server_opening_event&)>& apm::server_opening()
+    const {
+    return _server_opening;
+}
+
+apm& apm::on_server_closed(
+    std::function<void(const mongocxx::events::server_closed_event&)> server_closed) {
+    _server_closed = server_closed;
+    return *this;
+}
+
+const std::function<void(const mongocxx::events::server_closed_event&)>& apm::server_closed()
+    const {
+    return _server_closed;
+}
+
+apm& apm::on_server_changed(
+    std::function<void(const mongocxx::events::server_changed_event&)> server_changed) {
+    _server_changed = server_changed;
+    return *this;
+}
+
+const std::function<void(const mongocxx::events::server_changed_event&)>& apm::server_changed()
+    const {
+    return _server_changed;
+}
+
+apm& apm::on_topology_opening(
+    std::function<void(const mongocxx::events::topology_opening_event&)> topology_opening) {
+    _topology_opening = topology_opening;
+    return *this;
+}
+
+const std::function<void(const mongocxx::events::topology_opening_event&)>& apm::topology_opening()
+    const {
+    return _topology_opening;
+}
+
+apm& apm::on_topology_closed(
+    std::function<void(const mongocxx::events::topology_closed_event&)> topology_closed) {
+    _topology_closed = topology_closed;
+    return *this;
+}
+
+const std::function<void(const mongocxx::events::topology_closed_event&)>& apm::topology_closed()
+    const {
+    return _topology_closed;
+}
+
+apm& apm::on_topology_changed(
+    std::function<void(const mongocxx::events::topology_changed_event&)> topology_changed) {
+    _topology_changed = topology_changed;
+    return *this;
+}
+
+const std::function<void(const mongocxx::events::topology_changed_event&)>& apm::topology_changed()
+    const {
+    return _topology_changed;
+}
+
+apm& apm::on_heartbeat_started(
+    std::function<void(const mongocxx::events::heartbeat_started_event&)> heartbeat_started) {
+    _heartbeat_started = std::move(heartbeat_started);
+    return *this;
+}
+
+const std::function<void(const mongocxx::events::heartbeat_started_event&)>&
+apm::heartbeat_started() const {
+    return _heartbeat_started;
+}
+
+apm& apm::on_heartbeat_failed(
+    std::function<void(const mongocxx::events::heartbeat_failed_event&)> heartbeat_failed) {
+    _heartbeat_failed = std::move(heartbeat_failed);
+    return *this;
+}
+
+const std::function<void(const mongocxx::events::heartbeat_failed_event&)>& apm::heartbeat_failed()
+    const {
+    return _heartbeat_failed;
+}
+
+apm& apm::on_heartbeat_succeeded(
+    std::function<void(const mongocxx::events::heartbeat_succeeded_event&)> heartbeat_succeeded) {
+    _heartbeat_succeeded = std::move(heartbeat_succeeded);
+    return *this;
+}
+
+const std::function<void(const mongocxx::events::heartbeat_succeeded_event&)>&
+apm::heartbeat_succeeded() const {
+    return _heartbeat_succeeded;
+}
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

@@ -36,6 +36,80 @@ using mongocxx::events::server_description;
 ///
 class MONGOCXX_API topology_description {
    public:
+    ///
+    /// An array of server_description instances.
+    ///
+    class MONGOCXX_API server_descriptions {
+       private:
+        using container = std::vector<server_description>;
+
+       public:
+        ///
+        /// Move constructs a server_descriptions array.
+        ///
+        server_descriptions(server_descriptions&&) noexcept;
+
+        ///
+        /// Move assigns a server_descriptions array.
+        ///
+        server_descriptions& operator=(server_descriptions&&) noexcept;
+
+        server_descriptions(const server_descriptions&) = delete;
+        server_descriptions& operator=(const server_descriptions&) = delete;
+
+        ///
+        /// Destroys a server_descriptions array.
+        ///
+        ~server_descriptions();
+
+        ///
+        /// The array's iterator type.
+        ///
+        using iterator = container::iterator;
+
+        ///
+        /// The array's const iterator type.
+        ///
+        using const_iterator = container::const_iterator;
+
+        ///
+        /// @{
+        ///
+        /// Returns an iterator to the beginning.
+        ///
+        iterator begin() noexcept;
+        const_iterator begin() const noexcept;
+
+        ///
+        /// @}
+        ///
+
+        ///
+        /// @{
+        ///
+        /// Returns an iterator to the end.
+        ///
+        iterator end() noexcept;
+        const_iterator end() const noexcept;
+
+        ///
+        /// @}
+        ///
+
+        ///
+        /// The number of server_description instances in the array.
+        ///
+        std::size_t size() const noexcept;
+
+       private:
+        friend topology_description;
+        MONGOCXX_PRIVATE explicit server_descriptions(void* sds, std::size_t size);
+        MONGOCXX_PRIVATE void swap(server_descriptions& other) noexcept;
+        container _container;
+        void* _sds;
+        std::size_t _size;
+    };
+
     MONGOCXX_PRIVATE explicit topology_description(void* event);
 
     ///
@@ -77,7 +151,7 @@ class MONGOCXX_API topology_description {
     ///
     /// @return An array of server_description objects.
     ///
-    std::vector<server_description> servers() const;
+    server_descriptions servers() const;
 
    private:
     // Non-const since mongoc_topology_description_has_readable_server/writable_server take

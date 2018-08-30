@@ -34,6 +34,10 @@ class collection;
 class database;
 class uri;
 
+namespace events {
+class topology_description;
+}
+
 ///
 /// Class representing a preference for how the driver routes read operations to members of a
 /// replica set or to a sharded cluster.
@@ -239,6 +243,7 @@ class MONGOCXX_API read_preference {
     friend collection;
     friend database;
     friend options::transaction;
+    friend events::topology_description;
     friend uri;
 
     ///

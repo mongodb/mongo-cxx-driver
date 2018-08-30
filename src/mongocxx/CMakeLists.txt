@@ -58,6 +58,17 @@ set(mongocxx_sources
     events/command_failed_event.cpp
     events/command_started_event.cpp
     events/command_succeeded_event.cpp
+    events/heartbeat_failed_event.cpp
+    events/heartbeat_started_event.cpp
+    events/heartbeat_succeeded_event.cpp
+    events/server_changed_event.cpp
+    events/server_closed_event.cpp
+    events/server_description.cpp
+    events/server_opening_event.cpp
+    events/topology_changed_event.cpp
+    events/topology_closed_event.cpp
+    events/topology_description.cpp
+    events/topology_opening_event.cpp
     exception/error_code.cpp
     exception/operation_exception.cpp
     exception/server_error_code.cpp
