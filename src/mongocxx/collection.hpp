@@ -396,9 +396,13 @@ class MONGOCXX_API collection {
     ///   When migrating to count_documents() the following query operators must be replaced:
     ///
     ///   [$expr]: https://docs.mongodb.com/manual/reference/operator/query/expr/ "$expr"
-    ///   [$geoWithin]: https://docs.mongodb.com/manual/reference/operator/query/geoWithin/ "$geoWithin"
-    ///   [$center]: https://docs.mongodb.com/manual/reference/operator/query/center/#op._S_center "$center"
-    ///   [$centerSphere]: https://docs.mongodb.com/manual/reference/operator/query/centerSphere/#op._S_cent "$centerSphere"
+    ///   [$geoWithin]: https://docs.mongodb.com/manual/reference/operator/query/geoWithin/
+    ///   "$geoWithin"
+    ///   [$center]: https://docs.mongodb.com/manual/reference/operator/query/center/#op._S_center
+    ///   "$center"
+    ///   [$centerSphere]:
+    ///   https://docs.mongodb.com/manual/reference/operator/query/centerSphere/#op._S_cent
+    ///   "$centerSphere"
     ///
     ///    Operator    | Replacement
     ///   -------------|----------------------------------
@@ -435,9 +439,13 @@ class MONGOCXX_API collection {
     ///   When migrating to count_documents() the following query operators must be replaced:
     ///
     ///   [$expr]: https://docs.mongodb.com/manual/reference/operator/query/expr/ "$expr"
-    ///   [$geoWithin]: https://docs.mongodb.com/manual/reference/operator/query/geoWithin/ "$geoWithin"
-    ///   [$center]: https://docs.mongodb.com/manual/reference/operator/query/center/#op._S_center "$center"
-    ///   [$centerSphere]: https://docs.mongodb.com/manual/reference/operator/query/centerSphere/#op._S_cent "$centerSphere"
+    ///   [$geoWithin]: https://docs.mongodb.com/manual/reference/operator/query/geoWithin/
+    ///   "$geoWithin"
+    ///   [$center]: https://docs.mongodb.com/manual/reference/operator/query/center/#op._S_center
+    ///   "$center"
+    ///   [$centerSphere]:
+    ///   https://docs.mongodb.com/manual/reference/operator/query/centerSphere/#op._S_cent
+    ///   "$centerSphere"
     ///
     ///    Operator    | Replacement
     ///   -------------|----------------------------------
