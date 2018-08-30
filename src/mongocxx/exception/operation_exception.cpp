@@ -45,7 +45,7 @@ bool operation_exception::has_error_label(stdx::string_view label) const {
     }
 
     libbson::scoped_bson_t error(_raw_server_error->view());
-    std::string label_str(label);
+    std::string label_str{label.data(), label.size()};
     return libmongoc::error_has_label(error.bson(), label_str.c_str());
 }
 
