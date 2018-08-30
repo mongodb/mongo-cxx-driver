@@ -119,6 +119,7 @@ add_executable(test_command_monitoring_specs
     ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/command_monitoring.cpp
+    ${spec_test_common}
 )
 
 target_link_libraries(test_driver mongocxx_mocked ${libmongoc_libraries})

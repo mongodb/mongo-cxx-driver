@@ -56,6 +56,16 @@ namespace spec {
 using namespace mongocxx;
 using namespace bsoncxx;
 
+int64_t as_int64(const document::element& el) {
+    if (el.type() == type::k_int32) {
+        return static_cast<std::int64_t>(el.get_int32().value);
+    } else if (el.type() == type::k_int64) {
+        return el.get_int64().value;
+    }
+    REQUIRE(false);
+    return 0;
+}
+
 pipeline build_pipeline(array::view pipeline_docs) {
     pipeline pipeline{};
 
@@ -165,7 +175,7 @@ document::value run_find_test(collection* coll, document::view operation) {
     options::find options{};
 
     if (arguments["batchSize"]) {
-        options.batch_size(arguments["batchSize"].get_int32().value);
+        options.batch_size(static_cast<std::int32_t>(as_int64(arguments["batchSize"])));
     }
 
     if (arguments["collation"]) {
@@ -173,15 +183,48 @@ document::value run_find_test(collection* coll, document::view operation) {
     }
 
     if (arguments["limit"]) {
-        options.limit(arguments["limit"].get_int32().value);
+        options.limit(as_int64(arguments["limit"]));
     }
 
     if (arguments["skip"]) {
-        options.skip(arguments["skip"].get_int32().value);
+        options.skip(as_int64(arguments["skip"]));
     }
 
     if (arguments["sort"]) {
         options.sort(arguments["sort"].get_document().value);
+    }
+
+    if (arguments["modifiers"]) {
+        document::view modifiers = arguments["modifiers"].get_document().value;
+        if (modifiers["$comment"]) {
+            options.comment(modifiers["$comment"].get_utf8().value);
+        }
+
+        if (modifiers["$hint"]) {
+            hint my_hint(modifiers["$hint"].get_document().value);
+            options.hint(my_hint);
+        }
+
+        if (modifiers["$max"]) {
+            options.max(modifiers["$max"].get_document().value);
+        }
+
+        if (modifiers["$maxTimeMS"]) {
+            std::chrono::milliseconds my_millis(modifiers["$maxTimeMS"].get_int32().value);
+            options.max_time(my_millis);
+        }
+
+        if (modifiers["$min"]) {
+            options.min(modifiers["$min"].get_document().value);
+        }
+
+        if (modifiers["$returnKey"]) {
+            options.return_key(modifiers["$returnKey"].get_bool().value);
+        }
+
+        if (modifiers["$showDiskLoc"]) {
+            options.show_record_id(modifiers["$showDiskLoc"].get_bool().value);
+        }
     }
 
     cursor result_cursor = coll->find(filter, options);
@@ -385,12 +428,20 @@ document::value run_insert_many_test(collection* coll, document::view operation)
     document::view arguments = operation["arguments"].get_document().value;
     array::view documents = arguments["documents"].get_array().value;
     std::vector<document::view> documents_to_insert{};
+    options::insert insert_options;
+
+    if (arguments["options"]) {
+        document::view options = arguments["options"].get_document().value;
+        if (options["ordered"]) {
+            insert_options.ordered(options["ordered"].get_bool().value);
+        }
+    }
 
     for (auto&& element : documents) {
         documents_to_insert.push_back(element.get_document().value);
     }
 
-    auto insert_many_result = coll->insert_many(documents_to_insert);
+    auto insert_many_result = coll->insert_many(documents_to_insert, insert_options);
     std::map<size_t, document::element> inserted_ids{};
 
     if (insert_many_result) {
@@ -612,9 +663,22 @@ document::value run_bulk_write_test(collection* coll, document::view operation) 
 
     options::bulk_write options;
     std::vector<model::write> writes;
+    if (operation["collectionOptions"]) {
+        // Set write concern from collection options.
+        document::view collection_options = operation["collectionOptions"].get_document().value;
+        document::view write_concern_options =
+            collection_options["writeConcern"].get_document().value;
+        int32_t w_option = write_concern_options["w"].get_int32().value;
+        write_concern w;
+        w.nodes(w_option);
+        options.write_concern(w);
+    }
     auto arguments = operation["arguments"].get_document().value;
-    if (arguments["ordered"]) {
-        options.ordered(arguments["ordered"].get_bool().value);
+    if (arguments["options"]) {
+        document::view options_doc = arguments["options"].get_document().value;
+        if (options_doc["ordered"]) {
+            options.ordered(options_doc["ordered"].get_bool().value);
+        }
     }
     auto requests = arguments["requests"].get_array().value;
     for (auto&& request_element : requests) {
@@ -702,7 +766,7 @@ document::value run_bulk_write_test(collection* coll, document::view operation) 
     std::int32_t upserted_count = 0;
     result::bulk_write::id_map upserted_ids;
     std::int32_t inserted_count = 0;
-    auto bulk_write_result = coll->bulk_write(writes);
+    auto bulk_write_result = coll->bulk_write(writes, options);
     if (bulk_write_result) {
         matched_count = bulk_write_result->matched_count();
         modified_count = bulk_write_result->modified_count();

@@ -269,6 +269,13 @@ bool matches(types::value main, types::value pattern) {
     if (main.type() == type::k_document) {
         document::view main_view = main.get_document().value;
         for (auto&& el : pattern.get_document().value) {
+            // For write errors, only check for existence.
+            if (el.key().compare("writeErrors") == 0) {
+                if (main_view.find(el.key()) == main_view.end()) {
+                    return false;
+                }
+                continue;
+            }
             if (main_view.find(el.key()) == main_view.end()) {
                 return false;
             }
