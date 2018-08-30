@@ -384,6 +384,7 @@ class MONGOCXX_API collection {
     /// @}
     ///
 
+    // clang-format off
     ///
     /// @{
     ///
@@ -423,12 +424,14 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/count/
     ///
+    // clang-format on
     MONGOCXX_DEPRECATED std::int64_t count(bsoncxx::document::view_or_value filter,
                                            const options::count& options = options::count());
 
     std::int64_t count_deprecated(bsoncxx::document::view_or_value filter,
                                   const options::count& options = options::count());
 
+    // clang-format off
     ///
     /// Counts the number of documents matching the provided filter.
     ///
@@ -468,6 +471,7 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/count/
     ///
+    // clang-format on
     MONGOCXX_DEPRECATED std::int64_t count(const client_session& session,
                                            bsoncxx::document::view_or_value filter,
                                            const options::count& options = options::count());
