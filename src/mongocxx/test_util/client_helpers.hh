@@ -1,4 +1,4 @@
-// Copyright 2016 MongoDB Inc.
+// Copyright 2016-present MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -70,6 +70,11 @@ std::int32_t get_max_wire_version(const client& client);
 /// Determines the server version number by running "serverStatus".
 ///
 std::string get_server_version(const client& client);
+
+///
+/// Get replica set name, or empty string.
+///
+std::string replica_set_name(const client& client);
 
 ///
 /// Determines if the server is a replica set member.

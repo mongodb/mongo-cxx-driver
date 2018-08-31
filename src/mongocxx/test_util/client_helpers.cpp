@@ -198,6 +198,16 @@ std::string get_server_version(const client& client) {
     return bsoncxx::string::to_string(output.view()["version"].get_utf8().value);
 }
 
+std::string replica_set_name(const client& client) {
+    auto reply = client["admin"].run_command(make_document(kvp("isMaster", 1)));
+    auto name = reply.view()["setName"];
+    if (name) {
+        return bsoncxx::string::to_string(name.get_utf8().value);
+    }
+
+    return "";
+}
+
 bool is_replica_set(const client& client) {
     auto reply = client["admin"].run_command(make_document(kvp("isMaster", 1)));
     return static_cast<bool>(reply.view()["setName"]);
