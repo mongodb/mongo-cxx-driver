@@ -25,6 +25,12 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 namespace events {
 
+///
+/// An event notification sent when the driver fails to execute a MongoDB command.
+///
+/// @see "CommandFailedEvent" in
+/// https://github.com/mongodb/specifications/blob/master/source/command-monitoring/command-monitoring.rst
+///
 class MONGOCXX_API command_failed_event {
    public:
     MONGOCXX_PRIVATE explicit command_failed_event(const void* event);

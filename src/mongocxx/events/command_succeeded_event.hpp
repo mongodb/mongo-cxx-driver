@@ -25,6 +25,12 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 namespace events {
 
+///
+/// An event notification sent when the driver successfully executes a MongoDB command.
+///
+/// @see "CommandSucceededEvent" in
+/// https://github.com/mongodb/specifications/blob/master/source/command-monitoring/command-monitoring.rst
+///
 class MONGOCXX_API command_succeeded_event {
    public:
     MONGOCXX_PRIVATE explicit command_succeeded_event(const void* event);
