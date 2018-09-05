@@ -32,17 +32,28 @@ namespace spec {
 using namespace bsoncxx;
 using namespace mongocxx;
 
+pipeline build_pipeline(array::view pipeline_docs);
+bsoncxx::stdx::optional<read_concern> lookup_read_concern(document::view doc);
+bsoncxx::stdx::optional<write_concern> lookup_write_concern(document::view doc);
+bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view doc);
+
 class operation_runner {
    public:
     explicit operation_runner(collection* coll);
-    operation_runner(collection* coll, client_session* session0, client_session* session1);
+    operation_runner(database* db,
+                     collection* coll,
+                     client_session* session0,
+                     client_session* session1);
     document::value run(document::view operation);
 
    private:
     collection* _coll;
+    database* _db;
     client_session* _session0;
     client_session* _session1;
 
+    client_session* _lookup_session(document::view doc);
+    client_session* _lookup_session(stdx::string_view key);
     document::value _run_aggregate(document::view operation);
     document::value _run_count(document::view operation);
     document::value _run_distinct(document::view operation);
@@ -60,11 +71,11 @@ class operation_runner {
     document::value _run_bulk_write(document::view operation);
     document::value _run_count_documents(document::view operation);
     document::value _run_estimated_document_count(document::view);
-
-    client_session* _lookup_session(document::view operation);
+    document::value _run_start_transaction(document::view operation);
+    document::value _run_commit_transaction(document::view operation);
+    document::value _run_abort_transaction(document::view operation);
+    document::value _run_run_command(document::view operation);
 };
-
-pipeline build_pipeline(array::view pipeline_docs);
 
 }  // namespace spec
 MONGOCXX_INLINE_NAMESPACE_END

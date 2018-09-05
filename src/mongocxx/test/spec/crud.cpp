@@ -114,24 +114,8 @@ void run_crud_tests_in_file(std::string test_path, client* client) {
                 out_coll = db[out_coll_name];
             }
 
-            std::vector<std::string> actual_data;
-            std::vector<std::string> expected_data;
-
-            options::find options{};
-            builder::basic::document sort{};
-            sort.append(builder::basic::kvp("_id", 1));
-            options.sort(sort.extract());
-
-            for (auto&& doc : out_coll.find({}, options)) {
-                actual_data.push_back(to_json(doc));
-            }
-
-            for (auto&& ele : out_collection_doc["data"].get_array().value) {
-                expected_data.push_back(to_json(ele.get_document().value));
-            }
-
-            REQUIRE(expected_data == actual_data);
-
+            test_util::check_outcome_collection(&out_coll,
+                                                outcome["collection"].get_document().value);
             // The C++ driver does not implement the optional returning of results for
             // aggregations with $out.
             if (operation["name"].get_utf8().value == bsoncxx::stdx::string_view{"aggregate"}) {

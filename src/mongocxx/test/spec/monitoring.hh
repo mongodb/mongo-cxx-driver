@@ -16,6 +16,7 @@
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/test_util/client_helpers.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -27,7 +28,9 @@ using namespace mongocxx;
 class apm_checker {
    public:
     options::apm get_apm_opts();
-    void compare(bsoncxx::array::view expected, bool allow_extra = false);
+    void compare(bsoncxx::array::view expected,
+                 bool allow_extra = false,
+                 const test_util::match_visitor& match_visitor = {});
 
    private:
     std::vector<bsoncxx::document::value> _events;

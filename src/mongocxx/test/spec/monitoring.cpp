@@ -28,11 +28,13 @@ namespace spec {
 
 using namespace mongocxx;
 
-void apm_checker::compare(bsoncxx::array::view expectations, bool allow_extra) {
+void apm_checker::compare(bsoncxx::array::view expectations,
+                          bool allow_extra,
+                          const test_util::match_visitor& match_visitor) {
     auto events_iter = _events.begin();
     for (auto expectation : expectations) {
         REQUIRE(events_iter != _events.end());
-        REQUIRE(test_util::matches(*events_iter, expectation.get_document().view()));
+        REQUIRE(test_util::matches(*events_iter, expectation.get_document().view(), match_visitor));
         events_iter++;
     }
     if (!allow_extra) {

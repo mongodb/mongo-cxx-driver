@@ -29,6 +29,7 @@
 #include <bsoncxx/types/value.hpp>
 #include <mongocxx/stdx.hpp>
 
+#include <mongocxx/collection.hpp>
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
@@ -134,9 +135,23 @@ double as_double(bsoncxx::types::value value);
 
 bool is_numeric(bsoncxx::types::value value);
 
-bool matches(bsoncxx::types::value main, bsoncxx::types::value pattern);
+enum class match_action { k_skip, k_proceed, k_not_equal };
+using match_visitor =
+    std::function<match_action(bsoncxx::stdx::string_view key,
+                               bsoncxx::stdx::optional<bsoncxx::types::value> main,
+                               bsoncxx::types::value pattern)>;
 
-bool matches(bsoncxx::document::view doc, bsoncxx::document::view pattern);
+bool matches(bsoncxx::types::value main,
+             bsoncxx::types::value pattern,
+             bsoncxx::stdx::optional<match_visitor> visitor_fn = {});
+
+bool matches(bsoncxx::document::view doc,
+             bsoncxx::document::view pattern,
+             bsoncxx::stdx::optional<match_visitor> visitor_fn = {});
+
+std::string tolowercase(stdx::string_view view);
+
+void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::view expected);
 
 //
 // Require a topology that supports sessions (a post-3.6 replica set or cluster of them).

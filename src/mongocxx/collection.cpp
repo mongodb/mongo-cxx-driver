@@ -1178,7 +1178,7 @@ cursor collection::_distinct(const client_session* session,
                                                                &error);
 
     if (!result) {
-        throw_exception<operation_exception>(error);
+        throw_exception<operation_exception>(reply.steal(), error);
     }
 
     //

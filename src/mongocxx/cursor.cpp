@@ -25,6 +25,7 @@
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/private/cursor.hh>
+#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -46,13 +47,21 @@ void cursor::iterator::operator++(int) {
 
 cursor::iterator& cursor::iterator::operator++() {
     const bson_t* out;
+    const bson_t* error_document;
     bson_error_t error;
 
     if (libmongoc::cursor_next(_cursor->_impl->cursor_t, &out)) {
         _cursor->_impl->doc = bsoncxx::document::view{bson_get_data(out), out->len};
-    } else if (libmongoc::cursor_error(_cursor->_impl->cursor_t, &error)) {
+    } else if (libmongoc::cursor_error_document(
+                   _cursor->_impl->cursor_t, &error, &error_document)) {
         _cursor->_impl->mark_dead();
-        throw_exception<query_exception>(error);
+        if (error_document) {
+            bsoncxx::document::value error_doc{
+                bsoncxx::document::view{bson_get_data(error_document), error_document->len}};
+            throw_exception<query_exception>(error_doc, error);
+        } else {
+            throw_exception<query_exception>(error);
+        }
     } else {
         _cursor->_impl->mark_nothing_left();
     }

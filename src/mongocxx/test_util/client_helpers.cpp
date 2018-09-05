@@ -257,7 +257,7 @@ bool is_numeric(types::value value) {
            value.type() == type::k_double;
 }
 
-bool matches(types::value main, types::value pattern) {
+bool matches(types::value main, types::value pattern, stdx::optional<match_visitor> visitor_fn) {
     if (is_numeric(pattern) && as_double(pattern) == 42) {
         return true;
     }
@@ -270,8 +270,32 @@ bool matches(types::value main, types::value pattern) {
     if (main.type() == type::k_document) {
         document::view main_view = main.get_document().value;
         for (auto&& el : pattern.get_document().value) {
+            match_action action = match_action::k_proceed;
+            if (visitor_fn) {
+                stdx::optional<types::value> main_value;
+                if (main_view.find(el.key()) != main_view.end()) {
+                    main_value = main_view[el.key()].get_value();
+                }
+                action = (*visitor_fn)(el.key(), main_value, el.get_value());
+            }
+
+            if (action == match_action::k_skip) {
+                continue;
+            }
+
+            if (action == match_action::k_not_equal) {
+                return false;
+            }
+
             // For write errors, only check for existence.
             if (el.key().compare("writeErrors") == 0) {
+                if (main_view.find(el.key()) == main_view.end()) {
+                    return false;
+                }
+                continue;
+            }
+            // The C++ driver does not include insertedIds as part of the bulk write result.
+            if (el.key().compare("insertedIds") == 0) {
                 if (main_view.find(el.key()) == main_view.end()) {
                     return false;
                 }
@@ -280,7 +304,7 @@ bool matches(types::value main, types::value pattern) {
             if (main_view.find(el.key()) == main_view.end()) {
                 return false;
             }
-            if (!matches(main_view[el.key()].get_value(), el.get_value())) {
+            if (!matches(main_view[el.key()].get_value(), el.get_value(), visitor_fn)) {
                 return false;
             }
         }
@@ -297,7 +321,7 @@ bool matches(types::value main, types::value pattern) {
 
         auto main_iter = main_array.begin();
         for (auto&& el : pattern_array) {
-            if (!matches((*main_iter).get_value(), el.get_value())) {
+            if (!matches((*main_iter).get_value(), el.get_value(), visitor_fn)) {
                 return false;
             }
             main_iter++;
@@ -308,8 +332,38 @@ bool matches(types::value main, types::value pattern) {
     return main == pattern;
 }
 
-bool matches(document::view doc, document::view pattern) {
-    return matches(types::value{types::b_document{doc}}, types::value{types::b_document{pattern}});
+bool matches(document::view doc, document::view pattern, stdx::optional<match_visitor> visitor_fn) {
+    return matches(
+        types::value{types::b_document{doc}}, types::value{types::b_document{pattern}}, visitor_fn);
+}
+
+std::string tolowercase(stdx::string_view view) {
+    std::string out;
+    out.reserve(view.size());
+    for (size_t i = 0; i < view.length(); i++) {
+        out[i] = static_cast<char>(::tolower(view[i]));
+    }
+    return out;
+}
+
+void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::view expected) {
+    std::vector<std::string> actual_data;
+    std::vector<std::string> expected_data;
+
+    options::find options{};
+    builder::basic::document sort{};
+    sort.append(builder::basic::kvp("_id", 1));
+    options.sort(sort.extract());
+
+    for (auto&& doc : coll->find({}, options)) {
+        actual_data.push_back(to_json(doc));
+    }
+
+    for (auto&& ele : expected["data"].get_array().value) {
+        expected_data.push_back(to_json(ele.get_document().value));
+    }
+
+    REQUIRE(expected_data == actual_data);
 }
 
 bool server_has_sessions(const client& conn) {
