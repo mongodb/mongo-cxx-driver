@@ -111,7 +111,8 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
                 auto dbname = to_string(operation["database"].get_utf8().value);
                 auto collname = to_string(operation["collection"].get_utf8().value);
                 auto coll = global_client[dbname][collname];
-                get_test_runners()[operation_name](&coll, operation.get_document().value);
+                operation_runner op_runner{&coll};
+                op_runner.run(operation.get_document().value);
             }
         }
 

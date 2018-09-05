@@ -19,6 +19,7 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <mongocxx/client_session.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
@@ -31,27 +32,39 @@ namespace spec {
 using namespace bsoncxx;
 using namespace mongocxx;
 
+class operation_runner {
+   public:
+    explicit operation_runner(collection* coll);
+    operation_runner(collection* coll, client_session* session0, client_session* session1);
+    document::value run(document::view operation);
+
+   private:
+    collection* _coll;
+    client_session* _session0;
+    client_session* _session1;
+
+    document::value _run_aggregate(document::view operation);
+    document::value _run_count(document::view operation);
+    document::value _run_distinct(document::view operation);
+    document::value _run_find(document::view operation);
+    document::value _run_delete_many(document::view operation);
+    document::value _run_delete_one(document::view operation);
+    document::value _run_find_one_and_delete(document::view operation);
+    document::value _run_find_one_and_replace(document::view operation);
+    document::value _run_find_one_and_update(document::view operation);
+    document::value _run_insert_many(document::view operation);
+    document::value _run_insert_one(document::view operation);
+    document::value _run_replace_one(document::view operation);
+    document::value _run_update_many(document::view operation);
+    document::value _run_update_one(document::view operation);
+    document::value _run_bulk_write(document::view operation);
+    document::value _run_count_documents(document::view operation);
+    document::value _run_estimated_document_count(document::view);
+
+    client_session* _lookup_session(document::view operation);
+};
+
 pipeline build_pipeline(array::view pipeline_docs);
-document::value run_aggregate_test(collection* coll, document::view operation);
-document::value run_count_test(collection* coll, document::view operation);
-document::value run_count_documents_test(collection* coll, document::view operation);
-document::value run_estimated_document_count_test(collection* coll, document::view operation);
-document::value run_distinct_test(collection* coll, document::view operation);
-document::value run_find_test(collection* coll, document::view operation);
-document::value run_delete_many_test(collection* coll, document::view operation);
-document::value run_delete_one_test(collection* coll, document::view operation);
-document::value run_find_one_and_delete_test(collection* coll, document::view operation);
-document::value run_find_one_and_replace_test(collection* coll, document::view operation);
-document::value run_find_one_and_update_test(collection* coll, document::view operation);
-document::value run_insert_many_test(collection* coll, document::view operation);
-document::value run_insert_one_test(collection* coll, document::view operation);
-document::value run_replace_one_test(collection* coll, document::view operation);
-document::value run_update_many_test(collection* coll, document::view operation);
-document::value run_update_one_test(collection* coll, document::view operation);
-document::value run_bulk_write_test(collection* coll, document::view operation);
-using test_runners =
-    std::map<std::string, std::function<document::value(collection*, document::view)>>;
-test_runners get_test_runners();
 
 }  // namespace spec
 MONGOCXX_INLINE_NAMESPACE_END

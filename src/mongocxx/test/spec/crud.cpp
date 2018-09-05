@@ -86,6 +86,7 @@ void run_crud_tests_in_file(std::string test_path, client* client) {
 
     database db = (*client)["crud_tests"];
     collection coll = db["test"];
+    operation_runner op_runner{&coll};
 
     for (auto&& test : tests) {
         std::string description = bsoncxx::string::to_string(test["description"].get_utf8().value);
@@ -101,10 +102,7 @@ void run_crud_tests_in_file(std::string test_path, client* client) {
         }
 
         document::view operation = test["operation"].get_document().value;
-        std::string operation_name = bsoncxx::string::to_string(operation["name"].get_utf8().value);
-
-        auto run_test = get_test_runners()[operation_name];
-        document::value actual_result = run_test(&coll, operation);
+        document::value actual_result = op_runner.run(operation);
 
         if (outcome["collection"]) {
             collection out_coll = db["test"];

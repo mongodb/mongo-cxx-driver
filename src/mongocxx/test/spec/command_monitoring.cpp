@@ -167,14 +167,14 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
         client_opts.apm_opts(apm_opts);
         client client{uri{}, client_opts};
 
-        collection col = client[db_name][col_name];
+        collection coll = client[db_name][col_name];
 
         document::view operation = test["operation"].get_document().value;
         std::string operation_name = string::to_string(operation["name"].get_utf8().value);
-        auto test_function = spec::get_test_runners()[operation_name];
+        spec::operation_runner op_runner{&coll};
 
         try {
-            test_function(&col, operation);
+            op_runner.run(operation);
         } catch (mongocxx::exception& e) {
             // do nothing.
         }

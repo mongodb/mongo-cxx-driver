@@ -87,7 +87,19 @@ pipeline build_pipeline(array::view pipeline_docs) {
     return pipeline;
 }
 
-document::value run_aggregate_test(collection* coll, document::view operation) {
+client_session* operation_runner::_lookup_session(document::view operation) {
+    if (operation["arguments"] && operation["arguments"]["session"]) {
+        stdx::string_view session_name = operation["arguments"]["session"].get_utf8().value;
+        if (session_name.compare("session0")) {
+            return _session0;
+        } else {
+            return _session1;
+        }
+    }
+    return nullptr;
+}
+
+document::value operation_runner::_run_aggregate(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     pipeline pipeline = build_pipeline(arguments["pipeline"].get_array().value);
     options::aggregate options{};
@@ -100,11 +112,16 @@ document::value run_aggregate_test(collection* coll, document::view operation) {
         options.collation(arguments["collation"].get_document().value);
     }
 
-    cursor result_cursor = coll->aggregate(pipeline, options);
+    stdx::optional<cursor> result_cursor;
+    if (client_session* session = _lookup_session(operation)) {
+        *result_cursor = _coll->aggregate(*session, pipeline, options);
+    } else {
+        *result_cursor = _coll->aggregate(pipeline, options);
+    }
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", [&result_cursor](builder::basic::sub_array array) {
-        for (auto&& document : result_cursor) {
+        for (auto&& document : *result_cursor) {
             array.append(document);
         }
     }));
@@ -112,7 +129,7 @@ document::value run_aggregate_test(collection* coll, document::view operation) {
     return result.extract();
 }
 
-document::value run_count_test(collection* coll, document::view operation) {
+document::value operation_runner::_run_count(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::count options{};
@@ -129,7 +146,12 @@ document::value run_count_test(collection* coll, document::view operation) {
         options.skip(arguments["skip"].get_int32().value);
     }
 
-    int64_t count = coll->count_deprecated(filter, options);
+    int64_t count;
+    if (client_session* session = _lookup_session(operation)) {
+        count = _coll->count_deprecated(*session, filter, options);
+    } else {
+        count = _coll->count_deprecated(filter, options);
+    }
 
     auto result = builder::basic::document{};
 
@@ -140,7 +162,7 @@ document::value run_count_test(collection* coll, document::view operation) {
     return result.extract();
 }
 
-document::value run_distinct_test(collection* coll, document::view operation) {
+document::value operation_runner::_run_distinct(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter{};
 
@@ -156,11 +178,16 @@ document::value run_distinct_test(collection* coll, document::view operation) {
         options.collation(arguments["collation"].get_document().value);
     }
 
-    cursor result_cursor = coll->distinct(field_name, filter, options);
+    stdx::optional<cursor> result_cursor;
+    if (client_session* session = _lookup_session(operation)) {
+        *result_cursor = _coll->distinct(*session, field_name, filter, options);
+    } else {
+        *result_cursor = _coll->distinct(field_name, filter, options);
+    }
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", [&result_cursor](builder::basic::sub_array array) {
-        for (auto&& result_doc : result_cursor) {
+        for (auto&& result_doc : *result_cursor) {
             for (auto&& value : result_doc["values"].get_array().value) {
                 array.append(value.get_value());
             }
@@ -170,7 +197,7 @@ document::value run_distinct_test(collection* coll, document::view operation) {
     return result.extract();
 }
 
-document::value run_find_test(collection* coll, document::view operation) {
+document::value operation_runner::_run_find(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::find options{};
@@ -228,11 +255,16 @@ document::value run_find_test(collection* coll, document::view operation) {
         }
     }
 
-    cursor result_cursor = coll->find(filter, options);
+    stdx::optional<cursor> result_cursor;
+    if (client_session* session = _lookup_session(operation)) {
+        *result_cursor = _coll->find(*session, filter, options);
+    } else {
+        *result_cursor = _coll->find(filter, options);
+    }
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", [&result_cursor](builder::basic::sub_array array) {
-        for (auto&& document : result_cursor) {
+        for (auto&& document : *result_cursor) {
             array.append(document);
         }
     }));
@@ -240,7 +272,7 @@ document::value run_find_test(collection* coll, document::view operation) {
     return result.extract();
 }
 
-document::value run_delete_many_test(collection* coll, document::view operation) {
+document::value operation_runner::_run_delete_many(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::delete_options options{};
@@ -252,8 +284,14 @@ document::value run_delete_many_test(collection* coll, document::view operation)
     auto result = builder::basic::document{};
     std::int32_t deleted_count = 0;
 
-    if (auto delete_result = coll->delete_many(filter, options)) {
-        deleted_count = delete_result->deleted_count();
+    if (client_session* session = _lookup_session(operation)) {
+        if (auto delete_result = _coll->delete_many(*session, filter, options)) {
+            deleted_count = delete_result->deleted_count();
+        }
+    } else {
+        if (auto delete_result = _coll->delete_many(filter, options)) {
+            deleted_count = delete_result->deleted_count();
+        }
     }
 
     result.append(
@@ -265,7 +303,7 @@ document::value run_delete_many_test(collection* coll, document::view operation)
     return result.extract();
 }
 
-document::value run_delete_one_test(collection* coll, document::view operation) {
+document::value operation_runner::_run_delete_one(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::delete_options options{};
@@ -277,8 +315,14 @@ document::value run_delete_one_test(collection* coll, document::view operation) 
     auto result = builder::basic::document{};
     std::int32_t deleted_count = 0;
 
-    if (auto delete_result = coll->delete_one(filter, options)) {
-        deleted_count = delete_result->deleted_count();
+    if (client_session* session = _lookup_session(operation)) {
+        if (auto delete_result = _coll->delete_one(*session, filter, options)) {
+            deleted_count = delete_result->deleted_count();
+        }
+    } else {
+        if (auto delete_result = _coll->delete_one(filter, options)) {
+            deleted_count = delete_result->deleted_count();
+        }
     }
 
     result.append(
@@ -290,7 +334,7 @@ document::value run_delete_one_test(collection* coll, document::view operation) 
     return result.extract();
 }
 
-document::value run_find_one_and_delete_test(collection* coll, document::view operation) {
+document::value operation_runner::_run_find_one_and_delete(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::find_one_and_delete options{};
@@ -308,7 +352,12 @@ document::value run_find_one_and_delete_test(collection* coll, document::view op
     }
 
     auto result = builder::basic::document{};
-    auto document = coll->find_one_and_delete(filter, options);
+    stdx::optional<document::value> document;
+    if (client_session* session = _lookup_session(operation)) {
+        document = _coll->find_one_and_delete(*session, filter, options);
+    } else {
+        document = _coll->find_one_and_delete(filter, options);
+    }
 
     // Server versions below 3.0 sometimes return an empty document rather than null when no
     // documents match.
@@ -321,7 +370,7 @@ document::value run_find_one_and_delete_test(collection* coll, document::view op
     return result.extract();
 }
 
-document::value run_find_one_and_replace_test(collection* coll, document::view operation) {
+document::value operation_runner::_run_find_one_and_replace(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view replacement = arguments["replacement"].get_document().value;
@@ -357,7 +406,12 @@ document::value run_find_one_and_replace_test(collection* coll, document::view o
     }
 
     auto result = builder::basic::document{};
-    auto document = coll->find_one_and_replace(filter, replacement, options);
+    stdx::optional<document::value> document;
+    if (client_session* session = _lookup_session(operation)) {
+        document = _coll->find_one_and_replace(*session, filter, replacement, options);
+    } else {
+        document = _coll->find_one_and_replace(filter, replacement, options);
+    }
 
     // Server versions below 3.0 sometimes return an empty document rather than null when no
     // documents match.
@@ -370,7 +424,7 @@ document::value run_find_one_and_replace_test(collection* coll, document::view o
     return result.extract();
 }
 
-document::value run_find_one_and_update_test(collection* coll, document::view operation) {
+document::value operation_runner::_run_find_one_and_update(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view update = arguments["update"].get_document().value;
@@ -410,7 +464,12 @@ document::value run_find_one_and_update_test(collection* coll, document::view op
     }
 
     auto result = builder::basic::document{};
-    auto document = coll->find_one_and_update(filter, update, options);
+    stdx::optional<document::value> document;
+    if (client_session* session = _lookup_session(operation)) {
+        document = _coll->find_one_and_update(*session, filter, update, options);
+    } else {
+        document = _coll->find_one_and_update(filter, update, options);
+    }
 
     // Server versions below 3.0 sometimes return an empty document rather than null when no
     // documents match.
@@ -423,7 +482,7 @@ document::value run_find_one_and_update_test(collection* coll, document::view op
     return result.extract();
 }
 
-document::value run_insert_many_test(collection* coll, document::view operation) {
+document::value operation_runner::_run_insert_many(document::view operation) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
     document::view arguments = operation["arguments"].get_document().value;
@@ -442,7 +501,12 @@ document::value run_insert_many_test(collection* coll, document::view operation)
         documents_to_insert.push_back(element.get_document().value);
     }
 
-    auto insert_many_result = coll->insert_many(documents_to_insert, insert_options);
+    stdx::optional<result::insert_many> insert_many_result;
+    if (client_session* session = _lookup_session(operation)) {
+        insert_many_result = _coll->insert_many(*session, documents_to_insert, insert_options);
+    } else {
+        insert_many_result = _coll->insert_many(documents_to_insert, insert_options);
+    }
     std::map<size_t, document::element> inserted_ids{};
 
     if (insert_many_result) {
@@ -460,11 +524,16 @@ document::value run_insert_many_test(collection* coll, document::view operation)
     return result.extract();
 }
 
-document::value run_insert_one_test(collection* coll, document::view operation) {
+document::value operation_runner::_run_insert_one(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view document = arguments["document"].get_document().value;
     auto result = builder::basic::document{};
-    auto insert_one_result = coll->insert_one(document);
+    stdx::optional<result::insert_one> insert_one_result;
+    if (client_session* session = _lookup_session(operation)) {
+        insert_one_result = _coll->insert_one(*session, document);
+    } else {
+        insert_one_result = _coll->insert_one(document);
+    }
     types::value inserted_id{types::b_null{}};
 
     if (insert_one_result) {
@@ -473,13 +542,12 @@ document::value run_insert_one_test(collection* coll, document::view operation) 
 
     result.append(builder::basic::kvp("result", [inserted_id](builder::basic::sub_document subdoc) {
         subdoc.append(builder::basic::kvp("insertedId", inserted_id));
-
     }));
 
     return result.extract();
 }
 
-document::value run_replace_one_test(collection* coll, document::view operation) {
+document::value operation_runner::_run_replace_one(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view replacement = arguments["replacement"].get_document().value;
@@ -496,21 +564,26 @@ document::value run_replace_one_test(collection* coll, document::view operation)
     std::int32_t matched_count = 0;
     bsoncxx::stdx::optional<std::int32_t> modified_count;
     std::int32_t upserted_count = 0;
-    auto update_result = coll->replace_one(filter, replacement, options);
+    stdx::optional<result::replace_one> replace_result;
+    if (client_session* session = _lookup_session(operation)) {
+        replace_result = _coll->replace_one(*session, filter, replacement, options);
+    } else {
+        replace_result = _coll->replace_one(filter, replacement, options);
+    }
     bsoncxx::stdx::optional<types::value> upserted_id{};
 
-    if (update_result) {
-        matched_count = update_result->matched_count();
+    if (replace_result) {
+        matched_count = replace_result->matched_count();
 
         // Server versions below 2.4 do not return an `nModified` count.
         try {
-            modified_count = update_result->modified_count();
+            modified_count = replace_result->modified_count();
         } catch (const std::exception& e) {
         }
 
-        upserted_count = update_result->result().upserted_count();
+        upserted_count = replace_result->result().upserted_count();
 
-        if (auto upserted_element = update_result->upserted_id()) {
+        if (auto upserted_element = replace_result->upserted_id()) {
             upserted_id = upserted_element->get_value();
         }
     }
@@ -536,7 +609,7 @@ document::value run_replace_one_test(collection* coll, document::view operation)
     return result.extract();
 }
 
-document::value run_update_many_test(collection* coll, document::view operation) {
+document::value operation_runner::_run_update_many(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view update = arguments["update"].get_document().value;
@@ -557,7 +630,12 @@ document::value run_update_many_test(collection* coll, document::view operation)
     std::int32_t matched_count = 0;
     bsoncxx::stdx::optional<std::int32_t> modified_count;
     std::int32_t upserted_count = 0;
-    auto update_result = coll->update_many(filter, update, options);
+    stdx::optional<result::update> update_result;
+    if (client_session* session = _lookup_session(operation)) {
+        update_result = _coll->update_many(*session, filter, update, options);
+    } else {
+        update_result = _coll->update_many(filter, update, options);
+    }
     bsoncxx::stdx::optional<types::value> upserted_id{};
 
     if (update_result) {
@@ -597,7 +675,7 @@ document::value run_update_many_test(collection* coll, document::view operation)
     return result.extract();
 }
 
-document::value run_update_one_test(collection* coll, document::view operation) {
+document::value operation_runner::_run_update_one(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view update = arguments["update"].get_document().value;
@@ -618,7 +696,12 @@ document::value run_update_one_test(collection* coll, document::view operation) 
     std::int32_t matched_count = 0;
     bsoncxx::stdx::optional<std::int32_t> modified_count;
     std::int32_t upserted_count = 0;
-    auto update_result = coll->update_one(filter, update, options);
+    stdx::optional<result::update> update_result;
+    if (client_session* session = _lookup_session(operation)) {
+        update_result = _coll->update_one(*session, filter, update, options);
+    } else {
+        update_result = _coll->update_one(filter, update, options);
+    }
     bsoncxx::stdx::optional<types::value> upserted_id{};
 
     if (update_result) {
@@ -658,7 +741,7 @@ document::value run_update_one_test(collection* coll, document::view operation) 
     return result.extract();
 }
 
-document::value run_bulk_write_test(collection* coll, document::view operation) {
+document::value operation_runner::_run_bulk_write(document::view operation) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
@@ -767,7 +850,12 @@ document::value run_bulk_write_test(collection* coll, document::view operation) 
     std::int32_t upserted_count = 0;
     result::bulk_write::id_map upserted_ids;
     std::int32_t inserted_count = 0;
-    auto bulk_write_result = coll->bulk_write(writes, options);
+    stdx::optional<result::bulk_write> bulk_write_result;
+    if (client_session* session = _lookup_session(operation)) {
+        bulk_write_result = _coll->bulk_write(*session, writes, options);
+    } else {
+        bulk_write_result = _coll->bulk_write(writes, options);
+    }
     if (bulk_write_result) {
         matched_count = bulk_write_result->matched_count();
         modified_count = bulk_write_result->modified_count();
@@ -800,7 +888,7 @@ document::value run_bulk_write_test(collection* coll, document::view operation) 
     return result.extract();
 }
 
-document::value run_count_documents_test(collection* coll, document::view operation) {
+document::value operation_runner::_run_count_documents(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::count options{};
@@ -817,7 +905,12 @@ document::value run_count_documents_test(collection* coll, document::view operat
         options.skip(arguments["skip"].get_int32().value);
     }
 
-    int64_t count = coll->count_documents(filter, options);
+    int64_t count;
+    if (client_session* session = _lookup_session(operation)) {
+        count = _coll->count_documents(*session, filter, options);
+    } else {
+        count = _coll->count_documents(filter, options);
+    }
 
     auto result = builder::basic::document{};
 
@@ -828,8 +921,8 @@ document::value run_count_documents_test(collection* coll, document::view operat
     return result.extract();
 }
 
-document::value run_estimated_document_count_test(collection* coll, document::view) {
-    int64_t count = coll->estimated_document_count();
+document::value operation_runner::_run_estimated_document_count(document::view) {
+    int64_t count = _coll->estimated_document_count();
 
     auto result = builder::basic::document{};
 
@@ -840,26 +933,51 @@ document::value run_estimated_document_count_test(collection* coll, document::vi
     return result.extract();
 }
 
-spec::test_runners get_test_runners() {
-    static spec::test_runners runners = {
-        {"aggregate", run_aggregate_test},
-        {"count", run_count_test},
-        {"countDocuments", run_count_documents_test},
-        {"estimatedDocumentCount", run_estimated_document_count_test},
-        {"distinct", run_distinct_test},
-        {"find", run_find_test},
-        {"deleteMany", run_delete_many_test},
-        {"deleteOne", run_delete_one_test},
-        {"findOneAndDelete", run_find_one_and_delete_test},
-        {"findOneAndReplace", run_find_one_and_replace_test},
-        {"findOneAndUpdate", run_find_one_and_update_test},
-        {"insertMany", run_insert_many_test},
-        {"insertOne", run_insert_one_test},
-        {"replaceOne", run_replace_one_test},
-        {"updateMany", run_update_many_test},
-        {"updateOne", run_update_one_test},
-        {"bulkWrite", run_bulk_write_test}};
-    return runners;
+operation_runner::operation_runner(collection* coll) : _coll(coll) {}
+operation_runner::operation_runner(collection* coll,
+                                   client_session* session0,
+                                   client_session* session1)
+    : _coll(coll), _session0(session0), _session1(session1) {}
+
+document::value operation_runner::run(document::view operation) {
+    stdx::string_view key = operation["name"].get_utf8().value;
+    if (key.compare("aggregate") == 0) {
+        return _run_aggregate(operation);
+    } else if (key.compare("count") == 0) {
+        _run_count(operation);
+    } else if (key.compare("countDocuments") == 0) {
+        return _run_count_documents(operation);
+    } else if (key.compare("estimatedDocumentCount") == 0) {
+        return _run_estimated_document_count(operation);
+    } else if (key.compare("distinct") == 0) {
+        return _run_distinct(operation);
+    } else if (key.compare("find") == 0) {
+        return _run_find(operation);
+    } else if (key.compare("deleteMany") == 0) {
+        return _run_delete_many(operation);
+    } else if (key.compare("deleteOne") == 0) {
+        return _run_delete_one(operation);
+    } else if (key.compare("findOneAndDelete") == 0) {
+        return _run_find_one_and_delete(operation);
+    } else if (key.compare("findOneAndReplace") == 0) {
+        return _run_find_one_and_replace(operation);
+    } else if (key.compare("findOneAndUpdate") == 0) {
+        return _run_find_one_and_update(operation);
+    } else if (key.compare("insertMany") == 0) {
+        return _run_insert_many(operation);
+    } else if (key.compare("insertOne") == 0) {
+        return _run_insert_one(operation);
+    } else if (key.compare("replaceOne") == 0) {
+        return _run_replace_one(operation);
+    } else if (key.compare("updateMany") == 0) {
+        return _run_update_many(operation);
+    } else if (key.compare("updateOne") == 0) {
+        return _run_update_one(operation);
+    } else if (key.compare("bulkWrite") == 0) {
+        return _run_bulk_write(operation);
+    }
+
+    return bsoncxx::builder::basic::make_document();
 }
 
 }  // namespace spec
