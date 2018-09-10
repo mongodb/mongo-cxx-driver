@@ -57,6 +57,16 @@ TEST_CASE("valid read concern settings", "[read_concern]") {
             string_setting = stdx::string_view{""};
         }
 
+        SECTION("available") {
+            level_setting = read_concern::level::k_available;
+            string_setting = stdx::string_view{"available"};
+        }
+
+        SECTION("server default") {
+            level_setting = read_concern::level::k_snapshot;
+            string_setting = stdx::string_view{"snapshot"};
+        }
+
         REQUIRE_NOTHROW(rc.acknowledge_level(level_setting));
     }
 
@@ -79,6 +89,16 @@ TEST_CASE("valid read concern settings", "[read_concern]") {
         SECTION("server default") {
             level_setting = read_concern::level::k_server_default;
             string_setting = stdx::string_view{""};
+        }
+
+        SECTION("available") {
+            level_setting = read_concern::level::k_available;
+            string_setting = stdx::string_view{"available"};
+        }
+
+        SECTION("server default") {
+            level_setting = read_concern::level::k_snapshot;
+            string_setting = stdx::string_view{"snapshot"};
         }
 
         REQUIRE_NOTHROW(rc.acknowledge_string(string_setting));

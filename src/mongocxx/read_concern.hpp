@@ -63,6 +63,8 @@ class MONGOCXX_API read_concern {
         k_linearizable,
         k_server_default,
         k_unknown,
+        k_available,
+        k_snapshot
     };
 
     ///
