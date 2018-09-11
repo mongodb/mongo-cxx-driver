@@ -70,6 +70,7 @@ set(test_driver_sources
     result/replace_one.cpp
     result/update.cpp
     sdam-monitoring.cpp
+    transactions.cpp
     uri.cpp
     validation_criteria.cpp
     write_concern.cpp
