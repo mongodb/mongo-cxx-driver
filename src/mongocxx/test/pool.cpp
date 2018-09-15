@@ -143,38 +143,11 @@ TEST_CASE("calling acquire on a pool returns an entry that manages its client", 
     }
 }
 
-TEST_CASE(
-    "try_acquire returns an engaged stdx::optional<entry> if mongoc_client_pool_try_pop "
-    "returns a non-null pointer",
-    "[pool]") {
-    MOCK_POOL
-
+TEST_CASE("try_acquire returns an engaged stdx::optional<entry>", "[pool]") {
     instance::current();
-
-    // libstdc++ before GCC 4.9 places max_align_t in the wrong
-    // namespace. Use a limited scope 'using namespace std' to name it
-    // in a way that always works.
-    auto dummy_address = []() {
-        using namespace std;
-        return max_align_t{};
-    }();
-
-    bool try_pop_called = false;
-
-    mongoc_client_t* fake = reinterpret_cast<mongoc_client_t*>(&dummy_address);
-
-    client_pool_try_pop->interpose([&](::mongoc_client_pool_t*) {
-        try_pop_called = true;
-        return fake;
-    });
-
-    {
-        pool p{};
-        auto client = p.try_acquire();
-
-        REQUIRE(!!client);
-        REQUIRE(try_pop_called);
-    }
+    pool p{};
+    auto client = p.try_acquire();
+    REQUIRE(!!client);
 }
 
 TEST_CASE(
