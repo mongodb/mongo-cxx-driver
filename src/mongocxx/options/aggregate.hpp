@@ -131,38 +131,6 @@ class MONGOCXX_API aggregate {
     const stdx::optional<std::chrono::milliseconds>& max_time() const;
 
     ///
-    /// Sets whether the results of this aggregation should be returned via a cursor.
-    ///
-    /// @deprecated
-    ///   This setting has no effect. Support for aggregations without a cursor was deprecated in
-    ///   MongoDB 3.4 and removed in 3.6; the driver always uses a cursor for aggregations with all
-    ///   MongoDB versions.
-    ///
-    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
-    ///
-    /// @return
-    ///   A reference to the object on which this member function is being called. This facilitates
-    ///   method chaining.
-    ///
-    MONGOCXX_DEPRECATED aggregate& use_cursor(bool use_cursor);
-    aggregate& use_cursor_deprecated(bool use_cursor);
-
-    ///
-    /// The current use_cursor setting.
-    ///
-    /// @deprecated
-    ///   This setting has no effect. Support for aggregations without a cursor was deprecated in
-    ///   MongoDB 3.4 and removed in 3.6; the driver always uses a cursor for aggregations with all
-    ///   MongoDB versions.
-    ///
-    /// @return the current use_cursor setting
-    ///
-    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
-    ///
-    MONGOCXX_DEPRECATED const stdx::optional<bool>& use_cursor() const;
-    const stdx::optional<bool>& use_cursor_deprecated() const;
-
-    ///
     /// Sets the read_preference for this operation.
     ///
     /// @param rp the new read_preference
@@ -262,7 +230,6 @@ class MONGOCXX_API aggregate {
     stdx::optional<std::int32_t> _batch_size;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<std::chrono::milliseconds> _max_time;
-    stdx::optional<bool> _use_cursor;
     stdx::optional<class read_preference> _read_preference;
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<class hint> _hint;

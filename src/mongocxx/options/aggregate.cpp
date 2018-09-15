@@ -42,15 +42,6 @@ aggregate& aggregate::max_time(std::chrono::milliseconds max_time) {
     return *this;
 }
 
-aggregate& aggregate::use_cursor_deprecated(bool use_cursor) {
-    _use_cursor = use_cursor;
-    return *this;
-}
-
-aggregate& aggregate::use_cursor(bool use_cursor) {
-    return use_cursor_deprecated(use_cursor);
-}
-
 aggregate& aggregate::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
     return *this;
@@ -85,14 +76,6 @@ const stdx::optional<bsoncxx::document::view_or_value>& aggregate::collation() c
 
 const stdx::optional<std::chrono::milliseconds>& aggregate::max_time() const {
     return _max_time;
-}
-
-const stdx::optional<bool>& aggregate::use_cursor_deprecated() const {
-    return _use_cursor;
-}
-
-const stdx::optional<bool>& aggregate::use_cursor() const {
-    return use_cursor_deprecated();
 }
 
 const stdx::optional<class read_preference>& aggregate::read_preference() const {
