@@ -73,6 +73,7 @@ include(InstallRequiredSystemLibraries)
 
 # Allow the user to decide whether to build the shared libaries or the static libraries.
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+set(BUILD_VERSION "0.0.0" CACHE STRING "Library version (for both libbsoncxx and libmongocxx)")
 
 # If the user did not customize the install prefix,
 # set it to live under build so we don't inadverently pollute /usr/local
@@ -80,7 +81,43 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "default install path" FORCE)
 endif()
 
+set(CMAKE_MODULE_PATH
+   ${CMAKE_MODULE_PATH}
+   ${PROJECT_SOURCE_DIR}/cmake
+)
+
 include(GNUInstallDirs)
+include (ParseVersion)
+
+if(BUILD_VERSION STREQUAL "0.0.0")
+    if(EXISTS ${CMAKE_BINARY_DIR}/VERSION_CURRENT)
+        file(STRINGS ${CMAKE_BINARY_DIR}/VERSION_CURRENT BUILD_VERSION)
+    else()
+        find_package(PythonInterp)
+        if(PYTHONINTERP_FOUND)
+            execute_process(
+                COMMAND ${PYTHON_EXECUTABLE} etc/calc_release_version.py
+                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                OUTPUT_VARIABLE CALC_RELEASE_VERSION
+                RESULT_VARIABLE CALC_RELEASE_VERSION_RESULT
+            )
+            if(NOT CALC_RELEASE_VERSION_RESULT STREQUAL 0)
+                # If python failed above, stderr would tell the user about it
+                message(WARNING
+                    "BUILD_VERSION not specified and could not be calculated\
+ (script invocation failed); setting library version to 0.0.0"
+                )
+            else()
+                set(BUILD_VERSION ${CALC_RELEASE_VERSION})
+            endif()
+        else()
+            message(WARNING
+                "BUILD_VERSION not specified and could not be calculated\
+ (Python was not found on the system); setting library version to 0.0.0"
+            )
+        endif()
+    endif()
+endif()
 
 if(NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type selected, default is Release")

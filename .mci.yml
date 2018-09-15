@@ -192,6 +192,18 @@ functions:
                   if [ "Windows_NT" == "$OS" ]; then
                       MONGOC_PREFIX=$(cygpath -m "$MONGOC_PREFIX")
                   fi
+
+                  python -m virtualenv venv
+                  cd venv
+                  if [ -f bin/activate ]; then
+                      . bin/activate
+                      ./bin/pip install GitPython
+                  elif [ -f Scripts/activate ]; then
+                      . Scripts/activate
+                      ./Scripts/pip install GitPython
+                  fi
+                  cd ..
+
                   .evergreen/compile.sh -DCMAKE_PREFIX_PATH="$MONGOC_PREFIX" ${cmake_flags} ${poly_flags} $ADDL_OPTS -DCMAKE_INSTALL_PREFIX=install
 
     "test":
