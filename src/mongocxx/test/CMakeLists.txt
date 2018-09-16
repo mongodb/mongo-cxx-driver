@@ -53,7 +53,6 @@ set(test_driver_sources
     options/gridfs/upload.cpp
     options/index.cpp
     options/insert.cpp
-    options/modify_collection.cpp
     options/pool.cpp
     options/private/rewriter.cpp
     options/replace.cpp

@@ -108,7 +108,6 @@ set(mongocxx_sources
     options/index.cpp
     options/index_view.cpp
     options/insert.cpp
-    options/modify_collection.cpp
     options/pool.cpp
     options/private/rewriter.cpp
     options/replace.cpp

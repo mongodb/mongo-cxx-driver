@@ -207,18 +207,6 @@ bsoncxx::document::value database::run_command(const client_session& session,
     return _run_command(&session, command);
 }
 
-bsoncxx::document::value database::modify_collection_deprecated(
-    stdx::string_view name, const options::modify_collection& options) {
-    auto doc = make_document(kvp("collMod", name), concatenate(options.to_document()));
-
-    return run_command(doc.view());
-}
-
-bsoncxx::document::value database::modify_collection(stdx::string_view name,
-                                                     const options::modify_collection& options) {
-    return modify_collection_deprecated(name, options);
-}
-
 collection database::_create_collection(const client_session* session,
                                         bsoncxx::string::view_or_value name,
                                         const options::create_collection& collection_options,

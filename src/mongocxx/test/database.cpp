@@ -26,7 +26,6 @@
 #include <mongocxx/index_view.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/index_view.hpp>
-#include <mongocxx/options/modify_collection.hpp>
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
@@ -377,67 +376,6 @@ TEST_CASE("Database integration tests", "[database]") {
             database.create_collection(collection_name);
 
             REQUIRE_THROWS(database.create_collection(collection_name));
-        }
-    }
-
-    SECTION("A collection may be modified via modify_collection") {
-        SECTION("index can be modified") {
-            stdx::string_view collection_name{"collection_modify_index"};
-            database[collection_name].drop();
-            database.create_collection(collection_name);
-
-            auto key_pattern = make_document(kvp("a", 1));
-
-            database[collection_name].create_index(
-                key_pattern.view(), options::index{}.expire_after(std::chrono::seconds{1}));
-
-            options::modify_collection opts;
-            opts.index(key_pattern.view(), std::chrono::seconds{2});
-
-            database.modify_collection_deprecated(collection_name, opts);
-
-            auto cursor = database[collection_name].list_indexes();
-            for (auto&& index : cursor) {
-                if (index["key"].get_document().value == key_pattern.view()) {
-                    auto expire_after_seconds_ele = index["expireAfterSeconds"];
-                    if (expire_after_seconds_ele.type() == bsoncxx::type::k_int32) {
-                        REQUIRE(expire_after_seconds_ele.get_int32().value == 2);
-                    } else {
-                        REQUIRE(expire_after_seconds_ele.type() == bsoncxx::type::k_int64);
-                        REQUIRE(expire_after_seconds_ele.get_int64().value == 2);
-                    }
-                }
-            }
-        }
-
-        SECTION("validation_criteria can be modified") {
-            stdx::string_view collection_name{"collection_modify_validation"};
-            database[collection_name].drop();
-            database.create_collection(collection_name);
-
-            auto rule = make_document(kvp("email", make_document(kvp("$exists", "true"))));
-
-            validation_criteria criteria;
-            criteria.rule(rule.view());
-
-            options::modify_collection opts;
-            opts.validation_criteria(criteria);
-
-            if (test_util::get_max_wire_version(mongo_client) >= 4) {
-                // The server supports document validation.
-                REQUIRE_NOTHROW(database.modify_collection_deprecated(collection_name, opts));
-
-                auto cursor = database.list_collections();
-                for (auto&& coll : cursor) {
-                    if (coll["name"].get_utf8().value == collection_name) {
-                        REQUIRE(coll["options"]["validator"].get_document().value == rule);
-                    }
-                }
-            } else {
-                // The server does not support document validation.
-                REQUIRE_THROWS_AS(database.modify_collection_deprecated(collection_name, opts),
-                                  operation_exception);
-            }
         }
     }
 

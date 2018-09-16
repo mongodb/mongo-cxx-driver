@@ -25,7 +25,6 @@
 #include <mongocxx/options/create_collection.hpp>
 #include <mongocxx/options/create_view.hpp>
 #include <mongocxx/options/gridfs/bucket.hpp>
-#include <mongocxx/options/modify_collection.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/write_concern.hpp>
 
@@ -181,28 +180,6 @@ class MONGOCXX_API database {
     class collection create_view(bsoncxx::string::view_or_value name,
                                  bsoncxx::string::view_or_value view_on,
                                  const options::create_view& options = options::create_view());
-
-    ///
-    /// Modify an existing collection.
-    ///
-    /// @deprecated
-    ///   This method is deprecated.  To modify an existing collection, invoke the "collMod" command
-    ///   with database::run_command().
-    ///
-    /// @see https://docs.mongodb.com/master/reference/command/collMod/
-    ///
-    /// @param name the name of the collection to be modified.
-    /// @param options the modifications to be performed.
-    ///
-    /// @return the result of executing the command.
-    ///
-    MONGOCXX_DEPRECATED bsoncxx::document::value modify_collection(
-        stdx::string_view name,
-        const options::modify_collection& options = options::modify_collection());
-
-    bsoncxx::document::value modify_collection_deprecated(
-        stdx::string_view name,
-        const options::modify_collection& options = options::modify_collection());
 
     ///
     /// @{
