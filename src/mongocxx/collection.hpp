@@ -1418,7 +1418,8 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/update/
     ///
-    template <typename T, typename = std::enable_if<std::is_same<T, options::update>::value>>
+    template <typename T,
+              typename std::enable_if<std::is_same<T, options::update>::value, int>::type = 0>
     MONGOCXX_DEPRECATED stdx::optional<result::replace_one> replace_one(
         bsoncxx::document::view_or_value filter,
         bsoncxx::document::view_or_value replacement,
@@ -1457,7 +1458,8 @@ class MONGOCXX_API collection {
     ///
     /// @see https://docs.mongodb.com/master/reference/command/update/
     ///
-    template <typename T, typename = std::enable_if<std::is_same<T, options::update>::value>>
+    template <typename T,
+              typename std::enable_if<std::is_same<T, options::update>::value, int>::type = 0>
     MONGOCXX_DEPRECATED stdx::optional<result::replace_one> replace_one(
         const client_session& session,
         bsoncxx::document::view_or_value filter,
