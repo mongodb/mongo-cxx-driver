@@ -131,10 +131,9 @@ class MONGOCXX_API database {
     /// @exception
     ///   mongocxx::operation_exception if the operation fails.
     ///
-    class collection create_collection(
-        bsoncxx::string::view_or_value name,
-        const options::create_collection& collection_options = options::create_collection{},
-        const stdx::optional<write_concern>& write_concern = {});
+    class collection create_collection(stdx::string_view name,
+                                       bsoncxx::document::view_or_value collection_options = {},
+                                       const stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
@@ -155,18 +154,101 @@ class MONGOCXX_API database {
     /// @exception
     ///   mongocxx::operation_exception if the operation fails.
     ///
-    class collection create_collection(
+    class collection create_collection(const client_session& session,
+                                       stdx::string_view name,
+                                       bsoncxx::document::view_or_value collection_options = {},
+                                       const stdx::optional<write_concern>& write_concern = {});
+
+    ///
+    /// Explicitly creates a collection in this database with the specified options.
+    ///
+    /// @deprecated
+    ///   This overload is deprecated. Call database::create_collection with a
+    ///   bsoncxx::document::view_or_value collection_options instead.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/create/
+    ///
+    /// @param name
+    ///   the new collection's name.
+    /// @param collection_options
+    ///   the options for the new collection.
+    /// @param write_concern
+    ///   the write concern to use for this operation. Will default to database
+    ///   set write concern if none passed here.
+    ///
+    /// @exception
+    ///   mongocxx::operation_exception if the operation fails.
+    ///
+    template <class T>
+    MONGOCXX_DEPRECATED typename std::enable_if<std::is_same<T, options::create_collection>::value,
+                                                class collection>::type
+    create_collection(bsoncxx::string::view_or_value name,
+                      const T& collection_options,
+                      const stdx::optional<write_concern>& write_concern = {}) {
+        return create_collection_deprecated(name, collection_options, write_concern);
+    }
+
+    class collection create_collection_deprecated(
+        bsoncxx::string::view_or_value name,
+        const options::create_collection& collection_options,
+        const stdx::optional<write_concern>& write_concern = {});
+
+    ///
+    /// Explicitly creates a collection in this database with the specified options.
+    ///
+    /// @deprecated
+    ///   This overload is deprecated. Call database::create_collection with a
+    ///   bsoncxx::document::view_or_value collection_options instead.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/create/
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the create operation.
+    /// @param name
+    ///   the new collection's name.
+    /// @param collection_options
+    ///   the options for the new collection.
+    /// @param write_concern
+    ///   the write concern to use for this operation. Will default to database
+    ///   set write concern if none passed here.
+    ///
+    /// @exception
+    ///   mongocxx::operation_exception if the operation fails.
+    ///
+    template <class T>
+    MONGOCXX_DEPRECATED typename std::enable_if<std::is_same<T, options::create_collection>::value,
+                                                class collection>::type
+    create_collection(const client_session& session,
+                      bsoncxx::string::view_or_value name,
+                      const T& collection_options,
+                      const stdx::optional<write_concern>& write_concern = {}) {
+        return create_collection_deprecated(session, name, collection_options, write_concern);
+    }
+
+    class collection create_collection_deprecated(
         const client_session& session,
         bsoncxx::string::view_or_value name,
-        const options::create_collection& collection_options = options::create_collection{},
+        const options::create_collection& collection_options,
         const stdx::optional<write_concern>& write_concern = {});
+
     ///
     /// @}
     ///
 
+    ///
+    /// @{
+    ///
     /// Creates a non-materialized view in this database with the specified options.
     /// Non-materialized views are represented by the @c collection objects, and support many of the
     /// same read-only operations that regular collections do.
+    ///
+    /// @deprecated
+    ///   This method is deprecated.
+    ///   To create a non-materialized view, use database::create_collection and pass "viewOn":
+    ///   "COLLECTION_NAME", "pipeline": [ ... stages ... ] in the bsoncxx::document::view_or_value
+    ///   collection_options.
     ///
     /// @see https://docs.mongodb.com/master/core/views/
     ///
@@ -177,9 +259,19 @@ class MONGOCXX_API database {
     ///
     /// @throws mongocxx::operation_exception if the operation fails.
     ///
-    class collection create_view(bsoncxx::string::view_or_value name,
-                                 bsoncxx::string::view_or_value view_on,
-                                 const options::create_view& options = options::create_view());
+    MONGOCXX_DEPRECATED class collection create_view(
+        bsoncxx::string::view_or_value name,
+        bsoncxx::string::view_or_value view_on,
+        const options::create_view& options = options::create_view());
+
+    class collection create_view_deprecated(
+        bsoncxx::string::view_or_value name,
+        bsoncxx::string::view_or_value view_on,
+        const options::create_view& options = options::create_view());
+
+    ///
+    /// @}
+    ///
 
     ///
     /// @{
@@ -482,6 +574,12 @@ class MONGOCXX_API database {
         const client_session* session, bsoncxx::document::view_or_value command);
 
     MONGOCXX_PRIVATE class collection _create_collection(
+        const client_session* session,
+        stdx::string_view name,
+        bsoncxx::document::view_or_value collection_options,
+        const stdx::optional<class write_concern>& write_concern);
+
+    MONGOCXX_PRIVATE class collection _create_collection_deprecated(
         const client_session* session,
         bsoncxx::string::view_or_value name,
         const options::create_collection& collection_options,

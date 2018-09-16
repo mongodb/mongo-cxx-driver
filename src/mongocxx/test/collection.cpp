@@ -231,14 +231,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
             std::string collname = "insert_one_bypass_document_validation";
             db[collname].drop();
-            validation_criteria validation;
-            validation.level(validation_criteria::validation_level::k_strict);
-            validation.action(validation_criteria::validation_action::k_error);
-            validation.rule(make_document(kvp("_id", make_document(kvp("$eq", "baz")))));
-            mongocxx::options::create_collection opts;
-            opts.validation_criteria(validation);
-
-            collection coll = db.create_collection(collname, opts);
+            collection coll = db.create_collection(
+                collname,
+                make_document(
+                    kvp("validator", make_document(kvp("_id", make_document(kvp("$eq", "baz")))))));
 
             options::insert options;
             options.bypass_document_validation(true);
@@ -403,14 +399,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
             std::string collname = "insert_many_bypass_document_validation";
             db[collname].drop();
-            validation_criteria validation;
-            validation.level(validation_criteria::validation_level::k_strict);
-            validation.action(validation_criteria::validation_action::k_error);
-            validation.rule(make_document(kvp("x", make_document(kvp("$eq", "1")))));
-            mongocxx::options::create_collection opts;
-            opts.validation_criteria(validation);
-
-            collection coll = db.create_collection(collname, opts);
+            collection coll = db.create_collection(
+                collname,
+                make_document(
+                    kvp("validator", make_document(kvp("x", make_document(kvp("$eq", 1)))))));
 
             options::insert options;
             options.bypass_document_validation(true);
@@ -579,14 +571,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
             std::string collname = "update_one_bypass_document_validation";
             db[collname].drop();
-            validation_criteria validation;
-            validation.level(validation_criteria::validation_level::k_strict);
-            validation.action(validation_criteria::validation_action::k_error);
-            validation.rule(make_document(kvp("changed", make_document(kvp("$eq", false)))));
-            mongocxx::options::create_collection opts;
-            opts.validation_criteria(validation);
-
-            collection coll = db.create_collection(collname, opts);
+            collection coll = db.create_collection(
+                collname,
+                make_document(kvp(
+                    "validator", make_document(kvp("changed", make_document(kvp("$eq", false)))))));
 
             options::update options;
             options.bypass_document_validation(true);
@@ -697,14 +685,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
             std::string collname = "update_many_bypass_document_validation";
             db[collname].drop();
-            validation_criteria validation;
-            validation.level(validation_criteria::validation_level::k_strict);
-            validation.action(validation_criteria::validation_action::k_error);
-            validation.rule(make_document(kvp("changed", make_document(kvp("$eq", false)))));
-            mongocxx::options::create_collection opts;
-            opts.validation_criteria(validation);
-
-            collection coll = db.create_collection(collname, opts);
+            collection coll = db.create_collection(
+                collname,
+                make_document(kvp(
+                    "validator", make_document(kvp("changed", make_document(kvp("$eq", false)))))));
 
             options::update options;
             options.bypass_document_validation(true);
@@ -878,14 +862,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
             std::string collname = "replace_one_bypass_document_validation";
             db[collname].drop();
-            validation_criteria validation;
-            validation.level(validation_criteria::validation_level::k_strict);
-            validation.action(validation_criteria::validation_action::k_error);
-            validation.rule(make_document(kvp("x", make_document(kvp("$eq", 1)))));
-            mongocxx::options::create_collection opts;
-            opts.validation_criteria(validation);
-
-            collection coll = db.create_collection(collname, opts);
+            collection coll = db.create_collection(
+                collname,
+                make_document(
+                    kvp("validator", make_document(kvp("x", make_document(kvp("$eq", 1)))))));
 
             options::replace options;
             options.bypass_document_validation(true);
@@ -1319,14 +1299,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
             std::string collname = "find_one_and_replace_bypass_document_validation";
             db[collname].drop();
-            validation_criteria validation;
-            validation.level(validation_criteria::validation_level::k_strict);
-            validation.action(validation_criteria::validation_action::k_error);
-            validation.rule(make_document(kvp("x", make_document(kvp("$eq", "foo")))));
-            mongocxx::options::create_collection opts;
-            opts.validation_criteria(validation);
-
-            collection coll = db.create_collection(collname, opts);
+            collection coll = db.create_collection(
+                collname,
+                make_document(
+                    kvp("validator", make_document(kvp("x", make_document(kvp("$eq", "foo")))))));
 
             coll.insert_one(b1.view());
 
@@ -1433,14 +1409,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
             std::string collname = "find_one_and_update_bypass_document_validation";
             db[collname].drop();
-            validation_criteria validation;
-            validation.level(validation_criteria::validation_level::k_strict);
-            validation.action(validation_criteria::validation_action::k_error);
-            validation.rule(make_document(kvp("x", make_document(kvp("$eq", "foo")))));
-            mongocxx::options::create_collection opts;
-            opts.validation_criteria(validation);
-
-            collection coll = db.create_collection(collname, opts);
+            collection coll = db.create_collection(
+                collname,
+                make_document(
+                    kvp("validator", make_document(kvp("x", make_document(kvp("$eq", "foo")))))));
 
             coll.insert_one(b1.view());
 
@@ -1839,14 +1811,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             std::string collname = "aggregation_out_bypass_document_validation_out";
             db[collname].drop();
-            validation_criteria validation;
-            validation.level(validation_criteria::validation_level::k_strict);
-            validation.action(validation_criteria::validation_action::k_error);
-            validation.rule(make_document(kvp("x", make_document(kvp("$eq", 2)))));
-            mongocxx::options::create_collection opts;
-            opts.validation_criteria(validation);
-
-            collection coll_out = db.create_collection(collname, opts);
+            collection coll_out = db.create_collection(
+                collname,
+                make_document(
+                    kvp("validator", make_document(kvp("x", make_document(kvp("$eq", 2)))))));
 
             options::aggregate options;
             options.bypass_document_validation(true);
@@ -2173,14 +2141,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
             std::string collname = "bulk_write_bypass_document_validation";
             db[collname].drop();
-            validation_criteria validation;
-            validation.level(validation_criteria::validation_level::k_strict);
-            validation.action(validation_criteria::validation_action::k_error);
-            validation.rule(make_document(kvp("foo", make_document(kvp("$eq", 1)))));
-            mongocxx::options::create_collection opts;
-            opts.validation_criteria(validation);
-
-            collection coll = db.create_collection(collname, opts);
+            collection coll = db.create_collection(
+                collname,
+                make_document(
+                    kvp("validator", make_document(kvp("foo", make_document(kvp("$eq", 1)))))));
 
             bulk_opts.bypass_document_validation(true);
             auto cbulk = coll.create_bulk_write(bulk_opts);
@@ -2519,8 +2483,7 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
 
     // Drop and (re)create the capped collection.
     coll.drop();
-    auto create_opts = options::create_collection{}.capped(true).size(1024 * 1024);
-    db.create_collection(capped_name, create_opts);
+    db.create_collection(capped_name, make_document(kvp("capped", true), kvp("size", 1024 * 1024)));
 
     // Tests will use all three cursor types.
     options::find opts;

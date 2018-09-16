@@ -208,14 +208,40 @@ bsoncxx::document::value database::run_command(const client_session& session,
 }
 
 collection database::_create_collection(const client_session* session,
-                                        bsoncxx::string::view_or_value name,
-                                        const options::create_collection& collection_options,
+                                        stdx::string_view name,
+                                        bsoncxx::document::view_or_value collection_options,
                                         const stdx::optional<class write_concern>& write_concern) {
     bsoncxx::builder::basic::document options_builder;
+    bson_error_t error;
+
+    options_builder.append(bsoncxx::builder::concatenate_doc{collection_options});
 
     if (write_concern) {
         options_builder.append(kvp("writeConcern", write_concern->to_document()));
     }
+
+    if (session) {
+        options_builder.append(
+            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
+    libbson::scoped_bson_t opts_bson{options_builder.view()};
+    auto result = libmongoc::database_create_collection(
+        _get_impl().database_t, name.to_string().c_str(), opts_bson.bson(), &error);
+
+    if (!result) {
+        throw_exception<operation_exception>(error);
+    }
+
+    return mongocxx::collection(*this, result);
+}
+
+collection database::_create_collection_deprecated(
+    const client_session* session,
+    bsoncxx::string::view_or_value name,
+    const options::create_collection& collection_options,
+    const stdx::optional<class write_concern>& write_concern) {
+    bsoncxx::builder::basic::document options_builder;
 
     if (collection_options.auto_index_id_deprecated()) {
         options_builder.append(kvp("autoIndexId", *collection_options.auto_index_id_deprecated()));
@@ -285,40 +311,48 @@ collection database::_create_collection(const client_session* session,
         }
     }
 
-    if (session) {
-        options_builder.append(
-            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
-    }
-
-    bson_error_t error;
-    libbson::scoped_bson_t opts_bson{options_builder.view()};
-    auto result = libmongoc::database_create_collection(
-        _get_impl().database_t, name.terminated().data(), opts_bson.bson(), &error);
-    if (!result) {
-        throw_exception<operation_exception>(error);
-    }
-
-    return mongocxx::collection(*this, result);
+    return _create_collection(session, name, options_builder.view(), write_concern);
 }
 
 class collection database::create_collection(
-    bsoncxx::string::view_or_value name,
-    const options::create_collection& collection_options,
+    stdx::string_view name,
+    bsoncxx::document::view_or_value collection_options,
     const stdx::optional<class write_concern>& write_concern) {
     return _create_collection(nullptr, name, collection_options, write_concern);
 }
 
 class collection database::create_collection(
     const client_session& session,
+    stdx::string_view name,
+    bsoncxx::document::view_or_value collection_options,
+    const stdx::optional<class write_concern>& write_concern) {
+    return _create_collection(&session, name, collection_options, write_concern);
+}
+
+class collection database::create_collection_deprecated(
     bsoncxx::string::view_or_value name,
     const options::create_collection& collection_options,
     const stdx::optional<class write_concern>& write_concern) {
-    return _create_collection(&session, name, collection_options, write_concern);
+    return _create_collection_deprecated(nullptr, name, collection_options, write_concern);
+}
+
+class collection database::create_collection_deprecated(
+    const client_session& session,
+    bsoncxx::string::view_or_value name,
+    const options::create_collection& collection_options,
+    const stdx::optional<class write_concern>& write_concern) {
+    return _create_collection_deprecated(&session, name, collection_options, write_concern);
 }
 
 class collection database::create_view(bsoncxx::string::view_or_value name,
                                        bsoncxx::string::view_or_value view_on,
                                        const options::create_view& options) {
+    return create_view_deprecated(name, view_on, options);
+}
+
+class collection database::create_view_deprecated(bsoncxx::string::view_or_value name,
+                                                  bsoncxx::string::view_or_value view_on,
+                                                  const options::create_view& options) {
     bsoncxx::builder::basic::document options_builder;
     options_builder.append(kvp("viewOn", view_on));
 

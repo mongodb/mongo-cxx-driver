@@ -341,32 +341,9 @@ TEST_CASE("Database integration tests", "[database]") {
             stdx::string_view collection_name{"collection_create_with_opts"};
             database[collection_name].drop();
 
-            options::create_collection opts;
-            opts.capped(true);
-            opts.size(256);
-            opts.max(100);
-            opts.no_padding(false);
-
-            collection obtained_collection = database.create_collection(collection_name, opts);
+            collection obtained_collection = database.create_collection(
+                collection_name, make_document(kvp("capped", true), kvp("size", 1024 * 1024)));
             REQUIRE(obtained_collection.name() == collection_name);
-        }
-
-        SECTION("with collation") {
-            stdx::string_view collection_name{"collection_create_with_collation"};
-            database[collection_name].drop();
-
-            options::create_collection opts;
-            opts.collation(case_insensitive_collation.view());
-
-            if (test_util::supports_collation(mongo_client)) {
-                collection obtained_collection = database.create_collection(collection_name, opts);
-                REQUIRE(obtained_collection.insert_one(make_document(kvp("x", "foo"))));
-                REQUIRE(obtained_collection.find_one(make_document(kvp("x", "FOO"))));
-            } else {
-                // The server doesn't support collation.
-                REQUIRE_THROWS_AS(database.create_collection(collection_name, opts),
-                                  operation_exception);
-            }
         }
 
         SECTION("but raises exception when collection already exists") {
@@ -424,10 +401,12 @@ TEST_CASE("Database integration tests", "[database]") {
             database[collection_name].insert_one(make_document(kvp("x", "foo")));
             database[collection_name].insert_one(make_document(kvp("x", "bar")));
 
+            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
             collection view = database.create_view(
                 view_name,
                 collection_name,
                 options::create_view().pipeline(std::move(pipeline({}).limit(1))));
+            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
             if (test_util::get_max_wire_version(mongo_client) >= 5) {
                 // The server supports views.
@@ -451,6 +430,7 @@ TEST_CASE("Database integration tests", "[database]") {
             options::create_view opts;
             opts.collation(case_insensitive_collation.view());
 
+            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
             if (test_util::supports_collation(mongo_client)) {
                 collection obtained_view = database.create_view(view_name, collection_name, opts);
                 REQUIRE(obtained_view.find_one(make_document(kvp("x", "FOO"))));
@@ -459,6 +439,7 @@ TEST_CASE("Database integration tests", "[database]") {
                 REQUIRE_THROWS_AS(database.create_view(view_name, collection_name, opts),
                                   operation_exception);
             }
+            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
         }
     }
 
@@ -466,12 +447,9 @@ TEST_CASE("Database integration tests", "[database]") {
         class database db = mongo_client["list_collections"];
         db.drop();
 
-        options::create_collection opts;
-        opts.capped(true);
-        opts.size(256);
-
         collection default_collection = db.create_collection("list_collections_default");
-        collection capped_collection = db.create_collection("list_collections_capped", opts);
+        collection capped_collection = db.create_collection(
+            "list_collections_capped", make_document(kvp("capped", true), kvp("size", 256)));
 
         index_view default_index = default_collection.indexes();
         index_view capped_index = capped_collection.indexes();

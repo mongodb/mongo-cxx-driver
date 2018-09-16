@@ -41,22 +41,16 @@ int main(int, char**) {
     // Create a collection with document validation enabled.
     {
         // @begin: cpp-create-collection-with-document-validation
-        validation_criteria validation;
-        validation.level(validation_criteria::validation_level::k_strict);
-        validation.action(validation_criteria::validation_action::k_error);
-
-        // Add a validation rule: all zombies need to eat some brains.
-        validation.rule(make_document(kvp("brains", make_document(kvp("$gt", 0)))));
-
-        mongocxx::options::create_collection opts;
-        opts.validation_criteria(validation);
-
-        // Clean up any old collections with this name
+        // Clean up any existing "zombies" collection.
         if (db.has_collection("zombies")) {
             db["zombies"].drop();
         }
 
-        collection zombies = db.create_collection("zombies", opts);
+        // Create a validation rule: all zombies need to eat some brains.
+        collection zombies = db.create_collection(
+            "zombies",
+            make_document(
+                kvp("validator", make_document(kvp("brains", make_document(kvp("$gt", 0)))))));
 
         try {
             // Insert a document passing validation

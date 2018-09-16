@@ -23,12 +23,12 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/instance.hpp>
-#include <mongocxx/options/create_collection.hpp>
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/uri.hpp>
 
 using bsoncxx::builder::basic::document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 //
 // Document number counter for sample inserted documents.  This just
@@ -50,8 +50,7 @@ void init_capped_collection(mongocxx::client* conn, std::string name) {
     auto coll = db[name];
 
     coll.drop();
-    auto create_opts = mongocxx::options::create_collection{}.capped(true).size(1024 * 1024);
-    db.create_collection(name, create_opts);
+    db.create_collection(name, make_document(kvp("capped", true), kvp("size", 1024 * 1024)));
 
     document builder{};
     builder.append(kvp("n", counter++));
