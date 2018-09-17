@@ -1,10 +1,10 @@
-./insertMany.json
-./deleteOne.json
-./updateOne.json
 ./bulkWrite.json
+./command.json
+./deleteMany.json
+./deleteOne.json
 ./find.json
+./insertMany.json
+./insertOne.json
 ./unacknowledgedBulkWrite.json
 ./updateMany.json
-./command.json
-./insertOne.json
-./deleteMany.json
+./updateOne.json
