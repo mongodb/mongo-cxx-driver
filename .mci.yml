@@ -230,7 +230,8 @@ functions:
                       if [ -z "${disable_slow_tests}" ]; then
                           export MONGOCXX_ENABLE_SLOW_TESTS=1
                       fi
-                      
+
+                      ulimit -c unlimited || true
                       # Run tests and examples 1-by-1 with "test_params" so we can run them with valgrind.
                       ${test_params} ./src/bsoncxx/test/test_bson
                       ${test_params} ./src/mongocxx/test/test_driver
@@ -310,12 +311,40 @@ functions:
                       ./examples/mongocxx/connect "$URI"
                   fi
 
+    "backtrace":
+        - command: shell.exec
+          params:
+            working_dir: "mongo-cxx-driver"
+            script: |
+              ./etc/debug-core-evergreen.sh
+
+    "upload working dir":
+        - command: archive.targz_pack
+          params:
+            target: "working-dir.tar.gz"
+            source_dir: "mongo-cxx-driver"
+            include:
+            - "./**"
+        - command: s3.put
+          params:
+            aws_key: ${aws_key}
+            aws_secret: ${aws_secret}
+            local_file: working-dir.tar.gz
+            remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/artifacts/${task_id}-${execution}-working-dir.tar.gz
+            bucket: mciuploads
+            permissions: public-read
+            content_type: ${content_type|application/x-gzip}
+            display_name: "working-dir.tar.gz"
+
 #######################################
 #              Pre Task               #
 #######################################
 
 post:
   - func: "stop_mongod"
+  - func: "backtrace"
+  - func: "upload working dir"
+
 #######################################
 #               Tasks                 #
 #######################################
