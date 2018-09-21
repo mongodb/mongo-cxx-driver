@@ -691,7 +691,7 @@ div.versionadded > p > span, div.versionchanged > p > span, div.deprecated > p >
     left: 0;
     width: 100%;
     font-size: 200%; 
-    background-color: #3b291f;
+    background-color: #000;
     color: white;
     margin: 0;
     padding: 0;

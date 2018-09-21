@@ -39,14 +39,9 @@
     
     <div>
 <div class="nav-items pull-right">
-  <a href="https://university.mongodb.com" data-toggle="tooltip" data-placement="bottom" title="Free Online Classes">MongoDB University</a>
-  <a href="http://www.mongodb.org/downloads" data-toggle="tooltip" data-placement="bottom" title="Download MongoDB">Downloads</a>
-  <a href="http://www.mongodb.org/get-involved" data-toggle="tooltip" data-placement="bottom" title="Get involved with MongoDB">Community</a>
-  <a href="http://docs.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Documentation">Docs</a>
-  <a href="http://blog.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Blog">Blog</a>
   <div id="search">
 <form method="get" action="//www.google.com/search" target="_blank">
-    <input type="text" name="searchQuery" size="20" value="" autocomplete="off" placeholder="Search docs">
+    <input type="text" name="searchQuery" size="20" value="" autocomplete="off" placeholder="Search">
     <input type="hidden" name="site" value="https://mongodb.github.io/mongo-cxx-driver">
     <input type="hidden" name="q" value="">
     <label for="searchQuery"><i class="fa fa-search fa-1"></i></label>
@@ -581,7 +576,7 @@
     <li class="toctree-l2">
     <a href="/mongo-cxx-driver/mongocxx-v3/">
         
-        Overview
+        The mongocxx (v3) driver
     </a>
   </li>
 
@@ -786,7 +781,7 @@
     <li class="toctree-l2">
     <a href="/mongo-cxx-driver/legacy-v1/">
         
-        Overview
+        The Legacy C&#43;&#43; Driver
     </a>
   </li>
 
@@ -1126,9 +1121,8 @@
 </div>
 
 
+<h1>Configuring the mongocxx driver</h1>
 
-
-<h1 id="configuring-the-driver">Configuring the driver</h1>
 
 <p>In the mongocxx driver, most configuration is done via the <a href="https://docs.mongodb.com/master/reference/connection-string/">connection
 URI</a>.  Some
@@ -1321,7 +1315,7 @@ auto pool = mongocxx::pool{uri{&quot;mongodb://host1/?minPoolSize=3&amp;maxPoolS
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
 <ul>
-<li><a href="#configuring-the-driver">Configuring the driver</a>
+<li>
 <ul>
 <li><a href="#configuring-tls-ssl">Configuring TLS/SSL</a></li>
 <li><a href="#configuring-authentication">Configuring authentication</a>

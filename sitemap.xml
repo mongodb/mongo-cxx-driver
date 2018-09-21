@@ -53,16 +53,6 @@
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-  </url>
-  
-  <url>
     <loc>https://mongodb.github.io/mongo-cxx-driver/contributing/legacy-release-guide/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
@@ -84,6 +74,16 @@
   
   <url>
     <loc>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-mongocxx/</loc>
+    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/</loc>
+    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
@@ -118,25 +118,7 @@
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/contributing/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://mongodb.github.io/mongo-cxx-driver/</loc>
-    <lastmod>2017-04-18T13:39:39-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</loc>
     <lastmod>2017-04-18T13:39:39-04:00</lastmod>
     <priority>0</priority>
   </url>

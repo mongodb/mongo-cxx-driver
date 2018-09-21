@@ -39,14 +39,9 @@
     
     <div>
 <div class="nav-items pull-right">
-  <a href="https://university.mongodb.com" data-toggle="tooltip" data-placement="bottom" title="Free Online Classes">MongoDB University</a>
-  <a href="http://www.mongodb.org/downloads" data-toggle="tooltip" data-placement="bottom" title="Download MongoDB">Downloads</a>
-  <a href="http://www.mongodb.org/get-involved" data-toggle="tooltip" data-placement="bottom" title="Get involved with MongoDB">Community</a>
-  <a href="http://docs.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Documentation">Docs</a>
-  <a href="http://blog.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Blog">Blog</a>
   <div id="search">
 <form method="get" action="//www.google.com/search" target="_blank">
-    <input type="text" name="searchQuery" size="20" value="" autocomplete="off" placeholder="Search docs">
+    <input type="text" name="searchQuery" size="20" value="" autocomplete="off" placeholder="Search">
     <input type="hidden" name="site" value="https://mongodb.github.io/mongo-cxx-driver">
     <input type="hidden" name="q" value="">
     <label for="searchQuery"><i class="fa fa-search fa-1"></i></label>
@@ -773,7 +768,7 @@
     <li class="toctree-l2">
     <a href="/mongo-cxx-driver/mongocxx-v3/">
         
-        Overview
+        The mongocxx (v3) driver
     </a>
   </li>
 
@@ -982,7 +977,7 @@
     <li class="toctree-l2">
     <a href="/mongo-cxx-driver/legacy-v1/">
         
-        Overview
+        The Legacy C&#43;&#43; Driver
     </a>
   </li>
 
@@ -1322,17 +1317,15 @@
 </div>
 
 
+<h1>Configuring the legacy driver</h1>
+<em>The Legacy C++ driver has reached End-Of-Life. Please upgrade to the mongocxx driver.</em>
 
-
-<h2 id="note-the-legacy-c-driver-has-reached-end-of-life-please-upgrade-to-the-mongocxx-driver">NOTE: The Legacy C++ driver has reached End-Of-Life. Please upgrade to the mongocxx driver.</h2>
 
 <p>In the legacy-0.9 development cycle, the mechanism by which the driver is
 configured was refactored. Note that these changes <em>do not apply to
 releases on the 26compat branch, or releases pre-dating legacy-0.9.0</em>.This
 page describes the new configuration mechanism and documents the various
 configuration options that may be used.</p>
-
-<h1 id="configuring-the-driver">Configuring the Driver</h1>
 
 <h2 id="the-mongo-client-initialize-function">The <code>mongo::client::initialize</code> function</h2>
 
@@ -1625,10 +1618,6 @@ threads.</p></li>
     <nav id="TableOfContents">
 <ul>
 <li>
-<ul>
-<li><a href="#note-the-legacy-c-driver-has-reached-end-of-life-please-upgrade-to-the-mongocxx-driver">NOTE: The Legacy C++ driver has reached End-Of-Life. Please upgrade to the mongocxx driver.</a></li>
-</ul></li>
-<li><a href="#configuring-the-driver">Configuring the Driver</a>
 <ul>
 <li><a href="#the-mongo-client-initialize-function">The <code>mongo::client::initialize</code> function</a></li>
 <li><a href="#the-mongo-client-terminate-function">The <code>mongo::client::terminate</code> function</a></li>

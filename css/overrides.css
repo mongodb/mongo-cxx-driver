@@ -155,3 +155,7 @@ a code {
   -moz-transition: left 0.4s cubic-bezier(.02,.01,.47,1);
   -webkit-transition: left 0.4s cubic-bezier(.02,.01,.47,1);
 }
+
+#subpage-list {
+  margin-bottom: 2em;
+}

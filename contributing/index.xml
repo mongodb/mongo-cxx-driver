@@ -1,26 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Contributings on MongoDB C&#43;&#43; Driver Manual</title>
+    <title>Contribution Guidelines on MongoDB C&#43;&#43; Driver Manual</title>
     <link>https://mongodb.github.io/mongo-cxx-driver/contributing/</link>
-    <description>Recent content in Contributings on MongoDB C&#43;&#43; Driver Manual</description>
+    <description>Recent content in Contribution Guidelines on MongoDB C&#43;&#43; Driver Manual</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate>
     
 	<atom:link href="https://mongodb.github.io/mongo-cxx-driver/contributing/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Contribution Guidelines</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/contributing/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/</guid>
-      <description>Contribution Guidelines Commit Messages If a pull-request addresses a JIRA ticket, for a single-commit PR, prefix the subject line with the ticket ID. (For a multi-commit PR, we will add the ID later when we squash or merge it.)
- CXX-883 Add commit message conventions to CONTRIBUTING.md
- Capitalize subject lines and don&amp;rsquo;t use a trailing period. Keep the subject at most 70 characters long. Use active voice! Imagine this preamble to get your phrasing right:</description>
-    </item>
     
     <item>
       <title>Releasing the legacy driver</title>
@@ -39,7 +28,7 @@ Before Getting Started To perform the release process, you will need the followi
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/mongocxx-release-guide/</guid>
-      <description>Releasing the mongocxx driver NOTE: To follow these instructions, be very careful which branch you&amp;rsquo;re working on:
+      <description>NOTE: To follow these instructions, be very careful which branch you&amp;rsquo;re working on:
  Version bump/tag/post-bump commits go on the branch corresponding to the release. Documentation updates go on the master branch.  The instructions below will remind you about branches.
 Update fixVersion Status in Jira tickets  Ensure that all tickets under the version to be released are in &amp;lsquo;Closed&amp;rsquo; status on the C++ Driver roadmap page If not, bulk change Open tickets that will NOT be in the release to a new version (create it if necessary):  Audit Jira ticket titles and types for use in release notes  From the roadmap page click the &amp;ldquo;Release Notes&amp;rdquo; link to see a summary of tickets to be included in release notes.</description>
     </item>
@@ -50,7 +39,7 @@ Update fixVersion Status in Jira tickets  Ensure that all tickets under the vers
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-legacy/</guid>
-      <description>Testing the Legacy C++ Driver If you contribute to the C++ driver, you&amp;rsquo;ll need to test your changes. The driver comes with a number of tests to ensure its functionality and performance. There are a few different kinds of tests within the driver&amp;rsquo;s codebase.
+      <description>If you contribute to the C++ driver, you&amp;rsquo;ll need to test your changes. The driver comes with a number of tests to ensure its functionality and performance. There are a few different kinds of tests within the driver&amp;rsquo;s codebase.
 Note: if you are running OS X Mavericks or above, you may need to include the --osx-version-min=10.9 flag to the commands below.
 Note: The 26compat branch differs from the instructions below as follows: * MongoOrchestration is not required.</description>
     </item>
@@ -61,7 +50,7 @@ Note: The 26compat branch differs from the instructions below as follows: * Mong
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-mongocxx/</guid>
-      <description>Testing the mongocxx driver Tests for the C++11 driver use Catch, a testing framework for C++.
+      <description>Tests for the C++11 driver use Catch, a testing framework for C++.
 Each class in the driver has a corresponding file in src/mongocxx/test. Because the new driver wraps libmongoc, we prefer to mock and test the behavior of individual classes rather than test end-to-end behavior of operations against a running mongod. In other words, these are unit tests rather than integration tests.
 We also have integration tests for this driver in test/collection.</description>
     </item>

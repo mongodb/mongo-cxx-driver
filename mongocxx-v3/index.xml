@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Mongocxx-v3s on MongoDB C&#43;&#43; Driver Manual</title>
+    <title>The mongocxx (v3) driver on MongoDB C&#43;&#43; Driver Manual</title>
     <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</link>
-    <description>Recent content in Mongocxx-v3s on MongoDB C&#43;&#43; Driver Manual</description>
+    <description>Recent content in The mongocxx (v3) driver on MongoDB C&#43;&#43; Driver Manual</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 18 Apr 2017 13:39:39 -0400</lastBuildDate>
+    <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate>
     
 	<atom:link href="https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/index.xml" rel="self" type="application/rss+xml" />
     
@@ -17,7 +17,7 @@
       <pubDate>Tue, 18 Apr 2017 13:39:39 -0400</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/connection-pools/</guid>
-      <description>Connection pools mongocxx::client vs mongocxx::pool A standalone mongocxx::client uses a single-threaded algorithm to monitor the state of the cluster it&amp;rsquo;s connected to. When connected to a replica set, the thread &amp;ldquo;stops the world&amp;rdquo; every 60 seconds to check the status of the cluster. A mongocxx::pool, on the other hand, uses a separate background thread for each server in the cluster, each of which checks the status of the server it monitors every 10 seconds.</description>
+      <description>mongocxx::client vs mongocxx::pool A standalone mongocxx::client uses a single-threaded algorithm to monitor the state of the cluster it&amp;rsquo;s connected to. When connected to a replica set, the thread &amp;ldquo;stops the world&amp;rdquo; every 60 seconds to check the status of the cluster. A mongocxx::pool, on the other hand, uses a separate background thread for each server in the cluster, each of which checks the status of the server it monitors every 10 seconds.</description>
     </item>
     
     <item>
@@ -26,7 +26,7 @@
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/api-abi-versioning/</guid>
-      <description>Versioning API Versioning  We use semantic versioning. bsoncxx and mongocxx both define corresponding CMake variables for MAJOR, MINOR, and PATCH.  ABI Versioning  Both bsoncxx and mongocxx both have a single scalar ABI version. Only bump ABI version on incompatible ABI change (not for ABI additions). We stay on ABI version _noabi (without bumping for incompatible changes) until ABI is stable.  Parallel Header Installation  For mongocxx, install all headers to $PREFIX/mongocxx/v$ABI/.</description>
+      <description>API Versioning  We use semantic versioning. bsoncxx and mongocxx both define corresponding CMake variables for MAJOR, MINOR, and PATCH.  ABI Versioning  Both bsoncxx and mongocxx both have a single scalar ABI version. Only bump ABI version on incompatible ABI change (not for ABI additions). We stay on ABI version _noabi (without bumping for incompatible changes) until ABI is stable.  Parallel Header Installation  For mongocxx, install all headers to $PREFIX/mongocxx/v$ABI/.</description>
     </item>
     
     <item>
@@ -35,7 +35,7 @@
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/configuration/</guid>
-      <description>Configuring the driver In the mongocxx driver, most configuration is done via the connection URI. Some additional connection options are possible via the mongocxx::options::client class.
+      <description>In the mongocxx driver, most configuration is done via the connection URI. Some additional connection options are possible via the mongocxx::options::client class.
 Configuring TLS/SSL To enable TLS (SSL), set ssl=true in the URI:
  mongodb://mongodb.example.com/?ssl=true
  By default, mongocxx will verify server certificates against the local system CA list. You can override that by creating a mongocxx::options::ssl object and passing it to ssl_opts on mongocxx::options::client.
@@ -48,18 +48,8 @@ For example, to use a custom CA or to disable certificate validation, uncomment 
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/</guid>
-      <description>Installing the mongocxx driver Prerequisites  Any standard Unix platform, or Windows 7 SP1+ A compiler that suports C++11 (gcc, clang, or Visual Studio) CMake 3.2 or later boost headers (optional)  We currently test the driver with the following configurations:
+      <description>Prerequisites  Any standard Unix platform, or Windows 7 SP1+ A compiler that suports C++11 (gcc, clang, or Visual Studio) CMake 3.2 or later boost headers (optional)  We currently test the driver with the following configurations:
    &amp;nbsp; Linux macOS Windows     clang 3.8 7.0 (Apple) -   gcc 4.8, 5.4 - -   VS n/a n/a 14 (2015) Update 3   boost - 1.</description>
-    </item>
-    
-    <item>
-      <title>Overview</title>
-      <link>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</guid>
-      <description>The mongocxx (v3) driver The mongocxx is a ground-up rewrite of a C++ driver for MongoDB based on libmongoc. It requires a C++11 compiler. It is known to build on x86 and x86-64 architectures for Linux, macOS, Windows, and FreeBSD.
-The mongocxx driver library includes a matching bson package, bsoncxx, that implements the BSON specification (see http://www.bsonspec.org). This library can be used standalone for object serialization and deserialization even when one is not using MongoDB at all.</description>
     </item>
     
     <item>
@@ -68,7 +58,7 @@ The mongocxx driver library includes a matching bson package, bsoncxx, that impl
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/thread-safety/</guid>
-      <description>Thread and fork safety with mongocxx TLDR: Always give each thread its own mongocxx::client.
+      <description>TLDR: Always give each thread its own mongocxx::client.
 In general each mongocxx::client object AND all of its child objects, including mongocxx::client_session, mongocxx::database, mongocxx::collection, and mongocxx::cursor, should be used by a single thread at a time. This is true even for clients acquired from a mongocxx::pool.
 Even if you create multiple child objects from a single client, and synchronize them individually, that is unsafe as they will concurrently modify internal structures of the client.</description>
     </item>
@@ -79,10 +69,10 @@ Even if you create multiple child objects from a single client, and synchronize 
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/tutorial/</guid>
-      <description>Tutorial for mongocxx Prerequisites  A mongod instance running on localhost on port 27017.
+      <description>Prerequisites  A mongod instance running on localhost on port 27017.
  The mongocxx Driver. See Installation for mongocxx.
  The following statements at the top of your source file:
-  #include &amp;lt;cstdint&amp;gt; #include &amp;lt;iostream&amp;gt; #include &amp;lt;vector&amp;gt; #include &amp;lt;bsoncxx/json.hpp&amp;gt; #include &amp;lt;mongocxx/client.hpp&amp;gt; #include &amp;lt;mongocxx/stdx.hpp&amp;gt; #include &amp;lt;mongocxx/uri.hpp&amp;gt; using bsoncxx::builder::stream::close_array; using bsoncxx::builder::stream::close_document; using bsoncxx::builder::stream::document; using bsoncxx::builder::stream::finalize; using bsoncxx::builder::stream::open_array; using bsoncxx::builder::stream::open_document;  Compiling The mongocxx driver&amp;rsquo;s installation process will install a libmongocxx.</description>
+  #include &amp;lt;cstdint&amp;gt; #include &amp;lt;iostream&amp;gt; #include &amp;lt;vector&amp;gt; #include &amp;lt;bsoncxx/json.hpp&amp;gt; #include &amp;lt;mongocxx/client.hpp&amp;gt; #include &amp;lt;mongocxx/stdx.hpp&amp;gt; #include &amp;lt;mongocxx/uri.hpp&amp;gt; using bsoncxx::builder::stream::close_array; using bsoncxx::builder::stream::close_document; using bsoncxx::builder::stream::document; using bsoncxx::builder::stream::finalize; using bsoncxx::builder::stream::open_array; using bsoncxx::builder::stream::open_document;  Compiling The mongocxx driver&amp;rsquo;s installation process will install a libmongocxx.pc file for use with pkg-config.</description>
     </item>
     
     <item>
@@ -91,7 +81,7 @@ Even if you create multiple child objects from a single client, and synchronize 
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/working-with-bson/</guid>
-      <description>Working with BSON The mongocxx driver ships with a new library, bsoncxx. This article will go over some of the different types in this library, and how and when to use each. For more information and example code, see our examples.
+      <description>The mongocxx driver ships with a new library, bsoncxx. This article will go over some of the different types in this library, and how and when to use each. For more information and example code, see our examples.
  Document Builders Owning BSON Documents (values) Non-owning BSON Documents (views) Optionally-owning BSON Documents(view_or_value) BSON Document Lifetime Printing BSON Documents Getting Fields out of BSON Documents  Document Builders The bsoncxx library offers three interfaces for building BSON: one-off functions, a basic builder and a stream-based builder.</description>
     </item>
     
