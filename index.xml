@@ -105,28 +105,6 @@ Next, you may wish to take a look at the MongoDB Manual for a language independe
     </item>
     
     <item>
-      <title>Releasing the legacy driver</title>
-      <link>http://mongocxx.org/contributing/legacy-release-guide/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>http://mongocxx.org/contributing/legacy-release-guide/</guid>
-      <description>If you&amp;rsquo;re reading this, chances are you&amp;rsquo;re about to issue a release for a new version of the legacy C++ driver. Congratulations!
-Before Getting Started To perform the release process, you will need the following:
- git, python, doxygen installed on your local machine. Push access to the mongodb/mongo-cxx-driver repository on GitHub. Push access to the 10gen/apidocs repository on GitHub. Administrative access on the C++ Driver JIRA project.  This guide assumes that you have a local clone of the mongo-cxx-driver and apidocs repositories, and that your GitHub remote is configured with remote name origin.</description>
-    </item>
-    
-    <item>
-      <title>Releasing the mongocxx driver</title>
-      <link>http://mongocxx.org/contributing/mongocxx-release-guide/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>http://mongocxx.org/contributing/mongocxx-release-guide/</guid>
-      <description>NOTE: To follow these instructions, be very careful which branch you&amp;rsquo;re working on:
- Version bump/tag/post-bump commits go on the branch corresponding to the release. Documentation updates go on the master branch.  The instructions below will remind you about branches.
-Update fixVersion Status in Jira tickets  Ensure that all tickets under the version to be released are in &amp;lsquo;Closed&amp;rsquo; status on the C++ Driver roadmap page If not, bulk change Open tickets that will NOT be in the release to a new version (create it if necessary):  Audit Jira ticket titles and types for use in release notes  From the roadmap page click the &amp;ldquo;Release Notes&amp;rdquo; link to see a summary of tickets to be included in release notes.</description>
-    </item>
-    
-    <item>
       <title>Reporting Bugs</title>
       <link>http://mongocxx.org/reporting-bugs/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>

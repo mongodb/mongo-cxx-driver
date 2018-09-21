@@ -53,16 +53,6 @@
   </url>
   
   <url>
-    <loc>http://mongocxx.org/contributing/legacy-release-guide/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://mongocxx.org/contributing/mongocxx-release-guide/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-  </url>
-  
-  <url>
     <loc>http://mongocxx.org/reporting-bugs/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
