@@ -1,4 +1,4 @@
-baseurl = "https://mongodb.github.io/mongo-cxx-driver"
+baseurl = "http://mongocxx.org"
 languageCode = "en-us"
 title = "MongoDB C++ Driver Manual"
 theme = "mongodb"
