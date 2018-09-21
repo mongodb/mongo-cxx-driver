@@ -29,7 +29,7 @@ sub _pushd {
 
 sub _hugo_rsync {
     my $tmpdir = shift;
-    _try_run( qw{rsync -Cavz --delete --exclude=/api --exclude=/.git* build/hugo/},
+    _try_run( qw{rsync -Cavz --delete --exclude=/api --exclude=/.git* --exclude=CNAME build/hugo/},
         $tmpdir );
 }
 
