@@ -3,128 +3,128 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/connection-pools/</loc>
+    <loc>http://mongocxx.org/mongocxx-v3/connection-pools/</loc>
     <lastmod>2017-04-18T13:39:39-04:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/api-abi-versioning/</loc>
+    <loc>http://mongocxx.org/mongocxx-v3/api-abi-versioning/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/breaking-changes/</loc>
+    <loc>http://mongocxx.org/legacy-v1/breaking-changes/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/configuration/</loc>
+    <loc>http://mongocxx.org/legacy-v1/configuration/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/configuration/</loc>
+    <loc>http://mongocxx.org/mongocxx-v3/configuration/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/contributing/</loc>
+    <loc>http://mongocxx.org/contributing/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/installation/</loc>
+    <loc>http://mongocxx.org/legacy-v1/installation/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/</loc>
+    <loc>http://mongocxx.org/mongocxx-v3/installation/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/tutorial/</loc>
+    <loc>http://mongocxx.org/legacy-v1/tutorial/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/</loc>
+    <loc>http://mongocxx.org/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/contributing/legacy-release-guide/</loc>
+    <loc>http://mongocxx.org/contributing/legacy-release-guide/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/contributing/mongocxx-release-guide/</loc>
+    <loc>http://mongocxx.org/contributing/mongocxx-release-guide/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/reporting-bugs/</loc>
+    <loc>http://mongocxx.org/reporting-bugs/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-legacy/</loc>
+    <loc>http://mongocxx.org/contributing/testing-legacy/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/contributing/testing-mongocxx/</loc>
+    <loc>http://mongocxx.org/contributing/testing-mongocxx/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/</loc>
+    <loc>http://mongocxx.org/legacy-v1/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/</loc>
+    <loc>http://mongocxx.org/mongocxx-v3/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/thread-safety/</loc>
+    <loc>http://mongocxx.org/mongocxx-v3/thread-safety/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/tutorial/</loc>
+    <loc>http://mongocxx.org/mongocxx-v3/tutorial/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/legacy-v1/working-with-bson/</loc>
+    <loc>http://mongocxx.org/legacy-v1/working-with-bson/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/working-with-bson/</loc>
+    <loc>http://mongocxx.org/mongocxx-v3/working-with-bson/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/getting-help/</loc>
+    <loc>http://mongocxx.org/getting-help/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/categories/</loc>
+    <loc>http://mongocxx.org/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/</loc>
+    <loc>http://mongocxx.org/</loc>
     <lastmod>2017-04-18T13:39:39-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://mongodb.github.io/mongo-cxx-driver/tags/</loc>
+    <loc>http://mongocxx.org/tags/</loc>
     <priority>0</priority>
   </url>
   
