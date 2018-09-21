@@ -7,8 +7,6 @@ title = "Working with BSON"
   parent="legacy"
 +++
 
-## NOTE: The Legacy C++ driver has reached End-Of-Life. Please upgrade to the mongocxx driver.
-
 ###  BSON Helper Functions
 
 This is a non-exhaustive list of helper functions for use in the C++ stream

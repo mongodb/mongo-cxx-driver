@@ -6,8 +6,6 @@ title = "Testing the mongocxx driver"
   parent="contributing"
 +++
 
-## Testing the mongocxx driver
-
 Tests for the C++11 driver use
 [Catch](https://github.com/philsquared/Catch), a testing framework for C++.
 

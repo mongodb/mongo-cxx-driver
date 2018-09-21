@@ -7,8 +7,6 @@ title = "Legacy driver tutorial"
   parent="legacy"
 +++
 
-## NOTE: The Legacy C++ driver has reached End-Of-Life. Please upgrade to the mongocxx driver.
-
 ### Getting started with the Legacy C++ Driver
 
 This is an introduction to usage of the MongoDB database from a C++ program.

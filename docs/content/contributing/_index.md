@@ -6,8 +6,6 @@ title = "Contribution Guidelines"
   parent="contributing"
 +++
 
-## Contribution Guidelines
-
 ### Commit Messages
 
 If a pull-request addresses a JIRA ticket, for a single-commit PR, prefix

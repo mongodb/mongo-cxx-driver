@@ -6,8 +6,6 @@ title = "Thread and fork safety"
   parent="mongocxx3"
 +++
 
-# Thread and fork safety with mongocxx
-
 TLDR: **Always give each thread its own `mongocxx::client`**.
 
 In general each `mongocxx::client` object AND all of its child objects,

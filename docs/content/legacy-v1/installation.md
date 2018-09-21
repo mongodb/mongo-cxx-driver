@@ -6,8 +6,6 @@ title = "Installing the legacy driver"
   weight = 5
 +++
 
-## NOTE: The Legacy C++ driver has reached End-Of-Life. Please upgrade to the mongocxx driver.
-
 ### Table of Contents
 
 - [**How to ask for Help**](#how-to-ask-for-help)

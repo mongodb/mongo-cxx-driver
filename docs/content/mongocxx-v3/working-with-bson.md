@@ -7,8 +7,6 @@ title = "Working with BSON"
   parent="mongocxx3"
 +++
 
-# Working with BSON #
-
 The mongocxx driver ships with a new library, bsoncxx.  This article will
 go over some of the different types in this library, and how and when to
 use each.  For more information and example code, see our

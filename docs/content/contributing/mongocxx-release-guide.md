@@ -6,8 +6,6 @@ title = "Releasing the mongocxx driver"
   parent="contributing"
 +++
 
-# Releasing the mongocxx driver
-
 **NOTE**: To follow these instructions, be very careful which branch you're
 working on:
 

@@ -1,16 +1,10 @@
 +++
 date = "2016-08-15T16:11:58+05:30"
-title = "Overview"
-slug = "index"
+title = "The Legacy C++ Driver"
 [menu.main]
-  identifier = 'legacy-overview'
   weight = 0
   parent="legacy"
 +++
-
-## NOTE: The Legacy C++ driver has reached End-Of-Life. Please upgrade to the mongocxx driver.
-
-# The legacy C++ driver
 
 The legacy C++ driver builds on x86 and x86-64 architectures for Linux, Mac
 OS X, Windows, FreeBSD and Solaris.

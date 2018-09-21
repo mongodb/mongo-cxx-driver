@@ -6,8 +6,6 @@ title = "Connection pools"
   parent="mongocxx3"
 +++
 
-# Connection pools
-
 ## `mongocxx::client` vs `mongocxx::pool`
 
 A standalone `mongocxx::client` uses a single-threaded algorithm to

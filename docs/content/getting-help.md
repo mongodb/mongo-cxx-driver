@@ -6,8 +6,6 @@ title = "Getting help"
   pre = "<i class='fa fa-question'></i>"
 +++
 
-## Getting help
-
 Often, the quickest way to get support for general questions is through
 the
 [mongodb-user google group](http://groups.google.com/group/mongodb-user)

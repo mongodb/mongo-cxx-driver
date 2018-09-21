@@ -6,9 +6,6 @@ title = "Reporting Bugs"
   pre = "<i class='fa fa-bug'></i>"
 +++
 
-## Reporting Bugs
-
-
 If you think you have found a bug or want to see a new feature in the
 C++ driver, please open an issue in [JIRA](https://jira.mongodb.org/):
 

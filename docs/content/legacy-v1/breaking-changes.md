@@ -6,8 +6,6 @@ title = "Breaking changes from 26compat"
   parent="legacy"
 +++
 
-## NOTE: The Legacy C++ driver has reached End-Of-Life. Please upgrade to the mongocxx driver.
-
 The 26compat release series tracks the server 2.6 releases one-to-one. As a
 result, it receives only bugfixes and small updates necessary to keep it
 building in isolation.

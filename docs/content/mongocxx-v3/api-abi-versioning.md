@@ -6,8 +6,6 @@ title = "API and ABI versioning"
   parent="mongocxx3"
 +++
 
-# Versioning
-
 ## API Versioning
 
 * We use [semantic versioning](http://semver.org/).

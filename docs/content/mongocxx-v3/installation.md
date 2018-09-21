@@ -6,8 +6,6 @@ title = "Installing the mongocxx driver"
   weight = 8
 +++
 
-# Installing the mongocxx driver
-
 ## Prerequisites
 
 - Any standard Unix platform, or Windows 7 SP1+

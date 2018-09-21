@@ -7,8 +7,6 @@ title = "Tutorial for mongocxx"
   parent="mongocxx3"
 +++
 
-# Tutorial for mongocxx
-
 ## Prerequisites
 
 - A [mongod](https://docs.mongodb.com/master/reference/program/mongod/)

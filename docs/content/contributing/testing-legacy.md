@@ -6,8 +6,6 @@ title = "Testing the legacy driver"
   parent="contributing"
 +++
 
-## Testing the Legacy C++ Driver
-
 If you contribute to the C++ driver, you'll need to test your changes.  The
 driver comes with a number of tests to ensure its functionality and
 performance.  There are a few different kinds of tests within the driver's
