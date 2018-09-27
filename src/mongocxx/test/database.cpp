@@ -329,16 +329,15 @@ TEST_CASE("Database integration tests", "[database]") {
     auto case_insensitive_collation = make_document(kvp("locale", "en_US"), kvp("strength", 2));
 
     SECTION("A database may create a collection via create_collection") {
-        SECTION("without any options") {
-            stdx::string_view collection_name{"collection_create_no_opts"};
-            database[collection_name].drop();
+        stdx::string_view collection_name{"collection_create_with_opts"};
 
+        SECTION("without any options") {
+            database[collection_name].drop();
             collection obtained_collection = database.create_collection(collection_name);
             REQUIRE(obtained_collection.name() == collection_name);
         }
 
         SECTION("with options") {
-            stdx::string_view collection_name{"collection_create_with_opts"};
             database[collection_name].drop();
 
             collection obtained_collection = database.create_collection(
@@ -346,8 +345,33 @@ TEST_CASE("Database integration tests", "[database]") {
             REQUIRE(obtained_collection.name() == collection_name);
         }
 
+        SECTION("with default options") {
+            database[collection_name].drop();
+
+            collection obtained_collection = database.create_collection(collection_name, {});
+            REQUIRE(obtained_collection.name() == collection_name);
+            obtained_collection.drop();
+        }
+
+        SECTION("with deprecated options") {
+            database[collection_name].drop();
+
+            options::create_collection opts;
+            opts.capped(true);
+            opts.size(256);
+            opts.max(100);
+            opts.no_padding(false);
+
+            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+            collection obtained_collection = database.create_collection(collection_name, opts);
+            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
+
+            REQUIRE(obtained_collection.name() == collection_name);
+            obtained_collection.drop();
+
+        }
+
         SECTION("but raises exception when collection already exists") {
-            stdx::string_view collection_name{"collection_create_existing"};
             database[collection_name].drop();
 
             database.create_collection(collection_name);

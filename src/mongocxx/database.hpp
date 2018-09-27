@@ -180,12 +180,9 @@ class MONGOCXX_API database {
     /// @exception
     ///   mongocxx::operation_exception if the operation fails.
     ///
-    template <class T>
-    MONGOCXX_DEPRECATED typename std::enable_if<std::is_same<T, options::create_collection>::value,
-                                                class collection>::type
-    create_collection(bsoncxx::string::view_or_value name,
-                      const T& collection_options,
-                      const stdx::optional<write_concern>& write_concern = {}) {
+    class collection create_collection(bsoncxx::string::view_or_value name,
+                                       const options::create_collection& collection_options,
+                                       const stdx::optional<write_concern>& write_concern = {}) {
         return create_collection_deprecated(name, collection_options, write_concern);
     }
 
@@ -217,13 +214,10 @@ class MONGOCXX_API database {
     /// @exception
     ///   mongocxx::operation_exception if the operation fails.
     ///
-    template <class T>
-    MONGOCXX_DEPRECATED typename std::enable_if<std::is_same<T, options::create_collection>::value,
-                                                class collection>::type
-    create_collection(const client_session& session,
-                      bsoncxx::string::view_or_value name,
-                      const T& collection_options,
-                      const stdx::optional<write_concern>& write_concern = {}) {
+    class collection create_collection(const client_session& session,
+                                       bsoncxx::string::view_or_value name,
+                                       const options::create_collection& collection_options,
+                                       const stdx::optional<write_concern>& write_concern = {}) {
         return create_collection_deprecated(session, name, collection_options, write_concern);
     }
 
