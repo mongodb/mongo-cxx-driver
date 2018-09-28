@@ -368,7 +368,6 @@ TEST_CASE("Database integration tests", "[database]") {
 
             REQUIRE(obtained_collection.name() == collection_name);
             obtained_collection.drop();
-
         }
 
         SECTION("but raises exception when collection already exists") {
