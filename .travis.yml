@@ -58,6 +58,7 @@ install:
 
     - git checkout master
 
+    - sudo pip install GitPython
     - python build/calc_release_version.py > VERSION_CURRENT
     - python build/calc_release_version.py -p > VERSION_RELEASED
     - cmake -DENABLE_TESTS=OFF -DENABLE_EXAMPLES=OFF -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
