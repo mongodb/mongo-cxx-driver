@@ -129,7 +129,7 @@ class MONGOCXX_API ssl {
     const stdx::optional<bsoncxx::string::view_or_value>& crl_file() const;
 
     ///
-    /// If false, the driver will not verify the server's CA file.
+    /// If true, the driver will not verify the server's CA file.
     ///
     /// @param allow_invalid_certificates
     ///   Whether or not to check the server's CA file.
