@@ -79,7 +79,8 @@ class BSONCXX_API element {
     element();
 
     ///
-    /// Conversion operator to bool which is true for valid elements.
+    /// Conversion operator to bool which is true for valid elements
+    /// and false for invalid elements.
     ///
     explicit operator bool() const;
 
