@@ -9,6 +9,8 @@
 ./read/find-collation.json
 ./read/find.json
 ./write/bulkWrite-arrayFilters.json
+./write/bulkWrite-collation.json
+./write/bulkWrite.json
 ./write/deleteMany-collation.json
 ./write/deleteMany.json
 ./write/deleteOne-collation.json

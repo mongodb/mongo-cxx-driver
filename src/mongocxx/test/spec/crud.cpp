@@ -92,30 +92,32 @@ void run_crud_tests_in_file(std::string test_path, client* client) {
         std::string description = bsoncxx::string::to_string(test["description"].get_utf8().value);
         INFO("Test description: " << description);
         initialize_collection(&coll, test_spec_view["data"].get_array().value);
-        document::view outcome = test["outcome"].get_document().value;
+        document::view expected_outcome = test["outcome"].get_document().value;
 
-        if (outcome["collection"] && outcome["collection"].get_document().value["name"]) {
+        if (expected_outcome["collection"] &&
+            expected_outcome["collection"].get_document().value["name"]) {
             std::string out_coll_name = bsoncxx::string::to_string(
-                outcome["collection"].get_document().value["name"].get_utf8().value);
+                expected_outcome["collection"].get_document().value["name"].get_utf8().value);
             collection out_coll = db[out_coll_name];
             out_coll.delete_many({});
         }
 
         document::view operation = test["operation"].get_document().value;
-        document::value actual_result = op_runner.run(operation);
+        document::value actual_outcome_value = op_runner.run(operation);
+        document::view actual_outcome = actual_outcome_value.view();
 
-        if (outcome["collection"]) {
+        if (expected_outcome["collection"]) {
             collection out_coll = db["test"];
 
-            document::view out_collection_doc = outcome["collection"].get_document().value;
+            document::view out_collection_doc = expected_outcome["collection"].get_document().value;
             if (out_collection_doc["name"]) {
                 auto out_coll_name =
                     bsoncxx::string::to_string(out_collection_doc["name"].get_utf8().value);
                 out_coll = db[out_coll_name];
             }
 
-            test_util::check_outcome_collection(&out_coll,
-                                                outcome["collection"].get_document().value);
+            test_util::check_outcome_collection(
+                &out_coll, expected_outcome["collection"].get_document().value);
             // The C++ driver does not implement the optional returning of results for
             // aggregations with $out.
             if (operation["name"].get_utf8().value == bsoncxx::stdx::string_view{"aggregate"}) {
@@ -123,37 +125,27 @@ void run_crud_tests_in_file(std::string test_path, client* client) {
             }
         }
 
-        auto result = outcome["result"].get_value();
-
-        auto builder = builder::basic::document{};
-        builder.append(builder::basic::kvp("result", result));
-        document::value expected_result = builder.extract();
-
-        // The spec tests intentionally omit fields from the 'result' document for which the values
-        // of those fields are unspecified.  As such, we strip out fields from 'actual_result' that
-        // aren't also present in 'expected_result'.
-        auto actual_result_ele = actual_result.view()["result"];
-        auto expected_result_ele = expected_result.view()["result"];
-        if (actual_result_ele.type() == bsoncxx::type::k_document &&
-            expected_result_ele.type() == bsoncxx::type::k_document) {
-            builder::basic::document actual_result_builder{};
-
-            actual_result_builder.append(
-                builder::basic::kvp("result", [&](builder::basic::sub_document subdoc) {
-                    for (auto&& expected_ele : expected_result_ele.get_document().value) {
-                        document::element actual_ele =
-                            actual_result_ele.get_document().value[expected_ele.key()];
-                        if (actual_ele) {
-                            subdoc.append(
-                                builder::basic::kvp(actual_ele.key(), actual_ele.get_value()));
-                        }
-                    }
-                }));
-
-            actual_result = actual_result_builder.extract();
+        bool skip_result_check = false;
+        if (expected_outcome["error"]) {
+            bool error_expected = expected_outcome["error"].get_bool().value;
+            REQUIRE(actual_outcome["error"].get_bool().value == error_expected);
+            if (error_expected) {
+                // If an error is expected, there is no result returned. But some spec tests
+                // still define an expected result for drivers that return results for bulk writes
+                // even on error. So explicitly skip checking "outcome.result".
+                skip_result_check = true;
+            }
         }
 
-        REQUIRE(to_json(expected_result.view()) == to_json(actual_result.view()));
+        if (expected_outcome["result"] && !skip_result_check) {
+            // wrap the result, since it might not be a document.
+            using namespace bsoncxx::builder::basic;
+            auto actual_result_wrapped =
+                make_document(kvp("result", actual_outcome["result"].get_value()));
+            auto expected_result_wrapped =
+                make_document(kvp("result", expected_outcome["result"].get_value()));
+            REQUIRE(test_util::matches(actual_result_wrapped, expected_result_wrapped));
+        }
     }
 }
 
