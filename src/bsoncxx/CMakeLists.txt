@@ -17,9 +17,9 @@ project(BSONCXX)
 # Update these as needed.
 # TODO: read from file
 set(BSONCXX_VERSION_MAJOR 3)
-set(BSONCXX_VERSION_MINOR 4)
+set(BSONCXX_VERSION_MINOR 5)
 set(BSONCXX_VERSION_PATCH 0)
-set(BSONCXX_VERSION_EXTRA "")
+set(BSONCXX_VERSION_EXTRA "-rc0-pre")
 set(BSONCXX_ABI_VERSION _noabi)
 
 option(BSONCXX_POLY_USE_MNMLSTC "Use MNMLSTC/core for stdx polyfills" OFF)
