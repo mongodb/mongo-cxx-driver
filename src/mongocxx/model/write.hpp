@@ -32,37 +32,37 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace model {
 
 ///
-/// Models a single write operation within a @bulk_write.
+/// Models a single write operation within a mongocxx::bulk_write.
 ///
 class MONGOCXX_API write {
    public:
     ///
-    /// Constructs a write from an @insert_one.
+    /// Constructs a write from a model::insert_one.
     ///
     write(insert_one value);
 
     ///
-    /// Constructs a write from an @update_one.
+    /// Constructs a write from a model::update_one.
     ///
     write(update_one value);
 
     ///
-    /// Constructs a write from an @update_many.
+    /// Constructs a write from a model::update_many.
     ///
     write(update_many value);
 
     ///
-    /// Constructs a write from a @delete_one.
+    /// Constructs a write from a model::delete_one.
     ///
     write(delete_one value);
 
     ///
-    /// Constructs a write from a @delete_many.
+    /// Constructs a write from a model::delete_many.
     ///
     write(delete_many value);
 
     ///
-    /// Constructs a write from a @replace_one.
+    /// Constructs a write from a model::replace_one.
     ///
     write(replace_one value);
 
@@ -91,43 +91,43 @@ class MONGOCXX_API write {
     write_type type() const;
 
     ///
-    /// Accesses the write as an @insert_one. It is illegal to call
-    /// this method if the return of @type (above) does not indicate
+    /// Accesses the write as a model::insert_one. It is illegal to call
+    /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
     const insert_one& get_insert_one() const;
 
     ///
-    /// Accesses the write as an @update_one. It is illegal to call
-    /// this method if the return of @type (above) does not indicate
+    /// Accesses the write as an model::update_one. It is illegal to call
+    /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
     const update_one& get_update_one() const;
 
     ///
-    /// Accesses the write as an @update_many. It is illegal to call
-    /// this method if the return of @type (above) does not indicate
+    /// Accesses the write as an model::update_many. It is illegal to call
+    /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
     const update_many& get_update_many() const;
 
     ///
-    /// Accesses the write as a @delete_one. It is illegal to call
-    /// this method if the return of @type (above) does not indicate
+    /// Accesses the write as a model::delete_one. It is illegal to call
+    /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
     const delete_one& get_delete_one() const;
 
     ///
-    /// Accesses the write as a @delete_many. It is illegal to call
-    /// this method if the return of @type (above) does not indicate
+    /// Accesses the write as a model::delete_many. It is illegal to call
+    /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
     const delete_many& get_delete_many() const;
 
     ///
-    /// Accesses the write as a @replace_one. It is illegal to call
-    /// this method if the return of @type (above) does not indicate
+    /// Accesses the write as a model::replace_one. It is illegal to call
+    /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
     const replace_one& get_replace_one() const;

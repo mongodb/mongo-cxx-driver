@@ -46,6 +46,8 @@ enum class ExtendedJsonMode : std::uint8_t {
 ///
 /// @param view
 ///   A valid BSON document.
+/// @param mode
+///   An optional JSON representation mode.
 ///
 /// @throws bsoncxx::exception with error details if the conversion failed.
 ///

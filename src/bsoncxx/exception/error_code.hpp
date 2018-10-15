@@ -102,8 +102,8 @@ BSONCXX_API const std::error_category& BSONCXX_CALL error_category();
 ///
 /// Translate a bsoncxx::error_code into a std::error_code.
 ///
-/// @param an error from bsoncxx
-/// @return an error_code
+/// @param error An error from bsoncxx
+/// @return An error_code
 ///
 BSONCXX_INLINE std::error_code make_error_code(error_code error) {
     return {static_cast<int>(error), error_category()};

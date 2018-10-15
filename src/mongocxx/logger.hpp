@@ -25,7 +25,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
-/// The log level of a message passed to a @logger.
+/// The log level of a message passed to a mongocxx::logger.
 ///
 enum class log_level {
     k_error,
@@ -40,7 +40,7 @@ enum class log_level {
 ///
 /// Returns a stringification of the given log level.
 ///
-/// @param rhs
+/// @param level
 ///   The type to stringify.
 ///
 /// @return a std::string representation of the type.

@@ -140,7 +140,7 @@ class BSONCXX_API validator {
     /// Verifies that document keys do not contain any '.' characters. The dot
     /// character is illegal in MongoDB keys.
     ///
-    /// @param check_dollar_keys
+    /// @param check_dot_keys
     ///   If true, keys containing '.' will be treated as invalid.
     ///
     void check_dot_keys(bool check_dot_keys);

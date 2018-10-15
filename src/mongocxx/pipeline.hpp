@@ -410,7 +410,7 @@ class MONGOCXX_API pipeline {
     /// @see https://docs.mongodb.com/master/reference/operator/aggregation/unwind/
     ///
     /// @param unwind_args
-    ///   The specification for the unwind operation.  The required field @path must be included.
+    ///   The specification for the unwind operation.  The required field path must be included.
     ///
     /// @return
     ///   A reference to the object on which this member function is being called.  This facilitates

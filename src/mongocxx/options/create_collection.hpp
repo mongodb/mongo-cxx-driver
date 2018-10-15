@@ -191,7 +191,7 @@ class MONGOCXX_API create_collection {
     ///
     /// @note This option is currently only available with the WiredTiger storage engine.
     ///
-    /// @param storage_engine_options
+    /// @param storage_engine_opts
     ///   Configuration options specific to the storage engine.
     ///
     /// @return

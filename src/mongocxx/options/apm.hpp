@@ -85,7 +85,7 @@ class MONGOCXX_API apm {
     /// Set the command succeeded monitoring callback. The callback takes a reference to a
     /// command_succeeded_event which will only contain valid data for the duration of the callback.
     ///
-    /// @param command_failed
+    /// @param command_succeeded
     ///   The command succeeded monitoring callback.
     ///
     /// @return
@@ -286,7 +286,7 @@ class MONGOCXX_API apm {
     /// heartbeat_succeeded_event which will only contain valid data for the duration of the
     /// callback.
     ///
-    /// @param heartbeat_failed
+    /// @param heartbeat_succeeded
     ///   The heartbeat succeeded monitoring callback.
     ///
     /// @return

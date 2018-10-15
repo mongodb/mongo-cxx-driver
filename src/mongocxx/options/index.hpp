@@ -240,7 +240,7 @@ class MONGOCXX_API index {
     ///
     /// Sets the index version.
     ///
-    /// @param version
+    /// @param v
     ///   The index version.
     ///
     /// @return

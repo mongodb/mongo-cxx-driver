@@ -149,7 +149,7 @@ class MONGOCXX_API change_stream {
     /// Specifies the logical starting point for the new change stream. Changes are returned at or
     /// after the specified operation time.
     ///
-    /// @param operation_time
+    /// @param timestamp
     ///   The starting operation time.
     ///
     /// @return
