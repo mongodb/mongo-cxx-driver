@@ -1,4 +1,4 @@
-# Copyright 2016 MongoDB Inc.
+# Copyright 2018-present MongoDB Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,20 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_definitions(-DMONGO_CXX_DRIVER_COMPILING)
-add_subdirectory(bsoncxx)
-add_subdirectory(mongocxx)
-
-set_local_dist (src_DIST_local
-   CMakeLists.txt
-   third_party/catch/main.cpp
-   third_party/catch/include/catch.hpp
-   third_party/catch/include/helpers.hpp
+set (cmake_make_dist_MODULES
+   MakeDist.cmake
+   MakeDistCheck.cmake
+   MakeDistFiles.cmake
 )
 
-set (src_DIST
-   ${src_DIST_local}
-   ${src_bsoncxx_DIST}
-   ${src_mongocxx_DIST}
-   PARENT_SCOPE
+set_dist_list (cmake_make_dist_DIST
+   CMakeLists.txt
+   COPYING-CMAKE-SCRIPTS.txt
+   ${cmake_make_dist_MODULES}
 )

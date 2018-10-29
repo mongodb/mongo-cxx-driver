@@ -1,4 +1,4 @@
-# Copyright 2016 MongoDB Inc.
+# Copyright 2018-present MongoDB Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,20 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_definitions(-DMONGO_CXX_DRIVER_COMPILING)
-add_subdirectory(bsoncxx)
-add_subdirectory(mongocxx)
+file (GLOB_RECURSE data_DIST_jsons RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.json)
+file (GLOB_RECURSE data_DIST_rsts RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.rst)
+file (GLOB_RECURSE data_DIST_txts RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.txt)
+file (GLOB_RECURSE data_DIST_ymls RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.yml)
 
-set_local_dist (src_DIST_local
+set_dist_list (data_DIST
    CMakeLists.txt
-   third_party/catch/main.cpp
-   third_party/catch/include/catch.hpp
-   third_party/catch/include/helpers.hpp
-)
-
-set (src_DIST
-   ${src_DIST_local}
-   ${src_bsoncxx_DIST}
-   ${src_mongocxx_DIST}
-   PARENT_SCOPE
+   ${data_DIST_jsons}
+   ${data_DIST_rsts}
+   ${data_DIST_txts}
+   ${data_DIST_ymls}
 )

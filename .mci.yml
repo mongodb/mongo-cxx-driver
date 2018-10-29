@@ -179,6 +179,7 @@ functions:
                   set -o pipefail
                   export BUILD_TYPE=${build_type}
                   export PATH="${extra_path}:$PATH"
+                  export RUN_DISTCHECK=${RUN_DISTCHECK}
 
                   ADDL_OPTS=
                   if [ "${USE_STATIC_LIBS}" ]; then
@@ -375,6 +376,8 @@ tasks:
           vars:
               MONGOC_VERSION: master
         - func: "compile"
+          vars:
+              RUN_DISTCHECK: 1
         - func: "test"
 
     - name: compile_and_test_auth_with_shared_libs
@@ -399,6 +402,7 @@ tasks:
         - func: "compile"
           vars:
               USE_STATIC_LIBS: 1
+              RUN_DISTCHECK: 1
         - func: "test"
           vars:
               USE_STATIC_LIBS: 1
@@ -413,6 +417,8 @@ tasks:
           vars:
               MONGOC_VERSION: master
         - func: "compile"
+          vars:
+              RUN_DISTCHECK: 1
         - func: "test"
 
 #######################################

@@ -59,3 +59,17 @@ else()
         COMPONENT dev
     )
 endif()
+
+set_dist_list (src_bsoncxx_config_DIST
+   CMakeLists.txt
+   compiler.hpp
+   config.hpp.in
+   libbsoncxx-static.pc.in
+   libbsoncxx.pc.in
+   postlude.hpp
+   prelude.hpp
+   private/config.hh.in
+   private/postlude.hh
+   private/prelude.hh
+   version.hpp.in
+)
