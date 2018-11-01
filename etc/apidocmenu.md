@@ -49,7 +49,7 @@ is recommended for all new development.
 ## Resources
 
 * [MongoDB C++ Driver Quickstart](http://mongocxx.org/mongocxx-v3/tutorial/)
-* [MongoDB C++ Driver Manual](http://mongocxx.org/mongo-cxx-driver/)
+* [MongoDB C++ Driver Manual](http://mongocxx.org/)
 * [MongoDB C++ Driver Source Code on GitHub](https://github.com/mongodb/mongo-cxx-driver)
 * [MongoDB Database Manual](http://docs.mongodb.com/manual/)
 
