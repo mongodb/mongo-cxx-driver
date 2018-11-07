@@ -20,6 +20,7 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -226,7 +227,7 @@ collection database::_create_collection(const client_session* session,
 
     libbson::scoped_bson_t opts_bson{options_builder.view()};
     auto result = libmongoc::database_create_collection(
-        _get_impl().database_t, name.to_string().c_str(), opts_bson.bson(), &error);
+        _get_impl().database_t, bsoncxx::string::to_string(name).c_str(), opts_bson.bson(), &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
