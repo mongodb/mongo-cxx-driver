@@ -313,7 +313,6 @@ set_local_dist (src_mongocxx_DIST_local
    exception/logic_error.hpp
    exception/operation_exception.cpp
    exception/operation_exception.hpp
-   exception/private/error_category.hh
    exception/private/mongoc_error.hh
    exception/query_exception.hpp
    exception/server_error_code.cpp
