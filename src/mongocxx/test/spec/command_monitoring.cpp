@@ -105,7 +105,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
                 } else if (field.compare("command") == 0) {
                     document::view expected_command = value.get_document().value;
                     document::view command = event.command();
-                    REQUIRE(test_util::matches(command, expected_command));
+                    REQUIRE_BSON_MATCHES(command, expected_command);
                 } else if (field.compare("database_name") == 0) {
                     REQUIRE(event.database_name() == value.get_utf8().value);
                 } else {
@@ -151,7 +151,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
                 } else if (field.compare("reply") == 0) {
                     document::view expected_reply = value.get_document().value;
                     document::view reply = event.reply();
-                    REQUIRE(test_util::matches(reply, expected_reply));
+                    REQUIRE_BSON_MATCHES(reply, expected_reply);
                 } else {
                     // Should not happen.
                     REQUIRE(false);

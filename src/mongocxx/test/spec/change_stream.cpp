@@ -163,7 +163,7 @@ TEST_CASE("Change stream spec tests", "[change_stream_spec]") {
     instance::current();
     char* change_stream_tests_path = std::getenv("CHANGE_STREAM_TESTS_PATH");
     if (!change_stream_tests_path) {
-        FAIL("environment variable CHANGES_STREAM_TESTS_PATH not set");
+        FAIL("environment variable CHANGE_STREAM_TESTS_PATH not set");
     }
 
     std::string path = change_stream_tests_path;

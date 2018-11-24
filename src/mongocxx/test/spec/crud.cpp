@@ -33,6 +33,7 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/database.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/aggregate.hpp>
 #include <mongocxx/options/count.hpp>
@@ -51,6 +52,7 @@
 
 namespace {
 using namespace bsoncxx;
+using namespace bsoncxx::stdx;
 using namespace mongocxx;
 using namespace mongocxx::spec;
 
@@ -73,7 +75,7 @@ void initialize_collection(collection* coll, array::view initial_data) {
 
 void run_crud_tests_in_file(std::string test_path, client* client) {
     INFO("Test path: " << test_path);
-    bsoncxx::stdx::optional<document::value> test_spec = test_util::parse_test_file(test_path);
+    optional<document::value> test_spec = test_util::parse_test_file(test_path);
     REQUIRE(test_spec);
 
     document::view test_spec_view = test_spec->view();
@@ -103,8 +105,14 @@ void run_crud_tests_in_file(std::string test_path, client* client) {
         }
 
         document::view operation = test["operation"].get_document().value;
-        document::value actual_outcome_value = op_runner.run(operation);
-        document::view actual_outcome = actual_outcome_value.view();
+        optional<operation_exception> exception;
+        optional<document::value> actual_outcome_value;
+        INFO("Operation: " << bsoncxx::to_json(operation));
+        try {
+            actual_outcome_value = op_runner.run(operation);
+        } catch (const operation_exception& e) {
+            exception = e;
+        }
 
         if (expected_outcome["collection"]) {
             collection out_coll = db["test"];
@@ -125,26 +133,20 @@ void run_crud_tests_in_file(std::string test_path, client* client) {
             }
         }
 
-        bool skip_result_check = false;
-        if (expected_outcome["error"]) {
-            bool error_expected = expected_outcome["error"].get_bool().value;
-            REQUIRE(actual_outcome["error"].get_bool().value == error_expected);
-            if (error_expected) {
-                // If an error is expected, there is no result returned. But some spec tests
-                // still define an expected result for drivers that return results for bulk writes
-                // even on error. So explicitly skip checking "outcome.result".
-                skip_result_check = true;
-            }
-        }
-
-        if (expected_outcome["result"] && !skip_result_check) {
-            // wrap the result, since it might not be a document.
+        // If an error is expected, there is no result returned. But some spec tests
+        // still define an expected result for drivers that return results for bulk writes
+        // even on error, so skip checking "outcome.result".
+        if (expected_outcome["error"] && expected_outcome["error"].get_bool().value) {
+            REQUIRE(exception);
+        } else if (expected_outcome["result"]) {
             using namespace bsoncxx::builder::basic;
+            // wrap the result, since it might not be a document.
+            bsoncxx::document::view actual_outcome = actual_outcome_value->view();
             auto actual_result_wrapped =
                 make_document(kvp("result", actual_outcome["result"].get_value()));
             auto expected_result_wrapped =
                 make_document(kvp("result", expected_outcome["result"].get_value()));
-            REQUIRE(test_util::matches(actual_result_wrapped, expected_result_wrapped));
+            REQUIRE_BSON_MATCHES(actual_result_wrapped, expected_result_wrapped);
         }
     }
 }

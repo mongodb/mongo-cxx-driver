@@ -31,10 +31,13 @@ using namespace mongocxx;
 void apm_checker::compare(bsoncxx::array::view expectations,
                           bool allow_extra,
                           const test_util::match_visitor& match_visitor) {
+    using bsoncxx::to_json;
+
     auto events_iter = _events.begin();
     for (auto expectation : expectations) {
         REQUIRE(events_iter != _events.end());
-        REQUIRE(test_util::matches(*events_iter, expectation.get_document().view(), match_visitor));
+        auto expected = expectation.get_document().view();
+        REQUIRE_BSON_MATCHES_V(*events_iter, expected, match_visitor);
         events_iter++;
     }
     if (!allow_extra) {
