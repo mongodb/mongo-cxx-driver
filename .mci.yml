@@ -121,7 +121,7 @@ functions:
                 export MONGO_ORCHESTRATION_HOME=$DRIVERS_TOOLS/.evergreen/orchestration
                 export MONGODB_VERSION=${mongodb_version}
                 export AUTH=${AUTH}
-                export TOPOLOGY=${topology|server}
+                export TOPOLOGY=${TOPOLOGY|server}
                 echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
                 ./.evergreen/run-orchestration.sh
 
@@ -231,6 +231,7 @@ functions:
                   # CRUD_TESTS_PATH and GRIDFS_TESTS_PATH are required to be set by the
                   # `test_crud_specs` and `test_gridfs_specs` test binaries, respectively.
                   export CRUD_TESTS_PATH="$(pwd)/../data/crud"
+                  export CHANGE_STREAM_TESTS_PATH="$(pwd)/../data/change_stream"
                   export GRIDFS_TESTS_PATH="$(pwd)/../data/gridfs"
                   export COMMAND_MONITORING_TESTS_PATH="$(pwd)/../data/command-monitoring"
                   export TRANSACTIONS_TESTS_PATH="$(pwd)/../data/transactions"
@@ -248,6 +249,7 @@ functions:
                       # Run tests and examples 1-by-1 with "test_params" so we can run them with valgrind.
                       ${test_params} ./src/bsoncxx/test/test_bson
                       ${test_params} ./src/mongocxx/test/test_driver
+                      ${test_params} ./src/mongocxx/test/test_change_stream_specs
                       ${test_params} ./src/mongocxx/test/test_crud_specs
                       ${test_params} ./src/mongocxx/test/test_gridfs_specs
                       ${test_params} ./src/mongocxx/test/test_command_monitoring_specs

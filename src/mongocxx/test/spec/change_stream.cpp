@@ -171,6 +171,16 @@ TEST_CASE("Change stream spec tests", "[change_stream_spec]") {
         path.pop_back();
     }
 
+    client client{uri{}};
+    if (!test_util::is_replica_set(client)) {
+        WARN("Skipping - not a replica set");
+        return;
+    } else if (test_util::get_max_wire_version(client) < 7) {
+        // Change streams require wire version 6, and newer features require 7.
+        WARN("Skipping - max wire version is < 7");
+        return;
+    }
+
     std::ifstream test_files{path + "/test_files.txt"};
     REQUIRE(test_files.good());
     std::string test_file;
