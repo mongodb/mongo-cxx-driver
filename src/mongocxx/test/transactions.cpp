@@ -42,8 +42,8 @@ TEST_CASE("Transaction tests", "[transactions]") {
     }
 
     // The test run in first 3 SECTIONs below
-    auto successful_insert_test = [&](client_session session,
-                                      stdx::optional<options::transaction> transaction_opts) {
+    auto successful_insert_test = [&mongodb_client](
+        client_session session, stdx::optional<options::transaction> transaction_opts) {
         auto db = mongodb_client["test"];
         auto coll = db["txn_test"];
 
