@@ -1263,7 +1263,7 @@ shared <code>libmongoc</code> and static <code>mongocxx</code> is not supported,
 linking against both static <code>libmongoc</code> and shared <code>mongocxx</code>.</li>
 </ul>
 
-<p>For building with Visual Studio 2017 (without a C++17 polyfill), it is necessary to configure with an additional option, &ldquo;/Zc:<strong>cplusplus&rdquo; to opt into the correct definition of <code>__cplusplus</code> ([problem described here](<a href="https://blogs.msdn.microsoft.com/vcblog/2018/04/09/msvc-now-correctly-reports-">https://blogs.msdn.microsoft.com/vcblog/2018/04/09/msvc-now-correctly-reports-</a></strong>cplusplus/)):</p>
+<p>For building with Visual Studio 2017 (without a C++17 polyfill), it is necessary to configure with an additional option, <code>/Zc:__cplusplus</code> to opt into the correct definition of <code>__cplusplus</code> (<a href="https://blogs.msdn.microsoft.com/vcblog/2018/04/09/msvc-now-correctly-reports-__cplusplus/">problem described here</a>):</p>
 
 <pre><code class="language-sh">'C:\Program Files (x86)\CMake\bin\cmake.exe' -G &quot;Visual Studio 15 2017 Win64&quot;
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
