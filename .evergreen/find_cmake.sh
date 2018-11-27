@@ -21,7 +21,7 @@ find_cmake ()
      mkdir cmake-3.11.0
      tar xzf cmake.tar.gz -C cmake-3.11.0 --strip-components=1
      CMAKE=$(pwd)/cmake-3.11.0/bin/cmake
-  elif [ "$OS" == "cygwin"* ]; then
+  elif [ -f "/cygdrive/c/cmake/bin/cmake" ]; then
     CMAKE=/cygdrive/c/cmake/bin/cmake
   else
      # If cmake unavailable, create a BUILD ticket.
