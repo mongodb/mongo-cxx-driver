@@ -15,7 +15,8 @@ variables:
     extra_path:
         linux_extra_path: &linux_extra_path /opt/cmake/bin
         macos_extra_path: &macos_extra_path /Applications/Cmake.app/Contents/bin
-        windows_extra_path: &windows_extra_path "/cygdrive/c/cmake/bin:/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin"
+        msvc2015_extra_path: &msvc2015_extra_path "/cygdrive/c/cmake/bin:/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin"
+        msvc2017_extra_path: &msvc2017_extra_path "/cygdrive/c/cmake/bin:/cygdrive/c/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin"
 
     ## tar options variables
     tar_options:
@@ -32,7 +33,12 @@ variables:
         macos_cmake_flags: &macos_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror"
         asan_cmake_flags: &asan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror"
         ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.blacklist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror"
-        windows_cmake_flags: &windows_cmake_flags -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT=c:/local/boost_1_60_0
+        msvc2015_cmake_flags: &msvc2015_cmake_flags -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT=c:/local/boost_1_60_0
+        # The VS option /Zc:__cplusplus is necessary to build with VS2017's
+        # native C++17 support. __cplusplus should indicate the standard of C++
+        # the compiler supports. VS2017 erroneously reports it as 199711L
+        # (instead of 201703L) without this option.
+        msvc2017_cmake_flags: &msvc2017_cmake_flags -G "Visual Studio 15 2017 Win64" -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS="/Zc:__cplusplus"
 
     example_projects_cc:
         asan_cc_path: &asan_cc_path /usr/bin/clang
@@ -155,7 +161,8 @@ functions:
                     if [ "Windows_NT" == "$OS" ]; then
                         PREFIX=$(cygpath -m "$PREFIX")
                     fi
-                    ./.evergreen/install.sh ${MONGOC_VERSION|master}
+                    export GENERATOR="${cdriver_cmake_generator}"
+                    ./.evergreen/install_c_driver.sh ${MONGOC_VERSION|master}
 
     "lint":
         - command: shell.exec
@@ -382,6 +389,15 @@ tasks:
               RUN_DISTCHECK: 1
         - func: "test"
 
+    - name: compile_with_shared_libs
+      commands:
+      - func: "setup"
+      - func: "start_mongod"
+      - func: "install_c_driver"
+        vars:
+          MONGOC_VERSION: master
+      - func: "compile"
+
     - name: compile_and_test_auth_with_shared_libs
       commands:
         - func: "setup"
@@ -442,10 +458,10 @@ axes:
             run_on:
                 - ubuntu1404-test
           - id: "windows-2k8"
-            display_name: "Windows 2008R2 Debug"
+            display_name: "Windows (VS 2015) Debug"
             variables:
-                extra_path: *windows_extra_path
-                cmake_flags: *windows_cmake_flags
+                extra_path: *msvc2015_extra_path
+                cmake_flags: *msvc2015_cmake_flags
                 build_type: "Debug"
                 tar_options: *linux_tar_options # Same for Windows and Linux
             run_on:
@@ -661,12 +677,12 @@ buildvariants:
           - name: compile_and_test_with_static_libs
 
     - name: windows-2k8-release
-      display_name: "Windows 2008R2 Release"
+      display_name: "Windows (VS 2015) Release"
       expansions:
           build_type: "Release"
           tar_options: *linux_tar_options
-          extra_path: *windows_extra_path
-          cmake_flags: *windows_cmake_flags
+          extra_path: *msvc2015_extra_path
+          cmake_flags: *msvc2015_cmake_flags
           mongodb_version: *version_latest
       run_on:
           - windows-64-vs2015-compile
@@ -675,15 +691,29 @@ buildvariants:
           - name: compile_and_test_with_static_libs
 
     - name: windows-2k8-debug
-      display_name: "Windows 2008R2 Debug Static"
+      display_name: "Windows (VS 2015) Debug Static"
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
-          extra_path: *windows_extra_path
-          cmake_flags: *windows_cmake_flags
+          extra_path: *msvc2015_extra_path
+          cmake_flags: *msvc2015_cmake_flags
           mongodb_version: *version_latest
       run_on:
           - windows-64-vs2015-compile
       tasks:
           # The debug shared lib is tested in the "integration tests" matrix
           - name: compile_and_test_with_static_libs
+
+    - name: windows-msvc2017-debug
+      display_name: "Windows (VS 2017) Debug"
+      expansions:
+          build_type: "Debug"
+          tar_options: *linux_tar_options
+          extra_path: *msvc2017_extra_path
+          cdriver_cmake_generator: "Visual Studio 15 2017 Win64"
+          cmake_flags: *msvc2017_cmake_flags
+          mongodb_version: *version_latest
+      run_on:
+         - windows-64-vs2017-compile
+      tasks:
+         - name: compile_with_shared_libs
