@@ -174,16 +174,16 @@ cmake -DCMAKE_BUILD_TYPE=Release -DBSONCXX_POLY_USE_BOOST=1 \
 ```
 
 On Windows, here's an example of how to configure for MSVC (assuming
-libmongoc and libbson are in `c:\mongo-c-driver` as given in the
+libmongoc and libbson are in `C:\mongo-c-driver` as given in the
 [mongoc Windows installation
 instructions](http://mongoc.org/libmongoc/current/installing.html#building-windows)
 and boost is in `c:\local\boost_1_59_0`:
 
 ```sh
-'C:\Program Files (x86)\CMake\bin\cmake.exe' -G "Visual Studio 14 Win64"
+'C:\Program Files (x86)\CMake\bin\cmake.exe' -G "Visual Studio 14 2015 Win64"
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
-    -DCMAKE_PREFIX_PATH=c:\mongo-c-driver
-    -DBOOST_ROOT=c:\local\boost_1_59_0 ..
+    -DCMAKE_PREFIX_PATH=C:\mongo-c-driver
+    -DBOOST_ROOT=C:\local\boost_1_59_0 ..
 ```
 
 `mongocxx` builds shared libraries by default.  This is the recommended
@@ -195,6 +195,16 @@ build setting for novice users.
   `libmongoc` static libraries. Linking an application against both
   shared `libmongoc` and static `mongocxx` is not supported, nor is
   linking against both static `libmongoc` and shared `mongocxx`.
+
+For building with Visual Studio 2017 (without a C++17 polyfill), it is necessary to configure with an additional option, "/Zc:__cplusplus" to opt into the correct definition of `__cplusplus` ([problem described here](https://blogs.msdn.microsoft.com/vcblog/2018/04/09/msvc-now-correctly-reports-__cplusplus/)):
+
+```sh
+'C:\Program Files (x86)\CMake\bin\cmake.exe' -G "Visual Studio 15 2017 Win64"
+    -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
+    -DCMAKE_PREFIX_PATH=C:\mongo-c-driver
+    -DCMAKE_CXX_STANDARD=17
+    -DCMAKE_CXX_FLAGS="/Zc:__cplusplus" ..
+```
 
 ### Step 5: Build and install the driver
 
