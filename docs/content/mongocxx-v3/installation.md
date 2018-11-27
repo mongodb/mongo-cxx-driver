@@ -196,7 +196,7 @@ build setting for novice users.
   shared `libmongoc` and static `mongocxx` is not supported, nor is
   linking against both static `libmongoc` and shared `mongocxx`.
 
-For building with Visual Studio 2017 (without a C++17 polyfill), it is necessary to configure with an additional option, "/Zc:__cplusplus" to opt into the correct definition of `__cplusplus` ([problem described here](https://blogs.msdn.microsoft.com/vcblog/2018/04/09/msvc-now-correctly-reports-__cplusplus/)):
+For building with Visual Studio 2017 (without a C++17 polyfill), it is necessary to configure with an additional option, `/Zc:__cplusplus` to opt into the correct definition of `__cplusplus` ([problem described here](https://blogs.msdn.microsoft.com/vcblog/2018/04/09/msvc-now-correctly-reports-__cplusplus/)):
 
 ```sh
 'C:\Program Files (x86)\CMake\bin\cmake.exe' -G "Visual Studio 15 2017 Win64"
