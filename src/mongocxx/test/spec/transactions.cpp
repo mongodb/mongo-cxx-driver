@@ -176,6 +176,25 @@ void parse_session_opts(document::view session_opts, options::client_session* ou
     out->default_transaction_opts(txn_opts);
 }
 
+void parse_database_options(document::view op, database* out) {
+    if (op["databaseOptions"]) {
+        auto rc = lookup_read_concern(op["databaseOptions"].get_document());
+        if (rc) {
+            out->read_concern(*rc);
+        }
+
+        auto wc = lookup_write_concern(op["databaseOptions"].get_document());
+        if (wc) {
+            out->write_concern(*wc);
+        }
+
+        auto rp = lookup_read_preference(op["databaseOptions"].get_document());
+        if (rp) {
+            out->read_preference(*rp);
+        }
+    }
+}
+
 void parse_collection_options(document::view op, collection* out) {
     if (op["collectionOptions"]) {
         auto rc = lookup_read_concern(op["collectionOptions"].get_document());
@@ -246,9 +265,10 @@ void run_transactions_tests_in_file(const std::string& test_path) {
             optional<document::value> actual_result;
             INFO("Operation: " << bsoncxx::to_json(op.get_document().value));
             try {
-                database db = client[db_name];
-                collection coll = db[coll_name];
                 auto operation = op.get_document().value;
+                database db = client[db_name];
+                parse_database_options(operation, &db);
+                collection coll = db[coll_name];
                 parse_collection_options(operation, &coll);
                 operation_runner op_runner{&db, &coll, &session0, &session1};
                 actual_result = op_runner.run(operation);
