@@ -75,6 +75,56 @@ include(InstallRequiredSystemLibraries)
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 set(BUILD_VERSION "0.0.0" CACHE STRING "Library version (for both libbsoncxx and libmongocxx)")
 
+# Allow the user to decide whether to also build static libraries
+option(BUILD_SHARED_AND_STATIC_LIBS "Build static libraries" OFF)
+
+# Allow the user to decide whether to use shared libraries or static libraries
+# for the mongo-c-driver
+option(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC
+       "Use static mongo-c-driver libraries with shared mongo-cxx-driver libraries"
+        OFF
+)
+
+# Disambiguate our options into clear flags
+if(BUILD_SHARED_LIBS)
+    set(BSONCXX_BUILD_SHARED ON CACHE INTERNAL "")
+    set(MONGOCXX_BUILD_SHARED ON CACHE INTERNAL "")
+
+    if(BUILD_SHARED_AND_STATIC_LIBS)
+        set(BSONCXX_BUILD_STATIC ON CACHE INTERNAL "")
+        set(MONGOCXX_BUILD_STATIC ON CACHE INTERNAL "")
+    else()
+        set(BSONCXX_BUILD_STATIC OFF CACHE INTERNAL "")
+        set(MONGOCXX_BUILD_STATIC OFF CACHE INTERNAL "")
+    endif()
+
+    if(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC)
+        set(BSONCXX_LINK_STATIC ON CACHE INTERNAL "")
+        set(MONGOCXX_LINK_STATIC ON CACHE INTERNAL "")
+    else()
+        set(BSONCXX_LINK_STATIC OFF CACHE INTERNAL "")
+        set(MONGOCXX_LINK_STATIC OFF CACHE INTERNAL "")
+    endif()
+else()
+    # Give a fatal error if we have a non-sensical combination
+    if(BUILD_SHARED_AND_STATIC_LIBS)
+        message(FATAL_ERROR
+                "BUILD_SHARED_LIBS is OFF but BUILD_SHARED_AND_STATIC_LIBS is ON. \
+To build static libraries only, set both BUILD_SHARED_LIBS and BUILD_SHARED_AND_STATIC_LIBS to OFF"
+        )
+    endif()
+
+    set(BSONCXX_BUILD_SHARED OFF CACHE BOOL "")
+    set(MONGOCXX_BUILD_SHARED OFF CACHE BOOL "")
+
+    set(BSONCXX_BUILD_STATIC ON CACHE BOOL "")
+    set(MONGOCXX_BUILD_STATIC ON CACHE BOOL "")
+
+    set(BSONCXX_LINK_STATIC ON CACHE BOOL "")
+    set(MONGOCXX_LINK_STATIC ON CACHE BOOL "")
+endif()
+
+
 # If the user did not customize the install prefix,
 # set it to live under build so we don't inadverently pollute /usr/local
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)

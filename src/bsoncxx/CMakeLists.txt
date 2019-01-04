@@ -74,7 +74,7 @@ set(BSONCXX_HEADER_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/${BSONCXX_IN
 set(LIBBSON_REQUIRED_VERSION 1.13.0)
 set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
 
-if (BUILD_SHARED_LIBS)
+if(NOT BSONCXX_LINK_STATIC)
     find_package(libbson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
     set(libbson_libraries ${BSON_LIBRARIES})
     set(libbson_include_directories ${BSON_INCLUDE_DIRS})
@@ -117,85 +117,72 @@ if (BSONCXX_POLY_USE_BOOST)
     find_package(Boost 1.56.0 REQUIRED)
 endif()
 
-# We define two libraries: the normal library and the testing-only library.  The testing-only
-# library does not get installed, but the tests link against it instead of the normal library.  The
-# only difference between the two libraries is that BSONCXX_TESTING is defined in the testing-only
-# library (this define enables special testing-only behavior).
-add_library(bsoncxx
-    ${bsoncxx_sources}
-)
-add_library(bsoncxx_testing
-    ${bsoncxx_sources}
-)
-target_compile_definitions(bsoncxx_testing PUBLIC BSONCXX_TESTING)
-
-set_target_properties(bsoncxx_testing PROPERTIES
-    OUTPUT_NAME bsoncxx-testing
-)
-
-if (BUILD_SHARED_LIBS)
-    set_target_properties(bsoncxx PROPERTIES
-        OUTPUT_NAME bsoncxx
+function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
+    add_library(${TARGET} ${LINK_TYPE}
+        ${bsoncxx_sources}
     )
 
-    foreach (TARGET bsoncxx bsoncxx_testing)
+    set_target_properties(${TARGET} PROPERTIES
+        OUTPUT_NAME ${OUTPUT_NAME}
+        VERSION ${BSONCXX_VERSION}
+        DEFINE_SYMBOL BSONCXX_EXPORT
+    )
+
+    if(LINK_TYPE STREQUAL "SHARED")
         set_target_properties(${TARGET} PROPERTIES
-            VERSION ${BSONCXX_VERSION}
-            DEFINE_SYMBOL BSONCXX_EXPORT
             CXX_VISIBILITY_PRESET hidden
             VISIBILITY_INLINES_HIDDEN ON
             SOVERSION ${BSONCXX_ABI_VERSION}
         )
-    endforeach(TARGET)
-else()
-    target_compile_definitions(bsoncxx PUBLIC BSONCXX_STATIC)
-    target_compile_definitions(bsoncxx_testing PUBLIC BSONCXX_STATIC)
+    endif()
 
-    set_target_properties(bsoncxx PROPERTIES
-        OUTPUT_NAME bsoncxx-static
+    if(LINK_TYPE STREQUAL "STATIC")
+        target_compile_definitions(bsoncxx_static PUBLIC BSONCXX_STATIC)
+    endif()
+
+    if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
+        add_dependencies(${TARGET} EP_mnmlstc_core)
+        ExternalProject_Get_Property(EP_mnmlstc_core source_dir)
+        target_include_directories(${TARGET} PUBLIC ${source_dir}/include)
+    elseif (BSONCXX_POLY_USE_BOOST)
+        target_include_directories(${TARGET} PUBLIC ${Boost_INCLUDE_DIRS})
+    endif()
+
+    target_include_directories(${TARGET} PRIVATE ${libbson_include_directories})
+    target_compile_definitions(${TARGET} PRIVATE ${libbson_definitions})
+    target_link_libraries(${TARGET} PRIVATE ${libbson_libraries})
+
+    generate_export_header(${TARGET}
+        BASE_NAME BSONCXX
+        EXPORT_MACRO_NAME BSONCXX_API
+        NO_EXPORT_MACRO_NAME BSONCXX_PRIVATE
+        EXPORT_FILE_NAME config/export.hpp
+        STATIC_DEFINE BSONCXX_STATIC
     )
+endfunction(bsoncxx_add_library)
+
+# We define both the normal libraries and the testing-only library.  The testing-only
+# library does not get installed, but the tests link against it instead of the normal library.  The
+# only difference between the libraries is that BSONCXX_TESTING is defined in the testing-only
+# library (this define enables special testing-only behavior).
+
+if(BSONCXX_BUILD_SHARED)
+    bsoncxx_add_library(bsoncxx "bsoncxx" SHARED)
 endif()
 
-generate_export_header(bsoncxx
-    BASE_NAME BSONCXX
-    EXPORT_MACRO_NAME BSONCXX_API
-    NO_EXPORT_MACRO_NAME BSONCXX_PRIVATE
-    EXPORT_FILE_NAME config/export.hpp
-    STATIC_DEFINE BSONCXX_STATIC
-)
-
-generate_export_header(bsoncxx_testing
-    BASE_NAME BSONCXX
-    EXPORT_MACRO_NAME BSONCXX_API
-    NO_EXPORT_MACRO_NAME BSONCXX_PRIVATE
-    EXPORT_FILE_NAME config/export.hpp
-    STATIC_DEFINE BSONCXX_STATIC
-)
-
-if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
-    add_dependencies(bsoncxx EP_mnmlstc_core)
-    add_dependencies(bsoncxx_testing EP_mnmlstc_core)
-    ExternalProject_Get_Property(EP_mnmlstc_core source_dir)
-    target_include_directories(bsoncxx PUBLIC ${source_dir}/include)
-    target_include_directories(bsoncxx_testing PUBLIC ${source_dir}/include)
-elseif (BSONCXX_POLY_USE_BOOST)
-    target_include_directories(bsoncxx PUBLIC ${Boost_INCLUDE_DIRS})
-    target_include_directories(bsoncxx_testing PUBLIC ${Boost_INCLUDE_DIRS})
+if(BSONCXX_BUILD_STATIC)
+    bsoncxx_add_library(bsoncxx_static "bsoncxx-static" STATIC)
 endif()
 
-target_include_directories(bsoncxx PRIVATE ${libbson_include_directories})
-target_include_directories(bsoncxx_testing PRIVATE ${libbson_include_directories})
-
-target_compile_definitions(bsoncxx PRIVATE ${libbson_definitions})
-target_compile_definitions(bsoncxx_testing PRIVATE ${libbson_definitions})
-
-if (BUILD_SHARED_LIBS)
-    target_link_libraries(bsoncxx PRIVATE ${libbson_libraries})
-    target_link_libraries(bsoncxx_testing PRIVATE ${libbson_libraries})
+if(BSONCXX_BUILD_SHARED)
+    set(BSONCXX_LIBRARY_FOR_EXAMPLES "bsoncxx" CACHE INTERNAL "")
+    bsoncxx_add_library(bsoncxx_testing "bsoncxx-testing" SHARED)
 else()
-    target_link_libraries(bsoncxx ${libbson_libraries})
-    target_link_libraries(bsoncxx_testing ${libbson_libraries})
+    set(BSONCXX_LIBRARY_FOR_EXAMPLES "bsoncxx_static" CACHE INTERNAL "")
+    bsoncxx_add_library(bsoncxx_testing "bsoncxx-testing" STATIC)
 endif()
+target_compile_definitions(bsoncxx_testing PUBLIC BSONCXX_TESTING)
+
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     DESTINATION ${BSONCXX_HEADER_INSTALL_DIR}
@@ -210,40 +197,46 @@ install(FILES
     COMPONENT dev
 )
 
-install(TARGETS
-    bsoncxx
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
-)
-
 set(PACKAGE_INCLUDE_INSTALL_DIRS ${BSONCXX_HEADER_INSTALL_DIR})
 set(PACKAGE_LIBRARY_INSTALL_DIRS ${CMAKE_INSTALL_LIBDIR})
 set(PACKAGE_LIBRARIES bsoncxx)
 
 include(CMakePackageConfigHelpers)
 
-if (BUILD_SHARED_LIBS)
-    set(PKG "libbsoncxx")
-else()
-    set(PKG "libbsoncxx-static")
+function(bsoncxx_install TARGET)
+    install(TARGETS
+        ${TARGET}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
+    )
+    get_target_property(PKG ${TARGET} OUTPUT_NAME)
+    set(PKG "lib${PKG}")
+
+    configure_package_config_file(
+      cmake/${PKG}-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config.cmake
+      INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PKG}-${BSONCXX_VERSION}
+      PATH_VARS PACKAGE_INCLUDE_INSTALL_DIRS PACKAGE_LIBRARY_INSTALL_DIRS
+    )
+
+    write_basic_package_version_file(
+      ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config-version.cmake
+      VERSION ${BSONCXX_VERSION}
+      COMPATIBILITY SameMajorVersion
+    )
+
+    install(
+      FILES ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config-version.cmake
+      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PKG}-${BSONCXX_VERSION}
+    )
+endfunction(bsoncxx_install)
+
+if(BSONCXX_BUILD_SHARED)
+    bsoncxx_install(bsoncxx)
 endif()
 
-configure_package_config_file(
-  cmake/${PKG}-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config.cmake
-  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PKG}-${BSONCXX_VERSION}
-  PATH_VARS PACKAGE_INCLUDE_INSTALL_DIRS PACKAGE_LIBRARY_INSTALL_DIRS
-)
-
-write_basic_package_version_file(
-  ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config-version.cmake
-  VERSION ${BSONCXX_VERSION}
-  COMPATIBILITY SameMajorVersion
-)
-
-install(
-  FILES ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config-version.cmake
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PKG}-${BSONCXX_VERSION}
-)
+if(BSONCXX_BUILD_STATIC)
+    bsoncxx_install(bsoncxx_static)
+endif()
 
 add_subdirectory(test)

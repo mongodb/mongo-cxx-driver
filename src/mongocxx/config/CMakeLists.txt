@@ -34,7 +34,7 @@ install(FILES
     COMPONENT dev
 )
 
-if (BUILD_SHARED_LIBS)
+if(MONGOCXX_BUILD_SHARED)
     configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/libmongocxx.pc.in
         ${CMAKE_CURRENT_BINARY_DIR}/libmongocxx.pc
@@ -46,7 +46,9 @@ if (BUILD_SHARED_LIBS)
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
         COMPONENT dev
     )
-else()
+endif()
+
+if(MONGOCXX_BUILD_STATIC)
     configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/libmongocxx-static.pc.in
         ${CMAKE_CURRENT_BINARY_DIR}/libmongocxx-static.pc

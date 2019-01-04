@@ -29,7 +29,7 @@ set(BSONCXX_EXAMPLES
 foreach(EXAMPLE_SRC ${BSONCXX_EXAMPLES})
     get_filename_component(EXAMPLE_TARGET ${EXAMPLE_SRC} NAME_WE)
     add_executable(${EXAMPLE_TARGET} ${EXAMPLE_SRC})
-    target_link_libraries(${EXAMPLE_TARGET} bsoncxx)
+    target_link_libraries(${EXAMPLE_TARGET} ${BSONCXX_LIBRARY_FOR_EXAMPLES})
     set(BSONCXX_EXAMPLE_EXECUTABLES ${BSONCXX_EXAMPLE_EXECUTABLES} ${EXAMPLE_TARGET})
 endforeach(EXAMPLE_SRC)
 
