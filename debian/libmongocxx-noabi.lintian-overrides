@@ -1,0 +1,6 @@
+# Chosen not to maintain a symbols file, we'll check ABI stability with other
+# tools.
+libmongocxx-noabi: no-symbols-control-file
+
+# False positive on the spelling error
+libmongocxx-noabi: spelling-error-in-binary usr/lib/x86_64-linux-gnu/libmongocxx.so.3.4.0 ment meant

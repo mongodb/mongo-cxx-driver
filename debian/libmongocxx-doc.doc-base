@@ -1,0 +1,9 @@
+Document: libmongocxx-doc
+Title: libmongocxx Documentation
+Author: MongoDB, Inc.
+Abstract: Documentation for developing with the MongoDB C++ Driver
+Section: Programming
+
+Format: HTML
+Index: /usr/share/doc/libmongocxx-dev/api/current/index.html
+Files: /usr/share/doc/libmongocxx-dev/api/current/*.html

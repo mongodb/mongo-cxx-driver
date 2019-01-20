@@ -1,0 +1,5 @@
+mongo-cxx-driver (3.4.0-1) experimental; urgency=low
+
+  * Initial release (Closes: #914573)
+
+ -- Roberto C. Sanchez <roberto@connexer.com>  Tue, 29 Jan 2019 14:49:13 -0500

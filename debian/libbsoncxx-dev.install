@@ -1,0 +1,4 @@
+usr/include/bsoncxx*
+usr/lib/*/libbsoncxx*.so
+usr/lib/*/pkgconfig/libbsoncxx*
+usr/lib/*/cmake/libbsoncxx*
