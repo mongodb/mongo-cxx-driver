@@ -13,4 +13,3 @@ examples/projects/mongocxx/pkg-config/static/build.sh eol=lf
 /.* export-ignore
 /appveyor.yml export-ignore
 /TODO.md export-ignore
-/Doxyfile export-ignore
