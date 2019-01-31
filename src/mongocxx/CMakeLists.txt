@@ -30,7 +30,7 @@ set(MONGOCXX_HEADER_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/${MONGOCXX
 set(LIBMONGOC_REQUIRED_VERSION 1.13.0)
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 
-if(NOT MONGOCXX_LINK_STATIC)
+if(NOT MONGOCXX_LINK_WITH_STATIC_MONGOC)
     find_package(libmongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
     set(libmongoc_libraries ${MONGOC_LIBRARIES})
     set(libmongoc_include_directories ${MONGOC_INCLUDE_DIRS})
@@ -155,7 +155,7 @@ function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     endif()
 
     if(LINK_TYPE STREQUAL "STATIC")
-        # Nothing
+        target_compile_definitions(${TARGET} PUBLIC MONGOCXX_STATIC)
     endif()
 
     target_include_directories(${TARGET} PRIVATE ${libmongoc_include_directories})
