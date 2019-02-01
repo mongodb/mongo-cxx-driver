@@ -267,7 +267,7 @@ bool is_numeric(types::value value) {
            value.type() == type::k_double;
 }
 
-bool matches(types::value main, types::value pattern, stdx::optional<match_visitor> visitor_fn) {
+bool matches(types::value main, types::value pattern, match_visitor visitor_fn) {
     if (is_numeric(pattern) && as_double(pattern) == 42) {
         return true;
     }
@@ -286,7 +286,7 @@ bool matches(types::value main, types::value pattern, stdx::optional<match_visit
                 if (main_view.find(el.key()) != main_view.end()) {
                     main_value = main_view[el.key()].get_value();
                 }
-                action = (*visitor_fn)(el.key(), main_value, el.get_value());
+                action = visitor_fn(el.key(), main_value, el.get_value());
             }
 
             if (action == match_action::k_skip) {
@@ -342,7 +342,7 @@ bool matches(types::value main, types::value pattern, stdx::optional<match_visit
     return main == pattern;
 }
 
-bool matches(document::view doc, document::view pattern, stdx::optional<match_visitor> visitor_fn) {
+bool matches(document::view doc, document::view pattern, match_visitor visitor_fn) {
     return matches(
         types::value{types::b_document{doc}}, types::value{types::b_document{pattern}}, visitor_fn);
 }

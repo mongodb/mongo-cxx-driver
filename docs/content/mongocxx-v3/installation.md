@@ -35,10 +35,11 @@ have problems, please file a bug report via
 
 The mongocxx driver builds on top of the MongoDB C driver.
 
+* For mongocxx-3.4.x, libmongoc 1.13.0 or later is required.
 * For mongocxx-3.3.x, libmongoc 1.10.1 or later is required.
 * For mongocxx-3.2.x, libmongoc 1.9.2 or later is required.
-* For mongocxx-3.1.[0-3], libmongoc 1.5.0 or later is required.
 * For mongocxx-3.1.4+, libmongoc 1.7.0 or later is required.
+* For mongocxx-3.1.[0-3], libmongoc 1.5.0 or later is required.
 * For mongocxx-3.0.x, we recommend the last 1.4.x version of libmongoc
 
 Unless you know that your package manager offers a high-enough version, you
@@ -162,16 +163,30 @@ On Windows, this is the equivalent use of cmake:
 
 ```sh
 'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
-     -G "Visual Studio 14 Win64"                \
-    -DBOOST_ROOT=c:\local\boost_1_59_0          \
-    -DCMAKE_PREFIX_PATH=c:\mongo-c-driver       \
+     -G "Visual Studio 14 2015 Win64"           \
+    -DBOOST_ROOT=C:\local\boost_1_59_0          \
+    -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
 ```
 
 The example above assumes:
-* Boost is found in `c:\local\boost_1_59_0`.
-* `libmongoc` is found in `c:\mongo-c-driver`.
-* `mongocxx` is to be installed into `c:\mongo-cxx-driver`.
+* Boost is found in `C:\local\boost_1_59_0`.
+* `libmongoc` is found in `C:\mongo-c-driver`.
+* `mongocxx` is to be installed into `C:\mongo-cxx-driver`.
+
+For building with Visual Studio 2017 (without a C++17 polyfill), it is necessary to configure with
+an additional option, `/Zc:__cplusplus` to opt into the correct definition of `__cplusplus`
+([problem described here](https://blogs.msdn.microsoft.com/vcblog/2018/04/09/msvc-now-correctly-reports-__cplusplus/)):
+
+```sh
+'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
+    -G "Visual Studio 15 2017 Win64"            \
+    -DCMAKE_CXX_STANDARD=17                     \
+    -DCMAKE_CXX_FLAGS="/Zc:__cplusplus"         \
+    -DBOOST_ROOT=C:\local\boost_1_59_0          \
+    -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
+    -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver  \
+```
 
 For details on how to install libmongoc for windows, see the
 [mongoc Windows installation instructions](http://mongoc.org/libmongoc/current/installing.html#building-windows).

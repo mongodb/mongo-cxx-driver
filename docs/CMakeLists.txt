@@ -1,4 +1,4 @@
-# Copyright 2016 MongoDB Inc.
+# Copyright 2018-present MongoDB Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,20 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_definitions(-DMONGO_CXX_DRIVER_COMPILING)
-add_subdirectory(bsoncxx)
-add_subdirectory(mongocxx)
+add_subdirectory (themes)
 
-set_local_dist (src_DIST_local
+file (GLOB_RECURSE docs_DIST_mds RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} content/*.md)
+file (GLOB docs_DIST_htmls RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} layouts/shortcodes/*.html)
+file (GLOB docs_DIST_tomls RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.toml data/*.toml)
+
+set_local_dist (docs_DIST_local
    CMakeLists.txt
-   third_party/catch/main.cpp
-   third_party/catch/include/catch.hpp
-   third_party/catch/include/helpers.hpp
+   ${docs_DIST_mds}
+   ${docs_DIST_htmls}
+   ${docs_DIST_tomls}
+   layouts/.readme
+   static/.readme
 )
 
-set (src_DIST
-   ${src_DIST_local}
-   ${src_bsoncxx_DIST}
-   ${src_mongocxx_DIST}
+set (docs_DIST
+   ${docs_DIST_local}
+   ${docs_themes_DIST}
    PARENT_SCOPE
 )

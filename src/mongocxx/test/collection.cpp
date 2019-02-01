@@ -913,46 +913,6 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
     }
 
-    SECTION("replace_one overload resolution", "[collection]") {
-        if (!server_has_sessions(mongodb_client)) {
-            return;
-        }
-
-        auto cs = mongodb_client.start_session();
-        auto coll = db["replace_one_overload_resolution"];
-        document d;
-        auto v = d.view();
-
-        // Ensure the following usages all compile.
-        // With three empty braced initializers, use modern replace_one with options::replace.
-        coll.replace_one({}, {}, {});
-        coll.replace_one(cs, {}, {}, {});
-
-        // With two empty braced initializers, use modern replace_one with options::replace.
-        coll.replace_one(v, {}, {});
-        coll.replace_one(cs, v, {}, {});
-
-        // With one empty braced initializer, use modern replace_one with options::replace.
-        coll.replace_one(v, v, {});
-        coll.replace_one(cs, v, v, {});
-
-        // Explicit.
-        coll.replace_one(v, v, options::replace{});
-        coll.replace_one(cs, v, v, options::replace{});
-
-        // Deprecated, but compiles.
-        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
-        coll.replace_one({}, {}, options::update{});
-        coll.replace_one(cs, {}, {}, options::update{});
-
-        coll.replace_one(v, {}, options::update{});
-        coll.replace_one(cs, v, {}, options::update{});
-
-        coll.replace_one(v, v, options::update{});
-        coll.replace_one(cs, v, v, options::update{});
-        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
-    }
-
     SECTION("filtered document delete one works", "[collection]") {
         collection coll = db["filtered_doc_delete_one"];
         coll.drop();

@@ -128,3 +128,13 @@ class foo {
 
 ### Relational Operators
  - Prefer to use free functions
+
+### Formatting
+
+The source includes a clang format definitions file (`.clang-format`) to enforce consistent style. Run clang-format (using 3.8) from the root of the repository or use the helper script included in the source:
+
+```
+python ./etc/clang-format.py format
+```
+
+Note, this script will automatically download clang-format 3.8 if it cannot detect it on your system.

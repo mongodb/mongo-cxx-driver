@@ -28,6 +28,7 @@ endif()
 
 add_subdirectory(bsoncxx)
 add_subdirectory(mongocxx)
+add_subdirectory(projects)
 
 add_custom_target(examples DEPENDS ${MONGOCXX_EXAMPLE_EXECUTABLES} ${BSONCXX_EXAMPLE_EXECUTABLES})
 
@@ -56,3 +57,18 @@ endforeach(EXAMPLE)
 foreach(EXAMPLE ${BSONCXX_EXAMPLE_EXECUTABLES})
     add_custom_command(TARGET run-examples POST_BUILD COMMAND ${EXAMPLE})
 endforeach(EXAMPLE)
+
+file (GLOB examples_DIST_mds RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.md)
+
+set_local_dist (examples_DIST_local
+   CMakeLists.txt
+   ${examples_DIST_mds}
+)
+
+set (examples_DIST
+   ${examples_DIST_local}
+   ${examples_bsoncxx_DIST}
+   ${examples_mongocxx_DIST}
+   ${examples_projects_DIST}
+   PARENT_SCOPE
+)

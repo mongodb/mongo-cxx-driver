@@ -163,12 +163,22 @@ TEST_CASE("Change stream spec tests", "[change_stream_spec]") {
     instance::current();
     char* change_stream_tests_path = std::getenv("CHANGE_STREAM_TESTS_PATH");
     if (!change_stream_tests_path) {
-        FAIL("environment variable CHANGES_STREAM_TESTS_PATH not set");
+        FAIL("environment variable CHANGE_STREAM_TESTS_PATH not set");
     }
 
     std::string path = change_stream_tests_path;
     if (path.back() == '/') {
         path.pop_back();
+    }
+
+    client client{uri{}};
+    if (!test_util::is_replica_set(client)) {
+        WARN("Skipping - not a replica set");
+        return;
+    } else if (test_util::get_max_wire_version(client) < 7) {
+        // Change streams require wire version 6, and newer features require 7.
+        WARN("Skipping - max wire version is < 7");
+        return;
     }
 
     std::ifstream test_files{path + "/test_files.txt"};

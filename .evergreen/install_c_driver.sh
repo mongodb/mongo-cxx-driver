@@ -40,15 +40,7 @@ else
     tar --extract --file $LIB.tgz
 fi
 
-if [ -f "/Applications/cmake-3.2.2-Darwin-x86_64/CMake.app/Contents/bin/cmake" ]; then
-    CMAKE="/Applications/cmake-3.2.2-Darwin-x86_64/CMake.app/Contents/bin/cmake"
-elif [ -f "/Applications/Cmake.app/Contents/bin/cmake" ]; then
-    CMAKE="/Applications/Cmake.app/Contents/bin/cmake"
-elif [ -f "/opt/cmake/bin/cmake" ]; then
-    CMAKE="/opt/cmake/bin/cmake"
-elif command -v cmake 2>/dev/null; then
-    CMAKE=cmake
-fi
+. .evergreen/find_cmake.sh
 
 cd $DIR
 
@@ -69,8 +61,18 @@ case "$OS" in
         ;;
 
     cygwin*)
-        /cygdrive/c/cmake/bin/cmake -G "Visual Studio 14 2015 Win64" $CMAKE_ARGS .
-        "/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe" /m INSTALL.vcxproj
+        GENERATOR=${GENERATOR:-"Visual Studio 14 2015 Win64"}
+        if [ "$GENERATOR" == "Visual Studio 14 2015 Win64" ]; then
+          MSBUILD="/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe"
+        elif [ "$GENERATOR" == "Visual Studio 15 2017 Win64" ]; then
+          MSBUILD="/cygdrive/c/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin/MSBuild.exe"
+        else
+           echo "Unexpected generator \"$GENERATOR\" for Windows";
+           exit 1
+        fi
+        "$CMAKE" -G "$GENERATOR" $CMAKE_ARGS .
+        "$MSBUILD" /m INSTALL.vcxproj
+
         ;;
 
     *)

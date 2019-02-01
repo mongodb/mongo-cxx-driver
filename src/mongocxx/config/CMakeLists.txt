@@ -61,3 +61,17 @@ if(MONGOCXX_BUILD_STATIC)
         COMPONENT dev
     )
 endif()
+
+set_dist_list (src_mongocxx_config_DIST
+   CMakeLists.txt
+   compiler.hpp
+   config.hpp.in
+   libmongocxx-static.pc.in
+   libmongocxx.pc.in
+   postlude.hpp
+   prelude.hpp
+   private/config.hh.in
+   private/postlude.hh
+   private/prelude.hh
+   version.hpp.in
+)

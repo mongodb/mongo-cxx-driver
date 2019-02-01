@@ -34,3 +34,8 @@ foreach(EXAMPLE_SRC ${BSONCXX_EXAMPLES})
 endforeach(EXAMPLE_SRC)
 
 set(BSONCXX_EXAMPLE_EXECUTABLES ${BSONCXX_EXAMPLE_EXECUTABLES} PARENT_SCOPE)
+
+set_dist_list (examples_bsoncxx_DIST
+   CMakeLists.txt
+   ${BSONCXX_EXAMPLES}
+)

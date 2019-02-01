@@ -21,7 +21,6 @@
 
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <mongocxx/exception/private/error_category.hh>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/private/cursor.hh>

@@ -1069,59 +1069,55 @@ operation_runner::operation_runner(database* db,
     : _coll(coll), _db(db), _session0(session0), _session1(session1) {}
 
 document::value operation_runner::run(document::view operation) {
-    stdx::string_view key = operation["name"].get_utf8().value;
     using namespace bsoncxx::builder::basic;
-    try {
-        if (key.compare("aggregate") == 0) {
-            return _run_aggregate(operation);
-        } else if (key.compare("count") == 0) {
-            return _run_count(operation);
-        } else if (key.compare("countDocuments") == 0) {
-            return _run_count_documents(operation);
-        } else if (key.compare("estimatedDocumentCount") == 0) {
-            return _run_estimated_document_count(operation);
-        } else if (key.compare("distinct") == 0) {
-            return _run_distinct(operation);
-        } else if (key.compare("find") == 0) {
-            return _run_find(operation);
-        } else if (key.compare("deleteMany") == 0) {
-            return _run_delete_many(operation);
-        } else if (key.compare("deleteOne") == 0) {
-            return _run_delete_one(operation);
-        } else if (key.compare("findOneAndDelete") == 0) {
-            return _run_find_one_and_delete(operation);
-        } else if (key.compare("findOneAndReplace") == 0) {
-            return _run_find_one_and_replace(operation);
-        } else if (key.compare("findOneAndUpdate") == 0) {
-            return _run_find_one_and_update(operation);
-        } else if (key.compare("insertMany") == 0) {
-            return _run_insert_many(operation);
-        } else if (key.compare("insertOne") == 0) {
-            return _run_insert_one(operation);
-        } else if (key.compare("replaceOne") == 0) {
-            return _run_replace_one(operation);
-        } else if (key.compare("updateMany") == 0) {
-            return _run_update_many(operation);
-        } else if (key.compare("updateOne") == 0) {
-            return _run_update_one(operation);
-        } else if (key.compare("bulkWrite") == 0) {
-            return _run_bulk_write(operation);
-        } else if (key.compare("startTransaction") == 0) {
-            return _run_start_transaction(operation);
-        } else if (key.compare("commitTransaction") == 0) {
-            return _run_commit_transaction(operation);
-        } else if (key.compare("abortTransaction") == 0) {
-            return _run_abort_transaction(operation);
-        } else if (key.compare("runCommand") == 0) {
-            return _run_run_command(operation);
-        } else {
-            throw std::logic_error{"unsupported operation" + string::to_string(key)};
-        }
-    } catch (mongocxx::operation_exception& operation_exception) {
-        return make_document(kvp("error", true));
-    }
 
-    return make_document();
+    stdx::string_view key = operation["name"].get_utf8().value;
+
+    if (key.compare("aggregate") == 0) {
+        return _run_aggregate(operation);
+    } else if (key.compare("count") == 0) {
+        return _run_count(operation);
+    } else if (key.compare("countDocuments") == 0) {
+        return _run_count_documents(operation);
+    } else if (key.compare("estimatedDocumentCount") == 0) {
+        return _run_estimated_document_count(operation);
+    } else if (key.compare("distinct") == 0) {
+        return _run_distinct(operation);
+    } else if (key.compare("find") == 0) {
+        return _run_find(operation);
+    } else if (key.compare("deleteMany") == 0) {
+        return _run_delete_many(operation);
+    } else if (key.compare("deleteOne") == 0) {
+        return _run_delete_one(operation);
+    } else if (key.compare("findOneAndDelete") == 0) {
+        return _run_find_one_and_delete(operation);
+    } else if (key.compare("findOneAndReplace") == 0) {
+        return _run_find_one_and_replace(operation);
+    } else if (key.compare("findOneAndUpdate") == 0) {
+        return _run_find_one_and_update(operation);
+    } else if (key.compare("insertMany") == 0) {
+        return _run_insert_many(operation);
+    } else if (key.compare("insertOne") == 0) {
+        return _run_insert_one(operation);
+    } else if (key.compare("replaceOne") == 0) {
+        return _run_replace_one(operation);
+    } else if (key.compare("updateMany") == 0) {
+        return _run_update_many(operation);
+    } else if (key.compare("updateOne") == 0) {
+        return _run_update_one(operation);
+    } else if (key.compare("bulkWrite") == 0) {
+        return _run_bulk_write(operation);
+    } else if (key.compare("startTransaction") == 0) {
+        return _run_start_transaction(operation);
+    } else if (key.compare("commitTransaction") == 0) {
+        return _run_commit_transaction(operation);
+    } else if (key.compare("abortTransaction") == 0) {
+        return _run_abort_transaction(operation);
+    } else if (key.compare("runCommand") == 0) {
+        return _run_run_command(operation);
+    } else {
+        throw std::logic_error{"unsupported operation" + string::to_string(key)};
+    }
 }
 
 }  // namespace spec

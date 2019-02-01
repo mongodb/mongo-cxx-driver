@@ -134,6 +134,7 @@ endif()
 set(CMAKE_MODULE_PATH
    ${CMAKE_MODULE_PATH}
    ${PROJECT_SOURCE_DIR}/cmake
+   ${PROJECT_SOURCE_DIR}/cmake/make_dist
 )
 
 include(GNUInstallDirs)
@@ -142,6 +143,8 @@ include (ParseVersion)
 if(BUILD_VERSION STREQUAL "0.0.0")
     if(EXISTS ${CMAKE_BINARY_DIR}/VERSION_CURRENT)
         file(STRINGS ${CMAKE_BINARY_DIR}/VERSION_CURRENT BUILD_VERSION)
+    elseif(EXISTS ${PROJECT_SOURCE_DIR}/build/VERSION_CURRENT)
+        file(STRINGS ${PROJECT_SOURCE_DIR}/build/VERSION_CURRENT BUILD_VERSION)
     else()
         find_package(PythonInterp)
         if(PYTHONINTERP_FOUND)
@@ -150,6 +153,7 @@ if(BUILD_VERSION STREQUAL "0.0.0")
                 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                 OUTPUT_VARIABLE CALC_RELEASE_VERSION
                 RESULT_VARIABLE CALC_RELEASE_VERSION_RESULT
+                OUTPUT_STRIP_TRAILING_WHITESPACE
             )
             if(NOT CALC_RELEASE_VERSION_RESULT STREQUAL 0)
                 # If python failed above, stderr would tell the user about it
@@ -159,6 +163,7 @@ if(BUILD_VERSION STREQUAL "0.0.0")
                 )
             else()
                 set(BUILD_VERSION ${CALC_RELEASE_VERSION})
+                file(WRITE ${CMAKE_BINARY_DIR}/VERSION_CURRENT ${CALC_RELEASE_VERSION})
             endif()
         else()
             message(WARNING
@@ -175,6 +180,13 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+unset (dist_generated CACHE)
+unset (dist_generated_depends CACHE)
+
+set (BUILD_SOURCE_DIR ${CMAKE_BINARY_DIR})
+
+include (MakeDistFiles)
 
 add_custom_target(hugo_dir
     COMMAND ${CMAKE_COMMAND} -E make_directory hugo
@@ -241,3 +253,70 @@ add_subdirectory(src)
 add_subdirectory(examples EXCLUDE_FROM_ALL)
 
 add_subdirectory(benchmark EXCLUDE_FROM_ALL)
+
+# Implement 'dist' target
+#
+# CMake does not implement anything like 'dist' from autotools.
+# This implementation is based on the one in GnuCash.
+
+add_subdirectory (cmake)
+add_subdirectory (data)
+add_subdirectory (docs)
+add_subdirectory (etc)
+
+set (PACKAGE_PREFIX "mongo-cxx-driver-r${BUILD_VERSION}")
+set (DIST_FILE "${PACKAGE_PREFIX}.tar.gz")
+
+set (top_DIST_local
+   CMakeLists.txt
+   CONTRIBUTING.md
+   CREDITS.json
+   LICENSE
+   README.md
+   THIRD-PARTY-NOTICES
+   build/.gitignore
+   build/VERSION_CURRENT
+)
+
+set_local_dist (top_DIST ${top_DIST_local})
+
+set (ALL_DIST
+   ${top_DIST}
+   ${benchmark_DIST}
+   ${cmake_DIST}
+   ${docs_DIST}
+   ${data_DIST}
+   ${etc_DIST}
+   ${examples_DIST}
+   ${src_DIST}
+)
+
+# Write a dist manifest
+string (REPLACE ";" "\n" ALL_DIST_LINES "${ALL_DIST}")
+file (WRITE ${CMAKE_BINARY_DIR}/dist_manifest.txt ${ALL_DIST_LINES})
+
+# This is the command that produces the distribution tarball
+add_custom_command (OUTPUT ${DIST_FILE}
+   COMMAND ${CMAKE_COMMAND}
+      -D CMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake/make_dist
+      -D PACKAGE_PREFIX=${PACKAGE_PREFIX}
+      -D MONGOCXX_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+      -D BUILD_SOURCE_DIR=${BUILD_SOURCE_DIR}
+      -D SHELL=${SHELL}
+      "-Ddist_generated=\"${dist_generated}\""
+      -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDist.cmake
+
+   DEPENDS
+      ${ALL_DIST} ${dist_generated_depends}
+)
+
+add_custom_target (dist DEPENDS ${DIST_FILE})
+
+add_custom_target (distcheck DEPENDS dist
+   COMMAND ${CMAKE_COMMAND}
+      -D CMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake/make_dist
+      -D CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
+      -D PACKAGE_PREFIX=${PACKAGE_PREFIX}
+      -D CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
+      -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDistCheck.cmake
+)

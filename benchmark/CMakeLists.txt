@@ -51,6 +51,15 @@ set(BENCHMARK_LIBRARY
     score_recorder.cpp
 )
 
+file (GLOB benchmark_DIST_hpps RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.hpp)
+
+set_dist_list (benchmark_DIST
+   CMakeLists.txt
+   README.txt
+   ${BENCHMARK_LIBRARY}
+   ${benchmark_DIST_hpps}
+)
+
 add_executable(microbenchmarks ${BENCHMARK_LIBRARY})
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)

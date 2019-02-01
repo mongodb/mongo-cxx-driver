@@ -31,6 +31,7 @@
 
 #include <mongocxx/collection.hpp>
 #include <mongocxx/config/private/prelude.hh>
+#include <third_party/catch/include/catch.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -148,11 +149,25 @@ using match_visitor =
 
 bool matches(bsoncxx::types::value main,
              bsoncxx::types::value pattern,
-             bsoncxx::stdx::optional<match_visitor> visitor_fn = {});
+             match_visitor visitor_fn = {});
 
 bool matches(bsoncxx::document::view doc,
              bsoncxx::document::view pattern,
-             bsoncxx::stdx::optional<match_visitor> visitor_fn = {});
+             match_visitor visitor_fn = {});
+
+#define REQUIRE_BSON_MATCHES(_main, _pattern)                                                      \
+    do {                                                                                           \
+        if (!test_util::matches((_main), (_pattern))) {                                            \
+            FAIL("Mismatch, expected " << to_json((_pattern)) << ", actual " << to_json((_main))); \
+        }                                                                                          \
+    } while (0)
+
+#define REQUIRE_BSON_MATCHES_V(_main, _pattern, _visit)                                            \
+    do {                                                                                           \
+        if (!test_util::matches((_main), (_pattern), (_visit))) {                                  \
+            FAIL("Mismatch, expected " << to_json((_pattern)) << ", actual " << to_json((_main))); \
+        }                                                                                          \
+    } while (0)
 
 std::string tolowercase(stdx::string_view view);
 

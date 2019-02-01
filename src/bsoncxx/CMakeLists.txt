@@ -240,3 +240,83 @@ if(BSONCXX_BUILD_STATIC)
 endif()
 
 add_subdirectory(test)
+
+set_local_dist (src_bsoncxx_DIST_local
+   CMakeLists.txt
+   array/element.cpp
+   array/element.hpp
+   array/value.cpp
+   array/value.hpp
+   array/view.cpp
+   array/view.hpp
+   array/view_or_value.hpp
+   builder/basic/array.hpp
+   builder/basic/document.hpp
+   builder/basic/helpers.hpp
+   builder/basic/impl.hpp
+   builder/basic/kvp.hpp
+   builder/basic/sub_array.hpp
+   builder/basic/sub_document.hpp
+   builder/concatenate.hpp
+   builder/core.cpp
+   builder/core.hpp
+   builder/stream/array.hpp
+   builder/stream/array_context.hpp
+   builder/stream/closed_context.hpp
+   builder/stream/document.hpp
+   builder/stream/helpers.hpp
+   builder/stream/key_context.hpp
+   builder/stream/single_context.hpp
+   builder/stream/value_context.hpp
+   cmake/libbsoncxx-config.cmake.in
+   cmake/libbsoncxx-static-config.cmake.in
+   decimal128.cpp
+   decimal128.hpp
+   document/element.cpp
+   document/element.hpp
+   document/value.cpp
+   document/value.hpp
+   document/view.cpp
+   document/view.hpp
+   document/view_or_value.hpp
+   enums/binary_sub_type.hpp
+   enums/type.hpp
+   exception/error_code.cpp
+   exception/error_code.hpp
+   exception/exception.hpp
+   json.cpp
+   json.hpp
+   oid.cpp
+   oid.hpp
+   private/b64_ntop.hh
+   private/helpers.hh
+   private/itoa.cpp
+   private/itoa.hh
+   private/libbson.hh
+   private/stack.hh
+   private/suppress_deprecation_warnings.hh
+   stdx/make_unique.hpp
+   stdx/optional.hpp
+   stdx/string_view.hpp
+   string/to_string.hpp
+   string/view_or_value.cpp
+   string/view_or_value.hpp
+   test_util/catch.hh
+   test_util/export_for_testing.hh
+   types.cpp
+   types.hpp
+   types/value.cpp
+   types/value.hpp
+   util/functor.hpp
+   validate.cpp
+   validate.hpp
+   view_or_value.hpp
+)
+
+set (src_bsoncxx_DIST
+   ${src_bsoncxx_DIST_local}
+   ${src_bsoncxx_config_DIST}
+   ${src_bsoncxx_third_party_DIST}
+   ${src_bsoncxx_test_DIST}
+   PARENT_SCOPE
+)

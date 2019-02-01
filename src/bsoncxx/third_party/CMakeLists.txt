@@ -40,3 +40,6 @@ if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
 
 endif()
 
+set_dist_list (src_bsoncxx_third_party_DIST
+   CMakeLists.txt
+)

@@ -59,3 +59,9 @@ target_link_libraries(pool ${MONGOCXX_LIBRARY_FOR_EXAMPLES} Threads::Threads)
 set (MONGOCXX_EXAMPLE_EXECUTABLES ${MONGOCXX_EXAMPLE_EXECUTABLES} pool)
 
 set(MONGOCXX_EXAMPLE_EXECUTABLES ${MONGOCXX_EXAMPLE_EXECUTABLES} PARENT_SCOPE)
+
+set_dist_list (examples_mongocxx_DIST
+   CMakeLists.txt
+   ${MONGOCXX_EXAMPLES}
+   pool.cpp
+)
