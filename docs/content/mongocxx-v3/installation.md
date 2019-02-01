@@ -122,15 +122,15 @@ configuration, `mongocxx` installs into its local build directory as a courtesy 
 from source. To configure `mongocxx` for installation into `/usr/local` as well, use the following
 `cmake` command:
 
-(***NOTE***: The trailing `..` below is important!  Don't omit it.)
-
 ```
 cmake ..                                \
     -DCMAKE_BUILD_TYPE=Release          \
     -DCMAKE_INSTALL_PREFIX=/usr/local
 ```
 
-The installation of `mongocxx` can be customized further. In the Unix examples that follow,
+> ***NOTE*** The trailing `..` above is important!  Don't omit it.
+
+In the Unix examples that follow,
 `mongocxx` is customized in these ways:
 * `libmongoc` is found in `/opt/mongo-c-driver`.
 * `mongocxx` is to be installed into `/opt/mongo-cxx-driver`.
@@ -143,8 +143,9 @@ cmake ..                                            \
     -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
 ```
 
-(*Note*: If you need multiple paths in a CMake PATH variable, separate them with a semicolon like
-this: `-DCMAKE_PREFIX_PATH="/your/cdriver/prefix;/some/other/path"`)
+> *Note* If you need multiple paths in a CMake PATH variable, separate them with a semicolon like
+> this:
+> `-DCMAKE_PREFIX_PATH="/your/cdriver/prefix;/some/other/path"`
 
 These options can be freely mixed with a C++17 polyfill option. For instance, this is how a user
 would run the command above with the Boost polyfill option:
@@ -155,6 +156,7 @@ cmake ..                                            \
     -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
     -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
 ```
+---
 
 On Windows, this is the equivalent use of cmake:
 
@@ -176,8 +178,8 @@ For details on how to install libmongoc for windows, see the
 
 #### Configuring with `mongocxx` 3.1.x or 3.0.x
 
-Users should specify the `libmongoc` installation directory by using the `-DLIBMONGOC_DIR` and
-`-DLIBBSON_DIR` options instead of the `-DCMAKE_PREFIX_PATH` option:
+Instead of the `-DCMAKE_PREFIX_PATH` option, users must specify the `libmongoc` installation
+directory by using the `-DLIBMONGOC_DIR` and `-DLIBBSON_DIR` options:
 
 ```sh
 cmake ..                                            \
