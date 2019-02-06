@@ -20,7 +20,7 @@ We currently test the driver with the following configurations:
  clang |   3.8    | 7.0 (Apple) |        -
  gcc   | 4.8, 5.4 |     -       |        -
  VS    |   n/a    |    n/a      | 14 (2015) Update 3
- boost |    -     |   1.5.3     |      1.6.0
+ boost |    -     |   1.67.0    |      1.60.0
 
 Versions older the the ones listed may not work and are not
 supported; use them at your own risk.
