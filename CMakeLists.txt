@@ -245,6 +245,10 @@ set (ALL_DIST
 string (REPLACE ";" "\n" ALL_DIST_LINES "${ALL_DIST}")
 file (WRITE ${CMAKE_BINARY_DIR}/dist_manifest.txt ${ALL_DIST_LINES})
 
+install (FILES LICENSE README.md THIRD-PARTY-NOTICES
+   DESTINATION ${CMAKE_INSTALL_DATADIR}/mongo-cxx-driver
+)
+
 # This is the command that produces the distribution tarball
 add_custom_command (OUTPUT ${DIST_FILE}
    COMMAND ${CMAKE_COMMAND}
