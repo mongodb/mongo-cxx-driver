@@ -129,8 +129,6 @@ cmake ..                                \
     -DCMAKE_INSTALL_PREFIX=/usr/local
 ```
 
-> ***NOTE*** The trailing `..` above is important!  Don't omit it.
-
 In the Unix examples that follow,
 `mongocxx` is customized in these ways:
 * `libmongoc` is found in `/opt/mongo-c-driver`.

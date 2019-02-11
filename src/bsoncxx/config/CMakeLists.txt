@@ -34,7 +34,7 @@ install(FILES
     COMPONENT dev
 )
 
-if (BSONCXX_BUILD_SHARED)
+if(BSONCXX_BUILD_SHARED)
     configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/libbsoncxx.pc.in
         ${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx.pc

@@ -48,7 +48,7 @@ endif()
 # that we end up not being able to turn deprecation warnings into
 # errors. Instead, since we know all our platforms offer the feature,
 # just hard enable it here.
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   set(COMPILER_HAS_DEPRECATED true)
 else()
   set(COMPILER_HAS_DEPRECATED_ATTR true)

@@ -27,22 +27,22 @@ option(BSONCXX_POLY_USE_STD "Use C++17 std library for stdx polyfills" OFF)
 # Count how many polyfill options are true-ish
 set(BSONCXX_POLY_OPTIONS_SET 0)
 foreach (BSONCXX_POLY_OPTION  ${BSONCXX_POLY_USE_MNMLSTC} ${BSONCXX_POLY_USE_STD_EXPERIMENTAL} ${BSONCXX_POLY_USE_BOOST} ${BSONCXX_POLY_USE_STD})
-  if (${BSONCXX_POLY_OPTION})
+  if(${BSONCXX_POLY_OPTION})
     MATH(EXPR BSONCXX_POLY_OPTIONS_SET "${BSONCXX_POLY_OPTIONS_SET}+1")
   endif()
 endforeach()
 
-if (BSONCXX_POLY_OPTIONS_SET GREATER 1)
+if(BSONCXX_POLY_OPTIONS_SET GREATER 1)
   # You can't ask for more than one polyfill
   message(FATAL_ERROR "Cannnot specify more than one bsoncxx polyfill choice")
-elseif (BSONCXX_POLY_OPTIONS_SET EQUAL 0)
+elseif(BSONCXX_POLY_OPTIONS_SET EQUAL 0)
   # You can just not say, in which case we endeavor to pick a sane default:
 
-  if (NOT CMAKE_CXX_STANDARD LESS 17)
+  if(NOT CMAKE_CXX_STANDARD LESS 17)
     # If we are in C++17 mode, use the C++17 versions
     set(BSONCXX_POLY_USE_STD ON)
     message(STATUS "Auto-configuring bsoncxx to use C++17 std library polyfills since C++17 is active and user didn't specify otherwise")
-  elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     # Otherwise, since MSVC can't handle MNMLSTC, default to boost
     set(BSONCXX_POLY_USE_BOOST ON)
     message(STATUS "Auto-configuring bsoncxx to use boost std library polyfills since C++17 is inactive and compiler is MSVC")
@@ -56,12 +56,12 @@ endif()
 
 # It doesn't make sense to say we aren't using MNMLSTC but then
 # request the system version of it.
-if (NOT BSONCXX_POLY_USE_MNMLSTC AND BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
+if(NOT BSONCXX_POLY_USE_MNMLSTC AND BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
   MESSAGE(FATAL_ERROR "Can't specify system mnmlstc when not using mnmlstc")
 endif()
 
 # Can only use STD_EXPERIMENTAL in C++14 mode
-if (BSONCXX_POLY_USE_STD_EXPERIMENTAL AND CMAKE_CXX_STANDARD LESS 14)
+if(BSONCXX_POLY_USE_STD_EXPERIMENTAL AND CMAKE_CXX_STANDARD LESS 14)
   message(FATAL_ERROR "Can only use BSONCXX_POLY_USE_STD_EXPERIMENTAL if CMAKE_CXX_STANDARD is 14 or higher")
 endif()
 
@@ -113,7 +113,7 @@ include_directories(
     ${CMAKE_BINARY_DIR}/src
 )
 
-if (BSONCXX_POLY_USE_BOOST)
+if(BSONCXX_POLY_USE_BOOST)
     find_package(Boost 1.56.0 REQUIRED)
 endif()
 
@@ -140,11 +140,11 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         target_compile_definitions(bsoncxx_static PUBLIC BSONCXX_STATIC)
     endif()
 
-    if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
+    if(BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
         add_dependencies(${TARGET} EP_mnmlstc_core)
         ExternalProject_Get_Property(EP_mnmlstc_core source_dir)
         target_include_directories(${TARGET} PUBLIC ${source_dir}/include)
-    elseif (BSONCXX_POLY_USE_BOOST)
+    elseif(BSONCXX_POLY_USE_BOOST)
         target_include_directories(${TARGET} PUBLIC ${Boost_INCLUDE_DIRS})
     endif()
 
