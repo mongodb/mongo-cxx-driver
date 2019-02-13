@@ -34,7 +34,7 @@ install(FILES
     COMPONENT dev
 )
 
-if (BUILD_SHARED_LIBS)
+if(BSONCXX_BUILD_SHARED)
     configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/libbsoncxx.pc.in
         ${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx.pc
@@ -46,7 +46,9 @@ if (BUILD_SHARED_LIBS)
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
         COMPONENT dev
     )
-else()
+endif()
+
+if(BSONCXX_BUILD_STATIC)
     configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/libbsoncxx-static.pc.in
         ${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx-static.pc
