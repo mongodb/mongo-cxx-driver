@@ -198,7 +198,7 @@ directory by using the `-DLIBMONGOC_DIR` and `-DLIBBSON_DIR` options:
 cmake ..                                            \
     -DCMAKE_BUILD_TYPE=Release                      \
     -DLIBMONGOC_DIR=/opt/mongo-c-driver             \
-    -DLIBBSON_DIR=/opt/mongo-c-dirver               \
+    -DLIBBSON_DIR=/opt/mongo-c-driver               \
     -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
 ```
 
