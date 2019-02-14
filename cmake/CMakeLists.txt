@@ -16,6 +16,8 @@ add_subdirectory (make_dist)
 
 set (cmake_MODULES
    ParseVersion.cmake
+   BsoncxxUtil.cmake
+   MongocxxUtil.cmake
 )
 
 set_local_dist (cmake_DIST_local
