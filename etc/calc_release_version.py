@@ -24,9 +24,9 @@ current Git commit.
 
 import datetime
 import re
+import subprocess
 import sys
 from distutils.version import LooseVersion
-from git import Git, Repo # pip install GitPython
 
 DEBUG = len(sys.argv) > 1 and '-d' in sys.argv
 if DEBUG:
@@ -34,10 +34,10 @@ if DEBUG:
 
 RELEASE_TAG_RE = re.compile('r(?P<ver>(?P<vermaj>[0-9]+)\\.(?P<vermin>[0-9]+)'
                             '\\.(?P<verpatch>[0-9]+)(?:-(?P<verpre>.*))?)')
-RELEASE_BRANCH_RE = re.compile('(?:origin/)?releases/v'
-                               '(?P<vermaj>[0-9]+)\\.(?P<vermin>[0-9]+)')
+RELEASE_BRANCH_RE = re.compile('(?:(?:refs/remotes/)?origin/)?(?P<brname>releases/v'
+                               '(?P<vermaj>[0-9]+)\\.(?P<vermin>[0-9]+))')
 
-def check_head_tag(repo):
+def check_head_tag():
     """
     Checks the current HEAD to see if it has been tagged with a tag that matches
     the pattern for a release tag.  Returns release version calculated from the
@@ -49,9 +49,14 @@ def check_head_tag(repo):
     found_tag = False
     version_loose = LooseVersion('0.0.0')
 
-    for tag in repo.tags:
-        release_tag_match = RELEASE_TAG_RE.match(tag.name)
-        if tag.commit == repo.head.commit and release_tag_match:
+    tags = subprocess.check_output(['git', 'tag', '-l']).split()
+    head_commit = subprocess.check_output(['git', 'rev-parse', '--revs-only',
+                                           'HEAD^{commit}']).strip()
+    for tag in tags:
+        release_tag_match = RELEASE_TAG_RE.match(tag)
+        tag_commit = subprocess.check_output(['git', 'rev-parse', '--revs-only',
+                                              tag + '^{commit}']).strip()
+        if tag_commit == head_commit and release_tag_match:
             new_version_loose = LooseVersion(release_tag_match.group('ver'))
             if new_version_loose > version_loose:
                 if DEBUG:
@@ -83,24 +88,27 @@ def main():
            patch version, and append a new pre-release marker
     """
 
-    repo = Repo('.')
-    assert not repo.bare
-
-    head_tag_ver = check_head_tag(repo)
+    head_tag_ver = check_head_tag()
     if head_tag_ver:
         return head_tag_ver
 
     version_loose = LooseVersion('0.0.0')
+    head_commit_short = subprocess.check_output(['git', 'rev-parse',
+                                                 '--revs-only', '--short=10',
+                                                 'HEAD^{commit}']).strip()
     prerelease_marker = datetime.date.today().strftime('%Y%m%d') \
-            + '+git' + repo.head.commit.hexsha[:10]
+            + '+git' + head_commit_short
 
+    active_branch_name = subprocess.check_output(['git', 'rev-parse',
+                                                  '--abbrev-ref', 'HEAD']).strip()
     if DEBUG:
-        print 'Calculating release version for branch: ' + repo.active_branch.name
-    if repo.active_branch.name == 'master':
+        print 'Calculating release version for branch: ' + active_branch_name
+    if active_branch_name == 'master':
         version_new = {}
         # Use refs (not branches) to get local branches plus remote branches
-        for ref in repo.refs:
-            release_branch_match = RELEASE_BRANCH_RE.match(ref.name)
+        refs = subprocess.check_output(['git', 'show-ref']).splitlines()
+        for ref in refs:
+            release_branch_match = RELEASE_BRANCH_RE.match(ref.split()[1])
             if release_branch_match:
                 # Construct a candidate version from this branch name
                 version_new['major'] = int(release_branch_match.group('vermaj'))
@@ -115,14 +123,14 @@ def main():
                     version_loose = new_version_loose
                     if DEBUG:
                         print 'Found new best version "' + str(version_loose) \
-                                + '" on branch "' + ref.name + '"'
+                                + '" based on branch "' \
+                                + release_branch_match.group('brname') + '"'
 
     else:
-        gexc = Git('.')
-        tags = gexc.execute(['git', 'tag',
-                             '--merged', 'HEAD',
-                             '--list', 'r*',
-                             '--sort', 'version:refname'])
+        tags = subprocess.check_output(['git', 'tag',
+                                        '--merged', 'HEAD',
+                                        '--list', 'r*',
+                                        '--sort', 'version:refname'])
         if len(tags) > 0:
             release_tag_match = RELEASE_TAG_RE.match(tags.splitlines()[-1])
             if release_tag_match:
