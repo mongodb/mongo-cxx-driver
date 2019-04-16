@@ -30,7 +30,7 @@ from distutils.version import LooseVersion
 
 DEBUG = len(sys.argv) > 1 and '-d' in sys.argv
 if DEBUG:
-    print 'Debugging output enabled.'
+    print('Debugging output enabled.')
 
 RELEASE_TAG_RE = re.compile('r(?P<ver>(?P<vermaj>[0-9]+)\\.(?P<vermin>[0-9]+)'
                             '\\.(?P<verpatch>[0-9]+)(?:-(?P<verpre>.*))?)')
@@ -53,6 +53,7 @@ def check_head_tag():
     head_commit = subprocess.check_output(['git', 'rev-parse', '--revs-only',
                                            'HEAD^{commit}']).strip()
     for tag in tags:
+        tag=tag.decode('utf-8')
         release_tag_match = RELEASE_TAG_RE.match(tag)
         tag_commit = subprocess.check_output(['git', 'rev-parse', '--revs-only',
                                               tag + '^{commit}']).strip()
@@ -60,13 +61,13 @@ def check_head_tag():
             new_version_loose = LooseVersion(release_tag_match.group('ver'))
             if new_version_loose > version_loose:
                 if DEBUG:
-                    print 'HEAD release tag: ' + release_tag_match.group('ver')
+                    print('HEAD release tag: ' + release_tag_match.group('ver'))
                 version_loose = new_version_loose
                 found_tag = True
 
     if found_tag:
         if DEBUG:
-            print 'Calculated version: ' + str(version_loose)
+            print('Calculated version: ' + str(version_loose))
         return str(version_loose)
 
     return None
@@ -95,14 +96,14 @@ def main():
     version_loose = LooseVersion('0.0.0')
     head_commit_short = subprocess.check_output(['git', 'rev-parse',
                                                  '--revs-only', '--short=10',
-                                                 'HEAD^{commit}']).strip()
+                                                 'HEAD^{commit}']).decode('utf-8').strip()
     prerelease_marker = datetime.date.today().strftime('%Y%m%d') \
             + '+git' + head_commit_short
 
     active_branch_name = subprocess.check_output(['git', 'rev-parse',
                                                   '--abbrev-ref', 'HEAD']).strip()
     if DEBUG:
-        print 'Calculating release version for branch: ' + active_branch_name
+        print('Calculating release version for branch: ' + active_branch_name)
     if active_branch_name == 'master':
         version_new = {}
         # Use refs (not branches) to get local branches plus remote branches
@@ -122,9 +123,9 @@ def main():
                 if new_version_loose > version_loose:
                     version_loose = new_version_loose
                     if DEBUG:
-                        print 'Found new best version "' + str(version_loose) \
+                        print('Found new best version "' + str(version_loose) \
                                 + '" based on branch "' \
-                                + release_branch_match.group('brname') + '"'
+                                + release_branch_match.group('brname') + '"')
 
     else:
         tags = subprocess.check_output(['git', 'tag',
@@ -132,7 +133,7 @@ def main():
                                         '--list', 'r*',
                                         '--sort', 'version:refname'])
         if len(tags) > 0:
-            release_tag_match = RELEASE_TAG_RE.match(tags.splitlines()[-1])
+            release_tag_match = RELEASE_TAG_RE.match(tags.splitlines()[-1].decode('utf-8'))
             if release_tag_match:
                 version_new = {}
                 version_new['major'] = int(release_tag_match.group('vermaj'))
@@ -146,12 +147,12 @@ def main():
                 if new_version_loose > version_loose:
                     version_loose = new_version_loose
                     if DEBUG:
-                        print 'Found new best version "' + str(version_loose) \
-                                + '" from tag "' + release_tag_match.group('ver') + '"'
+                        print('Found new best version "' + str(version_loose) \
+                                + '" from tag "' + release_tag_match.group('ver') + '"')
 
     return str(version_loose)
 
 RELEASE_VER = main()
 if DEBUG:
-    print 'Final calculated release version:',
-print RELEASE_VER
+    print('Final calculated release version:')
+print(RELEASE_VER)
