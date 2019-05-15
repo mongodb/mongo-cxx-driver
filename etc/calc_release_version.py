@@ -53,7 +53,7 @@ def check_head_tag():
     head_commit = subprocess.check_output(['git', 'rev-parse', '--revs-only',
                                            'HEAD^{commit}']).strip()
     for tag in tags:
-        tag=tag.decode('utf-8')
+        tag = tag.decode('utf-8')
         release_tag_match = RELEASE_TAG_RE.match(tag)
         tag_commit = subprocess.check_output(['git', 'rev-parse', '--revs-only',
                                               tag + '^{commit}']).strip()
