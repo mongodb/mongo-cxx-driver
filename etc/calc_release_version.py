@@ -37,6 +37,22 @@ RELEASE_TAG_RE = re.compile('r(?P<ver>(?P<vermaj>[0-9]+)\\.(?P<vermin>[0-9]+)'
 RELEASE_BRANCH_RE = re.compile('(?:(?:refs/remotes/)?origin/)?(?P<brname>releases/v'
                                '(?P<vermaj>[0-9]+)\\.(?P<vermin>[0-9]+))')
 
+def check_output(args):
+    """
+    Delegates to subprocess.check_output() if it is available, otherwise
+    provides a reasonable facsimile.
+    """
+    if 'check_output' in dir(subprocess):
+        return subprocess.check_output(args)
+
+    proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+    out, err = proc.communicate()
+    ret = proc.poll()
+    if ret:
+        raise subprocess.CalledProcessError(ret, args[0], output=out)
+    return out
+
+
 def check_head_tag():
     """
     Checks the current HEAD to see if it has been tagged with a tag that matches
@@ -49,13 +65,13 @@ def check_head_tag():
     found_tag = False
     version_loose = LooseVersion('0.0.0')
 
-    tags = subprocess.check_output(['git', 'tag', '-l']).split()
-    head_commit = subprocess.check_output(['git', 'rev-parse', '--revs-only',
+    tags = check_output(['git', 'tag', '-l']).split()
+    head_commit = check_output(['git', 'rev-parse', '--revs-only',
                                            'HEAD^{commit}']).strip()
     for tag in tags:
         tag = tag.decode('utf-8')
         release_tag_match = RELEASE_TAG_RE.match(tag)
-        tag_commit = subprocess.check_output(['git', 'rev-parse', '--revs-only',
+        tag_commit = check_output(['git', 'rev-parse', '--revs-only',
                                               tag + '^{commit}']).strip()
         if tag_commit == head_commit and release_tag_match:
             new_version_loose = LooseVersion(release_tag_match.group('ver'))
@@ -94,20 +110,20 @@ def main():
         return head_tag_ver
 
     version_loose = LooseVersion('0.0.0')
-    head_commit_short = subprocess.check_output(['git', 'rev-parse',
+    head_commit_short = check_output(['git', 'rev-parse',
                                                  '--revs-only', '--short=10',
                                                  'HEAD^{commit}']).decode('utf-8').strip()
     prerelease_marker = datetime.date.today().strftime('%Y%m%d') \
             + '+git' + head_commit_short
 
-    active_branch_name = subprocess.check_output(['git', 'rev-parse',
+    active_branch_name = check_output(['git', 'rev-parse',
                                                   '--abbrev-ref', 'HEAD']).strip()
     if DEBUG:
         print('Calculating release version for branch: ' + active_branch_name)
     if active_branch_name == 'master':
         version_new = {}
         # Use refs (not branches) to get local branches plus remote branches
-        refs = subprocess.check_output(['git', 'show-ref']).splitlines()
+        refs = check_output(['git', 'show-ref']).splitlines()
         for ref in refs:
             release_branch_match = RELEASE_BRANCH_RE.match(ref.split()[1])
             if release_branch_match:
@@ -128,7 +144,7 @@ def main():
                                 + release_branch_match.group('brname') + '"')
 
     else:
-        tags = subprocess.check_output(['git', 'tag',
+        tags = check_output(['git', 'tag',
                                         '--merged', 'HEAD',
                                         '--list', 'r*',
                                         '--sort', 'version:refname'])
