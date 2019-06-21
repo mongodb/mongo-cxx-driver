@@ -20,7 +20,7 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         set_target_properties(${TARGET} PROPERTIES
             CXX_VISIBILITY_PRESET hidden
             VISIBILITY_INLINES_HIDDEN ON
-            SOVERSION ${BSONCXX_ABI_VERSION}
+            SOVERSION ${BSONCXX_VERSION_NO_EXTRA}
         )
     endif()
 
