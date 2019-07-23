@@ -247,8 +247,8 @@ discussed in the next section.
 
 ### <a name="lifetime">BSON Document Lifetime</a>
 
-It is imperative that `document::value`s outlive any `document::view`s that
-use them. If the underlying value gets cleaned up, the view will be left
+It is imperative that `document::view`s outlive any `document::value`s that
+they point to. If the underlying value gets cleaned up, the view will be left
 with a dangling pointer.  Consider a method that returns a view of a
 newly-created document:
 
