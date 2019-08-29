@@ -36,7 +36,7 @@ endif()
 
 # NOTE: For this to work, the CMAKE_PREFIX_PATH variable must be set to point to the directory that
 # was used as the argument to CMAKE_INSTALL_PREFIX when building libmongocxx.
-find_package(libmongocxx-static REQUIRED)
+find_package(mongocxx REQUIRED)
 
 add_executable(hello_mongocxx ../../hello_mongocxx.cpp)
 
@@ -47,16 +47,8 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     )
 endif()
 
-target_include_directories(hello_mongocxx
-  PRIVATE ${LIBMONGOCXX_STATIC_INCLUDE_DIRS}
-)
-
 target_link_libraries(hello_mongocxx
-  PRIVATE ${LIBMONGOCXX_STATIC_LIBRARIES}
-)
-
-target_compile_definitions(hello_mongocxx
-  PRIVATE ${LIBMONGOCXX_STATIC_DEFINITIONS}
+  PRIVATE mongo::mongocxx_static
 )
 
 add_custom_target(run
@@ -67,10 +59,12 @@ add_custom_target(run
 
 # Sanity-check that static library macros are set when building against the static library.  Users
 # don't need to include this section in their projects.
-list(FIND LIBMONGOCXX_STATIC_DEFINITIONS "BSONCXX_STATIC" LIST_IDX)
+get_target_property(LIBBSONCXX_STATIC_DEFINITIONS mongo::bsoncxx_static INTERFACE_COMPILE_DEFINITIONS)
+list(FIND LIBBSONCXX_STATIC_DEFINITIONS "BSONCXX_STATIC" LIST_IDX)
 if (${LIST_IDX} EQUAL -1)
     message(FATAL_ERROR "Expected BSONCXX_STATIC to be defined")
 endif()
+get_target_property(LIBMONGOCXX_STATIC_DEFINITIONS mongo::mongocxx_static INTERFACE_COMPILE_DEFINITIONS)
 list(FIND LIBMONGOCXX_STATIC_DEFINITIONS "MONGOCXX_STATIC" LIST_IDX)
 if (${LIST_IDX} EQUAL -1)
     message(FATAL_ERROR "Expected MONGOCXX_STATIC to be defined")

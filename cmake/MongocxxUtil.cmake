@@ -2,9 +2,7 @@
 #
 # This function requires the following variables to be defined in its parent scope:
 # - mongocxx_sources
-# - libmongoc_include_directories
-# - libmongoc_definitions
-# - libmongoc_libraries
+# - libmongoc_target
 function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     add_library(${TARGET} ${LINK_TYPE}
         ${mongocxx_sources}
@@ -28,9 +26,7 @@ function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         target_compile_definitions(${TARGET} PUBLIC MONGOCXX_STATIC)
     endif()
 
-    target_include_directories(${TARGET} PRIVATE ${libmongoc_include_directories})
-    target_compile_definitions(${TARGET} PRIVATE ${libmongoc_definitions})
-    target_link_libraries(${TARGET} PRIVATE ${libmongoc_libraries})
+    target_link_libraries(${TARGET} PRIVATE ${libmongoc_target})
 
     generate_export_header(${TARGET}
         BASE_NAME MONGOCXX
@@ -41,31 +37,47 @@ function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     )
 endfunction(mongocxx_add_library)
 
-# Install a form of the mongocxx library with associated CMake config files
-function(mongocxx_install TARGET)
+# Install the specified forms of the mongocxx library (i.e., shared and/or static)
+# with associated CMake config files
+function(mongocxx_install MONGOCXX_TARGET_LIST MONGOCXX_PKG_DEP)
     install(TARGETS
-        ${TARGET}
+            ${MONGOCXX_TARGET_LIST}
+        EXPORT mongocxx_targets
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
-    )
-    get_target_property(PKG ${TARGET} OUTPUT_NAME)
-    set(PKG "lib${PKG}")
-
-    configure_package_config_file(
-      cmake/${PKG}-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config.cmake
-      INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PKG}-${MONGOCXX_VERSION}
-      PATH_VARS PACKAGE_INCLUDE_INSTALL_DIRS PACKAGE_LIBRARY_INSTALL_DIRS
+        INCLUDES DESTINATION ${MONGOCXX_HEADER_INSTALL_DIR}
     )
 
     write_basic_package_version_file(
-      ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config-version.cmake
-      VERSION ${MONGOCXX_VERSION}
-      COMPATIBILITY SameMajorVersion
+        "${CMAKE_CURRENT_BINARY_DIR}/mongocxx-config-version.cmake"
+        VERSION ${MONGOCXX_VERSION}
+        COMPATIBILITY SameMajorVersion
+    )
+
+    configure_file(cmake/mongocxx-config.cmake.in
+        "${CMAKE_CURRENT_BINARY_DIR}/mongocxx-config.cmake"
+        @ONLY
+    )
+
+    export(EXPORT mongocxx_targets
+        NAMESPACE mongo::
+        FILE "${CMAKE_CURRENT_BINARY_DIR}/mongocxx_targets.cmake"
+    )
+
+    install(EXPORT mongocxx_targets
+        NAMESPACE mongo::
+        FILE mongocxx_targets.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mongocxx-${MONGOCXX_VERSION}
     )
 
     install(
-      FILES ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config-version.cmake
-      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PKG}-${MONGOCXX_VERSION}
+        FILES
+            "${CMAKE_CURRENT_BINARY_DIR}/mongocxx-config-version.cmake"
+            "${CMAKE_CURRENT_BINARY_DIR}/mongocxx-config.cmake"
+        DESTINATION
+            ${CMAKE_INSTALL_LIBDIR}/cmake/mongocxx-${MONGOCXX_VERSION}
+        COMPONENT
+            Devel
     )
 endfunction(mongocxx_install)

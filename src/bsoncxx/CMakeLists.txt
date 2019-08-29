@@ -74,16 +74,11 @@ set(BSONCXX_HEADER_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/${BSONCXX_IN
 set(LIBBSON_REQUIRED_VERSION 1.13.0)
 set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
 
+find_package(bson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
 if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
-    find_package(libbson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
-    set(libbson_libraries ${BSON_LIBRARIES})
-    set(libbson_include_directories ${BSON_INCLUDE_DIRS})
-    set(libbson_definitions ${BSON_DEFINITIONS})
+    set(libbson_target mongo::bson_shared)
 else()
-    find_package(libbson-static-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
-    set(libbson_libraries ${BSON_STATIC_LIBRARIES})
-    set(libbson_include_directories ${BSON_STATIC_INCLUDE_DIRS})
-    set(libbson_definitions ${BSON_STATIC_DEFINITIONS})
+    set(libbson_target mongo::bson_static)
 endif()
 
 add_subdirectory(third_party)
@@ -125,7 +120,7 @@ endif()
 include(BsoncxxUtil)
 
 if(BSONCXX_BUILD_SHARED)
-    bsoncxx_add_library(bsoncxx "bsoncxx" SHARED)
+    bsoncxx_add_library(bsoncxx_shared "bsoncxx" SHARED)
 endif()
 
 if(BSONCXX_BUILD_STATIC)
@@ -133,7 +128,7 @@ if(BSONCXX_BUILD_STATIC)
 endif()
 
 if(BSONCXX_BUILD_SHARED)
-    set(BSONCXX_LIBRARY_FOR_EXAMPLES "bsoncxx" CACHE INTERNAL "")
+    set(BSONCXX_LIBRARY_FOR_EXAMPLES "bsoncxx_shared" CACHE INTERNAL "")
     bsoncxx_add_library(bsoncxx_testing "bsoncxx-testing" SHARED)
 else()
     set(BSONCXX_LIBRARY_FOR_EXAMPLES "bsoncxx_static" CACHE INTERNAL "")
@@ -161,13 +156,17 @@ set(PACKAGE_LIBRARIES bsoncxx)
 
 include(CMakePackageConfigHelpers)
 
+set(bsoncxx_target_list "")
+set(bsoncxx_pkg_dep "")
 if(BSONCXX_BUILD_SHARED)
-    bsoncxx_install(bsoncxx)
+    list(APPEND bsoncxx_target_list bsoncxx_shared)
 endif()
 
 if(BSONCXX_BUILD_STATIC)
-    bsoncxx_install(bsoncxx_static)
+    list(APPEND bsoncxx_target_list bsoncxx_static)
+    set(bsoncxx_pkg_dep "find_dependency(bson-1.0 REQUIRED)")
 endif()
+bsoncxx_install("${bsoncxx_target_list}" "${bsoncxx_pkg_dep}")
 
 add_subdirectory(test)
 
@@ -198,8 +197,7 @@ set_local_dist (src_bsoncxx_DIST_local
    builder/stream/key_context.hpp
    builder/stream/single_context.hpp
    builder/stream/value_context.hpp
-   cmake/libbsoncxx-config.cmake.in
-   cmake/libbsoncxx-static-config.cmake.in
+   cmake/bsoncxx-config.cmake.in
    decimal128.cpp
    decimal128.hpp
    document/element.cpp

@@ -301,12 +301,10 @@ int main(int, char**) {
 #### Compiling with the help of CMake
 
 If you are using CMake for your project, you can use the find_package()
-directive to enable compiling and linking against `mongocxx`.  The
-find_package() directive will set variables in the current environment
-(e.g. `LIBMONGOCXX_INCLUDE_DIRS`, `LIBMONGOCXX_LIBRARIES`, etc.) that need
-to be propagated to your build targets.  If you have installed `mongocxx`
-or `libmongoc` to a non-standard location on your system, you will need to
-set `CMAKE_PREFIX_PATH` to the library installation prefix (specified at
+directive to import targets which can be used to link to your build
+targets.  If you have installed `mongocxx` or `libmongoc` to a
+ non-standard location on your system, you will need to set
+`CMAKE_PREFIX_PATH` to the library installation prefix (specified at
 build time with `CMAKE_INSTALL_PREFIX`) when running `cmake`.
 
 In the `mongocxx` source repository (versions 3.2.x or newer only), see

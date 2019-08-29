@@ -36,7 +36,7 @@ endif()
 
 # NOTE: For this to work, the CMAKE_PREFIX_PATH variable must be set to point to the directory that
 # was used as the argument to CMAKE_INSTALL_PREFIX when building libbsoncxx.
-find_package(libbsoncxx-static REQUIRED)
+find_package(bsoncxx REQUIRED)
 
 add_executable(hello_bsoncxx ../../hello_bsoncxx.cpp)
 
@@ -47,12 +47,8 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     )
 endif()
 
-target_include_directories(hello_bsoncxx
-  PRIVATE ${LIBBSONCXX_STATIC_INCLUDE_DIRS}
-)
-
 target_link_libraries(hello_bsoncxx
-  PRIVATE ${LIBBSONCXX_STATIC_LIBRARIES}
+  PRIVATE mongo::bsoncxx_static
 )
 
 target_compile_definitions(hello_bsoncxx
@@ -67,6 +63,7 @@ add_custom_target(run
 
 # Sanity-check that static library macros are set when building against the static library.  Users
 # don't need to include this section in their projects.
+get_target_property(LIBBSONCXX_STATIC_DEFINITIONS mongo::bsoncxx_static INTERFACE_COMPILE_DEFINITIONS)
 list(FIND LIBBSONCXX_STATIC_DEFINITIONS "BSONCXX_STATIC" LIST_IDX)
 if (${LIST_IDX} EQUAL -1)
     message(FATAL_ERROR "Expected BSONCXX_STATIC to be defined")

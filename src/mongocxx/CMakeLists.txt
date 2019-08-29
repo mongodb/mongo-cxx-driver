@@ -30,16 +30,11 @@ set(MONGOCXX_HEADER_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/${MONGOCXX
 set(LIBMONGOC_REQUIRED_VERSION 1.15.0)
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 
+find_package(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
 if(NOT MONGOCXX_LINK_WITH_STATIC_MONGOC)
-    find_package(libmongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
-    set(libmongoc_libraries ${MONGOC_LIBRARIES})
-    set(libmongoc_include_directories ${MONGOC_INCLUDE_DIRS})
-    set(libmongoc_definitions ${MONGOC_DEFINITIONS})
+    set(libmongoc_target mongo::mongoc_shared)
 else()
-    find_package(libmongoc-static-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
-    set(libmongoc_libraries ${MONGOC_STATIC_LIBRARIES})
-    set(libmongoc_include_directories ${MONGOC_STATIC_INCLUDE_DIRS})
-    set(libmongoc_definitions ${MONGOC_STATIC_DEFINITIONS})
+    set(libmongoc_target mongo::mongoc_static)
 endif()
 
 add_subdirectory(config)
@@ -143,8 +138,8 @@ include_directories(
 include(MongocxxUtil)
 
 if(MONGOCXX_BUILD_SHARED)
-    mongocxx_add_library(mongocxx "mongocxx" SHARED)
-    target_link_libraries(mongocxx PUBLIC bsoncxx)
+    mongocxx_add_library(mongocxx_shared "mongocxx" SHARED)
+    target_link_libraries(mongocxx_shared PUBLIC bsoncxx_shared)
 endif()
 
 if(MONGOCXX_BUILD_STATIC)
@@ -153,7 +148,7 @@ if(MONGOCXX_BUILD_STATIC)
 endif()
 
 if(MONGOCXX_BUILD_SHARED)
-    set(MONGOCXX_LIBRARY_FOR_EXAMPLES "mongocxx" CACHE INTERNAL "")
+    set(MONGOCXX_LIBRARY_FOR_EXAMPLES "mongocxx_shared" CACHE INTERNAL "")
     mongocxx_add_library(mongocxx_mocked "mongocxx-mocked" SHARED)
 else()
     set(MONGOCXX_LIBRARY_FOR_EXAMPLES "mongocxx_static" CACHE INTERNAL "")
@@ -186,13 +181,16 @@ set(PACKAGE_LIBRARIES mongocxx)
 
 include(CMakePackageConfigHelpers)
 
+set(mongocxx_target_list "")
 if(MONGOCXX_BUILD_SHARED)
-    mongocxx_install(mongocxx)
+    list(APPEND mongocxx_target_list mongocxx_shared)
 endif()
 
 if(MONGOCXX_BUILD_STATIC)
-    mongocxx_install(mongocxx_static)
+    list(APPEND mongocxx_target_list mongocxx_static)
+    set(mongocxx_pkg_dep "find_dependency(mongoc-1.0 REQUIRED)")
 endif()
+mongocxx_install("${mongocxx_target_list}" "${mongocxx_pkg_dep}")
 
 add_subdirectory(test)
 
@@ -206,8 +204,7 @@ set_local_dist (src_mongocxx_DIST_local
    client.hpp
    client_session.cpp
    client_session.hpp
-   cmake/libmongocxx-config.cmake.in
-   cmake/libmongocxx-static-config.cmake.in
+   cmake/mongocxx-config.cmake.in
    collection.cpp
    collection.hpp
    cursor.cpp

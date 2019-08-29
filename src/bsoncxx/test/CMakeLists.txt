@@ -23,9 +23,7 @@ add_executable(test_bson
     ${src_bsoncxx_test_DIST_cpps}
 )
 
-target_link_libraries(test_bson bsoncxx_testing ${libbson_libraries})
-target_include_directories(test_bson PRIVATE ${libbson_include_directories})
-target_compile_definitions(test_bson PRIVATE ${libbson_definitions})
+target_link_libraries(test_bson bsoncxx_testing ${libbson_target})
 
 add_test(bson test_bson)
 
