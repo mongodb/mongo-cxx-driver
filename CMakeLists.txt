@@ -85,6 +85,8 @@ option(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC
         OFF
 )
 
+option (ENABLE_UNINSTALL "Enable creation of uninstall script and associated uninstall build target." ON)
+
 # Disambiguate our options into clear flags
 if(BUILD_SHARED_LIBS)
     set(BSONCXX_BUILD_SHARED ON CACHE INTERNAL "")
@@ -276,6 +278,8 @@ set (top_DIST_local
    THIRD-PARTY-NOTICES
    build/.gitignore
    build/VERSION_CURRENT
+   # This sub-directory is added later, so manually include here
+   generate_uninstall/CMakeLists.txt
 )
 
 set_local_dist (top_DIST ${top_DIST_local})
@@ -324,3 +328,18 @@ add_custom_target (distcheck DEPENDS dist
       -D CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
       -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDistCheck.cmake
 )
+
+if(ENABLE_UNINSTALL)
+    if(WIN32)
+        set(UNINSTALL_PROG "uninstall.cmd")
+    else()
+        set(UNINSTALL_PROG "uninstall.sh")
+    endif()
+    set(UNINSTALL_PROG_DIR "${CMAKE_INSTALL_DATADIR}/mongo-cxx-driver")
+
+    # Create uninstall program and associated uninstall target
+    #
+    # This needs to be last (after all other add_subdirectory calls) to ensure
+    # that the generated uninstall program is complete and correct
+    add_subdirectory(generate_uninstall)
+endif()

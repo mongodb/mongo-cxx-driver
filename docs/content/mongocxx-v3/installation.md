@@ -259,11 +259,37 @@ build and install the driver:
 make && sudo make install
 ```
 
+The driver can be uninstalled at a later time in one of two ways.  First,
+the uninstall target can be called:
+
+```sh
+sudo make uninstall
+```
+
+Second, the uninstall script can be called:
+
+```sh
+sudo /opt/mongo-cxx-driver/share/mongo-cxx-driver/uninstall.sh
+```
+
 On Windows, build and install from the command line like this:
 
 ```sh
 msbuild.exe ALL_BUILD.vcxproj
 msbuild.exe INSTALL.vcxproj
+```
+
+On Windows, the driver can be uninstalled at a later time in one of two
+ways.  First, the uninstall project can be called:
+
+```sh
+msbuild.exe generate_uninstall\uninstall.vcxproj
+```
+
+Second, the uninstall script can be called:
+
+```sh
+C:\opt\mongo-cxx-driver\share\mongo-cxx-driver\uninstall.cmd
 ```
 
 ### Step 6: Test your installation

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+file (GLOB etc_DIST_cmds RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cmd)
 file (GLOB etc_DIST_csss RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.css)
 file (GLOB etc_DIST_mds RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.md)
 file (GLOB etc_DIST_pls RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.pl)
@@ -21,6 +22,7 @@ file (GLOB etc_DIST_txts RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.txt)
 
 set_dist_list (etc_DIST
    CMakeLists.txt
+   ${etc_DIST_cmds}
    ${etc_DIST_csss}
    ${etc_DIST_mds}
    ${etc_DIST_pls}

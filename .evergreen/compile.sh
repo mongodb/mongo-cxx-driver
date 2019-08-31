@@ -20,7 +20,7 @@ fi
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 
 cd build
-cmake "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" -DMONGOCXX_ENABLE_SLOW_TESTS=ON "$@" ..
+cmake "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" -DMONGOCXX_ENABLE_SLOW_TESTS=ON -DENABLE_UNINSTALL=ON "$@" ..
 
 case "$OS" in
     darwin|linux)
