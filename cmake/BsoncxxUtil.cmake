@@ -33,7 +33,7 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         ExternalProject_Get_Property(EP_mnmlstc_core source_dir)
         target_include_directories(${TARGET} PUBLIC ${source_dir}/include)
     elseif(BSONCXX_POLY_USE_BOOST)
-        target_include_directories(${TARGET} PUBLIC ${Boost_INCLUDE_DIRS})
+        target_link_libraries(${TARGET} PUBLIC Boost::boost)
     endif()
 
     target_include_directories(${TARGET} PRIVATE ${libbson_include_directories})
