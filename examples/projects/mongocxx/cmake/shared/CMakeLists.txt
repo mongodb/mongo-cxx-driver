@@ -42,9 +42,7 @@ add_executable(hello_mongocxx ../../hello_mongocxx.cpp)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     find_package(Boost 1.56.0 REQUIRED)
-    target_include_directories(hello_mongocxx
-      PRIVATE ${Boost_INCLUDE_DIRS}
-    )
+    target_link_libraries(hello_mongocxx PRIVATE Boost::boost)
 endif()
 
 target_include_directories(hello_mongocxx
