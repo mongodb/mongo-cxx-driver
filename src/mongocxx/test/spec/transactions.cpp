@@ -54,17 +54,18 @@
 #include <mongocxx/result/update.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/operation.hh>
+#include <mongocxx/test/spec/util.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 
 namespace {
 using namespace bsoncxx;
 using namespace mongocxx;
 using namespace spec;
-using bsoncxx::stdx::string_view;
-using bsoncxx::stdx::optional;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
+using bsoncxx::stdx::optional;
+using bsoncxx::stdx::string_view;
 
 uint32_t error_code_from_name(string_view name) {
     if (name.compare("CannotSatisfyWriteConcern") == 0) {
@@ -222,7 +223,15 @@ void run_transactions_tests_in_file(const std::string& test_path) {
     auto db_name = test_spec_view["database_name"].get_utf8().value;
     auto coll_name = test_spec_view["collection_name"].get_utf8().value;
     auto tests = test_spec_view["tests"].get_array().value;
+
+    /* we may not have a supported topology */
+    if (should_skip_spec_test(client{uri{}}, test_spec_view)) {
+        WARN("File skipped - " + test_path);
+        return;
+    }
+
     for (auto&& test : tests) {
+        bool fail_point_enabled = (bool)test["failPoint"];
         auto description = test["description"].get_utf8().value;
         INFO("Test description: " << description);
         if (description.compare("run command fails with explicit secondary read preference") == 0) {
@@ -237,7 +246,18 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         options::client client_opts;
         apm_checker apm_checker;
         client_opts.apm_opts(apm_checker.get_apm_opts());
-        client client{get_uri(test.get_document().value), client_opts};
+        client client;
+        if (test["useMultipleMongoses"]) {
+            client = {uri{"mongodb://localhost:27017,localhost:27018"}, client_opts};
+        } else {
+            client = {get_uri(test.get_document().value), client_opts};
+        }
+
+        /* individual test may contain a skipReason */
+        if (should_skip_spec_test(client, test.get_document())) {
+            continue;
+        }
+
         options::client_session session0_opts;
         options::client_session session1_opts;
 
@@ -259,6 +279,8 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         // Step 9. Perform the operations.
         auto operations = test["operations"].get_array().value;
         for (auto&& op : operations) {
+            fail_point_enabled =
+                fail_point_enabled || op.get_document().value["arguments"]["failPoint"];
             std::string error_msg;
             optional<document::value> server_error;
             optional<operation_exception> exception;
@@ -270,7 +292,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                 parse_database_options(operation, &db);
                 collection coll = db[coll_name];
                 parse_collection_options(operation, &coll);
-                operation_runner op_runner{&db, &coll, &session0, &session1};
+                operation_runner op_runner{&db, &coll, &session0, &session1, &client};
                 actual_result = op_runner.run(operation);
             } catch (const operation_exception& e) {
                 error_msg = e.what();
@@ -365,10 +387,11 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         }
 
         // Step 12. Disable the failpoint.
-        if (test["failPoint"]) {
-            auto failpoint_name = test["failPoint"]["configureFailPoint"].get_utf8().value;
-            client["admin"].run_command(
-                make_document(kvp("configureFailPoint", failpoint_name), kvp("mode", "off")));
+        if (fail_point_enabled) {
+            disable_fail_point("mongodb://localhost:27017", client_opts);
+            if (test["useMultipleMongoses"]) {
+                disable_fail_point("mongodb://localhost:27018", client_opts);
+            }
         }
 
         // Step 13. Compare the collection outcomes
@@ -392,10 +415,7 @@ TEST_CASE("Transactions spec automated tests", "[transactions_spec]") {
     }
 
     client client{uri{}};
-    if (!test_util::is_replica_set(client)) {
-        WARN("Skipping - not a replica set");
-        return;
-    } else if (test_util::get_max_wire_version(client) < 7) {
+    if (test_util::get_max_wire_version(client) < 7) {
         WARN("Skipping - max wire version is < 7");
         return;
     }

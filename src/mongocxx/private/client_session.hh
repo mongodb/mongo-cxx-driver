@@ -66,6 +66,10 @@ class client_session::impl {
         return _options;
     }
 
+    std::uint32_t server_id() const noexcept {
+        return libmongoc::client_session_get_server_id(_session_t.get());
+    }
+
     // Get session id, also known as "logical session id" or "lsid".
     bsoncxx::document::view id() const noexcept {
         return bsoncxx::helpers::view_from_bson_t(

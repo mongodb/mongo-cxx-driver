@@ -87,6 +87,11 @@ class MONGOCXX_API client_session {
     bsoncxx::types::b_timestamp operation_time() const noexcept;
 
     ///
+    /// Get the server_id the session is pinned to. The server_id is zero if the session is not
+    /// pinned to a server.
+    std::uint32_t server_id() const noexcept;
+
+    ///
     /// Advance the cluster time for a session. Has an effect only if the new cluster time is
     /// greater than the session's current cluster time.
     ///

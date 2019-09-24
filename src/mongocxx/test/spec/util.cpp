@@ -27,45 +27,85 @@ namespace spec {
 
 using namespace mongocxx;
 using namespace bsoncxx;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
+
+static const int kMaxIsMasterFailCommands = 7;
 
 bool should_skip_spec_test(const client& client, document::view test) {
-    std::string server_version = test_util::get_server_version(client);
+    if (test["skipReason"]) {
+        WARN("Test skipped - " << test["description"].get_utf8().value << "\n"
+                               << "reason: " << test["skipReason"].get_utf8().value);
+        return true;
+    }
 
-    // "If topology does not include the topology of the server instance(s), skip this test."
-    if (test["topology"]) {
-        auto required_topologies = test["topology"].get_array().value;
-        auto topology = test_util::get_topology(client);
-        bool found = false;
-        for (auto&& el : required_topologies) {
-            if (std::string(el.get_utf8().value) == topology) {
-                found = true;
-                break;
+    std::string server_version = test_util::get_server_version(client);
+    std::string topology = test_util::get_topology(client);
+
+    auto should_skip = [&](document::view requirements) {
+        if (requirements["topology"]) {
+            auto topologies = requirements["topology"].get_array().value;
+            bool found = false;
+            for (auto&& el : topologies) {
+                if (std::string(el.get_utf8().value) == topology) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                return true;
             }
         }
-        if (!found) {
-            WARN("Skipping - supported topologies are: " + to_json(required_topologies));
-            return true;
+
+        if (requirements["minServerVersion"]) {
+            auto min_server_version =
+                string::to_string(requirements["minServerVersion"].get_utf8().value);
+            if (test_util::compare_versions(server_version, min_server_version) < 0) {
+                return true;
+            }
         }
+
+        if (requirements["maxServerVersion"]) {
+            auto max_server_version =
+                string::to_string(requirements["maxServerVersion"].get_utf8().value);
+            if (test_util::compare_versions(server_version, max_server_version) > 0) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
+    if (test["runOn"]) {
+        for (auto&& el : test["runOn"].get_array().value) {
+            if (!should_skip(el.get_document())) {
+                return false;
+            }
+        }
+    } else if (!should_skip(test)) {
+        return false;
     }
 
-    if (test["minServerVersion"]) {
-        auto min_server_version = string::to_string(test["minServerVersion"].get_utf8().value);
-        if (test_util::compare_versions(server_version, min_server_version) < 0) {
-            WARN("Skipping - server is version: " + server_version + " but must be higher than " +
-                 min_server_version);
-            return true;
-        }
-    }
+    WARN("Skipping - unsupported server version '" + server_version + "' with topology '" +
+         topology + "'");
+    return true;
+}
 
-    if (test["maxServerVersion"]) {
-        auto max_server_version = string::to_string(test["maxServerVersion"].get_utf8().value);
-        if (test_util::compare_versions(server_version, max_server_version) > 0) {
-            WARN("Skipping - server is version: " + server_version + " but must be lower than " +
-                 max_server_version);
-            return true;
+void disable_fail_point(std::string uri_string, options::client client_opts) {
+    mongocxx::client client = {uri{uri_string}, client_opts};
+    /* Some transactions tests have a failCommand for "isMaster" repeat seven times. */
+    for (int i = 0; i < kMaxIsMasterFailCommands; i++) {
+        try {
+            client["admin"].run_command(
+                make_document(kvp("configureFailPoint", "failCommand"), kvp("mode", "off")));
+            break;
+        } catch (const std::exception& e) {
+            /* Tests that fail with isMaster also fail to disable the failpoint
+             * (since we run isMaster when opening the connection). Ignore those
+             * errors. */
+            continue;
         }
     }
-    return false;
 }
 
 }  // namespace spec

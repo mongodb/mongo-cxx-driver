@@ -207,6 +207,28 @@ bsoncxx::document::value database::run_command(const client_session& session,
     return _run_command(&session, command);
 }
 
+bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value command,
+                                               uint32_t server_id) {
+    libbson::scoped_bson_t command_bson{command};
+    libbson::scoped_bson_t reply_bson;
+    bson_error_t error;
+
+    auto result =
+        libmongoc::client_command_simple_with_server_id(_get_impl().client_impl->client_t,
+                                                        _get_impl().name.c_str(),
+                                                        command_bson.bson(),
+                                                        read_preference()._impl->read_preference_t,
+                                                        server_id,
+                                                        reply_bson.bson_for_init(),
+                                                        &error);
+
+    if (!result) {
+        throw_exception<operation_exception>(reply_bson.steal(), error);
+    }
+
+    return reply_bson.steal();
+}
+
 collection database::_create_collection(const client_session* session,
                                         stdx::string_view name,
                                         bsoncxx::document::view_or_value collection_options,

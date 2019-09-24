@@ -27,11 +27,13 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
+#include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/aggregate.hpp>
 #include <mongocxx/options/count.hpp>
 #include <mongocxx/options/delete.hpp>
@@ -43,6 +45,7 @@
 #include <mongocxx/options/find_one_common_options.hpp>
 #include <mongocxx/options/replace.hpp>
 #include <mongocxx/options/update.hpp>
+#include <mongocxx/private/libbson.hh>
 #include <mongocxx/result/delete.hpp>
 #include <mongocxx/result/insert_many.hpp>
 #include <mongocxx/result/insert_one.hpp>
@@ -368,7 +371,6 @@ document::value operation_runner::_run_delete_many(document::view operation) {
     result.append(
         builder::basic::kvp("result", [deleted_count](builder::basic::sub_document subdoc) {
             subdoc.append(builder::basic::kvp("deletedCount", deleted_count));
-
         }));
 
     return result.extract();
@@ -399,7 +401,6 @@ document::value operation_runner::_run_delete_one(document::view operation) {
     result.append(
         builder::basic::kvp("result", [deleted_count](builder::basic::sub_document subdoc) {
             subdoc.append(builder::basic::kvp("deletedCount", deleted_count));
-
         }));
 
     return result.extract();
@@ -1061,12 +1062,29 @@ document::value operation_runner::_run_run_command(bsoncxx::document::view opera
     return result.extract();
 }
 
+document::value operation_runner::_run_configure_fail_point(bsoncxx::document::view operation) {
+    auto arguments = operation["arguments"].get_document().value;
+    auto command = arguments["failPoint"].get_document().value;
+
+    const client_session* session = _lookup_session(arguments);
+
+    read_preference rp;
+    uint32_t server_id = session->server_id();
+    stdx::optional<document::value> reply = (*_client)["admin"].run_command(command, server_id);
+
+    auto result = builder::basic::document{};
+    result.append(builder::basic::kvp("result", *reply));
+
+    return result.extract();
+}
+
 operation_runner::operation_runner(collection* coll) : _coll(coll) {}
 operation_runner::operation_runner(database* db,
                                    collection* coll,
                                    client_session* session0,
-                                   client_session* session1)
-    : _coll(coll), _db(db), _session0(session0), _session1(session1) {}
+                                   client_session* session1,
+                                   client* client)
+    : _coll(coll), _db(db), _session0(session0), _session1(session1), _client(client) {}
 
 document::value operation_runner::run(document::view operation) {
     using namespace bsoncxx::builder::basic;
@@ -1115,6 +1133,18 @@ document::value operation_runner::run(document::view operation) {
         return _run_abort_transaction(operation);
     } else if (key.compare("runCommand") == 0) {
         return _run_run_command(operation);
+    } else if (key.compare("targetedFailPoint") == 0) {
+        return _run_configure_fail_point(operation);
+    } else if (key.compare("assertSessionPinned") == 0) {
+        const client_session* session =
+            _lookup_session(operation["arguments"].get_document().value);
+        REQUIRE(session->server_id());
+        return builder::basic::document{}.extract(); /* return empty doc */
+    } else if (key.compare("operationassertSessionUnpinned")) {
+        const client_session* session =
+            _lookup_session(operation["arguments"].get_document().value);
+        REQUIRE(!session->server_id());
+        return builder::basic::document{}.extract(); /* return empty doc */
     } else {
         throw std::logic_error{"unsupported operation" + string::to_string(key)};
     }

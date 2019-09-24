@@ -27,6 +27,8 @@ using namespace bsoncxx;
 using namespace mongocxx;
 bool should_skip_spec_test(const client& client, document::view test);
 
+void disable_fail_point(std::string uri_string, options::client client_opts);
+
 }  // namespace spec
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

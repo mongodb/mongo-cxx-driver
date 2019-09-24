@@ -108,6 +108,20 @@ class MONGOCXX_API database {
     ///
     bsoncxx::document::value run_command(const client_session& session,
                                          bsoncxx::document::view_or_value command);
+
+    ///
+    /// Executes a command on a specific server using this database.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/method/db.runCommand/
+    ///
+    /// @param command document representing the command to be run.
+    /// @param server_id specifying which server to use.
+    /// @return the result of executing the command.
+    ///
+    /// @throws mongocxx::operation_exception if the operation fails.
+    ///
+    bsoncxx::document::value run_command(bsoncxx::document::view_or_value command,
+                                         uint32_t server_id);
     ///
     /// @}
     ///

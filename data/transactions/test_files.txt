@@ -10,6 +10,9 @@
 ./findOneAndUpdate.json
 ./insert.json
 ./isolation.json
+./mongos-pin-auto.json
+./mongos-recovery-token.json
+./pin-mongos.json
 ./read-concern.json
 ./read-pref.json
 ./reads.json

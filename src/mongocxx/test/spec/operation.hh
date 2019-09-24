@@ -43,7 +43,8 @@ class operation_runner {
     operation_runner(database* db,
                      collection* coll,
                      client_session* session0,
-                     client_session* session1);
+                     client_session* session1,
+                     client* client = nullptr);
     document::value run(document::view operation);
 
    private:
@@ -51,6 +52,7 @@ class operation_runner {
     database* _db;
     client_session* _session0;
     client_session* _session1;
+    client* _client;
 
     client_session* _lookup_session(document::view doc);
     client_session* _lookup_session(stdx::string_view key);
@@ -75,6 +77,7 @@ class operation_runner {
     document::value _run_commit_transaction(document::view operation);
     document::value _run_abort_transaction(document::view operation);
     document::value _run_run_command(document::view operation);
+    document::value _run_configure_fail_point(bsoncxx::document::view operation);
 };
 
 }  // namespace spec

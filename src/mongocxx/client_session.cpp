@@ -42,6 +42,10 @@ const mongocxx::options::client_session& client_session::options() const noexcep
     return _impl->options();
 }
 
+std::uint32_t client_session::server_id() const noexcept {
+    return _impl->server_id();
+}
+
 bsoncxx::document::view client_session::id() const noexcept {
     return _impl->id();
 }
