@@ -1,4 +1,12 @@
 {
+  "runOn": [
+    {
+      "minServerVersion": "3.6",
+      "topology": [
+        "replicaset"
+      ]
+    }
+  ],
   "data": [
     {
       "_id": 1,
@@ -7,41 +15,17 @@
     {
       "_id": 2,
       "x": 22
-    },
-    {
-      "_id": 3,
-      "x": 33
     }
   ],
-  "minServerVersion": "2.6",
   "tests": [
     {
-      "description": "UpdateOne when many documents match",
-      "operation": {
-        "name": "updateOne",
-        "arguments": {
-          "filter": {
-            "_id": {
-              "$gt": 1
-            }
-          },
-          "update": {
-            "$inc": {
-              "x": 1
-            }
-          }
+      "description": "UpdateOne is committed on first attempt",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "times": 1
         }
       },
-      "outcome": {
-        "result": {
-          "matchedCount": 1,
-          "modifiedCount": 1,
-          "upsertedCount": 0
-        }
-      }
-    },
-    {
-      "description": "UpdateOne when one document matches",
       "operation": {
         "name": "updateOne",
         "arguments": {
@@ -70,22 +54,27 @@
             {
               "_id": 2,
               "x": 22
-            },
-            {
-              "_id": 3,
-              "x": 33
             }
           ]
         }
       }
     },
     {
-      "description": "UpdateOne when no documents match",
+      "description": "UpdateOne is not committed on first attempt",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "times": 1
+        },
+        "data": {
+          "failBeforeCommitExceptionCode": 1
+        }
+      },
       "operation": {
         "name": "updateOne",
         "arguments": {
           "filter": {
-            "_id": 4
+            "_id": 1
           },
           "update": {
             "$inc": {
@@ -96,10 +85,50 @@
       },
       "outcome": {
         "result": {
-          "matchedCount": 0,
-          "modifiedCount": 0,
+          "matchedCount": 1,
+          "modifiedCount": 1,
           "upsertedCount": 0
         },
+        "collection": {
+          "data": [
+            {
+              "_id": 1,
+              "x": 12
+            },
+            {
+              "_id": 2,
+              "x": 22
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "UpdateOne is never committed",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "times": 2
+        },
+        "data": {
+          "failBeforeCommitExceptionCode": 1
+        }
+      },
+      "operation": {
+        "name": "updateOne",
+        "arguments": {
+          "filter": {
+            "_id": 1
+          },
+          "update": {
+            "$inc": {
+              "x": 1
+            }
+          }
+        }
+      },
+      "outcome": {
+        "error": true,
         "collection": {
           "data": [
             {
@@ -109,22 +138,25 @@
             {
               "_id": 2,
               "x": 22
-            },
-            {
-              "_id": 3,
-              "x": 33
             }
           ]
         }
       }
     },
     {
-      "description": "UpdateOne with upsert when no documents match",
+      "description": "UpdateOne with upsert is committed on first attempt",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "times": 1
+        }
+      },
       "operation": {
         "name": "updateOne",
         "arguments": {
           "filter": {
-            "_id": 4
+            "_id": 3,
+            "x": 33
           },
           "update": {
             "$inc": {
@@ -139,7 +171,7 @@
           "matchedCount": 0,
           "modifiedCount": 0,
           "upsertedCount": 1,
-          "upsertedId": 4
+          "upsertedId": 3
         },
         "collection": {
           "data": [
@@ -153,11 +185,100 @@
             },
             {
               "_id": 3,
-              "x": 33
+              "x": 34
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "UpdateOne with upsert is not committed on first attempt",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "times": 1
+        },
+        "data": {
+          "failBeforeCommitExceptionCode": 1
+        }
+      },
+      "operation": {
+        "name": "updateOne",
+        "arguments": {
+          "filter": {
+            "_id": 3,
+            "x": 33
+          },
+          "update": {
+            "$inc": {
+              "x": 1
+            }
+          },
+          "upsert": true
+        }
+      },
+      "outcome": {
+        "result": {
+          "matchedCount": 0,
+          "modifiedCount": 0,
+          "upsertedCount": 1,
+          "upsertedId": 3
+        },
+        "collection": {
+          "data": [
+            {
+              "_id": 1,
+              "x": 11
             },
             {
-              "_id": 4,
+              "_id": 2,
+              "x": 22
+            },
+            {
+              "_id": 3,
+              "x": 34
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "UpdateOne with upsert is never committed",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "times": 2
+        },
+        "data": {
+          "failBeforeCommitExceptionCode": 1
+        }
+      },
+      "operation": {
+        "name": "updateOne",
+        "arguments": {
+          "filter": {
+            "_id": 3,
+            "x": 33
+          },
+          "update": {
+            "$inc": {
               "x": 1
+            }
+          },
+          "upsert": true
+        }
+      },
+      "outcome": {
+        "error": true,
+        "collection": {
+          "data": [
+            {
+              "_id": 1,
+              "x": 11
+            },
+            {
+              "_id": 2,
+              "x": 22
             }
           ]
         }

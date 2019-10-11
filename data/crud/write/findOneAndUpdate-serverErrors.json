@@ -1,9 +1,15 @@
 {
   "runOn": [
     {
-      "minServerVersion": "3.6",
+      "minServerVersion": "4.0",
       "topology": [
         "replicaset"
+      ]
+    },
+    {
+      "minServerVersion": "4.1.7",
+      "topology": [
+        "sharded"
       ]
     }
   ],
@@ -19,11 +25,17 @@
   ],
   "tests": [
     {
-      "description": "FindOneAndUpdate is committed on first attempt",
+      "description": "FindOneAndUpdate succeeds after PrimarySteppedDown",
       "failPoint": {
-        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "configureFailPoint": "failCommand",
         "mode": {
           "times": 1
+        },
+        "data": {
+          "failCommands": [
+            "findAndModify"
+          ],
+          "errorCode": 189
         }
       },
       "operation": {
@@ -60,80 +72,46 @@
       }
     },
     {
-      "description": "FindOneAndUpdate is not committed on first attempt",
+      "description": "FindOneAndUpdate succeeds after WriteConcernError ShutdownInProgress",
       "failPoint": {
-        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "configureFailPoint": "failCommand",
         "mode": {
           "times": 1
         },
         "data": {
-          "failBeforeCommitExceptionCode": 1
-        }
-      },
-      "operation": {
-        "name": "findOneAndUpdate",
-        "arguments": {
-          "filter": {
-            "_id": 1
-          },
-          "update": {
-            "$inc": {
-              "x": 1
-            }
-          },
-          "returnDocument": "Before"
-        }
-      },
-      "outcome": {
-        "result": {
-          "_id": 1,
-          "x": 11
-        },
-        "collection": {
-          "data": [
-            {
-              "_id": 1,
-              "x": 12
-            },
-            {
-              "_id": 2,
-              "x": 22
-            }
-          ]
-        }
-      }
-    },
-    {
-      "description": "FindOneAndUpdate is never committed",
-      "failPoint": {
-        "configureFailPoint": "onPrimaryTransactionalWrite",
-        "mode": {
-          "times": 2
-        },
-        "data": {
-          "failBeforeCommitExceptionCode": 1
-        }
-      },
-      "operation": {
-        "name": "findOneAndUpdate",
-        "arguments": {
-          "filter": {
-            "_id": 1
-          },
-          "update": {
-            "$inc": {
-              "x": 1
-            }
+          "failCommands": [
+            "findAndModify"
+          ],
+          "writeConcernError": {
+            "code": 91,
+            "errmsg": "Replication is being shut down"
           }
         }
       },
+      "operation": {
+        "name": "findOneAndUpdate",
+        "arguments": {
+          "filter": {
+            "_id": 1
+          },
+          "update": {
+            "$inc": {
+              "x": 1
+            }
+          },
+          "returnDocument": "Before"
+        }
+      },
       "outcome": {
-        "error": true,
+        "result": {
+          "_id": 1,
+          "x": 11
+        },
         "collection": {
           "data": [
             {
               "_id": 1,
-              "x": 11
+              "x": 12
             },
             {
               "_id": 2,

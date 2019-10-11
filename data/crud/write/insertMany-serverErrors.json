@@ -1,9 +1,15 @@
 {
   "runOn": [
     {
-      "minServerVersion": "3.6",
+      "minServerVersion": "4.0",
       "topology": [
         "replicaset"
+      ]
+    },
+    {
+      "minServerVersion": "4.1.7",
+      "topology": [
+        "sharded"
       ]
     }
   ],
@@ -15,114 +21,17 @@
   ],
   "tests": [
     {
-      "description": "InsertMany succeeds after one network error",
+      "description": "InsertMany succeeds after PrimarySteppedDown",
       "failPoint": {
-        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "configureFailPoint": "failCommand",
         "mode": {
           "times": 1
-        }
-      },
-      "operation": {
-        "name": "insertMany",
-        "arguments": {
-          "documents": [
-            {
-              "_id": 2,
-              "x": 22
-            },
-            {
-              "_id": 3,
-              "x": 33
-            }
-          ],
-          "options": {
-            "ordered": true
-          }
-        }
-      },
-      "outcome": {
-        "result": {
-          "insertedIds": {
-            "0": 2,
-            "1": 3
-          }
         },
-        "collection": {
-          "data": [
-            {
-              "_id": 1,
-              "x": 11
-            },
-            {
-              "_id": 2,
-              "x": 22
-            },
-            {
-              "_id": 3,
-              "x": 33
-            }
-          ]
-        }
-      }
-    },
-    {
-      "description": "InsertMany with unordered execution",
-      "failPoint": {
-        "configureFailPoint": "onPrimaryTransactionalWrite",
-        "mode": {
-          "times": 1
-        }
-      },
-      "operation": {
-        "name": "insertMany",
-        "arguments": {
-          "documents": [
-            {
-              "_id": 2,
-              "x": 22
-            },
-            {
-              "_id": 3,
-              "x": 33
-            }
-          ],
-          "options": {
-            "ordered": false
-          }
-        }
-      },
-      "outcome": {
-        "result": {
-          "insertedIds": {
-            "0": 2,
-            "1": 3
-          }
-        },
-        "collection": {
-          "data": [
-            {
-              "_id": 1,
-              "x": 11
-            },
-            {
-              "_id": 2,
-              "x": 22
-            },
-            {
-              "_id": 3,
-              "x": 33
-            }
-          ]
-        }
-      }
-    },
-    {
-      "description": "InsertMany fails after multiple network errors",
-      "failPoint": {
-        "configureFailPoint": "onPrimaryTransactionalWrite",
-        "mode": "alwaysOn",
         "data": {
-          "failBeforeCommitExceptionCode": 1
+          "failCommands": [
+            "insert"
+          ],
+          "errorCode": 189
         }
       },
       "operation": {
@@ -136,10 +45,6 @@
             {
               "_id": 3,
               "x": 33
-            },
-            {
-              "_id": 4,
-              "x": 44
             }
           ],
           "options": {
@@ -148,12 +53,85 @@
         }
       },
       "outcome": {
-        "error": true,
+        "result": {
+          "insertedIds": {
+            "0": 2,
+            "1": 3
+          }
+        },
         "collection": {
           "data": [
             {
               "_id": 1,
               "x": 11
+            },
+            {
+              "_id": 2,
+              "x": 22
+            },
+            {
+              "_id": 3,
+              "x": 33
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "InsertMany succeeds after WriteConcernError ShutdownInProgress",
+      "failPoint": {
+        "configureFailPoint": "failCommand",
+        "mode": {
+          "times": 1
+        },
+        "data": {
+          "failCommands": [
+            "insert"
+          ],
+          "writeConcernError": {
+            "code": 91,
+            "errmsg": "Replication is being shut down"
+          }
+        }
+      },
+      "operation": {
+        "name": "insertMany",
+        "arguments": {
+          "documents": [
+            {
+              "_id": 2,
+              "x": 22
+            },
+            {
+              "_id": 3,
+              "x": 33
+            }
+          ],
+          "options": {
+            "ordered": true
+          }
+        }
+      },
+      "outcome": {
+        "result": {
+          "insertedIds": {
+            "0": 2,
+            "1": 3
+          }
+        },
+        "collection": {
+          "data": [
+            {
+              "_id": 1,
+              "x": 11
+            },
+            {
+              "_id": 2,
+              "x": 22
+            },
+            {
+              "_id": 3,
+              "x": 33
             }
           ]
         }

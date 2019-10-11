@@ -1,3 +1,11 @@
+runOn:
+    -
+        minServerVersion: "4.0"
+        topology: ["replicaset"]
+    -
+        minServerVersion: "4.1.8"
+        topology: ["sharded"]
+
 database_name: &database_name "transaction-tests"
 collection_name: &collection_name "test"
 
@@ -7,7 +15,8 @@ data:
 
 tests:
   - description: causal consistency
-
+    clientOptions:
+      retryWrites: false
     operations:
       # Update a document without a transaction.
       - &updateOne
@@ -18,7 +27,6 @@ tests:
           filter: {_id: 1}
           update:
             $inc: {count: 1}
-          upsert: false
         result:
           matchedCount: 1
           modifiedCount: 1
@@ -39,8 +47,6 @@ tests:
             updates:
               - q: {_id: 1}
                 u: {$inc: {count: 1}}
-                multi: false
-                upsert: false
             ordered: true
             lsid: session0
             readConcern:
@@ -56,8 +62,6 @@ tests:
             updates:
               - q: {_id: 1}
                 u: {$inc: {count: 1}}
-                multi: false
-                upsert: false
             ordered: true
             readConcern:
               afterClusterTime: 42
@@ -88,7 +92,8 @@ tests:
             count: 2
 
   - description: causal consistency disabled
-
+    clientOptions:
+      retryWrites: false
     sessionOptions:
       session0:
         causalConsistency: false
@@ -112,7 +117,6 @@ tests:
           filter: {_id: 1}
           update:
             $inc: {count: 1}
-          upsert: false
         result:
           matchedCount: 1
           modifiedCount: 1
@@ -140,8 +144,6 @@ tests:
             updates:
               - q: {_id: 1}
                 u: {$inc: {count: 1}}
-                multi: false
-                upsert: false
             ordered: true
             # No afterClusterTime
             readConcern:

@@ -56,6 +56,9 @@ using namespace bsoncxx::stdx;
 using namespace mongocxx;
 using namespace mongocxx::spec;
 
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
+
 // Clears the collection and initialize it as the spec describes.
 void initialize_collection(collection* coll, array::view initial_data) {
     // We delete all documents from the collection instead of dropping the collection, as the former
@@ -96,6 +99,10 @@ void run_crud_tests_in_file(std::string test_path, client* client) {
         initialize_collection(&coll, test_spec_view["data"].get_array().value);
         document::view expected_outcome = test["outcome"].get_document().value;
 
+        if (test["failPoint"]) {
+            (*client)["admin"].run_command(test["failPoint"].get_document().value);
+        }
+
         if (expected_outcome["collection"] &&
             expected_outcome["collection"].get_document().value["name"]) {
             std::string out_coll_name = bsoncxx::string::to_string(
@@ -131,6 +138,12 @@ void run_crud_tests_in_file(std::string test_path, client* client) {
             if (operation["name"].get_utf8().value == bsoncxx::stdx::string_view{"aggregate"}) {
                 continue;
             }
+        }
+
+        if (test["failPoint"]) {
+            auto failpoint_name = test["failPoint"]["configureFailPoint"].get_utf8().value;
+            (*client)["admin"].run_command(
+                make_document(kvp("configureFailPoint", failpoint_name), kvp("mode", "off")));
         }
 
         // If an error is expected, there is no result returned. But some spec tests

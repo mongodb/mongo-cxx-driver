@@ -1,27 +1,50 @@
 {
+  "runOn": [
+    {
+      "minServerVersion": "3.6",
+      "topology": [
+        "replicaset"
+      ]
+    }
+  ],
   "data": [
     {
       "_id": 1,
       "x": 11
-    },
-    {
-      "_id": 2,
-      "x": 22
     }
   ],
-  "minServerVersion": "2.6",
   "tests": [
     {
-      "description": "BulkWrite with deleteOne operations",
+      "description": "First command is retried",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "times": 1
+        }
+      },
       "operation": {
         "name": "bulkWrite",
         "arguments": {
           "requests": [
             {
-              "name": "deleteOne",
+              "name": "insertOne",
+              "arguments": {
+                "document": {
+                  "_id": 2,
+                  "x": 22
+                }
+              }
+            },
+            {
+              "name": "updateOne",
               "arguments": {
                 "filter": {
-                  "_id": 3
+                  "_id": 2
+                },
+                "update": {
+                  "$inc": {
+                    "x": 1
+                  }
                 }
               }
             },
@@ -29,7 +52,7 @@
               "name": "deleteOne",
               "arguments": {
                 "filter": {
-                  "_id": 2
+                  "_id": 1
                 }
               }
             }
@@ -42,252 +65,43 @@
       "outcome": {
         "result": {
           "deletedCount": 1,
-          "insertedCount": 0,
-          "insertedIds": {},
-          "matchedCount": 0,
-          "modifiedCount": 0,
-          "upsertedCount": 0,
-          "upsertedIds": {}
-        },
-        "collection": {
-          "data": [
-            {
-              "_id": 1,
-              "x": 11
-            }
-          ]
-        }
-      }
-    },
-    {
-      "description": "BulkWrite with deleteMany operations",
-      "operation": {
-        "name": "bulkWrite",
-        "arguments": {
-          "requests": [
-            {
-              "name": "deleteMany",
-              "arguments": {
-                "filter": {
-                  "x": {
-                    "$lt": 11
-                  }
-                }
-              }
-            },
-            {
-              "name": "deleteMany",
-              "arguments": {
-                "filter": {
-                  "x": {
-                    "$lte": 22
-                  }
-                }
-              }
-            }
-          ],
-          "options": {
-            "ordered": true
-          }
-        }
-      },
-      "outcome": {
-        "result": {
-          "deletedCount": 2,
-          "insertedCount": 0,
-          "insertedIds": {},
-          "matchedCount": 0,
-          "modifiedCount": 0,
-          "upsertedCount": 0,
-          "upsertedIds": {}
-        },
-        "collection": {
-          "data": []
-        }
-      }
-    },
-    {
-      "description": "BulkWrite with insertOne operations",
-      "operation": {
-        "name": "bulkWrite",
-        "arguments": {
-          "requests": [
-            {
-              "name": "insertOne",
-              "arguments": {
-                "document": {
-                  "_id": 3,
-                  "x": 33
-                }
-              }
-            },
-            {
-              "name": "insertOne",
-              "arguments": {
-                "document": {
-                  "_id": 4,
-                  "x": 44
-                }
-              }
-            }
-          ],
-          "options": {
-            "ordered": true
-          }
-        }
-      },
-      "outcome": {
-        "result": {
-          "deletedCount": 0,
-          "insertedCount": 2,
+          "insertedCount": 1,
           "insertedIds": {
-            "0": 3,
-            "1": 4
+            "0": 2
           },
-          "matchedCount": 0,
-          "modifiedCount": 0,
+          "matchedCount": 1,
+          "modifiedCount": 1,
           "upsertedCount": 0,
           "upsertedIds": {}
         },
         "collection": {
           "data": [
             {
-              "_id": 1,
-              "x": 11
-            },
-            {
               "_id": 2,
-              "x": 22
-            },
-            {
-              "_id": 3,
-              "x": 33
-            },
-            {
-              "_id": 4,
-              "x": 44
+              "x": 23
             }
           ]
         }
       }
     },
     {
-      "description": "BulkWrite with replaceOne operations",
-      "operation": {
-        "name": "bulkWrite",
-        "arguments": {
-          "requests": [
-            {
-              "name": "replaceOne",
-              "arguments": {
-                "filter": {
-                  "_id": 3
-                },
-                "replacement": {
-                  "x": 33
-                }
-              }
-            },
-            {
-              "name": "replaceOne",
-              "arguments": {
-                "filter": {
-                  "_id": 1
-                },
-                "replacement": {
-                  "_id": 1,
-                  "x": 11
-                }
-              }
-            },
-            {
-              "name": "replaceOne",
-              "arguments": {
-                "filter": {
-                  "_id": 1
-                },
-                "replacement": {
-                  "x": 12
-                }
-              }
-            },
-            {
-              "name": "replaceOne",
-              "arguments": {
-                "filter": {
-                  "_id": 3
-                },
-                "replacement": {
-                  "x": 33
-                },
-                "upsert": true
-              }
-            }
-          ],
-          "options": {
-            "ordered": true
-          }
+      "description": "All commands are retried",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "times": 7
         }
       },
-      "outcome": {
-        "result": {
-          "deletedCount": 0,
-          "insertedCount": 0,
-          "insertedIds": {},
-          "matchedCount": 2,
-          "modifiedCount": 1,
-          "upsertedCount": 1,
-          "upsertedIds": {
-            "3": 3
-          }
-        },
-        "collection": {
-          "data": [
-            {
-              "_id": 1,
-              "x": 12
-            },
-            {
-              "_id": 2,
-              "x": 22
-            },
-            {
-              "_id": 3,
-              "x": 33
-            }
-          ]
-        }
-      }
-    },
-    {
-      "description": "BulkWrite with updateOne operations",
       "operation": {
         "name": "bulkWrite",
         "arguments": {
           "requests": [
             {
-              "name": "updateOne",
+              "name": "insertOne",
               "arguments": {
-                "filter": {
-                  "_id": 0
-                },
-                "update": {
-                  "$set": {
-                    "x": 0
-                  }
-                }
-              }
-            },
-            {
-              "name": "updateOne",
-              "arguments": {
-                "filter": {
-                  "_id": 1
-                },
-                "update": {
-                  "$set": {
-                    "x": 11
-                  }
+                "document": {
+                  "_id": 2,
+                  "x": 22
                 }
               }
             },
@@ -305,118 +119,56 @@
               }
             },
             {
+              "name": "insertOne",
+              "arguments": {
+                "document": {
+                  "_id": 3,
+                  "x": 33
+                }
+              }
+            },
+            {
               "name": "updateOne",
               "arguments": {
                 "filter": {
-                  "_id": 3
-                },
-                "update": {
-                  "$set": {
-                    "x": 33
-                  }
-                },
-                "upsert": true
-              }
-            }
-          ],
-          "options": {
-            "ordered": true
-          }
-        }
-      },
-      "outcome": {
-        "result": {
-          "deletedCount": 0,
-          "insertedCount": 0,
-          "insertedIds": {},
-          "matchedCount": 2,
-          "modifiedCount": 1,
-          "upsertedCount": 1,
-          "upsertedIds": {
-            "3": 3
-          }
-        },
-        "collection": {
-          "data": [
-            {
-              "_id": 1,
-              "x": 11
-            },
-            {
-              "_id": 2,
-              "x": 23
-            },
-            {
-              "_id": 3,
-              "x": 33
-            }
-          ]
-        }
-      }
-    },
-    {
-      "description": "BulkWrite with updateMany operations",
-      "operation": {
-        "name": "bulkWrite",
-        "arguments": {
-          "requests": [
-            {
-              "name": "updateMany",
-              "arguments": {
-                "filter": {
-                  "x": {
-                    "$lt": 11
-                  }
-                },
-                "update": {
-                  "$set": {
-                    "x": 0
-                  }
-                }
-              }
-            },
-            {
-              "name": "updateMany",
-              "arguments": {
-                "filter": {
-                  "x": {
-                    "$lte": 22
-                  }
-                },
-                "update": {
-                  "$unset": {
-                    "y": 1
-                  }
-                }
-              }
-            },
-            {
-              "name": "updateMany",
-              "arguments": {
-                "filter": {
-                  "x": {
-                    "$lte": 22
-                  }
+                  "_id": 4,
+                  "x": 44
                 },
                 "update": {
                   "$inc": {
                     "x": 1
                   }
+                },
+                "upsert": true
+              }
+            },
+            {
+              "name": "insertOne",
+              "arguments": {
+                "document": {
+                  "_id": 5,
+                  "x": 55
                 }
               }
             },
             {
-              "name": "updateMany",
+              "name": "replaceOne",
               "arguments": {
                 "filter": {
                   "_id": 3
                 },
-                "update": {
-                  "$set": {
-                    "x": 33
-                  }
-                },
-                "upsert": true
+                "replacement": {
+                  "_id": 3,
+                  "x": 333
+                }
+              }
+            },
+            {
+              "name": "deleteOne",
+              "arguments": {
+                "filter": {
+                  "_id": 1
+                }
               }
             }
           ],
@@ -427,36 +179,50 @@
       },
       "outcome": {
         "result": {
-          "deletedCount": 0,
-          "insertedCount": 0,
-          "insertedIds": {},
-          "matchedCount": 4,
+          "deletedCount": 1,
+          "insertedCount": 3,
+          "insertedIds": {
+            "0": 2,
+            "2": 3,
+            "4": 5
+          },
+          "matchedCount": 2,
           "modifiedCount": 2,
           "upsertedCount": 1,
           "upsertedIds": {
-            "3": 3
+            "3": 4
           }
         },
         "collection": {
           "data": [
-            {
-              "_id": 1,
-              "x": 12
-            },
             {
               "_id": 2,
               "x": 23
             },
             {
               "_id": 3,
-              "x": 33
+              "x": 333
+            },
+            {
+              "_id": 4,
+              "x": 45
+            },
+            {
+              "_id": 5,
+              "x": 55
             }
           ]
         }
       }
     },
     {
-      "description": "BulkWrite with mixed ordered operations",
+      "description": "Both commands are retried after their first statement fails",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "times": 2
+        }
+      },
       "operation": {
         "name": "bulkWrite",
         "arguments": {
@@ -465,8 +231,21 @@
               "name": "insertOne",
               "arguments": {
                 "document": {
-                  "_id": 3,
-                  "x": 33
+                  "_id": 2,
+                  "x": 22
+                }
+              }
+            },
+            {
+              "name": "updateOne",
+              "arguments": {
+                "filter": {
+                  "_id": 1
+                },
+                "update": {
+                  "$inc": {
+                    "x": 1
+                  }
                 }
               }
             },
@@ -481,56 +260,6 @@
                     "x": 1
                   }
                 }
-              }
-            },
-            {
-              "name": "updateMany",
-              "arguments": {
-                "filter": {
-                  "_id": {
-                    "$gt": 1
-                  }
-                },
-                "update": {
-                  "$inc": {
-                    "x": 1
-                  }
-                }
-              }
-            },
-            {
-              "name": "insertOne",
-              "arguments": {
-                "document": {
-                  "_id": 4,
-                  "x": 44
-                }
-              }
-            },
-            {
-              "name": "deleteMany",
-              "arguments": {
-                "filter": {
-                  "x": {
-                    "$nin": [
-                      24,
-                      34
-                    ]
-                  }
-                }
-              }
-            },
-            {
-              "name": "replaceOne",
-              "arguments": {
-                "filter": {
-                  "_id": 4
-                },
-                "replacement": {
-                  "_id": 4,
-                  "x": 44
-                },
-                "upsert": true
               }
             }
           ],
@@ -541,61 +270,61 @@
       },
       "outcome": {
         "result": {
-          "deletedCount": 2,
-          "insertedCount": 2,
+          "deletedCount": 0,
+          "insertedCount": 1,
           "insertedIds": {
-            "0": 3,
-            "3": 4
+            "0": 2
           },
-          "matchedCount": 3,
-          "modifiedCount": 3,
-          "upsertedCount": 1,
-          "upsertedIds": {
-            "5": 4
-          }
+          "matchedCount": 2,
+          "modifiedCount": 2,
+          "upsertedCount": 0,
+          "upsertedIds": {}
         },
         "collection": {
           "data": [
             {
+              "_id": 1,
+              "x": 12
+            },
+            {
               "_id": 2,
-              "x": 24
-            },
-            {
-              "_id": 3,
-              "x": 34
-            },
-            {
-              "_id": 4,
-              "x": 44
+              "x": 23
             }
           ]
         }
       }
     },
     {
-      "description": "BulkWrite with mixed unordered operations",
+      "description": "Second command is retried after its second statement fails",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "skip": 2
+        }
+      },
       "operation": {
         "name": "bulkWrite",
         "arguments": {
           "requests": [
             {
-              "name": "replaceOne",
+              "name": "insertOne",
               "arguments": {
-                "filter": {
-                  "_id": 3
-                },
-                "replacement": {
-                  "_id": 3,
-                  "x": 33
-                },
-                "upsert": true
+                "document": {
+                  "_id": 2,
+                  "x": 22
+                }
               }
             },
             {
-              "name": "deleteOne",
+              "name": "updateOne",
               "arguments": {
                 "filter": {
                   "_id": 1
+                },
+                "update": {
+                  "$inc": {
+                    "x": 1
+                  }
                 }
               }
             },
@@ -614,38 +343,44 @@
             }
           ],
           "options": {
-            "ordered": false
+            "ordered": true
           }
         }
       },
       "outcome": {
         "result": {
-          "deletedCount": 1,
-          "insertedCount": 0,
-          "insertedIds": {},
-          "matchedCount": 1,
-          "modifiedCount": 1,
-          "upsertedCount": 1,
-          "upsertedIds": {
-            "0": 3
-          }
+          "deletedCount": 0,
+          "insertedCount": 1,
+          "insertedIds": {
+            "0": 2
+          },
+          "matchedCount": 2,
+          "modifiedCount": 2,
+          "upsertedCount": 0,
+          "upsertedIds": {}
         },
         "collection": {
           "data": [
             {
-              "_id": 2,
-              "x": 23
+              "_id": 1,
+              "x": 12
             },
             {
-              "_id": 3,
-              "x": 33
+              "_id": 2,
+              "x": 23
             }
           ]
         }
       }
     },
     {
-      "description": "BulkWrite continue-on-error behavior with unordered (preexisting duplicate key)",
+      "description": "BulkWrite with unordered execution",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "times": 1
+        }
+      },
       "operation": {
         "name": "bulkWrite",
         "arguments": {
@@ -667,15 +402,6 @@
                   "x": 33
                 }
               }
-            },
-            {
-              "name": "insertOne",
-              "arguments": {
-                "document": {
-                  "_id": 4,
-                  "x": 44
-                }
-              }
             }
           ],
           "options": {
@@ -684,10 +410,13 @@
         }
       },
       "outcome": {
-        "error": true,
         "result": {
           "deletedCount": 0,
           "insertedCount": 2,
+          "insertedIds": {
+            "0": 2,
+            "1": 3
+          },
           "matchedCount": 0,
           "modifiedCount": 0,
           "upsertedCount": 0,
@@ -706,17 +435,22 @@
             {
               "_id": 3,
               "x": 33
-            },
-            {
-              "_id": 4,
-              "x": 44
             }
           ]
         }
       }
     },
     {
-      "description": "BulkWrite continue-on-error behavior with unordered (duplicate key in requests)",
+      "description": "First insertOne is never committed",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "times": 2
+        },
+        "data": {
+          "failBeforeCommitExceptionCode": 1
+        }
+      },
       "operation": {
         "name": "bulkWrite",
         "arguments": {
@@ -725,32 +459,35 @@
               "name": "insertOne",
               "arguments": {
                 "document": {
-                  "_id": 3,
-                  "x": 33
+                  "_id": 2,
+                  "x": 22
                 }
               }
             },
             {
-              "name": "insertOne",
+              "name": "updateOne",
               "arguments": {
-                "document": {
-                  "_id": 3,
-                  "x": 33
+                "filter": {
+                  "_id": 2
+                },
+                "update": {
+                  "$inc": {
+                    "x": 1
+                  }
                 }
               }
             },
             {
-              "name": "insertOne",
+              "name": "deleteOne",
               "arguments": {
-                "document": {
-                  "_id": 4,
-                  "x": 44
+                "filter": {
+                  "_id": 1
                 }
               }
             }
           ],
           "options": {
-            "ordered": false
+            "ordered": true
           }
         }
       },
@@ -758,7 +495,82 @@
         "error": true,
         "result": {
           "deletedCount": 0,
-          "insertedCount": 2,
+          "insertedCount": 0,
+          "insertedIds": {},
+          "matchedCount": 0,
+          "modifiedCount": 0,
+          "upsertedCount": 0,
+          "upsertedIds": {}
+        },
+        "collection": {
+          "data": [
+            {
+              "_id": 1,
+              "x": 11
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "Second updateOne is never committed",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "skip": 1
+        },
+        "data": {
+          "failBeforeCommitExceptionCode": 1
+        }
+      },
+      "operation": {
+        "name": "bulkWrite",
+        "arguments": {
+          "requests": [
+            {
+              "name": "insertOne",
+              "arguments": {
+                "document": {
+                  "_id": 2,
+                  "x": 22
+                }
+              }
+            },
+            {
+              "name": "updateOne",
+              "arguments": {
+                "filter": {
+                  "_id": 2
+                },
+                "update": {
+                  "$inc": {
+                    "x": 1
+                  }
+                }
+              }
+            },
+            {
+              "name": "deleteOne",
+              "arguments": {
+                "filter": {
+                  "_id": 1
+                }
+              }
+            }
+          ],
+          "options": {
+            "ordered": true
+          }
+        }
+      },
+      "outcome": {
+        "error": true,
+        "result": {
+          "deletedCount": 0,
+          "insertedCount": 1,
+          "insertedIds": {
+            "0": 2
+          },
           "matchedCount": 0,
           "modifiedCount": 0,
           "upsertedCount": 0,
@@ -773,14 +585,218 @@
             {
               "_id": 2,
               "x": 22
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "Third updateOne is never committed",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "skip": 2
+        },
+        "data": {
+          "failBeforeCommitExceptionCode": 1
+        }
+      },
+      "operation": {
+        "name": "bulkWrite",
+        "arguments": {
+          "requests": [
+            {
+              "name": "updateOne",
+              "arguments": {
+                "filter": {
+                  "_id": 1
+                },
+                "update": {
+                  "$inc": {
+                    "x": 1
+                  }
+                }
+              }
             },
             {
-              "_id": 3,
-              "x": 33
+              "name": "insertOne",
+              "arguments": {
+                "document": {
+                  "_id": 2,
+                  "x": 22
+                }
+              }
             },
             {
-              "_id": 4,
-              "x": 44
+              "name": "updateOne",
+              "arguments": {
+                "filter": {
+                  "_id": 2
+                },
+                "update": {
+                  "$inc": {
+                    "x": 1
+                  }
+                }
+              }
+            }
+          ],
+          "options": {
+            "ordered": true
+          }
+        }
+      },
+      "outcome": {
+        "error": true,
+        "result": {
+          "deletedCount": 0,
+          "insertedCount": 1,
+          "insertedIds": {
+            "1": 2
+          },
+          "matchedCount": 1,
+          "modifiedCount": 1,
+          "upsertedCount": 0,
+          "upsertedIds": {}
+        },
+        "collection": {
+          "data": [
+            {
+              "_id": 1,
+              "x": 12
+            },
+            {
+              "_id": 2,
+              "x": 22
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "Single-document write following deleteMany is retried",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "times": 1
+        },
+        "data": {
+          "failBeforeCommitExceptionCode": 1
+        }
+      },
+      "operation": {
+        "name": "bulkWrite",
+        "arguments": {
+          "requests": [
+            {
+              "name": "deleteMany",
+              "arguments": {
+                "filter": {
+                  "x": 11
+                }
+              }
+            },
+            {
+              "name": "insertOne",
+              "arguments": {
+                "document": {
+                  "_id": 2,
+                  "x": 22
+                }
+              }
+            }
+          ],
+          "options": {
+            "ordered": true
+          }
+        }
+      },
+      "outcome": {
+        "result": {
+          "deletedCount": 1,
+          "insertedCount": 1,
+          "insertedIds": {
+            "1": 2
+          },
+          "matchedCount": 0,
+          "modifiedCount": 0,
+          "upsertedCount": 0,
+          "upsertedIds": {}
+        },
+        "collection": {
+          "data": [
+            {
+              "_id": 2,
+              "x": 22
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "Single-document write following updateMany is retried",
+      "failPoint": {
+        "configureFailPoint": "onPrimaryTransactionalWrite",
+        "mode": {
+          "times": 1
+        },
+        "data": {
+          "failBeforeCommitExceptionCode": 1
+        }
+      },
+      "operation": {
+        "name": "bulkWrite",
+        "arguments": {
+          "requests": [
+            {
+              "name": "updateMany",
+              "arguments": {
+                "filter": {
+                  "x": 11
+                },
+                "update": {
+                  "$inc": {
+                    "x": 1
+                  }
+                }
+              }
+            },
+            {
+              "name": "insertOne",
+              "arguments": {
+                "document": {
+                  "_id": 2,
+                  "x": 22
+                }
+              }
+            }
+          ],
+          "options": {
+            "ordered": true
+          }
+        }
+      },
+      "outcome": {
+        "result": {
+          "deletedCount": 0,
+          "insertedCount": 1,
+          "insertedIds": {
+            "1": 2
+          },
+          "matchedCount": 1,
+          "modifiedCount": 1,
+          "upsertedCount": 0,
+          "upsertedIds": {}
+        },
+        "collection": {
+          "data": [
+            {
+              "_id": 1,
+              "x": 12
+            },
+            {
+              "_id": 2,
+              "x": 22
             }
           ]
         }
