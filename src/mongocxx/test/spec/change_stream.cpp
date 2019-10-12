@@ -81,11 +81,19 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
         client_opts.apm_opts(apm_checker.get_apm_opts());
         class client client(uri{}, client_opts);
 
-        INFO("Test case " << to_string(test["description"].get_utf8().value));
+        INFO("Test description: " << to_string(test["description"].get_utf8().value));
         if (test["description"].get_utf8().value.compare(
                 "Change Stream should error when an invalid aggregation stage is passed in") == 0) {
             WARN("Skipping test with invalid pipeline stages. The C++ driver cannot test them.");
             continue;
+        }
+
+        options::change_stream cs_opts{};
+        if (test["changeStreamOptions"]) {
+            auto options = test["changeStreamOptions"].get_document().value;
+            if (options["batchSize"]) {
+                cs_opts.batch_size(options["batchSize"].get_int32().value);
+            }
         }
 
         // "Using client, create a changeStream changeStream against the specified target"
@@ -96,9 +104,9 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
             }
             auto target = std::string(test["target"].get_utf8().value);
             if (target == "collection") {
-                return client[db1_name][coll1_name].watch(pipeline);
+                return client[db1_name][coll1_name].watch(pipeline, cs_opts);
             } else if (target == "database") {
-                return client[db1_name].watch(pipeline);
+                return client[db1_name].watch(pipeline, cs_opts);
             } else {
                 return client.watch(pipeline);
             }

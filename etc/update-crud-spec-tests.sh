@@ -16,5 +16,5 @@ curl -sL https://github.com/mongodb/specifications/archive/master.zip -o "$tmpdi
 unzip -d "$tmpdir" "$tmpdir/specs.zip" > /dev/null
 mkdir -p data/crud
 rsync -ah "$tmpdir/specifications-master/source/crud/tests/" data/crud
-( cd data/crud && find . -name \*.json | sort > test_files.txt )
+( cd data/crud && find * -name \*.json | sort > test_files.txt )
 rm -rf "$tmpdir"

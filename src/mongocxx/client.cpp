@@ -37,6 +37,31 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 using namespace libbson;
+using bsoncxx::builder::basic::kvp;
+
+namespace {
+class database_names {
+   public:
+    explicit database_names(char** names) {
+        _names = names;
+    };
+
+    ~database_names() {
+        bson_strfreev(_names);
+    }
+
+    const char* operator[](const std::size_t i) const {
+        return _names[i];
+    };
+
+    bool operator!() const {
+        return _names == nullptr;
+    }
+
+   private:
+    char** _names;
+};
+}  // namespace
 
 client::client() noexcept = default;
 
@@ -156,6 +181,30 @@ cursor client::list_databases(const client_session& session) const {
 cursor client::list_databases(const bsoncxx::document::view_or_value filter) const {
     scoped_bson_t filter_bson{filter.view()};
     return libmongoc::client_find_databases_with_opts(_get_impl().client_t, filter_bson.bson());
+}
+
+std::vector<std::string> client::list_database_names(
+    bsoncxx::document::view_or_value filter) const {
+    bsoncxx::builder::basic::document options_builder;
+    options_builder.append(kvp("filter", filter));
+
+    scoped_bson_t options_bson(options_builder.extract());
+
+    bson_error_t error;
+
+    database_names names(libmongoc::client_get_database_names_with_opts(
+        _get_impl().client_t, options_bson.bson(), &error));
+
+    if (!names) {
+        throw_exception<operation_exception>(error);
+    }
+
+    std::vector<std::string> _names;
+    for (std::size_t i = 0; names[i]; ++i) {
+        _names.emplace_back(names[i]);
+    }
+
+    return _names;
 }
 
 class client_session client::start_session(const mongocxx::options::client_session& options) {

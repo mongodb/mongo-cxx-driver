@@ -109,6 +109,63 @@ void disable_fail_point(std::string uri_string, options::client client_opts) {
     }
 }
 
+void initialize_collection(collection* coll, array::view initial_data) {
+    // Deleting all documents from the collection has much better performance than dropping the
+    // collection
+    coll->delete_many({});
+
+    std::vector<document::view> documents_to_insert;
+    for (auto&& document : initial_data) {
+        documents_to_insert.push_back(document.get_document().value);
+    }
+
+    if (documents_to_insert.size() > 0) {
+        coll->insert_many(documents_to_insert);
+    }
+}
+
+uri get_uri(document::view test) {
+    std::string uri_string = "mongodb://localhost/?";
+    auto add_opt = [&uri_string](std::string opt) {
+        if (uri_string.back() != '?') {
+            uri_string += '&';
+        }
+        uri_string += opt;
+    };
+
+    if (test["clientOptions"]) {
+        if (test["clientOptions"]["retryWrites"]) {
+            add_opt(std::string("retryWrites=") +
+                    (test["clientOptions"]["retryWrites"].get_bool().value ? "true" : "false"));
+        }
+        if (test["clientOptions"]["retryReads"]) {
+            add_opt(std::string("retryReads=") +
+                    (test["clientOptions"]["retryReads"].get_bool().value ? "true" : "false"));
+        }
+        if (test["clientOptions"]["readConcernLevel"]) {
+            add_opt("readConcernLevel=" +
+                    std::string(test["clientOptions"]["readConcernLevel"].get_utf8().value));
+        }
+        if (test["clientOptions"]["w"]) {
+            if (test["clientOptions"]["w"].type() == type::k_int32) {
+                add_opt("w=" + std::to_string(test["clientOptions"]["w"].get_int32().value));
+            } else {
+                add_opt("w=" + string::to_string(test["clientOptions"]["w"].get_utf8().value));
+            }
+        }
+        if (test["clientOptions"]["heartbeatFrequencyMS"]) {
+            add_opt(
+                "heartbeatFrequencyMS=" +
+                std::to_string(test["clientOptions"]["heartbeatFrequencyMS"].get_int32().value));
+        }
+        if (test["clientOptions"]["readPreference"]) {
+            add_opt("readPreference=" +
+                    string::to_string(test["clientOptions"]["readPreference"].get_utf8().value));
+        }
+    }
+    return uri{uri_string};
+}
+
 }  // namespace spec
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

@@ -1,2 +1,2 @@
-./change-streams-errors.json
-./change-streams.json
+change-streams-errors.json
+change-streams.json

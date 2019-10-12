@@ -131,6 +131,13 @@ add_executable(test_transactions_specs
     ${spec_test_common}
 )
 
+add_executable(test_retryable_reads_specs
+    ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
+    ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
+    spec/retryable-reads.cpp
+    ${spec_test_common}
+)
+
 target_link_libraries(test_driver mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_logging mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_instance mongocxx_mocked ${libmongoc_target})
@@ -139,6 +146,7 @@ target_link_libraries(test_gridfs_specs mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_command_monitoring_specs mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_change_stream_specs mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_transactions_specs mongocxx_mocked ${libmongoc_target})
+target_link_libraries(test_retryable_reads_specs mongocxx_mocked ${libmongoc_target})
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(test_driver PRIVATE /bigobj)
@@ -152,6 +160,7 @@ add_test(gridfs_specs test_gridfs_specs)
 add_test(command_monitoring_specs test_command_monitoring_specs)
 add_test(change_stream_specs test_change_stream_specs)
 add_test(transactions_specs test_transactions_specs)
+add_test(retryable_reads_spec test_retryable_reads_specs)
 
 set_tests_properties(crud_specs PROPERTIES
     ENVIRONMENT "CRUD_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/crud")
@@ -167,6 +176,9 @@ set_tests_properties(change_stream_specs PROPERTIES
 
 set_tests_properties(transactions_specs PROPERTIES
     ENVIRONMENT "TRANSACTIONS_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/transactions")
+
+set_tests_properties(retryable_reads_spec PROPERTIES
+   ENVIRONMENT "RETRYABLE_READS_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/retryable-reads")
 
 if (MONGOCXX_ENABLE_SLOW_TESTS)
   set_tests_properties(driver PROPERTIES
@@ -236,6 +248,7 @@ set_dist_list (src_mongocxx_test_DIST
    spec/monitoring.hh
    spec/operation.cpp
    spec/operation.hh
+   spec/retryable-reads.cpp
    spec/transactions.cpp
    spec/util.cpp
    spec/util.hh

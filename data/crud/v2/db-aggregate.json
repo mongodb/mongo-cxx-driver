@@ -1,0 +1,83 @@
+{
+  "runOn": [
+    {
+      "minServerVersion": "3.6.0"
+    }
+  ],
+  "database_name": "admin",
+  "tests": [
+    {
+      "description": "Aggregate with $listLocalSessions",
+      "skipReason": "blocked on CXX-1756",
+      "operations": [
+        {
+          "name": "aggregate",
+          "object": "database",
+          "arguments": {
+            "pipeline": [
+              {
+                "$listLocalSessions": {}
+              },
+              {
+                "$limit": 1
+              },
+              {
+                "$addFields": {
+                  "dummy": "dummy field"
+                }
+              },
+              {
+                "$project": {
+                  "_id": 0,
+                  "dummy": 1
+                }
+              }
+            ]
+          },
+          "result": [
+            {
+              "dummy": "dummy field"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Aggregate with $listLocalSessions and allowDiskUse",
+      "skipReason": "blocked on CXX-1756",
+      "operations": [
+        {
+          "name": "aggregate",
+          "object": "database",
+          "arguments": {
+            "pipeline": [
+              {
+                "$listLocalSessions": {}
+              },
+              {
+                "$limit": 1
+              },
+              {
+                "$addFields": {
+                  "dummy": "dummy field"
+                }
+              },
+              {
+                "$project": {
+                  "_id": 0,
+                  "dummy": 1
+                }
+              }
+            ],
+            "allowDiskUse": true
+          },
+          "result": [
+            {
+              "dummy": "dummy field"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

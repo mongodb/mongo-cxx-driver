@@ -54,6 +54,7 @@
 #include <mongocxx/test_util/client_helpers.hh>
 
 #include <mongocxx/config/private/prelude.hh>
+#include <third_party/catch/include/helpers.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -430,6 +431,24 @@ document::value operation_runner::_run_find_one_and_delete(document::view operat
     } else {
         document = _coll->find_one_and_delete(filter, options);
     }
+
+    // Server versions below 3.0 sometimes return an empty document rather than null when no
+    // documents match.
+    if (document && !(document->view().empty())) {
+        result.append(builder::basic::kvp("result", *document));
+    } else {
+        result.append(builder::basic::kvp("result", types::b_null{}));
+    }
+
+    return result.extract();
+}
+
+document::value operation_runner::_run_find_one(document::view operation) {
+    auto arguments = operation["arguments"].get_document().value;
+    auto filter = arguments["filter"].get_document().value;
+
+    builder::basic::document result{};
+    auto document = _coll->find_one(filter);
 
     // Server versions below 3.0 sometimes return an empty document rather than null when no
     // documents match.
@@ -1088,8 +1107,13 @@ operation_runner::operation_runner(database* db,
 
 document::value operation_runner::run(document::view operation) {
     using namespace bsoncxx::builder::basic;
+    bsoncxx::document::value empty_document({});
 
     stdx::string_view key = operation["name"].get_utf8().value;
+    stdx::string_view object;
+    if (operation["object"]) {
+        object = operation["object"].get_utf8().value;
+    }
 
     if (key.compare("aggregate") == 0) {
         return _run_aggregate(operation);
@@ -1107,6 +1131,8 @@ document::value operation_runner::run(document::view operation) {
         return _run_delete_many(operation);
     } else if (key.compare("deleteOne") == 0) {
         return _run_delete_one(operation);
+    } else if (key.compare("findOne") == 0) {
+        return _run_find_one(operation);
     } else if (key.compare("findOneAndDelete") == 0) {
         return _run_find_one_and_delete(operation);
     } else if (key.compare("findOneAndReplace") == 0) {
@@ -1139,14 +1165,54 @@ document::value operation_runner::run(document::view operation) {
         const client_session* session =
             _lookup_session(operation["arguments"].get_document().value);
         REQUIRE(session->server_id());
-        return builder::basic::document{}.extract(); /* return empty doc */
-    } else if (key.compare("operationassertSessionUnpinned")) {
+        return empty_document;
+    } else if (key.compare("operationassertSessionUnpinned") == 0) {
         const client_session* session =
             _lookup_session(operation["arguments"].get_document().value);
         REQUIRE(!session->server_id());
-        return builder::basic::document{}.extract(); /* return empty doc */
+        return empty_document;
+    } else if (key.compare("watch") == 0) {
+        if (object.compare("collection") == 0) {
+            _coll->watch();
+        } else if (object.compare("database") == 0) {
+            _db->watch();
+        } else if (object.compare("client") == 0) {
+            _client->watch();
+        } else {
+            throw std::logic_error{"unsupported operation object: " + string::to_string(object)};
+        }
+        return empty_document;
+    } else if (key.compare("rename") == 0) {
+        _coll->rename(operation["arguments"]["to"].get_utf8().value);
+        return empty_document;
+    } else if (key.compare("drop") == 0) {
+        _coll->drop();
+        return empty_document;
+    } else if (key.compare("listCollectionNames") == 0) {
+        _db->list_collection_names();
+        return empty_document;
+    } else if (key.compare("listCollectionObjects") == 0) {
+        throw std::logic_error("listCollectionObjects is not implemented in mongocxx");
+    } else if (key.compare("listCollections") == 0) {
+        _db->list_collections();
+        return empty_document;
+    } else if (key.compare("listDatabases") == 0) {
+        _client->list_databases().begin(); /* calling begin() iterates the cursor */
+        return empty_document;
+    } else if (key.compare("listDatabaseNames") == 0) {
+        _client->list_database_names();
+        return empty_document;
+    } else if (key.compare("listIndexes") == 0) {
+        _coll->list_indexes().begin(); /* calling begin() iterates the cursor */
+        return empty_document;
+    } else if (key.compare("download") == 0) {
+        std::ostream null_stream(nullptr); /* no need to store output */
+        auto bucket = _db->gridfs_bucket();
+        bucket.download_to_stream(operation["arguments"]["id"].get_value(), &null_stream);
+
+        return empty_document;
     } else {
-        throw std::logic_error{"unsupported operation" + string::to_string(key)};
+        throw std::logic_error{"unsupported operation: " + string::to_string(key)};
     }
 }
 

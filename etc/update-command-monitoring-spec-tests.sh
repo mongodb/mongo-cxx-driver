@@ -16,5 +16,5 @@ curl -sL https://github.com/mongodb/specifications/archive/master.zip -o "$tmpdi
 unzip -d "$tmpdir" "$tmpdir/specs.zip" > /dev/null
 mkdir -p data/command-monitoring
 rsync -ah "$tmpdir/specifications-master/source/command-monitoring/tests/" data/command-monitoring
-( cd data/command-monitoring && find . -name \*.json | sort > test_files.txt  )
+( cd data/command-monitoring && find * -name \*.json | sort > test_files.txt  )
 rm -rf "$tmpdir"

@@ -123,38 +123,6 @@ void test_setup(document::view test,
     }
 }
 
-uri get_uri(document::view test) {
-    std::string uri_opts = "";
-    auto add_opt = [&](std::string opt) {
-        if (uri_opts != "") {
-            uri_opts += "&" + opt;
-        }
-        uri_opts = opt;
-    };
-    if (test["clientOptions"]) {
-        if (test["clientOptions"]["retryWrites"]) {
-            add_opt(std::string("retryWrites=") +
-                    (test["clientOptions"]["retryWrites"].get_bool().value ? "true" : "false"));
-        }
-        if (test["clientOptions"]["readConcernLevel"]) {
-            add_opt("readConcernLevel=" +
-                    std::string(test["clientOptions"]["readConcernLevel"].get_utf8().value));
-        }
-        if (test["clientOptions"]["w"]) {
-            if (test["clientOptions"]["w"].type() == type::k_int32) {
-                add_opt("w=" + std::to_string(test["clientOptions"]["w"].get_int32().value));
-            } else {
-                add_opt("w=" + string::to_string(test["clientOptions"]["w"].get_utf8().value));
-            }
-        }
-        if (test["clientOptions"]["readPreference"]) {
-            add_opt("readPreference=" +
-                    string::to_string(test["clientOptions"]["readPreference"].get_utf8().value));
-        }
-    }
-    return uri{"mongodb://localhost/?" + uri_opts};
-}
-
 void parse_session_opts(document::view session_opts, options::client_session* out) {
     options::transaction txn_opts;
     if (session_opts["defaultTransactionOptions"]) {
@@ -245,7 +213,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         // Step 7. "Create a new MongoClient client, with Command Monitoring listeners enabled."
         options::client client_opts;
         apm_checker apm_checker;
-        client_opts.apm_opts(apm_checker.get_apm_opts());
+        client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
         client client;
         if (test["useMultipleMongoses"]) {
             client = {uri{"mongodb://localhost:27017,localhost:27018"}, client_opts};
@@ -277,6 +245,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         document::value session_lsid1(session1.id());
 
         // Step 9. Perform the operations.
+        apm_checker.clear();
         auto operations = test["operations"].get_array().value;
         for (auto&& op : operations) {
             fail_point_enabled =
@@ -383,7 +352,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         };
 
         if (test["expectations"]) {
-            apm_checker.compare(test["expectations"].get_array().value, true, visitor);
+            apm_checker.compare(test["expectations"].get_array().value, false, visitor);
         }
 
         // Step 12. Disable the failpoint.

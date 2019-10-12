@@ -41,12 +41,17 @@ void apm_checker::compare(bsoncxx::array::view expectations,
         events_iter++;
     }
     if (!allow_extra) {
+        if (_skip_kill_cursors && events_iter != _events.end()) {
+            if (events_iter->view()["command_started_event"]["command"]["killCursors"]) {
+                ++events_iter;
+            }
+        }
         // Then there must be no extra events after the expected ones.
         REQUIRE(events_iter == _events.end());
     }
 }
 
-options::apm apm_checker::get_apm_opts() {
+options::apm apm_checker::get_apm_opts(bool command_started_events_only) {
     options::apm opts;
     using namespace bsoncxx::builder::basic;
 
@@ -59,24 +64,33 @@ options::apm apm_checker::get_apm_opts() {
                                          kvp("database_name", event.database_name()))));
         this->_events.emplace_back(builder.extract());
     });
-    opts.on_command_failed([&](const events::command_failed_event& event) {
 
-        bsoncxx::builder::basic::document builder;
-        builder.append(kvp("command_failed_event",
-                           make_document(kvp("command_name", event.command_name()),
-                                         kvp("operation_id", event.operation_id()))));
-        this->_events.emplace_back(builder.extract());
-    });
-    opts.on_command_succeeded([&](const events::command_succeeded_event& event) {
-
-        bsoncxx::builder::basic::document builder;
-        builder.append(kvp("command_suceeded_event",
-                           make_document(kvp("reply", event.reply()),
-                                         kvp("command_name", event.command_name()),
-                                         kvp("operation_id", event.operation_id()))));
-        this->_events.emplace_back(builder.extract());
-    });
+    if (!command_started_events_only) {
+        opts.on_command_failed([&](const events::command_failed_event& event) {
+            bsoncxx::builder::basic::document builder;
+            builder.append(kvp("command_failed_event",
+                               make_document(kvp("command_name", event.command_name()),
+                                             kvp("operation_id", event.operation_id()))));
+            this->_events.emplace_back(builder.extract());
+        });
+        opts.on_command_succeeded([&](const events::command_succeeded_event& event) {
+            bsoncxx::builder::basic::document builder;
+            builder.append(kvp("command_suceeded_event",
+                               make_document(kvp("reply", event.reply()),
+                                             kvp("command_name", event.command_name()),
+                                             kvp("operation_id", event.operation_id()))));
+            this->_events.emplace_back(builder.extract());
+        });
+    }
     return opts;
+}
+
+void apm_checker::clear() {
+    this->_events.clear();
+}
+
+void apm_checker::skip_kill_cursors() {
+    this->_skip_kill_cursors = true;
 }
 
 }  // namespace spec
