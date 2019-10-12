@@ -112,7 +112,7 @@ std::string uri::to_string() const {
 }
 
 bool uri::ssl() const {
-    return libmongoc::uri_get_ssl(_impl->uri_t);
+    return libmongoc::uri_get_tls(_impl->uri_t);
 }
 
 std::string uri::username() const {
