@@ -202,8 +202,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         bool fail_point_enabled = (bool)test["failPoint"];
         auto description = test["description"].get_utf8().value;
         INFO("Test description: " << description);
-        if (description.compare("run command fails with explicit secondary read preference") == 0) {
-            WARN("Skipping test - read preferences in database::run_command are not supported");
+        if (should_skip_spec_test(client{uri{}}, test.get_document().value)) {
             continue;
         }
 
@@ -381,12 +380,6 @@ TEST_CASE("Transactions spec automated tests", "[transactions_spec]") {
     std::string path{transactions_tests_path};
     if (path.back() == '/') {
         path.pop_back();
-    }
-
-    client client{uri{}};
-    if (test_util::get_max_wire_version(client) < 7) {
-        WARN("Skipping - max wire version is < 7");
-        return;
     }
 
     std::ifstream test_files{path + "/test_files.txt"};
