@@ -827,7 +827,6 @@
     },
     {
       "description": "remain pinned after non-transient error on commit",
-      "skipReason": "blocked on SPEC-1320",
       "useMultipleMongoses": true,
       "operations": [
         {

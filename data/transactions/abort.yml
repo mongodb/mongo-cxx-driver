@@ -1,3 +1,11 @@
+runOn:
+    -
+        minServerVersion: "4.0"
+        topology: ["replicaset"]
+    -
+        minServerVersion: "4.1.8"
+        topology: ["sharded"]
+
 database_name: &database_name "transaction-tests"
 collection_name: &collection_name "test"
 
@@ -297,8 +305,10 @@ tests:
           document:
             _id: 1
         result:
-          errorCodeName: DuplicateKey
           errorLabelsOmit: ["TransientTransactionError", "UnknownTransactionCommitResult"]
+          # DuplicateKey error code included in the bulk write error message
+          # returned by the server
+          errorContains: E11000
       # Make sure the server aborted the transaction.
       - name: insertOne
         object: collection

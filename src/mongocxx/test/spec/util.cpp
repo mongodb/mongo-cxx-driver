@@ -35,7 +35,8 @@ static const int kMaxIsMasterFailCommands = 7;
 bool should_skip_spec_test(const client& client, document::view test) {
     if (test["skipReason"]) {
         WARN("Test skipped - " << test["description"].get_utf8().value << "\n"
-                               << "reason: " << test["skipReason"].get_utf8().value);
+                               << "reason: "
+                               << test["skipReason"].get_utf8().value);
         return true;
     }
 
