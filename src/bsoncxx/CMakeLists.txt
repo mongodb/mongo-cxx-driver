@@ -24,6 +24,8 @@ option(BSONCXX_POLY_USE_SYSTEM_MNMLSTC "Obtain mnmlstc/core from system" OFF)
 option(BSONCXX_POLY_USE_BOOST "Use boost for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_STD "Use C++17 std library for stdx polyfills" OFF)
 
+set (BSONCXX_OUTPUT_BASENAME "bsoncxx" CACHE STRING "Output bsoncxx library base name")
+
 # Count how many polyfill options are true-ish
 set(BSONCXX_POLY_OPTIONS_SET 0)
 foreach (BSONCXX_POLY_OPTION  ${BSONCXX_POLY_USE_MNMLSTC} ${BSONCXX_POLY_USE_STD_EXPERIMENTAL} ${BSONCXX_POLY_USE_BOOST} ${BSONCXX_POLY_USE_STD})
@@ -120,11 +122,11 @@ endif()
 include(BsoncxxUtil)
 
 if(BSONCXX_BUILD_SHARED)
-    bsoncxx_add_library(bsoncxx_shared "bsoncxx" SHARED)
+    bsoncxx_add_library(bsoncxx_shared "${BSONCXX_OUTPUT_BASENAME}" SHARED)
 endif()
 
 if(BSONCXX_BUILD_STATIC)
-    bsoncxx_add_library(bsoncxx_static "bsoncxx-static" STATIC)
+    bsoncxx_add_library(bsoncxx_static "${BSONCXX_OUTPUT_BASENAME}-static" STATIC)
 endif()
 
 if(BSONCXX_BUILD_SHARED)
