@@ -292,6 +292,18 @@ Second, the uninstall script can be called:
 C:\opt\mongo-cxx-driver\share\mongo-cxx-driver\uninstall.cmd
 ```
 
+#### Additional Options for Integrators
+
+In the event that you are building the BSON C++ library and/or the C++ driver to embed with other components and you wish to avoid the potential for collision with components installed from a standard build or from a distribution package manager, you can make use of the `BSONCXX_OUTPUT_BASENAME` and `MONGOCXX_OUTPUT_BASENAME` options to `cmake`.
+
+```sh
+cmake ..                                            \
+    -DBSONCXX_OUTPUT_BASENAME=custom_bsoncxx        \
+    -DMONGOCXX_OUTPUT_BASENAME=custom_mongocxx
+```
+
+The above command would produce libraries named `libcustom_bsoncxx.so` and `libcustom_mongocxx.so` (or with the extension appropriate for the build platform).  Those libraries could be placed in a standard system directory or in an alternate location and could be linked to by specifying something like `-lcustom_mongocxx -lcustom_bsoncxx` on the linker command line (possibly adjusting the specific flags to those required by your linker).
+
 ### Step 6: Test your installation
 
 Save the following source file with the filename `test.cpp`
