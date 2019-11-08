@@ -24,7 +24,7 @@ option(BSONCXX_POLY_USE_SYSTEM_MNMLSTC "Obtain mnmlstc/core from system" OFF)
 option(BSONCXX_POLY_USE_BOOST "Use boost for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_STD "Use C++17 std library for stdx polyfills" OFF)
 
-set (BSONCXX_OUTPUT_BASENAME "bsoncxx" CACHE STRING "Output bsoncxx library base name")
+set(BSONCXX_OUTPUT_BASENAME "bsoncxx" CACHE STRING "Output bsoncxx library base name")
 
 # Count how many polyfill options are true-ish
 set(BSONCXX_POLY_OPTIONS_SET 0)
