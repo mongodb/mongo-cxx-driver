@@ -21,6 +21,8 @@ set(MONGOCXX_ABI_VERSION _noabi)
 option(MONGOCXX_ENABLE_SSL "Enable SSL - if the underlying C driver offers it" ON)
 option(MONGOCXX_ENABLE_SLOW_TESTS "Run slow tests when invoking the the test target" OFF)
 
+set(MONGOCXX_OUTPUT_BASENAME "mongocxx" CACHE STRING "Output mongocxx library base name")
+
 set(MONGOCXX_VERSION_NO_EXTRA ${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR}.${MONGOCXX_VERSION_PATCH})
 set(MONGOCXX_VERSION ${MONGOCXX_VERSION_NO_EXTRA}${MONGOCXX_VERSION_EXTRA})
 message ("mongocxx version: ${MONGOCXX_VERSION}")
@@ -138,12 +140,12 @@ include_directories(
 include(MongocxxUtil)
 
 if(MONGOCXX_BUILD_SHARED)
-    mongocxx_add_library(mongocxx_shared "mongocxx" SHARED)
+    mongocxx_add_library(mongocxx_shared "${MONGOCXX_OUTPUT_BASENAME}" SHARED)
     target_link_libraries(mongocxx_shared PUBLIC bsoncxx_shared)
 endif()
 
 if(MONGOCXX_BUILD_STATIC)
-    mongocxx_add_library(mongocxx_static "mongocxx-static" STATIC)
+    mongocxx_add_library(mongocxx_static "${MONGOCXX_OUTPUT_BASENAME}-static" STATIC)
     target_link_libraries(mongocxx_static PUBLIC bsoncxx_static)
 endif()
 
