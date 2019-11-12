@@ -81,3 +81,24 @@ function(mongocxx_install MONGOCXX_TARGET_LIST MONGOCXX_PKG_DEP)
             Devel
     )
 endfunction(mongocxx_install)
+
+function(mongocxx_install_deprecated_cmake NAME)
+    set(PKG "lib${NAME}")
+
+    configure_package_config_file(
+      cmake/${PKG}-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config.cmake
+      INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PKG}-${MONGOCXX_VERSION}
+      PATH_VARS PACKAGE_INCLUDE_INSTALL_DIRS PACKAGE_LIBRARY_INSTALL_DIRS
+    )
+
+    write_basic_package_version_file(
+      ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config-version.cmake
+      VERSION ${MONGOCXX_VERSION}
+      COMPATIBILITY SameMajorVersion
+    )
+
+    install(
+      FILES ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config-version.cmake
+      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PKG}-${MONGOCXX_VERSION}
+    )
+endfunction(mongocxx_install_deprecated_cmake)

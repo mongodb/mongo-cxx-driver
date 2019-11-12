@@ -1,0 +1,32 @@
+# Copyright 2016 MongoDB Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+message(WARNING "This CMake target is deprecated.  Use 'mongo::bsoncxx_shared' instead.  Consult the example projects for further details.")
+
+set(LIBBSONCXX_VERSION_MAJOR @BSONCXX_VERSION_MAJOR@)
+set(LIBBSONCXX_VERSION_MINOR @BSONCXX_VERSION_MINOR@)
+set(LIBBSONCXX_VERSION_PATCH @BSONCXX_VERSION_PATCH@)
+set(LIBBSONCXX_PACKAGE_VERSION @BSONCXX_VERSION@)
+
+@PACKAGE_INIT@
+
+set_and_check(LIBBSONCXX_INCLUDE_DIRS "${PACKAGE_PREFIX_DIR}/@PACKAGE_INCLUDE_INSTALL_DIRS@")
+
+# We want to provide an absolute path to the library and we know the
+# directory and the base name, but not the suffix, so we use CMake's
+# find_library() to pick that up.
+find_library(LIBBSONCXX_LIBRARY_PATH bsoncxx PATHS "${PACKAGE_PREFIX_DIR}/@PACKAGE_LIBRARY_INSTALL_DIRS@" NO_DEFAULT_PATH)
+set(LIBBSONCXX_LIBRARIES ${LIBBSONCXX_LIBRARY_PATH})
+
+set(LIBBSONCXX_DEFINITIONS "")

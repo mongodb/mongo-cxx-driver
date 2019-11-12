@@ -185,10 +185,12 @@ include(CMakePackageConfigHelpers)
 
 set(mongocxx_target_list "")
 if(MONGOCXX_BUILD_SHARED)
+    mongocxx_install_deprecated_cmake(mongocxx)
     list(APPEND mongocxx_target_list mongocxx_shared)
 endif()
 
 if(MONGOCXX_BUILD_STATIC)
+    mongocxx_install_deprecated_cmake(mongocxx-static)
     list(APPEND mongocxx_target_list mongocxx_static)
     set(mongocxx_pkg_dep "find_dependency(mongoc-1.0 REQUIRED)")
 endif()
@@ -207,6 +209,8 @@ set_local_dist (src_mongocxx_DIST_local
    client_session.cpp
    client_session.hpp
    cmake/mongocxx-config.cmake.in
+   cmake/libmongocxx-config.cmake.in
+   cmake/libmongocxx-static-config.cmake.in
    collection.cpp
    collection.hpp
    cursor.cpp

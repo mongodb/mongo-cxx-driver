@@ -161,10 +161,12 @@ include(CMakePackageConfigHelpers)
 set(bsoncxx_target_list "")
 set(bsoncxx_pkg_dep "")
 if(BSONCXX_BUILD_SHARED)
+    bsoncxx_install_deprecated_cmake(bsoncxx)
     list(APPEND bsoncxx_target_list bsoncxx_shared)
 endif()
 
 if(BSONCXX_BUILD_STATIC)
+    bsoncxx_install_deprecated_cmake(bsoncxx-static)
     list(APPEND bsoncxx_target_list bsoncxx_static)
     set(bsoncxx_pkg_dep "find_dependency(bson-1.0 REQUIRED)")
 endif()
@@ -200,6 +202,8 @@ set_local_dist (src_bsoncxx_DIST_local
    builder/stream/single_context.hpp
    builder/stream/value_context.hpp
    cmake/bsoncxx-config.cmake.in
+   cmake/libbsoncxx-config.cmake.in
+   cmake/libbsoncxx-static-config.cmake.in
    decimal128.cpp
    decimal128.hpp
    document/element.cpp

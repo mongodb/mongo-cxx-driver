@@ -1,0 +1,37 @@
+# Copyright 2017 MongoDB Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+message(WARNING "This CMake target is deprecated.  Use 'mongo::bsoncxx_static' instead.  Consult the example projects for further details.")
+
+set(LIBBSONCXX_STATIC_VERSION_MAJOR @BSONCXX_VERSION_MAJOR@)
+set(LIBBSONCXX_STATIC_VERSION_MINOR @BSONCXX_VERSION_MINOR@)
+set(LIBBSONCXX_STATIC_VERSION_PATCH @BSONCXX_VERSION_PATCH@)
+set(LIBBSONCXX_STATIC_PACKAGE_VERSION @BSONCXX_VERSION@)
+
+# We need to pull in the libbson-static-* library to read the BSON_STATIC_LIBRARIES variable.  We
+# can ignore the other variables exported by that package (e.g. BSON_STATIC_INCLUDE_DIRS,
+# BSON_STATIC_DEFINITIONS), since bsoncxx hides the existence of libbson from the user through
+# abstraction.  bsoncxx users generally should not need to include libbson headers directly.
+find_package(libbson-static-@LIBBSON_REQUIRED_ABI_VERSION@ @LIBBSON_REQUIRED_VERSION@ REQUIRED)
+
+@PACKAGE_INIT@
+
+set_and_check(LIBBSONCXX_STATIC_INCLUDE_DIRS "${PACKAGE_PREFIX_DIR}/@PACKAGE_INCLUDE_INSTALL_DIRS@")
+
+# We want to provide an absolute path to the library and we know the directory and the base name,
+# but not the suffix, so we use CMake's find_library() to pick that up.
+find_library(LIBBSONCXX_STATIC_LIBRARY_PATH bsoncxx-static PATHS "${PACKAGE_PREFIX_DIR}/@PACKAGE_LIBRARY_INSTALL_DIRS@" NO_DEFAULT_PATH)
+set(LIBBSONCXX_STATIC_LIBRARIES ${LIBBSONCXX_STATIC_LIBRARY_PATH} ${BSON_STATIC_LIBRARIES})
+
+set(LIBBSONCXX_STATIC_DEFINITIONS BSONCXX_STATIC)

@@ -89,3 +89,24 @@ function(bsoncxx_install BSONCXX_TARGET_LIST BSONCXX_PKG_DEP)
             Devel
     )
 endfunction(bsoncxx_install)
+
+function(bsoncxx_install_deprecated_cmake NAME)
+    set(PKG "lib${NAME}")
+
+    configure_package_config_file(
+      cmake/${PKG}-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config.cmake
+      INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PKG}-${BSONCXX_VERSION}
+      PATH_VARS PACKAGE_INCLUDE_INSTALL_DIRS PACKAGE_LIBRARY_INSTALL_DIRS
+    )
+
+    write_basic_package_version_file(
+      ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config-version.cmake
+      VERSION ${BSONCXX_VERSION}
+      COMPATIBILITY SameMajorVersion
+    )
+
+    install(
+      FILES ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config-version.cmake
+      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PKG}-${BSONCXX_VERSION}
+    )
+endfunction(bsoncxx_install_deprecated_cmake)
