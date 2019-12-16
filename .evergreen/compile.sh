@@ -36,7 +36,7 @@ case "$OS" in
         make install VERBOSE=1
         make "-j$CONCURRENCY" examples VERBOSE=1
         if [ "$RUN_DISTCHECK" ]; then
-                make DISTCHECK_BUILD_OPTS="-j$CONCURRENCY" distcheck
+                make DISTCHECK_BUILD_OPTS="-j$CONCURRENCY" distcheck VERBOSE=1
         fi
         ;;
     cygwin*)

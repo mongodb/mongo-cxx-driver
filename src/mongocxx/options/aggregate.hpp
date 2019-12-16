@@ -20,6 +20,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/hint.hpp>
+#include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/write_concern.hpp>
@@ -225,6 +226,31 @@ class MONGOCXX_API aggregate {
     ///
     const stdx::optional<class write_concern>& write_concern() const;
 
+    ///
+    /// Sets the read concern to use for this operation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/aggregate/
+    ///
+    /// @param read_concern
+    ///   Object representing the read_concern.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.
+    ///
+    aggregate& read_concern(class read_concern read_concern);
+
+    ///
+    /// Gets the current read concern.
+    ///
+    /// @return
+    ///   The current read concern, if it is set.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/aggregate/
+    ///
+    const stdx::optional<class read_concern>& read_concern() const;
+
    private:
     stdx::optional<bool> _allow_disk_use;
     stdx::optional<std::int32_t> _batch_size;
@@ -234,6 +260,7 @@ class MONGOCXX_API aggregate {
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<class hint> _hint;
     stdx::optional<class write_concern> _write_concern;
+    stdx::optional<class read_concern> _read_concern;
 };
 
 }  // namespace options

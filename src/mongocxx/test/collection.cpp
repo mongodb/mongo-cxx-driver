@@ -1744,6 +1744,33 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE(results.size() == 2);
         }
 
+        SECTION("merge") {
+            auto merge_version = "4.1.11";
+            auto server_version = test_util::get_server_version(mongodb_client);
+            if (test_util::compare_versions(server_version, merge_version) < 0) {
+                // The server does not support $merge.
+                return;
+            }
+
+            collection coll = db["aggregation_merge"];
+            collection coll_out = db["aggregation_merge_out"];
+            coll.drop();
+            coll_out.drop();
+
+            coll.insert_one(make_document(kvp("a", 1)));
+
+            pipeline.match(make_document(kvp("a", 1)));
+            pipeline.merge(make_document(kvp("into", "aggregation_merge_out")));
+
+            auto cursor = coll.aggregate(pipeline);
+
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.empty());
+
+            auto doc = coll_out.find_one({});
+            REQUIRE(doc);
+        }
+
         SECTION("out") {
             collection coll = db["aggregation_out"];
             coll.drop();

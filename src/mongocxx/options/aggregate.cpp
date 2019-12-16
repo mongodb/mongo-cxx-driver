@@ -57,6 +57,11 @@ aggregate& aggregate::hint(class hint index_hint) {
     return *this;
 }
 
+aggregate& aggregate::read_concern(class read_concern read_concern) {
+    _read_concern = std::move(read_concern);
+    return *this;
+}
+
 aggregate& aggregate::write_concern(class write_concern write_concern) {
     _write_concern = std::move(write_concern);
     return *this;
@@ -88,6 +93,10 @@ const stdx::optional<bool>& aggregate::bypass_document_validation() const {
 
 const stdx::optional<class hint>& aggregate::hint() const {
     return _hint;
+}
+
+const stdx::optional<class read_concern>& aggregate::read_concern() const {
+    return _read_concern;
 }
 
 const stdx::optional<class write_concern>& aggregate::write_concern() const {

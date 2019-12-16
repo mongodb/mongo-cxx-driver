@@ -14,6 +14,7 @@
 
 #include <mongocxx/read_concern.hpp>
 
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/exception/error_code.hpp>
@@ -108,6 +109,19 @@ stdx::string_view read_concern::acknowledge_string() const {
         return "";
     }
     return {stdx::string_view{level}};
+}
+
+bsoncxx::document::value read_concern::to_document() const {
+    using bsoncxx::builder::basic::kvp;
+
+    auto level = libmongoc::read_concern_get_level(_impl->read_concern_t);
+
+    bsoncxx::builder::basic::document doc;
+    if (level) {
+        doc.append(kvp("level", level));
+    };
+
+    return doc.extract();
 }
 
 bool MONGOCXX_CALL operator==(const read_concern& lhs, const read_concern& rhs) {

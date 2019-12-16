@@ -79,6 +79,7 @@ class operation_runner {
     document::value _run_run_command(document::view operation);
     document::value _run_configure_fail_point(bsoncxx::document::view operation);
     document::value _run_find_one(document::view operation);
+    void _set_collection_options(document::view operation);
 };
 
 }  // namespace spec

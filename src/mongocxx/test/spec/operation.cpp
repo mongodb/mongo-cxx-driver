@@ -89,6 +89,8 @@ pipeline build_pipeline(array::view pipeline_docs) {
             pipeline.count(string::to_string(document["$count"].get_utf8().value));
         } else if (document["$project"]) {
             pipeline.project(document["$project"].get_document().value);
+        } else if (document["$merge"]) {
+            pipeline.merge(document["$merge"].get_document().value);
         } else {
             throw std::logic_error{"unsupported pipeline stage" + to_json(document)};
         }
@@ -180,6 +182,8 @@ document::value operation_runner::_run_aggregate(document::view operation) {
     if (arguments["collation"]) {
         options.collation(arguments["collation"].get_document().value);
     }
+
+    _set_collection_options(operation);
 
     stdx::optional<cursor> result_cursor;
     if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
@@ -832,22 +836,38 @@ document::value operation_runner::_run_update_one(document::view operation) {
     return result.extract();
 }
 
+void operation_runner::_set_collection_options(document::view operation) {
+    if (!operation["collectionOptions"]) {
+        return;
+    }
+
+    document::view options = operation["collectionOptions"].get_document().value;
+
+    if (options["writeConcern"]) {
+        document::view write_concern_options = options["writeConcern"].get_document().value;
+        int32_t w_option = write_concern_options["w"].get_int32().value;
+        write_concern w;
+        w.nodes(w_option);
+        _coll->write_concern(w);
+    }
+
+    if (options["readConcern"]) {
+        document::view read_concern_options = options["readConcern"].get_document().value;
+        read_concern rc;
+        rc.acknowledge_string(read_concern_options["level"].get_utf8().value);
+        _coll->read_concern(rc);
+    }
+}
+
 document::value operation_runner::_run_bulk_write(document::view operation) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
     options::bulk_write options;
     std::vector<model::write> writes;
-    if (operation["collectionOptions"]) {
-        // Set write concern from collection options.
-        document::view collection_options = operation["collectionOptions"].get_document().value;
-        document::view write_concern_options =
-            collection_options["writeConcern"].get_document().value;
-        int32_t w_option = write_concern_options["w"].get_int32().value;
-        write_concern w;
-        w.nodes(w_option);
-        options.write_concern(w);
-    }
+
+    _set_collection_options(operation);
+
     auto arguments = operation["arguments"].get_document().value;
     if (arguments["options"]) {
         document::view options_doc = arguments["options"].get_document().value;

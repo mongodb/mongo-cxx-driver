@@ -260,6 +260,21 @@ class MONGOCXX_API pipeline {
     pipeline& match(bsoncxx::document::view_or_value filter);
 
     ///
+    /// Outputs the aggregation results to a collection.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/merge/
+    ///
+    /// @param merge_args
+    ///   The specification for the merge options. Must include an `into` field that
+    ///   is either a collection name or a subdocument of the form:
+    ///   { `db` : <db name>, `coll` : <collection name> }.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.
+    ///
+    pipeline& merge(bsoncxx::document::view_or_value merge_args);
+
+    ///
     /// Takes documents returned by the aggregation pipeline and writes them to a specified
     /// collection. This stage must be the last stage in the pipeline. The out operator lets the
     /// aggregation framework return result sets of any size.

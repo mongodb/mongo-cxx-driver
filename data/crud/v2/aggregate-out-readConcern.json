@@ -26,7 +26,6 @@
   "tests": [
     {
       "description": "readConcern majority with out stage",
-      "skipReason": "blocked on CXX-1756",
       "operations": [
         {
           "object": "collection",
@@ -104,7 +103,6 @@
     },
     {
       "description": "readConcern local with out stage",
-      "skipReason": "blocked on CXX-1756",
       "operations": [
         {
           "object": "collection",
@@ -182,7 +180,6 @@
     },
     {
       "description": "readConcern available with out stage",
-      "skipReason": "blocked on CXX-1756",
       "operations": [
         {
           "object": "collection",
@@ -260,7 +257,6 @@
     },
     {
       "description": "readConcern linearizable with out stage",
-      "skipReason": "blocked on CXX-1756",
       "operations": [
         {
           "object": "collection",
@@ -324,7 +320,6 @@
     },
     {
       "description": "invalid readConcern with out stage",
-      "skipReason": "blocked on CXX-1756",
       "operations": [
         {
           "object": "collection",

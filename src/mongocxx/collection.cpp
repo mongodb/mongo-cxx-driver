@@ -491,6 +491,10 @@ cursor collection::_aggregate(const client_session* session,
         b.append(kvp("hint", options.hint()->to_value()));
     }
 
+    if (options.read_concern()) {
+        b.append(kvp("readConcern", options.read_concern()->to_document()));
+    }
+
     if (options.write_concern()) {
         b.append(kvp("writeConcern", options.write_concern()->to_document()));
     }

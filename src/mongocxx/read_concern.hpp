@@ -16,6 +16,7 @@
 
 #include <memory>
 
+#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <mongocxx/options/transaction.hpp>
@@ -143,6 +144,14 @@ class MONGOCXX_API read_concern {
     /// @return The read concern string.
     ///
     stdx::string_view acknowledge_string() const;
+
+    ///
+    /// Gets the document form of this read_concern.
+    ///
+    /// @return
+    ///   Document representation of this read_concern.
+    ///
+    bsoncxx::document::value to_document() const;
 
    private:
     friend client;

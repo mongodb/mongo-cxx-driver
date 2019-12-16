@@ -127,6 +127,13 @@ pipeline& pipeline::match(bsoncxx::document::view_or_value filter) {
     return *this;
 }
 
+pipeline& pipeline::merge(bsoncxx::document::view_or_value merge_args) {
+    _impl->sink().append(
+        [merge_args](sub_document sub_doc) { sub_doc.append(kvp("$merge", merge_args)); });
+
+    return *this;
+}
+
 pipeline& pipeline::out(std::string collection_name) {
     _impl->sink().append(
         [collection_name](sub_document sub_doc) { sub_doc.append(kvp("$out", collection_name)); });
