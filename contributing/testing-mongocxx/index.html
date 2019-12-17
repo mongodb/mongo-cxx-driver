@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-	<meta name="generator" content="Hugo 0.26" />
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
@@ -10,7 +9,7 @@
 
     <link rel="shortcut icon" href="http://mongocxx.org/img/favicon.png">
 
-    <title>MongoDB C&#43;&#43; Driver Manual</title>
+    <title>Testing the mongocxx driver</title>
 
     <link rel="stylesheet" href="http://mongocxx.org/lib/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="http://mongocxx.org/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
@@ -596,83 +595,41 @@
 
 
   
+  
+  
+  
+  
+  
+  
+  
 
-
-        
-          
-        
-      
+  
+    
+    
     
       
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
+    
+  
   
 
 
         
-          
-        
       
     
       
       
         
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
       
     
-    
       
+      
+    
     
   
 
 
           
 
-          
-          
-          
-          
-          
-          
-          
-          
           
 
           
@@ -1267,16 +1224,18 @@
 
 
 
+  
 
 
 
-<li class="toctree-l1 ">
+
+<li class="toctree-l1  current">
   <a href="/contributing/" class="">
       <i class='fa fa-pencil'></i>
       <span>Contributing</span>
-      <span class="menu-arrow fa fa-angle-right"></span>
+      <span class="menu-arrow fa fa-angle-down"></span>
   </a>
-    <ul >
+    <ul  class="current">
         
         
         
@@ -1293,6 +1252,8 @@
 
 
 
+
+  
 
 
 
@@ -1389,172 +1350,157 @@
                   <div class="body">
 
 
+   
+<a class="edit-link" href="https://github.com/mongodb/mongo-cxx-driver/blob/master/docs/content/contributing/testing-mongocxx.md" target="_blank" title="Edit contributing/testing-mongocxx.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
 
-    
-    
 
-<h1 id="mongodb-c-driver">MongoDB C++ Driver</h1>
 
-<p>Welcome to the MongoDB C++ driver.  On this site, you&rsquo;ll find documentation
-to help you get the most from MongoDB and C++.  If you&rsquo;re just starting
-out, take a look at these pages first:</p>
 
+
+
+
+
+
+
+<div class="bc">
 <ul>
-<li><a href="http://mongocxx.org/mongocxx-v3/installation/">Installing mongocxx</a></li>
-<li><a href="http://mongocxx.org/mongocxx-v3/tutorial/">Quick-start tutorial</a></li>
+  
+  
+  
+  
+  
+  <li><a href="/contributing/">Contributing</a> <i class="fa fa-angle-right"></i></li>
+  <li>Testing the mongocxx driver</li>
 </ul>
+</div>
 
-<h2 id="driver-status-by-family-and-version">Driver status by family and version</h2>
 
-<p>Stability indicates whether this driver is recommended for production use.
-Currently, no drivers guarantee API or ABI stability.</p>
+<h1>Testing the mongocxx driver</h1>
 
-<table>
-<thead>
-<tr>
-<th>Family/version</th>
-<th>Stability</th>
-<th>Development</th>
-<th>Purpose</th>
-</tr>
-</thead>
 
-<tbody>
-<tr>
-<td>(repo master branch)</td>
-<td>Unstable</td>
-<td>Active development</td>
-<td>New feature development</td>
-</tr>
+<p>Tests for the C++11 driver use
+<a href="https://github.com/philsquared/Catch">Catch</a>, a testing framework for C++.</p>
 
-<tr>
-<td>mongocxx 3.4.x</td>
-<td>Stable</td>
-<td>Bug fixes only</td>
-<td>Current stable C++ driver release</td>
-</tr>
+<p>Each class in the driver has a corresponding file in <code>src/mongocxx/test</code>.
+Because the new driver wraps
+<a href="https://github.com/mongodb/mongo-c-driver">libmongoc</a>, we prefer to mock
+and test the behavior of individual classes rather than test end-to-end
+behavior of operations against a running mongod.  In other words, these are
+unit tests rather than integration tests.</p>
 
-<tr>
-<td>mongocxx 3.3.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
+<p>We also have integration tests for this driver in <code>test/collection.cpp</code>.</p>
 
-<tr>
-<td>mongocxx 3.2.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
+<h2 id="running-the-existing-tests">Running the existing tests</h2>
 
-<tr>
-<td>mongocxx 3.1.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
+<p>Build the tests with:</p>
 
-<tr>
-<td>mongocxx 3.0.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
-</tbody>
-</table>
+<pre><code>make
+</code></pre>
 
-<h2 id="mongodb-compatibility">MongoDB compatibility</h2>
+<p>This will generate test binaries.  You can either run all the tests with:</p>
 
-<p>The following compatibility table specifies the driver version(s)
-recommended for different versions of MongoDB.  The mongocxx series
-is recommended for all new development.</p>
+<pre><code>make test
+</code></pre>
 
-<table>
-<thead>
-<tr>
-<th>Family/version</th>
-<th>MongoDB 2.4</th>
-<th>MongoDB 2.6</th>
-<th>MongoDB 3.0</th>
-<th>MongoDB 3.2</th>
-<th>MongoDB 3.4</th>
-<th>MongoDB 3.6</th>
-<th>MongoDB 4.0</th>
-</tr>
-</thead>
+<p>or, for more detailed output with Catch, run the generated binary:</p>
 
-<tbody>
-<tr>
-<td>mongocxx 3.4.x</td>
-<td></td>
-<td></td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-</tr>
+<pre><code>./build/src/mongocxx/test/test_driver
+</code></pre>
 
-<tr>
-<td>mongocxx 3.3.x</td>
-<td></td>
-<td></td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-</tr>
+<p>or you can run the ctest command and make use of ctest&rsquo;s various flags.
+For example:</p>
 
-<tr>
-<td>mongocxx 3.2.x</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-<td></td>
-</tr>
+<pre><code>ctest -V
+</code></pre>
 
-<tr>
-<td>mongocxx 3.1.x</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-<td></td>
-</tr>
+<p>can be used to run the tests with verbose output, or</p>
 
-<tr>
-<td>mongocxx 3.0.x</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
+<pre><code>ctest -R bson
+</code></pre>
 
-<h2 id="license">License</h2>
+<p>could be used to run only the bson tests.</p>
 
-<p>MongoDB C++ drivers are available under the terms of the Apache License, version 2.0.</p>
+<h3 id="running-integration-tests">Running integration tests</h3>
+
+<p>Some of the tests require a running mongod instance.  For this, first download
+the <a href="https://www.mongodb.com/download-center">mongodb server</a>.</p>
+
+<p>Then deploy a mongod on the default port with the command:</p>
+
+<pre><code>mongod
+</code></pre>
+
+<p>if it is installed, otherwise navigate to the directory holding the mongod
+executable, and run:</p>
+
+<pre><code>./mongod
+</code></pre>
+
+<p>following either command with any flags you wish to use, excluding
+<code>--port</code>.  While the mongod is running, run the tests as normal.</p>
+
+<h2 id="writing-new-tests">Writing new tests</h2>
+
+<p>If you&rsquo;d like to add a feature to the driver, please write a test for it as
+well.  Additions to existing classes should have new sections added to the
+existing test cases:</p>
+
+<pre><code>TEST_CASE(&quot;existing_class&quot;, &quot;[existing_class]&quot;) {
+   SECTION(&quot;Can do some new thing&quot;) {
+      ...
+      REQUIRE(new_thing_works);
+   }
+}
+</code></pre>
+
+<p>If you are adding a new class, please add a new test file for it to the
+<code>test</code> directory.  The test file&rsquo;s name should match the new class&rsquo;s file&rsquo;s
+name.  You will need to add your file as a source for the driver&rsquo;s test
+target, in <code>src/mongocxx/test/CMakeLists.txt</code>:</p>
+
+<pre><code>set(mongocxx_test_sources
+   ...
+   some_new_class.cpp
+   ...
+)
+</code></pre>
 
 
 
 
 
+
+<div id="btnv">
+  
+  
+  <div class="pull-right">
+  <a class="navigation next" href="/contributing/testing-legacy/">
+    Testing the legacy driver <i class="fa fa-long-arrow-right"> </i>
+  </a>
+  
+</div>
+</div>
 
 
 </div>
 <div class="right-column">
 <div class="wrapper">
+  
+  <div class="toc">
+    <span class="toc-header">On this page</span>
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#running-the-existing-tests">Running the existing tests</a>
+<ul>
+<li><a href="#running-integration-tests">Running integration tests</a></li>
+</ul></li>
+<li><a href="#writing-new-tests">Writing new tests</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
   
 </div>
 </div>

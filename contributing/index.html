@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-	<meta name="generator" content="Hugo 0.26" />
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
@@ -10,7 +9,7 @@
 
     <link rel="shortcut icon" href="http://mongocxx.org/img/favicon.png">
 
-    <title>MongoDB C&#43;&#43; Driver Manual</title>
+    <title>Contribution Guidelines</title>
 
     <link rel="stylesheet" href="http://mongocxx.org/lib/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="http://mongocxx.org/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
@@ -574,105 +573,21 @@
 
 
   
-    
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
+  
+  
+  
+  
+  
+  
   
 
-
-        
-          
-        
-      
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
   
-
-
-        
-          
-        
-      
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
-    
-    
-      
     
   
 
 
           
 
-          
-          
-          
-          
-          
-          
-          
-          
           
 
           
@@ -1267,16 +1182,18 @@
 
 
 
+  
 
 
 
-<li class="toctree-l1 ">
+
+<li class="toctree-l1  current">
   <a href="/contributing/" class="">
       <i class='fa fa-pencil'></i>
       <span>Contributing</span>
-      <span class="menu-arrow fa fa-angle-right"></span>
+      <span class="menu-arrow fa fa-angle-down"></span>
   </a>
-    <ul >
+    <ul  class="current">
         
         
         
@@ -1390,165 +1307,187 @@
 
 
 
-    
-    
 
-<h1 id="mongodb-c-driver">MongoDB C++ Driver</h1>
 
-<p>Welcome to the MongoDB C++ driver.  On this site, you&rsquo;ll find documentation
-to help you get the most from MongoDB and C++.  If you&rsquo;re just starting
-out, take a look at these pages first:</p>
 
+
+
+
+
+<div class="bc">
 <ul>
-<li><a href="http://mongocxx.org/mongocxx-v3/installation/">Installing mongocxx</a></li>
-<li><a href="http://mongocxx.org/mongocxx-v3/tutorial/">Quick-start tutorial</a></li>
+  
+  
+  
+  
+  
+  
+  <li>Contributing</li>
+</ul>
+</div>
+
+
+<h1> Contribution Guidelines </h1>
+<ul id="subpage-list">
+    
+    <li>
+        <a href="http://mongocxx.org/contributing/testing-legacy/">Testing the legacy driver</a>
+    </li>
+    
+    <li>
+        <a href="http://mongocxx.org/contributing/testing-mongocxx/">Testing the mongocxx driver</a>
+    </li>
+    
 </ul>
 
-<h2 id="driver-status-by-family-and-version">Driver status by family and version</h2>
 
-<p>Stability indicates whether this driver is recommended for production use.
-Currently, no drivers guarantee API or ABI stability.</p>
+<h3 id="commit-messages">Commit Messages</h3>
 
-<table>
-<thead>
-<tr>
-<th>Family/version</th>
-<th>Stability</th>
-<th>Development</th>
-<th>Purpose</th>
-</tr>
-</thead>
+<p>If a pull-request addresses a JIRA ticket, for a single-commit PR, prefix
+the subject line with the ticket ID.  (For a multi-commit PR, we will add
+the ID later when we squash or merge it.)</p>
 
-<tbody>
-<tr>
-<td>(repo master branch)</td>
-<td>Unstable</td>
-<td>Active development</td>
-<td>New feature development</td>
-</tr>
+<blockquote>
+<p>CXX-883 Add commit message conventions to CONTRIBUTING.md</p>
+</blockquote>
 
-<tr>
-<td>mongocxx 3.4.x</td>
-<td>Stable</td>
-<td>Bug fixes only</td>
-<td>Current stable C++ driver release</td>
-</tr>
+<p>Capitalize subject lines and don&rsquo;t use a trailing period.  Keep the subject
+at most 70 characters long.  Use active voice!  Imagine this preamble to get
+your phrasing right:</p>
 
-<tr>
-<td>mongocxx 3.3.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
+<blockquote>
+<p><em>If applied, this commit will&hellip;</em> [your subject line]</p>
+</blockquote>
 
-<tr>
-<td>mongocxx 3.2.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
+<p>See Chris Beams&rsquo;
+<a href="http://chris.beams.io/posts/git-commit/">How to write a git commit message</a>
+for more good guidelines to follow.</p>
 
-<tr>
-<td>mongocxx 3.1.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
+<h3 id="lifecycle-methods">Lifecycle Methods</h3>
 
-<tr>
-<td>mongocxx 3.0.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
-</tbody>
-</table>
+<ul>
+<li><p>default-or-argument-bearing &lsquo;user&rsquo; constructors</p></li>
 
-<h2 id="mongodb-compatibility">MongoDB compatibility</h2>
+<li><p>declaration-or-deletion-of-copy-contructor</p></li>
 
-<p>The following compatibility table specifies the driver version(s)
-recommended for different versions of MongoDB.  The mongocxx series
-is recommended for all new development.</p>
+<li><p>declaration-or-deletetion-of-move-constructor</p></li>
 
-<table>
-<thead>
-<tr>
-<th>Family/version</th>
-<th>MongoDB 2.4</th>
-<th>MongoDB 2.6</th>
-<th>MongoDB 3.0</th>
-<th>MongoDB 3.2</th>
-<th>MongoDB 3.4</th>
-<th>MongoDB 3.6</th>
-<th>MongoDB 4.0</th>
-</tr>
-</thead>
+<li><p>declaration-or-deletion-of-copy-assignment-operator</p></li>
 
-<tbody>
-<tr>
-<td>mongocxx 3.4.x</td>
-<td></td>
-<td></td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-</tr>
+<li><p>declaration-or-deletion-of-move-assignment-operator</p></li>
 
-<tr>
-<td>mongocxx 3.3.x</td>
-<td></td>
-<td></td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-</tr>
+<li><p>declaration-of-dtor</p></li>
+</ul>
 
-<tr>
-<td>mongocxx 3.2.x</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-<td></td>
-</tr>
+<h3 id="headers">Headers</h3>
 
-<tr>
-<td>mongocxx 3.1.x</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-<td></td>
-</tr>
+<p>Public headers must have a &ldquo;.hpp&rdquo; suffix. Private headers must have a &ldquo;.hh&rdquo;
+suffix.</p>
 
-<tr>
-<td>mongocxx 3.0.x</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
+<p>General structure:</p>
 
-<h2 id="license">License</h2>
+<ul>
+<li>License</li>
+<li>Include Guard (<code>#pragma once</code>)</li>
+<li>Header Prelude</li>
+<li>System Headers <code>&lt;vector&gt;</code> (alphabetical order)</li>
+<li>Driver Headers <code>&lt;path/to/header.hpp&gt;</code> (alphabetical order)</li>
+<li>Open Namespace mongocxx</li>
+<li><code>MONGOCXX_INLINE_NAMESPACE_BEGIN</code></li>
+<li>Code</li>
+<li><code>MONGOCXX_INLINE_NAMESPACE_END</code></li>
+<li>Close Namespace mongocxx</li>
+<li>Header Postlude</li>
+</ul>
 
-<p>MongoDB C++ drivers are available under the terms of the Apache License, version 2.0.</p>
+<p>Example:</p>
 
+<pre><code class="language-cpp">// Copyright 2018-present MongoDB Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
+#pragma once
 
+#include &lt;driver/config/prelude.hpp&gt;
 
+#include &lt;vector&gt;
+
+#include &lt;driver/blah.hpp&gt;
+
+namespace mongocxx {
+MONGOCXX_INLINE_NAMESPACE_BEGIN
+
+// Declarations
+
+// Inline Implementations
+
+MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace mongocxx
+
+#include &lt;driver/config/postlude.hpp&gt;
+</code></pre>
+
+<h3 id="class-declarations">Class Declarations</h3>
+
+<p>Guidelines:</p>
+
+<ul>
+<li>Blank line at beginning and end of class declaration</li>
+<li>Public section up top / private at bottom</li>
+<li>Lifecycle methods first (see rules above)</li>
+<li>Private Member Ordering
+
+<ul>
+<li>Friendships</li>
+<li>Private Constructors</li>
+<li>Private Methods</li>
+<li>Private Variables</li>
+</ul></li>
+</ul>
+
+<p>Example:</p>
+
+<pre><code class="language-cpp">class foo {
+
+    public:
+      foo();
+
+      foo(foo&amp;&amp; other) noexcept;
+      foo&amp; operator=(foo&amp;&amp; other) noexcept;
+
+      ~foo();
+
+    private:
+      friend baz;
+
+      class MONGOCXX_PRIVATE impl;
+      std::unique_ptr&lt;impl&gt; _impl;
+
+};
+</code></pre>
+
+<h3 id="inlines">Inlines</h3>
+
+<ul>
+<li>Define outside of class declaration</li>
+<li>Specify inline keyword in declaration and definition (for clarity)</li>
+</ul>
+
+<h3 id="relational-operators">Relational Operators</h3>
+
+<ul>
+<li>Prefer to use free functions</li>
+</ul>
 
 
 

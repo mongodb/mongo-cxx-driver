@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-	<meta name="generator" content="Hugo 0.26" />
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
@@ -10,7 +9,7 @@
 
     <link rel="shortcut icon" href="http://mongocxx.org/img/favicon.png">
 
-    <title>MongoDB C&#43;&#43; Driver Manual</title>
+    <title>Connection pools</title>
 
     <link rel="stylesheet" href="http://mongocxx.org/lib/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="http://mongocxx.org/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
@@ -224,96 +223,36 @@
 
 
   
+  
+  
+  
+  
+  
+  
+  
 
-
-        
-          
-        
-      
+  
     
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
+    
+    
+  
   
 
 
         
-          
-        
       
     
       
       
         
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
       
     
       
       
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
-    
     
       
+      
+    
     
   
 
@@ -335,168 +274,22 @@
     
       
       
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
+    
+      
       
     
       
       
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
+    
+      
       
     
       
       
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
     
       
       
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
     
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
-    
-    
-      
     
   
 
@@ -578,101 +371,19 @@
     
       
       
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
+    
+      
       
     
       
       
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
     
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
-    
-    
-      
     
   
 
 
           
 
-          
-          
-          
-          
-          
-          
-          
-          
           
 
           
@@ -691,16 +402,18 @@
 
 
 
+  
 
 
 
-<li class="toctree-l1 ">
+
+<li class="toctree-l1  current">
   <a href="/mongocxx-v3/" class="">
       <i class='fa fa-arrow-right'></i>
       <span>mongocxx (v3)</span>
-      <span class="menu-arrow fa fa-angle-right"></span>
+      <span class="menu-arrow fa fa-angle-down"></span>
   </a>
-    <ul >
+    <ul  class="current">
         
         
         
@@ -833,6 +546,8 @@
 
 
 
+
+  
 
 
 
@@ -1389,172 +1104,136 @@
                   <div class="body">
 
 
+   
+<a class="edit-link" href="https://github.com/mongodb/mongo-cxx-driver/blob/master/docs/content/mongocxx-v3/connection-pools.md" target="_blank" title="Edit mongocxx-v3/connection-pools.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
 
-    
-    
 
-<h1 id="mongodb-c-driver">MongoDB C++ Driver</h1>
 
-<p>Welcome to the MongoDB C++ driver.  On this site, you&rsquo;ll find documentation
-to help you get the most from MongoDB and C++.  If you&rsquo;re just starting
-out, take a look at these pages first:</p>
 
+
+
+
+
+
+
+<div class="bc">
 <ul>
-<li><a href="http://mongocxx.org/mongocxx-v3/installation/">Installing mongocxx</a></li>
-<li><a href="http://mongocxx.org/mongocxx-v3/tutorial/">Quick-start tutorial</a></li>
+  
+  
+  
+  
+  
+  <li><a href="/mongocxx-v3/">mongocxx (v3)</a> <i class="fa fa-angle-right"></i></li>
+  <li>Connection pools</li>
 </ul>
+</div>
 
-<h2 id="driver-status-by-family-and-version">Driver status by family and version</h2>
 
-<p>Stability indicates whether this driver is recommended for production use.
-Currently, no drivers guarantee API or ABI stability.</p>
+<h1>Connection pools</h1>
+
+
+<h2 id="mongocxx-client-vs-mongocxx-pool"><code>mongocxx::client</code> vs <code>mongocxx::pool</code></h2>
+
+<p>A standalone <code>mongocxx::client</code> uses a single-threaded algorithm to
+monitor the state of the cluster it&rsquo;s connected to. When connected to a
+replica set, the thread &ldquo;stops the world&rdquo; every 60 seconds to check the
+status of the cluster. A <code>mongocxx::pool</code>, on the other hand, uses a
+separate background thread for each server in the cluster, each of which
+checks the status of the server it monitors every 10 seconds. Because of
+the performance advantages of monitoring the cluster in the background
+rather than &ldquo;stopping the world&rdquo;, it&rsquo;s highly recommended to use a
+<code>mongocxx::pool</code> rather than a set of standalone clients if your
+application has access to multiple threads, even if your application only
+uses one thread.</p>
+
+<h2 id="connection-pools-and-thread-safety">Connection pools and thread safety</h2>
+
+<p>A <code>mongocxx::pool</code> can be shared across multiple threads and used to create
+clients. However, each <code>mongocxx::client</code> can only be used in a single
+thread. See the <a href="../thread-safety/">thread safety documentation</a> for
+details on how to use a <code>mongocxx::client</code> in a thread-safe manner.</p>
+
+<h2 id="configuring-a-connection-pool">Configuring a connection pool</h2>
+
+<p>The number of clients in a connection pool is determined by the URI
+parameters <code>minPoolSize</code> and <code>maxPoolSize</code>. The <code>minPoolSize</code> and
+<code>maxPoolSize</code> options set resource usage targets for when the driver is
+idle or fully-utilized.  When fully utilized, up to maxPoolSize clients
+are available. When clients are returned to the pool, they are destroyed
+until the pool has shrunk again to the minPoolSize.</p>
 
 <table>
 <thead>
 <tr>
-<th>Family/version</th>
-<th>Stability</th>
-<th>Development</th>
-<th>Purpose</th>
+<th>‌‌</th>
+<th></th>
 </tr>
 </thead>
 
 <tbody>
 <tr>
-<td>(repo master branch)</td>
-<td>Unstable</td>
-<td>Active development</td>
-<td>New feature development</td>
+<td>maxPoolSize</td>
+<td>The maximum number of clients created by a mongocxx::pool (both in the pool and checked out). The default value is 100. Once it is reached, mongocxx::pool::acquire blocks until another thread returns a client to the pool.</td>
 </tr>
 
 <tr>
-<td>mongocxx 3.4.x</td>
-<td>Stable</td>
-<td>Bug fixes only</td>
-<td>Current stable C++ driver release</td>
-</tr>
-
-<tr>
-<td>mongocxx 3.3.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
-
-<tr>
-<td>mongocxx 3.2.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
-
-<tr>
-<td>mongocxx 3.1.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
-
-<tr>
-<td>mongocxx 3.0.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
+<td>minPoolSize</td>
+<td>Sets a target size for the pool when idle.  Once this many clients have been created, there will never be fewer than this many clients in the pool. If additional clients above minPoolSize are created, they will be destroyed when returned to the pool. The default value is &ldquo;0&rdquo;, which disables this feature. When disabled, clients are never destroyed.</td>
 </tr>
 </tbody>
 </table>
 
-<h2 id="mongodb-compatibility">MongoDB compatibility</h2>
+<h2 id="using-a-connection-pool">Using a connection pool</h2>
 
-<p>The following compatibility table specifies the driver version(s)
-recommended for different versions of MongoDB.  The mongocxx series
-is recommended for all new development.</p>
+<p>To use a connection pool, first create a <code>mongocxx::pool</code>, passing the URI
+as an argument. Then, call <code>mongocxx::pool::acquire</code> to receive a client
+from the pool. The client will automatically be returned to the pool when
+it goes out of scope.</p>
 
-<table>
-<thead>
-<tr>
-<th>Family/version</th>
-<th>MongoDB 2.4</th>
-<th>MongoDB 2.6</th>
-<th>MongoDB 3.0</th>
-<th>MongoDB 3.2</th>
-<th>MongoDB 3.4</th>
-<th>MongoDB 3.6</th>
-<th>MongoDB 4.0</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>mongocxx 3.4.x</td>
-<td></td>
-<td></td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-</tr>
-
-<tr>
-<td>mongocxx 3.3.x</td>
-<td></td>
-<td></td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-</tr>
-
-<tr>
-<td>mongocxx 3.2.x</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-<td></td>
-</tr>
-
-<tr>
-<td>mongocxx 3.1.x</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-<td></td>
-</tr>
-
-<tr>
-<td>mongocxx 3.0.x</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-<h2 id="license">License</h2>
-
-<p>MongoDB C++ drivers are available under the terms of the Apache License, version 2.0.</p>
+<p>See the <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/mongocxx/pool.cpp">connection pool example</a>
+for more details.</p>
 
 
 
 
 
+
+<div id="btnv">
+  
+  <div class="pull-left">
+  <a class="navigation prev" href="/mongocxx-v3/thread-safety/">
+      <i class="fa fa-long-arrow-left"> </i> Thread and fork safety
+  </a>
+  </div>
+  
+  
+  <div class="pull-right">
+  <a class="navigation next" href="/mongocxx-v3/working-with-bson/">
+    Working with BSON <i class="fa fa-long-arrow-right"> </i>
+  </a>
+  
+</div>
+</div>
 
 
 </div>
 <div class="right-column">
 <div class="wrapper">
+  
+  <div class="toc">
+    <span class="toc-header">On this page</span>
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#mongocxx-client-vs-mongocxx-pool"><code>mongocxx::client</code> vs <code>mongocxx::pool</code></a></li>
+<li><a href="#connection-pools-and-thread-safety">Connection pools and thread safety</a></li>
+<li><a href="#configuring-a-connection-pool">Configuring a connection pool</a></li>
+<li><a href="#using-a-connection-pool">Using a connection pool</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
   
 </div>
 </div>

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-	<meta name="generator" content="Hugo 0.26" />
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
@@ -10,7 +9,7 @@
 
     <link rel="shortcut icon" href="http://mongocxx.org/img/favicon.png">
 
-    <title>MongoDB C&#43;&#43; Driver Manual</title>
+    <title>Breaking changes from 26compat</title>
 
     <link rel="stylesheet" href="http://mongocxx.org/lib/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="http://mongocxx.org/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
@@ -461,42 +460,32 @@
 
 
   
+  
+  
+  
+  
+  
+  
+  
 
-
-        
-          
-        
-      
+  
+    
+    
     
       
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
+    
+  
   
 
 
         
-          
+      
+    
+      
+      
         
       
     
-    
-      
     
   
 
@@ -578,101 +567,19 @@
     
       
       
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
+    
+      
       
     
       
       
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
     
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
-    
-    
-      
     
   
 
 
           
 
-          
-          
-          
-          
-          
-          
-          
-          
           
 
           
@@ -954,16 +861,18 @@
 
 
 
+  
 
 
 
-<li class="toctree-l1 ">
+
+<li class="toctree-l1  current">
   <a href="/legacy-v1/" class="">
       <i class='fa fa-arrow-right'></i>
       <span>legacy (v1)</span>
-      <span class="menu-arrow fa fa-angle-right"></span>
+      <span class="menu-arrow fa fa-angle-down"></span>
   </a>
-    <ul >
+    <ul  class="current">
         
         
         
@@ -1096,6 +1005,8 @@
 
 
 
+
+  
 
 
 
@@ -1389,172 +1300,223 @@
                   <div class="body">
 
 
+   
+<a class="edit-link" href="https://github.com/mongodb/mongo-cxx-driver/blob/master/docs/content/legacy-v1/breaking-changes.md" target="_blank" title="Edit legacy-v1/breaking-changes.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
 
-    
-    
 
-<h1 id="mongodb-c-driver">MongoDB C++ Driver</h1>
 
-<p>Welcome to the MongoDB C++ driver.  On this site, you&rsquo;ll find documentation
-to help you get the most from MongoDB and C++.  If you&rsquo;re just starting
-out, take a look at these pages first:</p>
+
+
+
+
+
+
+
+<div class="bc">
+<ul>
+  
+  
+  
+  
+  
+  <li><a href="/legacy-v1/">legacy (v1)</a> <i class="fa fa-angle-right"></i></li>
+  <li>Breaking changes from 26compat</li>
+</ul>
+</div>
+
+
+<h1>Breaking changes from 26compat</h1>
+<em>The Legacy C++ driver has reached End-Of-Life. Please upgrade to the mongocxx driver.</em>
+
+
+<p>The 26compat release series tracks the server 2.6 releases one-to-one. As a
+result, it receives only bugfixes and small updates necessary to keep it
+building in isolation.</p>
+
+<p>The legacy release series, on the other hand, is a permanent and diverging
+fork. Our philosophy is to keep the legacy branch as close to the 26compat
+branch as is reasonable, but that when weighing new features against
+compatibility, we will choose new features. As a result the legacy branch
+is not 100% source compatible with the 26compat branch.</p>
+
+<p>This page attempts to serve as a transition guide for those users looking
+to migrate from the 26compat branch to the legacy branch. Note that it does
+<em>not</em> discuss new features in detail and simply points to the per-release
+notes.</p>
+
+<h1 id="breaking-changes">Breaking Changes</h1>
+
+<h2 id="changes-to-the-build-system">Changes to the build system</h2>
+
+<p>Scons targets have been renamed to more &lsquo;obvious&rsquo; names, and some unused or
+unneeded targets have been removed.</p>
+
+<h3 id="cheat-sheet">cheat sheet</h3>
+
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Scons Target</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>compile driver</td>
+<td><code>driver</code></td>
+</tr>
+
+<tr>
+<td>install driver</td>
+<td><code>install</code></td>
+</tr>
+
+<tr>
+<td>check driver install (used internally)</td>
+<td><code>check-install</code></td>
+</tr>
+
+<tr>
+<td>build unit tests</td>
+<td><code>build-unit</code></td>
+</tr>
+
+<tr>
+<td>run unit tests</td>
+<td><code>unit</code></td>
+</tr>
+
+<tr>
+<td>build integration tests</td>
+<td><code>build-integration</code></td>
+</tr>
+
+<tr>
+<td>run integration tests</td>
+<td><code>integration</code></td>
+</tr>
+
+<tr>
+<td>build client examples</td>
+<td><code>build-examples</code></td>
+</tr>
+
+<tr>
+<td>run client examples</td>
+<td><code>examples</code></td>
+</tr>
+
+<tr>
+<td>build everything (driver, unit tests, integration tests, examples</td>
+<td><code>all</code></td>
+</tr>
+
+<tr>
+<td>run all tests and client examples</td>
+<td><code>test</code></td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="details">Details</h3>
 
 <ul>
-<li><a href="http://mongocxx.org/mongocxx-v3/installation/">Installing mongocxx</a></li>
-<li><a href="http://mongocxx.org/mongocxx-v3/tutorial/">Quick-start tutorial</a></li>
+<li><a href="https://github.com/10gen/mongo-orchestration"><code>mongo-orchestration</code></a> is now required to run the driver&rsquo;s test suite. Please see the repository for instructions how to install and run <code>mongo-orchestration</code>. If you are not running tests, simply allow scons to time out when it looks for an instance of <code>mongo-orchestration</code> at the start of a build.</li>
+<li>The <code>driver</code> target has been created to built the client library without installing it</li>
+<li>The <code>install-mongoclient</code> target has been renamed to <code>install</code></li>
+<li>Unit tests are now built with <code>build-unit</code>, and run with <code>unit</code></li>
+<li>Integration tests are now built with <code>build-integration</code>, and run with <code>integration</code></li>
+<li>Examples are now built with <code>build-examples</code>, and run with <code>examples</code></li>
+<li>On OSX the <code>--osx-version-min</code> flag will now default to the current OSX version</li>
+<li>The <code>--full</code> flag is no longer required, and it is an error to specify it.</li>
+<li>The <code>--d</code> and <code>--dd</code> flags have been removed. Use the <code>--opt</code> and <code>--dbg</code> flags instead.</li>
+<li>The <code>--use-system-boost</code> flag is no longer required, and it is an error to specify it.</li>
+<li>All ABI affecting macros are now defined in a generated <code>config.h</code> header that is automatically included from <code>dbclient.h</code> and <code>bson.h</code>.</li>
+<li>Many server specific build options (that were unlikely to have been used when building the driver) have been removed.</li>
+<li>The default installation prefix is now <code>build/install</code>, rather than <code>/usr/local</code>.</li>
+<li>All build artifacts are now captured under the <code>build</code> directory.</li>
 </ul>
 
-<h2 id="driver-status-by-family-and-version">Driver status by family and version</h2>
+<h2 id="changes-to-apis">Changes to APIs</h2>
 
-<p>Stability indicates whether this driver is recommended for production use.
-Currently, no drivers guarantee API or ABI stability.</p>
+<ul>
+<li>The <code>mongo::be</code>, <code>mongo::bo</code>, and <code>mongo::bob</code> typedefs for <code>mongo::BSONElement</code>, <code>mongo::BSONObj</code> and <code>mongo::BSONObjBuilder</code> have been removed. We recommend using the fully qualified names in new code.</li>
+<li>The <code>mongo::BSONBuilderBase</code> class has been removed and is no longer a base class of <code>mongo::BSONObjBuilder</code> or <code>mongo::BSONArrayBuilder</code></li>
+<li>The <code>OpTime</code> class has been completely removed. It has been replaced by the simplified <code>Timestamp_t</code> class.</li>
+<li>The <code>globalServerOptions</code> and <code>globalSSLOptions</code> objects and their classes have been removed. All driver configuration should be done through the new <code>mongo::client::Options</code> object.</li>
+<li>The <code>RamLog</code>, <code>RotatableFileAppender</code>, and <code>Console</code> classes have been removed from the logging subsystem.</li>
+<li>In addition, many auxiliary types, functions, and headers that were either unused, or minimally used, have been removed from the distribution.</li>
+<li>The <code>ensureIndex</code> and related methods have been removed. The replacement is the new <code>createIndex</code> method.</li>
+<li><code>IndexSpec::dropDuplicates()</code> is now deprecated as it is a no-op in MongoDB 3.0.</li>
+<li>The <code>QUERY</code> macro has been replaced by <code>MONGO_QUERY</code>.</li>
+<li>The <code>ConnectionString::parse</code> method now requires it&rsquo;s argument to be in the MongoDB URL (&ldquo;mongodb://&hellip;&ldquo;) format. To use the old format, use the new <code>ConnectionString::parseDeprecated</code> method.</li>
+<li>The <code>ConnectionPool</code> and <code>ScopedDbConnection</code> classes have been removed.</li>
+</ul>
 
-<table>
-<thead>
-<tr>
-<th>Family/version</th>
-<th>Stability</th>
-<th>Development</th>
-<th>Purpose</th>
-</tr>
-</thead>
+<h2 id="behavior-changes">Behavior Changes</h2>
 
-<tbody>
-<tr>
-<td>(repo master branch)</td>
-<td>Unstable</td>
-<td>Active development</td>
-<td>New feature development</td>
-</tr>
+<ul>
+<li>The driver will not function correctly unless <code>mongo::client::initialize</code> is invoked before using the driver APIs. The mongo::client::shutdown method should also be called at application termination (if options.callShutdownAtExit() is not set) so the driver can cleanly terminate. As a convenience, we have added <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h#L69"><code>mongo::GlobalInstance</code></a> as an RAII wrapper to automatically call these methods.</li>
+<li>options.callShutdownAtExit() is a no-op on non-static builds on Windows due to issues around sudden thread termination.</li>
+<li>The driver no longer logs any output by default. You may configure and inject a logger to re-enable logging. See <code>src/mongo/client/examples/clientTest.cpp</code> for an example of how to enable logging.</li>
+<li>Writes are now &ldquo;<a href="https://docs.mongodb.com/master/core/write-concern/#write-concern-acknowledged">acknowledged</a>&rdquo; by default. In all previous releases the default write concern was “<a href="https://docs.mongodb.com/master/core/write-concern/#unacknowledged">unacknowledged</a>”. This change may have performance and behavior implications for existing applications that did not confirm writes. You can read more about the change <a href="https://docs.mongodb.com/master/release-notes/drivers-write-concern/#driver-write-concern-change">here</a>.</li>
+<li>The driver now throws a mongo::OperationException when write concern is greater than Acknowledged for errors that occur when running operations against a MongoDB database.</li>
+<li>The default shutdown grace period is now zero which means the driver may block forever until a successful shutdown occurs.</li>
+</ul>
 
-<tr>
-<td>mongocxx 3.4.x</td>
-<td>Stable</td>
-<td>Bug fixes only</td>
-<td>Current stable C++ driver release</td>
-</tr>
+<h1 id="improvements">Improvements</h1>
 
-<tr>
-<td>mongocxx 3.3.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
-
-<tr>
-<td>mongocxx 3.2.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
-
-<tr>
-<td>mongocxx 3.1.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
-
-<tr>
-<td>mongocxx 3.0.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
-</tbody>
-</table>
-
-<h2 id="mongodb-compatibility">MongoDB compatibility</h2>
-
-<p>The following compatibility table specifies the driver version(s)
-recommended for different versions of MongoDB.  The mongocxx series
-is recommended for all new development.</p>
-
-<table>
-<thead>
-<tr>
-<th>Family/version</th>
-<th>MongoDB 2.4</th>
-<th>MongoDB 2.6</th>
-<th>MongoDB 3.0</th>
-<th>MongoDB 3.2</th>
-<th>MongoDB 3.4</th>
-<th>MongoDB 3.6</th>
-<th>MongoDB 4.0</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>mongocxx 3.4.x</td>
-<td></td>
-<td></td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-</tr>
-
-<tr>
-<td>mongocxx 3.3.x</td>
-<td></td>
-<td></td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-</tr>
-
-<tr>
-<td>mongocxx 3.2.x</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-<td></td>
-</tr>
-
-<tr>
-<td>mongocxx 3.1.x</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-<td></td>
-</tr>
-
-<tr>
-<td>mongocxx 3.0.x</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-<h2 id="license">License</h2>
-
-<p>MongoDB C++ drivers are available under the terms of the Apache License, version 2.0.</p>
+<p>Please see the <a href="https://github.com/mongodb/mongo-cxx-driver/releases">release
+notes</a> for the
+individual legacy branch releases for details on improvements in each
+release.</p>
 
 
 
 
 
+
+<div id="btnv">
+  
+  <div class="pull-left">
+  <a class="navigation prev" href="/legacy-v1/working-with-bson/">
+      <i class="fa fa-long-arrow-left"> </i> Working with BSON
+  </a>
+  </div>
+  
+  
+  <div class="pull-right">
+  <a class="navigation next" href="/legacy-v1/">
+    The Legacy C&#43;&#43; Driver <i class="fa fa-long-arrow-right"> </i>
+  </a>
+  
+</div>
+</div>
 
 
 </div>
 <div class="right-column">
 <div class="wrapper">
+  
+  <div class="toc">
+    <span class="toc-header">On this page</span>
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#breaking-changes">Breaking Changes</a>
+<ul>
+<li><a href="#changes-to-the-build-system">Changes to the build system</a>
+<ul>
+<li><a href="#cheat-sheet">cheat sheet</a></li>
+<li><a href="#details">Details</a></li>
+</ul></li>
+<li><a href="#changes-to-apis">Changes to APIs</a></li>
+<li><a href="#behavior-changes">Behavior Changes</a></li>
+</ul></li>
+<li><a href="#improvements">Improvements</a></li>
+</ul>
+</nav>
+  </div>
   
 </div>
 </div>

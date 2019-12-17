@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-	<meta name="generator" content="Hugo 0.26" />
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
@@ -10,7 +9,7 @@
 
     <link rel="shortcut icon" href="http://mongocxx.org/img/favicon.png">
 
-    <title>MongoDB C&#43;&#43; Driver Manual</title>
+    <title>API and ABI versioning</title>
 
     <link rel="stylesheet" href="http://mongocxx.org/lib/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="http://mongocxx.org/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
@@ -278,42 +277,30 @@
 
 
   
+  
+  
+  
+  
+  
+  
+  
 
-
-        
-          
-        
-      
+  
     
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
+    
+    
+  
   
 
 
         
-          
+      
+    
+      
+      
         
       
     
-    
-      
     
   
 
@@ -335,168 +322,22 @@
     
       
       
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
+    
+      
       
     
       
       
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
+    
+      
       
     
       
       
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
     
       
       
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
     
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
-    
-    
-      
     
   
 
@@ -578,101 +419,19 @@
     
       
       
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
+    
+      
       
     
       
       
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
     
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
-    
-    
-      
     
   
 
 
           
 
-          
-          
-          
-          
-          
-          
-          
-          
           
 
           
@@ -691,16 +450,18 @@
 
 
 
+  
 
 
 
-<li class="toctree-l1 ">
+
+<li class="toctree-l1  current">
   <a href="/mongocxx-v3/" class="">
       <i class='fa fa-arrow-right'></i>
       <span>mongocxx (v3)</span>
-      <span class="menu-arrow fa fa-angle-right"></span>
+      <span class="menu-arrow fa fa-angle-down"></span>
   </a>
-    <ul >
+    <ul  class="current">
         
         
         
@@ -891,6 +652,8 @@
 
 
 
+
+  
 
 
 
@@ -1389,172 +1152,129 @@
                   <div class="body">
 
 
+   
+<a class="edit-link" href="https://github.com/mongodb/mongo-cxx-driver/blob/master/docs/content/mongocxx-v3/api-abi-versioning.md" target="_blank" title="Edit mongocxx-v3/api-abi-versioning.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
 
-    
-    
 
-<h1 id="mongodb-c-driver">MongoDB C++ Driver</h1>
 
-<p>Welcome to the MongoDB C++ driver.  On this site, you&rsquo;ll find documentation
-to help you get the most from MongoDB and C++.  If you&rsquo;re just starting
-out, take a look at these pages first:</p>
+
+
+
+
+
+
+
+<div class="bc">
+<ul>
+  
+  
+  
+  
+  
+  <li><a href="/mongocxx-v3/">mongocxx (v3)</a> <i class="fa fa-angle-right"></i></li>
+  <li>API and ABI versioning</li>
+</ul>
+</div>
+
+
+<h1>API and ABI versioning</h1>
+
+
+<h2 id="api-versioning">API Versioning</h2>
 
 <ul>
-<li><a href="http://mongocxx.org/mongocxx-v3/installation/">Installing mongocxx</a></li>
-<li><a href="http://mongocxx.org/mongocxx-v3/tutorial/">Quick-start tutorial</a></li>
+<li>We use <a href="http://semver.org/">semantic versioning</a>.</li>
+<li>bsoncxx and mongocxx both define corresponding CMake variables for MAJOR, MINOR, and PATCH.</li>
 </ul>
 
-<h2 id="driver-status-by-family-and-version">Driver status by family and version</h2>
+<h2 id="abi-versioning">ABI Versioning</h2>
 
-<p>Stability indicates whether this driver is recommended for production use.
-Currently, no drivers guarantee API or ABI stability.</p>
+<ul>
+<li>Both bsoncxx and mongocxx both have a single scalar ABI version.</li>
+<li>Only bump ABI version on <strong>incompatible</strong> ABI change (not for ABI additions).</li>
+<li><strong>We stay on ABI version _noabi (without bumping for incompatible changes) until ABI is stable.</strong></li>
+</ul>
 
-<table>
-<thead>
-<tr>
-<th>Family/version</th>
-<th>Stability</th>
-<th>Development</th>
-<th>Purpose</th>
-</tr>
-</thead>
+<h2 id="parallel-header-installation">Parallel Header Installation</h2>
 
-<tbody>
-<tr>
-<td>(repo master branch)</td>
-<td>Unstable</td>
-<td>Active development</td>
-<td>New feature development</td>
-</tr>
+<ul>
+<li>For mongocxx, install all headers to <code>$PREFIX/mongocxx/v$ABI/</code>.</li>
+<li>For bsoncxx, install all headers to <code>$PREFIX/bsoncxx/v$ABI/</code>.</li>
+<li>We install a pkg-config file to shield consumers from this complexity.</li>
+</ul>
 
-<tr>
-<td>mongocxx 3.4.x</td>
-<td>Stable</td>
-<td>Bug fixes only</td>
-<td>Current stable C++ driver release</td>
-</tr>
+<h2 id="sonames-and-symlinks">Sonames and symlinks</h2>
 
-<tr>
-<td>mongocxx 3.3.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
+<p><em>Note that below examples are given for libmongocxx, but also apply to libbsoncxx</em></p>
 
-<tr>
-<td>mongocxx 3.2.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
+<p><em>DSO = Dynamic Shared Object, to use Ulrich Drepper&rsquo;s terminology</em></p>
 
-<tr>
-<td>mongocxx 3.1.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
+<ul>
+<li>Physical filename for a DSO is <code>libmongocxx.so.$MAJOR.$MINOR.$PATCH</code></li>
+</ul>
 
-<tr>
-<td>mongocxx 3.0.x</td>
-<td>Stable</td>
-<td>None</td>
-<td>Previous stable C++ driver release</td>
-</tr>
-</tbody>
-</table>
+<p>Note that the physical filename is disconnected from ABI version/soname.
+This looks a bit strange, but allows multiple versions of the library with
+the same ABI version to be installed on the same system.</p>
 
-<h2 id="mongodb-compatibility">MongoDB compatibility</h2>
+<ul>
+<li>soname for a DSO is <code>libmongocxx.$ABI</code></li>
+</ul>
 
-<p>The following compatibility table specifies the driver version(s)
-recommended for different versions of MongoDB.  The mongocxx series
-is recommended for all new development.</p>
+<p>We provide a soname symlink that links to the physical DSO.  We also
+provide a dev symlink that links to the soname symlink of the highest ABI
+version of the library installed.</p>
 
-<table>
-<thead>
-<tr>
-<th>Family/version</th>
-<th>MongoDB 2.4</th>
-<th>MongoDB 2.6</th>
-<th>MongoDB 3.0</th>
-<th>MongoDB 3.2</th>
-<th>MongoDB 3.4</th>
-<th>MongoDB 3.6</th>
-<th>MongoDB 4.0</th>
-</tr>
-</thead>
+<h2 id="inline-namespaces">Inline namespaces</h2>
 
-<tbody>
-<tr>
-<td>mongocxx 3.4.x</td>
-<td></td>
-<td></td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-</tr>
-
-<tr>
-<td>mongocxx 3.3.x</td>
-<td></td>
-<td></td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-</tr>
-
-<tr>
-<td>mongocxx 3.2.x</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-<td></td>
-</tr>
-
-<tr>
-<td>mongocxx 3.1.x</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-<td></td>
-</tr>
-
-<tr>
-<td>mongocxx 3.0.x</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-<h2 id="license">License</h2>
-
-<p>MongoDB C++ drivers are available under the terms of the Apache License, version 2.0.</p>
+<ul>
+<li>We provide inline namespace macros for both mongocxx and bsoncxx.</li>
+<li>This allows multiple, ABI incompatible versions of the library to be linked into the same application.</li>
+<li>The name of the namespace is <code>v$ABI</code>. We create them from ABI version to maintain forwards compatibibility.</li>
+</ul>
 
 
 
 
 
+
+<div id="btnv">
+  
+  <div class="pull-left">
+  <a class="navigation prev" href="/mongocxx-v3/working-with-bson/">
+      <i class="fa fa-long-arrow-left"> </i> Working with BSON
+  </a>
+  </div>
+  
+  
+  <div class="pull-right">
+  <a class="navigation next" href="/mongocxx-v3/">
+    The mongocxx (v3) driver <i class="fa fa-long-arrow-right"> </i>
+  </a>
+  
+</div>
+</div>
 
 
 </div>
 <div class="right-column">
 <div class="wrapper">
+  
+  <div class="toc">
+    <span class="toc-header">On this page</span>
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#api-versioning">API Versioning</a></li>
+<li><a href="#abi-versioning">ABI Versioning</a></li>
+<li><a href="#parallel-header-installation">Parallel Header Installation</a></li>
+<li><a href="#sonames-and-symlinks">Sonames and symlinks</a></li>
+<li><a href="#inline-namespaces">Inline namespaces</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
   
 </div>
 </div>

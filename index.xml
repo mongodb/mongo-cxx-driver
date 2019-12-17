@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>MongoDB C&#43;&#43; Driver Manual</title>
@@ -6,10 +6,92 @@
     <description>Recent content on MongoDB C&#43;&#43; Driver Manual</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate>
+    <lastBuildDate>Tue, 18 Apr 2017 13:39:39 -0400</lastBuildDate>
     
 	<atom:link href="http://mongocxx.org/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Connection pools</title>
+      <link>http://mongocxx.org/mongocxx-v3/connection-pools/</link>
+      <pubDate>Tue, 18 Apr 2017 13:39:39 -0400</pubDate>
+      
+      <guid>http://mongocxx.org/mongocxx-v3/connection-pools/</guid>
+      <description>mongocxx::client vs mongocxx::pool A standalone mongocxx::client uses a single-threaded algorithm to monitor the state of the cluster it&amp;rsquo;s connected to. When connected to a replica set, the thread &amp;ldquo;stops the world&amp;rdquo; every 60 seconds to check the status of the cluster. A mongocxx::pool, on the other hand, uses a separate background thread for each server in the cluster, each of which checks the status of the server it monitors every 10 seconds.</description>
+    </item>
+    
+    <item>
+      <title>API and ABI versioning</title>
+      <link>http://mongocxx.org/mongocxx-v3/api-abi-versioning/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>http://mongocxx.org/mongocxx-v3/api-abi-versioning/</guid>
+      <description>API Versioning  We use semantic versioning. bsoncxx and mongocxx both define corresponding CMake variables for MAJOR, MINOR, and PATCH.  ABI Versioning  Both bsoncxx and mongocxx both have a single scalar ABI version. Only bump ABI version on incompatible ABI change (not for ABI additions). We stay on ABI version _noabi (without bumping for incompatible changes) until ABI is stable.  Parallel Header Installation  For mongocxx, install all headers to $PREFIX/mongocxx/v$ABI/.</description>
+    </item>
+    
+    <item>
+      <title>Breaking changes from 26compat</title>
+      <link>http://mongocxx.org/legacy-v1/breaking-changes/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>http://mongocxx.org/legacy-v1/breaking-changes/</guid>
+      <description>The 26compat release series tracks the server 2.6 releases one-to-one. As a result, it receives only bugfixes and small updates necessary to keep it building in isolation.
+The legacy release series, on the other hand, is a permanent and diverging fork. Our philosophy is to keep the legacy branch as close to the 26compat branch as is reasonable, but that when weighing new features against compatibility, we will choose new features.</description>
+    </item>
+    
+    <item>
+      <title>Configuring the legacy driver</title>
+      <link>http://mongocxx.org/legacy-v1/configuration/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>http://mongocxx.org/legacy-v1/configuration/</guid>
+      <description>In the legacy-0.9 development cycle, the mechanism by which the driver is configured was refactored. Note that these changes do not apply to releases on the 26compat branch, or releases pre-dating legacy-0.9.0.This page describes the new configuration mechanism and documents the various configuration options that may be used.
+The mongo::client::initialize function The mongo::client::initialize function, found in file src/mongo/client/init.h configures the driver and starts background threads critical to the functioning of the driver.</description>
+    </item>
+    
+    <item>
+      <title>Configuring the mongocxx driver</title>
+      <link>http://mongocxx.org/mongocxx-v3/configuration/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>http://mongocxx.org/mongocxx-v3/configuration/</guid>
+      <description>In the mongocxx driver, most configuration is done via the connection URI. Some additional connection options are possible via the mongocxx::options::client class.
+Configuring TLS/SSL To enable TLS (SSL), set ssl=true in the URI:
+ mongodb://mongodb.example.com/?ssl=true
+ By default, mongocxx will verify server certificates against the local system CA list. You can override that by creating a mongocxx::options::ssl object and passing it to ssl_opts on mongocxx::options::client.
+For example, to use a custom CA or to disable certificate validation, uncomment the corresponding line in the following example:</description>
+    </item>
+    
+    <item>
+      <title>Installing the legacy driver</title>
+      <link>http://mongocxx.org/legacy-v1/installation/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>http://mongocxx.org/legacy-v1/installation/</guid>
+      <description>Table of Contents  How to ask for Help Get the source code Choose a branch  legacy branch  Compile the Driver  SCons options when Compiling the C++ Driver Targets Client Options Path Options Build Options SCons Options Windows Options Mac OS X Options Deprecated Options Windows Considerations  Example C++ Driver Compilations  Debug Builds Building on Windows Building against the pre-built boost binaries Building a DLL Building multiple Windows library variants  Using the driver in your application  Initialization and Configuration Client Headers Client Libraries Windows autolinking Linking with the static client library   How to ask for Help If you are having difficulty building the driver after reading the below instructions, please email the mongodb-user mailing list to ask for help.</description>
+    </item>
+    
+    <item>
+      <title>Installing the mongocxx driver</title>
+      <link>http://mongocxx.org/mongocxx-v3/installation/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>http://mongocxx.org/mongocxx-v3/installation/</guid>
+      <description>Prerequisites  Any standard Unix platform, or Windows 7 SP1+ A compiler that suports C++11 (gcc, clang, or Visual Studio) CMake 3.2 or later boost headers (optional)  We currently test the driver with the following configurations:
+   &amp;nbsp; Linux macOS Windows     clang 3.8 7.0 (Apple) -   gcc 4.8, 5.4 - -   VS n/a n/a 14 (2015) Update 3   boost - 1.</description>
+    </item>
+    
+    <item>
+      <title>Legacy driver tutorial</title>
+      <link>http://mongocxx.org/legacy-v1/tutorial/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>http://mongocxx.org/legacy-v1/tutorial/</guid>
+      <description>Getting started with the Legacy C++ Driver This is an introduction to usage of the MongoDB database from a C++ program.
+NOTE: this tutorial is for the legacy and 26compat versions of the C++ driver.
+First, install MongoDB – see the installation page for details.
+Next, you may wish to take a look at the MongoDB Manual for a language independent look at how to use MongoDB. Also, we suggest some basic familiarity with the mongo shell – the shell is the primary database administration tool and is useful for manually inspecting the contents of a database after your C++ program runs.</description>
+    </item>
     
     <item>
       <title>MongoDB C&#43;&#43; Driver Manual</title>
@@ -17,8 +99,99 @@
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>http://mongocxx.org/</guid>
-      <description>MongoDB C++ Driver Welcome to the MongoDB C++ driver. On this site, you&#39;ll find documentation to help you get the most from MongoDB and C++. If you&#39;re just starting out, take a look at these pages first:
- [Installing mongocxx]({{ ref &amp;ldquo;mongocxx-v3/installation.md&amp;rdquo; }}) [Quick-start tutorial]({{ ref &amp;ldquo;mongocxx-v3/tutorial.md&amp;rdquo; }})  Driver status by family and version Stability indicates whether this driver is recommended for production use. Currently, no drivers guarantee API or ABI stability.</description>
+      <description>MongoDB C++ Driver Welcome to the MongoDB C++ driver. On this site, you&amp;rsquo;ll find documentation to help you get the most from MongoDB and C++. If you&amp;rsquo;re just starting out, take a look at these pages first:
+ Installing mongocxx Quick-start tutorial  Driver status by family and version Stability indicates whether this driver is recommended for production use. Currently, no drivers guarantee API or ABI stability.
+   Family/version Stability Development Purpose     (repo master branch) Unstable Active development New feature development   mongocxx 3.</description>
+    </item>
+    
+    <item>
+      <title>Reporting Bugs</title>
+      <link>http://mongocxx.org/reporting-bugs/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>http://mongocxx.org/reporting-bugs/</guid>
+      <description>If you think you have found a bug or want to see a new feature in the C++ driver, please open an issue in JIRA:
+ Create a Jira account and login.
+ Navigate to the CXX project.
+ Click Create Issue. Provide as much information as possible about the issue and the steps to reproduce it.
+  Be aware that bug reports in JIRA for the C++ driver are public.</description>
+    </item>
+    
+    <item>
+      <title>Testing the legacy driver</title>
+      <link>http://mongocxx.org/contributing/testing-legacy/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>http://mongocxx.org/contributing/testing-legacy/</guid>
+      <description>If you contribute to the C++ driver, you&amp;rsquo;ll need to test your changes. The driver comes with a number of tests to ensure its functionality and performance. There are a few different kinds of tests within the driver&amp;rsquo;s codebase.
+Note: if you are running OS X Mavericks or above, you may need to include the --osx-version-min=10.9 flag to the commands below.
+Note: The 26compat branch differs from the instructions below as follows: * MongoOrchestration is not required.</description>
+    </item>
+    
+    <item>
+      <title>Testing the mongocxx driver</title>
+      <link>http://mongocxx.org/contributing/testing-mongocxx/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>http://mongocxx.org/contributing/testing-mongocxx/</guid>
+      <description>Tests for the C++11 driver use Catch, a testing framework for C++.
+Each class in the driver has a corresponding file in src/mongocxx/test. Because the new driver wraps libmongoc, we prefer to mock and test the behavior of individual classes rather than test end-to-end behavior of operations against a running mongod. In other words, these are unit tests rather than integration tests.
+We also have integration tests for this driver in test/collection.</description>
+    </item>
+    
+    <item>
+      <title>Thread and fork safety</title>
+      <link>http://mongocxx.org/mongocxx-v3/thread-safety/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>http://mongocxx.org/mongocxx-v3/thread-safety/</guid>
+      <description>TLDR: Always give each thread its own mongocxx::client.
+In general each mongocxx::client object AND all of its child objects, including mongocxx::client_session, mongocxx::database, mongocxx::collection, and mongocxx::cursor, should be used by a single thread at a time. This is true even for clients acquired from a mongocxx::pool.
+Even if you create multiple child objects from a single client, and synchronize them individually, that is unsafe as they will concurrently modify internal structures of the client.</description>
+    </item>
+    
+    <item>
+      <title>Tutorial for mongocxx</title>
+      <link>http://mongocxx.org/mongocxx-v3/tutorial/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>http://mongocxx.org/mongocxx-v3/tutorial/</guid>
+      <description>Prerequisites  A mongod instance running on localhost on port 27017.
+ The mongocxx Driver. See Installation for mongocxx.
+ The following statements at the top of your source file:
+  #include &amp;lt;cstdint&amp;gt; #include &amp;lt;iostream&amp;gt; #include &amp;lt;vector&amp;gt; #include &amp;lt;bsoncxx/json.hpp&amp;gt; #include &amp;lt;mongocxx/client.hpp&amp;gt; #include &amp;lt;mongocxx/stdx.hpp&amp;gt; #include &amp;lt;mongocxx/uri.hpp&amp;gt; #include &amp;lt;mongocxx/instance.hpp&amp;gt; using bsoncxx::builder::stream::close_array; using bsoncxx::builder::stream::close_document; using bsoncxx::builder::stream::document; using bsoncxx::builder::stream::finalize; using bsoncxx::builder::stream::open_array; using bsoncxx::builder::stream::open_document;  Compiling The mongocxx driver&amp;rsquo;s installation process will install a libmongocxx.</description>
+    </item>
+    
+    <item>
+      <title>Working with BSON</title>
+      <link>http://mongocxx.org/legacy-v1/working-with-bson/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>http://mongocxx.org/legacy-v1/working-with-bson/</guid>
+      <description>BSON Helper Functions This is a non-exhaustive list of helper functions for use in the C++ stream syntax. An exhaustive list is here: bsonmisc.h
+Typical example of stream syntax:
+BSONObj p = BSON( &amp;quot;name&amp;quot; &amp;lt;&amp;lt; &amp;quot;Joe&amp;quot; &amp;lt;&amp;lt; &amp;quot;age&amp;quot; &amp;lt;&amp;lt; 33 );  GENOID The server will add an _id automatically if it is not included explicitly.
+BSONObj p = BSON( GENOID &amp;lt;&amp;lt; &amp;quot;name&amp;quot; &amp;lt;&amp;lt; &amp;quot;Joe&amp;quot; &amp;lt;&amp;lt; &amp;quot;age&amp;quot; &amp;lt;&amp;lt; 33 ); // result is: { _id : .</description>
+    </item>
+    
+    <item>
+      <title>Working with BSON</title>
+      <link>http://mongocxx.org/mongocxx-v3/working-with-bson/</link>
+      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
+      
+      <guid>http://mongocxx.org/mongocxx-v3/working-with-bson/</guid>
+      <description>The mongocxx driver ships with a new library, bsoncxx. This article will go over some of the different types in this library, and how and when to use each. For more information and example code, see our examples.
+ Document Builders Owning BSON Documents (values) Non-owning BSON Documents (views) Optionally-owning BSON Documents(view_or_value) BSON Document Lifetime Printing BSON Documents Getting Fields out of BSON Documents  Document Builders The bsoncxx library offers three interfaces for building BSON: one-off functions, a basic builder and a stream-based builder.</description>
+    </item>
+    
+    <item>
+      <title>Getting help</title>
+      <link>http://mongocxx.org/getting-help/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>http://mongocxx.org/getting-help/</guid>
+      <description>Often, the quickest way to get support for general questions is through the mongodb-user google group or through Stack Overflow.
+Please also refer to MongoDB&amp;rsquo;s support channels documentation.</description>
     </item>
     
   </channel>
