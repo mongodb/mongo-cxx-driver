@@ -41,8 +41,12 @@ find_package(bsoncxx REQUIRED)
 add_executable(hello_bsoncxx ../../hello_bsoncxx.cpp)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    find_package(Boost 1.56.0 REQUIRED)
+  find_package(Boost 1.56.0 REQUIRED)
+  if (CMAKE_VERSION VERSION_LESS 3.15.0)
+    target_include_directories(hello_bsoncxx PRIVATE ${Boost_INCLUDE_DIRS})
+  else()
     target_link_libraries(hello_bsoncxx PRIVATE Boost::boost)
+  endif()
 endif()
 
 target_link_libraries(hello_bsoncxx
