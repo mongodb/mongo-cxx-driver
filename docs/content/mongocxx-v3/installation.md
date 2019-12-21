@@ -9,9 +9,9 @@ title = "Installing the mongocxx driver"
 ## Prerequisites
 
 - Any standard Unix platform, or Windows 7 SP1+
-- A compiler that suports C++11 (gcc, clang, or Visual Studio)
-- CMake 3.2 or later
-- boost headers (optional)
+- A compiler that supports C++11 (gcc, clang, or Visual Studio)
+- [CMake](https://cmake.org) 3.2 or later
+- [boost](https://www.boost.org) headers (optional)
 
 We currently test the driver with the following configurations:
 
@@ -22,7 +22,7 @@ We currently test the driver with the following configurations:
  VS    |   n/a    |    n/a      | 14 (2015) Update 3
  boost |    -     |   1.67.0    |      1.60.0
 
-Versions older the the ones listed may not work and are not
+Versions older than the ones listed may not work and are not
 supported; use them at your own risk.
 
 Versions newer than the ones listed above should work; if you
@@ -42,7 +42,7 @@ The mongocxx driver builds on top of the MongoDB C driver.
 * For mongocxx-3.1.[0-3], libmongoc 1.5.0 or later is required.
 * For mongocxx-3.0.x, we recommend the last 1.4.x version of libmongoc
 
-Unless you know that your package manager offers a high-enough version, you
+Unless you know that your package manager offers a high enough version, you
 will need to download and build from the source code. Get a tarball from
 the [C Driver releases](https://github.com/mongodb/mongo-c-driver/releases)
 page.
@@ -186,7 +186,7 @@ an additional option, `/Zc:__cplusplus` to opt into the correct definition of `_
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver  \
 ```
 
-For details on how to install libmongoc for windows, see the
+For details on how to install libmongoc for Windows, see the
 [mongoc Windows installation instructions](http://mongoc.org/libmongoc/current/installing.html#building-windows).
 
 #### Configuring with `mongocxx` 3.1.x or 3.0.x
@@ -338,7 +338,7 @@ int main(int, char**) {
 
 #### Compiling with the help of CMake
 
-If you are using CMake for your project, you can use the find_package()
+If you are using CMake for your project, you can use the `find_package()`
 directive to import targets which can be used to link to your build
 targets.  If you have installed `mongocxx` or `libmongoc` to a
  non-standard location on your system, you will need to set
