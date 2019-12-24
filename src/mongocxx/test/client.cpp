@@ -14,6 +14,8 @@
 
 #include "helpers.hpp"
 
+#include <mongocxx/config/private/prelude.hh>
+
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
@@ -392,26 +394,26 @@ TEST_CASE("A client can be constructed with SSL options", "[client]") {
     const std::string crl_file = "crl_file";
     const bool allow_invalid_certificates = true;
 
-    bool set_ssl_opts_called = false;
-    options::ssl ssl_opts;
-    ssl_opts.pem_file(pem_file);
-    ssl_opts.pem_password(pem_password);
-    ssl_opts.ca_file(ca_file);
-    ssl_opts.ca_dir(ca_dir);
-    ssl_opts.crl_file(crl_file);
-    ssl_opts.allow_invalid_certificates(allow_invalid_certificates);
+    bool set_tls_opts_called = false;
+    options::tls tls_opts;
+    tls_opts.pem_file(pem_file);
+    tls_opts.pem_password(pem_password);
+    tls_opts.ca_file(ca_file);
+    tls_opts.ca_dir(ca_dir);
+    tls_opts.crl_file(crl_file);
+    tls_opts.allow_invalid_certificates(allow_invalid_certificates);
 
     ::mongoc_ssl_opt_t interposed = {};
 
     client_set_ssl_opts->interpose([&](::mongoc_client_t*, const ::mongoc_ssl_opt_t* opts) {
-        set_ssl_opts_called = true;
+        set_tls_opts_called = true;
         interposed = *opts;
     });
 
     client c{uri{"mongodb://mongodb.example.com:9999/?ssl=true"},
-             options::client().ssl_opts(ssl_opts)};
+             options::client().tls_opts(tls_opts)};
 
-    REQUIRE(set_ssl_opts_called);
+    REQUIRE(set_tls_opts_called);
     REQUIRE(interposed.pem_file == pem_file);
     REQUIRE(interposed.pem_pwd == pem_password);
     REQUIRE(interposed.ca_file == ca_file);

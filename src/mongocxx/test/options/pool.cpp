@@ -26,12 +26,12 @@ TEST_CASE("pool", "[pool][option]") {
 
     {
         options::pool pool_opts{};
-        REQUIRE(!pool_opts.client_opts().ssl_opts());
+        REQUIRE(!pool_opts.client_opts().tls_opts());
     }
 
     {
-        options::pool pool_opts{options::client().ssl_opts(options::ssl())};
-        REQUIRE(pool_opts.client_opts().ssl_opts());
+        options::pool pool_opts{options::client().tls_opts(options::tls())};
+        REQUIRE(pool_opts.client_opts().tls_opts());
     }
 }
 }  // namespace

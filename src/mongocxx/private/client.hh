@@ -34,7 +34,7 @@ class client::impl {
     }
 
     mongoc_client_t* client_t;
-    std::list<bsoncxx::string::view_or_value> ssl_options;
+    std::list<bsoncxx::string::view_or_value> tls_options;
     options::apm listeners;
 };
 

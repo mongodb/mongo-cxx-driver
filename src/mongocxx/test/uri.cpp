@@ -46,7 +46,7 @@ TEST_CASE("URI", "[uri]") {
         REQUIRE(!u.read_preference().tags());
         REQUIRE(!u.read_preference().max_staleness());
         REQUIRE(u.replica_set() == "");
-        REQUIRE(u.ssl() == false);
+        REQUIRE(u.tls() == false);
         REQUIRE(u.to_string() == mongocxx::uri::k_default_uri);
         REQUIRE(u.username() == "");
         REQUIRE(u.write_concern().journal() == false);

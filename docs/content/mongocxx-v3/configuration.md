@@ -14,31 +14,38 @@ additional connection options are possible via the
 
 ## Configuring TLS/SSL
 
-To enable TLS (SSL), set `ssl=true` in the URI:
+To enable TLS (SSL), set `tls=true` in the URI:
 
-> `mongodb://mongodb.example.com/?ssl=true`
+> `mongodb://mongodb.example.com/?tls=true`
 
 By default, mongocxx will verify server certificates against the local
-system CA list.  You can override that by creating a
-[mongocxx::options::ssl] ({{< api3ref classmongocxx_1_1options_1_1ssl >}})
-object and passing it to `ssl_opts` on mongocxx::options::client.
+system CA list.  You can override that either by specifying different settings in
+the connection string, or by creating a
+[mongocxx::options::tls] ({{< api3ref classmongocxx_1_1options_1_1tls >}})
+object and passing it to `tls_opts` on mongocxx::options::client.
 
 For example, to use a custom CA or to disable certificate validation,
-uncomment the corresponding line in the following example:
+see the following example:
 
 ```cpp
+
+// 1) Using tls_options
 mongocxx::options::client client_options;
-mongocxx::options::ssl ssl_options;
+mongocxx::options::tls tls_options;
 
 // If the server certificate is not signed by a well-known CA,
 // you can set a custom CA file with the `ca_file` option.
-// ssl_options.ca_file("/path/to/custom/cert.pem");
+tls_options.ca_file("/path/to/custom/cert.pem");
 
 // If you want to disable certificate verification, you
 // can set the `allow_invalid_certificates` option.
-// ssl_options.allow_invalid_certificates(true);
+tls_options.allow_invalid_certificates(true);
 
-client_options.ssl_opts(ssl_options);
+client_options.tls_opts(tls_options);
+auto client1 = mongocxx::client{uri{"mongodb://host1/?tls=true"}, client_options};
+
+// 2) Using the URI
+auto client2 = mongocxx::client{uri{"mongodb://host1/?tls=true&tlsAllowInvalidCertificates=true&tlsCAFile=/path/to/custom/cert.pem"}};
 ```
 
 ## Configuring authentication
@@ -81,35 +88,28 @@ will use an authentication mechanism compatible with your server.
 
 The [X.509](https://www.mongodb.org/dochub/core/x509)
 mechanism authenticates a user whose name is derived from the distinguished
-subject name of the X.509 certificate presented by the driver during SSL
-negotiation. This authentication method requires the use of SSL
+subject name of the X.509 certificate presented by the driver during TLS
+negotiation. This authentication method requires the use of TLS
 connections with certificate validation and is available in MongoDB 2.6
-and newer. To create a credential of this type, first create a set of
-client options specifying the path to the PEM file containing the client
-private key and certificate, and then use a connection string with a
-parameter specifying the authentication mechanism as "MONGODB-X509" and
-with SSL enabled:
+and newer. To create a credential of this type, use a connection string with a
+parameter that specifies the authentication mechanism as "MONGODB-X509",
+that specifies the path to the PEM file containing the client private key
+and certificate, and that has TLS enabled:
 
 ```cpp
 #include <mongocxx/client.hpp>
 #include <mongocxx/uri.hpp>
-#include <mongocxx/options/client.hpp>
-#include <mongocxx/options/ssl.hpp>
-
-mongocxx::options::ssl ssl_opts{};
-ssl_opts.pem_file("client.pem");
-
-mongocxx::options::client client_opts{};
-client_opts.ssl_opts(ssl_opts);
 
 auto client = mongocxx::client{
-    uri{"mongodb://host1/?authMechanism=MONGODB-X509&ssl=true"}, client_opts};
+    uri{"mongodb://host1/?authMechanism=MONGODB-X509&tlsCertificateFile=client.pem&tls=true"}};
 ```
 
 See the MongoDB server
 [X.509 tutorial](https://www.mongodb.org/dochub/core/x509-subject-name)
 for more information about determining the subject name from the
 certificate.
+
+The PEM file can also be specified using the [mongocxx::options::tls] ({{< api3ref classmongocxx_1_1options_1_1tls >}}) class, see the first "Configuring TLS/SSL" example above.
 
 ### Kerberos (GSSAPI)
 

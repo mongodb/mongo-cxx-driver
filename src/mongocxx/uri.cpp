@@ -115,6 +115,10 @@ bool uri::ssl() const {
     return libmongoc::uri_get_tls(_impl->uri_t);
 }
 
+bool uri::tls() const {
+    return libmongoc::uri_get_tls(_impl->uri_t);
+}
+
 std::string uri::username() const {
     return to_string_null_safe(libmongoc::uri_get_username(_impl->uri_t));
 }

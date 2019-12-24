@@ -67,13 +67,13 @@ client::client() noexcept = default;
 
 client::client(const class uri& uri, const options::client& options) {
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
-    if (options.ssl_opts()) {
-        if (!uri.ssl())
+    if (options.tls_opts()) {
+        if (!uri.tls())
             throw exception{error_code::k_invalid_parameter,
-                            "cannot set SSL options if 'ssl=true' not in URI"};
+                            "cannot set TLS options if 'tls=true' not in URI"};
     }
 #else
-    if (uri.ssl() || options.ssl_opts()) {
+    if (uri.tls() || options.tls_opts()) {
         throw exception{error_code::k_ssl_not_supported};
     }
 #endif
@@ -95,9 +95,9 @@ client::client(const class uri& uri, const options::client& options) {
     }
 
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
-    if (options.ssl_opts()) {
-        auto mongoc_opts = options::make_ssl_opts(*options.ssl_opts());
-        _impl->ssl_options = std::move(mongoc_opts.second);
+    if (options.tls_opts()) {
+        auto mongoc_opts = options::make_tls_opts(*options.tls_opts());
+        _impl->tls_options = std::move(mongoc_opts.second);
         libmongoc::client_set_ssl_opts(_get_impl().client_t, &mongoc_opts.first);
     }
 #endif

@@ -139,7 +139,16 @@ class MONGOCXX_API uri {
     ///
     /// @return Boolean that is @c true if ssl is enabled and @c false if not.
     ///
-    bool ssl() const;
+    /// @deprecated The tls() method should be used instead of this method.
+    ///
+    MONGOCXX_DEPRECATED bool ssl() const;
+
+    ///
+    /// Returns the tls parameter from the uri.
+    ///
+    /// @return Boolean that is @c true if tls is enabled and @c false if not.
+    ///
+    bool tls() const;
 
     ///
     /// Returns the uri in a string format.

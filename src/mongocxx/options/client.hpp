@@ -18,7 +18,7 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/options/apm.hpp>
-#include <mongocxx/options/ssl.hpp>
+#include <mongocxx/options/tls.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -40,17 +40,41 @@ class MONGOCXX_API client {
     ///   The SSL-related options.
     ///
     /// @return
+    ///   A reference to the object on which this member function is being called. This
+    ///   facilitates method chaining.
+    ///
+    /// @deprecated
+    ///   Please use tls_opts instead.
+    ///
+    MONGOCXX_DEPRECATED client& ssl_opts(tls ssl_opts);
+
+    ///
+    /// Sets the TLS-related options.
+    ///
+    /// @param tls_opts
+    ///   The TLS-related options.
+    ///
+    /// @return
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    client& ssl_opts(ssl ssl_opts);
+    client& tls_opts(tls tls_opts);
 
     ///
     /// The current SSL-related options.
     ///
     /// @return The SSL-related options.
     ///
-    const stdx::optional<ssl>& ssl_opts() const;
+    /// @deprecated Please use tls_opts instead.
+    ///
+    MONGOCXX_DEPRECATED const stdx::optional<tls>& ssl_opts() const;
+
+    ///
+    /// The current TLS-related options.
+    ///
+    /// @return The TLS-related options.
+    ///
+    const stdx::optional<tls>& tls_opts() const;
 
     ///
     /// Sets the APM-related options.
@@ -72,7 +96,7 @@ class MONGOCXX_API client {
     const stdx::optional<apm>& apm_opts() const;
 
    private:
-    stdx::optional<ssl> _ssl_opts;
+    stdx::optional<tls> _tls_opts;
     stdx::optional<apm> _apm_opts;
 };
 

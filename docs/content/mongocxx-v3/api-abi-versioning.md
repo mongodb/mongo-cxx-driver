@@ -47,3 +47,48 @@ version of the library installed.
 * This allows multiple, ABI incompatible versions of the library to be linked into the same application.
 * The name of the namespace is `v$ABI`. We create them from ABI version to maintain forwards compatibibility.
 
+
+## Deprecation
+
+Occasionally we will phase features out of use in the driver.
+In the release that marks a feature as deprecated we offer several transition options:
+
+1. The original method, marked with `MONGOCXX_DEPRECATED`. This
+will raise deprecation warnings when compiled.
+2. A variant of the feature suffixed with `_deprecated`. This will require only small
+code changes and will not raise deprecation warnings.
+3. A new feature that provides alternate functionality.
+The new feature may not be a drop-in replacement for the deprecated feature and
+switching to it may require code changes. In the rare case where we
+remove a feature without replacing it, this third option will not be available.
+
+In the following release, the original feature marked with `MONGOCXX_DEPRECATED` and its
+suffixed `_deprecated` equivalent will be removed.
+
+```c++
+// release 1 with a supported feature
+void do_thing();
+
+// release 2 where the feature is deprecated in favor of a new feature
+MONGOCXX_DEPRECATED void do_thing();
+void do_thing_deprecated();
+void do_new_thing();
+
+// release 3 where the original feature is removed
+void do_new_thing();
+```
+
+In the case of a feature rename we do not offer a suffixed `_deprecated` variant,
+as one can simply switch to using the new name with the same amount of effort.
+
+```
+// release 1 with a supported feature
+void do_thing();
+
+// release 2 where the feature name is renamed
+MONGOCXX_DEPRECATED void do_thing();
+void do_stuff();
+
+// release 3 where the original feature name is removed
+void do_stuff();
+```
