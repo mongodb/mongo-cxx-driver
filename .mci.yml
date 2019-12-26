@@ -302,7 +302,7 @@ functions:
                   fi
                   # The example projects never run under valgrind, since we haven't added execution
                   # logic to handle ${test_params}.
-                  .evergreen/build_example_projects.sh
+                  MONGOC_VERSION=${MONGOC_VERSION|master} .evergreen/build_example_projects.sh
 
     "test auth":
         - command: shell.exec

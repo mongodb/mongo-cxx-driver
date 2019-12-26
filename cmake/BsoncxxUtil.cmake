@@ -3,6 +3,8 @@
 # This function requires the following variables to be defined in its parent scope:
 # - bsoncxx_sources
 # - libbson_target
+# - libbson_definitions
+# - libbson_include_directories
 function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     add_library(${TARGET} ${LINK_TYPE}
         ${bsoncxx_sources}
@@ -39,6 +41,8 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     endif()
 
     target_link_libraries(${TARGET} PRIVATE ${libbson_target})
+    target_include_directories(${TARGET} PRIVATE ${libbson_include_directories})
+    target_compile_definitions(${TARGET} PRIVATE ${libbson_definitions})
 
     generate_export_header(${TARGET}
         BASE_NAME BSONCXX

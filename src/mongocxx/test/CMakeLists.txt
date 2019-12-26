@@ -148,6 +148,20 @@ target_link_libraries(test_change_stream_specs mongocxx_mocked ${libmongoc_targe
 target_link_libraries(test_transactions_specs mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_retryable_reads_specs mongocxx_mocked ${libmongoc_target})
 
+target_include_directories(test_driver PRIVATE ${libmongoc_include_directories})
+target_include_directories(test_logging PRIVATE ${libmongoc_include_directories})
+target_include_directories(test_instance PRIVATE ${libmongoc_include_directories})
+target_include_directories(test_crud_specs PRIVATE ${libmongoc_include_directories})
+target_include_directories(test_gridfs_specs PRIVATE ${libmongoc_include_directories})
+target_include_directories(test_command_monitoring_specs PRIVATE ${libmongoc_include_directories})
+target_include_directories(test_change_stream_specs PRIVATE ${libmongoc_include_directories})
+target_include_directories(test_transactions_specs PRIVATE ${libmongoc_include_directories})
+target_include_directories(test_retryable_reads_specs PRIVATE ${libmongoc_include_directories})
+
+target_compile_definitions(test_driver PRIVATE ${libmongoc_definitions})
+target_compile_definitions(test_logging PRIVATE ${libmongoc_definitions})
+target_compile_definitions(test_instance PRIVATE ${libmongoc_definitions})
+
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(test_driver PRIVATE /bigobj)
 endif()

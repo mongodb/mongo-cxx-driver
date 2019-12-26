@@ -3,6 +3,8 @@
 # This function requires the following variables to be defined in its parent scope:
 # - mongocxx_sources
 # - libmongoc_target
+# - libmongoc_definitions
+# - libmongoc_definitions
 function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     add_library(${TARGET} ${LINK_TYPE}
         ${mongocxx_sources}
@@ -27,6 +29,8 @@ function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     endif()
 
     target_link_libraries(${TARGET} PRIVATE ${libmongoc_target})
+    target_include_directories(${TARGET} PRIVATE ${libmongoc_include_directories})
+    target_compile_definitions(${TARGET} PRIVATE ${libmongoc_definitions})
 
     generate_export_header(${TARGET}
         BASE_NAME MONGOCXX
