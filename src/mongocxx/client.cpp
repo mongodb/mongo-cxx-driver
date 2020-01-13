@@ -211,6 +211,10 @@ class client_session client::start_session(const mongocxx::options::client_sessi
     return client_session(this, options);
 }
 
+void client::reset() {
+    libmongoc::client_reset(_get_impl().client_t);
+}
+
 class change_stream client::watch(const options::change_stream& options) {
     return watch(pipeline{}, options);
 }

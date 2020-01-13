@@ -291,6 +291,20 @@ TEST_CASE("A client's write concern may be set and obtained", "[client]") {
     libmongoc::write_concern_destroy(underlying_wc);
 }
 
+TEST_CASE("A client can be reset", "[client]") {
+    MOCK_CLIENT
+
+    instance::current();
+
+    bool reset_called = false;
+    client_reset->interpose([&](const mongoc_client_t*) { reset_called = true; });
+
+    client mongo_client{uri{}};
+    mongo_client.reset();
+
+    REQUIRE(reset_called);
+}
+
 TEST_CASE("A client can create a named database object", "[client]") {
     MOCK_CLIENT
 

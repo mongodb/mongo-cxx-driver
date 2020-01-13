@@ -362,6 +362,23 @@ class MONGOCXX_API client {
     /// @}
     ///
 
+    ///
+    /// Prevents resource cleanup in the child process from interfering
+    /// with the parent process after forking.
+    ///
+    /// Clients should not be reused after forking. Call this method in the
+    /// child after forking to safely destroy the client. This method should
+    /// not be used with multi-threaded clients.
+    ///
+    /// This method causes the client to clear its session pool without sending
+    /// endSessions.  It also increments an internal generation counter on the
+    /// given client. After this method is called, cursors from
+    /// previous generations will not issue a killCursors command when
+    /// they are destroyed. Client sessions from previous generations
+    /// cannot be used and should be destroyed.
+    ///
+    void reset();
+
    private:
     friend class collection;
     friend class database;
