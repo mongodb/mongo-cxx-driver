@@ -83,6 +83,22 @@ class database;
 /// @endcode
 ///
 class MONGOCXX_API collection {
+    //
+    // Utility class supporting the convenience of {} meaning an empty bsoncxx::document.
+    //
+    // Users may not use this class directly.
+    //
+    // In places where driver methods take this class as a parameter, passing {} will
+    // translate to a default-constructed bsoncxx::document::view_or_value,
+    // regardless of other overloads taking other default-constructible types
+    // for that parameter. This class avoids compiler ambiguity with such overloads.
+    //
+    // See collection::update_one for an example of such overloads.
+    //
+    class _empty_doc_tag {
+        _empty_doc_tag() = default;
+    };
+
    public:
     ///
     /// Default constructs a collection object. The collection is
@@ -1019,6 +1035,56 @@ class MONGOCXX_API collection {
     /// Finds a single document matching the filter, updates it, and returns either the original
     /// or the newly-updated document.
     ///
+    /// @param filter
+    ///   Document view representing a document that should be updated.
+    /// @param update
+    ///   Pipeline representing the update to apply to a matching document.
+    /// @param options
+    ///   Optional arguments, see options::find_one_and_update.
+    ///
+    /// @return The original or updated document.
+    ///
+    /// @exception
+    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
+    ///   write concern is used.
+    ///
+    /// @exception
+    ///   Throws mongocxx::write_exception if the operation fails.
+    ///
+    stdx::optional<bsoncxx::document::value> find_one_and_update(
+        bsoncxx::document::view_or_value filter,
+        const pipeline& update,
+        const options::find_one_and_update& options = options::find_one_and_update());
+
+    ///
+    /// Finds a single document matching the filter, updates it, and returns either the original
+    /// or the newly-updated document.
+    ///
+    /// @param filter
+    ///   Document view representing a document that should be updated.
+    /// @param update
+    ///   Supports the empty update {}.
+    /// @param options
+    ///   Optional arguments, see options::find_one_and_update.
+    ///
+    /// @return The original or updated document.
+    ///
+    /// @exception
+    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
+    ///   write concern is used.
+    ///
+    /// @exception
+    ///   Throws mongocxx::write_exception if the operation fails.
+    ///
+    stdx::optional<bsoncxx::document::value> find_one_and_update(
+        bsoncxx::document::view_or_value filter,
+        std::initializer_list<_empty_doc_tag> update,
+        const options::find_one_and_update& options = options::find_one_and_update());
+
+    ///
+    /// Finds a single document matching the filter, updates it, and returns either the original
+    /// or the newly-updated document.
+    ///
     /// @param session
     ///   The mongocxx::client_session with which to perform the operation.
     /// @param filter
@@ -1041,6 +1107,62 @@ class MONGOCXX_API collection {
         const client_session& session,
         bsoncxx::document::view_or_value filter,
         bsoncxx::document::view_or_value update,
+        const options::find_one_and_update& options = options::find_one_and_update());
+
+    ///
+    /// Finds a single document matching the filter, updates it, and returns either the original
+    /// or the newly-updated document.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the operation.
+    /// @param filter
+    ///   Document view representing a document that should be updated.
+    /// @param update
+    ///   Pipeline representing the update to apply to a matching document.
+    /// @param options
+    ///   Optional arguments, see options::find_one_and_update.
+    ///
+    /// @return The original or updated document.
+    ///
+    /// @exception
+    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
+    ///   write concern is used.
+    ///
+    /// @exception
+    ///   Throws mongocxx::write_exception if the operation fails.
+    ///
+    stdx::optional<bsoncxx::document::value> find_one_and_update(
+        const client_session& session,
+        bsoncxx::document::view_or_value filter,
+        const pipeline& update,
+        const options::find_one_and_update& options = options::find_one_and_update());
+
+    ///
+    /// Finds a single document matching the filter, updates it, and returns either the original
+    /// or the newly-updated document.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the operation.
+    /// @param filter
+    ///   Document view representing a document that should be updated.
+    /// @param update
+    ///   Supports the empty update {}.
+    /// @param options
+    ///   Optional arguments, see options::find_one_and_update.
+    ///
+    /// @return The original or updated document.
+    ///
+    /// @exception
+    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
+    ///   write concern is used.
+    ///
+    /// @exception
+    ///   Throws mongocxx::write_exception if the operation fails.
+    ///
+    stdx::optional<bsoncxx::document::value> find_one_and_update(
+        const client_session& session,
+        bsoncxx::document::view_or_value filter,
+        std::initializer_list<_empty_doc_tag> update,
         const options::find_one_and_update& options = options::find_one_and_update());
 
     ///
@@ -1423,6 +1545,54 @@ class MONGOCXX_API collection {
     ///
     /// Updates multiple documents matching the provided filter in this collection.
     ///
+    /// @param filter
+    ///   Document representing the match criteria.
+    /// @param update
+    ///   Pipeline representing the update to be applied to matching documents.
+    /// @param options
+    ///   Optional arguments, see options::update.
+    ///
+    /// @return The optional result of attempting to update multiple documents.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws
+    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
+    ///   operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/update/
+    ///
+    stdx::optional<result::update> update_many(bsoncxx::document::view_or_value filter,
+                                               const pipeline& update,
+                                               const options::update& options = options::update());
+
+    ///
+    /// Updates multiple documents matching the provided filter in this collection.
+    ///
+    /// @param filter
+    ///   Document representing the match criteria.
+    /// @param update
+    ///   Supports the empty update {}.
+    /// @param options
+    ///   Optional arguments, see options::update.
+    ///
+    /// @return The optional result of attempting to update multiple documents.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws
+    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
+    ///   operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/update/
+    ///
+    stdx::optional<result::update> update_many(bsoncxx::document::view_or_value filter,
+                                               std::initializer_list<_empty_doc_tag> update,
+                                               const options::update& options = options::update());
+
+    ///
+    /// Updates multiple documents matching the provided filter in this collection.
+    ///
     /// @param session
     ///   The mongocxx::client_session with which to perform the update.
     /// @param filter
@@ -1445,6 +1615,60 @@ class MONGOCXX_API collection {
     stdx::optional<result::update> update_many(const client_session& session,
                                                bsoncxx::document::view_or_value filter,
                                                bsoncxx::document::view_or_value update,
+                                               const options::update& options = options::update());
+
+    ///
+    /// Updates multiple documents matching the provided filter in this collection.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the update.
+    /// @param filter
+    ///   Document representing the match criteria.
+    /// @param update
+    ///   Pipeline representing the update to be applied to matching documents.
+    /// @param options
+    ///   Optional arguments, see options::update.
+    ///
+    /// @return The optional result of attempting to update multiple documents.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws
+    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
+    ///   operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/update/
+    ///
+    stdx::optional<result::update> update_many(const client_session& session,
+                                               bsoncxx::document::view_or_value filter,
+                                               const pipeline& update,
+                                               const options::update& options = options::update());
+
+    ///
+    /// Updates multiple documents matching the provided filter in this collection.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the update.
+    /// @param filter
+    ///   Document representing the match criteria.
+    /// @param update
+    ///   Supports the empty update {}.
+    /// @param options
+    ///   Optional arguments, see options::update.
+    ///
+    /// @return The optional result of attempting to update multiple documents.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws
+    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
+    ///   operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/update/
+    ///
+    stdx::optional<result::update> update_many(const client_session& session,
+                                               bsoncxx::document::view_or_value filter,
+                                               std::initializer_list<_empty_doc_tag> update,
                                                const options::update& options = options::update());
 
     ///
@@ -1480,6 +1704,54 @@ class MONGOCXX_API collection {
     ///
     /// Updates a single document matching the provided filter in this collection.
     ///
+    /// @param filter
+    ///   Document representing the match criteria.
+    /// @param update
+    ///   Pipeline representing the update to be applied to a matching document.
+    /// @param options
+    ///   Optional arguments, see options::update.
+    ///
+    /// @return The optional result of attempting to update a document.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws
+    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
+    ///   operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/update/
+    ///
+    stdx::optional<result::update> update_one(bsoncxx::document::view_or_value filter,
+                                              const pipeline& update,
+                                              const options::update& options = options::update());
+
+    ///
+    /// Updates a single document matching the provided filter in this collection.
+    ///
+    /// @param filter
+    ///   Document representing the match criteria.
+    /// @param update
+    ///   Supports the empty update {}.
+    /// @param options
+    ///   Optional arguments, see options::update.
+    ///
+    /// @return The optional result of attempting to update a document.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws
+    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
+    ///   operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/update/
+    ///
+    stdx::optional<result::update> update_one(bsoncxx::document::view_or_value filter,
+                                              std::initializer_list<_empty_doc_tag> update,
+                                              const options::update& options = options::update());
+
+    ///
+    /// Updates a single document matching the provided filter in this collection.
+    ///
     /// @param session
     ///   The mongocxx::client_session with which to perform the update.
     /// @param filter
@@ -1502,6 +1774,60 @@ class MONGOCXX_API collection {
     stdx::optional<result::update> update_one(const client_session& session,
                                               bsoncxx::document::view_or_value filter,
                                               bsoncxx::document::view_or_value update,
+                                              const options::update& options = options::update());
+
+    ///
+    /// Updates a single document matching the provided filter in this collection.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the update.
+    /// @param filter
+    ///   Document representing the match criteria.
+    /// @param update
+    ///   Pipeline representing the update to be applied to a matching document.
+    /// @param options
+    ///   Optional arguments, see options::update.
+    ///
+    /// @return The optional result of attempting to update a document.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws
+    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
+    ///   operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/update/
+    ///
+    stdx::optional<result::update> update_one(const client_session& session,
+                                              bsoncxx::document::view_or_value filter,
+                                              const pipeline& update,
+                                              const options::update& options = options::update());
+
+    ///
+    /// Updates a single document matching the provided filter in this collection.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the update.
+    /// @param filter
+    ///   Document representing the match criteria.
+    /// @param update
+    ///   Supports the empty update {}.
+    /// @param options
+    ///   Optional arguments, see options::update.
+    ///
+    /// @return The optional result of attempting to update a document.
+    /// If the write concern is unacknowledged, the optional will be
+    /// disengaged.
+    ///
+    /// @throws
+    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
+    ///   operation fails.
+    ///
+    /// @see https://docs.mongodb.com/master/reference/command/update/
+    ///
+    stdx::optional<result::update> update_one(const client_session& session,
+                                              bsoncxx::document::view_or_value filter,
+                                              std::initializer_list<_empty_doc_tag> update,
                                               const options::update& options = options::update());
 
     ///

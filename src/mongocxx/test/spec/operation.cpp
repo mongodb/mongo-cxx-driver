@@ -27,11 +27,13 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
+#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/aggregate.hpp>
@@ -76,23 +78,65 @@ int64_t as_int64(const document::element& el) {
 pipeline build_pipeline(array::view pipeline_docs) {
     pipeline pipeline{};
 
-    for (auto&& element : pipeline_docs) {
-        document::view document = element.get_document();
+    for (auto&& e : pipeline_docs) {
+        if (e.type() != bsoncxx::type::k_document) {
+            throw std::logic_error{"pipeline must be built with an array of documents"};
+        }
 
-        if (document["$match"]) {
-            pipeline.match(document["$match"].get_document().value);
-        } else if (document["$out"]) {
-            pipeline.out(string::to_string(document["$out"].get_utf8().value));
-        } else if (document["$sort"]) {
-            pipeline.sort(document["$sort"].get_document().value);
-        } else if (document["$count"]) {
-            pipeline.count(string::to_string(document["$count"].get_utf8().value));
-        } else if (document["$project"]) {
-            pipeline.project(document["$project"].get_document().value);
-        } else if (document["$merge"]) {
-            pipeline.merge(document["$merge"].get_document().value);
+        auto stage = e.get_document().value;
+
+        if (stage["$addFields"]) {
+            pipeline.add_fields(stage["$addFields"].get_document().value);
+        } else if (stage["$bucket"]) {
+            pipeline.bucket(stage["$bucket"].get_document().value);
+        } else if (stage["$bucketAuto"]) {
+            pipeline.bucket_auto(stage["$bucketAuto"].get_document().value);
+        } else if (stage["$collStats"]) {
+            pipeline.coll_stats(stage["$collStats"].get_document().value);
+        } else if (stage["$count"]) {
+            pipeline.count(std::string(stage["$count"].get_utf8().value));
+        } else if (stage["$facet"]) {
+            pipeline.facet(stage["$facet"].get_document().value);
+        } else if (stage["$geoNear"]) {
+            pipeline.geo_near(stage["$geoNear"].get_document().value);
+        } else if (stage["$graphLookup"]) {
+            pipeline.graph_lookup(stage["$graphLookup"].get_document().value);
+        } else if (stage["$group"]) {
+            pipeline.group(stage["$group"].get_document().value);
+        } else if (stage["$indexStats"]) {
+            pipeline.index_stats();
+        } else if (stage["$limit"]) {
+            pipeline.limit(stage["$limit"].get_int32().value);
+        } else if (stage["$lookup"]) {
+            pipeline.lookup(stage["$lookup"].get_document().value);
+        } else if (stage["$match"]) {
+            pipeline.match(stage["$match"].get_document().value);
+        } else if (stage["$merge"]) {
+            pipeline.merge(stage["$merge"].get_document().value);
+        } else if (stage["$out"]) {
+            pipeline.out(std::string(stage["$out"].get_utf8().value));
+        } else if (stage["$project"]) {
+            pipeline.project(stage["$project"].get_document().value);
+        } else if (stage["$redact"]) {
+            pipeline.redact(stage["$redact"].get_document().value);
+        } else if (stage["$replaceRoot"]) {
+            pipeline.replace_root(stage["$replaceRoot"].get_document().value);
+        } else if (stage["$sample"]) {
+            pipeline.sample(stage["$sample"].get_int32().value);
+        } else if (stage["$skip"]) {
+            pipeline.skip(stage["$skip"].get_int32().value);
+        } else if (stage["$sort"]) {
+            pipeline.sort(stage["$sort"].get_document().value);
+        } else if (stage["$sortByCount"]) {
+            pipeline.sort_by_count(stage["$sortByCount"].get_document().value);
+        } else if (stage["$unwind"]) {
+            if (stage["$unwind"].type() == bsoncxx::type::k_document) {
+                pipeline.unwind(stage["$unwind"].get_document().value);
+            } else if (stage["$unwind"].type() == bsoncxx::type::k_utf8) {
+                pipeline.unwind(std::string(stage["$unwind"].get_utf8().value));
+            }
         } else {
-            throw std::logic_error{"unsupported pipeline stage" + to_json(document)};
+            throw std::logic_error{"unsupported pipeline stage"};
         }
     }
 
@@ -522,7 +566,6 @@ document::value operation_runner::_run_find_one_and_replace(document::view opera
 document::value operation_runner::_run_find_one_and_update(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
-    document::view update = arguments["update"].get_document().value;
     options::find_one_and_update options{};
 
     if (arguments["collation"]) {
@@ -560,10 +603,29 @@ document::value operation_runner::_run_find_one_and_update(document::view operat
 
     auto result = builder::basic::document{};
     stdx::optional<document::value> document;
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
-        document = _coll->find_one_and_update(*session, filter, update, options);
-    } else {
-        document = _coll->find_one_and_update(filter, update, options);
+    client_session* session = _lookup_session(operation["arguments"].get_document().value);
+
+    switch (arguments["update"].type()) {
+        case bsoncxx::type::k_document: {
+            document::view update = arguments["update"].get_document().value;
+            if (session) {
+                document = _coll->find_one_and_update(*session, filter, update, options);
+            } else {
+                document = _coll->find_one_and_update(filter, update, options);
+            }
+            break;
+        }
+        case bsoncxx::type::k_array: {
+            pipeline update = build_pipeline(arguments["update"].get_array().value);
+            if (session) {
+                document = _coll->find_one_and_update(*session, filter, update, options);
+            } else {
+                document = _coll->find_one_and_update(filter, update, options);
+            }
+            break;
+        }
+        default:
+            throw std::logic_error{"update must be a document or an array"};
     }
 
     // Server versions below 3.0 sometimes return an empty document rather than null when no
@@ -707,7 +769,6 @@ document::value operation_runner::_run_replace_one(document::view operation) {
 document::value operation_runner::_run_update_many(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
-    document::view update = arguments["update"].get_document().value;
     options::update options{};
 
     if (arguments["collation"]) {
@@ -726,11 +787,31 @@ document::value operation_runner::_run_update_many(document::view operation) {
     bsoncxx::stdx::optional<std::int32_t> modified_count;
     std::int32_t upserted_count = 0;
     stdx::optional<result::update> update_result;
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
-        update_result = _coll->update_many(*session, filter, update, options);
-    } else {
-        update_result = _coll->update_many(filter, update, options);
+    client_session* session = _lookup_session(operation["arguments"].get_document().value);
+
+    switch (arguments["update"].type()) {
+        case bsoncxx::type::k_document: {
+            document::view update = arguments["update"].get_document().value;
+            if (session) {
+                update_result = _coll->update_many(*session, filter, update, options);
+            } else {
+                update_result = _coll->update_many(filter, update, options);
+            }
+            break;
+        }
+        case bsoncxx::type::k_array: {
+            pipeline update = build_pipeline(arguments["update"].get_array().value);
+            if (session) {
+                update_result = _coll->update_many(*session, filter, update, options);
+            } else {
+                update_result = _coll->update_many(filter, update, options);
+            }
+            break;
+        }
+        default:
+            throw std::logic_error{"update must be a document or an array"};
     }
+
     bsoncxx::stdx::optional<types::value> upserted_id{};
 
     if (update_result) {
@@ -773,7 +854,6 @@ document::value operation_runner::_run_update_many(document::view operation) {
 document::value operation_runner::_run_update_one(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
-    document::view update = arguments["update"].get_document().value;
     options::update options{};
 
     if (arguments["collation"]) {
@@ -792,11 +872,31 @@ document::value operation_runner::_run_update_one(document::view operation) {
     bsoncxx::stdx::optional<std::int32_t> modified_count;
     std::int32_t upserted_count = 0;
     stdx::optional<result::update> update_result;
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
-        update_result = _coll->update_one(*session, filter, update, options);
-    } else {
-        update_result = _coll->update_one(filter, update, options);
+    client_session* session = _lookup_session(operation["arguments"].get_document().value);
+
+    switch (arguments["update"].type()) {
+        case bsoncxx::type::k_document: {
+            document::view update = arguments["update"].get_document().value;
+            if (session) {
+                update_result = _coll->update_one(*session, filter, update, options);
+            } else {
+                update_result = _coll->update_one(filter, update, options);
+            }
+            break;
+        }
+        case bsoncxx::type::k_array: {
+            pipeline update = build_pipeline(arguments["update"].get_array().value);
+            if (session) {
+                update_result = _coll->update_one(*session, filter, update, options);
+            } else {
+                update_result = _coll->update_one(filter, update, options);
+            }
+            break;
+        }
+        default:
+            throw std::logic_error{"update must be a document or an array"};
     }
+
     bsoncxx::stdx::optional<types::value> upserted_id{};
 
     if (update_result) {
@@ -859,6 +959,23 @@ void operation_runner::_set_collection_options(document::view operation) {
     }
 }
 
+template <typename T>
+T _build_update_model(document::view arguments) {
+    document::view filter = arguments["filter"].get_document().value;
+
+    switch (arguments["update"].type()) {
+        case bsoncxx::type::k_document: {
+            return T(filter, arguments["update"].get_document().value);
+        }
+        case bsoncxx::type::k_array: {
+            pipeline update = build_pipeline(arguments["update"].get_array().value);
+            return T(filter, update);
+        }
+        default:
+            throw std::logic_error{"update must be a document or an array"};
+    }
+}
+
 document::value operation_runner::_run_bulk_write(document::view operation) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
@@ -880,10 +997,9 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
         auto request = request_element.get_document().value;
         auto request_arguments = request["arguments"].get_document().value;
         auto operation_name = request["name"].get_utf8().value;
+
         if (operation_name.compare("updateOne") == 0) {
-            document::view filter = request_arguments["filter"].get_document().value;
-            document::view update = request_arguments["update"].get_document().value;
-            model::update_one update_one(filter, update);
+            auto update_one = _build_update_model<model::update_one>(request_arguments);
 
             if (request_arguments["collation"]) {
                 update_one.collation(request_arguments["collation"].get_document().value);
@@ -899,9 +1015,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
 
             writes.emplace_back(update_one);
         } else if (operation_name.compare("updateMany") == 0) {
-            document::view filter = request_arguments["filter"].get_document().value;
-            document::view update = request_arguments["update"].get_document().value;
-            model::update_many update_many(filter, update);
+            auto update_many = _build_update_model<model::update_many>(request_arguments);
 
             if (request_arguments["collation"]) {
                 update_many.collation(request_arguments["collation"].get_document().value);

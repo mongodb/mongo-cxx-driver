@@ -26,7 +26,6 @@
   "tests": [
     {
       "description": "UpdateOne using pipelines",
-      "skipReason": "blocked on CXX-1756",
       "operations": [
         {
           "name": "updateOne",
@@ -105,7 +104,6 @@
     },
     {
       "description": "UpdateMany using pipelines",
-      "skipReason": "blocked on CXX-1756",
       "operations": [
         {
           "name": "updateMany",
@@ -179,7 +177,6 @@
     },
     {
       "description": "FindOneAndUpdate using pipelines",
-      "skipReason": "blocked on CXX-1756",
       "operations": [
         {
           "name": "findOneAndUpdate",
@@ -244,7 +241,6 @@
     },
     {
       "description": "UpdateOne in bulk write using pipelines",
-      "skipReason": "blocked on CXX-1756",
       "operations": [
         {
           "name": "bulkWrite",
@@ -330,7 +326,6 @@
     },
     {
       "description": "UpdateMany in bulk write using pipelines",
-      "skipReason": "blocked on CXX-1756",
       "operations": [
         {
           "name": "bulkWrite",

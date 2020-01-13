@@ -163,6 +163,11 @@ std::int32_t compare_versions(std::string version1, std::string version2) {
     return 0;
 }
 
+bool newer_than(const client& client, std::string version) {
+    auto server_version = get_server_version(client);
+    return (compare_versions(server_version, version) >= 0);
+}
+
 std::basic_string<std::uint8_t> convert_hex_string_to_bytes(stdx::string_view hex) {
     std::basic_string<std::uint8_t> bytes;
 

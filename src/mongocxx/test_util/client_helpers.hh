@@ -52,6 +52,12 @@ namespace test_util {
 std::int32_t compare_versions(std::string version1, std::string version2);
 
 //
+// Returns 'true' if the server version for 'client' is at least 'version',
+// returns 'false' otherwise.
+//
+bool newer_than(const client& client, std::string version);
+
+//
 // Converts a hexadecimal string to an string of bytes.
 //
 // This function assumes that `hex` has an even length and that all characters in the string are

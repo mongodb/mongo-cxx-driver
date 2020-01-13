@@ -23,7 +23,7 @@
   "tests": [
     {
       "description": "Aggregate with $merge does not retry",
-      "skipReason": "blocked on CXX-1756",
+      "skipReason": "blocked on CXX-1785",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {

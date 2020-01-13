@@ -431,13 +431,13 @@ cursor collection::_find(const client_session* session,
 }
 
 cursor collection::find(view_or_value filter, const options::find& options) {
-    return _find(nullptr, filter, options);
+    return _find(nullptr, std::move(filter), options);
 }
 
 cursor collection::find(const client_session& session,
                         view_or_value filter,
                         const options::find& options) {
-    return _find(&session, filter, options);
+    return _find(&session, std::move(filter), options);
 }
 
 stdx::optional<bsoncxx::document::value> collection::_find_one(const client_session* session,
@@ -445,7 +445,8 @@ stdx::optional<bsoncxx::document::value> collection::_find_one(const client_sess
                                                                const options::find& options) {
     options::find copy(options);
     copy.limit(1);
-    cursor cursor = session ? find(*session, filter, copy) : find(filter, copy);
+    cursor cursor =
+        session ? find(*session, std::move(filter), copy) : find(std::move(filter), copy);
     cursor::iterator it = cursor.begin();
     if (it == cursor.end()) {
         return stdx::nullopt;
@@ -455,13 +456,13 @@ stdx::optional<bsoncxx::document::value> collection::_find_one(const client_sess
 
 stdx::optional<bsoncxx::document::value> collection::find_one(view_or_value filter,
                                                               const options::find& options) {
-    return _find_one(nullptr, filter, options);
+    return _find_one(nullptr, std::move(filter), options);
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one(const client_session& session,
                                                               view_or_value filter,
                                                               const options::find& options) {
-    return _find_one(&session, filter, options);
+    return _find_one(&session, std::move(filter), options);
 }
 
 cursor collection::_aggregate(const client_session* session,
@@ -614,7 +615,7 @@ stdx::optional<result::replace_one> collection::_replace_one(const client_sessio
         bulk_opts.write_concern(*options.write_concern());
     }
 
-    model::replace_one replace_op(filter, replacement);
+    model::replace_one replace_op(std::move(filter), std::move(replacement));
     if (options.collation()) {
         replace_op.collation(*options.collation());
     }
@@ -628,14 +629,14 @@ stdx::optional<result::replace_one> collection::_replace_one(const client_sessio
 stdx::optional<result::replace_one> collection::replace_one(view_or_value filter,
                                                             view_or_value replacement,
                                                             const options::replace& options) {
-    return _replace_one(nullptr, filter, replacement, options);
+    return _replace_one(nullptr, std::move(filter), replacement, options);
 }
 
 stdx::optional<result::replace_one> collection::replace_one(const client_session& session,
                                                             view_or_value filter,
                                                             view_or_value replacement,
                                                             const options::replace& options) {
-    return _replace_one(&session, filter, replacement, options);
+    return _replace_one(&session, std::move(filter), replacement, options);
 }
 
 stdx::optional<result::update> collection::_update_many(const client_session* session,
@@ -653,7 +654,7 @@ stdx::optional<result::update> collection::_update_many(const client_session* se
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
-    model::update_many update_op(filter, update);
+    model::update_many update_op(std::move(filter), std::move(update));
     if (options.collation()) {
         update_op.collation(*options.collation());
     }
@@ -677,14 +678,42 @@ stdx::optional<result::update> collection::_update_many(const client_session* se
 stdx::optional<result::update> collection::update_many(view_or_value filter,
                                                        view_or_value update,
                                                        const options::update& options) {
-    return _update_many(nullptr, filter, update, options);
+    return _update_many(nullptr, std::move(filter), update, options);
+}
+
+stdx::optional<result::update> collection::update_many(view_or_value filter,
+                                                       const pipeline& update,
+                                                       const options::update& options) {
+    return _update_many(
+        nullptr, std::move(filter), bsoncxx::document::view(update.view_array()), options);
+}
+
+stdx::optional<result::update> collection::update_many(view_or_value filter,
+                                                       std::initializer_list<_empty_doc_tag>,
+                                                       const options::update& options) {
+    return _update_many(nullptr, std::move(filter), bsoncxx::document::view{}, options);
 }
 
 stdx::optional<result::update> collection::update_many(const client_session& session,
                                                        view_or_value filter,
                                                        view_or_value update,
                                                        const options::update& options) {
-    return _update_many(&session, filter, update, options);
+    return _update_many(&session, std::move(filter), update, options);
+}
+
+stdx::optional<result::update> collection::update_many(const client_session& session,
+                                                       view_or_value filter,
+                                                       const pipeline& update,
+                                                       const options::update& options) {
+    return _update_many(
+        &session, std::move(filter), bsoncxx::document::view(update.view_array()), options);
+}
+
+stdx::optional<result::update> collection::update_many(const client_session& session,
+                                                       view_or_value filter,
+                                                       std::initializer_list<_empty_doc_tag>,
+                                                       const options::update& options) {
+    return _update_many(&session, std::move(filter), bsoncxx::document::view{}, options);
 }
 
 stdx::optional<result::update> collection::_update_one(const client_session* session,
@@ -702,7 +731,7 @@ stdx::optional<result::update> collection::_update_one(const client_session* ses
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
-    model::update_one update_op(filter, update);
+    model::update_one update_op(std::move(filter), std::move(update));
     if (options.collation()) {
         update_op.collation(*options.collation());
     }
@@ -726,14 +755,42 @@ stdx::optional<result::update> collection::_update_one(const client_session* ses
 stdx::optional<result::update> collection::update_one(view_or_value filter,
                                                       view_or_value update,
                                                       const options::update& options) {
-    return _update_one(nullptr, filter, update, options);
+    return _update_one(nullptr, std::move(filter), update, options);
+}
+
+stdx::optional<result::update> collection::update_one(view_or_value filter,
+                                                      const pipeline& update,
+                                                      const options::update& options) {
+    return _update_one(
+        nullptr, std::move(filter), bsoncxx::document::view(update.view_array()), options);
+}
+
+stdx::optional<result::update> collection::update_one(view_or_value filter,
+                                                      std::initializer_list<_empty_doc_tag>,
+                                                      const options::update& options) {
+    return _update_one(nullptr, std::move(filter), bsoncxx::document::view{}, options);
 }
 
 stdx::optional<result::update> collection::update_one(const client_session& session,
                                                       view_or_value filter,
                                                       view_or_value update,
                                                       const options::update& options) {
-    return _update_one(&session, filter, update, options);
+    return _update_one(&session, std::move(filter), update, options);
+}
+
+stdx::optional<result::update> collection::update_one(const client_session& session,
+                                                      view_or_value filter,
+                                                      const pipeline& update,
+                                                      const options::update& options) {
+    return _update_one(
+        &session, std::move(filter), bsoncxx::document::view(update.view_array()), options);
+}
+
+stdx::optional<result::update> collection::update_one(const client_session& session,
+                                                      view_or_value filter,
+                                                      std::initializer_list<_empty_doc_tag>,
+                                                      const options::update& options) {
+    return _update_one(&session, std::move(filter), bsoncxx::document::view{}, options);
 }
 
 stdx::optional<result::delete_result> collection::_delete_many(
@@ -762,12 +819,12 @@ stdx::optional<result::delete_result> collection::_delete_many(
 
 stdx::optional<result::delete_result> collection::delete_many(
     view_or_value filter, const options::delete_options& options) {
-    return _delete_many(nullptr, filter, options);
+    return _delete_many(nullptr, std::move(filter), options);
 }
 
 stdx::optional<result::delete_result> collection::delete_many(
     const client_session& session, view_or_value filter, const options::delete_options& options) {
-    return _delete_many(&session, filter, options);
+    return _delete_many(&session, std::move(filter), options);
 }
 
 stdx::optional<result::delete_result> collection::_delete_one(
@@ -796,12 +853,12 @@ stdx::optional<result::delete_result> collection::_delete_one(
 
 stdx::optional<result::delete_result> collection::delete_one(
     view_or_value filter, const options::delete_options& options) {
-    return _delete_one(nullptr, filter, options);
+    return _delete_one(nullptr, std::move(filter), options);
 }
 
 stdx::optional<result::delete_result> collection::delete_one(
     const client_session& session, view_or_value filter, const options::delete_options& options) {
-    return _delete_one(&session, filter, options);
+    return _delete_one(&session, std::move(filter), options);
 }
 
 stdx::optional<bsoncxx::document::value> collection::_find_one_and_replace(
@@ -830,7 +887,7 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_replace(
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
     view_or_value filter, view_or_value replacement, const options::find_one_and_replace& options) {
-    return _find_one_and_replace(nullptr, filter, replacement, options);
+    return _find_one_and_replace(nullptr, std::move(filter), replacement, options);
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
@@ -838,7 +895,7 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_replace(
     view_or_value filter,
     view_or_value replacement,
     const options::find_one_and_replace& options) {
-    return _find_one_and_replace(&session, filter, replacement, options);
+    return _find_one_and_replace(&session, std::move(filter), replacement, options);
 }
 
 stdx::optional<bsoncxx::document::value> collection::_find_one_and_update(
@@ -867,7 +924,20 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_update(
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
     view_or_value filter, view_or_value update, const options::find_one_and_update& options) {
-    return _find_one_and_update(nullptr, filter, update, options);
+    return _find_one_and_update(nullptr, std::move(filter), update, options);
+}
+
+stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
+    view_or_value filter, const pipeline& update, const options::find_one_and_update& options) {
+    return _find_one_and_update(
+        nullptr, std::move(filter), bsoncxx::document::view(update.view_array()), options);
+}
+
+stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
+    view_or_value filter,
+    std::initializer_list<_empty_doc_tag>,
+    const options::find_one_and_update& options) {
+    return _find_one_and_update(nullptr, std::move(filter), bsoncxx::document::view{}, options);
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
@@ -875,7 +945,24 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
     view_or_value filter,
     view_or_value update,
     const options::find_one_and_update& options) {
-    return _find_one_and_update(&session, filter, update, options);
+    return _find_one_and_update(&session, std::move(filter), update, options);
+}
+
+stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
+    const client_session& session,
+    view_or_value filter,
+    const pipeline& update,
+    const options::find_one_and_update& options) {
+    return _find_one_and_update(
+        &session, std::move(filter), bsoncxx::document::view(update.view_array()), options);
+}
+
+stdx::optional<bsoncxx::document::value> collection::find_one_and_update(
+    const client_session& session,
+    view_or_value filter,
+    std::initializer_list<_empty_doc_tag>,
+    const options::find_one_and_update& options) {
+    return _find_one_and_update(&session, std::move(filter), bsoncxx::document::view{}, options);
 }
 
 stdx::optional<bsoncxx::document::value> collection::_find_one_and_delete(
@@ -894,14 +981,14 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_delete(
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
     view_or_value filter, const options::find_one_and_delete& options) {
-    return _find_one_and_delete(nullptr, filter, options);
+    return _find_one_and_delete(nullptr, std::move(filter), options);
 }
 
 stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
     const client_session& session,
     view_or_value filter,
     const options::find_one_and_delete& options) {
-    return _find_one_and_delete(&session, filter, options);
+    return _find_one_and_delete(&session, std::move(filter), options);
 }
 
 std::int64_t collection::_count(const client_session* session,
@@ -1009,33 +1096,33 @@ std::int64_t collection::_count_documents(const client_session* session,
 }
 
 std::int64_t collection::count(view_or_value filter, const options::count& options) {
-    return count_deprecated(filter, options);
+    return count_deprecated(std::move(filter), options);
 }
 
 std::int64_t collection::count_deprecated(view_or_value filter, const options::count& options) {
-    return _count(nullptr, filter, options);
+    return _count(nullptr, std::move(filter), options);
 }
 
 std::int64_t collection::count(const client_session& session,
                                view_or_value filter,
                                const options::count& options) {
-    return count_deprecated(session, filter, options);
+    return count_deprecated(session, std::move(filter), options);
 }
 
 std::int64_t collection::count_deprecated(const client_session& session,
                                           view_or_value filter,
                                           const options::count& options) {
-    return _count(&session, filter, options);
+    return _count(&session, std::move(filter), options);
 }
 
 std::int64_t collection::count_documents(view_or_value filter, const options::count& options) {
-    return _count_documents(nullptr, filter, options);
+    return _count_documents(nullptr, std::move(filter), options);
 }
 
 std::int64_t collection::count_documents(const client_session& session,
                                          view_or_value filter,
                                          const options::count& options) {
-    return _count_documents(&session, filter, options);
+    return _count_documents(&session, std::move(filter), options);
 }
 
 std::int64_t collection::estimated_document_count(

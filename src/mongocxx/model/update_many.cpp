@@ -25,6 +25,13 @@ update_many::update_many(bsoncxx::document::view_or_value filter,
                          bsoncxx::document::view_or_value update)
     : _filter(std::move(filter)), _update(std::move(update)) {}
 
+update_many::update_many(bsoncxx::document::view_or_value filter, const pipeline& update)
+    : _filter(std::move(filter)), _update(bsoncxx::document::value(update.view_array())) {}
+
+update_many::update_many(bsoncxx::document::view_or_value filter,
+                         std::initializer_list<_empty_doc_tag>)
+    : _filter(std::move(filter)), _update() {}
+
 const bsoncxx::document::view_or_value& update_many::filter() const {
     return _filter;
 }

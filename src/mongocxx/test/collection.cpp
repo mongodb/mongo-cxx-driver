@@ -534,6 +534,34 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         REQUIRE(updated->view()["changed"].get_bool() == true);
     }
 
+    SECTION("update_one can take a pipeline", "[collection]") {
+        if (!test_util::newer_than(mongodb_client, "4.1.11")) {
+            WARN("skip: pipeline updates require 4.1.11");
+            return;
+        }
+
+        collection coll = db["update_one_pipeline"];
+        coll.drop();
+
+        auto bson = make_document(kvp("_id", 1));
+        coll.insert_one(bson.view());
+
+        auto doc = coll.find_one({});
+        REQUIRE(doc);
+        REQUIRE(doc->view()["_id"].get_int32() == 1);
+
+        pipeline update;
+        auto new_fields = make_document(kvp("name", "Charlotte"));
+        update.add_fields(new_fields.view());
+
+        coll.update_one(bson.view(), {});
+        coll.update_one(bson.view(), update);
+
+        auto result = coll.find_one({});
+        REQUIRE(result);
+        REQUIRE(result->view()["name"].get_utf8().value == stdx::string_view("Charlotte"));
+    }
+
     SECTION("update_one returns correct result object", "[collection]") {
         auto b1 = make_document(kvp("_id", 1));
 
