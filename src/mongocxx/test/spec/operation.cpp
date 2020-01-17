@@ -78,67 +78,7 @@ int64_t as_int64(const document::element& el) {
 pipeline build_pipeline(array::view pipeline_docs) {
     pipeline pipeline{};
 
-    for (auto&& e : pipeline_docs) {
-        if (e.type() != bsoncxx::type::k_document) {
-            throw std::logic_error{"pipeline must be built with an array of documents"};
-        }
-
-        auto stage = e.get_document().value;
-
-        if (stage["$addFields"]) {
-            pipeline.add_fields(stage["$addFields"].get_document().value);
-        } else if (stage["$bucket"]) {
-            pipeline.bucket(stage["$bucket"].get_document().value);
-        } else if (stage["$bucketAuto"]) {
-            pipeline.bucket_auto(stage["$bucketAuto"].get_document().value);
-        } else if (stage["$collStats"]) {
-            pipeline.coll_stats(stage["$collStats"].get_document().value);
-        } else if (stage["$count"]) {
-            pipeline.count(std::string(stage["$count"].get_utf8().value));
-        } else if (stage["$facet"]) {
-            pipeline.facet(stage["$facet"].get_document().value);
-        } else if (stage["$geoNear"]) {
-            pipeline.geo_near(stage["$geoNear"].get_document().value);
-        } else if (stage["$graphLookup"]) {
-            pipeline.graph_lookup(stage["$graphLookup"].get_document().value);
-        } else if (stage["$group"]) {
-            pipeline.group(stage["$group"].get_document().value);
-        } else if (stage["$indexStats"]) {
-            pipeline.index_stats();
-        } else if (stage["$limit"]) {
-            pipeline.limit(stage["$limit"].get_int32().value);
-        } else if (stage["$lookup"]) {
-            pipeline.lookup(stage["$lookup"].get_document().value);
-        } else if (stage["$match"]) {
-            pipeline.match(stage["$match"].get_document().value);
-        } else if (stage["$merge"]) {
-            pipeline.merge(stage["$merge"].get_document().value);
-        } else if (stage["$out"]) {
-            pipeline.out(std::string(stage["$out"].get_utf8().value));
-        } else if (stage["$project"]) {
-            pipeline.project(stage["$project"].get_document().value);
-        } else if (stage["$redact"]) {
-            pipeline.redact(stage["$redact"].get_document().value);
-        } else if (stage["$replaceRoot"]) {
-            pipeline.replace_root(stage["$replaceRoot"].get_document().value);
-        } else if (stage["$sample"]) {
-            pipeline.sample(stage["$sample"].get_int32().value);
-        } else if (stage["$skip"]) {
-            pipeline.skip(stage["$skip"].get_int32().value);
-        } else if (stage["$sort"]) {
-            pipeline.sort(stage["$sort"].get_document().value);
-        } else if (stage["$sortByCount"]) {
-            pipeline.sort_by_count(stage["$sortByCount"].get_document().value);
-        } else if (stage["$unwind"]) {
-            if (stage["$unwind"].type() == bsoncxx::type::k_document) {
-                pipeline.unwind(stage["$unwind"].get_document().value);
-            } else if (stage["$unwind"].type() == bsoncxx::type::k_utf8) {
-                pipeline.unwind(std::string(stage["$unwind"].get_utf8().value));
-            }
-        } else {
-            throw std::logic_error{"unsupported pipeline stage"};
-        }
-    }
+    pipeline.append_stages(std::move(pipeline_docs));
 
     return pipeline;
 }
