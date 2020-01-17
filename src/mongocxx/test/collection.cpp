@@ -557,9 +557,35 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         coll.update_one(bson.view(), {});
         coll.update_one(bson.view(), update);
 
-        auto result = coll.find_one({});
+        auto result = coll.find_one(bson.view());
         REQUIRE(result);
         REQUIRE(result->view()["name"].get_utf8().value == stdx::string_view("Charlotte"));
+
+        // Try adding stages with append_stage(s) instead
+        pipeline array_update;
+
+        using bsoncxx::builder::basic::sub_document;
+        bsoncxx::builder::basic::array stages{};
+
+        bsoncxx::builder::basic::document stage{};
+        stage.append(kvp("$addFields", make_document(kvp("lastname", "Krause"))));
+        bsoncxx::builder::basic::document stage2{};
+        stage2.append(kvp("$addFields", make_document(kvp("department", "VIS"))));
+        stages.append(stage.extract());
+        stages.append(stage2.extract());
+
+        bsoncxx::builder::basic::document stage3{};
+        stage3.append(kvp("$addFields", make_document(kvp("count", 1))));
+
+        array_update.append_stages(stages.extract());
+        array_update.append_stage(stage3.extract());
+        coll.update_one(bson.view(), array_update);
+
+        result = coll.find_one(bson.view());
+        REQUIRE(result);
+        REQUIRE(result->view()["lastname"].get_utf8().value == stdx::string_view("Krause"));
+        REQUIRE(result->view()["department"].get_utf8().value == stdx::string_view("VIS"));
+        REQUIRE(result->view()["count"].get_int32().value == 1);
     }
 
     SECTION("update_one returns correct result object", "[collection]") {

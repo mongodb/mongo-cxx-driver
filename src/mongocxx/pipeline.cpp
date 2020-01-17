@@ -42,6 +42,18 @@ pipeline& pipeline::add_fields(bsoncxx::document::view_or_value fields_to_add) {
     return *this;
 }
 
+pipeline& pipeline::append_stage(bsoncxx::document::view_or_value stage) {
+    _impl->sink().append(std::move(stage));
+    return *this;
+}
+
+pipeline& pipeline::append_stages(bsoncxx::array::view_or_value stages) {
+    for (auto&& stage : stages.view()) {
+        _impl->sink().append(stage.get_document().value);
+    }
+    return *this;
+}
+
 pipeline& pipeline::bucket(bsoncxx::document::view_or_value bucket_args) {
     _impl->sink().append(
         [bucket_args](sub_document sub_doc) { sub_doc.append(kvp("$bucket", bucket_args)); });

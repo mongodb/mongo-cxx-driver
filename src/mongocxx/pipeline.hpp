@@ -19,6 +19,7 @@
 #include <string>
 
 #include <bsoncxx/array/view.hpp>
+#include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 
@@ -152,6 +153,40 @@ class MONGOCXX_API pipeline {
     ///   method chaining.
     ///
     pipeline& facet(bsoncxx::document::view_or_value facet_args);
+
+    ///
+    /// Appends a stage to this pipeline object.
+    ///
+    /// Use this method to run new pipeline stages that are not yet offered as
+    /// explicit methods on this class. Pass in a document describing a
+    /// pipeline stage:
+    ///
+    ///    { "$addFields" : { "field" : 0 }}
+    ///
+    /// @param stage
+    ///   A bson document view or value describing a pipeline stage.
+    ///
+    /// @return
+    ///   A reference to this object on which this member function is being called.
+    ///
+    pipeline& append_stage(bsoncxx::document::view_or_value stage);
+
+    ///
+    /// Appends stages to this pipeline object from the given bson array.
+    ///
+    /// Use this method to run new pipeline stages that are not yet offered as
+    /// explicit methods on this class. Pass in an array of documents, where each
+    /// document in the array describes a pipeline stage:
+    ///
+    ///    [ { "$addFields" : { "field" : 0 } }, { "$newStage" : ... }, ... ]
+    ///
+    /// @param stages
+    ///   A bson array containing documents describing pipeline stages.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.
+    ///
+    pipeline& append_stages(bsoncxx::array::view_or_value stages);
 
     ///
     /// Outputs documents in order of nearest to farthest from a specified point.
