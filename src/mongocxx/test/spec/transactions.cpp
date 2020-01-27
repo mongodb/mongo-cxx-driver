@@ -238,92 +238,105 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                                &session1_opts);
         }
 
-        client_session session0 = client.start_session(session0_opts);
-        client_session session1 = client.start_session(session1_opts);
-        document::value session_lsid0(session0.id());
-        document::value session_lsid1(session1.id());
+        document::value session_lsid0{{}};
+        document::value session_lsid1{{}};
 
-        // Step 9. Perform the operations.
-        apm_checker.clear();
-        auto operations = test["operations"].get_array().value;
-        for (auto&& op : operations) {
-            fail_point_enabled =
-                fail_point_enabled || op.get_document().value["arguments"]["failPoint"];
-            std::string error_msg;
-            optional<document::value> server_error;
-            optional<operation_exception> exception;
-            optional<document::value> actual_result;
-            INFO("Operation: " << bsoncxx::to_json(op.get_document().value));
-            try {
-                auto operation = op.get_document().value;
-                database db = client[db_name];
-                parse_database_options(operation, &db);
-                collection coll = db[coll_name];
-                parse_collection_options(operation, &coll);
-                operation_runner op_runner{&db, &coll, &session0, &session1, &client};
-                actual_result = op_runner.run(operation);
-            } catch (const operation_exception& e) {
-                error_msg = e.what();
-                server_error = e.raw_server_error();
-                exception = e;
-            }
+        // We wrap this section in its own scope as a way to control when the client_session
+        // objects created inside get destroyed. On destruction, client_sessions can send
+        // an abortTransaction that some of the spec tests look for.
+        {
+            client_session session0 = client.start_session(session0_opts);
+            client_session session1 = client.start_session(session1_opts);
+            session_lsid0.reset(session0.id());
+            session_lsid1.reset(session1.id());
 
-            // "If the result document has an 'errorContains' field, verify that the method threw an
-            // exception or returned an error, and that the value of the 'errorContains' field
-            // matches the error string."
-            if (op["result"]["errorContains"]) {
-                REQUIRE(exception);
-                // Do a case insensitive check.
-                auto error_contains =
-                    test_util::tolowercase(op["result"]["errorContains"].get_utf8().value);
-                REQUIRE(test_util::tolowercase(error_msg).find(error_contains) <
-                        error_msg.length());
-            }
-
-            // "If the result document has an 'errorCodeName' field, verify that the method threw a
-            // command failed exception or returned an error, and that the value of the
-            // 'errorCodeName' field matches the 'codeName' in the server error response."
-            if (op["result"]["errorCodeName"]) {
-                REQUIRE(exception);
-                REQUIRE(server_error);
-                uint32_t expected =
-                    error_code_from_name(op["result"]["errorCodeName"].get_utf8().value);
-                REQUIRE(exception->code().value() == static_cast<int>(expected));
-            }
-
-            // "If the result document has an 'errorLabelsContain' field, [...] Verify that all of
-            // the error labels in 'errorLabelsContain' are present"
-            if (op["result"]["errorLabelsContain"]) {
-                REQUIRE(exception);
-                for (auto&& label_el : op["result"]["errorLabelsContain"].get_array().value) {
-                    auto label = label_el.get_utf8().value;
-                    REQUIRE(exception->has_error_label(label));
+            // Step 9. Perform the operations.
+            apm_checker.clear();
+            auto operations = test["operations"].get_array().value;
+            for (auto&& op : operations) {
+                fail_point_enabled =
+                    fail_point_enabled || op.get_document().value["arguments"]["failPoint"];
+                std::string error_msg;
+                optional<document::value> server_error;
+                optional<operation_exception> exception;
+                optional<document::value> actual_result;
+                INFO("Operation: " << bsoncxx::to_json(op.get_document().value));
+                try {
+                    auto operation = op.get_document().value;
+                    database db = client[db_name];
+                    parse_database_options(operation, &db);
+                    collection coll = db[coll_name];
+                    parse_collection_options(operation, &coll);
+                    operation_runner op_runner{&db, &coll, &session0, &session1, &client};
+                    actual_result = op_runner.run(operation);
+                } catch (const operation_exception& e) {
+                    error_msg = e.what();
+                    server_error = e.raw_server_error();
+                    exception = e;
                 }
-            }
 
-            // "If the result document has an 'errorLabelsOmit' field, [...] Verify that none of the
-            // error labels in 'errorLabelsOmit' are present."
-            if (op["result"]["errorLabelsOmit"]) {
-                REQUIRE(exception);
-                for (auto&& label_el : op["result"]["errorLabelsOmit"].get_array().value) {
-                    auto label = label_el.get_utf8().value;
-                    REQUIRE(!exception->has_error_label(label));
+                // "If the result document has an 'errorContains' field, verify that the method
+                // threw an
+                // exception or returned an error, and that the value of the 'errorContains' field
+                // matches the error string."
+                if (op["result"]["errorContains"]) {
+                    REQUIRE(exception);
+                    // Do a case insensitive check.
+                    auto error_contains =
+                        test_util::tolowercase(op["result"]["errorContains"].get_utf8().value);
+                    REQUIRE(test_util::tolowercase(error_msg).find(error_contains) <
+                            error_msg.length());
                 }
-            }
 
-            // "If the operation returns a raw command response, eg from runCommand, then compare
-            // only the fields present in the expected result document. Otherwise, compare the
-            // method's return value to result using the same logic as the CRUD Spec Tests runner."
-            if (!exception && op["result"]) {
-                REQUIRE(actual_result);
-                REQUIRE(actual_result->view()["result"]);
-                INFO("actual result" << bsoncxx::to_json(actual_result->view()));
-                INFO("expected result" << bsoncxx::to_json(op.get_document().value));
-                REQUIRE(test_util::matches(actual_result->view()["result"].get_value(),
-                                           op["result"].get_value()));
+                // "If the result document has an 'errorCodeName' field, verify that the method
+                // threw a
+                // command failed exception or returned an error, and that the value of the
+                // 'errorCodeName' field matches the 'codeName' in the server error response."
+                if (op["result"]["errorCodeName"]) {
+                    REQUIRE(exception);
+                    REQUIRE(server_error);
+                    uint32_t expected =
+                        error_code_from_name(op["result"]["errorCodeName"].get_utf8().value);
+                    REQUIRE(exception->code().value() == static_cast<int>(expected));
+                }
+
+                // "If the result document has an 'errorLabelsContain' field, [...] Verify that all
+                // of
+                // the error labels in 'errorLabelsContain' are present"
+                if (op["result"]["errorLabelsContain"]) {
+                    REQUIRE(exception);
+                    for (auto&& label_el : op["result"]["errorLabelsContain"].get_array().value) {
+                        auto label = label_el.get_utf8().value;
+                        REQUIRE(exception->has_error_label(label));
+                    }
+                }
+
+                // "If the result document has an 'errorLabelsOmit' field, [...] Verify that none of
+                // the
+                // error labels in 'errorLabelsOmit' are present."
+                if (op["result"]["errorLabelsOmit"]) {
+                    REQUIRE(exception);
+                    for (auto&& label_el : op["result"]["errorLabelsOmit"].get_array().value) {
+                        auto label = label_el.get_utf8().value;
+                        REQUIRE(!exception->has_error_label(label));
+                    }
+                }
+
+                // "If the operation returns a raw command response, eg from runCommand, then
+                // compare
+                // only the fields present in the expected result document. Otherwise, compare the
+                // method's return value to result using the same logic as the CRUD Spec Tests
+                // runner."
+                if (!exception && op["result"]) {
+                    REQUIRE(actual_result);
+                    REQUIRE(actual_result->view()["result"]);
+                    INFO("actual result" << bsoncxx::to_json(actual_result->view()));
+                    INFO("expected result" << bsoncxx::to_json(op.get_document().value));
+                    REQUIRE(test_util::matches(actual_result->view()["result"].get_value(),
+                                               op["result"].get_value()));
+                }
             }
         }
-
         // Step 10. "Call session0.endSession() and session1.endSession." (done in destructors).
 
         // Step 11. Compare APM events.
@@ -336,9 +349,9 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                 REQUIRE(main->type() == type::k_document);
                 auto session_name = pattern.get_utf8().value;
                 if (session_name.compare("session0") == 0) {
-                    REQUIRE(test_util::matches(session0.id(), main->get_document().value));
+                    REQUIRE(test_util::matches(session_lsid0, main->get_document().value));
                 } else {
-                    REQUIRE(test_util::matches(session1.id(), main->get_document().value));
+                    REQUIRE(test_util::matches(session_lsid1, main->get_document().value));
                 }
                 return test_util::match_action::k_skip;
             } else if (pattern.type() == type::k_null) {
