@@ -55,6 +55,12 @@ value::unique_ptr_type value::release() {
     return std::move(_data);
 }
 
+    void value::reset(document::view view) {
+	_data.reset(new std::uint8_t[static_cast<std::size_t>(view.length())]);
+	_length = view.length();
+	std::copy(view.data(), view.data() + view.length(), _data.get());
+    }
+
 }  // namespace document
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

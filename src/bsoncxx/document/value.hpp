@@ -99,6 +99,12 @@ class BSONCXX_API value {
     ///
     unique_ptr_type release();
 
+    ///
+    /// Replace the formerly-owned buffer with the new view.
+    /// This will make a copy of the passed-in view.
+    ///
+    void reset(document::view view);
+
    private:
     unique_ptr_type _data;
     std::size_t _length{0};
