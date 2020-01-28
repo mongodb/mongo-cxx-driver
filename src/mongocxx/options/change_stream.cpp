@@ -56,6 +56,15 @@ const stdx::optional<bsoncxx::document::view_or_value>& change_stream::resume_af
     return _resume_after;
 }
 
+change_stream& change_stream::start_after(bsoncxx::document::view_or_value token) {
+    _start_after = std::move(token);
+    return *this;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& change_stream::start_after() const {
+    return _start_after;
+}
+
 change_stream& change_stream::collation(bsoncxx::document::view_or_value collation) {
     _collation = std::move(collation);
     return *this;
@@ -97,6 +106,7 @@ bsoncxx::document::value change_stream::as_bson() const {
 
     append_if(out, "fullDocument", full_document());
     append_if(out, "resumeAfter", resume_after());
+    append_if(out, "startAfter", start_after());
     append_if(out, "batchSize", batch_size());
     append_if(out, "collation", collation());
     if (_start_at_operation_time_set) {

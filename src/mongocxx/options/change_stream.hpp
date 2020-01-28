@@ -105,6 +105,31 @@ class MONGOCXX_API change_stream {
     const stdx::optional<bsoncxx::document::view_or_value>& resume_after() const;
 
     ///
+    /// Specifies the logical starting point of the new change stream. The new stream will
+    /// return the first notification after the given token.
+    ///
+    /// The "_id" field of any change received from a change stream can be used here. This
+    /// option may not be used with resumeAfter.
+    ///
+    /// Unlike resumeAfter, this can resume notifications after an "invalidate" event.
+    ///
+    /// @param token
+    ///   The token representing the logical starting point of the change stream.
+    ///
+    /// @return
+    ///   A reference to the object on which this function is being called.
+    ///
+    change_stream& start_after(bsoncxx::document::view_or_value token);
+
+    ///
+    /// Retrieves the current startAfter token for this change stream.
+    ///
+    /// @return
+    ///   The current startAfter token.
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& start_after() const;
+
+    ///
     /// Sets the collation for this operation.
     ///
     /// @param collation
@@ -168,6 +193,7 @@ class MONGOCXX_API change_stream {
     stdx::optional<std::int32_t> _batch_size;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bsoncxx::document::view_or_value> _resume_after;
+    stdx::optional<bsoncxx::document::view_or_value> _start_after;
     stdx::optional<std::chrono::milliseconds> _max_await_time;
     // _start_at_operation_time is not wrapped in a stdx::optional because of a longstanding bug in
     // the MNMLSTC polyfill that has been fixed on master, but not in the latest release:

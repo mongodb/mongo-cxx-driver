@@ -84,6 +84,29 @@ const auto watch_interpose = [](const mongoc_collection_t*,
 
 const auto destroy_interpose = [](mongoc_change_stream_t*) -> void {};
 
+TEST_CASE("Change stream options") {
+    instance::current();
+    client mongodb_client{uri{}};
+
+    if (!test_util::is_replica_set(mongodb_client)) {
+        WARN("skip: change streams require replica set");
+        return;
+    }
+
+    SECTION("Error if both resumeAfter and startAfter are set") {
+        bsoncxx::document::value resume_after = make_document(kvp("resume", "token"));
+        bsoncxx::document::value start_after = make_document(kvp("start", "token"));
+
+        // Invalid to set both resumeAfter and startAfter.
+        options::change_stream cs_opts;
+        cs_opts.resume_after(resume_after.view());
+        cs_opts.start_after(start_after.view());
+
+        auto cs = mongodb_client.watch(cs_opts);
+        REQUIRE_THROWS(cs.begin());
+    }
+}
+
 TEST_CASE("Mock streams and error-handling") {
     MOCK_CHANGE_STREAM
 
