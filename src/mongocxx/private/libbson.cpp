@@ -119,6 +119,8 @@ bsoncxx::document::value scoped_bson_t::steal() {
     std::uint32_t length;
     std::uint8_t* buff = bson_destroy_with_steal(bson(), true, &length);
 
+    _is_initialized = false;
+
     return bsoncxx::document::value(buff, length, bson_free_deleter);
 }
 
