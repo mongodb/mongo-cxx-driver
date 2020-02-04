@@ -72,15 +72,6 @@ function (RUN_DIST_CHECK PACKAGE_PREFIX EXT)
       ERROR_MSG "Make install failed."
    )
 
-   # Run make test in the build directory
-   set (test_opts $ENV{DISTCHECK_CHECK_OPTS})
-   separate_arguments (test_opts)
-   execute_process_and_check_result (
-      COMMAND ${MY_CMAKE_COMMAND} ${MAKE_COMMAND} CTEST_OUTPUT_ON_FAILURE=1 test ${test_opts}
-      WORKING_DIRECTORY ${BUILD_DIR}
-      ERROR_MSG "Make test failed."
-   )
-
    # Run make dist
    execute_process_and_check_result (
       COMMAND ${MY_CMAKE_COMMAND} ${MAKE_COMMAND} dist
