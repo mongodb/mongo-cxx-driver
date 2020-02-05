@@ -105,6 +105,41 @@ database::operator bool() const noexcept {
     return static_cast<bool>(_impl);
 }
 
+cursor database::_aggregate(const client_session* session,
+                            const pipeline& pipeline,
+                            const options::aggregate& options) {
+    scoped_bson_t stages(bsoncxx::document::view(pipeline._impl->view_array()));
+
+    bsoncxx::builder::basic::document b;
+
+    options.append(b);
+
+    if (session) {
+        b.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
+    scoped_bson_t options_bson(b.view());
+
+    const ::mongoc_read_prefs_t* rp_ptr = NULL;
+
+    if (options.read_preference()) {
+        rp_ptr = options.read_preference()->_impl->read_preference_t;
+    }
+
+    return cursor(libmongoc::database_aggregate(
+        _get_impl().database_t, stages.bson(), options_bson.bson(), rp_ptr));
+}
+
+cursor database::aggregate(const pipeline& pipeline, const options::aggregate& options) {
+    return _aggregate(nullptr, pipeline, options);
+}
+
+cursor database::aggregate(const client_session& session,
+                           const pipeline& pipeline,
+                           const options::aggregate& options) {
+    return _aggregate(&session, pipeline, options);
+}
+
 cursor database::_list_collections(const client_session* session,
                                    bsoncxx::document::view_or_value filter) {
     bsoncxx::builder::basic::document options_builder;

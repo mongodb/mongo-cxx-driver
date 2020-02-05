@@ -472,37 +472,7 @@ cursor collection::_aggregate(const client_session* session,
 
     bsoncxx::builder::basic::document b;
 
-    if (options.allow_disk_use()) {
-        b.append(kvp("allowDiskUse", *options.allow_disk_use()));
-    }
-
-    if (options.collation()) {
-        b.append(kvp("collation", *options.collation()));
-    }
-
-    if (options.max_time()) {
-        b.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
-    }
-
-    if (options.bypass_document_validation()) {
-        b.append(kvp("bypassDocumentValidation", *options.bypass_document_validation()));
-    }
-
-    if (options.hint()) {
-        b.append(kvp("hint", options.hint()->to_value()));
-    }
-
-    if (options.read_concern()) {
-        b.append(kvp("readConcern", options.read_concern()->to_document()));
-    }
-
-    if (options.write_concern()) {
-        b.append(kvp("writeConcern", options.write_concern()->to_document()));
-    }
-
-    if (options.batch_size()) {
-        b.append(kvp("batchSize", *options.batch_size()));
-    }
+    options.append(b);
 
     if (session) {
         b.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});

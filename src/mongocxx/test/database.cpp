@@ -328,6 +328,38 @@ TEST_CASE("Database integration tests", "[database]") {
 
     auto case_insensitive_collation = make_document(kvp("locale", "en_US"), kvp("strength", 2));
 
+    SECTION("aggregation", "[database]") {
+        pipeline pipeline;
+
+        auto get_results = [](cursor&& cursor) {
+            std::vector<bsoncxx::document::value> results;
+            std::transform(cursor.begin(),
+                           cursor.end(),
+                           std::back_inserter(results),
+                           [](bsoncxx::document::view v) { return bsoncxx::document::value{v}; });
+            return results;
+        };
+
+        mongo_client["admin"].run_command(make_document(kvp("killAllSessions", make_array())));
+
+        SECTION("listLocalSessions") {
+            auto session1 = mongo_client.start_session();
+            auto session2 = mongo_client.start_session();
+
+            pipeline.list_local_sessions({});
+            pipeline.limit(2);
+            pipeline.add_fields(make_document(kvp("name", "Jane")));
+            pipeline.project(make_document(kvp("name", 1)));
+
+            auto cursor = database.aggregate(pipeline);
+            auto results = get_results(std::move(cursor));
+
+            REQUIRE(results.size() == 2);
+            REQUIRE(results[0].view()["name"].get_utf8().value == stdx::string_view("Jane"));
+            REQUIRE(results[1].view()["name"].get_utf8().value == stdx::string_view("Jane"));
+        }
+    }
+
     SECTION("A database may create a collection via create_collection") {
         stdx::string_view collection_name{"collection_create_with_opts"};
 

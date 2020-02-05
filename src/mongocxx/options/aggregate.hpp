@@ -17,6 +17,7 @@
 #include <chrono>
 #include <cstdint>
 
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/hint.hpp>
@@ -252,6 +253,11 @@ class MONGOCXX_API aggregate {
     const stdx::optional<class read_concern>& read_concern() const;
 
    private:
+    friend class ::mongocxx::database;
+    friend class ::mongocxx::collection;
+
+    void append(bsoncxx::builder::basic::document& builder) const;
+
     stdx::optional<bool> _allow_disk_use;
     stdx::optional<std::int32_t> _batch_size;
     stdx::optional<bsoncxx::document::view_or_value> _collation;

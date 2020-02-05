@@ -170,10 +170,25 @@ document::value operation_runner::_run_aggregate(document::view operation) {
     _set_collection_options(operation);
 
     stdx::optional<cursor> result_cursor;
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
-        result_cursor.emplace(_coll->aggregate(*session, pipeline, options));
+    client_session* session = _lookup_session(operation["arguments"].get_document().value);
+
+    if (operation["object"] &&
+        operation["object"].get_utf8().value == stdx::string_view{"database"}) {
+        REQUIRE(_db);
+
+        // Run on the database
+        if (session) {
+            result_cursor.emplace(_db->aggregate(*session, pipeline, options));
+        } else {
+            result_cursor.emplace(_db->aggregate(pipeline, options));
+        }
     } else {
-        result_cursor.emplace(_coll->aggregate(pipeline, options));
+        // Run on the collection
+        if (session) {
+            result_cursor.emplace(_coll->aggregate(*session, pipeline, options));
+        } else {
+            result_cursor.emplace(_coll->aggregate(pipeline, options));
+        }
     }
 
     auto result = builder::basic::document{};

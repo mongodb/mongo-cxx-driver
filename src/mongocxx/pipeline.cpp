@@ -83,6 +83,14 @@ pipeline& pipeline::count(std::string field) {
     return *this;
 }
 
+pipeline& pipeline::current_op(bsoncxx::document::view_or_value current_op_args) {
+    _impl->sink().append([current_op_args](sub_document sub_doc) {
+        sub_doc.append(kvp("$currentOp", current_op_args));
+    });
+
+    return *this;
+}
+
 pipeline& pipeline::facet(bsoncxx::document::view_or_value facet_args) {
     _impl->sink().append(
         [facet_args](sub_document sub_doc) { sub_doc.append(kvp("$facet", facet_args)); });
@@ -122,6 +130,22 @@ pipeline& pipeline::index_stats() {
 
 pipeline& pipeline::limit(std::int32_t limit) {
     _impl->sink().append([limit](sub_document sub_doc) { sub_doc.append(kvp("$limit", limit)); });
+
+    return *this;
+}
+
+pipeline& pipeline::list_local_sessions(bsoncxx::document::view_or_value list_local_sessions_args) {
+    _impl->sink().append([list_local_sessions_args](sub_document sub_doc) {
+        sub_doc.append(kvp("$listLocalSessions", list_local_sessions_args));
+    });
+
+    return *this;
+}
+
+pipeline& pipeline::list_sessions(bsoncxx::document::view_or_value list_sessions_args) {
+    _impl->sink().append([list_sessions_args](sub_document sub_doc) {
+        sub_doc.append(kvp("$listSessions", list_sessions_args));
+    });
 
     return *this;
 }

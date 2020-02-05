@@ -84,6 +84,62 @@ class MONGOCXX_API database {
     ///
     /// @{
     ///
+    /// Runs an aggregation framework pipeline against this database for
+    /// pipeline stages that do not require an underlying collection,
+    /// such as $currentOp and $listLocalSessions.
+    ///
+    /// @param pipeline
+    ///   The pipeline of aggregation operations to perform.
+    /// @param options
+    ///   Optional arguments, see mongocxx::options::aggregate.
+    ///
+    /// @return A mongocxx::cursor with the results.  If the query fails,
+    /// the cursor throws mongocxx::query_exception when the returned cursor
+    /// is iterated.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/#dbcmd.aggregate
+    ///
+    /// @note
+    ///   In order to pass a read concern to this, you must use the
+    ///   database level set read concern - database::read_concern(rc).
+    ///   (Write concern supported only for MongoDB 3.4+).
+    ///
+    cursor aggregate(const pipeline& pipeline,
+                     const options::aggregate& options = options::aggregate());
+
+    ///
+    /// Runs an aggregation framework pipeline against this database for
+    /// pipeline stages that do not require an underlying collection,
+    /// such as $currentOp and $listLocalSessions.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the aggregation.
+    /// @param pipeline
+    ///   The pipeline of aggregation operations to perform.
+    /// @param options
+    ///   Optional arguments, see mongocxx::options::aggregate.
+    ///
+    /// @return A mongocxx::cursor with the results.  If the query fails,
+    /// the cursor throws mongocxx::query_exception when the returned cursor
+    /// is iterated.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/#dbcmd.aggregate
+    ///
+    /// @note
+    ///   In order to pass a read concern to this, you must use the
+    ///   database level set read concern - database::read_concern(rc).
+    ///   (Write concern supported only for MongoDB 3.4+).
+    ///
+    cursor aggregate(const client_session& session,
+                     const pipeline& pipeline,
+                     const options::aggregate& options = options::aggregate());
+    ///
+    /// @}
+    ///
+
+    ///
+    /// @{
+    ///
     /// Runs a command against this database.
     ///
     /// @see https://docs.mongodb.com/master/reference/method/db.runCommand/
@@ -577,6 +633,10 @@ class MONGOCXX_API database {
     friend class collection;
 
     MONGOCXX_PRIVATE database(const class client& client, bsoncxx::string::view_or_value name);
+
+    MONGOCXX_PRIVATE cursor _aggregate(const client_session* session,
+                                       const pipeline& pipeline,
+                                       const options::aggregate& options);
 
     MONGOCXX_PRIVATE bsoncxx::document::value _run_command(
         const client_session* session, bsoncxx::document::view_or_value command);

@@ -8,7 +8,6 @@
   "tests": [
     {
       "description": "Aggregate with $listLocalSessions",
-      "skipReason": "blocked on CXX-1702",
       "operations": [
         {
           "name": "aggregate",
@@ -44,7 +43,6 @@
     },
     {
       "description": "Aggregate with $listLocalSessions and allowDiskUse",
-      "skipReason": "blocked on CXX-1702",
       "operations": [
         {
           "name": "aggregate",

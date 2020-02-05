@@ -42,8 +42,8 @@ class operation_runner {
     explicit operation_runner(collection* coll);
     operation_runner(database* db,
                      collection* coll,
-                     client_session* session0,
-                     client_session* session1,
+                     client_session* session0 = nullptr,
+                     client_session* session1 = nullptr,
                      client* client = nullptr);
     document::value run(document::view operation);
 

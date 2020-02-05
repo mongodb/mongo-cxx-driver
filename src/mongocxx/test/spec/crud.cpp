@@ -65,8 +65,11 @@ void run_crud_tests_in_file(std::string test_path) {
         auto database = client[database_name];
         auto collection = database[collection_name];
 
-        initialize_collection(&collection, test_spec_view["data"].get_array().value);
-        operation_runner op_runner{&collection};
+        if (test_spec_view["data"]) {
+            initialize_collection(&collection, test_spec_view["data"].get_array().value);
+        }
+
+        operation_runner op_runner{&database, &collection};
 
         std::string outcome_collection_name = "test";
         if (test["outcome"] && test["outcome"]["collection"]["name"]) {

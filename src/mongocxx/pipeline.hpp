@@ -139,6 +139,23 @@ class MONGOCXX_API pipeline {
     pipeline& count(std::string field);
 
     ///
+    /// Returns a stream of documents containing information on active and/or dormant
+    /// operations as well as inactive sessions that are holding locks as part of a
+    /// transaction. The stage returns a document for each operation or session.
+    ///
+    /// This stage must be used with database aggregate on the 'admin' database.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/currentOp/
+    ///
+    /// @param current_op_args
+    ///   A document containing the arguments for the current_op operation.
+    ///
+    /// @return
+    ///   A reference to the object on which this method is being called.
+    ///
+    pipeline& current_op(bsoncxx::document::view_or_value current_op_args);
+
+    ///
     /// Processes multiple aggregation pipelines within a single stage on the same set of input
     /// documents.
     ///
@@ -262,6 +279,35 @@ class MONGOCXX_API pipeline {
     ///   method chaining.
     ///
     pipeline& limit(std::int32_t limit);
+
+    ///
+    /// Lists the sessions cached in memory by the mongod or mongos instance.
+    ///
+    /// This option must be used with database aggregate.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/listLocalSessions/
+    ///
+    /// @param list_local_sessions_args
+    ///   A document containing the arguments for list_local_sessions.
+    ///
+    /// @return
+    ///   A reference to the object on which this method is being called.
+    ///
+    pipeline& list_local_sessions(bsoncxx::document::view_or_value list_local_sessions_args);
+
+    ///
+    /// Lists all sessions stored in the system.sessions collection in the config database.
+    /// These sessions are visible to all members of the MongoDB deployment.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/listSessions/
+    ///
+    /// @param list_sessions_args
+    ///   A document containing the arguments for list_sessions.
+    ///
+    /// @return
+    ///   A reference to the object on which this method is being called.
+    ///
+    pipeline& list_sessions(bsoncxx::document::view_or_value list_sessions_args);
 
     ///
     /// Performs a left outer join to an unsharded collection in the same database to filter in
