@@ -41,22 +41,6 @@ bsoncxx::types::value hint::to_value() const {
     return bsoncxx::types::value{bsoncxx::types::b_utf8{*_index_string}};
 }
 
-bsoncxx::document::value hint::to_document_deprecated() const {
-    auto doc = bsoncxx::builder::basic::document{};
-
-    if (_index_doc) {
-        doc.append(kvp("$hint", *_index_doc));
-    } else {
-        doc.append(kvp("$hint", *_index_string));
-    }
-
-    return doc.extract();
-}
-
-bsoncxx::document::value hint::to_document() const {
-    return to_document_deprecated();
-}
-
 bool MONGOCXX_CALL operator==(const hint& index_hint, std::string index) {
     return ((index_hint._index_string) && (*(index_hint._index_string) == index));
 }

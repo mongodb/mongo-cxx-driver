@@ -58,17 +58,6 @@ TEST_CASE("Hint", "[hint]") {
             auto index_doc = make_document(kvp("a", 1));
             REQUIRE(index_hint != index_doc);
         }
-
-        SECTION("Test for deprecated method to_document()") {
-            document::value filter =
-                make_document(kvp("a", 15), concatenate(index_hint.to_document_deprecated()));
-            document::view view{filter.view()};
-            document::element ele{view["$hint"]};
-            REQUIRE(ele);
-            REQUIRE(ele.type() == type::k_utf8);
-
-            REQUIRE(bsoncxx::string::to_string(ele.get_utf8().value) == index_name);
-        }
     }
 
     SECTION("Can be constructed with index document value") {
@@ -99,16 +88,6 @@ TEST_CASE("Hint", "[hint]") {
         SECTION("Does not equal index string") {
             REQUIRE(index_hint != "totoro_1");
             REQUIRE("a" != index_hint);
-        }
-
-        SECTION("Test for deprecated method to_document()") {
-            document::value filter =
-                make_document(kvp("a", 12), concatenate(index_hint.to_document_deprecated()));
-            document::view view{filter.view()};
-            document::element ele{view["$hint"]};
-            REQUIRE(ele);
-            REQUIRE(ele.type() == type::k_document);
-            REQUIRE(ele.get_document().value == index_copy);
         }
     }
 
