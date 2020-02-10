@@ -300,10 +300,6 @@ collection database::_create_collection_deprecated(
     const stdx::optional<class write_concern>& write_concern) {
     bsoncxx::builder::basic::document options_builder;
 
-    if (collection_options.auto_index_id_deprecated()) {
-        options_builder.append(kvp("autoIndexId", *collection_options.auto_index_id_deprecated()));
-    }
-
     if (collection_options.capped()) {
         options_builder.append(kvp("capped", *collection_options.capped()));
     }

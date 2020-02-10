@@ -44,7 +44,6 @@ TEST_CASE("create_collection accessors/mutators", "[create_collection]") {
 
     CHECK_OPTIONAL_ARGUMENT(cc, capped, true);
     BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-    CHECK_OPTIONAL_ARGUMENT(cc, auto_index_id, false);
     BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
     CHECK_OPTIONAL_ARGUMENT(cc, size, 5);
     CHECK_OPTIONAL_ARGUMENT(cc, max, 2);

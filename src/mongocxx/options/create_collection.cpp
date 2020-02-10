@@ -28,15 +28,6 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-create_collection& create_collection::auto_index_id_deprecated(bool auto_index_id) {
-    _auto_index_id = auto_index_id;
-    return *this;
-}
-
-create_collection& create_collection::auto_index_id(bool auto_index_id) {
-    return auto_index_id_deprecated(auto_index_id);
-}
-
 create_collection& create_collection::capped(bool capped) {
     _capped = capped;
     return *this;
@@ -73,14 +64,6 @@ create_collection& create_collection::validation_criteria(class validation_crite
     return *this;
 }
 
-const stdx::optional<bool>& create_collection::auto_index_id_deprecated() const {
-    return _auto_index_id;
-}
-
-const stdx::optional<bool>& create_collection::auto_index_id() const {
-    return auto_index_id_deprecated();
-}
-
 const stdx::optional<bool>& create_collection::capped() const {
     return _capped;
 }
@@ -111,10 +94,6 @@ const stdx::optional<class validation_criteria>& create_collection::validation_c
 
 bsoncxx::document::value create_collection::to_document_deprecated() const {
     auto doc = bsoncxx::builder::basic::document{};
-
-    if (_auto_index_id) {
-        doc.append(kvp("autoIndexId", *_auto_index_id));
-    }
 
     if (_capped) {
         doc.append(kvp("capped", *_capped));

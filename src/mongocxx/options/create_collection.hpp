@@ -31,36 +31,6 @@ namespace options {
 class MONGOCXX_API create_collection {
    public:
     ///
-    /// Specify false to disable the automatic creation of an index on the _id field.
-    ///
-    /// @deprecated
-    ///   This method is deprecated. Server versions 3.4 and above no longer support the
-    ///   "autoIndexId" option.
-    ///
-    /// @param auto_index_id
-    ///   Whether or not this collection will automatically generate an index on _id.
-    ///
-    /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
-    ///   method chaining.
-    ///
-    MONGOCXX_DEPRECATED create_collection& auto_index_id(bool auto_index_id);
-    create_collection& auto_index_id_deprecated(bool auto_index_id);
-
-    ///
-    /// Gets the current auto_index_id setting.
-    ///
-    /// @deprecated
-    ///   This method is deprecated. Server versions 3.4 and above no longer support the
-    ///   "autoIndexId" option.
-    ///
-    /// @return
-    ///   Whether or not this collection will automatically generate an index on _id.
-    ///
-    MONGOCXX_DEPRECATED const stdx::optional<bool>& auto_index_id() const;
-    const stdx::optional<bool>& auto_index_id_deprecated() const;
-
-    ///
     /// To create a capped collection, specify true.
     ///
     /// @note If you specify true, you must also set a maximum size using the size() method.
@@ -252,7 +222,6 @@ class MONGOCXX_API create_collection {
     MONGOCXX_DEPRECATED MONGOCXX_INLINE operator bsoncxx::document::value() const;
 
    private:
-    stdx::optional<bool> _auto_index_id;
     stdx::optional<bool> _capped;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<std::int64_t> _max_documents;
