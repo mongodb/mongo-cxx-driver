@@ -135,7 +135,6 @@ set(mongocxx_sources
     options/index_view.cpp
     options/insert.cpp
     options/pool.cpp
-    options/private/rewriter.cpp
     options/replace.cpp
     options/tls.cpp
     options/transaction.cpp
@@ -370,8 +369,6 @@ set_local_dist (src_mongocxx_DIST_local
    options/pool.cpp
    options/pool.hpp
    options/private/apm.hh
-   options/private/rewriter.cpp
-   options/private/rewriter.hh
    options/private/ssl.hh
    options/private/transaction.hh
    options/replace.cpp

@@ -43,7 +43,6 @@
 #include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/model/write.hpp>
-#include <mongocxx/options/private/rewriter.hh>
 #include <mongocxx/private/bulk_write.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
@@ -342,10 +341,6 @@ bsoncxx::builder::basic::document build_find_options_document(const options::fin
         options_builder.append(kvp("max", *options.max()));
     }
 
-    if (options.max_scan_deprecated()) {
-        options_builder.append(kvp("maxScan", *options.max_scan_deprecated()));
-    }
-
     if (options.max_time()) {
         options_builder.append(
             kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
@@ -376,10 +371,6 @@ bsoncxx::builder::basic::document build_find_options_document(const options::fin
         options_builder.append(kvp("skip", *options.skip()));
     }
 
-    if (options.snapshot_deprecated()) {
-        options_builder.append(kvp("snapshot", *options.snapshot_deprecated()));
-    }
-
     if (options.sort()) {
         options_builder.append(kvp("sort", bsoncxx::types::b_document{*options.sort()}));
     }
@@ -392,20 +383,14 @@ bsoncxx::builder::basic::document build_find_options_document(const options::fin
 cursor collection::_find(const client_session* session,
                          view_or_value filter,
                          const options::find& options) {
-    // libmongoc::collection_find_with_opts does not support the legacy "modifiers" options, so we
-    // must copy the options struct and convert all of the modifiers options to their modern
-    // equivalents.
-    auto options_converted = options::rewriter::rewrite_find_modifiers(options);
-
     scoped_bson_t filter_bson{std::move(filter)};
 
     const mongoc_read_prefs_t* rp_ptr = NULL;
-    if (options_converted.read_preference()) {
-        rp_ptr = options_converted.read_preference()->_impl->read_preference_t;
+    if (options.read_preference()) {
+        rp_ptr = options.read_preference()->_impl->read_preference_t;
     }
 
-    bsoncxx::builder::basic::document options_builder{
-        build_find_options_document(options_converted)};
+    bsoncxx::builder::basic::document options_builder{build_find_options_document(options)};
     if (session) {
         options_builder.append(
             bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
@@ -416,10 +401,10 @@ cursor collection::_find(const client_session* session,
     cursor query_cursor{
         libmongoc::collection_find_with_opts(
             _get_impl().collection_t, filter_bson.bson(), options_bson.bson(), rp_ptr),
-        options_converted.cursor_type()};
+        options.cursor_type()};
 
-    if (options_converted.max_await_time()) {
-        const auto count = options_converted.max_await_time()->count();
+    if (options.max_await_time()) {
+        const auto count = options.max_await_time()->count();
         if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max())) {
             throw logic_error{error_code::k_invalid_parameter};
         }

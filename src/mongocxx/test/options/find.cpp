@@ -36,7 +36,6 @@ TEST_CASE("find", "[find][option]") {
     auto hint = bsoncxx::document::view_or_value{make_document(kvp("_id", 1))};
     auto max = make_document(kvp("a", 6));
     auto min = make_document(kvp("a", 3));
-    auto modifiers = make_document(kvp("$comment", "comment"));
     auto projection = make_document(kvp("_id", false));
     auto sort = make_document(kvp("x", -1));
 
@@ -49,17 +48,14 @@ TEST_CASE("find", "[find][option]") {
     CHECK_OPTIONAL_ARGUMENT(find_opts, limit, 3);
     CHECK_OPTIONAL_ARGUMENT(find_opts, max, max.view());
     CHECK_OPTIONAL_ARGUMENT(find_opts, max_await_time, std::chrono::milliseconds{300});
-    CHECK_OPTIONAL_ARGUMENT(find_opts, max_scan_deprecated, 3);
     CHECK_OPTIONAL_ARGUMENT(find_opts, max_time, std::chrono::milliseconds{300});
     CHECK_OPTIONAL_ARGUMENT(find_opts, min, min.view());
-    CHECK_OPTIONAL_ARGUMENT(find_opts, modifiers_deprecated, modifiers.view());
     CHECK_OPTIONAL_ARGUMENT(find_opts, no_cursor_timeout, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, projection, projection.view());
     CHECK_OPTIONAL_ARGUMENT(find_opts, read_preference, read_preference{});
     CHECK_OPTIONAL_ARGUMENT(find_opts, return_key, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, show_record_id, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, skip, 3);
-    CHECK_OPTIONAL_ARGUMENT(find_opts, snapshot_deprecated, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, sort, sort.view());
 }
 }  // namespace

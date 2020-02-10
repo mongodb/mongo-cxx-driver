@@ -54,7 +54,6 @@ set(test_driver_sources
     options/index.cpp
     options/insert.cpp
     options/pool.cpp
-    options/private/rewriter.cpp
     options/replace.cpp
     options/update.cpp
     pool.cpp
@@ -241,7 +240,6 @@ set_dist_list (src_mongocxx_test_DIST
    options/index.cpp
    options/insert.cpp
    options/pool.cpp
-   options/private/rewriter.cpp
    options/replace.cpp
    options/update.cpp
    pool.cpp

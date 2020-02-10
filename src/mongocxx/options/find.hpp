@@ -254,38 +254,6 @@ class MONGOCXX_API find {
     const stdx::optional<std::chrono::milliseconds>& max_await_time() const;
 
     ///
-    /// Sets the maximum number of documents or index keys to scan when executing the query.
-    ///
-    /// @deprecated
-    ///   This method is deprecated.
-    ///
-    /// @param max
-    ///   The maximum number of documents or index keys to scan.
-    ///
-    /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
-    ///   method chaining.
-    ///
-    /// @see https://docs.mongodb.com/master/reference/command/find/
-    ///
-    MONGOCXX_DEPRECATED find& max_scan(std::int64_t max);
-    find& max_scan_deprecated(std::int64_t max);
-
-    ///
-    /// Gets the current setting for the maximum number of documents to scan when executing the
-    /// query.
-    ///
-    /// @deprecated
-    ///    This method is deprecated.
-    ///
-    /// @return The current setting for the maximum number of documents or index keys to scan.
-    ///
-    /// @see https://docs.mongodb.com/master/reference/command/find/
-    ///
-    MONGOCXX_DEPRECATED const stdx::optional<std::int64_t>& max_scan() const;
-    const stdx::optional<std::int64_t>& max_scan_deprecated() const;
-
-    ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
     ///
     /// @param max_time
@@ -330,39 +298,6 @@ class MONGOCXX_API find {
     /// @see https://docs.mongodb.com/master/reference/command/find/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& min() const;
-
-    ///
-    /// Sets the meta-operators modifying the output or behavior of the query.
-    ///
-    /// @param modifiers
-    ///   The query modifiers.
-    ///
-    /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
-    ///   method chaining.
-    ///
-    /// @deprecated
-    ///   The modifiers option has been deprecated, and has been replaced by new top-level options
-    ///   that have been introduced. For example, users should call find::snapshot() instead of
-    ///   calling find::modifiers() with a document containing a "$snapshot" field.
-    ///
-    /// @see https://docs.mongodb.com/master/reference/operator/query-modifier/
-    ///
-    MONGOCXX_DEPRECATED find& modifiers(bsoncxx::document::view_or_value modifiers);
-    find& modifiers_deprecated(bsoncxx::document::view_or_value modifiers);
-
-    ///
-    /// Gets the current query modifiers.
-    ///
-    /// @return The current query modifiers.
-    ///
-    /// @deprecated
-    ///   The modifiers option has been deprecated, and has been replaced by new top-level options
-    ///   that have been introduced. For example, users should call find::snapshot() instead of
-    ///   calling find::modifiers() with a document containing a "$snapshot" field.
-    ///
-    MONGOCXX_DEPRECATED const stdx::optional<bsoncxx::document::view_or_value>& modifiers() const;
-    const stdx::optional<bsoncxx::document::view_or_value>& modifiers_deprecated() const;
 
     ///
     /// Sets the cursor flag to prevent cursor from timing out server-side due to a period of
@@ -512,37 +447,6 @@ class MONGOCXX_API find {
     const stdx::optional<std::int64_t>& skip() const;
 
     ///
-    /// Sets whether snapshot mode should be used.
-    ///
-    /// @deprecated
-    ///    This method is deprecated.
-    ///
-    /// @param snapshot
-    ///   Whether to enable snapshot mode.
-    ///
-    /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
-    ///   method chaining.
-    ///
-    /// @see https://docs.mongodb.com/master/reference/command/find/
-    ///
-    MONGOCXX_DEPRECATED find& snapshot(bool snapshot);
-    find& snapshot_deprecated(bool snapshot);
-
-    ///
-    /// Gets the current setting for whether snapshot mode is being used.
-    ///
-    /// @deprecated
-    ///    This method is deprecated.
-    ///
-    /// @return Whether snapshot mode is being used.
-    ///
-    /// @see https://docs.mongodb.com/master/reference/command/find/
-    ///
-    MONGOCXX_DEPRECATED const stdx::optional<bool>& snapshot() const;
-    const stdx::optional<bool>& snapshot_deprecated() const;
-
-    ///
     /// The order in which to return matching documents. If $orderby also exists in the modifiers
     /// document, the sort field takes precedence over $orderby.
     ///
@@ -566,11 +470,6 @@ class MONGOCXX_API find {
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& sort() const;
 
-    ///
-    /// Clears the modifiers member. Internal-only.
-    ///
-    MONGOCXX_PRIVATE find& modifiers_clear();
-
    private:
     stdx::optional<bool> _allow_partial_results;
     stdx::optional<std::int32_t> _batch_size;
@@ -581,17 +480,14 @@ class MONGOCXX_API find {
     stdx::optional<std::int64_t> _limit;
     stdx::optional<bsoncxx::document::view_or_value> _max;
     stdx::optional<std::chrono::milliseconds> _max_await_time;
-    stdx::optional<std::int64_t> _max_scan;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<bsoncxx::document::view_or_value> _min;
-    stdx::optional<bsoncxx::document::view_or_value> _modifiers;
     stdx::optional<bool> _no_cursor_timeout;
     stdx::optional<bsoncxx::document::view_or_value> _projection;
     stdx::optional<class read_preference> _read_preference;
     stdx::optional<bool> _return_key;
     stdx::optional<bool> _show_record_id;
     stdx::optional<std::int64_t> _skip;
-    stdx::optional<bool> _snapshot;
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
 };
 

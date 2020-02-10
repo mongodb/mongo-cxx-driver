@@ -67,15 +67,6 @@ find& find::max_await_time(std::chrono::milliseconds max_await_time) {
     return *this;
 }
 
-find& find::max_scan(std::int64_t max_scan) {
-    return max_scan_deprecated(max_scan);
-}
-
-find& find::max_scan_deprecated(std::int64_t max_scan) {
-    _max_scan = max_scan;
-    return *this;
-}
-
 find& find::max_time(std::chrono::milliseconds max_time) {
     _max_time = std::move(max_time);
     return *this;
@@ -84,15 +75,6 @@ find& find::max_time(std::chrono::milliseconds max_time) {
 find& find::min(bsoncxx::document::view_or_value min) {
     _min = std::move(min);
     return *this;
-}
-
-find& find::modifiers_deprecated(bsoncxx::document::view_or_value modifiers) {
-    _modifiers = std::move(modifiers);
-    return *this;
-}
-
-find& find::modifiers(bsoncxx::document::view_or_value modifiers) {
-    return modifiers_deprecated(std::move(modifiers));
 }
 
 find& find::no_cursor_timeout(bool no_cursor_timeout) {
@@ -125,22 +107,8 @@ find& find::skip(std::int64_t skip) {
     return *this;
 }
 
-find& find::snapshot(bool snapshot) {
-    return snapshot_deprecated(snapshot);
-}
-
-find& find::snapshot_deprecated(bool snapshot) {
-    _snapshot = snapshot;
-    return *this;
-}
-
 find& find::sort(bsoncxx::document::view_or_value ordering) {
     _ordering = std::move(ordering);
-    return *this;
-}
-
-find& find::modifiers_clear() {
-    _modifiers = stdx::nullopt;
     return *this;
 }
 
@@ -180,28 +148,12 @@ const stdx::optional<std::chrono::milliseconds>& find::max_await_time() const {
     return _max_await_time;
 }
 
-const stdx::optional<std::int64_t>& find::max_scan() const {
-    return max_scan_deprecated();
-}
-
-const stdx::optional<std::int64_t>& find::max_scan_deprecated() const {
-    return _max_scan;
-}
-
 const stdx::optional<std::chrono::milliseconds>& find::max_time() const {
     return _max_time;
 }
 
 const stdx::optional<bsoncxx::document::view_or_value>& find::min() const {
     return _min;
-}
-
-const stdx::optional<bsoncxx::document::view_or_value>& find::modifiers_deprecated() const {
-    return _modifiers;
-}
-
-const stdx::optional<bsoncxx::document::view_or_value>& find::modifiers() const {
-    return modifiers_deprecated();
 }
 
 const stdx::optional<bool>& find::no_cursor_timeout() const {
@@ -222,14 +174,6 @@ const stdx::optional<bool>& find::show_record_id() const {
 
 const stdx::optional<std::int64_t>& find::skip() const {
     return _skip;
-}
-
-const stdx::optional<bool>& find::snapshot() const {
-    return snapshot_deprecated();
-}
-
-const stdx::optional<bool>& find::snapshot_deprecated() const {
-    return _snapshot;
 }
 
 const stdx::optional<bsoncxx::document::view_or_value>& find::sort() const {
