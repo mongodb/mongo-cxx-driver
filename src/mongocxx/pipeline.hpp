@@ -543,14 +543,6 @@ class MONGOCXX_API pipeline {
     ///
     bsoncxx::array::view view_array() const;
 
-    ///
-    /// @return A view of the underlying BSON document this pipeline represents.
-    ///
-    /// @deprecated The view_array() method should be used instead of this method.
-    ///
-    MONGOCXX_DEPRECATED bsoncxx::document::view view() const;
-    bsoncxx::document::view view_deprecated() const;
-
    private:
     friend class client;
     friend class collection;
