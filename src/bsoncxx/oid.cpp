@@ -32,14 +32,6 @@ oid::oid() {
     std::memcpy(_bytes.data(), oid.bytes, sizeof(oid.bytes));
 }
 
-const oid::init_tag_t oid::init_tag{};
-
-oid::oid(init_tag_t) : oid::oid(init_tag_deprecated) {}
-
-const oid::init_tag_t_deprecated oid::init_tag_deprecated{};
-
-oid::oid(init_tag_t_deprecated) : oid::oid() {}
-
 oid::oid(const bsoncxx::stdx::string_view& str) {
     if (!bson_oid_is_valid(str.data(), str.size())) {
         throw bsoncxx::exception{error_code::k_invalid_oid};
@@ -64,14 +56,6 @@ std::string oid::to_string() const {
     bson_oid_to_string(&oid, str);
 
     return std::string(str);
-}
-
-oid::operator bool() const {
-    return operator_bool_deprecated();
-}
-
-bool oid::operator_bool_deprecated() const {
-    return true;
 }
 
 std::time_t oid::get_time_t() const {

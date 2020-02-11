@@ -42,30 +42,6 @@ class BSONCXX_API oid {
     ///
     oid();
 
-    struct init_tag_t {};
-
-    // TODO(MSVC): Ideally this would be constexpr, but VS2015U1 can't
-    // handle it.
-    //
-    // See https://connect.microsoft.com/VisualStudio/feedback/details/2092790
-    //
-    BSONCXX_DEPRECATED static const init_tag_t init_tag;
-
-    ///
-    /// Constructs an oid and initializes it to a newly generated ObjectId.
-    ///
-    /// @deprecated
-    ///   This constructor for bsoncxx::oid is still supported but deprecated.
-    ///
-    /// @param tag
-    ///   A bsoncxx::oid::init_tag used to dispatch this overload.
-    ///
-    BSONCXX_DEPRECATED explicit oid(init_tag_t tag);
-
-    struct init_tag_t_deprecated {};
-    static const init_tag_t_deprecated init_tag_deprecated;
-    explicit oid(init_tag_t_deprecated);
-
     ///
     /// Constructs an oid initializes it to the contents of the provided buffer.
     ///
@@ -112,17 +88,6 @@ class BSONCXX_API oid {
     ///
     /// @}
     ///
-
-    ///
-    /// Conversion operator that indicates that the oid is initialized.
-    ///
-    /// @deprecated
-    ///   Uninitialized oids can no longer be created so this function will always return True.
-    ///
-    /// @return True
-    ///
-    BSONCXX_DEPRECATED explicit operator bool() const;
-    bool operator_bool_deprecated() const;
 
     ///
     /// Extracts the timestamp portion of the underlying ObjectId.
