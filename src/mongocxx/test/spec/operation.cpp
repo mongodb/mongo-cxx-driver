@@ -220,9 +220,10 @@ document::value operation_runner::_run_count(document::view operation) {
 
     int64_t count;
     if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
-        count = _coll->count_deprecated(*session, filter, options);
+        // CXX-1940: use estimated count instead, once it can support filters and sessions
+        count = _coll->count_documents(*session, filter, options);
     } else {
-        count = _coll->count_deprecated(filter, options);
+        count = _coll->count_documents(filter, options);
     }
 
     auto result = builder::basic::document{};

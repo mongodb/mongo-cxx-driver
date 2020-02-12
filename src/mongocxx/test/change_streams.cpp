@@ -52,7 +52,7 @@ const auto gen_next = [](bool has_next) {
     static mongocxx::libbson::scoped_bson_t next_bson{make_document(kvp("some", "doc"))};
     return [=](mongoc_change_stream_t*, const bson_t** bson) mutable -> bool {
         if (has_next) {
-            *bson = next_bson.bson_for_init();
+            *bson = next_bson.bson();
         }
         return has_next;
     };

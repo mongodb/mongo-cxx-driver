@@ -10,6 +10,7 @@
   "tests": [
     {
       "description": "A successful command",
+      "skipReason": "CXX-1940 estimated count cannot take a filter",
       "operation": {
         "name": "count",
         "arguments": {
@@ -44,6 +45,7 @@
     },
     {
       "description": "A failed command event",
+      "skipReason": "CXX-1940 estimated count cannot take a filter",
       "operation": {
         "name": "count",
         "arguments": {
@@ -74,6 +76,7 @@
     },
     {
       "description": "A successful command with a non-primary read preference",
+      "skipReason": "CXX-1940 estimated count cannot take a filter",
       "operation": {
         "name": "count",
         "arguments": {

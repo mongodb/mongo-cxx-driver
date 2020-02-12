@@ -946,59 +946,6 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
     return _find_one_and_delete(&session, std::move(filter), options);
 }
 
-std::int64_t collection::_count(const client_session* session,
-                                view_or_value filter,
-                                const options::count& options) {
-    scoped_bson_t bson_filter{filter};
-    bson_error_t error;
-
-    const mongoc_read_prefs_t* rp_ptr = NULL;
-
-    if (options.read_preference()) {
-        rp_ptr = options.read_preference()->_impl->read_preference_t;
-    }
-
-    // Some options must be added via the options struct
-    bsoncxx::builder::basic::document cmd_opts_builder;
-
-    if (options.collation()) {
-        cmd_opts_builder.append(kvp("collation", *options.collation()));
-    }
-
-    if (options.max_time()) {
-        cmd_opts_builder.append(
-            kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
-    }
-
-    if (options.hint()) {
-        cmd_opts_builder.append(kvp("hint", options.hint()->to_value()));
-    }
-
-    if (session) {
-        cmd_opts_builder.append(
-            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
-    }
-
-    scoped_bson_t cmd_opts_bson{cmd_opts_builder.view()};
-
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
-    auto result = libmongoc::collection_count_with_opts(_get_impl().collection_t,
-                                                        static_cast<mongoc_query_flags_t>(0),
-                                                        bson_filter.bson(),
-                                                        options.skip().value_or(0),
-                                                        options.limit().value_or(0),
-                                                        cmd_opts_bson.bson(),
-                                                        rp_ptr,
-                                                        &error);
-
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
-    if (result < 0) {
-        throw_exception<query_exception>(error);
-    }
-
-    return result;
-}
-
 std::int64_t collection::_count_documents(const client_session* session,
                                           view_or_value filter,
                                           const options::count& options) {
@@ -1048,26 +995,6 @@ std::int64_t collection::_count_documents(const client_session* session,
         throw_exception<query_exception>(reply.steal(), error);
     }
     return result;
-}
-
-std::int64_t collection::count(view_or_value filter, const options::count& options) {
-    return count_deprecated(std::move(filter), options);
-}
-
-std::int64_t collection::count_deprecated(view_or_value filter, const options::count& options) {
-    return _count(nullptr, std::move(filter), options);
-}
-
-std::int64_t collection::count(const client_session& session,
-                               view_or_value filter,
-                               const options::count& options) {
-    return count_deprecated(session, std::move(filter), options);
-}
-
-std::int64_t collection::count_deprecated(const client_session& session,
-                                          view_or_value filter,
-                                          const options::count& options) {
-    return _count(&session, std::move(filter), options);
 }
 
 std::int64_t collection::count_documents(view_or_value filter, const options::count& options) {

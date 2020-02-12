@@ -45,6 +45,14 @@ bool should_skip_spec_test(const client& client, document::view test) {
     std::string server_version = test_util::get_server_version(client);
     std::string topology = test_util::get_topology(client);
 
+    if (test["ignore_if_server_version_greater_than"]) {
+        std::string max_server_version = bsoncxx::string::to_string(
+            test["ignore_if_server_version_greater_than"].get_utf8().value);
+        if (test_util::compare_versions(server_version, max_server_version) > 0) {
+            return true;
+        }
+    }
+
     auto should_skip = [&](document::view requirements) {
         if (requirements["topology"]) {
             auto topologies = requirements["topology"].get_array().value;

@@ -153,7 +153,6 @@ MONGOCXX_INLINE_NAMESPACE_END
     auto collection_count_documents = libmongoc::collection_count_documents.create_instance();    \
     auto collection_estimated_document_count =                                                    \
         libmongoc::collection_estimated_document_count.create_instance();                         \
-    auto collection_count_with_opts = libmongoc::collection_count_with_opts.create_instance();    \
     auto collection_find_with_opts = libmongoc::collection_find_with_opts.create_instance();      \
     auto collection_aggregate = libmongoc::collection_aggregate.create_instance();                \
     auto collection_get_name = libmongoc::collection_get_name.create_instance();                  \

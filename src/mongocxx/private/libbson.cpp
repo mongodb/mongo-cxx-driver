@@ -86,7 +86,8 @@ bson_t* scoped_bson_t::bson() {
 }
 
 bson_t* scoped_bson_t::bson_for_init() {
-    flag_init();
+    // C driver doesn't always return reply initted, so run an extra init
+    init();
     return &_bson;
 }
 

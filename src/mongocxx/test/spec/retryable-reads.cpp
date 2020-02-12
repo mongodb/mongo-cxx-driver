@@ -43,6 +43,8 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
 
     document::view test_spec_view = test_spec->view();
     for (auto&& test : test_spec_view["tests"].get_array().value) {
+        bool ran_count = false;
+
         client client{get_uri(test.get_document().value), client_opts};
         if (should_skip_spec_test(client, test_spec_view)) {
             return;
@@ -94,6 +96,9 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
         apm_checker.clear();
         for (auto&& element : test["operations"].get_array().value) {
             auto operation = element.get_document().value;
+            if (operation["name"].get_utf8().value.compare("count") == 0) {
+                ran_count = true;
+            }
 
             INFO("Operation: " << bsoncxx::to_json(operation));
             optional<document::value> actual_outcome_value;
@@ -114,7 +119,9 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
             }
         }
 
-        if (test["expectations"]) {
+        // CXX-1940 We currently run count as an aggregation query, so skip apm matching, which
+        // which expects to see the count command. One day we will use estimated count instead.
+        if (test["expectations"] && !ran_count) {
             apm_checker.compare(test["expectations"].get_array().value, false);
         }
 

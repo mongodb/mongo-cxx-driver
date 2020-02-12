@@ -23,6 +23,7 @@
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/test/spec/operation.hh>
+#include <mongocxx/test/spec/util.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 
 namespace {
@@ -67,14 +68,10 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
         INFO("Test description: " << description);
         array::view expectations = test["expectations"].get_array().value;
 
-        if (test["ignore_if_server_version_greater_than"]) {
-            client temp_client{uri{}};
-            std::string server_version = test_util::get_server_version(temp_client);
-            std::string max_server_version = bsoncxx::string::to_string(
-                test["ignore_if_server_version_greater_than"].get_utf8().value);
-            if (test_util::compare_versions(server_version, max_server_version) > 0) {
-                return;
-            }
+        // Use a separate client to check version info, so as not to interfere with APM
+        client temp_client{uri{}};
+        if (spec::should_skip_spec_test(temp_client, test.get_document().value)) {
+            return;
         }
 
         // Used by the listeners
