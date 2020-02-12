@@ -2528,16 +2528,103 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
 
     // Tests will use all three cursor types.
     options::find opts;
-    std::string type_str;
+    std::string type_str = "no cursor type set";
+
+    auto run_test = [&]() {
+        INFO(type_str);
+
+        // Insert 3 documents.
+        for (int32_t n : {1, 2, 3}) {
+            coll.insert_one(make_document(kvp("x", n)));
+        }
+
+        auto cursor = coll.find({}, opts);
+        auto iter = cursor.begin();
+
+        REQUIRE(iter == cursor.begin());
+
+        // Check that the cursor finds three documents and that the iterator
+        // stays in lockstep.
+        auto expected = 1;
+
+        for (auto&& doc : cursor) {
+            REQUIRE(doc["x"].get_int32() == expected);
+
+            // Lockstep requires that iter matches both the current document
+            // and cursor.begin() (current doc before cursor increment).
+            // It must not match cursor.end(), since a document exists.
+            REQUIRE(iter == cursor.begin());
+            REQUIRE(iter != cursor.end());
+            REQUIRE((*iter)["x"].get_int32() == expected);
+
+            expected++;
+        }
+
+        // Check that iteration covered all three documents.
+        REQUIRE(expected == 4);
+
+        // As no document is available, iterator now must match cursor.end().
+        // We check both LHS and RHS for coverage.
+        REQUIRE(iter == cursor.end());
+        REQUIRE(cursor.end() == iter);
+
+        // Because there are no more documents available from this query,
+        // cursor.begin() must equal cursor.end().  Transitively, this means
+        // that iter must also match cursor.begin().
+        REQUIRE(cursor.begin() == cursor.end());
+        REQUIRE(iter == cursor.begin());
+
+        // For tailable cursors, if more documents are inserted, the next
+        // call to cursor.begin() should find more documents and the existing iterator
+        // should no longer be exhausted.
+        if (opts.cursor_type() != cursor::type::k_non_tailable) {
+            // Insert 3 more documents.
+            for (int32_t n : {4, 5, 6}) {
+                coll.insert_one(make_document(kvp("x", n)));
+            }
+
+            // More documents are available, but until the next call to
+            // cursor.begin(), the existing iterator still appears exhausted.
+            REQUIRE(iter == cursor.end());
+
+            // After calling cursor.begin(), the existing iterator is revived.
+            cursor.begin();
+            REQUIRE(iter != cursor.end());
+            REQUIRE(iter == cursor.begin());
+
+            // Check that the cursor finds the next three documents and that the
+            // iterator stays in lockstep.
+            for (auto&& doc : cursor) {
+                REQUIRE(doc["x"].get_int32() == expected);
+
+                REQUIRE(iter == cursor.begin());
+                REQUIRE(iter != cursor.end());
+                REQUIRE((*iter)["x"].get_int32() == expected);
+
+                expected++;
+            }
+
+            // Check that iteration has covered all six documents.
+            REQUIRE(expected == 7);
+
+            // As before: iter, cursor.begin() and cursor.end() must all
+            // transitively agree that the cursor is currently exhausted.
+            REQUIRE(iter == cursor.end());
+            REQUIRE(cursor.begin() == cursor.end());
+            REQUIRE(iter == cursor.begin());
+        }
+    };
 
     SECTION("k_non_tailable") {
         opts.cursor_type(cursor::type::k_non_tailable);
         type_str = "k_non_tailable";
+        run_test();
     }
 
     SECTION("k_tailable") {
         opts.cursor_type(cursor::type::k_tailable);
         type_str = "k_tailable";
+        run_test();
     }
 
     SECTION("k_tailable_await") {
@@ -2548,89 +2635,8 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
         // results
         // for this cursor.
         opts.max_await_time(std::chrono::milliseconds{1});
-    }
 
-    INFO(type_str);
-
-    // Insert 3 documents.
-    for (int32_t n : {1, 2, 3}) {
-        coll.insert_one(make_document(kvp("x", n)));
-    }
-
-    auto cursor = coll.find({}, opts);
-    auto iter = cursor.begin();
-
-    REQUIRE(iter == cursor.begin());
-
-    // Check that the cursor finds three documents and that the iterator
-    // stays in lockstep.
-    auto expected = 1;
-
-    for (auto&& doc : cursor) {
-        REQUIRE(doc["x"].get_int32() == expected);
-
-        // Lockstep requires that iter matches both the current document
-        // and cursor.begin() (current doc before cursor increment).
-        // It must not match cursor.end(), since a document exists.
-        REQUIRE(iter == cursor.begin());
-        REQUIRE(iter != cursor.end());
-        REQUIRE((*iter)["x"].get_int32() == expected);
-
-        expected++;
-    }
-
-    // Check that iteration covered all three documents.
-    REQUIRE(expected == 4);
-
-    // As no document is available, iterator now must match cursor.end().
-    // We check both LHS and RHS for coverage.
-    REQUIRE(iter == cursor.end());
-    REQUIRE(cursor.end() == iter);
-
-    // Because there are no more documents available from this query,
-    // cursor.begin() must equal cursor.end().  Transitively, this means
-    // that iter must also match cursor.begin().
-    REQUIRE(cursor.begin() == cursor.end());
-    REQUIRE(iter == cursor.begin());
-
-    // For tailable cursors, if more documents are inserted, the next
-    // call to cursor.begin() should find more documents and the existing iterator
-    // should no longer be exhausted.
-    if (opts.cursor_type() != cursor::type::k_non_tailable) {
-        // Insert 3 more documents.
-        for (int32_t n : {4, 5, 6}) {
-            coll.insert_one(make_document(kvp("x", n)));
-        }
-
-        // More documents are available, but until the next call to
-        // cursor.begin(), the existing iterator still appears exhausted.
-        REQUIRE(iter == cursor.end());
-
-        // After calling cursor.begin(), the existing iterator is revived.
-        cursor.begin();
-        REQUIRE(iter != cursor.end());
-        REQUIRE(iter == cursor.begin());
-
-        // Check that the cursor finds the next three documents and that the
-        // iterator stays in lockstep.
-        for (auto&& doc : cursor) {
-            REQUIRE(doc["x"].get_int32() == expected);
-
-            REQUIRE(iter == cursor.begin());
-            REQUIRE(iter != cursor.end());
-            REQUIRE((*iter)["x"].get_int32() == expected);
-
-            expected++;
-        }
-
-        // Check that iteration has covered all six documents.
-        REQUIRE(expected == 7);
-
-        // As before: iter, cursor.begin() and cursor.end() must all
-        // transitively agree that the cursor is currently exhausted.
-        REQUIRE(iter == cursor.end());
-        REQUIRE(cursor.begin() == cursor.end());
-        REQUIRE(iter == cursor.begin());
+        run_test();
     }
 }
 

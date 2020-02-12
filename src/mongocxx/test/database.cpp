@@ -340,8 +340,6 @@ TEST_CASE("Database integration tests", "[database]") {
             return results;
         };
 
-        mongo_client["admin"].run_command(make_document(kvp("killAllSessions", make_array())));
-
         SECTION("listLocalSessions") {
             auto session1 = mongo_client.start_session();
             auto session2 = mongo_client.start_session();

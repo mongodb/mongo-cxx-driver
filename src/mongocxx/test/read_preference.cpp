@@ -146,6 +146,7 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
             REQUIRE(mode == libmongoc::conversions::read_mode_t_from_read_mode(expected_mode));
         });
         rp.mode(expected_mode);
+        REQUIRE(called);
     }
 
     SECTION("tags() calls mongoc_read_prefs_set_tags()") {
@@ -155,6 +156,7 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
             REQUIRE(bson_get_data(tags) == expected_tags.view().data());
         });
         rp.tags(expected_tags.view());
+        REQUIRE(called);
     }
 
     SECTION("max_staleness() calls mongoc_read_prefs_set_max_staleness_seconds()") {
@@ -165,8 +167,7 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
                 REQUIRE(std::chrono::seconds{max_staleness_sec} == expected_max_staleness_sec);
             });
         rp.max_staleness(expected_max_staleness_sec);
+        REQUIRE(called);
     }
-
-    REQUIRE(called);
 }
 }  // namespace

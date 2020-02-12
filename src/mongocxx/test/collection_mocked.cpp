@@ -216,6 +216,7 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Succeeds with defaults") {
             REQUIRE_NOTHROW(mongo_coll.count_deprecated(filter_doc.view()));
+            REQUIRE(collection_count_called);
         }
 
         SECTION("Succeeds with options") {
@@ -223,6 +224,7 @@ TEST_CASE("Collection", "[collection]") {
             opts.skip(expected_skip);
             opts.limit(expected_limit);
             REQUIRE_NOTHROW(mongo_coll.count_deprecated(filter_doc.view(), opts));
+            REQUIRE(collection_count_called);
         }
 
         SECTION("Succeeds with hint") {
@@ -236,6 +238,7 @@ TEST_CASE("Collection", "[collection]") {
             expected_opts = cmd_opts.bson();
 
             REQUIRE_NOTHROW(mongo_coll.count_deprecated(filter_doc.view(), opts));
+            REQUIRE(collection_count_called);
         }
 
         SECTION("Succeeds with read_prefs") {
@@ -244,14 +247,14 @@ TEST_CASE("Collection", "[collection]") {
             rp.mode(read_preference::read_mode::k_secondary);
             opts.read_preference(rp);
             REQUIRE_NOTHROW(mongo_coll.count_deprecated(filter_doc.view(), opts));
+            REQUIRE(collection_count_called);
         }
 
         SECTION("Fails") {
             success = false;
             REQUIRE_THROWS_AS(mongo_coll.count_deprecated(filter_doc.view()), operation_exception);
+            REQUIRE(collection_count_called);
         }
-
-        REQUIRE(collection_count_called);
     }
 
     SECTION("Count Documents", "[collection::count_documents]") {
@@ -303,6 +306,7 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Succeeds with defaults") {
             REQUIRE_NOTHROW(mongo_coll.count_documents(filter_doc.view()));
+            REQUIRE(collection_count_called);
         }
 
         SECTION("Succeeds with options") {
@@ -310,6 +314,7 @@ TEST_CASE("Collection", "[collection]") {
             opts.skip(expected_skip);
             opts.limit(expected_limit);
             REQUIRE_NOTHROW(mongo_coll.count_documents(filter_doc.view(), opts));
+            REQUIRE(collection_count_called);
         }
 
         SECTION("Succeeds with hint") {
@@ -323,6 +328,7 @@ TEST_CASE("Collection", "[collection]") {
             expected_opts = cmd_opts.bson();
 
             REQUIRE_NOTHROW(mongo_coll.count_documents(filter_doc.view(), opts));
+            REQUIRE(collection_count_called);
         }
 
         SECTION("Succeeds with read_prefs") {
@@ -331,14 +337,14 @@ TEST_CASE("Collection", "[collection]") {
             rp.mode(read_preference::read_mode::k_secondary);
             opts.read_preference(rp);
             REQUIRE_NOTHROW(mongo_coll.count_documents(filter_doc.view(), opts));
+            REQUIRE(collection_count_called);
         }
 
         SECTION("Fails") {
             success = false;
             REQUIRE_THROWS_AS(mongo_coll.count_documents(filter_doc.view()), operation_exception);
+            REQUIRE(collection_count_called);
         }
-
-        REQUIRE(collection_count_called);
     }
 
     SECTION("Estimated Document Count", "[collection::estimated_document_count]") {
@@ -373,11 +379,13 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Succeeds with defaults") {
             REQUIRE_NOTHROW(mongo_coll.estimated_document_count());
+            REQUIRE(collection_estimated_document_count_called);
         }
 
         SECTION("Succeeds with options") {
             options::estimated_document_count opts;
             REQUIRE_NOTHROW(mongo_coll.estimated_document_count(opts));
+            REQUIRE(collection_estimated_document_count_called);
         }
 
         SECTION("Succeeds with read_prefs") {
@@ -386,14 +394,14 @@ TEST_CASE("Collection", "[collection]") {
             rp.mode(read_preference::read_mode::k_secondary);
             opts.read_preference(rp);
             REQUIRE_NOTHROW(mongo_coll.estimated_document_count(opts));
+            REQUIRE(collection_estimated_document_count_called);
         }
 
         SECTION("Fails") {
             success = false;
             REQUIRE_THROWS_AS(mongo_coll.estimated_document_count(), operation_exception);
+            REQUIRE(collection_estimated_document_count_called);
         }
-
-        REQUIRE(collection_estimated_document_count_called);
     }
 
     SECTION("Find", "[collection::find]") {
@@ -469,6 +477,7 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("find succeeds") {
             REQUIRE_NOTHROW(mongo_coll.find(doc));
+            REQUIRE(collection_find_called);
         }
 
         SECTION("Succeeds with allow_partial_results") {
@@ -477,6 +486,7 @@ TEST_CASE("Collection", "[collection]") {
             opts.allow_partial_results(*expected_allow_partial_results);
 
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
+            REQUIRE(collection_find_called);
         }
 
         SECTION("Succeeds with comment") {
@@ -485,6 +495,7 @@ TEST_CASE("Collection", "[collection]") {
             opts.comment(*expected_comment);
 
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
+            REQUIRE(collection_find_called);
         }
 
         SECTION("Succeeds with cursor type") {
@@ -493,6 +504,7 @@ TEST_CASE("Collection", "[collection]") {
             opts.cursor_type(*expected_cursor_type);
 
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
+            REQUIRE(collection_find_called);
         }
 
         SECTION("Succeeds with hint") {
@@ -502,6 +514,7 @@ TEST_CASE("Collection", "[collection]") {
             opts.hint(index_hint);
 
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
+            REQUIRE(collection_find_called);
         }
 
         SECTION("Succeeds with no_cursor_timeout") {
@@ -510,6 +523,7 @@ TEST_CASE("Collection", "[collection]") {
             opts.no_cursor_timeout(*expected_no_cursor_timeout);
 
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
+            REQUIRE(collection_find_called);
         }
 
         SECTION("Succeeds with sort") {
@@ -518,6 +532,7 @@ TEST_CASE("Collection", "[collection]") {
             expected_sort = sort_doc.view();
             opts.sort(*expected_sort);
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
+            REQUIRE(collection_find_called);
         }
 
         SECTION("Succeeds with read preference") {
@@ -527,17 +542,26 @@ TEST_CASE("Collection", "[collection]") {
             opts.read_preference(*expected_read_preference);
 
             REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
+            REQUIRE(collection_find_called);
         }
-
-        REQUIRE(collection_find_called);
     }
 
     SECTION("Writes", "[collection::writes]") {
         auto expected_order_setting = false;
         auto expect_set_bypass_document_validation_called = false;
         auto expected_bypass_document_validation = false;
+        bool bulk_operation_op_called = false;
+        bool bulk_operation_destroy_called = false;
 
         auto modification_doc = make_document(kvp("cool", "wow"), kvp("foo", "bar"));
+
+        auto perform_checks = [&]() {
+            REQUIRE(collection_create_bulk_operation_called);
+            REQUIRE(expect_set_bypass_document_validation_called ==
+                    bulk_operation_set_bypass_document_validation_called);
+            REQUIRE(bulk_operation_op_called);
+            REQUIRE(bulk_operation_destroy_called);
+        };
 
         collection_create_bulk_operation_with_opts->interpose(
             [&](mongoc_collection_t*, const bson_t* opts) -> mongoc_bulk_operation_t* {
@@ -581,7 +605,7 @@ TEST_CASE("Collection", "[collection]") {
                 });
 
             mongo_coll.insert_one(filter_doc.view());
-            REQUIRE(bulk_operation_execute_called);
+            perform_checks();
         }
 
         SECTION("Insert One Bypassing Validation", "[collection::insert_one]") {
@@ -603,7 +627,7 @@ TEST_CASE("Collection", "[collection]") {
             options::insert opts{};
             opts.bypass_document_validation(expected_bypass_document_validation);
             mongo_coll.insert_one(filter_doc.view(), opts);
-            REQUIRE(bulk_operation_execute_called);
+            perform_checks();
         }
 
         SECTION("Insert Many Ordered", "[collection::insert_many]") {
@@ -626,7 +650,7 @@ TEST_CASE("Collection", "[collection]") {
             std::vector<bsoncxx::document::view> docs{};
             docs.push_back(filter_doc.view());
             mongo_coll.insert_many(docs, opts);
-            REQUIRE(bulk_operation_execute_called);
+            perform_checks();
         }
 
         SECTION("Update One", "[collection::update_one]") {
@@ -690,6 +714,7 @@ TEST_CASE("Collection", "[collection]") {
 
             mongo_coll.update_one(filter_doc.view(), modification_doc.view(), options);
             REQUIRE(bulk_operation_execute_called);
+            perform_checks();
         }
 
         SECTION("Insert One Error", "[collection::insert_one]") {
@@ -703,6 +728,7 @@ TEST_CASE("Collection", "[collection]") {
 
             REQUIRE_THROWS_AS(mongo_coll.insert_one(filter_doc.view()), mongocxx::logic_error);
             REQUIRE(!bulk_operation_execute_called);
+            perform_checks();
         }
 
         SECTION("Insert Many Error", "[collection::insert_many]") {
@@ -719,6 +745,7 @@ TEST_CASE("Collection", "[collection]") {
             expected_order_setting = true;
             REQUIRE_THROWS_AS(mongo_coll.insert_many(docs), mongocxx::logic_error);
             REQUIRE(!bulk_operation_execute_called);
+            perform_checks();
         }
 
         SECTION("Update One Error", "[collection::update_one]") {
@@ -736,10 +763,11 @@ TEST_CASE("Collection", "[collection]") {
             REQUIRE_THROWS_AS(mongo_coll.update_one(filter_doc.view(), modification_doc.view()),
                               mongocxx::logic_error);
             REQUIRE(!bulk_operation_execute_called);
+            perform_checks();
         }
 
         SECTION("Update Many", "[collection::update_many]") {
-            bool upsert_option;
+            bool upsert_option = false;
             expected_order_setting = true;
 
             bulk_operation_update_many_with_opts->interpose([&](mongoc_bulk_operation_t*,
@@ -788,6 +816,7 @@ TEST_CASE("Collection", "[collection]") {
 
             mongo_coll.update_many(filter_doc.view(), modification_doc.view(), options);
             REQUIRE(bulk_operation_execute_called);
+            perform_checks();
         }
 
         SECTION("Update Many Error", "[collection::update_many]") {
@@ -805,10 +834,11 @@ TEST_CASE("Collection", "[collection]") {
             REQUIRE_THROWS_AS(mongo_coll.update_many(filter_doc.view(), modification_doc.view()),
                               mongocxx::logic_error);
             REQUIRE(!bulk_operation_execute_called);
+            perform_checks();
         }
 
         SECTION("Replace One", "[collection::replace_one]") {
-            bool upsert_option;
+            bool upsert_option = false;
             expected_order_setting = true;
 
             bulk_operation_replace_one_with_opts->interpose([&](mongoc_bulk_operation_t*,
@@ -857,6 +887,7 @@ TEST_CASE("Collection", "[collection]") {
 
             mongo_coll.replace_one(filter_doc.view(), modification_doc.view(), options);
             REQUIRE(bulk_operation_execute_called);
+            perform_checks();
         }
 
         SECTION("Replace One Error", "[collection::update_one]") {
@@ -874,6 +905,7 @@ TEST_CASE("Collection", "[collection]") {
             REQUIRE_THROWS_AS(mongo_coll.replace_one(filter_doc.view(), modification_doc.view()),
                               mongocxx::logic_error);
             REQUIRE(!bulk_operation_execute_called);
+            perform_checks();
         }
 
         SECTION("Delete One", "[collection::delete_one]") {
@@ -887,6 +919,7 @@ TEST_CASE("Collection", "[collection]") {
 
             mongo_coll.delete_one(filter_doc.view());
             REQUIRE(bulk_operation_execute_called);
+            perform_checks();
         }
 
         SECTION("Delete One Error", "[collection::delete_one]") {
@@ -900,6 +933,7 @@ TEST_CASE("Collection", "[collection]") {
 
             REQUIRE_THROWS_AS(mongo_coll.delete_one(filter_doc.view()), mongocxx::logic_error);
             REQUIRE(!bulk_operation_execute_called);
+            perform_checks();
         }
 
         SECTION("Delete Many", "[collection::delete_many]") {
@@ -913,6 +947,7 @@ TEST_CASE("Collection", "[collection]") {
 
             mongo_coll.delete_many(filter_doc.view());
             REQUIRE(bulk_operation_execute_called);
+            perform_checks();
         }
 
         SECTION("Delete Many Error", "[collection::delete_one]") {
@@ -926,13 +961,8 @@ TEST_CASE("Collection", "[collection]") {
 
             REQUIRE_THROWS_AS(mongo_coll.delete_many(filter_doc.view()), mongocxx::logic_error);
             REQUIRE(!bulk_operation_execute_called);
+            perform_checks();
         }
-
-        REQUIRE(collection_create_bulk_operation_called);
-        REQUIRE(expect_set_bypass_document_validation_called ==
-                bulk_operation_set_bypass_document_validation_called);
-        REQUIRE(bulk_operation_op_called);
-        REQUIRE(bulk_operation_destroy_called);
     }
 }
 }  // namespace
