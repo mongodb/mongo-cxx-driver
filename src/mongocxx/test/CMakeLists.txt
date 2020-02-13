@@ -42,7 +42,6 @@ set(test_driver_sources
     options/client_session.cpp
     options/count.cpp
     options/create_collection.cpp
-    options/create_view.cpp
     options/delete.cpp
     options/distinct.cpp
     options/find.cpp
@@ -228,7 +227,6 @@ set_dist_list (src_mongocxx_test_DIST
    options/client_session.cpp
    options/count.cpp
    options/create_collection.cpp
-   options/create_view.cpp
    options/delete.cpp
    options/distinct.cpp
    options/find.cpp

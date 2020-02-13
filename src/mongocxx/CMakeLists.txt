@@ -122,7 +122,6 @@ set(mongocxx_sources
     options/count.cpp
     options/estimated_document_count.cpp
     options/create_collection.cpp
-    options/create_view.cpp
     options/delete.cpp
     options/distinct.cpp
     options/find_one_and_delete.cpp
@@ -339,8 +338,6 @@ set_local_dist (src_mongocxx_DIST_local
    options/count.hpp
    options/create_collection.cpp
    options/create_collection.hpp
-   options/create_view.cpp
-   options/create_view.hpp
    options/delete.cpp
    options/delete.hpp
    options/distinct.cpp

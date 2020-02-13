@@ -397,41 +397,6 @@ class collection database::create_collection_deprecated(
     return _create_collection_deprecated(&session, name, collection_options, write_concern);
 }
 
-class collection database::create_view(bsoncxx::string::view_or_value name,
-                                       bsoncxx::string::view_or_value view_on,
-                                       const options::create_view& options) {
-    return create_view_deprecated(name, view_on, options);
-}
-
-class collection database::create_view_deprecated(bsoncxx::string::view_or_value name,
-                                                  bsoncxx::string::view_or_value view_on,
-                                                  const options::create_view& options) {
-    bsoncxx::builder::basic::document options_builder;
-    options_builder.append(kvp("viewOn", view_on));
-
-    if (options.collation()) {
-        options_builder.append(kvp("collation", *options.collation()));
-    }
-
-    if (options.pipeline()) {
-        options_builder.append(kvp("pipeline", options.pipeline()->view_array()));
-    }
-
-    if (options.write_concern()) {
-        options_builder.append(kvp("writeConcern", options.write_concern()->to_document()));
-    }
-
-    libbson::scoped_bson_t opts_bson{options_builder.view()};
-    bson_error_t error;
-    auto result = libmongoc::database_create_collection(
-        _get_impl().database_t, name.terminated().data(), opts_bson.bson(), &error);
-    if (!result) {
-        throw_exception<operation_exception>(error);
-    }
-
-    return mongocxx::collection(*this, result);
-}
-
 void database::_drop(const client_session* session,
                      const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern) {
     bson_error_t error;

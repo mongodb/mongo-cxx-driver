@@ -444,58 +444,6 @@ TEST_CASE("Database integration tests", "[database]") {
         }
     }
 
-    SECTION("A database may create a view via create_view") {
-        SECTION("View creation with a pipeline") {
-            stdx::string_view collection_name{"collection_view_with_pipeline"};
-            stdx::string_view view_name{"view"};
-            database[collection_name].drop();
-            database[view_name].drop();
-
-            database[collection_name].insert_one(make_document(kvp("x", "foo")));
-            database[collection_name].insert_one(make_document(kvp("x", "bar")));
-
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
-            collection view = database.create_view(
-                view_name,
-                collection_name,
-                options::create_view().pipeline(std::move(pipeline({}).limit(1))));
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
-
-            if (test_util::get_max_wire_version(mongo_client) >= 5) {
-                // The server supports views.
-                REQUIRE(view.count_documents(bsoncxx::document::view{}) == 1);
-            } else {
-                // The server doesn't support views. On these versions of the server, view creation
-                // requests are treated as ordinary collection creation requests.
-                REQUIRE(view.count_documents(bsoncxx::document::view{}) == 0);
-            }
-        }
-
-        SECTION("View creation with collation") {
-            stdx::string_view collection_name{"collection_view_with_collation"};
-            stdx::string_view view_name{"view"};
-            database[collection_name].drop();
-            database[view_name].drop();
-
-            database[collection_name].insert_one(make_document(kvp("x", "foo")));
-            database[collection_name].insert_one(make_document(kvp("x", "bar")));
-
-            options::create_view opts;
-            opts.collation(case_insensitive_collation.view());
-
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
-            if (test_util::supports_collation(mongo_client)) {
-                collection obtained_view = database.create_view(view_name, collection_name, opts);
-                REQUIRE(obtained_view.find_one(make_document(kvp("x", "FOO"))));
-            } else {
-                // The server doesn't support collation.
-                REQUIRE_THROWS_AS(database.create_view(view_name, collection_name, opts),
-                                  operation_exception);
-            }
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
-        }
-    }
-
     SECTION("list_collections returns a correct result") {
         class database db = mongo_client["list_collections"];
         db.drop();
