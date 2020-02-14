@@ -9,8 +9,8 @@ compiler:
 
 env:
     global:
-        - MONGO_REPO="[ arch=amd64 ] http://repo.mongodb.com/apt/ubuntu"
-        - REPO_TYPE="trusty/mongodb-enterprise/3.4 multiverse"
+        - MONGO_REPO="[ arch=${TRAVIS_CPU_ARCH} ] http://repo.mongodb.com/apt/ubuntu";
+        - REPO_TYPE="${TRAVIS_DIST}/mongodb-enterprise/3.4 multiverse"
         - SOURCES_LOC="/etc/apt/sources.list.d/mongodb-enterprise.list"
         - KEY_SERVER="hkp://keyserver.ubuntu.com:80"
 
@@ -18,6 +18,29 @@ env:
         - CONFIG=Release
         - CONFIG=Debug
 
+matrix:
+  include:
+    - os: linux
+      arch: s390x
+      dist: xenial
+      compiler: gcc
+      env: CONFIG=Release
+    - os: linux
+      arch: s390x
+      dist: xenial
+      compiler: gcc
+      env: CONFIG=Debug
+    - os: linux
+      arch: s390x
+      dist: xenial
+      compiler: clang
+      env: CONFIG=Release  
+    - os: linux
+      arch: s390x
+      dist: xenial
+      compiler: clang
+      env: CONFIG=Debug
+    
 # Setup required repositories before installation
 before_install:
     # Add the modern toolchain repositories (llvm repo depends on ubunut-toolchain-r + gcc)
@@ -40,8 +63,19 @@ install:
     - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.9; export CXX="g++-4.9"; export CC="gcc-4.9"; fi
 
     # Clang
-    - if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq clang-3.6; export CXX="clang++-3.6"; export CC="clang-3.6"; fi
-
+    - if [ "$CXX" == "clang++" ]; then
+		 if [ "$HOSTTYPE" == "s390x" ];then 
+            sudo apt-get install --allow-unauthenticated -qq clang-6.0; export CXX="clang++-6.0"; export CC="clang-6.0"; 
+         else
+            sudo apt-get install --allow-unauthenticated -qq clang-3.6; export CXX="clang++-3.6"; export CC="clang-3.6";
+         fi
+      fi
+      
+    # Clang-format
+    - if [ "$HOSTTYPE" == "s390x" ];then 
+        sudo apt-get install clang-format;
+      fi
+      
     # CMake
     - sudo apt-get install -qq cmake
 
