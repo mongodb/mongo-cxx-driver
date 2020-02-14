@@ -73,7 +73,7 @@ install:
       
     # Clang-format
     - if [ "$HOSTTYPE" == "s390x" ];then 
-        sudo apt-get install clang-format;
+        sudo apt-get install clang-format-3.8;
       fi
       
     # CMake
