@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <functional>
 #include <memory>
 
 #include <bsoncxx/document/view.hpp>
@@ -139,6 +140,30 @@ class MONGOCXX_API client_session {
     /// other errors such as a session with no transaction in progress.
     ///
     void abort_transaction();
+
+    ///
+    /// Helper to run a user-provided callback within a transaction.
+    ///
+    /// This method will start a new transaction on this client session,
+    /// run the callback, then commit the transaction. If it cannot commit
+    /// the transaction, the entire sequence may be retried, and the callback
+    /// may be run multiple times.
+    ///
+    /// If the user callback calls driver methods that run operations against the
+    /// server that can throw an operation_exception (ex: collection::insert_one),
+    /// the user callback should allow those exceptions to propagate up the stack
+    /// so they can be caught and processed by the with_transaction helper.
+    ///
+    /// @param cb
+    ///   The callback to run inside of a transaction.
+    /// @param opts (optional)
+    ///   The options to use to run the transaction.
+    ///
+    /// @throws mongocxx::operation_exception if there are errors completing the
+    /// transaction.
+    ///
+    using with_transaction_cb = std::function<void(client_session*)>;
+    void with_transaction(with_transaction_cb cb, options::transaction opts = {});
 
    private:
     friend class bulk_write;

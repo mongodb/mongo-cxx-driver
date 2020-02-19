@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <exception>
+
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/libbson.hh>
 #include <mongocxx/client_session.hpp>
@@ -30,6 +32,42 @@
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
+
+namespace {
+struct with_transaction_ctx {
+    client_session* parent;
+    client_session::with_transaction_cb cb;
+    std::exception_ptr eptr;
+};
+
+// The callback we pass into libmongoc is a wrapped version of the
+// user callback. Before giving control back to libmongoc, we convert
+// any exception the user callback emits into an error_t and reply object;
+// libmongoc uses these to determine whether to retry.
+bool with_transaction_cpp_cb(mongoc_client_session_t*,
+                             void* ctx,
+                             bson_t** reply,
+                             bson_error_t* error) noexcept {
+    with_transaction_ctx* cb_ctx = static_cast<with_transaction_ctx*>(ctx);
+
+    try {
+        cb_ctx->cb(cb_ctx->parent);
+        return true;
+    } catch (const operation_exception& e) {
+        make_bson_error(error, e);
+        if (e.raw_server_error()) {
+            libbson::scoped_bson_t raw{e.raw_server_error()->view()};
+            *reply = bson_copy(raw.bson());
+        }
+        return false;
+    } catch (...) {
+        cb_ctx->eptr = std::current_exception();
+        make_generic_bson_error(error);
+        return false;
+    }
+}
+
+}  // namespace
 
 class client_session::impl {
    public:
@@ -130,6 +168,29 @@ class client_session::impl {
         bson_error_t error;
         if (!libmongoc::client_session_abort_transaction(_session_t.get(), &error)) {
             throw_exception<operation_exception>(error);
+        }
+    }
+
+    void with_transaction(client_session* parent,
+                          client_session::with_transaction_cb cb,
+                          options::transaction opts) {
+        auto session_t = _session_t.get();
+        auto opts_t = opts._get_impl().get_transaction_opt_t();
+
+        with_transaction_ctx ctx{parent, std::move(cb), nullptr};
+
+        libbson::scoped_bson_t reply;
+        bson_error_t error;
+
+        auto res = libmongoc::client_session_with_transaction(
+            session_t, &with_transaction_cpp_cb, opts_t, &ctx, reply.bson_for_init(), &error);
+
+        if (!res) {
+            if (ctx.eptr) {
+                std::rethrow_exception(ctx.eptr);
+            }
+
+            throw_exception<operation_exception>(reply.steal(), error);
         }
     }
 

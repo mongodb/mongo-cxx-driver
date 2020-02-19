@@ -189,7 +189,9 @@ set_tests_properties(change_stream_specs PROPERTIES
     ENVIRONMENT "CHANGE_STREAM_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/change_stream")
 
 set_tests_properties(transactions_specs PROPERTIES
-    ENVIRONMENT "TRANSACTIONS_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/transactions")
+  ENVIRONMENT "TRANSACTIONS_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/transactions")
+set_property(TEST transactions_specs
+  APPEND PROPERTY ENVIRONMENT "WITH_TRANSACTION_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/with_transaction")
 
 set_tests_properties(retryable_reads_spec PROPERTIES
    ENVIRONMENT "RETRYABLE_READS_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/retryable-reads")

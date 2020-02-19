@@ -154,23 +154,6 @@ void run_crud_tests_in_file(std::string test_path) {
 TEST_CASE("CRUD spec automated tests", "[crud_spec]") {
     instance::current();
 
-    char* crud_tests_path = std::getenv("CRUD_TESTS_PATH");
-    REQUIRE(crud_tests_path);
-
-    std::string path{crud_tests_path};
-
-    if (path.back() == '/') {
-        path.pop_back();
-    }
-
-    std::ifstream test_files{path + "/test_files.txt"};
-
-    REQUIRE(test_files.good());
-
-    std::string test_file;
-
-    while (std::getline(test_files, test_file)) {
-        run_crud_tests_in_file(path + "/" + test_file);
-    }
+    run_tests_in_suite("CRUD_TESTS_PATH", &run_crud_tests_in_file);
 }
 }  // namespace

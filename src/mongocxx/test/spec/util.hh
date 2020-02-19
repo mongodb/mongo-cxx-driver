@@ -30,6 +30,13 @@ void disable_fail_point(std::string uri_string, options::client client_opts);
 void initialize_collection(collection* coll, array::view initial_data);
 uri get_uri(document::view test);
 
+//
+// Uses the given environment variable to load all tests in a test suite
+// and run them with the provided callback function.
+//
+using test_runner = std::function<void(const std::string& file)>;
+void run_tests_in_suite(std::string ev, test_runner cb);
+
 }  // namespace spec
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

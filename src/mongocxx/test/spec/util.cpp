@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <fstream>
+
 #include <mongocxx/test/spec/util.hh>
 
 #include <bsoncxx/json.hpp>
@@ -164,6 +166,24 @@ uri get_uri(document::view test) {
         }
     }
     return uri{uri_string};
+}
+
+void run_tests_in_suite(std::string ev, test_runner cb) {
+    char* tests_path = std::getenv(ev.c_str());
+    REQUIRE(tests_path);
+
+    std::string path{tests_path};
+    if (path.back() == '/') {
+        path.pop_back();
+    }
+
+    std::ifstream test_files{path + "/test_files.txt"};
+    REQUIRE(test_files.good());
+
+    std::string test_file;
+    while (std::getline(test_files, test_file)) {
+        cb(path + "/" + test_file);
+    }
 }
 
 }  // namespace spec

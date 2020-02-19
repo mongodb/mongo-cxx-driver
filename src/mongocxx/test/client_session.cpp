@@ -22,6 +22,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/server_error_code.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/test_util/client_helpers.hh>
@@ -755,6 +756,43 @@ TEST_CASE("lsid", "[session]") {
 
         test.test_method_with_session(f, s);
     }
+}
+
+TEST_CASE("with_transaction", "[session]") {
+    using namespace mongocxx::test_util;
+
+    instance::current();
+
+    session_test test;
+
+    auto session = test.client.start_session();
+
+    // The following three tests are prose tests from the with_transaction spec.
+    SECTION("prose tests for with_transaction") {
+        SECTION("callback raises a custom error") {
+            // Test an operation_exception
+            REQUIRE_THROWS_MATCHES(session.with_transaction([](client_session*) {
+                throw operation_exception{{}, "The meaning of life"};
+            }),
+                                   operation_exception,
+                                   mongocxx_exception_matcher{"The meaning of life"});
+
+            // Test a different exception
+            REQUIRE_THROWS_AS(session.with_transaction(
+                                  [](client_session*) { throw std::logic_error{"it's 42"}; }),
+                              std::logic_error);
+        }
+
+        SECTION("callback returns a value") {
+            // The C++ driver does not support returning values from the callback.
+        }
+
+        SECTION("retry timeout is enforced") {
+            // We let the libmongoc tests cover timeout tests. The c driver does not
+            // expose the mock timeout mechanism that allows this to be tested without
+            // performing long sleeps.
+        }
+    }  // End prose tests.
 }
 
 TEST_CASE("unacknowledged write in session", "[session]") {

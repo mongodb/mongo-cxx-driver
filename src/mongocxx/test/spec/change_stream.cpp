@@ -169,15 +169,6 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
 
 TEST_CASE("Change stream spec tests", "[change_stream_spec]") {
     instance::current();
-    char* change_stream_tests_path = std::getenv("CHANGE_STREAM_TESTS_PATH");
-    if (!change_stream_tests_path) {
-        FAIL("environment variable CHANGE_STREAM_TESTS_PATH not set");
-    }
-
-    std::string path = change_stream_tests_path;
-    if (path.back() == '/') {
-        path.pop_back();
-    }
 
     client client{uri{}};
     if (!test_util::is_replica_set(client)) {
@@ -189,11 +180,6 @@ TEST_CASE("Change stream spec tests", "[change_stream_spec]") {
         return;
     }
 
-    std::ifstream test_files{path + "/test_files.txt"};
-    REQUIRE(test_files.good());
-    std::string test_file;
-    while (std::getline(test_files, test_file)) {
-        run_change_stream_tests_in_file(path + "/" + test_file);
-    }
+    run_tests_in_suite("CHANGE_STREAM_TESTS_PATH", &run_change_stream_tests_in_file);
 }
 }  // namespace

@@ -41,6 +41,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/gridfs/upload.hpp>
 #include <mongocxx/result/gridfs/upload.hpp>
+#include <mongocxx/test/spec/util.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 
 namespace {
@@ -505,23 +506,8 @@ TEST_CASE("GridFS spec automated tests", "[gridfs_spec]") {
         return;
     }
 
-    char* gridfs_tests_path = std::getenv("GRIDFS_TESTS_PATH");
-    REQUIRE(gridfs_tests_path);
+    auto cb = [&](const std::string& test_file) { run_gridfs_tests_in_file(test_file, &client); };
 
-    std::string path{gridfs_tests_path};
-
-    if (path.back() == '/') {
-        path.pop_back();
-    }
-
-    std::ifstream test_files{path + "/test_files.txt"};
-
-    REQUIRE(test_files.good());
-
-    std::string test_file;
-
-    while (std::getline(test_files, test_file)) {
-        run_gridfs_tests_in_file(path + "/" + test_file, &client);
-    }
+    mongocxx::spec::run_tests_in_suite("GRIDFS_TESTS_PATH", cb);
 }
 }  // namespace

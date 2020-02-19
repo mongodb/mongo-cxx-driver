@@ -79,6 +79,10 @@ void client_session::abort_transaction() {
     _impl->abort_transaction();
 }
 
+void client_session::with_transaction(with_transaction_cb cb, options::transaction opts) {
+    _impl->with_transaction(this, std::move(cb), std::move(opts));
+}
+
 const client_session::impl& client_session::_get_impl() const {
     // Never null.
     return *_impl;
