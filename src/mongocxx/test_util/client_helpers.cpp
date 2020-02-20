@@ -365,6 +365,11 @@ void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::vie
     std::vector<std::string> actual_data;
     std::vector<std::string> expected_data;
 
+    read_concern rc;
+    rc.acknowledge_level(read_concern::level::k_local);
+    auto old_rc = coll->read_concern();
+    coll->read_concern(rc);
+
     options::find options{};
     builder::basic::document sort{};
     sort.append(builder::basic::kvp("_id", 1));
@@ -379,6 +384,8 @@ void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::vie
     }
 
     REQUIRE(expected_data == actual_data);
+
+    coll->read_concern(old_rc);
 }
 
 bool server_has_sessions(const client& conn) {
