@@ -41,7 +41,7 @@ matrix:
       compiler: clang
       env: CONFIG=Debug
     
-# Setup required repositories before installation
+# Setup required repositories before installation.
 before_install:
     # Add the modern toolchain repositories (llvm repo depends on ubunut-toolchain-r + gcc)
     - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
