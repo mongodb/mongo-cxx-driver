@@ -87,6 +87,11 @@ class MONGOCXX_API change_stream {
     ///
     /// Specifies the logical starting point for the new change stream.
     ///
+    /// The value returned by calling change_stream::get_resume_token can be used here.
+    ///
+    /// start_after, resume_after, and start_at_operation_time are mutually exclusive options.
+    /// Setting more than one of these will result in a server error.
+    ///
     /// @param resume_after
     ///   The resumeToken to use when starting the change stream.
     ///
@@ -108,10 +113,12 @@ class MONGOCXX_API change_stream {
     /// Specifies the logical starting point of the new change stream. The new stream will
     /// return the first notification after the given token.
     ///
-    /// The "_id" field of any change received from a change stream can be used here. This
-    /// option may not be used with resumeAfter.
+    /// The value returned by calling change_stream::get_resume_token can be used here.
     ///
     /// Unlike resumeAfter, this can resume notifications after an "invalidate" event.
+    ///
+    /// start_after, resume_after, and start_at_operation_time are mutually exclusive options.
+    /// Setting more than one of these will result in a server error.
     ///
     /// @param token
     ///   The token representing the logical starting point of the change stream.
@@ -173,6 +180,9 @@ class MONGOCXX_API change_stream {
     ///
     /// Specifies the logical starting point for the new change stream. Changes are returned at or
     /// after the specified operation time.
+    ///
+    /// start_after, resume_after, and start_at_operation_time are mutually exclusive options.
+    /// Setting more than one of these will result in a server error.
     ///
     /// @param timestamp
     ///   The starting operation time.

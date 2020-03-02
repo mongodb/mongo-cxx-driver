@@ -15,14 +15,17 @@
 #include <iostream>
 
 #include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/options/insert.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/test_util/client_helpers.hh>
+#include <mongocxx/write_concern.hpp>
 
 #include <third_party/catch/include/helpers.hpp>
 
@@ -104,6 +107,69 @@ TEST_CASE("Change stream options") {
 
         auto cs = mongodb_client.watch(cs_opts);
         REQUIRE_THROWS(cs.begin());
+    }
+}
+
+TEST_CASE("Spec Prose Tests") {
+    instance::current();
+    client client{uri{}};
+
+    if (!test_util::is_replica_set(client)) {
+        WARN("skip: change streams require replica set");
+        return;
+    }
+
+    auto db = client["db"];
+    auto coll = db["coll"];
+    coll.drop();
+
+    write_concern wc_majority;
+    wc_majority.majority(std::chrono::milliseconds(0));
+
+    // As a sanity check, we implement the first prose test. The behavior tested
+    // by the prose tests is implemented and tested by the C driver, so we won't
+    // replicate the full suite of prose tests here.
+
+    SECTION("1. ChangeStream must continuously track the last seen resumeToken") {
+        // Set the batch size to 1 so we read 1 doc at a time.
+        options::change_stream opts;
+        opts.batch_size(1);
+        auto cs = client.watch(std::move(opts));
+
+        // With WC majority, insert some documents to listen for.
+        auto doc1 = make_document(kvp("_id", 1));
+        auto doc2 = make_document(kvp("_id", 2));
+        auto doc3 = make_document(kvp("_id", 3));
+
+        options::insert insert_opts{};
+        insert_opts.write_concern(wc_majority);
+
+        coll.insert_one(doc1.view(), insert_opts);
+        coll.insert_one(doc2.view(), insert_opts);
+        coll.insert_one(doc3.view(), insert_opts);
+
+        // For each read, check the resume token is updated. We should
+        // be reading the postBatchResumeToken on each read, since our
+        // batch size is 1.
+        auto it = cs.begin();
+        REQUIRE(cs.get_resume_token());
+        auto token1 = bsoncxx::document::value(*cs.get_resume_token());
+
+        it++;
+        REQUIRE(cs.get_resume_token());
+        auto token2 = bsoncxx::document::value(*cs.get_resume_token());
+        REQUIRE(token1 != token2);
+
+        it++;
+        REQUIRE(cs.get_resume_token());
+        auto token3 = bsoncxx::document::value(*cs.get_resume_token());
+        REQUIRE(token2 != token3);
+        REQUIRE(token1 != token3);
+
+        // When out of docs, check that the resume token is the same as the last doc.
+        it++;
+        REQUIRE(it == cs.end());
+        REQUIRE(*cs.get_resume_token() == token3);
     }
 }
 

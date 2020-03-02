@@ -61,6 +61,10 @@ change_stream::iterator change_stream::end() const {
     return iterator{change_stream::iterator::iter_type::k_end, this};
 }
 
+stdx::optional<bsoncxx::document::view> change_stream::get_resume_token() const {
+    return _impl->get_resume_token();
+}
+
 // void* since we don't leak C driver defs into C++ driver
 change_stream::change_stream(void* change_stream_ptr)
     : _impl(stdx::make_unique<impl>(static_cast<mongoc_change_stream_t*>(change_stream_ptr))) {}

@@ -78,6 +78,31 @@ class MONGOCXX_API change_stream {
     ///
     iterator end() const;
 
+    ///
+    /// Returns a resume token for this change stream.
+    ///
+    /// If the change stream has not been iterated, and either resume_after or
+    /// start_after was specified in the options to this change stream, the
+    /// specified value will be returned by this method. If neither resume_after or
+    /// start_after was set on the options for this change stream, and it has
+    /// not been iterated, this method will return no token.
+    ///
+    /// Once this change stream has been iterated, this method will return the
+    /// resume token of the most recently returned document in the stream, or a
+    /// postBatchResumeToken if the current batch of documents has been exhausted.
+    ///
+    /// @see https://docs.mongodb.com/manual/changeStreams/#change-stream-resume-token
+    ///
+    /// The returned document::view is valid for the lifetime of the stream and
+    /// its data may be updated if the change stream is iterated after this function.
+    /// The value may be copied to extend its lifetime or preserve the
+    /// current resume token.
+    ///
+    /// @return
+    ///   The token.
+    ///
+    bsoncxx::stdx::optional<bsoncxx::document::view> get_resume_token() const;
+
    private:
     friend class client;
     friend class collection;

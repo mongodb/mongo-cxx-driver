@@ -101,6 +101,15 @@ class change_stream::impl {
         return this->doc_;
     }
 
+    stdx::optional<bsoncxx::document::view> get_resume_token() {
+        auto token = libmongoc::change_stream_get_resume_token(this->change_stream_);
+        if (!token) {
+            return {};
+        }
+
+        return {bsoncxx::document::view{bson_get_data(token), token->len}};
+    }
+
    private:
     mongoc_change_stream_t* const change_stream_;
     bsoncxx::document::view doc_;
