@@ -36,10 +36,9 @@
       
       <guid>http://mongocxx.org/mongocxx-v3/configuration/</guid>
       <description>In the mongocxx driver, most configuration is done via the connection URI. Some additional connection options are possible via the mongocxx::options::client class.
-Configuring TLS/SSL To enable TLS (SSL), set ssl=true in the URI:
- mongodb://mongodb.example.com/?ssl=true
- By default, mongocxx will verify server certificates against the local system CA list. You can override that by creating a mongocxx::options::ssl object and passing it to ssl_opts on mongocxx::options::client.
-For example, to use a custom CA or to disable certificate validation, uncomment the corresponding line in the following example:</description>
+Configuring TLS/SSL To enable TLS (SSL), set tls=true in the URI:
+ mongodb://mongodb.example.com/?tls=true
+ By default, mongocxx will verify server certificates against the local system CA list. You can override that either by specifying different settings in the connection string, or by creating a mongocxx::options::tls object and passing it to tls_opts on mongocxx::options::client.</description>
     </item>
     
     <item>
@@ -48,7 +47,7 @@ For example, to use a custom CA or to disable certificate validation, uncomment 
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>http://mongocxx.org/mongocxx-v3/installation/</guid>
-      <description>Prerequisites  Any standard Unix platform, or Windows 7 SP1+ A compiler that suports C++11 (gcc, clang, or Visual Studio) CMake 3.2 or later boost headers (optional)  We currently test the driver with the following configurations:
+      <description>Prerequisites  Any standard Unix platform, or Windows 7 SP1+ A compiler that supports C++11 (gcc, clang, or Visual Studio) CMake 3.2 or later boost headers (optional)  We currently test the driver with the following configurations:
    &amp;nbsp; Linux macOS Windows     clang 3.8 7.0 (Apple) -   gcc 4.8, 5.4 - -   VS n/a n/a 14 (2015) Update 3   boost - 1.</description>
     </item>
     

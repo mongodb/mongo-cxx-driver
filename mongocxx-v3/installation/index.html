@@ -1040,9 +1040,9 @@
 
 <ul>
 <li>Any standard Unix platform, or Windows 7 SP1+</li>
-<li>A compiler that suports C++11 (gcc, clang, or Visual Studio)</li>
-<li>CMake 3.2 or later</li>
-<li>boost headers (optional)</li>
+<li>A compiler that supports C++11 (gcc, clang, or Visual Studio)</li>
+<li><a href="https://cmake.org">CMake</a> 3.2 or later</li>
+<li><a href="https://www.boost.org">boost</a> headers (optional)</li>
 </ul>
 
 <p>We currently test the driver with the following configurations:</p>
@@ -1088,7 +1088,7 @@
 </tbody>
 </table>
 
-<p>Versions older the the ones listed may not work and are not
+<p>Versions older than the ones listed may not work and are not
 supported; use them at your own risk.</p>
 
 <p>Versions newer than the ones listed above should work; if you
@@ -1110,7 +1110,7 @@ have problems, please file a bug report via
 <li>For mongocxx-3.0.x, we recommend the last 1.4.x version of libmongoc</li>
 </ul>
 
-<p>Unless you know that your package manager offers a high-enough version, you
+<p>Unless you know that your package manager offers a high enough version, you
 will need to download and build from the source code. Get a tarball from
 the <a href="https://github.com/mongodb/mongo-c-driver/releases">C Driver releases</a>
 page.</p>
@@ -1172,11 +1172,11 @@ cd mongo-cxx-driver/build
 <p>If you prefer to download a tarball, look on the <a href="https://github.com/mongodb/mongo-cxx-driver/releases">mongocxx
 releases</a> page for a
 link to the release tarball for the version you wish you install.  For
-example, to download version 3.3.1:</p>
+example, to download version 3.4.1:</p>
 
-<pre><code class="language-sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.3.1.tar.gz
-tar -xzf r3.3.1.tar.gz
-cd mongo-cxx-driver-r3.3.1/build
+<pre><code class="language-sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.4.1.tar.gz
+tar -xzf r3.4.1.tar.gz
+cd mongo-cxx-driver-r3.4.1/build
 </code></pre>
 
 <p>Make sure you change to the <code>build</code> directory of whatever source tree you
@@ -1252,7 +1252,7 @@ an additional option, <code>/Zc:__cplusplus</code> to opt into the correct defin
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver  \
 </code></pre>
 
-<p>For details on how to install libmongoc for windows, see the
+<p>For details on how to install libmongoc for Windows, see the
 <a href="http://mongoc.org/libmongoc/current/installing.html#building-windows">mongoc Windows installation instructions</a>.</p>
 
 <h4 id="configuring-with-mongocxx-3-1-x-or-3-0-x">Configuring with <code>mongocxx</code> 3.1.x or 3.0.x</h4>
@@ -1275,29 +1275,6 @@ users.</strong> A user can enable this behavior with the <code>-DBUILD_SHARED_LI
 <pre><code class="language-sh">cmake ..                                            \
     -DCMAKE_BUILD_TYPE=Release                      \
     -DBUILD_SHARED_LIBS=OFF                         \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
-</code></pre>
-
-<h4 id="configuring-with-mongocxx-3-4-1-or-newer">Configuring with <code>mongocxx</code> 3.4.1 or newer</h4>
-
-<p>Users have the option to build <code>mongocxx</code> as both static and shared libraries. A user can enable
-this behavior with the <code>-DBUILD_SHARED_AND_STATIC_LIBS</code> option:</p>
-
-<pre><code class="language-sh">cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DBUILD_SHARED_AND_STATIC_LIBS=ON               \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
-</code></pre>
-
-<p>Users have the option to build <code>mongocxx</code> as a shared library that has statically linked
-<code>libmongoc</code>. <strong>This is not recommended for novice users.</strong> A user can enable this behavior with the
-<code>-DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC</code> option:</p>
-
-<pre><code class="language-sh">cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC=ON       \
     -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
     -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
 </code></pre>
@@ -1391,7 +1368,7 @@ int main(int, char**) {
 
 <h4 id="compiling-with-the-help-of-cmake">Compiling with the help of CMake</h4>
 
-<p>If you are using CMake for your project, you can use the find_package()
+<p>If you are using CMake for your project, you can use the <code>find_package()</code>
 directive to import targets which can be used to link to your build
 targets.  If you have installed <code>mongocxx</code> or <code>libmongoc</code> to a
  non-standard location on your system, you will need to set
@@ -1519,7 +1496,6 @@ settings for a Debug x64 build as an example:</p>
 <ul>
 <li><a href="#configuring-with-mongocxx-3-1-x-or-3-0-x">Configuring with <code>mongocxx</code> 3.1.x or 3.0.x</a></li>
 <li><a href="#configuring-with-mongocxx-3-2-x-or-newer">Configuring with <code>mongocxx</code> 3.2.x or newer</a></li>
-<li><a href="#configuring-with-mongocxx-3-4-1-or-newer">Configuring with <code>mongocxx</code> 3.4.1 or newer</a></li>
 </ul></li>
 <li><a href="#step-5-build-and-install-the-driver">Step 5: Build and install the driver</a>
 <ul>
