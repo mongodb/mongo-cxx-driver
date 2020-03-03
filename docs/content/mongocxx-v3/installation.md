@@ -215,7 +215,7 @@ cmake ..                                            \
     -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
 ```
 
-#### Configuring with `mongocxx` 3.4.1 or newer
+#### Configuring with `mongocxx` 3.5.0 or newer
 
 Users have the option to build `mongocxx` as both static and shared libraries. A user can enable
 this behavior with the `-DBUILD_SHARED_AND_STATIC_LIBS` option:
