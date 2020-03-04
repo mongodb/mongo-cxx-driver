@@ -1233,51 +1233,6 @@ version of the library installed.</p>
 <li>The name of the namespace is <code>v$ABI</code>. We create them from ABI version to maintain forwards compatibibility.</li>
 </ul>
 
-<h2 id="deprecation">Deprecation</h2>
-
-<p>Occasionally we will phase features out of use in the driver.
-In the release that marks a feature as deprecated we offer several transition options:</p>
-
-<ol>
-<li>The original method, marked with <code>MONGOCXX_DEPRECATED</code>. This
-will raise deprecation warnings when compiled.</li>
-<li>A variant of the feature suffixed with <code>_deprecated</code>. This will require only small
-code changes and will not raise deprecation warnings.</li>
-<li>A new feature that provides alternate functionality.
-The new feature may not be a drop-in replacement for the deprecated feature and
-switching to it may require code changes. In the rare case where we
-remove a feature without replacing it, this third option will not be available.</li>
-</ol>
-
-<p>In the following release, the original feature marked with <code>MONGOCXX_DEPRECATED</code> and its
-suffixed <code>_deprecated</code> equivalent will be removed.</p>
-
-<pre><code class="language-c++">// release 1 with a supported feature
-void do_thing();
-
-// release 2 where the feature is deprecated in favor of a new feature
-MONGOCXX_DEPRECATED void do_thing();
-void do_thing_deprecated();
-void do_new_thing();
-
-// release 3 where the original feature is removed
-void do_new_thing();
-</code></pre>
-
-<p>In the case of a feature rename we do not offer a suffixed <code>_deprecated</code> variant,
-as one can simply switch to using the new name with the same amount of effort.</p>
-
-<pre><code>// release 1 with a supported feature
-void do_thing();
-
-// release 2 where the feature name is renamed
-MONGOCXX_DEPRECATED void do_thing();
-void do_stuff();
-
-// release 3 where the original feature name is removed
-void do_stuff();
-</code></pre>
-
 
 
 
@@ -1316,7 +1271,6 @@ void do_stuff();
 <li><a href="#parallel-header-installation">Parallel Header Installation</a></li>
 <li><a href="#sonames-and-symlinks">Sonames and symlinks</a></li>
 <li><a href="#inline-namespaces">Inline namespaces</a></li>
-<li><a href="#deprecation">Deprecation</a></li>
 </ul></li>
 </ul>
 </nav>

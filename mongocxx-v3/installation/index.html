@@ -1296,32 +1296,10 @@ build and install the driver:</p>
 <pre><code class="language-sh">make &amp;&amp; sudo make install
 </code></pre>
 
-<p>The driver can be uninstalled at a later time in one of two ways.  First,
-the uninstall target can be called:</p>
-
-<pre><code class="language-sh">sudo make uninstall
-</code></pre>
-
-<p>Second, the uninstall script can be called:</p>
-
-<pre><code class="language-sh">sudo /opt/mongo-cxx-driver/share/mongo-cxx-driver/uninstall.sh
-</code></pre>
-
 <p>On Windows, build and install from the command line like this:</p>
 
 <pre><code class="language-sh">msbuild.exe ALL_BUILD.vcxproj
 msbuild.exe INSTALL.vcxproj
-</code></pre>
-
-<p>On Windows, the driver can be uninstalled at a later time in one of two
-ways.  First, the uninstall project can be called:</p>
-
-<pre><code class="language-sh">msbuild.exe generate_uninstall\uninstall.vcxproj
-</code></pre>
-
-<p>Second, the uninstall script can be called:</p>
-
-<pre><code class="language-sh">C:\opt\mongo-cxx-driver\share\mongo-cxx-driver\uninstall.cmd
 </code></pre>
 
 <h3 id="step-6-test-your-installation">Step 6: Test your installation</h3>
@@ -1357,11 +1335,13 @@ int main(int, char**) {
 
 <h4 id="compiling-with-the-help-of-cmake">Compiling with the help of CMake</h4>
 
-<p>If you are using CMake for your project, you can use the <code>find_package()</code>
-directive to import targets which can be used to link to your build
-targets.  If you have installed <code>mongocxx</code> or <code>libmongoc</code> to a
- non-standard location on your system, you will need to set
-<code>CMAKE_PREFIX_PATH</code> to the library installation prefix (specified at
+<p>If you are using CMake for your project, you can use the find_package()
+directive to enable compiling and linking against <code>mongocxx</code>.  The
+find_package() directive will set variables in the current environment
+(e.g. <code>LIBMONGOCXX_INCLUDE_DIRS</code>, <code>LIBMONGOCXX_LIBRARIES</code>, etc.) that need
+to be propagated to your build targets.  If you have installed <code>mongocxx</code>
+or <code>libmongoc</code> to a non-standard location on your system, you will need to
+set <code>CMAKE_PREFIX_PATH</code> to the library installation prefix (specified at
 build time with <code>CMAKE_INSTALL_PREFIX</code>) when running <code>cmake</code>.</p>
 
 <p>In the <code>mongocxx</code> source repository (versions 3.2.x or newer only), see
