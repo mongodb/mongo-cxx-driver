@@ -1040,9 +1040,9 @@
 
 <ul>
 <li>Any standard Unix platform, or Windows 7 SP1+</li>
-<li>A compiler that supports C++11 (gcc, clang, or Visual Studio)</li>
-<li><a href="https://cmake.org">CMake</a> 3.2 or later</li>
-<li><a href="https://www.boost.org">boost</a> headers (optional)</li>
+<li>A compiler that suports C++11 (gcc, clang, or Visual Studio)</li>
+<li>CMake 3.2 or later</li>
+<li>boost headers (optional)</li>
 </ul>
 
 <p>We currently test the driver with the following configurations:</p>
@@ -1082,13 +1082,13 @@
 <tr>
 <td>boost</td>
 <td>-</td>
-<td>1.67.0</td>
-<td>1.60.0</td>
+<td>1.5.3</td>
+<td>1.6.0</td>
 </tr>
 </tbody>
 </table>
 
-<p>Versions older than the ones listed may not work and are not
+<p>Versions older the the ones listed may not work and are not
 supported; use them at your own risk.</p>
 
 <p>Versions newer than the ones listed above should work; if you
@@ -1102,15 +1102,14 @@ have problems, please file a bug report via
 <p>The mongocxx driver builds on top of the MongoDB C driver.</p>
 
 <ul>
-<li>For mongocxx-3.4.x, libmongoc 1.13.0 or later is required.</li>
 <li>For mongocxx-3.3.x, libmongoc 1.10.1 or later is required.</li>
 <li>For mongocxx-3.2.x, libmongoc 1.9.2 or later is required.</li>
-<li>For mongocxx-3.1.4+, libmongoc 1.7.0 or later is required.</li>
 <li>For mongocxx-3.1.[0-3], libmongoc 1.5.0 or later is required.</li>
+<li>For mongocxx-3.1.4+, libmongoc 1.7.0 or later is required.</li>
 <li>For mongocxx-3.0.x, we recommend the last 1.4.x version of libmongoc</li>
 </ul>
 
-<p>Unless you know that your package manager offers a high enough version, you
+<p>Unless you know that your package manager offers a high-enough version, you
 will need to download and build from the source code. Get a tarball from
 the <a href="https://github.com/mongodb/mongo-c-driver/releases">C Driver releases</a>
 page.</p>
@@ -1172,11 +1171,11 @@ cd mongo-cxx-driver/build
 <p>If you prefer to download a tarball, look on the <a href="https://github.com/mongodb/mongo-cxx-driver/releases">mongocxx
 releases</a> page for a
 link to the release tarball for the version you wish you install.  For
-example, to download version 3.4.1:</p>
+example, to download version 3.3.1:</p>
 
-<pre><code class="language-sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.4.1.tar.gz
-tar -xzf r3.4.1.tar.gz
-cd mongo-cxx-driver-r3.4.1/build
+<pre><code class="language-sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.3.1.tar.gz
+tar -xzf r3.3.1.tar.gz
+cd mongo-cxx-driver-r3.3.1/build
 </code></pre>
 
 <p>Make sure you change to the <code>build</code> directory of whatever source tree you
@@ -1184,100 +1183,84 @@ obtain.</p>
 
 <h3 id="step-4-configure-the-driver">Step 4: Configure the driver</h3>
 
-<p>On Unix systems, <code>libmongoc</code> installs into <code>/usr/local</code> by default. Without additional
-configuration, <code>mongocxx</code> installs into its local build directory as a courtesy to those who build
-from source. To configure <code>mongocxx</code> for installation into <code>/usr/local</code> as well, use the following
-<code>cmake</code> command:</p>
+<p>On Unix systems, <code>libmongoc</code> installs into <code>/usr/local</code> by default.  To
+configure <code>mongocxx</code> for installation into <code>/usr/local</code> as well, use the
+following <code>cmake</code> command:</p>
 
-<pre><code>cmake ..                                \
-    -DCMAKE_BUILD_TYPE=Release          \
-    -DCMAKE_INSTALL_PREFIX=/usr/local
+<p>(<strong><em>NOTE</em></strong>: The trailing <code>..</code> below is important!  Don&rsquo;t omit it.)</p>
+
+<pre><code>cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
 </code></pre>
 
-<p>In the Unix examples that follow,
-<code>mongocxx</code> is customized in these ways:
-* <code>libmongoc</code> is found in <code>/opt/mongo-c-driver</code>.
-* <code>mongocxx</code> is to be installed into <code>/opt/mongo-cxx-driver</code>.</p>
+<p><code>/usr/local</code> may be replaced with the directory that <code>libmongoc</code> was
+installed to.</p>
 
-<p>With those two distinct (arbitrary) install locations, a user would run this <code>cmake</code> command:</p>
+<p>If you need to install <code>mongocxx</code> into a different directory than the
+directory where <code>libmongoc</code> is installed, you must instruct <code>cmake</code> on
+how to find the <code>libmongoc</code> installation directory.  The procedure for
+doing so varies between mongocxx versions:</p>
 
-<pre><code class="language-sh">cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
+<ul>
+<li>Users building <code>mongocxx</code> versions 3.2.x or newer should use
+<code>CMAKE_PREFIX_PATH</code> to specify the <code>libmongoc</code> installation directory.
+For example (make sure to replace <code>/your/cdriver/prefix</code> and
+<code>/your/cxxdriver/prefix</code> with the prefix used for installing the C
+driver and the desired installation prefix, respectively):</li>
+</ul>
+
+<pre><code class="language-sh">cmake -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/your/cxxdriver/prefix \
+    -DCMAKE_PREFIX_PATH=/your/cdriver/prefix ..
 </code></pre>
 
-<blockquote>
-<p><em>Note</em> If you need multiple paths in a CMake PATH variable, separate them with a semicolon like
-this:
-<code>-DCMAKE_PREFIX_PATH=&quot;/your/cdriver/prefix;/some/other/path&quot;</code></p>
-</blockquote>
+<ul>
+<li><p><em>Note</em>: If you need multiple paths in <code>CMAKE_PREFIX_PATH</code>, separate them with
+a semicolon like this: <code>-DCMAKE_PREFIX_PATH=&quot;/your/cdriver/prefix;/some/other/path&quot;</code></p></li>
 
-<p>These options can be freely mixed with a C++17 polyfill option. For instance, this is how a user
-would run the command above with the Boost polyfill option:</p>
+<li><p>Users building <code>mongocxx</code> versions 3.1.x and 3.0.x should specify the
+<code>libmongoc</code> installation directory by using the <code>-DLIBMONGOC_DIR</code> and
+<code>-DLIBBSON_DIR</code> options to <code>cmake</code>.  See the following example, which
+assumes that both <code>libmongoc</code> and <code>libbson</code> are installed into
+<code>/your/cdriver/prefix</code>:</p></li>
+</ul>
 
-<pre><code class="language-sh">cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DBSONCXX_POLY_USE_BOOST=1                      \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
+<pre><code class="language-sh">cmake -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/your/cxxdriver/prefix
+    -DLIBMONGOC_DIR=/your/cdriver/prefix
+    -DLIBBSON_DIR=/your/cdriver/prefix ..
 </code></pre>
 
-<hr />
+<p>Remember: to select a polyfill, pass the option to <code>cmake</code>. For example,
+to select the Boost polyfill, substitute the <code>cmake</code> line with
+the following:</p>
 
-<p>On Windows, this is the equivalent use of cmake:</p>
+<pre><code class="language-sh">cmake -DCMAKE_BUILD_TYPE=Release -DBSONCXX_POLY_USE_BOOST=1 \
+    -DCMAKE_INSTALL_PREFIX=/usr/local ..
+</code></pre>
 
-<pre><code class="language-sh">'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
-     -G &quot;Visual Studio 14 2015 Win64&quot;           \
-    -DBOOST_ROOT=C:\local\boost_1_59_0          \
-    -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
+<p>On Windows, here&rsquo;s an example of how to configure for MSVC (assuming
+libmongoc and libbson are in <code>c:\mongo-c-driver</code> as given in the
+<a href="http://mongoc.org/libmongoc/current/installing.html#building-windows">mongoc Windows installation
+instructions</a>
+and boost is in <code>c:\local\boost_1_59_0</code>:</p>
+
+<pre><code class="language-sh">'C:\Program Files (x86)\CMake\bin\cmake.exe' -G &quot;Visual Studio 14 Win64&quot;
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
+    -DCMAKE_PREFIX_PATH=c:\mongo-c-driver
+    -DBOOST_ROOT=c:\local\boost_1_59_0 ..
 </code></pre>
 
-<p>The example above assumes:
-* Boost is found in <code>C:\local\boost_1_59_0</code>.
-* <code>libmongoc</code> is found in <code>C:\mongo-c-driver</code>.
-* <code>mongocxx</code> is to be installed into <code>C:\mongo-cxx-driver</code>.</p>
+<p><code>mongocxx</code> builds shared libraries by default.  This is the recommended
+build setting for novice users.</p>
 
-<p>For building with Visual Studio 2017 (without a C++17 polyfill), it is necessary to configure with
-an additional option, <code>/Zc:__cplusplus</code> to opt into the correct definition of <code>__cplusplus</code>
-(<a href="https://blogs.msdn.microsoft.com/vcblog/2018/04/09/msvc-now-correctly-reports-__cplusplus/">problem described here</a>):</p>
-
-<pre><code class="language-sh">'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
-    -G &quot;Visual Studio 15 2017 Win64&quot;            \
-    -DCMAKE_CXX_STANDARD=17                     \
-    -DCMAKE_CXX_FLAGS=&quot;/Zc:__cplusplus&quot;         \
-    -DBOOST_ROOT=C:\local\boost_1_59_0          \
-    -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
-    -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver  \
-</code></pre>
-
-<p>For details on how to install libmongoc for Windows, see the
-<a href="http://mongoc.org/libmongoc/current/installing.html#building-windows">mongoc Windows installation instructions</a>.</p>
-
-<h4 id="configuring-with-mongocxx-3-1-x-or-3-0-x">Configuring with <code>mongocxx</code> 3.1.x or 3.0.x</h4>
-
-<p>Instead of the <code>-DCMAKE_PREFIX_PATH</code> option, users must specify the <code>libmongoc</code> installation
-directory by using the <code>-DLIBMONGOC_DIR</code> and <code>-DLIBBSON_DIR</code> options:</p>
-
-<pre><code class="language-sh">cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DLIBMONGOC_DIR=/opt/mongo-c-driver             \
-    -DLIBBSON_DIR=/opt/mongo-c-driver               \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
-</code></pre>
-
-<h4 id="configuring-with-mongocxx-3-2-x-or-newer">Configuring with <code>mongocxx</code> 3.2.x or newer</h4>
-
-<p>Users have the option to build <code>mongocxx</code> as a static library. <strong>This is not recommended for novice
-users.</strong> A user can enable this behavior with the <code>-DBUILD_SHARED_LIBS</code> option:</p>
-
-<pre><code class="language-sh">cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DBUILD_SHARED_LIBS=OFF                         \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
-</code></pre>
+<ul>
+<li>Note for users of mongocxx 3.2.x and newer: advanced users may build
+static libraries, if desired, by specifying <code>-DBUILD_SHARED_LIBS=OFF</code> to
+CMake. Specifying this option will introduce a dependency on the
+<code>libmongoc</code> static libraries. Linking an application against both
+shared <code>libmongoc</code> and static <code>mongocxx</code> is not supported, nor is
+linking against both static <code>libmongoc</code> and shared <code>mongocxx</code>.</li>
+</ul>
 
 <h3 id="step-5-build-and-install-the-driver">Step 5: Build and install the driver</h3>
 
@@ -1296,44 +1279,11 @@ build and install the driver:</p>
 <pre><code class="language-sh">make &amp;&amp; sudo make install
 </code></pre>
 
-<p>The driver can be uninstalled at a later time in one of two ways.  First,
-the uninstall target can be called:</p>
-
-<pre><code class="language-sh">sudo make uninstall
-</code></pre>
-
-<p>Second, the uninstall script can be called:</p>
-
-<pre><code class="language-sh">sudo /opt/mongo-cxx-driver/share/mongo-cxx-driver/uninstall.sh
-</code></pre>
-
 <p>On Windows, build and install from the command line like this:</p>
 
 <pre><code class="language-sh">msbuild.exe ALL_BUILD.vcxproj
 msbuild.exe INSTALL.vcxproj
 </code></pre>
-
-<p>On Windows, the driver can be uninstalled at a later time in one of two
-ways.  First, the uninstall project can be called:</p>
-
-<pre><code class="language-sh">msbuild.exe generate_uninstall\uninstall.vcxproj
-</code></pre>
-
-<p>Second, the uninstall script can be called:</p>
-
-<pre><code class="language-sh">C:\opt\mongo-cxx-driver\share\mongo-cxx-driver\uninstall.cmd
-</code></pre>
-
-<h4 id="additional-options-for-integrators">Additional Options for Integrators</h4>
-
-<p>In the event that you are building the BSON C++ library and/or the C++ driver to embed with other components and you wish to avoid the potential for collision with components installed from a standard build or from a distribution package manager, you can make use of the <code>BSONCXX_OUTPUT_BASENAME</code> and <code>MONGOCXX_OUTPUT_BASENAME</code> options to <code>cmake</code>.</p>
-
-<pre><code class="language-sh">cmake ..                                            \
-    -DBSONCXX_OUTPUT_BASENAME=custom_bsoncxx        \
-    -DMONGOCXX_OUTPUT_BASENAME=custom_mongocxx
-</code></pre>
-
-<p>The above command would produce libraries named <code>libcustom_bsoncxx.so</code> and <code>libcustom_mongocxx.so</code> (or with the extension appropriate for the build platform).  Those libraries could be placed in a standard system directory or in an alternate location and could be linked to by specifying something like <code>-lcustom_mongocxx -lcustom_bsoncxx</code> on the linker command line (possibly adjusting the specific flags to those required by your linker).</p>
 
 <h3 id="step-6-test-your-installation">Step 6: Test your installation</h3>
 
@@ -1368,11 +1318,13 @@ int main(int, char**) {
 
 <h4 id="compiling-with-the-help-of-cmake">Compiling with the help of CMake</h4>
 
-<p>If you are using CMake for your project, you can use the <code>find_package()</code>
-directive to import targets which can be used to link to your build
-targets.  If you have installed <code>mongocxx</code> or <code>libmongoc</code> to a
- non-standard location on your system, you will need to set
-<code>CMAKE_PREFIX_PATH</code> to the library installation prefix (specified at
+<p>If you are using CMake for your project, you can use the find_package()
+directive to enable compiling and linking against <code>mongocxx</code>.  The
+find_package() directive will set variables in the current environment
+(e.g. <code>LIBMONGOCXX_INCLUDE_DIRS</code>, <code>LIBMONGOCXX_LIBRARIES</code>, etc.) that need
+to be propagated to your build targets.  If you have installed <code>mongocxx</code>
+or <code>libmongoc</code> to a non-standard location on your system, you will need to
+set <code>CMAKE_PREFIX_PATH</code> to the library installation prefix (specified at
 build time with <code>CMAKE_INSTALL_PREFIX</code>) when running <code>cmake</code>.</p>
 
 <p>In the <code>mongocxx</code> source repository (versions 3.2.x or newer only), see
@@ -1492,15 +1444,8 @@ settings for a Debug x64 build as an example:</p>
 <li><a href="#step-1-install-the-latest-version-of-the-mongodb-c-driver">Step 1: Install the latest version of the MongoDB C driver.</a></li>
 <li><a href="#step-2-choose-a-c-17-polyfill">Step 2: Choose a C++17 polyfill</a></li>
 <li><a href="#step-3-download-the-latest-version-of-the-mongocxx-driver">Step 3: Download the latest version of the mongocxx driver.</a></li>
-<li><a href="#step-4-configure-the-driver">Step 4: Configure the driver</a>
-<ul>
-<li><a href="#configuring-with-mongocxx-3-1-x-or-3-0-x">Configuring with <code>mongocxx</code> 3.1.x or 3.0.x</a></li>
-<li><a href="#configuring-with-mongocxx-3-2-x-or-newer">Configuring with <code>mongocxx</code> 3.2.x or newer</a></li>
-</ul></li>
-<li><a href="#step-5-build-and-install-the-driver">Step 5: Build and install the driver</a>
-<ul>
-<li><a href="#additional-options-for-integrators">Additional Options for Integrators</a></li>
-</ul></li>
+<li><a href="#step-4-configure-the-driver">Step 4: Configure the driver</a></li>
+<li><a href="#step-5-build-and-install-the-driver">Step 5: Build and install the driver</a></li>
 <li><a href="#step-6-test-your-installation">Step 6: Test your installation</a>
 <ul>
 <li><a href="#compiling-with-the-help-of-cmake">Compiling with the help of CMake</a></li>
