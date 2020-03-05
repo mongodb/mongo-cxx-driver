@@ -8,10 +8,10 @@ title = "Getting help"
 
 Often, the quickest way to get support for general questions is through
 the
-[mongodb-user google group](http://groups.google.com/group/mongodb-user)
+[MongoDB Community Forums](https://community.mongodb.com/tags/c/drivers-odms-connectors/7/cxx-driver)
 or through
 [Stack Overflow](https://stackoverflow.com/questions/tagged/mongodb%20c%2b%2b).
 
 Please also refer to MongoDB's
-[support channels](<http://www.mongodb.org/about/support) documentation.
+[support channels](https://docs.mongodb.com/manual/support) documentation.
 
