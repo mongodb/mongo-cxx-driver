@@ -9,6 +9,7 @@ variables:
 
     mongodb_version:
         version_latest: &version_latest latest
+        version_42: &version_42 4.2
         version_40: &version_40 4.0
 
     ## cmake path variables
@@ -517,6 +518,10 @@ axes:
             display_name: "Latest"
             variables:
                 mongodb_version: *version_latest
+          - id: "4.2"
+            display_name: "4.2"
+            variables:
+                mongodb_version: *version_42
           - id: "4.0"
             display_name: "4.0"
             variables:
