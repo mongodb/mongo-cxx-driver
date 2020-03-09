@@ -716,7 +716,7 @@ buildvariants:
           tar_options: *linux_tar_options
           extra_path: *msvc2015_extra_path
           cmake_flags: *msvc2015_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: *version_42
       run_on:
           - windows-64-vs2015-compile
       tasks:
@@ -731,7 +731,7 @@ buildvariants:
           tar_options: *linux_tar_options
           extra_path: *msvc2015_extra_path
           cmake_flags: *msvc2015_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: *version_42
       run_on:
           - windows-64-vs2015-compile
       tasks:
