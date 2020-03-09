@@ -39,9 +39,8 @@ title = "Installing the legacy driver"
 ### How to ask for Help
 
 If you are having difficulty building the driver after reading the below
-instructions, please email the [mongodb-user mailing
-list](https://groups.google.com/forum/#!forum/mongodb-user) to ask for
-help. Please include in your email **all** of the following information:
+instructions, please post on the [MongoDB Community Forums](https://community.mongodb.com/tags/c/drivers-odms-connectors/7/cxx-driver) to ask for
+help. Please include in your post **all** of the following information:
 
  - The version of the driver you are trying to build (branch or tag).
    - Examples: _legacy-1.0.1 tag_, _legacy-1.0.2 tag_
