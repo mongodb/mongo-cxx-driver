@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <memory>
 
 #include <bsoncxx/stdx/optional.hpp>
@@ -124,6 +125,26 @@ class MONGOCXX_API transaction {
     ///    An optional containing the read preference. If the read preference has not been set, a
     ///    disengaged optional is returned.
     stdx::optional<class read_preference> read_preference() const;
+
+    ///
+    /// Sets the transaction's max commit time, in milliseconds.
+    ///
+    /// @param ms
+    ///   The max commit time in milliseconds.
+    ///
+    /// @return
+    ///   A reference to the object on which this function is being called.
+    ///
+    transaction& max_commit_time_ms(std::chrono::milliseconds ms);
+
+    ///
+    /// Gets the current transaction commit time, in milliseconds.
+    ///
+    /// @return
+    ///   An optional containing the timeout. If the max commit time has not been set,
+    ///   a disengaged optional is returned.
+    ///
+    stdx::optional<std::chrono::milliseconds> max_commit_time_ms() const;
 
    private:
     friend class ::mongocxx::client_session;

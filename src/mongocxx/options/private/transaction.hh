@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <memory>
 
 #include <mongocxx/private/read_concern.hh>
@@ -94,6 +95,18 @@ class transaction::impl {
         class read_preference rpi(
             stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(rp)));
         return stdx::optional<class read_preference>(std::move(rpi));
+    }
+
+    void max_commit_time_ms(std::chrono::milliseconds ms) {
+        libmongoc::transaction_opts_set_max_commit_time_ms(_transaction_opt_t.get(), ms.count());
+    }
+
+    stdx::optional<std::chrono::milliseconds> max_commit_time_ms() const {
+        auto ms = libmongoc::transaction_opts_get_max_commit_time_ms(_transaction_opt_t.get());
+        if (!ms) {
+            return {};
+        }
+        return {std::chrono::milliseconds{ms}};
     }
 
     mongoc_transaction_opt_t* get_transaction_opt_t() const noexcept {

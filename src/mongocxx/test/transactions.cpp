@@ -139,6 +139,20 @@ TEST_CASE("Transaction tests", "[transactions]") {
         successful_insert_test(mongodb_client.start_session(), transaction_opts);
     }
 
+    SECTION("A transaction can have maxCommitTimeMS") {
+        // We simply pass this option through to libmongoc, so check that
+        // it gets successfully set and returned.
+        options::transaction opts;
+
+        REQUIRE(!opts.max_commit_time_ms());
+
+        opts.max_commit_time_ms(std::chrono::milliseconds{100});
+
+        auto returned_opts = opts.max_commit_time_ms();
+        REQUIRE(returned_opts);
+        REQUIRE(returned_opts == std::chrono::milliseconds{100});
+    }
+
     SECTION("Transaction commit can have a TransientTransactionError label") {
         auto db = mongodb_client["test"];
         auto coll = db["txn_test"];

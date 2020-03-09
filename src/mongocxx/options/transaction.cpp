@@ -66,6 +66,15 @@ stdx::optional<class read_preference> transaction::read_preference() const {
     return _impl->read_preference();
 }
 
+transaction& transaction::max_commit_time_ms(std::chrono::milliseconds ms) {
+    _impl->max_commit_time_ms(ms);
+    return *this;
+}
+
+stdx::optional<std::chrono::milliseconds> transaction::max_commit_time_ms() const {
+    return _impl->max_commit_time_ms();
+}
+
 const transaction::impl& transaction::_get_impl() const {
     if (!_impl) {
         throw logic_error{error_code::k_invalid_transaction_options_object};
