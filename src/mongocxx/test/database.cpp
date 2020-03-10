@@ -386,7 +386,7 @@ TEST_CASE("Database integration tests", "[database]") {
         SECTION("with deprecated options") {
             database[collection_name].drop();
 
-            options::create_collection opts;
+            options::create_collection_deprecated opts;
             opts.capped(true);
             opts.size(256);
             opts.max(100);

@@ -249,15 +249,16 @@ class MONGOCXX_API database {
     /// @exception
     ///   mongocxx::operation_exception if the operation fails.
     ///
-    class collection create_collection(bsoncxx::string::view_or_value name,
-                                       const options::create_collection& collection_options,
-                                       const stdx::optional<write_concern>& write_concern = {}) {
+    MONGOCXX_DEPRECATED class collection create_collection(
+        bsoncxx::string::view_or_value name,
+        const options::create_collection_deprecated& collection_options,
+        const stdx::optional<write_concern>& write_concern = {}) {
         return create_collection_deprecated(name, collection_options, write_concern);
     }
 
     class collection create_collection_deprecated(
         bsoncxx::string::view_or_value name,
-        const options::create_collection& collection_options,
+        const options::create_collection_deprecated& collection_options,
         const stdx::optional<write_concern>& write_concern = {});
 
     ///
@@ -283,17 +284,18 @@ class MONGOCXX_API database {
     /// @exception
     ///   mongocxx::operation_exception if the operation fails.
     ///
-    class collection create_collection(const client_session& session,
-                                       bsoncxx::string::view_or_value name,
-                                       const options::create_collection& collection_options,
-                                       const stdx::optional<write_concern>& write_concern = {}) {
+    MONGOCXX_DEPRECATED class collection create_collection(
+        const client_session& session,
+        bsoncxx::string::view_or_value name,
+        const options::create_collection_deprecated& collection_options,
+        const stdx::optional<write_concern>& write_concern = {}) {
         return create_collection_deprecated(session, name, collection_options, write_concern);
     }
 
     class collection create_collection_deprecated(
         const client_session& session,
         bsoncxx::string::view_or_value name,
-        const options::create_collection& collection_options,
+        const options::create_collection_deprecated& collection_options,
         const stdx::optional<write_concern>& write_concern = {});
 
     ///
@@ -613,7 +615,7 @@ class MONGOCXX_API database {
     MONGOCXX_PRIVATE class collection _create_collection_deprecated(
         const client_session* session,
         bsoncxx::string::view_or_value name,
-        const options::create_collection& collection_options,
+        const options::create_collection_deprecated& collection_options,
         const stdx::optional<class write_concern>& write_concern);
 
     MONGOCXX_PRIVATE cursor _list_collections(const client_session* session,

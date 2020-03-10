@@ -28,71 +28,76 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-create_collection& create_collection::capped(bool capped) {
+create_collection_deprecated& create_collection_deprecated::capped(bool capped) {
     _capped = capped;
     return *this;
 }
 
-create_collection& create_collection::collation(bsoncxx::document::view_or_value collation) {
+create_collection_deprecated& create_collection_deprecated::collation(
+    bsoncxx::document::view_or_value collation) {
     _collation = std::move(collation);
     return *this;
 }
 
-create_collection& create_collection::max(std::int64_t max_documents) {
+create_collection_deprecated& create_collection_deprecated::max(std::int64_t max_documents) {
     _max_documents = max_documents;
     return *this;
 }
 
-create_collection& create_collection::no_padding(bool no_padding) {
+create_collection_deprecated& create_collection_deprecated::no_padding(bool no_padding) {
     _no_padding = no_padding;
     return *this;
 }
 
-create_collection& create_collection::size(std::int64_t max_size) {
+create_collection_deprecated& create_collection_deprecated::size(std::int64_t max_size) {
     _max_size = max_size;
     return *this;
 }
 
-create_collection& create_collection::storage_engine(
+create_collection_deprecated& create_collection_deprecated::storage_engine(
     bsoncxx::document::view_or_value storage_engine_opts) {
     _storage_engine_opts = std::move(storage_engine_opts);
     return *this;
 }
 
-create_collection& create_collection::validation_criteria(class validation_criteria validation) {
+create_collection_deprecated& create_collection_deprecated::validation_criteria(
+    class validation_criteria validation) {
     _validation = std::move(validation);
     return *this;
 }
 
-const stdx::optional<bool>& create_collection::capped() const {
+const stdx::optional<bool>& create_collection_deprecated::capped() const {
     return _capped;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& create_collection::collation() const {
+const stdx::optional<bsoncxx::document::view_or_value>& create_collection_deprecated::collation()
+    const {
     return _collation;
 }
 
-const stdx::optional<std::int64_t>& create_collection::max() const {
+const stdx::optional<std::int64_t>& create_collection_deprecated::max() const {
     return _max_documents;
 }
 
-const stdx::optional<bool>& create_collection::no_padding() const {
+const stdx::optional<bool>& create_collection_deprecated::no_padding() const {
     return _no_padding;
 }
 
-const stdx::optional<std::int64_t>& create_collection::size() const {
+const stdx::optional<std::int64_t>& create_collection_deprecated::size() const {
     return _max_size;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& create_collection::storage_engine() const {
+const stdx::optional<bsoncxx::document::view_or_value>&
+create_collection_deprecated::storage_engine() const {
     return _storage_engine_opts;
 }
 
-const stdx::optional<class validation_criteria>& create_collection::validation_criteria() const {
+const stdx::optional<class validation_criteria>& create_collection_deprecated::validation_criteria()
+    const {
     return _validation;
 }
 
-bsoncxx::document::value create_collection::to_document_deprecated() const {
+bsoncxx::document::value create_collection_deprecated::to_document_deprecated() const {
     auto doc = bsoncxx::builder::basic::document{};
 
     if (_capped) {
@@ -126,7 +131,7 @@ bsoncxx::document::value create_collection::to_document_deprecated() const {
     return doc.extract();
 }
 
-bsoncxx::document::value create_collection::to_document() const {
+bsoncxx::document::value create_collection_deprecated::to_document() const {
     return to_document_deprecated();
 }
 

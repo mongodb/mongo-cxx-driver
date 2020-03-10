@@ -28,7 +28,11 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB createCollection command
 ///
-class MONGOCXX_API create_collection {
+/// This class is deprecated, as are the database class methods that use this class.
+/// Please use the new database::create_collection methods that take options as a
+/// BSON document.
+///
+class MONGOCXX_API create_collection_deprecated {
    public:
     ///
     /// To create a capped collection, specify true.
@@ -44,7 +48,7 @@ class MONGOCXX_API create_collection {
     ///
     /// @see https://docs.mongodb.com/master/reference/glossary/#term-capped-collection
     ///
-    create_collection& capped(bool capped);
+    create_collection_deprecated& capped(bool capped);
 
     ///
     /// Gets the current capped setting.
@@ -69,7 +73,7 @@ class MONGOCXX_API create_collection {
     /// @see
     ///   https://docs.mongodb.com/master/reference/collation/
     ///
-    create_collection& collation(bsoncxx::document::view_or_value collation);
+    create_collection_deprecated& collation(bsoncxx::document::view_or_value collation);
 
     ///
     /// Gets the default collation for this collection.
@@ -96,7 +100,7 @@ class MONGOCXX_API create_collection {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    create_collection& max(std::int64_t max_documents);
+    create_collection_deprecated& max(std::int64_t max_documents);
 
     ///
     /// Gets the current setting for the maximum number of documents allowed in the capped
@@ -119,7 +123,7 @@ class MONGOCXX_API create_collection {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    create_collection& no_padding(bool no_padding);
+    create_collection_deprecated& no_padding(bool no_padding);
 
     ///
     /// Gets the current value of the "no padding" option for the collection.
@@ -146,7 +150,7 @@ class MONGOCXX_API create_collection {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    create_collection& size(std::int64_t max_size);
+    create_collection_deprecated& size(std::int64_t max_size);
 
     ///
     /// Gets the current size setting, for a capped collection.
@@ -168,7 +172,8 @@ class MONGOCXX_API create_collection {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    create_collection& storage_engine(bsoncxx::document::view_or_value storage_engine_opts);
+    create_collection_deprecated& storage_engine(
+        bsoncxx::document::view_or_value storage_engine_opts);
 
     ///
     /// Gets the current storage engine configuration for this collection.
@@ -190,7 +195,7 @@ class MONGOCXX_API create_collection {
     ///
     /// @see https://docs.mongodb.com/master/core/document-validation/
     ///
-    create_collection& validation_criteria(class validation_criteria validation);
+    create_collection_deprecated& validation_criteria(class validation_criteria validation);
 
     ///
     /// Gets the current validation criteria for this collection.
@@ -231,7 +236,9 @@ class MONGOCXX_API create_collection {
     stdx::optional<class validation_criteria> _validation;
 };
 
-MONGOCXX_INLINE create_collection::operator bsoncxx::document::value() const {
+MONGOCXX_DEPRECATED typedef create_collection_deprecated create_collection;
+
+MONGOCXX_INLINE create_collection_deprecated::operator bsoncxx::document::value() const {
     return to_document_deprecated();
 }
 

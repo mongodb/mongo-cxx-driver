@@ -296,7 +296,7 @@ collection database::_create_collection(const client_session* session,
 collection database::_create_collection_deprecated(
     const client_session* session,
     bsoncxx::string::view_or_value name,
-    const options::create_collection& collection_options,
+    const options::create_collection_deprecated& collection_options,
     const stdx::optional<class write_concern>& write_concern) {
     bsoncxx::builder::basic::document options_builder;
 
@@ -384,7 +384,7 @@ class collection database::create_collection(
 
 class collection database::create_collection_deprecated(
     bsoncxx::string::view_or_value name,
-    const options::create_collection& collection_options,
+    const options::create_collection_deprecated& collection_options,
     const stdx::optional<class write_concern>& write_concern) {
     return _create_collection_deprecated(nullptr, name, collection_options, write_concern);
 }
@@ -392,7 +392,7 @@ class collection database::create_collection_deprecated(
 class collection database::create_collection_deprecated(
     const client_session& session,
     bsoncxx::string::view_or_value name,
-    const options::create_collection& collection_options,
+    const options::create_collection_deprecated& collection_options,
     const stdx::optional<class write_concern>& write_concern) {
     return _create_collection_deprecated(&session, name, collection_options, write_concern);
 }

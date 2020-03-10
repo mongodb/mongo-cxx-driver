@@ -35,7 +35,7 @@ using builder::basic::make_document;
 TEST_CASE("create_collection accessors/mutators", "[create_collection]") {
     instance::current();
 
-    options::create_collection cc;
+    options::create_collection_deprecated cc;
 
     auto collation = make_document(kvp("locale", "en_US"));
     auto storage_engine = make_document(
@@ -68,7 +68,7 @@ TEST_CASE("create_collection accessors/mutators", "[create_collection]") {
 TEST_CASE("create_collection can be exported to a document", "[create_collection]") {
     instance::current();
 
-    options::create_collection cc;
+    options::create_collection_deprecated cc;
 
     auto collation_en_US = make_document(kvp("locale", "en_US"));
     auto rule = make_document(kvp("brain", make_document(kvp("$exists", true))));
