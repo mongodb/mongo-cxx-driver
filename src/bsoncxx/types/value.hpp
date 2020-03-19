@@ -25,6 +25,10 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
+namespace document {
+class element;
+}  // namespace document
+
 namespace types {
 
 ///
@@ -354,6 +358,13 @@ class BSONCXX_API value {
     const b_maxkey& get_maxkey() const;
 
    private:
+    friend class document::element;
+
+    value(const std::uint8_t* raw,
+          std::uint32_t length,
+          std::uint32_t offset,
+          std::uint32_t keylen);
+
     void BSONCXX_PRIVATE destroy() noexcept;
 
     bsoncxx::type _type;
