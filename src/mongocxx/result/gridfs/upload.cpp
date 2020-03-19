@@ -23,10 +23,10 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 namespace gridfs {
 
-upload::upload(bsoncxx::types::value id)
+upload::upload(bsoncxx::types::bson_value::view id)
     : _id_owned(bsoncxx::builder::basic::make_array(id)), _id(_id_owned.view()[0].get_value()) {}
 
-const bsoncxx::types::value& upload::id() const {
+const bsoncxx::types::bson_value::view& upload::id() const {
     return _id;
 }
 

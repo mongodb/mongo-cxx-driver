@@ -63,6 +63,7 @@ std::vector<std::int32_t> parse_version(std::string version) {
 
     return elements;
 }
+
 bsoncxx::document::value transform_document_recursive(bsoncxx::document::view view,
                                                       const xformer_t& fcn,
                                                       bsoncxx::builder::basic::array* context);
@@ -252,7 +253,7 @@ bsoncxx::document::value transform_document(bsoncxx::document::view view, const 
     return transform_document_recursive(view, fcn, &context);
 }
 
-double as_double(bsoncxx::types::value value) {
+double as_double(bsoncxx::types::bson_value::view value) {
     if (value.type() == type::k_int32) {
         return static_cast<double>(value.get_int32());
     }
@@ -267,12 +268,12 @@ double as_double(bsoncxx::types::value value) {
                            " to double"};
 }
 
-bool is_numeric(types::value value) {
+bool is_numeric(types::bson_value::view value) {
     return value.type() == type::k_int32 || value.type() == type::k_int64 ||
            value.type() == type::k_double;
 }
 
-stdx::optional<type> is_type_operator(types::value value) {
+stdx::optional<type> is_type_operator(types::bson_value::view value) {
     if (value.type() == type::k_document && value.get_document().value["$$type"]) {
         auto t = value.get_document().value["$$type"].get_utf8().value;
         if (t.compare("binData") == 0) {
@@ -285,7 +286,9 @@ stdx::optional<type> is_type_operator(types::value value) {
     return {};
 }
 
-bool matches(types::value main, types::value pattern, match_visitor visitor_fn) {
+bool matches(types::bson_value::view main,
+             types::bson_value::view pattern,
+             match_visitor visitor_fn) {
     if (auto t = is_type_operator(pattern)) {
         return t == main.type() ? true : false;
     }
@@ -304,7 +307,7 @@ bool matches(types::value main, types::value pattern, match_visitor visitor_fn) 
         for (auto&& el : pattern.get_document().value) {
             match_action action = match_action::k_proceed;
             if (visitor_fn) {
-                stdx::optional<types::value> main_value;
+                stdx::optional<types::bson_value::view> main_value;
                 if (main_view.find(el.key()) != main_view.end()) {
                     main_value = main_view[el.key()].get_value();
                 }
@@ -365,8 +368,9 @@ bool matches(types::value main, types::value pattern, match_visitor visitor_fn) 
 }
 
 bool matches(document::view doc, document::view pattern, match_visitor visitor_fn) {
-    return matches(
-        types::value{types::b_document{doc}}, types::value{types::b_document{pattern}}, visitor_fn);
+    return matches(types::bson_value::view{types::b_document{doc}},
+                   types::bson_value::view{types::b_document{pattern}},
+                   visitor_fn);
 }
 
 std::string tolowercase(stdx::string_view view) {

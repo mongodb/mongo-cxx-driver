@@ -66,20 +66,22 @@ class MONGOCXX_API hint {
     ///
 
     ///
-    /// Returns a types::value representing this hint.
+    /// Returns a types::bson_value::view representing this hint.
     ///
-    /// @return Hint, as a types::value. The caller must ensure that the returned object not outlive
+    /// @return Hint, as a types::bson_value::view. The caller must ensure that the returned object
+    /// not outlive
     /// the hint object that it was created from.
     ///
-    bsoncxx::types::value to_value() const;
+    bsoncxx::types::bson_value::view to_value() const;
 
     ///
-    /// Returns a types::value representing this hint.
+    /// Returns a types::bson_value::view representing this hint.
     ///
-    /// @return Hint, as a types::value. The caller must ensure that the returned object not outlive
+    /// @return Hint, as a types::bson_value::view. The caller must ensure that the returned object
+    /// not outlive
     /// the hint object that it was created from.
     ///
-    MONGOCXX_INLINE operator bsoncxx::types::value() const;
+    MONGOCXX_INLINE operator bsoncxx::types::bson_value::view() const;
 
    private:
     stdx::optional<bsoncxx::document::view_or_value> _index_doc;
@@ -135,7 +137,7 @@ MONGOCXX_API bool MONGOCXX_CALL operator!=(bsoncxx::document::view index, const 
 /// @}
 ///
 
-MONGOCXX_INLINE hint::operator bsoncxx::types::value() const {
+MONGOCXX_INLINE hint::operator bsoncxx::types::bson_value::view() const {
     return to_value();
 }
 

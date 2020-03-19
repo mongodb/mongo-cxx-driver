@@ -95,7 +95,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 
             for (auto ele : expected["command_started_event"].get_document().value) {
                 bsoncxx::stdx::string_view field{ele.key()};
-                types::value value{ele.get_value()};
+                types::bson_value::view value{ele.get_value()};
 
                 if (field.compare("command_name") == 0) {
                     REQUIRE(event.command_name() == value.get_utf8().value);
@@ -119,7 +119,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 
             for (auto ele : expected["command_failed_event"].get_document().value) {
                 bsoncxx::stdx::string_view field{ele.key()};
-                types::value value{ele.get_value()};
+                types::bson_value::view value{ele.get_value()};
 
                 if (field.compare("command_name") == 0) {
                     REQUIRE(event.command_name() == value.get_utf8().value);
@@ -141,7 +141,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 
             for (auto ele : expected["command_succeeded_event"].get_document().value) {
                 bsoncxx::stdx::string_view field{ele.key()};
-                types::value value{ele.get_value()};
+                types::bson_value::view value{ele.get_value()};
 
                 if (field.compare("command_name") == 0) {
                     REQUIRE(event.command_name() == value.get_utf8().value);

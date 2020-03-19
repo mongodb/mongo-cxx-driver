@@ -60,7 +60,7 @@ bsoncxx::stdx::optional<test_util::item_t> make_optional(test_util::item_t item)
 // Query the GridFS files collection and fetch the length of the file.
 //
 // Returns -1 if the file is not found.
-std::int64_t get_length_of_gridfs_file(gridfs::bucket bucket, types::value id) {
+std::int64_t get_length_of_gridfs_file(gridfs::bucket bucket, types::bson_value::view id) {
     builder::basic::document filter;
     filter.append(builder::basic::kvp("_id", id));
     cursor cursor = bucket.find(filter.extract());
@@ -130,8 +130,9 @@ bsoncxx::stdx::optional<test_util::item_t> convert_length_to_int64(test_util::it
 
     types::b_int64 length = {value.get_int32()};
 
-    return make_optional(std::make_pair(
-        bsoncxx::stdx::optional<bsoncxx::stdx::string_view>("length"), types::value{length}));
+    return make_optional(
+        std::make_pair(bsoncxx::stdx::optional<bsoncxx::stdx::string_view>("length"),
+                       types::bson_value::view{length}));
 }
 
 void compare_collections(database db) {
@@ -205,7 +206,7 @@ void test_download(database db,
     document::view arguments = operation["arguments"].get_document().value;
 
     REQUIRE(arguments["id"]);
-    types::value id = arguments["id"].get_value();
+    types::bson_value::view id = arguments["id"].get_value();
 
     // Allocate the space needed to store the result.
     std::int64_t length = get_length_of_gridfs_file(bucket, id);
@@ -336,7 +337,7 @@ void test_upload(database db,
                     return make_optional(pair);
                 }
 
-                return make_optional(std::make_pair(pair.first, types::value{id}));
+                return make_optional(std::make_pair(pair.first, types::bson_value::view{id}));
             });
 
         db.run_command(transformed_data.view());
@@ -353,7 +354,7 @@ void test_delete(database db,
     document::view arguments = operation["arguments"].get_document().value;
 
     REQUIRE(arguments["id"]);
-    types::value id = arguments["id"].get_value();
+    types::bson_value::view id = arguments["id"].get_value();
 
     if (assert_doc["error"]) {
         REQUIRE_THROWS_AS(bucket.delete_file(id), std::exception);

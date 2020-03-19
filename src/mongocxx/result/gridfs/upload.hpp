@@ -27,14 +27,14 @@ namespace gridfs {
 /// Class representing the result of a GridFS upload operation.
 class MONGOCXX_API upload {
    public:
-    upload(bsoncxx::types::value id);
+    upload(bsoncxx::types::bson_value::view id);
 
     ///
     /// Gets the id of the uploaded GridFS file.
     ///
     /// @return The id of the uploaded file.
     ///
-    const bsoncxx::types::value& id() const;
+    const bsoncxx::types::bson_value::view& id() const;
 
    private:
     // Array with a single element, containing the value of the _id field for the inserted files
@@ -42,7 +42,7 @@ class MONGOCXX_API upload {
     bsoncxx::array::value _id_owned;
 
     // Points into _id_owned.
-    bsoncxx::types::value _id;
+    bsoncxx::types::bson_value::view _id;
 
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const upload&, const upload&);
     friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const upload&, const upload&);

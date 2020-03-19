@@ -24,7 +24,7 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace types {
 
 ///
-/// The bsoncxx::types::value class has been renamed to
+/// The bsoncxx::types::bson_value::view class has been renamed to
 /// bsoncxx::types::bson_value::view.
 ///
 /// @deprecated use bsoncxx::types::bson_value::view instead.

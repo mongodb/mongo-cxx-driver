@@ -644,7 +644,7 @@ core& core::concatenate(const bsoncxx::document::view& view) {
     return *this;
 }
 
-core& core::append(const bsoncxx::types::value& value) {
+core& core::append(const bsoncxx::types::bson_value::view& value) {
     switch (static_cast<int>(value.type())) {
 #define BSONCXX_ENUM(type, val)     \
     case val:                       \

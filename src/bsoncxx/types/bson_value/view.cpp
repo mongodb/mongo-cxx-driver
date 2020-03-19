@@ -94,7 +94,7 @@ view& view::operator=(const view& rhs) noexcept {
     return *this;
 }
 
-view::~value() {
+view::~view() {
     destroy();
 }
 

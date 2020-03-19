@@ -207,7 +207,7 @@ TEST_CASE("session", "[session]") {
 
         // Test gridfs::bucket.
         auto bucket2 = db2.gridfs_bucket();
-        auto one = bsoncxx::types::value{bsoncxx::types::b_int32{1}};
+        auto one = bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{1}};
 
         REQUIRE_THROWS_INVALID_SESSION(bucket2.open_upload_stream(s, "file"));
         REQUIRE_THROWS_INVALID_SESSION(bucket2.open_download_stream(s, one));
@@ -324,8 +324,8 @@ TEST_CASE("lsid", "[session]") {
             use_session ? db["fs.files"].drop(s) : db["fs.files"].drop();
             use_session ? db["fs.chunks"].drop(s) : db["fs.chunks"].drop();
 
-            auto one = bsoncxx::types::value{bsoncxx::types::b_int32{1}};
-            auto two = bsoncxx::types::value{bsoncxx::types::b_int32{2}};
+            auto one = bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{1}};
+            auto two = bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{2}};
             auto data = (uint8_t*)"foo";
             size_t len = 4;
             // Ensure multiple chunks.

@@ -2369,7 +2369,7 @@ TEST_CASE("create_index tests", "[collection]") {
         coll.create_index(keys.view(), options);
 
         auto validate = [](bsoncxx::document::view index) {
-            bsoncxx::types::value locale{types::b_utf8{"en_US"}};
+            bsoncxx::types::bson_value::view locale{types::b_utf8{"en_US"}};
             auto locale_ele = index["collation"]["locale"];
             REQUIRE(locale_ele);
             REQUIRE(locale_ele.type() == type::k_utf8);

@@ -35,7 +35,7 @@ TEST_CASE("insert_one", "[insert_one][result]") {
 
     mongocxx::result::bulk_write b{document::value(build.view())};
 
-    mongocxx::result::insert_one insert_one{std::move(b), types::value{oid}};
+    mongocxx::result::insert_one insert_one{std::move(b), types::bson_value::view{oid}};
 
     SECTION("returns correct response") {
         REQUIRE(insert_one.inserted_id() == oid);
@@ -51,8 +51,8 @@ TEST_CASE("insert_one equals", "[insert_one][result]") {
     mongocxx::result::bulk_write a{build};
     mongocxx::result::bulk_write b{build};
 
-    mongocxx::result::insert_one insert_one1{std::move(a), types::value{oid}};
-    mongocxx::result::insert_one insert_one2{std::move(b), types::value{oid}};
+    mongocxx::result::insert_one insert_one1{std::move(a), types::bson_value::view{oid}};
+    mongocxx::result::insert_one insert_one2{std::move(b), types::bson_value::view{oid}};
 
     REQUIRE(insert_one1 == insert_one2);
 }
@@ -65,8 +65,8 @@ TEST_CASE("insert_one inequals", "[insert_one][result]") {
     mongocxx::result::bulk_write a{make_document(kvp("_id", oid), kvp("x", 1))};
     mongocxx::result::bulk_write b{make_document(kvp("_id", oid), kvp("x", 2))};
 
-    mongocxx::result::insert_one insert_one1{std::move(a), types::value{oid}};
-    mongocxx::result::insert_one insert_one2{std::move(b), types::value{oid}};
+    mongocxx::result::insert_one insert_one1{std::move(a), types::bson_value::view{oid}};
+    mongocxx::result::insert_one insert_one2{std::move(b), types::bson_value::view{oid}};
 
     REQUIRE(insert_one1 != insert_one2);
 }

@@ -62,7 +62,7 @@ class gridfs_multi_export : public microbench {
 
     std::string _directory;
     mongocxx::pool _pool;
-    std::vector<bsoncxx::types::value> _ids;
+    std::vector<bsoncxx::types::bson_value::view> _ids;
     std::uint32_t _thread_num;
 };
 

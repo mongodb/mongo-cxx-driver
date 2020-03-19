@@ -186,168 +186,174 @@ TEST_CASE("b_maxkey", "[bsoncxx::type::b_maxkey]") {
     REQUIRE(a == a);
 }
 
-TEST_CASE("value returns correct type", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view returns correct type", "[bsoncxx::types::bson_value::view]") {
     b_bool bool_val{true};
-    REQUIRE(value{bool_val}.type() == bsoncxx::type::k_bool);
+    REQUIRE(bson_value::view{bool_val}.type() == bsoncxx::type::k_bool);
 }
 
-TEST_CASE("value with b_double", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_double", "[bsoncxx::types::bson_value::view]") {
     b_double double_val{1.1};
-    REQUIRE(value{double_val}.get_double() == double_val);
+    REQUIRE(bson_value::view{double_val}.get_double() == double_val);
 }
 
-TEST_CASE("value with b_utf8", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_utf8", "[bsoncxx::types::bson_value::view]") {
     b_utf8 utf8_val{"hello"};
-    REQUIRE(value{utf8_val}.get_utf8() == utf8_val);
+    REQUIRE(bson_value::view{utf8_val}.get_utf8() == utf8_val);
 }
 
-TEST_CASE("value with b_document", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_document", "[bsoncxx::types::bson_value::view]") {
     auto doc = make_document(kvp("a", 1));
     b_document doc_val{doc.view()};
-    REQUIRE(value{doc_val}.get_document() == doc_val);
+    REQUIRE(bson_value::view{doc_val}.get_document() == doc_val);
 }
 
-TEST_CASE("value with b_array", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_array", "[bsoncxx::types::bson_value::view]") {
     builder::basic::array arr;
     arr.append(b_int32{1}, b_int32{2}, b_int32{3});
     b_array arr_val{arr.view()};
-    REQUIRE(value{arr_val}.get_array() == arr_val);
+    REQUIRE(bson_value::view{arr_val}.get_array() == arr_val);
 }
 
-TEST_CASE("value with b_binary", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_binary", "[bsoncxx::types::bson_value::view]") {
     b_binary binary_val{binary_sub_type::k_binary, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
-    REQUIRE(value{binary_val}.get_binary() == binary_val);
+    REQUIRE(bson_value::view{binary_val}.get_binary() == binary_val);
 }
 
-TEST_CASE("value with b_undefined", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_undefined", "[bsoncxx::types::bson_value::view]") {
     b_undefined undef_val;
-    REQUIRE(value{undef_val}.get_undefined() == undef_val);
+    REQUIRE(bson_value::view{undef_val}.get_undefined() == undef_val);
 }
 
-TEST_CASE("value with b_oid", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_oid", "[bsoncxx::types::bson_value::view]") {
     oid oid;
     b_oid oid_val{bsoncxx::oid{oid.bytes(), 12}};
-    REQUIRE(value{oid_val}.get_oid() == oid_val);
+    REQUIRE(bson_value::view{oid_val}.get_oid() == oid_val);
 }
 
-TEST_CASE("value with b_bool", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_bool", "[bsoncxx::types::bson_value::view]") {
     b_bool bool_val{true};
-    REQUIRE(value{bool_val}.get_bool() == bool_val);
+    REQUIRE(bson_value::view{bool_val}.get_bool() == bool_val);
 }
 
-TEST_CASE("value with b_date", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_date", "[bsoncxx::types::bson_value::view]") {
     using bsoncxx::types::b_date;
     using std::chrono::system_clock;
 
     b_date date_val{system_clock::now()};
-    REQUIRE(value{date_val}.get_date() == date_val);
+    REQUIRE(bson_value::view{date_val}.get_date() == date_val);
 }
 
-TEST_CASE("value with b_null", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_null", "[bsoncxx::types::bson_value::view]") {
     b_null null_val;
-    REQUIRE(value{null_val}.get_null() == null_val);
+    REQUIRE(bson_value::view{null_val}.get_null() == null_val);
 }
 
-TEST_CASE("value with b_regex", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_regex", "[bsoncxx::types::bson_value::view]") {
     b_regex regex_val{stdx::string_view{"^foo|bar$"}};
-    REQUIRE(value{regex_val}.get_regex() == regex_val);
+    REQUIRE(bson_value::view{regex_val}.get_regex() == regex_val);
 }
 
-TEST_CASE("value with b_code", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_code", "[bsoncxx::types::bson_value::view]") {
     b_code code_val{"var a = {};"};
-    REQUIRE(value{code_val}.get_code() == code_val);
+    REQUIRE(bson_value::view{code_val}.get_code() == code_val);
 }
 
-TEST_CASE("value with b_symbol", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_symbol", "[bsoncxx::types::bson_value::view]") {
     b_symbol symbol_val{"deadbeef"};
-    REQUIRE(value{symbol_val}.get_symbol() == symbol_val);
+    REQUIRE(bson_value::view{symbol_val}.get_symbol() == symbol_val);
 }
 
-TEST_CASE("value with b_codewscope", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_codewscope", "[bsoncxx::types::bson_value::view]") {
     auto scope1 = make_document(kvp("b", 1));
     b_codewscope codewscope_val{"var a = b;", scope1.view()};
-    REQUIRE(value{codewscope_val}.get_codewscope() == codewscope_val);
+    REQUIRE(bson_value::view{codewscope_val}.get_codewscope() == codewscope_val);
 }
 
-TEST_CASE("value with b_int32", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_int32", "[bsoncxx::types::bson_value::view]") {
     b_int32 int32_val{10};
-    REQUIRE(value{int32_val}.get_int32() == int32_val);
+    REQUIRE(bson_value::view{int32_val}.get_int32() == int32_val);
 }
 
-TEST_CASE("value with b_timestamp", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_timestamp", "[bsoncxx::types::bson_value::view]") {
     types::b_timestamp timestamp_val{100, 1000};
-    REQUIRE(value{timestamp_val}.get_timestamp() == timestamp_val);
+    REQUIRE(bson_value::view{timestamp_val}.get_timestamp() == timestamp_val);
 }
 
-TEST_CASE("value with b_int64", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_int64", "[bsoncxx::types::bson_value::view]") {
     b_int64 int64_val{100};
-    REQUIRE(value{int64_val}.get_int64() == int64_val);
+    REQUIRE(bson_value::view{int64_val}.get_int64() == int64_val);
 }
 
-TEST_CASE("value with b_decimal128", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_decimal128", "[bsoncxx::types::bson_value::view]") {
     b_decimal128 decimal_val{"-1234E+999"};
-    REQUIRE(value{decimal_val}.get_decimal128() == decimal_val);
+    REQUIRE(bson_value::view{decimal_val}.get_decimal128() == decimal_val);
 }
 
-TEST_CASE("value with b_minkey", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_minkey", "[bsoncxx::types::bson_value::view]") {
     b_minkey minkey_val;
-    REQUIRE(value{minkey_val}.get_minkey() == minkey_val);
+    REQUIRE(bson_value::view{minkey_val}.get_minkey() == minkey_val);
 }
 
-TEST_CASE("value with b_maxkey", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with b_maxkey", "[bsoncxx::types::bson_value::view]") {
     b_maxkey maxkey_val;
-    REQUIRE(value{maxkey_val}.get_maxkey() == maxkey_val);
+    REQUIRE(bson_value::view{maxkey_val}.get_maxkey() == maxkey_val);
 }
 
-TEST_CASE("value with copy constructor", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with copy constructor", "[bsoncxx::types::bson_value::view]") {
     b_int32 int32_val{10};
-    value original{int32_val};
-    value copy{original};
+    bson_value::view original{int32_val};
+    bson_value::view copy{original};
     REQUIRE(copy.get_int32() == int32_val);
 }
 
-TEST_CASE("value with assignment operator", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with assignment operator", "[bsoncxx::types::bson_value::view]") {
     b_int32 int32_val{10};
-    value original{int32_val};
-    value copy = original;
+    bson_value::view original{int32_val};
+    bson_value::view copy = original;
     REQUIRE(copy.get_int32() == int32_val);
 }
 
-TEST_CASE("value with equality operator", "[bsoncxx::type::value]") {
-    value original{b_int32{10}};
-    value copy{b_int32{10}};
+TEST_CASE("bson_value::view with equality operator", "[bsoncxx::types::bson_value::view]") {
+    bson_value::view original{b_int32{10}};
+    bson_value::view copy{b_int32{10}};
     REQUIRE(original == copy);
 }
 
-TEST_CASE("value with equality for value and non-value", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with equality for value and non-value",
+          "[bsoncxx::types::bson_value::view]") {
     b_int64 int64_val{100};
-    REQUIRE(value{int64_val} == int64_val);
+    REQUIRE(bson_value::view{int64_val} == int64_val);
 }
 
-TEST_CASE("value with equality for non-value and value", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with equality for non-value and value",
+          "[bsoncxx::types::bson_value::view]") {
     b_int64 int64_val{100};
-    REQUIRE(int64_val == value{int64_val});
+    REQUIRE(int64_val == bson_value::view{int64_val});
 }
 
-TEST_CASE("value with value inequality operator and same type", "[bsoncxx::type::value]") {
-    value first{b_int32{10}};
-    value second{b_int32{5}};
+TEST_CASE("bson_value::view with value inequality operator and same type",
+          "[bsoncxx::types::bson_value::view]") {
+    bson_value::view first{b_int32{10}};
+    bson_value::view second{b_int32{5}};
     REQUIRE(first != second);
 }
 
-TEST_CASE("value with value inequality operator and different type", "[bsoncxx::type::value]") {
-    value first{b_int32{10}};
-    value second{b_int64{10}};
+TEST_CASE("bson_value::view with value inequality operator and different type",
+          "[bsoncxx::types::bson_value::view]") {
+    bson_value::view first{b_int32{10}};
+    bson_value::view second{b_int64{10}};
     REQUIRE(first != second);
 }
 
-TEST_CASE("value with inequality for value and non-value", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with inequality for value and non-value",
+          "[bsoncxx::types::bson_value::view]") {
     b_int64 int64_val{100};
-    REQUIRE(value{b_int64{200}} != int64_val);
+    REQUIRE(bson_value::view{b_int64{200}} != int64_val);
 }
 
-TEST_CASE("value with inequality for non-value and value", "[bsoncxx::type::value]") {
+TEST_CASE("bson_value::view with inequality for non-value and value",
+          "[bsoncxx::types::bson_value::view]") {
     b_int64 int64_val{100};
-    REQUIRE(int64_val != value{b_int64{200}});
+    REQUIRE(int64_val != bson_value::view{b_int64{200}});
 }
 }

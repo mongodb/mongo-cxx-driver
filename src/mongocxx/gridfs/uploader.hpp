@@ -147,7 +147,7 @@ class MONGOCXX_API uploader {
     //   Optional metadata field of the files collection document.
     //
     MONGOCXX_PRIVATE uploader(const client_session* session,
-                              bsoncxx::types::value id,
+                              bsoncxx::types::bson_value::view id,
                               stdx::string_view filename,
                               collection files,
                               collection chunks,

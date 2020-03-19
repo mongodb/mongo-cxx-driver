@@ -50,7 +50,11 @@ struct b_int64;
 struct b_decimal128;
 struct b_minkey;
 struct b_maxkey;
-class value;
+
+namespace bson_value {
+class view;
+}  // namespace bson_value
+
 }  // namespace types
 
 namespace array {
@@ -320,12 +324,12 @@ class BSONCXX_API element {
     types::b_maxkey get_maxkey() const;
 
     ///
-    /// Getter for a types::value variant wrapper of the value portion of the
+    /// Getter for a types::bson_value::view variant wrapper of the value portion of the
     /// element.
     ///
     /// @return the element's value.
     ///
-    types::value get_value() const;
+    types::bson_value::view get_value() const;
 
     ///
     /// If this element is a document, finds the first element of the document

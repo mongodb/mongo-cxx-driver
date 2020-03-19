@@ -353,9 +353,10 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         }
 
         // Step 11. Compare APM events.
-        test_util::match_visitor visitor = [&](bsoncxx::stdx::string_view key,
-                                               bsoncxx::stdx::optional<bsoncxx::types::value> main,
-                                               bsoncxx::types::value pattern) {
+        test_util::match_visitor visitor = [&](
+            bsoncxx::stdx::string_view key,
+            bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
+            bsoncxx::types::bson_value::view pattern) {
             if (key.compare("lsid") == 0) {
                 REQUIRE(pattern.type() == type::k_utf8);
                 REQUIRE(main);

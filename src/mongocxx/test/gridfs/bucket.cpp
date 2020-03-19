@@ -51,7 +51,7 @@ using bsoncxx::builder::basic::make_document;
 // `expected_chunk_size`.
 void validate_gridfs_file(database db,
                           std::string bucket_name,
-                          bsoncxx::types::value id,
+                          bsoncxx::types::bson_value::view id,
                           std::string expected_file_name,
                           std::vector<std::uint8_t> expected_contents,
                           std::int32_t expected_chunk_size) {
@@ -109,7 +109,7 @@ void validate_gridfs_file(database db,
 void validate_gridfs_file(
     database db,
     std::string bucket_name,
-    bsoncxx::types::value id,
+    bsoncxx::types::bson_value::view id,
     std::string expected_file_name,
     std::function<void(const bsoncxx::types::b_binary&, std::size_t)> validate_chunk,
     std::int32_t expected_chunk_size,
@@ -153,7 +153,7 @@ void validate_gridfs_file(
 std::vector<std::uint8_t> manual_gridfs_initialize(database db,
                                                    std::int64_t length,
                                                    std::int32_t chunk_size,
-                                                   bsoncxx::types::value id) {
+                                                   bsoncxx::types::bson_value::view id) {
     std::vector<std::uint8_t> bytes;
 
     // Populate the vector with arbitrary values.
@@ -194,7 +194,7 @@ void manual_gridfs_initialize(
     database db,
     std::int32_t num_chunks,
     std::int32_t chunk_size,
-    bsoncxx::types::value id,
+    bsoncxx::types::bson_value::view id,
     std::function<std::vector<std::uint8_t>(std::int32_t)> get_expected_chunk_bytes) {
     db["fs.chunks"].create_index(make_document(kvp("files_id", 1), kvp("n", 1)),
                                  options::index{}.unique(true));
@@ -315,19 +315,20 @@ TEST_CASE("uploading throws error when options are invalid", "[gridfs::bucket]")
     options::gridfs::upload upload_options;
     auto run_test = [&]() {
         REQUIRE_THROWS_AS(bucket.open_upload_stream("filename", upload_options), logic_error);
-        REQUIRE_THROWS_AS(
-            bucket.open_upload_stream_with_id(
-                bsoncxx::types::value{bsoncxx::types::b_int32{0}}, "filename", upload_options),
-            logic_error);
+        REQUIRE_THROWS_AS(bucket.open_upload_stream_with_id(
+                              bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{0}},
+                              "filename",
+                              upload_options),
+                          logic_error);
 
         std::istringstream iss{"foo"};
         REQUIRE_THROWS_AS(bucket.upload_from_stream("filename", &iss, upload_options), logic_error);
-        REQUIRE_THROWS_AS(
-            bucket.upload_from_stream_with_id(bsoncxx::types::value{bsoncxx::types::b_int32{0}},
-                                              "filename",
-                                              &iss,
-                                              upload_options),
-            logic_error);
+        REQUIRE_THROWS_AS(bucket.upload_from_stream_with_id(
+                              bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{0}},
+                              "filename",
+                              &iss,
+                              upload_options),
+                          logic_error);
     };
 
     SECTION("zero chunk size") {
@@ -352,10 +353,10 @@ TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::b
 
     const std::int32_t k_expected_chunk_size_bytes = 255 * 1024;  // Default chunk size.
     const std::int64_t k_expected_file_length = 1024 * 1024;
-    stdx::optional<bsoncxx::types::value> chunk_size{
-        bsoncxx::types::value{bsoncxx::types::b_int32{k_expected_chunk_size_bytes}}};
-    stdx::optional<bsoncxx::types::value> length{
-        bsoncxx::types::value{bsoncxx::types::b_int64{k_expected_file_length}}};
+    stdx::optional<bsoncxx::types::bson_value::view> chunk_size{
+        bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{k_expected_chunk_size_bytes}}};
+    stdx::optional<bsoncxx::types::bson_value::view> length{
+        bsoncxx::types::bson_value::view{bsoncxx::types::b_int64{k_expected_file_length}}};
     bool expect_success = false;
 
     auto run_test = [&]() {
@@ -372,7 +373,8 @@ TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::b
             db["fs.files"].insert_one(files_doc.extract());
         }
         auto open_download_stream = [&bucket]() {
-            return bucket.open_download_stream(bsoncxx::types::value{bsoncxx::types::b_int32{0}});
+            return bucket.open_download_stream(
+                bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{0}});
         };
 
         if (expect_success) {
@@ -386,20 +388,21 @@ TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::b
 
     // Tests for invalid chunk size.
     SECTION("zero chunk size") {
-        chunk_size = bsoncxx::types::value{bsoncxx::types::b_int32{0}};
+        chunk_size = bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{0}};
         run_test();
     }
     SECTION("negative chunk size") {
-        chunk_size = bsoncxx::types::value{bsoncxx::types::b_int32{-1}};
+        chunk_size = bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{-1}};
         run_test();
     }
     SECTION("chunk size too large") {
         const std::int32_t k_max_document_size = 16 * 1024 * 1024;
-        chunk_size = bsoncxx::types::value{bsoncxx::types::b_int32{k_max_document_size + 1}};
+        chunk_size =
+            bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{k_max_document_size + 1}};
         run_test();
     }
     SECTION("chunk size of wrong type") {
-        chunk_size = bsoncxx::types::value{bsoncxx::types::b_utf8{"invalid"}};
+        chunk_size = bsoncxx::types::bson_value::view{bsoncxx::types::b_utf8{"invalid"}};
         run_test();
     }
     SECTION("missing chunk size") {
@@ -409,11 +412,11 @@ TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::b
 
     // Tests for invalid length.
     SECTION("negative length") {
-        length = bsoncxx::types::value{bsoncxx::types::b_int64{-1}};
+        length = bsoncxx::types::bson_value::view{bsoncxx::types::b_int64{-1}};
         run_test();
     }
     SECTION("invalid length") {
-        length = bsoncxx::types::value{bsoncxx::types::b_utf8{"invalid"}};
+        length = bsoncxx::types::bson_value::view{bsoncxx::types::b_utf8{"invalid"}};
         run_test();
     }
     SECTION("missing length") {
@@ -423,8 +426,8 @@ TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::b
 
     // Test for too many chunks.
     SECTION("too many chunks") {
-        chunk_size = bsoncxx::types::value{bsoncxx::types::b_int32{1}};
-        length = bsoncxx::types::value{bsoncxx::types::b_int64{
+        chunk_size = bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{1}};
+        length = bsoncxx::types::bson_value::view{bsoncxx::types::b_int64{
             static_cast<std::int64_t>(std::numeric_limits<std::int32_t>::max()) + 1}};
         run_test();
     }
@@ -448,8 +451,9 @@ TEST_CASE("downloading throws error when chunks document is corrupt", "[gridfs::
 
     const std::uint8_t k_expected_data_byte = 'd';
 
-    stdx::optional<bsoncxx::types::value> n{bsoncxx::types::value{bsoncxx::types::b_int32{0}}};
-    stdx::optional<bsoncxx::types::value> data{bsoncxx::types::value{
+    stdx::optional<bsoncxx::types::bson_value::view> n{
+        bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{0}}};
+    stdx::optional<bsoncxx::types::bson_value::view> data{bsoncxx::types::bson_value::view{
         bsoncxx::types::b_binary{bsoncxx::binary_sub_type::k_binary, 1, &k_expected_data_byte}}};
     bool expect_success = true;
 
@@ -459,7 +463,7 @@ TEST_CASE("downloading throws error when chunks document is corrupt", "[gridfs::
         expect_success = false;
     }
     SECTION("wrong type for n") {
-        n = bsoncxx::types::value{bsoncxx::types::b_int64{0}};
+        n = bsoncxx::types::bson_value::view{bsoncxx::types::b_int64{0}};
         expect_success = false;
     }
 
@@ -469,7 +473,7 @@ TEST_CASE("downloading throws error when chunks document is corrupt", "[gridfs::
         expect_success = false;
     }
     SECTION("wrong type for data") {
-        data = bsoncxx::types::value{bsoncxx::types::b_bool{true}};
+        data = bsoncxx::types::bson_value::view{bsoncxx::types::b_bool{true}};
         expect_success = false;
     }
 
@@ -494,7 +498,7 @@ TEST_CASE("downloading throws error when chunks document is corrupt", "[gridfs::
     }
 
     gridfs::downloader downloader =
-        bucket.open_download_stream(bsoncxx::types::value{bsoncxx::types::b_int32{0}});
+        bucket.open_download_stream(bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{0}});
     auto downloader_read_one = [&downloader]() {
         stdx::optional<std::uint8_t> result;
         std::uint8_t byte;
@@ -533,7 +537,7 @@ TEST_CASE("mongocxx::gridfs::downloader::read with arbitrary sizes", "[gridfs::d
     auto run_test = [&]() {
         REQUIRE(read_size != 0);
 
-        bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+        bsoncxx::types::bson_value::view id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
         std::vector<std::uint8_t> expected =
             manual_gridfs_initialize(db, file_length, chunk_size, id);
 
@@ -542,7 +546,7 @@ TEST_CASE("mongocxx::gridfs::downloader::read with arbitrary sizes", "[gridfs::d
         buffer.reserve(static_cast<std::size_t>(read_size));
 
         std::size_t total_bytes_read = 0;
-        auto downloader = bucket.open_download_stream(bsoncxx::types::value{id});
+        auto downloader = bucket.open_download_stream(bsoncxx::types::bson_value::view{id});
 
         while (std::size_t bytes_read =
                    downloader.read(buffer.data(), static_cast<std::size_t>(read_size))) {
@@ -604,7 +608,7 @@ TEST_CASE("mongocxx::gridfs::uploader::abort works", "[gridfs::uploader]") {
 
     bsoncxx::types::b_oid id = {bsoncxx::oid{}};
     gridfs::uploader uploader =
-        bucket.open_upload_stream_with_id(bsoncxx::types::value{id}, "file");
+        bucket.open_upload_stream_with_id(bsoncxx::types::bson_value::view{id}, "file");
 
     // The intended purpose of gridfs::uploader::abort is to clean up any chunks that are already
     // uploaded and to prevent any more data from being written to the uploader. The most
@@ -748,7 +752,7 @@ TEST_CASE("gridfs::bucket::open_upload_stream_with_id works", "[gridfs::bucket]"
 
     std::size_t chunk_size = 4;
     std::vector<std::uint8_t> bytes = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+    bsoncxx::types::bson_value::view id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
     auto uploader = bucket.open_upload_stream_with_id(
         id,
         "file",
@@ -781,7 +785,7 @@ TEST_CASE("gridfs::bucket::upload_from_stream works", "[gridfs::bucket]") {
     options::gridfs::upload opts;
     opts.chunk_size_bytes(chunk_size);
 
-    bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+    bsoncxx::types::bson_value::view id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
 
     auto validate = [&]() {
         validate_gridfs_file(db,
@@ -818,7 +822,7 @@ TEST_CASE("gridfs::bucket::upload_from_stream doesn't infinite loop when passed 
     }
 
     SECTION("upload_from_stream_with_id") {
-        bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+        bsoncxx::types::bson_value::view id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
         REQUIRE_THROWS(bucket.upload_from_stream_with_id(id, "file", &stream));
     }
 }
@@ -835,7 +839,7 @@ TEST_CASE("gridfs upload_from_stream aborts on failure", "[gridfs::bucket]") {
 
     std::ifstream in{"file_that_does_not_exist.txt"};
 
-    auto id = bsoncxx::types::value{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+    auto id = bsoncxx::types::bson_value::view{bsoncxx::types::b_oid{bsoncxx::oid{}}};
 
     // Aborting the upload should clear all chunks with the given file id.
     db["fs.chunks"].insert_one(make_document(kvp("files_id", id)));
@@ -856,7 +860,7 @@ TEST_CASE("gridfs::bucket::download_to_stream works", "[gridfs::bucket]") {
 
     std::int64_t length = 10;
     std::int32_t chunk_size = 4;
-    bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+    bsoncxx::types::bson_value::view id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
     auto expected_bytes = manual_gridfs_initialize(db, length, chunk_size, id);
 
     std::ostringstream os;
@@ -880,7 +884,7 @@ TEST_CASE("gridfs::bucket::delete_file works", "[gridfs::bucket]") {
 
     std::int64_t length = 10;
     std::int32_t chunk_size = 4;
-    bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+    bsoncxx::types::bson_value::view id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
     manual_gridfs_initialize(db, length, chunk_size, id);
 
     bucket.delete_file(id);
@@ -901,8 +905,8 @@ TEST_CASE("gridfs::bucket::find works", "[gridfs::bucket]") {
 
     std::int64_t length = 10;
     std::int32_t chunk_size = 4;
-    bsoncxx::types::value id1{bsoncxx::types::b_int32{1}};
-    bsoncxx::types::value id2{bsoncxx::types::b_int32{2}};
+    bsoncxx::types::bson_value::view id1{bsoncxx::types::b_int32{1}};
+    bsoncxx::types::bson_value::view id2{bsoncxx::types::b_int32{2}};
 
     manual_gridfs_initialize(db, length, chunk_size, id1);
     manual_gridfs_initialize(db, length, chunk_size, id2);
@@ -923,7 +927,7 @@ TEST_CASE("gridfs::bucket::find works", "[gridfs::bucket]") {
     }
 
     SECTION("find returning nothing") {
-        bsoncxx::types::value id3{bsoncxx::types::b_int32{3}};
+        bsoncxx::types::bson_value::view id3{bsoncxx::types::b_int32{3}};
         auto cursor = bucket.find(make_document(kvp("_id", id3)));
         REQUIRE(std::distance(cursor.begin(), cursor.end()) == 0);
     }
@@ -1012,7 +1016,7 @@ TEST_CASE("gridfs download large file", "[gridfs::bucket]") {
         ++num_chunks;
     }
 
-    bsoncxx::types::value id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+    bsoncxx::types::bson_value::view id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
     manual_gridfs_initialize(
         db,
         num_chunks,

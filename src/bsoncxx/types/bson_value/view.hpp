@@ -413,7 +413,7 @@ BSONCXX_INLINE not_value<T> operator==(T&& lhs, const bson_value::view& rhs) {
 }
 
 template <typename T>
-BSONCXX_INLINE not_value<T> operator!=(const bosn_value::view& lhs, T&& rhs) {
+BSONCXX_INLINE not_value<T> operator!=(const bson_value::view& lhs, T&& rhs) {
     return lhs != bson_value::view{std::forward<T>(rhs)};
 }
 

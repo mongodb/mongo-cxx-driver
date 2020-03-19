@@ -39,7 +39,7 @@ TEST_CASE("Hint", "[hint]") {
         hint index_hint{index_name};
 
         SECTION("Returns correct value from to_value") {
-            types::value val = index_hint.to_value();
+            types::bson_value::view val = index_hint.to_value();
             REQUIRE(val.type() == type::k_utf8);
             REQUIRE(bsoncxx::string::to_string(val.get_utf8().value) == index_name);
         }
@@ -67,7 +67,7 @@ TEST_CASE("Hint", "[hint]") {
         hint index_hint{std::move(index_doc)};
 
         SECTION("Returns correct value from to_value") {
-            types::value val = index_hint.to_value();
+            types::bson_value::view val = index_hint.to_value();
             REQUIRE(val.type() == type::k_document);
             REQUIRE(val.get_document().value == index_copy);
         }

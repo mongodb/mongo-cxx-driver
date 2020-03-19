@@ -53,7 +53,7 @@ class gridfs_download : public microbench {
    private:
     mongocxx::client _conn;
     mongocxx::gridfs::bucket _bucket;
-    bsoncxx::stdx::optional<bsoncxx::types::value> _id;
+    bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> _id;
     std::string _file_name;
 };
 

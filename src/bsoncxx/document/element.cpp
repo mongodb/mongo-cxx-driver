@@ -78,19 +78,19 @@ stdx::string_view element::key() const {
     return stdx::string_view{key};
 }
 
-#define BSONCXX_ENUM(name, val)                          \
-    types::b_##name element::get_##name() const {        \
-        types::value v{_raw, _length, _offset, _keylen}; \
-        return v.get_##name();                           \
+#define BSONCXX_ENUM(name, val)                                     \
+    types::b_##name element::get_##name() const {                   \
+        types::bson_value::view v{_raw, _length, _offset, _keylen}; \
+        return v.get_##name();                                      \
     }
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
-types::value element::get_value() const {
+types::bson_value::view element::get_value() const {
     switch (static_cast<int>(type())) {
 #define BSONCXX_ENUM(type, val) \
     case val:                   \
-        return types::value{get_##type()};
+        return types::bson_value::view{get_##type()};
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
     }

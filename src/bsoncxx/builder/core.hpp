@@ -465,7 +465,7 @@ class BSONCXX_API core {
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    core& append(const types::value& value);
+    core& append(const types::bson_value::view& value);
 
     ///
     /// Appends an STL string as a BSON UTF-8 string.

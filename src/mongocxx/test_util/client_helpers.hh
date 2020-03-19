@@ -108,7 +108,7 @@ stdx::optional<bsoncxx::document::value> parse_test_file(std::string path);
 //
 bool supports_collation(const client& client);
 
-using item_t = std::pair<stdx::optional<stdx::string_view>, bsoncxx::types::value>;
+using item_t = std::pair<stdx::optional<stdx::string_view>, bsoncxx::types::bson_value::view>;
 using xformer_t = std::function<stdx::optional<item_t>(item_t, bsoncxx::builder::basic::array*)>;
 
 //
@@ -143,18 +143,18 @@ using xformer_t = std::function<stdx::optional<item_t>(item_t, bsoncxx::builder:
 //
 bsoncxx::document::value transform_document(bsoncxx::document::view view, const xformer_t& fcn);
 
-double as_double(bsoncxx::types::value value);
+double as_double(bsoncxx::types::bson_value::view value);
 
-bool is_numeric(bsoncxx::types::value value);
+bool is_numeric(bsoncxx::types::bson_value::view value);
 
 enum class match_action { k_skip, k_proceed, k_not_equal };
 using match_visitor =
     std::function<match_action(bsoncxx::stdx::string_view key,
-                               bsoncxx::stdx::optional<bsoncxx::types::value> main,
-                               bsoncxx::types::value pattern)>;
+                               bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
+                               bsoncxx::types::bson_value::view pattern)>;
 
-bool matches(bsoncxx::types::value main,
-             bsoncxx::types::value pattern,
+bool matches(bsoncxx::types::bson_value::view main,
+             bsoncxx::types::bson_value::view pattern,
              match_visitor visitor_fn = {});
 
 bool matches(bsoncxx::document::view doc,

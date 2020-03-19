@@ -33,12 +33,12 @@ hint::hint(bsoncxx::document::view_or_value index) : _index_doc(std::move(index)
 
 hint::hint(bsoncxx::string::view_or_value index) : _index_string(std::move(index)) {}
 
-bsoncxx::types::value hint::to_value() const {
+bsoncxx::types::bson_value::view hint::to_value() const {
     if (_index_doc) {
-        return bsoncxx::types::value{bsoncxx::types::b_document{_index_doc->view()}};
+        return bsoncxx::types::bson_value::view{bsoncxx::types::b_document{_index_doc->view()}};
     }
 
-    return bsoncxx::types::value{bsoncxx::types::b_utf8{*_index_string}};
+    return bsoncxx::types::bson_value::view{bsoncxx::types::b_utf8{*_index_string}};
 }
 
 bool MONGOCXX_CALL operator==(const hint& index_hint, std::string index) {

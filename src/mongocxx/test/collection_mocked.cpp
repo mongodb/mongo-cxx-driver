@@ -329,7 +329,7 @@ TEST_CASE("Collection", "[collection]") {
         mongocxx::stdx::optional<bool> expected_allow_partial_results;
         mongocxx::stdx::optional<bsoncxx::stdx::string_view> expected_comment{};
         mongocxx::stdx::optional<mongocxx::cursor::type> expected_cursor_type{};
-        mongocxx::stdx::optional<bsoncxx::types::value> expected_hint{};
+        mongocxx::stdx::optional<bsoncxx::types::bson_value::view> expected_hint{};
         mongocxx::stdx::optional<bool> expected_no_cursor_timeout;
         mongocxx::stdx::optional<bsoncxx::document::view> expected_sort{};
         mongocxx::stdx::optional<read_preference> expected_read_preference{};

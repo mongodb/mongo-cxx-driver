@@ -272,7 +272,6 @@ set_local_dist (src_bsoncxx_DIST_local
    types.hpp
    types/bson_value/view.cpp
    types/bson_value/view.hpp
-   types/view.hpp
    util/functor.hpp
    validate.cpp
    validate.hpp

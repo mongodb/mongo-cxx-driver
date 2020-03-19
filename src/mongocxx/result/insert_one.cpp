@@ -22,7 +22,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
-insert_one::insert_one(result::bulk_write result, bsoncxx::types::value inserted_id)
+insert_one::insert_one(result::bulk_write result, bsoncxx::types::bson_value::view inserted_id)
     : _result(std::move(result)),
       _inserted_id_owned(bsoncxx::builder::basic::make_array(inserted_id)),
       _inserted_id(_inserted_id_owned.view()[0].get_value()) {}
@@ -31,7 +31,7 @@ const result::bulk_write& insert_one::result() const {
     return _result;
 }
 
-const bsoncxx::types::value& insert_one::inserted_id() const {
+const bsoncxx::types::bson_value::view& insert_one::inserted_id() const {
     return _inserted_id;
 }
 

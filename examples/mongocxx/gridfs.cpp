@@ -51,9 +51,10 @@ int main() {
     auto result = uploader.close();
 
     // This is the unique id of the uploaded file, which is needed to download the file. Note that
-    // the return type, bsoncxx::types::value, is a view type and is only valid as long as `result`
+    // the return type, bsoncxx::types::bson_value::view, is a view type and is only valid as long
+    // as `result`
     // is still in scope.
-    bsoncxx::types::value id = result.id();
+    bsoncxx::types::bson_value::view id = result.id();
 
     auto downloader = bucket.open_download_stream(id);
     auto file_length = downloader.file_length();

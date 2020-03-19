@@ -193,7 +193,7 @@ class MONGOCXX_API bucket {
     ///
     /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
     ///
-    uploader open_upload_stream_with_id(bsoncxx::types::value id,
+    uploader open_upload_stream_with_id(bsoncxx::types::bson_value::view id,
                                         stdx::string_view filename,
                                         const options::gridfs::upload& options = {});
 
@@ -229,7 +229,7 @@ class MONGOCXX_API bucket {
     /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
     ///
     uploader open_upload_stream_with_id(const client_session& session,
-                                        bsoncxx::types::value id,
+                                        bsoncxx::types::bson_value::view id,
                                         stdx::string_view filename,
                                         const options::gridfs::upload& options = {});
     ///
@@ -375,7 +375,7 @@ class MONGOCXX_API bucket {
     ///
     /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
     ///
-    void upload_from_stream_with_id(bsoncxx::types::value id,
+    void upload_from_stream_with_id(bsoncxx::types::bson_value::view id,
                                     stdx::string_view filename,
                                     std::istream* source,
                                     const options::gridfs::upload& options = {});
@@ -424,7 +424,7 @@ class MONGOCXX_API bucket {
     /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
     ///
     void upload_from_stream_with_id(const client_session& session,
-                                    bsoncxx::types::value id,
+                                    bsoncxx::types::bson_value::view id,
                                     stdx::string_view filename,
                                     std::istream* source,
                                     const options::gridfs::upload& options = {});
@@ -449,7 +449,7 @@ class MONGOCXX_API bucket {
     /// @throws mongocxx::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
-    downloader open_download_stream(bsoncxx::types::value id);
+    downloader open_download_stream(bsoncxx::types::bson_value::view id);
 
     ///
     /// Opens a gridfs::downloader to read a GridFS file.
@@ -470,7 +470,8 @@ class MONGOCXX_API bucket {
     /// @throws mongocxx::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
-    downloader open_download_stream(const client_session& session, bsoncxx::types::value id);
+    downloader open_download_stream(const client_session& session,
+                                    bsoncxx::types::bson_value::view id);
     ///
     /// @}
     ///
@@ -497,7 +498,7 @@ class MONGOCXX_API bucket {
     ///   `badbit`, any exception thrown during execution of `destination::write()` will be
     ///   re-thrown.
     ///
-    void download_to_stream(bsoncxx::types::value id, std::ostream* destination);
+    void download_to_stream(bsoncxx::types::bson_value::view id, std::ostream* destination);
 
     ///
     /// Downloads the contents of a stored GridFS file from the bucket and writes it to a stream.
@@ -523,7 +524,7 @@ class MONGOCXX_API bucket {
     ///   re-thrown.
     ///
     void download_to_stream(const client_session& session,
-                            bsoncxx::types::value id,
+                            bsoncxx::types::bson_value::view id,
                             std::ostream* destination);
     ///
     /// @}
@@ -542,7 +543,7 @@ class MONGOCXX_API bucket {
     /// @throws mongocxx::bulk_write_exception
     ///   if an error occurs when removing file data or chunk data from the database.
     ///
-    void delete_file(bsoncxx::types::value id);
+    void delete_file(bsoncxx::types::bson_value::view id);
 
     ///
     /// Deletes a GridFS file from the bucket.
@@ -558,7 +559,7 @@ class MONGOCXX_API bucket {
     /// @throws mongocxx::bulk_write_exception
     ///   if an error occurs when removing file data or chunk data from the database.
     ///
-    void delete_file(const client_session& session, bsoncxx::types::value id);
+    void delete_file(const client_session& session, bsoncxx::types::bson_value::view id);
     ///
     /// @}
     ///
@@ -631,24 +632,25 @@ class MONGOCXX_API bucket {
     MONGOCXX_PRIVATE void create_indexes_if_nonexistent(const client_session* session);
 
     MONGOCXX_PRIVATE uploader _open_upload_stream_with_id(const client_session* session,
-                                                          bsoncxx::types::value id,
+                                                          bsoncxx::types::bson_value::view id,
                                                           stdx::string_view filename,
                                                           const options::gridfs::upload& options);
 
     MONGOCXX_PRIVATE void _upload_from_stream_with_id(const client_session* session,
-                                                      bsoncxx::types::value id,
+                                                      bsoncxx::types::bson_value::view id,
                                                       stdx::string_view filename,
                                                       std::istream* source,
                                                       const options::gridfs::upload& options);
 
     MONGOCXX_PRIVATE downloader _open_download_stream(const client_session* session,
-                                                      bsoncxx::types::value id);
+                                                      bsoncxx::types::bson_value::view id);
 
     MONGOCXX_PRIVATE void _download_to_stream(const client_session* session,
-                                              bsoncxx::types::value id,
+                                              bsoncxx::types::bson_value::view id,
                                               std::ostream* destination);
 
-    MONGOCXX_PRIVATE void _delete_file(const client_session* session, bsoncxx::types::value id);
+    MONGOCXX_PRIVATE void _delete_file(const client_session* session,
+                                       bsoncxx::types::bson_value::view id);
 
     class MONGOCXX_PRIVATE impl;
 

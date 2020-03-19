@@ -91,7 +91,7 @@ int main(int, char**) {
 
         // usually we don't need to actually use a switch statement, because we can also
         // get a variant 'value' that can hold any BSON type.
-        types::value ele_val{ele.get_value()};
+        types::bson_value::view ele_val{ele.get_value()};
     }
 
     // If we want to search for an element we can use operator[]

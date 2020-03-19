@@ -45,7 +45,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace gridfs {
 
 uploader::uploader(const client_session* session,
-                   bsoncxx::types::value id,
+                   bsoncxx::types::bson_value::view id,
                    stdx::string_view filename,
                    collection files,
                    collection chunks,

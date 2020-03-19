@@ -397,9 +397,9 @@ TEST_CASE("builder appends decimal128", "[bsoncxx::builder::stream]") {
         bson_eq_stream(&expected, b);
     }
 
-    SECTION("bsoncxx::types::value with decimal128 works") {
+    SECTION("bsoncxx::types::bson_value::view with decimal128 works") {
         auto d = types::b_decimal128{"-1234E+999"};
-        auto v = types::value{d};
+        auto v = types::bson_value::view{d};
 
         REQUIRE(v.get_decimal128() == d);
 
