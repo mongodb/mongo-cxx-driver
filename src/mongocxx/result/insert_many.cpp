@@ -14,7 +14,7 @@
 
 #include <mongocxx/result/insert_many.hpp>
 
-#include <bsoncxx/types/value.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 

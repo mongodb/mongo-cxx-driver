@@ -15,7 +15,7 @@
 #pragma once
 
 #include <bsoncxx/array/value.hpp>
-#include <bsoncxx/types/value.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 

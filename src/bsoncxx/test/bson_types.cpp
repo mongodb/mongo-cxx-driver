@@ -15,7 +15,7 @@
 #include <chrono>
 
 #include <bsoncxx/types.hpp>
-#include <bsoncxx/types/value.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>

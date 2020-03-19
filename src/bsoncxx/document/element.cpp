@@ -22,7 +22,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types.hpp>
-#include <bsoncxx/types/value.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
 

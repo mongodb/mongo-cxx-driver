@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2020 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/types/value.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 
 #include <cstdlib>
 #include <cstring>
@@ -38,21 +38,22 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace types {
+namespace bson_value {
 
 // Boost doesn't mark the copy constructor and copy-assignment operator of string_ref as noexcept
 // so we can't rely on automatic noexcept propagation. It really is though, so it is OK.
 #if !defined(BSONCXX_POLY_USE_BOOST)
 #define BSONCXX_ENUM(name, val)                                                                \
-    value::value(b_##name value) noexcept : _type(static_cast<bsoncxx::type>(val)),            \
-                                            _b_##name(std::move(value)) {                      \
+    view::view(b_##name value) noexcept : _type(static_cast<bsoncxx::type>(val)),              \
+                                          _b_##name(std::move(value)) {                        \
         static_assert(std::is_nothrow_copy_constructible<b_##name>::value, "Copy may throw");  \
         static_assert(std::is_nothrow_copy_assignable<b_##name>::value, "Copy may throw");     \
         static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw"); \
     }
 #else
 #define BSONCXX_ENUM(name, val)                                                                \
-    value::value(b_##name value) noexcept : _type(static_cast<bsoncxx::type>(val)),            \
-                                            _b_##name(std::move(value)) {                      \
+    view::view(b_##name value) noexcept : _type(static_cast<bsoncxx::type>(val)),              \
+                                          _b_##name(std::move(value)) {                        \
         static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw"); \
     }
 #endif
@@ -60,7 +61,7 @@ namespace types {
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
-value::value(const value& rhs) noexcept {
+view::view(const view& rhs) noexcept {
     switch (static_cast<int>(rhs._type)) {
 #define BSONCXX_ENUM(type, val)                      \
     case val:                                        \
@@ -73,7 +74,7 @@ value::value(const value& rhs) noexcept {
     _type = rhs._type;
 }
 
-value& value::operator=(const value& rhs) noexcept {
+view& view::operator=(const view& rhs) noexcept {
     if (this == &rhs) {
         return *this;
     }
@@ -93,26 +94,26 @@ value& value::operator=(const value& rhs) noexcept {
     return *this;
 }
 
-value::~value() {
+view::~value() {
     destroy();
 }
 
-bsoncxx::type value::type() const {
+bsoncxx::type view::type() const {
     return _type;
 }
 
-#define BSONCXX_ENUM(type, val)                        \
-    const types::b_##type& value::get_##type() const { \
-        BSONCXX_TYPE_CHECK(type);                      \
-        return _b_##type;                              \
+#define BSONCXX_ENUM(type, val)                       \
+    const types::b_##type& view::get_##type() const { \
+        BSONCXX_TYPE_CHECK(type);                     \
+        return _b_##type;                             \
     }
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
-value::value(const std::uint8_t* raw,
-             std::uint32_t length,
-             std::uint32_t offset,
-             std::uint32_t keylen) {
+view::view(const std::uint8_t* raw,
+           std::uint32_t length,
+           std::uint32_t offset,
+           std::uint32_t keylen) {
     BSONCXX_CITER;
 
     _type = static_cast<bsoncxx::type>(bson_iter_type(&iter));
@@ -255,7 +256,7 @@ value::value(const std::uint8_t* raw,
     }
 }
 
-bool operator==(const value& lhs, const value& rhs) {
+bool operator==(const view& lhs, const view& rhs) {
     if (lhs.type() != rhs.type()) {
         return false;
     }
@@ -272,11 +273,11 @@ bool operator==(const value& lhs, const value& rhs) {
     BSONCXX_UNREACHABLE;
 }
 
-bool operator!=(const value& lhs, const value& rhs) {
+bool operator!=(const view& lhs, const view& rhs) {
     return !(lhs == rhs);
 }
 
-void value::destroy() noexcept {
+void view::destroy() noexcept {
     switch (static_cast<int>(_type)) {
 #define BSONCXX_ENUM(type, val) \
     case val:                   \
@@ -287,6 +288,7 @@ void value::destroy() noexcept {
     }
 }
 
+}  // namespace bson_value
 }  // namespace types
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
