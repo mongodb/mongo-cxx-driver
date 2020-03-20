@@ -277,6 +277,9 @@ functions:
                           *client_session*)
                             echo "TODO CXX-1201, enable for servers that support change streams"
                             ;;
+                          *with_transaction*)
+                            echo "TODO CXX-1201, enable for servers that support transactions"
+                            ;;
                           *)
                             ${test_params} $test
                             ;;

@@ -162,7 +162,7 @@ class MONGOCXX_API client_session {
     /// @throws mongocxx::operation_exception if there are errors completing the
     /// transaction.
     ///
-    using with_transaction_cb = std::function<void(client_session*)>;
+    using with_transaction_cb = std::function<void MONGOCXX_CALL(client_session*)>;
     void with_transaction(with_transaction_cb cb, options::transaction opts = {});
 
    private:

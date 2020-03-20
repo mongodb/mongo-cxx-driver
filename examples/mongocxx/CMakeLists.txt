@@ -42,6 +42,7 @@ set(MONGOCXX_EXAMPLES
     tailable_cursor.cpp
     update.cpp
     view_or_value_variant.cpp
+    with_transaction.cpp
 )
 
 foreach(EXAMPLE_SRC ${MONGOCXX_EXAMPLES})
