@@ -449,10 +449,10 @@ TEST_CASE("Documentation Examples", "[min36]") {
 
     SECTION("Example 3") {
         // Start Changestream Example 3
-        stdx::optional<bsoncxx::document::view_or_value> resume_token;
+        stdx::optional<bsoncxx::document::view> resume_token;
         change_stream stream = inventory.watch();
         for (auto& event : stream) {
-            resume_token = bsoncxx::document::view_or_value{event["_id"].get_document()};
+            resume_token = stream.get_resume_token();
         }
 
         if (resume_token) {
