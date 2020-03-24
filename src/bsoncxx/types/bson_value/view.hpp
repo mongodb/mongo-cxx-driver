@@ -32,119 +32,34 @@ class element;
 namespace types {
 namespace bson_value {
 
+class value;
+
 ///
 /// A view-only variant that can contain any BSON type.
 ///
 /// @warning
-///   It is undefined behavior to call the wrong get_<type> method. Check
-///   the underlying type() first.
+///   Calling the wrong get_<type> method will cause an exception
+///   to be thrown.
 ///
 class BSONCXX_API view {
    public:
-    ///
-    /// Construct a bson_value::view from a BSON double.
-    ///
-    explicit view(b_double) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON UTF-8 string.
-    ///
-    explicit view(b_utf8) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON document.
-    ///
-    explicit view(b_document) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON array.
-    ///
-    explicit view(b_array) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON binary datum.
-    ///
-    explicit view(b_binary) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON undefined.
-    ///
-    explicit view(b_undefined) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON ObjectId.
-    ///
-    explicit view(b_oid) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON boolean.
-    ///
-    explicit view(b_bool) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON date.
-    ///
-    explicit view(b_date) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON null.
-    ///
-    explicit view(b_null) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON regex.
-    ///
-    explicit view(b_regex) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON DBPointer.
-    ///
-    explicit view(b_dbpointer) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON JavaScript code.
-    ///
-    explicit view(b_code) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON symbol.
-    ///
-    explicit view(b_symbol) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON JavaScript code with scope.
-    ///
-    explicit view(b_codewscope) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON 32-bit signed integer.
-    ///
-    explicit view(b_int32) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON replication timestamp.
-    ///
-    explicit view(b_timestamp) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON 64-bit signed integer.
-    ///
-    explicit view(b_int64) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON Decimal128.
-    ///
-    explicit view(b_decimal128) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON min-key.
-    ///
-    explicit view(b_minkey) noexcept;
-
-    ///
-    /// Construct a bson_value::view from a BSON max-key.
-    ///
-    explicit view(b_maxkey) noexcept;
+///
+/// Construct a bson_value::view from any of the various BSON types. Defines
+/// constructors of the following form for each type:
+///
+///   explicit view(type) noexcept;
+///
+/// Like this:
+///
+///   explicit view(b_double) noexcept;
+///   explicit view(b_utf8) noexcept;
+///   explicit view(b_bool) noexcept;
+///
+/// etc.
+///
+#define BSONCXX_ENUM(type, val) explicit view(b_##type) noexcept;
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
 
     view(const view&) noexcept;
     view& operator=(const view&) noexcept;
@@ -175,8 +90,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON double value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_double& get_double() const;
 
@@ -184,8 +98,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON UTF-8 string value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_utf8& get_utf8() const;
 
@@ -193,8 +106,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON document value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_document& get_document() const;
 
@@ -202,8 +114,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON array value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_array& get_array() const;
 
@@ -211,8 +122,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON binary data value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_binary& get_binary() const;
 
@@ -220,8 +130,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON undefined value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_undefined& get_undefined() const;
 
@@ -229,8 +138,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON ObjectId value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_oid& get_oid() const;
 
@@ -238,8 +146,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON boolean value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_bool& get_bool() const;
 
@@ -247,8 +154,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON date value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_date& get_date() const;
 
@@ -256,8 +162,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON null value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_null& get_null() const;
 
@@ -265,8 +170,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON regex value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_regex& get_regex() const;
 
@@ -274,8 +178,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON DBPointer value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_dbpointer& get_dbpointer() const;
 
@@ -283,8 +186,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON JavaScript code value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_code& get_code() const;
 
@@ -292,8 +194,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON symbol value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_symbol& get_symbol() const;
 
@@ -301,8 +202,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON JavaScript code with scope value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_codewscope& get_codewscope() const;
 
@@ -310,8 +210,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON 32-bit signed integer value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_int32& get_int32() const;
 
@@ -319,8 +218,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON replication timestamp value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_timestamp& get_timestamp() const;
 
@@ -328,8 +226,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON 64-bit signed integer value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_int64& get_int64() const;
 
@@ -337,8 +234,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON Decimal128 value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_decimal128& get_decimal128() const;
 
@@ -346,8 +242,7 @@ class BSONCXX_API view {
     /// @return The underlying BSON min-key value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_minkey& get_minkey() const;
 
@@ -355,15 +250,18 @@ class BSONCXX_API view {
     /// @return The underlying BSON max-key value.
     ///
     /// @warning
-    ///   It is undefined behavior to call the wrong get_<type> method. Check
-    ///   the underlying type() first.
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
     const b_maxkey& get_maxkey() const;
 
    private:
     friend class document::element;
+    friend class bson_value::value;
 
     view(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
+    view(void* internal_value);
+
+    void _init(void* internal_value);
 
     void BSONCXX_PRIVATE destroy() noexcept;
 
@@ -394,31 +292,31 @@ class BSONCXX_API view {
 };
 
 // sfinae in the bool return to avoid competing with the value == value
-// operators
+// operators.
 template <typename T>
-using not_value = typename std::enable_if<
+using not_view = typename std::enable_if<
     std::is_constructible<bson_value::view, T>::value &&
-        !std::is_same<typename std::remove_reference<T>::type, bson_value::view>::value,
+        !std::is_same<typename std::decay<T>::type, bson_value::view>::value &&
+        !std::is_same<typename std::decay<T>::type, bson_value::value>::value,
     bool>::type;
 
-// these all return bool
 template <typename T>
-BSONCXX_INLINE not_value<T> operator==(const bson_value::view& lhs, T&& rhs) {
+BSONCXX_INLINE not_view<T> operator==(const bson_value::view& lhs, T&& rhs) {
     return lhs == bson_value::view{std::forward<T>(rhs)};
 }
 
 template <typename T>
-BSONCXX_INLINE not_value<T> operator==(T&& lhs, const bson_value::view& rhs) {
+BSONCXX_INLINE not_view<T> operator==(T&& lhs, const bson_value::view& rhs) {
     return bson_value::view{std::forward<T>(lhs)} == rhs;
 }
 
 template <typename T>
-BSONCXX_INLINE not_value<T> operator!=(const bson_value::view& lhs, T&& rhs) {
+BSONCXX_INLINE not_view<T> operator!=(const bson_value::view& lhs, T&& rhs) {
     return lhs != bson_value::view{std::forward<T>(rhs)};
 }
 
 template <typename T>
-BSONCXX_INLINE not_value<T> operator!=(T&& lhs, const bson_value::view& rhs) {
+BSONCXX_INLINE not_view<T> operator!=(T&& lhs, const bson_value::view& rhs) {
     return bson_value::view{std::forward<T>(lhs)} != rhs;
 }
 

@@ -22,6 +22,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
@@ -96,6 +97,10 @@ types::bson_value::view element::get_value() const {
     }
 
     BSONCXX_UNREACHABLE;
+}
+
+types::bson_value::value element::get_owning_value() const {
+    return types::bson_value::value{_raw, _length, _offset, _keylen};
 }
 
 element element::operator[](stdx::string_view key) const {

@@ -52,6 +52,7 @@ struct b_minkey;
 struct b_maxkey;
 
 namespace bson_value {
+class value;
 class view;
 }  // namespace bson_value
 
@@ -330,6 +331,14 @@ class BSONCXX_API element {
     /// @return the element's value.
     ///
     types::bson_value::view get_value() const;
+
+    ///
+    /// Getter for a types::bson_value::value variant wrapper of the value portion of
+    /// the element. The returned object will make a copy of the buffer from this object.
+    ///
+    /// @return an owning version of the element's value.
+    ///
+    types::bson_value::value get_owning_value() const;
 
     ///
     /// If this element is a document, finds the first element of the document
