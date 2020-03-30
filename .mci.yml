@@ -544,12 +544,20 @@ buildvariants:
       display_name: "${os} ${mongodb_version}"
       tasks:
           - name: compile_and_test_with_shared_libs
+      exclude_spec:
+        # Windows latest only runs on Windows 10. This is tested in the VS 2017 variant.
+        os: "windows-2k8"
+        mongodb_version: "latest"
 
     - matrix_name: "auth"
       matrix_spec: {os: "*", mongodb_version: "latest"}
       display_name: "${os} ${mongodb_version} Auth"
       tasks:
           - name: compile_and_test_auth_with_shared_libs
+      exclude_spec:
+        # Windows latest only runs on Windows 10. This is tested in the VS 2017 variant.
+        os: "windows-2k8"
+        mongodb_version: "latest"
 
     #######################################
     #         Linux Buildvariants         #
@@ -754,3 +762,4 @@ buildvariants:
          - windows-64-vs2017-compile
       tasks:
          - name: compile_with_shared_libs
+         - name: compile_and_test_auth_with_shared_libs
