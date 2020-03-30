@@ -1,3 +1,14 @@
+mongo-cxx-driver (3.4.1-1) experimental; urgency=medium
+
+  * New upstream release
+  * debian/copyright:
+    + Fix license specification for src/bsoncxx/private/b64_ntop.hh
+  * debian/control:
+    + Update to Standards-Version 4.5.0 (no changes)
+    + Remove A. Jesse Jiryu Davis from Uploaders
+
+ -- Roberto C. Sanchez <roberto@connexer.com>  Mon, 30 Mar 2020 12:44:55 -0400
+
 mongo-cxx-driver (3.4.0-1) experimental; urgency=low
 
   * Initial release (Closes: #914573)

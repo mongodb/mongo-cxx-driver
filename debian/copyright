@@ -48,7 +48,7 @@ License: Apache-2.0
 Files: src/bsoncxx/private/b64_ntop.hh
 Copyright: 1996, 1998 Internet Software Consortium
            1995 International Business Machines, Inc.
-License: ISC or Other-IBM
+License: ISC and Other-IBM
 
 License: ISC
  Permission to use, copy, modify, and/or distribute this software for any
