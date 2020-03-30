@@ -29,7 +29,8 @@ Currently, no drivers guarantee API or ABI stability.
 | Family/version       | Stability   | Development         | Purpose                             |
 | -------------------- | ----------- | ------------------- | ----------------------------------- |
 | (repo master branch) | Unstable    | Active development  | New feature development             |
-| mongocxx 3.3.x       | Stable      | Bug fixes only      | Current stable C++ driver release   |
+| mongocxx 3.4.x       | Stable      | Bug fixes only      | Current stable C++ driver release   |
+| mongocxx 3.3.x       | Stable      | None                | Previous stable C++ driver release  |
 | mongocxx 3.2.x       | Stable      | None                | Previous stable C++ driver release  |
 | mongocxx 3.1.x       | Stable      | None                | Previous stable C++ driver release  |
 | mongocxx 3.0.x       | Stable      | None                | Previous stable C++ driver release  |
@@ -40,12 +41,13 @@ The following compatibility table specifies the driver version(s)
 recommended for different versions of MongoDB.  The mongocxx series
 is recommended for all new development.
 
-| Family/version | MongoDB 3.0 | MongoDB 3.2 | MongoDB 3.4 | MongoDB 3.6 |
-| -------------- | ----------- | ----------- | ----------- | ----------- |
-| mongocxx 3.3.x | ✓           | ✓           | ✓           | Complete    |
-| mongocxx 3.2.x | ✓           | ✓           | ✓           | Partial     |
-| mongocxx 3.1.x | ✓           | ✓           | ✓           |             |
-| mongocxx 3.0.x | ✓           | ✓           |             |             |
+| Family/version | MongoDB 3.0 | MongoDB 3.2 | MongoDB 3.4 | MongoDB 3.6 | MongoDB 4.0 | MongoDB 4.2 | MongoDB 4.4 |
+| -------------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
+| mongocxx 3.4.x | ✓           | ✓           | ✓           | ✓           | ✓           |             |             |
+| mongocxx 3.3.x | ✓           | ✓           | ✓           | ✓           |             |             |             |
+| mongocxx 3.2.x | ✓           | ✓           | ✓           | Partial     |             |             |             |
+| mongocxx 3.1.x | ✓           | ✓           | ✓           |             |             |             |             |
+| mongocxx 3.0.x | ✓           | ✓           |             |             |             |             |             |
 
 ## Bugs and issues
 
