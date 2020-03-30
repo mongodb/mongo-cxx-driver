@@ -13,14 +13,11 @@ title = "Installing the mongocxx driver"
 - [CMake](https://cmake.org) 3.2 or later
 - [boost](https://www.boost.org) headers (optional)
 
-We currently test the driver with the following configurations:
+We currently test the driver on the following platforms:
 
-&nbsp; |   Linux  |    macOS    |      Windows
--------|----------|-------------|-------------------
- clang |   3.8    | 7.0 (Apple) |        -
- gcc   | 4.8, 5.4 |     -       |        -
- VS    |   n/a    |    n/a      | 14 (2015) Update 3
- boost |    -     |   1.67.0    |      1.60.0
+- Linux with clang 3.8, GCC 5.4 and 7.5
+- macOS with Apple clang 7.0 and 11.0 using Boost 1.70.0
+- Windows with Visual Studio 2015 using Boost 1.60.0 and Visual Studio 2017
 
 Versions older than the ones listed may not work and are not
 supported; use them at your own risk.
@@ -71,7 +68,8 @@ must choose one of the following implementations for these features:
 
    Boost (*default for Windows platforms*)
      Select with `-DBSONCXX_POLY_USE_BOOST=1`. This is currently the
-     only option if you are using MSVC.
+     only option if you are using a version of MSVC that does not support
+     C++17.
 
    `std::experimental`
      Select with `-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=1`. If your
@@ -162,13 +160,13 @@ On Windows, this is the equivalent use of cmake:
 ```sh
 'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
      -G "Visual Studio 14 2015 Win64"           \
-    -DBOOST_ROOT=C:\local\boost_1_59_0          \
+    -DBOOST_ROOT=C:\local\boost_1_60_0          \
     -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
 ```
 
 The example above assumes:
-* Boost is found in `C:\local\boost_1_59_0`.
+* Boost is found in `C:\local\boost_1_60_0`.
 * `libmongoc` is found in `C:\mongo-c-driver`.
 * `mongocxx` is to be installed into `C:\mongo-cxx-driver`.
 
