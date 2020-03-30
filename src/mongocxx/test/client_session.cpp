@@ -765,6 +765,10 @@ TEST_CASE("with_transaction", "[session]") {
 
     session_test test;
 
+    if (!server_has_sessions(test.client)) {
+        return;
+    }
+
     auto session = test.client.start_session();
 
     // The following three tests are prose tests from the with_transaction spec.

@@ -38,6 +38,7 @@ using namespace mongocxx;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
+using test_util::server_has_sessions;
 
 bool check_for_collections(cursor cursor, std::set<std::string> expected_colls) {
     for (auto&& coll : cursor) {
@@ -341,6 +342,10 @@ TEST_CASE("Database integration tests", "[database]") {
         };
 
         SECTION("listLocalSessions") {
+            if (!server_has_sessions(mongo_client)) {
+                return;
+            }
+
             auto session1 = mongo_client.start_session();
             auto session2 = mongo_client.start_session();
 
