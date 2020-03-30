@@ -62,7 +62,7 @@ int main() {
     read_preference rp_primary{};
     rp_primary.mode(read_preference::read_mode::k_primary);
 
-    // Prereq: Create collections. CRUD operations in transactions must be on existing collections.
+    // Prereq: Create collections.
 
     auto foo = client["mydb1"]["foo"];
     auto bar = client["mydb2"]["bar"];
