@@ -1045,48 +1045,13 @@
 <li><a href="https://www.boost.org">boost</a> headers (optional)</li>
 </ul>
 
-<p>We currently test the driver with the following configurations:</p>
+<p>We currently test the driver on the following platforms:</p>
 
-<table>
-<thead>
-<tr>
-<th>&nbsp;</th>
-<th>Linux</th>
-<th>macOS</th>
-<th>Windows</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>clang</td>
-<td>3.8</td>
-<td>7.0 (Apple)</td>
-<td>-</td>
-</tr>
-
-<tr>
-<td>gcc</td>
-<td>4.8, 5.4</td>
-<td>-</td>
-<td>-</td>
-</tr>
-
-<tr>
-<td>VS</td>
-<td>n/a</td>
-<td>n/a</td>
-<td>14 (2015) Update 3</td>
-</tr>
-
-<tr>
-<td>boost</td>
-<td>-</td>
-<td>1.67.0</td>
-<td>1.60.0</td>
-</tr>
-</tbody>
-</table>
+<ul>
+<li>Linux with clang 3.8, GCC 5.4 and 7.5</li>
+<li>macOS with Apple clang 7.0 and 11.0 using Boost 1.70.0</li>
+<li>Windows with Visual Studio 2015 using Boost 1.60.0 and Visual Studio 2017</li>
+</ul>
 
 <p>Versions older than the ones listed may not work and are not
 supported; use them at your own risk.</p>
@@ -1102,6 +1067,7 @@ have problems, please file a bug report via
 <p>The mongocxx driver builds on top of the MongoDB C driver.</p>
 
 <ul>
+<li>For mongocxx-3.5.x, libmongoc 1.15.0 or later is required.</li>
 <li>For mongocxx-3.4.x, libmongoc 1.13.0 or later is required.</li>
 <li>For mongocxx-3.3.x, libmongoc 1.10.1 or later is required.</li>
 <li>For mongocxx-3.2.x, libmongoc 1.9.2 or later is required.</li>
@@ -1139,7 +1105,8 @@ must choose one of the following implementations for these features:</p>
 
 <p>Boost (<em>default for Windows platforms</em>)
      Select with <code>-DBSONCXX_POLY_USE_BOOST=1</code>. This is currently the
-     only option if you are using MSVC.</p>
+     only option if you are using a version of MSVC that does not support
+     C++17.</p>
 
 <p><code>std::experimental</code>
      Select with <code>-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=1</code>. If your
@@ -1172,11 +1139,11 @@ cd mongo-cxx-driver/build
 <p>If you prefer to download a tarball, look on the <a href="https://github.com/mongodb/mongo-cxx-driver/releases">mongocxx
 releases</a> page for a
 link to the release tarball for the version you wish you install.  For
-example, to download version 3.4.1:</p>
+example, to download version 3.5.0:</p>
 
-<pre><code class="language-sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.4.1.tar.gz
-tar -xzf r3.4.1.tar.gz
-cd mongo-cxx-driver-r3.4.1/build
+<pre><code class="language-sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.5.0.tar.gz
+tar -xzf r3.5.0.tar.gz
+cd mongo-cxx-driver-r3.5.0/build
 </code></pre>
 
 <p>Make sure you change to the <code>build</code> directory of whatever source tree you
@@ -1229,13 +1196,13 @@ would run the command above with the Boost polyfill option:</p>
 
 <pre><code class="language-sh">'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
      -G &quot;Visual Studio 14 2015 Win64&quot;           \
-    -DBOOST_ROOT=C:\local\boost_1_59_0          \
+    -DBOOST_ROOT=C:\local\boost_1_60_0          \
     -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
 </code></pre>
 
 <p>The example above assumes:
-* Boost is found in <code>C:\local\boost_1_59_0</code>.
+* Boost is found in <code>C:\local\boost_1_60_0</code>.
 * <code>libmongoc</code> is found in <code>C:\mongo-c-driver</code>.
 * <code>mongocxx</code> is to be installed into <code>C:\mongo-cxx-driver</code>.</p>
 
@@ -1279,6 +1246,29 @@ users.</strong> A user can enable this behavior with the <code>-DBUILD_SHARED_LI
     -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
 </code></pre>
 
+<h4 id="configuring-with-mongocxx-3-5-0-or-newer">Configuring with <code>mongocxx</code> 3.5.0 or newer</h4>
+
+<p>Users have the option to build <code>mongocxx</code> as both static and shared libraries. A user can enable
+this behavior with the <code>-DBUILD_SHARED_AND_STATIC_LIBS</code> option:</p>
+
+<pre><code class="language-sh">cmake ..                                            \
+    -DCMAKE_BUILD_TYPE=Release                      \
+    -DBUILD_SHARED_AND_STATIC_LIBS=ON               \
+    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
+    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
+</code></pre>
+
+<p>Users have the option to build <code>mongocxx</code> as a shared library that has statically linked
+<code>libmongoc</code>. <strong>This is not recommended for novice users.</strong> A user can enable this behavior with the
+<code>-DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC</code> option:</p>
+
+<pre><code class="language-sh">cmake ..                                            \
+    -DCMAKE_BUILD_TYPE=Release                      \
+    -DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC=ON       \
+    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
+    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
+</code></pre>
+
 <h3 id="step-5-build-and-install-the-driver">Step 5: Build and install the driver</h3>
 
 <p>If you are using the default MNMLSTC polyfill and are installing to a
@@ -1296,11 +1286,44 @@ build and install the driver:</p>
 <pre><code class="language-sh">make &amp;&amp; sudo make install
 </code></pre>
 
+<p>The driver can be uninstalled at a later time in one of two ways.  First,
+the uninstall target can be called:</p>
+
+<pre><code class="language-sh">sudo make uninstall
+</code></pre>
+
+<p>Second, the uninstall script can be called:</p>
+
+<pre><code class="language-sh">sudo /opt/mongo-cxx-driver/share/mongo-cxx-driver/uninstall.sh
+</code></pre>
+
 <p>On Windows, build and install from the command line like this:</p>
 
 <pre><code class="language-sh">msbuild.exe ALL_BUILD.vcxproj
 msbuild.exe INSTALL.vcxproj
 </code></pre>
+
+<p>On Windows, the driver can be uninstalled at a later time in one of two
+ways.  First, the uninstall project can be called:</p>
+
+<pre><code class="language-sh">msbuild.exe generate_uninstall\uninstall.vcxproj
+</code></pre>
+
+<p>Second, the uninstall script can be called:</p>
+
+<pre><code class="language-sh">C:\opt\mongo-cxx-driver\share\mongo-cxx-driver\uninstall.cmd
+</code></pre>
+
+<h4 id="additional-options-for-integrators">Additional Options for Integrators</h4>
+
+<p>In the event that you are building the BSON C++ library and/or the C++ driver to embed with other components and you wish to avoid the potential for collision with components installed from a standard build or from a distribution package manager, you can make use of the <code>BSONCXX_OUTPUT_BASENAME</code> and <code>MONGOCXX_OUTPUT_BASENAME</code> options to <code>cmake</code>.</p>
+
+<pre><code class="language-sh">cmake ..                                            \
+    -DBSONCXX_OUTPUT_BASENAME=custom_bsoncxx        \
+    -DMONGOCXX_OUTPUT_BASENAME=custom_mongocxx
+</code></pre>
+
+<p>The above command would produce libraries named <code>libcustom_bsoncxx.so</code> and <code>libcustom_mongocxx.so</code> (or with the extension appropriate for the build platform).  Those libraries could be placed in a standard system directory or in an alternate location and could be linked to by specifying something like <code>-lcustom_mongocxx -lcustom_bsoncxx</code> on the linker command line (possibly adjusting the specific flags to those required by your linker).</p>
 
 <h3 id="step-6-test-your-installation">Step 6: Test your installation</h3>
 
@@ -1335,13 +1358,11 @@ int main(int, char**) {
 
 <h4 id="compiling-with-the-help-of-cmake">Compiling with the help of CMake</h4>
 
-<p>If you are using CMake for your project, you can use the find_package()
-directive to enable compiling and linking against <code>mongocxx</code>.  The
-find_package() directive will set variables in the current environment
-(e.g. <code>LIBMONGOCXX_INCLUDE_DIRS</code>, <code>LIBMONGOCXX_LIBRARIES</code>, etc.) that need
-to be propagated to your build targets.  If you have installed <code>mongocxx</code>
-or <code>libmongoc</code> to a non-standard location on your system, you will need to
-set <code>CMAKE_PREFIX_PATH</code> to the library installation prefix (specified at
+<p>If you are using CMake for your project, you can use the <code>find_package()</code>
+directive to import targets which can be used to link to your build
+targets.  If you have installed <code>mongocxx</code> or <code>libmongoc</code> to a
+ non-standard location on your system, you will need to set
+<code>CMAKE_PREFIX_PATH</code> to the library installation prefix (specified at
 build time with <code>CMAKE_INSTALL_PREFIX</code>) when running <code>cmake</code>.</p>
 
 <p>In the <code>mongocxx</code> source repository (versions 3.2.x or newer only), see
@@ -1465,8 +1486,12 @@ settings for a Debug x64 build as an example:</p>
 <ul>
 <li><a href="#configuring-with-mongocxx-3-1-x-or-3-0-x">Configuring with <code>mongocxx</code> 3.1.x or 3.0.x</a></li>
 <li><a href="#configuring-with-mongocxx-3-2-x-or-newer">Configuring with <code>mongocxx</code> 3.2.x or newer</a></li>
+<li><a href="#configuring-with-mongocxx-3-5-0-or-newer">Configuring with <code>mongocxx</code> 3.5.0 or newer</a></li>
 </ul></li>
-<li><a href="#step-5-build-and-install-the-driver">Step 5: Build and install the driver</a></li>
+<li><a href="#step-5-build-and-install-the-driver">Step 5: Build and install the driver</a>
+<ul>
+<li><a href="#additional-options-for-integrators">Additional Options for Integrators</a></li>
+</ul></li>
 <li><a href="#step-6-test-your-installation">Step 6: Test your installation</a>
 <ul>
 <li><a href="#compiling-with-the-help-of-cmake">Compiling with the help of CMake</a></li>
@@ -1530,6 +1555,22 @@ else if (window.attachEvent) window.attachEvent('onload', async_load);
 })();
 </script>
 
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-7301842-14"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-7301842-14');
+</script>
+
+
+<script type="text/javascript">
+  !function(e,t,r,n,a){if(!e[a]){for(var i=e[a]=[],s=0;s<r.length;s++){var c=r[s];i[c]=i[c]||function(e){return function(){var t=Array.prototype.slice.call(arguments);i.push([e,t])}}(c)}i.SNIPPET_VERSION="1.0.1";var o=t.createElement("script");o.type="text/javascript",o.async=!0,o.src="https://d2yyd1h5u9mauk.cloudfront.net/integrations/web/v1/library/"+n+"/"+a+".js";var l=t.getElementsByTagName("script")[0];l.parentNode.insertBefore(o,l)}}(window,document,["survey","reset","config","init","set","get","event","identify","track","page","screen","group","alias"],"Dk30CC86ba0nATlK","delighted");
+
+  delighted.survey();
+</script>
 </body>
 </html>
 

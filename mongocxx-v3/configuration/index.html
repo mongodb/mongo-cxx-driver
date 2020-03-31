@@ -1068,33 +1068,40 @@ additional connection options are possible via the
 
 <h2 id="configuring-tls-ssl">Configuring TLS/SSL</h2>
 
-<p>To enable TLS (SSL), set <code>ssl=true</code> in the URI:</p>
+<p>To enable TLS (SSL), set <code>tls=true</code> in the URI:</p>
 
 <blockquote>
-<p><code>mongodb://mongodb.example.com/?ssl=true</code></p>
+<p><code>mongodb://mongodb.example.com/?tls=true</code></p>
 </blockquote>
 
 <p>By default, mongocxx will verify server certificates against the local
-system CA list.  You can override that by creating a
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1ssl.html
-">mongocxx::options::ssl</a>
-object and passing it to <code>ssl_opts</code> on mongocxx::options::client.</p>
+system CA list.  You can override that either by specifying different settings in
+the connection string, or by creating a
+<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1tls.html
+">mongocxx::options::tls</a>
+object and passing it to <code>tls_opts</code> on mongocxx::options::client.</p>
 
 <p>For example, to use a custom CA or to disable certificate validation,
-uncomment the corresponding line in the following example:</p>
+see the following example:</p>
 
-<pre><code class="language-cpp">mongocxx::options::client client_options;
-mongocxx::options::ssl ssl_options;
+<pre><code class="language-cpp">
+// 1) Using tls_options
+mongocxx::options::client client_options;
+mongocxx::options::tls tls_options;
 
 // If the server certificate is not signed by a well-known CA,
 // you can set a custom CA file with the `ca_file` option.
-// ssl_options.ca_file(&quot;/path/to/custom/cert.pem&quot;);
+tls_options.ca_file(&quot;/path/to/custom/cert.pem&quot;);
 
 // If you want to disable certificate verification, you
 // can set the `allow_invalid_certificates` option.
-// ssl_options.allow_invalid_certificates(true);
+tls_options.allow_invalid_certificates(true);
 
-client_options.ssl_opts(ssl_options);
+client_options.tls_opts(tls_options);
+auto client1 = mongocxx::client{uri{&quot;mongodb://host1/?tls=true&quot;}, client_options};
+
+// 2) Using the URI
+auto client2 = mongocxx::client{uri{&quot;mongodb://host1/?tls=true&amp;tlsAllowInvalidCertificates=true&amp;tlsCAFile=/path/to/custom/cert.pem&quot;}};
 </code></pre>
 
 <h2 id="configuring-authentication">Configuring authentication</h2>
@@ -1135,34 +1142,28 @@ will use an authentication mechanism compatible with your server.</p>
 
 <p>The <a href="https://www.mongodb.org/dochub/core/x509">X.509</a>
 mechanism authenticates a user whose name is derived from the distinguished
-subject name of the X.509 certificate presented by the driver during SSL
-negotiation. This authentication method requires the use of SSL
+subject name of the X.509 certificate presented by the driver during TLS
+negotiation. This authentication method requires the use of TLS
 connections with certificate validation and is available in MongoDB 2.6
-and newer. To create a credential of this type, first create a set of
-client options specifying the path to the PEM file containing the client
-private key and certificate, and then use a connection string with a
-parameter specifying the authentication mechanism as &ldquo;MONGODB-X509&rdquo; and
-with SSL enabled:</p>
+and newer. To create a credential of this type, use a connection string with a
+parameter that specifies the authentication mechanism as &ldquo;MONGODB-X509&rdquo;,
+that specifies the path to the PEM file containing the client private key
+and certificate, and that has TLS enabled:</p>
 
 <pre><code class="language-cpp">#include &lt;mongocxx/client.hpp&gt;
 #include &lt;mongocxx/uri.hpp&gt;
-#include &lt;mongocxx/options/client.hpp&gt;
-#include &lt;mongocxx/options/ssl.hpp&gt;
-
-mongocxx::options::ssl ssl_opts{};
-ssl_opts.pem_file(&quot;client.pem&quot;);
-
-mongocxx::options::client client_opts{};
-client_opts.ssl_opts(ssl_opts);
 
 auto client = mongocxx::client{
-    uri{&quot;mongodb://host1/?authMechanism=MONGODB-X509&amp;ssl=true&quot;}, client_opts};
+    uri{&quot;mongodb://host1/?authMechanism=MONGODB-X509&amp;tlsCertificateFile=client.pem&amp;tls=true&quot;}};
 </code></pre>
 
 <p>See the MongoDB server
 <a href="https://www.mongodb.org/dochub/core/x509-subject-name">X.509 tutorial</a>
 for more information about determining the subject name from the
 certificate.</p>
+
+<p>The PEM file can also be specified using the <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1tls.html
+">mongocxx::options::tls</a> class, see the first &ldquo;Configuring TLS/SSL&rdquo; example above.</p>
 
 <h3 id="kerberos-gssapi">Kerberos (GSSAPI)</h3>
 
@@ -1319,6 +1320,22 @@ else if (window.attachEvent) window.attachEvent('onload', async_load);
 })();
 </script>
 
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-7301842-14"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-7301842-14');
+</script>
+
+
+<script type="text/javascript">
+  !function(e,t,r,n,a){if(!e[a]){for(var i=e[a]=[],s=0;s<r.length;s++){var c=r[s];i[c]=i[c]||function(e){return function(){var t=Array.prototype.slice.call(arguments);i.push([e,t])}}(c)}i.SNIPPET_VERSION="1.0.1";var o=t.createElement("script");o.type="text/javascript",o.async=!0,o.src="https://d2yyd1h5u9mauk.cloudfront.net/integrations/web/v1/library/"+n+"/"+a+".js";var l=t.getElementsByTagName("script")[0];l.parentNode.insertBefore(o,l)}}(window,document,["survey","reset","config","init","set","get","event","identify","track","page","screen","group","alias"],"Dk30CC86ba0nATlK","delighted");
+
+  delighted.survey();
+</script>
 </body>
 </html>
 
