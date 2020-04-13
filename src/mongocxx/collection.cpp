@@ -42,6 +42,7 @@
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/exception/write_exception.hpp>
+#include <mongocxx/hint.hpp>
 #include <mongocxx/model/write.hpp>
 #include <mongocxx/private/bulk_write.hh>
 #include <mongocxx/private/client.hh>
@@ -96,6 +97,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
     mongoc_find_and_modify_flags_t flags,
     bool bypass,
     mongocxx::stdx::optional<bsoncxx::array::view_or_value> array_filters,
+    const mongocxx::stdx::optional<mongocxx::hint>& hint,
     const T& options) {
     using unique_opts =
         std::unique_ptr<mongoc_find_and_modify_opts_t,
@@ -132,6 +134,10 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
 
     if (array_filters) {
         extra.append(kvp("arrayFilters", *array_filters));
+    }
+
+    if (hint) {
+        extra.append(kvp("hint", hint->to_value()));
     }
 
     scoped_bson_t extra_bson{extra.view()};
@@ -841,6 +847,7 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_replace(
                            flags,
                            options.bypass_document_validation().value_or(false),
                            stdx::nullopt,
+                           options.hint(),
                            options);
 }
 
@@ -878,6 +885,7 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_update(
                            flags,
                            options.bypass_document_validation().value_or(false),
                            options.array_filters(),
+                           options.hint(),
                            options);
 }
 
@@ -934,6 +942,7 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_delete(
                            nullptr,
                            MONGOC_FIND_AND_MODIFY_REMOVE,
                            false,
+                           stdx::nullopt,
                            stdx::nullopt,
                            options);
 }
