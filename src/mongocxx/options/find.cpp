@@ -22,6 +22,11 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+find& find::allow_disk_use(bool allow_disk_use) {
+    _allow_disk_use = allow_disk_use;
+    return *this;
+}
+
 find& find::allow_partial_results(bool allow_partial) {
     _allow_partial_results = allow_partial;
     return *this;
@@ -110,6 +115,10 @@ find& find::skip(std::int64_t skip) {
 find& find::sort(bsoncxx::document::view_or_value ordering) {
     _ordering = std::move(ordering);
     return *this;
+}
+
+const stdx::optional<bool>& find::allow_disk_use() const {
+    return _allow_disk_use;
 }
 
 const stdx::optional<bool>& find::allow_partial_results() const {

@@ -301,6 +301,10 @@ namespace {
 bsoncxx::builder::basic::document build_find_options_document(const options::find& options) {
     bsoncxx::builder::basic::document options_builder;
 
+    if (options.allow_disk_use()) {
+        options_builder.append(kvp("allowDiskUse", *options.allow_disk_use()));
+    }
+
     if (options.allow_partial_results()) {
         options_builder.append(kvp("allowPartialResults", *options.allow_partial_results()));
     }

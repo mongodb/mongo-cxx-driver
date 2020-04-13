@@ -36,6 +36,30 @@ namespace options {
 class MONGOCXX_API find {
    public:
     ///
+    /// Enables writing to temporary files on the server. When set to true, the server
+    /// can write temporary data to disk while executing the find operation.
+    ///
+    /// This option is sent only if the caller explicitly provides a value. The default
+    /// is to not send a value.
+    ///
+    /// @param allow_disk_use
+    ///   Whether to allow writing temporary files on the server.
+    ///
+    /// @return
+    ///   A reference to this object to facilitate method chaining.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/find/
+    ///
+    find& allow_disk_use(bool allow_disk_use);
+
+    ///
+    /// Gets the current setting for allowing disk use on the server.
+    ///
+    /// @return Whether disk use on the server is allowed.
+    ///
+    const stdx::optional<bool>& allow_disk_use() const;
+
+    ///
     /// Sets whether to allow partial results from a mongos if some shards are down (instead of
     /// throwing an error).
     ///
@@ -471,6 +495,7 @@ class MONGOCXX_API find {
     const stdx::optional<bsoncxx::document::view_or_value>& sort() const;
 
    private:
+    stdx::optional<bool> _allow_disk_use;
     stdx::optional<bool> _allow_partial_results;
     stdx::optional<std::int32_t> _batch_size;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
