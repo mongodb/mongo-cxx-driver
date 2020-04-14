@@ -421,18 +421,26 @@ class MONGOCXX_API index {
     /// @param haystack_bucket_size
     ///   The geoHaystack bucket size.
     ///
+    /// @deprecated
+    ///   This option is deprecated.
+    ///
     /// @return
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    index& haystack_bucket_size(double haystack_bucket_size);
+    MONGOCXX_DEPRECATED index& haystack_bucket_size(double haystack_bucket_size);
+    index& haystack_bucket_size_deprecated(double haystack_bucket_size);
 
     ///
     /// The current haystack_bucket_size setting.
     ///
     /// @return The current haystack_bucket_size.
     ///
-    const stdx::optional<double>& haystack_bucket_size() const;
+    /// @deprecated
+    ///   This method is deprecated.
+    ///
+    MONGOCXX_DEPRECATED const stdx::optional<double>& haystack_bucket_size() const;
+    const stdx::optional<double>& haystack_bucket_size_deprecated() const;
 
     ///
     /// Conversion operator that provides a view of the options in document form.

@@ -54,7 +54,7 @@ TEST_CASE("index", "[index][option]") {
         CHECK_OPTIONAL_ARGUMENT(idx, twod_bits_precision, 4);
         CHECK_OPTIONAL_ARGUMENT(idx, twod_location_min, 90.0);
         CHECK_OPTIONAL_ARGUMENT(idx, twod_location_max, 90.0);
-        CHECK_OPTIONAL_ARGUMENT(idx, haystack_bucket_size, 90.0);
+        CHECK_OPTIONAL_ARGUMENT(idx, haystack_bucket_size_deprecated, 90.0);
         CHECK_OPTIONAL_ARGUMENT(idx, weights, weights.view());
         CHECK_OPTIONAL_ARGUMENT(idx, partial_filter_expression, partial_filter_expression.view());
         REQUIRE_NOTHROW(idx.storage_options(std::move(storage)));
@@ -98,7 +98,7 @@ TEST_CASE("index", "[index][option]") {
         idx.twod_bits_precision(4);
         idx.twod_location_max(90.0);
         idx.twod_location_min(90.0);
-        idx.haystack_bucket_size(90.0);
+        idx.haystack_bucket_size_deprecated(90.0);
         idx.weights(weights.view());
         idx.storage_options(std::move(storage));
 

@@ -114,9 +114,13 @@ index& index::twod_location_max(double twod_location_max) {
     return *this;
 }
 
-index& index::haystack_bucket_size(double haystack_bucket_size) {
+index& index::haystack_bucket_size_deprecated(double haystack_bucket_size) {
     _haystack_bucket_size = haystack_bucket_size;
     return *this;
+}
+
+index& index::haystack_bucket_size(double haystack_bucket_size) {
+    return haystack_bucket_size_deprecated(haystack_bucket_size);
 }
 
 const stdx::optional<bool>& index::background() const {
@@ -183,8 +187,12 @@ const stdx::optional<double>& index::twod_location_max() const {
     return _twod_location_max;
 }
 
-const stdx::optional<double>& index::haystack_bucket_size() const {
+const stdx::optional<double>& index::haystack_bucket_size_deprecated() const {
     return _haystack_bucket_size;
+}
+
+const stdx::optional<double>& index::haystack_bucket_size() const {
+    return haystack_bucket_size_deprecated();
 }
 
 index::operator bsoncxx::document::view_or_value() {
