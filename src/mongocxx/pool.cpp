@@ -20,6 +20,8 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/private/apm.hh>
 #include <mongocxx/options/private/ssl.hh>
 #include <mongocxx/private/client.hh>
@@ -56,6 +58,23 @@ pool::pool(const uri& uri, const options::pool& options)
     if (uri.tls() || options.client_opts().tls_opts())
         throw exception{error_code::k_ssl_not_supported};
 #endif
+
+    if (options.client_opts().auto_encryption_opts()) {
+        const auto& auto_encrypt_opts = *(options.client_opts().auto_encryption_opts());
+        auto mongoc_auto_encrypt_opts =
+            static_cast<mongoc_auto_encryption_opts_t*>(auto_encrypt_opts.convert());
+
+        bson_error_t error;
+        auto r = libmongoc::client_pool_enable_auto_encryption(
+            _impl->client_pool_t, mongoc_auto_encrypt_opts, &error);
+
+        libmongoc::auto_encryption_opts_destroy(mongoc_auto_encrypt_opts);
+
+        if (!r) {
+            throw_exception<operation_exception>(error);
+        }
+    }
+
     if (options.client_opts().apm_opts()) {
         _impl->listeners = *options.client_opts().apm_opts();
         auto callbacks = options::make_apm_callbacks(_impl->listeners);

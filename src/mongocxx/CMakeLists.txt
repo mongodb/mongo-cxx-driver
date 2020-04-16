@@ -71,6 +71,9 @@ else()
   endif()
 endif()
 
+find_package(mongocrypt REQUIRED)
+set(libmongocrypt_target mongo::mongocrypt)
+
 add_subdirectory(config)
 
 set(mongocxx_sources
@@ -115,6 +118,7 @@ set(mongocxx_sources
     model/write.cpp
     options/aggregate.cpp
     options/apm.cpp
+    options/auto_encryption.cpp
     options/bulk_write.cpp
     options/change_stream.cpp
     options/client.cpp
@@ -326,6 +330,8 @@ set_local_dist (src_mongocxx_DIST_local
    options/aggregate.hpp
    options/apm.cpp
    options/apm.hpp
+   options/auto_encryption.cpp
+   options/auto_encryption.hpp
    options/bulk_write.cpp
    options/bulk_write.hpp
    options/change_stream.cpp

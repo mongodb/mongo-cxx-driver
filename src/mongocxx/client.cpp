@@ -20,6 +20,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
+#include <mongocxx/options/auto_encryption.hpp>
 #include <mongocxx/options/private/apm.hh>
 #include <mongocxx/options/private/ssl.hh>
 #include <mongocxx/private/client.hh>
@@ -92,6 +93,22 @@ client::client(const class uri& uri, const options::client& options) {
         // It will be cast back to an APM class in the event handlers.
         auto context = static_cast<void*>(&(_impl->listeners));
         libmongoc::client_set_apm_callbacks(_get_impl().client_t, callbacks.get(), context);
+    }
+
+    if (options.auto_encryption_opts()) {
+        const auto& auto_encrypt_opts = *options.auto_encryption_opts();
+        auto mongoc_auto_encrypt_opts =
+            static_cast<mongoc_auto_encryption_opts_t*>(auto_encrypt_opts.convert());
+
+        bson_error_t error;
+        auto r = libmongoc::client_enable_auto_encryption(
+            _get_impl().client_t, mongoc_auto_encrypt_opts, &error);
+
+        libmongoc::auto_encryption_opts_destroy(mongoc_auto_encrypt_opts);
+
+        if (!r) {
+            throw_exception<operation_exception>(error);
+        }
     }
 
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)

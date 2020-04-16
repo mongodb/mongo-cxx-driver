@@ -110,6 +110,8 @@ class MONGOCXX_API pool {
     stdx::optional<entry> try_acquire();
 
    private:
+    friend class options::auto_encryption;
+
     MONGOCXX_PRIVATE void _release(client* client);
 
     class MONGOCXX_PRIVATE impl;

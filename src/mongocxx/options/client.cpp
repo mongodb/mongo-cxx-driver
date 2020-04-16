@@ -46,6 +46,15 @@ const stdx::optional<apm>& client::apm_opts() const {
     return _apm_opts;
 }
 
+client& client::auto_encryption_opts(auto_encryption auto_encryption_opts) {
+    _auto_encrypt_opts = std::move(auto_encryption_opts);
+    return *this;
+}
+
+const stdx::optional<auto_encryption>& client::auto_encryption_opts() const {
+    return _auto_encrypt_opts;
+}
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
