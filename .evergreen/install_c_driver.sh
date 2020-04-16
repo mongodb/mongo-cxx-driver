@@ -19,9 +19,9 @@ PREFIX=${PREFIX:-$(pwd)"/../mongoc/"}
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 
 CMAKE_ARGS="
-  -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DENABLE_SHM_COUNTERS=OFF -DENABLE_BSON=ON
+  -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DENABLE_SHM_COUNTERS=OFF
   -DENABLE_TESTS=OFF -DENABLE_EXAMPLES=OFF -DENABLE_STATIC=ON -DENABLE_EXTRA_ALIGNMENT=OFF
-  -DCMAKE_MACOSX_RPATH=ON -DCMAKE_INSTALL_PREFIX=$PREFIX -DENABLE_CLIENT_SIDE_ENCRYPTION=OFF"
+  -DCMAKE_MACOSX_RPATH=ON -DCMAKE_INSTALL_PREFIX=$PREFIX -DCMAKE_PREFIX_PATH=$PREFIX"
 
 echo "About to install C driver ($VERSION) into $PREFIX"
 
@@ -53,26 +53,57 @@ else
     exit 1
 fi
 
+export CFLAGS="-fPIC"
+
 case "$OS" in
     darwin|linux)
-        PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig" $CMAKE $CMAKE_ARGS .
+	# build libbson
+	mkdir cmake_build
+	cd cmake_build
+	$CMAKE -DENABLE_MONGOC=OFF $CMAKE_ARGS ..
+	make "-j$CONCURRENCY"
+	make install
+	cd ../../
+
+	# fetch and build libmongocrypt
+	git clone https://github.com/mongodb/libmongocrypt
+	mkdir libmongocrypt/cmake_build
+	cd libmongocrypt/cmake_build
+	$CMAKE -DENABLE_SHARED_BSON=ON -DCMAKE_INSTALL_PREFIX="$PREFIX" -DCMAKE_PREFIX_PATH="$PREFIX" -DCMAKE_BUILD_TYPE="Debug" -DENABLE_CLIENT_SIDE_ENCRYPTION=OFF ..
+	make install
+	cd ../../$DIR
+
+	# build libmongoc
+	cd cmake_build
+        $CMAKE -DENABLE_MONGOC=ON -DENABLE_CLIENT_SIDE_ENCRYPTION=ON $CMAKE_ARGS ..
         make "-j$CONCURRENCY"
         make install
+	cd ../
         ;;
 
     cygwin*)
         GENERATOR=${GENERATOR:-"Visual Studio 14 2015 Win64"}
-        if [ "$GENERATOR" == "Visual Studio 14 2015 Win64" ]; then
-          MSBUILD="/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe"
-        elif [ "$GENERATOR" == "Visual Studio 15 2017 Win64" ]; then
-          MSBUILD="/cygdrive/c/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin/MSBuild.exe"
-        else
-           echo "Unexpected generator \"$GENERATOR\" for Windows";
-           exit 1
-        fi
-        "$CMAKE" -G "$GENERATOR" $CMAKE_ARGS .
-        "$MSBUILD" /m INSTALL.vcxproj
 
+	# build libbson
+	mkdir cmake_build
+	cd cmake_build
+	"$CMAKE" -G "$GENERATOR" -DENABLE_MONGOC=OFF $CMAKE_ARGS ..
+	"$CMAKE" --build . --target INSTALL --config "Debug" -- /m
+	cd ../../
+
+	# fetch and build libmongocrypt
+	git clone https://github.com/mongodb/libmongocrypt
+	mkdir libmongocrypt/cmake_build
+	cd libmongocrypt/cmake_build
+	"$CMAKE" -G "$GENERATOR" -DENABLE_SHARED_BSON=ON -DCMAKE_BUILD_TYPE="Debug" $CMAKE_ARGS ..
+	"$CMAKE" --build . --target INSTALL --config "Debug" -- /m
+	cd ../../$DIR
+
+	# build libmongoc
+	cd cmake_build
+        "$CMAKE" -G "$GENERATOR" -DENABLE_MONGOC=ON -DENABLE_CLIENT_SIDE_ENCRYPTION=ON $CMAKE_ARGS ..
+	"$CMAKE" --build . --target INSTALL --config "Debug" -- /m
+	cd ../
         ;;
 
     *)

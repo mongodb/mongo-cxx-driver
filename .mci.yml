@@ -129,8 +129,18 @@ functions:
                 export MONGODB_VERSION=${mongodb_version}
                 export AUTH=${AUTH}
                 export TOPOLOGY=${TOPOLOGY|server}
+                
                 echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
                 ./.evergreen/run-orchestration.sh
+
+                # Copy mongocryptd up so other functions can find it later, since we can't share PATHs
+                if [ -f $MONGODB_BINARIES/mongocryptd ]; then
+                    cp $MONGODB_BINARIES/mongocryptd ../mongocryptd
+                fi
+
+                cd ../
+                pwd
+
 
     "stop_mongod":
         command: shell.exec
@@ -224,7 +234,17 @@ functions:
                   set -o errexit
                   set -o xtrace
                   set -o pipefail
+
+                  # Grabs the mongocryptd path
+                  cd ../
+                  export MONGOCRYPTD_PATH=$(pwd)/
+                  if [ "Windows_NT" == "$OS" ]; then
+                     export MONGOCRYPTD_PATH=$(cygpath -m $MONGOCRYPTD_PATH)
+                  fi
+                  cd mongo-cxx-driver
+                  
                   export PATH="${extra_path}:$PATH"
+
                   cd build
                   export PREFIX=$(pwd)/../../mongoc
 
@@ -240,10 +260,20 @@ functions:
                   # `test_crud_specs` and `test_gridfs_specs` test binaries, respectively.
                   export CRUD_TESTS_PATH="$(pwd)/../data/crud"
                   export CHANGE_STREAM_TESTS_PATH="$(pwd)/../data/change_stream"
+                  export ENCRYPTION_TESTS_PATH="$(pwd)/../data/client_side_encryption"
                   export GRIDFS_TESTS_PATH="$(pwd)/../data/gridfs"
                   export COMMAND_MONITORING_TESTS_PATH="$(pwd)/../data/command-monitoring"
                   export TRANSACTIONS_TESTS_PATH="$(pwd)/../data/transactions"
                   export WITH_TRANSACTION_TESTS_PATH="$(pwd)/../data/with_transaction"
+
+                  # export environment variables for encryption tests (and redact them)
+                  set +o xtrace
+                  set +o errexit
+                  export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
+                  export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
+                  set -o errexit
+                  set -o xtrace
+
                   if [ "Windows_NT" == "$OS" ]; then
                       CRUD_TESTS_PATH=$(cygpath -m $CRUD_TESTS_PATH)
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} RUN_TESTS.vcxproj
@@ -253,12 +283,14 @@ functions:
                       if [ -z "${disable_slow_tests}" ]; then
                           export MONGOCXX_ENABLE_SLOW_TESTS=1
                       fi
-
+                      
                       ulimit -c unlimited || true
+
                       # Run tests and examples 1-by-1 with "test_params" so we can run them with valgrind.
                       ${test_params} ./src/bsoncxx/test/test_bson
                       ${test_params} ./src/mongocxx/test/test_driver
                       ${test_params} ./src/mongocxx/test/test_change_stream_specs
+                      ${test_params} ./src/mongocxx/test/test_client_side_encryption_specs
                       ${test_params} ./src/mongocxx/test/test_crud_specs
                       ${test_params} ./src/mongocxx/test/test_gridfs_specs
                       ${test_params} ./src/mongocxx/test/test_command_monitoring_specs
