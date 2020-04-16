@@ -90,10 +90,7 @@ uint32_t error_code_from_name(string_view name) {
     return 0;
 }
 
-void test_setup(document::view test,
-                document::view test_spec,
-                string_view db_name,
-                string_view coll_name) {
+void test_setup(document::view test, document::view test_spec) {
     // Step 1. "clean up any open transactions from previous test failures"
     client client{uri{}};
     try {
@@ -101,33 +98,11 @@ void test_setup(document::view test,
     } catch (const operation_exception& e) {
     }
 
-    // Step 2. "Create a collection object from the MongoClient, using the database_name and
-    // collection_name fields of the YAML file."
-    database db = client[db_name];
-    collection coll = db[coll_name];
-
-    // Step 3. "Drop the test collection, using writeConcern 'majority'."
-    write_concern wc_majority;
-    wc_majority.acknowledge_level(write_concern::level::k_majority);
-    coll.drop(wc_majority);
-
-    // Step 4. "Execute the 'create' command to recreate the collection"
-    coll = db.create_collection(coll_name, {}, wc_majority);
-
-    // Step 5. "If the YAML file contains a data array, insert the documents"
-    if (test_spec["data"]) {
-        array::view docs = test_spec["data"].get_array().value;
-        for (auto&& doc : docs) {
-            options::insert insert_opts;
-            insert_opts.write_concern(wc_majority);
-            coll.insert_one(doc.get_document().value, insert_opts);
-        }
-    }
+    // Steps 2 - 5, set up new collection
+    set_up_collection(client, test_spec);
 
     // Step 6. "If failPoint is specified, its value is a configureFailPoint command"
-    if (test["failPoint"]) {
-        client["admin"].run_command(test["failPoint"].get_document().value);
-    }
+    configure_fail_point(client, test);
 }
 
 void parse_session_opts(document::view session_opts, options::client_session* out) {
@@ -150,44 +125,6 @@ void parse_session_opts(document::view session_opts, options::client_session* ou
     }
 
     out->default_transaction_opts(txn_opts);
-}
-
-void parse_database_options(document::view op, database* out) {
-    if (op["databaseOptions"]) {
-        auto rc = lookup_read_concern(op["databaseOptions"].get_document());
-        if (rc) {
-            out->read_concern(*rc);
-        }
-
-        auto wc = lookup_write_concern(op["databaseOptions"].get_document());
-        if (wc) {
-            out->write_concern(*wc);
-        }
-
-        auto rp = lookup_read_preference(op["databaseOptions"].get_document());
-        if (rp) {
-            out->read_preference(*rp);
-        }
-    }
-}
-
-void parse_collection_options(document::view op, collection* out) {
-    if (op["collectionOptions"]) {
-        auto rc = lookup_read_concern(op["collectionOptions"].get_document());
-        if (rc) {
-            out->read_concern(*rc);
-        }
-
-        auto wc = lookup_write_concern(op["collectionOptions"].get_document());
-        if (wc) {
-            out->write_concern(*wc);
-        }
-
-        auto rp = lookup_read_preference(op["collectionOptions"].get_document());
-        if (rp) {
-            out->read_preference(*rp);
-        }
-    }
 }
 
 using bsoncxx::stdx::string_view;
@@ -357,7 +294,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         }
 
         // Steps 1-6.
-        test_setup(test.get_document().value, test_spec_view, db_name, coll_name);
+        test_setup(test.get_document().value, test_spec_view);
 
         // Step 7. "Create a new MongoClient client, with Command Monitoring listeners enabled."
         options::client client_opts;

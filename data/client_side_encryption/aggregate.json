@@ -365,6 +365,7 @@
     },
     {
       "description": "Database aggregate should fail",
+      "skipReason": "CXX-1834 $currentOp not supported",
       "clientOptions": {
         "autoEncryptOpts": {
           "kmsProviders": {

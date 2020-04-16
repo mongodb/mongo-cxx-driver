@@ -640,19 +640,26 @@ document::value operation_runner::_run_insert_many(document::view operation) {
 document::value operation_runner::_run_insert_one(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view document = arguments["document"].get_document().value;
-    auto result = builder::basic::document{};
-    stdx::optional<result::insert_one> insert_one_result;
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
-        insert_one_result = _coll->insert_one(*session, document);
-    } else {
-        insert_one_result = _coll->insert_one(document);
+
+    options::insert opts{};
+    if (arguments["bypassDocumentValidation"]) {
+        opts.bypass_document_validation(true);
     }
+
+    stdx::optional<result::insert_one> insert_one_result;
+    if (client_session* session = _lookup_session(arguments)) {
+        insert_one_result = _coll->insert_one(*session, document, opts);
+    } else {
+        insert_one_result = _coll->insert_one(document, opts);
+    }
+
     types::value inserted_id{types::b_null{}};
 
     if (insert_one_result) {
         inserted_id = insert_one_result->inserted_id();
     }
 
+    auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", [inserted_id](builder::basic::sub_document subdoc) {
         subdoc.append(builder::basic::kvp("insertedId", inserted_id));
     }));

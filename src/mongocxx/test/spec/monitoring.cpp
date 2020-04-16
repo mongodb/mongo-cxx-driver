@@ -16,6 +16,7 @@
 #include <iostream>
 
 #include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/json.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <third_party/catch/include/catch.hpp>
@@ -35,7 +36,15 @@ void apm_checker::compare(bsoncxx::array::view expectations,
 
     auto events_iter = _events.begin();
     for (auto expectation : expectations) {
+        if (events_iter == _events.end()) {
+            fprintf(stderr,
+                    "more expectations than events captured\nExpectations:\n\n%s\n\nCaptured:\n\n",
+                    to_json(expectations).c_str());
+            this->print_all();
+            REQUIRE(false);
+        }
         REQUIRE(events_iter != _events.end());
+
         auto expected = expectation.get_document().view();
         REQUIRE_BSON_MATCHES_V(*events_iter, expected, match_visitor);
         events_iter++;
@@ -46,9 +55,26 @@ void apm_checker::compare(bsoncxx::array::view expectations,
                 ++events_iter;
             }
         }
-        // Then there must be no extra events after the expected ones.
-        REQUIRE(events_iter == _events.end());
+
+        if (events_iter == _events.end()) {
+            return;
+        }
+
+        if (events_iter != _events.end()) {
+            fprintf(stderr, "Error: extra event captured: %s\n", to_json(*events_iter).c_str());
+            events_iter++;
+        }
+
+        REQUIRE(false);
     }
+}
+
+void apm_checker::print_all() {
+    printf("\n\n");
+    for (auto&& event : _events) {
+        printf("APM event: %s\n", bsoncxx::to_json(event).c_str());
+    }
+    printf("\n\n");
 }
 
 options::apm apm_checker::get_apm_opts(bool command_started_events_only) {

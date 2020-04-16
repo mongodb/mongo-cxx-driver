@@ -33,6 +33,7 @@ class apm_checker {
                  const test_util::match_visitor& match_visitor = {});
     void clear();
     void skip_kill_cursors();
+    void print_all();
 
    private:
     std::vector<bsoncxx::document::value> _events;

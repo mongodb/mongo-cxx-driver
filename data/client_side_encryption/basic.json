@@ -115,7 +115,11 @@
               "_id": 1,
               "encrypted_string": "string0"
             }
-          }
+          },
+	    "result":
+		{
+		    "insertedId" : 1
+		}
         },
         {
           "name": "find",

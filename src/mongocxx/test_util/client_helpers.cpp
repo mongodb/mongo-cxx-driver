@@ -272,7 +272,24 @@ bool is_numeric(types::value value) {
            value.type() == type::k_double;
 }
 
+stdx::optional<type> is_type_operator(types::value value) {
+    if (value.type() == type::k_document && value.get_document().value["$$type"]) {
+        auto t = value.get_document().value["$$type"].get_utf8().value;
+        if (t.compare("binData") == 0) {
+            return {type::k_binary};
+        } else if (t.compare("long") == 0) {
+            return {type::k_int64};
+        }
+        throw std::logic_error{"unsupported type for $$type"};
+    }
+    return {};
+}
+
 bool matches(types::value main, types::value pattern, match_visitor visitor_fn) {
+    if (auto t = is_type_operator(pattern)) {
+        return t == main.type() ? true : false;
+    }
+
     if (is_numeric(pattern) && as_double(pattern) == 42) {
         return true;
     }
@@ -375,17 +392,29 @@ void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::vie
     sort.append(builder::basic::kvp("_id", 1));
     options.sort(sort.extract());
 
-    for (auto&& doc : coll->find({}, options)) {
-        actual_data.push_back(to_json(doc));
-    }
-
+    std::vector<document::view> expected_docs{};
     for (auto&& ele : expected["data"].get_array().value) {
-        expected_data.push_back(to_json(ele.get_document().value));
+        expected_docs.push_back(ele.get_document().value);
     }
 
-    REQUIRE(expected_data == actual_data);
+    auto it = expected_docs.begin();
+
+    for (auto&& doc : coll->find({}, options)) {
+        if (it == expected_docs.end()) {
+            FAIL("found more documents than expected.");
+        }
+
+        auto next_expected = *it;
+        it++;
+
+        REQUIRE_BSON_MATCHES(doc, next_expected);
+    }
 
     coll->read_concern(old_rc);
+
+    if (it != expected_docs.end()) {
+        FAIL("Had more expected documents than we found.");
+    }
 }
 
 bool server_has_sessions(const client& conn) {

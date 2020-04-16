@@ -14,8 +14,11 @@
 
 #pragma once
 
+#include <functional>
+
 #include <bsoncxx/document/view.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/test/spec/operation.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -25,9 +28,62 @@ namespace spec {
 
 using namespace bsoncxx;
 using namespace mongocxx;
+
+///
+/// Returns true if this test should be skipped for any reason (for
+/// example, if a skipReason is defined, or if the given topology is not
+/// supported for this test.
+///
 bool should_skip_spec_test(const client& client, document::view test);
+
+///
+/// Configures the fail point described by test["failPoint"].
+///
+void configure_fail_point(const client& client, document::view test);
+
+///
+/// Disables fail points set by tests.
+///
+void disable_fail_point(const client& client, stdx::string_view failpoint = "failCommand");
 void disable_fail_point(std::string uri_string, options::client client_opts);
+
+///
+/// Drops the given collection, then recreates it using the jsonSchema
+/// from the test, if there is one, and inserts any documents listed
+/// in test["data"] into the new collection.
+///
+void set_up_collection(const client& client, document::view test);
+
+///
+/// Deletes all existing documents in the given collection, then inserts
+/// all documents passed in initial_data into the collection.
+///
 void initialize_collection(collection* coll, array::view initial_data);
+
+///
+/// Set options from the given operation on the given collection object,
+/// including the read concern, write concern, and read preference.
+///
+void parse_collection_options(document::view op, collection* out);
+
+///
+/// Set options from the given operation on the given database object,
+/// including the read concern, write concern, and read preference.
+///
+void parse_database_options(document::view op, database* out);
+
+///
+/// Creates an operation_runner via the provided callback, then uses it
+/// to run the given operation and check the outcome as per the transactions
+/// and client_side_encryption specs.
+///
+using make_op_runner_fn = std::function<operation_runner()>;
+void run_operation_check_result(document::view op, make_op_runner_fn make_op_runner);
+
+///
+/// Constructs a uri to the test server that includes options parsed
+/// out of test["clientOptions"].
+///
 uri get_uri(document::view test);
 
 //

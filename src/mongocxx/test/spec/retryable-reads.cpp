@@ -89,9 +89,7 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
         operation_runner op_runner{
             &database, &collection, nullptr /* session0 */, nullptr /* session1 */, &client};
 
-        if (test["failPoint"]) {
-            client["admin"].run_command(test["failPoint"].get_document().value);
-        }
+        configure_fail_point(client, test.get_document().value);
 
         apm_checker.clear();
         for (auto&& element : test["operations"].get_array().value) {
@@ -126,9 +124,7 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
         }
 
         if (test["failPoint"]) {
-            auto failpoint_name = test["failPoint"]["configureFailPoint"].get_utf8().value;
-            client["admin"].run_command(
-                make_document(kvp("configureFailPoint", failpoint_name), kvp("mode", "off")));
+            disable_fail_point(client, test["failPoint"]["configureFailPoint"].get_utf8().value);
         }
     }
 }

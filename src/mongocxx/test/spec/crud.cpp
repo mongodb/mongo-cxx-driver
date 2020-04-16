@@ -79,9 +79,7 @@ void run_crud_tests_in_file(std::string test_path) {
             initialize_collection(&outcome_collection, array::view{});
         }
 
-        if (test["failPoint"]) {
-            client["admin"].run_command(test["failPoint"].get_document().value);
-        }
+        configure_fail_point(client, test.get_document().value);
 
         apm_checker.clear();
         auto perform_op = [&database, &op_runner, &test, &outcome_collection_name](
@@ -144,9 +142,7 @@ void run_crud_tests_in_file(std::string test_path) {
         }
 
         if (test["failPoint"]) {
-            auto failpoint_name = test["failPoint"]["configureFailPoint"].get_utf8().value;
-            client["admin"].run_command(
-                make_document(kvp("configureFailPoint", failpoint_name), kvp("mode", "off")));
+            disable_fail_point(client, test["failPoint"]["configureFailPoint"].get_utf8().value);
         }
     }
 }

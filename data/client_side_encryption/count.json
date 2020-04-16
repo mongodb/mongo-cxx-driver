@@ -119,6 +119,7 @@
   "tests": [
     {
       "description": "Count with deterministic encryption",
+      "skipReason": "CXX-1940 estimated count cannot take a filter",
       "clientOptions": {
         "autoEncryptOpts": {
           "kmsProviders": {
