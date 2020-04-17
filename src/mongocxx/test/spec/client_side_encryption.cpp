@@ -248,6 +248,11 @@ void run_encryption_tests_in_file(const std::string& test_path) {
 TEST_CASE("Client side encryption spec automated tests", "[client_side_encryption_spec]") {
     instance::current();
 
+#ifndef MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION
+    WARN("linked libmongoc does not support client side encryption - skipping tests");
+    return;
+#endif
+
     char* encryption_tests_path = std::getenv("ENCRYPTION_TESTS_PATH");
     REQUIRE(encryption_tests_path);
 
