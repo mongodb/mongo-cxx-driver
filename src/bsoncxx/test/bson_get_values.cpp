@@ -333,4 +333,11 @@ TEST_CASE("CXX-1476: CXX-992 regression fixes", "[bsoncxx]") {
     }
 }
 
+TEST_CASE("CXX-1880: array element should have key") {
+    bsoncxx::array::value val = make_array(0, 1, 2);
+    REQUIRE(val.view()[0].key() == stdx::string_view("0"));
+    REQUIRE(val.view()[1].key() == stdx::string_view("1"));
+    REQUIRE(val.view()[2].key() == stdx::string_view("2"));
+}
+
 }  // namespace

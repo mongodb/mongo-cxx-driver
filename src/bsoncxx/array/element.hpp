@@ -71,6 +71,7 @@ class BSONCXX_API element : private document::element {
     using document::element::length;
     using document::element::offset;
     using document::element::keylen;
+    using document::element::key;
 
    private:
     friend class view;
