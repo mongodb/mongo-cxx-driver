@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/json.hpp>
+
 #include <bsoncxx/types/bson_value/value.hpp>
 
 #include <cstdlib>
@@ -20,6 +22,7 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types/bson_value/private/value.hh>
+#include <bsoncxx/types/private/convert.hh>
 
 #include <bsoncxx/config/private/prelude.hh>
 
@@ -27,6 +30,25 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace types {
 namespace bson_value {
+
+namespace {
+
+void create_from_bsoncxx(bson_value_t* v, const class view& bson_view) {
+    switch (bson_view.type()) {
+#define BSONCXX_ENUM(name, val)              \
+    case bsoncxx::type::k_##name: {          \
+        auto value = bson_view.get_##name(); \
+        convert_to_libbson(value, v);        \
+        break;                               \
+    }
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
+        default:
+            BSONCXX_UNREACHABLE;
+    }
+}
+
+}  // namespace
 
 value::~value() = default;
 
@@ -50,6 +72,11 @@ value::value(void* internal_value)
     : _impl(stdx::make_unique<impl>((bson_value_t*)internal_value)) {}
 
 value::value(const value& rhs) : value(&rhs._impl->_value) {}
+
+value::value(const class view& bson_view) {
+    _impl = stdx::make_unique<impl>();
+    create_from_bsoncxx(&_impl->_value, bson_view);
+}
 
 value& value::operator=(const value& rhs) {
     *this = value{rhs};

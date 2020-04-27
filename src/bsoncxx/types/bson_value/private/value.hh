@@ -31,6 +31,11 @@ class value::impl {
         bson_value_copy(value, &_value);
     }
 
+    impl() {
+        // Initialize the value to null for safe destruction.
+        _value.value_type = BSON_TYPE_NULL;
+    }
+
     ~impl() {
         bson_value_destroy(&_value);
     }

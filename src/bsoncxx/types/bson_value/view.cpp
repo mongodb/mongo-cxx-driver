@@ -21,6 +21,7 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/types/private/convert.hh>
 
 #include <bsoncxx/config/private/prelude.hh>
 
@@ -127,136 +128,16 @@ view::view(void* internal_value) {
 
 void view::_init(void* internal_value) {
     bson_value_t* v = (bson_value_t*)(internal_value);
-
     _type = static_cast<bsoncxx::type>(v->value_type);
 
     switch (_type) {
-        case bsoncxx::type::k_binary: {
-            bson_subtype_t type = v->value.v_binary.subtype;
-            std::uint32_t len = v->value.v_binary.data_len;
-            const std::uint8_t* binary = v->value.v_binary.data;
-
-            _b_binary = {static_cast<binary_sub_type>(type), len, binary};
-            break;
-        }
-        case bsoncxx::type::k_utf8: {
-            uint32_t len = v->value.v_utf8.len;
-            const char* val = v->value.v_utf8.str;
-
-            _b_utf8 = b_utf8{stdx::string_view{val, len}};
-            break;
-        }
-        case bsoncxx::type::k_double: {
-            _b_double = b_double{v->value.v_double};
-            break;
-        }
-        case bsoncxx::type::k_int32: {
-            _b_int32 = b_int32{v->value.v_int32};
-            break;
-        }
-        case bsoncxx::type::k_int64: {
-            _b_int64 = b_int64{v->value.v_int64};
-            break;
-        }
-        case bsoncxx::type::k_undefined: {
-            _b_undefined = b_undefined{};
-            break;
-        }
-        case bsoncxx::type::k_oid: {
-            const bson_oid_t* boid = &(v->value.v_oid);
-            oid val_oid(reinterpret_cast<const char*>(boid->bytes), sizeof(boid->bytes));
-            _b_oid = types::b_oid{std::move(val_oid)};
-            break;
-        }
-        case bsoncxx::type::k_decimal128: {
-            bson_decimal128_t d128 = v->value.v_decimal128;
-            _b_decimal128 = b_decimal128{decimal128{d128.high, d128.low}};
-            break;
-        }
-        case bsoncxx::type::k_bool: {
-            _b_bool = b_bool{v->value.v_bool};
-            break;
-        }
-        case bsoncxx::type::k_date: {
-            _b_date = b_date{std::chrono::milliseconds{v->value.v_datetime}};
-            break;
-        }
-        case bsoncxx::type::k_null: {
-            _b_null = b_null{};
-            break;
-        }
-        case bsoncxx::type::k_regex: {
-            const char* options = v->value.v_regex.options;
-            const char* regex = v->value.v_regex.regex;
-            _b_regex = b_regex{stdx::string_view{regex}, stdx::string_view{options}};
-            break;
-        }
-        case bsoncxx::type::k_dbpointer: {
-            uint32_t collection_len = v->value.v_dbpointer.collection_len;
-            const char* collection = v->value.v_dbpointer.collection;
-            const bson_oid_t* boid = &(v->value.v_dbpointer.oid);
-
-            oid v{reinterpret_cast<const char*>(boid->bytes), sizeof(boid->bytes)};
-
-            _b_dbpointer = b_dbpointer{stdx::string_view{collection, collection_len}, std::move(v)};
-            break;
-        }
-        case bsoncxx::type::k_code: {
-            uint32_t len = v->value.v_code.code_len;
-            const char* code = v->value.v_code.code;
-
-            _b_code = b_code{stdx::string_view{code, len}};
-            break;
-        }
-        case bsoncxx::type::k_symbol: {
-            uint32_t len = v->value.v_symbol.len;
-            const char* symbol = v->value.v_symbol.symbol;
-
-            _b_symbol = b_symbol{stdx::string_view{symbol, len}};
-            break;
-        }
-        case bsoncxx::type::k_codewscope: {
-            uint32_t code_len = v->value.v_codewscope.code_len;
-            const uint8_t* scope_ptr = v->value.v_codewscope.scope_data;
-            uint32_t scope_len = v->value.v_codewscope.scope_len;
-            const char* code = v->value.v_codewscope.code;
-            document::view view(scope_ptr, scope_len);
-
-            _b_codewscope = b_codewscope{stdx::string_view{code, code_len}, view};
-            break;
-        }
-        case bsoncxx::type::k_timestamp: {
-            uint32_t timestamp = v->value.v_timestamp.timestamp;
-            uint32_t increment = v->value.v_timestamp.increment;
-
-            _b_timestamp = b_timestamp{increment, timestamp};
-            break;
-        }
-        case bsoncxx::type::k_minkey: {
-            _b_minkey = b_minkey{};
-            break;
-        }
-        case bsoncxx::type::k_maxkey: {
-            _b_maxkey = b_maxkey{};
-            break;
-        }
-        case bsoncxx::type::k_document: {
-            const std::uint8_t* buf = v->value.v_doc.data;
-            std::uint32_t len = v->value.v_doc.data_len;
-
-            _b_document = b_document{document::view{buf, len}};
-            break;
-        }
-        case bsoncxx::type::k_array: {
-            // The bson_value_t struct does not have a separate union
-            // member for arrays. They are handled the same as the document
-            // BSON type.
-            const std::uint8_t* buf = v->value.v_doc.data;
-            std::uint32_t len = v->value.v_doc.data_len;
-
-            _b_array = b_array{array::view{buf, len}};
-            break;
-        }
+#define BSONCXX_ENUM(name, val)              \
+    case bsoncxx::type::k_##name: {          \
+        convert_from_libbson(v, &_b_##name); \
+        break;                               \
+    }
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
         default:
             BSONCXX_UNREACHABLE;
     }

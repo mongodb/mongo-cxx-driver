@@ -42,7 +42,7 @@ oid::oid(const bsoncxx::stdx::string_view& str) {
 }
 
 oid::oid(const char* bytes, std::size_t len) {
-    if (len != 12) {
+    if (len != this->size()) {
         throw bsoncxx::exception{error_code::k_invalid_oid};
     }
     std::memcpy(_bytes.data(), bytes, _bytes.size());

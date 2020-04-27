@@ -47,6 +47,11 @@ class BSONCXX_API value {
     value& operator=(value&&) noexcept;
 
     ///
+    /// Create an owning copy of a bson_value::view.
+    ///
+    value(const view&);
+
+    ///
     /// Get a view over the bson_value owned by this object.
     ///
     bson_value::view view() const noexcept;
@@ -82,6 +87,33 @@ BSONCXX_INLINE bool operator==(const value& lhs, const value& rhs) {
 }
 
 BSONCXX_INLINE bool operator!=(const value& lhs, const value& rhs) {
+    return !(lhs == rhs);
+}
+
+///
+/// @}
+///
+
+///
+/// @{
+///
+/// Compares a value with a view for (in)-equality.
+///
+/// @relates bson_value::value
+///
+BSONCXX_INLINE bool operator==(const value& lhs, const view& rhs) {
+    return (lhs.view() == rhs);
+}
+
+BSONCXX_INLINE bool operator==(const view& lhs, const value& rhs) {
+    return (rhs == lhs);
+}
+
+BSONCXX_INLINE bool operator!=(const value& lhs, const view& rhs) {
+    return !(lhs == rhs);
+}
+
+BSONCXX_INLINE bool operator!=(const view& lhs, const value& rhs) {
     return !(lhs == rhs);
 }
 
