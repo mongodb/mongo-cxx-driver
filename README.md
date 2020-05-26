@@ -44,7 +44,7 @@ is recommended for all new development.
 
 | Family/version | MongoDB 3.0 | MongoDB 3.2 | MongoDB 3.4 | MongoDB 3.6 | MongoDB 4.0 | MongoDB 4.2 | MongoDB 4.4 |
 | -------------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
-| mongocxx 3.5.x | ✓           | ✓           | ✓           | ✓           | ✓           | ✓           |             |
+| mongocxx 3.5.x | ✓           | ✓           | ✓           | ✓           | ✓           | Partial     |             |
 | mongocxx 3.4.x | ✓           | ✓           | ✓           | ✓           | ✓           |             |             |
 | mongocxx 3.3.x | ✓           | ✓           | ✓           | ✓           |             |             |             |
 | mongocxx 3.2.x | ✓           | ✓           | ✓           | Partial     |             |             |             |
