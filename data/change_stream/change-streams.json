@@ -6,6 +6,7 @@
   "tests": [
     {
       "description": "$changeStream must be the first stage in a change stream pipeline sent to the server",
+      "skipReason" : "CXX-2025",
       "minServerVersion": "3.6.0",
       "target": "collection",
       "topology": [
@@ -63,6 +64,7 @@
     },
     {
       "description": "The server returns change stream responses in the specified server response format",
+      "skipReason" : "CXX-2025",
       "minServerVersion": "3.6.0",
       "target": "collection",
       "topology": [
