@@ -169,5 +169,22 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
         rp.max_staleness(expected_max_staleness_sec);
         REQUIRE(called);
     }
+
+    SECTION("hedge() calls mongoc_read_prefs_set_hedge") {
+        /* No hedge should return a disengaged optional. */
+        REQUIRE(!rp.hedge());
+
+        read_prefs_set_hedge->visit([&](mongoc_read_prefs_t*, const bson_t* doc) {
+            bson_iter_t iter;
+
+            REQUIRE(bson_iter_init_find(&iter, doc, "hedge"));
+            REQUIRE(bson_iter_as_bool(&iter) == true);
+            called = true;
+        });
+
+        rp.hedge(make_document(kvp("hedge", true)));
+        REQUIRE((*rp.hedge())["hedge"].get_bool().value == true);
+        REQUIRE(called);
+    }
 }
 }  // namespace
