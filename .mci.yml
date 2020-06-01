@@ -117,9 +117,6 @@ functions:
                 set -o pipefail
                 git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git
                 cd drivers-evergreen-tools
-                # Convert shell script line endings.  TODO: Remove this when
-                # <https://github.com/mongodb-labs/drivers-evergreen-tools/pull/6> is merged.
-                for i in .evergreen/*.sh; do dos2unix "$i" || true; done
                 export DRIVERS_TOOLS=$(pwd)
                 if [ "Windows_NT" == "$OS" ]; then
                     export DRIVERS_TOOLS=$(cygpath -m $DRIVERS_TOOLS)
