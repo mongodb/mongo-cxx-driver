@@ -91,7 +91,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
         if (!wc->is_acknowledged() && opts["collation"]) {
             throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
         }
-        opts_builder.append(concatenate(wc->to_document()));
+        opts_builder.append(kvp("writeConcern", wc->to_document()));
     }
 
     mongocxx::libbson::scoped_bson_t command_bson{command};
