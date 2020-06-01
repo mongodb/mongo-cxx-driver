@@ -113,7 +113,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
         if (!options.write_concern()->is_acknowledged() && options.collation()) {
             throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
         }
-        extra.append(concatenate(options.write_concern()->to_document()));
+        extra.append(kvp("writeConcern", options.write_concern()->to_document()));
     }
 
     if (session_t) {
