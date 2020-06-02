@@ -91,24 +91,16 @@ stable binary interface.
 
 ### Step 3: Download the latest version of the mongocxx driver.
 
-To get the source via git, the `releases/stable` branch will track the most
-recent stable release. For example, to work from a shallow checkout of the
-stable release branch:
+The most reliable starting point for building the mongocxx driver is the latest
+release tarball.
 
-```sh
-git clone https://github.com/mongodb/mongo-cxx-driver.git \
-    --branch releases/stable --depth 1
-cd mongo-cxx-driver/build
-```
-
-If you prefer to download a tarball, look on the [mongocxx
-releases](https://github.com/mongodb/mongo-cxx-driver/releases) page for a
-link to the release tarball for the version you wish you install.  For
+The [mongocxx releases](https://github.com/mongodb/mongo-cxx-driver/releases)
+page will have links to the release tarball for the version you wish you install.  For
 example, to download version 3.5.1:
 
 ```sh
-curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.5.1.tar.gz
-tar -xzf r3.5.1.tar.gz
+curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.5.1/mongo-cxx-driver-r3.5.1.tar.gz
+tar -xzf mongo-cxx-driver-r3.5.1.tar.gz
 cd mongo-cxx-driver-r3.5.1/build
 ```
 
@@ -242,49 +234,36 @@ cmake ..                                            \
 
 If you are using the default MNMLSTC polyfill and are installing to a
 directory requiring root permissions, you should install the polyfill with
-`sudo` before running `make` so you don't have to run all of `make` with
-`sudo`:
+`sudo` before building the rest of mongocxx so you don't have to run
+the entire build with `sudo`:
 
 ```sh
 # Only for MNMLSTC polyfill
-sudo make EP_mnmlstc_core
+sudo cmake --build . --target EP_mnmlstc_core
 ```
 
 Once MNMLSTC is installed, or if you are using a different polyfill,
 build and install the driver:
 
 ```sh
-make && sudo make install
+cmake --build .
+sudo cmake --build . --target install
 ```
 
 The driver can be uninstalled at a later time in one of two ways.  First,
 the uninstall target can be called:
 
 ```sh
-sudo make uninstall
+sudo cmake --build . --target uninstall
 ```
 
-Second, the uninstall script can be called:
+Second, the uninstall script can be called (on Linux or macOS):
 
 ```sh
 sudo /opt/mongo-cxx-driver/share/mongo-cxx-driver/uninstall.sh
 ```
 
-On Windows, build and install from the command line like this:
-
-```sh
-msbuild.exe ALL_BUILD.vcxproj
-msbuild.exe INSTALL.vcxproj
-```
-
-On Windows, the driver can be uninstalled at a later time in one of two
-ways.  First, the uninstall project can be called:
-
-```sh
-msbuild.exe generate_uninstall\uninstall.vcxproj
-```
-
-Second, the uninstall script can be called:
+Or (on Windows):
 
 ```sh
 C:\opt\mongo-cxx-driver\share\mongo-cxx-driver\uninstall.cmd
