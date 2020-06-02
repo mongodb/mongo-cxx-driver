@@ -364,6 +364,7 @@ uri get_uri(document::view test) {
 
 void run_tests_in_suite(std::string ev, test_runner cb) {
     char* tests_path = std::getenv(ev.c_str());
+    INFO ("checking for path from environment variable: " << ev);
     REQUIRE(tests_path);
 
     std::string path{tests_path};
