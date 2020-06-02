@@ -43,8 +43,6 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
 
     document::view test_spec_view = test_spec->view();
     for (auto&& test : test_spec_view["tests"].get_array().value) {
-        bool ran_count = false;
-
         client client{get_uri(test.get_document().value), client_opts};
         if (should_skip_spec_test(client, test_spec_view)) {
             return;
@@ -94,9 +92,6 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
         apm_checker.clear();
         for (auto&& element : test["operations"].get_array().value) {
             auto operation = element.get_document().value;
-            if (operation["name"].get_utf8().value.compare("count") == 0) {
-                ran_count = true;
-            }
 
             INFO("Operation: " << bsoncxx::to_json(operation));
             optional<document::value> actual_outcome_value;
@@ -117,12 +112,6 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
             }
         }
 
-        // CXX-1940 We currently run count as an aggregation query, so skip apm matching, which
-        // which expects to see the count command. One day we will use estimated count instead.
-        if (test["expectations"] && !ran_count) {
-            apm_checker.compare(test["expectations"].get_array().value, false);
-        }
-
         if (test["failPoint"]) {
             disable_fail_point(client, test["failPoint"]["configureFailPoint"].get_utf8().value);
         }
@@ -132,18 +121,6 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
 TEST_CASE("retryable reads spec tests", "[retryable_reads_spec]") {
     instance::current();
 
-    char* retryable_reads_tests_path = std::getenv("RETRYABLE_READS_TESTS_PATH");
-    REQUIRE(retryable_reads_tests_path);
-
-    std::string path{retryable_reads_tests_path};
-
-    if (path.back() == '/') {
-        path.pop_back();
-    }
-
-    std::ifstream test_files{path + "/test_files.txt"};
-
-    REQUIRE(test_files.good());
     std::set<std::string> unsupported_tests{"gridfs-downloadByName.json",
                                             "gridfs-downloadByName-serverErrors.json",
                                             "listCollectionObjects.json",
@@ -152,14 +129,11 @@ TEST_CASE("retryable reads spec tests", "[retryable_reads_spec]") {
                                             "listDatabaseObjects-serverErrors.json",
                                             "listIndexNames.json",
                                             "listIndexNames-serverErrors.json",
-                                            "mapReduce.json"};
+                                            "mapReduce.json",
+                                            "count.json",
+                                            "count-serverErrors.json"};
 
-    for (std::string test_file; std::getline(test_files, test_file);) {
-        if (unsupported_tests.find(test_file) != unsupported_tests.end()) {
-            WARN("Test file: '" + test_file + "' not is not implemented in mongocxx");
-            continue;
-        }
-        run_retryable_reads_tests_in_file(path + "/" + test_file);
-    }
+    run_tests_in_suite(
+        "RETRYABLE_READS_TESTS_PATH", run_retryable_reads_tests_in_file, unsupported_tests);
 }
 }  // namespace
