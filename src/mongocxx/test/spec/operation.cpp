@@ -201,48 +201,6 @@ document::value operation_runner::_run_aggregate(document::view operation) {
     return result.extract();
 }
 
-document::value operation_runner::_run_count(document::view operation) {
-    document::view arguments = operation["arguments"].get_document().value;
-    document::view filter = arguments["filter"].get_document().value;
-    bsoncxx::builder::basic::document cmd_builder;
-
-    using bsoncxx::builder::basic::kvp;
-    using bsoncxx::builder::basic::make_document;
-
-    cmd_builder.append(kvp("count", _coll->name()), kvp("query", filter));
-
-    if (arguments["collation"]) {
-        cmd_builder.append(kvp("collation", arguments["collation"].get_document().value));
-    }
-
-    if (arguments["limit"]) {
-        cmd_builder.append(kvp("limit", arguments["limit"].get_int32().value));
-    }
-
-    if (arguments["skip"]) {
-        cmd_builder.append(kvp("skip", arguments["skip"].get_int32().value));
-    }
-
-    bsoncxx::document::value cmd = cmd_builder.extract();
-    INFO("sending count command " << bsoncxx::to_json(cmd));
-    int64_t count;
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
-        // Use the count command, not the estimated document count helper.
-        count = _db->run_command(*session, cmd.view()).view()["n"].get_int32().value;
-    } else {
-        // Use the count command, not the estimated document count helper.
-        count = _db->run_command(cmd.view()).view()["n"].get_int32().value;
-    }
-
-    auto result = builder::basic::document{};
-
-    // The JSON parser reads the counts as int32, so the document will not be equal to the expected
-    // result without casting.
-    result.append(builder::basic::kvp("result", static_cast<std::int32_t>(count)));
-
-    return result.extract();
-}
-
 document::value operation_runner::_run_distinct(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter{};
@@ -1223,7 +1181,7 @@ document::value operation_runner::run(document::view operation) {
     if (key.compare("aggregate") == 0) {
         return _run_aggregate(operation);
     } else if (key.compare("count") == 0) {
-        return _run_count(operation);
+        throw std::logic_error{"count command not supported"};
     } else if (key.compare("countDocuments") == 0) {
         return _run_count_documents(operation);
     } else if (key.compare("estimatedDocumentCount") == 0) {

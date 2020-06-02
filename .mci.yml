@@ -263,6 +263,7 @@ functions:
                   export COMMAND_MONITORING_TESTS_PATH="$(pwd)/../data/command-monitoring"
                   export TRANSACTIONS_TESTS_PATH="$(pwd)/../data/transactions"
                   export WITH_TRANSACTION_TESTS_PATH="$(pwd)/../data/with_transaction"
+                  export RETRYABLE_READS_TESTS_PATH="$(pwd)/../data/retryable-reads"
 
                   # export environment variables for encryption tests (and redact them)
                   set +o xtrace
@@ -294,6 +295,9 @@ functions:
                       ${test_params} ./src/mongocxx/test/test_command_monitoring_specs
                       ${test_params} ./src/mongocxx/test/test_instance
                       ${test_params} ./src/mongocxx/test/test_transactions_specs
+                      ${test_params} ./src/mongocxx/test/test_logging
+                      ${test_params} ./src/mongocxx/test/test_retryable_reads_specs
+
 
                       # Some platforms like OS X don't support the /mode syntax to the -perm option
                       # of find(1), and some platforms like Ubuntu 16.04 don't support the +mode

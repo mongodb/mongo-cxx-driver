@@ -362,7 +362,7 @@ uri get_uri(document::view test) {
     return uri{uri_string};
 }
 
-void run_tests_in_suite(std::string ev, test_runner cb) {
+void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> unsupported_tests) {
     char* tests_path = std::getenv(ev.c_str());
     INFO("checking for path from environment variable: " << ev);
     REQUIRE(tests_path);
@@ -383,6 +383,11 @@ void run_tests_in_suite(std::string ev, test_runner cb) {
         }
         cb(path + "/" + test_file);
     }
+}
+
+void run_tests_in_suite(std::string ev, test_runner cb) {
+    std::set<std::string> empty;
+    run_tests_in_suite(ev, cb, empty);
 }
 
 }  // namespace spec
