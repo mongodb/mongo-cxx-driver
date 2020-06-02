@@ -32,6 +32,8 @@
 #include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pipeline.hpp>
+#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
@@ -2665,4 +2667,56 @@ TEST_CASE("bulk_write with container", "[collection]") {
     REQUIRE(result->inserted_count() == 10);
     REQUIRE(collection.count_documents({}) == 10);
 }
+
+/* Regression test for CXX-2028. */
+TEST_CASE("find_and_x operations append write concern correctly", "[collection]") {
+    instance::current();
+    mongocxx::client client{uri{}};
+    mongocxx::write_concern wc;
+    wc.acknowledge_level(mongocxx::write_concern::level::k_acknowledged);
+
+    mongocxx::collection collection = client["fam_wc"]["collection"];
+    collection.drop();
+    collection.insert_one(make_document(kvp("x", 1)));
+
+    stdx::optional<bsoncxx::document::value> doc;
+    /* 4.4. servers will reply with an error, causing an exception. */
+    /* find_one_and_update */
+    mongocxx::options::find_one_and_update find_one_and_update_opts;
+    find_one_and_update_opts.write_concern(wc);
+    doc = collection.find_one_and_update(make_document(),
+                                         make_document(kvp("$set", make_document(kvp("x", 2)))),
+                                         find_one_and_update_opts);
+    REQUIRE(doc);
+
+    /* find_one_and_replace */
+    mongocxx::options::find_one_and_replace find_one_and_replace_opts;
+    find_one_and_replace_opts.write_concern(wc);
+    doc = collection.find_one_and_replace(
+        make_document(), make_document(kvp("x", 2)), find_one_and_replace_opts);
+    REQUIRE(doc);
+
+    /* find_one_and_delete */
+    mongocxx::options::find_one_and_delete find_one_and_delete_opts;
+    find_one_and_delete_opts.write_concern(wc);
+    doc = collection.find_one_and_delete(make_document(), find_one_and_delete_opts);
+    REQUIRE(doc);
+
+    /* < 4.4 servers will not return an error for unexpected fields. Add a visitor function to check
+     * manually. */
+    bool called = false;
+    auto visitor = libmongoc::find_and_modify_opts_append.create_instance();
+    visitor->visit([&](mongoc_find_and_modify_opts_t*, const bson_t* extra) {
+        bson_iter_t iter;
+        called = true;
+        REQUIRE(bson_iter_init_find(&iter, extra, "writeConcern"));
+    });
+
+    /* Insert a new document. */
+    collection.insert_one(make_document(kvp("x", 1)));
+    doc = collection.find_one_and_delete(make_document(), find_one_and_delete_opts);
+    REQUIRE(doc);
+    REQUIRE(called);
+}
+
 }  // namespace
