@@ -343,3 +343,17 @@ if(ENABLE_UNINSTALL)
     # that the generated uninstall program is complete and correct
     add_subdirectory(generate_uninstall)
 endif()
+
+# Spit out some information regarding the generated build system
+message (STATUS "Build files generated for:")
+message (STATUS "\tbuild system: ${CMAKE_GENERATOR}")
+if (CMAKE_GENERATOR_INSTANCE)
+   message (STATUS "\tinstance: ${CMAKE_GENERATOR_INSTANCE}")
+endif ()
+if (CMAKE_GENERATOR_PLATFORM)
+   message (STATUS "\tinstance: ${CMAKE_GENERATOR_PLATFORM}")
+endif ()
+if (CMAKE_GENERATOR_TOOLSET)
+   message (STATUS "\tinstance: ${CMAKE_GENERATOR_TOOLSET}")
+endif ()
+
