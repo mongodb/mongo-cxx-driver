@@ -304,8 +304,8 @@ bool matches(types::bson_value::view main,
 
     if (main.type() == type::k_document) {
         // the value '42' acts as placeholders for "any value"
-        if (pattern.type() == type::k_utf8 && 0 == pattern.get_utf8().value.compare("42") ) {
-                return true;
+        if (pattern.type() == type::k_utf8 && 0 == pattern.get_utf8().value.compare("42")) {
+            return true;
         }
 
         document::view main_view = main.get_document().value;
