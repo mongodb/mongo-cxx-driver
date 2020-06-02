@@ -204,26 +204,34 @@ document::value operation_runner::_run_aggregate(document::view operation) {
 document::value operation_runner::_run_count(document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
-    options::count options{};
+    bsoncxx::builder::basic::document cmd_builder;
+
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    cmd_builder.append(kvp("count", _coll->name()), kvp("query", filter));
 
     if (arguments["collation"]) {
-        options.collation(arguments["collation"].get_document().value);
+        cmd_builder.append(kvp("collation", arguments["collation"].get_document().value));
     }
 
     if (arguments["limit"]) {
-        options.limit(arguments["limit"].get_int32().value);
+        cmd_builder.append(kvp("limit", arguments["limit"].get_int32().value));
     }
 
     if (arguments["skip"]) {
-        options.skip(arguments["skip"].get_int32().value);
+        cmd_builder.append(kvp("skip", arguments["skip"].get_int32().value));
     }
 
+    bsoncxx::document::value cmd = cmd_builder.extract();
+    INFO("sending count command " << bsoncxx::to_json(cmd));
     int64_t count;
     if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
-        // CXX-1940: use estimated count instead, once it can support filters and sessions
-        count = _coll->count_documents(*session, filter, options);
+        // Use the count command, not the estimated document count helper.
+        count = _db->run_command(*session, cmd.view()).view()["n"].get_int32().value;
     } else {
-        count = _coll->count_documents(filter, options);
+        // Use the count command, not the estimated document count helper.
+        count = _db->run_command(cmd.view()).view()["n"].get_int32().value;
     }
 
     auto result = builder::basic::document{};

@@ -364,7 +364,7 @@ uri get_uri(document::view test) {
 
 void run_tests_in_suite(std::string ev, test_runner cb) {
     char* tests_path = std::getenv(ev.c_str());
-    INFO ("checking for path from environment variable: " << ev);
+    INFO("checking for path from environment variable: " << ev);
     REQUIRE(tests_path);
 
     std::string path{tests_path};
@@ -377,6 +377,10 @@ void run_tests_in_suite(std::string ev, test_runner cb) {
 
     std::string test_file;
     while (std::getline(test_files, test_file)) {
+        if (unsupported_tests.find(test_file) != unsupported_tests.end()) {
+            WARN("Skipping unsupported test file: " << test_file);
+            continue;
+        }
         cb(path + "/" + test_file);
     }
 }
