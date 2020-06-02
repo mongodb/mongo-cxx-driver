@@ -30,6 +30,19 @@ using namespace mongocxx::spec;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
+bool is_unsupported(bsoncxx::stdx::string_view description) {
+    std::set<std::string> unsupported_tests = {"Deprecated count with empty collection",
+                                               "Deprecated count with collation",
+                                               "Deprecated count without a filter",
+                                               "Deprecated count with a filter",
+                                               "Deprecated count with skip and limit"};
+    if (unsupported_tests.find(std::string(description)) != unsupported_tests.end()) {
+        WARN("Skipping unsupported test: " << description);
+        return true;
+    }
+    return false;
+}
+
 void run_crud_tests_in_file(std::string test_path) {
     INFO("Test path: " << test_path);
     optional<document::value> test_spec = test_util::parse_test_file(test_path);
@@ -47,6 +60,10 @@ void run_crud_tests_in_file(std::string test_path) {
 
     for (auto&& test : test_spec_view["tests"].get_array().value) {
         INFO("Test description: " << test["description"].get_utf8().value);
+
+        if (is_unsupported(test["description"].get_utf8().value)) {
+            continue;
+        }
 
         if (should_skip_spec_test(client, test.get_document())) {
             continue;
