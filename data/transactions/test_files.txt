@@ -5,7 +5,6 @@ commit.json
 count.json
 delete.json
 error-labels.json
-errors-client.json
 errors.json
 findOneAndDelete.json
 findOneAndReplace.json

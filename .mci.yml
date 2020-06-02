@@ -88,6 +88,7 @@ functions:
                  rm -rf "mongo-cxx-driver"
                  rm -fr "mongo-c-driver"
                  rm -fr mongod
+                 rm -fr drivers-evergreen-tools
         - command: git.get_project
           params:
               directory: "mongo-cxx-driver"
