@@ -76,7 +76,7 @@ before_script:
 
     # Build the driver and the tests
     - cd build
-    - cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" ..
+    - cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-error=missing-field-initializers -Wno-deprecated-declarations" ..
 
 script:
     - make format-lint
