@@ -2620,7 +2620,7 @@ TEST_CASE("find_and_x operations append write concern correctly", "[collection]"
     mongocxx::write_concern wc;
     wc.acknowledge_level(mongocxx::write_concern::level::k_acknowledged);
 
-    mongocxx::collection collection = client["fam_wc"]["collection"];
+    auto collection = client["fam_wc"]["collection"];
     collection.drop();
     collection.insert_one(make_document(kvp("x", 1)));
 
@@ -2629,22 +2629,21 @@ TEST_CASE("find_and_x operations append write concern correctly", "[collection]"
     /* find_one_and_update */
     mongocxx::options::find_one_and_update find_one_and_update_opts;
     find_one_and_update_opts.write_concern(wc);
-    doc = collection.find_one_and_update(make_document(),
-                                         make_document(kvp("$set", make_document(kvp("x", 2)))),
-                                         find_one_and_update_opts);
+    doc = collection.find_one_and_update(
+        {}, make_document(kvp("$set", make_document(kvp("x", 2)))), find_one_and_update_opts);
     REQUIRE(doc);
 
     /* find_one_and_replace */
     mongocxx::options::find_one_and_replace find_one_and_replace_opts;
     find_one_and_replace_opts.write_concern(wc);
-    doc = collection.find_one_and_replace(
-        make_document(), make_document(kvp("x", 2)), find_one_and_replace_opts);
+    doc =
+        collection.find_one_and_replace({}, make_document(kvp("x", 2)), find_one_and_replace_opts);
     REQUIRE(doc);
 
     /* find_one_and_delete */
     mongocxx::options::find_one_and_delete find_one_and_delete_opts;
     find_one_and_delete_opts.write_concern(wc);
-    doc = collection.find_one_and_delete(make_document(), find_one_and_delete_opts);
+    doc = collection.find_one_and_delete({}, find_one_and_delete_opts);
     REQUIRE(doc);
 
     /* < 4.4 servers will not return an error for unexpected fields. Add a visitor function to check
@@ -2653,14 +2652,17 @@ TEST_CASE("find_and_x operations append write concern correctly", "[collection]"
     auto visitor = libmongoc::collection_write_command_with_opts.create_instance();
     visitor->visit(
         [&](mongoc_collection_t*, const bson_t*, const bson_t* extra, bson_t*, bson_error_t*) {
-            bson_iter_t iter;
+            bsoncxx::document::value expected = make_document(kvp("w", 1));
+            bsoncxx::document::view extra_view =
+                bsoncxx::document::view(bson_get_data(extra), extra->len);
+
             called = true;
-            REQUIRE(bson_iter_init_find(&iter, extra, "writeConcern"));
+            REQUIRE(expected.view() == extra_view["writeConcern"].get_document().value);
         });
 
     /* Insert a new document. */
     collection.insert_one(make_document(kvp("x", 1)));
-    doc = collection.find_one_and_delete(make_document(), find_one_and_delete_opts);
+    doc = collection.find_one_and_delete({}, find_one_and_delete_opts);
     REQUIRE(doc);
     REQUIRE(called);
 }
