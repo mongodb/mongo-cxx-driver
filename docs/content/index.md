@@ -30,18 +30,7 @@ Currently, no drivers guarantee API or ABI stability.
 
 ## MongoDB compatibility
 
-The following compatibility table specifies the driver version(s)
-recommended for different versions of MongoDB.  The mongocxx series
-is recommended for all new development.
-
-| Family/version | MongoDB 3.0 | MongoDB 3.2 | MongoDB 3.4 | MongoDB 3.6 | MongoDB 4.0 | MongoDB 4.2 | MongoDB 4.4 |
-| -------------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
-| mongocxx 3.5.x | ✓           | ✓           | ✓           | ✓           | ✓           | Partial     |             |
-| mongocxx 3.4.x | ✓           | ✓           | ✓           | ✓           | ✓           |             |             |
-| mongocxx 3.3.x | ✓           | ✓           | ✓           | ✓           |             |             |             |
-| mongocxx 3.2.x | ✓           | ✓           | ✓           | Partial     |             |             |             |
-| mongocxx 3.1.x | ✓           | ✓           | ✓           |             |             |             |             |
-| mongocxx 3.0.x | ✓           | ✓           |             |             |             |             |             |
+Compatibility of each C++ driver version with each MongoDB server is documented in the [MongoDB manual](https://docs.mongodb.com/drivers/cxx#mongodb-compatibility).
 
 ## License
 
