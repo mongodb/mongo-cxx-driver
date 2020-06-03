@@ -341,8 +341,8 @@ buildvariants:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
 
-    - name: macos-1012
-      display_name: "MacOS 10.12 Release (Boost)"
+    - name: macos-1014
+      display_name: "MacOS 10.14 Release (Boost)"
       expansions:
           build_type: "Release"
           cdriver_configure_flags: *macos_cdriver_configure_flags
@@ -351,7 +351,7 @@ buildvariants:
           poly_flags: *poly_boost_flags
           mongodb_version: *version_latest
       run_on:
-          - macos-1012
+          - macos-1014
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
