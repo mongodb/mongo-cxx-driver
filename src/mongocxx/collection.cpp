@@ -747,10 +747,6 @@ stdx::optional<bsoncxx::document::value> collection::find_one_and_delete(
         options_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
     }
 
-    if (options.write_concern()) {
-        options_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
-    }
-
     return find_and_modify(
         _get_impl().collection_t, command_doc.view(), options_doc.view(), options.write_concern());
 }
