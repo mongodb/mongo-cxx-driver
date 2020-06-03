@@ -254,6 +254,8 @@ MONGOCXX_INLINE_NAMESPACE_END
     concern_copy->interpose([](const mongoc_write_concern_t*) { return nullptr; }).forever();
 
 #define MOCK_READ_PREFERENCE                                                       \
+    auto read_prefs_set_hedge = libmongoc::read_prefs_set_hedge.create_instance(); \
+    auto read_prefs_get_hedge = libmongoc::read_prefs_get_hedge.create_instance(); \
     auto read_prefs_get_max_staleness_seconds =                                    \
         libmongoc::read_prefs_get_max_staleness_seconds.create_instance();         \
     auto read_prefs_get_mode = libmongoc::read_prefs_get_mode.create_instance();   \
@@ -261,8 +263,6 @@ MONGOCXX_INLINE_NAMESPACE_END
     auto read_prefs_set_max_staleness_seconds =                                    \
         libmongoc::read_prefs_set_max_staleness_seconds.create_instance();         \
     auto read_prefs_set_mode = libmongoc::read_prefs_set_mode.create_instance();   \
-    auto read_prefs_set_tags = libmongoc::read_prefs_set_tags.create_instance();   \
-    auto read_prefs_set_hedge = libmongoc::read_prefs_set_hedge.create_instance(); \
-    auto read_prefs_get_hedge = libmongoc::read_prefs_get_hedge.create_instance();
+    auto read_prefs_set_tags = libmongoc::read_prefs_set_tags.create_instance();
 
 #include <mongocxx/config/private/postlude.hh>

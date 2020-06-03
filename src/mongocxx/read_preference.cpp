@@ -115,7 +115,7 @@ stdx::optional<std::chrono::seconds> read_preference::max_staleness() const {
 }
 
 read_preference& read_preference::hedge(bsoncxx::document::view_or_value hedge) {
-    libbson::scoped_bson_t hedge_bson{hedge.view()};
+    libbson::scoped_bson_t hedge_bson{std::move(hedge.view())};
 
     libmongoc::read_prefs_set_hedge(_impl->read_preference_t, hedge_bson.bson());
     return *this;

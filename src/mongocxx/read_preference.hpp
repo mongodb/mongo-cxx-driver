@@ -238,6 +238,7 @@ class MONGOCXX_API read_preference {
     ///
     stdx::optional<std::chrono::seconds> max_staleness() const;
 
+    ///
     /// Sets the hedge document to be used for the read preference. Sharded clusters running MongoDB
     /// 4.4 or later can dispatch read operations in parallel, returning the result from the fastest
     /// host and cancelling the unfinished operations.
@@ -245,19 +246,23 @@ class MONGOCXX_API read_preference {
     /// This may be an empty document or a document of the form { enabled: <boolean> }.
     ///
     /// Hedged reads are automatically enabled in MongoDB 4.4+ when using a ``nearest`` read
-    /// preference. To explicitly enable hedging, the ``hedge`` document must be
+    /// preference. To explicitly enable or disable hedging, the ``hedge`` document must be
     /// passed. An empty document uses server defaults to control hedging, but the ``enabled`` key
     /// may be set to ``true`` or ``false`` to explicitly enable or disable hedged reads.
     ///
-    /// @param hedge The hedge document to set. For example, the document { enabled: true }.
+    /// @param hedge
+    ///   The hedge document to set. For example, the document { enabled: true }.
     ///
     /// @return A reference to the object on which this member function is being called. This
     /// facilitates method chaining.
+    ///
     read_preference& hedge(bsoncxx::document::view_or_value hedge);
 
+    ///
     /// Gets the current hedge document to be used for the read preference.
     ///
     /// @return A hedge document if one was set.
+    ///
     const stdx::optional<bsoncxx::document::view> hedge() const;
 
    private:
