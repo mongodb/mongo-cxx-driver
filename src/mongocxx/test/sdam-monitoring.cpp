@@ -212,6 +212,19 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         int heartbeat_started_events = 0;
         int heartbeat_succeeded_events = 0;
         int heartbeat_failed_events = 0;
+        auto mock_started_awaited =
+            libmongoc::apm_server_heartbeat_started_get_awaited.create_instance();
+        auto mock_succeeded_awaited =
+            libmongoc::apm_server_heartbeat_succeeded_get_awaited.create_instance();
+        bool started_awaited_called = false;
+        bool succeeded_awaited_called = false;
+
+        mock_started_awaited->visit(
+            [&](const mongoc_apm_server_heartbeat_started_t*) { started_awaited_called = true; });
+
+        mock_succeeded_awaited->visit([&](const mongoc_apm_server_heartbeat_succeeded_t*) {
+            succeeded_awaited_called = true;
+        });
 
         ///////////////////////////////////////////////////////////////////////
         // Begin heartbeat listener lambdas
@@ -222,6 +235,8 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
             heartbeat_started_events++;
             REQUIRE_FALSE(event.host().empty());
             REQUIRE(event.port() != 0);
+            // Client is single-threaded, and will never perform an awaitable ismaster.
+            REQUIRE(!event.awaited());
         });
 
         // ServerHeartbeatSucceededEvent
@@ -230,6 +245,8 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
             REQUIRE_FALSE(event.host().empty());
             REQUIRE(event.port() != 0);
             REQUIRE_FALSE(event.reply().empty());
+            // Client is single-threaded, and will never perform an awaitable ismaster.
+            REQUIRE(!event.awaited());
         });
 
         // Don't expect a ServerHeartbeatFailedEvent here, see the test below.
@@ -241,6 +258,8 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         open_and_close_client(test_uri, apm_opts);
         REQUIRE(heartbeat_started_events > 0);
         REQUIRE(heartbeat_succeeded_events > 0);
+        REQUIRE(started_awaited_called);
+        REQUIRE(succeeded_awaited_called);
     }
 }
 
@@ -248,6 +267,11 @@ TEST_CASE("Heartbeat failed event", "[sdam_monitoring]") {
     instance::current();
     options::apm apm_opts;
     stdx::optional<oid> topology_id;
+    bool failed_awaited_called = false;
+    auto mock_failed_awaited = libmongoc::apm_server_heartbeat_failed_get_awaited.create_instance();
+
+    mock_failed_awaited->visit(
+        [&](const mongoc_apm_server_heartbeat_failed_t*) { failed_awaited_called = true; });
 
     int heartbeat_failed_events = 0;
 
@@ -257,6 +281,7 @@ TEST_CASE("Heartbeat failed event", "[sdam_monitoring]") {
         REQUIRE_FALSE(event.host().empty());
         REQUIRE_FALSE(event.message().empty());
         REQUIRE(event.port() != 0);
+        REQUIRE(!event.awaited());
     });
 
     REQUIRE_THROWS_AS(
@@ -264,5 +289,6 @@ TEST_CASE("Heartbeat failed event", "[sdam_monitoring]") {
         mongocxx::exception);
 
     REQUIRE(heartbeat_failed_events > 0);
+    REQUIRE(failed_awaited_called);
 }
 }  // namespace

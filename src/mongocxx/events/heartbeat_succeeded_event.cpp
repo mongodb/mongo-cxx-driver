@@ -26,26 +26,30 @@ heartbeat_succeeded_event::heartbeat_succeeded_event(const void* event) : _succe
 heartbeat_succeeded_event::~heartbeat_succeeded_event() = default;
 
 bsoncxx::document::view heartbeat_succeeded_event::reply() const {
-    auto reply = libmongoc::apm_server_heartbeat_succeeded_get_reply(
-        static_cast<const mongoc_apm_server_heartbeat_succeeded_t*>(_succeeded_event));
+    auto casted = static_cast<const mongoc_apm_server_heartbeat_succeeded_t*>(_succeeded_event);
+    auto reply = libmongoc::apm_server_heartbeat_succeeded_get_reply(casted);
     return {bson_get_data(reply), reply->len};
 }
 
 std::int64_t heartbeat_succeeded_event::duration() const {
-    return libmongoc::apm_server_heartbeat_succeeded_get_duration(
-        static_cast<const mongoc_apm_server_heartbeat_succeeded_t*>(_succeeded_event));
+    auto casted = static_cast<const mongoc_apm_server_heartbeat_succeeded_t*>(_succeeded_event);
+    return libmongoc::apm_server_heartbeat_succeeded_get_duration(casted);
 }
 
 bsoncxx::stdx::string_view heartbeat_succeeded_event::host() const {
-    return libmongoc::apm_server_heartbeat_succeeded_get_host(
-               static_cast<const mongoc_apm_server_heartbeat_succeeded_t*>(_succeeded_event))
-        ->host;
+    auto casted = static_cast<const mongoc_apm_server_heartbeat_succeeded_t*>(_succeeded_event);
+    return libmongoc::apm_server_heartbeat_succeeded_get_host(casted)->host;
 }
 
 std::uint16_t heartbeat_succeeded_event::port() const {
     return libmongoc::apm_server_heartbeat_succeeded_get_host(
                static_cast<const mongoc_apm_server_heartbeat_succeeded_t*>(_succeeded_event))
         ->port;
+}
+
+bool heartbeat_succeeded_event::awaited() const {
+    return libmongoc::apm_server_heartbeat_succeeded_get_awaited(
+        static_cast<const mongoc_apm_server_heartbeat_succeeded_t*>(_succeeded_event));
 }
 
 }  // namespace events
