@@ -114,6 +114,23 @@ stdx::optional<std::chrono::seconds> read_preference::max_staleness() const {
     return std::chrono::seconds{staleness};
 }
 
+read_preference& read_preference::hedge(bsoncxx::document::view_or_value hedge) {
+    libbson::scoped_bson_t hedge_bson{std::move(hedge)};
+
+    libmongoc::read_prefs_set_hedge(_impl->read_preference_t, hedge_bson.bson());
+    return *this;
+}
+
+const stdx::optional<bsoncxx::document::view> read_preference::hedge() const {
+    const bson_t* hedge_bson = libmongoc::read_prefs_get_hedge(_impl->read_preference_t);
+
+    if (!bson_empty(hedge_bson)) {
+        return bsoncxx::document::view(bson_get_data(hedge_bson), hedge_bson->len);
+    }
+
+    return stdx::optional<bsoncxx::document::view>{};
+}
+
 bool MONGOCXX_CALL operator==(const read_preference& lhs, const read_preference& rhs) {
     return (lhs.mode() == rhs.mode()) && (lhs.tags() == rhs.tags()) &&
            (lhs.max_staleness() == rhs.max_staleness());
