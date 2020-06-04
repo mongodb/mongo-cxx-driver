@@ -27,26 +27,29 @@ heartbeat_failed_event::~heartbeat_failed_event() = default;
 
 std::string heartbeat_failed_event::message() const {
     bson_error_t error;
-    libmongoc::apm_server_heartbeat_failed_get_error(
-        static_cast<const mongoc_apm_server_heartbeat_failed_t*>(_failed_event), &error);
+    auto casted = static_cast<const mongoc_apm_server_heartbeat_failed_t*>(_failed_event);
+    libmongoc::apm_server_heartbeat_failed_get_error(casted, &error);
     return error.message;
 }
 
 std::int64_t heartbeat_failed_event::duration() const {
-    return libmongoc::apm_server_heartbeat_failed_get_duration(
-        static_cast<const mongoc_apm_server_heartbeat_failed_t*>(_failed_event));
+    auto casted = static_cast<const mongoc_apm_server_heartbeat_failed_t*>(_failed_event);
+    return libmongoc::apm_server_heartbeat_failed_get_duration(casted);
 }
 
 bsoncxx::stdx::string_view heartbeat_failed_event::host() const {
-    return libmongoc::apm_server_heartbeat_failed_get_host(
-               static_cast<const mongoc_apm_server_heartbeat_failed_t*>(_failed_event))
-        ->host;
+    auto casted = static_cast<const mongoc_apm_server_heartbeat_failed_t*>(_failed_event);
+    return libmongoc::apm_server_heartbeat_failed_get_host(casted)->host;
 }
 
 std::uint16_t heartbeat_failed_event::port() const {
-    return libmongoc::apm_server_heartbeat_failed_get_host(
-               static_cast<const mongoc_apm_server_heartbeat_failed_t*>(_failed_event))
-        ->port;
+    auto casted = static_cast<const mongoc_apm_server_heartbeat_failed_t*>(_failed_event);
+    return libmongoc::apm_server_heartbeat_failed_get_host(casted)->port;
+}
+
+bool heartbeat_failed_event::awaited() const {
+    auto casted = static_cast<const mongoc_apm_server_heartbeat_failed_t*>(_failed_event);
+    return libmongoc::apm_server_heartbeat_failed_get_awaited(casted);
 }
 
 }  // namespace events

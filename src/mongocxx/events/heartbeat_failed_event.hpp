@@ -67,6 +67,13 @@ class MONGOCXX_API heartbeat_failed_event {
     ///
     std::uint16_t port() const;
 
+    ///
+    /// Returns a boolean indicating whether this heartbeat event is from an awaitable isMaster.
+    ///
+    /// @return A boolean.
+    ///
+    bool awaited() const;
+
    private:
     const void* _failed_event;
 };
