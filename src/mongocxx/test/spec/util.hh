@@ -46,14 +46,19 @@ void configure_fail_point(const client& client, document::view test);
 /// Disables fail points set by tests.
 ///
 void disable_fail_point(const client& client, stdx::string_view failpoint = "failCommand");
-void disable_fail_point(std::string uri_string, options::client client_opts);
+void disable_fail_point(std::string uri_string,
+                        options::client client_opts,
+                        stdx::string_view failpoint = "failCommand");
 
 ///
 /// Drops the given collection, then recreates it using the jsonSchema
 /// from the test, if there is one, and inserts any documents listed
 /// in test["data"] into the new collection.
 ///
-void set_up_collection(const client& client, document::view test);
+void set_up_collection(const client& client,
+                       document::view test,
+                       stdx::string_view database_name = "database_name",
+                       stdx::string_view collection_name = "collection_name");
 
 ///
 /// Deletes all existing documents in the given collection, then inserts

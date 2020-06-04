@@ -43,7 +43,7 @@ class apm_checker {
 
    private:
     std::vector<bsoncxx::document::value> _events;
-    bool _skip_kill_cursors;
+    bool _skip_kill_cursors = false;
 };
 
 }  // namespace spec

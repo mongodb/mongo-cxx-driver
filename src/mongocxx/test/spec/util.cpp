@@ -58,9 +58,9 @@ uint32_t error_code_from_name(string_view name) {
 
 bool should_skip_spec_test(const client& client, document::view test) {
     if (test["skipReason"]) {
-        WARN("Test skipped - " << test["description"].get_utf8().value << "\n"
-                               << "reason: "
-                               << test["skipReason"].get_utf8().value);
+        UNSCOPED_INFO("Test skipped - " << test["description"].get_utf8().value << "\n"
+                                        << "reason: "
+                                        << test["skipReason"].get_utf8().value);
         return true;
     }
 
@@ -119,8 +119,8 @@ bool should_skip_spec_test(const client& client, document::view test) {
         return false;
     }
 
-    WARN("Skipping - unsupported server version '" + server_version + "' with topology '" +
-         topology + "'");
+    UNSCOPED_INFO("Skipping - unsupported server version '" + server_version + "' with topology '" +
+                  topology + "'");
     return true;
 }
 
@@ -130,12 +130,12 @@ void configure_fail_point(const client& client, document::view test) {
     }
 }
 
-void disable_fail_point(const client& client, stdx::string_view failpoint) {
+void disable_fail_point(const client& client, stdx::string_view fail_point) {
     /* Some transactions tests have a failCommand for "isMaster" repeat seven times. */
     for (int i = 0; i < kMaxIsMasterFailCommands; i++) {
         try {
             client["admin"].run_command(
-                make_document(kvp("configureFailPoint", failpoint), kvp("mode", "off")));
+                make_document(kvp("configureFailPoint", fail_point), kvp("mode", "off")));
             break;
         } catch (const std::exception&) {
             /* Tests that fail with isMaster also fail to disable the failpoint
@@ -146,17 +146,24 @@ void disable_fail_point(const client& client, stdx::string_view failpoint) {
     }
 }
 
-void disable_fail_point(std::string uri_string, options::client client_opts) {
+void disable_fail_point(std::string uri_string,
+                        options::client client_opts,
+                        stdx::string_view fail_point) {
     mongocxx::client client = {uri{uri_string}, client_opts};
-    disable_fail_point(client);
+    disable_fail_point(client, fail_point);
 }
 
-void set_up_collection(const client& client, document::view test) {
+void set_up_collection(const client& client,
+                       document::view test,
+                       string_view database_name,
+                       string_view collection_name) {
     write_concern wc_majority;
     wc_majority.acknowledge_level(write_concern::level::k_majority);
 
-    auto db = client[test["database_name"].get_utf8().value];
-    auto coll_name = test["collection_name"].get_utf8().value;
+    auto db = client[test[database_name].get_utf8().value];
+    db.drop();
+
+    auto coll_name = test[collection_name].get_utf8().value;
     auto coll = db[coll_name];
 
     coll.drop(wc_majority);
