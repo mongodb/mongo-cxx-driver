@@ -23,11 +23,6 @@ variables:
     tar_options:
         linux_tar_options: &linux_tar_options --wildcards --no-anchored
 
-    ## cdriver configure flags
-    cdriver_configure_flags:
-        linux_cdriver_configure_flags: &linux_cdriver_configure_flags --enable-ssl --enable-sasl --with-gnu-ld CFLAGS=-fno-omit-frame-pointer
-        macos_cdriver_configure_flags: &macos_cdriver_configure_flags --enable-ssl --enable-sasl
-
     ## cmake flag variables
     cmake_flags:
         linux_cmake_flags: &linux_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wconversion -Wnarrowing -Wno-expansion-to-defined -pedantic -Werror -Wno-missing-field-initializers"
@@ -551,7 +546,6 @@ axes:
           - id: "ubuntu-1604"
             display_name: "Ubuntu 16.04 Debug"
             variables:
-                cdriver_configure_flags: *linux_cdriver_configure_flags
                 extra_path: *linux_extra_path
                 cmake_flags: *linux_cmake_flags
                 build_type: "Debug"
@@ -621,7 +615,6 @@ buildvariants:
       expansions:
           build_type: "Release"
           tar_options: *linux_tar_options
-          cdriver_configure_flags: *linux_cdriver_configure_flags
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
@@ -639,7 +632,6 @@ buildvariants:
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
-          cdriver_configure_flags: *linux_cdriver_configure_flags
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           poly_flags: *poly_std_experimental_flags
@@ -656,7 +648,6 @@ buildvariants:
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
-          cdriver_configure_flags: *linux_cdriver_configure_flags
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           test_params: *valgrind_test_params
@@ -673,7 +664,6 @@ buildvariants:
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
-          cdriver_configure_flags: *linux_cdriver_configure_flags
           extra_path: *linux_extra_path
           cmake_flags: *asan_cmake_flags
           test_params: *asan_test_params
@@ -693,7 +683,6 @@ buildvariants:
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
-          cdriver_configure_flags: *linux_cdriver_configure_flags
           extra_path: *linux_extra_path
           cmake_flags: *ubsan_cmake_flags
           test_params: *ubsan_test_params
@@ -717,7 +706,6 @@ buildvariants:
       expansions:
           build_type: "Release"
           tar_options: *linux_tar_options
-          cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
       run_on:
@@ -732,7 +720,6 @@ buildvariants:
       expansions:
           build_type: "Release"
           tar_options: *linux_tar_options
-          cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
       run_on:
@@ -747,7 +734,6 @@ buildvariants:
       expansions:
           build_type: "Release"
           tar_options: *linux_tar_options
-          cdriver_configure_flags: *linux_cdriver_configure_flags
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
       run_on:
@@ -763,7 +749,6 @@ buildvariants:
       display_name: "MacOS 10.14 Release (Boost) (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          cdriver_configure_flags: *macos_cdriver_configure_flags
           extra_path: *macos_extra_path
           cmake_flags: *macos_cmake_flags
           poly_flags: *poly_boost_flags
