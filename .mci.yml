@@ -378,7 +378,6 @@ functions:
             working_dir: "mongo-cxx-driver"
             script: |
               ./etc/debug-core-evergreen.sh
-
     "upload working dir":
         - command: archive.targz_pack
           params:
@@ -415,13 +414,14 @@ functions:
             display_name: "mongodb-logs.tar.gz"
 
 #######################################
-#              Pre Task               #
+#              Post Task              #
 #######################################
 
 post:
   - func: "stop_mongod"
   - func: "backtrace"
-  - func: "upload working dir"
+  # Workaround for CXX-2040
+  # - func: "upload working dir"
   - func: "upload mongo orchestration artifacts"
 
 #######################################
