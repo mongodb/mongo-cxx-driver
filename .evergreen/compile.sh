@@ -19,33 +19,43 @@ fi
 
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 
-cd build
-cmake "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" -DMONGOCXX_ENABLE_SLOW_TESTS=ON -DENABLE_UNINSTALL=ON "$@" ..
+if [ -f /proc/cpuinfo ]; then
+    CONCURRENCY=$(grep -c ^processor /proc/cpuinfo)
+elif which sysctl; then
+    CONCURRENCY=$(sysctl -n hw.logicalcpu)
+else
+    echo "$0: can't figure out what value of -j to pass to 'make'" >&2
+    exit 1
+fi
 
 case "$OS" in
-    darwin|linux)
-        if [ -f /proc/cpuinfo ]; then
-            CONCURRENCY=$(grep -c ^processor /proc/cpuinfo)
-        elif which sysctl; then
-            CONCURRENCY=$(sysctl -n hw.logicalcpu)
-        else
-            echo "$0: can't figure out what value of -j to pass to 'make'" >&2
-            exit 1
-        fi
-        make "-j$CONCURRENCY" all VERBOSE=1
-        make install VERBOSE=1
-        make "-j$CONCURRENCY" examples VERBOSE=1
-        if [ "$RUN_DISTCHECK" ]; then
-                make DISTCHECK_BUILD_OPTS="-j$CONCURRENCY" distcheck VERBOSE=1
-        fi
-        ;;
-    cygwin*)
-        MSBuild.exe /p:Configuration=${BUILD_TYPE} /m ALL_BUILD.vcxproj
-        MSBuild.exe /p:Configuration=${BUILD_TYPE} INSTALL.vcxproj
-        MSBuild.exe /p:Configuration=${BUILD_TYPE} /m examples/examples.vcxproj
-        ;;
-    *)
-        echo "$0: unsupported platform '$OS'" >&2
-        exit 1
-        ;;
+   darwin|linux)
+      CMAKE_BUILD_OPTS="-j $CONCURRENCY"
+      CMAKE_EXAMPLES_TARGET=examples
+      if [ "$RUN_DISTCHECK" ]; then
+         _RUN_DISTCHECK=$RUN_DISTCHECK
+      fi
+      ;;
+
+   cygwin*)
+      CMAKE_BUILD_OPTS="/maxcpucount:$CONCURRENCY"
+      CMAKE_EXAMPLES_TARGET=examples/examples
+      ;;
+
+   *)
+      echo "$0: unsupported platform '$OS'" >&2
+      exit 2
+      ;;
 esac
+
+. .evergreen/find_cmake.sh
+
+cd build
+"$CMAKE" "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" -DCMAKE_VERBOSE_MAKEFILE=ON -DMONGOCXX_ENABLE_SLOW_TESTS=ON -DENABLE_UNINSTALL=ON "$@" ..
+"$CMAKE" --build . -- $CMAKE_BUILD_OPTS
+"$CMAKE" --build . --target install
+"$CMAKE" --build . --target $CMAKE_EXAMPLES_TARGET
+
+if [ "$_RUN_DISTCHECK" ]; then
+   DISTCHECK_BUILD_OPTS="-j$CONCURRENCY" "$CMAKE" --build . --target distcheck
+fi
