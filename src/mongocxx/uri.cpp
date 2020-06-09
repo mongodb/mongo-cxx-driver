@@ -15,6 +15,7 @@
 #include <mongocxx/uri.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/types.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/private/libmongoc.hh>
@@ -127,6 +128,161 @@ class write_concern uri::write_concern() const {
     auto wc = libmongoc::uri_get_write_concern(_impl->uri_t);
     return (class write_concern)(
         stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(wc)));
+}
+
+static stdx::optional<stdx::string_view> _string_option(mongoc_uri_t* uri, std::string opt_name) {
+    const char* value;
+
+    value = libmongoc::uri_get_option_as_utf8(uri, opt_name.c_str(), NULL);
+    if (!value) {
+        return {};
+    }
+
+    return stdx::string_view{value};
+}
+
+static stdx::optional<std::int32_t> _int32_option(mongoc_uri_t* uri, std::string opt_name) {
+    bson_iter_t iter;
+    const bson_t* options_bson = libmongoc::uri_get_options(uri);
+
+    if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) ||
+        !BSON_ITER_HOLDS_INT32(&iter)) {
+        return {};
+    }
+    return bson_iter_int32(&iter);
+}
+
+static stdx::optional<bool> _bool_option(mongoc_uri_t* uri, std::string opt_name) {
+    bson_iter_t iter;
+    const bson_t* options_bson = libmongoc::uri_get_options(uri);
+
+    if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) ||
+        !BSON_ITER_HOLDS_BOOL(&iter)) {
+        return {};
+    }
+    return bson_iter_bool(&iter);
+}
+
+static stdx::optional<bsoncxx::document::view> _credential_document_option(mongoc_uri_t* uri,
+                                                                           std::string opt_name) {
+    bson_iter_t iter;
+    const uint8_t* data;
+    uint32_t len;
+    const bson_t* options_bson = libmongoc::uri_get_credentials(uri);
+
+    if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) ||
+        !BSON_ITER_HOLDS_DOCUMENT(&iter)) {
+        return {};
+    }
+    bson_iter_document(&iter, &len, &data);
+    return bsoncxx::document::view(data, len);
+}
+
+stdx::optional<stdx::string_view> uri::appname() const {
+    return _string_option(_impl->uri_t, "appname");
+}
+
+// Special case. authMechanismProperties are stored as part of libmongoc's credentials.
+stdx::optional<bsoncxx::document::view> uri::auth_mechanism_properties() const {
+    return _credential_document_option(_impl->uri_t, "authMechanismProperties");
+}
+
+std::vector<stdx::string_view> uri::compressors() const {
+    const bson_t* compressors;
+    std::vector<stdx::string_view> result;
+    bson_iter_t iter;
+
+    compressors = libmongoc::uri_get_compressors(_impl->uri_t);
+    if (!compressors) {
+        // Should not happen. libmongoc will return an empty document even if there were no
+        // compressors present in the URI.
+        return result;
+    }
+    bson_iter_init(&iter, compressors);
+    while (bson_iter_next(&iter)) {
+        result.push_back(stdx::string_view{bson_iter_key(&iter), bson_iter_key_len(&iter)});
+    }
+    return result;
+}
+
+stdx::optional<std::int32_t> uri::connect_timeout_ms() const {
+    return _int32_option(_impl->uri_t, "connectTimeoutMS");
+}
+
+stdx::optional<bool> uri::direct_connection() const {
+    return _bool_option(_impl->uri_t, "directConnection");
+}
+
+stdx::optional<std::int32_t> uri::heartbeat_frequency_ms() const {
+    return _int32_option(_impl->uri_t, "heartbeatFrequencyMS");
+}
+
+stdx::optional<std::int32_t> uri::local_threshold_ms() const {
+    return _int32_option(_impl->uri_t, "localThresholdMS");
+}
+
+stdx::optional<std::int32_t> uri::max_pool_size() const {
+    return _int32_option(_impl->uri_t, "maxPoolSize");
+}
+
+stdx::optional<bool> uri::retry_reads() const {
+    return _bool_option(_impl->uri_t, "retryReads");
+}
+
+stdx::optional<bool> uri::retry_writes() const {
+    return _bool_option(_impl->uri_t, "retryWrites");
+}
+
+stdx::optional<std::int32_t> uri::server_selection_timeout_ms() const {
+    return _int32_option(_impl->uri_t, "serverSelectionTimeoutMS");
+}
+
+stdx::optional<bool> uri::server_selection_try_once() const {
+    return _bool_option(_impl->uri_t, "serverSelectionTryOnce");
+}
+
+stdx::optional<std::int32_t> uri::socket_timeout_ms() const {
+    return _int32_option(_impl->uri_t, "socketTimeoutMS");
+}
+
+stdx::optional<bool> uri::tls_allow_invalid_certificates() const {
+    return _bool_option(_impl->uri_t, "tlsAllowInvalidCertificates");
+}
+
+stdx::optional<bool> uri::tls_allow_invalid_hostnames() const {
+    return _bool_option(_impl->uri_t, "tlsAllowInvalidHostnames");
+}
+
+stdx::optional<stdx::string_view> uri::tls_ca_file() const {
+    return _string_option(_impl->uri_t, "tlsCAFile");
+}
+
+stdx::optional<stdx::string_view> uri::tls_certificate_key_file() const {
+    return _string_option(_impl->uri_t, "tlsCertificateKeyFile");
+}
+
+stdx::optional<stdx::string_view> uri::tls_certificate_key_file_password() const {
+    return _string_option(_impl->uri_t, "tlsCertificateKeyFilePassword");
+}
+
+stdx::optional<bool> uri::tls_disable_certificate_revocation_check() const {
+    return _bool_option(_impl->uri_t, "tlsDisableCertificateRevocationCheck");
+}
+
+stdx::optional<bool> uri::tls_disable_ocsp_endpoint_check() const {
+    return _bool_option(_impl->uri_t, "tlsDisableOCSPEndpointCheck");
+}
+
+stdx::optional<bool> uri::tls_insecure() const {
+    return _bool_option(_impl->uri_t, "tlsInsecure");
+}
+
+stdx::optional<std::int32_t> uri::wait_queue_timeout_ms() const {
+    return _int32_option(_impl->uri_t, "waitQueueTimeoutMS");
+}
+
+stdx::optional<std::int32_t> uri::zlib_compression_level() const {
+    return _int32_option(_impl->uri_t, "zlibCompressionLevel");
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

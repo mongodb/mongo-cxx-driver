@@ -32,10 +32,13 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 ///
 /// Class representing a MongoDB connection string URI.
 ///
-/// @todo return const char* instead or stringview
-/// @todo harmonize with C library (options, credentials, etc...)
+/// @todo CXX-2038 Use optionals for all option getters. Otherwise users cannot distinguish between
+/// a case of an empty option explicitly present in the URI and the option being omitted. Also
+/// change getters that return a std::string to return a string_view since a copy is not necessary.
 ///
 /// @see https://docs.mongodb.com/master/reference/connection-string/
+/// @see http://mongoc.org/libmongoc/current/mongoc_uri_t.html for more information on supported URI
+/// options.
 ///
 class MONGOCXX_API uri {
    public:
@@ -48,11 +51,15 @@ class MONGOCXX_API uri {
     static const std::string k_default_uri;
 
     ///
-    /// Constructs a uri from an optional MongoDB uri string. If no uri string is specified,
-    /// uses the default uri string, 'mongodb://localhost:27017'.
+    /// Constructs a uri from an optional MongoDB URI string. If no URI string is specified,
+    /// uses the default URI string, 'mongodb://localhost:27017'.
+    ///
+    /// @see The documentation for the version of libmongoc used for the list of supported
+    ///   URI options. For the latest libmongoc release:
+    ///   http://mongoc.org/libmongoc/current/mongoc_uri_t.html
     ///
     /// @param uri_string
-    ///   String representing a MongoDB connection string uri, defaults to k_default_uri.
+    ///   String representing a MongoDB connection string URI, defaults to k_default_uri.
     ///
     uri(bsoncxx::string::view_or_value uri_string = k_default_uri);
 
@@ -101,6 +108,10 @@ class MONGOCXX_API uri {
 
     ///
     /// Returns other uri options.
+    ///
+    /// Note, options are returned in the case they were presented.
+    /// The URI mongodb://localhost/?appName=abc will return { "appName": "abc" }
+    /// The URI mongodb://localhost/?appname=abc will return { "appname": "abc" }
     ///
     /// @return A document view containing other options.
     ///
@@ -170,6 +181,169 @@ class MONGOCXX_API uri {
     /// @return A write_concern that represents what was specified in the uri.
     ///
     class write_concern write_concern() const;
+
+    ///
+    /// Returns the value of the option "appname" if present in the uri.
+    ///
+    /// @return An optional stdx::string_view
+    ///
+    stdx::optional<stdx::string_view> appname() const;
+
+    ///
+    /// Returns the value of the option "authMechanismProperties" if present in the uri.
+    ///
+    /// @return An optional bsoncxx::document::view
+    ///
+    stdx::optional<bsoncxx::document::view> auth_mechanism_properties() const;
+
+    ///
+    /// Returns the list of compressors present in the uri or an empty list if "compressors" was not
+    /// present or contained no valid compressors.
+    ///
+    /// @return A std::vector of stdx::string_view.
+    ///
+    std::vector<stdx::string_view> compressors() const;
+
+    ///
+    /// Returns the value of the option "connectTimeoutMS" if present in the uri.
+    ///
+    /// @return An optional std::int32_t
+    ///
+    stdx::optional<std::int32_t> connect_timeout_ms() const;
+
+    ///
+    /// Returns the value of the option "directConnection" if present in the uri.
+    ///
+    /// @return An optional bool
+    ///
+    stdx::optional<bool> direct_connection() const;
+
+    ///
+    /// Returns the value of the option "heartbeatFrequencyMS" if present in the uri.
+    ///
+    /// @return An optional std::int32_t
+    ///
+    stdx::optional<std::int32_t> heartbeat_frequency_ms() const;
+
+    ///
+    /// Returns the value of the option "localThresholdMS" if present in the uri.
+    ///
+    /// @return An optional std::int32_t
+    ///
+    stdx::optional<std::int32_t> local_threshold_ms() const;
+
+    ///
+    /// Returns the value of the option "maxPoolSize" if present in the uri.
+    ///
+    /// @return An optional std::int32_t
+    ///
+    stdx::optional<std::int32_t> max_pool_size() const;
+
+    ///
+    /// Returns the value of the option "retryReads" if present in the uri.
+    ///
+    /// @return An optional bool
+    ///
+    stdx::optional<bool> retry_reads() const;
+
+    ///
+    /// Returns the value of the option "retryWrites" if present in the uri.
+    ///
+    /// @return An optional bool
+    ///
+    stdx::optional<bool> retry_writes() const;
+
+    ///
+    /// Returns the value of the option "serverSelectionTimeoutMS" if present in the uri.
+    ///
+    /// @return An optional std::int32_t
+    ///
+    stdx::optional<std::int32_t> server_selection_timeout_ms() const;
+
+    ///
+    /// Returns the value of the option "serverSelectionTryOnce" if present in the uri.
+    ///
+    /// @return An optional bool
+    ///
+    stdx::optional<bool> server_selection_try_once() const;
+
+    ///
+    /// Returns the value of the option "socketTimeoutMS" if present in the uri.
+    ///
+    /// @return An optional std::int32_t
+    ///
+    stdx::optional<std::int32_t> socket_timeout_ms() const;
+
+    ///
+    /// Returns the value of the option "tlsAllowInvalidCertificates" if present in the uri.
+    ///
+    /// @return An optional bool
+    ///
+    stdx::optional<bool> tls_allow_invalid_certificates() const;
+
+    ///
+    /// Returns the value of the option "tlsAllowInvalidHostnames" if present in the uri.
+    ///
+    /// @return An optional bool
+    ///
+    stdx::optional<bool> tls_allow_invalid_hostnames() const;
+
+    ///
+    /// Returns the value of the option "tlsCAFile" if present in the uri.
+    ///
+    /// @return An optional stdx::string_view
+    ///
+    stdx::optional<stdx::string_view> tls_ca_file() const;
+
+    ///
+    /// Returns the value of the option "tlsCertificateKeyFile" if present in the uri.
+    ///
+    /// @return An optional stdx::string_view
+    ///
+    stdx::optional<stdx::string_view> tls_certificate_key_file() const;
+
+    ///
+    /// Returns the value of the option "tlsCertificateKeyFilePassword" if present in the uri.
+    ///
+    /// @return An optional stdx::string_view
+    ///
+    stdx::optional<stdx::string_view> tls_certificate_key_file_password() const;
+
+    ///
+    /// Returns the value of the option "tlsDisableCertificateRevocationCheck" if present in the
+    /// uri.
+    ///
+    /// @return An optional bool
+    ///
+    stdx::optional<bool> tls_disable_certificate_revocation_check() const;
+
+    ///
+    /// Returns the value of the option "tlsDisableOCSPEndpointCheck" if present in the uri.
+    ///
+    /// @return An optional bool
+    ///
+    stdx::optional<bool> tls_disable_ocsp_endpoint_check() const;
+
+    ///
+    /// Returns the value of the option "tlsInsecure" if present in the uri.
+    ///
+    /// @return An optional bool
+    ///
+    stdx::optional<bool> tls_insecure() const;
+
+    ///
+    /// Returns the value of the option "waitQueueTimeoutMS" if present in the uri.
+    ///
+    /// @return An optional std::int32_t
+    ///
+    stdx::optional<std::int32_t> wait_queue_timeout_ms() const;
+
+    ///
+    /// Returns the value of the option "zlibCompressionLevel" if present in the uri.
+    ///
+    /// @return An optional std::int32_t
+    ///
+    stdx::optional<std::int32_t> zlib_compression_level() const;
 
    private:
     friend class client;
