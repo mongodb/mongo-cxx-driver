@@ -52,6 +52,12 @@ class value::impl {
     bson_value_t _value;
 };
 
+// Helper to create a value from an existing bson_value_t
+// (for mongocxx callers who cannot be added as friends)
+BSONCXX_INLINE bson_value::value make_owning_bson(void* internal_value) {
+    return bson_value::value{internal_value};
+}
+
 }  // namespace bson_value
 }  // namespace types
 

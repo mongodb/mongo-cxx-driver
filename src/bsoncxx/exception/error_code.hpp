@@ -85,6 +85,9 @@ enum class error_code : std::int32_t {
     /// Failed to complete appending a BSON document to a BSON document or array.
     k_cannot_end_appending_document,
 
+    /// Invalid binary subtype.
+    k_invalid_binary_subtype,
+
 /// A value failed to append.
 #define BSONCXX_ENUM(name, value) k_cannot_append_##name,
 #include <bsoncxx/enums/type.hpp>

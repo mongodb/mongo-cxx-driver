@@ -69,7 +69,10 @@ class BSONCXX_API value {
           std::uint32_t offset,
           std::uint32_t keylen);
 
+    // Makes a copy of 'internal_value' and owns the copy.
     value(void* internal_value);
+
+    friend value make_owning_bson(void* internal_value);
 
     class BSONCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;

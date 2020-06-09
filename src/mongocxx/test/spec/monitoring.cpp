@@ -69,6 +69,25 @@ void apm_checker::compare(bsoncxx::array::view expectations,
     }
 }
 
+void apm_checker::has(bsoncxx::array::view expectations) {
+    using bsoncxx::to_json;
+
+    for (auto expectation : expectations) {
+        // find this expectation in the events
+        auto expected = expectation.get_document().view();
+
+        if (std::find_if(_events.begin(), _events.end(), [&](bsoncxx::document::view doc) {
+                return test_util::matches(doc, expected);
+            }) == _events.end()) {
+            fprintf(stderr,
+                    "Error: event not found in APM checker.\n Expected: %s\n\nActual:",
+                    to_json(expected).c_str());
+            print_all();
+            REQUIRE(false);
+        }
+    }
+}
+
 void apm_checker::print_all() {
     printf("\n\n");
     for (auto&& event : _events) {

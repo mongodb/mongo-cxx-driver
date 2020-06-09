@@ -16,6 +16,7 @@
 
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
 
@@ -176,6 +177,24 @@ BSONCXX_INLINE void convert_to_libbson(const bsoncxx::types::b_array& arr, bson_
     } else {
         v->value.v_doc.data = (uint8_t*)bson_malloc0(arr.value.length());
         std::memcpy(v->value.v_doc.data, arr.value.data(), arr.value.length());
+    }
+}
+
+//
+// Helper to convert without caller being aware of the underlying bson type.
+//
+BSONCXX_INLINE void convert_to_libbson(bson_value_t* v, const class bson_value::view& bson_view) {
+    switch (bson_view.type()) {
+#define BSONCXX_ENUM(name, val)              \
+    case bsoncxx::type::k_##name: {          \
+        auto value = bson_view.get_##name(); \
+        convert_to_libbson(value, v);        \
+        break;                               \
+    }
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
+        default:
+            BSONCXX_UNREACHABLE;
     }
 }
 

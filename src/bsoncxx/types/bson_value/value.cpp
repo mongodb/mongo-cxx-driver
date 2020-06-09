@@ -31,25 +31,6 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace types {
 namespace bson_value {
 
-namespace {
-
-void create_from_bsoncxx(bson_value_t* v, const class view& bson_view) {
-    switch (bson_view.type()) {
-#define BSONCXX_ENUM(name, val)              \
-    case bsoncxx::type::k_##name: {          \
-        auto value = bson_view.get_##name(); \
-        convert_to_libbson(value, v);        \
-        break;                               \
-    }
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
-        default:
-            BSONCXX_UNREACHABLE;
-    }
-}
-
-}  // namespace
-
 value::~value() = default;
 
 value::value(value&&) noexcept = default;
@@ -75,7 +56,7 @@ value::value(const value& rhs) : value(&rhs._impl->_value) {}
 
 value::value(const class view& bson_view) {
     _impl = stdx::make_unique<impl>();
-    create_from_bsoncxx(&_impl->_value, bson_view);
+    convert_to_libbson(&_impl->_value, bson_view);
 }
 
 value& value::operator=(const value& rhs) {

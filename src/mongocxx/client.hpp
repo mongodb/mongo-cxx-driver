@@ -19,6 +19,7 @@
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/options/client.hpp>
+#include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/options/client_session.hpp>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
@@ -385,6 +386,9 @@ class MONGOCXX_API client {
     friend class pool;
     friend class client_session;
     friend class options::auto_encryption;
+
+    friend class options::auto_encryption;
+    friend class options::client_encryption;
 
     MONGOCXX_PRIVATE explicit client(void* implementation);
 

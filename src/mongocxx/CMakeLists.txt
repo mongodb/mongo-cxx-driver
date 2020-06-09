@@ -76,6 +76,7 @@ add_subdirectory(config)
 set(mongocxx_sources
     bulk_write.cpp
     client.cpp
+    client_encryption.cpp
     client_session.cpp
     change_stream.cpp
     collection.cpp
@@ -119,12 +120,15 @@ set(mongocxx_sources
     options/bulk_write.cpp
     options/change_stream.cpp
     options/client.cpp
+    options/client_encryption.cpp
     options/client_session.cpp
     options/count.cpp
     options/estimated_document_count.cpp
     options/create_collection.cpp
+    options/data_key.cpp
     options/delete.cpp
     options/distinct.cpp
+    options/encrypt.cpp
     options/find_one_and_delete.cpp
     options/find_one_and_replace.cpp
     options/find_one_and_update.cpp
@@ -237,6 +241,8 @@ set_local_dist (src_mongocxx_DIST_local
    change_stream.hpp
    client.cpp
    client.hpp
+   client_encryption.cpp
+   client_encryption.hpp
    client_session.cpp
    client_session.hpp
    cmake/mongocxx-config.cmake.in
@@ -335,16 +341,22 @@ set_local_dist (src_mongocxx_DIST_local
    options/change_stream.hpp
    options/client.cpp
    options/client.hpp
+   options/client_encryption.cpp
+   options/client_encryption.hpp
    options/client_session.cpp
    options/client_session.hpp
    options/count.cpp
    options/count.hpp
    options/create_collection.cpp
    options/create_collection.hpp
+   options/data_key.cpp
+   options/data_key.hpp
    options/delete.cpp
    options/delete.hpp
    options/distinct.cpp
    options/distinct.hpp
+   options/encrypt.cpp
+   options/encrypt.hpp
    options/estimated_document_count.cpp
    options/estimated_document_count.hpp
    options/find.cpp
@@ -387,6 +399,7 @@ set_local_dist (src_mongocxx_DIST_local
    private/bulk_write.hh
    private/change_stream.hh
    private/client.hh
+   private/client_encryption.hh
    private/client_session.hh
    private/collection.hh
    private/conversions.cpp

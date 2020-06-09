@@ -49,7 +49,10 @@ enum class type : std::uint8_t {
 ///   k_function = 0x01,
 ///   k_binary_deprecated = 0x02,
 ///   k_uuid_deprecated = 0x03,
-///   k_uuid = 0x04 ...
+///   k_uuid = 0x04,
+///   k_md5 = 0x05,
+///   k_encrypted = 0x06,
+///   k_user = 0x80
 ///
 enum class binary_sub_type : std::uint8_t {
 #define BSONCXX_ENUM(name, val) k_##name = val,

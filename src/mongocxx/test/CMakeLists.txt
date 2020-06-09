@@ -22,6 +22,7 @@ set(test_driver_sources
     change_streams.cpp
     client.cpp
     client_session.cpp
+    client_side_encryption.cpp
     collection.cpp
     collection_mocked.cpp
     conversions.cpp
@@ -67,6 +68,8 @@ set(test_driver_sources
     result/replace_one.cpp
     result/update.cpp
     sdam-monitoring.cpp
+    spec/monitoring.cpp
+    spec/monitoring.hh
     transactions.cpp
     uri.cpp
     validation_criteria.cpp
@@ -217,6 +220,7 @@ set_dist_list (src_mongocxx_test_DIST
    change_streams.cpp
    client.cpp
    client_session.cpp
+   client_side_encryption.cpp
    collection.cpp
    collection_mocked.cpp
    conversions.cpp

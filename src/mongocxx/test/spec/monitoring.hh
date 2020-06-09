@@ -28,9 +28,15 @@ using namespace mongocxx;
 class apm_checker {
    public:
     options::apm get_apm_opts(bool command_started_events_only = false);
+
+    // Check that the apm checker's events exactly match our expected events, in order.
     void compare(bsoncxx::array::view expected,
                  bool allow_extra = false,
                  const test_util::match_visitor& match_visitor = {});
+
+    // Check that the apm checker has all expected events, ignore ordering and extra events.
+    void has(bsoncxx::array::view expected);
+
     void clear();
     void skip_kill_cursors();
     void print_all();
