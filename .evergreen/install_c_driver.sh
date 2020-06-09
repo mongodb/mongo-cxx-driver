@@ -57,53 +57,13 @@ export CFLAGS="-fPIC"
 
 case "$OS" in
     darwin|linux)
-	# build libbson
-	mkdir cmake_build
-	cd cmake_build
-	$CMAKE -DENABLE_MONGOC=OFF $CMAKE_ARGS ..
-	make "-j$CONCURRENCY"
-	make install
-	cd ../../
-
-	# fetch and build libmongocrypt
-	git clone https://github.com/mongodb/libmongocrypt
-	mkdir libmongocrypt/cmake_build
-	cd libmongocrypt/cmake_build
-	$CMAKE -DENABLE_SHARED_BSON=ON -DCMAKE_INSTALL_PREFIX="$PREFIX" -DCMAKE_PREFIX_PATH="$PREFIX" -DCMAKE_BUILD_TYPE="Debug" -DENABLE_CLIENT_SIDE_ENCRYPTION=OFF ..
-	make install
-	cd ../../$DIR
-
-	# build libmongoc
-	cd cmake_build
-        $CMAKE -DENABLE_MONGOC=ON -DENABLE_CLIENT_SIDE_ENCRYPTION=ON $CMAKE_ARGS ..
-        make "-j$CONCURRENCY"
-        make install
-	cd ../
+        GENERATOR=${GENERATOR:-"Unix Makefiles"}
+        CMAKE_BUILD_OPTS="-j $CONCURRENCY"
         ;;
 
     cygwin*)
         GENERATOR=${GENERATOR:-"Visual Studio 14 2015 Win64"}
-
-	# build libbson
-	mkdir cmake_build
-	cd cmake_build
-	"$CMAKE" -G "$GENERATOR" -DENABLE_MONGOC=OFF $CMAKE_ARGS ..
-	"$CMAKE" --build . --target INSTALL --config "Debug" -- /m
-	cd ../../
-
-	# fetch and build libmongocrypt
-	git clone https://github.com/mongodb/libmongocrypt
-	mkdir libmongocrypt/cmake_build
-	cd libmongocrypt/cmake_build
-	"$CMAKE" -G "$GENERATOR" -DENABLE_SHARED_BSON=ON -DCMAKE_BUILD_TYPE="Debug" $CMAKE_ARGS ..
-	"$CMAKE" --build . --target INSTALL --config "Debug" -- /m
-	cd ../../$DIR
-
-	# build libmongoc
-	cd cmake_build
-        "$CMAKE" -G "$GENERATOR" -DENABLE_MONGOC=ON -DENABLE_CLIENT_SIDE_ENCRYPTION=ON $CMAKE_ARGS ..
-	"$CMAKE" --build . --target INSTALL --config "Debug" -- /m
-	cd ../
+        CMAKE_BUILD_OPTS="/maxcpucount:$CONCURRENCY"
         ;;
 
     *)
@@ -111,6 +71,30 @@ case "$OS" in
         exit 2
         ;;
 esac
+
+# build libbson
+mkdir cmake_build
+cd cmake_build
+"$CMAKE" -G "$GENERATOR" -DCMAKE_BUILD_TYPE="Debug" -DENABLE_MONGOC=OFF $CMAKE_ARGS ..
+"$CMAKE" --build . --config Debug -- $CMAKE_BUILD_OPTS
+"$CMAKE" --build . --config Debug --target install
+cd ../../
+
+# fetch and build libmongocrypt
+git clone https://github.com/mongodb/libmongocrypt
+mkdir libmongocrypt/cmake_build
+cd libmongocrypt/cmake_build
+"$CMAKE" -G "$GENERATOR" -DENABLE_SHARED_BSON=ON -DCMAKE_INSTALL_PREFIX="$PREFIX" -DCMAKE_PREFIX_PATH="$PREFIX" -DCMAKE_BUILD_TYPE="Debug" -DENABLE_CLIENT_SIDE_ENCRYPTION=OFF ..
+"$CMAKE" --build . --config Debug -- $CMAKE_BUILD_OPTS
+"$CMAKE" --build . --config Debug --target install
+cd ../../$DIR
+
+# build libmongoc
+cd cmake_build
+"$CMAKE" -G "$GENERATOR" -DCMAKE_BUILD_TYPE="Debug" -DENABLE_MONGOC=ON -DENABLE_CLIENT_SIDE_ENCRYPTION=ON $CMAKE_ARGS ..
+"$CMAKE" --build . --config Debug -- $CMAKE_BUILD_OPTS
+"$CMAKE" --build . --config Debug --target install
+cd ../
 
 echo "Done installing"
 

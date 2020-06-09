@@ -7,11 +7,10 @@ echo > %INSTALL_DIR%\lib\canary.txt
 
 dir %INSTALL_DIR%\share\mongo-cxx-driver
 
-set PATH=%PATH%;"c:\Program Files (x86)\MSBuild\14.0\Bin"
-set PATH=%PATH%;"c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin"
+set CMAKE="C:\cmake\bin\cmake.exe"
 
 pushd build
-MSBuild.exe /m generate_uninstall\uninstall.vcxproj
+%CMAKE% --build . --target uninstall
 if errorlevel 1 (
   exit /B 1
 )
