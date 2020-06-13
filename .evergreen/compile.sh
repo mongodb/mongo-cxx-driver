@@ -52,10 +52,10 @@ esac
 
 cd build
 "$CMAKE" "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" -DCMAKE_VERBOSE_MAKEFILE=ON -DMONGOCXX_ENABLE_SLOW_TESTS=ON -DENABLE_UNINSTALL=ON "$@" ..
-"$CMAKE" --build . -- $CMAKE_BUILD_OPTS
-"$CMAKE" --build . --target install
-"$CMAKE" --build . --target $CMAKE_EXAMPLES_TARGET
+"$CMAKE" --build . --config $BUILD_TYPE -- $CMAKE_BUILD_OPTS
+"$CMAKE" --build . --config $BUILD_TYPE --target install
+"$CMAKE" --build . --config $BUILD_TYPE --target $CMAKE_EXAMPLES_TARGET
 
 if [ "$_RUN_DISTCHECK" ]; then
-   DISTCHECK_BUILD_OPTS="-j$CONCURRENCY" "$CMAKE" --build . --target distcheck
+   DISTCHECK_BUILD_OPTS="-j$CONCURRENCY" "$CMAKE" --build . --config $BUILD_TYPE --target distcheck
 fi

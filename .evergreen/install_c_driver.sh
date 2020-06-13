@@ -75,9 +75,9 @@ esac
 # build libbson
 mkdir cmake_build
 cd cmake_build
-"$CMAKE" -G "$GENERATOR" -DENABLE_MONGOC=OFF $CMAKE_ARGS ..
-"$CMAKE" --build . -- $CMAKE_BUILD_OPTS
-"$CMAKE" --build . --target install
+"$CMAKE" -G "$GENERATOR" -DCMAKE_BUILD_TYPE="Debug" -DENABLE_MONGOC=OFF $CMAKE_ARGS ..
+"$CMAKE" --build . --config Debug -- $CMAKE_BUILD_OPTS
+"$CMAKE" --build . --config Debug --target install
 cd ../../
 
 # fetch and build libmongocrypt
@@ -85,15 +85,15 @@ git clone https://github.com/mongodb/libmongocrypt
 mkdir libmongocrypt/cmake_build
 cd libmongocrypt/cmake_build
 "$CMAKE" -G "$GENERATOR" -DENABLE_SHARED_BSON=ON -DCMAKE_INSTALL_PREFIX="$PREFIX" -DCMAKE_PREFIX_PATH="$PREFIX" -DCMAKE_BUILD_TYPE="Debug" -DENABLE_CLIENT_SIDE_ENCRYPTION=OFF ..
-"$CMAKE" --build . -- $CMAKE_BUILD_OPTS
-"$CMAKE" --build . --target install
+"$CMAKE" --build . --config Debug -- $CMAKE_BUILD_OPTS
+"$CMAKE" --build . --config Debug --target install
 cd ../../$DIR
 
 # build libmongoc
 cd cmake_build
-"$CMAKE" -G "$GENERATOR" -DENABLE_MONGOC=ON -DENABLE_CLIENT_SIDE_ENCRYPTION=ON $CMAKE_ARGS ..
-"$CMAKE" --build . -- $CMAKE_BUILD_OPTS
-"$CMAKE" --build . --target install
+"$CMAKE" -G "$GENERATOR" -DCMAKE_BUILD_TYPE="Debug" -DENABLE_MONGOC=ON -DENABLE_CLIENT_SIDE_ENCRYPTION=ON $CMAKE_ARGS ..
+"$CMAKE" --build . --config Debug -- $CMAKE_BUILD_OPTS
+"$CMAKE" --build . --config Debug --target install
 cd ../
 
 echo "Done installing"
