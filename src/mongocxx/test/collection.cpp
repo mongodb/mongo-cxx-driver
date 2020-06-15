@@ -2721,4 +2721,51 @@ TEST_CASE("find_and_x operations append write concern correctly", "[collection]"
     REQUIRE(called);
 }
 
+TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[collection]") {
+    using namespace bsoncxx;
+    instance::current();
+
+    client mongodb_client{uri{}};
+    auto fail_point = builder::basic::document{};
+
+    fail_point.append(kvp("configureFailPoint", "failCommand"));
+
+    using bsoncxx::builder::basic::sub_document;
+    using bsoncxx::builder::basic::sub_array;
+    fail_point.append(kvp("data", [](sub_document sub_doc) {
+        sub_doc.append(kvp("failCommands", [](sub_array sub_arr) { sub_arr.append("insert"); }));
+        sub_doc.append(kvp("writeConcernError", [](sub_document sub_doc) {
+            sub_doc.append(kvp("code", types::b_int32{100}));
+            sub_doc.append(kvp("codeName", "UnsatisfiableWriteConcern"));
+            sub_doc.append(kvp("errmsg", "Not enough data-bearing nodes"));
+            sub_doc.append(kvp("errInfo", [](sub_document sub_doc) {
+                sub_doc.append(kvp("writeConcern", [](sub_document sub_doc) {
+                    sub_doc.append(kvp("w", types::b_int32{2}));
+                    sub_doc.append(kvp("wtimeout", types::b_int32{0}));
+                    sub_doc.append(kvp("provenance", "clientSupplied"));
+                }));
+            }));
+        }));
+    }));
+
+    fail_point.append(
+        kvp("mode", [](sub_document sub_doc) { sub_doc.append(kvp("times", types::b_int32{1})); }));
+
+    mongodb_client["admin"].run_command(fail_point.view());
+    collection coll = mongodb_client["test"]["errInfo"];
+
+    coll.drop();
+    auto doc = make_document(kvp("x", types::b_int32{1}));
+
+    bsoncxx::document::element result;
+    try {
+        coll.insert_one(doc.view());
+    } catch (const operation_exception& e) {
+        auto error = e.raw_server_error()->view();
+        result = error["writeConcernErrors"][0]["errInfo"];
+    }
+
+    REQUIRE(result);
+}
+
 }  // namespace
