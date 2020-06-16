@@ -1251,6 +1251,10 @@ document::value operation_runner::run(document::view operation) {
     } else if (key.compare("drop") == 0) {
         _coll->drop();
         return empty_document;
+    } else if (key.compare("dropCollection") == 0) {
+        auto collection_name = operation["arguments"]["collection"].get_utf8().value;
+        _db->collection(collection_name).drop();
+        return empty_document;
     } else if (key.compare("listCollectionNames") == 0) {
         _db->list_collection_names();
         return empty_document;
