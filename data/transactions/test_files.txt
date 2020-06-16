@@ -3,6 +3,8 @@ bulk.json
 causal-consistency.json
 commit.json
 count.json
+create-collection.json
+create-index.json
 delete.json
 error-labels.json
 errors.json
