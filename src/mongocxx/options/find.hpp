@@ -42,6 +42,8 @@ class MONGOCXX_API find {
     /// This option is sent only if the caller explicitly provides a value. The default
     /// is to not send a value.
     ///
+    /// This option may only be used with MongoDB version 4.4 or later.
+    ///
     /// @param allow_disk_use
     ///   Whether to allow writing temporary files on the server.
     ///
@@ -54,6 +56,8 @@ class MONGOCXX_API find {
 
     ///
     /// Gets the current setting for allowing disk use on the server.
+    ///
+    /// This option may only be used with MongoDB version 4.4 or later.
     ///
     /// @return Whether disk use on the server is allowed.
     ///
