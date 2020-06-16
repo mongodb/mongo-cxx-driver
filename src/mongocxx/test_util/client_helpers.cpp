@@ -382,7 +382,7 @@ std::string tolowercase(stdx::string_view view) {
     std::string out;
     out.reserve(view.size());
     for (size_t i = 0; i < view.length(); i++) {
-        out[i] = static_cast<char>(::tolower(view[i]));
+        out += static_cast<char>(::tolower(view[i]));
     }
     return out;
 }

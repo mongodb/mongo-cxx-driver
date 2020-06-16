@@ -273,6 +273,8 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
     // matches the error string."
     if (op["result"]["errorContains"]) {
         REQUIRE(exception);
+        INFO("expected error message " << op["result"]["errorContains"].get_utf8().value);
+        INFO("got error message" << error_msg);
         // Do a case insensitive check.
         auto error_contains =
             test_util::tolowercase(op["result"]["errorContains"].get_utf8().value);

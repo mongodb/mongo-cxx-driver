@@ -9,6 +9,7 @@ variables:
 
     mongodb_version:
         version_latest: &version_latest latest
+        version_44: &version_44 4.4
         version_42: &version_42 4.2
         version_40: &version_40 4.0
 
@@ -29,12 +30,16 @@ variables:
         macos_cmake_flags: &macos_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror"
         asan_cmake_flags: &asan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror"
         ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.blacklist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror"
-        msvc2015_cmake_flags: &msvc2015_cmake_flags -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT=c:/local/boost_1_60_0
+        msvc2015_cmake_flags: &msvc2015_cmake_flags -DBOOST_ROOT=c:/local/boost_1_60_0
+        msvc2015_generator: &msvc2015_generator Visual Studio 14 2015 Win64
         # The VS option /Zc:__cplusplus is necessary to build with VS2017's
         # native C++17 support. __cplusplus should indicate the standard of C++
         # the compiler supports. VS2017 erroneously reports it as 199711L
         # (instead of 201703L) without this option.
-        msvc2017_cmake_flags: &msvc2017_cmake_flags -G "Visual Studio 15 2017 Win64" -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS="/Zc:__cplusplus"
+        # The VS option /EHsc is necessary to opt into C++ standard exception unwinding.
+        # Without this option, some destructors may not be called in tests (CXX-2054).
+        msvc2017_cmake_flags: &msvc2017_cmake_flags -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS="/Zc:__cplusplus /EHsc"
+        msvc2017_generator: &msvc2017_generator Visual Studio 15 2017 Win64
 
     example_projects_cc:
         asan_cc_path: &asan_cc_path /usr/bin/clang
@@ -167,7 +172,7 @@ functions:
                     if [ "Windows_NT" == "$OS" ]; then
                         PREFIX=$(cygpath -m "$PREFIX")
                     fi
-                    export GENERATOR="${cdriver_cmake_generator}"
+                    export GENERATOR="${generator}"
                     ./.evergreen/install_c_driver.sh ${mongoc_version|master}
 
     "lint":
@@ -217,6 +222,8 @@ functions:
                       ./Scripts/pip install GitPython
                   fi
                   cd ..
+
+                  export GENERATOR="${generator}"
 
                   .evergreen/compile.sh -DCMAKE_PREFIX_PATH="$MONGOC_PREFIX" ${cmake_flags} ${poly_flags} $ADDL_OPTS -DCMAKE_INSTALL_PREFIX=install
 
@@ -271,7 +278,6 @@ functions:
                   set -o xtrace
 
                   if [ "Windows_NT" == "$OS" ]; then
-                      CRUD_TESTS_PATH=$(cygpath -m $CRUD_TESTS_PATH)
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} RUN_TESTS.vcxproj
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} examples/run-examples.vcxproj
                   else
@@ -543,14 +549,16 @@ axes:
             run_on:
                 - ubuntu1604-build
           - id: "windows-2k8"
-            display_name: "Windows (VS 2015) Debug"
+            display_name: "Windows (VS 2017) Debug"
             variables:
-                extra_path: *msvc2015_extra_path
-                cmake_flags: *msvc2015_cmake_flags
+                extra_path: *msvc2017_extra_path
+                cmake_flags: *msvc2017_cmake_flags
                 build_type: "Debug"
                 tar_options: *linux_tar_options # Same for Windows and Linux
+                generator: *msvc2017_generator
+                example_projects_cxx_standard: 17
             run_on:
-                - windows-64-vs2015-compile
+                - windows-64-vs2017-compile
 
     - id: mongodb_version
       display_name: "MongoDB Version"
@@ -559,6 +567,10 @@ axes:
             display_name: "Latest"
             variables:
                 mongodb_version: *version_latest
+          - id: "4.4"
+            display_name: "4.4"
+            variables:
+                mongodb_version: *version_44
           - id: "4.2"
             display_name: "4.2"
             variables:
@@ -582,20 +594,12 @@ buildvariants:
       display_name: "${os} (MongoDB ${mongodb_version})"
       tasks:
           - name: compile_and_test_with_shared_libs
-      exclude_spec:
-        # Windows latest only runs on Windows 10. This is tested in the VS 2017 variant.
-        os: "windows-2k8"
-        mongodb_version: "latest"
 
     - matrix_name: "auth"
       matrix_spec: {os: "*", mongodb_version: "latest"}
       display_name: "${os} ${mongodb_version} Auth"
       tasks:
           - name: compile_and_test_auth_with_shared_libs
-      exclude_spec:
-        # Windows latest only runs on Windows 10. This is tested in the VS 2017 variant.
-        os: "windows-2k8"
-        mongodb_version: "latest"
 
     #######################################
     #         Linux Buildvariants         #
@@ -775,6 +779,7 @@ buildvariants:
           extra_path: *msvc2015_extra_path
           cmake_flags: *msvc2015_cmake_flags
           mongodb_version: *version_42
+          generator: *msvc2015_generator
       run_on:
           - windows-64-vs2015-compile
       tasks:
@@ -790,23 +795,24 @@ buildvariants:
           extra_path: *msvc2015_extra_path
           cmake_flags: *msvc2015_cmake_flags
           mongodb_version: *version_42
+          generator: *msvc2015_generator
       run_on:
           - windows-64-vs2015-compile
       tasks:
           # The debug shared lib is tested in the "integration tests" matrix
           - name: compile_and_test_with_static_libs
 
-    - name: windows-msvc2017-debug
-      display_name: "Windows (VS 2017) Debug (MongoDB Latest)"
+    - name: windows-msvc2015-debug
+      display_name: "Windows (VS 2015) Debug (MongoDB 4.2)"
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
-          extra_path: *msvc2017_extra_path
-          cdriver_cmake_generator: "Visual Studio 15 2017 Win64"
-          cmake_flags: *msvc2017_cmake_flags
-          mongodb_version: *version_latest
+          extra_path: *msvc2015_extra_path
+          cmake_flags: *msvc2015_cmake_flags
+          generator: *msvc2015_generator
+          mongodb_version: *version_42
       run_on:
-         - windows-64-vs2017-compile
+         - windows-64-vs2015-compile
       tasks:
          - name: compile_with_shared_libs
          - name: compile_and_test_auth_with_shared_libs

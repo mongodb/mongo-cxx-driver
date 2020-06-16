@@ -40,7 +40,8 @@ find_package(libbsoncxx REQUIRED)
 
 add_executable(hello_bsoncxx ../../hello_bsoncxx.cpp)
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+# Visual Studio pre 2017 requires boost polyfill.
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND CMAKE_CXX_STANDARD LESS 17)
     find_package(Boost 1.56.0 REQUIRED)
     target_link_libraries(hello_bsoncxx PRIVATE Boost::boost)
 endif()
