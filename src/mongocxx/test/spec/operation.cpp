@@ -1298,7 +1298,7 @@ document::value operation_runner::run(document::view operation) {
         return empty_document;
     } else if (key.compare("assertCollectionNotExists") == 0) {
         auto collection_name = operation["arguments"]["collection"].get_utf8().value;
-        REQUIRE(!_db->has_collection(collection_name));
+        REQUIRE_FALSE(_db->has_collection(collection_name));
         return empty_document;
     } else if (key.compare("assertCollectionExists") == 0) {
         auto collection_name = operation["arguments"]["collection"].get_utf8().value;
@@ -1306,6 +1306,26 @@ document::value operation_runner::run(document::view operation) {
         return empty_document;
     } else if (key.compare("createIndex") == 0) {
         return _create_index(operation);
+    } else if (key.compare("assertIndexNotExists") == 0) {
+        auto cursor = _coll->list_indexes();
+        REQUIRE(
+            cursor.end() ==
+            std::find_if(
+                cursor.begin(), cursor.end(), [operation](bsoncxx::v_noabi::document::view doc) {
+                    return (doc["name"].get_utf8() == operation["arguments"]["index"].get_utf8());
+                }));
+
+        return empty_document;
+    } else if (key.compare("assertIndexExists") == 0) {
+        auto cursor = _coll->list_indexes();
+        REQUIRE(
+            cursor.end() !=
+            std::find_if(
+                cursor.begin(), cursor.end(), [operation](bsoncxx::v_noabi::document::view doc) {
+                    return (doc["name"].get_utf8() == operation["arguments"]["index"].get_utf8());
+                }));
+
+        return empty_document;
     } else {
         throw std::logic_error{"unsupported operation: " + string::to_string(key)};
     }
