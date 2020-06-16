@@ -1278,6 +1278,13 @@ document::value operation_runner::run(document::view operation) {
         bucket.download_to_stream(operation["arguments"]["id"].get_value(), &null_stream);
 
         return empty_document;
+    } else if (key.compare("createCollection") == 0) {
+        auto collection_name = operation["arguments"]["collection"].get_utf8().value;
+        auto session_name = operation["arguments"]["session"].get_utf8().value;
+        auto session = _lookup_session(session_name);
+
+        _db->create_collection(*session, collection_name);
+        return empty_document;
     } else {
         throw std::logic_error{"unsupported operation: " + string::to_string(key)};
     }
