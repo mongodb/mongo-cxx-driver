@@ -1160,6 +1160,18 @@ document::value operation_runner::_run_configure_fail_point(bsoncxx::document::v
     return result.extract();
 }
 
+document::value operation_runner::_create_index(const document::view& operation) {
+    auto arguments = operation["arguments"];
+    auto session = _lookup_session(arguments.get_document().value);
+    auto name = arguments["name"].get_utf8().value;
+    auto keys = arguments["keys"].get_document().value;
+
+    bsoncxx::builder::basic::document opts;
+    opts.append(bsoncxx::builder::basic::kvp("name", name));
+
+    return _coll->create_index(*session, keys, opts.extract());
+}
+
 operation_runner::operation_runner(collection* coll) : _coll(coll) {}
 operation_runner::operation_runner(database* db,
                                    collection* coll,
@@ -1280,11 +1292,20 @@ document::value operation_runner::run(document::view operation) {
         return empty_document;
     } else if (key.compare("createCollection") == 0) {
         auto collection_name = operation["arguments"]["collection"].get_utf8().value;
-        auto session_name = operation["arguments"]["session"].get_utf8().value;
-        auto session = _lookup_session(session_name);
+        auto session = _lookup_session(operation["arguments"].get_document().value);
 
         _db->create_collection(*session, collection_name);
         return empty_document;
+    } else if (key.compare("assertCollectionNotExists") == 0) {
+        auto collection_name = operation["arguments"]["collection"].get_utf8().value;
+        REQUIRE(!_db->has_collection(collection_name));
+        return empty_document;
+    } else if (key.compare("assertCollectionExists") == 0) {
+        auto collection_name = operation["arguments"]["collection"].get_utf8().value;
+        REQUIRE(_db->has_collection(collection_name));
+        return empty_document;
+    } else if (key.compare("createIndex") == 0) {
+        return _create_index(operation);
     } else {
         throw std::logic_error{"unsupported operation: " + string::to_string(key)};
     }
