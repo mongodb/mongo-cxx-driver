@@ -2726,25 +2726,27 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
     instance::current();
 
     client mongodb_client{uri{}};
-    auto fail_point = builder::basic::document{};
-
-    fail_point.append(kvp("configureFailPoint", "failCommand"));
 
     using bsoncxx::builder::basic::sub_document;
+    auto err_info = builder::basic::document{};
+    err_info.append(kvp("writeConcern", [](sub_document sub_doc) {
+        sub_doc.append(kvp("w", types::b_int32{2}));
+        sub_doc.append(kvp("wtimeout", types::b_int32{0}));
+        sub_doc.append(kvp("provenance", "clientSupplied"));
+    }));
+
+    auto fail_point = builder::basic::document{};
+    fail_point.append(kvp("configureFailPoint", "failCommand"));
+
     using bsoncxx::builder::basic::sub_array;
-    fail_point.append(kvp("data", [](sub_document sub_doc) {
-        sub_doc.append(kvp("failCommands", [](sub_array sub_arr) { sub_arr.append("insert"); }));
-        sub_doc.append(kvp("writeConcernError", [](sub_document sub_doc) {
+    fail_point.append(kvp("data", [&err_info](sub_document sub_doc) {
+        sub_doc.append(
+            kvp("failCommands", [&err_info](sub_array sub_arr) { sub_arr.append("insert"); }));
+        sub_doc.append(kvp("writeConcernError", [&err_info](sub_document sub_doc) {
             sub_doc.append(kvp("code", types::b_int32{100}));
             sub_doc.append(kvp("codeName", "UnsatisfiableWriteConcern"));
             sub_doc.append(kvp("errmsg", "Not enough data-bearing nodes"));
-            sub_doc.append(kvp("errInfo", [](sub_document sub_doc) {
-                sub_doc.append(kvp("writeConcern", [](sub_document sub_doc) {
-                    sub_doc.append(kvp("w", types::b_int32{2}));
-                    sub_doc.append(kvp("wtimeout", types::b_int32{0}));
-                    sub_doc.append(kvp("provenance", "clientSupplied"));
-                }));
-            }));
+            sub_doc.append(kvp("errInfo", types::b_document{err_info}));
         }));
     }));
 
@@ -2765,7 +2767,7 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
         result = error["writeConcernErrors"][0]["errInfo"];
     }
 
-    REQUIRE(result);
+    REQUIRE(err_info == result.get_document().view());
 }
 
 }  // namespace
