@@ -180,7 +180,6 @@ an additional option, `/Zc:__cplusplus` to opt into the correct definition of `_
     -G "Visual Studio 15 2017 Win64"            \
     -DCMAKE_CXX_STANDARD=17                     \
     -DCMAKE_CXX_FLAGS="/Zc:__cplusplus"         \
-    -DBOOST_ROOT=C:\local\boost_1_59_0          \
     -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver  \
 ```
@@ -414,7 +413,7 @@ settings for a Debug x64 build as an example:
 ```xml
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>c:\local\boost_1_59_0\;C:\mongo-cxx-driver\include\mongocxx\v_noabi;C:\mongo-cxx-driver\include\bsoncxx\v_noabi;C:\mongo-c-driver\include\libmongoc-1.0;C:\mongo-c-driver\include\libbson-1.0;$(IncludePath)</IncludePath>
+    <IncludePath>c:\local\boost_1_60_0\;C:\mongo-cxx-driver\include\mongocxx\v_noabi;C:\mongo-cxx-driver\include\bsoncxx\v_noabi;C:\mongo-c-driver\include\libmongoc-1.0;C:\mongo-c-driver\include\libbson-1.0;$(IncludePath)</IncludePath>
     <LibraryPath>c:\mongo-c-driver\lib\;c:\mongo-cxx-driver\lib\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
