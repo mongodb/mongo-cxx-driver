@@ -168,7 +168,7 @@ functions:
                         PREFIX=$(cygpath -m "$PREFIX")
                     fi
                     export GENERATOR="${cdriver_cmake_generator}"
-                    ./.evergreen/install_c_driver.sh ${MONGOC_VERSION|master}
+                    ./.evergreen/install_c_driver.sh ${mongoc_version|master}
 
     "lint":
         - command: shell.exec
@@ -338,7 +338,7 @@ functions:
                   fi
                   # The example projects never run under valgrind, since we haven't added execution
                   # logic to handle ${test_params}.
-                  MONGOC_VERSION=${MONGOC_VERSION|master} .evergreen/build_example_projects.sh
+                  MONGOC_VERSION=${mongoc_version|master} .evergreen/build_example_projects.sh
 
     "test auth":
         - command: shell.exec
@@ -436,8 +436,6 @@ tasks:
         - func: "setup"
         - func: "start_mongod"
         - func: "install_c_driver"
-          vars:
-              MONGOC_VERSION: master
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
@@ -448,8 +446,6 @@ tasks:
       - func: "setup"
       - func: "start_mongod"
       - func: "install_c_driver"
-        vars:
-          MONGOC_VERSION: master
       - func: "compile"
 
     - name: compile_and_test_auth_with_shared_libs
@@ -459,8 +455,6 @@ tasks:
           vars:
               AUTH: auth
         - func: "install_c_driver"
-          vars:
-              MONGOC_VERSION: master
         - func: "compile"
         - func: "test auth"
 
@@ -469,8 +463,6 @@ tasks:
         - func: "setup"
         - func: "start_mongod"
         - func: "install_c_driver"
-          vars:
-              MONGOC_VERSION: master
         - func: "compile"
           vars:
               USE_STATIC_LIBS: 1
@@ -486,8 +478,6 @@ tasks:
           vars:
               TOPOLOGY: "replica_set"
         - func: "install_c_driver"
-          vars:
-              MONGOC_VERSION: master
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
@@ -740,6 +730,22 @@ buildvariants:
           mongodb_version: *version_latest
       run_on:
           - ubuntu1804-arm64-build
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_static_libs
+
+    # Test that we actually support building against the minium required C version claimed.
+    - name: ubuntu1804-min-libmongoc
+      display_name: "Ubuntu 18.04 with minimum libmongoc (MongoDB 4.4)"
+      batchtime: 1440 # 1 day
+      expansions:
+          build_type: "Debug"
+          tar_options: *linux_tar_options
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_latest
+          mongoc_version: "1.17.0-beta2"
+      run_on:
+          - ubuntu1804-build
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs

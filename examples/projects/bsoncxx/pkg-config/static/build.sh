@@ -3,13 +3,8 @@ set -o errexit
 set -o pipefail
 set -o xtrace
 
-if [ -z "$CXX" ]; then
-    CXX=c++
-fi
-
-if [ -z "$CXX_STANDARD" ]; then
-    CXX_STANDARD=11
-fi
+CXX=${CXX:-c++}
+CXX_STANDARD=${CXX_STANDARD:-11}
 
 # Sanity-check that static library macros are set when building against the static library.  Users
 # don't need to include this section in their projects.
