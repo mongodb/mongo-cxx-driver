@@ -9,6 +9,7 @@ variables:
 
     mongodb_version:
         version_latest: &version_latest latest
+        version_44: &version_44 4.4
         version_42: &version_42 4.2
         version_40: &version_40 4.0
 
@@ -569,6 +570,10 @@ axes:
             display_name: "Latest"
             variables:
                 mongodb_version: *version_latest
+          - id: "4.4"
+            display_name: "4.4"
+            variables:
+                mongodb_version: *version_44
           - id: "4.2"
             display_name: "4.2"
             variables:
@@ -593,9 +598,11 @@ buildvariants:
       tasks:
           - name: compile_and_test_with_shared_libs
       exclude_spec:
-        # Windows latest only runs on Windows 10. This is tested in the VS 2017 variant.
+        # Windows 4.4+ only runs on Windows 10. This is tested in the VS 2017 variant.
         os: "windows-2k8"
-        mongodb_version: "latest"
+        mongodb_version:
+          - "latest"
+          - "4.4"
 
     - matrix_name: "auth"
       matrix_spec: {os: "*", mongodb_version: "latest"}
@@ -603,9 +610,11 @@ buildvariants:
       tasks:
           - name: compile_and_test_auth_with_shared_libs
       exclude_spec:
-        # Windows latest only runs on Windows 10. This is tested in the VS 2017 variant.
+        # Windows 4.4+ only runs on Windows 10. This is tested in the VS 2017 variant.
         os: "windows-2k8"
-        mongodb_version: "latest"
+        mongodb_version:
+          - "latest"
+          - "4.4"
 
     #######################################
     #         Linux Buildvariants         #
@@ -790,7 +799,7 @@ buildvariants:
           # The debug shared lib is tested in the "integration tests" matrix
           - name: compile_and_test_with_static_libs
 
-    - name: windows-msvc2017-debug
+    - name: windows-msvc2017-debug-latest
       display_name: "Windows (VS 2017) Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
@@ -804,3 +813,20 @@ buildvariants:
       tasks:
          - name: compile_with_shared_libs
          - name: compile_and_test_auth_with_shared_libs
+         # TODO: CXX-2054 add compile_and_test_with_shared_libs
+
+    - name: windows-msvc2017-debug-44
+      display_name: "Windows (VS 2017) Debug (MongoDB 4.4)"
+      expansions:
+          build_type: "Debug"
+          tar_options: *linux_tar_options
+          extra_path: *msvc2017_extra_path
+          cdriver_cmake_generator: "Visual Studio 15 2017 Win64"
+          cmake_flags: *msvc2017_cmake_flags
+          mongodb_version: *version_44
+      run_on:
+         - windows-64-vs2017-compile
+      tasks:
+         - name: compile_with_shared_libs
+         - name: compile_and_test_auth_with_shared_libs
+         # TODO: CXX-2054 add compile_and_test_with_shared_libs
