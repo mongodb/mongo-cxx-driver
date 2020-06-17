@@ -1163,6 +1163,8 @@ document::value operation_runner::_run_configure_fail_point(bsoncxx::document::v
 document::value operation_runner::_create_index(const document::view& operation) {
     auto arguments = operation["arguments"];
     auto session = _lookup_session(arguments.get_document().value);
+    REQUIRE(session);
+
     auto name = arguments["name"].get_utf8().value;
     auto keys = arguments["keys"].get_document().value;
 
@@ -1293,21 +1295,26 @@ document::value operation_runner::run(document::view operation) {
     } else if (key.compare("createCollection") == 0) {
         auto collection_name = operation["arguments"]["collection"].get_utf8().value;
         auto session = _lookup_session(operation["arguments"].get_document().value);
+        REQUIRE(session);
 
         _db->create_collection(*session, collection_name);
         return empty_document;
     } else if (key.compare("assertCollectionNotExists") == 0) {
         auto collection_name = operation["arguments"]["collection"].get_utf8().value;
-        REQUIRE_FALSE(_db->has_collection(collection_name));
+        client client{uri{}};
+        REQUIRE_FALSE(client[_db->name()].has_collection(collection_name));
         return empty_document;
     } else if (key.compare("assertCollectionExists") == 0) {
         auto collection_name = operation["arguments"]["collection"].get_utf8().value;
-        REQUIRE(_db->has_collection(collection_name));
+        client client{uri{}};
+        REQUIRE(client[_db->name()].has_collection(collection_name));
         return empty_document;
     } else if (key.compare("createIndex") == 0) {
         return _create_index(operation);
     } else if (key.compare("assertIndexNotExists") == 0) {
-        auto cursor = _coll->list_indexes();
+        client client{uri{}};
+        auto cursor = client[_db->name()][_coll->name()].list_indexes();
+
         REQUIRE(
             cursor.end() ==
             std::find_if(
@@ -1317,7 +1324,9 @@ document::value operation_runner::run(document::view operation) {
 
         return empty_document;
     } else if (key.compare("assertIndexExists") == 0) {
-        auto cursor = _coll->list_indexes();
+        client client{uri{}};
+        auto cursor = client[_db->name()][_coll->name()].list_indexes();
+
         REQUIRE(
             cursor.end() !=
             std::find_if(

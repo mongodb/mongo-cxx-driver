@@ -378,7 +378,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         };
 
         if (test["expectations"]) {
-            apm_checker.compare(test["expectations"].get_array().value, true, visitor);
+            apm_checker.compare(test["expectations"].get_array().value, false, visitor);
         }
 
         // Step 12. Disable the failpoint.
