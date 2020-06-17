@@ -9,6 +9,9 @@ else
     DIR=shared
 fi
 
+. .evergreen/find_cmake.sh
+export CMAKE="$CMAKE"
+
 cd examples/projects
 
 for project in bsoncxx mongocxx; do
