@@ -2739,8 +2739,7 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 
     using bsoncxx::builder::basic::sub_array;
     fail_point.append(kvp("data", [&err_info](sub_document sub_doc) {
-        sub_doc.append(
-            kvp("failCommands", [](sub_array sub_arr) { sub_arr.append("insert"); }));
+        sub_doc.append(kvp("failCommands", [](sub_array sub_arr) { sub_arr.append("insert"); }));
         sub_doc.append(kvp("writeConcernError", [&err_info](sub_document sub_doc) {
             sub_doc.append(kvp("code", types::b_int32{100}));
             sub_doc.append(kvp("codeName", "UnsatisfiableWriteConcern"));
@@ -2758,7 +2757,7 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
     coll.drop();
     auto doc = make_document(kvp("x", types::b_int32{1}));
 
-    bool contains_err_info {false};
+    bool contains_err_info{false};
     try {
         coll.insert_one(doc.view());
     } catch (const operation_exception& e) {
@@ -2767,7 +2766,7 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
         contains_err_info = (err_info == result.get_document().view());
     }
 
-    REQUIRE (contains_err_info);
+    REQUIRE(contains_err_info);
 }
 
 }  // namespace
