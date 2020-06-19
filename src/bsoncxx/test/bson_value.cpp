@@ -186,8 +186,8 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         bson_value::value value = elem.get_owning_value();
 
         SECTION("can create new views") {
-            bson_value::view view{value};
-            bson_value::view new_view{value};
+            bson_value::view view(value);
+            bson_value::view new_view(value);
             REQUIRE(view == new_view);
         }
 

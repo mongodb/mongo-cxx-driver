@@ -541,7 +541,7 @@ TEST_CASE("lsid", "[session]") {
         std::vector<bsoncxx::document::view> docs{doc.view()};
 
         auto insert_vector = [&s, &collection, &docs](bool use_session) {
-            return use_session ? collection.insert_many(s, docs) : collection.insert_many(docs);
+            use_session ? collection.insert_many(s, docs) : collection.insert_many(docs);
         };
 
         test.test_method_with_session(insert_vector, s);

@@ -47,14 +47,6 @@ class MONGOCXX_API encrypt {
     encrypt& key_id(bsoncxx::types::b_binary key_id);
 
     ///
-    /// Gets the current key id.
-    ///
-    /// @return
-    ///   An optional key id, as a UUID (BSON binary subtype 4).
-    ///
-    const stdx::optional<bsoncxx::types::b_binary>& key_id() const;
-
-    ///
     /// Sets a name by which to lookup a key from the key vault collection to use
     /// for this encryption operation. A key alt name can be used instead of a key id.
     ///
@@ -115,7 +107,8 @@ class MONGOCXX_API encrypt {
     friend class mongocxx::client_encryption;
     MONGOCXX_PRIVATE void* convert() const;
 
-    stdx::optional<bsoncxx::types::b_binary> _key_id;
+    bool _key_id_set;
+    bsoncxx::types::b_binary _key_id;
     stdx::optional<std::string> _key_alt_name;
     stdx::optional<encryption_algorithm> _algorithm;
 };
