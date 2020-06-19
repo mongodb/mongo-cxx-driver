@@ -27,12 +27,10 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 encrypt& encrypt::key_id(bsoncxx::types::b_binary key_id) {
+    // MNMLSTC on clang 3.6.2 reports an error when assigning to an optional of a struct.
     _key_id = std::move(key_id);
+    _key_id_set = true;
     return *this;
-}
-
-const stdx::optional<bsoncxx::types::b_binary>& encrypt::key_id() const {
-    return _key_id;
 }
 
 encrypt& encrypt::key_alt_name(std::string name) {
@@ -58,19 +56,19 @@ void* encrypt::convert() const {
 
     mongoc_client_encryption_encrypt_opts_t* opts = libmongoc::client_encryption_encrypt_opts_new();
 
-    if (_key_id && _key_alt_name) {
+    if (_key_id_set && _key_alt_name) {
         // libmongoc will error in this case.
     }
 
-    if (_key_id) {
-        if (_key_id->sub_type != bsoncxx::binary_sub_type::k_uuid) {
+    if (_key_id_set) {
+        if (_key_id.sub_type != bsoncxx::binary_sub_type::k_uuid) {
             libmongoc::client_encryption_encrypt_opts_destroy(opts);
             throw exception{error_code::k_invalid_parameter,
                             "key id must be a binary value with subtype 4 (UUID)"};
         }
 
         bson_value_t bson_uuid;
-        convert_to_libbson(*_key_id, &bson_uuid);
+        convert_to_libbson(_key_id, &bson_uuid);
 
         libmongoc::client_encryption_encrypt_opts_set_keyid(opts, &bson_uuid);
 

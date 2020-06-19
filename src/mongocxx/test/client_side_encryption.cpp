@@ -228,7 +228,7 @@ void run_datakey_and_double_encryption(Callable create_data_key,
     // AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic, and the key_alt_name of provider_altname
     options::encrypt opts2{};
     opts2.algorithm(options::encrypt::encryption_algorithm::k_deterministic);
-    std::string altname{provider};
+    std::string altname(provider);
     altname += "_altname";
     opts2.key_alt_name(altname);
 
