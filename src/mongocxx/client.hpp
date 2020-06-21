@@ -386,8 +386,6 @@ class MONGOCXX_API client {
     friend class pool;
     friend class client_session;
     friend class options::auto_encryption;
-
-    friend class options::auto_encryption;
     friend class options::client_encryption;
 
     MONGOCXX_PRIVATE explicit client(void* implementation);
