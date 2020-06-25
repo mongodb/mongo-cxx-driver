@@ -54,6 +54,6 @@ TEST_CASE("time_point is converted to int64 consistently", "[bsoncxx::types::b_d
     b_date d{system_clock::now()};
     std::int64_t unwrapped = d.to_int64();
 
-    REQUIRE(d.to_int64() == d);
+    REQUIRE(unwrapped == d);
 }
 }  // namespace

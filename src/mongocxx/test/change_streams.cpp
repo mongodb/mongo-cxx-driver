@@ -422,9 +422,7 @@ TEST_CASE("Documentation Examples", "[min36]") {
         return;
     }
 
-    options::change_stream options{};
     collection events = mongodb_client["streams"]["events"];
-
     collection inventory = events;  // doc examples use this name
 
     SECTION("Example 1") {
@@ -451,7 +449,7 @@ TEST_CASE("Documentation Examples", "[min36]") {
         // Start Changestream Example 3
         stdx::optional<bsoncxx::document::view> resume_token;
         change_stream stream = inventory.watch();
-        for (auto& event : stream) {
+        for (auto it = stream.begin(); it != stream.end(); it++) {
             resume_token = stream.get_resume_token();
         }
 
@@ -677,6 +675,7 @@ TEST_CASE("Watch a Collection", "[min36]") {
         SECTION("A range-based for loop iterates twice") {
             int count = 0;
             for (const auto& v : x) {
+                (void)v;
                 ++count;
             }
             REQUIRE(count == 2);

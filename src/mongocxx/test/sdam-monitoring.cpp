@@ -211,7 +211,6 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
     SECTION("Heartbeat Events") {
         int heartbeat_started_events = 0;
         int heartbeat_succeeded_events = 0;
-        int heartbeat_failed_events = 0;
         auto mock_started_awaited =
             libmongoc::apm_server_heartbeat_started_get_awaited.create_instance();
         auto mock_succeeded_awaited =

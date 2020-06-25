@@ -358,11 +358,8 @@ TEST_CASE("lsid", "[session]") {
             use_session ? bucket.download_to_stream(s, two, &stream)
                         : bucket.download_to_stream(two, &stream);
 
-            int total = 0;
             auto cursor = use_session ? bucket.find(s, {}) : bucket.find({});
-            for (auto&& result : cursor) {
-                ++total;
-            }
+            auto total = std::distance(cursor.begin(), cursor.end());
 
             REQUIRE(total == 4);
             use_session ? bucket.delete_file(s, one) : bucket.delete_file(one);
@@ -373,12 +370,9 @@ TEST_CASE("lsid", "[session]") {
 
     SECTION("client::list_databases") {
         auto f = [&s, &test](bool use_session) {
-            int total = 0;
             auto cursor =
                 use_session ? test.client.list_databases(s) : test.client.list_databases();
-            for (auto&& result : cursor) {
-                ++total;
-            }
+            auto total = std::distance(cursor.begin(), cursor.end());
 
             REQUIRE(total > 0);
         };
@@ -390,12 +384,9 @@ TEST_CASE("lsid", "[session]") {
         auto f = [&s, &collection](bool use_session) {
             options::aggregate opts;
             opts.batch_size(2);
-            int total = 0;
             auto cursor =
                 use_session ? collection.aggregate(s, {}, opts) : collection.aggregate({}, opts);
-            for (auto&& doc : cursor) {
-                ++total;
-            }
+            auto total = std::distance(cursor.begin(), cursor.end());
 
             REQUIRE(total == 10);
         };
@@ -486,13 +477,9 @@ TEST_CASE("lsid", "[session]") {
         auto f = [&s, &collection](bool use_session) {
             options::find opts;
             opts.batch_size(2);
-            int total = 0;
             auto cursor = use_session ? collection.find(s, {}, opts) : collection.find({}, opts);
 
-            for (auto&& doc : cursor) {
-                ++total;
-            }
-
+            auto total = std::distance(cursor.begin(), cursor.end());
             REQUIRE(total == 10);
         };
 
@@ -624,8 +611,8 @@ TEST_CASE("lsid", "[session]") {
             options::change_stream opts;
             opts.max_await_time(std::chrono::milliseconds(1));
             auto stream = use_session ? collection.watch(s, opts) : collection.watch(opts);
-            for (auto&& event : stream) {
-            }
+            for (auto it = stream.begin(); it != stream.end(); it++)
+                ;
         };
 
         test.test_method_with_session(f, s);
@@ -658,8 +645,8 @@ TEST_CASE("lsid", "[session]") {
     SECTION("database::list_collections") {
         auto f = [&s, &db](bool use_session) {
             auto cursor = use_session ? db.list_collections(s) : db.list_collections();
-            for (auto&& result : cursor) {
-            }
+            for (auto it = cursor.begin(); it != cursor.end(); it++)
+                ;
         };
 
         test.test_method_with_session(f, s);
@@ -668,8 +655,8 @@ TEST_CASE("lsid", "[session]") {
     SECTION("database::list_collection_names") {
         auto f = [&s, &db](bool use_session) {
             auto vector = use_session ? db.list_collection_names(s) : db.list_collection_names();
-            for (auto const& value : vector) {
-            }
+            for (auto it = vector.begin(); it != vector.end(); it++)
+                ;
         };
 
         test.test_method_with_session(f, s);
@@ -687,8 +674,8 @@ TEST_CASE("lsid", "[session]") {
     SECTION("index_view::list") {
         auto f = [&s, &indexes](bool use_session) {
             auto cursor = use_session ? indexes.list(s) : indexes.list();
-            for (auto&& i : cursor) {
-            }
+            for (auto it = cursor.begin(); it != cursor.end(); it++)
+                ;
         };
 
         test.test_method_with_session(f, s);
