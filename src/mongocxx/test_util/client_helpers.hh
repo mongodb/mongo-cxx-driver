@@ -189,6 +189,8 @@ void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::vie
 //
 bool server_has_sessions(const client& conn);
 
+bool should_run_client_side_encryption_test(void);
+
 }  // namespace test_util
 
 MONGOCXX_INLINE_NAMESPACE_END

@@ -438,6 +438,27 @@ bool server_has_sessions(const client& conn) {
     return false;
 }
 
+bool should_run_client_side_encryption_test(void) {
+#ifndef MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION
+    WARN("linked libmongoc does not support client side encryption - skipping tests");
+    return false;
+#endif
+
+    auto access_key = std::getenv("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY");
+    auto key_id = std::getenv("MONGOCXX_TEST_AWS_ACCESS_KEY_ID");
+
+    if (!access_key || !key_id) {
+        WARN(
+            "Skipping tests. Please set environment variables to enable client side encryption "
+            "tests:\n"
+            "\tMONGOCXX_TEST_AWS_SECRET_ACCESS_KEY\n"
+            "\tMONGOCXX_TEST_AWS_ACCESS_KEY_ID\n\n");
+        return false;
+    }
+
+    return true;
+}
+
 }  // namespace test_util
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
