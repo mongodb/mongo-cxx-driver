@@ -261,6 +261,10 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
         uri{}, std::move(client_opts)
     };
 
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
     if (test_util::get_max_wire_version(setup_client) < 8) {
         // Automatic encryption requires wire version 8.
         WARN("Skipping - max wire version is < 8");
