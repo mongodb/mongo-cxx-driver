@@ -468,8 +468,6 @@ TEST_CASE("Collection", "[collection]") {
         auto expected_order_setting = false;
         auto expect_set_bypass_document_validation_called = false;
         auto expected_bypass_document_validation = false;
-        bool bulk_operation_op_called = false;
-        bool bulk_operation_destroy_called = false;
 
         auto modification_doc = make_document(kvp("cool", "wow"), kvp("foo", "bar"));
 

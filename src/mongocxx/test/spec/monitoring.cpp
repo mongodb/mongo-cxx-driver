@@ -28,63 +28,37 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace spec {
 
 using namespace mongocxx;
+using bsoncxx::to_json;
 
 void apm_checker::compare(bsoncxx::array::view expectations,
                           bool allow_extra,
                           const test_util::match_visitor& match_visitor) {
-    using bsoncxx::to_json;
+    auto is_kill_cursor = [](bsoncxx::document::value v) {
+        return v.view()["command_started_event"]["command"]["killCursors"];
+    };
 
     auto events_iter = _events.begin();
+    if (_skip_kill_cursors)
+        _events.erase(std::remove_if(_events.begin(), _events.end(), is_kill_cursor));
     for (auto expectation : expectations) {
-        if (events_iter == _events.end()) {
-            fprintf(stderr,
-                    "more expectations than events captured\nExpectations:\n\n%s\n\nCaptured:\n\n",
-                    to_json(expectations).c_str());
-            this->print_all();
-            REQUIRE(false);
-        }
         REQUIRE(events_iter != _events.end());
 
         auto expected = expectation.get_document().view();
+        CAPTURE(to_json(*events_iter), expectation);
         REQUIRE_BSON_MATCHES_V(*events_iter, expected, match_visitor);
         events_iter++;
     }
-    if (!allow_extra) {
-        if (_skip_kill_cursors && events_iter != _events.end()) {
-            if (events_iter->view()["command_started_event"]["command"]["killCursors"]) {
-                ++events_iter;
-            }
-        }
 
-        if (events_iter == _events.end()) {
-            return;
-        }
-
-        if (events_iter != _events.end()) {
-            fprintf(stderr, "Error: extra event captured: %s\n", to_json(*events_iter).c_str());
-            events_iter++;
-        }
-
-        REQUIRE(false);
-    }
+    REQUIRE((allow_extra || events_iter == _events.end()));
 }
 
 void apm_checker::has(bsoncxx::array::view expectations) {
-    using bsoncxx::to_json;
-
     for (auto expectation : expectations) {
-        // find this expectation in the events
         auto expected = expectation.get_document().view();
-
-        if (std::find_if(_events.begin(), _events.end(), [&](bsoncxx::document::view doc) {
-                return test_util::matches(doc, expected);
-            }) == _events.end()) {
-            fprintf(stderr,
-                    "Error: event not found in APM checker.\n Expected: %s\n\nActual:",
-                    to_json(expected).c_str());
-            print_all();
-            REQUIRE(false);
-        }
+        CAPTURE(to_json(expected).c_str());
+        REQUIRE(std::find_if(_events.begin(), _events.end(), [&](bsoncxx::document::view doc) {
+                    return test_util::matches(doc, expected);
+                }) != _events.end());
     }
 }
 
