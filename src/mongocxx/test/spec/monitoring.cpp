@@ -38,12 +38,10 @@ void apm_checker::compare(bsoncxx::array::view expectations,
     };
 
     auto events_iter = _events.begin();
-    auto events_end = (_skip_kill_cursors)
-                          ? std::remove_if(_events.begin(), _events.end(), is_kill_cursor)
-                          : _events.end();
-
+    if (_skip_kill_cursors)
+        _events.erase(std::remove_if(_events.begin(), _events.end(), is_kill_cursor));
     for (auto expectation : expectations) {
-        REQUIRE(events_iter != events_end);
+        REQUIRE(events_iter != _events.end());
 
         auto expected = expectation.get_document().view();
         CAPTURE(to_json(*events_iter), expectation);
@@ -51,16 +49,16 @@ void apm_checker::compare(bsoncxx::array::view expectations,
         events_iter++;
     }
 
-    REQUIRE((allow_extra || events_iter == events_end));
+    REQUIRE((allow_extra || events_iter == _events.end()));
 }
 
 void apm_checker::has(bsoncxx::array::view expectations) {
     for (auto expectation : expectations) {
         auto expected = expectation.get_document().view();
         CAPTURE(to_json(expected).c_str());
-        REQUIRE(std::count_if(_events.begin(), _events.end(), [&](bsoncxx::document::view doc) {
-            return test_util::matches(doc, expected);
-        }));
+        REQUIRE(std::find_if(_events.begin(), _events.end(), [&](bsoncxx::document::view doc) {
+                    return test_util::matches(doc, expected);
+                }) != _events.end());
     }
 }
 

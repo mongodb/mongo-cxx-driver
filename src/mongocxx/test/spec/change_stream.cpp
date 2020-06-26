@@ -103,7 +103,7 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
                 }
             }
 
-            // "Using client, create a changeStream changeStream against the specified target"
+            // "Using client, create a changeStream against the specified target"
             auto cs = [&]() {
                 pipeline pipeline{};
                 if (test["changeStreamPipeline"]) {
@@ -158,19 +158,18 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
             if (!had_error) {
                 REQUIRE(expected_result["success"]);
                 for (auto&& expected_change : expected_result["success"].get_array().value) {
-                    REQUIRE(std::count_if(
-                        changes.begin(), changes.end(), [&](const document::value& res) {
-                            return matches(res.view(), expected_change.get_document().value);
-                        }));
+                    REQUIRE(std::find_if(
+                                changes.begin(), changes.end(), [&](const document::value& res) {
+                                    return matches(res.view(),
+                                                   expected_change.get_document().value);
+                                }) != changes.end());
                 }
             }
 
             // Disable the failpoint.
             if (test["failPoint"]) {
-                bsoncxx::v_noabi::stdx::string_view fail_point =
-                    (get_max_wire_version(client) >= 9) ? "failGetMoreAfterCursorCheckout"
-                                                        : "failPoint";
-                disable_fail_point(client, fail_point);
+                disable_fail_point(client,
+                                   test["failPoint"]["configureFailPoint"].get_utf8().value);
             }
 
             // Match captured APM events.
@@ -186,11 +185,11 @@ TEST_CASE("Change stream spec tests", "[change_stream_spec]") {
 
     client client{uri{}};
     if (!test_util::is_replica_set(client)) {
-        UNSCOPED_INFO("Skipping - not a replica set");
+        WARN("Skipping - not a replica set");
         return;
     } else if (test_util::get_max_wire_version(client) < 7) {
         // Change streams require wire version 6, and newer features require 7.
-        UNSCOPED_INFO("Skipping - max wire version is < 7");
+        WARN("Skipping - max wire version is < 7");
         return;
     }
 
