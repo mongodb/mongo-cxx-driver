@@ -205,7 +205,13 @@ void initialize_collection(collection* coll, array::view initial_data) {
     }
 
     if (documents_to_insert.size() > 0) {
-        coll->insert_many(documents_to_insert);
+        write_concern wc_majority;
+        wc_majority.acknowledge_level(write_concern::level::k_majority);
+
+        options::insert insert_opts;
+        insert_opts.write_concern(wc_majority);
+
+        coll->insert_many(documents_to_insert, insert_opts);
     }
 }
 
