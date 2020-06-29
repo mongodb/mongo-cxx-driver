@@ -36,7 +36,7 @@ void _set_up_key_vault(const client& client, document::view test_spec_view) {
         write_concern wc_majority;
         wc_majority.acknowledge_level(write_concern::level::k_majority);
 
-        auto coll = client["admin"]["datakeys"];
+        auto coll = client["keyvault"]["datakeys"];
         coll.drop(wc_majority);
 
         for (auto&& doc : test_spec_view["key_vault_data"].get_array().value) {
@@ -67,7 +67,7 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
 
             auto_encrypt_opts.key_vault_namespace({db.c_str(), coll.c_str()});
         } else {
-            auto_encrypt_opts.key_vault_namespace({"admin", "datakeys"});
+            auto_encrypt_opts.key_vault_namespace({"keyvault", "datakeys"});
         }
 
         if (test_encrypt_opts["schemaMap"]) {
