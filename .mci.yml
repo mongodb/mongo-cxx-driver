@@ -531,6 +531,30 @@ tasks:
             export INSTALL_VERSION=${mongocxx_version_finder_sh}
             cmd.exe /c .\\.evergreen\\uninstall_check_windows.cmd
 
+    - name: debian-package-build
+      commands:
+      - func: "setup"
+      - command: shell.exec
+        type: test
+        params:
+          working_dir: "mongo-cxx-driver"
+          shell: bash
+          script: |-
+            set -o errexit
+            set -o xtrace
+            export IS_PATCH="${is_patch}"
+            sh .evergreen/debian_package_build.sh
+      - command: s3.put
+        params:
+          aws_key: ${aws_key}
+          aws_secret: ${aws_secret}
+          local_file: deb.tar.gz
+          remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/debian-packages.tar.gz
+          bucket: mciuploads
+          permissions: public-read
+          content_type: ${content_type|application/x-gzip}
+          display_name: "deb.tar.gz"
+
 #######################################
 #           MongoDB Version Matrix    #
 #######################################
@@ -816,3 +840,9 @@ buildvariants:
       tasks:
          - name: compile_with_shared_libs
          - name: compile_and_test_auth_with_shared_libs
+
+    - name: packaging
+      display_name: Linux Distro Packaging
+      run_on: ubuntu1604-test
+      tasks:
+         - name: debian-package-build
