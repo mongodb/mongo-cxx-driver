@@ -129,6 +129,9 @@ TEST_CASE("session", "[session]") {
         auto a_id = value(session_a->id());
         auto b_id = value(session_b->id());
 
+        c["db"].run_command(*session_a, make_document(kvp("ping", 1)));
+        c["db"].run_command(*session_b, make_document(kvp("ping", 1)));
+
         // End session A, then session B.
         session_a = nullptr;
         session_b = nullptr;
