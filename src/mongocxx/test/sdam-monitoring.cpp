@@ -265,7 +265,6 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
 TEST_CASE("Heartbeat failed event", "[sdam_monitoring]") {
     instance::current();
     options::apm apm_opts;
-    stdx::optional<oid> topology_id;
     bool failed_awaited_called = false;
     auto mock_failed_awaited = libmongoc::apm_server_heartbeat_failed_get_awaited.create_instance();
 

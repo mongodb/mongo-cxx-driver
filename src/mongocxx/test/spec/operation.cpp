@@ -873,17 +873,29 @@ void operation_runner::_set_collection_options(document::view operation) {
     document::view options = operation["collectionOptions"].get_document().value;
 
     if (options["writeConcern"]) {
-        document::view write_concern_options = options["writeConcern"].get_document().value;
-        int32_t w_option = write_concern_options["w"].get_int32().value;
         write_concern w;
-        w.nodes(w_option);
+        document::view write_concern_options = options["writeConcern"].get_document().value;
+
+        // Empty writeConcern document means use the default.
+        if (!write_concern_options.empty()) {
+            REQUIRE(write_concern_options["w"]);
+
+            int32_t w_option = write_concern_options["w"].get_int32().value;
+            w.nodes(w_option);
+        }
         _coll->write_concern(w);
     }
 
     if (options["readConcern"]) {
         document::view read_concern_options = options["readConcern"].get_document().value;
         read_concern rc;
-        rc.acknowledge_string(read_concern_options["level"].get_utf8().value);
+
+        // Empty readConcern document means use the default.
+        if (!read_concern_options.empty()) {
+            REQUIRE(read_concern_options["level"]);
+
+            rc.acknowledge_string(read_concern_options["level"].get_utf8().value);
+        }
         _coll->read_concern(rc);
     }
 }

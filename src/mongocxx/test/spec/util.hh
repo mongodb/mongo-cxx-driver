@@ -100,6 +100,11 @@ using test_runner = std::function<void(const std::string& file)>;
 void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> unsupported_tests);
 void run_tests_in_suite(std::string ev, test_runner cb);
 
+//
+// The transactions spec test runner, also used by other spec tests.
+//
+void run_transactions_tests_in_file(const std::string& test_path);
+
 }  // namespace spec
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
