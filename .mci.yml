@@ -764,8 +764,8 @@ buildvariants:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
 
-    - name: power8-ubuntu1604
-      display_name: "ppc64le Ubuntu 16.04 (MongoDB Latest)"
+    - name: power8-ubuntu1804
+      display_name: "ppc64le Ubuntu 18.04 (MongoDB Latest)"
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
@@ -773,12 +773,11 @@ buildvariants:
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
       run_on:
-          - ubuntu1604-power8-build
+          - ubuntu1804-power8-build
       tasks:
-          # Once BUILD-11375 is resolved, add upgrade to Ubuntu 18.04 and add tests back.
           - name: compile_with_shared_libs
-          #- name: compile_and_test_with_shared_libs
-          #- name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_static_libs
 
     - name: arm-ubuntu1804
       display_name: "arm64 Ubuntu 18.04 (MongoDB Latest)"
