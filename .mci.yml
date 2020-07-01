@@ -268,6 +268,7 @@ functions:
                   export TRANSACTIONS_TESTS_PATH="$(pwd)/../data/transactions"
                   export WITH_TRANSACTION_TESTS_PATH="$(pwd)/../data/with_transaction"
                   export RETRYABLE_READS_TESTS_PATH="$(pwd)/../data/retryable-reads"
+                  export READ_WRITE_CONCERN_OPERATION_TESTS_PATH="$(pwd)/../data/read-write-concern/operation"
 
                   # export environment variables for encryption tests (and redact them)
                   set +o xtrace
@@ -300,6 +301,7 @@ functions:
                       ${test_params} ./src/mongocxx/test/test_transactions_specs
                       ${test_params} ./src/mongocxx/test/test_logging
                       ${test_params} ./src/mongocxx/test/test_retryable_reads_specs
+                      ${test_params} ./src/mongocxx/test/test_read_write_concern_specs
 
 
                       # Some platforms like OS X don't support the /mode syntax to the -perm option

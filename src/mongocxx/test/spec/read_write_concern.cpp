@@ -21,15 +21,10 @@ namespace {
 using namespace mongocxx;
 using namespace spec;
 
-TEST_CASE("Transactions spec automated tests", "[transactions_spec]") {
+TEST_CASE("Read / Write concern spec tests", "[read_write_concern_spec]") {
     instance::current();
 
-    /* Tests that use operations that the C++ driver does not have. */
-    std::set<std::string> unsupported_transaction_tests = {"count.json"};
-
-    run_tests_in_suite(
-        "TRANSACTIONS_TESTS_PATH", &run_transactions_tests_in_file, unsupported_transaction_tests);
-
-    run_tests_in_suite("WITH_TRANSACTION_TESTS_PATH", &run_transactions_tests_in_file);
+    // Reuse the transactions test runner.
+    run_tests_in_suite("READ_WRITE_CONCERN_OPERATION_TESTS_PATH", &run_transactions_tests_in_file);
 }
 }  // namespace

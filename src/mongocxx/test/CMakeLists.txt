@@ -146,6 +146,13 @@ add_executable(test_retryable_reads_specs
     ${spec_test_common}
 )
 
+add_executable(test_read_write_concern_specs
+    ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
+    ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
+    spec/read_write_concern.cpp
+    ${spec_test_common}
+)
+
 target_link_libraries(test_driver mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_logging mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_instance mongocxx_mocked ${libmongoc_target})
@@ -156,6 +163,7 @@ target_link_libraries(test_command_monitoring_specs mongocxx_mocked ${libmongoc_
 target_link_libraries(test_change_stream_specs mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_transactions_specs mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_retryable_reads_specs mongocxx_mocked ${libmongoc_target})
+target_link_libraries(test_read_write_concern_specs mongocxx_mocked ${libmongoc_target})
 
 target_include_directories(test_driver PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_logging PRIVATE ${libmongoc_include_directories})
@@ -166,6 +174,7 @@ target_include_directories(test_command_monitoring_specs PRIVATE ${libmongoc_inc
 target_include_directories(test_change_stream_specs PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_transactions_specs PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_retryable_reads_specs PRIVATE ${libmongoc_include_directories})
+target_include_directories(test_read_write_concern_specs PRIVATE ${libmongoc_include_directories})
 
 target_compile_definitions(test_driver PRIVATE ${libmongoc_definitions})
 target_compile_definitions(test_logging PRIVATE ${libmongoc_definitions})
@@ -185,6 +194,7 @@ add_test(command_monitoring_specs test_command_monitoring_specs)
 add_test(change_stream_specs test_change_stream_specs)
 add_test(transactions_specs test_transactions_specs)
 add_test(retryable_reads_spec test_retryable_reads_specs)
+add_test(read_write_concern_specs test_read_write_concern_specs)
 
 set_tests_properties(crud_specs PROPERTIES
     ENVIRONMENT "CRUD_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/crud")
@@ -208,6 +218,9 @@ set_property(TEST transactions_specs
 
 set_tests_properties(retryable_reads_spec PROPERTIES
    ENVIRONMENT "RETRYABLE_READS_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/retryable-reads")
+
+set_tests_properties(read_write_concern_specs PROPERTIES
+   ENVIRONMENT "READ_WRITE_CONCERN_OPERATION_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/read-write-concern/operation")
 
 if (MONGOCXX_ENABLE_SLOW_TESTS)
   set_tests_properties(driver PROPERTIES
@@ -277,6 +290,7 @@ set_dist_list (src_mongocxx_test_DIST
    spec/monitoring.hh
    spec/operation.cpp
    spec/operation.hh
+   spec/read_write_concern.cpp
    spec/retryable-reads.cpp
    spec/transactions.cpp
    spec/util.cpp
