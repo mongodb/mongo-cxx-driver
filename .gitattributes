@@ -10,6 +10,5 @@ examples/projects/mongocxx/cmake/static/build.sh eol=lf
 examples/projects/mongocxx/pkg-config/shared/build.sh eol=lf
 examples/projects/mongocxx/pkg-config/static/build.sh eol=lf
 
-/.* export-ignore
 /appveyor.yml export-ignore
 /TODO.md export-ignore
