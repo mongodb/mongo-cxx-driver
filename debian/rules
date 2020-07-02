@@ -24,7 +24,8 @@ export DEB_LDFLAGS_MAINT_APPEND := -lpthread
 override_dh_auto_configure:
 	dh_auto_configure -B$(CURDIR)/build -- \
 	-DBUILD_VERSION=$(DEB_VERSION_UPSTREAM) \
-	-DBSONCXX_POLY_USE_BOOST=1
+	-DBSONCXX_POLY_USE_BOOST=1 \
+	-DENABLE_UNINSTALL=OFF
 
 override_dh_auto_build:
 	dh_auto_build -B$(CURDIR)/build -- all doxygen-current
