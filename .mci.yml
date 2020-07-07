@@ -560,6 +560,28 @@ tasks:
           content_type: ${content_type|application/x-gzip}
           display_name: "deb.tar.gz"
 
+    - name: rpm-package-build
+      commands:
+      - func: "setup"
+      - command: shell.exec
+        type: test
+        params:
+          working_dir: "mongo-cxx-driver"
+          shell: bash
+          script: |-
+            set -o errexit
+            set -o xtrace
+            sh .evergreen/build_snapshot_rpm.sh
+      - command: s3.put
+        params:
+          aws_key: ${aws_key}
+          aws_secret: ${aws_secret}
+          remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/rpm-packages.tar.gz
+          bucket: mciuploads
+          permissions: public-read
+          local_file: rpm.tar.gz
+          content_type: ${content_type|application/x-gzip}
+
 #######################################
 #           MongoDB Version Matrix    #
 #######################################
@@ -851,3 +873,6 @@ buildvariants:
       run_on: ubuntu1604-test
       tasks:
          - name: debian-package-build
+         - name: rpm-package-build
+           distros:
+           - rhel80-test
