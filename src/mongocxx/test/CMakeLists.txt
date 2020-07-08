@@ -204,6 +204,9 @@ set_tests_properties(gridfs_specs PROPERTIES
 
 set_tests_properties(client_side_encryption_specs PROPERTIES
     ENVIRONMENT "ENCRYPTION_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/client_side_encryption")
+
+set_tests_properties(driver PROPERTIES
+    ENVIRONMENT "ENCRYPTION_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/client_side_encryption")
   
 set_tests_properties(command_monitoring_specs PROPERTIES
     ENVIRONMENT "COMMAND_MONITORING_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/command-monitoring")
