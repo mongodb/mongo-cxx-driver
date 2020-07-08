@@ -41,6 +41,8 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace types {
 namespace bson_value {
 
+view::view() noexcept : view(nullptr) {}
+
 // Boost doesn't mark the copy constructor and copy-assignment operator of string_ref as noexcept
 // so we can't rely on automatic noexcept propagation. It really is though, so it is OK.
 #if !defined(BSONCXX_POLY_USE_BOOST)
@@ -122,11 +124,17 @@ view::view(const std::uint8_t* raw,
     _init((void*)value);
 }
 
-view::view(void* internal_value) {
+view::view(void* internal_value) noexcept {
     _init(internal_value);
 }
 
-void view::_init(void* internal_value) {
+void view::_init(void* internal_value) noexcept {
+    if (!internal_value) {
+        _type = bsoncxx::type::k_null;
+        _b_null = bsoncxx::types::b_null{};
+        return;
+    }
+
     bson_value_t* v = (bson_value_t*)(internal_value);
     _type = static_cast<bsoncxx::type>(v->value_type);
 

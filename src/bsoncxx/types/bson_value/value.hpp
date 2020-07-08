@@ -49,7 +49,7 @@ class BSONCXX_API value {
     ///
     /// Create an owning copy of a bson_value::view.
     ///
-    value(const view&);
+    explicit value(const view&);
 
     ///
     /// Get a view over the bson_value owned by this object.

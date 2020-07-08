@@ -61,6 +61,12 @@ class BSONCXX_API view {
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
+    ///
+    /// Default constructs a bson_value::view. The resulting view will be initialized
+    /// to point at a bson_value of type k_null.
+    ///
+    view() noexcept;
+
     view(const view&) noexcept;
     view& operator=(const view&) noexcept;
 
@@ -259,9 +265,9 @@ class BSONCXX_API view {
     friend class bson_value::value;
 
     view(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
-    view(void* internal_value);
+    view(void* internal_value) noexcept;
 
-    void _init(void* internal_value);
+    void _init(void* internal_value) noexcept;
 
     void BSONCXX_PRIVATE destroy() noexcept;
 
