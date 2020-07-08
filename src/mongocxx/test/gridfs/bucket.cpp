@@ -20,6 +20,7 @@
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+#include <chrono>
 #include <cstdint>
 #include <cstdlib>
 #include <fstream>
@@ -34,6 +35,7 @@
 #include <mongocxx/options/gridfs/upload.hpp>
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/uri.hpp>
+#include <numeric>
 #include <sstream>
 #include <vector>
 
@@ -1057,19 +1059,45 @@ TEST_CASE("gridfs download large file", "[gridfs::bucket]") {
     REQUIRE(total_bytes_read == length);
 }
 
-TEST_CASE("gridfs automatic index creation", "[gridfs::uploader] [gridfs::downloader]") {
+std::string _gen_database_name(std::string name) {
+    using namespace std::chrono;
+    milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+    return name + '_' + std::to_string(ms.count());
+}
+
+TEST_CASE("gridfs does not create additional indexes", "[gridfs::uploader] [gridfs::downloader]") {
     using bsoncxx::builder::basic::document;
     using bsoncxx::builder::basic::sub_array;
 
     instance::current();
     client client{uri{}};
-    database db = client["gridfs_index_creation"];
-    auto bucket = db.gridfs_bucket();
+    auto db_name = _gen_database_name("gridfs_index_creation");
+    database db = client[db_name];
+
+    SECTION("when the default index is already created on fs.files") {
+        REQUIRE_NOTHROW(db.run_command(make_document(
+            kvp("createIndexes", "fs.files"), kvp("indexes", [&](sub_array sub_arr) {
+                sub_arr.append(make_document(
+                    kvp("key", make_document(kvp("filename", 1.0), kvp("uploadDate", 1.0))),
+                    kvp("name", "filename_1_uploadDate_1")));
+            }))));
+    }
+
+    SECTION("when the default index is already created on fs.chunks") {
+        REQUIRE_NOTHROW(db.run_command(
+            make_document(kvp("createIndexes", "fs.chunks"), kvp("indexes", [&](sub_array sub_arr) {
+                              sub_arr.append(make_document(
+                                  kvp("key", make_document(kvp("files_id", 1.0), kvp("n", 1.0))),
+                                  kvp("name", "files_id_1_n_1"),
+                                  kvp("unique", true)));
+                          }))));
+    }
 
     const size_t file_size = 100;
     std::array<std::uint8_t, file_size> to_write, to_read;
     std::iota(begin(to_write), end(to_write), 0);
 
+    auto bucket = db.gridfs_bucket();
     auto uploader = bucket.open_upload_stream("test_file");
 
     uploader.write(to_write.data(), file_size);
@@ -1079,33 +1107,9 @@ TEST_CASE("gridfs automatic index creation", "[gridfs::uploader] [gridfs::downlo
     auto bytes_read = downloader.read(to_read.data(), file_size);
     REQUIRE(bytes_read == file_size);
 
-    SECTION("default indexes created") {
-        auto bucket_collection_name = GENERATE(values({"fs.chunks", "fs.files"}));
+    for (const auto& bucket_collection_name : {"fs.chunks", "fs.files"}) {
         auto indexes = db[bucket_collection_name].list_indexes();
         REQUIRE(std::distance(indexes.begin(), indexes.end()) == 2);
-    }
-
-    SECTION("fs.chunks 'files_id' and 'n' compares by numeric value") {
-        auto create_index_cmd =
-            make_document(kvp("createIndexes", "fs.chunks"), kvp("indexes", [&](sub_array sub_arr) {
-                              sub_arr.append(make_document(
-                                  kvp("key", make_document(kvp("_id", 1.0), kvp("n", 1.0))),
-                                  kvp("name", "files_id_1_n_1"),
-                                  kvp("unique", true)));
-                          }));
-        REQUIRE_THROWS_WITH(db.run_command(create_index_cmd.view()),
-                            Catch::Contains("must have unique name"));
-    }
-
-    SECTION("fs.files 'filename' and 'n' compares by numeric value") {
-        auto create_index_cmd = make_document(
-            kvp("createIndexes", "fs.files"), kvp("indexes", [&](sub_array sub_arr) {
-                sub_arr.append(make_document(
-                    kvp("key", make_document(kvp("filename", 1.0), kvp("uploadDate", 1.0))),
-                    kvp("name", "files_id_1_n_1")));
-            }));
-        REQUIRE_THROWS_WITH(db.run_command(create_index_cmd.view()),
-                            Catch::Contains("already exists"));
     }
 }
 
