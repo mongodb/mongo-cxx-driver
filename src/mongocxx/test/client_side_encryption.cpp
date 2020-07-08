@@ -14,13 +14,14 @@
 
 #include <helpers.hpp>
 
-//#include <mongocxx/config/private/prelude.hh>
-
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/types/bson_value/make_value.hpp>
+#include <bsoncxx/types/bson_value/value.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/instance.hpp>
@@ -197,14 +198,12 @@ void run_datakey_and_double_encryption(Callable create_data_key,
 
     // 2. Call client_encryption.encrypt() with the value "hello there", the algorithm
     // AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic, and the key_id of datakey_id
-    auto to_encrypt_doc = make_document(kvp("v", "hello there"));
-    auto to_encrypt = to_encrypt_doc.view();
-
     options::encrypt opts{};
     opts.algorithm(options::encrypt::encryption_algorithm::k_deterministic);
     opts.key_id(datakey_id.view().get_binary());
 
-    auto encrypted_val = client_encryption->encrypt(to_encrypt["v"].get_value(), opts);
+    auto to_encrypt = bsoncxx::types::bson_value::make_value("hello there");
+    auto encrypted_val = client_encryption->encrypt(to_encrypt.view(), opts);
 
     // Expect the return value to be a BSON binary subtype 6, referred to as encrypted
     auto encrypted = encrypted_val.view();
@@ -232,7 +231,7 @@ void run_datakey_and_double_encryption(Callable create_data_key,
     altname += "_altname";
     opts2.key_alt_name(altname);
 
-    auto encrypted_val2 = client_encryption->encrypt(to_encrypt["v"].get_value(), opts2);
+    auto encrypted_val2 = client_encryption->encrypt(to_encrypt.view(), opts2);
 
     // Expect the return value to be a BSON binary subtype 6. Expect the value to exactly
     // match the value of "encrypted"

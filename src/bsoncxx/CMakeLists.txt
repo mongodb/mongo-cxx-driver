@@ -272,6 +272,7 @@ set_local_dist (src_bsoncxx_DIST_local
    types.cpp
    types.hpp
    types/private/convert.hh
+   types/bson_value/make_value.hpp
    types/bson_value/private/value.hh
    types/bson_value/value.cpp
    types/bson_value/value.hpp
