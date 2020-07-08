@@ -146,12 +146,17 @@ class BSONCXX_API view {
 /// This iterator type provides a const forward iterator interface to array
 /// view elements.
 ///
-class BSONCXX_API view::const_iterator : public std::iterator<std::forward_iterator_tag,
-                                                              element,
-                                                              std::ptrdiff_t,
-                                                              const element*,
-                                                              const element&> {
+class BSONCXX_API view::const_iterator {
    public:
+    ///
+    /// std::iterator_traits
+    ///
+    using value_type = element;
+    using reference = element&;
+    using pointer = element*;
+    using iterator_category = std::forward_iterator_tag;
+    using difference_type = std::ptrdiff_t;
+
     const_iterator();
     explicit const_iterator(const element& element);
 

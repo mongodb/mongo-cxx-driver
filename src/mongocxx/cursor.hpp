@@ -110,9 +110,17 @@ class MONGOCXX_API cursor {
 /// exhausted iterator so that it no longer compares equal to the
 /// end-iterator.
 ///
-class MONGOCXX_API cursor::iterator
-    : public std::iterator<std::input_iterator_tag, bsoncxx::document::view> {
+class MONGOCXX_API cursor::iterator {
    public:
+    ///
+    /// std::iterator_traits
+    ///
+    using value_type = bsoncxx::document::view;
+    using reference = bsoncxx::document::view&;
+    using pointer = bsoncxx::document::view*;
+    using iterator_category = std::input_iterator_tag;
+    using difference_type = std::ptrdiff_t;
+
     ///
     /// Dereferences the view for the document currently being pointed to.
     ///
