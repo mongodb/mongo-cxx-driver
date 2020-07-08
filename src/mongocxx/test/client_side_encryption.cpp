@@ -202,7 +202,7 @@ void run_datakey_and_double_encryption(Callable create_data_key,
 
     options::encrypt opts{};
     opts.algorithm(options::encrypt::encryption_algorithm::k_deterministic);
-    opts.key_id(datakey_id.view().get_binary());
+    opts.key_id(std::move(datakey_id));
 
     auto encrypted_val = client_encryption->encrypt(to_encrypt["v"].get_value(), opts);
 
