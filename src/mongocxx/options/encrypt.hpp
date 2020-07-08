@@ -18,6 +18,7 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
@@ -36,15 +37,19 @@ class MONGOCXX_API encrypt {
     /// Sets the key to use for this encryption operation. A key id can be used instead
     /// of a key alt name.
     ///
+    /// If a non-owning bson_value::view is passed in as the key_id, the object that owns
+    /// key_id's memory must outlive this object.
+    ///
     /// @param key_id
-    ///   The id of the key to use for encryption, as a UUID (BSON binary subtype 4).
+    ///   The id of the key to use for encryption, as a bson_value containing a
+    ///   UUID (BSON binary subtype 4).
     ///
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
     /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
     ///
-    encrypt& key_id(bsoncxx::types::b_binary key_id);
+    encrypt& key_id(bsoncxx::types::bson_value::view_or_value key_id);
 
     ///
     /// Sets a name by which to lookup a key from the key vault collection to use
@@ -103,12 +108,19 @@ class MONGOCXX_API encrypt {
     ///
     const stdx::optional<encryption_algorithm>& algorithm() const;
 
+    ///
+    /// Gets the key_id.
+    ///
+    /// @return
+    ///   An optional owning bson_value containing the key_id.
+    ///
+    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& key_id() const;
+
    private:
     friend class mongocxx::client_encryption;
     MONGOCXX_PRIVATE void* convert() const;
 
-    bool _key_id_set;
-    bsoncxx::types::b_binary _key_id;
+    stdx::optional<bsoncxx::types::bson_value::view_or_value> _key_id;
     stdx::optional<std::string> _key_alt_name;
     stdx::optional<encryption_algorithm> _algorithm;
 };

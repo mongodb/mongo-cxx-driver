@@ -200,7 +200,7 @@ void run_datakey_and_double_encryption(Callable create_data_key,
     // AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic, and the key_id of datakey_id
     options::encrypt opts{};
     opts.algorithm(options::encrypt::encryption_algorithm::k_deterministic);
-    opts.key_id(datakey_id.view().get_binary());
+    opts.key_id(std::move(datakey_id));
 
     auto to_encrypt = bsoncxx::types::bson_value::make_value("hello there");
     auto encrypted_val = client_encryption->encrypt(to_encrypt.view(), opts);
