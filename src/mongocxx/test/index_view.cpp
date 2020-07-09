@@ -172,6 +172,46 @@ TEST_CASE("create_one", "[index_view]") {
         REQUIRE_NOTHROW(indexes.create_one(keys1.view(), options.view()));
         REQUIRE_THROWS_AS(indexes.create_one(keys2.view(), options.view()), operation_exception);
     }
+
+    SECTION("commitQuorum option") {
+        collection coll = db["index_view_create_one_commit_quorum"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+        index_view indexes = coll.indexes();
+
+        auto key = make_document(kvp("a", 1));
+        index_model model(key.view());
+        options::index_view options;
+
+        auto commit_quorum_regex =
+            Catch::Matches("(.*)commit( )?quorum(.*)", Catch::CaseSensitive::No);
+
+        using namespace test_util;
+        if (compare_versions(get_server_version(mongodb_client), "4.4") < 0 ||
+            get_topology(mongodb_client) == "single") {
+            return;
+        }
+
+        SECTION("works with int") {
+            options.commit_quorum(1);
+            REQUIRE_NOTHROW(indexes.create_one(model, options));
+        }
+
+        SECTION("fails with invalid int") {
+            options.commit_quorum(-1);
+            REQUIRE_THROWS_WITH(indexes.create_one(model, options), commit_quorum_regex);
+        }
+
+        SECTION("works with string") {
+            options.commit_quorum("majority");
+            REQUIRE_NOTHROW(indexes.create_one(model, options));
+        }
+
+        SECTION("fails with invalid string") {
+            options.commit_quorum("bad_str");
+            REQUIRE_THROWS_WITH(indexes.create_one(model, options), commit_quorum_regex);
+        }
+    }
 }
 
 TEST_CASE("create_many", "[index_view]") {

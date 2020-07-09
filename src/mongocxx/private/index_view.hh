@@ -14,13 +14,13 @@
 
 #pragma once
 
-#include <vector>
-
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+#include <mongocxx/config/private/prelude.hh>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -28,8 +28,8 @@
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
-
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/test_util/client_helpers.hh>
+#include <vector>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -132,6 +132,10 @@ class index_view::impl {
 
         if (session) {
             opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+        }
+
+        if (options.commit_quorum()) {
+            opts_doc.append(concatenate(options.commit_quorum()->view()));
         }
 
         libbson::scoped_bson_t command_bson{command};
