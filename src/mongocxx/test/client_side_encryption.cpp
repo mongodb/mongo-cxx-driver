@@ -21,6 +21,7 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/document/element.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
@@ -29,6 +30,7 @@
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
+#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/client.hpp>
 #include <mongocxx/options/client_encryption.hpp>
@@ -48,6 +50,12 @@ const auto kLocalMasterKey =
     "\x69\x74\x51\x32\x48\x46\x44\x67\x50\x57\x4f\x70\x38\x65\x4d\x61\x43\x31"
     "\x4f\x69\x37\x36\x36\x4a\x7a\x58\x5a\x42\x64\x42\x64\x62\x64\x4d\x75\x72"
     "\x64\x6f\x6e\x4a\x31\x64";
+
+// This is the base64 encoding of LOCALAAAAAAAAAAAAAAAAA==.
+const auto kLocalKeyUUID = "\x2c\xe0\x80\x2c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+
+// This is the base64 encoding of AWSAAAAAAAAAAAAAAAAAAA==.
+const auto kAwsKeyUUID = "\x01\x64\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
 
 using bsoncxx::builder::concatenate;
 
@@ -138,7 +146,10 @@ void _add_client_encrypted_opts(options::client* client_opts,
     // KMS
     auto_encrypt_opts.kms_providers(std::move(kms_doc));
     auto_encrypt_opts.key_vault_namespace({"keyvault", "datakeys"});
-    auto_encrypt_opts.schema_map({std::move(schema_map)});
+
+    if (!schema_map.view().empty()) {
+        auto_encrypt_opts.schema_map({std::move(schema_map)});
+    }
 
     // For evergreen testing
     char* bypass_spawn = std::getenv("ENCRYPTION_TESTS_BYPASS_SPAWN");
@@ -681,8 +692,305 @@ TEST_CASE("Views are prohibited", "[client_side_encryption]") {
                            test_util::mongocxx_exception_matcher{"cannot auto encrypt a view"});
 }
 
+void _run_corpus_test(bool use_schema_map) {
+    // The corpus test exhaustively enumerates all ways to encrypt all BSON value types.
+    // Note, the test data includes BSON binary subtype 4 (or standard UUID),
+    // which MUST be decoded and encoded as subtype 4. Run the test as follows.
+
+    // Create a MongoClient without encryption enabled (referred to as client).
+    class client client {
+        uri {}
+    };
+
+    auto corpus_schema = _doc_from_file("/corpus/corpus-schema.json");
+    auto corpus_key_local = _doc_from_file("/corpus/corpus-key-local.json");
+    auto corpus_key_aws = _doc_from_file("/corpus/corpus-key-aws.json");
+
+    auto access_key_var = std::getenv("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY");
+    auto key_id_var = std::getenv("MONGOCXX_TEST_AWS_ACCESS_KEY_ID");
+    if (!access_key_var || !key_id_var) {
+        FAIL(
+            "Please set environment variables for client side encryption tests:\n"
+            "\tMONGOCXX_TEST_AWS_SECRET_ACCESS_KEY\n"
+            "\tMONGOCXX_TEST_AWS_ACCESS_KEY_ID\n\n");
+    }
+
+    std::string access_key{access_key_var};
+    std::string key_id{key_id_var};
+
+    // Using client, drop and create the collection db.coll configured with the included
+    // JSON schema corpus/corpus-schema.json.
+    _setup_drop_collections(client);
+
+    auto db = client["db"];
+    auto cmd = document{} << "create"
+                          << "coll"
+                          << "validator" << open_document << "$jsonSchema" << corpus_schema.view()
+                          << close_document << finalize;
+
+    db.run_command(cmd.view());
+
+    // Insert the documents corpus/corpus-key-local.json and corpus/corpus-key-aws.json.
+    write_concern wc_majority;
+    wc_majority.acknowledge_level(write_concern::level::k_majority);
+    options::insert insert_opts;
+    insert_opts.write_concern(std::move(wc_majority));
+
+    auto keyvault = client["keyvault"]["datakeys"];
+    keyvault.insert_one(std::move(corpus_key_local), insert_opts);
+    keyvault.insert_one(std::move(corpus_key_aws), insert_opts);
+
+    // Configure kms credentials as follows:
+    // {
+    //     "aws": { <AWS credentials> },
+    //     "local": { "key": <base64 decoding of LOCAL_MASTERKEY> }
+    // }
+
+    char local_key_id_storage[16];
+    char aws_key_id_storage[16];
+    char local_master_key_storage[96];
+    memcpy(&(local_key_id_storage[0]), kLocalKeyUUID, 16);
+    memcpy(&(aws_key_id_storage[0]), kAwsKeyUUID, 16);
+    memcpy(&(local_master_key_storage[0]), kLocalMasterKey, 96);
+
+    bsoncxx::types::b_binary local_key_id{
+        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&local_key_id_storage};
+    bsoncxx::types::b_binary aws_key_id{
+        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&aws_key_id_storage};
+    bsoncxx::types::b_binary local_master_key{
+        bsoncxx::binary_sub_type::k_binary, 96, (const uint8_t*)&local_master_key_storage};
+
+    auto local_key_value = make_value(local_key_id);
+    auto aws_key_value = make_value(aws_key_id);
+    auto local_master_key_value = make_value(local_master_key);
+
+    auto kms_doc = document{} << "local" << open_document << "key" << local_master_key
+                              << close_document << "aws" << open_document << "secretAccessKey"
+                              << access_key << "accessKeyId" << key_id << close_document
+                              << finalize;
+
+    // Create the following and configure both objects with keyVaultNamespace set to
+    // keyvault.datakeys:
+    // A MongoClient configured with auto encryption (referred to as client_encrypted)
+    options::client client_encrypted_opts;
+    if (use_schema_map) {
+        _add_client_encrypted_opts(&client_encrypted_opts, corpus_schema.view(), kms_doc.view());
+    } else {
+        _add_client_encrypted_opts(&client_encrypted_opts, {}, kms_doc.view());
+    }
+
+    class client client_encrypted {
+        uri{}, std::move(client_encrypted_opts)
+    };
+
+    // A ClientEncryption object (referred to as client_encryption)
+    options::client_encryption cse_opts;
+    cse_opts.kms_providers(kms_doc.view());
+    cse_opts.key_vault_client(&client);
+    cse_opts.key_vault_namespace({"keyvault", "datakeys"});
+    class client_encryption client_encryption {
+        std::move(cse_opts)
+    };
+
+    // Load corpus/corpus.json to a variable named corpus.
+    auto corpus = _doc_from_file("/corpus/corpus.json");
+    auto corpus_encrypted_expected = _doc_from_file("/corpus/corpus-encrypted.json");
+
+    // Create a new BSON document, named corpus_copied.
+    auto corpus_copied_builder = bsoncxx::builder::basic::document{};
+
+    // Iterate over each field of corpus.
+    for (bsoncxx::document::element ele : corpus.view()) {
+        auto field_name_view = ele.key();
+        std::string field_name(field_name_view);
+
+        // If the field name is _id, altname_aws and altname_local, copy the field to corpus_copied.
+        std::vector<std::string> copied_fields = {"_id", "altname_aws", "altname_local"};
+        if (std::find(copied_fields.begin(), copied_fields.end(), field_name) !=
+            copied_fields.end()) {
+            corpus_copied_builder.append(kvp(field_name, ele.get_value()));
+            continue;
+        }
+
+        auto subdoc_val = ele.get_document();
+        auto subdoc = subdoc_val.view();
+
+        // The corpus contains subdocuments with the following fields:
+        // kms is either aws or local
+        // type is a BSON type string names coming from here)
+        // algo is either rand or det for random or deterministic encryption
+        // method is either auto, for automatic encryption or explicit for explicit encryption
+        // identifier is either id or altname for the key identifier
+        // allowed is a boolean indicating whether the encryption for the given parameters is
+        // permitted.
+        // value is the value to be tested.
+        auto kms = subdoc["kms"].get_utf8().value;
+        auto type = subdoc["type"].get_utf8().value;
+        auto algo = subdoc["algo"].get_utf8().value;
+        auto method = subdoc["method"].get_utf8().value;
+        auto identifier = subdoc["identifier"].get_utf8().value;
+        auto allowed = subdoc["allowed"].get_bool().value;
+        auto to_encrypt = subdoc["value"].get_value();
+
+        // If method is auto, copy the field to corpus_copied.
+        // If method is explicit, encrypt explicitly.
+        if (method == stdx::string_view("auto")) {
+            corpus_copied_builder.append(kvp(field_name, ele.get_value()));
+        } else if (method == stdx::string_view{"explicit"}) {
+            options::encrypt encrypt_opts;
+
+            // Encrypt with the algorithm described by algo
+            if (algo == stdx::string_view{"rand"}) {
+                encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_random);
+            } else if (algo == stdx::string_view{"det"}) {
+                encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_deterministic);
+            } else {
+                throw exception{error_code::k_invalid_parameter, "unsupported algorithm"};
+            }
+
+            if (identifier == stdx::string_view{"id"}) {
+                if (kms == stdx::string_view{"local"}) {
+                    // If kms is local set the key_id to the UUID with base64 value
+                    // LOCALAAAAAAAAAAAAAAAAA==.
+                    encrypt_opts.key_id(local_key_value.view());
+                } else if (kms == stdx::string_view{"aws"}) {
+                    // If kms is aws set the key_id to the UUID with base64 value
+                    // AWSAAAAAAAAAAAAAAAAAAA==.
+                    encrypt_opts.key_id(aws_key_value.view());
+                } else {
+                    throw exception{error_code::k_invalid_parameter, "unsupported kms identifier"};
+                }
+            } else if (identifier == stdx::string_view{"altname"}) {
+                if (kms == stdx::string_view{"local"}) {
+                    // If kms is local set the key_alt_name to "local".
+                    encrypt_opts.key_alt_name("local");
+                } else if (kms == stdx::string_view{"aws"}) {
+                    // If kms is aws set the key_alt_name to "aws".
+                    encrypt_opts.key_alt_name("aws");
+                } else {
+                    throw exception{error_code::k_invalid_parameter, "unsupported kms altname"};
+                }
+            } else {
+                throw exception{error_code::k_invalid_parameter, "unsupported identifier"};
+            }
+
+            if (allowed) {
+                try {
+                    // If allowed is true, copy the field and encrypted value to corpus_copied.
+                    auto encrypted_val =
+                        client_encryption.encrypt(to_encrypt, std::move(encrypt_opts));
+
+                    auto new_field = document{} << "kms" << kms << "type" << type << "algo" << algo
+                                                << "method" << method << "identifier" << identifier
+                                                << "allowed" << allowed << "value" << encrypted_val
+                                                << finalize;
+
+                    corpus_copied_builder.append(kvp(field_name, std::move(new_field)));
+                } catch (const std::exception& e) {
+                    FAIL("caught an exception for encrypting an allowed field " << field_name
+                                                                                << ": "
+                                                                                << e.what());
+                }
+            } else {
+                REQUIRE_THROWS(client_encryption.encrypt(to_encrypt, std::move(encrypt_opts)));
+                corpus_copied_builder.append(kvp(field_name, subdoc));
+            }
+        }
+    }
+
+    auto corpus_copied = corpus_copied_builder.extract();
+
+    auto encrypted_coll = client_encrypted["db"]["coll"];
+
+    // Using client_encrypted, insert corpus_copied into db.coll.
+    try {
+        encrypted_coll.insert_one(corpus_copied.view(), insert_opts);
+    } catch (const std::exception& e) {
+        FAIL("failed to insert the corpus document: " << e.what());
+    }
+
+    // Using client_encrypted, find the inserted document from db.coll to a variable
+    // named corpus_decrypted. Since it should have been automatically decrypted, assert
+    // the document exactly matches corpus.
+    auto res = encrypted_coll.find_one({});
+    REQUIRE(res);
+    auto corpus_decrypted = res.value();
+    REQUIRE(corpus_decrypted == corpus);
+
+    // Load corpus/corpus_encrypted.json to a variable named corpus_encrypted_expected.
+    // Using client find the inserted document from db.coll to a variable named
+    // corpus_encrypted_actual.
+    res = client["db"]["coll"].find_one({});
+    REQUIRE(res);
+    auto corpus_encrypted_actual = res.value();
+
+    // Iterate over each field of corpus_encrypted_expected and check the following:
+    for (bsoncxx::document::element ele : corpus_encrypted_expected.view()) {
+        auto field_name_view = ele.key();
+        std::string field_name(field_name_view);
+
+        std::vector<std::string> copied_fields = {"_id", "altname_aws", "altname_local"};
+        if (std::find(copied_fields.begin(), copied_fields.end(), field_name) !=
+            copied_fields.end()) {
+            continue;
+        }
+
+        auto subdoc_val = ele.get_document();
+        auto subdoc = subdoc_val.view();
+
+        auto algo = subdoc["algo"].get_utf8().value;
+        auto allowed = subdoc["allowed"].get_bool().value;
+        auto value = subdoc["value"].get_value();
+
+        auto actual_field = corpus_encrypted_actual.view()[field_name];
+
+        // If the algo is det, that the value equals the value of the corresponding field
+        // in corpus_encrypted_actual.
+        if (algo == stdx::string_view{"det"}) {
+            REQUIRE(value == actual_field["value"].get_value());
+        }
+
+        // If the algo is rand and allowed is true, that the value does not equal the value
+        // of the corresponding field in corpus_encrypted_actual.
+        if (algo == stdx::string_view{"rand"} && allowed) {
+            REQUIRE(value != actual_field["value"].get_value());
+        }
+
+        // If allowed is true, decrypt the value with client_encryption. Decrypt the value of
+        // the corresponding field of corpus_encrypted and validate that they are both equal.
+        if (allowed) {
+            auto decrypted_actual = client_encryption.decrypt(actual_field["value"].get_value());
+            auto decrypted_expected = client_encryption.decrypt(value);
+            REQUIRE(decrypted_expected == decrypted_actual);
+        } else {
+            // If allowed is false, validate the value exactly equals the value of the corresponding
+            // field of corpus (neither was encrypted).
+            REQUIRE(value == corpus.view()[field_name]["value"].get_value());
+        }
+    }
+}
+
 TEST_CASE("Corpus", "[client_side_encryption]") {
-    // TODO CXX-2022
+    instance::current();
+
+    // Data keys created with AWS KMS may specify a custom endpoint to contact
+    // (instead of the default endpoint derived from the AWS region).
+
+    class client setup_client {
+        uri {}
+    };
+
+    if (test_util::get_max_wire_version(setup_client) < 8) {
+        // Automatic encryption requires wire version 8.
+        WARN("Skipping - max wire version is < 8");
+        return;
+    }
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
+    _run_corpus_test(true);
+    _run_corpus_test(false);
 }
 
 void _round_trip(class client_encryption* client_encryption,
