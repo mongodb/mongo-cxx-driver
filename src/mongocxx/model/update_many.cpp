@@ -49,6 +49,15 @@ const stdx::optional<bsoncxx::document::view_or_value>& update_many::collation()
     return _collation;
 }
 
+update_many& update_many::hint(class hint index_hint) {
+    _hint = std::move(index_hint);
+    return *this;
+}
+
+const stdx::optional<class hint>& update_many::hint() const {
+    return _hint;
+}
+
 update_many& update_many::upsert(bool upsert) {
     _upsert = upsert;
     return *this;

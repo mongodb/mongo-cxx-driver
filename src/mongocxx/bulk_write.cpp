@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/bulk_write.hpp>
-
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/bulk_write.hpp>
 #include <mongocxx/collection.hpp>
+#include <mongocxx/config/private/prelude.hh>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
@@ -27,8 +27,6 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/write_concern.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -61,6 +59,9 @@ bulk_write& bulk_write::append(const model::write& operation) {
             if (operation.get_update_one().collation()) {
                 options_builder.append(kvp("collation", *operation.get_update_one().collation()));
             }
+            if (operation.get_update_one().hint()) {
+                options_builder.append(kvp("hint", operation.get_update_one().hint()->to_value()));
+            }
             if (operation.get_update_one().upsert()) {
                 options_builder.append(kvp("upsert", *operation.get_update_one().upsert()));
             }
@@ -86,6 +87,9 @@ bulk_write& bulk_write::append(const model::write& operation) {
             if (operation.get_update_many().collation()) {
                 options_builder.append(kvp("collation", *operation.get_update_many().collation()));
             }
+            if (operation.get_update_many().hint()) {
+                options_builder.append(kvp("hint", operation.get_update_many().hint()->to_value()));
+            }
             if (operation.get_update_many().upsert()) {
                 options_builder.append(kvp("upsert", *operation.get_update_many().upsert()));
             }
@@ -110,6 +114,9 @@ bulk_write& bulk_write::append(const model::write& operation) {
             if (operation.get_delete_one().collation()) {
                 options_builder.append(kvp("collation", *operation.get_delete_one().collation()));
             }
+            if (operation.get_delete_one().hint()) {
+                options_builder.append(kvp("hint", operation.get_delete_one().hint()->to_value()));
+            }
             scoped_bson_t options(options_builder.extract());
 
             bson_error_t error;
@@ -126,6 +133,9 @@ bulk_write& bulk_write::append(const model::write& operation) {
             bsoncxx::builder::basic::document options_builder;
             if (operation.get_delete_many().collation()) {
                 options_builder.append(kvp("collation", *operation.get_delete_many().collation()));
+            }
+            if (operation.get_delete_many().hint()) {
+                options_builder.append(kvp("hint", operation.get_delete_many().hint()->to_value()));
             }
             scoped_bson_t options(options_builder.extract());
 
@@ -144,6 +154,9 @@ bulk_write& bulk_write::append(const model::write& operation) {
             bsoncxx::builder::basic::document options_builder;
             if (operation.get_replace_one().collation()) {
                 options_builder.append(kvp("collation", *operation.get_replace_one().collation()));
+            }
+            if (operation.get_replace_one().hint()) {
+                options_builder.append(kvp("hint", operation.get_replace_one().hint()->to_value()));
             }
             if (operation.get_replace_one().upsert()) {
                 options_builder.append(kvp("upsert", *operation.get_replace_one().upsert()));

@@ -16,6 +16,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/hint.hpp>
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -66,10 +67,33 @@ class MONGOCXX_API delete_one {
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 
+    ///
+    /// Sets the index to use for this operation.
+    ///
+    /// @note if the server already has a cached shape for this query, it may
+    /// ignore a hint.
+    ///
+    /// @param index_hint
+    ///   Object representing the index to use.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    delete_one& hint(class hint index_hint);
+
+    ///
+    /// Gets the current hint.
+    ///
+    /// @return The current hint, if one is set.
+    ///
+    const stdx::optional<class hint>& hint() const;
+
    private:
     bsoncxx::document::view_or_value _filter;
 
     stdx::optional<bsoncxx::document::view_or_value> _collation;
+    stdx::optional<class hint> _hint;
 };
 
 }  // namespace model

@@ -22,7 +22,6 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
@@ -31,7 +30,6 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
-#include <mongocxx/options/index.hpp>
 #include <mongocxx/options/update.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/private/conversions.hh>
@@ -468,6 +466,7 @@ TEST_CASE("Collection", "[collection]") {
         auto expected_order_setting = false;
         auto expect_set_bypass_document_validation_called = false;
         auto expected_bypass_document_validation = false;
+        mongocxx::stdx::optional<bsoncxx::types::bson_value::view> expected_hint{};
 
         auto modification_doc = make_document(kvp("cool", "wow"), kvp("foo", "bar"));
 
@@ -598,6 +597,10 @@ TEST_CASE("Collection", "[collection]") {
                     }
                 }
 
+                if (expected_hint) {
+                    REQUIRE(options_view["hint"].get_utf8() == expected_hint->get_utf8());
+                }
+
                 return true;
             });
 
@@ -615,6 +618,12 @@ TEST_CASE("Collection", "[collection]") {
                 upsert_option = false;
                 expected_order_setting = true;
                 options.upsert(upsert_option);
+            }
+
+            SECTION("With hint") {
+                hint index_hint("a_1");
+                expected_hint = index_hint.to_value();
+                options.hint(index_hint);
             }
 
             SECTION("With bypass_document_validation") {
@@ -711,6 +720,10 @@ TEST_CASE("Collection", "[collection]") {
                     }
                 }
 
+                if (expected_hint) {
+                    REQUIRE(options_view["hint"].get_utf8() == expected_hint->get_utf8());
+                }
+
                 return true;
             });
 
@@ -728,6 +741,12 @@ TEST_CASE("Collection", "[collection]") {
             SECTION("Upsert false") {
                 upsert_option = false;
                 options.upsert(upsert_option);
+            }
+
+            SECTION("With hint") {
+                hint index_hint("a_1");
+                expected_hint = index_hint.to_value();
+                options.hint(index_hint);
             }
 
             mongo_coll.update_many(filter_doc.view(), modification_doc.view(), options);
@@ -782,6 +801,10 @@ TEST_CASE("Collection", "[collection]") {
                     }
                 }
 
+                if (expected_hint) {
+                    REQUIRE(options_view["hint"].get_utf8() == expected_hint->get_utf8());
+                }
+
                 return true;
             });
 
@@ -799,6 +822,12 @@ TEST_CASE("Collection", "[collection]") {
             SECTION("Upsert false") {
                 upsert_option = false;
                 options.upsert(upsert_option);
+            }
+
+            SECTION("With hint") {
+                hint index_hint("a_1");
+                expected_hint = index_hint.to_value();
+                options.hint(index_hint);
             }
 
             mongo_coll.replace_one(filter_doc.view(), modification_doc.view(), options);
@@ -826,14 +855,27 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Delete One", "[collection::delete_one]") {
             expected_order_setting = true;
-            bulk_operation_remove_one_with_opts->interpose(
-                [&](mongoc_bulk_operation_t*, const bson_t* doc, const bson_t*, bson_error_t*) {
-                    bulk_operation_op_called = true;
-                    REQUIRE(bson_get_data(doc) == filter_doc.view().data());
-                    return true;
-                });
+            bulk_operation_remove_one_with_opts->interpose([&](
+                mongoc_bulk_operation_t*, const bson_t* doc, const bson_t* options, bson_error_t*) {
+                bulk_operation_op_called = true;
+                REQUIRE(bson_get_data(doc) == filter_doc.view().data());
 
-            mongo_coll.delete_one(filter_doc.view());
+                bsoncxx::document::view options_view{bson_get_data(options), options->len};
+                if (expected_hint) {
+                    CAPTURE(to_json(options_view));
+                    REQUIRE(options_view["hint"].get_utf8() == expected_hint->get_utf8());
+                }
+                return true;
+            });
+
+            options::delete_options options;
+            SECTION("With hint") {
+                hint index_hint("a_1");
+                expected_hint = index_hint.to_value();
+                options.hint(index_hint);
+            }
+
+            mongo_coll.delete_one(filter_doc.view(), options);
             REQUIRE(bulk_operation_execute_called);
             perform_checks();
         }
@@ -854,14 +896,27 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Delete Many", "[collection::delete_many]") {
             expected_order_setting = true;
-            bulk_operation_remove_many_with_opts->interpose(
-                [&](mongoc_bulk_operation_t*, const bson_t* doc, const bson_t*, bson_error_t*) {
-                    bulk_operation_op_called = true;
-                    REQUIRE(bson_get_data(doc) == filter_doc.view().data());
-                    return true;
-                });
+            bulk_operation_remove_many_with_opts->interpose([&](
+                mongoc_bulk_operation_t*, const bson_t* doc, const bson_t* options, bson_error_t*) {
+                bulk_operation_op_called = true;
+                REQUIRE(bson_get_data(doc) == filter_doc.view().data());
 
-            mongo_coll.delete_many(filter_doc.view());
+                bsoncxx::document::view options_view{bson_get_data(options), options->len};
+                if (expected_hint) {
+                    CAPTURE(to_json(options_view));
+                    REQUIRE(options_view["hint"].get_utf8() == expected_hint->get_utf8());
+                }
+                return true;
+            });
+
+            options::delete_options options;
+            SECTION("With hint") {
+                hint index_hint("a_1");
+                expected_hint = index_hint.to_value();
+                options.hint(index_hint);
+            }
+
+            mongo_coll.delete_many(filter_doc.view(), options);
             REQUIRE(bulk_operation_execute_called);
             perform_checks();
         }

@@ -32,6 +32,11 @@ update& update::collation(bsoncxx::document::view_or_value collation) {
     return *this;
 }
 
+update& update::hint(class hint index_hint) {
+    _hint = std::move(index_hint);
+    return *this;
+}
+
 update& update::upsert(bool upsert) {
     _upsert = upsert;
     return *this;
@@ -48,6 +53,10 @@ const stdx::optional<bool>& update::bypass_document_validation() const {
 
 const stdx::optional<bsoncxx::document::view_or_value>& update::collation() const {
     return _collation;
+}
+
+const stdx::optional<class hint>& update::hint() const {
+    return _hint;
 }
 
 const stdx::optional<bool>& update::upsert() const {

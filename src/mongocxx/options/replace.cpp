@@ -27,6 +27,11 @@ replace& replace::bypass_document_validation(bool bypass_document_validation) {
     return *this;
 }
 
+replace& replace::hint(class hint index_hint) {
+    _hint = std::move(index_hint);
+    return *this;
+}
+
 replace& replace::collation(bsoncxx::document::view_or_value collation) {
     _collation = std::move(collation);
     return *this;
@@ -40,6 +45,10 @@ replace& replace::upsert(bool upsert) {
 replace& replace::write_concern(class write_concern wc) {
     _write_concern = std::move(wc);
     return *this;
+}
+
+const stdx::optional<class hint>& replace::hint() const {
+    return _hint;
 }
 
 const stdx::optional<bool>& replace::bypass_document_validation() const {

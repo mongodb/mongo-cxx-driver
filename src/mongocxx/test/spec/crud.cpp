@@ -59,107 +59,110 @@ void run_crud_tests_in_file(std::string test_path) {
     }
 
     for (auto&& test : test_spec_view["tests"].get_array().value) {
-        INFO("Test description: " << test["description"].get_utf8().value);
-
-        if (is_unsupported(test["description"].get_utf8().value)) {
-            continue;
-        }
-
-        if (should_skip_spec_test(client, test.get_document())) {
-            continue;
-        }
-
-        auto get_value_or_default = [&](std::string key, std::string default_str) {
-            if (test_spec_view[key]) {
-                return to_string(test_spec_view[key].get_utf8().value);
+        auto description = test["description"].get_utf8().value;
+        SECTION(to_string(description)) {
+            if (is_unsupported(test["description"].get_utf8().value)) {
+                continue;
             }
-            return default_str;
-        };
 
-        auto database_name = get_value_or_default("database_name", "crud_test");
-        auto collection_name = get_value_or_default("collection_name", "test");
+            if (should_skip_spec_test(client, test.get_document())) {
+                continue;
+            }
 
-        auto database = client[database_name];
-        auto collection = database[collection_name];
+            auto get_value_or_default = [&](std::string key, std::string default_str) {
+                if (test_spec_view[key]) {
+                    return to_string(test_spec_view[key].get_utf8().value);
+                }
+                return default_str;
+            };
 
-        if (test_spec_view["data"]) {
-            initialize_collection(&collection, test_spec_view["data"].get_array().value);
-        }
+            auto database_name = get_value_or_default("database_name", "crud_test");
+            auto collection_name = get_value_or_default("collection_name", "test");
 
-        operation_runner op_runner{&database, &collection};
+            auto database = client[database_name];
+            auto collection = database[collection_name];
 
-        std::string outcome_collection_name = "test";
-        if (test["outcome"] && test["outcome"]["collection"]["name"]) {
-            outcome_collection_name =
-                to_string(test["outcome"]["collection"]["name"].get_utf8().value);
-            auto outcome_collection = database[outcome_collection_name];
-            initialize_collection(&outcome_collection, array::view{});
-        }
+            if (test_spec_view["data"]) {
+                initialize_collection(&collection, test_spec_view["data"].get_array().value);
+            }
 
-        configure_fail_point(client, test.get_document().value);
+            operation_runner op_runner{&database, &collection};
 
-        apm_checker.clear();
-        auto perform_op = [&database, &op_runner, &test, &outcome_collection_name](
-            document::view operation) {
-            optional<document::value> actual_outcome_value;
-            INFO("Operation: " << bsoncxx::to_json(operation));
-            try {
-                actual_outcome_value = op_runner.run(operation);
-            } catch (const mongocxx::operation_exception& e) {
-                REQUIRE([&operation, &test, &e]() {
-                    if (operation["error"]) { /* v2 tests expect tests[i].operation.error */
-                        return operation["error"].get_bool().value;
-                    } else if (test["outcome"] && test["outcome"]["error"]) {
-                        /* v1 tests expect tests[i].outcome.error (but some tests may
-                         have "outcome" without a nested "error") */
-                        return test["outcome"]["error"].get_bool().value;
-                    } else {
-                        WARN("Caught operation exception: " << e.what());
-                        return false;
+            std::string outcome_collection_name = collection_name;
+            if (test["outcome"] && test["outcome"]["collection"]["name"]) {
+                outcome_collection_name =
+                    to_string(test["outcome"]["collection"]["name"].get_utf8().value);
+                auto outcome_collection = database[outcome_collection_name];
+                initialize_collection(&outcome_collection, array::view{});
+            }
+
+            configure_fail_point(client, test.get_document().value);
+
+            apm_checker.clear();
+            auto perform_op =
+                [&database, &op_runner, &test, &outcome_collection_name](document::view operation) {
+                    optional<document::value> actual_outcome_value;
+                    INFO("Operation: " << bsoncxx::to_json(operation));
+                    try {
+                        actual_outcome_value = op_runner.run(operation);
+                    } catch (const mongocxx::operation_exception& e) {
+                        REQUIRE([&operation, &test, &e]() {
+                            if (operation["error"]) { /* v2 tests expect tests[i].operation.error */
+                                return operation["error"].get_bool().value;
+                            } else if (test["outcome"] && test["outcome"]["error"]) {
+                                /* v1 tests expect tests[i].outcome.error (but some tests may
+                                 have "outcome" without a nested "error") */
+                                return test["outcome"]["error"].get_bool().value;
+                            } else {
+                                WARN("Caught operation exception: " << e.what());
+                                return false;
+                            }
+                        }());
+                        return; /* do not check results if error is expected */
+                    } catch (const std::exception& e) {
+                        WARN("Caught exception: " << e.what());
+                    } catch (...) {
+                        WARN("Caught unknown exception");
                     }
-                }());
-                return; /* do not check results if error is expected */
-            } catch (const std::exception& e) {
-                WARN("Caught exception: " << e.what());
-            } catch (...) {
-                WARN("Caught unknown exception");
-            }
 
-            if (test["outcome"]) {
-                if (test["outcome"]["collection"]) {
-                    auto outcome_collection = database[outcome_collection_name];
-                    test_util::check_outcome_collection(
-                        &outcome_collection, test["outcome"]["collection"].get_document().value);
+                    if (test["outcome"]) {
+                        if (test["outcome"]["collection"]) {
+                            auto outcome_collection = database[outcome_collection_name];
+                            test_util::check_outcome_collection(
+                                &outcome_collection,
+                                test["outcome"]["collection"].get_document().value);
+                        }
+
+                        if (test["outcome"]["result"]) {
+                            // wrap the result, since it might not be a document.
+                            bsoncxx::document::view actual_outcome = actual_outcome_value->view();
+                            auto actual_result_wrapped =
+                                make_document(kvp("result", actual_outcome["result"].get_value()));
+                            auto expected_result_wrapped =
+                                make_document(kvp("result", test["outcome"]["result"].get_value()));
+                            REQUIRE_BSON_MATCHES(actual_result_wrapped, expected_result_wrapped);
+                        }
+                    }
+                };
+
+            if (test["operations"]) {
+                /* v2 tests expect a tests[i].operations array */
+                for (auto&& operation : test["operations"].get_array().value) {
+                    perform_op(operation.get_document().value);
                 }
-
-                if (test["outcome"]["result"]) {
-                    // wrap the result, since it might not be a document.
-                    bsoncxx::document::view actual_outcome = actual_outcome_value->view();
-                    auto actual_result_wrapped =
-                        make_document(kvp("result", actual_outcome["result"].get_value()));
-                    auto expected_result_wrapped =
-                        make_document(kvp("result", test["outcome"]["result"].get_value()));
-                    REQUIRE_BSON_MATCHES(actual_result_wrapped, expected_result_wrapped);
-                }
+            } else if (test["operation"]) {
+                /* v1 tests expect a single document, tests[i].operation */
+                perform_op(test["operation"].get_document().value);
             }
-        };
 
-        if (test["operations"]) {
-            /* v2 tests expect a tests[i].operations array */
-            for (auto&& operation : test["operations"].get_array().value) {
-                perform_op(operation.get_document().value);
+            if (test["expectations"]) {
+                apm_checker.compare(test["expectations"].get_array().value, true);
             }
-        } else if (test["operation"]) {
-            /* v1 tests expect a single document, tests[i].operation */
-            perform_op(test["operation"].get_document().value);
-        }
 
-        if (test["expectations"]) {
-            apm_checker.compare(test["expectations"].get_array().value, true);
-        }
-
-        if (test["failPoint"]) {
-            disable_fail_point(client, test["failPoint"]["configureFailPoint"].get_utf8().value);
+            if (test["failPoint"]) {
+                disable_fail_point(client,
+                                   test["failPoint"]["configureFailPoint"].get_utf8().value);
+            }
         }
     }
 }

@@ -35,6 +35,15 @@ const stdx::optional<bsoncxx::document::view_or_value>& delete_one::collation() 
     return _collation;
 }
 
+delete_one& delete_one::hint(class hint index_hint) {
+    _hint = std::move(index_hint);
+    return *this;
+}
+
+const stdx::optional<class hint>& delete_one::hint() const {
+    return _hint;
+}
+
 }  // namespace model
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
