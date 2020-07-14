@@ -101,12 +101,10 @@ class MONGOCXX_API index_view {
     /// @see
     ///   https://docs.mongodb.com/master/reference/command/createIndexes
     ///
-    index_view& commit_quorum(int commit_quorum);
+    index_view& commit_quorum(std::int32_t commit_quorum);
 
     ///
     /// Sets the commit quorum for this operation.
-    ///
-    /// The server-side default is "votingMembers".
     ///
     /// This option may only be used with MongoDB version 4.4 or later.
     ///
