@@ -17,7 +17,6 @@
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
-#include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/config/private/prelude.hh>
@@ -28,7 +27,6 @@
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/test_util/client_helpers.hh>
 #include <vector>
 
 namespace mongocxx {
