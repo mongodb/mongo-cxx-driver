@@ -23,6 +23,7 @@
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/options/index_view.hpp>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>
@@ -134,16 +135,17 @@ class index_view::impl {
         }
 
         if (options.commit_quorum()) {
-            auto server_description = libmongoc::client_select_server(
-                _client, true /* for_writes */, nullptr /* read_prefs */, &error);
-            auto is_master = libmongoc::server_description_ismaster(server_description);
+            auto server_description = scoped_server_description(libmongoc::client_select_server(
+                _client, true /* for_writes */, nullptr /* read_prefs */, &error));
+            if (!server_description.sd)
+                throw_exception<write_exception>(error);
+
+            auto is_master = libmongoc::server_description_ismaster(server_description.sd);
 
             bson_iter_t iter;
-            bson_iter_init_find(&iter, is_master, "maxWireVersion");
-            int32_t max_wire_version = bson_iter_int32(&iter);
-
-            if (max_wire_version < 9) {
-                throw logic_error{
+            if (!bson_iter_init_find(&iter, is_master, "maxWireVersion") ||
+                bson_iter_int32(&iter) < 9) {
+                throw write_exception{
                     error_code::k_invalid_parameter,
                     "option 'commitQuorum' not available on the current server version"};
             }
@@ -238,6 +240,15 @@ class index_view::impl {
 
     mongoc_collection_t* _coll;
     mongoc_client_t* _client;
+
+    class scoped_server_description {
+       public:
+        explicit scoped_server_description(mongoc_server_description_t* sd) : sd(sd) {}
+        ~scoped_server_description() {
+            mongoc_server_description_destroy(sd);
+        }
+        mongoc_server_description_t* sd;
+    };
 };
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
