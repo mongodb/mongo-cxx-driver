@@ -1282,7 +1282,7 @@ class change_stream collection::_watch(const client_session* session,
 }
 
 class index_view collection::indexes() {
-    return index_view{_get_impl().collection_t};
+    return index_view{_get_impl().collection_t, _get_impl().client_impl->client_t};
 }
 
 class bulk_write collection::_init_insert_many(const options::insert& options,

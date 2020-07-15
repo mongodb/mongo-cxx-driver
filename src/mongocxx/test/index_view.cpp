@@ -187,14 +187,16 @@ TEST_CASE("create_one", "[index_view]") {
             Catch::Matches("(.*)commit( )?quorum(.*)", Catch::CaseSensitive::No);
 
         using namespace test_util;
-        if (compare_versions(get_server_version(mongodb_client), "4.4") < 0 ||
-            get_topology(mongodb_client) == "single") {
-            return;
-        }
+        bool is_supported = compare_versions(get_server_version(mongodb_client), "4.4") >= 0 &&
+                            get_topology(mongodb_client) != "single";
 
         SECTION("works with int") {
             options.commit_quorum(1);
-            REQUIRE_NOTHROW(indexes.create_one(model, options));
+            if (is_supported) {
+                REQUIRE_NOTHROW(indexes.create_one(model, options));
+            } else {
+                REQUIRE_THROWS_WITH(indexes.create_one(model, options), commit_quorum_regex);
+            }
         }
 
         SECTION("fails with invalid int") {
@@ -204,7 +206,11 @@ TEST_CASE("create_one", "[index_view]") {
 
         SECTION("works with string") {
             options.commit_quorum("majority");
-            REQUIRE_NOTHROW(indexes.create_one(model, options));
+            if (is_supported) {
+                REQUIRE_NOTHROW(indexes.create_one(model, options));
+            } else {
+                REQUIRE_THROWS_WITH(indexes.create_one(model, options), commit_quorum_regex);
+            }
         }
 
         SECTION("fails with invalid string") {

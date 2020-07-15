@@ -39,7 +39,8 @@ using bsoncxx::builder::basic::kvp;
 
 class index_view::impl {
    public:
-    impl(mongoc_collection_t* collection) : _coll{collection} {}
+    impl(mongoc_collection_t* collection, mongoc_client_t* client)
+        : _coll{collection}, _client{client} {}
 
     impl(const impl& i) = default;
 
@@ -135,7 +136,22 @@ class index_view::impl {
         }
 
         if (options.commit_quorum()) {
-            opts_doc.append(concatenate(options.commit_quorum()->view()));
+            auto server_description = libmongoc::client_select_server(
+                _client, true /* for_writes */, nullptr /* read_prefs */, &error);
+            auto is_master = libmongoc::server_description_ismaster(server_description);
+
+            bson_iter_t iter;
+            bson_iter_init_find(&iter, is_master, "maxWireVersion");
+            int32_t max_wire_version = bson_iter_int32(&iter);
+
+            if (max_wire_version < 9) {
+                throw logic_error{
+                    error_code::k_invalid_parameter,
+                    "option 'commitQuorum' not available on the current server version"};
+            }
+
+            command =
+                make_document(concatenate(command), concatenate(options.commit_quorum()->view()));
         }
 
         libbson::scoped_bson_t command_bson{command};
@@ -223,6 +239,7 @@ class index_view::impl {
     }
 
     mongoc_collection_t* _coll;
+    mongoc_client_t* _client;
 };
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

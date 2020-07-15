@@ -421,7 +421,7 @@ class MONGOCXX_API index_view {
     friend class collection;
     class MONGOCXX_PRIVATE impl;
 
-    MONGOCXX_PRIVATE index_view(void* coll);
+    MONGOCXX_PRIVATE index_view(void* coll, void* client);
 
     MONGOCXX_PRIVATE impl& _get_impl();
 
