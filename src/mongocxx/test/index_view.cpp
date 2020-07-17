@@ -187,8 +187,9 @@ TEST_CASE("create_one", "[index_view]") {
             Catch::Matches("(.*)commit( )?quorum(.*)", Catch::CaseSensitive::No);
 
         using namespace test_util;
-        bool is_supported = compare_versions(get_server_version(mongodb_client), "4.4") >= 0 &&
-                            get_topology(mongodb_client) != "single";
+        bool is_supported =
+            get_max_wire_version(mongodb_client) >= 9 && get_topology(mongodb_client) != "single";
+        CAPTURE(is_supported);
 
         SECTION("works with int") {
             options.commit_quorum(1);
