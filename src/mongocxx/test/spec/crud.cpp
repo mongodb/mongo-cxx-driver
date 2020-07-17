@@ -156,7 +156,11 @@ void run_crud_tests_in_file(std::string test_path) {
             }
 
             if (test["expectations"]) {
-                apm_checker.compare(test["expectations"].get_array().value, true);
+                /* some tests use empty documents, instead of arrays */
+                if (test["expectations"].type() == type::k_document)
+                    REQUIRE(test["expectations"].get_document().view().empty());
+                else
+                    apm_checker.compare(test["expectations"].get_array().value, true);
             }
 
             if (test["failPoint"]) {
