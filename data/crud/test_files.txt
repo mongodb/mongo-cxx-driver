@@ -85,4 +85,5 @@ v2/updateMany-hint-serverError.json
 v2/updateOne-hint-clientError.json
 v2/updateOne-hint.json
 v2/updateOne-hint-serverError.json
+v2/find-allowdiskuse.json
 v2/updateWithPipelines.json

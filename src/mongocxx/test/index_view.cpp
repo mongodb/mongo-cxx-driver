@@ -172,6 +172,46 @@ TEST_CASE("create_one", "[index_view]") {
         REQUIRE_NOTHROW(indexes.create_one(keys1.view(), options.view()));
         REQUIRE_THROWS_AS(indexes.create_one(keys2.view(), options.view()), operation_exception);
     }
+
+    SECTION("commitQuorum option") {
+        if (test_util::get_topology(mongodb_client) == "single") {
+            WARN("skip: commitQuorum option requires a replica set");
+            return;
+        }
+
+        collection coll = db["index_view_create_one_commit_quorum"];
+        coll.drop();
+        coll.insert_one({});  // Ensure that the collection exists.
+        index_view indexes = coll.indexes();
+
+        auto key = make_document(kvp("a", 1));
+        index_model model(key.view());
+        options::index_view options;
+
+        auto commit_quorum_regex =
+            Catch::Matches("(.*)commit( )?quorum(.*)", Catch::CaseSensitive::No);
+
+        bool is_supported = test_util::get_max_wire_version(mongodb_client) >= 9;
+        CAPTURE(is_supported);
+
+        SECTION("works with int") {
+            options.commit_quorum(1);
+            if (is_supported) {
+                REQUIRE_NOTHROW(indexes.create_one(model, options));
+            } else {
+                REQUIRE_THROWS_WITH(indexes.create_one(model, options), commit_quorum_regex);
+            }
+        }
+
+        SECTION("works with string") {
+            options.commit_quorum("majority");
+            if (is_supported) {
+                REQUIRE_NOTHROW(indexes.create_one(model, options));
+            } else {
+                REQUIRE_THROWS_WITH(indexes.create_one(model, options), commit_quorum_regex);
+            }
+        }
+    }
 }
 
 TEST_CASE("create_many", "[index_view]") {

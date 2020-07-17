@@ -255,6 +255,10 @@ document::value operation_runner::_run_find(document::view operation) {
         options.sort(arguments["sort"].get_document().value);
     }
 
+    if (arguments["allowDiskUse"]) {
+        options.allow_disk_use(arguments["allowDiskUse"].get_bool().value);
+    }
+
     if (arguments["modifiers"]) {
         document::view modifiers = arguments["modifiers"].get_document().value;
         if (modifiers["$comment"]) {

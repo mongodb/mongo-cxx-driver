@@ -343,7 +343,7 @@ bool matches(types::bson_value::view main,
                 continue;
             }
             if (main_view.find(el.key()) == main_view.end()) {
-                return false;
+                return el.get_value().type() == type::k_null;
             }
             if (!matches(main_view[el.key()].get_value(), el.get_value(), visitor_fn)) {
                 return false;

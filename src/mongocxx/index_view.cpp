@@ -26,8 +26,9 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-index_view::index_view(void* coll)
-    : _impl{stdx::make_unique<impl>(static_cast<mongoc_collection_t*>(coll))} {}
+index_view::index_view(void* coll, void* client)
+    : _impl{stdx::make_unique<impl>(static_cast<mongoc_collection_t*>(coll),
+                                    static_cast<mongoc_client_t*>(client))} {}
 
 index_view::index_view(index_view&&) noexcept = default;
 index_view& index_view::operator=(index_view&&) noexcept = default;
