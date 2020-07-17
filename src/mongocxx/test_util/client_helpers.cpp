@@ -397,15 +397,17 @@ void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::vie
     options::find options{};
     options.sort(make_document(kvp("_id", 1)));
 
-    auto actual = coll->find({}, options);
-    std::equal(std::begin(actual),
-               std::end(actual),
-               std::begin(expected["data"].get_array().value),
-               [](document::view doc, bsoncxx::array::element ele) {
-                   REQUIRE_BSON_MATCHES(doc, ele.get_document().value);
-                   return true;
-               });
-
+    using namespace std;
+    cursor actual = coll->find({}, options);
+    auto expected_data = expected["data"].get_array().value;
+    REQUIRE(equal(begin(expected_data),
+                  end(expected_data),
+                  begin(actual),
+                  [&](const bsoncxx::array::element& ele, const document::view& doc) {
+                      REQUIRE_BSON_MATCHES(doc, ele.get_document().value);
+                      return true;
+                  }));
+    REQUIRE(begin(actual) == end(actual));
     coll->read_concern(old_rc);
 }
 
