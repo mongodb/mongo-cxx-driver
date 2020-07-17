@@ -174,8 +174,10 @@ TEST_CASE("create_one", "[index_view]") {
     }
 
     SECTION("commitQuorum option") {
-        if (test_util::get_topology(mongodb_client) == "single")
+        if (test_util::get_topology(mongodb_client) == "single") {
+            WARN("skip: commitQuorum option requires a replica set");
             return;
+        }
 
         collection coll = db["index_view_create_one_commit_quorum"];
         coll.drop();
