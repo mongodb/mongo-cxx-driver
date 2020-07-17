@@ -14,16 +14,11 @@
 
 #include <mongocxx/test/spec/operation.hh>
 
-#include <fstream>
 #include <functional>
-#include <memory>
-#include <set>
-#include <sstream>
 #include <vector>
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
@@ -32,10 +27,6 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/database.hpp>
-#include <mongocxx/exception/bulk_write_exception.hpp>
-#include <mongocxx/exception/error_code.hpp>
-#include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/aggregate.hpp>
 #include <mongocxx/options/count.hpp>
 #include <mongocxx/options/delete.hpp>
@@ -47,16 +38,13 @@
 #include <mongocxx/options/find_one_common_options.hpp>
 #include <mongocxx/options/replace.hpp>
 #include <mongocxx/options/update.hpp>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/result/delete.hpp>
 #include <mongocxx/result/insert_many.hpp>
 #include <mongocxx/result/insert_one.hpp>
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
-#include <mongocxx/test_util/client_helpers.hh>
 
 #include <mongocxx/config/private/prelude.hh>
-#include <third_party/catch/include/helpers.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -330,6 +318,13 @@ document::value operation_runner::_run_delete_many(document::view operation) {
         options.collation(arguments["collation"].get_document().value);
     }
 
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
+            options.hint(hint{arguments["hint"].get_utf8().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+
     auto result = builder::basic::document{};
     std::int32_t deleted_count = 0;
 
@@ -360,6 +355,13 @@ document::value operation_runner::_run_delete_one(document::view operation) {
         options.collation(arguments["collation"].get_document().value);
     }
 
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
+            options.hint(hint{arguments["hint"].get_utf8().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+
     auto result = builder::basic::document{};
     std::int32_t deleted_count = 0;
 
@@ -388,6 +390,20 @@ document::value operation_runner::_run_find_one_and_delete(document::view operat
 
     if (arguments["collation"]) {
         options.collation(arguments["collation"].get_document().value);
+    }
+
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
+            options.hint(hint{arguments["hint"].get_utf8().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
+            options.hint(hint{arguments["hint"].get_utf8().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
     }
 
     if (arguments["projection"]) {
@@ -445,6 +461,13 @@ document::value operation_runner::_run_find_one_and_replace(document::view opera
         options.collation(arguments["collation"].get_document().value);
     }
 
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
+            options.hint(hint{arguments["hint"].get_utf8().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+
     if (arguments["projection"]) {
         options.projection(arguments["projection"].get_document().value);
     }
@@ -496,6 +519,13 @@ document::value operation_runner::_run_find_one_and_update(document::view operat
 
     if (arguments["collation"]) {
         options.collation(arguments["collation"].get_document().value);
+    }
+
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
+            options.hint(hint{arguments["hint"].get_utf8().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
     }
 
     if (arguments["projection"]) {
@@ -647,6 +677,13 @@ document::value operation_runner::_run_replace_one(document::view operation) {
         options.collation(arguments["collation"].get_document().value);
     }
 
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
+            options.hint(hint{arguments["hint"].get_utf8().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+
     if (arguments["upsert"]) {
         options.upsert(arguments["upsert"].get_bool().value);
     }
@@ -706,6 +743,13 @@ document::value operation_runner::_run_update_many(document::view operation) {
 
     if (arguments["collation"]) {
         options.collation(arguments["collation"].get_document().value);
+    }
+
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
+            options.hint(hint{arguments["hint"].get_utf8().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
     }
 
     if (arguments["upsert"]) {
@@ -793,6 +837,12 @@ document::value operation_runner::_run_update_one(document::view operation) {
         options.collation(arguments["collation"].get_document().value);
     }
 
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
+            options.hint(hint{arguments["hint"].get_utf8().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
     if (arguments["upsert"]) {
         options.upsert(arguments["upsert"].get_bool().value);
     }
@@ -946,6 +996,13 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
         if (operation_name.compare("updateOne") == 0) {
             auto update_one = _build_update_model<model::update_one>(request_arguments);
 
+            if (request_arguments["hint"]) {
+                if (request_arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
+                    update_one.hint(hint{request_arguments["hint"].get_utf8().value});
+                else
+                    update_one.hint(hint{request_arguments["hint"].get_document().value});
+            }
+
             if (request_arguments["collation"]) {
                 update_one.collation(request_arguments["collation"].get_document().value);
             }
@@ -961,6 +1018,13 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
             writes.emplace_back(update_one);
         } else if (operation_name.compare("updateMany") == 0) {
             auto update_many = _build_update_model<model::update_many>(request_arguments);
+
+            if (request_arguments["hint"]) {
+                if (request_arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
+                    update_many.hint(hint{request_arguments["hint"].get_utf8().value});
+                else
+                    update_many.hint(hint{request_arguments["hint"].get_document().value});
+            }
 
             if (request_arguments["collation"]) {
                 update_many.collation(request_arguments["collation"].get_document().value);
@@ -979,6 +1043,13 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
             document::view filter = request_arguments["filter"].get_document().value;
             document::view replacement = request_arguments["replacement"].get_document().value;
             model::replace_one replace_one(filter, replacement);
+            if (request_arguments["hint"]) {
+                if (request_arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
+                    replace_one.hint(hint{request_arguments["hint"].get_utf8().value});
+                else
+                    replace_one.hint(hint{request_arguments["hint"].get_document().value});
+            }
+
             if (request_arguments["collation"]) {
                 replace_one.collation(request_arguments["collation"].get_document().value);
             }
@@ -995,6 +1066,13 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
         } else if (operation_name.compare("deleteOne") == 0) {
             document::view filter = request_arguments["filter"].get_document().value;
             model::delete_one delete_one(filter);
+            if (request_arguments["hint"]) {
+                if (request_arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
+                    delete_one.hint(hint{request_arguments["hint"].get_utf8().value});
+                else
+                    delete_one.hint(hint{request_arguments["hint"].get_document().value});
+            }
+
             if (request_arguments["collation"]) {
                 delete_one.collation(request_arguments["collation"].get_document().value);
             }
@@ -1003,6 +1081,13 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
         } else if (operation_name.compare("deleteMany") == 0) {
             document::view filter = request_arguments["filter"].get_document().value;
             model::delete_many delete_many(filter);
+            if (request_arguments["hint"]) {
+                if (request_arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
+                    delete_many.hint(hint{request_arguments["hint"].get_utf8().value});
+                else
+                    delete_many.hint(hint{request_arguments["hint"].get_document().value});
+            }
+
             if (request_arguments["collation"]) {
                 delete_many.collation(request_arguments["collation"].get_document().value);
             }

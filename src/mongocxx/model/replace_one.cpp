@@ -51,6 +51,14 @@ const stdx::optional<bool>& replace_one::upsert() const {
     return _upsert;
 }
 
+replace_one& replace_one::hint(class hint index_hint) {
+    _hint = std::move(index_hint);
+    return *this;
+}
+
+const stdx::optional<class hint>& replace_one::hint() const {
+    return _hint;
+}
 }  // namespace model
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

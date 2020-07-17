@@ -45,6 +45,15 @@ find_one_and_delete& find_one_and_delete::write_concern(mongocxx::write_concern 
     return *this;
 }
 
+find_one_and_delete& find_one_and_delete::hint(class hint index_hint) {
+    _hint = std::move(index_hint);
+    return *this;
+}
+
+const stdx::optional<class hint>& find_one_and_delete::hint() const {
+    return _hint;
+}
+
 const stdx::optional<bsoncxx::document::view_or_value>& find_one_and_delete::collation() const {
     return _collation;
 }

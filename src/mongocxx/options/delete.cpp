@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/delete.hpp>
-
 #include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/hint.hpp>
+#include <mongocxx/options/delete.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -30,12 +30,21 @@ delete_options& delete_options::write_concern(class write_concern wc) {
     return *this;
 }
 
+delete_options& delete_options::hint(class hint index_hint) {
+    _hint = std::move(index_hint);
+    return *this;
+}
+
 const stdx::optional<bsoncxx::document::view_or_value>& delete_options::collation() const {
     return _collation;
 }
 
 const stdx::optional<class write_concern>& delete_options::write_concern() const {
     return _write_concern;
+}
+
+const stdx::optional<class hint>& delete_options::hint() const {
+    return _hint;
 }
 
 }  // namespace options

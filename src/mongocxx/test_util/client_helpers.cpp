@@ -389,42 +389,26 @@ std::string tolowercase(stdx::string_view view) {
 }
 
 void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::view expected) {
-    std::vector<std::string> actual_data;
-    std::vector<std::string> expected_data;
-
     read_concern rc;
     rc.acknowledge_level(read_concern::level::k_local);
     auto old_rc = coll->read_concern();
     coll->read_concern(rc);
 
     options::find options{};
-    builder::basic::document sort{};
-    sort.append(builder::basic::kvp("_id", 1));
-    options.sort(sort.extract());
+    options.sort(make_document(kvp("_id", 1)));
 
-    std::vector<document::view> expected_docs{};
-    for (auto&& ele : expected["data"].get_array().value) {
-        expected_docs.push_back(ele.get_document().value);
-    }
-
-    auto it = expected_docs.begin();
-
-    for (auto&& doc : coll->find({}, options)) {
-        if (it == expected_docs.end()) {
-            FAIL("found more documents than expected.");
-        }
-
-        auto next_expected = *it;
-        it++;
-
-        REQUIRE_BSON_MATCHES(doc, next_expected);
-    }
-
+    using namespace std;
+    cursor actual = coll->find({}, options);
+    auto expected_data = expected["data"].get_array().value;
+    REQUIRE(equal(begin(expected_data),
+                  end(expected_data),
+                  begin(actual),
+                  [&](const bsoncxx::array::element& ele, const document::view& doc) {
+                      REQUIRE_BSON_MATCHES(doc, ele.get_document().value);
+                      return true;
+                  }));
+    REQUIRE(begin(actual) == end(actual));
     coll->read_concern(old_rc);
-
-    if (it != expected_docs.end()) {
-        FAIL("Had more expected documents than we found.");
-    }
 }
 
 bool server_has_sessions(const client& conn) {

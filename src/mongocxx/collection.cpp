@@ -17,7 +17,6 @@
 #include <chrono>
 #include <cstdint>
 #include <limits>
-#include <tuple>
 #include <utility>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -29,13 +28,11 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
-#include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -45,24 +42,20 @@
 #include <mongocxx/hint.hpp>
 #include <mongocxx/model/write.hpp>
 #include <mongocxx/private/bulk_write.hh>
-#include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/collection.hh>
 #include <mongocxx/private/cursor.hh>
-#include <mongocxx/private/database.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/pipeline.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/write_concern.hh>
-#include <mongocxx/result/bulk_write.hpp>
 #include <mongocxx/result/delete.hpp>
 #include <mongocxx/result/insert_many.hpp>
 #include <mongocxx/result/insert_one.hpp>
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
-#include <mongocxx/stdx.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -584,6 +577,9 @@ stdx::optional<result::replace_one> collection::_replace_one(const client_sessio
     if (options.collation()) {
         replace_op.collation(*options.collation());
     }
+    if (options.hint()) {
+        replace_op.hint(*options.hint());
+    }
     if (options.upsert()) {
         replace_op.upsert(*options.upsert());
     }
@@ -622,6 +618,9 @@ stdx::optional<result::update> collection::_update_many(const client_session* se
     model::update_many update_op(std::move(filter), std::move(update));
     if (options.collation()) {
         update_op.collation(*options.collation());
+    }
+    if (options.hint()) {
+        update_op.hint(*options.hint());
     }
     if (options.upsert()) {
         update_op.upsert(*options.upsert());
@@ -700,6 +699,9 @@ stdx::optional<result::update> collection::_update_one(const client_session* ses
     if (options.collation()) {
         update_op.collation(*options.collation());
     }
+    if (options.hint()) {
+        update_op.hint(*options.hint());
+    }
     if (options.upsert()) {
         update_op.upsert(*options.upsert());
     }
@@ -772,6 +774,9 @@ stdx::optional<result::delete_result> collection::_delete_many(
     if (options.collation()) {
         delete_op.collation(*options.collation());
     }
+    if (options.hint()) {
+        delete_op.hint(*options.hint());
+    }
     bulk_op.append(delete_op);
 
     auto result = bulk_op.execute();
@@ -805,6 +810,9 @@ stdx::optional<result::delete_result> collection::_delete_one(
     model::delete_one delete_op(filter);
     if (options.collation()) {
         delete_op.collation(*options.collation());
+    }
+    if (options.hint()) {
+        delete_op.hint(*options.hint());
     }
     bulk_op.append(delete_op);
 
@@ -943,7 +951,7 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_delete(
                            MONGOC_FIND_AND_MODIFY_REMOVE,
                            false,
                            stdx::nullopt,
-                           stdx::nullopt,
+                           options.hint(),
                            options);
 }
 

@@ -19,6 +19,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/hint.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -153,12 +154,35 @@ class MONGOCXX_API find_one_and_delete {
     ///
     const stdx::optional<mongocxx::write_concern>& write_concern() const;
 
+    ///
+    /// Sets the index to use for this operation.
+    ///
+    /// @note if the server already has a cached shape for this query, it may
+    /// ignore a hint.
+    ///
+    /// @param index_hint
+    ///   Object representing the index to use.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    find_one_and_delete& hint(class hint index_hint);
+
+    ///
+    /// Gets the current hint.
+    ///
+    /// @return The current hint, if one is set.
+    ///
+    const stdx::optional<class hint>& hint() const;
+
    private:
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<bsoncxx::document::view_or_value> _projection;
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
     stdx::optional<mongocxx::write_concern> _write_concern;
+    stdx::optional<class hint> _hint;
 };
 
 }  // namespace options

@@ -31,6 +31,15 @@ delete_many& delete_many::collation(bsoncxx::document::view_or_value collation) 
     return *this;
 }
 
+delete_many& delete_many::hint(class hint index_hint) {
+    _hint = std::move(index_hint);
+    return *this;
+}
+
+const stdx::optional<class hint>& delete_many::hint() const {
+    return _hint;
+}
+
 const stdx::optional<bsoncxx::document::view_or_value>& delete_many::collation() const {
     return _collation;
 }
