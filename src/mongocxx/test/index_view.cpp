@@ -174,6 +174,9 @@ TEST_CASE("create_one", "[index_view]") {
     }
 
     SECTION("commitQuorum option") {
+        if (test_util::get_topology(mongodb_client) == "single")
+            return;
+
         collection coll = db["index_view_create_one_commit_quorum"];
         coll.drop();
         coll.insert_one({});  // Ensure that the collection exists.
@@ -186,9 +189,7 @@ TEST_CASE("create_one", "[index_view]") {
         auto commit_quorum_regex =
             Catch::Matches("(.*)commit( )?quorum(.*)", Catch::CaseSensitive::No);
 
-        using namespace test_util;
-        bool is_supported =
-            get_max_wire_version(mongodb_client) >= 9 && get_topology(mongodb_client) != "single";
+        bool is_supported = test_util::get_max_wire_version(mongodb_client) >= 9;
         CAPTURE(is_supported);
 
         SECTION("works with int") {
@@ -200,11 +201,6 @@ TEST_CASE("create_one", "[index_view]") {
             }
         }
 
-        SECTION("fails with invalid int") {
-            options.commit_quorum(-1);
-            REQUIRE_THROWS_WITH(indexes.create_one(model, options), commit_quorum_regex);
-        }
-
         SECTION("works with string") {
             options.commit_quorum("majority");
             if (is_supported) {
@@ -212,11 +208,6 @@ TEST_CASE("create_one", "[index_view]") {
             } else {
                 REQUIRE_THROWS_WITH(indexes.create_one(model, options), commit_quorum_regex);
             }
-        }
-
-        SECTION("fails with invalid string") {
-            options.commit_quorum("bad_str");
-            REQUIRE_THROWS_WITH(indexes.create_one(model, options), commit_quorum_regex);
         }
     }
 }
