@@ -37,4 +37,5 @@ v2/aggregate-merge.json
 v2/aggregate-out-readConcern.json
 v2/bulkWrite-arrayFilters.json
 v2/db-aggregate.json
+v2/find-allowdiskuse.json
 v2/updateWithPipelines.json
