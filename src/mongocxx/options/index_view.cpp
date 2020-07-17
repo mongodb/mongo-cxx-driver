@@ -12,9 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/types.hpp>
+#include <mongocxx/config/private/prelude.hh>
 #include <mongocxx/options/index_view.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -30,6 +35,10 @@ const bsoncxx::stdx::optional<std::chrono::milliseconds>& index_view::max_time()
     return _max_time;
 }
 
+const stdx::optional<bsoncxx::document::value> index_view::commit_quorum() const {
+    return _commit_quorum;
+}
+
 index_view& index_view::max_time(std::chrono::milliseconds max_time) {
     _max_time = max_time;
     return *this;
@@ -40,6 +49,18 @@ index_view& index_view::write_concern(mongocxx::write_concern write_concern) {
     return *this;
 }
 
+index_view& index_view::commit_quorum(int commit_quorum) {
+    _commit_quorum = stdx::make_optional<bsoncxx::document::value>(
+        make_document(kvp("commitQuorum", bsoncxx::types::b_int32{commit_quorum})));
+    return *this;
+}
+
+index_view& index_view::commit_quorum(std::string commit_quorum) {
+    _commit_quorum = stdx::make_optional<bsoncxx::document::value>(
+        make_document(kvp("commitQuorum", commit_quorum)));
+    return *this;
+}
 }  // namespace options
+
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

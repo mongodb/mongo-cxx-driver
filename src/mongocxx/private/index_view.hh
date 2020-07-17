@@ -14,22 +14,21 @@
 
 #pragma once
 
-#include <vector>
-
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+#include <mongocxx/config/private/prelude.hh>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/options/index_view.hpp>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
-
-#include <mongocxx/config/private/prelude.hh>
+#include <vector>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -39,7 +38,8 @@ using bsoncxx::builder::basic::kvp;
 
 class index_view::impl {
    public:
-    impl(mongoc_collection_t* collection) : _coll{collection} {}
+    impl(mongoc_collection_t* collection, mongoc_client_t* client)
+        : _coll{collection}, _client{client} {}
 
     impl(const impl& i) = default;
 
@@ -134,6 +134,26 @@ class index_view::impl {
             opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
+        if (options.commit_quorum()) {
+            auto server_description = scoped_server_description(libmongoc::client_select_server(
+                _client, true /* for_writes */, nullptr /* read_prefs */, &error));
+            if (!server_description.sd)
+                throw_exception<write_exception>(error);
+
+            auto is_master = libmongoc::server_description_ismaster(server_description.sd);
+
+            bson_iter_t iter;
+            if (!bson_iter_init_find(&iter, is_master, "maxWireVersion") ||
+                bson_iter_int32(&iter) < 9) {
+                throw write_exception{
+                    error_code::k_invalid_parameter,
+                    "option 'commitQuorum' not available on the current server version"};
+            }
+
+            command =
+                make_document(concatenate(command), concatenate(options.commit_quorum()->view()));
+        }
+
         libbson::scoped_bson_t command_bson{command};
         libbson::scoped_bson_t opts_bson{opts_doc.view()};
 
@@ -219,6 +239,16 @@ class index_view::impl {
     }
 
     mongoc_collection_t* _coll;
+    mongoc_client_t* _client;
+
+    class scoped_server_description {
+       public:
+        explicit scoped_server_description(mongoc_server_description_t* sd) : sd(sd) {}
+        ~scoped_server_description() {
+            mongoc_server_description_destroy(sd);
+        }
+        mongoc_server_description_t* sd;
+    };
 };
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
