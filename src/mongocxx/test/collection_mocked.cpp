@@ -599,6 +599,8 @@ TEST_CASE("Collection", "[collection]") {
 
                 if (expected_hint) {
                     REQUIRE(options_view["hint"].get_utf8() == expected_hint->get_utf8());
+                } else {
+                    REQUIRE(!options_view["hint"]);
                 }
 
                 return true;
@@ -722,6 +724,8 @@ TEST_CASE("Collection", "[collection]") {
 
                 if (expected_hint) {
                     REQUIRE(options_view["hint"].get_utf8() == expected_hint->get_utf8());
+                } else {
+                    REQUIRE(!options_view["hint"]);
                 }
 
                 return true;
@@ -803,6 +807,8 @@ TEST_CASE("Collection", "[collection]") {
 
                 if (expected_hint) {
                     REQUIRE(options_view["hint"].get_utf8() == expected_hint->get_utf8());
+                } else {
+                    REQUIRE(!options_view["hint"]);
                 }
 
                 return true;
@@ -864,6 +870,8 @@ TEST_CASE("Collection", "[collection]") {
                 if (expected_hint) {
                     CAPTURE(to_json(options_view));
                     REQUIRE(options_view["hint"].get_utf8() == expected_hint->get_utf8());
+                } else {
+                    REQUIRE(!options_view["hint"]);
                 }
                 return true;
             });
@@ -905,6 +913,8 @@ TEST_CASE("Collection", "[collection]") {
                 if (expected_hint) {
                     CAPTURE(to_json(options_view));
                     REQUIRE(options_view["hint"].get_utf8() == expected_hint->get_utf8());
+                } else {
+                    REQUIRE(!options_view["hint"]);
                 }
                 return true;
             });
