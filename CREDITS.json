@@ -113,6 +113,13 @@
                 "evobranov@gmail.com"
             ],
             "description": "Command Monitoring API, Transactions API, various features and bug fixes."
+        },
+        {
+            "name": "Clyde Bazile",
+            "email": [
+                "clyde.bazile@mongodb.com"
+            ],
+            "description": "Ongoing development/maintenance."
         }
     ]
 }
