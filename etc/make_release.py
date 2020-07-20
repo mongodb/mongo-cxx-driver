@@ -403,7 +403,7 @@ def build_distribution(release_tag, release_version, c_driver_dir, quiet):
     outs, errs = proc.communicate()
 
     dist_file = 'mongo-cxx-driver-{}.tar.gz'.format(release_tag)
-    if proc.returncode == 0 and os.path.exist(dist_file):
+    if proc.returncode == 0 and os.path.exists(dist_file):
         if not quiet:
             click.echo('C++ Driver build was successful.')
             click.echo('Distribution file: {}'.format(dist_file))
