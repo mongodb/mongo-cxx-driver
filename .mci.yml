@@ -40,6 +40,7 @@ variables:
         # Without this option, some destructors may not be called in tests (CXX-2054).
         msvc2017_cmake_flags: &msvc2017_cmake_flags -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS="/Zc:__cplusplus /EHsc"
         msvc2017_generator: &msvc2017_generator Visual Studio 15 2017 Win64
+        code_coverage_cmake_flags: &code_coverage_cmake_flags -DENABLE_CODE_COVERAGE=ON
 
     example_projects_cc:
         asan_cc_path: &asan_cc_path /usr/bin/clang
@@ -201,9 +202,9 @@ functions:
                   export PATH="${extra_path}:$PATH"
                   export RUN_DISTCHECK=${RUN_DISTCHECK}
 
-                  ADDL_OPTS=
+                  ADDL_OPTS=${code_coverage_cmake_flags}
                   if [ "${USE_STATIC_LIBS}" ]; then
-                      ADDL_OPTS="-DBUILD_SHARED_LIBS=OFF"
+                      ADDL_OPTS="$ADDL_OPTS -DBUILD_SHARED_LIBS=OFF"
                   fi
 
                   MONGOC_PREFIX="$(pwd)/../mongoc"
@@ -425,6 +426,21 @@ functions:
             content_type: ${content_type|application/x-gzip}
             display_name: "mongodb-logs.tar.gz"
 
+    "upload code coverage":
+      - command: shell.exec
+        params:
+          shell: bash
+          working_dir: "mongo-cxx-driver"
+          script: |
+            # redacted code coverage token
+            export CODECOV_TOKEN="${codecov_token}"
+
+            set -o errexit
+            set -o xtrace
+            set -o pipefail
+
+            bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+
 #######################################
 #              Post Task              #
 #######################################
@@ -435,6 +451,7 @@ post:
   # Workaround for CXX-2040
   # - func: "upload working dir"
   - func: "upload mongo orchestration artifacts"
+  - func: "upload code coverage"
 
 #######################################
 #               Tasks                 #
@@ -601,6 +618,7 @@ axes:
                 cmake_flags: *linux_cmake_flags
                 build_type: "Debug"
                 tar_options: *linux_tar_options
+                code_coverage_cmake_flags: *code_coverage_cmake_flags
             run_on:
                 - ubuntu1604-build
           - id: "windows-2k8"
