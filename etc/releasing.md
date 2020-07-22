@@ -4,7 +4,7 @@ If doing a release on a version prior to 3.5.0, follow the old instructions from
 
 ## Check fixVersions in Jira
 
-Ensure that all tickets under the [version to be released](https://jira.mongodb.org/projects/CXX?selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=unreleased) are in `Closed` status on the C++ Driver releases page If not, bulk change Open tickets that will NOT be in the release to a new version (create it if necessary).
+Ensure that all tickets under the [version to be released](https://jira.mongodb.org/projects/CXX?selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=unreleased) are in `Closed` status on the C++ Driver releases page If not, bulk change open tickets that will NOT be in the release to a new version (create it if necessary).
 
 ## Audit Jira ticket titles and types for use in release notes
 From the releases page click the “Release Notes” link to see a summary of tickets to be included in release notes. Update the ticket type and title as appropriate. User-facing issues should generally be either “Bug” or “New Feature”. Non-user facing issues should generally be “Task” tickets (and will be omitted later, so you can ignore them here).
