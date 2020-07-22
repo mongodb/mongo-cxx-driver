@@ -1,0 +1,64 @@
+--- mongo-cxx-driver.spec.orig	2020-07-21 13:44:37.697202918 -0400
++++ mongo-cxx-driver.spec	2020-07-21 13:45:16.010026420 -0400
+@@ -1,6 +1,8 @@
+ # for better compatibility with SCL spec file
+ %global pkg_name mongo-cxx-driver
+ 
++%define _unpackaged_files_terminate_build 0
++
+ Name:           mongo-cxx-driver
+ Version:        3.4.1
+ Release:        1%{?dist}
+@@ -10,8 +12,6 @@
+ Source0:        https://github.com/mongodb/%{pkg_name}/archive/%{name}-r%{version}.tar.gz
+ 
+ 
+-Patch2:         mongo-cxx-driver-3.3.1_paths.patch
+-
+ BuildRequires:  boost-devel >= 1.49
+ BuildRequires:  openssl-devel
+ BuildRequires:  cmake
+@@ -66,8 +66,6 @@
+ %prep
+ %setup -q -n %{name}-r%{version}
+ 
+-%patch2 -p1 -b .paths
+-
+ 
+ %build
+ 
+@@ -77,13 +75,14 @@
+ %cmake \
+     -DCMAKE_BUILD_TYPE=Release \
+     -DBSONCXX_POLY_USE_BOOST=1 \
++    -DENABLE_UNINSTALL=OFF \
+     .
+ 
+-make %{?_smp_mflags}
++%cmake_build
+ 
+ 
+ %install
+-%make_install
++%cmake_install
+ 
+ %files
+ %doc README.md
+@@ -94,7 +93,7 @@
+ %{_includedir}/mongocxx/
+ %{_libdir}/libmongocxx.so
+ %{_libdir}/pkgconfig/libmongocxx.pc
+-%{_libdir}/cmake/libmongocxx*
++%{_libdir}/cmake/*mongocxx*
+ 
+ %files bsoncxx
+ %{_libdir}/libbsoncxx.so.*
+@@ -103,7 +102,7 @@
+ %{_includedir}/bsoncxx
+ %{_libdir}/libbsoncxx.so
+ %{_libdir}/pkgconfig/libbsoncxx.pc
+-%{_libdir}/cmake/libbsoncxx*
++%{_libdir}/cmake/*bsoncxx*
+ 
+ %changelog
+ * Mon Mar 09 2020 Honza Horak <hhorak@redhat.com> - 3.4.1-1
