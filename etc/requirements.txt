@@ -1,0 +1,5 @@
+# Required for release script.
+Click
+GitPython
+PyGithub
+jira
