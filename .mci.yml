@@ -557,6 +557,28 @@ tasks:
             export INSTALL_VERSION=${mongocxx_version_finder_sh}
             cmd.exe /c .\\.evergreen\\uninstall_check_windows.cmd
 
+    - name: build_example_with_add_subdirectory
+      commands:
+      - func: "setup"
+      - func: "start_mongod"
+      - command: shell.exec
+        type: test
+        params:
+          working_dir: "mongo-cxx-driver"
+          shell: bash
+          script: |-
+            set -o errexit
+            set -o xtrace
+            . .evergreen/find_cmake.sh
+            cd examples/add_subdirectory
+            [ -d mongo-c-driver ] || git clone --depth 1 https://github.com/mongodb/mongo-c-driver
+            rsync -aq --exclude='examples/add_subdirectory' $(readlink -f ../..) .
+            [ -d build ] || mkdir build
+            cd build
+            $CMAKE -DCMAKE_VERBOSE_MAKEFILE=ON ..
+            $CMAKE --build . -- -j 8
+            ./hello_mongocxx
+
     - name: debian-package-build
       commands:
       - func: "setup"
@@ -698,6 +720,9 @@ buildvariants:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_shared_libs_replica_set
+          - name: build_example_with_add_subdirectory
+            distros:
+            - ubuntu1804-build
           - name: uninstall_check
 
     - name: ubuntu1604-debug-std-experimental

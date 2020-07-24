@@ -30,6 +30,13 @@ function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
 
     target_link_libraries(${TARGET} PRIVATE ${libmongoc_target})
     target_include_directories(${TARGET} PRIVATE ${libmongoc_include_directories})
+    target_include_directories(
+        ${TARGET}
+        PUBLIC
+            $<BUILD_INTERFACE:${source_dir}/include>
+            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/..>
+            $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/..>
+    )
     target_compile_definitions(${TARGET} PRIVATE ${libmongoc_definitions})
 
     generate_export_header(${TARGET}

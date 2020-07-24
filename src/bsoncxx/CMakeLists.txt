@@ -78,39 +78,55 @@ set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
 
 set(bsoncxx_pkg_dep "")
 
-# Attempt to find libbson by new package name (without lib).
-find_package(bson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} QUIET)
+if(TARGET bson_shared OR TARGET bson_static)
+  # If these targets exist, then libbson has already been included as a project
+  # sub-directory
+  message ("found libbson targets declared in current build scope; version not checked")
 
-if(bson-${LIBBSON_REQUIRED_ABI_VERSION}_FOUND)
-  message ("found libbson version ${bson-${LIBBSON_REQUIRED_ABI_VERSION}_VERSION}")
   if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
-    set(libbson_target mongo::bson_shared)
+    set(libbson_target bson_shared)
   else()
-    set(libbson_target mongo::bson_static)
+    set(libbson_target bson_static)
   endif()
 
   if(BSONCXX_BUILD_STATIC)
     set(bsoncxx_pkg_dep "find_dependency(bson-1.0 REQUIRED)")
   endif()
 else()
-  # Require package of old libbson name (with lib).
-  if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
-    find_package(libbson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
-    message ("found libbson version ${BSON_VERSION}")
-    set(libbson_target ${BSON_LIBRARIES})
-    set(libbson_include_directories ${BSON_INCLUDE_DIRS})
-    set(libbson_definitions ${BSON_DEFINITIONS})
+  # Attempt to find libbson by new package name (without lib).
+  find_package(bson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} QUIET)
+
+  if(bson-${LIBBSON_REQUIRED_ABI_VERSION}_FOUND)
+    message ("found libbson version ${bson-${LIBBSON_REQUIRED_ABI_VERSION}_VERSION}")
+    if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
+      set(libbson_target mongo::bson_shared)
+    else()
+      set(libbson_target mongo::bson_static)
+    endif()
+
     if(BSONCXX_BUILD_STATIC)
-      set(bsoncxx_pkg_dep "find_dependency(libbson-1.0 REQUIRED)")
+      set(bsoncxx_pkg_dep "find_dependency(bson-1.0 REQUIRED)")
     endif()
   else()
-    find_package(libbson-static-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
-    message ("found libbson version ${BSON_STATIC_VERSION}")
-    set(libbson_target ${BSON_STATIC_LIBRARIES})
-    set(libbson_include_directories ${BSON_STATIC_INCLUDE_DIRS})
-    set(libbson_definitions ${BSON_STATIC_DEFINITIONS})
-    if(BSONCXX_BUILD_STATIC)
-      set(bsoncxx_pkg_dep "find_dependency(libbson-static-1.0 REQUIRED)")
+    # Require package of old libbson name (with lib).
+    if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
+      find_package(libbson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
+      message ("found libbson version ${BSON_VERSION}")
+      set(libbson_target ${BSON_LIBRARIES})
+      set(libbson_include_directories ${BSON_INCLUDE_DIRS})
+      set(libbson_definitions ${BSON_DEFINITIONS})
+      if(BSONCXX_BUILD_STATIC)
+        set(bsoncxx_pkg_dep "find_dependency(libbson-1.0 REQUIRED)")
+      endif()
+    else()
+      find_package(libbson-static-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
+      message ("found libbson version ${BSON_STATIC_VERSION}")
+      set(libbson_target ${BSON_STATIC_LIBRARIES})
+      set(libbson_include_directories ${BSON_STATIC_INCLUDE_DIRS})
+      set(libbson_definitions ${BSON_STATIC_DEFINITIONS})
+      if(BSONCXX_BUILD_STATIC)
+        set(bsoncxx_pkg_dep "find_dependency(libbson-static-1.0 REQUIRED)")
+      endif()
     endif()
   endif()
 endif()
@@ -136,11 +152,6 @@ set(bsoncxx_sources
     types/bson_value/value.cpp
     types/bson_value/view.cpp
     validate.cpp
-)
-
-include_directories(
-    ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_BINARY_DIR}/src
 )
 
 if(BSONCXX_POLY_USE_BOOST)

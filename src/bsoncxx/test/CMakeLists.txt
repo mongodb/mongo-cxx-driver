@@ -13,7 +13,7 @@
 # limitations under the License.
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/src/third_party/catch/include
+    ${MONGO_CXX_DRIVER_SOURCE_DIR}/src/third_party/catch/include
 )
 
 file (GLOB src_bsoncxx_test_DIST_cpps RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
