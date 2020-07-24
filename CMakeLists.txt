@@ -334,18 +334,23 @@ add_custom_command (OUTPUT ${DIST_FILE}
       ${ALL_DIST} ${dist_generated_depends}
 )
 
-add_custom_target (dist DEPENDS ${DIST_FILE})
+if(NOT (TARGET bson_shared OR TARGET mongoc_shared))
+   # If these targets exist, then libbson/libmongoc have already been included
+   # as a project sub-directory; the 'dist' and 'distcheck' targets here would
+   # collide with those declared in the mongo-c-driver project
+   add_custom_target (dist DEPENDS ${DIST_FILE})
 
-add_custom_target (distcheck DEPENDS dist
-   COMMAND ${CMAKE_COMMAND}
-      -D CMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake/make_dist
-      -D CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
-      -D PACKAGE_PREFIX=${PACKAGE_PREFIX}
-      -D CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
-      -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDistCheck.cmake
-)
+   add_custom_target (distcheck DEPENDS dist
+      COMMAND ${CMAKE_COMMAND}
+         -D CMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake/make_dist
+         -D CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
+         -D PACKAGE_PREFIX=${PACKAGE_PREFIX}
+         -D CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
+         -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDistCheck.cmake
+   )
+endif()
 
-if(ENABLE_UNINSTALL)
+if(ENABLE_UNINSTALL AND NOT (TARGET bson_shared OR TARGET mongoc_shared))
     if(WIN32)
         set(UNINSTALL_PROG "uninstall.cmd")
     else()

@@ -82,7 +82,7 @@ set(spec_test_common
     spec/util.cpp)
 
 add_executable(test_driver
-    ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
+    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     ${test_driver_sources}
 )
@@ -98,56 +98,56 @@ add_executable(test_instance
 )
 
 add_executable(test_crud_specs
-    ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
+    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/crud.cpp
     ${spec_test_common}
 )
 
 add_executable(test_change_stream_specs
-    ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
+    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/change_stream.cpp
     ${spec_test_common}
 )
 
 add_executable(test_gridfs_specs
-    ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
+    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/gridfs.cpp
     ${spec_test_common}
 )
 
 add_executable(test_client_side_encryption_specs
-  ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
+  ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
   ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
   spec/client_side_encryption.cpp
   ${spec_test_common}
 )
 
 add_executable(test_command_monitoring_specs
-    ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
+    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/command_monitoring.cpp
     ${spec_test_common}
 )
 
 add_executable(test_transactions_specs
-    ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
+    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/transactions.cpp
     ${spec_test_common}
 )
 
 add_executable(test_retryable_reads_specs
-    ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
+    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/retryable-reads.cpp
     ${spec_test_common}
 )
 
 add_executable(test_read_write_concern_specs
-    ${CMAKE_SOURCE_DIR}/src/mongocxx/test_util/client_helpers.cpp
+    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/read_write_concern.cpp
     ${spec_test_common}
@@ -197,33 +197,33 @@ add_test(retryable_reads_spec test_retryable_reads_specs)
 add_test(read_write_concern_specs test_read_write_concern_specs)
 
 set_tests_properties(crud_specs PROPERTIES
-    ENVIRONMENT "CRUD_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/crud")
+    ENVIRONMENT "CRUD_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/crud")
 
 set_tests_properties(gridfs_specs PROPERTIES
-    ENVIRONMENT "GRIDFS_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/gridfs")
+    ENVIRONMENT "GRIDFS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/gridfs")
 
 set_tests_properties(client_side_encryption_specs PROPERTIES
-    ENVIRONMENT "ENCRYPTION_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/client_side_encryption")
+    ENVIRONMENT "ENCRYPTION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/client_side_encryption")
 
 set_tests_properties(driver PROPERTIES
-    ENVIRONMENT "ENCRYPTION_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/client_side_encryption")
+    ENVIRONMENT "ENCRYPTION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/client_side_encryption")
   
 set_tests_properties(command_monitoring_specs PROPERTIES
-    ENVIRONMENT "COMMAND_MONITORING_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/command-monitoring")
+    ENVIRONMENT "COMMAND_MONITORING_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/command-monitoring")
 
 set_tests_properties(change_stream_specs PROPERTIES
-    ENVIRONMENT "CHANGE_STREAM_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/change_stream")
+    ENVIRONMENT "CHANGE_STREAM_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/change_stream")
 
 set_tests_properties(transactions_specs PROPERTIES
-  ENVIRONMENT "TRANSACTIONS_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/transactions")
+  ENVIRONMENT "TRANSACTIONS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/transactions")
 set_property(TEST transactions_specs
-  APPEND PROPERTY ENVIRONMENT "WITH_TRANSACTION_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/with_transaction")
+  APPEND PROPERTY ENVIRONMENT "WITH_TRANSACTION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/with_transaction")
 
 set_tests_properties(retryable_reads_spec PROPERTIES
-   ENVIRONMENT "RETRYABLE_READS_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/retryable-reads")
+   ENVIRONMENT "RETRYABLE_READS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/retryable-reads")
 
 set_tests_properties(read_write_concern_specs PROPERTIES
-   ENVIRONMENT "READ_WRITE_CONCERN_OPERATION_TESTS_PATH=${CMAKE_SOURCE_DIR}/data/read-write-concern/operation")
+   ENVIRONMENT "READ_WRITE_CONCERN_OPERATION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/read-write-concern/operation")
 
 if (MONGOCXX_ENABLE_SLOW_TESTS)
   set_tests_properties(driver PROPERTIES
