@@ -453,7 +453,9 @@ void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> un
             WARN("Skipping unsupported test file: " << test_file);
             continue;
         }
-        cb(path + "/" + test_file);
+        SECTION(test_file) {
+            cb(path + "/" + test_file);
+        }
     }
 }
 
