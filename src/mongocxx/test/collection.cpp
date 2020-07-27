@@ -2406,13 +2406,15 @@ TEST_CASE("create_index tests", "[collection]") {
 
         options::index options{};
         options.unique(true);
+        options.hidden(true);
         options.expire_after(std::chrono::seconds(500));
         options.name(index_name);
 
         REQUIRE_NOTHROW(coll.create_index(keys.view(), options));
 
         bool unique = options.unique().value();
-        auto validate = [unique](bsoncxx::document::view index) {
+        bool hidden = options.hidden().value();
+        auto validate = [=](bsoncxx::document::view index) {
             auto expire_after = index["expireAfterSeconds"];
             REQUIRE(expire_after);
             REQUIRE(expire_after.type() == type::k_int32);
@@ -2422,6 +2424,11 @@ TEST_CASE("create_index tests", "[collection]") {
             REQUIRE(unique_ele);
             REQUIRE(unique_ele.type() == type::k_bool);
             REQUIRE(unique_ele.get_bool() == unique);
+
+            auto hidden_ele = index["hidden"];
+            REQUIRE(hidden_ele);
+            REQUIRE(hidden_ele.type() == type::k_bool);
+            REQUIRE(hidden_ele.get_bool() == hidden);
         };
 
         find_index_and_validate(coll, index_name, validate);
