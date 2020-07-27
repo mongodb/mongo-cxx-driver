@@ -12,7 +12,7 @@ tests:
           errorCode: 6
           closeConnection: false
     target: collection
-    topology:
+    topology: 
       - replicaset
       - sharded
     changeStreamPipeline: []
