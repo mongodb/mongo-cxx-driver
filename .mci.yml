@@ -343,6 +343,7 @@ functions:
                   export CC="${example_projects_cc}"
                   export CXX="${example_projects_cxx}"
                   export CXX_STANDARD="${example_projects_cxx_standard}"
+                  export CMAKE=${cmake}
                   if [ "Windows_NT" == "$OS" ]; then
                       export MSVC=1
                   elif [ "$(uname -s | tr '[:upper:]' '[:lower:]')" == "darwin" ]; then
@@ -749,14 +750,14 @@ buildvariants:
           - name: compile_and_test_with_static_libs
 
     - name: ubuntu1804-zseries
-      display_name: "s390x Ubuntu 18.04 (MongoDB Latest)"
+      display_name: "s390x Ubuntu 18.04 (MongoDB 4.4)"
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
           cmake: "cmake"
           tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: *version_44
       run_on:
           - ubuntu1804-zseries-small
       tasks:
