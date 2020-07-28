@@ -93,11 +93,6 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             value_construction_test(test_doc.view());
         }
 
-        SECTION("undefined") {
-            auto test_doc = bson_value::make_value(types::b_undefined{});
-            value_construction_test(test_doc.view());
-        }
-
         SECTION("oid") {
             auto test_doc = bson_value::make_value(types::b_oid{});
             value_construction_test(test_doc.view());
