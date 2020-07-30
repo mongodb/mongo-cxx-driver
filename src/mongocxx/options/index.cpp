@@ -38,6 +38,11 @@ index& index::unique(bool unique) {
     return *this;
 }
 
+index& index::hidden(bool hidden) {
+    _hidden = hidden;
+    return *this;
+}
+
 index& index::name(bsoncxx::string::view_or_value name) {
     _name = std::move(name);
     return *this;
@@ -131,6 +136,10 @@ const stdx::optional<bool>& index::unique() const {
     return _unique;
 }
 
+const stdx::optional<bool>& index::hidden() const {
+    return _hidden;
+}
+
 const stdx::optional<bsoncxx::string::view_or_value>& index::name() const {
     return _name;
 }
@@ -212,6 +221,10 @@ index::operator bsoncxx::document::view_or_value() {
 
     if (_unique) {
         root.append(kvp("unique", *_unique));
+    }
+
+    if (_hidden) {
+        root.append(kvp("hidden", *_hidden));
     }
 
     if (_partial_filter_expression) {
