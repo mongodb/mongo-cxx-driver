@@ -8,8 +8,8 @@ Currently, no drivers guarantee API or ABI stability.
 | Family/version       | Stability   | Development         | Purpose                               |
 | -------------------- | ----------- | ------------------- | ------------------------------------- |
 | (repo master branch) | Unstable    | Active development  | New feature development               |
-| mongocxx 3.6.x       | Unstable    | Bug fixes only      | Upcoming stable C++ driver release    |
-| mongocxx 3.5.x       | Stable      | Bug fixes only      | Current stable C++ driver release     |
+| mongocxx 3.6.x       | Stable      | Bug fixes only      | Current stable C++ driver release     |
+| mongocxx 3.5.x       | Stable      | None                | Previous stable C++ driver release    |
 | mongocxx 3.4.x       | Stable      | None                | Previous stable C++ driver release    |
 | mongocxx 3.3.x       | Stable      | None                | Previous stable C++ driver release    |
 | mongocxx 3.2.x       | Stable      | None                | Previous stable C++ driver release    |
@@ -20,7 +20,7 @@ Currently, no drivers guarantee API or ABI stability.
 
 | mongocxx                                     |
 | ---------------------------------------------|
-| [mongocxx-3.6.0-rc0](../mongocxx-3.6.0-rc0)  |
+| [mongocxx-3.6.0](../mongocxx-3.6.0)          |
 | [mongocxx-3.5.1](../mongocxx-3.5.1)          |
 | [mongocxx-3.5.0](../mongocxx-3.5.0)          |
 | [mongocxx-3.4.2](../mongocxx-3.4.2)          |
