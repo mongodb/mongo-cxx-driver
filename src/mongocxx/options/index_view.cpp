@@ -25,7 +25,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-index_view::index_view() : _max_time(), _write_concern() {}
+index_view::index_view() : _max_time(), _write_concern(), _commit_quorum() {}
 
 const bsoncxx::stdx::optional<mongocxx::write_concern>& index_view::write_concern() const {
     return _write_concern;
