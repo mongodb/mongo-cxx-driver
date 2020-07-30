@@ -106,6 +106,7 @@ functions:
                  g++ --version || true
                  clang --version || true
                  cmake --version || true
+                 openssl version || true
 
     "start_mongod":
         command: shell.exec
@@ -172,6 +173,7 @@ functions:
                     if [ "Windows_NT" == "$OS" ]; then
                         PREFIX=$(cygpath -m "$PREFIX")
                     fi
+                    export CMAKE=${cmake}
                     export GENERATOR="${generator}"
                     ./.evergreen/install_c_driver.sh ${mongoc_version|master}
 
@@ -211,6 +213,7 @@ functions:
                   if [ "Windows_NT" == "$OS" ]; then
                       MONGOC_PREFIX=$(cygpath -m "$MONGOC_PREFIX")
                   fi
+                  export CMAKE=${cmake}
 
                   python -m virtualenv venv
                   cd venv
@@ -340,6 +343,7 @@ functions:
                   export CC="${example_projects_cc}"
                   export CXX="${example_projects_cxx}"
                   export CXX_STANDARD="${example_projects_cxx_standard}"
+                  export CMAKE=${cmake}
                   if [ "Windows_NT" == "$OS" ]; then
                       export MSVC=1
                   elif [ "$(uname -s | tr '[:upper:]' '[:lower:]')" == "darwin" ]; then
@@ -745,16 +749,17 @@ buildvariants:
           # signature.
           - name: compile_and_test_with_static_libs
 
-    - name: ubuntu1604-zseries
-      display_name: "s390x Ubuntu 16.04 (MongoDB Latest)"
+    - name: ubuntu1804-zseries
+      display_name: "s390x Ubuntu 18.04 (MongoDB 4.4)"
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
+          cmake: "cmake"
           tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: *version_44
       run_on:
-          - ubuntu1604-zseries-small
+          - ubuntu1804-zseries-small
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
