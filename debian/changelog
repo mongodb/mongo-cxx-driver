@@ -2,6 +2,7 @@ mongo-cxx-driver (3.6.0-1) UNRELEASED; urgency=medium
 
   * New upstream release
   * Bump dependency on libmongoc-dev
+  * Update to Standards-Version 4.5.0 (no changes)
 
  -- Roberto C. Sanchez <roberto@connexer.com>  Fri, 31 Jul 2020 10:58:16 -0400
 
