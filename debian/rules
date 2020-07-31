@@ -33,6 +33,7 @@ override_dh_auto_build:
 override_dh_auto_install:
 	dh_auto_install -B$(CURDIR)/build
 	find $(CURDIR)/debian/tmp -type d -empty -delete
+	rm -f $(CURDIR)/debian/tmp/usr/share/mongo-cxx-driver/LICENSE
 
 override_dh_auto_test:
 	# do nothing
