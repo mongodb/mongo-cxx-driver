@@ -1,5 +1,6 @@
 Description: Remove build references to embedded JS libraries which are used only for deploying the Mongo C++ Driver website (i.e., not for any binary or documentation artifacts)
 Author: Roberto C. Sánchez <roberto@connexer.com>
+Forwarded: not-needed
 --- mongo-cxx-driver.git.orig/docs/themes/CMakeLists.txt
 +++ mongo-cxx-driver.git/docs/themes/CMakeLists.txt
 @@ -12,14 +12,11 @@
