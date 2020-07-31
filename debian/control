@@ -7,7 +7,7 @@ Uploaders: A. Jesse Jiryu Davis <jesse@mongodb.com>,
            Roberto C. Sanchez <roberto@connexer.com>
 Build-Depends: debhelper (>= 11),
                cmake,
-               libmongoc-dev (>= 1.13.0),
+               libmongoc-dev (>= 1.17.0),
                libboost-dev,
                libsasl2-dev,
                libicu-dev,
