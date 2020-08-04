@@ -1701,7 +1701,7 @@ TEST_CASE("list builder with explicit type deduction", "[bsoncxx::builder::list]
         bson_append_int32(&array, "1", -1, 1);
         bson_append_array(&expected, "foo", -1, &array);
 
-        builder::list b{"foo", list::array{"bar", 1}};
+        builder::list b{"foo", builder::array{"bar", 1}};
         bson_eq_object(&expected, b.view().get_document().value);
 
         bson_destroy(&expected);
@@ -1712,11 +1712,11 @@ TEST_CASE("list builder with explicit type deduction", "[bsoncxx::builder::list]
         builder::list b;
         auto kvp_regex =
             Catch::Matches("(.*)must be list of key-value pairs(.*)", Catch::CaseSensitive::No);
-        REQUIRE_THROWS_WITH((b = list::document{"foo", 1, 2}), kvp_regex);
+        REQUIRE_THROWS_WITH((b = builder::document{"foo", 1, 2}), kvp_regex);
 
         auto type_regex =
             Catch::Matches("(.*)must be string type(.*)int32(.*)", Catch::CaseSensitive::No);
-        REQUIRE_THROWS_WITH((b = list::document{"foo", 1, 2, 4}), type_regex);
+        REQUIRE_THROWS_WITH((b = builder::document{"foo", 1, 2, 4}), type_regex);
     }
 }
 
@@ -1727,12 +1727,10 @@ TEST_CASE("empty list builder", "[bsoncxx::builder::list]") {
     builder::list lst = {};
     bson_eq_object(&expected, lst.view().get_document().value);
 
-    builder::list::document doc = {};
-    lst = doc;
-    bson_eq_object(&expected, lst.view().get_document().value);
+    builder::document doc = {};
+    bson_eq_object(&expected, doc.view().get_document().value);
 
-    builder::list::array arr = {};
-    lst = arr;
-    bson_eq_object(&expected, lst.view().get_array().value);
+    builder::array arr = {};
+    bson_eq_object(&expected, arr.view().get_array().value);
 }
 }  // namespace

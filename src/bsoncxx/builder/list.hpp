@@ -37,10 +37,6 @@ class list {
 
     list(initializer_list_t init) : list(init, true, true) {}
 
-    operator bson_value::value() {
-        return value();
-    }
-
     operator bson_value::view() {
         return view();
     }
@@ -49,36 +45,11 @@ class list {
         return val.view();
     }
 
-    bson_value::value value() {
-        return val;
-    }
-
-    class array {
-       public:
-        array() = default;
-        array(initializer_list_t init) : lst(init) {}
-        operator list() {
-            return list(lst, false, true);
-        }
-
-       private:
-        initializer_list_t lst;
-    };
-
-    class document {
-       public:
-        document() = default;
-        document(initializer_list_t init) : lst(init) {}
-        operator list() {
-            return list(lst, false, false);
-        }
-
-       private:
-        initializer_list_t lst;
-    };
-
    private:
     bson_value::value val;
+
+    friend class document;
+    friend class array;
 
     list(initializer_list_t init, bool type_deduction, bool is_array) : val{nullptr} {
         std::stringstream err_msg{"cannot construct document"};
@@ -117,6 +88,22 @@ class list {
             throw bsoncxx::exception{error_code::k_unmatched_key_in_builder, err_msg.str()};
         }
     }
+};
+
+class document : public list {
+    using initializer_list_t = std::initializer_list<list>;
+
+   public:
+    document() : list({}, false, false){};
+    document(initializer_list_t init) : list(init, false, false) {}
+};
+
+class array : public list {
+    using initializer_list_t = std::initializer_list<list>;
+
+   public:
+    array() : list({}, false, true){};
+    array(initializer_list_t init) : list(init, false, true) {}
 };
 }
 BSONCXX_INLINE_NAMESPACE_END
