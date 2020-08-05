@@ -36,15 +36,11 @@ class bson_ref {
     using value_type = BasicBsonType;
 
     bson_ref(std::initializer_list<bson_ref> init)
-        : owned_value(init), value_ref(&owned_value), is_rvalue(true) {
-        std::cout << "CALLED:: bson_ref(std::initializer_list<bson_ref> init)" << std::endl;
-    }
+        : owned_value(init), value_ref(&owned_value), is_rvalue(true) {}
 
     template <class... Args>
     bson_ref(Args&&... args)
-        : owned_value(std::forward<Args>(args)...), value_ref(&owned_value), is_rvalue(true) {
-        std::cout << "CALLED:: bson_ref(Args && ... args)" << std::endl;
-    }
+        : owned_value(std::forward<Args>(args)...), value_ref(&owned_value), is_rvalue(true) {}
 
     value_type moved_or_copied() const {
         if (is_rvalue)
