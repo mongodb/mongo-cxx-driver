@@ -20,9 +20,11 @@ using bsoncxx::builder::bson;
 namespace {
 TEST_CASE("implicit type deduction") {
     SECTION("object") {
-        bson b{{"one", 1}, {"three", 3}};
+        bson doc{{"one", 1}, {"three", 3}};
     }
 
-    SECTION("array") {}
+    SECTION("array") {
+        bson doc{1, 2, 3};
+    }
 }
 }
