@@ -155,11 +155,27 @@ class basic_bson {
         }
     }
 
+    basic_bson(std::nullptr_t = nullptr) noexcept : basic_bson(type::k_null) {}
+
+    basic_bson(const type t) : m_type(t), m_value(t) {}
+
     basic_bson(std::string&& val) : m_value{val}, m_type{type::k_utf8} {
         std::cout << "created string" << std::endl;
     }
     basic_bson(std::int32_t&& val) : m_value{adl_serializer{}(val)}, m_type{type::k_int32} {
         std::cout << "created int" << std::endl;
+    }
+
+    basic_bson(basic_bson&& other) noexcept : m_type(std::move(other.m_type)),
+                                              m_value(std::move(other.m_value)) {
+        other.m_type = type::k_null;
+        other.m_value = {};
+    }
+
+    value_type& operator=(basic_bson other) noexcept {
+        std::swap(m_type, other.m_type);
+        std::swap(m_value, other.m_value);
+        return *this;
     }
 
     constexpr bool is_array() const noexcept {
@@ -172,6 +188,26 @@ class basic_bson {
 
     const value_type& operator[](std::size_t idx) const {
         return m_value.array->operator[](idx);
+    }
+
+    template <typename T>
+    value_type& operator[](T* key) {
+        if (is_null()) {
+            m_type = type::k_document;
+            m_value = type::k_document;
+        }
+
+        if (is_document()) {
+            return m_value.document->operator[](key);
+        }
+    }
+
+    constexpr bool is_document() const noexcept {
+        return m_type == type::k_document;
+    }
+
+    constexpr bool is_null() const noexcept {
+        return m_type == type::k_null;
     }
 
     std::size_t size() const noexcept {
