@@ -27,4 +27,9 @@ TEST_CASE("implicit type deduction") {
         bson doc{1, 2, 3};
     }
 }
+
+TEST_CASE("alt construction") {
+    bson doc;
+    doc["one"] = 1;
+}
 }
