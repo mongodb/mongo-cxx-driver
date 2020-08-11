@@ -746,6 +746,7 @@ buildvariants:
             distros:
             - ubuntu1804-build
           - name: uninstall_check
+          - name: clang-tidy
 
     - name: ubuntu1604-debug-std-experimental
       display_name: "Ubuntu 16.04 Debug (std::experimental) (MongoDB Latest)"
