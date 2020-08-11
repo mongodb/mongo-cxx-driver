@@ -189,6 +189,18 @@ functions:
                   set -o pipefail
                   python etc/clang_format.py lint
 
+    "clang-tidy":
+      - command: shell.exec
+        params:
+          shell: bash
+          working_dir: "mongo-cxx-driver"
+          script: |
+            set -o errexit
+            set -o xtrace
+            set -o pipefail
+            sudo apt-get install -y clang-tidy
+            python etc/run-clang-tidy.py -p build
+
     "compile":
         - command: shell.exec
           params:
@@ -465,6 +477,13 @@ tasks:
       commands:
         - func: "setup"
         - func: "lint"
+          -
+    - name: clang-tidy
+      commands:
+        - func: "setup"
+        - func: "install_c_driver"
+        - func: "compile"
+        - func: "clang-tidy"
 
     - name: compile_and_test_with_shared_libs
       commands:
