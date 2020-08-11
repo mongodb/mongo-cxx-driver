@@ -477,7 +477,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "lint"
-          -
+
     - name: clang-tidy
       commands:
         - func: "setup"
