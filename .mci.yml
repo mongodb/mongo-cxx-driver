@@ -772,6 +772,7 @@ buildvariants:
           tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
+          cmake: "cmake"
       run_on:
           - ubuntu1804-power8-build
       tasks:
