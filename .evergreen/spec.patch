@@ -1,5 +1,5 @@
---- mongo-cxx-driver.spec.orig	2020-07-21 13:44:37.697202918 -0400
-+++ mongo-cxx-driver.spec	2020-07-21 13:45:16.010026420 -0400
+--- mongo-cxx-driver.spec.orig	2020-08-17 16:22:55.490400655 -0400
++++ mongo-cxx-driver.spec	2020-08-17 16:26:24.490702714 -0400
 @@ -1,6 +1,8 @@
  # for better compatibility with SCL spec file
  %global pkg_name mongo-cxx-driver
@@ -8,7 +8,7 @@
 +
  Name:           mongo-cxx-driver
  Version:        3.4.1
- Release:        1%{?dist}
+ Release:        4%{?dist}
 @@ -10,8 +12,6 @@
  Source0:        https://github.com/mongodb/%{pkg_name}/archive/%{name}-r%{version}.tar.gz
  
@@ -27,23 +27,14 @@
  
  %build
  
-@@ -77,13 +75,14 @@
+@@ -77,6 +75,7 @@
  %cmake \
      -DCMAKE_BUILD_TYPE=Release \
      -DBSONCXX_POLY_USE_BOOST=1 \
 +    -DENABLE_UNINSTALL=OFF \
      .
  
--make %{?_smp_mflags}
-+%cmake_build
- 
- 
- %install
--%make_install
-+%cmake_install
- 
- %files
- %doc README.md
+ %cmake_build
 @@ -94,7 +93,7 @@
  %{_includedir}/mongocxx/
  %{_libdir}/libmongocxx.so
@@ -61,4 +52,4 @@
 +%{_libdir}/cmake/*bsoncxx*
  
  %changelog
- * Mon Mar 09 2020 Honza Horak <hhorak@redhat.com> - 3.4.1-1
+ * Tue Aug 11 2020 Honza Horak <hhorak@redhat.com> - 3.4.1-4
