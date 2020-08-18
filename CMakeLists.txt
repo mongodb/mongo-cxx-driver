@@ -87,6 +87,9 @@ option(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC
 
 option (ENABLE_UNINSTALL "Enable creation of uninstall script and associated uninstall build target." ON)
 
+# Allow the user to enable code coverage
+option (ENABLE_CODE_COVERAGE "Enable code coverage." OFF)
+
 # Disambiguate our options into clear flags
 if(BUILD_SHARED_LIBS)
     set(BSONCXX_BUILD_SHARED ON CACHE INTERNAL "")
@@ -128,7 +131,7 @@ endif()
 
 
 # If the user did not customize the install prefix,
-# set it to live under build so we don't inadverently pollute /usr/local
+# set it to live under build so we don't inadvertently pollute /usr/local
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "default install path" FORCE)
 endif()
@@ -179,6 +182,19 @@ endif()
 if(NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type selected, default is Release")
     set(CMAKE_BUILD_TYPE "Release")
+endif()
+
+if (ENABLE_CODE_COVERAGE)
+    if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+        message(WARNING "Code coverage results with an optimized (non-Debug) build may be misleading")
+    endif()
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g --coverage")
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?[Cc]lang")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
+    else()
+        message(FATAL_ERROR "Code coverage requires Clang or GCC. Aborting.")
+    endif()
 endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
