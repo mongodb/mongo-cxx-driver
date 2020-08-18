@@ -667,7 +667,12 @@ buildvariants:
       display_name: "${os} (MongoDB ${mongodb_version})"
       tasks:
           - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_replica_set
+
+    - matrix_name: "integration (replica set)"
+      matrix_spec: {os: "ubuntu-1604", mongodb_version: "*"}
+      display_name: "${os} replica set (MongoDB ${mongodb_version})"
+      tasks:
+        - name: compile_and_test_with_shared_libs_replica_set
 
     - matrix_name: "auth"
       matrix_spec: {os: "*", mongodb_version: "latest"}
