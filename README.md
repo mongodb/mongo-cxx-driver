@@ -3,6 +3,7 @@
 [![Travis Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=master)](https://travis-ci.org/mongodb/mongo-cxx-driver)
 [![codecov](https://codecov.io/gh/mongodb/mongo-cxx-driver/branch/master/graph/badge.svg)](https://codecov.io/gh/mongodb/mongo-cxx-driver)
 [![Documentation](https://img.shields.io/badge/docs-doxygen-blue.svg)](http://mongocxx.org/api/mongocxx-v3/)
+[![Documentation](https://img.shields.io/badge/docs-mongocxx-green.svg)](http://mongocxx.org/)
 
 Welcome to the MongoDB C++ Driver!
 
