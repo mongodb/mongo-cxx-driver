@@ -1275,7 +1275,7 @@ document::value operation_runner::_create_index(const document::view& operation)
     return _coll->create_index(*session, keys, opts.extract());
 }
 
-operation_runner::operation_runner(collection* coll) : _coll(coll) {}
+operation_runner::operation_runner(collection* coll) : operation_runner(nullptr, coll) {}
 operation_runner::operation_runner(database* db,
                                    collection* coll,
                                    client_session* session0,
