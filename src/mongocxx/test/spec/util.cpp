@@ -451,7 +451,7 @@ void run_tests_in_suite(std::string directory,
     auto files = get_json_tests(path);
     for (auto&& file : files) {
         if (unsupported_tests.find(file) != unsupported_tests.end()) {
-            WARN("Skipping...");
+            WARN("Skipping unsupported test file: " << file);
         } else {
             SECTION(file) {
                 cb(path + "/" + file);
