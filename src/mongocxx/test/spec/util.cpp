@@ -12,13 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <dirent.h>
 #include <fstream>
-#include <functional>
-#include <iostream>
-#include <map>
-#include <memory>
 #include <set>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -35,26 +31,13 @@
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
-#include <mongocxx/cursor.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/instance.hpp>
-#include <mongocxx/options/aggregate.hpp>
-#include <mongocxx/options/count.hpp>
-#include <mongocxx/options/delete.hpp>
 #include <mongocxx/options/distinct.hpp>
-#include <mongocxx/options/find.hpp>
 #include <mongocxx/options/find_one_and_delete.hpp>
-#include <mongocxx/options/find_one_and_replace.hpp>
-#include <mongocxx/options/find_one_and_update.hpp>
-#include <mongocxx/options/find_one_common_options.hpp>
-#include <mongocxx/options/update.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/result/delete.hpp>
-#include <mongocxx/result/insert_many.hpp>
 #include <mongocxx/result/insert_one.hpp>
-#include <mongocxx/result/replace_one.hpp>
-#include <mongocxx/result/update.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/operation.hh>
 
@@ -434,6 +417,16 @@ uri get_uri(document::view test) {
     return uri{uri_string};
 }
 
+std::vector<std::string> get_json_tests(std::string folder_name) {
+    DIR* dir = opendir(("../../../../data/" + folder_name).c_str());
+    std::vector<std::string> files{};
+
+    for (dirent* entry = nullptr; (entry = readdir(dir));)
+        if (std::string{entry->d_name}.find(".json") != std::string::npos)
+            files.push_back(entry->d_name);
+    return files;
+}
+
 void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> unsupported_tests) {
     char* tests_path = std::getenv(ev.c_str());
     INFO("checking for path from environment variable: " << ev);
@@ -444,6 +437,9 @@ void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> un
         path.pop_back();
     }
 
+    auto files = get_json_tests("crud/v1/write");
+    for (auto file : files)
+        std::cout << "FILE: " << file << std::endl;
     std::ifstream test_files{path + "/test_files.txt"};
     REQUIRE(test_files.good());
 
