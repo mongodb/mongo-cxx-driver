@@ -12,8 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#ifdef _MSC_VER
+#include <tchar.h>
+#include <windows.h>
+#else
 #include <dirent.h>
-#include <fstream>
+#endif
+
 #include <set>
 #include <string>
 #include <vector>
@@ -418,12 +423,23 @@ uri get_uri(document::view test) {
 }
 
 std::vector<std::string> get_json_tests(std::string path) {
-    DIR* dir = opendir(path.c_str());
     std::vector<std::string> files{};
+#ifdef _MSC_VER
+    WIN32_FIND_DATA FindFileData;
+    HANDLE hFind;
 
+    hFind = FindFirstFile(path + "/*.json", &FindFileData);
+    REQUIRE(hFind != INVALID_HANDLE_VALUE);
+    do {
+        files.push_back(FindFileData.cFileName);
+    } while (FindNextFile(hFind, &FindFileData));
+    FindClose(hFind);
+#else
+    DIR* dir = opendir(path.c_str());
     for (dirent* entry = nullptr; (entry = readdir(dir));)
         if (std::string{entry->d_name}.find(".json") != std::string::npos)
             files.push_back(entry->d_name);
+#endif
     return files;
 }
 
