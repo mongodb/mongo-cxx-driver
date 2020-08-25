@@ -417,47 +417,34 @@ uri get_uri(document::view test) {
     return uri{uri_string};
 }
 
-std::vector<std::string> get_json_tests(std::string folder_name) {
-    DIR* dir = opendir(("../../../../data/" + folder_name).c_str());
+std::vector<std::string> get_json_tests(std::string path,
+                                        std::set<std::string> unsupported_tests = {}) {
+    DIR* dir = opendir(path.c_str());
     std::vector<std::string> files{};
 
-    for (dirent* entry = nullptr; (entry = readdir(dir));)
-        if (std::string{entry->d_name}.find(".json") != std::string::npos)
-            files.push_back(entry->d_name);
+    for (dirent* entry = nullptr; (entry = readdir(dir));) {
+        if (std::string{entry->d_name}.find(".json") != std::string::npos) {
+            if (unsupported_tests.count(entry->d_name)) {
+                WARN("Skipping unsupported test file: " << entry->d_name);
+            } else {
+                files.push_back(entry->d_name);
+            }
+        }
+    }
     return files;
 }
 
-void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> unsupported_tests) {
-    char* tests_path = std::getenv(ev.c_str());
-    INFO("checking for path from environment variable: " << ev);
-    REQUIRE(tests_path);
+void run_tests_in_suite(std::string directory,
+                        test_runner cb,
+                        std::set<std::string> unsupported_tests) {
+    std::string path = "../../../../data/" + directory;
+    auto files = get_json_tests(path, unsupported_tests);
 
-    std::string path{tests_path};
-    if (path.back() == '/') {
-        path.pop_back();
-    }
-
-    auto files = get_json_tests("crud/v1/write");
-    for (auto file : files)
-        std::cout << "FILE: " << file << std::endl;
-    std::ifstream test_files{path + "/test_files.txt"};
-    REQUIRE(test_files.good());
-
-    std::string test_file;
-    while (std::getline(test_files, test_file)) {
-        if (unsupported_tests.find(test_file) != unsupported_tests.end()) {
-            WARN("Skipping unsupported test file: " << test_file);
-            continue;
-        }
-        SECTION(test_file) {
-            cb(path + "/" + test_file);
+    for (auto file : files) {
+        SECTION(file) {
+            cb(path + "/" + file);
         }
     }
-}
-
-void run_tests_in_suite(std::string ev, test_runner cb) {
-    std::set<std::string> empty;
-    run_tests_in_suite(ev, cb, empty);
 }
 
 void test_setup(document::view test, document::view test_spec) {

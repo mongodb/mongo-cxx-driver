@@ -174,6 +174,8 @@ void run_crud_tests_in_file(std::string test_path) {
 TEST_CASE("CRUD spec automated tests", "[crud_spec]") {
     instance::current();
 
-    run_tests_in_suite("CRUD_TESTS_PATH", &run_crud_tests_in_file);
+    run_tests_in_suite("crud/v1/read", &run_crud_tests_in_file);
+    run_tests_in_suite("crud/v1/write", &run_crud_tests_in_file);
+    run_tests_in_suite("crud/v2", &run_crud_tests_in_file);
 }
 }  // namespace

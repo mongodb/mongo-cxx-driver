@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+add_definitions(-DDATA_DIRECTORY=${CMAKE_CURRENT_SOURCE_DIR})
+
 file (GLOB_RECURSE data_DIST_jsons RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.json)
 file (GLOB_RECURSE data_DIST_rsts RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.rst)
 file (GLOB_RECURSE data_DIST_txts RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.txt)
