@@ -97,7 +97,7 @@ uri get_uri(document::view test);
 // and run them with the provided callback function.
 //
 using test_runner = std::function<void(const std::string& file)>;
-void run_tests_in_suite(std::string ev,
+void run_tests_in_suite(std::string directory,
                         test_runner cb,
                         std::set<std::string> unsupported_tests = {});
 
