@@ -28,8 +28,7 @@ TEST_CASE("Transactions spec automated tests", "[transactions_spec]") {
     std::set<std::string> unsupported_transaction_tests = {"count.json"};
 
     run_tests_in_suite(
-        "TRANSACTIONS_TESTS_PATH", &run_transactions_tests_in_file, unsupported_transaction_tests);
-
-    run_tests_in_suite("WITH_TRANSACTION_TESTS_PATH", &run_transactions_tests_in_file);
+        "transactions", &run_transactions_tests_in_file, unsupported_transaction_tests);
+    run_tests_in_suite("with_transaction", &run_transactions_tests_in_file);
 }
 }  // namespace

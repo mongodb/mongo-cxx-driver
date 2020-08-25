@@ -249,30 +249,15 @@ TEST_CASE("Client side encryption spec automated tests", "[client_side_encryptio
     instance::current();
     /* Tests that use operations that the C++ driver does not have. */
     std::set<std::string> unsupported_tests = {"count.json", "unsupportedCommand.json"};
-
-    char* encryption_tests_path = std::getenv("ENCRYPTION_TESTS_PATH");
-    REQUIRE(encryption_tests_path);
-
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        return;
-    }
-
-    std::string path{encryption_tests_path};
-    if (path.back() == '/') {
-        path.pop_back();
-    }
-
-    std::ifstream test_files{path + "/test_files.txt"};
-    REQUIRE(test_files.good());
-
-    std::string test_file;
-    while (std::getline(test_files, test_file)) {
-        if (std::find(unsupported_tests.begin(), unsupported_tests.end(), test_file) !=
-            unsupported_tests.end()) {
-            WARN("skipping " << test_file << " due to unsupported operation");
-            continue;
-        }
-        run_encryption_tests_in_file(path + "/" + test_file);
+    if (mongocxx::test_util::should_run_client_side_encryption_test()) {
+        run_tests_in_suite(
+            "client_side_encryption", &run_encryption_tests_in_file, unsupported_tests);
+        run_tests_in_suite(
+            "client_side_encryption/corpus", &run_encryption_tests_in_file, unsupported_tests);
+        run_tests_in_suite(
+            "client_side_encryption/external", &run_encryption_tests_in_file, unsupported_tests);
+        run_tests_in_suite(
+            "client_side_encryption/limits", &run_encryption_tests_in_file, unsupported_tests);
     }
 }
 

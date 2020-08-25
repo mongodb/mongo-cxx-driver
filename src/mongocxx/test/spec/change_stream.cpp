@@ -197,6 +197,6 @@ TEST_CASE("Change stream spec tests", "[change_stream_spec]") {
         return;
     }
 
-    run_tests_in_suite("CHANGE_STREAM_TESTS_PATH", &run_change_stream_tests_in_file);
+    run_tests_in_suite("change_stream", &run_change_stream_tests_in_file);
 }
 }  // namespace
