@@ -417,32 +417,29 @@ uri get_uri(document::view test) {
     return uri{uri_string};
 }
 
-std::vector<std::string> get_json_tests(std::string path,
-                                        std::set<std::string> unsupported_tests = {}) {
+std::vector<std::string> get_json_tests(std::string path) {
     DIR* dir = opendir(path.c_str());
     std::vector<std::string> files{};
 
-    for (dirent* entry = nullptr; (entry = readdir(dir));) {
-        if (std::string{entry->d_name}.find(".json") != std::string::npos) {
-            if (unsupported_tests.count(entry->d_name)) {
-                WARN("Skipping unsupported test file: " << entry->d_name);
-            } else {
-                files.push_back(entry->d_name);
-            }
-        }
-    }
+    for (dirent* entry = nullptr; (entry = readdir(dir));)
+        if (std::string{entry->d_name}.find(".json") != std::string::npos)
+            files.push_back(entry->d_name);
     return files;
 }
 
 void run_tests_in_suite(std::string directory,
                         test_runner cb,
                         std::set<std::string> unsupported_tests) {
-    std::string path = "../../../../data/" + directory;
-    auto files = get_json_tests(path, unsupported_tests);
+    std::string path{std::string(MONGOCXX_SOURCE_DIR).append("/data/").append(directory)};
 
-    for (auto file : files) {
-        SECTION(file) {
-            cb(path + "/" + file);
+    auto files = get_json_tests(path);
+    for (auto&& file : files) {
+        if (unsupported_tests.find(file) != unsupported_tests.end()) {
+            WARN("Skipping...");
+        } else {
+            SECTION(file) {
+                cb(path + "/" + file);
+            }
         }
     }
 }

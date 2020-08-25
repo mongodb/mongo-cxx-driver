@@ -19,6 +19,8 @@
 #undef MONGOCXX_CALL
 
 // src/mongocxx/config/config.hpp.in
+#pragma push_macro("MONGOCXX_SOURCE_DIR")
+#undef MONGOCXX_SOURCE_DIR
 #pragma push_macro("MONGOCXX_INLINE_NAMESPACE_BEGIN")
 #undef MONGOCXX_INLINE_NAMESPACE_BEGIN
 #pragma push_macro("MONGOCXX_INLINE_NAMESPACE_END")
