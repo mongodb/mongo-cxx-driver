@@ -78,6 +78,7 @@ bsoncxx::document::value _doc_from_file(stdx::string_view sub_path) {
     std::string path{std::string(MONGOCXX_SOURCE_DIR)
                          .append("/data/client_side_encryption")
                          .append(sub_path.to_string())};
+    CAPTURE(path);
     return bsoncxx::from_json(path);
 }
 
