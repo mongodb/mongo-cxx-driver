@@ -252,12 +252,6 @@ TEST_CASE("Client side encryption spec automated tests", "[client_side_encryptio
     if (mongocxx::test_util::should_run_client_side_encryption_test()) {
         run_tests_in_suite(
             "client_side_encryption", &run_encryption_tests_in_file, unsupported_tests);
-        run_tests_in_suite(
-            "client_side_encryption/corpus", &run_encryption_tests_in_file, unsupported_tests);
-        run_tests_in_suite(
-            "client_side_encryption/external", &run_encryption_tests_in_file, unsupported_tests);
-        run_tests_in_suite(
-            "client_side_encryption/limits", &run_encryption_tests_in_file, unsupported_tests);
     }
 }
 
