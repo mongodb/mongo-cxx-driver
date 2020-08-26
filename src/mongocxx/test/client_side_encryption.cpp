@@ -75,7 +75,9 @@ using bsoncxx::types::bson_value::make_value;
 using namespace mongocxx;
 
 bsoncxx::document::value _doc_from_file(stdx::string_view sub_path) {
-    std::string path{std::string(MONGOCXX_SOURCE_DIR).append("/data").append(sub_path.to_string())};
+    std::string path{std::string(MONGOCXX_SOURCE_DIR)
+                         .append("/data/client_side_encryption")
+                         .append(sub_path.to_string())};
     return bsoncxx::from_json(path);
 }
 
