@@ -79,7 +79,13 @@ bsoncxx::document::value _doc_from_file(stdx::string_view sub_path) {
                          .append("/data/client_side_encryption")
                          .append(sub_path.to_string())};
     CAPTURE(path);
-    return bsoncxx::from_json(path);
+
+    std::ifstream file{path};
+    REQUIRE(file);
+
+    std::string file_contents((std::istreambuf_iterator<char>(file)),
+                              std::istreambuf_iterator<char>());
+    return bsoncxx::from_json(file_contents);
 }
 
 void _setup_drop_collections(const client& client) {
