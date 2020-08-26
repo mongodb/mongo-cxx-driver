@@ -74,23 +74,10 @@ using bsoncxx::types::bson_value::make_value;
 
 using namespace mongocxx;
 
-// Takes a path relative to the ENCRYPTION_TESTS_PATH variable, with leading '/'.
 bsoncxx::document::value _doc_from_file(stdx::string_view sub_path) {
-    char* encryption_tests_path = std::getenv("ENCRYPTION_TESTS_PATH");
-    std::string path{encryption_tests_path};
-    if (path.back() == '/') {
-        path.pop_back();
-    }
-
-    std::string full_path = path + sub_path.data();
-
-    std::ifstream file{full_path};
-    REQUIRE(file);
-
-    std::string file_contents((std::istreambuf_iterator<char>(file)),
-                              std::istreambuf_iterator<char>());
-
-    return bsoncxx::from_json(file_contents);
+    std::string path{
+        std::string(MONGOCXX_SOURCE_DIR).append("/data").append(std::string(sub_path))};
+    return bsoncxx::from_json(path);
 }
 
 void _setup_drop_collections(const client& client) {
