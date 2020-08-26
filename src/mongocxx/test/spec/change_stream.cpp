@@ -174,7 +174,11 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
 
             // Match captured APM events.
             if (test["expectations"]) {
-                apm_checker.compare(test["expectations"].get_array().value, true);
+                auto expectations_type = test["expectations"].type();
+                // If 'expectations' is explicitly null, skip the check.
+                if (expectations_type != bsoncxx::type::k_null) {
+                    apm_checker.compare(test["expectations"].get_array().value, true);
+                }
             }
         }
     }
