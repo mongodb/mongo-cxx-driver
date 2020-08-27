@@ -434,10 +434,11 @@ uri get_uri(document::view test) {
     return uri{uri_string};
 }
 
-void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> unsupported_tests) {
-    char* tests_path = std::getenv(ev.c_str());
-    INFO("checking for path from environment variable: " << ev);
-    REQUIRE(tests_path);
+void run_tests_in_suite(std::string tests_path,
+                        test_runner cb,
+                        std::set<std::string> unsupported_tests) {
+    CAPTURE(tests_path);
+    REQUIRE(!tests_path.empty());
 
     std::string path{tests_path};
     if (path.back() == '/') {
@@ -457,11 +458,6 @@ void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> un
             cb(path + "/" + test_file);
         }
     }
-}
-
-void run_tests_in_suite(std::string ev, test_runner cb) {
-    std::set<std::string> empty;
-    run_tests_in_suite(ev, cb, empty);
 }
 
 void test_setup(document::view test, document::view test_spec) {

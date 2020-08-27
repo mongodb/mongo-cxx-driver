@@ -27,9 +27,16 @@ TEST_CASE("Transactions spec automated tests", "[transactions_spec]") {
     /* Tests that use operations that the C++ driver does not have. */
     std::set<std::string> unsupported_transaction_tests = {"count.json"};
 
+    auto transactions_tests_path = std::getenv("TRANSACTIONS_TESTS_PATH")
+                                       ? std::getenv("TRANSACTIONS_TESTS_PATH")
+                                       : std::string{MONGOCXX_SOURCE_DIR} + "/data/transactions";
     run_tests_in_suite(
-        "TRANSACTIONS_TESTS_PATH", &run_transactions_tests_in_file, unsupported_transaction_tests);
+        transactions_tests_path, &run_transactions_tests_in_file, unsupported_transaction_tests);
 
-    run_tests_in_suite("WITH_TRANSACTION_TESTS_PATH", &run_transactions_tests_in_file);
+    auto with_transactions_tests_path =
+        std::getenv("WITH_TRANSACTION_TESTS_PATH")
+            ? std::getenv("WITH_TRANSACTION_TESTS_PATH")
+            : std::string{MONGOCXX_SOURCE_DIR} + "/data/with_transaction";
+    run_tests_in_suite(with_transactions_tests_path, &run_transactions_tests_in_file);
 }
 }  // namespace

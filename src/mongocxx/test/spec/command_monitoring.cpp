@@ -182,10 +182,11 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 
 TEST_CASE("Command Monitoring Spec Tests", "[command_monitoring_spec]") {
     instance::current();
-    char* command_monitoring_tests_path = std::getenv("COMMAND_MONITORING_TESTS_PATH");
-    REQUIRE(command_monitoring_tests_path);
 
-    std::string path{command_monitoring_tests_path};
+    auto path = std::getenv("COMMAND_MONITORING_TESTS_PATH")
+                    ? std::getenv("COMMAND_MONITORING_TESTS_PATH")
+                    : std::string{MONGOCXX_SOURCE_DIR} + "/data/command-monitoring";
+    REQUIRE(!path.empty());
 
     if (path.back() == '/') {
         path.pop_back();
