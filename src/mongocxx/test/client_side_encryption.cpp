@@ -76,9 +76,7 @@ using namespace mongocxx;
 
 // Takes a path relative to the ENCRYPTION_TESTS_PATH variable, with leading '/'.
 bsoncxx::document::value _doc_from_file(stdx::string_view sub_path) {
-    std::string path{std::string(MONGOCXX_SOURCE_DIR)
-                         .append("/data/client_side_encryption")
-                         .append(sub_path.to_string())};
+    std::string path{std::string(MONGOCXX_SOURCE_DIR).append("/data/client_side_encryption")};
     if (path.back() == '/') {
         path.pop_back();
     }
