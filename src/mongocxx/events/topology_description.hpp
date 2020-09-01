@@ -28,7 +28,6 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace events {
 
 using mongocxx::read_preference;
-using mongocxx::events::server_description;
 
 ///
 /// Class representing what the driver knows about a topology of MongoDB servers: either a
