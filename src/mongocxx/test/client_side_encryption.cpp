@@ -77,14 +77,12 @@ using namespace mongocxx;
 // Takes a path relative to the ENCRYPTION_TESTS_PATH variable, with leading '/'.
 bsoncxx::document::value _doc_from_file(stdx::string_view sub_path) {
     char* encryption_tests_path = std::getenv("ENCRYPTION_TESTS_PATH");
-    std::string path{encryption_tests_path};
-    if (path.back() == '/') {
-        path.pop_back();
-    }
+    REQUIRE(encryption_tests_path);
 
-    std::string full_path = path + sub_path.data();
+    std::string path = std::string(encryption_tests_path) + sub_path.data();
+    CAPTURE(path);
 
-    std::ifstream file{full_path};
+    std::ifstream file{path};
     REQUIRE(file);
 
     std::string file_contents((std::istreambuf_iterator<char>(file)),
