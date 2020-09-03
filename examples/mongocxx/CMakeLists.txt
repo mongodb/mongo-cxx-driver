@@ -18,11 +18,17 @@ include_directories(
 )
 
 set(MONGOCXX_EXAMPLES
+    aggregate.cpp
+    bulk_write.cpp
     change_streams.cpp
     client_session.cpp
     connect.cpp
+    create.cpp
+    document_validation.cpp
+    exception.cpp
     get_values_from_documents.cpp
     gridfs.cpp
+    index.cpp
     inserted_id.cpp
     instance_management.cpp
     mongodb.com/aggregation_examples.cpp
@@ -31,7 +37,11 @@ set(MONGOCXX_EXAMPLES
     mongodb.com/documentation_examples.cpp
     mongodb.com/usage_overview.cpp
     query_projection.cpp
+    query.cpp
+    remove.cpp
     tailable_cursor.cpp
+    update.cpp
+    view_or_value_variant.cpp
     with_transaction.cpp
 )
 
