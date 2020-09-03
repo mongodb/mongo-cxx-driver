@@ -38,7 +38,6 @@ int main(int, char**) {
 
     // TODO: fix dates
 
-    // @begin: cpp-insert-a-document
     bsoncxx::document::value restaurant_doc = make_document(
         kvp("address",
             make_document(kvp("street", "2 Avenue"),
@@ -61,5 +60,4 @@ int main(int, char**) {
 
     // We choose to move in our document here, which transfers ownership to insert_one()
     auto res = db["restaurants"].insert_one(std::move(restaurant_doc));
-    // @end: cpp-insert-a-document
 }

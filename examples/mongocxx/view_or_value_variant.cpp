@@ -40,34 +40,27 @@ int main(int, char**) {
 
     // Document::views can be passed in directly:
     {
-        // @begin: pass-view-to-view-or-value
         bsoncxx::document::value command = make_document(kvp("ping", 1));
         bsoncxx::document::view command_view = command.view();
         auto res = db.run_command(command_view);
-        // @end: pass-view-to-view-or-value
     }
 
     // Document::values can be passed in one of two ways:
 
     // 1. Pass a view of the document::value
     {
-        // @begin: pass-viewed-value-to-view-or-value
         bsoncxx::document::value command = make_document(kvp("ping", 1));
         auto res = db.run_command(command.view());
-        // @end: pass-viewed-value-to-view-or-value
     }
 
     // 2. Pass ownership of the document::value into the method
     {
-        // @begin: pass-owned-value-to-view-or-value
         bsoncxx::document::value command = make_document(kvp("ping", 1));
         auto res = db.run_command(std::move(command));
-        // @end: pass-owned-value-to-view-or-value
     }
 
     // Temporary document::values are captured and owned by the view_or_value type
     {
-        // @begin: pass-temporary-values-to-view-or-value
         auto res = db.run_command(make_document(kvp("ping", 1)));
 
         // NOTE: there is no need to call .view() on a temporary document::value in
@@ -75,6 +68,5 @@ int main(int, char**) {
         // BAD:
         // auto res = db.run_command(make_document(kvp("ping", 1)).view());
 
-        // @end: pass-temporary-values-to-view-or-value
     }
 }

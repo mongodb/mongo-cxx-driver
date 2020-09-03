@@ -40,7 +40,6 @@ int main(int, char**) {
 
     // Create a collection with document validation enabled.
     {
-        // @begin: cpp-create-collection-with-document-validation
         // Clean up any existing "zombies" collection.
         if (db.has_collection("zombies")) {
             db["zombies"].drop();
@@ -70,6 +69,5 @@ int main(int, char**) {
             std::cout << e.what() << std::endl;
         }
 
-        // @end: cpp-create-collection-with-document-validation
     }
 }
