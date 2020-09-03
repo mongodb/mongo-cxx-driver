@@ -34,7 +34,6 @@ int main(int, char**) {
     auto coll = conn["test"]["coll"];
     coll.drop();
 
-    // @begin: cpp-bulk-write
     auto doc1 = make_document(kvp("a", 1));
     auto doc2 = make_document(kvp("$set", make_document(kvp("a", 2))));
 
@@ -111,5 +110,4 @@ int main(int, char**) {
     }
 
     return (i == 2) ? EXIT_SUCCESS : EXIT_FAILURE;
-    // @end: cpp-bulk-write
 }

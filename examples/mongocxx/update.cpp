@@ -34,36 +34,29 @@ int main(int, char**) {
 
     // Update top-level fields in a single document.
     {
-        // @begin: cpp-update-top-level-fields
         db["restaurants"].update_one(
             make_document(kvp("name", "Juni")),
             make_document(kvp("$set", make_document(kvp("cuisine", "American (New)"))),
                           kvp("$currentDate", make_document(kvp("lastModified", true)))));
-        // @end: cpp-update-top-level-fields
     }
 
     // Update an embedded document in a single document.
     {
-        // @begin: cpp-update-embedded-field
         db["restaurants"].update_one(
             make_document(kvp("restaurant_id", "41156888")),
             make_document(kvp("$set", make_document(kvp("address.street", "East 31st Street")))));
-        // @end: cpp-update-embedded-field
     }
 
     // Update multiple documents.
     {
-        // @begin: cpp-update-multiple-documents
         db["restaurants"].update_many(
             make_document(kvp("address.zipcode", "10016"), kvp("cuisine", "Other")),
             make_document(kvp("$set", make_document(kvp("cuisine", "Category to be determined"))),
                           kvp("$currentDate", make_document(kvp("lastModified", true)))));
-        // @end: cpp-update-multiple-documents
     }
 
     // Replace the contents of a single document.
     {
-        // @begin: cpp-replace-document
         db["restaurants"].replace_one(
             make_document(kvp("restaurant_id", "41704620")),
             make_document(kvp("name", "Vella 2"),
@@ -72,6 +65,5 @@ int main(int, char**) {
                                             kvp("building", "1480"),
                                             kvp("street", "2 Avenue"),
                                             kvp("zipcode", "10075")))));
-        // @end: cpp-replace-document
     }
 }

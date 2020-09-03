@@ -37,7 +37,6 @@ int main(int, char**) {
     mongocxx::instance inst{};
     mongocxx::client conn{mongocxx::uri{}};
 
-    // @begin: cpp-logic-error
     // Using an uninitialized collection throws a mongocxx::logic_error.
     // A mongocxx::logic_error is-a mongocxx::exception is-a std::system_error.
     mongocxx::collection coll;
@@ -67,9 +66,7 @@ int main(int, char**) {
 
         std::cout << e.what() << std::endl << std::endl;
     }
-    // @end: cpp-logic-error
 
-    // @begin: cpp-operation-exception
     // Renaming a collection that does not exist throws a mongocxx::operation_exception.
     // A mongocxx::operation_exception is-a mongocxx::exception is-a std::system_error.
     coll = conn["test"]["coll"];
@@ -110,9 +107,7 @@ int main(int, char**) {
         }
         std::cout << std::endl;
     }
-    // @end: cpp-operation-exception
 
-    // @begin: cpp-bulk-write-exception
     // Adding a document whose "_id" is already present throws a mongocxx::bulk_write_exception.
     // A mongocxx::bulk_write_exception is-a mongocxx::operation_exception is-a mongocxx::exception
     // is-a std::system_error.
@@ -140,7 +135,6 @@ int main(int, char**) {
         }
         std::cout << std::endl;
     }
-    // @end: cpp-bulk-write-exception
 
     return EXIT_SUCCESS;
 }

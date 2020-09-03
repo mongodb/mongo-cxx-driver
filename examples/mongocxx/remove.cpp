@@ -33,29 +33,21 @@ int main(int, char**) {
 
     // Remove all documents that match a condition.
     {
-        // @begin: cpp-remove-matching-documents
         db["restaurants"].delete_many(make_document(kvp("borough", "Manhattan")));
-        // @end: cpp-remove-matching-documents
     }
 
     // Remove one document that matches a condition.
     {
-        // @begin: cpp-remove-justone
         db["restaurants"].delete_one(make_document(kvp("borough", "Queens")));
-        // @end: cpp-remove-justone
     }
 
     // Remove all documents in a collection.
     {
-        // @begin: cpp-remove-all-documents
         db["restaurants"].delete_many({});
-        // @end: cpp-remove-all-documents
     }
 
     // Drop a collection.
     {
-        // @begin: cpp-drop-collection
         db["restaurants"].drop();
-        // @end: cpp-drop-collection
     }
 }

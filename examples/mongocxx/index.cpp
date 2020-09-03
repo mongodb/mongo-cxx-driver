@@ -38,40 +38,32 @@ int main(int, char**) {
 
     // Create a single field index.
     {
-        // @begin: cpp-single-field-index
         db["restaurants"].create_index(make_document(kvp("cuisine", 1)), {});
-        // @end: cpp-single-field-index
     }
 
     // Create a compound index.
     {
         db["restaurants"].drop();
-        // @begin: cpp-create-compound-index
         db["restaurants"].create_index(make_document(kvp("cuisine", 1), kvp("address.zipcode", -1)),
                                        {});
-        // @end: cpp-create-compound-index
     }
 
     // Create a unique index.
     {
         db["restaurants"].drop();
-        // @begin: cpp-create-unique-index
         mongocxx::options::index index_options{};
         index_options.unique(true);
         db["restaurants"].create_index(make_document(kvp("website", 1)), index_options);
-        // @end: cpp-create-unique-index
     }
 
     // Create an index with storage engine options
     {
         db["restaurants"].drop();
-        // @begin: cpp-create-wt-options-index
         mongocxx::options::index index_options{};
         std::unique_ptr<mongocxx::options::index::wiredtiger_storage_options> wt_options =
             bsoncxx::stdx::make_unique<mongocxx::options::index::wiredtiger_storage_options>();
         wt_options->config_string("block_allocation=first");
         index_options.storage_options(std::move(wt_options));
         db["restaurants"].create_index(make_document(kvp("cuisine", 1)), index_options);
-        // @begin: cpp-create-wt-options-index
     }
 }

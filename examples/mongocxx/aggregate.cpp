@@ -36,7 +36,6 @@ int main(int, char**) {
 
     // Group documents by field and calculate count.
     {
-        // @begin: cpp-group-documents-by-a-field-and-calculate-count
         mongocxx::pipeline stages;
 
         stages.group(
@@ -47,12 +46,10 @@ int main(int, char**) {
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
-        // @end: cpp-group-documents-by-a-field-and-calculate-count
     }
 
     // Filter and group documents.
     {
-        // @begin: cpp-filter-and-group-documents
         mongocxx::pipeline stages;
 
         stages.match(make_document(kvp("borough", "queens"), kvp("cuisine", "Brazilian")))
@@ -64,6 +61,5 @@ int main(int, char**) {
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
-        // @end: cpp-filter-and-group-documents
     }
 }
