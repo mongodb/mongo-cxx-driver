@@ -16,7 +16,6 @@
 
 #include <fstream>
 #include <sstream>
-#include <streambuf>
 #include <string>
 
 #include <bsoncxx/builder/stream/document.hpp>
@@ -35,12 +34,10 @@
 #include <mongocxx/options/client.hpp>
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/options/data_key.hpp>
-#include <mongocxx/read_concern.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/uri.hpp>
 #include <mongocxx/write_concern.hpp>
-#include <third_party/catch/include/helpers.hpp>
 
 namespace {
 const auto kLocalMasterKey =

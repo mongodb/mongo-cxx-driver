@@ -31,8 +31,6 @@
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/stdx.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace gridfs {

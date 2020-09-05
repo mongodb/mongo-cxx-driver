@@ -14,7 +14,6 @@
 
 #include <mongocxx/options/gridfs/upload.hpp>
 
-#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/view_or_value.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

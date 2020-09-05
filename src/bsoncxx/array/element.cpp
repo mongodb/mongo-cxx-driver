@@ -14,8 +14,6 @@
 
 #include <bsoncxx/array/element.hpp>
 
-#include <cstdlib>
-#include <cstring>
 #include <stdexcept>
 
 #include <bsoncxx/config/private/prelude.hh>

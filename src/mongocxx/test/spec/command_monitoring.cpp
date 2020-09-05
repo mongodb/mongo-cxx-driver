@@ -13,8 +13,6 @@
 // limitations under the License.
 
 #include <fstream>
-#include <iostream>
-#include <memory>
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/string/to_string.hpp>

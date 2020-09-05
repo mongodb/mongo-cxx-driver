@@ -14,7 +14,6 @@
 
 #include <bsoncxx/array/view.hpp>
 
-#include <cstdlib>
 #include <cstring>
 #include <tuple>
 

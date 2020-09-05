@@ -14,8 +14,6 @@
 
 #include <bsoncxx/document/value.hpp>
 
-#include <cstdlib>
-#include <cstring>
 #include <utility>
 
 #include <bsoncxx/config/private/prelude.hh>

@@ -68,6 +68,5 @@ int main(int, char**) {
             std::cout << "Some zombie needs to eat more brains:" << std::endl;
             std::cout << e.what() << std::endl;
         }
-
     }
 }

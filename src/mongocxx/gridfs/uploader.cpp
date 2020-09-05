@@ -17,10 +17,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cstring>
-#include <iomanip>
-#include <ios>
 #include <limits>
-#include <sstream>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>

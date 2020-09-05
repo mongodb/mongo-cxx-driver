@@ -15,11 +15,9 @@
 #include <bsoncxx/document/element.hpp>
 
 #include <cstdlib>
-#include <cstring>
 
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
-#include <bsoncxx/json.hpp>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>

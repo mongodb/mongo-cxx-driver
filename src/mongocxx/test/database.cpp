@@ -30,7 +30,6 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/test_util/client_helpers.hh>
-#include <mongocxx/validation_criteria.hpp>
 
 namespace {
 using namespace mongocxx;

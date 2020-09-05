@@ -14,10 +14,7 @@
 
 #include <bsoncxx/json.hpp>
 
-#include <iomanip>
-#include <iostream>
 #include <memory>
-#include <sstream>
 #include <vector>
 
 #include <bsoncxx/document/view.hpp>
@@ -25,7 +22,6 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/private/b64_ntop.hh>
 #include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>

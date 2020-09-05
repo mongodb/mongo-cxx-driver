@@ -16,7 +16,6 @@
 
 #include <algorithm>
 #include <fstream>
-#include <functional>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -37,7 +36,6 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/stdx.hpp>
 #include <third_party/catch/include/catch.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
