@@ -182,23 +182,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 
 TEST_CASE("Command Monitoring Spec Tests", "[command_monitoring_spec]") {
     instance::current();
-    char* command_monitoring_tests_path = std::getenv("COMMAND_MONITORING_TESTS_PATH");
-    REQUIRE(command_monitoring_tests_path);
 
-    std::string path{command_monitoring_tests_path};
-
-    if (path.back() == '/') {
-        path.pop_back();
-    }
-
-    std::ifstream test_files{path + "/test_files.txt"};
-
-    REQUIRE(test_files.good());
-
-    std::string test_file;
-
-    while (std::getline(test_files, test_file)) {
-        run_command_monitoring_tests_in_file(path + "/" + test_file);
-    }
+    mongocxx::spec::run_tests_in_suite("command-monitoring", &run_command_monitoring_tests_in_file);
 }
 }  // namespace

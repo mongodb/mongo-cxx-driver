@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <fstream>
-#include <functional>
-#include <iostream>
-#include <map>
-#include <memory>
+#ifdef _MSC_VER
+#include <tchar.h>
+#include <windows.h>
+#else
+#include <dirent.h>
+#endif
+
 #include <set>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -35,26 +36,13 @@
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
-#include <mongocxx/cursor.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/instance.hpp>
-#include <mongocxx/options/aggregate.hpp>
-#include <mongocxx/options/count.hpp>
-#include <mongocxx/options/delete.hpp>
 #include <mongocxx/options/distinct.hpp>
-#include <mongocxx/options/find.hpp>
 #include <mongocxx/options/find_one_and_delete.hpp>
-#include <mongocxx/options/find_one_and_replace.hpp>
-#include <mongocxx/options/find_one_and_update.hpp>
-#include <mongocxx/options/find_one_common_options.hpp>
-#include <mongocxx/options/update.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/result/delete.hpp>
-#include <mongocxx/result/insert_many.hpp>
 #include <mongocxx/result/insert_one.hpp>
-#include <mongocxx/result/replace_one.hpp>
-#include <mongocxx/result/update.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/operation.hh>
 
@@ -434,34 +422,43 @@ uri get_uri(document::view test) {
     return uri{uri_string};
 }
 
-void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> unsupported_tests) {
-    char* tests_path = std::getenv(ev.c_str());
-    INFO("checking for path from environment variable: " << ev);
-    REQUIRE(tests_path);
+std::vector<std::string> get_json_tests(std::string path) {
+    std::vector<std::string> files{};
+#ifdef _MSC_VER
+    WIN32_FIND_DATA FindFileData;
+    HANDLE hFind;
 
-    std::string path{tests_path};
-    if (path.back() == '/') {
-        path.pop_back();
-    }
-
-    std::ifstream test_files{path + "/test_files.txt"};
-    REQUIRE(test_files.good());
-
-    std::string test_file;
-    while (std::getline(test_files, test_file)) {
-        if (unsupported_tests.find(test_file) != unsupported_tests.end()) {
-            WARN("Skipping unsupported test file: " << test_file);
-            continue;
-        }
-        SECTION(test_file) {
-            cb(path + "/" + test_file);
-        }
-    }
+    hFind = FindFirstFile(path + "/*.json", &FindFileData);
+    REQUIRE(hFind != INVALID_HANDLE_VALUE);
+    do {
+        files.push_back(FindFileData.cFileName);
+    } while (FindNextFile(hFind, &FindFileData));
+    FindClose(hFind);
+#else
+    DIR* dir = opendir(path.c_str());
+    for (dirent* entry = nullptr; (entry = readdir(dir));)
+        if (std::string{entry->d_name}.find(".json") != std::string::npos)
+            files.push_back(entry->d_name);
+#endif
+    return files;
 }
 
-void run_tests_in_suite(std::string ev, test_runner cb) {
-    std::set<std::string> empty;
-    run_tests_in_suite(ev, cb, empty);
+void run_tests_in_suite(std::string directory,
+                        test_runner cb,
+                        std::set<std::string> unsupported_tests) {
+    std::string path{std::string(MONGOCXX_SOURCE_DIR).append("/data/").append(directory)};
+    INFO("TEST PATH: " << path);
+
+    auto files = get_json_tests(path);
+    REQUIRE(!files.empty());
+
+    for (auto&& file : files) {
+        if (unsupported_tests.find(file) != unsupported_tests.end()) {
+            WARN("Skipping unsupported test file: " << file);
+        } else {
+            SECTION(file) cb(path + "/" + file);
+        }
+    }
 }
 
 void test_setup(document::view test, document::view test_spec) {
@@ -723,7 +720,8 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                                        &session1,
                                        &fail_point_enabled);
 
-            // Step 10. "Call session0.endSession() and session1.endSession." (done in destructors).
+            // Step 10. "Call session0.endSession() and session1.endSession." (done in
+            // destructors).
         }
 
         // Step 11. Compare APM events.
