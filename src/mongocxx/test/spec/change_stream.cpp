@@ -197,6 +197,9 @@ TEST_CASE("Change stream spec tests", "[change_stream_spec]") {
         return;
     }
 
-    run_tests_in_suite("CHANGE_STREAM_TESTS_PATH", &run_change_stream_tests_in_file);
+    auto tests_path = std::getenv("CHANGE_STREAM_TESTS_PATH")
+                          ? std::getenv("CHANGE_STREAM_TESTS_PATH")
+                          : std::string{MONGOCXX_SOURCE_DIR} + "/data/change_stream";
+    run_tests_in_suite(tests_path, &run_change_stream_tests_in_file);
 }
 }  // namespace

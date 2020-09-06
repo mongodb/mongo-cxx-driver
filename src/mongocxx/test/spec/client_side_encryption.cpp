@@ -250,14 +250,15 @@ TEST_CASE("Client side encryption spec automated tests", "[client_side_encryptio
     /* Tests that use operations that the C++ driver does not have. */
     std::set<std::string> unsupported_tests = {"count.json", "unsupportedCommand.json"};
 
-    char* encryption_tests_path = std::getenv("ENCRYPTION_TESTS_PATH");
-    REQUIRE(encryption_tests_path);
+    auto path = std::getenv("ENCRYPTION_TESTS_PATH")
+                    ? std::getenv("ENCRYPTION_TESTS_PATH")
+                    : std::string{MONGOCXX_SOURCE_DIR} + "/data/client_side_encryption";
+    REQUIRE(!path.empty());
 
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;
     }
 
-    std::string path{encryption_tests_path};
     if (path.back() == '/') {
         path.pop_back();
     }

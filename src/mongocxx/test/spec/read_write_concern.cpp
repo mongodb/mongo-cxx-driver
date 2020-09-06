@@ -25,6 +25,9 @@ TEST_CASE("Read / Write concern spec tests", "[read_write_concern_spec]") {
     instance::current();
 
     // Reuse the transactions test runner.
-    run_tests_in_suite("READ_WRITE_CONCERN_OPERATION_TESTS_PATH", &run_transactions_tests_in_file);
+    auto tests_path = std::getenv("READ_WRITE_CONCERN_OPERATION_TESTS_PATH")
+                          ? std::getenv("READ_WRITE_CONCERN_OPERATION_TESTS_PATH")
+                          : std::string{MONGOCXX_SOURCE_DIR} + "/data/read-write-concern/operation";
+    run_tests_in_suite(tests_path, &run_transactions_tests_in_file);
 }
 }  // namespace

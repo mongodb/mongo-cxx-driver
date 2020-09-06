@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#define MONGOCXX_SOURCE_DIR "@CMAKE_SOURCE_DIR@"
+
 #define MONGOCXX_INLINE_NAMESPACE_BEGIN inline namespace @MONGOCXX_INLINE_NAMESPACE@ {
 
 #define MONGOCXX_INLINE_NAMESPACE_END }  // namespace @MONGOCXX_INLINE_NAMESPACE@

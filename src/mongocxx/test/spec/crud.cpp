@@ -174,6 +174,9 @@ void run_crud_tests_in_file(std::string test_path) {
 TEST_CASE("CRUD spec automated tests", "[crud_spec]") {
     instance::current();
 
-    run_tests_in_suite("CRUD_TESTS_PATH", &run_crud_tests_in_file);
+    auto tests_path = std::getenv("CRUD_TESTS_PATH")
+                          ? std::getenv("CRUD_TESTS_PATH")
+                          : std::string{MONGOCXX_SOURCE_DIR} + "/data/crud";
+    run_tests_in_suite(tests_path, &run_crud_tests_in_file);
 }
 }  // namespace

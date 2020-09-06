@@ -133,7 +133,9 @@ TEST_CASE("retryable reads spec tests", "[retryable_reads_spec]") {
                                             "count.json",
                                             "count-serverErrors.json"};
 
-    run_tests_in_suite(
-        "RETRYABLE_READS_TESTS_PATH", run_retryable_reads_tests_in_file, unsupported_tests);
+    auto tests_path = std::getenv("RETRYABLE_READS_TESTS_PATH")
+                          ? std::getenv("RETRYABLE_READS_TESTS_PATH")
+                          : std::string{MONGOCXX_SOURCE_DIR} + "/data/retryable-reads";
+    run_tests_in_suite(tests_path, run_retryable_reads_tests_in_file, unsupported_tests);
 }
 }  // namespace
