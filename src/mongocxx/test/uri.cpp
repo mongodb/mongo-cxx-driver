@@ -71,6 +71,11 @@ TEST_CASE("URI", "[uri]") {
             mongocxx::uri{invalid};
         } catch (const mongocxx::logic_error& e) {
             REQUIRE(e.code() == mongocxx::error_code::k_invalid_uri);
+
+            std::string invalid_schema =
+                "Invalid URI Schema, expecting 'mongodb://' or 'mongodb+srv://': ";
+
+            REQUIRE(e.what() == invalid_schema + e.code().message());
         }
     }
 

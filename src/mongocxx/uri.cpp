@@ -49,12 +49,13 @@ uri::uri(std::unique_ptr<impl>&& implementation) {
 }
 
 uri::uri(bsoncxx::string::view_or_value uri_string) {
-    bson_error_t error = {0};
+    bson_error_t error;
+
     _impl = stdx::make_unique<impl>(
         libmongoc::uri_new_with_error(uri_string.terminated().data(), &error));
 
-    if (error.domain) {
-        throw logic_error{error_code::k_invalid_uri};
+    if (_impl->uri_t == nullptr) {
+        throw logic_error{error_code::k_invalid_uri, error.message};
     }
 }
 
