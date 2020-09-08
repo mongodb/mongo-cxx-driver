@@ -67,6 +67,5 @@ int main(int, char**) {
         // a call like this, and doing so could result in a use-after-free error.
         // BAD:
         // auto res = db.run_command(make_document(kvp("ping", 1)).view());
-
     }
 }
