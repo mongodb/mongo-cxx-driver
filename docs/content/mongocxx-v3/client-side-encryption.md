@@ -71,7 +71,11 @@ JSON Schemas supplied in the `schema_map` only apply to configuring automatic cl
 //         "bsonType" : "object",
 //         "properties" : {
 //            "encryptedFieldName" : {
+<<<<<<< HEAD
 //               "encrypt" : {
+=======
+//               "encryptField" : {
+>>>>>>> CXX-1855 add tutorial and example for client-side encryption
 //                  "keyId" : [ <datakey as UUID> ],
 //                  "bsonType" : "string",
 //                  "algorithm" : <algorithm>
@@ -141,3 +145,8 @@ Please see  [`examples/mongocxx/explicit_encryption_auto_decryption.cpp`](https:
 
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> CXX-1855 add tutorial and example for client-side encryption
