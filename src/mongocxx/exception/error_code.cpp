@@ -54,7 +54,7 @@ class error_category final : public std::error_category {
             case error_code::k_server_response_malformed:
                 return "the response from the server was malformed";
             case error_code::k_invalid_uri:
-                return "an invalid MongoDB URI was provided";
+                return "invalid URI schema, expecting 'mongodb://' or 'mongodb+srv://'";
             case error_code::k_invalid_gridfs_bucket_object:
                 return "invalid use of default constructed or moved-from mongocxx::gridfs::bucket "
                        "object";
