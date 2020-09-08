@@ -19,6 +19,7 @@ include_directories(
 
 set(MONGOCXX_EXAMPLES
     aggregate.cpp
+    automatic_client_side_field_level_encryption.cpp
     bulk_write.cpp
     change_streams.cpp
     client_session.cpp
@@ -26,6 +27,8 @@ set(MONGOCXX_EXAMPLES
     create.cpp
     document_validation.cpp
     exception.cpp
+    explicit_encryption.cpp
+    explicit_encryption_auto_decryption.cpp
     get_values_from_documents.cpp
     gridfs.cpp
     index.cpp
@@ -39,6 +42,7 @@ set(MONGOCXX_EXAMPLES
     query_projection.cpp
     query.cpp
     remove.cpp
+    server_side_field_level_encryption_enforcement.cpp
     tailable_cursor.cpp
     update.cpp
     view_or_value_variant.cpp
