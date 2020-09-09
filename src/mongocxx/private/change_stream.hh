@@ -23,6 +23,8 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
+#include <mongocxx/config/private/prelude.hh>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
