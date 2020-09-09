@@ -87,6 +87,10 @@ stdx::string_view element::key() const {
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
+types::b_utf8 element::get_string() const {
+    return element::get_utf8();
+}
+
 types::bson_value::view element::get_value() const {
     switch (static_cast<int>(type())) {
 #define BSONCXX_ENUM(type, val) \

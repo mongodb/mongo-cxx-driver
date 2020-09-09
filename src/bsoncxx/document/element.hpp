@@ -147,11 +147,23 @@ class BSONCXX_API element {
     ///
     /// Getter for elements of the b_utf8 type.
     ///
+    /// @deprecated use document::element::get_string() instead.
+    ///
     /// @throws bsoncxx::exception if this element is not a b_utf8.
     ///
     /// @return the element's value.
     ///
-    types::b_utf8 get_utf8() const;
+    BSONCXX_DEPRECATED types::b_utf8 get_utf8() const;
+
+    ///
+    /// Getter for elements of the b_utf8, or string, type. This function acts as a
+    /// wrapper for get_utf8().
+    ///
+    /// @throws bsoncxx::exception if this element is not a b_utf8.
+    ///
+    /// @return the element's value.
+    ///
+    types::b_utf8 get_string() const;
 
     ///
     /// Getter for elements of the b_document type.

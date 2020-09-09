@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <string>
 #include <utility>
 
 #include <bsoncxx/builder/basic/array.hpp>
@@ -338,6 +339,15 @@ TEST_CASE("CXX-1880: array element should have key") {
     REQUIRE(val.view()[0].key() == stdx::string_view("0"));
     REQUIRE(val.view()[1].key() == stdx::string_view("1"));
     REQUIRE(val.view()[2].key() == stdx::string_view("2"));
+}
+
+TEST_CASE("get_string() should successfully return type b_utf8") {
+    auto test_string = "beepboop";
+    auto doc = make_document(kvp("test_string", test_string));
+    auto ele = doc.view()["test_string"];
+
+    REQUIRE(test_string == std::string(ele.get_string().value));
+    REQUIRE(ele.get_string() == ele.get_utf8());
 }
 
 }  // namespace
