@@ -458,7 +458,8 @@ TEST_CASE("index creation and deletion with different collation") {
         ++index_it;
         bsoncxx::document::view index = *index_it;
 
-        REQUIRE(bsoncxx::string::to_string(index["name"].get_string().value) == "custom_index_name");
+        REQUIRE(bsoncxx::string::to_string(index["name"].get_string().value) ==
+                "custom_index_name");
 
         coll.drop();
         db.drop();

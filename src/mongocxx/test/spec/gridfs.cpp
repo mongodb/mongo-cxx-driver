@@ -474,7 +474,8 @@ void run_gridfs_tests_in_file(std::string test_path, client* client) {
     gridfs::bucket bucket = db.gridfs_bucket();
 
     for (auto&& test : tests) {
-        std::string description = bsoncxx::string::to_string(test["description"].get_string().value);
+        std::string description =
+            bsoncxx::string::to_string(test["description"].get_string().value);
         INFO("Test description: " << description);
         initialize_collections(db, test_spec_view["data"].get_document().value);
 

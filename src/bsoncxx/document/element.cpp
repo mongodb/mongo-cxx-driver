@@ -95,13 +95,13 @@ types::b_utf8 element::get_string() const {
 
 types::bson_value::view element::get_value() const {
     switch (static_cast<int>(type())) {
-BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 #define BSONCXX_ENUM(type, val) \
     case val:                   \
         return types::bson_value::view{get_##type()};
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
-BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
     }
 
     BSONCXX_UNREACHABLE;

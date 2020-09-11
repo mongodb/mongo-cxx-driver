@@ -67,15 +67,15 @@ view::view() noexcept : view(nullptr) {}
 
 view::view(const view& rhs) noexcept {
     switch (static_cast<int>(rhs._type)) {
-    // CXX-1817; deprecation warning suppressed for get_utf8()
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+        // CXX-1817; deprecation warning suppressed for get_utf8()
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 #define BSONCXX_ENUM(type, val)                      \
     case val:                                        \
         new (&_b_##type) b_##type(rhs.get_##type()); \
         break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
     }
 
     _type = rhs._type;
@@ -89,15 +89,15 @@ view& view::operator=(const view& rhs) noexcept {
     destroy();
 
     switch (static_cast<int>(rhs._type)) {
-    // CXX-1817; deprecation warning suppressed for get_utf8()
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+        // CXX-1817; deprecation warning suppressed for get_utf8()
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 #define BSONCXX_ENUM(type, val)                      \
     case val:                                        \
         new (&_b_##type) b_##type(rhs.get_##type()); \
         break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
     }
 
     _type = rhs._type;
@@ -120,7 +120,7 @@ bsoncxx::type view::type() const {
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
-const b_utf8 & view::get_string() const {
+const b_utf8& view::get_string() const {
     return _b_utf8;
 }
 
@@ -168,14 +168,14 @@ bool operator==(const view& lhs, const view& rhs) {
     }
 
     switch (static_cast<int>(lhs.type())) {
-    // CXX-1817; deprecation warning suppressed for get_utf8()
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+        // CXX-1817; deprecation warning suppressed for get_utf8()
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 #define BSONCXX_ENUM(type, val) \
     case val:                   \
         return lhs.get_##type() == rhs.get_##type();
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
     }
 
     // Silence compiler warnings about failing to return a value.

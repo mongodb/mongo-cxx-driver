@@ -2343,7 +2343,8 @@ TEST_CASE("create_index tests", "[collection]") {
         options.name(indexName);
 
         auto response = coll.create_index(index.view(), options);
-        REQUIRE(response.view()["name"].get_string().value == bsoncxx::stdx::string_view(indexName));
+        REQUIRE(response.view()["name"].get_string().value ==
+                bsoncxx::stdx::string_view(indexName));
 
         find_index_and_validate(coll, indexName);
 

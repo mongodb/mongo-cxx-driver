@@ -1416,24 +1416,26 @@ document::value operation_runner::run(document::view operation) {
         client client{uri{}};
         auto cursor = client[_db->name()][_coll->name()].list_indexes();
 
-        REQUIRE(
-            cursor.end() ==
-            std::find_if(
-                cursor.begin(), cursor.end(), [operation](bsoncxx::v_noabi::document::view doc) {
-                    return (doc["name"].get_string() == operation["arguments"]["index"].get_string());
-                }));
+        REQUIRE(cursor.end() ==
+                std::find_if(cursor.begin(),
+                             cursor.end(),
+                             [operation](bsoncxx::v_noabi::document::view doc) {
+                                 return (doc["name"].get_string() ==
+                                         operation["arguments"]["index"].get_string());
+                             }));
 
         return empty_document;
     } else if (key.compare("assertIndexExists") == 0) {
         client client{uri{}};
         auto cursor = client[_db->name()][_coll->name()].list_indexes();
 
-        REQUIRE(
-            cursor.end() !=
-            std::find_if(
-                cursor.begin(), cursor.end(), [operation](bsoncxx::v_noabi::document::view doc) {
-                    return (doc["name"].get_string() == operation["arguments"]["index"].get_string());
-                }));
+        REQUIRE(cursor.end() !=
+                std::find_if(cursor.begin(),
+                             cursor.end(),
+                             [operation](bsoncxx::v_noabi::document::view doc) {
+                                 return (doc["name"].get_string() ==
+                                         operation["arguments"]["index"].get_string());
+                             }));
 
         return empty_document;
     } else {

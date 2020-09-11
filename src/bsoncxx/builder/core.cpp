@@ -647,15 +647,15 @@ core& core::concatenate(const bsoncxx::document::view& view) {
 
 core& core::append(const bsoncxx::types::bson_value::view& value) {
     switch (static_cast<int>(value.type())) {
-    // CXX-1817; deprecation warning suppressed for get_utf8()
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+        // CXX-1817; deprecation warning suppressed for get_utf8()
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 #define BSONCXX_ENUM(type, val)     \
     case val:                       \
         append(value.get_##type()); \
         break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
     }
 
     return *this;
