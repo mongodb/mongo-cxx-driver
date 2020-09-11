@@ -80,6 +80,8 @@ stdx::string_view element::key() const {
     return stdx::string_view{key};
 }
 
+// CXX-1817; deprecation warning suppressed for get_utf8()
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 #define BSONCXX_ENUM(name, val)                                     \
     types::b_##name element::get_##name() const {                   \
         types::bson_value::view v{_raw, _length, _offset, _keylen}; \
@@ -87,6 +89,7 @@ stdx::string_view element::key() const {
     }
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
 types::b_utf8 element::get_string() const {
     types::bson_value::view v{_raw, _length, _offset, _keylen};
@@ -95,6 +98,7 @@ types::b_utf8 element::get_string() const {
 
 types::bson_value::view element::get_value() const {
     switch (static_cast<int>(type())) {
+        // CXX-1817; deprecation warning suppressed for get_utf8()
         BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 #define BSONCXX_ENUM(type, val) \
     case val:                   \
