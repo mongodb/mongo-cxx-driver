@@ -1036,11 +1036,11 @@ void update_examples(mongocxx::database db) {
         // End Example 52
 
         for (auto&& document : db["inventory"].find(make_document(kvp("item", "paper")))) {
-            if (document["size"].get_document().value["uom"].get_utf8().value !=
+            if (document["size"].get_document().value["uom"].get_string().value !=
                 bsoncxx::stdx::string_view{"cm"}) {
                 throw std::logic_error("error in example 52");
             }
-            if (document["status"].get_utf8().value != bsoncxx::stdx::string_view{"P"}) {
+            if (document["status"].get_string().value != bsoncxx::stdx::string_view{"P"}) {
                 throw std::logic_error("error in example 52");
             }
             check_has_field(document, "lastModified", 52);
@@ -1060,11 +1060,11 @@ void update_examples(mongocxx::database db) {
 
         for (auto&& document :
              db["inventory"].find(make_document(kvp("qty", make_document(kvp("$lt", 50)))))) {
-            if (document["size"].get_document().value["uom"].get_utf8().value !=
+            if (document["size"].get_document().value["uom"].get_string().value !=
                 bsoncxx::stdx::string_view{"in"}) {
                 throw std::logic_error("error in example 53");
             }
-            if (document["status"].get_utf8().value != bsoncxx::stdx::string_view{"P"}) {
+            if (document["status"].get_string().value != bsoncxx::stdx::string_view{"P"}) {
                 throw std::logic_error("error in example 53");
             }
             check_has_field(document, "lastModified", 53);
