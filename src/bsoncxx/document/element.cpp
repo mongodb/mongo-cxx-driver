@@ -21,6 +21,7 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
@@ -88,16 +89,19 @@ stdx::string_view element::key() const {
 #undef BSONCXX_ENUM
 
 types::b_utf8 element::get_string() const {
-    return element::get_utf8();
+    types::bson_value::view v{_raw, _length, _offset, _keylen};
+    return v.get_string();
 }
 
 types::bson_value::view element::get_value() const {
     switch (static_cast<int>(type())) {
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 #define BSONCXX_ENUM(type, val) \
     case val:                   \
         return types::bson_value::view{get_##type()};
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
     }
 
     BSONCXX_UNREACHABLE;

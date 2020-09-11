@@ -21,6 +21,7 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/types/private/convert.hh>
 
 #include <bsoncxx/config/private/prelude.hh>
@@ -112,6 +113,10 @@ bsoncxx::type view::type() const {
     }
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
+
+const b_utf8 & view::get_string() const {
+    return _b_utf8;
+}
 
 view::view(const std::uint8_t* raw,
            std::uint32_t length,
