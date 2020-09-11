@@ -15,6 +15,7 @@
 #pragma once
 
 #include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <cstdlib>
@@ -186,6 +187,8 @@ BSONCXX_INLINE void convert_to_libbson(const bsoncxx::types::b_array& arr, bson_
 //
 BSONCXX_INLINE void convert_to_libbson(bson_value_t* v, const class bson_value::view& bson_view) {
     switch (bson_view.type()) {
+    // CXX-1817; deprecation warning suppressed for get_utf8()
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 #define BSONCXX_ENUM(name, val)              \
     case bsoncxx::type::k_##name: {          \
         auto value = bson_view.get_##name(); \
@@ -194,6 +197,7 @@ BSONCXX_INLINE void convert_to_libbson(bson_value_t* v, const class bson_value::
     }
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
         default:
             BSONCXX_UNREACHABLE;
     }

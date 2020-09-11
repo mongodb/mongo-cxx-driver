@@ -81,7 +81,7 @@ int main(int, char**) {
                 array::view subarr{ele.get_array().value};
                 for (array::element ele : subarr) {
                     std::cout << "array element: "
-                              << bsoncxx::string::to_string(ele.get_utf8().value) << std::endl;
+                              << bsoncxx::string::to_string(ele.get_string().value) << std::endl;
                 }
                 break;
             }

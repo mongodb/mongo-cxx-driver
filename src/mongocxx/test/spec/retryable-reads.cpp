@@ -48,14 +48,14 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
             return;
         }
 
-        INFO("Test description: " << test["description"].get_utf8().value);
+        INFO("Test description: " << test["description"].get_string().value);
         if (should_skip_spec_test(client, test.get_document())) {
             continue;
         }
 
         auto get_value_or_default = [&](std::string key, std::string default_str) {
             if (test_spec_view[key]) {
-                return to_string(test_spec_view[key].get_utf8().value);
+                return to_string(test_spec_view[key].get_string().value);
             }
             return default_str;
         };
@@ -68,7 +68,7 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
 
         /* SPEC: GridFS tests are denoted by when the YAML file contains 'bucket_name'. */
         if (test_spec_view["bucket_name"]) {
-            auto bucket_name = to_string(test_spec_view["bucket_name"].get_utf8().value);
+            auto bucket_name = to_string(test_spec_view["bucket_name"].get_string().value);
             auto data = test_spec_view["data"].get_document().value;
 
             auto files_collection_name = bucket_name + ".files";
@@ -113,7 +113,7 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
         }
 
         if (test["failPoint"]) {
-            disable_fail_point(client, test["failPoint"]["configureFailPoint"].get_utf8().value);
+            disable_fail_point(client, test["failPoint"]["configureFailPoint"].get_string().value);
         }
     }
 }

@@ -78,12 +78,12 @@ TEST_CASE("validation_criteria can be exported to a document", "[validation_crit
     ele = criteria_view["validationLevel"];
     REQUIRE(ele);
     REQUIRE(ele.type() == type::k_utf8);
-    REQUIRE(bsoncxx::string::to_string(ele.get_utf8().value) == "strict");
+    REQUIRE(bsoncxx::string::to_string(ele.get_string().value) == "strict");
 
     ele = criteria_view["validationAction"];
     REQUIRE(ele);
     REQUIRE(ele.type() == type::k_utf8);
-    REQUIRE(bsoncxx::string::to_string(ele.get_utf8().value) == "warn");
+    REQUIRE(bsoncxx::string::to_string(ele.get_string().value) == "warn");
 
     ele = criteria_view["validator"];
     REQUIRE(ele);

@@ -106,7 +106,7 @@ class BSONCXX_API view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    const b_utf8& get_utf8() const;
+    BSONCXX_DEPRECATED const b_utf8& get_utf8() const;
 
     ///
     /// @return The underlying BSON UTF-8 string value.

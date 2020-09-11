@@ -198,7 +198,7 @@ TEST_CASE("bson_value::view with b_double", "[bsoncxx::types::bson_value::view]"
 
 TEST_CASE("bson_value::view with b_utf8", "[bsoncxx::types::bson_value::view]") {
     b_utf8 utf8_val{"hello"};
-    REQUIRE(bson_value::view{utf8_val}.get_utf8() == utf8_val);
+    REQUIRE(bson_value::view{utf8_val}.get_string() == utf8_val);
 }
 
 TEST_CASE("bson_value::view with b_document", "[bsoncxx::types::bson_value::view]") {

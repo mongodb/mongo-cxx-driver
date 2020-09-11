@@ -116,7 +116,7 @@ TEST_CASE("Collection", "[collection]") {
                 bsoncxx::document::view o(bson_get_data(options), options->len);
 
                 bsoncxx::stdx::string_view bar(
-                    p[0].get_document().value["$match"].get_document().value["foo"].get_utf8());
+                    p[0].get_document().value["$match"].get_document().value["foo"].get_string());
                 std::int32_t one(
                     p[1].get_document().value["$sort"].get_document().value["foo"].get_int32());
 
@@ -348,7 +348,7 @@ TEST_CASE("Collection", "[collection]") {
                         *expected_allow_partial_results);
             }
             if (expected_comment) {
-                REQUIRE(opts_view["comment"].get_utf8().value == *expected_comment);
+                REQUIRE(opts_view["comment"].get_string().value == *expected_comment);
             }
             if (expected_cursor_type) {
                 bsoncxx::document::element tailable = opts_view["tailable"];
@@ -369,7 +369,7 @@ TEST_CASE("Collection", "[collection]") {
                 }
             }
             if (expected_hint) {
-                REQUIRE(opts_view["hint"].get_utf8() == expected_hint->get_utf8());
+                REQUIRE(opts_view["hint"].get_string() == expected_hint->get_string());
             }
             if (expected_no_cursor_timeout) {
                 REQUIRE(opts_view["noCursorTimeout"].get_bool().value ==
@@ -598,7 +598,7 @@ TEST_CASE("Collection", "[collection]") {
                 }
 
                 if (expected_hint) {
-                    REQUIRE(options_view["hint"].get_utf8() == expected_hint->get_utf8());
+                    REQUIRE(options_view["hint"].get_string() == expected_hint->get_string());
                 } else {
                     REQUIRE(!options_view["hint"]);
                 }
@@ -723,7 +723,7 @@ TEST_CASE("Collection", "[collection]") {
                 }
 
                 if (expected_hint) {
-                    REQUIRE(options_view["hint"].get_utf8() == expected_hint->get_utf8());
+                    REQUIRE(options_view["hint"].get_string() == expected_hint->get_string());
                 } else {
                     REQUIRE(!options_view["hint"]);
                 }
@@ -806,7 +806,7 @@ TEST_CASE("Collection", "[collection]") {
                 }
 
                 if (expected_hint) {
-                    REQUIRE(options_view["hint"].get_utf8() == expected_hint->get_utf8());
+                    REQUIRE(options_view["hint"].get_string() == expected_hint->get_string());
                 } else {
                     REQUIRE(!options_view["hint"]);
                 }
@@ -869,7 +869,7 @@ TEST_CASE("Collection", "[collection]") {
                 bsoncxx::document::view options_view{bson_get_data(options), options->len};
                 if (expected_hint) {
                     CAPTURE(to_json(options_view));
-                    REQUIRE(options_view["hint"].get_utf8() == expected_hint->get_utf8());
+                    REQUIRE(options_view["hint"].get_string() == expected_hint->get_string());
                 } else {
                     REQUIRE(!options_view["hint"]);
                 }
@@ -912,7 +912,7 @@ TEST_CASE("Collection", "[collection]") {
                 bsoncxx::document::view options_view{bson_get_data(options), options->len};
                 if (expected_hint) {
                     CAPTURE(to_json(options_view));
-                    REQUIRE(options_view["hint"].get_utf8() == expected_hint->get_utf8());
+                    REQUIRE(options_view["hint"].get_string() == expected_hint->get_string());
                 } else {
                     REQUIRE(!options_view["hint"]);
                 }
