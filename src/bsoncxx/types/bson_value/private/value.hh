@@ -33,7 +33,7 @@ class value::impl {
 
     impl() {
         // Initialize the value to null for safe destruction.
-        _value.value_type = BSON_TYPE_NULL;
+        _value = {.value_type = BSON_TYPE_NULL};
     }
 
     ~impl() {
