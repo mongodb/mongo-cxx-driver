@@ -95,7 +95,7 @@ void index_view::drop_one(const bsoncxx::document::view_or_value& keys,
     bsoncxx::document::view opts_view = index_options.view();
 
     if (opts_view["name"]) {
-        drop_one(bsoncxx::string::to_string(opts_view["name"].get_utf8().value), options);
+        drop_one(bsoncxx::string::to_string(opts_view["name"].get_string().value), options);
     } else {
         drop_one(_get_impl().get_index_name_from_keys(keys), options);
     }
@@ -108,7 +108,8 @@ void index_view::drop_one(const client_session& session,
     bsoncxx::document::view opts_view = index_options.view();
 
     if (opts_view["name"]) {
-        drop_one(session, bsoncxx::string::to_string(opts_view["name"].get_utf8().value), options);
+        drop_one(
+            session, bsoncxx::string::to_string(opts_view["name"].get_string().value), options);
     } else {
         drop_one(session, _get_impl().get_index_name_from_keys(keys), options);
     }

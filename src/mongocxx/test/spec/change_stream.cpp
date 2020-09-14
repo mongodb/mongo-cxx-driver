@@ -40,7 +40,7 @@ using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 
 bool should_skip(const array::element& test) {
-    if (test["description"].get_utf8().value.compare(
+    if (test["description"].get_string().value.compare(
             "Change Stream should error when an invalid aggregation stage is passed in") == 0) {
         UNSCOPED_INFO(
             "Skipping test with invalid pipeline stages. The C++ driver cannot test them.");
@@ -79,7 +79,7 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
     // https://github.com/mongodb/specifications/tree/master/source/change-streams/tests#spec-test-runner
     for (auto&& test_el : tests) {
         auto test = test_el.get_document().value;
-        auto description = test["description"].get_utf8().value;
+        auto description = test["description"].get_string().value;
         SECTION(to_string(description)) {
             if (should_skip(test_el))
                 continue;
@@ -110,9 +110,9 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
                     pipeline = build_pipeline(test["changeStreamPipeline"].get_array().value);
                 }
 
-                std::string db_name = to_string(test_spec["database_name"].get_utf8().value);
-                std::string coll_name = to_string(test_spec["collection_name"].get_utf8().value);
-                auto target = std::string(test["target"].get_utf8().value);
+                std::string db_name = to_string(test_spec["database_name"].get_string().value);
+                std::string coll_name = to_string(test_spec["collection_name"].get_string().value);
+                auto target = std::string(test["target"].get_string().value);
                 if (target == "collection") {
                     return client[db_name][coll_name].watch(pipeline, cs_opts);
                 } else if (target == "database") {
@@ -126,9 +126,9 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
             // server."
             mongocxx::client global_client(uri{});
             for (auto&& operation : test["operations"].get_array().value) {
-                std::string operation_name = to_string(operation["name"].get_utf8().value);
-                auto dbname = to_string(operation["database"].get_utf8().value);
-                auto collname = to_string(operation["collection"].get_utf8().value);
+                std::string operation_name = to_string(operation["name"].get_string().value);
+                auto dbname = to_string(operation["database"].get_string().value);
+                auto collname = to_string(operation["collection"].get_string().value);
                 auto coll = global_client[dbname][collname];
                 operation_runner op_runner{&coll};
                 op_runner.run(operation.get_document().value);
@@ -169,7 +169,7 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
             // Disable the failpoint.
             if (test["failPoint"]) {
                 disable_fail_point(client,
-                                   test["failPoint"]["configureFailPoint"].get_utf8().value);
+                                   test["failPoint"]["configureFailPoint"].get_string().value);
             }
 
             // Match captured APM events.

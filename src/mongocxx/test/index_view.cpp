@@ -256,7 +256,7 @@ TEST_CASE("create_many", "[index_view]") {
         std::int8_t found = 0;
 
         for (auto&& index : indexes.list()) {
-            auto name = index["name"].get_utf8();
+            auto name = index["name"].get_string();
 
             for (auto expected : expected_names) {
                 if (stdx::string_view(expected) == name.value) {
@@ -458,7 +458,8 @@ TEST_CASE("index creation and deletion with different collation") {
         ++index_it;
         bsoncxx::document::view index = *index_it;
 
-        REQUIRE(bsoncxx::string::to_string(index["name"].get_utf8().value) == "custom_index_name");
+        REQUIRE(bsoncxx::string::to_string(index["name"].get_string().value) ==
+                "custom_index_name");
 
         coll.drop();
         db.drop();

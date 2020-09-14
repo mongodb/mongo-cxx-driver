@@ -74,7 +74,7 @@ pipeline build_pipeline(array::view pipeline_docs) {
 bsoncxx::stdx::optional<read_concern> lookup_read_concern(document::view doc) {
     if (doc["readConcern"] && doc["readConcern"]["level"]) {
         read_concern rc;
-        rc.acknowledge_string(string::to_string(doc["readConcern"]["level"].get_utf8().value));
+        rc.acknowledge_string(string::to_string(doc["readConcern"]["level"].get_string().value));
         return rc;
     }
 
@@ -86,7 +86,7 @@ bsoncxx::stdx::optional<write_concern> lookup_write_concern(document::view doc) 
         write_concern wc;
         document::element w = doc["writeConcern"]["w"];
         if (w.type() == bsoncxx::type::k_utf8) {
-            std::string level = string::to_string(w.get_utf8().value);
+            std::string level = string::to_string(w.get_string().value);
             if (level.compare("majority") == 0) {
                 wc.acknowledge_level(write_concern::level::k_majority);
             } else if (level.compare("acknowledged") == 0) {
@@ -106,7 +106,7 @@ bsoncxx::stdx::optional<write_concern> lookup_write_concern(document::view doc) 
 bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view doc) {
     if (doc["readPreference"] && doc["readPreference"]["mode"]) {
         read_preference rp;
-        std::string mode = string::to_string(doc["readPreference"]["mode"].get_utf8().value);
+        std::string mode = string::to_string(doc["readPreference"]["mode"].get_string().value);
         if (mode.compare("Primary") == 0) {
             rp.mode(read_preference::read_mode::k_primary);
         } else if (mode.compare("PrimaryPreferred") == 0) {
@@ -136,7 +136,7 @@ client_session* operation_runner::_lookup_session(stdx::string_view key) {
 
 client_session* operation_runner::_lookup_session(document::view doc) {
     if (doc["session"]) {
-        stdx::string_view session_name = doc["session"].get_utf8().value;
+        stdx::string_view session_name = doc["session"].get_string().value;
         return _lookup_session(session_name);
     }
     return nullptr;
@@ -161,7 +161,7 @@ document::value operation_runner::_run_aggregate(document::view operation) {
     client_session* session = _lookup_session(operation["arguments"].get_document().value);
 
     if (operation["object"] &&
-        operation["object"].get_utf8().value == stdx::string_view{"database"}) {
+        operation["object"].get_string().value == stdx::string_view{"database"}) {
         REQUIRE(_db);
 
         // Run on the database
@@ -197,7 +197,7 @@ document::value operation_runner::_run_distinct(document::view operation) {
         filter = arguments["filter"].get_document().value;
     }
 
-    bsoncxx::stdx::string_view field_name = arguments["fieldName"].get_utf8().value;
+    bsoncxx::stdx::string_view field_name = arguments["fieldName"].get_string().value;
 
     options::distinct options{};
 
@@ -262,7 +262,7 @@ document::value operation_runner::_run_find(document::view operation) {
     if (arguments["modifiers"]) {
         document::view modifiers = arguments["modifiers"].get_document().value;
         if (modifiers["$comment"]) {
-            options.comment(modifiers["$comment"].get_utf8().value);
+            options.comment(modifiers["$comment"].get_string().value);
         }
 
         if (modifiers["$hint"]) {
@@ -320,7 +320,7 @@ document::value operation_runner::_run_delete_many(document::view operation) {
 
     if (arguments["hint"]) {
         if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
-            options.hint(hint{arguments["hint"].get_utf8().value});
+            options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
     }
@@ -357,7 +357,7 @@ document::value operation_runner::_run_delete_one(document::view operation) {
 
     if (arguments["hint"]) {
         if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
-            options.hint(hint{arguments["hint"].get_utf8().value});
+            options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
     }
@@ -394,14 +394,14 @@ document::value operation_runner::_run_find_one_and_delete(document::view operat
 
     if (arguments["hint"]) {
         if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
-            options.hint(hint{arguments["hint"].get_utf8().value});
+            options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
     }
 
     if (arguments["hint"]) {
         if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
-            options.hint(hint{arguments["hint"].get_utf8().value});
+            options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
     }
@@ -463,7 +463,7 @@ document::value operation_runner::_run_find_one_and_replace(document::view opera
 
     if (arguments["hint"]) {
         if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
-            options.hint(hint{arguments["hint"].get_utf8().value});
+            options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
     }
@@ -474,7 +474,7 @@ document::value operation_runner::_run_find_one_and_replace(document::view opera
 
     if (arguments["returnDocument"]) {
         std::string return_document =
-            bsoncxx::string::to_string(arguments["returnDocument"].get_utf8().value);
+            bsoncxx::string::to_string(arguments["returnDocument"].get_string().value);
 
         if (return_document == "After") {
             options.return_document(options::return_document::k_after);
@@ -523,7 +523,7 @@ document::value operation_runner::_run_find_one_and_update(document::view operat
 
     if (arguments["hint"]) {
         if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
-            options.hint(hint{arguments["hint"].get_utf8().value});
+            options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
     }
@@ -538,7 +538,7 @@ document::value operation_runner::_run_find_one_and_update(document::view operat
 
     if (arguments["returnDocument"]) {
         std::string return_document =
-            bsoncxx::string::to_string(arguments["returnDocument"].get_utf8().value);
+            bsoncxx::string::to_string(arguments["returnDocument"].get_string().value);
 
         if (return_document == "After") {
             options.return_document(options::return_document::k_after);
@@ -679,7 +679,7 @@ document::value operation_runner::_run_replace_one(document::view operation) {
 
     if (arguments["hint"]) {
         if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
-            options.hint(hint{arguments["hint"].get_utf8().value});
+            options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
     }
@@ -747,7 +747,7 @@ document::value operation_runner::_run_update_many(document::view operation) {
 
     if (arguments["hint"]) {
         if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
-            options.hint(hint{arguments["hint"].get_utf8().value});
+            options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
     }
@@ -839,7 +839,7 @@ document::value operation_runner::_run_update_one(document::view operation) {
 
     if (arguments["hint"]) {
         if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
-            options.hint(hint{arguments["hint"].get_utf8().value});
+            options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
     }
@@ -948,7 +948,7 @@ void operation_runner::_set_collection_options(document::view operation) {
         if (!read_concern_options.empty()) {
             REQUIRE(read_concern_options["level"]);
 
-            rc.acknowledge_string(read_concern_options["level"].get_utf8().value);
+            rc.acknowledge_string(read_concern_options["level"].get_string().value);
         }
         _coll->read_concern(rc);
     }
@@ -991,14 +991,14 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
     for (auto&& request_element : requests) {
         auto request = request_element.get_document().value;
         auto request_arguments = request["arguments"].get_document().value;
-        auto operation_name = request["name"].get_utf8().value;
+        auto operation_name = request["name"].get_string().value;
 
         if (operation_name.compare("updateOne") == 0) {
             auto update_one = _build_update_model<model::update_one>(request_arguments);
 
             if (request_arguments["hint"]) {
                 if (request_arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
-                    update_one.hint(hint{request_arguments["hint"].get_utf8().value});
+                    update_one.hint(hint{request_arguments["hint"].get_string().value});
                 else
                     update_one.hint(hint{request_arguments["hint"].get_document().value});
             }
@@ -1021,7 +1021,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
 
             if (request_arguments["hint"]) {
                 if (request_arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
-                    update_many.hint(hint{request_arguments["hint"].get_utf8().value});
+                    update_many.hint(hint{request_arguments["hint"].get_string().value});
                 else
                     update_many.hint(hint{request_arguments["hint"].get_document().value});
             }
@@ -1045,7 +1045,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
             model::replace_one replace_one(filter, replacement);
             if (request_arguments["hint"]) {
                 if (request_arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
-                    replace_one.hint(hint{request_arguments["hint"].get_utf8().value});
+                    replace_one.hint(hint{request_arguments["hint"].get_string().value});
                 else
                     replace_one.hint(hint{request_arguments["hint"].get_document().value});
             }
@@ -1068,7 +1068,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
             model::delete_one delete_one(filter);
             if (request_arguments["hint"]) {
                 if (request_arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
-                    delete_one.hint(hint{request_arguments["hint"].get_utf8().value});
+                    delete_one.hint(hint{request_arguments["hint"].get_string().value});
                 else
                     delete_one.hint(hint{request_arguments["hint"].get_document().value});
             }
@@ -1083,7 +1083,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
             model::delete_many delete_many(filter);
             if (request_arguments["hint"]) {
                 if (request_arguments["hint"].type() == bsoncxx::v_noabi::type::k_utf8)
-                    delete_many.hint(hint{request_arguments["hint"].get_utf8().value});
+                    delete_many.hint(hint{request_arguments["hint"].get_string().value});
                 else
                     delete_many.hint(hint{request_arguments["hint"].get_document().value});
             }
@@ -1207,7 +1207,7 @@ document::value operation_runner::_run_start_transaction(bsoncxx::document::view
         }
     }
 
-    auto session = _lookup_session(operation["object"].get_utf8().value);
+    auto session = _lookup_session(operation["object"].get_string().value);
     REQUIRE(session);
     session->start_transaction(txn_opts);
 
@@ -1215,14 +1215,14 @@ document::value operation_runner::_run_start_transaction(bsoncxx::document::view
 }
 
 document::value operation_runner::_run_commit_transaction(bsoncxx::document::view operation) {
-    auto session = _lookup_session(operation["object"].get_utf8().value);
+    auto session = _lookup_session(operation["object"].get_string().value);
     REQUIRE(session);
     session->commit_transaction();
     return bsoncxx::builder::basic::make_document();
 }
 
 document::value operation_runner::_run_abort_transaction(bsoncxx::document::view operation) {
-    auto session = _lookup_session(operation["object"].get_utf8().value);
+    auto session = _lookup_session(operation["object"].get_string().value);
     REQUIRE(session);
     session->abort_transaction();
     return bsoncxx::builder::basic::make_document();
@@ -1266,7 +1266,7 @@ document::value operation_runner::_create_index(const document::view& operation)
     auto session = _lookup_session(arguments.get_document().value);
     REQUIRE(session);
 
-    auto name = arguments["name"].get_utf8().value;
+    auto name = arguments["name"].get_string().value;
     auto keys = arguments["keys"].get_document().value;
 
     bsoncxx::builder::basic::document opts;
@@ -1287,10 +1287,10 @@ document::value operation_runner::run(document::view operation) {
     using namespace bsoncxx::builder::basic;
     bsoncxx::document::value empty_document({});
 
-    stdx::string_view key = operation["name"].get_utf8().value;
+    stdx::string_view key = operation["name"].get_string().value;
     stdx::string_view object;
     if (operation["object"]) {
-        object = operation["object"].get_utf8().value;
+        object = operation["object"].get_string().value;
     }
 
     if (key.compare("aggregate") == 0) {
@@ -1361,13 +1361,13 @@ document::value operation_runner::run(document::view operation) {
         }
         return empty_document;
     } else if (key.compare("rename") == 0) {
-        _coll->rename(operation["arguments"]["to"].get_utf8().value);
+        _coll->rename(operation["arguments"]["to"].get_string().value);
         return empty_document;
     } else if (key.compare("drop") == 0) {
         _coll->drop();
         return empty_document;
     } else if (key.compare("dropCollection") == 0) {
-        auto collection_name = operation["arguments"]["collection"].get_utf8().value;
+        auto collection_name = operation["arguments"]["collection"].get_string().value;
         _db->collection(collection_name).drop();
         return empty_document;
     } else if (key.compare("listCollectionNames") == 0) {
@@ -1394,19 +1394,19 @@ document::value operation_runner::run(document::view operation) {
 
         return empty_document;
     } else if (key.compare("createCollection") == 0) {
-        auto collection_name = operation["arguments"]["collection"].get_utf8().value;
+        auto collection_name = operation["arguments"]["collection"].get_string().value;
         auto session = _lookup_session(operation["arguments"].get_document().value);
         REQUIRE(session);
 
         _db->create_collection(*session, collection_name);
         return empty_document;
     } else if (key.compare("assertCollectionNotExists") == 0) {
-        auto collection_name = operation["arguments"]["collection"].get_utf8().value;
+        auto collection_name = operation["arguments"]["collection"].get_string().value;
         client client{uri{}};
         REQUIRE_FALSE(client[_db->name()].has_collection(collection_name));
         return empty_document;
     } else if (key.compare("assertCollectionExists") == 0) {
-        auto collection_name = operation["arguments"]["collection"].get_utf8().value;
+        auto collection_name = operation["arguments"]["collection"].get_string().value;
         client client{uri{}};
         REQUIRE(client[_db->name()].has_collection(collection_name));
         return empty_document;
@@ -1416,24 +1416,26 @@ document::value operation_runner::run(document::view operation) {
         client client{uri{}};
         auto cursor = client[_db->name()][_coll->name()].list_indexes();
 
-        REQUIRE(
-            cursor.end() ==
-            std::find_if(
-                cursor.begin(), cursor.end(), [operation](bsoncxx::v_noabi::document::view doc) {
-                    return (doc["name"].get_utf8() == operation["arguments"]["index"].get_utf8());
-                }));
+        REQUIRE(cursor.end() ==
+                std::find_if(cursor.begin(),
+                             cursor.end(),
+                             [operation](bsoncxx::v_noabi::document::view doc) {
+                                 return (doc["name"].get_string() ==
+                                         operation["arguments"]["index"].get_string());
+                             }));
 
         return empty_document;
     } else if (key.compare("assertIndexExists") == 0) {
         client client{uri{}};
         auto cursor = client[_db->name()][_coll->name()].list_indexes();
 
-        REQUIRE(
-            cursor.end() !=
-            std::find_if(
-                cursor.begin(), cursor.end(), [operation](bsoncxx::v_noabi::document::view doc) {
-                    return (doc["name"].get_utf8() == operation["arguments"]["index"].get_utf8());
-                }));
+        REQUIRE(cursor.end() !=
+                std::find_if(cursor.begin(),
+                             cursor.end(),
+                             [operation](bsoncxx::v_noabi::document::view doc) {
+                                 return (doc["name"].get_string() ==
+                                         operation["arguments"]["index"].get_string());
+                             }));
 
         return empty_document;
     } else {

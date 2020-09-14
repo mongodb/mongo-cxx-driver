@@ -134,7 +134,7 @@ TEST_CASE("create_collection can be exported to a document", "[create_collection
     document::element validationLevel{doc_view["validationLevel"]};
     REQUIRE(validationLevel);
     REQUIRE(validationLevel.type() == type::k_utf8);
-    REQUIRE(bsoncxx::string::to_string(validationLevel.get_utf8().value) == "strict");
+    REQUIRE(bsoncxx::string::to_string(validationLevel.get_string().value) == "strict");
 
     document::element validationAction{doc_view["validationAction"]};
     REQUIRE(!validationAction);

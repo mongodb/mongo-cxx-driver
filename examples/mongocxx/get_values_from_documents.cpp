@@ -76,7 +76,7 @@ void iterate_messagelist(const bsoncxx::document::element& ele) {
                     std::cout << "status: " << status.get_int32().value << std::endl;
                 }
                 if (msg && msg.type() == type::k_utf8) {
-                    std::cout << "msg: " << msg.get_utf8().value << std::endl;
+                    std::cout << "msg: " << msg.get_string().value << std::endl;
                 }
             } else {
                 std::cout << "Message is not a document" << std::endl;

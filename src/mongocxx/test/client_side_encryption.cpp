@@ -213,7 +213,7 @@ void run_datakey_and_double_encryption(Callable create_data_key,
     // Expect that exactly one document is returned with the correct "masterKey.provider"
     std::size_t i = 0;
     for (auto&& doc : cursor) {
-        REQUIRE(doc["masterKey"]["provider"].get_utf8().value == provider);
+        REQUIRE(doc["masterKey"]["provider"].get_string().value == provider);
         i++;
     }
 
@@ -258,7 +258,7 @@ void run_datakey_and_double_encryption(Callable create_data_key,
     REQUIRE(res);
     auto decrypted_bson_val = res->view()["value"];
     REQUIRE(decrypted_bson_val.type() == bsoncxx::type::k_utf8);
-    REQUIRE(decrypted_bson_val.get_utf8().value == stdx::string_view{"hello there"});
+    REQUIRE(decrypted_bson_val.get_string().value == stdx::string_view{"hello there"});
 
     // 3. Call client_encryption.encrypt() with the value "hello there", the algorithm
     // AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic, and the key_alt_name of provider_altname
@@ -822,11 +822,11 @@ void _run_corpus_test(bool use_schema_map) {
         // allowed is a boolean indicating whether the encryption for the given parameters is
         // permitted.
         // value is the value to be tested.
-        auto kms = subdoc["kms"].get_utf8().value;
-        auto type = subdoc["type"].get_utf8().value;
-        auto algo = subdoc["algo"].get_utf8().value;
-        auto method = subdoc["method"].get_utf8().value;
-        auto identifier = subdoc["identifier"].get_utf8().value;
+        auto kms = subdoc["kms"].get_string().value;
+        auto type = subdoc["type"].get_string().value;
+        auto algo = subdoc["algo"].get_string().value;
+        auto method = subdoc["method"].get_string().value;
+        auto identifier = subdoc["identifier"].get_string().value;
         auto allowed = subdoc["allowed"].get_bool().value;
         auto to_encrypt = subdoc["value"].get_value();
 
@@ -936,7 +936,7 @@ void _run_corpus_test(bool use_schema_map) {
         auto subdoc_val = ele.get_document();
         auto subdoc = subdoc_val.view();
 
-        auto algo = subdoc["algo"].get_utf8().value;
+        auto algo = subdoc["algo"].get_string().value;
         auto allowed = subdoc["allowed"].get_bool().value;
         auto value = subdoc["value"].get_value();
 

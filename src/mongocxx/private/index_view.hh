@@ -79,14 +79,14 @@ class index_view::impl {
         bsoncxx::document::view result_view = result.view();
 
         if (result_view["note"] &&
-            bsoncxx::string::to_string(result_view["note"].get_utf8().value) ==
+            bsoncxx::string::to_string(result_view["note"].get_string().value) ==
                 "all indexes already exist") {
             return bsoncxx::stdx::nullopt;
         }
 
         if (auto name = model.options()["name"]) {
             return bsoncxx::stdx::make_optional(
-                bsoncxx::string::to_string(name.get_value().get_utf8().value));
+                bsoncxx::string::to_string(name.get_value().get_string().value));
         }
 
         return bsoncxx::stdx::make_optional(get_index_name_from_keys(model.keys()));

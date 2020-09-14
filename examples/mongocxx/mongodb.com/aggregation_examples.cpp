@@ -36,7 +36,7 @@ std::string get_server_version(const client& client) {
     server_status.append(bsoncxx::builder::basic::kvp("serverStatus", 1));
     bsoncxx::document::value output = client["test"].run_command(server_status.extract());
 
-    return bsoncxx::string::to_string(output.view()["version"].get_utf8().value);
+    return bsoncxx::string::to_string(output.view()["version"].get_string().value);
 }
 
 void aggregation_examples(const mongocxx::client& client, const mongocxx::database& db) {
