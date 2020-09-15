@@ -31,7 +31,12 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     if(BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
         add_dependencies(${TARGET} EP_mnmlstc_core)
         ExternalProject_Get_Property(EP_mnmlstc_core source_dir)
-        target_include_directories(${TARGET} PUBLIC $<BUILD_INTERFACE:${source_dir}/include>)
+        target_include_directories(
+            ${TARGET}
+            PUBLIC
+                $<BUILD_INTERFACE:${source_dir}/include>
+                $<BUILD_INTERFACE:${CMAKE_INSTALL_PREFIX}/${BSONCXX_HEADER_INSTALL_DIR}>
+        )
       elseif(BSONCXX_POLY_USE_BOOST)
 	if (CMAKE_VERSION VERSION_LESS 3.15.0)
 	  target_include_directories(${TARGET} PUBLIC ${Boost_INCLUDE_DIRS})
@@ -42,6 +47,12 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
 
     target_link_libraries(${TARGET} PRIVATE ${libbson_target})
     target_include_directories(${TARGET} PRIVATE ${libbson_include_directories})
+    target_include_directories(
+        ${TARGET}
+        PUBLIC
+            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/..>
+            $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/..>
+    )
     target_compile_definitions(${TARGET} PRIVATE ${libbson_definitions})
 
     generate_export_header(${TARGET}

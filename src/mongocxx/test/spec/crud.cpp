@@ -59,9 +59,9 @@ void run_crud_tests_in_file(std::string test_path) {
     }
 
     for (auto&& test : test_spec_view["tests"].get_array().value) {
-        auto description = test["description"].get_utf8().value;
+        auto description = test["description"].get_string().value;
         SECTION(to_string(description)) {
-            if (is_unsupported(test["description"].get_utf8().value)) {
+            if (is_unsupported(test["description"].get_string().value)) {
                 continue;
             }
 
@@ -71,7 +71,7 @@ void run_crud_tests_in_file(std::string test_path) {
 
             auto get_value_or_default = [&](std::string key, std::string default_str) {
                 if (test_spec_view[key]) {
-                    return to_string(test_spec_view[key].get_utf8().value);
+                    return to_string(test_spec_view[key].get_string().value);
                 }
                 return default_str;
             };
@@ -91,7 +91,7 @@ void run_crud_tests_in_file(std::string test_path) {
             std::string outcome_collection_name = collection_name;
             if (test["outcome"] && test["outcome"]["collection"]["name"]) {
                 outcome_collection_name =
-                    to_string(test["outcome"]["collection"]["name"].get_utf8().value);
+                    to_string(test["outcome"]["collection"]["name"].get_string().value);
                 auto outcome_collection = database[outcome_collection_name];
                 initialize_collection(&outcome_collection, array::view{});
             }
@@ -165,7 +165,7 @@ void run_crud_tests_in_file(std::string test_path) {
 
             if (test["failPoint"]) {
                 disable_fail_point(client,
-                                   test["failPoint"]["configureFailPoint"].get_utf8().value);
+                                   test["failPoint"]["configureFailPoint"].get_string().value);
             }
         }
     }

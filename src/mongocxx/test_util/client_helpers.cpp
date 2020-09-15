@@ -200,14 +200,14 @@ std::string get_server_version(const client& client) {
     server_status.append(bsoncxx::builder::basic::kvp("serverStatus", 1));
     bsoncxx::document::value output = client["test"].run_command(server_status.extract());
 
-    return bsoncxx::string::to_string(output.view()["version"].get_utf8().value);
+    return bsoncxx::string::to_string(output.view()["version"].get_string().value);
 }
 
 std::string replica_set_name(const client& client) {
     auto reply = client["admin"].run_command(make_document(kvp("isMaster", 1)));
     auto name = reply.view()["setName"];
     if (name) {
-        return bsoncxx::string::to_string(name.get_utf8().value);
+        return bsoncxx::string::to_string(name.get_string().value);
     }
 
     return "";
@@ -223,7 +223,7 @@ std::string get_topology(const client& client) {
     if (reply.view()["setName"]) {
         return "replicaset";
     } else if (reply.view()["msg"] &&
-               std::string(reply.view()["msg"].get_utf8().value) == "isdbgrid") {
+               std::string(reply.view()["msg"].get_string().value) == "isdbgrid") {
         return "sharded";
     } else {
         return "single";
@@ -274,7 +274,7 @@ bool is_numeric(types::bson_value::view value) {
 
 stdx::optional<type> is_type_operator(types::bson_value::view value) {
     if (value.type() == type::k_document && value.get_document().value["$$type"]) {
-        auto t = value.get_document().value["$$type"].get_utf8().value;
+        auto t = value.get_document().value["$$type"].get_string().value;
         if (t.compare("binData") == 0) {
             return {type::k_binary};
         } else if (t.compare("long") == 0) {
@@ -303,7 +303,7 @@ bool matches(types::bson_value::view main,
 
     if (main.type() == type::k_document) {
         // the value '42' acts as placeholders for "any value"
-        if (pattern.type() == type::k_utf8 && 0 == pattern.get_utf8().value.compare("42")) {
+        if (pattern.type() == type::k_utf8 && 0 == pattern.get_string().value.compare("42")) {
             return true;
         }
 

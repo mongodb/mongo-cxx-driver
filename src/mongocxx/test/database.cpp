@@ -43,7 +43,7 @@ bool check_for_collections(cursor cursor, std::set<std::string> expected_colls) 
     for (auto&& coll : cursor) {
         // Skip system collections which the MMAPv1 storage engine returns,
         // while WiredTiger does not.
-        auto name_string = bsoncxx::string::to_string(coll["name"].get_utf8().value);
+        auto name_string = bsoncxx::string::to_string(coll["name"].get_string().value);
         auto pos = name_string.find("system.");
         if (pos != std::string::npos && pos == 0) {
             continue;
@@ -357,8 +357,8 @@ TEST_CASE("Database integration tests", "[database]") {
             auto results = get_results(std::move(cursor));
 
             REQUIRE(results.size() == 2);
-            REQUIRE(results[0].view()["name"].get_utf8().value == stdx::string_view("Jane"));
-            REQUIRE(results[1].view()["name"].get_utf8().value == stdx::string_view("Jane"));
+            REQUIRE(results[0].view()["name"].get_string().value == stdx::string_view("Jane"));
+            REQUIRE(results[1].view()["name"].get_string().value == stdx::string_view("Jane"));
         }
     }
 

@@ -813,7 +813,7 @@ TEST_CASE("core method chaining to build array works", "[bsoncxx::builder::core]
 
     REQUIRE(std::distance(array_view.begin(), array_view.end()) == 3);
     REQUIRE(array_view[0].type() == type::k_utf8);
-    REQUIRE(string::to_string(array_view[0].get_utf8().value) == "foo");
+    REQUIRE(string::to_string(array_view[0].get_string().value) == "foo");
     REQUIRE(array_view[1].type() == type::k_int32);
     REQUIRE(array_view[1].get_int32().value == 1);
     REQUIRE(array_view[2].type() == type::k_bool);
@@ -1198,7 +1198,7 @@ TEST_CASE("builder::basic::make_array works", "[bsoncxx::builder::basic::make_ar
 
     REQUIRE(std::distance(array_view.begin(), array_view.end()) == 3);
     REQUIRE(array_view[0].type() == type::k_utf8);
-    REQUIRE(string::to_string(array_view[0].get_utf8().value) == "foo");
+    REQUIRE(string::to_string(array_view[0].get_string().value) == "foo");
     REQUIRE(array_view[1].type() == type::k_int32);
     REQUIRE(array_view[1].get_int32().value == 1);
     REQUIRE(array_view[2].type() == type::k_bool);

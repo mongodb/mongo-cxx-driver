@@ -208,7 +208,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE(result);
             REQUIRE(result->result().inserted_count() == 1);
             REQUIRE(result->inserted_id().type() == bsoncxx::type::k_utf8);
-            REQUIRE(result->inserted_id().get_utf8().value == expected_id);
+            REQUIRE(result->inserted_id().get_string().value == expected_id);
         }
 
         SECTION("unacknowledged write concern returns disengaged optional", "[collection]") {
@@ -245,7 +245,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE(result);
             REQUIRE(result->result().inserted_count() == 1);
             REQUIRE(result->inserted_id().type() == bsoncxx::type::k_utf8);
-            REQUIRE(result->inserted_id().get_utf8().value == expected_id);
+            REQUIRE(result->inserted_id().get_string().value == expected_id);
         }
     }
 
@@ -328,7 +328,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // Verify result->inserted_ids() is correct:
             auto id_map = result->inserted_ids();
             REQUIRE(id_map[0].type() == bsoncxx::type::k_utf8);
-            REQUIRE(id_map[0].get_utf8().value == stdx::string_view{"foo"});
+            REQUIRE(id_map[0].get_string().value == stdx::string_view{"foo"});
             REQUIRE(id_map[1].type() == bsoncxx::type::k_oid);
             auto second_inserted_doc = coll.find_one(make_document(kvp("x", 2)));
             REQUIRE(second_inserted_doc);
@@ -422,7 +422,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // Verify result->inserted_ids() is correct:
             auto id_map = result->inserted_ids();
             REQUIRE(id_map[0].type() == bsoncxx::type::k_utf8);
-            REQUIRE(id_map[0].get_utf8().value == stdx::string_view{"foo"});
+            REQUIRE(id_map[0].get_string().value == stdx::string_view{"foo"});
             REQUIRE(id_map[1].type() == bsoncxx::type::k_oid);
             auto second_inserted_doc = coll.find_one(make_document(kvp("x", 2)));
             REQUIRE(second_inserted_doc);
@@ -560,7 +560,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto result = coll.find_one(bson.view());
         REQUIRE(result);
-        REQUIRE(result->view()["name"].get_utf8().value == stdx::string_view("Charlotte"));
+        REQUIRE(result->view()["name"].get_string().value == stdx::string_view("Charlotte"));
 
         // Try adding stages with append_stage(s) instead
         pipeline array_update;
@@ -584,8 +584,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         result = coll.find_one(bson.view());
         REQUIRE(result);
-        REQUIRE(result->view()["lastname"].get_utf8().value == stdx::string_view("Krause"));
-        REQUIRE(result->view()["department"].get_utf8().value == stdx::string_view("VIS"));
+        REQUIRE(result->view()["lastname"].get_string().value == stdx::string_view("Krause"));
+        REQUIRE(result->view()["department"].get_string().value == stdx::string_view("VIS"));
         REQUIRE(result->view()["count"].get_int32().value == 1);
     }
 
@@ -1242,7 +1242,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             auto doc = coll.find_one_and_replace(criteria.view(), replacement.view());
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
+            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
         }
 
         SECTION("with return replacement returns new") {
@@ -1258,7 +1258,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options.return_document(options::return_document::k_after);
             auto doc = coll.find_one_and_replace(criteria.view(), replacement.view(), options);
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"bar"});
+            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"bar"});
         }
 
         SECTION("with collation") {
@@ -1287,7 +1287,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                 auto doc = coll.find_one_and_replace(
                     collation_criteria.view(), replacement.view(), options);
                 REQUIRE(doc);
-                REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
+                REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
             } else {
                 REQUIRE_THROWS_AS(coll.find_one_and_replace(
                                       collation_criteria.view(), replacement.view(), options),
@@ -1329,7 +1329,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE_NOTHROW(
                 doc = coll.find_one_and_replace(criteria.view(), replacement.view(), options));
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"bar"});
+            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"bar"});
         }
     }
 
@@ -1351,7 +1351,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             REQUIRE(doc);
 
-            REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
+            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
         }
 
         SECTION("with return update returns new") {
@@ -1367,7 +1367,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options.return_document(options::return_document::k_after);
             auto doc = coll.find_one_and_update(criteria.view(), update.view(), options);
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"bar"});
+            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"bar"});
         }
 
         SECTION("with collation") {
@@ -1396,7 +1396,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                 auto doc =
                     coll.find_one_and_update(collation_criteria.view(), update.view(), options);
                 REQUIRE(doc);
-                REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
+                REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
 
             } else {
                 REQUIRE_THROWS_AS(
@@ -1439,7 +1439,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE_NOTHROW(doc =
                                 coll.find_one_and_update(criteria.view(), update.view(), options));
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"bar"});
+            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"bar"});
         }
     }
 
@@ -1460,7 +1460,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             REQUIRE(doc);
 
-            REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
+            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
             REQUIRE(coll.count_documents({}) == 1);
         }
 
@@ -1488,7 +1488,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                 options.write_concern(default_wc);
                 auto doc = coll.find_one_and_delete(collation_criteria.view(), options);
                 REQUIRE(doc);
-                REQUIRE(doc->view()["x"].get_utf8().value == stdx::string_view{"foo"});
+                REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
 
             } else {
                 REQUIRE_THROWS_AS(coll.find_one_and_delete(collation_criteria.view(), options),
@@ -2237,7 +2237,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         std::vector<stdx::string_view> distinct_values;
         for (auto&& value : values_array) {
-            distinct_values.push_back(value.get_utf8().value);
+            distinct_values.push_back(value.get_string().value);
         }
 
         const auto assert_contains_one = [&](stdx::string_view val) {
@@ -2267,7 +2267,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             auto result = *iter;
             auto values = result["values"].get_array().value;
             REQUIRE(std::distance(values.begin(), values.end()) == 1);
-            REQUIRE(values[0].get_utf8().value == stdx::string_view{"foo"});
+            REQUIRE(values[0].get_string().value == stdx::string_view{"foo"});
         } else {
             // The server does not support collation.
             REQUIRE_THROWS_AS(coll.distinct("x", predicate.view(), distinct_opts),
@@ -2313,7 +2313,7 @@ void find_index_and_validate(collection& coll,
         REQUIRE(name_ele);
         REQUIRE(name_ele.type() == bsoncxx::type::k_utf8);
 
-        if (name_ele.get_utf8().value != index_name) {
+        if (name_ele.get_string().value != index_name) {
             continue;
         }
 
@@ -2343,14 +2343,15 @@ TEST_CASE("create_index tests", "[collection]") {
         options.name(indexName);
 
         auto response = coll.create_index(index.view(), options);
-        REQUIRE(response.view()["name"].get_utf8().value == bsoncxx::stdx::string_view(indexName));
+        REQUIRE(response.view()["name"].get_string().value ==
+                bsoncxx::stdx::string_view(indexName));
 
         find_index_and_validate(coll, indexName);
 
         bsoncxx::document::value index2 = make_document(kvp("b", 1), kvp("c", -1));
 
         auto response2 = coll.create_index(index2.view(), options::index{});
-        REQUIRE(response2.view()["name"].get_utf8().value ==
+        REQUIRE(response2.view()["name"].get_string().value ==
                 bsoncxx::stdx::string_view{"b_1_c_-1"});
 
         find_index_and_validate(coll, "b_1_c_-1");
@@ -2374,7 +2375,7 @@ TEST_CASE("create_index tests", "[collection]") {
             auto locale_ele = index["collation"]["locale"];
             REQUIRE(locale_ele);
             REQUIRE(locale_ele.type() == type::k_utf8);
-            REQUIRE((locale_ele.get_utf8() == locale));
+            REQUIRE((locale_ele.get_string() == locale));
         };
 
         find_index_and_validate(coll, "a_1", validate);
@@ -2474,7 +2475,7 @@ TEST_CASE("create_index tests", "[collection]") {
             auto config_string_ele = index["storageEngine"]["wiredTiger"]["configString"];
             REQUIRE(config_string_ele);
             REQUIRE(config_string_ele.type() == type::k_utf8);
-            REQUIRE(config_string_ele.get_utf8() == types::b_utf8{"block_allocation=first"});
+            REQUIRE(config_string_ele.get_string() == types::b_utf8{"block_allocation=first"});
         };
 
         find_index_and_validate(coll, index_name, validate);
@@ -2504,7 +2505,7 @@ TEST_CASE("list_indexes", "[collection]") {
     std::int8_t found = 0;
 
     for (auto&& index : cursor) {
-        auto name = index["name"].get_utf8();
+        auto name = index["name"].get_string();
 
         for (auto&& expected : expected_names) {
             if (bsoncxx::stdx::string_view(expected) == name.value) {

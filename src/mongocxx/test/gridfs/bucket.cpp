@@ -61,7 +61,7 @@ void validate_gridfs_file(database db,
     REQUIRE(static_cast<std::size_t>(files_doc->view()["length"].get_int64().value) ==
             expected_contents.size());
     REQUIRE(files_doc->view()["chunkSize"].get_int32().value == expected_chunk_size);
-    REQUIRE(files_doc->view()["filename"].get_utf8().value ==
+    REQUIRE(files_doc->view()["filename"].get_string().value ==
             stdx::string_view(expected_file_name));
 
     // md5 is deprecated in GridFS, we don't include it:
@@ -119,7 +119,7 @@ void validate_gridfs_file(
     REQUIRE(files_doc->view()["_id"].get_oid() == id.get_oid());
     REQUIRE(files_doc->view()["length"].get_int64().value == expected_length);
     REQUIRE(files_doc->view()["chunkSize"].get_int32().value == expected_chunk_size);
-    REQUIRE(files_doc->view()["filename"].get_utf8().value ==
+    REQUIRE(files_doc->view()["filename"].get_string().value ==
             stdx::string_view(expected_file_name));
 
     std::size_t i = 0;

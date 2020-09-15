@@ -88,7 +88,7 @@ bool should_skip_spec_test(const client& client, document::view test) {
         "MapReduce omits default write concern"};
 
     if (test["description"]) {
-        std::string description = std::string(test["description"].get_utf8().value);
+        std::string description = std::string(test["description"].get_string().value);
         if (unsupported_tests.find(description) != unsupported_tests.end()) {
             UNSCOPED_INFO("Test skipped - " << description << "\n"
                                             << "reason: unsupported in C++ driver");
@@ -97,9 +97,9 @@ bool should_skip_spec_test(const client& client, document::view test) {
     }
 
     if (test["skipReason"]) {
-        UNSCOPED_INFO("Test skipped - " << test["description"].get_utf8().value << "\n"
+        UNSCOPED_INFO("Test skipped - " << test["description"].get_string().value << "\n"
                                         << "reason: "
-                                        << test["skipReason"].get_utf8().value);
+                                        << test["skipReason"].get_string().value);
         return true;
     }
 
@@ -108,7 +108,7 @@ bool should_skip_spec_test(const client& client, document::view test) {
 
     if (test["ignore_if_server_version_greater_than"]) {
         std::string max_server_version = bsoncxx::string::to_string(
-            test["ignore_if_server_version_greater_than"].get_utf8().value);
+            test["ignore_if_server_version_greater_than"].get_string().value);
         if (test_util::compare_versions(server_version, max_server_version) > 0) {
             return true;
         }
@@ -119,7 +119,7 @@ bool should_skip_spec_test(const client& client, document::view test) {
             auto topologies = requirements["topology"].get_array().value;
             bool found = false;
             for (auto&& el : topologies) {
-                if (std::string(el.get_utf8().value) == topology) {
+                if (std::string(el.get_string().value) == topology) {
                     found = true;
                     break;
                 }
@@ -131,7 +131,7 @@ bool should_skip_spec_test(const client& client, document::view test) {
 
         if (requirements["minServerVersion"]) {
             auto min_server_version =
-                string::to_string(requirements["minServerVersion"].get_utf8().value);
+                string::to_string(requirements["minServerVersion"].get_string().value);
             if (test_util::compare_versions(server_version, min_server_version) < 0) {
                 return true;
             }
@@ -139,7 +139,7 @@ bool should_skip_spec_test(const client& client, document::view test) {
 
         if (requirements["maxServerVersion"]) {
             auto max_server_version =
-                string::to_string(requirements["maxServerVersion"].get_utf8().value);
+                string::to_string(requirements["maxServerVersion"].get_string().value);
             if (test_util::compare_versions(server_version, max_server_version) > 0) {
                 return true;
             }
@@ -199,10 +199,10 @@ void set_up_collection(const client& client,
     write_concern wc_majority;
     wc_majority.acknowledge_level(write_concern::level::k_majority);
 
-    auto db = client[test[database_name].get_utf8().value];
+    auto db = client[test[database_name].get_string().value];
     db.drop();
 
-    auto coll_name = test[collection_name].get_utf8().value;
+    auto coll_name = test[collection_name].get_string().value;
     auto coll = db[coll_name];
 
     coll.drop(wc_majority);
@@ -318,11 +318,11 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
     // matches the error string."
     if (op["result"]["errorContains"]) {
         REQUIRE(exception);
-        INFO("expected error message " << op["result"]["errorContains"].get_utf8().value);
+        INFO("expected error message " << op["result"]["errorContains"].get_string().value);
         INFO("got error message" << error_msg);
         // Do a case insensitive check.
         auto error_contains =
-            test_util::tolowercase(op["result"]["errorContains"].get_utf8().value);
+            test_util::tolowercase(op["result"]["errorContains"].get_string().value);
         REQUIRE(test_util::tolowercase(error_msg).find(error_contains) < error_msg.length());
     } else {
         if (exception) {
@@ -336,7 +336,7 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
     // 'errorCodeName' field matches the 'codeName' in the server error response."
     if (op["result"]["errorCodeName"]) {
         REQUIRE(op_exception);
-        uint32_t expected = error_code_from_name(op["result"]["errorCodeName"].get_utf8().value);
+        uint32_t expected = error_code_from_name(op["result"]["errorCodeName"].get_string().value);
         REQUIRE(op_exception->code().value() == static_cast<int>(expected));
     }
 
@@ -345,7 +345,7 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
     if (op["result"]["errorLabelsContain"]) {
         REQUIRE(op_exception);
         for (auto&& label_el : op["result"]["errorLabelsContain"].get_array().value) {
-            auto label = label_el.get_utf8().value;
+            auto label = label_el.get_string().value;
             REQUIRE(op_exception->has_error_label(label));
         }
     }
@@ -355,7 +355,7 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
     if (op["result"]["errorLabelsOmit"]) {
         REQUIRE(op_exception);
         for (auto&& label_el : op["result"]["errorLabelsOmit"].get_array().value) {
-            auto label = label_el.get_utf8().value;
+            auto label = label_el.get_string().value;
             REQUIRE(!op_exception->has_error_label(label));
         }
     }
@@ -394,13 +394,13 @@ uri get_uri(document::view test) {
         }
         if (test["clientOptions"]["readConcernLevel"]) {
             add_opt("readConcernLevel=" +
-                    std::string(test["clientOptions"]["readConcernLevel"].get_utf8().value));
+                    std::string(test["clientOptions"]["readConcernLevel"].get_string().value));
         }
         if (test["clientOptions"]["w"]) {
             if (test["clientOptions"]["w"].type() == type::k_int32) {
                 add_opt("w=" + std::to_string(test["clientOptions"]["w"].get_int32().value));
             } else {
-                add_opt("w=" + string::to_string(test["clientOptions"]["w"].get_utf8().value));
+                add_opt("w=" + string::to_string(test["clientOptions"]["w"].get_string().value));
             }
         }
         if (test["clientOptions"]["heartbeatFrequencyMS"]) {
@@ -410,7 +410,7 @@ uri get_uri(document::view test) {
         }
         if (test["clientOptions"]["readPreference"]) {
             add_opt("readPreference=" +
-                    string::to_string(test["clientOptions"]["readPreference"].get_utf8().value));
+                    string::to_string(test["clientOptions"]["readPreference"].get_string().value));
         }
     }
     return uri{uri_string};
@@ -510,9 +510,9 @@ void run_transaction_operations(document::view test,
         auto operation = op.get_document().value;
 
         // Handle with_transaction separately.
-        if (operation["name"].get_utf8().value.compare("withTransaction") == 0) {
+        if (operation["name"].get_string().value.compare("withTransaction") == 0) {
             auto session = [&]() {
-                if (operation["object"].get_utf8().value.compare("session0") == 0) {
+                if (operation["object"].get_string().value.compare("session0") == 0) {
                     return session0;
                 } else {
                     return session1;
@@ -566,7 +566,7 @@ void run_transaction_operations(document::view test,
             REQUIRE(exception);
             // Do a case insensitive check.
             auto error_contains =
-                test_util::tolowercase(op["result"]["errorContains"].get_utf8().value);
+                test_util::tolowercase(op["result"]["errorContains"].get_string().value);
             REQUIRE(test_util::tolowercase(error_msg).find(error_contains) < error_msg.length());
         }
 
@@ -577,7 +577,7 @@ void run_transaction_operations(document::view test,
             REQUIRE(exception);
             REQUIRE(server_error);
             uint32_t expected =
-                error_code_from_name(op["result"]["errorCodeName"].get_utf8().value);
+                error_code_from_name(op["result"]["errorCodeName"].get_string().value);
             REQUIRE(exception->code().value() == static_cast<int>(expected));
         }
 
@@ -586,7 +586,7 @@ void run_transaction_operations(document::view test,
         if (op["result"]["errorLabelsContain"]) {
             REQUIRE(exception);
             for (auto&& label_el : op["result"]["errorLabelsContain"].get_array().value) {
-                auto label = label_el.get_utf8().value;
+                auto label = label_el.get_string().value;
                 if (!exception->has_error_label(label)) {
                     FAIL("Expected exception to contain the label '" << label
                                                                      << "' but it did not.\n");
@@ -599,7 +599,7 @@ void run_transaction_operations(document::view test,
         if (op["result"]["errorLabelsOmit"]) {
             REQUIRE(exception);
             for (auto&& label_el : op["result"]["errorLabelsOmit"].get_array().value) {
-                auto label = label_el.get_utf8().value;
+                auto label = label_el.get_string().value;
                 if (exception->has_error_label(label)) {
                     FAIL("Expected exception to NOT contain the label '" << label
                                                                          << "' but it did.\n");
@@ -631,8 +631,8 @@ void run_transactions_tests_in_file(const std::string& test_path) {
     auto test_spec = test_util::parse_test_file(test_path);
     REQUIRE(test_spec);
     auto test_spec_view = test_spec->view();
-    auto db_name = test_spec_view["database_name"].get_utf8().value;
-    auto coll_name = test_spec_view["collection_name"].get_utf8().value;
+    auto db_name = test_spec_view["database_name"].get_string().value;
+    auto coll_name = test_spec_view["collection_name"].get_string().value;
     auto tests = test_spec_view["tests"].get_array().value;
 
     /* we may not have a supported topology */
@@ -643,7 +643,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
 
     for (auto&& test : tests) {
         bool fail_point_enabled = (bool)test["failPoint"];
-        auto description = test["description"].get_utf8().value;
+        auto description = test["description"].get_string().value;
         INFO("Test description: " << description);
         if (should_skip_spec_test(client{uri{}}, test.get_document().value)) {
             continue;
@@ -717,7 +717,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                 REQUIRE(pattern.type() == type::k_utf8);
                 REQUIRE(main);
                 REQUIRE(main->type() == type::k_document);
-                auto session_name = pattern.get_utf8().value;
+                auto session_name = pattern.get_string().value;
                 if (session_name.compare("session0") == 0) {
                     REQUIRE(test_util::matches(session_lsid0, main->get_document().value));
                 } else {
@@ -749,7 +749,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         if (test["outcome"] && test["outcome"]["collection"]) {
             auto outcome_coll_name = coll_name;
             if (test["outcome"]["collection"]["name"]) {
-                outcome_coll_name = test["outcome"]["collection"]["name"].get_utf8().value;
+                outcome_coll_name = test["outcome"]["collection"]["name"].get_string().value;
             }
             auto coll = client[db_name][outcome_coll_name];
             test_util::check_outcome_collection(&coll,

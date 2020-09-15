@@ -60,7 +60,7 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
 
         if (test_encrypt_opts["keyVaultNamespace"]) {
             auto ns_string =
-                string::to_string(test_encrypt_opts["keyVaultNamespace"].get_utf8().value);
+                string::to_string(test_encrypt_opts["keyVaultNamespace"].get_string().value);
             auto dot = ns_string.find(".");
             std::string db = ns_string.substr(0, dot);
             std::string coll = ns_string.substr(dot + 1);
@@ -135,8 +135,8 @@ void run_encryption_tests_in_file(const std::string& test_path) {
     REQUIRE(test_spec);
 
     auto test_spec_view = test_spec->view();
-    auto db_name = test_spec_view["database_name"].get_utf8().value;
-    auto coll_name = test_spec_view["collection_name"].get_utf8().value;
+    auto db_name = test_spec_view["database_name"].get_string().value;
+    auto coll_name = test_spec_view["collection_name"].get_string().value;
     auto tests = test_spec_view["tests"].get_array().value;
 
     /* we may not have a supported topology */
@@ -153,7 +153,7 @@ void run_encryption_tests_in_file(const std::string& test_path) {
     wc_majority.acknowledge_level(write_concern::level::k_majority);
 
     for (auto&& test : tests) {
-        auto description = test["description"].get_utf8().value;
+        auto description = test["description"].get_string().value;
         INFO("Test description: " << description);
         if (should_skip_spec_test(client{uri{}}, test.get_document().value)) {
             continue;
@@ -166,7 +166,7 @@ void run_encryption_tests_in_file(const std::string& test_path) {
 
         add_auto_encryption_opts(test.get_document().value, &client_opts);
 
-        if (strcmp(test["description"].get_utf8().value.data(),
+        if (strcmp(test["description"].get_string().value.data(),
                    "operation fails with maxWireVersion < 8") == 0) {
             // We cannot create a client with auto encryption enabled on 4.0,
             // and it fails in different ways on Windows and POSIX, so rather
@@ -175,7 +175,7 @@ void run_encryption_tests_in_file(const std::string& test_path) {
         }
 
         bool check_results_logging = false;
-        if (strcmp(test["description"].get_utf8().value.data(),
+        if (strcmp(test["description"].get_string().value.data(),
                    "Insert with deterministic encryption, then find it") == 0) {
             // CDRIVER-3566 Remove this once windows is debugged.
             check_results_logging = true;

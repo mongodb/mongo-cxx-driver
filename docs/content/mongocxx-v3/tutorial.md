@@ -198,7 +198,7 @@ bsoncxx::document::element element = view["name"];
 if(element.type() != bsoncxx::type::k_utf8) {
   // Error
 }
-std::string name = element.get_utf8().value.to_string();
+std::string name = element.get_string().value.to_string();
 ```
 
 If the value in the `name` field is not a string and you do not

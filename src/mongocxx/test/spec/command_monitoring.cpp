@@ -29,8 +29,8 @@ using namespace bsoncxx;
 using namespace mongocxx;
 
 void initialize_collection(document::view test_spec_view) {
-    std::string db_name = string::to_string(test_spec_view["database_name"].get_utf8().value);
-    std::string col_name = string::to_string(test_spec_view["collection_name"].get_utf8().value);
+    std::string db_name = string::to_string(test_spec_view["database_name"].get_string().value);
+    std::string col_name = string::to_string(test_spec_view["collection_name"].get_string().value);
 
     client temp_client{uri{}};
     collection temp_col = temp_client[db_name][col_name];
@@ -55,14 +55,14 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 
     document::view test_spec_view = test_spec->view();
 
-    std::string db_name = string::to_string(test_spec_view["database_name"].get_utf8().value);
-    std::string col_name = string::to_string(test_spec_view["collection_name"].get_utf8().value);
+    std::string db_name = string::to_string(test_spec_view["database_name"].get_string().value);
+    std::string col_name = string::to_string(test_spec_view["collection_name"].get_string().value);
 
     array::view tests = test_spec_view["tests"].get_array().value;
 
     for (auto&& test : tests) {
         initialize_collection(test_spec_view);
-        std::string description = string::to_string(test["description"].get_utf8().value);
+        std::string description = string::to_string(test["description"].get_string().value);
         INFO("Test description: " << description);
         array::view expectations = test["expectations"].get_array().value;
 
@@ -96,13 +96,13 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
                 types::bson_value::view value{ele.get_value()};
 
                 if (field.compare("command_name") == 0) {
-                    REQUIRE(event.command_name() == value.get_utf8().value);
+                    REQUIRE(event.command_name() == value.get_string().value);
                 } else if (field.compare("command") == 0) {
                     document::view expected_command = value.get_document().value;
                     document::view command = event.command();
                     REQUIRE_BSON_MATCHES(command, expected_command);
                 } else if (field.compare("database_name") == 0) {
-                    REQUIRE(event.database_name() == value.get_utf8().value);
+                    REQUIRE(event.database_name() == value.get_string().value);
                 } else {
                     // Should not happen.
                     REQUIRE(false);
@@ -120,7 +120,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
                 types::bson_value::view value{ele.get_value()};
 
                 if (field.compare("command_name") == 0) {
-                    REQUIRE(event.command_name() == value.get_utf8().value);
+                    REQUIRE(event.command_name() == value.get_string().value);
                 } else {
                     // Should not happen.
                     REQUIRE(false);
@@ -142,7 +142,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
                 types::bson_value::view value{ele.get_value()};
 
                 if (field.compare("command_name") == 0) {
-                    REQUIRE(event.command_name() == value.get_utf8().value);
+                    REQUIRE(event.command_name() == value.get_string().value);
                 } else if (field.compare("reply") == 0) {
                     document::view expected_reply = value.get_document().value;
                     document::view reply = event.reply();
@@ -165,7 +165,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
         collection coll = client[db_name][col_name];
 
         document::view operation = test["operation"].get_document().value;
-        std::string operation_name = string::to_string(operation["name"].get_utf8().value);
+        std::string operation_name = string::to_string(operation["name"].get_string().value);
         spec::operation_runner op_runner{&coll};
 
         try {

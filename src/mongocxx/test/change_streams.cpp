@@ -320,7 +320,7 @@ TEST_CASE("Mock streams and error-handling") {
             REQUIRE(opts["batchSize"].get_int32() == batch_size);
             REQUIRE(opts["maxAwaitTimeMS"].get_int64() == 4);
             REQUIRE(opts["collation"].get_document().view() == collation);
-            REQUIRE(opts["fullDocument"].get_utf8().value ==
+            REQUIRE(opts["fullDocument"].get_string().value ==
                     bsoncxx::stdx::string_view{full_document});
             REQUIRE(opts["resumeAfter"].get_document().view() == resume_after);
         };
@@ -620,7 +620,7 @@ TEST_CASE("Watch a Collection", "[min36]") {
 
         SECTION("Can receive it") {
             auto it = *(x.begin());
-            REQUIRE(it["fullDocument"]["a"].get_utf8().value == stdx::string_view("b"));
+            REQUIRE(it["fullDocument"]["a"].get_string().value == stdx::string_view("b"));
         }
 
         SECTION("iterator equals itself") {
@@ -638,8 +638,8 @@ TEST_CASE("Watch a Collection", "[min36]") {
             auto it = x.begin();
             auto a = *it;
             auto b = *it;
-            REQUIRE(a["fullDocument"]["a"].get_utf8().value == stdx::string_view("b"));
-            REQUIRE(b["fullDocument"]["a"].get_utf8().value == stdx::string_view("b"));
+            REQUIRE(a["fullDocument"]["a"].get_string().value == stdx::string_view("b"));
+            REQUIRE(b["fullDocument"]["a"].get_string().value == stdx::string_view("b"));
         }
 
         SECTION("Calling .begin multiple times doesn't advance state") {
