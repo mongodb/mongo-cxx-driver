@@ -112,4 +112,20 @@ TEST_CASE("CXX-1246: Canonical Extended JSON") {
         output ==
         R"({ "number" : { "$numberInt" : "42" }, "bin" : { "$binary" : { "base64": "ZGVhZGJlZWY=", "subType" : "04" } } })");
 }
+
+TEST_CASE("UDL _bson works like from_json()") {
+    using namespace bsoncxx;
+
+    SECTION("_bson and from_json() return the same value") {
+        auto from_json_func = from_json(k_valid_json);
+        auto from_json_udl = R"({ "a" : 1, "b" : 2.0 })"_bson;
+        REQUIRE(from_json_func == from_json_udl);
+    }
+
+    SECTION("_bson throws an exception with invalid json") {
+        REQUIRE_THROWS_AS(R"({])"_bson, bsoncxx::exception);
+        REQUIRE_THROWS_AS(""_bson, bsoncxx::exception);
+    }
+}
+
 }  // namespace

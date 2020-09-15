@@ -89,5 +89,10 @@ document::value BSONCXX_CALL from_json(stdx::string_view json) {
     return document::value{buf, length, bson_free_deleter};
 }
 
+document::value BSONCXX_CALL operator"" _bson(const char* str, size_t len) {
+    // len isn't used, but it is required for the UDL to use a char*
+    return from_json(str);
+}
+
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
