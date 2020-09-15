@@ -77,6 +77,18 @@ class BSONCXX_API value {
     value& operator=(value&&) noexcept = default;
 
     ///
+    /// Finds the first element of the document with the provided key. If there is no
+    /// such element, the invalid document::element will be returned. The runtime of operator[]
+    /// is linear in the length of the document.
+    ///
+    /// @param key
+    ///   The key to search for.
+    ///
+    /// @return The matching element, if found, or the invalid element.
+    ///
+    element operator[](stdx::string_view key) const;
+
+    ///
     /// Get a view over the document owned by this value.
     ///
     BSONCXX_INLINE document::view view() const noexcept;

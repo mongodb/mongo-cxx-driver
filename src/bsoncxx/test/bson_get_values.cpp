@@ -340,4 +340,22 @@ TEST_CASE("CXX-1880: array element should have key") {
     REQUIRE(val.view()[2].key() == stdx::string_view("2"));
 }
 
+TEST_CASE("can use operator[] with document::value") {
+    // {
+    //     "beep": 25,
+    //     "boop": {
+    //         "test": true
+    //     },
+    //     "test_array": [5, 4, 3]
+    // }
+    auto doc = make_document(kvp("beep", 25),
+                             kvp("boop", make_document(kvp("test", true))),
+                             kvp("test_array", make_array(5, 4, 3)));
+    auto view = doc.view();
+
+    REQUIRE(doc["beep"].get_int32() == view["beep"].get_int32());
+    REQUIRE(doc["boop"]["test"].get_bool() == view["boop"]["test"].get_bool());
+    REQUIRE(doc["test_array"][2].get_int32() == view["test_array"][2].get_int32());
+}
+
 }  // namespace

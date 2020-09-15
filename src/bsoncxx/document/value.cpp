@@ -48,6 +48,11 @@ value& value::operator=(const value& rhs) {
     return *this;
 }
 
+element value::operator[](stdx::string_view key) const {
+    auto view = this->view();
+    return view[key];
+}
+
 value::unique_ptr_type value::release() {
     _length = 0;
     return std::move(_data);
