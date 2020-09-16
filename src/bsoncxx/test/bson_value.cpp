@@ -153,6 +153,18 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             value_construction_test(test_doc.view());
         }
 
+        SECTION("binary") {
+            // TODO
+        }
+
+        SECTION("symbol") {
+            // TODO
+        }
+
+        SECTION("timestamp") {
+            // TODO
+        }
+
         SECTION("document") {
             auto doc = make_document(kvp("a", 1));
             auto test_doc = bson_value::make_value(doc.view());
