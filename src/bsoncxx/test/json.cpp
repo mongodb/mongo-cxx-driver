@@ -117,9 +117,9 @@ TEST_CASE("UDL _bson works like from_json()") {
     using namespace bsoncxx;
 
     SECTION("_bson and from_json() return the same value") {
-        auto from_json_func = from_json(k_valid_json);
-        auto from_json_udl = R"({ "a" : 1, "b" : 2.0 })"_bson;
-        REQUIRE(from_json_func == from_json_udl);
+        auto expected_value = from_json(k_valid_json);
+        auto actual_value = R"({ "a" : 1, "b" : 2.0 })"_bson;
+        REQUIRE(actual_value == expected_value);
     }
 
     SECTION("_bson throws an exception with invalid json") {
