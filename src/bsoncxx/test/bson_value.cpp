@@ -38,6 +38,19 @@ void value_construction_test(bson_value::view test_view) {
 
     REQUIRE(test_value == test_view);
 }
+
+template <typename T, typename U>
+void coverting_construction_test(T actual, U expected) {
+    bson_value::value copy_initialization = actual;
+    REQUIRE(copy_initialization == expected);
+
+    bson_value::value direct_initialization(actual);
+    REQUIRE(direct_initialization == expected);
+
+    bson_value::value _static_cast = static_cast<bson_value::value>(actual);
+    REQUIRE(_static_cast == expected);
+}
+
 }  // namespace
 
 TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
@@ -54,28 +67,8 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         SECTION("bool") {
             auto test_doc = bson_value::make_value(types::b_bool{true});
             value_construction_test(test_doc.view());
-
-            SECTION("with explicit BSON type") {
-                bson_value::value copy_initialization = types::b_bool{true};
-                REQUIRE(copy_initialization == test_doc);
-
-                bson_value::value direct_initialization(types::b_bool{true});
-                REQUIRE(direct_initialization == test_doc);
-
-                bson_value::value _static_cast = (bson_value::value)types::b_bool{true};
-                REQUIRE(_static_cast == test_doc);
-            }
-
-            SECTION("with implicit BSON type") {
-                bson_value::value copy_initialization = true;
-                REQUIRE(copy_initialization == test_doc);
-
-                bson_value::value direct_initialization(true);
-                REQUIRE(direct_initialization == test_doc);
-
-                bson_value::value _static_cast = (bson_value::value) true;
-                REQUIRE(_static_cast == test_doc);
-            }
+            coverting_construction_test(true, test_doc);
+            coverting_construction_test(types::b_bool{true}, test_doc);
         }
 
         SECTION("utf8") {
