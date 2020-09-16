@@ -19,9 +19,6 @@
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/gridfs/upload.hpp>
-#include <mongocxx/read_concern.hpp>
-#include <mongocxx/read_preference.hpp>
-#include <mongocxx/write_concern.hpp>
 
 namespace {
 using namespace bsoncxx;

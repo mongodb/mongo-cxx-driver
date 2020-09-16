@@ -15,7 +15,6 @@
 #include <mongocxx/instance.hpp>
 
 #include <atomic>
-#include <mutex>
 #include <type_traits>
 #include <utility>
 

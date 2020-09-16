@@ -14,7 +14,6 @@
 
 #include <bsoncxx/document/view.hpp>
 
-#include <cstdlib>
 #include <cstring>
 
 #include <bsoncxx/json.hpp>

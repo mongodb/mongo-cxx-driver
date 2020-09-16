@@ -13,10 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/concatenate.hpp>
-#include <bsoncxx/document/element.hpp>
 #include <bsoncxx/document/view.hpp>
-#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>

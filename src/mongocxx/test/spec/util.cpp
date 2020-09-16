@@ -13,12 +13,7 @@
 // limitations under the License.
 
 #include <fstream>
-#include <functional>
-#include <iostream>
-#include <map>
-#include <memory>
 #include <set>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -35,26 +30,13 @@
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
-#include <mongocxx/cursor.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/instance.hpp>
-#include <mongocxx/options/aggregate.hpp>
-#include <mongocxx/options/count.hpp>
-#include <mongocxx/options/delete.hpp>
 #include <mongocxx/options/distinct.hpp>
-#include <mongocxx/options/find.hpp>
 #include <mongocxx/options/find_one_and_delete.hpp>
-#include <mongocxx/options/find_one_and_replace.hpp>
-#include <mongocxx/options/find_one_and_update.hpp>
-#include <mongocxx/options/find_one_common_options.hpp>
-#include <mongocxx/options/update.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/result/delete.hpp>
-#include <mongocxx/result/insert_many.hpp>
 #include <mongocxx/result/insert_one.hpp>
-#include <mongocxx/result/replace_one.hpp>
-#include <mongocxx/result/update.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/operation.hh>
 

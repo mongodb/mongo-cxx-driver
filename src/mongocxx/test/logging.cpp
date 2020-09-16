@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "helpers.hpp"
-
 #include <vector>
 
 #include <bsoncxx/stdx/make_unique.hpp>
@@ -21,7 +19,6 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
 #include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/stdx.hpp>
 
 namespace {
 using namespace mongocxx;

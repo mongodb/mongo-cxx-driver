@@ -20,7 +20,6 @@
 #include <bsoncxx/types.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/index.hpp>
-#include <mongocxx/stdx.hpp>
 
 namespace {
 using namespace bsoncxx::builder::basic;

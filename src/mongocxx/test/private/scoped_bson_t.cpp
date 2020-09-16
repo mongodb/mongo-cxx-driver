@@ -17,7 +17,6 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/private/libbson.hh>
-#include <mongocxx/private/libmongoc.hh>
 
 namespace {
 using namespace bsoncxx;

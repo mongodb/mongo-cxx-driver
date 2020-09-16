@@ -13,11 +13,8 @@
 // limitations under the License.
 
 #include <set>
-#include <sstream>
 
-#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>

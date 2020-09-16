@@ -17,6 +17,9 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/change_stream.hpp>
+#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/exception/private/mongoc_error.hh>
+#include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 

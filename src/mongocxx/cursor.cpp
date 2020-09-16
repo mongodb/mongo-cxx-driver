@@ -14,17 +14,11 @@
 
 #include <mongocxx/cursor.hpp>
 
-#include <cstdint>
-#include <memory>
-#include <string>
-#include <tuple>
-
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/private/cursor.hh>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 #include <mongocxx/config/private/prelude.hh>

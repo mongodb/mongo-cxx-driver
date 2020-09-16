@@ -14,8 +14,6 @@
 
 #include <bsoncxx/types.hpp>
 
-#include <bsoncxx/json.hpp>
-
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {

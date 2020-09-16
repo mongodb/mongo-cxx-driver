@@ -17,9 +17,7 @@
 #include <chrono>
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/test_util/catch.hh>
-#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
 

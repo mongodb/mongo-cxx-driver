@@ -17,7 +17,6 @@
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/uploader.hpp>
-#include <mongocxx/options/gridfs/upload.hpp>
 
 namespace {
 using namespace mongocxx;

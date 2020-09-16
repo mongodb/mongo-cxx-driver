@@ -18,7 +18,6 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/basic/sub_array.hpp>
-#include <bsoncxx/builder/basic/sub_document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/validate.hpp>
 
