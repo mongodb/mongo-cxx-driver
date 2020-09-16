@@ -52,6 +52,11 @@ class BSONCXX_API value {
     explicit value(const view&);
 
     ///
+    /// Create an owning copy of a BSON boolean value.
+    ///
+    value(bool&& b);
+
+    ///
     /// Get a view over the bson_value owned by this object.
     ///
     bson_value::view view() const noexcept;

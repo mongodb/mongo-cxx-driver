@@ -54,6 +54,13 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         SECTION("bool") {
             auto test_doc = bson_value::make_value(types::b_bool{true});
             value_construction_test(test_doc.view());
+
+            // bson_value::value copy_initialization = true;      // OK: copy-initialization selects
+            // A::A(int)
+            // bson_value::value direct_initialization (true);       // OK: direct-initialization
+            // selects A::A(int)
+            // bson_value::value _static_cast = (bson_value::value) true;   // OK: explicit cast
+            // performs static_cast
         }
 
         SECTION("utf8") {
