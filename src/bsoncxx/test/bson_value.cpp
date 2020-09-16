@@ -55,12 +55,27 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             auto test_doc = bson_value::make_value(types::b_bool{true});
             value_construction_test(test_doc.view());
 
-            // bson_value::value copy_initialization = true;      // OK: copy-initialization selects
-            // A::A(int)
-            // bson_value::value direct_initialization (true);       // OK: direct-initialization
-            // selects A::A(int)
-            // bson_value::value _static_cast = (bson_value::value) true;   // OK: explicit cast
-            // performs static_cast
+            SECTION("with explicit BSON type") {
+                bson_value::value copy_initialization = types::b_bool{true};
+                REQUIRE(copy_initialization == test_doc);
+
+                bson_value::value direct_initialization(types::b_bool{true});
+                REQUIRE(direct_initialization == test_doc);
+
+                bson_value::value _static_cast = (bson_value::value)types::b_bool{true};
+                REQUIRE(_static_cast == test_doc);
+            }
+
+            SECTION("with implicit BSON type") {
+                bson_value::value copy_initialization = true;
+                REQUIRE(copy_initialization == test_doc);
+
+                bson_value::value direct_initialization(true);
+                REQUIRE(direct_initialization == test_doc);
+
+                bson_value::value _static_cast = (bson_value::value) true;
+                REQUIRE(_static_cast == test_doc);
+            }
         }
 
         SECTION("utf8") {

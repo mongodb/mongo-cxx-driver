@@ -51,10 +51,8 @@ class BSONCXX_API value {
     ///
     explicit value(const view&);
 
-    ///
-    /// Create an owning copy of a BSON boolean value.
-    ///
-    value(bool&& b);
+    value(b_bool b);  // TODO: use BSONCXX_ENUM for all b_ types
+    value(bool b);
 
     ///
     /// Get a view over the bson_value owned by this object.

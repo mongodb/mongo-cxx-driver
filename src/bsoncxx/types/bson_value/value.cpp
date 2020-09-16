@@ -53,6 +53,13 @@ value::value(const class view& bson_view) {
     convert_to_libbson(&_impl->_value, bson_view);
 }
 
+value::value(b_bool b) : value(b.value) {}
+value::value(bool b) {
+    _impl = stdx::make_unique<impl>();
+    _impl->_value.value_type = BSON_TYPE_BOOL;
+    _impl->_value.value.v_bool = b;
+}
+
 value& value::operator=(const value& rhs) {
     *this = value{rhs};
     return *this;
