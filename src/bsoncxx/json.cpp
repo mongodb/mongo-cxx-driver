@@ -91,6 +91,7 @@ document::value BSONCXX_CALL from_json(stdx::string_view json) {
 
 document::value BSONCXX_CALL operator"" _bson(const char* str, size_t len) {
     // len isn't used, but it is required for the UDL to use a char*
+    (void)len;
     return from_json(str);
 }
 

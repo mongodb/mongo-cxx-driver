@@ -74,6 +74,10 @@ BSONCXX_API document::value BSONCXX_CALL from_json(stdx::string_view json);
 /// @param 'json'
 ///  A string_view into a JSON document
 ///
+/// @param 'len'
+///  An unsigned integer representing the length of the json string_view. This is calculated
+///  automatically after calling the operator
+///
 /// @returns A document::value if conversion worked.
 ///
 /// @throws bsoncxx::exception with error details if the conversion failed.
