@@ -78,6 +78,8 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
 
             coverting_construction_test("super duper", test_doc);
             coverting_construction_test(types::b_utf8{"super duper"}, test_doc);
+            coverting_construction_test(stdx::string_view{"super duper"}, test_doc);
+            coverting_construction_test(std::string{"super duper"}, test_doc);
 
             auto test_empty = bson_value::make_value("");
             value_construction_test(test_empty.view());
