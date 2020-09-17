@@ -122,6 +122,11 @@ TEST_CASE("UDL _bson works like from_json()") {
         REQUIRE(actual_value == expected_value);
     }
 
+    SECTION("_bson returns an empty document") {
+        REQUIRE("{}"_bson == from_json("{  }"));
+        REQUIRE("{}"_bson.view().empty());
+    }
+
     SECTION("_bson throws an exception with invalid json") {
         REQUIRE_THROWS_AS(R"({])"_bson, bsoncxx::exception);
         REQUIRE_THROWS_AS(""_bson, bsoncxx::exception);

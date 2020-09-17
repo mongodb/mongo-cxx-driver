@@ -57,7 +57,7 @@ BSONCXX_API std::string BSONCXX_CALL to_json(document::view view,
                                              ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
 
 ///
-/// Constructs a new document::value from the provided JSON text
+/// Constructs a new document::value from the provided JSON text.
 ///
 /// @param 'json'
 ///  A string_view into a JSON document
@@ -69,20 +69,16 @@ BSONCXX_API std::string BSONCXX_CALL to_json(document::view view,
 BSONCXX_API document::value BSONCXX_CALL from_json(stdx::string_view json);
 
 ///
-/// Constructs a new document::value from the provided JSON text
+/// Constructs a new document::value from the provided JSON text.
 ///
 /// @param 'json'
 ///  A string into a JSON document
-///
-/// @param 'len'
-///  An unsigned integer representing the length of the json string. This is calculated
-///  automatically after calling the operator
 ///
 /// @returns A document::value if conversion worked.
 ///
 /// @throws bsoncxx::exception with error details if the conversion failed.
 ///
-BSONCXX_API document::value BSONCXX_CALL operator"" _bson(const char* json, size_t len);
+BSONCXX_API document::value BSONCXX_CALL operator"" _bson(const char* json, size_t);
 
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
