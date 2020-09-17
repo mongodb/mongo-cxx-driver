@@ -76,14 +76,20 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             auto test_doc = bson_value::make_value("super duper");
             value_construction_test(test_doc.view());
 
+            coverting_construction_test("super duper", test_doc);
+            coverting_construction_test(types::b_utf8{"super duper"}, test_doc);
+
             auto test_empty = bson_value::make_value("");
             value_construction_test(test_empty.view());
+
+            coverting_construction_test("", test_empty);
+            coverting_construction_test(types::b_utf8{""}, test_empty);
 
             auto test_nulls = bson_value::make_value("a\0\0\0");
             value_construction_test(test_nulls.view());
 
-            // coverting_construction_test("super duper", test_doc);
-            // coverting_construction_test(types::b_utf8{"super duper"}, test_doc);
+            coverting_construction_test("a\0\0\0", test_nulls);
+            coverting_construction_test(types::b_utf8{"a\0\0\0"}, test_nulls);
         }
 
         SECTION("double") {
@@ -97,6 +103,9 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         SECTION("int32") {
             auto test_doc = bson_value::make_value(types::b_int32{42});
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(42, test_doc);
+            coverting_construction_test(types::b_int32{42}, test_doc);
         }
 
         SECTION("int64") {

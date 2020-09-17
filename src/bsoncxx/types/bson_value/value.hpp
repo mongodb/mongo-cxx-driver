@@ -42,9 +42,14 @@ class BSONCXX_API value {
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
-    //     value(std::string v);
-    //     value(stdx::string_view v);
+    value(char const* v);
+    value(std::string v);
+    value(stdx::string_view v);
+
+    value(int32_t v);
+
     value(double v);
+
     value(bool v);
 
     ~value();
