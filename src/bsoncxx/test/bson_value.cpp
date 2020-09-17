@@ -67,6 +67,7 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         SECTION("bool") {
             auto test_doc = bson_value::make_value(types::b_bool{true});
             value_construction_test(test_doc.view());
+
             coverting_construction_test(true, test_doc);
             coverting_construction_test(types::b_bool{true}, test_doc);
         }
@@ -80,11 +81,17 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
 
             auto test_nulls = bson_value::make_value("a\0\0\0");
             value_construction_test(test_nulls.view());
+
+            // coverting_construction_test("super duper", test_doc);
+            // coverting_construction_test(types::b_utf8{"super duper"}, test_doc);
         }
 
         SECTION("double") {
             auto test_doc = bson_value::make_value(types::b_double{12});
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(12.0, test_doc);
+            coverting_construction_test(types::b_double{12}, test_doc);
         }
 
         SECTION("int32") {

@@ -38,6 +38,15 @@ namespace bson_value {
 ///
 class BSONCXX_API value {
    public:
+#define BSONCXX_ENUM(name, val) value(b_##name v);
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
+
+    //     value(std::string v);
+    //     value(stdx::string_view v);
+    value(double v);
+    value(bool v);
+
     ~value();
 
     value(const value&);
@@ -50,9 +59,6 @@ class BSONCXX_API value {
     /// Create an owning copy of a bson_value::view.
     ///
     explicit value(const view&);
-
-    value(b_bool b);  // TODO: use BSONCXX_ENUM for all b_ types
-    value(bool b);
 
     ///
     /// Get a view over the bson_value owned by this object.
