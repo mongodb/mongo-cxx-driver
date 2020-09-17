@@ -18,7 +18,6 @@
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/sub_array.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/test_util/catch.hh>
 
 namespace {
@@ -353,9 +352,17 @@ TEST_CASE("can use operator[] with document::value") {
                              kvp("test_array", make_array(5, 4, 3)));
     auto view = doc.view();
 
-    REQUIRE(doc["beep"].get_int32() == view["beep"].get_int32());
-    REQUIRE(doc["boop"]["test"].get_bool() == view["boop"]["test"].get_bool());
-    REQUIRE(doc["test_array"][2].get_int32() == view["test_array"][2].get_int32());
+    SECTION("operator[] can access valid keys") {
+        REQUIRE(doc["beep"].get_int32() == view["beep"].get_int32());
+        REQUIRE(doc["boop"]["test"].get_bool() == view["boop"]["test"].get_bool());
+        REQUIRE(doc["test_array"][2].get_int32() == view["test_array"][2].get_int32());
+    }
+
+    SECTION("operator[] returns invalid for nonexistent key") {
+        REQUIRE(!doc["not_a_key"]);
+        REQUIRE(!doc["not_a_key"]["test"]);
+        REQUIRE(!doc["test_array"][5]["not_a_key"]);
+    }
 }
 
 }  // namespace
