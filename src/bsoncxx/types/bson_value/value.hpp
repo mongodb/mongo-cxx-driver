@@ -25,20 +25,6 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 
 namespace types {
 namespace bson_value {
-template <bool B, typename T = void>
-using enable_if_t = typename std::enable_if<B, T>::type;
-template <typename T, typename U>
-static constexpr bool is_same_v() {
-    return std::is_same<T, U>::value;
-}
-template <typename T>
-using decay_t = typename std::decay<T>::type;
-
-template <typename T>
-using value_t = typename T::value_type;
-
-template <typename T>
-using remove_const_t = typename std::remove_const<T>::type;
 
 ///
 /// A variant owning type that represents any BSON type. Owns its underlying
@@ -57,7 +43,6 @@ class BSONCXX_API value {
 #undef BSONCXX_ENUM
 
     value(const char* v);
-
     value(std::string v);
     value(stdx::string_view v);
 
