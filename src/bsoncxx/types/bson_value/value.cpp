@@ -35,9 +35,11 @@ value::value(b_int32 v) : _impl{stdx::make_unique<impl>()} {
     convert_to_libbson(v, &_impl->_value);
 }
 
-value::value(char const* v) : value(b_utf8{v}) {}  // TODO: consider different chars
-value::value(stdx::string_view v) : value(b_utf8{v}) {}
+value::value(const char* v) : value(b_utf8{v}) {}
+
 value::value(std::string v) : value(b_utf8{v}) {}
+value::value(stdx::string_view v) : value(b_utf8{v}) {}
+
 value::value(b_utf8 v) : _impl{stdx::make_unique<impl>()} {
     convert_to_libbson(v, &_impl->_value);
 }
@@ -48,7 +50,11 @@ value::value(b_utf8 v) : _impl{stdx::make_unique<impl>()} {
 // BSONCXX_ENUM(undefined, 0x06)
 // BSONCXX_ENUM(oid, 0x07)
 value::value(b_bool v) : value(v.value) {}
-value::value(bool v) {
+
+template <
+    typename T,
+    typename std::enable_if<std::is_same<bool, typename std::decay<T>::type>::value, int>::type = 0>
+value::value(T v) {
     _impl = stdx::make_unique<impl>();
     _impl->_value.value_type = BSON_TYPE_BOOL;
     _impl->_value.value.v_bool = v;
