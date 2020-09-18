@@ -47,13 +47,16 @@ class BSONCXX_API value {
     value(stdx::string_view v);
 
     value(int32_t v);
-
+    value(int64_t v);
     value(double v);
+    value(bool v);
+    value(oid v);
+    value(decimal128 v);
+    value(std::chrono::milliseconds v);
+    value(nullptr_t);
 
-    template <typename T,
-              typename std::enable_if<std::is_same<bool, typename std::decay<T>::type>::value,
-                                      int>::type = 0>
-    value(T v);
+    template <typename... Args>
+    value(const type id, Args... args);
 
     ~value();
 

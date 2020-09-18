@@ -25,21 +25,28 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace types {
 namespace bson_value {
 
-value::value(double v) : value(b_double{v}) {}
-value::value(b_double v) : _impl{stdx::make_unique<impl>()} {
-    convert_to_libbson(v, &_impl->_value);
+value::value(b_double v) : value(v.value) {}
+value::value(double v) : _impl{stdx::make_unique<impl>()} {
+    _impl->_value.value_type = BSON_TYPE_DOUBLE;
+    _impl->_value.value.v_double = v;
 }
 
-value::value(int32_t v) : value(b_int32{v}) {}
-value::value(b_int32 v) : _impl{stdx::make_unique<impl>()} {
-    convert_to_libbson(v, &_impl->_value);
+value::value(b_int32 v) : value(v.value) {}
+value::value(int32_t v) : _impl{stdx::make_unique<impl>()} {
+    _impl->_value.value_type = BSON_TYPE_INT32;
+    _impl->_value.value.v_int32 = v;
 }
 
+value::value(b_int64 v) : value(v.value) {}
+value::value(int64_t v) : _impl{stdx::make_unique<impl>()} {
+    _impl->_value.value_type = BSON_TYPE_INT64;
+    _impl->_value.value.v_int64 = v;
+}
+
+// TODO: enable_if T in T* decays to char
 value::value(const char* v) : value(b_utf8{v}) {}
-
 value::value(std::string v) : value(b_utf8{v}) {}
 value::value(stdx::string_view v) : value(b_utf8{v}) {}
-
 value::value(b_utf8 v) : _impl{stdx::make_unique<impl>()} {
     convert_to_libbson(v, &_impl->_value);
 }
@@ -47,29 +54,60 @@ value::value(b_utf8 v) : _impl{stdx::make_unique<impl>()} {
 // BSONCXX_ENUM(document, 0x03)
 // BSONCXX_ENUM(array, 0x04)
 // BSONCXX_ENUM(binary, 0x05)
-// BSONCXX_ENUM(undefined, 0x06)
-// BSONCXX_ENUM(oid, 0x07)
-value::value(b_bool v) : value(v.value) {}
+value::value(b_undefined) : _impl{stdx::make_unique<impl>()} {
+    _impl->_value.value_type = BSON_TYPE_UNDEFINED;
+}
 
-template <
-    typename T,
-    typename std::enable_if<std::is_same<bool, typename std::decay<T>::type>::value, int>::type = 0>
-value::value(T v) {
-    _impl = stdx::make_unique<impl>();
+value::value(b_null) : value(nullptr) {}
+value::value(nullptr_t) : _impl{stdx::make_unique<impl>()} {
+    _impl->_value.value_type = BSON_TYPE_NULL;
+}
+
+value::value(b_date v) : value(v.value) {}
+value::value(std::chrono::milliseconds v) : _impl{stdx::make_unique<impl>()} {
+    _impl->_value.value_type = BSON_TYPE_DATE_TIME;
+    _impl->_value.value.v_datetime = v.count();
+}
+
+value::value(b_oid v) : value(v.value) {}
+value::value(oid v) : _impl{stdx::make_unique<impl>()} {
+    _impl->_value.value_type = BSON_TYPE_OID;
+    std::memcpy(_impl->_value.value.v_oid.bytes, v.bytes(), v.k_oid_length);
+}
+value::value(b_bool v) : value(v.value) {}
+value::value(bool v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_BOOL;
     _impl->_value.value.v_bool = v;
 }
-// BSONCXX_ENUM(date, 0x09)
-// BSONCXX_ENUM(null, 0x0A)
-// BSONCXX_ENUM(regex, 0x0B)
+
+value::value(b_decimal128 v) : value(v.value) {}
+value::value(decimal128 v) : _impl{stdx::make_unique<impl>()} {
+    _impl->_value.value_type = BSON_TYPE_DECIMAL128;
+    _impl->_value.value.v_decimal128.high = v.high();
+    _impl->_value.value.v_decimal128.low = v.low();
+}
+
+value::value(b_regex v) : value(v.type_id, std::string{v.regex}, std::string{v.options}) {}
+
+template <typename... Args>
+value::value(const type id, Args... args) : _impl{stdx::make_unique<impl>()} {
+    switch (id) {
+        case type::k_regex:
+            static_assert(sizeof...(args) != 2,
+                          "type regex must be constructed with two arguments: regex, options");
+            // _impl->_value.value_type = BSON_TYPE_REGEX;
+            // _impl->_value.value.v_regex.regex = make_copy_for_libbson(regex);
+            // _impl->_value.value.v_regex.options = make_copy_for_libbson(opts);
+            break;
+        default:
+            BSONCXX_UNREACHABLE;
+    }
+}
 // BSONCXX_ENUM(dbpointer, 0x0C)
 // BSONCXX_ENUM(code, 0x0D)
 // BSONCXX_ENUM(symbol, 0x0E)
 // BSONCXX_ENUM(codewscope, 0x0F)
-// BSONCXX_ENUM(int32, 0x10)
 // BSONCXX_ENUM(timestamp, 0x11)
-// BSONCXX_ENUM(int64, 0x12)
-// BSONCXX_ENUM(decimal128, 0x13)
 // BSONCXX_ENUM(maxkey, 0x7F)
 // BSONCXX_ENUM(minkey, 0xFF)
 
