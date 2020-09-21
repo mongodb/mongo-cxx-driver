@@ -50,7 +50,7 @@ foreach(EXAMPLE ${MONGOCXX_EXAMPLE_EXECUTABLES})
         continue()
     endif()
 
-    # Don't run the FLCSE examples as part of the suite; needs mongocryptd running.
+    # Don't run the CSFLE examples as part of the suite; needs mongocryptd running.
     if (${EXAMPLE} MATCHES "encryption")
         continue()
     endif()
