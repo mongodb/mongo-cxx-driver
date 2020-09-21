@@ -48,7 +48,7 @@ auto_encrypt_opts.extra_options({mongocryptd_options.view()});
 
 ### Automatic Client-Side Field Level Encryption
 
-Automatic client-side field level encryption is enabled by creating a `mongocxx::client` with the `auto_encryption_opts` option set to an instance of 'mongocxx::options::auto_encryption`. The following examples show how to set up automatic client-side field level encryption using the `mongocxx::client_encryption` class to create a new encryption data key.
+Automatic Client-Side Field Level Encryption is enabled by creating a `mongocxx::client` with the `auto_encryption_opts` option set to an instance of 'mongocxx::options::auto_encryption`. The following examples show how to set up automatic client-side field level encryption using the `mongocxx::client_encryption` class to create a new encryption data key.
 
 {{% note %}}
 Automatic client-side field level encryption requires MongoDB 4.2 enterprise or a MongoDB 4.2 Atlas cluster. The community version of the server supports automatic decryption as well as explicit client-side field level encryption.
@@ -138,7 +138,6 @@ class client client_encrypted {uri{}, std::move(client_opts)};
 ```
 
 Please see  [`examples/mongocxx/explicit_encryption_auto_decryption.cpp`](https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/mongocxx/explicit_encryption_auto_decryption.cpp) for an example of using explicit encryption with automatic decryption.
-
 
 
 
