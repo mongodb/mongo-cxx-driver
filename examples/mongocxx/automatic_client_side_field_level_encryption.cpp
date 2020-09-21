@@ -97,9 +97,8 @@ int main(int, char**) {
 
     // This must be the same master key that was used to create
     // the encryption key; here, we use a random key as a placeholder.
-    auto key_length = kKeyLength;
     char key_storage[kKeyLength];
-    std::generate_n(key_storage, key_length, std::rand);
+    std::generate_n(key_storage, kKeyLength, std::rand);
     bsoncxx::types::b_binary local_master_key{
         bsoncxx::binary_sub_type::k_binary, kKeyLength, (const uint8_t*)&key_storage};
 

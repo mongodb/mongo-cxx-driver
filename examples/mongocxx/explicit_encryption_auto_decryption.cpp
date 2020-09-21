@@ -42,16 +42,17 @@ using bsoncxx::types::bson_value::make_value;
 
 using namespace mongocxx;
 
+const int kKeyLength = 96;
+
 int main(int, char**) {
     instance inst{};
 
     // This must be the same master key that was used to create
     // the encryption key; here, we use a random key as a placeholder.
-    auto key_length = 96;
-    char key_storage[96];
-    std::generate_n(key_storage, key_length, std::rand);
+    char key_storage[kKeyLength];
+    std::generate_n(key_storage, kKeyLength, std::rand);
     bsoncxx::types::b_binary local_master_key{
-        bsoncxx::binary_sub_type::k_binary, 96, (const uint8_t*)&key_storage};
+        bsoncxx::binary_sub_type::k_binary, kKeyLength, (const uint8_t*)&key_storage};
 
     auto kms_providers = document{} << "local" << open_document << "key" << local_master_key
                                     << close_document << finalize;
