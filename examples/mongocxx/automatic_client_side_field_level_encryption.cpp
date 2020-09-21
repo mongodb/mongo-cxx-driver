@@ -45,6 +45,8 @@ using bsoncxx::types::bson_value::make_value;
 
 using namespace mongocxx;
 
+const int kKeyLength = 96;
+
 using ns_pair = std::pair<std::string, std::string>;
 void create_json_schema_file(bsoncxx::document::view_or_value kms_providers,
                              ns_pair key_vault_ns,
@@ -95,11 +97,11 @@ int main(int, char**) {
 
     // This must be the same master key that was used to create
     // the encryption key; here, we use a random key as a placeholder.
-    auto key_length = 96;
-    char key_storage[96];
+    auto key_length = kKeyLength;
+    char key_storage[kKeyLength];
     std::generate_n(key_storage, key_length, std::rand);
     bsoncxx::types::b_binary local_master_key{
-        bsoncxx::binary_sub_type::k_binary, 96, (const uint8_t*)&key_storage};
+        bsoncxx::binary_sub_type::k_binary, kKeyLength, (const uint8_t*)&key_storage};
 
     auto kms_providers = document{} << "local" << open_document << "key" << local_master_key
                                     << close_document << finalize;
