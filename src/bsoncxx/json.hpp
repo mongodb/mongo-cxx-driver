@@ -69,7 +69,8 @@ BSONCXX_API std::string BSONCXX_CALL to_json(document::view view,
 BSONCXX_API document::value BSONCXX_CALL from_json(stdx::string_view json);
 
 ///
-/// Constructs a new document::value from the provided JSON text. This is the UDL version of from_json().
+/// Constructs a new document::value from the provided JSON text. This is the UDL version of
+/// from_json().
 ///
 /// @param 'json'
 ///  A string into a JSON document.
