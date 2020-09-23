@@ -119,7 +119,9 @@ TEST_CASE("UDL _bson works like from_json()") {
     SECTION("_bson and from_json() return the same value") {
         auto expected_value = from_json(k_valid_json);
         auto actual_value = R"({ "a" : 1, "b" : 2.0 })"_bson;
+
         REQUIRE(actual_value == expected_value);
+        REQUIRE("[1, 2, 3]"_bson == from_json("[1, 2, 3]"));
     }
 
     SECTION("_bson returns an empty document") {
