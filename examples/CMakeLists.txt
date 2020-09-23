@@ -50,6 +50,11 @@ foreach(EXAMPLE ${MONGOCXX_EXAMPLE_EXECUTABLES})
         continue()
     endif()
 
+    # Don't run the CSFLE examples as part of the suite; needs mongocryptd running.
+    if (${EXAMPLE} MATCHES "encryption")
+        continue()
+    endif()
+
     add_custom_command(TARGET run-examples POST_BUILD COMMAND ${EXAMPLE})
 endforeach(EXAMPLE)
 

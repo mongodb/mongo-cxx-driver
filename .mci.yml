@@ -317,6 +317,9 @@ functions:
                       EXAMPLES=$(find examples -type f | sort | perl -nlwe 'print if -x')
                       for test in $EXAMPLES; do
                         case "$test" in
+                          *encryption*)
+                            echo "Skipping client side encryption example"
+                            ;;
                           *change_stream*)
                             echo "TODO CXX-1201, enable for servers that support change streams"
                             ;;
