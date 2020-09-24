@@ -268,7 +268,7 @@ class BSONCXX_API view {
     ///
     const b_maxkey& get_maxkey() const;
 
-    template<typename T>
+    template <typename T>
     void to_field(T& object_field) {
         // In an ideal world, we'd want something like:
         // object_field = _type.value;
@@ -299,7 +299,8 @@ class BSONCXX_API view {
     // Might have to have this for all expected primitive types
     // How do we handle different type of elements like of type _b_symbol?
     //      Can check for type() and work from there, maybe? (if using el.get_value().to_field())
-    //      Or, give each BSON struct its own version of a to_field() function? (if using el.get_symbol().to_field())
+    //      Or, give each BSON struct its own version of a to_field() function? (if using
+    //      el.get_symbol().to_field())
     // How about bson types of multiple fields such as b_regex and b_codewscope ?
     void _to_field(std::string& object_field) const;
     void _to_field(int32_t& object_field) const;

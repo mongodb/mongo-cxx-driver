@@ -57,7 +57,7 @@ class document : public sub_document {
 
     // Serializer function / constructor
     // Calling explicit on this function would throw an error
-    template<typename T>
+    template <typename T>
     document(T& user_object) : sub_document(&_core), _core(false) {
         to_bson(user_object, *this);
     }

@@ -37,11 +37,9 @@ struct Person {
 };
 
 void to_bson(const Person& person, builder::basic::document& bson_object) {
-    bson_object.append(
-        kvp("first_name", person.first_name),
-        kvp("last_name", person.last_name),
-        kvp("age", person.age)
-    );
+    bson_object.append(kvp("first_name", person.first_name),
+                       kvp("last_name", person.last_name),
+                       kvp("age", person.age));
 }
 
 void from_bson(Person& person, const document::view& bson_object) {
@@ -56,21 +54,27 @@ void from_bson(Person& person, const document::view& bson_object) {
 class Car {
    public:
     Car() = default;
-    Car(std::string manufacturer, std::string model) :
-          _manufacturer(std::move(manufacturer)), _model(std::move(model)) {};
+    Car(std::string manufacturer, std::string model)
+        : _manufacturer(std::move(manufacturer)), _model(std::move(model)){};
 
-    std::string get_manufacturer() const { return _manufacturer; }
-    void set_manufacturer(std::string manufacturer) { this->_manufacturer = manufacturer; }
+    std::string get_manufacturer() const {
+        return _manufacturer;
+    }
+    void set_manufacturer(std::string manufacturer) {
+        this->_manufacturer = manufacturer;
+    }
 
-    std::string get_model() const { return _model; }
-    void set_model(std::string model) { this->_model = model; }
+    std::string get_model() const {
+        return _model;
+    }
+    void set_model(std::string model) {
+        this->_model = model;
+    }
 
     friend void to_bson(const Car& car, builder::basic::document& bson_object) {
-        bson_object.append(
-            kvp("manufacturer", car.get_manufacturer()),
-            // Intentionally change the key name from "model" to "type"
-            kvp("type", car.get_model())
-        );
+        bson_object.append(kvp("manufacturer", car.get_manufacturer()),
+                           // Intentionally change the key name from "model" to "type"
+                           kvp("type", car.get_model()));
     }
 
     friend void from_bson(Car& car, const document::view& bson_object) {
@@ -87,22 +91,18 @@ void random_func() {
     // nothing
 }
 
-} // namespace test
+}  // namespace test
 
 TEST_CASE("person works") {
     // We will be using document::value as a representation of BSON objects
 
     test::Person expected_person{
-        "Lelouch",
-        "Lamperouge",
-        18,
+        "Lelouch", "Lamperouge", 18,
     };
 
-    document::value expected_doc = make_document(
-        kvp("first_name", expected_person.first_name),
-        kvp("last_name", expected_person.last_name),
-        kvp("age", expected_person.age)
-    );
+    document::value expected_doc = make_document(kvp("first_name", expected_person.first_name),
+                                                 kvp("last_name", expected_person.last_name),
+                                                 kvp("age", expected_person.age));
 
     // Person -> BSON object
     builder::basic::document test_doc = expected_person;
@@ -120,11 +120,9 @@ TEST_CASE("person works") {
     SECTION("Checking to see if manual assignment yield same results") {
         // Manual assignment of values
         auto ed_view = expected_doc.view();
-        test::Person other_person{
-            ed_view["first_name"].get_string().value.to_string(),
-            ed_view["last_name"].get_string().value.to_string(),
-            ed_view["age"].get_int32().value
-        };
+        test::Person other_person{ed_view["first_name"].get_string().value.to_string(),
+                                  ed_view["last_name"].get_string().value.to_string(),
+                                  ed_view["age"].get_int32().value};
 
         REQUIRE(test_person.first_name == other_person.first_name);
         REQUIRE(test_person.last_name == other_person.last_name);
@@ -132,8 +130,10 @@ TEST_CASE("person works") {
     }
 
     SECTION("Conversion from Person struct to BSON object works") {
-        REQUIRE(test_doc_view["first_name"].get_string().value.to_string() == expected_person.first_name);
-        REQUIRE(test_doc_view["last_name"].get_string().value.to_string() == expected_person.last_name);
+        REQUIRE(test_doc_view["first_name"].get_string().value.to_string() ==
+                expected_person.first_name);
+        REQUIRE(test_doc_view["last_name"].get_string().value.to_string() ==
+                expected_person.last_name);
         REQUIRE(test_doc_view["age"].get_int32().value == expected_person.age);
 
         // REQUIRE(test_doc_view == expected_doc.view());
@@ -144,10 +144,9 @@ TEST_CASE("person works") {
 TEST_CASE("Car works") {
     test::Car expected_car{"Tesla", "Model S"};
 
-    document::value expected_doc = make_document(
-        kvp("type", expected_car.get_model()),
-        kvp("manufacturer", expected_car.get_manufacturer())
-    );
+    document::value expected_doc =
+        make_document(kvp("type", expected_car.get_model()),
+                      kvp("manufacturer", expected_car.get_manufacturer()));
 
     // Car -> BSON
     builder::basic::document test_doc = expected_car;
@@ -158,7 +157,8 @@ TEST_CASE("Car works") {
 
     SECTION("Car to BSON works") {
         REQUIRE(doc_view["type"].get_string().value.to_string() == expected_car.get_model());
-        REQUIRE(doc_view["manufacturer"].get_string().value.to_string() == expected_car.get_manufacturer());
+        REQUIRE(doc_view["manufacturer"].get_string().value.to_string() ==
+                expected_car.get_manufacturer());
     }
 
     SECTION("BSON to Car works") {
@@ -166,5 +166,4 @@ TEST_CASE("Car works") {
         REQUIRE(test_car.get_model() == expected_car.get_model());
     }
 }
-
 }
