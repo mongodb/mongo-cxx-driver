@@ -184,6 +184,32 @@ bool operator!=(const view& lhs, const view& rhs) {
     return !(lhs == rhs);
 }
 
+// Serializer functions
+void view::_to_field(std::string& object_field) const {
+    // Check type() here and use cases of _b_##type where _b_##type.value is a string
+    object_field = this->_b_utf8.value.to_string();
+}
+
+void view::_to_field(int32_t& object_field) const {
+    object_field = this->_b_int32.value;
+}
+
+void view::_to_field(int64_t& object_field) const {
+    object_field = this->_b_int64.value;
+}
+
+void view::_to_field(decimal128& object_field) const {
+    object_field = this->_b_decimal128.value;
+}
+
+void view::_to_field(double& object_field) const {
+    object_field = this->_b_double.value;
+}
+
+void view::_to_field(bool& object_field) const {
+    object_field = this->_b_bool.value;
+}
+
 void view::destroy() noexcept {
     switch (static_cast<int>(_type)) {
 #define BSONCXX_ENUM(type, val) \
