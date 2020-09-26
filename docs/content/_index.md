@@ -10,8 +10,8 @@ Welcome to the MongoDB C++ driver.  On this site, you'll find documentation
 to help you get the most from MongoDB and C++.  If you're just starting
 out, take a look at these pages first:
 
-* [Installing mongocxx]({{< ref "mongocxx-v3/installation.md" >}})
-* [Quick-start tutorial]({{< ref "mongocxx-v3/tutorial.md" >}})
+* [Installing mongocxx]({{< ref "/mongocxx-v3/installation" >}})
+* [Quick-start tutorial]({{< ref "/mongocxx-v3/tutorial" >}})
 
 ## Driver status by family and version
 

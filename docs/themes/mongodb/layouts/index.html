@@ -1,6 +1,6 @@
 {{ partial "header.html" . }}
 {{ $.Scratch.Set "indexFound" false }}
-{{ range where .Data.Pages ".Type" "index" }}
+{{ range where .Site.Pages ".Type" "index" }}
     {{ $.Scratch.Set "indexFound" true }}
     {{ .Content }}
 {{ end }}

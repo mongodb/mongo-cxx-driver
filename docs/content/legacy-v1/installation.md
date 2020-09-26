@@ -355,7 +355,7 @@ mongoclient-gd.pdb
 #### Initialization and Configuration
 
 NOTE: You *must* initialize the legacy driver before use.  See
-[Configuration]({{< ref "legacy-v1/configuration.md" >}}) for more details.
+[Configuration]({{< ref "/legacy-v1/configuration" >}}) for more details.
 
 #### Client Headers
 
