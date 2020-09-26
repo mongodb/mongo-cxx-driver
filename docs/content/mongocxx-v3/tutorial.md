@@ -12,7 +12,7 @@ title = "Tutorial for mongocxx"
 - A [mongod](https://docs.mongodb.com/master/reference/program/mongod/)
   instance running on localhost on port 27017.
 
-- The mongocxx Driver. See [Installation for mongocxx]({{< ref "mongocxx-v3/installation.md" >}}).
+- The mongocxx Driver. See [Installation for mongocxx]({{< ref "/mongocxx-v3/installation" >}}).
 
 - The following statements at the top of your source file:
 
