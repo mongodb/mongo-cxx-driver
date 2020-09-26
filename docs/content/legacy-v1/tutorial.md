@@ -26,12 +26,12 @@ contents of a database after your C++ program runs.
 
 ### Installing the Driver Library and Headers
 
-Please see [Installation]({{< ref "legacy-v1/installation.md" >}}) for
+Please see [Installation]({{< ref "/legacy-v1/installation" >}}) for
 instructions on how to download, build, and install the C++ client driver.
 
 ### Initializing the Driver Library
 
-Please see [Configuration]({{< ref "legacy-v1/configuration.md" >}}) for
+Please see [Configuration]({{< ref "/legacy-v1/configuration" >}}) for
 instructions on how to properly initialize and terminate the driver:
 
 ### Connecting
@@ -158,8 +158,7 @@ GENOID should be at the beginning of the generated object. We can do something s
 BSONObj p = BSONObjBuilder().genOID().append("name","Joe").append("age",33).obj();
 ```
 
-Other helpers are listed in [Working with BSON]({{< ref
-"legacy-v1/working-with-bson.md" >}}).
+Other helpers are listed in [Working with BSON]({{< ref "/legacy-v1/working-with-bson" >}}).
 
 ### Inserting
 
