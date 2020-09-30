@@ -300,7 +300,7 @@ class BSONCXX_API view {
     // Regex
     void _to_fields(std::string& object_field1, std::string& object_field2) const;
     // Timestamp
-    void _to_fields(uint32_t& object_field1, u_int32_t& object_field2) const;
+    void _to_fields(uint32_t& object_field1, uint32_t& object_field2) const;
 
     void BSONCXX_PRIVATE destroy() noexcept;
 

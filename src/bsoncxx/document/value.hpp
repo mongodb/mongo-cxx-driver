@@ -24,6 +24,10 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
+namespace array {
+class view;
+}
+
 namespace builder {
 namespace basic {
 class document;
@@ -84,7 +88,8 @@ class BSONCXX_API value {
     value& operator=(value&&) noexcept = default;
 
     // Serializer functions
-    template <typename T>
+    template <typename T,
+              typename std::enable_if<!std::is_same<T, typename array::view>::value, int>::type = 0>
     explicit value(const T& user_object)
         : _data(new std::uint8_t[static_cast<std::size_t>(5)],
                 [](std::uint8_t* ptr) { delete[] ptr; }) {
