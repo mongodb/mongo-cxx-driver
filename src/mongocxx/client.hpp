@@ -247,8 +247,8 @@ class MONGOCXX_API client {
     ///
     /// Enumerates the databases in the client.
     ///
-    /// @param filter
-    ///   The filter that documents must match in order to be listed.
+    /// @param opts
+    ///   Options passed directly to the 'listDatabases' command.
     ///
     /// @return A mongocxx::cursor containing a BSON document for each
     ///   database. Each document contains a name field with the database
@@ -259,8 +259,9 @@ class MONGOCXX_API client {
     /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
     ///
     /// @see https://docs.mongodb.com/master/reference/command/listDatabases
+    ///   for a list of all possible options to pass to 'listDatabases'.
     ///
-    cursor list_databases(const bsoncxx::document::view_or_value filter) const;
+    cursor list_databases(const bsoncxx::document::view_or_value opts) const;
 
     ///
     /// Queries the MongoDB server for a list of known databases.

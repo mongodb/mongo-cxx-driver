@@ -73,6 +73,68 @@ TEST_CASE("A client lists its databases with a filter applied", "[client]") {
     REQUIRE(client_list_databases_called);
 }
 
+TEST_CASE("list databases with a filter works", "[client]") {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    instance::current();
+
+    mongocxx::client client{mongocxx::uri{"mongodb://localhost:27017"}};
+    // auto filter_doc = make_document(kvp("filter", make_document(kvp("name", "admin"))));
+    auto cursor = client.list_databases();
+    for (auto&& doc : cursor) {
+        std::cout << bsoncxx::to_json(doc) << std::endl;
+    }
+}
+
+TEST_CASE("list databases passes authorizedDatabases option", "[client]") {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+    using bsoncxx::to_json;
+
+    auto mock_client_find_databases_with_opts =
+        mongocxx::libmongoc::client_find_databases_with_opts.create_instance();
+    int num_called = 0;
+    stdx::optional<bsoncxx::document::value> opts_passed;
+
+    mock_client_find_databases_with_opts->interpose([&](mongoc_client_t* client,
+                                                        const bson_t* opts) {
+        (void)client;
+        (void)opts;
+        std::cout << "mock interpose has been called" << std::endl;
+        num_called++;
+
+        if (opts) {
+            opts_passed =
+                bsoncxx::document::value{bsoncxx::document::view{bson_get_data(opts), opts->len}};
+        }
+        return nullptr;
+    });
+
+    mongocxx::client client{mongocxx::uri{"mongodb://localhost:27017"}};
+
+    std::cout << "running test" << std::endl;
+
+    SECTION("list_databases with no arguments") {
+        client.list_databases();
+        REQUIRE(num_called == 1);
+    }
+
+    SECTION("list_databases with filter") {
+        bsoncxx::document::value opts = make_document(kvp("filter", 1));
+        client.list_databases(opts.view());
+        REQUIRE(num_called == 1);
+        REQUIRE_BSON_MATCHES(*opts_passed, make_document(kvp("filter", 1)));
+    }
+
+    SECTION("list_databases with authorizedDatabases") {
+        bsoncxx::document::value opts = make_document(kvp("authorizedDatabases", true));
+        client.list_databases(opts.view());
+        REQUIRE(num_called == 1);
+        REQUIRE_BSON_MATCHES(*opts_passed, make_document(kvp("authorizedDatabase", true)));
+    }
+}
+
 TEST_CASE("A client constructed with a URI is truthy", "[client]") {
     MOCK_CLIENT
 
