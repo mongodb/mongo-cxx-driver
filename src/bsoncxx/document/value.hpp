@@ -83,10 +83,18 @@ class BSONCXX_API value {
     value(value&&) noexcept = default;
     value& operator=(value&&) noexcept = default;
 
-    //    template<typename T>
-    //    explicit value(T& user_object) {
-    //        to_bson(user_object, *this);
-    //    }
+    // Serializer functions
+    template <typename T>
+    explicit value(const T& user_object)
+        : _data(new std::uint8_t[static_cast<std::size_t>(5)],
+                [](std::uint8_t* ptr) { delete[] ptr; }) {
+        to_bson(user_object, *this);
+    }
+    template <typename T>
+    value& operator=(const T& user_object) {
+        *this = value{user_object};
+        return *this;
+    }
 
     ///
     /// @returns A const_iterator to the first element of the document.

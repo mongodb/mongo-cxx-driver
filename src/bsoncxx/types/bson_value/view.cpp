@@ -187,7 +187,14 @@ bool operator!=(const view& lhs, const view& rhs) {
 // Serializer functions
 void view::_to_field(std::string& object_field) const {
     // Check type() here and use cases of _b_##type where _b_##type.value is a string
-    object_field = this->_b_utf8.value.to_string();
+    // Switch throws a warning to add missing switch cases
+    if (_type == type::k_utf8) {
+        object_field = this->_b_utf8.value.to_string();
+    } else if (_type == type::k_code) {
+        object_field = this->_b_code.code.to_string();
+    } else if (_type == type::k_symbol) {
+        object_field = this->_b_symbol.symbol.to_string();
+    }
 }
 
 void view::_to_field(int32_t& object_field) const {
@@ -208,6 +215,16 @@ void view::_to_field(double& object_field) const {
 
 void view::_to_field(bool& object_field) const {
     object_field = this->_b_bool.value;
+}
+
+void view::_to_fields(std::string& object_field1, std::string& object_field2) const {
+    object_field1 = this->_b_regex.regex.to_string();
+    object_field2 = this->_b_regex.options.to_string();
+}
+
+void view::_to_fields(uint32_t& object_field1, u_int32_t& object_field2) const {
+    object_field1 = this->_b_timestamp.increment;
+    object_field2 = this->_b_timestamp.timestamp;
 }
 
 void view::destroy() noexcept {

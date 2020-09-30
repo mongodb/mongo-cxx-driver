@@ -55,13 +55,6 @@ class document : public sub_document {
         return *this;
     }
 
-    // Serializer function / constructor
-    // Calling explicit on this function would throw an error
-    template <typename T>
-    document(T& user_object) : sub_document(&_core), _core(false) {
-        to_bson(user_object, *this);
-    }
-
     ///
     /// @return A view of the BSON document.
     ///

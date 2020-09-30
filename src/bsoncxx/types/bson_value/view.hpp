@@ -268,22 +268,15 @@ class BSONCXX_API view {
     ///
     const b_maxkey& get_maxkey() const;
 
+    // Serializer function for single member BSON type structs
     template <typename T>
     void to_field(T& object_field) {
-        // In an ideal world, we'd want something like:
-        // object_field = _type.value;
-        // But we need to take into account the many types that there are.
-
-        // We could run a check for type() == bsoncxx::type::k_##type first, but you'd need to
-        // figure out how assigning with different types is going to work.
-
-        // We could continue doing overloads for each of the different types there are, but how are
-        // we going to handle data types like an array of strings vs. array of ints vs. array of
-        // doubles, etc.? More overloads?
-        // And how are we going to handle fields that require a subdocument? Imagine a Person with
-        // an "offspring" field consisting of another person, or a "car" field consisting of a new
-        // struct Car.
         _to_field(object_field);
+    }
+    // Serializer function for BSON type structs that have more than one member
+    template <typename T, typename U>
+    void to_fields(T& object_field1, U& object_field2) {
+        _to_fields(object_field1, object_field2);
     }
 
    private:
@@ -296,20 +289,18 @@ class BSONCXX_API view {
     void _init(void* internal_value) noexcept;
 
     // Serializer functions
-    // Might have to have this for all expected primitive types
-    // How do we handle different type of elements like of type _b_symbol?
-    //      Can check for type() and work from there, maybe? (if using el.get_value().to_field())
-    //      Or, give each BSON struct its own version of a to_field() function? (if using
-    //      el.get_symbol().to_field())
-    // How about bson types of multiple fields such as b_regex and b_codewscope ?
     void _to_field(std::string& object_field) const;
     void _to_field(int32_t& object_field) const;
     void _to_field(int64_t& object_field) const;
     void _to_field(decimal128& object_field) const;
     void _to_field(double& object_field) const;
     void _to_field(bool& object_field) const;
-    // Add special cases for arrays and nested documents/objects
-    // Add case for char*
+
+    // Serializers for BSON types with more than one member
+    // Regex
+    void _to_fields(std::string& object_field1, std::string& object_field2) const;
+    // Timestamp
+    void _to_fields(uint32_t& object_field1, u_int32_t& object_field2) const;
 
     void BSONCXX_PRIVATE destroy() noexcept;
 
