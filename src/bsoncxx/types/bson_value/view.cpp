@@ -20,6 +20,7 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/private/convert.hh>
 
 #include <bsoncxx/config/private/prelude.hh>
@@ -188,42 +189,42 @@ bool operator!=(const view& lhs, const view& rhs) {
 void view::_to_field(std::string& object_field) const {
     // Check type() here and use cases of _b_##type where _b_##type.value is a string
     if (_type == bsoncxx::type::k_utf8) {
-        object_field = this->_b_utf8.value.to_string();
+        object_field = bsoncxx::string::to_string(_b_utf8.value);
     } else if (_type == bsoncxx::type::k_code) {
-        object_field = this->_b_code.code.to_string();
+        object_field = bsoncxx::string::to_string(_b_code.code);
     } else if (_type == bsoncxx::type::k_symbol) {
-        object_field = this->_b_symbol.symbol.to_string();
+        object_field = bsoncxx::string::to_string(_b_symbol.symbol);
     }
 }
 
 void view::_to_field(int32_t& object_field) const {
-    object_field = this->_b_int32.value;
+    object_field = _b_int32.value;
 }
 
 void view::_to_field(int64_t& object_field) const {
-    object_field = this->_b_int64.value;
+    object_field = _b_int64.value;
 }
 
 void view::_to_field(decimal128& object_field) const {
-    object_field = this->_b_decimal128.value;
+    object_field = _b_decimal128.value;
 }
 
 void view::_to_field(double& object_field) const {
-    object_field = this->_b_double.value;
+    object_field = _b_double.value;
 }
 
 void view::_to_field(bool& object_field) const {
-    object_field = this->_b_bool.value;
+    object_field = _b_bool.value;
 }
 
 void view::_to_fields(std::string& object_field1, std::string& object_field2) const {
-    object_field1 = this->_b_regex.regex.to_string();
-    object_field2 = this->_b_regex.options.to_string();
+    object_field1 = bsoncxx::string::to_string(_b_regex.regex);
+    object_field2 = bsoncxx::string::to_string(_b_regex.options);
 }
 
 void view::_to_fields(uint32_t& object_field1, uint32_t& object_field2) const {
-    object_field1 = this->_b_timestamp.increment;
-    object_field2 = this->_b_timestamp.timestamp;
+    object_field1 = _b_timestamp.increment;
+    object_field2 = _b_timestamp.timestamp;
 }
 
 void view::destroy() noexcept {

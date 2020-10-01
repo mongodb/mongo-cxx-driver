@@ -18,6 +18,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/value.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types/bson_value/view.hpp>
 
@@ -85,120 +86,120 @@ class Types_Test_Object {
    public:
     Types_Test_Object() = default;
 
-    Types_Test_Object(double _double,
-                      std::string&& _utf8,
-                      bool _bool,
-                      std::string&& _code,
-                      std::string&& _symbol,
-                      int32_t _int32,
-                      int64_t _int64,
-                      decimal128 _decimal128,
-                      std::string&& _regex_string,
-                      std::string&& _regex_options,
-                      uint32_t _timestamp_increment,
-                      uint32_t _timestamp_timestamp)
-        : _double(_double),
-          _utf8(std::move(_utf8)),
-          _bool(_bool),
-          _code(std::move(_code)),
-          _symbol(std::move(_symbol)),
-          _int32(_int32),
-          _int64(_int64),
-          _decimal128(_decimal128),
-          _regex_string(std::move(_regex_string)),
-          _regex_options(std::move(_regex_options)),
-          _timestamp_increment(_timestamp_increment),
-          _timestamp_timestamp(_timestamp_timestamp) {}
+    Types_Test_Object(double m_double,
+                      std::string&& m_utf8,
+                      bool m_bool,
+                      std::string&& m_code,
+                      std::string&& m_symbol,
+                      int m_int32,
+                      long long m_int64,
+                      decimal128 m_decimal128,
+                      std::string&& m_regex_string,
+                      std::string&& m_regex_options,
+                      uint32_t m_timestamp_increment,
+                      uint32_t m_timestamp_timestamp)
+        : m_double(m_double),
+          m_utf8(std::move(m_utf8)),
+          m_bool(m_bool),
+          m_code(std::move(m_code)),
+          m_symbol(std::move(m_symbol)),
+          m_int32(m_int32),
+          m_int64(m_int64),
+          m_decimal128(m_decimal128),
+          m_regex_string(std::move(m_regex_string)),
+          m_regex_options(std::move(m_regex_options)),
+          m_timestamp_increment(m_timestamp_increment),
+          m_timestamp_timestamp(m_timestamp_timestamp) {}
 
     // Getters
     double getDouble() const {
-        return _double;
+        return m_double;
     }
     std::string getUtf8() const {
-        return _utf8;
+        return m_utf8;
     }
     bool getBool() const {
-        return _bool;
+        return m_bool;
     }
     std::string getCode() const {
-        return _code;
+        return m_code;
     }
     std::string getSymbol() const {
-        return _symbol;
+        return m_symbol;
     }
-    int32_t getInt32() const {
-        return _int32;
+    int getInt32() const {
+        return m_int32;
     }
-    int64_t getInt64() const {
-        return _int64;
+    long long getInt64() const {
+        return m_int64;
     }
     decimal128 getDecimal128() const {
-        return _decimal128;
+        return m_decimal128;
     }
     std::string getRegexString() const {
-        return _regex_string;
+        return m_regex_string;
     }
     std::string getRegexOptions() const {
-        return _regex_options;
+        return m_regex_options;
     }
     uint32_t getTimestampIncrement() const {
-        return _timestamp_increment;
+        return m_timestamp_increment;
     }
     uint32_t getTimestampTimestamp() const {
-        return _timestamp_timestamp;
+        return m_timestamp_timestamp;
     }
 
     friend void to_bson(const Types_Test_Object& user_object,
                         bsoncxx::document::value& bson_object) {
         bson_object = make_document(
-            kvp("_double", types::b_double{user_object._double}),
-            kvp("_utf8", types::b_utf8{user_object._utf8}),
-            kvp("_bool", types::b_bool{user_object._bool}),
-            kvp("_code", types::b_code{user_object._code}),
-            kvp("_symbol", types::b_symbol{user_object._symbol}),
-            kvp("_int32", types::b_int32{user_object._int32}),
-            kvp("_int64", types::b_int64{user_object._int64}),
-            kvp("_decimal128", types::b_decimal128{user_object._decimal128}),
-            kvp("_regex", types::b_regex{user_object._regex_string, user_object._regex_options}),
+            kvp("_double", types::b_double{user_object.m_double}),
+            kvp("_utf8", types::b_utf8{user_object.m_utf8}),
+            kvp("_bool", types::b_bool{user_object.m_bool}),
+            kvp("_code", types::b_code{user_object.m_code}),
+            kvp("_symbol", types::b_symbol{user_object.m_symbol}),
+            kvp("_int32", types::b_int32{user_object.m_int32}),
+            kvp("_int64", types::b_int64{user_object.m_int64}),
+            kvp("_decimal128", types::b_decimal128{user_object.m_decimal128}),
+            kvp("_regex", types::b_regex{user_object.m_regex_string, user_object.m_regex_options}),
             kvp("_timestamp",
-                types::b_timestamp{user_object._timestamp_increment,
-                                   user_object._timestamp_timestamp}));
+                types::b_timestamp{user_object.m_timestamp_increment,
+                                   user_object.m_timestamp_timestamp}));
     }
 
     friend void from_bson(Types_Test_Object& user_object,
                           const bsoncxx::document::view& bson_object) {
-        bson_object["_double"].get_value().to_field(user_object._double);
-        bson_object["_utf8"].get_value().to_field(user_object._utf8);
-        bson_object["_bool"].get_value().to_field(user_object._bool);
-        bson_object["_code"].get_value().to_field(user_object._code);
-        bson_object["_symbol"].get_value().to_field(user_object._symbol);
-        bson_object["_int32"].get_value().to_field(user_object._int32);
-        bson_object["_int64"].get_value().to_field(user_object._int64);
-        bson_object["_decimal128"].get_value().to_field(user_object._decimal128);
-        bson_object["_regex"].get_value().to_fields(user_object._regex_string,
-                                                    user_object._regex_options);
-        bson_object["_timestamp"].get_value().to_fields(user_object._timestamp_increment,
-                                                        user_object._timestamp_timestamp);
+        bson_object["_double"].get_value().to_field(user_object.m_double);
+        bson_object["_utf8"].get_value().to_field(user_object.m_utf8);
+        bson_object["_bool"].get_value().to_field(user_object.m_bool);
+        bson_object["_code"].get_value().to_field(user_object.m_code);
+        bson_object["_symbol"].get_value().to_field(user_object.m_symbol);
+        bson_object["_int32"].get_value().to_field(user_object.m_int32);
+        bson_object["_int64"].get_value().to_field(user_object.m_int64);
+        bson_object["_decimal128"].get_value().to_field(user_object.m_decimal128);
+        bson_object["_regex"].get_value().to_fields(user_object.m_regex_string,
+                                                    user_object.m_regex_options);
+        bson_object["_timestamp"].get_value().to_fields(user_object.m_timestamp_increment,
+                                                        user_object.m_timestamp_timestamp);
     }
 
    private:
     // Represent BSON types that only have one struct field
-    double _double = 0;
-    std::string _utf8;
-    bool _bool = true;
-    std::string _code;
-    std::string _symbol;
-    int32_t _int32 = 0;
-    int64_t _int64 = 0;
-    decimal128 _decimal128;
+    double m_double;
+    std::string m_utf8;
+    bool m_bool = true;
+    std::string m_code;
+    std::string m_symbol;
+    int m_int32;
+    long long m_int64;
+    decimal128 m_decimal128;
 
     // Represent BSON types with more than one struct field
     // Regex
-    std::string _regex_string;
-    std::string _regex_options;
+    std::string m_regex_string;
+    std::string m_regex_options;
     // Timestamp
-    uint32_t _timestamp_increment = 0;
-    uint32_t _timestamp_timestamp = 0;
+    uint32_t m_timestamp_increment = 0;
+    uint32_t m_timestamp_timestamp = 0;
 };
 
 }  // namespace test
@@ -228,9 +229,9 @@ TEST_CASE("Convert between Person struct and BSON object") {
         bsoncxx::document::value test_value{expected_person};
         auto test_view = test_value.view();
 
-        REQUIRE(test_view["first_name"].get_string().value.to_string() ==
+        REQUIRE(string::to_string(test_view["first_name"].get_string().value) ==
                 expected_person.first_name);
-        REQUIRE(test_view["last_name"].get_string().value.to_string() == expected_person.last_name);
+        REQUIRE(string::to_string(test_view["last_name"].get_string().value) == expected_person.last_name);
         REQUIRE(test_view["age"].get_int32() == expected_person.age);
         REQUIRE(test_view == expected_view);
     }
@@ -248,8 +249,8 @@ TEST_CASE("Convert between Car class and BSON object") {
         bsoncxx::document::value test_value{expected_car};
         auto test_view = test_value.view();
 
-        REQUIRE(test_view["model"].get_string().value.to_string() == expected_car.get_model());
-        REQUIRE(test_view["manufacturer"].get_string().value.to_string() ==
+        REQUIRE(string::to_string(test_view["model"].get_string().value) == expected_car.get_model());
+        REQUIRE(string::to_string(test_view["manufacturer"].get_string().value) ==
                 expected_car.get_manufacturer());
         REQUIRE(test_view == expected_value.view());
     }
@@ -316,4 +317,4 @@ TEST_CASE("Test out different BSON types for serialization") {
         REQUIRE(test_tto.getTimestampTimestamp() == expected_tto.getTimestampTimestamp());
     }
 }
-}
+} // namespace
