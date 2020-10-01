@@ -91,8 +91,8 @@ class Types_Test_Object {
                       bool m_bool,
                       std::string&& m_code,
                       std::string&& m_symbol,
-                      int m_int32,
-                      long long m_int64,
+                      int32_t m_int32,
+                      int64_t m_int64,
                       decimal128 m_decimal128,
                       std::string&& m_regex_string,
                       std::string&& m_regex_options,
@@ -127,10 +127,10 @@ class Types_Test_Object {
     std::string getSymbol() const {
         return m_symbol;
     }
-    int getInt32() const {
+    int32_t getInt32() const {
         return m_int32;
     }
-    long long getInt64() const {
+    int64_t getInt64() const {
         return m_int64;
     }
     decimal128 getDecimal128() const {
@@ -189,8 +189,8 @@ class Types_Test_Object {
     bool m_bool = true;
     std::string m_code;
     std::string m_symbol;
-    int m_int32;
-    long long m_int64;
+    int32_t m_int32;
+    int64_t m_int64;
     decimal128 m_decimal128;
 
     // Represent BSON types with more than one struct field
