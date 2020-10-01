@@ -231,7 +231,8 @@ TEST_CASE("Convert between Person struct and BSON object") {
 
         REQUIRE(string::to_string(test_view["first_name"].get_string().value) ==
                 expected_person.first_name);
-        REQUIRE(string::to_string(test_view["last_name"].get_string().value) == expected_person.last_name);
+        REQUIRE(string::to_string(test_view["last_name"].get_string().value) ==
+                expected_person.last_name);
         REQUIRE(test_view["age"].get_int32() == expected_person.age);
         REQUIRE(test_view == expected_view);
     }
@@ -249,7 +250,8 @@ TEST_CASE("Convert between Car class and BSON object") {
         bsoncxx::document::value test_value{expected_car};
         auto test_view = test_value.view();
 
-        REQUIRE(string::to_string(test_view["model"].get_string().value) == expected_car.get_model());
+        REQUIRE(string::to_string(test_view["model"].get_string().value) ==
+                expected_car.get_model());
         REQUIRE(string::to_string(test_view["manufacturer"].get_string().value) ==
                 expected_car.get_manufacturer());
         REQUIRE(test_view == expected_value.view());
@@ -317,4 +319,4 @@ TEST_CASE("Test out different BSON types for serialization") {
         REQUIRE(test_tto.getTimestampTimestamp() == expected_tto.getTimestampTimestamp());
     }
 }
-} // namespace
+}  // namespace
