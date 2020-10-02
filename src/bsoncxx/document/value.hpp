@@ -28,12 +28,6 @@ namespace array {
 class view;
 }
 
-namespace builder {
-namespace basic {
-class document;
-}
-}
-
 namespace document {
 
 ///
