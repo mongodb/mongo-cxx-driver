@@ -55,8 +55,8 @@ class BSONCXX_API value {
     value(std::chrono::milliseconds v);
     value(nullptr_t);
 
-    template <typename... Args>
-    value(const type id, Args... args);
+    template <typename T, typename... Args>
+    value(const type id, T value, Args... args);
 
     ~value();
 
@@ -93,6 +93,10 @@ class BSONCXX_API value {
     value(void* internal_value);
 
     friend value make_owning_bson(void* internal_value);
+
+    template <typename T, typename... Args>
+    void variadic_value(const type id, T value, Args... args);
+    void variadic_value(const type id);
 
     class BSONCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;

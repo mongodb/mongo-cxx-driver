@@ -14,9 +14,12 @@
 
 #include <bsoncxx/types/bson_value/value.hpp>
 
+#include <bsoncxx/exception/error_code.hpp>
+#include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types/bson_value/private/value.hh>
 #include <bsoncxx/types/private/convert.hh>
+#include <iostream>
 
 #include <bsoncxx/config/private/prelude.hh>
 
@@ -87,22 +90,36 @@ value::value(decimal128 v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value.v_decimal128.low = v.low();
 }
 
-value::value(b_regex v) : value(v.type_id, std::string{v.regex}, std::string{v.options}) {}
+void value::variadic_value(const type) {
+    std::cout << "id: " << _impl->_value.value_type << std::endl;
+    std::cout << "regex: " << _impl->_value.value.v_regex.regex << std::endl;
+    std::cout << "options: " << _impl->_value.value.v_regex.options << std::endl;
+}
 
-template <typename... Args>
-value::value(const type id, Args... args) : _impl{stdx::make_unique<impl>()} {
+template <typename T, typename... Args>
+void value::variadic_value(const type id, T value, Args... args) {
     switch (id) {
         case type::k_regex:
-            static_assert(sizeof...(args) != 2,
-                          "type regex must be constructed with two arguments: regex, options");
-            // _impl->_value.value_type = BSON_TYPE_REGEX;
-            // _impl->_value.value.v_regex.regex = make_copy_for_libbson(regex);
-            // _impl->_value.value.v_regex.options = make_copy_for_libbson(opts);
-            break;
+            _impl->_value.value_type = BSON_TYPE_REGEX;
+            if (sizeof...(args) == 1)
+                _impl->_value.value.v_regex.regex = make_copy_for_libbson(value);
+            else if (sizeof...(args) == 0)
+                _impl->_value.value.v_regex.options = make_copy_for_libbson(value);
+            else
+                throw bsoncxx::exception{bsoncxx::error_code::k_internal_error};
+            return variadic_value(id, std::forward<Args>(args)...);
         default:
             BSONCXX_UNREACHABLE;
     }
 }
+
+value::value(b_regex v) : value(v.type_id, std::string{v.regex}, std::string{v.options}) {}
+
+template <typename T, typename... Args>
+value::value(const type id, T value, Args... args) : _impl{stdx::make_unique<impl>()} {
+    variadic_value(id, std::forward<T>(value), std::forward<Args>(args)...);
+}
+
 // BSONCXX_ENUM(dbpointer, 0x0C)
 // BSONCXX_ENUM(code, 0x0D)
 // BSONCXX_ENUM(symbol, 0x0E)
