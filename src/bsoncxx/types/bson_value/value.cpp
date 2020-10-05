@@ -117,12 +117,8 @@ value::value(const type id, stdx::string_view a, bsoncxx::document::view_or_valu
 value::value(bsoncxx::document::view_or_value v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DOCUMENT;
     _impl->_value.value.v_doc.data_len = (uint32_t)v.view().length();
-    if (v.view().empty()) {
-        _impl->_value.value.v_doc.data = nullptr;
-    } else {
-        _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc0(v.view().length());
-        std::memcpy(_impl->_value.value.v_doc.data, v.view().data(), v.view().length());
-    }
+    _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc0(v.view().length());
+    std::memcpy(_impl->_value.value.v_doc.data, v.view().data(), v.view().length());
 }
 value::value(const type id, stdx::string_view a, stdx::string_view b)
     : _impl{stdx::make_unique<impl>()} {
