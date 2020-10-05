@@ -194,9 +194,13 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         SECTION("code") {
             auto test_doc = bson_value::make_value(b_code{"look at me I'm some JS code"});
             value_construction_test(test_doc.view());
+            coverting_construction_test(value(type::k_code, "look at me I'm some JS code"),
+                                        test_doc);
 
             auto empty_code = bson_value::make_value(b_code{""});
             value_construction_test(empty_code.view());
+            coverting_construction_test(value(type::k_code), empty_code);
+            coverting_construction_test(value(type::k_code, ""), empty_code);
         }
 
         SECTION("codewscope") {
