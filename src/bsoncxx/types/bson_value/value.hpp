@@ -55,6 +55,7 @@ class BSONCXX_API value {
     value(decimal128 v);
     value(std::chrono::milliseconds v);
     value(nullptr_t);
+    value(bsoncxx::document::view_or_value v);
 
     value(const type id, stdx::string_view a = {}, stdx::string_view b = {});
     value(const type id, stdx::string_view a, oid b);

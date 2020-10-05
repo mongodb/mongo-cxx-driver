@@ -104,15 +104,24 @@ value::value(const type id, stdx::string_view a, bsoncxx::document::view_or_valu
         _impl->_value.value_type = BSON_TYPE_CODEWSCOPE;
         _impl->_value.value.v_codewscope.code = make_copy_for_libbson(a);
         _impl->_value.value.v_codewscope.code_len = (uint32_t)a.length();
+        _impl->_value.value.v_codewscope.scope_len = (uint32_t)b.view().length();
         if (b.view().empty()) {
             _impl->_value.value.v_codewscope.scope_data = nullptr;
-            _impl->_value.value.v_codewscope.scope_len = 0;
         } else {
             _impl->_value.value.v_codewscope.scope_data = (uint8_t*)bson_malloc0(b.view().length());
-            _impl->_value.value.v_codewscope.scope_len = (uint32_t)b.view().length();
             std::memcpy(
                 _impl->_value.value.v_codewscope.scope_data, b.view().data(), b.view().length());
         }
+    }
+}
+value::value(bsoncxx::document::view_or_value v) : _impl{stdx::make_unique<impl>()} {
+    _impl->_value.value_type = BSON_TYPE_DOCUMENT;
+    _impl->_value.value.v_doc.data_len = (uint32_t)v.view().length();
+    if (v.view().empty()) {
+        _impl->_value.value.v_doc.data = nullptr;
+    } else {
+        _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc0(v.view().length());
+        std::memcpy(_impl->_value.value.v_doc.data, v.view().data(), v.view().length());
     }
 }
 value::value(const type id, stdx::string_view a, stdx::string_view b)
