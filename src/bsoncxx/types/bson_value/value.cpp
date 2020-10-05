@@ -90,35 +90,25 @@ value::value(decimal128 v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value.v_decimal128.low = v.low();
 }
 
-void value::variadic_value(const type) {
-    std::cout << "id: " << _impl->_value.value_type << std::endl;
-    std::cout << "regex: " << _impl->_value.value.v_regex.regex << std::endl;
-    std::cout << "options: " << _impl->_value.value.v_regex.options << std::endl;
-}
-
-template <typename T, typename... Args>
-void value::variadic_value(const type id, T value, Args... args) {
+value::value(const type id, stdx::string_view a, stdx::string_view b)
+    : _impl{stdx::make_unique<impl>()} {
     switch (id) {
         case type::k_regex:
             _impl->_value.value_type = BSON_TYPE_REGEX;
-            if (sizeof...(args) == 1)
-                _impl->_value.value.v_regex.regex = make_copy_for_libbson(value);
-            else if (sizeof...(args) == 0)
-                _impl->_value.value.v_regex.options = make_copy_for_libbson(value);
-            else
-                throw bsoncxx::exception{bsoncxx::error_code::k_internal_error};
-            return variadic_value(id, std::forward<Args>(args)...);
+            // static_assert(std::is_convertible<T1, stdx::string_view>::value = true, "regex must
+            // be string");
+            _impl->_value.value.v_regex.regex = make_copy_for_libbson(a);
+            _impl->_value.value.v_regex.options = make_copy_for_libbson(b);
+            //            else if (sizeof...(args) == 0)
+            //            else
+            //                throw bsoncxx::exception{bsoncxx::error_code::k_internal_error};
+            break;
         default:
             BSONCXX_UNREACHABLE;
     }
 }
 
 value::value(b_regex v) : value(v.type_id, std::string{v.regex}, std::string{v.options}) {}
-
-template <typename T, typename... Args>
-value::value(const type id, T value, Args... args) : _impl{stdx::make_unique<impl>()} {
-    variadic_value(id, std::forward<T>(value), std::forward<Args>(args)...);
-}
 
 // BSONCXX_ENUM(dbpointer, 0x0C)
 // BSONCXX_ENUM(code, 0x0D)
