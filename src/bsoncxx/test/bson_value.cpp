@@ -164,19 +164,17 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         }
 
         SECTION("regex") {
-            auto test_doc = bson_value::make_value(b_regex{"amy", "no options"});
+            /* options are sorted and any duplicate or invalid options are ignored */
+            auto test_doc = bson_value::make_value(b_regex{"amy", "imsx"});
             value_construction_test(test_doc.view());
 
-            // std::cout << "id: " << test_doc.view().get_regex().type_id << std::endl;
-            std::cout << "regex: " << test_doc.view().get_regex().regex << std::endl;
-            std::cout << "options: " << test_doc.view().get_regex().options << std::endl;
-
-            coverting_construction_test(b_regex{"amy", "no options"}, test_doc);
-            coverting_construction_test(
-                value(type::k_regex, std::string("amy"), std::string("no options")), test_doc);
+            coverting_construction_test(b_regex{"amy", "imsx"}, test_doc);
+            coverting_construction_test(value(type::k_regex, "amy", "imsx"), test_doc);
 
             auto empty_regex = bson_value::make_value(b_regex{"", ""});
             value_construction_test(empty_regex.view());
+
+            // coverting_construction_test(value(type::k_regex, ""), empty_regex);
         }
 
         SECTION("dbpointer") {
