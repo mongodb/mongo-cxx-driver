@@ -90,6 +90,15 @@ value::value(decimal128 v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value.v_decimal128.low = v.low();
 }
 
+value::value(const type id, stdx::string_view a, oid b) : _impl{stdx::make_unique<impl>()} {
+    if (id == type::k_dbpointer) {
+        _impl->_value.value_type = BSON_TYPE_DBPOINTER;
+        _impl->_value.value.v_dbpointer.collection = make_copy_for_libbson(a);
+        _impl->_value.value.v_dbpointer.collection_len = (uint32_t)a.length();
+        std::memcpy(_impl->_value.value.v_dbpointer.oid.bytes, b.bytes(), b.k_oid_length);
+    }
+}
+
 value::value(const type id, stdx::string_view a, stdx::string_view b)
     : _impl{stdx::make_unique<impl>()} {
     if (id == type::k_regex) {

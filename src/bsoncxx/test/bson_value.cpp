@@ -180,11 +180,15 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         }
 
         SECTION("dbpointer") {
-            auto test_doc = bson_value::make_value(b_dbpointer{"collection", oid{}});
+            oid _id{"507f1f77bcf86cd799439011"};
+            auto test_doc = bson_value::make_value(b_dbpointer{"collection", oid{_id}});
             value_construction_test(test_doc.view());
+            coverting_construction_test(value(type::k_dbpointer, "collection", oid{_id}), test_doc);
 
-            auto empty_collection = bson_value::make_value(b_dbpointer{"", oid{}});
+            auto empty_oid = oid{};
+            auto empty_collection = bson_value::make_value(b_dbpointer{"", empty_oid});
             value_construction_test(empty_collection.view());
+            coverting_construction_test(value(type::k_dbpointer, "", empty_oid), empty_collection);
         }
 
         SECTION("code") {

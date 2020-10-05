@@ -56,6 +56,7 @@ class BSONCXX_API value {
     value(nullptr_t);
 
     value(const type id, stdx::string_view a = {}, stdx::string_view b = {});
+    value(const type id, stdx::string_view a, oid b);
 
     ~value();
 
