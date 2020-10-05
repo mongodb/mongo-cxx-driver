@@ -55,9 +55,7 @@ class BSONCXX_API value {
     value(std::chrono::milliseconds v);
     value(nullptr_t);
 
-    value(const type id, const char* a, const char* b);
-    template <typename T1, typename T2>
-    value(const type id, T1 a, T2 b);
+    value(const type id, stdx::string_view a = {}, stdx::string_view b = {});
 
     ~value();
 

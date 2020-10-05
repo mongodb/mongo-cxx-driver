@@ -90,25 +90,12 @@ value::value(decimal128 v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value.v_decimal128.low = v.low();
 }
 
-value::value(const type id, const char* a, const char* b)
-    : value(id, stdx::string_view{a}, stdx::string_view{b}) {}
-
-template <typename T1, typename T2>
-value::value(const type id, T1 a, T2 b) : _impl{stdx::make_unique<impl>()} {
-    switch (id) {
-        case type::k_regex:
-            _impl->_value.value_type = BSON_TYPE_REGEX;
-            // static_assert(std::is_convertible<T1, stdx::string_view>::value = true, "regex must
-            // be string");
-            (void)a, (void)b;
-            _impl->_value.value.v_regex.regex = make_copy_for_libbson(a);
-            _impl->_value.value.v_regex.options = make_copy_for_libbson(b);
-            //            else if (sizeof...(args) == 0)
-            //            else
-            //                throw bsoncxx::exception{bsoncxx::error_code::k_internal_error};
-            break;
-        default:
-            BSONCXX_UNREACHABLE;
+value::value(const type id, stdx::string_view a, stdx::string_view b)
+    : _impl{stdx::make_unique<impl>()} {
+    if (id == type::k_regex) {
+        _impl->_value.value_type = BSON_TYPE_REGEX;
+        _impl->_value.value.v_regex.regex = make_copy_for_libbson(a);
+        _impl->_value.value.v_regex.options = make_copy_for_libbson(b);
     }
 }
 
