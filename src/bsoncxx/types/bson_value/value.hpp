@@ -16,6 +16,7 @@
 
 #include <memory>
 
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
@@ -57,6 +58,7 @@ class BSONCXX_API value {
 
     value(const type id, stdx::string_view a = {}, stdx::string_view b = {});
     value(const type id, stdx::string_view a, oid b);
+    value(const type id, stdx::string_view a, bsoncxx::document::view_or_value b);
 
     ~value();
 

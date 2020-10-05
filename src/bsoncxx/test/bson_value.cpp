@@ -208,10 +208,14 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             auto test_doc =
                 bson_value::make_value(b_codewscope{"it's me, Code with Scope", doc.view()});
             value_construction_test(test_doc.view());
+            coverting_construction_test(
+                value(type::k_codewscope, "it's me, Code with Scope", doc.view()), test_doc);
 
             auto empty_doc = make_document(kvp("a", ""));
             auto empty_code = bson_value::make_value(b_codewscope{"", empty_doc.view()});
             value_construction_test(empty_code.view());
+            coverting_construction_test(value(type::k_codewscope, "", empty_doc.view()),
+                                        empty_code);
         }
 
         SECTION("minkey") {
