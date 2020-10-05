@@ -125,6 +125,10 @@ value::value(const type id, stdx::string_view a, stdx::string_view b)
         _impl->_value.value_type = BSON_TYPE_CODE;
         _impl->_value.value.v_code.code = make_copy_for_libbson(a);
         _impl->_value.value.v_code.code_len = (uint32_t)a.length();
+    } else if (id == type::k_minkey) {
+        _impl->_value.value_type = BSON_TYPE_MINKEY;
+    } else if (id == type::k_maxkey) {
+        _impl->_value.value_type = BSON_TYPE_MAXKEY;
     }
 }
 

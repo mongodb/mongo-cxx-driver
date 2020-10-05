@@ -221,11 +221,13 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         SECTION("minkey") {
             auto test_doc = bson_value::make_value(b_minkey{});
             value_construction_test(test_doc.view());
+            coverting_construction_test(value(type::k_minkey), test_doc);
         }
 
         SECTION("maxkey") {
             auto test_doc = bson_value::make_value(b_maxkey{});
             value_construction_test(test_doc.view());
+            coverting_construction_test(value(type::k_maxkey), test_doc);
         }
 
         SECTION("binary") {
