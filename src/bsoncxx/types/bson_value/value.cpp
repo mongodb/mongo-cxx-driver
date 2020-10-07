@@ -29,29 +29,32 @@ namespace types {
 namespace bson_value {
 
 value::value(b_double v) : value(v.value) {}
+value::value(b_int32 v) : value(v.value) {}
+value::value(b_int64 v) : value(v.value) {}
+value::value(b_utf8 v) : value(v.value) {}
+
 value::value(double v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DOUBLE;
     _impl->_value.value.v_double = v;
 }
 
-value::value(b_int32 v) : value(v.value) {}
 value::value(int32_t v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_INT32;
     _impl->_value.value.v_int32 = v;
 }
 
-value::value(b_int64 v) : value(v.value) {}
 value::value(int64_t v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_INT64;
     _impl->_value.value.v_int64 = v;
 }
 
 // TODO: enable_if T in T* decays to char
-value::value(const char* v) : value(b_utf8{v}) {}
-value::value(std::string v) : value(b_utf8{v}) {}
-value::value(stdx::string_view v) : value(b_utf8{v}) {}
-value::value(b_utf8 v) : _impl{stdx::make_unique<impl>()} {
-    convert_to_libbson(v, &_impl->_value);
+value::value(const char* v) : value(stdx::string_view{v}) {}
+value::value(std::string v) : value(stdx::string_view{v}) {}
+value::value(stdx::string_view v) : _impl{stdx::make_unique<impl>()} {
+    _impl->_value.value_type = BSON_TYPE_UTF8;
+    _impl->_value.value.v_utf8.str = make_copy_for_libbson(v);
+    _impl->_value.value.v_utf8.len = (uint32_t)v.size();
 }
 
 // BSONCXX_ENUM(document, 0x03)
