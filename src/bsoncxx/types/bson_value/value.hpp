@@ -15,6 +15,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
@@ -58,11 +59,13 @@ class BSONCXX_API value {
     value(nullptr_t);
     value(bsoncxx::document::view_or_value v);
     value(bsoncxx::array::view_or_value v);
+    value(std::vector<unsigned char> v, binary_sub_type sub_type = {});
 
     value(const type id);
     value(const type id, stdx::string_view a, stdx::string_view b = {});
     value(const type id, stdx::string_view a, oid b);
     value(const type id, stdx::string_view a, bsoncxx::document::view_or_value b);
+    value(const type id, const binary_sub_type sub_id, uint32_t size, const uint8_t* data);
 
     ~value();
 

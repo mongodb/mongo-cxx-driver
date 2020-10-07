@@ -247,9 +247,13 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
                 b_binary{binary_sub_type::k_binary, (uint32_t)bin.size(), bin.data()});
             value_construction_test(test_doc.view());
 
-            // coverting_construction_test(value(b_maxkey{}), test_doc);
-            // coverting_construction_test(value(bin), test_doc);
-            // TODO
+            coverting_construction_test(
+                value(b_binary{binary_sub_type::k_binary, (uint32_t)bin.size(), bin.data()}),
+                test_doc);
+            coverting_construction_test(value(bin), test_doc);
+
+            auto empty = bson_value::make_value(b_binary{});
+            coverting_construction_test(value(std::vector<unsigned char>{}), empty);
         }
 
         SECTION("symbol") {
