@@ -166,7 +166,7 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         }
 
         SECTION("regex") {
-            /* options are sorted and any duplicate or invalid options are ignored */
+            /* options are sorted and any duplicate or invalid options are removed */
             auto test_doc = bson_value::make_value(b_regex{"amy", "imsx"});
             value_construction_test(test_doc.view());
 
@@ -176,7 +176,7 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             auto empty_regex = bson_value::make_value(b_regex{"", ""});
             value_construction_test(empty_regex.view());
 
-            coverting_construction_test(value(type::k_regex), empty_regex);
+            coverting_construction_test(b_regex{"", ""}, empty_regex);
             coverting_construction_test(value(type::k_regex, ""), empty_regex);
             coverting_construction_test(value(type::k_regex, "", ""), empty_regex);
         }
@@ -196,12 +196,12 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         SECTION("code") {
             auto test_doc = bson_value::make_value(b_code{"look at me I'm some JS code"});
             value_construction_test(test_doc.view());
+            coverting_construction_test(b_code{"look at me I'm some JS code"}, test_doc);
             coverting_construction_test(value(type::k_code, "look at me I'm some JS code"),
                                         test_doc);
 
             auto empty_code = bson_value::make_value(b_code{""});
             value_construction_test(empty_code.view());
-            coverting_construction_test(value(type::k_code), empty_code);
             coverting_construction_test(value(type::k_code, ""), empty_code);
         }
 
@@ -210,12 +210,17 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             auto test_doc =
                 bson_value::make_value(b_codewscope{"it's me, Code with Scope", doc.view()});
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(value(b_codewscope{"it's me, Code with Scope", doc.view()}),
+                                        test_doc);
             coverting_construction_test(
                 value(type::k_codewscope, "it's me, Code with Scope", doc.view()), test_doc);
 
             auto empty_doc = make_document(kvp("a", ""));
             auto empty_code = bson_value::make_value(b_codewscope{"", empty_doc.view()});
             value_construction_test(empty_code.view());
+
+            coverting_construction_test(value(b_codewscope{"", empty_doc.view()}), empty_code);
             coverting_construction_test(value(type::k_codewscope, "", empty_doc.view()),
                                         empty_code);
         }
@@ -223,13 +228,17 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         SECTION("minkey") {
             auto test_doc = bson_value::make_value(b_minkey{});
             value_construction_test(test_doc.view());
+
             coverting_construction_test(value(type::k_minkey), test_doc);
+            coverting_construction_test(value(b_minkey{}), test_doc);
         }
 
         SECTION("maxkey") {
             auto test_doc = bson_value::make_value(b_maxkey{});
             value_construction_test(test_doc.view());
+
             coverting_construction_test(value(type::k_maxkey), test_doc);
+            coverting_construction_test(value(b_maxkey{}), test_doc);
         }
 
         SECTION("binary") {

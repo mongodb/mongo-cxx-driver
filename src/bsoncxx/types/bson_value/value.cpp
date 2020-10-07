@@ -98,6 +98,8 @@ value::value(const type id, stdx::string_view a, oid b) : _impl{stdx::make_uniqu
         std::memcpy(_impl->_value.value.v_dbpointer.oid.bytes, b.bytes(), b.k_oid_length);
     }
 }
+
+value::value(b_codewscope v) : value(type::k_codewscope, v.code, v.scope) {}
 value::value(const type id, stdx::string_view a, bsoncxx::document::view_or_value b)
     : _impl{stdx::make_unique<impl>()} {
     if (id == type::k_codewscope) {
@@ -116,6 +118,20 @@ value::value(bsoncxx::document::view_or_value v) : _impl{stdx::make_unique<impl>
     _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc0(v.view().length());
     std::memcpy(_impl->_value.value.v_doc.data, v.view().data(), v.view().length());
 }
+
+value::value(b_minkey) : value(type::k_minkey) {}
+value::value(b_maxkey) : value(type::k_maxkey) {}
+value::value(const type id) : _impl{stdx::make_unique<impl>()} {
+    if (id == type::k_minkey) {
+        _impl->_value.value_type = BSON_TYPE_MINKEY;
+    } else if (id == type::k_maxkey) {
+        _impl->_value.value_type = BSON_TYPE_MAXKEY;
+    } else {
+        throw std::logic_error{"Must be min/max key"};
+    }
+}
+
+value::value(b_code v) : value(type::k_code, v) {}
 value::value(const type id, stdx::string_view a, stdx::string_view b)
     : _impl{stdx::make_unique<impl>()} {
     if (id == type::k_regex) {
@@ -126,10 +142,8 @@ value::value(const type id, stdx::string_view a, stdx::string_view b)
         _impl->_value.value_type = BSON_TYPE_CODE;
         _impl->_value.value.v_code.code = make_copy_for_libbson(a);
         _impl->_value.value.v_code.code_len = (uint32_t)a.length();
-    } else if (id == type::k_minkey) {
-        _impl->_value.value_type = BSON_TYPE_MINKEY;
-    } else if (id == type::k_maxkey) {
-        _impl->_value.value_type = BSON_TYPE_MAXKEY;
+    } else {
+        throw std::logic_error{"Unknown type"};
     }
 }
 
