@@ -112,6 +112,7 @@ value::value(const type id, stdx::string_view a, bsoncxx::document::view_or_valu
             _impl->_value.value.v_codewscope.scope_data, b.view().data(), b.view().length());
     }
 }
+value::value(b_document v) : value(v.view()) {}
 value::value(bsoncxx::document::view_or_value v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DOCUMENT;
     _impl->_value.value.v_doc.data_len = (uint32_t)v.view().length();

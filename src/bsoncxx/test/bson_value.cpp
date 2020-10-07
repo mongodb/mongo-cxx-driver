@@ -257,11 +257,15 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             auto doc = make_document(kvp("a", 1));
             auto test_doc = bson_value::make_value(doc.view());
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(b_document{doc.view()}, test_doc);
             coverting_construction_test(value(doc.view()), test_doc);
 
             // Empty document
             test_doc = bson_value::make_value(document::view{});
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(value(b_document{}), test_doc);
             coverting_construction_test(value(document::view{}), test_doc);
         }
 
