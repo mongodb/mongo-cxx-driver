@@ -273,7 +273,16 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             auto arr = make_array(make_document(kvp("hi", 0)));
             auto test_doc = bson_value::make_value(arr.view());
             value_construction_test(test_doc.view());
-            // coverting_construction_test(value(test_doc.view()), test_doc);
+
+            coverting_construction_test(value(b_array{arr.view()}), test_doc);
+            coverting_construction_test(value(arr.view()), test_doc);
+
+            // Empty array
+            test_doc = bson_value::make_value(array::view{});
+            value_construction_test(test_doc.view());
+
+            coverting_construction_test(value(b_array{}), test_doc);
+            coverting_construction_test(value(array::view{}), test_doc);
         }
     }
 

@@ -120,6 +120,14 @@ value::value(bsoncxx::document::view_or_value v) : _impl{stdx::make_unique<impl>
     std::memcpy(_impl->_value.value.v_doc.data, v.view().data(), v.view().length());
 }
 
+value::value(b_array v) : value(v.value) {}
+value::value(bsoncxx::array::view_or_value v) : _impl{stdx::make_unique<impl>()} {
+    _impl->_value.value_type = BSON_TYPE_ARRAY;
+    _impl->_value.value.v_doc.data_len = (uint32_t)v.view().length();
+    _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc0(v.view().length());
+    std::memcpy(_impl->_value.value.v_doc.data, v.view().data(), v.view().length());
+}
+
 value::value(b_minkey) : value(type::k_minkey) {}
 value::value(b_maxkey) : value(type::k_maxkey) {}
 value::value(const type id) : _impl{stdx::make_unique<impl>()} {

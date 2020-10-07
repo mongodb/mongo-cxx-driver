@@ -16,6 +16,7 @@
 
 #include <memory>
 
+#include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
@@ -56,6 +57,7 @@ class BSONCXX_API value {
     value(std::chrono::milliseconds v);
     value(nullptr_t);
     value(bsoncxx::document::view_or_value v);
+    value(bsoncxx::array::view_or_value v);
 
     value(const type id);
     value(const type id, stdx::string_view a, stdx::string_view b = {});
