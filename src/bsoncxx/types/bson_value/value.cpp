@@ -83,19 +83,32 @@ value::value(bool v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value.v_bool = v;
 }
 
+value::value(b_timestamp v) : value(v.type_id, v.increment, v.timestamp) {}
 value::value(b_decimal128 v) : value(v.value) {}
-value::value(decimal128 v) : _impl{stdx::make_unique<impl>()} {
-    _impl->_value.value_type = BSON_TYPE_DECIMAL128;
-    _impl->_value.value.v_decimal128.high = v.high();
-    _impl->_value.value.v_decimal128.low = v.low();
+value::value(decimal128 v) : value(type::k_decimal128, v.high(), v.low()) {}
+value::value(const type id, uint64_t a, uint64_t b) : _impl{stdx::make_unique<impl>()} {
+    if (id == type::k_decimal128) {
+        _impl->_value.value_type = BSON_TYPE_DECIMAL128;
+        _impl->_value.value.v_decimal128.high = a;
+        _impl->_value.value.v_decimal128.low = b;
+    } else if (id == type::k_timestamp) {
+        _impl->_value.value_type = BSON_TYPE_TIMESTAMP;
+        _impl->_value.value.v_timestamp.increment = (uint32_t)a;
+        _impl->_value.value.v_timestamp.timestamp = (uint32_t)b;
+    } else {
+        throw std::logic_error{"Not decimal128 or timestamp"};
+    }
 }
 
+value::value(b_dbpointer v) : value(v.type_id, v.collection, v.value) {}
 value::value(const type id, stdx::string_view a, oid b) : _impl{stdx::make_unique<impl>()} {
     if (id == type::k_dbpointer) {
         _impl->_value.value_type = BSON_TYPE_DBPOINTER;
         _impl->_value.value.v_dbpointer.collection = make_copy_for_libbson(a);
         _impl->_value.value.v_dbpointer.collection_len = (uint32_t)a.length();
         std::memcpy(_impl->_value.value.v_dbpointer.oid.bytes, b.bytes(), b.k_oid_length);
+    } else {
+        throw std::logic_error{"Not dbpointer"};
     }
 }
 
@@ -113,11 +126,11 @@ value::value(const type id, stdx::string_view a, bsoncxx::document::view_or_valu
     }
 }
 value::value(b_document v) : value(v.view()) {}
-value::value(bsoncxx::document::view_or_value v) : _impl{stdx::make_unique<impl>()} {
+value::value(bsoncxx::document::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DOCUMENT;
-    _impl->_value.value.v_doc.data_len = (uint32_t)v.view().length();
-    _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc0(v.view().length());
-    std::memcpy(_impl->_value.value.v_doc.data, v.view().data(), v.view().length());
+    _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
+    _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc0(v.length());
+    std::memcpy(_impl->_value.value.v_doc.data, v.data(), v.length());
 }
 
 value::value(std::vector<unsigned char> v, binary_sub_type sub_type)
@@ -137,11 +150,11 @@ value::value(const type id, const binary_sub_type sub_id, uint32_t size, const u
 }
 
 value::value(b_array v) : value(v.value) {}
-value::value(bsoncxx::array::view_or_value v) : _impl{stdx::make_unique<impl>()} {
+value::value(bsoncxx::array::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_ARRAY;
-    _impl->_value.value.v_doc.data_len = (uint32_t)v.view().length();
-    _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc0(v.view().length());
-    std::memcpy(_impl->_value.value.v_doc.data, v.view().data(), v.view().length());
+    _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
+    _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc0(v.length());
+    std::memcpy(_impl->_value.value.v_doc.data, v.data(), v.length());
 }
 
 value::value(b_minkey) : value(type::k_minkey) {}

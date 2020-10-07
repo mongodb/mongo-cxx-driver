@@ -147,6 +147,7 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
 
             coverting_construction_test(decimal128{5, 4}, test_doc);
             coverting_construction_test(b_decimal128{decimal128{5, 4}}, test_doc);
+            REQUIRE(value(type::k_decimal128, 5, 4) == test_doc);
         }
 
         SECTION("date") {
@@ -171,38 +172,41 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             value_construction_test(test_doc.view());
 
             coverting_construction_test(b_regex{"amy", "imsx"}, test_doc);
-            coverting_construction_test(value(type::k_regex, "amy", "imsx"), test_doc);
+            REQUIRE(value(type::k_regex, "amy", "imsx") == test_doc);
 
             auto empty_regex = bson_value::make_value(b_regex{"", ""});
             value_construction_test(empty_regex.view());
 
             coverting_construction_test(b_regex{"", ""}, empty_regex);
-            coverting_construction_test(value(type::k_regex, ""), empty_regex);
-            coverting_construction_test(value(type::k_regex, "", ""), empty_regex);
+            REQUIRE(value(type::k_regex, "") == empty_regex);
+            REQUIRE(value(type::k_regex, "", "") == empty_regex);
         }
 
         SECTION("dbpointer") {
             oid _id{"507f1f77bcf86cd799439011"};
             auto test_doc = bson_value::make_value(b_dbpointer{"collection", oid{_id}});
             value_construction_test(test_doc.view());
-            coverting_construction_test(value(type::k_dbpointer, "collection", oid{_id}), test_doc);
+
+            coverting_construction_test(b_dbpointer{"collection", oid{_id}}, test_doc);
+            REQUIRE(value(type::k_dbpointer, "collection", oid{_id}) == test_doc);
 
             auto empty_oid = oid{};
             auto empty_collection = bson_value::make_value(b_dbpointer{"", empty_oid});
             value_construction_test(empty_collection.view());
-            coverting_construction_test(value(type::k_dbpointer, "", empty_oid), empty_collection);
+
+            coverting_construction_test(b_dbpointer{"", empty_oid}, empty_collection);
+            REQUIRE(value(type::k_dbpointer, "", empty_oid) == empty_collection);
         }
 
         SECTION("code") {
             auto test_doc = bson_value::make_value(b_code{"look at me I'm some JS code"});
             value_construction_test(test_doc.view());
             coverting_construction_test(b_code{"look at me I'm some JS code"}, test_doc);
-            coverting_construction_test(value(type::k_code, "look at me I'm some JS code"),
-                                        test_doc);
+            REQUIRE(value(type::k_code, "look at me I'm some JS code") == test_doc);
 
             auto empty_code = bson_value::make_value(b_code{""});
             value_construction_test(empty_code.view());
-            coverting_construction_test(value(type::k_code, ""), empty_code);
+            REQUIRE(value(type::k_code, "") == empty_code);
         }
 
         SECTION("codewscope") {
@@ -211,34 +215,32 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
                 bson_value::make_value(b_codewscope{"it's me, Code with Scope", doc.view()});
             value_construction_test(test_doc.view());
 
-            coverting_construction_test(value(b_codewscope{"it's me, Code with Scope", doc.view()}),
+            coverting_construction_test(b_codewscope{"it's me, Code with Scope", doc.view()},
                                         test_doc);
-            coverting_construction_test(
-                value(type::k_codewscope, "it's me, Code with Scope", doc.view()), test_doc);
+            REQUIRE(value(type::k_codewscope, "it's me, Code with Scope", doc.view()) == test_doc);
 
             auto empty_doc = make_document(kvp("a", ""));
             auto empty_code = bson_value::make_value(b_codewscope{"", empty_doc.view()});
             value_construction_test(empty_code.view());
 
-            coverting_construction_test(value(b_codewscope{"", empty_doc.view()}), empty_code);
-            coverting_construction_test(value(type::k_codewscope, "", empty_doc.view()),
-                                        empty_code);
+            coverting_construction_test(b_codewscope{"", empty_doc.view()}, empty_code);
+            REQUIRE(value(type::k_codewscope, "", empty_doc.view()) == empty_code);
         }
 
         SECTION("minkey") {
             auto test_doc = bson_value::make_value(b_minkey{});
             value_construction_test(test_doc.view());
 
-            coverting_construction_test(value(type::k_minkey), test_doc);
-            coverting_construction_test(value(b_minkey{}), test_doc);
+            coverting_construction_test(b_minkey{}, test_doc);
+            REQUIRE(value(type::k_minkey) == test_doc);
         }
 
         SECTION("maxkey") {
             auto test_doc = bson_value::make_value(b_maxkey{});
             value_construction_test(test_doc.view());
 
-            coverting_construction_test(value(type::k_maxkey), test_doc);
-            coverting_construction_test(value(b_maxkey{}), test_doc);
+            coverting_construction_test(b_maxkey{}, test_doc);
+            REQUIRE(value(type::k_maxkey) == test_doc);
         }
 
         SECTION("binary") {
@@ -247,28 +249,33 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
                 b_binary{binary_sub_type::k_binary, (uint32_t)bin.size(), bin.data()});
             value_construction_test(test_doc.view());
 
-            coverting_construction_test(
-                value(b_binary{binary_sub_type::k_binary, (uint32_t)bin.size(), bin.data()}),
-                test_doc);
-            coverting_construction_test(value(bin), test_doc);
+            REQUIRE(value(b_binary{binary_sub_type::k_binary, (uint32_t)bin.size(), bin.data()}) ==
+                    test_doc);
+            coverting_construction_test(bin, test_doc);
 
             auto empty = bson_value::make_value(b_binary{});
-            coverting_construction_test(value(std::vector<unsigned char>{}), empty);
+            coverting_construction_test(std::vector<unsigned char>{}, empty);
         }
 
         SECTION("symbol") {
             auto test_doc = bson_value::make_value(b_symbol{"some symbol"});
             value_construction_test(test_doc.view());
+
             coverting_construction_test(b_symbol{"some symbol"}, test_doc);
-            coverting_construction_test(value(type::k_symbol, "some symbol"), test_doc);
+            REQUIRE(value(type::k_symbol, "some symbol") == test_doc);
 
             auto empty_symbol = bson_value::make_value(b_symbol{""});
             value_construction_test(empty_symbol.view());
-            coverting_construction_test(value(type::k_symbol, ""), empty_symbol);
+
+            REQUIRE(value(type::k_symbol, "") == empty_symbol);
         }
 
         SECTION("timestamp") {
-            // TODO
+            auto test_doc = bson_value::make_value(b_timestamp{5, 4});
+            value_construction_test(test_doc.view());
+
+            coverting_construction_test(b_timestamp{5, 4}, test_doc);
+            REQUIRE(value(type::k_timestamp, 5, 4) == test_doc);
         }
 
         SECTION("document") {
@@ -277,14 +284,14 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             value_construction_test(test_doc.view());
 
             coverting_construction_test(b_document{doc.view()}, test_doc);
-            coverting_construction_test(value(doc.view()), test_doc);
+            REQUIRE(value(doc.view()) == test_doc);
 
             // Empty document
             test_doc = bson_value::make_value(document::view{});
             value_construction_test(test_doc.view());
 
-            coverting_construction_test(value(b_document{}), test_doc);
-            coverting_construction_test(value(document::view{}), test_doc);
+            coverting_construction_test(b_document{}, test_doc);
+            coverting_construction_test(document::view{}, test_doc);
         }
 
         SECTION("array") {
@@ -292,15 +299,15 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             auto test_doc = bson_value::make_value(arr.view());
             value_construction_test(test_doc.view());
 
-            coverting_construction_test(value(b_array{arr.view()}), test_doc);
-            coverting_construction_test(value(arr.view()), test_doc);
+            coverting_construction_test(b_array{arr.view()}, test_doc);
+            coverting_construction_test(arr.view(), test_doc);
 
             // Empty array
             test_doc = bson_value::make_value(array::view{});
             value_construction_test(test_doc.view());
 
-            coverting_construction_test(value(b_array{}), test_doc);
-            coverting_construction_test(value(array::view{}), test_doc);
+            coverting_construction_test(b_array{}, test_doc);
+            coverting_construction_test(array::view{}, test_doc);
         }
     }
 

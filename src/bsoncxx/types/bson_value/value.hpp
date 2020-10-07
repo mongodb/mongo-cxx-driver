@@ -57,11 +57,12 @@ class BSONCXX_API value {
     value(decimal128 v);
     value(std::chrono::milliseconds v);
     value(nullptr_t);
-    value(bsoncxx::document::view_or_value v);
-    value(bsoncxx::array::view_or_value v);
+    value(bsoncxx::document::view v);
+    value(bsoncxx::array::view v);
     value(std::vector<unsigned char> v, binary_sub_type sub_type = {});
 
     value(const type id);
+    value(const type id, uint64_t a, uint64_t b);
     value(const type id, stdx::string_view a, stdx::string_view b = {});
     value(const type id, stdx::string_view a, oid b);
     value(const type id, stdx::string_view a, bsoncxx::document::view_or_value b);
