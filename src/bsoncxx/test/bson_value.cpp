@@ -257,7 +257,14 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         }
 
         SECTION("symbol") {
-            // TODO
+            auto test_doc = bson_value::make_value(b_symbol{"some symbol"});
+            value_construction_test(test_doc.view());
+            coverting_construction_test(b_symbol{"some symbol"}, test_doc);
+            coverting_construction_test(value(type::k_symbol, "some symbol"), test_doc);
+
+            auto empty_symbol = bson_value::make_value(b_symbol{""});
+            value_construction_test(empty_symbol.view());
+            coverting_construction_test(value(type::k_symbol, ""), empty_symbol);
         }
 
         SECTION("timestamp") {

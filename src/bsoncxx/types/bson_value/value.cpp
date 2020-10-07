@@ -156,7 +156,8 @@ value::value(const type id) : _impl{stdx::make_unique<impl>()} {
     }
 }
 
-value::value(b_code v) : value(type::k_code, v) {}
+value::value(b_symbol v) : value(v.type_id, v) {}
+value::value(b_code v) : value(v.type_id, v) {}
 value::value(const type id, stdx::string_view a, stdx::string_view b)
     : _impl{stdx::make_unique<impl>()} {
     if (id == type::k_regex) {
@@ -167,20 +168,16 @@ value::value(const type id, stdx::string_view a, stdx::string_view b)
         _impl->_value.value_type = BSON_TYPE_CODE;
         _impl->_value.value.v_code.code = make_copy_for_libbson(a);
         _impl->_value.value.v_code.code_len = (uint32_t)a.length();
+    } else if (id == type::k_symbol) {
+        _impl->_value.value_type = BSON_TYPE_SYMBOL;
+        _impl->_value.value.v_symbol.symbol = make_copy_for_libbson(a);
+        _impl->_value.value.v_symbol.len = (uint32_t)a.length();
     } else {
         throw std::logic_error{"Unknown type"};
     }
 }
 
 value::value(b_regex v) : value(v.type_id, std::string{v.regex}, std::string{v.options}) {}
-
-// BSONCXX_ENUM(dbpointer, 0x0C)
-// BSONCXX_ENUM(code, 0x0D)
-// BSONCXX_ENUM(symbol, 0x0E)
-// BSONCXX_ENUM(codewscope, 0x0F)
-// BSONCXX_ENUM(timestamp, 0x11)
-// BSONCXX_ENUM(maxkey, 0x7F)
-// BSONCXX_ENUM(minkey, 0xFF)
 
 value::~value() = default;
 
