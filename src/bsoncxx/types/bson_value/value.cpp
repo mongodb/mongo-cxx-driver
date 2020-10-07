@@ -28,10 +28,29 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace types {
 namespace bson_value {
 
+value::value(b_array v) : value(v.value) {}
+value::value(b_binary v) : value(v.type_id, v.sub_type, v.size, v.bytes) {}
+value::value(b_bool v) : value(v.value) {}
+value::value(b_code v) : value(v.type_id, v) {}
+value::value(b_codewscope v) : value(type::k_codewscope, v.code, v.scope) {}
+value::value(b_date v) : value(v.value) {}
+value::value(b_dbpointer v) : value(v.type_id, v.collection, v.value) {}
+value::value(b_decimal128 v) : value(v.value) {}
+value::value(b_document v) : value(v.view()) {}
 value::value(b_double v) : value(v.value) {}
 value::value(b_int32 v) : value(v.value) {}
 value::value(b_int64 v) : value(v.value) {}
+value::value(b_maxkey) : value(type::k_maxkey) {}
+value::value(b_minkey) : value(type::k_minkey) {}
+value::value(b_null) : value(nullptr) {}
+value::value(b_oid v) : value(v.value) {}
+value::value(b_regex v) : value(v.type_id, std::string{v.regex}, std::string{v.options}) {}
+value::value(b_symbol v) : value(v.type_id, v) {}
+value::value(b_timestamp v) : value(v.type_id, v.increment, v.timestamp) {}
+value::value(b_undefined) : value(type::k_undefined) {}
 value::value(b_utf8 v) : value(v.value) {}
+
+value::value(decimal128 v) : value(type::k_decimal128, v.high(), v.low()) {}
 
 value::value(double v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DOUBLE;
@@ -57,38 +76,24 @@ value::value(stdx::string_view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value.v_utf8.len = (uint32_t)v.size();
 }
 
-// BSONCXX_ENUM(document, 0x03)
-// BSONCXX_ENUM(array, 0x04)
-// BSONCXX_ENUM(binary, 0x05)
-value::value(b_undefined) : _impl{stdx::make_unique<impl>()} {
-    _impl->_value.value_type = BSON_TYPE_UNDEFINED;
-}
-
-value::value(b_null) : value(nullptr) {}
 value::value(nullptr_t) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_NULL;
 }
 
-value::value(b_date v) : value(v.value) {}
 value::value(std::chrono::milliseconds v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DATE_TIME;
     _impl->_value.value.v_datetime = v.count();
 }
 
-value::value(b_oid v) : value(v.value) {}
 value::value(oid v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_OID;
     std::memcpy(_impl->_value.value.v_oid.bytes, v.bytes(), v.k_oid_length);
 }
-value::value(b_bool v) : value(v.value) {}
 value::value(bool v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_BOOL;
     _impl->_value.value.v_bool = v;
 }
 
-value::value(b_timestamp v) : value(v.type_id, v.increment, v.timestamp) {}
-value::value(b_decimal128 v) : value(v.value) {}
-value::value(decimal128 v) : value(type::k_decimal128, v.high(), v.low()) {}
 value::value(const type id, uint64_t a, uint64_t b) : _impl{stdx::make_unique<impl>()} {
     if (id == type::k_decimal128) {
         _impl->_value.value_type = BSON_TYPE_DECIMAL128;
@@ -103,7 +108,6 @@ value::value(const type id, uint64_t a, uint64_t b) : _impl{stdx::make_unique<im
     }
 }
 
-value::value(b_dbpointer v) : value(v.type_id, v.collection, v.value) {}
 value::value(const type id, stdx::string_view a, oid b) : _impl{stdx::make_unique<impl>()} {
     if (id == type::k_dbpointer) {
         _impl->_value.value_type = BSON_TYPE_DBPOINTER;
@@ -115,7 +119,6 @@ value::value(const type id, stdx::string_view a, oid b) : _impl{stdx::make_uniqu
     }
 }
 
-value::value(b_codewscope v) : value(type::k_codewscope, v.code, v.scope) {}
 value::value(const type id, stdx::string_view a, bsoncxx::document::view_or_value b)
     : _impl{stdx::make_unique<impl>()} {
     if (id == type::k_codewscope) {
@@ -128,7 +131,6 @@ value::value(const type id, stdx::string_view a, bsoncxx::document::view_or_valu
             _impl->_value.value.v_codewscope.scope_data, b.view().data(), b.view().length());
     }
 }
-value::value(b_document v) : value(v.view()) {}
 value::value(bsoncxx::document::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DOCUMENT;
     _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
@@ -138,7 +140,6 @@ value::value(bsoncxx::document::view v) : _impl{stdx::make_unique<impl>()} {
 
 value::value(std::vector<unsigned char> v, binary_sub_type sub_type)
     : value(type::k_binary, sub_type, (uint32_t)v.size(), (uint8_t*)v.data()) {}
-value::value(b_binary v) : value(v.type_id, v.sub_type, v.size, v.bytes) {}
 value::value(const type id, const binary_sub_type sub_id, uint32_t size, const uint8_t* data)
     : _impl{stdx::make_unique<impl>()} {
     if (id != type::k_binary)
@@ -152,7 +153,6 @@ value::value(const type id, const binary_sub_type sub_id, uint32_t size, const u
     std::memcpy(_impl->_value.value.v_binary.data, data, size);
 }
 
-value::value(b_array v) : value(v.value) {}
 value::value(bsoncxx::array::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_ARRAY;
     _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
@@ -160,20 +160,18 @@ value::value(bsoncxx::array::view v) : _impl{stdx::make_unique<impl>()} {
     std::memcpy(_impl->_value.value.v_doc.data, v.data(), v.length());
 }
 
-value::value(b_minkey) : value(type::k_minkey) {}
-value::value(b_maxkey) : value(type::k_maxkey) {}
 value::value(const type id) : _impl{stdx::make_unique<impl>()} {
     if (id == type::k_minkey) {
         _impl->_value.value_type = BSON_TYPE_MINKEY;
     } else if (id == type::k_maxkey) {
         _impl->_value.value_type = BSON_TYPE_MAXKEY;
+    } else if (id == type::k_undefined) {
+        _impl->_value.value_type = BSON_TYPE_UNDEFINED;
     } else {
-        throw std::logic_error{"Must be min/max key"};
+        throw std::logic_error{"Must be min/max key or undefined"};
     }
 }
 
-value::value(b_symbol v) : value(v.type_id, v) {}
-value::value(b_code v) : value(v.type_id, v) {}
 value::value(const type id, stdx::string_view a, stdx::string_view b)
     : _impl{stdx::make_unique<impl>()} {
     if (id == type::k_regex) {
@@ -192,8 +190,6 @@ value::value(const type id, stdx::string_view a, stdx::string_view b)
         throw std::logic_error{"Unknown type"};
     }
 }
-
-value::value(b_regex v) : value(v.type_id, std::string{v.regex}, std::string{v.options}) {}
 
 value::~value() = default;
 

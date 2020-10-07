@@ -130,6 +130,7 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             value_construction_test(test_doc.view());
 
             coverting_construction_test(b_undefined{}, test_doc);
+            REQUIRE(value(type::k_undefined) == test_doc);
         }
 
         SECTION("oid") {
