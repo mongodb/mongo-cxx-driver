@@ -268,17 +268,6 @@ class BSONCXX_API view {
     ///
     const b_maxkey& get_maxkey() const;
 
-    // Serializer function for single member BSON type structs
-    template <typename T>
-    void to_field(T& object_field) {
-        _to_field(object_field);
-    }
-    // Serializer function for BSON type structs that have more than one member
-    template <typename T, typename U>
-    void to_fields(T& object_field1, U& object_field2) {
-        _to_fields(object_field1, object_field2);
-    }
-
    private:
     friend class document::element;
     friend class bson_value::value;
@@ -287,20 +276,6 @@ class BSONCXX_API view {
     view(void* internal_value) noexcept;
 
     void _init(void* internal_value) noexcept;
-
-    // Serializer functions
-    void _to_field(std::string& object_field) const;
-    void _to_field(int32_t& object_field) const;
-    void _to_field(int64_t& object_field) const;
-    void _to_field(decimal128& object_field) const;
-    void _to_field(double& object_field) const;
-    void _to_field(bool& object_field) const;
-
-    // Serializers for BSON types with more than one member
-    // Regex
-    void _to_fields(std::string& object_field1, std::string& object_field2) const;
-    // Timestamp
-    void _to_fields(uint32_t& object_field1, uint32_t& object_field2) const;
 
     void BSONCXX_PRIVATE destroy() noexcept;
 

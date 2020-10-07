@@ -81,12 +81,17 @@ class BSONCXX_API value {
     value(value&&) noexcept = default;
     value& operator=(value&&) noexcept = default;
 
-    // Serializer functions
+    ///
+    /// Constructor used for serialization of user objects. This uses argument-dependent lookup
+    /// to find the function declaration `void to_bson(T& t, bsoncxx::document::value doc)`.
+    ///
+    /// @param user_object
+    ///   A custom user object to serialize. This object must be default-constructible for
+    ///   deserialization.
+    ///
     template <typename T,
               typename std::enable_if<!std::is_same<T, typename array::view>::value, int>::type = 0>
-    explicit value(const T& user_object)
-        : _data(new std::uint8_t[static_cast<std::size_t>(5)],
-                [](std::uint8_t* ptr) { delete[] ptr; }) {
+    explicit value(const T& user_object) : value({}) {
         to_bson(user_object, *this);
     }
     template <typename T>
@@ -181,7 +186,13 @@ class BSONCXX_API value {
     ///
     BSONCXX_INLINE operator document::view() const noexcept;
 
-    // Function to help with serialization
+    ///
+    /// Constructs an object of type T from this document object. This method uses
+    /// argument-dependent lookup to find the function declaration
+    /// `void from_bson(T& t, const bsoncxx::document::view& doc)`.
+    ///
+    /// @note The class being deserialized into must be default-constructible.
+    ///
     template <typename T>
     T get() {
         T temp_object{};
