@@ -19,7 +19,6 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types/bson_value/private/value.hh>
 #include <bsoncxx/types/private/convert.hh>
-#include <iostream>
 
 #include <bsoncxx/config/private/prelude.hh>
 
