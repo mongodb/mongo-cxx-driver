@@ -123,12 +123,12 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         }
 
         SECTION("oid") {
-            oid _id{"0123456789abcdefABCDEFFF"};
-            auto test_doc = bson_value::make_value(b_oid{_id});
+            oid id{"0123456789abcdefABCDEFFF"};
+            auto test_doc = bson_value::make_value(b_oid{id});
             value_construction_test(test_doc.view());
 
-            coverting_construction_test(_id, test_doc);
-            coverting_construction_test(b_oid{_id}, test_doc);
+            coverting_construction_test(id, test_doc);
+            coverting_construction_test(b_oid{id}, test_doc);
         }
 
         SECTION("decimal128") {
@@ -179,12 +179,14 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         }
 
         SECTION("dbpointer") {
-            oid _id{"507f1f77bcf86cd799439011"};
-            auto test_doc = bson_value::make_value(b_dbpointer{"collection", oid{_id}});
+            oid id{"0123456789abcdefABCDEFFF"};
+            auto coll_name = "collection";
+
+            auto test_doc = bson_value::make_value(b_dbpointer{coll_name, id});
             value_construction_test(test_doc.view());
 
-            coverting_construction_test(b_dbpointer{"collection", oid{_id}}, test_doc);
-            REQUIRE(value(type::k_dbpointer, "collection", oid{_id}) == test_doc);
+            coverting_construction_test(b_dbpointer{coll_name, id}, test_doc);
+            REQUIRE(value(type::k_dbpointer, coll_name, id) == test_doc);
 
             auto empty_oid = oid{};
             auto empty_collection = bson_value::make_value(b_dbpointer{"", empty_oid});
@@ -195,10 +197,12 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         }
 
         SECTION("code") {
-            auto test_doc = bson_value::make_value(b_code{"look at me I'm some JS code"});
+            auto code = "look at me I'm some JS code";
+            auto test_doc = bson_value::make_value(b_code{code});
             value_construction_test(test_doc.view());
-            coverting_construction_test(b_code{"look at me I'm some JS code"}, test_doc);
-            REQUIRE(value(type::k_code, "look at me I'm some JS code") == test_doc);
+
+            coverting_construction_test(b_code{code}, test_doc);
+            REQUIRE(value(type::k_code, code) == test_doc);
 
             auto empty_code = bson_value::make_value(b_code{""});
             value_construction_test(empty_code.view());
@@ -207,13 +211,12 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
 
         SECTION("codewscope") {
             auto doc = make_document(kvp("a", "b"));
-            auto test_doc =
-                bson_value::make_value(b_codewscope{"it's me, Code with Scope", doc.view()});
-            value_construction_test(test_doc.view());
+            auto code = "it's me, Code with Scope";
+            auto test_doc = bson_value::make_value(b_codewscope{code, doc.view()});
 
-            coverting_construction_test(b_codewscope{"it's me, Code with Scope", doc.view()},
-                                        test_doc);
-            REQUIRE(value(type::k_codewscope, "it's me, Code with Scope", doc.view()) == test_doc);
+            value_construction_test(test_doc.view());
+            coverting_construction_test(b_codewscope{code, doc.view()}, test_doc);
+            REQUIRE(value(type::k_codewscope, code, doc.view()) == test_doc);
 
             auto empty_doc = make_document(kvp("a", ""));
             auto empty_code = bson_value::make_value(b_codewscope{"", empty_doc.view()});
