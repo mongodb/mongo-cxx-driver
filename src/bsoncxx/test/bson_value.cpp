@@ -123,7 +123,7 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         }
 
         SECTION("oid") {
-            oid _id{"507f1f77bcf86cd799439011"};
+            oid _id{"0123456789abcdefABCDEFFF"};
             auto test_doc = bson_value::make_value(b_oid{_id});
             value_construction_test(test_doc.view());
 
