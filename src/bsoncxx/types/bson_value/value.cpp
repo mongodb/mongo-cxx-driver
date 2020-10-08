@@ -86,7 +86,7 @@ value::value(stdx::string_view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value.v_utf8.len = (uint32_t)v.size();
 }
 
-value::value(nullptr_t) : _impl{stdx::make_unique<impl>()} {
+value::value(std::nullptr_t) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_NULL;
 }
 
