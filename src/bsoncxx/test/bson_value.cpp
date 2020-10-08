@@ -79,15 +79,12 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
 
             auto test_empty = bson_value::make_value("");
             value_construction_test(test_empty.view());
-
             coverting_construction_test("", test_empty);
-            coverting_construction_test(b_utf8{""}, test_empty);
 
-            auto test_nulls = bson_value::make_value("a\0\0\0");
+            auto nulls = "a\0\0\0";
+            auto test_nulls = bson_value::make_value(nulls);
             value_construction_test(test_nulls.view());
-
-            coverting_construction_test("a\0\0\0", test_nulls);
-            coverting_construction_test(b_utf8{"a\0\0\0"}, test_nulls);
+            coverting_construction_test(nulls, test_nulls);
         }
 
         SECTION("double") {
