@@ -52,6 +52,38 @@ value::value(b_utf8 v) : value(v.value) {}
 
 value::value(decimal128 v) : value(type::k_decimal128, v.high(), v.low()) {}
 
+template <typename T, typename... Targs>
+value::value(type id, T value, Targs... Fargs) {
+    std::cout << "REACHED" << std::endl;
+}
+value::value(const type id) : _impl{stdx::make_unique<impl>()} {
+    if (id == type::k_minkey) {
+        _impl->_value.value_type = BSON_TYPE_MINKEY;
+    } else if (id == type::k_maxkey) {
+        _impl->_value.value_type = BSON_TYPE_MAXKEY;
+    } else if (id == type::k_undefined) {
+        _impl->_value.value_type = BSON_TYPE_UNDEFINED;
+    } else {
+        throw std::logic_error{"Must be min/max key or undefined"};
+    }
+}
+
+template value::value<int, int>(type, int, int);
+template value::value<int, int>(type, int, int);
+template value::value<uint32_t, uint32_t>(type, uint32_t, uint32_t);
+template value::value<uint64_t, uint64_t>(type, uint64_t, uint64_t);
+
+template value::value<stdx::string_view, stdx::string_view>(type,
+                                                            stdx::string_view,
+                                                            stdx::string_view);
+template value::value<stdx::string_view, oid>(type, stdx::string_view, oid);
+template value::value<stdx::string_view, document::view>(type, stdx::string_view, document::view);
+
+template value::value<const char*, const char*>(type, const char*, const char*);
+template value::value<const char*, oid>(type, const char*, oid);
+template value::value<const char*, document::view>(type, const char*, document::view);
+template value::value<const char*>(type, const char*);
+
 value::value(double v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DOUBLE;
     _impl->_value.value.v_double = v;
@@ -94,43 +126,75 @@ value::value(bool v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value.v_bool = v;
 }
 
-value::value(const type id, uint64_t a, uint64_t b) : _impl{stdx::make_unique<impl>()} {
-    if (id == type::k_decimal128) {
-        _impl->_value.value_type = BSON_TYPE_DECIMAL128;
-        _impl->_value.value.v_decimal128.high = a;
-        _impl->_value.value.v_decimal128.low = b;
-    } else if (id == type::k_timestamp) {
-        _impl->_value.value_type = BSON_TYPE_TIMESTAMP;
-        _impl->_value.value.v_timestamp.increment = (uint32_t)a;
-        _impl->_value.value.v_timestamp.timestamp = (uint32_t)b;
-    } else {
-        throw std::logic_error{"Not decimal128 or timestamp"};
-    }
-}
+// value::value(const type id, stdx::string_view a, stdx::string_view b)
+//     : _impl{stdx::make_unique<impl>()} {
+//     if (id == type::k_regex) {
+//         _impl->_value.value_type = BSON_TYPE_REGEX;
+//         _impl->_value.value.v_regex.regex = make_copy_for_libbson(a);
+//         _impl->_value.value.v_regex.options = make_copy_for_libbson(b);
+//     } else if (id == type::k_code) {
+//         _impl->_value.value_type = BSON_TYPE_CODE;
+//         _impl->_value.value.v_code.code = make_copy_for_libbson(a);
+//         _impl->_value.value.v_code.code_len = (uint32_t)a.length();
+//     } else if (id == type::k_symbol) {
+//         _impl->_value.value_type = BSON_TYPE_SYMBOL;
+//         _impl->_value.value.v_symbol.symbol = make_copy_for_libbson(a);
+//         _impl->_value.value.v_symbol.len = (uint32_t)a.length();
+//     } else {
+//         throw std::logic_error{"Unknown type"};
+//     }
+// }
 
-value::value(const type id, stdx::string_view a, oid b) : _impl{stdx::make_unique<impl>()} {
-    if (id == type::k_dbpointer) {
-        _impl->_value.value_type = BSON_TYPE_DBPOINTER;
-        _impl->_value.value.v_dbpointer.collection = make_copy_for_libbson(a);
-        _impl->_value.value.v_dbpointer.collection_len = (uint32_t)a.length();
-        std::memcpy(_impl->_value.value.v_dbpointer.oid.bytes, b.bytes(), b.k_oid_length);
-    } else {
-        throw std::logic_error{"Not dbpointer"};
-    }
-}
+// value::value(type id, uint64_t a, uint64_t b) : _impl{stdx::make_unique<impl>()} {
+//    if (id == type::k_decimal128) {
+//        _impl->_value.value_type = BSON_TYPE_DECIMAL128;
+//        _impl->_value.value.v_decimal128.high = a;
+//        _impl->_value.value.v_decimal128.low = b;
+//    } else if (id == type::k_timestamp) {
+//        _impl->_value.value_type = BSON_TYPE_TIMESTAMP;
+//        _impl->_value.value.v_timestamp.increment = (uint32_t)a;
+//        _impl->_value.value.v_timestamp.timestamp = (uint32_t)b;
+//    } else {
+//        throw std::logic_error{"Not decimal128 or timestamp"};
+//    }
+//}
+//
+// value::value(const type id, stdx::string_view a, oid b) : _impl{stdx::make_unique<impl>()} {
+//    if (id == type::k_dbpointer) {
+//        _impl->_value.value_type = BSON_TYPE_DBPOINTER;
+//        _impl->_value.value.v_dbpointer.collection = make_copy_for_libbson(a);
+//        _impl->_value.value.v_dbpointer.collection_len = (uint32_t)a.length();
+//        std::memcpy(_impl->_value.value.v_dbpointer.oid.bytes, b.bytes(), b.k_oid_length);
+//    } else {
+//        throw std::logic_error{"Not dbpointer"};
+//    }
+//}
+//
+// value::value(const type id, stdx::string_view a, bsoncxx::document::view_or_value b)
+//    : _impl{stdx::make_unique<impl>()} {
+//    if (id == type::k_codewscope) {
+//        _impl->_value.value_type = BSON_TYPE_CODEWSCOPE;
+//        _impl->_value.value.v_codewscope.code = make_copy_for_libbson(a);
+//        _impl->_value.value.v_codewscope.code_len = (uint32_t)a.length();
+//        _impl->_value.value.v_codewscope.scope_len = (uint32_t)b.view().length();
+//        _impl->_value.value.v_codewscope.scope_data = (uint8_t*)bson_malloc0(b.view().length());
+//        std::memcpy(
+//            _impl->_value.value.v_codewscope.scope_data, b.view().data(), b.view().length());
+//    }
+//}
+// value::value(const type id, const binary_sub_type sub_id, uint32_t size, const uint8_t* data)
+//     : _impl{stdx::make_unique<impl>()} {
+//     if (id != type::k_binary)
+//         throw std::logic_error{"Not binary"};
+//
+//     _impl->_value.value_type = BSON_TYPE_BINARY;
+//
+//     _impl->_value.value.v_binary.subtype = static_cast<bson_subtype_t>(sub_id);
+//     _impl->_value.value.v_binary.data_len = size;
+//     _impl->_value.value.v_binary.data = (uint8_t*)bson_malloc(size);
+//     std::memcpy(_impl->_value.value.v_binary.data, data, size);
+// }
 
-value::value(const type id, stdx::string_view a, bsoncxx::document::view_or_value b)
-    : _impl{stdx::make_unique<impl>()} {
-    if (id == type::k_codewscope) {
-        _impl->_value.value_type = BSON_TYPE_CODEWSCOPE;
-        _impl->_value.value.v_codewscope.code = make_copy_for_libbson(a);
-        _impl->_value.value.v_codewscope.code_len = (uint32_t)a.length();
-        _impl->_value.value.v_codewscope.scope_len = (uint32_t)b.view().length();
-        _impl->_value.value.v_codewscope.scope_data = (uint8_t*)bson_malloc0(b.view().length());
-        std::memcpy(
-            _impl->_value.value.v_codewscope.scope_data, b.view().data(), b.view().length());
-    }
-}
 value::value(bsoncxx::document::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DOCUMENT;
     _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
@@ -140,55 +204,11 @@ value::value(bsoncxx::document::view v) : _impl{stdx::make_unique<impl>()} {
 
 value::value(std::vector<unsigned char> v, binary_sub_type sub_type)
     : value(type::k_binary, sub_type, (uint32_t)v.size(), (uint8_t*)v.data()) {}
-value::value(const type id, const binary_sub_type sub_id, uint32_t size, const uint8_t* data)
-    : _impl{stdx::make_unique<impl>()} {
-    if (id != type::k_binary)
-        throw std::logic_error{"Not binary"};
-
-    _impl->_value.value_type = BSON_TYPE_BINARY;
-
-    _impl->_value.value.v_binary.subtype = static_cast<bson_subtype_t>(sub_id);
-    _impl->_value.value.v_binary.data_len = size;
-    _impl->_value.value.v_binary.data = (uint8_t*)bson_malloc(size);
-    std::memcpy(_impl->_value.value.v_binary.data, data, size);
-}
-
 value::value(bsoncxx::array::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_ARRAY;
     _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
     _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc0(v.length());
     std::memcpy(_impl->_value.value.v_doc.data, v.data(), v.length());
-}
-
-value::value(const type id) : _impl{stdx::make_unique<impl>()} {
-    if (id == type::k_minkey) {
-        _impl->_value.value_type = BSON_TYPE_MINKEY;
-    } else if (id == type::k_maxkey) {
-        _impl->_value.value_type = BSON_TYPE_MAXKEY;
-    } else if (id == type::k_undefined) {
-        _impl->_value.value_type = BSON_TYPE_UNDEFINED;
-    } else {
-        throw std::logic_error{"Must be min/max key or undefined"};
-    }
-}
-
-value::value(const type id, stdx::string_view a, stdx::string_view b)
-    : _impl{stdx::make_unique<impl>()} {
-    if (id == type::k_regex) {
-        _impl->_value.value_type = BSON_TYPE_REGEX;
-        _impl->_value.value.v_regex.regex = make_copy_for_libbson(a);
-        _impl->_value.value.v_regex.options = make_copy_for_libbson(b);
-    } else if (id == type::k_code) {
-        _impl->_value.value_type = BSON_TYPE_CODE;
-        _impl->_value.value.v_code.code = make_copy_for_libbson(a);
-        _impl->_value.value.v_code.code_len = (uint32_t)a.length();
-    } else if (id == type::k_symbol) {
-        _impl->_value.value_type = BSON_TYPE_SYMBOL;
-        _impl->_value.value.v_symbol.symbol = make_copy_for_libbson(a);
-        _impl->_value.value.v_symbol.len = (uint32_t)a.length();
-    } else {
-        throw std::logic_error{"Unknown type"};
-    }
 }
 
 value::~value() = default;

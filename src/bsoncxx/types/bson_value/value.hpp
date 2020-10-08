@@ -14,11 +14,13 @@
 
 #pragma once
 
+#include <iostream>
 #include <memory>
 #include <vector>
 
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
@@ -62,11 +64,15 @@ class BSONCXX_API value {
     value(std::vector<unsigned char> v, binary_sub_type sub_type = {});
 
     value(const type id);
-    value(const type id, uint64_t a, uint64_t b);
-    value(const type id, stdx::string_view a, stdx::string_view b = {});
-    value(const type id, stdx::string_view a, oid b);
-    value(const type id, stdx::string_view a, bsoncxx::document::view_or_value b);
-    value(const type id, const binary_sub_type sub_id, uint32_t size, const uint8_t* data);
+
+    template <typename T, typename... Targs>
+    value(type id, T value, Targs... Fargs);
+
+    // value(type id, uint64_t a, uint64_t b);
+    // value(const type id, stdx::string_view a, stdx::string_view b = {});
+    // value(const type id, stdx::string_view a, oid b);
+    // value(const type id, stdx::string_view a, bsoncxx::document::view_or_value b);
+    // value(const type id, const binary_sub_type sub_id, uint32_t size, const uint8_t* data);
 
     ~value();
 
