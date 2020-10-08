@@ -132,12 +132,15 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         }
 
         SECTION("decimal128") {
-            auto test_doc = bson_value::make_value(b_decimal128{decimal128{5, 4}});
+            uint64_t high = std::numeric_limits<uint64_t>::max();
+            uint64_t low = std::numeric_limits<uint64_t>::min();
+
+            auto test_doc = bson_value::make_value(b_decimal128{decimal128{high, low}});
             value_construction_test(test_doc.view());
 
-            coverting_construction_test(decimal128{5, 4}, test_doc);
-            coverting_construction_test(b_decimal128{decimal128{5, 4}}, test_doc);
-            REQUIRE(value(type::k_decimal128, 5, 4) == test_doc);
+            coverting_construction_test(decimal128{high, low}, test_doc);
+            coverting_construction_test(b_decimal128{decimal128{high, low}}, test_doc);
+            REQUIRE(value(type::k_decimal128, high, low) == test_doc);
         }
 
         SECTION("date") {
