@@ -160,12 +160,15 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         }
 
         SECTION("regex") {
+            auto regex = "amy";
             /* options are sorted and any duplicate or invalid options are removed */
-            auto test_doc = bson_value::make_value(b_regex{"amy", "imsx"});
+            auto options = "imsx";
+
+            auto test_doc = bson_value::make_value(b_regex{regex, options});
             value_construction_test(test_doc.view());
 
-            coverting_construction_test(b_regex{"amy", "imsx"}, test_doc);
-            REQUIRE(value(type::k_regex, "amy", "imsx") == test_doc);
+            coverting_construction_test(b_regex{regex, options}, test_doc);
+            REQUIRE(value(type::k_regex, regex, options) == test_doc);
 
             auto empty_regex = bson_value::make_value(b_regex{"", ""});
             value_construction_test(empty_regex.view());
