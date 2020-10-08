@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <memory>
 
+#include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/view.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
@@ -85,18 +86,17 @@ class BSONCXX_API value {
     /// Constructor used for serialization of user objects. This uses argument-dependent lookup
     /// to find the function declaration `void to_bson(T& t, bsoncxx::document::value doc)`.
     ///
-    /// @param user_object
-    ///   A custom user object to serialize. This object must be default-constructible for
-    ///   deserialization.
+    /// @param t
+    ///   A user-defined object to serialize into a BSON object.
     ///
     template <typename T,
               typename std::enable_if<!std::is_same<T, typename array::view>::value, int>::type = 0>
-    explicit value(const T& user_object) : value({}) {
-        to_bson(user_object, *this);
+    explicit value(const T& t) : value({}) {
+        to_bson(t, *this);
     }
     template <typename T>
-    value& operator=(const T& user_object) {
-        *this = value{user_object};
+    value& operator=(const T& t) {
+        *this = value{t};
         return *this;
     }
 
@@ -191,13 +191,14 @@ class BSONCXX_API value {
     /// argument-dependent lookup to find the function declaration
     /// `void from_bson(T& t, const bsoncxx::document::view& doc)`.
     ///
-    /// @note The class being deserialized into must be default-constructible.
+    /// @param t
+    ///   An optional partially constructed object. If no argument is passed, the function will
+    ///   create an object with its default constructor.
     ///
     template <typename T>
-    T get() {
-        T temp_object{};
-        from_bson(temp_object, this->view());
-        return temp_object;
+    T get(T t = {}) {
+        from_bson(t, this->view());
+        return t;
     }
 
     ///

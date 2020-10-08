@@ -14,7 +14,6 @@
 
 #include <string>
 
-#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/string/to_string.hpp>
@@ -29,14 +28,19 @@ using builder::basic::make_document;
 using string::to_string;
 
 namespace test {
-
 struct Person {
     std::string first_name;
     std::string last_name;
     int age;
+
+    bool operator==(const Person& rhs) const {
+        return (first_name == rhs.first_name) && (last_name == rhs.last_name) && (age == rhs.age);
+    }
+    bool operator!=(const Person& rhs) const {
+        return !(operator==(rhs));
+    }
 };
 
-// to_bson serializer function that can take a document::value&
 void to_bson(const Person& person, bsoncxx::document::value& bson_object) {
     bson_object = make_document(kvp("first_name", person.first_name),
                                 kvp("last_name", person.last_name),
@@ -59,27 +63,22 @@ TEST_CASE("Convert between Person struct and BSON object") {
         make_document(kvp("first_name", expected_person.first_name),
                       kvp("last_name", expected_person.last_name),
                       kvp("age", expected_person.age));
-    auto expected_view = expected_doc.view();
-
-    SECTION("Conversion from BSON object to Person struct works") {
-        // BSON object -> Person
-        test::Person test_person = expected_doc.get<test::Person>();
-
-        REQUIRE(test_person.first_name == expected_person.first_name);
-        REQUIRE(test_person.last_name == expected_person.last_name);
-        REQUIRE(test_person.age == expected_person.age);
-    }
 
     SECTION("Conversion from Person struct to document::value works") {
-        // Person -> BSON object
         bsoncxx::document::value test_value{expected_person};
-        auto test_view = test_value.view();
+        REQUIRE(test_value.view() == expected_doc.view());
+    }
 
-        REQUIRE(to_string(test_view["first_name"].get_string().value) ==
-                expected_person.first_name);
-        REQUIRE(to_string(test_view["last_name"].get_string().value) == expected_person.last_name);
-        REQUIRE(test_view["age"].get_int32() == expected_person.age);
-        REQUIRE(test_view == expected_view);
+    SECTION("Conversion from BSON object to Person struct works") {
+        test::Person test_person = expected_doc.get<test::Person>();
+        REQUIRE(test_person == expected_person);
+    }
+
+    SECTION("Conversion from BSON object to Person using partially constructed object") {
+        test::Person x;
+        test::Person y = expected_doc.get(x);
+        REQUIRE(y != x);
+        REQUIRE(y == expected_person);
     }
 }
 }  // namespace
