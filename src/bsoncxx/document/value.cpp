@@ -48,9 +48,41 @@ value& value::operator=(const value& rhs) {
     return *this;
 }
 
+view::const_iterator value::cbegin() const {
+    return this->view().cbegin();
+}
+
+view::const_iterator value::cend() const {
+    return this->view().cend();
+}
+
+view::const_iterator value::begin() const {
+    return this->view().begin();
+}
+
+view::const_iterator value::end() const {
+    return this->view().end();
+}
+
+view::const_iterator value::find(stdx::string_view key) const {
+    return this->view().find(key);
+}
+
 element value::operator[](stdx::string_view key) const {
     auto view = this->view();
     return view[key];
+}
+
+const std::uint8_t* value::data() const {
+    return static_cast<uint8_t*>(_data.get());
+}
+
+std::size_t value::length() const {
+    return _length;
+}
+
+bool value::empty() const {
+    return _length == 5;
 }
 
 value::unique_ptr_type value::release() {

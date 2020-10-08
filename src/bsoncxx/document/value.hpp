@@ -77,6 +77,43 @@ class BSONCXX_API value {
     value& operator=(value&&) noexcept = default;
 
     ///
+    /// @returns A const_iterator to the first element of the document.
+    ///
+    view::const_iterator cbegin() const;
+
+    ///
+    /// @returns A const_iterator to the past-the-end element of the document.
+    ///
+    view::const_iterator cend() const;
+
+    ///
+    /// @returns A const_iterator to the first element of the document.
+    ///
+    view::const_iterator begin() const;
+
+    ///
+    /// @returns A const_iterator to the past-the-end element of the document.
+    ///
+    view::const_iterator end() const;
+
+    ///
+    /// Finds the first element of the document with the provided key. If there is
+    /// no such element, the past-the-end iterator will be returned. The runtime of
+    /// find() is linear in the length of the document. This method only searches
+    /// the top-level document, and will not recurse to any subdocuments.
+    ///
+    /// @remark In BSON, keys are not required to be unique. If there are multiple
+    /// elements with a matching key in the document, the first matching element from
+    /// the start will be returned.
+    ///
+    /// @param key
+    ///   The key to search for.
+    ///
+    /// @return An iterator to the matching element, if found, or the past-the-end iterator.
+    ///
+    view::const_iterator find(stdx::string_view key) const;
+
+    ///
     /// Finds the first element of the document with the provided key. If there is no
     /// such element, the invalid document::element will be returned. The runtime of operator[]
     /// is linear in the length of the document.
@@ -87,6 +124,31 @@ class BSONCXX_API value {
     /// @return The matching element, if found, or the invalid element.
     ///
     element operator[](stdx::string_view key) const;
+
+    ///
+    /// Access the raw bytes of the underlying document.
+    ///
+    /// @return A (non-owning) pointer to the view's buffer.
+    ///
+    const std::uint8_t* data() const;
+
+    ///
+    /// Gets the length of the underlying buffer.
+    ///
+    /// @remark This is not the number of elements in the document.
+    /// To compute the number of elements, use std::distance.
+    ///
+    /// @return The length of the document, in bytes.
+    ///
+    std::size_t length() const;
+
+    ///
+    /// Checks if the underlying document is empty, i.e. it is equivalent to
+    /// the trivial document '{}'.
+    ///
+    /// @return true if the underlying document is empty.
+    ///
+    bool empty() const;
 
     ///
     /// Get a view over the document owned by this value.
