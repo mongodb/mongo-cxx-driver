@@ -63,6 +63,7 @@ value::value(const type id) : _impl{stdx::make_unique<impl>()} {
         throw std::logic_error{"Must be min/max key or undefined"};
     }
 }
+
 value::value(double v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DOUBLE;
     _impl->_value.value.v_double = v;
@@ -78,7 +79,6 @@ value::value(int64_t v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value.v_int64 = v;
 }
 
-// TODO: enable_if T in T* decays to char
 value::value(const char* v) : value(stdx::string_view{v}) {}
 value::value(std::string v) : value(stdx::string_view{v}) {}
 value::value(stdx::string_view v) : _impl{stdx::make_unique<impl>()} {
@@ -162,6 +162,7 @@ value::value(const type id, stdx::string_view a, bsoncxx::document::view_or_valu
             _impl->_value.value.v_codewscope.scope_data, b.view().data(), b.view().length());
     }
 }
+
 value::value(const type id, const binary_sub_type sub_id, uint32_t size, const uint8_t* data)
     : _impl{stdx::make_unique<impl>()} {
     if (id != type::k_binary)
