@@ -79,22 +79,22 @@ class BSONCXX_API value {
     ///
     /// @returns A const_iterator to the first element of the document.
     ///
-    view::const_iterator cbegin() const;
+    document::view::const_iterator cbegin() const;
 
     ///
     /// @returns A const_iterator to the past-the-end element of the document.
     ///
-    view::const_iterator cend() const;
+    document::view::const_iterator cend() const;
 
     ///
     /// @returns A const_iterator to the first element of the document.
     ///
-    view::const_iterator begin() const;
+    document::view::const_iterator begin() const;
 
     ///
     /// @returns A const_iterator to the past-the-end element of the document.
     ///
-    view::const_iterator end() const;
+    document::view::const_iterator end() const;
 
     ///
     /// Finds the first element of the document with the provided key. If there is
@@ -111,7 +111,7 @@ class BSONCXX_API value {
     ///
     /// @return An iterator to the matching element, if found, or the past-the-end iterator.
     ///
-    view::const_iterator find(stdx::string_view key) const;
+    document::view::const_iterator find(stdx::string_view key) const;
 
     ///
     /// Finds the first element of the document with the provided key. If there is no

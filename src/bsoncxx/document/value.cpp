@@ -48,23 +48,23 @@ value& value::operator=(const value& rhs) {
     return *this;
 }
 
-view::const_iterator value::cbegin() const {
+document::view::const_iterator value::cbegin() const {
     return this->view().cbegin();
 }
 
-view::const_iterator value::cend() const {
+document::view::const_iterator value::cend() const {
     return this->view().cend();
 }
 
-view::const_iterator value::begin() const {
+document::view::const_iterator value::begin() const {
     return this->view().begin();
 }
 
-view::const_iterator value::end() const {
+document::view::const_iterator value::end() const {
     return this->view().end();
 }
 
-view::const_iterator value::find(stdx::string_view key) const {
+document::view::const_iterator value::find(stdx::string_view key) const {
     return this->view().find(key);
 }
 
