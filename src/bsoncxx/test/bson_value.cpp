@@ -248,20 +248,21 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
                 b_binary{binary_sub_type::k_binary, (uint32_t)bin.size(), bin.data()});
             value_construction_test(test_doc.view());
 
+            coverting_construction_test(bin, test_doc);
             REQUIRE(value(b_binary{binary_sub_type::k_binary, (uint32_t)bin.size(), bin.data()}) ==
                     test_doc);
-            coverting_construction_test(bin, test_doc);
 
             auto empty = bson_value::make_value(b_binary{});
             coverting_construction_test(std::vector<unsigned char>{}, empty);
         }
 
         SECTION("symbol") {
-            auto test_doc = bson_value::make_value(b_symbol{"some symbol"});
+            auto symbol = "some symbol";
+            auto test_doc = bson_value::make_value(b_symbol{symbol});
             value_construction_test(test_doc.view());
 
-            coverting_construction_test(b_symbol{"some symbol"}, test_doc);
-            REQUIRE(value(type::k_symbol, "some symbol") == test_doc);
+            coverting_construction_test(b_symbol{symbol}, test_doc);
+            REQUIRE(value(type::k_symbol, symbol) == test_doc);
 
             auto empty_symbol = bson_value::make_value(b_symbol{""});
             value_construction_test(empty_symbol.view());
