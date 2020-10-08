@@ -21,7 +21,6 @@
 #include <bsoncxx/types/bson_value/make_value.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
-#include <iostream>
 #include <vector>
 
 namespace {
@@ -58,16 +57,7 @@ void coverting_construction_test(T actual, U expected) {
 }  // namespace
 
 TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
-    auto doc_value = make_document(kvp("hello", "world"));
-    auto doc2_value = make_document(kvp("a", 1));
-
-    auto doc = doc_value.view();
-    auto doc2 = doc2_value.view();
-
-    auto elem = doc["hello"];
-    auto elem2 = doc2["a"];
-
-    SECTION("can be constructed from a bson_value::view") {
+    SECTION("can be constructed from") {
         SECTION("bool") {
             auto test_doc = bson_value::make_value(b_bool{true});
             value_construction_test(test_doc.view());
@@ -77,13 +67,15 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         }
 
         SECTION("utf8") {
-            auto test_doc = bson_value::make_value("super duper");
+            std::string value = "super duper";
+
+            auto test_doc = bson_value::make_value(value);
             value_construction_test(test_doc.view());
 
-            coverting_construction_test("super duper", test_doc);
-            coverting_construction_test(b_utf8{"super duper"}, test_doc);
-            coverting_construction_test(stdx::string_view{"super duper"}, test_doc);
-            coverting_construction_test(std::string{"super duper"}, test_doc);
+            coverting_construction_test(value, test_doc);
+            coverting_construction_test(value.c_str(), test_doc);
+            coverting_construction_test(b_utf8{value}, test_doc);
+            coverting_construction_test(stdx::string_view{value}, test_doc);
 
             auto test_empty = bson_value::make_value("");
             value_construction_test(test_empty.view());
@@ -313,6 +305,15 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
     }
 
     SECTION("can be constructed by a document::element") {
+        auto doc_value = make_document(kvp("hello", "world"));
+        auto doc2_value = make_document(kvp("a", 1));
+
+        auto doc = doc_value.view();
+        auto doc2 = doc2_value.view();
+
+        auto elem = doc["hello"];
+        auto elem2 = doc2["a"];
+
         bson_value::value value = elem.get_owning_value();
 
         SECTION("can create new views") {

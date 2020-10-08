@@ -65,14 +65,11 @@ class BSONCXX_API value {
 
     value(const type id);
 
-    template <typename T, typename... Targs>
-    value(type id, T value, Targs... Fargs);
-
-    // value(type id, uint64_t a, uint64_t b);
-    // value(const type id, stdx::string_view a, stdx::string_view b = {});
-    // value(const type id, stdx::string_view a, oid b);
-    // value(const type id, stdx::string_view a, bsoncxx::document::view_or_value b);
-    // value(const type id, const binary_sub_type sub_id, uint32_t size, const uint8_t* data);
+    value(const type id, uint64_t a, uint64_t b);
+    value(const type id, stdx::string_view a, stdx::string_view b = {});
+    value(const type id, stdx::string_view a, oid b);
+    value(const type id, stdx::string_view a, bsoncxx::document::view_or_value b);
+    value(const type id, const binary_sub_type sub_id, uint32_t size, const uint8_t* data);
 
     ~value();
 
