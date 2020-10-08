@@ -271,11 +271,14 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         }
 
         SECTION("timestamp") {
-            auto test_doc = bson_value::make_value(b_timestamp{5, 4});
+            uint32_t inc = std::numeric_limits<uint32_t>::max();
+            uint32_t time = std::numeric_limits<uint32_t>::max() - 1;
+
+            auto test_doc = bson_value::make_value(b_timestamp{inc, time});
             value_construction_test(test_doc.view());
 
-            coverting_construction_test(b_timestamp{5, 4}, test_doc);
-            REQUIRE(value(type::k_timestamp, 5, 4) == test_doc);
+            coverting_construction_test(b_timestamp{inc, time}, test_doc);
+            REQUIRE(value(type::k_timestamp, inc, time) == test_doc);
         }
 
         SECTION("document") {
