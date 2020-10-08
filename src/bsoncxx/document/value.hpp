@@ -24,11 +24,6 @@
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
-
-namespace array {
-class view;
-}
-
 namespace document {
 
 ///
