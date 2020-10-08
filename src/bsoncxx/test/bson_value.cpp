@@ -289,12 +289,11 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             coverting_construction_test(b_document{doc.view()}, test_doc);
             REQUIRE(value(doc.view()) == test_doc);
 
-            // Empty document
-            test_doc = bson_value::make_value(document::view{});
-            value_construction_test(test_doc.view());
+            auto empty_doc = bson_value::make_value(document::view{});
+            value_construction_test(empty_doc.view());
 
-            coverting_construction_test(b_document{}, test_doc);
-            coverting_construction_test(document::view{}, test_doc);
+            coverting_construction_test(b_document{}, empty_doc);
+            coverting_construction_test(document::view{}, empty_doc);
         }
 
         SECTION("array") {
