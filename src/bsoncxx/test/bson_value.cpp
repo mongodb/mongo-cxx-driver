@@ -304,12 +304,11 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             coverting_construction_test(b_array{arr.view()}, test_doc);
             coverting_construction_test(arr.view(), test_doc);
 
-            // Empty array
-            test_doc = bson_value::make_value(array::view{});
-            value_construction_test(test_doc.view());
+            auto empty_doc = bson_value::make_value(array::view{});
+            value_construction_test(empty_doc.view());
 
-            coverting_construction_test(b_array{}, test_doc);
-            coverting_construction_test(array::view{}, test_doc);
+            coverting_construction_test(b_array{}, empty_doc);
+            coverting_construction_test(array::view{}, empty_doc);
         }
     }
 
