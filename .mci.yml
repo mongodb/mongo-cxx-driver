@@ -198,8 +198,7 @@ functions:
             set -o errexit
             set -o xtrace
             set -o pipefail
-            sudo apt-get install -y clang-tidy
-            python etc/run-clang-tidy.py -p build
+            .etc/run-clang-tidy.sh
 
     "compile":
         - command: shell.exec
@@ -746,7 +745,6 @@ buildvariants:
             distros:
             - ubuntu1804-build
           - name: uninstall_check
-          - name: clang-tidy
 
     - name: ubuntu1604-debug-std-experimental
       display_name: "Ubuntu 16.04 Debug (std::experimental) (MongoDB Latest)"
@@ -763,6 +761,7 @@ buildvariants:
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
+          - name: clang-tidy
 
     - name: ubuntu1604-debug-valgrind
       display_name: "Valgrind Ubuntu 16.04 Debug (MongoDB Latest)"
