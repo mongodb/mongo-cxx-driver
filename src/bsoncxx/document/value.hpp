@@ -186,14 +186,27 @@ class BSONCXX_API value {
     /// argument-dependent lookup to find the function declaration
     /// `void from_bson(T& t, const bsoncxx::document::view& doc)`.
     ///
-    /// @param t
-    ///   An optional partially constructed object. If no argument is passed, the function will
-    ///   create an object with its default constructor.
+    /// @note Type T must be default-constructible. Otherwise, use `void get(T& t)`.
     ///
     template <typename T>
-    T get(T t = {}) {
+    T get() {
+        T temp{};
+        from_bson(temp, this->view());
+        return temp;
+    }
+
+    ///
+    /// Constructs an object of type T from this document object. This method uses
+    /// argument-dependent lookup to find the function declaration
+    /// `void from_bson(T& t, const bsoncxx::document::view& doc)`.
+    ///
+    /// @param t
+    ///   A partially constructed object. The contents of the document object will be deserialized
+    ///   into t.
+    ///
+    template <typename T>
+    void get(T& t) {
         from_bson(t, this->view());
-        return t;
     }
 
     ///

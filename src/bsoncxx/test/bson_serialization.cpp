@@ -75,10 +75,18 @@ TEST_CASE("Convert between Person struct and BSON object") {
     }
 
     SECTION("Conversion from BSON object to Person using partially constructed object") {
-        test::Person x;
-        test::Person y = expected_doc.get(x);
-        REQUIRE(y != x);
-        REQUIRE(y == expected_person);
+        test::Person other_person{"Test", "Person", 99};
+        document::value other_doc = make_document(kvp("first_name", other_person.first_name),
+                                                  kvp("last_name", other_person.last_name),
+                                                  kvp("age", other_person.age));
+
+        // Default-constructed person
+        test::Person test_person;
+        expected_doc.get(test_person);
+        REQUIRE(test_person == expected_person);
+
+        other_doc.get(test_person);
+        REQUIRE(test_person == other_person);
     }
 }
 }  // namespace
