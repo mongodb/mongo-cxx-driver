@@ -57,11 +57,11 @@ document::view::const_iterator value::cend() const {
 }
 
 document::view::const_iterator value::begin() const {
-    return this->view().begin();
+    return cbegin();
 }
 
 document::view::const_iterator value::end() const {
-    return this->view().end();
+    return cend();
 }
 
 document::view::const_iterator value::find(stdx::string_view key) const {
@@ -74,7 +74,7 @@ element value::operator[](stdx::string_view key) const {
 }
 
 const std::uint8_t* value::data() const {
-    return static_cast<uint8_t*>(_data.get());
+    return _data.get();
 }
 
 std::size_t value::length() const {
