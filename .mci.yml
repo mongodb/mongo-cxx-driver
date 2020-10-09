@@ -824,7 +824,6 @@ buildvariants:
       display_name: "Ubuntu 18.04 Debug (MongoDB Latest)"
       expansions:
         build_type: "Debug"
-        cmake: "cmake"
         tar_options: *linux_tar_options
         cmake_flags: *linux_cmake_flags
         mongodb_version: *version_latest
