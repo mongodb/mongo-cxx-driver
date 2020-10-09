@@ -201,7 +201,7 @@ class BSONCXX_API value {
     /// `void from_bson(T& t, const bsoncxx::document::view& doc)`.
     ///
     /// @param t
-    ///   A partially constructed object. The contents of the document object will be deserialized
+    ///   The object to construct. The contents of the document object will be deserialized
     ///   into t.
     ///
     template <typename T>
