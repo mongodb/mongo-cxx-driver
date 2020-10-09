@@ -739,7 +739,6 @@ buildvariants:
           - ubuntu1604-build
       tasks:
           - name: lint
-          - name: clang-tidy
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_shared_libs_replica_set
@@ -820,6 +819,18 @@ buildvariants:
           # driver invokes mock callback functions that have libmongoc types in the callback
           # signature.
           - name: compile_and_test_with_static_libs
+
+    - name: ubuntu1804-debug
+      display_name: "Ubuntu 18.04 Debug (MongoDB 4.4)"
+      expansions:
+        build_type: "Debug"
+        tar_options: *linux_tar_options
+        cmake_flags: *linux_cmake_flags
+        mongodb_version: *version_latest
+      run_on:
+        - ubuntu1804-build
+      tasks:
+        - name: clang-tidy
 
     - name: ubuntu1804-zseries
       display_name: "s390x Ubuntu 18.04 (MongoDB 4.4)"
