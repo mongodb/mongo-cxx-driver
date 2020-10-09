@@ -3,7 +3,7 @@ set -o errexit
 set -o xtrace
 
 if ! which clang-tidy > /dev/null; then
-    apt-get install -y clang-tidy
+    sudo apt-get install -y clang-tidy
 fi
 clang-tidy -version
 
