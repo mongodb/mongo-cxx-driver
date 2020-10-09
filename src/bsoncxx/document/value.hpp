@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <memory>
 
+#include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/view.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
@@ -75,6 +76,24 @@ class BSONCXX_API value {
 
     value(value&&) noexcept = default;
     value& operator=(value&&) noexcept = default;
+
+    ///
+    /// Constructor used for serialization of user objects. This uses argument-dependent lookup
+    /// to find the function declaration `void to_bson(T& t, bsoncxx::document::value doc)`.
+    ///
+    /// @param t
+    ///   A user-defined object to serialize into a BSON object.
+    ///
+    template <typename T,
+              typename std::enable_if<!std::is_same<T, typename array::view>::value, int>::type = 0>
+    explicit value(const T& t) : value({}) {
+        to_bson(t, *this);
+    }
+    template <typename T>
+    value& operator=(const T& t) {
+        *this = value{t};
+        return *this;
+    }
 
     ///
     /// @returns A const_iterator to the first element of the document.
@@ -161,6 +180,34 @@ class BSONCXX_API value {
     /// @return A view over the value.
     ///
     BSONCXX_INLINE operator document::view() const noexcept;
+
+    ///
+    /// Constructs an object of type T from this document object. This method uses
+    /// argument-dependent lookup to find the function declaration
+    /// `void from_bson(T& t, const bsoncxx::document::view& doc)`.
+    ///
+    /// @note Type T must be default-constructible. Otherwise, use `void get(T& t)`.
+    ///
+    template <typename T>
+    T get() {
+        T temp{};
+        from_bson(temp, this->view());
+        return temp;
+    }
+
+    ///
+    /// Constructs an object of type T from this document object. This method uses
+    /// argument-dependent lookup to find the function declaration
+    /// `void from_bson(T& t, const bsoncxx::document::view& doc)`.
+    ///
+    /// @param t
+    ///   The object to construct. The contents of the document object will be deserialized
+    ///   into t.
+    ///
+    template <typename T>
+    void get(T& t) {
+        from_bson(t, this->view());
+    }
 
     ///
     /// Transfer ownership of the underlying buffer to the caller.
