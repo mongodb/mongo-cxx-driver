@@ -821,9 +821,10 @@ buildvariants:
           - name: compile_and_test_with_static_libs
 
     - name: ubuntu1804-debug
-      display_name: "Ubuntu 18.04 Debug (MongoDB 4.4)"
+      display_name: "Ubuntu 18.04 Debug (MongoDB Latest)"
       expansions:
         build_type: "Debug"
+        cmake: "cmake"
         tar_options: *linux_tar_options
         cmake_flags: *linux_cmake_flags
         mongodb_version: *version_latest
@@ -879,7 +880,7 @@ buildvariants:
 
     # Test that we actually support building against the minium required C version claimed.
     - name: ubuntu1804-min-libmongoc
-      display_name: "Ubuntu 18.04 with minimum libmongoc (MongoDB 4.4)"
+      display_name: "Ubuntu 18.04 with minimum libmongoc (MongoDB Latest)"
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Debug"
