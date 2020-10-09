@@ -364,4 +364,32 @@ TEST_CASE("can use operator[] with document::value") {
     }
 }
 
+TEST_CASE("document::values have a superset of document::view's methods") {
+    document::value doc = make_document(kvp("int", 5), kvp("alice", "Bob"));
+    document::view view = doc.view();
+
+    SECTION("iterators provide the same results") {
+        REQUIRE(doc.cbegin() == view.cbegin());
+        REQUIRE(doc.cend() == view.cend());
+        REQUIRE(doc.begin() == view.begin());
+        REQUIRE(doc.end() == view.end());
+        REQUIRE(doc.find("alice") == view.find("alice"));
+    }
+
+    SECTION("getters return the same results") {
+        REQUIRE(doc.data() == view.data());
+        REQUIRE(doc.length() == view.length());
+    }
+
+    SECTION("empty doc and empty view yield same results") {
+        document::value empty_doc = make_document();
+        document::view empty_view = empty_doc.view();
+
+        REQUIRE(empty_doc.empty());
+        REQUIRE(empty_view.empty());
+        REQUIRE(!doc.empty());
+        REQUIRE(!view.empty());
+    }
+}
+
 }  // namespace
