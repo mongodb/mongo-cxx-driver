@@ -128,7 +128,7 @@ class BSONCXX_API value {
     ///
     /// Access the raw bytes of the underlying document.
     ///
-    /// @return A (non-owning) pointer to the view's buffer.
+    /// @return A pointer to the value's buffer.
     ///
     const std::uint8_t* data() const;
 
