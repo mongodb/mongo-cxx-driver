@@ -738,6 +738,7 @@ buildvariants:
           - ubuntu1604-build
       tasks:
           - name: lint
+          - name: clang-tidy
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_shared_libs_replica_set
@@ -761,7 +762,6 @@ buildvariants:
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
-          - name: clang-tidy
 
     - name: ubuntu1604-debug-valgrind
       display_name: "Valgrind Ubuntu 16.04 Debug (MongoDB Latest)"
