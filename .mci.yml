@@ -189,6 +189,18 @@ functions:
                   set -o pipefail
                   python etc/clang_format.py lint
 
+    "clang-tidy":
+      - command: shell.exec
+        params:
+          shell: bash
+          working_dir: "mongo-cxx-driver"
+          script: |
+            set -o errexit
+            set -o xtrace
+            set -o pipefail
+            cd etc
+            ./run-clang-tidy.sh
+
     "compile":
         - command: shell.exec
           params:
@@ -465,6 +477,13 @@ tasks:
       commands:
         - func: "setup"
         - func: "lint"
+
+    - name: clang-tidy
+      commands:
+        - func: "setup"
+        - func: "install_c_driver"
+        - func: "compile"
+        - func: "clang-tidy"
 
     - name: compile_and_test_with_shared_libs
       commands:
@@ -801,6 +820,18 @@ buildvariants:
           # signature.
           - name: compile_and_test_with_static_libs
 
+    - name: ubuntu1804-debug
+      display_name: "Ubuntu 18.04 Debug (MongoDB Latest)"
+      expansions:
+        build_type: "Debug"
+        tar_options: *linux_tar_options
+        cmake_flags: *linux_cmake_flags
+        mongodb_version: *version_latest
+      run_on:
+        - ubuntu1804-build
+      tasks:
+        - name: clang-tidy
+
     - name: ubuntu1804-zseries
       display_name: "s390x Ubuntu 18.04 (MongoDB 4.4)"
       batchtime: 1440 # 1 day
@@ -848,7 +879,7 @@ buildvariants:
 
     # Test that we actually support building against the minium required C version claimed.
     - name: ubuntu1804-min-libmongoc
-      display_name: "Ubuntu 18.04 with minimum libmongoc (MongoDB 4.4)"
+      display_name: "Ubuntu 18.04 with minimum libmongoc (MongoDB Latest)"
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Debug"
