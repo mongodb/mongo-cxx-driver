@@ -23,7 +23,7 @@ clang-tidy -version
 #
 BUILD="../build"
 CHECKS="\"-*,cert-*,cppcoreguidelines-*,clang-analyzer-*\""
-CMD="clang-tidy -p=$BUILD -checks=$CHECKS -warnings-as-errors=$CHECKS"
+CMD="clang-tidy -p=$BUILD -checks=$CHECKS"
 
 echo "Running clang-tidy with configuration:"
 eval $CMD -dump-config
