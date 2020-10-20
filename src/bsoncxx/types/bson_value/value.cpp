@@ -119,16 +119,19 @@ value::value(b_decimal128 v) : value(v.value) {}
 value::value(decimal128 v) : value(type::k_decimal128, v.high(), v.low()) {}
 value::value(b_timestamp v) : value(v.type_id, v.increment, v.timestamp) {}
 value::value(type id, uint64_t a, uint64_t b) : _impl{stdx::make_unique<impl>()} {
-    if (id == type::k_decimal128) {
-        _impl->_value.value_type = BSON_TYPE_DECIMAL128;
-        _impl->_value.value.v_decimal128.high = a;
-        _impl->_value.value.v_decimal128.low = b;
-    } else if (id == type::k_timestamp) {
-        _impl->_value.value_type = BSON_TYPE_TIMESTAMP;
-        _impl->_value.value.v_timestamp.increment = (uint32_t)a;
-        _impl->_value.value.v_timestamp.timestamp = (uint32_t)b;
-    } else {
-        throw std::logic_error{"Not decimal128 or timestamp"};
+    switch (id) {
+        case type::k_decimal128:
+            _impl->_value.value_type = BSON_TYPE_DECIMAL128;
+            _impl->_value.value.v_decimal128.high = a;
+            _impl->_value.value.v_decimal128.low = b;
+            break;
+        case type::k_timestamp:
+            _impl->_value.value_type = BSON_TYPE_TIMESTAMP;
+            _impl->_value.value.v_timestamp.increment = (uint32_t)a;
+            _impl->_value.value.v_timestamp.timestamp = (uint32_t)b;
+            break;
+        default:
+            throw bsoncxx::exception(error_code::k_invalid_type);
     }
 }
 
