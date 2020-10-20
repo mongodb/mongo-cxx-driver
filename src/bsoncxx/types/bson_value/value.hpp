@@ -43,24 +43,87 @@ namespace bson_value {
 ///
 class BSONCXX_API value {
    public:
+///
+/// Constructor for each BSON type.
+///
+/// These x-macros will expand to:
+///    value(b_double v);
+///    value(b_utf8 v);
+///    value(b_document v);
+///    value(b_array v); ...
+///
 #define BSONCXX_ENUM(name, val) value(b_##name v);
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
+    ///
+    /// Constructs a BSON UTF-8 string value.
+    ///
     value(const char* v);
+
+    ///
+    /// Constructs a BSON UTF-8 string value.
+    ///
     value(std::string v);
+
+    ///
+    /// Constructs a BSON UTF-8 string value.
+    ///
     value(stdx::string_view v);
 
+    ///
+    /// Constructs a BSON 32-bit signed integer value.
+    ///
     value(int32_t v);
+
+    ///
+    /// Constructs a BSON 64-bit signed integer value.
+    ///
     value(int64_t v);
+
+    ///
+    /// Constructs a BSON double value.
+    ///
     value(double v);
+
+    ///
+    /// Constructs a BSON boolean value.
+    ///
     value(bool v);
+
+    ///
+    /// Constructs a BSON ObjectId value.
+    ///
     value(oid v);
+
+    ///
+    /// Constructs a BSON Decimal128 value.
+    ///
     value(decimal128 v);
+
+    ///
+    /// Constructs a BSON date value.
+    ///
     value(std::chrono::milliseconds v);
+
+    ///
+    /// Constructs a BSON null value.
+    ///
     value(std::nullptr_t);
+
+    ///
+    /// Constructs a BSON document value.
+    ///
     value(bsoncxx::document::view v);
+
+    ///
+    /// Constructs a BSON array value.
+    ///
     value(bsoncxx::array::view v);
+
+    ///
+    /// Constructs a BSON binary data value.
+    ///
     value(std::vector<unsigned char> v, binary_sub_type sub_type = {});
 
     value(const type id);
