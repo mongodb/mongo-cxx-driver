@@ -26,7 +26,7 @@ variables:
 
     ## cmake flag variables
     cmake_flags:
-        linux_cmake_flags: &linux_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wconversion -Wnarrowing -Wno-expansion-to-defined -pedantic -Werror -Wno-missing-field-initializers"
+        linux_cmake_flags: &linux_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wconversion -Wnarrowing -Wno-expansion-to-defined -pedantic -Werror -Wno-missing-field-initializers -Wno-aligned-new"
         macos_cmake_flags: &macos_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror"
         asan_cmake_flags: &asan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror"
         ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.blacklist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror"
@@ -176,7 +176,10 @@ functions:
                     fi
                     export CMAKE=${cmake}
                     export GENERATOR="${generator}"
-                    ./.evergreen/install_c_driver.sh ${mongoc_version|master}
+                    if [ "1" == "${BSON_EXTRA_ALIGNMENT}" ]; then
+                        echo "Building C driver with BSON extra alignment"
+                    fi
+                    BSON_EXTRA_ALIGNMENT=${BSON_EXTRA_ALIGNMENT} ./.evergreen/install_c_driver.sh ${mongoc_version|master}
 
     "lint":
         - command: shell.exec
@@ -305,7 +308,7 @@ functions:
                       if [ -z "${disable_slow_tests}" ]; then
                           export MONGOCXX_ENABLE_SLOW_TESTS=1
                       fi
-                      
+
                       ulimit -c unlimited || true
 
                       # Run tests and examples 1-by-1 with "test_params" so we can run them with valgrind.
@@ -495,6 +498,16 @@ tasks:
               RUN_DISTCHECK: 1
         - func: "test"
 
+    - name: compile_and_test_with_shared_libs_extra_alignment
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+        - func: "install_c_driver"
+          vars:
+              BSON_EXTRA_ALIGNMENT: 1
+        - func: "compile"
+        - func: "test"
+
     - name: compile_with_shared_libs
       commands:
       - func: "setup"
@@ -521,6 +534,20 @@ tasks:
           vars:
               USE_STATIC_LIBS: 1
               RUN_DISTCHECK: 1
+        - func: "test"
+          vars:
+              USE_STATIC_LIBS: 1
+
+    - name: compile_and_test_with_static_libs_extra_alignment
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+        - func: "install_c_driver"
+          vars:
+              BSON_EXTRA_ALIGNMENT: 1
+        - func: "compile"
+          vars:
+              USE_STATIC_LIBS: 1
         - func: "test"
           vars:
               USE_STATIC_LIBS: 1
@@ -711,6 +738,7 @@ buildvariants:
       display_name: "${os} (MongoDB ${mongodb_version})"
       tasks:
           - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
 
     - matrix_name: "integration (replica set)"
       matrix_spec: {os: "ubuntu-1604", mongodb_version: "*"}
@@ -740,7 +768,9 @@ buildvariants:
       tasks:
           - name: lint
           - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
           - name: build_example_with_add_subdirectory
             distros:
@@ -761,7 +791,9 @@ buildvariants:
           - ubuntu1604-build
       tasks:
           - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
 
     - name: ubuntu1604-debug-valgrind
       display_name: "Valgrind Ubuntu 16.04 Debug (MongoDB Latest)"
@@ -777,7 +809,9 @@ buildvariants:
           - ubuntu1604-build
       tasks:
           - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
 
     - name: ubuntu1604-debug-asan
       display_name: "ASAN Ubuntu 16.04 Debug (MongoDB Latest)"
@@ -796,7 +830,9 @@ buildvariants:
           - ubuntu1604-build
       tasks:
           - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
 
     - name: ubuntu1604-debug-ubsan
       display_name: "UBSAN Ubuntu 16.04 Debug (MongoDB Latest)"
@@ -845,7 +881,9 @@ buildvariants:
           - ubuntu1804-zseries-small
       tasks:
           - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
 
     - name: power8-ubuntu1804
       display_name: "ppc64le Ubuntu 18.04 (MongoDB Latest)"
@@ -861,7 +899,9 @@ buildvariants:
       tasks:
           - name: compile_with_shared_libs
           - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
 
     - name: arm-ubuntu1804
       display_name: "arm64 Ubuntu 18.04 (MongoDB Latest)"
@@ -875,7 +915,9 @@ buildvariants:
           - ubuntu1804-arm64-build
       tasks:
           - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
 
     # Test that we actually support building against the minium required C version claimed.
     - name: ubuntu1804-min-libmongoc
@@ -891,7 +933,9 @@ buildvariants:
           - ubuntu1804-build
       tasks:
           - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
 
     #######################################
     #         Mac and Windows             #
@@ -908,7 +952,9 @@ buildvariants:
           - macos-1014
       tasks:
           - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
 
     - name: windows-2k8-release
       display_name: "Windows (VS 2015) Release (MongoDB 4.2)"
@@ -923,7 +969,9 @@ buildvariants:
           - windows-64-vs2015-compile
       tasks:
           - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
           - name: uninstall_check_windows
 
     - name: windows-2k8-debug
@@ -940,6 +988,7 @@ buildvariants:
       tasks:
           # The debug shared lib is tested in the "integration tests" matrix
           - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
 
     - name: windows-msvc2015-debug
       display_name: "Windows (VS 2015) Debug (MongoDB 4.2)"
