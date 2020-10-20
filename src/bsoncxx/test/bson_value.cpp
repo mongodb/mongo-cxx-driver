@@ -216,14 +216,14 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
 
             value_construction_test(test_doc.view());
             coverting_construction_test(b_codewscope{code, doc.view()}, test_doc);
-            REQUIRE(value(type::k_codewscope, code, doc.view()) == test_doc);
+            REQUIRE(value(code, doc.view()) == test_doc);
 
             auto empty_doc = make_document(kvp("a", ""));
             auto empty_code = bson_value::make_value(b_codewscope{"", empty_doc.view()});
             value_construction_test(empty_code.view());
 
             coverting_construction_test(b_codewscope{"", empty_doc.view()}, empty_code);
-            REQUIRE(value(type::k_codewscope, "", empty_doc.view()) == empty_code);
+            REQUIRE(value("", empty_doc.view()) == empty_code);
         }
 
         SECTION("minkey") {

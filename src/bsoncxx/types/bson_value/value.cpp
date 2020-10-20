@@ -133,18 +133,16 @@ value::value(stdx::string_view collection, oid value) : _impl{stdx::make_unique<
     std::memcpy(_impl->_value.value.v_dbpointer.oid.bytes, value.bytes(), value.k_oid_length);
 }
 
-value::value(b_codewscope v) : value(type::k_codewscope, v.code, v.scope) {}
-value::value(const type id, stdx::string_view a, bsoncxx::document::view_or_value b)
+value::value(b_codewscope v) : value(v.code, v.scope) {}
+value::value(stdx::string_view code, bsoncxx::document::view_or_value scope)
     : _impl{stdx::make_unique<impl>()} {
-    if (id == type::k_codewscope) {
-        _impl->_value.value_type = BSON_TYPE_CODEWSCOPE;
-        _impl->_value.value.v_codewscope.code = make_copy_for_libbson(a);
-        _impl->_value.value.v_codewscope.code_len = (uint32_t)a.length();
-        _impl->_value.value.v_codewscope.scope_len = (uint32_t)b.view().length();
-        _impl->_value.value.v_codewscope.scope_data = (uint8_t*)bson_malloc0(b.view().length());
-        std::memcpy(
-            _impl->_value.value.v_codewscope.scope_data, b.view().data(), b.view().length());
-    }
+    _impl->_value.value_type = BSON_TYPE_CODEWSCOPE;
+    _impl->_value.value.v_codewscope.code = make_copy_for_libbson(code);
+    _impl->_value.value.v_codewscope.code_len = (uint32_t)code.length();
+    _impl->_value.value.v_codewscope.scope_len = (uint32_t)scope.view().length();
+    _impl->_value.value.v_codewscope.scope_data = (uint8_t*)bson_malloc0(scope.view().length());
+    std::memcpy(
+        _impl->_value.value.v_codewscope.scope_data, scope.view().data(), scope.view().length());
 }
 
 value::value(b_binary v) : value(v.type_id, v.sub_type, v.size, v.bytes) {}

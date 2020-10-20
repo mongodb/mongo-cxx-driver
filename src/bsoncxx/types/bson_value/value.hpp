@@ -140,6 +140,16 @@ class BSONCXX_API value {
     value(stdx::string_view collection, oid value);
 
     ///
+    /// Constructs a BSON JavaScript code with scope value.
+    ///
+    /// @param code
+    ///     the JavaScript code
+    /// @param scope
+    ///     a bson document view holding the scope environment
+    ///
+    value(stdx::string_view code, bsoncxx::document::view_or_value scope);
+
+    ///
     /// Constructs one of the following BSON values (each specified by the parenthesized type):
     /// - BSON code value (type::k_code)
     /// - BSON regex value (type::k_regex)
@@ -187,7 +197,6 @@ class BSONCXX_API value {
     ///
     value(const type id, uint64_t a, uint64_t b);
 
-    value(const type id, stdx::string_view a, bsoncxx::document::view_or_value b);
     value(const type id, const binary_sub_type sub_id, uint32_t size, const uint8_t* data);
 
     ~value();
