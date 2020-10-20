@@ -72,8 +72,8 @@ class error_category_impl final : public std::error_category {
                 return "tried to complete appending an array, but overflowed";
             case error_code::k_cannot_end_appending_document:
                 return "tried to complete appending an document, but overflowed";
-            case error_code::k_invalid_type:
-                return "invalid type identifier";
+            case error_code::k_invalid_bson_type_id:
+                return "invalid BSON type identifier";
 #define BSONCXX_ENUM(name, value)            \
     case error_code::k_cannot_append_##name: \
         return {"unable to append " #name};
