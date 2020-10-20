@@ -243,7 +243,7 @@ class MONGOCXX_API read_preference {
     /// 4.4 or later can dispatch read operations in parallel, returning the result from the fastest
     /// host and cancelling the unfinished operations.
     ///
-    /// This may be an empty document or a document of the form { enabled: <boolean> }.
+    /// This may be an empty document or a document of the form { enabled: &lt;boolean&gt; }.
     ///
     /// Hedged reads are automatically enabled in MongoDB 4.4+ when using a ``nearest`` read
     /// preference. To explicitly enable or disable hedging, the ``hedge`` document must be
@@ -269,8 +269,10 @@ class MONGOCXX_API read_preference {
     friend client;
     friend collection;
     friend database;
-    friend options::transaction;
-    friend events::topology_description;
+    /// \relates mongocxx::options::transaction
+    friend mongocxx::options::transaction;
+    /// \relates mongocxx::events::topology_description
+    friend mongocxx::events::topology_description;
     friend uri;
 
     ///

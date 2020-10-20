@@ -35,6 +35,9 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+///
+/// Class representing MongoDB application performance monitoring.
+///
 class MONGOCXX_API apm {
    public:
     ///

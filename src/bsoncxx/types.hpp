@@ -116,7 +116,7 @@ struct BSONCXX_API b_utf8 {
     ///
     /// Constructor for b_utf8.
     ///
-    /// @param value
+    /// @param t
     ///   The value to wrap.
     ///
     template <typename T,
@@ -301,7 +301,7 @@ struct BSONCXX_API b_date {
     ///
     /// Constructor for b_date
     ///
-    /// @param value
+    /// @param tp
     ///   A system_clock time_point.
     ///
     BSONCXX_INLINE
@@ -424,7 +424,7 @@ struct BSONCXX_API b_code {
     ///
     /// Constructor for b_code.
     ///
-    /// @param code
+    /// @param t
     ///   The js code
     ///
     template <typename T,
@@ -463,7 +463,7 @@ struct BSONCXX_API b_symbol {
     ///
     /// Constructor for b_symbol.
     ///
-    /// @param symbol
+    /// @param t
     ///   The symbol.
     ///
     template <typename T,
@@ -610,7 +610,7 @@ struct BSONCXX_API b_decimal128 {
     ///
     /// Constructor for b_decimal128.
     ///
-    /// @param value
+    /// @param t
     ///   The value to wrap.
     ///
     template <

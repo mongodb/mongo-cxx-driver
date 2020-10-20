@@ -42,6 +42,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 ///
 class MONGOCXX_API uri {
    public:
+    /// A host.
     struct host {
         std::string name;
         std::uint16_t port;

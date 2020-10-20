@@ -348,7 +348,7 @@ class MONGOCXX_API pipeline {
     /// @param merge_args
     ///   The specification for the merge options. Must include an `into` field that
     ///   is either a collection name or a subdocument of the form:
-    ///   { `db` : <db name>, `coll` : <collection name> }.
+    ///   { `db` : &lt;db name&gt;, `coll` : &lt;collection name&gt; }.
     ///
     /// @return
     ///   A reference to the object on which this member function is being called.

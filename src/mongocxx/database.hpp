@@ -292,6 +292,29 @@ class MONGOCXX_API database {
         return create_collection_deprecated(session, name, collection_options, write_concern);
     }
 
+    ///
+    /// Explicitly creates a collection in this database with the specified options.
+    ///
+    /// @deprecated
+    ///   This overload is deprecated. Call database::create_collection with a
+    ///   bsoncxx::document::view_or_value collection_options instead.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/master/reference/command/create/
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the create operation.
+    /// @param name
+    ///   the new collection's name.
+    /// @param collection_options
+    ///   the options for the new collection.
+    /// @param write_concern
+    ///   the write concern to use for this operation. Will default to database
+    ///   set write concern if none passed here.
+    ///
+    /// @exception
+    ///   mongocxx::operation_exception if the operation fails.
+    ///
     class collection create_collection_deprecated(
         const client_session& session,
         bsoncxx::string::view_or_value name,

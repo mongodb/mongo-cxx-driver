@@ -32,6 +32,9 @@ class database;
 
 namespace options {
 
+///
+/// Class representing MongoDB change stream options.
+///
 class MONGOCXX_API change_stream {
    public:
     change_stream();

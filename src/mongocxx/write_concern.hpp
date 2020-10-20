@@ -242,7 +242,8 @@ class MONGOCXX_API write_concern {
     friend client;
     friend collection;
     friend database;
-    friend options::transaction;
+    /// \relates mongocxx::options::transaction
+    friend mongocxx::options::transaction;
     friend uri;
 
     ///

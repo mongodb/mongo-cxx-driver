@@ -28,8 +28,12 @@ class client;
 class collection;
 class database;
 
+///
+/// Class representing a MongoDB change stream.
+///
 class MONGOCXX_API change_stream {
    public:
+    /// A change stream iterator.
     class MONGOCXX_API iterator;
 
     ///
@@ -115,6 +119,9 @@ class MONGOCXX_API change_stream {
     std::unique_ptr<impl> _impl;
 };
 
+///
+/// Class representing a MongoDB change stream iterator.
+///
 class MONGOCXX_API change_stream::iterator {
    public:
     // Support input-iterator (caveat of post-increment returning void)

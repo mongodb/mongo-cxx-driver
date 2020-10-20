@@ -40,7 +40,7 @@ class MONGOCXX_API client_encryption {
     /// sets the optional client to use to route data key queries to
     /// that cluster.
     ///
-    /// @param
+    /// @param client
     ///   A client to use for routing queries to the key vault collection.
     ///
     /// @return
