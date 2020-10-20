@@ -186,14 +186,14 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             value_construction_test(test_doc.view());
 
             coverting_construction_test(b_dbpointer{coll_name, id}, test_doc);
-            REQUIRE(value(type::k_dbpointer, coll_name, id) == test_doc);
+            REQUIRE(value(coll_name, id) == test_doc);
 
             auto empty_oid = oid{};
             auto empty_collection = bson_value::make_value(b_dbpointer{"", empty_oid});
             value_construction_test(empty_collection.view());
 
             coverting_construction_test(b_dbpointer{"", empty_oid}, empty_collection);
-            REQUIRE(value(type::k_dbpointer, "", empty_oid) == empty_collection);
+            REQUIRE(value("", empty_oid) == empty_collection);
         }
 
         SECTION("code") {

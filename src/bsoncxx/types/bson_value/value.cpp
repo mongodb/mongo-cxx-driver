@@ -125,16 +125,12 @@ value::value(type id, uint64_t a, uint64_t b) : _impl{stdx::make_unique<impl>()}
     }
 }
 
-value::value(b_dbpointer v) : value(v.type_id, v.collection, v.value) {}
-value::value(const type id, stdx::string_view a, oid b) : _impl{stdx::make_unique<impl>()} {
-    if (id == type::k_dbpointer) {
-        _impl->_value.value_type = BSON_TYPE_DBPOINTER;
-        _impl->_value.value.v_dbpointer.collection = make_copy_for_libbson(a);
-        _impl->_value.value.v_dbpointer.collection_len = (uint32_t)a.length();
-        std::memcpy(_impl->_value.value.v_dbpointer.oid.bytes, b.bytes(), b.k_oid_length);
-    } else {
-        throw std::logic_error{"Not dbpointer"};
-    }
+value::value(b_dbpointer v) : value(v.collection, v.value) {}
+value::value(stdx::string_view collection, oid value) : _impl{stdx::make_unique<impl>()} {
+    _impl->_value.value_type = BSON_TYPE_DBPOINTER;
+    _impl->_value.value.v_dbpointer.collection = make_copy_for_libbson(collection);
+    _impl->_value.value.v_dbpointer.collection_len = (uint32_t)collection.length();
+    std::memcpy(_impl->_value.value.v_dbpointer.oid.bytes, value.bytes(), value.k_oid_length);
 }
 
 value::value(b_codewscope v) : value(type::k_codewscope, v.code, v.scope) {}
