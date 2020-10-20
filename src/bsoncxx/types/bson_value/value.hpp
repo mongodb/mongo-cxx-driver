@@ -124,7 +124,24 @@ class BSONCXX_API value {
     ///
     /// Constructs a BSON binary data value.
     ///
-    value(std::vector<unsigned char> v, binary_sub_type sub_type = {});
+    /// @param v
+    ///     a steam of bytes
+    /// @param sub_type
+    ///     an optional binary sub type. Defaults to type::k_binary
+    ///
+    value(std::vector<unsigned char> v, const binary_sub_type sub_type = {});
+
+    ///
+    /// Constructs a BSON binary data value.
+    ///
+    /// @param data
+    ///     pointer to a stream of bytes
+    /// @param size
+    ///     the size of the stream of bytes
+    /// @param sub_type
+    ///     an optional binary sub type. Defaults to type::k_binary
+    ///
+    value(const uint8_t* data, size_t size, const binary_sub_type sub_type = {});
 
     ///
     /// Constructs a BSON DBPointer value.
@@ -196,8 +213,6 @@ class BSONCXX_API value {
     ///   is discouraged.
     ///
     value(const type id, uint64_t a, uint64_t b);
-
-    value(const type id, const binary_sub_type sub_id, uint32_t size, const uint8_t* data);
 
     ~value();
 

@@ -251,6 +251,8 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             coverting_construction_test(bin, test_doc);
             REQUIRE(value(b_binary{binary_sub_type::k_binary, (uint32_t)bin.size(), bin.data()}) ==
                     test_doc);
+            REQUIRE(value(bin.data(), bin.size(), binary_sub_type::k_binary) == test_doc);
+            REQUIRE(value(bin.data(), bin.size()) == test_doc);
 
             auto empty = bson_value::make_value(b_binary{});
             coverting_construction_test(std::vector<unsigned char>{}, empty);

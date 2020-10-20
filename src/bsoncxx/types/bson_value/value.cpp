@@ -145,16 +145,14 @@ value::value(stdx::string_view code, bsoncxx::document::view_or_value scope)
         _impl->_value.value.v_codewscope.scope_data, scope.view().data(), scope.view().length());
 }
 
-value::value(b_binary v) : value(v.type_id, v.sub_type, v.size, v.bytes) {}
-value::value(const type id, const binary_sub_type sub_id, uint32_t size, const uint8_t* data)
+value::value(b_binary v) : value(v.bytes, v.size, v.sub_type) {}
+value::value(std::vector<unsigned char> v, binary_sub_type sub_type)
+    : value(v.data(), v.size(), sub_type) {}
+value::value(const uint8_t* data, size_t size, const binary_sub_type sub_type)
     : _impl{stdx::make_unique<impl>()} {
-    if (id != type::k_binary)
-        throw std::logic_error{"Not binary"};
-
     _impl->_value.value_type = BSON_TYPE_BINARY;
-
-    _impl->_value.value.v_binary.subtype = static_cast<bson_subtype_t>(sub_id);
-    _impl->_value.value.v_binary.data_len = size;
+    _impl->_value.value.v_binary.subtype = static_cast<bson_subtype_t>(sub_type);
+    _impl->_value.value.v_binary.data_len = (uint32_t)size;
     _impl->_value.value.v_binary.data = (uint8_t*)bson_malloc(size);
     std::memcpy(_impl->_value.value.v_binary.data, data, size);
 }
@@ -168,8 +166,6 @@ value::value(bsoncxx::document::view v) : _impl{stdx::make_unique<impl>()} {
 }
 
 value::value(b_array v) : value(v.value) {}
-value::value(std::vector<unsigned char> v, binary_sub_type sub_type)
-    : value(type::k_binary, sub_type, (uint32_t)v.size(), (uint8_t*)v.data()) {}
 value::value(bsoncxx::array::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_ARRAY;
     _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
