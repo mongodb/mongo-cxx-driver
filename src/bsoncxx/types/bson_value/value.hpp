@@ -126,6 +126,14 @@ class BSONCXX_API value {
     ///
     value(std::vector<unsigned char> v, binary_sub_type sub_type = {});
 
+    ///
+    /// Constructs a BSON value of the specified type.
+    ///
+    /// @param id
+    ///     the type id of the BSON value to construct.
+    ///
+    /// @throws bsoncxx::exception if the specified type is missing its required arguments.
+    ///
     value(const type id);
     value(const type id, uint64_t a, uint64_t b);
     value(const type id, stdx::string_view a, stdx::string_view b = {});
