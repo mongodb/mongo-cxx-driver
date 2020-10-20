@@ -127,16 +127,26 @@ class BSONCXX_API value {
     value(std::vector<unsigned char> v, binary_sub_type sub_type = {});
 
     ///
-    /// Constructs a BSON value of the specified type.
+    /// Constructs one of the following BSON values (each specified by the parenthesized type):
+    /// - BSON code value (type::k_code)
+    /// - BSON regex value (type::k_regex)
+    /// - BSON symbol value (type::k_symbol)
+    /// - BSON maxkey value (type::k_maxkey)
+    /// - BSON minkey value (type::k_minkey)
+    /// - BSON undefined value (type::k_undefined)
     ///
     /// @param id
-    ///     the type id of the BSON value to construct.
+    ///     the type of the BSON value to construct.
+    /// @param a
+    ///     A string_view. This is required to construct a BSON symbol, code, or regex value. This
+    ///     is the symbol, JavaScript code, or regex pattern, respectively.
+    /// @param b
+    ///     An optional string_view for BSON regex value options.
     ///
     /// @throws bsoncxx::exception if the specified type is missing its required arguments.
     ///
-    value(const type id);
+    value(const type id, stdx::string_view a = {}, stdx::string_view b = {});
     value(const type id, uint64_t a, uint64_t b);
-    value(const type id, stdx::string_view a, stdx::string_view b = {});
     value(const type id, stdx::string_view a, oid b);
     value(const type id, stdx::string_view a, bsoncxx::document::view_or_value b);
     value(const type id, const binary_sub_type sub_id, uint32_t size, const uint8_t* data);

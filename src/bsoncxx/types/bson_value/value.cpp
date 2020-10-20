@@ -27,21 +27,6 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace types {
 namespace bson_value {
 
-value::value(b_maxkey) : value(type::k_maxkey) {}
-value::value(b_minkey) : value(type::k_minkey) {}
-value::value(b_undefined) : value(type::k_undefined) {}
-value::value(const type id) : _impl{stdx::make_unique<impl>()} {
-    if (id == type::k_minkey) {
-        _impl->_value.value_type = BSON_TYPE_MINKEY;
-    } else if (id == type::k_maxkey) {
-        _impl->_value.value_type = BSON_TYPE_MAXKEY;
-    } else if (id == type::k_undefined) {
-        _impl->_value.value_type = BSON_TYPE_UNDEFINED;
-    } else {
-        throw std::logic_error{"Must be min/max key or undefined"};
-    }
-}
-
 value::value(b_double v) : value(v.value) {}
 value::value(double v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DOUBLE;
@@ -95,6 +80,9 @@ value::value(bool v) : _impl{stdx::make_unique<impl>()} {
 value::value(b_code v) : value(v.type_id, v) {}
 value::value(b_regex v) : value(v.type_id, std::string{v.regex}, std::string{v.options}) {}
 value::value(b_symbol v) : value(v.type_id, v) {}
+value::value(b_maxkey) : value(type::k_maxkey) {}
+value::value(b_minkey) : value(type::k_minkey) {}
+value::value(b_undefined) : value(type::k_undefined) {}
 value::value(const type id, stdx::string_view a, stdx::string_view b)
     : _impl{stdx::make_unique<impl>()} {
     if (id == type::k_regex) {
@@ -109,6 +97,12 @@ value::value(const type id, stdx::string_view a, stdx::string_view b)
         _impl->_value.value_type = BSON_TYPE_SYMBOL;
         _impl->_value.value.v_symbol.symbol = make_copy_for_libbson(a);
         _impl->_value.value.v_symbol.len = (uint32_t)a.length();
+    } else if (id == type::k_minkey) {
+        _impl->_value.value_type = BSON_TYPE_MINKEY;
+    } else if (id == type::k_maxkey) {
+        _impl->_value.value_type = BSON_TYPE_MAXKEY;
+    } else if (id == type::k_undefined) {
+        _impl->_value.value_type = BSON_TYPE_UNDEFINED;
     } else {
         throw std::logic_error{"Unknown type"};
     }
