@@ -88,6 +88,9 @@ enum class error_code : std::int32_t {
     /// Invalid binary subtype.
     k_invalid_binary_subtype,
 
+    /// Invalid type.
+    k_invalid_type,
+
 /// A value failed to append.
 #define BSONCXX_ENUM(name, value) k_cannot_append_##name,
 #include <bsoncxx/enums/type.hpp>

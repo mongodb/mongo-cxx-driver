@@ -85,26 +85,33 @@ value::value(b_minkey) : value(type::k_minkey) {}
 value::value(b_undefined) : value(type::k_undefined) {}
 value::value(const type id, stdx::string_view a, stdx::string_view b)
     : _impl{stdx::make_unique<impl>()} {
-    if (id == type::k_regex) {
-        _impl->_value.value_type = BSON_TYPE_REGEX;
-        _impl->_value.value.v_regex.regex = make_copy_for_libbson(a);
-        _impl->_value.value.v_regex.options = make_copy_for_libbson(b);
-    } else if (id == type::k_code) {
-        _impl->_value.value_type = BSON_TYPE_CODE;
-        _impl->_value.value.v_code.code = make_copy_for_libbson(a);
-        _impl->_value.value.v_code.code_len = (uint32_t)a.length();
-    } else if (id == type::k_symbol) {
-        _impl->_value.value_type = BSON_TYPE_SYMBOL;
-        _impl->_value.value.v_symbol.symbol = make_copy_for_libbson(a);
-        _impl->_value.value.v_symbol.len = (uint32_t)a.length();
-    } else if (id == type::k_minkey) {
-        _impl->_value.value_type = BSON_TYPE_MINKEY;
-    } else if (id == type::k_maxkey) {
-        _impl->_value.value_type = BSON_TYPE_MAXKEY;
-    } else if (id == type::k_undefined) {
-        _impl->_value.value_type = BSON_TYPE_UNDEFINED;
-    } else {
-        throw std::logic_error{"Unknown type"};
+    switch (id) {
+        case type::k_regex:
+            _impl->_value.value_type = BSON_TYPE_REGEX;
+            _impl->_value.value.v_regex.regex = make_copy_for_libbson(a);
+            _impl->_value.value.v_regex.options = make_copy_for_libbson(b);
+            break;
+        case type::k_code:
+            _impl->_value.value_type = BSON_TYPE_CODE;
+            _impl->_value.value.v_code.code = make_copy_for_libbson(a);
+            _impl->_value.value.v_code.code_len = (uint32_t)a.length();
+            break;
+        case type::k_symbol:
+            _impl->_value.value_type = BSON_TYPE_SYMBOL;
+            _impl->_value.value.v_symbol.symbol = make_copy_for_libbson(a);
+            _impl->_value.value.v_symbol.len = (uint32_t)a.length();
+            break;
+        case type::k_minkey:
+            _impl->_value.value_type = BSON_TYPE_MINKEY;
+            break;
+        case type::k_maxkey:
+            _impl->_value.value_type = BSON_TYPE_MAXKEY;
+            break;
+        case type::k_undefined:
+            _impl->_value.value_type = BSON_TYPE_UNDEFINED;
+            break;
+        default:
+            throw bsoncxx::exception(error_code::k_invalid_type);
     }
 }
 
