@@ -48,7 +48,7 @@ class MONGOCXX_API auto_encryption {
     /// The given key vault client MUST outlive any client that has
     /// been enabled to use it through these options.
     ///
-    /// @param
+    /// @param client
     ///   A client to use for routing queries to the key vault collection.
     ///
     /// @return
@@ -78,7 +78,7 @@ class MONGOCXX_API auto_encryption {
     ///
     /// May only be set when enabling automatic encryption on a pool.
     ///
-    /// @param
+    /// @param pool
     ///   A pool to use for routing queries to the key vault collection.
     ///
     /// @return

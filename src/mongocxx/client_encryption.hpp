@@ -25,6 +25,9 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
+///
+/// Class supporting operations for MongoDB Client-Side Field Level Encryption.
+///
 class MONGOCXX_API client_encryption {
    public:
     ///
@@ -84,7 +87,7 @@ class MONGOCXX_API client_encryption {
     ///
     /// Decrypts an encrypted value (BSON binary of subtype 6).
     ///
-    /// @param
+    /// @param value
     ///   The encrypted value.
     ///
     /// @return The original BSON value.
