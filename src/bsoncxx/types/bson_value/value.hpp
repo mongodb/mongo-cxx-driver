@@ -145,6 +145,12 @@ class BSONCXX_API value {
     ///
     /// @throws bsoncxx::exception if the specified type is missing its required arguments.
     ///
+    /// @deprecated
+    ///   The BSON symbol type is deprecated and use by clients is discouraged.
+    /// @deprecated
+    ///   The BSON undefined type is deprecated and use by clients is discouraged.
+    ///
+    ///
     value(const type id, stdx::string_view a = {}, stdx::string_view b = {});
 
     ///
@@ -164,6 +170,23 @@ class BSONCXX_API value {
     /// @throws bsoncxx::exception if the specified type is missing its required arguments.
     ///
     value(const type id, uint64_t a, uint64_t b);
+
+    ///
+    /// Constructs one of the following BSON values (each specified by the parenthesized type):
+    /// - BSON decimal128 value (type::k_decimal128)
+    /// - BSON timestamp value (type::k_timestamp)
+    ///
+    /// @param id
+    ///     the type of the BSON value to construct.
+    /// @param a
+    ///     If a BSON decimal128 value is to be constructed, this is the high value.
+    ///     If a BSON timestamp value is to be constructed, this is the increment.
+    /// @param b
+    ///     If a BSON decimal128 value is to be constructed, this is the low value.
+    ///     If a BSON timestamp value is to be constructed, this is the timestamp.
+    ///
+    /// @throws bsoncxx::exception if the specified type is missing its required arguments.
+    ///
     value(const type id, stdx::string_view a, oid b);
     value(const type id, stdx::string_view a, bsoncxx::document::view_or_value b);
     value(const type id, const binary_sub_type sub_id, uint32_t size, const uint8_t* data);
