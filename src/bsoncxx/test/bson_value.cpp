@@ -58,11 +58,11 @@ void coverting_construction_test(T actual, U expected) {
 TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
     SECTION("can be constructed from") {
         SECTION("bool") {
-            auto test_doc = bson_value::make_value(b_bool{true});
-            value_construction_test(test_doc.view());
+            auto test_value = bson_value::make_value(b_bool{true});
+            value_construction_test(test_value.view());
 
-            coverting_construction_test(true, test_doc);
-            coverting_construction_test(b_bool{true}, test_doc);
+            coverting_construction_test(true, test_value);
+            coverting_construction_test(b_bool{true}, test_value);
         }
 
         SECTION("utf8") {
