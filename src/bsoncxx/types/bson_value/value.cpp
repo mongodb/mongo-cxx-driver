@@ -78,7 +78,7 @@ value::value(bool v) : _impl{stdx::make_unique<impl>()} {
 }
 
 value::value(b_code v) : value(v.type_id, v) {}
-value::value(b_regex v) : value(v.type_id, std::string{v.regex}, std::string{v.options}) {}
+value::value(b_regex v) : value(v.type_id, v.regex, v.options) {}
 value::value(b_symbol v) : value(v.type_id, v) {}
 value::value(b_maxkey) : value(type::k_maxkey) {}
 value::value(b_minkey) : value(type::k_minkey) {}
