@@ -77,12 +77,28 @@ value::value(bool v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value.v_bool = v;
 }
 
-value::value(b_code v) : value(v.type_id, v) {}
-value::value(b_regex v) : value(v.type_id, v.regex, v.options) {}
-value::value(b_symbol v) : value(v.type_id, v) {}
 value::value(b_maxkey) : value(type::k_maxkey) {}
 value::value(b_minkey) : value(type::k_minkey) {}
 value::value(b_undefined) : value(type::k_undefined) {}
+value::value(const type id) : _impl{stdx::make_unique<impl>()} {
+    switch (id) {
+        case type::k_minkey:
+            _impl->_value.value_type = BSON_TYPE_MINKEY;
+            break;
+        case type::k_maxkey:
+            _impl->_value.value_type = BSON_TYPE_MAXKEY;
+            break;
+        case type::k_undefined:
+            _impl->_value.value_type = BSON_TYPE_UNDEFINED;
+            break;
+        default:
+            throw bsoncxx::exception(error_code::k_invalid_bson_type_id);
+    }
+}
+
+value::value(b_code v) : value(v.type_id, v) {}
+value::value(b_symbol v) : value(v.type_id, v) {}
+value::value(b_regex v) : value(v.type_id, v.regex, v.options) {}
 value::value(const type id, stdx::string_view a, stdx::string_view b)
     : _impl{stdx::make_unique<impl>()} {
     switch (id) {
@@ -100,15 +116,6 @@ value::value(const type id, stdx::string_view a, stdx::string_view b)
             _impl->_value.value_type = BSON_TYPE_SYMBOL;
             _impl->_value.value.v_symbol.symbol = make_copy_for_libbson(a);
             _impl->_value.value.v_symbol.len = (uint32_t)a.length();
-            break;
-        case type::k_minkey:
-            _impl->_value.value_type = BSON_TYPE_MINKEY;
-            break;
-        case type::k_maxkey:
-            _impl->_value.value_type = BSON_TYPE_MAXKEY;
-            break;
-        case type::k_undefined:
-            _impl->_value.value_type = BSON_TYPE_UNDEFINED;
             break;
         default:
             throw bsoncxx::exception(error_code::k_invalid_bson_type_id);

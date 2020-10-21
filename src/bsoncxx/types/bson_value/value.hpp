@@ -171,26 +171,36 @@ class BSONCXX_API value {
     /// - BSON code value (type::k_code)
     /// - BSON regex value (type::k_regex)
     /// - BSON symbol value (type::k_symbol)
-    /// - BSON maxkey value (type::k_maxkey)
-    /// - BSON minkey value (type::k_minkey)
-    /// - BSON undefined value (type::k_undefined)
     ///
     /// @param id
     ///     the type of BSON value to construct.
     /// @param a
-    ///     A string_view. This is required to construct a BSON symbol, code, or regex value. This
-    ///     is the symbol, JavaScript code, or regex pattern, respectively.
+    ///     the symbol, JavaScript code, or regex pattern for the BSON symbol, code, or regex value
+    ///     respectively.
     /// @param b
     ///     An optional string_view for BSON regex value options.
     ///
-    /// @throws bsoncxx::exception if the specified type is missing its required arguments.
+    /// @throws bsoncxx::exception if the type's value is not k_code, k_regex, or k_symbol.
     ///
     /// @deprecated
     ///   The BSON symbol type is deprecated and use by clients is discouraged.
     /// @deprecated
     ///   The BSON undefined type is deprecated and use by clients is discouraged.
     ///
-    value(const type id, stdx::string_view a = {}, stdx::string_view b = {});
+    value(const type id, stdx::string_view a, stdx::string_view b = {});
+
+    ///
+    /// Constructs one of the following BSON values (each specified by the parenthesized type):
+    /// - BSON maxkey value (type::k_maxkey)
+    /// - BSON minkey value (type::k_minkey)
+    /// - BSON undefined value (type::k_undefined)
+    ///
+    /// @param id
+    ///     the type of BSON value to construct.
+    ///
+    /// @throws bsoncxx::exception if the type's value is not k_maxkey, k_minkey, or k_undefined.
+    ///
+    value(const type id);
 
     ///
     /// Constructs one of the following BSON values (each specified by the parenthesized type):
