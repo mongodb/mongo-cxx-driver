@@ -157,9 +157,9 @@ value::value(stdx::string_view code, bsoncxx::document::view_or_value scope)
     _impl->_value.value.v_codewscope.code = make_copy_for_libbson(code);
     _impl->_value.value.v_codewscope.code_len = (uint32_t)code.length();
     _impl->_value.value.v_codewscope.scope_len = (uint32_t)scope.view().length();
-    _impl->_value.value.v_codewscope.scope_data = (uint8_t*)bson_malloc0(scope.view().length());
-    std::memcpy(
-        _impl->_value.value.v_codewscope.scope_data, scope.view().data(), scope.view().length());
+
+    bson_t* cpy = bson_new_from_data(scope.view().data(), scope.view().length());
+    _impl->_value.value.v_codewscope.scope_data = bson_destroy_with_steal(cpy, true, &cpy->len);
 }
 
 value::value(b_binary v) : value(v.bytes, v.size, v.sub_type) {}
@@ -178,16 +178,18 @@ value::value(b_document v) : value(v.view()) {}
 value::value(bsoncxx::document::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DOCUMENT;
     _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
-    _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc0(v.length());
-    std::memcpy(_impl->_value.value.v_doc.data, v.data(), v.length());
+
+    bson_t* cpy = bson_new_from_data(v.data(), v.length());
+    _impl->_value.value.v_doc.data = bson_destroy_with_steal(cpy, true, &cpy->len);
 }
 
 value::value(b_array v) : value(v.value) {}
 value::value(bsoncxx::array::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_ARRAY;
     _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
-    _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc0(v.length());
-    std::memcpy(_impl->_value.value.v_doc.data, v.data(), v.length());
+
+    bson_t* cpy = bson_new_from_data(v.data(), v.length());
+    _impl->_value.value.v_doc.data = bson_destroy_with_steal(cpy, true, &cpy->len);
 }
 
 value::~value() = default;
