@@ -125,7 +125,7 @@ class BSONCXX_API value {
     /// Constructs a BSON binary data value.
     ///
     /// @param v
-    ///     a steam of bytes
+    ///     a stream of bytes
     /// @param sub_type
     ///     an optional binary sub type. Defaults to type::k_binary
     ///
