@@ -96,26 +96,32 @@ value::value(const type id) : _impl{stdx::make_unique<impl>()} {
     }
 }
 
+value::value(b_regex v) : value(v.regex, v.options) {}
+value::value(stdx::string_view regex, stdx::string_view options)
+    : _impl{stdx::make_unique<impl>()} {
+    _impl->_value.value_type = BSON_TYPE_REGEX;
+    _impl->_value.value.v_regex.regex = make_copy_for_libbson(regex);
+    _impl->_value.value.v_regex.options = make_copy_for_libbson(options);
+}
+
 value::value(b_code v) : value(v.type_id, v) {}
 value::value(b_symbol v) : value(v.type_id, v) {}
-value::value(b_regex v) : value(v.type_id, v.regex, v.options) {}
-value::value(const type id, stdx::string_view a, stdx::string_view b)
-    : _impl{stdx::make_unique<impl>()} {
+value::value(const type id, stdx::string_view v) : _impl{stdx::make_unique<impl>()} {
     switch (id) {
         case type::k_regex:
             _impl->_value.value_type = BSON_TYPE_REGEX;
-            _impl->_value.value.v_regex.regex = make_copy_for_libbson(a);
-            _impl->_value.value.v_regex.options = make_copy_for_libbson(b);
+            _impl->_value.value.v_regex.regex = make_copy_for_libbson(v);
+            _impl->_value.value.v_regex.options = make_copy_for_libbson({});
             break;
         case type::k_code:
             _impl->_value.value_type = BSON_TYPE_CODE;
-            _impl->_value.value.v_code.code = make_copy_for_libbson(a);
-            _impl->_value.value.v_code.code_len = (uint32_t)a.length();
+            _impl->_value.value.v_code.code = make_copy_for_libbson(v);
+            _impl->_value.value.v_code.code_len = (uint32_t)v.length();
             break;
         case type::k_symbol:
             _impl->_value.value_type = BSON_TYPE_SYMBOL;
-            _impl->_value.value.v_symbol.symbol = make_copy_for_libbson(a);
-            _impl->_value.value.v_symbol.len = (uint32_t)a.length();
+            _impl->_value.value.v_symbol.symbol = make_copy_for_libbson(v);
+            _impl->_value.value.v_symbol.len = (uint32_t)v.length();
             break;
         default:
             throw bsoncxx::exception(error_code::k_invalid_bson_type_id);
@@ -157,9 +163,9 @@ value::value(stdx::string_view code, bsoncxx::document::view_or_value scope)
     _impl->_value.value.v_codewscope.code = make_copy_for_libbson(code);
     _impl->_value.value.v_codewscope.code_len = (uint32_t)code.length();
     _impl->_value.value.v_codewscope.scope_len = (uint32_t)scope.view().length();
-
-    bson_t* cpy = bson_new_from_data(scope.view().data(), scope.view().length());
-    _impl->_value.value.v_codewscope.scope_data = bson_destroy_with_steal(cpy, true, &cpy->len);
+    _impl->_value.value.v_codewscope.scope_data = (uint8_t*)bson_malloc(scope.view().length());
+    std::memcpy(
+        _impl->_value.value.v_codewscope.scope_data, scope.view().data(), scope.view().length());
 }
 
 value::value(b_binary v) : value(v.bytes, v.size, v.sub_type) {}
@@ -178,18 +184,16 @@ value::value(b_document v) : value(v.view()) {}
 value::value(bsoncxx::document::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DOCUMENT;
     _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
-
-    bson_t* cpy = bson_new_from_data(v.data(), v.length());
-    _impl->_value.value.v_doc.data = bson_destroy_with_steal(cpy, true, &cpy->len);
+    _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc(v.length());
+    std::memcpy(_impl->_value.value.v_doc.data, v.data(), v.length());
 }
 
 value::value(b_array v) : value(v.value) {}
 value::value(bsoncxx::array::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_ARRAY;
     _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
-
-    bson_t* cpy = bson_new_from_data(v.data(), v.length());
-    _impl->_value.value.v_doc.data = bson_destroy_with_steal(cpy, true, &cpy->len);
+    _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc(v.length());
+    std::memcpy(_impl->_value.value.v_doc.data, v.data(), v.length());
 }
 
 value::~value() = default;

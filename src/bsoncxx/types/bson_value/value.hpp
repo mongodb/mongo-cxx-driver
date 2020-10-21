@@ -167,6 +167,16 @@ class BSONCXX_API value {
     value(stdx::string_view code, bsoncxx::document::view_or_value scope);
 
     ///
+    /// Constructs a BSON regex value with options.
+    ///
+    /// @param regex
+    ///   The regex pattern
+    /// @param options
+    ///   The regex options
+    ///
+    value(stdx::string_view regex, stdx::string_view options);
+
+    ///
     /// Constructs one of the following BSON values (each specified by the parenthesized type):
     /// - BSON code value (type::k_code)
     /// - BSON regex value (type::k_regex)
@@ -174,11 +184,9 @@ class BSONCXX_API value {
     ///
     /// @param id
     ///     the type of BSON value to construct.
-    /// @param a
+    /// @param v
     ///     the symbol, JavaScript code, or regex pattern for the BSON symbol, code, or regex value
     ///     respectively.
-    /// @param b
-    ///     An optional string_view for BSON regex value options.
     ///
     /// @throws bsoncxx::exception if the type's value is not k_code, k_regex, or k_symbol.
     ///
@@ -187,7 +195,7 @@ class BSONCXX_API value {
     /// @deprecated
     ///   The BSON undefined type is deprecated and use by clients is discouraged.
     ///
-    value(const type id, stdx::string_view a, stdx::string_view b = {});
+    value(const type id, stdx::string_view v);
 
     ///
     /// Constructs one of the following BSON values (each specified by the parenthesized type):

@@ -170,14 +170,14 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             value_construction_test(test_doc.view());
 
             coverting_construction_test(b_regex{regex, options}, test_doc);
-            REQUIRE(bson_value::value(type::k_regex, regex, options) == test_doc);
+            REQUIRE(bson_value::value(regex, options) == test_doc);
 
             auto empty_regex = bson_value::make_value(b_regex{"", ""});
             value_construction_test(empty_regex.view());
 
             coverting_construction_test(b_regex{"", ""}, empty_regex);
             REQUIRE(bson_value::value(type::k_regex, "") == empty_regex);
-            REQUIRE(bson_value::value(type::k_regex, "", "") == empty_regex);
+            REQUIRE(bson_value::value("", "") == empty_regex);
         }
 
         SECTION("dbpointer") {
