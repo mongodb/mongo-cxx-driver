@@ -177,7 +177,8 @@ value::value(const uint8_t* data, size_t size, const binary_sub_type sub_type)
     _impl->_value.value.v_binary.subtype = static_cast<bson_subtype_t>(sub_type);
     _impl->_value.value.v_binary.data_len = (uint32_t)size;
     _impl->_value.value.v_binary.data = (uint8_t*)bson_malloc(size);
-    std::memcpy(_impl->_value.value.v_binary.data, data, size);
+    if (size)
+        std::memcpy(_impl->_value.value.v_binary.data, data, size);
 }
 
 value::value(b_document v) : value(v.view()) {}
