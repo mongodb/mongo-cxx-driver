@@ -111,7 +111,7 @@ value::value(const type id, stdx::string_view v) : _impl{stdx::make_unique<impl>
         case type::k_regex:
             _impl->_value.value_type = BSON_TYPE_REGEX;
             _impl->_value.value.v_regex.regex = make_copy_for_libbson(v);
-            _impl->_value.value.v_regex.options = make_copy_for_libbson({});
+            _impl->_value.value.v_regex.options = NULL;
             break;
         case type::k_code:
             _impl->_value.value_type = BSON_TYPE_CODE;

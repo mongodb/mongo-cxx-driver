@@ -172,10 +172,10 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             coverting_construction_test(b_regex{regex, options}, test_doc);
             REQUIRE(bson_value::value(regex, options) == test_doc);
 
-            auto empty_regex = bson_value::make_value(b_regex{"", ""});
+            auto empty_regex = bson_value::make_value(b_regex{""});
             value_construction_test(empty_regex.view());
 
-            coverting_construction_test(b_regex{"", ""}, empty_regex);
+            coverting_construction_test(b_regex{""}, empty_regex);
             REQUIRE(bson_value::value(type::k_regex, "") == empty_regex);
             REQUIRE(bson_value::value("", "") == empty_regex);
         }
