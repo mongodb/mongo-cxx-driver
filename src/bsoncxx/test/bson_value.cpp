@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <algorithm>
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
@@ -20,6 +21,7 @@
 #include <bsoncxx/types/bson_value/make_value.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+#include <vector>
 
 namespace {
 using namespace bsoncxx;
@@ -38,119 +40,250 @@ void value_construction_test(bson_value::view test_view) {
 
     REQUIRE(test_value == test_view);
 }
+
+template <typename T, typename U>
+void coverting_construction_test(T actual, U expected) {
+    bson_value::value copy_initialization = actual;
+    REQUIRE(copy_initialization == expected);
+
+    bson_value::value direct_initialization(actual);
+    REQUIRE(direct_initialization == expected);
+
+    bson_value::value _static_cast = static_cast<bson_value::value>(actual);
+    REQUIRE(_static_cast == expected);
+}
+
 }  // namespace
 
 TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
-    auto doc_value = make_document(kvp("hello", "world"));
-    auto doc2_value = make_document(kvp("a", 1));
-
-    auto doc = doc_value.view();
-    auto doc2 = doc2_value.view();
-
-    auto elem = doc["hello"];
-    auto elem2 = doc2["a"];
-
-    SECTION("can be constructed from a bson_value::view") {
+    SECTION("can be constructed from") {
         SECTION("bool") {
-            auto test_doc = bson_value::make_value(types::b_bool{true});
-            value_construction_test(test_doc.view());
+            auto test_value = bson_value::make_value(b_bool{true});
+            value_construction_test(test_value.view());
+
+            coverting_construction_test(true, test_value);
+            coverting_construction_test(b_bool{true}, test_value);
         }
 
         SECTION("utf8") {
-            auto test_doc = bson_value::make_value("super duper");
+            std::string value = "super duper";
+
+            auto test_doc = bson_value::make_value(value);
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(value, test_doc);
+            coverting_construction_test(value.c_str(), test_doc);
+            coverting_construction_test(b_utf8{value}, test_doc);
+            coverting_construction_test(stdx::string_view{value}, test_doc);
+
+            const char raw_data[]{'s', 'u', 'p', 'e', 'r', ' ', 'd', 'u', 'p', 'e', 'r'};
+            coverting_construction_test(stdx::string_view{raw_data, 11}, test_doc);
 
             auto test_empty = bson_value::make_value("");
             value_construction_test(test_empty.view());
+            coverting_construction_test("", test_empty);
 
-            auto test_nulls = bson_value::make_value("a\0\0\0");
+            auto nulls = "a\0\0\0";
+            auto test_nulls = bson_value::make_value(nulls);
             value_construction_test(test_nulls.view());
+            coverting_construction_test(nulls, test_nulls);
         }
 
         SECTION("double") {
-            auto test_doc = bson_value::make_value(types::b_double{12});
+            auto lower_bound = std::numeric_limits<double>::min();
+            auto test_doc = bson_value::make_value(b_double{lower_bound});
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(lower_bound, test_doc);
+            coverting_construction_test(b_double{lower_bound}, test_doc);
         }
 
         SECTION("int32") {
-            auto test_doc = bson_value::make_value(types::b_int32{42});
+            auto lower_bound = std::numeric_limits<int32_t>::min();
+            auto test_doc = bson_value::make_value(b_int32{lower_bound});
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(lower_bound, test_doc);
+            coverting_construction_test(b_int32{lower_bound}, test_doc);
         }
 
         SECTION("int64") {
-            auto test_doc = bson_value::make_value(types::b_int64{72});
+            auto lower_bound = std::numeric_limits<int64_t>::min();
+            auto test_doc = bson_value::make_value(b_int64{lower_bound});
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(lower_bound, test_doc);
+            coverting_construction_test(b_int64{lower_bound}, test_doc);
         }
 
         SECTION("undefined") {
-            auto test_doc = bson_value::make_value(types::b_undefined{});
+            auto test_doc = bson_value::make_value(b_undefined{});
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(b_undefined{}, test_doc);
+            REQUIRE(bson_value::value(type::k_undefined) == test_doc);
         }
 
         SECTION("oid") {
-            auto test_doc = bson_value::make_value(types::b_oid{});
+            oid id{"0123456789abcdefABCDEFFF"};
+            auto test_doc = bson_value::make_value(b_oid{id});
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(id, test_doc);
+            coverting_construction_test(b_oid{id}, test_doc);
         }
 
         SECTION("decimal128") {
-            auto test_doc = bson_value::make_value(types::b_decimal128{decimal128{4, 4}});
+            uint64_t high = std::numeric_limits<uint64_t>::max();
+            uint64_t low = std::numeric_limits<uint64_t>::min();
+
+            auto test_doc = bson_value::make_value(b_decimal128{decimal128{high, low}});
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(decimal128{high, low}, test_doc);
+            coverting_construction_test(b_decimal128{decimal128{high, low}}, test_doc);
+            REQUIRE(bson_value::value(type::k_decimal128, high, low) == test_doc);
         }
 
         SECTION("date") {
-            auto test_doc =
-                bson_value::make_value(types::b_date(std::chrono::milliseconds(123456789)));
+            auto test_doc = bson_value::make_value(b_date(std::chrono::milliseconds(123456789)));
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(std::chrono::milliseconds(123456789), test_doc);
+            coverting_construction_test(b_date(std::chrono::milliseconds(123456789)), test_doc);
         }
 
         SECTION("null") {
-            auto test_doc = bson_value::make_value(types::b_null{});
+            auto test_doc = bson_value::make_value(b_null{});
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(nullptr, test_doc);
+            coverting_construction_test(b_null{}, test_doc);
         }
 
         SECTION("regex") {
-            auto test_doc = bson_value::make_value(types::b_regex{"amy", "no options"});
+            auto regex = "amy";
+            /* options are sorted and any duplicate or invalid options are removed */
+            auto options = "imsx";
+
+            auto test_doc = bson_value::make_value(b_regex{regex, options});
             value_construction_test(test_doc.view());
 
-            auto empty_regex = bson_value::make_value(types::b_regex{"", ""});
+            coverting_construction_test(b_regex{regex, options}, test_doc);
+            REQUIRE(bson_value::value(regex, options) == test_doc);
+
+            auto empty_regex = bson_value::make_value(b_regex{""});
             value_construction_test(empty_regex.view());
+
+            coverting_construction_test(b_regex{""}, empty_regex);
+            REQUIRE(bson_value::value(type::k_regex, "") == empty_regex);
+            REQUIRE(bson_value::value("", "") == empty_regex);
         }
 
         SECTION("dbpointer") {
-            auto test_doc = bson_value::make_value(types::b_dbpointer{"collection", oid{}});
+            oid id{"0123456789abcdefABCDEFFF"};
+            auto coll_name = "collection";
+
+            auto test_doc = bson_value::make_value(b_dbpointer{coll_name, id});
             value_construction_test(test_doc.view());
 
-            auto empty_collection = bson_value::make_value(types::b_dbpointer{"", oid{}});
+            coverting_construction_test(b_dbpointer{coll_name, id}, test_doc);
+            REQUIRE(bson_value::value(coll_name, id) == test_doc);
+
+            auto empty_oid = oid{};
+            auto empty_collection = bson_value::make_value(b_dbpointer{"", empty_oid});
             value_construction_test(empty_collection.view());
+
+            coverting_construction_test(b_dbpointer{"", empty_oid}, empty_collection);
+            REQUIRE(bson_value::value("", empty_oid) == empty_collection);
         }
 
         SECTION("code") {
-            auto test_doc = bson_value::make_value(types::b_code{"look at me I'm some JS code"});
+            auto code = "look at me I'm some JS code";
+            auto test_doc = bson_value::make_value(b_code{code});
             value_construction_test(test_doc.view());
 
-            auto empty_code = bson_value::make_value(types::b_code{""});
+            coverting_construction_test(b_code{code}, test_doc);
+            REQUIRE(bson_value::value(type::k_code, code) == test_doc);
+
+            auto empty_code = bson_value::make_value(b_code{""});
             value_construction_test(empty_code.view());
+            REQUIRE(bson_value::value(type::k_code, "") == empty_code);
         }
 
         SECTION("codewscope") {
             auto doc = make_document(kvp("a", "b"));
-            auto test_doc =
-                bson_value::make_value(types::b_codewscope{"it's me, Code with Scope", doc.view()});
+            auto code = "it's me, Code with Scope";
+            auto test_doc = bson_value::make_value(b_codewscope{code, doc.view()});
+
             value_construction_test(test_doc.view());
+            coverting_construction_test(b_codewscope{code, doc.view()}, test_doc);
+            REQUIRE(bson_value::value(code, doc.view()) == test_doc);
 
             auto empty_doc = make_document(kvp("a", ""));
-            auto empty_code = bson_value::make_value(types::b_codewscope{"", empty_doc.view()});
+            auto empty_code = bson_value::make_value(b_codewscope{"", empty_doc.view()});
             value_construction_test(empty_code.view());
+
+            coverting_construction_test(b_codewscope{"", empty_doc.view()}, empty_code);
+            REQUIRE(bson_value::value("", empty_doc.view()) == empty_code);
         }
 
         SECTION("minkey") {
-            auto test_doc = bson_value::make_value(types::b_minkey{});
+            auto test_doc = bson_value::make_value(b_minkey{});
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(b_minkey{}, test_doc);
+            REQUIRE(bson_value::value(type::k_minkey) == test_doc);
         }
 
         SECTION("maxkey") {
-            auto test_doc = bson_value::make_value(types::b_maxkey{});
+            auto test_doc = bson_value::make_value(b_maxkey{});
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(b_maxkey{}, test_doc);
+            REQUIRE(bson_value::value(type::k_maxkey) == test_doc);
+        }
+
+        SECTION("binary") {
+            std::vector<uint8_t> bin{'d', 'e', 'a', 'd', 'b', 'e', 'e', 'f'};
+            auto test_doc = bson_value::make_value(
+                b_binary{binary_sub_type::k_binary, (uint32_t)bin.size(), bin.data()});
+            value_construction_test(test_doc.view());
+
+            coverting_construction_test(bin, test_doc);
+            REQUIRE(bson_value::value(b_binary{
+                        binary_sub_type::k_binary, (uint32_t)bin.size(), bin.data()}) == test_doc);
+            REQUIRE(bson_value::value(bin.data(), bin.size(), binary_sub_type::k_binary) ==
+                    test_doc);
+            REQUIRE(bson_value::value(bin.data(), bin.size()) == test_doc);
+
+            auto empty = bson_value::make_value(b_binary{});
+            coverting_construction_test(std::vector<unsigned char>{}, empty);
+        }
+
+        SECTION("symbol") {
+            auto symbol = "some symbol";
+            auto test_doc = bson_value::make_value(b_symbol{symbol});
+            value_construction_test(test_doc.view());
+
+            coverting_construction_test(b_symbol{symbol}, test_doc);
+            REQUIRE(bson_value::value(type::k_symbol, symbol) == test_doc);
+
+            auto empty_symbol = bson_value::make_value(b_symbol{""});
+            value_construction_test(empty_symbol.view());
+
+            REQUIRE(bson_value::value(type::k_symbol, "") == empty_symbol);
+        }
+
+        SECTION("timestamp") {
+            uint32_t inc = std::numeric_limits<uint32_t>::max();
+            uint32_t time = std::numeric_limits<uint32_t>::max() - 1;
+
+            auto test_doc = bson_value::make_value(b_timestamp{inc, time});
+            value_construction_test(test_doc.view());
+
+            coverting_construction_test(b_timestamp{inc, time}, test_doc);
+            REQUIRE(bson_value::value(type::k_timestamp, inc, time) == test_doc);
         }
 
         SECTION("document") {
@@ -158,19 +291,42 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             auto test_doc = bson_value::make_value(doc.view());
             value_construction_test(test_doc.view());
 
-            // Empty document
-            test_doc = bson_value::make_value(document::view{});
-            value_construction_test(test_doc.view());
+            coverting_construction_test(b_document{doc.view()}, test_doc);
+            REQUIRE(bson_value::value(doc.view()) == test_doc);
+
+            auto empty_doc = bson_value::make_value(document::view{});
+            value_construction_test(empty_doc.view());
+
+            coverting_construction_test(b_document{}, empty_doc);
+            coverting_construction_test(document::view{}, empty_doc);
         }
 
         SECTION("array") {
             auto arr = make_array(make_document(kvp("hi", 0)));
             auto test_doc = bson_value::make_value(arr.view());
             value_construction_test(test_doc.view());
+
+            coverting_construction_test(b_array{arr.view()}, test_doc);
+            coverting_construction_test(arr.view(), test_doc);
+
+            auto empty_doc = bson_value::make_value(array::view{});
+            value_construction_test(empty_doc.view());
+
+            coverting_construction_test(b_array{}, empty_doc);
+            coverting_construction_test(array::view{}, empty_doc);
         }
     }
 
     SECTION("can be constructed by a document::element") {
+        auto doc_value = make_document(kvp("hello", "world"));
+        auto doc2_value = make_document(kvp("a", 1));
+
+        auto doc = doc_value.view();
+        auto doc2 = doc2_value.view();
+
+        auto elem = doc["hello"];
+        auto elem2 = doc2["a"];
+
         bson_value::value value = elem.get_owning_value();
 
         SECTION("can create new views") {

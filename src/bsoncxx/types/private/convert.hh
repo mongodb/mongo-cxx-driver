@@ -260,7 +260,7 @@ BSONCXX_INLINE void convert_from_libbson(bson_value_t*, bsoncxx::types::b_null* 
 BSONCXX_INLINE void convert_from_libbson(bson_value_t* v, bsoncxx::types::b_regex* out) {
     const char* options = v->value.v_regex.options;
     const char* regex = v->value.v_regex.regex;
-    *out = bsoncxx::types::b_regex{stdx::string_view{regex}, stdx::string_view{options}};
+    *out = bsoncxx::types::b_regex{regex, options ? options : stdx::string_view{}};
 }
 
 BSONCXX_INLINE void convert_from_libbson(bson_value_t* v, bsoncxx::types::b_dbpointer* out) {

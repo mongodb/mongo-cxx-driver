@@ -14,8 +14,13 @@
 
 #pragma once
 
+#include <iostream>
 #include <memory>
+#include <vector>
 
+#include <bsoncxx/array/view_or_value.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
@@ -38,6 +43,195 @@ namespace bson_value {
 ///
 class BSONCXX_API value {
    public:
+///
+/// Constructor for each BSON type.
+///
+/// These x-macros will expand to:
+///    value(b_double v);
+///    value(b_utf8 v);
+///    value(b_document v);
+///    value(b_array v); ...
+///
+#define BSONCXX_ENUM(name, val) value(b_##name v);
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
+
+    ///
+    /// Constructs a BSON UTF-8 string value.
+    ///
+    value(const char* v);
+
+    ///
+    /// Constructs a BSON UTF-8 string value.
+    ///
+    value(std::string v);
+
+    ///
+    /// Constructs a BSON UTF-8 string value.
+    ///
+    value(stdx::string_view v);
+
+    ///
+    /// Constructs a BSON 32-bit signed integer value.
+    ///
+    value(int32_t v);
+
+    ///
+    /// Constructs a BSON 64-bit signed integer value.
+    ///
+    value(int64_t v);
+
+    ///
+    /// Constructs a BSON double value.
+    ///
+    value(double v);
+
+    ///
+    /// Constructs a BSON boolean value.
+    ///
+    value(bool v);
+
+    ///
+    /// Constructs a BSON ObjectId value.
+    ///
+    value(oid v);
+
+    ///
+    /// Constructs a BSON Decimal128 value.
+    ///
+    value(decimal128 v);
+
+    ///
+    /// Constructs a BSON date value.
+    ///
+    value(std::chrono::milliseconds v);
+
+    ///
+    /// Constructs a BSON null value.
+    ///
+    value(std::nullptr_t);
+
+    ///
+    /// Constructs a BSON document value.
+    ///
+    value(bsoncxx::document::view v);
+
+    ///
+    /// Constructs a BSON array value.
+    ///
+    value(bsoncxx::array::view v);
+
+    ///
+    /// Constructs a BSON binary data value.
+    ///
+    /// @param v
+    ///     a stream of bytes
+    /// @param sub_type
+    ///     an optional binary sub type. Defaults to type::k_binary
+    ///
+    value(std::vector<unsigned char> v, const binary_sub_type sub_type = {});
+
+    ///
+    /// Constructs a BSON binary data value.
+    ///
+    /// @param data
+    ///     pointer to a stream of bytes
+    /// @param size
+    ///     the size of the stream of bytes
+    /// @param sub_type
+    ///     an optional binary sub type. Defaults to type::k_binary
+    ///
+    value(const uint8_t* data, size_t size, const binary_sub_type sub_type = {});
+
+    ///
+    /// Constructs a BSON DBPointer value.
+    ///
+    /// @param collection
+    ///     the collection name
+    /// @param value
+    ///     the object id
+    ///
+    /// @deprecated
+    ///   A BSON DBPointer (aka DBRef) is still supported but deprecated.
+    ///
+    value(stdx::string_view collection, oid value);
+
+    ///
+    /// Constructs a BSON JavaScript code with scope value.
+    ///
+    /// @param code
+    ///     the JavaScript code
+    /// @param scope
+    ///     a bson document view holding the scope environment
+    ///
+    value(stdx::string_view code, bsoncxx::document::view_or_value scope);
+
+    ///
+    /// Constructs a BSON regex value with options.
+    ///
+    /// @param regex
+    ///   The regex pattern
+    /// @param options
+    ///   The regex options
+    ///
+    value(stdx::string_view regex, stdx::string_view options);
+
+    ///
+    /// Constructs one of the following BSON values (each specified by the parenthesized type):
+    /// - BSON code value (type::k_code)
+    /// - BSON regex value (type::k_regex)
+    /// - BSON symbol value (type::k_symbol)
+    ///
+    /// @param id
+    ///     the type of BSON value to construct.
+    /// @param v
+    ///     the symbol, JavaScript code, or regex pattern for the BSON symbol, code, or regex value
+    ///     respectively.
+    ///
+    /// @throws bsoncxx::exception if the type's value is not k_code, k_regex, or k_symbol.
+    ///
+    /// @deprecated
+    ///   The BSON symbol type is deprecated and use by clients is discouraged.
+    /// @deprecated
+    ///   The BSON undefined type is deprecated and use by clients is discouraged.
+    ///
+    value(const type id, stdx::string_view v);
+
+    ///
+    /// Constructs one of the following BSON values (each specified by the parenthesized type):
+    /// - BSON maxkey value (type::k_maxkey)
+    /// - BSON minkey value (type::k_minkey)
+    /// - BSON undefined value (type::k_undefined)
+    ///
+    /// @param id
+    ///     the type of BSON value to construct.
+    ///
+    /// @throws bsoncxx::exception if the type's value is not k_maxkey, k_minkey, or k_undefined.
+    ///
+    value(const type id);
+
+    ///
+    /// Constructs one of the following BSON values (each specified by the parenthesized type):
+    /// - BSON decimal128 value (type::k_decimal128)
+    /// - BSON timestamp value (type::k_timestamp)
+    ///
+    /// @param id
+    ///     the type of the BSON value to construct.
+    /// @param a
+    ///     If a BSON decimal128 value is to be constructed, this is the high value.
+    ///     If a BSON timestamp value is to be constructed, this is the increment.
+    /// @param b
+    ///     If a BSON decimal128 value is to be constructed, this is the low value.
+    ///     If a BSON timestamp value is to be constructed, this is the timestamp.
+    ///
+    /// @throws bsoncxx::exception if the specified type is missing its required arguments.
+    ///
+    /// @warning
+    ///   The BSON timestamp type is used internally by the MongoDB server - use by clients
+    ///   is discouraged.
+    ///
+    value(const type id, uint64_t a, uint64_t b);
+
     ~value();
 
     value(const value&);
