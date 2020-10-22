@@ -77,7 +77,7 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             coverting_construction_test(stdx::string_view{value}, test_doc);
 
             const char raw_data[]{'s', 'u', 'p', 'e', 'r', ' ', 'd', 'u', 'p', 'e', 'r'};
-            coverting_construction_test(raw_data, test_doc);
+            coverting_construction_test(stdx::string_view{raw_data, 11}, test_doc);
 
             auto test_empty = bson_value::make_value("");
             value_construction_test(test_empty.view());
