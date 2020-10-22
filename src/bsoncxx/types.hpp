@@ -218,7 +218,7 @@ struct BSONCXX_API b_binary {
 ///
 BSONCXX_INLINE bool operator==(const b_binary& lhs, const b_binary& rhs) {
     return lhs.sub_type == rhs.sub_type && lhs.size == rhs.size &&
-           (std::memcmp(lhs.bytes, rhs.bytes, lhs.size) == 0);
+           (!lhs.size || (std::memcmp(lhs.bytes, rhs.bytes, lhs.size) == 0));
 }
 
 ///
