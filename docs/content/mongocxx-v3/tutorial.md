@@ -25,6 +25,10 @@ title = "Tutorial for mongocxx"
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 #include <mongocxx/instance.hpp>
+#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/stream/array.hpp>
+
 
 using bsoncxx::builder::stream::close_array;
 using bsoncxx::builder::stream::close_document;
