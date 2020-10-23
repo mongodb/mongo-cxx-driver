@@ -15,10 +15,12 @@
 #include <stdlib.h>
 #include <chrono>
 #include <cstring>
+#include <ctime>
 #include <iomanip>
 #include <sstream>
 
 #include <bsoncxx/oid.hpp>
+#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/test_util/catch.hh>
 
 using namespace bsoncxx;
@@ -40,6 +42,7 @@ parsed_oid parse_oid(const oid& oid) {
     std::memcpy(&parsed.rand, bytes + 1, 8);
     std::memcpy(&parsed.counter, bytes + 8, 4);
 
+#if BSON_BYTE_ORDER != BSON_BIG_ENDIAN
 #ifndef _WIN32
     parsed.timestamp = __builtin_bswap32(parsed.timestamp);
     parsed.rand = __builtin_bswap64(parsed.rand) & 0x000000FFFFFFFFFF;
@@ -49,14 +52,17 @@ parsed_oid parse_oid(const oid& oid) {
     parsed.rand = _byteswap_uint64(parsed.rand) & 0x000000FFFFFFFFFF;
     parsed.counter = _byteswap_ulong(parsed.counter) & 0x00FFFFFF;
 #endif
+#endif
 
     return parsed;
 }
 
 void compare_string(const std::time_t& t, std::string time) {
-    std::stringstream time_stream;
-    time_stream << std::put_time(std::gmtime(&t), "%b %e, %Y %H:%M:%S UTC");
-    REQUIRE(time_stream.str() == time);
+    char time_str[48];
+
+    REQUIRE(0 != (strftime(time_str, sizeof(time_str), "%b %e, %Y %H:%M:%S UTC", std::gmtime(&t))));
+
+    REQUIRE(time_str == time);
 }
 
 TEST_CASE("oid", "[bsoncxx::oid]") {
