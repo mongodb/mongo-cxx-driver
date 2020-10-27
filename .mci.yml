@@ -560,6 +560,31 @@ tasks:
           content_type: ${content_type|application/x-gzip}
           display_name: "deb.tar.gz"
 
+    - name: debian-package-build-mnmlstc
+      commands:
+      - func: "setup"
+      - command: shell.exec
+        type: test
+        params:
+          working_dir: "mongo-cxx-driver"
+          shell: bash
+          script: |-
+            set -o errexit
+            set -o xtrace
+            export IS_PATCH="${is_patch}"
+            export DEB_BUILD_PROFILES="pkg.mongo-cxx-driver.mnmlstc"
+            sh .evergreen/debian_package_build.sh
+      - command: s3.put
+        params:
+          aws_key: ${aws_key}
+          aws_secret: ${aws_secret}
+          local_file: deb.tar.gz
+          remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/debian-packages-mnmlstc.tar.gz
+          bucket: mciuploads
+          permissions: public-read
+          content_type: ${content_type|application/x-gzip}
+          display_name: "deb.tar.gz"
+
 #######################################
 #           MongoDB Version Matrix    #
 #######################################
@@ -851,3 +876,4 @@ buildvariants:
       run_on: ubuntu1604-test
       tasks:
          - name: debian-package-build
+         - name: debian-package-build-mnmlstc

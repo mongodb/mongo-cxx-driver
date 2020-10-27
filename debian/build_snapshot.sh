@@ -75,5 +75,9 @@ if [ "$(dpkg-parsechangelog | sed -E -n 's/^Version: +(.*)/\1/p')" != "${snapsho
 fi
 
 echo "Calling git-buildpackage ..."
-gbp buildpackage --git-no-pbuilder --git-export=WC --git-verbose
+if [ "${DEB_BUILD_PROFILES#*pkg.mongo-cxx-driver.mnmlstc}" != "${DEB_BUILD_PROFILES}" ]; then
+   gbp buildpackage --git-no-pbuilder --git-export=WC --git-verbose --git-pbuilder-options="--use-network yes"
+else
+   gbp buildpackage --git-no-pbuilder --git-export=WC --git-verbose
+fi
 

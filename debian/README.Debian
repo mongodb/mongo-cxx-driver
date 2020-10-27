@@ -1,0 +1,18 @@
+Using the MongoDB C++ Driver with MNMLSTC instead of Boost
+----------------------------------------------------------
+
+The MongoDB C++ driver Debian package is built with the Boost C++17 polyfill.
+In the event that you would rather use the MNMLSTC/core C++17 polyfill, you can
+simply obtain the mongo-cxx-driver source package and rebuild it.
+
+To enable the MNMLSTC/core C++17 polyfill use the pkg.mongo-cxx-driver.mnmlstc
+build profile and ensure that your build environment has network access enabled.
+The first can be accomplished by setting the environment variable
+DEB_BUILD_PROFILES="pkg.mongo-cxx-driver.mnmlstc" and the second when building
+by passing the option --git-pbuilder-options="--use-network yes" (for building
+with git-buildpackage) or possibly just "--use-network yes" (for building with
+pbuilder).  Enabling network access is required so that the upstream part of the
+build can clone the MNMLSTC/core GitHub project.
+
+General instructions for rebuilding Debian packages can be found here:
+https://wiki.debian.org/BuildingTutorial
