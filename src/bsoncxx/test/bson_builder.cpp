@@ -1515,28 +1515,25 @@ TEST_CASE("bson builder appends timestamp", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-// TEST_CASE("builder appends int64", "[bsoncxx::builder::stream]") {
-//     bson_t expected;
-//     bson_init(&expected);
-//     builder::stream::document b;
-//
-//     bson_append_int64(&expected, "foo", -1, 100);
-//
-//     SECTION("raw int64") {
-//         b << "foo" << std::int64_t(100);
-//
-//         bson_eq_stream(&expected, b);
-//     }
-//
-//     SECTION("b_int64") {
-//         b << "foo" << types::b_int64{100};
-//
-//         bson_eq_stream(&expected, b);
-//     }
-//
-//     bson_destroy(&expected);
-// }
-//
+TEST_CASE("bson builder appends int64", "[bsoncxx::builder::bson]") {
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_append_int64(&expected, "foo", -1, 100);
+
+    SECTION("raw int64") {
+        bson b{"foo", std::int64_t(100)};
+        bson_eq_document(&expected, b.view().get_document());
+    }
+
+    SECTION("b_int64") {
+        bson b{"foo", types::b_int64{100}};
+        bson_eq_document(&expected, b.view().get_document());
+    }
+
+    bson_destroy(&expected);
+}
+
 // TEST_CASE("builder appends decimal128", "[bsoncxx::builder::stream]") {
 //     bson_t expected;
 //     bson_init(&expected);
