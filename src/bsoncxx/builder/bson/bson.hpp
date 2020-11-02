@@ -39,15 +39,10 @@ class bson {
 
         core _core{!is_document};
         if (is_document) {
-            bool is_key = true;
-            for (auto ele = begin(init); ele != end(init); ele++, is_key = !is_key) {
-                if (is_key) {
-                    auto key = std::string(ele->_value.view().get_string().value);
-                    _core.key_owned(key);
-                } else {
-                    _core.append(ele->_value);
-                }
-            };
+            for (size_t i = 0; i < init.size(); i += 2) {
+                _core.key_owned(std::string((begin(init) + i)->_value.view().get_string().value));
+                _core.append((begin(init) + i + 1)->_value);
+            }
             _value = bson_value::value(_core.extract_document());
         } else {
             for (auto&& ele : init)
