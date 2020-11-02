@@ -31,6 +31,7 @@
 namespace {
 
 using namespace bsoncxx;
+using builder::bson;
 
 void bson_eq_stream(const bson_t* bson, const bsoncxx::builder::stream::document& builder) {
     bsoncxx::document::view expected(bson_get_data(bson), bson->len);
@@ -1247,8 +1248,6 @@ TEST_CASE("builder::stream::document throws on consecutive keys", "[bsoncxx::bui
 }
 
 TEST_CASE("bson builder appends utf8", "[bsoncxx::builder::bson]") {
-    using builder::bson;
-
     bson_t expected;
     bson_init(&expected);
 
@@ -1290,8 +1289,6 @@ TEST_CASE("bson builder appends utf8", "[bsoncxx::builder::bson]") {
 }
 
 TEST_CASE("bson builder appends double", "[bsoncxx::builder::bson]") {
-    using builder::bson;
-
     bson_t expected;
     bson_init(&expected);
 
@@ -1313,8 +1310,6 @@ TEST_CASE("bson builder appends double", "[bsoncxx::builder::bson]") {
 }
 
 TEST_CASE("bson builder appends binary", "[bsoncxx::builder::bson]") {
-    using builder::bson;
-
     bson_t expected;
     bson_init(&expected);
 
@@ -1327,21 +1322,19 @@ TEST_CASE("bson builder appends binary", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-// TEST_CASE("builder appends undefined", "[bsoncxx::builder::stream]") {
-//     bson_t expected;
-//     bson_init(&expected);
-//
-//     bson_append_undefined(&expected, "foo", -1);
-//
-//     builder::stream::document b;
-//
-//     b << "foo" << types::b_undefined{};
-//
-//     bson_eq_stream(&expected, b);
-//
-//     bson_destroy(&expected);
-// }
-//
+TEST_CASE("bson builder appends undefined", "[bsoncxx::builder::bson]") {
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_append_undefined(&expected, "foo", -1);
+
+    bson b{"foo", types::b_undefined{}};
+
+    bson_eq_document(&expected, b.view().get_document());
+
+    bson_destroy(&expected);
+}
+
 // TEST_CASE("builder appends oid", "[bsoncxx::builder::stream]") {
 //     bson_t expected;
 //     bson_init(&expected);
