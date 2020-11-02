@@ -21,14 +21,11 @@ clang-tidy -version
 #
 # see https://clang.llvm.org/extra/clang-tidy
 #
-BUILD="../build"
-CHECKS="\"-*,cert-*,cppcoreguidelines-*,clang-analyzer-*\""
-CMD="clang-tidy -p=$BUILD -checks=$CHECKS"
+CMD="clang-tidy -p=build"
 
 echo "Running clang-tidy with configuration:"
 eval $CMD -dump-config
-clang-tidy -checks=$CHECKS -list-checks
 
 # all source and header files, excluding third party libraries
-FIND="find ../src -type f \( -name \*.hh -o -name \*.hpp -o -name \*.cpp \) -not -path \"*third_party*\""
+FIND="find src -type f \( -name \*.hh -o -name \*.hpp -o -name \*.cpp \) -not -path \"*third_party*\""
 eval $FIND | xargs $CMD
