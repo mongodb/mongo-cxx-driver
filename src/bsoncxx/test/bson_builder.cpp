@@ -1689,5 +1689,4 @@ TEST_CASE("bson builder appends value", "[bsoncxx::builder::bson]") {
     bson_eq_document(&expected, b.view().get_document());
     bson_destroy(&expected);
 }
-
 }  // namespace
