@@ -1599,7 +1599,7 @@ TEST_CASE("bson builder appends array", "[bsoncxx::builder::bson]") {
 
     bson arr{"bar"};
 
-    bson b{"foo", types::b_array{arr.view().get_array()}};
+    bson b{"foo", arr};
     bson_eq_document(&expected, b.view().get_document());
 
     bson_destroy(&expected);
@@ -1616,7 +1616,7 @@ TEST_CASE("bson builder appends document", "[bsoncxx::builder::bson]") {
 
     bson doc{"bar", "baz"};
 
-    bson b{"foo", types::b_document{doc.view().get_document()}};
+    bson b{"foo", doc};
     bson_eq_document(&expected, b.view().get_document());
 
     bson_destroy(&expected);
@@ -1677,55 +1677,6 @@ TEST_CASE("bson builder appends inline nested", "[bsoncxx::builder::bson]") {
     bson_destroy(&third);
 }
 
-// TEST_CASE("builder appends concatenate", "[bsoncxx::builder::stream]") {
-//     bson_t expected, child;
-//
-//     bson_init(&expected);
-//     bson_init(&child);
-//
-//     builder::stream::document b;
-//
-//     SECTION("document context works") {
-//         bson_append_utf8(&child, "hello", -1, "world", -1);
-//         bson_append_document(&expected, "foo", -1, &child);
-//
-//         builder::stream::document child_builder;
-//
-//         child_builder << "hello"
-//                       << "world";
-//
-//         {
-//             using namespace builder::stream;
-//             b << "foo" << open_document << concatenate(child_builder.view()) << close_document;
-//         }
-//
-//         bson_eq_stream(&expected, b);
-//     }
-//
-//     SECTION("array context works") {
-//         bson_append_utf8(&child, "0", -1, "bar", -1);
-//         bson_append_utf8(&child, "1", -1, "0", -1);
-//         bson_append_utf8(&child, "2", -1, "baz", -1);
-//         bson_append_array(&expected, "foo", -1, &child);
-//
-//         builder::stream::array child_builder;
-//
-//         child_builder << "0"
-//                       << "baz";
-//
-//         {
-//             using namespace builder::stream;
-//             b << "foo" << open_array << "bar" << concatenate(child_builder.view()) <<
-//             close_array;
-//         }
-//
-//         bson_eq_stream(&expected, b);
-//     }
-//
-//     bson_destroy(&child);
-//     bson_destroy(&expected);
-// }
-//
 // TEST_CASE("builder appends value", "[bsoncxx::builder::stream]") {
 //     bson_t expected;
 //     bson_init(&expected);
