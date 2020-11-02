@@ -1450,20 +1450,19 @@ TEST_CASE("bson builder appends code", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-// TEST_CASE("builder appends symbol", "[bsoncxx::builder::stream]") {
-//     bson_t expected;
-//     bson_init(&expected);
-//     builder::stream::document b;
-//
-//     bson_append_symbol(&expected, "foo", -1, "deadbeef", -1);
-//
-//     b << "foo" << types::b_symbol{"deadbeef"};
-//
-//     bson_eq_stream(&expected, b);
-//
-//     bson_destroy(&expected);
-// }
-//
+TEST_CASE("bson builder appends symbol", "[bsoncxx::builder::bson]") {
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_append_symbol(&expected, "foo", -1, "deadbeef", -1);
+
+    bson b{"foo", types::b_symbol{"deadbeef"}};
+
+    bson_eq_document(&expected, b.view().get_document());
+
+    bson_destroy(&expected);
+}
+
 // TEST_CASE("builder appends code with scope", "[bsoncxx::builder::stream]") {
 //     bson_t expected, scope;
 //     bson_init(&expected);
