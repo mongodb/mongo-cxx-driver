@@ -29,13 +29,10 @@ class bson {
 
     bson(std::initializer_list<bson> init) {
         size_t counter = 0;
-        bool is_document =
-            std::all_of(begin(init),
-                        end(init),
-                        [&](const bson ele) {
-                            return counter++ % 2 != 0 || ele._value.view().type() == type::k_utf8;
-                        }) &&
-            counter % 2 == 0;
+        auto is_key_or_value = [&](const bson ele) {
+          return counter++ % 2 != 0 || ele._value.view().type() == type::k_utf8;
+        };
+        bool is_document = std::all_of(begin(init), end(init), is_key_or_value) && counter % 2 == 0;
 
         core _core{!is_document};
         if (is_document) {
