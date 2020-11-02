@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/bson/bson.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/builder/bson/bson.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
 
 using bsoncxx::builder::bson;
@@ -26,7 +26,8 @@ namespace {
 TEST_CASE("implicit type deduction") {
     SECTION("object") {
         bson doc{"three", 3};
-        std::cout << "doc=" << bsoncxx::to_json(((bson_value::value)doc).view().get_document()) << std::endl;
+        std::cout << "doc=" << bsoncxx::to_json(((bson_value::value)doc).view().get_document())
+                  << std::endl;
         auto expected = builder::basic::make_document(builder::basic::kvp("three", 3));
         REQUIRE(static_cast<bson_value::value>(doc).view().get_document() == expected.view());
     }
