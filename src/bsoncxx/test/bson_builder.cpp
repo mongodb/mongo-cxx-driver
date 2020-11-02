@@ -1289,29 +1289,29 @@ TEST_CASE("bson builder appends utf8", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-// TEST_CASE("builder appends double", "[bsoncxx::builder::stream]") {
-//     bson_t expected;
-//     bson_init(&expected);
-//
-//     bson_append_double(&expected, "foo", -1, 1.1);
-//
-//     builder::stream::document b;
-//
-//     SECTION("works with raw float") {
-//         b << "foo" << 1.1;
-//
-//         bson_eq_stream(&expected, b);
-//     }
-//
-//     SECTION("works with b_double") {
-//         b << "foo" << types::b_double{1.1};
-//
-//         bson_eq_stream(&expected, b);
-//     }
-//
-//     bson_destroy(&expected);
-// }
-//
+TEST_CASE("bson builder appends double", "[bsoncxx::builder::bson]") {
+    using builder::bson;
+
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_append_double(&expected, "foo", -1, 1.1);
+
+    SECTION("works with raw float") {
+        bson b{"foo", 1.1};
+
+        bson_eq_document(&expected, b.view().get_document());
+    }
+
+    SECTION("works with b_double") {
+        bson b{"foo", types::b_double{1.1}};
+
+        bson_eq_document(&expected, b.view().get_document());
+    }
+
+    bson_destroy(&expected);
+}
+
 // TEST_CASE("builder appends binary", "[bsoncxx::builder::stream]") {
 //     bson_t expected;
 //     bson_init(&expected);
