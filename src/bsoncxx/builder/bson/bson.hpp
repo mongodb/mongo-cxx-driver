@@ -28,15 +28,17 @@ class bson {
     bson(T value) : _value{value} {}
 
     bson(std::initializer_list<bson> init) {
-        bool is_key = false;
-        auto is_key_or_value = [&](const bson ele) mutable {
-            is_key = !is_key;
-            return !is_key || ele._value.view().type() == type::k_utf8;
-        };
-        bool is_doc = init.size() % 2 == 0 && std::all_of(begin(init), end(init), is_key_or_value);
+        bool is_document = [&] {
+            if (init.size() % 2 != 0)
+                return false;
+            for (size_t i = 0; i < init.size(); i += 2)
+                if ((begin(init) + i)->_value.view().type() != type::k_utf8)
+                    return false;
+            return true;
+        }();
 
-        core _core{!is_doc};
-        if (is_doc) {
+        core _core{!is_document};
+        if (is_document) {
             bool is_key = true;
             for (auto ele = begin(init); ele != end(init); ele++, is_key = !is_key) {
                 if (is_key) {
