@@ -52,6 +52,18 @@ class bson {
     }
 
     operator bson_value::value() {
+        return value();
+    }
+
+    operator bson_value::view() {
+        return view();
+    }
+
+    bson_value::view view() {
+        return _value.view();
+    }
+
+    bson_value::value value() {
         return _value;
     }
 

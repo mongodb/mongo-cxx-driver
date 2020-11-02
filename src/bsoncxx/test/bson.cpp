@@ -25,26 +25,26 @@ using namespace bsoncxx;
 
 namespace {
 TEST_CASE("implicit type deduction") {
-    SECTION("object") {
-        bson doc{"three", 3};
-        std::cout << "doc=" << bsoncxx::to_json(((bson_value::value)doc).view().get_document())
-                  << std::endl;
-        auto expected = builder::basic::make_document(builder::basic::kvp("three", 3));
-        REQUIRE(static_cast<bson_value::value>(doc).view().get_document() == expected.view());
-    }
-    SECTION("nested doc") {
-        bson doc{"three", {"two", 1}};
-        std::cout << "doc=" << bsoncxx::to_json(((bson_value::value)doc).view().get_document())
-                  << std::endl;
-        auto expected = builder::basic::make_document(builder::basic::kvp(
-            "three", builder::basic::make_document(builder::basic::kvp("two", 1))));
-        REQUIRE(static_cast<bson_value::value>(doc).view().get_document() == expected.view());
-    }
+    // SECTION("object") {
+    //     bson doc{"three", 3};
+    //     std::cout << "doc=" << bsoncxx::to_json(((bson_value::value)doc).view().get_document())
+    //               << std::endl;
+    //     auto expected = builder::basic::make_document(builder::basic::kvp("three", 3));
+    //     REQUIRE(static_cast<bson_value::value>(doc).view().get_document() == expected.view());
+    // }
+    // SECTION("nested doc") {
+    //     bson doc{"three", {"two", 1}};
+    //     std::cout << "doc=" << bsoncxx::to_json(((bson_value::value)doc).view().get_document())
+    //               << std::endl;
+    //     auto expected = builder::basic::make_document(builder::basic::kvp(
+    //         "three", builder::basic::make_document(builder::basic::kvp("two", 1))));
+    //     REQUIRE(static_cast<bson_value::value>(doc).view().get_document() == expected.view());
+    // }
 
-    SECTION("array") {
-        bson doc{1, 2, 3};
-        auto expected = builder::basic::make_array(1, 2, 3);
-        REQUIRE(static_cast<bson_value::value>(doc).view().get_array() == expected.view());
-    }
+    // SECTION("array") {
+    //     bson doc{1, 2, 3};
+    //     auto expected = builder::basic::make_array(1, 2, 3);
+    //     REQUIRE(static_cast<bson_value::value>(doc).view().get_array() == expected.view());
+    // }
 }
 }

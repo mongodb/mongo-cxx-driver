@@ -16,6 +16,7 @@
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/bson/bson.hpp>
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/builder/stream/array.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
@@ -50,6 +51,16 @@ void viewable_eq_viewable(const T& stream, const U& basic) {
     INFO("basic = " << to_json(test));
     REQUIRE(expected.length() == test.length());
     REQUIRE(std::memcmp(expected.data(), test.data(), expected.length()) == 0);
+}
+
+void bson_eq_document(const bson_t* bson, const document::view document) {
+    bsoncxx::document::view expected(bson_get_data(bson), bson->len);
+    bsoncxx::document::view actual(document);
+
+    INFO("expected = " << to_json(expected));
+    INFO("actual = " << to_json(actual));
+    REQUIRE(expected.length() == actual.length());
+    REQUIRE(std::memcmp(expected.data(), actual.data(), expected.length()) == 0);
 }
 
 TEST_CASE("builder appends utf8", "[bsoncxx::builder::stream]") {
@@ -1234,4 +1245,558 @@ TEST_CASE("builder::stream::document throws on consecutive keys", "[bsoncxx::bui
     REQUIRE_NOTHROW(doc << "far");
     REQUIRE_THROWS_AS(doc << "boo", bsoncxx::exception);
 }
+
+TEST_CASE("bson builder appends utf8", "[bsoncxx::builder::bson]") {
+    using builder::bson;
+
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_append_utf8(&expected, "hello", -1, "world", -1);
+
+    SECTION("works with string literals") {
+        bson b{"hello", "world"};
+
+        bson_eq_document(&expected, b.view().get_document());
+    }
+
+    SECTION("works with std::string") {
+        bson b{"hello", std::string{"world"}};
+
+        bson_eq_document(&expected, b.view().get_document());
+    }
+
+    SECTION("works with b_utf8") {
+        bson b{"hello", types::b_utf8{"world"}};
+
+        bson_eq_document(&expected, b.view().get_document());
+    }
+
+    SECTION("works with const char*") {
+        const char* world = "world";
+        bson b{"hello", world};
+
+        bson_eq_document(&expected, b.view().get_document());
+    }
+
+    SECTION("works with char*") {
+        char* world = const_cast<char*>("world");
+        bson b{"hello", world};
+
+        bson_eq_document(&expected, b.view().get_document());
+    }
+
+    bson_destroy(&expected);
+}
+
+// TEST_CASE("builder appends double", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//
+//     bson_append_double(&expected, "foo", -1, 1.1);
+//
+//     builder::stream::document b;
+//
+//     SECTION("works with raw float") {
+//         b << "foo" << 1.1;
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     SECTION("works with b_double") {
+//         b << "foo" << types::b_double{1.1};
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends binary", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//
+//     bson_append_binary(&expected, "foo", -1, BSON_SUBTYPE_BINARY, (uint8_t*)"deadbeef", 8);
+//
+//     builder::stream::document b;
+//
+//     b << "foo" << types::b_binary{binary_sub_type::k_binary, 8, (uint8_t*)"deadbeef"};
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends undefined", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//
+//     bson_append_undefined(&expected, "foo", -1);
+//
+//     builder::stream::document b;
+//
+//     b << "foo" << types::b_undefined{};
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends oid", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//
+//     bson_oid_t oid;
+//     bson_oid_init(&oid, NULL);
+//
+//     bson_append_oid(&expected, "foo", -1, &oid);
+//
+//     builder::stream::document b;
+//
+//     SECTION("b_oid works") {
+//         b << "foo" << types::b_oid{bsoncxx::oid{(char*)oid.bytes, 12}};
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     SECTION("raw oid works") {
+//         b << "foo" << bsoncxx::oid{(char*)oid.bytes, 12};
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends bool", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//     builder::stream::document b;
+//
+//     SECTION("b_bool true works") {
+//         bson_append_bool(&expected, "foo", -1, 1);
+//
+//         b << "foo" << types::b_bool{true};
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     SECTION("raw true works") {
+//         bson_append_bool(&expected, "foo", -1, 1);
+//
+//         b << "foo" << true;
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     SECTION("b_bool false works") {
+//         bson_append_bool(&expected, "foo", -1, 0);
+//
+//         b << "foo" << types::b_bool{false};
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     SECTION("raw false works") {
+//         bson_append_bool(&expected, "foo", -1, 0);
+//
+//         b << "foo" << false;
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends date time", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//     builder::stream::document b;
+//
+//     bson_append_date_time(&expected, "foo", -1, 10000);
+//
+//     b << "foo" << types::b_date{std::chrono::milliseconds{10000}};
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends null", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//     builder::stream::document b;
+//
+//     bson_append_null(&expected, "foo", -1);
+//
+//     b << "foo" << types::b_null{};
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends regex", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//     builder::stream::document b;
+//
+//     bson_append_regex(&expected, "foo", -1, "^foo|bar$", "i");
+//     bson_append_regex(&expected, "boo", -1, "^boo|far$", "");
+//     bson_append_regex(&expected, "bar", -1, "^bar|foo$", "");
+//
+//     b << "foo" << types::b_regex{"^foo|bar$", "i"};
+//     b << "boo" << types::b_regex{"^boo|far$", ""};
+//     b << "bar" << types::b_regex{"^bar|foo$"};
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends code", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//     builder::stream::document b;
+//
+//     bson_append_code(&expected, "foo", -1, "var a = {};");
+//
+//     b << "foo" << types::b_code{"var a = {};"};
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends symbol", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//     builder::stream::document b;
+//
+//     bson_append_symbol(&expected, "foo", -1, "deadbeef", -1);
+//
+//     b << "foo" << types::b_symbol{"deadbeef"};
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends code with scope", "[bsoncxx::builder::stream]") {
+//     bson_t expected, scope;
+//     bson_init(&expected);
+//     builder::stream::document b;
+//     builder::stream::document scope_builder;
+//
+//     bson_init(&scope);
+//
+//     bson_append_int32(&scope, "b", -1, 10);
+//
+//     scope_builder << "b" << 10;
+//
+//     bson_append_code_with_scope(&expected, "foo", -1, "var a = b;", &scope);
+//
+//     b << "foo" << types::b_codewscope{"var a = b;", scope_builder.view()};
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends int32", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//     builder::stream::document b;
+//
+//     bson_append_int32(&expected, "foo", -1, 100);
+//
+//     SECTION("raw int32") {
+//         b << "foo" << 100;
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     SECTION("b_int32") {
+//         b << "foo" << types::b_int32{100};
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends timestamp", "[bsoncxx::builder::stream]") {
+//     builder::stream::document b;
+//     types::b_timestamp foo{100, 1000};
+//     b << "foo" << foo;
+//
+//     bson_t expected;
+//     bson_init(&expected);
+//     bson_append_timestamp(&expected, "foo", -1, foo.timestamp, foo.increment);
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends int64", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//     builder::stream::document b;
+//
+//     bson_append_int64(&expected, "foo", -1, 100);
+//
+//     SECTION("raw int64") {
+//         b << "foo" << std::int64_t(100);
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     SECTION("b_int64") {
+//         b << "foo" << types::b_int64{100};
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends decimal128", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//
+//     bson_decimal128_t d128;
+//     bson_decimal128_from_string("-1234E+999", &d128);
+//     bson_append_decimal128(&expected, "foo", -1, &d128);
+//
+//     builder::stream::document b;
+//
+//     SECTION("b_decimal128 works") {
+//         b << "foo" << types::b_decimal128{"-1234E+999"};
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     SECTION("raw bsoncxx::decimal128 works") {
+//         b << "foo" << bsoncxx::decimal128{"-1234E+999"};
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     SECTION("bsoncxx::types::bson_value::view with decimal128 works") {
+//         auto d = types::b_decimal128{"-1234E+999"};
+//         auto v = types::bson_value::view{d};
+//
+//         REQUIRE(v.get_decimal128() == d);
+//
+//         b << "foo" << v;
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends minkey", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//     builder::stream::document b;
+//
+//     bson_append_minkey(&expected, "foo", -1);
+//
+//     b << "foo" << types::b_minkey{};
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends maxkey", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//     builder::stream::document b;
+//
+//     bson_append_maxkey(&expected, "foo", -1);
+//
+//     b << "foo" << types::b_maxkey{};
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends array", "[bsoncxx::builder::stream]") {
+//     bson_t expected, child;
+//     bson_init(&expected);
+//     bson_init(&child);
+//     builder::stream::document b;
+//     builder::stream::array child_builder;
+//
+//     bson_append_utf8(&child, "0", -1, "baz", -1);
+//     bson_append_array(&expected, "foo", -1, &child);
+//
+//     child_builder << "baz";
+//
+//     b << "foo" << types::b_array{child_builder.view()};
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+//     bson_destroy(&child);
+// }
+//
+// TEST_CASE("builder appends document", "[bsoncxx::builder::stream]") {
+//     bson_t expected, child;
+//     bson_init(&expected);
+//     bson_init(&child);
+//     builder::stream::document b;
+//     builder::stream::document child_builder;
+//
+//     bson_append_utf8(&child, "bar", -1, "baz", -1);
+//     bson_append_document(&expected, "foo", -1, &child);
+//
+//     child_builder << "bar"
+//                   << "baz";
+//
+//     b << "foo" << types::b_document{child_builder.view()};
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+//     bson_destroy(&child);
+// }
+//
+// TEST_CASE("builder appends inline array", "[bsoncxx::builder::stream]") {
+//     bson_t expected, child;
+//     bson_init(&expected);
+//     bson_init(&child);
+//     builder::stream::document b;
+//
+//     bson_append_utf8(&child, "0", -1, "baz", -1);
+//     bson_append_array(&expected, "foo", -1, &child);
+//
+//     b << "foo" << builder::stream::open_array << "baz" << builder::stream::close_array;
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+//     bson_destroy(&child);
+// }
+//
+// TEST_CASE("builder appends inline document", "[bsoncxx::builder::stream]") {
+//     bson_t expected, child;
+//     bson_init(&expected);
+//     bson_init(&child);
+//     builder::stream::document b;
+//
+//     bson_append_utf8(&child, "bar", -1, "baz", -1);
+//     bson_append_document(&expected, "foo", -1, &child);
+//
+//     b << "foo" << builder::stream::open_document << "bar"
+//       << "baz" << builder::stream::close_document;
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+//     bson_destroy(&child);
+// }
+//
+// TEST_CASE("builder appends inline nested", "[bsoncxx::builder::stream]") {
+//     bson_t expected, foo, bar, third;
+//
+//     bson_init(&expected);
+//     bson_init(&foo);
+//     bson_init(&bar);
+//     bson_init(&third);
+//
+//     bson_append_utf8(&third, "hello", -1, "world", -1);
+//     bson_append_int32(&bar, "0", -1, 1);
+//     bson_append_int32(&bar, "1", -1, 2);
+//     bson_append_document(&bar, "2", -1, &third);
+//     bson_append_array(&foo, "bar", -1, &bar);
+//     bson_append_document(&expected, "foo", -1, &foo);
+//     builder::stream::document b;
+//
+//     {
+//         using namespace builder::stream;
+//
+//         b << "foo" << open_document << "bar" << open_array << 1 << 2 << open_document << "hello"
+//           << "world" << close_document << close_array << close_document;
+//     }
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+//     bson_destroy(&foo);
+//     bson_destroy(&bar);
+//     bson_destroy(&third);
+// }
+//
+// TEST_CASE("builder appends concatenate", "[bsoncxx::builder::stream]") {
+//     bson_t expected, child;
+//
+//     bson_init(&expected);
+//     bson_init(&child);
+//
+//     builder::stream::document b;
+//
+//     SECTION("document context works") {
+//         bson_append_utf8(&child, "hello", -1, "world", -1);
+//         bson_append_document(&expected, "foo", -1, &child);
+//
+//         builder::stream::document child_builder;
+//
+//         child_builder << "hello"
+//                       << "world";
+//
+//         {
+//             using namespace builder::stream;
+//             b << "foo" << open_document << concatenate(child_builder.view()) << close_document;
+//         }
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     SECTION("array context works") {
+//         bson_append_utf8(&child, "0", -1, "bar", -1);
+//         bson_append_utf8(&child, "1", -1, "0", -1);
+//         bson_append_utf8(&child, "2", -1, "baz", -1);
+//         bson_append_array(&expected, "foo", -1, &child);
+//
+//         builder::stream::array child_builder;
+//
+//         child_builder << "0"
+//                       << "baz";
+//
+//         {
+//             using namespace builder::stream;
+//             b << "foo" << open_array << "bar" << concatenate(child_builder.view()) <<
+//             close_array;
+//         }
+//
+//         bson_eq_stream(&expected, b);
+//     }
+//
+//     bson_destroy(&child);
+//     bson_destroy(&expected);
+// }
+//
+// TEST_CASE("builder appends value", "[bsoncxx::builder::stream]") {
+//     bson_t expected;
+//     bson_init(&expected);
+//
+//     builder::stream::document b;
+//     builder::stream::document tmp;
+//
+//     bson_append_int32(&expected, "foo", -1, 999);
+//
+//     tmp << "foo" << 999;
+//
+//     b << "foo" << tmp.view()["foo"].get_value();
+//
+//     bson_eq_stream(&expected, b);
+//
+//     bson_destroy(&expected);
+// }
+
 }  // namespace
