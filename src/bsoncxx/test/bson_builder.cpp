@@ -1463,27 +1463,26 @@ TEST_CASE("bson builder appends symbol", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-// TEST_CASE("builder appends code with scope", "[bsoncxx::builder::stream]") {
-//     bson_t expected, scope;
-//     bson_init(&expected);
-//     builder::stream::document b;
-//     builder::stream::document scope_builder;
-//
-//     bson_init(&scope);
-//
-//     bson_append_int32(&scope, "b", -1, 10);
-//
-//     scope_builder << "b" << 10;
-//
-//     bson_append_code_with_scope(&expected, "foo", -1, "var a = b;", &scope);
-//
-//     b << "foo" << types::b_codewscope{"var a = b;", scope_builder.view()};
-//
-//     bson_eq_stream(&expected, b);
-//
-//     bson_destroy(&expected);
-// }
-//
+TEST_CASE("bson builder appends code with scope", "[bsoncxx::builder::bson]") {
+    bson_t expected, scope;
+    bson_init(&expected);
+    builder::stream::document scope_builder;
+
+    bson_init(&scope);
+
+    bson_append_int32(&scope, "b", -1, 10);
+
+    scope_builder << "b" << 10;
+
+    bson_append_code_with_scope(&expected, "foo", -1, "var a = b;", &scope);
+
+    bson b{"foo", types::b_codewscope{"var a = b;", scope_builder.view()}};
+
+    bson_eq_document(&expected, b.view().get_document());
+
+    bson_destroy(&expected);
+}
+
 // TEST_CASE("builder appends int32", "[bsoncxx::builder::stream]") {
 //     bson_t expected;
 //     bson_init(&expected);
