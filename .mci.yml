@@ -198,8 +198,7 @@ functions:
             set -o errexit
             set -o xtrace
             set -o pipefail
-            cd etc
-            ./run-clang-tidy.sh
+            ./etc/run-clang-tidy.sh
 
     "compile":
         - command: shell.exec
