@@ -1335,32 +1335,30 @@ TEST_CASE("bson builder appends undefined", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-// TEST_CASE("builder appends oid", "[bsoncxx::builder::stream]") {
-//     bson_t expected;
-//     bson_init(&expected);
-//
-//     bson_oid_t oid;
-//     bson_oid_init(&oid, NULL);
-//
-//     bson_append_oid(&expected, "foo", -1, &oid);
-//
-//     builder::stream::document b;
-//
-//     SECTION("b_oid works") {
-//         b << "foo" << types::b_oid{bsoncxx::oid{(char*)oid.bytes, 12}};
-//
-//         bson_eq_stream(&expected, b);
-//     }
-//
-//     SECTION("raw oid works") {
-//         b << "foo" << bsoncxx::oid{(char*)oid.bytes, 12};
-//
-//         bson_eq_stream(&expected, b);
-//     }
-//
-//     bson_destroy(&expected);
-// }
-//
+TEST_CASE("bson builder appends oid", "[bsoncxx::builder::bson]") {
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_oid_t oid;
+    bson_oid_init(&oid, NULL);
+
+    bson_append_oid(&expected, "foo", -1, &oid);
+
+    SECTION("b_oid works") {
+        bson b{"foo", types::b_oid{bsoncxx::oid{(char*)oid.bytes, 12}}};
+
+        bson_eq_document(&expected, b.view().get_document());
+    }
+
+    SECTION("raw oid works") {
+        bson b{"foo", bsoncxx::oid{(char*)oid.bytes, 12}};
+
+        bson_eq_document(&expected, b.view().get_document());
+    }
+
+    bson_destroy(&expected);
+}
+
 // TEST_CASE("builder appends bool", "[bsoncxx::builder::stream]") {
 //     bson_t expected;
 //     bson_init(&expected);
