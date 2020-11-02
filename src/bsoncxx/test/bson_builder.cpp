@@ -1398,20 +1398,19 @@ TEST_CASE("bson builder appends bool", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-// TEST_CASE("builder appends date time", "[bsoncxx::builder::stream]") {
-//     bson_t expected;
-//     bson_init(&expected);
-//     builder::stream::document b;
-//
-//     bson_append_date_time(&expected, "foo", -1, 10000);
-//
-//     b << "foo" << types::b_date{std::chrono::milliseconds{10000}};
-//
-//     bson_eq_stream(&expected, b);
-//
-//     bson_destroy(&expected);
-// }
-//
+TEST_CASE("bson builder appends date time", "[bsoncxx::builder::bson]") {
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_append_date_time(&expected, "foo", -1, 10000);
+
+    bson b{"foo", types::b_date{std::chrono::milliseconds{10000}}};
+
+    bson_eq_document(&expected, b.view().get_document());
+
+    bson_destroy(&expected);
+}
+
 // TEST_CASE("builder appends null", "[bsoncxx::builder::stream]") {
 //     bson_t expected;
 //     bson_init(&expected);
