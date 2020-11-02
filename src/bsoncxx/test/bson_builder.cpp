@@ -1638,24 +1638,21 @@ TEST_CASE("bson builder appends inline array", "[bsoncxx::builder::bson]") {
     bson_destroy(&child);
 }
 
-// TEST_CASE("builder appends inline document", "[bsoncxx::builder::stream]") {
-//     bson_t expected, child;
-//     bson_init(&expected);
-//     bson_init(&child);
-//     builder::stream::document b;
-//
-//     bson_append_utf8(&child, "bar", -1, "baz", -1);
-//     bson_append_document(&expected, "foo", -1, &child);
-//
-//     b << "foo" << builder::stream::open_document << "bar"
-//       << "baz" << builder::stream::close_document;
-//
-//     bson_eq_stream(&expected, b);
-//
-//     bson_destroy(&expected);
-//     bson_destroy(&child);
-// }
-//
+TEST_CASE("bson builder appends inline document", "[bsoncxx::builder::bson]") {
+    bson_t expected, child;
+    bson_init(&expected);
+    bson_init(&child);
+
+    bson_append_utf8(&child, "bar", -1, "baz", -1);
+    bson_append_document(&expected, "foo", -1, &child);
+
+    bson b{"foo", {"bar", "baz"}};
+    bson_eq_document(&expected, b.view().get_document());
+
+    bson_destroy(&expected);
+    bson_destroy(&child);
+}
+
 // TEST_CASE("builder appends inline nested", "[bsoncxx::builder::stream]") {
 //     bson_t expected, foo, bar, third;
 //
