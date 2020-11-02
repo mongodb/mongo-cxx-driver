@@ -1677,22 +1677,18 @@ TEST_CASE("bson builder appends inline nested", "[bsoncxx::builder::bson]") {
     bson_destroy(&third);
 }
 
-// TEST_CASE("builder appends value", "[bsoncxx::builder::stream]") {
-//     bson_t expected;
-//     bson_init(&expected);
-//
-//     builder::stream::document b;
-//     builder::stream::document tmp;
-//
-//     bson_append_int32(&expected, "foo", -1, 999);
-//
-//     tmp << "foo" << 999;
-//
-//     b << "foo" << tmp.view()["foo"].get_value();
-//
-//     bson_eq_stream(&expected, b);
-//
-//     bson_destroy(&expected);
-// }
+TEST_CASE("bson builder appends value", "[bsoncxx::builder::bson]") {
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_append_int32(&expected, "foo", -1, 999);
+
+    bson tmp{"foo", 999};
+    bson b{"foo", tmp.value()};
+
+    bson_eq_document(&expected, b.view().get_document());
+
+    bson_destroy(&expected);
+}
 
 }  // namespace
