@@ -30,7 +30,7 @@ class bson {
     bson(std::initializer_list<bson> init) {
         size_t counter = 0;
         auto is_key_or_value = [&](const bson ele) {
-          return counter++ % 2 != 0 || ele._value.view().type() == type::k_utf8;
+            return counter++ % 2 != 0 || ele._value.view().type() == type::k_utf8;
         };
         bool is_document = std::all_of(begin(init), end(init), is_key_or_value) && counter % 2 == 0;
 
