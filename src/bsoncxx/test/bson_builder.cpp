@@ -1565,20 +1565,18 @@ TEST_CASE("bson builder appends decimal128", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-// TEST_CASE("builder appends minkey", "[bsoncxx::builder::stream]") {
-//     bson_t expected;
-//     bson_init(&expected);
-//     builder::stream::document b;
-//
-//     bson_append_minkey(&expected, "foo", -1);
-//
-//     b << "foo" << types::b_minkey{};
-//
-//     bson_eq_stream(&expected, b);
-//
-//     bson_destroy(&expected);
-// }
-//
+TEST_CASE("bson builder appends minkey", "[bsoncxx::builder::bson]") {
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_append_minkey(&expected, "foo", -1);
+
+    bson b{"foo", types::b_minkey{}};
+    bson_eq_document(&expected, b.view().get_document());
+
+    bson_destroy(&expected);
+}
+
 // TEST_CASE("builder appends maxkey", "[bsoncxx::builder::stream]") {
 //     bson_t expected;
 //     bson_init(&expected);
