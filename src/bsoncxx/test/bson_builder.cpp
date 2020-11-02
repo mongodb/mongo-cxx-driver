@@ -1687,7 +1687,6 @@ TEST_CASE("bson builder appends value", "[bsoncxx::builder::bson]") {
     bson b{"foo", tmp.value()};
 
     bson_eq_document(&expected, b.view().get_document());
-
     bson_destroy(&expected);
 }
 
