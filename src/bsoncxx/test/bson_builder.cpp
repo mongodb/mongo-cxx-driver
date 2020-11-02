@@ -1605,28 +1605,24 @@ TEST_CASE("bson builder appends array", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
     bson_destroy(&child);
 }
-//
-// TEST_CASE("builder appends document", "[bsoncxx::builder::stream]") {
-//     bson_t expected, child;
-//     bson_init(&expected);
-//     bson_init(&child);
-//     builder::stream::document b;
-//     builder::stream::document child_builder;
-//
-//     bson_append_utf8(&child, "bar", -1, "baz", -1);
-//     bson_append_document(&expected, "foo", -1, &child);
-//
-//     child_builder << "bar"
-//                   << "baz";
-//
-//     b << "foo" << types::b_document{child_builder.view()};
-//
-//     bson_eq_stream(&expected, b);
-//
-//     bson_destroy(&expected);
-//     bson_destroy(&child);
-// }
-//
+
+TEST_CASE("bson builder appends document", "[bsoncxx::builder::bson]") {
+    bson_t expected, child;
+    bson_init(&expected);
+    bson_init(&child);
+
+    bson_append_utf8(&child, "bar", -1, "baz", -1);
+    bson_append_document(&expected, "foo", -1, &child);
+
+    bson doc{"bar", "baz"};
+
+    bson b{"foo", types::b_document{doc.view().get_document()}};
+    bson_eq_document(&expected, b.view().get_document());
+
+    bson_destroy(&expected);
+    bson_destroy(&child);
+}
+
 // TEST_CASE("builder appends inline array", "[bsoncxx::builder::stream]") {
 //     bson_t expected, child;
 //     bson_init(&expected);
