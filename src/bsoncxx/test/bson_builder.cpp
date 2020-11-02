@@ -1589,25 +1589,22 @@ TEST_CASE("bson builder appends maxkey", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-// TEST_CASE("builder appends array", "[bsoncxx::builder::stream]") {
-//     bson_t expected, child;
-//     bson_init(&expected);
-//     bson_init(&child);
-//     builder::stream::document b;
-//     builder::stream::array child_builder;
-//
-//     bson_append_utf8(&child, "0", -1, "baz", -1);
-//     bson_append_array(&expected, "foo", -1, &child);
-//
-//     child_builder << "baz";
-//
-//     b << "foo" << types::b_array{child_builder.view()};
-//
-//     bson_eq_stream(&expected, b);
-//
-//     bson_destroy(&expected);
-//     bson_destroy(&child);
-// }
+TEST_CASE("bson builder appends array", "[bsoncxx::builder::bson]") {
+    bson_t expected, child;
+    bson_init(&expected);
+    bson_init(&child);
+
+    bson_append_utf8(&child, "0", -1, "bar", -1);
+    bson_append_array(&expected, "foo", -1, &child);
+
+    bson arr{"bar"};
+
+    bson b{"foo", types::b_array{arr.view().get_array()}};
+    bson_eq_document(&expected, b.view().get_document());
+
+    bson_destroy(&expected);
+    bson_destroy(&child);
+}
 //
 // TEST_CASE("builder appends document", "[bsoncxx::builder::stream]") {
 //     bson_t expected, child;
