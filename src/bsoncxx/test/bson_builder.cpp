@@ -1312,21 +1312,21 @@ TEST_CASE("bson builder appends double", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-// TEST_CASE("builder appends binary", "[bsoncxx::builder::stream]") {
-//     bson_t expected;
-//     bson_init(&expected);
-//
-//     bson_append_binary(&expected, "foo", -1, BSON_SUBTYPE_BINARY, (uint8_t*)"deadbeef", 8);
-//
-//     builder::stream::document b;
-//
-//     b << "foo" << types::b_binary{binary_sub_type::k_binary, 8, (uint8_t*)"deadbeef"};
-//
-//     bson_eq_stream(&expected, b);
-//
-//     bson_destroy(&expected);
-// }
-//
+TEST_CASE("bson builder appends binary", "[bsoncxx::builder::bson]") {
+    using builder::bson;
+
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_append_binary(&expected, "foo", -1, BSON_SUBTYPE_BINARY, (uint8_t*)"deadbeef", 8);
+
+    bson b{"foo", types::b_binary{binary_sub_type::k_binary, 8, (uint8_t*)"deadbeef"}};
+
+    bson_eq_document(&expected, b.view().get_document());
+
+    bson_destroy(&expected);
+}
+
 // TEST_CASE("builder appends undefined", "[bsoncxx::builder::stream]") {
 //     bson_t expected;
 //     bson_init(&expected);
