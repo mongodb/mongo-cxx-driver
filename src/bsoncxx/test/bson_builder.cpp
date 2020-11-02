@@ -1483,27 +1483,24 @@ TEST_CASE("bson builder appends code with scope", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-// TEST_CASE("builder appends int32", "[bsoncxx::builder::stream]") {
-//     bson_t expected;
-//     bson_init(&expected);
-//     builder::stream::document b;
-//
-//     bson_append_int32(&expected, "foo", -1, 100);
-//
-//     SECTION("raw int32") {
-//         b << "foo" << 100;
-//
-//         bson_eq_stream(&expected, b);
-//     }
-//
-//     SECTION("b_int32") {
-//         b << "foo" << types::b_int32{100};
-//
-//         bson_eq_stream(&expected, b);
-//     }
-//
-//     bson_destroy(&expected);
-// }
+TEST_CASE("bson builder appends int32", "[bsoncxx::builder::bson]") {
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_append_int32(&expected, "foo", -1, 100);
+
+    SECTION("raw int32") {
+        bson b{"foo", 100};
+        bson_eq_document(&expected, b.view().get_document());
+    }
+
+    SECTION("b_int32") {
+        bson b{"foo", types::b_int32{100}};
+        bson_eq_document(&expected, b.view().get_document());
+    }
+
+    bson_destroy(&expected);
+}
 //
 // TEST_CASE("builder appends timestamp", "[bsoncxx::builder::stream]") {
 //     builder::stream::document b;
