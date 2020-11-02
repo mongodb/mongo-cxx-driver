@@ -1653,37 +1653,30 @@ TEST_CASE("bson builder appends inline document", "[bsoncxx::builder::bson]") {
     bson_destroy(&child);
 }
 
-// TEST_CASE("builder appends inline nested", "[bsoncxx::builder::stream]") {
-//     bson_t expected, foo, bar, third;
-//
-//     bson_init(&expected);
-//     bson_init(&foo);
-//     bson_init(&bar);
-//     bson_init(&third);
-//
-//     bson_append_utf8(&third, "hello", -1, "world", -1);
-//     bson_append_int32(&bar, "0", -1, 1);
-//     bson_append_int32(&bar, "1", -1, 2);
-//     bson_append_document(&bar, "2", -1, &third);
-//     bson_append_array(&foo, "bar", -1, &bar);
-//     bson_append_document(&expected, "foo", -1, &foo);
-//     builder::stream::document b;
-//
-//     {
-//         using namespace builder::stream;
-//
-//         b << "foo" << open_document << "bar" << open_array << 1 << 2 << open_document << "hello"
-//           << "world" << close_document << close_array << close_document;
-//     }
-//
-//     bson_eq_stream(&expected, b);
-//
-//     bson_destroy(&expected);
-//     bson_destroy(&foo);
-//     bson_destroy(&bar);
-//     bson_destroy(&third);
-// }
-//
+TEST_CASE("bson builder appends inline nested", "[bsoncxx::builder::bson]") {
+    bson_t expected, foo, bar, third;
+
+    bson_init(&expected);
+    bson_init(&foo);
+    bson_init(&bar);
+    bson_init(&third);
+
+    bson_append_utf8(&third, "hello", -1, "world", -1);
+    bson_append_int32(&bar, "0", -1, 1);
+    bson_append_int32(&bar, "1", -1, 2);
+    bson_append_document(&bar, "2", -1, &third);
+    bson_append_array(&foo, "bar", -1, &bar);
+    bson_append_document(&expected, "foo", -1, &foo);
+
+    bson b{"foo", {"bar", {1, 2, {"hello", "world"}}}};
+    bson_eq_document(&expected, b.view().get_document());
+
+    bson_destroy(&expected);
+    bson_destroy(&foo);
+    bson_destroy(&bar);
+    bson_destroy(&third);
+}
+
 // TEST_CASE("builder appends concatenate", "[bsoncxx::builder::stream]") {
 //     bson_t expected, child;
 //
