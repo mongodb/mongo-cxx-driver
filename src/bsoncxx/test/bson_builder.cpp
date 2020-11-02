@@ -1501,21 +1501,20 @@ TEST_CASE("bson builder appends int32", "[bsoncxx::builder::bson]") {
 
     bson_destroy(&expected);
 }
-//
-// TEST_CASE("builder appends timestamp", "[bsoncxx::builder::stream]") {
-//     builder::stream::document b;
-//     types::b_timestamp foo{100, 1000};
-//     b << "foo" << foo;
-//
-//     bson_t expected;
-//     bson_init(&expected);
-//     bson_append_timestamp(&expected, "foo", -1, foo.timestamp, foo.increment);
-//
-//     bson_eq_stream(&expected, b);
-//
-//     bson_destroy(&expected);
-// }
-//
+
+TEST_CASE("bson builder appends timestamp", "[bsoncxx::builder::bson]") {
+    types::b_timestamp foo{100, 1000};
+    bson b{"foo", foo};
+
+    bson_t expected;
+    bson_init(&expected);
+    bson_append_timestamp(&expected, "foo", -1, foo.timestamp, foo.increment);
+
+    bson_eq_document(&expected, b.view().get_document());
+
+    bson_destroy(&expected);
+}
+
 // TEST_CASE("builder appends int64", "[bsoncxx::builder::stream]") {
 //     bson_t expected;
 //     bson_init(&expected);
