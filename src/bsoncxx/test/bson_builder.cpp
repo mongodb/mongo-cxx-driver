@@ -1437,20 +1437,19 @@ TEST_CASE("bson builder appends regex", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-// TEST_CASE("builder appends code", "[bsoncxx::builder::stream]") {
-//     bson_t expected;
-//     bson_init(&expected);
-//     builder::stream::document b;
-//
-//     bson_append_code(&expected, "foo", -1, "var a = {};");
-//
-//     b << "foo" << types::b_code{"var a = {};"};
-//
-//     bson_eq_stream(&expected, b);
-//
-//     bson_destroy(&expected);
-// }
-//
+TEST_CASE("bson builder appends code", "[bsoncxx::builder::bson]") {
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_append_code(&expected, "foo", -1, "var a = {};");
+
+    bson b{"foo", types::b_code{"var a = {};"}};
+
+    bson_eq_document(&expected, b.view().get_document());
+
+    bson_destroy(&expected);
+}
+
 // TEST_CASE("builder appends symbol", "[bsoncxx::builder::stream]") {
 //     bson_t expected;
 //     bson_init(&expected);
