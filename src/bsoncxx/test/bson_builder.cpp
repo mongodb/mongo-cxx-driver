@@ -1424,24 +1424,19 @@ TEST_CASE("bson builder appends null", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-// TEST_CASE("builder appends regex", "[bsoncxx::builder::stream]") {
-//     bson_t expected;
-//     bson_init(&expected);
-//     builder::stream::document b;
-//
-//     bson_append_regex(&expected, "foo", -1, "^foo|bar$", "i");
-//     bson_append_regex(&expected, "boo", -1, "^boo|far$", "");
-//     bson_append_regex(&expected, "bar", -1, "^bar|foo$", "");
-//
-//     b << "foo" << types::b_regex{"^foo|bar$", "i"};
-//     b << "boo" << types::b_regex{"^boo|far$", ""};
-//     b << "bar" << types::b_regex{"^bar|foo$"};
-//
-//     bson_eq_stream(&expected, b);
-//
-//     bson_destroy(&expected);
-// }
-//
+TEST_CASE("bson builder appends regex", "[bsoncxx::builder::bson]") {
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_append_regex(&expected, "foo", -1, "^foo|bar$", "i");
+
+    bson b{"foo", types::b_regex{"^foo|bar$", "i"}};
+
+    bson_eq_document(&expected, b.view().get_document());
+
+    bson_destroy(&expected);
+}
+
 // TEST_CASE("builder appends code", "[bsoncxx::builder::stream]") {
 //     bson_t expected;
 //     bson_init(&expected);
