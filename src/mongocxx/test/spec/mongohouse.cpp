@@ -175,7 +175,7 @@ void test_kill_cursors() {
         auto cursor = client["test"]["driverdata"].find({}, find_opts);
 
         // Call begin() to run the find on the server.
-        auto it = cursor.begin();
+        cursor.begin();
 
         // Observe the CommandSucceededEvent event for the find command.
         for (auto&& doc : apm_checker) {
