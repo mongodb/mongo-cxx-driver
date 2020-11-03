@@ -28,15 +28,18 @@ class list {
     template <typename T>
     list(T value) : _value{value} {}
 
-    list(std::initializer_list<list> init) {
-        bool is_array = [&] {
-            if (init.size() % 2 != 0)
-                return true;
-            for (size_t i = 0; i < init.size(); i += 2)
-                if ((begin(init) + i)->_value.view().type() != type::k_utf8)
+    list(std::initializer_list<list> init, bool type_deduction = true, type t = type::k_array) {
+        bool is_array = t == type::k_array;
+        if (type_deduction) {
+            is_array = [&] {
+                if (init.size() % 2 != 0)
                     return true;
-            return false;
-        }();
+                for (size_t i = 0; i < init.size(); i += 2)
+                    if ((begin(init) + i)->_value.view().type() != type::k_utf8)
+                        return true;
+                return false;
+            }();
+        }
 
         core _core{is_array};
         if (is_array) {

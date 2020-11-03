@@ -1687,4 +1687,20 @@ TEST_CASE("list builder appends value", "[bsoncxx::builder::list]") {
     bson_eq_document(&expected, b.view().get_document());
     bson_destroy(&expected);
 }
+
+TEST_CASE("list builder with explicit type deduction", "[bsoncxx::builder::list]") {
+    bson_t expected, array;
+    bson_init(&expected);
+    bson_init(&array);
+
+    bson_append_utf8(&array, "0", -1, "bar", -1);
+    bson_append_int32(&array, "1", -1, 1);
+    bson_append_array(&expected, "foo", -1, &array);
+
+    builder::list b{"foo", builder::list({"bar", 1}, false)};
+    bson_eq_document(&expected, b.view().get_document());
+
+    bson_destroy(&expected);
+    bson_destroy(&array);
+}
 }  // namespace
