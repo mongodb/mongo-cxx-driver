@@ -1683,8 +1683,8 @@ TEST_CASE("bson builder appends value", "[bsoncxx::builder::bson]") {
 
     bson_append_int32(&expected, "foo", -1, 999);
 
-    bson tmp{"foo", 999};
-    bson b{"foo", tmp.value()};
+    types::bson_value::value tmp(999);
+    bson b{"foo", tmp};
 
     bson_eq_document(&expected, b.view().get_document());
     bson_destroy(&expected);
