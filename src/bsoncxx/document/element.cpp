@@ -59,7 +59,8 @@ std::uint32_t element::keylen() const {
 
 bsoncxx::type element::type() const {
     if (_raw == nullptr) {
-        throw bsoncxx::exception{error_code::k_unset_element};
+        throw bsoncxx::exception{error_code::k_unset_element,
+                                 "cannot return the type of uninitialized element"};
     }
 
     BSONCXX_CITER;
@@ -68,7 +69,8 @@ bsoncxx::type element::type() const {
 
 stdx::string_view element::key() const {
     if (_raw == nullptr) {
-        throw bsoncxx::exception{error_code::k_unset_element};
+        throw bsoncxx::exception{error_code::k_unset_element,
+                                 "cannot return the key from an uninitialized element"};
     }
 
     BSONCXX_CITER;
@@ -90,6 +92,11 @@ BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
 types::b_utf8 element::get_string() const {
+    if (_raw == nullptr) {
+        throw bsoncxx::exception{error_code::k_unset_element,
+                                 "cannot get string from an uninitialized element"};
+    }
+
     types::bson_value::view v{_raw, _length, _offset, _keylen};
     return v.get_string();
 }

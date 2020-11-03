@@ -103,7 +103,20 @@ bool should_skip_spec_test(const client& client, document::view test) {
         return true;
     }
 
-    std::string server_version = test_util::get_server_version(client);
+    std::string server_version;
+    try {
+        server_version = test_util::get_server_version(client);
+    } catch (const operation_exception& e) {
+        // Mongohouse does not support serverStatus, so if we get an error from
+        // serverStatus, exit this logic early and run the test.
+        std::string message = e.what();
+        if (message.find("command serverStatus is unsupported") != std::string::npos) {
+            return false;
+        }
+
+        throw e;
+    }
+
     std::string topology = test_util::get_topology(client);
 
     if (test["ignore_if_server_version_greater_than"]) {
@@ -419,6 +432,7 @@ uri get_uri(document::view test) {
 void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> unsupported_tests) {
     char* tests_path = std::getenv(ev.c_str());
     INFO("checking for path from environment variable: " << ev);
+    INFO("test path is: " << tests_path);
     REQUIRE(tests_path);
 
     std::string path{tests_path};
