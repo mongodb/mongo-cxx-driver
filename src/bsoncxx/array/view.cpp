@@ -20,6 +20,7 @@
 #include <bsoncxx/private/itoa.hh>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
 
@@ -137,6 +138,19 @@ view::const_iterator view::find(std::uint32_t i) const {
 
 element view::operator[](std::uint32_t i) const {
     return *(this->find(i));
+}
+
+view::const_iterator view::find_value(bsoncxx::types::bson_value::view v) const {
+    for (auto it = this->cbegin(); it != this->cend(); it++) {
+        if (it->get_value() == v) {
+            return it;
+        }
+    }
+    return this->cend();
+}
+
+bool view::has_value(bsoncxx::types::bson_value::view v) const {
+    return (this->find_value(v) != this->cend());
 }
 
 view::view(const std::uint8_t* data, std::size_t length) : _view(data, length) {}
