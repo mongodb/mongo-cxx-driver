@@ -29,26 +29,26 @@ class list {
     list(T value) : _value{value} {}
 
     list(std::initializer_list<list> init) {
-        bool is_document = [&] {
+        bool is_array = [&] {
             if (init.size() % 2 != 0)
-                return false;
+                return true;
             for (size_t i = 0; i < init.size(); i += 2)
                 if ((begin(init) + i)->_value.view().type() != type::k_utf8)
-                    return false;
-            return true;
+                    return true;
+            return false;
         }();
 
-        core _core{!is_document};
-        if (is_document) {
+        core _core{is_array};
+        if (is_array) {
+            for (auto&& ele : init)
+                _core.append(ele._value);
+            _value = bson_value::value(_core.extract_array());
+        } else {
             for (size_t i = 0; i < init.size(); i += 2) {
                 _core.key_owned(std::string((begin(init) + i)->_value.view().get_string().value));
                 _core.append((begin(init) + i + 1)->_value);
             }
             _value = bson_value::value(_core.extract_document());
-        } else {
-            for (auto&& ele : init)
-                _core.append(ele._value);
-            _value = bson_value::value(_core.extract_array());
         }
     }
 
