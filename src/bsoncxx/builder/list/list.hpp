@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/config/prelude.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 
