@@ -100,6 +100,16 @@ cmake ..                                \
     -DCMAKE_INSTALL_PREFIX=/usr/local
 ```
 
+If installing to a non-standard directory (i.e., one which the dynamic loader does not search),
+consider specifying the `-DCMAKE_INSTALL_RPATH=` option:
+
+```
+cmake ..                                \
+    -DCMAKE_BUILD_TYPE=Release          \
+    -DCMAKE_INSTALL_PREFIX=/opt/mongo   \
+    -DCMAKE_INSTALL_RPATH=/opt/mongo
+```
+
 In the Unix examples that follow, `mongocxx` is customized in these ways:
 
 * `libmongoc` is found in `/opt/mongo-c-driver`.
