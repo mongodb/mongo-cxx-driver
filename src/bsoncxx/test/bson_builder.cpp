@@ -1245,7 +1245,7 @@ TEST_CASE("builder::stream::document throws on consecutive keys", "[bsoncxx::bui
     REQUIRE_THROWS_AS(doc << "boo", bsoncxx::exception);
 }
 
-TEST_CASE("bson builder appends utf8", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends utf8", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1286,7 +1286,7 @@ TEST_CASE("bson builder appends utf8", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends double", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends double", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1307,7 +1307,7 @@ TEST_CASE("bson builder appends double", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends binary", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends binary", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1320,7 +1320,7 @@ TEST_CASE("bson builder appends binary", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends undefined", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends undefined", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1333,7 +1333,7 @@ TEST_CASE("bson builder appends undefined", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends oid", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends oid", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1357,7 +1357,7 @@ TEST_CASE("bson builder appends oid", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends bool", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends bool", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1396,7 +1396,7 @@ TEST_CASE("bson builder appends bool", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends date time", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends date time", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1409,7 +1409,7 @@ TEST_CASE("bson builder appends date time", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends null", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends null", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1422,7 +1422,7 @@ TEST_CASE("bson builder appends null", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends regex", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends regex", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1435,7 +1435,7 @@ TEST_CASE("bson builder appends regex", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends code", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends code", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1448,7 +1448,7 @@ TEST_CASE("bson builder appends code", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends symbol", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends symbol", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1461,7 +1461,7 @@ TEST_CASE("bson builder appends symbol", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends code with scope", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends code with scope", "[bsoncxx::builder::list]") {
     bson_t expected, scope;
     bson_init(&expected);
     builder::stream::document scope_builder;
@@ -1481,7 +1481,7 @@ TEST_CASE("bson builder appends code with scope", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends int32", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends int32", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1500,7 +1500,7 @@ TEST_CASE("bson builder appends int32", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends timestamp", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends timestamp", "[bsoncxx::builder::list]") {
     types::b_timestamp foo{100, 1000};
     builder::list b{"foo", foo};
 
@@ -1513,7 +1513,7 @@ TEST_CASE("bson builder appends timestamp", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends int64", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends int64", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1532,7 +1532,7 @@ TEST_CASE("bson builder appends int64", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends decimal128", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends decimal128", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1563,7 +1563,7 @@ TEST_CASE("bson builder appends decimal128", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends minkey", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends minkey", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1575,7 +1575,7 @@ TEST_CASE("bson builder appends minkey", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends maxkey", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends maxkey", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1587,7 +1587,7 @@ TEST_CASE("bson builder appends maxkey", "[bsoncxx::builder::bson]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("bson builder appends array", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends array", "[bsoncxx::builder::list]") {
     bson_t expected, child;
     bson_init(&expected);
     bson_init(&child);
@@ -1604,7 +1604,7 @@ TEST_CASE("bson builder appends array", "[bsoncxx::builder::bson]") {
     bson_destroy(&child);
 }
 
-TEST_CASE("bson builder appends document", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends document", "[bsoncxx::builder::list]") {
     bson_t expected, child;
     bson_init(&expected);
     bson_init(&child);
@@ -1621,7 +1621,7 @@ TEST_CASE("bson builder appends document", "[bsoncxx::builder::bson]") {
     bson_destroy(&child);
 }
 
-TEST_CASE("bson builder appends inline array", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends inline array", "[bsoncxx::builder::list]") {
     bson_t expected, child;
     bson_init(&expected);
     bson_init(&child);
@@ -1636,7 +1636,7 @@ TEST_CASE("bson builder appends inline array", "[bsoncxx::builder::bson]") {
     bson_destroy(&child);
 }
 
-TEST_CASE("bson builder appends inline document", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends inline document", "[bsoncxx::builder::list]") {
     bson_t expected, child;
     bson_init(&expected);
     bson_init(&child);
@@ -1651,7 +1651,7 @@ TEST_CASE("bson builder appends inline document", "[bsoncxx::builder::bson]") {
     bson_destroy(&child);
 }
 
-TEST_CASE("bson builder appends inline nested", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends inline nested", "[bsoncxx::builder::list]") {
     bson_t expected, foo, bar, third;
 
     bson_init(&expected);
@@ -1675,7 +1675,7 @@ TEST_CASE("bson builder appends inline nested", "[bsoncxx::builder::bson]") {
     bson_destroy(&third);
 }
 
-TEST_CASE("bson builder appends value", "[bsoncxx::builder::bson]") {
+TEST_CASE("list builder appends value", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
