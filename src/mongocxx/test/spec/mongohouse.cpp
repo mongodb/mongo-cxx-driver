@@ -184,7 +184,8 @@ void test_kill_cursors() {
                 continue;
             }
 
-            if (event["command_succeeded_event"]["command_name"].get_string().value != "find") {
+            if (event["command_succeeded_event"]["command_name"].get_string().value !=
+                bsoncxx::stdx::string_view{"find"}) {
                 continue;
             }
 
@@ -216,7 +217,7 @@ void test_kill_cursors() {
         // Use the command started event for killCursors to validate cursor info.
         if (event.find("command_started_event") != event.end()) {
             if (event["command_started_event"]["command_name"].get_string().value !=
-                "killCursors") {
+                bsoncxx::stdx::string_view{"killCursors"}) {
                 continue;
             }
 
@@ -242,7 +243,7 @@ void test_kill_cursors() {
         // Use the command succeeded event to confirm that the cursor was killed.
         if (event.find("command_succeeded_event") != event.end()) {
             if (event["command_succeeded_event"]["command_name"].get_string().value !=
-                "killCursors") {
+                bsoncxx::stdx::string_view{"killCursors"}) {
                 continue;
             }
 
