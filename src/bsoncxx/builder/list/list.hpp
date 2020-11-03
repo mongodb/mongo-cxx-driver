@@ -16,6 +16,8 @@
 
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/config/prelude.hpp>
+#include <bsoncxx/exception/error_code.hpp>
+#include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 
 namespace bsoncxx {
@@ -25,33 +27,38 @@ using namespace bsoncxx::types;
 
 class list {
    public:
+    list() {}
+
     template <typename T>
     list(T value) : _value{value} {}
 
-    list(std::initializer_list<list> init, bool type_deduction = true, type t = type::k_array) {
-        bool is_array = t == type::k_array;
-        if (type_deduction) {
-            is_array = [&] {
+    list(std::initializer_list<list> init, bool type_deduction = true, bool is_array = true) {
+        bool valid_document = false;
+        if (type_deduction || !is_array) {
+            valid_document = [&] {
                 if (init.size() % 2 != 0)
-                    return true;
+                    return false;
                 for (size_t i = 0; i < init.size(); i += 2)
                     if ((begin(init) + i)->_value.view().type() != type::k_utf8)
-                        return true;
-                return false;
+                        return false;
+                return true;
             }();
         }
 
-        core _core{is_array};
-        if (is_array) {
-            for (auto&& ele : init)
-                _core.append(ele._value);
-            _value = bson_value::value(_core.extract_array());
-        } else {
+        if (valid_document) {
+            core _core{false};
             for (size_t i = 0; i < init.size(); i += 2) {
                 _core.key_owned(std::string((begin(init) + i)->_value.view().get_string().value));
                 _core.append((begin(init) + i + 1)->_value);
             }
             _value = bson_value::value(_core.extract_document());
+        } else if (type_deduction || is_array) {
+            core _core{true};
+            for (auto&& ele : init)
+                _core.append(ele._value);
+            _value = bson_value::value(_core.extract_array());
+        } else {
+            throw bsoncxx::exception{error_code::k_unmatched_key_in_builder};
         }
     }
 
