@@ -109,6 +109,56 @@ functions:
                  cmake --version || true
                  openssl version || true
 
+    "build_mongohouse":
+        command: shell.exec
+        params:
+            shell: bash
+            script: |
+                set -o xtrace
+                if [ ! -d "drivers-evergreen-tools" ]; then
+                    git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git
+                fi
+                cd drivers-evergreen-tools
+                export DRIVERS_TOOLS=$(pwd)
+
+                sh .evergreen/atlas_data_lake/build-mongohouse-local.sh
+
+    "run_mongohouse":
+        command: shell.exec
+        params:
+            shell: bash
+            background: true
+            script: |
+                set -o xtrace
+
+                cd drivers-evergreen-tools
+                export DRIVERS_TOOLS=$(pwd)
+
+                sh .evergreen/atlas_data_lake/run-mongohouse-local.sh
+              
+    "test_mongohouse":
+        command: shell.exec
+        params:
+            shell: bash
+            working_dir: "mongo-cxx-driver"
+            script: |
+                set -o xtrace
+                echo "testing that mongohouse is running..."
+                ps aux | grep mongohouse
+
+                cd build
+                export PREFIX=$(pwd)/../../mongoc
+
+                # Use LD_LIBRARY_PATH to inform the tests where to find dependencies on Linux.
+                # This task only runs on Linux.
+                export LD_LIBRARY_PATH=.:$PREFIX/lib/
+
+                export MONGOHOUSE_TESTS_PATH="$(pwd)/../data/mongohouse"
+
+                ulimit -c unlimited || true
+
+                ./src/mongocxx/test/test_mongohouse_specs             
+              
     "start_mongod":
         command: shell.exec
         params:
@@ -647,6 +697,16 @@ tasks:
           local_file: rpm.tar.gz
           content_type: ${content_type|application/x-gzip}
 
+
+    - name: test_mongohouse
+      commands:
+        - func: "setup"
+        - func: "install_c_driver"
+        - func: "compile"
+        - func: "build_mongohouse"
+        - func: "run_mongohouse"
+        - func: "test_mongohouse"
+
 #######################################
 #           MongoDB Version Matrix    #
 #######################################
@@ -832,6 +892,18 @@ buildvariants:
       tasks:
         - name: clang-tidy
 
+
+    - name: mongohouse-ubuntu
+      display_name: "Mongohouse Test"
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_latest
+      run_on: ubuntu1804-test
+      tasks:
+          - name: test_mongohouse
+      
     - name: ubuntu1804-zseries
       display_name: "s390x Ubuntu 18.04 (MongoDB 4.4)"
       batchtime: 1440 # 1 day
