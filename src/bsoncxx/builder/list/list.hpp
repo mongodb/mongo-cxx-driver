@@ -22,12 +22,12 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 using namespace bsoncxx::types;
 
-class bson {
+class list {
    public:
     template <typename T>
-    bson(T value) : _value{value} {}
+    list(T value) : _value{value} {}
 
-    bson(std::initializer_list<bson> init) {
+    list(std::initializer_list<list> init) {
         bool is_document = [&] {
             if (init.size() % 2 != 0)
                 return false;
