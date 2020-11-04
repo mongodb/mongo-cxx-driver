@@ -204,7 +204,10 @@ add_test(change_stream_specs test_change_stream_specs)
 add_test(transactions_specs test_transactions_specs)
 add_test(retryable_reads_spec test_retryable_reads_specs)
 add_test(read_write_concern_specs test_read_write_concern_specs)
-add_test(mongohouse_specs test_mongohouse_specs)
+
+# Adding this as a test will run it as part of the RUN_TESTS command in MSVC.
+# Do not add, since we only test mongohouse on Linux.
+#add_test(mongohouse_specs test_mongohouse_specs)
 
 set_tests_properties(crud_specs PROPERTIES
     ENVIRONMENT "CRUD_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/crud")
@@ -234,9 +237,6 @@ set_tests_properties(retryable_reads_spec PROPERTIES
 
 set_tests_properties(read_write_concern_specs PROPERTIES
   ENVIRONMENT "READ_WRITE_CONCERN_OPERATION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/read-write-concern/operation")
-
-set_tests_properties(mongohouse_specs PROPERTIES
-  ENVIRONMENT "MONGOHOUSE_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/mongohouse")
 
 if (MONGOCXX_ENABLE_SLOW_TESTS)
   set_tests_properties(driver PROPERTIES
