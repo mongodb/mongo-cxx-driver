@@ -27,7 +27,7 @@ using namespace bsoncxx::types;
 
 class list {
    public:
-    list() {}
+    list() = default;
 
     template <typename T>
     list(T value) : _value{value} {}
@@ -80,7 +80,7 @@ class list {
 
     class array {
        public:
-        array() {}
+        array() = default;
         array(std::initializer_list<list> init) : _init(std::move(init)) {}
         operator list() {
             return list(_init, false, true);
@@ -92,7 +92,7 @@ class list {
 
     class document {
        public:
-        document() {}
+        document() = default;
         document(std::initializer_list<list> init) : _init(std::move(init)) {}
         operator list() {
             return list(_init, false, false);
