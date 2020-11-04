@@ -23,5 +23,5 @@ var searchData=
   ['auth_5fmechanism_20',['auth_mechanism',['../classmongocxx_1_1uri.html#aa53f0f057cb4aefb4f49dc534748a7bd',1,'mongocxx::uri']]],
   ['auth_5fsource_21',['auth_source',['../classmongocxx_1_1uri.html#ad8a5b4effef3d882881594c5b88b31b9',1,'mongocxx::uri']]],
   ['authentication_5fexception_22',['authentication_exception',['../classmongocxx_1_1authentication__exception.html',1,'mongocxx']]],
-  ['auto_5findex_5fid_23',['auto_index_id',['../classmongocxx_1_1options_1_1create__collection.html#ad840214f3f147fcdc54379faf7f434ac',1,'mongocxx::options::create_collection::auto_index_id(bool auto_index_id)'],['../classmongocxx_1_1options_1_1create__collection.html#abcec304f00222562b537ec4d01918480',1,'mongocxx::options::create_collection::auto_index_id() const']]]
+  ['auto_5findex_5fid_23',['auto_index_id',['../classmongocxx_1_1options_1_1create__collection.html#ad840214f3f147fcdc54379faf7f434ac',1,'mongocxx::options::create_collection::auto_index_id(bool auto_index_id)'],['../classmongocxx_1_1options_1_1create__collection.html#a40fe5eee698b868b1336cd494837b8a3',1,'mongocxx::options::create_collection::auto_index_id() const']]]
 ];

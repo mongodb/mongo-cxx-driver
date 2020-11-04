@@ -12,7 +12,7 @@ var searchData=
   ['regex_984',['regex',['../classmongo_1_1BSONElement.html#add9e443f031bb63a2ff0b93bfbd7841f',1,'mongo::BSONElement']]],
   ['regexflags_985',['regexFlags',['../classmongo_1_1BSONElement.html#a03ea0448d4adb41b3eb3da021382646e',1,'mongo::BSONElement']]],
   ['remaining_986',['remaining',['../classmongo_1_1BufReader.html#a33448ce07e041b21f93a8eba594c7eae',1,'mongo::BufReader']]],
-  ['remove_987',['remove',['../classmongo_1_1DBClientBase.html#a75ec5a5d7bf6b33479dc78ccb53f64ab',1,'mongo::DBClientBase::remove()'],['../classmongo_1_1ReplicaSetMonitor.html#a038df358175462298aede902eb26f31f',1,'mongo::ReplicaSetMonitor::remove()']]],
+  ['remove_987',['remove',['../classmongo_1_1DBClientBase.html#a75ec5a5d7bf6b33479dc78ccb53f64ab',1,'mongo::DBClientBase::remove()'],['../classmongo_1_1ReplicaSetMonitor.html#a038df358175462298aede902eb26f31f',1,'mongo::ReplicaSetMonitor::remove()'],['../classmongo_1_1DBClientReplicaSet.html#a75ec5a5d7bf6b33479dc78ccb53f64ab',1,'mongo::DBClientReplicaSet::remove()']]],
   ['removefield_988',['removeField',['../classmongo_1_1BSONObj.html#af002047ab61ab04c2c2f4813431f839e',1,'mongo::BSONObj']]],
   ['removefile_989',['removeFile',['../classmongo_1_1GridFS.html#abf1f29c33f363b1a550ebff588a64533',1,'mongo::GridFS']]],
   ['repairdatabase_990',['repairDatabase',['../classmongo_1_1DBClientWithCommands.html#a4029b9b7cdc42e0ec62043aa1f7ea5f4',1,'mongo::DBClientWithCommands']]],

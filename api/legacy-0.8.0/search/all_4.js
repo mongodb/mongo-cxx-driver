@@ -26,7 +26,7 @@ var searchData=
   ['dbref_149',['DBRef',['../namespacemongo.html#ab5a28c40b1f7e531a9d1a04daa0aa5d6ac582370953f786766e02ffe1c1b2172b',1,'mongo']]],
   ['decouple_150',['decouple',['../classmongo_1_1DBClientCursor.html#ad10b2afa75b0be3b8d50212d8602afa5',1,'mongo::DBClientCursor']]],
   ['deprecated_20list_151',['Deprecated List',['../deprecated.html',1,'']]],
-  ['done_152',['DONE',['../structmongo_1_1ReplicaSetMonitor_1_1NextStep.html#aa421378cd5a889ac53b133282f3a8659aaffa83f014d71f12d23837f43c1857d4',1,'mongo::ReplicaSetMonitor::NextStep::DONE()'],['../classmongo_1_1ScopedDbConnection.html#ab7be26fefbb677ed825b62f1ef269825',1,'mongo::ScopedDbConnection::done()'],['../classmongo_1_1BSONObjBuilder.html#ae1a64ea2deb887012b7d1d7c5ae47a79',1,'mongo::BSONObjBuilder::done()']]],
+  ['done_152',['done',['../classmongo_1_1ScopedDbConnection.html#ab7be26fefbb677ed825b62f1ef269825',1,'mongo::ScopedDbConnection::done()'],['../classmongo_1_1BSONObjBuilder.html#ae1a64ea2deb887012b7d1d7c5ae47a79',1,'mongo::BSONObjBuilder::done()'],['../structmongo_1_1ReplicaSetMonitor_1_1NextStep.html#aa421378cd5a889ac53b133282f3a8659aaffa83f014d71f12d23837f43c1857d4',1,'mongo::ReplicaSetMonitor::NextStep::DONE()']]],
   ['dosslhandshake_153',['doSSLHandshake',['../classmongo_1_1Socket.html#ae6c9349524d952655fc6b02af4957fb3',1,'mongo::Socket']]],
   ['dropcollection_154',['dropCollection',['../classmongo_1_1DBClientWithCommands.html#a4c5143c1c2f891bdfd991f73baaf865e',1,'mongo::DBClientWithCommands']]],
   ['dropdatabase_155',['dropDatabase',['../classmongo_1_1DBClientWithCommands.html#a7c4e2a3338f9d34cfc9fc8fe9da78ae4',1,'mongo::DBClientWithCommands']]],
