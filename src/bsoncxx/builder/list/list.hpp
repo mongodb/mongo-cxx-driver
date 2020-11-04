@@ -80,6 +80,31 @@ class list {
 
    private:
     bson_value::value _value{nullptr};
+
+   public:
+    class array {
+       public:
+        array() {}
+        array(std::initializer_list<list> init) : _init(std::move(init)) {}
+        operator list() {
+            return list(_init, false, true);
+        }
+
+       private:
+        std::initializer_list<list> _init;
+    };
+
+    class document {
+       public:
+        document() {}
+        document(std::initializer_list<list> init) : _init(std::move(init)) {}
+        operator list() {
+            return list(_init, false, false);
+        }
+
+       private:
+        std::initializer_list<list> _init;
+    };
 };
 }
 BSONCXX_INLINE_NAMESPACE_END

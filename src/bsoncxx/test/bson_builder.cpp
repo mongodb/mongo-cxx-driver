@@ -1689,6 +1689,7 @@ TEST_CASE("list builder appends value", "[bsoncxx::builder::list]") {
 }
 
 TEST_CASE("list builder with explicit type deduction", "[bsoncxx::builder::list]") {
+    using builder::list;
     SECTION("array") {
         bson_t expected, array;
         bson_init(&expected);
@@ -1698,7 +1699,7 @@ TEST_CASE("list builder with explicit type deduction", "[bsoncxx::builder::list]
         bson_append_int32(&array, "1", -1, 1);
         bson_append_array(&expected, "foo", -1, &array);
 
-        builder::list b{"foo", builder::list({"bar", 1}, false)};
+        builder::list b{"foo", list::array{"bar", 1}};
         bson_eq_object(&expected, b.view().get_document().value);
 
         bson_destroy(&expected);
@@ -1707,12 +1708,14 @@ TEST_CASE("list builder with explicit type deduction", "[bsoncxx::builder::list]
 
     SECTION("document") {
         builder::list b;
-        REQUIRE_THROWS(b = builder::list({"foo", 1, 2}, false, false));
-        REQUIRE_THROWS(b = builder::list({"foo", 1, 2, 4}, false, false));
+        REQUIRE_THROWS(b = list::document{"foo", 1, 2});
+        REQUIRE_THROWS(b = list::document{"foo", 1, 2, 4});
     }
 }
 
 TEST_CASE("list builder with type deduction true ignores type", "[bsoncxx::builder::list]") {
+    using builder::list;
+
     bson_t expected, nested;
     bson_init(&expected);
     bson_init(&nested);
