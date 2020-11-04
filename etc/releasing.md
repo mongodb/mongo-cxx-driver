@@ -86,7 +86,7 @@ Documentation generation must be run after the release tag has been made and pus
 - Edit `etc/apidocmenu.md` and add the released version in the `mongocxx` column following the established pattern. If this is a major release (x.y.0), revise the entire document as needed.
 - Edit `docs/content/index.md` and `README.md` to match.
 - Edit `etc/generate-all-apidocs.pl` and add the new release version to the `@DOC_TAGS` array, following the established pattern.
-- Edit `docs/content/mongocxx-v3/installation.md` and update `Step 1` to reflect to libmongoc requirements. If the release was not a release candidate, update `Step 3` to reflect the new latest stable version to download.
+- Edit `docs/content/mongocxx-v3/installation/linux.md`, `docs/content/mongocxx-v3/installation/macos.md` and `docs/content/mongocxx-v3/installation/windows.md` and update `Step 1` to reflect to libmongoc requirements. If the release was not a release candidate, update `Step 3` to reflect the new latest stable version to download.
 - Commit these changes `git commit -am "Prepare to generate r3.6.0 release documentation"`
 - Ensure you have doxygen and hugo installed and up to date.
 - Run `git clean -dxf` to clear out all extraneous files.
