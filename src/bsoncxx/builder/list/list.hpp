@@ -26,13 +26,15 @@ namespace builder {
 using namespace bsoncxx::types;
 
 class list {
+    using initializer_list_t = std::initializer_list<list>;
+
    public:
     list() = default;
 
     template <typename T>
     list(T value) : _value{value} {}
 
-    list(std::initializer_list<list> init, bool type_deduction = true, bool is_array = true) {
+    list(initializer_list_t init, bool type_deduction = true, bool is_array = true) {
         bool valid_document = false;
         if (type_deduction || !is_array) {
             valid_document = [&] {
@@ -81,25 +83,25 @@ class list {
     class array {
        public:
         array() = default;
-        array(std::initializer_list<list> init) : _init(std::move(init)) {}
+        array(initializer_list_t init) : _init(init) {}
         operator list() {
             return list(_init, false, true);
         }
 
        private:
-        std::initializer_list<list> _init;
+        initializer_list_t _init;
     };
 
     class document {
        public:
         document() = default;
-        document(std::initializer_list<list> init) : _init(std::move(init)) {}
+        document(initializer_list_t init) : _init(init) {}
         operator list() {
             return list(_init, false, false);
         }
 
        private:
-        std::initializer_list<list> _init;
+        initializer_list_t _init;
     };
 
    private:
