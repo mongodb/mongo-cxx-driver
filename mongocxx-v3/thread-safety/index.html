@@ -115,6 +115,147 @@
 
 
   
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
 
 
         
@@ -410,11 +551,131 @@
 
 
 
-    <li class="toctree-l2">
-    <a href="/mongocxx-v3/installation/">
+<li class="toctree-l2 ">
+  <a href="/mongocxx-v3/installation/" class="">
+      
+      <span>Installing the mongocxx driver</span>
+      
+  </a>
+    <ul >
         
-        Installing the mongocxx driver
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/windows/">
+        
+        Windows
     </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/macos/">
+        
+        macOS
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/linux/">
+        
+        Linux
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/advanced/">
+        
+        Advanced Configuration and Installation Options
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
   </li>
 
 
@@ -443,6 +704,35 @@
     <a href="/mongocxx-v3/configuration/">
         
         Configuring the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongocxx-v3/client-side-encryption/">
+        
+        Client-Side Field Level Encryption with mongocxx
     </a>
   </li>
 
@@ -1106,108 +1396,91 @@
 
 
 <h1>Thread and fork safety</h1>
-
-
 <p>TLDR: <strong>Always give each thread its own <code>mongocxx::client</code></strong>.</p>
-
 <p>In general each <code>mongocxx::client</code> object AND all of its child objects,
 including <code>mongocxx::client_session</code>, <code>mongocxx::database</code>, <code>mongocxx::collection</code>,
 and <code>mongocxx::cursor</code>, <strong>should be used by a single thread at a time</strong>. This
 is true even for clients acquired from a <code>mongocxx::pool</code>.</p>
-
 <p>Even if you create multiple child objects from a single <code>client</code>, and
 synchronize them individually, that is unsafe as they will concurrently
 modify internal structures of the <code>client</code>. The same is true if you copy a
 child object.</p>
-
 <h2 id="never-do-this">Never do this</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{};
+mongocxx<span style="color:#f92672">::</span>uri uri{};
+mongocxx<span style="color:#f92672">::</span>client c{uri};
+<span style="color:#66d9ef">auto</span> db1 <span style="color:#f92672">=</span> c[<span style="color:#e6db74">&#34;db1&#34;</span>];
+<span style="color:#66d9ef">auto</span> db2 <span style="color:#f92672">=</span> c[<span style="color:#e6db74">&#34;db2&#34;</span>];
+std<span style="color:#f92672">::</span>mutex db1_mtx{};
+std<span style="color:#f92672">::</span>mutex db2_mtx{};
 
-<pre><code class="language-c++">mongocxx::instance instance{};
-mongocxx::uri uri{};
-mongocxx::client c{uri};
-auto db1 = c[&quot;db1&quot;];
-auto db2 = c[&quot;db2&quot;];
-std::mutex db1_mtx{};
-std::mutex db2_mtx{};
-
-auto threadfunc = [](mongocxx::database&amp; db, std::mutex&amp; mtx) {
+<span style="color:#66d9ef">auto</span> threadfunc <span style="color:#f92672">=</span> [](mongocxx<span style="color:#f92672">::</span>database<span style="color:#f92672">&amp;</span> db, std<span style="color:#f92672">::</span>mutex<span style="color:#f92672">&amp;</span> mtx) {
   mtx.lock();
-  db[&quot;col&quot;].insert_one({});
+  db[<span style="color:#e6db74">&#34;col&#34;</span>].insert_one({});
   mtx.unlock();
 };
 
-// BAD! These two databases are individually synchronized, but they are derived from the same
-// client, so they can only be accessed by one thread at a time
-std::thread t1([&amp;]() { threadfunc(db1, db1_mtx); threadfunc(db2, db2_mtx); });
-std::thread t2([&amp;]() { threadfunc(db2, db2_mtx); threadfunc(db1, db1_mtx); });
+<span style="color:#75715e">// BAD! These two databases are individually synchronized, but they are derived from the same
+</span><span style="color:#75715e">// client, so they can only be accessed by one thread at a time
+</span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t1([<span style="color:#f92672">&amp;</span>]() { threadfunc(db1, db1_mtx); threadfunc(db2, db2_mtx); });
+std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t2([<span style="color:#f92672">&amp;</span>]() { threadfunc(db2, db2_mtx); threadfunc(db1, db1_mtx); });
 
 t1.join();
 t2.join();
-</code></pre>
-
-<p>In the above example, even though the two databases are individually
+</code></pre></div><p>In the above example, even though the two databases are individually
 synchronized, they are derived from the same client. There is shared state
 inside the library that is now being modified without synchronization. The
 same problem occurs if <code>db2</code> is a copy of <code>db1</code>.</p>
-
 <h2 id="a-better-version">A better version</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{};
+mongocxx<span style="color:#f92672">::</span>uri uri{};
+mongocxx<span style="color:#f92672">::</span>client c1{uri};
+mongocxx<span style="color:#f92672">::</span>client c2{uri};
+std<span style="color:#f92672">::</span>mutex c1_mtx{};
+std<span style="color:#f92672">::</span>mutex c2_mtx{};
 
-<pre><code class="language-c++">mongocxx::instance instance{};
-mongocxx::uri uri{};
-mongocxx::client c1{uri};
-mongocxx::client c2{uri};
-std::mutex c1_mtx{};
-std::mutex c2_mtx{};
-
-auto threadfunc = [](std::string dbname, mongocxx::client&amp; client, std::mutex&amp; mtx) {
+<span style="color:#66d9ef">auto</span> threadfunc <span style="color:#f92672">=</span> [](std<span style="color:#f92672">::</span>string dbname, mongocxx<span style="color:#f92672">::</span>client<span style="color:#f92672">&amp;</span> client, std<span style="color:#f92672">::</span>mutex<span style="color:#f92672">&amp;</span> mtx) {
   mtx.lock();
-  client[dbname][&quot;col&quot;].insert_one({});
+  client[dbname][<span style="color:#e6db74">&#34;col&#34;</span>].insert_one({});
   mtx.unlock();
 };
 
-// These two clients are individually synchronized, so it is safe to share them between
-// threads.
-std::thread t1([&amp;]() { threadfunc(&quot;db1&quot;, c1, c1_mtx); threadfunc(&quot;db2&quot;, c2, c2_mtx); });
-std::thread t2([&amp;]() { threadfunc(&quot;db2&quot;, c2, c2_mtx); threadfunc(&quot;db1&quot;, c1, c1_mtx); });
+<span style="color:#75715e">// These two clients are individually synchronized, so it is safe to share them between
+</span><span style="color:#75715e">// threads.
+</span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t1([<span style="color:#f92672">&amp;</span>]() { threadfunc(<span style="color:#e6db74">&#34;db1&#34;</span>, c1, c1_mtx); threadfunc(<span style="color:#e6db74">&#34;db2&#34;</span>, c2, c2_mtx); });
+std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t2([<span style="color:#f92672">&amp;</span>]() { threadfunc(<span style="color:#e6db74">&#34;db2&#34;</span>, c2, c2_mtx); threadfunc(<span style="color:#e6db74">&#34;db1&#34;</span>, c1, c1_mtx); });
 
 t1.join();
 t2.join();
-</code></pre>
+</code></pre></div><h2 id="the-best-version">The best version</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{};
+mongocxx<span style="color:#f92672">::</span>pool pool{mongocxx<span style="color:#f92672">::</span>uri{}};
 
-<h2 id="the-best-version">The best version</h2>
-
-<pre><code class="language-c++">mongocxx::instance instance{};
-mongocxx::pool pool{mongocxx::uri{}};
-
-auto threadfunc = [](mongocxx::client&amp; client, std::string dbname) {
-  auto col = client[dbname][&quot;col&quot;].insert_one({});
+<span style="color:#66d9ef">auto</span> threadfunc <span style="color:#f92672">=</span> [](mongocxx<span style="color:#f92672">::</span>client<span style="color:#f92672">&amp;</span> client, std<span style="color:#f92672">::</span>string dbname) {
+  <span style="color:#66d9ef">auto</span> col <span style="color:#f92672">=</span> client[dbname][<span style="color:#e6db74">&#34;col&#34;</span>].insert_one({});
 };
 
-// Great! Using the pool allows the clients to be synchronized while sharing only one
-// background monitoring thread.
-std::thread t1 ([&amp;]() {
-  auto c = pool.acquire();
-  threadfunc(*c, &quot;db1&quot;);
-  threadfunc(*c, &quot;db2&quot;);
+<span style="color:#75715e">// Great! Using the pool allows the clients to be synchronized while sharing only one
+</span><span style="color:#75715e">// background monitoring thread.
+</span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t1 ([<span style="color:#f92672">&amp;</span>]() {
+  <span style="color:#66d9ef">auto</span> c <span style="color:#f92672">=</span> pool.acquire();
+  threadfunc(<span style="color:#f92672">*</span>c, <span style="color:#e6db74">&#34;db1&#34;</span>);
+  threadfunc(<span style="color:#f92672">*</span>c, <span style="color:#e6db74">&#34;db2&#34;</span>);
 });
 
-std::thread t2 ([&amp;]() {
-  auto c = pool.acquire();
-  threadfunc(*c, &quot;db2&quot;);
-  threadfunc(*c, &quot;db1&quot;);
+std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t2 ([<span style="color:#f92672">&amp;</span>]() {
+  <span style="color:#66d9ef">auto</span> c <span style="color:#f92672">=</span> pool.acquire();
+  threadfunc(<span style="color:#f92672">*</span>c, <span style="color:#e6db74">&#34;db2&#34;</span>);
+  threadfunc(<span style="color:#f92672">*</span>c, <span style="color:#e6db74">&#34;db1&#34;</span>);
 });
 
 t1.join();
 t2.join();
-</code></pre>
-
-<p>In most programs, clients will be long lived - so it is less of a hassle (and
+</code></pre></div><p>In most programs, clients will be long lived - so it is less of a hassle (and
 more performant) to make one per-thread. Obviously in this contrived example,
 there&rsquo;s quite a bit of overhead because we&rsquo;re doing so little work with each
 client - but in a real program this is the best solution.</p>
-
 <h2 id="fork-safety">Fork safety</h2>
-
 <p>Neither a <code>mongocxx::client</code> or a <code>mongocxx::pool</code> can be safely copied
 when forking. Because of this, any client or pool must be created <em>after</em>
 forking, not before.</p>
@@ -1242,15 +1515,12 @@ forking, not before.</p>
   <div class="toc">
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#never-do-this">Never do this</a></li>
-<li><a href="#a-better-version">A better version</a></li>
-<li><a href="#the-best-version">The best version</a></li>
-<li><a href="#fork-safety">Fork safety</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#never-do-this">Never do this</a></li>
+    <li><a href="#a-better-version">A better version</a></li>
+    <li><a href="#the-best-version">The best version</a></li>
+    <li><a href="#fork-safety">Fork safety</a></li>
+  </ul>
 </nav>
   </div>
   
@@ -1269,7 +1539,7 @@ forking, not before.</p>
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
    URL_ROOT:    "http://mongocxx.org",
-   VERSION:     "",
+   VERSION:      null ,
    COLLAPSE_INDEX: false,
    FILE_SUFFIX: '.html',
    HAS_SOURCE:  true

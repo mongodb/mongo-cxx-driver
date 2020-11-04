@@ -115,6 +115,147 @@
 
 
   
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
 
 
         
@@ -386,11 +527,131 @@
 
 
 
-    <li class="toctree-l2">
-    <a href="/mongocxx-v3/installation/">
+<li class="toctree-l2 ">
+  <a href="/mongocxx-v3/installation/" class="">
+      
+      <span>Installing the mongocxx driver</span>
+      
+  </a>
+    <ul >
         
-        Installing the mongocxx driver
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/windows/">
+        
+        Windows
     </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/macos/">
+        
+        macOS
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/linux/">
+        
+        Linux
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/advanced/">
+        
+        Advanced Configuration and Installation Options
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
   </li>
 
 
@@ -419,6 +680,35 @@
     <a href="/mongocxx-v3/configuration/">
         
         Configuring the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongocxx-v3/client-side-encryption/">
+        
+        Client-Side Field Level Encryption with mongocxx
     </a>
   </li>
 
@@ -1082,92 +1372,77 @@
 
 
 <h1>Tutorial for mongocxx</h1>
-
-
 <h2 id="prerequisites">Prerequisites</h2>
-
 <ul>
-<li><p>A <a href="https://docs.mongodb.com/master/reference/program/mongod/">mongod</a>
-instance running on localhost on port 27017.</p></li>
-
-<li><p>The mongocxx Driver. See <a href="http://mongocxx.org/mongocxx-v3/installation/">Installation for mongocxx</a>.</p></li>
-
-<li><p>The following statements at the top of your source file:</p></li>
+<li>
+<p>A <a href="https://docs.mongodb.com/master/reference/program/mongod/">mongod</a>
+instance running on localhost on port 27017.</p>
+</li>
+<li>
+<p>The mongocxx Driver. See <a href="http://mongocxx.org/mongocxx-v3/installation/">Installation for mongocxx</a>.</p>
+</li>
+<li>
+<p>The following statements at the top of your source file:</p>
+</li>
 </ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;cstdint&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;vector&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;bsoncxx/json.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/stdx.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/instance.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;bsoncxx/builder/stream/helpers.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;bsoncxx/builder/stream/document.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;bsoncxx/builder/stream/array.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
 
-<pre><code class="language-c++">#include &lt;cstdint&gt;
-#include &lt;iostream&gt;
-#include &lt;vector&gt;
-#include &lt;bsoncxx/json.hpp&gt;
-#include &lt;mongocxx/client.hpp&gt;
-#include &lt;mongocxx/stdx.hpp&gt;
-#include &lt;mongocxx/uri.hpp&gt;
-#include &lt;mongocxx/instance.hpp&gt;
-
-using bsoncxx::builder::stream::close_array;
-using bsoncxx::builder::stream::close_document;
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::finalize;
-using bsoncxx::builder::stream::open_array;
-using bsoncxx::builder::stream::open_document;
-</code></pre>
-
-<h2 id="compiling">Compiling</h2>
-
+<span style="color:#66d9ef">using</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>stream<span style="color:#f92672">::</span>close_array;
+<span style="color:#66d9ef">using</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>stream<span style="color:#f92672">::</span>close_document;
+<span style="color:#66d9ef">using</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>stream<span style="color:#f92672">::</span>document;
+<span style="color:#66d9ef">using</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>stream<span style="color:#f92672">::</span>finalize;
+<span style="color:#66d9ef">using</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>stream<span style="color:#f92672">::</span>open_array;
+<span style="color:#66d9ef">using</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>stream<span style="color:#f92672">::</span>open_document;
+</code></pre></div><h2 id="compiling">Compiling</h2>
 <p>The mongocxx driver&rsquo;s installation process will install a
 <code>libmongocxx.pc</code> file for use
 with <a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a>.</p>
-
 <p>To compile a program, run the following command:</p>
-
-<pre><code class="language-sh">c++ --std=c++11 &lt;input&gt;.cpp $(pkg-config --cflags --libs libmongocxx)
-</code></pre>
-
-<p>If you don&rsquo;t have pkg-config available, you will need to set include and
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">c++ --std<span style="color:#f92672">=</span>c++11 &lt;input&gt;.cpp <span style="color:#66d9ef">$(</span>pkg-config --cflags --libs libmongocxx<span style="color:#66d9ef">)</span>
+</code></pre></div><p>If you don&rsquo;t have pkg-config available, you will need to set include and
 library flags manually on the command line or in your IDE.  For example, if
 libmongoc and mongocxx are installed in <code>/usr/local</code>, then the compilation
 line in above expands to this:</p>
-
-<pre><code class="language-sh">c++ --std=c++11 &lt;input&gt;.cpp
-  -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 \
-  -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 \
-  -L/usr/local/lib -lmongocxx -lbsoncxx
-</code></pre>
-
-<h2 id="make-a-connection">Make a Connection</h2>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">c++ --std<span style="color:#f92672">=</span>c++11 &lt;input&gt;.cpp
+  -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  -L/usr/local/lib -lmongocxx -lbsoncxx
+</code></pre></div><h2 id="make-a-connection">Make a Connection</h2>
 <p><strong>IMPORTANT</strong>: Before making any connections, you need to create one and only
 one instance of <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1instance.html
 "><code>mongocxx::instance</code></a>.
 This instance must exist for the entirety of your program.</p>
-
 <p>To connect to a running MongoDB instance, use the
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1client.html
 "><code>mongocxx::client</code></a>
 class.</p>
-
 <p>You must specify the host to connect to using a
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1uri.html
 "><code>mongocxx::uri</code></a> instance containing a
 <a href="https://docs.mongodb.com/master/reference/connection-string/">MongoDB URI</a>,
-and pass that into the <code>mongocxx::client</code> constructor.</p>
-
+and pass that into the <code>mongocxx::client</code> constructor.  For details regarding
+supported URI options see the documentation for the version of libmongoc used
+to build the C++ driver or for the <a href="http://mongoc.org/libmongoc/current/mongoc_uri_t.html">latest libmongoc release</a></p>
 <p>The default <code>mongocxx::uri</code> constructor will connect to a
 server running on localhost on port <code>27017</code>:</p>
-
-<pre><code class="language-c++">mongocxx::instance instance{}; // This should be done only once.
-mongocxx::client client{mongocxx::uri{}};
-</code></pre>
-
-<p>This is equivalent to the following:</p>
-
-<pre><code class="language-c++">mongocxx::instance instance{}; // This should be done only once.
-mongocxx::uri uri(&quot;mongodb://localhost:27017&quot;);
-mongocxx::client client(uri);
-</code></pre>
-
-<h2 id="access-a-database">Access a Database</h2>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{}; <span style="color:#75715e">// This should be done only once.
+</span><span style="color:#75715e"></span>mongocxx<span style="color:#f92672">::</span>client client{mongocxx<span style="color:#f92672">::</span>uri{}};
+</code></pre></div><p>This is equivalent to the following:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{}; <span style="color:#75715e">// This should be done only once.
+</span><span style="color:#75715e"></span>mongocxx<span style="color:#f92672">::</span>uri uri(<span style="color:#e6db74">&#34;mongodb://localhost:27017&#34;</span>);
+mongocxx<span style="color:#f92672">::</span>client client(uri);
+</code></pre></div><h2 id="access-a-database">Access a Database</h2>
 <p>Once you have a <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1client.html
 "><code>mongocxx::client</code></a>
 instance connected to a MongoDB deployment, use either the
@@ -1175,17 +1450,11 @@ instance connected to a MongoDB deployment, use either the
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1database.html
 "><code>mongocxx::database</code></a>
 instance.</p>
-
 <p>If the database you request does not exist, MongoDB creates it when you
 first store data.</p>
-
 <p>The following example accesses the <code>mydb</code> database:</p>
-
-<pre><code class="language-c++">mongocxx::database db = client[&quot;mydb&quot;];
-</code></pre>
-
-<h2 id="access-a-collection">Access a Collection</h2>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>database db <span style="color:#f92672">=</span> client[<span style="color:#e6db74">&#34;mydb&#34;</span>];
+</code></pre></div><h2 id="access-a-collection">Access a Collection</h2>
 <p>Once you have a
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1database.html
 "><code>mongocxx::database</code></a>
@@ -1193,315 +1462,220 @@ instance, use either the <code>collection()</code> method or <code>operator[]</c
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
 "><code>mongocxx::collection</code></a>
 instance.</p>
-
 <p>If the collection you request does not exist, MongoDB creates it when
 you first store data.</p>
-
 <p>For example, using the <code>db</code> instance created in the previous section,
 the following statement accesses the collection named <code>test</code> in the
 <code>mydb</code> database:</p>
-
-<pre><code class="language-c++">mongocxx::collection coll = db[&quot;test&quot;];
-</code></pre>
-
-<h2 id="create-a-document">Create a Document</h2>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>collection coll <span style="color:#f92672">=</span> db[<span style="color:#e6db74">&#34;test&#34;</span>];
+</code></pre></div><h2 id="create-a-document">Create a Document</h2>
 <p>To create a <code>document</code> using the C++ driver, use one of the two
 available builder interfaces:</p>
-
 <p>Stream builder: <code>bsoncxx::builder::stream</code>
-  A document builder using the streaming operators that works well for
-  literal document construction.</p>
-
+A document builder using the streaming operators that works well for
+literal document construction.</p>
 <p>Basic builder: <code>bsoncxx::builder::basic</code>
-  A more conventional document builder that involves calling methods on
-  a builder instance.</p>
-
+A more conventional document builder that involves calling methods on
+a builder instance.</p>
 <p>This guide only briefly describes the stream builder.</p>
-
 <p>For example, consider the following JSON document:</p>
-
-<pre><code class="language-json">{
-   &quot;name&quot; : &quot;MongoDB&quot;,
-   &quot;type&quot; : &quot;database&quot;,
-   &quot;count&quot; : 1,
-   &quot;versions&quot;: [ &quot;v3.2&quot;, &quot;v3.0&quot;, &quot;v2.6&quot; ],
-   &quot;info&quot; : {
-               &quot;x&quot; : 203,
-               &quot;y&quot; : 102
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+   <span style="color:#f92672">&#34;name&#34;</span> : <span style="color:#e6db74">&#34;MongoDB&#34;</span>,
+   <span style="color:#f92672">&#34;type&#34;</span> : <span style="color:#e6db74">&#34;database&#34;</span>,
+   <span style="color:#f92672">&#34;count&#34;</span> : <span style="color:#ae81ff">1</span>,
+   <span style="color:#f92672">&#34;versions&#34;</span>: [ <span style="color:#e6db74">&#34;v3.2&#34;</span>, <span style="color:#e6db74">&#34;v3.0&#34;</span>, <span style="color:#e6db74">&#34;v2.6&#34;</span> ],
+   <span style="color:#f92672">&#34;info&#34;</span> : {
+               <span style="color:#f92672">&#34;x&#34;</span> : <span style="color:#ae81ff">203</span>,
+               <span style="color:#f92672">&#34;y&#34;</span> : <span style="color:#ae81ff">102</span>
             }
 }
-</code></pre>
-
-<p>Using the stream builder interface, you can construct this document
+</code></pre></div><p>Using the stream builder interface, you can construct this document
 as follows:</p>
-
-<pre><code class="language-c++">auto builder = bsoncxx::builder::stream::document{};
-bsoncxx::document::value doc_value = builder
-  &lt;&lt; &quot;name&quot; &lt;&lt; &quot;MongoDB&quot;
-  &lt;&lt; &quot;type&quot; &lt;&lt; &quot;database&quot;
-  &lt;&lt; &quot;count&quot; &lt;&lt; 1
-  &lt;&lt; &quot;versions&quot; &lt;&lt; bsoncxx::builder::stream::open_array
-    &lt;&lt; &quot;v3.2&quot; &lt;&lt; &quot;v3.0&quot; &lt;&lt; &quot;v2.6&quot;
-  &lt;&lt; close_array
-  &lt;&lt; &quot;info&quot; &lt;&lt; bsoncxx::builder::stream::open_document
-    &lt;&lt; &quot;x&quot; &lt;&lt; 203
-    &lt;&lt; &quot;y&quot; &lt;&lt; 102
-  &lt;&lt; bsoncxx::builder::stream::close_document
-  &lt;&lt; bsoncxx::builder::stream::finalize;
-</code></pre>
-
-<p>Use <code>bsoncxx::builder::stream::finalize</code> to obtain a
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> builder <span style="color:#f92672">=</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>stream<span style="color:#f92672">::</span>document{};
+bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>value doc_value <span style="color:#f92672">=</span> builder
+  <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;MongoDB&#34;</span>
+  <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;type&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;database&#34;</span>
+  <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;count&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span>
+  <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;versions&#34;</span> <span style="color:#f92672">&lt;&lt;</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>stream<span style="color:#f92672">::</span>open_array
+    <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;v3.2&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;v3.0&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;v2.6&#34;</span>
+  <span style="color:#f92672">&lt;&lt;</span> close_array
+  <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;info&#34;</span> <span style="color:#f92672">&lt;&lt;</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>stream<span style="color:#f92672">::</span>open_document
+    <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;x&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">203</span>
+    <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;y&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">102</span>
+  <span style="color:#f92672">&lt;&lt;</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>stream<span style="color:#f92672">::</span>close_document
+  <span style="color:#f92672">&lt;&lt;</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>stream<span style="color:#f92672">::</span>finalize;
+</code></pre></div><p>Use <code>bsoncxx::builder::stream::finalize</code> to obtain a
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1value.html
 "><code>bsoncxx::document::value</code></a>
 instance.</p>
-
 <p>This <code>bsoncxx::document::value</code> type is a read-only object owning
 its own memory. To use it, you must obtain a
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1view.html
 "><code>bsoncxx::document::view</code></a> using
 the <code>view()</code> method:</p>
-
-<pre><code class="language-c++">bsoncxx::document::view view = doc_value.view();
-</code></pre>
-
-<p>You can access fields within this document view using <code>operator[]</code>,
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>view view <span style="color:#f92672">=</span> doc_value.view();
+</code></pre></div><p>You can access fields within this document view using <code>operator[]</code>,
 which will return a
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1element.html
 "><code>bsoncxx::document::element</code></a>
 instance. For example, the following will extract the <code>name</code> field whose
 value is a string:</p>
-
-<pre><code class="language-c++">bsoncxx::document::element element = view[&quot;name&quot;];
-if(element.type() != bsoncxx::type::k_utf8) {
-  // Error
-}
-std::string name = element.get_utf8().value.to_string();
-</code></pre>
-
-<p>If the value in the <code>name</code> field is not a string and you do not
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>element element <span style="color:#f92672">=</span> view[<span style="color:#e6db74">&#34;name&#34;</span>];
+<span style="color:#66d9ef">if</span>(element.type() <span style="color:#f92672">!=</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_utf8) {
+  <span style="color:#75715e">// Error
+</span><span style="color:#75715e"></span>}
+std<span style="color:#f92672">::</span>string name <span style="color:#f92672">=</span> element.get_string().value.to_string();
+</code></pre></div><p>If the value in the <code>name</code> field is not a string and you do not
 include a type guard as seen in the preceding example, this code will
 throw an instance of
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1exception.html
 "><code>bsoncxx::exception</code></a>.</p>
-
 <h2 id="insert-documents">Insert Documents</h2>
-
 <h3 id="insert-one-document">Insert One Document</h3>
-
 <p>To insert a single document into the collection, use a
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
 "><code>mongocxx::collection</code></a>
 instance&rsquo;s <code>insert_one()</code> method:</p>
-
-<pre><code class="language-c++">bsoncxx::stdx::optional&lt;mongocxx::result::insert_one&gt; result =
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">bsoncxx<span style="color:#f92672">::</span>stdx<span style="color:#f92672">::</span>optional<span style="color:#f92672">&lt;</span>mongocxx<span style="color:#f92672">::</span>result<span style="color:#f92672">::</span>insert_one<span style="color:#f92672">&gt;</span> result <span style="color:#f92672">=</span>
  restaurants.insert_one(doc);
-</code></pre>
-
-<p>If you do not specify a top-level <code>_id</code> field in the document,
+</code></pre></div><p>If you do not specify a top-level <code>_id</code> field in the document,
 MongoDB automatically adds an <code>_id</code> field to the inserted document.</p>
-
 <p>You can obtain this value using the <code>inserted_id()</code> method of the
 returned
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1insert__one.html
 "><code>mongocxx::result::insert_one</code></a>
 instance.</p>
-
 <h3 id="insert-multiple-documents">Insert Multiple Documents</h3>
-
 <p>To insert multiple documents to the collection, use a
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
 "><code>mongocxx::collection</code></a> instance&rsquo;s
 <code>insert_many()</code> method, which takes a list of documents to insert.</p>
-
 <p>The following example will add multiple documents of the form:</p>
-
-<pre><code class="language-json">{ &quot;i&quot; : value }
-</code></pre>
-
-<p>Create the documents in a loop and add to the documents list:</p>
-
-<pre><code class="language-c++">std::vector&lt;bsoncxx::document::value&gt; documents;
-for(int i = 0; i &lt; 100; i++) {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{ <span style="color:#f92672">&#34;i&#34;</span> : <span style="color:#960050;background-color:#1e0010">value</span> }
+</code></pre></div><p>Create the documents in a loop and add to the documents list:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>value<span style="color:#f92672">&gt;</span> documents;
+<span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">100</span>; i<span style="color:#f92672">++</span>) {
     documents.push_back(
-      bsoncxx::builder::stream::document{} &lt;&lt; &quot;i&quot; &lt;&lt; i &lt;&lt; finalize);
+      bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>stream<span style="color:#f92672">::</span>document{} <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;i&#34;</span> <span style="color:#f92672">&lt;&lt;</span> i <span style="color:#f92672">&lt;&lt;</span> finalize);
 }
-</code></pre>
-
-<p>To insert these documents to the collection, pass the list of documents
+</code></pre></div><p>To insert these documents to the collection, pass the list of documents
 to the <code>insert_many()</code> method.</p>
-
-<pre><code class="language-c++">collection.insert_many(documents);
-</code></pre>
-
-<p>If you do not specify a top-level <code>_id</code> field in each document,
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">collection.insert_many(documents);
+</code></pre></div><p>If you do not specify a top-level <code>_id</code> field in each document,
 MongoDB automatically adds a <code>_id</code> field to the inserted documents.</p>
-
 <p>You can obtain this value using the <code>inserted_ids()</code> method of the
 returned
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1insert__many.html
 "><code>mongocxx::result::insert_many</code></a>
 instance.</p>
-
 <h2 id="query-the-collection">Query the Collection</h2>
-
 <p>To query the collection, use the collection’s <code>find()</code> and
 <code>find_one</code> methods.</p>
-
 <p><code>find()</code> will return an instance of
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1cursor.html
 "><code>mongocxx::cursor</code></a>,
 while <code>find_one()</code> will return an instance of
 <code>std::optional&lt;</code><a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1value.html
 "><code>bsoncxx::document::value</code></a><code>&gt;</code></p>
-
 <p>You can call either method with an empty document to query all documents
 in a collection, or pass a filter to query for documents that match the
 filter criteria.</p>
-
 <h3 id="find-a-single-document-in-a-collection">Find a Single Document in a Collection</h3>
-
 <p>To return a single document in the collection, use the <code>find_one()</code>
 method without any parameters.</p>
-
-<pre><code class="language-c++">bsoncxx::stdx::optional&lt;bsoncxx::document::value&gt; maybe_result =
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">bsoncxx<span style="color:#f92672">::</span>stdx<span style="color:#f92672">::</span>optional<span style="color:#f92672">&lt;</span>bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>value<span style="color:#f92672">&gt;</span> maybe_result <span style="color:#f92672">=</span>
   collection.find_one({});
-if(maybe_result) {
-  // Do something with *maybe_result;
+<span style="color:#66d9ef">if</span>(maybe_result) {
+  <span style="color:#75715e">// Do something with *maybe_result;
+</span><span style="color:#75715e"></span>}
+</code></pre></div><h3 id="find-all-documents-in-a-collection">Find All Documents in a Collection</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>cursor cursor <span style="color:#f92672">=</span> collection.find({});
+<span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">auto</span> doc : cursor) {
+  std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> bsoncxx<span style="color:#f92672">::</span>to_json(doc) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
 }
-</code></pre>
-
-<h3 id="find-all-documents-in-a-collection">Find All Documents in a Collection</h3>
-
-<pre><code class="language-c++">mongocxx::cursor cursor = collection.find({});
-for(auto doc : cursor) {
-  std::cout &lt;&lt; bsoncxx::to_json(doc) &lt;&lt; &quot;\n&quot;;
-}
-</code></pre>
-
-<h3 id="specify-a-query-filter">Specify a Query Filter</h3>
-
+</code></pre></div><h3 id="specify-a-query-filter">Specify a Query Filter</h3>
 <h4 id="get-a-single-document-that-matches-a-filter">Get A Single Document That Matches a Filter</h4>
-
 <p>To find the first document where the field <code>i</code> has the value <code>71</code>,
 pass the document <code>{&quot;i&quot;: 71}</code> to specify the equality condition:</p>
-
-<pre><code class="language-c++">bsoncxx::stdx::optional&lt;bsoncxx::document::value&gt; maybe_result =
-  collection.find_one(document{} &lt;&lt; &quot;i&quot; &lt;&lt; 71 &lt;&lt; finalize);
-if(maybe_result) {
-  std::cout &lt;&lt; bsoncxx::to_json(*maybe_result) &lt;&lt; &quot;\n&quot;;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">bsoncxx<span style="color:#f92672">::</span>stdx<span style="color:#f92672">::</span>optional<span style="color:#f92672">&lt;</span>bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>value<span style="color:#f92672">&gt;</span> maybe_result <span style="color:#f92672">=</span>
+  collection.find_one(document{} <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;i&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">71</span> <span style="color:#f92672">&lt;&lt;</span> finalize);
+<span style="color:#66d9ef">if</span>(maybe_result) {
+  std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> bsoncxx<span style="color:#f92672">::</span>to_json(<span style="color:#f92672">*</span>maybe_result) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
 }
-</code></pre>
-
-<p>The example prints one document:</p>
-
-<pre><code class="language-json">{ &quot;_id&quot; : { &quot;$oid&quot; : &quot;5755e19b38c96f1fb25667a8&quot; },  &quot;i&quot; : 71 }
-</code></pre>
-
-<p>The <code>_id</code> element has been added automatically by MongoDB to your
+</code></pre></div><p>The example prints one document:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{ <span style="color:#f92672">&#34;_id&#34;</span> : { <span style="color:#f92672">&#34;$oid&#34;</span> : <span style="color:#e6db74">&#34;5755e19b38c96f1fb25667a8&#34;</span> },  <span style="color:#f92672">&#34;i&#34;</span> : <span style="color:#ae81ff">71</span> }
+</code></pre></div><p>The <code>_id</code> element has been added automatically by MongoDB to your
 document and your value will differ from that shown. MongoDB reserves
 field names that start with an underscore (<code>_</code>) and the dollar sign
 (<code>$</code>) for internal use.</p>
-
 <h4 id="get-all-documents-that-match-a-filter">Get All Documents That Match a Filter</h4>
-
 <p>The following example returns and prints all documents where
 <code>50 &lt; &quot;i&quot; &lt;= 100</code>:</p>
-
-<pre><code class="language-c++">mongocxx::cursor cursor = collection.find(
-  document{} &lt;&lt; &quot;i&quot; &lt;&lt; open_document &lt;&lt;
-    &quot;$gt&quot; &lt;&lt; 50 &lt;&lt;
-    &quot;$lte&quot; &lt;&lt; 100
-  &lt;&lt; close_document &lt;&lt; finalize);
-for(auto doc : cursor) {
-  std::cout &lt;&lt; bsoncxx::to_json(doc) &lt;&lt; &quot;\n&quot;;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>cursor cursor <span style="color:#f92672">=</span> collection.find(
+  document{} <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;i&#34;</span> <span style="color:#f92672">&lt;&lt;</span> open_document <span style="color:#f92672">&lt;&lt;</span>
+    <span style="color:#e6db74">&#34;$gt&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">50</span> <span style="color:#f92672">&lt;&lt;</span>
+    <span style="color:#e6db74">&#34;$lte&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">100</span>
+  <span style="color:#f92672">&lt;&lt;</span> close_document <span style="color:#f92672">&lt;&lt;</span> finalize);
+<span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">auto</span> doc : cursor) {
+  std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> bsoncxx<span style="color:#f92672">::</span>to_json(doc) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
 }
-</code></pre>
-
-<h2 id="update-documents">Update Documents</h2>
-
+</code></pre></div><h2 id="update-documents">Update Documents</h2>
 <p>To update documents in a collection, you can use the collection’s
 <code>update_one()</code> and <code>update_many()</code> methods.</p>
-
 <p>The update methods return an instance of
 <code>std::optional&lt;</code><a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1update.html
 "><code>mongocxx::result::update</code></a><code>&gt;</code>,
 which provides information about the operation including the number of
 documents modified by the update.</p>
-
 <h3 id="update-a-single-document">Update a Single Document</h3>
-
 <p>To update at most one document, use the <code>update_one()</code> method.</p>
-
 <p>The following example updates the first document that matches the filter
 <code>{ &quot;i&quot;: 10 }</code> and sets the value of <code>i</code> to <code>110</code>:</p>
-
-<pre><code class="language-c++">collection.update_one(document{} &lt;&lt; &quot;i&quot; &lt;&lt; 10 &lt;&lt; finalize,
-                      document{} &lt;&lt; &quot;$set&quot; &lt;&lt; open_document &lt;&lt;
-                        &quot;i&quot; &lt;&lt; 110 &lt;&lt; close_document &lt;&lt; finalize);
-</code></pre>
-
-<h3 id="update-multiple-documents">Update Multiple Documents</h3>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">collection.update_one(document{} <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;i&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">&lt;&lt;</span> finalize,
+                      document{} <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;$set&#34;</span> <span style="color:#f92672">&lt;&lt;</span> open_document <span style="color:#f92672">&lt;&lt;</span>
+                        <span style="color:#e6db74">&#34;i&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">110</span> <span style="color:#f92672">&lt;&lt;</span> close_document <span style="color:#f92672">&lt;&lt;</span> finalize);
+</code></pre></div><h3 id="update-multiple-documents">Update Multiple Documents</h3>
 <p>To update all documents matching a filter, use the <code>update_many()</code>
 method.</p>
-
 <p>The following example increments the value of <code>i</code> by <code>100</code> where
 <code>i</code> is less than <code>100</code>:</p>
-
-<pre><code class="language-c++">bsoncxx::stdx::optional&lt;mongocxx::result::update&gt; result =
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">bsoncxx<span style="color:#f92672">::</span>stdx<span style="color:#f92672">::</span>optional<span style="color:#f92672">&lt;</span>mongocxx<span style="color:#f92672">::</span>result<span style="color:#f92672">::</span>update<span style="color:#f92672">&gt;</span> result <span style="color:#f92672">=</span>
  collection.update_many(
-  document{} &lt;&lt; &quot;i&quot; &lt;&lt; open_document &lt;&lt;
-    &quot;$lt&quot; &lt;&lt; 100 &lt;&lt; close_document &lt;&lt; finalize,
-  document{} &lt;&lt; &quot;$inc&quot; &lt;&lt; open_document &lt;&lt;
-    &quot;i&quot; &lt;&lt; 100 &lt;&lt; close_document &lt;&lt; finalize);
+  document{} <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;i&#34;</span> <span style="color:#f92672">&lt;&lt;</span> open_document <span style="color:#f92672">&lt;&lt;</span>
+    <span style="color:#e6db74">&#34;$lt&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">&lt;&lt;</span> close_document <span style="color:#f92672">&lt;&lt;</span> finalize,
+  document{} <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;$inc&#34;</span> <span style="color:#f92672">&lt;&lt;</span> open_document <span style="color:#f92672">&lt;&lt;</span>
+    <span style="color:#e6db74">&#34;i&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">&lt;&lt;</span> close_document <span style="color:#f92672">&lt;&lt;</span> finalize);
 
-if(result) {
-  std::cout &lt;&lt; result-&gt;modified_count() &lt;&lt; &quot;\n&quot;;
+<span style="color:#66d9ef">if</span>(result) {
+  std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> result<span style="color:#f92672">-&gt;</span>modified_count() <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
 }
-</code></pre>
-
-<h2 id="delete-documents">Delete Documents</h2>
-
+</code></pre></div><h2 id="delete-documents">Delete Documents</h2>
 <p>To delete documents from a collection, you can use a collection’s
 <code>delete_one()</code> and <code>delete_many()</code> methods.</p>
-
 <p>The delete methods return an instance of
 <code>std::optional&lt;</code><a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1delete__result.html
 "><code>mongocxx::result::delete</code></a><code>&gt;</code>,
 which contains the number of documents deleted.</p>
-
 <h3 id="delete-a-single-document">Delete a Single Document</h3>
-
 <p>To delete at most a single document that matches a filter, use the
 <code>delete_one()</code> method.</p>
-
 <p>For example, to delete a document that matches the filter
 <code>{ &quot;i&quot;: 110 }</code>:</p>
-
-<pre><code class="language-c++">collection.delete_one(document{} &lt;&lt; &quot;i&quot; &lt;&lt; 110 &lt;&lt; finalize);
-</code></pre>
-
-<h3 id="delete-all-documents-that-match-a-filter">Delete All Documents That Match a Filter</h3>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">collection.delete_one(document{} <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;i&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">110</span> <span style="color:#f92672">&lt;&lt;</span> finalize);
+</code></pre></div><h3 id="delete-all-documents-that-match-a-filter">Delete All Documents That Match a Filter</h3>
 <p>To delete all documents matching a filter, use a collection&rsquo;s
 <code>delete_many()</code> method.</p>
-
 <p>The following example deletes all documents where <code>i</code> is greater or
 equal to <code>100</code>:</p>
-
-<pre><code class="language-c++">bsoncxx::stdx::optional&lt;mongocxx::result::delete_result&gt; result =
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">bsoncxx<span style="color:#f92672">::</span>stdx<span style="color:#f92672">::</span>optional<span style="color:#f92672">&lt;</span>mongocxx<span style="color:#f92672">::</span>result<span style="color:#f92672">::</span>delete_result<span style="color:#f92672">&gt;</span> result <span style="color:#f92672">=</span>
  collection.delete_many(
-  document{} &lt;&lt; &quot;i&quot; &lt;&lt; open_document &lt;&lt;
-    &quot;$gte&quot; &lt;&lt; 100 &lt;&lt; close_document &lt;&lt; finalize);
+  document{} <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;i&#34;</span> <span style="color:#f92672">&lt;&lt;</span> open_document <span style="color:#f92672">&lt;&lt;</span>
+    <span style="color:#e6db74">&#34;$gte&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">&lt;&lt;</span> close_document <span style="color:#f92672">&lt;&lt;</span> finalize);
 
-if(result) {
-  std::cout &lt;&lt; result-&gt;deleted_count() &lt;&lt; &quot;\n&quot;;
+<span style="color:#66d9ef">if</span>(result) {
+  std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> result<span style="color:#f92672">-&gt;</span>deleted_count() <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
 }
-</code></pre>
-
-<h2 id="create-indexes">Create Indexes</h2>
-
+</code></pre></div><h2 id="create-indexes">Create Indexes</h2>
 <p>To create an <a href="https://docs.mongodb.com/master/indexes/">index</a> on a
 field or set of fields, pass an index specification document to the
 <code>create_index()</code> method of a
@@ -1509,21 +1683,15 @@ field or set of fields, pass an index specification document to the
 "><code>mongocxx::collection</code></a> instance. An
 index key specification document contains the fields to index and the
 index type for each field:</p>
-
-<pre><code class="language-json">{ &quot;index1&quot;: &quot;&lt;type&gt;&quot;, &quot;index2&quot;: &lt;type&gt; }
-</code></pre>
-
-<ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{ <span style="color:#f92672">&#34;index1&#34;</span>: <span style="color:#e6db74">&#34;&lt;type&gt;&#34;</span>, <span style="color:#f92672">&#34;index2&#34;</span>: <span style="color:#960050;background-color:#1e0010">&lt;type&gt;</span> }
+</code></pre></div><ul>
 <li>For an ascending index type, specify 1 for <code>&lt;type&gt;</code>.</li>
 <li>For a descending index type, specify -1 for <code>&lt;type&gt;</code>.</li>
 </ul>
-
 <p>The following example creates an ascending index on the <code>i</code> field:</p>
-
-<pre><code class="language-c++">auto index_specification = document{} &lt;&lt; &quot;i&quot; &lt;&lt; 1 &lt;&lt; finalize;
-collection.create_index(std::move(index_specification));
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> index_specification <span style="color:#f92672">=</span> document{} <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;i&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> finalize;
+collection.create_index(std<span style="color:#f92672">::</span>move(index_specification));
+</code></pre></div>
 
 
 
@@ -1532,8 +1700,8 @@ collection.create_index(std::move(index_specification));
 <div id="btnv">
   
   <div class="pull-left">
-  <a class="navigation prev" href="/mongocxx-v3/configuration/">
-      <i class="fa fa-long-arrow-left"> </i> Configuring the mongocxx driver
+  <a class="navigation prev" href="/mongocxx-v3/client-side-encryption/">
+      <i class="fa fa-long-arrow-left"> </i> Client-Side Field Level Encryption with mongocxx
   </a>
   </div>
   
@@ -1554,43 +1722,40 @@ collection.create_index(std::move(index_specification));
   <div class="toc">
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#prerequisites">Prerequisites</a></li>
-<li><a href="#compiling">Compiling</a></li>
-<li><a href="#make-a-connection">Make a Connection</a></li>
-<li><a href="#access-a-database">Access a Database</a></li>
-<li><a href="#access-a-collection">Access a Collection</a></li>
-<li><a href="#create-a-document">Create a Document</a></li>
-<li><a href="#insert-documents">Insert Documents</a>
-<ul>
-<li><a href="#insert-one-document">Insert One Document</a></li>
-<li><a href="#insert-multiple-documents">Insert Multiple Documents</a></li>
-</ul></li>
-<li><a href="#query-the-collection">Query the Collection</a>
-<ul>
-<li><a href="#find-a-single-document-in-a-collection">Find a Single Document in a Collection</a></li>
-<li><a href="#find-all-documents-in-a-collection">Find All Documents in a Collection</a></li>
-<li><a href="#specify-a-query-filter">Specify a Query Filter</a>
-<ul>
-<li><a href="#get-a-single-document-that-matches-a-filter">Get A Single Document That Matches a Filter</a></li>
-<li><a href="#get-all-documents-that-match-a-filter">Get All Documents That Match a Filter</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#update-documents">Update Documents</a>
-<ul>
-<li><a href="#update-a-single-document">Update a Single Document</a></li>
-<li><a href="#update-multiple-documents">Update Multiple Documents</a></li>
-</ul></li>
-<li><a href="#delete-documents">Delete Documents</a>
-<ul>
-<li><a href="#delete-a-single-document">Delete a Single Document</a></li>
-<li><a href="#delete-all-documents-that-match-a-filter">Delete All Documents That Match a Filter</a></li>
-</ul></li>
-<li><a href="#create-indexes">Create Indexes</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#compiling">Compiling</a></li>
+    <li><a href="#make-a-connection">Make a Connection</a></li>
+    <li><a href="#access-a-database">Access a Database</a></li>
+    <li><a href="#access-a-collection">Access a Collection</a></li>
+    <li><a href="#create-a-document">Create a Document</a></li>
+    <li><a href="#insert-documents">Insert Documents</a>
+      <ul>
+        <li><a href="#insert-one-document">Insert One Document</a></li>
+        <li><a href="#insert-multiple-documents">Insert Multiple Documents</a></li>
+      </ul>
+    </li>
+    <li><a href="#query-the-collection">Query the Collection</a>
+      <ul>
+        <li><a href="#find-a-single-document-in-a-collection">Find a Single Document in a Collection</a></li>
+        <li><a href="#find-all-documents-in-a-collection">Find All Documents in a Collection</a></li>
+        <li><a href="#specify-a-query-filter">Specify a Query Filter</a></li>
+      </ul>
+    </li>
+    <li><a href="#update-documents">Update Documents</a>
+      <ul>
+        <li><a href="#update-a-single-document">Update a Single Document</a></li>
+        <li><a href="#update-multiple-documents">Update Multiple Documents</a></li>
+      </ul>
+    </li>
+    <li><a href="#delete-documents">Delete Documents</a>
+      <ul>
+        <li><a href="#delete-a-single-document">Delete a Single Document</a></li>
+        <li><a href="#delete-all-documents-that-match-a-filter">Delete All Documents That Match a Filter</a></li>
+      </ul>
+    </li>
+    <li><a href="#create-indexes">Create Indexes</a></li>
+  </ul>
 </nav>
   </div>
   
@@ -1609,7 +1774,7 @@ collection.create_index(std::move(index_specification));
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
    URL_ROOT:    "http://mongocxx.org",
-   VERSION:     "",
+   VERSION:      null ,
    COLLAPSE_INDEX: false,
    FILE_SUFFIX: '.html',
    HAS_SOURCE:  true

@@ -115,6 +115,147 @@
 
 
   
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
 
 
         
@@ -628,11 +769,131 @@
 
 
 
-    <li class="toctree-l2">
-    <a href="/mongocxx-v3/installation/">
+<li class="toctree-l2 ">
+  <a href="/mongocxx-v3/installation/" class="">
+      
+      <span>Installing the mongocxx driver</span>
+      
+  </a>
+    <ul >
         
-        Installing the mongocxx driver
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/windows/">
+        
+        Windows
     </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/macos/">
+        
+        macOS
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/linux/">
+        
+        Linux
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/advanced/">
+        
+        Advanced Configuration and Installation Options
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
   </li>
 
 
@@ -661,6 +922,35 @@
     <a href="/mongocxx-v3/configuration/">
         
         Configuring the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongocxx-v3/client-side-encryption/">
+        
+        Client-Side Field Level Encryption with mongocxx
     </a>
   </li>
 
@@ -1327,32 +1617,23 @@
 
 <h1>Breaking changes from 26compat</h1>
 <em>The Legacy C++ driver has reached End-Of-Life. Please upgrade to the mongocxx driver.</em>
-
-
 <p>The 26compat release series tracks the server 2.6 releases one-to-one. As a
 result, it receives only bugfixes and small updates necessary to keep it
 building in isolation.</p>
-
 <p>The legacy release series, on the other hand, is a permanent and diverging
 fork. Our philosophy is to keep the legacy branch as close to the 26compat
 branch as is reasonable, but that when weighing new features against
 compatibility, we will choose new features. As a result the legacy branch
 is not 100% source compatible with the 26compat branch.</p>
-
 <p>This page attempts to serve as a transition guide for those users looking
 to migrate from the 26compat branch to the legacy branch. Note that it does
 <em>not</em> discuss new features in detail and simply points to the per-release
 notes.</p>
-
 <h1 id="breaking-changes">Breaking Changes</h1>
-
 <h2 id="changes-to-the-build-system">Changes to the build system</h2>
-
 <p>Scons targets have been renamed to more &lsquo;obvious&rsquo; names, and some unused or
 unneeded targets have been removed.</p>
-
 <h3 id="cheat-sheet">cheat sheet</h3>
-
 <table>
 <thead>
 <tr>
@@ -1360,67 +1641,54 @@ unneeded targets have been removed.</p>
 <th>Scons Target</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>compile driver</td>
 <td><code>driver</code></td>
 </tr>
-
 <tr>
 <td>install driver</td>
 <td><code>install</code></td>
 </tr>
-
 <tr>
 <td>check driver install (used internally)</td>
 <td><code>check-install</code></td>
 </tr>
-
 <tr>
 <td>build unit tests</td>
 <td><code>build-unit</code></td>
 </tr>
-
 <tr>
 <td>run unit tests</td>
 <td><code>unit</code></td>
 </tr>
-
 <tr>
 <td>build integration tests</td>
 <td><code>build-integration</code></td>
 </tr>
-
 <tr>
 <td>run integration tests</td>
 <td><code>integration</code></td>
 </tr>
-
 <tr>
 <td>build client examples</td>
 <td><code>build-examples</code></td>
 </tr>
-
 <tr>
 <td>run client examples</td>
 <td><code>examples</code></td>
 </tr>
-
 <tr>
 <td>build everything (driver, unit tests, integration tests, examples</td>
 <td><code>all</code></td>
 </tr>
-
 <tr>
 <td>run all tests and client examples</td>
 <td><code>test</code></td>
 </tr>
 </tbody>
 </table>
-
 <h3 id="details">Details</h3>
-
 <ul>
 <li><a href="https://github.com/10gen/mongo-orchestration"><code>mongo-orchestration</code></a> is now required to run the driver&rsquo;s test suite. Please see the repository for instructions how to install and run <code>mongo-orchestration</code>. If you are not running tests, simply allow scons to time out when it looks for an instance of <code>mongo-orchestration</code> at the start of a build.</li>
 <li>The <code>driver</code> target has been created to built the client library without installing it</li>
@@ -1437,9 +1705,7 @@ unneeded targets have been removed.</p>
 <li>The default installation prefix is now <code>build/install</code>, rather than <code>/usr/local</code>.</li>
 <li>All build artifacts are now captured under the <code>build</code> directory.</li>
 </ul>
-
 <h2 id="changes-to-apis">Changes to APIs</h2>
-
 <ul>
 <li>The <code>mongo::be</code>, <code>mongo::bo</code>, and <code>mongo::bob</code> typedefs for <code>mongo::BSONElement</code>, <code>mongo::BSONObj</code> and <code>mongo::BSONObjBuilder</code> have been removed. We recommend using the fully qualified names in new code.</li>
 <li>The <code>mongo::BSONBuilderBase</code> class has been removed and is no longer a base class of <code>mongo::BSONObjBuilder</code> or <code>mongo::BSONArrayBuilder</code></li>
@@ -1450,12 +1716,10 @@ unneeded targets have been removed.</p>
 <li>The <code>ensureIndex</code> and related methods have been removed. The replacement is the new <code>createIndex</code> method.</li>
 <li><code>IndexSpec::dropDuplicates()</code> is now deprecated as it is a no-op in MongoDB 3.0.</li>
 <li>The <code>QUERY</code> macro has been replaced by <code>MONGO_QUERY</code>.</li>
-<li>The <code>ConnectionString::parse</code> method now requires it&rsquo;s argument to be in the MongoDB URL (&ldquo;mongodb://&hellip;&ldquo;) format. To use the old format, use the new <code>ConnectionString::parseDeprecated</code> method.</li>
+<li>The <code>ConnectionString::parse</code> method now requires it&rsquo;s argument to be in the MongoDB URL (&ldquo;mongodb://&hellip;&quot;) format. To use the old format, use the new <code>ConnectionString::parseDeprecated</code> method.</li>
 <li>The <code>ConnectionPool</code> and <code>ScopedDbConnection</code> classes have been removed.</li>
 </ul>
-
 <h2 id="behavior-changes">Behavior Changes</h2>
-
 <ul>
 <li>The driver will not function correctly unless <code>mongo::client::initialize</code> is invoked before using the driver APIs. The mongo::client::shutdown method should also be called at application termination (if options.callShutdownAtExit() is not set) so the driver can cleanly terminate. As a convenience, we have added <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h#L69"><code>mongo::GlobalInstance</code></a> as an RAII wrapper to automatically call these methods.</li>
 <li>options.callShutdownAtExit() is a no-op on non-static builds on Windows due to issues around sudden thread termination.</li>
@@ -1464,9 +1728,7 @@ unneeded targets have been removed.</p>
 <li>The driver now throws a mongo::OperationException when write concern is greater than Acknowledged for errors that occur when running operations against a MongoDB database.</li>
 <li>The default shutdown grace period is now zero which means the driver may block forever until a successful shutdown occurs.</li>
 </ul>
-
 <h1 id="improvements">Improvements</h1>
-
 <p>Please see the <a href="https://github.com/mongodb/mongo-cxx-driver/releases">release
 notes</a> for the
 individual legacy branch releases for details on improvements in each
@@ -1502,19 +1764,16 @@ release.</p>
   <div class="toc">
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
-<ul>
-<li><a href="#breaking-changes">Breaking Changes</a>
-<ul>
-<li><a href="#changes-to-the-build-system">Changes to the build system</a>
-<ul>
-<li><a href="#cheat-sheet">cheat sheet</a></li>
-<li><a href="#details">Details</a></li>
-</ul></li>
-<li><a href="#changes-to-apis">Changes to APIs</a></li>
-<li><a href="#behavior-changes">Behavior Changes</a></li>
-</ul></li>
-<li><a href="#improvements">Improvements</a></li>
-</ul>
+  <ul>
+    <li><a href="#changes-to-the-build-system">Changes to the build system</a>
+      <ul>
+        <li><a href="#cheat-sheet">cheat sheet</a></li>
+        <li><a href="#details">Details</a></li>
+      </ul>
+    </li>
+    <li><a href="#changes-to-apis">Changes to APIs</a></li>
+    <li><a href="#behavior-changes">Behavior Changes</a></li>
+  </ul>
 </nav>
   </div>
   
@@ -1533,7 +1792,7 @@ release.</p>
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
    URL_ROOT:    "http://mongocxx.org",
-   VERSION:     "",
+   VERSION:      null ,
    COLLAPSE_INDEX: false,
    FILE_SUFFIX: '.html',
    HAS_SOURCE:  true

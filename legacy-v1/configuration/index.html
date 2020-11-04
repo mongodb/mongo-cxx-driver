@@ -115,6 +115,147 @@
 
 
   
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
 
 
         
@@ -556,11 +697,131 @@
 
 
 
-    <li class="toctree-l2">
-    <a href="/mongocxx-v3/installation/">
+<li class="toctree-l2 ">
+  <a href="/mongocxx-v3/installation/" class="">
+      
+      <span>Installing the mongocxx driver</span>
+      
+  </a>
+    <ul >
         
-        Installing the mongocxx driver
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/windows/">
+        
+        Windows
     </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/macos/">
+        
+        macOS
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/linux/">
+        
+        Linux
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/advanced/">
+        
+        Advanced Configuration and Installation Options
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
   </li>
 
 
@@ -589,6 +850,35 @@
     <a href="/mongocxx-v3/configuration/">
         
         Configuring the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongocxx-v3/client-side-encryption/">
+        
+        Client-Side Field Level Encryption with mongocxx
     </a>
   </li>
 
@@ -1255,41 +1545,32 @@
 
 <h1>Configuring the legacy driver</h1>
 <em>The Legacy C++ driver has reached End-Of-Life. Please upgrade to the mongocxx driver.</em>
-
-
 <p>In the legacy-0.9 development cycle, the mechanism by which the driver is
 configured was refactored. Note that these changes <em>do not apply to
 releases on the 26compat branch, or releases pre-dating legacy-0.9.0</em>.This
 page describes the new configuration mechanism and documents the various
 configuration options that may be used.</p>
-
-<h2 id="the-mongo-client-initialize-function">The <code>mongo::client::initialize</code> function</h2>
-
+<h2 id="the-mongoclientinitialize-function">The <code>mongo::client::initialize</code> function</h2>
 <p>The <code>mongo::client::initialize</code> function, found in file
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h"><code>src/mongo/client/init.h</code></a>
 configures the driver and starts background threads critical to the
 functioning of the driver. The function has a single parameter receiving a
 <code>mongo::client::Options</code> object. If no value is provided, a default
 constructed <code>mongo::client::Options</code> object is used.</p>
-
 <p>To configure the driver to use non-default parameters, construct a new
 <code>mongo::client::Options</code> object and use its setter methods to configure the
 parameters of interest, and pass this object to
 <code>mongo::client::initialize</code>.</p>
-
 <p>This method must be called exactly once by your application. Invoke
 <code>mongo::client::initialize</code> as early as possible in your application
 startup phase, before any additional threads have been created. You must
 examine the return value of <code>mongo::client::initialize</code> and deal with any
 returned error appropriately.</p>
-
-<h2 id="the-mongo-client-terminate-function">The <code>mongo::client::terminate</code> function</h2>
-
+<h2 id="the-mongoclientterminate-function">The <code>mongo::client::terminate</code> function</h2>
 <p>When it is time to stop using the client driver, you must terminate its
 background tasks and release resources by invoking the
 <code>mongo::client::terminate</code> function, found in file
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h"><code>src/mongo/client/init.h</code></a>.</p>
-
 <p>The <code>mongo::client::terminate</code> function honors a grace period, specified in
 milliseconds, and defaulting to &lsquo;forever&rsquo;. The shutdown routine will give
 background tasks the selected grace period to terminate cleanly. If they do
@@ -1301,56 +1582,43 @@ driver cleanly. Please see the documentation for <code>mongo::client::terminate<
 for additional details. The value of the shutdown grace period may be
 changed from its default at driver initialization time by using an
 appropriately configured <code>mongo::client::Options</code> object.</p>
-
 <p>On some platforms, you may be able to arrange for
 <code>mongo::client::terminate</code> to be called via an atexit handler. To request
 this behavior, see the <code>setCallShutdownAtExit</code> option, documented below.</p>
-
 <p>Alternatively, you may use the <code>mongo::client::GlobalInstance</code> class, found
 in
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/init.h"><code>src/mongo/client/init.h</code></a>,
 to instantiate an RAII type that will automatically initialize and
 terminate the driver.</p>
-
-<h2 id="the-mongo-client-options-class">The <code>mongo::client::Options</code> class</h2>
-
+<h2 id="the-mongoclientoptions-class">The <code>mongo::client::Options</code> class</h2>
 <h3 id="where-to-find-it">Where to find it</h3>
-
 <p>Configuration of the driver is managed through a new class, added in the
 <code>legacy-0.9.0</code> release, called <code>Options</code>. This class is hosted in the
 <code>mongo::client</code> namespace, and is defined in the header
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/options.h"><code>mongo/client/options.h</code></a>.</p>
-
-<h3 id="passing-options-to-mongo-client-initialize">Passing options to <code>mongo::client::initialize</code></h3>
-
+<h3 id="passing-options-to-mongoclientinitialize">Passing options to <code>mongo::client::initialize</code></h3>
 <p>By default, calling <code>mongo::client::initialize()</code> with no parameters is
 equivalent to calling <code>mongo::client::initialize(mongo::client::Options())</code>
 passing a default constructed <code>mongo::client::Options</code> object.</p>
-
 <p>Because the <code>mongo::client::Options</code> class has setters returning a
 <code>mongo::client::Options&amp;</code> you can chain together options to easily
 configure them at the call site:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">using</span> mongo<span style="color:#f92672">::</span>client<span style="color:#f92672">::</span>initialize;
+<span style="color:#66d9ef">using</span> mongo<span style="color:#f92672">::</span>client<span style="color:#f92672">::</span>Options;
 
-<pre><code class="language-cpp">using mongo::client::initialize;
-using mongo::client::Options;
-
-// Configure the mongo C++ client driver, enabling SSL and setting
-// the SSL Certificate Authority file to &quot;mycafile&quot;.
-Status status = initialize(
-    Options().setSSLMode(Options::kSSLRequired).setSSLCAFile(&quot;mycafile&quot;)
+<span style="color:#75715e">// Configure the mongo C++ client driver, enabling SSL and setting
+</span><span style="color:#75715e">// the SSL Certificate Authority file to &#34;mycafile&#34;.
+</span><span style="color:#75715e"></span>Status status <span style="color:#f92672">=</span> initialize(
+    Options().setSSLMode(Options<span style="color:#f92672">::</span>kSSLRequired).setSSLCAFile(<span style="color:#e6db74">&#34;mycafile&#34;</span>)
 );
 
-if (!status.isOK()) {
-    // deal with errors
-} else {
-    // Driver is up in SSL mode.
-}
-</code></pre>
-
-<h3 id="available-options">Available Options</h3>
-
-<h4 id="options-callshutdownatexit-and-options-setcallshutdownatexit"><code>Options::callShutdownAtExit</code> and <code>Options::setCallShutdownAtExit</code></h4>
-
+<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>status.isOK()) {
+    <span style="color:#75715e">// deal with errors
+</span><span style="color:#75715e"></span>} <span style="color:#66d9ef">else</span> {
+    <span style="color:#75715e">// Driver is up in SSL mode.
+</span><span style="color:#75715e"></span>}
+</code></pre></div><h3 id="available-options">Available Options</h3>
+<h4 id="optionscallshutdownatexit-and-optionssetcallshutdownatexit"><code>Options::callShutdownAtExit</code> and <code>Options::setCallShutdownAtExit</code></h4>
 <ul>
 <li>Type: <code>bool</code></li>
 <li>Default: <code>false</code></li>
@@ -1360,9 +1628,7 @@ if (!status.isOK()) {
 <code>mongo::client::terminate</code> will be made with the value of
 <code>mongo::client::Options::current::autoShutdownGracePeriodMillis</code></li>
 </ul>
-
-<h4 id="options-autoshutdowngraceperiodmillis-and-options-setautoshutdowngraceperiodmillis"><code>Options::autoShutdownGracePeriodMillis</code> and <code>Options::setAutoShutdownGracePeriodMillis</code></h4>
-
+<h4 id="optionsautoshutdowngraceperiodmillis-and-optionssetautoshutdowngraceperiodmillis"><code>Options::autoShutdownGracePeriodMillis</code> and <code>Options::setAutoShutdownGracePeriodMillis</code></h4>
 <ul>
 <li>Type: <code>int</code>, interpreted as milliseconds</li>
 <li>Default: 0 (wait forever)</li>
@@ -1372,17 +1638,13 @@ if (!status.isOK()) {
 <code>Options::autoShutdownGracePeriodMillis</code> when calling
 <code>mongo::client::terminate</code>.</li>
 </ul>
-
-<h4 id="options-setdefaultlocalthresholdmillis-and-options-defaultlocalthresholdmillis"><code>Options::setDefaultLocalThresholdMillis</code> and <code>Options::defaultLocalThresholdMillis</code></h4>
-
+<h4 id="optionssetdefaultlocalthresholdmillis-and-optionsdefaultlocalthresholdmillis"><code>Options::setDefaultLocalThresholdMillis</code> and <code>Options::defaultLocalThresholdMillis</code></h4>
 <ul>
 <li>Type: <code>int</code>, interpreted as milliseconds</li>
 <li>Default: 15</li>
 <li>Semantics: TODO</li>
 </ul>
-
-<h4 id="options-setsslmode-and-options-sslmode"><code>Options::setSSLMode</code> and <code>Options::SSLMode</code></h4>
-
+<h4 id="optionssetsslmode-and-optionssslmode"><code>Options::setSSLMode</code> and <code>Options::SSLMode</code></h4>
 <ul>
 <li>Type: [<code>Options::kSSLEnabled</code>|<code>Options:kSSLDisabled</code>]</li>
 <li>Default: <code>Options::kSSLDisabled</code></li>
@@ -1393,18 +1655,14 @@ you may not be able to connect. This value is an enumeration so that we
 may later extend it with a <code>kSSLPreferred</code> option, but that is not
 currently implemented.</li>
 </ul>
-
-<h4 id="options-setfipsmode-and-options-fipsmode"><code>Options::setFIPSMode</code> and <code>Options::FIPSMode</code></h4>
-
+<h4 id="optionssetfipsmode-and-optionsfipsmode"><code>Options::setFIPSMode</code> and <code>Options::FIPSMode</code></h4>
 <ul>
 <li>Type: <code>bool</code></li>
 <li>Default: <code>false</code></li>
 <li>Semantics: If true, will attempt to use FIPS-140 validated crypto if
 supported by the crypto library currently in use.</li>
 </ul>
-
-<h4 id="options-setsslcafile-and-options-sslcafile"><code>Options::setSSLCAFile</code> and <code>Options::SSLCAFile</code></h4>
-
+<h4 id="optionssetsslcafile-and-optionssslcafile"><code>Options::setSSLCAFile</code> and <code>Options::SSLCAFile</code></h4>
 <ul>
 <li>Type: <code>std::string</code></li>
 <li>Default: <code>&quot;&quot;</code></li>
@@ -1414,9 +1672,7 @@ certificate authority file to use. See the <a href="https://docs.mongodb.com/mas
 documentation</a>
 for additional information on the CA file.</li>
 </ul>
-
-<h4 id="options-setsslpemkeyfile-and-options-sslpemkeyfile"><code>Options::setSSLPemKeyFile</code> and <code>Options::SSLPEMKeyFile</code></h4>
-
+<h4 id="optionssetsslpemkeyfile-and-optionssslpemkeyfile"><code>Options::setSSLPemKeyFile</code> and <code>Options::SSLPEMKeyFile</code></h4>
 <ul>
 <li>Type: <code>std::string</code></li>
 <li>Default: <code>&quot;&quot;</code></li>
@@ -1426,9 +1682,7 @@ PEM key file to use. See the <a href="https://docs.mongodb.com/master/tutorial/c
 documentation</a>
 for additional information on the PEM key file.</li>
 </ul>
-
-<h4 id="options-setsslpemkeypassword-and-options-sslpemkeypassword"><code>Options::setSSLPemKeyPassword</code> and <code>Options::SSLPEMKeyPassword</code></h4>
-
+<h4 id="optionssetsslpemkeypassword-and-optionssslpemkeypassword"><code>Options::setSSLPemKeyPassword</code> and <code>Options::SSLPEMKeyPassword</code></h4>
 <ul>
 <li>Type: <code>std::string</code></li>
 <li>Default: <code>&quot;&quot;</code></li>
@@ -1440,9 +1694,7 @@ password to be used to decrypt the SSL PEM key file specified with
 documentation</a>
 for additional information on the PEM key file password.</li>
 </ul>
-
-<h4 id="options-setsslcrlfile-and-options-sslcrlfile"><code>Options::setSSLCRLFile</code> and <code>Options::SSLCRLFile</code></h4>
-
+<h4 id="optionssetsslcrlfile-and-optionssslcrlfile"><code>Options::setSSLCRLFile</code> and <code>Options::SSLCRLFile</code></h4>
 <ul>
 <li>Type: <code>std::string</code></li>
 <li>Default: <code>&quot;&quot;</code></li>
@@ -1452,9 +1704,7 @@ certificate revocation list. See the <a href="https://docs.mongodb.com/master/tu
 documentation</a>
 for additional information on the certificate revocation list file.</li>
 </ul>
-
-<h4 id="options-setssallowinvalidcertificates-and-options-sslallowinvalidcertificates"><code>Options::setSSAllowInvalidCertificates</code> and <code>Options::SSLAllowInvalidCertificates</code></h4>
-
+<h4 id="optionssetssallowinvalidcertificates-and-optionssslallowinvalidcertificates"><code>Options::setSSAllowInvalidCertificates</code> and <code>Options::SSLAllowInvalidCertificates</code></h4>
 <ul>
 <li>Type: <code>bool</code></li>
 <li>Default: <code>false</code></li>
@@ -1463,9 +1713,7 @@ for additional information on the certificate revocation list file.</li>
 validation of certificates. In other words, invalid certificates will be
 accepted.</li>
 </ul>
-
-<h4 id="options-setlogappenderfactory-and-options-logappenderfactory"><code>Options::setLogAppenderFactory</code> and <code>Options::logAppenderFactory</code></h4>
-
+<h4 id="optionssetlogappenderfactory-and-optionslogappenderfactory"><code>Options::setLogAppenderFactory</code> and <code>Options::logAppenderFactory</code></h4>
 <ul>
 <li>Type: <code>Options::LogAppenderFactory</code></li>
 <li>Default: none</li>
@@ -1477,9 +1725,7 @@ can be found
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/loggingTest.cpp">here</a>.
 You may only configure one appender through startup options.</li>
 </ul>
-
-<h4 id="options-setminloggedseverity-and-options-minloggedseverity"><code>Options::setMinLoggedSeverity</code> and `Options::minLoggedSeverity&rsquo;</h4>
-
+<h4 id="optionssetminloggedseverity-and-optionsminloggedseverity"><code>Options::setMinLoggedSeverity</code> and `Options::minLoggedSeverity'</h4>
 <ul>
 <li>Type: <code>logger::LogSeverity</code></li>
 <li>Default: <code>LogSeverity::Log()</code></li>
@@ -1487,9 +1733,7 @@ You may only configure one appender through startup options.</li>
 set the minimum severity level of logged messages. Messages that are of
 less importance than the level you provide will not be logged.</li>
 </ul>
-
-<h4 id="options-setvalidateobjects-and-options-validateobjects"><code>Options::setValidateObjects</code> and <code>Options::validateObjects</code></h4>
-
+<h4 id="optionssetvalidateobjects-and-optionsvalidateobjects"><code>Options::setValidateObjects</code> and <code>Options::validateObjects</code></h4>
 <ul>
 <li>Type: <code>bool</code></li>
 <li>Default: <code>false</code></li>
@@ -1497,14 +1741,14 @@ less importance than the level you provide will not be logged.</li>
 data returned from the server to ensure that the returned data is valid
 BSON. Note that there is a performance cost to doing so.</li>
 </ul>
-
 <h2 id="caveats">Caveats</h2>
-
 <ul>
-<li><p>You must call <code>mongo::client::initialize</code> before using the driver. You
-may only call <code>mongo::client::initialize</code> once.</p></li>
-
-<li><p>Configuration of the driver is global. You may access a <code>const</code> reference
+<li>
+<p>You must call <code>mongo::client::initialize</code> before using the driver. You
+may only call <code>mongo::client::initialize</code> once.</p>
+</li>
+<li>
+<p>Configuration of the driver is global. You may access a <code>const</code> reference
 to the current global configuration state of the driver by calling
 <code>mongo::client::Options::current</code>. If called before entering <code>main</code>, the
 values returned by accessors of the <code>Options</code> object returned by
@@ -1513,13 +1757,15 @@ calling <code>mongo::client::initialize</code>, a default constructed instance o
 the <code>Options</code> class will be returned. If called after
 <code>mongo::client::initialize</code>, the value returned by <code>Options::current</code>
 will reflect any customized <code>Options</code> instance passed to
-<code>mongo::client::initialize</code>.</p></li>
-
-<li><p>Configuration of the driver is not synchronized, and you may only invoke
+<code>mongo::client::initialize</code>.</p>
+</li>
+<li>
+<p>Configuration of the driver is not synchronized, and you may only invoke
 <code>mongo::client::initialize</code> once. We strongly recommend that you call
 <code>mongo::client::initialize</code> as early as possible in <code>main</code> or your
 application startup code, preferably before creating any additional
-threads.</p></li>
+threads.</p>
+</li>
 </ul>
 
 
@@ -1552,35 +1798,18 @@ threads.</p></li>
   <div class="toc">
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#the-mongo-client-initialize-function">The <code>mongo::client::initialize</code> function</a></li>
-<li><a href="#the-mongo-client-terminate-function">The <code>mongo::client::terminate</code> function</a></li>
-<li><a href="#the-mongo-client-options-class">The <code>mongo::client::Options</code> class</a>
-<ul>
-<li><a href="#where-to-find-it">Where to find it</a></li>
-<li><a href="#passing-options-to-mongo-client-initialize">Passing options to <code>mongo::client::initialize</code></a></li>
-<li><a href="#available-options">Available Options</a>
-<ul>
-<li><a href="#options-callshutdownatexit-and-options-setcallshutdownatexit"><code>Options::callShutdownAtExit</code> and <code>Options::setCallShutdownAtExit</code></a></li>
-<li><a href="#options-autoshutdowngraceperiodmillis-and-options-setautoshutdowngraceperiodmillis"><code>Options::autoShutdownGracePeriodMillis</code> and <code>Options::setAutoShutdownGracePeriodMillis</code></a></li>
-<li><a href="#options-setdefaultlocalthresholdmillis-and-options-defaultlocalthresholdmillis"><code>Options::setDefaultLocalThresholdMillis</code> and <code>Options::defaultLocalThresholdMillis</code></a></li>
-<li><a href="#options-setsslmode-and-options-sslmode"><code>Options::setSSLMode</code> and <code>Options::SSLMode</code></a></li>
-<li><a href="#options-setfipsmode-and-options-fipsmode"><code>Options::setFIPSMode</code> and <code>Options::FIPSMode</code></a></li>
-<li><a href="#options-setsslcafile-and-options-sslcafile"><code>Options::setSSLCAFile</code> and <code>Options::SSLCAFile</code></a></li>
-<li><a href="#options-setsslpemkeyfile-and-options-sslpemkeyfile"><code>Options::setSSLPemKeyFile</code> and <code>Options::SSLPEMKeyFile</code></a></li>
-<li><a href="#options-setsslpemkeypassword-and-options-sslpemkeypassword"><code>Options::setSSLPemKeyPassword</code> and <code>Options::SSLPEMKeyPassword</code></a></li>
-<li><a href="#options-setsslcrlfile-and-options-sslcrlfile"><code>Options::setSSLCRLFile</code> and <code>Options::SSLCRLFile</code></a></li>
-<li><a href="#options-setssallowinvalidcertificates-and-options-sslallowinvalidcertificates"><code>Options::setSSAllowInvalidCertificates</code> and <code>Options::SSLAllowInvalidCertificates</code></a></li>
-<li><a href="#options-setlogappenderfactory-and-options-logappenderfactory"><code>Options::setLogAppenderFactory</code> and <code>Options::logAppenderFactory</code></a></li>
-<li><a href="#options-setminloggedseverity-and-options-minloggedseverity"><code>Options::setMinLoggedSeverity</code> and `Options::minLoggedSeverity&rsquo;</a></li>
-<li><a href="#options-setvalidateobjects-and-options-validateobjects"><code>Options::setValidateObjects</code> and <code>Options::validateObjects</code></a></li>
-</ul></li>
-</ul></li>
-<li><a href="#caveats">Caveats</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#the-mongoclientinitialize-function">The <code>mongo::client::initialize</code> function</a></li>
+    <li><a href="#the-mongoclientterminate-function">The <code>mongo::client::terminate</code> function</a></li>
+    <li><a href="#the-mongoclientoptions-class">The <code>mongo::client::Options</code> class</a>
+      <ul>
+        <li><a href="#where-to-find-it">Where to find it</a></li>
+        <li><a href="#passing-options-to-mongoclientinitialize">Passing options to <code>mongo::client::initialize</code></a></li>
+        <li><a href="#available-options">Available Options</a></li>
+      </ul>
+    </li>
+    <li><a href="#caveats">Caveats</a></li>
+  </ul>
 </nav>
   </div>
   
@@ -1599,7 +1828,7 @@ threads.</p></li>
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
    URL_ROOT:    "http://mongocxx.org",
-   VERSION:     "",
+   VERSION:      null ,
    COLLAPSE_INDEX: false,
    FILE_SUFFIX: '.html',
    HAS_SOURCE:  true

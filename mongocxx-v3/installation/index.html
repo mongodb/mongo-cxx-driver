@@ -157,6 +157,9 @@
       
       
     
+      
+      
+    
     
   
 
@@ -340,11 +343,131 @@
 
 
 
-    <li class="toctree-l2">
-    <a href="/mongocxx-v3/installation/">
+<li class="toctree-l2  current">
+  <a href="/mongocxx-v3/installation/" class="">
+      
+      <span>Installing the mongocxx driver</span>
+      
+  </a>
+    <ul  class="current">
         
-        Installing the mongocxx driver
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/windows/">
+        
+        Windows
     </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/macos/">
+        
+        macOS
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/linux/">
+        
+        Linux
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/advanced/">
+        
+        Advanced Configuration and Installation Options
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
   </li>
 
 
@@ -373,6 +496,35 @@
     <a href="/mongocxx-v3/configuration/">
         
         Configuring the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongocxx-v3/client-side-encryption/">
+        
+        Client-Side Field Level Encryption with mongocxx
     </a>
   </li>
 
@@ -1008,10 +1160,6 @@
                   <div class="body">
 
 
-   
-<a class="edit-link" href="https://github.com/mongodb/mongo-cxx-driver/blob/master/docs/content/mongocxx-v3/installation.md" target="_blank" title="Edit mongocxx-v3/installation.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
-
-
 
 
 
@@ -1033,459 +1181,61 @@
 </div>
 
 
-<h1>Installing the mongocxx driver</h1>
-
-
+<h1> Installing the mongocxx driver </h1>
+<ul id="subpage-list">
+    
+    <li>
+        <a href="http://mongocxx.org/mongocxx-v3/installation/windows/">Windows</a>
+    </li>
+    
+    <li>
+        <a href="http://mongocxx.org/mongocxx-v3/installation/macos/">macOS</a>
+    </li>
+    
+    <li>
+        <a href="http://mongocxx.org/mongocxx-v3/installation/linux/">Linux</a>
+    </li>
+    
+    <li>
+        <a href="http://mongocxx.org/mongocxx-v3/installation/advanced/">Advanced Configuration and Installation Options</a>
+    </li>
+    
+</ul>
 <h2 id="prerequisites">Prerequisites</h2>
-
 <ul>
 <li>Any standard Unix platform, or Windows 7 SP1+</li>
 <li>A compiler that supports C++11 (gcc, clang, or Visual Studio)</li>
 <li><a href="https://cmake.org">CMake</a> 3.2 or later</li>
 <li><a href="https://www.boost.org">boost</a> headers (optional)</li>
 </ul>
-
 <p>We currently test the driver on the following platforms:</p>
-
 <ul>
-<li>Linux with clang 3.8, GCC 5.4 and 7.5</li>
-<li>macOS with Apple clang 7.0 and 11.0 using Boost 1.70.0</li>
+<li>Linux with clang 3.8 and 6.0, GCC 5.4 and 7.5</li>
+<li>macOS with Apple clang 11.0 using Boost 1.70.0</li>
 <li>Windows with Visual Studio 2015 using Boost 1.60.0 and Visual Studio 2017</li>
 </ul>
-
 <p>Versions older than the ones listed may not work and are not
 supported; use them at your own risk.</p>
-
 <p>Versions newer than the ones listed above should work; if you
 have problems, please file a bug report via
 <a href="https://jira.mongodb.org/browse/CXX/">JIRA</a>.</p>
-
 <h2 id="installation">Installation</h2>
-
-<h3 id="step-1-install-the-latest-version-of-the-mongodb-c-driver">Step 1: Install the latest version of the MongoDB C driver.</h3>
-
-<p>The mongocxx driver builds on top of the MongoDB C driver.</p>
-
+<p>To configure and install the driver, follow the instructions for your platform:</p>
 <ul>
-<li>For mongocxx-3.6.x, libmongoc 1.17.0 or later is required.</li>
-<li>For mongocxx-3.5.x, libmongoc 1.15.0 or later is required.</li>
-<li>For mongocxx-3.4.x, libmongoc 1.13.0 or later is required.</li>
-<li>For mongocxx-3.3.x, libmongoc 1.10.1 or later is required.</li>
-<li>For mongocxx-3.2.x, libmongoc 1.9.2 or later is required.</li>
-<li>For mongocxx-3.1.4+, libmongoc 1.7.0 or later is required.</li>
-<li>For mongocxx-3.1.[0-3], libmongoc 1.5.0 or later is required.</li>
-<li>For mongocxx-3.0.x, we recommend the last 1.4.x version of libmongoc</li>
+<li><a href="http://mongocxx.org/mongocxx-v3/installation/windows/">Configuring and installing on Windows</a></li>
+<li><a href="http://mongocxx.org/mongocxx-v3/installation/macos/">Configuring and installing on macOS</a></li>
+<li><a href="http://mongocxx.org/mongocxx-v3/installation/linux/">Configuring and installing on Linux</a></li>
+</ul>
+<h2 id="advanced-options">Advanced Options</h2>
+<ul>
+<li><a href="http://mongocxx.org/mongocxx-v3/installation/advanced/">Advanced Configuration and Installation Options</a></li>
 </ul>
 
-<p>Unless you know that your package manager offers a high enough version, you
-will need to download and build from the source code. Get a tarball from
-the <a href="https://github.com/mongodb/mongo-c-driver/releases">C Driver releases</a>
-page.</p>
-
-<p>Follow the instructions for building from a tarball at
-<a href="http://mongoc.org/libmongoc/current/installing.html">Installing libmongoc</a>.</p>
-
-<p>Industry best practices and some regulations require the use of TLS 1.1
-or newer. The MongoDB C Driver supports TLS 1.1 on Linux if OpenSSL is
-at least version 1.0.1. On macOS and Windows, the C Driver uses native
-TLS implementations that support TLS 1.1.</p>
-
-<h3 id="step-2-choose-a-c-17-polyfill">Step 2: Choose a C++17 polyfill</h3>
-
-<p>The mongocxx driver uses the C++17 features <code>std::optional</code> and
-<code>std::string_view</code>. To compile the mongocxx driver for pre-C++17, you
-must choose one of the following implementations for these features:</p>
-
-<p>MNMLSTC/core (<em>default for non-Windows platforms</em>)
-     Select with <code>-DBSONCXX_POLY_USE_MNMLSTC=1</code>.  <strong>NOTE</strong>: This option
-     vendors a header-only installation of MNMLSTC/core into the bsoncxx
-     library installation and will therefore download MLNMLSTC from GitHub
-     during the build process. If you already have an available version of
-     MNMLSTC on your system, you can avoid the download step by using
-     <code>-DBSONCXX_POLY_USE_SYSTEM_MNMLSTC</code>.</p>
-
-<p>Boost (<em>default for Windows platforms</em>)
-     Select with <code>-DBSONCXX_POLY_USE_BOOST=1</code>. This is currently the
-     only option if you are using a version of MSVC that does not support
-     C++17.</p>
-
-<p><code>std::experimental</code>
-     Select with <code>-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=1</code>. If your
-     toolchain&rsquo;s standard library provides <code>optional</code> and
-     <code>string_view</code> in the namespace <code>std::experimental</code>, you can use
-     this option. Be aware that your standard library&rsquo;s
-     <code>std::experimental</code> implementation may change over time,
-     breaking binary compatibility in unexpected ways. Note that this
-     polyfill is <em>not</em> recommended and is unsupported.</p>
-
-<p>Most users should be fine sticking with the default. However, if you
-have an existing application which makes heavy use of one of the
-available libraries, you may prefer to build the mongocxx driver
-against the same library.</p>
-
-<p><strong>DO NOT</strong> change your project&rsquo;s polyfill if you need to create a
-stable binary interface.</p>
-
-<h3 id="step-3-download-the-latest-version-of-the-mongocxx-driver">Step 3: Download the latest version of the mongocxx driver.</h3>
-
-<p>The most reliable starting point for building the mongocxx driver is the latest
-release tarball.</p>
-
-<p>The <a href="https://github.com/mongodb/mongo-cxx-driver/releases">mongocxx releases</a>
-page will have links to the release tarball for the version you wish you install.  For
-example, to download version 3.6.0:</p>
-
-<pre><code class="language-sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.6.0/mongo-cxx-driver-r3.6.0.tar.gz
-tar -xzf mongo-cxx-driver-r3.6.0.tar.gz
-cd mongo-cxx-driver-r3.6.0/build
-</code></pre>
-
-<p>Make sure you change to the <code>build</code> directory of whatever source tree you
-obtain.</p>
-
-<h3 id="step-4-configure-the-driver">Step 4: Configure the driver</h3>
-
-<p>On Unix systems, <code>libmongoc</code> installs into <code>/usr/local</code> by default. Without additional
-configuration, <code>mongocxx</code> installs into its local build directory as a courtesy to those who build
-from source. To configure <code>mongocxx</code> for installation into <code>/usr/local</code> as well, use the following
-<code>cmake</code> command:</p>
-
-<pre><code>cmake ..                                \
-    -DCMAKE_BUILD_TYPE=Release          \
-    -DCMAKE_INSTALL_PREFIX=/usr/local
-</code></pre>
-
-<p>In the Unix examples that follow,
-<code>mongocxx</code> is customized in these ways:
-* <code>libmongoc</code> is found in <code>/opt/mongo-c-driver</code>.
-* <code>mongocxx</code> is to be installed into <code>/opt/mongo-cxx-driver</code>.</p>
-
-<p>With those two distinct (arbitrary) install locations, a user would run this <code>cmake</code> command:</p>
-
-<pre><code class="language-sh">cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
-</code></pre>
-
-<blockquote>
-<p><em>Note</em> If you need multiple paths in a CMake PATH variable, separate them with a semicolon like
-this:
-<code>-DCMAKE_PREFIX_PATH=&quot;/your/cdriver/prefix;/some/other/path&quot;</code></p>
-</blockquote>
-
-<p>These options can be freely mixed with a C++17 polyfill option. For instance, this is how a user
-would run the command above with the Boost polyfill option:</p>
-
-<pre><code class="language-sh">cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DBSONCXX_POLY_USE_BOOST=1                      \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
-</code></pre>
-
-<hr />
-
-<p>On Windows, this is the equivalent use of cmake:</p>
-
-<pre><code class="language-sh">'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
-     -G &quot;Visual Studio 14 2015 Win64&quot;           \
-    -DBOOST_ROOT=C:\local\boost_1_60_0          \
-    -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
-    -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
-</code></pre>
-
-<p>The example above assumes:
-* Boost is found in <code>C:\local\boost_1_60_0</code>.
-* <code>libmongoc</code> is found in <code>C:\mongo-c-driver</code>.
-* <code>mongocxx</code> is to be installed into <code>C:\mongo-cxx-driver</code>.</p>
-
-<p>For building with Visual Studio 2017 (without a C++17 polyfill), it is necessary to configure with
-an additional option, <code>/Zc:__cplusplus</code> to opt into the correct definition of <code>__cplusplus</code>
-(<a href="https://blogs.msdn.microsoft.com/vcblog/2018/04/09/msvc-now-correctly-reports-__cplusplus/">problem described here</a>):</p>
-
-<pre><code class="language-sh">'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
-    -G &quot;Visual Studio 15 2017 Win64&quot;            \
-    -DCMAKE_CXX_STANDARD=17                     \
-    -DCMAKE_CXX_FLAGS=&quot;/Zc:__cplusplus&quot;         \
-    -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
-    -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver  \
-</code></pre>
-
-<p>For details on how to install libmongoc for Windows, see the
-<a href="http://mongoc.org/libmongoc/current/installing.html#building-windows">mongoc Windows installation instructions</a>.</p>
-
-<h4 id="configuring-with-mongocxx-3-1-x-or-3-0-x">Configuring with <code>mongocxx</code> 3.1.x or 3.0.x</h4>
-
-<p>Instead of the <code>-DCMAKE_PREFIX_PATH</code> option, users must specify the <code>libmongoc</code> installation
-directory by using the <code>-DLIBMONGOC_DIR</code> and <code>-DLIBBSON_DIR</code> options:</p>
-
-<pre><code class="language-sh">cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DLIBMONGOC_DIR=/opt/mongo-c-driver             \
-    -DLIBBSON_DIR=/opt/mongo-c-driver               \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
-</code></pre>
-
-<h4 id="configuring-with-mongocxx-3-2-x-or-newer">Configuring with <code>mongocxx</code> 3.2.x or newer</h4>
-
-<p>Users have the option to build <code>mongocxx</code> as a static library. <strong>This is not recommended for novice
-users.</strong> A user can enable this behavior with the <code>-DBUILD_SHARED_LIBS</code> option:</p>
-
-<pre><code class="language-sh">cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DBUILD_SHARED_LIBS=OFF                         \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
-</code></pre>
-
-<h4 id="configuring-with-mongocxx-3-5-0-or-newer">Configuring with <code>mongocxx</code> 3.5.0 or newer</h4>
-
-<p>Users have the option to build <code>mongocxx</code> as both static and shared libraries. A user can enable
-this behavior with the <code>-DBUILD_SHARED_AND_STATIC_LIBS</code> option:</p>
-
-<pre><code class="language-sh">cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DBUILD_SHARED_AND_STATIC_LIBS=ON               \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
-</code></pre>
-
-<p>Users have the option to build <code>mongocxx</code> as a shared library that has statically linked
-<code>libmongoc</code>. <strong>This is not recommended for novice users.</strong> A user can enable this behavior with the
-<code>-DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC</code> option:</p>
-
-<pre><code class="language-sh">cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC=ON       \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
-</code></pre>
-
-<h3 id="step-5-build-and-install-the-driver">Step 5: Build and install the driver</h3>
-
-<p>If you are using the default MNMLSTC polyfill and are installing to a
-directory requiring root permissions, you should install the polyfill with
-<code>sudo</code> before building the rest of mongocxx so you don&rsquo;t have to run
-the entire build with <code>sudo</code>:</p>
-
-<pre><code class="language-sh"># Only for MNMLSTC polyfill
-sudo cmake --build . --target EP_mnmlstc_core
-</code></pre>
-
-<p>Once MNMLSTC is installed, or if you are using a different polyfill,
-build and install the driver:</p>
-
-<pre><code class="language-sh">cmake --build .
-sudo cmake --build . --target install
-</code></pre>
-
-<p>The driver can be uninstalled at a later time in one of two ways.  First,
-the uninstall target can be called:</p>
-
-<pre><code class="language-sh">sudo cmake --build . --target uninstall
-</code></pre>
-
-<p>Second, the uninstall script can be called (on Linux or macOS):</p>
-
-<pre><code class="language-sh">sudo /opt/mongo-cxx-driver/share/mongo-cxx-driver/uninstall.sh
-</code></pre>
-
-<p>Or (on Windows):</p>
-
-<pre><code class="language-sh">C:\opt\mongo-cxx-driver\share\mongo-cxx-driver\uninstall.cmd
-</code></pre>
-
-<h4 id="additional-options-for-integrators">Additional Options for Integrators</h4>
-
-<p>In the event that you are building the BSON C++ library and/or the C++ driver to embed with other components and you wish to avoid the potential for collision with components installed from a standard build or from a distribution package manager, you can make use of the <code>BSONCXX_OUTPUT_BASENAME</code> and <code>MONGOCXX_OUTPUT_BASENAME</code> options to <code>cmake</code>.</p>
-
-<pre><code class="language-sh">cmake ..                                            \
-    -DBSONCXX_OUTPUT_BASENAME=custom_bsoncxx        \
-    -DMONGOCXX_OUTPUT_BASENAME=custom_mongocxx
-</code></pre>
-
-<p>The above command would produce libraries named <code>libcustom_bsoncxx.so</code> and <code>libcustom_mongocxx.so</code> (or with the extension appropriate for the build platform).  Those libraries could be placed in a standard system directory or in an alternate location and could be linked to by specifying something like <code>-lcustom_mongocxx -lcustom_bsoncxx</code> on the linker command line (possibly adjusting the specific flags to those required by your linker).</p>
-
-<h3 id="step-6-test-your-installation">Step 6: Test your installation</h3>
-
-<p>Save the following source file with the filename <code>test.cpp</code>
-underneath any directory:</p>
-
-<pre><code class="language-c++">#include &lt;iostream&gt;
-
-#include &lt;bsoncxx/builder/stream/document.hpp&gt;
-#include &lt;bsoncxx/json.hpp&gt;
-
-#include &lt;mongocxx/client.hpp&gt;
-#include &lt;mongocxx/instance.hpp&gt;
-
-int main(int, char**) {
-    mongocxx::instance inst{};
-    mongocxx::client conn{mongocxx::uri{}};
-
-    bsoncxx::builder::stream::document document{};
-
-    auto collection = conn[&quot;testdb&quot;][&quot;testcollection&quot;];
-    document &lt;&lt; &quot;hello&quot; &lt;&lt; &quot;world&quot;;
-
-    collection.insert_one(document.view());
-    auto cursor = collection.find({});
-
-    for (auto&amp;&amp; doc : cursor) {
-        std::cout &lt;&lt; bsoncxx::to_json(doc) &lt;&lt; std::endl;
-    }
-}
-</code></pre>
-
-<h4 id="compiling-with-the-help-of-cmake">Compiling with the help of CMake</h4>
-
-<p>If you are using CMake for your project, you can use the <code>find_package()</code>
-directive to import targets which can be used to link to your build
-targets.  If you have installed <code>mongocxx</code> or <code>libmongoc</code> to a
- non-standard location on your system, you will need to set
-<code>CMAKE_PREFIX_PATH</code> to the library installation prefix (specified at
-build time with <code>CMAKE_INSTALL_PREFIX</code>) when running <code>cmake</code>.</p>
-
-<p>In the <code>mongocxx</code> source repository (versions 3.2.x or newer only), see
-the directory <code>examples/projects/mongocxx/cmake</code> for an example CMake
-application which uses the shared library (the default option), and an
-example CMake application which uses the static library (advanced users
-only).</p>
-
-<h4 id="compiling-with-the-help-of-pkg-config">Compiling with the help of pkg-config</h4>
-
-<p>Compile the test program above with the following command:</p>
-
-<pre><code class="language-sh">c++ --std=c++11 test.cpp -o test $(pkg-config --cflags --libs libmongocxx)
-</code></pre>
-
-<p>Advanced users who are using the static library must replace the
-<code>libmongocxx</code> argument to <code>pkg-config</code> above with <code>libmongocxx-static</code>
-(this requires mongocxx 3.2.x or newer).</p>
-
-<p>If you installed to somewhere not in your pkg-config search path, remember
-to set the <code>PKG_CONFIG_PATH</code> environment variable first:</p>
-
-<pre><code>export PKG_CONFIG_PATH=&quot;$MY_INSTALL_PREFIX/lib/pkgconfig&quot;
-</code></pre>
-
-<h4 id="compiling-without-pkg-config-or-cmake">Compiling without pkg-config or CMake</h4>
-
-<p>If you aren&rsquo;t using CMake for your project and you don&rsquo;t have pkg-config
-available, you will need to set include and library flags manually on the
-command line or in your IDE.</p>
-
-<p>Here&rsquo;s an example expansion of the compilation line above, on a system
-where mongocxx and libmongoc are installed in <code>/usr/local</code>:</p>
-
-<pre><code class="language-sh">c++ --std=c++11 test.cpp -o test \
-    -I/usr/local/include/mongocxx/v_noabi \
-    -I/usr/local/include/bsoncxx/v_noabi \
-    -L/usr/local/lib -lmongocxx -lbsoncxx
-</code></pre>
-
-<p>Advanced users only: here is an example expansion on the same system of
-the compilation line above when static libraries are being used.  Note
-that the preprocessor defines <code>MONGOCXX_STATIC</code> and <code>BSONCXX_STATIC</code> must
-be defined in all source files that include mongocxx headers; failure to
-do so will result in difficult-to-diagnose linker errors.</p>
-
-<pre><code class="language-sh">c++ --std=c++11 test.cpp -o test \
-    -DMONGOCXX_STATIC -DBSONCXX_STATIC -DMONGOC_STATIC -DBSON_STATIC \
-    -I/usr/local/include/libmongoc-1.0 \
-    -I/usr/local/include/libbson-1.0 \
-    -I/usr/local/include/mongocxx/v_noabi \
-    -I/usr/local/include/bsoncxx/v_noabi \
-    -L/usr/local/lib -lmongocxx-static -lbsoncxx-static
-    -lmongoc-static-1.0 -lsasl2 -lssl -lcrypto -lbson-static-1.0 -lm -lpthread
-</code></pre>
-
-<h4 id="compiling-with-msvc">Compiling with MSVC</h4>
-
-<p>To compile on MSVC, you will need to setup your project to include all the
-necessary include paths, library paths, preprocessor defines, and link
-libraries. To do this, you can set these values either by the UI or by
-editing the XML <code>.vcxproj</code> file directly. To confirm you have everything
-setup correctly, here are the <code>PropertyGroup</code> and <code>ItemDefinitionGroup</code>
-settings for a Debug x64 build as an example:</p>
-
-<pre><code class="language-xml">  &lt;PropertyGroup Condition=&quot;'$(Configuration)|$(Platform)'=='Debug|x64'&quot;&gt;
-    &lt;LinkIncremental&gt;true&lt;/LinkIncremental&gt;
-    &lt;IncludePath&gt;c:\local\boost_1_60_0\;C:\mongo-cxx-driver\include\mongocxx\v_noabi;C:\mongo-cxx-driver\include\bsoncxx\v_noabi;C:\mongo-c-driver\include\libmongoc-1.0;C:\mongo-c-driver\include\libbson-1.0;$(IncludePath)&lt;/IncludePath&gt;
-    &lt;LibraryPath&gt;c:\mongo-c-driver\lib\;c:\mongo-cxx-driver\lib\;$(LibraryPath)&lt;/LibraryPath&gt;
-  &lt;/PropertyGroup&gt;
-  &lt;ItemDefinitionGroup Condition=&quot;'$(Configuration)|$(Platform)'=='Debug|x64'&quot;&gt;
-    &lt;ClCompile&gt;
-      &lt;PrecompiledHeader&gt;Use&lt;/PrecompiledHeader&gt;
-      &lt;WarningLevel&gt;Level3&lt;/WarningLevel&gt;
-      &lt;Optimization&gt;Disabled&lt;/Optimization&gt;
-      &lt;PreprocessorDefinitions&gt;MONGOCXX_STATIC;BSONCXX_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)&lt;/PreprocessorDefinitions&gt;
-      &lt;SDLCheck&gt;true&lt;/SDLCheck&gt;
-    &lt;/ClCompile&gt;
-    &lt;Link&gt;
-      &lt;SubSystem&gt;Console&lt;/SubSystem&gt;
-      &lt;GenerateDebugInformation&gt;true&lt;/GenerateDebugInformation&gt;
-      &lt;AdditionalDependencies&gt;libmongocxx.lib;libbsoncxx.lib;mongoc-static-1.0.lib;bson-1.0.lib;%(AdditionalDependencies)&lt;/AdditionalDependencies&gt;
-    &lt;/Link&gt;
-  &lt;/ItemDefinitionGroup&gt;
-</code></pre>
-
-
-
-
-
-
-<div id="btnv">
-  
-  
-  <div class="pull-right">
-  <a class="navigation next" href="/mongocxx-v3/configuration/">
-    Configuring the mongocxx driver <i class="fa fa-long-arrow-right"> </i>
-  </a>
-  
-</div>
-</div>
 
 
 </div>
 <div class="right-column">
 <div class="wrapper">
-  
-  <div class="toc">
-    <span class="toc-header">On this page</span>
-    <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#prerequisites">Prerequisites</a></li>
-<li><a href="#installation">Installation</a>
-<ul>
-<li><a href="#step-1-install-the-latest-version-of-the-mongodb-c-driver">Step 1: Install the latest version of the MongoDB C driver.</a></li>
-<li><a href="#step-2-choose-a-c-17-polyfill">Step 2: Choose a C++17 polyfill</a></li>
-<li><a href="#step-3-download-the-latest-version-of-the-mongocxx-driver">Step 3: Download the latest version of the mongocxx driver.</a></li>
-<li><a href="#step-4-configure-the-driver">Step 4: Configure the driver</a>
-<ul>
-<li><a href="#configuring-with-mongocxx-3-1-x-or-3-0-x">Configuring with <code>mongocxx</code> 3.1.x or 3.0.x</a></li>
-<li><a href="#configuring-with-mongocxx-3-2-x-or-newer">Configuring with <code>mongocxx</code> 3.2.x or newer</a></li>
-<li><a href="#configuring-with-mongocxx-3-5-0-or-newer">Configuring with <code>mongocxx</code> 3.5.0 or newer</a></li>
-</ul></li>
-<li><a href="#step-5-build-and-install-the-driver">Step 5: Build and install the driver</a>
-<ul>
-<li><a href="#additional-options-for-integrators">Additional Options for Integrators</a></li>
-</ul></li>
-<li><a href="#step-6-test-your-installation">Step 6: Test your installation</a>
-<ul>
-<li><a href="#compiling-with-the-help-of-cmake">Compiling with the help of CMake</a></li>
-<li><a href="#compiling-with-the-help-of-pkg-config">Compiling with the help of pkg-config</a></li>
-<li><a href="#compiling-without-pkg-config-or-cmake">Compiling without pkg-config or CMake</a></li>
-<li><a href="#compiling-with-msvc">Compiling with MSVC</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ul>
-</nav>
-  </div>
   
 </div>
 </div>
@@ -1502,7 +1252,7 @@ settings for a Debug x64 build as an example:</p>
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
    URL_ROOT:    "http://mongocxx.org",
-   VERSION:     "",
+   VERSION:      null ,
    COLLAPSE_INDEX: false,
    FILE_SUFFIX: '.html',
    HAS_SOURCE:  true

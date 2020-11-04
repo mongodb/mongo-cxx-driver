@@ -115,6 +115,147 @@
 
 
   
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
 
 
         
@@ -604,11 +745,131 @@
 
 
 
-    <li class="toctree-l2">
-    <a href="/mongocxx-v3/installation/">
+<li class="toctree-l2 ">
+  <a href="/mongocxx-v3/installation/" class="">
+      
+      <span>Installing the mongocxx driver</span>
+      
+  </a>
+    <ul >
         
-        Installing the mongocxx driver
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/windows/">
+        
+        Windows
     </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/macos/">
+        
+        macOS
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/linux/">
+        
+        Linux
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/advanced/">
+        
+        Advanced Configuration and Installation Options
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
   </li>
 
 
@@ -637,6 +898,35 @@
     <a href="/mongocxx-v3/configuration/">
         
         Configuring the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongocxx-v3/client-side-encryption/">
+        
+        Client-Side Field Level Encryption with mongocxx
     </a>
   </li>
 
@@ -1303,63 +1593,35 @@
 
 <h1>Working with BSON</h1>
 <em>The Legacy C++ driver has reached End-Of-Life. Please upgrade to the mongocxx driver.</em>
-
-
 <h3 id="bson-helper-functions">BSON Helper Functions</h3>
-
 <p>This is a non-exhaustive list of helper functions for use in the C++ stream
 syntax. An exhaustive list is here:
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/bson/bsonmisc.h">bsonmisc.h</a></p>
-
 <p>Typical example of stream syntax:</p>
-
-<pre><code class="language-cpp">BSONObj p = BSON( &quot;name&quot; &lt;&lt; &quot;Joe&quot; &lt;&lt; &quot;age&quot; &lt;&lt; 33 );
-</code></pre>
-
-<h4 id="genoid">GENOID</h4>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Joe&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">33</span> );
+</code></pre></div><h4 id="genoid">GENOID</h4>
 <p>The server will add an <code>_id</code> automatically if it is not included explicitly.</p>
-
-<pre><code class="language-cpp">BSONObj p = BSON( GENOID &lt;&lt; &quot;name&quot; &lt;&lt; &quot;Joe&quot; &lt;&lt; &quot;age&quot; &lt;&lt; 33 );
-// result is: { _id : ..., name : &quot;Joe&quot;, age : 33 }
-</code></pre>
-
-<h4 id="lt-gt-lte-gte-ne">LT, GT, LTE, GTE, NE</h4>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSON( GENOID <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Joe&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">33</span> );
+<span style="color:#75715e">// result is: { _id : ..., name : &#34;Joe&#34;, age : 33 }
+</span></code></pre></div><h4 id="lt-gt-lte-gte-ne">LT, GT, LTE, GTE, NE</h4>
 <p>less than, greater than, etc.</p>
-
-<pre><code class="language-cpp">BSONObj p = BSON( &quot;age&quot; &lt;&lt; GT &lt;&lt; 21 );
-// result is:  { age : { $gt : 21 } }
-</code></pre>
-
-<h4 id="datenow">DATENOW</h4>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> GT <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">21</span> );
+<span style="color:#75715e">// result is:  { age : { $gt : 21 } }
+</span></code></pre></div><h4 id="datenow">DATENOW</h4>
 <p>Translates to current date</p>
-
-<pre><code class="language-cpp">BSONObj p = BSON( &quot;created&quot; &lt;&lt; DATENOW );
-// result is: { created : &quot;2009-10-09 11:41:42&quot; }
-</code></pre>
-
-<h4 id="minkey-maxkey">MINKEY, MAXKEY</h4>
-
-<pre><code class="language-cpp">BSONObj p = BSON( &quot;a&quot; &lt;&lt; MINKEY);
-// result is: { &quot;a&quot; : { &quot;$minKey&quot; : 1 } }
-</code></pre>
-
-<h4 id="or">OR</h4>
-
-<pre><code class="language-cpp">OR(BSON(&quot;x&quot; &lt;&lt; GT &lt;&lt; 7), BSON(&quot;y&quot; &lt;&lt; LT &lt;&lt; 6))
-// result is: {$or: [{x: {$gt: 7}}, {y: {$lt: 6}}]}
-</code></pre>
-
-<h4 id="bsonnull">BSONNULL</h4>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;created&#34;</span> <span style="color:#f92672">&lt;&lt;</span> DATENOW );
+<span style="color:#75715e">// result is: { created : &#34;2009-10-09 11:41:42&#34; }
+</span></code></pre></div><h4 id="minkey-maxkey">MINKEY, MAXKEY</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;a&#34;</span> <span style="color:#f92672">&lt;&lt;</span> MINKEY);
+<span style="color:#75715e">// result is: { &#34;a&#34; : { &#34;$minKey&#34; : 1 } }
+</span></code></pre></div><h4 id="or">OR</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">OR(BSON(<span style="color:#e6db74">&#34;x&#34;</span> <span style="color:#f92672">&lt;&lt;</span> GT <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">7</span>), BSON(<span style="color:#e6db74">&#34;y&#34;</span> <span style="color:#f92672">&lt;&lt;</span> LT <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">6</span>))
+<span style="color:#75715e">// result is: {$or: [{x: {$gt: 7}}, {y: {$lt: 6}}]}
+</span></code></pre></div><h4 id="bsonnull">BSONNULL</h4>
 <p>Translates to <code>null</code> value (will appear in MongoDB 2.1)</p>
-
-<pre><code class="language-cpp">BSONObj p = BSON( &quot;name&quot; &lt;&lt; &quot;Methuselah&quot; &lt;&lt; &quot;age&quot; &lt;&lt; BSONNULL );
-// result is: { name : &quot;Methuselah&quot;, age : null }
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Methuselah&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> BSONNULL );
+<span style="color:#75715e">// result is: { name : &#34;Methuselah&#34;, age : null }
+</span></code></pre></div>
 
 
 
@@ -1390,23 +1652,13 @@ syntax. An exhaustive list is here:
   <div class="toc">
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#bson-helper-functions">BSON Helper Functions</a>
-<ul>
-<li><a href="#genoid">GENOID</a></li>
-<li><a href="#lt-gt-lte-gte-ne">LT, GT, LTE, GTE, NE</a></li>
-<li><a href="#datenow">DATENOW</a></li>
-<li><a href="#minkey-maxkey">MINKEY, MAXKEY</a></li>
-<li><a href="#or">OR</a></li>
-<li><a href="#bsonnull">BSONNULL</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#bson-helper-functions">BSON Helper Functions</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
   </div>
   
@@ -1425,7 +1677,7 @@ syntax. An exhaustive list is here:
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
    URL_ROOT:    "http://mongocxx.org",
-   VERSION:     "",
+   VERSION:      null ,
    COLLAPSE_INDEX: false,
    FILE_SUFFIX: '.html',
    HAS_SOURCE:  true

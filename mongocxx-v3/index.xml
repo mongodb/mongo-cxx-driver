@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>The mongocxx (v3) driver on MongoDB C&#43;&#43; Driver Manual</title>
@@ -6,11 +6,7 @@
     <description>Recent content in The mongocxx (v3) driver on MongoDB C&#43;&#43; Driver Manual</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate>
-    
-	<atom:link href="http://mongocxx.org/mongocxx-v3/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate><atom:link href="http://mongocxx.org/mongocxx-v3/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Connection pools</title>
       <link>http://mongocxx.org/mongocxx-v3/connection-pools/</link>
@@ -35,20 +31,10 @@
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>http://mongocxx.org/mongocxx-v3/configuration/</guid>
-      <description>In the mongocxx driver, most configuration is done via the connection URI. Some additional connection options are possible via the mongocxx::options::client class.
+      <description>In the mongocxx driver, most configuration is done via the connection URI. Some additional connection options are possible via the [mongocxx::options::client] (https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1client.html ) class.
 Configuring TLS/SSL To enable TLS (SSL), set tls=true in the URI:
  mongodb://mongodb.example.com/?tls=true
- By default, mongocxx will verify server certificates against the local system CA list. You can override that either by specifying different settings in the connection string, or by creating a mongocxx::options::tls object and passing it to tls_opts on mongocxx::options::client.</description>
-    </item>
-    
-    <item>
-      <title>Installing the mongocxx driver</title>
-      <link>http://mongocxx.org/mongocxx-v3/installation/</link>
-      <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
-      <guid>http://mongocxx.org/mongocxx-v3/installation/</guid>
-      <description>Prerequisites  Any standard Unix platform, or Windows 7 SP1+ A compiler that supports C++11 (gcc, clang, or Visual Studio) CMake 3.2 or later boost headers (optional)  We currently test the driver on the following platforms:
- Linux with clang 3.8, GCC 5.4 and 7.5 macOS with Apple clang 7.0 and 11.0 using Boost 1.70.0 Windows with Visual Studio 2015 using Boost 1.60.0 and Visual Studio 2017  Versions older than the ones listed may not work and are not supported; use them at your own risk.</description>
+ By default, mongocxx will verify server certificates against the local system CA list. You can override that either by specifying different settings in the connection string, or by creating a [mongocxx::options::tls] (https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1tls.html ) object and passing it to tls_opts on mongocxx::options::client.</description>
     </item>
     
     <item>
@@ -68,10 +54,10 @@ Even if you create multiple child objects from a single client, and synchronize 
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>http://mongocxx.org/mongocxx-v3/tutorial/</guid>
-      <description>Prerequisites  A mongod instance running on localhost on port 27017.
- The mongocxx Driver. See Installation for mongocxx.
- The following statements at the top of your source file:
-  #include &amp;lt;cstdint&amp;gt; #include &amp;lt;iostream&amp;gt; #include &amp;lt;vector&amp;gt; #include &amp;lt;bsoncxx/json.hpp&amp;gt; #include &amp;lt;mongocxx/client.hpp&amp;gt; #include &amp;lt;mongocxx/stdx.hpp&amp;gt; #include &amp;lt;mongocxx/uri.hpp&amp;gt; #include &amp;lt;mongocxx/instance.hpp&amp;gt; using bsoncxx::builder::stream::close_array; using bsoncxx::builder::stream::close_document; using bsoncxx::builder::stream::document; using bsoncxx::builder::stream::finalize; using bsoncxx::builder::stream::open_array; using bsoncxx::builder::stream::open_document;  Compiling The mongocxx driver&amp;rsquo;s installation process will install a libmongocxx.</description>
+      <description>Prerequisites   A mongod instance running on localhost on port 27017.
+  The mongocxx Driver. See Installation for mongocxx.
+  The following statements at the top of your source file:
+  #include &amp;lt;cstdint&amp;gt;#include &amp;lt;iostream&amp;gt;#include &amp;lt;vector&amp;gt;#include &amp;lt;bsoncxx/json.hpp&amp;gt;#include &amp;lt;mongocxx/client.hpp&amp;gt;#include &amp;lt;mongocxx/stdx.hpp&amp;gt;#include &amp;lt;mongocxx/uri.hpp&amp;gt;#include &amp;lt;mongocxx/instance.hpp&amp;gt;#include &amp;lt;bsoncxx/builder/stream/helpers.hpp&amp;gt;#include &amp;lt;bsoncxx/builder/stream/document.hpp&amp;gt;#include &amp;lt;bsoncxx/builder/stream/array.hpp&amp;gt; using bsoncxx::builder::stream::close_array; using bsoncxx::builder::stream::close_document; using bsoncxx::builder::stream::document; using bsoncxx::builder::stream::finalize; using bsoncxx::builder::stream::open_array; using bsoncxx::builder::stream::open_document; Compiling The mongocxx driver&amp;rsquo;s installation process will install a libmongocxx.pc file for use with pkg-config.</description>
     </item>
     
     <item>
@@ -82,6 +68,17 @@ Even if you create multiple child objects from a single client, and synchronize 
       <guid>http://mongocxx.org/mongocxx-v3/working-with-bson/</guid>
       <description>The mongocxx driver ships with a new library, bsoncxx. This article will go over some of the different types in this library, and how and when to use each. For more information and example code, see our examples.
  Document Builders Owning BSON Documents (values) Non-owning BSON Documents (views) Optionally-owning BSON Documents(view_or_value) BSON Document Lifetime Printing BSON Documents Getting Fields out of BSON Documents  Document Builders The bsoncxx library offers three interfaces for building BSON: one-off functions, a basic builder and a stream-based builder.</description>
+    </item>
+    
+    <item>
+      <title>Client-Side Field Level Encryption with mongocxx</title>
+      <link>http://mongocxx.org/mongocxx-v3/client-side-encryption/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://mongocxx.org/mongocxx-v3/client-side-encryption/</guid>
+      <description>Client-Side Field Level Encryption New in MongoDB 4.2 Client-Side Field Level Encryption (CSFLE) allows administrators and developers to encrypt specific data fields in addition to other MongoDB encryption features.
+With CSFLE, developers can encrypt fields client side without any server-side configuration or directives. Client-Side Field Level Encryption supports workloads where applications must guarantee that unauthorized parties, including server administrators, cannot read the encrypted data.
+For an overview of CSFLE, please read the official MongoDB documentation in the manual.</description>
     </item>
     
   </channel>

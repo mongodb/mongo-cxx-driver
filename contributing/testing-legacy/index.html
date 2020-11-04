@@ -115,6 +115,147 @@
 
 
   
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
 
 
         
@@ -702,11 +843,131 @@
 
 
 
-    <li class="toctree-l2">
-    <a href="/mongocxx-v3/installation/">
+<li class="toctree-l2 ">
+  <a href="/mongocxx-v3/installation/" class="">
+      
+      <span>Installing the mongocxx driver</span>
+      
+  </a>
+    <ul >
         
-        Installing the mongocxx driver
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/windows/">
+        
+        Windows
     </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/macos/">
+        
+        macOS
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/linux/">
+        
+        Linux
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/advanced/">
+        
+        Advanced Configuration and Installation Options
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
   </li>
 
 
@@ -735,6 +996,35 @@
     <a href="/mongocxx-v3/configuration/">
         
         Configuring the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongocxx-v3/client-side-encryption/">
+        
+        Client-Side Field Level Encryption with mongocxx
     </a>
   </li>
 
@@ -1400,122 +1690,77 @@
 
 
 <h1>Testing the legacy driver</h1>
-
-
 <p>If you contribute to the C++ driver, you&rsquo;ll need to test your changes.  The
 driver comes with a number of tests to ensure its functionality and
 performance.  There are a few different kinds of tests within the driver&rsquo;s
 codebase.</p>
-
 <p>Note: if you are running OS X Mavericks or above, you may need to include the <code>--osx-version-min=10.9</code> flag to the commands below.</p>
-
-<p>Note: The 26compat branch differs from the instructions below as follows:
-* MongoOrchestration is not required.
-* The target to run unit tests is &lsquo;smokeCppUnittests&rsquo; (or &lsquo;test&rsquo;, or &lsquo;smoke&rsquo;), not &lsquo;unit&rsquo;
-* The build-[test] aliases are not supported (the run- aliases are supported, however)
-* There are no integration tests
-* The target to run the examples is &lsquo;smokeClient&rsquo;, not &lsquo;examples&rsquo;
-* You must have a mongod running on port 27999 to run the examples.
-* The &lsquo;test&rsquo; target does not run all tests, only the unit tests (see above).</p>
-
+<p>Note: The 26compat branch differs from the instructions below as follows:</p>
+<ul>
+<li>MongoOrchestration is not required.</li>
+<li>The target to run unit tests is &lsquo;smokeCppUnittests&rsquo; (or &lsquo;test&rsquo;, or &lsquo;smoke&rsquo;), not &lsquo;unit&rsquo;</li>
+<li>The build-[test] aliases are not supported (the run- aliases are supported, however)</li>
+<li>There are no integration tests</li>
+<li>The target to run the examples is &lsquo;smokeClient&rsquo;, not &lsquo;examples&rsquo;</li>
+<li>You must have a mongod running on port 27999 to run the examples.</li>
+<li>The &lsquo;test&rsquo; target does not run all tests, only the unit tests (see above).</li>
+</ul>
 <h3 id="unit-tests">Unit tests</h3>
-
 <p>Unit tests do not require a running mongod or mongo-orchestration. These
 tests are designed to test individual components of the driver in
 isolation, and the test files are found in the same directory as the things
 they test (so, <code>bson_validate.cpp</code> and <code>bson_validate_test.cpp</code> are
 both found in <code>src/mongo/bson</code>).  The different unit tests are listed
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/mongo/SConscript#L49">here</a>.</p>
-
 <p>Build all the unit tests with scons:</p>
-
 <pre><code>&gt; scons build-unit
-</code></pre>
-
-<p>Build and run all the unit tests:</p>
-
+</code></pre><p>Build and run all the unit tests:</p>
 <pre><code>&gt; scons unit
-</code></pre>
-
-<p>Build an individual unit test:</p>
-
+</code></pre><p>Build an individual unit test:</p>
 <pre><code>&gt; scons build-full/test/name
-</code></pre>
-
-<p>Build and run an individual unit test:</p>
-
+</code></pre><p>Build and run an individual unit test:</p>
 <pre><code>&gt; scons run-full/test/name
-</code></pre>
-
-<h3 id="integration-tests">Integration Tests</h3>
-
+</code></pre><h3 id="integration-tests">Integration Tests</h3>
 <p>Integration tests must run against <a href="https://github.com/10gen/mongo-orchestration">Mongo
 Orchestration</a>.  Install and
 setup Mongo Orchestration as follows:</p>
-
 <pre><code>&gt; git clone https://github.com/10gen/mongo-orchestration.git
 &gt; cd mongo-orchestration
 &gt; python setup.py install
-</code></pre>
-
-<p>To run Mongo Orchestration, you&rsquo;ll need to alter the provided config file
+</code></pre><p>To run Mongo Orchestration, you&rsquo;ll need to alter the provided config file
 to fit your system.  Open <code>mongo-orchestration.config</code> and replace the
 paths there with paths to your MongoDB binaries.  It is only required to
 have one MongoDB version defined as well as a last_updated field with a
 date, so feel free to keep one of the <code>&quot;releases&quot;</code> and delete the other
 entries. Mongo orchestration is <strong>very</strong> strict about JSON so no trailing
 commas please.</p>
-
 <p>Start up Mongo Orchestration and leave it running in the background while
 you run the integration test suite:</p>
-
 <pre><code>&gt; mongo-orchestration -f mongo-orchestration.config -e &lt;release_name&gt; start
-</code></pre>
-
-<p>The integration tests are located in <code>src/mongo/integration</code>.
+</code></pre><p>The integration tests are located in <code>src/mongo/integration</code>.
 Additionally, some tests require the parameter <code>enableTestCommands</code> to
 be set. There is a list of the different integration tests
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/mongo/SConscript#L114">here</a>.</p>
-
 <p>To build all the integration tests:</p>
-
 <pre><code>&gt; scons build-integration
-</code></pre>
-
-<p>Build and run all the integration tests:</p>
-
+</code></pre><p>Build and run all the integration tests:</p>
 <pre><code>&gt; scons integration
-</code></pre>
-
-<p>Individual integration tests can be run in the same way as individual unit tests, shown above.</p>
-
+</code></pre><p>Individual integration tests can be run in the same way as individual unit tests, shown above.</p>
 <p>Note: to run the SASL integration tests, you should build with the <code>--use-sasl-client</code> flag.</p>
-
 <h3 id="client-example-programs">Client Example Programs</h3>
-
 <p>The driver includes a number of example programs of its use.  The examples
 are listed
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/SConscript.client#L189">here</a>,
 and the source files are found in <code>src/mongo/client/examples</code>.  The
 examples expect a mongod to be running locally on port 27999.</p>
-
 <p>Build the examples with scons:</p>
-
 <pre><code>&gt; scons build-examples
-</code></pre>
-
-<p>Build and run the examples:</p>
-
+</code></pre><p>Build and run the examples:</p>
 <pre><code>&gt; scons examples
-</code></pre>
-
-<h3 id="run-all-tests">Run all tests</h3>
-
+</code></pre><h3 id="run-all-tests">Run all tests</h3>
 <p>Run the unit tests, integration tests, and examples with scons:</p>
-
 <pre><code>&gt; scons test
 </code></pre>
-
 
 
 
@@ -1546,18 +1791,16 @@ examples expect a mongod to be running locally on port 27999.</p>
   <div class="toc">
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#unit-tests">Unit tests</a></li>
-<li><a href="#integration-tests">Integration Tests</a></li>
-<li><a href="#client-example-programs">Client Example Programs</a></li>
-<li><a href="#run-all-tests">Run all tests</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#unit-tests">Unit tests</a></li>
+        <li><a href="#integration-tests">Integration Tests</a></li>
+        <li><a href="#client-example-programs">Client Example Programs</a></li>
+        <li><a href="#run-all-tests">Run all tests</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
   </div>
   
@@ -1576,7 +1819,7 @@ examples expect a mongod to be running locally on port 27999.</p>
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
    URL_ROOT:    "http://mongocxx.org",
-   VERSION:     "",
+   VERSION:      null ,
    COLLAPSE_INDEX: false,
    FILE_SUFFIX: '.html',
    HAS_SOURCE:  true

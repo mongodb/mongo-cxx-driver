@@ -115,6 +115,147 @@
 
 
   
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
 
 
         
@@ -434,11 +575,131 @@
 
 
 
-    <li class="toctree-l2">
-    <a href="/mongocxx-v3/installation/">
+<li class="toctree-l2 ">
+  <a href="/mongocxx-v3/installation/" class="">
+      
+      <span>Installing the mongocxx driver</span>
+      
+  </a>
+    <ul >
         
-        Installing the mongocxx driver
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/windows/">
+        
+        Windows
     </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/macos/">
+        
+        macOS
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/linux/">
+        
+        Linux
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongocxx-v3/installation/advanced/">
+        
+        Advanced Configuration and Installation Options
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
   </li>
 
 
@@ -467,6 +728,35 @@
     <a href="/mongocxx-v3/configuration/">
         
         Configuring the mongocxx driver
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongocxx-v3/client-side-encryption/">
+        
+        Client-Side Field Level Encryption with mongocxx
     </a>
   </li>
 
@@ -1130,10 +1420,7 @@
 
 
 <h1>Connection pools</h1>
-
-
-<h2 id="mongocxx-client-vs-mongocxx-pool"><code>mongocxx::client</code> vs <code>mongocxx::pool</code></h2>
-
+<h2 id="mongocxxclient-vs-mongocxxpool"><code>mongocxx::client</code> vs <code>mongocxx::pool</code></h2>
 <p>A standalone <code>mongocxx::client</code> uses a single-threaded algorithm to
 monitor the state of the cluster it&rsquo;s connected to. When connected to a
 replica set, the thread &ldquo;stops the world&rdquo; every 60 seconds to check the
@@ -1145,23 +1432,18 @@ rather than &ldquo;stopping the world&rdquo;, it&rsquo;s highly recommended to u
 <code>mongocxx::pool</code> rather than a set of standalone clients if your
 application has access to multiple threads, even if your application only
 uses one thread.</p>
-
 <h2 id="connection-pools-and-thread-safety">Connection pools and thread safety</h2>
-
 <p>A <code>mongocxx::pool</code> can be shared across multiple threads and used to create
 clients. However, each <code>mongocxx::client</code> can only be used in a single
 thread. See the <a href="../thread-safety/">thread safety documentation</a> for
 details on how to use a <code>mongocxx::client</code> in a thread-safe manner.</p>
-
 <h2 id="configuring-a-connection-pool">Configuring a connection pool</h2>
-
 <p>The number of clients in a connection pool is determined by the URI
 parameters <code>minPoolSize</code> and <code>maxPoolSize</code>. The <code>minPoolSize</code> and
 <code>maxPoolSize</code> options set resource usage targets for when the driver is
 idle or fully-utilized.  When fully utilized, up to maxPoolSize clients
 are available. When clients are returned to the pool, they are destroyed
 until the pool has shrunk again to the minPoolSize.</p>
-
 <table>
 <thead>
 <tr>
@@ -1169,27 +1451,22 @@ until the pool has shrunk again to the minPoolSize.</p>
 <th></th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>maxPoolSize</td>
 <td>The maximum number of clients created by a mongocxx::pool (both in the pool and checked out). The default value is 100. Once it is reached, mongocxx::pool::acquire blocks until another thread returns a client to the pool.</td>
 </tr>
-
 <tr>
 <td>minPoolSize</td>
 <td>Sets a target size for the pool when idle.  Once this many clients have been created, there will never be fewer than this many clients in the pool. If additional clients above minPoolSize are created, they will be destroyed when returned to the pool. The default value is &ldquo;0&rdquo;, which disables this feature. When disabled, clients are never destroyed.</td>
 </tr>
 </tbody>
 </table>
-
 <h2 id="using-a-connection-pool">Using a connection pool</h2>
-
 <p>To use a connection pool, first create a <code>mongocxx::pool</code>, passing the URI
 as an argument. Then, call <code>mongocxx::pool::acquire</code> to receive a client
 from the pool. The client will automatically be returned to the pool when
 it goes out of scope.</p>
-
 <p>See the <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/mongocxx/pool.cpp">connection pool example</a>
 for more details.</p>
 
@@ -1223,15 +1500,12 @@ for more details.</p>
   <div class="toc">
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#mongocxx-client-vs-mongocxx-pool"><code>mongocxx::client</code> vs <code>mongocxx::pool</code></a></li>
-<li><a href="#connection-pools-and-thread-safety">Connection pools and thread safety</a></li>
-<li><a href="#configuring-a-connection-pool">Configuring a connection pool</a></li>
-<li><a href="#using-a-connection-pool">Using a connection pool</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#mongocxxclient-vs-mongocxxpool"><code>mongocxx::client</code> vs <code>mongocxx::pool</code></a></li>
+    <li><a href="#connection-pools-and-thread-safety">Connection pools and thread safety</a></li>
+    <li><a href="#configuring-a-connection-pool">Configuring a connection pool</a></li>
+    <li><a href="#using-a-connection-pool">Using a connection pool</a></li>
+  </ul>
 </nav>
   </div>
   
@@ -1250,7 +1524,7 @@ for more details.</p>
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
    URL_ROOT:    "http://mongocxx.org",
-   VERSION:     "",
+   VERSION:      null ,
    COLLAPSE_INDEX: false,
    FILE_SUFFIX: '.html',
    HAS_SOURCE:  true
