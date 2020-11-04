@@ -78,10 +78,6 @@ class list {
         return _value;
     }
 
-   private:
-    bson_value::value _value{nullptr};
-
-   public:
     class array {
        public:
         array() {}
@@ -105,6 +101,9 @@ class list {
        private:
         std::initializer_list<list> _init;
     };
+
+   private:
+    bson_value::value _value{nullptr};
 };
 }
 BSONCXX_INLINE_NAMESPACE_END
