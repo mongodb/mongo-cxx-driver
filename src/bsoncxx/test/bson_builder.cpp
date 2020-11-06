@@ -1429,7 +1429,9 @@ TEST_CASE("list builder appends regex", "[bsoncxx::builder::list]") {
     bson_append_regex(&expected, "foo", -1, "^foo|bar$", "i");
 
     builder::list b{"foo", types::b_regex{"^foo|bar$", "i"}};
+    bson_eq_object(&expected, b.view().get_document().value);
 
+    b = {"foo", types::bson_value::value{"^foo|bar$", "i"}};
     bson_eq_object(&expected, b.view().get_document().value);
 
     bson_destroy(&expected);
