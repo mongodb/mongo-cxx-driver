@@ -1311,9 +1311,9 @@ TEST_CASE("list builder appends binary", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
-    bson_append_binary(&expected, "foo", -1, BSON_SUBTYPE_BINARY, (uint8_t*)"deadbeef", 8);
+    bson_append_binary(&expected, "foo", -1, BSON_SUBTYPE_BINARY, (uint8_t*)"data", 4);
 
-    builder::list b{"foo", types::b_binary{binary_sub_type::k_binary, 8, (uint8_t*)"deadbeef"}};
+    builder::list b{"foo", types::b_binary{binary_sub_type::k_binary, 4, (uint8_t*)"data"}};
 
     bson_eq_object(&expected, b.view().get_document().value);
 
