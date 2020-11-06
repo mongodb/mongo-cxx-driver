@@ -226,7 +226,7 @@ set_local_dist (src_bsoncxx_DIST_local
    array/view.cpp
    array/view.hpp
    array/view_or_value.hpp
-   builder/list/list.hpp
+   builder/list.hpp
    builder/basic/array.hpp
    builder/basic/document.hpp
    builder/basic/helpers.hpp
