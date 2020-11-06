@@ -1454,9 +1454,9 @@ TEST_CASE("list builder appends symbol", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
-    bson_append_symbol(&expected, "foo", -1, "deadbeef", -1);
+    bson_append_symbol(&expected, "foo", -1, "data", -1);
 
-    builder::list b{"foo", types::b_symbol{"deadbeef"}};
+    builder::list b{"foo", types::b_symbol{"data"}};
 
     bson_eq_object(&expected, b.view().get_document().value);
 
