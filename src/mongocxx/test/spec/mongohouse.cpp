@@ -85,7 +85,7 @@ void run_mongohouse_tests_in_file(std::string test_path) {
                     optional<document::value> actual_outcome_value;
                     INFO("Operation: " << bsoncxx::to_json(operation));
                     try {
-                        actual_outcome_value = op_runner.run(operation);  // here
+                        actual_outcome_value = op_runner.run(operation);
                     } catch (const mongocxx::operation_exception& e) {
                         REQUIRE([&operation, &test, &e]() {
                             if (operation["error"]) { /* v2 tests expect tests[i].operation.error */
