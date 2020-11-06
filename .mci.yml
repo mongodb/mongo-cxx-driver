@@ -131,7 +131,7 @@ functions:
                 export MONGODB_VERSION=${mongodb_version}
                 export AUTH=${AUTH}
                 export TOPOLOGY=${TOPOLOGY|server}
-                
+
                 echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
                 ./.evergreen/run-orchestration.sh
 
@@ -262,7 +262,7 @@ functions:
                      export MONGOCRYPTD_PATH=$(cygpath -m $MONGOCRYPTD_PATH)
                   fi
                   cd mongo-cxx-driver
-                  
+
                   export PATH="${extra_path}:$PATH"
 
                   cd build
