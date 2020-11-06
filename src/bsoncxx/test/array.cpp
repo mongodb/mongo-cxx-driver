@@ -17,7 +17,6 @@
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/make_value.hpp>
-#include <bsoncxx/types/bson_value/view.hpp>
 
 namespace {
 
