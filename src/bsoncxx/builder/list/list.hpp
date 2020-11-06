@@ -34,35 +34,7 @@ class list {
     template <typename T>
     list(T value) : _value{value} {}
 
-    list(initializer_list_t init, bool type_deduction = true, bool is_array = true) {
-        bool valid_document = false;
-        if (type_deduction || !is_array) {
-            valid_document = [&] {
-                if (init.size() % 2 != 0)
-                    return false;
-                for (size_t i = 0; i < init.size(); i += 2)
-                    if ((begin(init) + i)->_value.view().type() != type::k_utf8)
-                        return false;
-                return true;
-            }();
-        }
-
-        if (valid_document) {
-            core _core{false};
-            for (size_t i = 0; i < init.size(); i += 2) {
-                _core.key_owned(std::string((begin(init) + i)->_value.view().get_string().value));
-                _core.append((begin(init) + i + 1)->_value);
-            }
-            _value = bson_value::value(_core.extract_document());
-        } else if (type_deduction || is_array) {
-            core _core{true};
-            for (auto&& ele : init)
-                _core.append(ele._value);
-            _value = bson_value::value(_core.extract_array());
-        } else {
-            throw bsoncxx::exception{error_code::k_unmatched_key_in_builder};
-        }
-    }
+    list(initializer_list_t init) : list(init, true, true) {}
 
     operator bson_value::value() {
         return value();
@@ -106,6 +78,36 @@ class list {
 
    private:
     bson_value::value _value{nullptr};
+
+    list(initializer_list_t init, bool type_deduction, bool is_array) {
+        bool valid_document = false;
+        if (type_deduction || !is_array) {
+            valid_document = [&] {
+                if (init.size() % 2 != 0)
+                    return false;
+                for (size_t i = 0; i < init.size(); i += 2)
+                    if ((begin(init) + i)->_value.view().type() != type::k_utf8)
+                        return false;
+                return true;
+            }();
+        }
+
+        if (valid_document) {
+            core _core{false};
+            for (size_t i = 0; i < init.size(); i += 2) {
+                _core.key_owned(std::string((begin(init) + i)->_value.view().get_string().value));
+                _core.append((begin(init) + i + 1)->_value);
+            }
+            _value = bson_value::value(_core.extract_document());
+        } else if (type_deduction || is_array) {
+            core _core{true};
+            for (auto&& ele : init)
+                _core.append(ele._value);
+            _value = bson_value::value(_core.extract_array());
+        } else {
+            throw bsoncxx::exception{error_code::k_unmatched_key_in_builder};
+        }
+    }
 };
 }
 BSONCXX_INLINE_NAMESPACE_END
