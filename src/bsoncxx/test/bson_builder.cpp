@@ -1714,4 +1714,20 @@ TEST_CASE("list builder with explicit type deduction", "[bsoncxx::builder::list]
         REQUIRE_THROWS(b = list::document{"foo", 1, 2, 4});
     }
 }
+
+TEST_CASE("empty list builder", "[bsoncxx::builder::list]") {
+    bson_t expected;
+    bson_init(&expected);
+
+    builder::list lst = {};
+    bson_eq_object(&expected, lst.view().get_document().value);
+
+    builder::list::document doc = {};
+    lst = doc;
+    bson_eq_object(&expected, lst.view().get_document().value);
+
+    builder::list::array arr = {};
+    lst = arr;
+    bson_eq_object(&expected, lst.view().get_array().value);
+}
 }  // namespace

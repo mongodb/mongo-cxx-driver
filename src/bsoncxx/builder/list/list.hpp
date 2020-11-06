@@ -29,7 +29,7 @@ class list {
     using initializer_list_t = std::initializer_list<list>;
 
    public:
-    list() = default;
+    list() : list({}) {}
 
     template <typename T>
     list(T value) : _value{value} {}
@@ -77,9 +77,9 @@ class list {
     };
 
    private:
-    bson_value::value _value{nullptr};
+    bson_value::value _value;
 
-    list(initializer_list_t init, bool type_deduction, bool is_array) {
+    list(initializer_list_t init, bool type_deduction, bool is_array) : _value{nullptr} {
         bool valid_document = false;
         if (type_deduction || !is_array) {
             valid_document = [&] {
