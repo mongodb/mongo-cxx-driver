@@ -1,0 +1,56 @@
+package(default_visibility = ["//visibility:public"])
+
+exports_files(["config/config.hpp.in", "config/version.hpp.in"])
+
+cc_library(
+    name = "bsoncxx_hdrs",
+    strip_include_prefix = "/src",
+    includes = ["."],
+    hdrs = glob(["*.hpp"]),
+    deps = [
+        "@bsoncxx_config//:bsoncxx_config",
+        "@bsoncxx_config//:bsoncxx_version",
+    ],
+)
+
+cc_library(
+    name = "bsoncxx_private_hdrs",
+    strip_include_prefix = "/src",
+    includes = ["."],
+    hdrs = ["test_util/export_for_testing.hh"] + glob([
+        "array/**/*.hpp",
+        "builder/**/*.hpp",
+        "config/**/*.hpp",
+        "config/**/*.hh",
+        "document/**/*.hpp",
+        "enums/**/*.hpp",
+        "exception/**/*.hpp",
+        "private/**/*.hh",
+        "stdx/**/*.hpp",
+        "string/**/*.hpp",
+        "types/**/*.hpp",
+        "util/**/*.hpp",
+    ]),
+)
+
+cc_library(
+    name = "bsoncxx",
+    srcs = glob([
+        "*.cpp",
+        "array/**/*.cpp",
+        "builder/**/*.cpp",
+        "config/**/*.cpp",
+        "document/**/*.cpp",
+        "enums/**/*.cpp",
+        "exception/**/*.cpp",
+        "private/**/*.cpp",
+        "stdx/**/*.cpp",
+        "string/**/*.cpp",
+        "types/**/*.cpp",
+        "util/**/*.cpp",
+    ]),
+    deps = [
+        ":bsoncxx_hdrs",
+        ":bsoncxx_private_hdrs",
+    ],
+)

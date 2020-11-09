@@ -1,6 +1,7 @@
 # Directories that are generated
 /tags
 cmake-build*
+/.vscode
 
 # Filetypes
 *~
@@ -9,3 +10,6 @@ cmake-build*
 
 # OSX
 .DS_Store
+
+# Bazel
+/bazel-*
