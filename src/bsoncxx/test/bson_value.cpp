@@ -65,7 +65,7 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             coverting_construction_test(b_bool{true}, test_value);
         }
 
-        SECTION("utf8") {
+        SECTION("string") {
             std::string value = "super duper";
 
             auto test_doc = bson_value::make_value(value);
@@ -73,7 +73,7 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
 
             coverting_construction_test(value, test_doc);
             coverting_construction_test(value.c_str(), test_doc);
-            coverting_construction_test(b_utf8{value}, test_doc);
+            coverting_construction_test(b_string{value}, test_doc);
             coverting_construction_test(stdx::string_view{value}, test_doc);
 
             const char raw_data[]{'s', 'u', 'p', 'e', 'r', ' ', 'd', 'u', 'p', 'e', 'r'};

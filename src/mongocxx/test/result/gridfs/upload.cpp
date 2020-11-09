@@ -44,11 +44,11 @@ TEST_CASE("result::gridfs::upload owns id", "[result::gridfs::upload]") {
     // Constructing a result::gridfs::upload requires passing in an id, but we don't care what it
     // is.
     std::string baz = "baz";
-    result::gridfs::upload res{types::bson_value::view{types::b_utf8{baz}}};
+    result::gridfs::upload res{types::bson_value::view{types::b_string{baz}}};
 
     {
         std::string bar = "bar";
-        auto doc = make_document(kvp("foo", types::bson_value::view{types::b_utf8{bar}}));
+        auto doc = make_document(kvp("foo", types::bson_value::view{types::b_string{bar}}));
         auto id = doc.view()["foo"].get_value();
         res = result::gridfs::upload{id};
     }
@@ -74,7 +74,7 @@ TEST_CASE("result::gridfs::upload inequals", "[result::gridfs::upload]") {
     instance::current();
 
     result::gridfs::upload upload_result1{types::bson_value::view{types::b_oid{bsoncxx::oid{}}}};
-    result::gridfs::upload upload_result2{types::bson_value::view{types::b_utf8{"baz"}}};
+    result::gridfs::upload upload_result2{types::bson_value::view{types::b_string{"baz"}}};
 
     REQUIRE(upload_result1 != upload_result2);
 }

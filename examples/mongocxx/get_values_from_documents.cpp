@@ -75,7 +75,7 @@ void iterate_messagelist(const bsoncxx::document::element& ele) {
                 if (status && status.type() == type::k_int32) {
                     std::cout << "status: " << status.get_int32().value << std::endl;
                 }
-                if (msg && msg.type() == type::k_utf8) {
+                if (msg && msg.type() == type::k_string) {
                     std::cout << "msg: " << msg.get_string().value << std::endl;
                 }
             } else {

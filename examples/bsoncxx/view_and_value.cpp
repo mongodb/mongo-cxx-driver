@@ -69,7 +69,7 @@ int main(int, char**) {
 
         // we can use type() to get the type of the value.
         switch (ele.type()) {
-            case type::k_utf8:
+            case type::k_string:
                 std::cout << "Got String!" << std::endl;
                 break;
             case type::k_oid:

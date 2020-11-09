@@ -207,7 +207,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             auto result = coll.insert_one(doc.view());
             REQUIRE(result);
             REQUIRE(result->result().inserted_count() == 1);
-            REQUIRE(result->inserted_id().type() == bsoncxx::type::k_utf8);
+            REQUIRE(result->inserted_id().type() == bsoncxx::type::k_string);
             REQUIRE(result->inserted_id().get_string().value == expected_id);
         }
 
@@ -244,7 +244,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE_NOTHROW(result = coll.insert_one(doc.view(), options));
             REQUIRE(result);
             REQUIRE(result->result().inserted_count() == 1);
-            REQUIRE(result->inserted_id().type() == bsoncxx::type::k_utf8);
+            REQUIRE(result->inserted_id().type() == bsoncxx::type::k_string);
             REQUIRE(result->inserted_id().get_string().value == expected_id);
         }
     }
@@ -327,7 +327,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             // Verify result->inserted_ids() is correct:
             auto id_map = result->inserted_ids();
-            REQUIRE(id_map[0].type() == bsoncxx::type::k_utf8);
+            REQUIRE(id_map[0].type() == bsoncxx::type::k_string);
             REQUIRE(id_map[0].get_string().value == stdx::string_view{"foo"});
             REQUIRE(id_map[1].type() == bsoncxx::type::k_oid);
             auto second_inserted_doc = coll.find_one(make_document(kvp("x", 2)));
@@ -421,7 +421,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             // Verify result->inserted_ids() is correct:
             auto id_map = result->inserted_ids();
-            REQUIRE(id_map[0].type() == bsoncxx::type::k_utf8);
+            REQUIRE(id_map[0].type() == bsoncxx::type::k_string);
             REQUIRE(id_map[0].get_string().value == stdx::string_view{"foo"});
             REQUIRE(id_map[1].type() == bsoncxx::type::k_oid);
             auto second_inserted_doc = coll.find_one(make_document(kvp("x", 2)));
@@ -2311,7 +2311,7 @@ void find_index_and_validate(collection& coll,
     for (auto&& index : cursor) {
         auto name_ele = index["name"];
         REQUIRE(name_ele);
-        REQUIRE(name_ele.type() == bsoncxx::type::k_utf8);
+        REQUIRE(name_ele.type() == bsoncxx::type::k_string);
 
         if (name_ele.get_string().value != index_name) {
             continue;
@@ -2371,10 +2371,10 @@ TEST_CASE("create_index tests", "[collection]") {
         coll.create_index(keys.view(), options);
 
         auto validate = [](bsoncxx::document::view index) {
-            bsoncxx::types::bson_value::view locale{types::b_utf8{"en_US"}};
+            bsoncxx::types::bson_value::view locale{types::b_string{"en_US"}};
             auto locale_ele = index["collation"]["locale"];
             REQUIRE(locale_ele);
-            REQUIRE(locale_ele.type() == type::k_utf8);
+            REQUIRE(locale_ele.type() == type::k_string);
             REQUIRE((locale_ele.get_string() == locale));
         };
 
@@ -2474,8 +2474,8 @@ TEST_CASE("create_index tests", "[collection]") {
         auto validate = [](bsoncxx::document::view index) {
             auto config_string_ele = index["storageEngine"]["wiredTiger"]["configString"];
             REQUIRE(config_string_ele);
-            REQUIRE(config_string_ele.type() == type::k_utf8);
-            REQUIRE(config_string_ele.get_string() == types::b_utf8{"block_allocation=first"});
+            REQUIRE(config_string_ele.type() == type::k_string);
+            REQUIRE(config_string_ele.get_string() == types::b_string{"block_allocation=first"});
         };
 
         find_index_and_validate(coll, index_name, validate);

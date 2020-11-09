@@ -48,9 +48,9 @@ BSONCXX_INLINE void convert_to_libbson(const bsoncxx::types::b_binary& binary, b
     std::memcpy(v->value.v_binary.data, binary.bytes, binary.size);
 }
 
-BSONCXX_INLINE void convert_to_libbson(const bsoncxx::types::b_utf8& utf8, bson_value_t* v) {
+BSONCXX_INLINE void convert_to_libbson(const bsoncxx::types::b_string& str, bson_value_t* v) {
     v->value_type = BSON_TYPE_UTF8;
-    v->value.v_utf8.str = make_copy_for_libbson(utf8.value, &(v->value.v_utf8.len));
+    v->value.v_utf8.str = make_copy_for_libbson(str.value, &(v->value.v_utf8.len));
 }
 
 BSONCXX_INLINE void convert_to_libbson(const bsoncxx::types::b_double& val, bson_value_t* v) {
@@ -187,8 +187,6 @@ BSONCXX_INLINE void convert_to_libbson(const bsoncxx::types::b_array& arr, bson_
 //
 BSONCXX_INLINE void convert_to_libbson(bson_value_t* v, const class bson_value::view& bson_view) {
     switch (bson_view.type()) {
-        // CXX-1817; deprecation warning suppressed for get_utf8()
-        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 #define BSONCXX_ENUM(name, val)              \
     case bsoncxx::type::k_##name: {          \
         auto value = bson_view.get_##name(); \
@@ -197,7 +195,6 @@ BSONCXX_INLINE void convert_to_libbson(bson_value_t* v, const class bson_value::
     }
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
-        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
         default:
             BSONCXX_UNREACHABLE;
     }
@@ -211,11 +208,11 @@ BSONCXX_INLINE void convert_from_libbson(bson_value_t* v, bsoncxx::types::b_bina
     *out = {static_cast<binary_sub_type>(subtype), len, binary};
 }
 
-BSONCXX_INLINE void convert_from_libbson(bson_value_t* v, bsoncxx::types::b_utf8* out) {
+BSONCXX_INLINE void convert_from_libbson(bson_value_t* v, bsoncxx::types::b_string* out) {
     uint32_t len = v->value.v_utf8.len;
     const char* val = v->value.v_utf8.str;
 
-    *out = bsoncxx::types::b_utf8{stdx::string_view{val, len}};
+    *out = bsoncxx::types::b_string{stdx::string_view{val, len}};
 }
 
 BSONCXX_INLINE void convert_from_libbson(bson_value_t* v, bsoncxx::types::b_double* out) {

@@ -288,7 +288,7 @@ core& core::append(const types::b_double& value) {
     return *this;
 }
 
-core& core::append(const types::b_utf8& value) {
+core& core::append(const types::b_string& value) {
     stdx::string_view key = _impl->next_key();
 
     if (!bson_append_utf8(_impl->back(),
@@ -296,7 +296,7 @@ core& core::append(const types::b_utf8& value) {
                           static_cast<std::int32_t>(key.length()),
                           value.value.data(),
                           static_cast<std::int32_t>(value.value.length()))) {
-        throw bsoncxx::exception{error_code::k_cannot_append_utf8};
+        throw bsoncxx::exception{error_code::k_cannot_append_string};
     }
 
     return *this;
@@ -545,13 +545,13 @@ core& core::append(const types::b_maxkey&) {
 }
 
 core& core::append(std::string str) {
-    append(types::b_utf8{std::move(str)});
+    append(types::b_string{std::move(str)});
 
     return *this;
 }
 
 core& core::append(stdx::string_view str) {
-    append(types::b_utf8{std::move(str)});
+    append(types::b_string{std::move(str)});
 
     return *this;
 }
@@ -647,15 +647,12 @@ core& core::concatenate(const bsoncxx::document::view& view) {
 
 core& core::append(const bsoncxx::types::bson_value::view& value) {
     switch (static_cast<int>(value.type())) {
-        // CXX-1817; deprecation warning suppressed for get_utf8()
-        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 #define BSONCXX_ENUM(type, val)     \
     case val:                       \
         append(value.get_##type()); \
         break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
-        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
     }
 
     return *this;

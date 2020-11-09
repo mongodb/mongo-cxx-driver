@@ -36,7 +36,7 @@ bsoncxx::types::bson_value::view hint::to_value() const {
         return bsoncxx::types::bson_value::view{bsoncxx::types::b_document{_index_doc->view()}};
     }
 
-    return bsoncxx::types::bson_value::view{bsoncxx::types::b_utf8{*_index_string}};
+    return bsoncxx::types::bson_value::view{bsoncxx::types::b_string{*_index_string}};
 }
 
 bool MONGOCXX_CALL operator==(const hint& index_hint, std::string index) {

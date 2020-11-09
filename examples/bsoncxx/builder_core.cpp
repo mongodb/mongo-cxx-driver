@@ -61,8 +61,8 @@ int main(int, char**) {
     // Just call append() and pass a value wrapped in the corresponding BSON type.
     auto array = builder::core{true};  // we are building an array
 
-    array.append(types::b_utf8{"hello"});  // append a UTF-8 string
-    array.append(types::b_double{1.234});  // append a double
-    array.append(types::b_int32{1234});    // append an int32
+    array.append(types::b_string{"hello"});  // append a UTF-8 string
+    array.append(types::b_double{1.234});    // append a double
+    array.append(types::b_int32{1234});      // append an int32
     // ... etc.
 }

@@ -52,7 +52,7 @@ class BSONCXX_API view {
 /// Like this:
 ///
 ///   explicit view(b_double) noexcept;
-///   explicit view(b_utf8) noexcept;
+///   explicit view(b_string) noexcept;
 ///   explicit view(b_bool) noexcept;
 ///
 /// etc.
@@ -103,10 +103,12 @@ class BSONCXX_API view {
     ///
     /// @return The underlying BSON UTF-8 string value.
     ///
+    /// @deprecated use get_string instead.
+    ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_DEPRECATED const b_utf8& get_utf8() const;
+    BSONCXX_DEPRECATED const b_string& get_utf8() const;
 
     ///
     /// @return The underlying BSON UTF-8 string value.
@@ -114,7 +116,7 @@ class BSONCXX_API view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    const b_utf8& get_string() const;
+    const b_string& get_string() const;
 
     ///
     /// @return The underlying BSON document value.
@@ -282,7 +284,7 @@ class BSONCXX_API view {
     bsoncxx::type _type;
     union {
         struct b_double _b_double;
-        struct b_utf8 _b_utf8;
+        struct b_string _b_string;
         struct b_document _b_document;
         struct b_array _b_array;
         struct b_binary _b_binary;

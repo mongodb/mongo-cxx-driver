@@ -254,7 +254,7 @@ void run_datakey_and_double_encryption(Callable create_data_key,
     auto res = client_encrypted->database("db").collection("coll").find_one(filter.view());
     REQUIRE(res);
     auto decrypted_bson_val = res->view()["value"];
-    REQUIRE(decrypted_bson_val.type() == bsoncxx::type::k_utf8);
+    REQUIRE(decrypted_bson_val.type() == bsoncxx::type::k_string);
     REQUIRE(decrypted_bson_val.get_string().value == stdx::string_view{"hello there"});
 
     // 3. Call client_encryption.encrypt() with the value "hello there", the algorithm

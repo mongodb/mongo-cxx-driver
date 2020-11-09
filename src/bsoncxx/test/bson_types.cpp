@@ -45,10 +45,10 @@ TEST_CASE("b_double", "[bsoncxx::type::b_double]") {
     REQUIRE(!(a == c));
 }
 
-TEST_CASE("b_utf8", "[bsoncxx::type::b_utf8]") {
-    b_utf8 a{"hello"};
-    b_utf8 b{a};
-    b_utf8 c{"world"};
+TEST_CASE("b_string", "[bsoncxx::type::b_string]") {
+    b_string a{"hello"};
+    b_string b{a};
+    b_string c{"world"};
     REQUIRE(a == b);
     REQUIRE(!(a == c));
 }
@@ -196,9 +196,9 @@ TEST_CASE("bson_value::view with b_double", "[bsoncxx::types::bson_value::view]"
     REQUIRE(bson_value::view{double_val}.get_double() == double_val);
 }
 
-TEST_CASE("bson_value::view with b_utf8", "[bsoncxx::types::bson_value::view]") {
-    b_utf8 utf8_val{"hello"};
-    REQUIRE(bson_value::view{utf8_val}.get_string() == utf8_val);
+TEST_CASE("bson_value::view with b_string", "[bsoncxx::types::bson_value::view]") {
+    b_string string_val{"hello"};
+    REQUIRE(bson_value::view{string_val}.get_string() == string_val);
 }
 
 TEST_CASE("bson_value::view with b_document", "[bsoncxx::types::bson_value::view]") {

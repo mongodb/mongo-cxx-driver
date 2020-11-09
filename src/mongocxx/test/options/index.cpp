@@ -63,7 +63,7 @@ TEST_CASE("index", "[index][option]") {
         using namespace bsoncxx::types;
 
         bsoncxx::builder::basic::document options_doc;
-        options_doc.append(kvp("name", b_utf8{"name"}));
+        options_doc.append(kvp("name", b_string{"name"}));
         options_doc.append(kvp("background", b_bool{false}));
         options_doc.append(kvp("unique", b_bool{true}));
         options_doc.append(kvp("partialFilterExpression", partial_filter_expression.view()));

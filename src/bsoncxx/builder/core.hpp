@@ -184,9 +184,9 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the utf8 fails to append.
+    ///   bsoncxx::exception if the string fails to append.
     ///
-    core& append(const types::b_utf8& value);
+    core& append(const types::b_string& value);
 
     ///
     /// Appends a BSON document.
@@ -510,7 +510,7 @@ class BSONCXX_API core {
     BSONCXX_INLINE core& append(T* v) {
         static_assert(std::is_same<typename std::remove_const<T>::type, char>::value,
                       "append is disabled for non-char pointer types");
-        append(types::b_utf8{v});
+        append(types::b_string{v});
 
         return *this;
     }

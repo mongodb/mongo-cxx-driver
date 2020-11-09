@@ -48,7 +48,7 @@ class BSONCXX_API value {
 ///
 /// These x-macros will expand to:
 ///    value(b_double v);
-///    value(b_utf8 v);
+///    value(b_string v);
 ///    value(b_document v);
 ///    value(b_array v); ...
 ///
