@@ -1,0 +1,7 @@
+version: "1"
+rules:
+- base: master
+  upstream: mongodb:mongo-cxx-driver
+  mergeMethod: merge
+  conflictReviewers:
+  - zaucy
