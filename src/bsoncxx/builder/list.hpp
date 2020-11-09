@@ -19,6 +19,7 @@
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
+#include <sstream>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -80,14 +81,22 @@ class list {
     bson_value::value _value;
 
     list(initializer_list_t init, bool type_deduction, bool is_array) : _value{nullptr} {
+        std::stringstream err_msg{"cannot construct document"};
         bool valid_document = false;
         if (type_deduction || !is_array) {
             valid_document = [&] {
-                if (init.size() % 2 != 0)
+                if (init.size() % 2 != 0) {
+                    err_msg << " : must be list of key-value pairs";
                     return false;
-                for (size_t i = 0; i < init.size(); i += 2)
-                    if ((begin(init) + i)->_value.view().type() != type::k_utf8)
+                }
+                for (size_t i = 0; i < init.size(); i += 2) {
+                    auto type = (begin(init) + i)->_value.view().type();
+                    if (type != type::k_utf8) {
+                        err_msg << " : all keys must be string type. ";
+                        err_msg << "Found type=" << to_string(type);
                         return false;
+                    }
+                }
                 return true;
             }();
         }
@@ -105,7 +114,7 @@ class list {
                 _core.append(ele._value);
             _value = bson_value::value(_core.extract_array());
         } else {
-            throw bsoncxx::exception{error_code::k_unmatched_key_in_builder};
+            throw bsoncxx::exception{error_code::k_unmatched_key_in_builder, err_msg.str()};
         }
     }
 };

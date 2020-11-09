@@ -1710,8 +1710,13 @@ TEST_CASE("list builder with explicit type deduction", "[bsoncxx::builder::list]
 
     SECTION("document") {
         builder::list b;
-        REQUIRE_THROWS(b = list::document{"foo", 1, 2});
-        REQUIRE_THROWS(b = list::document{"foo", 1, 2, 4});
+        auto kvp_regex =
+            Catch::Matches("(.*)must be list of key-value pairs(.*)", Catch::CaseSensitive::No);
+        REQUIRE_THROWS_WITH((b = list::document{"foo", 1, 2}), kvp_regex);
+
+        auto type_regex =
+            Catch::Matches("(.*)must be string type(.*)int32(.*)", Catch::CaseSensitive::No);
+        REQUIRE_THROWS_WITH((b = list::document{"foo", 1, 2, 4}), type_regex);
     }
 }
 
