@@ -62,7 +62,7 @@ void bson_eq_object(const bson_t* bson, const T actual) {
     REQUIRE(std::memcmp(expected.data(), actual.data(), expected.length()) == 0);
 }
 
-TEST_CASE("builder appends utf8", "[bsoncxx::builder::stream]") {
+TEST_CASE("builder appends string", "[bsoncxx::builder::stream]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -83,8 +83,8 @@ TEST_CASE("builder appends utf8", "[bsoncxx::builder::stream]") {
         bson_eq_stream(&expected, b);
     }
 
-    SECTION("works with b_utf8") {
-        b << "hello" << types::b_utf8{"world"};
+    SECTION("works with b_string") {
+        b << "hello" << types::b_string{"world"};
 
         bson_eq_stream(&expected, b);
     }
@@ -822,7 +822,7 @@ TEST_CASE("core method chaining to build array works", "[bsoncxx::builder::core]
     auto array_view = array.view();
 
     REQUIRE(std::distance(array_view.begin(), array_view.end()) == 3);
-    REQUIRE(array_view[0].type() == type::k_utf8);
+    REQUIRE(array_view[0].type() == type::k_string);
     REQUIRE(string::to_string(array_view[0].get_string().value) == "foo");
     REQUIRE(array_view[1].type() == type::k_int32);
     REQUIRE(array_view[1].get_int32().value == 1);
@@ -1207,7 +1207,7 @@ TEST_CASE("builder::basic::make_array works", "[bsoncxx::builder::basic::make_ar
     auto array_view = array.view();
 
     REQUIRE(std::distance(array_view.begin(), array_view.end()) == 3);
-    REQUIRE(array_view[0].type() == type::k_utf8);
+    REQUIRE(array_view[0].type() == type::k_string);
     REQUIRE(string::to_string(array_view[0].get_string().value) == "foo");
     REQUIRE(array_view[1].type() == type::k_int32);
     REQUIRE(array_view[1].get_int32().value == 1);
@@ -1263,8 +1263,8 @@ TEST_CASE("list builder appends utf8", "[bsoncxx::builder::list]") {
         bson_eq_object(&expected, b.view().get_document().value);
     }
 
-    SECTION("works with b_utf8") {
-        builder::list b{"hello", types::b_utf8{"world"}};
+    SECTION("works with b_string") {
+        builder::list b{"hello", types::b_string{"world"}};
 
         bson_eq_object(&expected, b.view().get_document().value);
     }

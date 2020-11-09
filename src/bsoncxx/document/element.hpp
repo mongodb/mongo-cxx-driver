@@ -30,7 +30,7 @@ enum class binary_sub_type : std::uint8_t;
 namespace types {
 struct b_eod;
 struct b_double;
-struct b_utf8;
+struct b_string;
 struct b_document;
 struct b_array;
 struct b_binary;
@@ -145,25 +145,24 @@ class BSONCXX_API element {
     types::b_double get_double() const;
 
     ///
-    /// Getter for elements of the b_utf8 type.
+    /// Getter for elements of the b_string type.
     ///
     /// @deprecated use document::element::get_string() instead.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_utf8.
+    /// @throws bsoncxx::exception if this element is not a b_string.
     ///
     /// @return the element's value.
     ///
-    BSONCXX_DEPRECATED types::b_utf8 get_utf8() const;
+    BSONCXX_DEPRECATED types::b_string get_utf8() const;
 
     ///
-    /// Getter for elements of the b_utf8, or string, type. This function acts as a
-    /// wrapper for get_utf8().
+    /// Getter for elements of the b_string type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_utf8.
+    /// @throws bsoncxx::exception if this element is not a b_string.
     ///
     /// @return the element's value.
     ///
-    types::b_utf8 get_string() const;
+    types::b_string get_string() const;
 
     ///
     /// Getter for elements of the b_document type.

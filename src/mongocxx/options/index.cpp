@@ -249,11 +249,11 @@ index::operator bsoncxx::document::view_or_value() {
     }
 
     if (_default_language) {
-        root.append(kvp("default_language", types::b_utf8{*_default_language}));
+        root.append(kvp("default_language", types::b_string{*_default_language}));
     }
 
     if (_language_override) {
-        root.append(kvp("language_override", types::b_utf8{*_language_override}));
+        root.append(kvp("language_override", types::b_string{*_language_override}));
     }
 
     if (_twod_sphere_version) {

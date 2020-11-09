@@ -400,7 +400,7 @@ TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::b
         run_test();
     }
     SECTION("chunk size of wrong type") {
-        chunk_size = bsoncxx::types::bson_value::view{bsoncxx::types::b_utf8{"invalid"}};
+        chunk_size = bsoncxx::types::bson_value::view{bsoncxx::types::b_string{"invalid"}};
         run_test();
     }
     SECTION("missing chunk size") {
@@ -414,7 +414,7 @@ TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::b
         run_test();
     }
     SECTION("invalid length") {
-        length = bsoncxx::types::bson_value::view{bsoncxx::types::b_utf8{"invalid"}};
+        length = bsoncxx::types::bson_value::view{bsoncxx::types::b_string{"invalid"}};
         run_test();
     }
     SECTION("missing length") {

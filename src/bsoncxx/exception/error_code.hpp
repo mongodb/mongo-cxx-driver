@@ -95,6 +95,8 @@ enum class error_code : std::int32_t {
 #define BSONCXX_ENUM(name, value) k_cannot_append_##name,
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
+    k_cannot_append_utf8 = k_cannot_append_string,
+    k_need_element_type_k_utf8 = k_need_element_type_k_string,
     // Add new constant string message to error_code.cpp as well!
 };
 

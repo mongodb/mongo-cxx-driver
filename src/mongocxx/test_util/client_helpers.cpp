@@ -303,7 +303,7 @@ bool matches(types::bson_value::view main,
 
     if (main.type() == type::k_document) {
         // the value '42' acts as placeholders for "any value"
-        if (pattern.type() == type::k_utf8 && 0 == pattern.get_string().value.compare("42")) {
+        if (pattern.type() == type::k_string && 0 == pattern.get_string().value.compare("42")) {
             return true;
         }
 

@@ -37,7 +37,7 @@ TEST_CASE("Hint", "[hint]") {
 
         SECTION("Returns correct value from to_value") {
             types::bson_value::view val = index_hint.to_value();
-            REQUIRE(val.type() == type::k_utf8);
+            REQUIRE(val.type() == type::k_string);
             REQUIRE(bsoncxx::string::to_string(val.get_string().value) == index_name);
         }
 

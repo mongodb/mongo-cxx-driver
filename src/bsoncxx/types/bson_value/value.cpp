@@ -47,7 +47,7 @@ value::value(int64_t v) : _impl{stdx::make_unique<impl>()} {
 
 value::value(const char* v) : value(stdx::string_view{v}) {}
 value::value(std::string v) : value(stdx::string_view{v}) {}
-value::value(b_utf8 v) : value(v.value) {}
+value::value(b_string v) : value(v.value) {}
 value::value(stdx::string_view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_UTF8;
     _impl->_value.value.v_utf8.str = make_copy_for_libbson(v);
