@@ -131,7 +131,7 @@ TEST_CASE("list databases passes authorizedDatabases option", "[client]") {
         bsoncxx::document::value opts = make_document(kvp("authorizedDatabases", true));
         client.list_databases(opts.view());
         REQUIRE(num_called == 1);
-        REQUIRE_BSON_MATCHES(*opts_passed, make_document(kvp("authorizedDatabase", true)));
+        REQUIRE_BSON_MATCHES(*opts_passed, make_document(kvp("authorizedDatabases", true)));
     }
 }
 
