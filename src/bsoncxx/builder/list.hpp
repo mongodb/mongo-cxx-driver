@@ -33,7 +33,7 @@ class list {
     list() : list({}) {}
 
     template <typename T>
-    list(T value) : _value{value} {}
+    list(T value) : val{value} {}
 
     list(initializer_list_t init) : list(init, true, true) {}
 
@@ -46,41 +46,41 @@ class list {
     }
 
     bson_value::view view() {
-        return _value.view();
+        return val.view();
     }
 
     bson_value::value value() {
-        return _value;
+        return val;
     }
 
     class array {
        public:
         array() = default;
-        array(initializer_list_t init) : _init(init) {}
+        array(initializer_list_t init) : lst(init) {}
         operator list() {
-            return list(_init, false, true);
+            return list(lst, false, true);
         }
 
        private:
-        initializer_list_t _init;
+        initializer_list_t lst;
     };
 
     class document {
        public:
         document() = default;
-        document(initializer_list_t init) : _init(init) {}
+        document(initializer_list_t init) : lst(init) {}
         operator list() {
-            return list(_init, false, false);
+            return list(lst, false, false);
         }
 
        private:
-        initializer_list_t _init;
+        initializer_list_t lst;
     };
 
    private:
-    bson_value::value _value;
+    bson_value::value val;
 
-    list(initializer_list_t init, bool type_deduction, bool is_array) : _value{nullptr} {
+    list(initializer_list_t init, bool type_deduction, bool is_array) : val{nullptr} {
         std::stringstream err_msg{"cannot construct document"};
         bool valid_document = false;
         if (type_deduction || !is_array) {
@@ -90,10 +90,10 @@ class list {
                     return false;
                 }
                 for (size_t i = 0; i < init.size(); i += 2) {
-                    auto type = (begin(init) + i)->_value.view().type();
-                    if (type != type::k_utf8) {
+                    auto t = (begin(init) + i)->val.view().type();
+                    if (t != type::k_utf8) {
                         err_msg << " : all keys must be string type. ";
-                        err_msg << "Found type=" << to_string(type);
+                        err_msg << "Found type=" << to_string(t);
                         return false;
                     }
                 }
@@ -104,15 +104,15 @@ class list {
         if (valid_document) {
             core _core{false};
             for (size_t i = 0; i < init.size(); i += 2) {
-                _core.key_owned(std::string((begin(init) + i)->_value.view().get_string().value));
-                _core.append((begin(init) + i + 1)->_value);
+                _core.key_owned(std::string((begin(init) + i)->val.view().get_string().value));
+                _core.append((begin(init) + i + 1)->val);
             }
-            _value = bson_value::value(_core.extract_document());
+            val = bson_value::value(_core.extract_document());
         } else if (type_deduction || is_array) {
             core _core{true};
             for (auto&& ele : init)
-                _core.append(ele._value);
-            _value = bson_value::value(_core.extract_array());
+                _core.append(ele.val);
+            val = bson_value::value(_core.extract_array());
         } else {
             throw bsoncxx::exception{error_code::k_unmatched_key_in_builder, err_msg.str()};
         }
