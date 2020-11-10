@@ -117,4 +117,3 @@ cc_binary(
     srcs = ["with_transaction.cpp"],
     deps = ["//src/mongocxx"],
 )
-
