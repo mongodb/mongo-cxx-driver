@@ -38,7 +38,7 @@ class BSONCXX_TEST_API itoa {
     std::size_t length() const;
 
    private:
-    BSONCXX_PRIVATE void _init();
+    void _init();
 
     uint32_t _val;
     const char* _str;

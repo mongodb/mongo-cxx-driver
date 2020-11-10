@@ -1,0 +1,2 @@
+build --cxxopt=/std:c++latest
+build --cxxopt=/Zc:__cplusplus

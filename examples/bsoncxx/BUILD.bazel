@@ -1,0 +1,41 @@
+cc_binary(
+    name = "builder_basic",
+    srcs = ["builder_basic.cpp"],
+    deps = ["//src/bsoncxx"],
+)
+
+cc_binary(
+    name = "builder_core",
+    srcs = ["builder_core.cpp"],
+    deps = ["//src/bsoncxx"],
+)
+
+cc_binary(
+    name = "builder_stream_customization",
+    srcs = ["builder_stream_customization.cpp"],
+    deps = ["//src/bsoncxx"],
+)
+
+cc_binary(
+    name = "builder_stream",
+    srcs = ["builder_stream.cpp"],
+    deps = ["//src/bsoncxx"],
+)
+
+cc_binary(
+    name = "decimal128",
+    srcs = ["decimal128.cpp"],
+    deps = ["//src/bsoncxx"],
+)
+
+cc_binary(
+    name = "getting_values",
+    srcs = ["getting_values.cpp"],
+    deps = ["//src/bsoncxx"],
+)
+
+cc_binary(
+    name = "view_and_value",
+    srcs = ["view_and_value.cpp"],
+    deps = ["//src/bsoncxx"],
+)

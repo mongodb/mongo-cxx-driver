@@ -7,9 +7,11 @@ cc_library(
     strip_include_prefix = "/src",
     includes = ["."],
     hdrs = glob(["*.hpp"]),
+    defines = ["BSONCXX_STATIC"],
     deps = [
         "@bsoncxx_config//:bsoncxx_config",
         "@bsoncxx_config//:bsoncxx_version",
+        "@bazelregistry_mongo_c_driver//:libbson",
     ],
 )
 
@@ -17,6 +19,7 @@ cc_library(
     name = "bsoncxx_private_hdrs",
     strip_include_prefix = "/src",
     includes = ["."],
+    defines = ["BSONCXX_STATIC"],
     hdrs = ["test_util/export_for_testing.hh"] + glob([
         "array/**/*.hpp",
         "builder/**/*.hpp",
@@ -29,12 +32,14 @@ cc_library(
         "stdx/**/*.hpp",
         "string/**/*.hpp",
         "types/**/*.hpp",
+        "types/**/*.hh",
         "util/**/*.hpp",
     ]),
 )
 
 cc_library(
     name = "bsoncxx",
+    defines = ["BSONCXX_STATIC"],
     srcs = glob([
         "*.cpp",
         "array/**/*.cpp",
