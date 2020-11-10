@@ -1,0 +1,64 @@
+package(default_visibility = ["//visibility:public"])
+
+exports_files([
+    "config/config.hpp.in",
+    "config/private/config.hh.in",
+    "config/version.hpp.in",
+])
+
+cc_library(
+    name = "mongocxx_hdrs",
+    strip_include_prefix = "/src",
+    includes = ["."],
+    hdrs = glob(["*.hpp"]),
+    deps = [
+        "@mongocxx_config//:mongocxx_config",
+        "@mongocxx_config//:mongocxx_private_config",
+        "@mongocxx_config//:mongocxx_version",
+    ],
+)
+
+cc_library(
+    name = "mongocxx_private_hdrs",
+    strip_include_prefix = "/src",
+    includes = ["."],
+    hdrs = ["test_util/mock.hh", "test_util/export_for_testing.hh"] + glob([
+        "config/**/*.hpp",
+        "config/**/*.hh",
+        "events/**/*.hpp",
+        "exception/**/*.hpp",
+        "exception/**/*.hh",
+        "gridfs/**/*.hpp",
+        "gridfs/**/*.hh",
+        "model/**/*.hpp",
+        "options/**/*.hpp",
+        "options/**/*.hh",
+        "private/**/*.hpp",
+        "private/**/*.hh",
+        "result/**/*.hpp",
+    ]),
+    deps = [
+        ":mongocxx_hdrs",
+    ],
+)
+
+cc_library(
+    name = "mongocxx",
+    srcs = glob([
+        "*.cpp",
+        "config/**/*.cpp",
+        "events/**/*.cpp",
+        "exception/**/*.cpp",
+        "gridfs/**/*.cpp",
+        "model/**/*.cpp",
+        "options/**/*.cpp",
+        "private/**/*.cpp",
+        "result/**/*.cpp",
+    ]),
+    deps = [
+        ":mongocxx_hdrs",
+        ":mongocxx_private_hdrs",
+        "@bazelregistry_mongo_cxx_driver//src/bsoncxx",
+        "@bazelregistry_mongo_c_driver//:libmongoc",
+    ],
+)

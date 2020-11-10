@@ -1,0 +1,120 @@
+cc_binary(
+    name = "bulk_write",
+    srcs = ["bulk_write.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "change_streams",
+    srcs = ["change_streams.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "client_session",
+    srcs = ["client_session.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "connect",
+    srcs = ["connect.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "create",
+    srcs = ["create.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "document_validation",
+    srcs = ["document_validation.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "exception",
+    srcs = ["exception.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "get_values_from_documents",
+    srcs = ["get_values_from_documents.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "gridfs",
+    srcs = ["gridfs.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "index",
+    srcs = ["index.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "inserted_id",
+    srcs = ["inserted_id.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "instance_management",
+    srcs = ["instance_management.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "pool",
+    srcs = ["pool.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "query_projection",
+    srcs = ["query_projection.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "query",
+    srcs = ["query.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "remove",
+    srcs = ["remove.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "tailable_cursor",
+    srcs = ["tailable_cursor.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "update",
+    srcs = ["update.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "view_or_value_variant",
+    srcs = ["view_or_value_variant.cpp"],
+    deps = ["//src/mongocxx"],
+)
+
+cc_binary(
+    name = "with_transaction",
+    srcs = ["with_transaction.cpp"],
+    deps = ["//src/mongocxx"],
+)
+

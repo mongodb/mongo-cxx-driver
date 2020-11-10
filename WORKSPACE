@@ -11,6 +11,6 @@ mongo_c_driver_common_config()
 bson_config()
 mongoc_config()
 
-load("//:config.bzl", "bsoncxx_config")
+load("//:config.bzl", "bsoncxx_config", "mongocxx_config")
 bsoncxx_config()
-
+mongocxx_config()

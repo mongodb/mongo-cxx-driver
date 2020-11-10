@@ -1,0 +1,11 @@
+alias(
+    name = "libbsoncxx",
+    actual = "//src/bsoncxx",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "libmongocxx",
+    actual = "//src/mongocxx",
+    visibility = ["//visibility:public"],
+)
