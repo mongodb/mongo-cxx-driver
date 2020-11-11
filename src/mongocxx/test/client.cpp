@@ -57,8 +57,7 @@ TEST_CASE("A client lists its databases with a filter applied", "[client]") {
     auto filter_doc = make_document(kvp("filter", make_document(kvp("name", "admin"))));
     auto filter_view = filter_doc.view();
 
-    auto client_list_databases = libmongoc::client_find_databases_with_opts.create_instance();
-    client_list_databases
+    client_find_databases_with_opts
         ->interpose([&](mongoc_client_t*, const bson_t* opts) {
             REQUIRE(opts);
             bsoncxx::document::view opts_view{bson_get_data(opts), opts->len};
