@@ -259,7 +259,6 @@ class MONGOCXX_API client {
     /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
     ///
     /// @see https://docs.mongodb.com/master/reference/command/listDatabases
-    ///   for a list of all possible options to pass to 'listDatabases'.
     ///
     cursor list_databases(const bsoncxx::document::view_or_value opts) const;
 
