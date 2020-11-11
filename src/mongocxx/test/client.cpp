@@ -83,8 +83,7 @@ TEST_CASE("list databases passes authorizedDatabases option", "[client]") {
     bool called = false;
     stdx::optional<bsoncxx::document::value> opts_passed;
 
-    client_find_databases_with_opts->visit([&](mongoc_client_t*,
-                                                        const bson_t* opts) {
+    client_find_databases_with_opts->visit([&](mongoc_client_t*, const bson_t* opts) {
         called = true;
         if (opts) {
             opts_passed =
