@@ -57,8 +57,7 @@ TEST_CASE("A client lists its databases with a filter applied", "[client]") {
     auto filter_doc = make_document(kvp("filter", make_document(kvp("name", "admin"))));
     auto filter_view = filter_doc.view();
 
-    auto client_list_databases = libmongoc::client_find_databases_with_opts.create_instance();
-    client_list_databases
+    client_find_databases_with_opts
         ->interpose([&](mongoc_client_t*, const bson_t* opts) {
             REQUIRE(opts);
             bsoncxx::document::view opts_view{bson_get_data(opts), opts->len};
@@ -71,6 +70,47 @@ TEST_CASE("A client lists its databases with a filter applied", "[client]") {
     client mongo_client{uri{}};
     mongo_client.list_databases(filter_view);
     REQUIRE(client_list_databases_called);
+}
+
+TEST_CASE("list databases passes authorizedDatabases option", "[client]") {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+    using bsoncxx::to_json;
+
+    MOCK_CLIENT
+
+    bool called = false;
+    stdx::optional<bsoncxx::document::value> opts_passed;
+
+    client_find_databases_with_opts->visit([&](mongoc_client_t*, const bson_t* opts) {
+        called = true;
+        if (opts) {
+            opts_passed =
+                bsoncxx::document::value{bsoncxx::document::view{bson_get_data(opts), opts->len}};
+        }
+        return nullptr;
+    });
+
+    mongocxx::client client{mongocxx::uri{}};
+
+    SECTION("list_databases with no arguments") {
+        client.list_databases();
+        REQUIRE(called);
+    }
+
+    SECTION("list_databases with filter") {
+        bsoncxx::document::value opts = make_document(kvp("filter", 1));
+        client.list_databases(opts.view());
+        REQUIRE(called);
+        REQUIRE_BSON_MATCHES(*opts_passed, opts);
+    }
+
+    SECTION("list_databases with authorizedDatabases") {
+        bsoncxx::document::value opts = make_document(kvp("authorizedDatabases", true));
+        client.list_databases(opts.view());
+        REQUIRE(called);
+        REQUIRE_BSON_MATCHES(*opts_passed, opts);
+    }
 }
 
 TEST_CASE("A client constructed with a URI is truthy", "[client]") {
