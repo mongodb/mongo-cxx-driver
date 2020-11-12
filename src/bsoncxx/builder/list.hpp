@@ -26,21 +26,65 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 using namespace bsoncxx::types;
 
+///
+/// A JSON-like builder for creating documents and arrays.
+///
 class list {
     using initializer_list_t = std::initializer_list<list>;
 
    public:
+    ///
+    /// Creates an empty document.
+    ///
     list() : list({}) {}
 
+    ///
+    /// Creates a bsoncxx::builder::list from a value of type T. T must be a
+    /// bsoncxx::types::bson_value::value or implicitly convertible to a
+    /// bsoncxx::types::bson_value::value.
+    ///
+    /// @param value
+    ///     the BSON value
+    ///
+    /// @see bsoncxx::types::bson_value::value.
+    ///
     template <typename T>
     list(T value) : val{value} {}
 
+    ///
+    /// Creates a BSON document, if possible. Otherwise, it will create a BSON array. A document is
+    /// possible if:
+    //      1. The initializer list's size is even; this implies a list of
+    //         key-value pairs or an empty document if the size is zero.
+    //      2. Each 'key' is a string type. In a list of key-value pairs, the 'key' is every other
+    //         element starting at the 0th element.
+    //
+    /// @param init
+    ///     the initializer list used to construct the BSON document or array
+    ///
+    /// @note
+    ///     to enforce the creation of a BSON document or array use the bsoncxx::builder::document
+    ///     or bsoncxx::builder::array constructor, respectively.
+    ///
+    /// @see bsoncxx::builder::document
+    /// @see bsoncxx::builder::array
+    ///
     list(initializer_list_t init) : list(init, true, true) {}
 
+    ///
+    /// Provides a view of the underlying BSON value.
+    ///
+    /// @see bsoncxx::types::bson_value::view.
+    ///
     operator bson_value::view() {
         return view();
     }
 
+    ///
+    /// Provides a view of the underlying BSON value.
+    ///
+    /// @see bsoncxx::types::bson_value::view.
+    ///
     bson_value::view view() {
         return val.view();
     }
@@ -90,19 +134,51 @@ class list {
     }
 };
 
+///
+/// A JSON-like builder for creating documents.
+///
 class document : public list {
     using initializer_list_t = std::initializer_list<list>;
 
    public:
+    ///
+    /// Creates an empty document.
+    ///
     document() : list({}, false, false){};
+
+    ///
+    /// Creates a BSON document.
+    ///
+    /// @param init
+    ///     the initializer list used to construct the BSON document
+    ///
+    /// @see bsoncxx::builder::list
+    /// @see bsoncxx::builder::array
+    ///
     document(initializer_list_t init) : list(init, false, false) {}
 };
 
+///
+/// A JSON-like builder for creating arrays.
+///
 class array : public list {
     using initializer_list_t = std::initializer_list<list>;
 
    public:
+    ///
+    /// Creates an empty array.
+    ///
     array() : list({}, false, true){};
+
+    ///
+    /// Creates a BSON array.
+    ///
+    /// @param init
+    ///     the initializer list used to construct the BSON array
+    ///
+    /// @see bsoncxx::builder::list
+    /// @see bsoncxx::builder::document
+    ///
     array(initializer_list_t init) : list(init, false, true) {}
 };
 }
