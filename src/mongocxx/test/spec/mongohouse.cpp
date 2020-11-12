@@ -193,7 +193,7 @@ void test_kill_cursors() {
             auto reply = event["command_succeeded_event"]["reply"].get_document();
             auto cursor_doc = reply.view()["cursor"].get_document();
             cursor_id_val = cursor_doc.view()["id"].get_owning_value();
-            cursor_ns = std::string{cursor_doc.view()["ns"].get_string().value.to_string()};
+            cursor_ns = std::string(cursor_doc.view()["ns"].get_string().value);
 
             find_command_found = true;
 
