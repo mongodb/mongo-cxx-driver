@@ -187,7 +187,7 @@ include(MongocxxUtil)
 
 if(MONGOCXX_BUILD_SHARED)
     mongocxx_add_library(mongocxx_shared "${MONGOCXX_OUTPUT_BASENAME}" SHARED)
-      target_link_libraries(mongocxx_shared PUBLIC bsoncxx_shared)
+    target_link_libraries(mongocxx_shared PUBLIC bsoncxx_shared)
 endif()
 
 if(MONGOCXX_BUILD_STATIC)
