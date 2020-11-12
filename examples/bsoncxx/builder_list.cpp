@@ -60,7 +60,6 @@ int main(int, char**) {
     //  }
     //
     // clang-format off
-    std::chrono::seconds sec(1);
     doc = {"BSON boolean value", false,
            "BSON 32-bit signed integer value", -123,
            "BSON date value", std::chrono::milliseconds(123456789),
