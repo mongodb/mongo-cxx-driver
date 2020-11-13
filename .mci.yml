@@ -343,6 +343,9 @@ functions:
                           *with_transaction*)
                             echo "TODO CXX-1201, enable for servers that support transactions"
                             ;;
+                          *causal_consistency*)
+                            echo "TODO CXX-1201, enable for servers that support transactions"
+                            ;;
                           *)
                             ${test_params} $test
                             ;;
