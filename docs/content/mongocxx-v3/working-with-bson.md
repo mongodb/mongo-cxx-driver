@@ -43,7 +43,7 @@ bsoncxx::builder::list list_builder = {"hello", "world"};
 bsoncxx::document::view document = list_builder.view().get_document();
 ```
 
-More advanced uses of the basic builder are shown in [this
+More advanced uses of the list builder are shown in [this
 example](https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/builder_list.cpp).
 
 ## "One-off" builder functions {#one-off}
