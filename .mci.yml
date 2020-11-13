@@ -221,6 +221,10 @@ functions:
                       ADDL_OPTS="$ADDL_OPTS -DBUILD_SHARED_LIBS=OFF"
                   fi
 
+                  if [ "${ENABLE_TESTS}" = "OFF" ]; then
+                      ADDL_OPTS="$ADDL_OPTS -DENABLE_TESTS=OFF"
+                  fi
+
                   MONGOC_PREFIX="$(pwd)/../mongoc"
                   echo "MONGOC_PREFIX=$MONGOC_PREFIX"
                   ls -l $MONGOC_PREFIX
@@ -513,6 +517,14 @@ tasks:
       - func: "start_mongod"
       - func: "install_c_driver"
       - func: "compile"
+
+    - name: compile_without_tests
+      commands:
+      - func: "setup"
+      - func: "install_c_driver"
+      - func: "compile"
+        vars:
+            ENABLE_TESTS: OFF
 
     - name: compile_and_test_auth_with_shared_libs
       commands:
@@ -891,6 +903,7 @@ buildvariants:
         - ubuntu1804-build
       tasks:
         - name: clang-tidy
+        - name: compile_without_tests
 
     - name: ubuntu1804-zseries
       display_name: "s390x Ubuntu 18.04 (MongoDB 4.4)"

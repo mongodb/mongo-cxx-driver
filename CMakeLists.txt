@@ -264,7 +264,11 @@ add_custom_target(docs
 
 set(THIRD_PARTY_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party)
 
-enable_testing()
+option (ENABLE_TESTS "Build MongoDB C++ Driver tests." ON)
+
+if (ENABLE_TESTS)
+    enable_testing()
+endif ()
 
 add_subdirectory(src)
 

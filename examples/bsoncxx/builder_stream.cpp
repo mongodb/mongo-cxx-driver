@@ -23,7 +23,7 @@ int main(int, char**) {
     using builder::stream::document;
     using builder::stream::array;
 
-    // bsoncxx::builder::stream presents an iostream like interface for succintly
+    // bsoncxx::builder::stream presents an iostream like interface for succinctly
     // constructing complex BSON objects.
 
     // stream::document builds a BSON document
