@@ -1868,7 +1868,6 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             if (test_util::get_max_wire_version(mongodb_client) >= 1) {
                 // The server supports out().
-                REQUIRE(cursor);
                 auto results = get_results(std::move(*cursor));
                 REQUIRE(results.empty());
 

@@ -175,12 +175,18 @@ endif()
 
 if(BSONCXX_BUILD_SHARED)
     set(BSONCXX_LIBRARY_FOR_EXAMPLES "bsoncxx_shared" CACHE INTERNAL "")
-    bsoncxx_add_library(bsoncxx_testing "bsoncxx-testing" SHARED)
+    if(ENABLE_TESTS)
+      bsoncxx_add_library(bsoncxx_testing "bsoncxx-testing" SHARED)
+    endif()
 else()
     set(BSONCXX_LIBRARY_FOR_EXAMPLES "bsoncxx_static" CACHE INTERNAL "")
-    bsoncxx_add_library(bsoncxx_testing "bsoncxx-testing" STATIC)
+    if(ENABLE_TESTS)
+      bsoncxx_add_library(bsoncxx_testing "bsoncxx-testing" STATIC)
+    endif()
 endif()
-target_compile_definitions(bsoncxx_testing PUBLIC BSONCXX_TESTING)
+if(ENABLE_TESTS)
+  target_compile_definitions(bsoncxx_testing PUBLIC BSONCXX_TESTING)
+endif()
 
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -215,7 +221,9 @@ if(BSONCXX_BUILD_STATIC)
 endif()
 bsoncxx_install("${bsoncxx_target_list}" "${bsoncxx_pkg_dep}")
 
-add_subdirectory(test)
+if(ENABLE_TESTS)
+  add_subdirectory(test)
+endif()
 
 set_local_dist (src_bsoncxx_DIST_local
    CMakeLists.txt
@@ -226,6 +234,7 @@ set_local_dist (src_bsoncxx_DIST_local
    array/view.cpp
    array/view.hpp
    array/view_or_value.hpp
+   builder/list.hpp
    builder/basic/array.hpp
    builder/basic/document.hpp
    builder/basic/helpers.hpp

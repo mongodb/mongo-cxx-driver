@@ -92,7 +92,8 @@ MONGOCXX_INLINE_NAMESPACE_END
     client_reset->interpose([](const mongoc_client_t*){}).forever();                            \
     auto client_get_concern = libmongoc::client_get_write_concern.create_instance();            \
     client_get_concern->interpose([](const mongoc_client_t*) { return nullptr; }).forever();    \
-    auto client_start_session = libmongoc::client_start_session.create_instance();
+    auto client_start_session = libmongoc::client_start_session.create_instance();              \
+    auto client_find_databases_with_opts = mongocxx::libmongoc::client_find_databases_with_opts.create_instance();
 
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
 #define MOCK_CLIENT                                                              \

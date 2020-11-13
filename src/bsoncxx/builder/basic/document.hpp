@@ -79,7 +79,7 @@ class document : public sub_document {
     ///
     /// @warning
     ///  After calling extract() it is illegal to call any methods
-    ///  on this class, unless it is subsequenly moved into.
+    ///  on this class, unless it is subsequently moved into.
     ///
     BSONCXX_INLINE bsoncxx::document::value extract() {
         return _core.extract_document();
@@ -100,7 +100,7 @@ class document : public sub_document {
 /// Creates a document from a list of key-value pairs.
 ///
 /// @param args
-///   A variadiac list of key-value pairs. The types of the keys and values can be anything that
+///   A variadic list of key-value pairs. The types of the keys and values can be anything that
 ///   builder::basic::sub_document::append accepts.
 ///
 /// @return

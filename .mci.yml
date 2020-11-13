@@ -221,6 +221,10 @@ functions:
                       ADDL_OPTS="$ADDL_OPTS -DBUILD_SHARED_LIBS=OFF"
                   fi
 
+                  if [ "${ENABLE_TESTS}" = "OFF" ]; then
+                      ADDL_OPTS="$ADDL_OPTS -DENABLE_TESTS=OFF"
+                  fi
+
                   MONGOC_PREFIX="$(pwd)/../mongoc"
                   echo "MONGOC_PREFIX=$MONGOC_PREFIX"
                   ls -l $MONGOC_PREFIX
@@ -514,6 +518,14 @@ tasks:
       - func: "install_c_driver"
       - func: "compile"
 
+    - name: compile_without_tests
+      commands:
+      - func: "setup"
+      - func: "install_c_driver"
+      - func: "compile"
+        vars:
+            ENABLE_TESTS: OFF
+
     - name: compile_and_test_auth_with_shared_libs
       commands:
         - func: "setup"
@@ -646,6 +658,31 @@ tasks:
           aws_secret: ${aws_secret}
           local_file: deb.tar.gz
           remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/debian-packages.tar.gz
+          bucket: mciuploads
+          permissions: public-read
+          content_type: ${content_type|application/x-gzip}
+          display_name: "deb.tar.gz"
+
+    - name: debian-package-build-mnmlstc
+      commands:
+      - func: "setup"
+      - command: shell.exec
+        type: test
+        params:
+          working_dir: "mongo-cxx-driver"
+          shell: bash
+          script: |-
+            set -o errexit
+            set -o xtrace
+            export IS_PATCH="${is_patch}"
+            export DEB_BUILD_PROFILES="pkg.mongo-cxx-driver.mnmlstc"
+            sh .evergreen/debian_package_build.sh
+      - command: s3.put
+        params:
+          aws_key: ${aws_key}
+          aws_secret: ${aws_secret}
+          local_file: deb.tar.gz
+          remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/debian-packages-mnmlstc.tar.gz
           bucket: mciuploads
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
@@ -866,6 +903,7 @@ buildvariants:
         - ubuntu1804-build
       tasks:
         - name: clang-tidy
+        - name: compile_without_tests
 
     - name: ubuntu1804-zseries
       display_name: "s390x Ubuntu 18.04 (MongoDB 4.4)"
@@ -1009,6 +1047,7 @@ buildvariants:
       run_on: ubuntu1604-test
       tasks:
          - name: debian-package-build
+         - name: debian-package-build-mnmlstc
          - name: rpm-package-build
            distros:
            - rhel80-test

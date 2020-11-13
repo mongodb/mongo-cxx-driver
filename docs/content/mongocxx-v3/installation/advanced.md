@@ -106,3 +106,12 @@ cmake ..                                            \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
 ```
 
+## Disabling tests
+
+Pass `-DENABLE_TESTS=OFF` as a cmake option to disable configuration of test targets.
+
+```sh
+cmake .. -DENABLE_TESTS=OFF
+cmake --build .. --target help
+# No test targets are configured.
+```

@@ -22,8 +22,8 @@ use each.  For more information and example code, see our
 
 ## Document Builders {#builders}
 
-The bsoncxx library offers three interfaces for building BSON: one-off
-functions, a basic builder and a stream-based builder.
+The bsoncxx library offers four interfaces for building BSON: one-off
+functions, a basic builder, a list builder and a stream-based builder.
 
 [`bsoncxx::builder::basic::document`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/builder/basic/document.hpp)<br/>
 [`bsoncxx::builder::stream::document`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/builder/stream/document.hpp)
@@ -32,10 +32,23 @@ The various methods of creating BSON documents and arrays are all
 equivalent. All interfaces will provide the same results, the choice of
 which to use is entirely aesthetic.
 
+## List builder {#list}
+
+The simplest way to create a BSON document or array is to use the JSON-like
+list builder: 
+
+```c++
+// { "hello": "world" }
+bsoncxx::builder::list list_builder = {"hello", "world"};
+bsoncxx::document::view document = list_builder.view().get_document();
+```
+
+More advanced uses of the list builder are shown in [this
+example](https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/builder_list.cpp).
+
 ## "One-off" builder functions {#one-off}
 
-The simplest way to create a BSON document or array is to use the one-off
-builder functions, which create documents and arrays in a single call.
+The "One-off" builder creates documents and arrays in a single call.
 These can be used when no additional logic (such as conditionals or loops)
 needs to be used to create the object:
 

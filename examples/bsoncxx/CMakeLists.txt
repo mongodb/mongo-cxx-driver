@@ -18,6 +18,7 @@ include_directories(
 
 set(BSONCXX_EXAMPLES
     builder_core.cpp
+    builder_list.cpp
     builder_basic.cpp
     builder_stream.cpp
     builder_stream_customization.cpp

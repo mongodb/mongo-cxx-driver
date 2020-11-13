@@ -6,6 +6,8 @@ Uploaders: A. Jesse Jiryu Davis <jesse@mongodb.com>,
            Samantha Ritter <samantha.ritter@mongodb.com>,
            Roberto C. Sanchez <roberto@connexer.com>
 Build-Depends: debhelper (>= 11),
+               git <pkg.mongo-cxx-driver.mnmlstc>,
+               ca-certificates <pkg.mongo-cxx-driver.mnmlstc>,
                cmake,
                libmongoc-dev (>= 1.17.0),
                libboost-dev,
