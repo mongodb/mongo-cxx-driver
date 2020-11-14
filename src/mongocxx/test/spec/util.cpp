@@ -714,7 +714,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
             bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
             bsoncxx::types::bson_value::view pattern) {
             if (key.compare("lsid") == 0) {
-                REQUIRE(pattern.type() == type::k_utf8);
+                REQUIRE(pattern.type() == type::k_string);
                 REQUIRE(main);
                 REQUIRE(main->type() == type::k_document);
                 auto session_name = pattern.get_string().value;

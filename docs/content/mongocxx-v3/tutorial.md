@@ -202,7 +202,7 @@ value is a string:
 
 ```c++
 bsoncxx::document::element element = view["name"];
-if(element.type() != bsoncxx::type::k_utf8) {
+if(element.type() != bsoncxx::type::k_string) {
   // Error
 }
 std::string name = element.get_string().value.to_string();

@@ -17,7 +17,7 @@
 #endif
 
 BSONCXX_ENUM(double, 0x01)
-BSONCXX_ENUM(utf8, 0x02)
+BSONCXX_ENUM(string, 0x02)
 BSONCXX_ENUM(document, 0x03)
 BSONCXX_ENUM(array, 0x04)
 BSONCXX_ENUM(binary, 0x05)

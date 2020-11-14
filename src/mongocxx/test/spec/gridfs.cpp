@@ -89,7 +89,7 @@ bsoncxx::stdx::optional<test_util::item_t> transform_hex(test_util::item_t pair,
 
     auto data = value.get_document().value;
 
-    if (!data["$hex"] || data["$hex"].type() != type::k_utf8) {
+    if (!data["$hex"] || data["$hex"].type() != type::k_string) {
         return make_optional(pair);
     }
 
@@ -312,7 +312,7 @@ void test_upload(database db,
                 std::string key_string = bsoncxx::string::to_string(key);
 
                 if ((key_string != "_id" && key_string != "files_id") ||
-                    value.type() != type::k_utf8) {
+                    value.type() != type::k_string) {
                     auto new_pair = transform_hex(pair, context);
 
                     if (!new_pair) {
