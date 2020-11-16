@@ -43,8 +43,7 @@ int main() {
     // Start Causal Consistency Example 1
 
     write_concern wc_majority{};
-    wc_majority.acknowledge_level(write_concern::level::k_majority);
-    wc_majority.majority(std::chrono::milliseconds(100));
+    wc_majority.majority(std::chrono::milliseconds(1000));
 
     read_concern rc_majority{};
     rc_majority.acknowledge_level(read_concern::level::k_majority);
@@ -55,10 +54,8 @@ int main() {
 
     auto session_1 = client.start_session(std::move(session_opts));
 
-    bsoncxx::types::b_timestamp current_date;
     auto time_point = std::chrono::system_clock::now();
-    std::time_t now = std::chrono::system_clock::to_time_t(time_point);
-    current_date.timestamp = static_cast<uint32_t>(now);
+    bsoncxx::types::b_date current_date(time_point);
 
     auto items = client["test"]["items"];
     items.write_concern(wc_majority);
@@ -101,7 +98,6 @@ int main() {
 
     read_preference rp_secondary;
     rp_secondary.mode(read_preference::read_mode::k_secondary);
-    wc_majority.majority(std::chrono::milliseconds(1000));
 
     items = client["test"]["items"];
     items.read_preference(rp_secondary);
