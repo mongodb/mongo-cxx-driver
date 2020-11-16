@@ -25,54 +25,50 @@ using bsoncxx::types::b_int32;
 using bsoncxx::types::b_utf8;
 using types::bson_value::make_value;
 
-TEST_CASE("array has_value and find_value", "[bsoncxx::array::view]") {
+TEST_CASE("array element lookup with std::find", "[bsoncxx::array::view]") {
     auto val = make_value("hello");
 
     SECTION("empty array") {
         array::view a;
-        REQUIRE(!a.has_value(val));
-        REQUIRE(a.find_value(val) == a.cend());
+        REQUIRE(std::find(a.cbegin(), a.cend(), val) == a.cend());
     }
 
     SECTION("non-matching elements of other types") {
         builder::basic::array a_builder;
         a_builder.append(b_int32{1}, b_int32{2});
         auto a = a_builder.view();
-        REQUIRE(!a.has_value(val));
-        REQUIRE(a.find_value(val) == a.cend());
+        REQUIRE(std::find(a.cbegin(), a.cend(), val) == a.cend());
     }
 
     SECTION("non-matching utf8 elements") {
         builder::basic::array a_builder;
         a_builder.append(b_utf8{"yes"}, b_utf8{"no"});
         auto a = a_builder.view();
-        REQUIRE(!a.has_value(val));
-        REQUIRE(a.find_value(val) == a.cend());
+        REQUIRE(std::find(a.cbegin(), a.cend(), val) == a.cend());
     }
 
     SECTION("array with one matching element") {
         builder::basic::array a_builder;
         a_builder.append(b_utf8{"yes"}, b_utf8{"no"}, b_utf8{"hello"});
         auto a = a_builder.view();
-        REQUIRE(a.has_value(val));
-        REQUIRE(a.find_value(val) != a.cend());
+        auto it = std::find(a.cbegin(), a.cend(), val);
+        REQUIRE(it != a.cend());
+        REQUIRE(*it == val);
     }
 
     SECTION("array with multiple matching elements") {
         builder::basic::array a_builder;
         a_builder.append(b_utf8{"yes"}, b_utf8{"hello"}, b_utf8{"hello"});
         auto a = a_builder.view();
-        REQUIRE(a.has_value(val));
-        REQUIRE(a.find_value(val) != a.cend());
-        REQUIRE(a.find_value(val) == a.find_value(val));
+        auto it = std::find(a.cbegin(), a.cend(), val);
+        REQUIRE(it != a.cend());
+        REQUIRE(*it == val);
 
         // Returns the first matching instance
-        auto it = a.find_value(val);
-        REQUIRE(it->get_value() == val);
         it++;
-        REQUIRE(it->get_value() == val);
-        it++;
-        REQUIRE(it == a.cend());
+        it = std::find(it, a.cend(), val);
+        REQUIRE(it != a.cend());
+        REQUIRE(*it == val);
     }
 }
 }  // namespace

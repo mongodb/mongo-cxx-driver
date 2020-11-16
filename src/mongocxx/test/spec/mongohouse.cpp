@@ -224,9 +224,9 @@ void test_kill_cursors() {
             // Validate namespace
             auto db = event["command_started_event"]["database_name"].get_string().value;
             auto coll = event["command_started_event"]["command"]["killCursors"].get_string().value;
-            std::string cmd_ns{db};
+            std::string cmd_ns(db);
             cmd_ns += ".";
-            cmd_ns += std::string{coll};
+            cmd_ns += std::string(coll);
 
             if (cmd_ns.compare(cursor_ns) != 0) {
                 continue;
@@ -235,7 +235,8 @@ void test_kill_cursors() {
             auto cursors_killed =
                 event["command_started_event"]["command"]["cursors"].get_array().value;
 
-            if (cursors_killed.has_value(cursor_id_val.view())) {
+            if (std::find(cursors_killed.cbegin(), cursors_killed.cend(), cursor_id_val.view()) !=
+                cursors_killed.cend()) {
                 cmd_started_validated = true;
             }
         }
@@ -252,7 +253,8 @@ void test_kill_cursors() {
             auto cursors_killed_arr = cursors_killed_elem.get_array();
             auto cursors_killed = cursors_killed_arr.value;
 
-            if (cursors_killed.has_value(cursor_id_val.view())) {
+            if (std::find(cursors_killed.cbegin(), cursors_killed.cend(), cursor_id_val.view()) !=
+                cursors_killed.cend()) {
                 cmd_succeeded_validated = true;
             }
         }

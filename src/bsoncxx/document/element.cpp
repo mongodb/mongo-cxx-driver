@@ -138,6 +138,22 @@ element::operator bool() const {
     return _raw != nullptr;
 }
 
+bool BSONCXX_CALL operator==(const element& elem, const types::bson_value::view& v) {
+    return elem.get_value() == v;
+}
+
+bool BSONCXX_CALL operator==(const types::bson_value::view& v, const element& elem) {
+    return elem == v;
+}
+
+bool BSONCXX_CALL operator!=(const element& elem, const types::bson_value::view& v) {
+    return !(elem == v);
+}
+
+bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const element& elem) {
+    return !(elem == v);
+}
+
 }  // namespace document
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

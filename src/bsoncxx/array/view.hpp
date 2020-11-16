@@ -87,28 +87,6 @@ class BSONCXX_API view {
     element operator[](std::uint32_t i) const;
 
     ///
-    /// Returns the first element that has a value that compares equal to 'v', if one exists in
-    /// the array. Otherwise, returns the past-the-end iterator.
-    ///
-    /// @param v
-    ///   The value to search for in this array.
-    ///
-    /// @return An iterator to the first matching element, or the past-the-end iterator.
-    ///
-    const_iterator find_value(types::bson_value::view v) const;
-
-    ///
-    /// Returns true if this array contains an element that compares equal to the passed-in
-    /// bson_value::view 'v', false otherwise.
-    ///
-    /// @param v
-    ///   The value to search for in this array.
-    ///
-    /// @return True if this array contains an element that compares equal to 'v', or false.
-    ///
-    bool has_value(types::bson_value::view v) const;
-
-    ///
     /// Default constructs a view. The resulting view will be initialized to point at
     /// an empty BSON array.
     ///

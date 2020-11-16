@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/array/element.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 
 #include <stdexcept>
 
@@ -29,6 +30,22 @@ element::element(const std::uint8_t* raw,
                  std::uint32_t offset,
                  std::uint32_t keylen)
     : document::element(raw, length, offset, keylen) {}
+
+bool BSONCXX_CALL operator==(const element& elem, const types::bson_value::view& v) {
+    return elem.get_value() == v;
+}
+
+bool BSONCXX_CALL operator==(const types::bson_value::view& v, const element& elem) {
+    return elem == v;
+}
+
+bool BSONCXX_CALL operator!=(const element& elem, const types::bson_value::view& v) {
+    return !(elem == v);
+}
+
+bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const element& elem) {
+    return !(elem == v);
+}
 
 }  // namespace document
 BSONCXX_INLINE_NAMESPACE_END
