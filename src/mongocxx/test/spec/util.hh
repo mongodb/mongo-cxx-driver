@@ -20,6 +20,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/test/spec/operation.hh>
+#include <mongocxx/uri.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -104,6 +105,11 @@ void run_tests_in_suite(std::string ev, test_runner cb);
 // The transactions spec test runner, also used by other spec tests.
 //
 void run_transactions_tests_in_file(const std::string& test_path);
+
+//
+// The crud spec test runner, also used by other spec tests.
+//
+void run_crud_tests_in_file(const std::string& test_path, uri test_uri = uri{});
 
 }  // namespace spec
 MONGOCXX_INLINE_NAMESPACE_END
