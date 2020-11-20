@@ -6,6 +6,10 @@ title = "Contribution Guidelines"
   parent="contributing"
 +++
 
+### Code Style
+
+When contributing code, in addition to following the [C++ Core Guidelines](https://github.com/isocpp/CppCoreGuidelines), please follow the same [code style](https://github.com/mongodb/mongo/wiki/Server-Code-Style), [design guidelines](https://github.com/mongodb/mongo/wiki/Server-Design-Guidelines), and [style guidelines](https://github.com/mongodb/mongo/wiki/Style-Guidelines) as [mongodb/mongo](https://github.com/mongodb/mongo). Additions and exceptions are listed below.
+
 ### Commit Messages
 
 If a pull-request addresses a JIRA ticket, for a single-commit PR, prefix
