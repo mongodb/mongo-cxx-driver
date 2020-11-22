@@ -1253,35 +1253,35 @@ TEST_CASE("list builder appends utf8", "[bsoncxx::builder::list]") {
     bson_append_utf8(&expected, "hello", -1, "world", -1);
 
     SECTION("works with string literals") {
-        builder::list b{"hello", "world"};
+        builder::document b{"hello", "world"};
 
-        bson_eq_object(&expected, b.view().get_document().value);
+        bson_eq_object(&expected, b.extract().view());
     }
 
     SECTION("works with std::string") {
-        builder::list b{"hello", std::string{"world"}};
+        builder::document b{"hello", std::string{"world"}};
 
-        bson_eq_object(&expected, b.view().get_document().value);
+        bson_eq_object(&expected, b.extract().view());
     }
 
     SECTION("works with b_string") {
-        builder::list b{"hello", types::b_string{"world"}};
+        builder::document b{"hello", types::b_string{"world"}};
 
-        bson_eq_object(&expected, b.view().get_document().value);
+        bson_eq_object(&expected, b.extract().view());
     }
 
     SECTION("works with const char*") {
         const char* world = "world";
-        builder::list b{"hello", world};
+        builder::document b{"hello", world};
 
-        bson_eq_object(&expected, b.view().get_document().value);
+        bson_eq_object(&expected, b.extract().view());
     }
 
     SECTION("works with char*") {
         char* world = const_cast<char*>("world");
-        builder::list b{"hello", world};
+        builder::document b{"hello", world};
 
-        bson_eq_object(&expected, b.view().get_document().value);
+        bson_eq_object(&expected, b.extract().view());
     }
 
     bson_destroy(&expected);
@@ -1294,15 +1294,15 @@ TEST_CASE("list builder appends double", "[bsoncxx::builder::list]") {
     bson_append_double(&expected, "foo", -1, 1.1);
 
     SECTION("works with raw float") {
-        builder::list b{"foo", 1.1};
+        builder::document b{"foo", 1.1};
 
-        bson_eq_object(&expected, b.view().get_document().value);
+        bson_eq_object(&expected, b.extract().view());
     }
 
     SECTION("works with b_double") {
-        builder::list b{"foo", types::b_double{1.1}};
+        builder::document b{"foo", types::b_double{1.1}};
 
-        bson_eq_object(&expected, b.view().get_document().value);
+        bson_eq_object(&expected, b.extract().view());
     }
 
     bson_destroy(&expected);
@@ -1314,9 +1314,9 @@ TEST_CASE("list builder appends binary", "[bsoncxx::builder::list]") {
 
     bson_append_binary(&expected, "foo", -1, BSON_SUBTYPE_BINARY, (uint8_t*)"data", 4);
 
-    builder::list b{"foo", types::b_binary{binary_sub_type::k_binary, 4, (uint8_t*)"data"}};
+    builder::document b{"foo", types::b_binary{binary_sub_type::k_binary, 4, (uint8_t*)"data"}};
 
-    bson_eq_object(&expected, b.view().get_document().value);
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
 }
@@ -1327,9 +1327,9 @@ TEST_CASE("list builder appends undefined", "[bsoncxx::builder::list]") {
 
     bson_append_undefined(&expected, "foo", -1);
 
-    builder::list b{"foo", types::b_undefined{}};
+    builder::document b{"foo", types::b_undefined{}};
 
-    bson_eq_object(&expected, b.view().get_document().value);
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
 }
@@ -1344,15 +1344,15 @@ TEST_CASE("list builder appends oid", "[bsoncxx::builder::list]") {
     bson_append_oid(&expected, "foo", -1, &oid);
 
     SECTION("b_oid works") {
-        builder::list b{"foo", types::b_oid{bsoncxx::oid{(char*)oid.bytes, 12}}};
+        builder::document b{"foo", types::b_oid{bsoncxx::oid{(char*)oid.bytes, 12}}};
 
-        bson_eq_object(&expected, b.view().get_document().value);
+        bson_eq_object(&expected, b.extract().view());
     }
 
     SECTION("raw oid works") {
-        builder::list b{"foo", bsoncxx::oid{(char*)oid.bytes, 12}};
+        builder::document b{"foo", bsoncxx::oid{(char*)oid.bytes, 12}};
 
-        bson_eq_object(&expected, b.view().get_document().value);
+        bson_eq_object(&expected, b.extract().view());
     }
 
     bson_destroy(&expected);
@@ -1365,33 +1365,33 @@ TEST_CASE("list builder appends bool", "[bsoncxx::builder::list]") {
     SECTION("b_bool true works") {
         bson_append_bool(&expected, "foo", -1, 1);
 
-        builder::list b{"foo", types::b_bool{true}};
+        builder::document b{"foo", types::b_bool{true}};
 
-        bson_eq_object(&expected, b.view().get_document().value);
+        bson_eq_object(&expected, b.extract().view());
     }
 
     SECTION("raw true works") {
         bson_append_bool(&expected, "foo", -1, 1);
 
-        builder::list b{"foo", true};
+        builder::document b{"foo", true};
 
-        bson_eq_object(&expected, b.view().get_document().value);
+        bson_eq_object(&expected, b.extract().view());
     }
 
     SECTION("b_bool false works") {
         bson_append_bool(&expected, "foo", -1, 0);
 
-        builder::list b{"foo", types::b_bool{false}};
+        builder::document b{"foo", types::b_bool{false}};
 
-        bson_eq_object(&expected, b.view().get_document().value);
+        bson_eq_object(&expected, b.extract().view());
     }
 
     SECTION("raw false works") {
         bson_append_bool(&expected, "foo", -1, 0);
 
-        builder::list b{"foo", false};
+        builder::document b{"foo", false};
 
-        bson_eq_object(&expected, b.view().get_document().value);
+        bson_eq_object(&expected, b.extract().view());
     }
 
     bson_destroy(&expected);
@@ -1403,9 +1403,9 @@ TEST_CASE("list builder appends date time", "[bsoncxx::builder::list]") {
 
     bson_append_date_time(&expected, "foo", -1, 10000);
 
-    builder::list b{"foo", types::b_date{std::chrono::milliseconds{10000}}};
+    builder::document b{"foo", types::b_date{std::chrono::milliseconds{10000}}};
 
-    bson_eq_object(&expected, b.view().get_document().value);
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
 }
@@ -1416,9 +1416,9 @@ TEST_CASE("list builder appends null", "[bsoncxx::builder::list]") {
 
     bson_append_null(&expected, "foo", -1);
 
-    builder::list b{"foo", types::b_null{}};
+    builder::document b{"foo", types::b_null{}};
 
-    bson_eq_object(&expected, b.view().get_document().value);
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
 }
@@ -1429,11 +1429,11 @@ TEST_CASE("list builder appends regex", "[bsoncxx::builder::list]") {
 
     bson_append_regex(&expected, "foo", -1, "^foo|bar$", "i");
 
-    builder::list b{"foo", types::b_regex{"^foo|bar$", "i"}};
-    bson_eq_object(&expected, b.view().get_document().value);
+    builder::document b{"foo", types::b_regex{"^foo|bar$", "i"}};
+    bson_eq_object(&expected, b.extract().view());
 
     b = {"foo", types::bson_value::value{"^foo|bar$", "i"}};
-    bson_eq_object(&expected, b.view().get_document().value);
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
 }
@@ -1444,9 +1444,9 @@ TEST_CASE("list builder appends code", "[bsoncxx::builder::list]") {
 
     bson_append_code(&expected, "foo", -1, "var a = {};");
 
-    builder::list b{"foo", types::b_code{"var a = {};"}};
+    builder::document b{"foo", types::b_code{"var a = {};"}};
 
-    bson_eq_object(&expected, b.view().get_document().value);
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
 }
@@ -1457,9 +1457,9 @@ TEST_CASE("list builder appends symbol", "[bsoncxx::builder::list]") {
 
     bson_append_symbol(&expected, "foo", -1, "data", -1);
 
-    builder::list b{"foo", types::b_symbol{"data"}};
+    builder::document b{"foo", types::b_symbol{"data"}};
 
-    bson_eq_object(&expected, b.view().get_document().value);
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
 }
@@ -1477,9 +1477,9 @@ TEST_CASE("list builder appends code with scope", "[bsoncxx::builder::list]") {
 
     bson_append_code_with_scope(&expected, "foo", -1, "var a = b;", &scope);
 
-    builder::list b{"foo", types::b_codewscope{"var a = b;", scope_builder.view()}};
+    builder::document b{"foo", types::b_codewscope{"var a = b;", scope_builder.view()}};
 
-    bson_eq_object(&expected, b.view().get_document().value);
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
 }
@@ -1491,13 +1491,13 @@ TEST_CASE("list builder appends int32", "[bsoncxx::builder::list]") {
     bson_append_int32(&expected, "foo", -1, 100);
 
     SECTION("raw int32") {
-        builder::list b{"foo", 100};
-        bson_eq_object(&expected, b.view().get_document().value);
+        builder::document b{"foo", 100};
+        bson_eq_object(&expected, b.extract().view());
     }
 
     SECTION("b_int32") {
-        builder::list b{"foo", types::b_int32{100}};
-        bson_eq_object(&expected, b.view().get_document().value);
+        builder::document b{"foo", types::b_int32{100}};
+        bson_eq_object(&expected, b.extract().view());
     }
 
     bson_destroy(&expected);
@@ -1505,13 +1505,13 @@ TEST_CASE("list builder appends int32", "[bsoncxx::builder::list]") {
 
 TEST_CASE("list builder appends timestamp", "[bsoncxx::builder::list]") {
     types::b_timestamp foo{100, 1000};
-    builder::list b{"foo", foo};
+    builder::document b{"foo", foo};
 
     bson_t expected;
     bson_init(&expected);
     bson_append_timestamp(&expected, "foo", -1, foo.timestamp, foo.increment);
 
-    bson_eq_object(&expected, b.view().get_document().value);
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
 }
@@ -1523,13 +1523,13 @@ TEST_CASE("list builder appends int64", "[bsoncxx::builder::list]") {
     bson_append_int64(&expected, "foo", -1, 100);
 
     SECTION("raw int64") {
-        builder::list b{"foo", std::int64_t(100)};
-        bson_eq_object(&expected, b.view().get_document().value);
+        builder::document b{"foo", std::int64_t(100)};
+        bson_eq_object(&expected, b.extract().view());
     }
 
     SECTION("b_int64") {
-        builder::list b{"foo", types::b_int64{100}};
-        bson_eq_object(&expected, b.view().get_document().value);
+        builder::document b{"foo", types::b_int64{100}};
+        bson_eq_object(&expected, b.extract().view());
     }
 
     bson_destroy(&expected);
@@ -1544,13 +1544,13 @@ TEST_CASE("list builder appends decimal128", "[bsoncxx::builder::list]") {
     bson_append_decimal128(&expected, "foo", -1, &d128);
 
     SECTION("b_decimal128 works") {
-        builder::list b{"foo", types::b_decimal128{"-1234E+999"}};
-        bson_eq_object(&expected, b.view().get_document().value);
+        builder::document b{"foo", types::b_decimal128{"-1234E+999"}};
+        bson_eq_object(&expected, b.extract().view());
     }
 
     SECTION("raw bsoncxx::decimal128 works") {
-        builder::list b{"foo", bsoncxx::decimal128{"-1234E+999"}};
-        bson_eq_object(&expected, b.view().get_document().value);
+        builder::document b{"foo", bsoncxx::decimal128{"-1234E+999"}};
+        bson_eq_object(&expected, b.extract().view());
     }
 
     SECTION("bsoncxx::types::bson_value::view with decimal128 works") {
@@ -1559,8 +1559,8 @@ TEST_CASE("list builder appends decimal128", "[bsoncxx::builder::list]") {
 
         REQUIRE(v.get_decimal128() == d);
 
-        builder::list b{"foo", v};
-        bson_eq_object(&expected, b.view().get_document().value);
+        builder::document b{"foo", v};
+        bson_eq_object(&expected, b.extract().view());
     }
 
     bson_destroy(&expected);
@@ -1572,8 +1572,8 @@ TEST_CASE("list builder appends minkey", "[bsoncxx::builder::list]") {
 
     bson_append_minkey(&expected, "foo", -1);
 
-    builder::list b{"foo", types::b_minkey{}};
-    bson_eq_object(&expected, b.view().get_document().value);
+    builder::document b{"foo", types::b_minkey{}};
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
 }
@@ -1584,8 +1584,8 @@ TEST_CASE("list builder appends maxkey", "[bsoncxx::builder::list]") {
 
     bson_append_maxkey(&expected, "foo", -1);
 
-    builder::list b{"foo", types::b_maxkey{}};
-    bson_eq_object(&expected, b.view().get_document().value);
+    builder::document b{"foo", types::b_maxkey{}};
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
 }
@@ -1598,10 +1598,8 @@ TEST_CASE("list builder appends array", "[bsoncxx::builder::list]") {
     bson_append_utf8(&child, "0", -1, "bar", -1);
     bson_append_array(&expected, "foo", -1, &child);
 
-    builder::list arr{"bar"};
-
-    builder::list b{"foo", arr};
-    bson_eq_object(&expected, b.view().get_document().value);
+    builder::document b{"foo", builder::array{"bar"}};
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
     bson_destroy(&child);
@@ -1615,10 +1613,10 @@ TEST_CASE("list builder appends document", "[bsoncxx::builder::list]") {
     bson_append_utf8(&child, "bar", -1, "baz", -1);
     bson_append_document(&expected, "foo", -1, &child);
 
-    builder::list doc{"bar", "baz"};
+    builder::document doc{"bar", "baz"};
 
-    builder::list b{"foo", doc};
-    bson_eq_object(&expected, b.view().get_document().value);
+    builder::document b{"foo", std::move(doc)};
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
     bson_destroy(&child);
@@ -1632,8 +1630,8 @@ TEST_CASE("list builder appends inline array", "[bsoncxx::builder::list]") {
     bson_append_utf8(&child, "0", -1, "baz", -1);
     bson_append_array(&expected, "foo", -1, &child);
 
-    builder::list b{"foo", {"baz"}};
-    bson_eq_object(&expected, b.view().get_document().value);
+    builder::document b{"foo", builder::array{"baz"}};
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
     bson_destroy(&child);
@@ -1647,8 +1645,8 @@ TEST_CASE("list builder appends inline document", "[bsoncxx::builder::list]") {
     bson_append_utf8(&child, "bar", -1, "baz", -1);
     bson_append_document(&expected, "foo", -1, &child);
 
-    builder::list b{"foo", {"bar", "baz"}};
-    bson_eq_object(&expected, b.view().get_document().value);
+    builder::document b{"foo", {"bar", "baz"}};
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
     bson_destroy(&child);
@@ -1669,8 +1667,8 @@ TEST_CASE("list builder appends inline nested", "[bsoncxx::builder::list]") {
     bson_append_array(&foo, "bar", -1, &bar);
     bson_append_document(&expected, "foo", -1, &foo);
 
-    builder::list b{"foo", {"bar", {1, 2, {"hello", "world"}}}};
-    bson_eq_object(&expected, b.view().get_document().value);
+    builder::document b{"foo", {"bar", builder::array{1, 2, builder::document{"hello", "world"}}}};
+    bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
     bson_destroy(&foo);
@@ -1685,14 +1683,13 @@ TEST_CASE("list builder appends value", "[bsoncxx::builder::list]") {
     bson_append_int32(&expected, "foo", -1, 999);
 
     types::bson_value::value tmp(999);
-    builder::list b{"foo", tmp};
+    builder::document b{"foo", tmp};
 
-    bson_eq_object(&expected, b.view().get_document().value);
+    bson_eq_object(&expected, b.extract().view());
     bson_destroy(&expected);
 }
 
 TEST_CASE("list builder with explicit type deduction", "[bsoncxx::builder::list]") {
-    using builder::list;
     SECTION("array") {
         bson_t expected, array;
         bson_init(&expected);
@@ -1702,36 +1699,65 @@ TEST_CASE("list builder with explicit type deduction", "[bsoncxx::builder::list]
         bson_append_int32(&array, "1", -1, 1);
         bson_append_array(&expected, "foo", -1, &array);
 
-        builder::list b{"foo", builder::array{"bar", 1}};
-        bson_eq_object(&expected, b.view().get_document().value);
+        builder::document b{"foo", builder::array{"bar", 1}};
+        bson_eq_object(&expected, b.extract().view());
 
         bson_destroy(&expected);
         bson_destroy(&array);
     }
 
-    SECTION("document") {
-        builder::list b;
-        auto kvp_regex =
-            Catch::Matches("(.*)must be list of key-value pairs(.*)", Catch::CaseSensitive::No);
-        REQUIRE_THROWS_WITH((b = builder::document{"foo", 1, 2}), kvp_regex);
-
-        auto type_regex =
-            Catch::Matches("(.*)must be string type(.*)int32(.*)", Catch::CaseSensitive::No);
-        REQUIRE_THROWS_WITH((b = builder::document{"foo", 1, 2, 4}), type_regex);
-    }
+    // compile-time error
+    // SECTION("document") {
+    //      builder::document b = builder::document{"foo", 1, 2};
+    //      builder::document b = builder::document{"foo", 1, 2, 3};
+    // }
 }
 
 TEST_CASE("empty list builder", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
-    builder::list lst = {};
-    bson_eq_object(&expected, lst.view().get_document().value);
-
     builder::document doc = {};
-    bson_eq_object(&expected, doc.view().get_document().value);
+    bson_eq_object(&expected, doc.extract().view());
 
     builder::array arr = {};
-    bson_eq_object(&expected, arr.view().get_array().value);
+    bson_eq_object(&expected, arr.extract().view());
+}
+
+TEST_CASE("list builder append", "[bsoncxx::builder::list]") {
+    SECTION("document") {
+        bson_t expected;
+        bson_init(&expected);
+
+        bson_append_utf8(&expected, "foo", -1, "bar", -1);
+        bson_append_utf8(&expected, "hello", -1, "world", -1);
+
+        builder::document doc = {"foo", "bar"};
+        doc += {"hello", "world"};
+
+        bson_eq_object(&expected, doc.extract().view());
+    }
+
+    SECTION("array") {
+        bson_t expected;
+        bson_t nested;
+
+        bson_init(&expected);
+        bson_init(&nested);
+
+        bson_append_utf8(&expected, "0", -1, "foo", -1);
+
+        bson_append_utf8(&nested, "0", -1, "bar", -1);
+        bson_append_utf8(&nested, "1", -1, "baz", -1);
+        bson_append_array(&expected, "1", -1, &nested);
+
+        bson_append_utf8(&expected, "2", -1, "qux", -1);
+
+        builder::array arr = {"foo"};
+        arr += {"bar", "baz"};
+        arr += "qux";
+
+        bson_eq_object(&expected, arr.extract().view());
+    }
 }
 }  // namespace

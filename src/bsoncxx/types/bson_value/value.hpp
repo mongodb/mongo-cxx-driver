@@ -117,9 +117,19 @@ class BSONCXX_API value {
     value(bsoncxx::document::view v);
 
     ///
+    /// Constructs a BSON document value.
+    ///
+    value(bsoncxx::document::value v);
+
+    ///
     /// Constructs a BSON array value.
     ///
     value(bsoncxx::array::view v);
+
+    ///
+    /// Constructs a BSON array value.
+    ///
+    value(bsoncxx::array::value v);
 
     ///
     /// Constructs a BSON binary data value.

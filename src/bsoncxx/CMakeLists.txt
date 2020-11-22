@@ -139,6 +139,7 @@ set(bsoncxx_sources
     array/value.cpp
     array/view.cpp
     builder/core.cpp
+    builder/list.hpp
     decimal128.cpp
     document/element.cpp
     document/value.cpp
