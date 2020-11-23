@@ -33,7 +33,8 @@ using namespace mongocxx::spec;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
-const std::string kMongohouseURI = "mongodb://mhuser:pencil@localhost";
+const std::string kMongohouseURI =
+    "mongodb://mhuser:pencil@localhost/?serverSelectionTryOnce=false";
 
 void run_mongohouse_tests_in_file(std::string test_path) {
     return run_crud_tests_in_file(test_path, uri{kMongohouseURI});
