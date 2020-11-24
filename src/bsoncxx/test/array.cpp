@@ -22,7 +22,7 @@ namespace {
 
 using namespace bsoncxx;
 using bsoncxx::types::b_int32;
-using bsoncxx::types::b_utf8;
+using bsoncxx::types::b_string;
 using types::bson_value::make_value;
 
 TEST_CASE("array element lookup with std::find", "[bsoncxx::array::view]") {
@@ -42,14 +42,14 @@ TEST_CASE("array element lookup with std::find", "[bsoncxx::array::view]") {
 
     SECTION("non-matching utf8 elements") {
         builder::basic::array a_builder;
-        a_builder.append(b_utf8{"yes"}, b_utf8{"no"});
+        a_builder.append(b_string{"yes"}, b_string{"no"});
         auto a = a_builder.view();
         REQUIRE(std::find(a.cbegin(), a.cend(), val) == a.cend());
     }
 
     SECTION("array with one matching element") {
         builder::basic::array a_builder;
-        a_builder.append(b_utf8{"yes"}, b_utf8{"no"}, b_utf8{"hello"});
+        a_builder.append(b_string{"yes"}, b_string{"no"}, b_string{"hello"});
         auto a = a_builder.view();
         auto it = std::find(a.cbegin(), a.cend(), val);
         REQUIRE(it != a.cend());
@@ -58,7 +58,7 @@ TEST_CASE("array element lookup with std::find", "[bsoncxx::array::view]") {
 
     SECTION("array with multiple matching elements") {
         builder::basic::array a_builder;
-        a_builder.append(b_utf8{"yes"}, b_utf8{"hello"}, b_utf8{"hello"});
+        a_builder.append(b_string{"yes"}, b_string{"hello"}, b_string{"hello"});
         auto a = a_builder.view();
         auto it = std::find(a.cbegin(), a.cend(), val);
         REQUIRE(it != a.cend());
