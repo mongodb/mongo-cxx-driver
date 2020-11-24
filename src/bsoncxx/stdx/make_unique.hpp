@@ -48,7 +48,7 @@ using ::boost::make_unique;
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
-#elif __cplusplus >= 201402L
+#elif defined(BSONCXX_POLY_USE_STD)
 
 #include <memory>
 
