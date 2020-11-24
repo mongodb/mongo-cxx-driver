@@ -46,7 +46,7 @@ foreach(EXAMPLE ${MONGOCXX_EXAMPLE_EXECUTABLES})
     endif()
 
     # TODO CXX-1201, enable some examples only for replica sets.
-    if (${EXAMPLE} MATCHES "change_streams|client_session|with_transaction")
+    if (${EXAMPLE} MATCHES "change_streams|client_session|with_transaction|causal_consistency")
         continue()
     endif()
 

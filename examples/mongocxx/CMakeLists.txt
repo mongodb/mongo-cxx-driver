@@ -21,6 +21,7 @@ set(MONGOCXX_EXAMPLES
     aggregate.cpp
     automatic_client_side_field_level_encryption.cpp
     bulk_write.cpp
+    causal_consistency.cpp
     change_streams.cpp
     client_session.cpp
     connect.cpp
