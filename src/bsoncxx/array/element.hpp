@@ -24,6 +24,12 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
+namespace types {
+namespace bson_value {
+class view;
+}  // namespace bson_value
+}  // namespace types
+
 namespace array {
 
 ///
@@ -82,6 +88,36 @@ class BSONCXX_API element : private document::element {
                                      std::uint32_t offset,
                                      std::uint32_t keylen);
 };
+
+///
+/// @{
+///
+/// Convenience methods to compare for equality against a bson_value.
+///
+/// Returns true if this element contains a bson_value that matches.
+///
+/// @relates element
+///
+BSONCXX_API bool BSONCXX_CALL operator==(const element& elem, const types::bson_value::view& v);
+BSONCXX_API bool BSONCXX_CALL operator==(const types::bson_value::view& v, const element& elem);
+///
+/// @}
+///
+
+///
+/// @{
+///
+/// Convenience methods to compare for equality against a bson_value.
+///
+/// Returns false if this element contains a bson_value that matches.
+///
+/// @relates element
+///
+BSONCXX_API bool BSONCXX_CALL operator!=(const element& elem, const types::bson_value::view& v);
+BSONCXX_API bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const element& elem);
+///
+/// @}
+///
 
 }  // namespace array
 

@@ -40,9 +40,14 @@ void apm_checker::compare(bsoncxx::array::view expectations,
     if (_skip_kill_cursors)
         _events.erase(std::remove_if(_events.begin(), _events.end(), is_kill_cursor));
     for (auto expectation : expectations) {
-        REQUIRE(events_iter != _events.end());
-
         auto expected = expectation.get_document().view();
+
+        if (events_iter == _events.end()) {
+            FAIL("Out of events, expected to find event " << to_json(expected) << "\n\n");
+            print_all();
+            REQUIRE(false);
+        }
+
         CAPTURE(to_json(*events_iter), expectation);
         REQUIRE_BSON_MATCHES_V(*events_iter, expected, match_visitor);
         events_iter++;
@@ -63,6 +68,7 @@ void apm_checker::has(bsoncxx::array::view expectations) {
 
 void apm_checker::print_all() {
     printf("\n\n");
+    printf("APM Checker contents: \n");
     for (auto&& event : _events) {
         printf("APM event: %s\n", bsoncxx::to_json(event).c_str());
     }
@@ -93,7 +99,7 @@ options::apm apm_checker::get_apm_opts(bool command_started_events_only) {
         });
         opts.on_command_succeeded([&](const events::command_succeeded_event& event) {
             bsoncxx::builder::basic::document builder;
-            builder.append(kvp("command_suceeded_event",
+            builder.append(kvp("command_succeeded_event",
                                make_document(kvp("reply", event.reply()),
                                              kvp("command_name", event.command_name()),
                                              kvp("operation_id", event.operation_id()))));

@@ -25,6 +25,13 @@
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
+
+namespace types {
+namespace bson_value {
+class view;
+}  // namespace bson_value
+}  // namespace types
+
 namespace array {
 
 ///

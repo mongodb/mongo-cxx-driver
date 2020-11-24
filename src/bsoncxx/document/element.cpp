@@ -59,7 +59,8 @@ std::uint32_t element::keylen() const {
 
 bsoncxx::type element::type() const {
     if (_raw == nullptr) {
-        throw bsoncxx::exception{error_code::k_unset_element};
+        throw bsoncxx::exception{error_code::k_unset_element,
+                                 "cannot return the type of uninitialized element"};
     }
 
     BSONCXX_CITER;
@@ -68,7 +69,8 @@ bsoncxx::type element::type() const {
 
 stdx::string_view element::key() const {
     if (_raw == nullptr) {
-        throw bsoncxx::exception{error_code::k_unset_element};
+        throw bsoncxx::exception{error_code::k_unset_element,
+                                 "cannot return the key from an uninitialized element"};
     }
 
     BSONCXX_CITER;
@@ -87,6 +89,11 @@ stdx::string_view element::key() const {
 #undef BSONCXX_ENUM
 
 types::b_string element::get_utf8() const {
+    if (_raw == nullptr) {
+        throw bsoncxx::exception{error_code::k_unset_element,
+                                 "cannot get string from an uninitialized element"};
+    }
+
     types::bson_value::view v{_raw, _length, _offset, _keylen};
     return v.get_string();
 }
@@ -123,6 +130,22 @@ array::element element::operator[](std::uint32_t i) const {
 
 element::operator bool() const {
     return _raw != nullptr;
+}
+
+bool BSONCXX_CALL operator==(const element& elem, const types::bson_value::view& v) {
+    return elem.get_value() == v;
+}
+
+bool BSONCXX_CALL operator==(const types::bson_value::view& v, const element& elem) {
+    return elem == v;
+}
+
+bool BSONCXX_CALL operator!=(const element& elem, const types::bson_value::view& v) {
+    return !(elem == v);
+}
+
+bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const element& elem) {
+    return !(elem == v);
 }
 
 }  // namespace document

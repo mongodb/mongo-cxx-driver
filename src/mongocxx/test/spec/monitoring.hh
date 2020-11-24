@@ -41,8 +41,26 @@ class apm_checker {
     void skip_kill_cursors();
     void print_all();
 
+    using event_vector = std::vector<bsoncxx::document::value>;
+    using iterator = event_vector::iterator;
+    using const_iterator = event_vector::const_iterator;
+
+    inline iterator begin() noexcept {
+        return _events.begin();
+    }
+    inline const_iterator cbegin() const noexcept {
+        return _events.cbegin();
+    }
+
+    inline iterator end() noexcept {
+        return _events.end();
+    }
+    inline const_iterator cend() const noexcept {
+        return _events.cend();
+    }
+
    private:
-    std::vector<bsoncxx::document::value> _events;
+    event_vector _events;
     bool _skip_kill_cursors = false;
 };
 
