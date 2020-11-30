@@ -164,7 +164,7 @@ std::string uri_options_to_string(document::view object) {
 }
 
 std::string get_hostnames(document::view object) {
-    auto default_uri{"localhost:27017"};
+    const auto default_uri = std::string{"localhost:27017"};
     // Spec: This [useMultipleMongoses] option has no effect for non-sharded topologies.
     if (test_util::is_replica_set())
         return default_uri;
@@ -233,11 +233,122 @@ entity::map& get_entity_map() {
     return m;
 }
 
+write_concern get_write_concern(const document::element& opts) {
+    if (!opts["writeConcern"])
+        return {};
+
+    auto wc = write_concern{};
+    if (auto w = opts["writeConcern"]["w"]) {
+        REQUIRE(w.type() == type::k_int32);  // TODO: support type k_utf8
+        wc.nodes(w.get_int32());
+    }
+
+    return wc;
+}
+
+read_concern get_read_concern(const document::element& opts) {
+    if (!opts["readConcern"])
+        return {};
+
+    auto rc = read_concern{};
+    if (auto level = opts["readConcern"]["level"])
+        rc.acknowledge_string(level.get_string().value);
+    return rc;
+}
+
+template <typename T>
+void set_common_options(T& t, const document::element& opts) {
+    if (!opts)
+        return;
+
+    t.read_concern(get_read_concern(opts));
+    t.write_concern(get_write_concern(opts));
+    REQUIRE_FALSE(/* TODO */ opts["readPreference"]);
+}
+
+options::gridfs::bucket get_bucket_options(document::view object) {
+    if (!object["bucketOptions"])
+        return {};
+
+    auto opts = options::gridfs::bucket{};
+    set_common_options(opts, object["bucketOptions"]);
+
+    if (auto name = object["bucketOptions"]["bucketName"])
+        opts.bucket_name(name.get_string().value.to_string());
+    if (auto size = object["bucketOptions"]["chunkSizeBytes"])
+        opts.chunk_size_bytes(size.get_int32().value);
+    REQUIRE_FALSE(/* TODO */ object["bucketOptions"]["disableMD5"]);
+
+    return opts;
+}
+
+options::client_session get_session_options(document::view object) {
+    if (!object["sessionOptions"])
+        return {};
+
+    auto session_opts = options::client_session{};
+    auto txn_opts = options::transaction{};
+
+    set_common_options(txn_opts, object["sessionOptions"]["defaultTransactionOptions"]);
+    REQUIRE_FALSE(/* TODO */ object["sessionOptions"]["causalConsistency"]);
+
+    session_opts.default_transaction_opts(txn_opts);
+    return session_opts;
+}
+
 // TODO: create_change_stream
-// TODO: create_bucket
-// TODO: create_session
-// TODO: create_database
-// TODO: create_collection
+
+gridfs::bucket create_bucket(document::view object) {
+    auto id = object["database"].get_string().value.to_string();
+    auto& map = get_entity_map();
+    auto& db = map.get_database(id);
+
+    auto opts = get_bucket_options(object);
+    auto bucket = db.gridfs_bucket(opts);
+
+    CAPTURE(id);
+    return bucket;
+}
+
+client_session create_session(document::view object) {
+    auto id = object["client"].get_string().value.to_string();
+    auto& map = get_entity_map();
+    auto& client = map.get_client(id);
+
+    auto opts = get_session_options(object);
+    auto session = client.start_session(opts);
+
+    CAPTURE(id);
+    return session;
+}
+
+collection create_collection(document::view object) {
+    auto id = object["database"].get_string().value.to_string();
+    auto& map = get_entity_map();
+    auto& db = map.get_database(id);
+
+    auto name = object["collectionName"].get_string().value.to_string();
+    auto coll = collection{db.collection(name)};
+
+    set_common_options(coll, object["collectionOptions"]);
+
+    CAPTURE(name, id);
+    return coll;
+}
+
+database create_database(document::view object) {
+    auto id = object["client"].get_string().value.to_string();
+    auto& map = get_entity_map();
+    auto& client = map.get_client(id);
+
+    auto name = object["databaseName"].get_string().value.to_string();
+    auto db = database{client.database(name)};
+
+    set_common_options(db, object["databaseOptions"]);
+
+    CAPTURE(name, id);
+    return db;
+}
 
 client create_client(document::view object) {
     auto conn = "mongodb://" + get_hostnames(object) + "/?" + uri_options_to_string(object);
@@ -246,10 +357,11 @@ client create_client(document::view object) {
     add_observe_events(opts, object);
     add_ignore_command_monitoring_events(object);
 
+    CAPTURE(conn);
     return client{uri{conn}, options::client{}.apm_opts(opts)};
 }
 
-void add_to_map(const array::element& obj) {
+bool add_to_map(const array::element& obj) {
     // Spec: This object MUST contain exactly one top-level key that identifies the entity type and
     // maps to a nested object, which specifies a unique name for the entity ('id' key) and any
     // other parameters necessary for its construction.
@@ -257,32 +369,27 @@ void add_to_map(const array::element& obj) {
     auto type = doc->key().to_string();
     auto params = doc->get_document().view();
     auto id = params["id"].get_string().value.to_string();
-
-    CAPTURE(type, id, to_json(params));
     auto& map = get_entity_map();
 
-    if (type == "client") {
-        map.insert(id, create_client(params));
-        REQUIRE(map.contains(id));
-    } else if (type == "database") {
-        WARN("database not implemented");
-    } else if (type == "collection") {
-        WARN("collection not implemented");
-    } else if (type == "bucket") {
-        WARN("bucket not implemented");
-    } else if (type == "session") {
-        WARN("session not implemented");
-    } else {
-        FAIL("unrecognized type { " + type + " }");
-    }
+    // clang-format off
+    if (type == "client")       return map.insert(id, create_client(params));
+    if (type == "database")     return map.insert(id, create_database(params));
+    if (type == "collection")   return map.insert(id, create_collection(params));
+    if (type == "bucket")       return map.insert(id, create_bucket(params));
+    if (type == "session")      return map.insert(id, create_session(params));
+    // clang-format on
+
+    CAPTURE(type, id, to_json(params));
+    FAIL("unrecognized type { " + type + " }");
+    return false;
 }
 
 void create_entities(const document::view test) {
     if (!test["createEntities"])
         return;
 
-    for (auto entity : test["createEntities"].get_array().value)
-        add_to_map(entity);
+    auto entities = test["createEntities"].get_array().value;
+    REQUIRE(std::all_of(std::begin(entities), std::end(entities), add_to_map));
 }
 
 document::value parse_test_file(const std::string& test_path) {
