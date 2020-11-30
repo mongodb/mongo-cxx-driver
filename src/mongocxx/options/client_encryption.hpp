@@ -56,7 +56,7 @@ class MONGOCXX_API client_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    const stdx::optional<client*>& key_vault_client() const;
+    const stdx::optional<mongocxx::client*>& key_vault_client() const;
 
     ///
     /// Sets the namespace to use to access the key vault collection, which
