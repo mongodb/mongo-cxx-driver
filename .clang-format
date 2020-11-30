@@ -7,7 +7,7 @@ BinPackParameters: false
 ColumnLimit: 100
 Cpp11BracedListStyle: true
 DerivePointerAlignment: false
-IncludeBlocks:   Preserve
+IncludeBlocksStyle:   Regroup
 IncludeCategories:
   - Regex:           '.*'
     Priority:        1
