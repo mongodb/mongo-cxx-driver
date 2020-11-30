@@ -28,6 +28,10 @@ using namespace mongocxx;
 // Stores and compares apm events.
 class apm_checker {
    public:
+    enum class event { kill_cursors, get_more };
+    static event to_event(stdx::string_view s);
+    static std::string to_string(event e);
+
     options::apm get_apm_opts(bool command_started_events_only = false);
 
     // Check that the apm checker's events exactly match our expected events, in order.
@@ -39,7 +43,6 @@ class apm_checker {
     void has(bsoncxx::array::view expected);
 
     void clear();
-    void skip_kill_cursors();
     void print_all();
 
     using event_vector = std::vector<bsoncxx::document::value>;
@@ -60,9 +63,14 @@ class apm_checker {
         return _events.cend();
     }
 
+    void set_command_started(options::apm& apm);
+    void set_command_failed(options::apm& apm);
+    void set_command_succeeded(options::apm& apm);
+    void set_ignore_command_monitoring_event(event e);
+
    private:
     event_vector _events;
-    bool _skip_kill_cursors = false;
+    std::vector<std::string> _ignore;
 };
 
 }  // namespace spec

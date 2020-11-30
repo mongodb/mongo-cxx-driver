@@ -61,6 +61,11 @@ document::value get_server_status(const client& client) {
     static auto status = client["admin"].run_command(make_document(kvp("serverStatus", 1)));
     return status;
 }
+
+stdx::optional<document::value> get_shards(const client& client) {
+    static auto shards = client["config"]["shards"].find_one({});
+    return (shards) ? shards.value() : stdx::optional<document::value>{};
+}
 }  // namespace
 
 std::vector<std::int32_t> parse_version(std::string version) {
@@ -227,6 +232,13 @@ bool is_replica_set(const client& client) {
     return static_cast<bool>(reply.view()["setName"]);
 }
 
+std::string get_hosts(const client& client) {
+    auto shards = get_shards(client);
+    if (shards)
+        return shards->view()["host"].get_string().value.to_string();
+    return "";
+}
+
 std::string get_topology(const client& client) {
     if (is_replica_set(client))
         return "replicaset";
@@ -236,8 +248,8 @@ std::string get_topology(const client& client) {
     // slash, then a comma-separated list of the hostnames of each member of the replica set, as in
     // the following example:
     //      { ... , "host" : "shard0001/localhost:27018,localhost:27019,localhost:27020", ... }
-    if (auto shards = client["config"]["shards"].find_one({})) {
-        auto host = shards->view()["host"].get_string().value.to_string();
+    auto host = get_hosts(client);
+    if (!host.empty()) {
         if (std::find(std::begin(host), std::end(host), '/') != std::end(host))
             return "sharded-replicaset";
         return "sharded";
