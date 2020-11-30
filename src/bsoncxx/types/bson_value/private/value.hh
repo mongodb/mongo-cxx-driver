@@ -17,6 +17,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 #include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
 namespace bsoncxx {
